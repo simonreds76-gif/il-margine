@@ -26,6 +26,23 @@ default and skips only when every changed path is a known live-data artifact.
 Vercel convention: exit `0` skips the build, exit `1` proceeds with the build.
 Add `[force build]` to a commit message to build even when only data artifacts changed.
 
+## Vercel: production promotion helper
+
+Use `scripts/vercel-promote-production.ps1` when a verified preview deployment
+needs to become the live `ilmargine.bet` deployment:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/vercel-promote-production.ps1 `
+  -DeploymentUrl il-margine-example-simones-projects-fb02b6e0.vercel.app
+```
+
+The helper tries `vercel promote` first. If Vercel rejects promotion because the
+local CLI account is not GitHub-connected for Git deployment promotion, it falls
+back to `vercel alias set <deployment> ilmargine.bet`, which is the domain move
+that actually serves production traffic.
+
+Use the globally installed Vercel CLI (`vercel`), not parallel `npx vercel`
+calls. Parallel `npx` runs can corrupt npm's shared `_npx` extraction cache.
 
 ## Tennis stats test (Sackmann data)
 
