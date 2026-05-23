@@ -643,9 +643,6 @@ export default function HomepageClient({
             <ProofStatCard label="Tracking period" value={trackingPeriod} sub="Validation-phase history plus public tracking" accent />
           </div>
 
-          <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.14em] text-slate-600">
-            Baseline validation data shown immediately. Live public figures refresh automatically.
-          </p>
         </div>
       </section>
 
