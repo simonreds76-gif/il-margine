@@ -1527,7 +1527,6 @@
       "home_unavailable": [
         "Marash Kumbulla",
         "Mateo Joseph",
-        "Lucas Bergström",
         "Johan Mojica"
       ],
       "away_unavailable": [
@@ -1828,11 +1827,11 @@
         "Andoni Gorosabel",
         "Yeray Álvarez",
         "Aymeric Laporte",
-        "Íñigo Lekue",
+        "Adama Boiro",
         "Mikel Jauregizar",
         "Íñigo Ruíz de Galarreta",
         "Iñaki Williams",
-        "Alex Berenguer",
+        "Unai Gómez",
         "Robert Navarro",
         "Gorka Guruzeta"
       ],
@@ -1975,7 +1974,7 @@
           "position_id": 36
         },
         {
-          "name": "Íñigo Lekue",
+          "name": "Adama Boiro",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -2011,7 +2010,7 @@
           "position_id": 83
         },
         {
-          "name": "Alex Berenguer",
+          "name": "Unai Gómez",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -2043,15 +2042,14 @@
       "home_unavailable": [
         "Trent Alexander-Arnold",
         "Aurélien Tchouaméni",
-        "Andriy Lunin",
         "Dani Ceballos",
-        "Ferland Mendy",
-        "Éder Militao",
         "Arda Güler",
+        "Éder Militao",
+        "Ferland Mendy",
         "Rodrygo"
       ],
       "away_unavailable": [
-        "Beñat Prados",
+        "Alejandro Berenguer Remiro",
         "Unai Eguiluz",
         "Yuri Berchiche",
         "Oihan Sancet",
@@ -2303,17 +2301,16 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "Lucas Beltrán",
-        "Renzo Saravia",
-        "José Gayà",
-        "José Copete",
         "Dimitri Foulquier",
-        "Eray Cömert"
+        "Eray Cömert",
+        "José Copete",
+        "José Gayà",
+        "Renzo Saravia",
+        "Lucas Beltrán"
       ],
       "away_unavailable": [
         "Frenkie De Jong",
         "Fermín López",
-        "Ferran Torres",
         "Lamine Yamal"
       ]
     },
@@ -2330,32 +2327,32 @@
       "away_status": "FotMob Expected XI",
       "lineup_type": "predicted",
       "home_formation": "4-4-2",
-      "away_formation": "4-4-2",
+      "away_formation": "4-2-3-1",
       "home_players": [
         "Arnau Tenas",
         "Santiago Mouriño",
-        "Willy Kambwala",
-        "Rafa Marín",
-        "Sergi Cardona",
-        "Tajon Buchanan",
         "Pau Navarro",
+        "Renato Veiga",
+        "Alfonso Pedraza",
+        "Tajon Buchanan",
         "Pape Gueye",
+        "Dani Parejo",
         "Alberto Moleiro",
-        "Ayoze Pérez",
-        "Tani Oluwaseyi"
+        "Nicolas Pépé",
+        "Georges Mikautadze"
       ],
       "away_players": [
-        "Jan Oblak",
+        "Juan Musso",
+        "Marcos Llorente",
         "Marc Pubill",
-        "Clément Lenglet",
         "Dávid Hancko",
         "Matteo Ruggeri",
-        "Giuliano Simeone",
-        "Obed Vargas",
         "Koke",
+        "Obed Vargas",
+        "Giuliano Simeone",
         "Álex Baena",
-        "Antoine Griezmann",
-        "Ademola Lookman"
+        "Ademola Lookman",
+        "Antoine Griezmann"
       ],
       "home_starters": [
         {
@@ -2377,7 +2374,7 @@
           "position_id": 32
         },
         {
-          "name": "Willy Kambwala",
+          "name": "Pau Navarro",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -2386,7 +2383,7 @@
           "position_id": 34
         },
         {
-          "name": "Rafa Marín",
+          "name": "Renato Veiga",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -2395,7 +2392,7 @@
           "position_id": 36
         },
         {
-          "name": "Sergi Cardona",
+          "name": "Alfonso Pedraza",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -2413,7 +2410,7 @@
           "position_id": 72
         },
         {
-          "name": "Pau Navarro",
+          "name": "Pape Gueye",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -2422,7 +2419,7 @@
           "position_id": 74
         },
         {
-          "name": "Pape Gueye",
+          "name": "Dani Parejo",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -2440,7 +2437,7 @@
           "position_id": 78
         },
         {
-          "name": "Ayoze Pérez",
+          "name": "Nicolas Pépé",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -2449,7 +2446,7 @@
           "position_id": 104
         },
         {
-          "name": "Tani Oluwaseyi",
+          "name": "Georges Mikautadze",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -2460,13 +2457,22 @@
       ],
       "away_starters": [
         {
-          "name": "Jan Oblak",
+          "name": "Juan Musso",
           "line_index": -1,
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-4-2",
+          "formation": "4-2-3-1",
           "position_id": 11
+        },
+        {
+          "name": "Marcos Llorente",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32
         },
         {
           "name": "Marc Pubill",
@@ -2474,16 +2480,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
-          "position_id": 32
-        },
-        {
-          "name": "Clément Lenglet",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-2-3-1",
           "position_id": 34
         },
         {
@@ -2492,7 +2489,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-2-3-1",
           "position_id": 36
         },
         {
@@ -2501,78 +2498,78 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-2-3-1",
           "position_id": 38
-        },
-        {
-          "name": "Giuliano Simeone",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 72
-        },
-        {
-          "name": "Obed Vargas",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 74
         },
         {
           "name": "Koke",
           "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 76
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64
+        },
+        {
+          "name": "Obed Vargas",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66
+        },
+        {
+          "name": "Giuliano Simeone",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83
         },
         {
           "name": "Álex Baena",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 78
-        },
-        {
-          "name": "Antoine Griezmann",
           "line_index": 2,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-4-2",
-          "position_id": 104
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85
         },
         {
           "name": "Ademola Lookman",
           "line_index": 2,
-          "line_size": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87
+        },
+        {
+          "name": "Antoine Griezmann",
+          "line_index": 3,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-4-2",
-          "position_id": 106
+          "formation": "4-2-3-1",
+          "position_id": 115
         }
       ],
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
+        "Gerard Moreno",
         "Juan Foyth",
-        "Santi Comesaña",
-        "Gerard Moreno"
+        "Santi Comesaña"
       ],
       "away_unavailable": [
         "José Giménez",
-        "Pablo Barrios",
         "Nahuel Molina",
         "Robin Le Normand",
         "Johnny Cardoso",
         "Nicolás González",
+        "Pablo Barrios",
         "Rodrigo Mendoza",
         "Julián Álvarez"
       ]

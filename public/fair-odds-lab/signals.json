@@ -1,10 +1,11 @@
 {
-  "generated_at": "2026-05-23T08:08:28.429051Z",
+  "generated_at": "2026-05-23T10:24:03.766570Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
-    "data/goalscorer/la-liga/goalscorer-live-comparison.csv"
+    "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
+    "data/goalscorer/bundesliga/goalscorer-live-comparison.csv"
   ],
   "team_form_source": "/home/runner/work/_temp/football-form/team-match-base.csv",
   "edge_threshold_pp": 6.0,
@@ -30,8 +31,8 @@
     ],
     "post_kickoff_visibility_minutes": 150
   },
-  "fixtures_evaluated": 28,
-  "signals_qualifying": 5,
+  "fixtures_evaluated": 29,
+  "signals_qualifying": 4,
   "leagues_covered": [
     "epl",
     "la-liga",
@@ -66,8 +67,8 @@
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 53.0,
-        "fair_odds": 1.89
+        "scoring_chance_pct": 48.7,
+        "fair_odds": 2.05
       },
       "market_data": {
         "best_odds": 2.88,
@@ -75,7 +76,7 @@
         "implied_chance_pct": 34.8
       },
       "edge": {
-        "price_gap_pp": 18.2,
+        "price_gap_pp": 13.9,
         "model_advantage": true
       },
       "metrics": {
@@ -83,11 +84,11 @@
           "tier": "Strong",
           "percentile": 92
         },
-        "share_of_team_chances_pct": 43,
+        "share_of_team_chances_pct": 36,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 44
+          "percentile": 45
         },
         "recent_team_form": {
           "tier": "Positive",
@@ -106,7 +107,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 64
+          "percentile": 65
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -188,7 +189,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 29
+          "percentile": 27
         },
         "recent_team_form": {
           "tier": "Quiet",
@@ -207,7 +208,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 38
+          "percentile": 39
         },
         "opponent_recent_defence": {
           "tier": "Average",
@@ -236,95 +237,6 @@
         "The model price is shorter than the bookmaker's best available price",
         "A large share of the team's chances runs through him",
         "Recent chance quality grades as strong",
-        "Primary penalty role adds a clear scoring route"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260524-ollie-watkins-3f94b0c704",
-      "match": {
-        "home_team": "Manchester City",
-        "away_team": "Aston Villa",
-        "league": "epl",
-        "league_display": "Premier League",
-        "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "2026-05-24T15:00:00Z",
-        "kickoff_display": "Sun 24 May 16:00 UK",
-        "fotmob_match_id": "4813750",
-        "fotmob_page_url": "/matches/manchester-city-vs-aston-villa/2w74gq#4813750",
-        "lineup_type": "predicted",
-        "venue": ""
-      },
-      "player": {
-        "name": "Ollie Watkins",
-        "team": "Aston Villa",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/epl/aston-villa.png",
-        "team_primary_color": "#7f1d1d",
-        "team_secondary_color": "#38bdf8",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 33.9,
-        "fair_odds": 2.95
-      },
-      "market_data": {
-        "best_odds": 3.6,
-        "best_book": "Bet365",
-        "implied_chance_pct": 27.8
-      },
-      "edge": {
-        "price_gap_pp": 6.2,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 99
-        },
-        "share_of_team_chances_pct": 30,
-        "share_of_team_chances_percentile": 99,
-        "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 33
-        },
-        "recent_team_form": {
-          "tier": "Positive",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-15",
-          "xg_for_avg": 1.94,
-          "xg_against_avg": 1.44,
-          "xgd_per90": 0.5,
-          "shots_for_avg": 12.4,
-          "shots_against_avg": 12.8,
-          "sot_for_avg": 5.0,
-          "sot_against_avg": 5.8,
-          "corners_for_avg": 5.2,
-          "corners_against_avg": 4.6
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Low",
-          "percentile": 18
-        },
-        "opponent_recent_defence": {
-          "tier": "Unknown"
-        },
-        "fixture_boost_pct": -30,
-        "projected_minutes": 80,
-        "penalty_role": "Primary",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Recent team form supports the attacking case",
         "Primary penalty role adds a clear scoring route"
       ],
       "risk_flags": []
@@ -371,7 +283,7 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 82
+          "percentile": 81
         },
         "share_of_team_chances_pct": 21,
         "share_of_team_chances_percentile": 97,
@@ -445,7 +357,7 @@
       "market": "Anytime goalscorer",
       "model": {
         "scoring_chance_pct": 25.7,
-        "fair_odds": 3.89
+        "fair_odds": 3.9
       },
       "market_data": {
         "best_odds": 5.5,
@@ -465,7 +377,7 @@
         "share_of_team_chances_percentile": 97,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 27
+          "percentile": 25
         },
         "recent_team_form": {
           "tier": "Average",
