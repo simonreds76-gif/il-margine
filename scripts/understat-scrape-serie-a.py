@@ -20,7 +20,7 @@ import os
 import re
 import time
 from dataclasses import dataclass
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 import requests
 
@@ -647,6 +647,14 @@ def main() -> None:
         default=PLAYER_REQUEST_ATTEMPTS,
         help="Max attempts for per-player requests",
     )
+    parser.add_argument(
+        "--continue-on-league-error",
+        action="store_true",
+        help=(
+            "Continue with the next league/season when the league-level Understat fetch fails. "
+            "Use for scheduled stale refreshes that can safely reuse existing player logs."
+        ),
+    )
     args = parser.parse_args()
 
     seasons = args.season or DEFAULT_SEASONS
@@ -666,28 +674,38 @@ def main() -> None:
     print(f"  Timeout: {REQUEST_TIMEOUT:.1f}s per request")
     print(f"  Attempts: league={REQUEST_ATTEMPTS}, player={PLAYER_REQUEST_ATTEMPTS}")
 
+    skipped: List[Tuple[str, str, str]] = []
     for league_key in args.league:
         config = LEAGUE_CONFIGS[league_key]
         for season_label in seasons:
             if season_label not in AVAILABLE_SEASONS:
                 print(f"\n  Warning: {season_label} not in supported season list")
             season_start, normalized_label = _season_label_to_understat(season_label)
-            output = scrape_season(
-                ScrapeState(
-                    league_key=league_key,
-                    league_slug=config["slug"],
-                    league_label=config["label"],
-                    competition=config["competition"],
-                    output_prefix=config["output_prefix"],
-                    team_aliases=config["team_aliases"],
-                    season_label=normalized_label,
-                    season_start=season_start,
-                    session=session,
-                    output_dir=args.out_dir,
-                    max_players=args.max_players,
-                    resume=args.resume,
+            try:
+                output = scrape_season(
+                    ScrapeState(
+                        league_key=league_key,
+                        league_slug=config["slug"],
+                        league_label=config["label"],
+                        competition=config["competition"],
+                        output_prefix=config["output_prefix"],
+                        team_aliases=config["team_aliases"],
+                        season_label=normalized_label,
+                        season_start=season_start,
+                        session=session,
+                        output_dir=args.out_dir,
+                        max_players=args.max_players,
+                        resume=args.resume,
+                    )
                 )
-            )
+            except Exception as exc:
+                if not args.continue_on_league_error:
+                    raise
+                message = f"{type(exc).__name__}: {exc}"
+                skipped.append((league_key, normalized_label, message))
+                print(f"\n  WARNING: skipped {config['label']} {normalized_label}: {message}")
+                print("  Existing player-match log, if present, was left untouched.")
+                continue
 
             with open(output, "r", encoding="utf-8-sig") as handle:
                 rows = list(csv.DictReader(handle))
@@ -701,6 +719,12 @@ def main() -> None:
             print(f"    Team-match rows:   {unique_matches:,}")
             print(f"    Player-match rows: {len(rows):,}")
             print(f"    Goals:             {goals:,}")
+
+    if skipped:
+        print("\n  Understat refresh completed with skipped league(s):")
+        for league_key, season_label, message in skipped:
+            print(f"    - {league_key} {season_label}: {message}")
+        print("  Scheduled pipelines will continue with the latest existing player logs.")
 
     print("\n  Done.\n")
 
