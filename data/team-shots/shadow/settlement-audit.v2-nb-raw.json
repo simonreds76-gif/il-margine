@@ -1,14 +1,14 @@
 {
-  "run_at": "2026-05-24T10:11:56Z",
+  "run_at": "2026-05-24T18:11:25Z",
   "model": "team-shots",
   "total_bets": 150,
-  "settled_this_run": 7,
+  "settled_this_run": 0,
   "total_settled": 140,
   "total_pending": 10,
   "pending_breakdown": {
-    "future": 10,
-    "live": 0,
-    "stale": 0,
+    "future": 4,
+    "live": 1,
+    "stale": 5,
     "old_stale": 0,
     "unknown": 0
   },
@@ -47,8 +47,8 @@
       "football_data_latest": "2026-05-17",
       "lag_days": 7,
       "football_data_count": 370,
-      "fotmob_count": 9,
-      "fotmob_latest": "2026-05-23",
+      "fotmob_count": 0,
+      "fotmob_latest": null,
       "api_football_count": 0,
       "api_football_latest": null,
       "api_football_requests_used": 0,
@@ -77,7 +77,7 @@
       "football_data_latest": "2026-05-17",
       "lag_days": 7,
       "football_data_count": 370,
-      "fotmob_count": 3,
+      "fotmob_count": 2,
       "fotmob_latest": "2026-05-23",
       "api_football_count": 0,
       "api_football_latest": null,
@@ -89,11 +89,56 @@
       "snapshot_path": "data/results-snapshot/2026-05-24.json"
     }
   },
-  "stale_rows": [],
+  "stale_rows": [
+    {
+      "match": "Parma Calcio vs Sassuolo Calcio",
+      "league": "serie-a",
+      "line": "13.5",
+      "side": "under",
+      "kickoff": "2026-05-24T13:00:00Z",
+      "hours_elapsed": 5.19
+    },
+    {
+      "match": "Fulham FC vs Newcastle United",
+      "league": "epl",
+      "line": "11.5",
+      "side": "over",
+      "kickoff": "2026-05-24T15:00:00Z",
+      "hours_elapsed": 3.19
+    },
+    {
+      "match": "West Ham United vs Leeds United",
+      "league": "epl",
+      "line": "16.5",
+      "side": "under",
+      "kickoff": "2026-05-24T15:00:00Z",
+      "hours_elapsed": 3.19
+    },
+    {
+      "match": "Crystal Palace vs Arsenal FC",
+      "league": "epl",
+      "line": "11.5",
+      "side": "under",
+      "kickoff": "2026-05-24T15:00:00Z",
+      "hours_elapsed": 3.19
+    },
+    {
+      "match": "Sunderland AFC vs Chelsea FC",
+      "league": "epl",
+      "line": "10.5",
+      "side": "under",
+      "kickoff": "2026-05-24T15:00:00Z",
+      "hours_elapsed": 3.19
+    }
+  ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
-  "warnings": [],
-  "errors": [],
-  "exit_code_recommendation": 0
+  "warnings": [
+    "5 stale pending row(s) across 5 fixture(s) (3-48h elapsed)"
+  ],
+  "errors": [
+    "epl: 4 stale fixture(s) across 4 pending row(s)"
+  ],
+  "exit_code_recommendation": 1
 }

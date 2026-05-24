@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-05-24T17:59:36Z",
+  "run_at": "2026-05-24T18:11:39Z",
   "model": "corners-v0-research",
   "total_bets": 48,
   "settled_this_run": 0,
@@ -7,8 +7,8 @@
   "total_pending": 5,
   "pending_breakdown": {
     "future": 0,
-    "live": 4,
-    "stale": 1,
+    "live": 1,
+    "stale": 4,
     "old_stale": 0,
     "unknown": 0
   },
@@ -96,15 +96,41 @@
       "line": "9.5",
       "side": "over",
       "kickoff": "2026-05-24T13:00:00Z",
-      "hours_elapsed": 4.99
+      "hours_elapsed": 5.19
+    },
+    {
+      "match": "Brighton vs Manchester United",
+      "league": "epl",
+      "line": "10.5",
+      "side": "over",
+      "kickoff": "2026-05-24T15:00:00Z",
+      "hours_elapsed": 3.19
+    },
+    {
+      "match": "Crystal Palace vs Arsenal",
+      "league": "epl",
+      "line": "9.5",
+      "side": "over",
+      "kickoff": "2026-05-24T15:00:00Z",
+      "hours_elapsed": 3.19
+    },
+    {
+      "match": "Sunderland vs Chelsea",
+      "league": "epl",
+      "line": "9.5",
+      "side": "over",
+      "kickoff": "2026-05-24T15:00:00Z",
+      "hours_elapsed": 3.19
     }
   ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
   "warnings": [
-    "1 stale pending row(s) across 1 fixture(s) (3-48h elapsed)"
+    "4 stale pending row(s) across 4 fixture(s) (3-48h elapsed)"
   ],
-  "errors": [],
-  "exit_code_recommendation": 0
+  "errors": [
+    "epl: 3 stale fixture(s) across 3 pending row(s)"
+  ],
+  "exit_code_recommendation": 1
 }
