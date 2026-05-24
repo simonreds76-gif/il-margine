@@ -264,9 +264,9 @@
       "kickoff_utc": "2026-05-24T18:45:00Z",
       "home_team": "Hellas Verona",
       "away_team": "Roma",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "5-3-2",
       "away_formation": "3-4-2-1",
       "home_players": [
@@ -278,7 +278,7 @@
         "Martin Frese",
         "Jean-Daniel Akpa Akpro",
         "Sandi Lovric",
-        "Antoine Bernede",
+        "Abdou Harroui",
         "Tomás Suslov",
         "Kieron Bowie"
       ],
@@ -289,7 +289,7 @@
         "Mario Hermoso",
         "Zeki Çelik",
         "Bryan Cristante",
-        "Kouadio Koné",
+        "Niccolò Pisilli",
         "Devyne Rensch",
         "Paulo Dybala",
         "Matias Soulé",
@@ -369,7 +369,7 @@
           "position_id": 75
         },
         {
-          "name": "Antoine Bernede",
+          "name": "Abdou Harroui",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -452,7 +452,7 @@
           "position_id": 64
         },
         {
-          "name": "Kouadio Koné",
+          "name": "Niccolò Pisilli",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -498,7 +498,19 @@
         }
       ],
       "home_subs": [],
-      "away_subs": [],
+      "away_subs": [
+        "Giorgio De Marzi",
+        "Pierluigi Gollini",
+        "Radoslaw Zelezny",
+        "Jan Ziólkowski",
+        "Mohamed Seck",
+        "Angeliño",
+        "Kouadio Koné",
+        "Stephan El Shaarawy",
+        "Artem Dovbyk",
+        "Lorenzo Venturino",
+        "Robinio Vaz"
+      ],
       "home_unavailable": [
         "Daniel Oyegoke",
         "Roberto Gagliardini",
@@ -523,9 +535,9 @@
       "kickoff_utc": "2026-05-24T18:45:00Z",
       "home_team": "Lecce",
       "away_team": "Genoa",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "3-5-2",
       "home_players": [
@@ -546,12 +558,12 @@
         "Alessandro Marcandalli",
         "Sebastian Otoa",
         "Nils Zätterström",
-        "Mikael Egill Ellertsson",
-        "Ruslan Malinovsky",
-        "Morten Frendrup",
-        "Tommaso Baldanzi",
         "Stefano Sabelli",
-        "Jeff Ekhator",
+        "Amorim",
+        "Morten Frendrup",
+        "Patrizio Masini",
+        "Aarón Martín",
+        "Mikael Egill Ellertsson",
         "Lorenzo Colombo"
       ],
       "home_starters": [
@@ -693,7 +705,7 @@
           "position_id": 37
         },
         {
-          "name": "Mikael Egill Ellertsson",
+          "name": "Stefano Sabelli",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -702,7 +714,7 @@
           "position_id": 71
         },
         {
-          "name": "Ruslan Malinovsky",
+          "name": "Amorim",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -720,7 +732,7 @@
           "position_id": 75
         },
         {
-          "name": "Tommaso Baldanzi",
+          "name": "Patrizio Masini",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -729,7 +741,7 @@
           "position_id": 77
         },
         {
-          "name": "Stefano Sabelli",
+          "name": "Aarón Martín",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -738,7 +750,7 @@
           "position_id": 79
         },
         {
-          "name": "Jeff Ekhator",
+          "name": "Mikael Egill Ellertsson",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -756,15 +768,38 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Christian Früchtl",
+        "Jasper Samooja",
+        "Corrie Ndaba",
+        "Gaby Jean",
+        "Kialonda Gaspar",
+        "Matías Pérez",
+        "Álex Sala",
+        "Filip Marchwinski",
+        "Olaf Gorter",
+        "Omri Gandelman",
+        "Sadik Fofana",
+        "Thórir Helgason",
+        "Francesco Camarda",
+        "Konan N’Dri",
+        "Nikola Stulic"
+      ],
+      "away_subs": [
+        "Daniele Sommariva",
+        "Justin Bijlow",
+        "Johan Vásquez",
+        "Latif Ouedraogo",
+        "Brooke Norton-Cuffy",
+        "Filippo Carbone",
+        "Gaël Lafont"
+      ],
       "home_unavailable": [
         "Medon Berisha",
         "Riccardo Sottil"
       ],
       "away_unavailable": [
         "Caleb Ekuban",
-        "Brooke Norton-Cuffy",
         "Junior Messias",
         "Vítinha"
       ]
@@ -778,9 +813,9 @@
       "kickoff_utc": "2026-05-24T18:45:00Z",
       "home_team": "Milan",
       "away_team": "Cagliari",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-5-2",
       "away_formation": "3-5-2",
       "home_players": [
@@ -788,7 +823,7 @@
         "Fikayo Tomori",
         "Matteo Gabbia",
         "Strahinja Pavlovic",
-        "Zachary Athekame",
+        "Alexis Saelemaekers",
         "Youssouf Fofana",
         "Ardon Jashari",
         "Adrien Rabiot",
@@ -800,14 +835,14 @@
         "Elia Caprile",
         "Zé Pedro",
         "Yerry Mina",
-        "Alberto Dossena",
-        "Marco Palestra",
+        "Juan Rodríguez",
+        "Gabriele Zappa",
         "Alessandro Deiola",
         "Gianluca Gaetano",
         "Michel Ndary Adopo",
         "Adam Obert",
         "Sebastiano Esposito",
-        "Andrea Belotti"
+        "Gennaro Borrelli"
       ],
       "home_starters": [
         {
@@ -847,7 +882,7 @@
           "position_id": 37
         },
         {
-          "name": "Zachary Athekame",
+          "name": "Alexis Saelemaekers",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -939,7 +974,7 @@
           "position_id": 35
         },
         {
-          "name": "Alberto Dossena",
+          "name": "Juan Rodríguez",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -948,7 +983,7 @@
           "position_id": 37
         },
         {
-          "name": "Marco Palestra",
+          "name": "Gabriele Zappa",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -1002,7 +1037,7 @@
           "position_id": 104
         },
         {
-          "name": "Andrea Belotti",
+          "name": "Gennaro Borrelli",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -1012,11 +1047,26 @@
         }
       ],
       "home_subs": [],
-      "away_subs": [],
+      "away_subs": [
+        "Alen Sherri",
+        "Giuseppe Ciocci",
+        "Alberto Dossena",
+        "Othniël Raterink",
+        "Agustín Albarracín",
+        "Alessandro Russo",
+        "Ibrahim Sulemana",
+        "Ivan Sulev",
+        "Luca Mazzitelli",
+        "Marco Palestra",
+        "Mattia Felici",
+        "Nicola Grandu",
+        "Andrea Belotti",
+        "Paul Mendy",
+        "Yael Trepy"
+      ],
       "home_unavailable": [],
       "away_unavailable": [
         "Joseph Liteta",
-        "Mattia Felici",
         "Michael Folorunsho",
         "Riyad Idrissi",
         "Leonardo Pavoletti"
@@ -1035,7 +1085,7 @@
       "away_status": "Confirmed Lineup",
       "lineup_type": "standard",
       "home_formation": "3-4-2-1",
-      "away_formation": "3-4-2-1",
+      "away_formation": "3-5-1-1",
       "home_players": [
         "Alex Meret",
         "Giovanni Di Lorenzo",
@@ -1055,10 +1105,10 @@
         "Christian Kabasele",
         "Oumar Solet",
         "Kingsley Ehizibue",
-        "Jesper Karlström",
         "Jakub Piotrowski",
-        "Jordan Zemura",
+        "Jesper Karlström",
         "Lennon Miller",
+        "Jordan Zemura",
         "Arthur Atta",
         "Keinan Davis"
       ],
@@ -1170,7 +1220,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-2-1",
+          "formation": "3-5-1-1",
           "position_id": 11
         },
         {
@@ -1179,7 +1229,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-5-1-1",
           "position_id": 33
         },
         {
@@ -1188,7 +1238,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-5-1-1",
           "position_id": 35
         },
         {
@@ -1197,62 +1247,62 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-5-1-1",
           "position_id": 37
         },
         {
           "name": "Kingsley Ehizibue",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 62
-        },
-        {
-          "name": "Jesper Karlström",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 64
+          "formation": "3-5-1-1",
+          "position_id": 71
         },
         {
           "name": "Jakub Piotrowski",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 66
+          "formation": "3-5-1-1",
+          "position_id": 73
+        },
+        {
+          "name": "Jesper Karlström",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-1-1",
+          "position_id": 75
+        },
+        {
+          "name": "Lennon Miller",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-1-1",
+          "position_id": 77
         },
         {
           "name": "Jordan Zemura",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 68
-        },
-        {
-          "name": "Lennon Miller",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 84
+          "formation": "3-5-1-1",
+          "position_id": 79
         },
         {
           "name": "Arthur Atta",
           "line_index": 2,
-          "line_size": 2,
+          "line_size": 1,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 86
+          "formation": "3-5-1-1",
+          "position_id": 95
         },
         {
           "name": "Keinan Davis",
@@ -1260,32 +1310,32 @@
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-2-1",
-          "position_id": 105
+          "formation": "3-5-1-1",
+          "position_id": 115
         }
       ],
       "home_subs": [
-        "Nikita Contini",
-        "Vanja Milinkovic-Savic",
+        "Kevin De Bruyne",
+        "Billy Gilmour",
         "Juan Jesus",
+        "Nikita Contini",
+        "Pasquale Mazzocchi",
+        "Vanja Milinkovic-Savic",
         "Sam Beukema",
         "Frank Anguissa",
         "Antonio Vergara",
-        "Billy Gilmour",
-        "Kevin De Bruyne",
-        "Pasquale Mazzocchi",
         "Giovane Nascimento"
       ],
       "away_subs": [
+        "Idrissa Gueye",
+        "Nicolò Bertola",
+        "Adam Buksa",
+        "Branimir Mlacic",
+        "Oier Zarraga",
         "Alessandro Nunziante",
         "Daniele Padelli",
         "Razvan Sava",
-        "Branimir Mlacic",
-        "Nicolò Bertola",
         "Abdoulaye Camara",
-        "Oier Zarraga",
-        "Adam Buksa",
-        "Idrissa Gueye",
         "Vakoun Issouf Bayo"
       ],
       "home_unavailable": [
@@ -1599,9 +1649,9 @@
       "kickoff_utc": "2026-05-24T18:45:00Z",
       "home_team": "Torino",
       "away_team": "Juventus",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-1-2",
       "away_formation": "3-4-2-1",
       "home_players": [
@@ -1618,13 +1668,13 @@
         "Duván Zapata"
       ],
       "away_players": [
-        "Michele Di Gregorio",
+        "Mattia Perin",
         "Pierre Kalulu",
         "Federico Gatti",
         "Lloyd Kelly",
-        "Emil Holm",
-        "Manuel Locatelli",
         "Weston McKennie",
+        "Manuel Locatelli",
+        "Khéphren Thuram-Ulien",
         "Andrea Cambiaso",
         "Francisco Conceição",
         "Jérémie Boga",
@@ -1733,7 +1783,7 @@
       ],
       "away_starters": [
         {
-          "name": "Michele Di Gregorio",
+          "name": "Mattia Perin",
           "line_index": -1,
           "line_size": 1,
           "role_score": 0,
@@ -1769,7 +1819,7 @@
           "position_id": 37
         },
         {
-          "name": "Emil Holm",
+          "name": "Weston McKennie",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -1787,7 +1837,7 @@
           "position_id": 64
         },
         {
-          "name": "Weston McKennie",
+          "name": "Khéphren Thuram-Ulien",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -1840,7 +1890,6 @@
         "Zakaria Aboukhlal"
       ],
       "away_unavailable": [
-        "Khéphren Thuram-Ulien",
         "Gleison Bremer",
         "Kenan Yildiz"
       ]
