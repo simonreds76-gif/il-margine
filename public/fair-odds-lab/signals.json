@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-05-24T14:44:40.127007Z",
+  "generated_at": "2026-05-24T15:19:19.184940Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
@@ -31,10 +32,11 @@
     ],
     "post_kickoff_visibility_minutes": 150
   },
-  "fixtures_evaluated": 20,
-  "signals_qualifying": 4,
+  "fixtures_evaluated": 19,
+  "signals_qualifying": 5,
   "leagues_covered": [
-    "epl"
+    "epl",
+    "serie-a"
   ],
   "featured_signal_id": "20260524-dominic-calvert-lewin-93e5afe1f6",
   "signals": [
@@ -80,13 +82,13 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 92
+          "percentile": 91
         },
         "share_of_team_chances_pct": 34,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 43
+          "percentile": 45
         },
         "recent_team_form": {
           "tier": "Positive",
@@ -105,7 +107,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 64
+          "percentile": 68
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -187,7 +189,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 32
+          "percentile": 33
         },
         "recent_team_form": {
           "tier": "Positive",
@@ -206,7 +208,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 18
+          "percentile": 19
         },
         "opponent_recent_defence": {
           "tier": "Unknown"
@@ -276,7 +278,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 85
+          "percentile": 84
         },
         "recent_team_form": {
           "tier": "Quiet",
@@ -295,7 +297,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 82
+          "percentile": 84
         },
         "opponent_recent_defence": {
           "tier": "High",
@@ -371,20 +373,20 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 94
+          "percentile": 93
         },
         "share_of_team_chances_pct": 34,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 34
+          "tier": "Average",
+          "percentile": 36
         },
         "recent_team_form": {
           "tier": "Unknown"
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 15
+          "percentile": 16
         },
         "opponent_recent_defence": {
           "tier": "Average",
@@ -414,6 +416,106 @@
         "A large share of the team's chances runs through him",
         "Recent chance quality grades as strong",
         "Confirmed XI shows a more advanced scoring role"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260524-lorenzo-colombo-2ea47de538",
+      "match": {
+        "home_team": "US Lecce",
+        "away_team": "Genoa CFC",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "2026-05-24T18:45:00Z",
+        "kickoff_display": "Sun 24 May 19:45 UK",
+        "fotmob_match_id": "4803412",
+        "fotmob_page_url": "/matches/lecce-vs-genoa/3cj5b9#4803412",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Lorenzo Colombo",
+        "team": "Genoa",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/serie-a/genoa.png",
+        "team_primary_color": "#b91c1c",
+        "team_secondary_color": "#1e3a8a",
+        "team_shirt_pattern": "halves"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 26.8,
+        "fair_odds": 3.73
+      },
+      "market_data": {
+        "best_odds": 5.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 20.0
+      },
+      "edge": {
+        "price_gap_pp": 6.8,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 85
+        },
+        "share_of_team_chances_pct": 22,
+        "share_of_team_chances_percentile": 97,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 30
+        },
+        "recent_team_form": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-17",
+          "xg_for_avg": 1.1,
+          "xg_against_avg": 1.22,
+          "xgd_per90": -0.12,
+          "shots_for_avg": 9.8,
+          "shots_against_avg": 12.4,
+          "sot_for_avg": 2.6,
+          "sot_against_avg": 4.0,
+          "corners_for_avg": 3.2,
+          "corners_against_avg": 4.4
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 95
+        },
+        "opponent_recent_defence": {
+          "tier": "High",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-17",
+          "xg_for_avg": 1.26,
+          "xg_against_avg": 1.72,
+          "xgd_per90": -0.46,
+          "shots_for_avg": 10.4,
+          "shots_against_avg": 11.6,
+          "sot_for_avg": 3.8,
+          "sot_against_avg": 5.0,
+          "corners_for_avg": 3.8,
+          "corners_against_avg": 3.8
+        },
+        "fixture_boost_pct": 33,
+        "projected_minutes": 78,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "The fixture profile adds to his scoring case"
       ],
       "risk_flags": []
     }
