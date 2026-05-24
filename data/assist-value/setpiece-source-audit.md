@@ -1,6 +1,6 @@
 # Assist Value Set-Piece Source Audit
 
-Fetched at UTC: `2026-05-23T09:09:55+00:00`
+Fetched at UTC: `2026-05-24T09:24:58+00:00`
 
 ## Decision
 
@@ -22,7 +22,7 @@ Overall: **PASS_SOURCE_LAYER**
 | epl | 20 | 20 | 210 | 55 |
 | la-liga | 20 | 20 | 224 | 53 |
 | ligue-1 | 18 | 18 | 203 | 50 |
-| serie-a | 20 | 20 | 220 | 51 |
+| serie-a | 20 | 20 | 220 | 52 |
 
 ## FPL API
 
@@ -42,13 +42,14 @@ Overall: **PASS_SOURCE_LAYER**
 
 | League | Team | Player | Last-5 corner share | Season corner share | Corner total |
 |---|---|---|---:|---:|---:|
-| la-liga | Getafe | Luis Milla | 100.0% | 83.45% | 116 |
-| la-liga | Real Madrid | Trent Alexander-Arnold | 91.3% | 28.63% | 65 |
+| la-liga | Getafe | Luis Milla | 100.0% | 83.69% | 118 |
 | bundesliga | FSV Mainz 05 | Nadiem Amiri | 90.91% | 57.25% | 79 |
 | ligue-1 | Metz | Gauthier Hein | 90.91% | 64.17% | 77 |
 | ligue-1 | Lorient | Pablo Pagis | 83.33% | 58.54% | 48 |
+| la-liga | Espanyol | Edu Exposito | 81.82% | 72.22% | 117 |
 | bundesliga | VfL Wolfsburg | Christian Eriksen | 81.25% | 55.0% | 77 |
 | ligue-1 | AJ Auxerre | Kevin Danois | 78.95% | 62.04% | 85 |
+| la-liga | Real Madrid | Trent Alexander-Arnold | 78.95% | 28.38% | 65 |
 | ligue-1 | Angers | Branco van den Boomen | 78.57% | 38.71% | 36 |
 | epl | West Ham United | Jarrod Bowen | 75.0% | 37.14% | 65 |
 | bundesliga | RB Leipzig | Max Finkgrafe | 75.0% | 12.24% | 18 |
@@ -56,7 +57,6 @@ Overall: **PASS_SOURCE_LAYER**
 | epl | Leeds United | Anton Stach | 72.22% | 58.01% | 105 |
 | bundesliga | Bayer Leverkusen | Alejandro Grimaldo | 72.0% | 55.62% | 94 |
 | bundesliga | Union Berlin | Christopher Trimmel | 72.0% | 51.95% | 80 |
-| epl | Everton | James Garner | 71.43% | 66.2% | 94 |
 
 ## Outputs
 
