@@ -537,11 +537,11 @@
         "Jørgen Strand Larsen"
       ],
       "away_players": [
-        "David Raya",
+        "Kepa Arrizabalaga",
         "Cristhian Mosquera",
         "Christian Nørgaard",
-        "Gabriel",
         "Piero Hincapié",
+        "Myles Lewis-Skelly",
         "Max Dowman",
         "Martín Zubimendi",
         "Eberechi Eze",
@@ -652,7 +652,7 @@
       ],
       "away_starters": [
         {
-          "name": "David Raya",
+          "name": "Kepa Arrizabalaga",
           "line_index": -1,
           "line_size": 1,
           "role_score": 0,
@@ -679,7 +679,7 @@
           "position_id": 34
         },
         {
-          "name": "Gabriel",
+          "name": "Piero Hincapié",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -688,7 +688,7 @@
           "position_id": 36
         },
         {
-          "name": "Piero Hincapié",
+          "name": "Myles Lewis-Skelly",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -799,10 +799,10 @@
         "Sven Botman",
         "Daniel Burn",
         "Bruno Guimarães",
-        "Sandro Tonali",
-        "Harvey Barnes",
-        "Nick Woltemade",
         "Jacob Ramsey",
+        "Jacob Murphy",
+        "Nick Woltemade",
+        "Harvey Barnes",
         "William Osula"
       ],
       "home_starters": [
@@ -962,7 +962,7 @@
           "position_id": 64
         },
         {
-          "name": "Sandro Tonali",
+          "name": "Jacob Ramsey",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -971,7 +971,7 @@
           "position_id": 66
         },
         {
-          "name": "Harvey Barnes",
+          "name": "Jacob Murphy",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -989,7 +989,7 @@
           "position_id": 85
         },
         {
-          "name": "Jacob Ramsey",
+          "name": "Harvey Barnes",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1014,6 +1014,7 @@
         "Joachim Andersen"
       ],
       "away_unavailable": [
+        "Sandro Tonali",
         "Emil Krafth",
         "Fabian Schär",
         "Valentino Livramento",
@@ -1291,16 +1292,16 @@
       "home_status": "FotMob Expected XI",
       "away_status": "FotMob Expected XI",
       "lineup_type": "predicted",
-      "home_formation": "4-1-4-1",
+      "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Gianluigi Donnarumma",
         "Matheus Nunes",
         "John Stones",
-        "Marc Guéhi",
-        "Nico O'Reilly",
+        "Rúben Dias",
+        "Josko Gvardiol",
         "Bernardo Silva",
-        "Antoine Semenyo",
+        "Rodri",
         "Rayan Cherki",
         "Phil Foden",
         "Jérémy Doku",
@@ -1308,15 +1309,15 @@
       ],
       "away_players": [
         "Marco Bizot",
-        "Matty Cash",
-        "Ezri Konsa",
+        "Andrés García",
+        "Lamare Bogarde",
         "Tyrone Mings",
         "Ian Maatsen",
-        "Lamare Bogarde",
-        "Amadou Onana",
-        "Jadon Sancho",
         "Ross Barkley",
-        "Morgan Rogers",
+        "Douglas Luiz",
+        "Leon Bailey",
+        "Harvey Elliott",
+        "Jadon Sancho",
         "Tammy Abraham"
       ],
       "home_starters": [
@@ -1326,7 +1327,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 11
         },
         {
@@ -1335,7 +1336,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 32
         },
         {
@@ -1344,71 +1345,71 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 34
         },
         {
-          "name": "Marc Guéhi",
+          "name": "Rúben Dias",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 36
         },
         {
-          "name": "Nico O'Reilly",
+          "name": "Josko Gvardiol",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 38
         },
         {
           "name": "Bernardo Silva",
           "line_index": 1,
-          "line_size": 1,
+          "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
-          "formation": "4-1-4-1",
-          "position_id": 65
+          "formation": "4-2-3-1",
+          "position_id": 64
         },
         {
-          "name": "Antoine Semenyo",
-          "line_index": 2,
-          "line_size": 4,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-1-4-1",
-          "position_id": 82
+          "name": "Rodri",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66
         },
         {
           "name": "Rayan Cherki",
           "line_index": 2,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-1-4-1",
-          "position_id": 84
+          "formation": "4-2-3-1",
+          "position_id": 83
         },
         {
           "name": "Phil Foden",
           "line_index": 2,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-1-4-1",
-          "position_id": 86
+          "formation": "4-2-3-1",
+          "position_id": 85
         },
         {
           "name": "Jérémy Doku",
           "line_index": 2,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-1-4-1",
-          "position_id": 88
+          "formation": "4-2-3-1",
+          "position_id": 87
         },
         {
           "name": "Erling Haaland",
@@ -1416,7 +1417,7 @@
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 115
         }
       ],
@@ -1431,7 +1432,7 @@
           "position_id": 11
         },
         {
-          "name": "Matty Cash",
+          "name": "Andrés García",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1440,7 +1441,7 @@
           "position_id": 32
         },
         {
-          "name": "Ezri Konsa",
+          "name": "Lamare Bogarde",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1467,7 +1468,7 @@
           "position_id": 38
         },
         {
-          "name": "Lamare Bogarde",
+          "name": "Ross Barkley",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -1476,7 +1477,7 @@
           "position_id": 64
         },
         {
-          "name": "Amadou Onana",
+          "name": "Douglas Luiz",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -1485,7 +1486,7 @@
           "position_id": 66
         },
         {
-          "name": "Jadon Sancho",
+          "name": "Leon Bailey",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1494,7 +1495,7 @@
           "position_id": 83
         },
         {
-          "name": "Ross Barkley",
+          "name": "Harvey Elliott",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1503,7 +1504,7 @@
           "position_id": 85
         },
         {
-          "name": "Morgan Rogers",
+          "name": "Jadon Sancho",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -2064,7 +2065,7 @@
         "Pedro Porro",
         "Kevin Danso",
         "Micky van de Ven",
-        "Destiny Udogie",
+        "Djed Spence",
         "Rodrigo Bentancur",
         "João Palhinha",
         "Mathys Tel",
@@ -2123,7 +2124,7 @@
           "position_id": 36
         },
         {
-          "name": "Destiny Udogie",
+          "name": "Djed Spence",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
