@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-05-24T13:03:01.944415Z",
+  "generated_at": "2026-05-24T14:04:50.808479Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
@@ -32,7 +33,7 @@
     "post_kickoff_visibility_minutes": 150
   },
   "fixtures_evaluated": 20,
-  "signals_qualifying": 1,
+  "signals_qualifying": 4,
   "leagues_covered": [
     "epl"
   ],
@@ -50,7 +51,7 @@
         "kickoff_display": "Sun 24 May 16:00 UK",
         "fotmob_match_id": "4813754",
         "fotmob_page_url": "/matches/leeds-united-vs-west-ham-united/2f8a75#4813754",
-        "lineup_type": "predicted",
+        "lineup_type": "confirmed",
         "venue": ""
       },
       "player": {
@@ -65,8 +66,8 @@
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 48.7,
-        "fair_odds": 2.05
+        "scoring_chance_pct": 46.8,
+        "fair_odds": 2.14
       },
       "market_data": {
         "best_odds": 2.88,
@@ -74,15 +75,15 @@
         "implied_chance_pct": 34.8
       },
       "edge": {
-        "price_gap_pp": 13.9,
+        "price_gap_pp": 12.0,
         "model_advantage": true
       },
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 91
+          "percentile": 92
         },
-        "share_of_team_chances_pct": 36,
+        "share_of_team_chances_pct": 34,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Average",
@@ -123,19 +124,297 @@
           "corners_against_avg": 4.4
         },
         "fixture_boost_pct": -7,
-        "projected_minutes": 90,
+        "projected_minutes": 85,
         "penalty_role": "Primary",
         "role_adjustment_factor": 1.0,
         "role_adjustment_reason": "",
-        "lineup_confidence": "Projected starter"
+        "lineup_confidence": "Confirmed starter"
       },
-      "confidence_tier": "Medium",
+      "confidence_tier": "High",
       "reasons": [
         "The model price is shorter than the bookmaker's best available price",
         "A large share of the team's chances runs through him",
         "Recent chance quality grades as strong",
         "Recent team form supports the attacking case",
         "Opponent has been allowing chances recently"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260524-ollie-watkins-3f94b0c704",
+      "match": {
+        "home_team": "Manchester City",
+        "away_team": "Aston Villa",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-05-24T15:00:00Z",
+        "kickoff_display": "Sun 24 May 16:00 UK",
+        "fotmob_match_id": "4813750",
+        "fotmob_page_url": "/matches/manchester-city-vs-aston-villa/2w74gq#4813750",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Ollie Watkins",
+        "team": "Aston Villa",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/aston-villa.png",
+        "team_primary_color": "#7f1d1d",
+        "team_secondary_color": "#38bdf8",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 40.4,
+        "fair_odds": 2.47
+      },
+      "market_data": {
+        "best_odds": 3.5,
+        "best_book": "Bet365",
+        "implied_chance_pct": 28.6
+      },
+      "edge": {
+        "price_gap_pp": 11.9,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 98
+        },
+        "share_of_team_chances_pct": 37,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 32
+        },
+        "recent_team_form": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-15",
+          "xg_for_avg": 1.94,
+          "xg_against_avg": 1.44,
+          "xgd_per90": 0.5,
+          "shots_for_avg": 12.4,
+          "shots_against_avg": 12.8,
+          "sot_for_avg": 5.0,
+          "sot_against_avg": 5.8,
+          "corners_for_avg": 5.2,
+          "corners_against_avg": 4.6
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 18
+        },
+        "opponent_recent_defence": {
+          "tier": "Unknown"
+        },
+        "fixture_boost_pct": -30,
+        "projected_minutes": 85,
+        "penalty_role": "Primary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Recent team form supports the attacking case",
+        "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260524-joao-pedro-5bd8ca7b21",
+      "match": {
+        "home_team": "Sunderland AFC",
+        "away_team": "Chelsea FC",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-05-24T15:00:00Z",
+        "kickoff_display": "Sun 24 May 16:00 UK",
+        "fotmob_match_id": "4813752",
+        "fotmob_page_url": "/matches/chelsea-vs-sunderland/2dayh4#4813752",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Joao Pedro",
+        "team": "Chelsea",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/chelsea.png",
+        "team_primary_color": "#1d4ed8",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 44.6,
+        "fair_odds": 2.24
+      },
+      "market_data": {
+        "best_odds": 2.62,
+        "best_book": "Bet365",
+        "implied_chance_pct": 38.1
+      },
+      "edge": {
+        "price_gap_pp": 6.5,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 98
+        },
+        "share_of_team_chances_pct": 35,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 85
+        },
+        "recent_team_form": {
+          "tier": "Quiet",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-19",
+          "xg_for_avg": 1.09,
+          "xg_against_avg": 1.61,
+          "xgd_per90": -0.52,
+          "shots_for_avg": 12.6,
+          "shots_against_avg": 8.4,
+          "sot_for_avg": 3.0,
+          "sot_against_avg": 4.0,
+          "corners_for_avg": 5.4,
+          "corners_against_avg": 3.4
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 82
+        },
+        "opponent_recent_defence": {
+          "tier": "High",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-17",
+          "xg_for_avg": 1.12,
+          "xg_against_avg": 1.85,
+          "xgd_per90": -0.73,
+          "shots_for_avg": 11.2,
+          "shots_against_avg": 13.2,
+          "sot_for_avg": 4.0,
+          "sot_against_avg": 5.0,
+          "corners_for_avg": 4.0,
+          "corners_against_avg": 5.4
+        },
+        "fixture_boost_pct": 20,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "The fixture profile adds to his scoring case"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260524-bryan-mbeumo-7abca2c104",
+      "match": {
+        "home_team": "Brighton & Hove Albion",
+        "away_team": "Manchester United",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-05-24T15:00:00Z",
+        "kickoff_display": "Sun 24 May 16:00 UK",
+        "fotmob_match_id": "4813745",
+        "fotmob_page_url": "/matches/brighton-hove-albion-vs-manchester-united/3goccs#4813745",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Bryan Mbeumo",
+        "team": "Manchester United",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/manchester-united.png",
+        "team_primary_color": "#dc2626",
+        "team_secondary_color": "#111827",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 37.5,
+        "fair_odds": 2.67
+      },
+      "market_data": {
+        "best_odds": 3.4,
+        "best_book": "Bet365",
+        "implied_chance_pct": 29.4
+      },
+      "edge": {
+        "price_gap_pp": 8.1,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 94
+        },
+        "share_of_team_chances_pct": 34,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 34
+        },
+        "recent_team_form": {
+          "tier": "Unknown"
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 15
+        },
+        "opponent_recent_defence": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-17",
+          "xg_for_avg": 2.0,
+          "xg_against_avg": 1.25,
+          "xgd_per90": 0.75,
+          "shots_for_avg": 14.2,
+          "shots_against_avg": 8.8,
+          "sot_for_avg": 6.0,
+          "sot_against_avg": 2.8,
+          "corners_for_avg": 7.2,
+          "corners_against_avg": 4.4
+        },
+        "fixture_boost_pct": -26,
+        "projected_minutes": 85,
+        "penalty_role": "Secondary",
+        "role_adjustment_factor": 1.0391,
+        "role_adjustment_reason": "confirmed_role_delta=+1;usual=AMR;today=FW;weight=0.78",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Confirmed XI shows a more advanced scoring role"
       ],
       "risk_flags": []
     }
