@@ -1031,11 +1031,11 @@
       "kickoff_utc": "2026-05-24T16:00:00Z",
       "home_team": "Napoli",
       "away_team": "Udinese",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
-      "away_formation": "3-5-1-1",
+      "away_formation": "3-4-2-1",
       "home_players": [
         "Alex Meret",
         "Giovanni Di Lorenzo",
@@ -1170,7 +1170,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-5-1-1",
+          "formation": "3-4-2-1",
           "position_id": 11
         },
         {
@@ -1179,7 +1179,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-1-1",
+          "formation": "3-4-2-1",
           "position_id": 33
         },
         {
@@ -1188,7 +1188,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-1-1",
+          "formation": "3-4-2-1",
           "position_id": 35
         },
         {
@@ -1197,62 +1197,62 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-1-1",
+          "formation": "3-4-2-1",
           "position_id": 37
         },
         {
           "name": "Kingsley Ehizibue",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 71
+          "formation": "3-4-2-1",
+          "position_id": 62
         },
         {
           "name": "Jesper Karlström",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 73
+          "formation": "3-4-2-1",
+          "position_id": 64
         },
         {
           "name": "Jakub Piotrowski",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 75
+          "formation": "3-4-2-1",
+          "position_id": 66
         },
         {
           "name": "Jordan Zemura",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 77
+          "formation": "3-4-2-1",
+          "position_id": 68
         },
         {
           "name": "Lennon Miller",
-          "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 79
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 84
         },
         {
           "name": "Arthur Atta",
           "line_index": 2,
-          "line_size": 1,
+          "line_size": 2,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "3-5-1-1",
-          "position_id": 95
+          "formation": "3-4-2-1",
+          "position_id": 86
         },
         {
           "name": "Keinan Davis",
@@ -1260,12 +1260,34 @@
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-5-1-1",
-          "position_id": 115
+          "formation": "3-4-2-1",
+          "position_id": 105
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Nikita Contini",
+        "Vanja Milinkovic-Savic",
+        "Juan Jesus",
+        "Sam Beukema",
+        "Frank Anguissa",
+        "Antonio Vergara",
+        "Billy Gilmour",
+        "Kevin De Bruyne",
+        "Pasquale Mazzocchi",
+        "Giovane Nascimento"
+      ],
+      "away_subs": [
+        "Alessandro Nunziante",
+        "Daniele Padelli",
+        "Razvan Sava",
+        "Branimir Mlacic",
+        "Nicolò Bertola",
+        "Abdoulaye Camara",
+        "Oier Zarraga",
+        "Adam Buksa",
+        "Idrissa Gueye",
+        "Vakoun Issouf Bayo"
+      ],
       "home_unavailable": [
         "Romelu Lukaku",
         "David Neres Campos"
