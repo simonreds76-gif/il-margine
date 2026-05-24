@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-24T14:04:21Z",
+  "updated_at": "2026-05-24T14:44:11Z",
   "reason": "cycle",
   "leagues": {
     "serie-a": {
@@ -17,10 +17,10 @@
       "last_detail_run_at": "2026-05-01T17:17:24Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "lineup",
-      "last_decision": "ran",
-      "last_message": "Ran epl in lineup tier (cadence 10m, fixtures 10).",
-      "next_kickoff_utc": "2026-05-24T15:00:00Z"
+      "last_tier": "off",
+      "last_decision": "off",
+      "last_message": "Skip epl: no upcoming fixtures inside schedule window.",
+      "next_kickoff_utc": ""
     },
     "la-liga": {
       "last_successful_run_at": "2026-05-23T18:35:28Z",
