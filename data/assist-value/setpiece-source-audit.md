@@ -1,6 +1,6 @@
 # Assist Value Set-Piece Source Audit
 
-Fetched at UTC: `2026-05-24T09:24:58+00:00`
+Fetched at UTC: `2026-05-25T11:16:02+00:00`
 
 ## Decision
 
@@ -14,21 +14,21 @@ Overall: **PASS_SOURCE_LAYER**
 ## RotoWire
 
 - Teams with set-piece blocks: `96/96`
-- Player role rows extracted: `1038`
+- Player role rows extracted: `1043`
 
 | League | Teams OK | Teams | Role rows | Max latest week |
 |---|---:|---:|---:|---:|
 | bundesliga | 18 | 18 | 181 | 49 |
-| epl | 20 | 20 | 210 | 55 |
-| la-liga | 20 | 20 | 224 | 53 |
+| epl | 20 | 20 | 213 | 56 |
+| la-liga | 20 | 20 | 224 | 54 |
 | ligue-1 | 18 | 18 | 203 | 50 |
-| serie-a | 20 | 20 | 220 | 52 |
+| serie-a | 20 | 20 | 222 | 52 |
 
 ## FPL API
 
 - Status: `PASS`
 - Teams: `20`
-- Players: `840`
+- Players: `841`
 - Players with set-piece role fields: `132`
 
 ## SetPieceTakers
@@ -51,10 +51,10 @@ Overall: **PASS_SOURCE_LAYER**
 | ligue-1 | AJ Auxerre | Kevin Danois | 78.95% | 62.04% | 85 |
 | la-liga | Real Madrid | Trent Alexander-Arnold | 78.95% | 28.38% | 65 |
 | ligue-1 | Angers | Branco van den Boomen | 78.57% | 38.71% | 36 |
-| epl | West Ham United | Jarrod Bowen | 75.0% | 37.14% | 65 |
+| epl | Wolverhampton | Mateus Mane | 75.0% | 26.79% | 30 |
 | bundesliga | RB Leipzig | Max Finkgrafe | 75.0% | 12.24% | 18 |
 | bundesliga | SC Freiburg | Jan-Niklas Beste | 75.0% | 38.5% | 72 |
-| epl | Leeds United | Anton Stach | 72.22% | 58.01% | 105 |
+| epl | Everton | James Garner | 72.0% | 66.67% | 98 |
 | bundesliga | Bayer Leverkusen | Alejandro Grimaldo | 72.0% | 55.62% | 94 |
 | bundesliga | Union Berlin | Christopher Trimmel | 72.0% | 51.95% | 80 |
 
