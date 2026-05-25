@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-05-25T11:51:56+00:00",
+  "checked_at": "2026-05-25T12:00:32+00:00",
   "files": {
     "team-match-base.csv": {
       "age_days": 1,
@@ -36,7 +36,7 @@
       },
       "market_team_win_prob_coverage": 0.9997,
       "rows": 43176,
-      "xg_coverage": 0.0727
+      "xg_coverage": 0.074
     },
     "team-rolling-form.csv": {
       "age_days": 1,
@@ -73,18 +73,18 @@
       },
       "market_team_win_prob_coverage": 0.9997,
       "rows": 43176,
-      "xg_coverage": 0.0727
+      "xg_coverage": 0.074
     }
   },
   "issues": [
     {
       "code": "team_match_base_xg_coverage_low",
-      "detail": "xG coverage 7.3%",
+      "detail": "xG coverage 7.4%",
       "level": "warning"
     },
     {
       "code": "team_rolling_form_xg_coverage_low",
-      "detail": "xG coverage 7.3%",
+      "detail": "xG coverage 7.4%",
       "level": "warning"
     }
   ],
