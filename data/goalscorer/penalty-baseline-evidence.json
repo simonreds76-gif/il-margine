@@ -1,7 +1,56 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-24T01:53:01Z",
+  "generated_at": "2026-05-25T01:44:39Z",
   "league": "serie-a",
-  "row_count": 0,
-  "rows": []
+  "row_count": 3,
+  "rows": [
+    {
+      "team": "Como",
+      "team_key": "como",
+      "player_name": "Lucas Da Cunha",
+      "player_key": "lucas da cunha",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-05-24"
+    },
+    {
+      "team": "Cremonese",
+      "team_key": "cremonese",
+      "player_name": "Federico Bonazzoli",
+      "player_key": "federico bonazzoli",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-05-24"
+    },
+    {
+      "team": "Roma",
+      "team_key": "roma",
+      "player_name": "Donyell Malen",
+      "player_key": "donyell malen",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-05-24"
+    }
+  ]
 }

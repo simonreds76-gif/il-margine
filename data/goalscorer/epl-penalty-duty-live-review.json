@@ -1,7 +1,38 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-24T01:52:49Z",
+  "generated_at": "2026-05-25T01:44:27Z",
   "league": "epl",
-  "row_count": 0,
-  "rows": []
+  "row_count": 1,
+  "rows": [
+    {
+      "date": "2026-05-24",
+      "league": "epl",
+      "review_source": "fotmob_live",
+      "match": "Burnley vs Wolverhampton Wanderers",
+      "team": "Wolverhampton Wanderers",
+      "opponent": "Burnley",
+      "actual_taker": "Adam Armstrong",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "5",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "",
+      "secondary_pre_match": "",
+      "tertiary_pre_match": "",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "needs_manual_review",
+      "review_priority": "medium",
+      "editorial_note": "Adam Armstrong took 1 penalty attempt and scored for Wolverhampton Wanderers vs Burnley. Needs manual editorial review.",
+      "context_generated_at": "",
+      "context_source_path": ""
+    }
+  ]
 }
