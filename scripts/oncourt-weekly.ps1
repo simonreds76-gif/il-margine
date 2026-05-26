@@ -60,6 +60,8 @@ function Invoke-LoggedProcess {
     $stderrPath = Join-Path $env:TEMP ("ilmargine-" + [guid]::NewGuid().ToString() + ".err.log")
     try {
         $proc = Start-Process -FilePath $FilePath -ArgumentList $ArgumentList -NoNewWindow -PassThru -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
+        # Windows PowerShell only preserves ExitCode reliably if the process handle is opened.
+        $null = $proc.Handle
         if ($TimeoutSeconds -gt 0) {
             try {
                 Wait-Process -Id $proc.Id -Timeout $TimeoutSeconds -ErrorAction Stop
@@ -77,6 +79,10 @@ function Invoke-LoggedProcess {
         }
         if (Test-Path $stderrPath) {
             Get-Content $stderrPath | ForEach-Object { Log $_ }
+        }
+        if ($null -eq $proc.ExitCode) {
+            Log "WARNING: $Label exit code was unavailable; treating as failure."
+            return 1
         }
         return $proc.ExitCode
     } finally {

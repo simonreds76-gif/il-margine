@@ -49,6 +49,7 @@ data/backtest/*.bak-*.csv
 data/backtest/*.pre-*.bak
 data/backtest/*-audit.csv
 data/backtest/backtest-results-*-claycal.csv
+data/backtest/challenger-calibration-audit-predictions.csv
 data/backtest/clay-prob-calibration.json
 data/backtest/strict-policy-performance-clay2026-weekly.csv
 data/backtest/strict-policy-performance-clay2026-weekly.txt
@@ -62,6 +63,7 @@ data/backtest/strict-signals-live.csv
 data/backtest/tennis-health-status.json
 data/backtest/tennis-health.log
 data/backtest/tournament-pace-families.json
+data/sackmann/player-context.csv
 data/football-form/*.csv
 !data/football-form/team-shots-v3-ema20-published-picks.csv
 !data/football-form/team-shots-v3-ema20-clv-monitor.csv
@@ -70,6 +72,7 @@ data/football-form/*.csv
 data/pinnacle-history/*.csv
 data/pinnacle-odds-*.csv
 data/oncourt-*.log
+data/oncourt/stat_atp.*.tmp
 data/pinnacle-close-capture.log
 data/pinnacle-close-capture-heartbeat.json
 data/oncourt-am-refresh.log

@@ -13,6 +13,7 @@ features stay current and richer than the old static CSV.
 import csv
 import os
 import sys
+import tempfile
 
 try:
     import pyodbc
@@ -139,54 +140,75 @@ def main():
 
     out_path = os.path.join(OUT_DIR, "stat_atp.csv")
     total = 0
-    with open(out_path, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=FIELDNAMES)
-        writer.writeheader()
-        for raw in crsr.fetchall():
-            row = dict(zip(cols, raw))
+    tmp_fd, tmp_path = tempfile.mkstemp(prefix="stat_atp.", suffix=".tmp", dir=OUT_DIR, text=True)
+    try:
+        f = os.fdopen(tmp_fd, "w", newline="", encoding="utf-8")
+    except Exception:
+        os.close(tmp_fd)
+        raise
 
-            w_bp_won = _int_value(row, "BP_1")
-            w_bp_of = _int_value(row, "BPOF_1")
-            l_bp_won = _int_value(row, "BP_2")
-            l_bp_of = _int_value(row, "BPOF_2")
+    try:
+        with f:
+            writer = csv.DictWriter(f, fieldnames=FIELDNAMES)
+            writer.writeheader()
+            while True:
+                batch = crsr.fetchmany(5000)
+                if not batch:
+                    break
+                for raw in batch:
+                    row = dict(zip(cols, raw))
 
-            writer.writerow({
-                "winner_id": _value(row, "ID1"),
-                "loser_id": _value(row, "ID2"),
-                "tour_id": _value(row, "ID_T"),
-                "round_id": _value(row, "ID_R"),
-                "w_fs": _value(row, "FS_1"),
-                "w_fsof": _value(row, "FSOF_1"),
-                "w_w1s": _value(row, "W1S_1"),
-                "w_w1sof": _value(row, "W1SOF_1"),
-                "w_w2s": _value(row, "W2S_1"),
-                "w_w2sof": _value(row, "W2SOF_1"),
-                "w_rpw": _value(row, "RPW_1"),
-                "w_rpwof": _value(row, "RPWOF_1"),
-                "l_fs": _value(row, "FS_2"),
-                "l_fsof": _value(row, "FSOF_2"),
-                "l_w1s": _value(row, "W1S_2"),
-                "l_w1sof": _value(row, "W1SOF_2"),
-                "l_w2s": _value(row, "W2S_2"),
-                "l_w2sof": _value(row, "W2SOF_2"),
-                "l_rpw": _value(row, "RPW_2"),
-                "l_rpwof": _value(row, "RPWOF_2"),
-                "w_ace": _value(row, "ACES_1"),
-                "w_df": _value(row, "DF_1"),
-                "w_bpw": w_bp_won,
-                "w_bpof": w_bp_of,
-                "w_bpsaved": max(0, l_bp_of - l_bp_won),
-                "w_bpfaced": l_bp_of,
-                "w_svpt": _int_value(row, "FSOF_1") + _int_value(row, "W2SOF_1"),
-                "l_ace": _value(row, "ACES_2"),
-                "l_df": _value(row, "DF_2"),
-                "l_bpw": l_bp_won,
-                "l_bpof": l_bp_of,
-                "l_bpsaved": max(0, w_bp_of - w_bp_won),
-                "l_bpfaced": w_bp_of,
-                "l_svpt": _int_value(row, "FSOF_2") + _int_value(row, "W2SOF_2"),
-            })
-            total += 1
+                    w_bp_won = _int_value(row, "BP_1")
+                    w_bp_of = _int_value(row, "BPOF_1")
+                    l_bp_won = _int_value(row, "BP_2")
+                    l_bp_of = _int_value(row, "BPOF_2")
+
+                    writer.writerow({
+                        "winner_id": _value(row, "ID1"),
+                        "loser_id": _value(row, "ID2"),
+                        "tour_id": _value(row, "ID_T"),
+                        "round_id": _value(row, "ID_R"),
+                        "w_fs": _value(row, "FS_1"),
+                        "w_fsof": _value(row, "FSOF_1"),
+                        "w_w1s": _value(row, "W1S_1"),
+                        "w_w1sof": _value(row, "W1SOF_1"),
+                        "w_w2s": _value(row, "W2S_1"),
+                        "w_w2sof": _value(row, "W2SOF_1"),
+                        "w_rpw": _value(row, "RPW_1"),
+                        "w_rpwof": _value(row, "RPWOF_1"),
+                        "l_fs": _value(row, "FS_2"),
+                        "l_fsof": _value(row, "FSOF_2"),
+                        "l_w1s": _value(row, "W1S_2"),
+                        "l_w1sof": _value(row, "W1SOF_2"),
+                        "l_w2s": _value(row, "W2S_2"),
+                        "l_w2sof": _value(row, "W2SOF_2"),
+                        "l_rpw": _value(row, "RPW_2"),
+                        "l_rpwof": _value(row, "RPWOF_2"),
+                        "w_ace": _value(row, "ACES_1"),
+                        "w_df": _value(row, "DF_1"),
+                        "w_bpw": w_bp_won,
+                        "w_bpof": w_bp_of,
+                        "w_bpsaved": max(0, l_bp_of - l_bp_won),
+                        "w_bpfaced": l_bp_of,
+                        "w_svpt": _int_value(row, "FSOF_1") + _int_value(row, "W2SOF_1"),
+                        "l_ace": _value(row, "ACES_2"),
+                        "l_df": _value(row, "DF_2"),
+                        "l_bpw": l_bp_won,
+                        "l_bpof": l_bp_of,
+                        "l_bpsaved": max(0, w_bp_of - w_bp_won),
+                        "l_bpfaced": w_bp_of,
+                        "l_svpt": _int_value(row, "FSOF_2") + _int_value(row, "W2SOF_2"),
+                    })
+                    total += 1
+
+        os.replace(tmp_path, out_path)
+        tmp_path = ""
+    finally:
+        if tmp_path and os.path.exists(tmp_path):
+            try:
+                os.remove(tmp_path)
+            except OSError:
+                pass
 
     conn.close()
     print(f"  stat_atp: {total:,} rows -> stat_atp.csv")
