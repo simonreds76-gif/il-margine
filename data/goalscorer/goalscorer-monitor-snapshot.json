@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-27T12:43:04Z",
+  "generated_at": "2026-05-27T16:44:56Z",
   "source_status": {
-    "compared_at": "2026-05-27T12:42:30Z",
+    "compared_at": "2026-05-27T16:44:24Z",
     "hot_live_updated_at": "2026-05-27T12:42:33Z",
-    "expected_refresh_updated_at": "2026-05-27T12:42:30Z",
+    "expected_refresh_updated_at": "2026-05-27T16:44:24Z",
     "settlement_updated_at": "2026-05-27T01:57:19Z",
     "scheduler_heartbeat_at": "2026-05-27T12:42:33Z",
-    "snapshot_generated_at": "2026-05-27T12:43:04Z",
+    "snapshot_generated_at": "2026-05-27T16:44:56Z",
     "live_status_state": "skipped",
     "live_status_message": "Goalscorer live poll skipped: no leagues due in current cadence window."
   },
@@ -18,7 +18,7 @@
       "status_key": "no_feed",
       "status_label": "no ATGS feed",
       "status_detail": "Source feed returned 0 current ATGS rows for this league window.",
-      "updated_at": "2026-05-27T12:42:30Z",
+      "updated_at": "2026-05-27T16:44:08Z",
       "live_rows": 0,
       "public_now": 0,
       "shadow_now": 0,
@@ -49,7 +49,7 @@
       "status_key": "no_feed",
       "status_label": "no ATGS feed",
       "status_detail": "Source feed returned 0 current ATGS rows for this league window.",
-      "updated_at": "2026-05-27T12:42:30Z",
+      "updated_at": "2026-05-27T16:44:11Z",
       "live_rows": 0,
       "public_now": 0,
       "shadow_now": 0,
@@ -80,7 +80,7 @@
       "status_key": "no_feed",
       "status_label": "no ATGS feed",
       "status_detail": "Source feed returned 0 current ATGS rows for this league window.",
-      "updated_at": "2026-05-27T12:42:30Z",
+      "updated_at": "2026-05-27T16:44:14Z",
       "live_rows": 0,
       "public_now": 0,
       "shadow_now": 0,
@@ -111,7 +111,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-05-27T12:42:30Z",
+      "updated_at": "2026-05-27T16:44:19Z",
       "live_rows": 0,
       "public_now": 0,
       "shadow_now": 0,
@@ -142,12 +142,12 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-05-27T12:42:30Z",
-      "live_rows": 0,
+      "updated_at": "2026-05-27T16:44:24Z",
+      "live_rows": 24,
       "public_now": 0,
       "shadow_now": 0,
       "clean_fixtures": 0,
-      "degraded_fixtures": 0,
+      "degraded_fixtures": 1,
       "quarantined_fixtures": 0,
       "public_record": {
         "settled": 8,
@@ -170,15 +170,90 @@
   ],
   "live_bets": [],
   "fixture_health": {
-    "rows": [],
+    "rows": [
+      {
+        "key": "ligue-1|2026-05-29|nice|as saint etienne",
+        "league_key": "ligue-1",
+        "league_label": "Ligue 1",
+        "match_date": "2026-05-29",
+        "home_team": "OGC Nice",
+        "away_team": "AS Saint-Etienne",
+        "competition": "France - Ligue 1",
+        "bookmaker": "Bet365",
+        "lineup_input": "none",
+        "trust_tier": "T2",
+        "corruption_score": 1.0,
+        "corruption_flags": [
+          "no_lineup_payload"
+        ],
+        "status_label": "Awaiting Lineup",
+        "summary": "No FotMob lineup payload yet. This fixture stays soft until a real expected or confirmed XI lands."
+      }
+    ],
     "clean_count": 0,
-    "degraded_count": 0,
+    "degraded_count": 1,
     "quarantined_count": 0,
-    "hidden_pending_count": 0,
+    "hidden_pending_count": 1,
     "hidden_expected_count": 0,
     "flagged_rows": []
   },
-  "fixture_lineups": [],
+  "fixture_lineups": [
+    {
+      "key": "2026-05-29|Bet365|OGC Nice|AS Saint-Etienne",
+      "league_key": "ligue-1",
+      "league_label": "Ligue 1",
+      "competition": "France - Ligue 1",
+      "match_date": "2026-05-29",
+      "kickoff": "2026-05-29",
+      "bookmaker": "Bet365",
+      "home_team": "OGC Nice",
+      "away_team": "AS Saint-Etienne",
+      "matched_player_prices": 24,
+      "health": {
+        "key": "ligue-1|2026-05-29|nice|as saint etienne",
+        "league_key": "ligue-1",
+        "league_label": "Ligue 1",
+        "match_date": "2026-05-29",
+        "home_team": "OGC Nice",
+        "away_team": "AS Saint-Etienne",
+        "competition": "France - Ligue 1",
+        "bookmaker": "Bet365",
+        "lineup_input": "none",
+        "trust_tier": "T2",
+        "corruption_score": 1.0,
+        "corruption_flags": [
+          "no_lineup_payload"
+        ],
+        "status_label": "Awaiting Lineup",
+        "summary": "No FotMob lineup payload yet. This fixture stays soft until a real expected or confirmed XI lands."
+      },
+      "home": {
+        "team": "OGC Nice",
+        "lineup_status": "",
+        "total_players": 0,
+        "matched_players": 0,
+        "keeper": null,
+        "attackers": [],
+        "midfielders": [],
+        "wide_players": [],
+        "centre_backs": [],
+        "unplaced": []
+      },
+      "away": {
+        "team": "AS Saint-Etienne",
+        "lineup_status": "",
+        "total_players": 0,
+        "matched_players": 0,
+        "keeper": null,
+        "attackers": [],
+        "midfielders": [],
+        "wide_players": [],
+        "centre_backs": [],
+        "unplaced": []
+      },
+      "has_any_lineup": false
+    }
+  ],
   "penalty_watchlist": {
     "generated_at": "2026-05-27T01:57:19Z",
     "row_count": 5,
@@ -1488,18 +1563,18 @@
     ]
   },
   "diagnostics": {
-    "matched_rows": 0,
+    "matched_rows": 24,
     "suppressed_rows": 0,
     "fixtures_with_confirmed_lineups": 0,
     "fixtures_with_expected_xis": 0,
-    "history_mapped_rows": 0,
-    "roster_mapped_rows": 0,
-    "fallback_rows": 5,
-    "low_confidence_rows": 0,
-    "missing_player_history_rows": 37,
+    "history_mapped_rows": 23,
+    "roster_mapped_rows": 1,
+    "fallback_rows": 7,
+    "low_confidence_rows": 3,
+    "missing_player_history_rows": 49,
     "starter_rows": 0,
     "expected_starter_rows": 0,
-    "avg_ev_pct": null,
+    "avg_ev_pct": -73.22534583333335,
     "source_feed_gap_leagues": [
       {
         "key": "serie-a",
@@ -1517,8 +1592,8 @@
         "detail": "Source feed returned 0 current ATGS rows for this league window."
       }
     ],
-    "raw_monitor_summary": "=== Serie A | Updated 27/05/2026, 13:42 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-05-27T11:48:56Z\n\nHistorical Rows          31,109\nOdds Rows                0\nMatched Rows             0\nMissing Player History   0\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           0\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   0\nLow Confidence Rows      0\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        0\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               0.0000\n\n\n=== Premier League | Updated 27/05/2026, 13:42 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-05-27T11:48:59Z\n\nHistorical Rows          30,722\nOdds Rows                0\nMatched Rows             0\nMissing Player History   0\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           0\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   0\nLow Confidence Rows      0\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        0\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               0.0000\n\n\n=== La Liga | Updated 27/05/2026, 13:42 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-05-27T11:49:02Z\n\nHistorical Rows          32,218\nOdds Rows                0\nMatched Rows             0\nMissing Player History   0\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           0\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   0\nLow Confidence Rows      0\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        0\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               0.0000\n\n\n=== Bundesliga | Updated 27/05/2026, 13:42 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-05-27T11:49:04Z\n\nHistorical Rows          25,557\nOdds Rows                51\nMatched Rows             27\nMissing Player History   22\nMissing Team Mapping     2\nFallback Rows            3\nQualified Rows           0\nRoster Resolved Rows     2\nHigh Confidence Rows     0\nMedium Confidence Rows   20\nLow Confidence Rows      7\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        1\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.7523\n\n\n=== Ligue 1 | Updated 27/05/2026, 13:42 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-05-27T11:49:08Z\n\nHistorical Rows          25,039\nOdds Rows                56\nMatched Rows             24\nMissing Player History   15\nMissing Team Mapping     17\nFallback Rows            2\nQualified Rows           0\nRoster Resolved Rows     1\nHigh Confidence Rows     0\nMedium Confidence Rows   21\nLow Confidence Rows      3\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        1\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.7115\n"
+    "raw_monitor_summary": "=== Serie A | Updated 27/05/2026, 17:44 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-05-27T16:44:08Z\n\nHistorical Rows          31,109\nOdds Rows                0\nMatched Rows             0\nMissing Player History   0\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           0\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   0\nLow Confidence Rows      0\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        0\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               0.0000\n\n\n=== Premier League | Updated 27/05/2026, 17:44 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-05-27T16:44:11Z\n\nHistorical Rows          30,722\nOdds Rows                0\nMatched Rows             0\nMissing Player History   0\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           0\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   0\nLow Confidence Rows      0\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        0\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               0.0000\n\n\n=== La Liga | Updated 27/05/2026, 17:44 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-05-27T16:44:14Z\n\nHistorical Rows          32,218\nOdds Rows                0\nMatched Rows             0\nMissing Player History   0\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           0\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   0\nLow Confidence Rows      0\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        0\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               0.0000\n\n\n=== Bundesliga | Updated 27/05/2026, 17:44 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-05-27T16:44:17Z\n\nHistorical Rows          25,557\nOdds Rows                51\nMatched Rows             27\nMissing Player History   22\nMissing Team Mapping     2\nFallback Rows            3\nQualified Rows           0\nRoster Resolved Rows     2\nHigh Confidence Rows     0\nMedium Confidence Rows   20\nLow Confidence Rows      7\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        1\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.7523\n\n\n=== Ligue 1 | Updated 27/05/2026, 17:44 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-05-27T16:44:22Z\n\nHistorical Rows          25,039\nOdds Rows                104\nMatched Rows             48\nMissing Player History   27\nMissing Team Mapping     29\nFallback Rows            4\nQualified Rows           0\nRoster Resolved Rows     2\nHigh Confidence Rows     0\nMedium Confidence Rows   42\nLow Confidence Rows      6\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        2\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.7219\n"
   },
   "snapshot_key": "monitor_state",
-  "payload_hash": "1e2d1793aa954565908aa960804647629a89d9f56f9547d206ce2e0d51caf255"
+  "payload_hash": "a7f2a000b9b6fd1ecb08c205d9a4dd4d7a8295090c342840c49cc41721bd1c8d"
 }
