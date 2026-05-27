@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: team-props-branch-writes
+  group: golden-with-speed-insights-branch-writes
   cancel-in-progress: false
 
 jobs:
