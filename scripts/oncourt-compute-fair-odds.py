@@ -93,6 +93,13 @@ RANK_CLASS_GAP_CAP = 0.07
 RANK_POINTS_BLEND = 0.35
 POINTS_LOGIT_SCALE = 1.25
 POINTS_MIN_BASE = 5.0
+SURFACE_RANK_CONFLICT_SURFACES = {"Clay", "Grass"}
+SURFACE_RANK_CONFLICT_SERIES = {"Grand Slam", "Masters 1000", "ATP500"}
+SURFACE_RANK_CONFLICT_MIN_SR_EDGE = 0.12
+SURFACE_RANK_CONFLICT_MIN_SR_RANK_GAP = 0.32
+SURFACE_RANK_CONFLICT_MAX_ELO_EDGE = 0.14
+SURFACE_RANK_CONFLICT_RANK_TO_ANCHOR_RATIO = 0.10
+SURFACE_RANK_CONFLICT_RELEASE_TO_SR = 1.00
 SURFACE_POINTS_MISMATCH_SURFACES = {"Clay", "Grass"}
 SURFACE_POINTS_MISMATCH_SERIES = {"Grand Slam", "Masters 1000", "ATP500"}
 SURFACE_POINTS_MISMATCH_MIN_FAV_POINTS = 150.0
@@ -225,6 +232,9 @@ CLASS_JUMP_OPP_ESTABLISHED_BONUS = 10.0
 CLASS_JUMP_LOW_MATCH_BONUS = 8.0
 CLASS_JUMP_MAX_ELO = 120.0
 CLASS_JUMP_SAMPLE_MULT_MIN = 0.18
+CLASS_JUMP_ESTABLISHED_HIGH_MULT = 0.0
+CLASS_JUMP_ESTABLISHED_MEDIUM_MULT = 0.35
+CLASS_JUMP_ESTABLISHED_SAMPLE_MULT_MIN = 0.75
 STEPUP_DOG_GUARD_EVENT_MIN = 2.0
 STEPUP_DOG_GUARD_MIN_RECENT_DEFICIT = 0.75
 STEPUP_DOG_GUARD_ANCHOR_GAP = 0.02
@@ -672,6 +682,49 @@ def _apply_elo_magnitude_guard(w_sr, w_elo, w_rank, p_serve_return, p_elo, p_ran
     return w_sr, w_elo, w_rank, released
 
 
+def _apply_surface_rank_conflict_guard(
+    w_sr,
+    w_elo,
+    w_rank,
+    p_serve_return,
+    p_elo,
+    p_rank,
+    surface,
+    series_bucket,
+    confidence,
+):
+    """Cap stale broad-rank dominance when surface matchup data points the other way."""
+    if p_rank is None or p_serve_return is None:
+        return w_sr, w_elo, w_rank, 0.0
+    if surface not in SURFACE_RANK_CONFLICT_SURFACES:
+        return w_sr, w_elo, w_rank, 0.0
+    if series_bucket not in SURFACE_RANK_CONFLICT_SERIES:
+        return w_sr, w_elo, w_rank, 0.0
+    if confidence not in ("high", "medium"):
+        return w_sr, w_elo, w_rank, 0.0
+    if (p_rank - 0.5) * (p_serve_return - 0.5) >= 0:
+        return w_sr, w_elo, w_rank, 0.0
+    if abs(p_serve_return - 0.5) < SURFACE_RANK_CONFLICT_MIN_SR_EDGE:
+        return w_sr, w_elo, w_rank, 0.0
+    if abs(p_serve_return - p_rank) < SURFACE_RANK_CONFLICT_MIN_SR_RANK_GAP:
+        return w_sr, w_elo, w_rank, 0.0
+    if (p_elo - 0.5) * (p_rank - 0.5) > 0 and abs(p_elo - 0.5) > SURFACE_RANK_CONFLICT_MAX_ELO_EDGE:
+        return w_sr, w_elo, w_rank, 0.0
+
+    anchor_weight = max(0.0, w_sr + w_elo)
+    if anchor_weight <= 0:
+        return w_sr, w_elo, w_rank, 0.0
+    rank_cap = anchor_weight * SURFACE_RANK_CONFLICT_RANK_TO_ANCHOR_RATIO
+    if w_rank <= rank_cap:
+        return w_sr, w_elo, w_rank, 0.0
+
+    released = w_rank - rank_cap
+    w_rank = rank_cap
+    w_sr += released * SURFACE_RANK_CONFLICT_RELEASE_TO_SR
+    w_elo += released * (1.0 - SURFACE_RANK_CONFLICT_RELEASE_TO_SR)
+    return w_sr, w_elo, w_rank, released
+
+
 def _is_established_player(rank, elo_surface, elo_overall, match_count):
     if rank is not None and rank > 0 and rank <= LOW_CONF_DOG_ESTABLISHED_RANK:
         return True
@@ -838,7 +891,7 @@ def _synthetic_rank_for_unranked(rec, current_class_score, confidence, opponent_
     return int(round(_clamp(synthetic, 350.0, ONE_SIDED_RANK_CAP)))
 
 
-def _class_jump_adjustment(rec, current_class_score, confidence, opponent_established):
+def _class_jump_adjustment(rec, current_class_score, confidence, opponent_established, player_established=False):
     if current_class_score < CLASS_JUMP_EVENT_MIN:
         return 0.0, 1.0
 
@@ -872,8 +925,16 @@ def _class_jump_adjustment(rec, current_class_score, confidence, opponent_establ
     if opponent_established:
         penalty += CLASS_JUMP_OPP_ESTABLISHED_BONUS
 
+    if player_established:
+        if confidence == "high":
+            penalty *= CLASS_JUMP_ESTABLISHED_HIGH_MULT
+        elif confidence == "medium":
+            penalty *= CLASS_JUMP_ESTABLISHED_MEDIUM_MULT
+
     penalty = _clamp(penalty, 0.0, CLASS_JUMP_MAX_ELO)
     sample_multiplier = _clamp(1.0 - penalty / 150.0, CLASS_JUMP_SAMPLE_MULT_MIN, 1.0)
+    if player_established and confidence == "high":
+        sample_multiplier = max(sample_multiplier, CLASS_JUMP_ESTABLISHED_SAMPLE_MULT_MIN)
     return penalty, sample_multiplier
 
 
@@ -2668,10 +2729,10 @@ def main():
         p1_established = _is_established_player(r1, e1_s, e1_o, mc1_12)
         p2_established = _is_established_player(r2, e2_s, e2_o, mc2_12)
         class_penalty_elo_1, class_sample_mult_1 = _class_jump_adjustment(
-            p1_hist, current_class_score, confidence, p2_established
+            p1_hist, current_class_score, confidence, p2_established, p1_established
         )
         class_penalty_elo_2, class_sample_mult_2 = _class_jump_adjustment(
-            p2_hist, current_class_score, confidence, p1_established
+            p2_hist, current_class_score, confidence, p1_established, p2_established
         )
 
         if min_matches_12 >= 25:
@@ -2922,6 +2983,19 @@ def main():
                 p_rank,
                 is_challenger,
             )
+            w_sr, w_elo, w_rank, surface_rank_conflict_release = _apply_surface_rank_conflict_guard(
+                w_sr,
+                w_elo,
+                w_rank,
+                p_serve_return,
+                p_elo,
+                p_rank,
+                surface,
+                series_bucket,
+                confidence,
+            )
+        else:
+            surface_rank_conflict_release = 0.0
 
         if not has_s1 or not has_s2:
             w_sr *= 0.15
@@ -3412,6 +3486,7 @@ def main():
                     f"form_base={delta_p1_form:+.4f} results_form={results_form_delta:+.4f} "
                     f"tour_hist={tour_history_delta:+.4f} crisis_shock={crisis_shock_delta:+.4f} "
                     f"total_delta={delta_p1:+.4f} elo_mag_release={elo_magnitude_release:+.4f} "
+                    f"rank_conflict_release={surface_rank_conflict_release:+.4f} "
                     f"surface_points_guard={surface_points_guard_delta:+.4f} (ratio={surface_points_guard_ratio:.1f}) "
                     f"low_conf_guard={low_conf_dog_delta:+.4f} "
                     f"stepup_guard={stepup_dog_delta:+.4f} "

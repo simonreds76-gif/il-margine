@@ -89,10 +89,13 @@ def env_int(name: str, default: int) -> int:
 def fetch_rest_paged(base_url: str, table: str, headers: dict[str, str], params: dict[str, Any], *, page_size: int = 1000, timeout: int = 30) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     offset = 0
+    rest_base = base_url.rstrip("/")
+    if not rest_base.endswith("/rest/v1"):
+        rest_base = f"{rest_base}/rest/v1"
     while True:
         page_params = {**params, "limit": page_size, "offset": offset}
         response = requests.get(
-            f"{base_url}/rest/v1/{table}",
+            f"{rest_base}/{table}",
             headers=headers,
             params=page_params,
             timeout=timeout,
