@@ -2600,9 +2600,10 @@ def main() -> int:
                 sl_val = float(sl_raw) if sl_raw not in ("", None) else None
                 display_line = sl_val if s.get("side") == "P1+" else (-sl_val if sl_val is not None else None)
                 so = s.get("spread_odds", "")
+                guard_note = "  [ML-guarded]" if s.get("ml_model_market_gap_guard") else ""
                 print(
                     f"  {s['player1']} vs {s['player2']}  |  "
-                    f"{s['side']} ({format_signed_line(display_line)}) edge {s['value_pct']:+.1f}%  |  odds {so}"
+                    f"{s['side']} ({format_signed_line(display_line)}) edge {s['value_pct']:+.1f}%  |  odds {so}{guard_note}"
                 )
             else:
                 print(
