@@ -2404,8 +2404,12 @@ async function run(): Promise<Response> {
     const challengerValueExcluded = league === "Challenger";
     const injuryExcluded = STRICT_POLICY_MODE && STRICT_INJURY_OVERLAY_ENABLED && recentInjuredAny;
     const mispriceExcluded = modelFavOddsMispriceExcluded || pinFavOddsMispriceExcluded || modelMarketGapExcluded;
-    const handicapEdgeP1 = !modelMarketGapExcluded && !challengerValueExcluded ? rawHandicapEdgeP1 : undefined;
-    const handicapEdgeP2 = !modelMarketGapExcluded && !challengerValueExcluded ? rawHandicapEdgeP2 : undefined;
+    // Keep trusted handicap edges visible even when the ML model/market guard fires.
+    // The ML guard blocks routing as a clean ML signal, but the spread model uses the
+    // stored point-probability shape; if that shape is internally consistent, hiding
+    // the handicap edge makes the research board impossible to audit.
+    const handicapEdgeP1 = !challengerValueExcluded ? rawHandicapEdgeP1 : undefined;
+    const handicapEdgeP2 = !challengerValueExcluded ? rawHandicapEdgeP2 : undefined;
     if (
       policyBaseAllows &&
       (shortFavoriteExcluded || mispriceExcluded || injuryExcluded)

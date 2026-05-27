@@ -1749,21 +1749,22 @@ function MatchRow({
   const ouLines = SHOW_OU_COLUMNS ? parseOULines(m) : [];
   const hasPinnacle = m.pinnacle_odds1 != null && m.pinnacle_odds1 > 0;
   const handicapShape = handicapShapeMeta(m.handicap_point_prob_source);
-  const handicapEdgeHidden =
+  const handicapShapeHidden =
     m.spread_line != null &&
-    (
-      m.ml_model_market_gap_guard ||
-      (
-        m.handicap_point_prob_source != null &&
-        m.handicap_point_prob_source !== "stored_p_a_p_b"
-      )
-    );
+    m.handicap_point_prob_source != null &&
+    m.handicap_point_prob_source !== "stored_p_a_p_b";
+  const handicapMlGuardWarning =
+    m.spread_line != null &&
+    !handicapShapeHidden &&
+    (m.handicap_edge_p1 != null || m.handicap_edge_p2 != null) &&
+    (m.ml_model_market_gap_guard || m.ml_model_market_side_flip_guard);
   const handicapHiddenReason =
-    m.ml_model_market_side_flip_guard
-      ? "edge hidden: favourite side mismatch"
-      : m.ml_model_market_gap_guard
-      ? "edge hidden: ML/market mismatch"
+    m.handicap_point_prob_source === "fallback_missing"
+      ? "edge hidden: point probabilities missing"
       : "edge hidden: model shape drift";
+  const handicapMlGuardReason = m.ml_model_market_side_flip_guard
+    ? "ML guard active: favourite side mismatch, HC audit only"
+    : "ML guard active: market gap, HC audit only";
   const rowSignals = rowSignalSort(m.row_signals ?? []);
   const bestValue = bestValueBadge(m);
   const primaryBadge = primarySignalBadgeMeta(m, rowSignals, shadowProfile);
@@ -1866,9 +1867,14 @@ function MatchRow({
                   {m.handicap_edge_p2 != null ? `${m.handicap_edge_p2 > 0 ? "+" : ""}${m.handicap_edge_p2.toFixed(1)}%` : "--"}
                 </span>
               </div>
-              {handicapEdgeHidden ? (
+              {handicapShapeHidden ? (
                 <div className="pt-0.5 text-[10px] font-sans text-rose-300/70">
                   {handicapHiddenReason}
+                </div>
+              ) : null}
+              {handicapMlGuardWarning ? (
+                <div className="pt-0.5 text-[10px] font-sans text-amber-300/75">
+                  {handicapMlGuardReason}
                 </div>
               ) : null}
             </div>

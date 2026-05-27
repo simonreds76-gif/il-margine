@@ -2182,7 +2182,11 @@ def main() -> int:
             and he_p1 is not None
             and he_p2 is not None
             and handicap_shape_trusted
-            and not model_market_gap_excluded
+            and (
+                not model_market_gap_excluded
+                or args.signal_profile in SPREAD_V1_SIGNAL_PROFILES
+                or clay_bo3_requested
+            )
             and not inj_any
         ):
             edge_threshold = (
@@ -2334,6 +2338,7 @@ def main() -> int:
                         "spread_surface_scope": surface if spread_v1_eligible else "",
                         "ml_short_fav_model_guard": model_ml_excluded,
                         "ml_short_fav_market_guard": pin_ml_excluded,
+                        "ml_model_market_gap_guard": model_market_gap_excluded,
                         "atp500_short_fav_ml_guard": atp500_short_favorite_ml_excluded,
                         "short_fav_dog_spread_guard": short_fav_dog_spread_p1_guarded,
                         "spread_v1_max_edge_guard": spread_v1_p1_edge_guarded,
@@ -2397,6 +2402,7 @@ def main() -> int:
                         "spread_surface_scope": surface if spread_v1_eligible else "",
                         "ml_short_fav_model_guard": model_ml_excluded,
                         "ml_short_fav_market_guard": pin_ml_excluded,
+                        "ml_model_market_gap_guard": model_market_gap_excluded,
                         "atp500_short_fav_ml_guard": atp500_short_favorite_ml_excluded,
                         "short_fav_dog_spread_guard": short_fav_dog_spread_p2_guarded,
                         "spread_v1_max_edge_guard": spread_v1_p2_edge_guarded,
