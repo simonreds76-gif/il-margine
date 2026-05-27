@@ -111,13 +111,37 @@ def now_utc_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
+MOJIBAKE_REPLACEMENTS = {
+    "\u00e2\u20ac\u2122": "'",
+    "\u00e2\u20ac\u02dc": "'",
+    "\u00e2\u20ac\u201c": "-",
+    "\u00e2\u20ac\u201d": "-",
+    "\u00c3\u00a9": "e",
+    "\u00c3\u00a8": "e",
+    "\u00c3\u00a1": "a",
+    "\u00c3\u00ad": "i",
+    "\u00c3\u00b3": "o",
+    "\u00c3\u00ba": "u",
+    "\u00c3\u00b1": "n",
+    "\u251c\u00ae": "e",
+    "\u251c\u00a9": "e",
+    "\u251c\u00ad": "i",
+    "\u251c\u00a1": "a",
+    "\u251c\u00b3": "o",
+    "\u251c\u00ba": "u",
+    "\u251c\u00b1": "n",
+}
+
+
 def norm_text(value: str) -> str:
-    text = unicodedata.normalize("NFKD", value or "")
+    text = value or ""
+    for bad, good in MOJIBAKE_REPLACEMENTS.items():
+        text = text.replace(bad, good)
+    text = unicodedata.normalize("NFKD", text)
     text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
-    text = text.replace("'", "").replace("’", "").replace("‘", "")
+    text = text.replace("'", "")
     text = re.sub(r"[^a-z0-9]+", " ", text.lower())
     return re.sub(r"\s+", " ", text).strip()
-
 
 TEAM_ALIASES = {
     "afc bournemouth": "bournemouth",
@@ -472,6 +496,16 @@ def resolve_player_team(row: dict[str, str], league: str, player_key: str, index
     return role_team, away if role_team == home else home
 
 
+def resolve_player_history(indexes: dict[tuple[str, str, str], list[dict]], league: str, player_team: str, player_key: str) -> list[dict]:
+    exact = indexes.get((league, player_team, player_key), [])
+    if exact:
+        return exact
+    combined: list[dict] = []
+    for (candidate_league, _candidate_team, candidate_player), rows in indexes.items():
+        if candidate_league == league and candidate_player == player_key:
+            combined.extend(rows)
+    return sorted(combined, key=lambda item: item["match_date"])
+
 def model_row(row: dict[str, str], indexes, team_index, generated_at: str) -> dict[str, str] | None:
     match_date = parse_date(row.get("match_date", ""))
     if not match_date:
@@ -485,7 +519,7 @@ def model_row(row: dict[str, str], indexes, team_index, generated_at: str) -> di
         return None
 
     player_team, opponent_team = resolve_player_team(row, league, player_key, indexes)
-    history = indexes.get((league, player_team, player_key), [])
+    history = resolve_player_history(indexes, league, player_team, player_key)
     features = player_features(history, match_date)
     team_scale = team_context_scale(team_index, league, player_team, opponent_team, match_date)
 

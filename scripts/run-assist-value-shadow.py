@@ -10,6 +10,7 @@ The lane is deliberately evidence-only:
 from __future__ import annotations
 
 import argparse
+import glob
 import subprocess
 import sys
 from pathlib import Path
@@ -33,6 +34,14 @@ def run_cmd(cmd: list[str], *, allow_failure: bool = False) -> bool:
 def parse_leagues(raw: str) -> list[str]:
     leagues = [item.strip() for item in raw.split(",") if item.strip()]
     return leagues or DEFAULT_LEAGUES
+
+
+def has_matching_files(patterns: list[str]) -> bool:
+    for pattern in patterns:
+        full_pattern = str(ROOT / pattern) if not Path(pattern).is_absolute() else pattern
+        if glob.glob(full_pattern):
+            return True
+    return False
 
 
 def main() -> None:
@@ -79,6 +88,10 @@ def main() -> None:
                 ],
                 allow_failure=args.allow_odds_failure,
             )
+    elif not has_matching_files(["data/assist-value/inbox/*.csv"]):
+        print("  WARNING: --skip-odds was requested but no assist inbox CSVs exist; preserving current board/signals.")
+        print("\n  Done.\n")
+        return
 
     run_cmd(
         [
@@ -94,14 +107,13 @@ def main() -> None:
             "data/assist-value/assist-value-shadow-report.txt",
         ]
     )
+
     run_cmd(
         [
             sys.executable,
             str(ROOT / "scripts" / "build-assist-value-model.py"),
             "--board",
             "data/assist-value/assist-value-shadow-board.csv",
-            "--player-logs",
-            "data/goalscorer/*-player-match-logs-*.csv",
             "--out",
             "data/assist-value/assist-value-shadow-signals.csv",
             "--report-out",

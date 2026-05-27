@@ -40,6 +40,45 @@ OUTPUT_FIELDS = [
     "settlement_note",
 ]
 
+TEAM_KEY_OVERRIDES = {
+    "fc metz": "metz",
+    "getafe cf": "getafe",
+    "olympique lyon": "lyon",
+    "olympique lyonnais": "lyon",
+    "rc lens": "lens",
+}
+
+TEAM_KEY_DROP_TOKENS = {
+    "ac",
+    "afc",
+    "as",
+    "bc",
+    "cf",
+    "cfc",
+    "club",
+    "de",
+    "fc",
+    "la",
+    "ogc",
+    "olympique",
+    "racing",
+    "rc",
+    "sc",
+    "ss",
+    "ud",
+    "us",
+}
+
+
+def _assist_settlement_team_key(value: str, base_team_key) -> str:
+    """Use goalscorer aliases first, then tolerate bookmaker/FotMob affixes."""
+    key = str(base_team_key(value) or "").strip()
+    if key in TEAM_KEY_OVERRIDES:
+        return TEAM_KEY_OVERRIDES[key]
+    tokens = [token for token in key.split() if token not in TEAM_KEY_DROP_TOKENS]
+    compact = " ".join(tokens).strip()
+    return TEAM_KEY_OVERRIDES.get(compact, compact or key)
+
 
 def _parse_date(value: str) -> Optional[date]:
     text = (value or "").strip()
@@ -296,7 +335,10 @@ def main() -> int:
     args = parser.parse_args()
 
     model_mod = runpy.run_path(str(ROOT / "scripts" / "goalscorer-model.py"), run_name="goalscorer_model")
-    team_key_func = model_mod["_team_key"]
+    base_team_key_func = model_mod["_team_key"]
+
+    def team_key_func(value: str) -> str:
+        return _assist_settlement_team_key(value, base_team_key_func)
     penalty_utils = runpy.run_path(str(ROOT / "scripts" / "goalscorer_penalty_utils.py"), run_name="goalscorer_penalty_utils")
     best_name_match = penalty_utils["best_name_match"]
 
