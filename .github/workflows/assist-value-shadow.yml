@@ -15,7 +15,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: assist-value-shadow-writes
+  group: golden-with-speed-insights-branch-writes
   cancel-in-progress: false
 
 jobs:

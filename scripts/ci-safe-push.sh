@@ -5,14 +5,14 @@
 # Multiple scheduled jobs commit generated data to golden-with-speed-insights.
 # A plain `git rebase origin/branch` fails when the job has leftover generated
 # tracked changes, and a plain push fails when another job pushed first. This
-# helper rebases with autostash and retries the non-fast-forward race without
-# ever force-pushing.
+# helper rebases with autostash and retries branch-write failures without ever
+# force-pushing.
 
 set -euo pipefail
 
 branch="${1:-golden-with-speed-insights}"
 remote="${2:-origin}"
-max_attempts="${CI_SAFE_PUSH_ATTEMPTS:-4}"
+max_attempts="${CI_SAFE_PUSH_ATTEMPTS:-8}"
 
 git config user.name "github-actions[bot]"
 git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -39,15 +39,28 @@ for attempt in $(seq 1 "${max_attempts}"); do
 
   git rebase "${remote}/${branch}"
 
-  if git push "${remote}" "HEAD:${branch}"; then
+  push_log="$(mktemp)"
+  if git push "${remote}" "HEAD:${branch}" 2>&1 | tee "${push_log}"; then
+    rm -f "${push_log}"
     echo "Safe push completed."
     exit 0
   fi
 
   if [ "${attempt}" -lt "${max_attempts}" ]; then
-    sleep_seconds=$((attempt * 5))
-    echo "Push raced another writer; retrying after ${sleep_seconds}s."
+    if grep -Eiq 'fatal error in commit_refs|remote rejected.*failure|RPC failed|expected flush|Connection was reset|HTTP 5[0-9]{2}' "${push_log}"; then
+      echo "::warning::GitHub rejected the ref write with a transient/internal error; retrying after a longer backoff."
+    else
+      echo "::warning::Push failed; retrying after re-fetch/rebase."
+    fi
+    rm -f "${push_log}"
+    sleep_seconds=$((attempt * attempt * 10))
+    if [ "${sleep_seconds}" -gt 120 ]; then
+      sleep_seconds=120
+    fi
+    echo "Retrying after ${sleep_seconds}s."
     sleep "${sleep_seconds}"
+  else
+    rm -f "${push_log}"
   fi
 done
 

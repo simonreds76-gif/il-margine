@@ -20,7 +20,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: goalscorer-understat-backfill
+  group: golden-with-speed-insights-branch-writes
   cancel-in-progress: false
 
 jobs:
