@@ -77,6 +77,7 @@ interface SignalSummary {
   id: number;
   kind?:
     | "challenger_ml_shadow"
+    | "clay_v3_shadow"
     | "clay_bo3"
     | "clay_guarded"
     | "clay_2026"
@@ -189,6 +190,7 @@ interface ApiResponse {
   signals_volume_200_live?: SignalSummary[];
   signals_volume_200_upgrade_live?: SignalSummary[];
   signals_challenger_ml?: SignalSummary[];
+  signals_clay_v3?: SignalSummary[];
   signals_clay_bo3?: SignalSummary[];
   challenger_nearmisses?: ChallengerNearmiss[];
   signals_clay_guarded?: SignalSummary[];
@@ -196,6 +198,7 @@ interface ApiResponse {
   signals_spread_v1?: SignalSummary[];
   signal_attachment?: {
     challenger_ml_shadow?: { loaded: number; attached: number; unmatched: number };
+    clay_v3_shadow?: { loaded: number; attached: number; unmatched: number };
     clay_bo3?: { loaded: number; attached: number; unmatched: number };
     clay_guarded?: { loaded: number; attached: number; unmatched: number };
     clay_2026?: { loaded: number; attached: number; unmatched: number };
@@ -300,6 +303,7 @@ type SignalFeedCategory =
   | "strict"
   | "shadow"
   | "challenger_ml_shadow"
+  | "clay_v3_shadow"
   | "clay_bo3"
   | "volume_200"
   | "volume_200_upgrade"
@@ -345,6 +349,13 @@ function signalFeedMeta(category: SignalFeedCategory, shadowProfile?: string): {
       label: "CH ML",
       badgeClass: "border-fuchsia-400/35 bg-fuchsia-400/10 text-fuchsia-200",
       accentClass: "text-fuchsia-200",
+    };
+  }
+  if (category === "clay_v3_shadow") {
+    return {
+      label: "CLAY V3",
+      badgeClass: "border-lime-400/35 bg-lime-400/10 text-lime-200",
+      accentClass: "text-lime-200",
     };
   }
   if (category === "clay_bo3") {
@@ -396,6 +407,7 @@ function primarySignalBadgeMeta(
 ): { label: string; className: string; title?: string } | null {
   const clayGuardedSignal = rowSignals.find((signal) => signal.kind === "clay_guarded");
   const challengerSignal = rowSignals.find((signal) => signal.kind === "challenger_ml_shadow");
+  const clayV3Signal = rowSignals.find((signal) => signal.kind === "clay_v3_shadow");
   const clayBo3Signal = rowSignals.find((signal) => signal.kind === "clay_bo3");
   const volume200Signal = rowSignals.find((signal) => signal.kind === "volume_200");
   const claySignal = rowSignals.find((signal) => signal.kind === "clay_2026");
@@ -414,6 +426,14 @@ function primarySignalBadgeMeta(
       label: "CH ML",
       className: "border-fuchsia-400/35 bg-fuchsia-400/10 text-fuchsia-200",
       title: "Internal Challenger ML shadow signal",
+    };
+  }
+
+  if (clayV3Signal) {
+    return {
+      label: "CLAY V3",
+      className: "border-lime-400/35 bg-lime-400/10 text-lime-200",
+      title: `Clay v3 ${clayV3Signal.bet_type === "spread" ? "handicap" : "ML"} shadow signal`,
     };
   }
 
@@ -519,11 +539,12 @@ function categoryForShadowProfile(profile?: string): SignalFeedCategory {
 
 function rowSignalKindOrder(kind?: SignalSummary["kind"]): number {
   if (kind === "challenger_ml_shadow") return 0;
-  if (kind === "clay_bo3") return 1;
-  if (kind === "spread_v1") return 2;
-  if (kind === "clay_guarded") return 3;
-  if (kind === "clay_2026") return 4;
-  return 5;
+  if (kind === "clay_v3_shadow") return 1;
+  if (kind === "clay_bo3") return 2;
+  if (kind === "spread_v1") return 3;
+  if (kind === "clay_guarded") return 4;
+  if (kind === "clay_2026") return 5;
+  return 6;
 }
 
 function rowSignalSort(signals: SignalSummary[]): SignalSummary[] {
@@ -566,6 +587,8 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
             className={`w-full min-w-0 rounded-xl border px-3 py-3 ${
               signal.kind === "challenger_ml_shadow"
                 ? "border-fuchsia-400/25 bg-fuchsia-400/8"
+                : signal.kind === "clay_v3_shadow"
+                ? "border-lime-400/25 bg-lime-400/8"
                 : signal.kind === "clay_bo3"
                 ? "border-sky-400/25 bg-sky-400/8"
                 : signal.kind === "clay_guarded"
@@ -582,6 +605,8 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
                     className={`rounded border px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] ${
                       signal.kind === "challenger_ml_shadow"
                         ? "border-fuchsia-400/35 bg-fuchsia-400/10 text-fuchsia-200"
+                        : signal.kind === "clay_v3_shadow"
+                        ? "border-lime-400/35 bg-lime-400/10 text-lime-200"
                         : signal.kind === "clay_bo3"
                         ? "border-sky-400/35 bg-sky-400/10 text-sky-200"
                         : signal.kind === "clay_2026"
@@ -591,6 +616,10 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
                   >
                     {signal.kind === "challenger_ml_shadow"
                       ? "Challenger ML"
+                      : signal.kind === "clay_v3_shadow"
+                        ? signal.bet_type === "spread"
+                          ? "Clay v3 HC"
+                          : "Clay v3 ML"
                       : signal.kind === "clay_bo3"
                         ? signal.bet_type === "spread"
                           ? "Clay bo3 dog-HC"
@@ -853,6 +882,11 @@ function SignalFeedList({
                   {signal.kind === "challenger_ml_shadow" ? (
                     <span className="rounded border border-fuchsia-400/30 bg-fuchsia-400/10 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] text-fuchsia-200">
                       INTERNAL
+                    </span>
+                  ) : null}
+                  {signal.kind === "clay_v3_shadow" && signal.shadow_reason ? (
+                    <span className="rounded border border-lime-400/25 bg-lime-400/10 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] text-lime-200">
+                      {signalReasonLabel(signal.shadow_reason)}
                     </span>
                   ) : null}
                   {signal.kind === "clay_2026" && signal.league === "Challenger" ? (
@@ -1145,6 +1179,13 @@ export default function FairOddsPage() {
       signal,
     })),
   );
+  const clayV3FeedItems = sortSignalFeedItems(
+    (data?.signals_clay_v3 ?? []).map((signal) => ({
+      key: `clay-v3-${signal.id}`,
+      category: "clay_v3_shadow" as const,
+      signal,
+    })),
+  );
   const clayBo3FeedItems = sortSignalFeedItems(
     (data?.signals_clay_bo3 ?? []).map((signal) => ({
       key: `clay-bo3-${signal.id}`,
@@ -1191,18 +1232,15 @@ export default function FairOddsPage() {
             title: "Challenger ML",
             subtitle: "Internal HIGH-coverage 10-15% edge lane",
             items: challengerFeedItems,
-            emptyLabel:
-              (data?.challenger_nearmisses?.length ?? 0) > 0
-                ? "No live Challenger ML signals; see near-misses below."
-                : "No Challenger ML signals today",
+            emptyLabel: "No Challenger ML signals today",
           },
           {
-            key: "clay-bo3",
-            category: "clay_bo3" as const,
-            title: "Clay bo3",
-            subtitle: "Internal ATP clay ML 5-13% + dog-HC 6-25%",
-            items: clayBo3FeedItems,
-            emptyLabel: "No Clay bo3 signals today",
+            key: "clay-v3",
+            category: "clay_v3_shadow" as const,
+            title: "Clay v3",
+            subtitle: "Entry-aware clay ML + handicap research",
+            items: clayV3FeedItems,
+            emptyLabel: "No Clay v3 signals today",
           },
         ]
       : []),
@@ -1240,6 +1278,14 @@ export default function FairOddsPage() {
           },
         ]
       : []),
+    {
+      key: "clay-bo3",
+      category: "clay_bo3" as const,
+      title: "Clay bo3",
+      subtitle: "Archived legacy clay bo3 gate",
+      items: clayBo3FeedItems,
+      emptyLabel: "No Clay bo3 signals today",
+    },
     {
       key: "clay-guarded",
       category: "clay_guarded" as const,
@@ -1302,11 +1348,9 @@ export default function FairOddsPage() {
                     <>
                       <span className={data.signal_attachment.challenger_ml_shadow?.unmatched ? "text-amber-300" : "text-fuchsia-200"}>
                         Challenger ML <span className="text-slate-200">{data.signal_attachment.challenger_ml_shadow?.attached ?? 0}/{data.signal_attachment.challenger_ml_shadow?.loaded ?? 0}</span>
-                        {" "}
-                        <span className="text-slate-500">near {data.challenger_nearmisses?.length ?? 0}</span>
                       </span>
-                      <span className={data.signal_attachment.clay_bo3?.unmatched ? "text-amber-300" : "text-sky-200"}>
-                        Clay bo3 <span className="text-slate-200">{data.signal_attachment.clay_bo3?.attached ?? 0}/{data.signal_attachment.clay_bo3?.loaded ?? 0}</span>
+                      <span className={data.signal_attachment.clay_v3_shadow?.unmatched ? "text-amber-300" : "text-lime-200"}>
+                        Clay v3 <span className="text-slate-200">{data.signal_attachment.clay_v3_shadow?.attached ?? 0}/{data.signal_attachment.clay_v3_shadow?.loaded ?? 0}</span>
                       </span>
                     </>
                   ) : null}
@@ -1401,31 +1445,6 @@ export default function FairOddsPage() {
               })}
             </div>
 
-            {data.internal_research_lanes ? (
-              <details className="mt-4 rounded-xl border border-fuchsia-400/20 bg-fuchsia-400/5">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-3">
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="rounded border border-fuchsia-400/35 bg-fuchsia-400/10 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-fuchsia-200">
-                        CH AUDIT
-                      </span>
-                      <span className="text-[14px] font-medium text-slate-100">Challenger near-misses</span>
-                      <span className="text-[12px] text-slate-500">why candidates failed the HIGH-coverage gate</span>
-                    </div>
-                  </div>
-                  <div className="flex shrink-0 items-center gap-3 text-[11px]">
-                    <span className="text-slate-400">
-                      <span className="text-slate-200">{data.challenger_nearmisses?.length ?? 0}</span> rows
-                    </span>
-                    <span className="text-slate-500 transition-transform group-open:rotate-180">v</span>
-                  </div>
-                </summary>
-                <div className="border-t border-fuchsia-400/15 px-3 pb-3 pt-3">
-                  <ChallengerNearmissList rows={data.challenger_nearmisses ?? []} />
-                </div>
-              </details>
-            ) : null}
-
             {archivedSignalSections.length > 0 ? (
               <details className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/35">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-3">
@@ -1475,9 +1494,7 @@ export default function FairOddsPage() {
                   <>
                     Challenger ML {data.signal_attachment.challenger_ml_shadow?.attached ?? 0}/{data.signal_attachment.challenger_ml_shadow?.loaded ?? 0}
                     {" | "}
-                    Clay bo3 {data.signal_attachment.clay_bo3?.attached ?? 0}/{data.signal_attachment.clay_bo3?.loaded ?? 0}
-                    {" | "}
-                    Near-miss {data.challenger_nearmisses?.length ?? 0}
+                    Clay v3 {data.signal_attachment.clay_v3_shadow?.attached ?? 0}/{data.signal_attachment.clay_v3_shadow?.loaded ?? 0}
                     {" | "}
                   </>
                 ) : null}
