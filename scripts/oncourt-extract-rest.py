@@ -1,12 +1,15 @@
 """
-Phase 1.1c: Extract players_atp, tours_atp, courts, today_atp from OnCourt.mdb.
+Phase 1.1c: Extract players/tours/today from OnCourt.mdb.
 Run: C:\\Python312-32\\python.exe scripts/oncourt-extract-rest.py
 
 Output:
   - data/oncourt/players_atp.csv (includes ATP rank + surface points)
+  - data/oncourt/players_wta.csv (includes WTA rank + surface points)
   - data/oncourt/tours_atp.csv
+  - data/oncourt/tours_wta.csv
   - data/oncourt/courts.csv
   - data/oncourt/today_atp.csv
+  - data/oncourt/today_wta.csv
 """
 
 import os
@@ -57,16 +60,26 @@ def main():
         sys.exit(1)
 
     print("Extracting...")
+    player_cols_sql = "ID_P, NAME_P, DATE_P, COUNTRY_P, RANK_P, POINT_P, HARDPOINT_P, CLAYPOINT_P, GRASSPOINT_P"
     extract_table(
         conn,
         "players_atp",
-        "ID_P, NAME_P, DATE_P, COUNTRY_P, RANK_P, POINT_P, HARDPOINT_P, CLAYPOINT_P, GRASSPOINT_P",
+        player_cols_sql,
         ["id", "name", "birthdate", "country", "atp_rank", "points", "hard_points", "clay_points", "grass_points"],
         os.path.join(OUT_DIR, "players_atp.csv"),
     )
-    extract_table(conn, "tours_atp", "ID_T, NAME_T, ID_C_T, DATE_T, RANK_T, COUNTRY_T", ["id", "name", "court_id", "date", "rank", "country"], os.path.join(OUT_DIR, "tours_atp.csv"))
+    extract_table(
+        conn,
+        "players_wta",
+        player_cols_sql,
+        ["id", "name", "birthdate", "country", "wta_rank", "points", "hard_points", "clay_points", "grass_points"],
+        os.path.join(OUT_DIR, "players_wta.csv"),
+    )
+    for tour in ("atp", "wta"):
+        extract_table(conn, f"tours_{tour}", "ID_T, NAME_T, ID_C_T, DATE_T, RANK_T, COUNTRY_T", ["id", "name", "court_id", "date", "rank", "country"], os.path.join(OUT_DIR, f"tours_{tour}.csv"))
     extract_table(conn, "courts", "ID_C, NAME_C", ["id", "name"], os.path.join(OUT_DIR, "courts.csv"))
-    extract_table(conn, "today_atp", "TOUR, ID1, ID2, ROUND, DRAW, RESULT", ["tour_id", "player1_id", "player2_id", "round_id", "draw", "result"], os.path.join(OUT_DIR, "today_atp.csv"))
+    for tour in ("atp", "wta"):
+        extract_table(conn, f"today_{tour}", "TOUR, DATE_GAME, ID1, ID2, ROUND, DRAW, RESULT, COMPLETE, LIVE, TIME_GAME", ["tour_id", "date", "player1_id", "player2_id", "round_id", "draw", "result", "complete", "live", "time"], os.path.join(OUT_DIR, f"today_{tour}.csv"))
 
     conn.close()
     print("\nDone.")

@@ -212,6 +212,12 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: Pinnacle history append failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Step 6c/10: Tennis aces/DF research board ==="
+$tennisPropsExit = Invoke-LoggedProcessWithRetry -FilePath "python" -ArgumentList @("scripts\run-tennis-props-daily.py", "--max-events", "20") -Label "tennis props aces/DF board" -TimeoutSeconds 900 -Attempts 1
+if ($tennisPropsExit -ne 0) {
+    Log "WARNING: tennis props aces/DF board failed/timed out (exit $tennisPropsExit), continuing..."
+}
+
 # Step 7: Strict policy report + overlay comparison (auto-append CSVs)
 Log "=== Step 7/10: Strict policy report (--append --compare-overlay) ==="
 & python scripts\strict-policy-report.py --append --compare-overlay 2>&1 | ForEach-Object { Log $_ }

@@ -3,6 +3,7 @@ param(
     [switch]$Corners,
     [switch]$Goalscorer,
     [switch]$AssistValue,
+    [switch]$TennisProps,
     [switch]$Settlement,
     [string]$RemoteRef = "origin/golden-with-speed-insights",
     [switch]$NoFetch,
@@ -14,11 +15,12 @@ $ErrorActionPreference = "Stop"
 $repoRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $repoRoot
 
-$syncAll = -not ($TeamShots -or $Corners -or $Goalscorer -or $AssistValue -or $Settlement)
+$syncAll = -not ($TeamShots -or $Corners -or $Goalscorer -or $AssistValue -or $TennisProps -or $Settlement)
 $includeTeamShots = $syncAll -or $TeamShots
 $includeCorners = $syncAll -or $Corners
 $includeGoalscorer = $syncAll -or $Goalscorer
 $includeAssistValue = $syncAll -or $AssistValue
+$includeTennisProps = $syncAll -or $TennisProps
 $includeSettlement = $syncAll -or $Settlement -or $TeamShots -or $Corners
 
 $teamShotsFiles = @(
@@ -111,12 +113,19 @@ $assistValueFiles = @(
     "data/assist-value/assist-market-audit-ligue-1.csv"
 )
 
+$todayUtc = (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd")
+$tennisPropsFiles = @(
+    "data/tennis-props/inbox/bet365-lines-$todayUtc.csv",
+    "data/tennis-props/inbox/bet365-tennis-market-audit-$todayUtc.csv"
+)
+
 $files = New-Object System.Collections.Generic.List[string]
 if ($includeTeamShots) { $teamShotsFiles | ForEach-Object { [void]$files.Add($_) } }
 if ($includeCorners) { $cornersFiles | ForEach-Object { [void]$files.Add($_) } }
 if ($includeSettlement) { $settlementFiles | ForEach-Object { [void]$files.Add($_) } }
 if ($includeGoalscorer) { $goalscorerFiles | ForEach-Object { [void]$files.Add($_) } }
 if ($includeAssistValue) { $assistValueFiles | ForEach-Object { [void]$files.Add($_) } }
+if ($includeTennisProps) { $tennisPropsFiles | ForEach-Object { [void]$files.Add($_) } }
 
 $files = $files | Select-Object -Unique
 

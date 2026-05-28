@@ -36,6 +36,7 @@ function runHostedSync() {
       "-Settlement",
       "-Goalscorer",
       "-AssistValue",
+      "-TennisProps",
     ],
     {
       cwd: repoRoot,
@@ -53,6 +54,26 @@ function runHostedSync() {
   if (result.status !== 0) {
     console.warn(
       `[dev] Hosted monitor sync failed with exit code ${result.status ?? "unknown"}. Starting Next dev anyway.`,
+    );
+  }
+}
+
+function runTennisPropsCompare() {
+  const result = spawnSync("python", [resolve(scriptDir, "tennis-props-compare-bet365.py")], {
+    cwd: repoRoot,
+    stdio: "inherit",
+    env: process.env,
+    timeout: 60000,
+  });
+
+  if (result.error) {
+    console.warn(`[dev] Tennis props comparison did not complete (${result.error.message}). Starting Next dev anyway.`);
+    return;
+  }
+
+  if (result.status !== 0) {
+    console.warn(
+      `[dev] Tennis props comparison failed with exit code ${result.status ?? "unknown"}. Starting Next dev anyway.`,
     );
   }
 }
@@ -95,4 +116,5 @@ function startNextDev() {
 }
 
 runHostedSync();
+runTennisPropsCompare();
 startNextDev();
