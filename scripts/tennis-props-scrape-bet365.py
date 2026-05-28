@@ -341,7 +341,15 @@ def probe_request(path: str, params: dict[str, Any]) -> tuple[int | str, str]:
 def run_zero_row_market_probe(api_key: str, events: list[dict[str, Any]], bookmakers: str) -> None:
     if not events:
         return
-    event = events[0]
+    primary_bookmaker = bookmakers.split(",")[0].strip()
+    event = next(
+        (
+            candidate
+            for candidate in events
+            if (candidate.get("bookmakers") or {}).get(primary_bookmaker)
+        ),
+        events[0],
+    )
     event_id = str(event.get("id") or "")
     if not event_id:
         return
@@ -350,7 +358,7 @@ def run_zero_row_market_probe(api_key: str, events: list[dict[str, Any]], bookma
     print(f"  event={event_id} | {league} | {event.get('home')} vs {event.get('away')}")
 
     bookmaker_variants = []
-    for value in [bookmakers.split(",")[0].strip(), "Bet365", "bet365"]:
+    for value in [primary_bookmaker, "Bet365", "bet365"]:
         if value and value not in bookmaker_variants:
             bookmaker_variants.append(value)
 
@@ -372,7 +380,13 @@ def run_zero_row_market_probe(api_key: str, events: list[dict[str, Any]], bookma
 
     status, summary = probe_request(
         "value-bets",
-        {"apiKey": api_key, "bookmaker": bookmakers.split(",")[0].strip(), "sport": "tennis", "includeEventDetails": "true", "limit": "20"},
+        {
+            "apiKey": api_key,
+            "bookmaker": primary_bookmaker,
+            "sport": "tennis",
+            "includeEventDetails": "true",
+            "limit": "20",
+        },
     )
     print(f"    /value-bets tennis Bet365 sample: status={status}; markets={summary}")
 
@@ -450,7 +464,7 @@ def main() -> None:
     audit_out = Path(args.audit_out) if args.audit_out else OUT_DIR / f"bet365-tennis-market-audit-{args.date}.csv"
     print(f"parsed aces/DF rows: {len(rows)}")
     if not rows:
-        run_zero_row_market_probe(api_key, events, args.bookmakers)
+        run_zero_row_market_probe(api_key, payload or events, args.bookmakers)
     if args.dry_run:
         for row in rows[:20]:
             print(row)
