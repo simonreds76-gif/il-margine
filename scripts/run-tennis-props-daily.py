@@ -51,6 +51,15 @@ def lines_file(as_of: str) -> Path:
     return PROPS_DIR / "inbox" / f"bet365-lines-{as_of}.csv"
 
 
+def has_market_rows(path: Path) -> bool:
+    if not path.exists():
+        return False
+    try:
+        return sum(1 for line in path.read_text(encoding="utf-8", errors="ignore").splitlines() if line.strip()) > 1
+    except OSError:
+        return False
+
+
 def run_comparison(as_of: str) -> None:
     run(
         [
@@ -73,7 +82,7 @@ def main() -> int:
     parser.add_argument("--skip-odds", action="store_true", help="Do not scrape Bet365 lines even if a key is configured")
     parser.add_argument("--require-odds", action="store_true", help="Fail if the Bet365 odds scrape cannot run")
     parser.add_argument("--days-ahead", type=int, default=2)
-    parser.add_argument("--max-events", type=int, default=20)
+    parser.add_argument("--max-events", type=int, default=64)
     args = parser.parse_args()
 
     load_env()
@@ -136,7 +145,7 @@ def main() -> int:
         print("\nBet365 scrape skipped by --skip-odds.")
         return 0
     if not has_odds_key():
-        if lines_file(args.as_of).exists():
+        if has_market_rows(lines_file(args.as_of)):
             print("\nLocal odds key missing, but today's hosted Bet365 lines file exists; refreshing comparison.")
             run_comparison(args.as_of)
             return 0

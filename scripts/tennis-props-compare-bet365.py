@@ -35,19 +35,16 @@ def write_csv(path: Path, rows: list[dict[str, str]], fieldnames: list[str]) -> 
 
 
 def norm_name(value: object) -> str:
-    text = unicodedata.normalize("NFKD", str(value or ""))
+    raw = str(value or "").strip()
+    if "," in raw:
+        last, first = raw.split(",", 1)
+        if last.strip() and first.strip():
+            raw = f"{first.strip()} {last.strip()}"
+    text = unicodedata.normalize("NFKD", raw)
     text = "".join(ch for ch in text if not unicodedata.combining(ch))
     text = text.lower()
     text = re.sub(r"[^a-z0-9]+", " ", text)
     return " ".join(text.split())
-
-
-def name_match(left: str, right: str) -> bool:
-    if left == right:
-        return True
-    left_parts = left.split()
-    right_parts = right.split()
-    return bool(left_parts and right_parts and left_parts[-1] == right_parts[-1])
 
 
 def parse_float(value: object, default: float | None = None) -> float | None:
@@ -93,6 +90,13 @@ def main() -> None:
 
     lines_path = Path(args.lines) if args.lines else INBOX_DIR / f"bet365-lines-{args.date}.csv"
     out_path = Path(args.out) if args.out else PROPS_DIR / f"comparison-{args.date}.csv"
+    line_rows = read_csv(lines_path)
+    if not lines_path.exists():
+        print(f"Lines file not found: {lines_path}")
+        return
+    if not line_rows:
+        print(f"Lines file has no market rows: {lines_path}")
+        return
     board = {
         (
             str(row.get("date") or ""),
@@ -104,7 +108,7 @@ def main() -> None:
     }
 
     rows: list[dict[str, str]] = []
-    for line in read_csv(lines_path):
+    for line in line_rows:
         key = (
             str(line.get("date") or args.date),
             str(line.get("tour") or "").upper(),
@@ -113,28 +117,12 @@ def main() -> None:
         )
         board_row = board.get(key)
         if board_row is None:
-            # Allow matching by player only if opponent spelling differs in the manual drop.
-            candidates = [row for k, row in board.items() if k[:3] == key[:3]]
-            board_row = candidates[0] if len(candidates) == 1 else None
-        if board_row is None:
             # Allow matching when the manual line date is tomorrow but the board was
             # generated today.
             candidates = [
                 row
                 for k, row in board.items()
                 if k[1] == key[1] and k[2] == key[2] and k[3] == key[3]
-            ]
-            board_row = candidates[0] if len(candidates) == 1 else None
-        if board_row is None:
-            candidates = [row for k, row in board.items() if k[1] == key[1] and k[2] == key[2]]
-            board_row = candidates[0] if len(candidates) == 1 else None
-        if board_row is None:
-            line_player = key[2]
-            line_opp = key[3]
-            candidates = [
-                row
-                for k, row in board.items()
-                if k[1] == key[1] and name_match(k[2], line_player) and name_match(k[3], line_opp)
             ]
             board_row = candidates[0] if len(candidates) == 1 else None
         market = str(line.get("market") or "").strip()

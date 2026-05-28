@@ -108,9 +108,11 @@ def project_player(
     tour_norm = tour.lower()
     ace_prior_weight = 400.0 if tour_norm == "atp" else 600.0
     df_prior_weight = 600.0 if tour_norm == "atp" else 800.0
+    default_ace_prior = 0.065 if tour_norm == "atp" else 0.027
+    default_df_prior = 0.035 if tour_norm == "atp" else 0.048
 
-    prior_ace = _float(factor_row.get("tour_surface_baseline_ace"), 0.065) or 0.065
-    prior_df = _float(factor_row.get("tour_surface_baseline_df"), 0.035) or 0.035
+    prior_ace = _float(factor_row.get("tour_surface_baseline_ace"), default_ace_prior) or default_ace_prior
+    prior_df = _float(factor_row.get("tour_surface_baseline_df"), default_df_prior) or default_df_prior
     prior_svpt_per_svg = _float(factor_row.get("svpt_per_svgame"), 6.35) or 6.35
     prior_ret_first = 0.315 if tour_norm == "atp" else 0.365
 

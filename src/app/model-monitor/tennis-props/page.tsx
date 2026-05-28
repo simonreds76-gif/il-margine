@@ -88,6 +88,15 @@ async function fileStamp(filePath: string): Promise<string> {
   }
 }
 
+async function fileAgeHours(filePath: string): Promise<number | null> {
+  try {
+    const stat = await fs.stat(filePath);
+    return (Date.now() - stat.mtimeMs) / 36e5;
+  } catch {
+    return null;
+  }
+}
+
 async function latestCsv(prefix: string): Promise<string | null> {
   try {
     const files = await fs.readdir(prefix === "comparison" ? PROPS_DIR : INBOX_DIR);
@@ -201,8 +210,18 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
   );
 }
 
-function ComparisonTable({ rows }: { rows: CsvRow[] }) {
-  if (!rows.length) return <EmptyState message="No Bet365 comparison file yet. The projection board is ready; odds comparison appears after the Bet365 scrape runs." />;
+function ComparisonTable({ rows, hasLinesFile }: { rows: CsvRow[]; hasLinesFile: boolean }) {
+  if (!rows.length) {
+    return (
+      <EmptyState
+        message={
+          hasLinesFile
+            ? "Bet365 lines file exists, but no aces/DF market rows matched the board. Check the audit/manual CSV."
+            : "No Bet365 aces/DF lines available yet. The API audit can run daily, but a manual CSV drop may be needed if the provider does not expose tennis player props."
+        }
+      />
+    );
+  }
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full text-sm">
@@ -251,20 +270,23 @@ function ComparisonTable({ rows }: { rows: CsvRow[] }) {
 export default async function TennisPropsMonitorPage() {
   if (!MODEL_MONITOR_ENABLED) notFound();
 
-  const [boardRows, boardStamp, baselineStamp, factorsStamp, latestComparisonPath, latestLinesPath] = await Promise.all([
+  const [boardRows, boardStamp, boardAgeHours, baselineStamp, factorsStamp, latestComparisonPath, latestLinesPath] = await Promise.all([
     readCsv(BOARD_PATH),
     fileStamp(BOARD_PATH),
+    fileAgeHours(BOARD_PATH),
     fileStamp(BASELINE_PATH),
     fileStamp(FACTORS_PATH),
     latestCsv("comparison"),
     latestCsv("bet365-lines"),
   ]);
   const comparisonRows = latestComparisonPath ? await readCsv(latestComparisonPath) : [];
+  const lineRows = latestLinesPath ? await readCsv(latestLinesPath) : [];
   const lineStamp = latestLinesPath ? await fileStamp(latestLinesPath) : "missing";
   const comparisonStamp = latestComparisonPath ? await fileStamp(latestComparisonPath) : "missing";
   const sortedBoard = [...boardRows].sort(boardSort);
   const sortedComparison = [...comparisonRows].sort(comparisonSort);
   const actionableRows = sortedComparison.filter((row) => row.recommended_side);
+  const boardStale = boardAgeHours == null || boardAgeHours > 24;
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.12),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(244,63,94,0.08),_transparent_24%),#0b0f14] text-slate-100">
@@ -299,12 +321,18 @@ export default async function TennisPropsMonitorPage() {
           <div><span className="text-slate-500">Comparison:</span> <span className="text-slate-200">{comparisonStamp}</span></div>
         </section>
 
+        {boardStale ? (
+          <section className="mb-6 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-100">
+            Projection board is stale or missing. Run <span className="font-mono text-amber-50">python scripts/run-tennis-props-daily.py</span> after the OnCourt extract before trusting today&apos;s props board.
+          </section>
+        ) : null}
+
         <div className="grid gap-6">
           <SectionCard
             title="Bet365 Comparison"
             subtitle="Appears when data/tennis-props/comparison-YYYY-MM-DD.csv exists. Recommended side is gated hard; most rows should stay watch-only."
           >
-            <ComparisonTable rows={sortedComparison.slice(0, 80)} />
+            <ComparisonTable rows={sortedComparison.slice(0, 80)} hasLinesFile={lineRows.length > 0} />
           </SectionCard>
 
           <SectionCard

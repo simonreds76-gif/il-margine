@@ -103,7 +103,6 @@ def slam_name(value: object) -> str | None:
 
 def load_baseline(path: Path) -> dict[tuple[str, str, str], dict[str, dict[str, str]]]:
     out: dict[tuple[str, str, str], dict[str, dict[str, str]]] = defaultdict(dict)
-    surname_candidates: dict[tuple[str, str, str], set[str]] = defaultdict(set)
     for row in read_csv(path):
         full_name_norm = norm_name(row.get("player_name"))
         key = (
@@ -112,14 +111,6 @@ def load_baseline(path: Path) -> dict[tuple[str, str, str], dict[str, dict[str, 
             str(row.get("surface") or "").strip(),
         )
         out[key][str(row.get("window") or "")] = row
-        parts = full_name_norm.split()
-        if len(parts) >= 2:
-            surname_candidates[(key[0], parts[-1], key[2])].add(full_name_norm)
-    for (tour, surname, surface), names in surname_candidates.items():
-        if len(names) != 1:
-            continue
-        full_name_norm = next(iter(names))
-        out.setdefault((tour, surname, surface), out[(tour, full_name_norm, surface)])
     return out
 
 
@@ -207,17 +198,7 @@ def load_slam_samples(as_of: date) -> dict[tuple[str, str, str], int]:
                 )
                 samples[key_w].add(match_id)
                 samples[key_l].add(match_id)
-    result = {key: len(value) for key, value in samples.items()}
-    surname_candidates: dict[tuple[str, str, str], set[str]] = defaultdict(set)
-    for tour, full_name_norm, tournament in result:
-        parts = full_name_norm.split()
-        if len(parts) >= 2:
-            surname_candidates[(tour, parts[-1], tournament)].add(full_name_norm)
-    for (tour, surname, tournament), names in surname_candidates.items():
-        if len(names) == 1:
-            full_name_norm = next(iter(names))
-            result.setdefault((tour, surname, tournament), result[(tour, full_name_norm, tournament)])
-    return result
+    return {key: len(value) for key, value in samples.items()}
 
 
 def oncourt_schedule_rows(tour_code: str, include_completed: bool, board_date: str) -> list[dict[str, str]]:
@@ -412,8 +393,8 @@ def main() -> None:
     print(f"Saved {len(rows)} rows: {args.out}")
     if oncourt_wta_count:
         print(f"WTA schedule source: OnCourt today_wta ({oncourt_wta_count} matches)")
-    elif not wta_path.exists():
-        print(f"WTA schedule not found, skipped fallback: {wta_path}")
+    elif not args.wta_schedule:
+        print("WTA schedule source missing: OnCourt today_wta had no usable Slam rows; manual fallback not provided.")
 
 
 if __name__ == "__main__":

@@ -32,6 +32,14 @@ ROOT = Path(__file__).resolve().parent.parent
 BASE_URL = "https://api.odds-api.io/v3"
 OUT_DIR = ROOT / "data" / "tennis-props" / "inbox"
 DEFAULT_BOOKMAKERS = "Bet365"
+SLAM_KEYWORDS = (
+    "roland garros",
+    "french open",
+    "wimbledon",
+    "australian open",
+    "us open",
+    "u.s. open",
+)
 OUTPUT_FIELDS = [
     "date",
     "tour",
@@ -79,6 +87,10 @@ def norm(value: object) -> str:
 
 def clean_player(value: object) -> str:
     text = html.unescape(str(value or "")).strip()
+    if "," in text:
+        last, first = text.split(",", 1)
+        if last.strip() and first.strip():
+            text = f"{first.strip()} {last.strip()}"
     text = re.sub(r"\s*\(\d+\)\s*", " ", text)
     text = re.sub(r"\b(over|under|aces?|double faults?|dfs?|df)\b", " ", text, flags=re.I)
     text = re.sub(r"\d+\.?\d*", " ", text)
@@ -157,6 +169,29 @@ def tournament_from_event(event: dict[str, Any]) -> str:
     return league or "Tennis"
 
 
+def event_text(event: dict[str, Any]) -> str:
+    league = str((event.get("league") or {}).get("name") or event.get("league") or "")
+    return " ".join(
+        [
+            league,
+            str(event.get("name") or ""),
+            str(event.get("home") or ""),
+            str(event.get("away") or ""),
+        ]
+    ).lower()
+
+
+def is_slam_event(event: dict[str, Any]) -> bool:
+    text = event_text(event)
+    return any(keyword in text for keyword in SLAM_KEYWORDS)
+
+
+def is_singles_event(event: dict[str, Any]) -> bool:
+    home = str(event.get("home") or event.get("home_team") or "")
+    away = str(event.get("away") or event.get("away_team") or "")
+    return "/" not in home and "/" not in away
+
+
 def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any]) -> list[dict[str, str]]:
     market_name = str(market.get("name") or "")
     market_key = identify_market(market_name)
@@ -223,7 +258,7 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any]) 
                 "tour": tour,
                 "tournament": tournament,
                 "player": player,
-                "opponent": opponent,
+                "opponent": clean_player(opponent),
                 "market": market_key,
                 "line": f"{line:.1f}",
                 "over_odds": f"{prices['over_odds']:.4f}" if prices.get("over_odds") else "",
@@ -266,7 +301,7 @@ def main() -> None:
     parser.add_argument("--date", default=datetime.now(timezone.utc).date().isoformat())
     parser.add_argument("--days-ahead", type=int, default=2)
     parser.add_argument("--bookmakers", default=DEFAULT_BOOKMAKERS)
-    parser.add_argument("--max-events", type=int, default=20)
+    parser.add_argument("--max-events", type=int, default=64)
     parser.add_argument("--out", default="")
     parser.add_argument("--audit-out", default="")
     parser.add_argument("--dry-run", action="store_true")
@@ -287,8 +322,10 @@ def main() -> None:
     if not isinstance(events, list):
         events = []
 
+    raw_event_count = len(events)
+    events = [event for event in events if is_slam_event(event) and is_singles_event(event)]
     events = events[: max(0, args.max_events)] if args.max_events else events
-    print(f"odds-api.io tennis events selected: {len(events)}")
+    print(f"odds-api.io tennis events returned: {raw_event_count}; Slam singles selected: {len(events)}")
     if not events:
         return
 
@@ -328,9 +365,12 @@ def main() -> None:
             print(row)
         print(f"dry-run only; would write {out}")
         return
-    write_rows(out, rows, OUTPUT_FIELDS)
     write_rows(audit_out, audit_rows, AUDIT_FIELDS)
-    print(f"Saved lines: {out}")
+    if rows:
+        write_rows(out, rows, OUTPUT_FIELDS)
+        print(f"Saved lines: {out}")
+    else:
+        print("No aces/DF rows parsed; skipped writing lines file.")
     print(f"Saved audit: {audit_out}")
 
 
