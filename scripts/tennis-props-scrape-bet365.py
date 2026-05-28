@@ -40,6 +40,20 @@ SLAM_KEYWORDS = (
     "us open",
     "u.s. open",
 )
+ZERO_ROW_PROBE_PARAMS: tuple[tuple[str, dict[str, str]], ...] = (
+    ("baseline", {}),
+    ("markets=Player Props", {"markets": "Player Props"}),
+    ("markets=player_props", {"markets": "player_props"}),
+    ("market=player_props", {"market": "player_props"}),
+    ("markets=Player Aces", {"markets": "Player Aces"}),
+    ("markets=Aces", {"markets": "Aces"}),
+    ("markets=Player Double Faults", {"markets": "Player Double Faults"}),
+    ("markets=Double Faults", {"markets": "Double Faults"}),
+    ("include=all", {"include": "all"}),
+    ("include=all;markets=player_props", {"include": "all", "markets": "player_props"}),
+    ("hide_main_liner=false;markets=player_props", {"hide_main_liner": "false", "markets": "player_props"}),
+    ("source=bet365", {"source": "bet365"}),
+)
 OUTPUT_FIELDS = [
     "date",
     "tour",
@@ -288,6 +302,81 @@ def fetch_multi(api_key: str, event_ids: list[str], bookmakers: str) -> list[dic
     return payload
 
 
+def summarize_market_names(data: Any) -> str:
+    if isinstance(data, dict):
+        events = [data]
+    elif isinstance(data, list):
+        events = data
+    else:
+        return f"unexpected:{type(data).__name__}"
+
+    counts: dict[str, int] = defaultdict(int)
+    for event in events:
+        for markets in (event.get("bookmakers") or {}).values():
+            for market in markets or []:
+                counts[str(market.get("name") or "<blank>")] += 1
+    if not counts:
+        return "none"
+    return ", ".join(f"{name}:{count}" for name, count in sorted(counts.items()))
+
+
+def probe_request(path: str, params: dict[str, Any]) -> tuple[int | str, str]:
+    try:
+        response = requests.get(f"{BASE_URL}/{path.lstrip('/')}", params=params, timeout=30)
+    except requests.RequestException as exc:
+        return "request_error", repr(exc)
+    try:
+        data: Any = response.json()
+    except ValueError:
+        data = response.text[:220]
+    if response.status_code >= 400:
+        if isinstance(data, dict):
+            message = data.get("message") or data.get("error") or str(data)[:220]
+        else:
+            message = str(data)[:220]
+        return response.status_code, message
+    return response.status_code, summarize_market_names(data)
+
+
+def run_zero_row_market_probe(api_key: str, events: list[dict[str, Any]], bookmakers: str) -> None:
+    if not events:
+        return
+    event = events[0]
+    event_id = str(event.get("id") or "")
+    if not event_id:
+        return
+    league = str((event.get("league") or {}).get("name") or event.get("league") or "")
+    print("odds-api.io zero-row market probe:")
+    print(f"  event={event_id} | {league} | {event.get('home')} vs {event.get('away')}")
+
+    bookmaker_variants = []
+    for value in [bookmakers.split(",")[0].strip(), "Bet365", "bet365"]:
+        if value and value not in bookmaker_variants:
+            bookmaker_variants.append(value)
+
+    for bookmaker in bookmaker_variants:
+        labels = ZERO_ROW_PROBE_PARAMS if bookmaker == bookmaker_variants[0] else ZERO_ROW_PROBE_PARAMS[:3]
+        print(f"  bookmaker_probe={bookmaker}")
+        for label, extra in labels:
+            params = {"apiKey": api_key, "eventId": event_id, "bookmakers": bookmaker}
+            params.update(extra)
+            status, summary = probe_request("odds", params)
+            print(f"    /odds {label}: status={status}; markets={summary}")
+            time.sleep(0.2)
+
+    status, summary = probe_request(
+        "odds/multi",
+        {"apiKey": api_key, "eventIds": event_id, "bookmakers": bookmakers, "markets": "player_props"},
+    )
+    print(f"    /odds/multi markets=player_props: status={status}; markets={summary}")
+
+    status, summary = probe_request(
+        "value-bets",
+        {"apiKey": api_key, "bookmaker": bookmakers.split(",")[0].strip(), "sport": "tennis", "includeEventDetails": "true", "limit": "20"},
+    )
+    print(f"    /value-bets tennis Bet365 sample: status={status}; markets={summary}")
+
+
 def write_rows(path: Path, rows: list[dict[str, str]], fieldnames: list[str]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as f:
@@ -360,6 +449,8 @@ def main() -> None:
     out = Path(args.out) if args.out else OUT_DIR / f"bet365-lines-{args.date}.csv"
     audit_out = Path(args.audit_out) if args.audit_out else OUT_DIR / f"bet365-tennis-market-audit-{args.date}.csv"
     print(f"parsed aces/DF rows: {len(rows)}")
+    if not rows:
+        run_zero_row_market_probe(api_key, events, args.bookmakers)
     if args.dry_run:
         for row in rows[:20]:
             print(row)
