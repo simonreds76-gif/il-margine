@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
+import { Fragment } from "react";
 import { notFound } from "next/navigation";
 import {
   MODEL_MONITOR_ENABLED,
@@ -162,6 +163,33 @@ function latestDate(rows: CsvRow[]): string {
   return [...new Set(rows.map((row) => row.date).filter(Boolean))].sort().at(-1) ?? "-";
 }
 
+function dateLabel(value: string): string {
+  if (!value) return "Date missing";
+  const parsed = new Date(`${value}T12:00:00Z`);
+  if (Number.isNaN(parsed.getTime())) return value;
+  return new Intl.DateTimeFormat("en-GB", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+    timeZone: "Europe/London",
+  }).format(parsed);
+}
+
+function groupRowsByDate(rows: CsvRow[]): { date: string; rows: CsvRow[] }[] {
+  const grouped = new Map<string, CsvRow[]>();
+  for (const row of rows) {
+    const key = row.date || "unscheduled";
+    grouped.set(key, [...(grouped.get(key) ?? []), row]);
+  }
+  return [...grouped.entries()]
+    .sort(([a], [b]) => {
+      if (a === "unscheduled") return 1;
+      if (b === "unscheduled") return -1;
+      return a.localeCompare(b);
+    })
+    .map(([date, groupedRows]) => ({ date, rows: groupedRows }));
+}
+
 function MiniBadge({ label, tone }: { label: string; tone: string }) {
   return (
     <span className={cn("inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em]", tone)}>
@@ -172,6 +200,7 @@ function MiniBadge({ label, tone }: { label: string; tone: string }) {
 
 function ProjectionTable({ rows }: { rows: CsvRow[] }) {
   if (!rows.length) return <EmptyState message="No aces/DF projection board found. Run python scripts/run-tennis-props-daily.py after OnCourt extract." />;
+  const groupedRows = groupRowsByDate(rows);
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full text-sm">
@@ -189,23 +218,35 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, index) => (
-            <tr key={`${row.tour}-${row.player}-${row.opponent}-${index}`} className="border-b border-slate-900/80 text-slate-300">
-              <td className="px-3 py-3">
-                <MiniBadge label={row.tour || "-"} tone={row.tour === "WTA" ? "border-fuchsia-500/25 bg-fuchsia-500/10 text-fuchsia-200" : "border-cyan-500/25 bg-cyan-500/10 text-cyan-200"} />
-              </td>
-              <td className="px-3 py-3 font-semibold text-slate-100">{row.player}</td>
-              <td className="px-3 py-3 text-slate-400">{row.opponent}</td>
-              <td className="px-3 py-3 font-mono text-lg text-emerald-300">{fmt(row.projected_aces, 1)}</td>
-              <td className="px-3 py-3 font-mono text-lg text-rose-300">{fmt(row.projected_dfs, 1)}</td>
-              <td className="px-3 py-3"><MiniBadge label={row.ace_confidence || "LOW"} tone={confidenceTone(row.ace_confidence)} /></td>
-              <td className="px-3 py-3"><MiniBadge label={row.df_confidence || "LOW"} tone={confidenceTone(row.df_confidence)} /></td>
-              <td className="px-3 py-3 font-mono text-xs text-slate-400">
-                <div>{row.player_surface_matches || "0"}m / {row.player_surface_svpt_sample || "0"} svpt</div>
-                <div className="text-slate-600">event {row.same_tournament_matches || "0"}m / {row.same_tournament_svpt || "0"} svpt</div>
-              </td>
-              <td className="px-3 py-3 text-xs text-slate-500">{row.notes || "clear"}</td>
-            </tr>
+          {groupedRows.map((group) => (
+            <Fragment key={group.date}>
+              <tr className="border-y border-slate-800 bg-slate-950/80">
+                <td colSpan={9} className="px-3 py-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="text-xs font-black uppercase tracking-[0.18em] text-emerald-300">{dateLabel(group.date)}</span>
+                    <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate-500">{group.rows.length} player rows</span>
+                  </div>
+                </td>
+              </tr>
+              {group.rows.map((row, index) => (
+                <tr key={`${group.date}-${row.tour}-${row.player}-${row.opponent}-${index}`} className="border-b border-slate-900/80 text-slate-300">
+                  <td className="px-3 py-3">
+                    <MiniBadge label={row.tour || "-"} tone={row.tour === "WTA" ? "border-fuchsia-500/25 bg-fuchsia-500/10 text-fuchsia-200" : "border-cyan-500/25 bg-cyan-500/10 text-cyan-200"} />
+                  </td>
+                  <td className="px-3 py-3 font-semibold text-slate-100">{row.player}</td>
+                  <td className="px-3 py-3 text-slate-400">{row.opponent}</td>
+                  <td className="px-3 py-3 font-mono text-lg text-emerald-300">{fmt(row.projected_aces, 1)}</td>
+                  <td className="px-3 py-3 font-mono text-lg text-rose-300">{fmt(row.projected_dfs, 1)}</td>
+                  <td className="px-3 py-3"><MiniBadge label={row.ace_confidence || "LOW"} tone={confidenceTone(row.ace_confidence)} /></td>
+                  <td className="px-3 py-3"><MiniBadge label={row.df_confidence || "LOW"} tone={confidenceTone(row.df_confidence)} /></td>
+                  <td className="px-3 py-3 font-mono text-xs text-slate-400">
+                    <div>{row.player_surface_matches || "0"}m / {row.player_surface_svpt_sample || "0"} svpt</div>
+                    <div className="text-slate-600">event {row.same_tournament_matches || "0"}m / {row.same_tournament_svpt || "0"} svpt</div>
+                  </td>
+                  <td className="px-3 py-3 text-xs text-slate-500">{row.notes || "clear"}</td>
+                </tr>
+              ))}
+            </Fragment>
           ))}
         </tbody>
       </table>
@@ -225,6 +266,7 @@ function ComparisonTable({ rows, hasLinesFile }: { rows: CsvRow[]; hasLinesFile:
       />
     );
   }
+  const groupedRows = groupRowsByDate(rows);
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full text-sm">
@@ -243,26 +285,38 @@ function ComparisonTable({ rows, hasLinesFile }: { rows: CsvRow[]; hasLinesFile:
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, index) => (
-            <tr key={`${row.player}-${row.market}-${row.line}-${index}`} className="border-b border-slate-900/80 text-slate-300">
-              <td className="px-3 py-3"><MiniBadge label={row.recommended_side || "watch"} tone={recTone(row.recommended_side)} /></td>
-              <td className="px-3 py-3">
-                <div className="font-semibold text-slate-100">{row.player}</div>
-                <div className="text-xs text-slate-500">vs {row.opponent}</div>
-              </td>
-              <td className="px-3 py-3 text-slate-300">{row.market}</td>
-              <td className="px-3 py-3 font-mono text-slate-100">{fmt(row.line, 1)}</td>
-              <td className="px-3 py-3 font-mono text-slate-100">{fmt(row.projection_mean, 1)}</td>
-              <td className="px-3 py-3 font-mono text-slate-300">{fmt(row.over_odds, 2)}</td>
-              <td className="px-3 py-3 font-mono text-slate-300">{fmt(row.under_odds, 2)}</td>
-              <td className="px-3 py-3 font-mono text-xs text-slate-400">{fmt(row.fair_over_odds, 2)} / {fmt(row.fair_under_odds, 2)}</td>
-              <td className="px-3 py-3 font-mono text-xs">
-                <span className={n(row.value_over_pct) > 0 ? "text-emerald-300" : "text-slate-500"}>{fmt(row.value_over_pct, 1)}%</span>
-                <span className="text-slate-600"> / </span>
-                <span className={n(row.value_under_pct) > 0 ? "text-emerald-300" : "text-slate-500"}>{fmt(row.value_under_pct, 1)}%</span>
-              </td>
-              <td className="px-3 py-3"><MiniBadge label={row.confidence || "LOW"} tone={confidenceTone(row.confidence)} /></td>
-            </tr>
+          {groupedRows.map((group) => (
+            <Fragment key={group.date}>
+              <tr className="border-y border-slate-800 bg-slate-950/80">
+                <td colSpan={10} className="px-3 py-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="text-xs font-black uppercase tracking-[0.18em] text-cyan-300">{dateLabel(group.date)}</span>
+                    <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate-500">{group.rows.length} line rows</span>
+                  </div>
+                </td>
+              </tr>
+              {group.rows.map((row, index) => (
+                <tr key={`${group.date}-${row.player}-${row.market}-${row.line}-${index}`} className="border-b border-slate-900/80 text-slate-300">
+                  <td className="px-3 py-3"><MiniBadge label={row.recommended_side || "watch"} tone={recTone(row.recommended_side)} /></td>
+                  <td className="px-3 py-3">
+                    <div className="font-semibold text-slate-100">{row.player}</div>
+                    <div className="text-xs text-slate-500">vs {row.opponent}</div>
+                  </td>
+                  <td className="px-3 py-3 text-slate-300">{row.market}</td>
+                  <td className="px-3 py-3 font-mono text-slate-100">{fmt(row.line, 1)}</td>
+                  <td className="px-3 py-3 font-mono text-slate-100">{fmt(row.projection_mean, 1)}</td>
+                  <td className="px-3 py-3 font-mono text-slate-300">{fmt(row.over_odds, 2)}</td>
+                  <td className="px-3 py-3 font-mono text-slate-300">{fmt(row.under_odds, 2)}</td>
+                  <td className="px-3 py-3 font-mono text-xs text-slate-400">{fmt(row.fair_over_odds, 2)} / {fmt(row.fair_under_odds, 2)}</td>
+                  <td className="px-3 py-3 font-mono text-xs">
+                    <span className={n(row.value_over_pct) > 0 ? "text-emerald-300" : "text-slate-500"}>{fmt(row.value_over_pct, 1)}%</span>
+                    <span className="text-slate-600"> / </span>
+                    <span className={n(row.value_under_pct) > 0 ? "text-emerald-300" : "text-slate-500"}>{fmt(row.value_under_pct, 1)}%</span>
+                  </td>
+                  <td className="px-3 py-3"><MiniBadge label={row.confidence || "LOW"} tone={confidenceTone(row.confidence)} /></td>
+                </tr>
+              ))}
+            </Fragment>
           ))}
         </tbody>
       </table>
