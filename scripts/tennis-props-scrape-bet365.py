@@ -342,41 +342,55 @@ def run_zero_row_market_probe(api_key: str, events: list[dict[str, Any]], bookma
     if not events:
         return
     primary_bookmaker = bookmakers.split(",")[0].strip()
-    event = next(
-        (
-            candidate
-            for candidate in events
-            if (candidate.get("bookmakers") or {}).get(primary_bookmaker)
-        ),
-        events[0],
-    )
-    event_id = str(event.get("id") or "")
-    if not event_id:
-        return
-    league = str((event.get("league") or {}).get("name") or event.get("league") or "")
     print("odds-api.io zero-row market probe:")
-    print(f"  event={event_id} | {league} | {event.get('home')} vs {event.get('away')}")
+
+    populated_events = [
+        candidate
+        for candidate in events
+        if (candidate.get("bookmakers") or {}).get(primary_bookmaker)
+    ] or events[:1]
+    probe_events: list[dict[str, Any]] = []
+    for tour_marker in ("ATP", "WTA"):
+        match = next(
+            (
+                candidate
+                for candidate in populated_events
+                if tour_marker in str((candidate.get("league") or {}).get("name") or candidate.get("league") or "")
+            ),
+            None,
+        )
+        if match and match not in probe_events:
+            probe_events.append(match)
+    if not probe_events:
+        probe_events = populated_events[:1]
 
     bookmaker_variants = []
     for value in [primary_bookmaker, "Bet365", "bet365"]:
         if value and value not in bookmaker_variants:
             bookmaker_variants.append(value)
 
-    for bookmaker in bookmaker_variants:
-        labels = ZERO_ROW_PROBE_PARAMS if bookmaker == bookmaker_variants[0] else ZERO_ROW_PROBE_PARAMS[:3]
-        print(f"  bookmaker_probe={bookmaker}")
-        for label, extra in labels:
-            params = {"apiKey": api_key, "eventId": event_id, "bookmakers": bookmaker}
-            params.update(extra)
-            status, summary = probe_request("odds", params)
-            print(f"    /odds {label}: status={status}; markets={summary}")
-            time.sleep(0.2)
+    for event in probe_events:
+        event_id = str(event.get("id") or "")
+        if not event_id:
+            continue
+        league = str((event.get("league") or {}).get("name") or event.get("league") or "")
+        print(f"  event={event_id} | {league} | {event.get('home')} vs {event.get('away')}")
 
-    status, summary = probe_request(
-        "odds/multi",
-        {"apiKey": api_key, "eventIds": event_id, "bookmakers": bookmakers, "markets": "player_props"},
-    )
-    print(f"    /odds/multi markets=player_props: status={status}; markets={summary}")
+        for bookmaker in bookmaker_variants:
+            labels = ZERO_ROW_PROBE_PARAMS if bookmaker == bookmaker_variants[0] else ZERO_ROW_PROBE_PARAMS[:3]
+            print(f"  bookmaker_probe={bookmaker}")
+            for label, extra in labels:
+                params = {"apiKey": api_key, "eventId": event_id, "bookmakers": bookmaker}
+                params.update(extra)
+                status, summary = probe_request("odds", params)
+                print(f"    /odds {label}: status={status}; markets={summary}")
+                time.sleep(0.2)
+
+        status, summary = probe_request(
+            "odds/multi",
+            {"apiKey": api_key, "eventIds": event_id, "bookmakers": bookmakers, "markets": "player_props"},
+        )
+        print(f"    /odds/multi markets=player_props: status={status}; markets={summary}")
 
     status, summary = probe_request(
         "value-bets",
