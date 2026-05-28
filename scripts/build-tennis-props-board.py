@@ -84,6 +84,13 @@ def parse_int(value: object, default: int = 0) -> int:
         return default
 
 
+def add_stat_totals(target: dict[str, int], *, aces: object, dfs: object, svpt: object) -> None:
+    target["matches"] = target.get("matches", 0) + 1
+    target["aces"] = target.get("aces", 0) + parse_int(aces)
+    target["dfs"] = target.get("dfs", 0) + parse_int(dfs)
+    target["svpt"] = target.get("svpt", 0) + parse_int(svpt)
+
+
 def fmt(value: float | None, digits: int = 3) -> str:
     return "" if value is None else f"{value:.{digits}f}"
 
@@ -225,11 +232,14 @@ def oncourt_schedule_rows(tour_code: str, include_completed: bool, board_date: s
             {
                 "date": board_date,
                 "tour": tour_code.upper(),
+                "tour_id": str(row.get("tour_id") or "").strip(),
                 "tournament": tournament,
                 "round": ROUND_BY_ID.get(str(row.get("round_id") or ""), str(row.get("round_id") or "")),
                 "surface": SURFACE_BY_COURT.get(str(tour.get("court_id") or ""), "Clay"),
                 "player1": p1,
                 "player2": p2,
+                "player1_id": str(row.get("player1_id") or "").strip(),
+                "player2_id": str(row.get("player2_id") or "").strip(),
                 "source": f"oncourt_today_{tour_lower}",
             }
         )
@@ -248,15 +258,79 @@ def wta_schedule_rows(path: Path) -> list[dict[str, str]]:
             {
                 "date": str(row.get("date") or "").strip(),
                 "tour": "WTA",
+                "tour_id": str(row.get("tour_id") or "").strip(),
                 "tournament": tournament,
                 "round": str(row.get("round") or "").strip(),
                 "surface": str(row.get("surface") or "Clay").strip() or "Clay",
                 "player1": p1,
                 "player2": p2,
+                "player1_id": str(row.get("player1_id") or "").strip(),
+                "player2_id": str(row.get("player2_id") or "").strip(),
                 "source": str(path),
             }
         )
     return rows
+
+
+def load_current_tournament_stats(schedules: list[dict[str, str]], as_of: date) -> dict[tuple[str, str, str], dict[str, str]]:
+    """ATP same-edition aces/DFs from OnCourt completed matches.
+
+    WTA OnCourt stats are not exported locally, so WTA rows intentionally fall
+    back to historical Sackmann windows until a WTA stats source is added.
+    """
+    atp_tour_ids = {
+        str(row.get("tour_id") or "").strip()
+        for row in schedules
+        if str(row.get("tour") or "").upper() == "ATP" and str(row.get("tour_id") or "").strip()
+    }
+    if not atp_tour_ids:
+        return {}
+
+    stat_index: dict[tuple[str, str, str, str], dict[str, str]] = {}
+    for row in read_csv(ONCOURT_DIR / "stat_atp.csv"):
+        tour_id = str(row.get("tour_id") or "").strip()
+        if tour_id not in atp_tour_ids:
+            continue
+        key = (
+            str(row.get("winner_id") or "").strip(),
+            str(row.get("loser_id") or "").strip(),
+            tour_id,
+            str(row.get("round_id") or "").strip(),
+        )
+        stat_index.setdefault(key, row)
+
+    totals: dict[tuple[str, str, str], dict[str, int]] = defaultdict(dict)
+    for game in read_csv(ONCOURT_DIR / "games_atp.csv"):
+        tour_id = str(game.get("tour_id") or "").strip()
+        if tour_id not in atp_tour_ids:
+            continue
+        match_date = parse_date(game.get("date"))
+        if match_date is None or match_date >= as_of:
+            continue
+        winner_id = str(game.get("winner_id") or "").strip()
+        loser_id = str(game.get("loser_id") or "").strip()
+        if not winner_id or not loser_id or winner_id == loser_id:
+            continue
+        stat = stat_index.get((winner_id, loser_id, tour_id, str(game.get("round_id") or "").strip()))
+        if not stat:
+            continue
+        add_stat_totals(
+            totals[("ATP", tour_id, winner_id)],
+            aces=stat.get("w_ace"),
+            dfs=stat.get("w_df"),
+            svpt=stat.get("w_svpt"),
+        )
+        add_stat_totals(
+            totals[("ATP", tour_id, loser_id)],
+            aces=stat.get("l_ace"),
+            dfs=stat.get("l_df"),
+            svpt=stat.get("l_svpt"),
+        )
+
+    return {
+        key: {field: str(value) for field, value in values.items()}
+        for key, values in totals.items()
+    }
 
 
 def project_side(
@@ -264,10 +338,12 @@ def project_side(
     schedule: dict[str, str],
     player: str,
     opponent: str,
+    player_id: str,
     baseline: dict[tuple[str, str, str], dict[str, dict[str, str]]],
     factors: dict[tuple[str, str, str], dict[str, str]],
     slam_samples: dict[tuple[str, str, str], int],
     aliases: dict[tuple[str, str], str],
+    current_tournament_stats: dict[tuple[str, str, str], dict[str, str]],
 ) -> dict[str, str]:
     tour = schedule["tour"].upper()
     surface = schedule["surface"]
@@ -279,6 +355,7 @@ def project_side(
     factor = factors.get((tour, tournament, surface)) or {}
     expected_games = parse_float(factor.get("match_games_per_match"), 35.0 if tour == "ATP" else 22.0)
     slam_n = slam_samples.get((tour, player_lookup, tournament), 0)
+    same_tournament_row = current_tournament_stats.get((tour, str(schedule.get("tour_id") or ""), player_id))
     projection = project_player(
         tour=tour,
         player_rows=player_rows,
@@ -286,6 +363,7 @@ def project_side(
         factor_row=factor,
         expected_match_games=expected_games or (35.0 if tour == "ATP" else 22.0),
         slam_matches=slam_n,
+        same_tournament_row=same_tournament_row,
     )
     career = player_rows.get("career_4y") or {}
     notes = list(projection.notes)
@@ -308,6 +386,10 @@ def project_side(
         "player_surface_svpt_sample": str(parse_int(career.get("svpt"))),
         "player_surface_matches": str(parse_int(career.get("matches"))),
         "player_slam_sample": str(slam_n),
+        "same_tournament_matches": str(projection.same_tournament_matches),
+        "same_tournament_svpt": str(projection.same_tournament_svpt),
+        "same_tournament_ace_weight": fmt(projection.same_tournament_ace_weight, 3),
+        "same_tournament_df_weight": fmt(projection.same_tournament_df_weight, 3),
         "venue_ace_factor": str(factor.get("ace_factor") or ""),
         "venue_df_factor": str(factor.get("df_factor") or ""),
         "ace_rate_adj": fmt(projection.ace_rate, 5),
@@ -339,6 +421,7 @@ def main() -> None:
     oncourt_wta_count = sum(1 for row in schedules if row.get("source") == "oncourt_today_wta")
     if args.wta_schedule:
         schedules.extend(wta_schedule_rows(Path(args.wta_schedule)))
+    current_tournament_stats = load_current_tournament_stats(schedules, as_of)
 
     rows: list[dict[str, str]] = []
     for schedule in schedules:
@@ -347,10 +430,12 @@ def main() -> None:
                 schedule=schedule,
                 player=schedule["player1"],
                 opponent=schedule["player2"],
+                player_id=str(schedule.get("player1_id") or ""),
                 baseline=baseline,
                 factors=factors,
                 slam_samples=slam_samples,
                 aliases=aliases,
+                current_tournament_stats=current_tournament_stats,
             )
         )
         rows.append(
@@ -358,10 +443,12 @@ def main() -> None:
                 schedule=schedule,
                 player=schedule["player2"],
                 opponent=schedule["player1"],
+                player_id=str(schedule.get("player2_id") or ""),
                 baseline=baseline,
                 factors=factors,
                 slam_samples=slam_samples,
                 aliases=aliases,
+                current_tournament_stats=current_tournament_stats,
             )
         )
 
@@ -382,6 +469,10 @@ def main() -> None:
         "player_surface_svpt_sample",
         "player_surface_matches",
         "player_slam_sample",
+        "same_tournament_matches",
+        "same_tournament_svpt",
+        "same_tournament_ace_weight",
+        "same_tournament_df_weight",
         "venue_ace_factor",
         "venue_df_factor",
         "ace_rate_adj",

@@ -155,6 +155,13 @@ STREAK_UNIT = 0.004
 STREAK_CAP = 0.03
 RESULTS_FORM_TOTAL_CAP = 0.08
 
+# Same-edition tournament form. This is intentionally much smaller than the
+# normal form layer: at a Slam everybody still alive has been winning, so we use
+# score dominance, not raw W/L, and cap the effect hard.
+CURRENT_TOURNAMENT_MIN_MATCHES = 1
+CURRENT_TOURNAMENT_DOMINANCE_WEIGHT = 0.055
+CURRENT_TOURNAMENT_CAP = 0.018
+
 # Same-tournament history (past years by normalized tournament key)
 TOURNAMENT_HISTORY_MIN_MATCHES = 2
 TOURNAMENT_HISTORY_WEIGHT = 0.08
@@ -622,6 +629,32 @@ def _tour_class_score(tour_rank, tour_name):
     if rank == 0 or "ITF" in name or "FUTURES" in name or re.search(r"\b[MW]\d{1,2}\b", name):
         return 0.0
     return 1.0
+
+
+def _score_games_for_winner(result):
+    text = (result or "").strip()
+    if not text or "bye" in text.lower() or "w/o" in text.lower() or "walkover" in text.lower():
+        return None
+    winner_games = 0
+    loser_games = 0
+    winner_sets = 0
+    loser_sets = 0
+    for token in text.split():
+        cleaned = re.sub(r"\([^)]*\)", "", token)
+        match = re.match(r"^(\d+)-(\d+)", cleaned)
+        if not match:
+            continue
+        left = int(match.group(1))
+        right = int(match.group(2))
+        winner_games += left
+        loser_games += right
+        if left > right:
+            winner_sets += 1
+        elif right > left:
+            loser_sets += 1
+    if winner_games + loser_games <= 0:
+        return None
+    return winner_games, loser_games, winner_sets, loser_sets
 
 
 def _series_calibration_blend(series_bucket, surface, confidence):
@@ -1949,8 +1982,15 @@ def main():
     # 5e) Recent form / fatigue (player_recent_activity)
     recent_activity_by_player = {}
     fixture_player_ids = set()
+    current_fixture_tour_ids = set()
     for f in fixtures:
         a, b = f.get("player1_id"), f.get("player2_id")
+        tid_fixture = f.get("tour_id")
+        if tid_fixture is not None:
+            try:
+                current_fixture_tour_ids.add(int(tid_fixture))
+            except (TypeError, ValueError):
+                pass
         if a is not None:
             fixture_player_ids.add(int(a))
         if b is not None:
@@ -1958,6 +1998,7 @@ def main():
     # 5e0) Match-history features from oncourt_games:
     # YTD form, current streak, and same-tournament history across past years.
     recent_results_by_player = {}
+    current_tournament_results_by_player_tour = {}
     tournament_history_by_player_key = {}
     history_start = date(max(2000, date.today().year - RESULTS_LOOKBACK_YEARS), 1, 1).isoformat()
 
@@ -1978,7 +2019,7 @@ def main():
                             f"{base}/oncourt_games",
                             headers=headers,
                             params={
-                                "select": "winner_id,loser_id,tour_id,round_id,date",
+                                "select": "winner_id,loser_id,tour_id,round_id,date,result",
                                 col: in_clause,
                                 "date": f"gte.{history_start}",
                                 "offset": off,
@@ -2032,6 +2073,31 @@ def main():
                             player_history[w].append((d_hist, True, tid_hist, class_score))
                         if l in player_history:
                             player_history[l].append((d_hist, False, tid_hist, class_score))
+
+                        if tid_hist in current_fixture_tour_ids and d_hist < date.today():
+                            parsed_score = _score_games_for_winner(row.get("result"))
+                            if parsed_score is not None:
+                                w_games, l_games, w_sets, l_sets = parsed_score
+                                w_key = (w, tid_hist)
+                                l_key = (l, tid_hist)
+                                w_rec = current_tournament_results_by_player_tour.setdefault(
+                                    w_key,
+                                    {"matches": 0, "games_for": 0, "games_against": 0, "sets_for": 0, "sets_against": 0},
+                                )
+                                l_rec = current_tournament_results_by_player_tour.setdefault(
+                                    l_key,
+                                    {"matches": 0, "games_for": 0, "games_against": 0, "sets_for": 0, "sets_against": 0},
+                                )
+                                w_rec["matches"] += 1
+                                w_rec["games_for"] += w_games
+                                w_rec["games_against"] += l_games
+                                w_rec["sets_for"] += w_sets
+                                w_rec["sets_against"] += l_sets
+                                l_rec["matches"] += 1
+                                l_rec["games_for"] += l_games
+                                l_rec["games_against"] += w_games
+                                l_rec["sets_for"] += l_sets
+                                l_rec["sets_against"] += w_sets
 
                     off += len(data)
                     if len(data) < 1000:
@@ -2111,7 +2177,8 @@ def main():
     )
     print(
         f"  Match history: {players_with_hist}/{len(fixture_player_ids)} players with matches since {history_start}, "
-        f"tournament-history keys: {len(tournament_history_by_player_key):,}"
+        f"tournament-history keys: {len(tournament_history_by_player_key):,}, "
+        f"current-tournament keys: {len(current_tournament_results_by_player_tour):,}"
     )
 
     def _results_form_component(pid):
@@ -2145,6 +2212,26 @@ def main():
             d += min(STREAK_CAP, streak_boost)
 
         return _clamp(d, -RESULTS_FORM_TOTAL_CAP, RESULTS_FORM_TOTAL_CAP)
+
+    def _current_tournament_component(pid, tid):
+        if tid is None:
+            return 0.0
+        rec = current_tournament_results_by_player_tour.get((pid, tid)) or {}
+        matches = int(rec.get("matches") or 0)
+        if matches < CURRENT_TOURNAMENT_MIN_MATCHES:
+            return 0.0
+        games_for = float(rec.get("games_for") or 0.0)
+        games_against = float(rec.get("games_against") or 0.0)
+        total_games = games_for + games_against
+        if total_games < 12:
+            return 0.0
+        dominance = (games_for - games_against) / total_games
+        scale = min(1.0, matches / 3.0)
+        return _clamp(
+            dominance * CURRENT_TOURNAMENT_DOMINANCE_WEIGHT * scale,
+            -CURRENT_TOURNAMENT_CAP,
+            CURRENT_TOURNAMENT_CAP,
+        )
 
     def _tournament_history_component(pid, tid):
         if tid is None:
@@ -3041,6 +3128,7 @@ def main():
         h2h_delta = 0.0
         adv_delta = 0.0
         results_form_delta = 0.0
+        current_tournament_delta = 0.0
         tour_history_delta = 0.0
         crisis_shock_delta = 0.0
         cpi_delta = 0.0
@@ -3223,6 +3311,17 @@ def main():
         )
         delta_p1 += results_form_delta
 
+        # Current edition form: score dominance from already completed matches
+        # in this exact tournament_id, capped separately from long-form history.
+        p1_current_tour = _current_tournament_component(p1, tid)
+        p2_current_tour = _current_tournament_component(p2, tid)
+        current_tournament_delta = _clamp(
+            results_mult * (p1_current_tour - p2_current_tour),
+            -CURRENT_TOURNAMENT_CAP,
+            CURRENT_TOURNAMENT_CAP,
+        )
+        delta_p1 += current_tournament_delta
+
         # Tournament history (same event across years)
         if tid is not None:
             t1 = _tournament_history_component(p1, tid)
@@ -3247,6 +3346,7 @@ def main():
             AGE_CAP,
             FORM_TOTAL_CAP,
             RESULTS_FORM_TOTAL_CAP,
+            CURRENT_TOURNAMENT_CAP,
             TOURNAMENT_HISTORY_CAP,
             H2H_CAP,
             ADV_TOTAL_CAP,
@@ -3484,6 +3584,7 @@ def main():
                 print(
                     f"    H2H={h2h_delta:+.4f} ADV={adv_delta:+.4f} "
                     f"form_base={delta_p1_form:+.4f} results_form={results_form_delta:+.4f} "
+                    f"current_tour={current_tournament_delta:+.4f} "
                     f"tour_hist={tour_history_delta:+.4f} crisis_shock={crisis_shock_delta:+.4f} "
                     f"total_delta={delta_p1:+.4f} elo_mag_release={elo_magnitude_release:+.4f} "
                     f"rank_conflict_release={surface_rank_conflict_release:+.4f} "

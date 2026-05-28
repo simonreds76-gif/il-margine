@@ -15,6 +15,10 @@ class Projection:
     expected_service_games: float
     ace_rate: float
     df_rate: float
+    same_tournament_matches: int
+    same_tournament_svpt: int
+    same_tournament_ace_weight: float
+    same_tournament_df_weight: float
     ace_confidence: str
     df_confidence: str
     notes: tuple[str, ...]
@@ -96,6 +100,25 @@ def _clip(value: float, low: float, high: float) -> float:
     return max(low, min(high, value))
 
 
+def _same_tournament_rate(
+    row: dict[str, str] | None,
+    numerator_field: str,
+    *,
+    max_weight: float,
+    sample_full: float,
+) -> tuple[float | None, float, int, int]:
+    if not row:
+        return None, 0.0, 0, 0
+    svpt = _int(row.get("svpt"))
+    matches = _int(row.get("matches"))
+    numerator = _int(row.get(numerator_field))
+    if svpt <= 0 or matches <= 0:
+        return None, 0.0, matches, svpt
+    rate = numerator / svpt
+    weight = _clip((svpt / sample_full) * max_weight, 0.0, max_weight)
+    return rate, weight, matches, svpt
+
+
 def project_player(
     *,
     tour: str,
@@ -104,6 +127,7 @@ def project_player(
     factor_row: dict[str, str],
     expected_match_games: float,
     slam_matches: int,
+    same_tournament_row: dict[str, str] | None = None,
 ) -> Projection:
     tour_norm = tour.lower()
     ace_prior_weight = 400.0 if tour_norm == "atp" else 600.0
@@ -120,6 +144,24 @@ def project_player(
         player_rows, "ace_rate", "svpt", prior_ace, ace_prior_weight
     )
     df_rate, _ = _blend_rate(player_rows, "df_rate", "svpt", prior_df, df_prior_weight)
+
+    same_ace_rate, same_ace_weight, same_matches, same_svpt = _same_tournament_rate(
+        same_tournament_row,
+        "aces",
+        max_weight=0.34 if tour_norm == "atp" else 0.24,
+        sample_full=320.0 if tour_norm == "atp" else 280.0,
+    )
+    same_df_rate, same_df_weight, _, _ = _same_tournament_rate(
+        same_tournament_row,
+        "dfs",
+        max_weight=0.24 if tour_norm == "atp" else 0.18,
+        sample_full=360.0 if tour_norm == "atp" else 320.0,
+    )
+    if same_ace_rate is not None and same_ace_weight > 0:
+        ace_rate = (1.0 - same_ace_weight) * ace_rate + same_ace_weight * same_ace_rate
+    if same_df_rate is not None and same_df_weight > 0:
+        df_rate = (1.0 - same_df_weight) * df_rate + same_df_weight * same_df_rate
+
     svpt_per_svg = _blend_value(
         player_rows, "svpt_per_svgame", "svgms", prior_svpt_per_svg, 60.0
     )
@@ -138,6 +180,8 @@ def project_player(
         notes.append("NO_OPP_DATA")
     if slam_matches <= 0:
         notes.append("SLAM_DEBUT")
+    if same_matches > 0:
+        notes.append(f"SAME_TOURNAMENT_N{same_matches}")
 
     slam_ace_factor = _float(factor_row.get("ace_factor"), 1.0) or 1.0
     slam_df_factor = _float(factor_row.get("df_factor"), 1.0) or 1.0
@@ -174,6 +218,10 @@ def project_player(
         expected_service_games=expected_service_games,
         ace_rate=ace_rate_adj,
         df_rate=df_rate_adj,
+        same_tournament_matches=same_matches,
+        same_tournament_svpt=same_svpt,
+        same_tournament_ace_weight=same_ace_weight,
+        same_tournament_df_weight=same_df_weight,
         ace_confidence=ace_confidence,
         df_confidence=df_confidence,
         notes=tuple(notes),

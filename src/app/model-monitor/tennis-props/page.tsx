@@ -200,7 +200,10 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
               <td className="px-3 py-3 font-mono text-lg text-rose-300">{fmt(row.projected_dfs, 1)}</td>
               <td className="px-3 py-3"><MiniBadge label={row.ace_confidence || "LOW"} tone={confidenceTone(row.ace_confidence)} /></td>
               <td className="px-3 py-3"><MiniBadge label={row.df_confidence || "LOW"} tone={confidenceTone(row.df_confidence)} /></td>
-              <td className="px-3 py-3 font-mono text-xs text-slate-400">{row.player_surface_matches || "0"}m / {row.player_surface_svpt_sample || "0"} svpt</td>
+              <td className="px-3 py-3 font-mono text-xs text-slate-400">
+                <div>{row.player_surface_matches || "0"}m / {row.player_surface_svpt_sample || "0"} svpt</div>
+                <div className="text-slate-600">event {row.same_tournament_matches || "0"}m / {row.same_tournament_svpt || "0"} svpt</div>
+              </td>
               <td className="px-3 py-3 text-xs text-slate-500">{row.notes || "clear"}</td>
             </tr>
           ))}
