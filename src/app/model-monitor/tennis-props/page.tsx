@@ -251,9 +251,7 @@ function TournamentRoundDetails({ row }: { row: CsvRow }) {
         </div>
       ) : (
         <div className="mt-2 text-[11px] leading-relaxed text-slate-600">
-          {row.tour === "WTA"
-            ? "No current WTA ace/DF stat feed is loaded locally yet."
-            : "No completed same-tournament stat row found yet."}
+          No completed same-tournament stat row found yet.
         </div>
       )}
     </details>

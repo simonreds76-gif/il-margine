@@ -274,59 +274,58 @@ def wta_schedule_rows(path: Path) -> list[dict[str, str]]:
 
 
 def load_current_tournament_stats(schedules: list[dict[str, str]], as_of: date) -> dict[tuple[str, str, str], dict[str, str]]:
-    """ATP same-edition aces/DFs from OnCourt completed matches.
-
-    WTA OnCourt stats are not exported locally, so WTA rows intentionally fall
-    back to historical Sackmann windows until a WTA stats source is added.
-    """
-    atp_tour_ids = {
-        str(row.get("tour_id") or "").strip()
-        for row in schedules
-        if str(row.get("tour") or "").upper() == "ATP" and str(row.get("tour_id") or "").strip()
-    }
-    if not atp_tour_ids:
+    """Same-edition aces/DFs from OnCourt completed matches."""
+    tour_ids_by_tour: dict[str, set[str]] = defaultdict(set)
+    for row in schedules:
+        tour = str(row.get("tour") or "").upper()
+        tour_id = str(row.get("tour_id") or "").strip()
+        if tour in {"ATP", "WTA"} and tour_id:
+            tour_ids_by_tour[tour].add(tour_id)
+    if not tour_ids_by_tour:
         return {}
 
-    stat_index: dict[tuple[str, str, str, str], dict[str, str]] = {}
-    for row in read_csv(ONCOURT_DIR / "stat_atp.csv"):
-        tour_id = str(row.get("tour_id") or "").strip()
-        if tour_id not in atp_tour_ids:
-            continue
-        key = (
-            str(row.get("winner_id") or "").strip(),
-            str(row.get("loser_id") or "").strip(),
-            tour_id,
-            str(row.get("round_id") or "").strip(),
-        )
-        stat_index.setdefault(key, row)
-
     totals: dict[tuple[str, str, str], dict[str, int]] = defaultdict(dict)
-    for game in read_csv(ONCOURT_DIR / "games_atp.csv"):
-        tour_id = str(game.get("tour_id") or "").strip()
-        if tour_id not in atp_tour_ids:
-            continue
-        match_date = parse_date(game.get("date"))
-        if match_date is None or match_date >= as_of:
-            continue
-        winner_id = str(game.get("winner_id") or "").strip()
-        loser_id = str(game.get("loser_id") or "").strip()
-        if not winner_id or not loser_id or winner_id == loser_id:
-            continue
-        stat = stat_index.get((winner_id, loser_id, tour_id, str(game.get("round_id") or "").strip()))
-        if not stat:
-            continue
-        add_stat_totals(
-            totals[("ATP", tour_id, winner_id)],
-            aces=stat.get("w_ace"),
-            dfs=stat.get("w_df"),
-            svpt=stat.get("w_svpt"),
-        )
-        add_stat_totals(
-            totals[("ATP", tour_id, loser_id)],
-            aces=stat.get("l_ace"),
-            dfs=stat.get("l_df"),
-            svpt=stat.get("l_svpt"),
-        )
+    for tour, tour_ids in tour_ids_by_tour.items():
+        tour_lower = tour.lower()
+        stat_index: dict[tuple[str, str, str, str], dict[str, str]] = {}
+        for row in read_csv(ONCOURT_DIR / f"stat_{tour_lower}.csv"):
+            tour_id = str(row.get("tour_id") or "").strip()
+            if tour_id not in tour_ids:
+                continue
+            key = (
+                str(row.get("winner_id") or "").strip(),
+                str(row.get("loser_id") or "").strip(),
+                tour_id,
+                str(row.get("round_id") or "").strip(),
+            )
+            stat_index.setdefault(key, row)
+
+        for game in read_csv(ONCOURT_DIR / f"games_{tour_lower}.csv"):
+            tour_id = str(game.get("tour_id") or "").strip()
+            if tour_id not in tour_ids:
+                continue
+            match_date = parse_date(game.get("date"))
+            if match_date is None or match_date >= as_of:
+                continue
+            winner_id = str(game.get("winner_id") or "").strip()
+            loser_id = str(game.get("loser_id") or "").strip()
+            if not winner_id or not loser_id or winner_id == loser_id:
+                continue
+            stat = stat_index.get((winner_id, loser_id, tour_id, str(game.get("round_id") or "").strip()))
+            if not stat:
+                continue
+            add_stat_totals(
+                totals[(tour, tour_id, winner_id)],
+                aces=stat.get("w_ace"),
+                dfs=stat.get("w_df"),
+                svpt=stat.get("w_svpt"),
+            )
+            add_stat_totals(
+                totals[(tour, tour_id, loser_id)],
+                aces=stat.get("l_ace"),
+                dfs=stat.get("l_df"),
+                svpt=stat.get("l_svpt"),
+            )
 
     return {
         key: {field: str(value) for field, value in values.items()}
@@ -335,70 +334,73 @@ def load_current_tournament_stats(schedules: list[dict[str, str]], as_of: date) 
 
 
 def load_current_tournament_logs(schedules: list[dict[str, str]], as_of: date) -> dict[tuple[str, str, str], list[dict[str, str]]]:
-    """Per-round ATP aces/DF logs for players still in the current Slam draw."""
-    atp_tour_ids = {
-        str(row.get("tour_id") or "").strip()
-        for row in schedules
-        if str(row.get("tour") or "").upper() == "ATP" and str(row.get("tour_id") or "").strip()
-    }
-    if not atp_tour_ids:
+    """Per-round aces/DF logs for players still in the current Slam draw."""
+    tour_ids_by_tour: dict[str, set[str]] = defaultdict(set)
+    for row in schedules:
+        tour = str(row.get("tour") or "").upper()
+        tour_id = str(row.get("tour_id") or "").strip()
+        if tour in {"ATP", "WTA"} and tour_id:
+            tour_ids_by_tour[tour].add(tour_id)
+    if not tour_ids_by_tour:
         return {}
 
-    player_names = load_oncourt_player_names("atp")
-    stat_index: dict[tuple[str, str, str, str], dict[str, str]] = {}
-    for row in read_csv(ONCOURT_DIR / "stat_atp.csv"):
-        tour_id = str(row.get("tour_id") or "").strip()
-        if tour_id not in atp_tour_ids:
-            continue
-        key = (
-            str(row.get("winner_id") or "").strip(),
-            str(row.get("loser_id") or "").strip(),
-            tour_id,
-            str(row.get("round_id") or "").strip(),
-        )
-        stat_index.setdefault(key, row)
-
     logs: dict[tuple[str, str, str], list[dict[str, str]]] = defaultdict(list)
-    for game in read_csv(ONCOURT_DIR / "games_atp.csv"):
-        tour_id = str(game.get("tour_id") or "").strip()
-        if tour_id not in atp_tour_ids:
-            continue
-        match_date = parse_date(game.get("date"))
-        if match_date is None or match_date >= as_of:
-            continue
-        winner_id = str(game.get("winner_id") or "").strip()
-        loser_id = str(game.get("loser_id") or "").strip()
-        round_id = str(game.get("round_id") or "").strip()
-        if not winner_id or not loser_id or winner_id == loser_id:
-            continue
-        stat = stat_index.get((winner_id, loser_id, tour_id, round_id))
-        if not stat:
-            continue
-        winner_name = player_names.get(winner_id, winner_id)
-        loser_name = player_names.get(loser_id, loser_id)
-        base = {
-            "date": match_date.isoformat(),
-            "round": ROUND_BY_ID.get(round_id, round_id),
-            "result": str(game.get("result") or "").strip(),
-        }
-        logs[("ATP", tour_id, winner_id)].append(
-            {
-                **base,
-                "opponent": loser_name,
-                "aces": str(parse_int(stat.get("w_ace"))),
-                "dfs": str(parse_int(stat.get("w_df"))),
-                "svpt": str(parse_int(stat.get("w_svpt"))),
+    for tour, tour_ids in tour_ids_by_tour.items():
+        tour_lower = tour.lower()
+        player_names = load_oncourt_player_names(tour_lower)
+        stat_index: dict[tuple[str, str, str, str], dict[str, str]] = {}
+        for row in read_csv(ONCOURT_DIR / f"stat_{tour_lower}.csv"):
+            tour_id = str(row.get("tour_id") or "").strip()
+            if tour_id not in tour_ids:
+                continue
+            key = (
+                str(row.get("winner_id") or "").strip(),
+                str(row.get("loser_id") or "").strip(),
+                tour_id,
+                str(row.get("round_id") or "").strip(),
+            )
+            stat_index.setdefault(key, row)
+
+        for game in read_csv(ONCOURT_DIR / f"games_{tour_lower}.csv"):
+            tour_id = str(game.get("tour_id") or "").strip()
+            if tour_id not in tour_ids:
+                continue
+            match_date = parse_date(game.get("date"))
+            if match_date is None or match_date >= as_of:
+                continue
+            winner_id = str(game.get("winner_id") or "").strip()
+            loser_id = str(game.get("loser_id") or "").strip()
+            round_id = str(game.get("round_id") or "").strip()
+            if not winner_id or not loser_id or winner_id == loser_id:
+                continue
+            stat = stat_index.get((winner_id, loser_id, tour_id, round_id))
+            if not stat:
+                continue
+            winner_name = player_names.get(winner_id, winner_id)
+            loser_name = player_names.get(loser_id, loser_id)
+            base = {
+                "date": match_date.isoformat(),
+                "round": ROUND_BY_ID.get(round_id, round_id),
+                "result": str(game.get("result") or "").strip(),
             }
-        )
-        logs[("ATP", tour_id, loser_id)].append(
-            {
-                **base,
-                "opponent": winner_name,
-                "aces": str(parse_int(stat.get("l_ace"))),
-                "dfs": str(parse_int(stat.get("l_df"))),
-                "svpt": str(parse_int(stat.get("l_svpt"))),
-            }
-        )
+            logs[(tour, tour_id, winner_id)].append(
+                {
+                    **base,
+                    "opponent": loser_name,
+                    "aces": str(parse_int(stat.get("w_ace"))),
+                    "dfs": str(parse_int(stat.get("w_df"))),
+                    "svpt": str(parse_int(stat.get("w_svpt"))),
+                }
+            )
+            logs[(tour, tour_id, loser_id)].append(
+                {
+                    **base,
+                    "opponent": winner_name,
+                    "aces": str(parse_int(stat.get("l_ace"))),
+                    "dfs": str(parse_int(stat.get("l_df"))),
+                    "svpt": str(parse_int(stat.get("l_svpt"))),
+                }
+            )
 
     for player_logs in logs.values():
         player_logs.sort(key=lambda item: (item.get("date", ""), item.get("round", "")))

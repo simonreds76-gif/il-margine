@@ -1,5 +1,5 @@
 """
-Extract ATP match stat rows from OnCourt.mdb to data/oncourt/stat_atp.csv.
+Extract ATP/WTA match stat rows from OnCourt.mdb to data/oncourt/stat_*.csv.
 
 Run:
   C:\\Python312-32\\python.exe scripts\\oncourt-extract-stats.py
@@ -108,21 +108,13 @@ def _list_columns(conn, table):
         print(f"  {col}")
 
 
-def main():
-    os.makedirs(OUT_DIR, exist_ok=True)
-    conn = _connect()
-
-    if "--list-columns" in sys.argv:
-        _list_columns(conn, "stat_atp")
-        conn.close()
-        return 0
-
+def _extract_stats_table(conn, tour):
+    table = f"stat_{tour}"
     crsr = conn.cursor()
     try:
-        crsr.execute("SELECT * FROM [stat_atp]")
+        crsr.execute(f"SELECT * FROM [{table}]")
     except Exception as exc:
-        print(f"Could not read stat_atp: {exc}")
-        conn.close()
+        print(f"Could not read {table}: {exc}")
         return 1
 
     cols = [str(d[0]).upper() for d in crsr.description]
@@ -133,14 +125,13 @@ def main():
     }
     missing = sorted(required - set(cols))
     if missing:
-        print(f"Unknown stat_atp schema. Missing columns: {', '.join(missing)}")
+        print(f"Unknown {table} schema. Missing columns: {', '.join(missing)}")
         print(f"Available columns: {', '.join(cols)}")
-        conn.close()
         return 1
 
-    out_path = os.path.join(OUT_DIR, "stat_atp.csv")
+    out_path = os.path.join(OUT_DIR, f"stat_{tour}.csv")
     total = 0
-    tmp_fd, tmp_path = tempfile.mkstemp(prefix="stat_atp.", suffix=".tmp", dir=OUT_DIR, text=True)
+    tmp_fd, tmp_path = tempfile.mkstemp(prefix=f"stat_{tour}.", suffix=".tmp", dir=OUT_DIR, text=True)
     try:
         f = os.fdopen(tmp_fd, "w", newline="", encoding="utf-8")
     except Exception:
@@ -210,9 +201,39 @@ def main():
             except OSError:
                 pass
 
-    conn.close()
-    print(f"  stat_atp: {total:,} rows -> stat_atp.csv")
+    print(f"  {table}: {total:,} rows -> stat_{tour}.csv")
     return 0
+
+
+def main():
+    os.makedirs(OUT_DIR, exist_ok=True)
+    conn = _connect()
+
+    if "--list-columns" in sys.argv:
+        table = "stat_atp"
+        if "--tour" in sys.argv:
+            idx = sys.argv.index("--tour")
+            if idx + 1 < len(sys.argv) and sys.argv[idx + 1].lower() in {"atp", "wta"}:
+                table = f"stat_{sys.argv[idx + 1].lower()}"
+        _list_columns(conn, table)
+        conn.close()
+        return 0
+
+    tours = ["atp", "wta"]
+    if "--tour" in sys.argv:
+        idx = sys.argv.index("--tour")
+        if idx + 1 >= len(sys.argv) or sys.argv[idx + 1].lower() not in {"atp", "wta"}:
+            print("Usage: --tour atp|wta")
+            conn.close()
+            return 1
+        tours = [sys.argv[idx + 1].lower()]
+
+    exit_code = 0
+    for tour in tours:
+        exit_code = max(exit_code, _extract_stats_table(conn, tour))
+
+    conn.close()
+    return exit_code
 
 
 if __name__ == "__main__":
