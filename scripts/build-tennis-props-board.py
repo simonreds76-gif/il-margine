@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import re
 import unicodedata
 from collections import defaultdict
@@ -333,6 +334,80 @@ def load_current_tournament_stats(schedules: list[dict[str, str]], as_of: date) 
     }
 
 
+def load_current_tournament_logs(schedules: list[dict[str, str]], as_of: date) -> dict[tuple[str, str, str], list[dict[str, str]]]:
+    """Per-round ATP aces/DF logs for players still in the current Slam draw."""
+    atp_tour_ids = {
+        str(row.get("tour_id") or "").strip()
+        for row in schedules
+        if str(row.get("tour") or "").upper() == "ATP" and str(row.get("tour_id") or "").strip()
+    }
+    if not atp_tour_ids:
+        return {}
+
+    player_names = load_oncourt_player_names("atp")
+    stat_index: dict[tuple[str, str, str, str], dict[str, str]] = {}
+    for row in read_csv(ONCOURT_DIR / "stat_atp.csv"):
+        tour_id = str(row.get("tour_id") or "").strip()
+        if tour_id not in atp_tour_ids:
+            continue
+        key = (
+            str(row.get("winner_id") or "").strip(),
+            str(row.get("loser_id") or "").strip(),
+            tour_id,
+            str(row.get("round_id") or "").strip(),
+        )
+        stat_index.setdefault(key, row)
+
+    logs: dict[tuple[str, str, str], list[dict[str, str]]] = defaultdict(list)
+    for game in read_csv(ONCOURT_DIR / "games_atp.csv"):
+        tour_id = str(game.get("tour_id") or "").strip()
+        if tour_id not in atp_tour_ids:
+            continue
+        match_date = parse_date(game.get("date"))
+        if match_date is None or match_date >= as_of:
+            continue
+        winner_id = str(game.get("winner_id") or "").strip()
+        loser_id = str(game.get("loser_id") or "").strip()
+        round_id = str(game.get("round_id") or "").strip()
+        if not winner_id or not loser_id or winner_id == loser_id:
+            continue
+        stat = stat_index.get((winner_id, loser_id, tour_id, round_id))
+        if not stat:
+            continue
+        winner_name = player_names.get(winner_id, winner_id)
+        loser_name = player_names.get(loser_id, loser_id)
+        base = {
+            "date": match_date.isoformat(),
+            "round": ROUND_BY_ID.get(round_id, round_id),
+            "result": str(game.get("result") or "").strip(),
+        }
+        logs[("ATP", tour_id, winner_id)].append(
+            {
+                **base,
+                "opponent": loser_name,
+                "aces": str(parse_int(stat.get("w_ace"))),
+                "dfs": str(parse_int(stat.get("w_df"))),
+                "svpt": str(parse_int(stat.get("w_svpt"))),
+            }
+        )
+        logs[("ATP", tour_id, loser_id)].append(
+            {
+                **base,
+                "opponent": winner_name,
+                "aces": str(parse_int(stat.get("l_ace"))),
+                "dfs": str(parse_int(stat.get("l_df"))),
+                "svpt": str(parse_int(stat.get("l_svpt"))),
+            }
+        )
+
+    for player_logs in logs.values():
+        player_logs.sort(key=lambda item: (item.get("date", ""), item.get("round", "")))
+        for index, item in enumerate(player_logs, start=1):
+            item["draw_round"] = item.get("round", "")
+            item["round"] = f"Round {index}"
+    return logs
+
+
 def project_side(
     *,
     schedule: dict[str, str],
@@ -344,6 +419,7 @@ def project_side(
     slam_samples: dict[tuple[str, str, str], int],
     aliases: dict[tuple[str, str], str],
     current_tournament_stats: dict[tuple[str, str, str], dict[str, str]],
+    current_tournament_logs: dict[tuple[str, str, str], list[dict[str, str]]],
 ) -> dict[str, str]:
     tour = schedule["tour"].upper()
     surface = schedule["surface"]
@@ -356,6 +432,7 @@ def project_side(
     expected_games = parse_float(factor.get("match_games_per_match"), 35.0 if tour == "ATP" else 22.0)
     slam_n = slam_samples.get((tour, player_lookup, tournament), 0)
     same_tournament_row = current_tournament_stats.get((tour, str(schedule.get("tour_id") or ""), player_id))
+    same_tournament_log = current_tournament_logs.get((tour, str(schedule.get("tour_id") or ""), player_id), [])
     projection = project_player(
         tour=tour,
         player_rows=player_rows,
@@ -390,6 +467,7 @@ def project_side(
         "same_tournament_svpt": str(projection.same_tournament_svpt),
         "same_tournament_ace_weight": fmt(projection.same_tournament_ace_weight, 3),
         "same_tournament_df_weight": fmt(projection.same_tournament_df_weight, 3),
+        "tournament_round_log": json.dumps(same_tournament_log, ensure_ascii=True, separators=(",", ":")),
         "venue_ace_factor": str(factor.get("ace_factor") or ""),
         "venue_df_factor": str(factor.get("df_factor") or ""),
         "ace_rate_adj": fmt(projection.ace_rate, 5),
@@ -422,6 +500,7 @@ def main() -> None:
     if args.wta_schedule:
         schedules.extend(wta_schedule_rows(Path(args.wta_schedule)))
     current_tournament_stats = load_current_tournament_stats(schedules, as_of)
+    current_tournament_logs = load_current_tournament_logs(schedules, as_of)
 
     rows: list[dict[str, str]] = []
     for schedule in schedules:
@@ -436,6 +515,7 @@ def main() -> None:
                 slam_samples=slam_samples,
                 aliases=aliases,
                 current_tournament_stats=current_tournament_stats,
+                current_tournament_logs=current_tournament_logs,
             )
         )
         rows.append(
@@ -449,6 +529,7 @@ def main() -> None:
                 slam_samples=slam_samples,
                 aliases=aliases,
                 current_tournament_stats=current_tournament_stats,
+                current_tournament_logs=current_tournament_logs,
             )
         )
 
@@ -473,6 +554,7 @@ def main() -> None:
         "same_tournament_svpt",
         "same_tournament_ace_weight",
         "same_tournament_df_weight",
+        "tournament_round_log",
         "venue_ace_factor",
         "venue_df_factor",
         "ace_rate_adj",

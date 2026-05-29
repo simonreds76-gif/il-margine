@@ -16,6 +16,15 @@ import {
 export const dynamic = "force-dynamic";
 
 type CsvRow = Record<string, string>;
+type TournamentRoundLog = {
+  date?: string;
+  round?: string;
+  opponent?: string;
+  result?: string;
+  aces?: string;
+  dfs?: string;
+  svpt?: string;
+};
 
 const ROOT = process.cwd();
 const PROPS_DIR = path.join(ROOT, "data", "tennis-props");
@@ -190,11 +199,64 @@ function groupRowsByDate(rows: CsvRow[]): { date: string; rows: CsvRow[] }[] {
     .map(([date, groupedRows]) => ({ date, rows: groupedRows }));
 }
 
+function parseTournamentRoundLog(value: string | undefined): TournamentRoundLog[] {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
 function MiniBadge({ label, tone }: { label: string; tone: string }) {
   return (
     <span className={cn("inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em]", tone)}>
       {label}
     </span>
+  );
+}
+
+function TournamentRoundDetails({ row }: { row: CsvRow }) {
+  const logs = parseTournamentRoundLog(row.tournament_round_log);
+  return (
+    <details className="group mt-1 rounded-xl border border-slate-800/80 bg-slate-950/50 px-2 py-1">
+      <summary className="cursor-pointer list-none text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 transition group-open:text-emerald-300">
+        Round aces / DFs
+      </summary>
+      {logs.length ? (
+        <div className="mt-2 overflow-x-auto">
+          <table className="min-w-[360px] text-[11px]">
+            <thead className="text-left uppercase tracking-[0.12em] text-slate-600">
+              <tr>
+                <th className="py-1 pr-3 font-semibold">Round</th>
+                <th className="py-1 pr-3 font-semibold">Opponent</th>
+                <th className="py-1 pr-3 font-semibold">Aces</th>
+                <th className="py-1 pr-3 font-semibold">DFs</th>
+                <th className="py-1 pr-3 font-semibold">Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              {logs.map((log, index) => (
+                <tr key={`${log.date}-${log.round}-${log.opponent}-${index}`} className="border-t border-slate-900">
+                  <td className="py-1 pr-3 font-mono text-slate-300">{log.round || "-"}</td>
+                  <td className="py-1 pr-3 text-slate-400">{log.opponent || "-"}</td>
+                  <td className="py-1 pr-3 font-mono text-emerald-300">{log.aces || "0"}</td>
+                  <td className="py-1 pr-3 font-mono text-rose-300">{log.dfs || "0"}</td>
+                  <td className="py-1 pr-3 font-mono text-slate-500">{log.result || "-"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className="mt-2 text-[11px] leading-relaxed text-slate-600">
+          {row.tour === "WTA"
+            ? "No current WTA ace/DF stat feed is loaded locally yet."
+            : "No completed same-tournament stat row found yet."}
+        </div>
+      )}
+    </details>
   );
 }
 
@@ -233,7 +295,10 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
                   <td className="px-3 py-3">
                     <MiniBadge label={row.tour || "-"} tone={row.tour === "WTA" ? "border-fuchsia-500/25 bg-fuchsia-500/10 text-fuchsia-200" : "border-cyan-500/25 bg-cyan-500/10 text-cyan-200"} />
                   </td>
-                  <td className="px-3 py-3 font-semibold text-slate-100">{row.player}</td>
+                  <td className="px-3 py-3">
+                    <div className="font-semibold text-slate-100">{row.player}</div>
+                    <TournamentRoundDetails row={row} />
+                  </td>
                   <td className="px-3 py-3 text-slate-400">{row.opponent}</td>
                   <td className="px-3 py-3 font-mono text-lg text-emerald-300">{fmt(row.projected_aces, 1)}</td>
                   <td className="px-3 py-3 font-mono text-lg text-rose-300">{fmt(row.projected_dfs, 1)}</td>
