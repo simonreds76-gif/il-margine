@@ -346,7 +346,7 @@ function signalFeedMeta(category: SignalFeedCategory, shadowProfile?: string): {
   }
   if (category === "challenger_ml_shadow") {
     return {
-      label: "CH ML",
+      label: "CH CAL",
       badgeClass: "border-fuchsia-400/35 bg-fuchsia-400/10 text-fuchsia-200",
       accentClass: "text-fuchsia-200",
     };
@@ -423,9 +423,9 @@ function primarySignalBadgeMeta(
 
   if (challengerSignal) {
     return {
-      label: "CH ML",
+      label: "CH CAL",
       className: "border-fuchsia-400/35 bg-fuchsia-400/10 text-fuchsia-200",
-      title: "Internal Challenger ML shadow signal",
+      title: "Challenger ML calibration tracker, no odds-proofed betting lane",
     };
   }
 
@@ -615,7 +615,7 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
                     }`}
                   >
                     {signal.kind === "challenger_ml_shadow"
-                      ? "Challenger ML"
+                      ? "Challenger tracker"
                       : signal.kind === "clay_v3_shadow"
                         ? signal.bet_type === "spread"
                           ? "Clay v3 HC"
@@ -1229,10 +1229,10 @@ export default function FairOddsPage() {
           {
             key: "challenger",
             category: "challenger_ml_shadow" as const,
-            title: "Challenger ML",
-            subtitle: "Internal HIGH-coverage 10-15% edge lane",
+            title: "Challenger tracker",
+            subtitle: "Calibration tracker only; no ROI/CLV claim until odds capture is complete",
             items: challengerFeedItems,
-            emptyLabel: "No Challenger ML signals today",
+            emptyLabel: "No Challenger tracker rows today",
           },
           {
             key: "clay-v3",
@@ -1347,7 +1347,7 @@ export default function FairOddsPage() {
                   {data.internal_research_lanes ? (
                     <>
                       <span className={data.signal_attachment.challenger_ml_shadow?.unmatched ? "text-amber-300" : "text-fuchsia-200"}>
-                        Challenger ML <span className="text-slate-200">{data.signal_attachment.challenger_ml_shadow?.attached ?? 0}/{data.signal_attachment.challenger_ml_shadow?.loaded ?? 0}</span>
+                        Challenger tracker <span className="text-slate-200">{data.signal_attachment.challenger_ml_shadow?.attached ?? 0}/{data.signal_attachment.challenger_ml_shadow?.loaded ?? 0}</span>
                       </span>
                       <span className={data.signal_attachment.clay_v3_shadow?.unmatched ? "text-amber-300" : "text-lime-200"}>
                         Clay v3 <span className="text-slate-200">{data.signal_attachment.clay_v3_shadow?.attached ?? 0}/{data.signal_attachment.clay_v3_shadow?.loaded ?? 0}</span>
@@ -1492,7 +1492,7 @@ export default function FairOddsPage() {
               <div className="mt-4 border-t border-slate-800/70 pt-3 text-[11px] text-slate-500">
                 {data.internal_research_lanes ? (
                   <>
-                    Challenger ML {data.signal_attachment.challenger_ml_shadow?.attached ?? 0}/{data.signal_attachment.challenger_ml_shadow?.loaded ?? 0}
+                    Challenger tracker {data.signal_attachment.challenger_ml_shadow?.attached ?? 0}/{data.signal_attachment.challenger_ml_shadow?.loaded ?? 0}
                     {" | "}
                     Clay v3 {data.signal_attachment.clay_v3_shadow?.attached ?? 0}/{data.signal_attachment.clay_v3_shadow?.loaded ?? 0}
                     {" | "}

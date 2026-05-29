@@ -1235,22 +1235,25 @@ export default async function ModelMonitorPage() {
     ...(INTERNAL_RESEARCH_LANES
       ? [
           {
-            policy: "Challenger ML (internal)",
-            lane: "ML",
+            policy: "Challenger ML tracker",
+            lane: "CAL",
             marketType: challengerNearmissRows.length
-              ? `Match winner - ${challengerNearmissRows.length} shadow-settlement candidates`
-              : "Match winner",
+              ? `Outcome calibration - ${challengerNearmissRows.length} retained candidates`
+              : "Outcome calibration",
+            usageNote: "No ROI/CLV claim. Odds coverage is incomplete, so this is a calibration tracker, not a betting lane.",
             settled: perfValue(challengerPerfRow, "settled", parseIntMaybe) ?? challengerSettledCount,
             signals: perfValue(challengerPerfRow, "signals", parseIntMaybe) ?? challengerTrackedCount,
             open: perfValue(challengerPerfRow, "unsettled", parseIntMaybe) ?? challengerOpenCount,
             wlv: perfWlv(challengerPerfRow) || cohortWlv(challengerMlRecordedCohort),
-            roi: challengerRoiPct,
-            flatStakePounds: challengerMlFlatCohort.pnlUnits * 100,
-            flatTotalStakedPounds: challengerMlFlatCohort.stakedUnits * 100,
-            unitTotalStakedPounds: challengerMlRecordedCohort.stakedUnits * 100,
-            unitStakePounds: challengerMlRecordedCohort.pnlUnits * 100,
+            roi: undefined,
+            flatStakePounds: undefined,
+            flatTotalStakedPounds: undefined,
+            unitTotalStakedPounds: undefined,
+            unitStakePounds: undefined,
             winRate: perfValue(challengerBase.mlAll ?? challengerBase.combinedAll, "win_rate_pct", parseFloatMaybe),
-            clv: clvChallenger.avgClvPct,
+            clv: undefined,
+            clvLabel: "no odds proof",
+            statusBadge: { tone: "muted" as const, label: "tracker - no odds proof" },
           },
           {
             policy: "Clay-Fav HC (internal)",
@@ -1288,14 +1291,14 @@ export default async function ModelMonitorPage() {
     },
   ];
   const activeLaneScoreRows = laneScoreRows.filter(
-    (row) => row.policy !== "Spread Shadow" && !row.policy.includes("(internal)"),
+    (row) => row.policy !== "Spread Shadow" && row.policy !== "Challenger ML tracker" && !row.policy.includes("(internal)"),
   );
   const laneDetailRows = new Map<string, MonitorSignalRow[]>([
     ["Strict|ML", sortSignalRowsByCapture(strictSignalsArchive.filter((row) => row.betType !== "spread"))],
     ["Strict|Spread", sortSignalRowsByCapture(strictSignalsArchive.filter((row) => row.betType === "spread"))],
     ["Volume 200|ML", sortSignalRowsByCapture(volumeSignalsTracked.filter((row) => row.betType !== "spread"))],
     ["Spread v1|HC", sortSignalRowsByCapture(spreadV1SignalsTracked)],
-    ["Challenger ML (internal)|ML", sortSignalRowsByCapture(challengerSignalsArchive)],
+    ["Challenger ML tracker|CAL", sortSignalRowsByCapture(challengerSignalsArchive)],
     ["Clay-Fav HC (internal)|HC", sortSignalRowsByCapture(clayFavSignalsArchive)],
   ]);
   const signalBrowserGroups = [
@@ -1327,10 +1330,10 @@ export default async function ModelMonitorPage() {
       ? [
           {
             key: "challenger-ml",
-            title: "Challenger ML Internal",
-            subtitle: "Manual Challenger ML internal ledger; refreshed only by promote-challenger-nearmiss-shadow.py.",
+            title: "Challenger ML Calibration Tracker",
+            subtitle: "Outcome tracker only. Odds coverage is incomplete, so ROI/CLV is not decision-grade.",
             accent: "cyan",
-            statusBadge: { tone: "muted" as const, label: "manual - internal" },
+            statusBadge: { tone: "muted" as const, label: "tracker - no odds proof" },
             rows: sortSignalRowsForBrowser(challengerSignalsArchive),
           },
           {
@@ -1588,12 +1591,12 @@ export default async function ModelMonitorPage() {
               </div>
             </details>
             <p className="mt-3 text-xs leading-6 text-slate-500">
-              Default board uses one money column only: <span className="font-semibold text-slate-300">Recorded P/L (GBP100/u)</span>. That is the actual settled P/L from stored unit sizes with 1u = GBP100. CLV is audited on strict ML, ATP ML research, and spread_v1 shadow. Old Spread Shadow, manual Challenger ML, manual Clay-Fav HC, and the disabled Volume 200 spread lane are not mixed into active counts.
+              Default board uses one money column only: <span className="font-semibold text-slate-300">Recorded P/L (GBP100/u)</span>. That is the actual settled P/L from stored unit sizes with 1u = GBP100. CLV is audited on strict ML, ATP ML research, and spread_v1 shadow. Old Spread Shadow, Challenger ML tracker, manual Clay-Fav HC, and the disabled Volume 200 spread lane are not mixed into active counts.
             </p>
             <div className="mt-4 grid gap-3 lg:grid-cols-3">
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-sm text-slate-300">
                 <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Dormant / Manual Lanes</div>
-                <div className="mt-2">Spread Shadow, Challenger ML internal, Clay-Fav HC internal, and Clay Calibrated are audit/manual only.</div>
+                <div className="mt-2">Spread Shadow, Challenger ML tracker, Clay-Fav HC internal, and Clay Calibrated are audit/manual only.</div>
                 <div className="mt-1 text-slate-500">They stay browsable below, but do not pretend to be active scheduled models.</div>
               </div>
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-sm text-slate-300">
@@ -2171,14 +2174,14 @@ export default async function ModelMonitorPage() {
 
         {INTERNAL_RESEARCH_LANES ? (
           <div className="mb-8">
-            <MonitorCard title="Challenger ML Internal Watch" subtitle="HIGH-coverage Challenger singles lane, 10-15% value band. Near-misses are promoted into an internal shadow-settlement ledger so the lane can be evaluated.">
+            <MonitorCard title="Challenger ML Calibration Tracker" subtitle="Outcome and coverage tracker only. No ROI/CLV claim until Pinnacle odds capture is complete.">
               <div className="grid gap-4 xl:grid-cols-[0.85fr_1.15fr]">
                 <div className="rounded-2xl border border-fuchsia-400/25 bg-fuchsia-400/5 p-4">
                   <div className="mb-4 flex items-start justify-between gap-3">
                     <div>
-                      <h3 className="text-base font-semibold text-white">Current Challenger lane</h3>
+                      <h3 className="text-base font-semibold text-white">Current Challenger tracker</h3>
                       <p className="mt-1 text-sm leading-6 text-slate-400">
-                        Shows the internal Challenger ML settlement ledger, including near-miss candidates promoted for shadow evaluation.
+                        Shows the internal Challenger ML outcome ledger. It is useful for calibration, but odds coverage is incomplete so ROI and CLV are not decision-grade.
                       </p>
                     </div>
                     <span className="rounded-full border border-fuchsia-400/30 bg-fuchsia-400/10 px-2 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-fuchsia-200">
@@ -2190,12 +2193,12 @@ export default async function ModelMonitorPage() {
                     <Stat label="Open signals" value={`${challengerOpenCount}`} tone={challengerOpenCount > 0 ? "text-fuchsia-200" : "text-slate-300"} compact />
                     <Stat label="Settled signals" value={`${challengerSettledCount}`} compact />
                     <Stat label="Near-miss shadow rows" value={`${challengerNearmissRows.length}`} tone={challengerNearmissRows.length > 0 ? "text-amber-300" : "text-slate-300"} compact />
-                    <Stat label="ROI eligible" value={`${challengerRoiEligibleCount}/${challengerSettledCount}`} tone={challengerInvalidOddsCount > 0 ? "text-amber-300" : "text-emerald-300"} compact />
-                    <Stat label="ROI" value={formatPct(challengerRoiPct)} tone={metricTone(challengerRoiPct)} compact />
-                    <Stat label="CLV" value={formatPct(clvChallenger.avgClvPct, 3)} tone={metricTone(clvChallenger.avgClvPct)} compact />
+                    <Stat label="Odds-matched rows" value={`${challengerRoiEligibleCount}/${challengerSettledCount}`} tone={challengerInvalidOddsCount > 0 ? "text-amber-300" : "text-slate-300"} compact />
+                    <Stat label="ROI claim" value="not authorised" tone="text-amber-300" compact />
+                    <Stat label="CLV proof" value="none yet" tone="text-amber-300" compact />
                   </div>
                   <div className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/45 p-3 text-xs leading-5 text-slate-400">
-                    Gate: Challenger singles, HIGH coverage, high confidence, value 10-15%. Near-miss rows are now copied into strict-signals-challenger-ml archive as internal shadow bets and settled like signals. P/L/ROI uses only rows with captured Pinnacle odds; W/L settlement covers every matched result.
+                    Gate: Challenger singles, HIGH coverage, high confidence, value 10-15%. Near-miss rows are retained for outcome calibration only. Do not read this as a live model or paid-tip lane until Challenger Pinnacle odds capture produces a real CLV/ROI sample.
                   </div>
                 </div>
 
@@ -2204,7 +2207,7 @@ export default async function ModelMonitorPage() {
                     <div>
                       <h3 className="text-base font-semibold text-white">Near-miss reasons</h3>
                       <p className="mt-1 text-sm leading-6 text-slate-400">
-                        These are candidates that hit the Challenger universe but failed one gate. They are retained as shadow-settlement picks so the gate can be judged with actual outcomes.
+                        These are candidates that hit the Challenger universe but failed one gate. They are retained so the gate can be judged with actual outcomes, not to imply a current betting edge.
                       </p>
                     </div>
                     <div className="flex flex-wrap gap-2">

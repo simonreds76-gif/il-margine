@@ -64,7 +64,7 @@ export const TENNIS_MONITOR_FILES: Record<TennisResearchLaneId, TennisMonitorFil
     clvAuditTxt: "data/backtest/strict-clv-audit-slam_bo5-2026.txt",
   },
   challenger_ml: {
-    label: "Challenger ML",
+    label: "Challenger ML tracker",
     calibration: "data/backtest/calibration/challenger-ml-calibration.json",
     live: "data/backtest/strict-signals-challenger-ml-live.csv",
     archive: "data/backtest/strict-signals-challenger-ml-archive.csv",

@@ -71,11 +71,11 @@ const laneViews: Record<TennisResearchLaneId, LaneView> = {
   },
   challenger_ml: {
     id: "challenger_ml",
-    title: "Challenger ML",
-    state: "SHADOW PLANNED",
-    badgeTone: badgeTones.shadow,
-    market: "ML only",
-    summary: "Future registry name for the existing Challenger ML shadow work. The old profile remains untouched.",
+    title: "Challenger ML tracker",
+    state: "DEFERRED",
+    badgeTone: badgeTones.deferred,
+    market: "Outcome calibration",
+    summary: "Outcome-calibration tracker only. No ROI/CLV claim until Pinnacle Challenger odds capture is complete."
   },
   indoor_bo3: {
     id: "indoor_bo3",
