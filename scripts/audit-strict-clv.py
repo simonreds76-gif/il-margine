@@ -10,7 +10,8 @@ Default scope:
 - data/backtest/strict-signals.csv
 - match bets only by default (`--bet-type spread` audits spread rows directly)
 - settled rows only
-- match closes from data/backtest/atp-2026.xlsx
+- match closes from captured Pinnacle history first, with data/backtest/atp-2026.xlsx
+  as a fallback only
 - spread closes from captured Pinnacle history only
 
 Outputs:
@@ -48,6 +49,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data" / "backtest"
 ONCOURT_DIR = ROOT / "data" / "oncourt"
 HTTP_TIMEOUT = 30
+HISTORY_SIGNAL_GRACE_SECONDS = 300
 
 DEFAULT_SIGNALS = STRICT_SIGNAL_PATHS.archive
 DEFAULT_XLSX = DATA_DIR / "atp-2026.xlsx"
@@ -494,8 +496,9 @@ def merge_history_rows(primary: list[HistoryRow], secondary: list[HistoryRow]) -
     by_key: dict[tuple[str, str, str, str, float, float, str, float | None, float | None, float | None], HistoryRow] = {}
     source_priority = {"supabase": 2, "local_csv": 1}
     for row in [*primary, *secondary]:
+        canonical_ts = row.captured_ts.isoformat()
         key = (
-            row.captured_at,
+            canonical_ts,
             row.capture_mode,
             row.player1_name,
             row.player2_name,
@@ -592,14 +595,15 @@ def match_signal_to_history(
     if not p1 or not p2:
         return None, False, "missing_player_names"
 
+    earliest_ts = signal_ts - timedelta(seconds=HISTORY_SIGNAL_GRACE_SECONDS)
     cutoff_ts = datetime.combine(match_dt + timedelta(days=1), time.min, tzinfo=timezone.utc)
     candidate_map: dict[str, tuple[HistoryRow, bool, int]] = {}
     for key in _make_pair_keys(p1, p2):
         for hist, reversed_for_signal in lookup.get(key, []):
-            if hist.captured_ts < signal_ts or hist.captured_ts >= cutoff_ts:
+            if hist.captured_ts < earliest_ts or hist.captured_ts >= cutoff_ts:
                 continue
             ident = (
-                f"{hist.captured_at}|{hist.player1_name}|{hist.player2_name}|"
+                f"{hist.captured_ts.isoformat()}|{hist.player1_name}|{hist.player2_name}|"
                 f"{'R' if reversed_for_signal else 'N'}|{hist.spread_line}|"
                 f"{hist.spread_odds1}|{hist.spread_odds2}"
             )
@@ -762,7 +766,7 @@ def main() -> None:
                 f"Generated UTC: {date.today().isoformat()}",
                 f"Signals file: {signals_path}",
                 f"Audit bet type: {args.bet_type}",
-                f"Closing odds file: {xlsx_path if args.bet_type == 'match' else 'history-only'}",
+                f"Fallback closing odds file: {xlsx_path if args.bet_type == 'match' else 'history-only'}",
                 "",
                 "Input coverage",
                 "  Raw strict rows: 0",
@@ -792,7 +796,7 @@ def main() -> None:
                 f"Generated UTC: {date.today().isoformat()}",
                 f"Signals file: {signals_path}",
                 f"Audit bet type: {args.bet_type}",
-                f"Closing odds file: {xlsx_path if args.bet_type == 'match' else 'history-only'}",
+                f"Fallback closing odds file: {xlsx_path if args.bet_type == 'match' else 'history-only'}",
                 "",
                 "Input coverage",
                 "  Raw strict rows: 0",
@@ -1017,7 +1021,7 @@ def main() -> None:
     coverage_warning = None
     if args.bet_type == "match" and match_dates and closing_dates and max(closing_dates) < min(match_dates):
         coverage_warning = (
-            f"Closing file is stale for this live sample: latest closing date {max(closing_dates).isoformat()} "
+            f"Fallback closing file is stale for this live sample: latest fallback date {max(closing_dates).isoformat()} "
             f"but earliest settled match date is {min(match_dates).isoformat()}."
         )
 
@@ -1032,7 +1036,7 @@ def main() -> None:
         f"Generated UTC: {date.today().isoformat()}",
         f"Signals file: {signals_path}",
         f"Audit bet type: {args.bet_type}",
-        f"Closing odds file: {xlsx_path if args.bet_type == 'match' else 'history-only'}",
+        f"Fallback closing odds file: {xlsx_path if args.bet_type == 'match' else 'history-only'}",
         "",
         "Input coverage",
         f"  Raw strict rows: {len(raw_rows)}",
