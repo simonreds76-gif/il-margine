@@ -1,8 +1,8 @@
 Strict CLV Audit vs Captured/Closing Pinnacle Odds
 Generated UTC: 2026-05-29
-Signals file: D:\IlMargine\il-margine\data\backtest\strict-signals-archive.csv
+Signals file: data\backtest\strict-signals-archive.csv
 Audit bet type: match
-Fallback closing odds file: D:\IlMargine\il-margine\data\backtest\atp-2026.xlsx
+Fallback closing odds file: data\backtest\atp-2026.xlsx
 
 Input coverage
   Raw strict rows: 219
@@ -19,7 +19,7 @@ Captured-history coverage
   History rows loaded: 867
   Supabase rows loaded: 867
   Local rows loaded: 867
-  Local files scanned: 1237
+  Local files scanned: 1239
   History note: window 2026-03-04 -> 2026-03-29
 
 Closing-file mapping
@@ -34,7 +34,9 @@ Audit matching
   Matched ML rows: 45 / 109
   Closing sources: {'supabase': 45}
   Match methods: {'history': 45}
-  Unmatched reasons: {'pair_not_found': 64}
+  Unmatched reasons: {'history_not_found': 64}
+  Unmatched diagnostics rows: 64
+  Unmatched diagnostics file: data\backtest\strict-clv-audit-2026-unmatched.csv
 
 Coverage warning
   Fallback closing file is stale for this live sample: latest fallback date 2026-01-13 but earliest settled match date is 2026-03-08.

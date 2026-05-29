@@ -55,6 +55,7 @@ DEFAULT_SIGNALS = STRICT_SIGNAL_PATHS.archive
 DEFAULT_XLSX = DATA_DIR / "atp-2026.xlsx"
 DEFAULT_DETAIL_CSV = DATA_DIR / "strict-clv-audit-2026.csv"
 DEFAULT_SUMMARY_TXT = DATA_DIR / "strict-clv-audit-2026.txt"
+DEFAULT_UNMATCHED_CSV = DATA_DIR / "strict-clv-audit-2026-unmatched.csv"
 DEFAULT_LOCAL_HISTORY_DIR = ROOT / "data" / "pinnacle-history"
 
 KEY_FIELDS = ["date", "player1", "player2", "surface", "series", "confidence", "side"]
@@ -98,6 +99,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--xlsx", default=str(DEFAULT_XLSX), help="Tennis-data ATP XLSX with closing Pinnacle odds.")
     parser.add_argument("--detail-csv", default=str(DEFAULT_DETAIL_CSV), help="Detailed audit CSV output.")
     parser.add_argument("--summary-txt", default=str(DEFAULT_SUMMARY_TXT), help="Summary text output.")
+    parser.add_argument("--unmatched-csv", default=str(DEFAULT_UNMATCHED_CSV), help="Unmatched-row diagnostic CSV output.")
     parser.add_argument(
         "--local-history-dir",
         default=str(DEFAULT_LOCAL_HISTORY_DIR),
@@ -173,6 +175,15 @@ def parse_timestamp(v: str | None) -> datetime | None:
 
 def pct(v: float) -> str:
     return f"{v:+.3f}%"
+
+
+def display_path(path: Path | str) -> str:
+    if isinstance(path, str):
+        return path
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
 
 
 def row_key(row: dict[str, str], include_mode: bool = True) -> tuple[str, ...]:
@@ -703,6 +714,138 @@ def summarize_bucket(rows: list[dict[str, Any]], key: str) -> list[str]:
     return lines
 
 
+def history_window_for_signal(row: dict[str, str]) -> tuple[datetime, datetime] | None:
+    signal_ts = parse_signal_ts(row.get("date"), row.get("time_utc"))
+    match_dt = parse_iso_date(row.get("match_date"))
+    if signal_ts is None or match_dt is None:
+        return None
+    earliest_ts = signal_ts - timedelta(seconds=HISTORY_SIGNAL_GRACE_SECONDS)
+    cutoff_ts = datetime.combine(match_dt + timedelta(days=1), time.min, tzinfo=timezone.utc)
+    return earliest_ts, cutoff_ts
+
+
+def surname_keys_for_row(row: dict[str, str]) -> str:
+    p1 = (row.get("player1") or "").strip()
+    p2 = (row.get("player2") or "").strip()
+    return ";".join(sorted(_make_pair_keys(p1, p2)))
+
+
+def nearest_history_candidates(
+    row: dict[str, str],
+    history_rows: list[HistoryRow],
+    signal_line: float | None = None,
+    limit: int = 3,
+) -> list[str]:
+    window = history_window_for_signal(row)
+    if window is None:
+        return []
+    earliest_ts, cutoff_ts = window
+    p1 = (row.get("player1") or "").strip()
+    p2 = (row.get("player2") or "").strip()
+    if not p1 or not p2:
+        return []
+
+    signal_keys = set(_make_pair_keys(p1, p2)) | set(_make_pair_keys(p2, p1))
+    signal_tokens = set(_tokenise_pinnacle_name(p1)) | set(_tokenise_pinnacle_name(p2))
+    scored: list[tuple[int, float, HistoryRow, set[str]]] = []
+    for hist in history_rows:
+        if _is_doubles_name(hist.player1_name) or _is_doubles_name(hist.player2_name):
+            continue
+        if hist.captured_ts < earliest_ts or hist.captured_ts >= cutoff_ts:
+            continue
+        hist_keys = set(_make_pair_keys(hist.player1_name, hist.player2_name)) | set(
+            _make_pair_keys(hist.player2_name, hist.player1_name)
+        )
+        overlap_keys = signal_keys & hist_keys
+        hist_tokens = set(_tokenise_pinnacle_name(hist.player1_name)) | set(_tokenise_pinnacle_name(hist.player2_name))
+        token_overlap = signal_tokens & hist_tokens
+        score = len(overlap_keys) * 10 + len(token_overlap)
+        if signal_line is not None and hist.spread_line is not None and abs(abs(hist.spread_line) - abs(signal_line)) <= 0.051:
+            score += 4
+        if score <= 0:
+            continue
+        signal_ts = parse_signal_ts(row.get("date"), row.get("time_utc")) or hist.captured_ts
+        distance = abs((hist.captured_ts - signal_ts).total_seconds())
+        scored.append((score, distance, hist, overlap_keys))
+
+    scored.sort(key=lambda item: (-item[0], item[1], -item[2].captured_ts.timestamp()))
+    out: list[str] = []
+    for score, _distance, hist, overlap_keys in scored[:limit]:
+        keys = ",".join(sorted(overlap_keys)) if overlap_keys else "token-only"
+        out.append(
+            f"{hist.player1_name} vs {hist.player2_name} | {hist.captured_at} | "
+            f"source={hist.source} mode={hist.capture_mode} score={score} keys={keys}"
+        )
+    return out
+
+
+def build_unmatched_diagnostic_row(
+    row: dict[str, str],
+    history_sub_reason: str,
+    fallback_reason: str,
+    history_rows: list[HistoryRow],
+    signal_line: float | None = None,
+) -> dict[str, Any]:
+    nearest = nearest_history_candidates(row, history_rows, signal_line=signal_line, limit=3)
+    return {
+        "signal_date": row.get("date") or "",
+        "time_utc": row.get("time_utc") or "",
+        "match_date": row.get("match_date") or "",
+        "bet_type": norm(row.get("bet_type") or "match"),
+        "player1": row.get("player1") or "",
+        "player2": row.get("player2") or "",
+        "player1_id": row.get("player1_id") or "",
+        "player2_id": row.get("player2_id") or "",
+        "surface": row.get("surface") or "",
+        "series": row.get("series") or "",
+        "confidence": row.get("confidence") or "",
+        "side": row.get("side") or "",
+        "spread_line": row.get("spread_line") or "",
+        "value_pct": row.get("value_pct") or "",
+        "history_sub_reason": history_sub_reason,
+        "fallback_reason": fallback_reason,
+        "surname_keys_generated": surname_keys_for_row(row),
+        "nearest_in_window_capture_1": nearest[0] if len(nearest) > 0 else "",
+        "nearest_in_window_capture_2": nearest[1] if len(nearest) > 1 else "",
+        "nearest_in_window_capture_3": nearest[2] if len(nearest) > 2 else "",
+        "signal_profile": row.get("signal_profile") or "",
+        "policy_mode": row.get("policy_mode") or "base",
+    }
+
+
+def write_unmatched_csv(path: Path, rows: list[dict[str, Any]]) -> None:
+    fields = [
+        "signal_date",
+        "time_utc",
+        "match_date",
+        "bet_type",
+        "player1",
+        "player2",
+        "player1_id",
+        "player2_id",
+        "surface",
+        "series",
+        "confidence",
+        "side",
+        "spread_line",
+        "value_pct",
+        "history_sub_reason",
+        "fallback_reason",
+        "surname_keys_generated",
+        "nearest_in_window_capture_1",
+        "nearest_in_window_capture_2",
+        "nearest_in_window_capture_3",
+        "signal_profile",
+        "policy_mode",
+    ]
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fields)
+        writer.writeheader()
+        for row in rows:
+            writer.writerow({k: row.get(k, "") for k in fields})
+
+
 def write_detail_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     fields = [
         "signal_date",
@@ -755,6 +898,7 @@ def main() -> None:
     xlsx_path = Path(args.xlsx) if Path(args.xlsx).is_absolute() else (ROOT / args.xlsx)
     detail_csv_path = Path(args.detail_csv) if Path(args.detail_csv).is_absolute() else (ROOT / args.detail_csv)
     summary_txt_path = Path(args.summary_txt) if Path(args.summary_txt).is_absolute() else (ROOT / args.summary_txt)
+    unmatched_csv_path = Path(args.unmatched_csv) if Path(args.unmatched_csv).is_absolute() else (ROOT / args.unmatched_csv)
     history_dir = Path(args.local_history_dir) if Path(args.local_history_dir).is_absolute() else (ROOT / args.local_history_dir)
     audited_label = "ML" if args.bet_type == "match" else "spread"
     skipped_label = "spread" if args.bet_type == "match" else "ML"
@@ -764,9 +908,9 @@ def main() -> None:
             [
                 "Strict CLV Audit vs Captured/Closing Pinnacle Odds",
                 f"Generated UTC: {date.today().isoformat()}",
-                f"Signals file: {signals_path}",
+                f"Signals file: {display_path(signals_path)}",
                 f"Audit bet type: {args.bet_type}",
-                f"Fallback closing odds file: {xlsx_path if args.bet_type == 'match' else 'history-only'}",
+                f"Fallback closing odds file: {display_path(xlsx_path) if args.bet_type == 'match' else 'history-only'}",
                 "",
                 "Input coverage",
                 "  Raw strict rows: 0",
@@ -784,6 +928,7 @@ def main() -> None:
         print(summary_text)
         if not args.dry_run:
             write_detail_csv(detail_csv_path, [])
+            write_unmatched_csv(unmatched_csv_path, [])
             summary_txt_path.parent.mkdir(parents=True, exist_ok=True)
             summary_txt_path.write_text(summary_text + "\n", encoding="utf-8")
         return
@@ -794,9 +939,9 @@ def main() -> None:
             [
                 "Strict CLV Audit vs Captured/Closing Pinnacle Odds",
                 f"Generated UTC: {date.today().isoformat()}",
-                f"Signals file: {signals_path}",
+                f"Signals file: {display_path(signals_path)}",
                 f"Audit bet type: {args.bet_type}",
-                f"Fallback closing odds file: {xlsx_path if args.bet_type == 'match' else 'history-only'}",
+                f"Fallback closing odds file: {display_path(xlsx_path) if args.bet_type == 'match' else 'history-only'}",
                 "",
                 "Input coverage",
                 "  Raw strict rows: 0",
@@ -814,6 +959,7 @@ def main() -> None:
         print(summary_text)
         if not args.dry_run:
             write_detail_csv(detail_csv_path, [])
+            write_unmatched_csv(unmatched_csv_path, [])
             summary_txt_path.parent.mkdir(parents=True, exist_ok=True)
             summary_txt_path.write_text(summary_text + "\n", encoding="utf-8")
         return
@@ -852,17 +998,24 @@ def main() -> None:
     unmatched_reasons = Counter()
     source_counts = Counter()
     detailed_rows: list[dict[str, Any]] = []
+    unmatched_diagnostics: list[dict[str, Any]] = []
 
     for row in target_rows:
         p1 = parse_int(row.get("player1_id"))
         p2 = parse_int(row.get("player2_id"))
         if p1 is None or p2 is None:
             unmatched_reasons["missing_player_ids"] += 1
+            unmatched_diagnostics.append(
+                build_unmatched_diagnostic_row(row, "missing_player_ids", "", history_rows)
+            )
             continue
         signal_dt = parse_iso_date(row.get("date"))
         match_dt = parse_iso_date(row.get("match_date"))
         if signal_dt is None or match_dt is None:
             unmatched_reasons["missing_signal_or_match_date"] += 1
+            unmatched_diagnostics.append(
+                build_unmatched_diagnostic_row(row, "missing_signal_or_match_date", "", history_rows)
+            )
             continue
 
         closing_odds = None
@@ -883,9 +1036,15 @@ def main() -> None:
         if args.bet_type == "spread":
             if signal_line is None:
                 unmatched_reasons["missing_spread_line"] += 1
+                unmatched_diagnostics.append(
+                    build_unmatched_diagnostic_row(row, "missing_spread_line", "", history_rows)
+                )
                 continue
             if hist_row is None:
                 unmatched_reasons[hist_method] += 1
+                unmatched_diagnostics.append(
+                    build_unmatched_diagnostic_row(row, hist_method, "", history_rows, signal_line=signal_line)
+                )
                 continue
             if (
                 hist_row.spread_line is None
@@ -895,6 +1054,9 @@ def main() -> None:
                 or hist_row.spread_odds2 <= 1
             ):
                 unmatched_reasons["history_missing_spread"] += 1
+                unmatched_diagnostics.append(
+                    build_unmatched_diagnostic_row(row, "history_missing_spread", "", history_rows, signal_line=signal_line)
+                )
                 continue
             method = hist_method
             match_method_counts[method] += 1
@@ -907,6 +1069,9 @@ def main() -> None:
             close_p2 = hist_row.spread_odds1 if hist_reversed else hist_row.spread_odds2
             if close_line is None or abs(close_line - signal_line) > 0.051:
                 unmatched_reasons["spread_line_mismatch"] += 1
+                unmatched_diagnostics.append(
+                    build_unmatched_diagnostic_row(row, "spread_line_mismatch", "", history_rows, signal_line=signal_line)
+                )
                 continue
             if signal_side == "p1+":
                 closing_odds = close_p1
@@ -914,6 +1079,9 @@ def main() -> None:
                 closing_odds = close_p2
             else:
                 unmatched_reasons["bad_spread_side"] += 1
+                unmatched_diagnostics.append(
+                    build_unmatched_diagnostic_row(row, "bad_spread_side", "", history_rows, signal_line=signal_line)
+                )
                 continue
             scrape_odds = parse_float(row.get("spread_odds"))
         else:
@@ -930,7 +1098,11 @@ def main() -> None:
             else:
                 matched, method = match_signal_to_close(row, index)
                 if matched is None:
-                    unmatched_reasons[hist_method if hist_method not in {"history_not_found", "history_unavailable"} else method] += 1
+                    reason = hist_method if hist_method != "history_unavailable" else method
+                    unmatched_reasons[reason] += 1
+                    unmatched_diagnostics.append(
+                        build_unmatched_diagnostic_row(row, reason, method, history_rows)
+                    )
                     continue
                 match_method_counts[method] += 1
                 source_counts["tennis_data"] += 1
@@ -945,12 +1117,18 @@ def main() -> None:
                     close_p2 = matched.close_odds1
                 else:
                     unmatched_reasons["orientation_mismatch"] += 1
+                    unmatched_diagnostics.append(
+                        build_unmatched_diagnostic_row(row, "orientation_mismatch", method, history_rows)
+                    )
                     continue
                 closing_odds = close_p1 if signal_side == "p1" else close_p2
             scrape_odds = parse_float(row.get("pin_odds1") if signal_side == "p1" else row.get("pin_odds2"))
 
         if scrape_odds is None or scrape_odds <= 1 or closing_odds <= 1:
             unmatched_reasons["bad_odds"] += 1
+            unmatched_diagnostics.append(
+                build_unmatched_diagnostic_row(row, "bad_odds", method, history_rows, signal_line=signal_line)
+            )
             continue
 
         scrape_implied = 1.0 / scrape_odds
@@ -1034,9 +1212,9 @@ def main() -> None:
     summary_lines = [
         "Strict CLV Audit vs Captured/Closing Pinnacle Odds",
         f"Generated UTC: {date.today().isoformat()}",
-        f"Signals file: {signals_path}",
+        f"Signals file: {display_path(signals_path)}",
         f"Audit bet type: {args.bet_type}",
-        f"Fallback closing odds file: {xlsx_path if args.bet_type == 'match' else 'history-only'}",
+        f"Fallback closing odds file: {display_path(xlsx_path) if args.bet_type == 'match' else 'history-only'}",
         "",
         "Input coverage",
         f"  Raw strict rows: {len(raw_rows)}",
@@ -1069,6 +1247,8 @@ def main() -> None:
         f"  Closing sources: {dict(source_counts)}",
         f"  Match methods: {dict(match_method_counts)}",
         f"  Unmatched reasons: {dict(unmatched_reasons)}",
+        f"  Unmatched diagnostics rows: {len(unmatched_diagnostics)}",
+        f"  Unmatched diagnostics file: {display_path(unmatched_csv_path)}",
     ]
     if coverage_warning:
         summary_lines.extend(["", f"Coverage warning", f"  {coverage_warning}"])
@@ -1132,6 +1312,7 @@ def main() -> None:
 
     if not args.dry_run:
         write_detail_csv(detail_csv_path, detailed_rows)
+        write_unmatched_csv(unmatched_csv_path, unmatched_diagnostics)
         summary_txt_path.parent.mkdir(parents=True, exist_ok=True)
         summary_txt_path.write_text(summary_text + "\n", encoding="utf-8")
 
