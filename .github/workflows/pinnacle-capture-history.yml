@@ -2,10 +2,7 @@ name: Pinnacle Capture History
 
 on:
   schedule:
-    # Hourly wide sweep catches leagues Pinnacle omits from active-only listing.
-    - cron: "0 * * * *"
-    # Half-hour active sweep keeps close-price cadence tight.
-    - cron: "30 * * * *"
+    - cron: "*/30 * * * *"
   workflow_dispatch:
     inputs:
       capture_mode:
@@ -16,10 +13,9 @@ on:
       coverage_mode:
         description: "League coverage mode"
         required: false
-        default: "auto"
+        default: "active"
         type: choice
         options:
-          - auto
           - active
           - all
 
@@ -73,13 +69,12 @@ jobs:
         env:
           RUN_STATUS_HOST: github-actions
           CAPTURE_MODE: ${{ github.event.inputs.capture_mode || 'close' }}
-          COVERAGE_MODE: ${{ github.event.inputs.coverage_mode || 'auto' }}
-          SCHEDULE_EXPR: ${{ github.event.schedule || '' }}
+          COVERAGE_MODE: ${{ github.event.inputs.coverage_mode || 'active' }}
         run: |
           args=(--capture-mode "${CAPTURE_MODE}")
-          if [ "${COVERAGE_MODE}" = "all" ] || { [ "${COVERAGE_MODE}" = "auto" ] && [ "${SCHEDULE_EXPR}" = "0 * * * *" ]; }; then
+          if [ "${COVERAGE_MODE}" = "all" ]; then
             args+=(--all-leagues)
-            echo "Coverage: all leagues"
+            echo "Coverage: all leagues (manual/debug only)"
           else
             echo "Coverage: active leagues"
           fi
