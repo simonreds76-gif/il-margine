@@ -10,8 +10,8 @@ Default scope:
 - data/backtest/strict-signals.csv
 - match bets only by default (`--bet-type spread` audits spread rows directly)
 - settled rows only
-- match closes from captured Pinnacle history first, with data/backtest/atp-2026.xlsx
-  as a fallback only
+- match closes from captured Pinnacle history only by default
+- data/backtest/atp-2026.xlsx is available only behind --allow-stale-fallback
 - spread closes from captured Pinnacle history only
 
 Outputs:
@@ -100,6 +100,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--detail-csv", default=str(DEFAULT_DETAIL_CSV), help="Detailed audit CSV output.")
     parser.add_argument("--summary-txt", default=str(DEFAULT_SUMMARY_TXT), help="Summary text output.")
     parser.add_argument("--unmatched-csv", default=str(DEFAULT_UNMATCHED_CSV), help="Unmatched-row diagnostic CSV output.")
+    parser.add_argument(
+        "--allow-stale-fallback",
+        action="store_true",
+        help="Allow fallback to the tennis-data XLSX close file after captured-history misses. Default off to avoid stale CLV contamination.",
+    )
     parser.add_argument(
         "--local-history-dir",
         default=str(DEFAULT_LOCAL_HISTORY_DIR),
@@ -900,6 +905,11 @@ def main() -> None:
     summary_txt_path = Path(args.summary_txt) if Path(args.summary_txt).is_absolute() else (ROOT / args.summary_txt)
     unmatched_csv_path = Path(args.unmatched_csv) if Path(args.unmatched_csv).is_absolute() else (ROOT / args.unmatched_csv)
     history_dir = Path(args.local_history_dir) if Path(args.local_history_dir).is_absolute() else (ROOT / args.local_history_dir)
+    fallback_label = (
+        display_path(xlsx_path)
+        if args.bet_type == "match" and args.allow_stale_fallback
+        else "disabled (captured-history only)" if args.bet_type == "match" else "history-only"
+    )
     audited_label = "ML" if args.bet_type == "match" else "spread"
     skipped_label = "spread" if args.bet_type == "match" else "ML"
 
@@ -910,7 +920,7 @@ def main() -> None:
                 f"Generated UTC: {date.today().isoformat()}",
                 f"Signals file: {display_path(signals_path)}",
                 f"Audit bet type: {args.bet_type}",
-                f"Fallback closing odds file: {display_path(xlsx_path) if args.bet_type == 'match' else 'history-only'}",
+                f"Fallback closing odds file: {fallback_label}",
                 "",
                 "Input coverage",
                 "  Raw strict rows: 0",
@@ -941,7 +951,7 @@ def main() -> None:
                 f"Generated UTC: {date.today().isoformat()}",
                 f"Signals file: {display_path(signals_path)}",
                 f"Audit bet type: {args.bet_type}",
-                f"Fallback closing odds file: {display_path(xlsx_path) if args.bet_type == 'match' else 'history-only'}",
+                f"Fallback closing odds file: {fallback_label}",
                 "",
                 "Input coverage",
                 "  Raw strict rows: 0",
@@ -990,7 +1000,7 @@ def main() -> None:
         "closing_matches_skipped": {},
     }
     index: dict[frozenset[int], list[ClosingMatch]] = {}
-    if args.bet_type == "match":
+    if args.bet_type == "match" and args.allow_stale_fallback:
         closing_matches, meta = load_closing_matches(xlsx_path)
         index = build_closing_index(closing_matches)
 
@@ -1096,6 +1106,12 @@ def main() -> None:
                 close_p2 = hist_row.odds1 if hist_reversed else hist_row.odds2
                 closing_odds = close_p1 if signal_side == "p1" else close_p2
             else:
+                if not args.allow_stale_fallback:
+                    unmatched_reasons[hist_method] += 1
+                    unmatched_diagnostics.append(
+                        build_unmatched_diagnostic_row(row, hist_method, "stale_fallback_disabled", history_rows)
+                    )
+                    continue
                 matched, method = match_signal_to_close(row, index)
                 if matched is None:
                     reason = hist_method if hist_method != "history_unavailable" else method
@@ -1214,7 +1230,7 @@ def main() -> None:
         f"Generated UTC: {date.today().isoformat()}",
         f"Signals file: {display_path(signals_path)}",
         f"Audit bet type: {args.bet_type}",
-        f"Fallback closing odds file: {display_path(xlsx_path) if args.bet_type == 'match' else 'history-only'}",
+        f"Fallback closing odds file: {fallback_label}",
         "",
         "Input coverage",
         f"  Raw strict rows: {len(raw_rows)}",
@@ -1235,6 +1251,7 @@ def main() -> None:
         f"  History note: {history_note}",
         "",
         "Closing-file mapping",
+        f"  XLSX fallback enabled: {args.bet_type == 'match' and args.allow_stale_fallback}",
         f"  XLSX matches loaded: {meta['xlsx_matches_loaded']}",
         f"  Closing matches mapped to OnCourt IDs: {meta['closing_matches_mapped']}",
         f"  Closing date range: {closing_dates[0].isoformat() if closing_dates else 'n/a'} -> {closing_dates[-1].isoformat() if closing_dates else 'n/a'}",
