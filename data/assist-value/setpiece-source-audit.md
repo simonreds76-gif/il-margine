@@ -1,6 +1,6 @@
 # Assist Value Set-Piece Source Audit
 
-Fetched at UTC: `2026-05-28T11:01:38+00:00`
+Fetched at UTC: `2026-05-29T10:52:58+00:00`
 
 ## Decision
 
@@ -14,14 +14,14 @@ Overall: **PASS_SOURCE_LAYER**
 ## RotoWire
 
 - Teams with set-piece blocks: `96/96`
-- Player role rows extracted: `1041`
+- Player role rows extracted: `1038`
 
 | League | Teams OK | Teams | Role rows | Max latest week |
 |---|---:|---:|---:|---:|
-| bundesliga | 18 | 18 | 181 | 49 |
+| bundesliga | 18 | 18 | 180 | 49 |
 | epl | 20 | 20 | 213 | 56 |
-| la-liga | 20 | 20 | 223 | 54 |
-| ligue-1 | 18 | 18 | 203 | 50 |
+| la-liga | 20 | 20 | 222 | 54 |
+| ligue-1 | 18 | 18 | 202 | 50 |
 | serie-a | 20 | 20 | 221 | 52 |
 
 ## FPL API
@@ -46,7 +46,7 @@ Overall: **PASS_SOURCE_LAYER**
 | bundesliga | FSV Mainz 05 | Nadiem Amiri | 90.91% | 57.25% | 79 |
 | ligue-1 | Metz | Gauthier Hein | 90.91% | 64.17% | 77 |
 | ligue-1 | Lorient | Pablo Pagis | 83.33% | 58.54% | 48 |
-| la-liga | Espanyol | Edu Exposito | 81.82% | 72.22% | 117 |
+| la-liga | Espanyol | Edu Exposito | 81.82% | 72.67% | 117 |
 | bundesliga | VfL Wolfsburg | Christian Eriksen | 81.25% | 55.0% | 77 |
 | ligue-1 | AJ Auxerre | Kevin Danois | 78.95% | 62.04% | 85 |
 | la-liga | Real Madrid | Trent Alexander-Arnold | 78.95% | 28.38% | 65 |

@@ -1,5 +1,5 @@
 Assist Value Model Report
-generated_at_utc: 2026-05-28T23:18:36Z
+generated_at_utc: 2026-05-29T10:54:22Z
 
 Status
 model_status: ENABLED_SHADOW_V0
@@ -9,9 +9,9 @@ backtest_status: NOT_BACKTESTED
 
 Counts
 priced_rows: 3010
-shadow_signals: 13
+shadow_signals: 12
 watch_rows: 15
-shadow_signals_by_league: epl=2, la-liga=3, ligue-1=2, serie-a=6
+shadow_signals_by_league: epl=2, la-liga=3, ligue-1=1, serie-a=6
 
 Model
 p_assist = 1 - exp(-lambda)
@@ -24,7 +24,6 @@ Top shadow signals
  - Jon Ander Olasagasti | Levante UD vs RCD Mallorca | fair 4.015 vs market 7.000 | edge 10.62pp | conf medium | setpiece 58.33
  - Nicolo Zaniolo | SSC Napoli vs Udinese Calcio | fair 4.858 vs market 7.500 | edge 7.25pp | conf high | setpiece 50.0
  - Gauthier Hein | OGC Nice vs FC Metz | fair 4.646 vs market 7.000 | edge 7.24pp | conf high | setpiece 94.12
- - Adrien Thomasson | Olympique Lyon vs Racing Club De Lens | fair 3.453 vs market 4.500 | edge 6.74pp | conf high | setpiece 24.32
  - James Ward-Prowse | Arsenal FC vs Burnley FC | fair 6.742 vs market 12.000 | edge 6.50pp | conf high | setpiece 52.94
  - Luis Milla | Elche CF vs Getafe CF | fair 4.333 vs market 6.000 | edge 6.41pp | conf high | setpiece 96.88
  - Federico Dimarco | Inter Milano vs Hellas Verona | fair 2.873 vs market 3.500 | edge 6.23pp | conf high | setpiece 32.26
