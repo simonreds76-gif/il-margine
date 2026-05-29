@@ -31,6 +31,10 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# local backup artifacts
+*.bak
+*.bak-*
+
 # env files (can opt-in for committing if needed)
 .env*
 
@@ -73,6 +77,13 @@ data/pinnacle-history/*.csv
 data/pinnacle-odds-*.csv
 data/oncourt-*.log
 data/oncourt/stat_atp.*.tmp
+data/tennis-props/inbox/*.csv
+data/tennis-props/comparison-*.csv
+data/tennis-props/slam-venue-factors.csv
+data/tennis-props/player-props-baseline.csv
+data/tennis-props/player-props-board.csv
+data/oncourt/stat_wta.csv
+data/oncourt/games_wta.csv
 data/pinnacle-close-capture.log
 data/pinnacle-close-capture-heartbeat.json
 data/oncourt-am-refresh.log

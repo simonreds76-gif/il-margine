@@ -1,8 +1,6 @@
 name: Pinnacle Corners CLV Capture
 
 on:
-  schedule:
-    - cron: "0 8,12,16,19 * * *" # 08:00, 12:00, 16:00, 19:00 UTC daily
   workflow_dispatch:
 
 permissions:

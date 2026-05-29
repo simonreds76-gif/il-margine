@@ -1,9 +1,6 @@
 name: Team Props Settlement
 
 on:
-  schedule:
-    - cron: "30 23 * * *" # Nightly settlement after most match windows
-    - cron: "45 08 * * *" # Morning rerun to catch late-posted results without relying on local tasks
   workflow_dispatch:
 
 permissions:

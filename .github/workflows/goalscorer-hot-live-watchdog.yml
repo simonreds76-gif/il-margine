@@ -1,8 +1,6 @@
 name: Goalscorer Hot Live Watchdog
 
 on:
-  schedule:
-    - cron: "*/10 8-23 * * *"
   workflow_dispatch:
 
 permissions:

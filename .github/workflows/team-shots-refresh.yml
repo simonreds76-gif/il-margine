@@ -1,9 +1,6 @@
 name: Team Shots Refresh
 
 on:
-  schedule:
-    - cron: "12 8 * * *"  # Daily 08:12 UTC = 09:12 BST
-    - cron: "12 17 * * *" # Daily 17:12 UTC = 18:12 BST
   workflow_dispatch:
 
 permissions:

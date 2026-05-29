@@ -3,7 +3,6 @@ name: Assist Value Shadow
 on:
   schedule:
     - cron: "10 7 * * *"
-    - cron: "*/30 8-22 * * *"
   workflow_dispatch:
     inputs:
       refresh_role_sources:
