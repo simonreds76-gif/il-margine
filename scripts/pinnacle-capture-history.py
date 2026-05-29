@@ -19,6 +19,7 @@ from __future__ import annotations
 import argparse
 import csv
 import importlib.util
+from collections import Counter
 import os
 import sys
 from datetime import datetime, timezone
@@ -169,7 +170,12 @@ def main() -> int:
         print("No Pinnacle matches scraped.")
         return 0
     dated_count = sum(1 for row in results if row.get("match_date") and row.get("kickoff_iso"))
+    league_counts = Counter(str(row.get("league") or "unknown") for row in results)
+    spread_count = sum(1 for row in results if row.get("spread_line") is not None)
+    total_count = sum(1 for row in results if row.get("ou_line") is not None)
     print(f"Schedule metadata: {dated_count}/{len(results)} rows dated.")
+    print(f"Captured rows by league: {dict(league_counts)}")
+    print(f"Market coverage: spreads={spread_count}/{len(results)} totals={total_count}/{len(results)}")
     if dated_count == 0:
         raise RuntimeError("Pinnacle scrape returned no match_date/kickoff_iso metadata; refusing undated history capture.")
 
