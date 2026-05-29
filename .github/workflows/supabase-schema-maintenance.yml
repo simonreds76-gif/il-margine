@@ -1,0 +1,51 @@
+name: Supabase Schema Maintenance
+
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "Schema maintenance task"
+        required: true
+        default: "bookmaker-history-schedule"
+        type: choice
+        options:
+          - bookmaker-history-schedule
+
+permissions:
+  contents: read
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: golden-with-speed-insights
+          token: ${{ github.token }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install Python deps
+        run: pip install psycopg2-binary
+
+      - name: Create .env.local
+        run: |
+          : > .env.local
+          if [ -n "${{ secrets.DATABASE_URL }}" ]; then
+            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env.local
+          elif [ -n "${{ secrets.SUPABASE_DB_URL }}" ]; then
+            echo "SUPABASE_DB_URL=${{ secrets.SUPABASE_DB_URL }}" >> .env.local
+          fi
+
+      - name: Verify DB credentials
+        run: |
+          if [ ! -s .env.local ]; then
+            echo "DATABASE_URL/SUPABASE_DB_URL secret missing. Add one before running schema maintenance."
+            exit 2
+          fi
+
+      - name: Apply bookmaker history schedule columns
+        run: python scripts/migrate-bookmaker-odds-history-schedule.py
