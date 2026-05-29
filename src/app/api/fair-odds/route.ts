@@ -34,13 +34,14 @@ function resolveConfiguredRouteFilePath(
   return projectFilePath(trimmed);
 }
 
-export 
 interface DailyFairOddsDbRow {
   id: number;
   tour_id: number | null;
   player1_id: number | null;
   player2_id: number | null;
   surface: string | null;
+  p1_win_prob_raw?: number | string | null;
+  p2_win_prob_raw?: number | string | null;
   p1_win_prob: number | string | null;
   p2_win_prob: number | string | null;
   odds1: number | string | null;
@@ -72,7 +73,7 @@ interface OncourtTodayDbRow {
   result?: string | null;
 }
 
-interface FairOddsRow {
+export interface FairOddsRow {
   id: number;
   tournament: string;
   match_date?: string;
@@ -97,7 +98,7 @@ interface FairOddsRow {
   hard_overlay_best_value?: number;
   hard_overlay_delta_p1_pp?: number;
   hard_overlay_delta_p2_pp?: number;
-  hard_overlay_source?: "stored_prob_shadow";
+  hard_overlay_source?: "raw_prob_shadow" | "stored_prob_shadow";
   p1_serve?: number;
   p1_return?: number;
   p1_total?: number;
@@ -461,6 +462,14 @@ function parseBoolEnv(name: string, fallback: boolean): boolean {
   const raw = process.env[name];
   if (raw == null) return fallback;
   return ["1", "true", "yes", "on"].includes(raw.trim().toLowerCase());
+}
+
+function isSchemaCacheError(error: { message?: string; code?: string } | null | undefined): boolean {
+  if (!error) return false;
+  const text = `${error.code ?? ""} ${error.message ?? ""}`.toLowerCase();
+  return ["schema cache", "unknown column", "could not find", "does not exist", "42703"].some((token) =>
+    text.includes(token)
+  );
 }
 
 function clamp(value: number, lo: number, hi: number): number {
@@ -1781,28 +1790,34 @@ async function run(): Promise<Response> {
   const FAIR_ODDS_LIMIT = 5000;
 
   const FAIR_ODDS_PAGE_SIZE = 1000;
-  const DAILY_FAIR_ODDS_SELECT =
+  const DAILY_FAIR_ODDS_SELECT_BASE =
     "id, tour_id, player1_id, player2_id, surface, p1_win_prob, p2_win_prob, odds1, odds2, p_a, p_b, expected_total_games, ou_line_1, ou_over_1, ou_under_1, ou_line_2, ou_over_2, ou_under_2, ou_line_3, ou_over_3, ou_under_3, confidence, spread_line, spread_odds1, spread_odds2, handicap_edge_p1, handicap_edge_p2";
+  const DAILY_FAIR_ODDS_SELECT_WITH_RAW =
+    "id, tour_id, player1_id, player2_id, surface, p1_win_prob_raw, p2_win_prob_raw, p1_win_prob, p2_win_prob, odds1, odds2, p_a, p_b, expected_total_games, ou_line_1, ou_over_1, ou_under_1, ou_line_2, ou_over_2, ou_under_2, ou_line_3, ou_over_3, ou_under_3, confidence, spread_line, spread_odds1, spread_odds2, handicap_edge_p1, handicap_edge_p2";
 
-  const fetchDailyFairOddsRows = async () => {
+  const fetchDailyFairOddsRows = async (selectFields: string) => {
     const rows: DailyFairOddsDbRow[] = [];
     for (let from = 0; from < FAIR_ODDS_LIMIT; from += FAIR_ODDS_PAGE_SIZE) {
       const { data, error } = await supabase
         .from("daily_fair_odds")
-        .select(DAILY_FAIR_ODDS_SELECT)
+        .select(selectFields)
         .order("tour_id")
         .order("draw")
         .order("round_id")
         .range(from, Math.min(from + FAIR_ODDS_PAGE_SIZE - 1, FAIR_ODDS_LIMIT - 1));
       if (error) return { rows, error };
       const page = data ?? [];
-      rows.push(...(page as DailyFairOddsDbRow[]));
+      rows.push(...(page as unknown as DailyFairOddsDbRow[]));
       if (page.length < FAIR_ODDS_PAGE_SIZE) break;
     }
     return { rows, error: null };
   };
 
-  const { rows: oddsRows, error: oddsErr } = await fetchDailyFairOddsRows();
+  let { rows: oddsRows, error: oddsErr } = await fetchDailyFairOddsRows(DAILY_FAIR_ODDS_SELECT_WITH_RAW);
+  if (oddsErr && isSchemaCacheError(oddsErr)) {
+    console.warn("[fair-odds] daily_fair_odds raw probability columns missing; H-cal will fall back to stored probability.");
+    ({ rows: oddsRows, error: oddsErr } = await fetchDailyFairOddsRows(DAILY_FAIR_ODDS_SELECT_BASE));
+  }
 
   if (oddsErr) {
     return NextResponse.json({ error: oddsErr.message }, { status: 500 });
@@ -1830,7 +1845,7 @@ async function run(): Promise<Response> {
         .range(from, Math.min(from + FAIR_ODDS_PAGE_SIZE - 1, FAIR_ODDS_LIMIT - 1));
       if (error) return { rows, error };
       const page = data ?? [];
-      rows.push(...(page as OncourtTodayDbRow[]));
+      rows.push(...(page as unknown as OncourtTodayDbRow[]));
       if (page.length < FAIR_ODDS_PAGE_SIZE) break;
     }
     return { rows, error: null };
@@ -2477,6 +2492,10 @@ async function run(): Promise<Response> {
     const confidence = confidenceRaw ? confidenceRaw.toLowerCase() : undefined;
     const p1WinProb = r.p1_win_prob != null ? Number(r.p1_win_prob) : 0;
     const p2WinProb = r.p2_win_prob != null ? Number(r.p2_win_prob) : 0;
+    const p1WinProbRaw = parsePointProb(r.p1_win_prob_raw);
+    const hardOverlayInputProb = p1WinProbRaw ?? p1WinProb;
+    const hardOverlaySource: FairOddsRow["hard_overlay_source"] =
+      p1WinProbRaw != null ? "raw_prob_shadow" : "stored_prob_shadow";
     const storedPA = parsePointProb((r as { p_a?: number | string | null }).p_a);
     const storedPB = parsePointProb((r as { p_b?: number | string | null }).p_b);
     const storedMatchProb =
@@ -2532,7 +2551,7 @@ async function run(): Promise<Response> {
       pinnacle && ourOdds2 > 1 && pinnacle.pinnacle_odds2 > 1
         ? Math.round((pinnacle.pinnacle_odds2 / ourOdds2 - 1) * 10000) / 100
         : undefined;
-    const hardOverlayP1WinProb = hardCalibrationShadowProbability(p1WinProb, surfaceKey, seriesBucket, confidence);
+    const hardOverlayP1WinProb = hardCalibrationShadowProbability(hardOverlayInputProb, surfaceKey, seriesBucket, confidence);
     const hardOverlayP2WinProb = hardOverlayP1WinProb != null ? 1 - hardOverlayP1WinProb : undefined;
     const hardOverlayOdds1 = hardOverlayP1WinProb != null ? Math.round((1 / hardOverlayP1WinProb) * 1000) / 1000 : undefined;
     const hardOverlayOdds2 = hardOverlayP2WinProb != null ? Math.round((1 / hardOverlayP2WinProb) * 1000) / 1000 : undefined;
@@ -2844,7 +2863,7 @@ async function run(): Promise<Response> {
         hardOverlayP1WinProb != null ? Math.round((hardOverlayP1WinProb - p1WinProb) * 10000) / 100 : undefined,
       hard_overlay_delta_p2_pp:
         hardOverlayP2WinProb != null ? Math.round((hardOverlayP2WinProb - p2WinProb) * 10000) / 100 : undefined,
-      hard_overlay_source: hardOverlayP1WinProb != null ? "stored_prob_shadow" : undefined,
+      hard_overlay_source: hardOverlayP1WinProb != null ? hardOverlaySource : undefined,
       p_a: storedPA,
       p_b: storedPB,
       p1_serve: p1Stats ? Math.round(p1Stats.hold_pct * 1000) / 10 : undefined,

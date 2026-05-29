@@ -6,7 +6,7 @@ from __future__ import annotations
 import argparse
 import csv
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 import re
 import unicodedata
@@ -37,6 +37,8 @@ FIELDNAMES = [
     "fair_over_odds",
     "fair_under_odds",
     "fair_odds",
+    "fair_p_push",
+    "distribution",
     "value_over_pct",
     "value_under_pct",
     "value_pct",
@@ -83,6 +85,26 @@ def parse_year(value: object) -> int | None:
     text = str(value or "").strip()
     if len(text) >= 4 and text[:4].isdigit():
         return int(text[:4])
+    return None
+
+
+def parse_signal_date(value: object) -> date | None:
+    text = str(value or "").strip()
+    if len(text) >= 10:
+        try:
+            return datetime.strptime(text[:10], "%Y-%m-%d").date()
+        except ValueError:
+            return None
+    return None
+
+
+def parse_sackmann_date(value: object) -> date | None:
+    text = str(value or "").strip()
+    if len(text) >= 8 and text[:8].isdigit():
+        try:
+            return datetime.strptime(text[:8], "%Y%m%d").date()
+        except ValueError:
+            return None
     return None
 
 
@@ -192,9 +214,23 @@ def choose_candidate(signal: dict[str, str], candidates: list[dict[str, str]]) -
         return None
     tournament = signal.get("tournament", "")
     overlapped = [r for r in candidates if tournament_overlap(tournament, r.get("tourney_name", ""))]
-    pool = overlapped or candidates
-    pool = sorted(pool, key=lambda r: str(r.get("tourney_date") or ""), reverse=True)
-    return pool[0] if len(pool) == 1 or overlapped else pool[0]
+    if overlapped:
+        pool = overlapped
+    elif len(candidates) == 1:
+        pool = candidates
+    else:
+        # If the same pair met multiple times in the year and tournament names
+        # do not overlap, settling from the most recent match can fabricate a
+        # result. Leave it pending for manual review instead.
+        return None
+
+    signal_date = parse_signal_date(signal.get("date"))
+    if signal_date:
+        dated = [(row, parse_sackmann_date(row.get("tourney_date"))) for row in pool]
+        with_dates = [(row, dt) for row, dt in dated if dt is not None]
+        if with_dates:
+            return sorted(with_dates, key=lambda item: abs((item[1] - signal_date).days))[0][0]
+    return sorted(pool, key=lambda r: str(r.get("tourney_date") or ""), reverse=True)[0]
 
 
 def write_performance(path: Path, rows: list[dict[str, str]]) -> None:
@@ -259,10 +295,11 @@ def main() -> int:
             still_pending += 1
             continue
         key = (tour, year, pair_key(row.get("player"), row.get("opponent")))
-        candidate = choose_candidate(row, index.get(key, []))
+        candidates = index.get(key, [])
+        candidate = choose_candidate(row, candidates)
         if candidate is None:
             row["settlement_status"] = "pending"
-            row["settlement_note"] = "sackmann_match_not_found"
+            row["settlement_note"] = "sackmann_match_ambiguous" if candidates else "sackmann_match_not_found"
             still_pending += 1
             continue
         if is_void_score(candidate.get("score")):

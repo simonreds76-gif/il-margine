@@ -6,6 +6,27 @@ from __future__ import annotations
 from dataclasses import dataclass
 import math
 
+DEFAULT_COUNT_DISPERSION_ALPHA = {
+    ("ATP", "aces"): 0.35,
+    ("WTA", "aces"): 0.50,
+    ("ATP", "dfs"): 0.10,
+    ("WTA", "dfs"): 0.20,
+}
+
+# Additive correction = actual minus projected from the 2024-2025 Slam
+# Stage-0 holdout report. Keep this small and transparent; same-tournament
+# current-round data still carries the live within-event adjustment.
+SLAM_COUNT_BIAS_CORRECTION = {
+    ("ATP", "Australian Open"): {"aces": -0.180, "dfs": 0.252},
+    ("ATP", "Roland Garros"): {"aces": 0.076, "dfs": -0.327},
+    ("ATP", "US Open"): {"aces": -0.850, "dfs": 0.630},
+    ("ATP", "Wimbledon"): {"aces": 0.589, "dfs": -0.010},
+    ("WTA", "Australian Open"): {"aces": -0.092, "dfs": -0.033},
+    ("WTA", "Roland Garros"): {"aces": 0.073, "dfs": -0.164},
+    ("WTA", "US Open"): {"aces": -0.225, "dfs": 0.078},
+    ("WTA", "Wimbledon"): {"aces": 0.000, "dfs": 0.231},
+}
+
 
 @dataclass(frozen=True)
 class Projection:
@@ -194,6 +215,11 @@ def project_player(
 
     expected_aces = ace_rate_adj * expected_service_points
     expected_dfs = df_rate_adj * expected_service_points
+    tournament = str(factor_row.get("tournament") or "").strip()
+    correction = SLAM_COUNT_BIAS_CORRECTION.get((tour.upper(), tournament))
+    if correction:
+        expected_aces = max(0.0, expected_aces + _clip(correction.get("aces", 0.0), -0.90, 0.90))
+        expected_dfs = max(0.0, expected_dfs + _clip(correction.get("dfs", 0.0), -0.70, 0.70))
 
     l12 = player_rows.get("L12M") or {}
     l12_matches = _int(l12.get("matches"))
@@ -228,24 +254,48 @@ def project_player(
     )
 
 
-def poisson_p_over(line: float, mean: float) -> float:
-    if mean <= 0:
+def poisson_pmf(k: int, mean: float) -> float:
+    if k < 0 or mean <= 0:
         return 0.0
-    cutoff = math.floor(line)
-    cdf = 0.0
     term = math.exp(-mean)
-    cdf += term
-    for k in range(1, cutoff + 1):
-        term *= mean / k
-        cdf += term
-    return _clip(1.0 - cdf, 0.0, 1.0)
+    for i in range(1, k + 1):
+        term *= mean / i
+    return _clip(term, 0.0, 1.0)
 
 
-def poisson_p_under(line: float, mean: float) -> float:
+def negative_binomial_pmf(k: int, mean: float, alpha: float) -> float:
+    if k < 0:
+        return 0.0
+    if mean <= 0:
+        return 1.0 if k == 0 else 0.0
+    if alpha <= 1e-9:
+        return poisson_pmf(k, mean)
+    # Var = mean + alpha * mean^2. This is the standard NB2 parameterisation.
+    size = 1.0 / alpha
+    prob = size / (size + mean)
+    log_pmf = (
+        math.lgamma(k + size)
+        - math.lgamma(size)
+        - math.lgamma(k + 1)
+        + size * math.log(prob)
+        + k * math.log1p(-prob)
+    )
+    return _clip(math.exp(log_pmf), 0.0, 1.0)
+
+
+def _negative_binomial_cdf(cutoff: int, mean: float, alpha: float) -> float:
+    if cutoff < 0:
+        return 0.0
     if mean <= 0:
         return 1.0
-    # For common half-point lines, under is simply count <= floor(line).
-    cutoff = math.floor(line)
+    return _clip(sum(negative_binomial_pmf(k, mean, alpha) for k in range(cutoff + 1)), 0.0, 1.0)
+
+
+def _poisson_cdf(cutoff: int, mean: float) -> float:
+    if cutoff < 0:
+        return 0.0
+    if mean <= 0:
+        return 1.0
     cdf = 0.0
     term = math.exp(-mean)
     cdf += term
@@ -253,3 +303,86 @@ def poisson_p_under(line: float, mean: float) -> float:
         term *= mean / k
         cdf += term
     return _clip(cdf, 0.0, 1.0)
+
+
+def _is_integer_line(line: float) -> bool:
+    return abs(float(line) - round(float(line))) < 1e-9
+
+
+def poisson_p_push(line: float, mean: float) -> float:
+    if not _is_integer_line(line):
+        return 0.0
+    return poisson_pmf(int(round(line)), mean)
+
+
+def poisson_line_probabilities(line: float, mean: float) -> tuple[float, float, float]:
+    """Return raw (over win, under win, push) probabilities for an O/U line."""
+    if mean <= 0:
+        if _is_integer_line(line) and int(round(line)) == 0:
+            return 0.0, 0.0, 1.0
+        return 0.0, 1.0, 0.0
+    cutoff = math.floor(line)
+    if _is_integer_line(line):
+        push = poisson_pmf(cutoff, mean)
+        under = _poisson_cdf(cutoff - 1, mean)
+        over = 1.0 - under - push
+        return _clip(over, 0.0, 1.0), _clip(under, 0.0, 1.0), _clip(push, 0.0, 1.0)
+    under = _poisson_cdf(cutoff, mean)
+    return _clip(1.0 - under, 0.0, 1.0), under, 0.0
+
+
+def negative_binomial_line_probabilities(line: float, mean: float, alpha: float) -> tuple[float, float, float]:
+    if mean <= 0:
+        if _is_integer_line(line) and int(round(line)) == 0:
+            return 0.0, 0.0, 1.0
+        return 0.0, 1.0, 0.0
+    cutoff = math.floor(line)
+    if _is_integer_line(line):
+        push = negative_binomial_pmf(cutoff, mean, alpha)
+        under = _negative_binomial_cdf(cutoff - 1, mean, alpha)
+        over = 1.0 - under - push
+        return _clip(over, 0.0, 1.0), _clip(under, 0.0, 1.0), _clip(push, 0.0, 1.0)
+    under = _negative_binomial_cdf(cutoff, mean, alpha)
+    return _clip(1.0 - under, 0.0, 1.0), under, 0.0
+
+
+def resolve_count_dispersion(tour: str, market: str) -> float:
+    tour_key = str(tour or "").upper()
+    market_key = "dfs" if str(market or "").lower().replace(" ", "_") in {"double_faults", "double_fault", "df", "dfs"} else "aces"
+    return DEFAULT_COUNT_DISPERSION_ALPHA.get((tour_key, market_key), 0.25 if market_key == "aces" else 0.12)
+
+
+def count_line_probabilities(
+    line: float,
+    mean: float,
+    *,
+    distribution: str = "negative_binomial",
+    alpha: float | None = None,
+    tour: str = "",
+    market: str = "aces",
+) -> tuple[float, float, float]:
+    if distribution in {"nb", "negative_binomial"}:
+        resolved_alpha = resolve_count_dispersion(tour, market) if alpha is None else alpha
+        return negative_binomial_line_probabilities(line, mean, resolved_alpha)
+    return poisson_line_probabilities(line, mean)
+
+
+def push_adjusted_fair_odds(win_prob: float, push_prob: float = 0.0) -> float | None:
+    if win_prob <= 0:
+        return None
+    return max(1e-6, 1.0 - push_prob) / win_prob
+
+
+def push_adjusted_value_pct(win_prob: float, push_prob: float, odds: float | None) -> float | None:
+    if odds is None or odds <= 1:
+        return None
+    # EV per 1u stake with push returning stake: win*(odds-1) - loss.
+    return (win_prob * odds + push_prob - 1.0) * 100.0
+
+
+def poisson_p_over(line: float, mean: float) -> float:
+    return poisson_line_probabilities(line, mean)[0]
+
+
+def poisson_p_under(line: float, mean: float) -> float:
+    return poisson_line_probabilities(line, mean)[1]

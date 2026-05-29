@@ -456,7 +456,10 @@ function ComparisonTable({ rows, hasLinesFile }: { rows: CsvRow[]; hasLinesFile:
                   <td className="px-3 py-3 font-mono text-slate-100">{fmt(row.projection_mean, 1)}</td>
                   <td className="px-3 py-3 font-mono text-slate-300">{fmt(row.over_odds, 2)}</td>
                   <td className="px-3 py-3 font-mono text-slate-300">{fmt(row.under_odds, 2)}</td>
-                  <td className="px-3 py-3 font-mono text-xs text-slate-400">{fmt(row.fair_over_odds, 2)} / {fmt(row.fair_under_odds, 2)}</td>
+                  <td className="px-3 py-3 font-mono text-xs text-slate-400">
+                    <div>{fmt(row.fair_over_odds, 2)} / {fmt(row.fair_under_odds, 2)}</div>
+                    {n(row.fair_p_push) > 0 ? <div className="text-[10px] text-amber-300/70">push {(n(row.fair_p_push) * 100).toFixed(1)}%</div> : null}
+                  </td>
                   <td className="px-3 py-3 font-mono text-xs">
                     <span className={n(row.value_over_pct) > 0 ? "text-emerald-300" : "text-slate-500"}>{fmt(row.value_over_pct, 1)}%</span>
                     <span className="text-slate-600"> / </span>

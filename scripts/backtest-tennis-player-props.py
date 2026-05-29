@@ -22,7 +22,7 @@ from typing import Iterable
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from tennis_props_model import poisson_p_over, project_player  # noqa: E402
+from tennis_props_model import count_line_probabilities, project_player, resolve_count_dispersion  # noqa: E402
 
 
 SACKMANN_DIR = ROOT / "data" / "sackmann"
@@ -554,11 +554,49 @@ def bucket_summary(rows: list[EvalRow]) -> dict[str, float]:
     for r in rows:
         ace_line = math.floor(r.naive_aces) + 0.5
         df_line = math.floor(r.naive_dfs) + 0.5
-        ace_model_probs.append(poisson_p_over(ace_line, r.projected_aces))
-        ace_naive_probs.append(poisson_p_over(ace_line, r.naive_aces))
+        ace_alpha = resolve_count_dispersion(r.tour, "aces")
+        df_alpha = resolve_count_dispersion(r.tour, "dfs")
+        ace_model_probs.append(
+            count_line_probabilities(
+                ace_line,
+                r.projected_aces,
+                distribution="negative_binomial",
+                alpha=ace_alpha,
+                tour=r.tour,
+                market="aces",
+            )[0]
+        )
+        ace_naive_probs.append(
+            count_line_probabilities(
+                ace_line,
+                r.naive_aces,
+                distribution="negative_binomial",
+                alpha=ace_alpha,
+                tour=r.tour,
+                market="aces",
+            )[0]
+        )
         ace_outcomes.append(1 if r.actual_aces > ace_line else 0)
-        df_model_probs.append(poisson_p_over(df_line, r.projected_dfs))
-        df_naive_probs.append(poisson_p_over(df_line, r.naive_dfs))
+        df_model_probs.append(
+            count_line_probabilities(
+                df_line,
+                r.projected_dfs,
+                distribution="negative_binomial",
+                alpha=df_alpha,
+                tour=r.tour,
+                market="dfs",
+            )[0]
+        )
+        df_naive_probs.append(
+            count_line_probabilities(
+                df_line,
+                r.naive_dfs,
+                distribution="negative_binomial",
+                alpha=df_alpha,
+                tour=r.tour,
+                market="dfs",
+            )[0]
+        )
         df_outcomes.append(1 if r.actual_dfs > df_line else 0)
 
     return {
@@ -649,6 +687,10 @@ def write_report(path: Path, rows: list[EvalRow], *, years: list[int], sackmann_
     lines.append(f"Sackmann dir: {sackmann_dir}")
     lines.append(f"Evaluation years: {', '.join(map(str, years))}")
     lines.append("Outcome-only validation. No odds, no ROI, no CLV.")
+    lines.append(
+        "Synthetic O/U log-loss uses negative-binomial tails with alpha: "
+        "ATP aces 0.35, WTA aces 0.50, ATP DFs 0.10, WTA DFs 0.20."
+    )
     lines.append("")
 
     def section(title: str, items: list[tuple[str, dict[str, float]]]) -> None:

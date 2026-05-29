@@ -10,7 +10,12 @@ from pathlib import Path
 import re
 import unicodedata
 
-from tennis_props_model import poisson_p_over, poisson_p_under
+from tennis_props_model import (
+    count_line_probabilities,
+    poisson_line_probabilities,
+    push_adjusted_fair_odds,
+    push_adjusted_value_pct,
+)
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -86,6 +91,12 @@ def main() -> None:
     parser.add_argument("--lines", default="")
     parser.add_argument("--out", default="")
     parser.add_argument("--min-value", type=float, default=0.08)
+    parser.add_argument(
+        "--distribution",
+        choices=["negative_binomial", "nb", "poisson"],
+        default="negative_binomial",
+        help="Count distribution used for aces/DF O/U prices. Negative binomial is the default research surface.",
+    )
     args = parser.parse_args()
 
     lines_path = Path(args.lines) if args.lines else INBOX_DIR / f"bet365-lines-{args.date}.csv"
@@ -130,10 +141,39 @@ def main() -> None:
         line_value = parse_float(line.get("line"))
         over_odds = parse_float(line.get("over_odds"))
         under_odds = parse_float(line.get("under_odds"))
-        p_over = poisson_p_over(line_value, mean) if mean is not None and line_value is not None else None
-        p_under = poisson_p_under(line_value, mean) if mean is not None and line_value is not None else None
-        value_over = p_over * over_odds - 1.0 if p_over is not None and over_odds else None
-        value_under = p_under * under_odds - 1.0 if p_under is not None and under_odds else None
+        if mean is not None and line_value is not None:
+            if args.distribution == "poisson":
+                p_over, p_under, p_push = poisson_line_probabilities(line_value, mean)
+            else:
+                p_over, p_under, p_push = count_line_probabilities(
+                    line_value,
+                    mean,
+                    distribution=args.distribution,
+                    tour=str(line.get("tour") or ""),
+                    market=market,
+                )
+        else:
+            p_over, p_under, p_push = None, None, None
+        fair_over = (
+            push_adjusted_fair_odds(p_over, p_push or 0.0)
+            if p_over is not None and p_push is not None
+            else None
+        )
+        fair_under = (
+            push_adjusted_fair_odds(p_under, p_push or 0.0)
+            if p_under is not None and p_push is not None
+            else None
+        )
+        value_over = (
+            push_adjusted_value_pct(p_over, p_push or 0.0, over_odds) / 100.0
+            if p_over is not None and p_push is not None
+            else None
+        )
+        value_under = (
+            push_adjusted_value_pct(p_under, p_push or 0.0, under_odds) / 100.0
+            if p_under is not None and p_push is not None
+            else None
+        )
         confidence = market_confidence(board_row or {}, market)
         notes = str((board_row or {}).get("notes") or "")
         recommended = ""
@@ -154,8 +194,10 @@ def main() -> None:
                 "notes": notes,
                 "fair_p_over": fmt(p_over),
                 "fair_p_under": fmt(p_under),
-                "fair_over_odds": fmt(1.0 / p_over if p_over and p_over > 0 else None, 3),
-                "fair_under_odds": fmt(1.0 / p_under if p_under and p_under > 0 else None, 3),
+                "fair_p_push": fmt(p_push),
+                "distribution": args.distribution,
+                "fair_over_odds": fmt(fair_over, 3),
+                "fair_under_odds": fmt(fair_under, 3),
                 "value_over_pct": fmt((value_over * 100.0) if value_over is not None else None, 2),
                 "value_under_pct": fmt((value_under * 100.0) if value_under is not None else None, 2),
                 "recommended_side": recommended,
@@ -178,6 +220,8 @@ def main() -> None:
         "notes",
         "fair_p_over",
         "fair_p_under",
+        "fair_p_push",
+        "distribution",
         "fair_over_odds",
         "fair_under_odds",
         "value_over_pct",

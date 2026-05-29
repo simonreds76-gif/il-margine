@@ -1337,6 +1337,8 @@ def main():
 
         headers_write = {**headers, "Content-Type": "application/json", "Prefer": "return=minimal"}
         coverage_fields = {
+            "p1_win_prob_raw",
+            "p2_win_prob_raw",
             "match_count_12m_p1",
             "match_count_12m_p2",
             "matches_total_p1",
@@ -3395,6 +3397,9 @@ def main():
         if tot > 0:
             p1_win, p2_win = p1_win / tot, p2_win / tot
 
+        p1_win_raw = p1_win
+        p2_win_raw = p2_win
+
         # Post-hoc calibration by tour tier (trained on historical backtest).
         p1_win = _calibrate_match_probability(p1_win, series_bucket, surface, confidence)
         p1_win = _apply_series_probability_guard(
@@ -3616,6 +3621,8 @@ def main():
             "surface": surface,
             "round_id": round_id,
             "draw": draw,
+            "p1_win_prob_raw": round(p1_win_raw, 4),
+            "p2_win_prob_raw": round(p2_win_raw, 4),
             "p1_win_prob": round(p1_win, 4),
             "p2_win_prob": round(p2_win, 4),
             "p_a": round(p_a_eg, 4),

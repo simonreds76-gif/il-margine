@@ -1211,8 +1211,16 @@ def main() -> None:
         }
     clv_values = [float(r["clv_implied_delta_pct"]) for r in detailed_rows]
     positive_clv = sum(1 for v in clv_values if v > 0)
+    match_coverage_rate = len(detailed_rows) / len(target_rows) * 100.0 if target_rows else 0.0
+    unmatched_rate = 100.0 - match_coverage_rate if target_rows else 0.0
     closing_dates = sorted(date.fromisoformat(m.date_iso) for m in closing_matches)
     coverage_warning = None
+    low_coverage_warning = None
+    if target_rows and match_coverage_rate < 70.0:
+        low_coverage_warning = (
+            f"Only {match_coverage_rate:.2f}% of settled {audited_label} rows have a captured close. "
+            "Treat historical CLV as low-coverage until the widened capture era has enough settled rows."
+        )
     if args.bet_type == "match" and match_dates and closing_dates and max(closing_dates) < min(match_dates):
         coverage_warning = (
             f"Fallback closing file is stale for this live sample: latest fallback date {max(closing_dates).isoformat()} "
@@ -1261,14 +1269,20 @@ def main() -> None:
         "",
         "Audit matching",
         f"  Matched {audited_label} rows: {len(detailed_rows)} / {len(target_rows)}",
+        f"  Close coverage rate: {match_coverage_rate:.2f}%",
+        f"  Unmatched rate: {unmatched_rate:.2f}%",
         f"  Closing sources: {dict(source_counts)}",
         f"  Match methods: {dict(match_method_counts)}",
         f"  Unmatched reasons: {dict(unmatched_reasons)}",
         f"  Unmatched diagnostics rows: {len(unmatched_diagnostics)}",
         f"  Unmatched diagnostics file: {display_path(unmatched_csv_path)}",
     ]
-    if coverage_warning:
-        summary_lines.extend(["", f"Coverage warning", f"  {coverage_warning}"])
+    if coverage_warning or low_coverage_warning:
+        summary_lines.extend(["", "Coverage warning"])
+        if coverage_warning:
+            summary_lines.append(f"  {coverage_warning}")
+        if low_coverage_warning:
+            summary_lines.append(f"  {low_coverage_warning}")
 
     if detailed_rows:
         summary_lines.extend(

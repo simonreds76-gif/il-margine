@@ -1,5 +1,5 @@
 Strict CLV Audit vs Captured/Closing Pinnacle Odds
-Generated UTC: 2026-05-29
+Generated UTC: 2026-05-30
 Signals file: data\backtest\strict-signals-archive.csv
 Audit bet type: match
 Fallback closing odds file: disabled (captured-history only)
@@ -18,9 +18,9 @@ Captured-history coverage
   Enabled: True
   History rows loaded: 867
   Supabase rows loaded: 867
-  Local rows loaded: 867
-  Local files scanned: 1239
-  History note: window 2026-03-04 -> 2026-03-29
+  Local rows loaded: 0
+  Local files scanned: 0
+  History note: window 2026-03-04 -> 2026-03-29; local: missing directory: C:\Users\44746\Downloads\il-margine-tennis-props-push\data\pinnacle-history
 
 Closing-file mapping
   XLSX fallback enabled: False
@@ -33,11 +33,16 @@ Closing-file mapping
 
 Audit matching
   Matched ML rows: 45 / 109
+  Close coverage rate: 41.28%
+  Unmatched rate: 58.72%
   Closing sources: {'supabase': 45}
   Match methods: {'history': 45}
   Unmatched reasons: {'history_not_found': 64}
   Unmatched diagnostics rows: 64
   Unmatched diagnostics file: data\backtest\strict-clv-audit-2026-unmatched.csv
+
+Coverage warning
+  Only 41.28% of settled ML rows have a captured close. Treat historical CLV as low-coverage until the widened capture era has enough settled rows.
 
 CLV summary
   Avg CLV implied delta: -0.209%

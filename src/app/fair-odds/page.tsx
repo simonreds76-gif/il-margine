@@ -31,7 +31,7 @@ interface FairOddsMatch {
   hard_overlay_best_value?: number;
   hard_overlay_delta_p1_pp?: number;
   hard_overlay_delta_p2_pp?: number;
-  hard_overlay_source?: "stored_prob_shadow";
+  hard_overlay_source?: "raw_prob_shadow" | "stored_prob_shadow";
   p1_serve?: number;
   p1_return?: number;
   p1_total?: number;
@@ -317,6 +317,12 @@ function hardOverlayBadge(m: FairOddsMatch): { side: "P1" | "P2"; value: number;
     value: m.hard_overlay_best_value,
     delta: m.hard_overlay_best_side === "P1" ? m.hard_overlay_delta_p1_pp : m.hard_overlay_delta_p2_pp,
   };
+}
+
+function hardOverlaySourceLabel(source: FairOddsMatch["hard_overlay_source"]): string {
+  if (source === "raw_prob_shadow") return "raw pre-calibration probability";
+  if (source === "stored_prob_shadow") return "stored probability fallback";
+  return "unknown source";
 }
 
 type SignalFeedCategory =
@@ -1860,7 +1866,7 @@ function MatchRow({
             {hardOverlay ? (
               <span
                 className={`inline-flex rounded-md border border-cyan-500/20 bg-cyan-500/10 px-1.5 py-0.5 text-[10px] ${valueColor(hardOverlay.value)}`}
-                title={`Hard calibration shadow only. Uses stored model probability as input; does not change live routing.${hardOverlay.delta != null ? ` Delta ${hardOverlay.delta > 0 ? "+" : ""}${hardOverlay.delta.toFixed(2)}pp` : ""}`}
+                title={`Hard calibration shadow only. Uses ${hardOverlaySourceLabel(m.hard_overlay_source)} as input; does not change live routing.${hardOverlay.delta != null ? ` Delta ${hardOverlay.delta > 0 ? "+" : ""}${hardOverlay.delta.toFixed(2)}pp` : ""}`}
               >
                 H-cal {hardOverlay.side} {fmtPct(hardOverlay.value)}
               </span>
