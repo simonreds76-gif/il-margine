@@ -34,7 +34,45 @@ function resolveConfiguredRouteFilePath(
   return projectFilePath(trimmed);
 }
 
-export interface FairOddsRow {
+export 
+interface DailyFairOddsDbRow {
+  id: number;
+  tour_id: number | null;
+  player1_id: number | null;
+  player2_id: number | null;
+  surface: string | null;
+  p1_win_prob: number | string | null;
+  p2_win_prob: number | string | null;
+  odds1: number | string | null;
+  odds2: number | string | null;
+  p_a?: number | string | null;
+  p_b?: number | string | null;
+  expected_total_games?: number | string | null;
+  ou_line_1?: number | string | null;
+  ou_over_1?: number | string | null;
+  ou_under_1?: number | string | null;
+  ou_line_2?: number | string | null;
+  ou_over_2?: number | string | null;
+  ou_under_2?: number | string | null;
+  ou_line_3?: number | string | null;
+  ou_over_3?: number | string | null;
+  ou_under_3?: number | string | null;
+  confidence?: string | null;
+  spread_line?: number | string | null;
+  spread_odds1?: number | string | null;
+  spread_odds2?: number | string | null;
+  handicap_edge_p1?: number | string | null;
+  handicap_edge_p2?: number | string | null;
+}
+
+interface OncourtTodayDbRow {
+  tour_id?: number | string | null;
+  player1_id?: number | string | null;
+  player2_id?: number | string | null;
+  result?: string | null;
+}
+
+interface FairOddsRow {
   id: number;
   tournament: string;
   match_date?: string;
@@ -49,6 +87,17 @@ export interface FairOddsRow {
   p2_win_prob: number;
   odds1: number;
   odds2: number;
+  hard_overlay_p1_win_prob?: number;
+  hard_overlay_p2_win_prob?: number;
+  hard_overlay_odds1?: number;
+  hard_overlay_odds2?: number;
+  hard_overlay_value_p1?: number;
+  hard_overlay_value_p2?: number;
+  hard_overlay_best_side?: "P1" | "P2";
+  hard_overlay_best_value?: number;
+  hard_overlay_delta_p1_pp?: number;
+  hard_overlay_delta_p2_pp?: number;
+  hard_overlay_source?: "stored_prob_shadow";
   p1_serve?: number;
   p1_return?: number;
   p1_total?: number;
@@ -243,6 +292,18 @@ const CLAY_BO3_SIGNAL_ARCHIVE_CSV = projectFilePath("data/backtest/strict-signal
 const FAIR_ODDS_TENNIS_SPREADS_ENABLED = parseBoolEnv("FAIR_ODDS_TENNIS_SPREADS_ENABLED", false);
 const FAIR_ODDS_SPREAD_V1_ENABLED = parseBoolEnv("FAIR_ODDS_SPREAD_V1_ENABLED", true);
 const INTERNAL_RESEARCH_LANES = process.env.INTERNAL_RESEARCH_LANES === "1";
+const HARD_CALIBRATION_SHADOW_ENABLED = parseBoolEnv("FAIR_ODDS_HARD_CALIBRATION_SHADOW", true);
+const HARD_CALIBRATION_PARAMS_FILE = resolveConfiguredRouteFilePath(
+  process.env.HARD_CALIBRATION_PARAMS_FILE,
+  "data/backtest/calibration-params-2022-2026-review.json",
+);
+
+interface HardCalibrationParams {
+  A: number;
+  B: number;
+  blend_by_series: Record<string, number>;
+  generated_utc?: string;
+}
 type MatchSide = "P1" | "P2";
 type FastClayArchetype = "both" | "serve_led" | "return_led" | "contrarian";
 type ShadowSignalKind = "spread_v1" | "volume_200" | "challenger_ml_shadow" | "clay_v3_shadow" | "clay_bo3";
@@ -404,6 +465,95 @@ function parseBoolEnv(name: string, fallback: boolean): boolean {
 
 function clamp(value: number, lo: number, hi: number): number {
   return Math.max(lo, Math.min(hi, value));
+}
+
+
+const HARD_OVERLAY_FAVORITE_PROB_CAP: Record<string, Record<string, number>> = {
+  ATP250: { high: 0.89, medium: 0.85, low: 0.82 },
+  ATP500: { high: 0.91, medium: 0.87, low: 0.84 },
+  "Masters 1000": { high: 0.93, medium: 0.90, low: 0.87 },
+  "Grand Slam": { high: 0.95, medium: 0.92, low: 0.89 },
+  "Masters Cup": { high: 0.94, medium: 0.91, low: 0.88 },
+};
+
+let hardCalibrationParamsCache: HardCalibrationParams | null | undefined;
+
+function safeProbability(value: number): number {
+  return clamp(Number(value), 1e-6, 1 - 1e-6);
+}
+
+function logitProbability(value: number): number {
+  const p = safeProbability(value);
+  return Math.log(p / (1 - p));
+}
+
+function sigmoidProbability(value: number): number {
+  const z = clamp(Number(value), -20, 20);
+  return 1 / (1 + Math.exp(-z));
+}
+
+function loadHardCalibrationParams(): HardCalibrationParams | null {
+  if (hardCalibrationParamsCache !== undefined) return hardCalibrationParamsCache;
+  hardCalibrationParamsCache = null;
+  try {
+    if (!fs.existsSync(HARD_CALIBRATION_PARAMS_FILE)) return null;
+    const raw = fs.readFileSync(HARD_CALIBRATION_PARAMS_FILE, "utf8").replace(/\bNaN\b/g, "null");
+    const parsed = JSON.parse(raw) as { generated_utc?: string; surfaces?: Record<string, Partial<HardCalibrationParams>> };
+    const hard = parsed.surfaces?.Hard;
+    const a = Number(hard?.A);
+    const b = Number(hard?.B);
+    if (!Number.isFinite(a) || !Number.isFinite(b) || b <= 0) return null;
+    const blendBySeries = hard?.blend_by_series && typeof hard.blend_by_series === "object" ? hard.blend_by_series : {};
+    hardCalibrationParamsCache = {
+      A: a,
+      B: b,
+      blend_by_series: Object.fromEntries(
+        Object.entries(blendBySeries).map(([key, value]) => [key, Number(value)]).filter(([, value]) => Number.isFinite(value)),
+      ),
+      generated_utc: parsed.generated_utc,
+    };
+  } catch {
+    hardCalibrationParamsCache = null;
+  }
+  return hardCalibrationParamsCache;
+}
+
+function applyHardOverlayGuard(p1WinProb: number, seriesBucket: string, confidence?: string): number {
+  const caps = HARD_OVERLAY_FAVORITE_PROB_CAP[seriesBucket];
+  if (!caps) return safeProbability(p1WinProb);
+  const confidenceKey = (confidence ?? "").toLowerCase();
+  let cap = caps[confidenceKey] ?? 0.90;
+  if (seriesBucket === "ATP500") cap -= 0.02;
+  cap = clamp(cap, 0.78, 0.93);
+  const p = safeProbability(p1WinProb);
+  const favIsP1 = p >= 0.5;
+  const q = Math.min(favIsP1 ? p : 1 - p, cap);
+  return favIsP1 ? q : 1 - q;
+}
+
+function hardCalibrationShadowProbability(
+  storedP1WinProb: number,
+  surfaceKey: string,
+  seriesBucket: string,
+  confidence?: string,
+): number | undefined {
+  if (!INTERNAL_RESEARCH_LANES || !HARD_CALIBRATION_SHADOW_ENABLED) return undefined;
+  if (surfaceKey !== "hard") return undefined;
+  const params = loadHardCalibrationParams();
+  if (!params) return undefined;
+  const raw = safeProbability(storedP1WinProb);
+  const favIsP1 = raw >= 0.5;
+  const qRaw = favIsP1 ? raw : 1 - raw;
+  const qCal = sigmoidProbability(params.A + params.B * logitProbability(qRaw));
+  const blend = clamp(Number(params.blend_by_series[seriesBucket] ?? 0), 0, 1);
+  const q = safeProbability((1 - blend) * qRaw + blend * qCal);
+  const p = favIsP1 ? q : 1 - q;
+  return applyHardOverlayGuard(p, seriesBucket, confidence);
+}
+
+function pctValueFromProb(prob: number | undefined, marketOdds: number | undefined): number | undefined {
+  if (prob == null || marketOdds == null || !(marketOdds > 1)) return undefined;
+  return Math.round((prob * marketOdds - 1) * 10000) / 100;
 }
 
 function parsePointProb(value: unknown): number | undefined {
@@ -1635,7 +1785,7 @@ async function run(): Promise<Response> {
     "id, tour_id, player1_id, player2_id, surface, p1_win_prob, p2_win_prob, odds1, odds2, p_a, p_b, expected_total_games, ou_line_1, ou_over_1, ou_under_1, ou_line_2, ou_over_2, ou_under_2, ou_line_3, ou_over_3, ou_under_3, confidence, spread_line, spread_odds1, spread_odds2, handicap_edge_p1, handicap_edge_p2";
 
   const fetchDailyFairOddsRows = async () => {
-    const rows: any[] = [];
+    const rows: DailyFairOddsDbRow[] = [];
     for (let from = 0; from < FAIR_ODDS_LIMIT; from += FAIR_ODDS_PAGE_SIZE) {
       const { data, error } = await supabase
         .from("daily_fair_odds")
@@ -1646,7 +1796,7 @@ async function run(): Promise<Response> {
         .range(from, Math.min(from + FAIR_ODDS_PAGE_SIZE - 1, FAIR_ODDS_LIMIT - 1));
       if (error) return { rows, error };
       const page = data ?? [];
-      rows.push(...page);
+      rows.push(...(page as DailyFairOddsDbRow[]));
       if (page.length < FAIR_ODDS_PAGE_SIZE) break;
     }
     return { rows, error: null };
@@ -1667,7 +1817,7 @@ async function run(): Promise<Response> {
   }
 
   const fetchOncourtTodayRows = async () => {
-    const rows: any[] = [];
+    const rows: OncourtTodayDbRow[] = [];
     for (let from = 0; from < FAIR_ODDS_LIMIT; from += FAIR_ODDS_PAGE_SIZE) {
       const { data, error } = await supabase
         .from("oncourt_today")
@@ -1680,7 +1830,7 @@ async function run(): Promise<Response> {
         .range(from, Math.min(from + FAIR_ODDS_PAGE_SIZE - 1, FAIR_ODDS_LIMIT - 1));
       if (error) return { rows, error };
       const page = data ?? [];
-      rows.push(...page);
+      rows.push(...(page as OncourtTodayDbRow[]));
       if (page.length < FAIR_ODDS_PAGE_SIZE) break;
     }
     return { rows, error: null };
@@ -2382,6 +2532,15 @@ async function run(): Promise<Response> {
       pinnacle && ourOdds2 > 1 && pinnacle.pinnacle_odds2 > 1
         ? Math.round((pinnacle.pinnacle_odds2 / ourOdds2 - 1) * 10000) / 100
         : undefined;
+    const hardOverlayP1WinProb = hardCalibrationShadowProbability(p1WinProb, surfaceKey, seriesBucket, confidence);
+    const hardOverlayP2WinProb = hardOverlayP1WinProb != null ? 1 - hardOverlayP1WinProb : undefined;
+    const hardOverlayOdds1 = hardOverlayP1WinProb != null ? Math.round((1 / hardOverlayP1WinProb) * 1000) / 1000 : undefined;
+    const hardOverlayOdds2 = hardOverlayP2WinProb != null ? Math.round((1 / hardOverlayP2WinProb) * 1000) / 1000 : undefined;
+    const hardOverlayValueP1 = pctValueFromProb(hardOverlayP1WinProb, pinnacle?.pinnacle_odds1);
+    const hardOverlayValueP2 = pctValueFromProb(hardOverlayP2WinProb, pinnacle?.pinnacle_odds2);
+    const hardOverlayBestSide = pickSideByValues(hardOverlayValueP1, hardOverlayValueP2);
+    const hardOverlayBestValue =
+      hardOverlayBestSide === "P1" ? hardOverlayValueP1 : hardOverlayBestSide === "P2" ? hardOverlayValueP2 : undefined;
     const policyBaseAllows = strictPolicyAllowsValue(r.surface ?? "", seriesBucket, confidence);
     const shortFavoriteExcluded = strictPolicyExcludedByShortFavorite(
       r.surface ?? "",
@@ -2673,6 +2832,19 @@ async function run(): Promise<Response> {
       p2_win_prob: p2WinProb,
       odds1: ourOdds1,
       odds2: ourOdds2,
+      hard_overlay_p1_win_prob: hardOverlayP1WinProb != null ? Math.round(hardOverlayP1WinProb * 10000) / 10000 : undefined,
+      hard_overlay_p2_win_prob: hardOverlayP2WinProb != null ? Math.round(hardOverlayP2WinProb * 10000) / 10000 : undefined,
+      hard_overlay_odds1: hardOverlayOdds1,
+      hard_overlay_odds2: hardOverlayOdds2,
+      hard_overlay_value_p1: hardOverlayValueP1,
+      hard_overlay_value_p2: hardOverlayValueP2,
+      hard_overlay_best_side: hardOverlayBestSide,
+      hard_overlay_best_value: hardOverlayBestValue,
+      hard_overlay_delta_p1_pp:
+        hardOverlayP1WinProb != null ? Math.round((hardOverlayP1WinProb - p1WinProb) * 10000) / 100 : undefined,
+      hard_overlay_delta_p2_pp:
+        hardOverlayP2WinProb != null ? Math.round((hardOverlayP2WinProb - p2WinProb) * 10000) / 100 : undefined,
+      hard_overlay_source: hardOverlayP1WinProb != null ? "stored_prob_shadow" : undefined,
       p_a: storedPA,
       p_b: storedPB,
       p1_serve: p1Stats ? Math.round(p1Stats.hold_pct * 1000) / 10 : undefined,
@@ -2804,7 +2976,7 @@ async function run(): Promise<Response> {
   }
 
   const matches: FairOddsRow[] = rawMatches.map((m) => {
-    let rowSignals = Array.from(
+    const rowSignals = Array.from(
       new Map(
         [signalMatchKey(m.player1_id, m.player2_id), signalNameKey(m.player1_name, m.player2_name)]
           .flatMap((key) => (rowSignalsByMatch.get(key) ?? []).map((signal) => [`${signal.kind}|${signal.id}`, signal] as const))
@@ -2815,7 +2987,7 @@ async function run(): Promise<Response> {
       return a.side.localeCompare(b.side);
     });
 
-    let spreadSignal = rowSignals.find((signal) => signal.kind === "spread_v1" && signal.bet_type === "spread");
+    const spreadSignal = rowSignals.find((signal) => signal.kind === "spread_v1" && signal.bet_type === "spread");
 
     return {
       ...m,

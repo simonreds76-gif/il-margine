@@ -73,6 +73,27 @@ def run_comparison(as_of: str) -> None:
     )
 
 
+def run_shadow_tracking(as_of: str) -> None:
+    run(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "tennis-props-shadow-tracker.py"),
+            "--date",
+            as_of,
+        ],
+        "Append tennis props shadow signals",
+        fatal=False,
+    )
+    run(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "tennis-props-settle-shadow.py"),
+        ],
+        "Settle tennis props shadow signals",
+        fatal=False,
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build tennis aces/DF projections and optional Bet365 comparison")
     parser.add_argument("--as-of", default=date.today().isoformat())
@@ -143,16 +164,19 @@ def main() -> int:
 
     if args.skip_odds:
         print("\nBet365 scrape skipped by --skip-odds.")
+        run_shadow_tracking(args.as_of)
         return 0
     if not has_odds_key():
         if has_market_rows(lines_file(args.as_of)):
             print("\nLocal odds key missing, but today's hosted Bet365 lines file exists; refreshing comparison.")
             run_comparison(args.as_of)
+            run_shadow_tracking(args.as_of)
             return 0
         msg = "No local ODDS_API_KEY / ODDS_API_IO_KEY configured; projections refreshed, Bet365 scrape skipped."
         if args.require_odds:
             raise SystemExit(msg)
         print(f"\nWARNING: {msg}")
+        run_shadow_tracking(args.as_of)
         return 0
 
     scrape_exit = run(
@@ -173,6 +197,7 @@ def main() -> int:
     )
     if scrape_exit == 0:
         run_comparison(args.as_of)
+    run_shadow_tracking(args.as_of)
 
     return 0
 

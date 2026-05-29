@@ -32,6 +32,9 @@ const BOARD_PATH = path.join(PROPS_DIR, "player-props-board.csv");
 const BASELINE_PATH = path.join(PROPS_DIR, "player-props-baseline.csv");
 const FACTORS_PATH = path.join(PROPS_DIR, "slam-venue-factors.csv");
 const INBOX_DIR = path.join(PROPS_DIR, "inbox");
+const SHADOW_DIR = path.join(PROPS_DIR, "shadow");
+const SHADOW_SIGNALS_PATH = path.join(SHADOW_DIR, "aces-dfs-shadow-signals.csv");
+const SHADOW_PERFORMANCE_PATH = path.join(SHADOW_DIR, "aces-dfs-shadow-performance.txt");
 
 function parseCsv(text: string): CsvRow[] {
   const rows: string[][] = [];
@@ -162,6 +165,23 @@ function comparisonSort(a: CsvRow, b: CsvRow): number {
   const aRec = a.recommended_side ? 1 : 0;
   const bRec = b.recommended_side ? 1 : 0;
   return bRec - aRec || maxValue(b) - maxValue(a);
+}
+
+function shadowSort(a: CsvRow, b: CsvRow): number {
+  const statusRank = (row: CsvRow) => row.settlement_status === "pending" ? 0 : row.settlement_status === "settled" ? 1 : 2;
+  return statusRank(a) - statusRank(b) || (b.date || "").localeCompare(a.date || "") || n(b.value_pct) - n(a.value_pct);
+}
+
+function shadowStats(rows: CsvRow[]): { settled: number; pending: number; voided: number; pnl: number; roi: number } {
+  const settledRows = rows.filter((row) => row.settlement_status === "settled");
+  const pnl = settledRows.reduce((sum, row) => sum + n(row.pnl), 0);
+  return {
+    settled: settledRows.length,
+    pending: rows.filter((row) => row.settlement_status === "pending").length,
+    voided: rows.filter((row) => row.settlement_status === "void").length,
+    pnl,
+    roi: settledRows.length ? (pnl / settledRows.length) * 100 : 0,
+  };
 }
 
 function countBy(rows: CsvRow[], field: string, value: string): number {
@@ -317,6 +337,72 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
   );
 }
 
+
+function resultTone(value: string | undefined): string {
+  if (value === "win") return "border-emerald-500/25 bg-emerald-500/10 text-emerald-300";
+  if (value === "loss") return "border-rose-500/25 bg-rose-500/10 text-rose-300";
+  if (value === "push" || value === "void") return "border-slate-600/70 bg-slate-800/60 text-slate-400";
+  return "border-amber-500/25 bg-amber-500/10 text-amber-300";
+}
+
+function ShadowEvidenceTable({ rows }: { rows: CsvRow[] }) {
+  if (!rows.length) {
+    return <EmptyState message="No shadow signals yet. Add Bet365 aces/DF lines, run the comparison, then run python scripts/tennis-props-shadow-tracker.py." />;
+  }
+  const groupedRows = groupRowsByDate(rows.slice(0, 80));
+  return (
+    <div className="overflow-x-auto">
+      <table className="min-w-full text-sm">
+        <thead>
+          <tr className="border-b border-slate-800 text-left text-[11px] uppercase tracking-[0.16em] text-slate-500">
+            <th className="px-3 py-3 font-semibold">Status</th>
+            <th className="px-3 py-3 font-semibold">Player</th>
+            <th className="px-3 py-3 font-semibold">Market</th>
+            <th className="px-3 py-3 font-semibold">Line</th>
+            <th className="px-3 py-3 font-semibold">Side</th>
+            <th className="px-3 py-3 font-semibold">Odds</th>
+            <th className="px-3 py-3 font-semibold">Value</th>
+            <th className="px-3 py-3 font-semibold">Actual</th>
+            <th className="px-3 py-3 font-semibold">PnL</th>
+            <th className="px-3 py-3 font-semibold">Conf</th>
+          </tr>
+        </thead>
+        <tbody>
+          {groupedRows.map((group) => (
+            <Fragment key={group.date}>
+              <tr className="border-y border-slate-800 bg-slate-950/80">
+                <td colSpan={10} className="px-3 py-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="text-xs font-black uppercase tracking-[0.18em] text-amber-300">{dateLabel(group.date)}</span>
+                    <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate-500">{group.rows.length} shadow rows</span>
+                  </div>
+                </td>
+              </tr>
+              {group.rows.map((row, index) => (
+                <tr key={`${row.signal_id}-${index}`} className="border-b border-slate-900/80 text-slate-300">
+                  <td className="px-3 py-3"><MiniBadge label={row.result || row.settlement_status || "pending"} tone={resultTone(row.result || row.settlement_status)} /></td>
+                  <td className="px-3 py-3">
+                    <div className="font-semibold text-slate-100">{row.player}</div>
+                    <div className="text-xs text-slate-500">vs {row.opponent}</div>
+                  </td>
+                  <td className="px-3 py-3 text-slate-300">{row.market}</td>
+                  <td className="px-3 py-3 font-mono text-slate-100">{fmt(row.line, 1)}</td>
+                  <td className="px-3 py-3"><MiniBadge label={row.side || "-"} tone="border-cyan-500/25 bg-cyan-500/10 text-cyan-200" /></td>
+                  <td className="px-3 py-3 font-mono text-slate-300">{fmt(row.selected_odds, 2)}</td>
+                  <td className="px-3 py-3 font-mono text-emerald-300">{fmt(row.value_pct, 1)}%</td>
+                  <td className="px-3 py-3 font-mono text-slate-300">{row.actual || "-"}</td>
+                  <td className={cn("px-3 py-3 font-mono", n(row.pnl) > 0 ? "text-emerald-300" : n(row.pnl) < 0 ? "text-rose-300" : "text-slate-500")}>{row.pnl ? `${n(row.pnl).toFixed(2)}u` : "-"}</td>
+                  <td className="px-3 py-3"><MiniBadge label={row.confidence || "LOW"} tone={confidenceTone(row.confidence)} /></td>
+                </tr>
+              ))}
+            </Fragment>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 function ComparisonTable({ rows, hasLinesFile }: { rows: CsvRow[]; hasLinesFile: boolean }) {
   if (!rows.length) {
     return (
@@ -390,7 +476,18 @@ function ComparisonTable({ rows, hasLinesFile }: { rows: CsvRow[]; hasLinesFile:
 export default async function TennisPropsMonitorPage() {
   if (!MODEL_MONITOR_ENABLED) notFound();
 
-  const [boardRows, boardStamp, boardAgeHours, baselineStamp, factorsStamp, latestComparisonPath, latestLinesPath] = await Promise.all([
+  const [
+    boardRows,
+    boardStamp,
+    boardAgeHours,
+    baselineStamp,
+    factorsStamp,
+    latestComparisonPath,
+    latestLinesPath,
+    shadowRows,
+    shadowStamp,
+    shadowPerformanceStamp,
+  ] = await Promise.all([
     readCsv(BOARD_PATH),
     fileStamp(BOARD_PATH),
     fileAgeHours(BOARD_PATH),
@@ -398,6 +495,9 @@ export default async function TennisPropsMonitorPage() {
     fileStamp(FACTORS_PATH),
     latestCsv("comparison"),
     latestCsv("bet365-lines"),
+    readCsv(SHADOW_SIGNALS_PATH),
+    fileStamp(SHADOW_SIGNALS_PATH),
+    fileStamp(SHADOW_PERFORMANCE_PATH),
   ]);
   const comparisonRows = latestComparisonPath ? await readCsv(latestComparisonPath) : [];
   const lineRows = latestLinesPath ? await readCsv(latestLinesPath) : [];
@@ -406,6 +506,8 @@ export default async function TennisPropsMonitorPage() {
   const sortedBoard = [...boardRows].sort(boardSort);
   const sortedComparison = [...comparisonRows].sort(comparisonSort);
   const actionableRows = sortedComparison.filter((row) => row.recommended_side);
+  const sortedShadowRows = [...shadowRows].sort(shadowSort);
+  const shadow = shadowStats(shadowRows);
   const boardStale = boardAgeHours == null || boardAgeHours > 24;
 
   return (
@@ -426,12 +528,13 @@ export default async function TennisPropsMonitorPage() {
           </div>
         </HeroCard>
 
-        <section className="my-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <section className="my-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
           <StatCard label="Projection rows" value={String(boardRows.length)} detail={`${countBy(boardRows, "tour", "ATP")} ATP / ${countBy(boardRows, "tour", "WTA")} WTA`} />
           <StatCard label="High ace conf" value={String(countBy(boardRows, "ace_confidence", "HIGH"))} detail="Sample + Slam history gate" tone="text-emerald-300" />
           <StatCard label="High DF conf" value={String(countBy(boardRows, "df_confidence", "HIGH"))} detail="Harder gate, noisier market" tone="text-rose-300" />
           <StatCard label="Bet365 rows" value={String(comparisonRows.length)} detail={lineStamp} tone={comparisonRows.length ? "text-cyan-300" : "text-slate-400"} />
           <StatCard label="Actionable" value={String(actionableRows.length)} detail="HIGH confidence + edge gate" tone={actionableRows.length ? "text-emerald-300" : "text-slate-400"} />
+          <StatCard label="Shadow evidence" value={String(shadowRows.length)} detail={`${shadow.settled} settled / ${shadow.pending} pending`} tone={shadowRows.length ? "text-amber-300" : "text-slate-400"} />
         </section>
 
         <section className="mb-6 grid gap-3 rounded-2xl border border-slate-800 bg-slate-950/40 p-4 text-xs text-slate-400 md:grid-cols-4">
@@ -439,6 +542,8 @@ export default async function TennisPropsMonitorPage() {
           <div><span className="text-slate-500">Baseline:</span> <span className="text-slate-200">{baselineStamp}</span></div>
           <div><span className="text-slate-500">Slam factors:</span> <span className="text-slate-200">{factorsStamp}</span></div>
           <div><span className="text-slate-500">Comparison:</span> <span className="text-slate-200">{comparisonStamp}</span></div>
+          <div><span className="text-slate-500">Shadow:</span> <span className="text-slate-200">{shadowStamp}</span></div>
+          <div><span className="text-slate-500">Shadow perf:</span> <span className="text-slate-200">{shadowPerformanceStamp}</span></div>
         </section>
 
         {boardStale ? (
@@ -453,6 +558,13 @@ export default async function TennisPropsMonitorPage() {
             subtitle="Appears when data/tennis-props/comparison-YYYY-MM-DD.csv exists. Recommended side is gated hard; most rows should stay watch-only."
           >
             <ComparisonTable rows={sortedComparison.slice(0, 80)} hasLinesFile={lineRows.length > 0} />
+          </SectionCard>
+
+          <SectionCard
+            title="Shadow Evidence"
+            subtitle={`Append-only Bet365 line evidence. ROI is research-only until 300+ settled lines. Current shadow PnL ${shadow.pnl >= 0 ? "+" : ""}${shadow.pnl.toFixed(2)}u / ROI ${shadow.roi >= 0 ? "+" : ""}${shadow.roi.toFixed(1)}%.`}
+          >
+            <ShadowEvidenceTable rows={sortedShadowRows} />
           </SectionCard>
 
           <SectionCard

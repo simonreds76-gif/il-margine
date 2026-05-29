@@ -21,6 +21,17 @@ interface FairOddsMatch {
   p2_win_prob: number;
   odds1: number;
   odds2: number;
+  hard_overlay_p1_win_prob?: number;
+  hard_overlay_p2_win_prob?: number;
+  hard_overlay_odds1?: number;
+  hard_overlay_odds2?: number;
+  hard_overlay_value_p1?: number;
+  hard_overlay_value_p2?: number;
+  hard_overlay_best_side?: "P1" | "P2";
+  hard_overlay_best_value?: number;
+  hard_overlay_delta_p1_pp?: number;
+  hard_overlay_delta_p2_pp?: number;
+  hard_overlay_source?: "stored_prob_shadow";
   p1_serve?: number;
   p1_return?: number;
   p1_total?: number;
@@ -297,6 +308,15 @@ function bestValueBadge(m: FairOddsMatch): { side: string; value: number } | nul
   if (v1 == null) return v2 != null ? { side: "P2", value: v2 } : null;
   if (v2 == null) return { side: "P1", value: v1 };
   return v1 >= v2 ? { side: "P1", value: v1 } : { side: "P2", value: v2 };
+}
+
+function hardOverlayBadge(m: FairOddsMatch): { side: "P1" | "P2"; value: number; delta?: number } | null {
+  if (!m.hard_overlay_best_side || m.hard_overlay_best_value == null) return null;
+  return {
+    side: m.hard_overlay_best_side,
+    value: m.hard_overlay_best_value,
+    delta: m.hard_overlay_best_side === "P1" ? m.hard_overlay_delta_p1_pp : m.hard_overlay_delta_p2_pp,
+  };
 }
 
 type SignalFeedCategory =
@@ -1767,6 +1787,7 @@ function MatchRow({
     : "ML guard active: market gap, HC audit only";
   const rowSignals = rowSignalSort(m.row_signals ?? []);
   const bestValue = bestValueBadge(m);
+  const hardOverlay = hardOverlayBadge(m);
   const primaryBadge = primarySignalBadgeMeta(m, rowSignals, shadowProfile);
   const blockedDetail =
     m.blocked_reason && !m.policy_match && !m.shadow_match
@@ -1829,12 +1850,22 @@ function MatchRow({
         </td>
 
         <td className="text-center px-2.5 py-3 font-mono tabular-nums text-[13px]">
-          <span
-            className={`inline-flex rounded-md px-1.5 py-0.5 ${bestValue ? `${valueColor(bestValue.value)} ${valueBg(bestValue.value)}` : "text-slate-500"}`}
-            title={bestValue ? "Best-side raw value % = (Pinnacle / Our odds) - 1" : blockedDetail ?? "No matched market value"}
-          >
-            {bestValue ? `${bestValue.side} ${fmtPct(bestValue.value)}` : "--"}
-          </span>
+          <div className="flex flex-col items-center gap-1">
+            <span
+              className={`inline-flex rounded-md px-1.5 py-0.5 ${bestValue ? `${valueColor(bestValue.value)} ${valueBg(bestValue.value)}` : "text-slate-500"}`}
+              title={bestValue ? "Best-side raw value % = (Pinnacle / Our odds) - 1" : blockedDetail ?? "No matched market value"}
+            >
+              {bestValue ? `${bestValue.side} ${fmtPct(bestValue.value)}` : "--"}
+            </span>
+            {hardOverlay ? (
+              <span
+                className={`inline-flex rounded-md border border-cyan-500/20 bg-cyan-500/10 px-1.5 py-0.5 text-[10px] ${valueColor(hardOverlay.value)}`}
+                title={`Hard calibration shadow only. Uses stored model probability as input; does not change live routing.${hardOverlay.delta != null ? ` Delta ${hardOverlay.delta > 0 ? "+" : ""}${hardOverlay.delta.toFixed(2)}pp` : ""}`}
+              >
+                H-cal {hardOverlay.side} {fmtPct(hardOverlay.value)}
+              </span>
+            ) : null}
+          </div>
         </td>
 
         <td className="text-center px-2 py-2.5 font-mono tabular-nums text-sm text-slate-300 overflow-hidden">
