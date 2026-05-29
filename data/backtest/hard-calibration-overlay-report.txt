@@ -1,0 +1,57 @@
+Hard Calibration Overlay Backtest
+Generated: 2026-05-29T12:37:01+00:00
+Params: C:\Users\44746\Downloads\il-margine-tennis-props-push\data\backtest\calibration-params-2022-2026-review.json
+Split from params: train=2022,2023,2024 validation=2025 holdout=2026
+Hard params: A=0.098984 B=0.590611 blend={'ATP250': 1.0, 'ATP500': 0.8, 'Grand Slam': 0.0, 'Masters 1000': 1.0, 'Masters Cup': 0.92}
+
+Calibration quality on hard rows
+Dataset      N    logloss current/overlay   ECE current/overlay   Brier current/overlay
+train      4328  0.6250/0.6221       0.0276/0.0094       0.2169/0.2164
+validation 1310  0.6166/0.6148       0.0306/0.0229       0.2139/0.2135
+holdout     609  0.6100/0.6056       0.0375/0.0389       0.2120/0.2105
+all        6247  0.6218/0.6190       0.0215/0.0085       0.2158/0.2152
+
+[strict]
+  current  bets= 370 W-L=153-217 flatROI=+9.52% tierROI=+12.92% P/L=+76.68u on 593.50u avgValue=+23.02%
+    2022: bets= 71 tierROI=+1.53% P/L=+1.83u on 119.50u
+    2023: bets= 92 tierROI=-13.05% P/L=-19.12u on 146.50u
+    2024: bets= 86 tierROI=+22.77% P/L=+30.62u on 134.50u
+    2025: bets=121 tierROI=+32.83% P/L=+63.35u on 193.00u
+  overlay  bets= 377 W-L=164-213 flatROI=+13.90% tierROI=+14.92% P/L=+88.70u on 594.50u avgValue=+22.17%
+    2022: bets= 76 tierROI=+2.73% P/L=+3.42u on 125.50u
+    2023: bets= 85 tierROI=-11.64% P/L=-16.00u on 137.50u
+    2024: bets= 94 tierROI=+24.88% P/L=+34.59u on 139.00u
+    2025: bets=122 tierROI=+34.65% P/L=+66.69u on 192.50u
+  Change: common=342 dropped=28 added=35
+
+[volume_200_hard]
+  current  bets= 590 W-L=264-326 flatROI=+13.79% tierROI=+14.16% P/L=+129.31u on 913.50u avgValue=+23.28%
+    2022: bets=125 tierROI=+13.17% P/L=+25.61u on 194.50u
+    2023: bets=142 tierROI=+8.76% P/L=+19.14u on 218.50u
+    2024: bets=143 tierROI=+22.96% P/L=+49.94u on 217.50u
+    2025: bets=180 tierROI=+12.23% P/L=+34.62u on 283.00u
+  overlay  bets= 595 W-L=262-333 flatROI=+13.94% tierROI=+14.05% P/L=+130.64u on 930.00u avgValue=+23.17%
+    2022: bets=127 tierROI=+12.39% P/L=+24.54u on 198.00u
+    2023: bets=146 tierROI=+7.55% P/L=+17.07u on 226.00u
+    2024: bets=134 tierROI=+26.19% P/L=+53.83u on 205.50u
+    2025: bets=188 tierROI=+11.72% P/L=+35.20u on 300.50u
+  Change: common=552 dropped=38 added=43
+
+[hard_edge10_all]
+  current  bets=1197 W-L=492-705 flatROI=+5.30% tierROI=+7.00% P/L=+132.16u on 1887.50u avgValue=+23.49%
+    2022: bets=282 tierROI=+8.11% P/L=+36.24u on 447.00u
+    2023: bets=307 tierROI=+2.02% P/L=+9.88u on 488.00u
+    2024: bets=287 tierROI=+11.09% P/L=+50.52u on 455.50u
+    2025: bets=308 tierROI=+7.86% P/L=+37.62u on 478.50u
+    2026: bets= 13 tierROI=-11.30% P/L=-2.09u on 18.50u
+  overlay  bets=1325 W-L=517-808 flatROI=+3.65% tierROI=+5.26% P/L=+112.17u on 2133.50u avgValue=+23.89%
+    2022: bets=332 tierROI=+5.92% P/L=+31.65u on 534.50u
+    2023: bets=336 tierROI=+0.82% P/L=+4.54u on 554.00u
+    2024: bets=309 tierROI=+8.66% P/L=+42.25u on 488.00u
+    2025: bets=331 tierROI=+7.90% P/L=+41.97u on 531.00u
+    2026: bets= 17 tierROI=-31.71% P/L=-8.25u on 26.00u
+  Change: common=1098 dropped=99 added=227
+
+Verdict
+- Probability calibration improves validation and holdout log-loss. Keep as a hard-only shadow overlay candidate.
+- This report does not change live fair-odds scoring or signal archives.

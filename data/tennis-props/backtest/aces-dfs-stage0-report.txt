@@ -1,0 +1,48 @@
+Tennis Slam Aces/DF Stage-0 Backtest
+Generated: 2026-05-29T13:56:48
+Sackmann dir: c:\Users\44746\Downloads\il-margine\data\sackmann
+Evaluation years: 2024, 2025
+Outcome-only validation. No odds, no ROI, no CLV.
+
+Overall
+Bucket                         N  AceMAE model/naive  AceLL model/naive  DfMAE model/naive  DfLL model/naive  AceBias  DfBias
+all                          4064  2.913/2.981        0.685/0.768        1.997/2.097        0.662/0.714        +0.076  -0.082
+
+By tour
+Bucket                         N  AceMAE model/naive  AceLL model/naive  DfMAE model/naive  DfLL model/naive  AceBias  DfBias
+ATP                          2032  4.067/4.151        0.694/0.710        2.115/2.237        0.653/0.715        +0.091  -0.136
+WTA                          2032  1.759/1.810        0.676/0.826        1.880/1.957        0.671/0.713        +0.061  -0.028
+
+By tournament
+Bucket                         N  AceMAE model/naive  AceLL model/naive  DfMAE model/naive  DfLL model/naive  AceBias  DfBias
+ATP Australian Open           508  4.265/4.322        0.684/0.693        1.936/1.988        0.666/0.733        +0.180  -0.252
+ATP Roland Garros             508  3.115/3.217        0.668/0.709        1.888/1.911        0.668/0.676        -0.076  +0.327
+ATP US Open                   508  4.202/4.278        0.688/0.691        2.526/2.763        0.625/0.715        +0.850  -0.630
+ATP Wimbledon                 508  4.685/4.787        0.736/0.747        2.110/2.285        0.652/0.737        -0.589  +0.010
+WTA Australian Open           508  1.851/1.845        0.690/0.748        1.914/1.974        0.672/0.708        +0.092  +0.033
+WTA Roland Garros             508  1.384/1.409        0.664/0.693        1.762/1.865        0.649/0.703        -0.073  +0.164
+WTA US Open                   508  1.916/1.944        0.670/0.757        2.060/2.041        0.697/0.693        +0.225  -0.078
+WTA Wimbledon                 508  1.885/2.043        0.682/1.107        1.784/1.949        0.667/0.747        +0.000  -0.231
+
+By year
+Bucket                         N  AceMAE model/naive  AceLL model/naive  DfMAE model/naive  DfLL model/naive  AceBias  DfBias
+2024                         2032  2.868/2.912        0.692/0.759        1.969/2.064        0.657/0.705        -0.064  -0.010
+2025                         2032  2.958/3.049        0.678/0.778        2.026/2.130        0.667/0.723        +0.216  -0.154
+
+By ace confidence
+Bucket                         N  AceMAE model/naive  AceLL model/naive  DfMAE model/naive  DfLL model/naive  AceBias  DfBias
+aces HIGH                     466  2.897/2.920        0.696/0.690        1.990/1.986        0.693/0.683        +0.296  +0.185
+aces LOW                      610  3.155/3.358        0.686/1.083        2.045/2.270        0.639/0.821        +0.109  -0.162
+aces MED                     2988  2.866/2.913        0.683/0.716        1.989/2.079        0.662/0.697        +0.035  -0.107
+
+By DF confidence
+Bucket                         N  AceMAE model/naive  AceLL model/naive  DfMAE model/naive  DfLL model/naive  AceBias  DfBias
+dfs HIGH                      774  3.218/3.263        0.671/0.684        2.155/2.174        0.683/0.692        +0.472  -0.100
+dfs LOW                       610  3.155/3.358        0.686/1.083        2.045/2.270        0.639/0.821        +0.109  -0.162
+dfs MED                      2680  2.770/2.813        0.689/0.721        1.941/2.035        0.661/0.696        -0.046  -0.059
+
+Verdict
+- Aces beat the naive surface-average baseline on MAE and synthetic O/U log-loss. Worth keeping as a research board.
+- DFs beat the naive baseline overall, but still require line capture because counts are low and noisy.
+- HIGH-confidence aces sample: 466 rows. HIGH-confidence DF sample: 774 rows.
+- No live staking without Bet365 line capture and settlement.

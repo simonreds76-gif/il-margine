@@ -1,0 +1,46 @@
+Surface Calibration Validation Report
+Generated: 2026-05-29T12:32:04+00:00
+Train: 2022, 2023, 2024
+Validation: 2025
+Holdout: 2026
+
+=== Fitted parameters ===
+Clay: A=0.0787 B=0.5793 n_train=2339 backend=scipy
+  blend_by_series: ATP250=0.57, ATP500=0.29, Grand Slam=0.38, Masters 1000=0.97, Masters Cup=0.62
+Grass: A=0.0000 B=0.8395 n_train=931 backend=scipy
+  blend_by_series: ATP250=0.59, ATP500=1.00, Grand Slam=1.00, Masters 1000=1.00, Masters Cup=0.00
+Hard: A=0.0990 B=0.5906 n_train=4303 backend=scipy
+  blend_by_series: ATP250=1.00, ATP500=0.80, Grand Slam=0.00, Masters 1000=1.00, Masters Cup=0.92
+
+=== Calibration quality ===
+[Clay]
+  train      n=2339 ECE raw/cal/pin=0.0519/0.0341/0.0151 logloss raw/cal/pin=0.6432/0.6293/0.5881 brier raw/cal/pin=0.2200/0.2179/0.2025
+  validation n= 707 ECE raw/cal/pin=0.0572/0.0410/0.0378 logloss raw/cal/pin=0.6215/0.6154/0.5936 brier raw/cal/pin=0.2170/0.2147/0.2045
+  holdout    n= 359 ECE raw/cal/pin=0.0415/0.0161/0.1602 logloss raw/cal/pin=0.6111/0.6081/0.6931 brier raw/cal/pin=0.2126/0.2115/0.2500
+
+[Grass]
+  train      n= 931 ECE raw/cal/pin=0.0385/0.0311/0.0218 logloss raw/cal/pin=0.6201/0.6192/0.5742 brier raw/cal/pin=0.2158/0.2154/0.1974
+  validation n= 274 ECE raw/cal/pin=0.0525/0.0400/0.0760 logloss raw/cal/pin=0.6516/0.6448/0.6030 brier raw/cal/pin=0.2270/0.2254/0.2066
+  holdout    n=   0 ECE raw/cal/pin=n/a/n/a/n/a logloss raw/cal/pin=n/a/n/a/n/a brier raw/cal/pin=n/a/n/a/n/a
+
+[Hard]
+  train      n=4303 ECE raw/cal/pin=0.0451/0.0109/0.0159 logloss raw/cal/pin=0.6360/0.6232/0.5794 brier raw/cal/pin=0.2193/0.2165/0.1987
+  validation n=1335 ECE raw/cal/pin=0.0439/0.0230/0.0540 logloss raw/cal/pin=0.6301/0.6160/0.5960 brier raw/cal/pin=0.2172/0.2140/0.2064
+  holdout    n= 609 ECE raw/cal/pin=0.0601/0.0363/0.1694 logloss raw/cal/pin=0.6189/0.6042/0.6828 brier raw/cal/pin=0.2150/0.2103/0.2452
+
+=== Holdout ROI impact (flat stake, 10% threshold) ===
+Surface | Series | Raw N / ROI | Cal N / ROI
+Hard     | ATP250       |  38 / -0.2426 |  39 / -0.3431
+
+=== Clay diagnostics bins ===
+Dataset Year Bin       N  RawPred CalPred Pinn Pred Actual  RawGap  CalGap
+validation 2025 0.50-0.60  216 0.549   0.548   0.535   0.500   +0.049  +0.048
+validation 2025 0.60-0.70  173 0.650   0.623   0.602   0.567   +0.083  +0.057
+validation 2025 0.70-0.80  156 0.754   0.704   0.681   0.705   +0.049  -0.001
+validation 2025 0.80-0.90  110 0.845   0.782   0.759   0.800   +0.045  -0.018
+validation 2025 0.90-1.00   52 0.940   0.888   0.858   0.885   +0.055  +0.003
+holdout   2026 0.50-0.60  114 0.548   0.548   0.500   0.517   +0.031  +0.030
+holdout   2026 0.60-0.70  100 0.649   0.623   0.500   0.680   -0.031  -0.057
+holdout   2026 0.70-0.80   68 0.742   0.689   0.500   0.676   +0.065  +0.013
+holdout   2026 0.80-0.90   46 0.843   0.769   0.500   0.783   +0.060  -0.014
+holdout   2026 0.90-1.00   31 0.941   0.883   0.500   0.903   +0.038  -0.020

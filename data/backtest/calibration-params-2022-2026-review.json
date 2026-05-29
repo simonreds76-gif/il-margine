@@ -1,0 +1,86 @@
+{
+  "generated_utc": "2026-05-29T12:32:04+00:00",
+  "train_years": [
+    2022,
+    2023,
+    2024
+  ],
+  "validation_year": 2025,
+  "holdout_year": 2026,
+  "notes": [
+    "Favorite-space Platt calibration fitted from backtest results.",
+    "A is constrained >= 0 and B > 0 so calibration cannot flip the favorite through 50%.",
+    "This artefact is diagnostic only until wired into the live fair-odds model."
+  ],
+  "surfaces": {
+    "Clay": {
+      "A": 0.078655,
+      "B": 0.579257,
+      "blend_by_series": {
+        "ATP250": 0.57,
+        "ATP500": 0.29,
+        "Grand Slam": 0.38,
+        "Masters 1000": 0.97,
+        "Masters Cup": 0.62
+      },
+      "n_train": 2339,
+      "train_ece": 0.034098,
+      "validation_ece": 0.040957,
+      "holdout_ece": 0.016146,
+      "fit_backend": "scipy",
+      "fit_meta": {
+        "backend": "scipy",
+        "success": true,
+        "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+        "nll": 0.6284566693206836,
+        "iterations": 5
+      }
+    },
+    "Grass": {
+      "A": 0.0,
+      "B": 0.83951,
+      "blend_by_series": {
+        "ATP250": 0.59,
+        "ATP500": 1.0,
+        "Grand Slam": 1.0,
+        "Masters 1000": 1.0,
+        "Masters Cup": 0.0
+      },
+      "n_train": 931,
+      "train_ece": 0.031052,
+      "validation_ece": 0.039979,
+      "holdout_ece": NaN,
+      "fit_backend": "scipy",
+      "fit_meta": {
+        "backend": "scipy",
+        "success": true,
+        "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+        "nll": 0.6179910673833865,
+        "iterations": 5
+      }
+    },
+    "Hard": {
+      "A": 0.098984,
+      "B": 0.590611,
+      "blend_by_series": {
+        "ATP250": 1.0,
+        "ATP500": 0.8,
+        "Grand Slam": 0.0,
+        "Masters 1000": 1.0,
+        "Masters Cup": 0.92
+      },
+      "n_train": 4303,
+      "train_ece": 0.010858,
+      "validation_ece": 0.02303,
+      "holdout_ece": 0.036292,
+      "fit_backend": "scipy",
+      "fit_meta": {
+        "backend": "scipy",
+        "success": true,
+        "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+        "nll": 0.6230174719673225,
+        "iterations": 6
+      }
+    }
+  }
+}
