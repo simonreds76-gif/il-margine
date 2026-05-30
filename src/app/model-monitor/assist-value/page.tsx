@@ -409,6 +409,7 @@ export default async function AssistValueMonitorPage() {
     latestSignalTimestamp !== null &&
     performanceTimestamp !== null &&
     performanceTimestamp + 5 * 60 * 1000 < latestSignalTimestamp;
+  const settlementUnderReview = !/settlement_valid_for_roi:\s*true/i.test(performanceReport ?? "");
 
   return (
     <main className="min-h-screen bg-[#050b12] px-4 py-6 text-slate-100 sm:px-6 lg:px-8">
@@ -422,10 +423,11 @@ export default async function AssistValueMonitorPage() {
 
         <HeroCard title="Assist Value Shadow Monitor" eyebrow="Research lane, no public betting output">
           <div className="max-w-4xl text-slate-400">
-            Bet365 assist odds are compared with the internal assist fair line. This page now shows the actual evaluation layer: shadow signals, settlement state, P/L, ROI, and per-league splits. The public Fair Odds Lab stays untouched until this lane has a real backtest and live proof.
+            Bet365 assist odds are compared with the internal assist fair line. The lane is paused while settlement and calibration are under review; P/L and ROI are displayed only as invalid historical diagnostics, not as evidence.
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             <StatusPill label={publicStatus === "-" ? "private shadow" : publicStatus.replaceAll("_", " ")} tone="bg-amber-500/10 text-amber-300 border-amber-500/20" />
+            <StatusPill label="settlement under review" tone="bg-rose-500/10 text-rose-300 border-rose-500/20" />
             <StatusPill label={`${ledger.pending} pending`} tone="bg-cyan-500/10 text-cyan-300 border-cyan-500/20" />
             <StatusPill label={hasSettlementColumns ? "settlement columns ready" : "settlement columns missing locally"} tone={hasSettlementColumns ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20" : "bg-rose-500/10 text-rose-300 border-rose-500/20"} />
             <StatusPill
@@ -434,6 +436,12 @@ export default async function AssistValueMonitorPage() {
             />
           </div>
         </HeroCard>
+
+        {settlementUnderReview ? (
+          <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 px-5 py-4 text-sm text-rose-100">
+            Assist settlement is paused for model-risk review. The current W/L, P/L and ROI are not valid promotion evidence until FotMob assist extraction is revalidated, old rows are resettled with <span className="font-semibold">--resettle</span>, and a calibration/CLV report exists.
+          </div>
+        ) : null}
 
         {!hasSettlementColumns ? (
           <div className="rounded-2xl border border-amber-500/25 bg-amber-500/10 px-5 py-4 text-sm text-amber-100">
@@ -452,7 +460,7 @@ export default async function AssistValueMonitorPage() {
           <StatCard label="Shadow signals" value={`${ledger.signals}`} detail={`${watchRows.length} watch rows | ${noEdgeRows.length} no-edge rows`} />
           <StatCard label="Settled / pending" value={`${ledger.settled} / ${ledger.pending}`} detail={`${ledger.won}-${ledger.lost}-${ledger.voided} W-L-V`} />
           <StatCard label="Shadow P/L" value={formatUnits(ledger.pnl, 2)} detail={`${ledger.staked}u settled stake`} tone={toneClass(ledger.pnl)} />
-          <StatCard label="Shadow ROI" value={signedPct(ledger.roiPct ?? 0, 1)} detail={ledger.roiPct === null ? "no settled stake yet" : "settled signals only"} tone={toneClass(ledger.roiPct ?? 0)} />
+          <StatCard label="Shadow ROI" value={signedPct(ledger.roiPct ?? 0, 1)} detail={settlementUnderReview ? "invalid while settlement is under review" : ledger.roiPct === null ? "no settled stake yet" : "settled signals only"} tone={settlementUnderReview ? "text-rose-300" : toneClass(ledger.roiPct ?? 0)} />
           <StatCard label="Average edge" value={signedPp(ledger.avgEdge, 2)} detail="shadow signals only" tone={toneClass(ledger.avgEdge)} />
           <StatCard label="Role match" value={roleMatchRate === "-" ? "-" : `${roleMatchRate}%`} detail="source audit row match" />
           <StatCard label="Generated" value={generatedAt === "-" ? "-" : formatDateTimeLabel(generatedAt)} detail={signalsMtime ? `file ${formatDateTimeLabel(signalsMtime)}` : "file timestamp unavailable"} />
@@ -465,7 +473,7 @@ export default async function AssistValueMonitorPage() {
           />
         </section>
 
-        <SectionCard title="League P/L" subtitle="Shadow-signal ledger by league. This is what you monitor before public promotion.">
+        <SectionCard title="League P/L" subtitle="Diagnostic only while assist settlement is under review; do not use for promotion.">
           <LeagueLedger leagues={leagues} />
         </SectionCard>
 
@@ -487,16 +495,18 @@ export default async function AssistValueMonitorPage() {
           </SectionCard>
 
           <aside className="space-y-5">
-            <SectionCard title="Settlement Source" subtitle="FotMob assists when available, Understat as a slower fallback.">
+            <SectionCard title="Settlement Source" subtitle="FotMob assist events only; Understat assist settlement is not wired.">
               <div className="space-y-3 text-sm text-slate-400">
                 <div className="rounded-xl border border-slate-800/70 bg-slate-950/45 p-3">
                   <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">Current state</div>
                   <div className="mt-1 text-slate-200">
-                    {performanceIsStale
-                      ? "Performance report is stale; settlement workflow needs to refresh it"
-                      : hasSettlementColumns
-                        ? "CSV can hold settlement results"
-                        : "Awaiting local settled artifact"}
+                    {settlementUnderReview
+                      ? "Settlement is paused for model-risk review"
+                      : performanceIsStale
+                        ? "Performance report is stale; settlement workflow needs to refresh it"
+                        : hasSettlementColumns
+                          ? "CSV can hold settlement results"
+                          : "Awaiting local settled artifact"}
                   </div>
                 </div>
                 <div className="rounded-xl border border-slate-800/70 bg-slate-950/45 p-3">

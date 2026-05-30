@@ -1,8 +1,8 @@
 name: Assist Value Shadow
 
 on:
-  schedule:
-    - cron: "10 7 * * *"
+  # PAUSED 2026-05-30: assist settlement is under model-risk review.
+  # Re-enable only after FotMob assist extraction + resettlement validation land.
   workflow_dispatch:
     inputs:
       refresh_role_sources:
@@ -19,6 +19,8 @@ concurrency:
 
 jobs:
   assist-shadow:
+    # Fail closed unless explicitly enabled in repo variables.
+    if: ${{ vars.ASSIST_VALUE_SHADOW_ENABLED == '1' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5

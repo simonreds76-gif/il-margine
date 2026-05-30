@@ -40,6 +40,11 @@ OUTPUT_FIELDS = [
     "settlement_note",
 ]
 
+SETTLEMENT_REVIEW_NOTE = (
+    "Assist settlement is under review after the 2026-05-30 model-risk audit; "
+    "use --resettle after refreshing FotMob assist payloads before trusting ROI."
+)
+
 TEAM_KEY_OVERRIDES = {
     "fc metz": "metz",
     "getafe cf": "getafe",
@@ -306,6 +311,8 @@ def write_summary(summary_path: Path, rows: List[dict], *, now_utc: datetime) ->
         "lane_status: SHADOW_ONLY",
         "public_status: NOT_PUBLIC",
         "settlement_source: fotmob_match_detail_assist_events",
+        "settlement_validation: UNDER_REVIEW",
+        "settlement_valid_for_roi: false",
         "",
         "Summary",
         f"shadow_signals: {stats['signals']}",
@@ -321,6 +328,7 @@ def write_summary(summary_path: Path, rows: List[dict], *, now_utc: datetime) ->
         "Notes",
         "Only rows with signal_status=shadow_signal count in this ledger.",
         "Rows with missing FotMob/player data stay pending rather than guessed.",
+        SETTLEMENT_REVIEW_NOTE,
     ]
     summary_path.parent.mkdir(parents=True, exist_ok=True)
     summary_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -332,6 +340,8 @@ def main() -> int:
     parser.add_argument("--summary", default=str(DEFAULT_SUMMARY), help="Assist shadow performance TXT path")
     parser.add_argument("--match-results-dir", default=str(DEFAULT_RESULTS_DIR), help="Directory of FotMob match result JSON files")
     parser.add_argument("--alias-path", default=str(DEFAULT_ALIAS_PATH), help="Optional FotMob player alias JSON path")
+    parser.add_argument("--resettle", action="store_true", help="Recompute existing settled shadow rows from current FotMob assist payloads")
+    parser.add_argument("--dry-run", action="store_true", help="Print the settlement summary without writing CSV/report files")
     args = parser.parse_args()
 
     model_mod = runpy.run_path(str(ROOT / "scripts" / "goalscorer-model.py"), run_name="goalscorer_model")
@@ -371,7 +381,7 @@ def main() -> int:
     non_signal_rows = 0
 
     for row in rows:
-        if str(row.get("settled") or "").strip().lower() in {"1", "true", "yes", "settled"}:
+        if str(row.get("settled") or "").strip().lower() in {"1", "true", "yes", "settled"} and not args.resettle:
             already_settled += 1
             continue
 
@@ -390,6 +400,11 @@ def main() -> int:
                 still_open += 1
             continue
         if outcome == "pending":
+            row["settled"] = ""
+            row["assists_recorded"] = ""
+            row["bet_outcome"] = ""
+            row["settled_at"] = ""
+            row["pnl_units"] = ""
             row["settlement_note"] = note
             pending += 1
             continue
@@ -407,8 +422,9 @@ def main() -> int:
         row["settlement_note"] = note
         settled_now += 1
 
-    _write_csv(signals_path, rows, fieldnames)
-    write_summary(summary_path, rows, now_utc=now_utc)
+    if not args.dry_run:
+        _write_csv(signals_path, rows, fieldnames)
+        write_summary(summary_path, rows, now_utc=now_utc)
 
     print(f"  Match result files:   {len(match_results):,}")
     print(f"  Settled now:          {settled_now:,}")
@@ -416,8 +432,11 @@ def main() -> int:
     print(f"  Pending:              {pending:,}")
     print(f"  Still open:           {still_open:,}")
     print(f"  Non-signal rows:      {non_signal_rows:,}")
-    print(f"  Saved:                {signals_path}")
-    print(f"  Saved:                {summary_path}")
+    if args.dry_run:
+        print("  Dry run:              CSV/report not written")
+    else:
+        print(f"  Saved:                {signals_path}")
+        print(f"  Saved:                {summary_path}")
     print("\n  Done.\n")
     return settled_now
 

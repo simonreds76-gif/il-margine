@@ -1,10 +1,12 @@
 Assist Value Shadow Performance
-generated_at_utc: 2026-05-30T15:10:48Z
+generated_at_utc: 2026-05-30T15:33:55Z
 
 Status
 lane_status: SHADOW_ONLY
 public_status: NOT_PUBLIC
 settlement_source: fotmob_match_detail_assist_events
+settlement_validation: UNDER_REVIEW
+settlement_valid_for_roi: false
 
 Summary
 shadow_signals: 12
@@ -20,3 +22,4 @@ roi_pct: -30.00
 Notes
 Only rows with signal_status=shadow_signal count in this ledger.
 Rows with missing FotMob/player data stay pending rather than guessed.
+Assist settlement is under review after the 2026-05-30 model-risk audit; use --resettle after refreshing FotMob assist payloads before trusting ROI.
