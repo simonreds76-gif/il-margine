@@ -26,6 +26,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 import os
 import re
 import shutil
@@ -65,6 +66,7 @@ DEFAULT_COMPARE_OUTPUT = DATA_DIR / "strict-signals-overlay-compare.csv"
 DEFAULT_CLAY_CALIBRATION_FILE = DATA_DIR / "clay-prob-calibration.json"
 DEFAULT_SPREAD_V1_CALIBRATION_FILE = DATA_DIR / "spread-v1-calibration-params.json"
 DEFAULT_SPREAD_V1_CLAY_CALIBRATION_FILE = DATA_DIR / "spread-v1-clay-calibration-params.json"
+DEFAULT_HARD_CALIBRATION_FILE = DATA_DIR / "calibration-params-2022-2026-review.json"
 
 STRICT_MIN_VALUE_PCT = 10.0  # Public-facing high-conviction signals
 INTERNAL_TRACK_MIN_VALUE_PCT = 5.0  # Internal tracking for 200-bet confirmation
@@ -145,7 +147,7 @@ EXCLUDE_SHORT_FAV_CONFIDENCE = {"high"}
 # Suppress signals when model and Pinnacle disagree on favourite pricing by >10pp.
 # Phantom underdog edges (model 1.15 vs Pin 1.02) cause guaranteed losses.
 # Skip matches where model favourite odds < 1.25.
-# The model cannot price extreme mismatches — both sides are unreliable.
+# The model cannot price extreme mismatches â€” both sides are unreliable.
 MISPRICE_MODEL_MARKET_FAV_GAP_MAX = 0.10
 MISPRICE_MODEL_MARKET_FAV_SIDE_FLIP_BUFFER = 0.03
 MISPRICE_MODEL_FAV_ODDS_MIN = 1.25
@@ -340,6 +342,83 @@ def _parse_point_prob(value: Any) -> float | None:
     if not (0.0 < p < 1.0):
         return None
     return p
+
+def _load_hard_calibration_params(path: Path) -> dict[str, Any] | None:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8").replace("NaN", "null"))
+    except Exception:
+        return None
+    hard = (payload.get("surfaces") or {}).get("Hard") if isinstance(payload, dict) else None
+    if not isinstance(hard, dict):
+        return None
+    try:
+        a = float(hard.get("A"))
+        b = float(hard.get("B"))
+    except (TypeError, ValueError):
+        return None
+    if not math.isfinite(a) or not math.isfinite(b) or b <= 0:
+        return None
+    blend_by_series = hard.get("blend_by_series") if isinstance(hard.get("blend_by_series"), dict) else {}
+    return {
+        "A": a,
+        "B": b,
+        "blend_by_series": {
+            str(k): float(v)
+            for k, v in blend_by_series.items()
+            if isinstance(k, str) and isinstance(v, (int, float)) and math.isfinite(float(v))
+        },
+    }
+
+
+def _logit_prob(p: float) -> float:
+    q = _safe_prob(p)
+    return math.log(q / (1.0 - q))
+
+
+def _sigmoid_prob(z: float) -> float:
+    z = max(-20.0, min(20.0, float(z)))
+    return 1.0 / (1.0 + math.exp(-z))
+
+
+HARD_OVERLAY_FAVORITE_PROB_CAP: dict[str, dict[str, float]] = {
+    "ATP250": {"high": 0.89, "medium": 0.85, "low": 0.82},
+    "ATP500": {"high": 0.91, "medium": 0.87, "low": 0.84},
+    "Masters 1000": {"high": 0.93, "medium": 0.90, "low": 0.87},
+    "Grand Slam": {"high": 0.95, "medium": 0.92, "low": 0.89},
+    "Masters Cup": {"high": 0.94, "medium": 0.91, "low": 0.88},
+}
+
+
+def _apply_hard_overlay_guard(p1_win_prob: float, series_bucket: str, confidence: str) -> float:
+    caps = HARD_OVERLAY_FAVORITE_PROB_CAP.get(series_bucket)
+    if not caps:
+        return _safe_prob(p1_win_prob)
+    cap = float(caps.get((confidence or "").lower(), 0.90))
+    if series_bucket == "ATP500":
+        cap -= 0.02
+    cap = max(0.78, min(0.93, cap))
+    p = _safe_prob(p1_win_prob)
+    fav_is_p1 = p >= 0.5
+    fav_prob = min(p if fav_is_p1 else 1.0 - p, cap)
+    return fav_prob if fav_is_p1 else 1.0 - fav_prob
+
+
+def _hard_overlay_prob(
+    p1_win_prob: float,
+    series_bucket: str,
+    confidence: str,
+    params: dict[str, Any] | None,
+) -> float | None:
+    if not params:
+        return None
+    raw = _safe_prob(p1_win_prob)
+    fav_is_p1 = raw >= 0.5
+    q_raw = raw if fav_is_p1 else 1.0 - raw
+    q_cal = _sigmoid_prob(float(params["A"]) + float(params["B"]) * _logit_prob(q_raw))
+    blend = max(0.0, min(1.0, float((params.get("blend_by_series") or {}).get(series_bucket, 0.0))))
+    q = _safe_prob((1.0 - blend) * q_raw + blend * q_cal)
+    p = q if fav_is_p1 else 1.0 - q
+    return _apply_hard_overlay_guard(p, series_bucket, confidence)
 
 
 def _load_piecewise_prob_map(path: Path) -> list[tuple[float, float]]:
@@ -870,7 +949,7 @@ def compute_stake_units(
 
 def format_signed_line(v: float | None) -> str:
     if v is None:
-        return "—"
+        return "â€”"
     abs_v = abs(v)
     body = str(int(abs_v)) if float(abs_v).is_integer() else f"{abs_v:.1f}"
     return f"{'+' if v >= 0 else '-'}{body}"
@@ -1058,7 +1137,7 @@ def clay_bo3_skip_reason(
 
 def append_rows_dedup(path: Path, rows: list[dict[str, Any]], key_fields: list[str]) -> int:
     # spread_shadow (and similar) often appends 0/0 until a qualifying 20%+ handicap exists.
-    # Old behavior: skip writing → file never created → settle-strict-signals.py and
+    # Old behavior: skip writing â†’ file never created â†’ settle-strict-signals.py and
     # strict-policy-performance.py report "file not found" forever. Seed header-only CSV.
     if not path.exists() and not rows:
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -1365,6 +1444,14 @@ def main() -> int:
     parser.add_argument("--output", default="", help="Live output CSV path for profile signals (auto by profile if omitted)")
     parser.add_argument("--internal-output", default="", help="Internal live CSV path (auto by profile if omitted)")
     parser.add_argument("--policy-mode", choices=("base", "overlay"), default="base", help="Production mode")
+    parser.add_argument("--hard-calibration-file", default=os.environ.get("HARD_CALIBRATION_PARAMS_FILE", str(DEFAULT_HARD_CALIBRATION_FILE)))
+    parser.add_argument(
+        "--hard-calibration-live",
+        action="store_true",
+        default=env_bool(os.environ.get("STRICT_HARD_CALIBRATION_LIVE"), False)
+        or (os.environ.get("STRICT_POLICY_HARD_CALIBRATION_MODE", "").strip().lower() == "strict_volume"),
+        help="Use hard-court calibration for strict/volume ML values only",
+    )
     parser.add_argument("--compare-overlay", action="store_true", help="Compute and print base vs overlay side-by-side")
     parser.add_argument("--compare-output", default=str(DEFAULT_COMPARE_OUTPUT), help="CSV path for side-by-side tracking")
 
@@ -1439,6 +1526,13 @@ def main() -> int:
     if args.signal_profile == "clay_calibrated" and not clay_prob_map:
         print(f"Clay calibrated profile requested but no valid remap points loaded from {args.clay_calibration_file}", file=sys.stderr)
         return 1
+    hard_calibration_params = _load_hard_calibration_params(Path(args.hard_calibration_file)) if args.hard_calibration_live else None
+    hard_calibration_live_profiles = {"strict", "volume_200"}
+    hard_calibration_live = bool(args.hard_calibration_live and args.signal_profile in hard_calibration_live_profiles and hard_calibration_params)
+    if args.hard_calibration_live and args.signal_profile not in hard_calibration_live_profiles:
+        print(f"WARNING: hard calibration live applies to strict/volume_200 only; disabled for {args.signal_profile}.")
+    elif args.hard_calibration_live and not hard_calibration_params:
+        print(f"WARNING: hard calibration live requested but params missing/invalid at {args.hard_calibration_file}; using base probabilities.")
     if args.signal_profile == "challenger_ml_shadow" and not CHALLENGER_ML_ENABLE:
         print("challenger_ml_shadow disabled: CHALLENGER_ML_ENABLE=0")
         if args.append:
@@ -1570,8 +1664,9 @@ def main() -> int:
     injury_skipped_matches = 0
 
     base_daily_select = "id,tour_id,player1_id,player2_id,surface,p1_win_prob,p2_win_prob,odds1,odds2,p_a,p_b,confidence,spread_line,spread_odds1,spread_odds2,handicap_edge_p1,handicap_edge_p2"
+    raw_daily_select = "id,tour_id,player1_id,player2_id,surface,p1_win_prob_raw,p2_win_prob_raw,p1_win_prob,p2_win_prob,odds1,odds2,p_a,p_b,confidence,spread_line,spread_odds1,spread_odds2,handicap_edge_p1,handicap_edge_p2"
     coverage_daily_select = (
-        base_daily_select
+        raw_daily_select
         + ",match_count_12m_p1,match_count_12m_p2,matches_total_p1,matches_total_p2,"
         + "recent_challenger_plus_p1,recent_challenger_plus_p2,last_match_days_p1,last_match_days_p2,data_coverage_tag"
     )
@@ -1764,18 +1859,28 @@ def main() -> int:
         our_odds2 = float(our_odds2)
         p1_win_prob = float(r.get("p1_win_prob") or 0.0)
         p2_win_prob = float(r.get("p2_win_prob") or 0.0)
-        model_favorite_prob = max(p1_win_prob, p2_win_prob)
-        model_favorite_side = "P1" if p1_win_prob >= p2_win_prob else "P2"
+        hard_calibration_live_for_row = False
+        hard_p1_win_prob = None
+        if hard_calibration_live and surface == "Hard" and args.signal_profile in {"strict", "volume_200"}:
+            hard_input_prob = _parse_point_prob(r.get("p1_win_prob_raw")) or p1_win_prob
+            hard_p1_win_prob = _hard_overlay_prob(hard_input_prob, series_bucket, confidence, hard_calibration_params)
+            hard_calibration_live_for_row = hard_p1_win_prob is not None
+        policy_p1_win_prob = hard_p1_win_prob if hard_calibration_live_for_row and hard_p1_win_prob is not None else p1_win_prob
+        policy_p2_win_prob = 1.0 - policy_p1_win_prob if hard_calibration_live_for_row else p2_win_prob
+        policy_odds1 = 1.0 / _safe_prob(policy_p1_win_prob)
+        policy_odds2 = 1.0 / _safe_prob(policy_p2_win_prob)
+        model_favorite_prob = max(policy_p1_win_prob, policy_p2_win_prob)
+        model_favorite_side = "P1" if policy_p1_win_prob >= policy_p2_win_prob else "P2"
         # ML only: skip matches where model favourite odds < 1.25.
         # Keep spreads eligible; this filter is for dog-moneyline distortions.
-        model_fav_odds = min(our_odds1, our_odds2)
+        model_fav_odds = min(policy_odds1, policy_odds2)
         model_ml_excluded = model_fav_odds < MISPRICE_MODEL_FAV_ODDS_MIN
         atp500_short_favorite_ml_excluded = is_excluded_short_favorite(
             surface,
             series_bucket,
             confidence,
-            our_odds1,
-            our_odds2,
+            policy_odds1,
+            policy_odds2,
         )
 
         p1_name = players.get(r.get("player1_id") or 0) or ""
@@ -1824,7 +1929,7 @@ def main() -> int:
         model_market_side_flip_excluded = (
             model_favorite_side != pin_favorite_side
             and abs(pin_p1_no_vig - 0.5) >= MISPRICE_MODEL_MARKET_FAV_SIDE_FLIP_BUFFER
-            and abs(p1_win_prob - 0.5) >= MISPRICE_MODEL_MARKET_FAV_SIDE_FLIP_BUFFER
+            and abs(policy_p1_win_prob - 0.5) >= MISPRICE_MODEL_MARKET_FAV_SIDE_FLIP_BUFFER
         )
         model_market_gap_excluded = (
             model_market_fav_gap > MISPRICE_MODEL_MARKET_FAV_GAP_MAX
@@ -1840,8 +1945,8 @@ def main() -> int:
             and abs(handicap_point_prob_gap) <= POINT_PROB_MATCH_PROB_GAP_MAX
         )
 
-        value_p1 = (pin["odds1"] / our_odds1 - 1) * 100 if our_odds1 > 1 else None
-        value_p2 = (pin["odds2"] / our_odds2 - 1) * 100 if our_odds2 > 1 else None
+        value_p1 = (float(pin["odds1"]) * policy_p1_win_prob - 1) * 100 if policy_odds1 > 1 else None
+        value_p2 = (float(pin["odds2"]) * policy_p2_win_prob - 1) * 100 if policy_odds2 > 1 else None
         calibrated_p1_win_prob = _apply_piecewise_favorite_remap(p1_win_prob, clay_prob_map) if surface == "Clay" and clay_prob_map else p1_win_prob
         calibrated_p2_win_prob = _safe_prob(1.0 - calibrated_p1_win_prob)
         calibrated_odds1 = 1.0 / _safe_prob(calibrated_p1_win_prob)
@@ -1874,7 +1979,7 @@ def main() -> int:
 
         side = raw_side
         value_pct = value_p1 if side == "P1" else value_p2
-        fav_side = "P1" if our_odds1 <= our_odds2 else "P2"
+        fav_side = "P1" if policy_odds1 <= policy_odds2 else "P2"
         has_internal_ml_value = (
             (value_p1 is not None and value_p1 >= INTERNAL_TRACK_MIN_VALUE_PCT)
             or (value_p2 is not None and value_p2 >= INTERNAL_TRACK_MIN_VALUE_PCT)
@@ -2025,7 +2130,7 @@ def main() -> int:
             and args.signal_profile not in SPREAD_ONLY_SIGNAL_PROFILES
         )
         # spread_shadow lane targets clay/non-policy HC edges; those segments often have no
-        # strict_min_value (non-policy). The API still shows them — do not drop the row here
+        # strict_min_value (non-policy). The API still shows them â€” do not drop the row here
         # or handicap rows never reach candidates (0/0 append forever).
         if not strict_match and not volume_match:
             if (
@@ -2046,8 +2151,8 @@ def main() -> int:
             strict_match or volume_match or challenger_ml_match or clay_bo3_ml_match
         ):
             stake_units, stake_gbp, stake_model = compute_stake_units(
-                our_odds1=our_odds1,
-                our_odds2=our_odds2,
+                our_odds1=policy_odds1,
+                our_odds2=policy_odds2,
                 pin_odds1=pin["odds1"],
                 pin_odds2=pin["odds2"],
                 side=side,
@@ -2066,8 +2171,8 @@ def main() -> int:
                     "series": series_bucket,
                     "confidence": confidence,
                     **(challenger_fields if challenger_ml_match else {}),
-                    "our_odds1": round(our_odds1, 4),
-                    "our_odds2": round(our_odds2, 4),
+                    "our_odds1": round(policy_odds1, 4),
+                    "our_odds2": round(policy_odds2, 4),
                     "pin_odds1": round(pin["odds1"], 4),
                     "pin_odds2": round(pin["odds2"], 4),
                     "value_p1": round(value_p1, 2) if value_p1 is not None else None,
@@ -2092,6 +2197,7 @@ def main() -> int:
                     "_tournament_name": tname,
                     "_strict_match": strict_match,
                     "_volume_match": volume_match,
+                    "hard_calibration_live": hard_calibration_live_for_row,
                     "_challenger_ml_match": challenger_ml_match,
                     "_clay_bo3_match": clay_bo3_ml_match,
                     "_spread_shadow_match": False,

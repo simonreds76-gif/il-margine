@@ -298,6 +298,9 @@ const HARD_CALIBRATION_PARAMS_FILE = resolveConfiguredRouteFilePath(
   process.env.HARD_CALIBRATION_PARAMS_FILE,
   "data/backtest/calibration-params-2022-2026-review.json",
 );
+const STRICT_HARD_CALIBRATION_LIVE =
+  parseBoolEnv("STRICT_HARD_CALIBRATION_LIVE", false) ||
+  (process.env.STRICT_POLICY_HARD_CALIBRATION_MODE ?? "").trim().toLowerCase() === "strict_volume";
 
 interface HardCalibrationParams {
   A: number;
@@ -546,7 +549,10 @@ function hardCalibrationShadowProbability(
   seriesBucket: string,
   confidence?: string,
 ): number | undefined {
-  if (!INTERNAL_RESEARCH_LANES || !HARD_CALIBRATION_SHADOW_ENABLED) return undefined;
+  if (
+    !STRICT_HARD_CALIBRATION_LIVE &&
+    (!INTERNAL_RESEARCH_LANES || !HARD_CALIBRATION_SHADOW_ENABLED)
+  ) return undefined;
   if (surfaceKey !== "hard") return undefined;
   const params = loadHardCalibrationParams();
   if (!params) return undefined;
@@ -2496,6 +2502,20 @@ async function run(): Promise<Response> {
     const hardOverlayInputProb = p1WinProbRaw ?? p1WinProb;
     const hardOverlaySource: FairOddsRow["hard_overlay_source"] =
       p1WinProbRaw != null ? "raw_prob_shadow" : "stored_prob_shadow";
+    const hardOverlayP1WinProb = hardCalibrationShadowProbability(hardOverlayInputProb, surfaceKey, seriesBucket, confidence);
+    const hardOverlayP2WinProb = hardOverlayP1WinProb != null ? 1 - hardOverlayP1WinProb : undefined;
+    const hardOverlayOdds1 = hardOverlayP1WinProb != null ? Math.round((1 / hardOverlayP1WinProb) * 1000) / 1000 : undefined;
+    const hardOverlayOdds2 = hardOverlayP2WinProb != null ? Math.round((1 / hardOverlayP2WinProb) * 1000) / 1000 : undefined;
+    const hardCalibrationLiveForRow =
+      STRICT_HARD_CALIBRATION_LIVE &&
+      league === "ATP" &&
+      surfaceKey === "hard" &&
+      hardOverlayP1WinProb != null &&
+      hardOverlayP2WinProb != null;
+    const policyP1WinProb = hardCalibrationLiveForRow ? hardOverlayP1WinProb : p1WinProb;
+    const policyP2WinProb = hardCalibrationLiveForRow ? hardOverlayP2WinProb : p2WinProb;
+    const policyOdds1 = hardCalibrationLiveForRow && hardOverlayOdds1 != null ? hardOverlayOdds1 : p1WinProb > 0 ? 1 / p1WinProb : 0;
+    const policyOdds2 = hardCalibrationLiveForRow && hardOverlayOdds2 != null ? hardOverlayOdds2 : p2WinProb > 0 ? 1 / p2WinProb : 0;
     const storedPA = parsePointProb((r as { p_a?: number | string | null }).p_a);
     const storedPB = parsePointProb((r as { p_b?: number | string | null }).p_b);
     const storedMatchProb =
@@ -2508,8 +2528,8 @@ async function run(): Promise<Response> {
         : Math.abs(handicapPointProbGap) <= POINT_PROB_MATCH_PROB_GAP_MAX
           ? "stored_p_a_p_b"
           : "fallback_divergent_gap";
-    const modelFavoriteProb = Math.max(p1WinProb, p2WinProb);
-    const modelFavoriteSide: "P1" | "P2" = p1WinProb >= p2WinProb ? "P1" : "P2";
+    const modelFavoriteProb = Math.max(policyP1WinProb, policyP2WinProb);
+    const modelFavoriteSide: "P1" | "P2" = policyP1WinProb >= policyP2WinProb ? "P1" : "P2";
     const pinP1NoVig =
       pinnacle != null && pinnacle.pinnacle_odds1 > 1 && pinnacle.pinnacle_odds2 > 1
         ? (1 / pinnacle.pinnacle_odds1) / ((1 / pinnacle.pinnacle_odds1) + (1 / pinnacle.pinnacle_odds2))
@@ -2523,7 +2543,7 @@ async function run(): Promise<Response> {
       pinFavoriteSide != null &&
       modelFavoriteSide !== pinFavoriteSide &&
       Math.abs(pinP1NoVig - 0.5) >= MODEL_MARKET_FAV_SIDE_FLIP_BUFFER &&
-      Math.abs(p1WinProb - 0.5) >= MODEL_MARKET_FAV_SIDE_FLIP_BUFFER;
+      Math.abs(policyP1WinProb - 0.5) >= MODEL_MARKET_FAV_SIDE_FLIP_BUFFER;
     const hasCurrentSpreadData =
       pinnacle != null &&
       r.spread_line != null &&
@@ -2551,25 +2571,23 @@ async function run(): Promise<Response> {
       pinnacle && ourOdds2 > 1 && pinnacle.pinnacle_odds2 > 1
         ? Math.round((pinnacle.pinnacle_odds2 / ourOdds2 - 1) * 10000) / 100
         : undefined;
-    const hardOverlayP1WinProb = hardCalibrationShadowProbability(hardOverlayInputProb, surfaceKey, seriesBucket, confidence);
-    const hardOverlayP2WinProb = hardOverlayP1WinProb != null ? 1 - hardOverlayP1WinProb : undefined;
-    const hardOverlayOdds1 = hardOverlayP1WinProb != null ? Math.round((1 / hardOverlayP1WinProb) * 1000) / 1000 : undefined;
-    const hardOverlayOdds2 = hardOverlayP2WinProb != null ? Math.round((1 / hardOverlayP2WinProb) * 1000) / 1000 : undefined;
     const hardOverlayValueP1 = pctValueFromProb(hardOverlayP1WinProb, pinnacle?.pinnacle_odds1);
     const hardOverlayValueP2 = pctValueFromProb(hardOverlayP2WinProb, pinnacle?.pinnacle_odds2);
     const hardOverlayBestSide = pickSideByValues(hardOverlayValueP1, hardOverlayValueP2);
     const hardOverlayBestValue =
       hardOverlayBestSide === "P1" ? hardOverlayValueP1 : hardOverlayBestSide === "P2" ? hardOverlayValueP2 : undefined;
+    const policyValueP1 = hardCalibrationLiveForRow ? hardOverlayValueP1 : rawValueP1;
+    const policyValueP2 = hardCalibrationLiveForRow ? hardOverlayValueP2 : rawValueP2;
     const policyBaseAllows = strictPolicyAllowsValue(r.surface ?? "", seriesBucket, confidence);
     const shortFavoriteExcluded = strictPolicyExcludedByShortFavorite(
       r.surface ?? "",
       seriesBucket,
       confidence,
-      p1WinProb,
-      p2WinProb
+      policyP1WinProb,
+      policyP2WinProb
     );
     const modelFavOddsMispriceExcluded =
-      STRICT_POLICY_MODE && Math.min(ourOdds1, ourOdds2) < STRICT_POLICY_MISPRICE_FAV_ODDS_MIN;
+      STRICT_POLICY_MODE && Math.min(policyOdds1, policyOdds2) < STRICT_POLICY_MISPRICE_FAV_ODDS_MIN;
     const pinFavOddsMispriceExcluded =
       STRICT_POLICY_MODE &&
       pinnacle != null &&
@@ -2601,9 +2619,9 @@ async function run(): Promise<Response> {
       !injuryExcluded;
     if (policyAllows) strictPolicyEligibleCount += 1;
     const strictCandidateValueP1Base =
-      policyAllows && rawValueP1 != null && rawValueP1 >= STRICT_POLICY_INTERNAL_MIN_VALUE_PCT ? rawValueP1 : undefined;
+      policyAllows && policyValueP1 != null && policyValueP1 >= STRICT_POLICY_INTERNAL_MIN_VALUE_PCT ? policyValueP1 : undefined;
     const strictCandidateValueP2Base =
-      policyAllows && rawValueP2 != null && rawValueP2 >= STRICT_POLICY_INTERNAL_MIN_VALUE_PCT ? rawValueP2 : undefined;
+      policyAllows && policyValueP2 != null && policyValueP2 >= STRICT_POLICY_INTERNAL_MIN_VALUE_PCT ? policyValueP2 : undefined;
     const strictHeavyFavoriteDogExcludedP1 =
       strictCandidateValueP1Base != null &&
       strictPolicyExcludedByHeavyFavoriteDog(
@@ -2750,17 +2768,17 @@ async function run(): Promise<Response> {
       volumeMinVal != null &&
       !volumeExcluded &&
       !strictOppositeHandicapConflictP1 &&
-      rawValueP1 != null &&
-      rawValueP1 >= volumeMinVal
-        ? rawValueP1
+      policyValueP1 != null &&
+      policyValueP1 >= volumeMinVal
+        ? policyValueP1
         : undefined;
     const volumeProfileValueP2 =
       volumeMinVal != null &&
       !volumeExcluded &&
       !strictOppositeHandicapConflictP2 &&
-      rawValueP2 != null &&
-      rawValueP2 >= volumeMinVal
-        ? rawValueP2
+      policyValueP2 != null &&
+      policyValueP2 >= volumeMinVal
+        ? policyValueP2
         : undefined;
     const shadowProfileMatch = volumeProfileValueP1 != null || volumeProfileValueP2 != null;
     const shadowOverlapMatch = shadowProfileMatch && strictShadowCandidate;
