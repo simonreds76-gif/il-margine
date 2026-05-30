@@ -247,7 +247,7 @@ def settle_row(
     matched_name = best_name_match(player_name, candidate_names, minimum_score=76) if player_name else None
     if not matched_name:
         if _complete_team_sheet(team_players):
-            return "pending", "pending_player_name_match", 0
+            return "void", "not_in_matchday_squad", 0
         return "pending", "incomplete_team_sheet", 0
 
     player_entry = next(
