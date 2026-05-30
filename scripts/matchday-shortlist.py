@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import os
 import re
 import unicodedata
@@ -57,6 +58,7 @@ CORNERS_HISTORICAL_DIR = ROOT / "data" / "corners-ou" / "historical"
 LEGACY_HISTORICAL_DIR = ROOT / "data" / "team-shots" / "historical"
 CALIBRATION_PARAMS_PATH = ROOT / "data" / "corners-ou" / "corners-calibration-params.json"
 DEFAULT_PINNACLE_CORNERS_PATH = ROOT / "data" / "corners-ou" / "pinnacle-corners-odds.csv"
+DEFAULT_CORNERS_ALLOWED_CONFIG = ROOT / "data" / "football-form" / "corners-v0-allowed-leagues.json"
 LIGUE1_MAX_STAKE = 0.5  # DD risk: Ligue 1 backtest max DD ~133u vs ~36u Serie A
 DEFAULT_POLICY_VERSION = "V3"
 POLICY_SPECS: dict[str, dict[str, object]] = {
@@ -107,6 +109,21 @@ VALUE_BET_FIELDS = [
     "lambda_h_recent", "lambda_a_recent", "divergence", "consensus", "policy_version",
 ]
 
+
+
+def load_corners_allowed_leagues(path: Path) -> tuple[set[str], str]:
+    """Fail closed: if promotion config is missing/malformed, publish no corners bets."""
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return set(), f"allowed config unavailable ({type(exc).__name__}); corners publication blocked"
+    allowed_raw = payload.get("allowed_leagues")
+    if not isinstance(allowed_raw, list):
+        return set(), "allowed config missing allowed_leagues list; corners publication blocked"
+    allowed = {str(league).strip().lower() for league in allowed_raw if str(league).strip()}
+    if not allowed:
+        return set(), "no allowed leagues in corners promotion config; corners publication blocked"
+    return allowed, f"allowed leagues from {path}: {', '.join(sorted(allowed))}"
 
 def inclusive_days_cutoff(days_ahead: int) -> datetime:
     target_day = datetime.now(timezone.utc).date() + timedelta(days=max(days_ahead, 0))
@@ -888,11 +905,20 @@ def main() -> None:
                         help="Corners price source: Pinnacle snapshot, The Odds API, or auto fallback (default pinnacle)")
     parser.add_argument("--pinnacle-csv", default=str(DEFAULT_PINNACLE_CORNERS_PATH),
                         help="Path to the Pinnacle corners snapshot CSV")
+    parser.add_argument("--corners-allowed-config", default=str(DEFAULT_CORNERS_ALLOWED_CONFIG),
+                        help="Fail-closed allowed-league config for corners publication")
+    parser.add_argument("--ignore-corners-allowed-config", action="store_true",
+                        help="Manual diagnostics only: allow value-bet generation even when the promotion config blocks publication")
     parser.add_argument("--artifact-suffix", default="",
                         help="Optional suffix appended to shortlist/value-bets/signals output filenames")
     args = parser.parse_args()
 
     leagues = list(SPORT_KEYS.keys()) if args.all_leagues else [args.league or "epl"]
+    corners_allowed_leagues, corners_allowed_reason = load_corners_allowed_leagues(Path(args.corners_allowed_config))
+    if args.ignore_corners_allowed_config:
+        print("  [warn] ignoring corners allowed-league config; diagnostics only, not publication-safe")
+    else:
+        print(f"  Corners publication gate: {corners_allowed_reason}")
     policy_spec = POLICY_SPECS[args.policy]
     policy_version = args.policy
     policy_lines = list(policy_spec["corner_lines"])
@@ -1064,16 +1090,21 @@ def main() -> None:
                 print("    No corner odds available")
 
             if bm_lines:
-                value = find_value_bets(
-                    home, away, league, h_lam, a_lam, h_lam_recent, a_lam_recent, bm_lines,
-                    min_edge=min_edge,
-                    cal_params=cal_params,
-                    allowed_sides=allowed_sides,
-                    allowed_lines=allowed_lines,
-                    policy_lines=frozenset(policy_lines),
-                    kick_off=kick_off,
-                    policy_version=policy_version,
-                )
+                publication_allowed = args.ignore_corners_allowed_config or league in corners_allowed_leagues
+                if not publication_allowed:
+                    print(f"    Corners value-bet publication blocked by promotion config for league={league}")
+                    value = []
+                else:
+                    value = find_value_bets(
+                        home, away, league, h_lam, a_lam, h_lam_recent, a_lam_recent, bm_lines,
+                        min_edge=min_edge,
+                        cal_params=cal_params,
+                        allowed_sides=allowed_sides,
+                        allowed_lines=allowed_lines,
+                        policy_lines=frozenset(policy_lines),
+                        kick_off=kick_off,
+                        policy_version=policy_version,
+                    )
                 all_value_bets.extend(value)
                 if value:
                     print(f"    >>> {len(value)} VALUE BETS FOUND <<<")
