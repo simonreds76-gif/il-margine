@@ -40,6 +40,8 @@ OUTPUT_FIELDS = [
     "settlement_note",
 ]
 
+ASSIST_DATA_TIMEOUT_DAYS = 10
+
 SETTLEMENT_REVIEW_NOTE = (
     "Assist settlement is under review after the 2026-05-30 model-risk audit; "
     "use --resettle after refreshing FotMob assist payloads before trusting ROI."
@@ -221,6 +223,12 @@ def _player_team_goals_fully_captured(match_result: dict, player_team_key: str, 
     return captured >= team_score
 
 
+
+def _past_assist_data_timeout(kickoff: datetime | None, signal_date: date, now_utc: datetime) -> bool:
+    if kickoff is not None:
+        return kickoff + timedelta(days=ASSIST_DATA_TIMEOUT_DAYS) <= now_utc
+    return signal_date + timedelta(days=ASSIST_DATA_TIMEOUT_DAYS) <= now_utc.date()
+
 def settle_row(
     row: dict,
     *,
@@ -248,6 +256,8 @@ def settle_row(
     match_key = (league_key, (row.get("match_date") or "").strip(), home_team_key, away_team_key)
     match_result = match_results.get(match_key)
     if match_result is None:
+        if _past_assist_data_timeout(kickoff, signal_date, now_utc):
+            return "void", "settlement_data_unavailable_timeout", 0
         if kickoff is not None and kickoff + timedelta(hours=6) <= now_utc:
             return "pending", "pending_settlement_data", 0
         if signal_date < now_utc.date():
@@ -303,8 +313,12 @@ def settle_row(
         return "won", f"assisted_{assists}_goals", assists
 
     if not _has_trustworthy_assist_data(match_result):
+        if _past_assist_data_timeout(kickoff, signal_date, now_utc):
+            return "void", "assist_data_unavailable_timeout", 0
         return "pending", "needs_assist_data", 0
     if not _player_team_goals_fully_captured(match_result, player_team_key, team_key_func):
+        if _past_assist_data_timeout(kickoff, signal_date, now_utc):
+            return "void", "assist_data_unavailable_timeout", 0
         return "pending", "needs_assist_data", 0
 
     return "lost", "played_no_assist", 0
@@ -359,7 +373,7 @@ def write_summary(summary_path: Path, rows: List[dict], *, now_utc: datetime) ->
         "",
         "Notes",
         "Only rows with signal_status=shadow_signal count in this ledger.",
-        "Rows with missing FotMob/player data stay pending rather than guessed.",
+        f"Rows with missing FotMob/player data stay pending for {ASSIST_DATA_TIMEOUT_DAYS} days, then void rather than guessed.",
         SETTLEMENT_REVIEW_NOTE,
     ]
     summary_path.parent.mkdir(parents=True, exist_ok=True)

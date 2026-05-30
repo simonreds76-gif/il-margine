@@ -1332,6 +1332,81 @@ function preferIncomingShadowSignal(
   return incoming.id > existing.id;
 }
 
+type CollapsibleSpreadSignal = {
+  id: number;
+  kind?: string;
+  player1_id?: number;
+  player2_id?: number;
+  player1_name: string;
+  player2_name: string;
+  side: string;
+  value_pct?: number;
+  pinnacle_odds?: number;
+  bet_type: "match" | "spread";
+  spread_line?: number;
+  tournament?: string;
+  surface?: string;
+  league?: string;
+};
+
+function spreadLogicalIdentity(signal: CollapsibleSpreadSignal): string {
+  if (signal.player1_id != null && signal.player2_id != null) {
+    return `${signal.player1_id}|${signal.player2_id}`;
+  }
+  return signalNameKey(signal.player1_name, signal.player2_name);
+}
+
+function spreadLogicalKey(signal: CollapsibleSpreadSignal): string {
+  return [
+    signal.kind ?? "generated",
+    spreadLogicalIdentity(signal),
+    signal.bet_type,
+    signal.side,
+    signal.tournament ?? "",
+    signal.surface ?? "",
+    signal.league ?? "",
+  ].join("|");
+}
+
+function spreadSignalRank(signal: CollapsibleSpreadSignal): [number, number, number] {
+  return [
+    signal.value_pct ?? Number.NEGATIVE_INFINITY,
+    signal.pinnacle_odds ?? Number.NEGATIVE_INFINITY,
+    signal.id ?? 0,
+  ];
+}
+
+function isBetterSpreadSignal(incoming: CollapsibleSpreadSignal, existing: CollapsibleSpreadSignal): boolean {
+  const a = spreadSignalRank(incoming);
+  const b = spreadSignalRank(existing);
+  for (let i = 0; i < a.length; i += 1) {
+    if (a[i] !== b[i]) return a[i] > b[i];
+  }
+  return false;
+}
+
+function collapseDuplicateSpreadSignals<T extends CollapsibleSpreadSignal>(signals: T[]): T[] {
+  const collapsed: T[] = [];
+  const spreadIndex = new Map<string, number>();
+  for (const signal of signals) {
+    if (signal.bet_type !== "spread") {
+      collapsed.push(signal);
+      continue;
+    }
+    const key = spreadLogicalKey(signal);
+    const existingIndex = spreadIndex.get(key);
+    if (existingIndex == null) {
+      spreadIndex.set(key, collapsed.length);
+      collapsed.push(signal);
+      continue;
+    }
+    if (isBetterSpreadSignal(signal, collapsed[existingIndex])) {
+      collapsed[existingIndex] = signal;
+    }
+  }
+  return collapsed;
+}
+
 function loadActiveShadowSignals(csvPaths: string | string[], kind: ShadowSignalKind, _activeDate?: string): ShadowSignalSummary[] {
   const paths = Array.isArray(csvPaths) ? csvPaths : [csvPaths];
   const latestBySignalKey = new Map<string, ShadowSignalSummary & { settlement_status: string }>();
@@ -3199,6 +3274,8 @@ async function run(): Promise<Response> {
         : { units: 1, gbp: STRICT_UNIT_GBP };
     return {
       id: m.id,
+      player1_id: m.player1_id,
+      player2_id: m.player2_id,
       player1_name: m.player1_name,
       player2_name: m.player2_name,
       side,
@@ -3231,6 +3308,8 @@ async function run(): Promise<Response> {
   ) {
     return {
       id: m.id * 1000 + (side === "P1+" ? 1 : 2),
+      player1_id: m.player1_id,
+      player2_id: m.player2_id,
       player1_name: m.player1_name,
       player2_name: m.player2_name,
       side,
@@ -3285,7 +3364,7 @@ async function run(): Promise<Response> {
     }
   }
 
-  const signals_strict = [...matchSignalsStrict, ...spreadSignalsStrict];
+  const signals_strict = collapseDuplicateSpreadSignals([...matchSignalsStrict, ...spreadSignalsStrict]);
   const matchSignalsVolumeProfile = matches
     .filter((m) => m.shadow_profile_match)
     .map((m) =>
@@ -3396,11 +3475,11 @@ async function run(): Promise<Response> {
       }
     }
   }
-  const signals_volume = [...matchSignalsVolume, ...spreadSignalsVolume];
-  const signals_volume_profile = [...matchSignalsVolumeProfile, ...spreadSignalsVolumeProfile];
-  const signals_volume_overlap = [...matchSignalsVolumeOverlap, ...spreadSignalsVolumeOverlap];
-  const signals_volume_additional = [...matchSignalsVolumeAdditional, ...spreadSignalsVolume];
-  const spreadSignalsSpreadV1 = effectiveSpreadV1SignalsCsv;
+  const signals_volume = collapseDuplicateSpreadSignals([...matchSignalsVolume, ...spreadSignalsVolume]);
+  const signals_volume_profile = collapseDuplicateSpreadSignals([...matchSignalsVolumeProfile, ...spreadSignalsVolumeProfile]);
+  const signals_volume_overlap = collapseDuplicateSpreadSignals([...matchSignalsVolumeOverlap, ...spreadSignalsVolumeOverlap]);
+  const signals_volume_additional = collapseDuplicateSpreadSignals([...matchSignalsVolumeAdditional, ...spreadSignalsVolume]);
+  const spreadSignalsSpreadV1 = collapseDuplicateSpreadSignals(effectiveSpreadV1SignalsCsv);
 
   const matchesWithSpread = matches.filter(
     (m) =>
