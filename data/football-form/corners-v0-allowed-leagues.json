@@ -1,22 +1,22 @@
 {
-  "allowed_leagues": [
+  "allowed_leagues": [],
+  "blocked_leagues": [
+    "bundesliga",
     "epl",
+    "la-liga",
     "ligue-1",
     "serie-a"
   ],
-  "blocked_leagues": [
-    "bundesliga",
-    "la-liga"
-  ],
   "canonical_only_allowed": false,
   "canonical_only_min_n": 200,
-  "generated_at": "2026-04-25T16:01:46+00:00",
+  "generated_at": "2026-05-30T14:06:15+00:00",
   "lane": "research",
   "market": "corners_total",
   "model": "canonical_form_v0",
   "rules": [
     "publish only if league is in allowed_leagues",
     "publish only if current_model_would_have_priced is true",
-    "do not publish canonical-only fixtures until canonical-only sample and segment calibration pass"
+    "do not publish canonical-only fixtures until canonical-only sample and segment calibration pass",
+    "do not publish any corners league unless the real-odds Pinnacle CLV gate passes"
   ]
 }

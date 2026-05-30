@@ -27,10 +27,17 @@ DEFAULT_SUMMARY = ROOT / "data" / "football-form" / "canonical-backtest-summary.
 DEFAULT_JSON = ROOT / "data" / "football-form" / "corners-v0-promotion-check.json"
 DEFAULT_REPORT = ROOT / "data" / "football-form" / "corners-v0-promotion-check.md"
 DEFAULT_ALLOWED_CONFIG = ROOT / "data" / "football-form" / "corners-v0-allowed-leagues.json"
+DEFAULT_REAL_ODDS_RESULTS = ROOT / "data" / "corners-ou" / "corners-real-odds-backtest-results.csv"
 
 CORNERS_LINES = ["8.5", "9.5", "10.5", "11.5"]
 MIN_CANONICAL_ONLY_N = 200
 MIN_LAST90_LEAGUE_N = 50
+REAL_ODDS_MODEL_VERSION = "nb_market_blend"
+REAL_ODDS_MIN_N = 200
+REAL_ODDS_MIN_AVG_CLV = 0.01
+REAL_ODDS_MIN_POSITIVE_CLV_SHARE = 0.55
+REAL_ODDS_MIN_QUALIFIED_LEAGUES = 3
+REAL_ODDS_MIN_LEAGUE_N = 40
 
 
 def pf(value: Any) -> float | None:
@@ -150,7 +157,83 @@ def evaluate_league(rows: list[dict[str, str]], league: str) -> dict[str, Any]:
     }
 
 
-def build_payload(rows: list[dict[str, str]]) -> dict[str, Any]:
+
+def pb(value: Any) -> bool:
+    text = str(value or "").strip().lower()
+    return text in {"1", "true", "yes", "y"}
+
+
+def avg(values: list[float]) -> float | None:
+    return sum(values) / len(values) if values else None
+
+
+def load_real_odds_gate(path: Path) -> dict[str, Any]:
+    rows = load_rows(path) if path.exists() else []
+    selected = [
+        row
+        for row in rows
+        if row.get("model_version") == REAL_ODDS_MODEL_VERSION
+        and pb(row.get("selected"))
+        and not pb(row.get("close_is_stale"))
+    ]
+    n = len(selected)
+    pnl = sum(pf(row.get("pnl_units")) or 0.0 for row in selected)
+    roi = pnl / n if n else None
+    clvs = [x for x in (pf(row.get("published_to_close_clv")) for row in selected) if x is not None]
+    avg_clv = avg(clvs)
+    positive_clv_n = sum(1 for row in selected if pb(row.get("positive_clv")))
+    positive_clv_share = positive_clv_n / n if n else None
+    by_league: list[dict[str, Any]] = []
+    for league in sorted({str(row.get("league") or "").strip().lower() for row in selected if row.get("league")}):
+        sample = [row for row in selected if str(row.get("league") or "").strip().lower() == league]
+        league_clvs = [x for x in (pf(row.get("published_to_close_clv")) for row in sample) if x is not None]
+        league_avg_clv = avg(league_clvs)
+        league_pnl = sum(pf(row.get("pnl_units")) or 0.0 for row in sample)
+        by_league.append(
+            {
+                "league": league,
+                "n": len(sample),
+                "pnl_units": league_pnl,
+                "roi": league_pnl / len(sample) if sample else None,
+                "avg_clv": league_avg_clv,
+                "positive_clv_share": sum(1 for row in sample if pb(row.get("positive_clv"))) / len(sample) if sample else None,
+                "qualified_for_breadth": len(sample) >= REAL_ODDS_MIN_LEAGUE_N,
+                "clv_positive": league_avg_clv is not None and league_avg_clv > 0.0,
+            }
+        )
+    qualified_positive_leagues = [row["league"] for row in by_league if row["qualified_for_breadth"] and row["clv_positive"]]
+    gates = {
+        "n": n >= REAL_ODDS_MIN_N,
+        "avg_clv": avg_clv is not None and avg_clv >= REAL_ODDS_MIN_AVG_CLV,
+        "positive_clv_share": positive_clv_share is not None and positive_clv_share >= REAL_ODDS_MIN_POSITIVE_CLV_SHARE,
+        "roi": roi is not None and roi >= 0.0,
+        "league_breadth": len(qualified_positive_leagues) >= REAL_ODDS_MIN_QUALIFIED_LEAGUES,
+    }
+    return {
+        "source": str(path.relative_to(ROOT)).replace("\\", "/"),
+        "model_version": REAL_ODDS_MODEL_VERSION,
+        "selected_filter": "selected=true and close_is_stale=false",
+        "thresholds": {
+            "min_n": REAL_ODDS_MIN_N,
+            "min_avg_clv": REAL_ODDS_MIN_AVG_CLV,
+            "min_positive_clv_share": REAL_ODDS_MIN_POSITIVE_CLV_SHARE,
+            "min_qualified_leagues": REAL_ODDS_MIN_QUALIFIED_LEAGUES,
+            "min_league_n": REAL_ODDS_MIN_LEAGUE_N,
+        },
+        "n": n,
+        "pnl_units": pnl,
+        "roi": roi,
+        "avg_clv": avg_clv,
+        "positive_clv_share": positive_clv_share,
+        "positive_clv_n": positive_clv_n,
+        "qualified_positive_leagues": qualified_positive_leagues,
+        "by_league": by_league,
+        "gates": gates,
+        "overall_pass": bool(selected) and all(gates.values()),
+        "reason": "pass" if bool(selected) and all(gates.values()) else "real-odds CLV gate failed; corners remains research-only",
+    }
+
+def build_payload(rows: list[dict[str, str]], real_odds_results_path: Path = DEFAULT_REAL_ODDS_RESULTS) -> dict[str, Any]:
     leagues = sorted(
         {
             row.get("league", "")
@@ -167,6 +250,8 @@ def build_payload(rows: list[dict[str, str]]) -> dict[str, Any]:
     canonical_only_guard = canonical_only_n < MIN_CANONICAL_ONLY_N
     ready_leagues = [item["league"] for item in league_results if item["passes"]]
     blocked_leagues = [item["league"] for item in league_results if not item["passes"]]
+    real_odds_gate = load_real_odds_gate(real_odds_results_path)
+    real_odds_pass = bool(real_odds_gate.get("overall_pass"))
     return {
         "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat(),
         "source": str(DEFAULT_SUMMARY.relative_to(ROOT)).replace("\\", "/"),
@@ -176,6 +261,7 @@ def build_payload(rows: list[dict[str, str]]) -> dict[str, Any]:
             "promotion_lane": "research",
             "min_canonical_only_n": MIN_CANONICAL_ONLY_N,
             "min_last90_league_n": MIN_LAST90_LEAGUE_N,
+            "real_odds_gate_required": True,
         },
         "league_results": league_results,
         "canonical_only": {
@@ -187,10 +273,12 @@ def build_payload(rows: list[dict[str, str]]) -> dict[str, Any]:
                 else "canonical-only sample size threshold met; still require segment calibration before allowing publication"
             ),
         },
-        "ready_leagues": ready_leagues,
-        "blocked_leagues": blocked_leagues,
-        "research_lane_ready_all_leagues": all(item["passes"] for item in league_results) and canonical_only_guard,
-        "research_lane_ready_partial": bool(ready_leagues) and canonical_only_guard,
+        "ready_leagues": ready_leagues if real_odds_pass else [],
+        "blocked_leagues": sorted(set(blocked_leagues) | (set(ready_leagues) if not real_odds_pass else set())),
+        "count_calibration_ready_leagues": ready_leagues,
+        "real_odds_gate": real_odds_gate,
+        "research_lane_ready_all_leagues": real_odds_pass and all(item["passes"] for item in league_results) and canonical_only_guard,
+        "research_lane_ready_partial": real_odds_pass and bool(ready_leagues) and canonical_only_guard,
     }
 
 
@@ -208,6 +296,7 @@ def build_allowed_config(payload: dict[str, Any]) -> dict[str, Any]:
             "publish only if league is in allowed_leagues",
             "publish only if current_model_would_have_priced is true",
             "do not publish canonical-only fixtures until canonical-only sample and segment calibration pass",
+            "do not publish any corners league unless the real-odds Pinnacle CLV gate passes",
         ],
     }
 
@@ -236,7 +325,19 @@ def render_markdown(payload: dict[str, Any]) -> str:
         f"Passing leagues: `{', '.join(payload['ready_leagues']) or '-'}`",
         f"Blocked leagues: `{', '.join(payload['blocked_leagues']) or '-'}`",
         "",
-        "## Per-League Gates",
+        "## Real-Odds Gate",
+        "",
+        f"- Source: `{payload['real_odds_gate']['source']}`",
+        f"- Model: `{payload['real_odds_gate']['model_version']}`",
+        f"- Selected fresh-close bets: `{payload['real_odds_gate']['n']}` / required `{payload['real_odds_gate']['thresholds']['min_n']}`",
+        f"- ROI: `{fmt((payload['real_odds_gate']['roi'] or 0) * 100, 2)}%` / required `>= 0.00%`",
+        f"- Mean CLV: `{fmt((payload['real_odds_gate']['avg_clv'] or 0) * 100, 2)}%` / required `>= {fmt(payload['real_odds_gate']['thresholds']['min_avg_clv'] * 100, 2)}%`",
+        f"- Positive CLV share: `{fmt((payload['real_odds_gate']['positive_clv_share'] or 0) * 100, 1)}%` / required `>= {fmt(payload['real_odds_gate']['thresholds']['min_positive_clv_share'] * 100, 1)}%`",
+        f"- Qualified positive leagues: `{', '.join(payload['real_odds_gate']['qualified_positive_leagues']) or '-'}` / required `{payload['real_odds_gate']['thresholds']['min_qualified_leagues']}`",
+        f"- Overall pass: **{'yes' if payload['real_odds_gate']['overall_pass'] else 'no'}**",
+        f"- Reason: {payload['real_odds_gate']['reason']}",
+        "",
+        "## Per-League Count/Calibration Gates",
         "",
         "| League | Common N | Current MAE | V0 MAE | Count | Brier | Log-loss | Last90 N | Last90 Current MAE | Last90 V0 MAE | Last90 Count | Last90 Brier | Last90 Log-loss |",
         "| --- | ---: | ---: | ---: | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |",
@@ -278,6 +379,7 @@ def render_markdown(payload: dict[str, Any]) -> str:
             "- Allow corners v0 into research lane only for fixtures where the current model would also have priced the fixture.",
             "- Restrict initial research-lane publication to passing leagues only.",
             "- Keep canonical-only fixtures blocked until N >= 200 and segment calibration is stable.",
+            "- Keep all corners publication blocked unless the real Pinnacle odds gate passes.",
             "- CLV monitoring must log `current_model_would_have_priced` so live results can keep common vs extended-coverage bets separate.",
             f"- Allowed-league config written to `{DEFAULT_ALLOWED_CONFIG.relative_to(ROOT)}`.",
             "",
@@ -292,11 +394,12 @@ def main() -> None:
     parser.add_argument("--json-out", type=Path, default=DEFAULT_JSON)
     parser.add_argument("--report-out", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--allowed-config-out", type=Path, default=DEFAULT_ALLOWED_CONFIG)
+    parser.add_argument("--real-odds-results", type=Path, default=DEFAULT_REAL_ODDS_RESULTS)
     parser.add_argument("--strict", action="store_true", help="Exit 1 unless all-league research promotion gate passes")
     args = parser.parse_args()
 
     rows = load_rows(args.summary)
-    payload = build_payload(rows)
+    payload = build_payload(rows, args.real_odds_results)
     args.json_out.parent.mkdir(parents=True, exist_ok=True)
     args.json_out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     args.report_out.write_text(render_markdown(payload), encoding="utf-8")

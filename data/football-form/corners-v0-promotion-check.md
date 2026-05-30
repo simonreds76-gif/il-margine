@@ -1,23 +1,35 @@
 # Corners V0 Promotion Check
 
-Generated: 2026-04-25T16:01:46+00:00
+Generated: 2026-05-30T14:06:15+00:00
 
 This is a research-lane gate only. It does not change live picks.
 
 Research lane ready across all leagues with hard canonical-only cutoff: **no**
-Research lane ready for passing leagues only: **yes**
-Passing leagues: `epl, ligue-1, serie-a`
-Blocked leagues: `bundesliga, la-liga`
+Research lane ready for passing leagues only: **no**
+Passing leagues: `-`
+Blocked leagues: `bundesliga, epl, la-liga, ligue-1, serie-a`
 
-## Per-League Gates
+## Real-Odds Gate
+
+- Source: `data/corners-ou/corners-real-odds-backtest-results.csv`
+- Model: `nb_market_blend`
+- Selected fresh-close bets: `90` / required `200`
+- ROI: `-6.64%` / required `>= 0.00%`
+- Mean CLV: `1.14%` / required `>= 1.00%`
+- Positive CLV share: `54.4%` / required `>= 55.0%`
+- Qualified positive leagues: `-` / required `3`
+- Overall pass: **no**
+- Reason: real-odds CLV gate failed; corners remains research-only
+
+## Per-League Count/Calibration Gates
 
 | League | Common N | Current MAE | V0 MAE | Count | Brier | Log-loss | Last90 N | Last90 Current MAE | Last90 V0 MAE | Last90 Count | Last90 Brier | Last90 Log-loss |
 | --- | ---: | ---: | ---: | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
-| bundesliga | 3510 | 2.7947 | 2.7547 | PASS | PASS | PASS | 111 | 2.5870 | 2.6594 | FAIL | FAIL | FAIL |
-| epl | 4363 | 2.8648 | 2.8260 | PASS | PASS | PASS | 112 | 2.6609 | 2.5618 | PASS | PASS | PASS |
-| la-liga | 4369 | 2.6803 | 2.6405 | PASS | PASS | PASS | 121 | 2.7026 | 2.7749 | FAIL | FAIL | FAIL |
-| ligue-1 | 4058 | 2.7383 | 2.6776 | PASS | PASS | PASS | 106 | 2.6322 | 2.4323 | PASS | PASS | PASS |
-| serie-a | 4355 | 2.8581 | 2.8434 | PASS | PASS | PASS | 120 | 2.7384 | 2.6993 | PASS | PASS | PASS |
+| bundesliga | 3546 | 2.7983 | 2.7591 | PASS | PASS | PASS | 100 | 2.8539 | 2.9486 | FAIL | FAIL | FAIL |
+| epl | 4411 | 2.8668 | 2.8275 | PASS | PASS | PASS | 110 | 2.9214 | 2.7639 | PASS | PASS | PASS |
+| la-liga | 4429 | 2.6806 | 2.6408 | PASS | PASS | PASS | 132 | 2.8464 | 2.8838 | FAIL | FAIL | FAIL |
+| ligue-1 | 4095 | 2.7458 | 2.6851 | PASS | PASS | PASS | 98 | 3.0791 | 2.9024 | PASS | PASS | PASS |
+| serie-a | 4405 | 2.8549 | 2.8418 | PASS | PASS | PASS | 122 | 2.7327 | 2.7206 | PASS | PASS | PASS |
 
 ## Canonical-Only Guard
 
@@ -30,5 +42,6 @@ Blocked leagues: `bundesliga, la-liga`
 - Allow corners v0 into research lane only for fixtures where the current model would also have priced the fixture.
 - Restrict initial research-lane publication to passing leagues only.
 - Keep canonical-only fixtures blocked until N >= 200 and segment calibration is stable.
+- Keep all corners publication blocked unless the real Pinnacle odds gate passes.
 - CLV monitoring must log `current_model_would_have_priced` so live results can keep common vs extended-coverage bets separate.
 - Allowed-league config written to `data\football-form\corners-v0-allowed-leagues.json`.
