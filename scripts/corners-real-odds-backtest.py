@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-"""Real-odds corners backtest for the v2 rebuild.
+"""Corners v2 real-odds backtest.
 
-This script is the first validation gate for corners v2. It joins real captured
-Pinnacle corner O/U prices to historical actual corner totals and existing
-walk-forward lambda predictions, then scores a Negative Binomial market-blend
-model against real publication and close prices.
-
-No synthetic bookmaker prices are used for ROI, CLV, or sellability.
+This is the only valid corners validation gate. It joins the causal corners
+model to captured Pinnacle totals, anchors v2 to the de-vigged market line,
+and grades selected bets at real captured odds. Synthetic B365-derived prices
+are not used anywhere in this script.
 """
 
 from __future__ import annotations
@@ -15,85 +13,91 @@ import argparse
 import csv
 import math
 import re
+import runpy
 import sys
 import unicodedata
 from collections import Counter, defaultdict
 from dataclasses import dataclass
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
-from statistics import mean, median
-from typing import Any, Iterable
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "scripts"))
+SCRIPT_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(SCRIPT_DIR))
 
-from corners_nb import (  # noqa: E402
-    fit_pooled_and_group_dispersion,
-    nb_line_probabilities,
-    nb_total_prob_over,
-    push_adjusted_fair_decimal,
-)
-from corners_poisson import match_total_prob_over  # noqa: E402
+from corners_nb import fit_dispersion, invert_mean_for_over_prob, nb_total_prob_over, nb_total_probs  # noqa: E402
 
+DEFAULT_HISTORICAL = ROOT / "data" / "corners-ou" / "historical" / "all-historical-matches.csv"
 DEFAULT_PINNACLE = ROOT / "data" / "corners-ou" / "pinnacle-corners-odds.csv"
-DEFAULT_PREDICTIONS = ROOT / "data" / "corners-ou" / "corners-ou-predictions.csv"
-DEFAULT_ACTUALS = ROOT / "data" / "corners-ou" / "historical" / "all-historical-matches.csv"
-DEFAULT_RESULTS = ROOT / "data" / "corners-ou" / "corners-real-odds-backtest-results.csv"
+DEFAULT_OUTPUT = ROOT / "data" / "corners-ou" / "corners-real-odds-backtest-results.csv"
 DEFAULT_REPORT = ROOT / "data" / "corners-ou" / "corners-real-odds-backtest-report.txt"
 
+TEAM_ALIASES = {
+    "ath bilbao": "athletic bilbao",
+    "ath madrid": "atletico madrid",
+    "betis": "real betis",
+    "borussia monchengladbach": "m gladbach",
+    "dortmund": "borussia dortmund",
+    "ein frankfurt": "eintracht frankfurt",
+    "espanol": "espanyol",
+    "hamburg": "hamburger sv",
+    "inter": "internazionale",
+    "leeds": "leeds united",
+    "leverkusen": "bayer leverkusen",
+    "man city": "manchester city",
+    "man united": "manchester united",
+    "milan": "ac milan",
+    "newcastle": "newcastle united",
+    "nott m forest": "nottingham forest",
+    "oviedo": "real oviedo",
+    "paris sg": "paris saint germain",
+    "sociedad": "real sociedad",
+    "st pauli": "st pauli",
+    "tottenham": "tottenham hotspur",
+    "vallecano": "rayo vallecano",
+    "verona": "hellas verona",
+    "west ham": "west ham united",
+}
+
 OUTPUT_FIELDS = [
-    "match_id",
-    "date",
-    "league",
-    "home",
-    "away",
-    "kickoff_utc",
-    "line",
-    "side",
-    "model_version",
-    "published_at",
-    "close_captured_at",
-    "close_is_stale",
-    "published_odds",
-    "close_odds",
-    "market_fair_prob",
-    "market_over_prob",
-    "lambda_model",
-    "lambda_market",
-    "lambda_final",
-    "dispersion_r",
-    "model_prob",
-    "model_over_prob",
-    "model_push_prob",
-    "model_fair_odds",
-    "prob_edge",
-    "value_pct",
-    "selected",
-    "actual_total",
-    "result",
-    "pnl_units",
-    "published_to_close_clv",
-    "positive_clv",
-    "brier_over",
-    "logloss_over",
+    "match_date", "league", "home_team", "away_team", "line", "actual_total", "result_side",
+    "kickoff_utc", "published_at_utc", "close_at_utc", "close_is_stale",
+    "lambda_poisson", "nb_r", "market_lambda", "lambda_v2", "blend_weight",
+    "p_market_over", "p_poisson_over", "p_nb_raw_over", "p_v2_over",
+    "pub_over_odds", "pub_under_odds", "close_over_odds", "close_under_odds",
+    "ev_over", "ev_under", "selected_side", "selected_odds", "selected_close_odds",
+    "selected_ev", "published_to_close_clv", "pnl_units", "bet_result",
+    "brier_market", "brier_poisson", "brier_nb_raw", "brier_v2",
 ]
 
-STANDARD_LEAGUES = ["epl", "serie-a", "la-liga", "bundesliga", "ligue-1"]
+
+@dataclass
+class Snapshot:
+    captured_at: datetime
+    kickoff: datetime | None
+    over_odds: float
+    under_odds: float
 
 
-def norm_team(text: Any) -> str:
-    raw = str(text or "").strip().lower().replace("(corners)", "")
-    raw = unicodedata.normalize("NFD", raw)
-    raw = "".join(ch for ch in raw if unicodedata.category(ch) != "Mn")
-    return re.sub(r"[^a-z0-9]+", " ", raw).strip()
-
-
-def parse_dt(text: Any) -> datetime | None:
-    raw = str(text or "").strip()
-    if not raw:
+def pf(value: Any) -> float | None:
+    if isinstance(value, (int, float)):
+        return float(value)
+    text = str(value or "").replace(",", "").strip()
+    if not text:
         return None
     try:
-        parsed = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+        return float(text)
+    except ValueError:
+        return None
+
+
+def parse_dt(value: Any) -> datetime | None:
+    text = str(value or "").strip()
+    if not text:
+        return None
+    try:
+        parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
     except ValueError:
         return None
     if parsed.tzinfo is None:
@@ -107,618 +111,448 @@ def fmt_dt(value: datetime | None) -> str:
     return value.astimezone(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
-def pf(value: Any, default: float | None = None) -> float | None:
-    if isinstance(value, (int, float)):
-        return float(value)
-    text = str(value or "").replace(",", "").strip()
-    if not text:
-        return default
-    try:
-        return float(text)
-    except ValueError:
-        return default
+def norm_team(text: str) -> str:
+    raw = (text or "").strip().lower().replace("(corners)", "")
+    raw = unicodedata.normalize("NFD", raw)
+    raw = "".join(ch for ch in raw if unicodedata.category(ch) != "Mn")
+    raw = re.sub(r"[^a-z0-9]+", " ", raw).strip()
+    return TEAM_ALIASES.get(raw, raw)
 
 
-def pi(value: Any, default: int | None = None) -> int | None:
-    val = pf(value)
-    if val is None:
-        return default
-    return int(val)
+def is_aggregate_team(text: str) -> bool:
+    key = norm_team(text)
+    return key.startswith("home teams") or key.startswith("away teams")
 
 
-def parse_date(text: Any) -> str:
-    raw = str(text or "").strip()
-    if not raw:
-        return ""
-    if re.match(r"^\d{4}-\d{2}-\d{2}$", raw):
-        return raw
-    for fmt in ("%d/%m/%Y", "%d/%m/%y", "%Y-%m-%d"):
-        try:
-            return datetime.strptime(raw, fmt).date().isoformat()
-        except ValueError:
-            continue
-    return raw[:10]
+def poisson_pmf(k: int, mean: float) -> float:
+    if k < 0:
+        return 0.0
+    mean = max(0.001, mean)
+    return math.exp(-mean) * (mean ** k) / math.factorial(k)
 
 
-def load_csv(path: Path) -> list[dict[str, str]]:
-    if not path.exists():
-        return []
-    with path.open("r", encoding="utf-8-sig", errors="replace", newline="") as handle:
-        return list(csv.DictReader(handle))
+def poisson_cdf(k: int, mean: float) -> float:
+    if k < 0:
+        return 0.0
+    return sum(poisson_pmf(i, mean) for i in range(0, min(k, 80) + 1))
 
 
-def key_for(date_iso: str, league: str, home: Any, away: Any) -> str:
-    return "|".join([date_iso, str(league or "").strip().lower(), norm_team(home), norm_team(away)])
+def poisson_total_probs(line: float, mean: float) -> tuple[float, float, float]:
+    if abs(line - round(line)) < 1e-9:
+        exact = int(round(line))
+        p_push = poisson_pmf(exact, mean)
+        p_under = poisson_cdf(exact - 1, mean)
+        return max(0.0, 1.0 - p_under - p_push), p_under, p_push
+    threshold = math.floor(line)
+    p_under = poisson_cdf(threshold, mean)
+    return max(0.0, 1.0 - p_under), p_under, 0.0
 
 
-def line_label(value: Any) -> str:
-    val = pf(value)
-    return "" if val is None else f"{val:.1f}"
-
-
-def is_integer_line(line: float) -> bool:
-    return abs(line - round(line)) < 1e-9
-
-
-def result_for(side: str, line: float, actual_total: int) -> str:
-    if is_integer_line(line) and actual_total == int(round(line)):
-        return "push"
-    if side == "over":
-        return "won" if actual_total > line else "lost"
-    return "won" if actual_total < line else "lost"
-
-
-def pnl_for(result: str, odds: float) -> float:
-    if result == "won":
-        return odds - 1.0
-    if result == "lost":
-        return -1.0
-    return 0.0
-
-
-def safe_logloss(prob: float, actual: bool) -> float:
-    p = min(1.0 - 1e-12, max(1e-12, prob))
-    return -math.log(p if actual else 1.0 - p)
-
-
-def brier(prob: float, actual: bool) -> float:
+def brier(prob: float, actual: bool, push: bool) -> float | None:
+    if push:
+        return None
     y = 1.0 if actual else 0.0
     return (prob - y) ** 2
 
 
-@dataclass
-class Prediction:
-    date: str
-    league: str
-    home: str
-    away: str
-    lambda_home: float
-    lambda_away: float
-    lambda_total: float
-    actual_total: int
+def log_loss(prob: float, actual: bool, push: bool) -> float | None:
+    if push:
+        return None
+    p = max(1e-9, min(1.0 - 1e-9, prob))
+    return -math.log(p if actual else 1.0 - p)
 
 
-@dataclass
-class Actual:
-    date: str
-    league: str
-    home: str
-    away: str
-    total: int
+def load_v1_module() -> dict[str, Any]:
+    return runpy.run_path(str(SCRIPT_DIR / "corners-ou-model.py"), run_name="corners_ou_model")
 
 
-@dataclass
-class SnapshotPair:
-    captured_at: datetime
-    kickoff: datetime | None
-    over_odds: float
-    under_odds: float
+def load_predictions(historical_path: Path) -> tuple[list[Any], dict[tuple[str, str, str], dict[str, Any]]]:
+    v1 = load_v1_module()
+    input_path = v1["resolve_historical_input"](historical_path)
+    matches = v1["load_matches"](input_path)
+    predictions, _ = v1["run_model"](matches, holdout_start=None)
+    index: dict[tuple[str, str, str], dict[str, Any]] = {}
+    for row in predictions:
+        key = (str(row.get("date") or ""), norm_team(row.get("home_team") or ""), norm_team(row.get("away_team") or ""))
+        index[key] = row
+        # Total-corners market is orientation-invariant; this helps with occasional home/away naming reversals.
+        index[(key[0], key[2], key[1])] = row
+    return matches, index
 
 
-@dataclass
-class MarketPoint:
-    date: str
-    league: str
-    home: str
-    away: str
-    kickoff: datetime | None
-    line: float
-    published: SnapshotPair
-    close: SnapshotPair
+def fit_dispersions(matches: list[Any], train_before: date) -> tuple[float, dict[str, float], dict[str, int]]:
+    train = [m for m in matches if m.match_date < train_before]
+    pooled = fit_dispersion([m.home_corners + m.away_corners for m in train])
+    values: dict[str, list[float]] = defaultdict(list)
+    for m in train:
+        values[m.league].append(m.home_corners + m.away_corners)
+    by_league: dict[str, float] = {}
+    counts: dict[str, int] = {}
+    for league, totals in values.items():
+        counts[league] = len(totals)
+        by_league[league] = fit_dispersion(totals, fallback=pooled) if len(totals) >= 150 else pooled
+    return pooled, by_league, counts
 
 
-def load_predictions(path: Path) -> dict[str, Prediction]:
-    out: dict[str, Prediction] = {}
-    for row in load_csv(path):
-        date_iso = parse_date(row.get("date"))
-        league = str(row.get("league") or "").strip().lower()
-        lam_h = pf(row.get("lambda_home"))
-        lam_a = pf(row.get("lambda_away"))
-        lam_t = pf(row.get("lambda_total"))
-        actual = pi(row.get("actual_total"))
-        if not (date_iso and league and lam_h is not None and lam_a is not None and lam_t is not None and actual is not None):
-            continue
-        pred = Prediction(
-            date=date_iso,
-            league=league,
-            home=str(row.get("home_team") or "").strip(),
-            away=str(row.get("away_team") or "").strip(),
-            lambda_home=lam_h,
-            lambda_away=lam_a,
-            lambda_total=lam_t,
-            actual_total=actual,
-        )
-        out[key_for(date_iso, league, pred.home, pred.away)] = pred
-    return out
-
-
-def load_actuals(path: Path) -> dict[str, Actual]:
-    out: dict[str, Actual] = {}
-    for row in load_csv(path):
-        date_iso = parse_date(row.get("Date") or row.get("date"))
-        league = str(row.get("league") or "").strip().lower()
-        home = str(row.get("HomeTeam") or row.get("home_team") or "").strip()
-        away = str(row.get("AwayTeam") or row.get("away_team") or "").strip()
-        hc = pi(row.get("HC") or row.get("home_corners"))
-        ac = pi(row.get("AC") or row.get("away_corners"))
-        if not (date_iso and league and home and away and hc is not None and ac is not None):
-            continue
-        actual = Actual(date_iso, league, home, away, hc + ac)
-        out[key_for(date_iso, league, home, away)] = actual
-    return out
-
-
-def load_snapshot_pairs(path: Path) -> tuple[list[MarketPoint], Counter[str]]:
-    grouped: dict[str, dict[str, Any]] = defaultdict(dict)
-    skips: Counter[str] = Counter()
-    for row in load_csv(path):
-        date_iso = str(row.get("match_date") or row.get("kickoff_iso") or "").strip()[:10]
-        league = str(row.get("league") or "").strip().lower()
-        home = str(row.get("home_team") or "").strip()
-        away = str(row.get("away_team") or "").strip()
-        line = line_label(row.get("line"))
-        side = str(row.get("side") or "").strip().lower()
-        odds = pf(row.get("odds_decimal"))
-        captured = parse_dt(row.get("captured_at"))
-        kickoff = parse_dt(row.get("kickoff_iso"))
-        if not (date_iso and league and home and away and line and side in {"over", "under"} and odds and captured):
-            skips["bad_row"] += 1
-            continue
-        base_key = "|".join([date_iso, league, norm_team(home), norm_team(away), line, fmt_dt(captured)])
-        item = grouped[base_key]
-        item.update({"date": date_iso, "league": league, "home": home, "away": away, "line": float(line), "captured_at": captured, "kickoff": kickoff})
-        item[f"{side}_odds"] = odds
-
-    by_match_line: dict[str, list[SnapshotPair]] = defaultdict(list)
-    meta: dict[str, dict[str, Any]] = {}
-    for item in grouped.values():
+def load_market_snapshots(path: Path) -> dict[tuple[str, str, str, str, str], list[Snapshot]]:
+    raw: dict[tuple[str, str, str, str, str], dict[str, Any]] = {}
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        for row in csv.DictReader(handle):
+            home = row.get("home_team") or ""
+            away = row.get("away_team") or ""
+            if is_aggregate_team(home) or is_aggregate_team(away):
+                continue
+            side = str(row.get("side") or "").strip().lower()
+            if side not in {"over", "under"}:
+                continue
+            odds = pf(row.get("odds_decimal"))
+            captured = parse_dt(row.get("captured_at"))
+            if odds is None or odds <= 1.0 or captured is None:
+                continue
+            line_val = pf(row.get("line"))
+            if line_val is None:
+                continue
+            line = f"{line_val:.1f}"
+            key = (
+                str(row.get("match_date") or row.get("kickoff_iso") or "")[:10],
+                norm_team(home),
+                norm_team(away),
+                line,
+                fmt_dt(captured),
+            )
+            item = raw.setdefault(
+                key,
+                {
+                    "league": str(row.get("league") or "").strip().lower(),
+                    "home_team": home,
+                    "away_team": away,
+                    "kickoff": parse_dt(row.get("kickoff_iso")),
+                    "captured_at": captured,
+                },
+            )
+            item[f"{side}_odds"] = odds
+    grouped: dict[tuple[str, str, str, str, str], list[Snapshot]] = defaultdict(list)
+    for key, item in raw.items():
         over = item.get("over_odds")
         under = item.get("under_odds")
-        if not (over and under):
-            skips["missing_pair_side"] += 1
+        if not over or not under:
             continue
-        match_line_key = "|".join([
-            item["date"], item["league"], norm_team(item["home"]), norm_team(item["away"]), f"{float(item['line']):.1f}"
-        ])
-        meta[match_line_key] = item
-        by_match_line[match_line_key].append(SnapshotPair(item["captured_at"], item.get("kickoff"), float(over), float(under)))
-
-    points: list[MarketPoint] = []
-    for match_line_key, snapshots in by_match_line.items():
-        snapshots.sort(key=lambda s: s.captured_at)
-        item = meta[match_line_key]
-        kickoff = item.get("kickoff")
-        if kickoff:
-            pre_close = [snap for snap in snapshots if snap.captured_at <= kickoff]
-        else:
-            pre_close = snapshots
-        if not pre_close:
-            skips["no_pre_kickoff_snapshot"] += 1
-            continue
-        points.append(
-            MarketPoint(
-                date=item["date"],
-                league=item["league"],
-                home=item["home"],
-                away=item["away"],
-                kickoff=kickoff,
-                line=float(item["line"]),
-                published=snapshots[0],
-                close=pre_close[-1],
-            )
-        )
-    return points, skips
+        match_date, home, away, line, _captured = key
+        market_key = (match_date, home, away, line, str(item.get("league") or ""))
+        grouped[market_key].append(Snapshot(item["captured_at"], item.get("kickoff"), float(over), float(under)))
+    for items in grouped.values():
+        items.sort(key=lambda snap: snap.captured_at)
+    return grouped
 
 
-def devig_pair(over_odds: float, under_odds: float) -> tuple[float, float]:
-    inv_over = 1.0 / over_odds
-    inv_under = 1.0 / under_odds
-    total = inv_over + inv_under
+def devig_two_way(over_odds: float, under_odds: float) -> tuple[float, float]:
+    over_imp = 1.0 / over_odds
+    under_imp = 1.0 / under_odds
+    total = over_imp + under_imp
     if total <= 0:
         return 0.5, 0.5
-    return inv_over / total, inv_under / total
+    return over_imp / total, under_imp / total
 
 
-def solve_market_mu(line: float, target_over: float, r: float) -> float | None:
-    target = min(0.999, max(0.001, target_over))
-    lo, hi = 0.05, 30.0
-    for _ in range(80):
-        mid = (lo + hi) / 2.0
-        p_mid = nb_total_prob_over(line, mid, r)
-        if p_mid < target:
-            lo = mid
-        else:
-            hi = mid
-    return (lo + hi) / 2.0
+def pre_kickoff_window(items: list[Snapshot]) -> tuple[list[Snapshot], datetime | None]:
+    kickoff = next((item.kickoff for item in items if item.kickoff is not None), None)
+    if kickoff is None:
+        return [], None
+    before = [item for item in items if item.captured_at <= kickoff]
+    return before, kickoff
 
 
-def fmt_num(value: Any, digits: int = 6) -> str:
-    if value is None:
-        return ""
-    if isinstance(value, str):
-        return value
-    if isinstance(value, bool):
-        return "true" if value else "false"
-    return f"{float(value):.{digits}f}"
-
-
-def model_probabilities(
-    version: str,
-    point: MarketPoint,
-    pred: Prediction,
-    market_over_prob: float,
-    dispersion_r: float,
-    blend_weight: float,
-) -> tuple[float, float, float, float | None]:
-    if version == "poisson_v1":
-        p_over = match_total_prob_over(point.line, pred.lambda_home, pred.lambda_away)
-        # Independent Poisson helper includes exact integer mass in under side.
-        # For v1 control, expose push as 0 because historical v1 was not push-aware.
-        return p_over, 1.0 - p_over, 0.0, pred.lambda_total
-
-    if version == "nb_total":
-        p_over, p_under, p_push = nb_line_probabilities(point.line, pred.lambda_total, dispersion_r)
-        return p_over, p_under, p_push, pred.lambda_total
-
-    if version == "nb_market_blend":
-        market_mu = solve_market_mu(point.line, market_over_prob, dispersion_r)
-        final_mu = pred.lambda_total if market_mu is None else blend_weight * pred.lambda_total + (1.0 - blend_weight) * market_mu
-        p_over, p_under, p_push = nb_line_probabilities(point.line, final_mu, dispersion_r)
-        return p_over, p_under, p_push, final_mu
-
-    raise ValueError(f"unknown model version: {version}")
-
-
-def build_rows(
-    points: list[MarketPoint],
-    predictions: dict[str, Prediction],
-    actuals: dict[str, Actual],
-    group_r: dict[str, float],
+def score_markets(
+    markets: dict[tuple[str, str, str, str, str], list[Snapshot]],
+    predictions: dict[tuple[str, str, str], dict[str, Any]],
+    by_league_r: dict[str, float],
     pooled_r: float,
     *,
     blend_weight: float,
-    min_value: float,
-    stale_hours: float,
-    model_versions: list[str],
+    edge_threshold: float,
 ) -> tuple[list[dict[str, Any]], Counter[str]]:
     rows: list[dict[str, Any]] = []
-    skips: Counter[str] = Counter()
-    for point in points:
-        match_key = key_for(point.date, point.league, point.home, point.away)
-        pred = predictions.get(match_key)
-        actual = actuals.get(match_key)
-        if pred is None:
-            skips["missing_prediction"] += 1
+    misses: Counter[str] = Counter()
+    for (match_date, home_key, away_key, line_text, league), items in sorted(markets.items()):
+        prediction = predictions.get((match_date, home_key, away_key))
+        if prediction is None:
+            misses["prediction_not_found"] += 1
             continue
-        if actual is None:
-            skips["missing_actual"] += 1
+        pre_kickoff, kickoff = pre_kickoff_window(items)
+        if kickoff is None:
+            misses["missing_kickoff"] += 1
             continue
-        over_mkt, under_mkt = devig_pair(point.published.over_odds, point.published.under_odds)
-        dispersion_r = group_r.get(point.league, pooled_r)
-        market_mu = solve_market_mu(point.line, over_mkt, dispersion_r)
-        close_gap_hours = None
-        if point.kickoff:
-            close_gap_hours = (point.kickoff - point.close.captured_at).total_seconds() / 3600.0
-        close_is_stale = close_gap_hours is not None and close_gap_hours > stale_hours
-        actual_over = actual.total > point.line
-        push_actual = is_integer_line(point.line) and actual.total == int(round(point.line))
+        if not pre_kickoff:
+            misses["no_pre_kickoff_price"] += 1
+            continue
+        publication = pre_kickoff[0]
+        close = pre_kickoff[-1]
+        line = float(line_text)
+        actual_total = float(prediction.get("actual_total") or 0.0)
+        actual_over = actual_total > line
+        push = abs(actual_total - line) < 1e-9
+        result_side = "push" if push else ("over" if actual_over else "under")
+        mean = float(prediction.get("lambda_total") or 0.0)
+        r = by_league_r.get(str(prediction.get("league") or league), pooled_r)
+        p_market_over, _p_market_under = devig_two_way(publication.over_odds, publication.under_odds)
+        market_lambda = invert_mean_for_over_prob(line, p_market_over, r)
+        lambda_v2 = blend_weight * mean + (1.0 - blend_weight) * market_lambda
+        p_poisson_over, _p_pois_under, _p_pois_push = poisson_total_probs(line, mean)
+        p_nb_raw_over, _p_nb_raw_under, _p_nb_raw_push = nb_total_probs(line, mean, r)
+        p_v2_over, p_v2_under, p_v2_push = nb_total_probs(line, lambda_v2, r)
+        ev_over = p_v2_over * publication.over_odds + p_v2_push - 1.0
+        ev_under = p_v2_under * publication.under_odds + p_v2_push - 1.0
+        selected_side = ""
+        selected_odds = None
+        selected_close = None
+        selected_ev = None
+        if max(ev_over, ev_under) >= edge_threshold:
+            if ev_over >= ev_under:
+                selected_side = "over"
+                selected_odds = publication.over_odds
+                selected_close = close.over_odds
+                selected_ev = ev_over
+            else:
+                selected_side = "under"
+                selected_odds = publication.under_odds
+                selected_close = close.under_odds
+                selected_ev = ev_under
+        pnl = ""
+        bet_result = ""
+        clv = ""
+        if selected_side:
+            if push:
+                pnl = 0.0
+                bet_result = "push"
+            elif selected_side == result_side:
+                pnl = selected_odds - 1.0
+                bet_result = "won"
+            else:
+                pnl = -1.0
+                bet_result = "lost"
+            if selected_close and selected_close > 0:
+                clv = (selected_odds / selected_close) - 1.0
+        close_gap_hours = (kickoff - close.captured_at).total_seconds() / 3600.0
+        row = {
+            "match_date": match_date,
+            "league": str(prediction.get("league") or league),
+            "home_team": prediction.get("home_team") or home_key,
+            "away_team": prediction.get("away_team") or away_key,
+            "line": line_text,
+            "actual_total": int(actual_total),
+            "result_side": result_side,
+            "kickoff_utc": fmt_dt(publication.kickoff),
+            "published_at_utc": fmt_dt(publication.captured_at),
+            "close_at_utc": fmt_dt(close.captured_at),
+            "close_is_stale": "true" if close_gap_hours is not None and close_gap_hours > 12.0 else "false",
+            "lambda_poisson": round(mean, 4),
+            "nb_r": round(r, 4),
+            "market_lambda": round(market_lambda, 4),
+            "lambda_v2": round(lambda_v2, 4),
+            "blend_weight": round(blend_weight, 4),
+            "p_market_over": round(p_market_over, 6),
+            "p_poisson_over": round(p_poisson_over, 6),
+            "p_nb_raw_over": round(p_nb_raw_over, 6),
+            "p_v2_over": round(p_v2_over, 6),
+            "pub_over_odds": round(publication.over_odds, 6),
+            "pub_under_odds": round(publication.under_odds, 6),
+            "close_over_odds": round(close.over_odds, 6),
+            "close_under_odds": round(close.under_odds, 6),
+            "ev_over": round(ev_over, 6),
+            "ev_under": round(ev_under, 6),
+            "selected_side": selected_side,
+            "selected_odds": round(selected_odds, 6) if selected_odds else "",
+            "selected_close_odds": round(selected_close, 6) if selected_close else "",
+            "selected_ev": round(selected_ev, 6) if selected_ev is not None else "",
+            "published_to_close_clv": round(clv, 6) if clv != "" else "",
+            "pnl_units": round(pnl, 6) if pnl != "" else "",
+            "bet_result": bet_result,
+            "brier_market": _fmt_metric(brier(p_market_over, actual_over, push)),
+            "brier_poisson": _fmt_metric(brier(p_poisson_over, actual_over, push)),
+            "brier_nb_raw": _fmt_metric(brier(p_nb_raw_over, actual_over, push)),
+            "brier_v2": _fmt_metric(brier(p_v2_over, actual_over, push)),
+        }
+        rows.append(row)
+    keep_best_bet_per_match(rows)
+    return rows, misses
 
-        for version in model_versions:
-            p_over, p_under, p_push, final_mu = model_probabilities(version, point, pred, over_mkt, dispersion_r, blend_weight)
-            for side in ("over", "under"):
-                published_odds = point.published.over_odds if side == "over" else point.published.under_odds
-                close_odds = point.close.over_odds if side == "over" else point.close.under_odds
-                market_prob = over_mkt if side == "over" else under_mkt
-                model_prob = p_over if side == "over" else p_under
-                model_over_prob = p_over
-                model_fair = push_adjusted_fair_decimal(model_prob, p_push)
-                value_pct = (model_prob * published_odds + p_push - 1.0) * 100.0
-                prob_edge = model_prob - market_prob
-                selected = version == "nb_market_blend" and value_pct >= (min_value * 100.0)
-                result = result_for(side, point.line, actual.total)
-                pnl = pnl_for(result, published_odds)
-                clv = (published_odds / close_odds) - 1.0 if close_odds else None
-                if push_actual:
-                    brier_value = ""
-                    logloss_value = ""
-                else:
-                    brier_value = brier(model_over_prob, actual_over)
-                    logloss_value = safe_logloss(model_over_prob, actual_over)
-                rows.append({
-                    "match_id": match_key,
-                    "date": point.date,
-                    "league": point.league,
-                    "home": point.home,
-                    "away": point.away,
-                    "kickoff_utc": fmt_dt(point.kickoff),
-                    "line": f"{point.line:.1f}",
-                    "side": side,
-                    "model_version": version,
-                    "published_at": fmt_dt(point.published.captured_at),
-                    "close_captured_at": fmt_dt(point.close.captured_at),
-                    "close_is_stale": "true" if close_is_stale else "false",
-                    "published_odds": fmt_num(published_odds),
-                    "close_odds": fmt_num(close_odds),
-                    "market_fair_prob": fmt_num(market_prob),
-                    "market_over_prob": fmt_num(over_mkt),
-                    "lambda_model": fmt_num(pred.lambda_total, 4),
-                    "lambda_market": fmt_num(market_mu, 4),
-                    "lambda_final": fmt_num(final_mu, 4),
-                    "dispersion_r": fmt_num(dispersion_r, 4),
-                    "model_prob": fmt_num(model_prob),
-                    "model_over_prob": fmt_num(model_over_prob),
-                    "model_push_prob": fmt_num(p_push),
-                    "model_fair_odds": fmt_num(model_fair),
-                    "prob_edge": fmt_num(prob_edge),
-                    "value_pct": fmt_num(value_pct / 100.0),
-                    "selected": "true" if selected else "false",
-                    "actual_total": str(actual.total),
-                    "result": result,
-                    "pnl_units": fmt_num(pnl, 4),
-                    "published_to_close_clv": fmt_num(clv),
-                    "positive_clv": "true" if clv is not None and clv > 0 else "false",
-                    "brier_over": fmt_num(brier_value) if brier_value != "" else "",
-                    "logloss_over": fmt_num(logloss_value) if logloss_value != "" else "",
-                })
-    return rows, skips
+
+
+def keep_best_bet_per_match(rows: list[dict[str, Any]]) -> None:
+    best_by_match: dict[tuple[str, str, str], dict[str, Any]] = {}
+    for row in rows:
+        if not row.get("selected_side"):
+            continue
+        key = (str(row.get("match_date") or ""), norm_team(str(row.get("home_team") or "")), norm_team(str(row.get("away_team") or "")))
+        current = best_by_match.get(key)
+        row_ev = pf(row.get("selected_ev")) or -999.0
+        current_ev = pf(current.get("selected_ev")) if current else None
+        if current is None or row_ev > (current_ev if current_ev is not None else -999.0):
+            best_by_match[key] = row
+    keep_ids = {id(row) for row in best_by_match.values()}
+    for row in rows:
+        if row.get("selected_side") and id(row) not in keep_ids:
+            row["selected_side"] = ""
+            row["selected_odds"] = ""
+            row["selected_close_odds"] = ""
+            row["selected_ev"] = ""
+            row["published_to_close_clv"] = ""
+            row["pnl_units"] = ""
+            row["bet_result"] = ""
+
+def _fmt_metric(value: float | None) -> str:
+    return "" if value is None else f"{value:.8f}"
+
+
+def avg(values: list[float]) -> float | None:
+    vals = [v for v in values if v == v]
+    return sum(vals) / len(vals) if vals else None
+
+
+def pf_row(row: dict[str, Any], key: str) -> float | None:
+    return pf(row.get(key))
 
 
 def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=OUTPUT_FIELDS)
+        writer = csv.DictWriter(handle, fieldnames=OUTPUT_FIELDS, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(rows)
 
 
-def avg(values: Iterable[float]) -> float | None:
-    vals = [v for v in values if v is not None and v == v]
-    return sum(vals) / len(vals) if vals else None
-
-
 def pct(value: float | None) -> str:
-    return "-" if value is None else f"{value:+.2f}%"
-
-
-def fnum(value: float | None, digits: int = 3) -> str:
-    return "-" if value is None else f"{value:.{digits}f}"
-
-
-def row_float(row: dict[str, Any], key: str) -> float | None:
-    return pf(row.get(key))
-
-
-def selected_nb(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    return [r for r in rows if r.get("model_version") == "nb_market_blend" and r.get("selected") == "true"]
-
-
-def summarize_bets(rows: list[dict[str, Any]]) -> dict[str, Any]:
-    n = len(rows)
-    wins = sum(1 for r in rows if r.get("result") == "won")
-    losses = sum(1 for r in rows if r.get("result") == "lost")
-    pushes = sum(1 for r in rows if r.get("result") == "push")
-    pnl = sum(row_float(r, "pnl_units") or 0.0 for r in rows)
-    clv_vals = [row_float(r, "published_to_close_clv") for r in rows]
-    clv_vals = [v for v in clv_vals if v is not None]
-    return {
-        "n": n,
-        "wins": wins,
-        "losses": losses,
-        "pushes": pushes,
-        "pnl": pnl,
-        "roi": (pnl / n * 100.0) if n else None,
-        "avg_clv": (sum(clv_vals) / len(clv_vals) * 100.0) if clv_vals else None,
-        "pos_clv_share": (sum(1 for v in clv_vals if v > 0) / len(clv_vals) * 100.0) if clv_vals else None,
-        "clv_n": len(clv_vals),
-    }
-
-
-def summarize_calibration(rows: list[dict[str, Any]], version: str) -> dict[str, Any]:
-    subset = [r for r in rows if r.get("model_version") == version and r.get("side") == "over" and r.get("brier_over") != ""]
-    briers = [row_float(r, "brier_over") for r in subset]
-    logs = [row_float(r, "logloss_over") for r in subset]
-    briers = [v for v in briers if v is not None]
-    logs = [v for v in logs if v is not None]
-    return {"n": len(subset), "brier": avg(briers), "logloss": avg(logs)}
-
-
-def append_segment(lines: list[str], title: str, groups: list[tuple[str, list[dict[str, Any]]]]) -> None:
-    lines.extend([title, "", "label,n,w-l-p,pnl,roi,avg_clv,pos_clv"])
-    for label, rows in groups:
-        s = summarize_bets(rows)
-        if not s["n"]:
-            continue
-        lines.append(
-            f"{label},{s['n']},{s['wins']}-{s['losses']}-{s['pushes']},{s['pnl']:+.2f}u,{pct(s['roi'])},{pct(s['avg_clv'])},{fnum(s['pos_clv_share'], 1)}%"
-        )
-    lines.append("")
+    return "-" if value is None else f"{value:+.2%}"
 
 
 def render_report(
     rows: list[dict[str, Any]],
+    misses: Counter[str],
     *,
-    points_n: int,
-    initial_skips: Counter[str],
-    row_skips: Counter[str],
     pooled_r: float,
-    group_r: dict[str, float],
-    min_value: float,
+    by_league_r: dict[str, float],
+    dispersion_counts: dict[str, int],
     blend_weight: float,
-    stale_hours: float,
+    edge_threshold: float,
 ) -> str:
-    selected = selected_nb(rows)
-    selected_fresh = [r for r in selected if r.get("close_is_stale") != "true"]
-    lines: list[str] = [
-        "Corners v2 real-odds backtest",
-        "================================",
-        "",
-        f"Generated UTC: {fmt_dt(datetime.now(UTC))}",
-        f"Market points loaded: {points_n}",
-        f"Rows written: {len(rows)}",
-        f"Model selected for gate: nb_market_blend",
-        f"Fixed min value threshold: {min_value * 100:.1f}%",
-        f"Market blend weight: {blend_weight:.3f}",
-        f"Stale close threshold: {stale_hours:.1f}h",
-        f"Pooled NB dispersion r: {pooled_r:.4f}",
-        f"League dispersion r: {dict(sorted((k, round(v, 4)) for k, v in group_r.items()))}",
-        f"Pairing skips: {dict(initial_skips)}",
-        f"Scoring skips: {dict(row_skips)}",
-        "",
-        "Calibration control (over outcome, pushes skipped)",
-        "model,n,brier,logloss",
-    ]
-    for version in ("poisson_v1", "nb_total", "nb_market_blend"):
-        c = summarize_calibration(rows, version)
-        if c["n"]:
-            lines.append(f"{version},{c['n']},{fnum(c['brier'], 5)},{fnum(c['logloss'], 5)}")
-    lines.append("")
+    selected = [row for row in rows if row.get("selected_side")]
+    settled = [row for row in selected if row.get("bet_result") in {"won", "lost", "push"}]
+    non_push = [row for row in rows if row.get("result_side") != "push"]
+    pnl = sum(pf_row(row, "pnl_units") or 0.0 for row in settled)
+    risked = sum(1 for row in settled if row.get("bet_result") in {"won", "lost"})
+    roi = pnl / risked if risked else None
+    clv_vals = [pf_row(row, "published_to_close_clv") for row in settled if pf_row(row, "published_to_close_clv") is not None]
+    clv_avg = avg([v for v in clv_vals if v is not None])
+    clv_pos_share = (sum(1 for v in clv_vals if v is not None and v > 0.0) / len(clv_vals)) if clv_vals else None
+    metric_names = ["brier_market", "brier_poisson", "brier_nb_raw", "brier_v2"]
+    metric_avgs = {name: avg([pf_row(row, name) for row in non_push if pf_row(row, name) is not None]) for name in metric_names}
+    league_clv_gate_count = 0
+    league_clv_gate_total = 0
+    for league in sorted({str(row.get("league") or "") for row in settled}):
+        group = [row for row in settled if row.get("league") == league]
+        if len(group) < 40:
+            continue
+        league_clv_gate_total += 1
+        group_clv = avg([pf_row(row, "published_to_close_clv") for row in group if pf_row(row, "published_to_close_clv") is not None])
+        if group_clv is not None and group_clv > 0.0:
+            league_clv_gate_count += 1
+    brier_v2 = metric_avgs.get("brier_v2")
+    brier_poisson = metric_avgs.get("brier_poisson")
 
-    s = summarize_bets(selected)
-    sf = summarize_bets(selected_fresh)
+    lines = [
+        "Corners V2 Real-Odds Backtest",
+        "",
+        "Status: RESEARCH_ONLY - not sellable unless real CLV gates pass.",
+        "Validation rule: real captured Pinnacle prices only; synthetic B365 regression is not used.",
+        "",
+        f"scored_market_lines: {len(rows)}",
+        f"selected_bets_at_fixed_edge_one_per_match: {len(selected)}",
+        f"settled_selected: {len(settled)}",
+        f"edge_threshold: {edge_threshold:.2%}",
+        f"blend_weight_model_vs_market: {blend_weight:.2f}",
+        f"pooled_nb_r: {pooled_r:.4f}",
+        f"join_misses: {dict(misses)}",
+        "",
+        "Probability calibration on all non-push market lines",
+    ]
+    for name in metric_names:
+        lines.append(f"{name}: {metric_avgs[name]:.6f}" if metric_avgs[name] is not None else f"{name}: -")
     lines.extend([
-        "Selected NB market-blend bets",
-        "-----------------------------",
-        f"All selected: n={s['n']} W-L-P={s['wins']}-{s['losses']}-{s['pushes']} pnl={s['pnl']:+.2f}u roi={pct(s['roi'])} avg_clv={pct(s['avg_clv'])} pos_clv={fnum(s['pos_clv_share'], 1)}%",
-        f"Fresh-close selected: n={sf['n']} W-L-P={sf['wins']}-{sf['losses']}-{sf['pushes']} pnl={sf['pnl']:+.2f}u roi={pct(sf['roi'])} avg_clv={pct(sf['avg_clv'])} pos_clv={fnum(sf['pos_clv_share'], 1)}%",
         "",
-        "Sellability gate",
-        "----------------",
-        "Required: n>=200, mean CLV>=+1.0%, positive CLV share>=55%, ROI>=0%, positive in >=3/5 leagues with n>=40.",
-    ])
-    pass_n = sf["n"] >= 200
-    pass_clv = sf["avg_clv"] is not None and sf["avg_clv"] >= 1.0
-    pass_pos = sf["pos_clv_share"] is not None and sf["pos_clv_share"] >= 55.0
-    pass_roi = sf["roi"] is not None and sf["roi"] >= 0.0
-
-    league_summaries = {
-        league: summarize_bets([r for r in selected_fresh if r.get("league") == league])
-        for league in STANDARD_LEAGUES
-    }
-    qualified_leagues = [league for league, summary in league_summaries.items() if summary["n"] >= 40]
-    positive_qualified_leagues = [
-        league for league in qualified_leagues
-        if league_summaries[league]["avg_clv"] is not None and league_summaries[league]["avg_clv"] > 0.0
-    ]
-    bad_qualified_leagues = [
-        league for league in qualified_leagues
-        if league_summaries[league]["avg_clv"] is not None and league_summaries[league]["avg_clv"] < -0.5
-    ]
-
-    line_summaries = {
-        line: summarize_bets([r for r in selected_fresh if r.get("line") == line])
-        for line in sorted({r.get("line") or "" for r in selected_fresh}, key=lambda x: float(x or 0))
-    }
-    bad_qualified_lines = [
-        line for line, summary in line_summaries.items()
-        if summary["n"] >= 40 and summary["avg_clv"] is not None and summary["avg_clv"] < -0.5
-    ]
-    pass_league_positive = len(positive_qualified_leagues) >= 3
-    pass_bad_league = not bad_qualified_leagues
-    pass_bad_line = not bad_qualified_lines
-    all_sell_gates = pass_n and pass_clv and pass_pos and pass_roi and pass_league_positive and pass_bad_league and pass_bad_line
-
-    lines.extend([
-        f"n gate: {'PASS' if pass_n else 'FAIL'} ({sf['n']}/200)",
-        f"mean CLV gate: {'PASS' if pass_clv else 'FAIL'} ({pct(sf['avg_clv'])})",
-        f"positive CLV share gate: {'PASS' if pass_pos else 'FAIL'} ({fnum(sf['pos_clv_share'], 1)}%)",
-        f"ROI gate: {'PASS' if pass_roi else 'FAIL'} ({pct(sf['roi'])})",
-        f"league breadth gate: {'PASS' if pass_league_positive else 'FAIL'} ({len(positive_qualified_leagues)}/3 positive qualified leagues; qualified={qualified_leagues or '-'})",
-        f"bad league guard: {'PASS' if pass_bad_league else 'FAIL'} ({bad_qualified_leagues or '-'})",
-        f"bad line-band guard: {'PASS' if pass_bad_line else 'FAIL'} ({bad_qualified_lines or '-'})",
-        "Overall sellable: YES" if all_sell_gates else "Overall sellable: NO",
+        "Selected-bet real-price performance",
+        f"pnl_units: {pnl:+.2f}",
+        f"risked_bets_no_push: {risked}",
+        f"roi_on_risked: {pct(roi)}",
+        f"avg_published_to_close_clv: {pct(clv_avg)} (n={len(clv_vals)})",
+        f"positive_clv_share: {pct(clv_pos_share)}",
         "",
-    ])
-
-    leagues = sorted({r.get("league") or "unknown" for r in selected})
-    append_segment(lines, "Selected by league", [(lg, [r for r in selected if r.get("league") == lg]) for lg in leagues])
-    append_segment(lines, "Selected by side", [(side, [r for r in selected if r.get("side") == side]) for side in ("over", "under")])
-    line_labels = sorted({r.get("line") or "" for r in selected}, key=lambda x: float(x or 0))
-    append_segment(lines, "Selected by line", [(line, [r for r in selected if r.get("line") == line]) for line in line_labels])
-
-    lines.extend([
-        "Important notes",
-        "---------------",
-        "- This report uses real captured Pinnacle publication and close prices only.",
-        "- Synthetic backtest prices are not used for ROI or CLV.",
-        "- Close prices are marked stale when the latest captured pair is more than the stale threshold before kickoff.",
-        "- This is a research gate. Corners is not sellable unless the real-odds gate passes.",
+        "Sell gate (must all pass)",
+        f"n>=200: {'PASS' if len(settled) >= 200 else 'FAIL'} ({len(settled)})",
+        f"mean_clv>=+1%: {'PASS' if clv_avg is not None and clv_avg >= 0.01 else 'FAIL'} ({pct(clv_avg)})",
+        f"positive_clv_share>=55%: {'PASS' if clv_pos_share is not None and clv_pos_share >= 0.55 else 'FAIL'} ({pct(clv_pos_share)})",
+        f"v2_brier<=poisson_brier: {'PASS' if brier_v2 is not None and brier_poisson is not None and brier_v2 <= brier_poisson else 'FAIL'} ({brier_v2:.6f} vs {brier_poisson:.6f})" if brier_v2 is not None and brier_poisson is not None else "v2_brier<=poisson_brier: FAIL (-)",
+        f"positive_clv_in_3_of_5_leagues_n40: {'PASS' if league_clv_gate_count >= 3 else 'FAIL'} ({league_clv_gate_count}/{league_clv_gate_total})",
         "",
+        "League dispersion",
+        "league,n_train,nb_r",
     ])
-    return "\n".join(lines)
+    for league in sorted(by_league_r):
+        lines.append(f"{league},{dispersion_counts.get(league, 0)},{by_league_r[league]:.4f}")
+    lines.extend(["", "Selected by side"])
+    for side in ["over", "under"]:
+        group = [row for row in settled if row.get("selected_side") == side]
+        group_pnl = sum(pf_row(row, "pnl_units") or 0.0 for row in group)
+        group_risk = sum(1 for row in group if row.get("bet_result") in {"won", "lost"})
+        lines.append(f"{side}: n={len(group)} pnl={group_pnl:+.2f} roi={pct(group_pnl/group_risk if group_risk else None)}")
+    lines.extend(["", "Selected by league"])
+    for league in sorted({str(row.get("league") or "") for row in settled}):
+        group = [row for row in settled if row.get("league") == league]
+        group_pnl = sum(pf_row(row, "pnl_units") or 0.0 for row in group)
+        group_risk = sum(1 for row in group if row.get("bet_result") in {"won", "lost"})
+        group_clv = avg([pf_row(row, "published_to_close_clv") for row in group if pf_row(row, "published_to_close_clv") is not None])
+        lines.append(f"{league}: n={len(group)} pnl={group_pnl:+.2f} roi={pct(group_pnl/group_risk if group_risk else None)} clv={pct(group_clv)}")
+    return "\n".join(lines) + "\n"
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Backtest corners v2 against real captured Pinnacle corner odds")
+    parser = argparse.ArgumentParser(description="Corners v2 real-odds-only backtest")
+    parser.add_argument("--historical", type=Path, default=DEFAULT_HISTORICAL)
     parser.add_argument("--pinnacle", type=Path, default=DEFAULT_PINNACLE)
-    parser.add_argument("--predictions", type=Path, default=DEFAULT_PREDICTIONS)
-    parser.add_argument("--actuals", type=Path, default=DEFAULT_ACTUALS)
-    parser.add_argument("--out", type=Path, default=DEFAULT_RESULTS)
+    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
-    parser.add_argument("--min-value", type=float, default=0.08, help="Fixed value threshold for selected NB rows, decimal")
-    parser.add_argument("--blend-weight", type=float, default=0.30, help="Weight on model lambda in market blend")
-    parser.add_argument("--stale-hours", type=float, default=12.0)
-    parser.add_argument("--models", default="poisson_v1,nb_total,nb_market_blend")
+    parser.add_argument("--blend-weight", type=float, default=0.30)
+    parser.add_argument("--edge-threshold", type=float, default=0.03)
     args = parser.parse_args()
 
-    predictions = load_predictions(args.predictions)
-    actuals = load_actuals(args.actuals)
-    points, initial_skips = load_snapshot_pairs(args.pinnacle)
-
-    dispersion_rows: list[tuple[str, float]] = []
-    for actual in actuals.values():
-        dispersion_rows.append((actual.league, float(actual.total)))
-    pooled_r, group_r = fit_pooled_and_group_dispersion(dispersion_rows)
-
-    models = [part.strip() for part in args.models.split(",") if part.strip()]
-    rows, row_skips = build_rows(
-        points,
+    markets = load_market_snapshots(args.pinnacle)
+    if not markets:
+        raise SystemExit(f"No valid Pinnacle corner markets loaded from {args.pinnacle}")
+    first_market_date = min(date.fromisoformat(key[0]) for key in markets)
+    matches, predictions = load_predictions(args.historical)
+    pooled_r, by_league_r, dispersion_counts = fit_dispersions(matches, first_market_date)
+    rows, misses = score_markets(
+        markets,
         predictions,
-        actuals,
-        group_r,
+        by_league_r,
         pooled_r,
         blend_weight=args.blend_weight,
-        min_value=args.min_value,
-        stale_hours=args.stale_hours,
-        model_versions=models,
+        edge_threshold=args.edge_threshold,
     )
-
-    write_csv(args.out, rows)
+    write_csv(args.output, rows)
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(
         render_report(
             rows,
-            points_n=len(points),
-            initial_skips=initial_skips,
-            row_skips=row_skips,
+            misses,
             pooled_r=pooled_r,
-            group_r=group_r,
-            min_value=args.min_value,
+            by_league_r=by_league_r,
+            dispersion_counts=dispersion_counts,
             blend_weight=args.blend_weight,
-            stale_hours=args.stale_hours,
+            edge_threshold=args.edge_threshold,
         ),
         encoding="utf-8",
     )
-    print(f"Wrote {args.out.relative_to(ROOT)} ({len(rows)} rows)")
+    print(f"Wrote {args.output.relative_to(ROOT)}")
     print(f"Wrote {args.report.relative_to(ROOT)}")
     return 0
 
