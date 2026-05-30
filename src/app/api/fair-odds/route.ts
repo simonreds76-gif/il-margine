@@ -1318,6 +1318,20 @@ function loadLocalOncourtTodayRows(): Array<{
 
 const ACTIVE_SIGNAL_STATUSES = new Set(["", "pending", "open", "unsettled"]);
 
+function preferIncomingShadowSignal(
+  existing: ShadowSignalSummary & { settlement_status: string },
+  incoming: ShadowSignalSummary & { settlement_status: string }
+): boolean {
+  if (incoming.bet_type !== "spread" || existing.bet_type !== "spread") return false;
+  const incomingEdge = incoming.value_pct ?? Number.NEGATIVE_INFINITY;
+  const existingEdge = existing.value_pct ?? Number.NEGATIVE_INFINITY;
+  if (incomingEdge !== existingEdge) return incomingEdge > existingEdge;
+  const incomingOdds = incoming.pinnacle_odds ?? Number.NEGATIVE_INFINITY;
+  const existingOdds = existing.pinnacle_odds ?? Number.NEGATIVE_INFINITY;
+  if (incomingOdds !== existingOdds) return incomingOdds > existingOdds;
+  return incoming.id > existing.id;
+}
+
 function loadActiveShadowSignals(csvPaths: string | string[], kind: ShadowSignalKind, _activeDate?: string): ShadowSignalSummary[] {
   const paths = Array.isArray(csvPaths) ? csvPaths : [csvPaths];
   const latestBySignalKey = new Map<string, ShadowSignalSummary & { settlement_status: string }>();
@@ -1369,11 +1383,9 @@ function loadActiveShadowSignals(csvPaths: string | string[], kind: ShadowSignal
       // Keep one still-active signal per lane key, preserving the first archived
       // capture rather than replacing it with a later volatile live recalculation.
       const signalKey =
-        (kind === "clay_bo3" || kind === "clay_v3_shadow") && betType === "spread"
-          ? `${kind}|${signalIdentity}|${betType}|${side}|${spreadLine ?? ""}`
-          : kind === "spread_v1"
-            ? `${kind}|${signalIdentity}|${betType}|${spreadLine ?? ""}`
-            : `${kind}|${signalIdentity}|${betType}`;
+        betType === "spread"
+          ? `${kind}|${signalIdentity}|${betType}|${side}`
+          : `${kind}|${signalIdentity}|${betType}`;
 
       const row: ShadowSignalSummary & { settlement_status: string } = {
         id: rowOrdinal + 1,
@@ -1418,7 +1430,8 @@ function loadActiveShadowSignals(csvPaths: string | string[], kind: ShadowSignal
       };
       rowOrdinal += 1;
 
-      if (!latestBySignalKey.has(signalKey)) {
+      const existing = latestBySignalKey.get(signalKey);
+      if (!existing || preferIncomingShadowSignal(existing, row)) {
         latestBySignalKey.set(signalKey, row);
       }
     }
