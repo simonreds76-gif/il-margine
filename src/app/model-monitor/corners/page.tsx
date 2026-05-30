@@ -1440,7 +1440,9 @@ export default async function CornersMonitorPage() {
               </div>
 
               <div className="mt-3 rounded-xl border border-amber-500/20 bg-amber-500/8 px-3 py-2 text-xs text-amber-100">
-                This is the corners research model being monitored. EPL, Ligue 1 and Serie A are allowed; Bundesliga and La Liga remain blocked until total-corners calibration improves.
+                {cornersV0AllowedLeagues.length > 0
+                  ? `This is the corners research model being monitored. Allowed leagues: ${formatLeagueList(cornersV0AllowedLeagues)}. Blocked leagues: ${formatLeagueList(cornersV0BlockedLeagues)}.`
+                  : "This is the corners research model being monitored. All leagues are currently blocked because the real-odds Pinnacle gate has not passed."}
                 {cornersV0Lane?.next_action ? ` Next action: ${cornersV0Lane.next_action}` : ""}
               </div>
 
