@@ -254,6 +254,59 @@ def _clean_fieldnames(fieldnames: list[str]) -> list[str]:
     return out
 
 
+SPREAD_LOGICAL_KEY_FIELDS = ["date", "player1", "player2", "bet_type", "side", "policy_mode", "signal_profile"]
+
+
+def _float_for_rank(value: Any, default: float = float("-inf")) -> float:
+    try:
+        text = str(value or "").strip()
+        return float(text) if text else default
+    except (TypeError, ValueError):
+        return default
+
+
+def _spread_signal_rank(row: dict[str, Any]) -> tuple[float, float, float]:
+    # Keep one handicap quote per player/match/side. Prefer the strongest edge,
+    # then the better takeable price, then the later refresh if edge/price tie.
+    time_text = str(row.get("time_utc") or "").strip()
+    seconds = 0.0
+    parts = time_text.split(":")
+    if len(parts) == 3:
+        try:
+            seconds = (int(parts[0]) * 3600) + (int(parts[1]) * 60) + int(float(parts[2]))
+        except ValueError:
+            seconds = 0.0
+    return (
+        _float_for_rank(row.get("value_pct")),
+        _float_for_rank(row.get("spread_odds")),
+        seconds,
+    )
+
+
+def collapse_duplicate_spread_signals(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Collapse alternate handicap lines into one logical signal.
+
+    Pinnacle often exposes +7.5 and +8 (or refreshed odds on the same line) for
+    the same player/match. Those are alternate quotes for one research decision,
+    not separate bets in the monitor or archive.
+    """
+    collapsed: list[dict[str, Any]] = []
+    spread_index: dict[tuple[str, ...], int] = {}
+    for row in rows:
+        if (row.get("bet_type") or "match") != "spread":
+            collapsed.append(row)
+            continue
+        key = tuple(_append_key_value(field, row.get(field)) for field in SPREAD_LOGICAL_KEY_FIELDS)
+        existing_idx = spread_index.get(key)
+        if existing_idx is None:
+            spread_index[key] = len(collapsed)
+            collapsed.append(row)
+            continue
+        if _spread_signal_rank(row) > _spread_signal_rank(collapsed[existing_idx]):
+            collapsed[existing_idx] = row
+    return collapsed
+
+
 def load_env() -> None:
     for name in [".env.local", "env.local"]:
         path = ROOT / name
@@ -2588,6 +2641,8 @@ def main() -> int:
         row["overlay_resolved_year"] = "" if resolved_year is None else str(resolved_year)
         overlay_signals.append(row)
 
+    base_signals = collapse_duplicate_spread_signals(base_signals)
+    overlay_signals = collapse_duplicate_spread_signals(overlay_signals)
     signals = overlay_signals if args.policy_mode == "overlay" else base_signals
     if args.signal_profile == "strict":
         for s in signals:
@@ -2735,16 +2790,11 @@ def main() -> int:
             r.pop("_clay_calibrated_match", None)
 
     if args.append:
-        if args.signal_profile in SPREAD_V1_SIGNAL_PROFILES:
-            # One spread-v1 pick per fixture/side. Line refreshes are price
-            # updates, not separate bets.
-            live_dedup_fields = ["player1", "player2", "bet_type", "side", "policy_mode", "signal_profile"]
-            lane_key_fields = live_dedup_fields
-            archive_key_fields = live_dedup_fields
-        else:
-            live_dedup_fields = ["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"]
-            lane_key_fields = ["date", "player1", "player2", "bet_type", "spread_line", "policy_mode", "signal_profile"]
-            archive_key_fields = ["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"]
+        # One logical spread pick per fixture/side/lane. Alternate handicap
+        # lines and odds refreshes are quote updates, not extra bets.
+        live_dedup_fields = SPREAD_LOGICAL_KEY_FIELDS
+        lane_key_fields = SPREAD_LOGICAL_KEY_FIELDS
+        archive_key_fields = SPREAD_LOGICAL_KEY_FIELDS
         out_paths = derive_signal_csv_paths(Path(args.output))
         live_count = write_live_snapshot(
             out_paths.live,

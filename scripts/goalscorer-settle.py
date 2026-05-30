@@ -30,6 +30,47 @@ DEFAULT_RESULTS_DIR = ROOT / "data" / "goalscorer" / "match-results"
 DEFAULT_ALIAS_PATH = ROOT / "data" / "goalscorer" / "fotmob-player-aliases.json"
 SUPER_SUB_BOOKMAKER_TOKENS = {"bet365"}
 
+TEAM_KEY_OVERRIDES = {
+    "arsenal fc": "arsenal",
+    "burnley fc": "burnley",
+    "chelsea fc": "chelsea",
+    "liverpool fc": "liverpool",
+    "getafe cf": "getafe",
+    "rcd mallorca": "mallorca",
+    "ca osasuna": "osasuna",
+}
+
+TEAM_KEY_DROP_TOKENS = {
+    "1",
+    "ac",
+    "afc",
+    "as",
+    "bc",
+    "ca",
+    "cf",
+    "cfc",
+    "club",
+    "de",
+    "fc",
+    "la",
+    "rc",
+    "rcd",
+    "sc",
+    "ss",
+    "ud",
+    "us",
+}
+
+
+def _goalscorer_settlement_team_key(value: str, base_team_key) -> str:
+    key = str(base_team_key(value) or "").strip()
+    if key in TEAM_KEY_OVERRIDES:
+        return TEAM_KEY_OVERRIDES[key]
+    tokens = [token for token in key.split() if token not in TEAM_KEY_DROP_TOKENS]
+    compact = " ".join(tokens).strip()
+    return TEAM_KEY_OVERRIDES.get(compact, compact or key)
+
+
 LEAGUE_CONFIGS = {
     "serie-a": {
         "signals": ROOT / "data" / "goalscorer" / "goalscorer-shadow-signals.csv",
@@ -168,6 +209,9 @@ def _load_match_results(results_dir: Path, league_key: str, team_key_func) -> Di
         if not match_date or not home_team or not away_team:
             continue
         loaded[(match_date, team_key_func(home_team), team_key_func(away_team))] = payload
+        match_id = str(payload.get("match_id") or "").strip()
+        if match_id:
+            loaded[("fotmob_match_id", match_id, "")] = payload
     return loaded
 
 
@@ -291,6 +335,10 @@ def settle_row(
     )
     match_result = match_results.get(match_key)
     if match_result is None:
+        fotmob_match_id = str(row.get("fotmob_match_id") or "").strip()
+        if fotmob_match_id:
+            match_result = match_results.get(("fotmob_match_id", fotmob_match_id, ""))
+    if match_result is None:
         if kickoff is not None and kickoff + timedelta(hours=6) <= now_utc:
             return "pending", "pending_settlement_data", 0
         if signal_date < now_utc.date():
@@ -376,7 +424,11 @@ def main() -> int:
     args = parser.parse_args()
 
     model_mod = runpy.run_path(str(ROOT / "scripts" / "goalscorer-model.py"), run_name="goalscorer_model")
-    team_key_func = model_mod["_team_key"]
+    base_team_key_func = model_mod["_team_key"]
+
+    def team_key_func(value: str) -> str:
+        return _goalscorer_settlement_team_key(value, base_team_key_func)
+
     penalty_utils = runpy.run_path(str(ROOT / "scripts" / "goalscorer_penalty_utils.py"), run_name="goalscorer_penalty_utils")
     best_name_match = penalty_utils["best_name_match"]
     tracker_mod = runpy.run_path(str(ROOT / "scripts" / "goalscorer-shadow-tracker.py"), run_name="goalscorer_shadow_tracker")
