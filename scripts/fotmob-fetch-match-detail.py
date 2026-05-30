@@ -205,10 +205,7 @@ def _extract_goal_events_from_match_facts(
         if not scorer:
             continue
 
-        assist_name = str(event.get("assistInput") or "").strip()
-        assist_str = str(event.get("assistStr") or "").strip()
-        if not assist_name and assist_str.lower().startswith("assist by "):
-            assist_name = assist_str[10:].strip()
+        assist_name, assist_id = _extract_assist_from_payload(event)
 
         goal_events.append(
             {
@@ -218,10 +215,29 @@ def _extract_goal_events_from_match_facts(
                 "team": _team_name_for_event(event, home_team, away_team, home_id, away_id),
                 "is_own_goal": False,
                 "assist": assist_name,
-                "assist_fotmob_id": _safe_int(event.get("assistPlayerId")),
+                "assist_fotmob_id": assist_id,
             }
         )
     return goal_events
+
+
+def _extract_assist_from_payload(payload: dict) -> tuple[str, int]:
+    assist_name = str(
+        payload.get("assistInput")
+        or payload.get("assistName")
+        or payload.get("assistPlayerName")
+        or payload.get("assist")
+        or ""
+    ).strip()
+    assist_str = str(payload.get("assistStr") or "").strip()
+    if not assist_name and assist_str.lower().startswith("assist by "):
+        assist_name = assist_str[10:].strip()
+    assist_id = _safe_int(
+        payload.get("assistPlayerId")
+        or payload.get("assistId")
+        or payload.get("assistPlayer")
+    )
+    return assist_name, assist_id
 
 
 def _extract_goal_events(shots: Iterable[dict], home_team: str, away_team: str, home_id: int, away_id: int) -> List[dict]:
@@ -241,6 +257,7 @@ def _extract_goal_events(shots: Iterable[dict], home_team: str, away_team: str, 
             team_name = away_team
         else:
             team_name = str(shot.get("teamName") or "").strip()
+        assist_name, assist_id = _extract_assist_from_payload(shot)
         goal_events.append(
             {
                 "minute": _safe_int(shot.get("min")),
@@ -248,8 +265,8 @@ def _extract_goal_events(shots: Iterable[dict], home_team: str, away_team: str, 
                 "fotmob_id": _safe_int(shot.get("playerId")),
                 "team": team_name,
                 "is_own_goal": False,
-                "assist": "",
-                "assist_fotmob_id": 0,
+                "assist": assist_name,
+                "assist_fotmob_id": assist_id,
             }
         )
     return goal_events
@@ -329,8 +346,15 @@ def _build_match_result(league_key: str, match: dict, payload: dict) -> dict | N
     home_players = _parse_team_players(home_lineup, home_team, home_id)
     away_players = _parse_team_players(away_lineup, away_team, away_id)
     goal_events = _extract_goal_events_from_match_facts(match_fact_events, home_team, away_team, home_id, away_id)
+    assist_data_source = "match_facts"
+    assist_data_complete = True
     if not goal_events:
         goal_events = _extract_goal_events(shots, home_team, away_team, home_id, away_id)
+        assist_data_source = "shotmap_fallback"
+        assist_data_complete = any(
+            _safe_int(event.get("assist_fotmob_id")) > 0 or str(event.get("assist") or "").strip()
+            for event in goal_events
+        )
     assist_events = [
         {
             "minute": event["minute"],
@@ -348,16 +372,27 @@ def _build_match_result(league_key: str, match: dict, payload: dict) -> dict | N
     for event in goal_events:
         key = (_safe_int(event.get("fotmob_id")), str(event.get("scorer") or "").strip())
         goal_counts[key] = goal_counts.get(key, 0) + 1
-    assist_counts: Dict[tuple[int, str], int] = {}
+    assist_counts_by_id: Dict[int, int] = {}
+    assist_counts_by_name: Dict[str, int] = {}
     for event in assist_events:
-        key = (_safe_int(event.get("fotmob_id")), str(event.get("assister") or "").strip())
-        assist_counts[key] = assist_counts.get(key, 0) + 1
+        assist_id = _safe_int(event.get("fotmob_id"))
+        assister_name = str(event.get("assister") or "").strip().casefold()
+        if assist_id > 0:
+            assist_counts_by_id[assist_id] = assist_counts_by_id.get(assist_id, 0) + 1
+        elif assister_name:
+            assist_counts_by_name[assister_name] = assist_counts_by_name.get(assister_name, 0) + 1
 
     merged_players: List[dict] = []
     for player in [*home_players, *away_players]:
         key = (_safe_int(player.get("fotmob_id")), str(player.get("name") or "").strip())
+        player_id = _safe_int(player.get("fotmob_id"))
+        player_name_key = str(player.get("name") or "").strip().casefold()
         player["goals"] = max(_safe_int(player.get("goals")), goal_counts.get(key, 0))
-        player["assists"] = max(_safe_int(player.get("assists")), assist_counts.get(key, 0))
+        player["assists"] = max(
+            _safe_int(player.get("assists")),
+            assist_counts_by_id.get(player_id, 0) if player_id > 0 else 0,
+            assist_counts_by_name.get(player_name_key, 0),
+        )
         merged_players.append(player)
 
     return {
@@ -378,6 +413,8 @@ def _build_match_result(league_key: str, match: dict, payload: dict) -> dict | N
         "players": merged_players,
         "goal_events": goal_events,
         "assist_events": assist_events,
+        "assist_data_source": assist_data_source,
+        "assist_data_complete": assist_data_complete,
         "substitution_groups": _build_substitution_groups(merged_players),
         "fetched_at": datetime.now(ZoneInfo("UTC")).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
     }

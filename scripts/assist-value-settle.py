@@ -195,6 +195,16 @@ def _has_complete_finished_fallback(match_result: dict, home_team_key: str, away
     return _complete_team_sheet(home_players) and _complete_team_sheet(away_players)
 
 
+def _has_trustworthy_assist_data(match_result: dict) -> bool:
+    players = match_result.get("players") or []
+    if not any(isinstance(player, dict) and "assists" in player for player in players):
+        return False
+    if "assist_data_complete" in match_result:
+        return bool(match_result.get("assist_data_complete"))
+    # Legacy fixed payloads had assist_events but no completeness marker.
+    return "assist_events" in match_result
+
+
 def settle_row(
     row: dict,
     *,
@@ -271,6 +281,9 @@ def settle_row(
         if squad_status == "unavailable":
             return "void", "not_in_matchday_squad", 0
         return "void", "confirmed_non_runner", 0
+
+    if not _has_trustworthy_assist_data(match_result):
+        return "pending", "needs_assist_data", 0
 
     assists = int(player_entry.get("assists") or 0)
     if assists > 0:

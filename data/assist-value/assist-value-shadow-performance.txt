@@ -1,5 +1,5 @@
 Assist Value Shadow Performance
-generated_at_utc: 2026-05-30T15:33:55Z
+generated_at_utc: 2026-05-30T16:13:24Z
 
 Status
 lane_status: SHADOW_ONLY
@@ -10,14 +10,14 @@ settlement_valid_for_roi: false
 
 Summary
 shadow_signals: 12
-settled: 12
-pending: 0
+settled: 11
+pending: 1
 won: 1
-lost: 9
+lost: 8
 void: 2
-stake_units: 10.00
-pnl_units: -3.0000
-roi_pct: -30.00
+stake_units: 9.00
+pnl_units: -2.0000
+roi_pct: -22.22
 
 Notes
 Only rows with signal_status=shadow_signal count in this ledger.
