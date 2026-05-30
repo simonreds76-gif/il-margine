@@ -1,0 +1,141 @@
+Corners V2 Feature Diagnostics
+
+Status: RESEARCH_ONLY. Real Pinnacle prices only. One selected bet per match from corners-real-odds-backtest.py.
+Pre-match pressure features are strictly past-only. Post-match shot buckets are labelled diagnostics only.
+
+selected_rows: 199
+feature_rows_joined: 199
+feature_rows_missing: 0
+overall: n=199 pnl=-1.39 roi=-0.76% avg_clv=+0.22% pos_clv=+43.22%
+over: n=108 roi=+11.52% avg_clv=-1.15%
+under: n=91 roi=-13.30% avg_clv=+1.84%
+
+Main read: a bucket is interesting only if CLV improves, not just ROI. Treat n<30 as noise.
+
+Candidate cells with positive ROI and CLV (not promotion proof)
+field,segment,n,roi,avg_clv,pos_clv,pnl
+side_league,under|serie-a,51,+16.61%,+1.95%,+62.75%,+8.47
+league,serie-a,53,+17.93%,+1.70%,+60.38%,+9.50
+recent_shot_delta_bucket,-3 to -1,46,+10.77%,+1.31%,+54.35%,+4.63
+recent_corner_delta_bucket,flat,50,+13.63%,+1.04%,+54.00%,+6.27
+
+Trap cells: positive CLV but negative ROI
+field,segment,n,roi,avg_clv,pos_clv,pnl
+selected_side,under,91,-13.30%,+1.84%,+62.64%,-12.10
+line_bucket,<=8.5,77,-10.87%,+1.64%,+57.14%,-8.26
+side_line,under|<=8.5,73,-11.36%,+1.56%,+58.90%,-8.29
+line_bucket,9.0-9.5,32,-20.26%,+1.52%,+56.25%,-5.67
+lambda_gap_bucket,model<market,55,-14.56%,+1.32%,+65.45%,-7.57
+corner_per_shot_bucket,0.30-0.36,69,-9.09%,+1.23%,+56.52%,-5.91
+fav_bucket,fav>=65,36,-13.81%,+1.22%,+55.56%,-4.70
+
+By selected side
+segment,n,risked,pnl,roi,avg_clv,pos_clv,clv_n,flag
+over,108,93,+10.71,+11.52%,-1.15%,+26.85%,108,
+under,91,91,-12.10,-13.30%,+1.84%,+62.64%,91,
+
+By league
+segment,n,risked,pnl,roi,avg_clv,pos_clv,clv_n,flag
+serie-a,53,53,+9.50,+17.93%,+1.70%,+60.38%,53,
+la-liga,50,44,-3.16,-7.19%,-0.48%,+32.00%,50,
+epl,33,30,-2.52,-8.40%,-0.04%,+42.42%,33,
+ligue-1,32,28,-0.36,-1.30%,-0.47%,+34.38%,32,
+bundesliga,31,29,-4.84,-16.70%,-0.21%,+41.94%,31,
+
+By side x league
+segment,n,risked,pnl,roi,avg_clv,pos_clv,clv_n,flag
+under|serie-a,51,51,+8.47,+16.61%,+1.95%,+62.75%,51,
+over|la-liga,42,36,+0.72,+2.01%,-0.84%,+30.95%,42,
+over|epl,23,20,+0.89,+4.43%,-1.12%,+30.43%,23,LOW_N
+over|ligue-1,21,17,+6.21,+36.51%,-1.46%,+14.29%,21,LOW_N
+over|bundesliga,20,18,+1.87,+10.38%,-1.16%,+30.00%,20,LOW_N
+under|bundesliga,11,11,-6.71,-61.02%,+1.53%,+63.64%,11,LOW_N
+under|ligue-1,11,11,-6.57,-59.73%,+1.41%,+72.73%,11,LOW_N
+under|epl,10,10,-3.41,-34.07%,+2.44%,+70.00%,10,LOW_N
+under|la-liga,8,8,-3.89,-48.58%,+1.38%,+37.50%,8,LOW_N
+over|serie-a,2,2,+1.03,+51.50%,-4.79%,+0.00%,2,LOW_N
+
+By line bucket
+segment,n,risked,pnl,roi,avg_clv,pos_clv,clv_n,flag
+<=8.5,77,76,-8.26,-10.87%,+1.64%,+57.14%,77,
+10.0-10.5,66,58,+9.95,+17.16%,-2.07%,+21.21%,66,
+9.0-9.5,32,28,-5.67,-20.26%,+1.52%,+56.25%,32,
+>=11.0,24,22,+2.59,+11.77%,+0.18%,+41.67%,24,LOW_N
+
+By line type
+segment,n,risked,pnl,roi,avg_clv,pos_clv,clv_n,flag
+integer,108,93,+10.71,+11.52%,-1.15%,+26.85%,108,
+half,91,91,-12.10,-13.30%,+1.84%,+62.64%,91,
+
+By side x line
+segment,n,risked,pnl,roi,avg_clv,pos_clv,clv_n,flag
+under|<=8.5,73,73,-8.29,-11.36%,+1.56%,+58.90%,73,
+over|10.0-10.5,65,57,+9.01,+15.81%,-2.11%,+20.00%,65,
+over|>=11.0,24,22,+2.59,+11.77%,+0.18%,+41.67%,24,LOW_N
+under|9.0-9.5,17,17,-4.76,-27.98%,+3.10%,+76.47%,17,LOW_N
+over|9.0-9.5,15,11,-0.92,-8.32%,-0.26%,+33.33%,15,LOW_N
+over|<=8.5,4,3,+0.03,+1.00%,+3.06%,+25.00%,4,LOW_N
+under|10.0-10.5,1,1,+0.94,+94.34%,+0.45%,+100.00%,1,LOW_N
+
+By selected EV bucket
+segment,n,risked,pnl,roi,avg_clv,pos_clv,clv_n,flag
+3-6%,83,76,-7.63,-10.04%,+0.10%,+44.58%,83,
+6-10%,64,61,+16.86,+27.63%,-0.57%,+39.06%,64,
+>=10%,52,47,-10.61,-22.58%,+1.36%,+46.15%,52,
+
+By model-market lambda gap
+segment,n,risked,pnl,roi,avg_clv,pos_clv,clv_n,flag
+aligned,72,64,+17.62,+27.52%,-1.67%,+22.22%,72,
+model<market,55,52,-7.57,-14.56%,+1.32%,+65.45%,55,
+model<<market,45,45,-6.49,-14.42%,+1.78%,+53.33%,45,
+model>market,20,17,+1.06,+6.23%,-0.64%,+30.00%,20,LOW_N
+model>>market,7,6,-6.00,-100.00%,+3.44%,+57.14%,7,LOW_N
+
+By favourite probability
+segment,n,risked,pnl,roi,avg_clv,pos_clv,clv_n,flag
+balanced<45,81,75,+6.84,+9.12%,+0.08%,+40.74%,81,
+fav45-55,51,45,-0.21,-0.46%,-0.32%,+35.29%,51,
+fav>=65,36,34,-4.70,-13.81%,+1.22%,+55.56%,36,
+fav55-65,31,30,-3.32,-11.08%,+0.30%,+48.39%,31,
+
+By pre-match shot pressure
+segment,n,risked,pnl,roi,avg_clv,pos_clv,clv_n,flag
+25-28,111,101,-1.40,-1.39%,+0.26%,+42.34%,111,
+22-25,84,79,+4.01,+5.08%,+0.19%,+45.24%,84,
+>=28,4,4,-4.00,-100.00%,-0.53%,+25.00%,4,LOW_N
+
+By pre-match corner pressure
+segment,n,risked,pnl,roi,avg_clv,pos_clv,clv_n,flag
+8.5-9.5,83,81,-15.00,-18.51%,+0.86%,+51.81%,83,
+9.5-10.5,83,71,+6.79,+9.56%,-0.83%,+28.92%,83,
+<8.5,17,17,+6.31,+37.12%,+2.86%,+70.59%,17,LOW_N
+>=10.5,16,15,+0.51,+3.40%,-0.48%,+43.75%,16,LOW_N
+
+By pre-match corners per shot
+segment,n,risked,pnl,roi,avg_clv,pos_clv,clv_n,flag
+0.36-0.42,109,100,+4.04,+4.04%,-0.21%,+35.78%,109,
+0.30-0.36,69,65,-5.91,-9.09%,+1.23%,+56.52%,69,
+>=0.42,21,19,+0.49,+2.56%,-0.89%,+38.10%,21,LOW_N
+
+By recent corner pressure delta
+segment,n,risked,pnl,roi,avg_clv,pos_clv,clv_n,flag
+flat,50,46,+6.27,+13.63%,+1.04%,+54.00%,50,
++0.25 to +1,48,44,-1.11,-2.53%,+0.31%,+50.00%,48,
+>=+1,48,43,-2.04,-4.74%,-0.81%,+25.00%,48,
+-1 to -0.25,41,39,-4.67,-11.98%,-0.39%,+39.02%,41,
+<-1,12,12,+0.16,+1.37%,+2.58%,+58.33%,12,LOW_N
+
+By recent shot pressure delta
+segment,n,risked,pnl,roi,avg_clv,pos_clv,clv_n,flag
+flat,87,83,-2.21,-2.66%,-0.22%,+42.53%,87,
++1 to +3,56,49,-2.68,-5.47%,+0.08%,+37.50%,56,
+-3 to -1,46,43,+4.63,+10.77%,+1.31%,+54.35%,46,
+>=+3,6,5,+0.94,+18.87%,-2.01%,+33.33%,6,LOW_N
+<-3,4,4,-2.07,-51.85%,+2.34%,+25.00%,4,LOW_N
+
+Post-match total shot bucket (diagnostic only)
+segment,n,risked,pnl,roi,avg_clv,pos_clv,clv_n,flag
+25-30,57,50,-11.15,-22.29%,+0.06%,+42.11%,57,
+20-25,55,52,+6.37,+12.25%,-0.21%,+43.64%,55,
+>=30,53,49,+1.90,+3.87%,+0.07%,+37.74%,53,
+<20,34,33,+1.49,+4.52%,+1.40%,+52.94%,34,
