@@ -17,26 +17,41 @@ The only valid validation source for v2 is captured real Pinnacle corner totals.
 The v2 total model is:
 
 ```text
-lambda_model = lambda_home_ema + lambda_away_ema
+lambda_model_raw = lambda_home_ema + lambda_away_ema
+debias_delta = mean(lambda_market - lambda_model_raw), fitted on pre-lock data only
+lambda_model_adj = lambda_model_raw + debias_delta_league_or_pooled
 lambda_market = NB mean implied by de-vigged Pinnacle over probability at the captured line
-lambda_final = w * lambda_model + (1 - w) * lambda_market
+lambda_final = w * lambda_model_adj + (1 - w) * lambda_market
 ```
 
-Default `w = 0.30`. The market is the anchor; the model is a residual perturbation.
+Default `w = 0.30`. The market is the anchor; the model is a residual perturbation. The level debias is fitted only on the pre-lock market sample, then frozen for the locked holdout.
 
 ## Validation rules
 
 All validation must use real captured Pinnacle odds. Synthetic B365 regression prices are barred from ROI/CLV claims.
 
-Sell gate, all required:
+Sell gate, all required and measured on the locked holdout unless explicitly stated:
 
-- At least 200 settled real-odds selected bets.
-- Mean published-to-close CLV at least +1.0%.
-- At least 55% of selected bets positive CLV.
+- At least 200 settled selected bets with true-close odds, where the close snapshot is no more than 2 hours before kickoff.
+- Mean true-close published-to-close CLV at least +1.0%.
+- At least 55% of selected bets positive true-close CLV.
+- V2 Brier no worse than the de-vigged market Brier.
 - Real-odds ROI at least 0 at the fixed pre-declared edge threshold.
-- Positive CLV in at least 3 of 5 leagues once each has at least 40 selected bets.
+- Positive true-close CLV in at least 3 of 5 leagues once each has at least 40 selected bets.
 
 Until these pass, corners remains research/shadow only.
+
+## Current locked-holdout read
+
+After adding pre-lock market-scale debias, the broad fake under edge collapsed. The latest generated report still fails the sell gate:
+
+- Holdout selected bets: 130.
+- Holdout ROI: -6.06%.
+- Holdout true-close CLV sample: 7 bets, insufficient.
+- Holdout true-close CLV: -2.70%.
+- Holdout V2 Brier: 0.241345 vs market Brier 0.240787, so the market still wins.
+
+Interpretation: the immediate blocker is not another slice, it is better near-kickoff Pinnacle capture plus more settled real-price rows. Do not create an under-only or Serie A-only tracker from the old in-sample diagnostics.
 
 ## New files
 

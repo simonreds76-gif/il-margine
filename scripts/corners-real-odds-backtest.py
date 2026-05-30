@@ -61,9 +61,9 @@ TEAM_ALIASES = {
 }
 
 OUTPUT_FIELDS = [
-    "match_date", "league", "home_team", "away_team", "line", "actual_total", "result_side",
-    "kickoff_utc", "published_at_utc", "close_at_utc", "close_is_stale",
-    "lambda_poisson", "nb_r", "market_lambda", "lambda_v2", "blend_weight",
+    "sample_split", "match_date", "league", "home_team", "away_team", "line", "actual_total", "result_side",
+    "kickoff_utc", "published_at_utc", "close_at_utc", "close_to_kickoff_hours", "close_is_stale", "clv_eligible",
+    "lambda_poisson", "lambda_model_adj", "debias_delta", "nb_r", "market_lambda", "lambda_v2", "blend_weight",
     "p_market_over", "p_poisson_over", "p_nb_raw_over", "p_v2_over",
     "pub_over_odds", "pub_under_odds", "close_over_odds", "close_under_odds",
     "ev_over", "ev_under", "selected_side", "selected_odds", "selected_close_odds",
@@ -262,6 +262,62 @@ def pre_kickoff_window(items: list[Snapshot]) -> tuple[list[Snapshot], datetime 
     return before, kickoff
 
 
+MIN_DEBIAS_LINES = 40
+
+
+def fit_level_debias(
+    markets: dict[tuple[str, str, str, str, str], list[Snapshot]],
+    predictions: dict[tuple[str, str, str], dict[str, Any]],
+    by_league_r: dict[str, float],
+    pooled_r: float,
+    *,
+    lock_before: date,
+) -> tuple[float, dict[str, float], dict[str, int], Counter[str]]:
+    """Fit market-scale model mean offsets on pre-lock data only."""
+    deltas: dict[str, list[float]] = defaultdict(list)
+    misses: Counter[str] = Counter()
+    for (match_date, home_key, away_key, line_text, league), items in markets.items():
+        try:
+            market_date = date.fromisoformat(match_date)
+        except ValueError:
+            misses["invalid_date"] += 1
+            continue
+        if market_date >= lock_before:
+            continue
+        try:
+            market_date = date.fromisoformat(match_date)
+        except ValueError:
+            misses["invalid_date"] += 1
+            continue
+        prediction = predictions.get((match_date, home_key, away_key))
+        if prediction is None:
+            misses["prediction_not_found"] += 1
+            continue
+        pre_kickoff, kickoff = pre_kickoff_window(items)
+        if kickoff is None:
+            misses["missing_kickoff"] += 1
+            continue
+        if not pre_kickoff:
+            misses["no_pre_kickoff_price"] += 1
+            continue
+        publication = pre_kickoff[0]
+        line = float(line_text)
+        mean = float(prediction.get("lambda_total") or 0.0)
+        league_key = str(prediction.get("league") or league)
+        r = by_league_r.get(league_key, pooled_r)
+        p_market_over, _p_market_under = devig_two_way(publication.over_odds, publication.under_odds)
+        market_lambda = invert_mean_for_over_prob(line, p_market_over, r)
+        deltas[league_key].append(market_lambda - mean)
+    all_deltas = [value for values in deltas.values() for value in values]
+    pooled_delta = sum(all_deltas) / len(all_deltas) if all_deltas else 0.0
+    counts = {league: len(values) for league, values in deltas.items()}
+    by_league_delta = {
+        league: (sum(values) / len(values) if len(values) >= MIN_DEBIAS_LINES else pooled_delta)
+        for league, values in deltas.items()
+    }
+    return pooled_delta, by_league_delta, counts, misses
+
+
 def score_markets(
     markets: dict[tuple[str, str, str, str, str], list[Snapshot]],
     predictions: dict[tuple[str, str, str], dict[str, Any]],
@@ -270,10 +326,19 @@ def score_markets(
     *,
     blend_weight: float,
     edge_threshold: float,
+    lock_before: date,
+    debias_by_league: dict[str, float],
+    pooled_debias: float,
+    clv_close_hours: float,
 ) -> tuple[list[dict[str, Any]], Counter[str]]:
     rows: list[dict[str, Any]] = []
     misses: Counter[str] = Counter()
     for (match_date, home_key, away_key, line_text, league), items in sorted(markets.items()):
+        try:
+            market_date = date.fromisoformat(match_date)
+        except ValueError:
+            misses["invalid_date"] += 1
+            continue
         prediction = predictions.get((match_date, home_key, away_key))
         if prediction is None:
             misses["prediction_not_found"] += 1
@@ -293,10 +358,13 @@ def score_markets(
         push = abs(actual_total - line) < 1e-9
         result_side = "push" if push else ("over" if actual_over else "under")
         mean = float(prediction.get("lambda_total") or 0.0)
-        r = by_league_r.get(str(prediction.get("league") or league), pooled_r)
+        league_key = str(prediction.get("league") or league)
+        r = by_league_r.get(league_key, pooled_r)
         p_market_over, _p_market_under = devig_two_way(publication.over_odds, publication.under_odds)
         market_lambda = invert_mean_for_over_prob(line, p_market_over, r)
-        lambda_v2 = blend_weight * mean + (1.0 - blend_weight) * market_lambda
+        debias_delta = debias_by_league.get(league_key, pooled_debias)
+        mean_adj = max(0.05, mean + debias_delta)
+        lambda_v2 = blend_weight * mean_adj + (1.0 - blend_weight) * market_lambda
         p_poisson_over, _p_pois_under, _p_pois_push = poisson_total_probs(line, mean)
         p_nb_raw_over, _p_nb_raw_under, _p_nb_raw_push = nb_total_probs(line, mean, r)
         p_v2_over, p_v2_under, p_v2_push = nb_total_probs(line, lambda_v2, r)
@@ -334,8 +402,9 @@ def score_markets(
                 clv = (selected_odds / selected_close) - 1.0
         close_gap_hours = (kickoff - close.captured_at).total_seconds() / 3600.0
         row = {
+            "sample_split": "train" if market_date < lock_before else "holdout",
             "match_date": match_date,
-            "league": str(prediction.get("league") or league),
+            "league": league_key,
             "home_team": prediction.get("home_team") or home_key,
             "away_team": prediction.get("away_team") or away_key,
             "line": line_text,
@@ -344,8 +413,12 @@ def score_markets(
             "kickoff_utc": fmt_dt(publication.kickoff),
             "published_at_utc": fmt_dt(publication.captured_at),
             "close_at_utc": fmt_dt(close.captured_at),
-            "close_is_stale": "true" if close_gap_hours is not None and close_gap_hours > 12.0 else "false",
+            "close_to_kickoff_hours": round(close_gap_hours, 3),
+            "close_is_stale": "true" if close_gap_hours > 12.0 else "false",
+            "clv_eligible": "true" if close_gap_hours <= clv_close_hours else "false",
             "lambda_poisson": round(mean, 4),
+            "lambda_model_adj": round(mean_adj, 4),
+            "debias_delta": round(debias_delta, 4),
             "nb_r": round(r, 4),
             "market_lambda": round(market_lambda, 4),
             "lambda_v2": round(lambda_v2, 4),
@@ -434,85 +507,157 @@ def render_report(
     dispersion_counts: dict[str, int],
     blend_weight: float,
     edge_threshold: float,
+    lock_before: date,
+    pooled_debias: float,
+    debias_by_league: dict[str, float],
+    debias_counts: dict[str, int],
+    debias_misses: Counter[str],
+    clv_close_hours: float,
 ) -> str:
-    selected = [row for row in rows if row.get("selected_side")]
-    settled = [row for row in selected if row.get("bet_result") in {"won", "lost", "push"}]
-    non_push = [row for row in rows if row.get("result_side") != "push"]
-    pnl = sum(pf_row(row, "pnl_units") or 0.0 for row in settled)
-    risked = sum(1 for row in settled if row.get("bet_result") in {"won", "lost"})
-    roi = pnl / risked if risked else None
-    clv_vals = [pf_row(row, "published_to_close_clv") for row in settled if pf_row(row, "published_to_close_clv") is not None]
-    clv_avg = avg([v for v in clv_vals if v is not None])
-    clv_pos_share = (sum(1 for v in clv_vals if v is not None and v > 0.0) / len(clv_vals)) if clv_vals else None
     metric_names = ["brier_market", "brier_poisson", "brier_nb_raw", "brier_v2"]
-    metric_avgs = {name: avg([pf_row(row, name) for row in non_push if pf_row(row, name) is not None]) for name in metric_names}
+
+    def section(label: str, subset: list[dict[str, Any]]) -> list[str]:
+        selected = [row for row in subset if row.get("selected_side")]
+        settled = [row for row in selected if row.get("bet_result") in {"won", "lost", "push"}]
+        non_push = [row for row in subset if row.get("result_side") != "push"]
+        pnl = sum(pf_row(row, "pnl_units") or 0.0 for row in settled)
+        risked = sum(1 for row in settled if row.get("bet_result") in {"won", "lost"})
+        roi = pnl / risked if risked else None
+        all_clv = [pf_row(row, "published_to_close_clv") for row in settled if pf_row(row, "published_to_close_clv") is not None]
+        eligible = [
+            row for row in settled
+            if str(row.get("clv_eligible") or "").lower() == "true"
+            and pf_row(row, "published_to_close_clv") is not None
+        ]
+        eligible_clv = [pf_row(row, "published_to_close_clv") for row in eligible if pf_row(row, "published_to_close_clv") is not None]
+        metric_avgs = {
+            name: avg([pf_row(row, name) for row in non_push if pf_row(row, name) is not None])
+            for name in metric_names
+        }
+        all_clv_avg = avg([v for v in all_clv if v is not None])
+        all_clv_pos = (sum(1 for v in all_clv if v is not None and v > 0.0) / len(all_clv)) if all_clv else None
+        eligible_clv_avg = avg([v for v in eligible_clv if v is not None])
+        eligible_clv_pos = (sum(1 for v in eligible_clv if v is not None and v > 0.0) / len(eligible_clv)) if eligible_clv else None
+        close_gaps = [pf_row(row, "close_to_kickoff_hours") for row in settled if pf_row(row, "close_to_kickoff_hours") is not None]
+        close_avg = avg([v for v in close_gaps if v is not None])
+        return [
+            f"{label}",
+            f"scored_market_lines: {len(subset)}",
+            f"selected_bets: {len(selected)}",
+            f"settled_selected: {len(settled)}",
+            f"pnl_units: {pnl:+.2f}",
+            f"risked_bets_no_push: {risked}",
+            f"roi_on_risked: {pct(roi)}",
+            f"avg_published_to_close_clv_all: {pct(all_clv_avg)} (n={len(all_clv)})",
+            f"positive_clv_share_all: {pct(all_clv_pos)}",
+            f"avg_published_to_close_clv_true_close: {pct(eligible_clv_avg)} (n={len(eligible_clv)}, max_gap_h={clv_close_hours:.2f})",
+            f"positive_clv_share_true_close: {pct(eligible_clv_pos)}",
+            f"avg_close_to_kickoff_hours: {close_avg:.2f}" if close_avg is not None else "avg_close_to_kickoff_hours: -",
+            f"brier_market: {metric_avgs['brier_market']:.6f}" if metric_avgs["brier_market"] is not None else "brier_market: -",
+            f"brier_poisson: {metric_avgs['brier_poisson']:.6f}" if metric_avgs["brier_poisson"] is not None else "brier_poisson: -",
+            f"brier_nb_raw: {metric_avgs['brier_nb_raw']:.6f}" if metric_avgs["brier_nb_raw"] is not None else "brier_nb_raw: -",
+            f"brier_v2: {metric_avgs['brier_v2']:.6f}" if metric_avgs["brier_v2"] is not None else "brier_v2: -",
+        ]
+
+    selected_holdout = [row for row in rows if row.get("sample_split") == "holdout" and row.get("selected_side")]
+    settled_holdout = [row for row in selected_holdout if row.get("bet_result") in {"won", "lost", "push"}]
+    eligible_holdout = [
+        row for row in settled_holdout
+        if str(row.get("clv_eligible") or "").lower() == "true"
+        and pf_row(row, "published_to_close_clv") is not None
+    ]
+    holdout_non_push = [row for row in rows if row.get("sample_split") == "holdout" and row.get("result_side") != "push"]
+    holdout_brier_market = avg([pf_row(row, "brier_market") for row in holdout_non_push if pf_row(row, "brier_market") is not None])
+    holdout_brier_v2 = avg([pf_row(row, "brier_v2") for row in holdout_non_push if pf_row(row, "brier_v2") is not None])
+    holdout_clv_vals = [pf_row(row, "published_to_close_clv") for row in eligible_holdout if pf_row(row, "published_to_close_clv") is not None]
+    holdout_clv_avg = avg([v for v in holdout_clv_vals if v is not None])
+    holdout_clv_pos = (sum(1 for v in holdout_clv_vals if v is not None and v > 0.0) / len(holdout_clv_vals)) if holdout_clv_vals else None
+
     league_clv_gate_count = 0
     league_clv_gate_total = 0
-    for league in sorted({str(row.get("league") or "") for row in settled}):
-        group = [row for row in settled if row.get("league") == league]
+    for league in sorted({str(row.get("league") or "") for row in eligible_holdout}):
+        group = [row for row in eligible_holdout if row.get("league") == league]
         if len(group) < 40:
             continue
         league_clv_gate_total += 1
         group_clv = avg([pf_row(row, "published_to_close_clv") for row in group if pf_row(row, "published_to_close_clv") is not None])
         if group_clv is not None and group_clv > 0.0:
             league_clv_gate_count += 1
-    brier_v2 = metric_avgs.get("brier_v2")
-    brier_poisson = metric_avgs.get("brier_poisson")
+
+    clv_sample_ok = len(holdout_clv_vals) >= 200
+    gates = [
+        ("holdout_n_true_close>=200", clv_sample_ok, str(len(holdout_clv_vals))),
+        ("holdout_mean_true_close_clv>=+1%", holdout_clv_avg is not None and holdout_clv_avg >= 0.01, pct(holdout_clv_avg)),
+        ("holdout_positive_true_close_clv_share>=55%", holdout_clv_pos is not None and holdout_clv_pos >= 0.55, pct(holdout_clv_pos)),
+        (
+            "holdout_v2_brier<=market_brier",
+            holdout_brier_v2 is not None and holdout_brier_market is not None and holdout_brier_v2 <= holdout_brier_market,
+            f"{holdout_brier_v2:.6f} vs {holdout_brier_market:.6f}" if holdout_brier_v2 is not None and holdout_brier_market is not None else "-",
+        ),
+        ("positive_true_close_clv_in_3_of_5_leagues_n40", league_clv_gate_count >= 3, f"{league_clv_gate_count}/{league_clv_gate_total}"),
+    ]
 
     lines = [
         "Corners V2 Real-Odds Backtest",
         "",
-        "Status: RESEARCH_ONLY - not sellable unless real CLV gates pass.",
+        "Status: RESEARCH_ONLY - not sellable unless locked-holdout real CLV gates pass.",
         "Validation rule: real captured Pinnacle prices only; synthetic B365 regression is not used.",
+        "Claude patch: market-scale debias is fitted pre-lock only; sell gates use holdout and true-close CLV only.",
         "",
-        f"scored_market_lines: {len(rows)}",
-        f"selected_bets_at_fixed_edge_one_per_match: {len(selected)}",
-        f"settled_selected: {len(settled)}",
         f"edge_threshold: {edge_threshold:.2%}",
         f"blend_weight_model_vs_market: {blend_weight:.2f}",
+        f"lock_before: {lock_before.isoformat()}",
+        f"true_close_max_gap_hours: {clv_close_hours:.2f}",
         f"pooled_nb_r: {pooled_r:.4f}",
         f"join_misses: {dict(misses)}",
+        f"debias_fit_misses: {dict(debias_misses)}",
         "",
-        "Probability calibration on all non-push market lines",
+        "Market-scale debias fitted on train only",
+        f"pooled_debias_delta_market_minus_model: {pooled_debias:+.4f}",
+        "league,n_train_lines,debias_delta,nb_train_matches,nb_r",
     ]
-    for name in metric_names:
-        lines.append(f"{name}: {metric_avgs[name]:.6f}" if metric_avgs[name] is not None else f"{name}: -")
-    lines.extend([
-        "",
-        "Selected-bet real-price performance",
-        f"pnl_units: {pnl:+.2f}",
-        f"risked_bets_no_push: {risked}",
-        f"roi_on_risked: {pct(roi)}",
-        f"avg_published_to_close_clv: {pct(clv_avg)} (n={len(clv_vals)})",
-        f"positive_clv_share: {pct(clv_pos_share)}",
-        "",
-        "Sell gate (must all pass)",
-        f"n>=200: {'PASS' if len(settled) >= 200 else 'FAIL'} ({len(settled)})",
-        f"mean_clv>=+1%: {'PASS' if clv_avg is not None and clv_avg >= 0.01 else 'FAIL'} ({pct(clv_avg)})",
-        f"positive_clv_share>=55%: {'PASS' if clv_pos_share is not None and clv_pos_share >= 0.55 else 'FAIL'} ({pct(clv_pos_share)})",
-        f"v2_brier<=poisson_brier: {'PASS' if brier_v2 is not None and brier_poisson is not None and brier_v2 <= brier_poisson else 'FAIL'} ({brier_v2:.6f} vs {brier_poisson:.6f})" if brier_v2 is not None and brier_poisson is not None else "v2_brier<=poisson_brier: FAIL (-)",
-        f"positive_clv_in_3_of_5_leagues_n40: {'PASS' if league_clv_gate_count >= 3 else 'FAIL'} ({league_clv_gate_count}/{league_clv_gate_total})",
-        "",
-        "League dispersion",
-        "league,n_train,nb_r",
-    ])
-    for league in sorted(by_league_r):
-        lines.append(f"{league},{dispersion_counts.get(league, 0)},{by_league_r[league]:.4f}")
-    lines.extend(["", "Selected by side"])
-    for side in ["over", "under"]:
-        group = [row for row in settled if row.get("selected_side") == side]
-        group_pnl = sum(pf_row(row, "pnl_units") or 0.0 for row in group)
-        group_risk = sum(1 for row in group if row.get("bet_result") in {"won", "lost"})
-        lines.append(f"{side}: n={len(group)} pnl={group_pnl:+.2f} roi={pct(group_pnl/group_risk if group_risk else None)}")
-    lines.extend(["", "Selected by league"])
-    for league in sorted({str(row.get("league") or "") for row in settled}):
-        group = [row for row in settled if row.get("league") == league]
-        group_pnl = sum(pf_row(row, "pnl_units") or 0.0 for row in group)
-        group_risk = sum(1 for row in group if row.get("bet_result") in {"won", "lost"})
-        group_clv = avg([pf_row(row, "published_to_close_clv") for row in group if pf_row(row, "published_to_close_clv") is not None])
-        lines.append(f"{league}: n={len(group)} pnl={group_pnl:+.2f} roi={pct(group_pnl/group_risk if group_risk else None)} clv={pct(group_clv)}")
-    return "\n".join(lines) + "\n"
+    for league in sorted(set(by_league_r) | set(debias_by_league) | set(debias_counts)):
+        lines.append(
+            f"{league},{debias_counts.get(league, 0)},{debias_by_league.get(league, pooled_debias):+.4f},"
+            f"{dispersion_counts.get(league, 0)},{by_league_r.get(league, pooled_r):.4f}"
+        )
+    lines.extend(["", "Summary sections"])
+    for label, subset in [
+        ("ALL_ROWS", rows),
+        ("TRAIN_PRE_LOCK", [row for row in rows if row.get("sample_split") == "train"]),
+        ("HOLDOUT_LOCKED", [row for row in rows if row.get("sample_split") == "holdout"]),
+    ]:
+        lines.extend(section(label, subset))
+        lines.append("")
 
+    lines.extend(["Holdout sell gate (decisive)"])
+    if not clv_sample_ok:
+        lines.append("CLV_GATE_STATUS: INSUFFICIENT_TRUE_CLOSE_SAMPLE")
+    for name, passed, detail in gates:
+        lines.append(f"{name}: {'PASS' if passed else 'FAIL'} ({detail})")
+
+    lines.extend(["", "Holdout selected by side"])
+    for side in ["over", "under"]:
+        group = [row for row in settled_holdout if row.get("selected_side") == side]
+        group_pnl = sum(pf_row(row, "pnl_units") or 0.0 for row in group)
+        group_risk = sum(1 for row in group if row.get("bet_result") in {"won", "lost"})
+        group_clv = avg([
+            pf_row(row, "published_to_close_clv") for row in group
+            if str(row.get("clv_eligible") or "").lower() == "true" and pf_row(row, "published_to_close_clv") is not None
+        ])
+        lines.append(f"{side}: n={len(group)} pnl={group_pnl:+.2f} roi={pct(group_pnl/group_risk if group_risk else None)} true_close_clv={pct(group_clv)}")
+
+    lines.extend(["", "Holdout selected by league"])
+    for league in sorted({str(row.get("league") or "") for row in settled_holdout}):
+        group = [row for row in settled_holdout if row.get("league") == league]
+        group_pnl = sum(pf_row(row, "pnl_units") or 0.0 for row in group)
+        group_risk = sum(1 for row in group if row.get("bet_result") in {"won", "lost"})
+        group_clv = avg([
+            pf_row(row, "published_to_close_clv") for row in group
+            if str(row.get("clv_eligible") or "").lower() == "true" and pf_row(row, "published_to_close_clv") is not None
+        ])
+        lines.append(f"{league}: n={len(group)} pnl={group_pnl:+.2f} roi={pct(group_pnl/group_risk if group_risk else None)} true_close_clv={pct(group_clv)}")
+    return "\n".join(lines) + "\n"
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Corners v2 real-odds-only backtest")
@@ -522,14 +667,32 @@ def main() -> int:
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--blend-weight", type=float, default=0.30)
     parser.add_argument("--edge-threshold", type=float, default=0.03)
+    parser.add_argument("--lock-before", type=str, default="", help="Holdout lock date YYYY-MM-DD. Default: max market date minus 30 days.")
+    parser.add_argument("--clv-close-hours", type=float, default=2.0, help="Maximum close-to-kickoff gap counted as true-close CLV.")
     args = parser.parse_args()
 
     markets = load_market_snapshots(args.pinnacle)
     if not markets:
         raise SystemExit(f"No valid Pinnacle corner markets loaded from {args.pinnacle}")
-    first_market_date = min(date.fromisoformat(key[0]) for key in markets)
+    market_dates = sorted(date.fromisoformat(key[0]) for key in markets)
+    first_market_date = market_dates[0]
+    max_market_date = market_dates[-1]
+    lock_before = date.fromisoformat(args.lock_before) if args.lock_before else max_market_date - timedelta(days=30)
+    if lock_before <= first_market_date:
+        raise SystemExit(
+            f"lock_before={lock_before.isoformat()} leaves no pre-lock market sample; "
+            f"first_market_date={first_market_date.isoformat()}"
+        )
+
     matches, predictions = load_predictions(args.historical)
     pooled_r, by_league_r, dispersion_counts = fit_dispersions(matches, first_market_date)
+    pooled_debias, debias_by_league, debias_counts, debias_misses = fit_level_debias(
+        markets,
+        predictions,
+        by_league_r,
+        pooled_r,
+        lock_before=lock_before,
+    )
     rows, misses = score_markets(
         markets,
         predictions,
@@ -537,6 +700,10 @@ def main() -> int:
         pooled_r,
         blend_weight=args.blend_weight,
         edge_threshold=args.edge_threshold,
+        lock_before=lock_before,
+        debias_by_league=debias_by_league,
+        pooled_debias=pooled_debias,
+        clv_close_hours=args.clv_close_hours,
     )
     write_csv(args.output, rows)
     args.report.parent.mkdir(parents=True, exist_ok=True)
@@ -549,6 +716,12 @@ def main() -> int:
             dispersion_counts=dispersion_counts,
             blend_weight=args.blend_weight,
             edge_threshold=args.edge_threshold,
+            lock_before=lock_before,
+            pooled_debias=pooled_debias,
+            debias_by_league=debias_by_league,
+            debias_counts=debias_counts,
+            debias_misses=debias_misses,
+            clv_close_hours=args.clv_close_hours,
         ),
         encoding="utf-8",
     )

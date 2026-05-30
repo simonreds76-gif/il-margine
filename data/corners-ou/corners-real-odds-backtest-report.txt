@@ -1,51 +1,93 @@
 Corners V2 Real-Odds Backtest
 
-Status: RESEARCH_ONLY - not sellable unless real CLV gates pass.
+Status: RESEARCH_ONLY - not sellable unless locked-holdout real CLV gates pass.
 Validation rule: real captured Pinnacle prices only; synthetic B365 regression is not used.
+Claude patch: market-scale debias is fitted pre-lock only; sell gates use holdout and true-close CLV only.
 
-scored_market_lines: 1659
-selected_bets_at_fixed_edge_one_per_match: 199
-settled_selected: 199
 edge_threshold: 3.00%
 blend_weight_model_vs_market: 0.30
+lock_before: 2026-04-29
+true_close_max_gap_hours: 2.00
 pooled_nb_r: 55.4998
 join_misses: {'no_pre_kickoff_price': 156, 'prediction_not_found': 145}
+debias_fit_misses: {'prediction_not_found': 52, 'no_pre_kickoff_price': 156}
 
-Probability calibration on all non-push market lines
+Market-scale debias fitted on train only
+pooled_debias_delta_market_minus_model: +0.8851
+league,n_train_lines,debias_delta,nb_train_matches,nb_r
+bundesliga,126,+0.7252,3617,59.1218
+epl,147,+0.6457,4489,74.7748
+la-liga,138,+0.0933,4480,69.2387
+ligue-1,135,+0.8790,4181,67.0569
+serie-a,161,+1.9127,4490,41.6854
+
+Summary sections
+ALL_ROWS
+scored_market_lines: 1659
+selected_bets: 218
+settled_selected: 218
+pnl_units: -3.37
+risked_bets_no_push: 191
+roi_on_risked: -1.77%
+avg_published_to_close_clv_all: -1.30% (n=218)
+positive_clv_share_all: +27.06%
+avg_published_to_close_clv_true_close: -3.21% (n=10, max_gap_h=2.00)
+positive_clv_share_true_close: +10.00%
+avg_close_to_kickoff_hours: 7.46
 brier_market: 0.241471
 brier_poisson: 0.270955
 brier_nb_raw: 0.269260
-brier_v2: 0.245096
+brier_v2: 0.243350
 
-Selected-bet real-price performance
-pnl_units: -1.39
-risked_bets_no_push: 184
-roi_on_risked: -0.76%
-avg_published_to_close_clv: +0.22% (n=199)
-positive_clv_share: +43.22%
+TRAIN_PRE_LOCK
+scored_market_lines: 707
+selected_bets: 88
+settled_selected: 88
+pnl_units: +3.53
+risked_bets_no_push: 77
+roi_on_risked: +4.59%
+avg_published_to_close_clv_all: -1.28% (n=88)
+positive_clv_share_all: +28.41%
+avg_published_to_close_clv_true_close: -4.39% (n=3, max_gap_h=2.00)
+positive_clv_share_true_close: +0.00%
+avg_close_to_kickoff_hours: 6.79
+brier_market: 0.242386
+brier_poisson: 0.298150
+brier_nb_raw: 0.295505
+brier_v2: 0.246034
 
-Sell gate (must all pass)
-n>=200: FAIL (199)
-mean_clv>=+1%: FAIL (+0.22%)
-positive_clv_share>=55%: FAIL (+43.22%)
-v2_brier<=poisson_brier: PASS (0.245096 vs 0.270955)
-positive_clv_in_3_of_5_leagues_n40: FAIL (1/2)
+HOLDOUT_LOCKED
+scored_market_lines: 952
+selected_bets: 130
+settled_selected: 130
+pnl_units: -6.91
+risked_bets_no_push: 114
+roi_on_risked: -6.06%
+avg_published_to_close_clv_all: -1.31% (n=130)
+positive_clv_share_all: +26.15%
+avg_published_to_close_clv_true_close: -2.70% (n=7, max_gap_h=2.00)
+positive_clv_share_true_close: +14.29%
+avg_close_to_kickoff_hours: 7.92
+brier_market: 0.240787
+brier_poisson: 0.250635
+brier_nb_raw: 0.249649
+brier_v2: 0.241345
 
-League dispersion
-league,n_train,nb_r
-bundesliga,3617,59.1218
-epl,4489,74.7748
-la-liga,4480,69.2387
-ligue-1,4181,67.0569
-serie-a,4490,41.6854
+Holdout sell gate (decisive)
+CLV_GATE_STATUS: INSUFFICIENT_TRUE_CLOSE_SAMPLE
+holdout_n_true_close>=200: FAIL (7)
+holdout_mean_true_close_clv>=+1%: FAIL (-2.70%)
+holdout_positive_true_close_clv_share>=55%: FAIL (+14.29%)
+holdout_v2_brier<=market_brier: FAIL (0.241345 vs 0.240787)
+positive_true_close_clv_in_3_of_5_leagues_n40: FAIL (0/0)
 
-Selected by side
-over: n=108 pnl=+10.71 roi=+11.52%
-under: n=91 pnl=-12.10 roi=-13.30%
+Holdout selected by side
+over: n=125 pnl=-6.68 roi=-6.12% true_close_clv=-4.92%
+under: n=5 pnl=-0.23 roi=-4.60% true_close_clv=+10.63%
 
-Selected by league
-bundesliga: n=31 pnl=-4.84 roi=-16.70% clv=-0.21%
-epl: n=33 pnl=-2.52 roi=-8.40% clv=-0.04%
-la-liga: n=50 pnl=-3.16 roi=-7.19% clv=-0.48%
-ligue-1: n=32 pnl=-0.36 roi=-1.30% clv=-0.47%
-serie-a: n=53 pnl=+9.50 roi=+17.93% clv=+1.70%
+Holdout selected by league
+bundesliga: n=18 pnl=-2.46 roi=-15.36% true_close_clv=-1.91%
+epl: n=26 pnl=+2.87 roi=+11.94% true_close_clv=-
+la-liga: n=29 pnl=-4.58 roi=-18.32% true_close_clv=-
+ligue-1: n=25 pnl=+6.55 roi=+31.21% true_close_clv=+0.00%
+serie-a: n=32 pnl=-9.29 roi=-33.18% true_close_clv=-3.40%
