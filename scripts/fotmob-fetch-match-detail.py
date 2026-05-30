@@ -106,6 +106,25 @@ def _event_counts(events: Iterable[dict]) -> tuple[int, int]:
     return goals, own_goals
 
 
+def _score_parts(status: dict) -> tuple[int, int]:
+    score_text = str((status or {}).get("scoreStr") or "").strip()
+    if "-" not in score_text:
+        return 0, 0
+    home_text, away_text = score_text.split("-", 1)
+    return _safe_int(home_text), _safe_int(away_text)
+
+
+def _count_own_goal_events(events: Iterable[dict]) -> int:
+    own_goals = 0
+    for event in events:
+        if not isinstance(event, dict):
+            continue
+        event_type = str(event.get("type") or event.get("eventType") or "").strip().lower()
+        if event_type == "owngoal" or bool(event.get("ownGoal")):
+            own_goals += 1
+    return own_goals
+
+
 def _substitution_times(sub_events: Iterable[dict]) -> tuple[int | None, int | None]:
     sub_in = None
     sub_out = None
@@ -340,6 +359,7 @@ def _build_match_result(league_key: str, match: dict, payload: dict) -> dict | N
     home_id = _safe_int(general.get("homeTeam", {}).get("id") or match.get("home", {}).get("id"))
     away_id = _safe_int(general.get("awayTeam", {}).get("id") or match.get("away", {}).get("id"))
     status = match.get("status", {}) or {}
+    home_score, away_score = _score_parts(status)
 
     home_lineup = lineup.get("homeTeam", {}) or {}
     away_lineup = lineup.get("awayTeam", {}) or {}
@@ -347,14 +367,14 @@ def _build_match_result(league_key: str, match: dict, payload: dict) -> dict | N
     away_players = _parse_team_players(away_lineup, away_team, away_id)
     goal_events = _extract_goal_events_from_match_facts(match_fact_events, home_team, away_team, home_id, away_id)
     assist_data_source = "match_facts"
-    assist_data_complete = True
-    if not goal_events:
+    own_goal_count = _count_own_goal_events(match_fact_events)
+    expected_non_own_goals = max(0, home_score + away_score - own_goal_count)
+    assist_data_complete = len(goal_events) == expected_non_own_goals
+    if not goal_events and expected_non_own_goals > 0:
         goal_events = _extract_goal_events(shots, home_team, away_team, home_id, away_id)
         assist_data_source = "shotmap_fallback"
-        assist_data_complete = any(
-            _safe_int(event.get("assist_fotmob_id")) > 0 or str(event.get("assist") or "").strip()
-            for event in goal_events
-        )
+        # Shotmap can contain goals without full assist attribution. Treat it as evidence only, never as complete.
+        assist_data_complete = False
     assist_events = [
         {
             "minute": event["minute"],
@@ -408,13 +428,16 @@ def _build_match_result(league_key: str, match: dict, payload: dict) -> dict | N
         "away_team": away_team,
         "home_fotmob_team_id": home_id,
         "away_fotmob_team_id": away_id,
-        "home_score": _safe_int(status.get("scoreStr", "0-0").split("-")[0] if "-" in str(status.get("scoreStr") or "") else 0),
-        "away_score": _safe_int(status.get("scoreStr", "0-0").split("-")[1] if "-" in str(status.get("scoreStr") or "") else 0),
+        "home_score": home_score,
+        "away_score": away_score,
         "players": merged_players,
         "goal_events": goal_events,
         "assist_events": assist_events,
         "assist_data_source": assist_data_source,
         "assist_data_complete": assist_data_complete,
+        "assist_expected_non_own_goals": expected_non_own_goals,
+        "assist_captured_non_own_goals": len(goal_events),
+        "assist_own_goals_detected": own_goal_count,
         "substitution_groups": _build_substitution_groups(merged_players),
         "fetched_at": datetime.now(ZoneInfo("UTC")).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
     }

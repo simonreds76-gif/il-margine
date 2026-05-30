@@ -367,70 +367,6 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Aitor Ruibal",
-      "fotmob_id": 676533,
-      "team": "Real Betis",
-      "team_id": 8603,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "assists": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Ángel Ortiz",
-      "fotmob_id": 1580522,
-      "team": "Real Betis",
-      "team_id": 8603,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "assists": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Marc Bartra",
-      "fotmob_id": 195305,
-      "team": "Real Betis",
-      "team_id": 8603,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "assists": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Sergi Altimira",
-      "fotmob_id": 1310480,
-      "team": "Real Betis",
-      "team_id": 8603,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "assists": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Mathew Ryan",
       "fotmob_id": 185644,
       "team": "Levante",
@@ -799,72 +735,8 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Álex Primo",
-      "fotmob_id": 1366374,
-      "team": "Levante",
-      "team_id": 8581,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "assists": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Unai Elgezabal",
-      "fotmob_id": 693736,
-      "team": "Levante",
-      "team_id": 8581,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "assists": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Carlos Álvarez",
-      "fotmob_id": 1209980,
-      "team": "Levante",
-      "team_id": 8581,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "assists": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Roger Brugué",
       "fotmob_id": 1286471,
-      "team": "Levante",
-      "team_id": 8581,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "assists": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Víctor García",
-      "fotmob_id": 977618,
       "team": "Levante",
       "team_id": 8581,
       "started": false,
@@ -918,6 +790,11 @@
       "goal_fotmob_id": 1610744
     }
   ],
+  "assist_data_source": "match_facts",
+  "assist_data_complete": true,
+  "assist_expected_non_own_goals": 3,
+  "assist_captured_non_own_goals": 3,
+  "assist_own_goals_detected": 0,
   "substitution_groups": [
     {
       "team": "Levante",
@@ -1052,5 +929,5 @@
       "direct_replacement_verified": false
     }
   ],
-  "fetched_at": "2026-05-26T01:44:44Z"
+  "fetched_at": "2026-05-30T16:58:58Z"
 }

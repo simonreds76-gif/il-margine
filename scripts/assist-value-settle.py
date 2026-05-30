@@ -199,10 +199,26 @@ def _has_trustworthy_assist_data(match_result: dict) -> bool:
     players = match_result.get("players") or []
     if not any(isinstance(player, dict) and "assists" in player for player in players):
         return False
-    if "assist_data_complete" in match_result:
-        return bool(match_result.get("assist_data_complete"))
-    # Legacy fixed payloads had assist_events but no completeness marker.
-    return "assist_events" in match_result
+    return bool(match_result.get("assist_data_complete"))
+
+
+def _player_team_goals_fully_captured(match_result: dict, player_team_key: str, team_key_func) -> bool:
+    home_key = team_key_func(str(match_result.get("home_team") or ""))
+    away_key = team_key_func(str(match_result.get("away_team") or ""))
+    if player_team_key == home_key:
+        team_score = int(match_result.get("home_score") or 0)
+    elif player_team_key == away_key:
+        team_score = int(match_result.get("away_score") or 0)
+    else:
+        return False
+    if team_score <= 0:
+        return True
+    captured = sum(
+        1
+        for event in match_result.get("goal_events") or []
+        if isinstance(event, dict) and team_key_func(str(event.get("team") or "")) == player_team_key
+    )
+    return captured >= team_score
 
 
 def settle_row(
@@ -282,12 +298,15 @@ def settle_row(
             return "void", "not_in_matchday_squad", 0
         return "void", "confirmed_non_runner", 0
 
-    if not _has_trustworthy_assist_data(match_result):
-        return "pending", "needs_assist_data", 0
-
     assists = int(player_entry.get("assists") or 0)
     if assists > 0:
         return "won", f"assisted_{assists}_goals", assists
+
+    if not _has_trustworthy_assist_data(match_result):
+        return "pending", "needs_assist_data", 0
+    if not _player_team_goals_fully_captured(match_result, player_team_key, team_key_func):
+        return "pending", "needs_assist_data", 0
+
     return "lost", "played_no_assist", 0
 
 

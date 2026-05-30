@@ -792,6 +792,11 @@
       "goal_fotmob_id": 1254297
     }
   ],
+  "assist_data_source": "match_facts",
+  "assist_data_complete": true,
+  "assist_expected_non_own_goals": 5,
+  "assist_captured_non_own_goals": 5,
+  "assist_own_goals_detected": 1,
   "substitution_groups": [
     {
       "team": "Bologna",
@@ -934,5 +939,5 @@
       "direct_replacement_verified": true
     }
   ],
-  "fetched_at": "2026-05-26T01:44:35Z"
+  "fetched_at": "2026-05-30T16:59:03Z"
 }
