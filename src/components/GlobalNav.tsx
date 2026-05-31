@@ -108,12 +108,19 @@ export default function GlobalNav() {
             <Link
               href="/world-cup-2026-free-picks"
               onClick={() => track("world_cup_nav_cta_click", { source: "desktop_nav" })}
-              className={`hidden items-center rounded-full border px-4 py-2 text-sm font-semibold transition lg:inline-flex ${
+              className={`hidden items-center gap-2 rounded-full border py-1.5 pl-1.5 pr-4 text-sm font-semibold transition lg:inline-flex ${
                 isWorldCupFreePicksActive
                   ? "border-emerald-300 bg-emerald-400 text-slate-950"
                   : "border-emerald-400/30 bg-emerald-400/10 text-emerald-100 hover:border-emerald-300/45 hover:bg-emerald-400/18"
               }`}
             >
+              <Image
+                src="/brand/world-cup-2026-free-picks.png"
+                alt=""
+                width={32}
+                height={32}
+                className="h-8 w-8 rounded-full border border-emerald-200/35 object-cover shadow-[0_0_18px_rgba(16,185,129,0.35)]"
+              />
               Free World Cup Picks
             </Link>
           </div>
@@ -169,12 +176,19 @@ export default function GlobalNav() {
                 setMobileMenuPath(null);
                 track("world_cup_nav_cta_click", { source: "mobile_nav" });
               }}
-              className={`mx-4 mt-3 flex min-h-[44px] items-center justify-center rounded-full border px-4 py-3 text-base font-semibold transition-colors ${
+              className={`mx-4 mt-3 flex min-h-[44px] items-center justify-center gap-3 rounded-full border py-2 pl-2 pr-4 text-base font-semibold transition-colors ${
                 isWorldCupFreePicksActive
                   ? "border-emerald-300 bg-emerald-400 text-slate-950"
                   : "border-emerald-400/30 bg-emerald-400/10 text-emerald-100 hover:border-emerald-300/45 hover:bg-emerald-400/18"
               }`}
             >
+              <Image
+                src="/brand/world-cup-2026-free-picks.png"
+                alt=""
+                width={34}
+                height={34}
+                className="h-9 w-9 rounded-full border border-emerald-200/35 object-cover shadow-[0_0_18px_rgba(16,185,129,0.35)]"
+              />
               Free World Cup Picks
             </Link>
             <div className="px-4">
