@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { track } from "@/lib/analytics";
 
 export default function GlobalNav() {
   const [mobileMenuPath, setMobileMenuPath] = useState<string | null>(null);
@@ -31,6 +32,7 @@ export default function GlobalNav() {
     pathname === "/calculator" ||
     pathname === "/resources" ||
     pathname.startsWith("/resources/");
+  const isWorldCupFreePicksActive = pathname === "/world-cup-2026-free-picks";
   const linkClass = (active: boolean) =>
     `text-base font-medium transition-colors ${active ? "text-[var(--brand-green)]" : "text-slate-400 hover:text-slate-100"}`;
 
@@ -103,6 +105,17 @@ export default function GlobalNav() {
                 </div>
               )}
             </div>
+            <Link
+              href="/world-cup-2026-free-picks"
+              onClick={() => track("world_cup_nav_cta_click", { source: "desktop_nav" })}
+              className={`hidden items-center rounded-full border px-4 py-2 text-sm font-semibold transition lg:inline-flex ${
+                isWorldCupFreePicksActive
+                  ? "border-emerald-300 bg-emerald-400 text-slate-950"
+                  : "border-emerald-400/30 bg-emerald-400/10 text-emerald-100 hover:border-emerald-300/45 hover:bg-emerald-400/18"
+              }`}
+            >
+              Free World Cup Picks
+            </Link>
           </div>
         </div>
         
@@ -150,6 +163,20 @@ export default function GlobalNav() {
                 Monitor
               </Link>
             ) : null}
+            <Link
+              href="/world-cup-2026-free-picks"
+              onClick={() => {
+                setMobileMenuPath(null);
+                track("world_cup_nav_cta_click", { source: "mobile_nav" });
+              }}
+              className={`mx-4 mt-3 flex min-h-[44px] items-center justify-center rounded-full border px-4 py-3 text-base font-semibold transition-colors ${
+                isWorldCupFreePicksActive
+                  ? "border-emerald-300 bg-emerald-400 text-slate-950"
+                  : "border-emerald-400/30 bg-emerald-400/10 text-emerald-100 hover:border-emerald-300/45 hover:bg-emerald-400/18"
+              }`}
+            >
+              Free World Cup Picks
+            </Link>
             <div className="px-4">
               <button
                 onClick={() => setResourcesMenuPath(resourcesMenuOpen ? null : pathname)}

@@ -23,3 +23,7 @@ export const FAIR_ODDS_INDEXABLE = process.env.FAIR_ODDS_INDEXABLE === "true";
 
 /** Google Analytics 4 measurement ID (e.g. G-XXXXXXXX). Set NEXT_PUBLIC_GA_MEASUREMENT_ID in Vercel / .env. */
 export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "";
+
+/** Telegram channel used by the World Cup 2026 free-picks funnel. Override in Vercel if the handle changes. */
+export const WORLD_CUP_TELEGRAM_URL =
+  process.env.NEXT_PUBLIC_WORLD_CUP_TELEGRAM_URL || "https://t.me/IlMargineTips";
