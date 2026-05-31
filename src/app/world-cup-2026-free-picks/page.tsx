@@ -59,6 +59,17 @@ const INSIDE = [
   },
 ] as const;
 
+function TelegramIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M21.6 4.1 18.2 20c-.2 1.1-.9 1.4-1.8.9l-5.1-3.8-2.5 2.4c-.3.3-.5.5-1 .5l.4-5.2 9.5-8.6c.4-.4-.1-.6-.6-.2L5.3 13.4.2 11.8c-1.1-.3-1.1-1.1.2-1.6L20.3 2.6c.9-.4 1.7.2 1.3 1.5Z"
+      />
+    </svg>
+  );
+}
+
 export default function WorldCupFreePicksPage() {
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
@@ -85,8 +96,9 @@ export default function WorldCupFreePicksPage() {
                 <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                   <a
                     href="/go/world-cup-telegram?source=landing_hero"
-                    className="inline-flex items-center justify-center rounded-full bg-emerald-400 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-300"
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-[#2AABEE] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#229ED9]"
                   >
+                    <TelegramIcon className="h-4 w-4" />
                     Join Free on Telegram
                   </a>
                   <Link
@@ -96,7 +108,9 @@ export default function WorldCupFreePicksPage() {
                     See penalty taker file
                   </Link>
                 </div>
-                <p className="mt-4 text-xs leading-5 text-slate-500">Free through the World Cup. No lottery acca spam.</p>
+                <p className="mt-4 text-xs leading-5 text-slate-500">
+                  Free throughout the World Cup. Model-driven picks, player props and fast market notes.
+                </p>
               </div>
 
               <div className="mx-auto w-full max-w-[420px] lg:ml-auto">
@@ -127,7 +141,7 @@ export default function WorldCupFreePicksPage() {
         <section className="mt-10 grid gap-4 lg:grid-cols-[0.95fr,1.05fr]">
           <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-6 shadow-[0_12px_32px_rgba(0,0,0,0.16)]">
             <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Why join</div>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Not another noisy tips channel.</h2>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">World Cup picks with the reasoning attached.</h2>
             <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
               <p>Il Margine is built around pricing, data and evidence by someone who used to work on the bookmaker side building prices.</p>
               <p>The point is not to post every match. The point is to flag where the market may be wrong and explain the reasoning quickly.</p>
@@ -144,8 +158,9 @@ export default function WorldCupFreePicksPage() {
             <div className="mt-5 flex flex-col gap-3 sm:flex-row">
               <a
                 href="/go/world-cup-telegram?source=landing_bottom"
-                className="inline-flex items-center justify-center rounded-full bg-emerald-400 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-300"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#2AABEE] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#229ED9]"
               >
+                <TelegramIcon className="h-4 w-4" />
                 Join Free on Telegram
               </a>
               <Link
