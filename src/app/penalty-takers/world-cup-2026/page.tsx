@@ -371,7 +371,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
                 </div>
                 <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4 sm:p-5">
                   <div className="font-mono text-3xl font-semibold text-emerald-400">{latestHierarchyUpdates.length}</div>
-                  <div className="mt-1 text-sm text-slate-400">Evidence notes refreshed</div>
+                  <div className="mt-1 text-sm text-slate-400">Teams re-checked</div>
                 </div>
                 <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4 sm:p-5">
                   <div className="font-mono text-xl font-semibold text-emerald-400">{lastVerifiedLabel}</div>
