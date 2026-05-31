@@ -4,6 +4,14 @@ import { BASE_URL } from "@/lib/config";
 
 export type ResearchStatus = "reviewed" | "researching";
 export type Confidence = "high" | "medium" | "researching";
+export type SquadStatus = "final_announced" | "preliminary_or_reduced" | "final_pending" | "listed_unclear" | "no_section_found";
+export type CallupStatus =
+  | "confirmed_final_squad"
+  | "listed_preliminary"
+  | "final_pending_unverified"
+  | "not_in_final_squad"
+  | "not_listed_preliminary"
+  | "unknown";
 
 export type TeamRow = {
   team: string;
@@ -18,6 +26,13 @@ export type TeamRow = {
   evidence_log?: string[];
   note?: string;
   source_urls?: string[];
+  squad_verified_at?: string;
+  squad_status?: SquadStatus;
+  squad_count?: number | null;
+  primary_callup_status?: CallupStatus;
+  secondary_callup_status?: CallupStatus;
+  squad_note?: string;
+  squad_source_urls?: string[];
 };
 
 export type WorldCupPenaltyData = {
@@ -173,6 +188,43 @@ export function publicPenaltyEvidenceText(value: string | undefined, fallback = 
     .replace(/\s+([.,;:])/g, "$1")
     .replace(/\s{2,}/g, " ")
     .trim();
+}
+
+export function publicSquadStatusText(team: TeamRow): string {
+  const primary = team.likely_primary?.trim();
+  const secondary = team.likely_secondary?.trim();
+  const primaryStatus = team.primary_callup_status;
+  const secondaryStatus = team.secondary_callup_status;
+  const squadCount = team.squad_count ? `${team.squad_count}-man` : "";
+
+  if (team.squad_status === "final_announced") {
+    if (primaryStatus === "confirmed_final_squad" && (!secondary || secondaryStatus === "confirmed_final_squad")) {
+      return `Squad check: ${primary}${secondary ? ` and ${secondary}` : ""} ${secondary ? "are" : "is"} named in the ${squadCount || "final"} World Cup squad.`;
+    }
+    if (primaryStatus === "confirmed_final_squad" && secondaryStatus === "not_in_final_squad") {
+      return `Squad check: ${primary} is in the final World Cup squad, but the previous backup is not. The backup line has been reworked inside the named squad.`;
+    }
+    if (primaryStatus === "not_in_final_squad") {
+      return "Squad check: the previous first-choice call is not in the final World Cup squad, so this team needs immediate manual review.";
+    }
+    return "Squad check: final squad announced; the penalty order is being checked against the named 26.";
+  }
+
+  if (team.squad_status === "preliminary_or_reduced") {
+    if (primaryStatus === "listed_preliminary" && (!secondary || secondaryStatus === "listed_preliminary")) {
+      return `Squad check: ${primary}${secondary ? ` and ${secondary}` : ""} ${secondary ? "are" : "is"} listed in the current preliminary/reduced squad, but FIFA-final confirmation is still pending.`;
+    }
+    return "Squad check: preliminary squad only, so this penalty hierarchy stays under review until the final cut is public.";
+  }
+
+  if (team.squad_status === "final_pending") {
+    if (primaryStatus === "listed_preliminary" || secondaryStatus === "listed_preliminary") {
+      return "Squad check: at least one named taker appears on the current wider squad list, but the final 26 is still pending.";
+    }
+    return "Squad check: final squad announcement is still pending, so call-up confirmation must be re-run after the federation list drops.";
+  }
+
+  return "Squad check: final squad cross-check still needs a manual source before the call-up status can be treated as clean.";
 }
 
 export function getGroupForTeam(team: string): string | undefined {
