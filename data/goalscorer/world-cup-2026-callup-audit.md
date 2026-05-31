@@ -1,6 +1,6 @@
 # World Cup 2026 Penalty Taker Call-Up Audit
 
-Verified at: 2026-05-31
+Verified at: 31 May 2026
 
 ## Source Boundary
 
@@ -52,5 +52,5 @@ Verified at: 2026-05-31
 ## Next Pass
 
 - Re-run on 2026-06-02 after FIFA publishes all final 26-player squad lists.
-- Specifically re-check Algeria, Australia, Ecuador and Uruguay because the current public squad table had no player list yet on 2026-05-31.
+- Specifically re-check Algeria, Australia, Ecuador and Uruguay because the current public squad table had no player list yet on 31 May 2026.
 - Re-check preliminary/reduced sides after final cuts: Paraguay, Qatar, Saudi Arabia, Senegal, Turkiye and Uzbekistan.

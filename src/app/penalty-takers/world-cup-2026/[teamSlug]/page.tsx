@@ -10,6 +10,7 @@ import {
   buildWorldCupTeamLead,
   buildWorldCupTeamTitle,
   CONFEDERATION_ORDER,
+  formatAuditDate,
   getWorldCupTeamBySlug,
   initials,
   publicPenaltyEvidenceText,
@@ -168,6 +169,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
   const visibleNote = publicPenaltyEvidenceText(team.note);
   const visibleSquadStatus = publicSquadStatusText(team);
   const visibleSquadNote = team.squad_note ? publicPenaltyEvidenceText(team.squad_note) : "";
+  const lastVerifiedLabel = formatAuditDate(data.last_verified);
   const visibleEvidenceLog = (team.evidence_log?.length ? team.evidence_log : ["Evidence trail still being built."]).map(
     (entry) => publicPenaltyEvidenceText(entry, "Evidence trail still being built."),
   );
@@ -329,7 +331,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
                       </span>
                     ) : null}
                     <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300 sm:text-xs sm:tracking-[0.18em]">
-                      Current file: {data.last_verified}
+                      Current file: {lastVerifiedLabel}
                     </span>
                     <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-[10px] text-slate-400 sm:text-xs">
                       Il Margine file
