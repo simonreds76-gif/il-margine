@@ -157,14 +157,14 @@ export default function WorldCupTelegramOverlay() {
             <button
               type="button"
               onClick={closeModal}
-              className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition hover:bg-white/10 hover:text-white"
+              className="absolute right-4 top-4 z-30 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition hover:bg-white/10 hover:text-white"
               aria-label="Close"
             >
               x
             </button>
             <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-emerald-400/12 blur-3xl" />
             <div className="pointer-events-none absolute -bottom-20 left-10 h-44 w-44 rounded-full bg-amber-400/10 blur-3xl" />
-            <div className="relative">
+            <div className="relative z-10">
               <div className="grid gap-5 sm:grid-cols-[120px,1fr] sm:items-center">
                 <div className="mx-auto w-28 rounded-[24px] border border-emerald-400/25 bg-slate-950/70 p-2 shadow-[0_16px_48px_rgba(0,0,0,0.35)] sm:mx-0">
                   <Image
