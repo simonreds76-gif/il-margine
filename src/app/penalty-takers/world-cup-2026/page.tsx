@@ -408,6 +408,64 @@ export default async function WorldCup2026PenaltyTakersPage() {
         </section>
 
         <section
+          id="latest-penalty-taker-updates"
+          className="mt-6 rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]"
+        >
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <div className="font-mono text-xs uppercase tracking-[0.24em] text-emerald-400">Recent changes</div>
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Latest penalty taker updates</h2>
+              <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-400">
+                The teams whose World Cup penalty order we re-checked most recently this cycle. Each card opens the
+                full team page with the current call, backup order and evidence trail.
+              </p>
+            </div>
+            <div className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-400">
+              {latestHierarchyUpdates.length} teams re-checked this cycle
+            </div>
+          </div>
+
+          <div className="mt-6 grid gap-4 lg:grid-cols-2">
+            {latestHierarchyUpdates.map((update) => (
+              <Link
+                key={update.team.team}
+                href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(update.team.team)}`}
+                className="rounded-2xl border border-slate-800/80 bg-slate-950/70 p-4 transition hover:border-slate-600 hover:bg-slate-900/90"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center">
+                    <FlagMark
+                      src={teamCrestImageUrl(update.team.team)}
+                      alt={`${update.team.team} crest`}
+                      fallbackText={initials(update.team.team)}
+                      wrapperClassName="flex h-12 w-12 shrink-0 items-center justify-center"
+                      imageClassName="h-10 w-10 object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
+                      fallbackClassName="font-mono text-[12px] font-semibold text-slate-200"
+                      width={40}
+                      height={40}
+                      sizes="40px"
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-base font-semibold tracking-tight text-slate-100">{update.team.team} penalty taker</span>
+                      <span className="rounded-full border border-slate-700 bg-slate-900/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-300">
+                        Group {update.team.group}
+                      </span>
+                      <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-200">
+                        {update.team.confidence}
+                      </span>
+                    </div>
+                    <div className="mt-2 text-sm font-semibold text-slate-200">{update.label}</div>
+                    <div className="mt-2 text-xs leading-6 text-slate-400">{update.summary}</div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section
           id="group-browser"
           className="mt-6 scroll-mt-28 rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]"
         >
@@ -591,54 +649,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
           })}
         </section>
 
-        <section className="mt-14 grid gap-4 sm:gap-6 xl:grid-cols-[1.05fr,0.95fr]">
-          <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
-            <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Latest Evidence Notes</div>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">What changed in the latest audit</h2>
-            <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-400">
-              The page is now less about qualification slots and more about the penalty hierarchy itself. These are the
-              latest notes that moved the board or tightened the public wording after the final-squad check.
-            </p>
-            <div className="mt-6 grid gap-4 lg:grid-cols-2">
-              {latestHierarchyUpdates.map((update) => (
-                <Link
-                  key={update.team.team}
-                  href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(update.team.team)}`}
-                  className="rounded-2xl border border-slate-800/80 bg-slate-950/70 p-4 transition hover:border-slate-600 hover:bg-slate-900/90"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center">
-                      <FlagMark
-                        src={teamCrestImageUrl(update.team.team)}
-                        alt={`${update.team.team} crest`}
-                        fallbackText={initials(update.team.team)}
-                        wrapperClassName="flex h-12 w-12 shrink-0 items-center justify-center"
-                        imageClassName="h-10 w-10 object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
-                        fallbackClassName="font-mono text-[12px] font-semibold text-slate-200"
-                        width={40}
-                        height={40}
-                        sizes="40px"
-                      />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-base font-semibold tracking-tight text-slate-100">{update.team.team}</span>
-                        <span className="rounded-full border border-slate-700 bg-slate-900/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-300">
-                          Group {update.team.group}
-                        </span>
-                        <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-200">
-                          {update.team.confidence}
-                        </span>
-                      </div>
-                      <div className="mt-2 text-sm font-semibold text-slate-200">{update.label}</div>
-                      <div className="mt-2 text-xs leading-6 text-slate-400">{update.summary}</div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-
+        <section className="mt-14">
           <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
             <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">How The Board Moves</div>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">How the finished board gets tightened</h2>
