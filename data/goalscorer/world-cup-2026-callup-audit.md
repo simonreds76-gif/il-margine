@@ -16,6 +16,7 @@ Verified at: 2026-05-31
 
 ## Material Updates Made
 
+- Brazil: Neymar / Raphinha | 31 May 2026 hierarchy audit: Neymar is in the final 26 and remains the penalty alpha if fit/on-pitch; Raphinha is the practical first call only when Neymar is absent or not starting because of the grade-two calf injury.
 - Korea Republic: Son Heung-min / Hwang Hee-chan | South Korea 5-0 Trinidad and Tobago, 30 May 2026: Son Heung-min scored a first-half penalty; Hwang Hee-chan converted another penalty after Son had been substituted.
 - Cabo Verde: Ryan Mendes / Jovane Cabral | 31 May 2026 call-up audit: Ryan Mendes is in Cape Verde's final squad; Bebe is absent, so Jovane Cabral replaces him as the in-squad backup after a March 2026 penalty event vs Finland.
 - Curacao: Leandro Bacuna / Juninho Bacuna | 31 May 2026 call-up audit: Leandro Bacuna is in Curacao's final squad; Jordi Paulina is absent, so Juninho Bacuna is now the closest in-squad backup.
