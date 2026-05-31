@@ -42,6 +42,11 @@ const LATEST_HIERARCHY_UPDATES = [
     summary: "Oyarzabal keeps the direct Spain penalty trail. Lamine Yamal now sits ahead of Ferran as the upside backup, with Rodri the veteran fallback.",
   },
   {
+    team: "Switzerland",
+    label: "Xhaka first, Embolo now backup",
+    summary: "Xhaka still owns the qualifier trail. Embolo's Jordan penalty moves him into the live secondary line ahead of Ricardo Rodriguez.",
+  },
+  {
     team: "Curacao",
     label: "Backup caveat tightened",
     summary: "Leandro Bacuna has the direct qualifier evidence. Juninho Bacuna is an inferred fallback after Jordi Paulina missed the final squad.",
