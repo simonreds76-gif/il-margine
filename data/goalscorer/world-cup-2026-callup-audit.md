@@ -16,11 +16,12 @@ Verified at: 31 May 2026
 
 ## Material Updates Made
 
+- IR Iran: Mehdi Taremi / Alireza Jahanbakhsh | 31 May 2026 call-up audit: Azmoun remains out of the squad path; AP/Guardian describe the omission as politically contested, so he stays off the penalty hierarchy unless officially restored.
+- Spain: Mikel Oyarzabal / Lamine Yamal | 31 May 2026 hierarchy audit: Oyarzabal keeps the primary signal from recent Spain penalties; Lamine moves ahead of Ferran Torres as upside backup, with Rodri noted as the veteran fallback.
 - Brazil: Neymar / Raphinha | 31 May 2026 hierarchy audit: Neymar is in the final 26 and remains the penalty alpha if fit/on-pitch; Raphinha is the practical first call only when Neymar is absent or not starting because of the grade-two calf injury.
 - Korea Republic: Son Heung-min / Hwang Hee-chan | South Korea 5-0 Trinidad and Tobago, 30 May 2026: Son Heung-min scored a first-half penalty; Hwang Hee-chan converted another penalty after Son had been substituted.
 - Cabo Verde: Ryan Mendes / Jovane Cabral | 31 May 2026 call-up audit: Ryan Mendes is in Cape Verde's final squad; Bebe is absent, so Jovane Cabral replaces him as the in-squad backup after a March 2026 penalty event vs Finland.
 - Curacao: Leandro Bacuna / Juninho Bacuna | 31 May 2026 call-up audit: Leandro has direct recent penalty evidence vs Bermuda; Jordi Paulina also scored but is absent, so Juninho is an inferred in-squad fallback rather than a proven national-team penalty No. 2.
-- IR Iran: Mehdi Taremi / Alireza Jahanbakhsh | 31 May 2026 call-up audit: Mehdi Taremi is listed in Iran's 30-man squad, while Sardar Azmoun is omitted; Alireza Jahanbakhsh becomes the closest in-squad backup.
 - Jordan: Ali Olwan / Musa Al-Taamari | 31 May 2026 call-up audit: Ali Olwan and Musa Al-Taamari are both listed in Jordan's 30-man preliminary squad.
 
 ## Still Pending Final Squad Publication

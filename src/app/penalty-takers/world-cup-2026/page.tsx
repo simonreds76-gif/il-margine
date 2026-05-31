@@ -37,14 +37,19 @@ const LATEST_HIERARCHY_UPDATES = [
     summary: "Son scored the first penalty against Trinidad and Tobago; Hwang converted another after Son had been substituted.",
   },
   {
+    team: "Spain",
+    label: "Lamine moves into the backup line",
+    summary: "Oyarzabal keeps the direct Spain penalty trail. Lamine Yamal now sits ahead of Ferran as the upside backup, with Rodri the veteran fallback.",
+  },
+  {
     team: "Curacao",
     label: "Backup caveat tightened",
     summary: "Leandro Bacuna has the direct qualifier evidence. Juninho Bacuna is an inferred fallback after Jordi Paulina missed the final squad.",
   },
   {
     team: "IR Iran",
-    label: "Azmoun removed from backup line",
-    summary: "Azmoun is outside the squad path, so Jahanbakhsh moves into the in-squad fallback slot behind Taremi.",
+    label: "Azmoun stays off the hierarchy",
+    summary: "Azmoun remains outside the squad path amid politically contested reporting; Jahanbakhsh is the in-squad fallback behind Taremi.",
   },
   {
     team: "Cabo Verde",
