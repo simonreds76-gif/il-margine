@@ -10,9 +10,11 @@ import {
   buildWorldCupTeamLead,
   buildWorldCupTeamTitle,
   CONFEDERATION_ORDER,
+  formatAuditDate,
   getWorldCupTeamBySlug,
   initials,
   publicPenaltyEvidenceText,
+  publicSquadStatusText,
   readWorldCupData,
   teamCrestImageUrl,
   worldCupTeamSlug,
@@ -165,6 +167,9 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
   const secondary = team.likely_secondary?.trim();
   const visibleLastEvidence = publicPenaltyEvidenceText(team.last_evidence);
   const visibleNote = publicPenaltyEvidenceText(team.note);
+  const visibleSquadStatus = publicSquadStatusText(team);
+  const visibleSquadNote = team.squad_note ? publicPenaltyEvidenceText(team.squad_note) : "";
+  const lastVerifiedLabel = formatAuditDate(data.last_verified);
   const visibleEvidenceLog = (team.evidence_log?.length ? team.evidence_log : ["Evidence trail still being built."]).map(
     (entry) => publicPenaltyEvidenceText(entry, "Evidence trail still being built."),
   );
@@ -326,7 +331,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
                       </span>
                     ) : null}
                     <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300 sm:text-xs sm:tracking-[0.18em]">
-                      Current file: {data.last_verified}
+                      Current file: {lastVerifiedLabel}
                     </span>
                     <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-[10px] text-slate-400 sm:text-xs">
                       Il Margine file
@@ -399,6 +404,8 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Who takes penalties for {team.team} at World Cup 2026?</h2>
             <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
               <p>{worldCupAnswer}</p>
+              <p>{visibleSquadStatus}</p>
+              {visibleSquadNote ? <p>{visibleSquadNote}</p> : null}
               <p>A fresh in-match penalty can move this page quickly, especially if it contradicts the current lead or happens with the full-strength tournament pool on the pitch.</p>
               <p>For the more conditional boards, one more clean senior penalty is often enough to sharpen the backup line or flip the order outright.</p>
               <p>

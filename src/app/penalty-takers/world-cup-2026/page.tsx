@@ -13,6 +13,7 @@ import {
   teamCrestImageUrl,
   worldCupTeamSlug,
   worldCupTeamUrl,
+  formatAuditDate,
   initials,
   publicPenaltyEvidenceText,
 } from "@/lib/world-cup-penalties";
@@ -23,7 +24,49 @@ const PAGE_DESCRIPTION =
   "Who takes penalties for every qualified nation at the 2026 FIFA World Cup? First-choice and backup penalty takers from the Il Margine World Cup intelligence file.";
 
 const FEATURED_TEAMS = ["Germany", "France", "Brazil", "Argentina", "England", "Spain", "Japan", "Netherlands", "USA", "Mexico"];
-const LATE_QUALIFIER_TEAMS = ["Bosnia and Herzegovina", "Sweden", "Turkiye", "Czechia", "Congo DR", "Iraq"];
+
+const LATEST_HIERARCHY_UPDATES = [
+  {
+    team: "Australia",
+    label: "Boyle cut, hierarchy rebuilt",
+    summary: "Hrustic leads only if on the pitch; Toure is the practical fallback, with Leckie, Irankunda and Mabil live depending on the XI.",
+  },
+  {
+    team: "Brazil",
+    label: "Neymar conditional No. 1",
+    summary: "Neymar owns the penalty if fit and on the pitch; Raphinha is the practical taker only when Neymar is absent or not starting.",
+  },
+  {
+    team: "Korea Republic",
+    label: "Son then Hwang confirmed",
+    summary: "Son scored the first penalty against Trinidad and Tobago; Hwang converted another after Son had been substituted.",
+  },
+  {
+    team: "Spain",
+    label: "Lamine moves into the backup line",
+    summary: "Oyarzabal keeps the direct Spain penalty trail. Lamine Yamal now sits ahead of Ferran as the upside backup, with Rodri the veteran fallback.",
+  },
+  {
+    team: "Switzerland",
+    label: "Xhaka first, Embolo now backup",
+    summary: "Xhaka still owns the qualifier trail. Embolo's Jordan penalty moves him into the live secondary line ahead of Ricardo Rodriguez.",
+  },
+  {
+    team: "Curacao",
+    label: "Backup caveat tightened",
+    summary: "Leandro Bacuna has the direct qualifier evidence. Juninho Bacuna is an inferred fallback after Jordi Paulina missed the final squad.",
+  },
+  {
+    team: "IR Iran",
+    label: "Azmoun stays off the hierarchy",
+    summary: "Azmoun remains outside the squad path amid politically contested reporting; Jahanbakhsh is the in-squad fallback behind Taremi.",
+  },
+  {
+    team: "Cabo Verde",
+    label: "Bebe out, Cabral in",
+    summary: "Ryan Mendes remains the lead. Jovane Cabral replaces Bebe as the best in-squad backup after the final-squad audit.",
+  },
+];
 
 const CONFEDERATION_INTROS: Record<string, string> = {
   UEFA:
@@ -161,10 +204,12 @@ export default async function WorldCup2026PenaltyTakersPage() {
     const match = data.teams.find((team) => team.team === name);
     return match ? [match] : [];
   });
-  const lateQualifiers = LATE_QUALIFIER_TEAMS.flatMap((name) => {
-    const match = data.teams.find((team) => team.team === name);
-    return match ? [match] : [];
+  const latestHierarchyUpdates = LATEST_HIERARCHY_UPDATES.flatMap((update) => {
+    const team = data.teams.find((candidate) => candidate.team === update.team);
+    return team ? [{ ...update, team }] : [];
   });
+  const finalSquadsAudited = data.teams.filter((team) => team.squad_status === "final_announced").length;
+  const lastVerifiedLabel = formatAuditDate(data.last_verified);
   const alphabeticalTeams = [...data.teams].sort((left, right) => left.team.localeCompare(right.team, "en"));
   const alphabeticalIndexTeams = alphabeticalTeams.map((team) => ({
     team: team.team,
@@ -318,19 +363,19 @@ export default async function WorldCup2026PenaltyTakersPage() {
                     {data.qualified_count}
                     <span className="text-lg text-emerald-200/70">/48</span>
                   </div>
-                  <div className="mt-1 text-sm text-slate-400">Confirmed spots filled</div>
+                  <div className="mt-1 text-sm text-slate-400">Qualified nations covered</div>
                 </div>
                 <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4 sm:p-5">
-                  <div className="font-mono text-3xl font-semibold text-emerald-400">{lateQualifiers.length}</div>
-                  <div className="mt-1 text-sm text-slate-400">Late qualifiers added</div>
+                  <div className="font-mono text-3xl font-semibold text-emerald-400">{finalSquadsAudited}</div>
+                  <div className="mt-1 text-sm text-slate-400">Final squads audited</div>
                 </div>
                 <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4 sm:p-5">
-                  <div className="font-mono text-3xl font-semibold text-emerald-400">{WORLD_CUP_GROUP_ORDER.length}</div>
-                  <div className="mt-1 text-sm text-slate-400">Groups locked in</div>
+                  <div className="font-mono text-3xl font-semibold text-emerald-400">{latestHierarchyUpdates.length}</div>
+                  <div className="mt-1 text-sm text-slate-400">Teams re-checked</div>
                 </div>
                 <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4 sm:p-5">
-                  <div className="font-mono text-xl font-semibold text-emerald-400">{data.last_verified}</div>
-                  <div className="mt-1 text-sm text-slate-400">Last verified</div>
+                  <div className="font-mono text-xl font-semibold text-emerald-400">{lastVerifiedLabel}</div>
+                  <div className="mt-1 text-sm text-slate-400">Latest audit</div>
                 </div>
               </div>
             </div>
@@ -363,6 +408,64 @@ export default async function WorldCup2026PenaltyTakersPage() {
         </section>
 
         <section
+          id="latest-penalty-taker-updates"
+          className="mt-6 rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]"
+        >
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <div className="font-mono text-xs uppercase tracking-[0.24em] text-emerald-400">Recent changes</div>
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Latest penalty taker updates</h2>
+              <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-400">
+                The teams whose World Cup penalty order we re-checked most recently this cycle. Each card opens the
+                full team page with the current call, backup order and evidence trail.
+              </p>
+            </div>
+            <div className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-400">
+              {latestHierarchyUpdates.length} teams re-checked this cycle
+            </div>
+          </div>
+
+          <div className="mt-6 grid gap-4 lg:grid-cols-2">
+            {latestHierarchyUpdates.map((update) => (
+              <Link
+                key={update.team.team}
+                href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(update.team.team)}`}
+                className="rounded-2xl border border-slate-800/80 bg-slate-950/70 p-4 transition hover:border-slate-600 hover:bg-slate-900/90"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center">
+                    <FlagMark
+                      src={teamCrestImageUrl(update.team.team)}
+                      alt={`${update.team.team} crest`}
+                      fallbackText={initials(update.team.team)}
+                      wrapperClassName="flex h-12 w-12 shrink-0 items-center justify-center"
+                      imageClassName="h-10 w-10 object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
+                      fallbackClassName="font-mono text-[12px] font-semibold text-slate-200"
+                      width={40}
+                      height={40}
+                      sizes="40px"
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-base font-semibold tracking-tight text-slate-100">{update.team.team} penalty taker</span>
+                      <span className="rounded-full border border-slate-700 bg-slate-900/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-300">
+                        Group {update.team.group}
+                      </span>
+                      <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-200">
+                        {update.team.confidence}
+                      </span>
+                    </div>
+                    <div className="mt-2 text-sm font-semibold text-slate-200">{update.label}</div>
+                    <div className="mt-2 text-xs leading-6 text-slate-400">{update.summary}</div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section
           id="group-browser"
           className="mt-6 scroll-mt-28 rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]"
         >
@@ -375,7 +478,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
               </p>
             </div>
             <div className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-400">
-              Updated {data.last_verified}
+              Updated {lastVerifiedLabel}
             </div>
           </div>
 
@@ -546,55 +649,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
           })}
         </section>
 
-        <section className="mt-14 grid gap-4 sm:gap-6 xl:grid-cols-[1.05fr,0.95fr]">
-          <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
-            <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Freshly Added</div>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">The last six teams are now on the board</h2>
-            <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-400">
-              The March play-offs closed the field and the World Cup page is now a full 48-team board. These were the six teams that landed late, so they are the ones most likely to have thinner penalty files or more cautious confidence labels than the older qualifiers.
-            </p>
-            <div className="mt-6 grid gap-4 lg:grid-cols-2">
-              {lateQualifiers.map((team) => (
-                <Link
-                  key={team.team}
-                  href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(team.team)}`}
-                  className="rounded-2xl border border-slate-800/80 bg-slate-950/70 p-4 transition hover:border-slate-600 hover:bg-slate-900/90"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center">
-                      <FlagMark
-                        src={teamCrestImageUrl(team.team)}
-                        alt={`${team.team} crest`}
-                        fallbackText={initials(team.team)}
-                        wrapperClassName="flex h-12 w-12 shrink-0 items-center justify-center"
-                        imageClassName="h-10 w-10 object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
-                        fallbackClassName="font-mono text-[12px] font-semibold text-slate-200"
-                        width={40}
-                        height={40}
-                        sizes="40px"
-                      />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-base font-semibold tracking-tight text-slate-100">{team.team}</span>
-                        <span className="rounded-full border border-slate-700 bg-slate-900/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-300">
-                          Group {team.group}
-                        </span>
-                        <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-200">
-                          {team.confidence}
-                        </span>
-                      </div>
-                      <div className="mt-2 text-sm text-slate-300">
-                        <span className="text-slate-500">Current call:</span> {team.likely_primary || "Still building"}{team.likely_secondary ? `, with ${team.likely_secondary} next.` : "."}
-                      </div>
-                      <div className="mt-2 text-xs leading-6 text-slate-400">{publicPenaltyEvidenceText(team.last_evidence, "Fresh file added after qualification.")}</div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-
+        <section className="mt-14">
           <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
             <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">How The Board Moves</div>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">How the finished board gets tightened</h2>
