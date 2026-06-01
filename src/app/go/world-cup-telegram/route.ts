@@ -1,4 +1,4 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { WORLD_CUP_TELEGRAM_URL } from "@/lib/config";
 
 export const dynamic = "force-static";

@@ -13,7 +13,8 @@
     "create-logos": "node scripts/create-placeholder-logos.js",
     "download-logos": "node scripts/download-real-logos.js",
     "check-last7": "node scripts/check-last7.js",
-    "check:vercel-trace": "node scripts/check-vercel-trace.mjs"
+    "check:vercel-trace": "node scripts/check-vercel-trace.mjs",
+    "check:wc-penalties": "python scripts/validate-world-cup-penalty-page.py"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.43",
