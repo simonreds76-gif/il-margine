@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build an internal ATP/WTA Slam aces and double-fault projection board."""
+"""Build an internal ATP/WTA Slam aces/DF board with break-count context."""
 
 from __future__ import annotations
 
@@ -85,11 +85,27 @@ def parse_int(value: object, default: int = 0) -> int:
         return default
 
 
-def add_stat_totals(target: dict[str, int], *, aces: object, dfs: object, svpt: object) -> None:
+def add_stat_totals(
+    target: dict[str, int],
+    *,
+    aces: object,
+    dfs: object,
+    svpt: object,
+    breaks_for: object,
+    broken: object,
+    return_games: object,
+) -> None:
     target["matches"] = target.get("matches", 0) + 1
     target["aces"] = target.get("aces", 0) + parse_int(aces)
     target["dfs"] = target.get("dfs", 0) + parse_int(dfs)
     target["svpt"] = target.get("svpt", 0) + parse_int(svpt)
+    target["breaks_for"] = target.get("breaks_for", 0) + parse_int(breaks_for)
+    target["broken"] = target.get("broken", 0) + parse_int(broken)
+    target["return_games"] = target.get("return_games", 0) + parse_int(return_games)
+
+
+def broken_from_stat(stat: dict[str, str], prefix: str) -> int:
+    return max(0, parse_int(stat.get(f"{prefix}_bpfaced")) - parse_int(stat.get(f"{prefix}_bpsaved")))
 
 
 def fmt(value: float | None, digits: int = 3) -> str:
@@ -319,12 +335,18 @@ def load_current_tournament_stats(schedules: list[dict[str, str]], as_of: date) 
                 aces=stat.get("w_ace"),
                 dfs=stat.get("w_df"),
                 svpt=stat.get("w_svpt"),
+                breaks_for=stat.get("w_bpw"),
+                broken=broken_from_stat(stat, "w"),
+                return_games=stat.get("l_SvGms"),
             )
             add_stat_totals(
                 totals[(tour, tour_id, loser_id)],
                 aces=stat.get("l_ace"),
                 dfs=stat.get("l_df"),
                 svpt=stat.get("l_svpt"),
+                breaks_for=stat.get("l_bpw"),
+                broken=broken_from_stat(stat, "l"),
+                return_games=stat.get("w_SvGms"),
             )
 
     return {
@@ -389,6 +411,9 @@ def load_current_tournament_logs(schedules: list[dict[str, str]], as_of: date) -
                     "opponent": loser_name,
                     "aces": str(parse_int(stat.get("w_ace"))),
                     "dfs": str(parse_int(stat.get("w_df"))),
+                    "breaks_for": str(parse_int(stat.get("w_bpw"))),
+                    "broken": str(broken_from_stat(stat, "w")),
+                    "total_breaks": str(parse_int(stat.get("w_bpw")) + broken_from_stat(stat, "w")),
                     "svpt": str(parse_int(stat.get("w_svpt"))),
                 }
             )
@@ -398,6 +423,9 @@ def load_current_tournament_logs(schedules: list[dict[str, str]], as_of: date) -
                     "opponent": winner_name,
                     "aces": str(parse_int(stat.get("l_ace"))),
                     "dfs": str(parse_int(stat.get("l_df"))),
+                    "breaks_for": str(parse_int(stat.get("l_bpw"))),
+                    "broken": str(broken_from_stat(stat, "l")),
+                    "total_breaks": str(parse_int(stat.get("l_bpw")) + broken_from_stat(stat, "l")),
                     "svpt": str(parse_int(stat.get("l_svpt"))),
                 }
             )
@@ -469,6 +497,12 @@ def project_side(
         "same_tournament_svpt": str(projection.same_tournament_svpt),
         "same_tournament_ace_weight": fmt(projection.same_tournament_ace_weight, 3),
         "same_tournament_df_weight": fmt(projection.same_tournament_df_weight, 3),
+        "same_tournament_breaks_for": str(parse_int(same_tournament_row.get("breaks_for") if same_tournament_row else "")),
+        "same_tournament_broken": str(parse_int(same_tournament_row.get("broken") if same_tournament_row else "")),
+        "same_tournament_total_breaks": str(
+            parse_int(same_tournament_row.get("breaks_for") if same_tournament_row else "")
+            + parse_int(same_tournament_row.get("broken") if same_tournament_row else "")
+        ),
         "tournament_round_log": json.dumps(same_tournament_log, ensure_ascii=True, separators=(",", ":")),
         "venue_ace_factor": str(factor.get("ace_factor") or ""),
         "venue_df_factor": str(factor.get("df_factor") or ""),
@@ -556,6 +590,9 @@ def main() -> None:
         "same_tournament_svpt",
         "same_tournament_ace_weight",
         "same_tournament_df_weight",
+        "same_tournament_breaks_for",
+        "same_tournament_broken",
+        "same_tournament_total_breaks",
         "tournament_round_log",
         "venue_ace_factor",
         "venue_df_factor",

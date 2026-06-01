@@ -23,6 +23,9 @@ type TournamentRoundLog = {
   result?: string;
   aces?: string;
   dfs?: string;
+  breaks_for?: string;
+  broken?: string;
+  total_breaks?: string;
   svpt?: string;
 };
 
@@ -242,17 +245,20 @@ function TournamentRoundDetails({ row }: { row: CsvRow }) {
   return (
     <details className="group mt-1 rounded-xl border border-slate-800/80 bg-slate-950/50 px-2 py-1">
       <summary className="cursor-pointer list-none text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 transition group-open:text-emerald-300">
-        Round aces / DFs
+        Round aces / DFs / breaks
       </summary>
       {logs.length ? (
         <div className="mt-2 overflow-x-auto">
-          <table className="min-w-[360px] text-[11px]">
+          <table className="min-w-[520px] text-[11px]">
             <thead className="text-left uppercase tracking-[0.12em] text-slate-600">
               <tr>
                 <th className="py-1 pr-3 font-semibold">Round</th>
                 <th className="py-1 pr-3 font-semibold">Opponent</th>
                 <th className="py-1 pr-3 font-semibold">Aces</th>
                 <th className="py-1 pr-3 font-semibold">DFs</th>
+                <th className="py-1 pr-3 font-semibold">Brk</th>
+                <th className="py-1 pr-3 font-semibold">Brkn</th>
+                <th className="py-1 pr-3 font-semibold">Total brk</th>
                 <th className="py-1 pr-3 font-semibold">Result</th>
               </tr>
             </thead>
@@ -263,6 +269,9 @@ function TournamentRoundDetails({ row }: { row: CsvRow }) {
                   <td className="py-1 pr-3 text-slate-400">{log.opponent || "-"}</td>
                   <td className="py-1 pr-3 font-mono text-emerald-300">{log.aces || "0"}</td>
                   <td className="py-1 pr-3 font-mono text-rose-300">{log.dfs || "0"}</td>
+                  <td className="py-1 pr-3 font-mono text-cyan-300">{log.breaks_for || "0"}</td>
+                  <td className="py-1 pr-3 font-mono text-amber-300">{log.broken || "0"}</td>
+                  <td className="py-1 pr-3 font-mono text-slate-300">{log.total_breaks || "0"}</td>
                   <td className="py-1 pr-3 font-mono text-slate-500">{log.result || "-"}</td>
                 </tr>
               ))}
@@ -291,6 +300,7 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
             <th className="px-3 py-3 font-semibold">Opponent</th>
             <th className="px-3 py-3 font-semibold">Aces</th>
             <th className="px-3 py-3 font-semibold">DFs</th>
+            <th className="px-3 py-3 font-semibold">Event breaks</th>
             <th className="px-3 py-3 font-semibold">Aces conf</th>
             <th className="px-3 py-3 font-semibold">DF conf</th>
             <th className="px-3 py-3 font-semibold">Sample</th>
@@ -301,7 +311,7 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
           {groupedRows.map((group) => (
             <Fragment key={group.date}>
               <tr className="border-y border-slate-800 bg-slate-950/80">
-                <td colSpan={9} className="px-3 py-3">
+                <td colSpan={10} className="px-3 py-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="text-xs font-black uppercase tracking-[0.18em] text-emerald-300">{dateLabel(group.date)}</span>
                     <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate-500">{group.rows.length} player rows</span>
@@ -320,6 +330,10 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
                   <td className="px-3 py-3 text-slate-400">{row.opponent}</td>
                   <td className="px-3 py-3 font-mono text-lg text-emerald-300">{fmt(row.projected_aces, 1)}</td>
                   <td className="px-3 py-3 font-mono text-lg text-rose-300">{fmt(row.projected_dfs, 1)}</td>
+                  <td className="px-3 py-3 font-mono text-xs text-slate-400">
+                    <div><span className="text-cyan-300">{row.same_tournament_breaks_for || "0"}</span> won / <span className="text-amber-300">{row.same_tournament_broken || "0"}</span> lost</div>
+                    <div className="text-slate-600">total {row.same_tournament_total_breaks || "0"}</div>
+                  </td>
                   <td className="px-3 py-3"><MiniBadge label={row.ace_confidence || "LOW"} tone={confidenceTone(row.ace_confidence)} /></td>
                   <td className="px-3 py-3"><MiniBadge label={row.df_confidence || "LOW"} tone={confidenceTone(row.df_confidence)} /></td>
                   <td className="px-3 py-3 font-mono text-xs text-slate-400">
@@ -522,7 +536,7 @@ export default async function TennisPropsMonitorPage() {
 
         <HeroCard title="Tennis Aces / Double-Faults Board" eyebrow="Slam player props research">
           <p className="text-slate-300">
-            Local OnCourt schedule plus Sackmann service stats. This is a research board for Bet365 aces and double-fault lines, not a public record lane yet.
+            Local OnCourt schedule plus Sackmann service stats. This is a research board for Bet365 aces and double-fault lines, with same-tournament break context added for trader review.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             <StatusPill label="OnCourt schedule" tone="border-emerald-500/25 bg-emerald-500/10 text-emerald-300" />

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build ATP/WTA player ace and double-fault baselines for Slam props."""
+"""Build ATP/WTA player serve and break-context baselines for Slam props."""
 
 from __future__ import annotations
 
@@ -75,6 +75,10 @@ def empty_totals() -> dict[str, float]:
         "svgms": 0,
         "aces": 0,
         "dfs": 0,
+        "breaks_for": 0,
+        "broken": 0,
+        "return_games": 0,
+        "service_games_break_sample": 0,
         "first_in": 0,
         "first_won": 0,
         "second_won": 0,
@@ -104,11 +108,13 @@ def add_side(
     opp_second_attempts = max(0, opp_svpt - opp_first_in)
     opp_first_won = parse_int(row.get(f"{opp_prefix}_1stWon"))
     opp_second_won = parse_int(row.get(f"{opp_prefix}_2ndWon"))
+    service_games = parse_int(row.get(f"{prefix}_SvGms"))
+    return_games = parse_int(row.get(f"{opp_prefix}_SvGms"))
 
     totals["matches"] += 1
     totals["wins"] += 1 if won else 0
     totals["svpt"] += svpt
-    totals["svgms"] += parse_int(row.get(f"{prefix}_SvGms"))
+    totals["svgms"] += service_games
     totals["aces"] += parse_int(row.get(f"{prefix}_ace"))
     totals["dfs"] += parse_int(row.get(f"{prefix}_df"))
     totals["first_in"] += first_in
@@ -119,6 +125,22 @@ def add_side(
     totals["ret_first_won"] += max(0, opp_first_in - opp_first_won)
     totals["ret_second_points"] += opp_second_attempts
     totals["ret_second_won"] += max(0, opp_second_attempts - opp_second_won)
+
+    own_bp_faced_raw = str(row.get(f"{prefix}_bpFaced") or "").strip()
+    own_bp_saved_raw = str(row.get(f"{prefix}_bpSaved") or "").strip()
+    if own_bp_faced_raw and own_bp_saved_raw and service_games > 0:
+        own_bp_faced = parse_int(own_bp_faced_raw)
+        own_bp_saved = parse_int(own_bp_saved_raw)
+        totals["broken"] += max(0, own_bp_faced - own_bp_saved)
+        totals["service_games_break_sample"] += service_games
+
+    opp_bp_faced_raw = str(row.get(f"{opp_prefix}_bpFaced") or "").strip()
+    opp_bp_saved_raw = str(row.get(f"{opp_prefix}_bpSaved") or "").strip()
+    if opp_bp_faced_raw and opp_bp_saved_raw and return_games > 0:
+        opp_bp_faced = parse_int(opp_bp_faced_raw)
+        opp_bp_saved = parse_int(opp_bp_saved_raw)
+        totals["breaks_for"] += max(0, opp_bp_faced - opp_bp_saved)
+        totals["return_games"] += return_games
 
 
 def safe_div(num: float, den: float) -> float | None:
@@ -150,8 +172,14 @@ def totals_row(
         "svgms": str(int(totals["svgms"])),
         "aces": str(int(totals["aces"])),
         "dfs": str(int(totals["dfs"])),
+        "breaks_for": str(int(totals["breaks_for"])),
+        "broken": str(int(totals["broken"])),
+        "return_games": str(int(totals["return_games"])),
+        "service_games_break_sample": str(int(totals["service_games_break_sample"])),
         "ace_rate": fmt(safe_div(totals["aces"], totals["svpt"])),
         "df_rate": fmt(safe_div(totals["dfs"], totals["svpt"])),
+        "break_for_rate": fmt(safe_div(totals["breaks_for"], totals["return_games"])),
+        "broken_rate": fmt(safe_div(totals["broken"], totals["service_games_break_sample"])),
         "first_serve_pct": fmt(safe_div(totals["first_in"], totals["svpt"])),
         "first_serve_win_pct": fmt(safe_div(totals["first_won"], totals["first_in"])),
         "second_serve_win_pct": fmt(safe_div(totals["second_won"], totals["second_attempts"])),
@@ -229,8 +257,14 @@ def main() -> None:
         "svgms",
         "aces",
         "dfs",
+        "breaks_for",
+        "broken",
+        "return_games",
+        "service_games_break_sample",
         "ace_rate",
         "df_rate",
+        "break_for_rate",
+        "broken_rate",
         "first_serve_pct",
         "first_serve_win_pct",
         "second_serve_win_pct",
