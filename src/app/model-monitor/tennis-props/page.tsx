@@ -245,7 +245,7 @@ function TournamentRoundDetails({ row }: { row: CsvRow }) {
   return (
     <details className="group mt-1 rounded-xl border border-slate-800/80 bg-slate-950/50 px-2 py-1">
       <summary className="cursor-pointer list-none text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 transition group-open:text-emerald-300">
-        Round aces / DFs / breaks
+        Per-match aces / DFs / breaks
       </summary>
       {logs.length ? (
         <div className="mt-2 overflow-x-auto">
@@ -300,8 +300,7 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
             <th className="px-3 py-3 font-semibold">Opponent</th>
             <th className="px-3 py-3 font-semibold">Aces</th>
             <th className="px-3 py-3 font-semibold">DFs</th>
-            <th className="px-3 py-3 font-semibold">Break proj</th>
-            <th className="px-3 py-3 font-semibold">Event breaks</th>
+            <th className="px-3 py-3 font-semibold">Break est</th>
             <th className="px-3 py-3 font-semibold">Aces conf</th>
             <th className="px-3 py-3 font-semibold">DF conf</th>
             <th className="px-3 py-3 font-semibold">Break conf</th>
@@ -313,7 +312,7 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
           {groupedRows.map((group) => (
             <Fragment key={group.date}>
               <tr className="border-y border-slate-800 bg-slate-950/80">
-                <td colSpan={12} className="px-3 py-3">
+                <td colSpan={11} className="px-3 py-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="text-xs font-black uppercase tracking-[0.18em] text-emerald-300">{dateLabel(group.date)}</span>
                     <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate-500">{group.rows.length} player rows</span>
@@ -333,17 +332,10 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
                   <td className="px-3 py-3 font-mono text-lg text-emerald-300">{fmt(row.projected_aces, 1)}</td>
                   <td className="px-3 py-3 font-mono text-lg text-rose-300">{fmt(row.projected_dfs, 1)}</td>
                   <td className="px-3 py-3 font-mono text-xs text-slate-400">
-                    <div>
-                      <span className="text-cyan-300">{row.projected_breaks_for ? `+${fmt(row.projected_breaks_for, 1)}` : "-"}</span>
-                      <span className="text-slate-600"> / </span>
-                      <span className="text-amber-300">{row.projected_broken ? `-${fmt(row.projected_broken, 1)}` : "-"}</span>
-                    </div>
-                    <div className="text-slate-600">total {row.projected_total_breaks ? fmt(row.projected_total_breaks, 1) : "-"}</div>
+                    <div><span className="text-cyan-300">won {row.projected_breaks_for ? `+${fmt(row.projected_breaks_for, 1)}` : "-"}</span></div>
+                    <div><span className="text-amber-300">broken {row.projected_broken ? `-${fmt(row.projected_broken, 1)}` : "-"}</span></div>
+                    <div className="text-slate-600">match total {row.projected_total_breaks ? fmt(row.projected_total_breaks, 1) : "-"}</div>
                     <div className="mt-1 text-[10px] uppercase tracking-[0.12em] text-amber-300/70">context only</div>
-                  </td>
-                  <td className="px-3 py-3 font-mono text-xs text-slate-400">
-                    <div><span className="text-cyan-300">{row.same_tournament_breaks_for || "0"}</span> won / <span className="text-amber-300">{row.same_tournament_broken || "0"}</span> lost</div>
-                    <div className="text-slate-600">total {row.same_tournament_total_breaks || "0"}</div>
                   </td>
                   <td className="px-3 py-3"><MiniBadge label={row.ace_confidence || "LOW"} tone={confidenceTone(row.ace_confidence)} /></td>
                   <td className="px-3 py-3"><MiniBadge label={row.df_confidence || "LOW"} tone={confidenceTone(row.df_confidence)} /></td>
@@ -599,7 +591,7 @@ export default async function TennisPropsMonitorPage() {
 
           <SectionCard
             title={`Projection Board (${latestDate(boardRows)})`}
-            subtitle="Expected aces, double faults, and break counts for each scheduled player. Breaks are context only because the estimate is still chained to the match-games assumption."
+            subtitle="Expected aces, double faults, and break counts for each scheduled player. Open a player row for the per-match aces/DF/breaks log from completed rounds. Break estimates are context only because they are still chained to the match-games assumption."
           >
             <ProjectionTable rows={sortedBoard} />
           </SectionCard>
