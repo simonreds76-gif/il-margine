@@ -1,6 +1,6 @@
 # Assist Value Set-Piece Source Audit
 
-Fetched at UTC: `2026-05-31T09:49:34+00:00`
+Fetched at UTC: `2026-06-01T12:46:19+00:00`
 
 ## Decision
 
@@ -14,12 +14,12 @@ Overall: **PASS_SOURCE_LAYER**
 ## RotoWire
 
 - Teams with set-piece blocks: `96/96`
-- Player role rows extracted: `1033`
+- Player role rows extracted: `1032`
 
 | League | Teams OK | Teams | Role rows | Max latest week |
 |---|---:|---:|---:|---:|
 | bundesliga | 18 | 18 | 179 | 49 |
-| epl | 20 | 20 | 212 | 57 |
+| epl | 20 | 20 | 211 | 57 |
 | la-liga | 20 | 20 | 220 | 54 |
 | ligue-1 | 18 | 18 | 201 | 51 |
 | serie-a | 20 | 20 | 221 | 52 |
