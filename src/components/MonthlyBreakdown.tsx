@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { formatStake } from "@/lib/format";
 
 export type MonthlyBreakdownScope = "combined" | "props" | "tennis";
 
@@ -114,7 +115,7 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
                 <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 border-t border-slate-800/40 pt-2 text-xs font-mono text-slate-500">
                   <span>{r.total_bets} bets</span>
                   <span>{r.wins}-{r.losses}</span>
-                  <span>{Number(r.total_stake).toFixed(1)}u staked</span>
+                  <span>{formatStake(r.total_stake)}u staked</span>
                   <span className={Number(r.roi) >= 0 ? "text-emerald-400" : "text-red-400"}>
                     {Number(r.roi) >= 0 ? "+" : ""}{Number(r.roi).toFixed(1)}% ROI
                   </span>
@@ -143,7 +144,7 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
                 <td className="px-4 py-3 text-slate-200">{formatMonth(r.month)}</td>
                 <td className="px-4 py-3 text-right font-mono text-slate-300">{r.total_bets}</td>
                 <td className="px-4 py-3 text-right font-mono text-slate-300">{r.wins}-{r.losses}</td>
-                <td className="px-4 py-3 text-right font-mono text-slate-300">{Number(r.total_stake).toFixed(1)}u</td>
+                <td className="px-4 py-3 text-right font-mono text-slate-300">{formatStake(r.total_stake)}u</td>
                 <td className={`px-4 py-3 text-right font-mono font-medium ${Number(r.total_profit) >= 0 ? "text-emerald-400" : "text-red-400"}`}>
                   {Number(r.total_profit) >= 0 ? "+" : ""}{Number(r.total_profit).toFixed(2)}u
                 </td>
