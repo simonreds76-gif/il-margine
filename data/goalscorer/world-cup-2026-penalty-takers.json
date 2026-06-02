@@ -1,7 +1,7 @@
 {
   "tournament": "FIFA World Cup 2026",
   "season": "2026",
-  "last_verified": "2026-06-01",
+  "last_verified": "2026-06-02",
   "qualified_count": 48,
   "playoff_count": 0,
   "teams": [
@@ -1556,27 +1556,32 @@
       "research_status": "reviewed",
       "confidence": "high",
       "likely_primary": "Federico Valverde",
-      "likely_secondary": "Giorgian De Arrascaeta",
-      "last_evidence": "England 1-1 Uruguay, 27 Mar 2026: Federico Valverde scored the stoppage-time penalty at Wembley",
-      "note": "Federico Valverde is now an even cleaner Uruguay primary. The older Copa America shootout order already pointed strongly in his favour, but the March 2026 friendly at Wembley added the freshest direct evidence when he converted Uruguay's stoppage-time penalty against England. That is exactly the kind of late-cycle senior spot-kick that removes most of the remaining doubt. Giorgian De Arrascaeta still profiles as the best secondary from Uruguay's trusted attacking core, but the lead call should now sit very firmly with Valverde.",
+      "likely_secondary": "Rodrigo Bentancur",
+      "last_evidence": "2 Jun 2026 injury audit: De Arrascaeta became a World Cup doubt after a calf/muscle issue in Uruguay training; Bentancur was Uruguay's No. 2 shooter in both 2024 Copa America shootouts behind Valverde.",
+      "note": "Federico Valverde remains the clear Uruguay primary. The March 2026 Wembley penalty is the freshest in-match evidence, and the 2024 Copa America shootout order already placed him first. The backup line now moves from Giorgian De Arrascaeta to Rodrigo Bentancur. This is not because De Arrascaeta has lost status when fully fit; it is because he is now an active World Cup injury doubt after leaving Uruguay training with a calf/muscle problem on 2 June. Bentancur is the safest in-squad secondary among regular starters because Uruguay trusted him immediately after Valverde in both major 2024 Copa America shootouts, and he converted both. If De Arrascaeta is passed fully fit and starts, he remains live in the hierarchy, but the market-facing backup should now be Bentancur until the medical picture clears.",
       "source_urls": [
         "https://www.espn.co.uk/football/report/_/gameId/762553",
-        "https://www.sofascore.com/football/match/uruguay-england/nUbsAUb",
-        "https://www.sofascore.com/news/england-1-1-uruguay-valverdes-late-penalty/"
+        "https://ge.globo.com/futebol/copa-do-mundo/noticia/2026/06/02/arrascaeta-vira-duvida-para-a-copa-do-mundo-diz-radio-uruguaia.ghtml",
+        "https://ladiaria.com.uy/deporte/articulo/2026/6/giorgian-de-arrascaeta-sufrio-una-lesion-muscular-y-podria-quedar-fuera-del-mundial/",
+        "https://copaamerica.com/en/news/uruguay-brazil-match-recap-quarterfinals-penalties-copa-america-2024",
+        "https://copaamerica.com/en/news/highlights-uruguay-canada-third-place-penalties-copa-america-2024"
       ],
       "evidence_log": [
         "27 Mar 2026: ESPN and SofaScore both show Federico Valverde scored Uruguay's 90+4 minute penalty in the 1-1 friendly draw with England at Wembley.",
-        "That gives Uruguay a fresh direct in-match penalty event on top of Valverde's already strong pressure-order evidence from the 2024 Copa America shootouts.",
-        "Current working view: Valverde is a high-confidence Uruguay primary, with De Arrascaeta still the clearest backup from the same trusted group."
+        "2024 Copa America quarter-final vs Brazil: Uruguay's shootout order opened Valverde then Bentancur; both scored, with De Arrascaeta third.",
+        "2024 Copa America third-place match vs Canada: Uruguay again opened Valverde then Bentancur; both scored, with De Arrascaeta third and Suarez fourth.",
+        "2 Jun 2026: GE and La Diaria report De Arrascaeta suffered a calf/muscle issue in Uruguay training and will undergo tests, making his World Cup availability uncertain.",
+        "Current working view: Valverde remains high-confidence primary. Bentancur is promoted to secondary while De Arrascaeta is an injury doubt; De Arrascaeta remains live only if cleared and starting."
       ],
-      "squad_verified_at": "2026-05-31",
-      "squad_status": "final_pending",
-      "squad_count": 0,
-      "primary_callup_status": "final_pending_unverified",
-      "secondary_callup_status": "final_pending_unverified",
-      "squad_note": "Coach: Marcelo Bielsa Uruguay will announce their final squad on June 1. ==Group I==",
+      "squad_verified_at": "2026-06-02",
+      "squad_status": "final_announced",
+      "squad_count": 26,
+      "primary_callup_status": "confirmed_final_squad",
+      "secondary_callup_status": "confirmed_final_squad",
+      "squad_note": "Coach: Marcelo Bielsa. Uruguay announced a 26-man World Cup squad with Federico Valverde, Rodrigo Bentancur and Giorgian De Arrascaeta included, but De Arrascaeta is an injury doubt after the 2 June training issue. Group H: Spain, Saudi Arabia, Uruguay, Cabo Verde.",
       "squad_source_urls": [
-        "https://www.instagram.com/p/DY17CkwOzln/"
+        "https://as.com/futbol/mundial/uruguay-en-el-mundial-2026-convocatoria-lista-jugadores-grupo-y-calendario-f202606-n/",
+        "https://ge.globo.com/futebol/copa-do-mundo/noticia/2026/06/02/arrascaeta-vira-duvida-para-a-copa-do-mundo-diz-radio-uruguaia.ghtml"
       ]
     },
     {

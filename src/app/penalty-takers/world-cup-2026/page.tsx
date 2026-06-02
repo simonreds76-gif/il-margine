@@ -27,6 +27,11 @@ const FEATURED_TEAMS = ["Germany", "France", "Brazil", "Argentina", "England", "
 
 const LATEST_HIERARCHY_UPDATES = [
   {
+    team: "Uruguay",
+    label: "Bentancur promoted after De Arrascaeta injury",
+    summary: "Valverde stays first. Bentancur is now the safer backup after De Arrascaeta became an active injury doubt in Uruguay training.",
+  },
+  {
     team: "Australia",
     label: "Boyle cut, hierarchy rebuilt",
     summary: "Hrustic leads only if on the pitch; Toure is the practical fallback, with Leckie, Irankunda and Mabil live depending on the XI.",
@@ -60,11 +65,6 @@ const LATEST_HIERARCHY_UPDATES = [
     team: "IR Iran",
     label: "Azmoun stays off the hierarchy",
     summary: "Azmoun remains outside the squad path amid politically contested reporting; Jahanbakhsh is the in-squad fallback behind Taremi.",
-  },
-  {
-    team: "Cabo Verde",
-    label: "Bebe out, Cabral in",
-    summary: "Ryan Mendes remains the lead. Jovane Cabral replaces Bebe as the best in-squad backup after the final-squad audit.",
   },
 ];
 
