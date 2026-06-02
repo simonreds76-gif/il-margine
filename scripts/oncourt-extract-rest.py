@@ -5,6 +5,8 @@ Run: C:\\Python312-32\\python.exe scripts/oncourt-extract-rest.py
 Output:
   - data/oncourt/players_atp.csv (includes ATP rank + surface points)
   - data/oncourt/players_wta.csv (includes WTA rank + surface points)
+  - data/oncourt/categories_atp.csv (OnCourt category flags; CAT1=True marks left-handed ATP players)
+  - data/oncourt/categories_wta.csv (OnCourt category flags; extracted for diagnostics/future WTA use)
   - data/oncourt/tours_atp.csv
   - data/oncourt/tours_wta.csv
   - data/oncourt/courts.csv
@@ -75,6 +77,17 @@ def main():
         ["id", "name", "birthdate", "country", "wta_rank", "points", "hard_points", "clay_points", "grass_points"],
         os.path.join(OUT_DIR, "players_wta.csv"),
     )
+    for tour in ("atp", "wta"):
+        category_cols_sql = "ID_P, " + ", ".join(f"CAT{i}" for i in range(1, 31))
+        category_cols_out = ["player_id"] + [f"cat{i}" for i in range(1, 31)]
+        extract_table(
+            conn,
+            f"categories_{tour}",
+            category_cols_sql,
+            category_cols_out,
+            os.path.join(OUT_DIR, f"categories_{tour}.csv"),
+        )
+
     for tour in ("atp", "wta"):
         extract_table(conn, f"tours_{tour}", "ID_T, NAME_T, ID_C_T, DATE_T, RANK_T, COUNTRY_T", ["id", "name", "court_id", "date", "rank", "country"], os.path.join(OUT_DIR, f"tours_{tour}.csv"))
     extract_table(conn, "courts", "ID_C, NAME_C", ["id", "name"], os.path.join(OUT_DIR, "courts.csv"))
