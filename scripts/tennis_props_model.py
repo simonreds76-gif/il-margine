@@ -32,16 +32,26 @@ SLAM_COUNT_BIAS_CORRECTION = {
 class Projection:
     expected_aces: float
     expected_dfs: float
+    expected_breaks_for: float
+    expected_broken: float
+    expected_total_breaks: float
     expected_service_points: float
     expected_service_games: float
     ace_rate: float
     df_rate: float
+    break_rate: float
+    broken_rate: float
     same_tournament_matches: int
     same_tournament_svpt: int
     same_tournament_ace_weight: float
     same_tournament_df_weight: float
+    same_tournament_breaks_for: int
+    same_tournament_broken: int
+    same_tournament_total_breaks: int
     ace_confidence: str
     df_confidence: str
+    break_confidence: str
+    break_notes: tuple[str, ...]
     notes: tuple[str, ...]
 
 
@@ -160,11 +170,25 @@ def project_player(
     prior_df = _float(factor_row.get("tour_surface_baseline_df"), default_df_prior) or default_df_prior
     prior_svpt_per_svg = _float(factor_row.get("svpt_per_svgame"), 6.35) or 6.35
     prior_ret_first = 0.315 if tour_norm == "atp" else 0.365
+    prior_break_rate = 0.235 if tour_norm == "atp" else 0.285
+    prior_broken_rate = 0.235 if tour_norm == "atp" else 0.285
 
     ace_rate, surface_svpt = _blend_rate(
         player_rows, "ace_rate", "svpt", prior_ace, ace_prior_weight
     )
     df_rate, _ = _blend_rate(player_rows, "df_rate", "svpt", prior_df, df_prior_weight)
+    break_for_rate, return_games_sample = _blend_rate(
+        player_rows, "break_for_rate", "return_games", prior_break_rate, 80.0
+    )
+    broken_rate, service_games_sample = _blend_rate(
+        player_rows, "broken_rate", "service_games_break_sample", prior_broken_rate, 80.0
+    )
+    opp_break_for_rate, opp_return_games_sample = _blend_rate(
+        opponent_rows, "break_for_rate", "return_games", prior_break_rate, 80.0
+    )
+    opp_broken_rate, opp_service_games_sample = _blend_rate(
+        opponent_rows, "broken_rate", "service_games_break_sample", prior_broken_rate, 80.0
+    )
 
     same_ace_rate, same_ace_weight, same_matches, same_svpt = _same_tournament_rate(
         same_tournament_row,
@@ -213,8 +237,28 @@ def project_player(
     expected_service_games = max(4.0, expected_match_games * 0.5)
     expected_service_points = expected_service_games * _clip(svpt_per_svg, 4.8, 8.6)
 
+    # Breaks are game-count props, so estimate them from both sides: a player's
+    # return break rate and the opponent's broken rate. Keep it market-research
+    # only until we have real Bet365 line history.
+    break_rate_adj = math.sqrt(max(0.0001, break_for_rate) * max(0.0001, opp_broken_rate))
+    broken_rate_adj = math.sqrt(max(0.0001, broken_rate) * max(0.0001, opp_break_for_rate))
+    break_rate_adj = _clip(break_rate_adj, 0.06, 0.48)
+    broken_rate_adj = _clip(broken_rate_adj, 0.06, 0.48)
+    same_breaks_for = _int((same_tournament_row or {}).get("breaks_for"))
+    same_broken = _int((same_tournament_row or {}).get("broken"))
+    same_total_breaks = same_breaks_for + same_broken
+    if same_matches > 0 and expected_service_games > 0:
+        same_break_weight = _clip(same_matches / 8.0, 0.0, 0.25)
+        same_break_rate = _clip(same_breaks_for / max(1.0, same_matches * expected_service_games), 0.02, 0.55)
+        same_broken_rate = _clip(same_broken / max(1.0, same_matches * expected_service_games), 0.02, 0.55)
+        break_rate_adj = (1.0 - same_break_weight) * break_rate_adj + same_break_weight * same_break_rate
+        broken_rate_adj = (1.0 - same_break_weight) * broken_rate_adj + same_break_weight * same_broken_rate
+
     expected_aces = ace_rate_adj * expected_service_points
     expected_dfs = df_rate_adj * expected_service_points
+    expected_breaks_for = break_rate_adj * expected_service_games
+    expected_broken = broken_rate_adj * expected_service_games
+    expected_total_breaks = expected_breaks_for + expected_broken
     tournament = str(factor_row.get("tournament") or "").strip()
     correction = SLAM_COUNT_BIAS_CORRECTION.get((tour.upper(), tournament))
     if correction:
@@ -237,19 +281,39 @@ def project_player(
     else:
         df_confidence = "LOW"
 
+    break_sample = min(return_games_sample, service_games_sample, opp_return_games_sample, opp_service_games_sample)
+    break_notes = ["BREAK_RESEARCH_ONLY", "TOTAL_GAMES_DEPENDENT"]
+    if break_sample >= 180 and surface_svpt >= 1500:
+        break_confidence = "HIGH"
+    elif break_sample >= 60 or surface_svpt >= 500:
+        break_confidence = "MED"
+    else:
+        break_confidence = "LOW"
+        break_notes.append("BREAK_LOW_SAMPLE")
+
     return Projection(
         expected_aces=expected_aces,
         expected_dfs=expected_dfs,
+        expected_breaks_for=expected_breaks_for,
+        expected_broken=expected_broken,
+        expected_total_breaks=expected_total_breaks,
         expected_service_points=expected_service_points,
         expected_service_games=expected_service_games,
         ace_rate=ace_rate_adj,
         df_rate=df_rate_adj,
+        break_rate=break_rate_adj,
+        broken_rate=broken_rate_adj,
         same_tournament_matches=same_matches,
         same_tournament_svpt=same_svpt,
         same_tournament_ace_weight=same_ace_weight,
         same_tournament_df_weight=same_df_weight,
+        same_tournament_breaks_for=same_breaks_for,
+        same_tournament_broken=same_broken,
+        same_tournament_total_breaks=same_total_breaks,
         ace_confidence=ace_confidence,
         df_confidence=df_confidence,
+        break_confidence=break_confidence,
+        break_notes=tuple(break_notes),
         notes=tuple(notes),
     )
 

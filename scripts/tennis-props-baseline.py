@@ -75,6 +75,10 @@ def empty_totals() -> dict[str, float]:
         "svgms": 0,
         "aces": 0,
         "dfs": 0,
+        "breaks_for": 0,
+        "broken": 0,
+        "return_games": 0,
+        "service_games_break_sample": 0,
         "first_in": 0,
         "first_won": 0,
         "second_won": 0,
@@ -100,17 +104,27 @@ def add_side(
         return
     first_in = parse_int(row.get(f"{prefix}_1stIn"))
     opp_first_in = parse_int(row.get(f"{opp_prefix}_1stIn"))
+    service_games = parse_int(row.get(f"{prefix}_SvGms"))
+    opp_service_games = parse_int(row.get(f"{opp_prefix}_SvGms"))
     second_attempts = max(0, svpt - first_in)
     opp_second_attempts = max(0, opp_svpt - opp_first_in)
     opp_first_won = parse_int(row.get(f"{opp_prefix}_1stWon"))
     opp_second_won = parse_int(row.get(f"{opp_prefix}_2ndWon"))
+    bp_faced = parse_int(row.get(f"{prefix}_bpFaced"))
+    bp_saved = parse_int(row.get(f"{prefix}_bpSaved"))
+    opp_bp_faced = parse_int(row.get(f"{opp_prefix}_bpFaced"))
+    opp_bp_saved = parse_int(row.get(f"{opp_prefix}_bpSaved"))
 
     totals["matches"] += 1
     totals["wins"] += 1 if won else 0
     totals["svpt"] += svpt
-    totals["svgms"] += parse_int(row.get(f"{prefix}_SvGms"))
+    totals["svgms"] += service_games
     totals["aces"] += parse_int(row.get(f"{prefix}_ace"))
     totals["dfs"] += parse_int(row.get(f"{prefix}_df"))
+    totals["breaks_for"] += max(0, opp_bp_faced - opp_bp_saved)
+    totals["broken"] += max(0, bp_faced - bp_saved)
+    totals["return_games"] += opp_service_games
+    totals["service_games_break_sample"] += service_games
     totals["first_in"] += first_in
     totals["first_won"] += parse_int(row.get(f"{prefix}_1stWon"))
     totals["second_won"] += parse_int(row.get(f"{prefix}_2ndWon"))
@@ -150,8 +164,14 @@ def totals_row(
         "svgms": str(int(totals["svgms"])),
         "aces": str(int(totals["aces"])),
         "dfs": str(int(totals["dfs"])),
+        "breaks_for": str(int(totals["breaks_for"])),
+        "broken": str(int(totals["broken"])),
+        "return_games": str(int(totals["return_games"])),
+        "service_games_break_sample": str(int(totals["service_games_break_sample"])),
         "ace_rate": fmt(safe_div(totals["aces"], totals["svpt"])),
         "df_rate": fmt(safe_div(totals["dfs"], totals["svpt"])),
+        "break_for_rate": fmt(safe_div(totals["breaks_for"], totals["return_games"])),
+        "broken_rate": fmt(safe_div(totals["broken"], totals["service_games_break_sample"])),
         "first_serve_pct": fmt(safe_div(totals["first_in"], totals["svpt"])),
         "first_serve_win_pct": fmt(safe_div(totals["first_won"], totals["first_in"])),
         "second_serve_win_pct": fmt(safe_div(totals["second_won"], totals["second_attempts"])),
@@ -229,8 +249,14 @@ def main() -> None:
         "svgms",
         "aces",
         "dfs",
+        "breaks_for",
+        "broken",
+        "return_games",
+        "service_games_break_sample",
         "ace_rate",
         "df_rate",
+        "break_for_rate",
+        "broken_rate",
         "first_serve_pct",
         "first_serve_win_pct",
         "second_serve_win_pct",

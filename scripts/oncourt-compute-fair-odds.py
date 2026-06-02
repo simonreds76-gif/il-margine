@@ -187,7 +187,9 @@ DELTA_CAP_LOW = 0.08
 DELTA_COMPONENT_SUM_CAP_FACTOR = 0.60
 DELTA_COMPONENT_SUM_CAP_MAX = 0.20
 
-H2H_MIN_MATCHES = 5
+# H2H is a small structural nudge, not an override. Three completed meetings is
+# enough to matter for matchup-specific pricing, while the cap prevents overfit.
+H2H_MIN_MATCHES = 3
 H2H_WEIGHT = 0.03
 H2H_CAP = 0.02
 

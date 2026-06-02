@@ -1289,13 +1289,12 @@ def write_live_snapshot(
     dedup_key_fields: list[str],
     lane_key_fields: list[str],
 ) -> int:
-    # Live signal files are a captured-signal queue, not a volatile recalculation
-    # view. Once a lane captures a signal, keep it visible until settlement writes
-    # a settled row. Otherwise odds movement can make a real signal disappear.
+    # Live signal files drive the monitor/current board. Keep them as a fresh
+    # recalculation snapshot only; the archive remains the append-only queue for
+    # settlement and CLV. Otherwise stale pending rows look like today's picks.
     existing_fields: list[str] = []
-    existing_rows_by_lane: dict[tuple[str, ...], dict[str, str]] = {}
 
-    def absorb_existing_rows(source_path: Path) -> None:
+    def absorb_existing_fields(source_path: Path) -> None:
         nonlocal existing_fields
         if not source_path.exists():
             return
@@ -1304,20 +1303,11 @@ def write_live_snapshot(
             for field in _clean_fieldnames(list(rd.fieldnames or [])):
                 if field not in existing_fields:
                     existing_fields.append(field)
-            for row in rd:
-                normalized_existing = {k: ("" if v is None else str(v)) for k, v in dict(row).items()}
-                status = (normalized_existing.get("settlement_status") or "pending").strip().lower()
-                if status not in ACTIVE_LIVE_SIGNAL_STATUSES:
-                    continue
-                if not normalized_existing.get("settlement_status"):
-                    normalized_existing["settlement_status"] = "pending"
-                lane_key = tuple(_append_key_value(k, normalized_existing.get(k)) for k in lane_key_fields)
-                existing_rows_by_lane.setdefault(lane_key, normalized_existing)
 
     archive_path = derive_signal_csv_paths(path).archive
     if archive_path != path:
-        absorb_existing_rows(archive_path)
-    absorb_existing_rows(path)
+        absorb_existing_fields(archive_path)
+    absorb_existing_fields(path)
 
     incoming_rows_by_lane: dict[tuple[str, ...], dict[str, str]] = {}
     for row in rows:
@@ -1328,21 +1318,9 @@ def write_live_snapshot(
             normalized["settlement_status"] = "pending"
         incoming_rows_by_lane[lane_key] = normalized
 
-    merged_rows_by_lane = dict(existing_rows_by_lane)
-    for lane_key, incoming in incoming_rows_by_lane.items():
-        existing = merged_rows_by_lane.get(lane_key)
-        if existing is None:
-            merged_rows_by_lane[lane_key] = incoming
-            continue
-        # Keep the original captured price/line stable. Fill only fields that
-        # were missing in the older live row so the row remains settleable.
-        for key, value in incoming.items():
-            if value != "" and not existing.get(key):
-                existing[key] = value
-
     ordered_rows: list[dict[str, str]] = []
     seen_keys: dict[tuple[str, ...], int] = {}
-    for row in merged_rows_by_lane.values():
+    for row in incoming_rows_by_lane.values():
         key = tuple(_append_key_value(k, row.get(k)) for k in dedup_key_fields)
         if key in seen_keys:
             ordered_rows[seen_keys[key]] = row
