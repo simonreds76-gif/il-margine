@@ -1,6 +1,6 @@
 # Assist Value Set-Piece Source Audit
 
-Fetched at UTC: `2026-06-02T11:24:18+00:00`
+Fetched at UTC: `2026-06-03T12:02:51+00:00`
 
 ## Decision
 
