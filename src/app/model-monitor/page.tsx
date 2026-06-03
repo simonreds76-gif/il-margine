@@ -774,6 +774,10 @@ function getNoMatchRows(rows: MonitorSignalRow[]): MonitorSignalRow[] {
     .sort((left, right) => signalTimestamp(right) - signalTimestamp(left));
 }
 
+function isClosedArchiveSignal(row: MonitorSignalRow): boolean {
+  return isSettledSignal(row);
+}
+
 function getSettledSignalRows(rows: MonitorSignalRow[]): MonitorSignalRow[] {
   return rows
     .filter(isSettledSignal)
@@ -978,18 +982,18 @@ export default async function ModelMonitorPage() {
   const volumeSignalsArchiveRaw = parseSignalRows(volumeSignalsArchiveCsv);
   const volumeSignalsArchive = dedupeLogicalSignalRows(volumeSignalsArchiveRaw);
   const volumeSignalsLive = dedupeLogicalSignalRows(parseSignalRows(volumeSignalsLiveCsv));
-  const volumeSignalsTracked = dedupeLogicalSignalRows([...volumeSignalsArchiveRaw, ...parseSignalRows(volumeSignalsLiveCsv)]);
   const volumeSignalsClean = filterCleanSignalRows(volumeSignalsArchive);
-  const volumeQueue = getActiveQueueRows(volumeSignalsTracked);
+  const volumeQueue = getActiveQueueRows(volumeSignalsLive);
   const volumeNoMatchRows = getNoMatchRows(volumeSignalsArchive);
+  const volumeVisibleNoMatchRows = getNoMatchRows(volumeSignalsLive);
   const volumeSettledRows = getSettledSignalRows(volumeSignalsArchive);
   const spreadV1SignalsArchiveRaw = parseSignalRows(spreadV1SignalsArchiveCsv);
   const spreadV1SignalsArchive = dedupeLogicalSignalRows(spreadV1SignalsArchiveRaw);
   const spreadV1SignalsLive = dedupeLogicalSignalRows(parseSignalRows(spreadV1SignalsLiveCsv));
-  const spreadV1SignalsTracked = dedupeLogicalSignalRows([...spreadV1SignalsArchiveRaw, ...parseSignalRows(spreadV1SignalsLiveCsv)]);
   const spreadV1SignalsClean = filterCleanSignalRows(spreadV1SignalsArchive);
-  const spreadV1Queue = getActiveQueueRows(spreadV1SignalsTracked);
+  const spreadV1Queue = getActiveQueueRows(spreadV1SignalsLive);
   const spreadV1NoMatchRows = getNoMatchRows(spreadV1SignalsArchive);
+  const spreadV1VisibleNoMatchRows = getNoMatchRows(spreadV1SignalsLive);
   const spreadV1SettledRows = getSettledSignalRows(spreadV1SignalsArchive);
   const spreadShadowSignalsArchiveRaw = parseSignalRows(spreadShadowSignalsArchiveCsv);
   const spreadShadowSignalsArchive = dedupeLogicalSignalRows(spreadShadowSignalsArchiveRaw);
@@ -1090,8 +1094,8 @@ export default async function ModelMonitorPage() {
   const shadowDiagnosis =
     volumeSignalsLive.length === 0
       ? "ATP ML research file is empty right now."
-      : volumeQueue.length === 0 && volumeNoMatchRows.length > 0
-      ? `ATP ML research has ${volumeNoMatchRows.length} unresolved settlement rows marked no_match, but no true live queue at the moment.`
+      : volumeQueue.length === 0 && volumeVisibleNoMatchRows.length > 0
+      ? `ATP ML research has ${volumeVisibleNoMatchRows.length} live rows parked as no_match settlement mismatches, but no true live queue at the moment.`
       : perfValue(volumeBase.combinedAll, "settled", parseIntMaybe) === 0
       ? "ATP ML research has no settled sample yet."
       : `ATP ML research has settled enough to start comparing against strict on live results.`;
@@ -1100,8 +1104,8 @@ export default async function ModelMonitorPage() {
   const spreadV1Diagnosis =
     !spreadV1SignalsLiveCsv
       ? "Spread v1 shadow has no live CSV on disk yet."
-      : spreadV1Queue.length === 0 && spreadV1NoMatchRows.length > 0
-        ? `Spread v1 shadow has ${spreadV1NoMatchRows.length} unresolved no_match rows, but no true live queue right now.`
+      : spreadV1Queue.length === 0 && spreadV1VisibleNoMatchRows.length > 0
+        ? `Spread v1 shadow has ${spreadV1VisibleNoMatchRows.length} live rows parked as no_match, but no true live queue right now.`
         : spreadV1SignalsLive.length === 0
           ? "Spread v1 shadow is wired in, but scheduled runs are hard-only right now and have not logged a qualifying row."
           : spreadV1SettledRows.length === 0
@@ -1112,7 +1116,7 @@ export default async function ModelMonitorPage() {
     perfValue(volumeBase.mlAll, "settled", parseIntMaybe) ??
     volumeSignalsArchive.filter((row) => row.betType !== "spread" && (row.settlementStatus || "").trim().toLowerCase() === "settled").length;
   const volumeTrackedCount = perfValue(volumeBase.combinedAll, "signals", parseIntMaybe) ?? volumeSignalsArchive.length;
-  const volumeOpenCount = perfValue(volumeBase.combinedAll, "unsettled", parseIntMaybe) ?? volumeQueue.length;
+  const volumeOpenCount = volumeQueue.length;
   const volumeNoMatchCount = volumeNoMatchRows.length;
   const volumeSettledCount =
     perfValue(volumeBase.combinedAll, "settled", parseIntMaybe) ??
@@ -1296,27 +1300,27 @@ export default async function ModelMonitorPage() {
   const laneDetailRows = new Map<string, MonitorSignalRow[]>([
     ["Strict|ML", sortSignalRowsByCapture(strictSignalsArchive.filter((row) => row.betType !== "spread"))],
     ["Strict|Spread", sortSignalRowsByCapture(strictSignalsArchive.filter((row) => row.betType === "spread"))],
-    ["Volume 200|ML", sortSignalRowsByCapture(volumeSignalsTracked.filter((row) => row.betType !== "spread"))],
-    ["Spread v1|HC", sortSignalRowsByCapture(spreadV1SignalsTracked)],
+    ["Volume 200|ML", sortSignalRowsByCapture(volumeSignalsLive.filter((row) => row.betType !== "spread"))],
+    ["Spread v1|HC", sortSignalRowsByCapture(spreadV1SignalsLive)],
     ["Challenger ML tracker|CAL", sortSignalRowsByCapture(challengerSignalsArchive)],
     ["Clay-Fav HC (internal)|HC", sortSignalRowsByCapture(clayFavSignalsArchive)],
   ]);
   const signalBrowserGroups = [
     {
       key: "volume-200-ml",
-      title: "Volume 200 ML",
-      subtitle: "ATP main-tour ML expansion: Hard M1000, Hard ATP500, Hard Grand Slam, Clay ATP500, Grass ATP500. No Clay/Grass Slam and no handicap output.",
+      title: "Volume 200 ML archive",
+      subtitle: "Settled history only. Active VOL200 rows come from the live CSV and are shown in the queue above.",
       accent: "amber",
-      statusBadge: { tone: "ok" as const, label: "active - atp ml" },
-      rows: sortSignalRowsForBrowser(volumeSignalsArchive.filter((row) => row.betType !== "spread")),
+      statusBadge: { tone: "muted" as const, label: "archive - settled only" },
+      rows: sortSignalRowsForBrowser(volumeSignalsArchive.filter((row) => row.betType !== "spread" && isClosedArchiveSignal(row))),
     },
     {
       key: "spread-v1",
-      title: "Spread v1 HC",
-      subtitle: "Strict-first ATP bo3 handicap research. Scheduled hard-only right now; clay-fav slice is manual/dormant.",
+      title: "Spread v1 HC archive",
+      subtitle: "Settled history only. Active spread_v1 rows come from the live CSV and are shown in the queue above.",
       accent: "sky",
-      statusBadge: { tone: "warn" as const, label: "research - hard hc" },
-      rows: sortSignalRowsForBrowser(spreadV1SignalsArchive),
+      statusBadge: { tone: "muted" as const, label: "archive - settled only" },
+      rows: sortSignalRowsForBrowser(spreadV1SignalsArchive.filter(isClosedArchiveSignal)),
     },
     {
       key: "spread-shadow",
@@ -1324,7 +1328,7 @@ export default async function ModelMonitorPage() {
       subtitle: "Legacy 20%+ spread shadow, including clay and non-policy rows. Audit history only.",
       accent: "slate",
       statusBadge: { tone: "muted" as const, label: "dormant - audit" },
-      rows: sortSignalRowsForBrowser(spreadShadowSignalsArchive),
+      rows: sortSignalRowsForBrowser(spreadShadowSignalsArchive.filter(isClosedArchiveSignal)),
     },
     ...(INTERNAL_RESEARCH_LANES
       ? [
@@ -1339,10 +1343,10 @@ export default async function ModelMonitorPage() {
           {
             key: "clay-fav-hc",
             title: "Clay-Fav HC Internal",
-            subtitle: "Manual Clay-Fav HC ledger derived from spread_v1 archive; refreshed only by promote-clay-internal-shadow.py.",
+            subtitle: "Manual Clay-Fav HC ledger derived from spread_v1 archive. Settled history only; no live queue.",
             accent: "emerald",
             statusBadge: { tone: "muted" as const, label: "manual - internal" },
-            rows: sortSignalRowsForBrowser(clayFavSignalsArchive),
+            rows: sortSignalRowsForBrowser(clayFavSignalsArchive.filter(isClosedArchiveSignal)),
           },
         ]
       : []),
@@ -2069,8 +2073,8 @@ export default async function ModelMonitorPage() {
                 <div className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">ATP ML Research Queue</div>
                 {volumeQueue.length === 0 ? (
                   <p className="text-sm leading-6 text-slate-400">
-                    {volumeNoMatchRows.length > 0
-                      ? `No true open ATP ML research bets right now. ${volumeNoMatchRows.length} rows are parked as no_match settlement mismatches instead.`
+                    {volumeVisibleNoMatchRows.length > 0
+                      ? `No true open ATP ML research bets right now. ${volumeVisibleNoMatchRows.length} live rows are parked as no_match settlement mismatches instead.`
                       : "No open ATP ML research rows right now. When the active ATP-only ML candidate logs live bets, they will appear here."}
                   </p>
                 ) : (
@@ -2110,14 +2114,14 @@ export default async function ModelMonitorPage() {
                     ))}
                   </div>
                 )}
-                {volumeNoMatchRows.length > 0 ? (
+                {volumeVisibleNoMatchRows.length > 0 ? (
                   <div className="mt-4 rounded-xl border border-rose-500/20 bg-rose-500/5 p-3">
                     <div className="text-xs font-semibold uppercase tracking-[0.18em] text-rose-300">Settlement Mismatch</div>
                     <p className="mt-2 text-sm leading-6 text-slate-300">
-                      {volumeNoMatchRows.length} volume_200 rows are tagged <span className="font-semibold text-rose-200">no_match</span>. They were generated by the model, but the settlement step did not find a matching OnCourt row yet.
+                      {volumeVisibleNoMatchRows.length} live volume_200 rows are tagged <span className="font-semibold text-rose-200">no_match</span>. They were generated by the model, but the settlement step did not find a matching OnCourt row yet.
                     </p>
                     <div className="mt-3 space-y-2">
-                      {volumeNoMatchRows.slice(0, 5).map((row) => (
+                      {volumeVisibleNoMatchRows.slice(0, 5).map((row) => (
                         <div key={`nomatch-${row.date}-${row.player1}-${row.player2}-${row.side}-${row.spreadLine}`} className="rounded-lg border border-slate-800/80 bg-slate-900/70 px-3 py-2 text-sm text-slate-300">
                           <div className="font-medium text-slate-100">{row.player1} vs {row.player2}</div>
                           <div className="mt-1 text-xs text-slate-500">
