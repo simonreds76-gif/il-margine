@@ -1079,7 +1079,6 @@ export default async function ModelMonitorPage() {
     !clvAuditVolumeTxt ? "volume_200 CLV audit" : null,
     !clvAuditSpreadV1Txt ? "spread_v1 CLV audit" : null,
     !profileTxt ? "policy profile backtest" : null,
-    !clayMlAnalysisTxt ? "clay ML calibration analysis" : null,
   ].filter(Boolean) as string[];
   const strictDiagnosis =
     strictAllRoi == null
