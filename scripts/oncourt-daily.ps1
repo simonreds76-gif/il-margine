@@ -120,6 +120,30 @@ function Invoke-LoggedProcess {
     }
 }
 
+function Invoke-LoggedProcessWithRetry {
+    param(
+        [Parameter(Mandatory = $true)][string]$FilePath,
+        [Parameter(Mandatory = $true)][string[]]$ArgumentList,
+        [Parameter(Mandatory = $true)][string]$Label,
+        [int]$TimeoutSeconds = 0,
+        [int]$Attempts = 1
+    )
+
+    $maxAttempts = [Math]::Max(1, $Attempts)
+    for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
+        if ($maxAttempts -gt 1) {
+            Log "$Label attempt $attempt/$maxAttempts"
+        }
+        $exitCode = Invoke-LoggedProcess -FilePath $FilePath -ArgumentList $ArgumentList -Label $Label -TimeoutSeconds $TimeoutSeconds
+        if ($exitCode -eq 0 -or $attempt -eq $maxAttempts) {
+            return $exitCode
+        }
+        Start-Sleep -Seconds ([Math]::Min(30, 5 * $attempt))
+    }
+
+    return 1
+}
+
 function Set-RunStatusFailure([string]$Type, [string]$Message) {
     $script:runStatusFinal = "failed"
     $script:runStatusErrorType = $Type
