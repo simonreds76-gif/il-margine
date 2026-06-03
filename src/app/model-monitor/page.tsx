@@ -1355,6 +1355,9 @@ export default async function ModelMonitorPage() {
           <Link href="/fair-odds" className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300">
             Fair Odds
           </Link>
+          <Link href="/model-monitor/tennis-props" className="inline-flex items-center rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1.5 text-sm text-emerald-200 transition-colors hover:border-emerald-400/40 hover:text-emerald-100">
+            Aces / DFs
+          </Link>
           <Link href="/api/model-monitor/betting-archive" className="inline-flex items-center rounded-full border border-cyan-500/25 bg-cyan-500/10 px-3 py-1.5 text-sm text-cyan-200 transition-colors hover:border-cyan-400/40 hover:text-cyan-100">
             Download Bet Archive
           </Link>
@@ -1376,7 +1379,7 @@ export default async function ModelMonitorPage() {
         </div>
 
         <section className="mb-8 overflow-hidden rounded-3xl border border-slate-800 bg-[linear-gradient(135deg,rgba(16,185,129,0.12),rgba(15,23,42,0.92)_40%,rgba(244,63,94,0.08))] p-6 sm:p-8">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-3xl">
               <div className="mb-3 inline-flex items-center rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-emerald-300">
                 Model Monitor
@@ -1418,7 +1421,17 @@ export default async function ModelMonitorPage() {
             <h2 className="text-xl font-semibold text-slate-100">Monitor Pages</h2>
             <p className="mt-1 text-sm text-slate-400">Direct entry points for the live model monitors and diagnostics pages.</p>
           </div>
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <Link
+              href="/model-monitor/tennis-props"
+              className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-emerald-500/30"
+            >
+              <div className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300">Tennis Props</div>
+              <div className="text-lg font-semibold text-white">Aces / DFs / Breaks</div>
+              <p className="mt-2 text-sm leading-6 text-slate-400">
+                Daily Slam player-prop projections, per-round aces/DF/break logs, Bet365 line comparison, and shadow settlement.
+              </p>
+            </Link>
             <Link
               href="/model-monitor/goalscorer"
               className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-emerald-500/30"

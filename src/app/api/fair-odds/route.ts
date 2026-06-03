@@ -1435,9 +1435,8 @@ function loadActiveShadowSignals(csvPaths: string | string[], kind: ShadowSignal
 
     const get = (cols: string[], name: string) => cols[index.get(name) ?? -1] ?? "";
 
-    // These files are captured-signal queues, not today's recalculation view.
-    // Settlement updates the archive CSV, while the live CSV can be narrowed by
-    // the next model pass; read both and keep every still-pending signal visible.
+    // Fair-odds shows the current live queue only. Archives remain available for
+    // settlement/audit, but must not leak stale pending rows back into the board.
     for (let i = 1; i < lines.length; i += 1) {
       const cols = parseCsvLine(lines[i]);
       const settlementStatus = (hasSettlementStatus ? get(cols, "settlement_status") : "open").trim().toLowerCase();
@@ -3047,21 +3046,21 @@ async function run(): Promise<Response> {
   });
 
   const spreadV1SignalsCsv = FAIR_ODDS_SPREAD_V1_ENABLED
-    ? loadActiveShadowSignals([SPREAD_V1_SIGNAL_ARCHIVE_CSV, SPREAD_V1_SIGNAL_CSV], "spread_v1", today)
+    ? loadActiveShadowSignals(SPREAD_V1_SIGNAL_CSV, "spread_v1", today)
     : [];
   const volume200SignalsCsv = loadActiveShadowSignals(
-    [VOLUME_200_SIGNAL_ARCHIVE_CSV, VOLUME_200_SIGNAL_CSV],
+    VOLUME_200_SIGNAL_CSV,
     "volume_200",
     today
   );
   const challengerMlSignalsCsv = INTERNAL_RESEARCH_LANES
-    ? loadActiveShadowSignals([CHALLENGER_ML_SIGNAL_ARCHIVE_CSV, CHALLENGER_ML_SIGNAL_CSV], "challenger_ml_shadow", today)
+    ? loadActiveShadowSignals(CHALLENGER_ML_SIGNAL_CSV, "challenger_ml_shadow", today)
     : [];
   const clayV3SignalsCsv = INTERNAL_RESEARCH_LANES
-    ? loadActiveShadowSignals([CLAY_V3_SIGNAL_ARCHIVE_CSV, CLAY_V3_SIGNAL_CSV], "clay_v3_shadow", today)
+    ? loadActiveShadowSignals(CLAY_V3_SIGNAL_CSV, "clay_v3_shadow", today)
     : [];
   const clayBo3SignalsCsv = INTERNAL_RESEARCH_LANES
-    ? loadActiveShadowSignals([CLAY_BO3_SIGNAL_ARCHIVE_CSV, CLAY_BO3_SIGNAL_CSV], "clay_bo3", today)
+    ? loadActiveShadowSignals(CLAY_BO3_SIGNAL_CSV, "clay_bo3", today)
     : [];
   const challengerNearmisses = INTERNAL_RESEARCH_LANES
     ? loadChallengerNearmisses(CHALLENGER_ML_NEARMISS_CSV, today)
