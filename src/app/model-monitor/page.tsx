@@ -774,10 +774,6 @@ function getNoMatchRows(rows: MonitorSignalRow[]): MonitorSignalRow[] {
     .sort((left, right) => signalTimestamp(right) - signalTimestamp(left));
 }
 
-function isClosedArchiveSignal(row: MonitorSignalRow): boolean {
-  return isSettledSignal(row);
-}
-
 function getSettledSignalRows(rows: MonitorSignalRow[]): MonitorSignalRow[] {
   return rows
     .filter(isSettledSignal)
@@ -1303,32 +1299,32 @@ export default async function ModelMonitorPage() {
     ["Volume 200|ML", sortSignalRowsByCapture(volumeSignalsLive.filter((row) => row.betType !== "spread"))],
     ["Spread v1|HC", sortSignalRowsByCapture(spreadV1SignalsLive)],
     ["Challenger ML tracker|CAL", sortSignalRowsByCapture(challengerSignalsArchive)],
-    ["Clay-Fav HC (internal)|HC", sortSignalRowsByCapture(clayFavSignalsArchive)],
+    ["Clay-Fav HC (internal)|HC", sortSignalRowsByCapture(clayFavSignalsLive)],
   ]);
   const signalBrowserGroups = [
     {
       key: "volume-200-ml",
-      title: "Volume 200 ML archive",
-      subtitle: "Settled history only. Active VOL200 rows come from the live CSV and are shown in the queue above.",
+      title: "Volume 200 ML live file",
+      subtitle: "Current live rows only. Historical archive rows stay in the CSV/downloads and are not rendered here.",
       accent: "amber",
-      statusBadge: { tone: "muted" as const, label: "archive - settled only" },
-      rows: sortSignalRowsForBrowser(volumeSignalsArchive.filter((row) => row.betType !== "spread" && isClosedArchiveSignal(row))),
+      statusBadge: { tone: "ok" as const, label: "live file - current only" },
+      rows: sortSignalRowsForBrowser(volumeSignalsLive.filter((row) => row.betType !== "spread")),
     },
     {
       key: "spread-v1",
-      title: "Spread v1 HC archive",
-      subtitle: "Settled history only. Active spread_v1 rows come from the live CSV and are shown in the queue above.",
+      title: "Spread v1 HC live file",
+      subtitle: "Current live rows only. Historical archive rows stay in the CSV/downloads and are not rendered here.",
       accent: "sky",
-      statusBadge: { tone: "muted" as const, label: "archive - settled only" },
-      rows: sortSignalRowsForBrowser(spreadV1SignalsArchive.filter(isClosedArchiveSignal)),
+      statusBadge: { tone: "ok" as const, label: "live file - current only" },
+      rows: sortSignalRowsForBrowser(spreadV1SignalsLive),
     },
     {
       key: "spread-shadow",
       title: "Spread Shadow Legacy",
-      subtitle: "Legacy 20%+ spread shadow, including clay and non-policy rows. Audit history only.",
+      subtitle: "Legacy 20%+ spread shadow. Kept in files for audit history, not rendered inline to avoid stale signal confusion.",
       accent: "slate",
       statusBadge: { tone: "muted" as const, label: "dormant - audit" },
-      rows: sortSignalRowsForBrowser(spreadShadowSignalsArchive.filter(isClosedArchiveSignal)),
+      rows: [],
     },
     ...(INTERNAL_RESEARCH_LANES
       ? [
@@ -1343,10 +1339,10 @@ export default async function ModelMonitorPage() {
           {
             key: "clay-fav-hc",
             title: "Clay-Fav HC Internal",
-            subtitle: "Manual Clay-Fav HC ledger derived from spread_v1 archive. Settled history only; no live queue.",
+            subtitle: "Manual Clay-Fav HC ledger derived from spread_v1 archive. Kept in files only; no live queue.",
             accent: "emerald",
             statusBadge: { tone: "muted" as const, label: "manual - internal" },
-            rows: sortSignalRowsForBrowser(clayFavSignalsArchive.filter(isClosedArchiveSignal)),
+            rows: [],
           },
         ]
       : []),
