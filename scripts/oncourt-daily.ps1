@@ -201,16 +201,16 @@ if ($LASTEXITCODE -ne 0) {
 
 # Step 4: Refresh TennisExplorer injured/returning CSV
 Log "=== Step 4/10: Refresh injured players list (TennisExplorer) ==="
-& python scripts\scrape-tennisexplorer-injured.py --max-pages 2 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: injured players scrape failed (exit $LASTEXITCODE), continuing..."
+$injuredExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\scrape-tennisexplorer-injured.py", "--max-pages", "2") -Label "injured players scrape"
+if ($injuredExit -ne 0) {
+    Log "WARNING: injured players scrape failed (exit $injuredExit), continuing..."
 }
 
 # Step 5: Refresh Tennis Abstract CPI/surface-speed table
 Log "=== Step 5/10: Refresh CPI surface-speed table ==="
-& python scripts\scrape-tennisabstract-surface-speed.py 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: CPI surface-speed refresh failed (exit $LASTEXITCODE), continuing..."
+$surfaceSpeedExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\scrape-tennisabstract-surface-speed.py") -Label "CPI surface-speed refresh"
+if ($surfaceSpeedExit -ne 0) {
+    Log "WARNING: CPI surface-speed refresh failed (exit $surfaceSpeedExit), continuing..."
 }
 
 # Step 6: Pinnacle odds + fair odds
