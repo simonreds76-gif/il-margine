@@ -1,6 +1,6 @@
 # Assist Value Set-Piece Source Audit
 
-Fetched at UTC: `2026-06-03T12:02:51+00:00`
+Fetched at UTC: `2026-06-04T10:42:46+00:00`
 
 ## Decision
 
@@ -14,14 +14,14 @@ Overall: **PASS_SOURCE_LAYER**
 ## RotoWire
 
 - Teams with set-piece blocks: `96/96`
-- Player role rows extracted: `1032`
+- Player role rows extracted: `1030`
 
 | League | Teams OK | Teams | Role rows | Max latest week |
 |---|---:|---:|---:|---:|
-| bundesliga | 18 | 18 | 179 | 49 |
+| bundesliga | 18 | 18 | 178 | 49 |
 | epl | 20 | 20 | 211 | 57 |
 | la-liga | 20 | 20 | 220 | 54 |
-| ligue-1 | 18 | 18 | 201 | 51 |
+| ligue-1 | 18 | 18 | 200 | 51 |
 | serie-a | 20 | 20 | 221 | 52 |
 
 ## FPL API
@@ -47,7 +47,7 @@ Overall: **PASS_SOURCE_LAYER**
 | ligue-1 | Metz | Gauthier Hein | 90.91% | 64.17% | 77 |
 | la-liga | Espanyol | Edu Exposito | 90.0% | 84.78% | 117 |
 | ligue-1 | Lorient | Pablo Pagis | 83.33% | 58.54% | 48 |
-| bundesliga | VfL Wolfsburg | Christian Eriksen | 81.25% | 55.0% | 77 |
+| bundesliga | VfL Wolfsburg | Christian Eriksen | 81.25% | 59.23% | 77 |
 | ligue-1 | AJ Auxerre | Kevin Danois | 78.95% | 62.04% | 85 |
 | la-liga | Real Madrid | Trent Alexander-Arnold | 78.95% | 28.38% | 65 |
 | ligue-1 | Angers | Branco van den Boomen | 78.57% | 38.71% | 36 |
