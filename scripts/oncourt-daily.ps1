@@ -215,7 +215,7 @@ if ($surfaceSpeedExit -ne 0) {
 
 # Step 6: Pinnacle odds + fair odds
 Log "=== Step 6/10: Pinnacle odds + fair odds ==="
-$step6Exit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\run-daily-odds.py", "--skip-strict-report") -Label "Pinnacle/fair-odds" -TimeoutSeconds $dailyOddsTimeoutSeconds
+$step6Exit = Invoke-LoggedProcessWithRetry -FilePath "python" -ArgumentList @("scripts\run-daily-odds.py", "--skip-strict-report") -Label "Pinnacle/fair-odds" -TimeoutSeconds $dailyOddsTimeoutSeconds -Attempts 3
 $step6Lines = @($script:LastProcessOutputLines | ForEach-Object { "$_" })
 if ($step6Exit -ne 0) {
     Log "ERROR: Pinnacle/fair-odds failed (exit $step6Exit)"
