@@ -13,6 +13,7 @@ import os
 import re
 import subprocess
 import sys
+import time
 from datetime import date
 
 # Project root for tennis_prob; scripts dir for matchup_model
@@ -1205,6 +1206,51 @@ def main():
     base = url.rstrip("/") + "/rest/v1"
     headers = {"apikey": _supabase_key, "Authorization": f"Bearer {_supabase_key}"}
     REQ_TIMEOUT = 45  # avoid hanging on slow Supabase
+    SUPABASE_READ_RETRIES = max(1, _env_int("FAIR_ODDS_SUPABASE_READ_RETRIES", 4))
+    SUPABASE_READ_RETRY_BASE_SLEEP = max(0.1, _env_float("FAIR_ODDS_SUPABASE_READ_RETRY_BASE_SLEEP", 1.5))
+    SUPABASE_READ_RETRY_STATUS = {408, 425, 429, 500, 502, 503, 504}
+
+    _requests_request = requests.request
+
+    def _request_with_retry(method, request_url, **kwargs):
+        method_upper = str(method or "GET").upper()
+        if method_upper not in {"GET", "HEAD"}:
+            return _requests_request(method_upper, request_url, **kwargs)
+
+        kwargs.setdefault("timeout", REQ_TIMEOUT)
+        last_exc = None
+        for attempt in range(1, SUPABASE_READ_RETRIES + 1):
+            try:
+                resp = _requests_request(method_upper, request_url, **kwargs)
+                if resp.status_code not in SUPABASE_READ_RETRY_STATUS or attempt >= SUPABASE_READ_RETRIES:
+                    return resp
+                delay = SUPABASE_READ_RETRY_BASE_SLEEP * attempt
+                print(
+                    f"  WARNING: Supabase {method_upper} {resp.status_code} at {request_url}; "
+                    f"retry {attempt}/{SUPABASE_READ_RETRIES} in {delay:.1f}s"
+                )
+                time.sleep(delay)
+            except requests.exceptions.RequestException as exc:
+                last_exc = exc
+                if attempt >= SUPABASE_READ_RETRIES:
+                    raise
+                delay = SUPABASE_READ_RETRY_BASE_SLEEP * attempt
+                print(
+                    f"  WARNING: Supabase {method_upper} transient error at {request_url}: {exc}; "
+                    f"retry {attempt}/{SUPABASE_READ_RETRIES} in {delay:.1f}s"
+                )
+                time.sleep(delay)
+
+        if last_exc is not None:
+            raise last_exc
+        return _requests_request(method_upper, request_url, **kwargs)
+
+    def _get_with_retry(request_url, **kwargs):
+        return _request_with_retry("GET", request_url, **kwargs)
+
+    # Keep call sites simple while making every Supabase read resilient.
+    requests.get = _get_with_retry
+    requests.request = _request_with_retry
 
     def _daily_row_key(row):
         return (
