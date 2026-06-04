@@ -309,7 +309,13 @@ def _upsert_supabase(rows: list[dict], table: str) -> None:
     batch_size = 500
     sent = 0
     for i in range(0, len(rows), batch_size):
-        chunk = rows[i : i + batch_size]
+        # The local CSV keeps ta_surface_speed as a backwards-compatible alias
+        # for older research scripts; the Supabase table stores the canonical
+        # value as cpi only.
+        chunk = [
+            {k: v for k, v in row.items() if k != "ta_surface_speed"}
+            for row in rows[i : i + batch_size]
+        ]
         r = requests.post(endpoint, headers=headers, json=chunk, timeout=45)
         if r.status_code >= 300:
             raise RuntimeError(f"Supabase upsert failed [{r.status_code}]: {r.text[:400]}")
