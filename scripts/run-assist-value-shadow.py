@@ -18,6 +18,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_LEAGUES = ["serie-a", "epl", "la-liga", "bundesliga", "ligue-1"]
+ROLE_SOURCE_FILES = [
+    ROOT / "data" / "assist-value" / "rotowire-setpiece-roles.csv",
+    ROOT / "data" / "assist-value" / "rotowire-source-status.csv",
+    ROOT / "data" / "assist-value" / "fpl-setpiece-roles.csv",
+    ROOT / "data" / "assist-value" / "setpiecetakers-source-status.csv",
+    ROOT / "data" / "assist-value" / "setpiece-source-audit.md",
+    ROOT / "data" / "assist-value" / "setpiece-source-audit.json",
+]
 
 
 def run_cmd(cmd: list[str], *, allow_failure: bool = False) -> bool:
@@ -44,12 +52,34 @@ def has_matching_files(patterns: list[str]) -> bool:
     return False
 
 
+def snapshot_files(paths: list[Path]) -> dict[Path, bytes | None]:
+    snapshot: dict[Path, bytes | None] = {}
+    for path in paths:
+        snapshot[path] = path.read_bytes() if path.exists() else None
+    return snapshot
+
+
+def restore_snapshot(snapshot: dict[Path, bytes | None]) -> None:
+    for path, content in snapshot.items():
+        if content is None:
+            if path.exists():
+                path.unlink()
+            continue
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(content)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run private Assist Value shadow lane")
     parser.add_argument("--leagues", default=",".join(DEFAULT_LEAGUES))
     parser.add_argument("--bookmakers", default="Bet365")
     parser.add_argument("--days-ahead", type=int, default=3)
     parser.add_argument("--refresh-role-sources", action="store_true")
+    parser.add_argument(
+        "--strict-source-audit",
+        action="store_true",
+        help="Fail the whole shadow run if role-source freshness/coverage audit fails.",
+    )
     parser.add_argument("--skip-odds", action="store_true")
     parser.add_argument("--allow-odds-failure", action="store_true")
     args = parser.parse_args()
@@ -60,14 +90,19 @@ def main() -> None:
     print("  Status: research-only, no public lane, no model wiring")
 
     if args.refresh_role_sources:
-        run_cmd(
+        source_snapshot = snapshot_files(ROLE_SOURCE_FILES)
+        source_ok = run_cmd(
             [
                 sys.executable,
                 str(ROOT / "scripts" / "audit-assist-setpiece-sources.py"),
                 "--out-dir",
                 str(ROOT / "data" / "assist-value"),
-            ]
+            ],
+            allow_failure=not args.strict_source_audit,
         )
+        if not source_ok and not args.strict_source_audit:
+            restore_snapshot(source_snapshot)
+            print("  WARNING: source audit failed; restored previous role-source files before modelling.")
 
     if not args.skip_odds:
         for league in parse_leagues(args.leagues):
