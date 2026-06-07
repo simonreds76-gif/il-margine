@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build an internal ATP/WTA Slam aces and double-fault projection board."""
+"""Build an internal ATP/WTA aces and double-fault projection board."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ import json
 import re
 import unicodedata
 from collections import defaultdict
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 from tennis_props_model import project_player
@@ -30,6 +30,7 @@ SURFACE_BY_COURT = {
     "2": "Clay",
     "3": "Grass",
     "4": "Hard",
+    "5": "Grass",
 }
 ROUND_BY_ID = {
     "1": "F",
@@ -40,6 +41,7 @@ ROUND_BY_ID = {
     "6": "R64",
     "7": "R128",
 }
+SLAM_TOURNAMENTS = {"Australian Open", "Roland Garros", "Wimbledon", "US Open"}
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -119,6 +121,66 @@ def slam_name(value: object) -> str | None:
     return None
 
 
+def canonical_tournament_name(value: object) -> str | None:
+    """Canonical tournament names for the tour-level events this board supports."""
+    raw = str(value or "")
+    lower = raw.lower()
+    slam = slam_name(raw)
+    if slam:
+        return slam
+    if "hertogenbosch" in lower or "rosmalen" in lower or "libema open" in lower:
+        return "Hertogenbosch"
+    if (
+        "queen" in lower
+        or "hsbc championships" in lower
+        or "lta london championships" in lower
+        or "cinch championships" in lower
+        or "stella artois" in lower
+    ):
+        return "Queen's Club"
+    if "stuttgart" in lower or "boss open" in lower:
+        return "Stuttgart"
+    if "halle" in lower or "terra wortmann" in lower or "gerry weber" in lower:
+        return "Halle"
+    if "nottingham" in lower:
+        return "Nottingham"
+    if "berlin" in lower and ("open" in lower or "tennis" in lower or "bett1" in lower):
+        return "Berlin"
+    if "eastbourne" in lower:
+        return "Eastbourne"
+    if "bad homburg" in lower:
+        return "Bad Homburg"
+    return None
+
+
+def round_label(round_id: object, tournament: str) -> str:
+    rid = str(round_id or "").strip()
+    if tournament not in SLAM_TOURNAMENTS:
+        return {
+            "4": "R32",
+            "5": "R16",
+            "9": "QF",
+            "10": "SF",
+            "12": "F",
+        }.get(rid, rid)
+    return ROUND_BY_ID.get(rid, rid)
+
+
+def is_placeholder_player(value: object) -> bool:
+    name = norm_name(value)
+    return name in {"unknown player", "bye"} or not name
+
+
+def is_best_of_five(tour: str, tournament: str) -> bool:
+    return tour.upper() == "ATP" and tournament in SLAM_TOURNAMENTS
+
+
+def default_match_games(tour: str, tournament: str) -> float:
+    if is_best_of_five(tour, tournament):
+        return 35.0
+    return 23.5 if tour.upper() == "ATP" else 21.5
+
+
 def load_baseline(path: Path) -> dict[tuple[str, str, str], dict[str, dict[str, str]]]:
     out: dict[tuple[str, str, str], dict[str, dict[str, str]]] = defaultdict(dict)
     for row in read_csv(path):
@@ -191,7 +253,7 @@ def parse_date(value: object) -> date | None:
     return None
 
 
-def load_slam_samples(as_of: date) -> dict[tuple[str, str, str], int]:
+def load_tournament_samples(as_of: date) -> dict[tuple[str, str, str], int]:
     samples: dict[tuple[str, str, str], set[str]] = defaultdict(set)
     for tour in ("atp", "wta"):
         for path in sorted(SACKMANN_DIR.glob(f"{tour}_matches_*.csv")):
@@ -199,7 +261,7 @@ def load_slam_samples(as_of: date) -> dict[tuple[str, str, str], int]:
                 continue
             for row in read_csv(path):
                 match_date = parse_date(row.get("tourney_date"))
-                tournament = slam_name(row.get("tourney_name"))
+                tournament = canonical_tournament_name(row.get("tourney_name"))
                 if match_date is None or match_date >= as_of or not tournament:
                     continue
                 winner_norm = norm_name(row.get("winner_name"))
@@ -223,29 +285,36 @@ def oncourt_schedule_rows(tour_code: str, include_completed: bool, board_date: s
     tour_lower = tour_code.lower()
     player_names = load_oncourt_player_names(tour_lower)
     tours = load_oncourt_tours(tour_lower)
+    board_dt = parse_date(board_date) or date.today()
     rows: list[dict[str, str]] = []
     for row in read_csv(ONCOURT_DIR / f"today_{tour_lower}.csv"):
         if not include_completed and str(row.get("result") or "").strip():
             continue
         tour = tours.get(str(row.get("tour_id") or "").strip()) or {}
-        tournament = slam_name(tour.get("name"))
+        if parse_int(tour.get("rank")) < 2:
+            continue
+        tour_start = parse_date(tour.get("date"))
+        if tour_start and tour_start > board_dt + timedelta(days=1):
+            continue
+        tournament = canonical_tournament_name(tour.get("name"))
         if not tournament:
             continue
         p1 = player_names.get(str(row.get("player1_id") or "").strip(), "")
         p2 = player_names.get(str(row.get("player2_id") or "").strip(), "")
         if not p1 or not p2:
             continue
-        if norm_name(p1) == "unknown player" or norm_name(p2) == "unknown player":
+        if is_placeholder_player(p1) or is_placeholder_player(p2):
             continue
         if "/" in p1 or "/" in p2:
             continue
+        schedule_date = str(row.get("date") or "").strip() or (tour_start.isoformat() if tour_start else board_date)
         rows.append(
             {
-                "date": board_date,
+                "date": schedule_date,
                 "tour": tour_code.upper(),
                 "tour_id": str(row.get("tour_id") or "").strip(),
                 "tournament": tournament,
-                "round": ROUND_BY_ID.get(str(row.get("round_id") or ""), str(row.get("round_id") or "")),
+                "round": round_label(row.get("round_id"), tournament),
                 "surface": SURFACE_BY_COURT.get(str(tour.get("court_id") or ""), "Clay"),
                 "player1": p1,
                 "player2": p2,
@@ -264,7 +333,9 @@ def wta_schedule_rows(path: Path) -> list[dict[str, str]]:
         p2 = str(row.get("player2") or "").strip()
         if not p1 or not p2:
             continue
-        tournament = slam_name(row.get("tournament")) or str(row.get("tournament") or "Roland Garros").strip()
+        tournament = canonical_tournament_name(row.get("tournament")) or str(row.get("tournament") or "").strip()
+        if not tournament:
+            continue
         rows.append(
             {
                 "date": str(row.get("date") or "").strip(),
@@ -348,7 +419,7 @@ def load_current_tournament_stats(schedules: list[dict[str, str]], as_of: date) 
 
 
 def load_current_tournament_logs(schedules: list[dict[str, str]], as_of: date) -> dict[tuple[str, str, str], list[dict[str, str]]]:
-    """Per-round aces/DF logs for players still in the current Slam draw."""
+    """Per-round aces/DF logs for players still in the current tournament draw."""
     tour_ids_by_tour: dict[str, set[str]] = defaultdict(set)
     for row in schedules:
         tour = str(row.get("tour") or "").upper()
@@ -392,9 +463,14 @@ def load_current_tournament_logs(schedules: list[dict[str, str]], as_of: date) -
                 continue
             winner_name = player_names.get(winner_id, winner_id)
             loser_name = player_names.get(loser_id, loser_id)
+            tournament_name = ""
+            for schedule in schedules:
+                if str(schedule.get("tour") or "").upper() == tour and str(schedule.get("tour_id") or "") == tour_id:
+                    tournament_name = str(schedule.get("tournament") or "")
+                    break
             base = {
                 "date": match_date.isoformat(),
-                "round": ROUND_BY_ID.get(round_id, round_id),
+                "round": round_label(round_id, tournament_name),
                 "result": str(game.get("result") or "").strip(),
             }
             logs[(tour, tour_id, winner_id)].append(
@@ -444,7 +520,7 @@ def project_side(
     player_id: str,
     baseline: dict[tuple[str, str, str], dict[str, dict[str, str]]],
     factors: dict[tuple[str, str, str], dict[str, str]],
-    slam_samples: dict[tuple[str, str, str], int],
+    tournament_samples: dict[tuple[str, str, str], int],
     aliases: dict[tuple[str, str], str],
     current_tournament_stats: dict[tuple[str, str, str], dict[str, str]],
     current_tournament_logs: dict[tuple[str, str, str], list[dict[str, str]]],
@@ -457,8 +533,8 @@ def project_side(
     player_rows = baseline.get((tour, player_lookup, surface), {})
     opponent_rows = baseline.get((tour, opponent_lookup, surface), {})
     factor = factors.get((tour, tournament, surface)) or {}
-    expected_games = parse_float(factor.get("match_games_per_match"), 35.0 if tour == "ATP" else 22.0)
-    slam_n = slam_samples.get((tour, player_lookup, tournament), 0)
+    expected_games = parse_float(factor.get("match_games_per_match"), default_match_games(tour, tournament))
+    tournament_n = tournament_samples.get((tour, player_lookup, tournament), 0)
     same_tournament_row = current_tournament_stats.get((tour, str(schedule.get("tour_id") or ""), player_id))
     same_tournament_log = current_tournament_logs.get((tour, str(schedule.get("tour_id") or ""), player_id), [])
     projection = project_player(
@@ -466,14 +542,14 @@ def project_side(
         player_rows=player_rows,
         opponent_rows=opponent_rows,
         factor_row=factor,
-        expected_match_games=expected_games or (35.0 if tour == "ATP" else 22.0),
-        slam_matches=slam_n,
+        expected_match_games=expected_games or default_match_games(tour, tournament),
+        slam_matches=tournament_n,
         same_tournament_row=same_tournament_row,
     )
     career = player_rows.get("career_4y") or {}
     notes = list(projection.notes)
     if not factor:
-        notes.append("NO_SLAM_FACTOR")
+        notes.append("NO_VENUE_FACTOR")
     return {
         "date": schedule["date"],
         "tour": tour,
@@ -494,7 +570,7 @@ def project_side(
         "service_games_estimate": fmt(projection.expected_service_games, 1),
         "player_surface_svpt_sample": str(parse_int(career.get("svpt"))),
         "player_surface_matches": str(parse_int(career.get("matches"))),
-        "player_slam_sample": str(slam_n),
+        "player_slam_sample": str(tournament_n),
         "same_tournament_matches": str(projection.same_tournament_matches),
         "same_tournament_svpt": str(projection.same_tournament_svpt),
         "same_tournament_ace_weight": fmt(projection.same_tournament_ace_weight, 3),
@@ -530,7 +606,7 @@ def main() -> None:
     baseline = load_baseline(Path(args.baseline))
     factors = load_factors(Path(args.factors))
     aliases = load_aliases(Path(args.aliases))
-    slam_samples = load_slam_samples(as_of)
+    tournament_samples = load_tournament_samples(as_of)
 
     schedules = oncourt_schedule_rows("ATP", args.include_completed, args.as_of)
     schedules.extend(oncourt_schedule_rows("WTA", args.include_completed, args.as_of))
@@ -550,7 +626,7 @@ def main() -> None:
                 player_id=str(schedule.get("player1_id") or ""),
                 baseline=baseline,
                 factors=factors,
-                slam_samples=slam_samples,
+                tournament_samples=tournament_samples,
                 aliases=aliases,
                 current_tournament_stats=current_tournament_stats,
                 current_tournament_logs=current_tournament_logs,
@@ -564,7 +640,7 @@ def main() -> None:
                 player_id=str(schedule.get("player2_id") or ""),
                 baseline=baseline,
                 factors=factors,
-                slam_samples=slam_samples,
+                tournament_samples=tournament_samples,
                 aliases=aliases,
                 current_tournament_stats=current_tournament_stats,
                 current_tournament_logs=current_tournament_logs,
@@ -615,7 +691,7 @@ def main() -> None:
     if oncourt_wta_count:
         print(f"WTA schedule source: OnCourt today_wta ({oncourt_wta_count} matches)")
     elif not args.wta_schedule:
-        print("WTA schedule source missing: OnCourt today_wta had no usable Slam rows; manual fallback not provided.")
+        print("WTA schedule source missing: OnCourt today_wta had no usable supported rows; manual fallback not provided.")
 
 
 if __name__ == "__main__":

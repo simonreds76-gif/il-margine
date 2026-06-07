@@ -538,7 +538,7 @@ export default async function TennisPropsMonitorPage() {
           <MonitorNav current="tennis-props" />
         </div>
 
-        <HeroCard title="Tennis Aces / Double-Faults Board" eyebrow="Slam player props research">
+        <HeroCard title="Tennis Aces / Double-Faults Board" eyebrow="Tennis player props research">
           <p className="text-slate-300">
             Local OnCourt schedule plus Sackmann service stats. This is a research board for Bet365 aces and double-fault lines, not a public record lane yet.
           </p>
@@ -551,7 +551,7 @@ export default async function TennisPropsMonitorPage() {
 
         <section className="my-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
           <StatCard label="Projection rows" value={String(boardRows.length)} detail={`${countBy(boardRows, "tour", "ATP")} ATP / ${countBy(boardRows, "tour", "WTA")} WTA`} />
-          <StatCard label="High ace conf" value={String(countBy(boardRows, "ace_confidence", "HIGH"))} detail="Sample + Slam history gate" tone="text-emerald-300" />
+          <StatCard label="High ace conf" value={String(countBy(boardRows, "ace_confidence", "HIGH"))} detail="Sample + event history gate" tone="text-emerald-300" />
           <StatCard label="High DF conf" value={String(countBy(boardRows, "df_confidence", "HIGH"))} detail="Harder gate, noisier market" tone="text-rose-300" />
           <StatCard label="Bet365 rows" value={String(comparisonRows.length)} detail={lineStamp} tone={comparisonRows.length ? "text-cyan-300" : "text-slate-400"} />
           <StatCard label="Actionable" value={String(actionableRows.length)} detail="HIGH confidence + edge gate" tone={actionableRows.length ? "text-emerald-300" : "text-slate-400"} />
@@ -561,7 +561,7 @@ export default async function TennisPropsMonitorPage() {
         <section className="mb-6 grid gap-3 rounded-2xl border border-slate-800 bg-slate-950/40 p-4 text-xs text-slate-400 md:grid-cols-4">
           <div><span className="text-slate-500">Board:</span> <span className="text-slate-200">{boardStamp}</span></div>
           <div><span className="text-slate-500">Baseline:</span> <span className="text-slate-200">{baselineStamp}</span></div>
-          <div><span className="text-slate-500">Slam factors:</span> <span className="text-slate-200">{factorsStamp}</span></div>
+          <div><span className="text-slate-500">Venue factors:</span> <span className="text-slate-200">{factorsStamp}</span></div>
           <div><span className="text-slate-500">Comparison:</span> <span className="text-slate-200">{comparisonStamp}</span></div>
           <div><span className="text-slate-500">Shadow:</span> <span className="text-slate-200">{shadowStamp}</span></div>
           <div><span className="text-slate-500">Shadow perf:</span> <span className="text-slate-200">{shadowPerformanceStamp}</span></div>

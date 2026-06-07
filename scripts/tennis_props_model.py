@@ -224,7 +224,7 @@ def project_player(
     if opp_return_sample < 250:
         notes.append("NO_OPP_DATA")
     if slam_matches <= 0:
-        notes.append("SLAM_DEBUT")
+        notes.append("TOURNAMENT_DEBUT")
     if same_matches > 0:
         notes.append(f"SAME_TOURNAMENT_N{same_matches}")
 
