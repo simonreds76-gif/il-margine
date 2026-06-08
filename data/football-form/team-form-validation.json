@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-06-08T12:26:35+00:00",
+  "checked_at": "2026-06-08T12:45:01+00:00",
   "files": {
     "team-match-base.csv": {
       "age_days": 15,
@@ -36,7 +36,7 @@
       },
       "market_team_win_prob_coverage": 0.9997,
       "rows": 43176,
-      "xg_coverage": 0.074
+      "xg_coverage": 0.0
     },
     "team-rolling-form.csv": {
       "age_days": 15,
@@ -73,7 +73,7 @@
       },
       "market_team_win_prob_coverage": 0.9997,
       "rows": 43176,
-      "xg_coverage": 0.074
+      "xg_coverage": 0.0
     }
   },
   "issues": [
@@ -88,11 +88,6 @@
       "level": "error"
     },
     {
-      "code": "team_match_base_xg_coverage_low",
-      "detail": "xG coverage 7.4%",
-      "level": "warning"
-    },
-    {
       "code": "team_rolling_form_bundesliga_stale",
       "detail": "bundesliga latest date 2026-05-16 is 23d old; max 21d",
       "level": "error"
@@ -101,11 +96,6 @@
       "code": "team_rolling_form_ligue_1_stale",
       "detail": "ligue-1 latest date 2026-05-17 is 22d old; max 21d",
       "level": "error"
-    },
-    {
-      "code": "team_rolling_form_xg_coverage_low",
-      "detail": "xG coverage 7.4%",
-      "level": "warning"
     }
   ],
   "status": "error"
