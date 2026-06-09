@@ -870,6 +870,7 @@ export default async function ModelMonitorPage() {
     profileTxt,
     grandSlamEvalJson,
     shadowComparisonTxt,
+    modelVariantsCsv,
     volumeSignalsArchiveCsv,
     volumeSignalsLiveCsv,
     spreadV1SignalsArchiveCsv,
@@ -897,6 +898,7 @@ export default async function ModelMonitorPage() {
     clvAuditSpreadV1Mtime,
     profileMtime,
     grandSlamEvalMtime,
+    modelVariantsMtime,
     strictSignalsLiveMtime,
     volumeSignalsMtime,
     spreadV1SignalsMtime,
@@ -917,6 +919,7 @@ export default async function ModelMonitorPage() {
     readLocalFile("data/backtest/policy-profile-backtest-2022-2025.txt"),
     readLocalFile("data/backtest/grand-slam-eval-2022-2025.json"),
     readLocalFile("data/backtest/shadow-profile-comparison.txt"),
+    readLocalFile("data/backtest/model-variants-shadow.csv"),
     readLocalFile("data/backtest/strict-signals-volume200-archive.csv"),
     readLocalFile("data/backtest/strict-signals-volume200-live.csv"),
     readLocalFile("data/backtest/strict-signals-spreadv1-archive.csv"),
@@ -944,6 +947,7 @@ export default async function ModelMonitorPage() {
     readLocalMtime("data/backtest/strict-clv-audit-spreadv1-2026.txt"),
     readLocalMtime("data/backtest/policy-profile-backtest-2022-2025.txt"),
     readLocalMtime("data/backtest/grand-slam-eval-2022-2025.json"),
+    readLocalMtime("data/backtest/model-variants-shadow.csv"),
     readLocalMtime("data/backtest/strict-signals-live.csv"),
     readLocalMtime("data/backtest/strict-signals-volume200-live.csv"),
     readLocalMtime("data/backtest/strict-signals-spreadv1-live.csv"),
@@ -968,6 +972,7 @@ export default async function ModelMonitorPage() {
   const profiles = parsePolicyProfiles(profileTxt);
   const grandSlamEval = parseJsonMaybe<GrandSlamEvalReport>(grandSlamEvalJson);
   const grandSlamRows = grandSlamEval?.rows ?? [];
+  const modelVariantRows = modelVariantsCsv ? parseCsv(modelVariantsCsv) : [];
   const profileMap = new Map(profiles.map((profile) => [profile.name, profile]));
   const strictSignalsArchiveRaw = parseSignalRows(strictSignalsArchiveCsv);
   const strictSignalsArchive = dedupeLogicalSignalRows(strictSignalsArchiveRaw);
@@ -1051,6 +1056,70 @@ export default async function ModelMonitorPage() {
   const clayScratchHandicap = claySpreadOrientation.scratch;
   const clayThresholds = spreadV1Status?.surfaces?.clay?.threshold_results ?? [];
   const clayFavCandidateStatus = claySpreadCalibrationReady ? "tracking shadow candidate" : "blocked until clay-only calibration is valid";
+  const variantRow = (variant: string, profile: string) =>
+    modelVariantRows.find((row) => row.variant === variant && row.profile === profile);
+  const variantNumber = (row: CsvRow | undefined, key: string) => parseFloatMaybe(row?.[key]);
+  const variantGenerated = modelVariantRows[0]?.generated_utc;
+  const baselineVariantStrict = variantRow("baseline_current", "strict");
+  const baselineVariantVolume = variantRow("baseline_current", "volume_200_hard");
+  const baselineVariantHardAll = variantRow("baseline_current", "hard_edge10_all");
+  const baselineVariantClayAll = variantRow("baseline_current", "clay_edge10_all");
+  const modelVariantCards = [
+    {
+      key: "hardcal-strict",
+      title: "Hard Cal Strict",
+      row: variantRow("hardcal_strict_live", "strict"),
+      baseline: baselineVariantStrict,
+      badge: "candidate",
+      tone: "emerald",
+      note: "Best practical upgrade: improves strict tier ROI and calibration. Only suitable inside strict/volume hard gates.",
+    },
+    {
+      key: "hardcal-volume",
+      title: "Hard Cal Volume",
+      row: variantRow("hardcal_strict_live", "volume_200_hard"),
+      baseline: baselineVariantVolume,
+      badge: "candidate",
+      tone: "emerald",
+      note: "Small positive lift for the sellable hard-court expansion lane. Do not use it to broaden hard outside approved profiles.",
+    },
+    {
+      key: "h2h-strict",
+      title: "H2H n>=2",
+      row: variantRow("h2h_n2_shrunk", "strict"),
+      baseline: baselineVariantStrict,
+      badge: "shadow",
+      tone: "amber",
+      note: "Cleaner probability metrics, but lower strict ROI than baseline. Useful as an audit feature, not a live promotion yet.",
+    },
+    {
+      key: "fatigue-volume",
+      title: "Fatigue x1.5",
+      row: variantRow("fatigue_x1.5", "volume_200_hard"),
+      baseline: baselineVariantVolume,
+      badge: "rejected",
+      tone: "rose",
+      note: "The heavier fatigue multiplier hurts volume ROI. Keep the existing conservative fatigue/rust sizing.",
+    },
+    {
+      key: "clay-cal",
+      title: "Clay Calibration",
+      row: variantRow("claycal_lanes", "clay_edge10_all"),
+      baseline: baselineVariantClayAll,
+      badge: "blocked",
+      tone: "rose",
+      note: "Clay overlay is still a no-go: calibration improves shape but destroys ROI. Do not route clay ML through it.",
+    },
+    {
+      key: "atp250-hard",
+      title: "Hard ATP250 20%+",
+      row: variantRow("atp250_hard_20", "atp250_hard_20"),
+      baseline: baselineVariantHardAll,
+      badge: "watch",
+      tone: "amber",
+      note: "Historically interesting but 2026 is tiny and ugly. Track only; no product claim.",
+    },
+  ];
 
   const strictAllRoi = perfValue(strictBase.combinedAll, "roi_pct", parseFloatMaybe);
   const volumeAllRoi = perfValue(volumeBase.combinedAll, "roi_pct", parseFloatMaybe);
@@ -1398,6 +1467,7 @@ export default async function ModelMonitorPage() {
               <FileStamp label="Spread v1 CLV" value={clvAuditSpreadV1Mtime} />
               <FileStamp label="Profile backtest" value={profileMtime} />
               <FileStamp label="GS eval" value={grandSlamEvalMtime} />
+              <FileStamp label="Model variants" value={modelVariantsMtime} />
               <FileStamp label="Strict signals" value={strictSignalsLiveMtime} />
               <FileStamp label="Vol200 signals" value={volumeSignalsMtime} />
               <FileStamp label="Spread v1 signals" value={spreadV1SignalsMtime} />
@@ -1483,6 +1553,71 @@ export default async function ModelMonitorPage() {
             </Link>
           </div>
         </section>
+
+        <div className="mb-8">
+          <MonitorCard
+            title="Tennis Model Variants Shadow"
+            subtitle={
+              variantGenerated
+                ? `Generated ${variantGenerated}. Historical ATP 2022-2026 comparison only; this does not change live routing by itself.`
+                : "Run scripts/tennis-model-variants-shadow.py to refresh the model-variant comparison."
+            }
+          >
+            {modelVariantRows.length === 0 ? (
+              <p className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm text-slate-400">
+                No model-variant report found. Run <span className="font-mono text-slate-200">python scripts/tennis-model-variants-shadow.py</span>.
+              </p>
+            ) : (
+              <>
+                <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                  {modelVariantCards.map((card) => {
+                    const roi = variantNumber(card.row, "tier_roi_pct");
+                    const baselineRoi = variantNumber(card.baseline, "tier_roi_pct");
+                    const delta = roi != null && baselineRoi != null ? roi - baselineRoi : undefined;
+                    const bets = parseIntMaybe(card.row?.bets);
+                    const ece = variantNumber(card.row, "ece");
+                    const status = card.row?.status ?? "missing";
+                    const badgeClass =
+                      card.tone === "emerald"
+                        ? "border-emerald-500/35 bg-emerald-500/10 text-emerald-200"
+                        : card.tone === "rose"
+                          ? "border-rose-500/35 bg-rose-500/10 text-rose-200"
+                          : "border-amber-500/35 bg-amber-500/10 text-amber-200";
+                    return (
+                      <div key={card.key} className="rounded-2xl border border-slate-800 bg-slate-950/45 p-4">
+                        <div className="mb-3 flex items-start justify-between gap-3">
+                          <div>
+                            <h3 className="text-base font-semibold text-white">{card.title}</h3>
+                            <p className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-500">{status}</p>
+                          </div>
+                          <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${badgeClass}`}>
+                            {card.badge}
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 text-sm">
+                          <Stat label="Tier ROI" value={formatPct(roi)} tone={metricTone(roi)} compact />
+                          <Stat label="vs Baseline" value={formatPct(delta)} tone={metricTone(delta)} compact />
+                          <Stat label="Bets" value={bets != null ? `${bets}` : "n/a"} compact />
+                          <Stat label="ECE" value={ece != null ? ece.toFixed(5) : "n/a"} tone={ece != null && ece <= 0.04 ? "text-emerald-300" : "text-slate-300"} compact />
+                        </div>
+                        <p className="mt-3 text-sm leading-6 text-slate-400">{card.note}</p>
+                        {card.row?.by_year ? (
+                          <div className="mt-3 rounded-xl border border-slate-800/80 bg-slate-900/55 p-3 font-mono text-[11px] leading-5 text-slate-400">
+                            {card.row.by_year}
+                          </div>
+                        ) : null}
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="mt-4 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-sm leading-6 text-emerald-50">
+                  Current interpretation: the only model change with a promotion case is <span className="font-semibold text-white">Hard calibration inside strict/volume only</span>.
+                  H2H, heavier fatigue, tournament-form cap expansion, clay calibration, and ATP250-hard expansion stay shadow until they beat the existing lane on ROI and calibration together.
+                </div>
+              </>
+            )}
+          </MonitorCard>
+        </div>
 
         <div className="mb-3 flex items-center justify-between gap-4">
           <div>

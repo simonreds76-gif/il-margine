@@ -465,6 +465,17 @@ def _write_summary(path: Path, rows: list[dict[str, str]]) -> None:
         writer.writerows(rows)
 
 
+def _load_previous_summary(path: Path) -> dict[tuple[str, str], dict[str, str]]:
+    if not path.exists():
+        return {}
+    with path.open("r", encoding="utf-8-sig", newline="") as f:
+        return {
+            (row.get("variant", ""), row.get("profile", "")): dict(row)
+            for row in csv.DictReader(f)
+            if row.get("variant") and row.get("profile")
+        }
+
+
 def _write_picks(path: Path, rows_by_key: dict[str, dict[str, str]], picks: list[Pick]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     fields = [
@@ -525,6 +536,7 @@ def _write_report(path: Path, rows: list[dict[str, str]]) -> None:
         "",
         "Purpose: compare candidate model changes without changing live fair-odds routing.",
         "A variant marked pending needs its suffixed backtest CSVs generated with --run-model-reruns.",
+        "A variant marked stale_ok is the last successful summary retained because the heavy rerun source CSVs were unavailable in this environment.",
         "",
     ]
     for row in rows:
@@ -553,6 +565,7 @@ def main() -> int:
 
     generated = datetime.now(timezone.utc).isoformat(timespec="seconds")
     params = _load_calibration_params(Path(args.params))
+    previous_summary = _load_previous_summary(Path(args.out))
     summary_rows: list[dict[str, str]] = []
     all_picks: list[Pick] = []
     rows_by_key: dict[str, dict[str, str]] = {}
@@ -571,6 +584,16 @@ def main() -> int:
             quality = {"rows": 0.0, "logloss": float("nan"), "brier": float("nan"), "ece": float("nan")}
 
         for profile in variant.profiles:
+            previous = previous_summary.get((variant.name, profile))
+            if not rows and previous and previous.get("status") in {"ok", "stale_ok"}:
+                retained = dict(previous)
+                retained["generated_utc"] = generated
+                retained["status"] = "stale_ok"
+                retained["description"] = variant.description
+                retained["source_suffix"] = variant.source_suffix
+                retained["transform"] = variant.transform
+                summary_rows.append(retained)
+                continue
             profile_picks = [pick for pick in picks if pick.profile == profile]
             stats = _summarize_picks(profile_picks)
             summary_rows.append(

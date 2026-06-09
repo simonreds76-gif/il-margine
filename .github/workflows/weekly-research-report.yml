@@ -56,6 +56,7 @@ jobs:
             --report data/football-form/team-shots-v3-ema20-clv-monitor.md \
             --allowed-config data/football-form/team-shots-v3-ema20-allowed-leagues.json
           python scripts/corners-v0-clv-monitor.py
+          python scripts/tennis-model-variants-shadow.py
 
       - name: Build and send weekly report
         run: python scripts/weekly-research-report.py
@@ -85,3 +86,5 @@ jobs:
             data/football-form/weekly-research-report.json
             data/football-form/team-shots-v3-ema20-clv-monitor.md
             data/football-form/corners-v0-clv-monitor.md
+            data/backtest/model-variants-shadow.csv
+            data/backtest/model-variants-shadow-report.txt
