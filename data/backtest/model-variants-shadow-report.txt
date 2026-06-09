@@ -1,0 +1,29 @@
+Tennis Model Variants Shadow Harness
+Generated: 2026-06-09T20:44:19+00:00
+
+Purpose: compare candidate model changes without changing live fair-odds routing.
+A variant marked pending needs its suffixed backtest CSVs generated with --run-model-reruns.
+
+baseline_current           strict             ok       bets= 370 tierROI=  12.920% logloss=0.62342 ece=0.05241 2022:71/+1.5% 2023:92/-13.1% 2024:86/+22.8% 2025:121/+32.8%
+baseline_current           volume_200_hard    ok       bets= 590 tierROI=  14.156% logloss=0.62342 ece=0.05241 2022:125/+13.2% 2023:142/+8.8% 2024:143/+23.0% 2025:180/+12.2%
+baseline_current           hard_edge10_all    ok       bets=1197 tierROI=   7.002% logloss=0.62342 ece=0.05241 2022:282/+8.1% 2023:307/+2.0% 2024:287/+11.1% 2025:308/+7.9% 2026:13/-11.3%
+baseline_current           clay_edge10_all    ok       bets= 750 tierROI=  -3.482% logloss=0.62342 ece=0.05241 2022:180/-7.9% 2023:205/+7.2% 2024:185/-8.4% 2025:180/-6.5%
+baseline_current           all_edge10         ok       bets=2201 tierROI=   2.908% logloss=0.62342 ece=0.05241 2022:517/+0.3% 2023:574/+7.7% 2024:535/+3.7% 2025:562/-0.0% 2026:13/-11.3%
+hardcal_strict_live        strict             ok       bets= 355 tierROI=  15.136% logloss=0.62251 ece=0.03456 2022:69/+2.9% 2023:81/-6.9% 2024:90/+25.1% 2025:115/+31.4%
+hardcal_strict_live        volume_200_hard    ok       bets= 572 tierROI=  14.670% logloss=0.62251 ece=0.03456 2022:120/+14.5% 2023:141/+9.6% 2024:131/+27.3% 2025:180/+9.8%
+hardcal_strict_live        hard_edge10_all    ok       bets=1231 tierROI=   6.099% logloss=0.62251 ece=0.03456 2022:306/+2.7% 2023:311/+4.6% 2024:288/+10.1% 2025:311/+8.5% 2026:15/-19.3%
+claycal_lanes              clay_edge10_all    ok       bets= 752 tierROI= -11.728% logloss=0.62307 ece=0.04357 2022:191/-14.5% 2023:198/-1.9% 2024:185/-16.3% 2025:178/-15.1%
+claycal_lanes              clay_masters_high  ok       bets= 146 tierROI= -15.715% logloss=0.62307 ece=0.04357 2022:25/-33.5% 2023:39/-31.8% 2024:40/-6.1% 2025:42/+0.6%
+atp250_hard_20             atp250_hard_20     ok       bets= 253 tierROI=   9.103% logloss=0.62342 ece=0.05241 2022:64/+11.9% 2023:72/+5.9% 2024:67/+12.3% 2025:46/+10.3% 2026:4/-45.2%
+h2h_n2_shrunk              strict             pending  bets=   0 tierROI=        % logloss= ece= 
+h2h_n2_shrunk              volume_200_hard    pending  bets=   0 tierROI=        % logloss= ece= 
+h2h_n2_shrunk              hard_edge10_all    pending  bets=   0 tierROI=        % logloss= ece= 
+h2h_n2_shrunk              all_edge10         pending  bets=   0 tierROI=        % logloss= ece= 
+fatigue_x1.5               strict             pending  bets=   0 tierROI=        % logloss= ece= 
+fatigue_x1.5               volume_200_hard    pending  bets=   0 tierROI=        % logloss= ece= 
+fatigue_x1.5               hard_edge10_all    pending  bets=   0 tierROI=        % logloss= ece= 
+fatigue_x1.5               all_edge10         pending  bets=   0 tierROI=        % logloss= ece= 
+tournament_form_caps_up    strict             pending  bets=   0 tierROI=        % logloss= ece= 
+tournament_form_caps_up    volume_200_hard    pending  bets=   0 tierROI=        % logloss= ece= 
+tournament_form_caps_up    hard_edge10_all    pending  bets=   0 tierROI=        % logloss= ece= 
+tournament_form_caps_up    all_edge10         pending  bets=   0 tierROI=        % logloss= ece= 

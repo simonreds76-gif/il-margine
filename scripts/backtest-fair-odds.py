@@ -110,6 +110,7 @@ FORM_TOTAL_CAP = 0.05
 H2H_MIN_MATCHES = 5
 H2H_WEIGHT = 0.03
 H2H_CAP = 0.02
+H2H_PRIOR_K = 0.0
 
 TOURNAMENT_HISTORY_MIN_MATCHES = 2
 TOURNAMENT_HISTORY_WEIGHT = 0.08
@@ -128,6 +129,7 @@ STREAK_HARD_START = 6
 STREAK_UNIT = 0.004
 STREAK_CAP = 0.03
 RESULTS_FORM_TOTAL_CAP = 0.055
+FATIGUE_MODEL_MULTIPLIER = 1.0
 
 FORM_CRISIS_LOSS_STREAK = 5
 FORM_CRISIS_YTD_MIN_MATCHES = 6
@@ -1675,12 +1677,18 @@ def _compute_match_probability(
     return_adv = ret1_eff - ret2_eff
     style_edge = serve_adv - return_adv
     h2h_row = state.h2h_record(p1, p2, surface)
+    h2h_delta = 0.0
+    h2h_n = 0
     if h2h_row:
         a, _b, wins_a, wins_b, h2h_n = h2h_row
         if h2h_n >= H2H_MIN_MATCHES:
             wins_p1 = wins_a if p1 == a else wins_b
-            win_rate_p1 = wins_p1 / h2h_n
-            delta_p1 += structural_mult * _clamp((win_rate_p1 - 0.5) * H2H_WEIGHT, -H2H_CAP, H2H_CAP)
+            if H2H_PRIOR_K > 0:
+                win_rate_p1 = (wins_p1 + (0.5 * H2H_PRIOR_K)) / (h2h_n + H2H_PRIOR_K)
+            else:
+                win_rate_p1 = wins_p1 / h2h_n
+            h2h_delta = _clamp((win_rate_p1 - 0.5) * H2H_WEIGHT, -H2H_CAP, H2H_CAP)
+            delta_p1 += structural_mult * h2h_delta
 
     if p2 in lefties:
         delta_p1 += structural_mult * (state.vs_leftie_win_pct(p1, surface) - 0.5) * VS_LEFTIE_WEIGHT
@@ -1729,6 +1737,7 @@ def _compute_match_probability(
         delta_fatigue_rust, _ = compute_fatigue_rust_delta(
             p1_recent, p2_recent, match_dt, surface, tour_id=None, debug=False
         )
+        delta_fatigue_rust *= FATIGUE_MODEL_MULTIPLIER
         delta_form = _clamp(
             delta_form_part + structural_mult * delta_fatigue_rust,
             -FORM_TOTAL_CAP,
@@ -1782,6 +1791,8 @@ def _compute_match_probability(
         "cpi_year": cpi_year,
         "cpi_z": cpi_z,
         "cpi_delta": cpi_delta,
+        "h2h_n": h2h_n,
+        "h2h_delta": h2h_delta,
         "tournament_speed_signal": tour_speed_signal,
         "tournament_speed_multiplier": tour_speed_multiplier,
         "tournament_speed_venue_spw": tour_speed_debug.get("venue_spw"),
@@ -2525,6 +2536,8 @@ def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         "p_a",
         "p_b",
         "confidence",
+        "h2h_n",
+        "h2h_delta",
         "tournament_speed_signal",
         "tournament_speed_multiplier",
         "tournament_speed_archetype_delta",
@@ -2539,7 +2552,15 @@ def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
             w.writerow({k: row.get(k) for k in fields})
 
 
+def _safe_suffix(value: object) -> str:
+    text = str(value or "").strip().lower()
+    text = re.sub(r"[^a-z0-9._-]+", "-", text)
+    return text.strip("-_.")
+
+
 def main() -> None:
+    global H2H_MIN_MATCHES, H2H_PRIOR_K, H2H_WEIGHT, H2H_CAP, FATIGUE_MODEL_MULTIPLIER, TOURNAMENT_HISTORY_CAP
+
     parser = argparse.ArgumentParser(description="Backtest fair-odds model vs historical Pinnacle closing odds.")
     parser.add_argument(
         "--files",
@@ -2624,11 +2645,59 @@ def main() -> None:
         help="Exclude matches where model fav odds < this (default: 1.25). Try 1.35 for stricter.",
     )
     parser.add_argument(
+        "--h2h-min-matches",
+        type=int,
+        default=H2H_MIN_MATCHES,
+        help="Minimum prior H2H matches before applying H2H delta (default: 5).",
+    )
+    parser.add_argument(
+        "--h2h-prior-k",
+        type=float,
+        default=H2H_PRIOR_K,
+        help="Shrink H2H record toward 50%% with this prior match count (default: 0/off).",
+    )
+    parser.add_argument(
+        "--h2h-weight",
+        type=float,
+        default=H2H_WEIGHT,
+        help="H2H delta weight before cap (default: 0.03).",
+    )
+    parser.add_argument(
+        "--h2h-cap",
+        type=float,
+        default=H2H_CAP,
+        help="H2H delta cap in probability points (default: 0.02).",
+    )
+    parser.add_argument(
+        "--fatigue-multiplier",
+        type=float,
+        default=FATIGUE_MODEL_MULTIPLIER,
+        help="Multiplier on the v2 fatigue/rust delta only (default: 1.0).",
+    )
+    parser.add_argument(
+        "--tournament-history-cap",
+        type=float,
+        default=TOURNAMENT_HISTORY_CAP,
+        help="Cap for historical same-tournament win-rate delta (default: 0.03).",
+    )
+    parser.add_argument(
+        "--output-suffix",
+        default="",
+        help="Append a custom suffix to output CSVs, e.g. h2h-n2-shrunk.",
+    )
+    parser.add_argument(
         "--challenger",
         action="store_true",
         help="Backtest Challenger matches from oncourt_games + pinnacle-odds CSV (requires data/pinnacle-odds-*.csv).",
     )
     args = parser.parse_args()
+
+    H2H_MIN_MATCHES = max(1, int(args.h2h_min_matches))
+    H2H_PRIOR_K = max(0.0, float(args.h2h_prior_k))
+    H2H_WEIGHT = max(0.0, float(args.h2h_weight))
+    H2H_CAP = max(0.0, float(args.h2h_cap))
+    FATIGUE_MODEL_MULTIPLIER = max(0.0, float(args.fatigue_multiplier))
+    TOURNAMENT_HISTORY_CAP = max(0.0, float(args.tournament_history_cap))
 
     backtest_dir = ROOT / "data" / "backtest"
     data_dir = ROOT / "data"
@@ -2966,6 +3035,8 @@ def main() -> None:
             "p_a": debug.get("p_a"),
             "p_b": debug.get("p_b"),
             "p_raw": float(debug.get("p_raw") or p_winner),
+            "h2h_n": debug.get("h2h_n"),
+            "h2h_delta": debug.get("h2h_delta"),
             "cpi_value": debug.get("cpi_value"),
             "cpi_year": debug.get("cpi_year"),
             "cpi_z": debug.get("cpi_z"),
@@ -3143,12 +3214,17 @@ def main() -> None:
                         "p_a": r.get("p_a"),
                         "p_b": r.get("p_b"),
                         "confidence": r.get("confidence"),
+                        "h2h_n": r.get("h2h_n"),
+                        "h2h_delta": r.get("h2h_delta"),
                         "score": r.get("score") or "",
                     }
                 )
             suffix = "-v2" if getattr(args, "v2", False) else ""
             if args.temperature is not None:
                 suffix = suffix + "-calibrated" if suffix else "-calibrated"
+            custom_suffix = _safe_suffix(getattr(args, "output_suffix", ""))
+            if custom_suffix:
+                suffix = f"{suffix}-{custom_suffix}" if suffix else f"-{custom_suffix}"
             prefix = "challenger-" if args.challenger else ""
             out_path = backtest_dir / f"backtest-results-{prefix}{year}{suffix}.csv"
             _write_csv(out_path, out_rows)
