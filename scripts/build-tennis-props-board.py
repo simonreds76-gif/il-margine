@@ -43,6 +43,8 @@ ROUND_BY_ID = {
     "7": "R128",
 }
 SLAM_TOURNAMENTS = {"Australian Open", "Roland Garros", "Wimbledon", "US Open"}
+VENUE_FACTOR_MIN = 0.85
+VENUE_FACTOR_MAX = 1.20
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -248,6 +250,21 @@ def surface_baseline_factor(
         "df_factor": "1.0000",
         "sample_flag": "SURFACE_BASELINE",
     }
+
+
+def clipped_venue_factor_row(row: dict[str, str]) -> tuple[dict[str, str], bool]:
+    """Cap venue multipliers so small warmup fields cannot dominate projections."""
+    out = dict(row)
+    clipped = False
+    for field in ("ace_factor", "df_factor"):
+        value = parse_float(out.get(field))
+        if value is None:
+            continue
+        capped = max(VENUE_FACTOR_MIN, min(VENUE_FACTOR_MAX, value))
+        if abs(capped - value) > 1e-9:
+            out[field] = f"{capped:.4f}"
+            clipped = True
+    return out, clipped
 
 
 def load_aliases(path: Path) -> dict[tuple[str, str], str]:
@@ -577,6 +594,7 @@ def project_side(
     opponent_rows = baseline.get((tour, opponent_lookup, surface), {})
     factor = factors.get((tour, tournament, surface)) or {}
     factor_source = "venue" if factor else ""
+    factor_clipped = False
     if not factor:
         factor = surface_baseline_factor(
             tour=tour,
@@ -585,6 +603,8 @@ def project_side(
             surface_baselines=surface_baselines,
         )
         factor_source = "surface_baseline" if factor else ""
+    elif factor_source == "venue":
+        factor, factor_clipped = clipped_venue_factor_row(factor)
     expected_games = parse_float(factor.get("match_games_per_match"), default_match_games(tour, tournament))
     tournament_n = tournament_samples.get((tour, player_lookup, tournament), 0)
     same_tournament_row = current_tournament_stats.get((tour, str(schedule.get("tour_id") or ""), player_id))
@@ -604,6 +624,8 @@ def project_side(
         notes.append("SURFACE_BASELINE_ONLY")
     elif not factor:
         notes.append("NO_VENUE_FACTOR")
+    if factor_clipped:
+        notes.append("VENUE_FACTOR_CLIPPED")
     return {
         "date": schedule["date"],
         "tour": tour,
