@@ -104,6 +104,8 @@ def main() -> int:
     parser.set_defaults(strict_compare_overlay=_env_bool("STRICT_POLICY_COMPARE_OVERLAY", True))
     args = parser.parse_args()
     step_timeout = _env_int("TENNIS_DAILY_ODDS_STEP_TIMEOUT_SECONDS", 900)
+    os.environ.setdefault("STRICT_HARD_CALIBRATION_LIVE", "1")
+    os.environ.setdefault("STRICT_HARD_CALIBRATION_PROFILES", "strict")
 
     run_cmd(
         [sys.executable, str(ROOT / "scripts" / "pinnacle-scrape-odds.py"), "--active-leagues-only"],

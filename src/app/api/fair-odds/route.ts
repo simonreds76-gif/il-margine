@@ -544,7 +544,7 @@ function applyHardOverlayGuard(p1WinProb: number, seriesBucket: string, confiden
 }
 
 function hardCalibrationShadowProbability(
-  storedP1WinProb: number,
+  rawP1WinProb: number | undefined,
   surfaceKey: string,
   seriesBucket: string,
   confidence?: string,
@@ -554,9 +554,10 @@ function hardCalibrationShadowProbability(
     (!INTERNAL_RESEARCH_LANES || !HARD_CALIBRATION_SHADOW_ENABLED)
   ) return undefined;
   if (surfaceKey !== "hard") return undefined;
+  if (rawP1WinProb == null) return undefined;
   const params = loadHardCalibrationParams();
   if (!params) return undefined;
-  const raw = safeProbability(storedP1WinProb);
+  const raw = safeProbability(rawP1WinProb);
   const favIsP1 = raw >= 0.5;
   const qRaw = favIsP1 ? raw : 1 - raw;
   const qCal = sigmoidProbability(params.A + params.B * logitProbability(qRaw));
@@ -2596,10 +2597,9 @@ async function run(): Promise<Response> {
     const p1WinProb = r.p1_win_prob != null ? Number(r.p1_win_prob) : 0;
     const p2WinProb = r.p2_win_prob != null ? Number(r.p2_win_prob) : 0;
     const p1WinProbRaw = parsePointProb(r.p1_win_prob_raw);
-    const hardOverlayInputProb = p1WinProbRaw ?? p1WinProb;
     const hardOverlaySource: FairOddsRow["hard_overlay_source"] =
       p1WinProbRaw != null ? "raw_prob_shadow" : "stored_prob_shadow";
-    const hardOverlayP1WinProb = hardCalibrationShadowProbability(hardOverlayInputProb, surfaceKey, seriesBucket, confidence);
+    const hardOverlayP1WinProb = hardCalibrationShadowProbability(p1WinProbRaw, surfaceKey, seriesBucket, confidence);
     const hardOverlayP2WinProb = hardOverlayP1WinProb != null ? 1 - hardOverlayP1WinProb : undefined;
     const hardOverlayOdds1 = hardOverlayP1WinProb != null ? Math.round((1 / hardOverlayP1WinProb) * 1000) / 1000 : undefined;
     const hardOverlayOdds2 = hardOverlayP2WinProb != null ? Math.round((1 / hardOverlayP2WinProb) * 1000) / 1000 : undefined;
@@ -2607,6 +2607,8 @@ async function run(): Promise<Response> {
       STRICT_HARD_CALIBRATION_LIVE &&
       league === "ATP" &&
       surfaceKey === "hard" &&
+      seriesBucket === "Masters 1000" &&
+      confidence === "high" &&
       hardOverlayP1WinProb != null &&
       hardOverlayP2WinProb != null;
     const policyP1WinProb = hardCalibrationLiveForRow ? hardOverlayP1WinProb : p1WinProb;

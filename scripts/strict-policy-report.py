@@ -1558,10 +1558,14 @@ def main() -> int:
         print(f"Clay calibrated profile requested but no valid remap points loaded from {args.clay_calibration_file}", file=sys.stderr)
         return 1
     hard_calibration_params = _load_hard_calibration_params(Path(args.hard_calibration_file)) if args.hard_calibration_live else None
-    hard_calibration_live_profiles = {"strict", "volume_200"}
+    hard_calibration_live_profiles = {
+        part.strip()
+        for part in os.environ.get("STRICT_HARD_CALIBRATION_PROFILES", "strict").split(",")
+        if part.strip()
+    }
     hard_calibration_live = bool(args.hard_calibration_live and args.signal_profile in hard_calibration_live_profiles and hard_calibration_params)
     if args.hard_calibration_live and args.signal_profile not in hard_calibration_live_profiles:
-        print(f"WARNING: hard calibration live applies to strict/volume_200 only; disabled for {args.signal_profile}.")
+        print(f"WARNING: hard calibration live applies to {sorted(hard_calibration_live_profiles)} only; disabled for {args.signal_profile}.")
     elif args.hard_calibration_live and not hard_calibration_params:
         print(f"WARNING: hard calibration live requested but params missing/invalid at {args.hard_calibration_file}; using base probabilities.")
     if args.signal_profile == "challenger_ml_shadow" and not CHALLENGER_ML_ENABLE:
@@ -1892,10 +1896,11 @@ def main() -> int:
         p2_win_prob = float(r.get("p2_win_prob") or 0.0)
         hard_calibration_live_for_row = False
         hard_p1_win_prob = None
-        if hard_calibration_live and surface == "Hard" and args.signal_profile in {"strict", "volume_200"}:
-            hard_input_prob = _parse_point_prob(r.get("p1_win_prob_raw")) or p1_win_prob
-            hard_p1_win_prob = _hard_overlay_prob(hard_input_prob, series_bucket, confidence, hard_calibration_params)
-            hard_calibration_live_for_row = hard_p1_win_prob is not None
+        if hard_calibration_live and surface == "Hard" and args.signal_profile in hard_calibration_live_profiles:
+            hard_input_prob = _parse_point_prob(r.get("p1_win_prob_raw"))
+            if hard_input_prob is not None:
+                hard_p1_win_prob = _hard_overlay_prob(hard_input_prob, series_bucket, confidence, hard_calibration_params)
+                hard_calibration_live_for_row = hard_p1_win_prob is not None
         policy_p1_win_prob = hard_p1_win_prob if hard_calibration_live_for_row and hard_p1_win_prob is not None else p1_win_prob
         policy_p2_win_prob = 1.0 - policy_p1_win_prob if hard_calibration_live_for_row else p2_win_prob
         policy_odds1 = 1.0 / _safe_prob(policy_p1_win_prob)

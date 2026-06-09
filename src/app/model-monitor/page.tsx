@@ -1079,9 +1079,9 @@ export default async function ModelMonitorPage() {
       title: "Hard Cal Volume",
       row: variantRow("hardcal_strict_live", "volume_200_hard"),
       baseline: baselineVariantVolume,
-      badge: "candidate",
-      tone: "emerald",
-      note: "Small positive lift for the sellable hard-court expansion lane. Do not use it to broaden hard outside approved profiles.",
+      badge: "watch",
+      tone: "amber",
+      note: "Corrected harness still shows a small lift, but strict-only is the live promotion. Volume needs explicit approval before routing.",
     },
     {
       key: "h2h-strict",
@@ -1577,8 +1577,12 @@ export default async function ModelMonitorPage() {
                     const bets = parseIntMaybe(card.row?.bets);
                     const ece = variantNumber(card.row, "ece");
                     const status = card.row?.status ?? "missing";
+                    const staleSince = card.row?.stale_since;
+                    const statusLabel = status === "stale_ok" && staleSince ? `stale since ${staleSince}` : status;
                     const badgeClass =
-                      card.tone === "emerald"
+                      status === "stale_ok"
+                        ? "border-amber-500/35 bg-amber-500/10 text-amber-200"
+                        : card.tone === "emerald"
                         ? "border-emerald-500/35 bg-emerald-500/10 text-emerald-200"
                         : card.tone === "rose"
                           ? "border-rose-500/35 bg-rose-500/10 text-rose-200"
@@ -1588,7 +1592,7 @@ export default async function ModelMonitorPage() {
                         <div className="mb-3 flex items-start justify-between gap-3">
                           <div>
                             <h3 className="text-base font-semibold text-white">{card.title}</h3>
-                            <p className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-500">{status}</p>
+                            <p className={`mt-1 text-xs uppercase tracking-[0.16em] ${status === "stale_ok" ? "text-amber-300" : "text-slate-500"}`}>{statusLabel}</p>
                           </div>
                           <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${badgeClass}`}>
                             {card.badge}

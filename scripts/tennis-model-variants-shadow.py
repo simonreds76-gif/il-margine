@@ -225,10 +225,13 @@ def _load_calibration_params(path: Path) -> dict[str, dict[str, object]]:
 
 def _surface_calibrated_prob(row: dict[str, str], params: dict[str, dict[str, object]], target_surface: str) -> float:
     current = _safe_prob(_safe_float(row.get("our_prob"), 0.5) or 0.5)
-    raw = _safe_prob(_safe_float(row.get("our_prob_raw"), current) or current)
+    raw_value = _safe_float(row.get("our_prob_raw"))
     surface = str(row.get("surface") or "").strip()
     if surface != target_surface:
         return current
+    if raw_value is None:
+        return current
+    raw = _safe_prob(raw_value)
     surface_params = params.get(surface) or {}
     a = _safe_float(surface_params.get("A"))
     b = _safe_float(surface_params.get("B"))
@@ -245,7 +248,7 @@ def _surface_calibrated_prob(row: dict[str, str], params: dict[str, dict[str, ob
     fav_prob = raw if fav_is_p1 else 1.0 - raw
     fav_cal = _sigmoid(a + b * _logit(fav_prob))
     restored = fav_cal if fav_is_p1 else 1.0 - fav_cal
-    return _safe_prob((1.0 - blend) * current + blend * restored)
+    return _safe_prob((1.0 - blend) * raw + blend * restored)
 
 
 def _prob_for_variant(row: dict[str, str], variant: Variant, params: dict[str, dict[str, object]]) -> float:
@@ -458,6 +461,7 @@ def _write_summary(path: Path, rows: list[dict[str, str]]) -> None:
         "tier_roi_pct",
         "avg_value_pct",
         "by_year",
+        "stale_since",
     ]
     with path.open("w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fields)
@@ -587,8 +591,8 @@ def main() -> int:
             previous = previous_summary.get((variant.name, profile))
             if not rows and previous and previous.get("status") in {"ok", "stale_ok"}:
                 retained = dict(previous)
-                retained["generated_utc"] = generated
                 retained["status"] = "stale_ok"
+                retained["stale_since"] = previous.get("stale_since") or generated
                 retained["description"] = variant.description
                 retained["source_suffix"] = variant.source_suffix
                 retained["transform"] = variant.transform
@@ -619,6 +623,7 @@ def main() -> int:
                     "tier_roi_pct": _fmt(stats["tier_roi_pct"], 3),
                     "avg_value_pct": _fmt(stats["avg_value_pct"], 3),
                     "by_year": _by_year_summary(profile_picks),
+                    "stale_since": "",
                 }
             )
 
