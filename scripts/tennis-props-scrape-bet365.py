@@ -32,13 +32,19 @@ ROOT = Path(__file__).resolve().parent.parent
 BASE_URL = "https://api.odds-api.io/v3"
 OUT_DIR = ROOT / "data" / "tennis-props" / "inbox"
 DEFAULT_BOOKMAKERS = "Bet365"
-SLAM_KEYWORDS = (
-    "roland garros",
-    "french open",
-    "wimbledon",
-    "australian open",
-    "us open",
-    "u.s. open",
+SUPPORTED_TOURNAMENT_KEYWORDS = (
+    ("Roland Garros", ("roland garros", "french open")),
+    ("Wimbledon", ("wimbledon",)),
+    ("Australian Open", ("australian open",)),
+    ("US Open", ("us open", "u.s. open")),
+    ("Hertogenbosch", ("hertogenbosch", "s hertogenbosch", "'s hertogenbosch", "rosmalen", "libema open")),
+    ("Queen's Club", ("queen s", "queens", "queen's", "queen's club", "hsbc championships", "lta london championships", "cinch championships")),
+    ("Stuttgart", ("stuttgart", "boss open", "porsche tennis grand prix")),
+    ("Halle", ("halle", "terra wortmann", "gerry weber")),
+    ("Nottingham", ("nottingham",)),
+    ("Berlin", ("berlin", "bett1open", "bett1 open")),
+    ("Eastbourne", ("eastbourne",)),
+    ("Bad Homburg", ("bad homburg",)),
 )
 ZERO_ROW_PROBE_PARAMS: tuple[tuple[str, dict[str, str]], ...] = (
     ("baseline", {}),
@@ -171,15 +177,10 @@ def tour_from_event(event: dict[str, Any]) -> str:
 
 def tournament_from_event(event: dict[str, Any]) -> str:
     league = str((event.get("league") or {}).get("name") or event.get("league") or "").strip()
-    haystack = f"{league} {event.get('name') or ''}".lower()
-    if "roland" in haystack or "french open" in haystack:
-        return "Roland Garros"
-    if "wimbledon" in haystack:
-        return "Wimbledon"
-    if "australian open" in haystack:
-        return "Australian Open"
-    if "us open" in haystack or "u.s. open" in haystack:
-        return "US Open"
+    haystack = norm(f"{league} {event.get('name') or ''} {event.get('home') or ''} {event.get('away') or ''}")
+    for tournament, keywords in SUPPORTED_TOURNAMENT_KEYWORDS:
+        if any(keyword in haystack for keyword in keywords):
+            return tournament
     return league or "Tennis"
 
 
@@ -195,9 +196,9 @@ def event_text(event: dict[str, Any]) -> str:
     ).lower()
 
 
-def is_slam_event(event: dict[str, Any]) -> bool:
-    text = event_text(event)
-    return any(keyword in text for keyword in SLAM_KEYWORDS)
+def is_supported_tournament_event(event: dict[str, Any]) -> bool:
+    text = norm(event_text(event))
+    return any(keyword in text for _, keywords in SUPPORTED_TOURNAMENT_KEYWORDS for keyword in keywords)
 
 
 def is_singles_event(event: dict[str, Any]) -> bool:
@@ -440,9 +441,9 @@ def main() -> None:
         events = []
 
     raw_event_count = len(events)
-    events = [event for event in events if is_slam_event(event) and is_singles_event(event)]
+    events = [event for event in events if is_supported_tournament_event(event) and is_singles_event(event)]
     events = events[: max(0, args.max_events)] if args.max_events else events
-    print(f"odds-api.io tennis events returned: {raw_event_count}; Slam singles selected: {len(events)}")
+    print(f"odds-api.io tennis events returned: {raw_event_count}; supported singles selected: {len(events)}")
     if not events:
         return
 
