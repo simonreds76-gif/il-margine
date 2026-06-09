@@ -134,7 +134,7 @@ def main() -> int:
             "--end-year",
             str(max(args.start_year, args.end_year - 1)),
         ],
-        "Compute Slam venue factors",
+        "Compute tennis props venue factors",
         fatal=True,
     )
     run(

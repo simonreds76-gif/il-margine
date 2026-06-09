@@ -23,6 +23,7 @@ PROPS_DIR = DATA_DIR / "tennis-props"
 INBOX_DIR = PROPS_DIR / "inbox"
 DEFAULT_BASELINE = PROPS_DIR / "player-props-baseline.csv"
 DEFAULT_FACTORS = PROPS_DIR / "slam-venue-factors.csv"
+DEFAULT_SURFACE_BASELINES = PROPS_DIR / "tour-surface-baselines.csv"
 DEFAULT_ALIASES = PROPS_DIR / "player-name-aliases.csv"
 DEFAULT_OUT = PROPS_DIR / "player-props-board.csv"
 SURFACE_BY_COURT = {
@@ -206,6 +207,47 @@ def load_factors(path: Path) -> dict[tuple[str, str, str], dict[str, str]]:
         )
         factors[key] = row
     return factors
+
+
+def load_surface_baselines(path: Path) -> dict[tuple[str, str], dict[str, str]]:
+    baselines: dict[tuple[str, str], dict[str, str]] = {}
+    for row in read_csv(path):
+        if str(row.get("year") or "") != "ALL":
+            continue
+        key = (
+            str(row.get("tour") or "").upper(),
+            str(row.get("surface") or "").strip(),
+        )
+        baselines[key] = row
+    return baselines
+
+
+def surface_baseline_factor(
+    *,
+    tour: str,
+    tournament: str,
+    surface: str,
+    surface_baselines: dict[tuple[str, str], dict[str, str]],
+) -> dict[str, str]:
+    row = surface_baselines.get((tour, surface)) or {}
+    if not row:
+        return {}
+    return {
+        "tour": tour,
+        "tournament": tournament,
+        "surface": surface,
+        "year": "ALL",
+        "matches": str(row.get("matches") or ""),
+        "ace_rate": str(row.get("ace_rate") or ""),
+        "df_rate": str(row.get("df_rate") or ""),
+        "svpt_per_svgame": str(row.get("svpt_per_svgame") or ""),
+        "match_games_per_match": str(row.get("match_games_per_match") or ""),
+        "tour_surface_baseline_ace": str(row.get("ace_rate") or ""),
+        "tour_surface_baseline_df": str(row.get("df_rate") or ""),
+        "ace_factor": "1.0000",
+        "df_factor": "1.0000",
+        "sample_flag": "SURFACE_BASELINE",
+    }
 
 
 def load_aliases(path: Path) -> dict[tuple[str, str], str]:
@@ -520,6 +562,7 @@ def project_side(
     player_id: str,
     baseline: dict[tuple[str, str, str], dict[str, dict[str, str]]],
     factors: dict[tuple[str, str, str], dict[str, str]],
+    surface_baselines: dict[tuple[str, str], dict[str, str]],
     tournament_samples: dict[tuple[str, str, str], int],
     aliases: dict[tuple[str, str], str],
     current_tournament_stats: dict[tuple[str, str, str], dict[str, str]],
@@ -533,6 +576,15 @@ def project_side(
     player_rows = baseline.get((tour, player_lookup, surface), {})
     opponent_rows = baseline.get((tour, opponent_lookup, surface), {})
     factor = factors.get((tour, tournament, surface)) or {}
+    factor_source = "venue" if factor else ""
+    if not factor:
+        factor = surface_baseline_factor(
+            tour=tour,
+            tournament=tournament,
+            surface=surface,
+            surface_baselines=surface_baselines,
+        )
+        factor_source = "surface_baseline" if factor else ""
     expected_games = parse_float(factor.get("match_games_per_match"), default_match_games(tour, tournament))
     tournament_n = tournament_samples.get((tour, player_lookup, tournament), 0)
     same_tournament_row = current_tournament_stats.get((tour, str(schedule.get("tour_id") or ""), player_id))
@@ -548,7 +600,9 @@ def project_side(
     )
     career = player_rows.get("career_4y") or {}
     notes = list(projection.notes)
-    if not factor:
+    if factor_source == "surface_baseline":
+        notes.append("SURFACE_BASELINE_ONLY")
+    elif not factor:
         notes.append("NO_VENUE_FACTOR")
     return {
         "date": schedule["date"],
@@ -581,6 +635,8 @@ def project_side(
         "tournament_round_log": json.dumps(same_tournament_log, ensure_ascii=True, separators=(",", ":")),
         "venue_ace_factor": str(factor.get("ace_factor") or ""),
         "venue_df_factor": str(factor.get("df_factor") or ""),
+        "venue_factor_source": factor_source,
+        "venue_sample_flag": str(factor.get("sample_flag") or ""),
         "ace_rate_adj": fmt(projection.ace_rate, 5),
         "df_rate_adj": fmt(projection.df_rate, 5),
         "break_rate_adj": fmt(projection.break_rate, 5),
@@ -596,6 +652,7 @@ def main() -> None:
     parser.add_argument("--as-of", default=date.today().isoformat())
     parser.add_argument("--baseline", default=str(DEFAULT_BASELINE))
     parser.add_argument("--factors", default=str(DEFAULT_FACTORS))
+    parser.add_argument("--surface-baselines", default=str(DEFAULT_SURFACE_BASELINES))
     parser.add_argument("--aliases", default=str(DEFAULT_ALIASES))
     parser.add_argument("--wta-schedule", default="")
     parser.add_argument("--include-completed", action="store_true")
@@ -605,6 +662,7 @@ def main() -> None:
     as_of = datetime.strptime(args.as_of, "%Y-%m-%d").date()
     baseline = load_baseline(Path(args.baseline))
     factors = load_factors(Path(args.factors))
+    surface_baselines = load_surface_baselines(Path(args.surface_baselines))
     aliases = load_aliases(Path(args.aliases))
     tournament_samples = load_tournament_samples(as_of)
 
@@ -626,6 +684,7 @@ def main() -> None:
                 player_id=str(schedule.get("player1_id") or ""),
                 baseline=baseline,
                 factors=factors,
+                surface_baselines=surface_baselines,
                 tournament_samples=tournament_samples,
                 aliases=aliases,
                 current_tournament_stats=current_tournament_stats,
@@ -640,6 +699,7 @@ def main() -> None:
                 player_id=str(schedule.get("player2_id") or ""),
                 baseline=baseline,
                 factors=factors,
+                surface_baselines=surface_baselines,
                 tournament_samples=tournament_samples,
                 aliases=aliases,
                 current_tournament_stats=current_tournament_stats,
@@ -678,6 +738,8 @@ def main() -> None:
         "tournament_round_log",
         "venue_ace_factor",
         "venue_df_factor",
+        "venue_factor_source",
+        "venue_sample_flag",
         "ace_rate_adj",
         "df_rate_adj",
         "break_rate_adj",
