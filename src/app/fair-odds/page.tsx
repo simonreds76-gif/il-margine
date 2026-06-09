@@ -420,7 +420,7 @@ function signalFeedMeta(category: SignalFeedCategory, shadowProfile?: string): {
     };
   }
   return {
-    label: "SPREAD V1",
+    label: "SPREAD AUDIT",
     badgeClass: "border-cyan-500/25 bg-cyan-500/10 text-cyan-300",
     accentClass: "text-cyan-300",
   };
@@ -497,9 +497,9 @@ function primarySignalBadgeMeta(
 
   if (spreadSignal) {
     return {
-      label: "SPREAD V1",
+      label: "SPREAD AUDIT",
       className: "border-cyan-500/25 bg-cyan-500/10 text-cyan-300",
-      title: "Spread v1 signal attached",
+      title: "Spread v1 audit-only handicap research, not a live pick",
     };
   }
 
@@ -606,6 +606,7 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
         const challengerLabel = signal.league === "Challenger" ? "CH" : null;
         const stakeUnits = signal.stake_units != null ? formatStake(signal.stake_units) : "1.0";
         const stakeGbp = signal.stake_gbp != null ? Math.round(signal.stake_gbp) : 100;
+        const auditOnly = signal.kind === "spread_v1";
 
         return (
           <div
@@ -652,7 +653,7 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
                           : "Clay bo3 ML"
                       : signal.kind === "clay_2026"
                         ? "Clay 2026 ML"
-                        : "Spread v1"}
+                        : "Spread audit"}
                   </span>
                   <span className="rounded border border-slate-700/70 bg-slate-950/70 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-200">
                     {signalSideBadgeText(signal)}
@@ -709,7 +710,7 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
                   {fmtPct(signal.value_pct)}
                 </div>
                 <div className="mt-1 text-[11px] text-slate-500">
-                  {stakeUnits}u / GBP{stakeGbp}
+                  {auditOnly ? "audit only - not a live pick" : `${stakeUnits}u / GBP${stakeGbp}`}
                 </div>
               </div>
             </div>
@@ -849,7 +850,7 @@ function formatSignalBet(s: SignalSummary): { matchLabel: string; betLine: strin
   const odds = s.pinnacle_odds != null ? s.pinnacle_odds.toFixed(2) : "--";
   const units = s.stake_units != null ? s.stake_units : 1;
   const gbp = s.stake_gbp != null ? Math.round(s.stake_gbp) : 100;
-  const stakePart = `x ${formatStake(units)}u (or GBP${gbp})`;
+  const stakePart = s.kind === "spread_v1" ? "(audit only)" : `x ${formatStake(units)}u (or GBP${gbp})`;
 
   if (s.bet_type === "spread" && s.spread_line != null) {
     const line = s.side === "P1+" ? s.spread_line : -s.spread_line;
@@ -1040,7 +1041,7 @@ function signalReasonLabel(reason?: string): string {
   if (reason === "allow_tier_dog_elo_ge_market_15") return "Allow + Elo>=Mkt";
   if (reason === "new_after_calibration_favorite_55_65") return "Clay 2026";
   if (reason === "strict_first_atp_bo3_hard_clay") return "Strict-first ATP";
-  return "Spread v1";
+  return "Spread audit";
 }
 
 function handicapShapeMeta(source?: SignalSummary["handicap_point_prob_source"] | FairOddsMatch["handicap_point_prob_source"]) {
@@ -1273,10 +1274,10 @@ export default function FairOddsPage() {
     {
       key: "spread",
       category: "spread_v1" as const,
-      title: "Spread v1",
-      subtitle: "Strict-first ATP bo3 hard/clay research spreads",
+      title: "Spread audit",
+      subtitle: "Audit-only handicap research, not a live pick",
       items: spreadFeedItems,
-      emptyLabel: "No spread v1 signals today",
+      emptyLabel: "No spread audit rows today",
     },
   ];
   const archivedSignalSections = [
@@ -1384,7 +1385,7 @@ export default function FairOddsPage() {
                     Clay Guard <span className="text-slate-200">{data.signal_attachment.clay_guarded?.attached ?? 0}/{data.signal_attachment.clay_guarded?.loaded ?? 0}</span>
                   </span>
                   <span className={data.signal_attachment.spread_v1?.unmatched ? "text-amber-300" : ""}>
-                    Spread v1 <span className="text-slate-200">{data.signal_attachment.spread_v1?.attached ?? 0}/{data.signal_attachment.spread_v1?.loaded ?? 0}</span>
+                    Spread audit <span className="text-slate-200">{data.signal_attachment.spread_v1?.attached ?? 0}/{data.signal_attachment.spread_v1?.loaded ?? 0}</span>
                   </span>
                 </>
               )}
@@ -1526,7 +1527,7 @@ export default function FairOddsPage() {
                 ) : null}
                 Clay Guard {data.signal_attachment.clay_guarded?.attached ?? 0}/{data.signal_attachment.clay_guarded?.loaded ?? 0}
                 {" | "}
-                Spread v1 {data.signal_attachment.spread_v1?.attached ?? 0}/{data.signal_attachment.spread_v1?.loaded ?? 0}
+                Spread audit {data.signal_attachment.spread_v1?.attached ?? 0}/{data.signal_attachment.spread_v1?.loaded ?? 0}
                 {data.matches_with_row_signals != null ? ` | ${data.matches_with_row_signals} matches with signals` : ""}
               </div>
             )}

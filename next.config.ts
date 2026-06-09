@@ -19,6 +19,8 @@ const nextConfig: NextConfig = {
   // The goalscorer monitor now reads a compact snapshot payload instead of raw league trees.
   outputFileTracingExcludes: {
     "/api/fair-odds": [
+      "./data/**",
+      "./public/**",
       "./data/goalscorer/**",
       "./data/corners-ou/**",
       "./data/team-shots/**",
@@ -46,6 +48,20 @@ const nextConfig: NextConfig = {
       "./data/oncourt/**",
       "./tml-data/**",
       "./data/sackmann/**",
+    ],
+  },
+  outputFileTracingIncludes: {
+    "/api/fair-odds": [
+      "./data/backtest/calibration-params-2022-2026-review.json",
+      "./data/backtest/strict-signals-spreadv1-live.csv",
+      "./data/backtest/strict-signals-volume200-live.csv",
+      "./data/backtest/strict-signals-challenger-ml-live.csv",
+      "./data/backtest/challenger-ml-shadow-nearmiss.csv",
+      "./data/backtest/strict-signals-clayv3-shadow-live.csv",
+      "./data/backtest/strict-signals-clay_bo3-live.csv",
+      "./data/backtest/tournament-segment-roi.csv",
+      "./data/injured-players-tennisexplorer.csv",
+      "./data/oncourt/today_atp.csv",
     ],
   },
   images: {

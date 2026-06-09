@@ -21,7 +21,7 @@ const LOCAL_PINNACLE_HISTORY_DIR = path.join(process.cwd(), "data", "pinnacle-hi
 const LOCAL_ONCOURT_TODAY_CSV = path.join(process.cwd(), "data", "oncourt", "today_atp.csv");
 
 function projectFilePath(relativePath: string): string {
-  return path.join(process.cwd(), ...relativePath.split("/"));
+  return path.join(process.cwd(), relativePath);
 }
 
 function resolveConfiguredRouteFilePath(
@@ -291,8 +291,8 @@ const CLAY_V3_SIGNAL_ARCHIVE_CSV = projectFilePath("data/backtest/strict-signals
 const CLAY_BO3_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-clay_bo3-live.csv");
 const CLAY_BO3_SIGNAL_ARCHIVE_CSV = projectFilePath("data/backtest/strict-signals-clay_bo3-archive.csv");
 const FAIR_ODDS_TENNIS_SPREADS_ENABLED = parseBoolEnv("FAIR_ODDS_TENNIS_SPREADS_ENABLED", false);
-const FAIR_ODDS_SPREAD_V1_ENABLED = parseBoolEnv("FAIR_ODDS_SPREAD_V1_ENABLED", true);
 const INTERNAL_RESEARCH_LANES = process.env.INTERNAL_RESEARCH_LANES === "1";
+const FAIR_ODDS_SPREAD_V1_ENABLED = parseBoolEnv("FAIR_ODDS_SPREAD_V1_ENABLED", INTERNAL_RESEARCH_LANES);
 const HARD_CALIBRATION_SHADOW_ENABLED = parseBoolEnv("FAIR_ODDS_HARD_CALIBRATION_SHADOW", true);
 const HARD_CALIBRATION_PARAMS_FILE = resolveConfiguredRouteFilePath(
   process.env.HARD_CALIBRATION_PARAMS_FILE,
@@ -1447,6 +1447,10 @@ function loadActiveShadowSignals(csvPaths: string | string[], kind: ShadowSignal
       const player2Name = get(cols, "player2");
       if (!player1Name || !player2Name) continue;
       const side = get(cols, "side");
+      const signalProfile = get(cols, "signal_profile").trim().toLowerCase();
+      if (kind === "challenger_ml_shadow" && signalProfile.includes("nearmiss")) {
+        continue;
+      }
       const betType: "match" | "spread" =
         (get(cols, "bet_type") || "match").trim().toLowerCase() === "spread" ? "spread" : "match";
       const spreadLine = parseCsvNumber(get(cols, "spread_line"));
@@ -1969,7 +1973,13 @@ async function run(): Promise<Response> {
   const fairOddsSourceRows =
     currentOncourtRows.length > 0
       ? oddsRows.filter((row) => openOncourtPairIdKeys.has(`${row.tour_id}|${row.player1_id}|${row.player2_id}`))
-      : oddsRows;
+      : [];
+  const scheduleFilterUnavailable = currentOncourtRows.length === 0;
+  if (scheduleFilterUnavailable) {
+    console.warn(
+      "[fair-odds] No oncourt_today rows available; suppressing daily_fair_odds instead of serving potentially stale matches."
+    );
+  }
   if (currentOncourtRows.length > 0 && fairOddsSourceRows.length !== oddsRows.length) {
     console.log(
       `[fair-odds] Filtered daily_fair_odds to open OnCourt rows: ${fairOddsSourceRows.length}/${oddsRows.length}.`
@@ -3610,6 +3620,7 @@ async function run(): Promise<Response> {
     signals_spread_v1: spreadSignalsSpreadV1,
     signal_attachment,
     internal_research_lanes: INTERNAL_RESEARCH_LANES,
+    schedule_filter_status: scheduleFilterUnavailable ? "unavailable_stale_guard_active" : "ok",
     ...(pinnacleHint ? { pinnacle_hint: pinnacleHint } : {}),
     ...(spreadHint ? { spread_hint: spreadHint } : {}),
   });

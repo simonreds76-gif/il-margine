@@ -35,7 +35,8 @@ DEFAULT_SIGNALS = STRICT_SIGNAL_PATHS.archive
 DEFAULT_COMPARE = DATA_DIR / "strict-signals-overlay-compare.csv"
 DEFAULT_REPORT_TXT = DATA_DIR / "strict-policy-performance-weekly.txt"
 DEFAULT_SUMMARY_CSV = DATA_DIR / "strict-policy-performance-weekly.csv"
-CLEAN_EVAL_START = date(2026, 3, 14)
+DEFAULT_CLEAN_EVAL_START = date(2026, 3, 14)
+VOLUME_200_GUARD_EVAL_START = date(2026, 5, 27)
 
 KEY_FIELDS = ["date", "player1", "player2", "surface", "series", "confidence", "side", "bet_type", "spread_line"]
 LANE_FIELDS = ["date", "player1", "player2", "bet_type", "spread_line", "signal_profile"]
@@ -146,6 +147,29 @@ def lookup_key(row: dict[str, str]) -> tuple[str, ...]:
 
 def is_settled(row: dict[str, str]) -> bool:
     return norm_key_val(row.get("settlement_status")) == "settled"
+
+
+def is_performance_audit_row(row: dict[str, str]) -> bool:
+    """Rows such as Challenger near-misses are settled for audit, not staking ROI."""
+    profile = norm_key_val(row.get("signal_profile"))
+    stake_model = norm_key_val(row.get("stake_model"))
+    if "nearmiss" in profile:
+        return True
+    if stake_model.startswith("audit_"):
+        return True
+    return False
+
+
+def infer_clean_eval_start(signals_path: Path, override: str | None) -> date | None:
+    parsed_override = parse_iso_date(override)
+    if parsed_override is not None:
+        return parsed_override
+    name = signals_path.name.lower()
+    if "volume200" in name or "volume-200" in name or "volume_200" in name:
+        # The model/market gap + side-flip guards landed on 2026-05-27.
+        # Older volume_200 rows are mixed-vintage and must not be used as current-policy ROI.
+        return VOLUME_200_GUARD_EVAL_START
+    return DEFAULT_CLEAN_EVAL_START
 
 
 def load_csv_rows(path: Path) -> list[dict[str, str]]:
@@ -448,6 +472,11 @@ def main() -> int:
     parser.add_argument("--summary-csv", default=str(DEFAULT_SUMMARY_CSV), help="Append-only summary CSV")
     parser.add_argument("--days", type=int, default=7, help="Window size in days (default: 7)")
     parser.add_argument("--as-of", default="", help="As-of date YYYY-MM-DD (default: max date in source)")
+    parser.add_argument(
+        "--clean-eval-start",
+        default="",
+        help="Start date YYYY-MM-DD for current-policy evaluation. Defaults to 2026-05-27 for volume_200, else 2026-03-14.",
+    )
     parser.add_argument("--dry-run", action="store_true", help="Print report only, do not write files")
     args = parser.parse_args()
 
@@ -457,6 +486,10 @@ def main() -> int:
     summary_path = Path(args.summary_csv)
     window_days = max(1, int(args.days))
     generated_utc = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    clean_eval_start = infer_clean_eval_start(signals_path, args.clean_eval_start)
+    if clean_eval_start is None:
+        print(f"Invalid --clean-eval-start date: {args.clean_eval_start}")
+        return 1
 
     if not signals_path.exists():
         print(f"Signals file missing: {signals_path}")
@@ -490,7 +523,9 @@ def main() -> int:
         print(f"Appended summary CSV: {summary_path}")
         return 0
 
-    signal_rows = dedupe_rows(load_csv_rows(signals_path))
+    raw_signal_rows = dedupe_rows(load_csv_rows(signals_path))
+    audit_rows_excluded = sum(1 for row in raw_signal_rows if is_performance_audit_row(row))
+    signal_rows = [row for row in raw_signal_rows if not is_performance_audit_row(row)]
     if not signal_rows:
         print(f"No rows in signals file: {signals_path}")
         # Header-only CSV (e.g. spread_shadow before first 20%+ handicap) — write zero stub so
@@ -514,10 +549,13 @@ def main() -> int:
         ]
         report_path.parent.mkdir(parents=True, exist_ok=True)
         report_path.write_text(
-            "Strict Policy Settled Performance\n"
-            f"Generated UTC: {generated_utc}\n"
-            f"As-of date: {as_of_stub.isoformat()}\n"
-            f"No signal rows in {signals_path.name}; stub summary (all zeros).\n",
+            (
+                "Strict Policy Settled Performance\n"
+                f"Generated UTC: {generated_utc}\n"
+                f"As-of date: {as_of_stub.isoformat()}\n"
+                f"No signal rows in {signals_path.name}; stub summary (all zeros).\n"
+                + (f"Excluded audit-only rows from performance: {audit_rows_excluded}\n" if audit_rows_excluded else "")
+            ),
             encoding="utf-8",
         )
         append_summary(summary_path, stub_rows)
@@ -554,10 +592,10 @@ def main() -> int:
     window_start = as_of - timedelta(days=window_days - 1)
     window_rows = filter_window(report_rows, window_start, as_of)
     all_rows = [r for r in report_rows if parse_iso_date(r.get("date")) is not None and parse_iso_date(r.get("date")) <= as_of]
-    legacy_rows = [r for r in all_rows if (parse_iso_date(r.get("date")) or CLEAN_EVAL_START) < CLEAN_EVAL_START]
-    clean_rows = [r for r in all_rows if (parse_iso_date(r.get("date")) or date.min) >= CLEAN_EVAL_START]
-    clean_window_start = max(window_start, CLEAN_EVAL_START)
-    clean_window_rows = filter_window(clean_rows, clean_window_start, as_of) if as_of >= CLEAN_EVAL_START else []
+    legacy_rows = [r for r in all_rows if (parse_iso_date(r.get("date")) or clean_eval_start) < clean_eval_start]
+    clean_rows = [r for r in all_rows if (parse_iso_date(r.get("date")) or date.min) >= clean_eval_start]
+    clean_window_start = max(window_start, clean_eval_start)
+    clean_window_rows = filter_window(clean_rows, clean_window_start, as_of) if as_of >= clean_eval_start else []
 
     modes = sorted({norm_key_val(r.get("policy_mode") or "base") or "base" for r in all_rows})
     if "base" in modes and "overlay" in modes:
@@ -576,7 +614,11 @@ def main() -> int:
     lines.append(f"Generated UTC: {generated_utc}")
     lines.append(f"As-of date: {as_of.isoformat()}")
     lines.append(f"Window: {window_start.isoformat()} -> {as_of.isoformat()} ({window_days}d)")
-    lines.append(f"Clean evaluation start: {CLEAN_EVAL_START.isoformat()}")
+    lines.append(f"Clean evaluation start: {clean_eval_start.isoformat()}")
+    if audit_rows_excluded:
+        lines.append(f"Excluded audit-only rows from performance: {audit_rows_excluded}")
+    if clean_eval_start == VOLUME_200_GUARD_EVAL_START:
+        lines.append("Pre-clean volume_200 rows are pre-guard/mixed-vintage and are not current-policy evidence.")
     lines.append(
         f"Source: {'base from strict-signals + overlay from overlay-compare' if use_compare else 'strict-signals only'}"
     )

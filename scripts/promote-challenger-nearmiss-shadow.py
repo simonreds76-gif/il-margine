@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Promote Challenger ML near-miss rows into the internal settlement ledger.
+"""Promote Challenger ML near-miss rows into the internal audit ledger.
 
-The near-miss file is useful only if it can be evaluated like a shadow lane.
+The near-miss file is useful only if it can be settled and audited.
 This script turns those rows into strict-signal-shaped rows, enriches local
 Pinnacle odds when available, and writes the Challenger ML archive/live files.
+Rows remain audit artifacts: they must not carry stake or be counted as bets.
 """
 
 from __future__ import annotations
@@ -155,9 +156,9 @@ def promote_row(row: dict[str, str], odds_index: dict[tuple[str, str], dict[str,
             "pinnacle_league_name": odds.get("pinnacle_league_name", ""),
             "bet_type": "match",
             "policy_mode": "base",
-            "stake_units": row.get("stake_units") or "1.0",
-            "stake_gbp": row.get("stake_gbp") or "100.0",
-            "stake_model": row.get("stake_model") or "flat_match",
+            "stake_units": "0.0",
+            "stake_gbp": "0.0",
+            "stake_model": "audit_nearmiss_no_stake",
             "signal_profile": row.get("signal_profile") or "challenger_ml_nearmiss",
             "settlement_status": row.get("settlement_status") or "pending",
             "settlement_note": row.get("settlement_note", ""),
