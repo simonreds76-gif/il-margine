@@ -143,6 +143,14 @@ function fmt(value: string | number | undefined, digits = 1): string {
   return Number.isFinite(parsed) ? parsed.toFixed(digits) : "-";
 }
 
+function factorMove(value: string | undefined, digits = 1): string {
+  const parsed = Number.parseFloat(value ?? "");
+  if (!Number.isFinite(parsed) || parsed <= 0) return "-";
+  const pct = (parsed - 1) * 100;
+  if (Math.abs(pct) < 0.05) return "flat";
+  return `${pct > 0 ? "+" : ""}${pct.toFixed(digits)}%`;
+}
+
 function confidenceTone(value: string | undefined): string {
   if (value === "HIGH") return "border-emerald-500/25 bg-emerald-500/10 text-emerald-300";
   if (value === "MED") return "border-amber-500/25 bg-amber-500/10 text-amber-300";
@@ -346,7 +354,7 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
                       env {row.current_env_matches || "0"}m / w {fmt(row.current_env_weight, 2)}
                     </div>
                     <div className="text-slate-600">
-                      A x{fmt(row.current_env_ace_factor, 2)} DF x{fmt(row.current_env_df_factor, 2)} Br x{fmt(row.current_env_break_factor, 2)}
+                      live A {factorMove(row.current_env_ace_factor)} DF {factorMove(row.current_env_df_factor)} Br {factorMove(row.current_env_break_factor)}
                     </div>
                     <div className="text-slate-600">event brk +{row.same_tournament_breaks_for || "0"} / -{row.same_tournament_broken || "0"}</div>
                   </td>
