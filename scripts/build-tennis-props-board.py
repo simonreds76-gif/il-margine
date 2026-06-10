@@ -7,6 +7,7 @@ import argparse
 import csv
 import json
 import math
+import os
 import re
 import unicodedata
 from collections import defaultdict
@@ -27,6 +28,7 @@ DEFAULT_FACTORS = PROPS_DIR / "slam-venue-factors.csv"
 DEFAULT_SURFACE_BASELINES = PROPS_DIR / "tour-surface-baselines.csv"
 DEFAULT_ALIASES = PROPS_DIR / "player-name-aliases.csv"
 DEFAULT_OUT = PROPS_DIR / "player-props-board.csv"
+DEFAULT_FAIR_ODDS_TOTALS_SOURCE = "auto"
 SURFACE_BY_COURT = {
     "1": "Hard",
     "2": "Clay",
@@ -67,6 +69,18 @@ def write_csv(path: Path, rows: list[dict[str, str]], fieldnames: list[str]) -> 
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
+
+
+def load_env() -> None:
+    for name in (".env.local", "env.local"):
+        path = ROOT / name
+        if not path.exists():
+            continue
+        for raw_line in path.read_text(encoding="utf-8").splitlines():
+            raw_line = raw_line.strip()
+            if raw_line and not raw_line.startswith("#") and "=" in raw_line:
+                key, value = raw_line.split("=", 1)
+                os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
 
 
 def norm_name(value: object) -> str:
@@ -652,6 +666,85 @@ def load_current_tournament_environment(
     return out
 
 
+def _chunked(values: list[str], size: int) -> list[list[str]]:
+    return [values[index : index + size] for index in range(0, len(values), size)]
+
+
+def load_fair_odds_expected_games(
+    schedules: list[dict[str, str]],
+    *,
+    source: str,
+) -> dict[tuple[str, str, str], dict[str, str]]:
+    """Load match-specific expected total games from daily_fair_odds.
+
+    Keyed by (tour_id, player1_id, player2_id). The board also indexes reversed
+    order because projections are written as two player rows per match.
+    """
+    mode = (source or "").strip().lower()
+    if mode in {"", "off", "none", "0", "false", "no"}:
+        return {}
+    tour_ids = sorted({str(row.get("tour_id") or "").strip() for row in schedules if str(row.get("tour_id") or "").strip()})
+    if not tour_ids:
+        return {}
+    load_env()
+    url = os.environ.get("NEXT_PUBLIC_SUPABASE_URL")
+    key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("NEXT_PUBLIC_SUPABASE_ANON_KEY")
+    if not url or not key:
+        if mode != "required":
+            print("Fair-odds match totals: Supabase env missing; using venue/tournament match-length fallback.")
+            return {}
+        raise SystemExit("Fair-odds match totals required but NEXT_PUBLIC_SUPABASE_URL / SUPABASE key is missing.")
+
+    try:
+        import requests
+    except ImportError as exc:
+        if mode != "required":
+            print(f"Fair-odds match totals: requests unavailable ({exc}); using fallback.")
+            return {}
+        raise
+
+    base = url.rstrip("/") + "/rest/v1"
+    headers = {"apikey": key, "Authorization": f"Bearer {key}"}
+    out: dict[tuple[str, str, str], dict[str, str]] = {}
+    try:
+        for chunk in _chunked(tour_ids, 120):
+            response = requests.get(
+                f"{base}/daily_fair_odds",
+                headers=headers,
+                params={
+                    "select": "tour_id,player1_id,player2_id,expected_total_games,confidence",
+                    "tour_id": f"in.({','.join(chunk)})",
+                    "limit": 5000,
+                },
+                timeout=25,
+            )
+            response.raise_for_status()
+            for row in response.json():
+                expected = parse_float(row.get("expected_total_games"))
+                if expected is None or expected < 12 or expected > 48:
+                    continue
+                tour_id = str(row.get("tour_id") or "").strip()
+                p1 = str(row.get("player1_id") or "").strip()
+                p2 = str(row.get("player2_id") or "").strip()
+                if not tour_id or not p1 or not p2:
+                    continue
+                payload = {
+                    "expected_total_games": f"{expected:.1f}",
+                    "confidence": str(row.get("confidence") or ""),
+                    "source": "fair_odds",
+                }
+                out[(tour_id, p1, p2)] = payload
+                out[(tour_id, p2, p1)] = payload
+    except Exception as exc:
+        if mode == "required":
+            raise
+        print(f"Fair-odds match totals: load failed ({exc}); using venue/tournament match-length fallback.")
+        return {}
+
+    print(f"Fair-odds match totals: loaded {len(out) // 2} matches from daily_fair_odds.")
+    return out
+
+
 def load_current_tournament_logs(schedules: list[dict[str, str]], as_of: date) -> dict[tuple[str, str, str], list[dict[str, str]]]:
     """Per-round aces/DF logs for players still in the current tournament draw."""
     tour_ids_by_tour: dict[str, set[str]] = defaultdict(set)
@@ -760,6 +853,7 @@ def project_side(
     current_tournament_stats: dict[tuple[str, str, str], dict[str, str]],
     current_tournament_logs: dict[tuple[str, str, str], list[dict[str, str]]],
     current_tournament_environment: dict[tuple[str, str], dict[str, str]],
+    fair_odds_expected_games: dict[tuple[str, str, str], dict[str, str]],
 ) -> dict[str, str]:
     tour = schedule["tour"].upper()
     surface = schedule["surface"]
@@ -781,7 +875,23 @@ def project_side(
         factor_source = "surface_baseline" if factor else ""
     elif factor_source == "venue":
         factor, factor_clipped = clipped_venue_factor_row(factor)
-    expected_games = parse_float(factor.get("match_games_per_match"), default_match_games(tour, tournament))
+    fallback_expected_games = parse_float(factor.get("match_games_per_match"), default_match_games(tour, tournament))
+    expected_games_source = "venue_avg" if factor_source == "venue" else ("surface_avg" if factor_source == "surface_baseline" else "default")
+    expected_games_confidence = ""
+    fair_total_row = fair_odds_expected_games.get(
+        (
+            str(schedule.get("tour_id") or ""),
+            str(player_id or ""),
+            str(schedule.get("player2_id") if str(schedule.get("player1_id") or "") == str(player_id or "") else schedule.get("player1_id") or ""),
+        )
+    )
+    fair_expected_games = parse_float((fair_total_row or {}).get("expected_total_games"))
+    if fair_expected_games is not None and 12.0 <= fair_expected_games <= 48.0:
+        expected_games = fair_expected_games
+        expected_games_source = "fair_odds"
+        expected_games_confidence = str((fair_total_row or {}).get("confidence") or "")
+    else:
+        expected_games = fallback_expected_games
     tournament_n = tournament_samples.get((tour, player_lookup, tournament), 0)
     same_tournament_row = current_tournament_stats.get((tour, str(schedule.get("tour_id") or ""), player_id))
     same_tournament_log = current_tournament_logs.get((tour, str(schedule.get("tour_id") or ""), player_id), [])
@@ -822,6 +932,9 @@ def project_side(
         "break_confidence": projection.break_confidence,
         "service_points_estimate": fmt(projection.expected_service_points, 1),
         "service_games_estimate": fmt(projection.expected_service_games, 1),
+        "expected_match_games": fmt(expected_games or default_match_games(tour, tournament), 1),
+        "expected_match_games_source": expected_games_source,
+        "expected_match_games_confidence": expected_games_confidence,
         "player_surface_svpt_sample": str(parse_int(career.get("svpt"))),
         "player_surface_matches": str(parse_int(career.get("matches"))),
         "player_slam_sample": str(tournament_n),
@@ -863,6 +976,12 @@ def main() -> None:
     parser.add_argument("--aliases", default=str(DEFAULT_ALIASES))
     parser.add_argument("--wta-schedule", default="")
     parser.add_argument("--include-completed", action="store_true")
+    parser.add_argument(
+        "--fair-odds-totals-source",
+        default=DEFAULT_FAIR_ODDS_TOTALS_SOURCE,
+        choices=("auto", "required", "off"),
+        help="Use daily_fair_odds.expected_total_games when available; fallback unless 'required'.",
+    )
     parser.add_argument("--out", default=str(DEFAULT_OUT))
     args = parser.parse_args()
 
@@ -878,6 +997,10 @@ def main() -> None:
     oncourt_wta_count = sum(1 for row in schedules if row.get("source") == "oncourt_today_wta")
     if args.wta_schedule:
         schedules.extend(wta_schedule_rows(Path(args.wta_schedule)))
+    fair_odds_expected_games = load_fair_odds_expected_games(
+        schedules,
+        source=args.fair_odds_totals_source,
+    )
     current_tournament_stats = load_current_tournament_stats(schedules, as_of)
     current_tournament_logs = load_current_tournament_logs(schedules, as_of)
     current_tournament_environment = load_current_tournament_environment(
@@ -903,6 +1026,7 @@ def main() -> None:
                 current_tournament_stats=current_tournament_stats,
                 current_tournament_logs=current_tournament_logs,
                 current_tournament_environment=current_tournament_environment,
+                fair_odds_expected_games=fair_odds_expected_games,
             )
         )
         rows.append(
@@ -919,6 +1043,7 @@ def main() -> None:
                 current_tournament_stats=current_tournament_stats,
                 current_tournament_logs=current_tournament_logs,
                 current_tournament_environment=current_tournament_environment,
+                fair_odds_expected_games=fair_odds_expected_games,
             )
         )
 
@@ -940,6 +1065,9 @@ def main() -> None:
         "break_confidence",
         "service_points_estimate",
         "service_games_estimate",
+        "expected_match_games",
+        "expected_match_games_source",
+        "expected_match_games_confidence",
         "player_surface_svpt_sample",
         "player_surface_matches",
         "player_slam_sample",

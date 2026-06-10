@@ -389,7 +389,14 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
                   <td className="px-3 py-3"><MiniBadge label={row.df_confidence || "LOW"} tone={confidenceTone(row.df_confidence)} /></td>
                   <td className="px-3 py-3"><MiniBadge label={row.break_confidence || "LOW"} tone={confidenceTone(row.break_confidence)} /></td>
                   <td className="px-3 py-3 text-xs text-slate-400">
-                    <div className="min-w-[150px] rounded-xl border border-slate-800/80 bg-slate-950/55 p-2">
+                    <div className="min-w-[180px] rounded-xl border border-slate-800/80 bg-slate-950/55 p-2">
+                      <div className="mb-1 font-mono text-emerald-300">
+                        match games {fmt(row.expected_match_games, 1)}
+                      </div>
+                      <div className="mb-2 text-[11px] uppercase tracking-[0.1em] text-slate-600">
+                        {row.expected_match_games_source || "fallback"}
+                        {row.expected_match_games_confidence ? ` / ${row.expected_match_games_confidence}` : ""}
+                      </div>
                       <div className="font-mono text-slate-300">{row.player_surface_matches || "0"}m / {row.player_surface_svpt_sample || "0"} svpt</div>
                       <div className="mt-1 text-[11px] text-slate-600">player same-event {row.same_tournament_matches || "0"}m / {row.same_tournament_svpt || "0"} svpt</div>
                       <div className="mt-1 text-[11px] text-slate-600">brk log +{row.same_tournament_breaks_for || "0"} / -{row.same_tournament_broken || "0"}</div>
