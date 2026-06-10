@@ -21,6 +21,7 @@ if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_V1_SHADOW_ENABLED)) { $env:S
 if ([string]::IsNullOrWhiteSpace($env:CHALLENGER_ML_ENABLE)) { $env:CHALLENGER_ML_ENABLE = "0" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED)) { $env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED = "0" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_CLAY_BO3_ENABLED)) { $env:STRICT_CLAY_BO3_ENABLED = "1" }
+if ([string]::IsNullOrWhiteSpace($env:STRICT_GRASS_BO3_ENABLED)) { $env:STRICT_GRASS_BO3_ENABLED = "1" }
 if ([string]::IsNullOrWhiteSpace($env:CLAY_BO3_ML_ENABLE)) { $env:CLAY_BO3_ML_ENABLE = "0" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_POLICY_HARD_CALIBRATION_MODE)) { $env:STRICT_POLICY_HARD_CALIBRATION_MODE = "strict_volume" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_HARD_CALIBRATION_LIVE)) { $env:STRICT_HARD_CALIBRATION_LIVE = "1" }
@@ -43,6 +44,7 @@ $spreadV1ShadowEnabled = Test-EnvFlag $env:STRICT_SPREAD_V1_SHADOW_ENABLED
 $challengerMlEnabled = Test-EnvFlag $env:CHALLENGER_ML_ENABLE
 $clayFavEnabled = Test-EnvFlag $env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED
 $clayBo3Enabled = Test-EnvFlag $env:STRICT_CLAY_BO3_ENABLED
+$grassBo3Enabled = Test-EnvFlag $env:STRICT_GRASS_BO3_ENABLED
 
 function Get-VolumeShadowConfig([string]$mode) {
     switch ($mode) {
@@ -250,6 +252,26 @@ try {
         }
     } else {
         Log "Clay bo3 shadow skipped (STRICT_CLAY_BO3_ENABLED=0)."
+    }
+    if ($grassBo3Enabled) {
+        Log "Grass bo3 internal shadow (ATP grass warm-up ML 10-30%, favourite agreement)."
+        $prevInternalResearchLanes = $env:INTERNAL_RESEARCH_LANES
+        $env:INTERNAL_RESEARCH_LANES = "1"
+        try {
+            & python scripts\strict-policy-report.py --append --signal-profile grass_bo3 --output "data\backtest\strict-signals-grass_bo3-live.csv" 2>&1 | ForEach-Object { Log $_ }
+            if ($LASTEXITCODE -ne 0) {
+                Log "WARNING: grass_bo3 append failed (exit $LASTEXITCODE), continuing..."
+            }
+        }
+        finally {
+            if ($null -eq $prevInternalResearchLanes) {
+                Remove-Item Env:\INTERNAL_RESEARCH_LANES -ErrorAction SilentlyContinue
+            } else {
+                $env:INTERNAL_RESEARCH_LANES = $prevInternalResearchLanes
+            }
+        }
+    } else {
+        Log "Grass bo3 shadow skipped (STRICT_GRASS_BO3_ENABLED=0)."
     }
 
     Log "=== Step 8/8: Nightly-style tennis settlement/performance ==="

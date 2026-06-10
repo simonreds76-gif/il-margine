@@ -88,10 +88,10 @@ const laneViews: Record<TennisResearchLaneId, LaneView> = {
   grass_bo3: {
     id: "grass_bo3",
     title: "Grass bo3",
-    state: "DEFERRED",
-    badgeTone: badgeTones.deferred,
-    market: "Fav HC, overs",
-    summary: "Scaffold only. Grass is sample-thin and will stay shadow-only until proven.",
+    state: "SHADOW LIVE",
+    badgeTone: badgeTones.shadow,
+    market: "ML only",
+    summary: "Internal ATP grass warm-up ML lane: ATP250/ATP500, high+medium confidence, 10-30% value, model-market favourite agreement required.",
   },
   challenger_hc: {
     id: "challenger_hc",
