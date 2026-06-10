@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 import re
 import unicodedata
 from collections import defaultdict
@@ -45,12 +46,12 @@ ROUND_BY_ID = {
 SLAM_TOURNAMENTS = {"Australian Open", "Roland Garros", "Wimbledon", "US Open"}
 VENUE_FACTOR_MIN = 0.85
 VENUE_FACTOR_MAX = 1.20
-CURRENT_ENV_ACE_DF_MIN = 0.88
-CURRENT_ENV_ACE_DF_MAX = 1.12
-CURRENT_ENV_BREAK_MIN = 0.85
-CURRENT_ENV_BREAK_MAX = 1.15
-CURRENT_ENV_MAX_WEIGHT = 0.35
-CURRENT_ENV_FULL_MATCHES = 12.0
+CURRENT_ENV_ACE_DF_MIN = 0.94
+CURRENT_ENV_ACE_DF_MAX = 1.06
+CURRENT_ENV_BREAK_MIN = 0.92
+CURRENT_ENV_BREAK_MAX = 1.08
+CURRENT_ENV_MAX_WEIGHT = 0.10
+CURRENT_ENV_FULL_MATCHES = 20.0
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -292,8 +293,12 @@ def _clipped_ratio_factor(
 ) -> float:
     if not baseline_rate or baseline_rate <= 0 or current_rate <= 0 or weight <= 0:
         return 1.0
-    raw = max(0.70, min(1.30, current_rate / baseline_rate))
-    return max(low, min(high, 1.0 + (raw - 1.0) * weight))
+    # Use a log-scale nudge so early event samples cannot force the whole board
+    # into identical cap values. Venue history and player/opponent rates remain
+    # the primary signal; same-edition stats are a small environment correction.
+    raw_ratio = max(0.25, min(4.0, current_rate / baseline_rate))
+    adjusted = math.exp(math.log(raw_ratio) * weight)
+    return max(low, min(high, adjusted))
 
 
 def current_env_weight(matches: int) -> float:
