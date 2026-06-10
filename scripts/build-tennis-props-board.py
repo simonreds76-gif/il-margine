@@ -43,6 +43,14 @@ ROUND_BY_ID = {
     "7": "R128",
 }
 SLAM_TOURNAMENTS = {"Australian Open", "Roland Garros", "Wimbledon", "US Open"}
+VENUE_FACTOR_MIN = 0.85
+VENUE_FACTOR_MAX = 1.20
+CURRENT_ENV_ACE_DF_MIN = 0.88
+CURRENT_ENV_ACE_DF_MAX = 1.12
+CURRENT_ENV_BREAK_MIN = 0.85
+CURRENT_ENV_BREAK_MAX = 1.15
+CURRENT_ENV_MAX_WEIGHT = 0.35
+CURRENT_ENV_FULL_MATCHES = 12.0
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -86,6 +94,15 @@ def parse_int(value: object, default: int = 0) -> int:
         return int(float(text))
     except (TypeError, ValueError):
         return default
+
+
+def parse_score_total_games(value: object) -> int:
+    """Return completed games from score strings like '6-4 3-6 7-6(4)'."""
+    text = str(value or "")
+    total = 0
+    for left, right in re.findall(r"(\d+)\s*-\s*(\d+)", text):
+        total += int(left) + int(right)
+    return total
 
 
 def add_stat_totals(
@@ -248,6 +265,41 @@ def surface_baseline_factor(
         "df_factor": "1.0000",
         "sample_flag": "SURFACE_BASELINE",
     }
+
+
+def clipped_venue_factor_row(row: dict[str, str]) -> tuple[dict[str, str], bool]:
+    """Cap venue multipliers so small warmup fields cannot dominate projections."""
+    out = dict(row)
+    clipped = False
+    for field in ("ace_factor", "df_factor"):
+        value = parse_float(out.get(field))
+        if value is None:
+            continue
+        capped = max(VENUE_FACTOR_MIN, min(VENUE_FACTOR_MAX, value))
+        if abs(capped - value) > 1e-9:
+            out[field] = f"{capped:.4f}"
+            clipped = True
+    return out, clipped
+
+
+def _clipped_ratio_factor(
+    *,
+    current_rate: float,
+    baseline_rate: float | None,
+    weight: float,
+    low: float,
+    high: float,
+) -> float:
+    if not baseline_rate or baseline_rate <= 0 or current_rate <= 0 or weight <= 0:
+        return 1.0
+    raw = max(0.70, min(1.30, current_rate / baseline_rate))
+    return max(low, min(high, 1.0 + (raw - 1.0) * weight))
+
+
+def current_env_weight(matches: int) -> float:
+    if matches < 2:
+        return 0.0
+    return max(0.0, min(CURRENT_ENV_MAX_WEIGHT, matches / CURRENT_ENV_FULL_MATCHES * CURRENT_ENV_MAX_WEIGHT))
 
 
 def load_aliases(path: Path) -> dict[tuple[str, str], str]:
@@ -460,6 +512,141 @@ def load_current_tournament_stats(schedules: list[dict[str, str]], as_of: date) 
     }
 
 
+def load_current_tournament_environment(
+    schedules: list[dict[str, str]],
+    as_of: date,
+    factors: dict[tuple[str, str, str], dict[str, str]],
+    surface_baselines: dict[tuple[str, str], dict[str, str]],
+) -> dict[tuple[str, str], dict[str, str]]:
+    """Same-edition tournament speed/volatility adjustment.
+
+    This is deliberately conservative: completed matches nudge aces, DFs, and
+    breaks toward how the event is playing this year, but venue history remains
+    the base until the current sample is large enough.
+    """
+    meta_by_event: dict[tuple[str, str], dict[str, str]] = {}
+    for row in schedules:
+        tour = str(row.get("tour") or "").upper()
+        tour_id = str(row.get("tour_id") or "").strip()
+        tournament = str(row.get("tournament") or "").strip()
+        surface = str(row.get("surface") or "").strip()
+        if tour in {"ATP", "WTA"} and tour_id and tournament and surface:
+            meta_by_event[(tour, tour_id)] = {
+                "tournament": tournament,
+                "surface": surface,
+            }
+    if not meta_by_event:
+        return {}
+
+    totals: dict[tuple[str, str], dict[str, float]] = defaultdict(lambda: defaultdict(float))
+    tour_ids_by_tour: dict[str, set[str]] = defaultdict(set)
+    for tour, tour_id in meta_by_event:
+        tour_ids_by_tour[tour].add(tour_id)
+
+    for tour, tour_ids in tour_ids_by_tour.items():
+        tour_lower = tour.lower()
+        stat_index: dict[tuple[str, str, str, str], dict[str, str]] = {}
+        for row in read_csv(ONCOURT_DIR / f"stat_{tour_lower}.csv"):
+            tour_id = str(row.get("tour_id") or "").strip()
+            if tour_id not in tour_ids:
+                continue
+            key = (
+                str(row.get("winner_id") or "").strip(),
+                str(row.get("loser_id") or "").strip(),
+                tour_id,
+                str(row.get("round_id") or "").strip(),
+            )
+            stat_index.setdefault(key, row)
+
+        for game in read_csv(ONCOURT_DIR / f"games_{tour_lower}.csv"):
+            tour_id = str(game.get("tour_id") or "").strip()
+            if tour_id not in tour_ids:
+                continue
+            match_date = parse_date(game.get("date"))
+            if match_date is None or match_date >= as_of:
+                continue
+            winner_id = str(game.get("winner_id") or "").strip()
+            loser_id = str(game.get("loser_id") or "").strip()
+            round_id = str(game.get("round_id") or "").strip()
+            if not winner_id or not loser_id or winner_id == loser_id:
+                continue
+            stat = stat_index.get((winner_id, loser_id, tour_id, round_id))
+            if not stat:
+                continue
+            svpt = parse_int(stat.get("w_svpt")) + parse_int(stat.get("l_svpt"))
+            if svpt <= 0:
+                continue
+            match_games = parse_score_total_games(game.get("result"))
+            breaks = parse_int(stat.get("w_bpw")) + parse_int(stat.get("l_bpw"))
+            bucket = totals[(tour, tour_id)]
+            bucket["matches"] += 1
+            bucket["aces"] += parse_int(stat.get("w_ace")) + parse_int(stat.get("l_ace"))
+            bucket["dfs"] += parse_int(stat.get("w_df")) + parse_int(stat.get("l_df"))
+            bucket["svpt"] += svpt
+            bucket["breaks"] += breaks
+            bucket["match_games"] += match_games
+
+    out: dict[tuple[str, str], dict[str, str]] = {}
+    for key, values in totals.items():
+        tour, tour_id = key
+        meta = meta_by_event.get(key) or {}
+        tournament = meta.get("tournament") or ""
+        surface = meta.get("surface") or ""
+        matches = int(values.get("matches", 0))
+        svpt = values.get("svpt", 0.0)
+        if matches <= 0 or svpt <= 0:
+            continue
+        factor = factors.get((tour, tournament, surface)) or surface_baseline_factor(
+            tour=tour,
+            tournament=tournament,
+            surface=surface,
+            surface_baselines=surface_baselines,
+        )
+        weight = current_env_weight(matches)
+        current_ace_rate = values.get("aces", 0.0) / svpt
+        current_df_rate = values.get("dfs", 0.0) / svpt
+        match_games = values.get("match_games", 0.0)
+        current_break_rate = values.get("breaks", 0.0) / match_games if match_games > 0 else 0.0
+        baseline_ace = parse_float(factor.get("ace_rate")) or parse_float(factor.get("tour_surface_baseline_ace"))
+        baseline_df = parse_float(factor.get("df_rate")) or parse_float(factor.get("tour_surface_baseline_df"))
+        baseline_break = 0.235 if tour == "ATP" else 0.285
+        ace_factor = _clipped_ratio_factor(
+            current_rate=current_ace_rate,
+            baseline_rate=baseline_ace,
+            weight=weight,
+            low=CURRENT_ENV_ACE_DF_MIN,
+            high=CURRENT_ENV_ACE_DF_MAX,
+        )
+        df_factor = _clipped_ratio_factor(
+            current_rate=current_df_rate,
+            baseline_rate=baseline_df,
+            weight=weight,
+            low=CURRENT_ENV_ACE_DF_MIN,
+            high=CURRENT_ENV_ACE_DF_MAX,
+        )
+        break_factor = _clipped_ratio_factor(
+            current_rate=current_break_rate,
+            baseline_rate=baseline_break,
+            weight=weight,
+            low=CURRENT_ENV_BREAK_MIN,
+            high=CURRENT_ENV_BREAK_MAX,
+        )
+        out[key] = {
+            "matches": str(matches),
+            "svpt": str(int(svpt)),
+            "match_games": str(int(match_games)),
+            "weight": f"{weight:.3f}",
+            "ace_rate": f"{current_ace_rate:.5f}",
+            "df_rate": f"{current_df_rate:.5f}",
+            "break_rate": f"{current_break_rate:.5f}" if current_break_rate > 0 else "",
+            "ace_factor": f"{ace_factor:.4f}",
+            "df_factor": f"{df_factor:.4f}",
+            "break_factor": f"{break_factor:.4f}",
+            "sample_flag": "LIVE_OK" if matches >= 8 else "LIVE_LOW_SAMPLE",
+        }
+    return out
+
+
 def load_current_tournament_logs(schedules: list[dict[str, str]], as_of: date) -> dict[tuple[str, str, str], list[dict[str, str]]]:
     """Per-round aces/DF logs for players still in the current tournament draw."""
     tour_ids_by_tour: dict[str, set[str]] = defaultdict(set)
@@ -567,6 +754,7 @@ def project_side(
     aliases: dict[tuple[str, str], str],
     current_tournament_stats: dict[tuple[str, str, str], dict[str, str]],
     current_tournament_logs: dict[tuple[str, str, str], list[dict[str, str]]],
+    current_tournament_environment: dict[tuple[str, str], dict[str, str]],
 ) -> dict[str, str]:
     tour = schedule["tour"].upper()
     surface = schedule["surface"]
@@ -577,6 +765,7 @@ def project_side(
     opponent_rows = baseline.get((tour, opponent_lookup, surface), {})
     factor = factors.get((tour, tournament, surface)) or {}
     factor_source = "venue" if factor else ""
+    factor_clipped = False
     if not factor:
         factor = surface_baseline_factor(
             tour=tour,
@@ -585,10 +774,13 @@ def project_side(
             surface_baselines=surface_baselines,
         )
         factor_source = "surface_baseline" if factor else ""
+    elif factor_source == "venue":
+        factor, factor_clipped = clipped_venue_factor_row(factor)
     expected_games = parse_float(factor.get("match_games_per_match"), default_match_games(tour, tournament))
     tournament_n = tournament_samples.get((tour, player_lookup, tournament), 0)
     same_tournament_row = current_tournament_stats.get((tour, str(schedule.get("tour_id") or ""), player_id))
     same_tournament_log = current_tournament_logs.get((tour, str(schedule.get("tour_id") or ""), player_id), [])
+    current_env_row = current_tournament_environment.get((tour, str(schedule.get("tour_id") or "")))
     projection = project_player(
         tour=tour,
         player_rows=player_rows,
@@ -597,6 +789,7 @@ def project_side(
         expected_match_games=expected_games or default_match_games(tour, tournament),
         slam_matches=tournament_n,
         same_tournament_row=same_tournament_row,
+        current_tournament_env_row=current_env_row,
     )
     career = player_rows.get("career_4y") or {}
     notes = list(projection.notes)
@@ -604,6 +797,8 @@ def project_side(
         notes.append("SURFACE_BASELINE_ONLY")
     elif not factor:
         notes.append("NO_VENUE_FACTOR")
+    if factor_clipped:
+        notes.append("VENUE_FACTOR_CLIPPED")
     return {
         "date": schedule["date"],
         "tour": tour,
@@ -637,6 +832,13 @@ def project_side(
         "venue_df_factor": str(factor.get("df_factor") or ""),
         "venue_factor_source": factor_source,
         "venue_sample_flag": str(factor.get("sample_flag") or ""),
+        "current_env_matches": str(projection.current_env_matches),
+        "current_env_svpt": str(projection.current_env_svpt),
+        "current_env_weight": fmt(projection.current_env_weight, 3),
+        "current_env_ace_factor": fmt(projection.current_env_ace_factor, 4),
+        "current_env_df_factor": fmt(projection.current_env_df_factor, 4),
+        "current_env_break_factor": fmt(projection.current_env_break_factor, 4),
+        "current_env_sample_flag": str((current_env_row or {}).get("sample_flag") or ""),
         "ace_rate_adj": fmt(projection.ace_rate, 5),
         "df_rate_adj": fmt(projection.df_rate, 5),
         "break_rate_adj": fmt(projection.break_rate, 5),
@@ -673,6 +875,12 @@ def main() -> None:
         schedules.extend(wta_schedule_rows(Path(args.wta_schedule)))
     current_tournament_stats = load_current_tournament_stats(schedules, as_of)
     current_tournament_logs = load_current_tournament_logs(schedules, as_of)
+    current_tournament_environment = load_current_tournament_environment(
+        schedules,
+        as_of,
+        factors,
+        surface_baselines,
+    )
 
     rows: list[dict[str, str]] = []
     for schedule in schedules:
@@ -689,6 +897,7 @@ def main() -> None:
                 aliases=aliases,
                 current_tournament_stats=current_tournament_stats,
                 current_tournament_logs=current_tournament_logs,
+                current_tournament_environment=current_tournament_environment,
             )
         )
         rows.append(
@@ -704,6 +913,7 @@ def main() -> None:
                 aliases=aliases,
                 current_tournament_stats=current_tournament_stats,
                 current_tournament_logs=current_tournament_logs,
+                current_tournament_environment=current_tournament_environment,
             )
         )
 
@@ -740,6 +950,13 @@ def main() -> None:
         "venue_df_factor",
         "venue_factor_source",
         "venue_sample_flag",
+        "current_env_matches",
+        "current_env_svpt",
+        "current_env_weight",
+        "current_env_ace_factor",
+        "current_env_df_factor",
+        "current_env_break_factor",
+        "current_env_sample_flag",
         "ace_rate_adj",
         "df_rate_adj",
         "break_rate_adj",

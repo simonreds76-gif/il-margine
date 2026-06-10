@@ -342,6 +342,12 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
                   <td className="px-3 py-3 font-mono text-xs text-slate-400">
                     <div>{row.player_surface_matches || "0"}m / {row.player_surface_svpt_sample || "0"} svpt</div>
                     <div className="text-slate-600">event {row.same_tournament_matches || "0"}m / {row.same_tournament_svpt || "0"} svpt</div>
+                    <div className="text-slate-600">
+                      env {row.current_env_matches || "0"}m / w {fmt(row.current_env_weight, 2)}
+                    </div>
+                    <div className="text-slate-600">
+                      A x{fmt(row.current_env_ace_factor, 2)} DF x{fmt(row.current_env_df_factor, 2)} Br x{fmt(row.current_env_break_factor, 2)}
+                    </div>
                     <div className="text-slate-600">event brk +{row.same_tournament_breaks_for || "0"} / -{row.same_tournament_broken || "0"}</div>
                   </td>
                   <td className="px-3 py-3 text-xs text-slate-500">{[row.notes, row.break_notes].filter(Boolean).join(" | ") || "clear"}</td>

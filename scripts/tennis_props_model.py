@@ -48,6 +48,12 @@ class Projection:
     same_tournament_breaks_for: int
     same_tournament_broken: int
     same_tournament_total_breaks: int
+    current_env_matches: int
+    current_env_svpt: int
+    current_env_weight: float
+    current_env_ace_factor: float
+    current_env_df_factor: float
+    current_env_break_factor: float
     ace_confidence: str
     df_confidence: str
     break_confidence: str
@@ -159,6 +165,7 @@ def project_player(
     expected_match_games: float,
     slam_matches: int,
     same_tournament_row: dict[str, str] | None = None,
+    current_tournament_env_row: dict[str, str] | None = None,
 ) -> Projection:
     tour_norm = tour.lower()
     ace_prior_weight = 400.0 if tour_norm == "atp" else 600.0
@@ -230,10 +237,19 @@ def project_player(
 
     slam_ace_factor = _float(factor_row.get("ace_factor"), 1.0) or 1.0
     slam_df_factor = _float(factor_row.get("df_factor"), 1.0) or 1.0
+    current_env_row = current_tournament_env_row or {}
+    current_env_matches = _int(current_env_row.get("matches"))
+    current_env_svpt = _int(current_env_row.get("svpt"))
+    current_env_weight = _float(current_env_row.get("weight"), 0.0) or 0.0
+    current_env_ace_factor = _float(current_env_row.get("ace_factor"), 1.0) or 1.0
+    current_env_df_factor = _float(current_env_row.get("df_factor"), 1.0) or 1.0
+    current_env_break_factor = _float(current_env_row.get("break_factor"), 1.0) or 1.0
+    if current_env_weight > 0 and current_env_matches > 0:
+        notes.append(f"EVENT_ENV_N{current_env_matches}")
     ret_factor = _clip((prior_ret_first / max(0.18, opp_ret_first)) ** 0.6, 0.76, 1.22)
 
-    ace_rate_adj = _clip(ace_rate * slam_ace_factor * ret_factor, 0.002, 0.28)
-    df_rate_adj = _clip(df_rate * slam_df_factor, 0.002, 0.16)
+    ace_rate_adj = _clip(ace_rate * slam_ace_factor * current_env_ace_factor * ret_factor, 0.002, 0.28)
+    df_rate_adj = _clip(df_rate * slam_df_factor * current_env_df_factor, 0.002, 0.16)
     expected_service_games = max(4.0, expected_match_games * 0.5)
     expected_service_points = expected_service_games * _clip(svpt_per_svg, 4.8, 8.6)
 
@@ -242,8 +258,8 @@ def project_player(
     # only until we have real Bet365 line history.
     break_rate_adj = math.sqrt(max(0.0001, break_for_rate) * max(0.0001, opp_broken_rate))
     broken_rate_adj = math.sqrt(max(0.0001, broken_rate) * max(0.0001, opp_break_for_rate))
-    break_rate_adj = _clip(break_rate_adj, 0.06, 0.48)
-    broken_rate_adj = _clip(broken_rate_adj, 0.06, 0.48)
+    break_rate_adj = _clip(break_rate_adj * current_env_break_factor, 0.06, 0.48)
+    broken_rate_adj = _clip(broken_rate_adj * current_env_break_factor, 0.06, 0.48)
     same_breaks_for = _int((same_tournament_row or {}).get("breaks_for"))
     same_broken = _int((same_tournament_row or {}).get("broken"))
     same_total_breaks = same_breaks_for + same_broken
@@ -310,6 +326,12 @@ def project_player(
         same_tournament_breaks_for=same_breaks_for,
         same_tournament_broken=same_broken,
         same_tournament_total_breaks=same_total_breaks,
+        current_env_matches=current_env_matches,
+        current_env_svpt=current_env_svpt,
+        current_env_weight=current_env_weight,
+        current_env_ace_factor=current_env_ace_factor,
+        current_env_df_factor=current_env_df_factor,
+        current_env_break_factor=current_env_break_factor,
         ace_confidence=ace_confidence,
         df_confidence=df_confidence,
         break_confidence=break_confidence,
