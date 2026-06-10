@@ -151,6 +151,13 @@ function factorMove(value: string | undefined, digits = 1): string {
   return `${pct > 0 ? "+" : ""}${pct.toFixed(digits)}%`;
 }
 
+function factorProductMove(first: string | undefined, second: string | undefined, digits = 1): string {
+  const a = Number.parseFloat(first ?? "");
+  const b = Number.parseFloat(second ?? "");
+  const product = (Number.isFinite(a) && a > 0 ? a : 1) * (Number.isFinite(b) && b > 0 ? b : 1);
+  return factorMove(String(product), digits);
+}
+
 function confidenceTone(value: string | undefined): string {
   if (value === "HIGH") return "border-emerald-500/25 bg-emerald-500/10 text-emerald-300";
   if (value === "MED") return "border-amber-500/25 bg-amber-500/10 text-amber-300";
@@ -254,6 +261,13 @@ function factorTone(value: string | undefined): string {
   if (parsed >= 1.03) return "border-emerald-500/25 bg-emerald-500/10 text-emerald-300";
   if (parsed <= 0.97) return "border-rose-500/25 bg-rose-500/10 text-rose-300";
   return "border-slate-700/70 bg-slate-800/60 text-slate-400";
+}
+
+function factorProductTone(first: string | undefined, second: string | undefined): string {
+  const a = Number.parseFloat(first ?? "");
+  const b = Number.parseFloat(second ?? "");
+  const product = (Number.isFinite(a) && a > 0 ? a : 1) * (Number.isFinite(b) && b > 0 ? b : 1);
+  return factorTone(String(product));
 }
 
 function NoteBadges({ value }: { value: string }) {
@@ -382,15 +396,34 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
                     </div>
                   </td>
                   <td className="px-3 py-3 text-xs">
-                    <div className="min-w-[230px] rounded-xl border border-slate-800/80 bg-slate-950/55 p-2">
+                    <div className="min-w-[310px] rounded-xl border border-slate-800/80 bg-slate-950/55 p-2">
                       <div className="mb-2 flex items-center justify-between gap-2 text-[11px] uppercase tracking-[0.12em] text-slate-500">
-                        <span>{row.current_env_matches || "0"} matches</span>
-                        <span>w {fmt(row.current_env_weight, 2)}</span>
+                        <span>current {row.current_env_matches || "0"} matches</span>
+                        <span>live weight {fmt(row.current_env_weight, 2)}</span>
                       </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        <MiniBadge label={`Aces ${factorMove(row.current_env_ace_factor)}`} tone={factorTone(row.current_env_ace_factor)} />
-                        <MiniBadge label={`DF ${factorMove(row.current_env_df_factor)}`} tone={factorTone(row.current_env_df_factor)} />
-                        <MiniBadge label={`Breaks ${factorMove(row.current_env_break_factor)}`} tone={factorTone(row.current_env_break_factor)} />
+                      <div className="space-y-1.5">
+                        <div className="grid grid-cols-[44px_1fr] items-center gap-2">
+                          <span className="text-[10px] font-black uppercase tracking-[0.12em] text-emerald-300">Aces</span>
+                          <div className="flex flex-wrap gap-1.5">
+                            <MiniBadge label={`venue ${factorMove(row.venue_ace_factor)}`} tone={factorTone(row.venue_ace_factor)} />
+                            <MiniBadge label={`live ${factorMove(row.current_env_ace_factor)}`} tone={factorTone(row.current_env_ace_factor)} />
+                            <MiniBadge label={`net ${factorProductMove(row.venue_ace_factor, row.current_env_ace_factor)}`} tone={factorProductTone(row.venue_ace_factor, row.current_env_ace_factor)} />
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-[44px_1fr] items-center gap-2">
+                          <span className="text-[10px] font-black uppercase tracking-[0.12em] text-rose-300">DF</span>
+                          <div className="flex flex-wrap gap-1.5">
+                            <MiniBadge label={`venue ${factorMove(row.venue_df_factor)}`} tone={factorTone(row.venue_df_factor)} />
+                            <MiniBadge label={`live ${factorMove(row.current_env_df_factor)}`} tone={factorTone(row.current_env_df_factor)} />
+                            <MiniBadge label={`net ${factorProductMove(row.venue_df_factor, row.current_env_df_factor)}`} tone={factorProductTone(row.venue_df_factor, row.current_env_df_factor)} />
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-[44px_1fr] items-center gap-2">
+                          <span className="text-[10px] font-black uppercase tracking-[0.12em] text-cyan-300">Brk</span>
+                          <div className="flex flex-wrap gap-1.5">
+                            <MiniBadge label={`live ${factorMove(row.current_env_break_factor)}`} tone={factorTone(row.current_env_break_factor)} />
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </td>
