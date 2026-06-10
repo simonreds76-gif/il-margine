@@ -248,6 +248,32 @@ function MiniBadge({ label, tone }: { label: string; tone: string }) {
   );
 }
 
+function factorTone(value: string | undefined): string {
+  const parsed = Number.parseFloat(value ?? "");
+  if (!Number.isFinite(parsed)) return "border-slate-700 bg-slate-900 text-slate-500";
+  if (parsed >= 1.03) return "border-emerald-500/25 bg-emerald-500/10 text-emerald-300";
+  if (parsed <= 0.97) return "border-rose-500/25 bg-rose-500/10 text-rose-300";
+  return "border-slate-700/70 bg-slate-800/60 text-slate-400";
+}
+
+function NoteBadges({ value }: { value: string }) {
+  const notes = value
+    .split("|")
+    .map((note) => note.trim())
+    .filter(Boolean)
+    .slice(0, 5);
+  if (!notes.length) return <span className="text-xs text-slate-600">clear</span>;
+  return (
+    <div className="flex max-w-[300px] flex-wrap gap-1.5">
+      {notes.map((note) => (
+        <span key={note} className="rounded-full border border-slate-800 bg-slate-950/70 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-500">
+          {note.replaceAll("_", " ")}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function TournamentRoundDetails({ row }: { row: CsvRow }) {
   const logs = parseTournamentRoundLog(row.tournament_round_log);
   return (
@@ -312,7 +338,8 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
             <th className="px-3 py-3 font-semibold">Aces conf</th>
             <th className="px-3 py-3 font-semibold">DF conf</th>
             <th className="px-3 py-3 font-semibold">Break conf</th>
-            <th className="px-3 py-3 font-semibold">Sample</th>
+            <th className="px-3 py-3 font-semibold">Model inputs</th>
+            <th className="px-3 py-3 font-semibold">Live event</th>
             <th className="px-3 py-3 font-semibold">Notes</th>
           </tr>
         </thead>
@@ -320,7 +347,7 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
           {groupedRows.map((group) => (
             <Fragment key={group.date}>
               <tr className="border-y border-slate-800 bg-slate-950/80">
-                <td colSpan={11} className="px-3 py-3">
+                <td colSpan={12} className="px-3 py-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="text-xs font-black uppercase tracking-[0.18em] text-emerald-300">{dateLabel(group.date)}</span>
                     <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate-500">{group.rows.length} player rows</span>
@@ -347,18 +374,29 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
                   <td className="px-3 py-3"><MiniBadge label={row.ace_confidence || "LOW"} tone={confidenceTone(row.ace_confidence)} /></td>
                   <td className="px-3 py-3"><MiniBadge label={row.df_confidence || "LOW"} tone={confidenceTone(row.df_confidence)} /></td>
                   <td className="px-3 py-3"><MiniBadge label={row.break_confidence || "LOW"} tone={confidenceTone(row.break_confidence)} /></td>
-                  <td className="px-3 py-3 font-mono text-xs text-slate-400">
-                    <div>{row.player_surface_matches || "0"}m / {row.player_surface_svpt_sample || "0"} svpt</div>
-                    <div className="text-slate-600">event {row.same_tournament_matches || "0"}m / {row.same_tournament_svpt || "0"} svpt</div>
-                    <div className="text-slate-600">
-                      env {row.current_env_matches || "0"}m / w {fmt(row.current_env_weight, 2)}
+                  <td className="px-3 py-3 text-xs text-slate-400">
+                    <div className="min-w-[150px] rounded-xl border border-slate-800/80 bg-slate-950/55 p-2">
+                      <div className="font-mono text-slate-300">{row.player_surface_matches || "0"}m / {row.player_surface_svpt_sample || "0"} svpt</div>
+                      <div className="mt-1 text-[11px] text-slate-600">player same-event {row.same_tournament_matches || "0"}m / {row.same_tournament_svpt || "0"} svpt</div>
+                      <div className="mt-1 text-[11px] text-slate-600">brk log +{row.same_tournament_breaks_for || "0"} / -{row.same_tournament_broken || "0"}</div>
                     </div>
-                    <div className="text-slate-600">
-                      live A {factorMove(row.current_env_ace_factor)} DF {factorMove(row.current_env_df_factor)} Br {factorMove(row.current_env_break_factor)}
-                    </div>
-                    <div className="text-slate-600">event brk +{row.same_tournament_breaks_for || "0"} / -{row.same_tournament_broken || "0"}</div>
                   </td>
-                  <td className="px-3 py-3 text-xs text-slate-500">{[row.notes, row.break_notes].filter(Boolean).join(" | ") || "clear"}</td>
+                  <td className="px-3 py-3 text-xs">
+                    <div className="min-w-[230px] rounded-xl border border-slate-800/80 bg-slate-950/55 p-2">
+                      <div className="mb-2 flex items-center justify-between gap-2 text-[11px] uppercase tracking-[0.12em] text-slate-500">
+                        <span>{row.current_env_matches || "0"} matches</span>
+                        <span>w {fmt(row.current_env_weight, 2)}</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        <MiniBadge label={`Aces ${factorMove(row.current_env_ace_factor)}`} tone={factorTone(row.current_env_ace_factor)} />
+                        <MiniBadge label={`DF ${factorMove(row.current_env_df_factor)}`} tone={factorTone(row.current_env_df_factor)} />
+                        <MiniBadge label={`Breaks ${factorMove(row.current_env_break_factor)}`} tone={factorTone(row.current_env_break_factor)} />
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-3 py-3 text-xs text-slate-500">
+                    <NoteBadges value={[row.notes, row.break_notes].filter(Boolean).join("|")} />
+                  </td>
                 </tr>
               ))}
             </Fragment>
