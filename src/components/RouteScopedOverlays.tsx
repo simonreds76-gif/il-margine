@@ -2,7 +2,6 @@
 
 import { usePathname } from "next/navigation";
 import ChatWidget from "@/components/ChatWidget";
-import RogerTeaser from "@/components/RogerTeaser";
 import WorldCupTelegramOverlay from "@/components/WorldCupTelegramOverlay";
 
 function shouldShowWorldCupTelegram(pathname: string | null): boolean {
@@ -22,10 +21,9 @@ export default function RouteScopedOverlays() {
     return <WorldCupTelegramOverlay />;
   }
 
-  return (
-    <>
-      <ChatWidget />
-      <RogerTeaser />
-    </>
-  );
+  if (pathname === "/resources/roger") {
+    return <ChatWidget />;
+  }
+
+  return null;
 }
