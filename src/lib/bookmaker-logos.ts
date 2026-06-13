@@ -31,6 +31,7 @@ const LOGO_FILES: Record<string, string[]> = {
   skybet: ["skybet.png", "skybet.svg"],
   spreadex: ["spreadex.svg", "spreadex.jpg"],
   unibet: ["Unibet_idYHeiKVm__1.png", "unibet.png", "unibet.svg"],
+  virginbet: ["virginbet.svg"],
   williamhill: ["williamhill.png", "williamhill.svg"],
 };
 
@@ -52,6 +53,7 @@ const DISPLAY_NAMES: Record<string, string> = {
   skybet: "Sky Bet",
   spreadex: "Spreadex",
   unibet: "Unibet",
+  virginbet: "Virgin Bet",
   williamhill: "William Hill",
 };
 
@@ -95,6 +97,9 @@ const ALIASES: Record<string, string> = {
   spx: "spreadex",
   unibet: "unibet",
   ub: "unibet",
+  virgin: "virginbet",
+  virginbet: "virginbet",
+  vb: "virginbet",
   williamhill: "williamhill",
   wh: "williamhill",
 };
