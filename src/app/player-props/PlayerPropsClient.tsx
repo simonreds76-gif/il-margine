@@ -283,7 +283,7 @@ export default function PlayerProps({
       label: "Avg Odds",
       value: formatOdds(currentStats.avg_odds),
       tone: colorClasses[activeColor].text,
-      detail: "mean advised price",
+      detail: "average advised odds",
     },
   ];
 
