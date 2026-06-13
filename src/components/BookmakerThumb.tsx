@@ -21,7 +21,7 @@ const LOGO_SCALE: Record<string, number> = {
   betway: 1.14,
   boylesports: 0.92,
   spreadex: 0.95,
-  virginbet: 1.02,
+  virginbet: 1.75,
 };
 
 interface BookmakerThumbProps {
