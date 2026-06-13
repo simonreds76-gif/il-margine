@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createHmac } from "crypto";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
+import { postWorldCupTipToTelegram } from "@/lib/world-cup-telegram";
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const COOKIE_NAME = "admin_session";
@@ -23,13 +24,23 @@ export async function POST(req: Request) {
   let supabase;
   try {
     supabase = getSupabaseAdmin();
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: "Server misconfigured: add SUPABASE_SERVICE_ROLE_KEY in Vercel." }, { status: 500 });
   }
   const body = await req.json();
-  const { data, error } = await supabase.from("bets").insert([body]).select("id").single();
+  const { data, error } = await supabase
+    .from("bets")
+    .insert([body])
+    .select("id, market, category, event, player, selection, odds, stake, match_date, notes, bookmaker:bookmakers(name, short_name)")
+    .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
-  return NextResponse.json({ id: data.id });
+
+  const telegram = await postWorldCupTipToTelegram(data);
+  if (telegram.status === "failed") {
+    console.warn("World Cup Telegram post failed:", telegram.reason);
+  }
+
+  return NextResponse.json({ id: data.id, telegram });
 }
 
 export async function PATCH(req: Request) {

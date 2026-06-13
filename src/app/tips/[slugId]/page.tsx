@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { supabase } from "@/lib/supabase";
 import { BASE_URL } from "@/lib/config";
 import { slugifyTip, parseTipSlugId } from "@/lib/slugify";
+import { isWorldCupPropsTip, WORLD_CUP_TIP_IMAGE_PATH } from "@/lib/world-cup-tips";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import MarketBadge from "@/components/MarketBadge";
 import Footer from "@/components/Footer";
@@ -47,6 +48,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       ? `Tennis tip: ${bet.event}. ${bet.selection} at ${formatOdds(bet.odds)}. ${bet.category}. Il Margine.`
       : `Player props tip: ${bet.event}. ${bet.player ? bet.player + " – " : ""}${bet.selection} at ${formatOdds(bet.odds)}. Il Margine.`;
   const url = `${BASE_URL}/tips/${canonicalSlug}`;
+  const worldCupGraphic = isWorldCupPropsTip(bet) ? `${BASE_URL}${WORLD_CUP_TIP_IMAGE_PATH}` : null;
 
   return {
     title,
@@ -59,11 +61,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       siteName: "Il Margine",
       title,
       description,
+      images: worldCupGraphic
+        ? [
+            {
+              url: worldCupGraphic,
+              width: 1200,
+              height: 1200,
+              alt: "Il Margine World Cup free picks",
+            },
+          ]
+        : undefined,
     },
     twitter: {
-      card: "summary",
+      card: worldCupGraphic ? "summary_large_image" : "summary",
       title,
       description,
+      images: worldCupGraphic ? [worldCupGraphic] : undefined,
     },
     robots: {
       index: false,

@@ -293,7 +293,15 @@ export default function AdminPanel() {
     const data = await res.json().catch(() => ({}));
     setLoading(false);
     if (res.ok) {
-      setMessage({ type: "success", text: "Bet added successfully!" });
+      let successText = "Bet added successfully!";
+      if (data.telegram?.status === "posted") {
+        successText += " Telegram posted.";
+      } else if (data.telegram?.status === "failed") {
+        successText += ` Telegram failed: ${data.telegram.reason || "unknown error"}`;
+      } else if (form.market === "props" && form.category === "worldcup" && data.telegram?.status === "skipped") {
+        successText += ` Telegram not posted (${data.telegram.reason || "skipped"}).`;
+      }
+      setMessage({ type: "success", text: successText });
       setForm({ ...form, event: "", player: "", selection: "", odds: "", match_date: new Date().toISOString().slice(0, 10), notes: "" });
       fetchPendingBets();
       fetchPendingCount();
