@@ -20,8 +20,8 @@ const BOOKMAKER_LOGOS: Array<[RegExp, string]> = [
   [/coral/i, "/bookmakers/coral.jpeg"],
   [/888/i, "/bookmakers/888sport.svg"],
   [/spreadex/i, "/bookmakers/spreadex.jpg"],
-  [/virgin\s*bet/i, "/bookmakers/virginbet.svg"],
-  [/virginbet/i, "/bookmakers/virginbet.svg"],
+  [/virgin\s*bet/i, "/bookmakers/virginbet.png"],
+  [/virginbet/i, "/bookmakers/virginbet.png"],
 ];
 
 export function bookmakerLogoPath(name: string) {

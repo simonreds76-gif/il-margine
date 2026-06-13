@@ -31,7 +31,7 @@ const LOGO_FILES: Record<string, string[]> = {
   skybet: ["skybet.png", "skybet.svg"],
   spreadex: ["spreadex.svg", "spreadex.jpg"],
   unibet: ["Unibet_idYHeiKVm__1.png", "unibet.png", "unibet.svg"],
-  virginbet: ["virginbet.svg"],
+  virginbet: ["virginbet.png"],
   williamhill: ["williamhill.png", "williamhill.svg"],
 };
 
