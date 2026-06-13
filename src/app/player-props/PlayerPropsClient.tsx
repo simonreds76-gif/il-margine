@@ -26,6 +26,7 @@ type PlayerPropsClientProps = {
 type DisplayStats = {
   total_bets: number;
   total_profit: number;
+  avg_stake: number;
   roi: number;
   win_rate: number;
   avg_odds: number;
@@ -54,6 +55,11 @@ function formatSignedUnits(units: number): string {
   const rounded = Math.round(Number(units || 0) * 100) / 100;
   const display = String(parseFloat(rounded.toFixed(2)));
   return `${rounded > 0 ? "+" : ""}${display}u`;
+}
+
+function formatUnits(units: number): string {
+  const rounded = Math.round(Number(units || 0) * 100) / 100;
+  return `${String(parseFloat(rounded.toFixed(2)))}u`;
 }
 
 export default function PlayerProps({
@@ -173,6 +179,7 @@ export default function PlayerProps({
       return {
         total_bets: totalBets,
         total_profit: totalProfit,
+        avg_stake: totalBets > 0 ? totalStake / totalBets : 0,
         roi: calculateROI(totalProfit, totalStake || 1),
         win_rate: calculateWinRate(totalWins, totalLosses),
         avg_odds: avgOdds,
@@ -200,7 +207,7 @@ export default function PlayerProps({
     if (!categoryBaseline) {
       // No baseline for this category, show only live data
       if (!leagueStats) {
-        return { total_bets: 0, total_profit: 0, roi: 0, win_rate: 0, avg_odds: 0 };
+        return { total_bets: 0, total_profit: 0, avg_stake: 0, roi: 0, win_rate: 0, avg_odds: 0 };
       }
       const liveBets = leagueStats.total_bets || 0;
       const liveProfit = Number(leagueStats.total_profit) || 0;
@@ -210,6 +217,7 @@ export default function PlayerProps({
       return {
         total_bets: liveBets,
         total_profit: liveProfit,
+        avg_stake: liveBets > 0 ? liveStake / liveBets : 0,
         roi: liveStake > 0 ? calculateROI(liveProfit, liveStake) : 0,
         win_rate: calculateWinRate(liveWins, liveLosses),
         avg_odds: Number(leagueStats.avg_odds) || 0,
@@ -238,6 +246,7 @@ export default function PlayerProps({
     return {
       total_bets: totalBets,
       total_profit: totalProfit,
+      avg_stake: totalBets > 0 ? totalStake / totalBets : 0,
       roi: calculateROI(totalProfit, totalStake || 1),
       win_rate: calculateWinRate(totalWins, totalLosses),
       avg_odds: avgOdds,
@@ -266,6 +275,12 @@ export default function PlayerProps({
       value: formatSignedUnits(currentStats.total_profit),
       tone: profitToneClass(currentStats.total_profit),
       detail: "net profit",
+    },
+    {
+      label: "Avg Stake",
+      value: formatUnits(currentStats.avg_stake),
+      tone: colorClasses[activeColor].text,
+      detail: "units per bet",
     },
     {
       label: "ROI",
@@ -353,6 +368,9 @@ export default function PlayerProps({
                       <span className={`${profitToneClass(leagueStats.total_profit)} font-mono`}>
                         {formatSignedUnits(leagueStats.total_profit)}
                       </span>
+                      <span className="font-mono text-slate-400">
+                        {formatUnits(leagueStats.avg_stake)} avg stake
+                      </span>
                       <span className={`${roiToneClass(leagueStats.roi)} font-mono`}>
                         {leagueStats.roi > 0 ? "+" : ""}{leagueStats.roi.toFixed(1)}% ROI
                       </span>
@@ -364,7 +382,7 @@ export default function PlayerProps({
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-5">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-6">
             {statCards.map((card) => (
               <div
                 key={card.label}
