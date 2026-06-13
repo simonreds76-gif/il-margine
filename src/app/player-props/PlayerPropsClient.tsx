@@ -254,6 +254,38 @@ export default function PlayerProps({
 
   const activeColor = leagueConfig.find(l => l.id === activeLeague)?.color || "emerald";
   const currentStats = getStatsForLeague(activeLeague);
+  const statCards = [
+    {
+      label: "Total Bets",
+      value: currentStats.total_bets.toLocaleString(),
+      tone: "text-white",
+      detail: "settled sample",
+    },
+    {
+      label: "Units P/L",
+      value: formatSignedUnits(currentStats.total_profit),
+      tone: profitToneClass(currentStats.total_profit),
+      detail: "net profit",
+    },
+    {
+      label: "ROI",
+      value: `${currentStats.roi > 0 ? "+" : ""}${currentStats.roi.toFixed(1)}%`,
+      tone: roiToneClass(currentStats.roi),
+      detail: "return on stake",
+    },
+    {
+      label: "Win Rate",
+      value: `${currentStats.win_rate.toFixed(1)}%`,
+      tone: colorClasses[activeColor].text,
+      detail: "settled hit rate",
+    },
+    {
+      label: "Avg Odds",
+      value: formatOdds(currentStats.avg_odds),
+      tone: colorClasses[activeColor].text,
+      detail: "mean advised price",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
@@ -333,43 +365,19 @@ export default function PlayerProps({
 
           {/* Stats */}
           <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-5">
-            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className="text-2xl font-bold text-white font-mono mb-2">{currentStats.total_bets}</div>
-              <div className="text-xs text-slate-500 mb-3">Total Bets</div>
-              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${Math.min((currentStats.total_bets / 1000) * 100, 100)}%` }} />
+            {statCards.map((card) => (
+              <div
+                key={card.label}
+                className="relative overflow-hidden rounded-xl border border-slate-800 bg-slate-950/45 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.18)]"
+              >
+                <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${colorClasses[activeColor].bar} opacity-80`} />
+                <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-slate-500">{card.label}</div>
+                <div className={`mt-3 font-mono text-2xl font-bold ${card.tone}`}>{card.value}</div>
+                <div className="mt-3 inline-flex rounded-full border border-slate-800 bg-slate-900/70 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-slate-500">
+                  {card.detail}
+                </div>
               </div>
-            </div>
-            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className={`text-2xl font-bold ${profitToneClass(currentStats.total_profit)} font-mono mb-2`}>
-                {formatSignedUnits(currentStats.total_profit)}
-              </div>
-              <div className="text-xs text-slate-500 mb-3">Units P/L</div>
-              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${Math.min(Math.abs(currentStats.total_profit) / 2.5, 100)}%` }} />
-              </div>
-            </div>
-            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className={`text-2xl font-bold ${roiToneClass(currentStats.roi)} font-mono mb-2`}>{currentStats.roi > 0 ? "+" : ""}{currentStats.roi.toFixed(1)}%</div>
-              <div className="text-xs text-slate-500 mb-3">ROI</div>
-              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${Math.min(Math.abs(currentStats.roi) * 3, 100)}%` }} />
-              </div>
-            </div>
-            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className={`text-2xl font-bold ${colorClasses[activeColor].text} font-mono mb-2`}>{currentStats.win_rate.toFixed(1)}%</div>
-              <div className="text-xs text-slate-500 mb-3">Win Rate</div>
-              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${currentStats.win_rate}%` }} />
-              </div>
-            </div>
-            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className={`text-2xl font-bold ${colorClasses[activeColor].text} font-mono mb-2`}>{formatOdds(currentStats.avg_odds)}</div>
-              <div className="text-xs text-slate-500 mb-3">Avg Odds</div>
-              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${(currentStats.avg_odds / 3) * 100}%` }} />
-              </div>
-            </div>
+            ))}
           </div>
           <p className="mt-4 max-w-3xl text-xs leading-relaxed text-slate-500">
             Record cards use the full tracked category record. The recent selections table below is only a browsing
