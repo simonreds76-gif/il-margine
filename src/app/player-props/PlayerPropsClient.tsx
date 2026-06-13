@@ -23,6 +23,14 @@ type PlayerPropsClientProps = {
   initialStats?: CategoryStats[];
 };
 
+type DisplayStats = {
+  total_bets: number;
+  total_profit: number;
+  roi: number;
+  win_rate: number;
+  avg_odds: number;
+};
+
 const darkLogoFilter =
   "[filter:brightness(0)_invert(1)_drop-shadow(0_0_5px_rgba(255,255,255,0.58))_drop-shadow(0_0_12px_rgba(87,209,150,0.2))]";
 const lowContrastLogoFilter =
@@ -34,6 +42,18 @@ function roiToneClass(roi: number): string {
   if (roi > 0) return "text-emerald-400";
   if (roi < 0) return "text-rose-400";
   return "text-slate-400";
+}
+
+function profitToneClass(units: number): string {
+  if (units > 0) return "text-emerald-400";
+  if (units < 0) return "text-rose-400";
+  return "text-slate-400";
+}
+
+function formatSignedUnits(units: number): string {
+  const rounded = Math.round(Number(units || 0) * 100) / 100;
+  const display = String(parseFloat(rounded.toFixed(2)));
+  return `${rounded > 0 ? "+" : ""}${display}u`;
 }
 
 export default function PlayerProps({
@@ -124,7 +144,7 @@ export default function PlayerProps({
     requestAnimationFrame(() => requestAnimationFrame(() => el.scrollIntoView({ behavior: "smooth", block: "start" })));
   }, [loading]);
 
-  const getStatsForLeague = (leagueId: string) => {
+  const getStatsForLeague = (leagueId: string): DisplayStats => {
     if (leagueId === "all") {
       // For "All Leagues" - combine baseline + all live data
       const allStats = stats.filter(s => s.market === "props");
@@ -152,6 +172,7 @@ export default function PlayerProps({
 
       return {
         total_bets: totalBets,
+        total_profit: totalProfit,
         roi: calculateROI(totalProfit, totalStake || 1),
         win_rate: calculateWinRate(totalWins, totalLosses),
         avg_odds: avgOdds,
@@ -179,7 +200,7 @@ export default function PlayerProps({
     if (!categoryBaseline) {
       // No baseline for this category, show only live data
       if (!leagueStats) {
-        return { total_bets: 0, roi: 0, win_rate: 0, avg_odds: 0 };
+        return { total_bets: 0, total_profit: 0, roi: 0, win_rate: 0, avg_odds: 0 };
       }
       const liveBets = leagueStats.total_bets || 0;
       const liveProfit = Number(leagueStats.total_profit) || 0;
@@ -188,6 +209,7 @@ export default function PlayerProps({
       const liveStake = Number(leagueStats.total_stake) || liveBets;
       return {
         total_bets: liveBets,
+        total_profit: liveProfit,
         roi: liveStake > 0 ? calculateROI(liveProfit, liveStake) : 0,
         win_rate: calculateWinRate(liveWins, liveLosses),
         avg_odds: Number(leagueStats.avg_odds) || 0,
@@ -215,6 +237,7 @@ export default function PlayerProps({
 
     return {
       total_bets: totalBets,
+      total_profit: totalProfit,
       roi: calculateROI(totalProfit, totalStake || 1),
       win_rate: calculateWinRate(totalWins, totalLosses),
       avg_odds: avgOdds,
@@ -276,7 +299,7 @@ export default function PlayerProps({
                 <button
                   key={league.id}
                   onClick={() => setActiveLeague(league.id)}
-                  className={`flex min-w-[152px] items-center gap-3 rounded-xl border px-3 py-3 text-left transition-all sm:min-w-[174px] ${
+                  className={`flex min-w-[164px] items-center gap-3 rounded-xl border px-3 py-3 text-left transition-all sm:min-w-[190px] ${
                     isActive
                       ? `bg-slate-900/80 ${colorClasses[league.color].border} ${colorClasses[league.color].text}`
                       : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
@@ -293,8 +316,11 @@ export default function PlayerProps({
                   </span>
                   <div className="min-w-0">
                     <span className="block truncate font-medium">{league.name}</span>
-                    <div className="mt-1 flex gap-3 text-xs">
+                    <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs">
                       <span>{leagueStats.total_bets} bets</span>
+                      <span className={`${profitToneClass(leagueStats.total_profit)} font-mono`}>
+                        {formatSignedUnits(leagueStats.total_profit)}
+                      </span>
                       <span className={`${roiToneClass(leagueStats.roi)} font-mono`}>
                         {leagueStats.roi > 0 ? "+" : ""}{leagueStats.roi.toFixed(1)}% ROI
                       </span>
@@ -306,12 +332,21 @@ export default function PlayerProps({
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-5">
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
               <div className="text-2xl font-bold text-white font-mono mb-2">{currentStats.total_bets}</div>
               <div className="text-xs text-slate-500 mb-3">Total Bets</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                 <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${Math.min((currentStats.total_bets / 1000) * 100, 100)}%` }} />
+              </div>
+            </div>
+            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
+              <div className={`text-2xl font-bold ${profitToneClass(currentStats.total_profit)} font-mono mb-2`}>
+                {formatSignedUnits(currentStats.total_profit)}
+              </div>
+              <div className="text-xs text-slate-500 mb-3">Units P/L</div>
+              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${Math.min(Math.abs(currentStats.total_profit) / 2.5, 100)}%` }} />
               </div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
