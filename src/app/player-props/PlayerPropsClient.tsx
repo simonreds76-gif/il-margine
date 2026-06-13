@@ -78,27 +78,17 @@ export default function PlayerProps({
   const [showAllRecent, setShowAllRecent] = useState(false);
 
   const leagueConfig = [
-    { id: "all", name: "All Leagues", color: "emerald", logoPath: "/icons/markets/other-football.svg", logoClassName: naturalLogoFilter },
-    { id: "pl", name: "Premier League", color: "purple", logoPath: "/league-logos/epl.png", logoClassName: lowContrastLogoFilter },
-    { id: "seriea", name: "Serie A", color: "blue", logoPath: "/league-logos/serie-a.png", logoClassName: naturalLogoFilter },
-    { id: "laliga", name: "La Liga", color: "red", logoPath: "/league-logos/la-liga.png", logoClassName: naturalLogoFilter },
-    { id: "bundesliga", name: "Bundesliga", color: "rose", logoPath: "/league-logos/bundesliga.png", logoClassName: naturalLogoFilter },
-    { id: "ligue1", name: "Ligue 1", color: "cyan", logoPath: "/league-logos/ligue-1.png", logoClassName: darkLogoFilter },
-    { id: "ucl", name: "Champions League", color: "amber", logoPath: "/icons/markets/ucl-official.svg", logoClassName: darkLogoFilter },
-    { id: "worldcup", name: "World Cup", color: "emerald", logoPath: "/world-cup-trophy.svg", logoClassName: naturalLogoFilter },
-    { id: "other", name: "Other", color: "slate", logoPath: "/icons/markets/other-football.svg", logoClassName: naturalLogoFilter },
+    { id: "all", name: "All Leagues", logoPath: "/icons/markets/other-football.svg", logoClassName: naturalLogoFilter },
+    { id: "pl", name: "Premier League", logoPath: "/league-logos/epl.png", logoClassName: lowContrastLogoFilter },
+    { id: "seriea", name: "Serie A", logoPath: "/league-logos/serie-a.png", logoClassName: naturalLogoFilter },
+    { id: "laliga", name: "La Liga", logoPath: "/league-logos/la-liga.png", logoClassName: naturalLogoFilter },
+    { id: "bundesliga", name: "Bundesliga", logoPath: "/league-logos/bundesliga.png", logoClassName: naturalLogoFilter },
+    { id: "ligue1", name: "Ligue 1", logoPath: "/league-logos/ligue-1.png", logoClassName: darkLogoFilter },
+    { id: "ucl", name: "Champions League", logoPath: "/icons/markets/ucl-official.svg", logoClassName: darkLogoFilter },
+    { id: "worldcup", name: "World Cup", logoPath: "/world-cup-trophy.svg", logoClassName: naturalLogoFilter },
+    { id: "other", name: "Other", logoPath: "/icons/markets/other-football.svg", logoClassName: naturalLogoFilter },
   ];
 
-  const colorClasses: Record<string, { border: string; text: string; bg: string; bar: string }> = {
-    emerald: { border: "border-emerald-500/50", text: "text-emerald-400", bg: "bg-emerald-500/10", bar: "from-emerald-500 to-emerald-400" },
-    purple: { border: "border-purple-500/50", text: "text-purple-400", bg: "bg-purple-500/10", bar: "from-purple-500 to-purple-400" },
-    blue: { border: "border-blue-500/50", text: "text-blue-400", bg: "bg-blue-500/10", bar: "from-blue-500 to-blue-400" },
-    amber: { border: "border-amber-500/50", text: "text-amber-400", bg: "bg-amber-500/10", bar: "from-amber-500 to-amber-400" },
-    red: { border: "border-red-500/50", text: "text-red-400", bg: "bg-red-500/10", bar: "from-red-500 to-red-400" },
-    rose: { border: "border-rose-500/50", text: "text-rose-400", bg: "bg-rose-500/10", bar: "from-rose-500 to-rose-400" },
-    cyan: { border: "border-cyan-500/50", text: "text-cyan-400", bg: "bg-cyan-500/10", bar: "from-cyan-500 to-cyan-400" },
-    slate: { border: "border-slate-600/70", text: "text-slate-300", bg: "bg-slate-700/20", bar: "from-slate-600 to-slate-500" },
-  };
   const logoMarkClassName = "flex h-10 w-10 shrink-0 items-center justify-center overflow-visible";
   const logoImageClassName = "h-full w-full object-contain";
 
@@ -261,7 +251,6 @@ export default function PlayerProps({
   const displayedPending = showAllPending ? filteredPending : filteredPending.slice(0, 5);
   const displayedRecent = showAllRecent ? filteredRecent : filteredRecent.slice(0, 5);
 
-  const activeColor = leagueConfig.find(l => l.id === activeLeague)?.color || "emerald";
   const currentStats = getStatsForLeague(activeLeague);
   const statCards = [
     {
@@ -279,7 +268,7 @@ export default function PlayerProps({
     {
       label: "Avg Stake",
       value: formatUnits(currentStats.avg_stake),
-      tone: colorClasses[activeColor].text,
+      tone: "text-emerald-300",
       detail: "units per bet",
     },
     {
@@ -291,13 +280,13 @@ export default function PlayerProps({
     {
       label: "Win Rate",
       value: `${currentStats.win_rate.toFixed(1)}%`,
-      tone: colorClasses[activeColor].text,
+      tone: "text-emerald-300",
       detail: "settled hit rate",
     },
     {
       label: "Avg Odds",
       value: formatOdds(currentStats.avg_odds),
-      tone: colorClasses[activeColor].text,
+      tone: "text-emerald-300",
       detail: "average advised odds",
     },
   ];
@@ -338,7 +327,18 @@ export default function PlayerProps({
       {/* League Tabs */}
       <section className="py-12 md:py-16 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8">
+          <div className="mb-5 flex flex-col gap-2 sm:mb-6 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <span className="text-xs font-mono uppercase tracking-[0.18em] text-emerald-400">Record Filters</span>
+              <h2 className="mt-2 text-2xl font-semibold text-slate-100">Category breakdown</h2>
+            </div>
+            <p className="max-w-xl text-xs leading-relaxed text-slate-500">
+              Filter the public record without changing the ledger maths. P/L and ROI use the settled stakes in each
+              category.
+            </p>
+          </div>
+
+          <div className="mb-6 grid grid-cols-1 gap-3 sm:mb-8 sm:grid-cols-2 xl:grid-cols-3">
             {leagueConfig.map((league) => {
               const leagueStats = getStatsForLeague(league.id);
               const isActive = activeLeague === league.id;
@@ -346,35 +346,55 @@ export default function PlayerProps({
                 <button
                   key={league.id}
                   onClick={() => setActiveLeague(league.id)}
-                  className={`flex min-w-[164px] items-center gap-3 rounded-xl border px-3 py-3 text-left transition-all sm:min-w-[190px] ${
+                  className={`group relative overflow-hidden rounded-2xl border p-3 text-left transition-all sm:p-4 ${
                     isActive
-                      ? `bg-slate-900/80 ${colorClasses[league.color].border} ${colorClasses[league.color].text}`
-                      : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
+                      ? "border-emerald-400/70 bg-emerald-950/20 shadow-[0_18px_70px_rgba(16,185,129,0.12)]"
+                      : "border-slate-800 bg-slate-950/35 hover:border-slate-700 hover:bg-slate-900/45"
                   }`}
                 >
-                  <span className={`${logoMarkClassName} ${isActive ? "scale-105" : ""}`}>
-                    <Image
-                      src={league.logoPath}
-                      alt=""
-                      width={36}
-                      height={36}
-                      className={`${logoImageClassName} ${league.logoClassName}`}
-                    />
-                  </span>
-                  <div className="min-w-0">
-                    <span className="block truncate font-medium">{league.name}</span>
-                    <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs">
-                      <span>{leagueStats.total_bets} bets</span>
-                      <span className={`${profitToneClass(leagueStats.total_profit)} font-mono`}>
-                        {formatSignedUnits(leagueStats.total_profit)}
+                  <div className={`absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-emerald-500 to-emerald-300 transition-opacity ${isActive ? "opacity-100" : "opacity-0 group-hover:opacity-45"}`} />
+                  <div className="flex items-center gap-3">
+                    <span className={`${logoMarkClassName} ${isActive ? "scale-105" : ""}`}>
+                      <Image
+                        src={league.logoPath}
+                        alt=""
+                        width={36}
+                        height={36}
+                        className={`${logoImageClassName} ${league.logoClassName}`}
+                      />
+                    </span>
+                    <div className="min-w-0">
+                      <span className={`block truncate font-semibold ${isActive ? "text-white" : "text-slate-200"}`}>
+                        {league.name}
                       </span>
-                      <span className="font-mono text-slate-400">
-                        {formatUnits(leagueStats.avg_stake)} avg stake
-                      </span>
-                      <span className={`${roiToneClass(leagueStats.roi)} font-mono`}>
-                        {leagueStats.roi > 0 ? "+" : ""}{leagueStats.roi.toFixed(1)}% ROI
+                      <span className="mt-1 block text-[10px] font-mono uppercase tracking-[0.18em] text-slate-500">
+                        {isActive ? "selected record" : "view record"}
                       </span>
                     </div>
+                  </div>
+                  <div className="mt-3 grid grid-cols-2 gap-2 text-xs sm:mt-4">
+                    <span className="rounded-xl border border-slate-800/80 bg-black/18 px-2.5 py-1.5 sm:px-3 sm:py-2">
+                      <span className="block text-[10px] uppercase tracking-[0.14em] text-slate-500">Bets</span>
+                      <span className="mt-1 block font-mono text-sm font-semibold text-white">{leagueStats.total_bets}</span>
+                    </span>
+                    <span className="rounded-xl border border-slate-800/80 bg-black/18 px-2.5 py-1.5 sm:px-3 sm:py-2">
+                      <span className="block text-[10px] uppercase tracking-[0.14em] text-slate-500">P/L</span>
+                      <span className={`mt-1 block font-mono text-sm font-semibold ${profitToneClass(leagueStats.total_profit)}`}>
+                        {formatSignedUnits(leagueStats.total_profit)}
+                      </span>
+                    </span>
+                    <span className="rounded-xl border border-slate-800/80 bg-black/18 px-2.5 py-1.5 sm:px-3 sm:py-2">
+                      <span className="block text-[10px] uppercase tracking-[0.14em] text-slate-500">Avg Stake</span>
+                      <span className="mt-1 block font-mono text-sm font-semibold text-emerald-300">
+                        {formatUnits(leagueStats.avg_stake)}
+                      </span>
+                    </span>
+                    <span className="rounded-xl border border-slate-800/80 bg-black/18 px-2.5 py-1.5 sm:px-3 sm:py-2">
+                      <span className="block text-[10px] uppercase tracking-[0.14em] text-slate-500">ROI</span>
+                      <span className={`mt-1 block font-mono text-sm font-semibold ${roiToneClass(leagueStats.roi)}`}>
+                        {leagueStats.roi > 0 ? "+" : ""}{leagueStats.roi.toFixed(1)}%
+                      </span>
+                    </span>
                   </div>
                 </button>
               );
@@ -382,13 +402,13 @@ export default function PlayerProps({
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-6">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-6">
             {statCards.map((card) => (
               <div
                 key={card.label}
-                className="relative overflow-hidden rounded-xl border border-slate-800 bg-slate-950/45 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.18)]"
+                className="relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-950/45 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.18)]"
               >
-                <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${colorClasses[activeColor].bar} opacity-80`} />
+                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-500 to-emerald-300 opacity-70" />
                 <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-slate-500">{card.label}</div>
                 <div className={`mt-3 font-mono text-2xl font-bold ${card.tone}`}>{card.value}</div>
                 <div className="mt-3 inline-flex rounded-full border border-slate-800 bg-slate-900/70 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-slate-500">
