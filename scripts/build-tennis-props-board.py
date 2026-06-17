@@ -52,6 +52,8 @@ CURRENT_ENV_ACE_DF_MIN = 0.94
 CURRENT_ENV_ACE_DF_MAX = 1.06
 CURRENT_ENV_BREAK_MIN = 0.92
 CURRENT_ENV_BREAK_MAX = 1.08
+CURRENT_ENV_TIEBREAK_MIN = 0.90
+CURRENT_ENV_TIEBREAK_MAX = 1.12
 CURRENT_ENV_MAX_WEIGHT = 0.10
 CURRENT_ENV_FULL_MATCHES = 20.0
 
@@ -111,6 +113,16 @@ def parse_int(value: object, default: int = 0) -> int:
         return default
 
 
+def oncourt_service_points(stat: dict[str, str], prefix: str) -> int:
+    """Return the clean OnCourt service-point denominator for one side.
+
+    In the MDB export, FSOF is the service-point denominator. Some generated
+    stat CSVs also include *_svpt, but older exports inflated it as
+    FSOF + W2SOF, which double-counts second-serve points. Props use FSOF.
+    """
+    return parse_int(stat.get(f"{prefix}_fsof")) or parse_int(stat.get(f"{prefix}_svpt"))
+
+
 def parse_score_total_games(value: object) -> int:
     """Return completed games from score strings like '6-4 3-6 7-6(4)'."""
     text = str(value or "")
@@ -118,6 +130,15 @@ def parse_score_total_games(value: object) -> int:
     for left, right in re.findall(r"(\d+)\s*-\s*(\d+)", text):
         total += int(left) + int(right)
     return total
+
+
+def parse_score_tiebreaks(value: object) -> tuple[int, int, int]:
+    text = str(value or "")
+    sets = re.findall(r"(\d+)\s*-\s*(\d+)(?:\s*\([^)]*\))?", text)
+    if not sets:
+        return 0, 0, 0
+    flags = [1 if {int(left), int(right)} == {6, 7} else 0 for left, right in sets]
+    return len(sets), flags[0] if flags else 0, 1 if any(flags) else 0
 
 
 def add_stat_totals(
@@ -139,6 +160,13 @@ def add_stat_totals(
 
 def fmt(value: float | None, digits: int = 3) -> str:
     return "" if value is None else f"{value:.{digits}f}"
+
+
+def fmt_rate_pct(value: object, digits: int = 1) -> str:
+    parsed = parse_float(value)
+    if parsed is None:
+        return ""
+    return fmt(parsed * 100.0, digits)
 
 
 def slam_name(value: object) -> str | None:
@@ -272,12 +300,20 @@ def surface_baseline_factor(
         "matches": str(row.get("matches") or ""),
         "ace_rate": str(row.get("ace_rate") or ""),
         "df_rate": str(row.get("df_rate") or ""),
+        "tiebreak_set_rate": str(row.get("tiebreak_set_rate") or ""),
+        "first_set_tiebreak_rate": str(row.get("first_set_tiebreak_rate") or ""),
+        "match_tiebreak_rate": str(row.get("match_tiebreak_rate") or ""),
         "svpt_per_svgame": str(row.get("svpt_per_svgame") or ""),
         "match_games_per_match": str(row.get("match_games_per_match") or ""),
         "tour_surface_baseline_ace": str(row.get("ace_rate") or ""),
         "tour_surface_baseline_df": str(row.get("df_rate") or ""),
+        "tour_surface_baseline_tiebreak_set": str(row.get("tiebreak_set_rate") or ""),
+        "tour_surface_baseline_first_set_tiebreak": str(row.get("first_set_tiebreak_rate") or ""),
+        "tour_surface_baseline_match_tiebreak": str(row.get("match_tiebreak_rate") or ""),
         "ace_factor": "1.0000",
         "df_factor": "1.0000",
+        "first_set_tiebreak_factor": "1.0000",
+        "match_tiebreak_factor": "1.0000",
         "sample_flag": "SURFACE_BASELINE",
     }
 
@@ -286,7 +322,7 @@ def clipped_venue_factor_row(row: dict[str, str]) -> tuple[dict[str, str], bool]
     """Cap venue multipliers so small warmup fields cannot dominate projections."""
     out = dict(row)
     clipped = False
-    for field in ("ace_factor", "df_factor"):
+    for field in ("ace_factor", "df_factor", "first_set_tiebreak_factor", "match_tiebreak_factor"):
         value = parse_float(out.get(field))
         if value is None:
             continue
@@ -512,7 +548,7 @@ def load_current_tournament_stats(schedules: list[dict[str, str]], as_of: date) 
                 totals[(tour, tour_id, winner_id)],
                 aces=stat.get("w_ace"),
                 dfs=stat.get("w_df"),
-                svpt=stat.get("w_svpt"),
+                svpt=oncourt_service_points(stat, "w"),
                 breaks_for=stat.get("w_bpw"),
                 broken=max(0, parse_int(stat.get("w_bpfaced")) - parse_int(stat.get("w_bpsaved"))),
             )
@@ -520,7 +556,7 @@ def load_current_tournament_stats(schedules: list[dict[str, str]], as_of: date) 
                 totals[(tour, tour_id, loser_id)],
                 aces=stat.get("l_ace"),
                 dfs=stat.get("l_df"),
-                svpt=stat.get("l_svpt"),
+                svpt=oncourt_service_points(stat, "l"),
                 breaks_for=stat.get("l_bpw"),
                 broken=max(0, parse_int(stat.get("l_bpfaced")) - parse_int(stat.get("l_bpsaved"))),
             )
@@ -592,10 +628,11 @@ def load_current_tournament_environment(
             stat = stat_index.get((winner_id, loser_id, tour_id, round_id))
             if not stat:
                 continue
-            svpt = parse_int(stat.get("w_svpt")) + parse_int(stat.get("l_svpt"))
+            svpt = oncourt_service_points(stat, "w") + oncourt_service_points(stat, "l")
             if svpt <= 0:
                 continue
             match_games = parse_score_total_games(game.get("result"))
+            sets_played, first_set_tb, match_tb = parse_score_tiebreaks(game.get("result"))
             breaks = parse_int(stat.get("w_bpw")) + parse_int(stat.get("l_bpw"))
             bucket = totals[(tour, tour_id)]
             bucket["matches"] += 1
@@ -604,6 +641,9 @@ def load_current_tournament_environment(
             bucket["svpt"] += svpt
             bucket["breaks"] += breaks
             bucket["match_games"] += match_games
+            bucket["sets"] += sets_played
+            bucket["first_set_tiebreaks"] += first_set_tb
+            bucket["match_tiebreaks"] += match_tb
 
     out: dict[tuple[str, str], dict[str, str]] = {}
     for key, values in totals.items():
@@ -626,8 +666,12 @@ def load_current_tournament_environment(
         current_df_rate = values.get("dfs", 0.0) / svpt
         match_games = values.get("match_games", 0.0)
         current_break_rate = values.get("breaks", 0.0) / match_games if match_games > 0 else 0.0
+        current_first_set_tb_rate = values.get("first_set_tiebreaks", 0.0) / matches if matches > 0 else 0.0
+        current_match_tb_rate = values.get("match_tiebreaks", 0.0) / matches if matches > 0 else 0.0
         baseline_ace = parse_float(factor.get("ace_rate")) or parse_float(factor.get("tour_surface_baseline_ace"))
         baseline_df = parse_float(factor.get("df_rate")) or parse_float(factor.get("tour_surface_baseline_df"))
+        baseline_first_set_tb = parse_float(factor.get("first_set_tiebreak_rate")) or parse_float(factor.get("tour_surface_baseline_first_set_tiebreak"))
+        baseline_match_tb = parse_float(factor.get("match_tiebreak_rate")) or parse_float(factor.get("tour_surface_baseline_match_tiebreak"))
         baseline_break = 0.235 if tour == "ATP" else 0.285
         ace_factor = _clipped_ratio_factor(
             current_rate=current_ace_rate,
@@ -650,6 +694,20 @@ def load_current_tournament_environment(
             low=CURRENT_ENV_BREAK_MIN,
             high=CURRENT_ENV_BREAK_MAX,
         )
+        first_set_tiebreak_factor = _clipped_ratio_factor(
+            current_rate=current_first_set_tb_rate,
+            baseline_rate=baseline_first_set_tb,
+            weight=weight,
+            low=CURRENT_ENV_TIEBREAK_MIN,
+            high=CURRENT_ENV_TIEBREAK_MAX,
+        )
+        match_tiebreak_factor = _clipped_ratio_factor(
+            current_rate=current_match_tb_rate,
+            baseline_rate=baseline_match_tb,
+            weight=weight,
+            low=CURRENT_ENV_TIEBREAK_MIN,
+            high=CURRENT_ENV_TIEBREAK_MAX,
+        )
         out[key] = {
             "matches": str(matches),
             "svpt": str(int(svpt)),
@@ -658,9 +716,13 @@ def load_current_tournament_environment(
             "ace_rate": f"{current_ace_rate:.5f}",
             "df_rate": f"{current_df_rate:.5f}",
             "break_rate": f"{current_break_rate:.5f}" if current_break_rate > 0 else "",
+            "first_set_tiebreak_rate": f"{current_first_set_tb_rate:.5f}" if current_first_set_tb_rate > 0 else "",
+            "match_tiebreak_rate": f"{current_match_tb_rate:.5f}" if current_match_tb_rate > 0 else "",
             "ace_factor": f"{ace_factor:.4f}",
             "df_factor": f"{df_factor:.4f}",
             "break_factor": f"{break_factor:.4f}",
+            "first_set_tiebreak_factor": f"{first_set_tiebreak_factor:.4f}",
+            "match_tiebreak_factor": f"{match_tiebreak_factor:.4f}",
             "sample_flag": "LIVE_OK" if matches >= 8 else "LIVE_LOW_SAMPLE",
         }
     return out
@@ -800,6 +862,7 @@ def load_current_tournament_logs(schedules: list[dict[str, str]], as_of: date) -
                 "round": round_label(round_id, tournament_name),
                 "result": str(game.get("result") or "").strip(),
             }
+            _, first_set_tb, match_tb = parse_score_tiebreaks(game.get("result"))
             logs[(tour, tour_id, winner_id)].append(
                 {
                     **base,
@@ -812,7 +875,9 @@ def load_current_tournament_logs(schedules: list[dict[str, str]], as_of: date) -
                         parse_int(stat.get("w_bpw"))
                         + max(0, parse_int(stat.get("w_bpfaced")) - parse_int(stat.get("w_bpsaved")))
                     ),
-                    "svpt": str(parse_int(stat.get("w_svpt"))),
+                    "first_set_tiebreak": str(first_set_tb),
+                    "match_tiebreak": str(match_tb),
+                    "svpt": str(oncourt_service_points(stat, "w")),
                 }
             )
             logs[(tour, tour_id, loser_id)].append(
@@ -827,7 +892,9 @@ def load_current_tournament_logs(schedules: list[dict[str, str]], as_of: date) -
                         parse_int(stat.get("l_bpw"))
                         + max(0, parse_int(stat.get("l_bpfaced")) - parse_int(stat.get("l_bpsaved")))
                     ),
-                    "svpt": str(parse_int(stat.get("l_svpt"))),
+                    "first_set_tiebreak": str(first_set_tb),
+                    "match_tiebreak": str(match_tb),
+                    "svpt": str(oncourt_service_points(stat, "l")),
                 }
             )
 
@@ -908,12 +975,25 @@ def project_side(
     )
     career = player_rows.get("career_4y") or {}
     notes = list(projection.notes)
+    tiebreak_notes = list(projection.tiebreak_notes)
     if factor_source == "surface_baseline":
         notes.append("SURFACE_BASELINE_ONLY")
     elif not factor:
         notes.append("NO_VENUE_FACTOR")
     if factor_clipped:
         notes.append("VENUE_FACTOR_CLIPPED")
+    venue_sample = parse_int(factor.get("matches"))
+    venue_first_set_rate = parse_float(factor.get("first_set_tiebreak_rate"))
+    venue_match_rate = parse_float(factor.get("match_tiebreak_rate"))
+    if (
+        factor_source != "surface_baseline"
+        and venue_sample >= 50
+        and (
+            (venue_first_set_rate is not None and abs(projection.first_set_tiebreak_prob - venue_first_set_rate) > 0.08)
+            or (venue_match_rate is not None and abs(projection.match_tiebreak_prob - venue_match_rate) > 0.08)
+        )
+    ):
+        tiebreak_notes.append("LOW_VENUE_AGREEMENT")
     return {
         "date": schedule["date"],
         "tour": tour,
@@ -927,9 +1007,16 @@ def project_side(
         "projected_breaks_for": fmt(projection.expected_breaks_for),
         "projected_broken": fmt(projection.expected_broken),
         "projected_total_breaks": fmt(projection.expected_total_breaks),
+        "first_set_tiebreak_pct": fmt(projection.first_set_tiebreak_prob * 100.0, 1),
+        "match_tiebreak_pct": fmt(projection.match_tiebreak_prob * 100.0, 1),
+        "first_set_tiebreak_fair_yes": fmt(projection.first_set_tiebreak_fair_yes, 2),
+        "match_tiebreak_fair_yes": fmt(projection.match_tiebreak_fair_yes, 2),
+        "first_set_tiebreak_base_pct": fmt(projection.first_set_tiebreak_base_prob * 100.0, 1),
+        "match_tiebreak_base_pct": fmt(projection.match_tiebreak_base_prob * 100.0, 1),
         "ace_confidence": projection.ace_confidence,
         "df_confidence": projection.df_confidence,
         "break_confidence": projection.break_confidence,
+        "tiebreak_confidence": projection.tiebreak_confidence,
         "service_points_estimate": fmt(projection.expected_service_points, 1),
         "service_games_estimate": fmt(projection.expected_service_games, 1),
         "expected_match_games": fmt(expected_games or default_match_games(tour, tournament), 1),
@@ -948,6 +1035,10 @@ def project_side(
         "tournament_round_log": json.dumps(same_tournament_log, ensure_ascii=True, separators=(",", ":")),
         "venue_ace_factor": str(factor.get("ace_factor") or ""),
         "venue_df_factor": str(factor.get("df_factor") or ""),
+        "venue_first_set_tiebreak_factor": fmt(projection.venue_first_set_tiebreak_factor, 4),
+        "venue_match_tiebreak_factor": fmt(projection.venue_match_tiebreak_factor, 4),
+        "venue_first_set_tiebreak_actual_pct": fmt_rate_pct(factor.get("first_set_tiebreak_rate"), 1),
+        "venue_match_tiebreak_actual_pct": fmt_rate_pct(factor.get("match_tiebreak_rate"), 1),
         "venue_factor_source": factor_source,
         "venue_sample_flag": str(factor.get("sample_flag") or ""),
         "current_env_matches": str(projection.current_env_matches),
@@ -956,12 +1047,19 @@ def project_side(
         "current_env_ace_factor": fmt(projection.current_env_ace_factor, 4),
         "current_env_df_factor": fmt(projection.current_env_df_factor, 4),
         "current_env_break_factor": fmt(projection.current_env_break_factor, 4),
+        "current_env_first_set_tiebreak_factor": fmt(projection.current_env_first_set_tiebreak_factor, 4),
+        "current_env_match_tiebreak_factor": fmt(projection.current_env_match_tiebreak_factor, 4),
+        "current_env_first_set_tiebreak_actual_pct": fmt_rate_pct((current_env_row or {}).get("first_set_tiebreak_rate"), 1),
+        "current_env_match_tiebreak_actual_pct": fmt_rate_pct((current_env_row or {}).get("match_tiebreak_rate"), 1),
         "current_env_sample_flag": str((current_env_row or {}).get("sample_flag") or ""),
         "ace_rate_adj": fmt(projection.ace_rate, 5),
         "df_rate_adj": fmt(projection.df_rate, 5),
         "break_rate_adj": fmt(projection.break_rate, 5),
         "broken_rate_adj": fmt(projection.broken_rate, 5),
+        "service_point_win": fmt(projection.player_service_point_win, 4),
+        "opponent_service_point_win": fmt(projection.opponent_service_point_win, 4),
         "break_notes": "|".join(dict.fromkeys(projection.break_notes)),
+        "tiebreak_notes": "|".join(dict.fromkeys(tiebreak_notes)),
         "notes": "|".join(dict.fromkeys(notes)),
         "source": schedule["source"],
     }
@@ -1060,9 +1158,16 @@ def main() -> None:
         "projected_breaks_for",
         "projected_broken",
         "projected_total_breaks",
+        "first_set_tiebreak_pct",
+        "match_tiebreak_pct",
+        "first_set_tiebreak_fair_yes",
+        "match_tiebreak_fair_yes",
+        "first_set_tiebreak_base_pct",
+        "match_tiebreak_base_pct",
         "ace_confidence",
         "df_confidence",
         "break_confidence",
+        "tiebreak_confidence",
         "service_points_estimate",
         "service_games_estimate",
         "expected_match_games",
@@ -1081,6 +1186,10 @@ def main() -> None:
         "tournament_round_log",
         "venue_ace_factor",
         "venue_df_factor",
+        "venue_first_set_tiebreak_factor",
+        "venue_match_tiebreak_factor",
+        "venue_first_set_tiebreak_actual_pct",
+        "venue_match_tiebreak_actual_pct",
         "venue_factor_source",
         "venue_sample_flag",
         "current_env_matches",
@@ -1089,12 +1198,19 @@ def main() -> None:
         "current_env_ace_factor",
         "current_env_df_factor",
         "current_env_break_factor",
+        "current_env_first_set_tiebreak_factor",
+        "current_env_match_tiebreak_factor",
+        "current_env_first_set_tiebreak_actual_pct",
+        "current_env_match_tiebreak_actual_pct",
         "current_env_sample_flag",
         "ace_rate_adj",
         "df_rate_adj",
         "break_rate_adj",
         "broken_rate_adj",
+        "service_point_win",
+        "opponent_service_point_win",
         "break_notes",
+        "tiebreak_notes",
         "notes",
         "source",
     ]

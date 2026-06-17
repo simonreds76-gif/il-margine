@@ -26,6 +26,8 @@ type TournamentRoundLog = {
   breaks_for?: string;
   broken?: string;
   total_breaks?: string;
+  first_set_tiebreak?: string;
+  match_tiebreak?: string;
   svpt?: string;
 };
 
@@ -141,6 +143,11 @@ function n(value: string | undefined): number {
 function fmt(value: string | number | undefined, digits = 1): string {
   const parsed = typeof value === "number" ? value : Number.parseFloat(value ?? "");
   return Number.isFinite(parsed) ? parsed.toFixed(digits) : "-";
+}
+
+function pctText(value: string | number | undefined, digits = 1): string {
+  const parsed = typeof value === "number" ? value : Number.parseFloat(value ?? "");
+  return Number.isFinite(parsed) ? `${parsed.toFixed(digits)}%` : "-";
 }
 
 function factorMove(value: string | undefined, digits = 1): string {
@@ -293,7 +300,7 @@ function TournamentRoundDetails({ row }: { row: CsvRow }) {
   return (
     <details className="group mt-1 rounded-xl border border-slate-800/80 bg-slate-950/50 px-2 py-1">
       <summary className="cursor-pointer list-none text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 transition group-open:text-emerald-300">
-        Round aces / DFs / breaks
+        Round aces / DFs / breaks / TB
       </summary>
       {logs.length ? (
         <div className="mt-2 overflow-x-auto">
@@ -307,6 +314,8 @@ function TournamentRoundDetails({ row }: { row: CsvRow }) {
                 <th className="py-1 pr-3 font-semibold">Brk+</th>
                 <th className="py-1 pr-3 font-semibold">Brk-</th>
                 <th className="py-1 pr-3 font-semibold">Tot brk</th>
+                <th className="py-1 pr-3 font-semibold">1st TB</th>
+                <th className="py-1 pr-3 font-semibold">Match TB</th>
                 <th className="py-1 pr-3 font-semibold">Result</th>
               </tr>
             </thead>
@@ -320,6 +329,8 @@ function TournamentRoundDetails({ row }: { row: CsvRow }) {
                   <td className="py-1 pr-3 font-mono text-cyan-300">{log.breaks_for || "0"}</td>
                   <td className="py-1 pr-3 font-mono text-amber-300">{log.broken || "0"}</td>
                   <td className="py-1 pr-3 font-mono text-slate-300">{log.total_breaks || "0"}</td>
+                  <td className="py-1 pr-3 font-mono text-violet-300">{log.first_set_tiebreak === "1" ? "Y" : "N"}</td>
+                  <td className="py-1 pr-3 font-mono text-violet-300">{log.match_tiebreak === "1" ? "Y" : "N"}</td>
                   <td className="py-1 pr-3 font-mono text-slate-500">{log.result || "-"}</td>
                 </tr>
               ))}
@@ -332,6 +343,58 @@ function TournamentRoundDetails({ row }: { row: CsvRow }) {
         </div>
       )}
     </details>
+  );
+}
+
+function TieBreakCell({ row }: { row: CsvRow }) {
+  const items = [
+    {
+      label: "1st set",
+      probability: row.first_set_tiebreak_pct,
+      fairOdds: row.first_set_tiebreak_fair_yes,
+      venueActual: row.venue_first_set_tiebreak_actual_pct,
+      liveActual: row.current_env_first_set_tiebreak_actual_pct,
+      accent: "text-violet-200",
+      border: "border-violet-500/20 bg-violet-500/10",
+    },
+    {
+      label: "Any set",
+      probability: row.match_tiebreak_pct,
+      fairOdds: row.match_tiebreak_fair_yes,
+      venueActual: row.venue_match_tiebreak_actual_pct,
+      liveActual: row.current_env_match_tiebreak_actual_pct,
+      accent: "text-fuchsia-200",
+      border: "border-fuchsia-500/20 bg-fuchsia-500/10",
+    },
+  ];
+
+  return (
+    <div className="min-w-[176px] space-y-1.5">
+      {items.map((item) => (
+        <div key={item.label} className={cn("rounded-xl border px-2.5 py-2", item.border)}>
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="text-[10px] font-black uppercase tracking-[0.13em] text-slate-500">{item.label}</span>
+            <span className={cn("font-mono text-lg font-black leading-none", item.accent)}>
+              {fmt(item.fairOdds, 2)}
+            </span>
+          </div>
+          <div className="mt-1 flex items-center justify-between gap-2 border-t border-white/5 pt-1 text-[10px] uppercase tracking-[0.11em] text-slate-500">
+            <span>YES prob</span>
+            <span className="font-mono text-slate-300">{fmt(item.probability, 1)}%</span>
+          </div>
+          <div className="mt-1 grid grid-cols-2 gap-1 text-[10px] uppercase tracking-[0.09em] text-slate-600">
+            <span>hist {pctText(item.venueActual, 1)}</span>
+            <span>live {pctText(item.liveActual, 1)}</span>
+          </div>
+        </div>
+      ))}
+      <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 px-2 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-300">
+        Research only · no odds feed · not a pick
+      </div>
+      <div className="px-1 text-[10px] leading-snug text-slate-600">
+        Any set = tie-break anywhere in the match.
+      </div>
+    </div>
   );
 }
 
@@ -349,9 +412,11 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
             <th className="px-3 py-3 font-semibold">Aces</th>
             <th className="px-3 py-3 font-semibold">DFs</th>
             <th className="px-3 py-3 font-semibold">Breaks</th>
+            <th className="px-3 py-3 font-semibold">Tie-break %</th>
             <th className="px-3 py-3 font-semibold">Aces conf</th>
             <th className="px-3 py-3 font-semibold">DF conf</th>
             <th className="px-3 py-3 font-semibold">Break conf</th>
+            <th className="px-3 py-3 font-semibold">TB conf</th>
             <th className="px-3 py-3 font-semibold">Model inputs</th>
             <th className="px-3 py-3 font-semibold">Live event</th>
             <th className="px-3 py-3 font-semibold">Notes</th>
@@ -361,7 +426,7 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
           {groupedRows.map((group) => (
             <Fragment key={group.date}>
               <tr className="border-y border-slate-800 bg-slate-950/80">
-                <td colSpan={12} className="px-3 py-3">
+                <td colSpan={14} className="px-3 py-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="text-xs font-black uppercase tracking-[0.18em] text-emerald-300">{dateLabel(group.date)}</span>
                     <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate-500">{group.rows.length} player rows</span>
@@ -385,9 +450,13 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
                     <div className="text-amber-300">-{fmt(row.projected_broken, 1)}</div>
                     <div className="text-slate-500">tot {fmt(row.projected_total_breaks, 1)}</div>
                   </td>
+                  <td className="px-3 py-3 font-mono text-xs">
+                    <TieBreakCell row={row} />
+                  </td>
                   <td className="px-3 py-3"><MiniBadge label={row.ace_confidence || "LOW"} tone={confidenceTone(row.ace_confidence)} /></td>
                   <td className="px-3 py-3"><MiniBadge label={row.df_confidence || "LOW"} tone={confidenceTone(row.df_confidence)} /></td>
                   <td className="px-3 py-3"><MiniBadge label={row.break_confidence || "LOW"} tone={confidenceTone(row.break_confidence)} /></td>
+                  <td className="px-3 py-3"><MiniBadge label={row.tiebreak_confidence || "LOW"} tone={confidenceTone(row.tiebreak_confidence)} /></td>
                   <td className="px-3 py-3 text-xs text-slate-400">
                     <div className="min-w-[180px] rounded-xl border border-slate-800/80 bg-slate-950/55 p-2">
                       <div className="mb-1 font-mono text-emerald-300">
@@ -400,6 +469,7 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
                       <div className="font-mono text-slate-300">{row.player_surface_matches || "0"}m / {row.player_surface_svpt_sample || "0"} svpt</div>
                       <div className="mt-1 text-[11px] text-slate-600">player same-event {row.same_tournament_matches || "0"}m / {row.same_tournament_svpt || "0"} svpt</div>
                       <div className="mt-1 text-[11px] text-slate-600">brk log +{row.same_tournament_breaks_for || "0"} / -{row.same_tournament_broken || "0"}</div>
+                      <div className="mt-1 text-[11px] text-slate-600">serve pts {fmt(row.service_point_win, 3)} / opp {fmt(row.opponent_service_point_win, 3)}</div>
                     </div>
                   </td>
                   <td className="px-3 py-3 text-xs">
@@ -431,11 +501,20 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
                             <MiniBadge label={`live ${factorMove(row.current_env_break_factor)}`} tone={factorTone(row.current_env_break_factor)} />
                           </div>
                         </div>
+                        <div className="grid grid-cols-[44px_1fr] items-center gap-2">
+                          <span className="text-[10px] font-black uppercase tracking-[0.12em] text-violet-300">TB</span>
+                          <div className="flex flex-wrap gap-1.5">
+                            <MiniBadge label={`1st venue ${factorMove(row.venue_first_set_tiebreak_factor)}`} tone={factorTone(row.venue_first_set_tiebreak_factor)} />
+                            <MiniBadge label={`1st live ${factorMove(row.current_env_first_set_tiebreak_factor)}`} tone={factorTone(row.current_env_first_set_tiebreak_factor)} />
+                            <MiniBadge label={`match venue ${factorMove(row.venue_match_tiebreak_factor)}`} tone={factorTone(row.venue_match_tiebreak_factor)} />
+                            <MiniBadge label={`match live ${factorMove(row.current_env_match_tiebreak_factor)}`} tone={factorTone(row.current_env_match_tiebreak_factor)} />
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </td>
                   <td className="px-3 py-3 text-xs text-slate-500">
-                    <NoteBadges value={[row.notes, row.break_notes].filter(Boolean).join("|")} />
+                    <NoteBadges value={[row.notes, row.break_notes, row.tiebreak_notes].filter(Boolean).join("|")} />
                   </td>
                 </tr>
               ))}

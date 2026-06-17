@@ -4,7 +4,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import lru_cache
+import json
 import math
+from pathlib import Path
 
 DEFAULT_COUNT_DISPERSION_ALPHA = {
     ("ATP", "aces"): 0.35,
@@ -27,6 +30,10 @@ SLAM_COUNT_BIAS_CORRECTION = {
     ("WTA", "Wimbledon"): {"aces": 0.000, "dfs": 0.231},
 }
 
+ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_TIEBREAK_CALIBRATION_PATH = ROOT / "data" / "tennis-props" / "tiebreak-calibration.json"
+_TIEBREAK_CALIBRATION_OVERRIDE: dict[str, object] | None = None
+
 
 @dataclass(frozen=True)
 class Projection:
@@ -35,12 +42,20 @@ class Projection:
     expected_breaks_for: float
     expected_broken: float
     expected_total_breaks: float
+    first_set_tiebreak_prob: float
+    match_tiebreak_prob: float
+    first_set_tiebreak_base_prob: float
+    match_tiebreak_base_prob: float
+    first_set_tiebreak_fair_yes: float
+    match_tiebreak_fair_yes: float
     expected_service_points: float
     expected_service_games: float
     ace_rate: float
     df_rate: float
     break_rate: float
     broken_rate: float
+    player_service_point_win: float
+    opponent_service_point_win: float
     same_tournament_matches: int
     same_tournament_svpt: int
     same_tournament_ace_weight: float
@@ -54,10 +69,16 @@ class Projection:
     current_env_ace_factor: float
     current_env_df_factor: float
     current_env_break_factor: float
+    venue_first_set_tiebreak_factor: float
+    venue_match_tiebreak_factor: float
+    current_env_first_set_tiebreak_factor: float
+    current_env_match_tiebreak_factor: float
     ace_confidence: str
     df_confidence: str
     break_confidence: str
+    tiebreak_confidence: str
     break_notes: tuple[str, ...]
+    tiebreak_notes: tuple[str, ...]
     notes: tuple[str, ...]
 
 
@@ -137,6 +158,235 @@ def _clip(value: float, low: float, high: float) -> float:
     return max(low, min(high, value))
 
 
+def _service_point_win_from_row(row: dict[str, str], default: float) -> float | None:
+    first_pct = _float(row.get("first_serve_pct"))
+    first_win = _float(row.get("first_serve_win_pct"))
+    second_win = _float(row.get("second_serve_win_pct"))
+    if first_pct is None or first_win is None or second_win is None:
+        return None
+    return _clip(first_pct * first_win + (1.0 - first_pct) * second_win, 0.42, 0.76)
+
+
+def _blend_service_point_win(
+    rows_by_window: dict[str, dict[str, str]],
+    *,
+    prior_value: float,
+    prior_weight: float,
+) -> tuple[float, int]:
+    weights = {
+        "L12M": 1.0,
+        "L24M": 0.55,
+        "career_4y": 0.25,
+    }
+    numerator = prior_value * prior_weight
+    denominator = prior_weight
+    max_sample = 0
+    for window, weight in weights.items():
+        row = rows_by_window.get(window) or {}
+        sample = _int(row.get("svpt"))
+        value = _service_point_win_from_row(row, prior_value)
+        if sample <= 0 or value is None:
+            continue
+        numerator += value * sample * weight
+        denominator += sample * weight
+        max_sample = max(max_sample, sample)
+    return numerator / denominator if denominator > 0 else prior_value, max_sample
+
+
+def _return_point_win_vs_server_mix(
+    rows_by_window: dict[str, dict[str, str]],
+    *,
+    server_first_serve_pct: float,
+    prior_ret_first: float,
+    prior_ret_second: float,
+) -> tuple[float, int]:
+    ret_first, ret_first_sample = _blend_rate(
+        rows_by_window,
+        "ret_first_win_pct",
+        "ret_first_points",
+        prior_ret_first,
+        350.0,
+    )
+    ret_second, ret_second_sample = _blend_rate(
+        rows_by_window,
+        "ret_second_win_pct",
+        "ret_second_points",
+        prior_ret_second,
+        350.0,
+    )
+    return (
+        _clip(server_first_serve_pct * ret_first + (1.0 - server_first_serve_pct) * ret_second, 0.20, 0.56),
+        min(ret_first_sample, ret_second_sample),
+    )
+
+
+def _prob_game_from_point(p: float) -> float:
+    p = _clip(p, 0.01, 0.99)
+    d = (p * p) / (1.0 - 2.0 * p * (1.0 - p))
+    return p**4 + 4 * p**4 * (1 - p) + 10 * p**4 * (1 - p) ** 2 + 20 * p**3 * (1 - p) ** 3 * d
+
+
+@lru_cache(maxsize=8192)
+def _set_no_tb_outcomes(pa_int: int, pb_int: int, a_serves_first: bool) -> tuple[float, float, float]:
+    """Return (A wins set without TB, B wins set without TB, set reaches TB)."""
+    p_a = _clip(pa_int / 10000.0, 0.01, 0.99)
+    p_b = _clip(pb_int / 10000.0, 0.01, 0.99)
+    pg_a = _prob_game_from_point(p_a)
+    pg_b = _prob_game_from_point(p_b)
+    reach: dict[tuple[int, int, bool], float] = {(0, 0, a_serves_first): 1.0}
+    a_no_tb = 0.0
+    b_no_tb = 0.0
+    reaches_tb = 0.0
+
+    for total_games in range(13):
+        current = [(state, prob) for state, prob in reach.items() if state[0] + state[1] == total_games and prob > 0]
+        for (a_games, b_games, a_serves), state_prob in current:
+            if a_games >= 6 and a_games - b_games >= 2:
+                a_no_tb += state_prob
+                continue
+            if b_games >= 6 and b_games - a_games >= 2:
+                b_no_tb += state_prob
+                continue
+            if a_games == 6 and b_games == 6:
+                reaches_tb += state_prob
+                continue
+            p_win_game = pg_a if a_serves else (1.0 - pg_b)
+            reach[(a_games + 1, b_games, not a_serves)] = reach.get((a_games + 1, b_games, not a_serves), 0.0) + state_prob * p_win_game
+            reach[(a_games, b_games + 1, not a_serves)] = reach.get((a_games, b_games + 1, not a_serves), 0.0) + state_prob * (1.0 - p_win_game)
+
+    return _clip(a_no_tb, 0.0, 1.0), _clip(b_no_tb, 0.0, 1.0), _clip(reaches_tb, 0.0, 1.0)
+
+
+def _set_tiebreak_prob(p_a: float, p_b: float, a_serves_first: bool) -> float:
+    pa_int = int(round(_clip(p_a, 0.01, 0.99) * 10000))
+    pb_int = int(round(_clip(p_b, 0.01, 0.99) * 10000))
+    return _set_no_tb_outcomes(pa_int, pb_int, a_serves_first)[2]
+
+
+def _match_tiebreak_prob(p_a: float, p_b: float, *, best_of: int) -> float:
+    pa_int = int(round(_clip(p_a, 0.01, 0.99) * 10000))
+    pb_int = int(round(_clip(p_b, 0.01, 0.99) * 10000))
+    sets_needed = 3 if best_of >= 5 else 2
+    serve_order = [True, False, True, False, True]
+
+    @lru_cache(maxsize=256)
+    def no_tb_from(set_index: int, a_wins: int, b_wins: int) -> float:
+        if a_wins >= sets_needed or b_wins >= sets_needed:
+            return 1.0
+        if set_index >= best_of:
+            return 0.0
+        a_no_tb, b_no_tb, _ = _set_no_tb_outcomes(pa_int, pb_int, serve_order[set_index])
+        return (
+            a_no_tb * no_tb_from(set_index + 1, a_wins + 1, b_wins)
+            + b_no_tb * no_tb_from(set_index + 1, a_wins, b_wins + 1)
+        )
+
+    return _clip(1.0 - no_tb_from(0, 0, 0), 0.0, 1.0)
+
+
+def _prob_fair_yes(prob: float) -> float:
+    return 999.0 if prob <= 0 else 1.0 / _clip(prob, 0.001, 0.999)
+
+
+def _apply_probability_factors(
+    base_prob: float,
+    *,
+    venue_factor: float,
+    current_factor: float,
+    low: float,
+    high: float,
+) -> float:
+    # Multiplicative probability nudges are deliberately conservative because
+    # the exact serve/return model is still the primary signal.
+    return _clip(base_prob * venue_factor * current_factor, low, high)
+
+
+def _logit(prob: float) -> float:
+    p = _clip(prob, 0.001, 0.999)
+    return math.log(p / (1.0 - p))
+
+
+def _sigmoid(value: float) -> float:
+    if value >= 0:
+        z = math.exp(-value)
+        return 1.0 / (1.0 + z)
+    z = math.exp(value)
+    return z / (1.0 + z)
+
+
+def _apply_tiebreak_probability_factors(
+    base_prob: float,
+    *,
+    venue_factor: float,
+    current_factor: float,
+    low: float,
+    high: float,
+) -> float:
+    # Tie-break venue/live adjustments behave better in logit space. A venue
+    # at 1.10 becomes a small odds-ratio nudge, not a raw +10% probability jump.
+    delta = _clip(math.log(max(0.50, venue_factor)), math.log(0.82), math.log(1.22))
+    delta += _clip(math.log(max(0.50, current_factor)), math.log(0.90), math.log(1.12))
+    return _clip(_sigmoid(_logit(base_prob) + delta), low, high)
+
+
+def set_tiebreak_calibration_override(calibration: dict[str, object] | None) -> None:
+    global _TIEBREAK_CALIBRATION_OVERRIDE
+    _TIEBREAK_CALIBRATION_OVERRIDE = calibration
+    _load_tiebreak_calibration.cache_clear()
+
+
+@lru_cache(maxsize=1)
+def _load_tiebreak_calibration() -> dict[str, object]:
+    if _TIEBREAK_CALIBRATION_OVERRIDE is not None:
+        return _TIEBREAK_CALIBRATION_OVERRIDE
+    path = DEFAULT_TIEBREAK_CALIBRATION_PATH
+    if not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def _calibration_keys(*, market: str, tour: str, surface: str, best_of: int) -> list[str]:
+    tour_key = (tour or "").strip().upper() or "ALL"
+    surface_key = (surface or "").strip().title() or "ALL"
+    bo_key = f"BO{best_of}" if market == "match" else "ALL"
+    return [
+        f"{market}|{tour_key}|{surface_key}|{bo_key}",
+        f"{market}|{tour_key}|{surface_key}|ALL",
+        f"{market}|{tour_key}|ALL|{bo_key}",
+        f"{market}|{tour_key}|ALL|ALL",
+        f"{market}|ALL|ALL|ALL",
+    ]
+
+
+def _calibrate_tiebreak_prob(
+    prob: float,
+    *,
+    market: str,
+    tour: str,
+    surface: str,
+    best_of: int,
+) -> tuple[float, str | None]:
+    payload = _load_tiebreak_calibration()
+    keys = payload.get("keys") if isinstance(payload, dict) else None
+    if not isinstance(keys, dict):
+        return prob, None
+    for key in _calibration_keys(market=market, tour=tour, surface=surface, best_of=best_of):
+        params = keys.get(key)
+        if not isinstance(params, dict):
+            continue
+        a = _float(params.get("a"))
+        b = _float(params.get("b"))
+        if a is None or b is None:
+            continue
+        calibrated = _sigmoid(a * _logit(prob) + b)
+        return _clip(calibrated, 0.001, 0.999), key
+    return prob, None
+
+
 def _same_tournament_rate(
     row: dict[str, str] | None,
     numerator_field: str,
@@ -177,6 +427,8 @@ def project_player(
     prior_df = _float(factor_row.get("tour_surface_baseline_df"), default_df_prior) or default_df_prior
     prior_svpt_per_svg = _float(factor_row.get("svpt_per_svgame"), 6.35) or 6.35
     prior_ret_first = 0.315 if tour_norm == "atp" else 0.365
+    prior_ret_second = 0.520 if tour_norm == "atp" else 0.550
+    prior_service_point_win = 0.635 if tour_norm == "atp" else 0.585
     prior_break_rate = 0.235 if tour_norm == "atp" else 0.285
     prior_broken_rate = 0.235 if tour_norm == "atp" else 0.285
 
@@ -196,6 +448,44 @@ def project_player(
     opp_broken_rate, opp_service_games_sample = _blend_rate(
         opponent_rows, "broken_rate", "service_games_break_sample", prior_broken_rate, 80.0
     )
+    player_first_serve_pct = _blend_value(
+        player_rows,
+        "first_serve_pct",
+        "svpt",
+        0.62 if tour_norm == "atp" else 0.60,
+        400.0,
+    )
+    opponent_first_serve_pct = _blend_value(
+        opponent_rows,
+        "first_serve_pct",
+        "svpt",
+        0.62 if tour_norm == "atp" else 0.60,
+        400.0,
+    )
+    player_service_baseline, service_point_sample = _blend_service_point_win(
+        player_rows,
+        prior_value=prior_service_point_win,
+        prior_weight=400.0 if tour_norm == "atp" else 600.0,
+    )
+    opponent_service_baseline, opponent_service_point_sample = _blend_service_point_win(
+        opponent_rows,
+        prior_value=prior_service_point_win,
+        prior_weight=400.0 if tour_norm == "atp" else 600.0,
+    )
+    opp_return_vs_player, opp_return_mix_sample = _return_point_win_vs_server_mix(
+        opponent_rows,
+        server_first_serve_pct=player_first_serve_pct,
+        prior_ret_first=prior_ret_first,
+        prior_ret_second=prior_ret_second,
+    )
+    player_return_vs_opp, player_return_mix_sample = _return_point_win_vs_server_mix(
+        player_rows,
+        server_first_serve_pct=opponent_first_serve_pct,
+        prior_ret_first=prior_ret_first,
+        prior_ret_second=prior_ret_second,
+    )
+    player_service_point_win = _clip(math.sqrt(player_service_baseline * (1.0 - opp_return_vs_player)), 0.45, 0.76)
+    opponent_service_point_win = _clip(math.sqrt(opponent_service_baseline * (1.0 - player_return_vs_opp)), 0.45, 0.76)
 
     same_ace_rate, same_ace_weight, same_matches, same_svpt = _same_tournament_rate(
         same_tournament_row,
@@ -244,6 +534,8 @@ def project_player(
     current_env_ace_factor = _float(current_env_row.get("ace_factor"), 1.0) or 1.0
     current_env_df_factor = _float(current_env_row.get("df_factor"), 1.0) or 1.0
     current_env_break_factor = _float(current_env_row.get("break_factor"), 1.0) or 1.0
+    current_env_first_set_tiebreak_factor = _float(current_env_row.get("first_set_tiebreak_factor"), 1.0) or 1.0
+    current_env_match_tiebreak_factor = _float(current_env_row.get("match_tiebreak_factor"), 1.0) or 1.0
     if current_env_weight > 0 and current_env_matches > 0:
         notes.append(f"EVENT_ENV_N{current_env_matches}")
     ret_factor = _clip((prior_ret_first / max(0.18, opp_ret_first)) ** 0.6, 0.76, 1.22)
@@ -275,6 +567,45 @@ def project_player(
     expected_breaks_for = break_rate_adj * expected_service_games
     expected_broken = broken_rate_adj * expected_service_games
     expected_total_breaks = expected_breaks_for + expected_broken
+    best_of = 5 if str(factor_row.get("tournament") or "").strip() in {"Australian Open", "Roland Garros", "Wimbledon", "US Open"} and tour.upper() == "ATP" else 3
+    first_set_tiebreak_base_prob = _set_tiebreak_prob(player_service_point_win, opponent_service_point_win, True)
+    venue_first_set_tiebreak_factor = _float(factor_row.get("first_set_tiebreak_factor"), 1.0) or 1.0
+    venue_match_tiebreak_factor = _float(factor_row.get("match_tiebreak_factor"), 1.0) or 1.0
+    first_set_tiebreak_prob = _apply_tiebreak_probability_factors(
+        first_set_tiebreak_base_prob,
+        venue_factor=venue_first_set_tiebreak_factor,
+        current_factor=current_env_first_set_tiebreak_factor,
+        low=0.015,
+        high=0.58 if best_of == 3 else 0.62,
+    )
+    match_tiebreak_base_prob = _clip(
+        _match_tiebreak_prob(player_service_point_win, opponent_service_point_win, best_of=best_of),
+        0.015,
+        0.92 if best_of >= 5 else 0.86,
+    )
+    match_tiebreak_note = "MATCH_TB_RECURSION"
+    match_tiebreak_prob = _apply_tiebreak_probability_factors(
+        match_tiebreak_base_prob,
+        venue_factor=venue_match_tiebreak_factor,
+        current_factor=current_env_match_tiebreak_factor,
+        low=0.025,
+        high=0.94 if best_of >= 5 else 0.86,
+    )
+    surface = str(factor_row.get("surface") or "")
+    first_set_tiebreak_prob, first_cal_key = _calibrate_tiebreak_prob(
+        first_set_tiebreak_prob,
+        market="first_set",
+        tour=tour,
+        surface=surface,
+        best_of=best_of,
+    )
+    match_tiebreak_prob, match_cal_key = _calibrate_tiebreak_prob(
+        match_tiebreak_prob,
+        market="match",
+        tour=tour,
+        surface=surface,
+        best_of=best_of,
+    )
     tournament = str(factor_row.get("tournament") or "").strip()
     correction = SLAM_COUNT_BIAS_CORRECTION.get((tour.upper(), tournament))
     if correction:
@@ -306,6 +637,18 @@ def project_player(
     else:
         break_confidence = "LOW"
         break_notes.append("BREAK_LOW_SAMPLE")
+    tiebreak_notes = ["TIEBREAK_RESEARCH_ONLY", "SERVE_RETURN_DEPENDENT", match_tiebreak_note]
+    if first_cal_key or match_cal_key:
+        tiebreak_notes.append("TIEBREAK_PLATT_CALIBRATED")
+    venue_matches = _int(factor_row.get("matches"))
+    tiebreak_sample = min(service_point_sample, opponent_service_point_sample, opp_return_mix_sample, player_return_mix_sample)
+    if tiebreak_sample >= 1200 and venue_matches >= 50:
+        tiebreak_confidence = "HIGH"
+    elif tiebreak_sample >= 500 or venue_matches >= 30:
+        tiebreak_confidence = "MED"
+    else:
+        tiebreak_confidence = "LOW"
+        tiebreak_notes.append("TIEBREAK_LOW_SAMPLE")
 
     return Projection(
         expected_aces=expected_aces,
@@ -313,12 +656,20 @@ def project_player(
         expected_breaks_for=expected_breaks_for,
         expected_broken=expected_broken,
         expected_total_breaks=expected_total_breaks,
+        first_set_tiebreak_prob=first_set_tiebreak_prob,
+        match_tiebreak_prob=match_tiebreak_prob,
+        first_set_tiebreak_base_prob=first_set_tiebreak_base_prob,
+        match_tiebreak_base_prob=match_tiebreak_base_prob,
+        first_set_tiebreak_fair_yes=_prob_fair_yes(first_set_tiebreak_prob),
+        match_tiebreak_fair_yes=_prob_fair_yes(match_tiebreak_prob),
         expected_service_points=expected_service_points,
         expected_service_games=expected_service_games,
         ace_rate=ace_rate_adj,
         df_rate=df_rate_adj,
         break_rate=break_rate_adj,
         broken_rate=broken_rate_adj,
+        player_service_point_win=player_service_point_win,
+        opponent_service_point_win=opponent_service_point_win,
         same_tournament_matches=same_matches,
         same_tournament_svpt=same_svpt,
         same_tournament_ace_weight=same_ace_weight,
@@ -332,10 +683,16 @@ def project_player(
         current_env_ace_factor=current_env_ace_factor,
         current_env_df_factor=current_env_df_factor,
         current_env_break_factor=current_env_break_factor,
+        venue_first_set_tiebreak_factor=venue_first_set_tiebreak_factor,
+        venue_match_tiebreak_factor=venue_match_tiebreak_factor,
+        current_env_first_set_tiebreak_factor=current_env_first_set_tiebreak_factor,
+        current_env_match_tiebreak_factor=current_env_match_tiebreak_factor,
         ace_confidence=ace_confidence,
         df_confidence=df_confidence,
         break_confidence=break_confidence,
+        tiebreak_confidence=tiebreak_confidence,
         break_notes=tuple(break_notes),
+        tiebreak_notes=tuple(tiebreak_notes),
         notes=tuple(notes),
     )
 
