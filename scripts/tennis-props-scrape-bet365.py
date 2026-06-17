@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Scrape Bet365 tennis aces/double-fault lines from odds-api.io.
+"""Scrape Bet365 tennis props/side-market lines from odds-api.io.
 
 This is intentionally narrow and credit-conscious:
   - tennis only
@@ -8,7 +8,9 @@ This is intentionally narrow and credit-conscious:
   - outputs the same inbox format consumed by tennis-props-compare-bet365.py
 
 The odds-api.io tennis market naming is not guaranteed, so the parser accepts
-several common shapes and writes a market-audit CSV when requested.
+several common shapes and writes a market-audit CSV when requested. Aces/DFs
+are the only markets priced by the compare script today; tie-break/set-game
+markets are captured as raw evidence until a value layer is wired.
 """
 
 from __future__ import annotations
@@ -55,8 +57,25 @@ ZERO_ROW_PROBE_PARAMS: tuple[tuple[str, dict[str, str]], ...] = (
     ("markets=Aces", {"markets": "Aces"}),
     ("markets=Player Double Faults", {"markets": "Player Double Faults"}),
     ("markets=Double Faults", {"markets": "Double Faults"}),
+    ("markets=Tie Break in Match", {"markets": "Tie Break in Match"}),
+    ("markets=Tie-Break in Match", {"markets": "Tie-Break in Match"}),
+    ("markets=Match Tie Break", {"markets": "Match Tie Break"}),
+    ("markets=Match Tie-Break", {"markets": "Match Tie-Break"}),
+    ("markets=Tie Break in 1st Set", {"markets": "Tie Break in 1st Set"}),
+    ("markets=Tie-Break in 1st Set", {"markets": "Tie-Break in 1st Set"}),
+    ("markets=1st Set Tie Break", {"markets": "1st Set Tie Break"}),
+    ("markets=1st Set Tie-Break", {"markets": "1st Set Tie-Break"}),
+    ("markets=First Set Tie Break", {"markets": "First Set Tie Break"}),
+    ("markets=Set 1 Tie Break", {"markets": "Set 1 Tie Break"}),
+    ("markets=1st Set Total Games", {"markets": "1st Set Total Games"}),
+    ("markets=First Set Total Games", {"markets": "First Set Total Games"}),
+    ("markets=Set 1 Total Games", {"markets": "Set 1 Total Games"}),
+    ("markets=Total Games 1st Set", {"markets": "Total Games 1st Set"}),
+    ("markets=Total Tie Breaks", {"markets": "Total Tie Breaks"}),
     ("include=all", {"include": "all"}),
     ("include=all;markets=player_props", {"include": "all", "markets": "player_props"}),
+    ("include=all;markets=Tie Break in Match", {"include": "all", "markets": "Tie Break in Match"}),
+    ("include=all;markets=1st Set Total Games", {"include": "all", "markets": "1st Set Total Games"}),
     ("hide_main_liner=false;markets=player_props", {"hide_main_liner": "false", "markets": "player_props"}),
     ("source=bet365", {"source": "bet365"}),
 )
@@ -142,10 +161,36 @@ def parse_line(*values: object) -> float | None:
 
 def identify_market(name: str) -> str | None:
     text = norm(name)
+    has_first_set = any(token in text for token in ("1st set", "first set", "set 1"))
+    if "tie break" in text or "tiebreak" in text:
+        if "total" in text:
+            return "total_tiebreaks"
+        return "first_set_tiebreak" if has_first_set else "match_tiebreak"
+    if has_first_set and "total" in text and "game" in text:
+        return "first_set_total_games"
     if "double fault" in text or re.search(r"\bdfs?\b", text):
         return "double_faults"
     if "ace" in text and "race" not in text:
         return "aces"
+    return None
+
+
+def is_yes_no_market(market_key: str) -> bool:
+    return market_key in {"match_tiebreak", "first_set_tiebreak"}
+
+
+def side_from_label(label: object, *, yes_no: bool) -> str | None:
+    text = norm(label)
+    tokens = set(text.split())
+    if yes_no:
+        if "yes" in tokens or text in {"y", "true"}:
+            return "over_odds"
+        if "no" in tokens or text in {"n", "false"}:
+            return "under_odds"
+    if "over" in tokens:
+        return "over_odds"
+    if "under" in tokens:
+        return "under_odds"
     return None
 
 
@@ -219,26 +264,45 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any]) 
     away = str(event.get("away") or event.get("away_team") or "")
     tour = tour_from_event(event)
     tournament = tournament_from_event(event)
-    grouped: dict[tuple[str, str, float], dict[str, float]] = defaultdict(dict)
+    grouped: dict[tuple[str, str, str], dict[str, float]] = defaultdict(dict)
+    yes_no_market = is_yes_no_market(market_key)
+    match_level_market = yes_no_market or market_key in {"first_set_total_games", "total_tiebreaks"}
+    match_player = clean_player(home)
+    match_opponent = clean_player(away)
 
     for prop in market.get("odds") or market.get("outcomes") or []:
         label = str(prop.get("label") or prop.get("name") or "").strip()
-        line = parse_line(prop.get("hdp"), prop.get("point"), label, market_name)
-        if line is None:
+        line = None if yes_no_market else parse_line(prop.get("hdp"), prop.get("point"), label, market_name)
+        line_text = "" if line is None else f"{line:.1f}"
+        if line is None and not yes_no_market:
             continue
 
         # Shape A: one prop carries both over and under.
         over_price = parse_decimal(prop.get("over"))
         under_price = parse_decimal(prop.get("under"))
-        player_name = clean_player(prop.get("player") or prop.get("participant") or label or market_name)
+        yes_price = parse_decimal(prop.get("yes") or prop.get("Yes"))
+        no_price = parse_decimal(prop.get("no") or prop.get("No"))
+        player_name = clean_player(prop.get("player") or prop.get("participant") or "")
+        if not player_name and match_level_market:
+            player_name = match_player
+        if not player_name:
+            player_name = clean_player(label or market_name)
         if over_price or under_price:
             if not player_name:
                 player_name = clean_player(market_name)
-            key = (player_name, opponent_for(player_name, home, away), line)
+            opponent = match_opponent if match_level_market else opponent_for(player_name, home, away)
+            key = (player_name, opponent, line_text)
             if over_price:
                 grouped[key]["over_odds"] = over_price
             if under_price:
                 grouped[key]["under_odds"] = under_price
+            continue
+        if yes_price or no_price:
+            key = (player_name or match_player, match_opponent, line_text)
+            if yes_price:
+                grouped[key]["over_odds"] = yes_price
+            if no_price:
+                grouped[key]["under_odds"] = no_price
             continue
 
         # Shape B: one prop per side.
@@ -250,21 +314,22 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any]) 
         if price is None:
             continue
 
-        lower = norm(label)
-        if "over" in lower:
-            side = "over_odds"
-        elif "under" in lower:
-            side = "under_odds"
-        else:
+        side = side_from_label(label, yes_no=yes_no_market)
+        if side is None:
             continue
-        player_name = clean_player(prop.get("player") or prop.get("participant") or label or market_name)
+        player_name = clean_player(prop.get("player") or prop.get("participant") or "")
+        if not player_name and match_level_market:
+            player_name = match_player
+        if not player_name:
+            player_name = clean_player(label or market_name)
         if not player_name:
             player_name = clean_player(market_name)
-        key = (player_name, opponent_for(player_name, home, away), line)
+        opponent = match_opponent if match_level_market else opponent_for(player_name, home, away)
+        key = (player_name, opponent, line_text)
         grouped[key][side] = price
 
     rows: list[dict[str, str]] = []
-    for (player, opponent, line), prices in grouped.items():
+    for (player, opponent, line_text), prices in grouped.items():
         if not prices.get("over_odds") and not prices.get("under_odds"):
             continue
         rows.append(
@@ -275,7 +340,7 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any]) 
                 "player": player,
                 "opponent": clean_player(opponent),
                 "market": market_key,
-                "line": f"{line:.1f}",
+                "line": line_text,
                 "over_odds": f"{prices['over_odds']:.4f}" if prices.get("over_odds") else "",
                 "under_odds": f"{prices['under_odds']:.4f}" if prices.get("under_odds") else "",
             }
@@ -415,13 +480,14 @@ def write_rows(path: Path, rows: list[dict[str, str]], fieldnames: list[str]) ->
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Scrape Bet365 tennis aces/DF lines from odds-api.io")
+    parser = argparse.ArgumentParser(description="Scrape Bet365 tennis props/side-market lines from odds-api.io")
     parser.add_argument("--date", default=datetime.now(timezone.utc).date().isoformat())
     parser.add_argument("--days-ahead", type=int, default=2)
     parser.add_argument("--bookmakers", default=DEFAULT_BOOKMAKERS)
     parser.add_argument("--max-events", type=int, default=64)
     parser.add_argument("--out", default="")
     parser.add_argument("--audit-out", default="")
+    parser.add_argument("--probe-markets", action="store_true", help="Force endpoint/tier probes for hidden tennis markets")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
@@ -477,8 +543,8 @@ def main() -> None:
 
     out = Path(args.out) if args.out else OUT_DIR / f"bet365-lines-{args.date}.csv"
     audit_out = Path(args.audit_out) if args.audit_out else OUT_DIR / f"bet365-tennis-market-audit-{args.date}.csv"
-    print(f"parsed aces/DF rows: {len(rows)}")
-    if not rows:
+    print(f"parsed supported tennis market rows: {len(rows)}")
+    if args.probe_markets or not rows:
         run_zero_row_market_probe(api_key, payload or events, args.bookmakers)
     if args.dry_run:
         for row in rows[:20]:
@@ -490,7 +556,7 @@ def main() -> None:
         write_rows(out, rows, OUTPUT_FIELDS)
         print(f"Saved lines: {out}")
     else:
-        print("No aces/DF rows parsed; skipped writing lines file.")
+        print("No supported tennis market rows parsed; skipped writing lines file.")
     print(f"Saved audit: {audit_out}")
 
 
