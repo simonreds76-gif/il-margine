@@ -124,6 +124,13 @@ def norm(value: object) -> str:
     return " ".join(text.split())
 
 
+def contains_keyword(text: str, keyword: str) -> bool:
+    key = norm(keyword)
+    if not key:
+        return False
+    return bool(re.search(rf"(?:^| ){re.escape(key)}(?: |$)", text))
+
+
 def clean_player(value: object) -> str:
     text = html.unescape(str(value or "")).strip()
     if "," in text:
@@ -224,7 +231,7 @@ def tournament_from_event(event: dict[str, Any]) -> str:
     league = str((event.get("league") or {}).get("name") or event.get("league") or "").strip()
     haystack = norm(f"{league} {event.get('name') or ''} {event.get('home') or ''} {event.get('away') or ''}")
     for tournament, keywords in SUPPORTED_TOURNAMENT_KEYWORDS:
-        if any(keyword in haystack for keyword in keywords):
+        if any(contains_keyword(haystack, keyword) for keyword in keywords):
             return tournament
     return league or "Tennis"
 
@@ -243,7 +250,7 @@ def event_text(event: dict[str, Any]) -> str:
 
 def is_supported_tournament_event(event: dict[str, Any]) -> bool:
     text = norm(event_text(event))
-    return any(keyword in text for _, keywords in SUPPORTED_TOURNAMENT_KEYWORDS for keyword in keywords)
+    return any(contains_keyword(text, keyword) for _, keywords in SUPPORTED_TOURNAMENT_KEYWORDS for keyword in keywords)
 
 
 def is_singles_event(event: dict[str, Any]) -> bool:
