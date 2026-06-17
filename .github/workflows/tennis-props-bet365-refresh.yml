@@ -18,6 +18,10 @@ on:
         description: "Commit captured odds files back to the branch"
         type: boolean
         default: true
+      probe_markets:
+        description: "Force odds-api.io tennis market endpoint probes in logs"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -55,12 +59,18 @@ jobs:
         env:
           DAYS_AHEAD: ${{ github.event.inputs.days_ahead || '2' }}
           MAX_EVENTS: ${{ github.event.inputs.max_events || '64' }}
+          PROBE_MARKETS: ${{ github.event.inputs.probe_markets || 'false' }}
         run: |
+          EXTRA_ARGS=""
+          if [ "${PROBE_MARKETS}" = "true" ]; then
+            EXTRA_ARGS="--probe-markets"
+          fi
           python scripts/tennis-props-scrape-bet365.py \
             --date "$(date -u +%F)" \
             --days-ahead "${DAYS_AHEAD}" \
             --max-events "${MAX_EVENTS}" \
-            --bookmakers "Bet365"
+            --bookmakers "Bet365" \
+            ${EXTRA_ARGS}
 
       - name: Upload captured odds artifact
         uses: actions/upload-artifact@v4
