@@ -10,22 +10,6 @@ type BookmakerShape = {
   short_name?: string | null;
 };
 
-const BOOKMAKER_CUSTOM_EMOJI_IDS: Record<string, string> = {
-  bet365: "5949780412321504184",
-  virginbet: "5949458302659207866",
-  williamhill: "5949310667453373092",
-  betmgm: "5949755703374650309",
-  unibet: "5949500620971972748",
-  skybet: "5951531818380433738",
-  paddypower: "5949715098753834205",
-  coral: "5949556094769567829",
-  ladbrokes: "5949471492503772250",
-  boylesports: "5949549987326073413",
-  betfred: "5951825181826620659",
-  betway: "5949551194211884412",
-  betvictor: "5951673376207543117",
-};
-
 export type WorldCupTelegramTip = {
   id: number;
   market?: string | null;
@@ -45,9 +29,7 @@ export type TelegramPostResult =
   | { status: "skipped"; reason: "not_worldcup_props" | "disabled" | "missing_config"; url?: string }
   | { status: "failed"; reason: string; url?: string };
 
-type TelegramMessageEntity =
-  | { type: "bold"; offset: number; length: number }
-  | { type: "custom_emoji"; offset: number; length: number; custom_emoji_id: string };
+type TelegramMessageEntity = { type: "bold"; offset: number; length: number };
 
 type TelegramMessagePayload = {
   text: string;
@@ -75,10 +57,6 @@ function bookmakerLabel(tip: WorldCupTelegramTip): string | null {
   return bookmaker?.short_name || bookmaker?.name || null;
 }
 
-function bookmakerKey(value: string): string {
-  return value.toLowerCase().replace(/[^a-z0-9]/g, "");
-}
-
 export function worldCupTipUrl(tip: Pick<WorldCupTelegramTip, "id" | "event">): string {
   return `${BASE_URL}/tips/${slugifyTip(tip.event || "world-cup-tip", tip.id)}`;
 }
@@ -100,7 +78,6 @@ function renderWorldCupTipPayload(tip: WorldCupTelegramTip): TelegramMessagePayl
   const selection = truncate(tip.selection || "Selection", 120);
   const pickLine = player ? `${player} - ${selection}` : selection;
   const bookmaker = bookmakerLabel(tip);
-  const bookmakerEmojiId = bookmaker ? BOOKMAKER_CUSTOM_EMOJI_IDS[bookmakerKey(bookmaker)] : null;
   const notes = truncate(tip.notes || "", 260);
 
   let text = "";
@@ -112,12 +89,6 @@ function renderWorldCupTipPayload(tip: WorldCupTelegramTip): TelegramMessagePayl
     const offset = utf16Length(text);
     append(value);
     entities.push({ type: "bold", offset, length: utf16Length(value) });
-  };
-  const appendCustomEmoji = (customEmojiId: string) => {
-    const fallback = String.fromCodePoint(0x1f4b8);
-    const offset = utf16Length(text);
-    append(fallback);
-    entities.push({ type: "custom_emoji", offset, length: utf16Length(fallback), custom_emoji_id: customEmojiId });
   };
   const newline = (count = 1) => append("\n".repeat(count));
 
@@ -136,10 +107,6 @@ function renderWorldCupTipPayload(tip: WorldCupTelegramTip): TelegramMessagePayl
 
   if (bookmaker) {
     append("Bookmaker: ");
-    if (bookmakerEmojiId) {
-      appendCustomEmoji(bookmakerEmojiId);
-      append(" ");
-    }
     appendBold(bookmaker);
     newline();
   }
@@ -163,6 +130,21 @@ function renderWorldCupTipPayload(tip: WorldCupTelegramTip): TelegramMessagePayl
   return { text, entities };
 }
 
+function worldCupTipCardUrl(tip: WorldCupTelegramTip): string {
+  const bookmaker = bookmakerLabel(tip);
+  const params = new URLSearchParams({
+    event: tip.event || "World Cup",
+    player: tip.player || "",
+    selection: tip.selection || "Selection",
+    odds: displayOdds(tip.odds),
+    stake: displayStake(tip.stake),
+    bookmaker: bookmaker || "Bookmaker",
+    date: tip.match_date ? formatMatchDate(tip.match_date) : "",
+  });
+
+  return `${BASE_URL}/api/telegram/wc-tip-card?${params.toString()}`;
+}
+
 export async function postWorldCupTipToTelegram(tip: WorldCupTelegramTip): Promise<TelegramPostResult> {
   const url = worldCupTipUrl(tip);
   if (!isWorldCupPropsTip(tip)) return { status: "skipped", reason: "not_worldcup_props", url };
@@ -177,14 +159,14 @@ export async function postWorldCupTipToTelegram(tip: WorldCupTelegramTip): Promi
 
   try {
     const payload = renderWorldCupTipPayload(tip);
-    const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    const response = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         chat_id: chatId,
-        text: payload.text,
-        entities: payload.entities,
-        disable_web_page_preview: false,
+        photo: worldCupTipCardUrl(tip),
+        caption: payload.text,
+        caption_entities: payload.entities,
       }),
     });
 
