@@ -21,6 +21,7 @@ const BOOKMAKER_CUSTOM_EMOJI_IDS: Record<string, string> = {
   coral: "5949556094769567829",
   ladbrokes: "5949471492503772250",
   boylesports: "5949549987326073413",
+  betfred: "5951825181826620659",
   betway: "5949551194211884412",
   betvictor: "5951673376207543117",
 };
