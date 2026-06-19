@@ -1,10 +1,10 @@
 {
   "pipeline": "team-props",
   "state": "idle",
-  "updated_at": "2026-06-18T19:29:39.7429488Z",
-  "last_started_at": "2026-06-18T19:28:29.3997547Z",
-  "last_finished_at": "2026-06-18T19:29:39.7429488Z",
-  "last_successful_finished_at": "2026-06-18T19:29:39.7428323Z",
+  "updated_at": "2026-06-19T12:03:52.7403910Z",
+  "last_started_at": "2026-06-19T12:02:40.9285979Z",
+  "last_finished_at": "2026-06-19T12:03:52.7403910Z",
+  "last_successful_finished_at": "2026-06-19T12:03:52.7402828Z",
   "current_step": "",
   "message": "Team props pipeline finished successfully.",
   "warnings": [],
@@ -18,55 +18,55 @@
     "regions": "eu"
   },
   "artifacts": {
-    "signals_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/signals-latest.csv",
+    "team_shots_predictions": {
+      "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-predictions.csv",
       "exists": true,
-      "updated_at": "2026-06-18T19:28:26.4740319Z"
-    },
-    "pipeline_log": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/pipeline-log.txt",
-      "exists": true,
-      "updated_at": "2026-06-18T19:29:39.7373612Z"
-    },
-    "shadow_value_bets_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/value-bets-latest-v31.csv",
-      "exists": true,
-      "updated_at": "2026-06-18T19:28:26.4780320Z"
+      "updated_at": "2026-06-19T12:02:33.0157782Z"
     },
     "team_shots_comparison": {
       "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-comparison.csv",
       "exists": true,
-      "updated_at": "2026-06-18T19:28:26.5008140Z"
+      "updated_at": "2026-06-19T12:02:33.0037779Z"
     },
-    "shadow_shortlist_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/shortlist-latest-v31.txt",
+    "pipeline_log": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/pipeline-log.txt",
       "exists": true,
-      "updated_at": "2026-06-18T19:28:26.4700318Z"
+      "updated_at": "2026-06-19T12:03:52.7355661Z"
     },
-    "value_bets_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/value-bets-latest.csv",
+    "signals_latest": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/signals-latest.csv",
       "exists": true,
-      "updated_at": "2026-06-18T19:28:26.4780320Z"
+      "updated_at": "2026-06-19T12:02:32.9767773Z"
     },
     "shadow_signals_latest": {
       "path": "/home/runner/work/il-margine/il-margine/data/shortlist/signals-latest-v31.csv",
       "exists": true,
-      "updated_at": "2026-06-18T19:28:26.4740319Z"
+      "updated_at": "2026-06-19T12:02:32.9767773Z"
+    },
+    "shadow_value_bets_latest": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/value-bets-latest-v31.csv",
+      "exists": true,
+      "updated_at": "2026-06-19T12:02:32.9797774Z"
     },
     "team_shots_upcoming": {
       "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-upcoming.csv",
       "exists": true,
-      "updated_at": "2026-06-18T19:28:26.5160328Z"
+      "updated_at": "2026-06-19T12:02:33.0207783Z"
     },
-    "team_shots_predictions": {
-      "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-predictions.csv",
+    "shadow_shortlist_latest": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/shortlist-latest-v31.txt",
       "exists": true,
-      "updated_at": "2026-06-18T19:28:26.5120327Z"
+      "updated_at": "2026-06-19T12:02:32.9727773Z"
+    },
+    "value_bets_latest": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/value-bets-latest.csv",
+      "exists": true,
+      "updated_at": "2026-06-19T12:02:32.9797774Z"
     },
     "shortlist_latest": {
       "path": "/home/runner/work/il-margine/il-margine/data/shortlist/shortlist-latest.txt",
       "exists": true,
-      "updated_at": "2026-06-18T19:28:26.4700318Z"
+      "updated_at": "2026-06-19T12:02:32.9727773Z"
     }
   }
 }
