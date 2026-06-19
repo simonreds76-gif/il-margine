@@ -45,11 +45,17 @@ export type TelegramPostResult =
   | { status: "skipped"; reason: "not_worldcup_props" | "disabled" | "missing_config"; url?: string }
   | { status: "failed"; reason: string; url?: string };
 
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+type TelegramMessageEntity =
+  | { type: "bold"; offset: number; length: number }
+  | { type: "custom_emoji"; offset: number; length: number; custom_emoji_id: string };
+
+type TelegramMessagePayload = {
+  text: string;
+  entities: TelegramMessageEntity[];
+};
+
+function utf16Length(value: string): number {
+  return Array.from(value).reduce((total, char) => total + (char.codePointAt(0)! > 0xffff ? 2 : 1), 0);
 }
 
 function truncate(value: string, maxLength: number): string {
@@ -73,11 +79,6 @@ function bookmakerKey(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
-function bookmakerEmojiHtml(label: string): string {
-  const emojiId = BOOKMAKER_CUSTOM_EMOJI_IDS[bookmakerKey(label)];
-  return emojiId ? `<tg-emoji emoji-id="${emojiId}">💸</tg-emoji> ` : "";
-}
-
 export function worldCupTipUrl(tip: Pick<WorldCupTelegramTip, "id" | "event">): string {
   return `${BASE_URL}/tips/${slugifyTip(tip.event || "world-cup-tip", tip.id)}`;
 }
@@ -92,38 +93,74 @@ function displayStake(value: WorldCupTelegramTip["stake"]): string {
   return `${formatStake(value)}u`;
 }
 
-function renderWorldCupTipMessage(tip: WorldCupTelegramTip): string {
+function renderWorldCupTipPayload(tip: WorldCupTelegramTip): TelegramMessagePayload {
   const url = worldCupTipUrl(tip);
-  const event = escapeHtml(tip.event || "World Cup");
+  const event = tip.event || "World Cup";
   const player = truncate(tip.player || "", 80);
   const selection = truncate(tip.selection || "Selection", 120);
-  const pickLine = player ? `${escapeHtml(player)} - ${escapeHtml(selection)}` : escapeHtml(selection);
+  const pickLine = player ? `${player} - ${selection}` : selection;
   const bookmaker = bookmakerLabel(tip);
+  const bookmakerEmojiId = bookmaker ? BOOKMAKER_CUSTOM_EMOJI_IDS[bookmakerKey(bookmaker)] : null;
   const notes = truncate(tip.notes || "", 260);
 
-  const lines = [
-    "<b>Il Margine WC Pick</b>",
-    "",
-    `<b>${event}</b>`,
-    pickLine,
-    "",
-    `Odds: <b>${escapeHtml(displayOdds(tip.odds))}</b>`,
-    `Stake: <b>${escapeHtml(displayStake(tip.stake))}</b>`,
-  ];
+  let text = "";
+  const entities: TelegramMessageEntity[] = [];
+  const append = (value: string) => {
+    text += value;
+  };
+  const appendBold = (value: string) => {
+    const offset = utf16Length(text);
+    append(value);
+    entities.push({ type: "bold", offset, length: utf16Length(value) });
+  };
+  const appendCustomEmoji = (customEmojiId: string) => {
+    const fallback = String.fromCodePoint(0x1f4b8);
+    const offset = utf16Length(text);
+    append(fallback);
+    entities.push({ type: "custom_emoji", offset, length: utf16Length(fallback), custom_emoji_id: customEmojiId });
+  };
+  const newline = (count = 1) => append("\n".repeat(count));
 
-  if (bookmaker) lines.push(`Bookmaker: ${bookmakerEmojiHtml(bookmaker)}<b>${escapeHtml(bookmaker)}</b>`);
-  if (tip.match_date) lines.push(`Match date: <b>${escapeHtml(formatMatchDate(tip.match_date))}</b>`);
+  appendBold("Il Margine WC Pick");
+  newline(2);
+  appendBold(event);
+  newline();
+  append(pickLine);
+  newline(2);
+  append("Odds: ");
+  appendBold(displayOdds(tip.odds));
+  newline();
+  append("Stake: ");
+  appendBold(displayStake(tip.stake));
+  newline();
+
+  if (bookmaker) {
+    append("Bookmaker: ");
+    if (bookmakerEmojiId) {
+      appendCustomEmoji(bookmakerEmojiId);
+      append(" ");
+    }
+    appendBold(bookmaker);
+    newline();
+  }
+  if (tip.match_date) {
+    append("Match date: ");
+    appendBold(formatMatchDate(tip.match_date));
+    newline();
+  }
   if (notes) {
-    lines.push("");
-    lines.push(`<b>Reasoning:</b> ${escapeHtml(notes)}`);
+    newline();
+    appendBold("Reasoning:");
+    append(` ${notes}`);
+    newline();
   }
 
-  lines.push("");
-  lines.push("Model-driven World Cup player props and market value.");
-  lines.push("");
-  lines.push(`Full pick: ${url}`);
+  newline();
+  append("Model-driven World Cup player props and market value.");
+  newline(2);
+  append(`Full pick: ${url}`);
 
-  return lines.join("\n");
+  return { text, entities };
 }
 
 export async function postWorldCupTipToTelegram(tip: WorldCupTelegramTip): Promise<TelegramPostResult> {
@@ -139,13 +176,14 @@ export async function postWorldCupTipToTelegram(tip: WorldCupTelegramTip): Promi
   if (!token || !chatId) return { status: "skipped", reason: "missing_config", url };
 
   try {
+    const payload = renderWorldCupTipPayload(tip);
     const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         chat_id: chatId,
-        text: renderWorldCupTipMessage(tip),
-        parse_mode: "HTML",
+        text: payload.text,
+        entities: payload.entities,
         disable_web_page_preview: false,
       }),
     });
