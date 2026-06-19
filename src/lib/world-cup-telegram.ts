@@ -10,6 +10,21 @@ type BookmakerShape = {
   short_name?: string | null;
 };
 
+const BOOKMAKER_CUSTOM_EMOJI_IDS: Record<string, string> = {
+  bet365: "5949780412321504184",
+  virginbet: "5949458302659207866",
+  williamhill: "5949310667453373092",
+  betmgm: "5949755703374650309",
+  unibet: "5949500620971972748",
+  skybet: "5951531818380433738",
+  paddypower: "5949715098753834205",
+  coral: "5949556094769567829",
+  ladbrokes: "5949471492503772250",
+  boylesports: "5949549987326073413",
+  betway: "5949551194211884412",
+  betvictor: "5951673376207543117",
+};
+
 export type WorldCupTelegramTip = {
   id: number;
   market?: string | null;
@@ -53,6 +68,15 @@ function bookmakerLabel(tip: WorldCupTelegramTip): string | null {
   return bookmaker?.short_name || bookmaker?.name || null;
 }
 
+function bookmakerKey(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+function bookmakerEmojiHtml(label: string): string {
+  const emojiId = BOOKMAKER_CUSTOM_EMOJI_IDS[bookmakerKey(label)];
+  return emojiId ? `<tg-emoji emoji-id="${emojiId}">💸</tg-emoji> ` : "";
+}
+
 export function worldCupTipUrl(tip: Pick<WorldCupTelegramTip, "id" | "event">): string {
   return `${BASE_URL}/tips/${slugifyTip(tip.event || "world-cup-tip", tip.id)}`;
 }
@@ -86,7 +110,7 @@ function renderWorldCupTipMessage(tip: WorldCupTelegramTip): string {
     `Stake: <b>${escapeHtml(displayStake(tip.stake))}</b>`,
   ];
 
-  if (bookmaker) lines.push(`Bookmaker: <b>${escapeHtml(bookmaker)}</b>`);
+  if (bookmaker) lines.push(`Bookmaker: ${bookmakerEmojiHtml(bookmaker)}<b>${escapeHtml(bookmaker)}</b>`);
   if (tip.match_date) lines.push(`Match date: <b>${escapeHtml(formatMatchDate(tip.match_date))}</b>`);
   if (notes) {
     lines.push("");
