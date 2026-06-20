@@ -1,6 +1,6 @@
 # Team-Shots CLV Monitor: `canonical_form_v3_ema20_nb`
 
-Generated: 2026-06-20T10:30:39Z
+Generated: 2026-06-20T13:30:08Z
 Picks input: `data/football-form/team-shots-v3-ema20-published-picks.csv`
 Odds input: `data/team-shots/team-shots-odds-history.csv`
 
