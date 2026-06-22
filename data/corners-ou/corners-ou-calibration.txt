@@ -1,26 +1,26 @@
 ======================================================================
   CORNERS O/U MODEL -- CALIBRATION REPORT
 ======================================================================
-  Total predictions: 20886
+  Total predictions: 20887
 
   Mean predicted total: 9.733
   Mean actual total:    9.839
 
-  MAE:  2.789
+  MAE:  2.790
   RMSE: 3.508
 
   Line-by-line calibration:
-    Line   7.5: predicted=0.727  actual=0.743  diff=-0.0159  (n=20886)
-    Line   8.5: predicted=0.615  actual=0.633  diff=-0.0177  (n=20886)
-    Line   9.5: predicted=0.499  actual=0.515  diff=-0.0160  (n=20886)
-    Line  10.5: predicted=0.387  actual=0.398  diff=-0.0119  (n=20886)
-    Line  11.5: predicted=0.287  actual=0.293  diff=-0.0062  (n=20886)
-    Line  12.5: predicted=0.204  actual=0.209  diff=-0.0050  (n=20886)
+    Line   7.5: predicted=0.727  actual=0.743  diff=-0.0158  (n=20887)
+    Line   8.5: predicted=0.615  actual=0.633  diff=-0.0176  (n=20887)
+    Line   9.5: predicted=0.499  actual=0.515  diff=-0.0159  (n=20887)
+    Line  10.5: predicted=0.387  actual=0.398  diff=-0.0119  (n=20887)
+    Line  11.5: predicted=0.287  actual=0.293  diff=-0.0062  (n=20887)
+    Line  12.5: predicted=0.204  actual=0.209  diff=-0.0050  (n=20887)
 
   Calibration by probability bins (over 9.5):
     [0.00, 0.25): n= 1803  predicted=0.189  actual=0.424  diff=-0.2352
     [0.25, 0.40): n= 4378  predicted=0.333  actual=0.454  diff=-0.1208
-    [0.40, 0.50): n= 4273  predicted=0.451  actual=0.496  diff=-0.0454
+    [0.40, 0.50): n= 4274  predicted=0.451  actual=0.496  diff=-0.0453
     [0.50, 0.60): n= 4247  predicted=0.549  actual=0.537  diff=+0.0122
     [0.60, 0.75): n= 4569  predicted=0.667  actual=0.566  diff=+0.1008
     [0.75, 1.00): n= 1616  predicted=0.810  actual=0.624  diff=+0.1865
@@ -29,11 +29,11 @@
     bundesliga     : n= 3546  pred=9.704  actual=9.647  MAE=2.798
     epl            : n= 4411  pred=10.342  actual=10.419  MAE=2.867
     la-liga        : n= 4429  pred=9.348  actual=9.546  MAE=2.681
-    ligue-1        : n= 4095  pred=9.566  actual=9.547  MAE=2.746
+    ligue-1        : n= 4096  pred=9.566  actual=9.546  MAE=2.746
     serie-a        : n= 4405  pred=9.690  actual=9.979  MAE=2.855
 
   Smart baseline regression (OLS on B365 1X2 -> corners):
-    Matches with B365 odds: 20880
+    Matches with B365 odds: 20881
     Home corners: avg=5.43, avg P(home_win)=0.442, avg P(away_win)=0.309
     Away corners: avg=4.41
 
