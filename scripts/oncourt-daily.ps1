@@ -27,6 +27,8 @@ if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_V1_SHADOW_ENABLED)) { $env:S
 if ([string]::IsNullOrWhiteSpace($env:CHALLENGER_ML_ENABLE)) { $env:CHALLENGER_ML_ENABLE = "0" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED)) { $env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED = "0" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_CLAY_BO3_ENABLED)) { $env:STRICT_CLAY_BO3_ENABLED = "1" }
+if ([string]::IsNullOrWhiteSpace($env:STRICT_GRASS_BO3_ENABLED)) { $env:STRICT_GRASS_BO3_ENABLED = "1" }
+if ([string]::IsNullOrWhiteSpace($env:STRICT_CPI_SPEED_SHADOW_ENABLED)) { $env:STRICT_CPI_SPEED_SHADOW_ENABLED = "1" }
 if ([string]::IsNullOrWhiteSpace($env:CLAY_BO3_ML_ENABLE)) { $env:CLAY_BO3_ML_ENABLE = "0" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_POLICY_HARD_CALIBRATION_MODE)) { $env:STRICT_POLICY_HARD_CALIBRATION_MODE = "strict_volume" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_HARD_CALIBRATION_LIVE)) { $env:STRICT_HARD_CALIBRATION_LIVE = "1" }
@@ -39,6 +41,7 @@ $spreadFitFiles = @(
 )
 $spreadRefreshTimeoutSeconds = 240
 $dailyOddsTimeoutSeconds = 1800
+$shadowLaneTimeoutSeconds = 300
 if (-not [string]::IsNullOrWhiteSpace($env:TENNIS_DAILY_ODDS_TOTAL_TIMEOUT_SECONDS)) {
     $parsedDailyOddsTimeout = 0
     if ([int]::TryParse($env:TENNIS_DAILY_ODDS_TOTAL_TIMEOUT_SECONDS, [ref]$parsedDailyOddsTimeout) -and $parsedDailyOddsTimeout -gt 0) {
@@ -55,6 +58,8 @@ $spreadV1ShadowEnabled = Test-EnvFlag $env:STRICT_SPREAD_V1_SHADOW_ENABLED
 $challengerMlEnabled = Test-EnvFlag $env:CHALLENGER_ML_ENABLE
 $clayFavEnabled = Test-EnvFlag $env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED
 $clayBo3Enabled = Test-EnvFlag $env:STRICT_CLAY_BO3_ENABLED
+$grassBo3Enabled = Test-EnvFlag $env:STRICT_GRASS_BO3_ENABLED
+$cpiSpeedShadowEnabled = Test-EnvFlag $env:STRICT_CPI_SPEED_SHADOW_ENABLED
 
 function Get-VolumeShadowConfig([string]$mode) {
     switch ($mode) {
@@ -308,14 +313,14 @@ if ($clayFavEnabled) {
     Log "=== Step 8e/10: Spread v1 clay-favourite shadow skipped (STRICT_SPREAD_V1_CLAY_FAV_ENABLED=0) ==="
 }
 
-if ($clayBo3Enabled) {
-    Log "=== Step 8f/10: Clay bo3 internal shadow (ML 5-13%, dog HC 6-25%) ==="
+if ($grassBo3Enabled) {
+    Log "=== Step 8f/10: Grass bo3 internal shadow (ATP grass warm-up ML 10-30%, favourite agreement) ==="
     $prevInternalResearchLanes = $env:INTERNAL_RESEARCH_LANES
     $env:INTERNAL_RESEARCH_LANES = "1"
     try {
-        & python scripts\strict-policy-report.py --append --signal-profile clay_bo3 --output "data\backtest\strict-signals-clay_bo3-live.csv" 2>&1 | ForEach-Object { Log $_ }
-        if ($LASTEXITCODE -ne 0) {
-            Log "WARNING: clay_bo3 append failed (exit $LASTEXITCODE), continuing..."
+        $grassExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\strict-policy-report.py", "--append", "--signal-profile", "grass_bo3", "--output", "data\backtest\strict-signals-grass_bo3-live.csv") -Label "grass_bo3 append" -TimeoutSeconds $shadowLaneTimeoutSeconds
+        if ($grassExit -ne 0) {
+            Log "WARNING: grass_bo3 append failed (exit $grassExit), continuing..."
         }
     }
     finally {
@@ -326,7 +331,49 @@ if ($clayBo3Enabled) {
         }
     }
 } else {
-    Log "=== Step 8f/10: Clay bo3 shadow skipped (STRICT_CLAY_BO3_ENABLED=0) ==="
+    Log "=== Step 8f/10: Grass bo3 shadow skipped (STRICT_GRASS_BO3_ENABLED=0) ==="
+}
+
+if ($clayBo3Enabled) {
+    Log "=== Step 8g/10: Clay bo3 internal shadow (ML 5-13%, dog HC 6-25%) ==="
+    $prevInternalResearchLanes = $env:INTERNAL_RESEARCH_LANES
+    $env:INTERNAL_RESEARCH_LANES = "1"
+    try {
+        $clayExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\strict-policy-report.py", "--append", "--signal-profile", "clay_bo3", "--output", "data\backtest\strict-signals-clay_bo3-live.csv") -Label "clay_bo3 append" -TimeoutSeconds $shadowLaneTimeoutSeconds
+        if ($clayExit -ne 0) {
+            Log "WARNING: clay_bo3 append failed (exit $clayExit), continuing..."
+        }
+    }
+    finally {
+        if ($null -eq $prevInternalResearchLanes) {
+            Remove-Item Env:\INTERNAL_RESEARCH_LANES -ErrorAction SilentlyContinue
+        } else {
+            $env:INTERNAL_RESEARCH_LANES = $prevInternalResearchLanes
+        }
+    }
+} else {
+    Log "=== Step 8g/10: Clay bo3 shadow skipped (STRICT_CLAY_BO3_ENABLED=0) ==="
+}
+
+if ($cpiSpeedShadowEnabled) {
+    Log "=== Step 8h/10: CPI speed-regime internal shadow (ATP ML, passed CPI gates, 10-30% edge) ==="
+    $prevInternalResearchLanes = $env:INTERNAL_RESEARCH_LANES
+    $env:INTERNAL_RESEARCH_LANES = "1"
+    try {
+        $cpiExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\strict-policy-report.py", "--append", "--signal-profile", "cpi_speed_shadow", "--output", "data\backtest\strict-signals-cpi_speed-live.csv") -Label "cpi_speed_shadow append" -TimeoutSeconds $shadowLaneTimeoutSeconds
+        if ($cpiExit -ne 0) {
+            Log "WARNING: cpi_speed_shadow append failed (exit $cpiExit), continuing..."
+        }
+    }
+    finally {
+        if ($null -eq $prevInternalResearchLanes) {
+            Remove-Item Env:\INTERNAL_RESEARCH_LANES -ErrorAction SilentlyContinue
+        } else {
+            $env:INTERNAL_RESEARCH_LANES = $prevInternalResearchLanes
+        }
+    }
+} else {
+    Log "=== Step 8h/10: CPI speed-regime shadow skipped (STRICT_CPI_SPEED_SHADOW_ENABLED=0) ==="
 }
 
 # Step 9: Settle/report immediately after nightly append so results are ready by the next morning.

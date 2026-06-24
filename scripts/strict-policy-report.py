@@ -48,6 +48,8 @@ from injury_overlay import env_bool, load_recent_injury_index
 from signal_storage import (
     CLAY_BO3_NEARMISS_PATH,
     CHALLENGER_ML_NEARMISS_PATH,
+    CPI_SPEED_NEARMISS_PATH,
+    GRASS_BO3_NEARMISS_PATH,
     SIGNAL_PROFILE_PATHS,
     SIGNALS_CURRENT_JSON,
     STRICT_INTERNAL_SIGNAL_PATHS,
@@ -67,6 +69,8 @@ DEFAULT_CLAY_CALIBRATION_FILE = DATA_DIR / "clay-prob-calibration.json"
 DEFAULT_SPREAD_V1_CALIBRATION_FILE = DATA_DIR / "spread-v1-calibration-params.json"
 DEFAULT_SPREAD_V1_CLAY_CALIBRATION_FILE = DATA_DIR / "spread-v1-clay-calibration-params.json"
 DEFAULT_HARD_CALIBRATION_FILE = DATA_DIR / "calibration-params-2022-2026-review.json"
+DEFAULT_SURFACE_SPEED_FILE = DATA_DIR / "tennisabstract-atp-surface-speed.csv"
+DEFAULT_CPI_SPEED_GATES_FILE = DATA_DIR / "cpi-regime-shadow-gates.csv"
 
 STRICT_MIN_VALUE_PCT = 10.0  # Public-facing high-conviction signals
 INTERNAL_TRACK_MIN_VALUE_PCT = 5.0  # Internal tracking for 200-bet confirmation
@@ -131,6 +135,25 @@ CLAY_BO3_DOG_HC_MAX_EDGE_PCT = env_float("CLAY_BO3_DOG_HC_MAX_EDGE_PCT", 25.0)
 CLAY_BO3_ML_ENABLE = env_bool(os.environ.get("CLAY_BO3_ML_ENABLE"), False)
 CLAY_BO3_ALLOWED_SERIES = {"ATP250", "ATP500", "Masters 1000", "Masters Cup"}
 CLAY_BO3_ALLOWED_CONFIDENCE = {"high"}
+GRASS_BO3_MIN_EDGE_PCT = env_float("GRASS_BO3_MIN_EDGE_PCT", 10.0)
+GRASS_BO3_MAX_EDGE_PCT = env_float("GRASS_BO3_MAX_EDGE_PCT", 30.0)
+GRASS_BO3_ALLOWED_SERIES = {"ATP250", "ATP500"}
+GRASS_BO3_ALLOWED_CONFIDENCE = {"high", "medium"}
+GRASS_BO3_REQUIRE_FAV_AGREEMENT = env_bool(os.environ.get("GRASS_BO3_REQUIRE_FAV_AGREEMENT"), True)
+GRASS_BO3_FAST_CPI_GATE = env_bool(os.environ.get("GRASS_BO3_FAST_CPI_GATE"), True)
+GRASS_BO3_SLOW_CPI_MAX = env_float("GRASS_BO3_SLOW_CPI_MAX", 1.05)
+GRASS_BO3_FAST_CPI_MIN = env_float("GRASS_BO3_FAST_CPI_MIN", 1.15)
+GRASS_BO3_CPI_LAG_YEARS = max(1, env_int("GRASS_BO3_CPI_LAG_YEARS", 3))
+GRASS_BO3_CPI_LAG_ONLY = env_bool(os.environ.get("GRASS_BO3_CPI_LAG_ONLY"), True)
+CPI_SPEED_MIN_EDGE_PCT = env_float("CPI_SPEED_MIN_EDGE_PCT", 10.0)
+CPI_SPEED_MAX_EDGE_PCT = env_float("CPI_SPEED_MAX_EDGE_PCT", 30.0)
+CPI_SPEED_CPI_LAG_YEARS = max(1, env_int("CPI_SPEED_CPI_LAG_YEARS", 3))
+CPI_SPEED_CPI_LAG_ONLY = env_bool(os.environ.get("CPI_SPEED_CPI_LAG_ONLY"), True)
+CPI_SPEED_Z_FAST = env_float("CPI_SPEED_Z_FAST", 0.50)
+CPI_SPEED_Z_SLOW = env_float("CPI_SPEED_Z_SLOW", -0.50)
+CPI_SPEED_Z_CAP = env_float("CPI_SPEED_Z_CAP", 3.0)
+CPI_SPEED_ALLOWED_CONFIDENCE = {"high", "medium"}
+CPI_SPEED_ALLOWED_STATUSES = {"PASS_SHADOW"}
 SPREAD_V1_CLAY_FAV_STALE_DAYS = env_int("SPREAD_V1_CLAY_FAV_STALE_DAYS", 14)
 ALLOWED_SEGMENT = "Hard|Masters 1000"
 ALLOWED_CONFIDENCE = {"high"}
@@ -187,7 +210,7 @@ VOLUME_200_RULES: list[dict[str, Any]] = [
     {"surface": "Grass", "series": "ATP500", "confidence": {"high", "medium"}, "min_value_pct": 10.0},
 ]
 
-MATCH_ONLY_SIGNAL_PROFILES = {"volume_200", "challenger_ml_shadow"}
+MATCH_ONLY_SIGNAL_PROFILES = {"volume_200", "challenger_ml_shadow", "grass_bo3", "cpi_speed_shadow"}
 SPREAD_V1_SIGNAL_PROFILES = {"spread_v1_shadow", "spread_v1_clay_fav"}
 SPREAD_ONLY_SIGNAL_PROFILES = SPREAD_V1_SIGNAL_PROFILES
 
@@ -204,6 +227,8 @@ SHADOW_PROFILE_LABELS: dict[str, str] = {
     "spread_v1_clay_fav": "Clay favourite handicap shadow (fav HC 2.0-3.5 games, 8-18% edge, clay-only calibration required)",
     "challenger_ml_shadow": "Challenger singles ML internal shadow (HIGH coverage, 10-15% edge)",
     "clay_bo3": "Clay bo3 internal shadow (ATP clay ML 5-13% edge + dog HC 6-25%)",
+    "grass_bo3": "Grass bo3 internal shadow (ATP grass warm-up ML, high/medium, 10-30% edge, favourite agreement)",
+    "cpi_speed_shadow": "CPI speed-regime ML shadow (ATP only, passed train/holdout CPI cells, 10-30% edge)",
 }
 SHADOW_PROFILE_ALLOWED_LEAGUES: dict[str, set[str]] = {
     # Shadow lanes have not held up in Challenger samples; keep production-facing
@@ -215,6 +240,8 @@ SHADOW_PROFILE_ALLOWED_LEAGUES: dict[str, set[str]] = {
     "spread_v1_clay_fav": {"ATP"},
     "challenger_ml_shadow": {"Challenger"},
     "clay_bo3": {"ATP"},
+    "grass_bo3": {"ATP"},
+    "cpi_speed_shadow": {"ATP"},
 }
 HOUSTON_SHADOW_MIN_VALUE_PCT = 20.0
 HOUSTON_SHADOW_CONFIDENCE = {"high", "medium"}
@@ -381,6 +408,194 @@ def tour_key_candidates(name: str | None) -> list[str]:
             seen.add(c)
             out.append(c)
     return out
+
+
+GRASS_SPEED_TOUR_ALIASES = {
+    "cinch championships": "queen s club",
+    "london queens club": "queen s club",
+    "queens club championships": "queen s club",
+    "queen s club championships": "queen s club",
+    "terra wortmann open": "halle",
+    "noventi open": "halle",
+    "halle open": "halle",
+    "b oss open": "stuttgart",
+    "boss open": "stuttgart",
+    "mercedes cup": "stuttgart",
+    "stuttgart open": "stuttgart",
+    "libema open": "s hertogenbosch",
+    "rosmalen grass court championships": "s hertogenbosch",
+    "s hertogenbosch": "s hertogenbosch",
+    "hertogenbosch": "s hertogenbosch",
+    "eastbourne international": "eastbourne",
+    "mallorca championships": "mallorca",
+    "hall of fame championships": "newport",
+}
+
+
+def surface_speed_key_candidates(name: str | None) -> list[str]:
+    keys = tour_key_candidates(name)
+    expanded: list[str] = []
+    for key in keys:
+        expanded.append(key)
+        alias = GRASS_SPEED_TOUR_ALIASES.get(key)
+        if alias:
+            expanded.append(alias)
+        # Sponsor names change often; keep a conservative city-token fallback
+        # for the established grass warm-up venues.
+        if "queen" in key and "club" in key:
+            expanded.append("queen s club")
+        if "hertogenbosch" in key or "rosmalen" in key:
+            expanded.append("s hertogenbosch")
+        for token in ("halle", "stuttgart", "eastbourne", "mallorca", "newport", "wimbledon"):
+            if token in key:
+                expanded.append(token)
+    seen = set()
+    out: list[str] = []
+    for key in expanded:
+        if key and key not in seen:
+            seen.add(key)
+            out.append(key)
+    return out
+
+
+def load_surface_speed_lookup(path: Path) -> dict[tuple[str, str], dict[int, float]]:
+    lookup: dict[tuple[str, str], dict[int, float]] = defaultdict(dict)
+    if not path.exists():
+        return lookup
+    with path.open("r", encoding="utf-8-sig", newline="") as f:
+        for row in csv.DictReader(f):
+            surface = (row.get("surface") or "").strip().title()
+            key = tour_key(row.get("tournament_key") or row.get("tournament_name"))
+            try:
+                year = int(row.get("season_year") or 0)
+                cpi = float(row.get("cpi") or row.get("ta_surface_speed") or "")
+            except (TypeError, ValueError):
+                continue
+            if not surface or not key or year <= 0 or not math.isfinite(cpi):
+                continue
+            lookup[(surface, key)][year] = cpi
+    return lookup
+
+
+def _mean_std(values: list[float]) -> tuple[float, float]:
+    clean = [float(v) for v in values if math.isfinite(float(v))]
+    if not clean:
+        return 0.0, 1.0
+    mu = sum(clean) / len(clean)
+    if len(clean) < 2:
+        return mu, 1.0
+    var = sum((v - mu) ** 2 for v in clean) / (len(clean) - 1)
+    return mu, max(math.sqrt(var), 1e-9)
+
+
+def _clamp(value: float, lo: float, hi: float) -> float:
+    return max(lo, min(hi, float(value)))
+
+
+def load_surface_speed_context(
+    path: Path,
+) -> tuple[dict[tuple[int, str, str], float], dict[tuple[int, str], tuple[float, float]], dict[str, tuple[float, float]]]:
+    lookup: dict[tuple[int, str, str], float] = {}
+    by_year_surface: dict[tuple[int, str], list[float]] = defaultdict(list)
+    by_surface: dict[str, list[float]] = defaultdict(list)
+    if not path.exists():
+        return lookup, {}, {}
+    with path.open("r", encoding="utf-8-sig", newline="") as f:
+        for row in csv.DictReader(f):
+            surface = (row.get("surface") or "").strip().title()
+            if surface == "I.Hard":
+                surface = "Hard"
+            key = tour_key(row.get("tournament_key") or row.get("tournament_name"))
+            try:
+                year = int(row.get("season_year") or 0)
+                cpi = float(row.get("cpi") or row.get("ta_surface_speed") or "")
+            except (TypeError, ValueError):
+                continue
+            if surface not in {"Hard", "Clay", "Grass"} or not key or year <= 0 or not math.isfinite(cpi):
+                continue
+            idx = (year, surface, key)
+            if idx in lookup:
+                continue
+            lookup[idx] = cpi
+            by_year_surface[(year, surface)].append(cpi)
+            by_surface[surface].append(cpi)
+    return (
+        lookup,
+        {key: _mean_std(values) for key, values in by_year_surface.items()},
+        {key: _mean_std(values) for key, values in by_surface.items()},
+    )
+
+
+def resolve_surface_speed_z(
+    lookup: dict[tuple[int, str, str], float],
+    year_surface_stats: dict[tuple[int, str], tuple[float, float]],
+    surface_stats: dict[str, tuple[float, float]],
+    *,
+    surface: str,
+    tournament_name: str,
+    season_year: int,
+    lag_only: bool = True,
+    lag_years: int = 3,
+    z_cap: float = 3.0,
+) -> tuple[float | None, int | None, float, str, str]:
+    surface_key = (surface or "").strip().title()
+    if surface_key == "I.Hard":
+        surface_key = "Hard"
+    if surface_key not in {"Hard", "Clay", "Grass"}:
+        return None, None, 0.0, "", "unsupported_surface"
+    start_yr_back = 1 if lag_only else 0
+    for yr_back in range(start_yr_back, max(0, int(lag_years)) + 1):
+        year = season_year - yr_back
+        for tkey in surface_speed_key_candidates(tournament_name):
+            cpi = lookup.get((year, surface_key, tkey))
+            if cpi is None:
+                continue
+            mu, sd = year_surface_stats.get((year, surface_key), surface_stats.get(surface_key, (0.0, 1.0)))
+            sd = sd if sd > 1e-9 else 1.0
+            z = _clamp((cpi - mu) / sd, -abs(z_cap), abs(z_cap))
+            return cpi, year, z, tkey, f"prior_lag_{yr_back}y"
+    return None, None, 0.0, "", "missing"
+
+
+def cpi_speed_bucket(cpi_z: float | None) -> str:
+    if cpi_z is None:
+        return "missing"
+    if cpi_z <= CPI_SPEED_Z_SLOW:
+        return "slow"
+    if cpi_z >= CPI_SPEED_Z_FAST:
+        return "fast"
+    return "neutral"
+
+
+def resolve_surface_speed(
+    lookup: dict[tuple[str, str], dict[int, float]],
+    *,
+    surface: str,
+    tournament_name: str,
+    season_year: int,
+    lag_only: bool = True,
+    lag_years: int = 3,
+) -> tuple[float | None, int | None, str, str]:
+    surface_key = (surface or "").strip().title()
+    for tkey in surface_speed_key_candidates(tournament_name):
+        years = lookup.get((surface_key, tkey))
+        if not years:
+            continue
+        lagged_years = sorted((y for y in years if y <= season_year - 1), reverse=True)[: max(1, lag_years)]
+        if lagged_years:
+            value = sum(years[y] for y in lagged_years) / len(lagged_years)
+            return value, max(lagged_years), tkey, f"prior_lag_{len(lagged_years)}y"
+        if not lag_only and season_year in years:
+            return years[season_year], season_year, tkey, "exact"
+        prior_years = [y for y in years if y <= season_year]
+        if prior_years:
+            year = max(prior_years)
+            return years[year], year, tkey, "prior"
+        if lag_only:
+            continue
+        year = max(years)
+        return years[year], year, tkey, "latest"
+    return None, None, "", "missing"
 
 
 def _safe_prob(p: float) -> float:
@@ -979,6 +1194,101 @@ def shadow_profile_league_allowed(profile_name: str, league: str) -> bool:
     return league in allowed
 
 
+def load_cpi_speed_pass_gates(path: Path) -> set[tuple[str, str]]:
+    gates: set[tuple[str, str]] = set()
+    if not path.exists():
+        return gates
+    try:
+        with path.open("r", encoding="utf-8-sig", newline="") as f:
+            for row in csv.DictReader(f):
+                status = (row.get("status") or "").strip()
+                segment = (row.get("segment") or "").strip()
+                value = (row.get("value") or "").strip()
+                if status in CPI_SPEED_ALLOWED_STATUSES and segment and value:
+                    gates.add((segment, value))
+    except Exception:
+        return set()
+    return gates
+
+
+def cpi_speed_model_surface(cpi_bucket: str) -> str:
+    return {
+        "slow": "SpeedSlow",
+        "neutral": "SpeedNeutral",
+        "fast": "SpeedFast",
+    }.get(cpi_bucket, "")
+
+
+def cpi_speed_value_band(value_pct: float | None) -> str:
+    value = float(value_pct or 0.0)
+    if value >= 25:
+        return "25+"
+    if value >= 15:
+        return "15-25"
+    if value >= 10:
+        return "10-15"
+    if value >= 5:
+        return "5-10"
+    return "<5"
+
+
+def cpi_speed_segments(
+    *,
+    surface: str,
+    cpi_bucket: str,
+    confidence: str,
+    series_bucket: str,
+    value_pct: float | None,
+    model_favorite_side: str,
+    pin_favorite_side: str,
+) -> list[tuple[str, str]]:
+    model_surface = cpi_speed_model_surface(cpi_bucket)
+    if not model_surface:
+        return []
+    conf = (confidence or "unknown").strip().lower() or "unknown"
+    alignment = "same_fav" if model_favorite_side == pin_favorite_side else "side_flip"
+    surface_cpi = f"{surface}:{cpi_bucket}"
+    value_band = cpi_speed_value_band(value_pct)
+    return [
+        ("model_surface", model_surface),
+        ("surface_cpi_bucket", surface_cpi),
+        ("model_surface_confidence", f"{model_surface}:{conf}"),
+        ("surface_cpi_bucket_confidence", f"{surface_cpi}:{conf}"),
+        ("model_surface_alignment", f"{model_surface}:{alignment}"),
+        ("surface_cpi_bucket_alignment", f"{surface_cpi}:{alignment}"),
+        ("model_surface_value_band", f"{model_surface}:{value_band}"),
+        ("surface_cpi_bucket_value_band", f"{surface_cpi}:{value_band}"),
+        ("model_surface_series", f"{model_surface}:{series_bucket}"),
+    ]
+
+
+def cpi_speed_gate_match(
+    gates: set[tuple[str, str]],
+    *,
+    surface: str,
+    cpi_bucket: str,
+    confidence: str,
+    series_bucket: str,
+    value_pct: float | None,
+    model_favorite_side: str,
+    pin_favorite_side: str,
+) -> tuple[bool, str, list[str]]:
+    segments = cpi_speed_segments(
+        surface=surface,
+        cpi_bucket=cpi_bucket,
+        confidence=confidence,
+        series_bucket=series_bucket,
+        value_pct=value_pct,
+        model_favorite_side=model_favorite_side,
+        pin_favorite_side=pin_favorite_side,
+    )
+    labels = [f"{segment}={value}" for segment, value in segments]
+    for segment, value in segments:
+        if (segment, value) in gates:
+            return True, f"{segment}={value}", labels
+    return False, "", labels
+
+
 def compute_stake_units(
     *,
     our_odds1: float,
@@ -1184,6 +1494,43 @@ def clay_bo3_skip_reason(
     if value_pct < CLAY_BO3_MIN_EDGE_PCT:
         return "edge_below_floor"
     if value_pct > CLAY_BO3_MAX_EDGE_PCT:
+        return "edge_above_cap"
+    return None
+
+
+def grass_bo3_skip_reason(
+    *,
+    scope_reason: str | None,
+    speed_reason: str | None,
+    value_pct: float | None,
+    model_ml_excluded: bool,
+    pin_ml_excluded: bool,
+    model_market_gap_excluded: bool,
+    atp500_short_favorite_ml_excluded: bool,
+    heavy_favorite_dog_excluded: bool,
+    favorite_agreement: bool,
+) -> str | None:
+    if scope_reason:
+        return scope_reason
+    if speed_reason:
+        return speed_reason
+    if GRASS_BO3_REQUIRE_FAV_AGREEMENT and not favorite_agreement:
+        return "favorite_disagreement"
+    if model_market_gap_excluded:
+        return "model_market_gap"
+    if model_ml_excluded:
+        return "model_ml_excluded"
+    if pin_ml_excluded:
+        return "pin_ml_excluded"
+    if atp500_short_favorite_ml_excluded:
+        return "short_favorite_ml_excluded"
+    if heavy_favorite_dog_excluded:
+        return "heavy_favorite_dog_excluded"
+    if value_pct is None:
+        return "edge_missing"
+    if value_pct < GRASS_BO3_MIN_EDGE_PCT:
+        return "edge_below_floor"
+    if value_pct > GRASS_BO3_MAX_EDGE_PCT:
         return "edge_above_cap"
     return None
 
@@ -1436,8 +1783,8 @@ def phase0_signal_profile_dispatch(
         return "strict", None, "", False
     if signal_profile == "challenger_hc":
         return signal_profile, 2, "lane disabled: awaiting Pinnacle HC coverage + challenger_ml proof", True
-    if signal_profile == "clay_bo3" and not internal_research_lanes:
-        return signal_profile, 2, "lane clay_bo3 requires INTERNAL_RESEARCH_LANES=1", True
+    if signal_profile in {"clay_bo3", "grass_bo3", "cpi_speed_shadow"} and not internal_research_lanes:
+        return signal_profile, 2, f"lane {signal_profile} requires INTERNAL_RESEARCH_LANES=1", True
     if signal_profile in PHASE0_RESEARCH_LANE_STUBS:
         if not internal_research_lanes:
             return signal_profile, 2, f"lane {signal_profile} requires INTERNAL_RESEARCH_LANES=1", True
@@ -1467,6 +1814,7 @@ def main() -> int:
             "challenger_ml",
             "indoor_bo3",
             "grass_bo3",
+            "cpi_speed_shadow",
             "challenger_hc",
         ),
         default=(os.environ.get("STRICT_SIGNAL_PROFILE", "strict") or "strict").strip().lower(),
@@ -1524,6 +1872,11 @@ def main() -> int:
         default=str(DEFAULT_SPREAD_V1_CALIBRATION_FILE),
         help="Versioned real-market spread calibration JSON for spread_v1_shadow.",
     )
+    parser.add_argument(
+        "--cpi-speed-gates-file",
+        default=os.environ.get("CPI_SPEED_GATES_FILE", str(DEFAULT_CPI_SPEED_GATES_FILE)),
+        help="PASS_SHADOW gate CSV for cpi_speed_shadow.",
+    )
     args = parser.parse_args()
     args.signal_profile, phase0_exit_code, phase0_message, phase0_stderr = phase0_signal_profile_dispatch(
         args.signal_profile,
@@ -1543,7 +1896,7 @@ def main() -> int:
     if not args.output:
         args.output = str(profile_public_paths.live)
     if not args.internal_output:
-        if args.signal_profile in {"spread_shadow", "challenger_ml_shadow", "clay_bo3", *SPREAD_V1_SIGNAL_PROFILES}:
+        if args.signal_profile in {"spread_shadow", "challenger_ml_shadow", "clay_bo3", "grass_bo3", "cpi_speed_shadow", *SPREAD_V1_SIGNAL_PROFILES}:
             args.internal_output = ""
         else:
             args.internal_output = str((profile_internal_paths or STRICT_INTERNAL_SIGNAL_PATHS).live)
@@ -1688,6 +2041,20 @@ def main() -> int:
     except ValueError:
         print(f"Invalid date format: {today}", file=sys.stderr)
         return 1
+    surface_speed_lookup = load_surface_speed_lookup(DEFAULT_SURFACE_SPEED_FILE)
+    surface_speed_context_lookup: dict[tuple[int, str, str], float] = {}
+    surface_speed_year_stats: dict[tuple[int, str], tuple[float, float]] = {}
+    surface_speed_surface_stats: dict[str, tuple[float, float]] = {}
+    cpi_speed_pass_gates: set[tuple[str, str]] = set()
+    if args.signal_profile == "cpi_speed_shadow":
+        cpi_speed_pass_gates = load_cpi_speed_pass_gates(Path(args.cpi_speed_gates_file))
+        (
+            surface_speed_context_lookup,
+            surface_speed_year_stats,
+            surface_speed_surface_stats,
+        ) = load_surface_speed_context(DEFAULT_SURFACE_SPEED_FILE)
+        if not cpi_speed_pass_gates:
+            print(f"WARNING: no CPI speed PASS_SHADOW gates loaded from {args.cpi_speed_gates_file}; lane will be empty.")
 
     injury_index = load_recent_injury_index(
         Path(args.injury_csv),
@@ -1848,6 +2215,8 @@ def main() -> int:
     candidates: list[dict[str, Any]] = []
     challenger_nearmiss_rows: list[dict[str, Any]] = []
     clay_bo3_nearmiss_rows: list[dict[str, Any]] = []
+    grass_bo3_nearmiss_rows: list[dict[str, Any]] = []
+    cpi_speed_nearmiss_rows: list[dict[str, Any]] = []
     for r in rows:
         surface = (r.get("surface") or "").strip()
         confidence = (r.get("confidence") or "").strip().lower()
@@ -1873,6 +2242,8 @@ def main() -> int:
         clay_calibrated_enabled = args.signal_profile == "clay_calibrated" and surface == "Clay"
         challenger_ml_requested = args.signal_profile == "challenger_ml_shadow"
         clay_bo3_requested = args.signal_profile == "clay_bo3"
+        grass_bo3_requested = args.signal_profile == "grass_bo3"
+        cpi_speed_requested = args.signal_profile == "cpi_speed_shadow"
         spread_v1_requested = args.signal_profile in SPREAD_V1_SIGNAL_PROFILES
         spread_v1_clay_fav_requested = args.signal_profile == "spread_v1_clay_fav"
         if (
@@ -1882,6 +2253,8 @@ def main() -> int:
             and not clay_calibrated_enabled
             and not challenger_ml_requested
             and not clay_bo3_requested
+            and not grass_bo3_requested
+            and not cpi_speed_requested
             and not spread_v1_requested
         ):
             continue
@@ -1935,6 +2308,7 @@ def main() -> int:
             volume_min_value = None
             spread_shadow_eligible = False
             clay_calibrated_enabled = False
+            cpi_speed_requested = False
             if strict_min_value is None:
                 continue
         spread_v1_scope = (
@@ -1952,6 +2326,34 @@ def main() -> int:
         clay_bo3_scope = clay_bo3_scope_reason(surface, series_bucket, league, confidence) if clay_bo3_requested else None
         clay_bo3_scope_ok = clay_bo3_requested and clay_bo3_scope is None
         clay_bo3_spread_eligible = clay_bo3_scope_ok
+        grass_bo3_scope = grass_bo3_scope_reason(surface, series_bucket, league, confidence) if grass_bo3_requested else None
+        grass_cpi: float | None = None
+        grass_cpi_year: int | None = None
+        grass_cpi_key = ""
+        grass_cpi_mode = ""
+        grass_speed_tier = ""
+        grass_speed_reason: str | None = None
+        if grass_bo3_requested and surface == "Grass":
+            grass_cpi, grass_cpi_year, grass_cpi_key, grass_cpi_mode = resolve_surface_speed(
+                surface_speed_lookup,
+                surface=surface,
+                tournament_name=tournament_name,
+                season_year=season_year,
+                lag_only=GRASS_BO3_CPI_LAG_ONLY,
+                lag_years=GRASS_BO3_CPI_LAG_YEARS,
+            )
+            if grass_cpi is None:
+                grass_speed_reason = "grass_speed_missing" if GRASS_BO3_FAST_CPI_GATE else None
+                grass_speed_tier = "missing"
+            elif grass_cpi < GRASS_BO3_SLOW_CPI_MAX:
+                grass_speed_tier = "slow"
+                grass_speed_reason = "grass_slow_court" if GRASS_BO3_FAST_CPI_GATE else None
+            elif grass_cpi >= GRASS_BO3_FAST_CPI_MIN:
+                grass_speed_tier = "fast"
+            else:
+                grass_speed_tier = "neutral"
+        grass_bo3_speed_ok = grass_speed_reason is None
+        grass_bo3_scope_ok = grass_bo3_requested and grass_bo3_scope is None and grass_bo3_speed_ok
 
         # ML only: skip when Pinnacle favourite odds < 1.25. Keep spreads eligible.
         pin_fav_odds = min(float(pin["odds1"] or 0), float(pin["odds2"] or 0))
@@ -1971,6 +2373,27 @@ def main() -> int:
             model_market_fav_gap > MISPRICE_MODEL_MARKET_FAV_GAP_MAX
             or model_market_side_flip_excluded
         )
+        grass_bo3_favorite_agreement = model_favorite_side == pin_favorite_side
+        cpi_speed_cpi: float | None = None
+        cpi_speed_year: int | None = None
+        cpi_speed_z: float | None = None
+        cpi_speed_key = ""
+        cpi_speed_mode = ""
+        cpi_speed_bucket_value = "missing"
+        if cpi_speed_requested:
+            cpi_speed_cpi, cpi_speed_year, cpi_z_value, cpi_speed_key, cpi_speed_mode = resolve_surface_speed_z(
+                surface_speed_context_lookup,
+                surface_speed_year_stats,
+                surface_speed_surface_stats,
+                surface=surface,
+                tournament_name=tournament_name,
+                season_year=season_year,
+                lag_only=CPI_SPEED_CPI_LAG_ONLY,
+                lag_years=CPI_SPEED_CPI_LAG_YEARS,
+                z_cap=CPI_SPEED_Z_CAP,
+            )
+            cpi_speed_z = cpi_z_value if cpi_speed_cpi is not None else None
+            cpi_speed_bucket_value = cpi_speed_bucket(cpi_speed_z)
 
         stored_pa = _parse_point_prob(r.get("p_a"))
         stored_pb = _parse_point_prob(r.get("p_b"))
@@ -2033,6 +2456,20 @@ def main() -> int:
             side,
             model_favorite_side,
         )
+        cpi_speed_gate_ok = False
+        cpi_speed_gate_label = ""
+        cpi_speed_gate_labels: list[str] = []
+        if cpi_speed_requested and value_pct is not None:
+            cpi_speed_gate_ok, cpi_speed_gate_label, cpi_speed_gate_labels = cpi_speed_gate_match(
+                cpi_speed_pass_gates,
+                surface=surface,
+                cpi_bucket=cpi_speed_bucket_value,
+                confidence=confidence,
+                series_bucket=series_bucket,
+                value_pct=value_pct,
+                model_favorite_side=model_favorite_side,
+                pin_favorite_side=pin_favorite_side,
+            )
         strict_match = (
             strict_min_value is not None
             and not model_ml_excluded
@@ -2101,6 +2538,79 @@ def main() -> int:
             and value_pct is not None
             and CLAY_BO3_MIN_EDGE_PCT <= value_pct <= CLAY_BO3_MAX_EDGE_PCT
         )
+        grass_bo3_ml_match = (
+            grass_bo3_scope_ok
+            and (not GRASS_BO3_REQUIRE_FAV_AGREEMENT or grass_bo3_favorite_agreement)
+            and not model_ml_excluded
+            and not pin_ml_excluded
+            and not model_market_gap_excluded
+            and not atp500_short_favorite_ml_excluded
+            and not heavy_favorite_dog_excluded
+            and value_pct is not None
+            and GRASS_BO3_MIN_EDGE_PCT <= value_pct <= GRASS_BO3_MAX_EDGE_PCT
+        )
+        cpi_speed_match = (
+            cpi_speed_requested
+            and league == "ATP"
+            and cpi_speed_cpi is not None
+            and cpi_speed_gate_ok
+            and confidence in CPI_SPEED_ALLOWED_CONFIDENCE
+            and not model_ml_excluded
+            and not pin_ml_excluded
+            and not model_market_gap_excluded
+            and not atp500_short_favorite_ml_excluded
+            and not heavy_favorite_dog_excluded
+            and value_pct is not None
+            and CPI_SPEED_MIN_EDGE_PCT <= value_pct <= CPI_SPEED_MAX_EDGE_PCT
+        )
+        if cpi_speed_requested and league == "ATP" and not cpi_speed_match:
+            if cpi_speed_cpi is None:
+                cpi_skip_reason = "cpi_missing"
+            elif value_pct is None:
+                cpi_skip_reason = "edge_missing"
+            elif value_pct < CPI_SPEED_MIN_EDGE_PCT:
+                cpi_skip_reason = "edge_below_floor"
+            elif value_pct > CPI_SPEED_MAX_EDGE_PCT:
+                cpi_skip_reason = "edge_above_cap"
+            elif confidence not in CPI_SPEED_ALLOWED_CONFIDENCE:
+                cpi_skip_reason = "low_confidence"
+            elif model_market_gap_excluded:
+                cpi_skip_reason = "model_market_gap"
+            elif model_ml_excluded:
+                cpi_skip_reason = "model_ml_excluded"
+            elif pin_ml_excluded:
+                cpi_skip_reason = "pin_ml_excluded"
+            elif atp500_short_favorite_ml_excluded:
+                cpi_skip_reason = "short_favorite_ml_excluded"
+            elif heavy_favorite_dog_excluded:
+                cpi_skip_reason = "heavy_favorite_dog_excluded"
+            elif not cpi_speed_gate_ok:
+                cpi_skip_reason = "no_passed_cpi_gate"
+            else:
+                cpi_skip_reason = "blocked"
+            cpi_speed_nearmiss_rows.append(
+                {
+                    "date": snapshot_date_used,
+                    "time_utc": datetime.now(timezone.utc).strftime("%H:%M:%S"),
+                    "player1": p1_name,
+                    "player2": p2_name,
+                    "surface": surface,
+                    "league": league,
+                    "series": series_bucket,
+                    "confidence": confidence,
+                    "side": side,
+                    "value_pct": round(value_pct, 2) if value_pct is not None else "",
+                    "model_favorite_side": model_favorite_side,
+                    "pin_favorite_side": pin_favorite_side,
+                    "cpi_speed_cpi": round(cpi_speed_cpi, 3) if cpi_speed_cpi is not None else "",
+                    "cpi_speed_z": round(cpi_speed_z, 3) if cpi_speed_z is not None else "",
+                    "cpi_speed_bucket": cpi_speed_bucket_value,
+                    "cpi_speed_key": cpi_speed_key,
+                    "cpi_speed_mode": cpi_speed_mode,
+                    "cpi_speed_gate_labels": ";".join(cpi_speed_gate_labels[:8]),
+                    "skip_reason": cpi_skip_reason,
+                }
+            )
         if clay_bo3_requested and league == "ATP" and surface == "Clay" and not clay_bo3_ml_match:
             skip_reason = clay_bo3_skip_reason(
                 ml_enabled=CLAY_BO3_ML_ENABLE,
@@ -2127,6 +2637,48 @@ def main() -> int:
                         "value_pct": round(value_pct, 2) if value_pct is not None else "",
                         "model_favorite_prob": round(model_favorite_prob, 4),
                         "pin_favorite_prob": round(max(pin_p1_no_vig, 1.0 - pin_p1_no_vig), 4),
+                        "skip_reason": skip_reason,
+                    }
+                )
+        if grass_bo3_requested and league == "ATP" and surface == "Grass" and not grass_bo3_ml_match:
+            skip_reason = grass_bo3_skip_reason(
+                scope_reason=grass_bo3_scope,
+                speed_reason=grass_speed_reason,
+                value_pct=value_pct,
+                model_ml_excluded=model_ml_excluded,
+                pin_ml_excluded=pin_ml_excluded,
+                model_market_gap_excluded=model_market_gap_excluded,
+                atp500_short_favorite_ml_excluded=atp500_short_favorite_ml_excluded,
+                heavy_favorite_dog_excluded=heavy_favorite_dog_excluded,
+                favorite_agreement=grass_bo3_favorite_agreement,
+            )
+            if skip_reason:
+                grass_bo3_nearmiss_rows.append(
+                    {
+                        "date": snapshot_date_used,
+                        "time_utc": datetime.now(timezone.utc).strftime("%H:%M:%S"),
+                        "player1": p1_name,
+                        "player2": p2_name,
+                        "surface": surface,
+                        "league": league,
+                        "series": series_bucket,
+                        "confidence": confidence,
+                        "side": side,
+                        "value_pct": round(value_pct, 2) if value_pct is not None else "",
+                        "model_favorite_side": model_favorite_side,
+                        "pin_favorite_side": pin_favorite_side,
+                        "model_favorite_prob": round(model_favorite_prob, 4),
+                        "pin_favorite_prob": round(max(pin_p1_no_vig, 1.0 - pin_p1_no_vig), 4),
+                        "favorite_agreement": grass_bo3_favorite_agreement,
+                        "grass_cpi": round(grass_cpi, 3) if grass_cpi is not None else "",
+                        "grass_cpi_year": grass_cpi_year or "",
+                        "grass_cpi_key": grass_cpi_key,
+                        "grass_cpi_mode": grass_cpi_mode,
+                        "grass_speed_tier": grass_speed_tier,
+                        "grass_cpi_gate_min": GRASS_BO3_SLOW_CPI_MAX if GRASS_BO3_FAST_CPI_GATE else "",
+                        "grass_cpi_slow_max": GRASS_BO3_SLOW_CPI_MAX if GRASS_BO3_FAST_CPI_GATE else "",
+                        "grass_cpi_fast_min": GRASS_BO3_FAST_CPI_MIN if GRASS_BO3_FAST_CPI_GATE else "",
+                        "grass_cpi_lag_years": GRASS_BO3_CPI_LAG_YEARS if GRASS_BO3_FAST_CPI_GATE else "",
                         "skip_reason": skip_reason,
                     }
                 )
@@ -2178,13 +2730,15 @@ def main() -> int:
                 and not clay_calibrated_match
                 and not challenger_ml_match
                 and not clay_bo3_ml_match
+                and not grass_bo3_ml_match
+                and not cpi_speed_match
             ):
                 continue
         bet_side = "fav" if side == fav_side else "dog"
         tname = tournament_name
         tkey = tour_key(tname)
         if args.signal_profile not in {"spread_shadow", *SPREAD_V1_SIGNAL_PROFILES} and (
-            strict_match or volume_match or challenger_ml_match or clay_bo3_ml_match
+            strict_match or volume_match or challenger_ml_match or clay_bo3_ml_match or grass_bo3_ml_match or cpi_speed_match
         ):
             stake_units, stake_gbp, stake_model = compute_stake_units(
                 our_odds1=policy_odds1,
@@ -2228,6 +2782,23 @@ def main() -> int:
                     "recent_injured_any": inj_any,
                     "recent_injured_p1_mode": p1_inj_mode,
                     "recent_injured_p2_mode": p2_inj_mode,
+                    "grass_cpi": round(grass_cpi, 3) if grass_bo3_ml_match and grass_cpi is not None else "",
+                    "grass_cpi_year": grass_cpi_year if grass_bo3_ml_match and grass_cpi_year is not None else "",
+                    "grass_cpi_key": grass_cpi_key if grass_bo3_ml_match else "",
+                    "grass_cpi_mode": grass_cpi_mode if grass_bo3_ml_match else "",
+                    "grass_speed_tier": grass_speed_tier if grass_bo3_ml_match else "",
+                    "grass_cpi_gate_min": GRASS_BO3_SLOW_CPI_MAX if grass_bo3_ml_match and GRASS_BO3_FAST_CPI_GATE else "",
+                    "grass_cpi_slow_max": GRASS_BO3_SLOW_CPI_MAX if grass_bo3_ml_match and GRASS_BO3_FAST_CPI_GATE else "",
+                    "grass_cpi_fast_min": GRASS_BO3_FAST_CPI_MIN if grass_bo3_ml_match and GRASS_BO3_FAST_CPI_GATE else "",
+                    "grass_cpi_lag_years": GRASS_BO3_CPI_LAG_YEARS if grass_bo3_ml_match and GRASS_BO3_FAST_CPI_GATE else "",
+                    "cpi_speed_cpi": round(cpi_speed_cpi, 3) if cpi_speed_match and cpi_speed_cpi is not None else "",
+                    "cpi_speed_year": cpi_speed_year if cpi_speed_match and cpi_speed_year is not None else "",
+                    "cpi_speed_z": round(cpi_speed_z, 3) if cpi_speed_match and cpi_speed_z is not None else "",
+                    "cpi_speed_bucket": cpi_speed_bucket_value if cpi_speed_match else "",
+                    "cpi_speed_key": cpi_speed_key if cpi_speed_match else "",
+                    "cpi_speed_mode": cpi_speed_mode if cpi_speed_match else "",
+                    "cpi_speed_gate": cpi_speed_gate_label if cpi_speed_match else "",
+                    "cpi_speed_lag_years": CPI_SPEED_CPI_LAG_YEARS if cpi_speed_match else "",
                     "_bet_side": bet_side,
                     "_tournament_key": tkey,
                     "_tournament_name": tname,
@@ -2236,9 +2807,21 @@ def main() -> int:
                     "hard_calibration_live": hard_calibration_live_for_row,
                     "_challenger_ml_match": challenger_ml_match,
                     "_clay_bo3_match": clay_bo3_ml_match,
+                    "_grass_bo3_match": grass_bo3_ml_match,
+                    "_cpi_speed_match": cpi_speed_match,
                     "_spread_shadow_match": False,
                     "_spread_v1_match": False,
-                    "shadow_reason": "clay_bo3_ml_edge_5_13" if clay_bo3_ml_match else "challenger_ml_high_coverage_10_15" if challenger_ml_match else "",
+                    "shadow_reason": (
+                        "cpi_speed_gate_passed"
+                        if cpi_speed_match
+                        else "grass_bo3_warmup_ml_fav_agreement_10_30"
+                        if grass_bo3_ml_match
+                        else "clay_bo3_ml_edge_5_13"
+                        if clay_bo3_ml_match
+                        else "challenger_ml_high_coverage_10_15"
+                        if challenger_ml_match
+                        else ""
+                    ),
                 }
             )
 
@@ -2575,6 +3158,10 @@ def main() -> int:
         profile_key = "_challenger_ml_match"
     elif args.signal_profile == "clay_bo3":
         profile_key = "_clay_bo3_match"
+    elif args.signal_profile == "grass_bo3":
+        profile_key = "_grass_bo3_match"
+    elif args.signal_profile == "cpi_speed_shadow":
+        profile_key = "_cpi_speed_match"
     elif args.signal_profile == "clay_calibrated":
         profile_key = "_clay_calibrated_match"
     else:
@@ -2701,6 +3288,26 @@ def main() -> int:
                 f"dog HC edge {CLAY_BO3_DOG_HC_MIN_EDGE_PCT:.1f}-{CLAY_BO3_DOG_HC_MAX_EDGE_PCT:.1f}% | "
                 f"confidence={','.join(sorted(CLAY_BO3_ALLOWED_CONFIDENCE))}"
             )
+        if args.signal_profile == "grass_bo3":
+            print(
+                "Grass bo3 gate: "
+                f"ATP warm-ups only ({','.join(sorted(GRASS_BO3_ALLOWED_SERIES))}) | "
+                f"ML edge {GRASS_BO3_MIN_EDGE_PCT:.1f}-{GRASS_BO3_MAX_EDGE_PCT:.1f}% | "
+                f"confidence={','.join(sorted(GRASS_BO3_ALLOWED_CONFIDENCE))} | "
+                f"favorite_agreement_required={GRASS_BO3_REQUIRE_FAV_AGREEMENT} | "
+                f"cpi_gate={GRASS_BO3_FAST_CPI_GATE} lag_only={GRASS_BO3_CPI_LAG_ONLY} "
+                f"lag_years={GRASS_BO3_CPI_LAG_YEARS} slow<{GRASS_BO3_SLOW_CPI_MAX:.2f} "
+                f"fast>={GRASS_BO3_FAST_CPI_MIN:.2f}"
+            )
+        if args.signal_profile == "cpi_speed_shadow":
+            print(
+                "CPI speed shadow gate: "
+                f"ATP only | ML edge {CPI_SPEED_MIN_EDGE_PCT:.1f}-{CPI_SPEED_MAX_EDGE_PCT:.1f}% | "
+                f"confidence={','.join(sorted(CPI_SPEED_ALLOWED_CONFIDENCE))} | "
+                f"PASS gates={len(cpi_speed_pass_gates)} | "
+                f"lag_only={CPI_SPEED_CPI_LAG_ONLY} lag_years={CPI_SPEED_CPI_LAG_YEARS} | "
+                f"slow_z<={CPI_SPEED_Z_SLOW:+.2f} fast_z>={CPI_SPEED_Z_FAST:+.2f}"
+            )
     print(
         "Stake sizing: "
         f"match 1u flat; spread 2u flat; unit_gbp={STRICT_UNIT_GBP:.2f}"
@@ -2768,6 +3375,8 @@ def main() -> int:
             r.pop("_volume_match", None)
             r.pop("_challenger_ml_match", None)
             r.pop("_clay_bo3_match", None)
+            r.pop("_grass_bo3_match", None)
+            r.pop("_cpi_speed_match", None)
             r.pop("_spread_shadow_match", None)
             r.pop("_spread_v1_match", None)
             r.pop("_clay_calibrated_match", None)
@@ -2849,6 +3458,26 @@ def main() -> int:
             print(
                 f"Appended {nearmiss_added}/{len(clay_bo3_nearmiss_rows)} Clay bo3 near-miss rows "
                 f"to {CLAY_BO3_NEARMISS_PATH}."
+            )
+        if args.signal_profile == "grass_bo3":
+            nearmiss_added = append_rows_dedup(
+                GRASS_BO3_NEARMISS_PATH,
+                grass_bo3_nearmiss_rows,
+                key_fields=["date", "player1", "player2", "skip_reason"],
+            )
+            print(
+                f"Appended {nearmiss_added}/{len(grass_bo3_nearmiss_rows)} Grass bo3 near-miss rows "
+                f"to {GRASS_BO3_NEARMISS_PATH}."
+            )
+        if args.signal_profile == "cpi_speed_shadow":
+            nearmiss_added = append_rows_dedup(
+                CPI_SPEED_NEARMISS_PATH,
+                cpi_speed_nearmiss_rows,
+                key_fields=["date", "player1", "player2", "skip_reason"],
+            )
+            print(
+                f"Appended {nearmiss_added}/{len(cpi_speed_nearmiss_rows)} CPI speed near-miss rows "
+                f"to {CPI_SPEED_NEARMISS_PATH}."
             )
         write_signals_current_artifact()
         print(f"Updated signals artifact at {SIGNALS_CURRENT_JSON}.")

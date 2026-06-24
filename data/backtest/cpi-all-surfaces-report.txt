@@ -1,0 +1,59 @@
+All-Surface CPI Research Report
+===============================
+
+Scope: ATP fair-odds historical backtest rows, value >= 5%; headline tables use value >= 10%.
+lagged uses prior completed CPI editions only. same_year is a leakage diagnostic only.
+CPI buckets are within-surface z-score buckets: slow <= -0.50, fast >= +0.50.
+CPI rows: 455; candidates: 3417; enriched rows: 6262.
+
+Missing CPI rows by mode/surface:
+- lagged: Hard=265, Clay=49, Grass=0
+- same_year: Hard=219, Clay=39, Grass=0
+
+Headline lagged cells, value >= 10%:
+
+research_all   Hard  value_10_plus          all     n=1082 ROI=  +8.3% WR= 42.1% P(<=0)=0.02 years=2022:+7.6u/227; 2023:+9.8u/298; 2024:+43.7u/251; 2025:+28.4u/306
+research_all   Hard  value_10_plus          slow    n=235  ROI=  +9.1% WR= 43.0% P(<=0)=0.13 years=2022:-2.5u/60; 2023:+1.5u/66; 2024:-0.6u/43; 2025:+22.9u/66
+research_all   Hard  value_10_plus          neutral n=561  ROI= +11.7% WR= 42.4% P(<=0)=0.02 years=2022:+1.2u/70; 2023:+22.3u/136; 2024:+35.5u/153; 2025:+6.6u/202
+research_all   Hard  value_10_plus          fast    n=286  ROI=  +0.9% WR= 40.6% P(<=0)=0.45 years=2022:+8.8u/97; 2023:-14.0u/96; 2024:+8.8u/55; 2025:-1.2u/38
+research_all   Clay  value_10_plus          all     n=746  ROI=  -5.4% WR= 37.1% P(<=0)=0.87 years=2022:-12.5u/168; 2023:+7.5u/203; 2024:-17.0u/183; 2025:-18.0u/192
+research_all   Clay  value_10_plus          slow    n=184  ROI= -16.3% WR= 32.1% P(<=0)=0.95 years=2022:-18.4u/41; 2023:+4.7u/43; 2024:+5.9u/23; 2025:-22.1u/77
+research_all   Clay  value_10_plus          neutral n=391  ROI=  +1.4% WR= 40.2% P(<=0)=0.39 years=2022:+1.1u/85; 2023:+11.3u/127; 2024:-12.6u/109; 2025:+5.7u/70
+research_all   Clay  value_10_plus          fast    n=171  ROI=  -9.1% WR= 35.7% P(<=0)=0.83 years=2022:+4.8u/42; 2023:-8.5u/33; 2024:-10.2u/51; 2025:-1.5u/45
+research_all   Grass value_10_plus          all     n=304  ROI=  +2.3% WR= 41.1% P(<=0)=0.43 years=2022:-4.7u/63; 2023:+25.3u/80; 2024:-1.3u/76; 2025:-12.3u/85
+research_all   Grass value_10_plus          slow    n=116  ROI=  +6.9% WR= 42.2% P(<=0)=0.29 years=2022:+0.9u/32; 2023:+11.7u/45; 2024:+1.5u/31; 2025:-6.2u/8
+research_all   Grass value_10_plus          neutral n=125  ROI=  -2.2% WR= 40.0% P(<=0)=0.57 years=2022:-1.0u/18; 2023:+8.6u/30; 2024:+0.4u/34; 2025:-10.8u/43
+research_all   Grass value_10_plus          fast    n=63   ROI=  +3.0% WR= 41.3% P(<=0)=0.45 years=2022:-4.6u/13; 2023:+5.1u/5; 2024:-3.2u/11; 2025:+4.7u/34
+
+policy_allowed Hard  value_10_plus          all     n=1082 ROI=  +8.3% WR= 42.1% P(<=0)=0.04 years=2022:+7.6u/227; 2023:+9.8u/298; 2024:+43.7u/251; 2025:+28.4u/306
+policy_allowed Hard  value_10_plus          slow    n=235  ROI=  +9.1% WR= 43.0% P(<=0)=0.17 years=2022:-2.5u/60; 2023:+1.5u/66; 2024:-0.6u/43; 2025:+22.9u/66
+policy_allowed Hard  value_10_plus          neutral n=561  ROI= +11.7% WR= 42.4% P(<=0)=0.03 years=2022:+1.2u/70; 2023:+22.3u/136; 2024:+35.5u/153; 2025:+6.6u/202
+policy_allowed Hard  value_10_plus          fast    n=286  ROI=  +0.9% WR= 40.6% P(<=0)=0.42 years=2022:+8.8u/97; 2023:-14.0u/96; 2024:+8.8u/55; 2025:-1.2u/38
+policy_allowed Clay  value_10_plus          all     n=746  ROI=  -5.4% WR= 37.1% P(<=0)=0.88 years=2022:-12.5u/168; 2023:+7.5u/203; 2024:-17.0u/183; 2025:-18.0u/192
+policy_allowed Clay  value_10_plus          slow    n=184  ROI= -16.3% WR= 32.1% P(<=0)=0.94 years=2022:-18.4u/41; 2023:+4.7u/43; 2024:+5.9u/23; 2025:-22.1u/77
+policy_allowed Clay  value_10_plus          neutral n=391  ROI=  +1.4% WR= 40.2% P(<=0)=0.40 years=2022:+1.1u/85; 2023:+11.3u/127; 2024:-12.6u/109; 2025:+5.7u/70
+policy_allowed Clay  value_10_plus          fast    n=171  ROI=  -9.1% WR= 35.7% P(<=0)=0.82 years=2022:+4.8u/42; 2023:-8.5u/33; 2024:-10.2u/51; 2025:-1.5u/45
+policy_allowed Grass value_10_plus          all     n=304  ROI=  +2.3% WR= 41.1% P(<=0)=0.40 years=2022:-4.7u/63; 2023:+25.3u/80; 2024:-1.3u/76; 2025:-12.3u/85
+policy_allowed Grass value_10_plus          slow    n=116  ROI=  +6.9% WR= 42.2% P(<=0)=0.26 years=2022:+0.9u/32; 2023:+11.7u/45; 2024:+1.5u/31; 2025:-6.2u/8
+policy_allowed Grass value_10_plus          neutral n=125  ROI=  -2.2% WR= 40.0% P(<=0)=0.53 years=2022:-1.0u/18; 2023:+8.6u/30; 2024:+0.4u/34; 2025:-10.8u/43
+policy_allowed Grass value_10_plus          fast    n=63   ROI=  +3.0% WR= 41.3% P(<=0)=0.42 years=2022:-4.6u/13; 2023:+5.1u/5; 2024:-3.2u/11; 2025:+4.7u/34
+
+Promising research_all lagged cells (n>=60, ROI>0):
+- research_all   Hard  style_balanced         neutral n=106  ROI= +27.2% WR= 48.1% P(<=0)=0.03 years=2022:+7.8u/23; 2023:+5.7u/20; 2024:+9.1u/25; 2025:+6.3u/38
+- research_all   Hard  style_balanced         all     n=187  ROI= +25.8% WR= 49.2% P(<=0)=0.01 years=2022:+12.9u/46; 2023:+4.9u/45; 2024:+18.1u/45; 2025:+12.3u/51
+- research_all   Hard  fav_disagree           slow    n=93   ROI= +23.5% WR= 53.8% P(<=0)=0.02 years=2022:-4.3u/28; 2023:+13.6u/26; 2024:-1.9u/16; 2025:+14.5u/23
+- research_all   Hard  series_Grand Slam      neutral n=137  ROI= +20.1% WR= 44.5% P(<=0)=0.05 years=2022:-0.0u/15; 2023:+22.0u/42; 2024:+13.9u/37; 2025:-8.3u/43
+- research_all   Hard  value_band_20-30       neutral n=143  ROI= +19.9% WR= 42.7% P(<=0)=0.05 years=2022:+7.7u/13; 2023:+1.2u/35; 2024:+7.1u/33; 2025:+12.5u/62
+- research_all   Grass style_serve_led        slow    n=61   ROI= +19.7% WR= 44.3% P(<=0)=0.16 years=2022:+2.8u/14; 2023:+10.9u/22; 2024:+2.4u/21; 2025:-4.0u/4
+- research_all   Hard  series_Grand Slam      all     n=164  ROI= +16.0% WR= 43.3% P(<=0)=0.08 years=2022:-1.3u/42; 2023:+22.0u/42; 2024:+13.9u/37; 2025:-8.3u/43
+- research_all   Hard  fav_agree              neutral n=329  ROI= +15.6% WR= 39.8% P(<=0)=0.03 years=2022:+4.4u/44; 2023:+10.7u/76; 2024:+23.7u/87; 2025:+12.5u/122
+- research_all   Hard  value_band_20-30       slow    n=63   ROI= +15.5% WR= 44.4% P(<=0)=0.18 years=2022:-0.6u/18; 2023:-1.4u/16; 2024:+4.7u/8; 2025:+7.0u/21
+- research_all   Hard  value_band_20-30       all     n=279  ROI= +15.2% WR= 41.9% P(<=0)=0.03 years=2022:+12.0u/55; 2023:+2.7u/79; 2024:+14.1u/56; 2025:+13.5u/89
+- research_all   Hard  series_Masters 1000    neutral n=222  ROI= +15.0% WR= 42.3% P(<=0)=0.04 years=2022:-2.4u/30; 2023:+0.5u/15; 2024:+17.5u/87; 2025:+17.8u/90
+- research_all   Grass fav_agree              slow    n=61   ROI= +14.5% WR= 42.6% P(<=0)=0.22 years=2022:+2.2u/17; 2023:+9.1u/28; 2024:+0.7u/11; 2025:-3.2u/5
+
+Decision rules:
+- Do not use same_year for model decisions.
+- Treat n<60 as informational only; n>=150 is the minimum for a cell worth acting on.
+- A surface-speed cell needs live CLV before promotion.
+- CPI should next be tested as a shadow probability overlay, not directly switched on for live signals.

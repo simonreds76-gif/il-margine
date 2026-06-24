@@ -37,6 +37,22 @@ type LaneStats = {
   latestSignals: CsvRow[];
 };
 
+type CpiSummary = {
+  headlineRows: CsvRow[];
+  candidateRows: CsvRow[];
+  overlayRows: CsvRow[];
+  overlayVerdict: string | null;
+  overlayAvailable: boolean;
+  regimeRows: CsvRow[];
+  regimeVerdict: string | null;
+  regimeAvailable: boolean;
+  regimeGateRows: CsvRow[];
+  regimeFactorRows: CsvRow[];
+  regimeGateVerdict: string | null;
+  regimeGatesAvailable: boolean;
+  reportAvailable: boolean;
+};
+
 const badgeTones = {
   live: "border-emerald-500/25 bg-emerald-500/10 text-emerald-300",
   shadow: "border-cyan-500/25 bg-cyan-500/10 text-cyan-300",
@@ -88,10 +104,19 @@ const laneViews: Record<TennisResearchLaneId, LaneView> = {
   grass_bo3: {
     id: "grass_bo3",
     title: "Grass bo3",
-    state: "DEFERRED",
-    badgeTone: badgeTones.deferred,
-    market: "Fav HC, overs",
-    summary: "Scaffold only. Grass is sample-thin and will stay shadow-only until proven.",
+    state: "SHADOW LIVE",
+    badgeTone: badgeTones.shadow,
+    market: "ML only",
+    summary: "Internal ATP grass warm-up ML lane: ATP250/ATP500, high+medium confidence, 10-30% value, model-market favourite agreement, and lagged CPI guard: slow grass (<1.05) and missing CPI blocked; neutral/fast allowed.",
+  },
+  cpi_speed_shadow: {
+    id: "cpi_speed_shadow",
+    title: "CPI speed shadow",
+    state: "SHADOW LIVE",
+    badgeTone: badgeTones.shadow,
+    market: "ML by court speed",
+    summary:
+      "ATP-only ML shadow lane using lagged CPI z-score gates. It admits only cells that passed the 2024 train and 2025 holdout gate; no live staking or public routing.",
   },
   challenger_hc: {
     id: "challenger_hc",
@@ -198,6 +223,10 @@ function formatNumber(value: number | null, suffix = "", digits = 1): string {
   return `${sign}${value.toFixed(digits)}${suffix}`;
 }
 
+function formatSignedPct(value: string | undefined): string {
+  return formatNumber(toNumber(value), "%");
+}
+
 function topReasons(rows: CsvRow[]): string[] {
   const counts = new Map<string, number>();
   rows.forEach((row) => {
@@ -279,12 +308,403 @@ async function loadLaneStats(id: TennisResearchLaneId): Promise<LaneStats> {
   };
 }
 
+async function loadCpiSummary(): Promise<CpiSummary> {
+  const [csv, overlayCsv, overlayReport, regimeCsv, regimeReport, gateCsv, factorCsv, gateReport] = await Promise.all([
+    readKnownFile("data/backtest/cpi-all-surfaces-cells.csv"),
+    readKnownFile("data/backtest/cpi-shadow-overlay-cells.csv"),
+    readKnownFile("data/backtest/cpi-shadow-overlay-report.txt"),
+    readKnownFile("data/backtest/cpi-regime-surface-cells.csv"),
+    readKnownFile("data/backtest/cpi-regime-surface-report.txt"),
+    readKnownFile("data/backtest/cpi-regime-shadow-gates.csv"),
+    readKnownFile("data/backtest/cpi-regime-shadow-value-factors.csv"),
+    readKnownFile("data/backtest/cpi-regime-shadow-report.txt"),
+  ]);
+  if (!csv) {
+    return {
+      headlineRows: [],
+      candidateRows: [],
+      overlayRows: [],
+      overlayVerdict: null,
+      overlayAvailable: false,
+      regimeRows: [],
+      regimeVerdict: null,
+      regimeAvailable: false,
+      regimeGateRows: [],
+      regimeFactorRows: [],
+      regimeGateVerdict: null,
+      regimeGatesAvailable: false,
+      reportAvailable: false,
+    };
+  }
+  const rows = parseCsv(csv);
+  const overlayRowsRaw = overlayCsv ? parseCsv(overlayCsv) : [];
+  const regimeRowsRaw = regimeCsv ? parseCsv(regimeCsv) : [];
+  const regimeGateRowsRaw = gateCsv ? parseCsv(gateCsv) : [];
+  const regimeFactorRows = factorCsv ? parseCsv(factorCsv) : [];
+  const laggedResearchRows = rows.filter((row) => row.mode === "lagged" && row.scope === "research_all");
+  const surfaceOrder = new Map(["Hard", "Clay", "Grass"].map((surface, index) => [surface, index]));
+  const bucketOrder = new Map(["all", "slow", "neutral", "fast"].map((bucket, index) => [bucket, index]));
+  const overlayOrder = new Map(["all", "Hard", "Clay", "Grass"].map((value, index) => [value, index]));
+  const regimeOrder = new Map(["all", "SpeedSlow", "SpeedNeutral", "SpeedFast"].map((value, index) => [value, index]));
+  const headlineRows = laggedResearchRows
+    .filter((row) => row.cell === "value_10_plus")
+    .sort((left, right) => {
+      const surfaceDiff = (surfaceOrder.get(left.surface) ?? 99) - (surfaceOrder.get(right.surface) ?? 99);
+      if (surfaceDiff !== 0) return surfaceDiff;
+      return (bucketOrder.get(left.bucket) ?? 99) - (bucketOrder.get(right.bucket) ?? 99);
+    });
+  const candidateRows = laggedResearchRows
+    .filter((row) => {
+      const n = toNumber(row.n) ?? 0;
+      const roi = toNumber(row.roi_pct) ?? 0;
+      return n >= 60 && roi > 0;
+    })
+    .sort((left, right) => {
+      const roiDiff = (toNumber(right.roi_pct) ?? 0) - (toNumber(left.roi_pct) ?? 0);
+      if (Math.abs(roiDiff) > 1e-9) return roiDiff;
+      return (toNumber(right.n) ?? 0) - (toNumber(left.n) ?? 0);
+    })
+    .slice(0, 10);
+  const overlayRows = overlayRowsRaw
+    .filter((row) => row.threshold === "10.0" && (row.segment === "all" || row.segment === "surface"))
+    .sort((left, right) => (overlayOrder.get(left.value) ?? 99) - (overlayOrder.get(right.value) ?? 99));
+  const regimeRows = regimeRowsRaw
+    .filter(
+      (row) =>
+        row.threshold === "10.0" &&
+        ((row.segment === "all" && row.value === "all") ||
+          (row.segment === "model_surface" && row.value.startsWith("Speed"))),
+    )
+    .sort((left, right) => (regimeOrder.get(left.value) ?? 99) - (regimeOrder.get(right.value) ?? 99));
+  const gateOrder = new Map(["PASS_SHADOW", "WATCH"].map((status, index) => [status, index]));
+  const regimeGateRows = regimeGateRowsRaw
+    .filter((row) => row.status === "PASS_SHADOW" || row.status === "WATCH")
+    .sort((left, right) => {
+      const statusDiff = (gateOrder.get(left.status) ?? 99) - (gateOrder.get(right.status) ?? 99);
+      if (statusDiff !== 0) return statusDiff;
+      return (toNumber(right.combined_overlay_roi_pct) ?? 0) - (toNumber(left.combined_overlay_roi_pct) ?? 0);
+    })
+    .slice(0, 14);
+  const overlayVerdict = overlayReport?.match(/Verdict:\s*([^\r\n]+)/)?.[1]?.trim() ?? null;
+  const regimeVerdict = regimeReport?.match(/Verdict:\s*([^\r\n]+)/)?.[1]?.trim() ?? null;
+  const regimeGateVerdict = gateReport?.match(/Verdict:\s*([^\r\n]+)/)?.[1]?.trim() ?? null;
+  return {
+    headlineRows,
+    candidateRows,
+    overlayRows,
+    overlayVerdict,
+    overlayAvailable: overlayRows.length > 0,
+    regimeRows,
+    regimeVerdict,
+    regimeAvailable: regimeRows.length > 0,
+    regimeGateRows,
+    regimeFactorRows,
+    regimeGateVerdict,
+    regimeGatesAvailable: regimeGateRows.length > 0 || regimeFactorRows.length > 0,
+    reportAvailable: true,
+  };
+}
+
 function EmptyMetric({ label, value = "-" }: { label: string; value?: string }) {
   return (
     <div className="rounded-xl border border-slate-800/70 bg-slate-950/50 p-4">
       <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">{label}</p>
       <p className="mt-2 text-2xl font-semibold tabular-nums text-slate-200">{value}</p>
     </div>
+  );
+}
+
+function CpiSurfaceSpeedCard({ summary }: { summary: CpiSummary }) {
+  return (
+    <section
+      id="cpi-surface-speed"
+      className="rounded-2xl border border-emerald-500/20 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_38%),rgba(2,6,23,0.72)] p-5 shadow-[0_18px_60px_rgba(2,6,23,0.32)]"
+    >
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="text-xl font-semibold text-slate-100">CPI Surface Speed Research</h2>
+            <StatusPill label="SHADOW DIAGNOSTIC" tone={badgeTones.shadow} />
+          </div>
+          <p className="mt-2 max-w-4xl text-sm leading-6 text-slate-400">
+            Lagged Tennis Abstract court-speed buckets across Hard, Clay and Grass. This is a research map for future
+            gates and overlays; it does not change live staking by itself.
+          </p>
+        </div>
+        <div className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-200">
+          prior editions only
+        </div>
+      </div>
+
+      {!summary.reportAvailable ? (
+        <div className="mt-4 rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
+          CPI report not found. Run `python scripts\backtest-cpi-all-surfaces.py` locally.
+        </div>
+      ) : (
+        <>
+          {summary.overlayAvailable ? (
+            <div className="mt-5 rounded-xl border border-cyan-500/20 bg-cyan-500/10 p-4">
+              <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-cyan-300">
+                    CPI overlay A/B verdict
+                  </p>
+                  <p className="mt-1 text-sm text-slate-300">
+                    {summary.overlayVerdict || "Report generated"}: the current CPI overlay is research-only and is not
+                    promoted into live staking.
+                  </p>
+                </div>
+                <StatusPill label="NOT LIVE" tone={badgeTones.disabled} />
+              </div>
+              <div className="mt-4 overflow-x-auto">
+                <table className="min-w-full text-left text-xs">
+                  <thead className="text-slate-500">
+                    <tr>
+                      <th className="py-2 pr-4 font-medium">Scope</th>
+                      <th className="py-2 pr-4 font-medium">Base bets</th>
+                      <th className="py-2 pr-4 font-medium">Base ROI</th>
+                      <th className="py-2 pr-4 font-medium">CPI bets</th>
+                      <th className="py-2 pr-4 font-medium">CPI ROI</th>
+                      <th className="py-2 pr-4 font-medium">P/L delta</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-cyan-500/10 text-slate-300">
+                    {summary.overlayRows.map((row) => (
+                      <tr key={`${row.segment}-${row.value}`}>
+                        <td className="py-2 pr-4 font-semibold text-slate-100">{row.value}</td>
+                        <td className="py-2 pr-4 tabular-nums">{row.base_bets}</td>
+                        <td className="py-2 pr-4 tabular-nums">{formatSignedPct(row.base_roi_pct)}</td>
+                        <td className="py-2 pr-4 tabular-nums">{row.overlay_bets}</td>
+                        <td className="py-2 pr-4 tabular-nums">{formatSignedPct(row.overlay_roi_pct)}</td>
+                        <td
+                          className={cn(
+                            "py-2 pr-4 font-semibold tabular-nums",
+                            (toNumber(row.delta_pnl) ?? 0) >= 0 ? "text-emerald-300" : "text-rose-300",
+                          )}
+                        >
+                          {formatNumber(toNumber(row.delta_pnl), "u", 2)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : null}
+
+          {summary.regimeAvailable ? (
+            <div className="mt-5 rounded-xl border border-emerald-500/25 bg-[linear-gradient(135deg,rgba(16,185,129,0.13),rgba(15,23,42,0.45))] p-4">
+              <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300">
+                    CPI speed-regime model
+                  </p>
+                  <p className="mt-1 text-sm text-slate-300">
+                    {summary.regimeVerdict || "Report generated"}: this tests treating venue speed as the model surface
+                    itself. It is shadow-only until calibration and live CLV are proven.
+                  </p>
+                </div>
+                <StatusPill label="SHADOW ONLY" tone={badgeTones.shadow} />
+              </div>
+              <div className="mt-4 overflow-x-auto">
+                <table className="min-w-full text-left text-xs">
+                  <thead className="text-slate-500">
+                    <tr>
+                      <th className="py-2 pr-4 font-medium">Model surface</th>
+                      <th className="py-2 pr-4 font-medium">Base bets</th>
+                      <th className="py-2 pr-4 font-medium">Base ROI</th>
+                      <th className="py-2 pr-4 font-medium">Regime bets</th>
+                      <th className="py-2 pr-4 font-medium">Regime ROI</th>
+                      <th className="py-2 pr-4 font-medium">P/L delta</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-emerald-500/10 text-slate-300">
+                    {summary.regimeRows.map((row) => (
+                      <tr key={`${row.segment}-${row.value}`}>
+                        <td className="py-2 pr-4 font-semibold text-slate-100">{row.value}</td>
+                        <td className="py-2 pr-4 tabular-nums">{row.base_bets}</td>
+                        <td className="py-2 pr-4 tabular-nums">{formatSignedPct(row.base_roi_pct)}</td>
+                        <td className="py-2 pr-4 tabular-nums">{row.overlay_bets}</td>
+                        <td className="py-2 pr-4 font-semibold tabular-nums text-emerald-300">
+                          {formatSignedPct(row.overlay_roi_pct)}
+                        </td>
+                        <td
+                          className={cn(
+                            "py-2 pr-4 font-semibold tabular-nums",
+                            (toNumber(row.delta_pnl) ?? 0) >= 0 ? "text-emerald-300" : "text-rose-300",
+                          )}
+                        >
+                          {formatNumber(toNumber(row.delta_pnl), "u", 2)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : null}
+
+          {summary.regimeGatesAvailable ? (
+            <div className="mt-5 rounded-xl border border-lime-500/25 bg-[radial-gradient(circle_at_top_right,rgba(132,204,22,0.16),transparent_35%),rgba(15,23,42,0.55)] p-4">
+              <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-lime-300">
+                    CPI gated shadow cells
+                  </p>
+                  <p className="mt-1 text-sm text-slate-300">
+                    {summary.regimeGateVerdict || "Shadow-only gate report"}: broad speed regimes are not trusted
+                    directly. Only cells that passed 2024 train and 2025 holdout are listed here.
+                  </p>
+                </div>
+                <StatusPill label="NOT ROUTED LIVE" tone={badgeTones.disabled} />
+              </div>
+
+              {summary.regimeFactorRows.length > 0 ? (
+                <div className="mt-4 grid gap-3 md:grid-cols-3">
+                  {summary.regimeFactorRows.map((row) => (
+                    <div
+                      key={row.model_surface}
+                      className="rounded-xl border border-slate-800/80 bg-slate-950/55 p-3"
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="text-sm font-semibold text-slate-100">{row.model_surface}</p>
+                        <StatusPill
+                          label={row.verdict || "unknown"}
+                          tone={
+                            row.verdict === "usable"
+                              ? badgeTones.live
+                              : "border-rose-500/25 bg-rose-500/10 text-rose-300"
+                          }
+                        />
+                      </div>
+                      <dl className="mt-3 grid grid-cols-3 gap-2 text-xs">
+                        <div>
+                          <dt className="text-slate-500">2024 bets</dt>
+                          <dd className="font-semibold tabular-nums text-slate-200">{row.bets || "-"}</dd>
+                        </div>
+                        <div>
+                          <dt className="text-slate-500">ROI</dt>
+                          <dd className="font-semibold tabular-nums text-slate-200">
+                            {formatSignedPct(row.roi_pct)}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-slate-500">Factor</dt>
+                          <dd className="font-semibold tabular-nums text-slate-200">
+                            {row.realisation_factor || "-"}
+                          </dd>
+                        </div>
+                      </dl>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+
+              {summary.regimeGateRows.length > 0 ? (
+                <div className="mt-4 overflow-x-auto rounded-xl border border-slate-800/80">
+                  <table className="min-w-full text-left text-xs">
+                    <thead className="bg-slate-950/80 text-slate-500">
+                      <tr>
+                        <th className="px-3 py-2 font-medium">Status</th>
+                        <th className="px-3 py-2 font-medium">Gate</th>
+                        <th className="px-3 py-2 font-medium">2024</th>
+                        <th className="px-3 py-2 font-medium">2025 holdout</th>
+                        <th className="px-3 py-2 font-medium">Combined</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800/70 text-slate-300">
+                      {summary.regimeGateRows.map((row) => (
+                        <tr key={`${row.status}-${row.segment}-${row.value}`}>
+                          <td className="px-3 py-2">
+                            <StatusPill
+                              label={row.status === "PASS_SHADOW" ? "PASS" : "WATCH"}
+                              tone={row.status === "PASS_SHADOW" ? badgeTones.shadow : badgeTones.disabled}
+                            />
+                          </td>
+                          <td className="px-3 py-2">
+                            <p className="font-semibold text-slate-100">{row.value}</p>
+                            <p className="mt-0.5 text-[11px] uppercase tracking-[0.12em] text-slate-500">
+                              {row.segment}
+                            </p>
+                          </td>
+                          <td className="px-3 py-2 tabular-nums">
+                            {row.train_overlay_bets} bets · {formatSignedPct(row.train_overlay_roi_pct)}
+                          </td>
+                          <td className="px-3 py-2 tabular-nums">
+                            {row.holdout_overlay_bets} bets · {formatSignedPct(row.holdout_overlay_roi_pct)}
+                          </td>
+                          <td className="px-3 py-2 font-semibold tabular-nums text-lime-200">
+                            {row.combined_overlay_bets} bets · {formatSignedPct(row.combined_overlay_roi_pct)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="mt-4 rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
+                  No CPI-specific cell passed the shadow gate yet.
+                </div>
+              )}
+            </div>
+          ) : null}
+
+          <div className="mt-5 overflow-x-auto rounded-xl border border-slate-800/80">
+            <table className="min-w-full text-left text-xs">
+              <thead className="bg-slate-950/80 text-slate-500">
+                <tr>
+                  <th className="px-3 py-2 font-medium">Surface</th>
+                  <th className="px-3 py-2 font-medium">CPI bucket</th>
+                  <th className="px-3 py-2 font-medium">Bets</th>
+                  <th className="px-3 py-2 font-medium">ROI</th>
+                  <th className="px-3 py-2 font-medium">Years</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-800/70 text-slate-300">
+                {summary.headlineRows.map((row) => (
+                  <tr key={`${row.surface}-${row.bucket}`}>
+                    <td className="px-3 py-2 font-semibold text-slate-100">{row.surface}</td>
+                    <td className="px-3 py-2 uppercase tracking-[0.12em] text-slate-400">{row.bucket}</td>
+                    <td className="px-3 py-2 tabular-nums">{row.n}</td>
+                    <td
+                      className={cn(
+                        "px-3 py-2 font-semibold tabular-nums",
+                        (toNumber(row.roi_pct) ?? 0) >= 0 ? "text-emerald-300" : "text-rose-300",
+                      )}
+                    >
+                      {formatSignedPct(row.roi_pct)}
+                    </td>
+                    <td className="min-w-[320px] px-3 py-2 text-slate-500">{row.years || "-"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="mt-5 rounded-xl border border-slate-800/80 bg-slate-950/45 p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+              Strongest lagged research cells
+            </p>
+            <div className="mt-3 grid gap-3 lg:grid-cols-2">
+              {summary.candidateRows.map((row) => (
+                <div key={`${row.surface}-${row.cell}-${row.bucket}`} className="rounded-xl border border-slate-800/70 bg-slate-950/55 p-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <p className="text-sm font-semibold text-slate-100">
+                      {row.surface} · {row.cell.replaceAll("_", " ")} · {row.bucket}
+                    </p>
+                    <p className="text-sm font-bold tabular-nums text-emerald-300">{formatSignedPct(row.roi_pct)}</p>
+                  </div>
+                  <p className="mt-2 text-xs text-slate-500">
+                    n={row.n} · WR {formatNumber(toNumber(row.wr_pct), "%")} · P(ROI≤0) {formatNumber(toNumber(row.p_roi_le_0), "", 2)}
+                  </p>
+                  <p className="mt-1 text-xs text-slate-600">{row.years || "No yearly split"}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+    </section>
   );
 }
 
@@ -377,6 +797,10 @@ function LaneCard({ lane, stats }: { lane: LaneView; stats: LaneStats }) {
               <dt className="text-slate-500">Near miss</dt>
               <dd className="break-all text-slate-300">{files.nearMiss || "-"}</dd>
             </div>
+            <div>
+              <dt className="text-slate-500">Weekly performance</dt>
+              <dd className="break-all text-slate-300">{files.performance || "-"}</dd>
+            </div>
           </dl>
         </div>
       </div>
@@ -395,6 +819,7 @@ export default async function TennisMonitorPage() {
     [...TENNIS_RESEARCH_LANES, ...TENNIS_LEGACY_DISABLED_LANES].map(async (id) => [id, await loadLaneStats(id)] as const),
   );
   const statsByLane = Object.fromEntries(statsEntries) as Record<TennisResearchLaneId, LaneStats>;
+  const cpiSummary = await loadCpiSummary();
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
@@ -407,8 +832,8 @@ export default async function TennisMonitorPage() {
                 Tennis Research Lanes
               </h1>
               <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-400">
-                Internal-only tennis lane board. Clay bo3 is the first active shadow lane; later tabs stay scaffolded
-                until their own research phases are built.
+                Internal-only tennis lane board. Clay bo3 and Grass bo3 are active shadow lanes; deferred tabs stay
+                scaffolded until their own research phases are built.
               </p>
             </div>
             <StatusPill label="LOCALHOST ONLY" tone="border-slate-600 bg-slate-900 text-slate-300" />
@@ -416,6 +841,15 @@ export default async function TennisMonitorPage() {
         </div>
 
         <nav className="mt-6 flex flex-wrap gap-2" aria-label="Tennis research lanes">
+          <a
+            href="#cpi-surface-speed"
+            className={cn(
+              "rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] transition-colors",
+              "border-emerald-500/30 bg-emerald-500/10 text-emerald-200 hover:border-emerald-400/60",
+            )}
+          >
+            CPI speed map
+          </a>
           {[...activeLanes, ...legacyLanes].map((lane) => (
             <a
               key={lane.id}
@@ -431,6 +865,7 @@ export default async function TennisMonitorPage() {
         </nav>
 
         <div className="mt-6 space-y-5">
+          <CpiSurfaceSpeedCard summary={cpiSummary} />
           {activeLanes.map((lane) => (
             <LaneCard key={lane.id} lane={lane} stats={statsByLane[lane.id]} />
           ))}

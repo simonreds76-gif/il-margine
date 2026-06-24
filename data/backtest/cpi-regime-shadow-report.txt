@@ -1,0 +1,53 @@
+CPI speed-regime shadow gate report
+===================================
+
+Verdict: SHADOW ONLY - gated cells, no live routing
+Train year: 2024; holdout year: 2025; value threshold: 10%.
+The historical files list winners first, so value realisation is used instead of a fake reliability curve.
+
+Speed-regime value realisation factors (trained on 2024 value>=5)
+----------------------------------------------------------------
+SpeedFast     bets= 172 roi=  -4.67% avg_claim=25.53% factor=0.00 blocked
+SpeedNeutral  bets= 231 roi=  -1.75% avg_claim=21.54% factor=0.00 blocked
+SpeedSlow     bets= 168 roi=  +0.72% avg_claim=22.40% factor=0.00 too_weak
+
+Calibrated holdout selection, speed surfaces only
+-------------------------------------------------
+All speed surfaces: bets=0 roi=+0.00% pnl=+0.00u
+
+Accepted shadow gates
+---------------------
+surface_cpi_bucket_confidence=Hard:neutral:medium | train 71 bets +10.04% | holdout 108 bets +12.03% | combined 179 bets +11.24%
+surface_cpi_bucket_alignment=Hard:neutral:side_flip | train 45 bets +9.02% | holdout 66 bets +11.74% | combined 111 bets +10.64%
+model_surface_value_band=SpeedSlow:15-25 | train 43 bets +3.54% | holdout 35 bets +18.83% | combined 78 bets +10.40%
+surface_cpi_bucket=Hard:fast | train 61 bets +4.56% | holdout 37 bets +17.27% | combined 98 bets +9.36%
+model_surface_value_band=SpeedNeutral:15-25 | train 66 bets +4.12% | holdout 56 bets +9.66% | combined 122 bets +6.66%
+surface_cpi_bucket_confidence=Clay:slow:medium | train 40 bets +18.57% | holdout 39 bets +12.67% | combined 79 bets +15.66%
+model_surface_alignment=SpeedSlow:same_fav | train 75 bets +8.37% | holdout 51 bets +9.35% | combined 126 bets +8.77%
+model_surface_alignment=SpeedNeutral:same_fav | train 82 bets +4.18% | holdout 108 bets +3.70% | combined 190 bets +3.91%
+model_surface_confidence=SpeedNeutral:medium | train 129 bets +5.22% | holdout 150 bets +2.42% | combined 279 bets +3.71%
+surface_cpi_bucket=Clay:slow | train 48 bets +12.04% | holdout 47 bets +7.28% | combined 95 bets +9.68%
+model_surface_confidence=SpeedSlow:medium | train 109 bets +3.86% | holdout 71 bets +4.59% | combined 180 bets +4.15%
+model_surface_alignment=SpeedFast:side_flip | train 82 bets +7.50% | holdout 52 bets +5.08% | combined 134 bets +6.56%
+model_surface_value_band=SpeedSlow:10-15 | train 40 bets +13.38% | holdout 25 bets +9.52% | combined 65 bets +11.89%
+model_surface_value_band=SpeedFast:15-25 | train 45 bets +21.38% | holdout 37 bets +6.27% | combined 82 bets +14.56%
+surface_cpi_bucket_confidence=Clay:fast:medium | train 47 bets +4.66% | holdout 23 bets +5.61% | combined 70 bets +4.97%
+
+Watchlist gates
+---------------
+model_surface=SpeedSlow | train 130 bets +2.42% | holdout 90 bets +18.00% | combined 220 bets +8.79%
+surface_cpi_bucket=Hard:neutral | train 95 bets +2.17% | holdout 142 bets +10.30% | combined 237 bets +7.04%
+model_surface_value_band=SpeedNeutral:10-15 | train 46 bets +2.76% | holdout 62 bets +23.34% | combined 108 bets +14.57%
+surface_cpi_bucket_value_band=Hard:neutral:10-15 | train 25 bets +7.84% | holdout 44 bets +30.02% | combined 69 bets +21.99%
+surface_cpi_bucket_value_band=Hard:slow:15-25 | train 20 bets +7.10% | holdout 19 bets +67.53% | combined 39 bets +36.54%
+model_surface_confidence=SpeedFast:medium | train 107 bets +1.46% | holdout 75 bets +9.51% | combined 182 bets +4.78%
+surface_cpi_bucket_value_band=Hard:neutral:15-25 | train 36 bets +2.69% | holdout 44 bets +15.77% | combined 80 bets +9.89%
+surface_cpi_bucket_alignment=Hard:fast:same_fav | train 21 bets +0.57% | holdout 21 bets +20.43% | combined 42 bets +10.50%
+surface_cpi_bucket_alignment=Hard:fast:side_flip | train 40 bets +6.65% | holdout 16 bets +13.12% | combined 56 bets +8.50%
+surface_cpi_bucket_alignment=Clay:fast:side_flip | train 34 bets +6.76% | holdout 18 bets +11.50% | combined 52 bets +8.40%
+
+Rules
+-----
+- PASS_SHADOW requires train>=30 bets, train ROI>=+3%, holdout>=20 bets, holdout ROI>=0%, combined>=60 bets, combined ROI>=+3%.
+- WATCH is weaker and exists only to keep an eye on cells, not to publish picks.
+- No production route should consume these files without a separate live CLV gate.

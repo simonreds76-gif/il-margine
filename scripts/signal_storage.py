@@ -53,6 +53,10 @@ CHALLENGER_ML_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-
 CHALLENGER_ML_NEARMISS_PATH = DATA_DIR / "challenger-ml-shadow-nearmiss.csv"
 CLAY_BO3_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-clay_bo3.csv")
 CLAY_BO3_NEARMISS_PATH = DATA_DIR / "clay_bo3-shadow-nearmiss.csv"
+GRASS_BO3_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-grass_bo3.csv")
+GRASS_BO3_NEARMISS_PATH = DATA_DIR / "grass_bo3-shadow-nearmiss.csv"
+CPI_SPEED_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-cpi_speed.csv")
+CPI_SPEED_NEARMISS_PATH = DATA_DIR / "cpi_speed-shadow-nearmiss.csv"
 
 SIGNAL_PROFILE_PATHS: dict[str, tuple[SignalCsvPaths, SignalCsvPaths | None]] = {
     "strict": (STRICT_SIGNAL_PATHS, STRICT_INTERNAL_SIGNAL_PATHS),
@@ -63,6 +67,8 @@ SIGNAL_PROFILE_PATHS: dict[str, tuple[SignalCsvPaths, SignalCsvPaths | None]] = 
     "spread_v1_clay_fav": (SPREAD_V1_CLAY_FAV_SIGNAL_PATHS, None),
     "challenger_ml_shadow": (CHALLENGER_ML_SIGNAL_PATHS, None),
     "clay_bo3": (CLAY_BO3_SIGNAL_PATHS, None),
+    "grass_bo3": (GRASS_BO3_SIGNAL_PATHS, None),
+    "cpi_speed_shadow": (CPI_SPEED_SIGNAL_PATHS, None),
 }
 
 SIGNALS_CURRENT_JSON = DATA_DIR / "signals-current.json"

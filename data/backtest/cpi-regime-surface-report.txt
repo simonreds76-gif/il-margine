@@ -1,0 +1,57 @@
+CPI speed-regime surface comparison
+================================
+
+Verdict: ROI IMPROVED, PROBABILITY QUALITY WORSE - SHADOW ONLY
+Scope: ATP 2024-2025, paired current-code baseline vs CPI speed-regime surface.
+CPI is lag-only. Same-season CPI is not used. This is not a live lane.
+
+Paired rows: 4857
+Probability quality: baseline brier=0.21620, logloss=0.62140 (n=4857); overlay brier=0.21659, logloss=0.62217 (n=4857).
+
+Main selection comparison
+-------------------------
+all                    pairs=4857 base=1779 bets   -0.27% overlay=1774 bets   +3.51% delta_pnl= +67.17u added/drop/flip=512/517/99
+all                    pairs=4857 base=1195 bets   -0.28% overlay=1259 bets   +4.07% delta_pnl= +54.65u added/drop/flip=462/398/21
+
+Surface split at value>=10
+--------------------------
+Hard                   pairs=2763 base= 651 bets   +7.72% overlay= 694 bets  +10.67% delta_pnl= +23.78u added/drop/flip=264/221/18
+Clay                   pairs=1511 base= 384 bets  -10.20% overlay= 411 bets   -2.24% delta_pnl= +29.98u added/drop/flip=143/116/1
+Grass                  pairs= 583 base= 160 bets   -9.03% overlay= 154 bets   -8.80% delta_pnl=  +0.89u added/drop/flip=55/61/2
+
+Model-surface split at value>=10
+--------------------------------
+Hard                   pairs= 949 base= 244 bets  +15.66% overlay= 244 bets  +15.66% delta_pnl=  +0.00u added/drop/flip=0/0/0
+Clay                   pairs= 612 base= 150 bets   -7.94% overlay= 150 bets   -7.94% delta_pnl=  +0.00u added/drop/flip=0/0/0
+Grass                  pairs= 109 base=  34 bets  -29.06% overlay=  34 bets  -29.06% delta_pnl=  +0.00u added/drop/flip=0/0/0
+SpeedSlow              pairs= 858 base= 183 bets   -4.61% overlay= 220 bets   +8.79% delta_pnl= +27.77u added/drop/flip=130/93/5
+SpeedNeutral           pairs=1548 base= 360 bets   -5.62% overlay= 371 bets   +1.51% delta_pnl= +25.86u added/drop/flip=200/189/11
+SpeedFast              pairs= 781 base= 224 bets   +3.95% overlay= 240 bets   +4.11% delta_pnl=  +1.02u added/drop/flip=132/116/5
+
+CPI speed bucket split at value>=10
+-----------------------------------
+slow                   pairs= 858 base= 183 bets   -4.61% overlay= 220 bets   +8.79% delta_pnl= +27.77u added/drop/flip=130/93/5
+neutral                pairs=1548 base= 360 bets   -5.62% overlay= 371 bets   +1.51% delta_pnl= +25.86u added/drop/flip=200/189/11
+fast                   pairs= 781 base= 224 bets   +3.95% overlay= 240 bets   +4.11% delta_pnl=  +1.02u added/drop/flip=132/116/5
+missing                pairs=1670 base= 428 bets   +3.84% overlay= 428 bets   +3.84% delta_pnl=  +0.00u added/drop/flip=0/0/0
+
+Surface x CPI bucket at value>=10
+---------------------------------
+Clay:fast              pairs= 286 base=  87 bets   +1.38% overlay=  91 bets   +0.45% delta_pnl=  -0.79u added/drop/flip=49/45/1
+Clay:missing           pairs= 612 base= 150 bets   -7.94% overlay= 150 bets   -7.94% delta_pnl=  +0.00u added/drop/flip=0/0/0
+Clay:neutral           pairs= 256 base=  59 bets  -34.20% overlay=  75 bets   -9.20% delta_pnl= +13.28u added/drop/flip=41/25/0
+Clay:slow              pairs= 357 base=  88 bets   -9.42% overlay=  95 bets   +9.68% delta_pnl= +17.49u added/drop/flip=53/46/0
+Grass:fast             pairs= 163 base=  54 bets   +3.33% overlay=  51 bets   +0.57% delta_pnl=  -1.51u added/drop/flip=22/25/2
+Grass:missing          pairs= 109 base=  34 bets  -29.06% overlay=  34 bets  -29.06% delta_pnl=  +0.00u added/drop/flip=0/0/0
+Grass:neutral          pairs= 284 base=  65 bets   -8.79% overlay=  59 bets   -7.07% delta_pnl=  +1.54u added/drop/flip=28/34/0
+Grass:slow             pairs=  27 base=   7 bets   -9.43% overlay=  10 bets   +2.00% delta_pnl=  +0.86u added/drop/flip=5/2/0
+Hard:fast              pairs= 332 base=  83 bets   +7.05% overlay=  98 bets   +9.36% delta_pnl=  +3.32u added/drop/flip=61/46/2
+Hard:missing           pairs= 949 base= 244 bets  +15.66% overlay= 244 bets  +15.66% delta_pnl=  +0.00u added/drop/flip=0/0/0
+Hard:neutral           pairs=1008 base= 236 bets   +2.39% overlay= 237 bets   +7.04% delta_pnl= +11.04u added/drop/flip=131/130/11
+Hard:slow              pairs= 474 base=  88 bets   +0.59% overlay= 115 bets   +8.64% delta_pnl=  +9.42u added/drop/flip=72/45/5
+
+Decision notes
+--------------
+- The regime model improved selected-bet ROI, but worsened broad probability quality.
+- Treat this as a shadow candidate: profile-specific gates only, no broad live routing.
+- Next test should isolate profitable regime cells and retune calibration for model_surface.

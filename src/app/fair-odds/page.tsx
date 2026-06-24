@@ -90,6 +90,8 @@ interface SignalSummary {
     | "challenger_ml_shadow"
     | "clay_v3_shadow"
     | "clay_bo3"
+    | "grass_bo3"
+    | "cpi_speed_shadow"
     | "clay_guarded"
     | "clay_2026"
     | "spread_v1"
@@ -113,6 +115,23 @@ interface SignalSummary {
   shadow_reason?: string;
   tournament_speed_signal?: number;
   clay_speed_tier?: "fast" | "normal";
+  grass_cpi?: number;
+  grass_cpi_year?: number;
+  grass_cpi_key?: string;
+  grass_cpi_mode?: string;
+  grass_speed_tier?: "fast" | "neutral" | "slow" | "missing";
+  grass_cpi_gate_min?: number;
+  grass_cpi_slow_max?: number;
+  grass_cpi_fast_min?: number;
+  grass_cpi_lag_years?: number;
+  cpi_speed_cpi?: number;
+  cpi_speed_year?: number;
+  cpi_speed_z?: number;
+  cpi_speed_bucket?: "fast" | "neutral" | "slow" | "missing";
+  cpi_speed_key?: string;
+  cpi_speed_mode?: string;
+  cpi_speed_gate?: string;
+  cpi_speed_lag_years?: number;
   raw_value_p1?: number;
   raw_value_p2?: number;
   clay_2026_raw_value_same_side?: number;
@@ -170,6 +189,22 @@ interface StrictPolicyMeta {
   };
 }
 
+interface SignalPerformanceSummary {
+  archive_rows: number;
+  live_rows: number;
+  settled: number;
+  pending: number;
+  wins: number;
+  losses: number;
+  pushes: number;
+  voids: number;
+  pnl_units: number;
+  staked_units: number;
+  roi_pct?: number;
+  avg_odds?: number;
+  last_settled_at?: string;
+}
+
 interface PinnacleOnlyMatch {
   tournament?: string;
   player1_name: string;
@@ -203,6 +238,9 @@ interface ApiResponse {
   signals_challenger_ml?: SignalSummary[];
   signals_clay_v3?: SignalSummary[];
   signals_clay_bo3?: SignalSummary[];
+  signals_grass_bo3?: SignalSummary[];
+  signals_cpi_speed?: SignalSummary[];
+  cpi_speed_performance?: SignalPerformanceSummary;
   challenger_nearmisses?: ChallengerNearmiss[];
   signals_clay_guarded?: SignalSummary[];
   signals_clay_2026?: SignalSummary[];
@@ -211,6 +249,8 @@ interface ApiResponse {
     challenger_ml_shadow?: { loaded: number; attached: number; unmatched: number };
     clay_v3_shadow?: { loaded: number; attached: number; unmatched: number };
     clay_bo3?: { loaded: number; attached: number; unmatched: number };
+    grass_bo3?: { loaded: number; attached: number; unmatched: number };
+    cpi_speed_shadow?: { loaded: number; attached: number; unmatched: number };
     clay_guarded?: { loaded: number; attached: number; unmatched: number };
     clay_2026?: { loaded: number; attached: number; unmatched: number };
     spread_v1?: { loaded: number; attached: number; unmatched: number };
@@ -331,6 +371,8 @@ type SignalFeedCategory =
   | "challenger_ml_shadow"
   | "clay_v3_shadow"
   | "clay_bo3"
+  | "grass_bo3"
+  | "cpi_speed_shadow"
   | "volume_200"
   | "volume_200_upgrade"
   | "volume_275"
@@ -391,6 +433,20 @@ function signalFeedMeta(category: SignalFeedCategory, shadowProfile?: string): {
       accentClass: "text-sky-200",
     };
   }
+  if (category === "grass_bo3") {
+    return {
+      label: "GRASS BO3",
+      badgeClass: "border-teal-400/35 bg-teal-400/10 text-teal-200",
+      accentClass: "text-teal-200",
+    };
+  }
+  if (category === "cpi_speed_shadow") {
+    return {
+      label: "CPI SPEED",
+      badgeClass: "border-indigo-400/35 bg-indigo-400/10 text-indigo-200",
+      accentClass: "text-indigo-200",
+    };
+  }
   if (category === "volume_200_upgrade") {
     return {
       label: "VOL200+",
@@ -435,6 +491,8 @@ function primarySignalBadgeMeta(
   const challengerSignal = rowSignals.find((signal) => signal.kind === "challenger_ml_shadow");
   const clayV3Signal = rowSignals.find((signal) => signal.kind === "clay_v3_shadow");
   const clayBo3Signal = rowSignals.find((signal) => signal.kind === "clay_bo3");
+  const grassBo3Signal = rowSignals.find((signal) => signal.kind === "grass_bo3");
+  const cpiSpeedSignal = rowSignals.find((signal) => signal.kind === "cpi_speed_shadow");
   const volume200Signal = rowSignals.find((signal) => signal.kind === "volume_200");
   const claySignal = rowSignals.find((signal) => signal.kind === "clay_2026");
   const spreadSignal = rowSignals.find((signal) => signal.kind === "spread_v1");
@@ -468,6 +526,22 @@ function primarySignalBadgeMeta(
       label: "CLAY BO3",
       className: "border-sky-400/35 bg-sky-400/10 text-sky-200",
       title: `Internal clay bo3 ${clayBo3Signal.bet_type === "spread" ? "dog-HC" : "ML"} shadow signal`,
+    };
+  }
+
+  if (grassBo3Signal) {
+    return {
+      label: "GRASS BO3",
+      className: "border-teal-400/35 bg-teal-400/10 text-teal-200",
+      title: "Internal grass warm-up ML research signal",
+    };
+  }
+
+  if (cpiSpeedSignal) {
+    return {
+      label: "CPI SPEED",
+      className: "border-indigo-400/35 bg-indigo-400/10 text-indigo-200",
+      title: "Experimental CPI speed-regime ML shadow signal, not a live staking lane",
     };
   }
 
@@ -567,10 +641,12 @@ function rowSignalKindOrder(kind?: SignalSummary["kind"]): number {
   if (kind === "challenger_ml_shadow") return 0;
   if (kind === "clay_v3_shadow") return 1;
   if (kind === "clay_bo3") return 2;
-  if (kind === "spread_v1") return 3;
-  if (kind === "clay_guarded") return 4;
-  if (kind === "clay_2026") return 5;
-  return 6;
+  if (kind === "grass_bo3") return 3;
+  if (kind === "cpi_speed_shadow") return 4;
+  if (kind === "spread_v1") return 5;
+  if (kind === "clay_guarded") return 6;
+  if (kind === "clay_2026") return 7;
+  return 8;
 }
 
 function rowSignalSort(signals: SignalSummary[]): SignalSummary[] {
@@ -607,6 +683,7 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
         const stakeUnits = signal.stake_units != null ? formatStake(signal.stake_units) : "1.0";
         const stakeGbp = signal.stake_gbp != null ? Math.round(signal.stake_gbp) : 100;
         const auditOnly = signal.kind === "spread_v1";
+        const shadowOnly = signal.kind === "cpi_speed_shadow";
 
         return (
           <div
@@ -618,6 +695,10 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
                 ? "border-lime-400/25 bg-lime-400/8"
                 : signal.kind === "clay_bo3"
                 ? "border-sky-400/25 bg-sky-400/8"
+                : signal.kind === "grass_bo3"
+                ? "border-teal-400/25 bg-teal-400/8"
+                : signal.kind === "cpi_speed_shadow"
+                ? "border-indigo-400/25 bg-indigo-400/8"
                 : signal.kind === "clay_guarded"
                 ? "border-lime-500/25 bg-lime-500/8"
                 : signal.kind === "clay_2026"
@@ -636,6 +717,10 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
                         ? "border-lime-400/35 bg-lime-400/10 text-lime-200"
                         : signal.kind === "clay_bo3"
                         ? "border-sky-400/35 bg-sky-400/10 text-sky-200"
+                        : signal.kind === "grass_bo3"
+                        ? "border-teal-400/35 bg-teal-400/10 text-teal-200"
+                        : signal.kind === "cpi_speed_shadow"
+                        ? "border-indigo-400/35 bg-indigo-400/10 text-indigo-200"
                         : signal.kind === "clay_2026"
                         ? "border-orange-500/30 bg-orange-500/10 text-orange-200"
                         : "border-cyan-500/25 bg-cyan-500/10 text-cyan-300"
@@ -651,6 +736,10 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
                         ? signal.bet_type === "spread"
                           ? "Clay bo3 dog-HC"
                           : "Clay bo3 ML"
+                      : signal.kind === "grass_bo3"
+                        ? "Grass bo3 ML"
+                      : signal.kind === "cpi_speed_shadow"
+                        ? "CPI speed ML"
                       : signal.kind === "clay_2026"
                         ? "Clay 2026 ML"
                         : "Spread audit"}
@@ -683,6 +772,57 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
                       FAST CLAY
                     </span>
                   ) : null}
+                  {signal.kind === "grass_bo3" && signal.grass_speed_tier ? (
+                    <span
+                      className={`rounded border px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] ${
+                        signal.grass_speed_tier === "fast"
+                          ? "border-teal-400/30 bg-teal-400/10 text-teal-200"
+                          : signal.grass_speed_tier === "neutral"
+                            ? "border-slate-400/25 bg-slate-400/10 text-slate-200"
+                          : "border-amber-500/25 bg-amber-500/10 text-amber-200"
+                      }`}
+                      title={[
+                        signal.grass_cpi != null ? `Lagged CPI ${signal.grass_cpi.toFixed(2)}` : null,
+                        signal.grass_cpi_year != null ? `latest lag year ${signal.grass_cpi_year}` : null,
+                        signal.grass_cpi_mode ? `mode ${signal.grass_cpi_mode}` : null,
+                        signal.grass_cpi_key ? `key ${signal.grass_cpi_key}` : null,
+                        signal.grass_cpi_slow_max != null ? `slow block < ${signal.grass_cpi_slow_max.toFixed(2)}` : null,
+                        signal.grass_cpi_fast_min != null ? `fast tag >= ${signal.grass_cpi_fast_min.toFixed(2)}` : null,
+                        signal.grass_cpi_lag_years != null ? `lag years ${signal.grass_cpi_lag_years.toFixed(0)}` : null,
+                      ].filter(Boolean).join(" | ")}
+                    >
+                      {signal.grass_speed_tier === "fast"
+                        ? "FAST GRASS"
+                        : signal.grass_speed_tier === "neutral"
+                          ? "NEUTRAL GRASS"
+                          : signal.grass_speed_tier === "missing"
+                            ? "GRASS CPI MISSING"
+                            : "SLOW GRASS"}
+                      {signal.grass_cpi != null ? ` ${signal.grass_cpi.toFixed(2)}` : ""}
+                    </span>
+                  ) : null}
+                  {signal.kind === "cpi_speed_shadow" && signal.cpi_speed_bucket ? (
+                    <span
+                      className={`rounded border px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] ${
+                        signal.cpi_speed_bucket === "fast"
+                          ? "border-indigo-300/35 bg-indigo-300/10 text-indigo-100"
+                          : signal.cpi_speed_bucket === "neutral"
+                            ? "border-slate-400/25 bg-slate-400/10 text-slate-200"
+                            : "border-amber-500/25 bg-amber-500/10 text-amber-200"
+                      }`}
+                      title={[
+                        signal.cpi_speed_cpi != null ? `Lagged CPI ${signal.cpi_speed_cpi.toFixed(2)}` : null,
+                        signal.cpi_speed_z != null ? `z ${signal.cpi_speed_z > 0 ? "+" : ""}${signal.cpi_speed_z.toFixed(2)}` : null,
+                        signal.cpi_speed_year != null ? `latest lag year ${signal.cpi_speed_year}` : null,
+                        signal.cpi_speed_mode ? `mode ${signal.cpi_speed_mode}` : null,
+                        signal.cpi_speed_key ? `key ${signal.cpi_speed_key}` : null,
+                        signal.cpi_speed_gate ? `gate ${signal.cpi_speed_gate}` : null,
+                      ].filter(Boolean).join(" | ")}
+                    >
+                      CPI {signal.cpi_speed_bucket}
+                      {signal.cpi_speed_z != null ? ` ${signal.cpi_speed_z > 0 ? "+" : ""}${signal.cpi_speed_z.toFixed(1)}z` : ""}
+                    </span>
+                  ) : null}
                   {clayMeta?.flipped ? (
                     <span className="rounded border border-orange-500/25 bg-orange-500/10 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] text-orange-200">
                       CAL FLIP
@@ -710,7 +850,11 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
                   {fmtPct(signal.value_pct)}
                 </div>
                 <div className="mt-1 text-[11px] text-slate-500">
-                  {auditOnly ? "audit only - not a live pick" : `${stakeUnits}u / GBP${stakeGbp}`}
+                  {auditOnly
+                    ? "audit only - not a live pick"
+                    : shadowOnly
+                      ? "shadow only - not a live pick"
+                      : `${stakeUnits}u / GBP${stakeGbp}`}
                 </div>
               </div>
             </div>
@@ -756,6 +900,11 @@ function fmtOdds(v: number | undefined): string {
 function fmtPct(v: number | undefined): string {
   if (v == null) return "--";
   return `${v > 0 ? "+" : ""}${v.toFixed(1)}%`;
+}
+
+function fmtUnits(v: number | undefined): string {
+  if (v == null || Number.isNaN(v)) return "--";
+  return `${v >= 0 ? "+" : ""}${v.toFixed(2)}u`;
 }
 
 function fmtSignedPct(v: number | undefined): string {
@@ -850,7 +999,12 @@ function formatSignalBet(s: SignalSummary): { matchLabel: string; betLine: strin
   const odds = s.pinnacle_odds != null ? s.pinnacle_odds.toFixed(2) : "--";
   const units = s.stake_units != null ? s.stake_units : 1;
   const gbp = s.stake_gbp != null ? Math.round(s.stake_gbp) : 100;
-  const stakePart = s.kind === "spread_v1" ? "(audit only)" : `x ${formatStake(units)}u (or GBP${gbp})`;
+  const stakePart =
+    s.kind === "spread_v1"
+      ? "(audit only)"
+      : s.kind === "cpi_speed_shadow"
+        ? "(shadow only)"
+        : `x ${formatStake(units)}u (or GBP${gbp})`;
 
   if (s.bet_type === "spread" && s.spread_line != null) {
     const line = s.side === "P1+" ? s.spread_line : -s.spread_line;
@@ -931,6 +1085,18 @@ function SignalFeedList({
                       {signalReasonLabel(signal.shadow_reason)}
                     </span>
                   ) : null}
+                  {signal.kind === "cpi_speed_shadow" ? (
+                    <span
+                      className="rounded border border-indigo-400/30 bg-indigo-400/10 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] text-indigo-200"
+                      title={[
+                        signal.cpi_speed_cpi != null ? `CPI ${signal.cpi_speed_cpi.toFixed(2)}` : null,
+                        signal.cpi_speed_z != null ? `z ${signal.cpi_speed_z > 0 ? "+" : ""}${signal.cpi_speed_z.toFixed(2)}` : null,
+                        signal.cpi_speed_gate ? `gate ${signal.cpi_speed_gate}` : null,
+                      ].filter(Boolean).join(" | ")}
+                    >
+                      {signal.cpi_speed_bucket ? `CPI ${signal.cpi_speed_bucket}` : "CPI GATE"}
+                    </span>
+                  ) : null}
                   {signal.kind === "clay_guarded" && signal.shadow_reason ? (
                     <span className="rounded border border-lime-500/25 bg-lime-500/10 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] text-lime-200">
                       {signalReasonLabel(signal.shadow_reason)}
@@ -947,6 +1113,15 @@ function SignalFeedList({
                 {signal.kind === "clay_guarded" && clayGuardGap != null ? (
                   <div className="mt-1 text-[11px] text-slate-500">
                     Elo vs market {fmtSignedPct(clayGuardGap * 100)}
+                  </div>
+                ) : null}
+                {signal.kind === "cpi_speed_shadow" ? (
+                  <div className="mt-1 text-[11px] text-slate-500">
+                    {[
+                      signal.cpi_speed_gate ? signal.cpi_speed_gate.replaceAll("_", " ") : null,
+                      signal.cpi_speed_key ? `venue ${signal.cpi_speed_key}` : null,
+                      signal.cpi_speed_year != null ? `CPI year ${signal.cpi_speed_year}` : null,
+                    ].filter(Boolean).join(" | ")}
                   </div>
                 ) : null}
               </div>
@@ -1220,6 +1395,20 @@ export default function FairOddsPage() {
       signal,
     })),
   );
+  const grassBo3FeedItems = sortSignalFeedItems(
+    (data?.signals_grass_bo3 ?? []).map((signal) => ({
+      key: `grass-bo3-${signal.id}`,
+      category: "grass_bo3" as const,
+      signal,
+    })),
+  );
+  const cpiSpeedFeedItems = sortSignalFeedItems(
+    (data?.signals_cpi_speed ?? []).map((signal) => ({
+      key: `cpi-speed-${signal.id}`,
+      category: "cpi_speed_shadow" as const,
+      signal,
+    })),
+  );
   const clayGuardedFeedItems = sortSignalFeedItems(
     (data?.signals_clay_guarded ?? []).map((signal) => ({
       key: `clay-guarded-${signal.id}`,
@@ -1234,7 +1423,14 @@ export default function FairOddsPage() {
       signal,
     })),
   );
-  const signalSections = [
+  const signalSections: Array<{
+    key: string;
+    category: SignalFeedCategory;
+    title: string;
+    subtitle: string;
+    items: SignalFeedItem[];
+    emptyLabel: string;
+  }> = [
     {
       key: "strict",
       category: "strict" as const,
@@ -1268,6 +1464,22 @@ export default function FairOddsPage() {
             subtitle: "Entry-aware clay ML + handicap research",
             items: clayV3FeedItems,
             emptyLabel: "No Clay v3 signals today",
+          },
+          {
+            key: "grass-bo3",
+            category: "grass_bo3" as const,
+            title: "Grass bo3",
+            subtitle: "Internal grass warm-up ML research; not a paid/live lane until ROI/CLV improves",
+            items: grassBo3FeedItems,
+            emptyLabel: "No Grass bo3 signals today",
+          },
+          {
+            key: "cpi-speed",
+            category: "cpi_speed_shadow" as const,
+            title: "CPI speed shadow",
+            subtitle: "Court-speed regime ML experiment; shadow-only until settled ROI/CLV is proven",
+            items: cpiSpeedFeedItems,
+            emptyLabel: "No CPI speed shadow signals today",
           },
         ]
       : []),
@@ -1379,6 +1591,9 @@ export default function FairOddsPage() {
                       <span className={data.signal_attachment.clay_v3_shadow?.unmatched ? "text-amber-300" : "text-lime-200"}>
                         Clay v3 <span className="text-slate-200">{data.signal_attachment.clay_v3_shadow?.attached ?? 0}/{data.signal_attachment.clay_v3_shadow?.loaded ?? 0}</span>
                       </span>
+                      <span className={data.signal_attachment.cpi_speed_shadow?.unmatched ? "text-amber-300" : "text-indigo-200"}>
+                        CPI speed <span className="text-slate-200">{data.signal_attachment.cpi_speed_shadow?.attached ?? 0}/{data.signal_attachment.cpi_speed_shadow?.loaded ?? 0}</span>
+                      </span>
                     </>
                   ) : null}
                   <span className={data.signal_attachment.clay_guarded?.unmatched ? "text-amber-300" : ""}>
@@ -1461,6 +1676,46 @@ export default function FairOddsPage() {
                       </div>
                     </summary>
                     <div className="border-t border-slate-800/70 px-3 pb-3 pt-3">
+                      {section.key === "cpi-speed" && data.cpi_speed_performance ? (
+                        <div className="mb-3 rounded-xl border border-indigo-400/20 bg-indigo-400/8 p-3">
+                          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                            <div>
+                              <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-indigo-200">
+                                Settlement record
+                              </div>
+                              <div className="mt-1 text-[12px] text-slate-400">
+                                {data.cpi_speed_performance.settled > 0
+                                  ? `${data.cpi_speed_performance.settled} settled | ${data.cpi_speed_performance.wins}W-${data.cpi_speed_performance.losses}L-${data.cpi_speed_performance.pushes}P-${data.cpi_speed_performance.voids}V`
+                                  : "No settled CPI speed rows yet. This is discovery only until results land."}
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-3 gap-2 text-right text-[12px] md:min-w-[360px]">
+                              <div className="rounded-lg border border-slate-800/70 bg-slate-950/45 px-2 py-1.5">
+                                <div className="text-[10px] uppercase tracking-wide text-slate-500">P/L</div>
+                                <div className={`font-mono font-semibold ${data.cpi_speed_performance.pnl_units >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                                  {fmtUnits(data.cpi_speed_performance.pnl_units)}
+                                </div>
+                              </div>
+                              <div className="rounded-lg border border-slate-800/70 bg-slate-950/45 px-2 py-1.5">
+                                <div className="text-[10px] uppercase tracking-wide text-slate-500">ROI</div>
+                                <div className={`font-mono font-semibold ${data.cpi_speed_performance.roi_pct == null || data.cpi_speed_performance.roi_pct >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                                  {fmtPct(data.cpi_speed_performance.roi_pct)}
+                                </div>
+                              </div>
+                              <div className="rounded-lg border border-slate-800/70 bg-slate-950/45 px-2 py-1.5">
+                                <div className="text-[10px] uppercase tracking-wide text-slate-500">Pending</div>
+                                <div className="font-mono font-semibold text-slate-200">
+                                  {data.cpi_speed_performance.pending}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="mt-2 text-[11px] text-slate-500">
+                            Archive {data.cpi_speed_performance.archive_rows} rows | live {data.cpi_speed_performance.live_rows}
+                            {data.cpi_speed_performance.avg_odds != null ? ` | avg odds ${data.cpi_speed_performance.avg_odds.toFixed(2)}` : ""}
+                          </div>
+                        </div>
+                      ) : null}
                       <SignalFeedList
                         items={section.items}
                         emptyLabel={section.emptyLabel}
@@ -1522,6 +1777,10 @@ export default function FairOddsPage() {
                     Challenger tracker {data.signal_attachment.challenger_ml_shadow?.attached ?? 0}/{data.signal_attachment.challenger_ml_shadow?.loaded ?? 0}
                     {" | "}
                     Clay v3 {data.signal_attachment.clay_v3_shadow?.attached ?? 0}/{data.signal_attachment.clay_v3_shadow?.loaded ?? 0}
+                    {" | "}
+                    Grass bo3 {data.signal_attachment.grass_bo3?.attached ?? 0}/{data.signal_attachment.grass_bo3?.loaded ?? 0}
+                    {" | "}
+                    CPI speed {data.signal_attachment.cpi_speed_shadow?.attached ?? 0}/{data.signal_attachment.cpi_speed_shadow?.loaded ?? 0}
                     {" | "}
                   </>
                 ) : null}
