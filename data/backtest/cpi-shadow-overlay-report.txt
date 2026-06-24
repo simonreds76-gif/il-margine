@@ -1,0 +1,49 @@
+CPI shadow overlay comparison
+================================
+
+Verdict: NO MATERIAL CHANGE
+Scope: ATP 2024-2025, paired current-code baseline vs CPI shadow overlay.
+CPI is lag-only. Same-season CPI is not used. This is not a live lane.
+
+Paired rows: 4857
+Probability quality: baseline brier=0.21620, logloss=0.62140 (n=4857); overlay brier=0.21620, logloss=0.62140 (n=4857).
+
+Main selection comparison
+-------------------------
+all                    pairs=4857 base=1779 bets   -0.27% overlay=1778 bets   -0.32% delta_pnl=  -0.89u added/drop/flip=3/4/0
+all                    pairs=4857 base=1195 bets   -0.28% overlay=1193 bets   -0.28% delta_pnl=  +0.07u added/drop/flip=0/2/0
+
+Surface split at value>=10
+--------------------------
+Hard                   pairs=2763 base= 651 bets   +7.72% overlay= 649 bets   +7.75% delta_pnl=  +0.07u added/drop/flip=0/2/0
+Clay                   pairs=1511 base= 384 bets  -10.20% overlay= 384 bets  -10.20% delta_pnl=  +0.00u added/drop/flip=0/0/0
+Grass                  pairs= 583 base= 160 bets   -9.03% overlay= 160 bets   -9.03% delta_pnl=  +0.00u added/drop/flip=0/0/0
+
+CPI speed bucket split at value>=10
+-----------------------------------
+slow                   pairs= 858 base= 183 bets   -4.61% overlay= 182 bets   -5.14% delta_pnl=  -0.93u added/drop/flip=0/1/0
+neutral                pairs=1548 base= 360 bets   -5.62% overlay= 360 bets   -5.62% delta_pnl=  +0.00u added/drop/flip=0/0/0
+fast                   pairs= 781 base= 224 bets   +3.95% overlay= 223 bets   +4.42% delta_pnl=  +1.00u added/drop/flip=0/1/0
+missing                pairs=1670 base= 428 bets   +3.84% overlay= 428 bets   +3.84% delta_pnl=  +0.00u added/drop/flip=0/0/0
+
+Surface x CPI bucket at value>=10
+---------------------------------
+Clay:fast              pairs= 286 base=  87 bets   +1.38% overlay=  87 bets   +1.38% delta_pnl=  +0.00u added/drop/flip=0/0/0
+Clay:missing           pairs= 612 base= 150 bets   -7.94% overlay= 150 bets   -7.94% delta_pnl=  +0.00u added/drop/flip=0/0/0
+Clay:neutral           pairs= 256 base=  59 bets  -34.20% overlay=  59 bets  -34.20% delta_pnl=  +0.00u added/drop/flip=0/0/0
+Clay:slow              pairs= 357 base=  88 bets   -9.42% overlay=  88 bets   -9.42% delta_pnl=  +0.00u added/drop/flip=0/0/0
+Grass:fast             pairs= 163 base=  54 bets   +3.33% overlay=  54 bets   +3.33% delta_pnl=  +0.00u added/drop/flip=0/0/0
+Grass:missing          pairs= 109 base=  34 bets  -29.06% overlay=  34 bets  -29.06% delta_pnl=  +0.00u added/drop/flip=0/0/0
+Grass:neutral          pairs= 284 base=  65 bets   -8.79% overlay=  65 bets   -8.79% delta_pnl=  +0.00u added/drop/flip=0/0/0
+Grass:slow             pairs=  27 base=   7 bets   -9.43% overlay=   7 bets   -9.43% delta_pnl=  +0.00u added/drop/flip=0/0/0
+Hard:fast              pairs= 332 base=  83 bets   +7.05% overlay=  82 bets   +8.35% delta_pnl=  +1.00u added/drop/flip=0/1/0
+Hard:missing           pairs= 949 base= 244 bets  +15.66% overlay= 244 bets  +15.66% delta_pnl=  +0.00u added/drop/flip=0/0/0
+Hard:neutral           pairs=1008 base= 236 bets   +2.39% overlay= 236 bets   +2.39% delta_pnl=  +0.00u added/drop/flip=0/0/0
+Hard:slow              pairs= 474 base=  88 bets   +0.59% overlay=  87 bets   -0.47% delta_pnl=  -0.93u added/drop/flip=0/1/0
+
+Decision notes
+--------------
+- The CPI overlay is not a production improvement on this paired test.
+- It changed too few selections to be meaningful; treat the tiny P/L move as noise.
+- Keep CPI as a monitor/research map, not a signal generator.
+- Use the report to design gated cells, not to broaden grass blindly.

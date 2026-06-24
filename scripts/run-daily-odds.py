@@ -1,7 +1,7 @@
 """
 Run Pinnacle scraper then fair-odds pipeline in sequence.
 Optionally runs strict policy reporting (base production mode by default)
-with side-by-side base/overlay tracking plus the Spread Shadow appender.
+with side-by-side base/overlay tracking plus shadow-lane appenders.
 
 Usage:
   python scripts/run-daily-odds.py
@@ -109,21 +109,21 @@ def main() -> int:
 
     run_cmd(
         [sys.executable, str(ROOT / "scripts" / "pinnacle-scrape-odds.py"), "--active-leagues-only"],
-        label="1/4 Pinnacle scraper (writes to bookmaker_odds_snapshot)",
+        label="1/5 Pinnacle scraper (writes to bookmaker_odds_snapshot)",
         fatal=True,
         timeout_seconds=step_timeout,
     )
 
     run_cmd(
         [sys.executable, str(ROOT / "scripts" / "oncourt-compute-fair-odds.py"), "--skip-handicap-values"],
-        label="2/4 Fair odds pipeline",
+        label="2/5 Fair odds pipeline",
         fatal=True,
         timeout_seconds=step_timeout,
     )
 
     run_cmd(
         [sys.executable, str(ROOT / "scripts" / "compute-handicap-values.py")],
-        label="3/4 Handicap values (spread edge)",
+        label="3/5 Handicap values (spread edge)",
         fatal=False,
         timeout_seconds=step_timeout,
     )
@@ -157,7 +157,7 @@ def main() -> int:
 
         run_cmd(
             strict_cmd,
-            label=f"4/5 Strict report (production mode: {args.strict_policy_mode}; compare: {args.strict_compare_overlay})",
+            label=f"4a/5 Strict report (production mode: {args.strict_policy_mode}; compare: {args.strict_compare_overlay})",
             fatal=False,
             timeout_seconds=step_timeout,
         )
@@ -173,14 +173,31 @@ def main() -> int:
             spread_cmd.extend(["--date", args.strict_report_date])
         run_cmd(
             spread_cmd,
-            label="5/5 Spread v1 Shadow append",
+            label="4b/5 Spread v1 Shadow append",
             fatal=False,
             timeout_seconds=step_timeout,
             env_overrides={"SPREAD_V1_ENABLE_CORRECTION_ONLY": "1"},
         )
+
+        cpi_speed_cmd = [
+            sys.executable,
+            str(ROOT / "scripts" / "strict-policy-report.py"),
+            "--append",
+            "--signal-profile",
+            "cpi_speed_shadow",
+        ]
+        if args.strict_report_date:
+            cpi_speed_cmd.extend(["--date", args.strict_report_date])
+        run_cmd(
+            cpi_speed_cmd,
+            label="5/5 CPI speed-regime Shadow append",
+            fatal=False,
+            timeout_seconds=step_timeout,
+            env_overrides={"INTERNAL_RESEARCH_LANES": "1"},
+        )
     else:
         print("\n=== 4/5 Strict report skipped (--skip-strict-report) ===")
-        print("=== 5/5 Spread v1 Shadow skipped (--skip-strict-report) ===")
+        print("=== 5/5 Shadow appenders skipped (--skip-strict-report) ===")
 
     print("\nDone. Pinnacle snapshot + daily_fair_odds updated.")
     if not args.skip_strict_report:
@@ -188,6 +205,7 @@ def main() -> int:
         if args.strict_compare_overlay:
             print(f"Overlay comparison rows updated at {args.strict_compare_output}.")
         print("Spread Shadow CSV appended.")
+        print("CPI speed-regime Shadow CSV refreshed.")
     return 0
 
 

@@ -25,7 +25,8 @@ $envFiles = @(
 $laneConfigs = @(
     @{ Name = "Strict live control"; Path = "data\backtest\strict-policy-performance-weekly.csv" },
     @{ Name = "Volume 200 shadow"; Path = "data\backtest\strict-policy-performance-volume200-weekly.csv" },
-    @{ Name = "Spread v1 shadow"; Path = "data\backtest\strict-policy-performance-spreadv1-weekly.csv" }
+    @{ Name = "Spread v1 shadow"; Path = "data\backtest\strict-policy-performance-spreadv1-weekly.csv" },
+    @{ Name = "CPI speed shadow"; Path = "data\backtest\strict-policy-performance-cpi_speed-weekly.csv" }
 )
 
 $taskNames = @(

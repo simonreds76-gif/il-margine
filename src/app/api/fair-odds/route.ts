@@ -290,6 +290,10 @@ const CLAY_V3_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-clayv3-
 const CLAY_V3_SIGNAL_ARCHIVE_CSV = projectFilePath("data/backtest/strict-signals-clayv3-shadow-archive.csv");
 const CLAY_BO3_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-clay_bo3-live.csv");
 const CLAY_BO3_SIGNAL_ARCHIVE_CSV = projectFilePath("data/backtest/strict-signals-clay_bo3-archive.csv");
+const GRASS_BO3_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-grass_bo3-live.csv");
+const GRASS_BO3_SIGNAL_ARCHIVE_CSV = projectFilePath("data/backtest/strict-signals-grass_bo3-archive.csv");
+const CPI_SPEED_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-cpi_speed-live.csv");
+const CPI_SPEED_SIGNAL_ARCHIVE_CSV = projectFilePath("data/backtest/strict-signals-cpi_speed-archive.csv");
 const FAIR_ODDS_TENNIS_SPREADS_ENABLED = parseBoolEnv("FAIR_ODDS_TENNIS_SPREADS_ENABLED", false);
 const INTERNAL_RESEARCH_LANES = process.env.INTERNAL_RESEARCH_LANES === "1";
 const FAIR_ODDS_SPREAD_V1_ENABLED = parseBoolEnv("FAIR_ODDS_SPREAD_V1_ENABLED", INTERNAL_RESEARCH_LANES);
@@ -310,7 +314,7 @@ interface HardCalibrationParams {
 }
 type MatchSide = "P1" | "P2";
 type FastClayArchetype = "both" | "serve_led" | "return_led" | "contrarian";
-type ShadowSignalKind = "spread_v1" | "volume_200" | "challenger_ml_shadow" | "clay_v3_shadow" | "clay_bo3";
+type ShadowSignalKind = "spread_v1" | "volume_200" | "challenger_ml_shadow" | "clay_v3_shadow" | "clay_bo3" | "grass_bo3" | "cpi_speed_shadow";
 
 interface ShadowSignalSummary {
   id: number;
@@ -332,6 +336,23 @@ interface ShadowSignalSummary {
   shadow_reason?: string;
   tournament_speed_signal?: number;
   clay_speed_tier?: "fast" | "normal";
+  grass_cpi?: number;
+  grass_cpi_year?: number;
+  grass_cpi_key?: string;
+  grass_cpi_mode?: string;
+  grass_speed_tier?: "fast" | "neutral" | "slow" | "missing";
+  grass_cpi_gate_min?: number;
+  grass_cpi_slow_max?: number;
+  grass_cpi_fast_min?: number;
+  grass_cpi_lag_years?: number;
+  cpi_speed_cpi?: number;
+  cpi_speed_year?: number;
+  cpi_speed_z?: number;
+  cpi_speed_bucket?: "fast" | "neutral" | "slow" | "missing";
+  cpi_speed_key?: string;
+  cpi_speed_mode?: string;
+  cpi_speed_gate?: string;
+  cpi_speed_lag_years?: number;
   raw_value_p1?: number;
   raw_value_p2?: number;
   clay_2026_raw_value_same_side?: number;
@@ -375,6 +396,22 @@ interface SignalAttachmentDiagnostics {
   unmatched: number;
 }
 
+interface SignalPerformanceSummary {
+  archive_rows: number;
+  live_rows: number;
+  settled: number;
+  pending: number;
+  wins: number;
+  losses: number;
+  pushes: number;
+  voids: number;
+  pnl_units: number;
+  staked_units: number;
+  roi_pct?: number;
+  avg_odds?: number;
+  last_settled_at?: string;
+}
+
 function computeStakeUnits(): { units: number; gbp: number } {
   return { units: 1, gbp: STRICT_UNIT_GBP };
 }
@@ -409,9 +446,11 @@ function shadowKindRank(kind: ShadowSignalKind): number {
   if (kind === "challenger_ml_shadow") return 0;
   if (kind === "clay_v3_shadow") return 1;
   if (kind === "clay_bo3") return 2;
-  if (kind === "volume_200") return 3;
-  if (kind === "spread_v1") return 4;
-  return 5;
+  if (kind === "grass_bo3") return 3;
+  if (kind === "cpi_speed_shadow") return 4;
+  if (kind === "volume_200") return 5;
+  if (kind === "spread_v1") return 6;
+  return 6;
 }
 
 function suppressConflictingClaySignals(
@@ -904,7 +943,6 @@ const VOLUME_200_RULES: Array<{
   { surface: "Hard", series: "Grand Slam", confidence: new Set(["high", "medium"]), min_value_pct: 5 },
   { surface: "Hard", series: "ATP500", confidence: new Set(["high", "medium"]), min_value_pct: 10 },
   { surface: "Clay", series: "ATP500", confidence: new Set(["high", "medium"]), min_value_pct: 10 },
-  { surface: "Grass", series: "ATP500", confidence: new Set(["high", "medium"]), min_value_pct: 10 },
 ];
 const MATCH_ONLY_SHADOW_PROFILES = new Set<ShadowProfile>(["volume_200"]);
 const SHADOW_PROFILE_ALLOWED_LEAGUES: Partial<Record<ShadowProfile, Set<"ATP" | "Challenger">>> = {
@@ -1493,6 +1531,41 @@ function loadActiveShadowSignals(csvPaths: string | string[], kind: ShadowSignal
             : (get(cols, "clay_speed_tier") || "") === "normal"
               ? "normal"
               : undefined,
+        grass_cpi: parseCsvNumber(get(cols, "grass_cpi")),
+        grass_cpi_year: parseCsvNumber(get(cols, "grass_cpi_year")),
+        grass_cpi_key: get(cols, "grass_cpi_key") || undefined,
+        grass_cpi_mode: get(cols, "grass_cpi_mode") || undefined,
+        grass_speed_tier:
+          (get(cols, "grass_speed_tier") || "") === "fast"
+            ? "fast"
+            : (get(cols, "grass_speed_tier") || "") === "neutral"
+              ? "neutral"
+            : (get(cols, "grass_speed_tier") || "") === "slow"
+              ? "slow"
+              : (get(cols, "grass_speed_tier") || "") === "missing"
+                ? "missing"
+                : undefined,
+        grass_cpi_gate_min: parseCsvNumber(get(cols, "grass_cpi_gate_min")),
+        grass_cpi_slow_max: parseCsvNumber(get(cols, "grass_cpi_slow_max")),
+        grass_cpi_fast_min: parseCsvNumber(get(cols, "grass_cpi_fast_min")),
+        grass_cpi_lag_years: parseCsvNumber(get(cols, "grass_cpi_lag_years")),
+        cpi_speed_cpi: parseCsvNumber(get(cols, "cpi_speed_cpi")),
+        cpi_speed_year: parseCsvNumber(get(cols, "cpi_speed_year")),
+        cpi_speed_z: parseCsvNumber(get(cols, "cpi_speed_z")),
+        cpi_speed_bucket:
+          (get(cols, "cpi_speed_bucket") || "") === "fast"
+            ? "fast"
+            : (get(cols, "cpi_speed_bucket") || "") === "neutral"
+              ? "neutral"
+              : (get(cols, "cpi_speed_bucket") || "") === "slow"
+                ? "slow"
+                : (get(cols, "cpi_speed_bucket") || "") === "missing"
+                  ? "missing"
+                  : undefined,
+        cpi_speed_key: get(cols, "cpi_speed_key") || undefined,
+        cpi_speed_mode: get(cols, "cpi_speed_mode") || undefined,
+        cpi_speed_gate: get(cols, "cpi_speed_gate") || undefined,
+        cpi_speed_lag_years: parseCsvNumber(get(cols, "cpi_speed_lag_years")),
         raw_value_p1: parseCsvNumber(get(cols, "raw_value_p1")) ?? parseCsvNumber(get(cols, "value_p1")),
         raw_value_p2: parseCsvNumber(get(cols, "raw_value_p2")) ?? parseCsvNumber(get(cols, "value_p2")),
         clay_2026_raw_value_same_side: parseCsvNumber(get(cols, "raw_value_same_side")),
@@ -1523,6 +1596,109 @@ function loadActiveShadowSignals(csvPaths: string | string[], kind: ShadowSignal
       void settlement_status;
       return rest;
     });
+}
+
+function loadSignalPerformanceSummary(archivePath: string, liveRows: number): SignalPerformanceSummary {
+  const summary: SignalPerformanceSummary = {
+    archive_rows: 0,
+    live_rows: liveRows,
+    settled: 0,
+    pending: 0,
+    wins: 0,
+    losses: 0,
+    pushes: 0,
+    voids: 0,
+    pnl_units: 0,
+    staked_units: 0,
+  };
+  if (!fs.existsSync(archivePath)) return summary;
+
+  let text = "";
+  try {
+    text = fs.readFileSync(archivePath, "utf8");
+  } catch (e) {
+    console.warn(`[fair-odds] Could not read signal archive: ${archivePath}`, e);
+    return summary;
+  }
+
+  const lines = text.split(/\r?\n/).filter((line) => line.trim().length > 0);
+  if (lines.length < 2) return summary;
+  const header = parseCsvLine(lines[0]);
+  const index = new Map<string, number>();
+  header.forEach((h, i) => index.set(h, i));
+  const get = (cols: string[], name: string) => cols[index.get(name) ?? -1] ?? "";
+
+  let oddsSum = 0;
+  let oddsCount = 0;
+  for (let i = 1; i < lines.length; i += 1) {
+    const cols = parseCsvLine(lines[i]);
+    summary.archive_rows += 1;
+    const status = (get(cols, "settlement_status") || "").trim().toLowerCase();
+    if (ACTIVE_SIGNAL_STATUSES.has(status)) {
+      summary.pending += 1;
+      continue;
+    }
+
+    const outcomeRaw = (get(cols, "bet_outcome") || get(cols, "result_for") || get(cols, "result") || "").trim().toLowerCase();
+    const side = (get(cols, "side") || "").trim();
+    const stake = parseCsvNumber(get(cols, "stake_units")) ?? 1;
+    const selectedOdds =
+      parseCsvNumber(get(cols, "spread_odds")) ??
+      parseCsvNumber(get(cols, side === "P1" || side === "P1+" ? "pin_odds1" : "pin_odds2")) ??
+      parseCsvNumber(get(cols, "closing_odds"));
+
+    if (status.includes("void") || outcomeRaw.includes("void") || outcomeRaw === "v") {
+      summary.voids += 1;
+    } else if (outcomeRaw.includes("push") || outcomeRaw === "p") {
+      summary.pushes += 1;
+      summary.settled += 1;
+      summary.staked_units += stake;
+      if (selectedOdds != null) {
+        oddsSum += selectedOdds;
+        oddsCount += 1;
+      }
+    } else {
+      const wonBet = (get(cols, "won_bet") || "").trim();
+      const result = (get(cols, "result") || "").trim().toUpperCase();
+      const isWin =
+        outcomeRaw.includes("win") ||
+        wonBet === "1" ||
+        (result && side && result === side.replace(/[+-]$/, "").toUpperCase());
+      const isLoss = outcomeRaw.includes("loss") || outcomeRaw.includes("lose") || wonBet === "0";
+      if (!isWin && !isLoss) {
+        summary.pending += 1;
+        continue;
+      }
+      summary.settled += 1;
+      summary.staked_units += stake;
+      if (selectedOdds != null) {
+        oddsSum += selectedOdds;
+        oddsCount += 1;
+      }
+      if (isWin) {
+        summary.wins += 1;
+        summary.pnl_units += selectedOdds != null ? stake * (selectedOdds - 1) : 0;
+      } else {
+        summary.losses += 1;
+        summary.pnl_units -= stake;
+      }
+    }
+
+    const settledAt = get(cols, "settled_at").trim();
+    if (settledAt && (!summary.last_settled_at || settledAt > summary.last_settled_at)) {
+      summary.last_settled_at = settledAt;
+    }
+  }
+
+  summary.pnl_units = Math.round(summary.pnl_units * 100) / 100;
+  summary.staked_units = Math.round(summary.staked_units * 100) / 100;
+  if (summary.staked_units > 0) {
+    summary.roi_pct = Math.round((summary.pnl_units / summary.staked_units) * 1000) / 10;
+  }
+  if (oddsCount > 0) {
+    summary.avg_odds = Math.round((oddsSum / oddsCount) * 100) / 100;
+  }
+  return summary;
 }
 
 function loadChallengerNearmisses(csvPath: string, activeDate?: string): ChallengerNearmissSummary[] {
@@ -3074,6 +3250,15 @@ async function run(): Promise<Response> {
   const clayBo3SignalsCsv = INTERNAL_RESEARCH_LANES
     ? loadActiveShadowSignals(CLAY_BO3_SIGNAL_CSV, "clay_bo3", today)
     : [];
+  const grassBo3SignalsCsv = INTERNAL_RESEARCH_LANES
+    ? loadActiveShadowSignals(GRASS_BO3_SIGNAL_CSV, "grass_bo3", today)
+    : [];
+  const cpiSpeedSignalsCsv = INTERNAL_RESEARCH_LANES
+    ? loadActiveShadowSignals(CPI_SPEED_SIGNAL_CSV, "cpi_speed_shadow", today)
+    : [];
+  const cpiSpeedPerformance = INTERNAL_RESEARCH_LANES
+    ? loadSignalPerformanceSummary(CPI_SPEED_SIGNAL_ARCHIVE_CSV, cpiSpeedSignalsCsv.length)
+    : undefined;
   const challengerNearmisses = INTERNAL_RESEARCH_LANES
     ? loadChallengerNearmisses(CHALLENGER_ML_NEARMISS_CSV, today)
     : [];
@@ -3099,6 +3284,8 @@ async function run(): Promise<Response> {
     ...challengerMlSignalsCsv,
     ...clayV3SignalsCsv,
     ...clayBo3SignalsCsv,
+    ...grassBo3SignalsCsv,
+    ...cpiSpeedSignalsCsv,
     ...effectiveSpreadV1SignalsCsv,
   ]) {
     for (const key of signalLookupKeys(signal)) addSignalToRowKey(key, signal);
@@ -3140,6 +3327,8 @@ async function run(): Promise<Response> {
     challenger_ml_shadow: new Set<number>(),
     clay_v3_shadow: new Set<number>(),
     clay_bo3: new Set<number>(),
+    grass_bo3: new Set<number>(),
+    cpi_speed_shadow: new Set<number>(),
     spread_v1: new Set<number>(),
   };
   let matchesWithRowSignals = 0;
@@ -3169,6 +3358,16 @@ async function run(): Promise<Response> {
       attached: attachedByKind.clay_bo3.size,
       unmatched: Math.max(0, clayBo3SignalsCsv.length - attachedByKind.clay_bo3.size),
     },
+    grass_bo3: {
+      loaded: grassBo3SignalsCsv.length,
+      attached: attachedByKind.grass_bo3.size,
+      unmatched: Math.max(0, grassBo3SignalsCsv.length - attachedByKind.grass_bo3.size),
+    },
+    cpi_speed_shadow: {
+      loaded: cpiSpeedSignalsCsv.length,
+      attached: attachedByKind.cpi_speed_shadow.size,
+      unmatched: Math.max(0, cpiSpeedSignalsCsv.length - attachedByKind.cpi_speed_shadow.size),
+    },
     spread_v1: {
       loaded: effectiveSpreadV1SignalsCsv.length,
       attached: attachedByKind.spread_v1.size,
@@ -3180,6 +3379,8 @@ async function run(): Promise<Response> {
     challenger_ml_shadow: challengerMlSignalsCsv.filter((signal) => !attachedByKind.challenger_ml_shadow.has(signal.id)),
     clay_v3_shadow: clayV3SignalsCsv.filter((signal) => !attachedByKind.clay_v3_shadow.has(signal.id)),
     clay_bo3: clayBo3SignalsCsv.filter((signal) => !attachedByKind.clay_bo3.has(signal.id)),
+    grass_bo3: grassBo3SignalsCsv.filter((signal) => !attachedByKind.grass_bo3.has(signal.id)),
+    cpi_speed_shadow: cpiSpeedSignalsCsv.filter((signal) => !attachedByKind.cpi_speed_shadow.has(signal.id)),
     spread_v1: effectiveSpreadV1SignalsCsv.filter((signal) => !attachedByKind.spread_v1.has(signal.id)),
   };
   if (unmatchedSignals.volume_200.length) {
@@ -3209,6 +3410,24 @@ async function run(): Promise<Response> {
       unmatchedSignals.clay_bo3.map(
         (signal) =>
           `${signal.id}: ${signal.player1_name} vs ${signal.player2_name} | ${signal.side}${signal.spread_line != null ? ` ${signal.spread_line}` : ""}`
+      )
+    );
+  }
+  if (unmatchedSignals.grass_bo3.length) {
+    console.warn(
+      "[fair-odds] Unmatched Grass bo3 signals:",
+      unmatchedSignals.grass_bo3.map(
+        (signal) =>
+          `${signal.id}: ${signal.player1_name} vs ${signal.player2_name} | ${signal.side}${signal.spread_line != null ? ` ${signal.spread_line}` : ""}`
+      )
+    );
+  }
+  if (unmatchedSignals.cpi_speed_shadow.length) {
+    console.warn(
+      "[fair-odds] Unmatched CPI speed signals:",
+      unmatchedSignals.cpi_speed_shadow.map(
+        (signal) =>
+          `${signal.id}: ${signal.player1_name} vs ${signal.player2_name} | ${signal.side}${signal.cpi_speed_bucket ? ` | ${signal.cpi_speed_bucket}` : ""}`
       )
     );
   }
@@ -3618,6 +3837,9 @@ async function run(): Promise<Response> {
     signals_challenger_ml: challengerMlSignalsCsv,
     signals_clay_v3: clayV3SignalsCsv,
     signals_clay_bo3: clayBo3SignalsCsv,
+    signals_grass_bo3: grassBo3SignalsCsv,
+    signals_cpi_speed: cpiSpeedSignalsCsv,
+    cpi_speed_performance: cpiSpeedPerformance,
     challenger_nearmisses: challengerNearmisses,
     signals_spread_v1: spreadSignalsSpreadV1,
     signal_attachment,
