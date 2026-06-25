@@ -1,12 +1,188 @@
 import { ImageResponse } from "next/og";
 import { BASE_URL } from "@/lib/config";
-import { getBookmakerLogoPath } from "@/lib/bookmaker-logos";
+import { resolveBookmakerLogo } from "@/lib/bookmaker-logos";
 
 export const runtime = "edge";
 
 const size = {
   width: 1200,
   height: 675,
+};
+
+type BookmakerCardTheme = {
+  background: string;
+  border: string;
+  accent: string;
+  accentSoft: string;
+  logoFrame: string;
+  logoFit?: "contain" | "cover";
+  label: string;
+};
+
+const DEFAULT_BOOKMAKER_THEME: BookmakerCardTheme = {
+  background: "linear-gradient(145deg, rgba(10,20,34,0.98), rgba(4,12,23,0.98))",
+  border: "rgba(52,211,153,0.42)",
+  accent: "#34d399",
+  accentSoft: "rgba(52,211,153,0.14)",
+  logoFrame: "rgba(248,250,252,0.94)",
+  label: "#f8fafc",
+};
+
+const BOOKMAKER_THEMES: Record<string, BookmakerCardTheme> = {
+  "888sport": {
+    background: "linear-gradient(145deg, #06140d 0%, #0f3a23 58%, #111827 100%)",
+    border: "rgba(16,185,129,0.62)",
+    accent: "#10b981",
+    accentSoft: "rgba(16,185,129,0.18)",
+    logoFrame: "rgba(3,10,8,0.70)",
+    label: "#ecfdf5",
+  },
+  bet365: {
+    background: "linear-gradient(145deg, #06130b 0%, #063f25 52%, #111827 100%)",
+    border: "rgba(255,228,24,0.62)",
+    accent: "#ffe418",
+    accentSoft: "rgba(255,228,24,0.16)",
+    logoFrame: "rgba(4,16,10,0.82)",
+    label: "#fefce8",
+  },
+  betfair: {
+    background: "linear-gradient(145deg, #191302 0%, #5a4304 48%, #050812 100%)",
+    border: "rgba(255,186,0,0.72)",
+    accent: "#ffba00",
+    accentSoft: "rgba(255,186,0,0.18)",
+    logoFrame: "rgba(255,246,205,0.94)",
+    label: "#fef3c7",
+  },
+  betfred: {
+    background: "linear-gradient(145deg, #091a3a 0%, #113c87 46%, #7f0715 100%)",
+    border: "rgba(239,68,68,0.70)",
+    accent: "#ef4444",
+    accentSoft: "rgba(59,130,246,0.20)",
+    logoFrame: "rgba(248,250,252,0.96)",
+    logoFit: "cover",
+    label: "#eff6ff",
+  },
+  betmgm: {
+    background: "linear-gradient(145deg, #070605 0%, #1f1608 48%, #06080d 100%)",
+    border: "rgba(212,175,55,0.72)",
+    accent: "#d4af37",
+    accentSoft: "rgba(212,175,55,0.16)",
+    logoFrame: "rgba(5,5,5,0.62)",
+    label: "#fef3c7",
+  },
+  betvictor: {
+    background: "linear-gradient(145deg, #050812 0%, #10233f 52%, #0b1a2b 100%)",
+    border: "rgba(96,165,250,0.58)",
+    accent: "#60a5fa",
+    accentSoft: "rgba(96,165,250,0.16)",
+    logoFrame: "rgba(248,250,252,0.96)",
+    label: "#eff6ff",
+  },
+  betway: {
+    background: "linear-gradient(145deg, #030712 0%, #0f172a 54%, #111827 100%)",
+    border: "rgba(148,163,184,0.54)",
+    accent: "#f8fafc",
+    accentSoft: "rgba(148,163,184,0.14)",
+    logoFrame: "rgba(3,7,18,0.70)",
+    label: "#f8fafc",
+  },
+  boylesports: {
+    background: "linear-gradient(145deg, #03120b 0%, #087343 56%, #04111f 100%)",
+    border: "rgba(34,197,94,0.66)",
+    accent: "#22c55e",
+    accentSoft: "rgba(34,197,94,0.18)",
+    logoFrame: "rgba(3,12,8,0.72)",
+    label: "#dcfce7",
+  },
+  bwin: {
+    background: "linear-gradient(145deg, #030712 0%, #111827 50%, #292524 100%)",
+    border: "rgba(250,204,21,0.60)",
+    accent: "#facc15",
+    accentSoft: "rgba(250,204,21,0.14)",
+    logoFrame: "rgba(248,250,252,0.95)",
+    label: "#fef9c3",
+  },
+  coral: {
+    background: "linear-gradient(145deg, #07131f 0%, #003c70 48%, #04101a 100%)",
+    border: "rgba(56,189,248,0.58)",
+    accent: "#38bdf8",
+    accentSoft: "rgba(56,189,248,0.16)",
+    logoFrame: "rgba(248,250,252,0.96)",
+    label: "#e0f2fe",
+  },
+  ladbrokes: {
+    background: "linear-gradient(145deg, #200405 0%, #a30d16 52%, #09090b 100%)",
+    border: "rgba(248,113,113,0.68)",
+    accent: "#f87171",
+    accentSoft: "rgba(248,113,113,0.16)",
+    logoFrame: "rgba(248,250,252,0.96)",
+    label: "#fee2e2",
+  },
+  midnite: {
+    background: "linear-gradient(145deg, #04020b 0%, #241052 56%, #030712 100%)",
+    border: "rgba(168,85,247,0.62)",
+    accent: "#a855f7",
+    accentSoft: "rgba(168,85,247,0.16)",
+    logoFrame: "rgba(248,250,252,0.96)",
+    label: "#f3e8ff",
+  },
+  paddypower: {
+    background: "linear-gradient(145deg, #02140a 0%, #006b36 54%, #03110a 100%)",
+    border: "rgba(34,197,94,0.70)",
+    accent: "#22c55e",
+    accentSoft: "rgba(34,197,94,0.18)",
+    logoFrame: "rgba(248,250,252,0.96)",
+    label: "#dcfce7",
+  },
+  pinnacle: {
+    background: "linear-gradient(145deg, #050812 0%, #2b2110 54%, #070707 100%)",
+    border: "rgba(245,158,11,0.66)",
+    accent: "#f59e0b",
+    accentSoft: "rgba(245,158,11,0.18)",
+    logoFrame: "rgba(255,251,235,0.96)",
+    label: "#fef3c7",
+  },
+  skybet: {
+    background: "linear-gradient(145deg, #061637 0%, #0f4db3 50%, #9f1239 100%)",
+    border: "rgba(59,130,246,0.70)",
+    accent: "#60a5fa",
+    accentSoft: "rgba(239,68,68,0.16)",
+    logoFrame: "rgba(248,250,252,0.96)",
+    label: "#eff6ff",
+  },
+  spreadex: {
+    background: "linear-gradient(145deg, #071923 0%, #0d3a49 56%, #4a0a17 100%)",
+    border: "rgba(200,16,46,0.72)",
+    accent: "#c8102e",
+    accentSoft: "rgba(52,115,135,0.22)",
+    logoFrame: "rgba(248,250,252,0.96)",
+    logoFit: "cover",
+    label: "#ecfeff",
+  },
+  unibet: {
+    background: "linear-gradient(145deg, #020b08 0%, #063e2b 56%, #030712 100%)",
+    border: "rgba(0,206,0,0.66)",
+    accent: "#00ce00",
+    accentSoft: "rgba(0,206,0,0.16)",
+    logoFrame: "rgba(2,8,6,0.74)",
+    label: "#dcfce7",
+  },
+  virginbet: {
+    background: "linear-gradient(145deg, #210205 0%, #d90913 50%, #04070d 100%)",
+    border: "rgba(248,113,113,0.72)",
+    accent: "#ef4444",
+    accentSoft: "rgba(255,255,255,0.14)",
+    logoFrame: "rgba(248,250,252,0.98)",
+    label: "#fee2e2",
+  },
+  williamhill: {
+    background: "linear-gradient(145deg, #03112f 0%, #073a82 54%, #07101f 100%)",
+    border: "rgba(250,204,21,0.64)",
+    accent: "#facc15",
+    accentSoft: "rgba(250,204,21,0.16)",
+    logoFrame: "rgba(248,250,252,0.96)",
+    label: "#fef9c3",
+  },
 };
 
 function param(url: URL, key: string, fallback = ""): string {
@@ -19,10 +195,19 @@ function truncate(value: string, max: number): string {
   return `${text.slice(0, Math.max(0, max - 1)).trimEnd()}…`;
 }
 
-function bookmakerLogoUrl(bookmaker: string): string | null {
-  const path = getBookmakerLogoPath(bookmaker);
-  if (!path) return null;
-  return `${BASE_URL}${path}`;
+function resolveBookmakerCard(bookmaker: string) {
+  const resolved = resolveBookmakerLogo(bookmaker);
+  const key = resolved?.key ?? "generic";
+  const path =
+    resolved?.paths.find((candidate) => /\.(png|jpe?g|webp)$/i.test(candidate)) ??
+    resolved?.paths[0] ??
+    null;
+  return {
+    key,
+    displayName: resolved?.displayName ?? bookmaker,
+    logoUrl: path ? `${BASE_URL}${path}` : null,
+    theme: BOOKMAKER_THEMES[key] ?? DEFAULT_BOOKMAKER_THEME,
+  };
 }
 
 export async function GET(request: Request) {
@@ -32,9 +217,12 @@ export async function GET(request: Request) {
   const selection = truncate(param(url, "selection", "Selection"), 58);
   const odds = truncate(param(url, "odds", "-"), 12);
   const stake = truncate(param(url, "stake", "-"), 10);
-  const bookmaker = truncate(param(url, "bookmaker", "Bookmaker"), 22);
+  const bookmakerParam = param(url, "bookmaker", "Bookmaker");
   const matchDate = truncate(param(url, "date", ""), 18);
-  const logoUrl = bookmakerLogoUrl(bookmaker);
+  const bookmakerCard = resolveBookmakerCard(bookmakerParam);
+  const bookmakerName = truncate(bookmakerCard.displayName, 22);
+  const logoUrl = bookmakerCard.logoUrl;
+  const logoTheme = bookmakerCard.theme;
   const pickLine = player ? `${player} · ${selection}` : selection;
 
   return new ImageResponse(
@@ -141,28 +329,100 @@ export async function GET(request: Request) {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              width: 300,
-              minHeight: 250,
-              borderRadius: 34,
-              background: "linear-gradient(180deg, rgba(248,250,252,0.95), rgba(226,232,240,0.92))",
-              border: "2px solid rgba(251,191,36,0.80)",
-              padding: 26,
+              width: 322,
+              minHeight: 266,
+              borderRadius: 36,
+              background: logoTheme.background,
+              border: `2px solid ${logoTheme.border}`,
+              padding: 22,
+              position: "relative",
+              overflow: "hidden",
             }}
           >
+            <div
+              style={{
+                position: "absolute",
+                top: -70,
+                right: -50,
+                width: 180,
+                height: 180,
+                borderRadius: 999,
+                background: logoTheme.accentSoft,
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                left: 0,
+                right: 0,
+                top: 0,
+                height: 8,
+                background: logoTheme.accent,
+              }}
+            />
+            <div
+              style={{
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                height: 132,
+                borderRadius: 26,
+                background: logoTheme.logoFrame,
+                border: "1px solid rgba(255,255,255,0.24)",
+                padding: 18,
+              }}
+            >
             {logoUrl ? (
               <img
                 src={logoUrl}
-                alt={bookmaker}
+                alt={bookmakerName}
                 style={{
-                  width: 230,
-                  height: 110,
-                  objectFit: "contain",
+                  width: 264,
+                  height: 108,
+                  objectFit: logoTheme.logoFit ?? "contain",
                 }}
               />
             ) : (
-              <div style={{ color: "#0f172a", fontSize: 40, fontWeight: 900, textAlign: "center" }}>{bookmaker}</div>
+              <div style={{ color: logoTheme.accent, fontSize: 40, fontWeight: 900, textAlign: "center" }}>{bookmakerName}</div>
             )}
-            <div style={{ marginTop: 20, color: "#0f172a", fontSize: 26, fontWeight: 900 }}>{bookmaker}</div>
+            </div>
+            <div
+              style={{
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: 18,
+                padding: "10px 16px",
+                borderRadius: 999,
+                background: "rgba(2,6,23,0.42)",
+                border: `1px solid ${logoTheme.border}`,
+                color: logoTheme.label,
+                fontSize: 28,
+                fontWeight: 900,
+                letterSpacing: 0.2,
+                textAlign: "center",
+                minWidth: 226,
+              }}
+            >
+              {bookmakerName}
+            </div>
+            <div
+              style={{
+                position: "relative",
+                display: "flex",
+                marginTop: 10,
+                color: logoTheme.accent,
+                fontSize: 18,
+                fontWeight: 800,
+                letterSpacing: 3,
+                textTransform: "uppercase",
+              }}
+            >
+              Bookmaker
+            </div>
           </div>
         </div>
 
