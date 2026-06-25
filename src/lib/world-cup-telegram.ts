@@ -25,7 +25,7 @@ export type WorldCupTelegramTip = {
 };
 
 export type TelegramPostResult =
-  | { status: "posted"; url: string }
+  | { status: "posted"; url: string; mode?: "photo" | "text_fallback" }
   | { status: "skipped"; reason: "not_worldcup_props" | "disabled" | "missing_config"; url?: string }
   | { status: "failed"; reason: string; url?: string };
 
@@ -35,6 +35,8 @@ type TelegramMessagePayload = {
   text: string;
   entities: TelegramMessageEntity[];
 };
+
+type TelegramAttempt = { ok: true } | { ok: false; reason: string };
 
 function utf16Length(value: string): number {
   return Array.from(value).reduce((total, char) => total + (char.codePointAt(0)! > 0xffff ? 2 : 1), 0);
@@ -145,6 +147,75 @@ function worldCupTipCardUrl(tip: WorldCupTelegramTip): string {
   return `${BASE_URL}/api/telegram/wc-tip-card?${params.toString()}`;
 }
 
+async function fetchTipCardBlob(tip: WorldCupTelegramTip): Promise<Blob> {
+  const cardUrl = worldCupTipCardUrl(tip);
+  const response = await fetch(cardUrl, { cache: "no-store" });
+  const contentType = response.headers.get("content-type") || "";
+
+  if (!response.ok || !contentType.toLowerCase().includes("image/")) {
+    const body = await response.text().catch(() => "");
+    throw new Error(
+      `card_http_${response.status}${contentType ? `_${contentType}` : ""}${body ? `: ${truncate(body, 120)}` : ""}`,
+    );
+  }
+
+  const blob = await response.blob();
+  if (blob.size === 0) throw new Error("card_empty_image");
+  return blob;
+}
+
+async function sendTelegramPhotoUpload(
+  token: string,
+  chatId: string,
+  tip: WorldCupTelegramTip,
+  payload: TelegramMessagePayload,
+): Promise<TelegramAttempt> {
+  try {
+    const cardBlob = await fetchTipCardBlob(tip);
+    const form = new FormData();
+    form.append("chat_id", chatId);
+    form.append("photo", cardBlob, `ilmargine-wc-tip-${tip.id}.png`);
+    form.append("caption", payload.text);
+    form.append("caption_entities", JSON.stringify(payload.entities));
+
+    const response = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+      method: "POST",
+      body: form,
+    });
+
+    if (response.ok) return { ok: true };
+    const body = await response.text().catch(() => "");
+    return { ok: false, reason: `telegram_photo_http_${response.status}${body ? `: ${truncate(body, 180)}` : ""}` };
+  } catch (error) {
+    return { ok: false, reason: error instanceof Error ? error.message : "telegram_photo_failed" };
+  }
+}
+
+async function sendTelegramText(
+  token: string,
+  chatId: string,
+  payload: TelegramMessagePayload,
+): Promise<TelegramAttempt> {
+  try {
+    const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: payload.text,
+        entities: payload.entities,
+        disable_web_page_preview: false,
+      }),
+    });
+
+    if (response.ok) return { ok: true };
+    const body = await response.text().catch(() => "");
+    return { ok: false, reason: `telegram_text_http_${response.status}${body ? `: ${truncate(body, 180)}` : ""}` };
+  } catch (error) {
+    return { ok: false, reason: error instanceof Error ? error.message : "telegram_text_failed" };
+  }
+}
+
 export async function postWorldCupTipToTelegram(tip: WorldCupTelegramTip): Promise<TelegramPostResult> {
   const url = worldCupTipUrl(tip);
   if (!isWorldCupPropsTip(tip)) return { status: "skipped", reason: "not_worldcup_props", url };
@@ -157,34 +228,16 @@ export async function postWorldCupTipToTelegram(tip: WorldCupTelegramTip): Promi
   const chatId = process.env.WC_TELEGRAM_CHAT_ID?.trim();
   if (!token || !chatId) return { status: "skipped", reason: "missing_config", url };
 
-  try {
-    const payload = renderWorldCupTipPayload(tip);
-    const response = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: chatId,
-        photo: worldCupTipCardUrl(tip),
-        caption: payload.text,
-        caption_entities: payload.entities,
-      }),
-    });
+  const payload = renderWorldCupTipPayload(tip);
+  const photoAttempt = await sendTelegramPhotoUpload(token, chatId, tip, payload);
+  if (photoAttempt.ok) return { status: "posted", url, mode: "photo" };
 
-    if (!response.ok) {
-      const body = await response.text().catch(() => "");
-      return {
-        status: "failed",
-        reason: `telegram_http_${response.status}${body ? `: ${truncate(body, 180)}` : ""}`,
-        url,
-      };
-    }
+  const textAttempt = await sendTelegramText(token, chatId, payload);
+  if (textAttempt.ok) return { status: "posted", url, mode: "text_fallback" };
 
-    return { status: "posted", url };
-  } catch (error) {
-    return {
-      status: "failed",
-      reason: error instanceof Error ? error.message : "telegram_request_failed",
-      url,
-    };
-  }
+  return {
+    status: "failed",
+    reason: `${photoAttempt.reason}; fallback_${textAttempt.reason}`,
+    url,
+  };
 }

@@ -1,5 +1,4 @@
 import { ImageResponse } from "next/og";
-import { BASE_URL } from "@/lib/config";
 import { resolveBookmakerLogo } from "@/lib/bookmaker-logos";
 
 export const runtime = "edge";
@@ -195,7 +194,7 @@ function truncate(value: string, max: number): string {
   return `${text.slice(0, Math.max(0, max - 1)).trimEnd()}…`;
 }
 
-function resolveBookmakerCard(bookmaker: string) {
+function resolveBookmakerCard(bookmaker: string, origin: string) {
   const resolved = resolveBookmakerLogo(bookmaker);
   const key = resolved?.key ?? "generic";
   const path =
@@ -205,7 +204,7 @@ function resolveBookmakerCard(bookmaker: string) {
   return {
     key,
     displayName: resolved?.displayName ?? bookmaker,
-    logoUrl: path ? `${BASE_URL}${path}` : null,
+    logoUrl: path ? new URL(path, origin).toString() : null,
     theme: BOOKMAKER_THEMES[key] ?? DEFAULT_BOOKMAKER_THEME,
   };
 }
@@ -219,7 +218,7 @@ export async function GET(request: Request) {
   const stake = truncate(param(url, "stake", "-"), 10);
   const bookmakerParam = param(url, "bookmaker", "Bookmaker");
   const matchDate = truncate(param(url, "date", ""), 18);
-  const bookmakerCard = resolveBookmakerCard(bookmakerParam);
+  const bookmakerCard = resolveBookmakerCard(bookmakerParam, url.origin);
   const bookmakerName = truncate(bookmakerCard.displayName, 22);
   const logoUrl = bookmakerCard.logoUrl;
   const logoTheme = bookmakerCard.theme;
