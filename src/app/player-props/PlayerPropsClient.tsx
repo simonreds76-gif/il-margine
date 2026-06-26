@@ -39,6 +39,7 @@ type CategoryProgressionRow = {
 type ProgressionPoint = CategoryProgressionRow & {
   index: number;
   cumulative: number;
+  isOpeningBalance?: boolean;
   x: number;
   y: number;
 };
@@ -67,9 +68,9 @@ function formatShortDate(value: string | null): string {
   return date.toLocaleDateString("en-GB", { day: "2-digit", month: "short" });
 }
 
-function buildProgressionPoints(rows: CategoryProgressionRow[]): Omit<ProgressionPoint, "x" | "y">[] {
-  let cumulative = 0;
-  return rows
+function buildProgressionPoints(rows: CategoryProgressionRow[], openingBalance = 0): Omit<ProgressionPoint, "x" | "y">[] {
+  let cumulative = openingBalance;
+  const sortedRows = rows
     .slice()
     .sort((a, b) => {
       const aDate = a.date || "";
@@ -77,15 +78,36 @@ function buildProgressionPoints(rows: CategoryProgressionRow[]): Omit<Progressio
       const dateCompare = aDate.localeCompare(bDate);
       if (dateCompare !== 0) return dateCompare;
       return a.id - b.id;
-    })
-    .map((row, index) => {
+    });
+
+  const points: Omit<ProgressionPoint, "x" | "y">[] = [];
+  if (openingBalance !== 0) {
+    points.push({
+      id: -1,
+      date: null,
+      category: "archive",
+      event: "Archive opening balance",
+      player: "",
+      selection: "Tracked record before the current public ledger",
+      status: "settled",
+      stake: 0,
+      profit_loss: openingBalance,
+      index: -1,
+      cumulative: Math.round((openingBalance + Number.EPSILON) * 100) / 100,
+      isOpeningBalance: true,
+    });
+  }
+
+  sortedRows.forEach((row, index) => {
       cumulative += Number(row.profit_loss) || 0;
-      return {
+      points.push({
         ...row,
         index,
         cumulative: Math.round((cumulative + Number.EPSILON) * 100) / 100,
-      };
-    });
+      });
+  });
+
+  return points;
 }
 
 function buildChartPath(points: ProgressionPoint[]): string {
@@ -106,30 +128,33 @@ function ProgressionStat({ label, value, tone = "neutral" }: { label: string; va
 function ProfitProgressionPanel({
   rows,
   activeName,
+  openingBalance,
 }: {
   rows: CategoryProgressionRow[];
   activeName: string;
+  openingBalance: number;
 }) {
   const [activePointId, setActivePointId] = useState<number | null>(null);
-  const rawPoints = useMemo(() => buildProgressionPoints(rows), [rows]);
-  const latestPoint = rawPoints[rawPoints.length - 1] ?? null;
+  const rawPoints = useMemo(() => buildProgressionPoints(rows, openingBalance), [openingBalance, rows]);
+  const settledPoints = useMemo(() => rawPoints.filter((point) => !point.isOpeningBalance), [rawPoints]);
+  const latestPoint = settledPoints[settledPoints.length - 1] ?? rawPoints[rawPoints.length - 1] ?? null;
   const activeRawPoint = activePointId === null ? latestPoint : rawPoints.find((point) => point.id === activePointId) ?? latestPoint;
 
   const metrics = useMemo(() => {
-    let peak = 0;
+    let peak = openingBalance;
     let maxDrawdown = 0;
     for (const point of rawPoints) {
       peak = Math.max(peak, point.cumulative);
       maxDrawdown = Math.max(maxDrawdown, peak - point.cumulative);
     }
-    const last10 = rawPoints.slice(-10).reduce((sum, point) => sum + point.profit_loss, 0);
+    const last10 = settledPoints.slice(-10).reduce((sum, point) => sum + point.profit_loss, 0);
     return {
       cumulative: latestPoint?.cumulative ?? 0,
       peak,
       maxDrawdown,
       last10,
     };
-  }, [latestPoint?.cumulative, rawPoints]);
+  }, [latestPoint?.cumulative, openingBalance, rawPoints, settledPoints]);
 
   const chart = useMemo(() => {
     const width = 720;
@@ -174,7 +199,7 @@ function ProfitProgressionPanel({
               </div>
               <h3 className="mt-1 text-lg font-semibold text-slate-100">{activeName} equity curve</h3>
               <p className="mt-1 text-xs leading-relaxed text-slate-500">
-                Settled public rows only. Hover or tap a point to inspect the running unit balance.
+                Starts from the tracked archive balance where available, then follows real settled public ledger rows.
               </p>
             </div>
             <div className={`rounded-full border px-3 py-1.5 font-mono text-xs font-black tabular-nums ${
@@ -211,6 +236,7 @@ function ProfitProgressionPanel({
                 <path d={chart.linePath} fill="none" stroke="url(#props-equity-line)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" />
                 {chart.points.map((point, index) => {
                   const isActive = activePoint?.id === point.id;
+                  const isOpening = point.isOpeningBalance;
                   const showPoint = isActive || index === chart.points.length - 1 || index % Math.ceil(chart.points.length / 18) === 0;
                   return (
                     <circle
@@ -218,8 +244,8 @@ function ProfitProgressionPanel({
                       cx={point.x}
                       cy={point.y}
                       r={isActive ? 7 : showPoint ? 4 : 8}
-                      fill={isActive ? "#fbbf24" : showPoint ? "#34d399" : "transparent"}
-                      stroke={isActive ? "rgba(251,191,36,0.5)" : "rgba(16,185,129,0.35)"}
+                      fill={isActive ? "#fbbf24" : isOpening ? "#94a3b8" : showPoint ? "#34d399" : "transparent"}
+                      stroke={isActive ? "rgba(251,191,36,0.5)" : isOpening ? "rgba(148,163,184,0.35)" : "rgba(16,185,129,0.35)"}
                       strokeWidth={isActive ? 8 : showPoint ? 3 : 0}
                       className="cursor-pointer transition-opacity"
                       onMouseEnter={() => setActivePointId(point.id)}
@@ -255,8 +281,8 @@ function ProfitProgressionPanel({
               <div className="mt-3">
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-sm font-semibold text-slate-100">{formatShortDate(activeRawPoint.date)}</span>
-                  <span className={`font-mono text-sm font-black ${activeRawPoint.profit_loss >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
-                    {formatUnits(activeRawPoint.profit_loss)}
+                  <span className={`font-mono text-sm font-black ${activeRawPoint.cumulative >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
+                    {formatUnits(activeRawPoint.isOpeningBalance ? activeRawPoint.cumulative : activeRawPoint.profit_loss)}
                   </span>
                 </div>
                 <div className="mt-2 text-sm leading-snug text-slate-300">{activeRawPoint.event}</div>
@@ -264,9 +290,11 @@ function ProfitProgressionPanel({
                   {activeRawPoint.player ? `${activeRawPoint.player} - ${activeRawPoint.selection}` : activeRawPoint.selection}
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2 font-mono text-[11px]">
-                  <span className="rounded-full border border-slate-700 bg-slate-900/80 px-2.5 py-1 text-slate-400">
-                    Stake {activeRawPoint.stake.toFixed(2)}u
-                  </span>
+                  {!activeRawPoint.isOpeningBalance && (
+                    <span className="rounded-full border border-slate-700 bg-slate-900/80 px-2.5 py-1 text-slate-400">
+                      Stake {activeRawPoint.stake.toFixed(2)}u
+                    </span>
+                  )}
                   <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-emerald-300">
                     Balance {formatUnits(activeRawPoint.cumulative)}
                   </span>
@@ -479,6 +507,10 @@ export default function PlayerProps({
   const filteredRecent = activeLeague === "all" ? recentBets : recentBets.filter(b => categoryForBet(b) === activeLeague);
   const filteredProgressionRows =
     activeLeague === "all" ? progressionRows : progressionRows.filter((row) => normalizeBetCategory(row.category) === activeLeague);
+  const openingBalance =
+    activeLeague === "all"
+      ? BASELINE_STATS.props.total_profit
+      : BASELINE_STATS.categoryBaselines.props[activeLeague as keyof typeof BASELINE_STATS.categoryBaselines.props]?.total_profit ?? 0;
 
   // Display limits: show 5 initially, or all if expanded
   const displayedPending = showAllPending ? filteredPending : filteredPending.slice(0, 5);
@@ -593,12 +625,13 @@ export default function PlayerProps({
             </div>
           </div>
 
-          <ProfitProgressionPanel rows={filteredProgressionRows} activeName={activeName} />
+          <ProfitProgressionPanel rows={filteredProgressionRows} activeName={activeName} openingBalance={openingBalance} />
 
           <p className="mt-4 max-w-3xl text-xs leading-relaxed text-slate-500">
             Record cards use the full tracked category record. The recent selections table below is only a browsing
             sample from the latest 50 settled player-prop picks, then filtered by the league tab you choose. The P/L
-            progression uses settled public ledger rows for the selected tab.
+            progression starts from the tracked category opening balance where available, then uses settled public ledger
+            rows for the selected tab.
           </p>
         </div>
       </section>
