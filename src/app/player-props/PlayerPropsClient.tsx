@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
@@ -15,7 +16,7 @@ import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import PageHomeLink from "@/components/PageHomeLink";
 import { getDisplayBetCategory, normalizeBetCategory } from "@/lib/bet-category";
-import { formatMatchDate, formatOdds } from "@/lib/format";
+import { formatMatchDate, formatOdds, formatStake } from "@/lib/format";
 import { slugifyTip } from "@/lib/slugify";
 
 type PlayerPropsClientProps = {
@@ -36,6 +37,165 @@ function roiToneClass(roi: number): string {
   if (roi > 0) return "text-emerald-400";
   if (roi < 0) return "text-rose-400";
   return "text-slate-400";
+}
+
+type WorldCupClusterMode = "pending" | "settled";
+
+type WorldCupMatchCluster = {
+  key: string;
+  event: string;
+  matchDate: string | null;
+  picks: Bet[];
+  stake: number;
+  profit: number;
+  wins: number;
+  losses: number;
+  voids: number;
+  pending: number;
+};
+
+function signedUnits(value: number, decimals = 2): string {
+  return `${value >= 0 ? "+" : ""}${value.toFixed(decimals)}u`;
+}
+
+function buildWorldCupMatchClusters(bets: Bet[]): WorldCupMatchCluster[] {
+  const clusters = new Map<string, WorldCupMatchCluster>();
+
+  for (const bet of bets) {
+    const event = bet.event || "Unknown match";
+    const matchDate = bet.match_date || null;
+    const key = `${matchDate || "no-date"}::${event.toLowerCase()}`;
+    const status = (bet.status || "").toLowerCase();
+    const cluster = clusters.get(key) ?? {
+      key,
+      event,
+      matchDate,
+      picks: [],
+      stake: 0,
+      profit: 0,
+      wins: 0,
+      losses: 0,
+      voids: 0,
+      pending: 0,
+    };
+
+    cluster.picks.push(bet);
+    cluster.stake += Number(bet.stake) || 0;
+    cluster.profit += Number(bet.profit_loss) || 0;
+    if (status === "won") cluster.wins += 1;
+    else if (status === "lost") cluster.losses += 1;
+    else if (status === "void") cluster.voids += 1;
+    else cluster.pending += 1;
+    clusters.set(key, cluster);
+  }
+
+  return Array.from(clusters.values()).sort((a, b) => {
+    const aDate = a.matchDate || "";
+    const bDate = b.matchDate || "";
+    const dateCompare = aDate.localeCompare(bDate);
+    if (dateCompare !== 0) return dateCompare;
+    if (b.picks.length !== a.picks.length) return b.picks.length - a.picks.length;
+    return a.event.localeCompare(b.event);
+  });
+}
+
+function WorldCupMatchClusters({ bets, mode }: { bets: Bet[]; mode: WorldCupClusterMode }) {
+  const clusters = buildWorldCupMatchClusters(bets);
+  if (clusters.length === 0) return null;
+
+  const hasMultiPickMatch = clusters.some((cluster) => cluster.picks.length > 1);
+  if (!hasMultiPickMatch && clusters.length > 4) return null;
+
+  const isSettled = mode === "settled";
+
+  return (
+    <div className="mb-5 rounded-2xl border border-emerald-500/20 bg-[radial-gradient(circle_at_20%_0%,rgba(16,185,129,0.10),transparent_35%),rgba(15,23,42,0.62)] p-4 sm:p-5">
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <div className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-emerald-400">World Cup fixture view</div>
+          <h3 className="mt-1 text-lg font-semibold text-slate-100">Grouped by match</h3>
+          <p className="mt-1 max-w-2xl text-xs leading-relaxed text-slate-500">
+            Useful when several props belong to the same fixture. Individual picks remain below as the official record.
+          </p>
+        </div>
+        <div className="rounded-full border border-slate-700 bg-slate-950/60 px-3 py-1.5 font-mono text-[11px] font-bold text-slate-300">
+          {clusters.length} fixtures | {bets.length} picks
+        </div>
+      </div>
+
+      <div className="grid gap-3 lg:grid-cols-2">
+        {clusters.map((cluster) => {
+          const statusLine = isSettled
+            ? `${cluster.wins}W-${cluster.losses}L${cluster.voids ? `-${cluster.voids}V` : ""}`
+            : `${cluster.pending} pending`;
+          const profitTone = cluster.profit > 0 ? "text-emerald-300" : cluster.profit < 0 ? "text-rose-300" : "text-slate-300";
+          const chipTone = isSettled
+            ? `${profitTone} border-slate-700 bg-slate-900/80`
+            : "border-amber-500/25 bg-amber-500/10 text-amber-300";
+
+          return (
+            <article key={cluster.key} className="overflow-hidden rounded-xl border border-slate-800 bg-slate-950/55">
+              <div className="flex flex-col gap-3 border-b border-slate-800/80 p-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
+                  <div className="text-xs text-slate-500">{formatMatchDate(cluster.matchDate)}</div>
+                  <div className="mt-1 font-semibold leading-snug text-slate-100">{cluster.event}</div>
+                </div>
+                <div className="flex shrink-0 gap-2 sm:flex-col sm:items-end">
+                  <span className="rounded-full border border-slate-700 bg-slate-900/80 px-2.5 py-1 font-mono text-[11px] font-bold text-slate-300">
+                    {cluster.picks.length} picks
+                  </span>
+                  <span className={`rounded-full border px-2.5 py-1 font-mono text-[11px] font-bold ${chipTone}`}>
+                    {isSettled ? signedUnits(cluster.profit) : `${formatStake(cluster.stake)}u exposure`}
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-2 border-b border-slate-800/70 p-3 text-center">
+                <div className="rounded-lg bg-slate-900/55 px-2 py-2">
+                  <div className="font-mono text-sm font-black text-slate-100">{formatStake(cluster.stake)}u</div>
+                  <div className="mt-0.5 text-[10px] uppercase tracking-[0.12em] text-slate-600">Stake</div>
+                </div>
+                <div className="rounded-lg bg-slate-900/55 px-2 py-2">
+                  <div className="font-mono text-sm font-black text-slate-100">{statusLine}</div>
+                  <div className="mt-0.5 text-[10px] uppercase tracking-[0.12em] text-slate-600">Status</div>
+                </div>
+                <div className="rounded-lg bg-slate-900/55 px-2 py-2">
+                  <div className={`font-mono text-sm font-black ${isSettled ? profitTone : "text-slate-100"}`}>
+                    {isSettled ? signedUnits(cluster.profit) : formatOdds(Math.max(...cluster.picks.map((pick) => Number(pick.odds) || 0)))}
+                  </div>
+                  <div className="mt-0.5 text-[10px] uppercase tracking-[0.12em] text-slate-600">{isSettled ? "P/L" : "Best odds"}</div>
+                </div>
+              </div>
+
+              <div className="divide-y divide-slate-800/70">
+                {cluster.picks.slice(0, 6).map((pick) => (
+                  <Link
+                    key={pick.id}
+                    href={`/tips/${slugifyTip(pick.event, pick.id)}`}
+                    className="grid grid-cols-[auto,1fr,auto] items-center gap-3 px-4 py-3 transition hover:bg-slate-900/70"
+                  >
+                    <MarketBadge market={pick.market} category={pick.category} event={pick.event} compact />
+                    <div className="min-w-0">
+                      <div className="truncate text-sm font-medium text-slate-200">
+                        {pick.player ? `${pick.player} | ` : ""}{pick.selection}
+                      </div>
+                      <div className="mt-0.5 font-mono text-[11px] text-slate-500">
+                        {formatOdds(pick.odds)} | {formatStake(pick.stake)}u
+                      </div>
+                    </div>
+                    {isSettled ? <ResultBadge status={pick.status} size="sm" /> : <span className="font-mono text-[11px] text-amber-300">PENDING</span>}
+                  </Link>
+                ))}
+                {cluster.picks.length > 6 ? (
+                  <div className="px-4 py-2 text-center text-xs text-slate-500">+{cluster.picks.length - 6} more picks in the table below</div>
+                ) : null}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 export default function PlayerProps({
@@ -379,6 +539,10 @@ export default function PlayerProps({
           </div>
           <p className="text-slate-500 text-xs mb-6">Stake in units (1u = your standard stake). We typically recommend 0.5u-2u per pick.</p>
 
+          {activeLeague === "worldcup" && !loading && filteredPending.length > 0 ? (
+            <WorldCupMatchClusters bets={filteredPending} mode="pending" />
+          ) : null}
+
           {loading ? (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
               <p className="text-slate-500">Loading...</p>
@@ -510,6 +674,10 @@ export default function PlayerProps({
               in the category record even when they have rolled out of the latest-50 settled feed.
             </p>
           </div>
+
+          {activeLeague === "worldcup" && filteredRecent.length > 0 ? (
+            <WorldCupMatchClusters bets={filteredRecent} mode="settled" />
+          ) : null}
 
           {filteredRecent.length > 0 ? (
             <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
