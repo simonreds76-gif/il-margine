@@ -1,5 +1,6 @@
 import "server-only";
 
+import { getDisplayBetCategory } from "@/lib/bet-category";
 import { getSupabaseAdmin, hasSupabaseAdminConfig } from "@/lib/supabase-server";
 
 const TIMEOUT_MS = 8000;
@@ -28,7 +29,51 @@ function emptyHomePayload() {
 }
 
 function emptyMarketPayload() {
-  return { pending: [], recent: [], stats: [] };
+  return { pending: [], recent: [], stats: [], progression: [] };
+}
+
+type ProgressionBetRow = {
+  id: number;
+  market: string | null;
+  category: string | null;
+  event: string | null;
+  selection: string | null;
+  status: string | null;
+  stake: number | string | null;
+  profit_loss: number | string | null;
+  match_date: string | null;
+  settled_at: string | null;
+  posted_at: string | null;
+};
+
+function roundUnits(value: number): number {
+  return Math.round((value + Number.EPSILON) * 10000) / 10000;
+}
+
+function buildProgressionRows(rows: ProgressionBetRow[]) {
+  return rows
+    .filter((row) => {
+      const status = (row.status || "").toLowerCase();
+      const profit = Number(row.profit_loss);
+      return (status === "won" || status === "lost") && Number.isFinite(profit);
+    })
+    .sort((a, b) => {
+      const aDate = a.match_date || a.settled_at || a.posted_at || "";
+      const bDate = b.match_date || b.settled_at || b.posted_at || "";
+      const dateCompare = aDate.localeCompare(bDate);
+      if (dateCompare !== 0) return dateCompare;
+      return (a.id || 0) - (b.id || 0);
+    })
+    .map((row) => ({
+      id: row.id,
+      date: row.match_date || row.settled_at || row.posted_at || null,
+      category: getDisplayBetCategory({ market: row.market, category: row.category, event: row.event }),
+      event: row.event || "Unknown event",
+      selection: row.selection || "Selection",
+      status: row.status || "settled",
+      stake: roundUnits(Number(row.stake) || 0),
+      profit_loss: roundUnits(Number(row.profit_loss) || 0),
+    }));
 }
 
 async function withTimeout<T>(promise: PromiseLike<T>, label: string): Promise<T> {
@@ -103,7 +148,7 @@ export async function fetchMarketPayload(scope: "tennis" | "props") {
   const supabase = getSupabaseAdmin();
   const market = MARKET_BY_SCOPE[scope];
 
-  const [pendingResponse, recentResponse, categoryStatsResponse] = await withTimeout(
+  const [pendingResponse, recentResponse, categoryStatsResponse, progressionResponse] = await withTimeout(
     Promise.all([
       supabase
         .from("bets")
@@ -123,17 +168,29 @@ export async function fetchMarketPayload(scope: "tennis" | "props") {
         .order("id", { ascending: false })
         .limit(50),
       supabase.from("category_stats").select("*").eq("market", market),
+      supabase
+        .from("bets")
+        .select("id, market, category, event, selection, status, stake, profit_loss, match_date, settled_at, posted_at")
+        .eq("market", market)
+        .in("status", ["won", "lost"])
+        .not("profit_loss", "is", null)
+        .order("match_date", { ascending: true, nullsFirst: false })
+        .order("settled_at", { ascending: true, nullsFirst: false })
+        .order("posted_at", { ascending: true, nullsFirst: false })
+        .order("id", { ascending: true })
+        .limit(5000),
     ]),
     `public ${scope} record query`,
   );
 
-  const error = pendingResponse.error || recentResponse.error || categoryStatsResponse.error;
+  const error = pendingResponse.error || recentResponse.error || categoryStatsResponse.error || progressionResponse.error;
   if (error) throw new Error(error.message);
 
   return {
     pending: pendingResponse.data ?? [],
     recent: recentResponse.data ?? [],
     stats: categoryStatsResponse.data ?? [],
+    progression: buildProgressionRows((progressionResponse.data ?? []) as ProgressionBetRow[]),
   };
 }
 

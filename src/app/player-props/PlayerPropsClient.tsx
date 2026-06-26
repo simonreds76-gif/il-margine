@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Bet, CategoryStats } from "@/lib/supabase";
@@ -21,15 +21,25 @@ type PlayerPropsClientProps = {
   initialPendingBets?: Bet[];
   initialRecentBets?: Bet[];
   initialStats?: CategoryStats[];
+  initialProgressionRows?: CategoryProgressionRow[];
 };
 
-type DisplayStats = {
-  total_bets: number;
-  total_profit: number;
-  avg_stake: number;
-  roi: number;
-  win_rate: number;
-  avg_odds: number;
+type CategoryProgressionRow = {
+  id: number;
+  date: string | null;
+  category: string;
+  event: string;
+  selection: string;
+  status: string;
+  stake: number;
+  profit_loss: number;
+};
+
+type ProgressionPoint = CategoryProgressionRow & {
+  index: number;
+  cumulative: number;
+  x: number;
+  y: number;
 };
 
 const darkLogoFilter =
@@ -45,50 +55,273 @@ function roiToneClass(roi: number): string {
   return "text-slate-400";
 }
 
-function profitToneClass(units: number): string {
-  if (units > 0) return "text-emerald-400";
-  if (units < 0) return "text-rose-400";
-  return "text-slate-400";
+function formatUnits(value: number, decimals = 2): string {
+  return `${value >= 0 ? "+" : ""}${value.toFixed(decimals)}u`;
 }
 
-function formatSignedUnits(units: number): string {
-  const rounded = Math.round(Number(units || 0) * 100) / 100;
-  const display = String(parseFloat(rounded.toFixed(2)));
-  return `${rounded > 0 ? "+" : ""}${display}u`;
+function formatShortDate(value: string | null): string {
+  if (!value) return "Unknown date";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value.slice(0, 10);
+  return date.toLocaleDateString("en-GB", { day: "2-digit", month: "short" });
 }
 
-function formatUnits(units: number): string {
-  const rounded = Math.round(Number(units || 0) * 100) / 100;
-  return `${String(parseFloat(rounded.toFixed(2)))}u`;
+function buildProgressionPoints(rows: CategoryProgressionRow[]): Omit<ProgressionPoint, "x" | "y">[] {
+  let cumulative = 0;
+  return rows
+    .slice()
+    .sort((a, b) => {
+      const aDate = a.date || "";
+      const bDate = b.date || "";
+      const dateCompare = aDate.localeCompare(bDate);
+      if (dateCompare !== 0) return dateCompare;
+      return a.id - b.id;
+    })
+    .map((row, index) => {
+      cumulative += Number(row.profit_loss) || 0;
+      return {
+        ...row,
+        index,
+        cumulative: Math.round((cumulative + Number.EPSILON) * 100) / 100,
+      };
+    });
+}
+
+function buildChartPath(points: ProgressionPoint[]): string {
+  if (points.length === 0) return "";
+  return points.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" ");
+}
+
+function ProgressionStat({ label, value, tone = "neutral" }: { label: string; value: string; tone?: "positive" | "negative" | "neutral" }) {
+  const toneClass = tone === "positive" ? "text-emerald-400" : tone === "negative" ? "text-rose-400" : "text-slate-100";
+  return (
+    <div className="rounded-xl border border-slate-800 bg-slate-950/45 px-3 py-2.5">
+      <div className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">{label}</div>
+      <div className={`mt-1 font-mono text-sm font-black tabular-nums ${toneClass}`}>{value}</div>
+    </div>
+  );
+}
+
+function ProfitProgressionPanel({
+  rows,
+  activeName,
+}: {
+  rows: CategoryProgressionRow[];
+  activeName: string;
+}) {
+  const [activePointId, setActivePointId] = useState<number | null>(null);
+  const rawPoints = useMemo(() => buildProgressionPoints(rows), [rows]);
+  const latestPoint = rawPoints[rawPoints.length - 1] ?? null;
+  const activeRawPoint = activePointId === null ? latestPoint : rawPoints.find((point) => point.id === activePointId) ?? latestPoint;
+
+  const metrics = useMemo(() => {
+    let peak = 0;
+    let maxDrawdown = 0;
+    for (const point of rawPoints) {
+      peak = Math.max(peak, point.cumulative);
+      maxDrawdown = Math.max(maxDrawdown, peak - point.cumulative);
+    }
+    const last10 = rawPoints.slice(-10).reduce((sum, point) => sum + point.profit_loss, 0);
+    return {
+      cumulative: latestPoint?.cumulative ?? 0,
+      peak,
+      maxDrawdown,
+      last10,
+    };
+  }, [latestPoint?.cumulative, rawPoints]);
+
+  const chart = useMemo(() => {
+    const width = 720;
+    const height = 220;
+    const paddingX = 18;
+    const paddingY = 18;
+    if (rawPoints.length === 0) {
+      return { width, height, points: [] as ProgressionPoint[], linePath: "", areaPath: "", zeroY: height / 2 };
+    }
+
+    const cumulativeValues = rawPoints.map((point) => point.cumulative);
+    const minValue = Math.min(0, ...cumulativeValues);
+    const maxValue = Math.max(0, ...cumulativeValues);
+    const span = Math.max(1, maxValue - minValue);
+    const plotWidth = width - paddingX * 2;
+    const plotHeight = height - paddingY * 2;
+
+    const points = rawPoints.map((point, index) => {
+      const x = rawPoints.length === 1 ? width / 2 : paddingX + (index / (rawPoints.length - 1)) * plotWidth;
+      const y = paddingY + ((maxValue - point.cumulative) / span) * plotHeight;
+      return { ...point, x, y };
+    });
+    const zeroY = paddingY + ((maxValue - 0) / span) * plotHeight;
+    const linePath = buildChartPath(points);
+    const areaPath = points.length
+      ? `${linePath} L ${points[points.length - 1].x.toFixed(1)} ${zeroY.toFixed(1)} L ${points[0].x.toFixed(1)} ${zeroY.toFixed(1)} Z`
+      : "";
+
+    return { width, height, points, linePath, areaPath, zeroY };
+  }, [rawPoints]);
+
+  const activePoint = activeRawPoint ? chart.points.find((point) => point.id === activeRawPoint.id) ?? null : null;
+
+  return (
+    <div className="mt-4 overflow-hidden rounded-2xl border border-emerald-500/20 bg-[radial-gradient(circle_at_18%_0%,rgba(16,185,129,0.10),transparent_34%),linear-gradient(135deg,rgba(15,23,42,0.78),rgba(2,6,23,0.88))]">
+      <div className="grid gap-0 lg:grid-cols-[1.1fr,0.9fr]">
+        <div className="border-b border-slate-800/80 p-5 lg:border-b-0 lg:border-r">
+          <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <div className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-emerald-400/90">
+                P/L progression
+              </div>
+              <h3 className="mt-1 text-lg font-semibold text-slate-100">{activeName} equity curve</h3>
+              <p className="mt-1 text-xs leading-relaxed text-slate-500">
+                Settled public rows only. Hover or tap a point to inspect the running unit balance.
+              </p>
+            </div>
+            <div className={`rounded-full border px-3 py-1.5 font-mono text-xs font-black tabular-nums ${
+              metrics.cumulative >= 0
+                ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300"
+                : "border-rose-500/25 bg-rose-500/10 text-rose-300"
+            }`}>
+              {formatUnits(metrics.cumulative)}
+            </div>
+          </div>
+
+          <div className="relative h-[220px] rounded-xl border border-slate-800 bg-slate-950/55 p-2">
+            {chart.points.length > 0 ? (
+              <svg
+                viewBox={`0 0 ${chart.width} ${chart.height}`}
+                className="h-full w-full"
+                role="img"
+                aria-label={`${activeName} profit and loss progression`}
+                onMouseLeave={() => setActivePointId(null)}
+              >
+                <defs>
+                  <linearGradient id="props-equity-line" x1="0" x2="1" y1="0" y2="0">
+                    <stop offset="0%" stopColor="#10b981" stopOpacity="0.55" />
+                    <stop offset="55%" stopColor="#34d399" stopOpacity="0.95" />
+                    <stop offset="100%" stopColor="#fbbf24" stopOpacity="0.95" />
+                  </linearGradient>
+                  <linearGradient id="props-equity-fill" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stopColor="#10b981" stopOpacity="0.22" />
+                    <stop offset="100%" stopColor="#10b981" stopOpacity="0.01" />
+                  </linearGradient>
+                </defs>
+                <line x1="0" x2={chart.width} y1={chart.zeroY} y2={chart.zeroY} stroke="rgba(148,163,184,0.22)" strokeDasharray="6 7" />
+                <path d={chart.areaPath} fill="url(#props-equity-fill)" />
+                <path d={chart.linePath} fill="none" stroke="url(#props-equity-line)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" />
+                {chart.points.map((point, index) => {
+                  const isActive = activePoint?.id === point.id;
+                  const showPoint = isActive || index === chart.points.length - 1 || index % Math.ceil(chart.points.length / 18) === 0;
+                  return (
+                    <circle
+                      key={point.id}
+                      cx={point.x}
+                      cy={point.y}
+                      r={isActive ? 7 : showPoint ? 4 : 8}
+                      fill={isActive ? "#fbbf24" : showPoint ? "#34d399" : "transparent"}
+                      stroke={isActive ? "rgba(251,191,36,0.5)" : "rgba(16,185,129,0.35)"}
+                      strokeWidth={isActive ? 8 : showPoint ? 3 : 0}
+                      className="cursor-pointer transition-opacity"
+                      onMouseEnter={() => setActivePointId(point.id)}
+                      onClick={() => setActivePointId(point.id)}
+                    />
+                  );
+                })}
+              </svg>
+            ) : (
+              <div className="flex h-full items-center justify-center text-center">
+                <div>
+                  <div className="text-sm font-semibold text-slate-300">No settled rows yet</div>
+                  <div className="mt-1 max-w-xs text-xs text-slate-500">The progression line appears once this tab has won/lost settlements.</div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="p-5">
+          <div className="grid grid-cols-2 gap-3">
+            <ProgressionStat label="Current" value={formatUnits(metrics.cumulative)} tone={metrics.cumulative >= 0 ? "positive" : "negative"} />
+            <ProgressionStat label="Peak" value={formatUnits(metrics.peak)} tone={metrics.peak >= 0 ? "positive" : "neutral"} />
+            <ProgressionStat label="Max DD" value={`${metrics.maxDrawdown.toFixed(2)}u`} tone={metrics.maxDrawdown > 0 ? "negative" : "neutral"} />
+            <ProgressionStat label="Last 10" value={formatUnits(metrics.last10)} tone={metrics.last10 >= 0 ? "positive" : "negative"} />
+          </div>
+
+          <div className="mt-4 rounded-xl border border-slate-800 bg-slate-950/45 p-4">
+            <div className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">
+              Selected point
+            </div>
+            {activeRawPoint ? (
+              <div className="mt-3">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm font-semibold text-slate-100">{formatShortDate(activeRawPoint.date)}</span>
+                  <span className={`font-mono text-sm font-black ${activeRawPoint.profit_loss >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
+                    {formatUnits(activeRawPoint.profit_loss)}
+                  </span>
+                </div>
+                <div className="mt-2 text-sm leading-snug text-slate-300">{activeRawPoint.event}</div>
+                <div className="mt-1 text-xs leading-relaxed text-slate-500">{activeRawPoint.selection}</div>
+                <div className="mt-3 flex flex-wrap gap-2 font-mono text-[11px]">
+                  <span className="rounded-full border border-slate-700 bg-slate-900/80 px-2.5 py-1 text-slate-400">
+                    Stake {activeRawPoint.stake.toFixed(2)}u
+                  </span>
+                  <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-emerald-300">
+                    Balance {formatUnits(activeRawPoint.cumulative)}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <p className="mt-3 text-sm text-slate-500">No settled pick selected.</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default function PlayerProps({
   initialPendingBets = [],
   initialRecentBets = [],
   initialStats = [],
+  initialProgressionRows = [],
 }: PlayerPropsClientProps) {
   const router = useRouter();
   const [activeLeague, setActiveLeague] = useState("all");
   const [pendingBets, setPendingBets] = useState<Bet[]>(initialPendingBets);
   const [recentBets, setRecentBets] = useState<Bet[]>(initialRecentBets);
   const [stats, setStats] = useState<CategoryStats[]>(initialStats);
-  const hasInitialPayload = initialPendingBets.length > 0 || initialRecentBets.length > 0 || initialStats.length > 0;
+  const [progressionRows, setProgressionRows] = useState<CategoryProgressionRow[]>(initialProgressionRows);
+  const hasInitialPayload =
+    initialPendingBets.length > 0 ||
+    initialRecentBets.length > 0 ||
+    initialStats.length > 0 ||
+    initialProgressionRows.length > 0;
   const [loading, setLoading] = useState(!hasInitialPayload);
   const [showAllPending, setShowAllPending] = useState(false);
   const [showAllRecent, setShowAllRecent] = useState(false);
 
   const leagueConfig = [
-    { id: "all", name: "All Leagues", logoPath: "/icons/markets/other-football.svg", logoClassName: naturalLogoFilter },
-    { id: "pl", name: "Premier League", logoPath: "/league-logos/epl.png", logoClassName: lowContrastLogoFilter },
-    { id: "seriea", name: "Serie A", logoPath: "/league-logos/serie-a.png", logoClassName: naturalLogoFilter },
-    { id: "laliga", name: "La Liga", logoPath: "/league-logos/la-liga.png", logoClassName: naturalLogoFilter },
-    { id: "bundesliga", name: "Bundesliga", logoPath: "/league-logos/bundesliga.png", logoClassName: naturalLogoFilter },
-    { id: "ligue1", name: "Ligue 1", logoPath: "/league-logos/ligue-1.png", logoClassName: darkLogoFilter },
-    { id: "ucl", name: "Champions League", logoPath: "/icons/markets/ucl-official.svg", logoClassName: darkLogoFilter },
-    { id: "worldcup", name: "World Cup", logoPath: "/world-cup-trophy.svg", logoClassName: naturalLogoFilter },
-    { id: "other", name: "Other", logoPath: "/icons/markets/other-football.svg", logoClassName: naturalLogoFilter },
+    { id: "all", name: "All Leagues", color: "emerald", logoPath: "/icons/markets/other-football.svg", logoClassName: naturalLogoFilter },
+    { id: "pl", name: "Premier League", color: "purple", logoPath: "/league-logos/epl.png", logoClassName: lowContrastLogoFilter },
+    { id: "seriea", name: "Serie A", color: "blue", logoPath: "/league-logos/serie-a.png", logoClassName: naturalLogoFilter },
+    { id: "laliga", name: "La Liga", color: "red", logoPath: "/league-logos/la-liga.png", logoClassName: naturalLogoFilter },
+    { id: "bundesliga", name: "Bundesliga", color: "rose", logoPath: "/league-logos/bundesliga.png", logoClassName: naturalLogoFilter },
+    { id: "ligue1", name: "Ligue 1", color: "cyan", logoPath: "/league-logos/ligue-1.png", logoClassName: darkLogoFilter },
+    { id: "ucl", name: "Champions League", color: "amber", logoPath: "/icons/markets/ucl-official.svg", logoClassName: darkLogoFilter },
+    { id: "worldcup", name: "World Cup", color: "emerald", logoPath: "/world-cup-trophy.svg", logoClassName: naturalLogoFilter },
+    { id: "other", name: "Other", color: "slate", logoPath: "/icons/markets/other-football.svg", logoClassName: naturalLogoFilter },
   ];
 
+  const colorClasses: Record<string, { border: string; text: string; bg: string; bar: string }> = {
+    emerald: { border: "border-emerald-500/50", text: "text-emerald-400", bg: "bg-emerald-500/10", bar: "from-emerald-500 to-emerald-400" },
+    purple: { border: "border-purple-500/50", text: "text-purple-400", bg: "bg-purple-500/10", bar: "from-purple-500 to-purple-400" },
+    blue: { border: "border-blue-500/50", text: "text-blue-400", bg: "bg-blue-500/10", bar: "from-blue-500 to-blue-400" },
+    amber: { border: "border-amber-500/50", text: "text-amber-400", bg: "bg-amber-500/10", bar: "from-amber-500 to-amber-400" },
+    red: { border: "border-red-500/50", text: "text-red-400", bg: "bg-red-500/10", bar: "from-red-500 to-red-400" },
+    rose: { border: "border-rose-500/50", text: "text-rose-400", bg: "bg-rose-500/10", bar: "from-rose-500 to-rose-400" },
+    cyan: { border: "border-cyan-500/50", text: "text-cyan-400", bg: "bg-cyan-500/10", bar: "from-cyan-500 to-cyan-400" },
+    slate: { border: "border-slate-600/70", text: "text-slate-300", bg: "bg-slate-700/20", bar: "from-slate-600 to-slate-500" },
+  };
   const logoMarkClassName = "flex h-10 w-10 shrink-0 items-center justify-center overflow-visible";
   const logoImageClassName = "h-full w-full object-contain";
 
@@ -103,6 +336,7 @@ export default function PlayerProps({
       setPendingBets((json.pending ?? []) as Bet[]);
       setRecentBets((json.recent ?? []) as Bet[]);
       setStats((json.stats ?? []) as CategoryStats[]);
+      setProgressionRows((json.progression ?? []) as CategoryProgressionRow[]);
     } catch (error) {
       console.error("Error fetching player props record:", error);
     } finally {
@@ -140,7 +374,7 @@ export default function PlayerProps({
     requestAnimationFrame(() => requestAnimationFrame(() => el.scrollIntoView({ behavior: "smooth", block: "start" })));
   }, [loading]);
 
-  const getStatsForLeague = (leagueId: string): DisplayStats => {
+  const getStatsForLeague = (leagueId: string) => {
     if (leagueId === "all") {
       // For "All Leagues" - combine baseline + all live data
       const allStats = stats.filter(s => s.market === "props");
@@ -168,8 +402,6 @@ export default function PlayerProps({
 
       return {
         total_bets: totalBets,
-        total_profit: totalProfit,
-        avg_stake: totalBets > 0 ? totalStake / totalBets : 0,
         roi: calculateROI(totalProfit, totalStake || 1),
         win_rate: calculateWinRate(totalWins, totalLosses),
         avg_odds: avgOdds,
@@ -197,7 +429,7 @@ export default function PlayerProps({
     if (!categoryBaseline) {
       // No baseline for this category, show only live data
       if (!leagueStats) {
-        return { total_bets: 0, total_profit: 0, avg_stake: 0, roi: 0, win_rate: 0, avg_odds: 0 };
+        return { total_bets: 0, roi: 0, win_rate: 0, avg_odds: 0 };
       }
       const liveBets = leagueStats.total_bets || 0;
       const liveProfit = Number(leagueStats.total_profit) || 0;
@@ -206,8 +438,6 @@ export default function PlayerProps({
       const liveStake = Number(leagueStats.total_stake) || liveBets;
       return {
         total_bets: liveBets,
-        total_profit: liveProfit,
-        avg_stake: liveBets > 0 ? liveStake / liveBets : 0,
         roi: liveStake > 0 ? calculateROI(liveProfit, liveStake) : 0,
         win_rate: calculateWinRate(liveWins, liveLosses),
         avg_odds: Number(leagueStats.avg_odds) || 0,
@@ -235,8 +465,6 @@ export default function PlayerProps({
 
     return {
       total_bets: totalBets,
-      total_profit: totalProfit,
-      avg_stake: totalBets > 0 ? totalStake / totalBets : 0,
       roi: calculateROI(totalProfit, totalStake || 1),
       win_rate: calculateWinRate(totalWins, totalLosses),
       avg_odds: avgOdds,
@@ -246,50 +474,16 @@ export default function PlayerProps({
   const categoryForBet = (bet: Bet) => getDisplayBetCategory({ market: bet.market, category: bet.category, event: bet.event });
   const filteredPending = activeLeague === "all" ? pendingBets : pendingBets.filter(b => categoryForBet(b) === activeLeague);
   const filteredRecent = activeLeague === "all" ? recentBets : recentBets.filter(b => categoryForBet(b) === activeLeague);
+  const filteredProgressionRows =
+    activeLeague === "all" ? progressionRows : progressionRows.filter((row) => normalizeBetCategory(row.category) === activeLeague);
 
   // Display limits: show 5 initially, or all if expanded
   const displayedPending = showAllPending ? filteredPending : filteredPending.slice(0, 5);
   const displayedRecent = showAllRecent ? filteredRecent : filteredRecent.slice(0, 5);
 
+  const activeColor = leagueConfig.find(l => l.id === activeLeague)?.color || "emerald";
+  const activeName = leagueConfig.find(l => l.id === activeLeague)?.name || "Selected";
   const currentStats = getStatsForLeague(activeLeague);
-  const statCards = [
-    {
-      label: "Total Bets",
-      value: currentStats.total_bets.toLocaleString(),
-      tone: "text-white",
-      detail: "settled sample",
-    },
-    {
-      label: "Units P/L",
-      value: formatSignedUnits(currentStats.total_profit),
-      tone: profitToneClass(currentStats.total_profit),
-      detail: "net profit",
-    },
-    {
-      label: "Avg Stake",
-      value: formatUnits(currentStats.avg_stake),
-      tone: "text-emerald-300",
-      detail: "units per bet",
-    },
-    {
-      label: "ROI",
-      value: `${currentStats.roi > 0 ? "+" : ""}${currentStats.roi.toFixed(1)}%`,
-      tone: roiToneClass(currentStats.roi),
-      detail: "return on stake",
-    },
-    {
-      label: "Win Rate",
-      value: `${currentStats.win_rate.toFixed(1)}%`,
-      tone: "text-emerald-300",
-      detail: "settled hit rate",
-    },
-    {
-      label: "Avg Odds",
-      value: formatOdds(currentStats.avg_odds),
-      tone: "text-emerald-300",
-      detail: "average advised odds",
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
@@ -327,18 +521,7 @@ export default function PlayerProps({
       {/* League Tabs */}
       <section className="py-12 md:py-16 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-5 flex flex-col gap-2 sm:mb-6 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <span className="text-xs font-mono uppercase tracking-[0.18em] text-emerald-400">Record Filters</span>
-              <h2 className="mt-2 text-2xl font-semibold text-slate-100">Category breakdown</h2>
-            </div>
-            <p className="max-w-xl text-xs leading-relaxed text-slate-500">
-              Filter the public record without changing the ledger maths. P/L and ROI use the settled stakes in each
-              category.
-            </p>
-          </div>
-
-          <div className="mb-6 grid grid-cols-1 gap-3 sm:mb-8 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8">
             {leagueConfig.map((league) => {
               const leagueStats = getStatsForLeague(league.id);
               const isActive = activeLeague === league.id;
@@ -346,55 +529,29 @@ export default function PlayerProps({
                 <button
                   key={league.id}
                   onClick={() => setActiveLeague(league.id)}
-                  className={`group relative overflow-hidden rounded-2xl border p-3 text-left transition-all sm:p-4 ${
+                  className={`flex min-w-[152px] items-center gap-3 rounded-xl border px-3 py-3 text-left transition-all sm:min-w-[174px] ${
                     isActive
-                      ? "border-emerald-400/70 bg-emerald-950/20 shadow-[0_18px_70px_rgba(16,185,129,0.12)]"
-                      : "border-slate-800 bg-slate-950/35 hover:border-slate-700 hover:bg-slate-900/45"
+                      ? `bg-slate-900/80 ${colorClasses[league.color].border} ${colorClasses[league.color].text}`
+                      : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
                   }`}
                 >
-                  <div className={`absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-emerald-500 to-emerald-300 transition-opacity ${isActive ? "opacity-100" : "opacity-0 group-hover:opacity-45"}`} />
-                  <div className="flex items-center gap-3">
-                    <span className={`${logoMarkClassName} ${isActive ? "scale-105" : ""}`}>
-                      <Image
-                        src={league.logoPath}
-                        alt=""
-                        width={36}
-                        height={36}
-                        className={`${logoImageClassName} ${league.logoClassName}`}
-                      />
-                    </span>
-                    <div className="min-w-0">
-                      <span className={`block truncate font-semibold ${isActive ? "text-white" : "text-slate-200"}`}>
-                        {league.name}
-                      </span>
-                      <span className="mt-1 block text-[10px] font-mono uppercase tracking-[0.18em] text-slate-500">
-                        {isActive ? "selected record" : "view record"}
+                  <span className={`${logoMarkClassName} ${isActive ? "scale-105" : ""}`}>
+                    <Image
+                      src={league.logoPath}
+                      alt=""
+                      width={36}
+                      height={36}
+                      className={`${logoImageClassName} ${league.logoClassName}`}
+                    />
+                  </span>
+                  <div className="min-w-0">
+                    <span className="block truncate font-medium">{league.name}</span>
+                    <div className="mt-1 flex gap-3 text-xs">
+                      <span>{leagueStats.total_bets} bets</span>
+                      <span className={`${roiToneClass(leagueStats.roi)} font-mono`}>
+                        {leagueStats.roi > 0 ? "+" : ""}{leagueStats.roi.toFixed(1)}% ROI
                       </span>
                     </div>
-                  </div>
-                  <div className="mt-3 grid grid-cols-2 gap-2 text-xs sm:mt-4">
-                    <span className="rounded-xl border border-slate-800/80 bg-black/18 px-2.5 py-1.5 sm:px-3 sm:py-2">
-                      <span className="block text-[10px] uppercase tracking-[0.14em] text-slate-500">Bets</span>
-                      <span className="mt-1 block font-mono text-sm font-semibold text-white">{leagueStats.total_bets}</span>
-                    </span>
-                    <span className="rounded-xl border border-slate-800/80 bg-black/18 px-2.5 py-1.5 sm:px-3 sm:py-2">
-                      <span className="block text-[10px] uppercase tracking-[0.14em] text-slate-500">P/L</span>
-                      <span className={`mt-1 block font-mono text-sm font-semibold ${profitToneClass(leagueStats.total_profit)}`}>
-                        {formatSignedUnits(leagueStats.total_profit)}
-                      </span>
-                    </span>
-                    <span className="rounded-xl border border-slate-800/80 bg-black/18 px-2.5 py-1.5 sm:px-3 sm:py-2">
-                      <span className="block text-[10px] uppercase tracking-[0.14em] text-slate-500">Avg Stake</span>
-                      <span className="mt-1 block font-mono text-sm font-semibold text-emerald-300">
-                        {formatUnits(leagueStats.avg_stake)}
-                      </span>
-                    </span>
-                    <span className="rounded-xl border border-slate-800/80 bg-black/18 px-2.5 py-1.5 sm:px-3 sm:py-2">
-                      <span className="block text-[10px] uppercase tracking-[0.14em] text-slate-500">ROI</span>
-                      <span className={`mt-1 block font-mono text-sm font-semibold ${roiToneClass(leagueStats.roi)}`}>
-                        {leagueStats.roi > 0 ? "+" : ""}{leagueStats.roi.toFixed(1)}%
-                      </span>
-                    </span>
                   </div>
                 </button>
               );
@@ -402,24 +559,43 @@ export default function PlayerProps({
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-6">
-            {statCards.map((card) => (
-              <div
-                key={card.label}
-                className="relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-950/45 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.18)]"
-              >
-                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-500 to-emerald-300 opacity-70" />
-                <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-slate-500">{card.label}</div>
-                <div className={`mt-3 font-mono text-2xl font-bold ${card.tone}`}>{card.value}</div>
-                <div className="mt-3 inline-flex rounded-full border border-slate-800 bg-slate-900/70 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-slate-500">
-                  {card.detail}
-                </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
+              <div className="text-2xl font-bold text-white font-mono mb-2">{currentStats.total_bets}</div>
+              <div className="text-xs text-slate-500 mb-3">Total Bets</div>
+              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${Math.min((currentStats.total_bets / 1000) * 100, 100)}%` }} />
               </div>
-            ))}
+            </div>
+            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
+              <div className={`text-2xl font-bold ${roiToneClass(currentStats.roi)} font-mono mb-2`}>{currentStats.roi > 0 ? "+" : ""}{currentStats.roi.toFixed(1)}%</div>
+              <div className="text-xs text-slate-500 mb-3">ROI</div>
+              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${Math.min(Math.abs(currentStats.roi) * 3, 100)}%` }} />
+              </div>
+            </div>
+            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
+              <div className={`text-2xl font-bold ${colorClasses[activeColor].text} font-mono mb-2`}>{currentStats.win_rate.toFixed(1)}%</div>
+              <div className="text-xs text-slate-500 mb-3">Win Rate</div>
+              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${currentStats.win_rate}%` }} />
+              </div>
+            </div>
+            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
+              <div className={`text-2xl font-bold ${colorClasses[activeColor].text} font-mono mb-2`}>{formatOdds(currentStats.avg_odds)}</div>
+              <div className="text-xs text-slate-500 mb-3">Avg Odds</div>
+              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${(currentStats.avg_odds / 3) * 100}%` }} />
+              </div>
+            </div>
           </div>
+
+          <ProfitProgressionPanel rows={filteredProgressionRows} activeName={activeName} />
+
           <p className="mt-4 max-w-3xl text-xs leading-relaxed text-slate-500">
             Record cards use the full tracked category record. The recent selections table below is only a browsing
-            sample from the latest 50 settled player-prop picks, then filtered by the league tab you choose.
+            sample from the latest 50 settled player-prop picks, then filtered by the league tab you choose. The P/L
+            progression uses settled public ledger rows for the selected tab.
           </p>
         </div>
       </section>
