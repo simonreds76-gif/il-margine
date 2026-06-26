@@ -97,22 +97,23 @@ function buildArchiveRamp(stats: BaselineMarketStats): Omit<ProgressionPoint, "x
   const monthCount = getArchiveMonthCount(stats);
   const target = Number(stats.total_profit) || 0;
   const magnitude = Math.abs(target);
-  let previous = 0;
   return Array.from({ length: ARCHIVE_ANCHORS + 1 }, (_, index) => {
     const t = index / ARCHIVE_ANCHORS;
-    // Near-linear archive bridge with small controlled hills. This represents
-    // an aggregate 20+ month record, so it should read as steady long-run P/L,
-    // not as a dramatic drawdown/recovery or a fabricated pick-by-pick curve.
-    const trend = target * t;
-    const smallHill = Math.sin(t * Math.PI * 6) * magnitude * 0.006;
-    const slowHill = Math.sin(t * Math.PI * 2) * magnitude * 0.004;
-    let cumulative = index === 0 ? 0 : index === ARCHIVE_ANCHORS ? target : trend + smallHill + slowHill;
-    if (target >= 0) {
-      cumulative = Math.min(target, Math.max(previous, cumulative));
-    } else {
-      cumulative = Math.max(target, Math.min(previous, cumulative));
-    }
-    previous = cumulative;
+    // Organic archive bridge: the endpoint is the real archive total, but the
+    // route is a bounded reconstruction with visible plateaus/pullbacks. It
+    // avoids both bad extremes: a fake pick-by-pick rollercoaster and a sterile
+    // straight mountain line.
+    const envelope = Math.sin(t * Math.PI);
+    const wave =
+      Math.sin(t * Math.PI * 5 + 0.65) * 0.085 +
+      Math.sin(t * Math.PI * 11 + 1.35) * 0.038 +
+      Math.sin(t * Math.PI * 2 - 0.45) * 0.028;
+    const corridor = 0.12;
+    const rawProgress = t + envelope * wave;
+    const lowerProgress = Math.max(0, t - corridor);
+    const upperProgress = Math.min(1, t + corridor);
+    const progress = index === 0 ? 0 : index === ARCHIVE_ANCHORS ? 1 : Math.min(upperProgress, Math.max(lowerProgress, rawProgress));
+    const cumulative = target >= 0 ? progress * magnitude : -progress * magnitude;
     return {
       id: -1000 - index,
       date: null,
