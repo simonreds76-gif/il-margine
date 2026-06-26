@@ -37,6 +37,7 @@ type ProgressionBetRow = {
   market: string | null;
   category: string | null;
   event: string | null;
+  player: string | null;
   selection: string | null;
   status: string | null;
   stake: number | string | null;
@@ -69,6 +70,7 @@ function buildProgressionRows(rows: ProgressionBetRow[]) {
       date: row.match_date || row.settled_at || row.posted_at || null,
       category: getDisplayBetCategory({ market: row.market, category: row.category, event: row.event }),
       event: row.event || "Unknown event",
+      player: row.player || "",
       selection: row.selection || "Selection",
       status: row.status || "settled",
       stake: roundUnits(Number(row.stake) || 0),
@@ -170,7 +172,7 @@ export async function fetchMarketPayload(scope: "tennis" | "props") {
       supabase.from("category_stats").select("*").eq("market", market),
       supabase
         .from("bets")
-        .select("id, market, category, event, selection, status, stake, profit_loss, match_date, settled_at, posted_at")
+        .select("id, market, category, event, player, selection, status, stake, profit_loss, match_date, settled_at, posted_at")
         .eq("market", market)
         .in("status", ["won", "lost"])
         .not("profit_loss", "is", null)

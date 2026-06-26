@@ -29,6 +29,7 @@ type CategoryProgressionRow = {
   date: string | null;
   category: string;
   event: string;
+  player: string;
   selection: string;
   status: string;
   stake: number;
@@ -259,7 +260,9 @@ function ProfitProgressionPanel({
                   </span>
                 </div>
                 <div className="mt-2 text-sm leading-snug text-slate-300">{activeRawPoint.event}</div>
-                <div className="mt-1 text-xs leading-relaxed text-slate-500">{activeRawPoint.selection}</div>
+                <div className="mt-1 text-sm font-semibold leading-relaxed text-slate-100">
+                  {activeRawPoint.player ? `${activeRawPoint.player} - ${activeRawPoint.selection}` : activeRawPoint.selection}
+                </div>
                 <div className="mt-3 flex flex-wrap gap-2 font-mono text-[11px]">
                   <span className="rounded-full border border-slate-700 bg-slate-900/80 px-2.5 py-1 text-slate-400">
                     Stake {activeRawPoint.stake.toFixed(2)}u

@@ -191,16 +191,14 @@ function param(url: URL, key: string, fallback = ""): string {
 function truncate(value: string, max: number): string {
   const text = value.replace(/\s+/g, " ").trim();
   if (text.length <= max) return text;
-  return `${text.slice(0, Math.max(0, max - 1)).trimEnd()}…`;
+  return `${text.slice(0, Math.max(0, max - 1)).trimEnd()}...`;
 }
 
 function resolveBookmakerCard(bookmaker: string, origin: string) {
   const resolved = resolveBookmakerLogo(bookmaker);
   const key = resolved?.key ?? "generic";
   const path =
-    resolved?.paths.find((candidate) => /\.(png|jpe?g|webp)$/i.test(candidate)) ??
-    resolved?.paths[0] ??
-    null;
+    resolved?.paths[0] ?? null;
   return {
     key,
     displayName: resolved?.displayName ?? bookmaker,
@@ -208,7 +206,28 @@ function resolveBookmakerCard(bookmaker: string, origin: string) {
     theme: BOOKMAKER_THEMES[key] ?? DEFAULT_BOOKMAKER_THEME,
   };
 }
+function bytesToBase64(bytes: Uint8Array): string {
+  let binary = "";
+  const chunkSize = 0x8000;
+  for (let index = 0; index < bytes.length; index += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(index, index + chunkSize));
+  }
+  return btoa(binary);
+}
 
+async function fetchImageDataUrl(imageUrl: string | null): Promise<string | null> {
+  if (!imageUrl) return null;
+  try {
+    const response = await fetch(imageUrl, { cache: "force-cache" });
+    const contentType = response.headers.get("content-type") || "image/png";
+    if (!response.ok || !contentType.toLowerCase().startsWith("image/")) return null;
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    if (!bytes.length) return null;
+    return `data:${contentType};base64,${bytesToBase64(bytes)}`;
+  } catch {
+    return null;
+  }
+}
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const event = truncate(param(url, "event", "World Cup"), 64);
@@ -221,8 +240,9 @@ export async function GET(request: Request) {
   const bookmakerCard = resolveBookmakerCard(bookmakerParam, url.origin);
   const bookmakerName = truncate(bookmakerCard.displayName, 22);
   const logoUrl = bookmakerCard.logoUrl;
+  const logoDataUrl = await fetchImageDataUrl(logoUrl);
   const logoTheme = bookmakerCard.theme;
-  const pickLine = player ? `${player} · ${selection}` : selection;
+  const pickLine = player ? `${player} - ${selection}` : selection;
 
   return new ImageResponse(
     (
@@ -373,9 +393,9 @@ export async function GET(request: Request) {
                 padding: 18,
               }}
             >
-            {logoUrl ? (
+            {logoDataUrl ? (
               <img
-                src={logoUrl}
+                src={logoDataUrl}
                 alt={bookmakerName}
                 style={{
                   width: 264,
