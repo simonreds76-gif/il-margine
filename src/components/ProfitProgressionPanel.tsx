@@ -97,14 +97,22 @@ function buildArchiveRamp(stats: BaselineMarketStats): Omit<ProgressionPoint, "x
   const monthCount = getArchiveMonthCount(stats);
   const target = Number(stats.total_profit) || 0;
   const magnitude = Math.abs(target);
+  let previous = 0;
   return Array.from({ length: ARCHIVE_ANCHORS + 1 }, (_, index) => {
     const t = index / ARCHIVE_ANCHORS;
-    // Gentle organic shape around a straight climb to the baseline P/L. Kept
-    // small so the curve reads as a steady long-run record, not a fake series.
+    // Near-linear archive bridge with small controlled hills. This represents
+    // an aggregate 20+ month record, so it should read as steady long-run P/L,
+    // not as a dramatic drawdown/recovery or a fabricated pick-by-pick curve.
     const trend = target * t;
-    const wave = Math.sin(t * Math.PI * 4) * magnitude * 0.012;
-    const earlyDrag = Math.sin(t * Math.PI) * magnitude * 0.02;
-    const cumulative = index === 0 ? 0 : index === ARCHIVE_ANCHORS ? target : trend + wave - earlyDrag;
+    const smallHill = Math.sin(t * Math.PI * 6) * magnitude * 0.006;
+    const slowHill = Math.sin(t * Math.PI * 2) * magnitude * 0.004;
+    let cumulative = index === 0 ? 0 : index === ARCHIVE_ANCHORS ? target : trend + smallHill + slowHill;
+    if (target >= 0) {
+      cumulative = Math.min(target, Math.max(previous, cumulative));
+    } else {
+      cumulative = Math.max(target, Math.min(previous, cumulative));
+    }
+    previous = cumulative;
     return {
       id: -1000 - index,
       date: null,
