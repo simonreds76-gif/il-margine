@@ -9,10 +9,12 @@ import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BetMobileMeta from "@/components/BetMobileMeta";
 import MarketBadge from "@/components/MarketBadge";
 import PublicBetsTable from "@/components/PublicBetsTable";
+import ProfitProgressionPanel, { type CategoryProgressionRow } from "@/components/ProfitProgressionPanel";
 import ResultBadge from "@/components/ResultBadge";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import PageHomeLink from "@/components/PageHomeLink";
+import { normalizeBetCategory } from "@/lib/bet-category";
 import { formatMatchDate, formatOdds } from "@/lib/format";
 import { slugifyTip } from "@/lib/slugify";
 
@@ -20,6 +22,7 @@ type TennisTipsClientProps = {
   initialPendingBets?: Bet[];
   initialRecentBets?: Bet[];
   initialStats?: CategoryStats[];
+  initialProgressionRows?: CategoryProgressionRow[];
 };
 
 const naturalLogoFilter =
@@ -35,13 +38,19 @@ export default function TennisTips({
   initialPendingBets = [],
   initialRecentBets = [],
   initialStats = [],
+  initialProgressionRows = [],
 }: TennisTipsClientProps) {
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState("all");
   const [pendingBets, setPendingBets] = useState<Bet[]>(initialPendingBets);
   const [recentBets, setRecentBets] = useState<Bet[]>(initialRecentBets);
   const [stats, setStats] = useState<CategoryStats[]>(initialStats);
-  const hasInitialPayload = initialPendingBets.length > 0 || initialRecentBets.length > 0 || initialStats.length > 0;
+  const [progressionRows, setProgressionRows] = useState<CategoryProgressionRow[]>(initialProgressionRows);
+  const hasInitialPayload =
+    initialPendingBets.length > 0 ||
+    initialRecentBets.length > 0 ||
+    initialStats.length > 0 ||
+    initialProgressionRows.length > 0;
   const [loading, setLoading] = useState(!hasInitialPayload);
   const [showAllPending, setShowAllPending] = useState(false);
   const [showAllRecent, setShowAllRecent] = useState(false);
@@ -81,6 +90,7 @@ export default function TennisTips({
       setPendingBets((json.pending ?? []) as Bet[]);
       setRecentBets((json.recent ?? []) as Bet[]);
       setStats((json.stats ?? []) as CategoryStats[]);
+      setProgressionRows((json.progression ?? []) as CategoryProgressionRow[]);
     } catch (error) {
       console.error("Error fetching tennis record:", error);
     } finally {
@@ -202,6 +212,11 @@ export default function TennisTips({
     };
   };
 
+  const getArchiveStatsForCategory = (categoryId: string) => {
+    if (categoryId === "all") return BASELINE_STATS.tennis;
+    return BASELINE_STATS.categoryBaselines.tennis[categoryId] ?? null;
+  };
+
   // Filter bets by category
   const filteredPending = activeCategory === "all"
     ? pendingBets
@@ -211,12 +226,19 @@ export default function TennisTips({
     ? recentBets
     : recentBets.filter(b => b.category === activeCategory);
 
+  const filteredProgressionRows = activeCategory === "all"
+    ? progressionRows
+    : progressionRows.filter((row) => normalizeBetCategory(row.category) === activeCategory);
+
   // Display limits: show 5 initially, or all if expanded
   const displayedPending = showAllPending ? filteredPending : filteredPending.slice(0, 5);
   const displayedRecent = showAllRecent ? filteredRecent : filteredRecent.slice(0, 5);
 
-  const activeColor = categoryConfig.find(c => c.id === activeCategory)?.color || "emerald";
+  const activeName = categoryConfig.find(c => c.id === activeCategory)?.name || "Selected";
   const currentStats = getStatsForCategory(activeCategory);
+  const archiveStats = getArchiveStatsForCategory(activeCategory);
+  const neutralBar = "from-slate-600 to-slate-400";
+  const roiBar = currentStats.roi >= 0 ? "from-emerald-500 to-emerald-400" : "from-rose-500 to-rose-400";
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
@@ -254,7 +276,7 @@ export default function TennisTips({
                   onClick={() => setActiveCategory(cat.id)}
                   className={`flex min-w-[152px] items-center gap-3 rounded-xl border px-3 py-3 text-left transition-all sm:min-w-[174px] ${
                     isActive
-                      ? `bg-slate-900/80 ${colorClasses[cat.color].border} ${colorClasses[cat.color].text}`
+                      ? `bg-slate-900/80 ${colorClasses[cat.color].border} text-slate-100`
                       : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
                   }`}
                 >
@@ -287,34 +309,39 @@ export default function TennisTips({
               <div className="text-2xl font-bold text-white font-mono mb-2">{currentStats.total_bets}</div>
               <div className="text-xs text-slate-500 mb-3">Total Bets</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${Math.min((currentStats.total_bets / 500) * 100, 100)}%` }} />
+                <div className={`h-full bg-gradient-to-r ${neutralBar} rounded-full`} style={{ width: `${Math.min((currentStats.total_bets / 500) * 100, 100)}%` }} />
               </div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
               <div className={`text-2xl font-bold ${roiToneClass(currentStats.roi)} font-mono mb-2`}>{currentStats.roi > 0 ? "+" : ""}{currentStats.roi.toFixed(1)}%</div>
               <div className="text-xs text-slate-500 mb-3">ROI</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${Math.min(Math.abs(currentStats.roi) * 4, 100)}%` }} />
+                <div className={`h-full bg-gradient-to-r ${roiBar} rounded-full`} style={{ width: `${Math.min(Math.abs(currentStats.roi) * 4, 100)}%` }} />
               </div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className={`text-2xl font-bold ${colorClasses[activeColor].text} font-mono mb-2`}>{currentStats.win_rate.toFixed(1)}%</div>
+              <div className="text-2xl font-bold text-slate-100 font-mono mb-2">{currentStats.win_rate.toFixed(1)}%</div>
               <div className="text-xs text-slate-500 mb-3">Win Rate</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${currentStats.win_rate}%` }} />
+                <div className={`h-full bg-gradient-to-r ${neutralBar} rounded-full`} style={{ width: `${currentStats.win_rate}%` }} />
               </div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className={`text-2xl font-bold ${colorClasses[activeColor].text} font-mono mb-2`}>{formatOdds(currentStats.avg_odds)}</div>
+              <div className="text-2xl font-bold text-slate-100 font-mono mb-2">{formatOdds(currentStats.avg_odds)}</div>
               <div className="text-xs text-slate-500 mb-3">Avg Odds</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${(currentStats.avg_odds / 3) * 100}%` }} />
+                <div className={`h-full bg-gradient-to-r ${neutralBar} rounded-full`} style={{ width: `${(currentStats.avg_odds / 3) * 100}%` }} />
               </div>
             </div>
           </div>
+
+          <ProfitProgressionPanel rows={filteredProgressionRows} activeName={activeName} archiveStats={archiveStats} />
+
           <p className="mt-4 max-w-3xl text-xs leading-relaxed text-slate-500">
             Record cards use the full tracked tennis category record. The recent selections table below is only a
-            browsing sample from the latest 50 settled tennis picks, then filtered by the category tab you choose.
+            browsing sample from the latest 50 settled tennis picks, then filtered by the category tab you choose. The
+            P/L progression shows any pre-tracking baseline as a dashed aggregate summary, then uses settled public
+            ledger rows for the selected tab.
           </p>
         </div>
       </section>

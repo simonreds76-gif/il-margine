@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Bet, CategoryStats } from "@/lib/supabase";
@@ -8,6 +8,7 @@ import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BetMobileMeta from "@/components/BetMobileMeta";
 import MarketBadge from "@/components/MarketBadge";
 import PublicBetsTable from "@/components/PublicBetsTable";
+import ProfitProgressionPanel, { type CategoryProgressionRow } from "@/components/ProfitProgressionPanel";
 import ResultBadge from "@/components/ResultBadge";
 
 import Footer from "@/components/Footer";
@@ -24,26 +25,6 @@ type PlayerPropsClientProps = {
   initialProgressionRows?: CategoryProgressionRow[];
 };
 
-type CategoryProgressionRow = {
-  id: number;
-  date: string | null;
-  category: string;
-  event: string;
-  player: string;
-  selection: string;
-  status: string;
-  stake: number;
-  profit_loss: number;
-};
-
-type ProgressionPoint = CategoryProgressionRow & {
-  index: number;
-  cumulative: number;
-  isOpeningBalance?: boolean;
-  x: number;
-  y: number;
-};
-
 const darkLogoFilter =
   "[filter:brightness(0)_invert(1)_drop-shadow(0_0_5px_rgba(255,255,255,0.58))_drop-shadow(0_0_12px_rgba(87,209,150,0.2))]";
 const lowContrastLogoFilter =
@@ -55,259 +36,6 @@ function roiToneClass(roi: number): string {
   if (roi > 0) return "text-emerald-400";
   if (roi < 0) return "text-rose-400";
   return "text-slate-400";
-}
-
-function formatUnits(value: number, decimals = 2): string {
-  return `${value >= 0 ? "+" : ""}${value.toFixed(decimals)}u`;
-}
-
-function formatShortDate(value: string | null): string {
-  if (!value) return "Unknown date";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value.slice(0, 10);
-  return date.toLocaleDateString("en-GB", { day: "2-digit", month: "short" });
-}
-
-function buildProgressionPoints(rows: CategoryProgressionRow[], openingBalance = 0): Omit<ProgressionPoint, "x" | "y">[] {
-  let cumulative = openingBalance;
-  const sortedRows = rows
-    .slice()
-    .sort((a, b) => {
-      const aDate = a.date || "";
-      const bDate = b.date || "";
-      const dateCompare = aDate.localeCompare(bDate);
-      if (dateCompare !== 0) return dateCompare;
-      return a.id - b.id;
-    });
-
-  const points: Omit<ProgressionPoint, "x" | "y">[] = [];
-  if (openingBalance !== 0) {
-    points.push({
-      id: -1,
-      date: null,
-      category: "archive",
-      event: "Archive opening balance",
-      player: "",
-      selection: "Tracked record before the current public ledger",
-      status: "settled",
-      stake: 0,
-      profit_loss: openingBalance,
-      index: -1,
-      cumulative: Math.round((openingBalance + Number.EPSILON) * 100) / 100,
-      isOpeningBalance: true,
-    });
-  }
-
-  sortedRows.forEach((row, index) => {
-      cumulative += Number(row.profit_loss) || 0;
-      points.push({
-        ...row,
-        index,
-        cumulative: Math.round((cumulative + Number.EPSILON) * 100) / 100,
-      });
-  });
-
-  return points;
-}
-
-function buildChartPath(points: ProgressionPoint[]): string {
-  if (points.length === 0) return "";
-  return points.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" ");
-}
-
-function ProgressionStat({ label, value, tone = "neutral" }: { label: string; value: string; tone?: "positive" | "negative" | "neutral" }) {
-  const toneClass = tone === "positive" ? "text-emerald-400" : tone === "negative" ? "text-rose-400" : "text-slate-100";
-  return (
-    <div className="rounded-xl border border-slate-800 bg-slate-950/45 px-3 py-2.5">
-      <div className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">{label}</div>
-      <div className={`mt-1 font-mono text-sm font-black tabular-nums ${toneClass}`}>{value}</div>
-    </div>
-  );
-}
-
-function ProfitProgressionPanel({
-  rows,
-  activeName,
-  openingBalance,
-}: {
-  rows: CategoryProgressionRow[];
-  activeName: string;
-  openingBalance: number;
-}) {
-  const [activePointId, setActivePointId] = useState<number | null>(null);
-  const rawPoints = useMemo(() => buildProgressionPoints(rows, openingBalance), [openingBalance, rows]);
-  const settledPoints = useMemo(() => rawPoints.filter((point) => !point.isOpeningBalance), [rawPoints]);
-  const latestPoint = settledPoints[settledPoints.length - 1] ?? rawPoints[rawPoints.length - 1] ?? null;
-  const activeRawPoint = activePointId === null ? latestPoint : rawPoints.find((point) => point.id === activePointId) ?? latestPoint;
-
-  const metrics = useMemo(() => {
-    let peak = openingBalance;
-    let maxDrawdown = 0;
-    for (const point of rawPoints) {
-      peak = Math.max(peak, point.cumulative);
-      maxDrawdown = Math.max(maxDrawdown, peak - point.cumulative);
-    }
-    const last10 = settledPoints.slice(-10).reduce((sum, point) => sum + point.profit_loss, 0);
-    return {
-      cumulative: latestPoint?.cumulative ?? 0,
-      peak,
-      maxDrawdown,
-      last10,
-    };
-  }, [latestPoint?.cumulative, openingBalance, rawPoints, settledPoints]);
-
-  const chart = useMemo(() => {
-    const width = 720;
-    const height = 220;
-    const paddingX = 18;
-    const paddingY = 18;
-    if (rawPoints.length === 0) {
-      return { width, height, points: [] as ProgressionPoint[], linePath: "", areaPath: "", zeroY: height / 2 };
-    }
-
-    const cumulativeValues = rawPoints.map((point) => point.cumulative);
-    const minValue = Math.min(0, ...cumulativeValues);
-    const maxValue = Math.max(0, ...cumulativeValues);
-    const span = Math.max(1, maxValue - minValue);
-    const plotWidth = width - paddingX * 2;
-    const plotHeight = height - paddingY * 2;
-
-    const points = rawPoints.map((point, index) => {
-      const x = rawPoints.length === 1 ? width / 2 : paddingX + (index / (rawPoints.length - 1)) * plotWidth;
-      const y = paddingY + ((maxValue - point.cumulative) / span) * plotHeight;
-      return { ...point, x, y };
-    });
-    const zeroY = paddingY + ((maxValue - 0) / span) * plotHeight;
-    const linePath = buildChartPath(points);
-    const areaPath = points.length
-      ? `${linePath} L ${points[points.length - 1].x.toFixed(1)} ${zeroY.toFixed(1)} L ${points[0].x.toFixed(1)} ${zeroY.toFixed(1)} Z`
-      : "";
-
-    return { width, height, points, linePath, areaPath, zeroY };
-  }, [rawPoints]);
-
-  const activePoint = activeRawPoint ? chart.points.find((point) => point.id === activeRawPoint.id) ?? null : null;
-
-  return (
-    <div className="mt-4 overflow-hidden rounded-2xl border border-emerald-500/20 bg-[radial-gradient(circle_at_18%_0%,rgba(16,185,129,0.10),transparent_34%),linear-gradient(135deg,rgba(15,23,42,0.78),rgba(2,6,23,0.88))]">
-      <div className="grid gap-0 lg:grid-cols-[1.1fr,0.9fr]">
-        <div className="border-b border-slate-800/80 p-5 lg:border-b-0 lg:border-r">
-          <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <div className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-emerald-400/90">
-                P/L progression
-              </div>
-              <h3 className="mt-1 text-lg font-semibold text-slate-100">{activeName} equity curve</h3>
-              <p className="mt-1 text-xs leading-relaxed text-slate-500">
-                Starts from the tracked archive balance where available, then follows real settled public ledger rows.
-              </p>
-            </div>
-            <div className={`rounded-full border px-3 py-1.5 font-mono text-xs font-black tabular-nums ${
-              metrics.cumulative >= 0
-                ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300"
-                : "border-rose-500/25 bg-rose-500/10 text-rose-300"
-            }`}>
-              {formatUnits(metrics.cumulative)}
-            </div>
-          </div>
-
-          <div className="relative h-[220px] rounded-xl border border-slate-800 bg-slate-950/55 p-2">
-            {chart.points.length > 0 ? (
-              <svg
-                viewBox={`0 0 ${chart.width} ${chart.height}`}
-                className="h-full w-full"
-                role="img"
-                aria-label={`${activeName} profit and loss progression`}
-                onMouseLeave={() => setActivePointId(null)}
-              >
-                <defs>
-                  <linearGradient id="props-equity-line" x1="0" x2="1" y1="0" y2="0">
-                    <stop offset="0%" stopColor="#10b981" stopOpacity="0.55" />
-                    <stop offset="55%" stopColor="#34d399" stopOpacity="0.95" />
-                    <stop offset="100%" stopColor="#fbbf24" stopOpacity="0.95" />
-                  </linearGradient>
-                  <linearGradient id="props-equity-fill" x1="0" x2="0" y1="0" y2="1">
-                    <stop offset="0%" stopColor="#10b981" stopOpacity="0.22" />
-                    <stop offset="100%" stopColor="#10b981" stopOpacity="0.01" />
-                  </linearGradient>
-                </defs>
-                <line x1="0" x2={chart.width} y1={chart.zeroY} y2={chart.zeroY} stroke="rgba(148,163,184,0.22)" strokeDasharray="6 7" />
-                <path d={chart.areaPath} fill="url(#props-equity-fill)" />
-                <path d={chart.linePath} fill="none" stroke="url(#props-equity-line)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" />
-                {chart.points.map((point, index) => {
-                  const isActive = activePoint?.id === point.id;
-                  const isOpening = point.isOpeningBalance;
-                  const showPoint = isActive || index === chart.points.length - 1 || index % Math.ceil(chart.points.length / 18) === 0;
-                  return (
-                    <circle
-                      key={point.id}
-                      cx={point.x}
-                      cy={point.y}
-                      r={isActive ? 7 : showPoint ? 4 : 8}
-                      fill={isActive ? "#fbbf24" : isOpening ? "#94a3b8" : showPoint ? "#34d399" : "transparent"}
-                      stroke={isActive ? "rgba(251,191,36,0.5)" : isOpening ? "rgba(148,163,184,0.35)" : "rgba(16,185,129,0.35)"}
-                      strokeWidth={isActive ? 8 : showPoint ? 3 : 0}
-                      className="cursor-pointer transition-opacity"
-                      onMouseEnter={() => setActivePointId(point.id)}
-                      onClick={() => setActivePointId(point.id)}
-                    />
-                  );
-                })}
-              </svg>
-            ) : (
-              <div className="flex h-full items-center justify-center text-center">
-                <div>
-                  <div className="text-sm font-semibold text-slate-300">No settled rows yet</div>
-                  <div className="mt-1 max-w-xs text-xs text-slate-500">The progression line appears once this tab has won/lost settlements.</div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="p-5">
-          <div className="grid grid-cols-2 gap-3">
-            <ProgressionStat label="Current" value={formatUnits(metrics.cumulative)} tone={metrics.cumulative >= 0 ? "positive" : "negative"} />
-            <ProgressionStat label="Peak" value={formatUnits(metrics.peak)} tone={metrics.peak >= 0 ? "positive" : "neutral"} />
-            <ProgressionStat label="Max DD" value={`${metrics.maxDrawdown.toFixed(2)}u`} tone={metrics.maxDrawdown > 0 ? "negative" : "neutral"} />
-            <ProgressionStat label="Last 10" value={formatUnits(metrics.last10)} tone={metrics.last10 >= 0 ? "positive" : "negative"} />
-          </div>
-
-          <div className="mt-4 rounded-xl border border-slate-800 bg-slate-950/45 p-4">
-            <div className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">
-              Selected point
-            </div>
-            {activeRawPoint ? (
-              <div className="mt-3">
-                <div className="flex items-center justify-between gap-3">
-                  <span className="text-sm font-semibold text-slate-100">{formatShortDate(activeRawPoint.date)}</span>
-                  <span className={`font-mono text-sm font-black ${activeRawPoint.cumulative >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
-                    {formatUnits(activeRawPoint.isOpeningBalance ? activeRawPoint.cumulative : activeRawPoint.profit_loss)}
-                  </span>
-                </div>
-                <div className="mt-2 text-sm leading-snug text-slate-300">{activeRawPoint.event}</div>
-                <div className="mt-1 text-sm font-semibold leading-relaxed text-slate-100">
-                  {activeRawPoint.player ? `${activeRawPoint.player} - ${activeRawPoint.selection}` : activeRawPoint.selection}
-                </div>
-                <div className="mt-3 flex flex-wrap gap-2 font-mono text-[11px]">
-                  {!activeRawPoint.isOpeningBalance && (
-                    <span className="rounded-full border border-slate-700 bg-slate-900/80 px-2.5 py-1 text-slate-400">
-                      Stake {activeRawPoint.stake.toFixed(2)}u
-                    </span>
-                  )}
-                  <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-emerald-300">
-                    Balance {formatUnits(activeRawPoint.cumulative)}
-                  </span>
-                </div>
-              </div>
-            ) : (
-              <p className="mt-3 text-sm text-slate-500">No settled pick selected.</p>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 }
 
 export default function PlayerProps({
@@ -502,23 +230,26 @@ export default function PlayerProps({
     };
   };
 
+  const getArchiveStatsForLeague = (leagueId: string) => {
+    if (leagueId === "all") return BASELINE_STATS.props;
+    return BASELINE_STATS.categoryBaselines.props[leagueId] ?? null;
+  };
+
   const categoryForBet = (bet: Bet) => getDisplayBetCategory({ market: bet.market, category: bet.category, event: bet.event });
   const filteredPending = activeLeague === "all" ? pendingBets : pendingBets.filter(b => categoryForBet(b) === activeLeague);
   const filteredRecent = activeLeague === "all" ? recentBets : recentBets.filter(b => categoryForBet(b) === activeLeague);
   const filteredProgressionRows =
     activeLeague === "all" ? progressionRows : progressionRows.filter((row) => normalizeBetCategory(row.category) === activeLeague);
-  const openingBalance =
-    activeLeague === "all"
-      ? BASELINE_STATS.props.total_profit
-      : BASELINE_STATS.categoryBaselines.props[activeLeague as keyof typeof BASELINE_STATS.categoryBaselines.props]?.total_profit ?? 0;
 
   // Display limits: show 5 initially, or all if expanded
   const displayedPending = showAllPending ? filteredPending : filteredPending.slice(0, 5);
   const displayedRecent = showAllRecent ? filteredRecent : filteredRecent.slice(0, 5);
 
-  const activeColor = leagueConfig.find(l => l.id === activeLeague)?.color || "emerald";
   const activeName = leagueConfig.find(l => l.id === activeLeague)?.name || "Selected";
   const currentStats = getStatsForLeague(activeLeague);
+  const archiveStats = getArchiveStatsForLeague(activeLeague);
+  const neutralBar = "from-slate-600 to-slate-400";
+  const roiBar = currentStats.roi >= 0 ? "from-emerald-500 to-emerald-400" : "from-rose-500 to-rose-400";
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
@@ -566,7 +297,7 @@ export default function PlayerProps({
                   onClick={() => setActiveLeague(league.id)}
                   className={`flex min-w-[152px] items-center gap-3 rounded-xl border px-3 py-3 text-left transition-all sm:min-w-[174px] ${
                     isActive
-                      ? `bg-slate-900/80 ${colorClasses[league.color].border} ${colorClasses[league.color].text}`
+                      ? `bg-slate-900/80 ${colorClasses[league.color].border} text-slate-100`
                       : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
                   }`}
                 >
@@ -599,38 +330,38 @@ export default function PlayerProps({
               <div className="text-2xl font-bold text-white font-mono mb-2">{currentStats.total_bets}</div>
               <div className="text-xs text-slate-500 mb-3">Total Bets</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${Math.min((currentStats.total_bets / 1000) * 100, 100)}%` }} />
+                <div className={`h-full bg-gradient-to-r ${neutralBar} rounded-full`} style={{ width: `${Math.min((currentStats.total_bets / 1000) * 100, 100)}%` }} />
               </div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
               <div className={`text-2xl font-bold ${roiToneClass(currentStats.roi)} font-mono mb-2`}>{currentStats.roi > 0 ? "+" : ""}{currentStats.roi.toFixed(1)}%</div>
               <div className="text-xs text-slate-500 mb-3">ROI</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${Math.min(Math.abs(currentStats.roi) * 3, 100)}%` }} />
+                <div className={`h-full bg-gradient-to-r ${roiBar} rounded-full`} style={{ width: `${Math.min(Math.abs(currentStats.roi) * 3, 100)}%` }} />
               </div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className={`text-2xl font-bold ${colorClasses[activeColor].text} font-mono mb-2`}>{currentStats.win_rate.toFixed(1)}%</div>
+              <div className="text-2xl font-bold text-slate-100 font-mono mb-2">{currentStats.win_rate.toFixed(1)}%</div>
               <div className="text-xs text-slate-500 mb-3">Win Rate</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${currentStats.win_rate}%` }} />
+                <div className={`h-full bg-gradient-to-r ${neutralBar} rounded-full`} style={{ width: `${currentStats.win_rate}%` }} />
               </div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className={`text-2xl font-bold ${colorClasses[activeColor].text} font-mono mb-2`}>{formatOdds(currentStats.avg_odds)}</div>
+              <div className="text-2xl font-bold text-slate-100 font-mono mb-2">{formatOdds(currentStats.avg_odds)}</div>
               <div className="text-xs text-slate-500 mb-3">Avg Odds</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${(currentStats.avg_odds / 3) * 100}%` }} />
+                <div className={`h-full bg-gradient-to-r ${neutralBar} rounded-full`} style={{ width: `${(currentStats.avg_odds / 3) * 100}%` }} />
               </div>
             </div>
           </div>
 
-          <ProfitProgressionPanel rows={filteredProgressionRows} activeName={activeName} openingBalance={openingBalance} />
+          <ProfitProgressionPanel rows={filteredProgressionRows} activeName={activeName} archiveStats={archiveStats} />
 
           <p className="mt-4 max-w-3xl text-xs leading-relaxed text-slate-500">
             Record cards use the full tracked category record. The recent selections table below is only a browsing
             sample from the latest 50 settled player-prop picks, then filtered by the league tab you choose. The P/L
-            progression starts from the tracked category opening balance where available, then uses settled public ledger
+            progression shows any pre-tracking baseline as a dashed aggregate summary, then uses settled public ledger
             rows for the selected tab.
           </p>
         </div>
