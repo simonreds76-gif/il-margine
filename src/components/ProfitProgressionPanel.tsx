@@ -45,8 +45,11 @@ type ChartModel = {
 // per-bet data, so it never needs hundreds of points.
 const ARCHIVE_ANCHORS = 56;
 // Share of the plot width reserved for the archive ramp when a live ledger
-// also exists, so the verified record always keeps readable space.
-const ARCHIVE_WIDTH_FRACTION = 0.4;
+// also exists. The archive represents roughly 20+ months of old record, so it
+// needs visual time to breathe; otherwise large PL/Serie A records look like a
+// sudden jump. Keep a live-ledger floor so verified picks remain inspectable.
+const ARCHIVE_MAX_WIDTH_FRACTION = 0.72;
+const ARCHIVE_MIN_WIDTH_FRACTION = 0.6;
 const UNIT_GBP = 100;
 
 function formatUnits(value: number, decimals = 2): string {
@@ -173,6 +176,13 @@ function archiveSummary(stats?: BaselineMarketStats | null): { line: string } | 
   };
 }
 
+function getArchiveWidthFraction(hasArchive: boolean, liveCount: number): number {
+  if (!hasArchive) return 0;
+  if (liveCount <= 0) return 1;
+  const livePressure = Math.min(1, liveCount / 120);
+  return ARCHIVE_MAX_WIDTH_FRACTION - (ARCHIVE_MAX_WIDTH_FRACTION - ARCHIVE_MIN_WIDTH_FRACTION) * livePressure;
+}
+
 function buildChart(pointsRaw: Omit<ProgressionPoint, "x" | "y">[]): ChartModel {
   const width = 720;
   const height = 240;
@@ -198,7 +208,8 @@ function buildChart(pointsRaw: Omit<ProgressionPoint, "x" | "y">[]): ChartModel 
   const plotHeight = height - paddingTop - paddingBottom;
   const yOf = (cumulative: number) => paddingTop + ((maxValue - cumulative) / span) * plotHeight;
 
-  const leadWidth = hasArchive ? (hasLive ? ARCHIVE_WIDTH_FRACTION : 1) * plotWidth : 0;
+  const archiveWidthFraction = getArchiveWidthFraction(hasArchive, live.length);
+  const leadWidth = hasArchive ? archiveWidthFraction * plotWidth : 0;
   const liveStart = paddingX + leadWidth;
   const liveWidth = plotWidth - leadWidth;
 
