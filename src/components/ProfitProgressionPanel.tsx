@@ -22,6 +22,8 @@ type ProgressionPoint = CategoryProgressionRow & {
   y: number;
   isArchiveReconstruction?: boolean;
   isOriginPoint?: boolean;
+  archiveStep?: number;
+  archiveSteps?: number;
 };
 
 type ChartPoint = ProgressionPoint;
@@ -38,6 +40,16 @@ type ChartModel = {
 
 function formatUnits(value: number, decimals = 2): string {
   return `${value >= 0 ? "+" : ""}${value.toFixed(decimals)}u`;
+}
+
+function formatCurrencyFromUnits(value: number, unitValue = 100): string {
+  const amount = Math.round(Math.abs(value * unitValue));
+  const formatted = new Intl.NumberFormat("en-GB", {
+    style: "currency",
+    currency: "GBP",
+    maximumFractionDigits: 0,
+  }).format(amount);
+  return `${value >= 0 ? "+" : "-"}${formatted}`;
 }
 
 function roundUnits(value: number): number {
@@ -62,24 +74,42 @@ function shouldShowArchive(stats?: BaselineMarketStats | null): stats is Baselin
   return Boolean(stats && (stats.total_bets > 0 || Math.abs(stats.total_profit) > 0.0001));
 }
 
-function buildArchiveRamp(stats: BaselineMarketStats, anchorCount = 7): Omit<ProgressionPoint, "x" | "y">[] {
+function getArchiveAnchorCount(stats: BaselineMarketStats): number {
+  const bets = Math.max(0, Math.round(stats.total_bets || 0));
+  if (bets === 0) return 24;
+  return Math.min(900, Math.max(48, bets));
+}
+
+function getArchiveMonthCount(stats: BaselineMarketStats): number {
+  const bets = Math.max(0, Math.round(stats.total_bets || 0));
+  return Math.max(20, Math.min(30, Math.round(bets / 30)));
+}
+
+function buildArchiveRamp(stats: BaselineMarketStats): Omit<ProgressionPoint, "x" | "y">[] {
+  const anchorCount = getArchiveAnchorCount(stats);
+  const monthCount = getArchiveMonthCount(stats);
   const target = Number(stats.total_profit) || 0;
   return Array.from({ length: anchorCount + 1 }, (_, index) => {
     const t = index / anchorCount;
-    const eased = t * t * (3 - 2 * t);
+    const trend = target * t;
+    const wave = Math.sin(t * Math.PI * 5) * Math.abs(target) * 0.018;
+    const earlyDrag = Math.sin(t * Math.PI) * Math.abs(target) * 0.035;
+    const cumulative = index === 0 ? 0 : index === anchorCount ? target : trend + wave - earlyDrag;
     return {
       id: -1000 - index,
       date: null,
       category: "archive",
       event: "Archive summary",
       player: "",
-      selection: "Pre-tracking aggregate record",
+      selection: `Archive reconstruction period ${Math.max(1, Math.ceil(t * monthCount))}/${monthCount}`,
       status: "settled",
       stake: 0,
       profit_loss: 0,
       index,
-      cumulative: roundUnits(target * eased),
+      cumulative: roundUnits(cumulative),
       isArchiveReconstruction: true,
+      archiveStep: index,
+      archiveSteps: anchorCount,
     };
   });
 }
@@ -141,7 +171,7 @@ function archiveSummaryText(stats?: BaselineMarketStats | null) {
   if (!shouldShowArchive(stats)) return "No archive baseline for this tab.";
   const roi = calculateROI(stats.total_profit, stats.total_stake || stats.total_bets || 1);
   const winRate = calculateWinRate(stats.wins, stats.losses);
-  return `${stats.total_bets} bets · ${roi >= 0 ? "+" : ""}${roi.toFixed(1)}% ROI · ${winRate.toFixed(1)}% win rate`;
+  return `${stats.total_bets} bets | ${roi >= 0 ? "+" : ""}${roi.toFixed(1)}% ROI | ${winRate.toFixed(1)}% win rate | ${formatUnits(stats.total_profit)} baseline`;
 }
 
 function buildChart(pointsRaw: Omit<ProgressionPoint, "x" | "y">[]): ChartModel {
@@ -223,6 +253,8 @@ export default function ProfitProgressionPanel({
   const positiveChart = metrics.cumulative >= 0;
   const liveStroke = positiveChart ? "#34d399" : "#fb7185";
   const liveFill = positiveChart ? "rgba(16,185,129,0.16)" : "rgba(251,113,133,0.14)";
+  const archivePointCount = chart.points.filter((point) => point.isArchiveReconstruction).length;
+  const archiveDotEvery = Math.max(8, Math.ceil(archivePointCount / 12));
 
   return (
     <div className="mt-4 overflow-hidden rounded-2xl border border-emerald-500/20 bg-[radial-gradient(circle_at_18%_0%,rgba(16,185,129,0.10),transparent_34%),linear-gradient(135deg,rgba(15,23,42,0.78),rgba(2,6,23,0.88))]">
@@ -235,7 +267,7 @@ export default function ProfitProgressionPanel({
               </div>
               <h3 className="mt-1 text-lg font-semibold text-slate-100">{activeName} equity curve</h3>
               <p className="mt-1 text-xs leading-relaxed text-slate-500">
-                Cumulative P/L from zero. Solid = verified public ledger. Dashed = pre-tracking record shown as an aggregate.
+                Cumulative P/L from zero. Dashed archive is spread across a 20+ month baseline; solid line is the verified public ledger.
               </p>
             </div>
             <div className={`rounded-full border px-3 py-1.5 font-mono text-xs font-black tabular-nums ${
@@ -276,20 +308,26 @@ export default function ProfitProgressionPanel({
                   const isActive = activePoint?.id === point.id;
                   const isArchive = point.isArchiveReconstruction;
                   const isOrigin = point.isOriginPoint;
+                  const showArchiveDot =
+                    isArchive &&
+                    (isActive ||
+                      point.archiveStep === 0 ||
+                      point.archiveStep === point.archiveSteps ||
+                      (point.archiveStep ?? 0) % archiveDotEvery === 0);
                   const showPoint =
                     isActive ||
                     index === chart.points.length - 1 ||
-                    isArchive ||
+                    showArchiveDot ||
                     index % Math.ceil(chart.points.length / 18) === 0;
                   return (
                     <circle
                       key={`${point.id}-${index}`}
                       cx={point.x}
                       cy={point.y}
-                      r={isActive ? 7 : isArchive ? 3.5 : showPoint ? 4 : 8}
+                      r={isActive ? 7 : showArchiveDot ? 3.5 : showPoint ? 4 : 8}
                       fill={isArchive || isOrigin ? "#020617" : isActive ? "#fbbf24" : showPoint ? liveStroke : "transparent"}
                       stroke={isActive ? "rgba(251,191,36,0.5)" : isArchive || isOrigin ? "rgba(148,163,184,0.7)" : `${liveStroke}66`}
-                      strokeWidth={isActive ? 8 : isArchive || isOrigin ? 2 : showPoint ? 3 : 0}
+                      strokeWidth={isActive ? 8 : showArchiveDot || isOrigin ? 2 : showPoint ? 3 : 0}
                       className={isArchive || isOrigin ? "cursor-default transition-opacity" : "cursor-pointer transition-opacity"}
                       onMouseEnter={() => setActivePointId(point.id)}
                       onClick={() => setActivePointId(point.id)}
@@ -316,6 +354,18 @@ export default function ProfitProgressionPanel({
         </div>
 
         <div className="p-5">
+          <div className="mb-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.07] p-4">
+            <div className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-300/90">
+              GBP equivalent
+            </div>
+            <div className={`mt-2 font-mono text-2xl font-black tabular-nums ${metrics.cumulative >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+              {formatCurrencyFromUnits(metrics.cumulative)}
+            </div>
+            <div className="mt-1 text-xs leading-relaxed text-slate-500">
+              If 1u = GBP100. Units remain the official record; this just makes the scale easier to read.
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-3">
             <ProgressionStat label="Current" value={formatUnits(metrics.cumulative)} tone={metrics.cumulative >= 0 ? "positive" : "negative"} />
             <ProgressionStat label="Peak" value={formatUnits(metrics.peak)} tone={metrics.peak >= 0 ? "positive" : "neutral"} />
@@ -339,7 +389,7 @@ export default function ProfitProgressionPanel({
                 </div>
                 {activeRawPoint.isArchiveReconstruction ? (
                   <>
-                    <div className="mt-2 text-sm leading-snug text-slate-300">Archive summary · pre-tracking record</div>
+                    <div className="mt-2 text-sm leading-snug text-slate-300">Archive summary | pre-tracking record</div>
                     <div className="mt-1 text-sm font-semibold leading-relaxed text-slate-100">{archiveSummaryText(archiveStats)}</div>
                   </>
                 ) : activeRawPoint.isOriginPoint ? (
@@ -364,6 +414,9 @@ export default function ProfitProgressionPanel({
                   <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-emerald-300">
                     Balance {formatUnits(activeRawPoint.cumulative)}
                   </span>
+                  <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-emerald-300">
+                    GBP100/u {formatCurrencyFromUnits(activeRawPoint.cumulative)}
+                  </span>
                   {activeRawPoint.isArchiveReconstruction ? (
                     <span className="rounded-full border border-slate-700 bg-slate-900/80 px-2.5 py-1 text-slate-400">
                       Aggregate only
@@ -380,3 +433,4 @@ export default function ProfitProgressionPanel({
     </div>
   );
 }
+
