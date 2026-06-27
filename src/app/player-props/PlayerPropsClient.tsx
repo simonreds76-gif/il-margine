@@ -10,6 +10,7 @@ import MarketBadge from "@/components/MarketBadge";
 import PublicBetsTable from "@/components/PublicBetsTable";
 import ProfitProgressionPanel, { type CategoryProgressionRow } from "@/components/ProfitProgressionPanel";
 import ResultBadge from "@/components/ResultBadge";
+import WorldCupMatchGroups from "@/components/WorldCupMatchGroups";
 
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
@@ -246,6 +247,7 @@ export default function PlayerProps({
   const displayedRecent = showAllRecent ? filteredRecent : filteredRecent.slice(0, 5);
 
   const activeName = leagueConfig.find(l => l.id === activeLeague)?.name || "Selected";
+  const isWorldCup = activeLeague === "worldcup";
   const currentStats = getStatsForLeague(activeLeague);
   const archiveStats = getArchiveStatsForLeague(activeLeague);
   const neutralBar = "from-slate-600 to-slate-400";
@@ -384,6 +386,9 @@ export default function PlayerProps({
               <p className="text-slate-500">Loading...</p>
             </div>
           ) : filteredPending.length > 0 ? (
+            isWorldCup ? (
+              <WorldCupMatchGroups bets={filteredPending} mode="pending" />
+            ) : (
             <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
               {/* Desktop Table */}
               <div className="hidden md:block overflow-x-auto -mx-4 sm:mx-0">
@@ -446,6 +451,7 @@ export default function PlayerProps({
                 </div>
               )}
             </div>
+            )
           ) : (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
               <p className="text-slate-500">No active selections at the moment</p>
@@ -512,6 +518,9 @@ export default function PlayerProps({
           </div>
 
           {filteredRecent.length > 0 ? (
+            isWorldCup ? (
+              <WorldCupMatchGroups bets={filteredRecent} mode="settled" />
+            ) : (
             <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
               {/* Desktop Table */}
               <div className="hidden md:block overflow-x-auto -mx-4 sm:mx-0">
@@ -583,6 +592,7 @@ export default function PlayerProps({
                 </div>
               )}
             </div>
+            )
           ) : (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
               <p className="text-slate-500">No settled bets yet</p>
