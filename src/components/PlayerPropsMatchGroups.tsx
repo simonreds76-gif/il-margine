@@ -8,10 +8,51 @@ import BookmakerLogo from "@/components/BookmakerLogo";
 import MarketBadge from "@/components/MarketBadge";
 import PnL from "@/components/PnL";
 import ResultBadge from "@/components/ResultBadge";
+import { getDisplayBetCategory } from "@/lib/bet-category";
 import { formatMatchDate, formatOdds, formatStake } from "@/lib/format";
 import { slugifyTip } from "@/lib/slugify";
+import teamLogoManifest from "../../data/goalscorer/team-logo-map.json";
 
 type Mode = "pending" | "settled";
+
+type TeamEntry = {
+  team_key?: string;
+  fotmob_name?: string;
+  fotmob_short_name?: string;
+  logo_path?: string;
+};
+
+type LeagueEntry = {
+  teams?: Record<string, TeamEntry>;
+};
+
+type LogoRow = {
+  category: string;
+  leagueKey: string;
+  logoPath: string;
+  aliases: string[];
+};
+
+const CATEGORY_TO_LOGO_DIR: Record<string, string> = {
+  worldcup: "world-cup",
+  pl: "epl",
+  seriea: "serie-a",
+  laliga: "la-liga",
+  bundesliga: "bundesliga",
+  ligue1: "ligue-1",
+};
+
+const MANIFEST_LEAGUE_TO_CATEGORY: Record<string, string> = {
+  epl: "pl",
+  "serie-a": "seriea",
+  "la-liga": "laliga",
+  bundesliga: "bundesliga",
+  "ligue-1": "ligue1",
+};
+
+const CATEGORY_TO_MANIFEST_LEAGUE = Object.fromEntries(
+  Object.entries(MANIFEST_LEAGUE_TO_CATEGORY).map(([league, category]) => [category, league]),
+) as Record<string, string>;
 
 const TEAM_LOGO_ALIASES: Record<string, string> = {
   "cape-verde": "cabo-verde",
@@ -24,29 +65,104 @@ const TEAM_LOGO_ALIASES: Record<string, string> = {
   "turkey": "turkiye",
   "united-states": "usa",
   "united-states-of-america": "usa",
+  "man-city": "manchester-city",
+  "man-utd": "manchester-united",
+  "man-united": "manchester-united",
+  "newcastle": "newcastle-united",
+  "nottingham": "nottingham-forest",
+  "spurs": "tottenham",
+  "tottenham-hotspur": "tottenham",
+  "west-ham-united": "west-ham",
+  "wolves": "wolves",
+  "brighton-and-hove-albion": "brighton",
+  "inter-milan": "inter",
+  "ac-milan": "milan",
+  "psg": "paris-saint-germain",
+  "rb-leipzig": "rasenballsport-leipzig",
+  "borussia-monchengladbach": "borussia-m-gladbach",
 };
 
-function normalizeTeamKey(value: string): string {
-  const key = value
+function normalizeText(value: string): string {
+  return value
     .normalize("NFKD")
     .replace(/[\u0300-\u036f]/g, "")
+    .replace(/&/g, " and ")
     .replace(/[^a-zA-Z0-9]+/g, " ")
     .trim()
     .toLowerCase()
-    .replace(/\s+/g, "-");
+    .replace(/\s+/g, " ");
+}
+
+function normalizeTeamKey(value: string): string {
+  const key = normalizeText(value).replace(/\s+/g, "-");
   return TEAM_LOGO_ALIASES[key] ?? key;
 }
 
-function teamCrestImageUrl(team: string): string {
-  return `/team-logos/world-cup/${normalizeTeamKey(team)}.png`;
+const MANIFEST_LOGOS: LogoRow[] = (() => {
+  const leagues = (teamLogoManifest as { leagues?: Record<string, LeagueEntry> }).leagues ?? {};
+  const rows: LogoRow[] = [];
+
+  for (const [leagueKey, league] of Object.entries(leagues)) {
+    const category = MANIFEST_LEAGUE_TO_CATEGORY[leagueKey];
+    if (!category) continue;
+
+    for (const [displayName, team] of Object.entries(league.teams ?? {})) {
+      if (!team.logo_path) continue;
+      const aliases = [displayName, team.team_key, team.fotmob_name, team.fotmob_short_name]
+        .filter(Boolean)
+        .map((value) => normalizeText(value as string))
+        .filter((value, index, all) => value.length >= 2 && all.indexOf(value) === index);
+      rows.push({ category, leagueKey, logoPath: team.logo_path, aliases });
+    }
+  }
+
+  return rows.sort((a, b) => Math.max(...b.aliases.map((alias) => alias.length)) - Math.max(...a.aliases.map((alias) => alias.length)));
+})();
+
+function teamLogoPathFromCategory(team: string, category: string): string | null {
+  const folder = CATEGORY_TO_LOGO_DIR[category];
+  if (!folder) return null;
+  return `/team-logos/${folder}/${normalizeTeamKey(team)}.png`;
 }
 
-function initials(team: string): string {
+function resolveManifestLogoPath(team: string, category: string): string | null {
+  const normalized = normalizeText(team);
+  if (!normalized) return null;
+
+  const preferredLeague = CATEGORY_TO_MANIFEST_LEAGUE[category];
+  const isPreferred = (row: LogoRow) => !preferredLeague || row.leagueKey === preferredLeague || row.category === category;
+  const exact = MANIFEST_LOGOS.find((row) => isPreferred(row) && row.aliases.includes(normalized));
+  if (exact) return exact.logoPath;
+
+  const loose = MANIFEST_LOGOS.find(
+    (row) =>
+      isPreferred(row) &&
+      row.aliases.some((alias) => alias.length >= 5 && (normalized.includes(alias) || alias.includes(normalized))),
+  );
+  if (loose) return loose.logoPath;
+
+  const anyExact = MANIFEST_LOGOS.find((row) => row.aliases.includes(normalized));
+  if (anyExact) return anyExact.logoPath;
+
+  const anyLoose = MANIFEST_LOGOS.find((row) =>
+    row.aliases.some((alias) => alias.length >= 5 && (normalized.includes(alias) || alias.includes(normalized))),
+  );
+  return anyLoose?.logoPath ?? null;
+}
+
+function resolveTeamLogoPath(team: string | null, category: string): string | null {
+  if (!team) return null;
+  if (category === "worldcup") return teamLogoPathFromCategory(team, category);
+  return resolveManifestLogoPath(team, category) ?? teamLogoPathFromCategory(team, category) ?? resolveManifestLogoPath(team, "all");
+}
+
+function initials(team: string | null, category: string): string {
+  if (!team) return category === "worldcup" ? "WC" : "FC";
   const parts = team
     .replace(/[.'-]/g, " ")
     .split(/\s+/)
     .filter(Boolean);
-  if (parts.length === 0) return "WC";
+  if (parts.length === 0) return category === "worldcup" ? "WC" : "FC";
   if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
   return parts
     .slice(0, 2)
@@ -57,6 +173,7 @@ function initials(team: string): string {
 type MatchGroup = {
   key: string;
   event: string;
+  category: string;
   home: string | null;
   away: string | null;
   matchDate: string | null;
@@ -71,7 +188,7 @@ type MatchGroup = {
 
 function parseFixture(event: string): { home: string; away: string } | null {
   if (!event) return null;
-  const parts = event.split(/\s+(?:vs?\.?|v|@|-)\s+/i);
+  const parts = event.split(/\s+(?:vs?\.?|v|@|-|\u2013|\u2014)\s+/i);
   if (parts.length >= 2 && parts[0].trim() && parts[1].trim()) {
     return { home: parts[0].trim(), away: parts.slice(1).join(" ").trim() };
   }
@@ -95,17 +212,23 @@ function isTodayOrFuture(matchDate: string | null): boolean {
   return date.getTime() >= startOfToday();
 }
 
+function categoryForBet(bet: Bet): string {
+  return getDisplayBetCategory({ market: bet.market, category: bet.category, event: bet.event });
+}
+
 function buildGroups(bets: Bet[], mode: Mode): MatchGroup[] {
   const map = new Map<string, MatchGroup>();
   for (const bet of bets) {
     const event = (bet.event || "Unknown match").trim();
-    const key = `${bet.match_date || "no-date"}::${event.toLowerCase()}`;
+    const category = categoryForBet(bet);
+    const key = `${category}::${bet.match_date || "no-date"}::${event.toLowerCase()}`;
     let group = map.get(key);
     if (!group) {
       const fixture = parseFixture(event);
       group = {
         key,
         event,
+        category,
         home: fixture?.home ?? null,
         away: fixture?.away ?? null,
         matchDate: bet.match_date ?? null,
@@ -135,21 +258,21 @@ function buildGroups(bets: Bet[], mode: Mode): MatchGroup[] {
   groups.sort((a, b) => {
     const aTime = a.matchDate ? new Date(`${a.matchDate}T00:00:00`).getTime() : 0;
     const bTime = b.matchDate ? new Date(`${b.matchDate}T00:00:00`).getTime() : 0;
-    // Pending: soonest first. Settled: most recent first.
     return mode === "pending" ? aTime - bTime : bTime - aTime;
   });
   return groups;
 }
 
-function Crest({ team }: { team: string | null }) {
+function Crest({ team, category }: { team: string | null; category: string }) {
   const [errored, setErrored] = useState(false);
-  const label = team ? initials(team) : "WC";
-  const showImage = Boolean(team) && !errored;
+  const src = resolveTeamLogoPath(team, category);
+  const label = initials(team, category);
+  const showImage = Boolean(src) && !errored;
   return (
-    <span className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-slate-800 ring-2 ring-slate-950">
+    <span data-testid="team-crest" className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-slate-800 ring-2 ring-slate-950">
       {showImage ? (
         <Image
-          src={teamCrestImageUrl(team as string)}
+          src={src as string}
           alt=""
           width={32}
           height={32}
@@ -185,7 +308,6 @@ function PickRow({ bet, mode }: { bet: Bet; mode: Mode }) {
   const href = `/tips/${slugifyTip(bet.event, bet.id)}`;
   return (
     <Link href={href} className="block transition-colors hover:bg-slate-800/30 active:bg-slate-800/40">
-      {/* Desktop ledger row */}
       <div className="hidden items-center gap-3 px-4 py-3 sm:flex">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center">
           <MarketBadge market={bet.market} category={bet.category} event={bet.event} />
@@ -204,7 +326,6 @@ function PickRow({ bet, mode }: { bet: Bet; mode: Mode }) {
         </div>
       </div>
 
-      {/* Mobile stacked row */}
       <div className="px-4 py-3 sm:hidden">
         <div className="flex items-start gap-3">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center">
@@ -252,7 +373,7 @@ function MatchCard({ group, mode, open, onToggle }: { group: MatchGroup; mode: M
   const netClass = group.netProfit > 0 ? "text-emerald-400" : group.netProfit < 0 ? "text-rose-400" : "text-slate-400";
 
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/50">
+    <div data-testid="player-props-match-group" className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/50">
       <button
         type="button"
         onClick={onToggle}
@@ -260,8 +381,8 @@ function MatchCard({ group, mode, open, onToggle }: { group: MatchGroup; mode: M
         className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-slate-800/30"
       >
         <span className="flex shrink-0 -space-x-2">
-          <Crest team={group.home} />
-          <Crest team={group.away} />
+          <Crest team={group.home} category={group.category} />
+          <Crest team={group.away} category={group.category} />
         </span>
         <span className="min-w-0 flex-1">
           <span className="block text-sm font-semibold leading-snug text-slate-100 sm:truncate sm:text-base">{group.event}</span>
@@ -299,7 +420,7 @@ function MatchCard({ group, mode, open, onToggle }: { group: MatchGroup; mode: M
   );
 }
 
-export default function WorldCupMatchGroups({ bets, mode }: { bets: Bet[]; mode: Mode }) {
+export default function PlayerPropsMatchGroups({ bets, mode }: { bets: Bet[]; mode: Mode }) {
   const groups = useMemo(() => buildGroups(bets, mode), [bets, mode]);
   const [overrides, setOverrides] = useState<Record<string, boolean>>({});
 
@@ -309,9 +430,9 @@ export default function WorldCupMatchGroups({ bets, mode }: { bets: Bet[]; mode:
   if (groups.length === 0) return null;
 
   return (
-    <div className="space-y-3">
+    <div data-testid="player-props-match-groups" className="space-y-3">
       <p className="text-xs text-slate-500">
-        Grouped by match for readability. Each pick is still settled individually in the public ledger.
+        Grouped by fixture for readability. Each pick is still settled individually in the public ledger.
       </p>
       {groups.map((group) => (
         <MatchCard
@@ -325,4 +446,3 @@ export default function WorldCupMatchGroups({ bets, mode }: { bets: Bet[]; mode:
     </div>
   );
 }
-

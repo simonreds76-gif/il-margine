@@ -2,22 +2,16 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
-import BetMobileMeta from "@/components/BetMobileMeta";
-import MarketBadge from "@/components/MarketBadge";
-import PublicBetsTable from "@/components/PublicBetsTable";
 import ProfitProgressionPanel, { type CategoryProgressionRow } from "@/components/ProfitProgressionPanel";
-import ResultBadge from "@/components/ResultBadge";
-import WorldCupMatchGroups from "@/components/WorldCupMatchGroups";
+import PlayerPropsMatchGroups from "@/components/PlayerPropsMatchGroups";
 
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import PageHomeLink from "@/components/PageHomeLink";
 import { getDisplayBetCategory, normalizeBetCategory } from "@/lib/bet-category";
-import { formatMatchDate, formatOdds } from "@/lib/format";
-import { slugifyTip } from "@/lib/slugify";
+import { formatOdds } from "@/lib/format";
 
 type PlayerPropsClientProps = {
   initialPendingBets?: Bet[];
@@ -45,7 +39,6 @@ export default function PlayerProps({
   initialStats = [],
   initialProgressionRows = [],
 }: PlayerPropsClientProps) {
-  const router = useRouter();
   const [activeLeague, setActiveLeague] = useState("all");
   const [pendingBets, setPendingBets] = useState<Bet[]>(initialPendingBets);
   const [recentBets, setRecentBets] = useState<Bet[]>(initialRecentBets);
@@ -57,8 +50,6 @@ export default function PlayerProps({
     initialStats.length > 0 ||
     initialProgressionRows.length > 0;
   const [loading, setLoading] = useState(!hasInitialPayload);
-  const [showAllPending, setShowAllPending] = useState(false);
-  const [showAllRecent, setShowAllRecent] = useState(false);
 
   const leagueConfig = [
     { id: "all", name: "All Leagues", color: "emerald", logoPath: "/icons/markets/other-football.svg", logoClassName: naturalLogoFilter },
@@ -242,12 +233,7 @@ export default function PlayerProps({
   const filteredProgressionRows =
     activeLeague === "all" ? progressionRows : progressionRows.filter((row) => normalizeBetCategory(row.category) === activeLeague);
 
-  // Display limits: show 5 initially, or all if expanded
-  const displayedPending = showAllPending ? filteredPending : filteredPending.slice(0, 5);
-  const displayedRecent = showAllRecent ? filteredRecent : filteredRecent.slice(0, 5);
-
   const activeName = leagueConfig.find(l => l.id === activeLeague)?.name || "Selected";
-  const isWorldCup = activeLeague === "worldcup";
   const currentStats = getStatsForLeague(activeLeague);
   const archiveStats = getArchiveStatsForLeague(activeLeague);
   const neutralBar = "from-slate-600 to-slate-400";
@@ -386,72 +372,7 @@ export default function PlayerProps({
               <p className="text-slate-500">Loading...</p>
             </div>
           ) : filteredPending.length > 0 ? (
-            isWorldCup ? (
-              <WorldCupMatchGroups bets={filteredPending} mode="pending" />
-            ) : (
-            <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
-              {/* Desktop Table */}
-              <div className="hidden md:block overflow-x-auto -mx-4 sm:mx-0">
-                <PublicBetsTable bets={displayedPending} mode="pending" />
-              </div>
-              {/* Mobile Cards */}
-              <div className="md:hidden divide-y divide-slate-600">
-                {displayedPending.map((pick) => (
-                  <div
-                    key={pick.id}
-                    role="link"
-                    tabIndex={0}
-                    className="block cursor-pointer p-5 hover:bg-slate-800/20 active:bg-slate-800/30"
-                    onClick={() => router.push(`/tips/${slugifyTip(pick.event, pick.id)}`)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        router.push(`/tips/${slugifyTip(pick.event, pick.id)}`);
-                      }
-                    }}
-                  >
-                    <div className="mb-3 flex items-start gap-3">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center">
-                        <MarketBadge market={pick.market} category={pick.category} event={pick.event} />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="mb-1 flex items-center justify-between gap-3">
-                          <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(pick.match_date)}</span>
-                          <span className="text-xs font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-400">
-                            PENDING
-                          </span>
-                        </div>
-                        <div className="font-medium text-slate-200 mb-1 block leading-snug">
-                          {pick.event}
-                        </div>
-                        <div className="text-sm text-slate-400 mb-1 leading-snug">
-                          {pick.player && <span>{pick.player} | </span>}
-                          {pick.selection}
-                        </div>
-                      </div>
-                    </div>
-                    <BetMobileMeta odds={pick.odds} bookmaker={pick.bookmaker} stake={pick.stake} />
-                  </div>
-                ))}
-              </div>
-
-              {/* Show More/Less Button */}
-              {filteredPending.length > 5 && (
-                <div className="border-t border-slate-800 p-4 text-center">
-                  <button
-                    onClick={() => setShowAllPending(!showAllPending)}
-                    className="text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
-                  >
-                    {showAllPending ? (
-                      <>Show Less ({filteredPending.length - 5} hidden)</>
-                    ) : (
-                      <>Show All ({filteredPending.length - 5} more)</>
-                    )}
-                  </button>
-                </div>
-              )}
-            </div>
-            )
+            <PlayerPropsMatchGroups bets={filteredPending} mode="pending" />
           ) : (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
               <p className="text-slate-500">No active selections at the moment</p>
@@ -518,81 +439,14 @@ export default function PlayerProps({
           </div>
 
           {filteredRecent.length > 0 ? (
-            isWorldCup ? (
-              <WorldCupMatchGroups bets={filteredRecent} mode="settled" />
-            ) : (
-            <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
-              {/* Desktop Table */}
-              <div className="hidden md:block overflow-x-auto -mx-4 sm:mx-0">
-                <PublicBetsTable bets={displayedRecent} mode="settled" />
-              </div>
-              {/* Mobile Cards */}
-              <div className="md:hidden divide-y divide-slate-600">
-                {displayedRecent.map((result) => (
-                  <div
-                    key={result.id}
-                    role="link"
-                    tabIndex={0}
-                    className="block cursor-pointer p-5 hover:bg-slate-800/20 active:bg-slate-800/30"
-                    onClick={() => router.push(`/tips/${slugifyTip(result.event, result.id)}`)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        router.push(`/tips/${slugifyTip(result.event, result.id)}`);
-                      }
-                    }}
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(result.match_date)}</span>
-                        </div>
-                        <div className="font-medium text-slate-200 mb-1 block">
-                          {result.event}
-                        </div>
-                        <div className="text-sm text-slate-400 mb-1">
-                          {result.player && <span>{result.player} | </span>}
-                          {result.selection}
-                        </div>
-                      </div>
-                      <ResultBadge status={result.status} size="sm" className="ml-3" />
-                    </div>
-                    <BetMobileMeta
-                      odds={result.odds}
-                      bookmaker={result.bookmaker}
-                      stake={result.stake}
-                      status={result.status}
-                      profitLoss={result.profit_loss}
-                      showProfit
-                    />
-                  </div>
-                ))}
-              </div>
-
-              {/* Note when showing the capped settled feed */}
-              {showAllRecent && activeLeague === "all" && recentBets.length >= 500 && (
-                <div className="border-t border-slate-800 px-4 py-2 text-center">
+            <>
+              <PlayerPropsMatchGroups bets={filteredRecent} mode="settled" />
+              {activeLeague === "all" && recentBets.length >= 500 ? (
+                <div className="mt-3 rounded-lg border border-slate-800 bg-slate-900/40 px-4 py-2 text-center">
                   <p className="text-xs text-slate-500">Showing the most recent settled player-prop feed; older settled bets remain in the record cards and progression.</p>
                 </div>
-              )}
-
-              {/* Show More/Less Button */}
-              {filteredRecent.length > 5 && (
-                <div className="border-t border-slate-800 p-4 text-center">
-                  <button
-                    onClick={() => setShowAllRecent(!showAllRecent)}
-                    className="text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
-                  >
-                    {showAllRecent ? (
-                      <>Show Less ({filteredRecent.length - 5} hidden)</>
-                    ) : (
-                      <>Show All ({filteredRecent.length - 5} more)</>
-                    )}
-                  </button>
-                </div>
-              )}
-            </div>
-            )
+              ) : null}
+            </>
           ) : (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
               <p className="text-slate-500">No settled bets yet</p>
@@ -607,4 +461,3 @@ export default function PlayerProps({
     </div>
   );
 }
-
