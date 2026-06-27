@@ -82,6 +82,57 @@ const TEAM_LOGO_ALIASES: Record<string, string> = {
   "borussia-monchengladbach": "borussia-m-gladbach",
 };
 
+const WORLD_CUP_TEAM_KEYS = new Set([
+  "algeria",
+  "argentina",
+  "australia",
+  "austria",
+  "belgium",
+  "bosnia-and-herzegovina",
+  "brazil",
+  "cabo-verde",
+  "canada",
+  "colombia",
+  "congo-dr",
+  "cote-d-ivoire",
+  "croatia",
+  "curacao",
+  "czechia",
+  "ecuador",
+  "egypt",
+  "england",
+  "france",
+  "germany",
+  "ghana",
+  "haiti",
+  "ir-iran",
+  "iraq",
+  "japan",
+  "jordan",
+  "korea-republic",
+  "mexico",
+  "morocco",
+  "netherlands",
+  "new-zealand",
+  "norway",
+  "panama",
+  "paraguay",
+  "portugal",
+  "qatar",
+  "saudi-arabia",
+  "scotland",
+  "senegal",
+  "south-africa",
+  "spain",
+  "sweden",
+  "switzerland",
+  "tunisia",
+  "turkiye",
+  "uruguay",
+  "usa",
+  "uzbekistan",
+]);
+
 function normalizeText(value: string): string {
   return value
     .normalize("NFKD")
@@ -125,6 +176,11 @@ function teamLogoPathFromCategory(team: string, category: string): string | null
   return `/team-logos/${folder}/${normalizeTeamKey(team)}.png`;
 }
 
+function worldCupTeamLogoPath(team: string): string | null {
+  const key = normalizeTeamKey(team);
+  return WORLD_CUP_TEAM_KEYS.has(key) ? `/team-logos/world-cup/${key}.png` : null;
+}
+
 function resolveManifestLogoPath(team: string, category: string): string | null {
   const normalized = normalizeText(team);
   if (!normalized) return null;
@@ -152,8 +208,13 @@ function resolveManifestLogoPath(team: string, category: string): string | null 
 
 function resolveTeamLogoPath(team: string | null, category: string): string | null {
   if (!team) return null;
-  if (category === "worldcup") return teamLogoPathFromCategory(team, category);
-  return resolveManifestLogoPath(team, category) ?? teamLogoPathFromCategory(team, category) ?? resolveManifestLogoPath(team, "all");
+  if (category === "worldcup") return worldCupTeamLogoPath(team) ?? teamLogoPathFromCategory(team, category);
+  return (
+    resolveManifestLogoPath(team, category) ??
+    teamLogoPathFromCategory(team, category) ??
+    worldCupTeamLogoPath(team) ??
+    resolveManifestLogoPath(team, "all")
+  );
 }
 
 function initials(team: string | null, category: string): string {
