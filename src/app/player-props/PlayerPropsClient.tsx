@@ -362,7 +362,7 @@ export default function PlayerProps({
 
           <p className="mt-4 max-w-3xl text-xs leading-relaxed text-slate-500">
             Record cards use the full tracked category record. The recent selections table below is only a browsing
-            sample from the latest 50 settled player-prop picks, then filtered by the league tab you choose. The P/L
+            sample from the wider settled player-prop feed, then filtered by the league tab you choose. The P/L
             progression shows any pre-tracking baseline as a dashed aggregate summary, then uses settled public ledger
             rows for the selected tab.
           </p>
@@ -569,10 +569,10 @@ export default function PlayerProps({
                 ))}
               </div>
 
-              {/* Note when showing max 50 results */}
-              {showAllRecent && filteredRecent.length === 50 && (
+              {/* Note when showing the capped settled feed */}
+              {showAllRecent && activeLeague === "all" && recentBets.length >= 500 && (
                 <div className="border-t border-slate-800 px-4 py-2 text-center">
-                  <p className="text-xs text-slate-500">Showing the 50 most recent settled player-prop bets; older settled bets remain in the record cards.</p>
+                  <p className="text-xs text-slate-500">Showing the most recent settled player-prop feed; older settled bets remain in the record cards and progression.</p>
                 </div>
               )}
 

@@ -8,6 +8,7 @@ export const runtime = "nodejs";
 const CACHE_HEADER = "public, s-maxage=90, stale-while-revalidate=900";
 const LIVE_RECORD_CACHE_HEADER = "no-store";
 const TIMEOUT_MS = 8000;
+const MARKET_RECENT_LIMIT = 500;
 
 type PublicScope = "home" | "tennis" | "props" | "calculator" | "monthly";
 type MonthlyScope = "combined" | "props" | "tennis";
@@ -243,7 +244,7 @@ async function fetchMarketPayload(scope: "tennis" | "props") {
         .order("settled_at", { ascending: false, nullsFirst: false })
         .order("posted_at", { ascending: false, nullsFirst: false })
         .order("id", { ascending: false })
-        .limit(50),
+        .limit(MARKET_RECENT_LIMIT),
       supabase.from("category_stats").select("*").eq("market", market),
       supabase
         .from("bets")

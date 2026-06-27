@@ -4,6 +4,7 @@ import { getDisplayBetCategory } from "@/lib/bet-category";
 import { getSupabaseAdmin, hasSupabaseAdminConfig } from "@/lib/supabase-server";
 
 const TIMEOUT_MS = 8000;
+const MARKET_RECENT_LIMIT = 500;
 
 type MonthlyScope = "combined" | "props" | "tennis";
 
@@ -168,7 +169,7 @@ export async function fetchMarketPayload(scope: "tennis" | "props") {
         .order("settled_at", { ascending: false, nullsFirst: false })
         .order("posted_at", { ascending: false, nullsFirst: false })
         .order("id", { ascending: false })
-        .limit(50),
+        .limit(MARKET_RECENT_LIMIT),
       supabase.from("category_stats").select("*").eq("market", market),
       supabase
         .from("bets")
