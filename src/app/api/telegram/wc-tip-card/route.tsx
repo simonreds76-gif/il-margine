@@ -155,7 +155,7 @@ const BOOKMAKER_THEMES: Record<string, BookmakerCardTheme> = {
     accent: "#c8102e",
     accentSoft: "rgba(52,115,135,0.22)",
     logoFrame: "rgba(248,250,252,0.96)",
-    logoFit: "cover",
+    logoFit: "contain",
     label: "#ecfeff",
   },
   unibet: {
@@ -427,20 +427,6 @@ export async function GET(request: Request) {
               }}
             >
               {bookmakerName}
-            </div>
-            <div
-              style={{
-                position: "relative",
-                display: "flex",
-                marginTop: 10,
-                color: logoTheme.accent,
-                fontSize: 18,
-                fontWeight: 800,
-                letterSpacing: 3,
-                textTransform: "uppercase",
-              }}
-            >
-              Bookmaker
             </div>
           </div>
         </div>

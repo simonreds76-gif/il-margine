@@ -29,7 +29,7 @@ const LOGO_FILES: Record<string, string[]> = {
   paddypower: ["paddypower.png", "paddypower.svg"],
   pinnacle: ["pinnacle.png", "pinnacle.svg"],
   skybet: ["skybet.png", "skybet.svg"],
-  spreadex: ["spreadex.svg", "spreadex.jpg"],
+  spreadex: ["spreadex.png", "spreadex.jpg", "spreadex.svg"],
   unibet: ["Unibet_idYHeiKVm__1.png", "unibet.png", "unibet.svg"],
   virginbet: ["virginbet.png"],
   williamhill: ["williamhill.png", "williamhill.svg"],
