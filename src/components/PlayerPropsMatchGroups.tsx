@@ -304,6 +304,15 @@ function StatusCell({ bet, mode }: { bet: Bet; mode: Mode }) {
   );
 }
 
+function PickMetric({ label, value, className = "" }: { label: string; value: string; className?: string }) {
+  return (
+    <span className={`rounded-lg border border-slate-800 bg-slate-950/45 px-2.5 py-1.5 text-right ${className}`}>
+      <span className="block font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500">{label}</span>
+      <span className="block font-mono text-sm font-semibold tabular-nums text-slate-100">{value}</span>
+    </span>
+  );
+}
+
 function PickRow({ bet, mode }: { bet: Bet; mode: Mode }) {
   const href = `/tips/${slugifyTip(bet.event, bet.id)}`;
   return (
@@ -316,8 +325,8 @@ function PickRow({ bet, mode }: { bet: Bet; mode: Mode }) {
           <div className="truncate text-sm font-medium text-slate-100">{bet.player || bet.selection}</div>
           {bet.player ? <div className="truncate text-xs text-slate-400">{bet.selection}</div> : null}
         </div>
-        <div className="w-16 text-right font-mono text-sm text-slate-200">{formatOdds(bet.odds)}</div>
-        <div className="w-16 text-right font-mono text-sm text-slate-300">{formatStake(bet.stake)}u</div>
+        <PickMetric label="Odds" value={formatOdds(bet.odds)} className="w-20" />
+        <PickMetric label="Stake" value={`${formatStake(bet.stake)}u`} className="w-20" />
         <div className="flex w-20 justify-center">
           <BookmakerLogo bookmaker={bet.bookmaker} size="sm" noLink stopPropagationOnClick />
         </div>
@@ -337,9 +346,9 @@ function PickRow({ bet, mode }: { bet: Bet; mode: Mode }) {
           </div>
           <StatusCell bet={bet} mode={mode} />
         </div>
-        <div className="mt-2 flex items-center gap-4 pl-12 font-mono text-xs text-slate-400">
-          <span>{formatOdds(bet.odds)}</span>
-          <span>{formatStake(bet.stake)}u</span>
+        <div className="mt-2 flex flex-wrap items-center gap-2 pl-12">
+          <PickMetric label="Odds" value={formatOdds(bet.odds)} />
+          <PickMetric label="Stake" value={`${formatStake(bet.stake)}u`} />
           <BookmakerLogo bookmaker={bet.bookmaker} size="sm" noLink stopPropagationOnClick />
         </div>
       </div>
@@ -364,12 +373,28 @@ function Chevron({ open }: { open: boolean }) {
   );
 }
 
+function RecordChip({ group }: { group: MatchGroup }) {
+  const parts = [
+    group.won > 0 ? { label: `${group.won}W`, className: "text-emerald-300" } : null,
+    group.lost > 0 ? { label: `${group.lost}L`, className: "text-rose-300" } : null,
+    group.voided > 0 ? { label: `${group.voided}V`, className: "text-slate-400" } : null,
+  ].filter(Boolean) as Array<{ label: string; className: string }>;
+
+  if (parts.length === 0) return null;
+
+  return (
+    <span className="hidden rounded-full border border-slate-700 bg-slate-950/50 px-2.5 py-1 font-mono text-[11px] sm:inline-flex">
+      {parts.map((part, index) => (
+        <span key={part.label} className={part.className}>
+          {index > 0 ? <span className="px-1 text-slate-600">/</span> : null}
+          {part.label}
+        </span>
+      ))}
+    </span>
+  );
+}
+
 function MatchCard({ group, mode, open, onToggle }: { group: MatchGroup; mode: Mode; open: boolean; onToggle: () => void }) {
-  const recordParts = [
-    group.won > 0 ? `${group.won}W` : null,
-    group.lost > 0 ? `${group.lost}L` : null,
-    group.voided > 0 ? `${group.voided}V` : null,
-  ].filter(Boolean);
   const netClass = group.netProfit > 0 ? "text-emerald-400" : group.netProfit < 0 ? "text-rose-400" : "text-slate-400";
 
   return (
@@ -398,11 +423,7 @@ function MatchCard({ group, mode, open, onToggle }: { group: MatchGroup; mode: M
             </span>
           ) : (
             <>
-              {recordParts.length > 0 ? (
-                <span className="hidden rounded-full border border-slate-700 bg-slate-950/50 px-2.5 py-1 font-mono text-[11px] text-slate-400 sm:inline">
-                  {recordParts.join(" / ")}
-                </span>
-              ) : null}
+              <RecordChip group={group} />
               <span className={`font-mono text-sm font-black tabular-nums ${netClass}`}>{formatNetUnits(group.netProfit)}</span>
             </>
           )}
