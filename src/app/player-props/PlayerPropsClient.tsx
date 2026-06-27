@@ -513,7 +513,7 @@ export default function PlayerProps({
             <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Recent Selections</h2>
             <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-500">
               This is a recent-results window, not the source of truth for the ROI card above. Older bets still count
-              in the category record even when they have rolled out of the latest-50 settled feed.
+              in the category record even when they have rolled out of the wider settled feed.
             </p>
           </div>
 
@@ -607,3 +607,4 @@ export default function PlayerProps({
     </div>
   );
 }
+
