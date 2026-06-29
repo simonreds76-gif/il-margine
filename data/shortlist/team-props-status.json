@@ -1,10 +1,10 @@
 {
   "pipeline": "team-props",
   "state": "idle",
-  "updated_at": "2026-06-29T12:28:54.3261988Z",
-  "last_started_at": "2026-06-29T12:27:40.8553319Z",
-  "last_finished_at": "2026-06-29T12:28:54.3261988Z",
-  "last_successful_finished_at": "2026-06-29T12:28:54.3260951Z",
+  "updated_at": "2026-06-29T19:05:36.7040570Z",
+  "last_started_at": "2026-06-29T19:04:23.9295584Z",
+  "last_finished_at": "2026-06-29T19:05:36.7040570Z",
+  "last_successful_finished_at": "2026-06-29T19:05:36.7039515Z",
   "current_step": "",
   "message": "Team props pipeline finished successfully.",
   "warnings": [],
@@ -18,55 +18,55 @@
     "regions": "eu"
   },
   "artifacts": {
-    "shadow_shortlist_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/shortlist-latest-v31.txt",
+    "pipeline_log": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/pipeline-log.txt",
       "exists": true,
-      "updated_at": "2026-06-29T12:27:32.1773430Z"
-    },
-    "shortlist_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/shortlist-latest.txt",
-      "exists": true,
-      "updated_at": "2026-06-29T12:27:32.1773430Z"
-    },
-    "shadow_signals_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/signals-latest-v31.csv",
-      "exists": true,
-      "updated_at": "2026-06-29T12:27:32.1823430Z"
+      "updated_at": "2026-06-29T19:05:36.6988774Z"
     },
     "team_shots_comparison": {
       "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-comparison.csv",
       "exists": true,
-      "updated_at": "2026-06-29T12:27:32.1963431Z"
+      "updated_at": "2026-06-29T19:04:19.9122496Z"
     },
-    "team_shots_upcoming": {
-      "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-upcoming.csv",
+    "shadow_shortlist_latest": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/shortlist-latest-v31.txt",
       "exists": true,
-      "updated_at": "2026-06-29T12:27:32.2113431Z"
-    },
-    "value_bets_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/value-bets-latest.csv",
-      "exists": true,
-      "updated_at": "2026-06-29T12:27:32.1853430Z"
+      "updated_at": "2026-06-29T19:04:19.8932495Z"
     },
     "team_shots_predictions": {
       "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-predictions.csv",
       "exists": true,
-      "updated_at": "2026-06-29T12:27:32.2073431Z"
+      "updated_at": "2026-06-29T19:04:19.9232496Z"
     },
-    "shadow_value_bets_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/value-bets-latest-v31.csv",
+    "value_bets_latest": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/value-bets-latest.csv",
       "exists": true,
-      "updated_at": "2026-06-29T12:27:32.1853430Z"
+      "updated_at": "2026-06-29T19:04:19.9002495Z"
+    },
+    "shortlist_latest": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/shortlist-latest.txt",
+      "exists": true,
+      "updated_at": "2026-06-29T19:04:19.8932495Z"
+    },
+    "shadow_signals_latest": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/signals-latest-v31.csv",
+      "exists": true,
+      "updated_at": "2026-06-29T19:04:19.8972495Z"
     },
     "signals_latest": {
       "path": "/home/runner/work/il-margine/il-margine/data/shortlist/signals-latest.csv",
       "exists": true,
-      "updated_at": "2026-06-29T12:27:32.1823430Z"
+      "updated_at": "2026-06-29T19:04:19.8972495Z"
     },
-    "pipeline_log": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/pipeline-log.txt",
+    "shadow_value_bets_latest": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/value-bets-latest-v31.csv",
       "exists": true,
-      "updated_at": "2026-06-29T12:28:54.3208031Z"
+      "updated_at": "2026-06-29T19:04:19.9002495Z"
+    },
+    "team_shots_upcoming": {
+      "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-upcoming.csv",
+      "exists": true,
+      "updated_at": "2026-06-29T19:04:19.9272496Z"
     }
   }
 }
