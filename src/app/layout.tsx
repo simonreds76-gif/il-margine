@@ -12,6 +12,7 @@ import { ChatProvider } from "@/contexts/ChatContext";
 import { BASE_URL, GA_MEASUREMENT_ID } from "@/lib/config";
 
 const inter = Inter({ subsets: ["latin"] });
+const DEFAULT_SOCIAL_IMAGE = `${BASE_URL}/og-social-20260629.png`;
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -46,10 +47,10 @@ export const metadata: Metadata = {
     description: "Professional betting methodology from a former odds compiler. Data driven betting tips on tennis markets and football player props. We identify value where bookmakers misprice markets and publish transparent results.",
     images: [
       {
-        url: `${BASE_URL}/og.png`,
+        url: DEFAULT_SOCIAL_IMAGE,
         width: 1200,
         height: 630,
-        alt: "Il Margine Smart Betting Tips and Analysis",
+        alt: "Il Margine betting with mathematical edge",
         type: "image/png",
       },
     ],
@@ -58,7 +59,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Betting with Mathematical Edge | Tennis and Football Player Props",
     description: "Professional betting methodology from a former odds compiler. Data driven betting tips on tennis markets and football player props. We identify value where bookmakers misprice markets and publish transparent results.",
-    images: [`${BASE_URL}/og.png`],
+    images: [DEFAULT_SOCIAL_IMAGE],
   },
 };
 

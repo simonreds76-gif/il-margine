@@ -11,6 +11,7 @@ import { formatStake, formatMatchDate, formatOdds } from "@/lib/format";
 
 /** Revalidate tip pages every 60s so settled status and new tips show without full dynamic. */
 export const revalidate = 60;
+const DEFAULT_SOCIAL_IMAGE = `${BASE_URL}/og-social-20260629.png`;
 
 /** Spell out common abbreviations on the tip page (no need to shorten here). */
 function displaySelection(selection: string): string {
@@ -41,11 +42,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!bet) return { title: "Tip not found" };
 
   const canonicalSlug = slugifyTip(bet.event, bet.id);
-  const title = `${bet.event} – ${bet.selection} | Betting Tip`;
+  const title = `${bet.event} - ${bet.selection} | Betting Tip`;
   const description =
     bet.market === "tennis"
       ? `Tennis tip: ${bet.event}. ${bet.selection} at ${formatOdds(bet.odds)}. ${bet.category}. Il Margine.`
-      : `Player props tip: ${bet.event}. ${bet.player ? bet.player + " – " : ""}${bet.selection} at ${formatOdds(bet.odds)}. Il Margine.`;
+      : `Player props tip: ${bet.event}. ${bet.player ? bet.player + " - " : ""}${bet.selection} at ${formatOdds(bet.odds)}. Il Margine.`;
   const url = `${BASE_URL}/tips/${canonicalSlug}`;
 
   return {
@@ -59,11 +60,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       siteName: "Il Margine",
       title,
       description,
+      images: [
+        {
+          url: DEFAULT_SOCIAL_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: "Il Margine betting with mathematical edge",
+          type: "image/png",
+        },
+      ],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title,
       description,
+      images: [DEFAULT_SOCIAL_IMAGE],
     },
     robots: {
       index: false,
