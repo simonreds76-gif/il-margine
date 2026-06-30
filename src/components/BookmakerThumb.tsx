@@ -18,6 +18,7 @@ const FRAME_SIZE_CLASSES = {
 } as const;
 
 const LOGO_SCALE: Record<string, number> = {
+  "10bet": 1.08,
   betway: 1.14,
   boylesports: 0.92,
   spreadex: 0.95,

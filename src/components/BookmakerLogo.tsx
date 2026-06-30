@@ -20,6 +20,7 @@ interface BookmakerLogoProps {
 
 // Logos that have lots of padding in the asset - scale up so they match others' visual size.
 const logoScale: Record<string, number> = {
+  "10bet": 1.08,
   pinnacle: 2,
   ladbrokes: 0.85,
   bwin: 1.05,
@@ -30,6 +31,7 @@ const logoScale: Record<string, number> = {
 };
 
 const logoFrameClasses: Record<string, string> = {
+  "10bet": "rounded-md border border-emerald-300/45 bg-slate-950 px-1 py-0.5 shadow-[0_0_16px_rgba(16,185,129,0.12)]",
   bwin: "rounded-md border border-slate-200/90 bg-white p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]",
   spreadex: "rounded-md border border-slate-200/90 bg-white px-1 py-0.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]",
 };
