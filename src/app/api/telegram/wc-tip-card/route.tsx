@@ -29,12 +29,12 @@ const DEFAULT_BOOKMAKER_THEME: BookmakerCardTheme = {
 
 const BOOKMAKER_THEMES: Record<string, BookmakerCardTheme> = {
   "10bet": {
-    background: "linear-gradient(145deg, #02080a 0%, #064e3b 54%, #030712 100%)",
-    border: "rgba(16,185,129,0.74)",
-    accent: "#24d38e",
-    accentSoft: "rgba(16,185,129,0.18)",
-    logoFrame: "rgba(2,8,10,0.86)",
-    label: "#ecfdf5",
+    background: "linear-gradient(145deg, #05070a 0%, #111827 52%, #020617 100%)",
+    border: "rgba(255,255,255,0.72)",
+    accent: "#f8fafc",
+    accentSoft: "rgba(255,255,255,0.12)",
+    logoFrame: "#ffffff",
+    label: "#f8fafc",
   },
   "888sport": {
     background: "linear-gradient(145deg, #06140d 0%, #0f3a23 58%, #111827 100%)",
