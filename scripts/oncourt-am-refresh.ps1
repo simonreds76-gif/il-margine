@@ -1,5 +1,5 @@
-# Il Margine - AM Tennis Refresh
-# Lighter daytime refresh: refresh today's OnCourt schedule/tours, then odds/fair-odds/shadow append/settlement.
+﻿# Il Margine - AM Tennis Refresh
+# Lighter daytime refresh: refresh today's OnCourt schedule/tours, then odds/fair-odds/shadow append.
 
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
@@ -173,6 +173,12 @@ try {
         exit 1
     }
 
+    Log "=== Step 3b/8: Tennis props projection board ==="
+    $tennisPropsBoardExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\build-tennis-props-board.py", "--as-of", (Get-Date -Format "yyyy-MM-dd")) -Label "tennis props projection board" -TimeoutSeconds 240
+    if ($tennisPropsBoardExit -ne 0) {
+        Log "WARNING: tennis props projection board failed/timed out (exit $tennisPropsBoardExit), continuing..."
+    }
+
     Log "=== Step 4/8: Append Pinnacle history capture (daily) ==="
     & python scripts\pinnacle-capture-history.py --capture-mode daily 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
@@ -300,11 +306,8 @@ try {
         Log "CPI speed-regime shadow skipped (STRICT_CPI_SPEED_SHADOW_ENABLED=0)."
     }
 
-    Log "=== Step 8/8: Nightly-style tennis settlement/performance ==="
-    & powershell -ExecutionPolicy Bypass -NoProfile -File scripts\oncourt-settle-nightly.ps1 2>&1 | ForEach-Object { Log $_ }
-    if ($LASTEXITCODE -ne 0) {
-        Log "WARNING: nightly tennis settlement failed (exit $LASTEXITCODE), continuing..."
-    }
+    Log "=== Step 8/8: Settlement/performance skipped in AM task ==="
+    Log "Nightly tennis settlement/performance is handled by oncourt-daily.ps1 at 22:30 to keep AM refresh fast."
 
     Log "=== Post-step: spread_v1 refresh skipped in AM task (nightly/weekly only) ==="
 
@@ -324,3 +327,4 @@ finally {
     Complete-RunStatus -Run $runStatus -Status $runStatusFinal -ErrorRecord $runStatusErrorRecord -ErrorType $runStatusErrorType -ErrorMessage $runStatusErrorMessage
     Exit-TaskLock $lockHandle
 }
+

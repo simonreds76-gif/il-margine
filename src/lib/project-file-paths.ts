@@ -1,4 +1,4 @@
-import path from "node:path";
+﻿import path from "node:path";
 
 const KNOWN_PROJECT_FILE_PATHS = {
   "data/backtest/clay-prob-calibration.json": path.join(process.cwd(), "data/backtest/clay-prob-calibration.json"),
@@ -24,6 +24,9 @@ const KNOWN_PROJECT_FILE_PATHS = {
   "data/backtest/strict-policy-performance-weekly.csv": path.join(process.cwd(), "data/backtest/strict-policy-performance-weekly.csv"),
   "data/backtest/strict-policy-performance-cpi_speed-weekly.csv": path.join(process.cwd(), "data/backtest/strict-policy-performance-cpi_speed-weekly.csv"),
   "data/backtest/strict-policy-performance-cpi_speed-weekly.txt": path.join(process.cwd(), "data/backtest/strict-policy-performance-cpi_speed-weekly.txt"),
+  "data/backtest/strict-clv-audit-cpi_speed-2026.csv": path.join(process.cwd(), "data/backtest/strict-clv-audit-cpi_speed-2026.csv"),
+  "data/backtest/strict-clv-audit-cpi_speed-2026.txt": path.join(process.cwd(), "data/backtest/strict-clv-audit-cpi_speed-2026.txt"),
+  "data/backtest/strict-clv-audit-cpi_speed-2026-unmatched.csv": path.join(process.cwd(), "data/backtest/strict-clv-audit-cpi_speed-2026-unmatched.csv"),
   "data/backtest/cpi-all-surfaces-cells.csv": path.join(process.cwd(), "data/backtest/cpi-all-surfaces-cells.csv"),
   "data/backtest/cpi-shadow-overlay-cells.csv": path.join(process.cwd(), "data/backtest/cpi-shadow-overlay-cells.csv"),
   "data/backtest/cpi-shadow-overlay-report.txt": path.join(process.cwd(), "data/backtest/cpi-shadow-overlay-report.txt"),
@@ -246,3 +249,4 @@ export function resolveConfiguredProjectFilePath(
   }
   return getKnownProjectFilePath(fallbackPath);
 }
+

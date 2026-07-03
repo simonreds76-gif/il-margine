@@ -122,7 +122,8 @@ if (!(Test-Path $closeCaptureScript)) {
     throw "Missing close-capture wrapper: $closeCaptureScript"
 }
 
-$taskExists = (& cmd.exe /c "schtasks /Query /TN `"$TaskName`" >nul 2>&1"; $LASTEXITCODE -eq 0)
+& cmd.exe /c "schtasks /Query /TN `"$TaskName`" >nul 2>&1"
+$taskExists = ($LASTEXITCODE -eq 0)
 if (-not $taskExists) {
     throw "Scheduled task '$TaskName' does not exist. Create it first, then rerun this bridge script."
 }
@@ -150,7 +151,7 @@ if ([string]::IsNullOrWhiteSpace($password)) {
     throw "A non-empty password is required to register the task with LogonType=Password."
 }
 
-$closeCaptureCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -File `"$closeCaptureScript`""
+$closeCaptureCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File `"$closeCaptureScript`""
 
 try {
     schtasks /Create /TN $TaskName /SC DAILY /ST 08:00 /RI 30 /DU 16:00 /TR "$closeCaptureCmd" /RU $credential.UserName /RP $password /RL HIGHEST /F | Out-Host

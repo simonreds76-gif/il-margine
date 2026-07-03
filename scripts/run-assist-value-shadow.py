@@ -69,6 +69,23 @@ def restore_snapshot(snapshot: dict[Path, bytes | None]) -> None:
         path.write_bytes(content)
 
 
+def snapshot_inbox_files() -> dict[Path, int]:
+    inbox = ROOT / "data" / "assist-value" / "inbox"
+    if not inbox.exists():
+        return {}
+    return {path: path.stat().st_mtime_ns for path in inbox.glob("*.csv") if path.is_file()}
+
+
+def new_or_updated_inbox_files(before: dict[Path, int]) -> list[Path]:
+    after = snapshot_inbox_files()
+    changed = [path for path, mtime in after.items() if before.get(path) != mtime]
+    return sorted(changed, key=lambda path: path.stat().st_mtime_ns)
+
+
+def rel_path(path: Path) -> str:
+    return str(path.relative_to(ROOT)).replace("\\", "/")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run private Assist Value shadow lane")
     parser.add_argument("--leagues", default=",".join(DEFAULT_LEAGUES))
@@ -104,7 +121,9 @@ def main() -> None:
             restore_snapshot(source_snapshot)
             print("  WARNING: source audit failed; restored previous role-source files before modelling.")
 
+    fresh_odds_files: list[Path] = []
     if not args.skip_odds:
+        inbox_before = snapshot_inbox_files()
         for league in parse_leagues(args.leagues):
             run_cmd(
                 [
@@ -123,17 +142,30 @@ def main() -> None:
                 ],
                 allow_failure=args.allow_odds_failure,
             )
+        fresh_odds_files = new_or_updated_inbox_files(inbox_before)
+        if not fresh_odds_files:
+            print("  No fresh assist odds files were created during this run.")
+            print("  Preserving existing board/signals instead of rebuilding from stale inbox history.")
+            print("\n  Done.\n")
+            return
     elif not has_matching_files(["data/assist-value/inbox/*.csv"]):
         print("  WARNING: --skip-odds was requested but no assist inbox CSVs exist; preserving current board/signals.")
         print("\n  Done.\n")
         return
+
+    odds_inputs = [rel_path(path) for path in fresh_odds_files] if not args.skip_odds else ["data/assist-value/inbox/*.csv"]
+    print(f"  Assist odds inputs for this build: {len(odds_inputs)}")
+    for input_path in odds_inputs[:10]:
+        print(f"    - {input_path}")
+    if len(odds_inputs) > 10:
+        print(f"    - ... {len(odds_inputs) - 10} more")
 
     run_cmd(
         [
             sys.executable,
             str(ROOT / "scripts" / "build-assist-value-shadow.py"),
             "--odds-input",
-            "data/assist-value/inbox/*.csv",
+            *odds_inputs,
             "--roles",
             "data/assist-value/rotowire-setpiece-roles.csv",
             "--out",

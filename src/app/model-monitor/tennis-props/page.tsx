@@ -2,6 +2,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import { Fragment } from "react";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import {
   MODEL_MONITOR_ENABLED,
   MonitorNav,
@@ -16,6 +17,8 @@ import {
 export const dynamic = "force-dynamic";
 
 type CsvRow = Record<string, string>;
+type ProjectionSortKey = "schedule" | "aces" | "dfs" | "match_tb" | "first_tb" | "breaks";
+type SearchParamsInput = Promise<Record<string, string | string[] | undefined>>;
 type TournamentRoundLog = {
   date?: string;
   round?: string;
@@ -26,6 +29,8 @@ type TournamentRoundLog = {
   breaks_for?: string;
   broken?: string;
   total_breaks?: string;
+  first_set_tiebreak?: string;
+  match_tiebreak?: string;
   svpt?: string;
 };
 
@@ -143,6 +148,26 @@ function fmt(value: string | number | undefined, digits = 1): string {
   return Number.isFinite(parsed) ? parsed.toFixed(digits) : "-";
 }
 
+function pctText(value: string | number | undefined, digits = 1): string {
+  const parsed = typeof value === "number" ? value : Number.parseFloat(value ?? "");
+  return Number.isFinite(parsed) ? `${parsed.toFixed(digits)}%` : "-";
+}
+
+function factorMove(value: string | undefined, digits = 1): string {
+  const parsed = Number.parseFloat(value ?? "");
+  if (!Number.isFinite(parsed) || parsed <= 0) return "-";
+  const pct = (parsed - 1) * 100;
+  if (Math.abs(pct) < 0.05) return "flat";
+  return `${pct > 0 ? "+" : ""}${pct.toFixed(digits)}%`;
+}
+
+function factorProductMove(first: string | undefined, second: string | undefined, digits = 1): string {
+  const a = Number.parseFloat(first ?? "");
+  const b = Number.parseFloat(second ?? "");
+  const product = (Number.isFinite(a) && a > 0 ? a : 1) * (Number.isFinite(b) && b > 0 ? b : 1);
+  return factorMove(String(product), digits);
+}
+
 function confidenceTone(value: string | undefined): string {
   if (value === "HIGH") return "border-emerald-500/25 bg-emerald-500/10 text-emerald-300";
   if (value === "MED") return "border-amber-500/25 bg-amber-500/10 text-amber-300";
@@ -222,6 +247,53 @@ function groupRowsByDate(rows: CsvRow[]): { date: string; rows: CsvRow[] }[] {
     .map(([date, groupedRows]) => ({ date, rows: groupedRows }));
 }
 
+function validProjectionSort(value: string | string[] | undefined): ProjectionSortKey {
+  const raw = Array.isArray(value) ? value[0] : value;
+  if (raw === "aces" || raw === "dfs" || raw === "match_tb" || raw === "first_tb" || raw === "breaks") return raw;
+  return "schedule";
+}
+
+function projectionSortValue(rows: CsvRow[], sortKey: ProjectionSortKey): number {
+  if (sortKey === "aces") return Math.max(...rows.map((row) => n(row.projected_aces)));
+  if (sortKey === "dfs") return Math.max(...rows.map((row) => n(row.projected_dfs)));
+  if (sortKey === "match_tb") return Math.max(...rows.map((row) => n(row.match_tiebreak_pct)));
+  if (sortKey === "first_tb") return Math.max(...rows.map((row) => n(row.first_set_tiebreak_pct)));
+  if (sortKey === "breaks") return Math.max(...rows.map((row) => n(row.projected_total_breaks)));
+  return 0;
+}
+
+function matchKey(row: CsvRow): string {
+  const players = [row.player || "", row.opponent || ""].sort((a, b) => a.localeCompare(b)).join(" v ");
+  return [row.date || "", row.tour || "", row.tournament || "", players].join("|");
+}
+
+function fixtureName(rows: CsvRow[]): string {
+  const first = rows[0] ?? {};
+  return `${first.player || "-"} vs ${first.opponent || "-"}`;
+}
+
+function groupRowsByDateAndMatch(rows: CsvRow[], sortKey: ProjectionSortKey): { date: string; matches: { key: string; rows: CsvRow[] }[] }[] {
+  return groupRowsByDate(rows).map((dateGroup) => {
+    const matchMap = new Map<string, CsvRow[]>();
+    for (const row of dateGroup.rows) {
+      const key = matchKey(row);
+      matchMap.set(key, [...(matchMap.get(key) ?? []), row]);
+    }
+    const matches = [...matchMap.entries()].map(([key, matchRows]) => ({
+      key,
+      rows: [...matchRows].sort((a, b) => (a.player || "").localeCompare(b.player || "")),
+    }));
+    matches.sort((a, b) => {
+      if (sortKey !== "schedule") {
+        return projectionSortValue(b.rows, sortKey) - projectionSortValue(a.rows, sortKey)
+          || fixtureName(a.rows).localeCompare(fixtureName(b.rows));
+      }
+      return fixtureName(a.rows).localeCompare(fixtureName(b.rows));
+    });
+    return { date: dateGroup.date, matches };
+  });
+}
+
 function parseTournamentRoundLog(value: string | undefined): TournamentRoundLog[] {
   if (!value) return [];
   try {
@@ -240,12 +312,45 @@ function MiniBadge({ label, tone }: { label: string; tone: string }) {
   );
 }
 
+function factorTone(value: string | undefined): string {
+  const parsed = Number.parseFloat(value ?? "");
+  if (!Number.isFinite(parsed)) return "border-slate-700 bg-slate-900 text-slate-500";
+  if (parsed >= 1.03) return "border-emerald-500/25 bg-emerald-500/10 text-emerald-300";
+  if (parsed <= 0.97) return "border-rose-500/25 bg-rose-500/10 text-rose-300";
+  return "border-slate-700/70 bg-slate-800/60 text-slate-400";
+}
+
+function factorProductTone(first: string | undefined, second: string | undefined): string {
+  const a = Number.parseFloat(first ?? "");
+  const b = Number.parseFloat(second ?? "");
+  const product = (Number.isFinite(a) && a > 0 ? a : 1) * (Number.isFinite(b) && b > 0 ? b : 1);
+  return factorTone(String(product));
+}
+
+function NoteBadges({ value }: { value: string }) {
+  const notes = value
+    .split("|")
+    .map((note) => note.trim())
+    .filter(Boolean)
+    .slice(0, 5);
+  if (!notes.length) return <span className="text-xs text-slate-600">clear</span>;
+  return (
+    <div className="flex max-w-[300px] flex-wrap gap-1.5">
+      {notes.map((note) => (
+        <span key={note} className="rounded-full border border-slate-800 bg-slate-950/70 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-500">
+          {note.replaceAll("_", " ")}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function TournamentRoundDetails({ row }: { row: CsvRow }) {
   const logs = parseTournamentRoundLog(row.tournament_round_log);
   return (
     <details className="group mt-1 rounded-xl border border-slate-800/80 bg-slate-950/50 px-2 py-1">
       <summary className="cursor-pointer list-none text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 transition group-open:text-emerald-300">
-        Round aces / DFs / breaks
+        Round aces / DFs / breaks / TB
       </summary>
       {logs.length ? (
         <div className="mt-2 overflow-x-auto">
@@ -259,6 +364,8 @@ function TournamentRoundDetails({ row }: { row: CsvRow }) {
                 <th className="py-1 pr-3 font-semibold">Brk+</th>
                 <th className="py-1 pr-3 font-semibold">Brk-</th>
                 <th className="py-1 pr-3 font-semibold">Tot brk</th>
+                <th className="py-1 pr-3 font-semibold">1st TB</th>
+                <th className="py-1 pr-3 font-semibold">Match TB</th>
                 <th className="py-1 pr-3 font-semibold">Result</th>
               </tr>
             </thead>
@@ -272,6 +379,8 @@ function TournamentRoundDetails({ row }: { row: CsvRow }) {
                   <td className="py-1 pr-3 font-mono text-cyan-300">{log.breaks_for || "0"}</td>
                   <td className="py-1 pr-3 font-mono text-amber-300">{log.broken || "0"}</td>
                   <td className="py-1 pr-3 font-mono text-slate-300">{log.total_breaks || "0"}</td>
+                  <td className="py-1 pr-3 font-mono text-violet-300">{log.first_set_tiebreak === "1" ? "Y" : "N"}</td>
+                  <td className="py-1 pr-3 font-mono text-violet-300">{log.match_tiebreak === "1" ? "Y" : "N"}</td>
                   <td className="py-1 pr-3 font-mono text-slate-500">{log.result || "-"}</td>
                 </tr>
               ))}
@@ -287,11 +396,93 @@ function TournamentRoundDetails({ row }: { row: CsvRow }) {
   );
 }
 
-function ProjectionTable({ rows }: { rows: CsvRow[] }) {
+function TieBreakCell({ row }: { row: CsvRow }) {
+  const items = [
+    {
+      label: "1st set",
+      probability: row.first_set_tiebreak_pct,
+      fairOdds: row.first_set_tiebreak_fair_yes,
+      venueActual: row.venue_first_set_tiebreak_actual_pct,
+      liveActual: row.current_env_first_set_tiebreak_actual_pct,
+      accent: "text-violet-200",
+      border: "border-violet-500/20 bg-violet-500/10",
+    },
+    {
+      label: "Any set",
+      probability: row.match_tiebreak_pct,
+      fairOdds: row.match_tiebreak_fair_yes,
+      venueActual: row.venue_match_tiebreak_actual_pct,
+      liveActual: row.current_env_match_tiebreak_actual_pct,
+      accent: "text-fuchsia-200",
+      border: "border-fuchsia-500/20 bg-fuchsia-500/10",
+    },
+  ];
+
+  return (
+    <div className="min-w-[176px] space-y-1.5">
+      {items.map((item) => (
+        <div key={item.label} className={cn("rounded-xl border px-2.5 py-2", item.border)}>
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="text-[10px] font-black uppercase tracking-[0.13em] text-slate-500">{item.label}</span>
+            <span className={cn("font-mono text-lg font-black leading-none", item.accent)}>
+              {fmt(item.fairOdds, 2)}
+            </span>
+          </div>
+          <div className="mt-1 flex items-center justify-between gap-2 border-t border-white/5 pt-1 text-[10px] uppercase tracking-[0.11em] text-slate-500">
+            <span>YES prob</span>
+            <span className="font-mono text-slate-300">{fmt(item.probability, 1)}%</span>
+          </div>
+          <div className="mt-1 grid grid-cols-2 gap-1 text-[10px] uppercase tracking-[0.09em] text-slate-600">
+            <span>hist {pctText(item.venueActual, 1)}</span>
+            <span>live {pctText(item.liveActual, 1)}</span>
+          </div>
+        </div>
+      ))}
+      <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 px-2 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-300">
+        Research only · no odds feed · not a pick
+      </div>
+      <div className="px-1 text-[10px] leading-snug text-slate-600">
+        Any set = tie-break anywhere in the match.
+      </div>
+    </div>
+  );
+}
+
+function ProjectionSortControls({ active }: { active: ProjectionSortKey }) {
+  const options: { key: ProjectionSortKey; label: string }[] = [
+    { key: "schedule", label: "Schedule" },
+    { key: "match_tb", label: "Highest match TB" },
+    { key: "first_tb", label: "Highest 1st-set TB" },
+    { key: "aces", label: "Highest aces" },
+    { key: "dfs", label: "Highest DFs" },
+    { key: "breaks", label: "Highest breaks" },
+  ];
+  return (
+    <div className="mb-4 flex flex-wrap gap-2">
+      {options.map((option) => (
+        <Link
+          key={option.key}
+          href={`/model-monitor/tennis-props?propsSort=${option.key}`}
+          className={cn(
+            "rounded-full border px-3 py-1.5 text-xs font-bold uppercase tracking-[0.12em] transition",
+            active === option.key
+              ? "border-emerald-400/40 bg-emerald-500/15 text-emerald-200"
+              : "border-slate-800 bg-slate-950/70 text-slate-400 hover:border-slate-600 hover:text-slate-200",
+          )}
+        >
+          {option.label}
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+function ProjectionTable({ rows, sortKey }: { rows: CsvRow[]; sortKey: ProjectionSortKey }) {
   if (!rows.length) return <EmptyState message="No aces/DF projection board found. Run python scripts/run-tennis-props-daily.py after OnCourt extract." />;
-  const groupedRows = groupRowsByDate(rows);
+  const groupedRows = groupRowsByDateAndMatch(rows, sortKey);
   return (
     <div className="overflow-x-auto">
+      <ProjectionSortControls active={sortKey} />
       <table className="min-w-full text-sm">
         <thead>
           <tr className="border-b border-slate-800 text-left text-[11px] uppercase tracking-[0.16em] text-slate-500">
@@ -301,10 +492,13 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
             <th className="px-3 py-3 font-semibold">Aces</th>
             <th className="px-3 py-3 font-semibold">DFs</th>
             <th className="px-3 py-3 font-semibold">Breaks</th>
+            <th className="px-3 py-3 font-semibold">Tie-break %</th>
             <th className="px-3 py-3 font-semibold">Aces conf</th>
             <th className="px-3 py-3 font-semibold">DF conf</th>
             <th className="px-3 py-3 font-semibold">Break conf</th>
-            <th className="px-3 py-3 font-semibold">Sample</th>
+            <th className="px-3 py-3 font-semibold">TB conf</th>
+            <th className="px-3 py-3 font-semibold">Model inputs</th>
+            <th className="px-3 py-3 font-semibold">Live event</th>
             <th className="px-3 py-3 font-semibold">Notes</th>
           </tr>
         </thead>
@@ -312,40 +506,118 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
           {groupedRows.map((group) => (
             <Fragment key={group.date}>
               <tr className="border-y border-slate-800 bg-slate-950/80">
-                <td colSpan={11} className="px-3 py-3">
+                <td colSpan={14} className="px-3 py-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="text-xs font-black uppercase tracking-[0.18em] text-emerald-300">{dateLabel(group.date)}</span>
-                    <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate-500">{group.rows.length} player rows</span>
+                    <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate-500">{group.matches.length} matches / {group.matches.reduce((sum, match) => sum + match.rows.length, 0)} player rows</span>
                   </div>
                 </td>
               </tr>
-              {group.rows.map((row, index) => (
-                <tr key={`${group.date}-${row.tour}-${row.player}-${row.opponent}-${index}`} className="border-b border-slate-900/80 text-slate-300">
-                  <td className="px-3 py-3">
-                    <MiniBadge label={row.tour || "-"} tone={row.tour === "WTA" ? "border-fuchsia-500/25 bg-fuchsia-500/10 text-fuchsia-200" : "border-cyan-500/25 bg-cyan-500/10 text-cyan-200"} />
-                  </td>
-                  <td className="px-3 py-3">
-                    <div className="font-semibold text-slate-100">{row.player}</div>
-                    <TournamentRoundDetails row={row} />
-                  </td>
-                  <td className="px-3 py-3 text-slate-400">{row.opponent}</td>
-                  <td className="px-3 py-3 font-mono text-lg text-emerald-300">{fmt(row.projected_aces, 1)}</td>
-                  <td className="px-3 py-3 font-mono text-lg text-rose-300">{fmt(row.projected_dfs, 1)}</td>
-                  <td className="px-3 py-3 font-mono text-xs">
-                    <div className="text-cyan-300">+{fmt(row.projected_breaks_for, 1)}</div>
-                    <div className="text-amber-300">-{fmt(row.projected_broken, 1)}</div>
-                    <div className="text-slate-500">tot {fmt(row.projected_total_breaks, 1)}</div>
-                  </td>
-                  <td className="px-3 py-3"><MiniBadge label={row.ace_confidence || "LOW"} tone={confidenceTone(row.ace_confidence)} /></td>
-                  <td className="px-3 py-3"><MiniBadge label={row.df_confidence || "LOW"} tone={confidenceTone(row.df_confidence)} /></td>
-                  <td className="px-3 py-3"><MiniBadge label={row.break_confidence || "LOW"} tone={confidenceTone(row.break_confidence)} /></td>
-                  <td className="px-3 py-3 font-mono text-xs text-slate-400">
-                    <div>{row.player_surface_matches || "0"}m / {row.player_surface_svpt_sample || "0"} svpt</div>
-                    <div className="text-slate-600">event {row.same_tournament_matches || "0"}m / {row.same_tournament_svpt || "0"} svpt</div>
-                    <div className="text-slate-600">event brk +{row.same_tournament_breaks_for || "0"} / -{row.same_tournament_broken || "0"}</div>
-                  </td>
-                  <td className="px-3 py-3 text-xs text-slate-500">{[row.notes, row.break_notes].filter(Boolean).join(" | ") || "clear"}</td>
-                </tr>
+              {group.matches.map((match) => (
+                <Fragment key={`${group.date}-${match.key}`}>
+                  <tr className="border-b border-slate-900/80 bg-slate-950/45">
+                    <td colSpan={14} className="px-3 py-2">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="font-semibold text-slate-100">{fixtureName(match.rows)}</div>
+                        <div className="flex flex-wrap gap-2 font-mono text-[11px]">
+                          <span className="rounded-full border border-violet-500/20 bg-violet-500/10 px-2 py-0.5 text-violet-200">match TB {fmt(projectionSortValue(match.rows, "match_tb"), 1)}%</span>
+                          <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-emerald-200">max aces {fmt(projectionSortValue(match.rows, "aces"), 1)}</span>
+                          <span className="rounded-full border border-rose-500/20 bg-rose-500/10 px-2 py-0.5 text-rose-200">max DF {fmt(projectionSortValue(match.rows, "dfs"), 1)}</span>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  {match.rows.map((row, index) => (
+                    <tr key={`${group.date}-${row.tour}-${row.player}-${row.opponent}-${index}`} className="border-b border-slate-900/80 text-slate-300">
+                      <td className="px-3 py-3">
+                        <MiniBadge label={row.tour || "-"} tone={row.tour === "WTA" ? "border-fuchsia-500/25 bg-fuchsia-500/10 text-fuchsia-200" : "border-cyan-500/25 bg-cyan-500/10 text-cyan-200"} />
+                      </td>
+                      <td className="px-3 py-3">
+                        <div className="font-semibold text-slate-100">{row.player}</div>
+                        <TournamentRoundDetails row={row} />
+                      </td>
+                      <td className="px-3 py-3 text-slate-400">{row.opponent}</td>
+                      <td className="px-3 py-3 font-mono text-lg text-emerald-300">{fmt(row.projected_aces, 1)}</td>
+                      <td className="px-3 py-3 font-mono text-lg text-rose-300">{fmt(row.projected_dfs, 1)}</td>
+                      <td className="px-3 py-3 font-mono text-xs">
+                        <div className="text-cyan-300">+{fmt(row.projected_breaks_for, 1)}</div>
+                        <div className="text-amber-300">-{fmt(row.projected_broken, 1)}</div>
+                        <div className="text-slate-500">tot {fmt(row.projected_total_breaks, 1)}</div>
+                      </td>
+                      <td className="px-3 py-3 font-mono text-xs">
+                        <TieBreakCell row={row} />
+                      </td>
+                      <td className="px-3 py-3"><MiniBadge label={row.ace_confidence || "LOW"} tone={confidenceTone(row.ace_confidence)} /></td>
+                      <td className="px-3 py-3"><MiniBadge label={row.df_confidence || "LOW"} tone={confidenceTone(row.df_confidence)} /></td>
+                      <td className="px-3 py-3"><MiniBadge label={row.break_confidence || "LOW"} tone={confidenceTone(row.break_confidence)} /></td>
+                      <td className="px-3 py-3"><MiniBadge label={row.tiebreak_confidence || "LOW"} tone={confidenceTone(row.tiebreak_confidence)} /></td>
+                      <td className="px-3 py-3 text-xs text-slate-400">
+                        <div className="min-w-[180px] rounded-xl border border-slate-800/80 bg-slate-950/55 p-2">
+                          <div className="mb-1 font-mono text-emerald-300">
+                            match games {fmt(row.expected_match_games, 1)}
+                          </div>
+                          <div className="mb-2 text-[11px] uppercase tracking-[0.1em] text-slate-600">
+                            {row.expected_match_games_source || "fallback"}
+                            {row.expected_match_games_confidence ? ` / ${row.expected_match_games_confidence}` : ""}
+                          </div>
+                          <div className="font-mono text-slate-300">{row.player_surface_matches || "0"}m / {row.player_surface_svpt_sample || "0"} svpt</div>
+                          <div className="mt-1 text-[11px] text-slate-600">player same-event {row.same_tournament_matches || "0"}m / {row.same_tournament_svpt || "0"} svpt</div>
+                          <div className="mt-1 text-[11px] text-slate-600">brk log +{row.same_tournament_breaks_for || "0"} / -{row.same_tournament_broken || "0"}</div>
+                          <div className="mt-1 text-[11px] text-slate-600">serve pts {fmt(row.service_point_win, 3)} / opp {fmt(row.opponent_service_point_win, 3)}</div>
+                        </div>
+                      </td>
+                      <td className="px-3 py-3 text-xs">
+                        <div className="min-w-[310px] rounded-xl border border-slate-800/80 bg-slate-950/55 p-2">
+                          <div className="mb-2 flex items-center justify-between gap-2 text-[11px] uppercase tracking-[0.12em] text-slate-500">
+                            <span>current {row.current_env_matches || "0"} matches</span>
+                            <span>live weight {fmt(row.current_env_weight, 2)}</span>
+                          </div>
+                          <div className="space-y-1.5">
+                            <div className="grid grid-cols-[44px_1fr] items-center gap-2">
+                              <span className="text-[10px] font-black uppercase tracking-[0.12em] text-emerald-300">Aces</span>
+                              <div className="flex flex-wrap gap-1.5">
+                                <MiniBadge label={`venue ${factorMove(row.venue_ace_factor)}`} tone={factorTone(row.venue_ace_factor)} />
+                                <MiniBadge label={`live ${factorMove(row.current_env_ace_factor)}`} tone={factorTone(row.current_env_ace_factor)} />
+                                <MiniBadge label={`net ${factorProductMove(row.venue_ace_factor, row.current_env_ace_factor)}`} tone={factorProductTone(row.venue_ace_factor, row.current_env_ace_factor)} />
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-[44px_1fr] items-center gap-2">
+                              <span className="text-[10px] font-black uppercase tracking-[0.12em] text-rose-300">DF</span>
+                              <div className="flex flex-wrap gap-1.5">
+                                <MiniBadge label={`venue ${factorMove(row.venue_df_factor)}`} tone={factorTone(row.venue_df_factor)} />
+                                <MiniBadge label={`live ${factorMove(row.current_env_df_factor)}`} tone={factorTone(row.current_env_df_factor)} />
+                                <MiniBadge label={`net ${factorProductMove(row.venue_df_factor, row.current_env_df_factor)}`} tone={factorProductTone(row.venue_df_factor, row.current_env_df_factor)} />
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-[44px_1fr] items-center gap-2">
+                              <span className="text-[10px] font-black uppercase tracking-[0.12em] text-cyan-300">Brk</span>
+                              <div className="flex flex-wrap gap-1.5">
+                                <MiniBadge label={`live ${factorMove(row.current_env_break_factor)}`} tone={factorTone(row.current_env_break_factor)} />
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-[44px_1fr] items-center gap-2">
+                              <span className="text-[10px] font-black uppercase tracking-[0.12em] text-violet-300">TB</span>
+                              <div className="flex flex-wrap gap-1.5">
+                            <MiniBadge label={`1st venue ${factorMove(row.venue_first_set_tiebreak_factor)}`} tone={factorTone(row.venue_first_set_tiebreak_factor)} />
+                            <MiniBadge label={`1st live ${factorMove(row.current_env_first_set_tiebreak_factor)}`} tone={factorTone(row.current_env_first_set_tiebreak_factor)} />
+                            <MiniBadge label={`match venue ${factorMove(row.venue_match_tiebreak_factor)}`} tone={factorTone(row.venue_match_tiebreak_factor)} />
+                            <MiniBadge label={`match live ${factorMove(row.current_env_match_tiebreak_factor)}`} tone={factorTone(row.current_env_match_tiebreak_factor)} />
+                            <MiniBadge label={`player ${factorMove(row.player_tiebreak_factor)}`} tone={factorTone(row.player_tiebreak_factor)} />
+                          </div>
+                          <div className="mt-1 text-[10px] text-slate-600">
+                            hist match TB {pctText(row.player_match_tiebreak_actual_pct)} / opp {pctText(row.opponent_match_tiebreak_actual_pct)}
+                            {row.player_tiebreak_sample ? ` · sample ${row.player_tiebreak_sample}` : ""}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                      </td>
+                      <td className="px-3 py-3 text-xs text-slate-500">
+                        <NoteBadges value={[row.notes, row.break_notes, row.tiebreak_notes].filter(Boolean).join("|")} />
+                      </td>
+                    </tr>
+                  ))}
+                </Fragment>
               ))}
             </Fragment>
           ))}
@@ -494,8 +766,10 @@ function ComparisonTable({ rows, hasLinesFile }: { rows: CsvRow[]; hasLinesFile:
   );
 }
 
-export default async function TennisPropsMonitorPage() {
+export default async function TennisPropsMonitorPage({ searchParams }: { searchParams?: SearchParamsInput }) {
   if (!MODEL_MONITOR_ENABLED) notFound();
+  const resolvedSearchParams: Record<string, string | string[] | undefined> = searchParams ? await searchParams : {};
+  const projectionSortKey = validProjectionSort(resolvedSearchParams.propsSort);
 
   const [
     boardRows,
@@ -592,7 +866,7 @@ export default async function TennisPropsMonitorPage() {
             title={`Projection Board (${latestDate(boardRows)})`}
             subtitle="Expected aces and double faults for each scheduled player. This is the simulation layer you asked for."
           >
-            <ProjectionTable rows={sortedBoard} />
+            <ProjectionTable rows={sortedBoard} sortKey={projectionSortKey} />
           </SectionCard>
         </div>
       </div>

@@ -1,0 +1,2330 @@
+{
+  "constraints": {
+    "current_odds_feed_has_tiebreak_markets": false,
+    "needs_200_settled_shadow_clv_positive": true,
+    "needs_automated_market_price": true,
+    "no_manual_csv_workflow": true
+  },
+  "eval_years": [
+    2024,
+    2025,
+    2026
+  ],
+  "fit_years": "<=2023",
+  "gates": {
+    "first_set": {
+      "checks": {
+        "brier_beats_naive_by_0_002": false,
+        "brier_skill_ge_1pct": true,
+        "ece_le_1_5pp": true,
+        "logloss_beats_naive_by_0_003": true,
+        "max_bin_gap_le_3pp": false,
+        "mean_error_abs_le_1pp": true,
+        "overall_sample_ge_1000": true,
+        "tournament_abs10_share_lt_20pct": true,
+        "tournament_signed_error_abs_le_2pp": true
+      },
+      "market": "first_set",
+      "metrics": {
+        "actual": 0.15290299314821493,
+        "brier": 0.12672189875718282,
+        "brier_skill": 0.014011380015843455,
+        "ece": 0.005268162762527149,
+        "logloss": 0.41762874454662563,
+        "max_bin_gap": 0.1633958486335486,
+        "mean_error": 0.003148563176241903,
+        "n": 19411,
+        "naive": 0.15004523414558754,
+        "naive_brier": 0.12852267885122148,
+        "naive_logloss": 0.43017202041372665,
+        "pred": 0.15605155632445683
+      },
+      "pass": false,
+      "reliability": {
+        "bins": [
+          {
+            "actual": 0.1022504892367906,
+            "bin": 0,
+            "gap": 0.009088414215305332,
+            "high": 0.1,
+            "low": 0.0,
+            "n": 2044,
+            "pred": 0.09316207502148527
+          },
+          {
+            "actual": 0.1343030862772262,
+            "bin": 1,
+            "gap": 0.00015354845906315195,
+            "high": 0.2,
+            "low": 0.1,
+            "n": 12993,
+            "pred": 0.13414953781816305
+          },
+          {
+            "actual": 0.21671018276762402,
+            "bin": 2,
+            "gap": 0.0205379563880852,
+            "high": 0.3,
+            "low": 0.2,
+            "n": 3830,
+            "pred": 0.23724813915570922
+          },
+          {
+            "actual": 0.32991803278688525,
+            "bin": 3,
+            "gap": 0.002094355533426462,
+            "high": 0.4,
+            "low": 0.3,
+            "n": 488,
+            "pred": 0.3320123883203117
+          },
+          {
+            "actual": 0.4166666666666667,
+            "bin": 4,
+            "gap": 0.01456142381200054,
+            "high": 0.5,
+            "low": 0.4,
+            "n": 48,
+            "pred": 0.4312280904786672
+          },
+          {
+            "actual": 0.375,
+            "bin": 5,
+            "gap": 0.1633958486335486,
+            "high": 0.6,
+            "low": 0.5,
+            "n": 8,
+            "pred": 0.5383958486335486
+          }
+        ],
+        "ece": 0.005268162762527149,
+        "max_bin_gap": 0.1633958486335486
+      },
+      "tour_surface_samples": {
+        "all_cells_ge_300": true,
+        "cells": [
+          {
+            "certifiable": true,
+            "n": 3356,
+            "surface": "Clay",
+            "tour": "ATP"
+          },
+          {
+            "certifiable": true,
+            "n": 1103,
+            "surface": "Grass",
+            "tour": "ATP"
+          },
+          {
+            "certifiable": true,
+            "n": 5386,
+            "surface": "Hard",
+            "tour": "ATP"
+          },
+          {
+            "certifiable": true,
+            "n": 2681,
+            "surface": "Clay",
+            "tour": "WTA"
+          },
+          {
+            "certifiable": true,
+            "n": 1142,
+            "surface": "Grass",
+            "tour": "WTA"
+          },
+          {
+            "certifiable": true,
+            "n": 5743,
+            "surface": "Hard",
+            "tour": "WTA"
+          }
+        ]
+      },
+      "tournament_drift": {
+        "items": [
+          {
+            "abs_diff": 0.017015379840575773,
+            "actual": 0.272,
+            "diff": -0.017015379840575773,
+            "n": 125,
+            "pred": 0.25498462015942425,
+            "tour": "ATP",
+            "tournament": "ABN AMRO Open"
+          },
+          {
+            "abs_diff": 0.06422586026107163,
+            "actual": 0.14035087719298245,
+            "diff": 0.06422586026107163,
+            "n": 114,
+            "pred": 0.20457673745405408,
+            "tour": "ATP",
+            "tournament": "ASB Classic"
+          },
+          {
+            "abs_diff": 0.030433803805070936,
+            "actual": 0.21487603305785125,
+            "diff": -0.030433803805070936,
+            "n": 121,
+            "pred": 0.1844422292527803,
+            "tour": "ATP",
+            "tournament": "Abierto Mexicano Telcel"
+          },
+          {
+            "abs_diff": 0.050304113032879405,
+            "actual": 0.13392857142857142,
+            "diff": 0.050304113032879405,
+            "n": 112,
+            "pred": 0.18423268446145083,
+            "tour": "ATP",
+            "tournament": "Adelaide International"
+          },
+          {
+            "abs_diff": 0.04537981391333323,
+            "actual": 0.26666666666666666,
+            "diff": -0.04537981391333323,
+            "n": 75,
+            "pred": 0.22128685275333343,
+            "tour": "ATP",
+            "tournament": "Almaty Open"
+          },
+          {
+            "abs_diff": 0.005242819077109079,
+            "actual": 0.16964285714285715,
+            "diff": -0.005242819077109079,
+            "n": 112,
+            "pred": 0.16440003806574807,
+            "tour": "ATP",
+            "tournament": "Argentina Open"
+          },
+          {
+            "abs_diff": 0.007210338200433208,
+            "actual": 0.20869565217391303,
+            "diff": -0.007210338200433208,
+            "n": 690,
+            "pred": 0.20148531397347982,
+            "tour": "ATP",
+            "tournament": "Australian Open"
+          },
+          {
+            "abs_diff": 0.028628656054111218,
+            "actual": 0.22764227642276422,
+            "diff": -0.028628656054111218,
+            "n": 123,
+            "pred": 0.199013620368653,
+            "tour": "ATP",
+            "tournament": "BMW Open"
+          },
+          {
+            "abs_diff": 0.02788174237783067,
+            "actual": 0.2702702702702703,
+            "diff": -0.02788174237783067,
+            "n": 74,
+            "pred": 0.24238852789243961,
+            "tour": "ATP",
+            "tournament": "BNP Paribas Nordic Open"
+          },
+          {
+            "abs_diff": 0.017242799317600643,
+            "actual": 0.17754569190600522,
+            "diff": 0.017242799317600643,
+            "n": 383,
+            "pred": 0.19478849122360586,
+            "tour": "ATP",
+            "tournament": "BNP Paribas Open"
+          },
+          {
+            "abs_diff": 0.01711798317399016,
+            "actual": 0.14935064935064934,
+            "diff": -0.01711798317399016,
+            "n": 154,
+            "pred": 0.13223266617665919,
+            "tour": "ATP",
+            "tournament": "Barcelona Open Banc Sabadell"
+          },
+          {
+            "abs_diff": 0.009828548938139697,
+            "actual": 0.24786324786324787,
+            "diff": -0.009828548938139697,
+            "n": 117,
+            "pred": 0.23803469892510817,
+            "tour": "ATP",
+            "tournament": "Brisbane International"
+          },
+          {
+            "abs_diff": 0.005168104809664981,
+            "actual": 0.24,
+            "diff": 0.005168104809664981,
+            "n": 75,
+            "pred": 0.24516810480966497,
+            "tour": "ATP",
+            "tournament": "Chengdu Open"
+          },
+          {
+            "abs_diff": 0.04832706119964039,
+            "actual": 0.14634146341463414,
+            "diff": 0.04832706119964039,
+            "n": 82,
+            "pred": 0.19466852461427453,
+            "tour": "ATP",
+            "tournament": "China Open"
+          },
+          {
+            "abs_diff": 0.017240427426000182,
+            "actual": 0.2644628099173554,
+            "diff": -0.017240427426000182,
+            "n": 121,
+            "pred": 0.2472223824913552,
+            "tour": "ATP",
+            "tournament": "Cincinnati Open"
+          },
+          {
+            "abs_diff": 0.0178987347943578,
+            "actual": 0.1951219512195122,
+            "diff": 0.0178987347943578,
+            "n": 123,
+            "pred": 0.21302068601387,
+            "tour": "ATP",
+            "tournament": "Citi Open"
+          },
+          {
+            "abs_diff": 0.051621597245166295,
+            "actual": 0.2,
+            "diff": 0.051621597245166295,
+            "n": 120,
+            "pred": 0.2516215972451663,
+            "tour": "ATP",
+            "tournament": "Dallas Open"
+          },
+          {
+            "abs_diff": 0.01838219205274763,
+            "actual": 0.23008849557522124,
+            "diff": -0.01838219205274763,
+            "n": 113,
+            "pred": 0.2117063035224736,
+            "tour": "ATP",
+            "tournament": "Delray Beach Open"
+          },
+          {
+            "abs_diff": 0.005203432591509544,
+            "actual": 0.2459016393442623,
+            "diff": -0.005203432591509544,
+            "n": 122,
+            "pred": 0.24069820675275275,
+            "tour": "ATP",
+            "tournament": "Dubai Duty Free Tennis Championships"
+          },
+          {
+            "abs_diff": 0.08292636694624808,
+            "actual": 0.28205128205128205,
+            "diff": -0.08292636694624808,
+            "n": 78,
+            "pred": 0.19912491510503397,
+            "tour": "ATP",
+            "tournament": "EFG Swiss Open"
+          },
+          {
+            "abs_diff": 0.04463399412329325,
+            "actual": 0.2894736842105263,
+            "diff": -0.04463399412329325,
+            "n": 76,
+            "pred": 0.24483969008723308,
+            "tour": "ATP",
+            "tournament": "Eastbourne"
+          },
+          {
+            "abs_diff": 0.0007850166555648241,
+            "actual": 0.21686746987951808,
+            "diff": -0.0007850166555648241,
+            "n": 83,
+            "pred": 0.21608245322395325,
+            "tour": "ATP",
+            "tournament": "Erste Bank Open"
+          },
+          {
+            "abs_diff": 0.06641253060419078,
+            "actual": 0.32894736842105265,
+            "diff": -0.06641253060419078,
+            "n": 76,
+            "pred": 0.2625348378168619,
+            "tour": "ATP",
+            "tournament": "European Open"
+          },
+          {
+            "abs_diff": 0.032660615847269064,
+            "actual": 0.14473684210526316,
+            "diff": 0.032660615847269064,
+            "n": 76,
+            "pred": 0.17739745795253223,
+            "tour": "ATP",
+            "tournament": "Generali Open"
+          },
+          {
+            "abs_diff": 0.024255474473838745,
+            "actual": 0.14035087719298245,
+            "diff": 0.024255474473838745,
+            "n": 114,
+            "pred": 0.1646063516668212,
+            "tour": "ATP",
+            "tournament": "Gonet Geneva Open"
+          },
+          {
+            "abs_diff": 0.0365376132348601,
+            "actual": 0.1981981981981982,
+            "diff": -0.0365376132348601,
+            "n": 111,
+            "pred": 0.1616605849633381,
+            "tour": "ATP",
+            "tournament": "Grand Prix Hassan II"
+          },
+          {
+            "abs_diff": 0.023526302520594122,
+            "actual": 0.24324324324324326,
+            "diff": 0.023526302520594122,
+            "n": 111,
+            "pred": 0.2667695457638374,
+            "tour": "ATP",
+            "tournament": "Halle"
+          },
+          {
+            "abs_diff": 0.015485306116498565,
+            "actual": 0.1746031746031746,
+            "diff": -0.015485306116498565,
+            "n": 126,
+            "pred": 0.15911786848667603,
+            "tour": "ATP",
+            "tournament": "Hamburg Open"
+          },
+          {
+            "abs_diff": 0.0064710288700859375,
+            "actual": 0.20270270270270271,
+            "diff": -0.0064710288700859375,
+            "n": 74,
+            "pred": 0.19623167383261678,
+            "tour": "ATP",
+            "tournament": "Hangzhou Open"
+          },
+          {
+            "abs_diff": 0.041414819540617126,
+            "actual": 0.2782608695652174,
+            "diff": -0.041414819540617126,
+            "n": 115,
+            "pred": 0.23684605002460027,
+            "tour": "ATP",
+            "tournament": "Hertogenbosch"
+          },
+          {
+            "abs_diff": 0.027391312812814872,
+            "actual": 0.16822429906542055,
+            "diff": 0.027391312812814872,
+            "n": 107,
+            "pred": 0.19561561187823542,
+            "tour": "ATP",
+            "tournament": "Hong Kong Tennis Open"
+          },
+          {
+            "abs_diff": 0.003464966382615564,
+            "actual": 0.1544502617801047,
+            "diff": -0.003464966382615564,
+            "n": 382,
+            "pred": 0.15098529539748914,
+            "tour": "ATP",
+            "tournament": "Internazionali BNL d'Italia"
+          },
+          {
+            "abs_diff": 0.04393529627814166,
+            "actual": 0.15476190476190477,
+            "diff": 0.04393529627814166,
+            "n": 84,
+            "pred": 0.19869720104004643,
+            "tour": "ATP",
+            "tournament": "Japan Open Tennis Championships"
+          },
+          {
+            "abs_diff": 0.07967533518744499,
+            "actual": 0.14285714285714285,
+            "diff": 0.07967533518744499,
+            "n": 77,
+            "pred": 0.22253247804458784,
+            "tour": "ATP",
+            "tournament": "Mallorca"
+          },
+          {
+            "abs_diff": 0.025229201073759838,
+            "actual": 0.23759791122715404,
+            "diff": 0.025229201073759838,
+            "n": 383,
+            "pred": 0.2628271123009139,
+            "tour": "ATP",
+            "tournament": "Miami Open"
+          },
+          {
+            "abs_diff": 0.08750448853517628,
+            "actual": 0.09090909090909091,
+            "diff": 0.08750448853517628,
+            "n": 77,
+            "pred": 0.1784135794442672,
+            "tour": "ATP",
+            "tournament": "Mifel Tennis Open"
+          },
+          {
+            "abs_diff": 0.022339369225167577,
+            "actual": 0.11711711711711711,
+            "diff": 0.022339369225167577,
+            "n": 222,
+            "pred": 0.1394564863422847,
+            "tour": "ATP",
+            "tournament": "Monte-Carlo Rolex Masters"
+          },
+          {
+            "abs_diff": 0.06051374776678556,
+            "actual": 0.17567567567567569,
+            "diff": 0.06051374776678556,
+            "n": 74,
+            "pred": 0.23618942344246124,
+            "tour": "ATP",
+            "tournament": "Moselle Open"
+          },
+          {
+            "abs_diff": 0.0015100571395594564,
+            "actual": 0.14102564102564102,
+            "diff": 0.0015100571395594564,
+            "n": 78,
+            "pred": 0.14253569816520048,
+            "tour": "ATP",
+            "tournament": "Movistar Chile Open"
+          },
+          {
+            "abs_diff": 0.026698075940815746,
+            "actual": 0.16129032258064516,
+            "diff": 0.026698075940815746,
+            "n": 372,
+            "pred": 0.1879883985214609,
+            "tour": "ATP",
+            "tournament": "Mutua Madrid Open"
+          },
+          {
+            "abs_diff": 0.05870141064926107,
+            "actual": 0.21348314606741572,
+            "diff": 0.05870141064926107,
+            "n": 178,
+            "pred": 0.2721845567166768,
+            "tour": "ATP",
+            "tournament": "National Bank Open"
+          },
+          {
+            "abs_diff": 0.019722198805336058,
+            "actual": 0.11688311688311688,
+            "diff": 0.019722198805336058,
+            "n": 77,
+            "pred": 0.13660531568845294,
+            "tour": "ATP",
+            "tournament": "Nordea Open"
+          },
+          {
+            "abs_diff": 0.030688572598497305,
+            "actual": 0.1111111111111111,
+            "diff": 0.030688572598497305,
+            "n": 63,
+            "pred": 0.1417996837096084,
+            "tour": "ATP",
+            "tournament": "Olympics"
+          },
+          {
+            "abs_diff": 0.014422104192297308,
+            "actual": 0.16216216216216217,
+            "diff": 0.014422104192297308,
+            "n": 74,
+            "pred": 0.17658426635445948,
+            "tour": "ATP",
+            "tournament": "Open 13 Provence"
+          },
+          {
+            "abs_diff": 0.0011361074909717328,
+            "actual": 0.22535211267605634,
+            "diff": 0.0011361074909717328,
+            "n": 71,
+            "pred": 0.22648822016702808,
+            "tour": "ATP",
+            "tournament": "Open Occitanie"
+          },
+          {
+            "abs_diff": 0.012509227501636064,
+            "actual": 0.1038961038961039,
+            "diff": 0.012509227501636064,
+            "n": 77,
+            "pred": 0.11640533139773997,
+            "tour": "ATP",
+            "tournament": "Plava Laguna Croatia Open"
+          },
+          {
+            "abs_diff": 0.008169224420818716,
+            "actual": 0.19166666666666668,
+            "diff": 0.008169224420818716,
+            "n": 120,
+            "pred": 0.1998358910874854,
+            "tour": "ATP",
+            "tournament": "Qatar ExxonMobil Open"
+          },
+          {
+            "abs_diff": 0.003940654869131838,
+            "actual": 0.24691358024691357,
+            "diff": -0.003940654869131838,
+            "n": 81,
+            "pred": 0.24297292537778173,
+            "tour": "ATP",
+            "tournament": "Queen's Club"
+          },
+          {
+            "abs_diff": 0.011070838492485524,
+            "actual": 0.16,
+            "diff": -0.011070838492485524,
+            "n": 125,
+            "pred": 0.14892916150751448,
+            "tour": "ATP",
+            "tournament": "Rio Open"
+          },
+          {
+            "abs_diff": 0.010085779550188079,
+            "actual": 0.16063675832127353,
+            "diff": -0.010085779550188079,
+            "n": 691,
+            "pred": 0.15055097877108545,
+            "tour": "ATP",
+            "tournament": "Roland Garros"
+          },
+          {
+            "abs_diff": 0.036404792280438525,
+            "actual": 0.2465753424657534,
+            "diff": -0.036404792280438525,
+            "n": 146,
+            "pred": 0.21017055018531489,
+            "tour": "ATP",
+            "tournament": "Rolex Paris Masters"
+          },
+          {
+            "abs_diff": 0.040290202121329916,
+            "actual": 0.24206349206349206,
+            "diff": 0.040290202121329916,
+            "n": 252,
+            "pred": 0.282353694184822,
+            "tour": "ATP",
+            "tournament": "Shanghai Rolex Masters"
+          },
+          {
+            "abs_diff": 0.07184864995337797,
+            "actual": 0.34513274336283184,
+            "diff": -0.07184864995337797,
+            "n": 113,
+            "pred": 0.27328409340945387,
+            "tour": "ATP",
+            "tournament": "Stuttgart"
+          },
+          {
+            "abs_diff": 0.020883074819962266,
+            "actual": 0.3375,
+            "diff": -0.020883074819962266,
+            "n": 80,
+            "pred": 0.31661692518003776,
+            "tour": "ATP",
+            "tournament": "Swiss Indoors Basel"
+          },
+          {
+            "abs_diff": 0.0021234636850539224,
+            "actual": 0.13157894736842105,
+            "diff": 0.0021234636850539224,
+            "n": 76,
+            "pred": 0.13370241105347497,
+            "tour": "ATP",
+            "tournament": "Tiriac Open"
+          },
+          {
+            "abs_diff": 0.005873293122325013,
+            "actual": 0.16216216216216217,
+            "diff": 0.005873293122325013,
+            "n": 111,
+            "pred": 0.16803545528448718,
+            "tour": "ATP",
+            "tournament": "US Men's Clay Court Championship"
+          },
+          {
+            "abs_diff": 0.0015432812411043106,
+            "actual": 0.185589519650655,
+            "diff": 0.0015432812411043106,
+            "n": 458,
+            "pred": 0.18713280089175932,
+            "tour": "ATP",
+            "tournament": "US Open"
+          },
+          {
+            "abs_diff": 0.08872004720101831,
+            "actual": 0.15384615384615385,
+            "diff": 0.08872004720101831,
+            "n": 65,
+            "pred": 0.24256620104717216,
+            "tour": "ATP",
+            "tournament": "United Cup"
+          },
+          {
+            "abs_diff": 0.0993959476464934,
+            "actual": 0.1506849315068493,
+            "diff": 0.0993959476464934,
+            "n": 73,
+            "pred": 0.2500808791533427,
+            "tour": "ATP",
+            "tournament": "Western & Southern Open"
+          },
+          {
+            "abs_diff": 0.015922093068627796,
+            "actual": 0.22894168466522677,
+            "diff": -0.015922093068627796,
+            "n": 463,
+            "pred": 0.21301959159659897,
+            "tour": "ATP",
+            "tournament": "Wimbledon"
+          },
+          {
+            "abs_diff": 0.051791648024231446,
+            "actual": 0.1415929203539823,
+            "diff": 0.051791648024231446,
+            "n": 113,
+            "pred": 0.19338456837821374,
+            "tour": "ATP",
+            "tournament": "Winston-Salem Open"
+          },
+          {
+            "abs_diff": 0.01664469681851309,
+            "actual": 0.1349206349206349,
+            "diff": -0.01664469681851309,
+            "n": 126,
+            "pred": 0.11827593810212182,
+            "tour": "WTA",
+            "tournament": "ASB Classic"
+          },
+          {
+            "abs_diff": 0.03446556133385925,
+            "actual": 0.08450704225352113,
+            "diff": 0.03446556133385925,
+            "n": 142,
+            "pred": 0.11897260358738038,
+            "tour": "WTA",
+            "tournament": "ATX Open"
+          },
+          {
+            "abs_diff": 0.049576957343985706,
+            "actual": 0.18421052631578946,
+            "diff": -0.049576957343985706,
+            "n": 76,
+            "pred": 0.13463356897180376,
+            "tour": "WTA",
+            "tournament": "Abierto GNP Seguros"
+          },
+          {
+            "abs_diff": 0.024962447559550488,
+            "actual": 0.14728682170542637,
+            "diff": -0.024962447559550488,
+            "n": 129,
+            "pred": 0.12232437414587588,
+            "tour": "WTA",
+            "tournament": "Adelaide International"
+          },
+          {
+            "abs_diff": 0.015358285689766854,
+            "actual": 0.12571428571428572,
+            "diff": -0.015358285689766854,
+            "n": 700,
+            "pred": 0.11035600002451887,
+            "tour": "WTA",
+            "tournament": "Australian Open"
+          },
+          {
+            "abs_diff": 0.0260651622991952,
+            "actual": 0.0968586387434555,
+            "diff": 0.0260651622991952,
+            "n": 382,
+            "pred": 0.1229238010426507,
+            "tour": "WTA",
+            "tournament": "BNP Paribas Open"
+          },
+          {
+            "abs_diff": 0.024524582098246067,
+            "actual": 0.09859154929577464,
+            "diff": 0.024524582098246067,
+            "n": 71,
+            "pred": 0.12311613139402071,
+            "tour": "WTA",
+            "tournament": "Bad Homburg"
+          },
+          {
+            "abs_diff": 0.03015515656852022,
+            "actual": 0.17117117117117117,
+            "diff": -0.03015515656852022,
+            "n": 111,
+            "pred": 0.14101601460265095,
+            "tour": "WTA",
+            "tournament": "Berlin"
+          },
+          {
+            "abs_diff": 0.011235294826754519,
+            "actual": 0.11515151515151516,
+            "diff": -0.011235294826754519,
+            "n": 165,
+            "pred": 0.10391622032476064,
+            "tour": "WTA",
+            "tournament": "Brisbane International"
+          },
+          {
+            "abs_diff": 0.01285882046038131,
+            "actual": 0.07936507936507936,
+            "diff": 0.01285882046038131,
+            "n": 252,
+            "pred": 0.09222389982546067,
+            "tour": "WTA",
+            "tournament": "China Open"
+          },
+          {
+            "abs_diff": 0.02475952898765242,
+            "actual": 0.13385826771653545,
+            "diff": -0.02475952898765242,
+            "n": 127,
+            "pred": 0.10909873872888302,
+            "tour": "WTA",
+            "tournament": "Cincinnati Open"
+          },
+          {
+            "abs_diff": 0.03232506790823894,
+            "actual": 0.13286713286713286,
+            "diff": -0.03232506790823894,
+            "n": 143,
+            "pred": 0.10054206495889392,
+            "tour": "WTA",
+            "tournament": "Copa Colsanitas"
+          },
+          {
+            "abs_diff": 0.04263206016611569,
+            "actual": 0.06806282722513089,
+            "diff": 0.04263206016611569,
+            "n": 191,
+            "pred": 0.11069488739124658,
+            "tour": "WTA",
+            "tournament": "Credit One Charleston Open"
+          },
+          {
+            "abs_diff": 0.006324812395554616,
+            "actual": 0.09954751131221719,
+            "diff": -0.006324812395554616,
+            "n": 221,
+            "pred": 0.09322269891666257,
+            "tour": "WTA",
+            "tournament": "Dubai Duty Free Championships"
+          },
+          {
+            "abs_diff": 0.017901667121263287,
+            "actual": 0.10465116279069768,
+            "diff": 0.017901667121263287,
+            "n": 86,
+            "pred": 0.12255282991196097,
+            "tour": "WTA",
+            "tournament": "Eastbourne"
+          },
+          {
+            "abs_diff": 0.00017046687016554485,
+            "actual": 0.10569105691056911,
+            "diff": 0.00017046687016554485,
+            "n": 123,
+            "pred": 0.10586152378073466,
+            "tour": "WTA",
+            "tournament": "Grand Prix De SAR La Princesse Lalla Meryem"
+          },
+          {
+            "abs_diff": 0.0036475355437191187,
+            "actual": 0.10465116279069768,
+            "diff": 0.0036475355437191187,
+            "n": 86,
+            "pred": 0.1082986983344168,
+            "tour": "WTA",
+            "tournament": "Guadalajara Open Akron"
+          },
+          {
+            "abs_diff": 0.020483384729347076,
+            "actual": 0.09574468085106383,
+            "diff": 0.020483384729347076,
+            "n": 94,
+            "pred": 0.1162280655804109,
+            "tour": "WTA",
+            "tournament": "Guangzhou Open"
+          },
+          {
+            "abs_diff": 0.004889418536910731,
+            "actual": 0.12318840579710146,
+            "diff": 0.004889418536910731,
+            "n": 138,
+            "pred": 0.12807782433401219,
+            "tour": "WTA",
+            "tournament": "Hertogenbosch"
+          },
+          {
+            "abs_diff": 0.04276931887800057,
+            "actual": 0.04861111111111111,
+            "diff": 0.04276931887800057,
+            "n": 144,
+            "pred": 0.09138042998911168,
+            "tour": "WTA",
+            "tournament": "Hobart International"
+          },
+          {
+            "abs_diff": 0.040787069209489366,
+            "actual": 0.07058823529411765,
+            "diff": 0.040787069209489366,
+            "n": 85,
+            "pred": 0.11137530450360701,
+            "tour": "WTA",
+            "tournament": "Hong Kong Tennis Open"
+          },
+          {
+            "abs_diff": 0.0016460681334771604,
+            "actual": 0.09649122807017543,
+            "diff": 0.0016460681334771604,
+            "n": 114,
+            "pred": 0.0981372962036526,
+            "tour": "WTA",
+            "tournament": "Internationaux de Strasbourg"
+          },
+          {
+            "abs_diff": 0.012912251389318619,
+            "actual": 0.09448818897637795,
+            "diff": 0.012912251389318619,
+            "n": 381,
+            "pred": 0.10740044036569657,
+            "tour": "WTA",
+            "tournament": "Internazionali BNL d'Italia"
+          },
+          {
+            "abs_diff": 0.005794138817569211,
+            "actual": 0.1,
+            "diff": -0.005794138817569211,
+            "n": 80,
+            "pred": 0.0942058611824308,
+            "tour": "WTA",
+            "tournament": "Jiangxi Open"
+          },
+          {
+            "abs_diff": 0.021203520266796658,
+            "actual": 0.08139534883720931,
+            "diff": 0.021203520266796658,
+            "n": 86,
+            "pred": 0.10259886910400597,
+            "tour": "WTA",
+            "tournament": "Korea Open"
+          },
+          {
+            "abs_diff": 0.03683875206193017,
+            "actual": 0.07377049180327869,
+            "diff": 0.03683875206193017,
+            "n": 122,
+            "pred": 0.11060924386520886,
+            "tour": "WTA",
+            "tournament": "Merida Open Akron"
+          },
+          {
+            "abs_diff": 0.009597790905484752,
+            "actual": 0.11733333333333333,
+            "diff": 0.009597790905484752,
+            "n": 375,
+            "pred": 0.12693112423881808,
+            "tour": "WTA",
+            "tournament": "Miami Open"
+          },
+          {
+            "abs_diff": 0.009973116351176217,
+            "actual": 0.13008130081300814,
+            "diff": -0.009973116351176217,
+            "n": 123,
+            "pred": 0.12010818446183193,
+            "tour": "WTA",
+            "tournament": "Mubadala Abu Dhabi Open"
+          },
+          {
+            "abs_diff": 0.006521552687528659,
+            "actual": 0.13333333333333333,
+            "diff": -0.006521552687528659,
+            "n": 75,
+            "pred": 0.12681178064580467,
+            "tour": "WTA",
+            "tournament": "Mubadala Citi DC Open"
+          },
+          {
+            "abs_diff": 0.009462361446299236,
+            "actual": 0.10077519379844961,
+            "diff": 0.009462361446299236,
+            "n": 387,
+            "pred": 0.11023755524474885,
+            "tour": "WTA",
+            "tournament": "Mutua Madrid Open"
+          },
+          {
+            "abs_diff": 0.04843831831325121,
+            "actual": 0.0547945205479452,
+            "diff": 0.04843831831325121,
+            "n": 73,
+            "pred": 0.10323283886119641,
+            "tour": "WTA",
+            "tournament": "National Bank Open"
+          },
+          {
+            "abs_diff": 0.0030181674818939436,
+            "actual": 0.11494252873563218,
+            "diff": 0.0030181674818939436,
+            "n": 87,
+            "pred": 0.11796069621752613,
+            "tour": "WTA",
+            "tournament": "Ningbo Open"
+          },
+          {
+            "abs_diff": 0.007748641249986199,
+            "actual": 0.1297709923664122,
+            "diff": 0.007748641249986199,
+            "n": 131,
+            "pred": 0.1375196336163984,
+            "tour": "WTA",
+            "tournament": "Nottingham"
+          },
+          {
+            "abs_diff": 0.05625141637008868,
+            "actual": 0.16129032258064516,
+            "diff": -0.05625141637008868,
+            "n": 62,
+            "pred": 0.10503890621055648,
+            "tour": "WTA",
+            "tournament": "Olympics"
+          },
+          {
+            "abs_diff": 0.028907796117748047,
+            "actual": 0.07339449541284404,
+            "diff": 0.028907796117748047,
+            "n": 109,
+            "pred": 0.10230229153059209,
+            "tour": "WTA",
+            "tournament": "Omnium Banque Nationale"
+          },
+          {
+            "abs_diff": 0.0058156761920999805,
+            "actual": 0.1111111111111111,
+            "diff": -0.0058156761920999805,
+            "n": 144,
+            "pred": 0.10529543491901112,
+            "tour": "WTA",
+            "tournament": "Open Capfinances Rouen Metropole"
+          },
+          {
+            "abs_diff": 0.0008009365786093986,
+            "actual": 0.10638297872340426,
+            "diff": 0.0008009365786093986,
+            "n": 94,
+            "pred": 0.10718391530201365,
+            "tour": "WTA",
+            "tournament": "Prague Open"
+          },
+          {
+            "abs_diff": 0.0010909360132171225,
+            "actual": 0.09251101321585903,
+            "diff": -0.0010909360132171225,
+            "n": 227,
+            "pred": 0.0914200772026419,
+            "tour": "WTA",
+            "tournament": "Qatar TotalEnergies Open"
+          },
+          {
+            "abs_diff": 0.006783310098742043,
+            "actual": 0.11032531824611033,
+            "diff": -0.006783310098742043,
+            "n": 707,
+            "pred": 0.10354200814736829,
+            "tour": "WTA",
+            "tournament": "Roland Garros"
+          },
+          {
+            "abs_diff": 0.045817208098098694,
+            "actual": 0.1592920353982301,
+            "diff": -0.045817208098098694,
+            "n": 113,
+            "pred": 0.11347482730013139,
+            "tour": "WTA",
+            "tournament": "Stuttgart"
+          },
+          {
+            "abs_diff": 0.031115947512177625,
+            "actual": 0.058823529411764705,
+            "diff": 0.031115947512177625,
+            "n": 85,
+            "pred": 0.08993947692394233,
+            "tour": "WTA",
+            "tournament": "Tennis in the Land"
+          },
+          {
+            "abs_diff": 0.04241246381000112,
+            "actual": 0.14444444444444443,
+            "diff": -0.04241246381000112,
+            "n": 90,
+            "pred": 0.10203198063444331,
+            "tour": "WTA",
+            "tournament": "Thailand Open"
+          },
+          {
+            "abs_diff": 0.014330975560026118,
+            "actual": 0.1323529411764706,
+            "diff": -0.014330975560026118,
+            "n": 68,
+            "pred": 0.11802196561644447,
+            "tour": "WTA",
+            "tournament": "Toray Pan Pacific Open"
+          },
+          {
+            "abs_diff": 0.014821213433546934,
+            "actual": 0.08088235294117647,
+            "diff": 0.014821213433546934,
+            "n": 136,
+            "pred": 0.09570356637472341,
+            "tour": "WTA",
+            "tournament": "Transylvania Open"
+          },
+          {
+            "abs_diff": 0.00802541530044161,
+            "actual": 0.09656652360515021,
+            "diff": 0.00802541530044161,
+            "n": 466,
+            "pred": 0.10459193890559182,
+            "tour": "WTA",
+            "tournament": "US Open"
+          },
+          {
+            "abs_diff": 0.015734183026160725,
+            "actual": 0.08695652173913043,
+            "diff": 0.015734183026160725,
+            "n": 92,
+            "pred": 0.10269070476529116,
+            "tour": "WTA",
+            "tournament": "UniCredit Iasi Open"
+          },
+          {
+            "abs_diff": 0.018412949319896232,
+            "actual": 0.09090909090909091,
+            "diff": 0.018412949319896232,
+            "n": 66,
+            "pred": 0.10932204022898714,
+            "tour": "WTA",
+            "tournament": "United Cup"
+          },
+          {
+            "abs_diff": 0.0038468175323314313,
+            "actual": 0.10236220472440945,
+            "diff": 0.0038468175323314313,
+            "n": 127,
+            "pred": 0.10620902225674088,
+            "tour": "WTA",
+            "tournament": "Upper Austria Ladies Linz"
+          },
+          {
+            "abs_diff": 0.05055480722461067,
+            "actual": 0.07692307692307693,
+            "diff": 0.05055480722461067,
+            "n": 78,
+            "pred": 0.1274778841476876,
+            "tour": "WTA",
+            "tournament": "Western & Southern Open"
+          },
+          {
+            "abs_diff": 0.02963806381310631,
+            "actual": 0.14437367303609341,
+            "diff": -0.02963806381310631,
+            "n": 471,
+            "pred": 0.1147356092229871,
+            "tour": "WTA",
+            "tournament": "Wimbledon"
+          },
+          {
+            "abs_diff": 0.00059236366218543,
+            "actual": 0.1095890410958904,
+            "diff": -0.00059236366218543,
+            "n": 146,
+            "pred": 0.10899667743370497,
+            "tour": "WTA",
+            "tournament": "Wuhan Open"
+          }
+        ],
+        "mean_signed_error": 0.005403385072958603,
+        "n_tournaments": 112,
+        "share_abs_gt_10pp": 0.0
+      }
+    },
+    "match": {
+      "checks": {
+        "brier_beats_naive_by_0_002": true,
+        "brier_skill_ge_1pct": true,
+        "ece_le_1_5pp": true,
+        "logloss_beats_naive_by_0_003": true,
+        "max_bin_gap_le_3pp": false,
+        "mean_error_abs_le_1pp": true,
+        "overall_sample_ge_1000": true,
+        "tournament_abs10_share_lt_20pct": true,
+        "tournament_signed_error_abs_le_2pp": true
+      },
+      "market": "match",
+      "metrics": {
+        "actual": 0.3113183246612745,
+        "brier": 0.20305608093714192,
+        "brier_skill": 0.02172940927372402,
+        "ece": 0.00904546275393353,
+        "logloss": 0.5944645419891226,
+        "max_bin_gap": 0.06588433682970063,
+        "mean_error": 0.005046237147943111,
+        "n": 19411,
+        "naive": 0.3018744816856422,
+        "naive_brier": 0.2075663756654398,
+        "naive_logloss": 0.6120831444024427,
+        "pred": 0.3163645618092176
+      },
+      "pass": false,
+      "reliability": {
+        "bins": [
+          {
+            "actual": 0.2136986301369863,
+            "bin": 1,
+            "gap": 0.026858500091509002,
+            "high": 0.2,
+            "low": 0.1,
+            "n": 1095,
+            "pred": 0.1868401300454773
+          },
+          {
+            "actual": 0.229448109749712,
+            "bin": 2,
+            "gap": 0.0028941931753281303,
+            "high": 0.3,
+            "low": 0.2,
+            "n": 9549,
+            "pred": 0.23234230292504013
+          },
+          {
+            "actual": 0.3542719614921781,
+            "bin": 3,
+            "gap": 0.00226339988417279,
+            "high": 0.4,
+            "low": 0.3,
+            "n": 4155,
+            "pred": 0.3520085616080053
+          },
+          {
+            "actual": 0.41612271540469975,
+            "bin": 4,
+            "gap": 0.02774115136500005,
+            "high": 0.5,
+            "low": 0.4,
+            "n": 3064,
+            "pred": 0.4438638667696998
+          },
+          {
+            "actual": 0.5386029411764706,
+            "bin": 5,
+            "gap": 0.002064073028859692,
+            "high": 0.6,
+            "low": 0.5,
+            "n": 1088,
+            "pred": 0.5406670142053303
+          },
+          {
+            "actual": 0.5872093023255814,
+            "bin": 6,
+            "gap": 0.05074016797223002,
+            "high": 0.7,
+            "low": 0.6,
+            "n": 344,
+            "pred": 0.6379494702978115
+          },
+          {
+            "actual": 0.7070707070707071,
+            "bin": 7,
+            "gap": 0.033445373940844236,
+            "high": 0.8,
+            "low": 0.7,
+            "n": 99,
+            "pred": 0.7405160810115513
+          },
+          {
+            "actual": 0.7647058823529411,
+            "bin": 8,
+            "gap": 0.06588433682970063,
+            "high": 0.9,
+            "low": 0.8,
+            "n": 17,
+            "pred": 0.8305902191826418
+          }
+        ],
+        "ece": 0.00904546275393353,
+        "max_bin_gap": 0.06588433682970063
+      },
+      "tour_surface_samples": {
+        "all_cells_ge_300": true,
+        "cells": [
+          {
+            "certifiable": true,
+            "n": 3356,
+            "surface": "Clay",
+            "tour": "ATP"
+          },
+          {
+            "certifiable": true,
+            "n": 1103,
+            "surface": "Grass",
+            "tour": "ATP"
+          },
+          {
+            "certifiable": true,
+            "n": 5386,
+            "surface": "Hard",
+            "tour": "ATP"
+          },
+          {
+            "certifiable": true,
+            "n": 2681,
+            "surface": "Clay",
+            "tour": "WTA"
+          },
+          {
+            "certifiable": true,
+            "n": 1142,
+            "surface": "Grass",
+            "tour": "WTA"
+          },
+          {
+            "certifiable": true,
+            "n": 5743,
+            "surface": "Hard",
+            "tour": "WTA"
+          }
+        ]
+      },
+      "tournament_drift": {
+        "items": [
+          {
+            "abs_diff": 0.0069255719233781154,
+            "actual": 0.432,
+            "diff": -0.0069255719233781154,
+            "n": 125,
+            "pred": 0.4250744280766219,
+            "tour": "ATP",
+            "tournament": "ABN AMRO Open"
+          },
+          {
+            "abs_diff": 0.083337499994183,
+            "actual": 0.30701754385964913,
+            "diff": 0.083337499994183,
+            "n": 114,
+            "pred": 0.39035504385383213,
+            "tour": "ATP",
+            "tournament": "ASB Classic"
+          },
+          {
+            "abs_diff": 0.0012775123835830904,
+            "actual": 0.34710743801652894,
+            "diff": 0.0012775123835830904,
+            "n": 121,
+            "pred": 0.348384950400112,
+            "tour": "ATP",
+            "tournament": "Abierto Mexicano Telcel"
+          },
+          {
+            "abs_diff": 0.03489413494445659,
+            "actual": 0.35714285714285715,
+            "diff": 0.03489413494445659,
+            "n": 112,
+            "pred": 0.39203699208731374,
+            "tour": "ATP",
+            "tournament": "Adelaide International"
+          },
+          {
+            "abs_diff": 0.04834779585231441,
+            "actual": 0.4533333333333333,
+            "diff": -0.04834779585231441,
+            "n": 75,
+            "pred": 0.4049855374810189,
+            "tour": "ATP",
+            "tournament": "Almaty Open"
+          },
+          {
+            "abs_diff": 0.007064290367668369,
+            "actual": 0.32142857142857145,
+            "diff": -0.007064290367668369,
+            "n": 112,
+            "pred": 0.3143642810609031,
+            "tour": "ATP",
+            "tournament": "Argentina Open"
+          },
+          {
+            "abs_diff": 0.03451362305035349,
+            "actual": 0.4652173913043478,
+            "diff": 0.03451362305035349,
+            "n": 690,
+            "pred": 0.4997310143547013,
+            "tour": "ATP",
+            "tournament": "Australian Open"
+          },
+          {
+            "abs_diff": 0.010690521230897088,
+            "actual": 0.3821138211382114,
+            "diff": -0.010690521230897088,
+            "n": 123,
+            "pred": 0.3714232999073143,
+            "tour": "ATP",
+            "tournament": "BMW Open"
+          },
+          {
+            "abs_diff": 0.0143994547003648,
+            "actual": 0.44594594594594594,
+            "diff": -0.0143994547003648,
+            "n": 74,
+            "pred": 0.43154649124558114,
+            "tour": "ATP",
+            "tournament": "BNP Paribas Nordic Open"
+          },
+          {
+            "abs_diff": 0.008714282320861577,
+            "actual": 0.3289817232375979,
+            "diff": 0.008714282320861577,
+            "n": 383,
+            "pred": 0.33769600555845947,
+            "tour": "ATP",
+            "tournament": "BNP Paribas Open"
+          },
+          {
+            "abs_diff": 0.027572683502439188,
+            "actual": 0.2987012987012987,
+            "diff": -0.027572683502439188,
+            "n": 154,
+            "pred": 0.2711286151988595,
+            "tour": "ATP",
+            "tournament": "Barcelona Open Banc Sabadell"
+          },
+          {
+            "abs_diff": 0.014486691844488586,
+            "actual": 0.48717948717948717,
+            "diff": -0.014486691844488586,
+            "n": 117,
+            "pred": 0.4726927953349986,
+            "tour": "ATP",
+            "tournament": "Brisbane International"
+          },
+          {
+            "abs_diff": 0.018138381952284455,
+            "actual": 0.37333333333333335,
+            "diff": 0.018138381952284455,
+            "n": 75,
+            "pred": 0.3914717152856178,
+            "tour": "ATP",
+            "tournament": "Chengdu Open"
+          },
+          {
+            "abs_diff": 0.09034967870227578,
+            "actual": 0.2804878048780488,
+            "diff": 0.09034967870227578,
+            "n": 82,
+            "pred": 0.3708374835803246,
+            "tour": "ATP",
+            "tournament": "China Open"
+          },
+          {
+            "abs_diff": 0.0063297791703686435,
+            "actual": 0.4214876033057851,
+            "diff": -0.0063297791703686435,
+            "n": 121,
+            "pred": 0.41515782413541646,
+            "tour": "ATP",
+            "tournament": "Cincinnati Open"
+          },
+          {
+            "abs_diff": 0.037352399587629315,
+            "actual": 0.34146341463414637,
+            "diff": 0.037352399587629315,
+            "n": 123,
+            "pred": 0.3788158142217757,
+            "tour": "ATP",
+            "tournament": "Citi Open"
+          },
+          {
+            "abs_diff": 0.04193234125991335,
+            "actual": 0.425,
+            "diff": 0.04193234125991335,
+            "n": 120,
+            "pred": 0.46693234125991334,
+            "tour": "ATP",
+            "tournament": "Dallas Open"
+          },
+          {
+            "abs_diff": 0.042835708751282675,
+            "actual": 0.4336283185840708,
+            "diff": -0.042835708751282675,
+            "n": 113,
+            "pred": 0.39079260983278813,
+            "tour": "ATP",
+            "tournament": "Delray Beach Open"
+          },
+          {
+            "abs_diff": 0.004194733675610851,
+            "actual": 0.45901639344262296,
+            "diff": 0.004194733675610851,
+            "n": 122,
+            "pred": 0.4632111271182338,
+            "tour": "ATP",
+            "tournament": "Dubai Duty Free Tennis Championships"
+          },
+          {
+            "abs_diff": 0.05668866826464569,
+            "actual": 0.44871794871794873,
+            "diff": -0.05668866826464569,
+            "n": 78,
+            "pred": 0.39202928045330304,
+            "tour": "ATP",
+            "tournament": "EFG Swiss Open"
+          },
+          {
+            "abs_diff": 0.029728174156149145,
+            "actual": 0.42105263157894735,
+            "diff": 0.029728174156149145,
+            "n": 76,
+            "pred": 0.4507808057350965,
+            "tour": "ATP",
+            "tournament": "Eastbourne"
+          },
+          {
+            "abs_diff": 0.015928957514849684,
+            "actual": 0.42168674698795183,
+            "diff": -0.015928957514849684,
+            "n": 83,
+            "pred": 0.40575778947310215,
+            "tour": "ATP",
+            "tournament": "Erste Bank Open"
+          },
+          {
+            "abs_diff": 0.051749411564169734,
+            "actual": 0.5,
+            "diff": -0.051749411564169734,
+            "n": 76,
+            "pred": 0.44825058843583027,
+            "tour": "ATP",
+            "tournament": "European Open"
+          },
+          {
+            "abs_diff": 0.02905512427287632,
+            "actual": 0.34210526315789475,
+            "diff": 0.02905512427287632,
+            "n": 76,
+            "pred": 0.37116038743077107,
+            "tour": "ATP",
+            "tournament": "Generali Open"
+          },
+          {
+            "abs_diff": 0.016832597150946593,
+            "actual": 0.32456140350877194,
+            "diff": 0.016832597150946593,
+            "n": 114,
+            "pred": 0.34139400065971853,
+            "tour": "ATP",
+            "tournament": "Gonet Geneva Open"
+          },
+          {
+            "abs_diff": 0.026605629919056573,
+            "actual": 0.36036036036036034,
+            "diff": -0.026605629919056573,
+            "n": 111,
+            "pred": 0.33375473044130377,
+            "tour": "ATP",
+            "tournament": "Grand Prix Hassan II"
+          },
+          {
+            "abs_diff": 0.05010408134118455,
+            "actual": 0.4594594594594595,
+            "diff": 0.05010408134118455,
+            "n": 111,
+            "pred": 0.509563540800644,
+            "tour": "ATP",
+            "tournament": "Halle"
+          },
+          {
+            "abs_diff": 0.022530223146619455,
+            "actual": 0.36507936507936506,
+            "diff": -0.022530223146619455,
+            "n": 126,
+            "pred": 0.3425491419327456,
+            "tour": "ATP",
+            "tournament": "Hamburg Open"
+          },
+          {
+            "abs_diff": 0.009361952041509136,
+            "actual": 0.35135135135135137,
+            "diff": 0.009361952041509136,
+            "n": 74,
+            "pred": 0.3607133033928605,
+            "tour": "ATP",
+            "tournament": "Hangzhou Open"
+          },
+          {
+            "abs_diff": 0.09661958926684788,
+            "actual": 0.5478260869565217,
+            "diff": -0.09661958926684788,
+            "n": 115,
+            "pred": 0.4512064976896738,
+            "tour": "ATP",
+            "tournament": "Hertogenbosch"
+          },
+          {
+            "abs_diff": 0.03371428595879211,
+            "actual": 0.3364485981308411,
+            "diff": 0.03371428595879211,
+            "n": 107,
+            "pred": 0.3701628840896332,
+            "tour": "ATP",
+            "tournament": "Hong Kong Tennis Open"
+          },
+          {
+            "abs_diff": 0.03868577469810225,
+            "actual": 0.31413612565445026,
+            "diff": 0.03868577469810225,
+            "n": 382,
+            "pred": 0.3528219003525525,
+            "tour": "ATP",
+            "tournament": "Internazionali BNL d'Italia"
+          },
+          {
+            "abs_diff": 0.05273181847187974,
+            "actual": 0.35714285714285715,
+            "diff": 0.05273181847187974,
+            "n": 84,
+            "pred": 0.4098746756147369,
+            "tour": "ATP",
+            "tournament": "Japan Open Tennis Championships"
+          },
+          {
+            "abs_diff": 0.0746419131513637,
+            "actual": 0.36363636363636365,
+            "diff": 0.0746419131513637,
+            "n": 77,
+            "pred": 0.43827827678772735,
+            "tour": "ATP",
+            "tournament": "Mallorca"
+          },
+          {
+            "abs_diff": 0.019243008953939655,
+            "actual": 0.4464751958224543,
+            "diff": -0.019243008953939655,
+            "n": 383,
+            "pred": 0.42723218686851466,
+            "tour": "ATP",
+            "tournament": "Miami Open"
+          },
+          {
+            "abs_diff": 0.12822944307323922,
+            "actual": 0.22077922077922077,
+            "diff": 0.12822944307323922,
+            "n": 77,
+            "pred": 0.34900866385246,
+            "tour": "ATP",
+            "tournament": "Mifel Tennis Open"
+          },
+          {
+            "abs_diff": 0.07757487327254386,
+            "actual": 0.23873873873873874,
+            "diff": 0.07757487327254386,
+            "n": 222,
+            "pred": 0.3163136120112826,
+            "tour": "ATP",
+            "tournament": "Monte-Carlo Rolex Masters"
+          },
+          {
+            "abs_diff": 0.015527176392748643,
+            "actual": 0.43243243243243246,
+            "diff": -0.015527176392748643,
+            "n": 74,
+            "pred": 0.4169052560396838,
+            "tour": "ATP",
+            "tournament": "Moselle Open"
+          },
+          {
+            "abs_diff": 0.01250970673634133,
+            "actual": 0.34615384615384615,
+            "diff": -0.01250970673634133,
+            "n": 78,
+            "pred": 0.3336441394175048,
+            "tour": "ATP",
+            "tournament": "Movistar Chile Open"
+          },
+          {
+            "abs_diff": 0.042085391205840095,
+            "actual": 0.33602150537634407,
+            "diff": 0.042085391205840095,
+            "n": 372,
+            "pred": 0.37810689658218416,
+            "tour": "ATP",
+            "tournament": "Mutua Madrid Open"
+          },
+          {
+            "abs_diff": 0.027742879206919424,
+            "actual": 0.398876404494382,
+            "diff": 0.027742879206919424,
+            "n": 178,
+            "pred": 0.4266192837013014,
+            "tour": "ATP",
+            "tournament": "National Bank Open"
+          },
+          {
+            "abs_diff": 0.023141441812106256,
+            "actual": 0.2857142857142857,
+            "diff": 0.023141441812106256,
+            "n": 77,
+            "pred": 0.30885572752639195,
+            "tour": "ATP",
+            "tournament": "Nordea Open"
+          },
+          {
+            "abs_diff": 0.024122014572765582,
+            "actual": 0.2857142857142857,
+            "diff": 0.024122014572765582,
+            "n": 63,
+            "pred": 0.3098363002870513,
+            "tour": "ATP",
+            "tournament": "Olympics"
+          },
+          {
+            "abs_diff": 0.02309953128486153,
+            "actual": 0.36486486486486486,
+            "diff": 0.02309953128486153,
+            "n": 74,
+            "pred": 0.3879643961497264,
+            "tour": "ATP",
+            "tournament": "Open 13 Provence"
+          },
+          {
+            "abs_diff": 0.0763794457556693,
+            "actual": 0.5211267605633803,
+            "diff": -0.0763794457556693,
+            "n": 71,
+            "pred": 0.44474731480771096,
+            "tour": "ATP",
+            "tournament": "Open Occitanie"
+          },
+          {
+            "abs_diff": 0.00808538232932085,
+            "actual": 0.24675324675324675,
+            "diff": 0.00808538232932085,
+            "n": 77,
+            "pred": 0.2548386290825676,
+            "tour": "ATP",
+            "tournament": "Plava Laguna Croatia Open"
+          },
+          {
+            "abs_diff": 0.06003716603757275,
+            "actual": 0.3416666666666667,
+            "diff": 0.06003716603757275,
+            "n": 120,
+            "pred": 0.4017038327042394,
+            "tour": "ATP",
+            "tournament": "Qatar ExxonMobil Open"
+          },
+          {
+            "abs_diff": 0.0032292641718570936,
+            "actual": 0.4444444444444444,
+            "diff": 0.0032292641718570936,
+            "n": 81,
+            "pred": 0.4476737086163015,
+            "tour": "ATP",
+            "tournament": "Queen's Club"
+          },
+          {
+            "abs_diff": 0.03189173881741697,
+            "actual": 0.328,
+            "diff": -0.03189173881741697,
+            "n": 125,
+            "pred": 0.29610826118258304,
+            "tour": "ATP",
+            "tournament": "Rio Open"
+          },
+          {
+            "abs_diff": 0.02587581639912534,
+            "actual": 0.41389290882778584,
+            "diff": -0.02587581639912534,
+            "n": 691,
+            "pred": 0.3880170924286605,
+            "tour": "ATP",
+            "tournament": "Roland Garros"
+          },
+          {
+            "abs_diff": 0.0028335445540135784,
+            "actual": 0.4520547945205479,
+            "diff": 0.0028335445540135784,
+            "n": 146,
+            "pred": 0.4548883390745615,
+            "tour": "ATP",
+            "tournament": "Rolex Paris Masters"
+          },
+          {
+            "abs_diff": 0.03352338309680386,
+            "actual": 0.4007936507936508,
+            "diff": 0.03352338309680386,
+            "n": 252,
+            "pred": 0.4343170338904547,
+            "tour": "ATP",
+            "tournament": "Shanghai Rolex Masters"
+          },
+          {
+            "abs_diff": 0.06592209910353064,
+            "actual": 0.6106194690265486,
+            "diff": -0.06592209910353064,
+            "n": 113,
+            "pred": 0.544697369923018,
+            "tour": "ATP",
+            "tournament": "Stuttgart"
+          },
+          {
+            "abs_diff": 0.09656187922330994,
+            "actual": 0.65,
+            "diff": -0.09656187922330994,
+            "n": 80,
+            "pred": 0.5534381207766901,
+            "tour": "ATP",
+            "tournament": "Swiss Indoors Basel"
+          },
+          {
+            "abs_diff": 0.01950693818947702,
+            "actual": 0.32894736842105265,
+            "diff": -0.01950693818947702,
+            "n": 76,
+            "pred": 0.30944043023157564,
+            "tour": "ATP",
+            "tournament": "Tiriac Open"
+          },
+          {
+            "abs_diff": 0.050106107888506723,
+            "actual": 0.38738738738738737,
+            "diff": -0.050106107888506723,
+            "n": 111,
+            "pred": 0.33728127949888065,
+            "tour": "ATP",
+            "tournament": "US Men's Clay Court Championship"
+          },
+          {
+            "abs_diff": 0.02031534287100001,
+            "actual": 0.4279475982532751,
+            "diff": 0.02031534287100001,
+            "n": 458,
+            "pred": 0.4482629411242751,
+            "tour": "ATP",
+            "tournament": "US Open"
+          },
+          {
+            "abs_diff": 0.08426255434012492,
+            "actual": 0.3384615384615385,
+            "diff": 0.08426255434012492,
+            "n": 65,
+            "pred": 0.4227240928016634,
+            "tour": "ATP",
+            "tournament": "United Cup"
+          },
+          {
+            "abs_diff": 0.007684217392956216,
+            "actual": 0.4246575342465753,
+            "diff": -0.007684217392956216,
+            "n": 73,
+            "pred": 0.4169733168536191,
+            "tour": "ATP",
+            "tournament": "Western & Southern Open"
+          },
+          {
+            "abs_diff": 0.044652312638361,
+            "actual": 0.5183585313174947,
+            "diff": 0.044652312638361,
+            "n": 463,
+            "pred": 0.5630108439558557,
+            "tour": "ATP",
+            "tournament": "Wimbledon"
+          },
+          {
+            "abs_diff": 0.0497156053107628,
+            "actual": 0.2920353982300885,
+            "diff": 0.0497156053107628,
+            "n": 113,
+            "pred": 0.3417510035408513,
+            "tour": "ATP",
+            "tournament": "Winston-Salem Open"
+          },
+          {
+            "abs_diff": 0.04392260274342563,
+            "actual": 0.2698412698412698,
+            "diff": -0.04392260274342563,
+            "n": 126,
+            "pred": 0.2259186670978442,
+            "tour": "WTA",
+            "tournament": "ASB Classic"
+          },
+          {
+            "abs_diff": 0.04590238895700349,
+            "actual": 0.20422535211267606,
+            "diff": 0.04590238895700349,
+            "n": 142,
+            "pred": 0.25012774106967955,
+            "tour": "WTA",
+            "tournament": "ATX Open"
+          },
+          {
+            "abs_diff": 0.06907686942212382,
+            "actual": 0.35526315789473684,
+            "diff": -0.06907686942212382,
+            "n": 76,
+            "pred": 0.286186288472613,
+            "tour": "WTA",
+            "tournament": "Abierto GNP Seguros"
+          },
+          {
+            "abs_diff": 0.005422954367979432,
+            "actual": 0.2248062015503876,
+            "diff": 0.005422954367979432,
+            "n": 129,
+            "pred": 0.23022915591836704,
+            "tour": "WTA",
+            "tournament": "Adelaide International"
+          },
+          {
+            "abs_diff": 0.01567858056113311,
+            "actual": 0.2342857142857143,
+            "diff": -0.01567858056113311,
+            "n": 700,
+            "pred": 0.21860713372458118,
+            "tour": "WTA",
+            "tournament": "Australian Open"
+          },
+          {
+            "abs_diff": 0.01707969932225961,
+            "actual": 0.23298429319371727,
+            "diff": 0.01707969932225961,
+            "n": 382,
+            "pred": 0.2500639925159769,
+            "tour": "WTA",
+            "tournament": "BNP Paribas Open"
+          },
+          {
+            "abs_diff": 0.024166007670097467,
+            "actual": 0.28169014084507044,
+            "diff": -0.024166007670097467,
+            "n": 71,
+            "pred": 0.25752413317497297,
+            "tour": "WTA",
+            "tournament": "Bad Homburg"
+          },
+          {
+            "abs_diff": 0.04665900464347872,
+            "actual": 0.34234234234234234,
+            "diff": -0.04665900464347872,
+            "n": 111,
+            "pred": 0.2956833376988636,
+            "tour": "WTA",
+            "tournament": "Berlin"
+          },
+          {
+            "abs_diff": 0.010981990747006676,
+            "actual": 0.22424242424242424,
+            "diff": -0.010981990747006676,
+            "n": 165,
+            "pred": 0.21326043349541757,
+            "tour": "WTA",
+            "tournament": "Brisbane International"
+          },
+          {
+            "abs_diff": 0.01487772595584394,
+            "actual": 0.20634920634920634,
+            "diff": 0.01487772595584394,
+            "n": 252,
+            "pred": 0.22122693230505028,
+            "tour": "WTA",
+            "tournament": "China Open"
+          },
+          {
+            "abs_diff": 0.03534210894046577,
+            "actual": 0.25984251968503935,
+            "diff": -0.03534210894046577,
+            "n": 127,
+            "pred": 0.22450041074457358,
+            "tour": "WTA",
+            "tournament": "Cincinnati Open"
+          },
+          {
+            "abs_diff": 0.03077957001723028,
+            "actual": 0.23776223776223776,
+            "diff": -0.03077957001723028,
+            "n": 143,
+            "pred": 0.20698266774500748,
+            "tour": "WTA",
+            "tournament": "Copa Colsanitas"
+          },
+          {
+            "abs_diff": 0.05110501026984238,
+            "actual": 0.15706806282722513,
+            "diff": 0.05110501026984238,
+            "n": 191,
+            "pred": 0.2081730730970675,
+            "tour": "WTA",
+            "tournament": "Credit One Charleston Open"
+          },
+          {
+            "abs_diff": 0.011173707041476688,
+            "actual": 0.21266968325791855,
+            "diff": -0.011173707041476688,
+            "n": 221,
+            "pred": 0.20149597621644186,
+            "tour": "WTA",
+            "tournament": "Dubai Duty Free Championships"
+          },
+          {
+            "abs_diff": 0.03273447496181153,
+            "actual": 0.27906976744186046,
+            "diff": -0.03273447496181153,
+            "n": 86,
+            "pred": 0.24633529248004893,
+            "tour": "WTA",
+            "tournament": "Eastbourne"
+          },
+          {
+            "abs_diff": 0.0038324707401092006,
+            "actual": 0.2032520325203252,
+            "diff": 0.0038324707401092006,
+            "n": 123,
+            "pred": 0.2070845032604344,
+            "tour": "WTA",
+            "tournament": "Grand Prix De SAR La Princesse Lalla Meryem"
+          },
+          {
+            "abs_diff": 0.003979922026339566,
+            "actual": 0.23255813953488372,
+            "diff": -0.003979922026339566,
+            "n": 86,
+            "pred": 0.22857821750854415,
+            "tour": "WTA",
+            "tournament": "Guadalajara Open Akron"
+          },
+          {
+            "abs_diff": 0.013899076514416214,
+            "actual": 0.24468085106382978,
+            "diff": 0.013899076514416214,
+            "n": 94,
+            "pred": 0.258579927578246,
+            "tour": "WTA",
+            "tournament": "Guangzhou Open"
+          },
+          {
+            "abs_diff": 0.015550245599488033,
+            "actual": 0.2898550724637681,
+            "diff": -0.015550245599488033,
+            "n": 138,
+            "pred": 0.2743048268642801,
+            "tour": "WTA",
+            "tournament": "Hertogenbosch"
+          },
+          {
+            "abs_diff": 0.026005335133589935,
+            "actual": 0.1597222222222222,
+            "diff": 0.026005335133589935,
+            "n": 144,
+            "pred": 0.18572755735581215,
+            "tour": "WTA",
+            "tournament": "Hobart International"
+          },
+          {
+            "abs_diff": 0.055164961798519485,
+            "actual": 0.15294117647058825,
+            "diff": 0.055164961798519485,
+            "n": 85,
+            "pred": 0.20810613826910773,
+            "tour": "WTA",
+            "tournament": "Hong Kong Tennis Open"
+          },
+          {
+            "abs_diff": 0.0029598401562801746,
+            "actual": 0.20175438596491227,
+            "diff": 0.0029598401562801746,
+            "n": 114,
+            "pred": 0.20471422612119244,
+            "tour": "WTA",
+            "tournament": "Internationaux de Strasbourg"
+          },
+          {
+            "abs_diff": 0.012207414866569427,
+            "actual": 0.1942257217847769,
+            "diff": 0.012207414866569427,
+            "n": 381,
+            "pred": 0.20643313665134633,
+            "tour": "WTA",
+            "tournament": "Internazionali BNL d'Italia"
+          },
+          {
+            "abs_diff": 0.052302445840373385,
+            "actual": 0.2875,
+            "diff": -0.052302445840373385,
+            "n": 80,
+            "pred": 0.2351975541596266,
+            "tour": "WTA",
+            "tournament": "Jiangxi Open"
+          },
+          {
+            "abs_diff": 0.03289013798210233,
+            "actual": 0.1744186046511628,
+            "diff": 0.03289013798210233,
+            "n": 86,
+            "pred": 0.20730874263326513,
+            "tour": "WTA",
+            "tournament": "Korea Open"
+          },
+          {
+            "abs_diff": 0.06237054051995103,
+            "actual": 0.1557377049180328,
+            "diff": 0.06237054051995103,
+            "n": 122,
+            "pred": 0.21810824543798382,
+            "tour": "WTA",
+            "tournament": "Merida Open Akron"
+          },
+          {
+            "abs_diff": 0.008297334286080149,
+            "actual": 0.24,
+            "diff": -0.008297334286080149,
+            "n": 375,
+            "pred": 0.23170266571391984,
+            "tour": "WTA",
+            "tournament": "Miami Open"
+          },
+          {
+            "abs_diff": 0.003311856827198034,
+            "actual": 0.2601626016260163,
+            "diff": -0.003311856827198034,
+            "n": 123,
+            "pred": 0.25685074479881825,
+            "tour": "WTA",
+            "tournament": "Mubadala Abu Dhabi Open"
+          },
+          {
+            "abs_diff": 0.018989120694410833,
+            "actual": 0.26666666666666666,
+            "diff": -0.018989120694410833,
+            "n": 75,
+            "pred": 0.24767754597225583,
+            "tour": "WTA",
+            "tournament": "Mubadala Citi DC Open"
+          },
+          {
+            "abs_diff": 0.019392136413652228,
+            "actual": 0.22739018087855298,
+            "diff": -0.019392136413652228,
+            "n": 387,
+            "pred": 0.20799804446490075,
+            "tour": "WTA",
+            "tournament": "Mutua Madrid Open"
+          },
+          {
+            "abs_diff": 0.057804632446816606,
+            "actual": 0.1917808219178082,
+            "diff": 0.057804632446816606,
+            "n": 73,
+            "pred": 0.24958545436462481,
+            "tour": "WTA",
+            "tournament": "National Bank Open"
+          },
+          {
+            "abs_diff": 0.013434512650212671,
+            "actual": 0.19540229885057472,
+            "diff": 0.013434512650212671,
+            "n": 87,
+            "pred": 0.2088368115007874,
+            "tour": "WTA",
+            "tournament": "Ningbo Open"
+          },
+          {
+            "abs_diff": 0.008203908464916976,
+            "actual": 0.26717557251908397,
+            "diff": -0.008203908464916976,
+            "n": 131,
+            "pred": 0.258971664054167,
+            "tour": "WTA",
+            "tournament": "Nottingham"
+          },
+          {
+            "abs_diff": 0.03566340114260397,
+            "actual": 0.24193548387096775,
+            "diff": -0.03566340114260397,
+            "n": 62,
+            "pred": 0.20627208272836378,
+            "tour": "WTA",
+            "tournament": "Olympics"
+          },
+          {
+            "abs_diff": 0.01202969117254929,
+            "actual": 0.22935779816513763,
+            "diff": -0.01202969117254929,
+            "n": 109,
+            "pred": 0.21732810699258834,
+            "tour": "WTA",
+            "tournament": "Omnium Banque Nationale"
+          },
+          {
+            "abs_diff": 0.009082137915310956,
+            "actual": 0.2152777777777778,
+            "diff": -0.009082137915310956,
+            "n": 144,
+            "pred": 0.20619563986246683,
+            "tour": "WTA",
+            "tournament": "Open Capfinances Rouen Metropole"
+          },
+          {
+            "abs_diff": 0.013427767846296484,
+            "actual": 0.20212765957446807,
+            "diff": 0.013427767846296484,
+            "n": 94,
+            "pred": 0.21555542742076456,
+            "tour": "WTA",
+            "tournament": "Prague Open"
+          },
+          {
+            "abs_diff": 0.01677995191252768,
+            "actual": 0.2290748898678414,
+            "diff": -0.01677995191252768,
+            "n": 227,
+            "pred": 0.21229493795531373,
+            "tour": "WTA",
+            "tournament": "Qatar TotalEnergies Open"
+          },
+          {
+            "abs_diff": 0.016877805397594314,
+            "actual": 0.22347949080622348,
+            "diff": -0.016877805397594314,
+            "n": 707,
+            "pred": 0.20660168540862917,
+            "tour": "WTA",
+            "tournament": "Roland Garros"
+          },
+          {
+            "abs_diff": 0.03811548075211327,
+            "actual": 0.24778761061946902,
+            "diff": -0.03811548075211327,
+            "n": 113,
+            "pred": 0.20967212986735576,
+            "tour": "WTA",
+            "tournament": "Stuttgart"
+          },
+          {
+            "abs_diff": 0.003469710591695929,
+            "actual": 0.18823529411764706,
+            "diff": -0.003469710591695929,
+            "n": 85,
+            "pred": 0.18476558352595113,
+            "tour": "WTA",
+            "tournament": "Tennis in the Land"
+          },
+          {
+            "abs_diff": 0.020916815509229553,
+            "actual": 0.2,
+            "diff": 0.020916815509229553,
+            "n": 90,
+            "pred": 0.22091681550922956,
+            "tour": "WTA",
+            "tournament": "Thailand Open"
+          },
+          {
+            "abs_diff": 0.03082582511173701,
+            "actual": 0.23529411764705882,
+            "diff": -0.03082582511173701,
+            "n": 68,
+            "pred": 0.2044682925353218,
+            "tour": "WTA",
+            "tournament": "Toray Pan Pacific Open"
+          },
+          {
+            "abs_diff": 0.026484354318619507,
+            "actual": 0.19117647058823528,
+            "diff": 0.026484354318619507,
+            "n": 136,
+            "pred": 0.2176608249068548,
+            "tour": "WTA",
+            "tournament": "Transylvania Open"
+          },
+          {
+            "abs_diff": 0.027134133925176412,
+            "actual": 0.20600858369098712,
+            "diff": 0.027134133925176412,
+            "n": 466,
+            "pred": 0.23314271761616354,
+            "tour": "WTA",
+            "tournament": "US Open"
+          },
+          {
+            "abs_diff": 0.02156941657392103,
+            "actual": 0.18478260869565216,
+            "diff": 0.02156941657392103,
+            "n": 92,
+            "pred": 0.2063520252695732,
+            "tour": "WTA",
+            "tournament": "UniCredit Iasi Open"
+          },
+          {
+            "abs_diff": 0.02053452777114212,
+            "actual": 0.16666666666666666,
+            "diff": 0.02053452777114212,
+            "n": 66,
+            "pred": 0.18720119443780878,
+            "tour": "WTA",
+            "tournament": "United Cup"
+          },
+          {
+            "abs_diff": 0.0007050781348260649,
+            "actual": 0.2283464566929134,
+            "diff": -0.0007050781348260649,
+            "n": 127,
+            "pred": 0.22764137855808733,
+            "tour": "WTA",
+            "tournament": "Upper Austria Ladies Linz"
+          },
+          {
+            "abs_diff": 0.018504014660396945,
+            "actual": 0.21794871794871795,
+            "diff": 0.018504014660396945,
+            "n": 78,
+            "pred": 0.2364527326091149,
+            "tour": "WTA",
+            "tournament": "Western & Southern Open"
+          },
+          {
+            "abs_diff": 0.02977426031156266,
+            "actual": 0.2632696390658174,
+            "diff": -0.02977426031156266,
+            "n": 471,
+            "pred": 0.23349537875425475,
+            "tour": "WTA",
+            "tournament": "Wimbledon"
+          },
+          {
+            "abs_diff": 0.00992218464103789,
+            "actual": 0.23972602739726026,
+            "diff": -0.00992218464103789,
+            "n": 146,
+            "pred": 0.22980384275622237,
+            "tour": "WTA",
+            "tournament": "Wuhan Open"
+          }
+        ],
+        "mean_signed_error": 0.003410425404657547,
+        "n_tournaments": 112,
+        "share_abs_gt_10pp": 0.008928571428571428
+      }
+    }
+  },
+  "generated_at": "2026-06-17T19:15:21",
+  "market_gate_pass": false,
+  "probability_gate_pass": false,
+  "reason": "probability_gate_failed",
+  "recommendations_allowed": false,
+  "status": "FAIL"
+}

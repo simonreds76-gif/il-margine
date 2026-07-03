@@ -1,6 +1,7 @@
 # One-time task registration for fully automatic pipeline.
 # Daily fair-odds refresh: 10:05 and 22:30.
 # Tennis Pinnacle history capture: every 30 minutes from 08:00 to 23:30.
+# Use hidden PowerShell windows so scheduled jobs do not interrupt desktop work.
 
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
@@ -9,17 +10,20 @@ $dailyScript = Join-Path $root "scripts\oncourt-daily.ps1"
 $amRefreshScript = Join-Path $root "scripts\oncourt-am-refresh.ps1"
 $weeklyScript = Join-Path $root "scripts\oncourt-weekly.ps1"
 $closeCaptureScript = Join-Path $root "scripts\pinnacle-close-capture.ps1"
+$healthScript = Join-Path $root "scripts\tennis-health-check.ps1"
 $psExe = "$env:WINDIR\System32\WindowsPowerShell\v1.0\powershell.exe"
 
 if (!(Test-Path $dailyScript)) { throw "Missing $dailyScript" }
 if (!(Test-Path $amRefreshScript)) { throw "Missing $amRefreshScript" }
 if (!(Test-Path $weeklyScript)) { throw "Missing $weeklyScript" }
 if (!(Test-Path $closeCaptureScript)) { throw "Missing $closeCaptureScript" }
+if (!(Test-Path $healthScript)) { throw "Missing $healthScript" }
 
-$dailyCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -File `"$dailyScript`""
-$amRefreshCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -File `"$amRefreshScript`""
-$weeklyCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -File `"$weeklyScript`""
-$closeCaptureCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -File `"$closeCaptureScript`""
+$dailyCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File `"$dailyScript`""
+$amRefreshCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File `"$amRefreshScript`""
+$weeklyCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File `"$weeklyScript`""
+$closeCaptureCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File `"$closeCaptureScript`""
+$healthCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File `"$healthScript`""
 
 function Test-ScheduledTaskExists([string]$taskName) {
     & cmd.exe /c "schtasks /Query /TN `"$taskName`" >nul 2>&1"
@@ -110,17 +114,24 @@ function Set-ScheduledTaskBridgeHardening(
 Remove-ScheduledTaskIfExists "OnCourt Daily Sync"
 Remove-ScheduledTaskIfExists "OnCourt Weekly"
 Remove-ScheduledTaskIfExists "IlMargine-PinnacleCloseCapture"
+Remove-ScheduledTaskIfExists "IlMargine-Tennis-Health"
 
 schtasks /Create /TN "IlMargine-Daily" /SC DAILY /ST 22:30 /TR "$dailyCmd" /F | Out-Host
 schtasks /Create /TN "IlMargine-Daily-AM" /SC DAILY /ST 10:05 /TR "$amRefreshCmd" /F | Out-Host
 schtasks /Create /TN "IlMargine-Weekly" /SC WEEKLY /D SUN /ST 03:00 /TR "$weeklyCmd" /F | Out-Host
 schtasks /Create /TN "IlMargine-Tennis-Close-Capture" /SC DAILY /ST 08:00 /RI 30 /DU 16:00 /TR "$closeCaptureCmd" /F | Out-Host
+schtasks /Create /TN "IlMargine-Tennis-Health-AM" /SC DAILY /ST 11:15 /TR "$healthCmd" /F | Out-Host
+schtasks /Create /TN "IlMargine-Tennis-Health-PM" /SC DAILY /ST 23:15 /TR "$healthCmd" /F | Out-Host
 
 Set-ScheduledTaskBatteryFriendly "IlMargine-Daily"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Daily-AM"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Weekly"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Tennis-Close-Capture"
+Set-ScheduledTaskBatteryFriendly "IlMargine-Tennis-Health-AM"
+Set-ScheduledTaskBatteryFriendly "IlMargine-Tennis-Health-PM"
 Set-ScheduledTaskBridgeHardening "IlMargine-Tennis-Close-Capture"
+Set-ScheduledTaskBridgeHardening "IlMargine-Tennis-Health-AM" -executionTimeLimit "PT5M" -restartCount 1
+Set-ScheduledTaskBridgeHardening "IlMargine-Tennis-Health-PM" -executionTimeLimit "PT5M" -restartCount 1
 
 if (Test-ScheduledTaskExists "IlMargine-Tennis-Shadow-Settle") {
     schtasks /Delete /TN "IlMargine-Tennis-Shadow-Settle" /F | Out-Host
@@ -132,6 +143,8 @@ schtasks /Query /TN "IlMargine-Daily" | Out-Host
 schtasks /Query /TN "IlMargine-Daily-AM" | Out-Host
 schtasks /Query /TN "IlMargine-Weekly" | Out-Host
 schtasks /Query /TN "IlMargine-Tennis-Close-Capture" | Out-Host
+schtasks /Query /TN "IlMargine-Tennis-Health-AM" | Out-Host
+schtasks /Query /TN "IlMargine-Tennis-Health-PM" | Out-Host
 Write-Host ""
 Write-Host "Optional immediate test:"
 Write-Host "  schtasks /Run /TN IlMargine-Daily"

@@ -54,6 +54,16 @@ def parse_int(value: object) -> int:
         return 0
 
 
+def parse_score_tiebreaks(value: object) -> tuple[int, int, int, int]:
+    """Return (sets_played, tiebreak_sets, first_set_tiebreak, match_had_tiebreak)."""
+    text = str(value or "").strip()
+    sets = re.findall(r"(\d+)\s*-\s*(\d+)(?:\s*\([^)]*\))?", text)
+    if not sets:
+        return 0, 0, 0, 0
+    flags = [1 if {int(left), int(right)} == {6, 7} else 0 for left, right in sets]
+    return len(sets), sum(flags), flags[0] if flags else 0, 1 if any(flags) else 0
+
+
 def norm_surface(value: object) -> str:
     lower = str(value or "").strip().lower()
     if "clay" in lower:
@@ -87,6 +97,10 @@ def empty_totals() -> dict[str, float]:
         "ret_first_won": 0,
         "ret_second_points": 0,
         "ret_second_won": 0,
+        "sets_played": 0,
+        "tiebreak_sets": 0,
+        "first_set_tiebreaks": 0,
+        "match_tiebreaks": 0,
     }
 
 
@@ -114,6 +128,7 @@ def add_side(
     bp_saved = parse_int(row.get(f"{prefix}_bpSaved"))
     opp_bp_faced = parse_int(row.get(f"{opp_prefix}_bpFaced"))
     opp_bp_saved = parse_int(row.get(f"{opp_prefix}_bpSaved"))
+    sets_played, tiebreak_sets, first_set_tiebreak, match_tiebreak = parse_score_tiebreaks(row.get("score"))
 
     totals["matches"] += 1
     totals["wins"] += 1 if won else 0
@@ -133,6 +148,10 @@ def add_side(
     totals["ret_first_won"] += max(0, opp_first_in - opp_first_won)
     totals["ret_second_points"] += opp_second_attempts
     totals["ret_second_won"] += max(0, opp_second_attempts - opp_second_won)
+    totals["sets_played"] += sets_played
+    totals["tiebreak_sets"] += tiebreak_sets
+    totals["first_set_tiebreaks"] += first_set_tiebreak
+    totals["match_tiebreaks"] += match_tiebreak
 
 
 def safe_div(num: float, den: float) -> float | None:
@@ -168,10 +187,17 @@ def totals_row(
         "broken": str(int(totals["broken"])),
         "return_games": str(int(totals["return_games"])),
         "service_games_break_sample": str(int(totals["service_games_break_sample"])),
+        "sets_played": str(int(totals["sets_played"])),
+        "tiebreak_sets": str(int(totals["tiebreak_sets"])),
+        "first_set_tiebreaks": str(int(totals["first_set_tiebreaks"])),
+        "match_tiebreaks": str(int(totals["match_tiebreaks"])),
         "ace_rate": fmt(safe_div(totals["aces"], totals["svpt"])),
         "df_rate": fmt(safe_div(totals["dfs"], totals["svpt"])),
         "break_for_rate": fmt(safe_div(totals["breaks_for"], totals["return_games"])),
         "broken_rate": fmt(safe_div(totals["broken"], totals["service_games_break_sample"])),
+        "tiebreak_set_rate": fmt(safe_div(totals["tiebreak_sets"], totals["sets_played"])),
+        "first_set_tiebreak_rate": fmt(safe_div(totals["first_set_tiebreaks"], totals["matches"])),
+        "match_tiebreak_rate": fmt(safe_div(totals["match_tiebreaks"], totals["matches"])),
         "first_serve_pct": fmt(safe_div(totals["first_in"], totals["svpt"])),
         "first_serve_win_pct": fmt(safe_div(totals["first_won"], totals["first_in"])),
         "second_serve_win_pct": fmt(safe_div(totals["second_won"], totals["second_attempts"])),
@@ -217,8 +243,9 @@ def main() -> None:
                     for window, days in WINDOW_DAYS.items():
                         if age_days > days:
                             continue
-                        key = (tour, player_id, surface, window)
-                        add_side(buckets[key], row, won=won, prefix=prefix, opp_prefix=opp_prefix)
+                        for bucket_surface in (surface, "All"):
+                            key = (tour, player_id, bucket_surface, window)
+                            add_side(buckets[key], row, won=won, prefix=prefix, opp_prefix=opp_prefix)
 
     rows: list[dict[str, str]] = []
     for (tour, player_id, surface, window), totals in sorted(buckets.items()):
@@ -253,10 +280,17 @@ def main() -> None:
         "broken",
         "return_games",
         "service_games_break_sample",
+        "sets_played",
+        "tiebreak_sets",
+        "first_set_tiebreaks",
+        "match_tiebreaks",
         "ace_rate",
         "df_rate",
         "break_for_rate",
         "broken_rate",
+        "tiebreak_set_rate",
+        "first_set_tiebreak_rate",
+        "match_tiebreak_rate",
         "first_serve_pct",
         "first_serve_win_pct",
         "second_serve_win_pct",

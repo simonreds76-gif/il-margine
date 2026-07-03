@@ -207,7 +207,8 @@ VOLUME_200_RULES: list[dict[str, Any]] = [
     {"surface": "Hard", "series": "Grand Slam", "confidence": {"high", "medium"}, "min_value_pct": 5.0},
     {"surface": "Hard", "series": "ATP500", "confidence": {"high", "medium"}, "min_value_pct": 10.0},
     {"surface": "Clay", "series": "ATP500", "confidence": {"high", "medium"}, "min_value_pct": 10.0},
-    {"surface": "Grass", "series": "ATP500", "confidence": {"high", "medium"}, "min_value_pct": 10.0},
+    # Grass is split into grass_bo3 so it can carry its own fav-agreement guard
+    # and promotion/kill criteria instead of hiding inside volume_200.
 ]
 
 MATCH_ONLY_SIGNAL_PROFILES = {"volume_200", "challenger_ml_shadow", "grass_bo3", "cpi_speed_shadow"}
@@ -1187,6 +1188,20 @@ def clay_bo3_scope_reason(surface: str, series_bucket: str, league: str, confide
     return None
 
 
+def grass_bo3_scope_reason(surface: str, series_bucket: str, league: str, confidence: str) -> str | None:
+    if league != "ATP":
+        return "league"
+    if surface != "Grass":
+        return "surface"
+    if series_bucket == "Grand Slam":
+        return "best_of_five"
+    if series_bucket not in GRASS_BO3_ALLOWED_SERIES:
+        return "series_blocked"
+    if (confidence or "").strip().lower() not in GRASS_BO3_ALLOWED_CONFIDENCE:
+        return "confidence_low"
+    return None
+
+
 def shadow_profile_league_allowed(profile_name: str, league: str) -> bool:
     allowed = SHADOW_PROFILE_ALLOWED_LEAGUES.get(profile_name)
     if not allowed:
@@ -1766,7 +1781,7 @@ def write_signals_current_artifact() -> None:
     SIGNALS_CURRENT_JSON.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
-PHASE0_RESEARCH_LANE_STUBS = {"slam_bo5", "challenger_ml", "indoor_bo3", "grass_bo3"}
+PHASE0_RESEARCH_LANE_STUBS = {"slam_bo5", "challenger_ml", "indoor_bo3"}
 
 
 def phase0_signal_profile_dispatch(

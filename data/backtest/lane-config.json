@@ -153,18 +153,22 @@
     },
     "grass_bo3": {
       "label": "Grass bo3",
-      "state": "deferred",
-      "phase": 5,
+      "state": "internal_shadow",
+      "phase": 2,
+      "description": "Active internal shadow lane from the grass audit: ATP grass warm-ups only, ML-only, favourite-agreement guard, value capped to avoid phantom model edges. Wimbledon/Grand Slams remain excluded.",
       "filters": {
         "league": ["ATP"],
         "surface": ["Grass"],
+        "series": ["ATP250", "ATP500"],
+        "confidence": ["high", "medium"],
         "best_of": [3],
-        "exclude_grand_slams": true
+        "exclude_grand_slams": true,
+        "require_model_market_favourite_agreement": true
       },
       "markets": {
-        "fav_hc": { "state": "planned_shadow" },
-        "over_games": { "state": "planned_shadow" },
-        "ml": { "state": "planned_shadow", "min_edge_pct": 8 }
+        "ml": { "state": "internal_shadow", "edge_pct": [10, 30] },
+        "fav_hc": { "state": "blocked_no_grass_training_set" },
+        "over_games": { "state": "future_shadow" }
       },
       "calibration": {
         "path": "data/backtest/calibration/grass-bo3-calibration.json",

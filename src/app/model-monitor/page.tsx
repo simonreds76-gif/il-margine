@@ -1426,6 +1426,9 @@ export default async function ModelMonitorPage() {
           <Link href="/model-monitor/tennis-props" className="inline-flex items-center rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1.5 text-sm text-emerald-200 transition-colors hover:border-emerald-400/40 hover:text-emerald-100">
             Aces / DFs
           </Link>
+          <Link href="/model-monitor/tennis" className="inline-flex items-center rounded-full border border-teal-500/25 bg-teal-500/10 px-3 py-1.5 text-sm text-teal-200 transition-colors hover:border-teal-400/40 hover:text-teal-100">
+            Tennis ML Lanes
+          </Link>
           <Link href="/api/model-monitor/betting-archive" className="inline-flex items-center rounded-full border border-cyan-500/25 bg-cyan-500/10 px-3 py-1.5 text-sm text-cyan-200 transition-colors hover:border-cyan-400/40 hover:text-cyan-100">
             Download Bet Archive
           </Link>
@@ -1491,6 +1494,16 @@ export default async function ModelMonitorPage() {
             <p className="mt-1 text-sm text-slate-400">Direct entry points for the live model monitors and diagnostics pages.</p>
           </div>
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <Link
+              href="/model-monitor/tennis"
+              className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-teal-500/30"
+            >
+              <div className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-teal-300">Tennis ML</div>
+              <div className="text-lg font-semibold text-white">Surface Lanes</div>
+              <p className="mt-2 text-sm leading-6 text-slate-400">
+                Hard, clay, grass, Challenger, and indoor research-lane status with the active surface policy notes.
+              </p>
+            </Link>
             <Link
               href="/model-monitor/tennis-props"
               className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-emerald-500/30"
