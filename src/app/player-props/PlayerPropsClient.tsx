@@ -8,7 +8,9 @@ import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BetMobileMeta from "@/components/BetMobileMeta";
 import MarketBadge from "@/components/MarketBadge";
 import PublicBetsTable from "@/components/PublicBetsTable";
+import ProfitProgressionPanel, { type CategoryProgressionRow } from "@/components/ProfitProgressionPanel";
 import ResultBadge from "@/components/ResultBadge";
+import WorldCupMatchGroups from "@/components/WorldCupMatchGroups";
 
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
@@ -21,6 +23,7 @@ type PlayerPropsClientProps = {
   initialPendingBets?: Bet[];
   initialRecentBets?: Bet[];
   initialStats?: CategoryStats[];
+  initialProgressionRows?: CategoryProgressionRow[];
 };
 
 const darkLogoFilter =
@@ -40,13 +43,19 @@ export default function PlayerProps({
   initialPendingBets = [],
   initialRecentBets = [],
   initialStats = [],
+  initialProgressionRows = [],
 }: PlayerPropsClientProps) {
   const router = useRouter();
   const [activeLeague, setActiveLeague] = useState("all");
   const [pendingBets, setPendingBets] = useState<Bet[]>(initialPendingBets);
   const [recentBets, setRecentBets] = useState<Bet[]>(initialRecentBets);
   const [stats, setStats] = useState<CategoryStats[]>(initialStats);
-  const hasInitialPayload = initialPendingBets.length > 0 || initialRecentBets.length > 0 || initialStats.length > 0;
+  const [progressionRows, setProgressionRows] = useState<CategoryProgressionRow[]>(initialProgressionRows);
+  const hasInitialPayload =
+    initialPendingBets.length > 0 ||
+    initialRecentBets.length > 0 ||
+    initialStats.length > 0 ||
+    initialProgressionRows.length > 0;
   const [loading, setLoading] = useState(!hasInitialPayload);
   const [showAllPending, setShowAllPending] = useState(false);
   const [showAllRecent, setShowAllRecent] = useState(false);
@@ -87,6 +96,7 @@ export default function PlayerProps({
       setPendingBets((json.pending ?? []) as Bet[]);
       setRecentBets((json.recent ?? []) as Bet[]);
       setStats((json.stats ?? []) as CategoryStats[]);
+      setProgressionRows((json.progression ?? []) as CategoryProgressionRow[]);
     } catch (error) {
       console.error("Error fetching player props record:", error);
     } finally {
@@ -221,16 +231,27 @@ export default function PlayerProps({
     };
   };
 
+  const getArchiveStatsForLeague = (leagueId: string) => {
+    if (leagueId === "all") return BASELINE_STATS.props;
+    return BASELINE_STATS.categoryBaselines.props[leagueId] ?? null;
+  };
+
   const categoryForBet = (bet: Bet) => getDisplayBetCategory({ market: bet.market, category: bet.category, event: bet.event });
   const filteredPending = activeLeague === "all" ? pendingBets : pendingBets.filter(b => categoryForBet(b) === activeLeague);
   const filteredRecent = activeLeague === "all" ? recentBets : recentBets.filter(b => categoryForBet(b) === activeLeague);
+  const filteredProgressionRows =
+    activeLeague === "all" ? progressionRows : progressionRows.filter((row) => normalizeBetCategory(row.category) === activeLeague);
 
   // Display limits: show 5 initially, or all if expanded
   const displayedPending = showAllPending ? filteredPending : filteredPending.slice(0, 5);
   const displayedRecent = showAllRecent ? filteredRecent : filteredRecent.slice(0, 5);
 
-  const activeColor = leagueConfig.find(l => l.id === activeLeague)?.color || "emerald";
+  const activeName = leagueConfig.find(l => l.id === activeLeague)?.name || "Selected";
+  const isWorldCup = activeLeague === "worldcup";
   const currentStats = getStatsForLeague(activeLeague);
+  const archiveStats = getArchiveStatsForLeague(activeLeague);
+  const neutralBar = "from-slate-600 to-slate-400";
+  const roiBar = currentStats.roi >= 0 ? "from-emerald-500 to-emerald-400" : "from-rose-500 to-rose-400";
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
@@ -278,7 +299,7 @@ export default function PlayerProps({
                   onClick={() => setActiveLeague(league.id)}
                   className={`flex min-w-[152px] items-center gap-3 rounded-xl border px-3 py-3 text-left transition-all sm:min-w-[174px] ${
                     isActive
-                      ? `bg-slate-900/80 ${colorClasses[league.color].border} ${colorClasses[league.color].text}`
+                      ? `bg-slate-900/80 ${colorClasses[league.color].border} text-slate-100`
                       : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
                   }`}
                 >
@@ -311,34 +332,39 @@ export default function PlayerProps({
               <div className="text-2xl font-bold text-white font-mono mb-2">{currentStats.total_bets}</div>
               <div className="text-xs text-slate-500 mb-3">Total Bets</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${Math.min((currentStats.total_bets / 1000) * 100, 100)}%` }} />
+                <div className={`h-full bg-gradient-to-r ${neutralBar} rounded-full`} style={{ width: `${Math.min((currentStats.total_bets / 1000) * 100, 100)}%` }} />
               </div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
               <div className={`text-2xl font-bold ${roiToneClass(currentStats.roi)} font-mono mb-2`}>{currentStats.roi > 0 ? "+" : ""}{currentStats.roi.toFixed(1)}%</div>
               <div className="text-xs text-slate-500 mb-3">ROI</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${Math.min(Math.abs(currentStats.roi) * 3, 100)}%` }} />
+                <div className={`h-full bg-gradient-to-r ${roiBar} rounded-full`} style={{ width: `${Math.min(Math.abs(currentStats.roi) * 3, 100)}%` }} />
               </div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className={`text-2xl font-bold ${colorClasses[activeColor].text} font-mono mb-2`}>{currentStats.win_rate.toFixed(1)}%</div>
+              <div className="text-2xl font-bold text-slate-100 font-mono mb-2">{currentStats.win_rate.toFixed(1)}%</div>
               <div className="text-xs text-slate-500 mb-3">Win Rate</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${currentStats.win_rate}%` }} />
+                <div className={`h-full bg-gradient-to-r ${neutralBar} rounded-full`} style={{ width: `${currentStats.win_rate}%` }} />
               </div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className={`text-2xl font-bold ${colorClasses[activeColor].text} font-mono mb-2`}>{formatOdds(currentStats.avg_odds)}</div>
+              <div className="text-2xl font-bold text-slate-100 font-mono mb-2">{formatOdds(currentStats.avg_odds)}</div>
               <div className="text-xs text-slate-500 mb-3">Avg Odds</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${(currentStats.avg_odds / 3) * 100}%` }} />
+                <div className={`h-full bg-gradient-to-r ${neutralBar} rounded-full`} style={{ width: `${(currentStats.avg_odds / 3) * 100}%` }} />
               </div>
             </div>
           </div>
+
+          <ProfitProgressionPanel rows={filteredProgressionRows} activeName={activeName} archiveStats={archiveStats} />
+
           <p className="mt-4 max-w-3xl text-xs leading-relaxed text-slate-500">
             Record cards use the full tracked category record. The recent selections table below is only a browsing
-            sample from the latest 50 settled player-prop picks, then filtered by the league tab you choose.
+            sample from the wider settled player-prop feed, then filtered by the league tab you choose. The P/L
+            progression shows any pre-tracking baseline as a dashed aggregate summary, then uses settled public ledger
+            rows for the selected tab.
           </p>
         </div>
       </section>
@@ -360,6 +386,9 @@ export default function PlayerProps({
               <p className="text-slate-500">Loading...</p>
             </div>
           ) : filteredPending.length > 0 ? (
+            isWorldCup ? (
+              <WorldCupMatchGroups bets={filteredPending} mode="pending" />
+            ) : (
             <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
               {/* Desktop Table */}
               <div className="hidden md:block overflow-x-auto -mx-4 sm:mx-0">
@@ -422,6 +451,7 @@ export default function PlayerProps({
                 </div>
               )}
             </div>
+            )
           ) : (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
               <p className="text-slate-500">No active selections at the moment</p>
@@ -483,11 +513,14 @@ export default function PlayerProps({
             <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Recent Selections</h2>
             <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-500">
               This is a recent-results window, not the source of truth for the ROI card above. Older bets still count
-              in the category record even when they have rolled out of the latest-50 settled feed.
+              in the category record even when they have rolled out of the wider settled feed.
             </p>
           </div>
 
           {filteredRecent.length > 0 ? (
+            isWorldCup ? (
+              <WorldCupMatchGroups bets={filteredRecent} mode="settled" />
+            ) : (
             <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
               {/* Desktop Table */}
               <div className="hidden md:block overflow-x-auto -mx-4 sm:mx-0">
@@ -536,10 +569,10 @@ export default function PlayerProps({
                 ))}
               </div>
 
-              {/* Note when showing max 50 results */}
-              {showAllRecent && filteredRecent.length === 50 && (
+              {/* Note when showing the capped settled feed */}
+              {showAllRecent && activeLeague === "all" && recentBets.length >= 500 && (
                 <div className="border-t border-slate-800 px-4 py-2 text-center">
-                  <p className="text-xs text-slate-500">Showing the 50 most recent settled player-prop bets; older settled bets remain in the record cards.</p>
+                  <p className="text-xs text-slate-500">Showing the most recent settled player-prop feed; older settled bets remain in the record cards and progression.</p>
                 </div>
               )}
 
@@ -559,6 +592,7 @@ export default function PlayerProps({
                 </div>
               )}
             </div>
+            )
           ) : (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
               <p className="text-slate-500">No settled bets yet</p>
@@ -573,3 +607,5 @@ export default function PlayerProps({
     </div>
   );
 }
+
+

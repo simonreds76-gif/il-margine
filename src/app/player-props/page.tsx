@@ -6,7 +6,7 @@ export const revalidate = 60;
 export default async function PlayerProps() {
   const payload = await fetchMarketPayload("props").catch((error) => {
     console.error("[player-props] failed to load initial public record", error);
-    return { pending: [], recent: [], stats: [] };
+    return { pending: [], recent: [], stats: [], progression: [] };
   });
 
   return (
@@ -14,6 +14,7 @@ export default async function PlayerProps() {
       initialPendingBets={payload.pending}
       initialRecentBets={payload.recent}
       initialStats={payload.stats}
+      initialProgressionRows={payload.progression}
     />
   );
 }

@@ -6,7 +6,7 @@ export const revalidate = 60;
 export default async function TennisTips() {
   const payload = await fetchMarketPayload("tennis").catch((error) => {
     console.error("[tennis-tips] failed to load initial public record", error);
-    return { pending: [], recent: [], stats: [] };
+    return { pending: [], recent: [], stats: [], progression: [] };
   });
 
   return (
@@ -14,6 +14,7 @@ export default async function TennisTips() {
       initialPendingBets={payload.pending}
       initialRecentBets={payload.recent}
       initialStats={payload.stats}
+      initialProgressionRows={payload.progression}
     />
   );
 }
