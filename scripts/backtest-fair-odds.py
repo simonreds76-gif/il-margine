@@ -82,9 +82,38 @@ POINT_CLAMP = (0.42, 0.80)
 RETURN_CLAMP = (0.20, 0.55)
 SHRINKAGE_N = 40
 
-SURFACE_LEAGUE_AVG = {"Hard": 0.64, "Clay": 0.62, "Grass": 0.67, "I.hard": 0.64, "N/A": 0.64}
-SURFACE_AVG_HOLD = {"Hard": 0.4342, "Clay": 0.4189, "Grass": 0.5053, "I.hard": 0.5099, "N/A": 0.44}
-SURFACE_AVG_RETURN = {"Hard": 0.3467, "Clay": 0.3643, "Grass": 0.3166, "I.hard": 0.3413, "N/A": 0.35}
+SURFACE_LEAGUE_AVG = {
+    "Hard": 0.64,
+    "Clay": 0.62,
+    "Grass": 0.67,
+    "I.hard": 0.64,
+    "N/A": 0.64,
+    # Shadow CPI regime surfaces. These are priors only; player stats/Elo are
+    # still learned from matches tagged into the same speed regime.
+    "SpeedFast": 0.67,
+    "SpeedNeutral": 0.64,
+    "SpeedSlow": 0.62,
+}
+SURFACE_AVG_HOLD = {
+    "Hard": 0.4342,
+    "Clay": 0.4189,
+    "Grass": 0.5053,
+    "I.hard": 0.5099,
+    "N/A": 0.44,
+    "SpeedFast": 0.5053,
+    "SpeedNeutral": 0.4342,
+    "SpeedSlow": 0.4189,
+}
+SURFACE_AVG_RETURN = {
+    "Hard": 0.3467,
+    "Clay": 0.3643,
+    "Grass": 0.3166,
+    "I.hard": 0.3413,
+    "N/A": 0.35,
+    "SpeedFast": 0.3166,
+    "SpeedNeutral": 0.3467,
+    "SpeedSlow": 0.3643,
+}
 
 RANK_LOGIT_SCALE = 0.95
 RANK_CLASS_GAP_RATIO_START = 1.40
@@ -111,6 +140,14 @@ H2H_MIN_MATCHES = 5
 H2H_WEIGHT = 0.03
 H2H_CAP = 0.02
 H2H_PRIOR_K = 0.0
+RECENT_REMATCH_LOOKBACK_DAYS = 21
+RECENT_REMATCH_WEIGHT = 0.045
+RECENT_REMATCH_CAP = 0.035
+RECENT_REMATCH_RANK_ELO_DAMP_SURFACES = {"Grass"}
+RECENT_REMATCH_RANK_ELO_DAMP_LOOKBACK_DAYS = 14
+RECENT_REMATCH_RANK_ELO_DAMP_MIN_MODEL_GAP = 0.12
+RECENT_REMATCH_RANK_ELO_DAMP_MAX_MIN_MATCHES = 12
+RECENT_REMATCH_RANK_ELO_DAMP_MULT = 0.30
 
 TOURNAMENT_HISTORY_MIN_MATCHES = 2
 TOURNAMENT_HISTORY_WEIGHT = 0.08
@@ -154,7 +191,18 @@ ELO_RELIABILITY_MIN = 0.50
 DEFAULT_CPI_LOOKBACK_YEARS = 3
 DEFAULT_CPI_MATCH_WEIGHT = 0.025
 DEFAULT_CPI_MATCH_CAP = 0.012
+DEFAULT_CPI_GRASS_MATCH_CAP = 0.030
 DEFAULT_CPI_Z_CAP = 2.0
+CPI_MIN_VALUE = 0.25
+CPI_MAX_VALUE = 1.75
+CPI_REGIME_FAST_Z = 0.50
+CPI_REGIME_SLOW_Z = -0.50
+CPI_SPEED_SURFACES = {"SpeedFast", "SpeedNeutral", "SpeedSlow"}
+CPI_REGIME_TO_MATH_SURFACE = {
+    "SpeedFast": "Grass",
+    "SpeedNeutral": "Hard",
+    "SpeedSlow": "Clay",
+}
 MIN_TOURNAMENT_SPEED_MATCHES = 50
 TOURNAMENT_SPEED_LOOKBACK_DAYS = 365 * 3
 TOURNAMENT_SPEED_VENUE_FULL_MATCHES = 150
@@ -232,6 +280,7 @@ class HistoryEvent:
     tournament_speed_key: str
     winner_stats: tuple[int, ...] | None  # (svc_w, svc_t, ret_w, ret_t) or +5 decomposed
     loser_stats: tuple[int, ...] | None
+    speed_surface: str | None = None
 
 
 def _float(v: Any, default: float | None = None) -> float | None:
@@ -362,6 +411,8 @@ def _mean_std(values: list[float]) -> tuple[float, float]:
 
 
 def _surface_candidates(surface: str) -> tuple[str, ...]:
+    if surface in CPI_SPEED_SURFACES:
+        return (surface, "N/A")
     if surface == "I.hard":
         return ("I.hard", "Hard", "N/A")
     if surface == "Hard":
@@ -801,16 +852,13 @@ class ModelState:
             lambda: {"dates": [], "serve_won_prefix": [0.0], "serve_total_prefix": [0.0], "match_prefix": [0]}
         )
         self.h2h: dict[tuple[int, int, str], list[int]] = defaultdict(lambda: [0, 0, 0])  # wins_a, wins_b, matches
+        self.h2h_last: dict[tuple[int, int, str], tuple[int, int]] = {}  # winner_id, date_ord
         self.vs_leftie: dict[tuple[int, str], list[int]] = defaultdict(lambda: [0, 0])  # wins, matches
 
     def _elo_expected(self, elo_a: float, elo_b: float) -> float:
         return 1.0 / (1.0 + 10.0 ** ((elo_b - elo_a) / 400.0))
 
-    def update(self, ev: HistoryEvent, lefties: set[int]) -> None:
-        w = ev.winner_id
-        l = ev.loser_id
-        surf = ev.surface
-
+    def _update_surface_elo(self, w: int, l: int, surf: str) -> tuple[float, float]:
         e_w_s = self.elo_surface.get((w, surf), DEFAULT_ELO)
         e_l_s = self.elo_surface.get((l, surf), DEFAULT_ELO)
         exp_w_s = self._elo_expected(e_w_s, e_l_s)
@@ -818,6 +866,16 @@ class ModelState:
         self.elo_surface[(l, surf)] = e_l_s + ELO_K_SURFACE * (0.0 - (1.0 - exp_w_s))
         self.elo_surface_matches[(w, surf)] += 1
         self.elo_surface_matches[(l, surf)] += 1
+        return e_w_s, e_l_s
+
+    def update(self, ev: HistoryEvent, lefties: set[int]) -> None:
+        w = ev.winner_id
+        l = ev.loser_id
+        surf = ev.surface
+
+        e_w_s, e_l_s = self._update_surface_elo(w, l, surf)
+        if ev.speed_surface:
+            self._update_surface_elo(w, l, ev.speed_surface)
 
         e_w_o = self.elo_overall.get(w, DEFAULT_ELO)
         e_l_o = self.elo_overall.get(l, DEFAULT_ELO)
@@ -856,13 +914,16 @@ class ModelState:
                     match_prefix.append(match_prefix[-1] + 1)
 
         a, b = (w, l) if w < l else (l, w)
-        for s in (surf, "N/A"):
+        for s in tuple(dict.fromkeys([surf, ev.speed_surface, "N/A"])):
+            if not s:
+                continue
             rec = self.h2h[(a, b, s)]
             if w == a:
                 rec[0] += 1
             else:
                 rec[1] += 1
             rec[2] += 1
+            self.h2h_last[(a, b, s)] = (w, ev.date_ord)
 
         if ev.winner_stats:
             ws = ev.winner_stats
@@ -875,6 +936,8 @@ class ModelState:
             else:
                 rvf_w, rvf_f, rvs_w, rvs_f = 0, 0, 0, 0
             _hist_add(self.point_hist[(w, surf)], ev.date_ord, ws[0], ws[1], ws[2], ws[3], *dec, rvf_w, rvf_f, rvs_w, rvs_f)
+            if ev.speed_surface:
+                _hist_add(self.point_hist[(w, ev.speed_surface)], ev.date_ord, ws[0], ws[1], ws[2], ws[3], *dec, rvf_w, rvf_f, rvs_w, rvs_f)
             _hist_add(self.point_hist[(w, "N/A")], ev.date_ord, ws[0], ws[1], ws[2], ws[3], *dec, rvf_w, rvf_f, rvs_w, rvs_f)
         if ev.loser_stats:
             ls = ev.loser_stats
@@ -887,18 +950,27 @@ class ModelState:
             else:
                 rvf_w, rvf_f, rvs_w, rvs_f = 0, 0, 0, 0
             _hist_add(self.point_hist[(l, surf)], ev.date_ord, ls[0], ls[1], ls[2], ls[3], *dec, rvf_w, rvf_f, rvs_w, rvs_f)
+            if ev.speed_surface:
+                _hist_add(self.point_hist[(l, ev.speed_surface)], ev.date_ord, ls[0], ls[1], ls[2], ls[3], *dec, rvf_w, rvf_f, rvs_w, rvs_f)
             _hist_add(self.point_hist[(l, "N/A")], ev.date_ord, ls[0], ls[1], ls[2], ls[3], *dec, rvf_w, rvf_f, rvs_w, rvs_f)
 
         if l in lefties:
             vl = self.vs_leftie[(w, surf)]
             vl[0] += 1
             vl[1] += 1
+            if ev.speed_surface:
+                vl_speed = self.vs_leftie[(w, ev.speed_surface)]
+                vl_speed[0] += 1
+                vl_speed[1] += 1
             vla = self.vs_leftie[(w, "N/A")]
             vla[0] += 1
             vla[1] += 1
         if w in lefties:
             vl = self.vs_leftie[(l, surf)]
             vl[1] += 1
+            if ev.speed_surface:
+                vl_speed = self.vs_leftie[(l, ev.speed_surface)]
+                vl_speed[1] += 1
             vla = self.vs_leftie[(l, "N/A")]
             vla[1] += 1
 
@@ -1100,6 +1172,18 @@ class ModelState:
             rec = self.h2h.get((a, b, s))
             if rec:
                 return (a, b, int(rec[0]), int(rec[1]), int(rec[2]))
+        return None
+
+    def recent_h2h_match(self, p1: int, p2: int, surface: str, date_ord: int) -> tuple[int, int] | None:
+        a, b = (p1, p2) if p1 < p2 else (p2, p1)
+        for s in _surface_candidates(surface):
+            rec = self.h2h_last.get((a, b, s))
+            if not rec:
+                continue
+            winner_id, last_date_ord = rec
+            days_since = date_ord - int(last_date_ord)
+            if 0 < days_since <= RECENT_REMATCH_LOOKBACK_DAYS:
+                return int(winner_id), int(days_since)
         return None
 
     def vs_leftie_win_pct(self, pid: int, surface: str) -> float:
@@ -1368,12 +1452,15 @@ def _compute_match_probability(
     use_matchup_model: bool = True,
     use_decomposed_return: bool = True,
     cpi_enabled: bool = False,
+    cpi_regime_enabled: bool = False,
     cpi_lookup: dict[tuple[int, str, str], float] | None = None,
     cpi_year_surface_stats: dict[tuple[int, str], tuple[float, float]] | None = None,
     cpi_surface_stats: dict[str, tuple[float, float]] | None = None,
     cpi_fallback_years: int = DEFAULT_CPI_LOOKBACK_YEARS,
+    cpi_lag_only: bool = True,
     cpi_match_weight: float = DEFAULT_CPI_MATCH_WEIGHT,
     cpi_match_cap: float = DEFAULT_CPI_MATCH_CAP,
+    cpi_grass_match_cap: float = DEFAULT_CPI_GRASS_MATCH_CAP,
     cpi_z_cap: float = DEFAULT_CPI_Z_CAP,
     tournament_speed_enabled: bool = True,
     tournament_speed_point_weight: float = DEFAULT_TOURNAMENT_SPEED_POINT_WEIGHT,
@@ -1385,8 +1472,33 @@ def _compute_match_probability(
 ) -> tuple[float, str, dict[str, Any]]:
     p1 = int(match.winner_id)  # player1 is row winner (actual outcome)
     p2 = int(match.loser_id)
-    surface = match.surface
+    official_surface = match.surface
+    surface = official_surface
     match_dt = date.fromordinal(match.date_ord)
+    cpi_value = None
+    cpi_year = None
+    cpi_z = 0.0
+    cpi_regime_surface = None
+    if (cpi_enabled or cpi_regime_enabled) and cpi_lookup:
+        cpi_value, cpi_year, cpi_z = _resolve_cpi_context(
+            season_year=match_dt.year,
+            surface=official_surface,
+            key_candidates=_tour_key_candidates(
+                match.tournament_key,
+                match.tournament,
+                f"{match.tournament} - {match.location}".strip(" -"),
+            ),
+            cpi_lookup=cpi_lookup,
+            cpi_year_surface_stats=cpi_year_surface_stats,
+            cpi_surface_stats=cpi_surface_stats,
+            cpi_fallback_years=cpi_fallback_years,
+            cpi_lag_only=cpi_lag_only,
+            cpi_z_cap=cpi_z_cap,
+        )
+        if cpi_regime_enabled and cpi_value is not None:
+            cpi_regime_surface = _cpi_regime_surface(cpi_z)
+            surface = cpi_regime_surface
+    surface_math = _cpi_math_surface(surface)
 
     s1 = state.player_stats(p1, surface, match.date_ord)
     s2 = state.player_stats(p2, surface, match.date_ord)
@@ -1420,9 +1532,9 @@ def _compute_match_probability(
         recent_weight = 0.5
     else:
         recent_weight = 0.3
-    if surface == "Clay":
+    if surface_math == "Clay":
         recent_weight = min(recent_weight, 0.6)
-    elif surface == "Grass":
+    elif surface_math == "Grass":
         recent_weight = max(recent_weight, 0.55)
 
     hold1_raw = recent_weight * h1_12 + (1.0 - recent_weight) * h1_long
@@ -1453,9 +1565,11 @@ def _compute_match_probability(
     ret1_model = ret1_eff
     ret2_model = ret2_eff
     if tournament_speed_enabled and tournament_speed_point_weight > 0.0:
-        venue_entry = state.tournament_speed_profile(match.tournament_speed_key, surface, match.date_ord)
+        tour_speed_surface = official_surface if surface in CPI_SPEED_SURFACES else surface
+        tour_speed_league_avg = SURFACE_LEAGUE_AVG.get(tour_speed_surface, SURFACE_LEAGUE_AVG["N/A"])
+        venue_entry = state.tournament_speed_profile(match.tournament_speed_key, tour_speed_surface, match.date_ord)
         tour_speed_signal, tour_speed_debug = _compute_tournament_speed_signal(
-            league_avg=league_avg,
+            league_avg=tour_speed_league_avg,
             venue_entry=venue_entry,
         )
         if abs(tour_speed_signal) > 1e-9:
@@ -1500,7 +1614,7 @@ def _compute_match_probability(
         row2 = _build_matchup_row(s2 or {}, hold2_model, ret2_model)
         stats_a = MatchupStats.from_db_row(row1)
         stats_b = MatchupStats.from_db_row(row2)
-        p_a, p_b, _ = compute_match_point_probs(stats_a, stats_b, surface)
+        p_a, p_b, _ = compute_match_point_probs(stats_a, stats_b, surface_math)
         # Classify for decomposed-vs-fallback diagnostic
         if stats_a.has_decomposed and stats_b.has_decomposed:
             matchup_method = "both_decomposed"
@@ -1511,7 +1625,7 @@ def _compute_match_probability(
     elif use_v2_formula and HAS_HYBRID_V2:
         p_a, p_b = compute_point_probs_bc(
             hold1_model, ret1_model, hold2_model, ret2_model,
-            surface, league_avg=SURFACE_LEAGUE_AVG
+            surface_math, league_avg=SURFACE_LEAGUE_AVG
         )
     else:
         p_a = _clamp((hold1_model * (1.0 - ret2_model)) / league_avg, POINT_CLAMP[0], POINT_CLAMP[1])
@@ -1586,44 +1700,15 @@ def _compute_match_probability(
         confidence = "medium"
     if confidence in ("high", "medium") and (act1 is None or act2 is None):
         confidence = "medium" if confidence == "high" else "low"
-    form_mult, results_mult, structural_mult, cap_mult = _series_delta_multipliers(match.series, surface, confidence)
-
-    cpi_value = None
-    cpi_year = None
-    cpi_z = 0.0
-    if cpi_enabled and cpi_lookup:
-        season_year = match_dt.year
-        surf = "Hard" if surface == "I.hard" else surface
-        key_candidates = _tour_key_candidates(
-            match.tournament_key,
-            match.tournament,
-            f"{match.tournament} - {match.location}".strip(" -"),
-        )
-        if surf in ("Hard", "Clay", "Grass") and key_candidates:
-            for yr_back in range(0, max(0, int(cpi_fallback_years)) + 1):
-                y = season_year - yr_back
-                found = None
-                for tk in key_candidates:
-                    found = cpi_lookup.get((y, surf, tk))
-                    if found is not None:
-                        cpi_value = float(found)
-                        cpi_year = y
-                        break
-                if cpi_value is not None:
-                    break
-        if cpi_value is not None and cpi_year is not None:
-            ys_stats = cpi_year_surface_stats or {}
-            s_stats = cpi_surface_stats or {}
-            mean_std = ys_stats.get((cpi_year, surf), s_stats.get(surf, (0.0, 1.0)))
-            mu, sd = float(mean_std[0]), float(mean_std[1])
-            if sd <= 1e-9:
-                sd = 1.0
-            cpi_z = _clamp((cpi_value - mu) / sd, -abs(cpi_z_cap), abs(cpi_z_cap))
+    form_mult, results_mult, structural_mult, cap_mult = _series_delta_multipliers(match.series, surface_math, confidence)
 
     p1_results = state.results_snapshot(p1, match.date_ord)
     p2_results = state.results_snapshot(p2, match.date_ord)
     p1_crisis = _is_form_crisis(p1_results)
     p2_crisis = _is_form_crisis(p2_results)
+    recent_h2h = state.recent_h2h_match(p1, p2, surface, match.date_ord)
+    recent_rematch_winner_id = recent_h2h[0] if recent_h2h else None
+    recent_rematch_days = recent_h2h[1] if recent_h2h else None
 
     serve_rel = min(1.0, min_matches_12 / float(HYBRID_ELO_WEIGHT_MIN_MATCHES)) if (has_s1 and has_s2) else 0.0
     w_sr = (1.0 - HYBRID_ELO_WEIGHT_DEFAULT) * (0.35 + 0.65 * serve_rel) if (has_s1 and has_s2) else 0.0
@@ -1660,6 +1745,26 @@ def _compute_match_probability(
         elif p_rank < 0.5 and p2_crisis and not p1_crisis:
             w_rank *= crisis_rank_mult
 
+    recent_rematch_rank_elo_release = 0.0
+    if (
+        recent_rematch_winner_id in {p1, p2}
+        and recent_rematch_days is not None
+        and recent_rematch_days <= RECENT_REMATCH_RANK_ELO_DAMP_LOOKBACK_DAYS
+        and surface_math in RECENT_REMATCH_RANK_ELO_DAMP_SURFACES
+        and min_matches_12 <= RECENT_REMATCH_RANK_ELO_DAMP_MAX_MIN_MATCHES
+        and p_rank is not None
+    ):
+        rematch_sign = 1.0 if recent_rematch_winner_id == p1 else -1.0
+        elo_against_winner = (p_elo - 0.5) * rematch_sign < -RECENT_REMATCH_RANK_ELO_DAMP_MIN_MODEL_GAP
+        rank_against_winner = (p_rank - 0.5) * rematch_sign < -RECENT_REMATCH_RANK_ELO_DAMP_MIN_MODEL_GAP
+        sr_not_against_winner = (p_serve_return - 0.5) * rematch_sign >= -0.04
+        if elo_against_winner and rank_against_winner and sr_not_against_winner:
+            before_elo_rank = w_elo + w_rank
+            w_elo *= RECENT_REMATCH_RANK_ELO_DAMP_MULT
+            w_rank *= RECENT_REMATCH_RANK_ELO_DAMP_MULT
+            recent_rematch_rank_elo_release = max(0.0, before_elo_rank - (w_elo + w_rank))
+            w_sr += recent_rematch_rank_elo_release
+
     total_w = w_sr + w_elo + w_rank
     if total_w <= 0:
         p1_win = 0.5
@@ -1678,6 +1783,7 @@ def _compute_match_probability(
     style_edge = serve_adv - return_adv
     h2h_row = state.h2h_record(p1, p2, surface)
     h2h_delta = 0.0
+    recent_rematch_delta = 0.0
     h2h_n = 0
     if h2h_row:
         a, _b, wins_a, wins_b, h2h_n = h2h_row
@@ -1689,6 +1795,15 @@ def _compute_match_probability(
                 win_rate_p1 = wins_p1 / h2h_n
             h2h_delta = _clamp((win_rate_p1 - 0.5) * H2H_WEIGHT, -H2H_CAP, H2H_CAP)
             delta_p1 += structural_mult * h2h_delta
+        if recent_rematch_winner_id in {p1, p2} and recent_rematch_days is not None:
+            recency = 1.0 - ((recent_rematch_days - 1) / RECENT_REMATCH_LOOKBACK_DAYS)
+            sign = 1.0 if recent_rematch_winner_id == p1 else -1.0
+            recent_rematch_delta = _clamp(
+                sign * RECENT_REMATCH_WEIGHT * recency,
+                -RECENT_REMATCH_CAP,
+                RECENT_REMATCH_CAP,
+            )
+            delta_p1 += structural_mult * recent_rematch_delta
 
     if p2 in lefties:
         delta_p1 += structural_mult * (state.vs_leftie_win_pct(p1, surface) - 0.5) * VS_LEFTIE_WEIGHT
@@ -1698,7 +1813,12 @@ def _compute_match_probability(
     cpi_delta = 0.0
     if cpi_enabled and cpi_value is not None and cpi_match_weight > 0.0:
         # Same conservative style-speed interaction as live fair-odds.
-        cpi_delta = _clamp(cpi_z * style_edge * cpi_match_weight, -cpi_match_cap, cpi_match_cap)
+        cpi_match_cap_for_surface = cpi_grass_match_cap if surface_math == "Grass" else cpi_match_cap
+        cpi_delta = _clamp(
+            cpi_z * style_edge * cpi_match_weight,
+            -cpi_match_cap_for_surface,
+            cpi_match_cap_for_surface,
+        )
         delta_p1 += structural_mult * cpi_delta
 
     tournament_speed_archetype_delta = 0.0
@@ -1735,7 +1855,7 @@ def _compute_match_probability(
             p2, games_by_player.get(p2, []), tour_surface_map, match_dt, lookback_days=21
         )
         delta_fatigue_rust, _ = compute_fatigue_rust_delta(
-            p1_recent, p2_recent, match_dt, surface, tour_id=None, debug=False
+            p1_recent, p2_recent, match_dt, surface_math, tour_id=None, debug=False
         )
         delta_fatigue_rust *= FATIGUE_MODEL_MULTIPLIER
         delta_form = _clamp(
@@ -1770,6 +1890,7 @@ def _compute_match_probability(
         RESULTS_FORM_TOTAL_CAP,
         TOURNAMENT_HISTORY_CAP,
         H2H_CAP,
+        RECENT_REMATCH_CAP,
     ]
     delta_p1 = _clamp(delta_p1, -max(cap_components), max(cap_components))
     overall_cap = DELTA_CAP_HIGH if confidence == "high" else (DELTA_CAP_MEDIUM if confidence == "medium" else DELTA_CAP_LOW)
@@ -1777,10 +1898,13 @@ def _compute_match_probability(
     delta_p1 = _clamp(delta_p1, -overall_cap, overall_cap)
 
     p1_raw = _safe_prob(p1_win + delta_p1)
-    p1_win = _calibrate_match_prob(p1_raw, match.series, surface, confidence)
-    p1_win = _apply_series_probability_guard(p1_win, match.series, surface, confidence)
+    p1_win = _calibrate_match_prob(p1_raw, match.series, surface_math, confidence)
+    p1_win = _apply_series_probability_guard(p1_win, match.series, surface_math, confidence)
     debug = {
         "confidence": confidence,
+        "official_surface": official_surface,
+        "model_surface": surface,
+        "surface_math": surface_math,
         "p_serve_return": p_serve_return,
         "p_elo": p_elo,
         "p_rank": p_rank,
@@ -1791,8 +1915,12 @@ def _compute_match_probability(
         "cpi_year": cpi_year,
         "cpi_z": cpi_z,
         "cpi_delta": cpi_delta,
+        "cpi_regime_surface": cpi_regime_surface,
         "h2h_n": h2h_n,
         "h2h_delta": h2h_delta,
+        "recent_rematch_delta": recent_rematch_delta,
+        "recent_rematch_days": recent_rematch_days,
+        "recent_rematch_rank_elo_release": recent_rematch_rank_elo_release,
         "tournament_speed_signal": tour_speed_signal,
         "tournament_speed_multiplier": tour_speed_multiplier,
         "tournament_speed_venue_spw": tour_speed_debug.get("venue_spw"),
@@ -2109,6 +2237,8 @@ def _load_cpi_lookup(
             cpi = _float(row.get("cpi"))
             if y is None or cpi is None or not key or not surf_raw:
                 continue
+            if cpi < CPI_MIN_VALUE or cpi > CPI_MAX_VALUE:
+                continue
             surf = "Hard" if surf_raw == "I.hard" else surf_raw
             if surf not in ("Hard", "Clay", "Grass"):
                 continue
@@ -2121,6 +2251,64 @@ def _load_cpi_lookup(
     stats_year = {k: _mean_std(v) for k, v in by_year_surface.items()}
     stats_surface = {k: _mean_std(v) for k, v in by_surface.items()}
     return lookup, stats_year, stats_surface
+
+
+def _cpi_math_surface(surface: str) -> str:
+    return CPI_REGIME_TO_MATH_SURFACE.get(surface, surface)
+
+
+def _cpi_regime_surface(cpi_z: float) -> str:
+    if cpi_z <= CPI_REGIME_SLOW_Z:
+        return "SpeedSlow"
+    if cpi_z >= CPI_REGIME_FAST_Z:
+        return "SpeedFast"
+    return "SpeedNeutral"
+
+
+def _resolve_cpi_context(
+    *,
+    season_year: int,
+    surface: str,
+    key_candidates: list[str],
+    cpi_lookup: dict[tuple[int, str, str], float] | None,
+    cpi_year_surface_stats: dict[tuple[int, str], tuple[float, float]] | None,
+    cpi_surface_stats: dict[str, tuple[float, float]] | None,
+    cpi_fallback_years: int,
+    cpi_lag_only: bool,
+    cpi_z_cap: float,
+) -> tuple[float | None, int | None, float]:
+    if not cpi_lookup or not key_candidates:
+        return None, None, 0.0
+
+    surf = "Hard" if surface == "I.hard" else surface
+    if surf not in ("Hard", "Clay", "Grass"):
+        return None, None, 0.0
+
+    cpi_value = None
+    cpi_year = None
+    start_yr_back = 1 if cpi_lag_only else 0
+    for yr_back in range(start_yr_back, max(0, int(cpi_fallback_years)) + 1):
+        y = season_year - yr_back
+        for tk in key_candidates:
+            found = cpi_lookup.get((y, surf, tk))
+            if found is not None:
+                cpi_value = float(found)
+                cpi_year = y
+                break
+        if cpi_value is not None:
+            break
+
+    if cpi_value is None or cpi_year is None:
+        return None, None, 0.0
+
+    ys_stats = cpi_year_surface_stats or {}
+    s_stats = cpi_surface_stats or {}
+    mu, sd = ys_stats.get((cpi_year, surf), s_stats.get(surf, (0.0, 1.0)))
+    sd = float(sd)
+    if sd <= 1e-9:
+        sd = 1.0
+    cpi_z = _clamp((cpi_value - float(mu)) / sd, -abs(cpi_z_cap), abs(cpi_z_cap))
+    return cpi_value, cpi_year, cpi_z
 
 
 def _load_tour_info(tours_path: Path, courts_path: Path) -> dict[int, dict[str, Any]]:
@@ -2262,6 +2450,12 @@ def _history_from_oncourt(
     tours: dict[int, dict[str, Any]],
     stat_map: dict[tuple[int, int, int, int], deque[tuple[int, ...]]],
     max_date_ord: int,
+    *,
+    cpi_lookup: dict[tuple[int, str, str], float] | None = None,
+    cpi_year_surface_stats: dict[tuple[int, str], tuple[float, float]] | None = None,
+    cpi_surface_stats: dict[str, tuple[float, float]] | None = None,
+    cpi_fallback_years: int = DEFAULT_CPI_LOOKBACK_YEARS,
+    cpi_z_cap: float = DEFAULT_CPI_Z_CAP,
 ) -> tuple[list[HistoryEvent], Counter]:
     events: list[HistoryEvent] = []
     skip = Counter()
@@ -2344,16 +2538,40 @@ def _history_from_oncourt(
                 if winner_stats[1] == 0 or winner_stats[3] == 0:
                     winner_stats = None
 
+            surface = str(tour.get("surface") or "N/A")
+            speed_surface = None
+            if cpi_lookup:
+                event_date = date.fromordinal(int(date_ord))
+                key_candidates = _tour_key_candidates(
+                    str(tour.get("tour_key") or ""),
+                    str(tour.get("name") or ""),
+                    str(tour.get("tournament_speed_key") or ""),
+                )
+                _cpi_value, _cpi_year, cpi_z = _resolve_cpi_context(
+                    season_year=event_date.year,
+                    surface=surface,
+                    key_candidates=key_candidates,
+                    cpi_lookup=cpi_lookup,
+                    cpi_year_surface_stats=cpi_year_surface_stats,
+                    cpi_surface_stats=cpi_surface_stats,
+                    cpi_fallback_years=cpi_fallback_years,
+                    cpi_lag_only=True,
+                    cpi_z_cap=cpi_z_cap,
+                )
+                if _cpi_value is not None:
+                    speed_surface = _cpi_regime_surface(cpi_z)
+
             events.append(
                 HistoryEvent(
                     date_ord=int(date_ord),
                     winner_id=int(w),
                     loser_id=int(l),
-                    surface=str(tour.get("surface") or "N/A"),
+                    surface=surface,
                     tour_key=str(tour.get("tour_key") or ""),
                     tournament_speed_key=str(tour.get("tournament_speed_key") or ""),
                     winner_stats=winner_stats,
                     loser_stats=loser_stats,
+                    speed_surface=speed_surface,
                 )
             )
     events.sort(key=lambda e: e.date_ord)
@@ -2511,6 +2729,9 @@ def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         "date",
         "tournament",
         "surface",
+        "official_surface",
+        "model_surface",
+        "surface_math",
         "round",
         "series",
         "player1",
@@ -2538,6 +2759,14 @@ def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         "confidence",
         "h2h_n",
         "h2h_delta",
+        "recent_rematch_delta",
+        "recent_rematch_days",
+        "recent_rematch_rank_elo_release",
+        "cpi_value",
+        "cpi_year",
+        "cpi_z",
+        "cpi_delta",
+        "cpi_regime_surface",
         "tournament_speed_signal",
         "tournament_speed_multiplier",
         "tournament_speed_archetype_delta",
@@ -2590,13 +2819,27 @@ def main() -> None:
     parser.add_argument("--unmatched-limit", type=int, default=40)
     parser.add_argument("--enable-cpi-overlay", action="store_true", help="Enable optional CPI/surface-speed overlay in model probabilities.")
     parser.add_argument(
+        "--enable-cpi-regime-surface",
+        action="store_true",
+        help=(
+            "Shadow experiment: replace official surface features with lagged CPI speed regimes "
+            "(SpeedFast/SpeedNeutral/SpeedSlow) for player stats, Elo, H2H and matchup priors."
+        ),
+    )
+    parser.add_argument(
         "--cpi-file",
         default=str((ROOT / "data" / "backtest" / "tennisabstract-atp-surface-speed.csv").as_posix()),
         help="CPI CSV path (default: data/backtest/tennisabstract-atp-surface-speed.csv).",
     )
     parser.add_argument("--cpi-fallback-years", type=int, default=DEFAULT_CPI_LOOKBACK_YEARS)
+    parser.add_argument(
+        "--cpi-allow-same-season",
+        action="store_true",
+        help="Allow same-season CPI rows. Default is lag-only to avoid current-event leakage.",
+    )
     parser.add_argument("--cpi-match-weight", type=float, default=DEFAULT_CPI_MATCH_WEIGHT)
     parser.add_argument("--cpi-match-cap", type=float, default=DEFAULT_CPI_MATCH_CAP)
+    parser.add_argument("--cpi-grass-match-cap", type=float, default=DEFAULT_CPI_GRASS_MATCH_CAP)
     parser.add_argument("--cpi-z-cap", type=float, default=DEFAULT_CPI_Z_CAP)
     parser.add_argument("--no-tournament-speed-overlay", action="store_true", help="Disable tournament-speed overlay based on prior editions of the same event.")
     parser.add_argument("--tournament-speed-point-weight", type=float, default=DEFAULT_TOURNAMENT_SPEED_POINT_WEIGHT)
@@ -2766,10 +3009,14 @@ def main() -> None:
     effective_policy_exclude_fn = _combined_policy_exclude
 
     cpi_enabled = bool(args.enable_cpi_overlay)
+    cpi_regime_enabled = bool(getattr(args, "enable_cpi_regime_surface", False))
+    cpi_required = cpi_enabled or cpi_regime_enabled
     cpi_file = Path(args.cpi_file) if Path(args.cpi_file).is_absolute() else (ROOT / args.cpi_file)
     cpi_fallback_years = max(0, int(args.cpi_fallback_years))
+    cpi_lag_only = not bool(getattr(args, "cpi_allow_same_season", False))
     cpi_match_weight = _clamp(float(args.cpi_match_weight), 0.0, 0.15)
     cpi_match_cap = _clamp(float(args.cpi_match_cap), 0.0, 0.08)
+    cpi_grass_match_cap = _clamp(float(args.cpi_grass_match_cap), 0.0, 0.08)
     cpi_z_cap = _clamp(float(args.cpi_z_cap), 0.2, 6.0)
     tournament_speed_enabled = not bool(getattr(args, "no_tournament_speed_overlay", False))
     tournament_speed_point_weight = _clamp(float(args.tournament_speed_point_weight), 0.0, 0.40)
@@ -2803,15 +3050,22 @@ def main() -> None:
         print("No usable matches loaded.")
         return
 
-    if cpi_enabled:
+    if cpi_required:
         cpi_lookup, cpi_year_surface_stats, cpi_surface_stats = _load_cpi_lookup(cpi_file)
         print(
             "CPI overlay: "
-            f"enabled rows={len(cpi_lookup):,} file={cpi_file} "
-            f"fallback_years={cpi_fallback_years} weight={cpi_match_weight:.3f} cap={cpi_match_cap:.3f} z_cap={cpi_z_cap:.2f}"
+            f"{'enabled' if cpi_enabled else 'disabled'} rows={len(cpi_lookup):,} file={cpi_file} "
+            f"fallback_years={cpi_fallback_years} lag_only={cpi_lag_only} "
+            f"weight={cpi_match_weight:.3f} cap={cpi_match_cap:.3f} "
+            f"grass_cap={cpi_grass_match_cap:.3f} z_cap={cpi_z_cap:.2f}"
         )
     else:
         print("CPI overlay: disabled")
+    print(
+        "CPI speed-regime surface: "
+        f"{'enabled' if cpi_regime_enabled else 'disabled'} "
+        f"(slow_z<={CPI_REGIME_SLOW_Z:+.2f}, fast_z>={CPI_REGIME_FAST_Z:+.2f})"
+    )
     print(
         "Tournament speed overlay: "
         f"{'enabled' if tournament_speed_enabled else 'disabled'} "
@@ -2915,7 +3169,18 @@ def main() -> None:
     print("Loading historical OnCourt stat/games...")
     stat_map = _load_stat_map(stat_path)
     max_date_ord = max(m.date_ord for m in filtered_matches)
-    history_events, history_skip = _history_from_oncourt(games_path, players_by_id, tours, stat_map, max_date_ord=max_date_ord)
+    history_events, history_skip = _history_from_oncourt(
+        games_path,
+        players_by_id,
+        tours,
+        stat_map,
+        max_date_ord=max_date_ord,
+        cpi_lookup=cpi_lookup if cpi_regime_enabled else None,
+        cpi_year_surface_stats=cpi_year_surface_stats,
+        cpi_surface_stats=cpi_surface_stats,
+        cpi_fallback_years=cpi_fallback_years,
+        cpi_z_cap=cpi_z_cap,
+    )
     print(f"  History events loaded: {len(history_events):,}")
     if history_skip:
         print(f"  History skipped: {dict(history_skip)}")
@@ -2952,12 +3217,15 @@ def main() -> None:
             use_matchup_model=not getattr(args, "no_matchup", False),
             use_decomposed_return=not getattr(args, "no_decomposed_return", False),
             cpi_enabled=cpi_enabled,
+            cpi_regime_enabled=cpi_regime_enabled,
             cpi_lookup=cpi_lookup,
             cpi_year_surface_stats=cpi_year_surface_stats,
             cpi_surface_stats=cpi_surface_stats,
             cpi_fallback_years=cpi_fallback_years,
+            cpi_lag_only=cpi_lag_only,
             cpi_match_weight=cpi_match_weight,
             cpi_match_cap=cpi_match_cap,
+            cpi_grass_match_cap=cpi_grass_match_cap,
             cpi_z_cap=cpi_z_cap,
             tournament_speed_enabled=tournament_speed_enabled,
             tournament_speed_point_weight=tournament_speed_point_weight,
@@ -3002,6 +3270,9 @@ def main() -> None:
             "date": m.date_iso,
             "tournament": m.tournament,
             "surface": m.surface,
+            "official_surface": debug.get("official_surface") or m.surface,
+            "model_surface": debug.get("model_surface") or m.surface,
+            "surface_math": debug.get("surface_math") or m.surface,
             "round": m.round_name,
             "series": m.series,
             "player1": players_by_id[m.winner_id]["name"],
@@ -3037,10 +3308,14 @@ def main() -> None:
             "p_raw": float(debug.get("p_raw") or p_winner),
             "h2h_n": debug.get("h2h_n"),
             "h2h_delta": debug.get("h2h_delta"),
+            "recent_rematch_delta": debug.get("recent_rematch_delta"),
+            "recent_rematch_days": debug.get("recent_rematch_days"),
+            "recent_rematch_rank_elo_release": debug.get("recent_rematch_rank_elo_release"),
             "cpi_value": debug.get("cpi_value"),
             "cpi_year": debug.get("cpi_year"),
             "cpi_z": debug.get("cpi_z"),
             "cpi_delta": debug.get("cpi_delta"),
+            "cpi_regime_surface": debug.get("cpi_regime_surface"),
             "tournament_speed_signal": debug.get("tournament_speed_signal"),
             "tournament_speed_multiplier": debug.get("tournament_speed_multiplier"),
             "tournament_speed_venue_spw": debug.get("tournament_speed_venue_spw"),
@@ -3078,13 +3353,16 @@ def main() -> None:
             pct_both = 100.0 * both / total if total else 0
             pct_fallback = 100.0 * (one + neither + legacy) / total if total else 0
             print(f"    {yr}: both_decomposed={both} ({pct_both:.1f}%), fallback/mixed={one + neither + legacy} ({pct_fallback:.1f}%)")
-    if cpi_enabled:
+    if cpi_required:
         cpi_resolved = sum(1 for r in results if r.get("cpi_value") is not None)
         cpi_adjusted = sum(1 for r in results if abs(float(r.get("cpi_delta") or 0.0)) > 1e-9)
         print(
             f"  CPI overlay usage: resolved={cpi_resolved}/{len(results)} "
             f"adjusted={cpi_adjusted} (weight={cpi_match_weight:.3f}, cap={cpi_match_cap:.3f})"
         )
+        if cpi_regime_enabled:
+            regime_counts = Counter(str(r.get("model_surface") or r.get("surface") or "") for r in results)
+            print(f"  CPI speed-regime surfaces: {dict(regime_counts)}")
     if tournament_speed_enabled:
         speed_resolved = sum(1 for r in results if abs(float(r.get("tournament_speed_signal") or 0.0)) > 1e-9)
         speed_adjusted = sum(1 for r in results if abs(float(r.get("tournament_speed_multiplier") or 0.0)) > 1e-9)
@@ -3189,6 +3467,9 @@ def main() -> None:
                         "date": r["date"],
                         "tournament": r["tournament"],
                         "surface": r["surface"],
+                        "official_surface": r.get("official_surface") or r["surface"],
+                        "model_surface": r.get("model_surface") or r["surface"],
+                        "surface_math": r.get("surface_math") or r["surface"],
                         "round": r["round"],
                         "series": r["series"],
                         "player1": r["player1"],
@@ -3216,7 +3497,20 @@ def main() -> None:
                         "confidence": r.get("confidence"),
                         "h2h_n": r.get("h2h_n"),
                         "h2h_delta": r.get("h2h_delta"),
+                        "recent_rematch_delta": r.get("recent_rematch_delta"),
+                        "recent_rematch_days": r.get("recent_rematch_days"),
+                        "recent_rematch_rank_elo_release": r.get("recent_rematch_rank_elo_release"),
+                        "cpi_value": r.get("cpi_value"),
+                        "cpi_year": r.get("cpi_year"),
+                        "cpi_z": r.get("cpi_z"),
+                        "cpi_delta": r.get("cpi_delta"),
+                        "cpi_regime_surface": r.get("cpi_regime_surface"),
+                        "tournament_speed_signal": r.get("tournament_speed_signal"),
+                        "tournament_speed_multiplier": r.get("tournament_speed_multiplier"),
+                        "tournament_speed_archetype_delta": r.get("tournament_speed_archetype_delta"),
+                        "tournament_speed_style_edge": r.get("tournament_speed_style_edge"),
                         "score": r.get("score") or "",
+                        "has_pinnacle_odds": r.get("has_pinnacle_odds"),
                     }
                 )
             suffix = "-v2" if getattr(args, "v2", False) else ""

@@ -181,14 +181,14 @@ def _extract_stats_table(conn, tour):
                         "w_bpof": w_bp_of,
                         "w_bpsaved": max(0, l_bp_of - l_bp_won),
                         "w_bpfaced": l_bp_of,
-                        "w_svpt": _int_value(row, "FSOF_1") + _int_value(row, "W2SOF_1"),
+                        "w_svpt": _int_value(row, "FSOF_1"),
                         "l_ace": _value(row, "ACES_2"),
                         "l_df": _value(row, "DF_2"),
                         "l_bpw": l_bp_won,
                         "l_bpof": l_bp_of,
                         "l_bpsaved": max(0, w_bp_of - w_bp_won),
                         "l_bpfaced": w_bp_of,
-                        "l_svpt": _int_value(row, "FSOF_2") + _int_value(row, "W2SOF_2"),
+                        "l_svpt": _int_value(row, "FSOF_2"),
                     })
                     total += 1
 

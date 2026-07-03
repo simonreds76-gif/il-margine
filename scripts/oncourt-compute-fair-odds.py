@@ -193,6 +193,14 @@ DELTA_COMPONENT_SUM_CAP_MAX = 0.20
 H2H_MIN_MATCHES = 3
 H2H_WEIGHT = 0.03
 H2H_CAP = 0.02
+RECENT_REMATCH_LOOKBACK_DAYS = 21
+RECENT_REMATCH_WEIGHT = 0.045
+RECENT_REMATCH_CAP = 0.035
+RECENT_REMATCH_RANK_ELO_DAMP_SURFACES = {"Grass"}
+RECENT_REMATCH_RANK_ELO_DAMP_LOOKBACK_DAYS = 14
+RECENT_REMATCH_RANK_ELO_DAMP_MIN_MODEL_GAP = 0.12
+RECENT_REMATCH_RANK_ELO_DAMP_MAX_MIN_MATCHES = 12
+RECENT_REMATCH_RANK_ELO_DAMP_MULT = 0.30
 
 ADV_MIN_MATCHES = 12
 ADV_SERVE_MATCHUP_WEIGHT = 0.10
@@ -335,6 +343,7 @@ DEFAULT_FAIR_ODDS_INJURY_DELTA = 0.02
 DEFAULT_CPI_LOOKBACK_YEARS = 3
 DEFAULT_CPI_MATCH_WEIGHT = 0.025
 DEFAULT_CPI_MATCH_CAP = 0.012
+DEFAULT_CPI_GRASS_MATCH_CAP = 0.030
 DEFAULT_CPI_Z_CAP = 2.0
 DEFAULT_CPI_TOTAL_RATIO_WEIGHT = 0.020
 DEFAULT_CPI_TOTAL_RATIO_CLAMP = (0.95, 1.05)
@@ -2423,6 +2432,8 @@ def main():
                                 "wins_b": 0,
                                 "match_count": 0,
                                 "last_match_date": None,
+                                "last_winner_id": None,
+                                "last_loser_id": None,
                             }
                             h2h_lookup[(a, b, key_surf)] = rec
                         if winner_is_a:
@@ -2432,6 +2443,8 @@ def main():
                         rec["match_count"] += 1
                         if d_h2h_iso and (rec["last_match_date"] is None or d_h2h_iso > rec["last_match_date"]):
                             rec["last_match_date"] = d_h2h_iso
+                            rec["last_winner_id"] = w
+                            rec["last_loser_id"] = l
 
                     # Surface-specific record
                     _bump(surf)
@@ -2570,9 +2583,11 @@ def main():
     )
 
     cpi_enabled = env_bool(os.environ.get("FAIR_ODDS_CPI_ENABLED"), False)
+    cpi_lag_only = env_bool(os.environ.get("FAIR_ODDS_CPI_LAG_ONLY"), True)
     cpi_lookback_years = max(0, _env_int("FAIR_ODDS_CPI_FALLBACK_YEARS", DEFAULT_CPI_LOOKBACK_YEARS))
     cpi_match_weight = _clamp(_env_float("FAIR_ODDS_CPI_MATCH_WEIGHT", DEFAULT_CPI_MATCH_WEIGHT), 0.0, 0.15)
     cpi_match_cap = _clamp(_env_float("FAIR_ODDS_CPI_MATCH_CAP", DEFAULT_CPI_MATCH_CAP), 0.0, 0.08)
+    cpi_grass_match_cap = _clamp(_env_float("FAIR_ODDS_CPI_GRASS_MATCH_CAP", DEFAULT_CPI_GRASS_MATCH_CAP), 0.0, 0.08)
     cpi_z_cap = _clamp(_env_float("FAIR_ODDS_CPI_Z_CAP", DEFAULT_CPI_Z_CAP), 0.2, 6.0)
     cpi_total_ratio_weight = _clamp(
         _env_float("FAIR_ODDS_CPI_TOTAL_RATIO_WEIGHT", DEFAULT_CPI_TOTAL_RATIO_WEIGHT),
@@ -2688,7 +2703,9 @@ def main():
         print(
             f"  CPI rows: {cpi_rows_loaded:,} "
             f"(years {min_year}-{max_year}, fallback {cpi_lookback_years}y, "
-            f"match_weight={cpi_match_weight:.3f}, total_ratio_weight={cpi_total_ratio_weight:.3f})"
+            f"lag_only={cpi_lag_only}, match_weight={cpi_match_weight:.3f}, "
+            f"match_cap={cpi_match_cap:.3f}, grass_cap={cpi_grass_match_cap:.3f}, "
+            f"total_ratio_weight={cpi_total_ratio_weight:.3f})"
         )
     else:
         print("  CPI rows: disabled (set FAIR_ODDS_CPI_ENABLED=true to activate)")
@@ -2713,13 +2730,14 @@ def main():
         if not surf_candidates:
             surf_candidates = ["Hard", "Clay", "Grass"]
 
-        for yr_back in range(0, cpi_lookback_years + 1):
+        start_yr_back = 1 if cpi_lag_only else 0
+        for yr_back in range(start_yr_back, cpi_lookback_years + 1):
             y = season_year - yr_back
             for surf in surf_candidates:
                 for tkey in keys:
                     v = cpi_lookup.get((y, surf, tkey))
                     if v is not None:
-                        mode = "exact_year" if yr_back == 0 else f"fallback_y{yr_back}"
+                        mode = "exact_year" if yr_back == 0 else f"prior_lag_y{yr_back}"
                         return (float(v), y, mode)
         return (None, season_year, "missing")
 
@@ -3084,6 +3102,19 @@ def main():
         elif p_rank_points is not None:
             p_rank = p_rank_points
 
+        h2h_row = _get_h2h_row(p1, p2, surface)
+        recent_rematch_winner_id = None
+        recent_rematch_days = None
+        if h2h_row:
+            last_match_date = _parse_iso_date(h2h_row.get("last_match_date"))
+            if last_match_date is not None:
+                days_since_h2h = (date.today() - last_match_date).days
+                if 0 < days_since_h2h <= RECENT_REMATCH_LOOKBACK_DAYS:
+                    last_winner_id = h2h_row.get("last_winner_id")
+                    if last_winner_id in {p1, p2}:
+                        recent_rematch_winner_id = last_winner_id
+                        recent_rematch_days = days_since_h2h
+
         form_mult, results_mult, structural_mult, cap_mult = _series_delta_multipliers(series_bucket, surface, confidence)
 
         # Blend in logit space (better behavior than linear prob mix when components disagree)
@@ -3134,6 +3165,26 @@ def main():
         else:
             surface_rank_conflict_release = 0.0
 
+        recent_rematch_rank_elo_release = 0.0
+        if (
+            recent_rematch_winner_id in {p1, p2}
+            and recent_rematch_days is not None
+            and recent_rematch_days <= RECENT_REMATCH_RANK_ELO_DAMP_LOOKBACK_DAYS
+            and surface in RECENT_REMATCH_RANK_ELO_DAMP_SURFACES
+            and min(mc1_eff, mc2_eff) <= RECENT_REMATCH_RANK_ELO_DAMP_MAX_MIN_MATCHES
+            and p_rank is not None
+        ):
+            rematch_sign = 1.0 if recent_rematch_winner_id == p1 else -1.0
+            elo_against_winner = (p_elo - 0.5) * rematch_sign < -RECENT_REMATCH_RANK_ELO_DAMP_MIN_MODEL_GAP
+            rank_against_winner = (p_rank - 0.5) * rematch_sign < -RECENT_REMATCH_RANK_ELO_DAMP_MIN_MODEL_GAP
+            sr_not_against_winner = (p_serve_return - 0.5) * rematch_sign >= -0.04
+            if elo_against_winner and rank_against_winner and sr_not_against_winner:
+                before_elo_rank = w_elo + w_rank
+                w_elo *= RECENT_REMATCH_RANK_ELO_DAMP_MULT
+                w_rank *= RECENT_REMATCH_RANK_ELO_DAMP_MULT
+                recent_rematch_rank_elo_release = max(0.0, before_elo_rank - (w_elo + w_rank))
+                w_sr += recent_rematch_rank_elo_release
+
         if not has_s1 or not has_s2:
             w_sr *= 0.15
             w_elo += 0.08
@@ -3176,6 +3227,7 @@ def main():
         # Factor adjustments (small weights, capped so we don't flip favourites)
         delta_p1 = 0.0
         h2h_delta = 0.0
+        recent_rematch_delta = 0.0
         adv_delta = 0.0
         results_form_delta = 0.0
         current_tournament_delta = 0.0
@@ -3184,7 +3236,6 @@ def main():
         cpi_delta = 0.0
 
         # H2H
-        h2h_row = _get_h2h_row(p1, p2, surface)
         if h2h_row:
             h2h_n = int(h2h_row.get("match_count") or 0)
             if h2h_n >= H2H_MIN_MATCHES:
@@ -3192,6 +3243,15 @@ def main():
                 win_rate_p1 = wins_p1 / h2h_n if h2h_n > 0 else 0.5
                 h2h_delta = _clamp((win_rate_p1 - 0.5) * H2H_WEIGHT, -H2H_CAP, H2H_CAP)
                 delta_p1 += structural_mult * h2h_delta
+            if recent_rematch_winner_id in {p1, p2} and recent_rematch_days is not None:
+                recency = 1.0 - ((recent_rematch_days - 1) / RECENT_REMATCH_LOOKBACK_DAYS)
+                sign = 1.0 if recent_rematch_winner_id == p1 else -1.0
+                recent_rematch_delta = _clamp(
+                    sign * RECENT_REMATCH_WEIGHT * recency,
+                    -RECENT_REMATCH_CAP,
+                    RECENT_REMATCH_CAP,
+                )
+                delta_p1 += structural_mult * recent_rematch_delta
 
         # Advanced serve/return profile
         adv1 = _get_advanced_row(p1, surface)
@@ -3257,7 +3317,12 @@ def main():
         # Tournament CPI overlay (surface-speed): faster courts amplify server-style edge.
         if cpi_enabled and cpi_value is not None and cpi_match_weight > 0.0:
             style_edge = (hold1 - hold2) - (ret1 - ret2)
-            cpi_delta = _clamp(cpi_z * style_edge * cpi_match_weight, -cpi_match_cap, cpi_match_cap)
+            cpi_match_cap_for_surface = cpi_grass_match_cap if surface == "Grass" else cpi_match_cap
+            cpi_delta = _clamp(
+                cpi_z * style_edge * cpi_match_weight,
+                -cpi_match_cap_for_surface,
+                cpi_match_cap_for_surface,
+            )
             if abs(cpi_delta) > 1e-9:
                 delta_p1 += structural_mult * cpi_delta
                 cpi_delta_applied_matches += 1
@@ -3399,6 +3464,7 @@ def main():
             CURRENT_TOURNAMENT_CAP,
             TOURNAMENT_HISTORY_CAP,
             H2H_CAP,
+            RECENT_REMATCH_CAP,
             ADV_TOTAL_CAP,
         ]
         component_cap = min(
@@ -3632,15 +3698,20 @@ def main():
                 )
                 print(
                     f"    CPI: enabled={cpi_enabled} value={cpi_value} year={cpi_year} mode={cpi_mode} "
-                    f"z={cpi_z:+.3f} delta={cpi_delta:+.4f} ratio={cpi_ratio:.3f} totals_used={cpi_used_in_totals}"
+                    f"z={cpi_z:+.3f} delta={cpi_delta:+.4f} "
+                    f"cap={(cpi_grass_match_cap if surface == 'Grass' else cpi_match_cap):.3f} "
+                    f"ratio={cpi_ratio:.3f} totals_used={cpi_used_in_totals}"
                 )
                 print(
                     f"    H2H={h2h_delta:+.4f} ADV={adv_delta:+.4f} "
+                    f"recent_rematch={recent_rematch_delta:+.4f}"
+                    f"{'' if recent_rematch_days is None else f'/{recent_rematch_days}d'} "
                     f"form_base={delta_p1_form:+.4f} results_form={results_form_delta:+.4f} "
                     f"current_tour={current_tournament_delta:+.4f} "
                     f"tour_hist={tour_history_delta:+.4f} crisis_shock={crisis_shock_delta:+.4f} "
                     f"total_delta={delta_p1:+.4f} elo_mag_release={elo_magnitude_release:+.4f} "
                     f"rank_conflict_release={surface_rank_conflict_release:+.4f} "
+                    f"rematch_rank_elo_release={recent_rematch_rank_elo_release:+.4f} "
                     f"surface_points_guard={surface_points_guard_delta:+.4f} (ratio={surface_points_guard_ratio:.1f}) "
                     f"low_conf_guard={low_conf_dog_delta:+.4f} "
                     f"stepup_guard={stepup_dog_delta:+.4f} "
