@@ -37,13 +37,13 @@ SURFACE_BY_COURT = {
     "5": "Grass",
 }
 ROUND_BY_ID = {
-    "1": "F",
-    "2": "SF",
-    "3": "QF",
-    "4": "R16",
-    "5": "R32",
-    "6": "R64",
-    "7": "R128",
+    "4": "R128",
+    "5": "R64",
+    "6": "R32",
+    "7": "R16",
+    "9": "QF",
+    "10": "SF",
+    "12": "F",
 }
 SLAM_TOURNAMENTS = {"Australian Open", "Roland Garros", "Wimbledon", "US Open"}
 VENUE_FACTOR_MIN = 0.85
@@ -234,6 +234,23 @@ def is_placeholder_player(value: object) -> bool:
 
 def is_best_of_five(tour: str, tournament: str) -> bool:
     return tour.upper() == "ATP" and tournament in SLAM_TOURNAMENTS
+
+
+def slam_main_draw_active_events(schedules: list[dict[str, str]]) -> set[tuple[str, str]]:
+    """Events where the current board is main-draw Slam, not qualifying."""
+    active: set[tuple[str, str]] = set()
+    for row in schedules:
+        tour = str(row.get("tour") or "").upper()
+        tour_id = str(row.get("tour_id") or "").strip()
+        tournament = str(row.get("tournament") or "").strip()
+        round_id = parse_int(row.get("round_id_raw"))
+        if tour in {"ATP", "WTA"} and tour_id and tournament in SLAM_TOURNAMENTS and round_id >= 4:
+            active.add((tour, tour_id))
+    return active
+
+
+def skip_slam_qualifying_for_main_draw(main_draw_events: set[tuple[str, str]], tour: str, tour_id: str, round_id: object) -> bool:
+    return (tour, tour_id) in main_draw_events and parse_int(round_id) < 4
 
 
 def default_match_games(tour: str, tournament: str) -> float:
@@ -464,6 +481,7 @@ def oncourt_schedule_rows(tour_code: str, include_completed: bool, board_date: s
                 "tour_id": str(row.get("tour_id") or "").strip(),
                 "tournament": tournament,
                 "round": round_label(row.get("round_id"), tournament),
+                "round_id_raw": str(row.get("round_id") or "").strip(),
                 "surface": SURFACE_BY_COURT.get(str(tour.get("court_id") or ""), "Clay"),
                 "player1": p1,
                 "player2": p2,
@@ -492,6 +510,7 @@ def wta_schedule_rows(path: Path) -> list[dict[str, str]]:
                 "tour_id": str(row.get("tour_id") or "").strip(),
                 "tournament": tournament,
                 "round": str(row.get("round") or "").strip(),
+                "round_id_raw": str(row.get("round_id") or "").strip(),
                 "surface": str(row.get("surface") or "Clay").strip() or "Clay",
                 "player1": p1,
                 "player2": p2,
@@ -506,6 +525,7 @@ def wta_schedule_rows(path: Path) -> list[dict[str, str]]:
 def load_current_tournament_stats(schedules: list[dict[str, str]], as_of: date) -> dict[tuple[str, str, str], dict[str, str]]:
     """Same-edition aces/DFs from OnCourt completed matches."""
     tour_ids_by_tour: dict[str, set[str]] = defaultdict(set)
+    main_draw_events = slam_main_draw_active_events(schedules)
     for row in schedules:
         tour = str(row.get("tour") or "").upper()
         tour_id = str(row.get("tour_id") or "").strip()
@@ -539,9 +559,12 @@ def load_current_tournament_stats(schedules: list[dict[str, str]], as_of: date) 
                 continue
             winner_id = str(game.get("winner_id") or "").strip()
             loser_id = str(game.get("loser_id") or "").strip()
+            round_id = str(game.get("round_id") or "").strip()
+            if skip_slam_qualifying_for_main_draw(main_draw_events, tour, tour_id, round_id):
+                continue
             if not winner_id or not loser_id or winner_id == loser_id:
                 continue
-            stat = stat_index.get((winner_id, loser_id, tour_id, str(game.get("round_id") or "").strip()))
+            stat = stat_index.get((winner_id, loser_id, tour_id, round_id))
             if not stat:
                 continue
             add_stat_totals(
@@ -580,6 +603,7 @@ def load_current_tournament_environment(
     the base until the current sample is large enough.
     """
     meta_by_event: dict[tuple[str, str], dict[str, str]] = {}
+    main_draw_events = slam_main_draw_active_events(schedules)
     for row in schedules:
         tour = str(row.get("tour") or "").upper()
         tour_id = str(row.get("tour_id") or "").strip()
@@ -623,6 +647,8 @@ def load_current_tournament_environment(
             winner_id = str(game.get("winner_id") or "").strip()
             loser_id = str(game.get("loser_id") or "").strip()
             round_id = str(game.get("round_id") or "").strip()
+            if skip_slam_qualifying_for_main_draw(main_draw_events, tour, tour_id, round_id):
+                continue
             if not winner_id or not loser_id or winner_id == loser_id:
                 continue
             stat = stat_index.get((winner_id, loser_id, tour_id, round_id))
@@ -810,6 +836,7 @@ def load_fair_odds_expected_games(
 def load_current_tournament_logs(schedules: list[dict[str, str]], as_of: date) -> dict[tuple[str, str, str], list[dict[str, str]]]:
     """Per-round aces/DF logs for players still in the current tournament draw."""
     tour_ids_by_tour: dict[str, set[str]] = defaultdict(set)
+    main_draw_events = slam_main_draw_active_events(schedules)
     for row in schedules:
         tour = str(row.get("tour") or "").upper()
         tour_id = str(row.get("tour_id") or "").strip()
@@ -845,6 +872,8 @@ def load_current_tournament_logs(schedules: list[dict[str, str]], as_of: date) -
             winner_id = str(game.get("winner_id") or "").strip()
             loser_id = str(game.get("loser_id") or "").strip()
             round_id = str(game.get("round_id") or "").strip()
+            if skip_slam_qualifying_for_main_draw(main_draw_events, tour, tour_id, round_id):
+                continue
             if not winner_id or not loser_id or winner_id == loser_id:
                 continue
             stat = stat_index.get((winner_id, loser_id, tour_id, round_id))
@@ -929,6 +958,8 @@ def project_side(
     opponent_lookup = aliases.get((tour, norm_name(opponent)), norm_name(opponent))
     player_rows = baseline.get((tour, player_lookup, surface), {})
     opponent_rows = baseline.get((tour, opponent_lookup, surface), {})
+    player_all_rows = baseline.get((tour, player_lookup, "All"), {})
+    opponent_all_rows = baseline.get((tour, opponent_lookup, "All"), {})
     factor = factors.get((tour, tournament, surface)) or {}
     factor_source = "venue" if factor else ""
     factor_clipped = False
@@ -967,6 +998,8 @@ def project_side(
         tour=tour,
         player_rows=player_rows,
         opponent_rows=opponent_rows,
+        player_all_rows=player_all_rows,
+        opponent_all_rows=opponent_all_rows,
         factor_row=factor,
         expected_match_games=expected_games or default_match_games(tour, tournament),
         slam_matches=tournament_n,
@@ -1037,6 +1070,10 @@ def project_side(
         "venue_df_factor": str(factor.get("df_factor") or ""),
         "venue_first_set_tiebreak_factor": fmt(projection.venue_first_set_tiebreak_factor, 4),
         "venue_match_tiebreak_factor": fmt(projection.venue_match_tiebreak_factor, 4),
+        "player_tiebreak_factor": fmt(projection.player_tiebreak_factor, 4),
+        "player_tiebreak_sample": str(projection.player_tiebreak_sample),
+        "player_match_tiebreak_actual_pct": fmt(projection.player_match_tiebreak_rate * 100.0, 1),
+        "opponent_match_tiebreak_actual_pct": fmt(projection.opponent_match_tiebreak_rate * 100.0, 1),
         "venue_first_set_tiebreak_actual_pct": fmt_rate_pct(factor.get("first_set_tiebreak_rate"), 1),
         "venue_match_tiebreak_actual_pct": fmt_rate_pct(factor.get("match_tiebreak_rate"), 1),
         "venue_factor_source": factor_source,
@@ -1188,6 +1225,10 @@ def main() -> None:
         "venue_df_factor",
         "venue_first_set_tiebreak_factor",
         "venue_match_tiebreak_factor",
+        "player_tiebreak_factor",
+        "player_tiebreak_sample",
+        "player_match_tiebreak_actual_pct",
+        "opponent_match_tiebreak_actual_pct",
         "venue_first_set_tiebreak_actual_pct",
         "venue_match_tiebreak_actual_pct",
         "venue_factor_source",

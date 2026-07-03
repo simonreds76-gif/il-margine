@@ -69,6 +69,10 @@ class Projection:
     current_env_ace_factor: float
     current_env_df_factor: float
     current_env_break_factor: float
+    player_tiebreak_factor: float
+    player_tiebreak_sample: int
+    player_match_tiebreak_rate: float
+    opponent_match_tiebreak_rate: float
     venue_first_set_tiebreak_factor: float
     venue_match_tiebreak_factor: float
     current_env_first_set_tiebreak_factor: float
@@ -152,6 +156,159 @@ def _blend_value(
         numerator += value * sample * weight
         denominator += sample * weight
     return numerator / denominator if denominator > 0 else prior_value
+
+
+def _blend_tiebreak_rate(
+    rows_by_window: dict[str, dict[str, str]],
+    rate_field: str,
+    sample_field: str,
+    prior_rate: float,
+    prior_weight: float,
+) -> tuple[float, int]:
+    return _blend_rate(rows_by_window, rate_field, sample_field, prior_rate, prior_weight)
+
+
+def _player_tiebreak_factor(
+    player_rows: dict[str, dict[str, str]],
+    opponent_rows: dict[str, dict[str, str]],
+    *,
+    prior_set_rate: float,
+    prior_first_set_rate: float,
+    prior_match_rate: float,
+    player_all_rows: dict[str, dict[str, str]] | None = None,
+    opponent_all_rows: dict[str, dict[str, str]] | None = None,
+) -> tuple[float, int, float, float]:
+    def blended_with_all(
+        surface_rows: dict[str, dict[str, str]],
+        all_rows: dict[str, dict[str, str]] | None,
+        rate_field: str,
+        sample_field: str,
+        prior_rate: float,
+        surface_prior_weight: float,
+        all_prior_weight: float,
+    ) -> tuple[float, int]:
+        surface_rate, surface_sample = _blend_tiebreak_rate(
+            surface_rows,
+            rate_field,
+            sample_field,
+            prior_rate,
+            surface_prior_weight,
+        )
+        all_rate, all_sample = _blend_tiebreak_rate(
+            all_rows or {},
+            rate_field,
+            sample_field,
+            prior_rate,
+            all_prior_weight,
+        )
+        if all_sample <= 0:
+            return surface_rate, surface_sample
+
+        # Surface is still king, but tiny grass samples should not erase a
+        # repeatable player style. The all-surface term carries big-server /
+        # grinder tendency until the surface sample becomes meaningful.
+        surface_weight = _clip(surface_sample / 80.0, 0.0, 1.0)
+        all_weight = _clip(all_sample / 180.0, 0.0, 1.0) * (1.0 - 0.45 * surface_weight)
+        prior_weight = 0.25
+        denominator = prior_weight + surface_weight + all_weight
+        rate = (
+            prior_rate * prior_weight
+            + surface_rate * surface_weight
+            + all_rate * all_weight
+        ) / denominator
+        effective_sample = int(max(surface_sample, min(all_sample, 180)))
+        return rate, effective_sample
+
+    player_set_rate, player_set_sample = blended_with_all(
+        player_rows,
+        player_all_rows,
+        "tiebreak_set_rate",
+        "sets_played",
+        prior_set_rate,
+        28.0,
+        60.0,
+    )
+    opponent_set_rate, opponent_set_sample = blended_with_all(
+        opponent_rows,
+        opponent_all_rows,
+        "tiebreak_set_rate",
+        "sets_played",
+        prior_set_rate,
+        28.0,
+        60.0,
+    )
+    player_first_set_rate, player_first_set_sample = blended_with_all(
+        player_rows,
+        player_all_rows,
+        "first_set_tiebreak_rate",
+        "matches",
+        prior_first_set_rate,
+        16.0,
+        36.0,
+    )
+    opponent_first_set_rate, opponent_first_set_sample = blended_with_all(
+        opponent_rows,
+        opponent_all_rows,
+        "first_set_tiebreak_rate",
+        "matches",
+        prior_first_set_rate,
+        16.0,
+        36.0,
+    )
+    player_match_rate, player_match_sample = blended_with_all(
+        player_rows,
+        player_all_rows,
+        "match_tiebreak_rate",
+        "matches",
+        prior_match_rate,
+        16.0,
+        36.0,
+    )
+    opponent_match_rate, opponent_match_sample = blended_with_all(
+        opponent_rows,
+        opponent_all_rows,
+        "match_tiebreak_rate",
+        "matches",
+        prior_match_rate,
+        16.0,
+        36.0,
+    )
+    sample = int(
+        (
+            player_set_sample
+            + opponent_set_sample
+            + player_first_set_sample
+            + opponent_first_set_sample
+            + player_match_sample
+            + opponent_match_sample
+        )
+        / 6
+    )
+    if sample <= 0 or prior_set_rate <= 0 or prior_match_rate <= 0:
+        return 1.0, sample, player_match_rate, opponent_match_rate
+
+    def pair_style_ratio(player_rate: float, opponent_rate: float, prior_rate: float) -> float:
+        if prior_rate <= 0:
+            return 1.0
+        player_ratio = max(0.20, player_rate / prior_rate)
+        opponent_ratio = max(0.20, opponent_rate / prior_rate)
+        max_ratio = max(player_ratio, opponent_ratio)
+        mean_ratio = (player_ratio + opponent_ratio) * 0.5
+        geom_ratio = math.sqrt(player_ratio * opponent_ratio)
+        # A tiebreak-prone server can drag a match into breakers even if the
+        # opponent is more ordinary, so do not let geometric averaging fully
+        # cancel a strong single-player signal.
+        return 0.45 * max_ratio + 0.35 * geom_ratio + 0.20 * mean_ratio
+
+    set_ratio = pair_style_ratio(player_set_rate, opponent_set_rate, prior_set_rate)
+    first_ratio = pair_style_ratio(player_first_set_rate, opponent_first_set_rate, prior_first_set_rate)
+    match_ratio = pair_style_ratio(player_match_rate, opponent_match_rate, prior_match_rate)
+    raw = (max(0.25, set_ratio) ** 0.40) * (max(0.25, first_ratio) ** 0.25) * (max(0.25, match_ratio) ** 0.35)
+    sample_weight = _clip(sample / 55.0, 0.0, 1.0)
+    # Historical player tendency is useful for monster-server profiles, but it
+    # is a correction to serve/return math, not a replacement for it.
+    adjusted = math.exp(math.log(max(0.35, min(2.85, raw))) * 0.55 * sample_weight)
+    return _clip(adjusted, 0.82, 1.24), sample, player_match_rate, opponent_match_rate
 
 
 def _clip(value: float, low: float, high: float) -> float:
@@ -411,6 +568,8 @@ def project_player(
     tour: str,
     player_rows: dict[str, dict[str, str]],
     opponent_rows: dict[str, dict[str, str]],
+    player_all_rows: dict[str, dict[str, str]] | None = None,
+    opponent_all_rows: dict[str, dict[str, str]] | None = None,
     factor_row: dict[str, str],
     expected_match_games: float,
     slam_matches: int,
@@ -571,9 +730,27 @@ def project_player(
     first_set_tiebreak_base_prob = _set_tiebreak_prob(player_service_point_win, opponent_service_point_win, True)
     venue_first_set_tiebreak_factor = _float(factor_row.get("first_set_tiebreak_factor"), 1.0) or 1.0
     venue_match_tiebreak_factor = _float(factor_row.get("match_tiebreak_factor"), 1.0) or 1.0
+    prior_tiebreak_set = _float(factor_row.get("tiebreak_set_rate"), None)
+    if prior_tiebreak_set is None:
+        prior_tiebreak_set = _float(factor_row.get("tour_surface_baseline_tiebreak_set"), 0.18) or 0.18
+    prior_first_set_tiebreak = _float(factor_row.get("first_set_tiebreak_rate"), None)
+    if prior_first_set_tiebreak is None:
+        prior_first_set_tiebreak = _float(factor_row.get("tour_surface_baseline_first_set_tiebreak"), prior_tiebreak_set) or prior_tiebreak_set
+    prior_match_tiebreak = _float(factor_row.get("match_tiebreak_rate"), None)
+    if prior_match_tiebreak is None:
+        prior_match_tiebreak = _float(factor_row.get("tour_surface_baseline_match_tiebreak"), 0.36 if best_of >= 5 else 0.28) or (0.36 if best_of >= 5 else 0.28)
+    player_tiebreak_factor, player_tiebreak_sample, player_match_tiebreak_rate, opponent_match_tiebreak_rate = _player_tiebreak_factor(
+        player_rows,
+        opponent_rows,
+        prior_set_rate=prior_tiebreak_set,
+        prior_first_set_rate=prior_first_set_tiebreak,
+        prior_match_rate=prior_match_tiebreak,
+        player_all_rows=player_all_rows,
+        opponent_all_rows=opponent_all_rows,
+    )
     first_set_tiebreak_prob = _apply_tiebreak_probability_factors(
         first_set_tiebreak_base_prob,
-        venue_factor=venue_first_set_tiebreak_factor,
+        venue_factor=venue_first_set_tiebreak_factor * player_tiebreak_factor,
         current_factor=current_env_first_set_tiebreak_factor,
         low=0.015,
         high=0.58 if best_of == 3 else 0.62,
@@ -586,7 +763,7 @@ def project_player(
     match_tiebreak_note = "MATCH_TB_RECURSION"
     match_tiebreak_prob = _apply_tiebreak_probability_factors(
         match_tiebreak_base_prob,
-        venue_factor=venue_match_tiebreak_factor,
+        venue_factor=venue_match_tiebreak_factor * player_tiebreak_factor,
         current_factor=current_env_match_tiebreak_factor,
         low=0.025,
         high=0.94 if best_of >= 5 else 0.86,
@@ -638,6 +815,8 @@ def project_player(
         break_confidence = "LOW"
         break_notes.append("BREAK_LOW_SAMPLE")
     tiebreak_notes = ["TIEBREAK_RESEARCH_ONLY", "SERVE_RETURN_DEPENDENT", match_tiebreak_note]
+    if abs(player_tiebreak_factor - 1.0) >= 0.025:
+        tiebreak_notes.append("PLAYER_TB_TENDENCY")
     if first_cal_key or match_cal_key:
         tiebreak_notes.append("TIEBREAK_PLATT_CALIBRATED")
     venue_matches = _int(factor_row.get("matches"))
@@ -683,6 +862,10 @@ def project_player(
         current_env_ace_factor=current_env_ace_factor,
         current_env_df_factor=current_env_df_factor,
         current_env_break_factor=current_env_break_factor,
+        player_tiebreak_factor=player_tiebreak_factor,
+        player_tiebreak_sample=player_tiebreak_sample,
+        player_match_tiebreak_rate=player_match_tiebreak_rate,
+        opponent_match_tiebreak_rate=opponent_match_tiebreak_rate,
         venue_first_set_tiebreak_factor=venue_first_set_tiebreak_factor,
         venue_match_tiebreak_factor=venue_match_tiebreak_factor,
         current_env_first_set_tiebreak_factor=current_env_first_set_tiebreak_factor,

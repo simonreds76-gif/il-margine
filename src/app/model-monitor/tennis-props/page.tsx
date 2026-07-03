@@ -2,6 +2,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import { Fragment } from "react";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import {
   MODEL_MONITOR_ENABLED,
   MonitorNav,
@@ -16,6 +17,8 @@ import {
 export const dynamic = "force-dynamic";
 
 type CsvRow = Record<string, string>;
+type ProjectionSortKey = "schedule" | "aces" | "dfs" | "match_tb" | "first_tb" | "breaks";
+type SearchParamsInput = Promise<Record<string, string | string[] | undefined>>;
 type TournamentRoundLog = {
   date?: string;
   round?: string;
@@ -244,6 +247,53 @@ function groupRowsByDate(rows: CsvRow[]): { date: string; rows: CsvRow[] }[] {
     .map(([date, groupedRows]) => ({ date, rows: groupedRows }));
 }
 
+function validProjectionSort(value: string | string[] | undefined): ProjectionSortKey {
+  const raw = Array.isArray(value) ? value[0] : value;
+  if (raw === "aces" || raw === "dfs" || raw === "match_tb" || raw === "first_tb" || raw === "breaks") return raw;
+  return "schedule";
+}
+
+function projectionSortValue(rows: CsvRow[], sortKey: ProjectionSortKey): number {
+  if (sortKey === "aces") return Math.max(...rows.map((row) => n(row.projected_aces)));
+  if (sortKey === "dfs") return Math.max(...rows.map((row) => n(row.projected_dfs)));
+  if (sortKey === "match_tb") return Math.max(...rows.map((row) => n(row.match_tiebreak_pct)));
+  if (sortKey === "first_tb") return Math.max(...rows.map((row) => n(row.first_set_tiebreak_pct)));
+  if (sortKey === "breaks") return Math.max(...rows.map((row) => n(row.projected_total_breaks)));
+  return 0;
+}
+
+function matchKey(row: CsvRow): string {
+  const players = [row.player || "", row.opponent || ""].sort((a, b) => a.localeCompare(b)).join(" v ");
+  return [row.date || "", row.tour || "", row.tournament || "", players].join("|");
+}
+
+function fixtureName(rows: CsvRow[]): string {
+  const first = rows[0] ?? {};
+  return `${first.player || "-"} vs ${first.opponent || "-"}`;
+}
+
+function groupRowsByDateAndMatch(rows: CsvRow[], sortKey: ProjectionSortKey): { date: string; matches: { key: string; rows: CsvRow[] }[] }[] {
+  return groupRowsByDate(rows).map((dateGroup) => {
+    const matchMap = new Map<string, CsvRow[]>();
+    for (const row of dateGroup.rows) {
+      const key = matchKey(row);
+      matchMap.set(key, [...(matchMap.get(key) ?? []), row]);
+    }
+    const matches = [...matchMap.entries()].map(([key, matchRows]) => ({
+      key,
+      rows: [...matchRows].sort((a, b) => (a.player || "").localeCompare(b.player || "")),
+    }));
+    matches.sort((a, b) => {
+      if (sortKey !== "schedule") {
+        return projectionSortValue(b.rows, sortKey) - projectionSortValue(a.rows, sortKey)
+          || fixtureName(a.rows).localeCompare(fixtureName(b.rows));
+      }
+      return fixtureName(a.rows).localeCompare(fixtureName(b.rows));
+    });
+    return { date: dateGroup.date, matches };
+  });
+}
+
 function parseTournamentRoundLog(value: string | undefined): TournamentRoundLog[] {
   if (!value) return [];
   try {
@@ -398,11 +448,41 @@ function TieBreakCell({ row }: { row: CsvRow }) {
   );
 }
 
-function ProjectionTable({ rows }: { rows: CsvRow[] }) {
+function ProjectionSortControls({ active }: { active: ProjectionSortKey }) {
+  const options: { key: ProjectionSortKey; label: string }[] = [
+    { key: "schedule", label: "Schedule" },
+    { key: "match_tb", label: "Highest match TB" },
+    { key: "first_tb", label: "Highest 1st-set TB" },
+    { key: "aces", label: "Highest aces" },
+    { key: "dfs", label: "Highest DFs" },
+    { key: "breaks", label: "Highest breaks" },
+  ];
+  return (
+    <div className="mb-4 flex flex-wrap gap-2">
+      {options.map((option) => (
+        <Link
+          key={option.key}
+          href={`/model-monitor/tennis-props?propsSort=${option.key}`}
+          className={cn(
+            "rounded-full border px-3 py-1.5 text-xs font-bold uppercase tracking-[0.12em] transition",
+            active === option.key
+              ? "border-emerald-400/40 bg-emerald-500/15 text-emerald-200"
+              : "border-slate-800 bg-slate-950/70 text-slate-400 hover:border-slate-600 hover:text-slate-200",
+          )}
+        >
+          {option.label}
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+function ProjectionTable({ rows, sortKey }: { rows: CsvRow[]; sortKey: ProjectionSortKey }) {
   if (!rows.length) return <EmptyState message="No aces/DF projection board found. Run python scripts/run-tennis-props-daily.py after OnCourt extract." />;
-  const groupedRows = groupRowsByDate(rows);
+  const groupedRows = groupRowsByDateAndMatch(rows, sortKey);
   return (
     <div className="overflow-x-auto">
+      <ProjectionSortControls active={sortKey} />
       <table className="min-w-full text-sm">
         <thead>
           <tr className="border-b border-slate-800 text-left text-[11px] uppercase tracking-[0.16em] text-slate-500">
@@ -429,94 +509,115 @@ function ProjectionTable({ rows }: { rows: CsvRow[] }) {
                 <td colSpan={14} className="px-3 py-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="text-xs font-black uppercase tracking-[0.18em] text-emerald-300">{dateLabel(group.date)}</span>
-                    <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate-500">{group.rows.length} player rows</span>
+                    <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate-500">{group.matches.length} matches / {group.matches.reduce((sum, match) => sum + match.rows.length, 0)} player rows</span>
                   </div>
                 </td>
               </tr>
-              {group.rows.map((row, index) => (
-                <tr key={`${group.date}-${row.tour}-${row.player}-${row.opponent}-${index}`} className="border-b border-slate-900/80 text-slate-300">
-                  <td className="px-3 py-3">
-                    <MiniBadge label={row.tour || "-"} tone={row.tour === "WTA" ? "border-fuchsia-500/25 bg-fuchsia-500/10 text-fuchsia-200" : "border-cyan-500/25 bg-cyan-500/10 text-cyan-200"} />
-                  </td>
-                  <td className="px-3 py-3">
-                    <div className="font-semibold text-slate-100">{row.player}</div>
-                    <TournamentRoundDetails row={row} />
-                  </td>
-                  <td className="px-3 py-3 text-slate-400">{row.opponent}</td>
-                  <td className="px-3 py-3 font-mono text-lg text-emerald-300">{fmt(row.projected_aces, 1)}</td>
-                  <td className="px-3 py-3 font-mono text-lg text-rose-300">{fmt(row.projected_dfs, 1)}</td>
-                  <td className="px-3 py-3 font-mono text-xs">
-                    <div className="text-cyan-300">+{fmt(row.projected_breaks_for, 1)}</div>
-                    <div className="text-amber-300">-{fmt(row.projected_broken, 1)}</div>
-                    <div className="text-slate-500">tot {fmt(row.projected_total_breaks, 1)}</div>
-                  </td>
-                  <td className="px-3 py-3 font-mono text-xs">
-                    <TieBreakCell row={row} />
-                  </td>
-                  <td className="px-3 py-3"><MiniBadge label={row.ace_confidence || "LOW"} tone={confidenceTone(row.ace_confidence)} /></td>
-                  <td className="px-3 py-3"><MiniBadge label={row.df_confidence || "LOW"} tone={confidenceTone(row.df_confidence)} /></td>
-                  <td className="px-3 py-3"><MiniBadge label={row.break_confidence || "LOW"} tone={confidenceTone(row.break_confidence)} /></td>
-                  <td className="px-3 py-3"><MiniBadge label={row.tiebreak_confidence || "LOW"} tone={confidenceTone(row.tiebreak_confidence)} /></td>
-                  <td className="px-3 py-3 text-xs text-slate-400">
-                    <div className="min-w-[180px] rounded-xl border border-slate-800/80 bg-slate-950/55 p-2">
-                      <div className="mb-1 font-mono text-emerald-300">
-                        match games {fmt(row.expected_match_games, 1)}
-                      </div>
-                      <div className="mb-2 text-[11px] uppercase tracking-[0.1em] text-slate-600">
-                        {row.expected_match_games_source || "fallback"}
-                        {row.expected_match_games_confidence ? ` / ${row.expected_match_games_confidence}` : ""}
-                      </div>
-                      <div className="font-mono text-slate-300">{row.player_surface_matches || "0"}m / {row.player_surface_svpt_sample || "0"} svpt</div>
-                      <div className="mt-1 text-[11px] text-slate-600">player same-event {row.same_tournament_matches || "0"}m / {row.same_tournament_svpt || "0"} svpt</div>
-                      <div className="mt-1 text-[11px] text-slate-600">brk log +{row.same_tournament_breaks_for || "0"} / -{row.same_tournament_broken || "0"}</div>
-                      <div className="mt-1 text-[11px] text-slate-600">serve pts {fmt(row.service_point_win, 3)} / opp {fmt(row.opponent_service_point_win, 3)}</div>
-                    </div>
-                  </td>
-                  <td className="px-3 py-3 text-xs">
-                    <div className="min-w-[310px] rounded-xl border border-slate-800/80 bg-slate-950/55 p-2">
-                      <div className="mb-2 flex items-center justify-between gap-2 text-[11px] uppercase tracking-[0.12em] text-slate-500">
-                        <span>current {row.current_env_matches || "0"} matches</span>
-                        <span>live weight {fmt(row.current_env_weight, 2)}</span>
-                      </div>
-                      <div className="space-y-1.5">
-                        <div className="grid grid-cols-[44px_1fr] items-center gap-2">
-                          <span className="text-[10px] font-black uppercase tracking-[0.12em] text-emerald-300">Aces</span>
-                          <div className="flex flex-wrap gap-1.5">
-                            <MiniBadge label={`venue ${factorMove(row.venue_ace_factor)}`} tone={factorTone(row.venue_ace_factor)} />
-                            <MiniBadge label={`live ${factorMove(row.current_env_ace_factor)}`} tone={factorTone(row.current_env_ace_factor)} />
-                            <MiniBadge label={`net ${factorProductMove(row.venue_ace_factor, row.current_env_ace_factor)}`} tone={factorProductTone(row.venue_ace_factor, row.current_env_ace_factor)} />
-                          </div>
+              {group.matches.map((match) => (
+                <Fragment key={`${group.date}-${match.key}`}>
+                  <tr className="border-b border-slate-900/80 bg-slate-950/45">
+                    <td colSpan={14} className="px-3 py-2">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="font-semibold text-slate-100">{fixtureName(match.rows)}</div>
+                        <div className="flex flex-wrap gap-2 font-mono text-[11px]">
+                          <span className="rounded-full border border-violet-500/20 bg-violet-500/10 px-2 py-0.5 text-violet-200">match TB {fmt(projectionSortValue(match.rows, "match_tb"), 1)}%</span>
+                          <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-emerald-200">max aces {fmt(projectionSortValue(match.rows, "aces"), 1)}</span>
+                          <span className="rounded-full border border-rose-500/20 bg-rose-500/10 px-2 py-0.5 text-rose-200">max DF {fmt(projectionSortValue(match.rows, "dfs"), 1)}</span>
                         </div>
-                        <div className="grid grid-cols-[44px_1fr] items-center gap-2">
-                          <span className="text-[10px] font-black uppercase tracking-[0.12em] text-rose-300">DF</span>
-                          <div className="flex flex-wrap gap-1.5">
-                            <MiniBadge label={`venue ${factorMove(row.venue_df_factor)}`} tone={factorTone(row.venue_df_factor)} />
-                            <MiniBadge label={`live ${factorMove(row.current_env_df_factor)}`} tone={factorTone(row.current_env_df_factor)} />
-                            <MiniBadge label={`net ${factorProductMove(row.venue_df_factor, row.current_env_df_factor)}`} tone={factorProductTone(row.venue_df_factor, row.current_env_df_factor)} />
+                      </div>
+                    </td>
+                  </tr>
+                  {match.rows.map((row, index) => (
+                    <tr key={`${group.date}-${row.tour}-${row.player}-${row.opponent}-${index}`} className="border-b border-slate-900/80 text-slate-300">
+                      <td className="px-3 py-3">
+                        <MiniBadge label={row.tour || "-"} tone={row.tour === "WTA" ? "border-fuchsia-500/25 bg-fuchsia-500/10 text-fuchsia-200" : "border-cyan-500/25 bg-cyan-500/10 text-cyan-200"} />
+                      </td>
+                      <td className="px-3 py-3">
+                        <div className="font-semibold text-slate-100">{row.player}</div>
+                        <TournamentRoundDetails row={row} />
+                      </td>
+                      <td className="px-3 py-3 text-slate-400">{row.opponent}</td>
+                      <td className="px-3 py-3 font-mono text-lg text-emerald-300">{fmt(row.projected_aces, 1)}</td>
+                      <td className="px-3 py-3 font-mono text-lg text-rose-300">{fmt(row.projected_dfs, 1)}</td>
+                      <td className="px-3 py-3 font-mono text-xs">
+                        <div className="text-cyan-300">+{fmt(row.projected_breaks_for, 1)}</div>
+                        <div className="text-amber-300">-{fmt(row.projected_broken, 1)}</div>
+                        <div className="text-slate-500">tot {fmt(row.projected_total_breaks, 1)}</div>
+                      </td>
+                      <td className="px-3 py-3 font-mono text-xs">
+                        <TieBreakCell row={row} />
+                      </td>
+                      <td className="px-3 py-3"><MiniBadge label={row.ace_confidence || "LOW"} tone={confidenceTone(row.ace_confidence)} /></td>
+                      <td className="px-3 py-3"><MiniBadge label={row.df_confidence || "LOW"} tone={confidenceTone(row.df_confidence)} /></td>
+                      <td className="px-3 py-3"><MiniBadge label={row.break_confidence || "LOW"} tone={confidenceTone(row.break_confidence)} /></td>
+                      <td className="px-3 py-3"><MiniBadge label={row.tiebreak_confidence || "LOW"} tone={confidenceTone(row.tiebreak_confidence)} /></td>
+                      <td className="px-3 py-3 text-xs text-slate-400">
+                        <div className="min-w-[180px] rounded-xl border border-slate-800/80 bg-slate-950/55 p-2">
+                          <div className="mb-1 font-mono text-emerald-300">
+                            match games {fmt(row.expected_match_games, 1)}
                           </div>
-                        </div>
-                        <div className="grid grid-cols-[44px_1fr] items-center gap-2">
-                          <span className="text-[10px] font-black uppercase tracking-[0.12em] text-cyan-300">Brk</span>
-                          <div className="flex flex-wrap gap-1.5">
-                            <MiniBadge label={`live ${factorMove(row.current_env_break_factor)}`} tone={factorTone(row.current_env_break_factor)} />
+                          <div className="mb-2 text-[11px] uppercase tracking-[0.1em] text-slate-600">
+                            {row.expected_match_games_source || "fallback"}
+                            {row.expected_match_games_confidence ? ` / ${row.expected_match_games_confidence}` : ""}
                           </div>
+                          <div className="font-mono text-slate-300">{row.player_surface_matches || "0"}m / {row.player_surface_svpt_sample || "0"} svpt</div>
+                          <div className="mt-1 text-[11px] text-slate-600">player same-event {row.same_tournament_matches || "0"}m / {row.same_tournament_svpt || "0"} svpt</div>
+                          <div className="mt-1 text-[11px] text-slate-600">brk log +{row.same_tournament_breaks_for || "0"} / -{row.same_tournament_broken || "0"}</div>
+                          <div className="mt-1 text-[11px] text-slate-600">serve pts {fmt(row.service_point_win, 3)} / opp {fmt(row.opponent_service_point_win, 3)}</div>
                         </div>
-                        <div className="grid grid-cols-[44px_1fr] items-center gap-2">
-                          <span className="text-[10px] font-black uppercase tracking-[0.12em] text-violet-300">TB</span>
-                          <div className="flex flex-wrap gap-1.5">
+                      </td>
+                      <td className="px-3 py-3 text-xs">
+                        <div className="min-w-[310px] rounded-xl border border-slate-800/80 bg-slate-950/55 p-2">
+                          <div className="mb-2 flex items-center justify-between gap-2 text-[11px] uppercase tracking-[0.12em] text-slate-500">
+                            <span>current {row.current_env_matches || "0"} matches</span>
+                            <span>live weight {fmt(row.current_env_weight, 2)}</span>
+                          </div>
+                          <div className="space-y-1.5">
+                            <div className="grid grid-cols-[44px_1fr] items-center gap-2">
+                              <span className="text-[10px] font-black uppercase tracking-[0.12em] text-emerald-300">Aces</span>
+                              <div className="flex flex-wrap gap-1.5">
+                                <MiniBadge label={`venue ${factorMove(row.venue_ace_factor)}`} tone={factorTone(row.venue_ace_factor)} />
+                                <MiniBadge label={`live ${factorMove(row.current_env_ace_factor)}`} tone={factorTone(row.current_env_ace_factor)} />
+                                <MiniBadge label={`net ${factorProductMove(row.venue_ace_factor, row.current_env_ace_factor)}`} tone={factorProductTone(row.venue_ace_factor, row.current_env_ace_factor)} />
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-[44px_1fr] items-center gap-2">
+                              <span className="text-[10px] font-black uppercase tracking-[0.12em] text-rose-300">DF</span>
+                              <div className="flex flex-wrap gap-1.5">
+                                <MiniBadge label={`venue ${factorMove(row.venue_df_factor)}`} tone={factorTone(row.venue_df_factor)} />
+                                <MiniBadge label={`live ${factorMove(row.current_env_df_factor)}`} tone={factorTone(row.current_env_df_factor)} />
+                                <MiniBadge label={`net ${factorProductMove(row.venue_df_factor, row.current_env_df_factor)}`} tone={factorProductTone(row.venue_df_factor, row.current_env_df_factor)} />
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-[44px_1fr] items-center gap-2">
+                              <span className="text-[10px] font-black uppercase tracking-[0.12em] text-cyan-300">Brk</span>
+                              <div className="flex flex-wrap gap-1.5">
+                                <MiniBadge label={`live ${factorMove(row.current_env_break_factor)}`} tone={factorTone(row.current_env_break_factor)} />
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-[44px_1fr] items-center gap-2">
+                              <span className="text-[10px] font-black uppercase tracking-[0.12em] text-violet-300">TB</span>
+                              <div className="flex flex-wrap gap-1.5">
                             <MiniBadge label={`1st venue ${factorMove(row.venue_first_set_tiebreak_factor)}`} tone={factorTone(row.venue_first_set_tiebreak_factor)} />
                             <MiniBadge label={`1st live ${factorMove(row.current_env_first_set_tiebreak_factor)}`} tone={factorTone(row.current_env_first_set_tiebreak_factor)} />
                             <MiniBadge label={`match venue ${factorMove(row.venue_match_tiebreak_factor)}`} tone={factorTone(row.venue_match_tiebreak_factor)} />
                             <MiniBadge label={`match live ${factorMove(row.current_env_match_tiebreak_factor)}`} tone={factorTone(row.current_env_match_tiebreak_factor)} />
+                            <MiniBadge label={`player ${factorMove(row.player_tiebreak_factor)}`} tone={factorTone(row.player_tiebreak_factor)} />
+                          </div>
+                          <div className="mt-1 text-[10px] text-slate-600">
+                            hist match TB {pctText(row.player_match_tiebreak_actual_pct)} / opp {pctText(row.opponent_match_tiebreak_actual_pct)}
+                            {row.player_tiebreak_sample ? ` · sample ${row.player_tiebreak_sample}` : ""}
                           </div>
                         </div>
                       </div>
                     </div>
-                  </td>
-                  <td className="px-3 py-3 text-xs text-slate-500">
-                    <NoteBadges value={[row.notes, row.break_notes, row.tiebreak_notes].filter(Boolean).join("|")} />
-                  </td>
-                </tr>
+                      </td>
+                      <td className="px-3 py-3 text-xs text-slate-500">
+                        <NoteBadges value={[row.notes, row.break_notes, row.tiebreak_notes].filter(Boolean).join("|")} />
+                      </td>
+                    </tr>
+                  ))}
+                </Fragment>
               ))}
             </Fragment>
           ))}
@@ -665,8 +766,10 @@ function ComparisonTable({ rows, hasLinesFile }: { rows: CsvRow[]; hasLinesFile:
   );
 }
 
-export default async function TennisPropsMonitorPage() {
+export default async function TennisPropsMonitorPage({ searchParams }: { searchParams?: SearchParamsInput }) {
   if (!MODEL_MONITOR_ENABLED) notFound();
+  const resolvedSearchParams: Record<string, string | string[] | undefined> = searchParams ? await searchParams : {};
+  const projectionSortKey = validProjectionSort(resolvedSearchParams.propsSort);
 
   const [
     boardRows,
@@ -763,7 +866,7 @@ export default async function TennisPropsMonitorPage() {
             title={`Projection Board (${latestDate(boardRows)})`}
             subtitle="Expected aces and double faults for each scheduled player. This is the simulation layer you asked for."
           >
-            <ProjectionTable rows={sortedBoard} />
+            <ProjectionTable rows={sortedBoard} sortKey={projectionSortKey} />
           </SectionCard>
         </div>
       </div>
