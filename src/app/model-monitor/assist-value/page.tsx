@@ -395,6 +395,7 @@ export default async function AssistValueMonitorPage() {
   const sortedSignals = [...signals].sort((a, b) => (numeric(b, "edge_pp") ?? -999) - (numeric(a, "edge_pp") ?? -999));
   const generatedAt = maxValue(rows, "generated_at");
   const capturedAt = maxValue(rows, "captured_at");
+  const latestKickoff = maxValue(rows, "kickoff_at");
   const ledger = summarize(rows);
   const leagues = leagueSummaries(rows);
   const hasSettlementColumns = settlementColumnsPresent(rows);
@@ -410,6 +411,19 @@ export default async function AssistValueMonitorPage() {
     performanceTimestamp !== null &&
     performanceTimestamp + 5 * 60 * 1000 < latestSignalTimestamp;
   const settlementUnderReview = !/settlement_valid_for_roi:\s*true/i.test(performanceReport ?? "");
+  const latestKickoffTimestamp = timestampMs(latestKickoff);
+  const capturedTimestamp = timestampMs(capturedAt);
+  const artifactTimestamp = timestampMs(signalsMtime) ?? latestSignalTimestamp ?? performanceTimestamp;
+  const fixtureSourceIsStale =
+    latestKickoffTimestamp !== null &&
+    artifactTimestamp !== null &&
+    latestKickoffTimestamp + 48 * 60 * 60 * 1000 < artifactTimestamp;
+  const captureSourceIsStale =
+    capturedTimestamp !== null &&
+    artifactTimestamp !== null &&
+    capturedTimestamp + 48 * 60 * 60 * 1000 < artifactTimestamp;
+  const sourceIsStale = fixtureSourceIsStale || captureSourceIsStale;
+  const visibleSignals = sourceIsStale ? [] : sortedSignals;
 
   return (
     <main className="min-h-screen bg-[#050b12] px-4 py-6 text-slate-100 sm:px-6 lg:px-8">
@@ -423,10 +437,14 @@ export default async function AssistValueMonitorPage() {
 
         <HeroCard title="Assist Value Shadow Monitor" eyebrow="Research lane, no public betting output">
           <div className="max-w-4xl text-slate-400">
-            Bet365 assist odds are compared with the internal assist fair line. The lane is paused while settlement and calibration are under review; P/L and ROI are displayed only as invalid historical diagnostics, not as evidence.
+            Bet365 assist odds are compared with the internal assist fair line. The lane is paused while settlement and calibration are under review; stale/offseason odds are now blocked from being displayed as current candidates.
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             <StatusPill label={publicStatus === "-" ? "private shadow" : publicStatus.replaceAll("_", " ")} tone="bg-amber-500/10 text-amber-300 border-amber-500/20" />
+            <StatusPill
+              label={sourceIsStale ? "offseason / stale source" : "fresh source"}
+              tone={sourceIsStale ? "bg-rose-500/10 text-rose-300 border-rose-500/20" : "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"}
+            />
             <StatusPill label="settlement under review" tone="bg-rose-500/10 text-rose-300 border-rose-500/20" />
             <StatusPill label={`${ledger.pending} pending`} tone="bg-cyan-500/10 text-cyan-300 border-cyan-500/20" />
             <StatusPill label={hasSettlementColumns ? "settlement columns ready" : "settlement columns missing locally"} tone={hasSettlementColumns ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20" : "bg-rose-500/10 text-rose-300 border-rose-500/20"} />
@@ -436,6 +454,15 @@ export default async function AssistValueMonitorPage() {
             />
           </div>
         </HeroCard>
+
+        {sourceIsStale ? (
+          <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 px-5 py-4 text-sm text-amber-100">
+            Assist Value is paused because the latest source fixture/odds are stale
+            {latestKickoff !== "-" ? <>: latest kickoff <span className="font-semibold">{formatDateTimeLabel(latestKickoff)}</span></> : null}
+            {capturedAt !== "-" ? <>; latest capture <span className="font-semibold">{formatDateTimeLabel(capturedAt)}</span></> : null}.
+            Current candidate cards are hidden so old club-season prices cannot be mistaken for live fair odds.
+          </div>
+        ) : null}
 
         {settlementUnderReview ? (
           <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 px-5 py-4 text-sm text-rose-100">
@@ -464,7 +491,8 @@ export default async function AssistValueMonitorPage() {
           <StatCard label="Average edge" value={signedPp(ledger.avgEdge, 2)} detail="shadow signals only" tone={toneClass(ledger.avgEdge)} />
           <StatCard label="Role match" value={roleMatchRate === "-" ? "-" : `${roleMatchRate}%`} detail="source audit row match" />
           <StatCard label="Generated" value={generatedAt === "-" ? "-" : formatDateTimeLabel(generatedAt)} detail={signalsMtime ? `file ${formatDateTimeLabel(signalsMtime)}` : "file timestamp unavailable"} />
-          <StatCard label="Captured" value={capturedAt === "-" ? "-" : formatDateTimeLabel(capturedAt)} detail="latest odds capture in CSV" />
+          <StatCard label="Captured" value={capturedAt === "-" ? "-" : formatDateTimeLabel(capturedAt)} detail="latest odds capture in CSV" tone={captureSourceIsStale ? "text-rose-300" : undefined} />
+          <StatCard label="Latest kickoff" value={latestKickoff === "-" ? "-" : formatDateTimeLabel(latestKickoff)} detail={fixtureSourceIsStale ? "stale source fixture" : "source fixture freshness"} tone={fixtureSourceIsStale ? "text-rose-300" : "text-emerald-300"} />
           <StatCard
             label="Performance"
             value={performanceGeneratedAt === "-" ? "missing" : formatDateTimeLabel(performanceGeneratedAt)}
@@ -479,11 +507,13 @@ export default async function AssistValueMonitorPage() {
 
         <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
           <SectionCard title="Assist Value Signals" subtitle="Goalscorer-style cards with fair odds, market odds, edge, set-piece role and settlement state.">
-            {sortedSignals.length === 0 ? (
+            {sourceIsStale ? (
+              <EmptyState message="Assist candidate cards are hidden because the latest source odds/fixtures are stale. This lane will show candidates again only when fresh club assist odds are captured." />
+            ) : visibleSignals.length === 0 ? (
               <EmptyState message="No assist shadow signals in the current artifact." />
             ) : (
               <div className="space-y-3">
-                {sortedSignals.slice(0, 24).map((row, index) => (
+                {visibleSignals.slice(0, 24).map((row, index) => (
                   <AssistSignalCard
                     key={`${row.player_name}-${row.home_team}-${row.away_team}-${row.kickoff_at}-${index}`}
                     row={row}
