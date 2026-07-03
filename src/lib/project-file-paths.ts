@@ -48,6 +48,7 @@ const KNOWN_PROJECT_FILE_PATHS = {
   "data/backtest/strict-signals-grass_bo3-archive.csv": path.join(process.cwd(), "data/backtest/strict-signals-grass_bo3-archive.csv"),
   "data/backtest/strict-signals-grass_bo3-live.csv": path.join(process.cwd(), "data/backtest/strict-signals-grass_bo3-live.csv"),
   "data/backtest/grass_bo3-shadow-nearmiss.csv": path.join(process.cwd(), "data/backtest/grass_bo3-shadow-nearmiss.csv"),
+  "data/backtest/strict-signals-cpi_speed.csv": path.join(process.cwd(), "data/backtest/strict-signals-cpi_speed.csv"),
   "data/backtest/strict-policy-performance-grass_bo3-weekly.csv": path.join(process.cwd(), "data/backtest/strict-policy-performance-grass_bo3-weekly.csv"),
   "data/backtest/strict-clv-audit-grass_bo3-2026.csv": path.join(process.cwd(), "data/backtest/strict-clv-audit-grass_bo3-2026.csv"),
   "data/backtest/strict-clv-audit-grass_bo3-2026.txt": path.join(process.cwd(), "data/backtest/strict-clv-audit-grass_bo3-2026.txt"),

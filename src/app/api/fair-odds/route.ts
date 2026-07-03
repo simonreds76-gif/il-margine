@@ -292,8 +292,8 @@ const CLAY_BO3_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-clay_b
 const CLAY_BO3_SIGNAL_ARCHIVE_CSV = projectFilePath("data/backtest/strict-signals-clay_bo3-archive.csv");
 const GRASS_BO3_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-grass_bo3-live.csv");
 const GRASS_BO3_SIGNAL_ARCHIVE_CSV = projectFilePath("data/backtest/strict-signals-grass_bo3-archive.csv");
-const CPI_SPEED_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-cpi_speed-live.csv");
-const CPI_SPEED_SIGNAL_ARCHIVE_CSV = projectFilePath("data/backtest/strict-signals-cpi_speed-archive.csv");
+const CPI_SPEED_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-cpi_speed.csv");
+const CPI_SPEED_SIGNAL_ARCHIVE_CSV = projectFilePath("data/backtest/strict-signals-cpi_speed.csv");
 const FAIR_ODDS_TENNIS_SPREADS_ENABLED = parseBoolEnv("FAIR_ODDS_TENNIS_SPREADS_ENABLED", false);
 const INTERNAL_RESEARCH_LANES = process.env.INTERNAL_RESEARCH_LANES === "1";
 const FAIR_ODDS_SPREAD_V1_ENABLED = parseBoolEnv("FAIR_ODDS_SPREAD_V1_ENABLED", INTERNAL_RESEARCH_LANES);

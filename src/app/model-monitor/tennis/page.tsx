@@ -32,9 +32,14 @@ type LaneStats = {
   liveCount: number;
   archiveCount: number;
   nearMissCount: number;
+  openCount: number;
   settledCount: number;
   roiPct: number | null;
+  avgValuePct: number | null;
   avgClvPct: number | null;
+  performanceGeneratedUtc: string | null;
+  performanceAsOfDate: string | null;
+  performanceSourceFile: string | null;
   topNearMissReasons: string[];
   latestSignals: CsvRow[];
 };
@@ -203,6 +208,14 @@ function settledRows(rows: CsvRow[]): CsvRow[] {
   return rows.filter((row) => isWon(row) || isLost(row));
 }
 
+function openRows(rows: CsvRow[]): CsvRow[] {
+  return rows.filter((row) => {
+    const raw = (row.settlement_status || row.bet_outcome || row.result || "").trim().toLowerCase();
+    if (!raw) return true;
+    return raw === "pending" || raw === "open" || raw === "active";
+  });
+}
+
 function rowPnlUnits(row: CsvRow): number | null {
   const stake = toNumber(row.stake_units) ?? 1;
   if (isLost(row)) return -stake;
@@ -281,21 +294,37 @@ function latestCapturedRows(rows: CsvRow[]): CsvRow[] {
 
 async function loadLaneStats(id: TennisResearchLaneId): Promise<LaneStats> {
   const files = TENNIS_MONITOR_FILES[id];
-  const [liveCsv, archiveCsv, nearMissCsv, clvCsv, clvSpreadCsv] = await Promise.all([
+  const [liveCsv, archiveCsv, nearMissCsv, performanceCsv, clvCsv, clvSpreadCsv] = await Promise.all([
     readKnownFile(files.live),
     readKnownFile(files.archive),
     readKnownFile(files.nearMiss),
+    readKnownFile(files.performance),
     readKnownFile(files.clvAuditCsv),
     readKnownFile(files.clvAuditSpreadCsv),
   ]);
   const liveRows = liveCsv ? parseCsv(liveCsv) : [];
   const archiveRows = archiveCsv ? parseCsv(archiveCsv) : [];
   const nearMissRows = nearMissCsv ? parseCsv(nearMissCsv) : [];
-  const settled = settledRows(archiveRows);
+  const allSignalRows = [...archiveRows, ...liveRows];
+  const settledSourceRows = archiveRows.length > 0 ? archiveRows : liveRows;
+  const settled = settledRows(settledSourceRows);
+  const open = openRows(liveRows.length > 0 ? liveRows : allSignalRows);
   const pnlValues = settled.map(rowPnlUnits).filter((value): value is number => value !== null);
   const stakeValues = settled.map((row) => toNumber(row.stake_units) ?? 1);
   const totalStake = stakeValues.reduce((sum, value) => sum + value, 0);
   const totalPnl = pnlValues.reduce((sum, value) => sum + value, 0);
+  const valuePctValues = allSignalRows
+    .map((row) => toNumber(row.value_pct))
+    .filter((value): value is number => value !== null);
+  const performanceRows = performanceCsv ? parseCsv(performanceCsv) : [];
+  const performanceRow =
+    performanceRows.find(
+      (row) =>
+        row.scope === "all_time" &&
+        row.eval_period === "clean" &&
+        row.league_scope === "combined" &&
+        (row.bet_type || "") === "",
+    ) ?? performanceRows.find((row) => row.scope === "all_time" && row.league_scope === "combined") ?? null;
   const clvRows = [...(clvCsv ? parseCsv(clvCsv) : []), ...(clvSpreadCsv ? parseCsv(clvSpreadCsv) : [])];
   const clvValues = clvRows
     .map((row) => toNumber(row.clv_pct) ?? toNumber(row.avg_clv_pct))
@@ -305,11 +334,16 @@ async function loadLaneStats(id: TennisResearchLaneId): Promise<LaneStats> {
     liveCount: liveRows.length,
     archiveCount: archiveRows.length,
     nearMissCount: nearMissRows.length,
-    settledCount: settled.length,
-    roiPct: totalStake > 0 ? (totalPnl / totalStake) * 100 : null,
+    openCount: open.length || toNumber(performanceRow?.unsettled) || 0,
+    settledCount: settled.length || toNumber(performanceRow?.settled) || 0,
+    roiPct: totalStake > 0 ? (totalPnl / totalStake) * 100 : toNumber(performanceRow?.roi_pct),
+    avgValuePct: avg(valuePctValues) ?? toNumber(performanceRow?.avg_value_pct),
     avgClvPct: avg(clvValues),
+    performanceGeneratedUtc: performanceRow?.generated_utc || null,
+    performanceAsOfDate: performanceRow?.as_of_date || null,
+    performanceSourceFile: performanceRow?.source_file || null,
     topNearMissReasons: topReasons(nearMissRows),
-    latestSignals: latestCapturedRows([...archiveRows, ...liveRows]),
+    latestSignals: latestCapturedRows(allSignalRows),
   };
 }
 
@@ -740,12 +774,20 @@ function LaneCard({ lane, stats }: { lane: LaneView; stats: LaneStats }) {
         </div>
       ) : null}
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <EmptyMetric label="Live signals" value={String(stats.liveCount)} />
-        <EmptyMetric label="Near misses" value={String(stats.nearMissCount)} />
-        <EmptyMetric label="Settled" value={String(stats.settledCount || stats.archiveCount)} />
-        <EmptyMetric label="ROI" value={formatNumber(stats.roiPct, "%")} />
+      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <EmptyMetric label="Current rows" value={String(stats.liveCount || stats.archiveCount)} />
+        <EmptyMetric label="Open" value={String(stats.openCount)} />
+        <EmptyMetric label="Settled" value={String(stats.settledCount)} />
+        <EmptyMetric label="ROI" value={stats.settledCount > 0 ? formatNumber(stats.roiPct, "%") : "not settled"} />
+        <EmptyMetric label="Avg edge" value={formatNumber(stats.avgValuePct, "%")} />
       </div>
+
+      {lane.id === "cpi_speed_shadow" ? (
+        <div className="mt-4 rounded-xl border border-cyan-500/20 bg-cyan-500/10 px-4 py-3 text-sm text-cyan-100">
+          CPI-speed is being tracked, not sold: {stats.openCount} open row{stats.openCount === 1 ? "" : "s"}, {stats.settledCount} settled, avg edge {formatNumber(stats.avgValuePct, "%")}. ROI and CLV are not meaningful until these rows settle and closing-price coverage is checked.
+          {stats.performanceAsOfDate ? <span> Weekly report as of {stats.performanceAsOfDate}.</span> : null}
+        </div>
+      ) : null}
 
       <div className="mt-5 grid gap-3 lg:grid-cols-3">
         <div className="rounded-xl border border-slate-800/70 bg-slate-950/40 p-4 lg:col-span-2">
@@ -772,7 +814,16 @@ function LaneCard({ lane, stats }: { lane: LaneView; stats: LaneStats }) {
                       <td className="py-2 pr-4">{row.bet_type || "match"}</td>
                       <td className="py-2 pr-4">{row.side || "-"}</td>
                       <td className="py-2 pr-4">{row.value_pct || "-"}</td>
-                      <td className="py-2 pr-4">{row.shadow_reason || "-"}</td>
+                      <td className="py-2 pr-4">
+                        {lane.id === "cpi_speed_shadow"
+                          ? [
+                              row.cpi_speed_gate || row.shadow_reason,
+                              row.cpi_speed_bucket ? `bucket ${row.cpi_speed_bucket}` : null,
+                              row.cpi_speed_key ? `venue ${row.cpi_speed_key}` : null,
+                              row.cpi_speed_z ? `z ${row.cpi_speed_z}` : null,
+                            ].filter(Boolean).join(" | ") || "-"
+                          : row.shadow_reason || "-"}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -780,7 +831,7 @@ function LaneCard({ lane, stats }: { lane: LaneView; stats: LaneStats }) {
             </div>
           ) : (
             <p className="mt-2 text-sm leading-6 text-slate-400">
-              No live rows yet. Run the lane with `INTERNAL_RESEARCH_LANES=1` and `--signal-profile clay_bo3`.
+              No current rows found for this lane. Run the daily report with `INTERNAL_RESEARCH_LANES=1` and the lane profile, then refresh this monitor.
             </p>
           )}
           {stats.topNearMissReasons.length > 0 ? (
@@ -806,6 +857,14 @@ function LaneCard({ lane, stats }: { lane: LaneView; stats: LaneStats }) {
               <dt className="text-slate-500">Weekly performance</dt>
               <dd className="break-all text-slate-300">{files.performance || "-"}</dd>
             </div>
+            {stats.performanceGeneratedUtc || stats.performanceSourceFile ? (
+              <div>
+                <dt className="text-slate-500">Performance snapshot</dt>
+                <dd className="break-all text-slate-300">
+                  {[stats.performanceGeneratedUtc, stats.performanceSourceFile].filter(Boolean).join(" | ")}
+                </dd>
+              </div>
+            ) : null}
           </dl>
         </div>
       </div>
