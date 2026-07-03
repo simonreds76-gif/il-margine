@@ -103,7 +103,13 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Log "=== Step 7f/13: Settle CPI speed shadow CSV ==="
-& python scripts\settle-strict-signals.py --csv data\backtest\strict-signals-cpi_speed-archive.csv 2>&1 | ForEach-Object { Log $_ }
+$cpiSpeedArchivePath = "data\backtest\strict-signals-cpi_speed-archive.csv"
+$cpiSpeedLegacyPath = "data\backtest\strict-signals-cpi_speed.csv"
+if (-not (Test-Path $cpiSpeedArchivePath) -and (Test-Path $cpiSpeedLegacyPath)) {
+    Copy-Item -Path $cpiSpeedLegacyPath -Destination $cpiSpeedArchivePath
+    Log "Seeded CPI speed archive from legacy mirror for first settlement run."
+}
+& python scripts\settle-strict-signals.py --csv $cpiSpeedArchivePath 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: cpi_speed_shadow settlement failed (exit $LASTEXITCODE), continuing..."
 }

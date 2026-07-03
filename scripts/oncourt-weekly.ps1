@@ -300,6 +300,18 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: clay bo3 dog-HC CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Post-step: Grass bo3 ML CLV audit ==="
+& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-grass_bo3-archive.csv --detail-csv data\backtest\strict-clv-audit-grass_bo3-2026.csv --summary-txt data\backtest\strict-clv-audit-grass_bo3-2026.txt --unmatched-csv data\backtest\strict-clv-audit-grass_bo3-2026-unmatched.csv 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: grass bo3 ML CLV audit failed (exit $LASTEXITCODE), continuing..."
+}
+
+Log "=== Post-step: CPI speed shadow ML CLV audit ==="
+& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-cpi_speed-archive.csv --detail-csv data\backtest\strict-clv-audit-cpi_speed-2026.csv --summary-txt data\backtest\strict-clv-audit-cpi_speed-2026.txt --unmatched-csv data\backtest\strict-clv-audit-cpi_speed-2026-unmatched.csv 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: CPI speed shadow ML CLV audit failed (exit $LASTEXITCODE), continuing..."
+}
+
 Log "=== Post-step: Spread v1 shadow report ==="
 $prevSpreadV1CorrectionOnly = $env:SPREAD_V1_ENABLE_CORRECTION_ONLY
 $env:SPREAD_V1_ENABLE_CORRECTION_ONLY = "1"
