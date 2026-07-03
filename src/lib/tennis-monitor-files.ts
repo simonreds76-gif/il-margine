@@ -97,6 +97,8 @@ export const TENNIS_MONITOR_FILES: Record<TennisResearchLaneId, TennisMonitorFil
     archive: "data/backtest/strict-signals-cpi_speed-archive.csv",
     nearMiss: "data/backtest/cpi_speed-shadow-nearmiss.csv",
     performance: "data/backtest/strict-policy-performance-cpi_speed-weekly.csv",
+    clvAuditCsv: "data/backtest/strict-clv-audit-cpi_speed-2026.csv",
+    clvAuditTxt: "data/backtest/strict-clv-audit-cpi_speed-2026.txt",
   },
   challenger_hc: {
     label: "Challenger HC",
