@@ -426,7 +426,7 @@ export function PhaseLabel({ label, aside }: { label: string; aside?: string }) 
 export function MonitorNav({
   current,
 }: {
-  current: "tennis" | "tennis-props" | "goalscorer" | "lineups" | "assist-value" | "team-shots" | "corners";
+  current: "overview" | "tennis" | "tennis-live" | "tennis-props" | "goalscorer" | "lineups" | "assist-value" | "team-shots" | "corners";
 }) {
   const base =
     "inline-flex items-center rounded-full border border-slate-700/70 bg-slate-900/70 px-3 py-1.5 text-sm text-slate-400 transition-colors hover:border-slate-600 hover:text-slate-200";
@@ -434,8 +434,14 @@ export function MonitorNav({
     "border-emerald-500/30 bg-emerald-500/8 text-emerald-200 hover:border-emerald-500/40 hover:text-emerald-100";
   return (
     <nav className="flex flex-wrap items-center gap-2">
-      <Link href="/model-monitor" className={cn(base, current === "tennis" && active)}>
-        Tennis
+      <Link href="/model-monitor" className={cn(base, current === "overview" && active)}>
+        Overview
+      </Link>
+      <Link href="/model-monitor/tennis" className={cn(base, current === "tennis" && active)}>
+        Tennis Research
+      </Link>
+      <Link href="/model-monitor/tennis/live" className={cn(base, current === "tennis-live" && active)}>
+        Tennis Live
       </Link>
       <Link href="/model-monitor/tennis-props" className={cn(base, current === "tennis-props" && active)}>
         Aces / DFs

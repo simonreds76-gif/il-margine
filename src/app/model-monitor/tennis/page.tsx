@@ -1,18 +1,20 @@
 import { readFile } from "node:fs/promises";
 import { notFound } from "next/navigation";
 import {
-  TENNIS_LEGACY_DISABLED_LANES,
   TENNIS_MONITOR_FILES,
-  TENNIS_RESEARCH_LANES,
   type TennisResearchLaneId,
 } from "@/lib/tennis-monitor-files";
 import { tryGetKnownProjectFilePath } from "@/lib/project-file-paths";
-import { StatusPill, cn } from "../shared";
+import { MonitorNav, StatusPill, cn } from "../shared";
 
 export const dynamic = "force-dynamic";
 
 const TENNIS_MONITOR_ENABLED =
-  process.env.NODE_ENV !== "production" && process.env.INTERNAL_RESEARCH_LANES === "1";
+  process.env.NODE_ENV !== "production" ||
+  process.env.INTERNAL_RESEARCH_LANES === "1" ||
+  process.env.MODEL_MONITOR_PUBLIC === "1" ||
+  process.env.NEXT_PUBLIC_ENABLE_MODEL_MONITOR === "1" ||
+  process.env.VERCEL_ENV === "preview";
 
 type LaneView = {
   id: TennisResearchLaneId;
@@ -128,6 +130,9 @@ const laneViews: Record<TennisResearchLaneId, LaneView> = {
     disabledReason: "awaiting Pinnacle HC coverage + challenger_ml proof",
   },
 };
+
+const PRIMARY_LANE_IDS: TennisResearchLaneId[] = ["hard_bo3", "grass_bo3", "clay_bo3", "cpi_speed_shadow", "challenger_ml"];
+const PARKED_LANE_IDS: TennisResearchLaneId[] = ["slam_bo5", "indoor_bo3", "challenger_hc"];
 
 function laneAnchor(id: string) {
   return id.replaceAll("_", "-");
@@ -628,13 +633,13 @@ function CpiSurfaceSpeedCard({ summary }: { summary: CpiSummary }) {
                             </p>
                           </td>
                           <td className="px-3 py-2 tabular-nums">
-                            {row.train_overlay_bets} bets · {formatSignedPct(row.train_overlay_roi_pct)}
+                            {row.train_overlay_bets} bets | {formatSignedPct(row.train_overlay_roi_pct)}
                           </td>
                           <td className="px-3 py-2 tabular-nums">
-                            {row.holdout_overlay_bets} bets · {formatSignedPct(row.holdout_overlay_roi_pct)}
+                            {row.holdout_overlay_bets} bets | {formatSignedPct(row.holdout_overlay_roi_pct)}
                           </td>
                           <td className="px-3 py-2 font-semibold tabular-nums text-lime-200">
-                            {row.combined_overlay_bets} bets · {formatSignedPct(row.combined_overlay_roi_pct)}
+                            {row.combined_overlay_bets} bets | {formatSignedPct(row.combined_overlay_roi_pct)}
                           </td>
                         </tr>
                       ))}
@@ -690,12 +695,12 @@ function CpiSurfaceSpeedCard({ summary }: { summary: CpiSummary }) {
                 <div key={`${row.surface}-${row.cell}-${row.bucket}`} className="rounded-xl border border-slate-800/70 bg-slate-950/55 p-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <p className="text-sm font-semibold text-slate-100">
-                      {row.surface} · {row.cell.replaceAll("_", " ")} · {row.bucket}
+                      {row.surface} | {row.cell.replaceAll("_", " ")} | {row.bucket}
                     </p>
                     <p className="text-sm font-bold tabular-nums text-emerald-300">{formatSignedPct(row.roi_pct)}</p>
                   </div>
                   <p className="mt-2 text-xs text-slate-500">
-                    n={row.n} · WR {formatNumber(toNumber(row.wr_pct), "%")} · P(ROI≤0) {formatNumber(toNumber(row.p_roi_le_0), "", 2)}
+                    n={row.n} | WR {formatNumber(toNumber(row.wr_pct), "%")} | P(ROI&lt;=0) {formatNumber(toNumber(row.p_roi_le_0), "", 2)}
                   </p>
                   <p className="mt-1 text-xs text-slate-600">{row.years || "No yearly split"}</p>
                 </div>
@@ -813,10 +818,10 @@ export default async function TennisMonitorPage() {
     notFound();
   }
 
-  const activeLanes = TENNIS_RESEARCH_LANES.map((id) => laneViews[id]);
-  const legacyLanes = TENNIS_LEGACY_DISABLED_LANES.map((id) => laneViews[id]);
+  const activeLanes = PRIMARY_LANE_IDS.map((id) => laneViews[id]);
+  const parkedLanes = PARKED_LANE_IDS.map((id) => laneViews[id]);
   const statsEntries = await Promise.all(
-    [...TENNIS_RESEARCH_LANES, ...TENNIS_LEGACY_DISABLED_LANES].map(async (id) => [id, await loadLaneStats(id)] as const),
+    [...PRIMARY_LANE_IDS, ...PARKED_LANE_IDS].map(async (id) => [id, await loadLaneStats(id)] as const),
   );
   const statsByLane = Object.fromEntries(statsEntries) as Record<TennisResearchLaneId, LaneStats>;
   const cpiSummary = await loadCpiSummary();
@@ -824,6 +829,9 @@ export default async function TennisMonitorPage() {
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mb-6">
+          <MonitorNav current="tennis" />
+        </div>
         <div className="rounded-3xl border border-slate-800 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.13),transparent_34%),linear-gradient(135deg,rgba(15,23,42,0.96),rgba(2,6,23,0.98))] p-6 md:p-8">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300">Internal research</p>
           <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -832,8 +840,7 @@ export default async function TennisMonitorPage() {
                 Tennis Research Lanes
               </h1>
               <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-400">
-                Internal-only tennis lane board. Clay bo3 and Grass bo3 are active shadow lanes; deferred tabs stay
-                scaffolded until their own research phases are built.
+                Tennis hub for production-adjacent research. Strict live control has its own detailed page; this board keeps Clay bo3, Grass bo3, CPI speed and Challenger visible without pretending they are paid picks.
               </p>
             </div>
             <StatusPill label="LOCALHOST ONLY" tone="border-slate-600 bg-slate-900 text-slate-300" />
@@ -850,7 +857,7 @@ export default async function TennisMonitorPage() {
           >
             CPI speed map
           </a>
-          {[...activeLanes, ...legacyLanes].map((lane) => (
+          {[...activeLanes, ...parkedLanes].map((lane) => (
             <a
               key={lane.id}
               href={`#${laneAnchor(lane.id)}`}
@@ -869,9 +876,20 @@ export default async function TennisMonitorPage() {
           {activeLanes.map((lane) => (
             <LaneCard key={lane.id} lane={lane} stats={statsByLane[lane.id]} />
           ))}
-          {legacyLanes.map((lane) => (
-            <LaneCard key={lane.id} lane={lane} stats={statsByLane[lane.id]} />
-          ))}
+          <section className="rounded-2xl border border-amber-500/20 bg-amber-500/10 p-5">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="text-xl font-semibold text-amber-100">Parked / scaffolded lanes</h2>
+                <p className="mt-1 text-sm leading-6 text-amber-50/75">These are visible for memory and planning only. They are not daily betting lanes.</p>
+              </div>
+              <StatusPill label="NOT ACTIVE" tone={badgeTones.disabled} />
+            </div>
+            <div className="mt-5 space-y-5">
+              {parkedLanes.map((lane) => (
+                <LaneCard key={lane.id} lane={lane} stats={statsByLane[lane.id]} />
+              ))}
+            </div>
+          </section>
         </div>
       </div>
     </main>
