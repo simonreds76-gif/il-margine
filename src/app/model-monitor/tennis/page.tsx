@@ -4,6 +4,7 @@ import {
   TENNIS_LEGACY_DISABLED_LANES,
   TENNIS_MONITOR_FILES,
   TENNIS_RESEARCH_LANES,
+  type TennisMonitorFilePath,
   type TennisResearchLaneId,
 } from "@/lib/tennis-monitor-files";
 import { tryGetKnownProjectFilePath } from "@/lib/project-file-paths";
@@ -30,9 +31,15 @@ type LaneStats = {
   liveCount: number;
   archiveCount: number;
   nearMissCount: number;
+  pendingCount: number;
   settledCount: number;
+  wins: number;
+  losses: number;
+  pnlUnits: number;
   roiPct: number | null;
   avgClvPct: number | null;
+  clvRowCount: number;
+  positiveClvPct: number | null;
   topNearMissReasons: string[];
   latestSignals: CsvRow[];
 };
@@ -167,15 +174,24 @@ function parseCsv(text: string): CsvRow[] {
   });
 }
 
-async function readKnownFile(relativePath?: string): Promise<string | null> {
+async function readKnownFile(relativePath?: TennisMonitorFilePath): Promise<string | null> {
   if (!relativePath) return null;
-  const fullPath = tryGetKnownProjectFilePath(relativePath);
-  if (!fullPath) return null;
-  try {
-    return await readFile(fullPath, "utf8");
-  } catch {
-    return null;
+  const candidates = Array.isArray(relativePath) ? relativePath : [relativePath];
+  for (const candidate of candidates) {
+    const fullPath = tryGetKnownProjectFilePath(candidate);
+    if (!fullPath) continue;
+    try {
+      return await readFile(fullPath, "utf8");
+    } catch {
+      // Try the next fallback path.
+    }
   }
+  return null;
+}
+
+function formatFileTarget(target?: TennisMonitorFilePath): string {
+  if (!target) return "-";
+  return Array.isArray(target) ? target.join(" | fallback: ") : target;
 }
 
 function toNumber(value: string | undefined): number | null {
@@ -192,6 +208,12 @@ function isWon(row: CsvRow): boolean {
 function isLost(row: CsvRow): boolean {
   const raw = `${row.won_bet || row.bet_outcome || row.result || ""}`.toLowerCase();
   return raw === "false" || raw === "0" || raw.includes("lost") || raw === "l";
+}
+
+function isPendingRow(row: CsvRow): boolean {
+  const status = (row.settlement_status || row.status || "").trim().toLowerCase();
+  if (status === "settled" || status === "void" || status === "cancelled") return false;
+  return !isWon(row) && !isLost(row);
 }
 
 function settledRows(rows: CsvRow[]): CsvRow[] {
@@ -256,7 +278,7 @@ function logicalCsvSignalKey(row: CsvRow): string {
   ].join("|");
 }
 
-function latestCapturedRows(rows: CsvRow[]): CsvRow[] {
+function latestCapturedRows(rows: CsvRow[], limit = 5): CsvRow[] {
   const byKey = new Map<string, CsvRow>();
   [...rows]
     .sort((left, right) => rowSignalTimestamp(left) - rowSignalTimestamp(right))
@@ -271,7 +293,7 @@ function latestCapturedRows(rows: CsvRow[]): CsvRow[] {
       const previousSettled = (previous.settlement_status || "").trim().toLowerCase() === "settled";
       byKey.set(key, rowSettled && !previousSettled ? { ...previous, ...row } : previous);
     });
-  return [...byKey.values()].sort((left, right) => rowSignalTimestamp(right) - rowSignalTimestamp(left)).slice(0, 5);
+  return [...byKey.values()].sort((left, right) => rowSignalTimestamp(right) - rowSignalTimestamp(left)).slice(0, limit);
 }
 
 async function loadLaneStats(id: TennisResearchLaneId): Promise<LaneStats> {
@@ -286,25 +308,36 @@ async function loadLaneStats(id: TennisResearchLaneId): Promise<LaneStats> {
   const liveRows = liveCsv ? parseCsv(liveCsv) : [];
   const archiveRows = archiveCsv ? parseCsv(archiveCsv) : [];
   const nearMissRows = nearMissCsv ? parseCsv(nearMissCsv) : [];
+  const allSignalRows = latestCapturedRows([...archiveRows, ...liveRows], Number.POSITIVE_INFINITY);
+  const pendingCount = allSignalRows.filter(isPendingRow).length;
   const settled = settledRows(archiveRows);
+  const wins = settled.filter(isWon).length;
+  const losses = settled.filter(isLost).length;
   const pnlValues = settled.map(rowPnlUnits).filter((value): value is number => value !== null);
   const stakeValues = settled.map((row) => toNumber(row.stake_units) ?? 1);
   const totalStake = stakeValues.reduce((sum, value) => sum + value, 0);
   const totalPnl = pnlValues.reduce((sum, value) => sum + value, 0);
   const clvRows = [...(clvCsv ? parseCsv(clvCsv) : []), ...(clvSpreadCsv ? parseCsv(clvSpreadCsv) : [])];
   const clvValues = clvRows
-    .map((row) => toNumber(row.clv_pct) ?? toNumber(row.avg_clv_pct))
+    .map((row) => toNumber(row.clv_implied_delta_pct) ?? toNumber(row.clv_pct) ?? toNumber(row.avg_clv_pct))
     .filter((value): value is number => value !== null);
 
   return {
     liveCount: liveRows.length,
     archiveCount: archiveRows.length,
     nearMissCount: nearMissRows.length,
+    pendingCount,
     settledCount: settled.length,
+    wins,
+    losses,
+    pnlUnits: totalPnl,
     roiPct: totalStake > 0 ? (totalPnl / totalStake) * 100 : null,
     avgClvPct: avg(clvValues),
+    clvRowCount: clvValues.length,
+    positiveClvPct:
+      clvValues.length > 0 ? (clvValues.filter((value) => value > 0).length / clvValues.length) * 100 : null,
     topNearMissReasons: topReasons(nearMissRows),
-    latestSignals: latestCapturedRows([...archiveRows, ...liveRows]),
+    latestSignals: allSignalRows.slice(0, 5),
   };
 }
 
@@ -628,13 +661,13 @@ function CpiSurfaceSpeedCard({ summary }: { summary: CpiSummary }) {
                             </p>
                           </td>
                           <td className="px-3 py-2 tabular-nums">
-                            {row.train_overlay_bets} bets · {formatSignedPct(row.train_overlay_roi_pct)}
+                            {row.train_overlay_bets} bets / {formatSignedPct(row.train_overlay_roi_pct)}
                           </td>
                           <td className="px-3 py-2 tabular-nums">
-                            {row.holdout_overlay_bets} bets · {formatSignedPct(row.holdout_overlay_roi_pct)}
+                            {row.holdout_overlay_bets} bets / {formatSignedPct(row.holdout_overlay_roi_pct)}
                           </td>
                           <td className="px-3 py-2 font-semibold tabular-nums text-lime-200">
-                            {row.combined_overlay_bets} bets · {formatSignedPct(row.combined_overlay_roi_pct)}
+                            {row.combined_overlay_bets} bets / {formatSignedPct(row.combined_overlay_roi_pct)}
                           </td>
                         </tr>
                       ))}
@@ -690,12 +723,12 @@ function CpiSurfaceSpeedCard({ summary }: { summary: CpiSummary }) {
                 <div key={`${row.surface}-${row.cell}-${row.bucket}`} className="rounded-xl border border-slate-800/70 bg-slate-950/55 p-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <p className="text-sm font-semibold text-slate-100">
-                      {row.surface} · {row.cell.replaceAll("_", " ")} · {row.bucket}
+                      {row.surface} / {row.cell.replaceAll("_", " ")} / {row.bucket}
                     </p>
                     <p className="text-sm font-bold tabular-nums text-emerald-300">{formatSignedPct(row.roi_pct)}</p>
                   </div>
                   <p className="mt-2 text-xs text-slate-500">
-                    n={row.n} · WR {formatNumber(toNumber(row.wr_pct), "%")} · P(ROI≤0) {formatNumber(toNumber(row.p_roi_le_0), "", 2)}
+                    n={row.n} / WR {formatNumber(toNumber(row.wr_pct), "%")} / P(ROI le 0) {formatNumber(toNumber(row.p_roi_le_0), "", 2)}
                   </p>
                   <p className="mt-1 text-xs text-slate-600">{row.years || "No yearly split"}</p>
                 </div>
@@ -710,6 +743,20 @@ function CpiSurfaceSpeedCard({ summary }: { summary: CpiSummary }) {
 
 function LaneCard({ lane, stats }: { lane: LaneView; stats: LaneStats }) {
   const files = TENNIS_MONITOR_FILES[lane.id];
+  const proofLabel =
+    stats.settledCount > 0 && stats.clvRowCount > 0
+      ? "ROI + CLV tracked"
+      : stats.settledCount > 0
+        ? "ROI tracked, CLV pending"
+        : stats.pendingCount > 0 || stats.liveCount > 0
+          ? "pending settlement"
+          : "no active sample";
+  const proofTone =
+    stats.settledCount > 0 && stats.clvRowCount > 0
+      ? badgeTones.live
+      : stats.settledCount > 0 || stats.pendingCount > 0 || stats.liveCount > 0
+        ? badgeTones.shadow
+        : badgeTones.deferred;
 
   return (
     <section
@@ -721,6 +768,7 @@ function LaneCard({ lane, stats }: { lane: LaneView; stats: LaneStats }) {
           <div className="flex flex-wrap items-center gap-2">
             <h2 className="text-xl font-semibold text-slate-100">{lane.title}</h2>
             <StatusPill label={lane.state} tone={lane.badgeTone} />
+            <StatusPill label={proofLabel} tone={proofTone} />
           </div>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">{lane.summary}</p>
         </div>
@@ -735,18 +783,22 @@ function LaneCard({ lane, stats }: { lane: LaneView; stats: LaneStats }) {
         </div>
       ) : null}
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <EmptyMetric label="Live signals" value={String(stats.liveCount)} />
-        <EmptyMetric label="Near misses" value={String(stats.nearMissCount)} />
-        <EmptyMetric label="Settled" value={String(stats.settledCount || stats.archiveCount)} />
+      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+        <EmptyMetric label="Live now" value={String(stats.liveCount)} />
+        <EmptyMetric label="Pending" value={String(stats.pendingCount)} />
+        <EmptyMetric label="Settled W-L" value={stats.settledCount > 0 ? `${stats.wins}W-${stats.losses}L` : "-"} />
+        <EmptyMetric label="P/L" value={formatNumber(stats.pnlUnits, "u", 2)} />
         <EmptyMetric label="ROI" value={formatNumber(stats.roiPct, "%")} />
+        <EmptyMetric label="Avg CLV" value={formatNumber(stats.avgClvPct, "%", 2)} />
       </div>
 
       <div className="mt-5 grid gap-3 lg:grid-cols-3">
         <div className="rounded-xl border border-slate-800/70 bg-slate-950/40 p-4 lg:col-span-2">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Latest live rows</p>
-            <p className="text-xs text-slate-500">Avg CLV: {formatNumber(stats.avgClvPct, "%")}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Latest signal rows</p>
+            <p className="text-xs text-slate-500">
+              CLV n={stats.clvRowCount} Ã‚Â· avg {formatNumber(stats.avgClvPct, "%", 2)} Ã‚Â· positive {formatNumber(stats.positiveClvPct, "%")}
+            </p>
           </div>
           {stats.latestSignals.length > 0 ? (
             <div className="mt-3 overflow-x-auto">
@@ -757,25 +809,30 @@ function LaneCard({ lane, stats }: { lane: LaneView; stats: LaneStats }) {
                     <th className="py-2 pr-4 font-medium">Type</th>
                     <th className="py-2 pr-4 font-medium">Side</th>
                     <th className="py-2 pr-4 font-medium">Edge</th>
+                    <th className="py-2 pr-4 font-medium">Status</th>
                     <th className="py-2 pr-4 font-medium">Reason</th>
                   </tr>
                 </thead>
                 <tbody className="text-slate-300">
-                  {stats.latestSignals.map((row, index) => (
-                    <tr key={`${row.player1}-${row.player2}-${row.side}-${index}`} className="border-t border-slate-800/70">
-                      <td className="py-2 pr-4">{row.player1 || "-"} vs {row.player2 || "-"}</td>
-                      <td className="py-2 pr-4">{row.bet_type || "match"}</td>
-                      <td className="py-2 pr-4">{row.side || "-"}</td>
-                      <td className="py-2 pr-4">{row.value_pct || "-"}</td>
-                      <td className="py-2 pr-4">{row.shadow_reason || "-"}</td>
-                    </tr>
-                  ))}
+                  {stats.latestSignals.map((row, index) => {
+                    const status = row.settlement_status || (isWon(row) ? "won" : isLost(row) ? "lost" : "pending");
+                    return (
+                      <tr key={`${row.player1}-${row.player2}-${row.side}-${index}`} className="border-t border-slate-800/70">
+                        <td className="py-2 pr-4">{row.player1 || "-"} vs {row.player2 || "-"}</td>
+                        <td className="py-2 pr-4">{row.bet_type || "match"}</td>
+                        <td className="py-2 pr-4">{row.side || "-"}</td>
+                        <td className="py-2 pr-4">{row.value_pct || "-"}</td>
+                        <td className="py-2 pr-4 uppercase tracking-[0.12em] text-slate-500">{status}</td>
+                        <td className="py-2 pr-4">{row.shadow_reason || row.blocked_reason || "-"}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
           ) : (
             <p className="mt-2 text-sm leading-6 text-slate-400">
-              No live rows yet. Run the lane with `INTERNAL_RESEARCH_LANES=1` and `--signal-profile clay_bo3`.
+              No rows yet for this lane. If it is an active shadow lane, run the daily fair-odds pipeline locally.
             </p>
           )}
           {stats.topNearMissReasons.length > 0 ? (
@@ -787,19 +844,19 @@ function LaneCard({ lane, stats }: { lane: LaneView; stats: LaneStats }) {
           <dl className="mt-3 space-y-2 text-xs text-slate-400">
             <div>
               <dt className="text-slate-500">Calibration</dt>
-              <dd className="break-all text-slate-300">{files.calibration || "-"}</dd>
+              <dd className="break-all text-slate-300">{formatFileTarget(files.calibration)}</dd>
             </div>
             <div>
               <dt className="text-slate-500">Live</dt>
-              <dd className="break-all text-slate-300">{files.live || "-"}</dd>
+              <dd className="break-all text-slate-300">{formatFileTarget(files.live)}</dd>
             </div>
             <div>
               <dt className="text-slate-500">Near miss</dt>
-              <dd className="break-all text-slate-300">{files.nearMiss || "-"}</dd>
+              <dd className="break-all text-slate-300">{formatFileTarget(files.nearMiss)}</dd>
             </div>
             <div>
               <dt className="text-slate-500">Weekly performance</dt>
-              <dd className="break-all text-slate-300">{files.performance || "-"}</dd>
+              <dd className="break-all text-slate-300">{formatFileTarget(files.performance)}</dd>
             </div>
           </dl>
         </div>

@@ -1,4 +1,4 @@
-﻿export type TennisResearchLaneId =
+export type TennisResearchLaneId =
   | "hard_bo3"
   | "clay_bo3"
   | "slam_bo5"
@@ -8,17 +8,19 @@
   | "cpi_speed_shadow"
   | "challenger_hc";
 
+export type TennisMonitorFilePath = string | string[];
+
 export type TennisMonitorFileGroup = {
   label: string;
-  calibration?: string;
-  live?: string;
-  archive?: string;
-  nearMiss?: string;
-  performance?: string;
-  clvAuditCsv?: string;
-  clvAuditTxt?: string;
-  clvAuditSpreadCsv?: string;
-  clvAuditSpreadTxt?: string;
+  calibration?: TennisMonitorFilePath;
+  live?: TennisMonitorFilePath;
+  archive?: TennisMonitorFilePath;
+  nearMiss?: TennisMonitorFilePath;
+  performance?: TennisMonitorFilePath;
+  clvAuditCsv?: TennisMonitorFilePath;
+  clvAuditTxt?: TennisMonitorFilePath;
+  clvAuditSpreadCsv?: TennisMonitorFilePath;
+  clvAuditSpreadTxt?: TennisMonitorFilePath;
 };
 
 export const TENNIS_RESEARCH_LANES: TennisResearchLaneId[] = [
@@ -41,6 +43,7 @@ export const TENNIS_MONITOR_FILES: Record<TennisResearchLaneId, TennisMonitorFil
     live: "data/backtest/strict-signals-live.csv",
     archive: "data/backtest/strict-signals-archive.csv",
     performance: "data/backtest/strict-policy-performance-weekly.csv",
+    clvAuditCsv: "data/backtest/strict-clv-audit-2026.csv",
     clvAuditTxt: "data/backtest/strict-clv-audit-2026.txt",
   },
   clay_bo3: {
@@ -93,8 +96,14 @@ export const TENNIS_MONITOR_FILES: Record<TennisResearchLaneId, TennisMonitorFil
   },
   cpi_speed_shadow: {
     label: "CPI speed shadow",
-    live: "data/backtest/strict-signals-cpi_speed-live.csv",
-    archive: "data/backtest/strict-signals-cpi_speed-archive.csv",
+    live: [
+      "data/backtest/strict-signals-cpi_speed-live.csv",
+      "data/backtest/strict-signals-cpi_speed.csv",
+    ],
+    archive: [
+      "data/backtest/strict-signals-cpi_speed-archive.csv",
+      "data/backtest/strict-signals-cpi_speed.csv",
+    ],
     nearMiss: "data/backtest/cpi_speed-shadow-nearmiss.csv",
     performance: "data/backtest/strict-policy-performance-cpi_speed-weekly.csv",
     clvAuditCsv: "data/backtest/strict-clv-audit-cpi_speed-2026.csv",
