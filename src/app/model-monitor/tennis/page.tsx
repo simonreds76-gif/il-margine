@@ -44,6 +44,26 @@ type LaneStats = {
   latestSignals: CsvRow[];
 };
 
+
+type ProofRow = {
+  lane: string;
+  label: string;
+  signals: number;
+  liveRows: number;
+  pending: number;
+  settled: number;
+  wins: number;
+  losses: number;
+  voids: number;
+  pnlUnits: number | null;
+  roiPct: number | null;
+  clvRows: number;
+  avgClvPct: number | null;
+  positiveClvPct: number | null;
+  verdict: string;
+  source: string;
+  note: string;
+};
 type CpiSummary = {
   headlineRows: CsvRow[];
   candidateRows: CsvRow[];
@@ -249,6 +269,94 @@ function formatSignedPct(value: string | undefined): string {
   return formatNumber(toNumber(value), "%");
 }
 
+
+function numericMetric(value: string | undefined): number {
+  return toNumber(value) ?? 0;
+}
+
+function nullableMetric(value: string | undefined): number | null {
+  return toNumber(value);
+}
+
+function proofVerdictFromStats(stats: LaneStats): string {
+  if (stats.settledCount === 0) return stats.pendingCount > 0 || stats.liveCount > 0 ? "COLLECTING" : "NO SAMPLE";
+  if (stats.settledCount < 30) return "TOO EARLY";
+  if (stats.clvRowCount === 0) return "ROI ONLY - CLV MISSING";
+  if (
+    stats.settledCount >= 100 &&
+    stats.clvRowCount >= 50 &&
+    (stats.roiPct ?? 0) >= 0 &&
+    (stats.avgClvPct ?? 0) >= 0.5 &&
+    (stats.positiveClvPct ?? 0) >= 52
+  ) {
+    return "PROMOTION WATCH";
+  }
+  if ((stats.roiPct ?? 0) < -5 || (stats.avgClvPct ?? 0) < -0.5) return "CAUTION";
+  return "SHADOW HOLD";
+}
+
+function proofTone(verdict: string): string {
+  const normalized = verdict.toUpperCase();
+  if (normalized.includes("PROMOTION")) return badgeTones.live;
+  if (normalized.includes("CAUTION")) return "border-rose-500/25 bg-rose-500/10 text-rose-300";
+  if (normalized.includes("MISSING") || normalized.includes("COLLECTING") || normalized.includes("TOO EARLY")) {
+    return badgeTones.disabled;
+  }
+  if (normalized.includes("NO SAMPLE")) return badgeTones.deferred;
+  return badgeTones.shadow;
+}
+
+function proofRowsFromStats(statsByLane: Record<TennisResearchLaneId, LaneStats>): ProofRow[] {
+  return TENNIS_RESEARCH_LANES.map((id) => {
+    const stats = statsByLane[id];
+    const lane = laneViews[id];
+    return {
+      lane: id,
+      label: lane.title,
+      signals: stats.archiveCount,
+      liveRows: stats.liveCount,
+      pending: stats.pendingCount,
+      settled: stats.settledCount,
+      wins: stats.wins,
+      losses: stats.losses,
+      voids: 0,
+      pnlUnits: stats.pnlUnits,
+      roiPct: stats.roiPct,
+      clvRows: stats.clvRowCount,
+      avgClvPct: stats.avgClvPct,
+      positiveClvPct: stats.positiveClvPct,
+      verdict: proofVerdictFromStats(stats),
+      source: "live page fallback",
+      note: lane.summary,
+    };
+  });
+}
+
+async function loadProofReport(): Promise<ProofRow[] | null> {
+  const csv = await readKnownFile("data/backtest/tennis-shadow-proof-report.csv");
+  if (!csv) return null;
+  const rows = parseCsv(csv);
+  if (rows.length === 0) return null;
+  return rows.map((row) => ({
+    lane: row.lane || row.label || "unknown",
+    label: row.label || row.lane || "Unknown lane",
+    signals: numericMetric(row.signals),
+    liveRows: numericMetric(row.live_rows),
+    pending: numericMetric(row.pending),
+    settled: numericMetric(row.settled),
+    wins: numericMetric(row.wins),
+    losses: numericMetric(row.losses),
+    voids: numericMetric(row.voids),
+    pnlUnits: nullableMetric(row.pnl_units),
+    roiPct: nullableMetric(row.roi_pct),
+    clvRows: numericMetric(row.clv_rows),
+    avgClvPct: nullableMetric(row.avg_clv_pct),
+    positiveClvPct: nullableMetric(row.positive_clv_pct),
+    verdict: row.verdict || "UNKNOWN",
+    source: row.archive_source || "missing",
+    note: row.note || "",
+  }));
+}
 function topReasons(rows: CsvRow[]): string[] {
   const counts = new Map<string, number>();
   rows.forEach((row) => {
@@ -741,6 +849,70 @@ function CpiSurfaceSpeedCard({ summary }: { summary: CpiSummary }) {
   );
 }
 
+
+function ProofDashboard({ rows, fromReport }: { rows: ProofRow[]; fromReport: boolean }) {
+  return (
+    <section
+      id="tennis-proof"
+      className="rounded-2xl border border-emerald-500/20 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.16),transparent_34%),rgba(2,6,23,0.76)] p-5 shadow-[0_18px_60px_rgba(2,6,23,0.28)]"
+    >
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="text-xl font-semibold text-slate-100">Tennis Lane Proof Board</h2>
+            <StatusPill label={fromReport ? "LOCAL NIGHTLY REPORT" : "LIVE FALLBACK"} tone={fromReport ? badgeTones.live : badgeTones.disabled} />
+          </div>
+          <p className="mt-2 max-w-4xl text-sm leading-6 text-slate-400">
+            First-read decision layer: what has proof, what is still collecting, and what is currently caution-only.
+            This is local/internal and does not change staking or public picks.
+          </p>
+        </div>
+        <a
+          href="#cpi-surface-speed"
+          className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] text-emerald-200 hover:border-emerald-400/60"
+        >
+          CPI map
+        </a>
+      </div>
+
+      <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        {rows.map((row) => (
+          <div key={row.lane} className="rounded-xl border border-slate-800/80 bg-slate-950/58 p-4">
+            <div className="flex flex-wrap items-start justify-between gap-2">
+              <div>
+                <p className="text-sm font-semibold text-slate-100">{row.label}</p>
+                <p className="mt-1 text-[11px] uppercase tracking-[0.12em] text-slate-500">{row.source || "missing"}</p>
+              </div>
+              <StatusPill label={row.verdict} tone={proofTone(row.verdict)} />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
+              <div className="rounded-lg border border-slate-800/70 bg-slate-900/55 p-2">
+                <p className="text-slate-500">Pending</p>
+                <p className="mt-1 font-semibold tabular-nums text-slate-100">{row.pending}</p>
+              </div>
+              <div className="rounded-lg border border-slate-800/70 bg-slate-900/55 p-2">
+                <p className="text-slate-500">Settled</p>
+                <p className="mt-1 font-semibold tabular-nums text-slate-100">{row.settled} ({row.wins}W-{row.losses}L)</p>
+              </div>
+              <div className="rounded-lg border border-slate-800/70 bg-slate-900/55 p-2">
+                <p className="text-slate-500">P/L</p>
+                <p className={cn("mt-1 font-semibold tabular-nums", (row.pnlUnits ?? 0) >= 0 ? "text-emerald-300" : "text-rose-300")}>{formatNumber(row.pnlUnits, "u", 2)}</p>
+              </div>
+              <div className="rounded-lg border border-slate-800/70 bg-slate-900/55 p-2">
+                <p className="text-slate-500">ROI</p>
+                <p className={cn("mt-1 font-semibold tabular-nums", (row.roiPct ?? 0) >= 0 ? "text-emerald-300" : "text-rose-300")}>{formatNumber(row.roiPct, "%")}</p>
+              </div>
+            </div>
+            <p className="mt-3 text-xs text-slate-500">
+              CLV n={row.clvRows} / avg {formatNumber(row.avgClvPct, "%", 2)} / positive {formatNumber(row.positiveClvPct, "%")}
+            </p>
+            {row.note ? <p className="mt-2 line-clamp-2 text-xs leading-5 text-slate-500">{row.note}</p> : null}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
 function LaneCard({ lane, stats }: { lane: LaneView; stats: LaneStats }) {
   const files = TENNIS_MONITOR_FILES[lane.id];
   const proofLabel =
@@ -797,7 +969,7 @@ function LaneCard({ lane, stats }: { lane: LaneView; stats: LaneStats }) {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Latest signal rows</p>
             <p className="text-xs text-slate-500">
-              CLV n={stats.clvRowCount} Ã‚Â· avg {formatNumber(stats.avgClvPct, "%", 2)} Ã‚Â· positive {formatNumber(stats.positiveClvPct, "%")}
+              CLV n={stats.clvRowCount} / avg {formatNumber(stats.avgClvPct, "%", 2)} / positive {formatNumber(stats.positiveClvPct, "%")}
             </p>
           </div>
           {stats.latestSignals.length > 0 ? (
@@ -876,6 +1048,8 @@ export default async function TennisMonitorPage() {
     [...TENNIS_RESEARCH_LANES, ...TENNIS_LEGACY_DISABLED_LANES].map(async (id) => [id, await loadLaneStats(id)] as const),
   );
   const statsByLane = Object.fromEntries(statsEntries) as Record<TennisResearchLaneId, LaneStats>;
+  const proofReportRows = await loadProofReport();
+  const proofRows = proofReportRows ?? proofRowsFromStats(statsByLane);
   const cpiSummary = await loadCpiSummary();
 
   return (
@@ -897,7 +1071,20 @@ export default async function TennisMonitorPage() {
           </div>
         </div>
 
+        <div className="mt-6">
+          <ProofDashboard rows={proofRows} fromReport={proofReportRows !== null} />
+        </div>
+
         <nav className="mt-6 flex flex-wrap gap-2" aria-label="Tennis research lanes">
+          <a
+            href="#tennis-proof"
+            className={cn(
+              "rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] transition-colors",
+              "border-emerald-500/30 bg-emerald-500/10 text-emerald-200 hover:border-emerald-400/60",
+            )}
+          >
+            Proof board
+          </a>
           <a
             href="#cpi-surface-speed"
             className={cn(
