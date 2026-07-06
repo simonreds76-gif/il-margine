@@ -52,6 +52,11 @@ def norm_name(value: object) -> str:
     return " ".join(text.split())
 
 
+def is_placeholder_player(value: object) -> bool:
+    text = norm_name(value)
+    return (not text) or text in {"total", "totals", "player total", "player totals"} or text.startswith("totals")
+
+
 def parse_float(value: object, default: float | None = None) -> float | None:
     try:
         text = str(value or "").strip()
@@ -108,6 +113,7 @@ def main() -> None:
     if not line_rows:
         print(f"Lines file has no market rows: {lines_path}")
         return
+    board_rows = read_csv(Path(args.board))
     board = {
         (
             str(row.get("date") or ""),
@@ -115,18 +121,33 @@ def main() -> None:
             norm_name(row.get("player")),
             norm_name(row.get("opponent")),
         ): row
-        for row in read_csv(Path(args.board))
+        for row in board_rows
     }
+    board_by_player: dict[tuple[str, str, str], list[dict[str, str]]] = {}
+    for row in board_rows:
+        player_key = (str(row.get("date") or ""), str(row.get("tour") or "").upper(), norm_name(row.get("player")))
+        board_by_player.setdefault(player_key, []).append(row)
 
     rows: list[dict[str, str]] = []
     for line in line_rows:
+        line_date = str(line.get("date") or args.date)
+        line_tour = str(line.get("tour") or "").upper()
+        line_player = str(line.get("player") or "").strip()
+        line_opponent = str(line.get("opponent") or "").strip()
         key = (
-            str(line.get("date") or args.date),
-            str(line.get("tour") or "").upper(),
-            norm_name(line.get("player")),
-            norm_name(line.get("opponent")),
+            line_date,
+            line_tour,
+            norm_name(line_player),
+            norm_name(line_opponent),
         )
         board_row = board.get(key)
+        if board_row is None and is_placeholder_player(line_player) and line_opponent:
+            player_only_key = (line_date, line_tour, norm_name(line_opponent))
+            candidates = board_by_player.get(player_only_key, [])
+            if len(candidates) == 1:
+                board_row = candidates[0]
+                line_player = str(board_row.get("player") or line_opponent)
+                line_opponent = str(board_row.get("opponent") or "")
         if board_row is None:
             # Allow matching when the manual line date is tomorrow but the board was
             # generated today.
@@ -164,20 +185,29 @@ def main() -> None:
             if p_under is not None and p_push is not None
             else None
         )
-        value_over = (
-            push_adjusted_value_pct(p_over, p_push or 0.0, over_odds) / 100.0
-            if p_over is not None and p_push is not None
+        raw_value_over = (
+            push_adjusted_value_pct(p_over, p_push or 0.0, over_odds)
+            if p_over is not None and p_push is not None and over_odds is not None
             else None
         )
-        value_under = (
-            push_adjusted_value_pct(p_under, p_push or 0.0, under_odds) / 100.0
-            if p_under is not None and p_push is not None
+        raw_value_under = (
+            push_adjusted_value_pct(p_under, p_push or 0.0, under_odds)
+            if p_under is not None and p_push is not None and under_odds is not None
             else None
         )
+        value_over = raw_value_over / 100.0 if raw_value_over is not None else None
+        value_under = raw_value_under / 100.0 if raw_value_under is not None else None
         confidence = market_confidence(board_row or {}, market)
         notes = str((board_row or {}).get("notes") or "")
+        complete_line = over_odds is not None and under_odds is not None
+        deep_alt = False
+        if complete_line and over_odds is not None and under_odds is not None:
+            deep_alt = max(over_odds, under_odds) > 4.0 or min(over_odds, under_odds) < 1.12
+        if mean is not None and line_value is not None:
+            deep_alt = deep_alt or abs(line_value - mean) > max(1.2, mean * 0.25)
+        line_quality = "one_sided" if not complete_line else "deep_alt" if deep_alt else "complete"
         recommended = ""
-        if confidence == "HIGH" and not notes:
+        if confidence == "HIGH" and not notes and line_quality == "complete":
             if value_over is not None and value_over >= args.min_value:
                 recommended = "OVER"
             if value_under is not None and value_under >= args.min_value and (
@@ -188,9 +218,12 @@ def main() -> None:
         rows.append(
             {
                 **line,
+                "player": line_player,
+                "opponent": line_opponent,
                 "matched_board": "yes" if board_row else "no",
                 "projection_mean": fmt(mean, 3),
                 "confidence": confidence,
+                "line_quality": line_quality,
                 "notes": notes,
                 "fair_p_over": fmt(p_over),
                 "fair_p_under": fmt(p_under),
@@ -217,6 +250,7 @@ def main() -> None:
         "matched_board",
         "projection_mean",
         "confidence",
+        "line_quality",
         "notes",
         "fair_p_over",
         "fair_p_under",
