@@ -1,4 +1,4 @@
-﻿# Il Margine - Nightly Tennis Settlement (runs daily after matches)
+# Il Margine - Nightly Tennis Settlement (runs daily after matches)
 # Settles strict + shadow lanes and refreshes performance summaries.
 
 $ErrorActionPreference = "Stop"
@@ -174,7 +174,12 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-policy-performance cpi_speed_shadow failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Post-step: Tennis shadow proof report ==="
+& python scripts\tennis-shadow-proof-report.py 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: tennis-shadow-proof-report failed (exit $LASTEXITCODE), continuing..."
+}
+
 Log "============================================"
 Log "  Nightly tennis settlement finished at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Log "============================================"
-
