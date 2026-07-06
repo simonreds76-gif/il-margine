@@ -722,6 +722,8 @@ function ComparisonLineCard({ row }: { row: CsvRow }) {
   const trustedLine = row.matched_board === "yes" && row.line_quality === "complete";
   const bestSide = n(row.value_under_pct) > n(row.value_over_pct) ? "UNDER" : "OVER";
   const bestValue = trustedLine ? Math.max(n(row.value_over_pct), n(row.value_under_pct)) : 0;
+  const bestNovigEdge = bestSide === "UNDER" ? n(row.edge_under_novig_pp) : n(row.edge_over_novig_pp);
+  const blockedReason = row.blocked_reason || rowRejectionReason(row);
   return (
     <div className="rounded-2xl border border-slate-800/80 bg-slate-950/70 p-3">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -731,6 +733,7 @@ function ComparisonLineCard({ row }: { row: CsvRow }) {
             <MiniBadge label={row.matched_board === "yes" ? "matched" : "unmatched"} tone={row.matched_board === "yes" ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300" : "border-rose-500/25 bg-rose-500/10 text-rose-300"} />
             <MiniBadge label={row.line_quality || "line"} tone={row.line_quality === "complete" ? "border-cyan-500/25 bg-cyan-500/10 text-cyan-200" : "border-amber-500/25 bg-amber-500/10 text-amber-300"} />
             <MiniBadge label={row.confidence || "LOW"} tone={confidenceTone(row.confidence)} />
+            {!row.recommended_side && blockedReason ? <MiniBadge label={blockedReason.replaceAll("_", " ")} tone="border-amber-500/25 bg-amber-500/10 text-amber-300" /> : null}
           </div>
           <div className="mt-2 font-semibold text-slate-100">{row.player || "-"} - {row.market?.replaceAll("_", " ") || "market"} {fmt(row.line, 1)}</div>
           <div className="text-xs text-slate-500">projection {fmt(row.projection_mean, 1)} - {row.distribution || "model"}</div>
@@ -740,14 +743,16 @@ function ComparisonLineCard({ row }: { row: CsvRow }) {
           <div className={cn("font-mono text-2xl font-black", trustedLine && bestValue > 0 ? "text-emerald-300" : "text-slate-500")}>
             {trustedLine ? `${bestSide} ${fmt(bestValue, 1)}%` : (row.line_quality || "watch").replaceAll("_", " ")}
           </div>
+          {trustedLine ? <div className="mt-1 font-mono text-[11px] text-slate-500">no-vig edge {bestNovigEdge > 0 ? "+" : ""}{fmt(bestNovigEdge, 1)}pp</div> : null}
         </div>
       </div>
       <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
         <MetricTile label="Over price" value={fmt(row.over_odds, 2)} sub={`fair ${fmt(row.fair_over_odds, 2)}`} tone="text-slate-100" />
         <MetricTile label="Under price" value={fmt(row.under_odds, 2)} sub={`fair ${fmt(row.fair_under_odds, 2)}`} tone="text-slate-100" />
-        <MetricTile label="Over value" value={trustedLine ? `${fmt(row.value_over_pct, 1)}%` : "audit"} tone={trustedLine && n(row.value_over_pct) > 0 ? "text-emerald-300" : "text-slate-500"} />
-        <MetricTile label="Under value" value={trustedLine ? `${fmt(row.value_under_pct, 1)}%` : "audit"} tone={trustedLine && n(row.value_under_pct) > 0 ? "text-emerald-300" : "text-slate-500"} />
+        <MetricTile label="Over value" value={trustedLine ? `${fmt(row.value_over_pct, 1)}%` : "audit"} sub={trustedLine ? `no-vig ${n(row.edge_over_novig_pp) > 0 ? "+" : ""}${fmt(row.edge_over_novig_pp, 1)}pp` : undefined} tone={trustedLine && n(row.value_over_pct) > 0 ? "text-emerald-300" : "text-slate-500"} />
+        <MetricTile label="Under value" value={trustedLine ? `${fmt(row.value_under_pct, 1)}%` : "audit"} sub={trustedLine ? `no-vig ${n(row.edge_under_novig_pp) > 0 ? "+" : ""}${fmt(row.edge_under_novig_pp, 1)}pp` : undefined} tone={trustedLine && n(row.value_under_pct) > 0 ? "text-emerald-300" : "text-slate-500"} />
       </div>
+      {row.model_market_gap_pp ? <div className="mt-2 text-[11px] text-slate-500">Model-market gap: {fmt(row.model_market_gap_pp, 1)}pp. Rows above the guard are blocked, even if raw EV looks large.</div> : null}
       {n(row.fair_p_push) > 0 ? <div className="mt-2 text-[11px] text-amber-300/80">Integer-line push mass: {(n(row.fair_p_push) * 100).toFixed(1)}%</div> : null}
     </div>
   );
@@ -819,6 +824,7 @@ function rowBestValue(row: CsvRow): number {
 }
 
 function rowRejectionReason(row: CsvRow): string {
+  if (row.blocked_reason) return row.blocked_reason.replaceAll("_", " ").toLowerCase();
   const confidence = (row.confidence || "LOW").toUpperCase();
   if (confidence !== "HIGH") return `confidence ${confidence} (needs HIGH)`;
   if (row.line_quality && row.line_quality !== "complete") return `line is ${row.line_quality}`;

@@ -71,6 +71,30 @@ def fmt(value: float | None, digits: int = 4) -> str:
     return "" if value is None else f"{value:.{digits}f}"
 
 
+def no_vig_probabilities(over_odds: float | None, under_odds: float | None) -> tuple[float | None, float | None]:
+    if over_odds is None or under_odds is None or over_odds <= 1.0 or under_odds <= 1.0:
+        return None, None
+    over_imp = 1.0 / over_odds
+    under_imp = 1.0 / under_odds
+    total = over_imp + under_imp
+    if total <= 0:
+        return None, None
+    return over_imp / total, under_imp / total
+
+
+def push_excluded_probabilities(
+    p_over: float | None,
+    p_under: float | None,
+    p_push: float | None,
+) -> tuple[float | None, float | None]:
+    if p_over is None or p_under is None:
+        return None, None
+    denominator = 1.0 - (p_push or 0.0)
+    if denominator <= 0:
+        return None, None
+    return p_over / denominator, p_under / denominator
+
+
 def market_mean(board_row: dict[str, str], market: str) -> float | None:
     lower = market.lower().replace(" ", "_")
     if lower in {"aces", "ace", "player_aces"}:
@@ -95,7 +119,9 @@ def main() -> None:
     parser.add_argument("--board", default=str(DEFAULT_BOARD))
     parser.add_argument("--lines", default="")
     parser.add_argument("--out", default="")
-    parser.add_argument("--min-value", type=float, default=0.08)
+    parser.add_argument("--min-value", type=float, default=0.10)
+    parser.add_argument("--min-novig-edge", type=float, default=0.05)
+    parser.add_argument("--max-model-market-gap", type=float, default=0.12)
     parser.add_argument(
         "--distribution",
         choices=["negative_binomial", "nb", "poisson"],
@@ -197,6 +223,22 @@ def main() -> None:
         )
         value_over = raw_value_over / 100.0 if raw_value_over is not None else None
         value_under = raw_value_under / 100.0 if raw_value_under is not None else None
+        novig_over, novig_under = no_vig_probabilities(over_odds, under_odds)
+        model_over, model_under = push_excluded_probabilities(p_over, p_under, p_push)
+        edge_over_novig = (
+            model_over - novig_over
+            if model_over is not None and novig_over is not None
+            else None
+        )
+        edge_under_novig = (
+            model_under - novig_under
+            if model_under is not None and novig_under is not None
+            else None
+        )
+        model_market_gap = max(
+            [abs(value) for value in (edge_over_novig, edge_under_novig) if value is not None],
+            default=None,
+        )
         confidence = market_confidence(board_row or {}, market)
         notes = str((board_row or {}).get("notes") or "")
         complete_line = over_odds is not None and under_odds is not None
@@ -207,13 +249,37 @@ def main() -> None:
             deep_alt = deep_alt or abs(line_value - mean) > max(1.2, mean * 0.25)
         line_quality = "one_sided" if not complete_line else "deep_alt" if deep_alt else "complete"
         recommended = ""
+        blocked_reason = ""
         if confidence == "HIGH" and not notes and line_quality == "complete":
-            if value_over is not None and value_over >= args.min_value:
-                recommended = "OVER"
-            if value_under is not None and value_under >= args.min_value and (
-                value_over is None or value_under > value_over
-            ):
-                recommended = "UNDER"
+            candidates: list[tuple[str, float]] = []
+            if novig_over is None or novig_under is None:
+                blocked_reason = "NO_NOVIG_PAIR"
+            else:
+                if value_over is not None and value_over >= args.min_value:
+                    if edge_over_novig is None or edge_over_novig < args.min_novig_edge:
+                        blocked_reason = blocked_reason or "NOVIG_EDGE_BELOW_GATE"
+                    elif edge_over_novig > args.max_model_market_gap:
+                        blocked_reason = blocked_reason or "MODEL_MARKET_GAP"
+                    else:
+                        candidates.append(("OVER", value_over))
+                if value_under is not None and value_under >= args.min_value:
+                    if edge_under_novig is None or edge_under_novig < args.min_novig_edge:
+                        blocked_reason = blocked_reason or "NOVIG_EDGE_BELOW_GATE"
+                    elif edge_under_novig > args.max_model_market_gap:
+                        blocked_reason = blocked_reason or "MODEL_MARKET_GAP"
+                    else:
+                        candidates.append(("UNDER", value_under))
+                if candidates:
+                    recommended = max(candidates, key=lambda item: item[1])[0]
+                    blocked_reason = ""
+                elif not blocked_reason:
+                    blocked_reason = "RAW_EDGE_BELOW_GATE"
+        elif confidence != "HIGH":
+            blocked_reason = "CONF_NOT_HIGH"
+        elif notes:
+            blocked_reason = "BOARD_WARNINGS"
+        elif line_quality != "complete":
+            blocked_reason = f"LINE_{line_quality.upper()}"
 
         rows.append(
             {
@@ -233,6 +299,12 @@ def main() -> None:
                 "fair_under_odds": fmt(fair_under, 3),
                 "value_over_pct": fmt((value_over * 100.0) if value_over is not None else None, 2),
                 "value_under_pct": fmt((value_under * 100.0) if value_under is not None else None, 2),
+                "novig_p_over": fmt(novig_over),
+                "novig_p_under": fmt(novig_under),
+                "edge_over_novig_pp": fmt((edge_over_novig * 100.0) if edge_over_novig is not None else None, 2),
+                "edge_under_novig_pp": fmt((edge_under_novig * 100.0) if edge_under_novig is not None else None, 2),
+                "model_market_gap_pp": fmt((model_market_gap * 100.0) if model_market_gap is not None else None, 2),
+                "blocked_reason": blocked_reason,
                 "recommended_side": recommended,
             }
         )
@@ -260,6 +332,12 @@ def main() -> None:
         "fair_under_odds",
         "value_over_pct",
         "value_under_pct",
+        "novig_p_over",
+        "novig_p_under",
+        "edge_over_novig_pp",
+        "edge_under_novig_pp",
+        "model_market_gap_pp",
+        "blocked_reason",
         "recommended_side",
     ]
     write_csv(out_path, rows, fieldnames)
