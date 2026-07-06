@@ -186,6 +186,28 @@ def fmt_rate_pct(value: object, digits: int = 1) -> str:
     return fmt(parsed * 100.0, digits)
 
 
+def append_note(value: str, note: str) -> str:
+    notes = [part for part in str(value or "").split("|") if part]
+    if note not in notes:
+        notes.append(note)
+    return "|".join(notes)
+
+
+def normalize_match_break_totals(row_a: dict[str, str], row_b: dict[str, str]) -> None:
+    """Break totals are match-level: A breaks + B breaks, identical on both rows."""
+    a_breaks = parse_float(row_a.get("projected_breaks_for"))
+    b_breaks = parse_float(row_b.get("projected_breaks_for"))
+    if a_breaks is None or b_breaks is None:
+        return
+    total_breaks = a_breaks + b_breaks
+    row_a["projected_broken"] = fmt(b_breaks)
+    row_b["projected_broken"] = fmt(a_breaks)
+    row_a["projected_total_breaks"] = fmt(total_breaks)
+    row_b["projected_total_breaks"] = fmt(total_breaks)
+    row_a["break_notes"] = append_note(row_a.get("break_notes", ""), "MATCH_LEVEL_TOTAL")
+    row_b["break_notes"] = append_note(row_b.get("break_notes", ""), "MATCH_LEVEL_TOTAL")
+
+
 def slam_name(value: object) -> str | None:
     lower = str(value or "").lower()
     if "roland garros" in lower or "french open" in lower:
@@ -1175,40 +1197,38 @@ def main() -> None:
 
     rows: list[dict[str, str]] = []
     for schedule in schedules:
-        rows.append(
-            project_side(
-                schedule=schedule,
-                player=schedule["player1"],
-                opponent=schedule["player2"],
-                player_id=str(schedule.get("player1_id") or ""),
-                baseline=baseline,
-                factors=factors,
-                surface_baselines=surface_baselines,
-                tournament_samples=tournament_samples,
-                aliases=aliases,
-                current_tournament_stats=current_tournament_stats,
-                current_tournament_logs=current_tournament_logs,
-                current_tournament_environment=current_tournament_environment,
-                fair_odds_expected_games=fair_odds_expected_games,
-            )
+        row_a = project_side(
+            schedule=schedule,
+            player=schedule["player1"],
+            opponent=schedule["player2"],
+            player_id=str(schedule.get("player1_id") or ""),
+            baseline=baseline,
+            factors=factors,
+            surface_baselines=surface_baselines,
+            tournament_samples=tournament_samples,
+            aliases=aliases,
+            current_tournament_stats=current_tournament_stats,
+            current_tournament_logs=current_tournament_logs,
+            current_tournament_environment=current_tournament_environment,
+            fair_odds_expected_games=fair_odds_expected_games,
         )
-        rows.append(
-            project_side(
-                schedule=schedule,
-                player=schedule["player2"],
-                opponent=schedule["player1"],
-                player_id=str(schedule.get("player2_id") or ""),
-                baseline=baseline,
-                factors=factors,
-                surface_baselines=surface_baselines,
-                tournament_samples=tournament_samples,
-                aliases=aliases,
-                current_tournament_stats=current_tournament_stats,
-                current_tournament_logs=current_tournament_logs,
-                current_tournament_environment=current_tournament_environment,
-                fair_odds_expected_games=fair_odds_expected_games,
-            )
+        row_b = project_side(
+            schedule=schedule,
+            player=schedule["player2"],
+            opponent=schedule["player1"],
+            player_id=str(schedule.get("player2_id") or ""),
+            baseline=baseline,
+            factors=factors,
+            surface_baselines=surface_baselines,
+            tournament_samples=tournament_samples,
+            aliases=aliases,
+            current_tournament_stats=current_tournament_stats,
+            current_tournament_logs=current_tournament_logs,
+            current_tournament_environment=current_tournament_environment,
+            fair_odds_expected_games=fair_odds_expected_games,
         )
+        normalize_match_break_totals(row_a, row_b)
+        rows.extend([row_a, row_b])
 
     fieldnames = [
         "date",
