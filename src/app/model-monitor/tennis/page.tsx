@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import { notFound } from "next/navigation";
 import {
   TENNIS_LEGACY_DISABLED_LANES,
@@ -64,6 +64,13 @@ type ProofRow = {
   source: string;
   note: string;
 };
+type ProofReportLoad = {
+  rows: ProofRow[];
+  updatedAt: Date | null;
+  ageLabel: string | null;
+  stale: boolean;
+};
+
 type CpiSummary = {
   headlineRows: CsvRow[];
   candidateRows: CsvRow[];
@@ -209,6 +216,21 @@ async function readKnownFile(relativePath?: TennisMonitorFilePath): Promise<stri
   return null;
 }
 
+async function readKnownMtime(relativePath?: TennisMonitorFilePath): Promise<Date | null> {
+  if (!relativePath) return null;
+  const candidates = Array.isArray(relativePath) ? relativePath : [relativePath];
+  for (const candidate of candidates) {
+    const fullPath = tryGetKnownProjectFilePath(candidate);
+    if (!fullPath) continue;
+    try {
+      const info = await stat(fullPath);
+      return info.mtime;
+    } catch {
+      // Try the next fallback path.
+    }
+  }
+  return null;
+}
 function formatFileTarget(target?: TennisMonitorFilePath): string {
   if (!target) return "-";
   return Array.isArray(target) ? target.join(" | fallback: ") : target;
@@ -270,6 +292,13 @@ function formatSignedPct(value: string | undefined): string {
 }
 
 
+function proofReportAgeLabel(updatedAt: Date | null, nowMs: number): string | null {
+  if (!updatedAt) return null;
+  const hours = Math.max(0, (nowMs - updatedAt.getTime()) / 36e5);
+  if (hours < 1) return "updated <1h ago";
+  if (hours < 48) return `updated ${Math.round(hours)}h ago`;
+  return `updated ${Math.round(hours / 24)}d ago`;
+}
 function numericMetric(value: string | undefined): number {
   return toNumber(value) ?? 0;
 }
@@ -332,30 +361,37 @@ function proofRowsFromStats(statsByLane: Record<TennisResearchLaneId, LaneStats>
   });
 }
 
-async function loadProofReport(): Promise<ProofRow[] | null> {
-  const csv = await readKnownFile("data/backtest/tennis-shadow-proof-report.csv");
+async function loadProofReport(): Promise<ProofReportLoad | null> {
+  const reportPath = "data/backtest/tennis-shadow-proof-report.csv";
+  const [csv, updatedAt] = await Promise.all([readKnownFile(reportPath), readKnownMtime(reportPath)]);
   if (!csv) return null;
   const rows = parseCsv(csv);
   if (rows.length === 0) return null;
-  return rows.map((row) => ({
-    lane: row.lane || row.label || "unknown",
-    label: row.label || row.lane || "Unknown lane",
-    signals: numericMetric(row.signals),
-    liveRows: numericMetric(row.live_rows),
-    pending: numericMetric(row.pending),
-    settled: numericMetric(row.settled),
-    wins: numericMetric(row.wins),
-    losses: numericMetric(row.losses),
-    voids: numericMetric(row.voids),
-    pnlUnits: nullableMetric(row.pnl_units),
-    roiPct: nullableMetric(row.roi_pct),
-    clvRows: numericMetric(row.clv_rows),
-    avgClvPct: nullableMetric(row.avg_clv_pct),
-    positiveClvPct: nullableMetric(row.positive_clv_pct),
-    verdict: row.verdict || "UNKNOWN",
-    source: row.archive_source || "missing",
-    note: row.note || "",
-  }));
+  const nowMs = Date.now();
+  return {
+    updatedAt,
+    ageLabel: proofReportAgeLabel(updatedAt, nowMs),
+    stale: !updatedAt || nowMs - updatedAt.getTime() > 36 * 60 * 60 * 1000,
+    rows: rows.map((row) => ({
+      lane: row.lane || row.label || "unknown",
+      label: row.label || row.lane || "Unknown lane",
+      signals: numericMetric(row.signals),
+      liveRows: numericMetric(row.live_rows),
+      pending: numericMetric(row.pending),
+      settled: numericMetric(row.settled),
+      wins: numericMetric(row.wins),
+      losses: numericMetric(row.losses),
+      voids: numericMetric(row.voids),
+      pnlUnits: nullableMetric(row.pnl_units),
+      roiPct: nullableMetric(row.roi_pct),
+      clvRows: numericMetric(row.clv_rows),
+      avgClvPct: nullableMetric(row.avg_clv_pct),
+      positiveClvPct: nullableMetric(row.positive_clv_pct),
+      verdict: row.verdict || "UNKNOWN",
+      source: row.archive_source || "missing",
+      note: row.note || "",
+    })),
+  };
 }
 function topReasons(rows: CsvRow[]): string[] {
   const counts = new Map<string, number>();
@@ -850,7 +886,17 @@ function CpiSurfaceSpeedCard({ summary }: { summary: CpiSummary }) {
 }
 
 
-function ProofDashboard({ rows, fromReport }: { rows: ProofRow[]; fromReport: boolean }) {
+function ProofDashboard({
+  rows,
+  fromReport,
+  reportAge,
+  reportStale,
+}: {
+  rows: ProofRow[];
+  fromReport: boolean;
+  reportAge: string | null;
+  reportStale: boolean;
+}) {
   return (
     <section
       id="tennis-proof"
@@ -861,10 +907,19 @@ function ProofDashboard({ rows, fromReport }: { rows: ProofRow[]; fromReport: bo
           <div className="flex flex-wrap items-center gap-2">
             <h2 className="text-xl font-semibold text-slate-100">Tennis Lane Proof Board</h2>
             <StatusPill label={fromReport ? "LOCAL NIGHTLY REPORT" : "LIVE FALLBACK"} tone={fromReport ? badgeTones.live : badgeTones.disabled} />
+            <StatusPill
+              label={reportStale ? "STALE / MISSING" : "FRESH"}
+              tone={reportStale ? badgeTones.disabled : badgeTones.live}
+            />
           </div>
           <p className="mt-2 max-w-4xl text-sm leading-6 text-slate-400">
             First-read decision layer: what has proof, what is still collecting, and what is currently caution-only.
             This is local/internal and does not change staking or public picks.
+          </p>
+          <p className={cn("mt-2 text-xs", reportStale ? "text-amber-300" : "text-emerald-300")}>
+            {fromReport
+              ? `${reportAge ?? "report timestamp unavailable"}. Nightly settlement refreshes this after the fair-odds run.`
+              : "Proof report not found. Showing live fallback until the local nightly settlement writes the report."}
           </p>
         </div>
         <a
@@ -1049,7 +1104,7 @@ export default async function TennisMonitorPage() {
   );
   const statsByLane = Object.fromEntries(statsEntries) as Record<TennisResearchLaneId, LaneStats>;
   const proofReportRows = await loadProofReport();
-  const proofRows = proofReportRows ?? proofRowsFromStats(statsByLane);
+  const proofRows = proofReportRows?.rows ?? proofRowsFromStats(statsByLane);
   const cpiSummary = await loadCpiSummary();
 
   return (
@@ -1072,7 +1127,7 @@ export default async function TennisMonitorPage() {
         </div>
 
         <div className="mt-6">
-          <ProofDashboard rows={proofRows} fromReport={proofReportRows !== null} />
+          <ProofDashboard rows={proofRows} fromReport={proofReportRows !== null} reportAge={proofReportRows?.ageLabel ?? null} reportStale={proofReportRows?.stale ?? true} />
         </div>
 
         <nav className="mt-6 flex flex-wrap gap-2" aria-label="Tennis research lanes">

@@ -1505,6 +1505,16 @@ export default async function ModelMonitorPage() {
               </p>
             </Link>
             <Link
+              href="/model-monitor/tennis#tennis-proof"
+              className="rounded-2xl border border-emerald-500/25 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.17),transparent_38%),linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-emerald-400/45"
+            >
+              <div className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300">Tennis Proof</div>
+              <div className="text-lg font-semibold text-white">Lane Proof Board</div>
+              <p className="mt-2 text-sm leading-6 text-slate-400">
+                One-click view of which tennis lanes are live-grade, collecting, caution-only, or missing CLV proof.
+              </p>
+            </Link>
+            <Link
               href="/model-monitor/tennis-props"
               className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-emerald-500/30"
             >
