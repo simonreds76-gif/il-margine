@@ -164,6 +164,9 @@ def main() -> int:
 
     if args.skip_odds:
         print("\nBet365 scrape skipped by --skip-odds.")
+        if has_market_rows(lines_file(args.as_of)):
+            print("Hosted/local Bet365 lines file exists; refreshing comparison.")
+            run_comparison(args.as_of)
         run_shadow_tracking(args.as_of)
         return 0
     if not has_odds_key():

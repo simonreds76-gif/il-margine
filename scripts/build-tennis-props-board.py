@@ -46,6 +46,23 @@ ROUND_BY_ID = {
     "12": "F",
 }
 SLAM_TOURNAMENTS = {"Australian Open", "Roland Garros", "Wimbledon", "US Open"}
+MAIN_TOUR_RANKS = {2, 3, 4}
+EXCLUDED_TOUR_NAME_FRAGMENTS = (
+    "junior",
+    "juniors",
+    "challenger",
+    "itf",
+    " m15",
+    " m25",
+    " w15",
+    " w25",
+    "qualifying",
+    "qualification",
+    "wild card",
+    "wildcard",
+    "play-off",
+    "playoff",
+)
 VENUE_FACTOR_MIN = 0.85
 VENUE_FACTOR_MAX = 1.20
 CURRENT_ENV_ACE_DF_MIN = 0.94
@@ -212,6 +229,14 @@ def canonical_tournament_name(value: object) -> str | None:
     if "bad homburg" in lower:
         return "Bad Homburg"
     return None
+
+
+def is_supported_main_tour(tour: dict[str, str]) -> bool:
+    rank = parse_int(tour.get("rank"))
+    if rank not in MAIN_TOUR_RANKS:
+        return False
+    name = f" {str(tour.get('name') or '').lower()} "
+    return not any(fragment in name for fragment in EXCLUDED_TOUR_NAME_FRAGMENTS)
 
 
 def round_label(round_id: object, tournament: str) -> str:
@@ -457,7 +482,10 @@ def oncourt_schedule_rows(tour_code: str, include_completed: bool, board_date: s
         if not include_completed and str(row.get("result") or "").strip():
             continue
         tour = tours.get(str(row.get("tour_id") or "").strip()) or {}
-        if parse_int(tour.get("rank")) < 2:
+        if not is_supported_main_tour(tour):
+            continue
+        row_date = parse_date(row.get("date"))
+        if row_date and row_date < board_dt:
             continue
         tour_start = parse_date(tour.get("date"))
         if tour_start and tour_start > board_dt + timedelta(days=1):

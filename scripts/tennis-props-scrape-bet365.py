@@ -212,6 +212,65 @@ def opponent_for(player: str, home: str, away: str) -> str:
     return away if home else ""
 
 
+BAD_PLAYER_NAMES = {"total", "totals", "player total", "player totals", "totals player", "totals players"}
+
+
+def is_bad_player_name(value: str) -> bool:
+    cleaned = norm(value)
+    return (not cleaned) or cleaned in BAD_PLAYER_NAMES or cleaned.startswith("totals")
+
+
+def player_from_text(text: object, home: str, away: str) -> str:
+    haystack = norm(text)
+    if not haystack:
+        return ""
+    hay_tokens = set(haystack.split())
+    matches: list[str] = []
+    for raw_name in (home, away):
+        name = clean_player(raw_name)
+        name_norm = norm(name)
+        if not name_norm:
+            continue
+        tokens = name_norm.split()
+        last = tokens[-1] if tokens else ""
+        first = tokens[0] if tokens else ""
+        exact = name_norm in haystack or haystack in name_norm
+        token_match = bool(last and last in hay_tokens and (first in hay_tokens or len(last) >= 6))
+        if exact or token_match:
+            matches.append(name)
+    unique = []
+    for match in matches:
+        if norm(match) not in {norm(item) for item in unique}:
+            unique.append(match)
+    return unique[0] if len(unique) == 1 else ""
+
+
+def resolve_prop_player(prop: dict[str, Any], label: str, market_name: str, home: str, away: str, *, match_level_market: bool) -> str:
+    if match_level_market:
+        return clean_player(home)
+    raw_candidates = [
+        prop.get("player"),
+        prop.get("participant"),
+        prop.get("competitor"),
+        prop.get("runner"),
+        prop.get("team"),
+        label,
+        market_name,
+        f"{market_name} {label}",
+    ]
+    for raw in raw_candidates:
+        inferred = player_from_text(raw, home, away)
+        if inferred:
+            return inferred
+        cleaned = clean_player(raw)
+        if is_bad_player_name(cleaned):
+            continue
+        cleaned_norm = norm(cleaned)
+        if cleaned_norm in {norm(clean_player(home)), norm(clean_player(away))}:
+            return cleaned
+    return ""
+
+
 def tour_from_event(event: dict[str, Any]) -> str:
     league = norm((event.get("league") or {}).get("name") or event.get("league") or "")
     haystack = " ".join(
@@ -289,14 +348,10 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any]) 
         under_price = parse_decimal(prop.get("under"))
         yes_price = parse_decimal(prop.get("yes") or prop.get("Yes"))
         no_price = parse_decimal(prop.get("no") or prop.get("No"))
-        player_name = clean_player(prop.get("player") or prop.get("participant") or "")
-        if not player_name and match_level_market:
-            player_name = match_player
-        if not player_name:
-            player_name = clean_player(label or market_name)
+        player_name = resolve_prop_player(prop, label, market_name, home, away, match_level_market=match_level_market)
         if over_price or under_price:
             if not player_name:
-                player_name = clean_player(market_name)
+                continue
             opponent = match_opponent if match_level_market else opponent_for(player_name, home, away)
             key = (player_name, opponent, line_text)
             if over_price:
@@ -305,7 +360,9 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any]) 
                 grouped[key]["under_odds"] = under_price
             continue
         if yes_price or no_price:
-            key = (player_name or match_player, match_opponent, line_text)
+            if not player_name:
+                continue
+            key = (player_name, match_opponent, line_text)
             if yes_price:
                 grouped[key]["over_odds"] = yes_price
             if no_price:
@@ -324,13 +381,9 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any]) 
         side = side_from_label(label, yes_no=yes_no_market)
         if side is None:
             continue
-        player_name = clean_player(prop.get("player") or prop.get("participant") or "")
-        if not player_name and match_level_market:
-            player_name = match_player
+        player_name = resolve_prop_player(prop, label, market_name, home, away, match_level_market=match_level_market)
         if not player_name:
-            player_name = clean_player(label or market_name)
-        if not player_name:
-            player_name = clean_player(market_name)
+            continue
         opponent = match_opponent if match_level_market else opponent_for(player_name, home, away)
         key = (player_name, opponent, line_text)
         grouped[key][side] = price
