@@ -809,6 +809,98 @@ function ComparisonTable({ rows, hasLinesFile }: { rows: CsvRow[]; hasLinesFile:
   );
 }
 
+
+function rowBestSide(row: CsvRow): string {
+  return n(row.value_under_pct) > n(row.value_over_pct) ? "UNDER" : "OVER";
+}
+
+function rowBestValue(row: CsvRow): number {
+  return Math.max(n(row.value_over_pct), n(row.value_under_pct));
+}
+
+function rowRejectionReason(row: CsvRow): string {
+  const confidence = (row.confidence || "LOW").toUpperCase();
+  if (confidence !== "HIGH") return `confidence ${confidence} (needs HIGH)`;
+  if (row.line_quality && row.line_quality !== "complete") return `line is ${row.line_quality}`;
+  if (row.notes) return "notes flag present";
+  return "gate did not pass";
+}
+
+function RecommendationPanel({
+  actionableRows,
+  watchRows,
+  matchedCount,
+  totalCount,
+}: {
+  actionableRows: CsvRow[];
+  watchRows: CsvRow[];
+  matchedCount: number;
+  totalCount: number;
+}) {
+  if (actionableRows.length) {
+    return (
+      <SectionCard
+        title="Recommended Bet365 Props"
+        subtitle="These are the only lines passing every live gate: matched Bet365 line, complete two-way price, HIGH confidence, clean notes, and edge threshold."
+      >
+        <div className="grid gap-3 lg:grid-cols-2">
+          {actionableRows.slice(0, 8).map((row, index) => <ComparisonLineCard key={`${row.player}-${row.market}-${row.line}-${index}`} row={row} />)}
+        </div>
+      </SectionCard>
+    );
+  }
+
+  return (
+    <SectionCard
+      title="Recommended Bet365 Props"
+      subtitle="This is the actual betting decision layer, above the audit board."
+    >
+      <div className="rounded-[2rem] border border-amber-500/25 bg-[radial-gradient(circle_at_top_left,rgba(245,158,11,0.16),transparent_34%),rgba(15,23,42,0.84)] p-5">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <div className="text-[11px] font-black uppercase tracking-[0.18em] text-amber-300">No bet suggested right now</div>
+            <h3 className="mt-2 text-2xl font-black tracking-tight text-slate-50">0 official aces/DF recommendations</h3>
+            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-300">
+              Bet365 is being compared now: {matchedCount} of {totalCount} line rows matched the board. None pass the full gate, so anything below is watch/audit only, not a bet.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:min-w-[520px]">
+            <MetricTile label="Recommended" value="0" sub="official bets" tone="text-slate-400" />
+            <MetricTile label="Matched lines" value={`${matchedCount}`} sub={`${totalCount} captured`} tone="text-cyan-300" />
+            <MetricTile label="Required conf" value="HIGH" sub="aces/DF gate" tone="text-emerald-300" />
+            <MetricTile label="Line type" value="clean" sub="complete two-way" tone="text-amber-300" />
+          </div>
+        </div>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <MiniBadge label="needs HIGH confidence" tone="border-emerald-500/25 bg-emerald-500/10 text-emerald-300" />
+          <MiniBadge label="needs complete line" tone="border-cyan-500/25 bg-cyan-500/10 text-cyan-200" />
+          <MiniBadge label="needs clean notes" tone="border-slate-700/70 bg-slate-800/60 text-slate-300" />
+          <MiniBadge label="needs value threshold" tone="border-amber-500/25 bg-amber-500/10 text-amber-300" />
+        </div>
+      </div>
+      {watchRows.length ? (
+        <div className="mt-4">
+          <div className="mb-2 text-xs font-black uppercase tracking-[0.16em] text-slate-500">Rejected audit examples, not bets</div>
+          <div className="grid gap-3 lg:grid-cols-3">
+            {watchRows.slice(0, 3).map((row, index) => (
+              <div key={`${row.player}-${row.market}-${row.line}-${index}`} className="rounded-2xl border border-slate-800/80 bg-slate-950/70 p-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <MiniBadge label="rejected" tone="border-rose-500/25 bg-rose-500/10 text-rose-300" />
+                  <MiniBadge label={row.confidence || "LOW"} tone={confidenceTone(row.confidence)} />
+                </div>
+                <div className="mt-2 font-semibold text-slate-100">{row.player} {rowBestSide(row)} {row.line} {row.market?.replaceAll("_", " ")}</div>
+                <div className="mt-1 text-xs text-slate-500">vs {row.opponent} - projection {fmt(row.projection_mean, 1)}</div>
+                <div className="mt-3 text-xs font-black uppercase tracking-[0.14em] text-rose-300">Blocked: {rowRejectionReason(row)}</div>
+                <div className="mt-1 text-[11px] text-slate-500">Raw model edge {rowBestValue(row).toFixed(1)}%, kept audit-only.</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
+    </SectionCard>
+  );
+}
+
 export default async function TennisPropsMonitorPage({ searchParams }: { searchParams?: SearchParamsInput }) {
   if (!MODEL_MONITOR_ENABLED) notFound();
   const resolvedSearchParams: Record<string, string | string[] | undefined> = searchParams ? await searchParams : {};
@@ -845,6 +937,9 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
   const sortedComparison = [...comparisonRows].sort(comparisonSort);
   const matchedComparisonRows = sortedComparison.filter((row) => row.matched_board === "yes");
   const actionableRows = matchedComparisonRows.filter((row) => row.recommended_side);
+  const cleanWatchRows = matchedComparisonRows
+    .filter((row) => !row.recommended_side && row.line_quality === "complete")
+    .sort((a, b) => rowBestValue(b) - rowBestValue(a));
   const sortedShadowRows = [...shadowRows].sort(shadowSort);
   const shadow = shadowStats(shadowRows);
   const boardStale = boardAgeHours == null || boardAgeHours > 24;
@@ -892,6 +987,13 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
         ) : null}
 
         <div className="grid gap-6">
+          <RecommendationPanel
+            actionableRows={actionableRows}
+            watchRows={cleanWatchRows}
+            matchedCount={matchedComparisonRows.length}
+            totalCount={comparisonRows.length}
+          />
+
           <SectionCard
             title="Bet365 Comparison"
             subtitle="Appears when data/tennis-props/comparison-YYYY-MM-DD.csv exists. Recommended side is gated hard; most rows should stay watch-only."
