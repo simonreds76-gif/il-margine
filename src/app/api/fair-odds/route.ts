@@ -294,6 +294,7 @@ const GRASS_BO3_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-grass
 const GRASS_BO3_SIGNAL_ARCHIVE_CSV = projectFilePath("data/backtest/strict-signals-grass_bo3-archive.csv");
 const CPI_SPEED_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-cpi_speed-live.csv");
 const CPI_SPEED_SIGNAL_ARCHIVE_CSV = projectFilePath("data/backtest/strict-signals-cpi_speed-archive.csv");
+const CPI_SPEED_SIGNAL_LEGACY_CSV = projectFilePath("data/backtest/strict-signals-cpi_speed.csv");
 const FAIR_ODDS_TENNIS_SPREADS_ENABLED = parseBoolEnv("FAIR_ODDS_TENNIS_SPREADS_ENABLED", false);
 const INTERNAL_RESEARCH_LANES = process.env.INTERNAL_RESEARCH_LANES === "1";
 const FAIR_ODDS_SPREAD_V1_ENABLED = parseBoolEnv("FAIR_ODDS_SPREAD_V1_ENABLED", INTERNAL_RESEARCH_LANES);
@@ -1598,7 +1599,7 @@ function loadActiveShadowSignals(csvPaths: string | string[], kind: ShadowSignal
     });
 }
 
-function loadSignalPerformanceSummary(archivePath: string, liveRows: number): SignalPerformanceSummary {
+function loadSignalPerformanceSummary(archivePath: string | string[], liveRows: number): SignalPerformanceSummary {
   const summary: SignalPerformanceSummary = {
     archive_rows: 0,
     live_rows: liveRows,
@@ -1611,13 +1612,15 @@ function loadSignalPerformanceSummary(archivePath: string, liveRows: number): Si
     pnl_units: 0,
     staked_units: 0,
   };
-  if (!fs.existsSync(archivePath)) return summary;
+  const archivePaths = Array.isArray(archivePath) ? archivePath : [archivePath];
+  const archivePathToRead = archivePaths.find((candidatePath) => fs.existsSync(candidatePath));
+  if (!archivePathToRead) return summary;
 
   let text = "";
   try {
-    text = fs.readFileSync(archivePath, "utf8");
+    text = fs.readFileSync(archivePathToRead, "utf8");
   } catch (e) {
-    console.warn(`[fair-odds] Could not read signal archive: ${archivePath}`, e);
+    console.warn(`[fair-odds] Could not read signal archive: ${archivePathToRead}`, e);
     return summary;
   }
 
@@ -3254,10 +3257,10 @@ async function run(): Promise<Response> {
     ? loadActiveShadowSignals(GRASS_BO3_SIGNAL_CSV, "grass_bo3", today)
     : [];
   const cpiSpeedSignalsCsv = INTERNAL_RESEARCH_LANES
-    ? loadActiveShadowSignals(CPI_SPEED_SIGNAL_CSV, "cpi_speed_shadow", today)
+    ? loadActiveShadowSignals([CPI_SPEED_SIGNAL_CSV, CPI_SPEED_SIGNAL_LEGACY_CSV], "cpi_speed_shadow", today)
     : [];
   const cpiSpeedPerformance = INTERNAL_RESEARCH_LANES
-    ? loadSignalPerformanceSummary(CPI_SPEED_SIGNAL_ARCHIVE_CSV, cpiSpeedSignalsCsv.length)
+    ? loadSignalPerformanceSummary([CPI_SPEED_SIGNAL_ARCHIVE_CSV, CPI_SPEED_SIGNAL_LEGACY_CSV], cpiSpeedSignalsCsv.length)
     : undefined;
   const challengerNearmisses = INTERNAL_RESEARCH_LANES
     ? loadChallengerNearmisses(CHALLENGER_ML_NEARMISS_CSV, today)
