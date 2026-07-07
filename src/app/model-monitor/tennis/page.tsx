@@ -1,4 +1,6 @@
 import { readFile, stat } from "node:fs/promises";
+import path from "node:path";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   TENNIS_LEGACY_DISABLED_LANES,
@@ -13,7 +15,10 @@ import { StatusPill, cn } from "../shared";
 export const dynamic = "force-dynamic";
 
 const TENNIS_MONITOR_ENABLED =
-  process.env.NODE_ENV !== "production" && process.env.INTERNAL_RESEARCH_LANES === "1";
+  process.env.NODE_ENV !== "production" ||
+  process.env.INTERNAL_RESEARCH_LANES === "1" ||
+  process.env.MODEL_MONITOR_PUBLIC === "1" ||
+  process.env.NEXT_PUBLIC_ENABLE_MODEL_MONITOR === "1";
 
 type LaneView = {
   id: TennisResearchLaneId;
@@ -205,8 +210,7 @@ async function readKnownFile(relativePath?: TennisMonitorFilePath): Promise<stri
   if (!relativePath) return null;
   const candidates = Array.isArray(relativePath) ? relativePath : [relativePath];
   for (const candidate of candidates) {
-    const fullPath = tryGetKnownProjectFilePath(candidate);
-    if (!fullPath) continue;
+    const fullPath = tryGetKnownProjectFilePath(candidate) ?? path.join(process.cwd(), candidate);
     try {
       return await readFile(fullPath, "utf8");
     } catch {
@@ -220,8 +224,7 @@ async function readKnownMtime(relativePath?: TennisMonitorFilePath): Promise<Dat
   if (!relativePath) return null;
   const candidates = Array.isArray(relativePath) ? relativePath : [relativePath];
   for (const candidate of candidates) {
-    const fullPath = tryGetKnownProjectFilePath(candidate);
-    if (!fullPath) continue;
+    const fullPath = tryGetKnownProjectFilePath(candidate) ?? path.join(process.cwd(), candidate);
     try {
       const info = await stat(fullPath);
       return info.mtime;
@@ -359,6 +362,182 @@ function proofRowsFromStats(statsByLane: Record<TennisResearchLaneId, LaneStats>
       note: lane.summary,
     };
   });
+}
+
+function findProofRow(rows: ProofRow[], lane: string): ProofRow | null {
+  return rows.find((row) => row.lane === lane) ?? null;
+}
+
+function formatRecord(row: ProofRow | null): string {
+  if (!row) return "-";
+  if (row.settled === 0) return "0 settled";
+  return `${row.wins}W-${row.losses}L / ${formatNumber(row.pnlUnits, "u", 2)}`;
+}
+
+function metricTone(value: number | null | undefined): string {
+  if (value === null || value === undefined || !Number.isFinite(value)) return "text-slate-300";
+  if (value > 0) return "text-emerald-300";
+  if (value < 0) return "text-rose-300";
+  return "text-slate-300";
+}
+
+function DecisionCard({
+  eyebrow,
+  title,
+  body,
+  rows,
+  tone,
+  href,
+  cta,
+}: {
+  eyebrow: string;
+  title: string;
+  body: string;
+  rows: Array<ProofRow | null>;
+  tone: string;
+  href?: string;
+  cta?: string;
+}) {
+  const content = (
+    <div className={cn("group h-full rounded-2xl border p-5 transition-colors", tone)}>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">{eyebrow}</p>
+      <h2 className="mt-2 text-xl font-semibold text-slate-50">{title}</h2>
+      <p className="mt-2 text-sm leading-6 text-slate-300">{body}</p>
+      <div className="mt-4 space-y-2">
+        {rows.map((row, index) => (
+          <div key={row?.lane ?? index} className="rounded-xl border border-slate-800/75 bg-slate-950/55 p-3">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-sm font-semibold text-slate-100">{row?.label ?? "No lane"}</p>
+                <p className="mt-1 text-xs text-slate-500">{row ? formatRecord(row) : "No data file yet"}</p>
+              </div>
+              {row ? (
+                <StatusPill
+                  label={row.lane === "strict_ml" ? "LIVE CORE" : row.verdict}
+                  tone={row.lane === "strict_ml" ? badgeTones.live : proofTone(row.verdict)}
+                />
+              ) : null}
+            </div>
+            {row ? (
+              <div className="mt-3 grid grid-cols-3 gap-2 text-xs">
+                <div>
+                  <p className="text-slate-500">ROI</p>
+                  <p className={cn("font-semibold tabular-nums", metricTone(row.roiPct))}>{formatNumber(row.roiPct, "%")}</p>
+                </div>
+                <div>
+                  <p className="text-slate-500">CLV n</p>
+                  <p className="font-semibold tabular-nums text-slate-100">{row.clvRows}</p>
+                </div>
+                <div>
+                  <p className="text-slate-500">Avg CLV</p>
+                  <p className={cn("font-semibold tabular-nums", metricTone(row.avgClvPct))}>{formatNumber(row.avgClvPct, "%", 2)}</p>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        ))}
+      </div>
+      {href && cta ? (
+        <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-emerald-200 group-hover:text-emerald-100">
+          {cta} {"->"}
+        </p>
+      ) : null}
+    </div>
+  );
+  return href ? <Link href={href}>{content}</Link> : content;
+}
+
+function TennisDecisionBoard({
+  rows,
+  fromReport,
+  reportAge,
+  reportStale,
+}: {
+  rows: ProofRow[];
+  fromReport: boolean;
+  reportAge: string | null;
+  reportStale: boolean;
+}) {
+  const strict = findProofRow(rows, "strict_ml");
+  const volume = findProofRow(rows, "volume_200");
+  const spread = findProofRow(rows, "spread_v1");
+  const grass = findProofRow(rows, "grass_bo3");
+  const cpi = findProofRow(rows, "cpi_speed_shadow");
+  const challenger = findProofRow(rows, "challenger_ml");
+  const clay = findProofRow(rows, "clay_bo3");
+
+  return (
+    <section className="rounded-3xl border border-emerald-500/20 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.17),transparent_34%),linear-gradient(135deg,rgba(15,23,42,0.97),rgba(2,6,23,0.98))] p-5 shadow-[0_24px_80px_rgba(2,6,23,0.34)] md:p-6">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300">Tennis control room</p>
+            <StatusPill label={fromReport ? "PROOF REPORT LOADED" : "LIVE FALLBACK"} tone={fromReport ? badgeTones.live : badgeTones.disabled} />
+            <StatusPill label={reportStale ? "STALE / MISSING" : "FRESH"} tone={reportStale ? badgeTones.disabled : badgeTones.live} />
+          </div>
+          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-50 md:text-4xl">
+            What can I trust today?
+          </h1>
+          <p className="mt-3 max-w-4xl text-sm leading-6 text-slate-400">
+            Read this page top to bottom: sellable core first, measured expansion second, then shadow experiments that need ROI/CLV proof before they become tips.
+          </p>
+        </div>
+        <div className="rounded-2xl border border-slate-800 bg-slate-950/55 px-4 py-3 text-sm text-slate-300">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Refresh source</p>
+          <p className="mt-1">{fromReport ? reportAge ?? "timestamp unavailable" : "generated from live CSVs"}</p>
+        </div>
+      </div>
+
+      <div className="mt-6 grid gap-4 xl:grid-cols-3">
+        <DecisionCard
+          eyebrow="Use now, narrowly"
+          title="Strict ML is still the core product"
+          body="Only the strict hard/Masters/high-confidence cell is live-grade. Keep showing CLV coverage honestly; do not broaden it just to create volume."
+          rows={[strict]}
+          tone="border-emerald-500/25 bg-emerald-500/10 hover:border-emerald-400/50"
+          href="#tennis-proof"
+          cta="Open proof board"
+        />
+        <DecisionCard
+          eyebrow="Watch / bundle"
+          title="Volume 200 is not a standalone product"
+          body="The record is positive, but the sample is small and CLV proof is missing. Treat it as a measured add-on inside tennis, not a separate sellable lane."
+          rows={[volume]}
+          tone="border-cyan-500/25 bg-cyan-500/10 hover:border-cyan-400/50"
+          href="#tennis-proof"
+          cta="Check sample"
+        />
+        <DecisionCard
+          eyebrow="Do not bet yet"
+          title="Shadow lanes need proof"
+          body="Spread v1, grass, CPI speed, clay, and Challenger are visible so we can learn. They are not trusted tips until settled ROI and CLV gates pass."
+          rows={[spread, grass, cpi, challenger, clay]}
+          tone="border-amber-500/25 bg-amber-500/10 hover:border-amber-400/50"
+          href="#shadow-lanes"
+          cta="Review shadows"
+        />
+      </div>
+
+      <div className="mt-4 grid gap-3 md:grid-cols-2">
+        <Link
+          href="/model-monitor/tennis-props"
+          className="rounded-2xl border border-slate-800 bg-slate-950/55 p-4 transition-colors hover:border-emerald-500/40"
+        >
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-300">Props board</p>
+          <p className="mt-1 text-lg font-semibold text-slate-100">Aces / DFs / breaks / tiebreaks</p>
+          <p className="mt-1 text-sm text-slate-400">Projection and Bet365 comparison board. Research-only unless matched prices and settlement prove it.</p>
+        </Link>
+        <Link
+          href="/fair-odds"
+          className="rounded-2xl border border-slate-800 bg-slate-950/55 p-4 transition-colors hover:border-teal-500/40"
+        >
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-300">Live board</p>
+          <p className="mt-1 text-lg font-semibold text-slate-100">Fair odds page</p>
+          <p className="mt-1 text-sm text-slate-400">Current match board. Signals must still pass the policy/guard layer before being treated as picks.</p>
+        </Link>
+      </div>
+    </section>
+  );
 }
 
 async function loadProofReport(): Promise<ProofReportLoad | null> {
@@ -1110,21 +1289,12 @@ export default async function TennisMonitorPage() {
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="rounded-3xl border border-slate-800 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.13),transparent_34%),linear-gradient(135deg,rgba(15,23,42,0.96),rgba(2,6,23,0.98))] p-6 md:p-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300">Internal research</p>
-          <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <h1 className="text-3xl font-semibold tracking-tight text-slate-50 md:text-4xl">
-                Tennis Research Lanes
-              </h1>
-              <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-400">
-                Internal-only tennis lane board. Clay bo3 and Grass bo3 are active shadow lanes; deferred tabs stay
-                scaffolded until their own research phases are built.
-              </p>
-            </div>
-            <StatusPill label="LOCALHOST ONLY" tone="border-slate-600 bg-slate-900 text-slate-300" />
-          </div>
-        </div>
+        <TennisDecisionBoard
+          rows={proofRows}
+          fromReport={proofReportRows !== null}
+          reportAge={proofReportRows?.ageLabel ?? null}
+          reportStale={proofReportRows?.stale ?? true}
+        />
 
         <div className="mt-6">
           <ProofDashboard rows={proofRows} fromReport={proofReportRows !== null} reportAge={proofReportRows?.ageLabel ?? null} reportStale={proofReportRows?.stale ?? true} />
@@ -1163,7 +1333,7 @@ export default async function TennisMonitorPage() {
           ))}
         </nav>
 
-        <div className="mt-6 space-y-5">
+        <div id="shadow-lanes" className="mt-6 space-y-5">
           <CpiSurfaceSpeedCard summary={cpiSummary} />
           {activeLanes.map((lane) => (
             <LaneCard key={lane.id} lane={lane} stats={statsByLane[lane.id]} />

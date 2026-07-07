@@ -190,10 +190,17 @@ def main() -> int:
             cpi_speed_cmd.extend(["--date", args.strict_report_date])
         run_cmd(
             cpi_speed_cmd,
-            label="5/5 CPI speed-regime Shadow append",
+            label="5a/5 CPI speed-regime Shadow append",
             fatal=False,
             timeout_seconds=step_timeout,
             env_overrides={"INTERNAL_RESEARCH_LANES": "1"},
+        )
+
+        run_cmd(
+            [sys.executable, str(ROOT / "scripts" / "tennis-shadow-proof-report.py")],
+            label="5b/5 Tennis lane proof report",
+            fatal=False,
+            timeout_seconds=step_timeout,
         )
     else:
         print("\n=== 4/5 Strict report skipped (--skip-strict-report) ===")
