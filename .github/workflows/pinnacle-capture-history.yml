@@ -79,3 +79,12 @@ jobs:
             echo "Coverage: active leagues"
           fi
           python scripts/pinnacle-capture-history.py "${args[@]}"
+
+      - name: Upload local Pinnacle history CSV
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pinnacle-history-${{ github.run_id }}
+          path: data/pinnacle-history/pinnacle-history-*.csv
+          if-no-files-found: ignore
+          retention-days: 14

@@ -22,6 +22,7 @@ import importlib.util
 from collections import Counter
 import os
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -39,6 +40,10 @@ from scripts._lib.run_status import run_status
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data" / "pinnacle-history"
 HTTP_TIMEOUT = 30
+REST_INSERT_ATTEMPTS = max(1, int(os.environ.get("PINNACLE_HISTORY_REST_ATTEMPTS", "3")))
+REST_RETRY_SECONDS = max(1.0, float(os.environ.get("PINNACLE_HISTORY_RETRY_SECONDS", "5")))
+TRANSIENT_REST_STATUS = {408, 425, 429, 500, 502, 503, 504, 520, 521, 522, 523, 524}
+
 
 
 def load_env() -> None:
@@ -97,14 +102,53 @@ def append_history_rows(rows: list[dict[str, Any]], dry_run: bool) -> None:
         "Content-Type": "application/json",
         "Prefer": "return=minimal",
     }
-    resp = requests.post(url, headers=req_headers, json=rows, timeout=HTTP_TIMEOUT)
-    if not resp.ok and _unknown_schedule_column(resp.text):
-        print("History table schedule columns unavailable; retrying without match_date/kickoff_iso.")
-        rows = _strip_schedule_fields(rows)
-        resp = requests.post(url, headers=req_headers, json=rows, timeout=HTTP_TIMEOUT)
-    if not resp.ok:
-        raise RuntimeError(f"bookmaker_odds_history insert failed: {resp.status_code} {resp.text[:300]}")
-    print(f"Appended {len(rows)} rows to bookmaker_odds_history.")
+    strict_upload = os.environ.get("PINNACLE_HISTORY_STRICT_UPLOAD") == "1"
+    captured_at = str(rows[0].get("captured_at") or "")
+    last_error = "unknown error"
+
+    for attempt in range(1, REST_INSERT_ATTEMPTS + 1):
+        try:
+            resp = requests.post(url, headers=req_headers, json=rows, timeout=HTTP_TIMEOUT)
+            if not resp.ok and _unknown_schedule_column(resp.text):
+                print("History table schedule columns unavailable; retrying without match_date/kickoff_iso.")
+                rows = _strip_schedule_fields(rows)
+                resp = requests.post(url, headers=req_headers, json=rows, timeout=HTTP_TIMEOUT)
+            if resp.ok:
+                print(f"Appended {len(rows)} rows to bookmaker_odds_history.")
+                return
+
+            last_error = f"HTTP {resp.status_code}: {resp.text[:300]}"
+            if resp.status_code not in TRANSIENT_REST_STATUS:
+                raise RuntimeError(f"bookmaker_odds_history insert failed: {last_error}")
+        except requests.RequestException as exc:
+            last_error = f"{type(exc).__name__}: {exc}"
+
+        if captured_at and _history_rows_present(base, headers, captured_at):
+            print("bookmaker_odds_history insert returned transient error, but captured_at is already present; treating as success.")
+            return
+        if attempt < REST_INSERT_ATTEMPTS:
+            sleep_for = REST_RETRY_SECONDS * attempt
+            print(f"bookmaker_odds_history insert transient failure ({last_error}); retrying in {sleep_for:.0f}s ({attempt}/{REST_INSERT_ATTEMPTS}).")
+            time.sleep(sleep_for)
+
+    message = f"bookmaker_odds_history insert skipped after {REST_INSERT_ATTEMPTS} attempts: {last_error}"
+    if strict_upload:
+        raise RuntimeError(message)
+    print(f"WARNING: {message}")
+    print("WARNING: local Pinnacle history CSV was written; GitHub workflow uploads it as a recovery artifact.")
+
+
+def _history_rows_present(base: str, headers: dict[str, str], captured_at: str) -> bool:
+    try:
+        resp = requests.get(
+            f"{base}/bookmaker_odds_history",
+            headers=headers,
+            params={"captured_at": f"eq.{captured_at}", "select": "captured_at", "limit": "1"},
+            timeout=HTTP_TIMEOUT,
+        )
+        return resp.ok and bool(resp.json())
+    except Exception:
+        return False
 
 
 def _strip_schedule_fields(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
