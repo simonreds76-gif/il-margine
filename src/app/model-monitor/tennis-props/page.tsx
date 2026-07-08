@@ -148,6 +148,48 @@ function fmt(value: string | number | undefined, digits = 1): string {
   return Number.isFinite(parsed) ? parsed.toFixed(digits) : "-";
 }
 
+function hasNumeric(value: string | undefined): boolean {
+  const parsed = Number.parseFloat(value ?? "");
+  return Number.isFinite(parsed) && parsed > 0;
+}
+
+function normalizedText(...parts: (string | undefined)[]): string {
+  return parts.join(" ").toLowerCase();
+}
+
+function isMainTourProjectionRow(row: CsvRow): boolean {
+  const tour = (row.tour || "").toUpperCase();
+  if (tour !== "ATP" && tour !== "WTA") return false;
+  const text = normalizedText(row.tournament, row.round, row.source, row.player, row.opponent);
+  if (/junior|boys|girls|qualifying|qualifier|challenger|itf|doubles/.test(text)) return false;
+  return true;
+}
+
+function effectiveLineQuality(row: CsvRow): string {
+  if (row.line_quality) return row.line_quality;
+  if (
+    hasNumeric(row.over_odds)
+    && hasNumeric(row.under_odds)
+    && hasNumeric(row.fair_over_odds)
+    && hasNumeric(row.fair_under_odds)
+  ) {
+    return "complete";
+  }
+  if (row.matched_board === "yes") return "partial";
+  return "unmatched";
+}
+
+function isTrustedComparisonRow(row: CsvRow): boolean {
+  return row.matched_board === "yes" && effectiveLineQuality(row) === "complete";
+}
+
+function isUsefulComparisonRow(row: CsvRow): boolean {
+  const text = normalizedText(row.player, row.opponent, row.tournament, row.market);
+  if (/totals \(|team total|match total|sets|games/.test(text)) return false;
+  if (row.market !== "aces" && row.market !== "double_faults") return false;
+  return true;
+}
+
 function pctText(value: string | number | undefined, digits = 1): string {
   const parsed = typeof value === "number" ? value : Number.parseFloat(value ?? "");
   return Number.isFinite(parsed) ? `${parsed.toFixed(digits)}%` : "-";
@@ -180,7 +222,7 @@ function recTone(value: string | undefined): string {
 }
 
 function maxValue(row: CsvRow): number {
-  if (row.line_quality && row.line_quality !== "complete") return 0;
+  if (!isTrustedComparisonRow(row)) return 0;
   return Math.max(n(row.value_over_pct), n(row.value_under_pct));
 }
 
@@ -243,7 +285,7 @@ function groupRowsByDate(rows: CsvRow[]): { date: string; rows: CsvRow[] }[] {
     .sort(([a], [b]) => {
       if (a === "unscheduled") return 1;
       if (b === "unscheduled") return -1;
-      return a.localeCompare(b);
+      return b.localeCompare(a);
     })
     .map(([date, groupedRows]) => ({ date, rows: groupedRows }));
 }
@@ -719,7 +761,8 @@ function groupComparisonByMatch(rows: CsvRow[]): { date: string; matches: { key:
 }
 
 function ComparisonLineCard({ row }: { row: CsvRow }) {
-  const trustedLine = row.matched_board === "yes" && row.line_quality === "complete";
+  const quality = effectiveLineQuality(row);
+  const trustedLine = isTrustedComparisonRow(row);
   const bestSide = n(row.value_under_pct) > n(row.value_over_pct) ? "UNDER" : "OVER";
   const bestValue = trustedLine ? Math.max(n(row.value_over_pct), n(row.value_under_pct)) : 0;
   const bestNovigEdge = bestSide === "UNDER" ? n(row.edge_under_novig_pp) : n(row.edge_over_novig_pp);
@@ -731,7 +774,7 @@ function ComparisonLineCard({ row }: { row: CsvRow }) {
           <div className="flex flex-wrap items-center gap-2">
             <MiniBadge label={row.recommended_side || "watch"} tone={recTone(row.recommended_side)} />
             <MiniBadge label={row.matched_board === "yes" ? "matched" : "unmatched"} tone={row.matched_board === "yes" ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300" : "border-rose-500/25 bg-rose-500/10 text-rose-300"} />
-            <MiniBadge label={row.line_quality || "line"} tone={row.line_quality === "complete" ? "border-cyan-500/25 bg-cyan-500/10 text-cyan-200" : "border-amber-500/25 bg-amber-500/10 text-amber-300"} />
+            <MiniBadge label={quality} tone={quality === "complete" ? "border-cyan-500/25 bg-cyan-500/10 text-cyan-200" : "border-amber-500/25 bg-amber-500/10 text-amber-300"} />
             <MiniBadge label={row.confidence || "LOW"} tone={confidenceTone(row.confidence)} />
             {!row.recommended_side && blockedReason ? <MiniBadge label={blockedReason.replaceAll("_", " ")} tone="border-amber-500/25 bg-amber-500/10 text-amber-300" /> : null}
           </div>
@@ -741,7 +784,7 @@ function ComparisonLineCard({ row }: { row: CsvRow }) {
         <div className="text-right">
           <div className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">{trustedLine ? "best value" : "audit only"}</div>
           <div className={cn("font-mono text-2xl font-black", trustedLine && bestValue > 0 ? "text-emerald-300" : "text-slate-500")}>
-            {trustedLine ? `${bestSide} ${fmt(bestValue, 1)}%` : (row.line_quality || "watch").replaceAll("_", " ")}
+            {trustedLine ? `${bestSide} ${fmt(bestValue, 1)}%` : quality.replaceAll("_", " ")}
           </div>
           {trustedLine ? <div className="mt-1 font-mono text-[11px] text-slate-500">no-vig edge {bestNovigEdge > 0 ? "+" : ""}{fmt(bestNovigEdge, 1)}pp</div> : null}
         </div>
@@ -764,7 +807,7 @@ function ComparisonTable({ rows, hasLinesFile }: { rows: CsvRow[]; hasLinesFile:
       <EmptyState
         message={
           hasLinesFile
-            ? "Bet365 lines file exists, but no aces/DF market rows matched the board. Check the audit/manual CSV."
+            ? "No matched Bet365 player-prop rows for the current board. Betting decision: NO BET. Check the scraper/audit CSV before trusting any raw line."
             : "No Bet365 aces/DF lines available yet. The API audit can run daily, but a manual CSV drop may be needed if the provider does not expose tennis player props."
         }
       />
@@ -827,7 +870,8 @@ function rowRejectionReason(row: CsvRow): string {
   if (row.blocked_reason) return row.blocked_reason.replaceAll("_", " ").toLowerCase();
   const confidence = (row.confidence || "LOW").toUpperCase();
   if (confidence !== "HIGH") return `confidence ${confidence} (needs HIGH)`;
-  if (row.line_quality && row.line_quality !== "complete") return `line is ${row.line_quality}`;
+  const quality = effectiveLineQuality(row);
+  if (quality !== "complete") return `line is ${quality}`;
   if (row.notes) return "notes flag present";
   return "gate did not pass";
 }
@@ -846,7 +890,7 @@ function RecommendationPanel({
   if (actionableRows.length) {
     return (
       <SectionCard
-        title="Recommended Bet365 Props"
+        title="Betting Decision: Recommended Bet365 Props"
         subtitle="These are the only lines passing every live gate: matched Bet365 line, complete two-way price, HIGH confidence, clean notes, and edge threshold."
       >
         <div className="grid gap-3 lg:grid-cols-2">
@@ -858,14 +902,14 @@ function RecommendationPanel({
 
   return (
     <SectionCard
-      title="Recommended Bet365 Props"
-      subtitle="This is the actual betting decision layer, above the audit board."
+      title="Betting Decision: NO BET"
+      subtitle="This is the actual decision layer, above the audit board. If this says no bet, the rows below are research only."
     >
       <div className="rounded-[2rem] border border-amber-500/25 bg-[radial-gradient(circle_at_top_left,rgba(245,158,11,0.16),transparent_34%),rgba(15,23,42,0.84)] p-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <div className="text-[11px] font-black uppercase tracking-[0.18em] text-amber-300">No bet suggested right now</div>
-            <h3 className="mt-2 text-2xl font-black tracking-tight text-slate-50">0 official aces/DF recommendations</h3>
+            <div className="text-[11px] font-black uppercase tracking-[0.18em] text-amber-300">Official decision</div>
+            <h3 className="mt-2 text-3xl font-black tracking-tight text-slate-50">NO BET SUGGESTED</h3>
             <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-300">
               Bet365 is being compared now: {matchedCount} of {totalCount} line rows matched the board. None pass the full gate, so anything below is watch/audit only, not a bet.
             </p>
@@ -939,12 +983,14 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
   const lineRows = latestLinesPath ? await readCsv(latestLinesPath) : [];
   const lineStamp = latestLinesPath ? await fileStamp(latestLinesPath) : "missing";
   const comparisonStamp = latestComparisonPath ? await fileStamp(latestComparisonPath) : "missing";
-  const sortedBoard = [...boardRows].sort(boardSort);
-  const sortedComparison = [...comparisonRows].sort(comparisonSort);
+  const displayBoardRows = boardRows.filter(isMainTourProjectionRow);
+  const sortedBoard = [...displayBoardRows].sort(boardSort);
+  const usefulComparisonRows = comparisonRows.filter(isUsefulComparisonRow);
+  const sortedComparison = [...usefulComparisonRows].sort(comparisonSort);
   const matchedComparisonRows = sortedComparison.filter((row) => row.matched_board === "yes");
-  const actionableRows = matchedComparisonRows.filter((row) => row.recommended_side);
+  const actionableRows = matchedComparisonRows.filter((row) => row.recommended_side && isTrustedComparisonRow(row));
   const cleanWatchRows = matchedComparisonRows
-    .filter((row) => !row.recommended_side && row.line_quality === "complete")
+    .filter((row) => !row.recommended_side && isTrustedComparisonRow(row))
     .sort((a, b) => rowBestValue(b) - rowBestValue(a));
   const sortedShadowRows = [...shadowRows].sort(shadowSort);
   const shadow = shadowStats(shadowRows);
@@ -969,10 +1015,10 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
         </HeroCard>
 
         <section className="my-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
-          <StatCard label="Projection rows" value={String(boardRows.length)} detail={`${countBy(boardRows, "tour", "ATP")} ATP / ${countBy(boardRows, "tour", "WTA")} WTA`} />
-          <StatCard label="High ace conf" value={String(countBy(boardRows, "ace_confidence", "HIGH"))} detail="Sample + event history gate" tone="text-emerald-300" />
-          <StatCard label="High DF conf" value={String(countBy(boardRows, "df_confidence", "HIGH"))} detail="Harder gate, noisier market" tone="text-rose-300" />
-          <StatCard label="Bet365 rows" value={String(comparisonRows.length)} detail={`${matchedComparisonRows.length} matched / ${lineStamp}`} tone={comparisonRows.length ? "text-cyan-300" : "text-slate-400"} />
+          <StatCard label="Projection rows" value={String(sortedBoard.length)} detail={`${countBy(sortedBoard, "tour", "ATP")} ATP / ${countBy(sortedBoard, "tour", "WTA")} WTA / ${boardRows.length - sortedBoard.length} filtered`} />
+          <StatCard label="High ace conf" value={String(countBy(sortedBoard, "ace_confidence", "HIGH"))} detail="Sample + event history gate" tone="text-emerald-300" />
+          <StatCard label="High DF conf" value={String(countBy(sortedBoard, "df_confidence", "HIGH"))} detail="Harder gate, noisier market" tone="text-rose-300" />
+          <StatCard label="Bet365 player rows" value={String(usefulComparisonRows.length)} detail={`${matchedComparisonRows.length} matched / ${comparisonRows.length} raw / ${lineStamp}`} tone={usefulComparisonRows.length ? "text-cyan-300" : "text-slate-400"} />
           <StatCard label="Actionable" value={String(actionableRows.length)} detail="HIGH confidence + edge gate" tone={actionableRows.length ? "text-emerald-300" : "text-slate-400"} />
           <StatCard label="Shadow evidence" value={String(shadowRows.length)} detail={`${shadow.settled} settled / ${shadow.pending} pending`} tone={shadowRows.length ? "text-amber-300" : "text-slate-400"} />
         </section>
@@ -1015,7 +1061,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
           </SectionCard>
 
           <SectionCard
-            title={`Projection Board (${latestDate(boardRows)})`}
+            title={`Projection Board (${latestDate(sortedBoard)})`}
             subtitle="Expected aces and double faults for each scheduled player. This is the simulation layer you asked for."
           >
             <ProjectionTable rows={sortedBoard} sortKey={projectionSortKey} />
