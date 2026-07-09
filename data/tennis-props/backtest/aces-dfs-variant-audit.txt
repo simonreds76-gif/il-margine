@@ -1,0 +1,69 @@
+Tennis Aces/DF Model Variant Audit
+Generated: 2026-07-09T18:03:42
+Rows: 4064
+Train year: 2024
+Evaluation year: 2025
+Outcome-only. No odds, no ROI, no CLV.
+
+Headline
+- ACES: conf_high_current_else_75 improves 2025 MAE by 0.002 counts vs current (2.948 -> 2.946); log-loss delta +0.001.
+- DFS: blend_model_75 improves 2025 MAE by 0.004 counts vs current (2.033 -> 2.029); log-loss delta -0.001.
+
+ACES variants
+Variant                              TrainMAE  EvalMAE  DeltaMAE  EvalBias  EvalLL  DeltaLL
+* conf_high_current_else_75             2.834    2.946    -0.002   +0.150   0.659   +0.001
+  blend_model_75                        2.835    2.947    -0.001   +0.156   0.659   +0.000
+  current                               2.841    2.948    +0.000   +0.140   0.658   +0.000
+  conf_high_current_else_50             2.840    2.958    +0.010   +0.159   0.661   +0.003
+  blend_model_50                        2.842    2.962    +0.014   +0.171   0.661   +0.003
+  prior_tour_surface_conf_bias_05       2.841    2.963    +0.015   +0.219   0.658   -0.001
+  prior_tour_tournament_bias_05         2.841    2.968    +0.020   +0.210   0.659   +0.001
+  prior_tour_surface_conf_bias_075      2.841    2.972    +0.024   +0.258   0.658   -0.001
+  prior_tour_tournament_bias_075        2.841    2.979    +0.031   +0.245   0.659   +0.001
+  prior_tour_surface_conf_bias_10       2.841    2.981    +0.033   +0.298   0.658   -0.000
+  prior_tour_tournament_bias_10         2.841    2.991    +0.043   +0.280   0.660   +0.002
+  blend_model_25                        2.871    2.995    +0.047   +0.187   0.668   +0.010
+  naive                                 2.912    3.049    +0.101   +0.202   0.770   +0.112
+
+DFS variants
+Variant                              TrainMAE  EvalMAE  DeltaMAE  EvalBias  EvalLL  DeltaLL
+* blend_model_75                        1.952    2.029    -0.004   -0.082   0.664   -0.001
+  current                               1.949    2.033    +0.000   -0.072   0.665   +0.000
+  prior_tour_surface_conf_bias_05       1.949    2.035    +0.003   -0.106   0.668   +0.002
+  conf_high_current_else_75             1.953    2.035    +0.003   -0.061   0.665   -0.000
+  prior_tour_surface_conf_bias_075      1.949    2.038    +0.006   -0.123   0.669   +0.004
+  prior_tour_tournament_bias_05         1.949    2.041    +0.009   -0.109   0.669   +0.004
+  prior_tour_surface_conf_bias_10       1.949    2.042    +0.010   -0.139   0.672   +0.007
+  blend_model_50                        1.974    2.046    +0.014   -0.091   0.667   +0.002
+  prior_tour_tournament_bias_075        1.949    2.047    +0.015   -0.127   0.672   +0.007
+  prior_tour_tournament_bias_10         1.949    2.055    +0.022   -0.145   0.675   +0.010
+  conf_high_current_else_50             1.974    2.057    +0.024   -0.051   0.668   +0.003
+  blend_model_25                        2.013    2.081    +0.048   -0.100   0.676   +0.011
+  naive                                 2.064    2.130    +0.097   -0.109   0.724   +0.059
+
+ACES winning variant by tournament (conf_high_current_else_75)
+Bucket                         N  MAE   Bias   RMSE  LogLoss
+ATP Australian Open           254 4.442 +0.494  5.624   0.662
+ATP Roland Garros             254 3.069 +0.055  4.017   0.665
+ATP US Open                   254 4.115 -0.034  5.346   0.646
+ATP Wimbledon                 254 4.828 +0.363  6.297   0.684
+WTA Australian Open           254 1.876 -0.037  2.355   0.684
+WTA Roland Garros             254 1.521 -0.010  2.029   0.635
+WTA US Open                   254 1.970 +0.053  2.626   0.667
+WTA Wimbledon                 254 1.747 +0.314  2.230   0.627
+
+DFS winning variant by tournament (blend_model_75)
+Bucket                         N  MAE   Bias   RMSE  LogLoss
+ATP Australian Open           254 2.056 -0.193  2.756   0.665
+ATP Roland Garros             254 1.899 -0.034  2.431   0.666
+ATP US Open                   254 2.469 +0.238  3.128   0.649
+ATP Wimbledon                 254 2.208 -0.079  2.925   0.638
+WTA Australian Open           254 1.948 -0.109  2.561   0.662
+WTA Roland Garros             254 1.725 -0.196  2.147   0.681
+WTA US Open                   254 2.135 -0.157  2.784   0.688
+WTA Wimbledon                 254 1.792 -0.123  2.291   0.660
+
+Decision rule
+- Wire a variant only if it improves MAE and does not materially worsen synthetic O/U log-loss.
+- If the winning delta is tiny (<0.03 counts), keep the live model unchanged and collect line/settlement evidence.
+- This report should be refreshed after each full Slam or after stage-0 rows are regenerated.
