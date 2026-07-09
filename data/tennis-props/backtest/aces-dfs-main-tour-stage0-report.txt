@@ -1,0 +1,76 @@
+Tennis Main-Tour Aces/DF Stage-0 Backtest
+Generated: 2026-07-09T18:42:19
+Evaluation years: 2024, 2025
+Outcome-only validation. No odds, no ROI, no CLV.
+Scope: tournaments present in data/tennis-props/slam-venue-factors.csv.
+
+Coverage
+- (2024, 'ATP', 'Clay', 'included_sides'): 254
+- (2024, 'ATP', 'Clay', 'not_in_factor_file'): 853
+- (2024, 'ATP', 'Grass', 'included_sides'): 540
+- (2024, 'ATP', 'Grass', 'not_in_factor_file'): 57
+- (2024, 'ATP', 'Hard', 'included_sides'): 508
+- (2024, 'ATP', 'Hard', 'not_in_factor_file'): 1515
+- (2024, 'WTA', 'Clay', 'included_sides'): 308
+- (2024, 'WTA', 'Clay', 'not_in_factor_file'): 575
+- (2024, 'WTA', 'Grass', 'included_sides'): 432
+- (2024, 'WTA', 'Grass', 'not_in_factor_file'): 89
+- (2024, 'WTA', 'Hard', 'included_sides'): 508
+- (2024, 'WTA', 'Hard', 'not_in_factor_file'): 1447
+- (2024, 'WTA', 'Unknown', 'not_in_factor_file'): 57
+- (2025, 'WTA', 'Clay', 'included_sides'): 308
+- (2025, 'WTA', 'Clay', 'not_in_factor_file'): 543
+- (2025, 'WTA', 'Grass', 'included_sides'): 486
+- (2025, 'WTA', 'Grass', 'not_in_factor_file'): 58
+- (2025, 'WTA', 'Hard', 'included_sides'): 508
+- (2025, 'WTA', 'Hard', 'not_in_factor_file'): 1404
+- (2025, 'WTA', 'Unknown', 'not_in_factor_file'): 36
+
+Overall
+Bucket                         N  AceMAE model/naive  AceLL model/naive  DfMAE model/naive  DfLL model/naive  AceBias  DfBias
+all                          3852  2.564/2.599        0.669/0.783        1.930/2.011        0.662/0.711        +0.037  -0.024
+
+By tour
+Bucket                         N  AceMAE model/naive  AceLL model/naive  DfMAE model/naive  DfLL model/naive  AceBias  DfBias
+ATP                          1302  3.943/3.989        0.674/0.707        2.017/2.106        0.656/0.695        -0.000  -0.032
+WTA                          2550  1.860/1.889        0.666/0.821        1.886/1.963        0.666/0.719        +0.057  -0.019
+
+By surface
+Bucket                         N  AceMAE model/naive  AceLL model/naive  DfMAE model/naive  DfLL model/naive  AceBias  DfBias
+ATP Clay                      254  3.199/3.245        0.676/0.682        1.924/1.871        0.662/0.653        -0.312  +0.665
+ATP Grass                     540  4.177/4.220        0.665/0.728        1.840/1.895        0.666/0.698        +0.089  +0.356
+ATP Hard                      508  4.065/4.116        0.683/0.698        2.253/2.448        0.641/0.715        +0.061  -0.793
+WTA Clay                      616  1.550/1.473        0.667/0.688        1.799/1.897        0.651/0.714        +0.231  -0.003
+WTA Grass                     918  2.052/2.163        0.663/0.982        1.833/1.958        0.661/0.742        -0.102  -0.015
+WTA Hard                     1016  1.875/1.895        0.669/0.757        1.986/2.007        0.679/0.700        +0.094  -0.033
+
+By tournament
+Bucket                         N  AceMAE model/naive  AceLL model/naive  DfMAE model/naive  DfLL model/naive  AceBias  DfBias
+ATP Australian Open           254  4.019/4.115        0.689/0.714        1.824/1.886        0.658/0.675        -0.393  +0.024
+ATP Eastbourne                 54  2.887/3.086        0.609/0.642        1.331/1.355        0.629/0.628        -0.122  +0.542
+ATP Halle                      62  3.949/4.002        0.688/0.736        1.437/1.584        0.598/0.681        +0.439  +0.597
+ATP Mallorca                   54  3.384/3.418        0.614/0.706        2.043/2.065        0.710/0.667        +0.903  +0.273
+ATP Queen's Club               62  3.523/3.473        0.714/0.692        1.534/1.583        0.654/0.681        -1.887  +0.377
+ATP Roland Garros             254  3.199/3.245        0.676/0.682        1.924/1.871        0.662/0.653        -0.312  +0.665
+ATP Stuttgart                  54  5.190/4.718        0.637/0.759        2.025/1.680        0.776/0.678        +1.848  +1.354
+ATP Us Open                   254  4.112/4.117        0.677/0.681        2.681/3.009        0.624/0.754        +0.514  -1.610
+ATP Wimbledon                 254  4.620/4.762        0.675/0.750        2.040/2.171        0.662/0.731        -0.016  +0.059
+WTA Australian Open           508  1.836/1.846        0.678/0.754        1.909/1.975        0.665/0.700        -0.024  -0.017
+WTA Bad Homburg               116  2.371/2.458        0.672/0.780        1.777/1.857        0.659/0.680        -0.711  +0.107
+WTA Eastbourne                116  2.011/2.042        0.667/0.783        1.966/2.111        0.622/0.833        +0.409  -0.006
+WTA Nottingham                124  2.437/2.483        0.667/0.791        1.766/1.927        0.660/0.700        -0.245  +0.010
+WTA Queen's Club               54  2.138/2.176        0.709/1.229        2.125/2.006        0.760/0.737        -0.518  -0.496
+WTA Roland Garros             508  1.399/1.409        0.655/0.691        1.739/1.865        0.645/0.699        +0.000  +0.000
+WTA Stuttgart                 108  2.263/1.777        0.724/0.674        2.079/2.047        0.682/0.785        +1.320  -0.018
+WTA Us Open                   508  1.913/1.944        0.659/0.760        2.062/2.040        0.692/0.700        +0.212  -0.050
+WTA Wimbledon                 508  1.885/2.043        0.654/1.094        1.801/1.949        0.660/0.747        +0.000  +0.000
+
+By year
+Bucket                         N  AceMAE model/naive  AceLL model/naive  DfMAE model/naive  DfLL model/naive  AceBias  DfBias
+2024                         2550  2.909/2.934        0.672/0.757        1.957/2.035        0.658/0.709        +0.025  +0.035
+2025                         1302  1.888/1.943        0.662/0.833        1.878/1.965        0.672/0.715        +0.062  -0.138
+
+Decision
+- Aces beat naive on this main-tour venue sample.
+- DFs beat naive on this main-tour venue sample.
+- This is not promotion evidence until ATP 2025/2026 Sackmann rows are present and Bet365 lines settle.
