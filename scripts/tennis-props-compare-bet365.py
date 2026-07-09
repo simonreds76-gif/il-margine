@@ -73,6 +73,20 @@ def is_placeholder_player(value: object) -> bool:
     return (not text) or text in {"total", "totals", "player total", "player totals"} or text.startswith("totals")
 
 
+def compatible_player_name(left: object, right: object) -> bool:
+    left_norm = norm_name(left)
+    right_norm = norm_name(right)
+    if not left_norm or not right_norm:
+        return False
+    if left_norm == right_norm:
+        return True
+    left_parts = left_norm.split()
+    right_parts = right_norm.split()
+    left_last = left_parts[-1] if left_parts else ""
+    right_last = right_parts[-1] if right_parts else ""
+    return bool(left_last and left_last == right_last and len(left_last) >= 4)
+
+
 def parse_float(value: object, default: float | None = None) -> float | None:
     try:
         text = str(value or "").strip()
@@ -243,6 +257,8 @@ def main() -> None:
         line_tour = str(line.get("tour") or "").upper()
         line_player = str(line.get("player") or "").strip()
         line_opponent = str(line.get("opponent") or "").strip()
+        line_market = str(line.get("market") or "").strip()
+        requires_exact_pair = is_match_total_count_market(line_market)
         original_player = line_player
         original_opponent = line_opponent
         match_source = ""
@@ -257,7 +273,7 @@ def main() -> None:
         board_row = board.get(key)
         if board_row is not None:
             match_source = "exact"
-        if board_row is None and is_placeholder_player(line_player) and line_opponent:
+        if board_row is None and not requires_exact_pair and is_placeholder_player(line_player) and line_opponent:
             player_only_key = (line_date, line_tour, norm_name(line_opponent))
             candidates = board_by_player.get(player_only_key, [])
             candidate_rows = candidates
@@ -271,7 +287,7 @@ def main() -> None:
             else:
                 unmatched_reason = "PLACEHOLDER_PLAYER_NOT_ON_BOARD_DATE"
         if board_row is None and line_player and not is_placeholder_player(line_player) and (
-            not line_opponent or is_placeholder_player(line_opponent)
+            not requires_exact_pair and (not line_opponent or is_placeholder_player(line_opponent))
         ):
             player_only_key = (line_date, line_tour, norm_name(line_player))
             candidates = board_by_player.get(player_only_key, [])
@@ -302,7 +318,24 @@ def main() -> None:
                 match_source = "exact_any_date"
             elif len(candidates) > 1:
                 unmatched_reason = "AMBIGUOUS_EXACT_ANY_DATE"
-        if board_row is None:
+        if board_row is None and requires_exact_pair and line_player and line_opponent:
+            candidates = [
+                row
+                for row in board_by_player_any_date.get((line_tour, norm_name(line_player)), [])
+                if within_date_drift(line_date, row, args.max_date_drift_days)
+                and compatible_player_name(line_opponent, row.get("opponent"))
+            ]
+            candidate_rows = candidates
+            if len(candidates) == 1:
+                board_row = candidates[0]
+                line_player = str(board_row.get("player") or line_player)
+                line_opponent = str(board_row.get("opponent") or line_opponent)
+                match_source = "pair_alias_any_date"
+            elif len(candidates) > 1:
+                unmatched_reason = "AMBIGUOUS_PAIR_ALIAS_ANY_DATE"
+            else:
+                unmatched_reason = unmatched_reason or "PAIR_NOT_ON_BOARD"
+        if board_row is None and not requires_exact_pair:
             lookup_player = ""
             if is_placeholder_player(original_player) and original_opponent:
                 lookup_player = original_opponent
@@ -337,7 +370,7 @@ def main() -> None:
                     "board_file": str(Path(args.board)),
                 }
             )
-        market = str(line.get("market") or "").strip()
+        market = line_market
         counterpart_row: dict[str, str] | None = None
         if board_row and is_match_total_count_market(market):
             counterpart_row = board.get(
