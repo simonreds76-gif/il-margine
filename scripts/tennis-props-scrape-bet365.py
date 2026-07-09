@@ -201,23 +201,35 @@ def side_from_label(label: object, *, yes_no: bool) -> str | None:
     return None
 
 
-def opponent_for(player: str, home: str, away: str) -> str:
-    p = norm(player)
-    home_norm = norm(home)
-    away_norm = norm(away)
-    if p and (p == home_norm or p in home_norm or home_norm in p):
-        return away
-    if p and (p == away_norm or p in away_norm or away_norm in p):
-        return home
-    return away if home else ""
-
-
 BAD_PLAYER_NAMES = {"total", "totals", "player total", "player totals", "totals player", "totals players"}
 
 
 def is_bad_player_name(value: str) -> bool:
     cleaned = norm(value)
     return (not cleaned) or cleaned in BAD_PLAYER_NAMES or cleaned.startswith("totals")
+
+
+def real_event_players(home: str, away: str) -> list[str]:
+    players: list[str] = []
+    for raw in (home, away):
+        cleaned = clean_player(raw)
+        if cleaned and not is_bad_player_name(cleaned):
+            players.append(cleaned)
+    return players
+
+
+def opponent_for(player: str, home: str, away: str) -> str:
+    p = norm(player)
+    home_clean = clean_player(home)
+    away_clean = clean_player(away)
+    home_norm = norm(home_clean)
+    away_norm = norm(away_clean)
+    if p and (p == home_norm or p in home_norm or home_norm in p):
+        return "" if is_bad_player_name(away_clean) else away_clean
+    if p and (p == away_norm or p in away_norm or away_norm in p):
+        return "" if is_bad_player_name(home_clean) else home_clean
+    real_players = [name for name in real_event_players(home, away) if norm(name) != p]
+    return real_players[0] if len(real_players) == 1 else ""
 
 
 def player_from_text(text: object, home: str, away: str) -> str:
@@ -228,6 +240,8 @@ def player_from_text(text: object, home: str, away: str) -> str:
     matches: list[str] = []
     for raw_name in (home, away):
         name = clean_player(raw_name)
+        if is_bad_player_name(name):
+            continue
         name_norm = norm(name)
         if not name_norm:
             continue
@@ -246,8 +260,13 @@ def player_from_text(text: object, home: str, away: str) -> str:
 
 
 def resolve_prop_player(prop: dict[str, Any], label: str, market_name: str, home: str, away: str, *, match_level_market: bool) -> str:
+    real_players = real_event_players(home, away)
     if match_level_market:
-        return clean_player(home)
+        return real_players[0] if real_players else ""
+    if len(real_players) == 1:
+        # odds-api.io exposes some Bet365 player props as "Totals ( ) v Player".
+        # In that shape the only real participant is the prop player.
+        return real_players[0]
     raw_candidates = [
         prop.get("player"),
         prop.get("participant"),
@@ -582,9 +601,14 @@ def main() -> None:
             for market in markets or []:
                 market_name = str(market.get("name") or "")
                 odds_list = market.get("odds") or market.get("outcomes") or []
-                labels = [
-                    str(prop.get("label") or prop.get("name") or prop.get("player") or "") for prop in odds_list[:6]
-                ]
+                labels = []
+                for prop in odds_list[:6]:
+                    bits = []
+                    for key in ("label", "name", "player", "participant", "competitor", "runner", "team", "hdp", "point"):
+                        value = prop.get(key)
+                        if value not in (None, ""):
+                            bits.append(f"{key}={value}")
+                    labels.append(";".join(bits) or str(prop)[:120])
                 audit_rows.append(
                     {
                         "captured_at": captured_at,

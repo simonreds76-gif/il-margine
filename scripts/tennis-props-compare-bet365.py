@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import argparse
 import csv
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 import re
 import unicodedata
@@ -22,6 +22,22 @@ ROOT = Path(__file__).resolve().parent.parent
 PROPS_DIR = ROOT / "data" / "tennis-props"
 INBOX_DIR = PROPS_DIR / "inbox"
 DEFAULT_BOARD = PROPS_DIR / "player-props-board.csv"
+UNMATCHED_FIELDS = [
+    "date",
+    "tour",
+    "tournament",
+    "player",
+    "opponent",
+    "market",
+    "line",
+    "over_odds",
+    "under_odds",
+    "reason",
+    "candidate_count",
+    "candidate_players",
+    "lines_file",
+    "board_file",
+]
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -34,7 +50,7 @@ def read_csv(path: Path) -> list[dict[str, str]]:
 def write_csv(path: Path, rows: list[dict[str, str]], fieldnames: list[str]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -113,15 +129,60 @@ def market_confidence(board_row: dict[str, str], market: str) -> str:
     return ""
 
 
+def candidate_summary(rows: list[dict[str, str]], limit: int = 6) -> str:
+    bits = []
+    for row in rows[:limit]:
+        bits.append(
+            " | ".join(
+                part
+                for part in (
+                    str(row.get("date") or ""),
+                    str(row.get("tour") or ""),
+                    str(row.get("tournament") or ""),
+                    f"{row.get('player') or ''} vs {row.get('opponent') or ''}",
+                )
+                if part
+            )
+        )
+    if len(rows) > limit:
+        bits.append(f"+{len(rows) - limit} more")
+    return " ; ".join(bits)
+
+
+def unique_row(rows: list[dict[str, str]]) -> dict[str, str] | None:
+    return rows[0] if len(rows) == 1 else None
+
+
+def date_drift_days(left: str, right: str) -> int | None:
+    try:
+        a = datetime.strptime(left, "%Y-%m-%d").date()
+        b = datetime.strptime(right, "%Y-%m-%d").date()
+    except ValueError:
+        return None
+    return abs((a - b).days)
+
+
+def within_date_drift(line_date: str, row: dict[str, str], max_days: int) -> bool:
+    drift = date_drift_days(line_date, str(row.get("date") or ""))
+    return drift is not None and drift <= max_days
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--date", default=date.today().isoformat())
     parser.add_argument("--board", default=str(DEFAULT_BOARD))
     parser.add_argument("--lines", default="")
     parser.add_argument("--out", default="")
+    parser.add_argument("--unmatched-out", default="")
     parser.add_argument("--min-value", type=float, default=0.10)
     parser.add_argument("--min-novig-edge", type=float, default=0.05)
     parser.add_argument("--max-model-market-gap", type=float, default=0.12)
+    parser.add_argument(
+        "--max-date-drift-days",
+        type=int,
+        default=1,
+        help="Maximum date mismatch allowed for fallback name matching.",
+    )
     parser.add_argument(
         "--distribution",
         choices=["negative_binomial", "nb", "poisson"],
@@ -132,6 +193,11 @@ def main() -> None:
 
     lines_path = Path(args.lines) if args.lines else INBOX_DIR / f"bet365-lines-{args.date}.csv"
     out_path = Path(args.out) if args.out else PROPS_DIR / f"comparison-{args.date}.csv"
+    unmatched_out_path = (
+        Path(args.unmatched_out)
+        if args.unmatched_out
+        else PROPS_DIR / f"comparison-{args.date}-unmatched.csv"
+    )
     line_rows = read_csv(lines_path)
     if not lines_path.exists():
         print(f"Lines file not found: {lines_path}")
@@ -150,16 +216,25 @@ def main() -> None:
         for row in board_rows
     }
     board_by_player: dict[tuple[str, str, str], list[dict[str, str]]] = {}
+    board_by_player_any_date: dict[tuple[str, str], list[dict[str, str]]] = {}
     for row in board_rows:
         player_key = (str(row.get("date") or ""), str(row.get("tour") or "").upper(), norm_name(row.get("player")))
         board_by_player.setdefault(player_key, []).append(row)
+        any_date_key = (str(row.get("tour") or "").upper(), norm_name(row.get("player")))
+        board_by_player_any_date.setdefault(any_date_key, []).append(row)
 
     rows: list[dict[str, str]] = []
+    unmatched_rows: list[dict[str, str]] = []
     for line in line_rows:
         line_date = str(line.get("date") or args.date)
         line_tour = str(line.get("tour") or "").upper()
         line_player = str(line.get("player") or "").strip()
         line_opponent = str(line.get("opponent") or "").strip()
+        original_player = line_player
+        original_opponent = line_opponent
+        match_source = ""
+        unmatched_reason = ""
+        candidate_rows: list[dict[str, str]] = []
         key = (
             line_date,
             line_tour,
@@ -167,22 +242,88 @@ def main() -> None:
             norm_name(line_opponent),
         )
         board_row = board.get(key)
+        if board_row is not None:
+            match_source = "exact"
         if board_row is None and is_placeholder_player(line_player) and line_opponent:
             player_only_key = (line_date, line_tour, norm_name(line_opponent))
             candidates = board_by_player.get(player_only_key, [])
+            candidate_rows = candidates
             if len(candidates) == 1:
                 board_row = candidates[0]
                 line_player = str(board_row.get("player") or line_opponent)
                 line_opponent = str(board_row.get("opponent") or "")
+                match_source = "placeholder_player_same_date"
+            elif len(candidates) > 1:
+                unmatched_reason = "AMBIGUOUS_PLACEHOLDER_PLAYER_SAME_DATE"
+            else:
+                unmatched_reason = "PLACEHOLDER_PLAYER_NOT_ON_BOARD_DATE"
+        if board_row is None and line_player and not is_placeholder_player(line_player) and (
+            not line_opponent or is_placeholder_player(line_opponent)
+        ):
+            player_only_key = (line_date, line_tour, norm_name(line_player))
+            candidates = board_by_player.get(player_only_key, [])
+            candidate_rows = candidates
+            if len(candidates) == 1:
+                board_row = candidates[0]
+                line_player = str(board_row.get("player") or line_player)
+                line_opponent = str(board_row.get("opponent") or "")
+                match_source = "player_only_same_date"
+            elif len(candidates) > 1:
+                unmatched_reason = "AMBIGUOUS_PLAYER_SAME_DATE"
+            else:
+                unmatched_reason = "PLAYER_NOT_ON_BOARD_DATE"
         if board_row is None:
             # Allow matching when the manual line date is tomorrow but the board was
             # generated today.
             candidates = [
                 row
                 for k, row in board.items()
-                if k[1] == key[1] and k[2] == key[2] and k[3] == key[3]
+                if k[1] == key[1]
+                and k[2] == key[2]
+                and k[3] == key[3]
+                and within_date_drift(line_date, row, args.max_date_drift_days)
             ]
-            board_row = candidates[0] if len(candidates) == 1 else None
+            candidate_rows = candidates
+            if len(candidates) == 1:
+                board_row = candidates[0]
+                match_source = "exact_any_date"
+            elif len(candidates) > 1:
+                unmatched_reason = "AMBIGUOUS_EXACT_ANY_DATE"
+        if board_row is None:
+            lookup_player = ""
+            if is_placeholder_player(original_player) and original_opponent:
+                lookup_player = original_opponent
+            elif line_player and not is_placeholder_player(line_player):
+                lookup_player = line_player
+            if lookup_player:
+                candidates = [
+                    row
+                    for row in board_by_player_any_date.get((line_tour, norm_name(lookup_player)), [])
+                    if within_date_drift(line_date, row, args.max_date_drift_days)
+                ]
+                candidate_rows = candidates
+                if len(candidates) == 1:
+                    board_row = candidates[0]
+                    line_player = str(board_row.get("player") or lookup_player)
+                    line_opponent = str(board_row.get("opponent") or "")
+                    match_source = "player_only_any_date"
+                elif len(candidates) > 1:
+                    unmatched_reason = unmatched_reason or "AMBIGUOUS_PLAYER_ANY_DATE"
+                else:
+                    unmatched_reason = unmatched_reason or "PLAYER_NOT_ON_BOARD"
+            else:
+                unmatched_reason = unmatched_reason or "NO_PLAYER_NAME"
+        if board_row is None:
+            unmatched_rows.append(
+                {
+                    **line,
+                    "reason": unmatched_reason or "NO_BOARD_MATCH",
+                    "candidate_count": str(len(candidate_rows)),
+                    "candidate_players": candidate_summary(candidate_rows),
+                    "lines_file": str(lines_path),
+                    "board_file": str(Path(args.board)),
+                }
+            )
         market = str(line.get("market") or "").strip()
         mean = market_mean(board_row or {}, market) if board_row else None
         line_value = parse_float(line.get("line"))
@@ -284,9 +425,13 @@ def main() -> None:
         rows.append(
             {
                 **line,
+                "date": str((board_row or {}).get("date") or line_date),
+                "tour": str((board_row or {}).get("tour") or line_tour),
+                "tournament": str((board_row or {}).get("tournament") or line.get("tournament") or ""),
                 "player": line_player,
                 "opponent": line_opponent,
                 "matched_board": "yes" if board_row else "no",
+                "match_source": match_source,
                 "projection_mean": fmt(mean, 3),
                 "confidence": confidence,
                 "line_quality": line_quality,
@@ -320,6 +465,7 @@ def main() -> None:
         "over_odds",
         "under_odds",
         "matched_board",
+        "match_source",
         "projection_mean",
         "confidence",
         "line_quality",
@@ -342,6 +488,8 @@ def main() -> None:
     ]
     write_csv(out_path, rows, fieldnames)
     print(f"Saved {len(rows)} rows: {out_path}")
+    write_csv(unmatched_out_path, unmatched_rows, UNMATCHED_FIELDS)
+    print(f"Saved {len(unmatched_rows)} unmatched rows: {unmatched_out_path}")
     if not lines_path.exists():
         print(f"Lines file not found: {lines_path}")
 
