@@ -92,6 +92,14 @@ def run_shadow_tracking(as_of: str) -> None:
         "Settle tennis props shadow signals",
         fatal=False,
     )
+    run(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "tennis-props-model-report.py"),
+        ],
+        "Build tennis props model monitor report",
+        fatal=False,
+    )
 
 
 def main() -> int:

@@ -44,6 +44,8 @@ const INBOX_DIR = path.join(PROPS_DIR, "inbox");
 const SHADOW_DIR = path.join(PROPS_DIR, "shadow");
 const SHADOW_SIGNALS_PATH = path.join(SHADOW_DIR, "aces-dfs-shadow-signals.csv");
 const SHADOW_PERFORMANCE_PATH = path.join(SHADOW_DIR, "aces-dfs-shadow-performance.txt");
+const MODEL_SUMMARY_PATH = path.join(PROPS_DIR, "model-monitor-summary.csv");
+const MODEL_REPORT_PATH = path.join(PROPS_DIR, "model-monitor-report.txt");
 
 function parseCsv(text: string): CsvRow[] {
   const rows: string[][] = [];
@@ -1136,6 +1138,55 @@ function FeedDiagnosticsPanel({
   );
 }
 
+function latestSummaryRows(rows: CsvRow[]): CsvRow[] {
+  const out: CsvRow[] = [];
+  for (const periodType of ["day", "week", "month"]) {
+    const subset = rows
+      .filter((row) => row.period_type === periodType)
+      .sort((a, b) => (b.period || "").localeCompare(a.period || ""));
+    if (subset[0]) out.push(subset[0]);
+  }
+  return out;
+}
+
+function ModelTrackerPanel({ rows, stamp }: { rows: CsvRow[]; stamp: string }) {
+  const latest = latestSummaryRows(rows);
+  return (
+    <SectionCard
+      title="Model Change Tracker"
+      subtitle={`Weekly/monthly diagnostics generated from every comparison CSV. Latest report: ${stamp}.`}
+    >
+      {latest.length ? (
+        <div className="grid gap-3 lg:grid-cols-3">
+          {latest.map((row) => (
+            <div key={`${row.period_type}-${row.period}`} className="rounded-[1.5rem] border border-slate-800/80 bg-slate-950/70 p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="text-[10px] font-black uppercase tracking-[0.18em] text-emerald-300">{row.period_type}</div>
+                  <h3 className="mt-1 font-mono text-2xl font-black text-slate-50">{row.period || "-"}</h3>
+                  <div className="mt-1 text-xs text-slate-500">{row.first_date || "-"} to {row.last_date || "-"}</div>
+                </div>
+                <MiniBadge label={`${row.bettable_rows || 0} bettable`} tone={n(row.bettable_rows) > 0 ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300" : "border-amber-500/25 bg-amber-500/10 text-amber-300"} />
+              </div>
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                <MetricTile label="Rows" value={row.line_rows || "0"} sub={`${row.matched_rows || 0} matched`} tone="text-slate-100" />
+                <MetricTile label="Two-way" value={row.two_way_rows || "0"} sub={`${row.one_sided_rows || 0} one-sided`} tone="text-cyan-300" />
+                <MetricTile label="Best avail" value={row.best_available_rows || "0"} sub={`${row.main_line_rows || 0} usable main`} tone="text-emerald-300" />
+                <MetricTile label="Shadow" value={`${row.shadow_pnl_units || "0.00"}u`} sub={`${row.shadow_settled || 0} settled / ROI ${row.shadow_roi_pct || "0.0"}%`} tone={n(row.shadow_pnl_units) >= 0 ? "text-emerald-300" : "text-rose-300"} />
+              </div>
+              <div className="mt-3 rounded-xl border border-slate-800 bg-slate-950/70 px-3 py-2 text-[11px] text-slate-500">
+                Top blocker: <span className="font-semibold text-amber-300">{(row.top_blocker || "none").replaceAll("_", " ").toLowerCase()}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <EmptyState message="No model monitor summary yet. Run python scripts/tennis-props-model-report.py or the daily tennis props job." />
+      )}
+    </SectionCard>
+  );
+}
+
 export default async function TennisPropsMonitorPage({ searchParams }: { searchParams?: SearchParamsInput }) {
   if (!MODEL_MONITOR_ENABLED) notFound();
   const resolvedSearchParams: Record<string, string | string[] | undefined> = searchParams ? await searchParams : {};
@@ -1153,6 +1204,9 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     latestComparisonPath,
     latestLinesPath,
     latestAuditPath,
+    modelSummaryRows,
+    modelSummaryStamp,
+    modelReportStamp,
     shadowRows,
     shadowStamp,
     shadowPerformanceStamp,
@@ -1165,6 +1219,9 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     latestCsv("comparison"),
     latestCsv("bet365-lines"),
     latestCsv("bet365-tennis-market-audit"),
+    readCsv(MODEL_SUMMARY_PATH),
+    fileStamp(MODEL_SUMMARY_PATH),
+    fileStamp(MODEL_REPORT_PATH),
     readCsv(SHADOW_SIGNALS_PATH),
     fileStamp(SHADOW_SIGNALS_PATH),
     fileStamp(SHADOW_PERFORMANCE_PATH),
@@ -1233,6 +1290,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
           <div><span className="text-slate-500">Comparison:</span> <span className="text-slate-200">{comparisonStamp}</span></div>
           <div><span className="text-slate-500">Venue factors:</span> <span className="text-slate-200">{factorsStamp}</span></div>
           <div><span className="text-slate-500">Baseline:</span> <span className="text-slate-200">{baselineStamp}</span></div>
+          <div><span className="text-slate-500">Model report:</span> <span className="text-slate-200">{modelReportStamp}</span></div>
           <div><span className="text-slate-500">Shadow:</span> <span className="text-slate-200">{shadowStamp}</span></div>
           <div><span className="text-slate-500">Shadow perf:</span> <span className="text-slate-200">{shadowPerformanceStamp}</span></div>
         </section>
@@ -1256,6 +1314,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
               matchedCount={matchedDecisionRows.length}
               totalCount={decisionRows.length}
             />
+
+            <ModelTrackerPanel rows={modelSummaryRows} stamp={modelSummaryStamp} />
 
             <FeedDiagnosticsPanel
               lineRows={lineRows}
