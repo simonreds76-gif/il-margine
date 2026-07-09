@@ -193,23 +193,84 @@ def line_group_key(row: dict[str, str]) -> tuple[str, str, str, str, str]:
     )
 
 
+def price_pair_status(over_odds: float | None, under_odds: float | None) -> str:
+    if over_odds is not None and under_odds is not None:
+        return "two_way"
+    if over_odds is not None:
+        return "over_only"
+    if under_odds is not None:
+        return "under_only"
+    return "missing_prices"
+
+
+def line_quality_from_shape(
+    over_odds: float | None,
+    under_odds: float | None,
+    line_value: float | None,
+    mean: float | None,
+) -> tuple[str, str]:
+    if over_odds is None and under_odds is None:
+        return "one_sided", "MISSING_BOTH_PRICES"
+    if over_odds is None:
+        return "one_sided", "UNDER_ONLY_PRICE"
+    if under_odds is None:
+        return "one_sided", "OVER_ONLY_PRICE"
+
+    reasons: list[str] = []
+    if max(over_odds, under_odds) > 4.0 or min(over_odds, under_odds) < 1.12:
+        reasons.append("EXTREME_PRICE")
+    if mean is not None and line_value is not None:
+        distance = abs(line_value - mean)
+        threshold = max(1.2, mean * 0.25)
+        if distance > threshold:
+            reasons.append("FAR_FROM_PROJECTION")
+    if reasons:
+        return "deep_alt", "|".join(reasons)
+    return "complete", "TWO_WAY_MAIN_CANDIDATE"
+
+
 def select_main_lines(rows: list[dict[str, str]]) -> None:
     grouped: dict[tuple[str, str, str, str, str], list[dict[str, str]]] = {}
     for row in rows:
         row["main_line"] = "false"
+        row["best_available_line"] = "false"
+        row["line_rank"] = ""
+        row["group_line_count"] = "0"
+        row["complete_line_count"] = "0"
         grouped.setdefault(line_group_key(row), []).append(row)
     for group_rows in grouped.values():
-        candidates = [
+        two_way_candidates = [
             row for row in group_rows
-            if row.get("matched_board") == "yes" and row.get("line_quality") == "complete"
+            if row.get("matched_board") == "yes" and row.get("price_pair_status") == "two_way"
         ]
-        if not candidates:
+        group_size = len(group_rows)
+        complete_count = len(two_way_candidates)
+        for row in group_rows:
+            row["group_line_count"] = str(group_size)
+            row["complete_line_count"] = str(complete_count)
+        if not two_way_candidates:
             continue
-        def score(row: dict[str, str]) -> tuple[float, float]:
+
+        def score(row: dict[str, str]) -> tuple[float, float, float]:
             novig = parse_float(row.get("novig_p_over"), 0.5) or 0.5
             mean = parse_float(row.get("projection_mean"), 0.0) or 0.0
             line_value = parse_float(row.get("line"), mean) or mean
-            return (abs(novig - 0.5), abs(line_value - mean))
+            price_imbalance = abs(novig - 0.5)
+            projection_distance = abs(line_value - mean)
+            price_min = min(parse_float(row.get("over_odds"), 999.0) or 999.0, parse_float(row.get("under_odds"), 999.0) or 999.0)
+            return (price_imbalance, projection_distance, -price_min)
+
+        ranked = sorted(two_way_candidates, key=score)
+        for index, row in enumerate(ranked, start=1):
+            row["line_rank"] = str(index)
+        ranked[0]["best_available_line"] = "true"
+
+        candidates = [
+            row for row in ranked
+            if row.get("line_quality") == "complete"
+        ]
+        if not candidates:
+            continue
         min(candidates, key=score)["main_line"] = "true"
 
 
@@ -613,13 +674,8 @@ def main() -> None:
             notes = " | ".join(part for part in (notes, other_notes) if part)
         elif board_row and is_match_total_count_market(market):
             notes = " | ".join(part for part in (notes, "MATCH_TOTAL_COUNTERPART_MISSING") if part)
-        complete_line = over_odds is not None and under_odds is not None
-        deep_alt = False
-        if complete_line and over_odds is not None and under_odds is not None:
-            deep_alt = max(over_odds, under_odds) > 4.0 or min(over_odds, under_odds) < 1.12
-        if mean is not None and line_value is not None:
-            deep_alt = deep_alt or abs(line_value - mean) > max(1.2, mean * 0.25)
-        line_quality = "one_sided" if not complete_line else "deep_alt" if deep_alt else "complete"
+        price_status = price_pair_status(over_odds, under_odds)
+        line_quality, line_quality_reason = line_quality_from_shape(over_odds, under_odds, line_value, mean)
         recommended = ""
         blocked_reason = ""
 
@@ -631,6 +687,11 @@ def main() -> None:
                 "tournament": str((board_row or {}).get("tournament") or line.get("tournament") or ""),
                 "player": line_player,
                 "opponent": line_opponent,
+                "event_id": str(line.get("event_id") or ""),
+                "bookmaker": str(line.get("bookmaker") or ""),
+                "raw_market_name": str(line.get("raw_market_name") or ""),
+                "raw_outcome_count": str(line.get("raw_outcome_count") or ""),
+                "raw_label_sample": str(line.get("raw_label_sample") or ""),
                 "matched_board": "yes" if board_row else "no",
                 "match_source": match_source,
                 "scope": "match_total" if is_match_total_count_market(market) else "player",
@@ -642,7 +703,13 @@ def main() -> None:
                 "combined_surface_svpt_sample": fmt(combined_sample, 0),
                 "confidence": confidence,
                 "line_quality": line_quality,
+                "line_quality_reason": line_quality_reason,
+                "price_pair_status": price_status,
                 "main_line": "false",
+                "best_available_line": "false",
+                "line_rank": "",
+                "group_line_count": "",
+                "complete_line_count": "",
                 "capture_ts": str(line.get("capture_ts") or line.get("captured_at") or ""),
                 "match_start_utc": str(line.get("match_start_utc") or line.get("kickoff_at") or ""),
                 "notes": notes,
@@ -680,6 +747,11 @@ def main() -> None:
         "line",
         "over_odds",
         "under_odds",
+        "event_id",
+        "bookmaker",
+        "raw_market_name",
+        "raw_outcome_count",
+        "raw_label_sample",
         "scope",
         "matched_board",
         "match_source",
@@ -691,7 +763,13 @@ def main() -> None:
         "combined_surface_svpt_sample",
         "confidence",
         "line_quality",
+        "line_quality_reason",
+        "price_pair_status",
         "main_line",
+        "best_available_line",
+        "line_rank",
+        "group_line_count",
+        "complete_line_count",
         "capture_ts",
         "match_start_utc",
         "notes",

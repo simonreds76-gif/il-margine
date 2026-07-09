@@ -198,6 +198,7 @@ function isBettableComparisonRow(row: CsvRow): boolean {
 }
 
 function isHardHiddenLine(row: CsvRow): boolean {
+  if (row.best_available_line === "true") return false;
   const quality = effectiveLineQuality(row);
   return quality === "one_sided" || quality === "deep_alt" || row.matched_board !== "yes";
 }
@@ -274,6 +275,34 @@ function shadowStats(rows: CsvRow[]): { settled: number; pending: number; voided
 
 function countBy(rows: CsvRow[], field: string, value: string): number {
   return rows.filter((row) => row[field] === value).length;
+}
+
+function topCounts(rows: CsvRow[], field: string, limit = 8): { label: string; count: number }[] {
+  const counts = new Map<string, number>();
+  for (const row of rows) {
+    const label = row[field] || "missing";
+    counts.set(label, (counts.get(label) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .map(([label, count]) => ({ label, count }))
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
+    .slice(0, limit);
+}
+
+function firstBlockReason(row: CsvRow): string {
+  return (row.block_reasons || row.blocked_reason || "not blocked").split("|").find(Boolean) || "not blocked";
+}
+
+function topBlockReasons(rows: CsvRow[], limit = 8): { label: string; count: number }[] {
+  const counts = new Map<string, number>();
+  for (const row of rows) {
+    const label = firstBlockReason(row);
+    counts.set(label, (counts.get(label) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .map(([label, count]) => ({ label: blockReasonLabel(label), count }))
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
+    .slice(0, limit);
 }
 
 function latestDate(rows: CsvRow[]): string {
@@ -547,6 +576,26 @@ function MetricTile({ label, value, sub, tone }: { label: string; value: string;
   );
 }
 
+function CountList({ title, rows, tone = "text-slate-200" }: { title: string; rows: { label: string; count: number }[]; tone?: string }) {
+  return (
+    <div className="rounded-2xl border border-slate-800/80 bg-slate-950/70 p-3">
+      <div className="mb-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500">{title}</div>
+      {rows.length ? (
+        <div className="space-y-1.5">
+          {rows.map((row) => (
+            <div key={`${title}-${row.label}`} className="flex items-center justify-between gap-3 text-xs">
+              <span className="truncate text-slate-400">{row.label.replaceAll("_", " ").toLowerCase()}</span>
+              <span className={cn("font-mono font-black", tone)}>{row.count}</span>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-xs text-slate-600">No rows</div>
+      )}
+    </div>
+  );
+}
+
 function FactorCluster({ row }: { row: CsvRow }) {
   return (
     <div className="grid gap-2 text-[11px] sm:grid-cols-2">
@@ -784,6 +833,14 @@ function ComparisonLineCard({ row }: { row: CsvRow }) {
   const bestValue = trustedLine ? Math.max(n(row.value_over_pct), n(row.value_under_pct)) : 0;
   const bestNovigEdge = bestSide === "UNDER" ? n(row.edge_under_novig_pct) : n(row.edge_over_novig_pct);
   const blockedReason = row.blocked_reason || rowRejectionReason(row);
+  const lineStatus = row.main_line === "true" ? "main line" : row.best_available_line === "true" ? "best available" : quality;
+  const lineTone = row.main_line === "true"
+    ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300"
+    : row.best_available_line === "true"
+      ? "border-cyan-500/25 bg-cyan-500/10 text-cyan-200"
+      : quality === "complete"
+        ? "border-cyan-500/25 bg-cyan-500/10 text-cyan-200"
+        : "border-amber-500/25 bg-amber-500/10 text-amber-300";
   return (
     <div className="rounded-2xl border border-slate-800/80 bg-slate-950/70 p-3">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -791,12 +848,16 @@ function ComparisonLineCard({ row }: { row: CsvRow }) {
           <div className="flex flex-wrap items-center gap-2">
             <MiniBadge label={row.bettable === "true" ? "BET NOW" : row.recommended_side || "watch"} tone={row.bettable === "true" ? "border-emerald-400/35 bg-emerald-500/15 text-emerald-200" : recTone(row.recommended_side)} />
             <MiniBadge label={row.matched_board === "yes" ? "matched" : "unmatched"} tone={row.matched_board === "yes" ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300" : "border-rose-500/25 bg-rose-500/10 text-rose-300"} />
-            <MiniBadge label={row.main_line === "true" ? "main line" : quality} tone={row.main_line === "true" ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300" : quality === "complete" ? "border-cyan-500/25 bg-cyan-500/10 text-cyan-200" : "border-amber-500/25 bg-amber-500/10 text-amber-300"} />
+            <MiniBadge label={lineStatus} tone={lineTone} />
+            {row.price_pair_status ? <MiniBadge label={row.price_pair_status.replaceAll("_", " ")} tone="border-slate-700/70 bg-slate-800/60 text-slate-300" /> : null}
             <MiniBadge label={row.confidence || "LOW"} tone={confidenceTone(row.confidence)} />
             {!row.recommended_side && blockedReason ? <MiniBadge label={blockedReason.replaceAll("_", " ")} tone="border-amber-500/25 bg-amber-500/10 text-amber-300" /> : null}
           </div>
           <div className="mt-2 font-semibold text-slate-100">{row.player || "-"} - {marketLabel(row)} {fmt(row.line, 1)}</div>
-          <div className="text-xs text-slate-500">projection {fmt(row.projection_mean, 1)} - {row.distribution || "model"}</div>
+          <div className="text-xs text-slate-500">
+            projection {fmt(row.projection_mean, 1)} - {row.distribution || "model"}
+            {row.line_rank ? ` - rank ${row.line_rank}/${row.complete_line_count || row.group_line_count}` : ""}
+          </div>
         </div>
         <div className="text-right">
           <div className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">{trustedLine ? "best value" : "audit only"}</div>
@@ -812,6 +873,12 @@ function ComparisonLineCard({ row }: { row: CsvRow }) {
         <MetricTile label="Over value" value={trustedLine ? `${fmt(row.value_over_pct, 1)}%` : "audit"} sub={trustedLine ? `no-vig ${n(row.edge_over_novig_pct) > 0 ? "+" : ""}${fmt(row.edge_over_novig_pct, 1)}%` : undefined} tone={trustedLine && n(row.value_over_pct) > 0 ? "text-emerald-300" : "text-slate-500"} />
         <MetricTile label="Under value" value={trustedLine ? `${fmt(row.value_under_pct, 1)}%` : "audit"} sub={trustedLine ? `no-vig ${n(row.edge_under_novig_pct) > 0 ? "+" : ""}${fmt(row.edge_under_novig_pct, 1)}%` : undefined} tone={trustedLine && n(row.value_under_pct) > 0 ? "text-emerald-300" : "text-slate-500"} />
       </div>
+      {row.line_quality_reason || row.raw_market_name ? (
+        <div className="mt-2 rounded-xl border border-slate-800 bg-slate-950/70 px-3 py-2 text-[11px] leading-relaxed text-slate-500">
+          {row.line_quality_reason ? <div><span className="font-bold uppercase tracking-[0.12em] text-slate-400">Line shape:</span> {row.line_quality_reason.replaceAll("_", " ").toLowerCase()}</div> : null}
+          {row.raw_market_name ? <div><span className="font-bold uppercase tracking-[0.12em] text-slate-400">Raw market:</span> {row.raw_market_name}</div> : null}
+        </div>
+      ) : null}
       {row.model_market_gap_pp ? <div className="mt-2 text-[11px] text-slate-500">Model-market gap: {fmt(row.model_market_gap_pp, 1)}pp. Rows above the guard are blocked, even if raw EV looks large.</div> : null}
       {n(row.fair_p_push) > 0 ? <div className="mt-2 text-[11px] text-amber-300/80">Integer-line push mass: {(n(row.fair_p_push) * 100).toFixed(1)}%</div> : null}
     </div>
@@ -997,6 +1064,78 @@ function RecommendationPanel({
   );
 }
 
+function FeedDiagnosticsPanel({
+  lineRows,
+  auditRows,
+  decisionRows,
+  matchedRows,
+}: {
+  lineRows: CsvRow[];
+  auditRows: CsvRow[];
+  decisionRows: CsvRow[];
+  matchedRows: CsvRow[];
+}) {
+  const bestAvailable = matchedRows.filter((row) => row.best_available_line === "true").length;
+  const mainLines = matchedRows.filter((row) => row.main_line === "true").length;
+  const twoWayRows = matchedRows.filter((row) => row.price_pair_status === "two_way").length;
+  const rawMarketRows = auditRows.filter((row) => row.market_name);
+  return (
+    <SectionCard
+      title="Why No Bet? Feed Diagnostics"
+      subtitle="This is the feed-quality layer: raw Bet365 inventory, parsed line shapes, and blocker counts before any model opinion is trusted."
+    >
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <MetricTile label="Raw lines" value={String(lineRows.length)} sub="rows from Bet365 parser" tone="text-cyan-300" />
+        <MetricTile label="Decision rows" value={String(decisionRows.length)} sub={`${matchedRows.length} matched board`} tone="text-slate-100" />
+        <MetricTile label="Two-way rows" value={String(twoWayRows)} sub="over + under present" tone={twoWayRows ? "text-emerald-300" : "text-amber-300"} />
+        <MetricTile label="Best available" value={String(bestAvailable)} sub="closest ladder row per market" tone="text-cyan-300" />
+        <MetricTile label="Usable main" value={String(mainLines)} sub="strict gate candidate" tone={mainLines ? "text-emerald-300" : "text-amber-300"} />
+      </div>
+      <div className="mt-3 grid gap-3 lg:grid-cols-4">
+        <CountList title="Blockers" rows={topBlockReasons(matchedRows)} tone="text-amber-300" />
+        <CountList title="Line quality" rows={topCounts(matchedRows, "line_quality")} tone="text-cyan-300" />
+        <CountList title="Price pair" rows={topCounts(matchedRows, "price_pair_status")} tone="text-emerald-300" />
+        <CountList title="Parsed market" rows={topCounts(lineRows, "market")} tone="text-slate-200" />
+      </div>
+      <details className="group mt-3 rounded-2xl border border-slate-800/80 bg-slate-950/60">
+        <summary className="cursor-pointer list-none px-4 py-3 text-xs font-black uppercase tracking-[0.16em] text-slate-400 transition group-open:text-cyan-200">
+          Raw Bet365 market inventory ({rawMarketRows.length} market rows)
+        </summary>
+        <div className="border-t border-slate-800/80 p-4">
+          {rawMarketRows.length ? (
+            <div className="overflow-x-auto">
+              <table className="min-w-[880px] text-left text-xs">
+                <thead className="uppercase tracking-[0.12em] text-slate-600">
+                  <tr>
+                    <th className="px-3 py-2 font-semibold">Book</th>
+                    <th className="px-3 py-2 font-semibold">Event</th>
+                    <th className="px-3 py-2 font-semibold">Market</th>
+                    <th className="px-3 py-2 font-semibold">Outcomes</th>
+                    <th className="px-3 py-2 font-semibold">Sample labels</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rawMarketRows.slice(0, 18).map((row, index) => (
+                    <tr key={`${row.event_id}-${row.market_name}-${index}`} className="border-t border-slate-900">
+                      <td className="px-3 py-2 text-slate-300">{row.bookmaker || "-"}</td>
+                      <td className="px-3 py-2 text-slate-400">{row.home || "-"} vs {row.away || "-"}</td>
+                      <td className="px-3 py-2 text-slate-200">{row.market_name || "-"}</td>
+                      <td className="px-3 py-2 font-mono text-cyan-300">{row.odds_count || "-"}</td>
+                      <td className="max-w-[420px] truncate px-3 py-2 text-slate-500">{row.sample_labels || "-"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <EmptyState message="No raw market-audit CSV found yet. Run the Bet365 scraper once to populate bet365-tennis-market-audit-YYYY-MM-DD.csv." />
+          )}
+        </div>
+      </details>
+    </SectionCard>
+  );
+}
+
 export default async function TennisPropsMonitorPage({ searchParams }: { searchParams?: SearchParamsInput }) {
   if (!MODEL_MONITOR_ENABLED) notFound();
   const resolvedSearchParams: Record<string, string | string[] | undefined> = searchParams ? await searchParams : {};
@@ -1013,6 +1152,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     factorsStamp,
     latestComparisonPath,
     latestLinesPath,
+    latestAuditPath,
     shadowRows,
     shadowStamp,
     shadowPerformanceStamp,
@@ -1024,6 +1164,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     fileStamp(FACTORS_PATH),
     latestCsv("comparison"),
     latestCsv("bet365-lines"),
+    latestCsv("bet365-tennis-market-audit"),
     readCsv(SHADOW_SIGNALS_PATH),
     fileStamp(SHADOW_SIGNALS_PATH),
     fileStamp(SHADOW_PERFORMANCE_PATH),
@@ -1031,9 +1172,11 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
 
   const comparisonRows = latestComparisonPath ? await readCsv(latestComparisonPath) : [];
   const lineRows = latestLinesPath ? await readCsv(latestLinesPath) : [];
+  const auditRows = latestAuditPath ? await readCsv(latestAuditPath) : [];
   const lineStamp = latestLinesPath ? await fileStamp(latestLinesPath) : "missing";
   const lineAgeHours = latestLinesPath ? await fileAgeHours(latestLinesPath) : null;
   const comparisonStamp = latestComparisonPath ? await fileStamp(latestComparisonPath) : "missing";
+  const auditStamp = latestAuditPath ? await fileStamp(latestAuditPath) : "missing";
   const displayBoardRows = boardRows.filter(isMainTourProjectionRow);
   const sortedBoard = [...displayBoardRows].sort(boardSort);
   const usefulComparisonRows = comparisonRows.filter(isUsefulComparisonRow);
@@ -1047,8 +1190,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
   const blockedExamples = matchedDecisionRows
     .filter((row) => !isBettableComparisonRow(row))
     .sort((a, b) => rowBestValue(b) - rowBestValue(a));
-  const visibleAllLineRows = matchedDecisionRows.filter((row) => showHiddenLines || !isHardHiddenLine(row) || row.main_line === "true" || row.bettable === "true");
-  const allLineRowsForPanel = showAllLines ? visibleAllLineRows : visibleAllLineRows.filter((row) => row.main_line === "true" || row.bettable === "true");
+  const visibleAllLineRows = matchedDecisionRows.filter((row) => showHiddenLines || !isHardHiddenLine(row) || row.main_line === "true" || row.best_available_line === "true" || row.bettable === "true");
+  const allLineRowsForPanel = showAllLines ? visibleAllLineRows : visibleAllLineRows.filter((row) => row.main_line === "true" || row.best_available_line === "true" || row.bettable === "true");
   const sortedShadowRows = [...shadowRows].sort(shadowSort);
   const shadow = shadowStats(shadowRows);
   const boardStale = boardAgeHours == null || boardAgeHours > 24;
@@ -1086,6 +1229,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
         <section className="mb-6 grid gap-3 rounded-2xl border border-slate-800 bg-slate-950/40 p-4 text-xs text-slate-400 md:grid-cols-4">
           <div><span className="text-slate-500">Board:</span> <span className="text-slate-200">{boardStamp}</span></div>
           <div><span className="text-slate-500">Bet365 lines:</span> <span className="text-slate-200">{lineStamp}</span></div>
+          <div><span className="text-slate-500">Bet365 audit:</span> <span className="text-slate-200">{auditStamp}</span></div>
           <div><span className="text-slate-500">Comparison:</span> <span className="text-slate-200">{comparisonStamp}</span></div>
           <div><span className="text-slate-500">Venue factors:</span> <span className="text-slate-200">{factorsStamp}</span></div>
           <div><span className="text-slate-500">Baseline:</span> <span className="text-slate-200">{baselineStamp}</span></div>
@@ -1111,6 +1255,13 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
               watchRows={nearMissRows.length ? nearMissRows : blockedExamples}
               matchedCount={matchedDecisionRows.length}
               totalCount={decisionRows.length}
+            />
+
+            <FeedDiagnosticsPanel
+              lineRows={lineRows}
+              auditRows={auditRows}
+              decisionRows={decisionRows}
+              matchedRows={matchedDecisionRows}
             />
 
             <SectionCard

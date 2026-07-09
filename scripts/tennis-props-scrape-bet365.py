@@ -80,9 +80,11 @@ ZERO_ROW_PROBE_PARAMS: tuple[tuple[str, dict[str, str]], ...] = (
     ("source=bet365", {"source": "bet365"}),
 )
 OUTPUT_FIELDS = [
+    "event_id",
     "date",
     "tour",
     "tournament",
+    "bookmaker",
     "player",
     "opponent",
     "market",
@@ -91,6 +93,9 @@ OUTPUT_FIELDS = [
     "under_odds",
     "capture_ts",
     "match_start_utc",
+    "raw_market_name",
+    "raw_outcome_count",
+    "raw_label_sample",
 ]
 AUDIT_FIELDS = [
     "captured_at",
@@ -346,12 +351,14 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any], 
         return []
 
     kickoff = str(event.get("date") or "")
+    event_id = str(event.get("id") or "")
     event_date = kickoff[:10]
     home = str(event.get("home") or event.get("home_team") or "")
     away = str(event.get("away") or event.get("away_team") or "")
     tour = tour_from_event(event)
     tournament = tournament_from_event(event)
     grouped: dict[tuple[str, str, str], dict[str, float]] = defaultdict(dict)
+    raw_labels: dict[tuple[str, str, str], list[str]] = defaultdict(list)
     yes_no_market = is_yes_no_market(market_key)
     real_players = real_event_players(home, away)
     is_match_count_total = (
@@ -395,6 +402,7 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any], 
                 continue
             opponent = match_opponent if match_level_market else opponent_for(player_name, home, away)
             key = (player_name, opponent, line_text)
+            raw_labels[key].append(label or str(prop)[:90])
             if over_price:
                 grouped[key]["over_odds"] = over_price
             if under_price:
@@ -404,6 +412,7 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any], 
             if not player_name:
                 continue
             key = (player_name, match_opponent, line_text)
+            raw_labels[key].append(label or str(prop)[:90])
             if yes_price:
                 grouped[key]["over_odds"] = yes_price
             if no_price:
@@ -427,6 +436,7 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any], 
             continue
         opponent = match_opponent if match_level_market else opponent_for(player_name, home, away)
         key = (player_name, opponent, line_text)
+        raw_labels[key].append(label or str(prop)[:90])
         grouped[key][side] = price
 
     rows: list[dict[str, str]] = []
@@ -435,9 +445,11 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any], 
             continue
         rows.append(
             {
+                "event_id": event_id,
                 "date": event_date,
                 "tour": tour,
                 "tournament": tournament,
+                "bookmaker": bookmaker,
                 "player": player,
                 "opponent": clean_player(opponent),
                 "market": output_market,
@@ -446,6 +458,9 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any], 
                 "under_odds": f"{prices['under_odds']:.4f}" if prices.get("under_odds") else "",
                 "capture_ts": captured_at,
                 "match_start_utc": kickoff,
+                "raw_market_name": market_name,
+                "raw_outcome_count": str(len(market.get("odds") or market.get("outcomes") or [])),
+                "raw_label_sample": " | ".join(raw_labels.get((player, opponent, line_text), [])[:4]),
             }
         )
     return rows
