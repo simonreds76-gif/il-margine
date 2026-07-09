@@ -351,7 +351,24 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any]) 
     tournament = tournament_from_event(event)
     grouped: dict[tuple[str, str, str], dict[str, float]] = defaultdict(dict)
     yes_no_market = is_yes_no_market(market_key)
-    match_level_market = yes_no_market or market_key in {"first_set_total_games", "total_tiebreaks"}
+    real_players = real_event_players(home, away)
+    is_match_count_total = (
+        market_key in {"aces", "double_faults"}
+        and "total" in norm(market_name)
+        and len(real_players) == 2
+    )
+    output_market = (
+        "match_aces"
+        if is_match_count_total and market_key == "aces"
+        else "match_double_faults"
+        if is_match_count_total and market_key == "double_faults"
+        else market_key
+    )
+    match_level_market = (
+        yes_no_market
+        or market_key in {"first_set_total_games", "total_tiebreaks"}
+        or is_match_count_total
+    )
     match_player = clean_player(home)
     match_opponent = clean_player(away)
 
@@ -362,11 +379,14 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any]) 
         if line is None and not yes_no_market:
             continue
 
-        # Shape A: one prop carries both over and under.
-        over_price = parse_decimal(prop.get("over"))
-        under_price = parse_decimal(prop.get("under"))
-        yes_price = parse_decimal(prop.get("yes") or prop.get("Yes"))
-        no_price = parse_decimal(prop.get("no") or prop.get("No"))
+        # Shape A: one prop carries both sides. odds-api.io uses home/away
+        # for Bet365 tennis totals, where home == Over/Yes and away == Under/No.
+        home_side_price = parse_decimal(prop.get("home"))
+        away_side_price = parse_decimal(prop.get("away"))
+        over_price = parse_decimal(prop.get("over")) or (None if yes_no_market else home_side_price)
+        under_price = parse_decimal(prop.get("under")) or (None if yes_no_market else away_side_price)
+        yes_price = parse_decimal(prop.get("yes") or prop.get("Yes")) or (home_side_price if yes_no_market else None)
+        no_price = parse_decimal(prop.get("no") or prop.get("No")) or (away_side_price if yes_no_market else None)
         player_name = resolve_prop_player(prop, label, market_name, home, away, match_level_market=match_level_market)
         if over_price or under_price:
             if not player_name:
@@ -418,7 +438,7 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any]) 
                 "tournament": tournament,
                 "player": player,
                 "opponent": clean_player(opponent),
-                "market": market_key,
+                "market": output_market,
                 "line": line_text,
                 "over_odds": f"{prices['over_odds']:.4f}" if prices.get("over_odds") else "",
                 "under_odds": f"{prices['under_odds']:.4f}" if prices.get("under_odds") else "",

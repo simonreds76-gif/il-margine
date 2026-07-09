@@ -113,20 +113,33 @@ def push_excluded_probabilities(
 
 def market_mean(board_row: dict[str, str], market: str) -> float | None:
     lower = market.lower().replace(" ", "_")
-    if lower in {"aces", "ace", "player_aces"}:
+    if lower in {"aces", "ace", "player_aces", "match_aces"}:
         return parse_float(board_row.get("projected_aces"))
-    if lower in {"double_faults", "double_fault", "dfs", "df"}:
+    if lower in {"double_faults", "double_fault", "dfs", "df", "match_double_faults"}:
         return parse_float(board_row.get("projected_dfs"))
     return None
 
 
 def market_confidence(board_row: dict[str, str], market: str) -> str:
     lower = market.lower().replace(" ", "_")
-    if lower in {"aces", "ace", "player_aces"}:
+    if lower in {"aces", "ace", "player_aces", "match_aces"}:
         return str(board_row.get("ace_confidence") or "")
-    if lower in {"double_faults", "double_fault", "dfs", "df"}:
+    if lower in {"double_faults", "double_fault", "dfs", "df", "match_double_faults"}:
         return str(board_row.get("df_confidence") or "")
     return ""
+
+
+def is_match_total_count_market(market: str) -> bool:
+    return market.lower().replace(" ", "_") in {"match_aces", "match_double_faults"}
+
+
+def combine_confidence(left: str, right: str) -> str:
+    order = {"LOW": 0, "MED": 1, "HIGH": 2}
+    left_key = left.upper()
+    right_key = right.upper()
+    if left_key not in order or right_key not in order:
+        return left or right
+    return left_key if order[left_key] <= order[right_key] else right_key
 
 
 def candidate_summary(rows: list[dict[str, str]], limit: int = 6) -> str:
@@ -325,7 +338,26 @@ def main() -> None:
                 }
             )
         market = str(line.get("market") or "").strip()
-        mean = market_mean(board_row or {}, market) if board_row else None
+        counterpart_row: dict[str, str] | None = None
+        if board_row and is_match_total_count_market(market):
+            counterpart_row = board.get(
+                (
+                    str(board_row.get("date") or ""),
+                    str(board_row.get("tour") or "").upper(),
+                    norm_name(board_row.get("opponent")),
+                    norm_name(board_row.get("player")),
+                )
+            )
+        if board_row and counterpart_row:
+            left_mean = market_mean(board_row, market)
+            right_mean = market_mean(counterpart_row, market)
+            mean = (
+                left_mean + right_mean
+                if left_mean is not None and right_mean is not None
+                else None
+            )
+        else:
+            mean = market_mean(board_row or {}, market) if board_row else None
         line_value = parse_float(line.get("line"))
         over_odds = parse_float(line.get("over_odds"))
         under_odds = parse_float(line.get("under_odds"))
@@ -382,6 +414,12 @@ def main() -> None:
         )
         confidence = market_confidence(board_row or {}, market)
         notes = str((board_row or {}).get("notes") or "")
+        if counterpart_row:
+            confidence = combine_confidence(confidence, market_confidence(counterpart_row, market))
+            other_notes = str(counterpart_row.get("notes") or "")
+            notes = " | ".join(part for part in (notes, other_notes) if part)
+        elif board_row and is_match_total_count_market(market):
+            notes = " | ".join(part for part in (notes, "MATCH_TOTAL_COUNTERPART_MISSING") if part)
         complete_line = over_odds is not None and under_odds is not None
         deep_alt = False
         if complete_line and over_odds is not None and under_odds is not None:
