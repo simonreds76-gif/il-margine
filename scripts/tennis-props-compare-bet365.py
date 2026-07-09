@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import argparse
 import csv
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from pathlib import Path
 import re
 import unicodedata
@@ -22,6 +22,10 @@ ROOT = Path(__file__).resolve().parent.parent
 PROPS_DIR = ROOT / "data" / "tennis-props"
 INBOX_DIR = PROPS_DIR / "inbox"
 DEFAULT_BOARD = PROPS_DIR / "player-props-board.csv"
+MATCH_TOTAL_MARKETS = {"match_aces", "match_double_faults"}
+CONFIDENCE_RANK = {"LOW": 0, "MED": 1, "HIGH": 2}
+MIN_COMBINED_SAMPLE = 800.0
+STALE_CAPTURE_HOURS = 6.0
 UNMATCHED_FIELDS = [
     "date",
     "tour",
@@ -123,6 +127,152 @@ def push_excluded_probabilities(
     if denominator <= 0:
         return None, None
     return p_over / denominator, p_under / denominator
+
+
+def no_vig_edge_ratio(model_prob: float | None, market_prob: float | None) -> float | None:
+    if model_prob is None or market_prob is None or market_prob <= 0:
+        return None
+    return (model_prob / market_prob) - 1.0
+
+
+def confidence_rank(value: object) -> int:
+    return CONFIDENCE_RANK.get(str(value or "").upper(), 0)
+
+
+def confidence_floor(*values: object) -> str:
+    ranks = [confidence_rank(value) for value in values if str(value or "").strip()]
+    rank = min(ranks) if ranks else 0
+    for label, label_rank in CONFIDENCE_RANK.items():
+        if label_rank == rank:
+            return label
+    return "LOW"
+
+
+def board_sample(row: dict[str, str] | None) -> float:
+    if not row:
+        return 0.0
+    return parse_float(row.get("player_surface_svpt_sample"), 0.0) or 0.0
+
+
+def combined_board_sample(*rows: dict[str, str] | None) -> float:
+    return sum(board_sample(row) for row in rows if row)
+
+
+def parse_timestamp(value: object) -> datetime | None:
+    text = str(value or "").strip()
+    if not text:
+        return None
+    try:
+        parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def hours_since(value: object, now: datetime) -> float | None:
+    parsed = parse_timestamp(value)
+    if not parsed:
+        return None
+    return (now - parsed).total_seconds() / 3600.0
+
+
+def bool_text(value: bool) -> str:
+    return "true" if value else "false"
+
+
+def line_group_key(row: dict[str, str]) -> tuple[str, str, str, str, str]:
+    players = " v ".join(sorted([norm_name(row.get("player")), norm_name(row.get("opponent"))]))
+    return (
+        str(row.get("date") or ""),
+        str(row.get("tour") or "").upper(),
+        str(row.get("tournament") or ""),
+        players,
+        str(row.get("market") or ""),
+    )
+
+
+def select_main_lines(rows: list[dict[str, str]]) -> None:
+    grouped: dict[tuple[str, str, str, str, str], list[dict[str, str]]] = {}
+    for row in rows:
+        row["main_line"] = "false"
+        grouped.setdefault(line_group_key(row), []).append(row)
+    for group_rows in grouped.values():
+        candidates = [
+            row for row in group_rows
+            if row.get("matched_board") == "yes" and row.get("line_quality") == "complete"
+        ]
+        if not candidates:
+            continue
+        def score(row: dict[str, str]) -> tuple[float, float]:
+            novig = parse_float(row.get("novig_p_over"), 0.5) or 0.5
+            mean = parse_float(row.get("projection_mean"), 0.0) or 0.0
+            line_value = parse_float(row.get("line"), mean) or mean
+            return (abs(novig - 0.5), abs(line_value - mean))
+        min(candidates, key=score)["main_line"] = "true"
+
+
+def best_candidate(row: dict[str, str], args: argparse.Namespace) -> tuple[str, float] | None:
+    candidates: list[tuple[str, float, float]] = []
+    for side, raw_field, ratio_field in (
+        ("OVER", "value_over_pct", "edge_over_novig_pct"),
+        ("UNDER", "value_under_pct", "edge_under_novig_pct"),
+    ):
+        raw = (parse_float(row.get(raw_field), 0.0) or 0.0) / 100.0
+        ratio = (parse_float(row.get(ratio_field), 0.0) or 0.0) / 100.0
+        if raw >= args.min_value and ratio >= args.min_novig_edge:
+            candidates.append((side, raw, ratio))
+    if not candidates:
+        return None
+    side, raw, _ratio = max(candidates, key=lambda item: (item[1], item[2]))
+    return side, raw
+
+
+def apply_decision_gates(rows: list[dict[str, str]], args: argparse.Namespace, now: datetime) -> None:
+    select_main_lines(rows)
+    for row in rows:
+        reasons: list[str] = []
+        market = str(row.get("market") or "")
+        scope = str(row.get("scope") or "")
+        if scope != "match_total" or market not in MATCH_TOTAL_MARKETS:
+            reasons.append("PLAYER_LINE_RESEARCH_ONLY")
+        if row.get("matched_board") != "yes":
+            reasons.append("NO_BOARD_MATCH")
+        if row.get("line_quality") != "complete":
+            reasons.append(f"LINE_{str(row.get('line_quality') or 'UNKNOWN').upper()}")
+        if row.get("main_line") != "true":
+            reasons.append("NOT_MAIN_LINE")
+        if not row.get("capture_ts"):
+            reasons.append("MISSING_CAPTURE_TS")
+        else:
+            age = hours_since(row.get("capture_ts"), now)
+            if age is not None and age > STALE_CAPTURE_HOURS:
+                reasons.append("STALE_CAPTURE")
+        start = parse_timestamp(row.get("match_start_utc"))
+        if not row.get("match_start_utc"):
+            reasons.append("MISSING_MATCH_START")
+        elif start is not None and start <= now:
+            reasons.append("MATCH_STARTED")
+        if scope == "match_total" and (not row.get("projection_p1") or not row.get("projection_p2")):
+            reasons.append("PROJECTION_COMPONENT_MISSING")
+        if confidence_rank(row.get("confidence")) < confidence_rank("MED"):
+            reasons.append("CONF_BELOW_MED")
+        sample = parse_float(row.get("combined_surface_svpt_sample"), 0.0) or 0.0
+        if sample < MIN_COMBINED_SAMPLE:
+            reasons.append("SAMPLE_BELOW_800")
+        gap = parse_float(row.get("model_market_gap_pp"), 0.0) or 0.0
+        if gap > args.max_model_market_gap * 100.0:
+            reasons.append("MODEL_MARKET_GAP")
+        if row.get("notes"):
+            reasons.append("BOARD_WARNINGS")
+        candidate = best_candidate(row, args)
+        if candidate is None:
+            reasons.append("EDGE_BELOW_GATE")
+        row["block_reasons"] = "|".join(dict.fromkeys(reasons))
+        row["bettable"] = bool_text(not reasons and candidate is not None)
+        row["recommended_side"] = candidate[0] if not reasons and candidate is not None else ""
+        row["blocked_reason"] = "" if row["bettable"] == "true" else (row["block_reasons"].split("|")[0] if row["block_reasons"] else "GATE_BLOCKED")
 
 
 def market_mean(board_row: dict[str, str], market: str) -> float | None:
@@ -252,6 +402,7 @@ def main() -> None:
 
     rows: list[dict[str, str]] = []
     unmatched_rows: list[dict[str, str]] = []
+    now_utc = datetime.now(timezone.utc)
     for line in line_rows:
         line_date = str(line.get("date") or args.date)
         line_tour = str(line.get("tour") or "").upper()
@@ -381,16 +532,22 @@ def main() -> None:
                     norm_name(board_row.get("player")),
                 )
             )
+        left_mean: float | None = None
+        right_mean: float | None = None
+        p1_confidence = market_confidence(board_row or {}, market) if board_row else "LOW"
+        p2_confidence = ""
         if board_row and counterpart_row:
             left_mean = market_mean(board_row, market)
             right_mean = market_mean(counterpart_row, market)
+            p2_confidence = market_confidence(counterpart_row, market)
             mean = (
                 left_mean + right_mean
                 if left_mean is not None and right_mean is not None
                 else None
             )
         else:
-            mean = market_mean(board_row or {}, market) if board_row else None
+            left_mean = market_mean(board_row or {}, market) if board_row else None
+            mean = left_mean
         line_value = parse_float(line.get("line"))
         over_odds = parse_float(line.get("over_odds"))
         under_odds = parse_float(line.get("under_odds"))
@@ -441,14 +598,17 @@ def main() -> None:
             if model_under is not None and novig_under is not None
             else None
         )
+        edge_over_novig_ratio = no_vig_edge_ratio(model_over, novig_over)
+        edge_under_novig_ratio = no_vig_edge_ratio(model_under, novig_under)
         model_market_gap = max(
             [abs(value) for value in (edge_over_novig, edge_under_novig) if value is not None],
             default=None,
         )
-        confidence = market_confidence(board_row or {}, market)
+        confidence = p1_confidence
         notes = str((board_row or {}).get("notes") or "")
+        combined_sample = combined_board_sample(board_row, counterpart_row)
         if counterpart_row:
-            confidence = combine_confidence(confidence, market_confidence(counterpart_row, market))
+            confidence = confidence_floor(confidence, p2_confidence)
             other_notes = str(counterpart_row.get("notes") or "")
             notes = " | ".join(part for part in (notes, other_notes) if part)
         elif board_row and is_match_total_count_market(market):
@@ -462,36 +622,6 @@ def main() -> None:
         line_quality = "one_sided" if not complete_line else "deep_alt" if deep_alt else "complete"
         recommended = ""
         blocked_reason = ""
-        if confidence == "HIGH" and not notes and line_quality == "complete":
-            candidates: list[tuple[str, float]] = []
-            if novig_over is None or novig_under is None:
-                blocked_reason = "NO_NOVIG_PAIR"
-            else:
-                if value_over is not None and value_over >= args.min_value:
-                    if edge_over_novig is None or edge_over_novig < args.min_novig_edge:
-                        blocked_reason = blocked_reason or "NOVIG_EDGE_BELOW_GATE"
-                    elif edge_over_novig > args.max_model_market_gap:
-                        blocked_reason = blocked_reason or "MODEL_MARKET_GAP"
-                    else:
-                        candidates.append(("OVER", value_over))
-                if value_under is not None and value_under >= args.min_value:
-                    if edge_under_novig is None or edge_under_novig < args.min_novig_edge:
-                        blocked_reason = blocked_reason or "NOVIG_EDGE_BELOW_GATE"
-                    elif edge_under_novig > args.max_model_market_gap:
-                        blocked_reason = blocked_reason or "MODEL_MARKET_GAP"
-                    else:
-                        candidates.append(("UNDER", value_under))
-                if candidates:
-                    recommended = max(candidates, key=lambda item: item[1])[0]
-                    blocked_reason = ""
-                elif not blocked_reason:
-                    blocked_reason = "RAW_EDGE_BELOW_GATE"
-        elif confidence != "HIGH":
-            blocked_reason = "CONF_NOT_HIGH"
-        elif notes:
-            blocked_reason = "BOARD_WARNINGS"
-        elif line_quality != "complete":
-            blocked_reason = f"LINE_{line_quality.upper()}"
 
         rows.append(
             {
@@ -503,9 +633,18 @@ def main() -> None:
                 "opponent": line_opponent,
                 "matched_board": "yes" if board_row else "no",
                 "match_source": match_source,
+                "scope": "match_total" if is_match_total_count_market(market) else "player",
                 "projection_mean": fmt(mean, 3),
+                "projection_p1": fmt(left_mean, 3),
+                "projection_p2": fmt(right_mean, 3),
+                "p1_confidence": p1_confidence,
+                "p2_confidence": p2_confidence,
+                "combined_surface_svpt_sample": fmt(combined_sample, 0),
                 "confidence": confidence,
                 "line_quality": line_quality,
+                "main_line": "false",
+                "capture_ts": str(line.get("capture_ts") or line.get("captured_at") or ""),
+                "match_start_utc": str(line.get("match_start_utc") or line.get("kickoff_at") or ""),
                 "notes": notes,
                 "fair_p_over": fmt(p_over),
                 "fair_p_under": fmt(p_under),
@@ -519,11 +658,17 @@ def main() -> None:
                 "novig_p_under": fmt(novig_under),
                 "edge_over_novig_pp": fmt((edge_over_novig * 100.0) if edge_over_novig is not None else None, 2),
                 "edge_under_novig_pp": fmt((edge_under_novig * 100.0) if edge_under_novig is not None else None, 2),
+                "edge_over_novig_pct": fmt((edge_over_novig_ratio * 100.0) if edge_over_novig_ratio is not None else None, 2),
+                "edge_under_novig_pct": fmt((edge_under_novig_ratio * 100.0) if edge_under_novig_ratio is not None else None, 2),
                 "model_market_gap_pp": fmt((model_market_gap * 100.0) if model_market_gap is not None else None, 2),
                 "blocked_reason": blocked_reason,
+                "block_reasons": "",
+                "bettable": "false",
                 "recommended_side": recommended,
             }
         )
+
+    apply_decision_gates(rows, args, now_utc)
 
     fieldnames = [
         "date",
@@ -535,11 +680,20 @@ def main() -> None:
         "line",
         "over_odds",
         "under_odds",
+        "scope",
         "matched_board",
         "match_source",
         "projection_mean",
+        "projection_p1",
+        "projection_p2",
+        "p1_confidence",
+        "p2_confidence",
+        "combined_surface_svpt_sample",
         "confidence",
         "line_quality",
+        "main_line",
+        "capture_ts",
+        "match_start_utc",
         "notes",
         "fair_p_over",
         "fair_p_under",
@@ -553,8 +707,12 @@ def main() -> None:
         "novig_p_under",
         "edge_over_novig_pp",
         "edge_under_novig_pp",
+        "edge_over_novig_pct",
+        "edge_under_novig_pct",
         "model_market_gap_pp",
         "blocked_reason",
+        "block_reasons",
+        "bettable",
         "recommended_side",
     ]
     write_csv(out_path, rows, fieldnames)

@@ -18,6 +18,7 @@ export const dynamic = "force-dynamic";
 
 type CsvRow = Record<string, string>;
 type ProjectionSortKey = "schedule" | "aces" | "dfs" | "match_tb" | "first_tb" | "breaks";
+type MonitorTab = "decision" | "projections";
 type SearchParamsInput = Promise<Record<string, string | string[] | undefined>>;
 type TournamentRoundLog = {
   date?: string;
@@ -183,11 +184,27 @@ function isTrustedComparisonRow(row: CsvRow): boolean {
   return row.matched_board === "yes" && effectiveLineQuality(row) === "complete";
 }
 
+function isMatchTotalComparisonRow(row: CsvRow): boolean {
+  return row.scope === "match_total" || row.market === "match_aces" || row.market === "match_double_faults";
+}
+
 function isUsefulComparisonRow(row: CsvRow): boolean {
-  const text = normalizedText(row.player, row.opponent, row.tournament, row.market);
-  if (/totals \(|team total|match total|sets|games/.test(text)) return false;
-  if (row.market !== "aces" && row.market !== "double_faults") return false;
-  return true;
+  if (isMatchTotalComparisonRow(row)) return true;
+  return row.market === "aces" || row.market === "double_faults";
+}
+
+function isBettableComparisonRow(row: CsvRow): boolean {
+  return row.bettable === "true" || (Boolean(row.recommended_side) && isTrustedComparisonRow(row));
+}
+
+function isHardHiddenLine(row: CsvRow): boolean {
+  const quality = effectiveLineQuality(row);
+  return quality === "one_sided" || quality === "deep_alt" || row.matched_board !== "yes";
+}
+
+function validMonitorTab(value: string | string[] | undefined): MonitorTab {
+  const raw = Array.isArray(value) ? value[0] : value;
+  return raw === "projections" ? "projections" : "decision";
 }
 
 function pctText(value: string | number | undefined, digits = 1): string {
@@ -222,7 +239,7 @@ function recTone(value: string | undefined): string {
 }
 
 function maxValue(row: CsvRow): number {
-  if (!isTrustedComparisonRow(row)) return 0;
+  if (row.matched_board !== "yes") return 0;
   return Math.max(n(row.value_over_pct), n(row.value_under_pct));
 }
 
@@ -505,7 +522,7 @@ function ProjectionSortControls({ active }: { active: ProjectionSortKey }) {
       {options.map((option) => (
         <Link
           key={option.key}
-          href={`/model-monitor/tennis-props?propsSort=${option.key}`}
+          href={`/model-monitor/tennis-props?tab=projections&propsSort=${option.key}`}
           className={cn(
             "rounded-full border px-3 py-1.5 text-xs font-bold uppercase tracking-[0.12em] transition",
             active === option.key
@@ -765,20 +782,20 @@ function ComparisonLineCard({ row }: { row: CsvRow }) {
   const trustedLine = isTrustedComparisonRow(row);
   const bestSide = n(row.value_under_pct) > n(row.value_over_pct) ? "UNDER" : "OVER";
   const bestValue = trustedLine ? Math.max(n(row.value_over_pct), n(row.value_under_pct)) : 0;
-  const bestNovigEdge = bestSide === "UNDER" ? n(row.edge_under_novig_pp) : n(row.edge_over_novig_pp);
+  const bestNovigEdge = bestSide === "UNDER" ? n(row.edge_under_novig_pct) : n(row.edge_over_novig_pct);
   const blockedReason = row.blocked_reason || rowRejectionReason(row);
   return (
     <div className="rounded-2xl border border-slate-800/80 bg-slate-950/70 p-3">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <MiniBadge label={row.recommended_side || "watch"} tone={recTone(row.recommended_side)} />
+            <MiniBadge label={row.bettable === "true" ? "BET NOW" : row.recommended_side || "watch"} tone={row.bettable === "true" ? "border-emerald-400/35 bg-emerald-500/15 text-emerald-200" : recTone(row.recommended_side)} />
             <MiniBadge label={row.matched_board === "yes" ? "matched" : "unmatched"} tone={row.matched_board === "yes" ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300" : "border-rose-500/25 bg-rose-500/10 text-rose-300"} />
-            <MiniBadge label={quality} tone={quality === "complete" ? "border-cyan-500/25 bg-cyan-500/10 text-cyan-200" : "border-amber-500/25 bg-amber-500/10 text-amber-300"} />
+            <MiniBadge label={row.main_line === "true" ? "main line" : quality} tone={row.main_line === "true" ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300" : quality === "complete" ? "border-cyan-500/25 bg-cyan-500/10 text-cyan-200" : "border-amber-500/25 bg-amber-500/10 text-amber-300"} />
             <MiniBadge label={row.confidence || "LOW"} tone={confidenceTone(row.confidence)} />
             {!row.recommended_side && blockedReason ? <MiniBadge label={blockedReason.replaceAll("_", " ")} tone="border-amber-500/25 bg-amber-500/10 text-amber-300" /> : null}
           </div>
-          <div className="mt-2 font-semibold text-slate-100">{row.player || "-"} - {row.market?.replaceAll("_", " ") || "market"} {fmt(row.line, 1)}</div>
+          <div className="mt-2 font-semibold text-slate-100">{row.player || "-"} - {marketLabel(row)} {fmt(row.line, 1)}</div>
           <div className="text-xs text-slate-500">projection {fmt(row.projection_mean, 1)} - {row.distribution || "model"}</div>
         </div>
         <div className="text-right">
@@ -786,14 +803,14 @@ function ComparisonLineCard({ row }: { row: CsvRow }) {
           <div className={cn("font-mono text-2xl font-black", trustedLine && bestValue > 0 ? "text-emerald-300" : "text-slate-500")}>
             {trustedLine ? `${bestSide} ${fmt(bestValue, 1)}%` : quality.replaceAll("_", " ")}
           </div>
-          {trustedLine ? <div className="mt-1 font-mono text-[11px] text-slate-500">no-vig edge {bestNovigEdge > 0 ? "+" : ""}{fmt(bestNovigEdge, 1)}pp</div> : null}
+          {trustedLine ? <div className="mt-1 font-mono text-[11px] text-slate-500">no-vig edge {bestNovigEdge > 0 ? "+" : ""}{fmt(bestNovigEdge, 1)}%</div> : null}
         </div>
       </div>
       <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
         <MetricTile label="Over price" value={fmt(row.over_odds, 2)} sub={`fair ${fmt(row.fair_over_odds, 2)}`} tone="text-slate-100" />
         <MetricTile label="Under price" value={fmt(row.under_odds, 2)} sub={`fair ${fmt(row.fair_under_odds, 2)}`} tone="text-slate-100" />
-        <MetricTile label="Over value" value={trustedLine ? `${fmt(row.value_over_pct, 1)}%` : "audit"} sub={trustedLine ? `no-vig ${n(row.edge_over_novig_pp) > 0 ? "+" : ""}${fmt(row.edge_over_novig_pp, 1)}pp` : undefined} tone={trustedLine && n(row.value_over_pct) > 0 ? "text-emerald-300" : "text-slate-500"} />
-        <MetricTile label="Under value" value={trustedLine ? `${fmt(row.value_under_pct, 1)}%` : "audit"} sub={trustedLine ? `no-vig ${n(row.edge_under_novig_pp) > 0 ? "+" : ""}${fmt(row.edge_under_novig_pp, 1)}pp` : undefined} tone={trustedLine && n(row.value_under_pct) > 0 ? "text-emerald-300" : "text-slate-500"} />
+        <MetricTile label="Over value" value={trustedLine ? `${fmt(row.value_over_pct, 1)}%` : "audit"} sub={trustedLine ? `no-vig ${n(row.edge_over_novig_pct) > 0 ? "+" : ""}${fmt(row.edge_over_novig_pct, 1)}%` : undefined} tone={trustedLine && n(row.value_over_pct) > 0 ? "text-emerald-300" : "text-slate-500"} />
+        <MetricTile label="Under value" value={trustedLine ? `${fmt(row.value_under_pct, 1)}%` : "audit"} sub={trustedLine ? `no-vig ${n(row.edge_under_novig_pct) > 0 ? "+" : ""}${fmt(row.edge_under_novig_pct, 1)}%` : undefined} tone={trustedLine && n(row.value_under_pct) > 0 ? "text-emerald-300" : "text-slate-500"} />
       </div>
       {row.model_market_gap_pp ? <div className="mt-2 text-[11px] text-slate-500">Model-market gap: {fmt(row.model_market_gap_pp, 1)}pp. Rows above the guard are blocked, even if raw EV looks large.</div> : null}
       {n(row.fair_p_push) > 0 ? <div className="mt-2 text-[11px] text-amber-300/80">Integer-line push mass: {(n(row.fair_p_push) * 100).toFixed(1)}%</div> : null}
@@ -866,14 +883,43 @@ function rowBestValue(row: CsvRow): number {
   return Math.max(n(row.value_over_pct), n(row.value_under_pct));
 }
 
+function blockReasonLabel(value: string | undefined): string {
+  const first = String(value || "").split("|").find(Boolean) || "gate blocked";
+  return first.replaceAll("_", " ").toLowerCase();
+}
+
 function rowRejectionReason(row: CsvRow): string {
-  if (row.blocked_reason) return row.blocked_reason.replaceAll("_", " ").toLowerCase();
+  if (row.block_reasons) return blockReasonLabel(row.block_reasons);
+  if (row.blocked_reason) return blockReasonLabel(row.blocked_reason);
   const confidence = (row.confidence || "LOW").toUpperCase();
-  if (confidence !== "HIGH") return `confidence ${confidence} (needs HIGH)`;
+  if (confidence !== "HIGH") return `confidence ${confidence}`;
   const quality = effectiveLineQuality(row);
   if (quality !== "complete") return `line is ${quality}`;
   if (row.notes) return "notes flag present";
   return "gate did not pass";
+}
+
+function marketLabel(row: CsvRow): string {
+  if (row.market === "match_aces") return "Match aces";
+  if (row.market === "match_double_faults") return "Match double faults";
+  return row.market?.replaceAll("_", " ") || "market";
+}
+
+function TabLink({ active, href, label, detail }: { active: boolean; href: string; label: string; detail: string }) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "rounded-2xl border px-4 py-3 transition",
+        active
+          ? "border-emerald-400/40 bg-emerald-500/15 text-emerald-100 shadow-[0_0_24px_rgba(16,185,129,0.12)]"
+          : "border-slate-800 bg-slate-950/60 text-slate-400 hover:border-slate-600 hover:text-slate-200",
+      )}
+    >
+      <span className="block text-sm font-black uppercase tracking-[0.14em]">{label}</span>
+      <span className="mt-1 block text-xs text-slate-500">{detail}</span>
+    </Link>
+  );
 }
 
 function RecommendationPanel({
@@ -890,8 +936,8 @@ function RecommendationPanel({
   if (actionableRows.length) {
     return (
       <SectionCard
-        title="Betting Decision: Recommended Bet365 Props"
-        subtitle="These are the only lines passing every live gate: matched Bet365 line, complete two-way price, HIGH confidence, clean notes, and edge threshold."
+        title="BET NOW: Bet365 Match-Total Props"
+        subtitle="These are the only lines passing every live gate: match-total market, main complete line, fresh capture, MED+ confidence, enough sample, and raw/no-vig edge."
       >
         <div className="grid gap-3 lg:grid-cols-2">
           {actionableRows.slice(0, 8).map((row, index) => <ComparisonLineCard key={`${row.player}-${row.market}-${row.line}-${index}`} row={row} />)}
@@ -917,15 +963,15 @@ function RecommendationPanel({
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:min-w-[520px]">
             <MetricTile label="Recommended" value="0" sub="official bets" tone="text-slate-400" />
             <MetricTile label="Matched lines" value={`${matchedCount}`} sub={`${totalCount} captured`} tone="text-cyan-300" />
-            <MetricTile label="Required conf" value="HIGH" sub="aces/DF gate" tone="text-emerald-300" />
+            <MetricTile label="Required conf" value="MED+" sub="800 svpt sample" tone="text-emerald-300" />
             <MetricTile label="Line type" value="clean" sub="complete two-way" tone="text-amber-300" />
           </div>
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
-          <MiniBadge label="needs HIGH confidence" tone="border-emerald-500/25 bg-emerald-500/10 text-emerald-300" />
-          <MiniBadge label="needs complete line" tone="border-cyan-500/25 bg-cyan-500/10 text-cyan-200" />
-          <MiniBadge label="needs clean notes" tone="border-slate-700/70 bg-slate-800/60 text-slate-300" />
-          <MiniBadge label="needs value threshold" tone="border-amber-500/25 bg-amber-500/10 text-amber-300" />
+          <MiniBadge label="needs MED+ confidence" tone="border-emerald-500/25 bg-emerald-500/10 text-emerald-300" />
+          <MiniBadge label="needs main complete line" tone="border-cyan-500/25 bg-cyan-500/10 text-cyan-200" />
+          <MiniBadge label="no board warnings" tone="border-slate-700/70 bg-slate-800/60 text-slate-300" />
+          <MiniBadge label="needs raw + no-vig edge" tone="border-amber-500/25 bg-amber-500/10 text-amber-300" />
         </div>
       </div>
       {watchRows.length ? (
@@ -938,7 +984,7 @@ function RecommendationPanel({
                   <MiniBadge label="rejected" tone="border-rose-500/25 bg-rose-500/10 text-rose-300" />
                   <MiniBadge label={row.confidence || "LOW"} tone={confidenceTone(row.confidence)} />
                 </div>
-                <div className="mt-2 font-semibold text-slate-100">{row.player} {rowBestSide(row)} {row.line} {row.market?.replaceAll("_", " ")}</div>
+                <div className="mt-2 font-semibold text-slate-100">{row.player} {rowBestSide(row)} {row.line} {marketLabel(row)}</div>
                 <div className="mt-1 text-xs text-slate-500">vs {row.opponent} - projection {fmt(row.projection_mean, 1)}</div>
                 <div className="mt-3 text-xs font-black uppercase tracking-[0.14em] text-rose-300">Blocked: {rowRejectionReason(row)}</div>
                 <div className="mt-1 text-[11px] text-slate-500">Raw model edge {rowBestValue(row).toFixed(1)}%, kept audit-only.</div>
@@ -955,6 +1001,9 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
   if (!MODEL_MONITOR_ENABLED) notFound();
   const resolvedSearchParams: Record<string, string | string[] | undefined> = searchParams ? await searchParams : {};
   const projectionSortKey = validProjectionSort(resolvedSearchParams.propsSort);
+  const activeTab = validMonitorTab(resolvedSearchParams.tab);
+  const showAllLines = resolvedSearchParams.showAll === "1";
+  const showHiddenLines = resolvedSearchParams.showHidden === "1";
 
   const [
     boardRows,
@@ -979,22 +1028,33 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     fileStamp(SHADOW_SIGNALS_PATH),
     fileStamp(SHADOW_PERFORMANCE_PATH),
   ]);
+
   const comparisonRows = latestComparisonPath ? await readCsv(latestComparisonPath) : [];
   const lineRows = latestLinesPath ? await readCsv(latestLinesPath) : [];
   const lineStamp = latestLinesPath ? await fileStamp(latestLinesPath) : "missing";
+  const lineAgeHours = latestLinesPath ? await fileAgeHours(latestLinesPath) : null;
   const comparisonStamp = latestComparisonPath ? await fileStamp(latestComparisonPath) : "missing";
   const displayBoardRows = boardRows.filter(isMainTourProjectionRow);
   const sortedBoard = [...displayBoardRows].sort(boardSort);
   const usefulComparisonRows = comparisonRows.filter(isUsefulComparisonRow);
   const sortedComparison = [...usefulComparisonRows].sort(comparisonSort);
-  const matchedComparisonRows = sortedComparison.filter((row) => row.matched_board === "yes");
-  const actionableRows = matchedComparisonRows.filter((row) => row.recommended_side && isTrustedComparisonRow(row));
-  const cleanWatchRows = matchedComparisonRows
-    .filter((row) => !row.recommended_side && isTrustedComparisonRow(row))
+  const decisionRows = sortedComparison.filter(isMatchTotalComparisonRow);
+  const matchedDecisionRows = decisionRows.filter((row) => row.matched_board === "yes");
+  const bettableRows = matchedDecisionRows.filter(isBettableComparisonRow);
+  const nearMissRows = matchedDecisionRows
+    .filter((row) => !isBettableComparisonRow(row) && row.main_line === "true" && effectiveLineQuality(row) === "complete")
     .sort((a, b) => rowBestValue(b) - rowBestValue(a));
+  const blockedExamples = matchedDecisionRows
+    .filter((row) => !isBettableComparisonRow(row))
+    .sort((a, b) => rowBestValue(b) - rowBestValue(a));
+  const visibleAllLineRows = matchedDecisionRows.filter((row) => showHiddenLines || !isHardHiddenLine(row) || row.main_line === "true" || row.bettable === "true");
+  const allLineRowsForPanel = showAllLines ? visibleAllLineRows : visibleAllLineRows.filter((row) => row.main_line === "true" || row.bettable === "true");
   const sortedShadowRows = [...shadowRows].sort(shadowSort);
   const shadow = shadowStats(shadowRows);
   const boardStale = boardAgeHours == null || boardAgeHours > 24;
+  const linesStale = lineAgeHours == null || lineAgeHours > 6;
+  const matchedRate = decisionRows.length ? (matchedDecisionRows.length / decisionRows.length) * 100 : 0;
+  const hiddenCount = matchedDecisionRows.length - visibleAllLineRows.length;
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.12),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(244,63,94,0.08),_transparent_24%),#0b0f14] text-slate-100">
@@ -1003,31 +1063,32 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
           <MonitorNav current="tennis-props" />
         </div>
 
-        <HeroCard title="Tennis Aces / Double-Faults Board" eyebrow="Tennis player props research">
+        <HeroCard title="Tennis Props Decision Board" eyebrow="Bet365 aces / double-faults monitor">
           <p className="text-slate-300">
-            Local OnCourt schedule plus Sackmann service stats. This is a research board for Bet365 aces and double-fault lines, not a public record lane yet.
+            Decision first: Bet365 match-total aces and double-fault lines are compared against the projection board, then gated for main line, stale capture, sample, confidence, market disagreement, and raw/no-vig edge.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
-            <StatusPill label="OnCourt schedule" tone="border-emerald-500/25 bg-emerald-500/10 text-emerald-300" />
-            <StatusPill label="ATP + WTA" tone="border-cyan-500/25 bg-cyan-500/10 text-cyan-200" />
-            <StatusPill label="Research only" tone="border-amber-500/25 bg-amber-500/10 text-amber-300" />
+            <StatusPill label="Decision board default" tone="border-emerald-500/25 bg-emerald-500/10 text-emerald-300" />
+            <StatusPill label="ATP + WTA projections" tone="border-cyan-500/25 bg-cyan-500/10 text-cyan-200" />
+            <StatusPill label="Shadow only until settled" tone="border-amber-500/25 bg-amber-500/10 text-amber-300" />
           </div>
         </HeroCard>
 
         <section className="my-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
-          <StatCard label="Projection rows" value={String(sortedBoard.length)} detail={`${countBy(sortedBoard, "tour", "ATP")} ATP / ${countBy(sortedBoard, "tour", "WTA")} WTA / ${boardRows.length - sortedBoard.length} filtered`} />
-          <StatCard label="High ace conf" value={String(countBy(sortedBoard, "ace_confidence", "HIGH"))} detail="Sample + event history gate" tone="text-emerald-300" />
-          <StatCard label="High DF conf" value={String(countBy(sortedBoard, "df_confidence", "HIGH"))} detail="Harder gate, noisier market" tone="text-rose-300" />
-          <StatCard label="Bet365 player rows" value={String(usefulComparisonRows.length)} detail={`${matchedComparisonRows.length} matched / ${comparisonRows.length} raw / ${lineStamp}`} tone={usefulComparisonRows.length ? "text-cyan-300" : "text-slate-400"} />
-          <StatCard label="Actionable" value={String(actionableRows.length)} detail="HIGH confidence + edge gate" tone={actionableRows.length ? "text-emerald-300" : "text-slate-400"} />
+          <StatCard label="Verdict" value={bettableRows.length ? `${bettableRows.length} BET NOW` : "NO BET"} detail={`${nearMissRows.length} near miss / ${blockedExamples.length} blocked`} tone={bettableRows.length ? "text-emerald-300" : "text-amber-300"} />
+          <StatCard label="Bet365 lines" value={String(decisionRows.length)} detail={`${matchedDecisionRows.length} matched / ${lineRows.length} raw rows`} tone={decisionRows.length ? "text-cyan-300" : "text-slate-400"} />
+          <StatCard label="Match rate" value={`${matchedRate.toFixed(0)}%`} detail={`comparison ${comparisonStamp}`} tone={matchedRate >= 95 ? "text-emerald-300" : matchedRate ? "text-amber-300" : "text-slate-400"} />
+          <StatCard label="Line freshness" value={linesStale ? "STALE" : "fresh"} detail={lineStamp} tone={linesStale ? "text-amber-300" : "text-emerald-300"} />
+          <StatCard label="Projection rows" value={String(sortedBoard.length)} detail={`${countBy(sortedBoard, "tour", "ATP")} ATP / ${countBy(sortedBoard, "tour", "WTA")} WTA`} />
           <StatCard label="Shadow evidence" value={String(shadowRows.length)} detail={`${shadow.settled} settled / ${shadow.pending} pending`} tone={shadowRows.length ? "text-amber-300" : "text-slate-400"} />
         </section>
 
         <section className="mb-6 grid gap-3 rounded-2xl border border-slate-800 bg-slate-950/40 p-4 text-xs text-slate-400 md:grid-cols-4">
           <div><span className="text-slate-500">Board:</span> <span className="text-slate-200">{boardStamp}</span></div>
-          <div><span className="text-slate-500">Baseline:</span> <span className="text-slate-200">{baselineStamp}</span></div>
-          <div><span className="text-slate-500">Venue factors:</span> <span className="text-slate-200">{factorsStamp}</span></div>
+          <div><span className="text-slate-500">Bet365 lines:</span> <span className="text-slate-200">{lineStamp}</span></div>
           <div><span className="text-slate-500">Comparison:</span> <span className="text-slate-200">{comparisonStamp}</span></div>
+          <div><span className="text-slate-500">Venue factors:</span> <span className="text-slate-200">{factorsStamp}</span></div>
+          <div><span className="text-slate-500">Baseline:</span> <span className="text-slate-200">{baselineStamp}</span></div>
           <div><span className="text-slate-500">Shadow:</span> <span className="text-slate-200">{shadowStamp}</span></div>
           <div><span className="text-slate-500">Shadow perf:</span> <span className="text-slate-200">{shadowPerformanceStamp}</span></div>
         </section>
@@ -1038,35 +1099,77 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
           </section>
         ) : null}
 
-        <div className="grid gap-6">
-          <RecommendationPanel
-            actionableRows={actionableRows}
-            watchRows={cleanWatchRows}
-            matchedCount={matchedComparisonRows.length}
-            totalCount={comparisonRows.length}
-          />
+        <nav className="mb-6 grid gap-3 sm:grid-cols-2">
+          <TabLink active={activeTab === "decision"} href="/model-monitor/tennis-props?tab=decision" label="Decision Board" detail="BET NOW / near miss / blocked lines" />
+          <TabLink active={activeTab === "projections"} href="/model-monitor/tennis-props?tab=projections" label="Projections" detail="Aces, DFs, breaks, tie-break simulation" />
+        </nav>
 
-          <SectionCard
-            title="Bet365 Comparison"
-            subtitle="Appears when data/tennis-props/comparison-YYYY-MM-DD.csv exists. Recommended side is gated hard; most rows should stay watch-only."
-          >
-            <ComparisonTable rows={matchedComparisonRows} hasLinesFile={lineRows.length > 0} />
-          </SectionCard>
+        {activeTab === "decision" ? (
+          <div className="grid gap-6">
+            <RecommendationPanel
+              actionableRows={bettableRows}
+              watchRows={nearMissRows.length ? nearMissRows : blockedExamples}
+              matchedCount={matchedDecisionRows.length}
+              totalCount={decisionRows.length}
+            />
 
-          <SectionCard
-            title="Shadow Evidence"
-            subtitle={`Append-only Bet365 line evidence. ROI is research-only until 300+ settled lines. Current shadow PnL ${shadow.pnl >= 0 ? "+" : ""}${shadow.pnl.toFixed(2)}u / ROI ${shadow.roi >= 0 ? "+" : ""}${shadow.roi.toFixed(1)}%.`}
-          >
-            <ShadowEvidenceTable rows={sortedShadowRows} />
-          </SectionCard>
+            <SectionCard
+              title="Near Misses"
+              subtitle="Complete main lines that fail one gate. If there are none, the examples shown are the best blocked audit rows. Still not bets."
+            >
+              {nearMissRows.length || blockedExamples.length ? (
+                <div className="grid gap-3 lg:grid-cols-3">
+                  {(nearMissRows.length ? nearMissRows : blockedExamples).slice(0, 6).map((row, index) => <ComparisonLineCard key={`near-${row.player}-${row.market}-${row.line}-${index}`} row={row} />)}
+                </div>
+              ) : <EmptyState message="No near-miss rows. Either no Bet365 rows were captured, or nothing matched the board." />}
+            </SectionCard>
 
-          <SectionCard
-            title={`Projection Board (${latestDate(sortedBoard)})`}
-            subtitle="Expected aces and double faults for each scheduled player. This is the simulation layer you asked for."
-          >
-            <ProjectionTable rows={sortedBoard} sortKey={projectionSortKey} />
-          </SectionCard>
-        </div>
+            <SectionCard
+              title="All Captured Lines"
+              subtitle={`${matchedDecisionRows.length} matched rows. ${hiddenCount} one-sided/deep-alt rows hidden unless opened.`}
+              collapsible
+              defaultOpen={showAllLines}
+            >
+              <div className="mb-3 flex flex-wrap gap-2">
+                <Link href="/model-monitor/tennis-props?tab=decision&showAll=1" className="rounded-full border border-cyan-500/25 bg-cyan-500/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.12em] text-cyan-200">Open audit rows</Link>
+                <Link href="/model-monitor/tennis-props?tab=decision&showAll=1&showHidden=1" className="rounded-full border border-amber-500/25 bg-amber-500/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.12em] text-amber-200">Show one-sided/deep-alt</Link>
+              </div>
+              <ComparisonTable rows={allLineRowsForPanel} hasLinesFile={lineRows.length > 0} />
+            </SectionCard>
+
+            <SectionCard
+              title="Settled Sample"
+              subtitle="Placeholder until the match-total Bet365 prop lane has settled evidence. Existing shadow settlement remains append-only."
+            >
+              <ShadowEvidenceTable rows={sortedShadowRows} />
+            </SectionCard>
+
+            <SectionCard title="Ops Footer" subtitle="Files this page reads directly from disk on localhost.">
+              <div className="grid gap-2 text-xs text-slate-400 md:grid-cols-2">
+                <div><span className="text-slate-500">Board:</span> data/tennis-props/player-props-board.csv</div>
+                <div><span className="text-slate-500">Lines:</span> {latestLinesPath ? path.basename(latestLinesPath) : "missing"}</div>
+                <div><span className="text-slate-500">Comparison:</span> {latestComparisonPath ? path.basename(latestComparisonPath) : "missing"}</div>
+                <div><span className="text-slate-500">Shadow:</span> data/tennis-props/shadow/aces-dfs-shadow-signals.csv</div>
+              </div>
+            </SectionCard>
+          </div>
+        ) : (
+          <div className="grid gap-6">
+            <SectionCard
+              title={`Projection Board (${latestDate(sortedBoard)})`}
+              subtitle="Expected aces, double faults, breaks and tie-break probabilities for each scheduled player. Sort controls are for scanning, not bet recommendations."
+            >
+              <ProjectionTable rows={sortedBoard} sortKey={projectionSortKey} />
+            </SectionCard>
+
+            <SectionCard
+              title="Shadow Evidence"
+              subtitle={`Append-only Bet365 line evidence. ROI is research-only until 300+ settled lines. Current shadow PnL ${shadow.pnl >= 0 ? "+" : ""}${shadow.pnl.toFixed(2)}u / ROI ${shadow.roi >= 0 ? "+" : ""}${shadow.roi.toFixed(1)}%.`}
+            >
+              <ShadowEvidenceTable rows={sortedShadowRows} />
+            </SectionCard>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -89,6 +89,8 @@ OUTPUT_FIELDS = [
     "line",
     "over_odds",
     "under_odds",
+    "capture_ts",
+    "match_start_utc",
 ]
 AUDIT_FIELDS = [
     "captured_at",
@@ -337,7 +339,7 @@ def is_singles_event(event: dict[str, Any]) -> bool:
     return "/" not in home and "/" not in away
 
 
-def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any]) -> list[dict[str, str]]:
+def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any], captured_at: str = "") -> list[dict[str, str]]:
     market_name = str(market.get("name") or "")
     market_key = identify_market(market_name)
     if not market_key:
@@ -442,6 +444,8 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any]) 
                 "line": line_text,
                 "over_odds": f"{prices['over_odds']:.4f}" if prices.get("over_odds") else "",
                 "under_odds": f"{prices['under_odds']:.4f}" if prices.get("under_odds") else "",
+                "capture_ts": captured_at,
+                "match_start_utc": kickoff,
             }
         )
     return rows
@@ -643,7 +647,7 @@ def main() -> None:
                         "sample_labels": " | ".join(labels),
                     }
                 )
-                rows.extend(extract_rows(event, bookmaker, market))
+                rows.extend(extract_rows(event, bookmaker, market, captured_at=captured_at))
 
     out = Path(args.out) if args.out else OUT_DIR / f"bet365-lines-{args.date}.csv"
     audit_out = Path(args.audit_out) if args.audit_out else OUT_DIR / f"bet365-tennis-market-audit-{args.date}.csv"
