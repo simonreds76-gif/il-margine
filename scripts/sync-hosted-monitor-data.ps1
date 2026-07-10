@@ -114,9 +114,11 @@ $assistValueFiles = @(
 )
 
 $todayUtc = (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd")
+$monthUtc = (Get-Date).ToUniversalTime().ToString("yyyy-MM")
 $tennisPropsFiles = @(
     "data/tennis-props/inbox/bet365-lines-$todayUtc.csv",
-    "data/tennis-props/inbox/bet365-tennis-market-audit-$todayUtc.csv"
+    "data/tennis-props/inbox/bet365-tennis-market-audit-$todayUtc.csv",
+    "data/tennis-props/inbox/bet365-lines-history-$monthUtc.csv"
 )
 
 $files = New-Object System.Collections.Generic.List[string]

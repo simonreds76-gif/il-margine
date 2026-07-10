@@ -132,6 +132,7 @@ async function latestCsv(prefix: string): Promise<string | null> {
         file.startsWith(`${prefix}-`)
         && file.endsWith(".csv")
         && !(prefix === "comparison" && file.endsWith("-unmatched.csv"))
+        && !(prefix === "bet365-lines" && file.startsWith("bet365-lines-history-"))
       ))
       .map((file) => path.join(dir, file));
     if (!matches.length) return null;
@@ -269,15 +270,20 @@ function shadowSort(a: CsvRow, b: CsvRow): number {
   return statusRank(a) - statusRank(b) || (b.date || "").localeCompare(a.date || "") || n(b.value_pct) - n(a.value_pct);
 }
 
-function shadowStats(rows: CsvRow[]): { settled: number; pending: number; voided: number; pnl: number; roi: number } {
+function shadowStats(rows: CsvRow[]): { settled: number; pending: number; voided: number; pnl: number; roi: number; clvCount: number; meanClv: number; positiveClv: number } {
   const settledRows = rows.filter((row) => row.settlement_status === "settled");
   const pnl = settledRows.reduce((sum, row) => sum + n(row.pnl), 0);
+  const clvRows = settledRows.filter((row) => row.clv_pct !== "" && Number.isFinite(Number.parseFloat(row.clv_pct || "")));
+  const meanClv = clvRows.length ? clvRows.reduce((sum, row) => sum + n(row.clv_pct), 0) / clvRows.length : 0;
   return {
     settled: settledRows.length,
     pending: rows.filter((row) => row.settlement_status === "pending").length,
     voided: rows.filter((row) => row.settlement_status === "void").length,
     pnl,
     roi: settledRows.length ? (pnl / settledRows.length) * 100 : 0,
+    clvCount: clvRows.length,
+    meanClv,
+    positiveClv: clvRows.length ? clvRows.filter((row) => n(row.clv_pct) > 0).length / clvRows.length * 100 : 0,
   };
 }
 
@@ -785,6 +791,8 @@ function ShadowEvidenceTable({ rows }: { rows: CsvRow[] }) {
             <th className="px-3 py-3 font-semibold">Line</th>
             <th className="px-3 py-3 font-semibold">Side</th>
             <th className="px-3 py-3 font-semibold">Odds</th>
+            <th className="px-3 py-3 font-semibold">Close</th>
+            <th className="px-3 py-3 font-semibold">CLV</th>
             <th className="px-3 py-3 font-semibold">Value</th>
             <th className="px-3 py-3 font-semibold">Actual</th>
             <th className="px-3 py-3 font-semibold">PnL</th>
@@ -795,7 +803,7 @@ function ShadowEvidenceTable({ rows }: { rows: CsvRow[] }) {
           {groupedRows.map((group) => (
             <Fragment key={group.date}>
               <tr className="border-y border-slate-800 bg-slate-950/80">
-                <td colSpan={10} className="px-3 py-3">
+                <td colSpan={12} className="px-3 py-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="text-xs font-black uppercase tracking-[0.18em] text-amber-300">{dateLabel(group.date)}</span>
                     <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate-500">{group.rows.length} shadow rows</span>
@@ -813,6 +821,8 @@ function ShadowEvidenceTable({ rows }: { rows: CsvRow[] }) {
                   <td className="px-3 py-3 font-mono text-slate-100">{fmt(row.line, 1)}</td>
                   <td className="px-3 py-3"><MiniBadge label={row.side || "-"} tone="border-cyan-500/25 bg-cyan-500/10 text-cyan-200" /></td>
                   <td className="px-3 py-3 font-mono text-slate-300">{fmt(row.selected_odds, 2)}</td>
+                  <td className="px-3 py-3 font-mono text-slate-300">{row.closing_odds ? fmt(row.closing_odds, 2) : "-"}</td>
+                  <td className={cn("px-3 py-3 font-mono", n(row.clv_pct) > 0 ? "text-emerald-300" : n(row.clv_pct) < 0 ? "text-rose-300" : "text-slate-500")}>{row.clv_pct ? `${n(row.clv_pct) >= 0 ? "+" : ""}${fmt(row.clv_pct, 1)}%` : "-"}</td>
                   <td className="px-3 py-3 font-mono text-emerald-300">{fmt(row.value_pct, 1)}%</td>
                   <td className="px-3 py-3 font-mono text-slate-300">{row.actual || "-"}</td>
                   <td className={cn("px-3 py-3 font-mono", n(row.pnl) > 0 ? "text-emerald-300" : n(row.pnl) < 0 ? "text-rose-300" : "text-slate-500")}>{row.pnl ? `${n(row.pnl).toFixed(2)}u` : "-"}</td>
@@ -1470,7 +1480,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
 
             <SectionCard
               title="Settled Sample"
-              subtitle="Append-only match-total Bet365 paper record. Signals settle automatically from current OnCourt stats, with Sackmann as the historical fallback."
+              subtitle={`Append-only match-total Bet365 paper record. OnCourt settlement with Sackmann fallback. Closing-price coverage ${shadow.clvCount}/${shadow.settled}; mean CLV ${shadow.meanClv >= 0 ? "+" : ""}${shadow.meanClv.toFixed(2)}%.`}
             >
               <ShadowEvidenceTable rows={sortedShadowRows} />
             </SectionCard>
