@@ -46,6 +46,11 @@ FIELDNAMES = [
     "over_odds",
     "under_odds",
     "selected_odds",
+    "closing_odds",
+    "closing_ts_utc",
+    "closing_snapshot_count",
+    "clv_pct",
+    "clv_method",
     "fair_over_odds",
     "fair_under_odds",
     "fair_odds",
@@ -208,6 +213,11 @@ def build_signal(row: dict[str, str], source: Path, args: argparse.Namespace) ->
         "over_odds": row.get("over_odds", ""),
         "under_odds": row.get("under_odds", ""),
         "selected_odds": fmt_float(selected_odds, 3),
+        "closing_odds": "",
+        "closing_ts_utc": "",
+        "closing_snapshot_count": "",
+        "clv_pct": "",
+        "clv_method": "",
         "fair_over_odds": row.get("fair_over_odds", ""),
         "fair_under_odds": row.get("fair_under_odds", ""),
         "fair_odds": fair_odds_for_side(row, side),
@@ -241,6 +251,10 @@ def write_performance(path: Path, rows: list[dict[str, str]]) -> None:
     voids = [r for r in rows if (r.get("settlement_status") or "").lower() == "void"]
     pnl = sum(parse_float(r.get("pnl")) or 0.0 for r in settled)
     roi = pnl / len(settled) * 100.0 if settled else 0.0
+    settled_clv = [parse_float(r.get("clv_pct")) for r in settled]
+    settled_clv = [value for value in settled_clv if value is not None]
+    mean_clv = sum(settled_clv) / len(settled_clv) if settled_clv else 0.0
+    positive_clv = sum(value > 0 for value in settled_clv) / len(settled_clv) * 100.0 if settled_clv else 0.0
 
     def bucket(label: str, key: str) -> list[str]:
         out = [f"\n{label}:"]
@@ -259,6 +273,7 @@ def write_performance(path: Path, rows: list[dict[str, str]]) -> None:
         "Status: internal shadow only; no public betting record or live staking.",
         f"Rows: {len(rows)} | settled: {len(settled)} | pending: {len(pending)} | void: {len(voids)}",
         f"PnL: {pnl:+.2f}u | ROI: {roi:+.1f}%",
+        f"CLV: coverage={len(settled_clv)}/{len(settled)} | mean={mean_clv:+.2f}% | positive={positive_clv:.1f}%",
         "Promotion guard: do not read ROI seriously before 300 settled lines across at least two Slams.",
     ]
     for label, key in [("By market", "market"), ("By side", "side"), ("By tour", "tour"), ("By confidence", "confidence")]:

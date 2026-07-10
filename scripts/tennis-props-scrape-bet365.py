@@ -597,6 +597,28 @@ def write_rows(path: Path, rows: list[dict[str, str]], fieldnames: list[str]) ->
         writer.writerows(rows)
 
 
+def history_row_key(row: dict[str, str]) -> tuple[str, ...]:
+    return tuple(str(row.get(field) or "").strip() for field in OUTPUT_FIELDS)
+
+
+def append_history_rows(path: Path, rows: list[dict[str, str]]) -> int:
+    existing: list[dict[str, str]] = []
+    if path.exists():
+        with path.open("r", encoding="utf-8-sig", newline="") as f:
+            existing = [dict(row) for row in csv.DictReader(f)]
+    seen = {history_row_key(row) for row in existing}
+    added = 0
+    for row in rows:
+        key = history_row_key(row)
+        if key in seen:
+            continue
+        seen.add(key)
+        existing.append(row)
+        added += 1
+    write_rows(path, existing, OUTPUT_FIELDS)
+    return added
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Scrape Bet365 tennis props/side-market lines from odds-api.io")
     parser.add_argument("--date", default=datetime.now(timezone.utc).date().isoformat())
@@ -605,6 +627,7 @@ def main() -> None:
     parser.add_argument("--max-events", type=int, default=64)
     parser.add_argument("--out", default="")
     parser.add_argument("--audit-out", default="")
+    parser.add_argument("--history-out", default="")
     parser.add_argument("--probe-markets", action="store_true", help="Force endpoint/tier probes for hidden tennis markets")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
@@ -666,6 +689,10 @@ def main() -> None:
 
     out = Path(args.out) if args.out else OUT_DIR / f"bet365-lines-{args.date}.csv"
     audit_out = Path(args.audit_out) if args.audit_out else OUT_DIR / f"bet365-tennis-market-audit-{args.date}.csv"
+    month = args.date[:7] if re.fullmatch(r"\d{4}-\d{2}-\d{2}", args.date) else now.strftime("%Y-%m")
+    # Keep this under the workflow's existing bet365-lines-* commit pattern so
+    # the golden data branch remains the only runtime branch dependency.
+    history_out = Path(args.history_out) if args.history_out else OUT_DIR / f"bet365-lines-history-{month}.csv"
     print(f"parsed supported tennis market rows: {len(rows)}")
     if args.probe_markets or not rows:
         run_zero_row_market_probe(api_key, payload or events, args.bookmakers)
@@ -678,6 +705,8 @@ def main() -> None:
     if rows:
         write_rows(out, rows, OUTPUT_FIELDS)
         print(f"Saved lines: {out}")
+        history_added = append_history_rows(history_out, rows)
+        print(f"Price history: added {history_added}, file={history_out}")
     else:
         print("No supported tennis market rows parsed; skipped writing lines file.")
     print(f"Saved audit: {audit_out}")

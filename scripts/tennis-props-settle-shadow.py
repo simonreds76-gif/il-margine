@@ -44,6 +44,11 @@ FIELDNAMES = [
     "over_odds",
     "under_odds",
     "selected_odds",
+    "closing_odds",
+    "closing_ts_utc",
+    "closing_snapshot_count",
+    "clv_pct",
+    "clv_method",
     "fair_over_odds",
     "fair_under_odds",
     "fair_odds",
@@ -136,6 +141,85 @@ def read_csv(path: Path) -> list[dict[str, str]]:
         return []
     with path.open("r", encoding="utf-8-sig", newline="") as f:
         return [dict(row) for row in csv.DictReader(f)]
+
+
+def parse_utc_datetime(value: object) -> datetime | None:
+    text = str(value or "").strip()
+    if not text:
+        return None
+    try:
+        parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def history_key(row: dict[str, str], *, fallback: bool = False) -> tuple[object, ...]:
+    line = parse_float(row.get("line"))
+    line_key = round(line, 3) if line is not None else None
+    common = (
+        norm_text(row.get("bookmaker")),
+        norm_text(row.get("market")),
+        line_key,
+    )
+    event_id = str(row.get("event_id") or "").strip()
+    if event_id and not fallback:
+        return ("event", event_id, *common)
+    return (
+        "pair",
+        str(row.get("date") or "").strip(),
+        str(row.get("tour") or "").upper(),
+        pair_key(row.get("player"), row.get("opponent")),
+        *common,
+    )
+
+
+def load_price_history(paths: list[Path]) -> tuple[dict[tuple[object, ...], list[dict[str, str]]], dict[tuple[object, ...], list[dict[str, str]]]]:
+    by_event: dict[tuple[object, ...], list[dict[str, str]]] = defaultdict(list)
+    by_pair: dict[tuple[object, ...], list[dict[str, str]]] = defaultdict(list)
+    for path in paths:
+        for row in read_csv(path):
+            by_event[history_key(row)].append(row)
+            by_pair[history_key(row, fallback=True)].append(row)
+    return by_event, by_pair
+
+
+def enrich_closing_price(
+    signal: dict[str, str],
+    by_event: dict[tuple[object, ...], list[dict[str, str]]],
+    by_pair: dict[tuple[object, ...], list[dict[str, str]]],
+) -> bool:
+    match_start = parse_utc_datetime(signal.get("match_start_utc"))
+    side = str(signal.get("side") or "").upper()
+    selected_odds = parse_float(signal.get("selected_odds"))
+    if match_start is None or side not in {"OVER", "UNDER"} or selected_odds is None:
+        return False
+    candidates = by_event.get(history_key(signal), [])
+    method = "event_id_latest_prestart"
+    if not candidates:
+        candidates = by_pair.get(history_key(signal, fallback=True), [])
+        method = "pair_latest_prestart"
+    price_field = "over_odds" if side == "OVER" else "under_odds"
+    priced: list[tuple[datetime, float]] = []
+    for row in candidates:
+        captured_at = parse_utc_datetime(row.get("capture_ts"))
+        odds = parse_float(row.get(price_field))
+        if captured_at is None or odds is None or odds <= 1.0 or captured_at > match_start:
+            continue
+        priced.append((captured_at, odds))
+    if not priced:
+        return False
+    priced.sort(key=lambda item: item[0])
+    closing_ts, closing_odds = priced[-1]
+    clv_pct = (selected_odds / closing_odds - 1.0) * 100.0
+    signal["closing_odds"] = f"{closing_odds:.3f}"
+    signal["closing_ts_utc"] = closing_ts.isoformat(timespec="seconds")
+    signal["closing_snapshot_count"] = str(len({captured_at for captured_at, _odds in priced}))
+    signal["clv_pct"] = f"{clv_pct:.3f}"
+    signal["clv_method"] = method
+    return True
 
 
 def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
@@ -354,6 +438,10 @@ def write_performance(path: Path, rows: list[dict[str, str]]) -> None:
     voids = [r for r in rows if (r.get("settlement_status") or "").lower() == "void"]
     pnl = sum(parse_float(r.get("pnl")) or 0.0 for r in settled)
     roi = pnl / len(settled) * 100.0 if settled else 0.0
+    settled_clv = [parse_float(r.get("clv_pct")) for r in settled]
+    settled_clv = [value for value in settled_clv if value is not None]
+    mean_clv = sum(settled_clv) / len(settled_clv) if settled_clv else 0.0
+    positive_clv = sum(value > 0 for value in settled_clv) / len(settled_clv) * 100.0 if settled_clv else 0.0
 
     def bucket(label: str, key: str) -> list[str]:
         out = [f"\n{label}:"]
@@ -371,6 +459,7 @@ def write_performance(path: Path, rows: list[dict[str, str]]) -> None:
         "Status: internal shadow only; no public betting record or live staking.",
         f"Rows: {len(rows)} | settled: {len(settled)} | pending: {len(pending)} | void: {len(voids)}",
         f"PnL: {pnl:+.2f}u | ROI: {roi:+.1f}%",
+        f"CLV: coverage={len(settled_clv)}/{len(settled)} | mean={mean_clv:+.2f}% | positive={positive_clv:.1f}%",
         "Promotion guard: do not read ROI seriously before 300 settled lines across at least two Slams.",
     ]
     for label, key in [("By market", "market"), ("By side", "side"), ("By tour", "tour"), ("By confidence", "confidence")]:
@@ -385,6 +474,7 @@ def main() -> int:
     parser.add_argument("--performance", default=str(DEFAULT_PERFORMANCE))
     parser.add_argument("--sackmann-dir", default=str(DEFAULT_SACKMANN))
     parser.add_argument("--oncourt-dir", default=str(DEFAULT_ONCOURT))
+    parser.add_argument("--history-glob", default=str(PROPS_DIR / "inbox" / "bet365-lines-history-*.csv"))
     args = parser.parse_args()
 
     signals_path = Path(args.signals)
@@ -395,6 +485,10 @@ def main() -> int:
         return 0
 
     pending_rows = [row for row in rows if (row.get("settlement_status") or "pending").lower() in {"", "pending"}]
+    history_pattern = Path(args.history_glob)
+    history_paths = sorted(history_pattern.parent.glob(history_pattern.name))
+    history_by_event, history_by_pair = load_price_history(history_paths)
+    clv_updated = sum(enrich_closing_price(row, history_by_event, history_by_pair) for row in rows)
     oncourt_index = load_oncourt_index(Path(args.oncourt_dir), pending_rows)
     sackmann_index = load_sackmann_index(Path(args.sackmann_dir))
     now = datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -451,7 +545,7 @@ def main() -> int:
 
     write_csv(signals_path, rows)
     write_performance(Path(args.performance), rows)
-    print(f"Settled/voided now: {settled_now}; still pending checked: {still_pending}; total rows: {len(rows)}")
+    print(f"Settled/voided now: {settled_now}; CLV rows refreshed: {clv_updated}; still pending checked: {still_pending}; total rows: {len(rows)}")
     return 0
 
 
