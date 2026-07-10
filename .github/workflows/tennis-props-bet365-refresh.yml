@@ -3,6 +3,9 @@ name: Tennis Props Bet365 Refresh
 on:
   schedule:
     - cron: "25 8 * * *"
+    # GitHub occasionally delays or drops a scheduled run. This fallback is
+    # credit-safe: it only scrapes when the morning capture has no usable rows.
+    - cron: "25 11 * * *"
     - cron: "25 15 * * *"
   workflow_dispatch:
     inputs:
@@ -55,7 +58,23 @@ jobs:
             echo "ODDS_API_IO_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
           fi
 
+      - name: Guard fallback API credits
+        if: ${{ github.event_name == 'schedule' && github.event.schedule == '25 11 * * *' }}
+        id: fallback_guard
+        shell: bash
+        run: |
+          TODAY="$(date -u +%F)"
+          LINES_FILE="data/tennis-props/inbox/bet365-lines-${TODAY}.csv"
+          if [ -s "${LINES_FILE}" ] && [ "$(wc -l < "${LINES_FILE}")" -gt 1 ]; then
+            echo "skip=true" >> "${GITHUB_OUTPUT}"
+            echo "Morning capture already has usable rows; skipping fallback API call."
+          else
+            echo "skip=false" >> "${GITHUB_OUTPUT}"
+            echo "No usable morning capture found; running fallback API call."
+          fi
+
       - name: Scrape Bet365 tennis player props
+        if: ${{ steps.fallback_guard.outputs.skip != 'true' }}
         env:
           DAYS_AHEAD: ${{ github.event.inputs.days_ahead || '2' }}
           MAX_EVENTS: ${{ github.event.inputs.max_events || '64' }}
@@ -87,6 +106,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -f data/tennis-props/inbox/bet365-lines-*.csv || true
+          git add -f data/tennis-props/inbox/bet365-tennis-market-audit-*.csv || true
           if git diff --cached --quiet; then
             echo "No tennis props odds changes to commit."
             exit 0
