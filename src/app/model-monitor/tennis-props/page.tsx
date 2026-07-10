@@ -126,7 +126,11 @@ async function latestCsv(prefix: string): Promise<string | null> {
     const files = await fs.readdir(prefix === "comparison" ? PROPS_DIR : INBOX_DIR);
     const dir = prefix === "comparison" ? PROPS_DIR : INBOX_DIR;
     const matches = files
-      .filter((file) => file.startsWith(`${prefix}-`) && file.endsWith(".csv"))
+      .filter((file) => (
+        file.startsWith(`${prefix}-`)
+        && file.endsWith(".csv")
+        && !(prefix === "comparison" && file.endsWith("-unmatched.csv"))
+      ))
       .map((file) => path.join(dir, file));
     if (!matches.length) return null;
     const stamped = await Promise.all(
@@ -307,8 +311,22 @@ function topBlockReasons(rows: CsvRow[], limit = 8): { label: string; count: num
     .slice(0, limit);
 }
 
-function latestDate(rows: CsvRow[]): string {
-  return [...new Set(rows.map((row) => row.date).filter(Boolean))].sort().at(-1) ?? "-";
+function londonDateIso(value = new Date()): string {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: "Europe/London",
+  }).formatToParts(value);
+  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((item) => item.type === type)?.value ?? "";
+  return `${part("year")}-${part("month")}-${part("day")}`;
+}
+
+function projectionFocusDate(rows: CsvRow[]): string {
+  const dates = [...new Set(rows.map((row) => row.date).filter(Boolean))].sort();
+  const today = londonDateIso();
+  if (dates.includes(today)) return today;
+  return dates.find((value) => value > today) ?? dates.at(-1) ?? "-";
 }
 
 function dateLabel(value: string): string {
@@ -329,11 +347,17 @@ function groupRowsByDate(rows: CsvRow[]): { date: string; rows: CsvRow[] }[] {
     const key = row.date || "unscheduled";
     grouped.set(key, [...(grouped.get(key) ?? []), row]);
   }
+  const today = londonDateIso();
   return [...grouped.entries()]
     .sort(([a], [b]) => {
       if (a === "unscheduled") return 1;
       if (b === "unscheduled") return -1;
-      return b.localeCompare(a);
+      if (a === today) return -1;
+      if (b === today) return 1;
+      const aFuture = a > today;
+      const bFuture = b > today;
+      if (aFuture !== bFuture) return aFuture ? -1 : 1;
+      return aFuture ? a.localeCompare(b) : b.localeCompare(a);
     })
     .map(([date, groupedRows]) => ({ date, rows: groupedRows }));
 }
@@ -1255,6 +1279,9 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
   const linesStale = lineAgeHours == null || lineAgeHours > 6;
   const matchedRate = decisionRows.length ? (matchedDecisionRows.length / decisionRows.length) * 100 : 0;
   const hiddenCount = matchedDecisionRows.length - visibleAllLineRows.length;
+  const todayIso = londonDateIso();
+  const todayBoardRows = sortedBoard.filter((row) => row.date === todayIso);
+  const todayMatchCount = new Set(todayBoardRows.map(matchKey)).size;
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.12),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(244,63,94,0.08),_transparent_24%),#0b0f14] text-slate-100">
@@ -1305,6 +1332,23 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
           <TabLink active={activeTab === "decision"} href="/model-monitor/tennis-props?tab=decision" label="Decision Board" detail="BET NOW / near miss / blocked lines" />
           <TabLink active={activeTab === "projections"} href="/model-monitor/tennis-props?tab=projections" label="Projections" detail="Aces, DFs, breaks, tie-break simulation" />
         </nav>
+
+        {activeTab === "decision" && todayBoardRows.length ? (
+          <section className="mb-6 flex flex-col gap-4 rounded-[2rem] border border-cyan-500/25 bg-[radial-gradient(circle_at_top_left,rgba(6,182,212,0.16),transparent_38%),rgba(15,23,42,0.82)] p-5 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <div className="text-[11px] font-black uppercase tracking-[0.18em] text-cyan-300">Today&apos;s projections are ready</div>
+              <h2 className="mt-2 text-2xl font-black text-slate-50">{todayMatchCount} matches / {todayBoardRows.length} player estimates</h2>
+              <p className="mt-1 text-sm text-slate-400">
+                {linesStale
+                  ? "The projection board is current, but Bet365 prices are stale or missing. That means estimates are available while the official betting decision remains NO BET."
+                  : "Open the projection board for aces, double faults, breaks and tie-break estimates. The betting decision above remains the official gate."}
+              </p>
+            </div>
+            <Link href="/model-monitor/tennis-props?tab=projections" className="shrink-0 rounded-full border border-cyan-400/35 bg-cyan-500/15 px-5 py-3 text-center text-xs font-black uppercase tracking-[0.15em] text-cyan-100 transition hover:bg-cyan-500/25">
+              View today&apos;s matches
+            </Link>
+          </section>
+        ) : null}
 
         {activeTab === "decision" ? (
           <div className="grid gap-6">
@@ -1367,7 +1411,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
         ) : (
           <div className="grid gap-6">
             <SectionCard
-              title={`Projection Board (${latestDate(sortedBoard)})`}
+              title={`Projection Board (${dateLabel(projectionFocusDate(sortedBoard))} first)`}
               subtitle="Expected aces, double faults, breaks and tie-break probabilities for each scheduled player. Sort controls are for scanning, not bet recommendations."
             >
               <ProjectionTable rows={sortedBoard} sortKey={projectionSortKey} />

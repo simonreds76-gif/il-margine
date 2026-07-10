@@ -174,7 +174,10 @@ try {
     }
 
     Log "=== Step 3b/8: Tennis props projection board ==="
-    $tennisPropsBoardExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\build-tennis-props-board.py", "--as-of", (Get-Date -Format "yyyy-MM-dd")) -Label "tennis props projection board" -TimeoutSeconds 240
+    # Historical OnCourt scans can slow down while the morning fair-odds job is
+    # still releasing memory. Allow enough time to finish instead of retaining
+    # yesterday's board after a false timeout.
+    $tennisPropsBoardExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\build-tennis-props-board.py", "--as-of", (Get-Date -Format "yyyy-MM-dd")) -Label "tennis props projection board" -TimeoutSeconds 600
     if ($tennisPropsBoardExit -ne 0) {
         Log "WARNING: tennis props projection board failed/timed out (exit $tennisPropsBoardExit), continuing..."
     }
