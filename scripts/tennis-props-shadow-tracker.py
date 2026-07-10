@@ -26,14 +26,23 @@ FIELDNAMES = [
     "date",
     "tour",
     "tournament",
+    "scope",
     "player",
     "opponent",
     "market",
     "line",
     "side",
     "projection_mean",
+    "projection_p1",
+    "projection_p2",
     "confidence",
+    "p1_confidence",
+    "p2_confidence",
+    "combined_surface_svpt_sample",
     "bookmaker",
+    "event_id",
+    "capture_ts",
+    "match_start_utc",
     "over_odds",
     "under_odds",
     "selected_odds",
@@ -42,9 +51,15 @@ FIELDNAMES = [
     "fair_odds",
     "fair_p_push",
     "distribution",
+    "totals_alpha",
+    "totals_stage0_passed",
     "value_over_pct",
     "value_under_pct",
     "value_pct",
+    "novig_p_over",
+    "novig_p_under",
+    "edge_over_novig_pct",
+    "edge_under_novig_pct",
     "matched_board",
     "notes",
     "source_file",
@@ -98,6 +113,17 @@ def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
 
 
 def signal_id(row: dict[str, str], side: str) -> str:
+    if (row.get("scope") or "").strip().lower() == "match_total":
+        pair = sorted((norm_text(row.get("player")), norm_text(row.get("opponent"))))
+        return "|".join(
+            [
+                row.get("date") or "",
+                (row.get("tour") or "").upper(),
+                norm_text(row.get("tournament")),
+                *pair,
+                norm_text(row.get("market")),
+            ]
+        )
     parts = [
         row.get("date") or "",
         (row.get("tour") or "").upper(),
@@ -139,13 +165,16 @@ def fair_odds_for_side(row: dict[str, str], side: str) -> str:
 
 
 def build_signal(row: dict[str, str], source: Path, args: argparse.Namespace) -> dict[str, str] | None:
+    scope = (row.get("scope") or "player").strip().lower()
     confidence = (row.get("confidence") or "").strip().upper()
-    allowed_conf = {"HIGH"} if not args.allow_medium else {"HIGH", "MED"}
+    allowed_conf = {"HIGH", "MED"} if scope == "match_total" or args.allow_medium else {"HIGH"}
     if confidence not in allowed_conf:
         return None
     if (row.get("matched_board") or "").strip().lower() != "yes":
         return None
-    if row.get("notes") and not args.allow_notes:
+    if scope == "match_total" and (row.get("bettable") or "").strip().lower() != "true":
+        return None
+    if scope != "match_total" and row.get("notes") and not args.allow_notes:
         return None
 
     picked = pick_side(row, args.min_value, args.allow_watch)
@@ -159,14 +188,23 @@ def build_signal(row: dict[str, str], source: Path, args: argparse.Namespace) ->
         "date": row.get("date", ""),
         "tour": (row.get("tour") or "").upper(),
         "tournament": row.get("tournament", ""),
+        "scope": scope,
         "player": row.get("player", ""),
         "opponent": row.get("opponent", ""),
         "market": row.get("market", ""),
         "line": row.get("line", ""),
         "side": side,
         "projection_mean": row.get("projection_mean", ""),
+        "projection_p1": row.get("projection_p1", ""),
+        "projection_p2": row.get("projection_p2", ""),
         "confidence": confidence,
-        "bookmaker": args.bookmaker,
+        "p1_confidence": row.get("p1_confidence", ""),
+        "p2_confidence": row.get("p2_confidence", ""),
+        "combined_surface_svpt_sample": row.get("combined_surface_svpt_sample", ""),
+        "bookmaker": row.get("bookmaker", "") or args.bookmaker,
+        "event_id": row.get("event_id", ""),
+        "capture_ts": row.get("capture_ts", ""),
+        "match_start_utc": row.get("match_start_utc", ""),
         "over_odds": row.get("over_odds", ""),
         "under_odds": row.get("under_odds", ""),
         "selected_odds": fmt_float(selected_odds, 3),
@@ -175,9 +213,15 @@ def build_signal(row: dict[str, str], source: Path, args: argparse.Namespace) ->
         "fair_odds": fair_odds_for_side(row, side),
         "fair_p_push": row.get("fair_p_push", ""),
         "distribution": row.get("distribution", ""),
+        "totals_alpha": row.get("totals_alpha", ""),
+        "totals_stage0_passed": row.get("totals_stage0_passed", ""),
         "value_over_pct": row.get("value_over_pct", ""),
         "value_under_pct": row.get("value_under_pct", ""),
         "value_pct": fmt_float(value_pct, 2),
+        "novig_p_over": row.get("novig_p_over", ""),
+        "novig_p_under": row.get("novig_p_under", ""),
+        "edge_over_novig_pct": row.get("edge_over_novig_pct", ""),
+        "edge_under_novig_pct": row.get("edge_under_novig_pct", ""),
         "matched_board": row.get("matched_board", ""),
         "notes": row.get("notes", ""),
         "source_file": str(source.relative_to(ROOT)) if source.is_relative_to(ROOT) else str(source),

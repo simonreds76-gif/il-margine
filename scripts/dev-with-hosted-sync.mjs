@@ -58,8 +58,8 @@ function runHostedSync() {
   }
 }
 
-function runTennisPropsCompare() {
-  const result = spawnSync("python", [resolve(scriptDir, "tennis-props-compare-bet365.py")], {
+function runLocalPythonScript(scriptName, label, args = []) {
+  const result = spawnSync("python", [resolve(scriptDir, scriptName), ...args], {
     cwd: repoRoot,
     stdio: "inherit",
     env: process.env,
@@ -67,15 +67,22 @@ function runTennisPropsCompare() {
   });
 
   if (result.error) {
-    console.warn(`[dev] Tennis props comparison did not complete (${result.error.message}). Starting Next dev anyway.`);
+    console.warn(`[dev] ${label} did not complete (${result.error.message}). Starting Next dev anyway.`);
     return;
   }
 
   if (result.status !== 0) {
     console.warn(
-      `[dev] Tennis props comparison failed with exit code ${result.status ?? "unknown"}. Starting Next dev anyway.`,
+      `[dev] ${label} failed with exit code ${result.status ?? "unknown"}. Starting Next dev anyway.`,
     );
   }
+}
+
+function refreshTennisPropsEvidence() {
+  runLocalPythonScript("tennis-props-compare-bet365.py", "Tennis props comparison");
+  runLocalPythonScript("tennis-props-shadow-tracker.py", "Tennis props shadow tracker");
+  runLocalPythonScript("tennis-props-settle-shadow.py", "Tennis props shadow settlement");
+  runLocalPythonScript("tennis-props-model-report.py", "Tennis props model report");
 }
 
 function quoteCmdArg(value) {
@@ -116,5 +123,5 @@ function startNextDev() {
 }
 
 runHostedSync();
-runTennisPropsCompare();
+refreshTennisPropsEvidence();
 startNextDev();
