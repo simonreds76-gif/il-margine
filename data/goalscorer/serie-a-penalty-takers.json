@@ -1,11 +1,120 @@
 {
+  "_meta": {
+    "schema_version": 2,
+    "league": {
+      "key": "serie-a",
+      "name": "Serie A"
+    },
+    "season": {
+      "label": "2026/27",
+      "status": "preseason"
+    },
+    "relegated": [
+      {
+        "team": "Cremonese",
+        "archived_slug": "cremonese",
+        "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+      },
+      {
+        "team": "Pisa",
+        "archived_slug": "pisa",
+        "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+      },
+      {
+        "team": "Verona",
+        "archived_slug": "verona",
+        "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+      }
+    ],
+    "promoted": [
+      "Frosinone",
+      "Monza",
+      "Venezia"
+    ],
+    "last_verified": "2026-07-10",
+    "public_updated_at": "2026-07-10",
+    "membership_source": "https://en.legaseriea.it/serie-a/news/looking-forward-to-the-2026-27-serie-a-fixture-list"
+  },
   "AC Milan": {
     "primary": "Christian Pulisic",
     "secondary": "Rafael Leão",
     "tertiary": "Christopher Nkunku",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_ac_milan_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Christian Pulisic",
+          "secondary": "Rafael Leão",
+          "tertiary": "Christopher Nkunku"
+        },
+        "to": {
+          "primary": "Christian Pulisic",
+          "secondary": "Rafael Leão",
+          "tertiary": "Christopher Nkunku"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_ac_milan_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Christian Pulisic",
+      "secondary": "Rafael Leão",
+      "tertiary": "Christopher Nkunku",
+      "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Atalanta": {
     "primary": "Gianluca Scamacca",
@@ -13,7 +122,80 @@
     "tertiary": "Éderson",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_atalanta_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Gianluca Scamacca",
+          "secondary": "Charles De Ketelaere",
+          "tertiary": "Éderson"
+        },
+        "to": {
+          "primary": "Gianluca Scamacca",
+          "secondary": "Charles De Ketelaere",
+          "tertiary": "Éderson"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_atalanta_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Gianluca Scamacca",
+      "secondary": "Charles De Ketelaere",
+      "tertiary": "Éderson",
+      "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Bologna": {
     "primary": "Riccardo Orsolini",
@@ -21,7 +203,80 @@
     "tertiary": "Santiago Castro",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_bologna_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Riccardo Orsolini",
+          "secondary": "Federico Bernardeschi",
+          "tertiary": "Santiago Castro"
+        },
+        "to": {
+          "primary": "Riccardo Orsolini",
+          "secondary": "Federico Bernardeschi",
+          "tertiary": "Santiago Castro"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_bologna_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Riccardo Orsolini",
+      "secondary": "Federico Bernardeschi",
+      "tertiary": "Santiago Castro",
+      "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Cagliari": {
     "primary": "Yerry Mina",
@@ -29,7 +284,80 @@
     "tertiary": "Gianluca Gaetano",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_cagliari_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Yerry Mina",
+          "secondary": "Sebastiano Esposito",
+          "tertiary": "Gianluca Gaetano"
+        },
+        "to": {
+          "primary": "Yerry Mina",
+          "secondary": "Sebastiano Esposito",
+          "tertiary": "Gianluca Gaetano"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_cagliari_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Yerry Mina",
+      "secondary": "Sebastiano Esposito",
+      "tertiary": "Gianluca Gaetano",
+      "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Como": {
     "primary": "Lucas Da Cunha",
@@ -37,15 +365,80 @@
     "tertiary": "Tasos Douvikas",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
-  },
-  "Cremonese": {
-    "primary": "Jamie Vardy",
-    "secondary": "Federico Bonazzoli",
-    "tertiary": "Milan Djuric",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_como_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Lucas Da Cunha",
+          "secondary": "Martin Baturina",
+          "tertiary": "Tasos Douvikas"
+        },
+        "to": {
+          "primary": "Lucas Da Cunha",
+          "secondary": "Martin Baturina",
+          "tertiary": "Tasos Douvikas"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_como_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Lucas Da Cunha",
+      "secondary": "Martin Baturina",
+      "tertiary": "Tasos Douvikas",
+      "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Fiorentina": {
     "primary": "Albert Gudmundsson",
@@ -53,7 +446,111 @@
     "tertiary": "Moise Kean",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_fiorentina_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Albert Gudmundsson",
+          "secondary": "Rolando Mandragora",
+          "tertiary": "Moise Kean"
+        },
+        "to": {
+          "primary": "Albert Gudmundsson",
+          "secondary": "Rolando Mandragora",
+          "tertiary": "Moise Kean"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_fiorentina_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Albert Gudmundsson",
+      "secondary": "Rolando Mandragora",
+      "tertiary": "Moise Kean",
+      "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+    },
+    "player_ids": {}
+  },
+  "Frosinone": {
+    "primary": "",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-10",
+    "hierarchy_status": "unknown",
+    "confidence": {
+      "primary": "low",
+      "secondary": "low",
+      "tertiary": "low"
+    },
+    "condition_note": "Newly promoted club; the 2026/27 order is not yet verified.",
+    "last_verified": {
+      "date": "2026-07-10",
+      "by": "Il Margine",
+      "method": "league_membership_audit"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [],
+    "change_log": [],
+    "flags": {
+      "carryover_from_previous_season": false,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": null,
+    "player_ids": {},
+    "source": "https://en.legaseriea.it/serie-a/news/looking-forward-to-the-2026-27-serie-a-fixture-list",
+    "cross_check": "Official 2026/27 league roster"
   },
   "Genoa": {
     "primary": "Ruslan Malinovskiy",
@@ -61,7 +558,80 @@
     "tertiary": "Lorenzo Colombo",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_genoa_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Ruslan Malinovskiy",
+          "secondary": "Junior Messias",
+          "tertiary": "Lorenzo Colombo"
+        },
+        "to": {
+          "primary": "Ruslan Malinovskiy",
+          "secondary": "Junior Messias",
+          "tertiary": "Lorenzo Colombo"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_genoa_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Ruslan Malinovskiy",
+      "secondary": "Junior Messias",
+      "tertiary": "Lorenzo Colombo",
+      "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Inter": {
     "primary": "Hakan Calhanoglu",
@@ -69,7 +639,80 @@
     "tertiary": "Piotr Zielinski",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_inter_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Hakan Calhanoglu",
+          "secondary": "Lautaro Martínez",
+          "tertiary": "Piotr Zielinski"
+        },
+        "to": {
+          "primary": "Hakan Calhanoglu",
+          "secondary": "Lautaro Martínez",
+          "tertiary": "Piotr Zielinski"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_inter_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Hakan Calhanoglu",
+      "secondary": "Lautaro Martínez",
+      "tertiary": "Piotr Zielinski",
+      "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Juventus": {
     "primary": "Kenan Yildiz",
@@ -77,7 +720,80 @@
     "tertiary": "Jonathan Christian David",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_juventus_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Kenan Yildiz",
+          "secondary": "Dusan Vlahovic",
+          "tertiary": "Jonathan Christian David"
+        },
+        "to": {
+          "primary": "Kenan Yildiz",
+          "secondary": "Dusan Vlahovic",
+          "tertiary": "Jonathan Christian David"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_juventus_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Kenan Yildiz",
+      "secondary": "Dusan Vlahovic",
+      "tertiary": "Jonathan Christian David",
+      "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Lazio": {
     "primary": "Mattia Zaccagni",
@@ -85,7 +801,80 @@
     "tertiary": "Pedro",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_lazio_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Mattia Zaccagni",
+          "secondary": "Danilo Cataldi",
+          "tertiary": "Pedro"
+        },
+        "to": {
+          "primary": "Mattia Zaccagni",
+          "secondary": "Danilo Cataldi",
+          "tertiary": "Pedro"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_lazio_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Mattia Zaccagni",
+      "secondary": "Danilo Cataldi",
+      "tertiary": "Pedro",
+      "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Lecce": {
     "primary": "Nikola Stulic",
@@ -93,7 +882,111 @@
     "tertiary": "Francesco Camarda",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_lecce_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Nikola Stulic",
+          "secondary": "Tete Morente",
+          "tertiary": "Francesco Camarda"
+        },
+        "to": {
+          "primary": "Nikola Stulic",
+          "secondary": "Tete Morente",
+          "tertiary": "Francesco Camarda"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_lecce_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Nikola Stulic",
+      "secondary": "Tete Morente",
+      "tertiary": "Francesco Camarda",
+      "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+    },
+    "player_ids": {}
+  },
+  "Monza": {
+    "primary": "",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-10",
+    "hierarchy_status": "unknown",
+    "confidence": {
+      "primary": "low",
+      "secondary": "low",
+      "tertiary": "low"
+    },
+    "condition_note": "Newly promoted club; the 2026/27 order is not yet verified.",
+    "last_verified": {
+      "date": "2026-07-10",
+      "by": "Il Margine",
+      "method": "league_membership_audit"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [],
+    "change_log": [],
+    "flags": {
+      "carryover_from_previous_season": false,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": null,
+    "player_ids": {},
+    "source": "https://en.legaseriea.it/serie-a/news/looking-forward-to-the-2026-27-serie-a-fixture-list",
+    "cross_check": "Official 2026/27 league roster"
   },
   "Napoli": {
     "primary": "Kevin De Bruyne",
@@ -101,7 +994,80 @@
     "tertiary": "Scott McTominay",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_napoli_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Kevin De Bruyne",
+          "secondary": "Rasmus Højlund",
+          "tertiary": "Scott McTominay"
+        },
+        "to": {
+          "primary": "Kevin De Bruyne",
+          "secondary": "Rasmus Højlund",
+          "tertiary": "Scott McTominay"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_napoli_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Kevin De Bruyne",
+      "secondary": "Rasmus Højlund",
+      "tertiary": "Scott McTominay",
+      "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Parma Calcio 1913": {
     "primary": "Mateo Pellegrino",
@@ -109,15 +1075,80 @@
     "tertiary": "Adrián Bernabé",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
-  },
-  "Pisa": {
-    "primary": "Stefano Moreo",
-    "secondary": "Matteo Tramoni",
-    "tertiary": "Juan Cuadrado",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_parma_calcio_1913_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Mateo Pellegrino",
+          "secondary": "Gabriel Strefezza",
+          "tertiary": "Adrián Bernabé"
+        },
+        "to": {
+          "primary": "Mateo Pellegrino",
+          "secondary": "Gabriel Strefezza",
+          "tertiary": "Adrián Bernabé"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_parma_calcio_1913_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Mateo Pellegrino",
+      "secondary": "Gabriel Strefezza",
+      "tertiary": "Adrián Bernabé",
+      "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Roma": {
     "primary": "Paulo Dybala",
@@ -125,7 +1156,80 @@
     "tertiary": "Lorenzo Pellegrini",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_roma_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Paulo Dybala",
+          "secondary": "Donyell Malen",
+          "tertiary": "Lorenzo Pellegrini"
+        },
+        "to": {
+          "primary": "Paulo Dybala",
+          "secondary": "Donyell Malen",
+          "tertiary": "Lorenzo Pellegrini"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_roma_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Paulo Dybala",
+      "secondary": "Donyell Malen",
+      "tertiary": "Lorenzo Pellegrini",
+      "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Sassuolo": {
     "primary": "Domenico Berardi",
@@ -133,7 +1237,80 @@
     "tertiary": "Andrea Pinamonti",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_sassuolo_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Domenico Berardi",
+          "secondary": "Armand Lauriente",
+          "tertiary": "Andrea Pinamonti"
+        },
+        "to": {
+          "primary": "Domenico Berardi",
+          "secondary": "Armand Lauriente",
+          "tertiary": "Andrea Pinamonti"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_sassuolo_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Domenico Berardi",
+      "secondary": "Armand Lauriente",
+      "tertiary": "Andrea Pinamonti",
+      "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Torino": {
     "primary": "Nikola Vlasic",
@@ -141,7 +1318,80 @@
     "tertiary": "Giovanni Simeone",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_torino_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Nikola Vlasic",
+          "secondary": "Duván Zapata",
+          "tertiary": "Giovanni Simeone"
+        },
+        "to": {
+          "primary": "Nikola Vlasic",
+          "secondary": "Duván Zapata",
+          "tertiary": "Giovanni Simeone"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_torino_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Nikola Vlasic",
+      "secondary": "Duván Zapata",
+      "tertiary": "Giovanni Simeone",
+      "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Udinese": {
     "primary": "Keinan Davis",
@@ -149,14 +1399,110 @@
     "tertiary": "Nicolo Zaniolo",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_udinese_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Keinan Davis",
+          "secondary": "Oumar Solet",
+          "tertiary": "Nicolo Zaniolo"
+        },
+        "to": {
+          "primary": "Keinan Davis",
+          "secondary": "Oumar Solet",
+          "tertiary": "Nicolo Zaniolo"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_udinese_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Keinan Davis",
+      "secondary": "Oumar Solet",
+      "tertiary": "Nicolo Zaniolo",
+      "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+    },
+    "player_ids": {}
   },
-  "Verona": {
-    "primary": "Gift Orban",
-    "secondary": "Amin Sarr",
-    "tertiary": "Daniel Mosquera",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+  "Venezia": {
+    "primary": "",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-10",
+    "hierarchy_status": "unknown",
+    "confidence": {
+      "primary": "low",
+      "secondary": "low",
+      "tertiary": "low"
+    },
+    "condition_note": "Newly promoted club; the 2026/27 order is not yet verified.",
+    "last_verified": {
+      "date": "2026-07-10",
+      "by": "Il Margine",
+      "method": "league_membership_audit"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [],
+    "change_log": [],
+    "flags": {
+      "carryover_from_previous_season": false,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": null,
+    "player_ids": {},
+    "source": "https://en.legaseriea.it/serie-a/news/looking-forward-to-the-2026-27-serie-a-fixture-list",
+    "cross_check": "Official 2026/27 league roster"
   }
 }

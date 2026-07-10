@@ -2,6 +2,7 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 import PageHomeLink from "@/components/PageHomeLink";
 import { RESOURCES, RESOURCE_CATEGORIES, type ResourceCategory } from "@/lib/resources";
+import { CLUB_PENALTY_SEASON } from "@/lib/club-penalty-takers";
 
 type PageProps = {
   searchParams?: Promise<{
@@ -139,7 +140,7 @@ export default async function ResourcesPage({ searchParams }: PageProps) {
                 Club board
               </div>
               <h3 className="mt-3 text-xl font-semibold text-slate-100">
-                Penalty Takers 2025/26
+                Penalty Takers {CLUB_PENALTY_SEASON}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-slate-400">
                 First, second and third-choice takers for every club across the top five leagues,

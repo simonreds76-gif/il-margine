@@ -3,39 +3,52 @@ import "server-only";
 import { promises as fs } from "node:fs";
 import { BASE_URL } from "@/lib/config";
 import { getKnownProjectFilePath, type KnownProjectFile } from "@/lib/project-file-paths";
+import clubPenaltySeason from "../../data/goalscorer/club-penalty-season.json";
 
-export const CLUB_PENALTY_SEASON = "2025/26";
+export const CLUB_PENALTY_SEASON = clubPenaltySeason.label;
+export const CLUB_PENALTY_PREVIOUS_SEASON = clubPenaltySeason.previous_label;
 export const CLUB_PENALTY_BASE_PATH = "/penalty-takers";
+
+type PenaltyConfidence = "high" | "medium" | "low";
+type PenaltyHierarchyStatus = "confirmed" | "probable" | "conditional" | "disputed" | "unknown";
 
 type PenaltyTeamRow = {
   primary?: string;
   secondary?: string;
   tertiary?: string;
   last_updated?: string;
+  hierarchy_status?: PenaltyHierarchyStatus;
+  confidence?: Partial<Record<"primary" | "secondary" | "tertiary", PenaltyConfidence>>;
+  condition_note?: string;
+  last_verified?: { date?: string; by?: string; method?: string };
+  public_updated_at?: string;
+  evidence_log?: Array<{ review?: { status?: string } }>;
+  change_log?: Array<{ change_type?: string; changed_at?: string; reason?: string }>;
+  flags?: { carryover_from_previous_season?: boolean; weak_evidence?: boolean };
 };
 
-type PenaltyFile = Record<string, PenaltyTeamRow>;
-
-type TeamLogoRow = {
-  logo_path?: string;
-  team_key?: string;
+type PenaltyFileMeta = {
+  schema_version?: number;
+  season?: { label?: string; status?: string };
+  relegated?: Array<{ team?: string; archived_slug?: string; archive?: string }>;
+  public_updated_at?: string;
 };
 
+type PenaltyFile = Record<string, PenaltyTeamRow | PenaltyFileMeta | undefined> & { _meta?: PenaltyFileMeta };
+
+type TeamLogoRow = { logo_path?: string; team_key?: string };
 type LogoManifest = {
-  leagues?: Record<
-    string,
-    {
-      label?: string;
-      teams?: Record<string, TeamLogoRow>;
-    }
-  >;
+  leagues?: Record<string, { label?: string; teams?: Record<string, TeamLogoRow> }>;
 };
+
+export type ClubPenaltySeason = typeof clubPenaltySeason;
 
 export type ClubLeagueConfig = {
   key: string;
   label: string;
   short: string;
   file: KnownProjectFile;
+  archiveFile: KnownProjectFile;
   logoPath: string;
   accent: string;
   surface: string;
@@ -55,8 +68,19 @@ export type ClubPenaltyTeam = {
   primary: string;
   secondary: string;
   tertiary: string;
+  hierarchyStatus: PenaltyHierarchyStatus;
+  primaryConfidence: PenaltyConfidence;
   lastUpdated: string;
   lastUpdatedLabel: string;
+  publicUpdatedAt: string;
+  publicUpdatedLabel: string;
+  conditionNote: string;
+  isCarryover: boolean;
+  isArchived: boolean;
+  weakEvidence: boolean;
+  evidenceCount: number;
+  seasonLabel: string;
+  seasonStatus: string;
   logoPath: string;
   initials: string;
   relativeUrl: string;
@@ -65,34 +89,39 @@ export type ClubPenaltyTeam = {
 
 export type ClubPenaltyLeague = ClubLeagueConfig & {
   teams: ClubPenaltyTeam[];
+  archivedTeams: ClubPenaltyTeam[];
+  publicUpdatedAt: string;
 };
 
 export const CLUB_LEAGUES: ClubLeagueConfig[] = [
-  {
-    key: "serie-a",
-    label: "Serie A",
-    short: "SA",
-    file: "data/goalscorer/serie-a-penalty-takers.json",
-    logoPath: "/league-logos/serie-a.png",
-    accent: "emerald",
-    surface: "from-emerald-500/24 via-emerald-400/8 to-slate-950",
-    copy: "Serie A penalty orders move quickly around transfers, coaching changes and form. We keep the backup line visible because the second name is often the value edge when the regular taker is off the pitch.",
-  },
   {
     key: "epl",
     label: "Premier League",
     short: "PL",
     file: "data/goalscorer/epl-penalty-takers.json",
+    archiveFile: "data/goalscorer/archive/2025-26/epl-penalty-takers.json",
     logoPath: "/league-logos/epl.png",
     accent: "indigo",
     surface: "from-indigo-500/24 via-indigo-400/8 to-slate-950",
     copy: "Premier League markets react quickly to the obvious taker, so the useful intelligence is the full order: who steps up first, who follows, and who becomes live if team news removes the headline name.",
   },
   {
+    key: "serie-a",
+    label: "Serie A",
+    short: "SA",
+    file: "data/goalscorer/serie-a-penalty-takers.json",
+    archiveFile: "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json",
+    logoPath: "/league-logos/serie-a.png",
+    accent: "emerald",
+    surface: "from-emerald-500/24 via-emerald-400/8 to-slate-950",
+    copy: "Serie A penalty orders move quickly around transfers, coaching changes and form. We keep the backup line visible because the second name is often the value edge when the regular taker is off the pitch.",
+  },
+  {
     key: "la-liga",
     label: "La Liga",
     short: "LL",
     file: "data/goalscorer/la-liga-penalty-takers.json",
+    archiveFile: "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json",
     logoPath: "/league-logos/la-liga.png",
     accent: "amber",
     surface: "from-amber-500/24 via-amber-400/8 to-slate-950",
@@ -103,6 +132,7 @@ export const CLUB_LEAGUES: ClubLeagueConfig[] = [
     label: "Bundesliga",
     short: "BL",
     file: "data/goalscorer/bundesliga-penalty-takers.json",
+    archiveFile: "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json",
     logoPath: "/league-logos/bundesliga.png",
     accent: "rose",
     surface: "from-rose-500/24 via-rose-400/8 to-slate-950",
@@ -113,6 +143,7 @@ export const CLUB_LEAGUES: ClubLeagueConfig[] = [
     label: "Ligue 1",
     short: "L1",
     file: "data/goalscorer/ligue-1-penalty-takers.json",
+    archiveFile: "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json",
     logoPath: "/league-logos/ligue-1.png",
     accent: "cyan",
     surface: "from-cyan-500/24 via-cyan-400/8 to-slate-950",
@@ -126,7 +157,6 @@ function repairMojibake(value: string): string {
   if (!value) return value;
   const normalized = value.normalize("NFC");
   if (!/[\u00C3\u00C2\u00E2]/.test(normalized)) return normalized;
-
   try {
     const repaired = Buffer.from(normalized, "latin1").toString("utf8").normalize("NFC");
     const penaltyScore = (text: string) => (text.match(/[\u00C3\u00C2\u00E2\uFFFD]/g) ?? []).length;
@@ -161,8 +191,16 @@ export function clubPenaltySlug(value: string): string {
   return normalizeClubPenaltyKey(value).replace(/\s+/g, "-");
 }
 
+export function clubPenaltyLeagueRelativeUrl(leagueKey: string): string {
+  return `${CLUB_PENALTY_BASE_PATH}/${leagueKey}`;
+}
+
+export function clubPenaltyLeagueUrl(leagueKey: string): string {
+  return `${BASE_URL}${clubPenaltyLeagueRelativeUrl(leagueKey)}`;
+}
+
 export function clubPenaltyTeamRelativeUrl(leagueKey: string, teamSlug: string): string {
-  return `${CLUB_PENALTY_BASE_PATH}/${leagueKey}/${teamSlug}`;
+  return `${clubPenaltyLeagueRelativeUrl(leagueKey)}/${teamSlug}`;
 }
 
 export function clubPenaltyTeamUrl(leagueKey: string, teamSlug: string): string {
@@ -170,17 +208,10 @@ export function clubPenaltyTeamUrl(leagueKey: string, teamSlug: string): string 
 }
 
 function buildInitials(team: string): string {
-  const parts = cleanClubPenaltyText(team)
-    .replace(/[.'-]/g, " ")
-    .split(/\s+/)
-    .filter(Boolean);
-
+  const parts = cleanClubPenaltyText(team).replace(/[.'-]/g, " ").split(/\s+/).filter(Boolean);
   if (!parts.length) return "FC";
   if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return parts
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("");
+  return parts.slice(0, 2).map((part) => part[0]?.toUpperCase() ?? "").join("");
 }
 
 function parseDateOnly(value?: string): number {
@@ -191,19 +222,12 @@ function parseDateOnly(value?: string): number {
 export function formatClubPenaltyDate(value?: string): string {
   const stamp = parseDateOnly(value);
   if (!Number.isFinite(stamp)) return value ?? "";
-
-  return new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Europe/London",
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  }).format(new Date(stamp));
+  return new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/London", day: "numeric", month: "short", year: "numeric" }).format(new Date(stamp));
 }
 
 function findLogoPath(leagueKey: string, team: string, manifest: LogoManifest): string {
   const teams = manifest.leagues?.[leagueKey]?.teams ?? {};
   if (teams[team]?.logo_path) return cleanClubPenaltyText(teams[team].logo_path);
-
   const normalizedTeam = normalizeClubPenaltyKey(team);
   const matched = Object.entries(teams).find(([name]) => normalizeClubPenaltyKey(name) === normalizedTeam);
   return matched?.[1]?.logo_path ? cleanClubPenaltyText(matched[1].logo_path) : "";
@@ -218,76 +242,131 @@ async function readLogoManifest(): Promise<LogoManifest> {
   return readJson<LogoManifest>("data/goalscorer/team-logo-map.json").catch(() => EMPTY_LOGO_MANIFEST);
 }
 
+function asTeamRow(value: PenaltyTeamRow | PenaltyFileMeta | undefined): PenaltyTeamRow {
+  return value && typeof value === "object" ? (value as PenaltyTeamRow) : {};
+}
+
+function mapTeam(
+  league: ClubLeagueConfig,
+  teamName: string,
+  entryValue: PenaltyTeamRow | PenaltyFileMeta | undefined,
+  manifest: LogoManifest,
+  options: { archived?: boolean } = {},
+): ClubPenaltyTeam {
+  const entry = asTeamRow(entryValue);
+  const team = cleanClubPenaltyText(teamName);
+  const slug = clubPenaltySlug(team);
+  const relativeUrl = clubPenaltyTeamRelativeUrl(league.key, slug);
+  const lastUpdated = cleanClubPenaltyText(entry.last_verified?.date || entry.last_updated);
+  const publicUpdatedAt = cleanClubPenaltyText(entry.public_updated_at || entry.last_updated);
+  const isArchived = Boolean(options.archived);
+  const isCarryover = !isArchived && Boolean(entry.flags?.carryover_from_previous_season);
+  const approvedEvidence = (entry.evidence_log ?? []).filter((evidence) => evidence.review?.status === "approved").length;
+
+  return {
+    leagueKey: league.key,
+    leagueLabel: league.label,
+    leagueShort: league.short,
+    leagueLogoPath: league.logoPath,
+    leagueAccent: league.accent,
+    leagueSurface: league.surface,
+    leagueCopy: league.copy,
+    team,
+    slug,
+    primary: cleanClubPenaltyText(entry.primary) || "Not yet verified",
+    secondary: cleanClubPenaltyText(entry.secondary) || "Not yet verified",
+    tertiary: cleanClubPenaltyText(entry.tertiary),
+    hierarchyStatus: isArchived ? "confirmed" : entry.hierarchy_status ?? (entry.primary ? "probable" : "unknown"),
+    primaryConfidence: entry.confidence?.primary ?? (entry.primary ? "medium" : "low"),
+    lastUpdated,
+    lastUpdatedLabel: formatClubPenaltyDate(lastUpdated),
+    publicUpdatedAt,
+    publicUpdatedLabel: formatClubPenaltyDate(publicUpdatedAt),
+    conditionNote: cleanClubPenaltyText(entry.condition_note),
+    isCarryover,
+    isArchived,
+    weakEvidence: isArchived ? false : Boolean(entry.flags?.weak_evidence),
+    evidenceCount: approvedEvidence,
+    seasonLabel: isArchived ? CLUB_PENALTY_PREVIOUS_SEASON : CLUB_PENALTY_SEASON,
+    seasonStatus: isArchived ? "archived" : clubPenaltySeason.status,
+    logoPath: findLogoPath(league.key, teamName, manifest),
+    initials: buildInitials(team),
+    relativeUrl,
+    absoluteUrl: `${BASE_URL}${relativeUrl}`,
+  };
+}
+
+export function getClubPenaltySeason(): ClubPenaltySeason {
+  return clubPenaltySeason;
+}
+
 export async function readClubPenaltyData(): Promise<ClubPenaltyLeague[]> {
   const logoManifest = await readLogoManifest();
-
   return Promise.all(
     CLUB_LEAGUES.map(async (league) => {
-      const penaltyFile = await readJson<PenaltyFile>(league.file);
+      const [penaltyFile, archiveFile] = await Promise.all([
+        readJson<PenaltyFile>(league.file),
+        readJson<PenaltyFile>(league.archiveFile),
+      ]);
+      const meta = penaltyFile._meta ?? {};
       const teams = Object.entries(penaltyFile)
-        .map(([teamName, entry]) => {
-          const team = cleanClubPenaltyText(teamName);
-          const slug = clubPenaltySlug(team);
-          const relativeUrl = clubPenaltyTeamRelativeUrl(league.key, slug);
-
-          return {
-            leagueKey: league.key,
-            leagueLabel: league.label,
-            leagueShort: league.short,
-            leagueLogoPath: league.logoPath,
-            leagueAccent: league.accent,
-            leagueSurface: league.surface,
-            leagueCopy: league.copy,
-            team,
-            slug,
-            primary: cleanClubPenaltyText(entry.primary) || "TBC",
-            secondary: cleanClubPenaltyText(entry.secondary) || "TBC",
-            tertiary: cleanClubPenaltyText(entry.tertiary),
-            lastUpdated: cleanClubPenaltyText(entry.last_updated),
-            lastUpdatedLabel: formatClubPenaltyDate(cleanClubPenaltyText(entry.last_updated)),
-            logoPath: findLogoPath(league.key, teamName, logoManifest),
-            initials: buildInitials(team),
-            relativeUrl,
-            absoluteUrl: `${BASE_URL}${relativeUrl}`,
-          } satisfies ClubPenaltyTeam;
-        })
+        .filter(([teamName]) => !teamName.startsWith("_"))
+        .map(([teamName, entry]) => mapTeam(league, teamName, entry, logoManifest))
         .sort((left, right) => left.team.localeCompare(right.team, "en"));
-
-      return { ...league, teams };
+      const archivedNames = new Set((meta.relegated ?? []).map((row) => cleanClubPenaltyText(row.team)));
+      const archivedTeams = Object.entries(archiveFile)
+        .filter(([teamName]) => archivedNames.has(cleanClubPenaltyText(teamName)))
+        .map(([teamName, entry]) => mapTeam(league, teamName, entry, logoManifest, { archived: true }))
+        .sort((left, right) => left.team.localeCompare(right.team, "en"));
+      const publicUpdatedAt = cleanClubPenaltyText(meta.public_updated_at) || clubPenaltySeason.published_at;
+      return { ...league, teams, archivedTeams, publicUpdatedAt };
     }),
   );
 }
 
-export async function readAllClubPenaltyTeams(): Promise<ClubPenaltyTeam[]> {
+export async function readAllClubPenaltyTeams(options: { includeArchived?: boolean } = {}): Promise<ClubPenaltyTeam[]> {
   const leagues = await readClubPenaltyData();
-  return leagues.flatMap((league) => league.teams);
+  const includeArchived = options.includeArchived ?? true;
+  return leagues.flatMap((league) => includeArchived ? [...league.teams, ...league.archivedTeams] : league.teams);
+}
+
+export async function getClubPenaltyLeague(leagueSlug: string): Promise<ClubPenaltyLeague | undefined> {
+  const leagues = await readClubPenaltyData();
+  return leagues.find((candidate) => candidate.key === leagueSlug);
 }
 
 export async function getClubPenaltyTeam(leagueSlug: string, teamSlug: string): Promise<ClubPenaltyTeam | undefined> {
-  const leagues = await readClubPenaltyData();
-  const league = leagues.find((candidate) => candidate.key === leagueSlug);
-  return league?.teams.find((team) => team.slug === teamSlug);
+  const league = await getClubPenaltyLeague(leagueSlug);
+  return [...(league?.teams ?? []), ...(league?.archivedTeams ?? [])].find((team) => team.slug === teamSlug);
 }
 
 export function buildClubPenaltyTitle(team: ClubPenaltyTeam): string {
-  return `${team.team} Penalty Taker ${CLUB_PENALTY_SEASON}`;
+  if (team.isArchived) return `${team.team} Penalty Takers ${team.seasonLabel} (Archived)`;
+  const question = `Who Takes Penalties for ${team.team}? ${CLUB_PENALTY_SEASON} Penalty Takers`;
+  return question.length <= 64 ? question : `${team.team} Penalty Takers ${CLUB_PENALTY_SEASON}`;
 }
 
 export function buildClubPenaltyDescription(team: ClubPenaltyTeam): string {
-  const primary = team.primary && team.primary !== "TBC" ? team.primary : "still to be confirmed";
-  const secondary = team.secondary && team.secondary !== "TBC" ? team.secondary : "the backup order still being monitored";
-  return `Who is ${team.team}'s penalty taker? ${primary} is listed as current first choice for ${team.leagueLabel}, with ${secondary} next in line. Updated ${team.lastUpdatedLabel || CLUB_PENALTY_SEASON}.`;
+  if (team.isArchived) {
+    return `Archived ${team.seasonLabel} penalty hierarchy for ${team.team}: ${team.primary} first choice, with ${team.secondary} next in line.`;
+  }
+  if (team.hierarchyStatus === "unknown") {
+    return `${team.team}'s ${CLUB_PENALTY_SEASON} penalty taker order is not yet verified. Il Margine is monitoring preseason and early-season evidence.`;
+  }
+  return `Who takes penalties for ${team.team}? ${team.primary} is the current first-choice call for ${team.leagueLabel}, with ${team.secondary} next in line for ${CLUB_PENALTY_SEASON}.`;
 }
 
 export function buildClubPenaltyLead(team: ClubPenaltyTeam): string {
-  if (!team.primary || team.primary === "TBC") {
-    return `We are still building the ${team.team} penalty order and need another clean signal before naming a firm first-choice taker.`;
+  if (team.isArchived) {
+    return `This is the final archived ${team.seasonLabel} order. ${team.team} is not part of the current ${team.leagueLabel} board.`;
   }
-
-  if (team.secondary && team.secondary !== "TBC") {
-    return `${team.primary} is our current ${team.team} penalty taker call, with ${team.secondary} next in line if the order changes or the first choice is not on the pitch.`;
+  if (team.hierarchyStatus === "unknown") {
+    return `${team.team} are newly tracked for ${CLUB_PENALTY_SEASON}. We are not naming a penalty taker until the evidence is strong enough.`;
   }
-
-  return `${team.primary} is our current ${team.team} penalty taker call. We do not name a firm backup yet because the second-choice trail is still thin.`;
+  if (team.isCarryover) {
+    return `${team.primary} leads the carried-over ${team.team} order, with ${team.secondary} next. This hierarchy is being re-verified through preseason and the opening weeks.`;
+  }
+  return team.secondary !== "Not yet verified"
+    ? `${team.primary} is our current ${team.team} penalty taker call, with ${team.secondary} next in line.`
+    : `${team.primary} is our current ${team.team} penalty taker call. The backup order remains under review.`;
 }
-

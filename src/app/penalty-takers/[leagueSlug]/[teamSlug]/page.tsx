@@ -6,6 +6,7 @@ import PageHomeLink from "@/components/PageHomeLink";
 import { BASE_URL } from "@/lib/config";
 import {
   CLUB_PENALTY_SEASON,
+  CLUB_PENALTY_PREVIOUS_SEASON,
   buildClubPenaltyDescription,
   buildClubPenaltyLead,
   buildClubPenaltyTitle,
@@ -151,13 +152,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       url: team.absoluteUrl,
       siteName: "Il Margine",
-      images: [{ url: `${BASE_URL}/og.png`, width: 1200, height: 630, alt: `${team.team} penalty taker` }],
+      images: [{ url: `${team.absoluteUrl}/opengraph-image`, width: 1200, height: 630, alt: `${team.team} penalty taker` }],
     },
     twitter: {
       card: "summary_large_image",
       title: `${title} | Il Margine`,
       description,
-      images: [`${BASE_URL}/og.png`],
+      images: [`${team.absoluteUrl}/opengraph-image`],
     },
     robots: { index: true, follow: true },
   };
@@ -181,7 +182,9 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
   const lead = buildClubPenaltyLead(team);
 
   const quickAnswer = lead;
-  const secondAnswer = team.secondary && team.secondary !== "TBC"
+  const secondAnswer = team.hierarchyStatus === "unknown"
+    ? `The ${team.team} backup penalty taker is not yet verified for ${CLUB_PENALTY_SEASON}.`
+    : team.secondary && team.secondary !== "TBC" && team.secondary !== "Not yet verified"
     ? `${team.secondary} is listed as the next ${team.team} penalty taker behind ${team.primary}. ${team.tertiary ? `${team.tertiary} is the current third-choice name.` : "The third-choice line is thinner."}`
     : `We do not have a strong second-choice ${team.team} penalty taker call yet.`;
 
@@ -191,7 +194,7 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: BASE_URL },
       { "@type": "ListItem", position: 2, name: "Penalty Takers", item: `${BASE_URL}/penalty-takers` },
-      { "@type": "ListItem", position: 3, name: team.leagueLabel, item: `${BASE_URL}/penalty-takers#${team.leagueKey}` },
+      { "@type": "ListItem", position: 3, name: team.leagueLabel, item: `${BASE_URL}/penalty-takers/${team.leagueKey}` },
       { "@type": "ListItem", position: 4, name: team.team, item: team.absoluteUrl },
     ],
   };
@@ -202,7 +205,7 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
     name: title,
     description,
     url: team.absoluteUrl,
-    dateModified: team.lastUpdated || undefined,
+    dateModified: team.publicUpdatedAt || undefined,
     about: {
       "@type": "SportsTeam",
       name: team.team,
@@ -246,7 +249,7 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
           <div className="mb-5 flex flex-wrap items-center gap-2 text-sm text-slate-400">
             <Link href="/penalty-takers" className="hover:text-slate-100">Penalty Takers</Link>
             <span>/</span>
-            <Link href={`/penalty-takers#${team.leagueKey}`} className="hover:text-slate-100">{team.leagueLabel}</Link>
+            <Link href={`/penalty-takers/${team.leagueKey}`} className="hover:text-slate-100">{team.leagueLabel}</Link>
             <span>/</span>
             <span className="text-slate-200">{team.team}</span>
           </div>
@@ -268,7 +271,7 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
                           <LeagueLogo team={team} /> <span className="ml-2 align-middle">{team.leagueLabel}</span>
                         </span>
                         <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-300">
-                          {CLUB_PENALTY_SEASON}
+                          {team.seasonLabel}
                         </span>
                       </div>
                       <h1 className="mt-4 text-[2.2rem] font-semibold leading-[0.98] tracking-tight text-slate-100 sm:text-5xl sm:leading-[1.02]">
@@ -277,6 +280,19 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
                       <p className="mt-4 max-w-3xl text-[15px] leading-7 text-slate-300 sm:text-lg sm:leading-8">
                         {lead}
                       </p>
+                      {team.isArchived ? (
+                        <p className="mt-4 max-w-3xl rounded-2xl border border-slate-600/60 bg-slate-950/60 px-4 py-3 text-sm leading-6 text-slate-300">
+                          Archived record: {team.team} are not on the current {team.leagueLabel} board. This page preserves the final {team.seasonLabel} hierarchy and URL.
+                        </p>
+                      ) : team.hierarchyStatus === "unknown" ? (
+                        <p className="mt-4 max-w-3xl rounded-2xl border border-amber-300/25 bg-amber-400/10 px-4 py-3 text-sm leading-6 text-amber-100">
+                          New for {CLUB_PENALTY_SEASON}: no public hierarchy is claimed until direct preseason or competitive evidence supports it.
+                        </p>
+                      ) : team.isCarryover ? (
+                        <p className="mt-4 max-w-3xl rounded-2xl border border-cyan-300/20 bg-cyan-400/8 px-4 py-3 text-sm leading-6 text-cyan-100">
+                          Provisional carryover from the final {CLUB_PENALTY_PREVIOUS_SEASON} order. It is being re-verified through preseason and the opening weeks.
+                        </p>
+                      ) : null}
                     </div>
                   </div>
                 </div>
@@ -314,7 +330,6 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Who takes penalties for {team.team}?</h2>
             <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
               <p>{quickAnswer}</p>
-              <p>{team.leagueCopy}</p>
               <p>
                 This page is built as a live Il Margine club file, not a one-name list. If the first-choice taker is injured, suspended, substituted or not starting, the second and third names become the useful part of the hierarchy.
               </p>
@@ -330,8 +345,9 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
 
           <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_14px_40px_rgba(0,0,0,0.18)] sm:p-6">
             <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Il Margine file</div>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Last checked: {team.lastUpdatedLabel || "current file"}</h2>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Last verified: {team.lastUpdatedLabel || "awaiting direct evidence"}</h2>
             <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
+              <p>Public file updated: {team.publicUpdatedLabel || "not available"}.</p>
               <p>
                 We update the order only when the evidence changes: penalties taken or missed, lineup context, injuries, suspensions, transfers, coaching comments, or strong league-specific signals.
               </p>
@@ -380,7 +396,7 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
                     </span>
                     <span className="mt-0.5 block truncate text-xs text-slate-500">{relatedTeam.primary}</span>
                   </span>
-                  <span className="text-slate-600 transition group-hover:text-emerald-300" aria-hidden="true">→</span>
+                  <span className="text-slate-600 transition group-hover:text-emerald-300" aria-hidden="true">-&gt;</span>
                 </Link>
               ))}
             </div>
@@ -411,11 +427,17 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
               </Link>
             ) : null}
             <Link
-              href={`/penalty-takers#${team.leagueKey}`}
+              href={`/penalty-takers/${team.leagueKey}`}
               className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 py-1.5 pr-3 pl-1.5 text-xs text-emerald-100 transition hover:border-emerald-300/40 hover:bg-emerald-400/14"
             >
               <MiniLeagueLogo team={team} />
               <span>All {team.leagueLabel}</span>
+            </Link>
+            <Link
+              href="/penalty-takers/methodology"
+              className="inline-flex items-center rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-300 transition hover:border-slate-500 hover:text-slate-100"
+            >
+              How we verify takers
             </Link>
           </div>
         </section>

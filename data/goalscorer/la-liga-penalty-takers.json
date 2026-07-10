@@ -1,11 +1,120 @@
 {
+  "_meta": {
+    "schema_version": 2,
+    "league": {
+      "key": "la-liga",
+      "name": "La Liga"
+    },
+    "season": {
+      "label": "2026/27",
+      "status": "preseason"
+    },
+    "relegated": [
+      {
+        "team": "Girona",
+        "archived_slug": "girona",
+        "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+      },
+      {
+        "team": "Mallorca",
+        "archived_slug": "mallorca",
+        "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+      },
+      {
+        "team": "Real Oviedo",
+        "archived_slug": "real-oviedo",
+        "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+      }
+    ],
+    "promoted": [
+      "Deportivo La Coruna",
+      "Malaga",
+      "Racing Santander"
+    ],
+    "last_verified": "2026-07-10",
+    "public_updated_at": "2026-07-10",
+    "membership_source": "https://www.laliga.com/en-GB/laliga-easports/clubs"
+  },
   "Alaves": {
     "primary": "Carlos Vicente",
     "secondary": "Lucas Boyé",
     "tertiary": "Antonio Martínez",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_alaves_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Carlos Vicente",
+          "secondary": "Lucas Boyé",
+          "tertiary": "Antonio Martínez"
+        },
+        "to": {
+          "primary": "Carlos Vicente",
+          "secondary": "Lucas Boyé",
+          "tertiary": "Antonio Martínez"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_alaves_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Carlos Vicente",
+      "secondary": "Lucas Boyé",
+      "tertiary": "Antonio Martínez",
+      "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Athletic Club": {
     "primary": "Oihan Sancet",
@@ -13,7 +122,80 @@
     "tertiary": "Gorka Guruzeta",
     "last_updated": "2026-03-15",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-15",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_athletic_club_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Oihan Sancet",
+          "secondary": "Nico Williams",
+          "tertiary": "Gorka Guruzeta"
+        },
+        "to": {
+          "primary": "Oihan Sancet",
+          "secondary": "Nico Williams",
+          "tertiary": "Gorka Guruzeta"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_athletic_club_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Oihan Sancet",
+      "secondary": "Nico Williams",
+      "tertiary": "Gorka Guruzeta",
+      "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Atletico Madrid": {
     "primary": "Julián Álvarez",
@@ -21,7 +203,80 @@
     "tertiary": "Alexander Sørloth",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_atletico_madrid_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Julián Álvarez",
+          "secondary": "Antoine Griezmann",
+          "tertiary": "Alexander Sørloth"
+        },
+        "to": {
+          "primary": "Julián Álvarez",
+          "secondary": "Antoine Griezmann",
+          "tertiary": "Alexander Sørloth"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_atletico_madrid_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Julián Álvarez",
+      "secondary": "Antoine Griezmann",
+      "tertiary": "Alexander Sørloth",
+      "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Barcelona": {
     "primary": "Lamine Yamal",
@@ -29,7 +284,80 @@
     "tertiary": "Raphinha",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_barcelona_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Lamine Yamal",
+          "secondary": "Robert Lewandowski",
+          "tertiary": "Raphinha"
+        },
+        "to": {
+          "primary": "Lamine Yamal",
+          "secondary": "Robert Lewandowski",
+          "tertiary": "Raphinha"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_barcelona_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Lamine Yamal",
+      "secondary": "Robert Lewandowski",
+      "tertiary": "Raphinha",
+      "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Celta Vigo": {
     "primary": "Borja Iglesias",
@@ -37,7 +365,111 @@
     "tertiary": "Marcos Alonso",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_celta_vigo_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Borja Iglesias",
+          "secondary": "Iago Aspas",
+          "tertiary": "Marcos Alonso"
+        },
+        "to": {
+          "primary": "Borja Iglesias",
+          "secondary": "Iago Aspas",
+          "tertiary": "Marcos Alonso"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_celta_vigo_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Borja Iglesias",
+      "secondary": "Iago Aspas",
+      "tertiary": "Marcos Alonso",
+      "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+    },
+    "player_ids": {}
+  },
+  "Deportivo La Coruna": {
+    "primary": "",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-10",
+    "hierarchy_status": "unknown",
+    "confidence": {
+      "primary": "low",
+      "secondary": "low",
+      "tertiary": "low"
+    },
+    "condition_note": "Newly promoted club; the 2026/27 order is not yet verified.",
+    "last_verified": {
+      "date": "2026-07-10",
+      "by": "Il Margine",
+      "method": "league_membership_audit"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [],
+    "change_log": [],
+    "flags": {
+      "carryover_from_previous_season": false,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": null,
+    "player_ids": {},
+    "source": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+    "cross_check": "Official 2026/27 league roster"
   },
   "Elche": {
     "primary": "Rafa Mir",
@@ -45,7 +477,80 @@
     "tertiary": "Aleix Febas",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_elche_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Rafa Mir",
+          "secondary": "André Silva",
+          "tertiary": "Aleix Febas"
+        },
+        "to": {
+          "primary": "Rafa Mir",
+          "secondary": "André Silva",
+          "tertiary": "Aleix Febas"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_elche_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Rafa Mir",
+      "secondary": "André Silva",
+      "tertiary": "Aleix Febas",
+      "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Espanyol": {
     "primary": "Javi Puado",
@@ -53,7 +558,80 @@
     "tertiary": "Roberto Fernandez",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_espanyol_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Javi Puado",
+          "secondary": "Kike Garcia",
+          "tertiary": "Roberto Fernandez"
+        },
+        "to": {
+          "primary": "Javi Puado",
+          "secondary": "Kike Garcia",
+          "tertiary": "Roberto Fernandez"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_espanyol_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Javi Puado",
+      "secondary": "Kike Garcia",
+      "tertiary": "Roberto Fernandez",
+      "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Getafe": {
     "primary": "Mauro Arambarri",
@@ -61,15 +639,80 @@
     "tertiary": "Martín Satriano",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
-  },
-  "Girona": {
-    "primary": "Vladyslav Vanat",
-    "secondary": "Cristhian Stuani",
-    "tertiary": "Azzedine Ounahi",
-    "last_updated": "2026-04-22",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_getafe_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Mauro Arambarri",
+          "secondary": "Borja Mayoral",
+          "tertiary": "Martín Satriano"
+        },
+        "to": {
+          "primary": "Mauro Arambarri",
+          "secondary": "Borja Mayoral",
+          "tertiary": "Martín Satriano"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_getafe_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Mauro Arambarri",
+      "secondary": "Borja Mayoral",
+      "tertiary": "Martín Satriano",
+      "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Levante": {
     "primary": "Morales",
@@ -77,15 +720,111 @@
     "tertiary": "Karl Etta Eyong",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_levante_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Morales",
+          "secondary": "Adrián De la Fuente",
+          "tertiary": "Karl Etta Eyong"
+        },
+        "to": {
+          "primary": "Morales",
+          "secondary": "Adrián De la Fuente",
+          "tertiary": "Karl Etta Eyong"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_levante_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Morales",
+      "secondary": "Adrián De la Fuente",
+      "tertiary": "Karl Etta Eyong",
+      "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
-  "Mallorca": {
-    "primary": "Vedat Muriqi",
-    "secondary": "Sergi Darder",
-    "tertiary": "Pablo Torre",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+  "Malaga": {
+    "primary": "",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-10",
+    "hierarchy_status": "unknown",
+    "confidence": {
+      "primary": "low",
+      "secondary": "low",
+      "tertiary": "low"
+    },
+    "condition_note": "Newly promoted club; the 2026/27 order is not yet verified.",
+    "last_verified": {
+      "date": "2026-07-10",
+      "by": "Il Margine",
+      "method": "league_membership_audit"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [],
+    "change_log": [],
+    "flags": {
+      "carryover_from_previous_season": false,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": null,
+    "player_ids": {},
+    "source": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+    "cross_check": "Official 2026/27 league roster"
   },
   "Osasuna": {
     "primary": "Ante Budimir",
@@ -93,7 +832,111 @@
     "tertiary": "Ruben Garcia",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_osasuna_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Ante Budimir",
+          "secondary": "Aimar Oroz",
+          "tertiary": "Ruben Garcia"
+        },
+        "to": {
+          "primary": "Ante Budimir",
+          "secondary": "Aimar Oroz",
+          "tertiary": "Ruben Garcia"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_osasuna_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Ante Budimir",
+      "secondary": "Aimar Oroz",
+      "tertiary": "Ruben Garcia",
+      "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+    },
+    "player_ids": {}
+  },
+  "Racing Santander": {
+    "primary": "",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-10",
+    "hierarchy_status": "unknown",
+    "confidence": {
+      "primary": "low",
+      "secondary": "low",
+      "tertiary": "low"
+    },
+    "condition_note": "Newly promoted club; the 2026/27 order is not yet verified.",
+    "last_verified": {
+      "date": "2026-07-10",
+      "by": "Il Margine",
+      "method": "league_membership_audit"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [],
+    "change_log": [],
+    "flags": {
+      "carryover_from_previous_season": false,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": null,
+    "player_ids": {},
+    "source": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+    "cross_check": "Official 2026/27 league roster"
   },
   "Rayo Vallecano": {
     "primary": "Isi Palazón",
@@ -101,7 +944,80 @@
     "tertiary": "Pedro Díaz",
     "last_updated": "2026-03-15",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-15",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_rayo_vallecano_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Isi Palazón",
+          "secondary": "Jorge De Frutos",
+          "tertiary": "Pedro Díaz"
+        },
+        "to": {
+          "primary": "Isi Palazón",
+          "secondary": "Jorge De Frutos",
+          "tertiary": "Pedro Díaz"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_rayo_vallecano_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Isi Palazón",
+      "secondary": "Jorge De Frutos",
+      "tertiary": "Pedro Díaz",
+      "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Real Betis": {
     "primary": "Juan Camilo Hernández",
@@ -109,7 +1025,80 @@
     "tertiary": "Antony",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_real_betis_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Juan Camilo Hernández",
+          "secondary": "Ezequiel Ávila",
+          "tertiary": "Antony"
+        },
+        "to": {
+          "primary": "Juan Camilo Hernández",
+          "secondary": "Ezequiel Ávila",
+          "tertiary": "Antony"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_real_betis_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Juan Camilo Hernández",
+      "secondary": "Ezequiel Ávila",
+      "tertiary": "Antony",
+      "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Real Madrid": {
     "primary": "Kylian Mbappe-Lottin",
@@ -117,15 +1106,80 @@
     "tertiary": "Jude Bellingham",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
-  },
-  "Real Oviedo": {
-    "primary": "Federico Vinas",
-    "secondary": "Salomon Rondon",
-    "tertiary": "Josip Brekalo",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_real_madrid_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Kylian Mbappe-Lottin",
+          "secondary": "Vinícius Júnior",
+          "tertiary": "Jude Bellingham"
+        },
+        "to": {
+          "primary": "Kylian Mbappe-Lottin",
+          "secondary": "Vinícius Júnior",
+          "tertiary": "Jude Bellingham"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_real_madrid_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Kylian Mbappe-Lottin",
+      "secondary": "Vinícius Júnior",
+      "tertiary": "Jude Bellingham",
+      "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Real Sociedad": {
     "primary": "Mikel Oyarzabal",
@@ -133,7 +1187,80 @@
     "tertiary": "Takefusa Kubo",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_real_sociedad_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Mikel Oyarzabal",
+          "secondary": "Brais Méndez",
+          "tertiary": "Takefusa Kubo"
+        },
+        "to": {
+          "primary": "Mikel Oyarzabal",
+          "secondary": "Brais Méndez",
+          "tertiary": "Takefusa Kubo"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_real_sociedad_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Mikel Oyarzabal",
+      "secondary": "Brais Méndez",
+      "tertiary": "Takefusa Kubo",
+      "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Sevilla": {
     "primary": "Akor Adams",
@@ -141,7 +1268,80 @@
     "tertiary": "Ruben Vargas",
     "last_updated": "2026-03-15",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-15",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_sevilla_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Akor Adams",
+          "secondary": "Isaac Romero",
+          "tertiary": "Ruben Vargas"
+        },
+        "to": {
+          "primary": "Akor Adams",
+          "secondary": "Isaac Romero",
+          "tertiary": "Ruben Vargas"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_sevilla_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Akor Adams",
+      "secondary": "Isaac Romero",
+      "tertiary": "Ruben Vargas",
+      "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Valencia": {
     "primary": "Largie Ramazani",
@@ -149,7 +1349,80 @@
     "tertiary": "Hugo Duro",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_valencia_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Largie Ramazani",
+          "secondary": "Pepelu",
+          "tertiary": "Hugo Duro"
+        },
+        "to": {
+          "primary": "Largie Ramazani",
+          "secondary": "Pepelu",
+          "tertiary": "Hugo Duro"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_valencia_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Largie Ramazani",
+      "secondary": "Pepelu",
+      "tertiary": "Hugo Duro",
+      "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Villarreal": {
     "primary": "Gerard Moreno",
@@ -157,6 +1430,79 @@
     "tertiary": "Daniel Parejo",
     "last_updated": "2026-04-26",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-04-26",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_villarreal_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Gerard Moreno",
+          "secondary": "Nicolas Pepe",
+          "tertiary": "Daniel Parejo"
+        },
+        "to": {
+          "primary": "Gerard Moreno",
+          "secondary": "Nicolas Pepe",
+          "tertiary": "Daniel Parejo"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_villarreal_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Gerard Moreno",
+      "secondary": "Nicolas Pepe",
+      "tertiary": "Daniel Parejo",
+      "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+    },
+    "player_ids": {}
   }
 }

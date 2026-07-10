@@ -98,6 +98,8 @@ def load_penalty_hierarchy(
 
     loaded: Dict[str, dict] = {}
     for team_name, entry in raw.items():
+        if str(team_name).startswith("_"):
+            continue
         team_key = team_key_func(team_name) if team_key_func else norm_text(team_name)
         item = dict(entry)
         item["team"] = team_name

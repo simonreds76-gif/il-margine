@@ -1,11 +1,120 @@
 {
+  "_meta": {
+    "schema_version": 2,
+    "league": {
+      "key": "epl",
+      "name": "Premier League"
+    },
+    "season": {
+      "label": "2026/27",
+      "status": "preseason"
+    },
+    "relegated": [
+      {
+        "team": "Burnley",
+        "archived_slug": "burnley",
+        "archive": "data/goalscorer/archive/2025-26/epl-penalty-takers.json"
+      },
+      {
+        "team": "West Ham",
+        "archived_slug": "west-ham",
+        "archive": "data/goalscorer/archive/2025-26/epl-penalty-takers.json"
+      },
+      {
+        "team": "Wolverhampton Wanderers",
+        "archived_slug": "wolverhampton-wanderers",
+        "archive": "data/goalscorer/archive/2025-26/epl-penalty-takers.json"
+      }
+    ],
+    "promoted": [
+      "Coventry City",
+      "Hull City",
+      "Ipswich Town"
+    ],
+    "last_verified": "2026-07-10",
+    "public_updated_at": "2026-07-10",
+    "membership_source": "https://www.premierleague.com/en/news/4675508/premier-league-fixture-schedulereleased-for-season-202627"
+  },
   "Arsenal": {
     "primary": "Bukayo Saka",
     "secondary": "Viktor Gyokeres",
     "tertiary": "Martin Odegaard",
     "last_updated": "2026-03-15",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-15",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_arsenal_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Bukayo Saka",
+          "secondary": "Viktor Gyokeres",
+          "tertiary": "Martin Odegaard"
+        },
+        "to": {
+          "primary": "Bukayo Saka",
+          "secondary": "Viktor Gyokeres",
+          "tertiary": "Martin Odegaard"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_arsenal_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Bukayo Saka",
+      "secondary": "Viktor Gyokeres",
+      "tertiary": "Martin Odegaard",
+      "archive": "data/goalscorer/archive/2025-26/epl-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Aston Villa": {
     "primary": "Ollie Watkins",
@@ -13,7 +122,80 @@
     "tertiary": "Youri Tielemans",
     "last_updated": "2026-05-13",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-05-13",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_aston_villa_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Ollie Watkins",
+          "secondary": "Emiliano Buendia",
+          "tertiary": "Youri Tielemans"
+        },
+        "to": {
+          "primary": "Ollie Watkins",
+          "secondary": "Emiliano Buendia",
+          "tertiary": "Youri Tielemans"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_aston_villa_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Ollie Watkins",
+      "secondary": "Emiliano Buendia",
+      "tertiary": "Youri Tielemans",
+      "archive": "data/goalscorer/archive/2025-26/epl-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Bournemouth": {
     "primary": "Eli Junior Kroupi",
@@ -21,7 +203,80 @@
     "tertiary": "Evanilson",
     "last_updated": "2026-03-20",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-20",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_bournemouth_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Eli Junior Kroupi",
+          "secondary": "Marcus Tavernier",
+          "tertiary": "Evanilson"
+        },
+        "to": {
+          "primary": "Eli Junior Kroupi",
+          "secondary": "Marcus Tavernier",
+          "tertiary": "Evanilson"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_bournemouth_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Eli Junior Kroupi",
+      "secondary": "Marcus Tavernier",
+      "tertiary": "Evanilson",
+      "archive": "data/goalscorer/archive/2025-26/epl-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Brentford": {
     "primary": "Thiago",
@@ -29,7 +284,80 @@
     "tertiary": "Dango Ouattara",
     "last_updated": "2026-03-15",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-15",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_brentford_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Thiago",
+          "secondary": "Kevin Schade",
+          "tertiary": "Dango Ouattara"
+        },
+        "to": {
+          "primary": "Thiago",
+          "secondary": "Kevin Schade",
+          "tertiary": "Dango Ouattara"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_brentford_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Thiago",
+      "secondary": "Kevin Schade",
+      "tertiary": "Dango Ouattara",
+      "archive": "data/goalscorer/archive/2025-26/epl-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Brighton": {
     "primary": "Danny Welbeck",
@@ -37,15 +365,80 @@
     "tertiary": "James Milner",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
-  },
-  "Burnley": {
-    "primary": "Zian Flemming",
-    "secondary": "Lyle Foster",
-    "tertiary": "Jacob Bruun Larsen",
-    "last_updated": "2026-03-15",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_brighton_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Danny Welbeck",
+          "secondary": "Matt O'Reilly",
+          "tertiary": "James Milner"
+        },
+        "to": {
+          "primary": "Danny Welbeck",
+          "secondary": "Matt O'Reilly",
+          "tertiary": "James Milner"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_brighton_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Danny Welbeck",
+      "secondary": "Matt O'Reilly",
+      "tertiary": "James Milner",
+      "archive": "data/goalscorer/archive/2025-26/epl-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Chelsea": {
     "primary": "Cole Palmer",
@@ -53,7 +446,111 @@
     "tertiary": "João Pedro",
     "last_updated": "2026-03-15",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-15",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_chelsea_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Cole Palmer",
+          "secondary": "Enzo Fernández",
+          "tertiary": "João Pedro"
+        },
+        "to": {
+          "primary": "Cole Palmer",
+          "secondary": "Enzo Fernández",
+          "tertiary": "João Pedro"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_chelsea_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Cole Palmer",
+      "secondary": "Enzo Fernández",
+      "tertiary": "João Pedro",
+      "archive": "data/goalscorer/archive/2025-26/epl-penalty-takers.json"
+    },
+    "player_ids": {}
+  },
+  "Coventry City": {
+    "primary": "",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-10",
+    "hierarchy_status": "unknown",
+    "confidence": {
+      "primary": "low",
+      "secondary": "low",
+      "tertiary": "low"
+    },
+    "condition_note": "Newly promoted club; the 2026/27 order is not yet verified.",
+    "last_verified": {
+      "date": "2026-07-10",
+      "by": "Il Margine",
+      "method": "league_membership_audit"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [],
+    "change_log": [],
+    "flags": {
+      "carryover_from_previous_season": false,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": null,
+    "player_ids": {},
+    "source": "https://www.premierleague.com/en/news/4673099/the-202627-premier-league-season-officially-starts/",
+    "cross_check": "Official 2026/27 league roster"
   },
   "Crystal Palace": {
     "primary": "Jean-Philippe Mateta",
@@ -61,7 +558,80 @@
     "tertiary": "Justin Devenny",
     "last_updated": "2026-03-15",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-15",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_crystal_palace_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Jean-Philippe Mateta",
+          "secondary": "Ismaila Sarr",
+          "tertiary": "Justin Devenny"
+        },
+        "to": {
+          "primary": "Jean-Philippe Mateta",
+          "secondary": "Ismaila Sarr",
+          "tertiary": "Justin Devenny"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_crystal_palace_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Jean-Philippe Mateta",
+      "secondary": "Ismaila Sarr",
+      "tertiary": "Justin Devenny",
+      "archive": "data/goalscorer/archive/2025-26/epl-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Everton": {
     "primary": "Iliman Ndiaye",
@@ -69,7 +639,80 @@
     "tertiary": "Thierno Barry",
     "last_updated": "2026-03-15",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-15",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_everton_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Iliman Ndiaye",
+          "secondary": "Beto",
+          "tertiary": "Thierno Barry"
+        },
+        "to": {
+          "primary": "Iliman Ndiaye",
+          "secondary": "Beto",
+          "tertiary": "Thierno Barry"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_everton_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Iliman Ndiaye",
+      "secondary": "Beto",
+      "tertiary": "Thierno Barry",
+      "archive": "data/goalscorer/archive/2025-26/epl-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Fulham": {
     "primary": "Raúl Jiménez",
@@ -77,7 +720,142 @@
     "tertiary": "Alex Iwobi",
     "last_updated": "2026-03-21",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-21",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_fulham_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Raúl Jiménez",
+          "secondary": "Harry Wilson",
+          "tertiary": "Alex Iwobi"
+        },
+        "to": {
+          "primary": "Raúl Jiménez",
+          "secondary": "Harry Wilson",
+          "tertiary": "Alex Iwobi"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_fulham_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Raúl Jiménez",
+      "secondary": "Harry Wilson",
+      "tertiary": "Alex Iwobi",
+      "archive": "data/goalscorer/archive/2025-26/epl-penalty-takers.json"
+    },
+    "player_ids": {}
+  },
+  "Hull City": {
+    "primary": "",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-10",
+    "hierarchy_status": "unknown",
+    "confidence": {
+      "primary": "low",
+      "secondary": "low",
+      "tertiary": "low"
+    },
+    "condition_note": "Newly promoted club; the 2026/27 order is not yet verified.",
+    "last_verified": {
+      "date": "2026-07-10",
+      "by": "Il Margine",
+      "method": "league_membership_audit"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [],
+    "change_log": [],
+    "flags": {
+      "carryover_from_previous_season": false,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": null,
+    "player_ids": {},
+    "source": "https://www.premierleague.com/en/news/4673099/the-202627-premier-league-season-officially-starts/",
+    "cross_check": "Official 2026/27 league roster"
+  },
+  "Ipswich Town": {
+    "primary": "",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-10",
+    "hierarchy_status": "unknown",
+    "confidence": {
+      "primary": "low",
+      "secondary": "low",
+      "tertiary": "low"
+    },
+    "condition_note": "Newly promoted club; the 2026/27 order is not yet verified.",
+    "last_verified": {
+      "date": "2026-07-10",
+      "by": "Il Margine",
+      "method": "league_membership_audit"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [],
+    "change_log": [],
+    "flags": {
+      "carryover_from_previous_season": false,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": null,
+    "player_ids": {},
+    "source": "https://www.premierleague.com/en/news/4673099/the-202627-premier-league-season-officially-starts/",
+    "cross_check": "Official 2026/27 league roster"
   },
   "Leeds": {
     "primary": "Dominic Calvert-Lewin",
@@ -85,7 +863,80 @@
     "tertiary": "Joel Piroe",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_leeds_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Dominic Calvert-Lewin",
+          "secondary": "Lukas Nmecha",
+          "tertiary": "Joel Piroe"
+        },
+        "to": {
+          "primary": "Dominic Calvert-Lewin",
+          "secondary": "Lukas Nmecha",
+          "tertiary": "Joel Piroe"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_leeds_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Dominic Calvert-Lewin",
+      "secondary": "Lukas Nmecha",
+      "tertiary": "Joel Piroe",
+      "archive": "data/goalscorer/archive/2025-26/epl-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Liverpool": {
     "primary": "Mohamed Salah",
@@ -93,7 +944,80 @@
     "tertiary": "Alexis Mac Allister",
     "last_updated": "2026-03-15",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-15",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_liverpool_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Mohamed Salah",
+          "secondary": "Dominik Szoboszlai",
+          "tertiary": "Alexis Mac Allister"
+        },
+        "to": {
+          "primary": "Mohamed Salah",
+          "secondary": "Dominik Szoboszlai",
+          "tertiary": "Alexis Mac Allister"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_liverpool_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Mohamed Salah",
+      "secondary": "Dominik Szoboszlai",
+      "tertiary": "Alexis Mac Allister",
+      "archive": "data/goalscorer/archive/2025-26/epl-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Manchester City": {
     "primary": "Erling Haaland",
@@ -101,7 +1025,80 @@
     "tertiary": "Phil Foden",
     "last_updated": "2026-03-15",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-15",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_manchester_city_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Erling Haaland",
+          "secondary": "Omar Marmoush",
+          "tertiary": "Phil Foden"
+        },
+        "to": {
+          "primary": "Erling Haaland",
+          "secondary": "Omar Marmoush",
+          "tertiary": "Phil Foden"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_manchester_city_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Erling Haaland",
+      "secondary": "Omar Marmoush",
+      "tertiary": "Phil Foden",
+      "archive": "data/goalscorer/archive/2025-26/epl-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Manchester United": {
     "primary": "Bruno Fernandes",
@@ -109,7 +1106,80 @@
     "tertiary": "Matheus Cunha",
     "last_updated": "2026-03-15",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-15",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_manchester_united_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Bruno Fernandes",
+          "secondary": "Bryan Mbeumo",
+          "tertiary": "Matheus Cunha"
+        },
+        "to": {
+          "primary": "Bruno Fernandes",
+          "secondary": "Bryan Mbeumo",
+          "tertiary": "Matheus Cunha"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_manchester_united_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Bruno Fernandes",
+      "secondary": "Bryan Mbeumo",
+      "tertiary": "Matheus Cunha",
+      "archive": "data/goalscorer/archive/2025-26/epl-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Newcastle United": {
     "primary": "Anthony Gordon",
@@ -117,7 +1187,80 @@
     "tertiary": "Harvey Barnes",
     "last_updated": "2026-03-15",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-15",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_newcastle_united_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Anthony Gordon",
+          "secondary": "Bruno Guimarães",
+          "tertiary": "Harvey Barnes"
+        },
+        "to": {
+          "primary": "Anthony Gordon",
+          "secondary": "Bruno Guimarães",
+          "tertiary": "Harvey Barnes"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_newcastle_united_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Anthony Gordon",
+      "secondary": "Bruno Guimarães",
+      "tertiary": "Harvey Barnes",
+      "archive": "data/goalscorer/archive/2025-26/epl-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Nottingham Forest": {
     "primary": "Chris Wood",
@@ -125,7 +1268,80 @@
     "tertiary": "Igor Jesus",
     "last_updated": "2026-05-05",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-05-05",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_nottingham_forest_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Chris Wood",
+          "secondary": "Morgan Gibbs-White",
+          "tertiary": "Igor Jesus"
+        },
+        "to": {
+          "primary": "Chris Wood",
+          "secondary": "Morgan Gibbs-White",
+          "tertiary": "Igor Jesus"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_nottingham_forest_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Chris Wood",
+      "secondary": "Morgan Gibbs-White",
+      "tertiary": "Igor Jesus",
+      "archive": "data/goalscorer/archive/2025-26/epl-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Sunderland": {
     "primary": "Habib Diarra",
@@ -133,7 +1349,80 @@
     "tertiary": "Patrick Roberts",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_sunderland_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Habib Diarra",
+          "secondary": "Enzo Le Fee",
+          "tertiary": "Patrick Roberts"
+        },
+        "to": {
+          "primary": "Habib Diarra",
+          "secondary": "Enzo Le Fee",
+          "tertiary": "Patrick Roberts"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_sunderland_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Habib Diarra",
+      "secondary": "Enzo Le Fee",
+      "tertiary": "Patrick Roberts",
+      "archive": "data/goalscorer/archive/2025-26/epl-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Tottenham": {
     "primary": "Dominic Solanke",
@@ -141,22 +1430,79 @@
     "tertiary": "Richarlison",
     "last_updated": "2026-03-15",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
-  },
-  "West Ham": {
-    "primary": "Jarrod Bowen",
-    "secondary": "Callum Wilson",
-    "tertiary": "Valentín Castellanos",
-    "last_updated": "2026-03-18",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
-  },
-  "Wolverhampton Wanderers": {
-    "primary": "Hee-Chan Hwang",
-    "secondary": "Tolu Arokodare",
-    "tertiary": "Jhon Arias",
-    "last_updated": "2026-03-15",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-15",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_tottenham_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Dominic Solanke",
+          "secondary": "Mathys Tel",
+          "tertiary": "Richarlison"
+        },
+        "to": {
+          "primary": "Dominic Solanke",
+          "secondary": "Mathys Tel",
+          "tertiary": "Richarlison"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_tottenham_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Dominic Solanke",
+      "secondary": "Mathys Tel",
+      "tertiary": "Richarlison",
+      "archive": "data/goalscorer/archive/2025-26/epl-penalty-takers.json"
+    },
+    "player_ids": {}
   }
 }

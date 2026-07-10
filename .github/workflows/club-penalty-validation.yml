@@ -1,0 +1,34 @@
+name: Club Penalty Page Validation
+
+on:
+  pull_request:
+    paths:
+      - "data/goalscorer/*-penalty-takers.json"
+      - "data/goalscorer/archive/**"
+      - "data/goalscorer/club-penalty-season.json"
+      - "scripts/goalscorer_penalty_utils.py"
+      - "scripts/rollover-club-penalty-season.py"
+      - "scripts/validate-club-penalty-pages.py"
+      - "src/app/penalty-takers/**"
+      - "src/app/resources/page.tsx"
+      - "src/app/sitemap.ts"
+      - "src/components/ClubPenaltyLeagueLinks.tsx"
+      - "src/lib/club-penalty-takers.ts"
+      - "src/lib/project-file-paths.ts"
+      - ".github/workflows/club-penalty-validation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate club penalty data and routes
+        run: python scripts/validate-club-penalty-pages.py

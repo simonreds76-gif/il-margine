@@ -1,499 +1,164 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import Footer from "@/components/Footer";
 import PageHomeLink from "@/components/PageHomeLink";
+import type { ClubPenaltyLeague, ClubPenaltySeason } from "@/lib/club-penalty-takers";
 
-type TeamEntry = {
-  team: string;
-  slug: string;
-  primary: string;
-  secondary: string;
-  tertiary: string;
-  lastUpdated: string;
-  lastUpdatedLabel: string;
-  logoPath: string;
-  initials: string;
+type Props = { leagues: ClubPenaltyLeague[]; totalTeams: number; season: ClubPenaltySeason };
+
+const FEATURED: Record<string, string[]> = {
+  epl: ["Arsenal", "Chelsea", "Liverpool", "Manchester City", "Manchester United"],
+  "serie-a": ["AC Milan", "Inter", "Juventus", "Napoli", "Roma"],
+  "la-liga": ["Atletico Madrid", "Barcelona", "Real Madrid", "Real Betis", "Villarreal"],
+  bundesliga: ["Bayern Munich", "Borussia Dortmund", "Bayer Leverkusen", "RasenBallsport Leipzig", "Eintracht Frankfurt"],
+  "ligue-1": ["Paris Saint Germain", "Marseille", "Monaco", "Lyon", "Lille"],
 };
 
-type LeagueEntry = {
-  key: string;
-  label: string;
-  short: string;
-  teamCount: number;
-  subtitle: string;
-  logoPath: string;
-  tabClasses: string;
-  cardGlowClasses: string;
-  heading: string;
-  intro: string;
-  teams: TeamEntry[];
-};
-
-type Props = {
-  leagues: LeagueEntry[];
-  totalTeams: number;
-  currentSeason: string;
-  lastUpdatedLabel: string;
-  lastUpdatedIso: string;
-  recentChanges: {
-    team: string;
-    slug: string;
-    leagueKey: string;
-    leagueLabel: string;
-    leagueShort: string;
-    leagueLogoPath: string;
-    primary: string;
-    secondary: string;
-    lastUpdated: string;
-    lastUpdatedLabel: string;
-    logoPath: string;
-    initials: string;
-  }[];
-};
-
-function getLeagueDotClass(leagueKey: string): string {
-  switch (leagueKey) {
-    case "serie-a":
-      return "bg-emerald-400";
-    case "epl":
-      return "bg-indigo-400";
-    case "la-liga":
-      return "bg-amber-400";
-    case "bundesliga":
-      return "bg-rose-400";
-    case "ligue-1":
-      return "bg-cyan-400";
-    default:
-      return "bg-slate-500";
-  }
-}
-
-function getLeagueRecentClasses(leagueKey: string): string {
-  switch (leagueKey) {
-    case "serie-a":
-      return "border-emerald-400/20 bg-emerald-400/8 text-emerald-200";
-    case "epl":
-      return "border-indigo-400/20 bg-indigo-400/8 text-indigo-200";
-    case "la-liga":
-      return "border-amber-400/20 bg-amber-400/8 text-amber-100";
-    case "bundesliga":
-      return "border-rose-400/20 bg-rose-400/8 text-rose-100";
-    case "ligue-1":
-      return "border-cyan-400/20 bg-cyan-400/8 text-cyan-100";
-    default:
-      return "border-slate-700/60 bg-slate-800/60 text-slate-300";
-  }
-}
-
-function RecentChangeCrest({
-  logoPath,
-  team,
-  initials,
-  leagueLogoPath,
-  leagueLabel,
-  leagueShort,
-}: {
-  logoPath: string;
-  team: string;
-  initials: string;
-  leagueLogoPath: string;
-  leagueLabel: string;
-  leagueShort: string;
-}) {
+function Crest({ src, label, fallback, large = false }: { src: string; label: string; fallback: string; large?: boolean }) {
   return (
-    <div className="relative flex h-14 w-16 shrink-0 items-center">
-      <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl border border-slate-700/75 bg-slate-950/80 shadow-[0_10px_24px_rgba(0,0,0,0.22)]">
-        {logoPath ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={logoPath} alt={`${team} crest`} className="h-8 w-8 object-contain" />
-        ) : (
-          <span className="font-mono text-[11px] font-semibold tracking-tight text-slate-300">{initials}</span>
-        )}
-      </div>
-      <div className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center overflow-hidden rounded-xl border border-white/70 bg-gradient-to-b from-white to-slate-100 shadow-[0_8px_18px_rgba(0,0,0,0.28)]">
-        {leagueLogoPath ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={leagueLogoPath} alt={leagueLabel} className="h-[18px] w-[18px] object-contain" />
-        ) : (
-          <span className="font-mono text-[9px] font-bold text-slate-700">{leagueShort}</span>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function Crest({
-  logoPath,
-  team,
-  initials,
-  size = "club",
-}: {
-  logoPath: string;
-  team: string;
-  initials: string;
-  size?: "club" | "league";
-}) {
-  const wrapperClass =
-    size === "league"
-      ? "flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-300/70 bg-gradient-to-b from-white to-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]"
-      : "flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-700/80 bg-slate-900/85";
-  const imageClass = size === "league" ? "h-7 w-7 object-contain" : "h-6 w-6 object-contain";
-
-  return (
-    <div className={wrapperClass}>
-      {logoPath ? (
+    <div className={`${large ? "h-14 w-14 rounded-2xl" : "h-9 w-9 rounded-xl"} flex shrink-0 items-center justify-center overflow-hidden border border-white/10 bg-white shadow-[0_10px_30px_rgba(0,0,0,0.22)]`}>
+      {src ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={logoPath} alt={team} className={imageClass} />
+        <img src={src} alt={`${label} logo`} className={`${large ? "h-10 w-10" : "h-6 w-6"} object-contain`} />
       ) : (
-        <span className="font-mono text-[11px] font-semibold tracking-tight text-slate-400">{initials}</span>
+        <span className="font-mono text-[10px] font-bold text-slate-700">{fallback}</span>
       )}
     </div>
   );
 }
 
-function TeamCard({ team, league }: { team: TeamEntry; league: LeagueEntry }) {
-  const anchorId = `${league.key}-${team.slug}`;
-  const teamPath = `/penalty-takers/${league.key}/${team.slug}`;
-  const takers = [
-    { label: "First choice", value: team.primary, tier: "1" as const },
-    { label: "Second choice", value: team.secondary, tier: "2" as const },
-    { label: "Third choice", value: team.tertiary, tier: "3" as const },
-  ].filter((taker) => taker.value);
+function LeagueCard({ league, season }: { league: ClubPenaltyLeague; season: ClubPenaltySeason }) {
+  const featured = (FEATURED[league.key] ?? [])
+    .map((name) => league.teams.find((team) => team.team === name))
+    .filter((team): team is ClubPenaltyLeague["teams"][number] => Boolean(team));
+  const unverified = league.teams.filter((team) => team.hierarchyStatus === "unknown").length;
 
   return (
-    <article
-      className={`group scroll-mt-28 rounded-xl border border-slate-800/70 bg-slate-900/55 p-5 shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition hover:-translate-y-0.5 hover:border-slate-700 hover:bg-slate-900/80 ${league.cardGlowClasses}`}
-    >
-      <div className="mb-3.5 flex items-start gap-3 border-b border-slate-800/70 pb-3.5">
-        <Crest logoPath={team.logoPath} team={team.team} initials={team.initials} />
-        <div className="min-w-0 flex-1 pt-0.5">
-          <h3 id={anchorId} className="scroll-mt-28 truncate text-[15px] font-semibold tracking-[0.01em] text-slate-100">
-            <Link href={teamPath} className="transition hover:text-emerald-400">
-              {team.team}
-            </Link>
-          </h3>
-          {team.lastUpdated ? (
-            <p className="mt-1 text-[11px] font-mono uppercase tracking-[0.14em] text-slate-500">
-              Updated {team.lastUpdatedLabel || team.lastUpdated}
-            </p>
-          ) : null}
-        </div>
-      </div>
-
-      <div className="space-y-1">
-        {takers.map((taker) => (
-          <div key={`${team.team}-${taker.label}`} className="grid grid-cols-[30px_minmax(0,1fr)_auto] items-center gap-3 py-2">
-            <div
-              className={
-                taker.tier === "1"
-                  ? "flex h-7 w-7 items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/10 font-mono text-[11px] font-semibold text-emerald-300"
-                  : taker.tier === "2"
-                    ? "flex h-7 w-7 items-center justify-center rounded-lg border border-slate-700/80 bg-slate-950/80 font-mono text-[11px] font-semibold text-slate-300"
-                    : "flex h-7 w-7 items-center justify-center rounded-lg border border-slate-700/80 bg-slate-950/70 font-mono text-[11px] font-semibold text-slate-300"
-              }
-            >
-              {taker.tier}
+    <article className="group relative overflow-hidden rounded-[28px] border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_18px_55px_rgba(0,0,0,0.2)] transition hover:-translate-y-0.5 hover:border-slate-700 sm:p-6">
+      <div className={`pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-r ${league.surface} opacity-70`} />
+      <div className="relative">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <Crest src={league.logoPath} label={league.label} fallback={league.short} large />
+            <div>
+              <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-slate-400">{season.label} board</div>
+              <h2 className="mt-1 text-xl font-semibold tracking-tight text-slate-100">{league.label}</h2>
             </div>
-            <span
-              className={
-                taker.tier === "1"
-                  ? "truncate text-[14px] font-medium text-slate-100"
-                  : taker.tier === "2"
-                    ? "truncate text-[14px] text-slate-300"
-                    : "truncate text-[14px] text-slate-300"
-              }
-            >
-              {taker.value}
-            </span>
-            <span
-              className={
-                taker.tier === "1"
-                  ? "rounded-md bg-emerald-500/10 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-emerald-300"
-                  : taker.tier === "2"
-                    ? "rounded-md bg-slate-950/80 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-slate-400"
-                    : "rounded-md bg-slate-950/70 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-slate-400"
-              }
-            >
-              {taker.label}
-            </span>
           </div>
-        ))}
-      </div>
+          <span className="rounded-full border border-amber-300/20 bg-amber-400/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.16em] text-amber-100">Preseason</span>
+        </div>
 
-      <Link
-        href={teamPath}
-        className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1.5 text-xs font-semibold text-emerald-100 transition hover:border-emerald-300/35 hover:bg-emerald-400/15"
-      >
-        Open {team.team} page <span aria-hidden="true">-&gt;</span>
-      </Link>
+        <p className="mt-4 text-sm leading-6 text-slate-400">{league.copy}</p>
+
+        <div className="mt-5 grid grid-cols-3 gap-2">
+          <div className="rounded-2xl border border-slate-800 bg-slate-950/65 p-3">
+            <div className="font-mono text-[9px] uppercase tracking-[0.17em] text-slate-500">Clubs</div>
+            <div className="mt-1 text-lg font-semibold text-slate-100">{league.teams.length}</div>
+          </div>
+          <div className="rounded-2xl border border-slate-800 bg-slate-950/65 p-3">
+            <div className="font-mono text-[9px] uppercase tracking-[0.17em] text-slate-500">New</div>
+            <div className="mt-1 text-lg font-semibold text-amber-200">{unverified}</div>
+          </div>
+          <div className="rounded-2xl border border-slate-800 bg-slate-950/65 p-3">
+            <div className="font-mono text-[9px] uppercase tracking-[0.17em] text-slate-500">Archived</div>
+            <div className="mt-1 text-lg font-semibold text-slate-300">{league.archivedTeams.length}</div>
+          </div>
+        </div>
+
+        <div className="mt-5 space-y-2">
+          {featured.slice(0, 4).map((team) => (
+            <Link key={team.relativeUrl} href={team.relativeUrl} className="flex items-center gap-3 rounded-xl border border-slate-800/80 bg-slate-950/45 px-3 py-2 transition hover:border-slate-700 hover:bg-slate-950/80">
+              <Crest src={team.logoPath} label={team.team} fallback={team.initials} />
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-sm font-medium text-slate-100">{team.team}</span>
+                <span className="block truncate text-xs text-slate-500">{team.primary}</span>
+              </span>
+              <span className="text-slate-600" aria-hidden="true">-&gt;</span>
+            </Link>
+          ))}
+        </div>
+
+        <Link href={`/penalty-takers/${league.key}`} className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-400/25 bg-emerald-400/10 px-4 py-3 text-sm font-semibold text-emerald-100 transition hover:border-emerald-300/40 hover:bg-emerald-400/15">
+          View every {league.label} club <span aria-hidden="true">-&gt;</span>
+        </Link>
+      </div>
     </article>
   );
 }
 
-export default function PenaltyTakersClient({
-  leagues,
-  totalTeams,
-  currentSeason,
-  lastUpdatedLabel,
-  lastUpdatedIso,
-  recentChanges,
-}: Props) {
+export default function PenaltyTakersClient({ leagues, totalTeams, season }: Props) {
+  const archivedCount = leagues.reduce((sum, league) => sum + league.archivedTeams.length, 0);
+
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      <main className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
         <section className="pt-6">
-          <Link
-            href="/penalty-takers/world-cup-2026"
-            className="group block overflow-hidden rounded-[26px] border border-amber-400/20 bg-[linear-gradient(135deg,rgba(20,18,12,0.98),rgba(16,18,24,0.98))] p-5 shadow-[0_18px_50px_rgba(0,0,0,0.18)] transition hover:-translate-y-0.5 hover:border-amber-300/35"
-          >
+          <Link href="/penalty-takers/world-cup-2026" className="group block overflow-hidden rounded-[26px] border border-amber-400/20 bg-[linear-gradient(135deg,rgba(20,18,12,0.98),rgba(16,18,24,0.98))] p-5 transition hover:border-amber-300/35">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-start gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-amber-400/20 bg-amber-500/10 text-amber-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+              <div className="flex items-center gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-amber-400/20 bg-amber-500/10">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/world-cup-2026-logo.png"
-                    alt="FIFA World Cup 2026 logo"
-                    className="h-10 w-10 object-contain"
-                  />
+                  <img src="/world-cup-2026-logo.png" alt="FIFA World Cup 2026 logo" className="h-10 w-10 object-contain" />
                 </div>
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-sm font-semibold text-slate-100">World Cup 2026 Penalty Takers</span>
-                    <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-300">
-                      New
-                    </span>
-                  </div>
-                  <p className="mt-1 text-sm leading-6 text-slate-400">
-                    All qualified nations, full hierarchy, country pages built for tournament search.
-                  </p>
-                  <div className="mt-2 inline-flex items-center rounded-full border border-amber-300/20 bg-amber-400/8 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-amber-100">
-                    11 Jun to 19 Jul 2026
-                  </div>
+                <div>
+                  <div className="text-sm font-semibold text-slate-100">World Cup 2026 penalty takers</div>
+                  <p className="mt-1 text-sm text-slate-400">The live 48-nation evidence file remains available throughout the tournament.</p>
                 </div>
               </div>
-              <div className="inline-flex items-center gap-2 text-sm font-medium text-amber-200 transition group-hover:translate-x-0.5 group-hover:text-amber-100">
-                <span>Open World Cup board</span>
-                <span aria-hidden="true">→</span>
-              </div>
+              <span className="text-sm font-medium text-amber-200">Open World Cup board -&gt;</span>
             </div>
           </Link>
         </section>
 
-        <section className="border-b border-slate-800/50 pt-6 pb-12 md:pt-6 md:pb-16">
-          <div className="max-w-4xl">
-            <PageHomeLink className="mb-8" />
-            <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">IL MARGINE INTELLIGENCE</span>
-            <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4">
-              Penalty Takers <span className="text-emerald-400">{currentSeason}</span>
-            </h1>
-            <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed">
-              First, second and third-choice penalty takers for every club in Europe&apos;s top five leagues.
-              Built as a live intelligence file for bettors, fantasy players and anyone who needs the full hierarchy,
-              not a stale one-name list from August.
-            </p>
-
-            <div className="mt-8 grid gap-3 sm:grid-cols-3">
-              <div className="rounded-xl border border-slate-800/60 bg-slate-900/60 p-5">
-                <div className="font-mono text-3xl font-semibold text-emerald-400">{totalTeams}</div>
-                <div className="mt-1 text-sm text-slate-400">Teams tracked</div>
-              </div>
-              <div className="rounded-xl border border-slate-800/60 bg-slate-900/60 p-5">
-                <div className="font-mono text-3xl font-semibold text-emerald-400">{leagues.length}</div>
-                <div className="mt-1 text-sm text-slate-400">Leagues covered</div>
-              </div>
-              <div className="rounded-xl border border-slate-800/60 bg-slate-900/60 p-5">
-                <div className="font-mono text-3xl font-semibold text-emerald-400">{currentSeason}</div>
-                <div className="mt-1 text-sm text-slate-400">Current season</div>
-              </div>
-            </div>
-
-            <div className="mt-5 inline-flex flex-wrap items-center gap-2 rounded-2xl border border-slate-800/70 bg-slate-900/65 px-4 py-3 text-xs text-slate-300">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70 opacity-75" />
-                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
-              </span>
-              <span className="font-mono uppercase tracking-[0.18em] text-emerald-300">Latest file edit</span>
-              <time dateTime={lastUpdatedIso || undefined}>{lastUpdatedLabel || "Live"}</time>
-            </div>
-          </div>
-        </section>
-
-        <section className="mt-8 rounded-[28px] border border-slate-800/70 bg-slate-900/55 p-6 shadow-[0_12px_40px_rgba(0,0,0,0.16)]">
-          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-            <div>
-              <div className="font-mono text-xs uppercase tracking-[0.24em] text-emerald-400">Recent changes</div>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Latest hierarchy updates</h2>
-              <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-400">
-                The newest team-level edits and re-checks across the five leagues, pulled from the latest club files rather than a full-page reset.
+        <section className="pt-8 pb-12 md:pb-16">
+          <PageHomeLink className="mb-8" />
+          <div className="relative overflow-hidden rounded-[34px] border border-slate-800/80 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_38%),linear-gradient(150deg,#07100f,#0f1722_58%,#11131b)] p-6 sm:p-9 lg:p-11">
+            <div className="max-w-4xl">
+              <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Il Margine intelligence</div>
+              <h1 className="mt-4 text-4xl font-semibold tracking-[-0.035em] text-slate-100 sm:text-6xl">
+                Club penalty takers <span className="text-emerald-400">{season.label}</span>
+              </h1>
+              <p className="mt-5 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
+                Five dedicated league boards, {totalTeams} current clubs and honest preseason status. Final {season.previous_label} orders are carried forward only as a starting point, then re-verified from real penalties and lineup context.
               </p>
+              <div className="mt-7 flex flex-wrap gap-2">
+                <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-200">{totalTeams} current clubs</span>
+                <span className="rounded-full border border-amber-300/20 bg-amber-400/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-amber-100">Preseason verification</span>
+                <span className="rounded-full border border-slate-700 bg-slate-950/60 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-slate-300">{archivedCount} relegated records retained</span>
+              </div>
             </div>
-            <div className="text-right">
-              <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-slate-500">Freshest edit</div>
-              <div className="mt-1 text-sm text-slate-300">{lastUpdatedLabel || "Live"}</div>
-            </div>
-          </div>
-
-          <div className="mt-6 overflow-hidden rounded-2xl border border-slate-800/80 bg-slate-950/70">
-            {recentChanges.map((change, index) => (
-              <Link
-                key={`${change.leagueKey}-${change.slug}-${change.lastUpdated}`}
-                href={`/penalty-takers/${change.leagueKey}/${change.slug}`}
-                className={`group block px-4 py-4 transition hover:bg-slate-900/85 sm:px-5 ${index > 0 ? "border-t border-slate-800/80" : ""}`}
-              >
-                <div className="flex items-center gap-4">
-                  <RecentChangeCrest
-                    logoPath={change.logoPath}
-                    team={change.team}
-                    initials={change.initials}
-                    leagueLogoPath={change.leagueLogoPath}
-                    leagueLabel={change.leagueLabel}
-                    leagueShort={change.leagueShort}
-                  />
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <time
-                        dateTime={change.lastUpdated || undefined}
-                        className="font-mono text-[11px] uppercase tracking-[0.16em] text-slate-500"
-                      >
-                        {change.lastUpdatedLabel}
-                      </time>
-                      <span className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] ${getLeagueRecentClasses(change.leagueKey)}`}>
-                        <span className={`h-1.5 w-1.5 rounded-full ${getLeagueDotClass(change.leagueKey)}`} />
-                        {change.leagueLabel}
-                      </span>
-                    </div>
-                    <div className="mt-1.5 flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
-                      <strong className="truncate text-[15px] font-semibold text-slate-100 transition group-hover:text-emerald-300">
-                        {change.team}
-                      </strong>
-                      <span className="hidden text-slate-600 sm:inline">/</span>
-                      <span className="min-w-0 text-sm text-slate-300">
-                        <span>{change.primary}</span>
-                        {change.secondary && change.secondary !== "TBC" ? (
-                          <>
-                            <span className="mx-2 text-slate-600">→</span>
-                            <span className="text-slate-400">{change.secondary}</span>
-                          </>
-                        ) : null}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-700/70 bg-slate-950/70 text-slate-500 transition group-hover:border-emerald-400/30 group-hover:text-emerald-300 sm:flex">
-                    <span aria-hidden="true">→</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
           </div>
         </section>
 
-        <div className="sticky top-0 z-20 -mx-4 my-10 border-y border-slate-800/70 bg-[#0f1117]/95 px-4 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-          <nav aria-label="League jump links" className="flex overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-            {leagues.map((league) => (
-              <a
-                key={league.key}
-                href={`#${league.key}`}
-                className={`relative whitespace-nowrap border-b-2 px-5 py-4 text-sm font-medium transition ${league.tabClasses} hover:bg-slate-900/40 hover:text-slate-100`}
-              >
-                <span className="mr-2 inline-flex h-5 w-5 items-center justify-center overflow-hidden rounded-md border border-slate-300/70 bg-gradient-to-b from-white to-slate-100 align-middle shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={league.logoPath} alt={league.label} className="h-3.5 w-3.5 object-contain" />
-                </span>
-                {league.label}
-              </a>
-            ))}
-          </nav>
-        </div>
+        <section>
+          <div className="mb-6 max-w-3xl">
+            <div className="font-mono text-xs uppercase tracking-[0.25em] text-emerald-400">Choose a league</div>
+            <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-100">Every league now has its own indexable board</h2>
+            <p className="mt-3 text-sm leading-7 text-slate-400">The main page is an overview. Full club tables live on dedicated league pages so users and search engines do not have to navigate five duplicate sections.</p>
+          </div>
+          <div className="grid gap-5 lg:grid-cols-2">
+            {leagues.map((league) => <LeagueCard key={league.key} league={league} season={season} />)}
+          </div>
+        </section>
 
-        <section className="space-y-16">
-          {leagues.map((league) => (
-            <section key={league.key} id={league.key} className="scroll-mt-28">
-              <div className="mb-7 flex items-center gap-4">
-                <Crest logoPath={league.logoPath} team={league.label} initials={league.short} size="league" />
-                <div>
-                  <h2 className="text-3xl font-semibold tracking-tight text-slate-100">{league.heading}</h2>
-                  <p className="text-sm text-slate-500">{league.subtitle}</p>
-                </div>
-              </div>
-
-              <div className="mb-8 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-                <div className="lg:max-w-4xl">
-                  <p className="text-[15px] leading-7 text-slate-300">{league.intro}</p>
-                </div>
-                <div className="rounded-2xl border border-slate-800/70 bg-slate-900/50 p-4">
-                  <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-emerald-400">Jump to team</div>
-                  <div className="mt-3 flex flex-wrap items-center text-sm leading-6 text-slate-400">
-                    {league.teams.map((team, index) => (
-                      <div key={`jump-${league.key}-${team.slug}`} className="contents">
-                        <a
-                          href={`#${league.key}-${team.slug}`}
-                          className="py-0.5 transition hover:text-emerald-300"
-                        >
-                          {team.team}
-                        </a>
-                        {index < league.teams.length - 1 ? (
-                          <span className="px-2 text-slate-600">·</span>
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-                {league.teams.map((team) => (
-                  <TeamCard key={`${league.key}-${team.slug}`} team={team} league={league} />
-                ))}
-              </div>
-            </section>
+        <section className="mt-10 grid gap-4 md:grid-cols-3">
+          {[
+            ["Carryover is labelled", `A ${season.previous_label} order is not presented as fresh ${season.label} evidence.`],
+            ["Real events move the order", "Penalties, misses, who was on the pitch and explicit hierarchy comments matter more than reputation."],
+            ["No automatic claims", "Promoted clubs remain unverified until the evidence supports a public hierarchy."],
+          ].map(([title, body]) => (
+            <div key={title} className="rounded-2xl border border-slate-800 bg-slate-900/55 p-5">
+              <h2 className="font-semibold text-slate-100">{title}</h2>
+              <p className="mt-2 text-sm leading-6 text-slate-400">{body}</p>
+            </div>
           ))}
         </section>
-
-        <section className="mt-14 border-t border-slate-800/50 py-10">
-          <div className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="rounded-xl border border-slate-800/60 bg-slate-900/55 p-6">
-              <div className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-400">Using the hierarchy</div>
-              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-100">Why the full order matters</h2>
-              <p className="mt-4 text-[15px] leading-7 text-slate-300">
-                The first name is the current likeliest taker. The second and third names matter when the regular
-                taker is benched, suspended, injured or substituted. That is usually where a quick one-name list
-                stops being useful.
-              </p>
-            </div>
-
-            <div className="rounded-xl border border-slate-800/60 bg-slate-900/55 p-6">
-              <div className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-400">When it changes</div>
-              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-100">Only on real evidence</h2>
-              <p className="mt-4 text-[15px] leading-7 text-slate-300">
-                We only move a team when the hierarchy actually changes on the pitch or in the squad context:
-                penalties taken, penalties missed, injuries, suspensions, transfers, coach decisions or strong
-                league-specific signals.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-5 px-1 text-sm leading-6 text-slate-400">
-            Need the international board too?{" "}
-            <Link
-              href="/penalty-takers/world-cup-2026"
-              className="border-b border-emerald-500/30 text-emerald-400 hover:text-emerald-300"
-            >
-              World Cup 2026 penalty takers
-            </Link>
-            .{" "}
-          </div>
-
-          <div className="mt-2 px-1 text-sm leading-6 text-slate-400">
-            Spot an error or a hierarchy shift?{" "}
-            <a href="mailto:contact@ilmargine.bet" className="border-b border-emerald-500/30 text-emerald-400 hover:text-emerald-300">
-              Let us know
-            </a>{" "}
-            and we&apos;ll tighten the file.
-          </div>
+        <section className="mt-8 rounded-3xl border border-emerald-400/18 bg-emerald-400/6 p-5 sm:p-6">
+          <h2 className="text-xl font-semibold text-slate-100">How these orders are verified</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">Read the rules for in-match penalties, absences, shootouts, misses, corrections and human approval.</p>
+          <Link href="/penalty-takers/methodology" className="mt-4 inline-flex text-sm font-semibold text-emerald-300 hover:text-emerald-200">Read the methodology -&gt;</Link>
         </section>
       </main>
-
       <Footer />
     </div>
   );
 }
-

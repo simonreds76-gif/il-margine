@@ -1,11 +1,114 @@
 {
+  "_meta": {
+    "schema_version": 2,
+    "league": {
+      "key": "ligue-1",
+      "name": "Ligue 1"
+    },
+    "season": {
+      "label": "2026/27",
+      "status": "preseason"
+    },
+    "relegated": [
+      {
+        "team": "Metz",
+        "archived_slug": "metz",
+        "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+      },
+      {
+        "team": "Nantes",
+        "archived_slug": "nantes",
+        "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+      }
+    ],
+    "promoted": [
+      "Le Mans",
+      "Troyes"
+    ],
+    "last_verified": "2026-07-10",
+    "public_updated_at": "2026-07-10",
+    "membership_source": "https://ligue1.com/en/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released"
+  },
   "Angers": {
     "primary": "Goduine Koyalipou",
     "secondary": "Branco van den Boomen",
     "tertiary": "Amine Sbaï",
     "last_updated": "2026-05-05",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-05-05",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_angers_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Goduine Koyalipou",
+          "secondary": "Branco van den Boomen",
+          "tertiary": "Amine Sbaï"
+        },
+        "to": {
+          "primary": "Goduine Koyalipou",
+          "secondary": "Branco van den Boomen",
+          "tertiary": "Amine Sbaï"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_angers_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Goduine Koyalipou",
+      "secondary": "Branco van den Boomen",
+      "tertiary": "Amine Sbaï",
+      "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Auxerre": {
     "primary": "Lassine Sinayoko",
@@ -13,7 +116,80 @@
     "tertiary": "",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_auxerre_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Lassine Sinayoko",
+          "secondary": "Josue Casimir",
+          "tertiary": ""
+        },
+        "to": {
+          "primary": "Lassine Sinayoko",
+          "secondary": "Josue Casimir",
+          "tertiary": ""
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_auxerre_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Lassine Sinayoko",
+      "secondary": "Josue Casimir",
+      "tertiary": "",
+      "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Brest": {
     "primary": "Romain Del Castillo",
@@ -21,7 +197,80 @@
     "tertiary": "Ludovic Ajorque",
     "last_updated": "2026-05-13",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-05-13",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_brest_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Romain Del Castillo",
+          "secondary": "Kenny Lala",
+          "tertiary": "Ludovic Ajorque"
+        },
+        "to": {
+          "primary": "Romain Del Castillo",
+          "secondary": "Kenny Lala",
+          "tertiary": "Ludovic Ajorque"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_brest_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Romain Del Castillo",
+      "secondary": "Kenny Lala",
+      "tertiary": "Ludovic Ajorque",
+      "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Le Havre": {
     "primary": "Yanis Zouaoui",
@@ -29,7 +278,111 @@
     "tertiary": "Abdoulaye Toure",
     "last_updated": "2026-04-27",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-04-27",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_le_havre_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Yanis Zouaoui",
+          "secondary": "Issa Soumare",
+          "tertiary": "Abdoulaye Toure"
+        },
+        "to": {
+          "primary": "Yanis Zouaoui",
+          "secondary": "Issa Soumare",
+          "tertiary": "Abdoulaye Toure"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_le_havre_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Yanis Zouaoui",
+      "secondary": "Issa Soumare",
+      "tertiary": "Abdoulaye Toure",
+      "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+    },
+    "player_ids": {}
+  },
+  "Le Mans": {
+    "primary": "",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-10",
+    "hierarchy_status": "unknown",
+    "confidence": {
+      "primary": "low",
+      "secondary": "low",
+      "tertiary": "low"
+    },
+    "condition_note": "Newly promoted club; the 2026/27 order is not yet verified.",
+    "last_verified": {
+      "date": "2026-07-10",
+      "by": "Il Margine",
+      "method": "league_membership_audit"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [],
+    "change_log": [],
+    "flags": {
+      "carryover_from_previous_season": false,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": null,
+    "player_ids": {},
+    "source": "https://ligue1.com/en/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",
+    "cross_check": "Official 2026/27 league roster"
   },
   "Lens": {
     "primary": "Florian Thauvin",
@@ -37,7 +390,80 @@
     "tertiary": "Wesley Said",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_lens_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Florian Thauvin",
+          "secondary": "Odsonne Edouard",
+          "tertiary": "Wesley Said"
+        },
+        "to": {
+          "primary": "Florian Thauvin",
+          "secondary": "Odsonne Edouard",
+          "tertiary": "Wesley Said"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_lens_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Florian Thauvin",
+      "secondary": "Odsonne Edouard",
+      "tertiary": "Wesley Said",
+      "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Lille": {
     "primary": "Olivier Giroud",
@@ -45,7 +471,80 @@
     "tertiary": "Nabil Bentaleb",
     "last_updated": "2026-04-05",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-04-05",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_lille_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Olivier Giroud",
+          "secondary": "Matias Fernandez-Pardo",
+          "tertiary": "Nabil Bentaleb"
+        },
+        "to": {
+          "primary": "Olivier Giroud",
+          "secondary": "Matias Fernandez-Pardo",
+          "tertiary": "Nabil Bentaleb"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_lille_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Olivier Giroud",
+      "secondary": "Matias Fernandez-Pardo",
+      "tertiary": "Nabil Bentaleb",
+      "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Lorient": {
     "primary": "Pablo Pagis",
@@ -53,7 +552,80 @@
     "tertiary": "Aiyegun Tosin",
     "last_updated": "2026-04-26",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-04-26",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_lorient_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Pablo Pagis",
+          "secondary": "Bamba Dieng",
+          "tertiary": "Aiyegun Tosin"
+        },
+        "to": {
+          "primary": "Pablo Pagis",
+          "secondary": "Bamba Dieng",
+          "tertiary": "Aiyegun Tosin"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_lorient_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Pablo Pagis",
+      "secondary": "Bamba Dieng",
+      "tertiary": "Aiyegun Tosin",
+      "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Lyon": {
     "primary": "Corentin Tolisso",
@@ -61,7 +633,80 @@
     "tertiary": "Ainsley Maitland-Niles",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_lyon_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Corentin Tolisso",
+          "secondary": "Endrick",
+          "tertiary": "Ainsley Maitland-Niles"
+        },
+        "to": {
+          "primary": "Corentin Tolisso",
+          "secondary": "Endrick",
+          "tertiary": "Ainsley Maitland-Niles"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_lyon_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Corentin Tolisso",
+      "secondary": "Endrick",
+      "tertiary": "Ainsley Maitland-Niles",
+      "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Marseille": {
     "primary": "Mason Greenwood",
@@ -69,15 +714,80 @@
     "tertiary": "Pierre-Emile Hojbjerg",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
-  },
-  "Metz": {
-    "primary": "Gauthier Hein",
-    "secondary": "Habib Diallo",
-    "tertiary": "",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_marseille_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Mason Greenwood",
+          "secondary": "Amine Gouiri",
+          "tertiary": "Pierre-Emile Hojbjerg"
+        },
+        "to": {
+          "primary": "Mason Greenwood",
+          "secondary": "Amine Gouiri",
+          "tertiary": "Pierre-Emile Hojbjerg"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_marseille_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Mason Greenwood",
+      "secondary": "Amine Gouiri",
+      "tertiary": "Pierre-Emile Hojbjerg",
+      "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Monaco": {
     "primary": "Folarin Balogun",
@@ -85,15 +795,80 @@
     "tertiary": "",
     "last_updated": "2026-03-26",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
-  },
-  "Nantes": {
-    "primary": "Ignatius Ganago",
-    "secondary": "Remy Cabella",
-    "tertiary": "Matthis Abline",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-26",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_monaco_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Folarin Balogun",
+          "secondary": "Ansu Fati",
+          "tertiary": ""
+        },
+        "to": {
+          "primary": "Folarin Balogun",
+          "secondary": "Ansu Fati",
+          "tertiary": ""
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_monaco_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Folarin Balogun",
+      "secondary": "Ansu Fati",
+      "tertiary": "",
+      "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Nice": {
     "primary": "Sofiane Diop",
@@ -101,7 +876,80 @@
     "tertiary": "Terem Moffi",
     "last_updated": "2026-05-03",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-05-03",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_nice_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Sofiane Diop",
+          "secondary": "Elye Wahi",
+          "tertiary": "Terem Moffi"
+        },
+        "to": {
+          "primary": "Sofiane Diop",
+          "secondary": "Elye Wahi",
+          "tertiary": "Terem Moffi"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_nice_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Sofiane Diop",
+      "secondary": "Elye Wahi",
+      "tertiary": "Terem Moffi",
+      "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Paris FC": {
     "primary": "Ilan Kebbal",
@@ -109,7 +957,80 @@
     "tertiary": "Willem Geubbels",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_paris_fc_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Ilan Kebbal",
+          "secondary": "Jean-Philippe Krasso",
+          "tertiary": "Willem Geubbels"
+        },
+        "to": {
+          "primary": "Ilan Kebbal",
+          "secondary": "Jean-Philippe Krasso",
+          "tertiary": "Willem Geubbels"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_paris_fc_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Ilan Kebbal",
+      "secondary": "Jean-Philippe Krasso",
+      "tertiary": "Willem Geubbels",
+      "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Paris Saint Germain": {
     "primary": "Ousmane Dembele",
@@ -117,7 +1038,80 @@
     "tertiary": "Vitinha",
     "last_updated": "2026-05-13",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-05-13",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_paris_saint_germain_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Ousmane Dembele",
+          "secondary": "Khvicha Kvaratskhelia",
+          "tertiary": "Vitinha"
+        },
+        "to": {
+          "primary": "Ousmane Dembele",
+          "secondary": "Khvicha Kvaratskhelia",
+          "tertiary": "Vitinha"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_paris_saint_germain_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Ousmane Dembele",
+      "secondary": "Khvicha Kvaratskhelia",
+      "tertiary": "Vitinha",
+      "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Rennes": {
     "primary": "Esteban Lepaul",
@@ -125,7 +1119,80 @@
     "tertiary": "",
     "last_updated": "2026-04-04",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-04-04",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_rennes_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Esteban Lepaul",
+          "secondary": "Ludovic Blas",
+          "tertiary": ""
+        },
+        "to": {
+          "primary": "Esteban Lepaul",
+          "secondary": "Ludovic Blas",
+          "tertiary": ""
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_rennes_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Esteban Lepaul",
+      "secondary": "Ludovic Blas",
+      "tertiary": "",
+      "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Strasbourg": {
     "primary": "Joaquin Panichelli",
@@ -133,7 +1200,80 @@
     "tertiary": "Emmanuel Emegha",
     "last_updated": "2026-05-12",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-05-12",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_strasbourg_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Joaquin Panichelli",
+          "secondary": "Julio Enciso",
+          "tertiary": "Emmanuel Emegha"
+        },
+        "to": {
+          "primary": "Joaquin Panichelli",
+          "secondary": "Julio Enciso",
+          "tertiary": "Emmanuel Emegha"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_strasbourg_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Joaquin Panichelli",
+      "secondary": "Julio Enciso",
+      "tertiary": "Emmanuel Emegha",
+      "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Toulouse": {
     "primary": "Aron Donnum",
@@ -141,6 +1281,110 @@
     "tertiary": "Frank Magri",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_toulouse_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Aron Donnum",
+          "secondary": "Djibril Sidibe",
+          "tertiary": "Frank Magri"
+        },
+        "to": {
+          "primary": "Aron Donnum",
+          "secondary": "Djibril Sidibe",
+          "tertiary": "Frank Magri"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_toulouse_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Aron Donnum",
+      "secondary": "Djibril Sidibe",
+      "tertiary": "Frank Magri",
+      "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+    },
+    "player_ids": {}
+  },
+  "Troyes": {
+    "primary": "",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-10",
+    "hierarchy_status": "unknown",
+    "confidence": {
+      "primary": "low",
+      "secondary": "low",
+      "tertiary": "low"
+    },
+    "condition_note": "Newly promoted club; the 2026/27 order is not yet verified.",
+    "last_verified": {
+      "date": "2026-07-10",
+      "by": "Il Margine",
+      "method": "league_membership_audit"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [],
+    "change_log": [],
+    "flags": {
+      "carryover_from_previous_season": false,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": null,
+    "player_ids": {},
+    "source": "https://ligue1.com/en/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",
+    "cross_check": "Official 2026/27 league roster"
   }
 }

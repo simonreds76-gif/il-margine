@@ -3,6 +3,7 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 import FlagMark from "@/components/FlagMark";
 import PageHomeLink from "@/components/PageHomeLink";
+import ClubPenaltyLeagueLinks from "@/components/ClubPenaltyLeagueLinks";
 import WorldCupTeamIndex from "./WorldCupTeamIndex";
 import {
   CONFEDERATION_ORDER,
@@ -679,6 +680,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
             </div>
           </div>
         </section>
+        <ClubPenaltyLeagueLinks />
       </main>
 
       <Footer />
