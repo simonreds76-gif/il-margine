@@ -8,8 +8,9 @@ This updates:
   - wta_players.csv
   - wta_matches_<year>.csv
 
-We keep this lightweight and opportunistic:
-  - if a remote file doesn't exist yet (404), we skip it
+We keep this lightweight and resilient:
+  - try the original Sackmann repository first, then the archival mirror
+  - if neither remote exists, preserve a verified local snapshot
   - if content matches local bytes, we leave the file untouched
 
 Run:
@@ -31,36 +32,68 @@ import requests
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data" / "sackmann"
 BASE_URLS = {
-    "atp": "https://raw.githubusercontent.com/JeffSackmann/tennis_atp/master",
-    "wta": "https://raw.githubusercontent.com/JeffSackmann/tennis_wta/master",
+    "atp": (
+        "https://raw.githubusercontent.com/JeffSackmann/tennis_atp/master",
+        "https://huggingface.co/datasets/Aneeshers/tennis-sackmann-archive/resolve/main/atp",
+    ),
+    "wta": (
+        "https://raw.githubusercontent.com/JeffSackmann/tennis_wta/master",
+        "https://huggingface.co/datasets/Aneeshers/tennis-sackmann-archive/resolve/main/wta",
+    ),
 }
 REQ_TIMEOUT = 60
 
 
 def _fetch_bytes(url: str) -> tuple[int, bytes | None]:
-    r = requests.get(url, timeout=REQ_TIMEOUT)
+    try:
+        r = requests.get(url, timeout=REQ_TIMEOUT)
+    except requests.RequestException:
+        return 0, None
     if r.status_code == 404:
         return 404, None
-    r.raise_for_status()
+    try:
+        r.raise_for_status()
+    except requests.RequestException:
+        return r.status_code, None
     return r.status_code, r.content
 
 
-def _refresh_file(filename: str, base_url: str, dry_run: bool) -> str:
-    url = f"{base_url}/{filename}"
-    status, content = _fetch_bytes(url)
-    if status == 404 or content is None:
-        return f"skip_missing_remote {filename}"
+def _valid_csv(content: bytes | None) -> bool:
+    if content is None or len(content) <= 100:
+        return False
+    first_line = content.splitlines()[0].decode("utf-8-sig", errors="ignore").lower()
+    return "," in first_line and ("player" in first_line or "tourney" in first_line)
+
+
+def _refresh_file(filename: str, base_urls: tuple[str, ...], dry_run: bool) -> str:
+    content: bytes | None = None
+    source = ""
+    for base_url in base_urls:
+        candidate_url = f"{base_url}/{filename}"
+        _status, candidate = _fetch_bytes(candidate_url)
+        if _valid_csv(candidate):
+            content = candidate
+            source = "archive_mirror" if "huggingface.co" in base_url else "sackmann"
+            break
 
     path = DATA_DIR / filename
+    if content is None:
+        # Sackmann's repositories can be temporarily unavailable or removed.
+        # A verified local snapshot is still valid historical input; never
+        # describe it as missing and never replace it with a 404 body.
+        if path.exists() and path.stat().st_size > 100:
+            return f"kept_local_snapshot {filename}"
+        return f"skip_missing_remote {filename}"
+
     if path.exists():
         current = path.read_bytes()
         if current == content:
-            return f"unchanged {filename}"
+            return f"unchanged {filename} source={source}"
 
     if not dry_run:
         DATA_DIR.mkdir(parents=True, exist_ok=True)
         path.write_bytes(content)
-    return f"{'would_update' if dry_run else 'updated'} {filename}"
+    return f"{'would_update' if dry_run else 'updated'} {filename} source={source}"
 
 
 def main() -> None:
@@ -89,6 +122,7 @@ def main() -> None:
     counts = {
         "updated": 0,
         "unchanged": 0,
+        "kept_local_snapshot": 0,
         "skip_missing_remote": 0,
         "would_update": 0,
     }
@@ -100,7 +134,7 @@ def main() -> None:
         print(f"  {result}")
 
     print("Summary:")
-    for key in ("updated", "would_update", "unchanged", "skip_missing_remote"):
+    for key in ("updated", "would_update", "unchanged", "kept_local_snapshot", "skip_missing_remote"):
         print(f"  {key}: {counts.get(key, 0)}")
 
 

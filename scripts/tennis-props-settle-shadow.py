@@ -16,6 +16,7 @@ PROPS_DIR = ROOT / "data" / "tennis-props"
 DEFAULT_SIGNALS = PROPS_DIR / "shadow" / "aces-dfs-shadow-signals.csv"
 DEFAULT_PERFORMANCE = PROPS_DIR / "shadow" / "aces-dfs-shadow-performance.txt"
 DEFAULT_SACKMANN = ROOT / "data" / "sackmann"
+DEFAULT_ONCOURT = ROOT / "data" / "oncourt"
 
 FIELDNAMES = [
     "signal_id",
@@ -23,14 +24,23 @@ FIELDNAMES = [
     "date",
     "tour",
     "tournament",
+    "scope",
     "player",
     "opponent",
     "market",
     "line",
     "side",
     "projection_mean",
+    "projection_p1",
+    "projection_p2",
     "confidence",
+    "p1_confidence",
+    "p2_confidence",
+    "combined_surface_svpt_sample",
     "bookmaker",
+    "event_id",
+    "capture_ts",
+    "match_start_utc",
     "over_odds",
     "under_odds",
     "selected_odds",
@@ -39,9 +49,15 @@ FIELDNAMES = [
     "fair_odds",
     "fair_p_push",
     "distribution",
+    "totals_alpha",
+    "totals_stage0_passed",
     "value_over_pct",
     "value_under_pct",
     "value_pct",
+    "novig_p_over",
+    "novig_p_under",
+    "edge_over_novig_pct",
+    "edge_under_novig_pct",
     "matched_board",
     "notes",
     "source_file",
@@ -144,6 +160,18 @@ def market_count(row: dict[str, str], player_norm: str, market: str) -> tuple[in
     if not is_winner and not is_loser:
         return None, "player_not_in_match"
     lower = market.lower().replace(" ", "_")
+    if lower == "match_aces":
+        left = parse_float(row.get("w_ace"))
+        right = parse_float(row.get("l_ace"))
+        if left is None or right is None:
+            return None, "missing_match_ace_stats"
+        return int(round(left + right)), "ok"
+    if lower == "match_double_faults":
+        left = parse_float(row.get("w_df"))
+        right = parse_float(row.get("l_df"))
+        if left is None or right is None:
+            return None, "missing_match_df_stats"
+        return int(round(left + right)), "ok"
     if lower in {"aces", "ace", "player_aces"}:
         raw = row.get("w_ace") if is_winner else row.get("l_ace")
     elif lower in {"double_faults", "double_fault", "dfs", "df"}:
@@ -188,6 +216,93 @@ def load_sackmann_index(sackmann_dir: Path) -> dict[tuple[str, int, tuple[str, s
                 continue
             key = (tour, year, pair_key(row.get("winner_name"), row.get("loser_name")))
             index[key].append(row)
+    return index
+
+
+def load_oncourt_index(
+    oncourt_dir: Path,
+    signals: list[dict[str, str]],
+) -> dict[tuple[str, int, tuple[str, str]], list[dict[str, str]]]:
+    """Resolve current results from the local OnCourt game/stat exports."""
+    wanted: dict[tuple[str, int], set[tuple[str, str]]] = defaultdict(set)
+    for signal in signals:
+        tour = (signal.get("tour") or "").upper()
+        year = parse_year(signal.get("date"))
+        if tour in {"ATP", "WTA"} and year is not None:
+            wanted[(tour, year)].add(pair_key(signal.get("player"), signal.get("opponent")))
+    if not wanted:
+        return {}
+
+    index: dict[tuple[str, int, tuple[str, str]], list[dict[str, str]]] = defaultdict(list)
+    for tour in ("ATP", "WTA"):
+        relevant_years = {year for candidate_tour, year in wanted if candidate_tour == tour}
+        if not relevant_years:
+            continue
+        suffix = tour.lower()
+        players = {
+            str(row.get("id") or "").strip(): str(row.get("name") or "").strip()
+            for row in read_csv(oncourt_dir / f"players_{suffix}.csv")
+            if row.get("id") and row.get("name")
+        }
+        tours = {
+            str(row.get("id") or "").strip(): str(row.get("name") or "").strip()
+            for row in read_csv(oncourt_dir / f"tours_{suffix}.csv")
+            if row.get("id")
+        }
+        candidate_games: list[tuple[dict[str, str], tuple[str, str, str], tuple[str, int, tuple[str, str]]]] = []
+        stat_keys: set[tuple[str, str, str]] = set()
+        for game in read_csv(oncourt_dir / f"games_{suffix}.csv"):
+            game_date = parse_signal_date(game.get("date"))
+            if game_date is None or game_date.year not in relevant_years:
+                continue
+            winner_id = str(game.get("winner_id") or "").strip()
+            loser_id = str(game.get("loser_id") or "").strip()
+            winner_name = players.get(winner_id, "")
+            loser_name = players.get(loser_id, "")
+            pair = pair_key(winner_name, loser_name)
+            lookup_key = (tour, game_date.year, pair)
+            if pair not in wanted.get((tour, game_date.year), set()):
+                continue
+            stat_key = (
+                winner_id,
+                loser_id,
+                str(game.get("tour_id") or "").strip(),
+            )
+            stat_keys.add(stat_key)
+            candidate_games.append((game, stat_key, lookup_key))
+
+        stats: dict[tuple[str, str, str], dict[str, str]] = {}
+        if stat_keys:
+            for stat in read_csv(oncourt_dir / f"stat_{suffix}.csv"):
+                stat_key = (
+                    str(stat.get("winner_id") or "").strip(),
+                    str(stat.get("loser_id") or "").strip(),
+                    str(stat.get("tour_id") or "").strip(),
+                )
+                if stat_key in stat_keys:
+                    stats.setdefault(stat_key, stat)
+
+        for game, stat_key, lookup_key in candidate_games:
+            stat = stats.get(stat_key)
+            if not stat:
+                continue
+            game_date = parse_signal_date(game.get("date"))
+            winner_name = players.get(stat_key[0], "")
+            loser_name = players.get(stat_key[1], "")
+            index[lookup_key].append(
+                {
+                    "winner_name": winner_name,
+                    "loser_name": loser_name,
+                    "tourney_name": tours.get(stat_key[2], stat_key[2]),
+                    "tourney_date": game_date.strftime("%Y%m%d") if game_date else "",
+                    "score": str(game.get("result") or ""),
+                    "w_ace": str(stat.get("w_ace") or ""),
+                    "l_ace": str(stat.get("l_ace") or ""),
+                    "w_df": str(stat.get("w_df") or ""),
+                    "l_df": str(stat.get("l_df") or ""),
+                    "_settlement_source": "oncourt",
+                }
+            )
     return index
 
 
@@ -269,6 +384,7 @@ def main() -> int:
     parser.add_argument("--signals", default=str(DEFAULT_SIGNALS))
     parser.add_argument("--performance", default=str(DEFAULT_PERFORMANCE))
     parser.add_argument("--sackmann-dir", default=str(DEFAULT_SACKMANN))
+    parser.add_argument("--oncourt-dir", default=str(DEFAULT_ONCOURT))
     args = parser.parse_args()
 
     signals_path = Path(args.signals)
@@ -278,7 +394,9 @@ def main() -> int:
         print(f"No shadow rows to settle: {signals_path}")
         return 0
 
-    index = load_sackmann_index(Path(args.sackmann_dir))
+    pending_rows = [row for row in rows if (row.get("settlement_status") or "pending").lower() in {"", "pending"}]
+    oncourt_index = load_oncourt_index(Path(args.oncourt_dir), pending_rows)
+    sackmann_index = load_sackmann_index(Path(args.sackmann_dir))
     now = datetime.now(timezone.utc).isoformat(timespec="seconds")
     settled_now = 0
     still_pending = 0
@@ -295,7 +413,9 @@ def main() -> int:
             still_pending += 1
             continue
         key = (tour, year, pair_key(row.get("player"), row.get("opponent")))
-        candidates = index.get(key, [])
+        candidates = oncourt_index.get(key, [])
+        if not candidates:
+            candidates = sackmann_index.get(key, [])
         candidate = choose_candidate(row, candidates)
         if candidate is None:
             row["settlement_status"] = "pending"
@@ -325,7 +445,8 @@ def main() -> int:
         row["result"] = result
         row["pnl"] = f"{pnl_for(result, odds):.3f}"
         row["settled_at_utc"] = now
-        row["settlement_note"] = f"sackmann:{candidate.get('tourney_name','')}:{candidate.get('score','')}"
+        source = candidate.get("_settlement_source") or "sackmann"
+        row["settlement_note"] = f"{source}:{candidate.get('tourney_name','')}:{candidate.get('score','')}"
         settled_now += 1
 
     write_csv(signals_path, rows)

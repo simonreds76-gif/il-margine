@@ -1,0 +1,19 @@
+Tennis Match-Total Aces/DF Stage-0
+Generated UTC: 2026-07-10T13:52:35+00:00
+Train years: 2023, 2024
+Untouched holdout year: 2025
+Outcome-only validation. No odds, ROI or CLV evidence.
+Dispersion is fitted separately for model and naive means on training seasons only.
+
+match_aces: PASS
+  ATP: PASS n=1524 train=1016 holdout=508 alpha=0.165974 MAE=6.665242/6.929199 LL=0.656826/0.68097 Brier=0.231909/0.243934 bias=0.632963
+  WTA: PASS n=1524 train=1016 holdout=508 alpha=0.227966 MAE=2.681778/2.821427 LL=0.653722/0.673191 Brier=0.231458/0.240101 bias=0.103841
+
+match_double_faults: PASS
+  ATP: PASS n=1524 train=1016 holdout=508 alpha=0.137694 MAE=3.395323/3.515028 LL=0.654177/0.696131 Brier=0.231159/0.251454 bias=0.095173
+  WTA: PASS n=1524 train=1016 holdout=508 alpha=0.134748 MAE=2.829764/3.010183 LL=0.663444/0.694664 Brier=0.236311/0.250727 bias=-0.35789
+
+Gate interpretation
+- A market is shadow-eligible only when ATP and WTA both pass coverage, MAE, log-loss and Brier gates.
+- The live comparison must use the fitted totals alpha for its tour and market.
+- A pass is research permission only; public/live promotion still requires settled Bet365 ROI and CLV.

@@ -152,6 +152,18 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: Sackmann refresh failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Post-step: Refresh match-total aces/DF holdout gate ==="
+& python scripts\backtest-tennis-player-props.py --start-year 2022 --end-year 2026 --eval-years 2023 2024 2025 --out-csv data\tennis-props\backtest\aces-dfs-totals-source-rows.csv --out-txt data\tennis-props\backtest\aces-dfs-totals-source-report.txt 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: tennis props totals source refresh failed (exit $LASTEXITCODE), keeping the last verified gate."
+}
+else {
+    & python scripts\backtest-tennis-props-totals.py 2>&1 | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) {
+        Log "WARNING: tennis props totals Stage-0 failed (exit $LASTEXITCODE), keeping the last verified gate."
+    }
+}
+
 # Step 5: Recompute H2H
 Log "=== Step 5/12: Recompute H2H ==="
 & python scripts\sackmann-compute-h2h.py 2>&1 | ForEach-Object { Log $_ }

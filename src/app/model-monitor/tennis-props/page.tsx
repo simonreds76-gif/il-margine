@@ -17,6 +17,7 @@ import {
 export const dynamic = "force-dynamic";
 
 type CsvRow = Record<string, string>;
+type JsonRecord = Record<string, unknown>;
 type ProjectionSortKey = "schedule" | "aces" | "dfs" | "match_tb" | "first_tb" | "breaks";
 type MonitorTab = "decision" | "projections";
 type SearchParamsInput = Promise<Record<string, string | string[] | undefined>>;
@@ -46,6 +47,7 @@ const SHADOW_SIGNALS_PATH = path.join(SHADOW_DIR, "aces-dfs-shadow-signals.csv")
 const SHADOW_PERFORMANCE_PATH = path.join(SHADOW_DIR, "aces-dfs-shadow-performance.txt");
 const MODEL_SUMMARY_PATH = path.join(PROPS_DIR, "model-monitor-summary.csv");
 const MODEL_REPORT_PATH = path.join(PROPS_DIR, "model-monitor-report.txt");
+const TOTALS_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-totals-gate.json");
 
 function parseCsv(text: string): CsvRow[] {
   const rows: string[][] = [];
@@ -320,6 +322,32 @@ function londonDateIso(value = new Date()): string {
   }).formatToParts(value);
   const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((item) => item.type === type)?.value ?? "";
   return `${part("year")}-${part("month")}-${part("day")}`;
+}
+
+async function readJson(filePath: string): Promise<JsonRecord> {
+  try {
+    const payload: unknown = JSON.parse(await fs.readFile(filePath, "utf8"));
+    return payload && typeof payload === "object" && !Array.isArray(payload) ? payload as JsonRecord : {};
+  } catch {
+    return {};
+  }
+}
+
+function record(value: unknown): JsonRecord {
+  return value && typeof value === "object" && !Array.isArray(value) ? value as JsonRecord : {};
+}
+
+function gateMarket(gate: JsonRecord, market: string): JsonRecord {
+  return record(record(gate.markets)[market]);
+}
+
+function gateTour(gate: JsonRecord, market: string, tour: "ATP" | "WTA"): JsonRecord {
+  return record(record(gateMarket(gate, market).tours)[tour]);
+}
+
+function gateNumber(row: JsonRecord, key: string): number {
+  const value = Number(row[key]);
+  return Number.isFinite(value) ? value : 0;
 }
 
 function projectionFocusDate(rows: CsvRow[]): string {
@@ -850,6 +878,7 @@ function ComparisonLineCard({ row }: { row: CsvRow }) {
           <div className="mt-2 font-semibold text-slate-100">{row.player || "-"} - {marketLabel(row)} {fmt(row.line, 1)}</div>
           <div className="text-xs text-slate-500">
             projection {fmt(row.projection_mean, 1)} - {row.distribution || "model"}
+            {row.totals_alpha ? ` (alpha ${fmt(row.totals_alpha, 3)})` : ""}
             {row.line_rank ? ` - rank ${row.line_rank}/${row.complete_line_count || row.group_line_count}` : ""}
           </div>
         </div>
@@ -946,6 +975,7 @@ function rowBestValue(row: CsvRow): number {
 
 function blockReasonLabel(value: string | undefined): string {
   const first = String(value || "").split("|").find(Boolean) || "gate blocked";
+  if (first === "TOTALS_STAGE0_BLOCKED") return "totals holdout gate blocked";
   return first.replaceAll("_", " ").toLowerCase();
 }
 
@@ -964,6 +994,64 @@ function marketLabel(row: CsvRow): string {
   if (row.market === "match_aces") return "Match aces";
   if (row.market === "match_double_faults") return "Match double faults";
   return row.market?.replaceAll("_", " ") || "market";
+}
+
+function TotalsStage0Panel({ gate, stamp }: { gate: JsonRecord; stamp: string }) {
+  const marketRows = [
+    { key: "match_aces", label: "Match aces" },
+    { key: "match_double_faults", label: "Match double faults" },
+  ];
+  const holdoutYear = String(gate.holdout_year ?? "-");
+  return (
+    <SectionCard
+      title="Totals Model Gate"
+      subtitle={`Historical count validation before any Bet365 shadow signal. Train seasons stay before the untouched ${holdoutYear} holdout.`}
+    >
+      <div className="grid gap-3 lg:grid-cols-2">
+        {marketRows.map(({ key, label }) => {
+          const market = gateMarket(gate, key);
+          const marketPassed = market.passed === true;
+          return (
+            <article key={key} className="rounded-2xl border border-slate-800/80 bg-slate-950/70 p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <div className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-500">Stage 0</div>
+                  <h3 className="mt-1 text-lg font-black text-slate-100">{label}</h3>
+                </div>
+                <MiniBadge
+                  label={marketPassed ? "HOLDOUT PASS" : "BLOCKED"}
+                  tone={marketPassed ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300" : "border-rose-500/30 bg-rose-500/10 text-rose-300"}
+                />
+              </div>
+              <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                {(["ATP", "WTA"] as const).map((tour) => {
+                  const row = gateTour(gate, key, tour);
+                  const passed = row.passed === true;
+                  return (
+                    <div key={tour} className="rounded-xl border border-slate-800 bg-slate-900/55 p-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-black text-slate-200">{tour}</span>
+                        <span className={cn("text-[10px] font-black uppercase tracking-[0.12em]", passed ? "text-emerald-300" : "text-rose-300")}>{passed ? "pass" : "blocked"}</span>
+                      </div>
+                      <div className="mt-2 font-mono text-xs text-slate-400">
+                        n {gateNumber(row, "total_matches").toFixed(0)} · alpha {gateNumber(row, "model_alpha").toFixed(3)}
+                      </div>
+                      <div className="mt-1 text-[11px] text-slate-500">
+                        Holdout MAE {gateNumber(row, "model_mae").toFixed(2)} vs naive {gateNumber(row, "naive_mae").toFixed(2)}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+      <p className="mt-3 text-xs leading-relaxed text-slate-500">
+        Pass means the historical total-count model beat its naive baseline. It permits shadow tracking only; sell/live status still requires settled Bet365 ROI and CLV evidence. Gate file updated {stamp}.
+      </p>
+    </SectionCard>
+  );
 }
 
 function TabLink({ active, href, label, detail }: { active: boolean; href: string; label: string; detail: string }) {
@@ -1202,6 +1290,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     shadowRows,
     shadowStamp,
     shadowPerformanceStamp,
+    totalsGate,
+    totalsGateStamp,
   ] = await Promise.all([
     readCsv(BOARD_PATH),
     fileStamp(BOARD_PATH),
@@ -1217,6 +1307,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     readCsv(SHADOW_SIGNALS_PATH),
     fileStamp(SHADOW_SIGNALS_PATH),
     fileStamp(SHADOW_PERFORMANCE_PATH),
+    readJson(TOTALS_GATE_PATH),
+    fileStamp(TOTALS_GATE_PATH),
   ]);
 
   const comparisonRows = latestComparisonPath ? await readCsv(latestComparisonPath) : [];
@@ -1280,6 +1372,10 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
           <StatCard label="Projection rows" value={String(sortedBoard.length)} detail={`${countBy(sortedBoard, "tour", "ATP")} ATP / ${countBy(sortedBoard, "tour", "WTA")} WTA`} />
           <StatCard label="Shadow evidence" value={String(shadowRows.length)} detail={`${shadow.settled} settled / ${shadow.pending} pending`} tone={shadowRows.length ? "text-amber-300" : "text-slate-400"} />
         </section>
+
+        <div className="mb-6">
+          <TotalsStage0Panel gate={totalsGate} stamp={totalsGateStamp} />
+        </div>
 
         <section className="mb-6 grid gap-3 rounded-2xl border border-slate-800 bg-slate-950/40 p-4 text-xs text-slate-400 md:grid-cols-4">
           <div><span className="text-slate-500">Board:</span> <span className="text-slate-200">{boardStamp}</span></div>
@@ -1374,7 +1470,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
 
             <SectionCard
               title="Settled Sample"
-              subtitle="Placeholder until the match-total Bet365 prop lane has settled evidence. Existing shadow settlement remains append-only."
+              subtitle="Append-only match-total Bet365 paper record. Signals settle automatically from current OnCourt stats, with Sackmann as the historical fallback."
             >
               <ShadowEvidenceTable rows={sortedShadowRows} />
             </SectionCard>

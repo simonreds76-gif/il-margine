@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 from datetime import date, datetime, timezone
 from pathlib import Path
 import re
@@ -22,6 +23,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PROPS_DIR = ROOT / "data" / "tennis-props"
 INBOX_DIR = PROPS_DIR / "inbox"
 DEFAULT_BOARD = PROPS_DIR / "player-props-board.csv"
+DEFAULT_TOTALS_GATE = PROPS_DIR / "backtest" / "aces-dfs-totals-gate.json"
 MATCH_TOTAL_MARKETS = {"match_aces", "match_double_faults"}
 CONFIDENCE_RANK = {"LOW": 0, "MED": 1, "HIGH": 2}
 MIN_COMBINED_SAMPLE = 800.0
@@ -49,6 +51,31 @@ def read_csv(path: Path) -> list[dict[str, str]]:
         return []
     with path.open("r", encoding="utf-8-sig", newline="") as f:
         return list(csv.DictReader(f))
+
+
+def read_json(path: Path) -> dict[str, object]:
+    if not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def totals_gate_result(gate: dict[str, object], tour: str, market: str) -> tuple[bool, float | None]:
+    markets = gate.get("markets")
+    if not isinstance(markets, dict):
+        return False, None
+    market_row = markets.get(market)
+    if not isinstance(market_row, dict) or market_row.get("passed") is not True:
+        return False, None
+    tours = market_row.get("tours")
+    tour_row = tours.get(str(tour or "").upper()) if isinstance(tours, dict) else None
+    if not isinstance(tour_row, dict) or tour_row.get("passed") is not True:
+        return False, None
+    alpha = parse_float(tour_row.get("model_alpha"))
+    return alpha is not None and alpha > 0, alpha
 
 
 def write_csv(path: Path, rows: list[dict[str, str]], fieldnames: list[str]) -> None:
@@ -298,6 +325,8 @@ def apply_decision_gates(rows: list[dict[str, str]], args: argparse.Namespace, n
         scope = str(row.get("scope") or "")
         if scope != "match_total" or market not in MATCH_TOTAL_MARKETS:
             reasons.append("PLAYER_LINE_RESEARCH_ONLY")
+        if scope == "match_total" and row.get("totals_stage0_passed") != "true":
+            reasons.append("TOTALS_STAGE0_BLOCKED")
         if row.get("matched_board") != "yes":
             reasons.append("NO_BOARD_MATCH")
         if row.get("line_quality") != "complete":
@@ -409,6 +438,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--date", default=date.today().isoformat())
     parser.add_argument("--board", default=str(DEFAULT_BOARD))
+    parser.add_argument("--totals-gate", default=str(DEFAULT_TOTALS_GATE))
     parser.add_argument("--lines", default="")
     parser.add_argument("--out", default="")
     parser.add_argument("--unmatched-out", default="")
@@ -444,6 +474,7 @@ def main() -> None:
         print(f"Lines file has no market rows: {lines_path}")
         return
     board_rows = read_csv(Path(args.board))
+    totals_gate = read_json(Path(args.totals_gate))
     board = {
         (
             str(row.get("date") or ""),
@@ -470,6 +501,7 @@ def main() -> None:
         line_player = str(line.get("player") or "").strip()
         line_opponent = str(line.get("opponent") or "").strip()
         line_market = str(line.get("market") or "").strip()
+        totals_passed, totals_alpha = totals_gate_result(totals_gate, line_tour, line_market)
         requires_exact_pair = is_match_total_count_market(line_market)
         original_player = line_player
         original_opponent = line_opponent
@@ -620,6 +652,7 @@ def main() -> None:
                     line_value,
                     mean,
                     distribution=args.distribution,
+                    alpha=totals_alpha if is_match_total_count_market(market) else None,
                     tour=str(line.get("tour") or ""),
                     market=market,
                 )
@@ -695,6 +728,8 @@ def main() -> None:
                 "matched_board": "yes" if board_row else "no",
                 "match_source": match_source,
                 "scope": "match_total" if is_match_total_count_market(market) else "player",
+                "totals_stage0_passed": bool_text(totals_passed) if is_match_total_count_market(market) else "false",
+                "totals_alpha": fmt(totals_alpha, 6),
                 "projection_mean": fmt(mean, 3),
                 "projection_p1": fmt(left_mean, 3),
                 "projection_p2": fmt(right_mean, 3),
@@ -753,6 +788,8 @@ def main() -> None:
         "raw_outcome_count",
         "raw_label_sample",
         "scope",
+        "totals_stage0_passed",
+        "totals_alpha",
         "matched_board",
         "match_source",
         "projection_mean",
