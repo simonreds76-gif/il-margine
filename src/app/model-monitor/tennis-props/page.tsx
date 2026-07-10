@@ -460,16 +460,17 @@ function NoteBadges({ value }: { value: string }) {
   );
 }
 
-function TournamentRoundDetails({ row }: { row: CsvRow }) {
+function RoundHistoryTable({ row }: { row: CsvRow }) {
   const logs = parseTournamentRoundLog(row.tournament_round_log);
   return (
-    <details className="group mt-1 rounded-xl border border-slate-800/80 bg-slate-950/50 px-2 py-1">
-      <summary className="cursor-pointer list-none text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 transition group-open:text-emerald-300">
-        Round aces / DFs / breaks / TB
-      </summary>
+    <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-3">
+      <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
+        <h4 className="font-black text-slate-100">{row.player || "Player"}</h4>
+        <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-600">completed rounds</span>
+      </div>
       {logs.length ? (
-        <div className="mt-2 overflow-x-auto">
-          <table className="min-w-[520px] text-[11px]">
+        <div className="overflow-x-auto">
+          <table className="min-w-[600px] text-[11px]">
             <thead className="text-left uppercase tracking-[0.12em] text-slate-600">
               <tr>
                 <th className="py-1 pr-3 font-semibold">Round</th>
@@ -503,63 +504,29 @@ function TournamentRoundDetails({ row }: { row: CsvRow }) {
           </table>
         </div>
       ) : (
-        <div className="mt-2 text-[11px] leading-relaxed text-slate-600">
+        <div className="text-[11px] leading-relaxed text-slate-600">
           No completed same-tournament stat row found yet.
         </div>
       )}
-    </details>
+    </div>
   );
 }
 
-function TieBreakCell({ row }: { row: CsvRow }) {
-  const items = [
-    {
-      label: "1st set",
-      probability: row.first_set_tiebreak_pct,
-      fairOdds: row.first_set_tiebreak_fair_yes,
-      venueActual: row.venue_first_set_tiebreak_actual_pct,
-      liveActual: row.current_env_first_set_tiebreak_actual_pct,
-      accent: "text-violet-200",
-      border: "border-violet-500/20 bg-violet-500/10",
-    },
-    {
-      label: "Any set",
-      probability: row.match_tiebreak_pct,
-      fairOdds: row.match_tiebreak_fair_yes,
-      venueActual: row.venue_match_tiebreak_actual_pct,
-      liveActual: row.current_env_match_tiebreak_actual_pct,
-      accent: "text-fuchsia-200",
-      border: "border-fuchsia-500/20 bg-fuchsia-500/10",
-    },
-  ];
-
+function MatchRoundHistory({ rows }: { rows: CsvRow[] }) {
   return (
-    <div className="min-w-[176px] space-y-1.5">
-      {items.map((item) => (
-        <div key={item.label} className={cn("rounded-xl border px-2.5 py-2", item.border)}>
-          <div className="flex items-baseline justify-between gap-3">
-            <span className="text-[10px] font-black uppercase tracking-[0.13em] text-slate-500">{item.label}</span>
-            <span className={cn("font-mono text-lg font-black leading-none", item.accent)}>
-              {fmt(item.fairOdds, 2)}
-            </span>
-          </div>
-          <div className="mt-1 flex items-center justify-between gap-2 border-t border-white/5 pt-1 text-[10px] uppercase tracking-[0.11em] text-slate-500">
-            <span>YES prob</span>
-            <span className="font-mono text-slate-300">{fmt(item.probability, 1)}%</span>
-          </div>
-          <div className="mt-1 grid grid-cols-2 gap-1 text-[10px] uppercase tracking-[0.09em] text-slate-600">
-            <span>hist {pctText(item.venueActual, 1)}</span>
-            <span>live {pctText(item.liveActual, 1)}</span>
-          </div>
-        </div>
-      ))}
-      <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 px-2 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-300">
-        Research only · no odds feed · not a pick
+    <details open className="group border-t border-slate-800/80 bg-slate-950/30 p-4 sm:p-5">
+      <summary className="cursor-pointer list-none rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-xs font-black uppercase tracking-[0.15em] text-emerald-200">
+        Round-by-round comparison · aces / DFs / breaks / tiebreaks
+      </summary>
+      <div className="mt-3 grid gap-3 xl:grid-cols-2">
+        {rows.map((row, index) => (
+          <RoundHistoryTable key={`${row.player}-${row.opponent}-${index}`} row={row} />
+        ))}
       </div>
-      <div className="px-1 text-[10px] leading-snug text-slate-600">
-        Any set = tie-break anywhere in the match.
-      </div>
-    </div>
+      <p className="mt-3 text-[11px] leading-relaxed text-slate-600">
+        1st TB marks a first-set tiebreak. Match TB marks a tiebreak in any set. Every row belongs to the named player above it.
+      </p>
+    </details>
   );
 }
 
@@ -675,24 +642,23 @@ function ProjectionPlayerCard({ row }: { row: CsvRow }) {
           <p className="text-sm text-slate-400">vs {row.opponent || "-"}</p>
         </div>
         <div className="flex flex-wrap gap-1.5">
-          <MiniBadge label={row.ace_confidence || "LOW"} tone={confidenceTone(row.ace_confidence)} />
-          <MiniBadge label={row.df_confidence || "LOW"} tone={confidenceTone(row.df_confidence)} />
-          <MiniBadge label={row.tiebreak_confidence || "LOW"} tone={confidenceTone(row.tiebreak_confidence)} />
+          <MiniBadge label={`ACES ${row.ace_confidence || "LOW"}`} tone={confidenceTone(row.ace_confidence)} />
+          <MiniBadge label={`DFS ${row.df_confidence || "LOW"}`} tone={confidenceTone(row.df_confidence)} />
+          <MiniBadge label={`BREAKS ${row.break_confidence || "LOW"}`} tone={confidenceTone(row.break_confidence)} />
         </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2">
         <MetricTile label="Aces projection" value={fmt(row.projected_aces, 1)} sub={`sample ${row.player_surface_matches || "0"}m / ${row.player_surface_svpt_sample || "0"} svpt`} tone="text-emerald-300" />
         <MetricTile label="Double faults" value={fmt(row.projected_dfs, 1)} sub={`same event ${row.same_tournament_matches || "0"}m`} tone="text-rose-300" />
-        <MetricTile label="Breaks total" value={fmt(row.projected_total_breaks, 1)} sub={`for +${fmt(row.projected_breaks_for, 1)} / against -${fmt(row.projected_broken, 1)}`} tone="text-cyan-300" />
+        <MetricTile label="Projected breaks won" value={fmt(row.projected_breaks_for, 1)} sub="player-specific" tone="text-cyan-300" />
+        <MetricTile label="Projected times broken" value={fmt(row.projected_broken, 1)} sub="player-specific" tone="text-amber-300" />
       </div>
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-[220px_1fr]">
-        <TieBreakCell row={row} />
-        <div className="space-y-3">
+      <div className="mt-4">
           <details className="group rounded-2xl border border-slate-800/80 bg-slate-950/55 p-3">
             <summary className="cursor-pointer list-none text-xs font-black uppercase tracking-[0.14em] text-slate-400 transition group-open:text-emerald-300">
-              Model inputs, venue factors, notes
+              How this projection was built
             </summary>
             <div className="mt-3 space-y-3">
               <div className="grid gap-2 text-xs text-slate-400 sm:grid-cols-2">
@@ -709,8 +675,6 @@ function ProjectionPlayerCard({ row }: { row: CsvRow }) {
               <NoteBadges value={[row.notes, row.break_notes, row.tiebreak_notes].filter(Boolean).join("|")} />
             </div>
           </details>
-          <TournamentRoundDetails row={row} />
-        </div>
       </div>
     </article>
   );
@@ -730,6 +694,8 @@ function ProjectionTable({ rows, sortKey }: { rows: CsvRow[]; sortKey: Projectio
           </div>
           {group.matches.map((match) => {
             const first = match.rows[0] ?? {};
+            const aceLeader = match.rows.reduce((best, row) => n(row.projected_aces) > n(best.projected_aces) ? row : best, first);
+            const dfLeader = match.rows.reduce((best, row) => n(row.projected_dfs) > n(best.projected_dfs) ? row : best, first);
             const matchTbFair = Math.min(...match.rows.map((row) => n(row.match_tiebreak_fair_yes)).filter((value) => value > 0));
             const firstSetFair = Math.min(...match.rows.map((row) => n(row.first_set_tiebreak_fair_yes)).filter((value) => value > 0));
             return (
@@ -744,11 +710,12 @@ function ProjectionTable({ rows, sortKey }: { rows: CsvRow[]; sortKey: Projectio
                       <h3 className="text-2xl font-black tracking-tight text-slate-50">{fixtureName(match.rows)}</h3>
                       <p className="mt-1 text-sm text-slate-500">Click to collapse. Aces, double faults, breaks and tie-break pricing stay grouped by match.</p>
                     </div>
-                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:min-w-[470px]">
-                      <MetricTile label="Any-set TB odds" value={Number.isFinite(matchTbFair) ? matchTbFair.toFixed(2) : "-"} sub={`prob ${fmt(projectionSortValue(match.rows, "match_tb"), 1)}%`} tone="text-fuchsia-200" />
-                      <MetricTile label="1st-set TB odds" value={Number.isFinite(firstSetFair) ? firstSetFair.toFixed(2) : "-"} sub={`prob ${fmt(projectionSortValue(match.rows, "first_tb"), 1)}%`} tone="text-violet-200" />
-                      <MetricTile label="Max aces" value={fmt(projectionSortValue(match.rows, "aces"), 1)} tone="text-emerald-300" />
-                      <MetricTile label="Max DFs" value={fmt(projectionSortValue(match.rows, "dfs"), 1)} tone="text-rose-300" />
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-5 lg:min-w-[680px]">
+                      <MetricTile label="Any-set TB fair odds" value={Number.isFinite(matchTbFair) ? matchTbFair.toFixed(2) : "-"} sub={`${fmt(first.match_tiebreak_pct, 1)}% · hist ${pctText(first.venue_match_tiebreak_actual_pct)} · live ${pctText(first.current_env_match_tiebreak_actual_pct)}`} tone="text-fuchsia-200" />
+                      <MetricTile label="1st-set TB fair odds" value={Number.isFinite(firstSetFair) ? firstSetFair.toFixed(2) : "-"} sub={`${fmt(first.first_set_tiebreak_pct, 1)}% · hist ${pctText(first.venue_first_set_tiebreak_actual_pct)} · live ${pctText(first.current_env_first_set_tiebreak_actual_pct)}`} tone="text-violet-200" />
+                      <MetricTile label="Highest aces" value={fmt(aceLeader.projected_aces, 1)} sub={aceLeader.player || "-"} tone="text-emerald-300" />
+                      <MetricTile label="Highest DFs" value={fmt(dfLeader.projected_dfs, 1)} sub={dfLeader.player || "-"} tone="text-rose-300" />
+                      <MetricTile label="Total match breaks" value={fmt(first.projected_total_breaks, 1)} sub="shared match estimate" tone="text-cyan-300" />
                     </div>
                   </div>
                 </summary>
@@ -757,6 +724,7 @@ function ProjectionTable({ rows, sortKey }: { rows: CsvRow[]; sortKey: Projectio
                     <ProjectionPlayerCard key={`${group.date}-${row.tour}-${row.player}-${row.opponent}-${index}`} row={row} />
                   ))}
                 </div>
+                <MatchRoundHistory rows={match.rows} />
               </details>
             );
           })}
@@ -1275,11 +1243,14 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
   const allLineRowsForPanel = showAllLines ? visibleAllLineRows : visibleAllLineRows.filter((row) => row.main_line === "true" || row.best_available_line === "true" || row.bettable === "true");
   const sortedShadowRows = [...shadowRows].sort(shadowSort);
   const shadow = shadowStats(shadowRows);
+  const todayIso = londonDateIso();
+  const latestLinesDate = latestLinesPath ? path.basename(latestLinesPath).match(/bet365-lines-(\d{4}-\d{2}-\d{2})\.csv$/)?.[1] ?? "" : "";
+  const hasTodayLines = latestLinesDate === todayIso;
   const boardStale = boardAgeHours == null || boardAgeHours > 24;
   const linesStale = lineAgeHours == null || lineAgeHours > 6;
+  const lineStatus = !latestLinesPath ? "MISSING" : !hasTodayLines ? "NO TODAY CAPTURE" : linesStale ? "STALE" : "FRESH";
   const matchedRate = decisionRows.length ? (matchedDecisionRows.length / decisionRows.length) * 100 : 0;
   const hiddenCount = matchedDecisionRows.length - visibleAllLineRows.length;
-  const todayIso = londonDateIso();
   const todayBoardRows = sortedBoard.filter((row) => row.date === todayIso);
   const todayMatchCount = new Set(todayBoardRows.map(matchKey)).size;
 
@@ -1305,7 +1276,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
           <StatCard label="Verdict" value={bettableRows.length ? `${bettableRows.length} BET NOW` : "NO BET"} detail={`${nearMissRows.length} near miss / ${blockedExamples.length} blocked`} tone={bettableRows.length ? "text-emerald-300" : "text-amber-300"} />
           <StatCard label="Bet365 lines" value={String(decisionRows.length)} detail={`${matchedDecisionRows.length} matched / ${lineRows.length} raw rows`} tone={decisionRows.length ? "text-cyan-300" : "text-slate-400"} />
           <StatCard label="Match rate" value={`${matchedRate.toFixed(0)}%`} detail={`comparison ${comparisonStamp}`} tone={matchedRate >= 95 ? "text-emerald-300" : matchedRate ? "text-amber-300" : "text-slate-400"} />
-          <StatCard label="Line freshness" value={linesStale ? "STALE" : "fresh"} detail={lineStamp} tone={linesStale ? "text-amber-300" : "text-emerald-300"} />
+          <StatCard label="Line freshness" value={lineStatus} detail={latestLinesPath ? `${latestLinesDate || "unknown date"} · ${lineStamp}` : "No Bet365 file found"} tone={lineStatus === "FRESH" ? "text-emerald-300" : "text-amber-300"} />
           <StatCard label="Projection rows" value={String(sortedBoard.length)} detail={`${countBy(sortedBoard, "tour", "ATP")} ATP / ${countBy(sortedBoard, "tour", "WTA")} WTA`} />
           <StatCard label="Shadow evidence" value={String(shadowRows.length)} detail={`${shadow.settled} settled / ${shadow.pending} pending`} tone={shadowRows.length ? "text-amber-300" : "text-slate-400"} />
         </section>
@@ -1347,6 +1318,15 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
             <Link href="/model-monitor/tennis-props?tab=projections" className="shrink-0 rounded-full border border-cyan-400/35 bg-cyan-500/15 px-5 py-3 text-center text-xs font-black uppercase tracking-[0.15em] text-cyan-100 transition hover:bg-cyan-500/25">
               View today&apos;s matches
             </Link>
+          </section>
+        ) : null}
+
+        {!hasTodayLines ? (
+          <section className="mb-6 rounded-2xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-100">
+            <div className="font-black uppercase tracking-[0.12em] text-rose-200">No Bet365 capture for {todayIso}</div>
+            <p className="mt-1 text-rose-100/80">
+              The projections are current, but the latest available prices are from {latestLinesDate || "an earlier date"}. Old prices remain visible for audit only and the betting gate stays blocked until a current capture is synced.
+            </p>
           </section>
         ) : null}
 
