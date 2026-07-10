@@ -1,52 +1,117 @@
 Tennis Props CPI Speed Audit
-Generated: 2026-07-09T18:44:10
+Generated: 2026-07-10T10:01:05
 Input rows: 3852
 Outcome-only. No odds, no ROI, no CLV.
 Lagged CPI is safe for model decisions; same-year CPI is diagnostic only unless captured before the match.
 
 Coverage
-- lagged: 0/3852 rows (0.0%)
-- same_year: 1132/3852 rows (29.4%)
+- lagged: 3504/3852 rows (91.0%)
+  ATP Australian Open 2024: 254
+  ATP Eastbourne 2024: 54
+  ATP Halle 2024: 62
+  ATP Mallorca 2024: 54
+  ATP Queen's Club 2024: 62
+  ATP Roland Garros 2024: 254
+  ATP Stuttgart 2024: 54
+  ATP Us Open 2024: 254
+  ATP Wimbledon 2024: 254
+  WTA Australian Open 2024: 254
   WTA Australian Open 2025: 254
+  WTA Eastbourne 2024: 54
   WTA Eastbourne 2025: 62
   WTA Queen's Club 2025: 54
+  WTA Roland Garros 2024: 254
   WTA Roland Garros 2025: 254
+  WTA Us Open 2024: 254
   WTA Us Open 2025: 254
+  WTA Wimbledon 2024: 254
+  WTA Wimbledon 2025: 254
+- same_year: 3504/3852 rows (91.0%)
+  ATP Australian Open 2024: 254
+  ATP Eastbourne 2024: 54
+  ATP Halle 2024: 62
+  ATP Mallorca 2024: 54
+  ATP Queen's Club 2024: 62
+  ATP Roland Garros 2024: 254
+  ATP Stuttgart 2024: 54
+  ATP Us Open 2024: 254
+  ATP Wimbledon 2024: 254
+  WTA Australian Open 2024: 254
+  WTA Australian Open 2025: 254
+  WTA Eastbourne 2024: 54
+  WTA Eastbourne 2025: 62
+  WTA Queen's Club 2025: 54
+  WTA Roland Garros 2024: 254
+  WTA Roland Garros 2025: 254
+  WTA Us Open 2024: 254
+  WTA Us Open 2025: 254
+  WTA Wimbledon 2024: 254
   WTA Wimbledon 2025: 254
 
+LAGGED headline
+- ACES: current remains best (MAE 2.584, bias +0.033).
+- DFS: cpi_ace+0.015_df+0.020 improves MAE by 0.001 (1.936 -> 1.936), log-loss delta +0.000.
+
+LAGGED current model by CPI bucket
+Market Bucket     N  MAE   Bias   RMSE  LogLoss
+aces   fast      108 4.287 +1.375  5.555   0.625
+aces   neutral  2634 2.684 +0.017  3.783   0.670
+aces   slow      762 1.999 -0.104  2.838   0.662
+dfs    fast      108 2.034 +0.814  2.496   0.743
+dfs    neutral  2634 1.972 -0.136  2.555   0.662
+dfs    slow      762 1.801 +0.222  2.244   0.651
+
+LAGGED best variants
+Market Variant                         N  MAE   DeltaMAE  Bias   LogLoss  DeltaLL
+aces   current                         3504 2.584    +0.000 +0.033   0.667   +0.000
+aces   cpi_ace+0.015_df-0.020          3504 2.584    +0.000 +0.022   0.667   +0.000
+aces   cpi_ace+0.015_df-0.010          3504 2.584    +0.000 +0.022   0.667   +0.000
+aces   cpi_ace+0.015_df+0.000          3504 2.584    +0.000 +0.022   0.667   +0.000
+aces   cpi_ace+0.015_df+0.010          3504 2.584    +0.000 +0.022   0.667   +0.000
+aces   cpi_ace+0.015_df+0.020          3504 2.584    +0.000 +0.022   0.667   +0.000
+aces   cpi_ace+0.025_df-0.020          3504 2.585    +0.000 +0.015   0.667   +0.000
+aces   cpi_ace+0.025_df-0.010          3504 2.585    +0.000 +0.015   0.667   +0.000
+dfs    cpi_ace+0.015_df+0.020          3504 1.936    -0.001 -0.045   0.662   +0.000
+dfs    cpi_ace+0.025_df+0.020          3504 1.936    -0.001 -0.045   0.662   +0.000
+dfs    cpi_ace+0.035_df+0.020          3504 1.936    -0.001 -0.045   0.662   +0.000
+dfs    cpi_ace+0.050_df+0.020          3504 1.936    -0.001 -0.045   0.662   +0.000
+dfs    cpi_ace+0.015_df+0.010          3504 1.936    -0.000 -0.037   0.662   +0.000
+dfs    cpi_ace+0.025_df+0.010          3504 1.936    -0.000 -0.037   0.662   +0.000
+dfs    cpi_ace+0.035_df+0.010          3504 1.936    -0.000 -0.037   0.662   +0.000
+dfs    cpi_ace+0.050_df+0.010          3504 1.936    -0.000 -0.037   0.662   +0.000
+
 SAME_YEAR headline
-- ACES: cpi_ace+0.050_df-0.020 improves MAE by 0.013 (1.819 -> 1.805), log-loss delta -0.001.
-- DFS: cpi_ace+0.015_df+0.020 improves MAE by 0.001 (1.905 -> 1.904), log-loss delta +0.001.
+- ACES: cpi_ace+0.015_df-0.020 improves MAE by 0.000 (2.584 -> 2.584), log-loss delta -0.000.
+- DFS: cpi_ace+0.015_df-0.020 improves MAE by 0.001 (1.936 -> 1.936), log-loss delta -0.000.
 
 SAME_YEAR current model by CPI bucket
 Market Bucket     N  MAE   Bias   RMSE  LogLoss
-aces   fast       54 2.138 -0.518  2.852   0.709
-aces   neutral   762 1.717 +0.041  2.214   0.650
-aces   slow      316 2.010 +0.326  2.613   0.666
-dfs    fast       54 2.125 -0.496  2.638   0.760
-dfs    neutral   762 1.812 -0.220  2.338   0.667
-dfs    slow      316 2.090 -0.076  2.706   0.676
+aces   fast      394 3.306 +0.093  4.713   0.660
+aces   neutral  2286 2.615 +0.018  3.692   0.667
+aces   slow      824 2.152 +0.045  2.967   0.672
+dfs    fast      394 1.787 +0.360  2.214   0.677
+dfs    neutral  2286 1.962 -0.201  2.544   0.663
+dfs    slow      824 1.937 +0.262  2.458   0.651
 
 SAME_YEAR best variants
 Market Variant                         N  MAE   DeltaMAE  Bias   LogLoss  DeltaLL
-aces   cpi_ace+0.050_df-0.020          1132 1.805    -0.013 +0.044   0.656   -0.001
-aces   cpi_ace+0.050_df-0.010          1132 1.805    -0.013 +0.044   0.656   -0.001
-aces   cpi_ace+0.050_df+0.000          1132 1.805    -0.013 +0.044   0.656   -0.001
-aces   cpi_ace+0.050_df+0.010          1132 1.805    -0.013 +0.044   0.656   -0.001
-aces   cpi_ace+0.050_df+0.020          1132 1.805    -0.013 +0.044   0.656   -0.001
-aces   cpi_ace+0.035_df-0.020          1132 1.809    -0.010 +0.059   0.657   -0.001
-aces   cpi_ace+0.035_df-0.010          1132 1.809    -0.010 +0.059   0.657   -0.001
-aces   cpi_ace+0.035_df+0.000          1132 1.809    -0.010 +0.059   0.657   -0.001
-dfs    cpi_ace+0.015_df+0.020          1132 1.904    -0.001 -0.218   0.675   +0.001
-dfs    cpi_ace+0.025_df+0.020          1132 1.904    -0.001 -0.218   0.675   +0.001
-dfs    cpi_ace+0.035_df+0.020          1132 1.904    -0.001 -0.218   0.675   +0.001
-dfs    cpi_ace+0.050_df+0.020          1132 1.904    -0.001 -0.218   0.675   +0.001
-dfs    cpi_ace+0.015_df+0.010          1132 1.904    -0.001 -0.205   0.675   +0.000
-dfs    cpi_ace+0.025_df+0.010          1132 1.904    -0.001 -0.205   0.675   +0.000
-dfs    cpi_ace+0.035_df+0.010          1132 1.904    -0.001 -0.205   0.675   +0.000
-dfs    cpi_ace+0.050_df+0.010          1132 1.904    -0.001 -0.205   0.675   +0.000
+aces   cpi_ace+0.015_df-0.020          3504 2.584    -0.000 +0.038   0.667   -0.000
+aces   cpi_ace+0.015_df-0.010          3504 2.584    -0.000 +0.038   0.667   -0.000
+aces   cpi_ace+0.015_df+0.000          3504 2.584    -0.000 +0.038   0.667   -0.000
+aces   cpi_ace+0.015_df+0.010          3504 2.584    -0.000 +0.038   0.667   -0.000
+aces   cpi_ace+0.015_df+0.020          3504 2.584    -0.000 +0.038   0.667   -0.000
+aces   cpi_ace+0.025_df-0.020          3504 2.584    -0.000 +0.041   0.667   -0.000
+aces   cpi_ace+0.025_df-0.010          3504 2.584    -0.000 +0.041   0.667   -0.000
+aces   cpi_ace+0.025_df+0.000          3504 2.584    -0.000 +0.041   0.667   -0.000
+dfs    cpi_ace+0.015_df-0.020          3504 1.936    -0.001 -0.022   0.662   -0.000
+dfs    cpi_ace+0.025_df-0.020          3504 1.936    -0.001 -0.022   0.662   -0.000
+dfs    cpi_ace+0.035_df-0.020          3504 1.936    -0.001 -0.022   0.662   -0.000
+dfs    cpi_ace+0.050_df-0.020          3504 1.936    -0.001 -0.022   0.662   -0.000
+dfs    cpi_ace+0.015_df-0.010          3504 1.936    -0.000 -0.026   0.662   -0.000
+dfs    cpi_ace+0.025_df-0.010          3504 1.936    -0.000 -0.026   0.662   -0.000
+dfs    cpi_ace+0.035_df-0.010          3504 1.936    -0.000 -0.026   0.662   -0.000
+dfs    cpi_ace+0.050_df-0.010          3504 1.936    -0.000 -0.026   0.662   -0.000
 
 Decision
-- No lagged CPI coverage in the current props stage-0 rows, so do not wire CPI into aces/DF live pricing from this audit.
-- Next required step: regenerate stage-0 rows with broader non-Slam main-tour coverage and historical CPI rows, then re-run.
+- Consider wiring only if lagged CPI improves MAE by >=0.03 counts and does not worsen synthetic O/U log-loss.
 - Same-year CPI can explain venue effects but must stay research-only unless we can prove it is available before match time.
