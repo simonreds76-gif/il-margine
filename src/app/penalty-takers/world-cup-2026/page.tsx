@@ -33,6 +33,11 @@ const LATEST_HIERARCHY_UPDATES = [
     summary: "Valverde stays first. Bentancur is now the safer backup after De Arrascaeta became an active injury doubt in Uruguay training.",
   },
   {
+    team: "Cabo Verde",
+    label: "Bebe out, Cabral in",
+    summary: "Ryan Mendes remains the high-confidence first choice. Jovane Cabral is now the best in-squad backup after Bebe was left out of the final 26.",
+  },
+  {
     team: "Australia",
     label: "Boyle cut, hierarchy rebuilt",
     summary: "Hrustic leads only if on the pitch; Toure is the practical fallback, with Leckie, Irankunda and Mabil live depending on the XI.",
