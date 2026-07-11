@@ -13,6 +13,7 @@ import csv
 import json
 import math
 import os
+import re
 import sys
 import urllib.request
 from datetime import UTC, datetime
@@ -66,6 +67,55 @@ def load_csv(path: Path) -> list[dict[str, str]]:
         return []
     with path.open("r", encoding="utf-8-sig", errors="replace", newline="") as handle:
         return list(csv.DictReader(handle))
+
+
+def load_text(path: Path) -> str:
+    if not path.exists():
+        return ""
+    return path.read_text(encoding="utf-8", errors="replace")
+
+
+def labelled_value(text: str, label: str) -> str:
+    match = re.search(rf"^{re.escape(label)}:\s*(.+?)\s*$", text, flags=re.MULTILINE)
+    return match.group(1).strip() if match else ""
+
+
+def labelled_float(text: str, label: str) -> float | None:
+    match = re.search(r"[-+]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)", labelled_value(text, label))
+    return float(match.group(0)) if match else None
+
+
+def goalscorer_research_summary() -> dict[str, Any]:
+    backtest_dir = ROOT / "data" / "goalscorer" / "backtest"
+    parity = load_text(backtest_dir / "parity-report.txt")
+    walkforward = load_text(backtest_dir / "walkforward-report.txt")
+    clv_rows = load_csv(ROOT / "data" / "goalscorer" / "fair-odds-lab-clv.csv")
+    matched = [row for row in clv_rows if str(row.get("close_odds") or "").strip()]
+    true_closes = [row for row in clv_rows if row.get("close_status") == "true_close"]
+    beta_gate = re.search(
+        r"^beta,(\d+),(\d+),([^,]+),([^,]+),([^\n]+)$",
+        walkforward,
+        flags=re.MULTILINE,
+    )
+    return {
+        "status": "research_only",
+        "variant": labelled_value(walkforward, "Model variant") or "v2_minutes_absolute_share_repair",
+        "parity_decision": labelled_value(parity, "Decision") or "NOT_RUN",
+        "parity_max_delta_pp": (
+            labelled_float(parity, "Maximum absolute probability delta") * 100
+            if labelled_float(parity, "Maximum absolute probability delta") is not None
+            else None
+        ),
+        "signals": len(clv_rows),
+        "matched_closes": len(matched),
+        "true_closes": len(true_closes),
+        "clv_coverage_pct": (len(matched) / len(clv_rows) * 100) if clv_rows else 0.0,
+        "beta_folds": int(beta_gate.group(1)) if beta_gate else 0,
+        "beta_fold_wins": int(beta_gate.group(2)) if beta_gate else 0,
+        "probability_gate": beta_gate.group(3) if beta_gate else "NOT_RUN",
+        "market_roi_gate": beta_gate.group(4) if beta_gate else "UNAVAILABLE",
+        "decision": beta_gate.group(5).strip() if beta_gate else "KEEP_RESEARCH",
+    }
 
 
 def pf(value: Any) -> float | None:
@@ -333,6 +383,7 @@ def build_payload() -> dict[str, Any]:
     team_clv_rows = load_csv(OUT_DIR / "team-shots-v3-ema20-clv-monitor.csv")
     corners_clv_rows = load_csv(OUT_DIR / "corners-v0-clv-monitor.csv")
     tennis_gap_guard = ml_gap_guard_summary()
+    goalscorer_research = goalscorer_research_summary()
 
     payload = {
         "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
@@ -360,6 +411,7 @@ def build_payload() -> dict[str, Any]:
             "clv": clv_summary(corners_clv_rows),
         },
         "tennis_ml_gap_guard": tennis_gap_guard,
+        "goalscorer_v2": goalscorer_research,
     }
     payload["status"] = {
         "pause_required": bool(
@@ -375,6 +427,7 @@ def render_report(payload: dict[str, Any]) -> str:
     team = payload["team_shots_v3_ema20"]
     corners = payload["corners_v0"]
     tennis = payload["tennis_ml_gap_guard"]
+    goalscorer = payload["goalscorer_v2"]
     team_gate = team["segment_gate"]
     team_clv = team["clv"]
     corners_clv = corners["clv"]
@@ -424,6 +477,14 @@ def render_report(payload: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
+            "## Goalscorer V2 Research Gate",
+            "",
+            "- Public Fair Odds Lab remains on the incumbent model.",
+            f"- Live/backtest parity: {goalscorer['parity_decision']} | max drift {pct(goalscorer['parity_max_delta_pp'], 3)}.",
+            f"- Beta calibration: {goalscorer['beta_fold_wins']}/{goalscorer['beta_folds']} fold wins | probability gate {goalscorer['probability_gate']} | market gate {goalscorer['market_roi_gate']}.",
+            f"- Real-price CLV coverage: {goalscorer['matched_closes']}/{goalscorer['signals']} ({goalscorer['clv_coverage_pct']:.1f}%) | true closes {goalscorer['true_closes']}.",
+            f"- Decision: {goalscorer['decision'].replace('_', ' ').lower()} until the fifth fold and real-price evidence exist.",
+            "",
             "## Tennis ML Gap-Guard Quiet Audit",
             "",
             "- This is not a live picks lane. Official ML value remains blocked when the model/market favourite gap is too wide.",
@@ -450,6 +511,7 @@ def render_report(payload: dict[str, Any]) -> str:
             "",
             "- Team-shots V3 is not proven profitable live yet; it is the first broad research candidate that passed the backtest segment gates.",
             "- Corners V0 is narrower and deliberately blocked in two leagues. That is a discipline feature, not a failure.",
+            "- Goalscorer V2 fixes live/backtest mechanics, but it is not a betting edge until captured prices validate it.",
             "- Tennis ML gap-guard remains a safety brake. The backtest is not stable enough to unblock those big market-disagreement ML dogs.",
             "- The next real evidence is CLV and settled live sample. Until 50 settled picks, do not overreact to wins/losses.",
             "",
@@ -462,6 +524,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
     team = payload["team_shots_v3_ema20"]
     corners = payload["corners_v0"]
     tennis = payload["tennis_ml_gap_guard"]
+    goalscorer = payload["goalscorer_v2"]
     team_clv = team["clv"]
     corners_clv = corners["clv"]
     return "\n".join(
@@ -471,6 +534,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
             "",
             f"Team Shots V3 EMA20: {len(team['allowed_leagues'])}/5 leagues, {team_clv['published_picks']} picks, {team_clv['settled']} settled, avg CLV {pct((team_clv['avg_published_to_close_clv'] or 0) * 100) if team_clv['avg_published_to_close_clv'] is not None else '-'}",
             f"Corners V0: {len(corners['allowed_leagues'])}/5 leagues, blocked {join_leagues(corners['blocked_leagues'])}, {corners_clv['published_picks']} picks, {corners_clv['settled']} settled, avg CLV {pct((corners_clv['avg_published_to_close_clv'] or 0) * 100) if corners_clv['avg_published_to_close_clv'] is not None else '-'}",
+            f"Goalscorer V2: parity {goalscorer['parity_decision']}, Beta {goalscorer['beta_fold_wins']}/{goalscorer['beta_folds']} fold wins, CLV coverage {goalscorer['matched_closes']}/{goalscorer['signals']}; research only",
             f"Tennis ML gap guard: Etch/Fils-type {format_bet_summary(tennis['etch_type'])}; recent 2024-26 {format_bet_summary(tennis['etch_type_recent'])}",
             "",
             "Read: observe football live sample. Keep tennis ML gap guard active; quiet audit only.",

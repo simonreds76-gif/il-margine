@@ -1276,6 +1276,105 @@ def read_penalty_review_rows(config: dict[str, str]) -> tuple[list[dict[str, Any
     return rows, latest_generated
 
 
+def report_value(text: str, label: str) -> str:
+    match = re.search(rf"^{re.escape(label)}:\s*(.+?)\s*$", text, flags=re.MULTILINE)
+    return match.group(1).strip() if match else ""
+
+
+def report_int(text: str, label: str) -> int | None:
+    match = re.search(r"-?[0-9][0-9,]*", report_value(text, label))
+    return int(match.group(0).replace(",", "")) if match else None
+
+
+def report_float(text: str, label: str) -> float | None:
+    match = re.search(r"[-+]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)", report_value(text, label))
+    return float(match.group(0)) if match else None
+
+
+def report_percent(text: str, label: str) -> float | None:
+    value = report_float(text, label)
+    return value if value is not None else None
+
+
+def report_csv_row(text: str, section: str, row_name: str) -> list[str]:
+    section_match = re.search(
+        rf"^{re.escape(section)}\s*$([\s\S]*?)(?=^[A-Z][^\n]*\s*$|\Z)",
+        text,
+        flags=re.MULTILINE,
+    )
+    if not section_match:
+        return []
+    for line in section_match.group(1).splitlines():
+        columns = [column.strip() for column in line.split(",")]
+        if columns and columns[0] == row_name:
+            return columns
+    return []
+
+
+def build_research_status() -> dict[str, Any]:
+    parity_path = "data/goalscorer/backtest/parity-report.txt"
+    walkforward_path = "data/goalscorer/backtest/walkforward-report.txt"
+    segment_path = "data/goalscorer/backtest/segment-diagnostics.txt"
+    clv_path = "data/goalscorer/fair-odds-lab-clv-weekly.txt"
+    parity = read_text(parity_path)
+    walkforward = read_text(walkforward_path)
+    segments = read_text(segment_path)
+    clv = read_text(clv_path)
+
+    pooled_beta = report_csv_row(walkforward, "Pooled metrics", "beta")
+    beta_gate = report_csv_row(walkforward, "Promotion gate", "beta")
+    clv_coverage_match = re.search(
+        r"^Matched closes/references:\s*(\d+)\s*\(([0-9.]+)%\)",
+        clv,
+        flags=re.MULTILINE,
+    )
+
+    return {
+        "status": "RESEARCH_ONLY",
+        "model_variant": report_value(walkforward, "Model variant") or "v2_minutes_absolute_share_repair",
+        "updated_at": newest_timestamp(
+            [file_mtime_iso(parity_path), file_mtime_iso(walkforward_path), file_mtime_iso(segment_path), file_mtime_iso(clv_path)]
+        ),
+        "parity": {
+            "decision": report_value(parity, "Decision") or "NOT_RUN",
+            "golden_rows": report_int(parity, "Golden rows") or 0,
+            "mean_abs_delta": report_float(parity, "Mean absolute probability delta"),
+            "max_abs_delta": report_float(parity, "Maximum absolute probability delta"),
+            "gate": report_float(parity, "Gate"),
+        },
+        "calibration": {
+            "candidate": "beta",
+            "n": parse_int(pooled_beta[1]) if len(pooled_beta) > 1 else 0,
+            "brier": parse_float(pooled_beta[2]) if len(pooled_beta) > 2 else None,
+            "log_loss": parse_float(pooled_beta[3]) if len(pooled_beta) > 3 else None,
+            "ece": parse_float(pooled_beta[4]) if len(pooled_beta) > 4 else None,
+            "predicted": parse_float(pooled_beta[5]) if len(pooled_beta) > 5 else None,
+            "actual": parse_float(pooled_beta[6]) if len(pooled_beta) > 6 else None,
+            "evaluated_folds": parse_int(beta_gate[1]) if len(beta_gate) > 1 else 0,
+            "fold_wins": parse_int(beta_gate[2]) if len(beta_gate) > 2 else 0,
+            "probability_gate": beta_gate[3] if len(beta_gate) > 3 else "NOT_RUN",
+            "market_roi_gate": beta_gate[4] if len(beta_gate) > 4 else "UNAVAILABLE",
+            "decision": beta_gate[5] if len(beta_gate) > 5 else "KEEP_RESEARCH",
+        },
+        "segments": {
+            "rows": report_int(segments, "Rows") or 0,
+            "position_sub_rows": report_int(segments, "Position=Sub rows") or 0,
+            "minutes_gap_pct": report_percent(segments, "30-59 gap vs overall"),
+            "minutes_gate": report_value(segments, "30-59 within +/-5pp") or "NOT_RUN",
+        },
+        "clv": {
+            "signals": report_int(clv, "Signals") or 0,
+            "captures_loaded": report_int(clv, "Captured price rows loaded") or 0,
+            "matched": int(clv_coverage_match.group(1)) if clv_coverage_match else 0,
+            "coverage_pct": float(clv_coverage_match.group(2)) if clv_coverage_match else 0.0,
+            "true_closes": report_int(clv, "True same-book closes (<= 45m)") or 0,
+            "lagged_closes": report_int(clv, "Lagged same-book closes") or 0,
+            "pinnacle_references": report_int(clv, "Pinnacle references") or 0,
+            "missing": report_int(clv, "Missing") or 0,
+        },
+    }
+
+
 def build_snapshot(snapshot_key: str) -> dict[str, Any]:
     today_iso = iso_date_in_timezone(LONDON_TZ)
     yesterday_iso = add_days_iso(today_iso, -1)
@@ -1424,7 +1523,7 @@ def build_snapshot(snapshot_key: str) -> dict[str, Any]:
     avg_ev_pct = (sum(ev_values) / len(ev_values) * 100) if ev_values else None
 
     payload = {
-        "schema_version": 1,
+        "schema_version": 2,
         "generated_at": utc_now_iso(),
         "source_status": {
             "compared_at": newest_timestamp([*(row.get("compared_at") for row in all_active_rows), newest_timestamp(comparison_mtims)]),
@@ -1444,6 +1543,7 @@ def build_snapshot(snapshot_key: str) -> dict[str, Any]:
         "shadow_summary": {"by_league": shadow_by_league, "recent_rows": shadow_recent_rows[:50], "settled_today": shadow_today_rows, "settled_yesterday": shadow_yesterday_rows},
         "public_summary": {"by_league": public_by_league},
         "diagnostics": {"matched_rows": len(all_active_rows), "suppressed_rows": sum(1 for row in all_active_rows if effective_monitor_action(row) == "suppress"), "fixtures_with_confirmed_lineups": sum(parse_int(parse_summary_metrics(read_text(config["comparison_txt"])).get("Fixtures With Confirmed Lineups")) or 0 for config in LEAGUE_CONFIGS), "fixtures_with_expected_xis": sum(parse_int(parse_summary_metrics(read_text(config["comparison_txt"])).get("Fixtures With Expected Lineups")) or 0 for config in LEAGUE_CONFIGS), "history_mapped_rows": sum(1 for row in all_active_rows if row.get("resolver_source") == "history"), "roster_mapped_rows": sum(1 for row in all_active_rows if row.get("resolver_source") == "live_roster"), "fallback_rows": sum(parse_int(parse_summary_metrics(read_text(config["comparison_txt"])).get("Fallback Rows")) or 0 for config in LEAGUE_CONFIGS), "low_confidence_rows": sum(1 for row in all_active_rows if row.get("signal_confidence") == "low"), "missing_player_history_rows": sum(parse_int(parse_summary_metrics(read_text(config["comparison_txt"])).get("Missing Player History")) or 0 for config in LEAGUE_CONFIGS), "starter_rows": sum(1 for row in all_active_rows if row.get("lineup_status", "").lower() == "confirmed_starter"), "expected_starter_rows": sum(1 for row in all_active_rows if row.get("lineup_status", "").lower() == "expected_starter"), "avg_ev_pct": avg_ev_pct, "source_feed_gap_leagues": source_feed_gap_leagues, "raw_monitor_summary": "\n\n".join(raw_monitor_summary_chunks)},
+        "research_status": build_research_status(),
         "snapshot_key": snapshot_key,
     }
     payload["payload_hash"] = hashlib.sha256(json.dumps(payload, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()

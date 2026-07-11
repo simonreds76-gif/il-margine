@@ -42,6 +42,8 @@ DEFAULT_START_MINUTES = 79.0
 DEFAULT_SUB_MINUTES = 24.0
 DEFAULT_UNKNOWN_MINUTES = 62.0
 UNALLOCATED_SHARE_FLOOR = 0.10
+FALLBACK_SHARE_POOL = 0.02
+V2_REPAIR_ENABLED = False
 
 BASE_LEAGUE_AVG = {
     "npxg_per_90": 0.20,
@@ -487,6 +489,11 @@ def load_match_logs(paths: List[str]) -> List[NormalizedRow]:
 
         team = row.get(columns["team"] or "", "").strip()
         opponent = row.get(columns["opponent"] or "", "").strip()
+        position = (row.get(columns["position"] or "", "") or "").strip()
+        minutes = _parse_int(row.get(columns["minutes"] or "", "0"), 0)
+        started = _parse_bool(row.get(columns["started"] or "", ""))
+        if V2_REPAIR_ENABLED and started is None and minutes > 0:
+            started = coarse_position(position).upper() != "SUB"
         normalized.append(
             NormalizedRow(
                 season=row.get(columns["season"] or "", ""),
@@ -499,9 +506,9 @@ def load_match_logs(paths: List[str]) -> List[NormalizedRow]:
                 opponent=opponent,
                 opponent_key=_team_key(opponent),
                 is_home=str(row.get(columns["is_home"] or "", "")).strip().lower() in {"1", "true", "y", "yes"},
-                position=(row.get(columns["position"] or "", "") or "").strip(),
-                started=_parse_bool(row.get(columns["started"] or "", "")),
-                minutes=_parse_int(row.get(columns["minutes"] or "", "0"), 0),
+                position=position,
+                started=started,
+                minutes=minutes,
                 goals=_parse_int(row.get(columns["goals"] or "", "0"), 0),
                 shots=_parse_int(row.get(columns["shots"] or "", "0"), 0),
                 xg=_parse_float(row.get(columns["xg"] or "", "0"), 0.0) or 0.0,
@@ -534,6 +541,13 @@ class PlayerHistory:
 
     def add_match(self, match: dict) -> None:
         self.matches.append(match)
+
+    def latest_playing_position(self) -> str:
+        for match in reversed(self.matches):
+            position = coarse_position(str(match.get("position") or ""))
+            if position and position.upper() not in {"SUB", "UNKNOWN"}:
+                return position
+        return "Unknown"
 
     def summary(self, window: int) -> Optional[dict]:
         if not self.matches:
@@ -648,6 +662,51 @@ def expected_minutes_from_summary(summary: Optional[dict], confirmed_started: Op
     if confirmed_started is False:
         return summary["avg_sub_minutes"] or min(summary["avg_minutes"], DEFAULT_SUB_MINUTES)
     return summary["expected_minutes"]
+
+
+def expected_minutes_for_lineup(summary: Optional[dict], lineup_state: str) -> float:
+    """Use the same player-specific minute estimate in live and backtest paths."""
+    state = (lineup_state or "").strip().lower()
+    if state in {"not_in_squad", "expected_out"}:
+        return 0.0
+    if state in {"starter", "expected_starter"}:
+        return expected_minutes_from_summary(summary, True)
+    if state in {"bench", "expected_bench"}:
+        return expected_minutes_from_summary(summary, False)
+    return expected_minutes_from_summary(summary, None)
+
+
+def allocate_team_shares(predictions: List[dict]) -> List[float]:
+    """Allocate absolute shares without filling omitted bookmaker runners."""
+    if not predictions:
+        return []
+    max_share = 1.0 - UNALLOCATED_SHARE_FLOOR
+    raw = [max(0.0, float(item.get("raw_share", 0.0) or 0.0)) for item in predictions]
+    eligible = [bool(item.get("share_eligible", True)) for item in predictions]
+    weights = [max(0.0, float(item.get("fallback_share_weight", 0.0) or 0.0)) for item in predictions]
+    raw_total = sum(value for value, is_eligible in zip(raw, eligible) if is_eligible)
+
+    if raw_total > max_share:
+        scale = max_share / raw_total
+        return [value * scale if is_eligible else 0.0 for value, is_eligible in zip(raw, eligible)]
+
+    shares = [value if is_eligible else 0.0 for value, is_eligible in zip(raw, eligible)]
+    fallback_indices = [
+        index
+        for index, value in enumerate(raw)
+        if value <= 0 and eligible[index] and weights[index] > 0
+    ]
+    if not fallback_indices:
+        return shares
+
+    remaining = max(0.0, max_share - sum(shares))
+    fallback_pool = min(FALLBACK_SHARE_POOL, remaining)
+    weight_total = sum(weights[index] for index in fallback_indices)
+    if fallback_pool <= 0 or weight_total <= 0:
+        return shares
+    for index in fallback_indices:
+        shares[index] = fallback_pool * weights[index] / weight_total
+    return shares
 
 
 def team_factor(summary: Optional[dict], field: str, league_key: str, low: float, high: float) -> tuple[float, bool]:
@@ -959,21 +1018,23 @@ def run_backtest(rows: List[NormalizedRow]) -> tuple[List[dict], dict]:
                 stats["opponent_defense_fallbacks"] += len(team_rows)
 
             player_predictions: List[dict] = []
-            raw_share_total = 0.0
             for row in team_rows:
                 player_recent = player_histories[row.player_id].summary(RECENT_WINDOW)
                 player_long = player_histories[row.player_id].summary(LONG_WINDOW)
+                prediction_position = coarse_position(row.position)
+                if V2_REPAIR_ENABLED and prediction_position.upper() == "SUB":
+                    prediction_position = player_histories[row.player_id].latest_playing_position()
                 expected_minutes = expected_minutes_from_summary(player_recent, row.started)
                 fallback_propensity, _base_rate, method = build_player_propensity(
                     player_recent,
                     player_long,
-                    row.position,
+                    prediction_position,
                     expected_minutes,
                 )
                 raw_share = build_player_raw_share(
                     player_recent,
                     team_summary,
-                    row.position,
+                    prediction_position,
                     expected_minutes,
                 )
                 penalty_lambda = 0.0
@@ -996,29 +1057,36 @@ def run_backtest(rows: List[NormalizedRow]) -> tuple[List[dict], dict]:
                 player_predictions.append(
                     {
                         "row": row,
+                        "prediction_position": prediction_position,
                         "expected_minutes": expected_minutes,
                         "raw_share": raw_share,
                         "fallback_propensity": fallback_propensity,
+                        "fallback_share_weight": fallback_propensity,
+                        "share_eligible": True,
                         "method": method,
                         "penalty_lambda": penalty_lambda,
                         "penalty_share": penalty_share,
                         "penalty_meta": penalty_meta,
                     }
                 )
-                raw_share_total += raw_share
-
-            if raw_share_total <= 0:
-                fallback_total = sum(prediction["fallback_propensity"] for prediction in player_predictions)
-                fallback_total = fallback_total if fallback_total > 0 else (float(len(player_predictions)) or 1.0)
-                for prediction in player_predictions:
-                    prediction["team_share"] = (
-                        (prediction["fallback_propensity"] / fallback_total) * (1.0 - UNALLOCATED_SHARE_FLOOR)
-                    )
+            if V2_REPAIR_ENABLED:
+                allocated_shares = allocate_team_shares(player_predictions)
+                for prediction, allocated_share in zip(player_predictions, allocated_shares):
+                    prediction["team_share"] = allocated_share
             else:
-                for prediction in player_predictions:
-                    prediction["team_share"] = (
-                        (prediction["raw_share"] / raw_share_total) * (1.0 - UNALLOCATED_SHARE_FLOOR)
-                    )
+                raw_share_total = sum(prediction["raw_share"] for prediction in player_predictions)
+                if raw_share_total <= 0:
+                    fallback_total = sum(prediction["fallback_propensity"] for prediction in player_predictions)
+                    fallback_total = fallback_total if fallback_total > 0 else (float(len(player_predictions)) or 1.0)
+                    for prediction in player_predictions:
+                        prediction["team_share"] = (
+                            prediction["fallback_propensity"] / fallback_total
+                        ) * (1.0 - UNALLOCATED_SHARE_FLOOR)
+                else:
+                    for prediction in player_predictions:
+                        prediction["team_share"] = (
+                            prediction["raw_share"] / raw_share_total
+                        ) * (1.0 - UNALLOCATED_SHARE_FLOOR)
 
             for prediction in player_predictions:
                 row = prediction["row"]
@@ -1034,7 +1102,7 @@ def run_backtest(rows: List[NormalizedRow]) -> tuple[List[dict], dict]:
                 else:
                     stats["fallback_rows"] += 1
 
-                position_group = coarse_position(row.position)
+                position_group = prediction["prediction_position"]
                 minutes_band = (
                     "<30"
                     if expected_minutes < 30
@@ -1053,7 +1121,7 @@ def run_backtest(rows: List[NormalizedRow]) -> tuple[List[dict], dict]:
                         "player_name": row.player_name,
                         "team": row.team,
                         "opponent": row.opponent,
-                        "position": row.position,
+                        "position": prediction["prediction_position"],
                         "position_group": position_group or "Unknown",
                         "confirmed_started": "" if row.started is None else int(row.started),
                         "expected_minutes": round(expected_minutes, 1),
@@ -1087,6 +1155,7 @@ def run_backtest(rows: List[NormalizedRow]) -> tuple[List[dict], dict]:
                 {
                     "minutes": row.minutes,
                     "started": row.started,
+                    "position": row.position,
                     "goals": row.goals,
                     "shots": row.shots,
                     "xg": row.xg,
@@ -1187,7 +1256,10 @@ def main() -> None:
     parser.add_argument("--data", nargs="+", required=True, help="CSV files or globs for player match logs")
     parser.add_argument("--out-dir", default="data/goalscorer")
     parser.add_argument("--league", choices=sorted(LEAGUE_AVG_OVERRIDES), default="serie-a")
+    parser.add_argument("--v2-repair", action="store_true", help="Enable research-only minutes/share repair")
     args = parser.parse_args()
+
+    globals()["V2_REPAIR_ENABLED"] = bool(args.v2_repair)
 
     print("\n" + "=" * 64)
     print("  IL MARGINE - Goalscorer Model")

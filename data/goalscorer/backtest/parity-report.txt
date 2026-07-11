@@ -1,0 +1,37 @@
+Goalscorer Live/Backtest Parity
+=================================
+
+League: bundesliga
+Fixture date: 2026-05-16
+Golden rows: 25
+Mean absolute probability delta: 0.000027
+Maximum absolute probability delta: 0.000047
+Gate: <= 0.005000
+Decision: PASS
+
+player,lineup,backtest_p,live_p,delta,backtest_minutes,live_minutes,backtest_share,live_share
+Anton Kade,starter,0.229600,0.229553,-0.000047,83.7,83.7,0.1410,0.1410
+Leopold Querfeld,bench,0.029200,0.029246,+0.000046,24.0,24.0,0.0109,0.0109
+Robin Fellhauer,starter,0.110000,0.109958,-0.000042,84.5,84.5,0.0630,0.0630
+Fabian Rieder,starter,0.085900,0.085859,-0.000041,87.7,87.7,0.0303,0.0303
+Yannik Keitel,starter,0.026100,0.026062,-0.000038,80.4,80.4,0.0143,0.0143
+Oliver Burke,starter,0.183700,0.183735,+0.000035,79.7,79.7,0.1184,0.1184
+Jeffrey Gouweleeuw,starter,0.030000,0.030035,+0.000035,84.6,84.6,0.0157,0.0157
+Marius Wolf,starter,0.028500,0.028467,-0.000033,75.1,75.1,0.0156,0.0156
+Woo-Yeong Jeong,bench,0.018500,0.018467,-0.000033,21.8,21.8,0.0109,0.0109
+Josip Juranovic,bench,0.012900,0.012869,-0.000031,13.2,13.2,0.0074,0.0074
+Noahkai Banks,bench,0.008500,0.008469,-0.000031,24.0,24.0,0.0046,0.0046
+Diogo Leite,starter,0.051100,0.051069,-0.000031,86.6,86.6,0.0306,0.0306
+Han-Noah Massengo,bench,0.006800,0.006830,+0.000030,17.6,17.6,0.0037,0.0037
+Aljoscha Kemlein,starter,0.050700,0.050675,-0.000025,81.0,81.0,0.0303,0.0303
+Livan Burcu,starter,0.092100,0.092081,-0.000019,71.7,71.7,0.0563,0.0563
+Michael Gregoritsch,starter,0.286100,0.286119,+0.000019,74.7,74.7,0.1705,0.1705
+Danilho Doekhi,starter,0.138300,0.138318,+0.000018,90.0,90.0,0.0868,0.0868
+Rodrigo Ribeiro,bench,0.056800,0.056783,-0.000017,19.8,19.8,0.0316,0.0316
+Tim Skarke,bench,0.008500,0.008483,-0.000017,15.3,15.3,0.0050,0.0050
+Tom Rothe,starter,0.053500,0.053516,+0.000016,80.6,80.6,0.0321,0.0321
+Christopher Trimmel,starter,0.001000,0.001016,+0.000016,79.0,79.0,0.0006,0.0006
+Chrislain Matsima,starter,0.016600,0.016615,+0.000015,88.8,88.8,0.0091,0.0091
+Mads Pedersen,bench,0.004000,0.004013,+0.000013,17.5,17.5,0.0022,0.0022
+Cédric Zesiger,starter,0.089500,0.089513,+0.000013,90.0,90.0,0.0507,0.0507
+Andrej Ilic,starter,0.358300,0.358311,+0.000011,86.9,86.9,0.2577,0.2577

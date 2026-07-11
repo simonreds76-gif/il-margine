@@ -57,6 +57,14 @@ jobs:
             --allowed-config data/football-form/team-shots-v3-ema20-allowed-leagues.json
           python scripts/corners-v0-clv-monitor.py
           python scripts/tennis-model-variants-shadow.py
+          if [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+            python scripts/goalscorer-clv-monitor.py --supabase
+          else
+            python scripts/goalscorer-clv-monitor.py
+          fi
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
       - name: Build and send weekly report
         run: python scripts/weekly-research-report.py
@@ -69,10 +77,12 @@ jobs:
         run: |
           python scripts/team-shots-live-snapshot.py
           python scripts/corners-live-snapshot.py
+          python scripts/build-goalscorer-monitor-snapshot.py
           if [ "${ENABLE_SUPABASE_SNAPSHOT_UPLOADS:-0}" = "1" ] && [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
             export NEXT_PUBLIC_SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL:-https://nuqcgzbagxtbxlqrhtvc.supabase.co}"
             python scripts/team-shots-live-snapshot.py --supabase
             python scripts/corners-live-snapshot.py --supabase
+            python scripts/build-goalscorer-monitor-snapshot.py --supabase
           else
             echo "::warning::Supabase snapshot upload disabled or key missing; hosted monitor snapshot upload skipped."
           fi
@@ -88,3 +98,8 @@ jobs:
             data/football-form/corners-v0-clv-monitor.md
             data/backtest/model-variants-shadow.csv
             data/backtest/model-variants-shadow-report.txt
+            data/goalscorer/fair-odds-lab-clv.csv
+            data/goalscorer/fair-odds-lab-clv-weekly.txt
+            data/goalscorer/backtest/parity-report.txt
+            data/goalscorer/backtest/walkforward-report.txt
+            data/goalscorer/backtest/segment-diagnostics.txt
