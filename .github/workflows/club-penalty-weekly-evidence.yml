@@ -1,0 +1,87 @@
+name: Club Penalty Weekly Evidence
+
+on:
+  schedule:
+    - cron: "20 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: golden-with-speed-insights-branch-writes
+  cancel-in-progress: false
+
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: golden-with-speed-insights
+          token: ${{ github.token }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Scan recent penalty events
+        run: |
+          for league in serie-a epl la-liga bundesliga ligue-1; do
+            echo "---- Penalty evidence: ${league}"
+            python scripts/goalscorer-live-penalty-review.py --league "${league}" --days-back 8
+            python scripts/build-penalty-baseline-evidence.py --league "${league}"
+          done
+
+      - name: Summarise review queue
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          files = {
+              "Serie A": Path("data/goalscorer/penalty-duty-live-review.json"),
+              "Premier League": Path("data/goalscorer/epl-penalty-duty-live-review.json"),
+              "La Liga": Path("data/goalscorer/la-liga-penalty-duty-live-review.json"),
+              "Bundesliga": Path("data/goalscorer/bundesliga-penalty-duty-live-review.json"),
+              "Ligue 1": Path("data/goalscorer/ligue-1-penalty-duty-live-review.json"),
+          }
+          lines = ["## Club penalty evidence", "", "Public hierarchies are unchanged until editorial approval.", ""]
+          for label, path in files.items():
+              payload = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+              rows = payload.get("rows", [])
+              high = sum(str(row.get("review_priority", "")).lower() == "high" for row in rows)
+              lines.append(f"- **{label}:** {len(rows)} event row(s), {high} high-priority review(s)")
+          summary = "\n".join(lines) + "\n"
+          print(summary)
+          with Path(__import__("os").environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as handle:
+              handle.write(summary)
+          PY
+
+      - name: Validate public hierarchy safety
+        run: python scripts/validate-club-penalty-pages.py
+
+      - name: Commit evidence updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f data/goalscorer/penalty-duty-live-review.json
+          git add -f data/goalscorer/epl-penalty-duty-live-review.json
+          git add -f data/goalscorer/la-liga-penalty-duty-live-review.json
+          git add -f data/goalscorer/bundesliga-penalty-duty-live-review.json
+          git add -f data/goalscorer/ligue-1-penalty-duty-live-review.json
+          git add -f data/goalscorer/penalty-baseline-evidence.json
+          git add -f data/goalscorer/epl-penalty-baseline-evidence.json
+          git add -f data/goalscorer/la-liga-penalty-baseline-evidence.json
+          git add -f data/goalscorer/bundesliga-penalty-baseline-evidence.json
+          git add -f data/goalscorer/ligue-1-penalty-baseline-evidence.json
+          if git diff --cached --quiet; then
+            echo "No new club penalty evidence."
+            exit 0
+          fi
+          git commit -m "chore: weekly club penalty evidence"
+          bash scripts/ci-safe-push.sh golden-with-speed-insights
