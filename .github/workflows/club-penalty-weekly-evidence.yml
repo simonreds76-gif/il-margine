@@ -108,6 +108,26 @@ jobs:
           print(f"Restored {restored} timestamp-only artifact(s).")
           PY
 
+      - name: Rebuild monitor when evidence changes
+        run: |
+          evidence_paths=(
+            data/goalscorer/penalty-duty-live-review.json
+            data/goalscorer/epl-penalty-duty-live-review.json
+            data/goalscorer/la-liga-penalty-duty-live-review.json
+            data/goalscorer/bundesliga-penalty-duty-live-review.json
+            data/goalscorer/ligue-1-penalty-duty-live-review.json
+            data/goalscorer/penalty-baseline-evidence.json
+            data/goalscorer/epl-penalty-baseline-evidence.json
+            data/goalscorer/la-liga-penalty-baseline-evidence.json
+            data/goalscorer/bundesliga-penalty-baseline-evidence.json
+            data/goalscorer/ligue-1-penalty-baseline-evidence.json
+          )
+          if git diff --quiet -- "${evidence_paths[@]}"; then
+            echo "No semantic penalty evidence changes; monitor snapshot unchanged."
+          else
+            python scripts/build-goalscorer-monitor-snapshot.py
+          fi
+
       - name: Validate public hierarchy safety
         run: python scripts/validate-club-penalty-pages.py
 
@@ -125,6 +145,7 @@ jobs:
           git add -f data/goalscorer/la-liga-penalty-baseline-evidence.json
           git add -f data/goalscorer/bundesliga-penalty-baseline-evidence.json
           git add -f data/goalscorer/ligue-1-penalty-baseline-evidence.json
+          git add -f data/goalscorer/goalscorer-monitor-snapshot.json
           if git diff --cached --quiet; then
             echo "No new club penalty evidence."
             exit 0
