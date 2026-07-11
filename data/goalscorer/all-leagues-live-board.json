@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-11T09:28:25Z",
+  "generated_at": "2026-07-11T14:17:46Z",
   "league_count": 5,
   "row_count": 75,
   "leagues": [
@@ -9,40 +9,40 @@
       "label": "Serie A",
       "path": "data/goalscorer/live-board.json",
       "row_count": 0,
-      "generated_at": "2026-07-11T09:28:13Z"
+      "generated_at": "2026-07-11T14:17:34Z"
     },
     {
       "league": "epl",
       "label": "Premier League",
       "path": "data/goalscorer/epl/live-board.json",
       "row_count": 0,
-      "generated_at": "2026-07-11T09:28:16Z"
+      "generated_at": "2026-07-11T14:17:37Z"
     },
     {
       "league": "la-liga",
       "label": "La Liga",
       "path": "data/goalscorer/la-liga/live-board.json",
       "row_count": 0,
-      "generated_at": "2026-07-11T09:28:19Z"
+      "generated_at": "2026-07-11T14:17:40Z"
     },
     {
       "league": "bundesliga",
       "label": "Bundesliga",
       "path": "data/goalscorer/bundesliga/live-board.json",
       "row_count": 27,
-      "generated_at": "2026-07-11T09:28:21Z"
+      "generated_at": "2026-07-11T14:17:42Z"
     },
     {
       "league": "ligue-1",
       "label": "Ligue 1",
       "path": "data/goalscorer/ligue-1/live-board.json",
       "row_count": 48,
-      "generated_at": "2026-07-11T09:28:25Z"
+      "generated_at": "2026-07-11T14:17:46Z"
     }
   ],
   "rows": [
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -140,7 +140,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -158,20 +158,20 @@
       "position_group": "MC",
       "odds_decimal": 4.5,
       "implied_prob": 0.222222,
-      "model_p_atgs": 0.163833,
-      "model_fair_odds_atgs": 6.1038,
-      "model_lambda": 0.1789,
+      "model_p_atgs": 0.201782,
+      "model_fair_odds_atgs": 4.9558,
+      "model_lambda": 0.2254,
       "team_expected_npxg": 1.3745,
       "team_share": 0.055,
       "non_pen_lambda": 0.0756,
       "base_non_pen_lambda": 0.0756,
-      "penalty_lambda": 0.1034,
-      "base_model_lambda": 0.1789,
+      "penalty_lambda": 0.1498,
+      "base_model_lambda": 0.2254,
       "role_adjustment_factor": 1.0,
       "role_adjustment_reason": "",
-      "penalty_dependency_share": 0.5777,
+      "penalty_dependency_share": 0.6647,
       "penalty_dependent": 1,
-      "penalty_share": 0.69,
+      "penalty_share": 1.0,
       "baseline_penalty_share": 1.0,
       "baseline_penalty_sample": 2.61,
       "baseline_penalty_source": "recent_long",
@@ -182,11 +182,11 @@
       "penalty_evidence_sample": 0.0,
       "penalty_evidence_source": "",
       "penalty_evidence_note": "",
-      "is_penalty_taker": 1,
-      "penalty_role": "primary",
-      "penalty_share_prior": 0.42,
-      "penalty_share_prior_weight": 3.0,
-      "penalty_hierarchy_boost_xg": 0.0082,
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0546,
       "penalty_transfer": 0,
       "penalty_transfer_from": "",
       "penalty_transfer_level": "",
@@ -219,8 +219,8 @@
       "fixture_swing_3": 0.7205,
       "attack_factor": 1.2268,
       "opp_factor": 1.0,
-      "ev": -0.262751,
-      "edge_pct": -26.275,
+      "ev": -0.091982,
+      "edge_pct": -9.198,
       "method": "model",
       "resolver_source": "history",
       "historical_minutes": 2446.0,
@@ -238,7 +238,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -336,7 +336,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -434,7 +434,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -532,7 +532,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -550,20 +550,20 @@
       "position_group": "Sub",
       "odds_decimal": 2.75,
       "implied_prob": 0.363636,
-      "model_p_atgs": 0.145761,
-      "model_fair_odds_atgs": 6.8605,
-      "model_lambda": 0.1575,
+      "model_p_atgs": 0.140339,
+      "model_fair_odds_atgs": 7.1256,
+      "model_lambda": 0.1512,
       "team_expected_npxg": 1.3745,
       "team_share": 0.1081,
       "non_pen_lambda": 0.1485,
       "base_non_pen_lambda": 0.1485,
-      "penalty_lambda": 0.009,
-      "base_model_lambda": 0.1575,
+      "penalty_lambda": 0.0027,
+      "base_model_lambda": 0.1512,
       "role_adjustment_factor": 1.0,
       "role_adjustment_reason": "",
-      "penalty_dependency_share": 0.0571,
+      "penalty_dependency_share": 0.0177,
       "penalty_dependent": 0,
-      "penalty_share": 0.0881,
+      "penalty_share": 0.0261,
       "baseline_penalty_share": 0.0261,
       "baseline_penalty_sample": 3.0,
       "baseline_penalty_source": "recent_long",
@@ -574,11 +574,11 @@
       "penalty_evidence_sample": 0.0,
       "penalty_evidence_source": "",
       "penalty_evidence_note": "",
-      "is_penalty_taker": 1,
-      "penalty_role": "secondary",
-      "penalty_share_prior": 0.15,
-      "penalty_share_prior_weight": 3.0,
-      "penalty_hierarchy_boost_xg": 0.0072,
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0009,
       "penalty_transfer": 0,
       "penalty_transfer_from": "",
       "penalty_transfer_level": "",
@@ -611,8 +611,8 @@
       "fixture_swing_3": 0.723,
       "attack_factor": 1.2268,
       "opp_factor": 1.0,
-      "ev": -0.599157,
-      "edge_pct": -59.916,
+      "ev": -0.614068,
+      "edge_pct": -61.407,
       "method": "model",
       "resolver_source": "history",
       "historical_minutes": 4461.0,
@@ -630,7 +630,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -728,7 +728,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -826,7 +826,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -924,7 +924,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -1022,7 +1022,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -1120,7 +1120,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -1218,7 +1218,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -1316,7 +1316,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -1414,7 +1414,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -1512,7 +1512,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -1610,7 +1610,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -1628,20 +1628,20 @@
       "position_group": "Sub",
       "odds_decimal": 3.1,
       "implied_prob": 0.322581,
-      "model_p_atgs": 0.026479,
-      "model_fair_odds_atgs": 37.7659,
-      "model_lambda": 0.0268,
+      "model_p_atgs": 0.024854,
+      "model_fair_odds_atgs": 40.2349,
+      "model_lambda": 0.0252,
       "team_expected_npxg": 1.3745,
       "team_share": 0.0177,
       "non_pen_lambda": 0.0243,
       "base_non_pen_lambda": 0.0243,
-      "penalty_lambda": 0.0025,
-      "base_model_lambda": 0.0268,
+      "penalty_lambda": 0.0008,
+      "base_model_lambda": 0.0252,
       "role_adjustment_factor": 1.0,
       "role_adjustment_reason": "",
-      "penalty_dependency_share": 0.0937,
+      "penalty_dependency_share": 0.0336,
       "penalty_dependent": 0,
-      "penalty_share": 0.0388,
+      "penalty_share": 0.0131,
       "baseline_penalty_share": 0.0131,
       "baseline_penalty_sample": 2.48,
       "baseline_penalty_source": "recent_long",
@@ -1652,11 +1652,11 @@
       "penalty_evidence_sample": 0.0,
       "penalty_evidence_source": "",
       "penalty_evidence_note": "",
-      "is_penalty_taker": 1,
-      "penalty_role": "tertiary",
-      "penalty_share_prior": 0.06,
-      "penalty_share_prior_weight": 3.0,
-      "penalty_hierarchy_boost_xg": 0.002,
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0003,
       "penalty_transfer": 0,
       "penalty_transfer_from": "",
       "penalty_transfer_level": "",
@@ -1689,8 +1689,8 @@
       "fixture_swing_3": 0.7205,
       "attack_factor": 1.2268,
       "opp_factor": 1.0,
-      "ev": -0.917915,
-      "edge_pct": -91.792,
+      "ev": -0.922953,
+      "edge_pct": -92.295,
       "method": "model",
       "resolver_source": "history",
       "historical_minutes": 3863.0,
@@ -1708,7 +1708,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -1806,7 +1806,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -1904,7 +1904,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -2002,7 +2002,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -2100,7 +2100,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -2198,7 +2198,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -2296,7 +2296,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -2394,7 +2394,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -2492,7 +2492,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -2590,7 +2590,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:21Z",
+      "compared_at": "2026-07-11T14:17:42Z",
       "captured_at": "2026-05-25T15:57:15Z",
       "match_date": "2026-05-25",
       "kickoff": "",
@@ -2688,7 +2688,7 @@
       "notes": "event_id=71443806;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -2786,7 +2786,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -2884,7 +2884,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -2982,7 +2982,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -3080,7 +3080,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -3178,7 +3178,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-25T19:51:25Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -3276,7 +3276,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -3374,7 +3374,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -3472,7 +3472,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -3570,7 +3570,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -3668,7 +3668,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -3766,7 +3766,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -3864,7 +3864,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -3962,7 +3962,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -4060,7 +4060,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -4158,7 +4158,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -4256,7 +4256,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -4354,7 +4354,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -4452,7 +4452,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -4550,7 +4550,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -4648,7 +4648,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -4746,7 +4746,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -4844,7 +4844,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -4942,7 +4942,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-26T16:48:49Z",
       "match_date": "2026-05-26",
       "kickoff": "",
@@ -5040,7 +5040,7 @@
       "notes": "event_id=71564468;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -5138,7 +5138,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -5236,7 +5236,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -5334,7 +5334,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -5432,7 +5432,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -5530,7 +5530,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -5628,7 +5628,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -5726,7 +5726,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -5824,7 +5824,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -5922,7 +5922,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -6020,7 +6020,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -6118,7 +6118,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -6216,7 +6216,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -6314,7 +6314,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -6412,7 +6412,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -6510,7 +6510,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -6608,7 +6608,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -6706,7 +6706,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -6804,7 +6804,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -6902,7 +6902,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -7000,7 +7000,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -7098,7 +7098,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -7196,7 +7196,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
@@ -7294,7 +7294,7 @@
       "notes": "event_id=71564470;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-07-11T09:28:25Z",
+      "compared_at": "2026-07-11T14:17:46Z",
       "captured_at": "2026-05-29T17:06:31Z",
       "match_date": "2026-05-29",
       "kickoff": "",
