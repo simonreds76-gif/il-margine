@@ -121,7 +121,14 @@ def _dedupe_events(rows: Iterable[dict]) -> List[dict]:
 
 
 def build_payload(league_key: str, settled_rows: List[dict], live_rows: List[dict]) -> dict:
-    deduped = _dedupe_events([*live_rows, *settled_rows])
+    all_rows = [*live_rows, *settled_rows]
+    supporting_rows = [
+        row
+        for row in all_rows
+        if str(row.get("review_source") or "").strip() == "fotmob_friendly"
+        or str(row.get("evidence_strength") or "").strip() == "supporting"
+    ]
+    deduped = _dedupe_events([row for row in all_rows if row not in supporting_rows])
 
     team_totals: Dict[str, int] = defaultdict(int)
     team_labels: Dict[str, str] = {}
@@ -193,6 +200,7 @@ def build_payload(league_key: str, settled_rows: List[dict], live_rows: List[dic
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "league": league_key,
         "row_count": len(rows),
+        "excluded_supporting_rows": len(supporting_rows),
         "rows": rows,
     }
 

@@ -108,6 +108,9 @@ export type GoalscorerPenaltyWatchlistRow = {
   date?: string;
   league?: string;
   review_source?: string;
+  competition?: string;
+  is_friendly?: boolean;
+  evidence_strength?: string;
   review_priority?: string;
   review_type?: string;
   match?: string;

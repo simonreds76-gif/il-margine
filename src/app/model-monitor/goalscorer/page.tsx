@@ -163,7 +163,7 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
           <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">
             <LeagueLabel league={row.league} label={row.league || "League"} iconSize={14} />
             <span>|</span>
-            <span>{row.review_source || "Penalty review"}</span>
+            <span>{row.competition || row.review_source || "Penalty review"}</span>
           </div>
           <h3 className="mt-1 text-base font-semibold text-white">
             {row.actual_taker || "Unknown taker"}
@@ -181,6 +181,12 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
           </div>
         </div>
         <div className="flex shrink-0 flex-wrap items-center gap-1.5">
+          {row.evidence_strength === "supporting" ? (
+            <StatusPill
+              label="supporting evidence"
+              tone="border-amber-500/20 bg-amber-500/10 text-amber-300"
+            />
+          ) : null}
           {row.review_priority ? (
             <StatusPill label={row.review_priority} tone={reviewPriorityTone(row.review_priority)} />
           ) : null}

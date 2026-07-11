@@ -1260,6 +1260,8 @@ def read_penalty_review_rows(config: dict[str, str]) -> tuple[list[dict[str, Any
         rows.append({
             "row_id": penalty_review_identity(row),
             "date": row.get("date"), "league": decode_html_value(row.get("league")), "review_source": decode_html_value(row.get("review_source")),
+            "competition": decode_html_value(row.get("competition")), "is_friendly": bool(parse_int(row.get("is_friendly"))),
+            "evidence_strength": decode_html_value(row.get("evidence_strength")),
             "review_priority": decode_html_value(row.get("review_priority")), "review_type": decode_html_value(row.get("review_type")), "match": decode_html_value(row.get("match")),
             "team": decode_html_value(row.get("team")), "opponent": decode_html_value(row.get("opponent")), "actual_taker": decode_html_value(row.get("actual_taker")),
             "actual_role_pre_match": decode_html_value(row.get("actual_role_pre_match")), "penalties_attempted": parse_int(row.get("penalties_attempted")),

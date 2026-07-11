@@ -40,6 +40,7 @@ HEADERS = {
 LEAGUE_CONFIGS = {
     "serie-a": {
         "league_id": 55,
+        "penalty_hierarchy": ROOT / "data" / "goalscorer" / "serie-a-penalty-takers.json",
         "context": ROOT / "data" / "goalscorer" / "penalty-duty-context.json",
         "context_history": ROOT / "data" / "goalscorer" / "live-history" / "penalty-duty-context-*.json",
         "output_csv": ROOT / "data" / "goalscorer" / "penalty-duty-live-review.csv",
@@ -47,6 +48,7 @@ LEAGUE_CONFIGS = {
     },
     "epl": {
         "league_id": 47,
+        "penalty_hierarchy": ROOT / "data" / "goalscorer" / "epl-penalty-takers.json",
         "context": ROOT / "data" / "goalscorer" / "epl" / "penalty-duty-context.json",
         "context_history": ROOT / "data" / "goalscorer" / "epl" / "live-history" / "penalty-duty-context-*.json",
         "output_csv": ROOT / "data" / "goalscorer" / "epl-penalty-duty-live-review.csv",
@@ -54,6 +56,7 @@ LEAGUE_CONFIGS = {
     },
     "la-liga": {
         "league_id": 87,
+        "penalty_hierarchy": ROOT / "data" / "goalscorer" / "la-liga-penalty-takers.json",
         "context": ROOT / "data" / "goalscorer" / "la-liga" / "penalty-duty-context.json",
         "context_history": ROOT / "data" / "goalscorer" / "la-liga" / "live-history" / "penalty-duty-context-*.json",
         "output_csv": ROOT / "data" / "goalscorer" / "la-liga-penalty-duty-live-review.csv",
@@ -61,6 +64,7 @@ LEAGUE_CONFIGS = {
     },
     "bundesliga": {
         "league_id": 54,
+        "penalty_hierarchy": ROOT / "data" / "goalscorer" / "bundesliga-penalty-takers.json",
         "context": ROOT / "data" / "goalscorer" / "bundesliga" / "penalty-duty-context.json",
         "context_history": ROOT / "data" / "goalscorer" / "bundesliga" / "live-history" / "penalty-duty-context-*.json",
         "output_csv": ROOT / "data" / "goalscorer" / "bundesliga-penalty-duty-live-review.csv",
@@ -68,6 +72,7 @@ LEAGUE_CONFIGS = {
     },
     "ligue-1": {
         "league_id": 53,
+        "penalty_hierarchy": ROOT / "data" / "goalscorer" / "ligue-1-penalty-takers.json",
         "context": ROOT / "data" / "goalscorer" / "ligue-1" / "penalty-duty-context.json",
         "context_history": ROOT / "data" / "goalscorer" / "ligue-1" / "live-history" / "penalty-duty-context-*.json",
         "output_csv": ROOT / "data" / "goalscorer" / "ligue-1-penalty-duty-live-review.csv",
@@ -79,6 +84,9 @@ FIELDNAMES = [
     "date",
     "league",
     "review_source",
+    "competition",
+    "is_friendly",
+    "evidence_strength",
     "match",
     "team",
     "opponent",
@@ -105,6 +113,8 @@ FIELDNAMES = [
     "context_generated_at",
     "context_source_path",
 ]
+
+CLUB_FRIENDLY_NAMES = {"club friendlies", "club friendly"}
 
 
 def _today_fotmob_date() -> str:
@@ -137,6 +147,77 @@ def _load_json(path: Path) -> dict:
         return {}
     with path.open("r", encoding="utf-8") as handle:
         return json.load(handle)
+
+
+def _load_active_hierarchy(path: Path) -> tuple[List[str], Dict[str, dict]]:
+    payload = _load_json(path)
+    teams = {
+        str(team): dict(entry)
+        for team, entry in payload.items()
+        if not str(team).startswith("_") and isinstance(entry, dict)
+    }
+    return list(teams), teams
+
+
+def _resolve_active_team(observed_name: str, active_teams: List[str], team_name_match_score) -> str:
+    observed = str(observed_name or "").strip()
+    if not observed:
+        return ""
+
+    candidates = sorted(
+        (
+            (float(team_name_match_score(observed, candidate)), candidate)
+            for candidate in active_teams
+        ),
+        key=lambda item: (item[0], item[1]),
+        reverse=True,
+    )
+    if not candidates or candidates[0][0] < 0.82:
+        return ""
+    if len(candidates) > 1 and candidates[0][0] - candidates[1][0] < 0.08:
+        return ""
+    return candidates[0][1]
+
+
+def _select_matches(
+    leagues: Iterable[dict],
+    *,
+    domestic_league_id: int,
+    active_teams: List[str],
+    team_name_match_score,
+) -> List[dict]:
+    selected: List[dict] = []
+    for league in leagues:
+        competition = str(league.get("name") or "").strip()
+        competition_key = competition.lower()
+        is_domestic = league.get("id") == domestic_league_id
+        is_friendly = competition_key in CLUB_FRIENDLY_NAMES
+        if not is_domestic and not is_friendly:
+            continue
+
+        for raw_match in league.get("matches", []):
+            match = dict(raw_match)
+            home_observed = str(
+                match.get("home", {}).get("longName")
+                or match.get("home", {}).get("name")
+                or ""
+            ).strip()
+            away_observed = str(
+                match.get("away", {}).get("longName")
+                or match.get("away", {}).get("name")
+                or ""
+            ).strip()
+            home_canonical = _resolve_active_team(home_observed, active_teams, team_name_match_score)
+            away_canonical = _resolve_active_team(away_observed, active_teams, team_name_match_score)
+            if is_friendly and not home_canonical and not away_canonical:
+                continue
+
+            match["_competition"] = competition or "Domestic league"
+            match["_is_friendly"] = is_friendly
+            match["_home_canonical"] = home_canonical
+            match["_away_canonical"] = away_canonical
+            selected.append(match)
+    return selected
 
 
 def _write_csv(path: Path, rows: List[dict]) -> None:
@@ -253,7 +334,9 @@ def _blank_context(
     home_team: str,
     away_team: str,
     is_home: bool,
+    hierarchy: dict | None = None,
 ) -> dict:
+    hierarchy = hierarchy or {}
     return {
         "league": league_key,
         "match_date": match_date,
@@ -264,9 +347,9 @@ def _blank_context(
         "opponent": opponent_name,
         "opponent_key": opponent_key,
         "is_home": int(is_home),
-        "primary": "",
-        "secondary": "",
-        "tertiary": "",
+        "primary": str(hierarchy.get("primary") or ""),
+        "secondary": str(hierarchy.get("secondary") or ""),
+        "tertiary": str(hierarchy.get("tertiary") or ""),
         "primary_lineup_status": "",
         "secondary_lineup_status": "",
         "tertiary_lineup_status": "",
@@ -315,8 +398,14 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
         run_name="goalscorer_penalty_utils",
     )
     penalty_role_for_player = penalty_utils["penalty_role_for_player"]
+    settlement_utils = runpy.run_path(
+        str(ROOT / "scripts" / "settlement_utils.py"),
+        run_name="goalscorer_settlement_utils",
+    )
+    team_name_match_score = settlement_utils["team_name_match_score"]
 
     context_map = _load_context_map([config["context"], config["context_history"]])
+    active_teams, hierarchy_by_team = _load_active_hierarchy(config["penalty_hierarchy"])
 
     grouped_events: Dict[tuple[str, str, str, str], List[dict]] = defaultdict(list)
     distinct_takers_by_team_match: Dict[tuple[str, str, str], set[str]] = defaultdict(set)
@@ -328,12 +417,12 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
             {"date": fotmob_date, "timezone": "Europe/London", "ccode3": "GBR"},
         )
         leagues = matches_payload.get("leagues", [])
-        league_matches = [
-            match
-            for league in leagues
-            if league.get("id") == config["league_id"]
-            for match in league.get("matches", [])
-        ]
+        league_matches = _select_matches(
+            leagues,
+            domestic_league_id=int(config["league_id"]),
+            active_teams=active_teams,
+            team_name_match_score=team_name_match_score,
+        )
 
         for match in league_matches:
             status = match.get("status", {}) or {}
@@ -362,13 +451,15 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
                 shots = []
 
             home_team = str(
-                general.get("homeTeam", {}).get("name")
+                match.get("_home_canonical")
+                or general.get("homeTeam", {}).get("name")
                 or match.get("home", {}).get("longName")
                 or match.get("home", {}).get("name")
                 or ""
             ).strip()
             away_team = str(
-                general.get("awayTeam", {}).get("name")
+                match.get("_away_canonical")
+                or general.get("awayTeam", {}).get("name")
                 or match.get("away", {}).get("longName")
                 or match.get("away", {}).get("name")
                 or ""
@@ -379,6 +470,16 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
 
             home_id = int(general.get("homeTeam", {}).get("id") or match.get("home", {}).get("id") or 0)
             away_id = int(general.get("awayTeam", {}).get("id") or match.get("away", {}).get("id") or 0)
+            tracked_team_ids = {
+                team_id
+                for team_id, canonical_name in (
+                    (home_id, str(match.get("_home_canonical") or "")),
+                    (away_id, str(match.get("_away_canonical") or "")),
+                )
+                if canonical_name
+            }
+            is_friendly = bool(match.get("_is_friendly"))
+            competition = str(match.get("_competition") or "").strip()
 
             for shot in shots:
                 if str(shot.get("situation") or "").strip().lower() != "penalty":
@@ -387,6 +488,8 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
                     continue
 
                 team_id = int(shot.get("teamId") or 0)
+                if is_friendly and team_id not in tracked_team_ids:
+                    continue
                 if team_id == home_id:
                     team_name = home_team
                     opponent_name = away_team
@@ -428,6 +531,8 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
                         "event_type": event_type,
                         "event_result": event_result,
                         "penalties_scored": scored_flag,
+                        "competition": competition,
+                        "is_friendly": is_friendly,
                     }
                 )
 
@@ -446,6 +551,7 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
                 home_team=sample["match"].split(" vs ")[0],
                 away_team=sample["match"].split(" vs ")[1],
                 is_home=bool(sample["is_home"]),
+                hierarchy=hierarchy_by_team.get(sample["team"], {}),
             )
         )
 
@@ -464,12 +570,34 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
             actual_role=actual_role,
             distinct_takers_in_match=distinct_takers,
         )
+        is_friendly = bool(sample.get("is_friendly"))
+        priority = review_priority(review_type)
+        if is_friendly and priority == "high":
+            priority = "medium"
+        evidence_strength = "supporting" if is_friendly else "competitive"
+        editorial_note = build_editorial_note(
+            actual_taker=player_name,
+            attempts=attempts,
+            event_result=_summarise_event_result(scored, attempts),
+            team=sample["team"],
+            opponent=sample["opponent"],
+            context=context,
+            review_type=review_type,
+        )
+        if is_friendly:
+            editorial_note = (
+                "Club-friendly supporting evidence only; do not change the hierarchy from this event alone. "
+                + editorial_note
+            )
 
         rows.append(
             {
                 "date": match_date,
                 "league": league_key,
-                "review_source": "fotmob_live",
+                "review_source": "fotmob_friendly" if is_friendly else "fotmob_live",
+                "competition": sample.get("competition", ""),
+                "is_friendly": int(is_friendly),
+                "evidence_strength": evidence_strength,
                 "match": sample["match"],
                 "team": sample["team"],
                 "opponent": sample["opponent"],
@@ -491,16 +619,8 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
                 "active_slot_pre_match": context.get("active_slot_pre_match", ""),
                 "team_lineup_status": context.get("team_lineup_status", ""),
                 "review_type": review_type,
-                "review_priority": review_priority(review_type),
-                "editorial_note": build_editorial_note(
-                    actual_taker=player_name,
-                    attempts=attempts,
-                    event_result=_summarise_event_result(scored, attempts),
-                    team=sample["team"],
-                    opponent=sample["opponent"],
-                    context=context,
-                    review_type=review_type,
-                ),
+                "review_priority": priority,
+                "editorial_note": editorial_note,
                 "context_generated_at": context.get("_generated_at", ""),
                 "context_source_path": context.get("_source_path", ""),
             }
