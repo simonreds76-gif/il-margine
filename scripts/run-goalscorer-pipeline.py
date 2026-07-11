@@ -209,6 +209,12 @@ def main() -> None:
     parser.add_argument("--supabase", action="store_true", help="Upload imported odds rows to Supabase")
     parser.add_argument("--fetch-odds-api", action="store_true", help="Fetch live league ATGS prices from odds-api.io into the inbox first")
     parser.add_argument("--odds-api-bookmakers", default="Bet365", help="Comma-separated bookmakers for odds-api.io")
+    parser.add_argument(
+        "--odds-api-days-ahead",
+        type=int,
+        default=3,
+        help="Limit odds-api.io event discovery to this many days ahead",
+    )
     parser.add_argument("--fetch-pinnacle", action="store_true", help="Fetch live Pinnacle ATGS prices into the inbox first")
     parser.add_argument("--fetch-lineups", action="store_true", help="Fetch FotMob expected/confirmed lineups before live compare")
     parser.add_argument("--lineup-days-ahead", type=int, default=3, help="Fetch FotMob lineups across this many days ahead")
@@ -275,6 +281,8 @@ def main() -> None:
                 args.odds_api_bookmakers,
                 "--out-dir",
                 str(ROOT / "data" / "goalscorer" / "inbox"),
+                "--days-ahead",
+                str(max(1, args.odds_api_days_ahead)),
             ],
             allow_failure=args.live_only,
         )

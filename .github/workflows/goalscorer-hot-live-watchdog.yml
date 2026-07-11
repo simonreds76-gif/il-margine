@@ -24,6 +24,12 @@ jobs:
           sparse-checkout: |
             scripts/goalscorer-hosted-watchdog.py
             scripts/goalscorer-live-schedule.py
+            scripts/settlement_utils.py
+            data/goalscorer/fair-odds-lab-serie-a-signals.csv
+            data/goalscorer/fair-odds-lab-epl-signals.csv
+            data/goalscorer/fair-odds-lab-la-liga-signals.csv
+            data/goalscorer/fair-odds-lab-bundesliga-signals.csv
+            data/goalscorer/fair-odds-lab-ligue-1-signals.csv
             data/goalscorer/confirmed-lineups.json
             data/goalscorer/epl-confirmed-lineups.json
             data/goalscorer/la-liga-confirmed-lineups.json

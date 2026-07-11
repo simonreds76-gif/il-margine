@@ -1,0 +1,48 @@
+Goalscorer Walk-Forward Calibration Report
+=============================================
+
+Generated UTC: 2026-07-11T19:26:37Z
+Status: RESEARCH_ONLY_NOT_LIVE
+Registered: 2026-07-11
+Live proxy: method=model, expected_minutes>=65, position_group!=Sub
+ROI/market gate: unavailable until historical ATGS price coverage exists
+
+Fold metrics
+fold,variant,train_n,test_n,brier,log_loss,ece,predicted,actual
+F1,raw,20058,9778,0.08492,0.29649,0.02450,0.1247,0.1043
+F1,platt,20058,9778,0.08416,0.29340,0.01455,0.1058,0.1043
+F1,beta,20058,9778,0.08419,0.29283,0.01433,0.1065,0.1043
+F1,isotonic,20058,9778,0.08396,0.29181,0.00863,0.1062,0.1043
+F2,raw,29836,12183,0.08196,0.28872,0.02237,0.1169,0.1005
+F2,platt,29836,12183,0.08160,0.28653,0.01389,0.1000,0.1005
+F2,beta,29836,12183,0.08139,0.28561,0.01035,0.0994,0.1005
+F2,isotonic,29836,12183,0.08133,0.28522,0.00644,0.0994,0.1005
+F3,raw,42019,9448,0.07538,0.27376,0.03172,0.1118,0.0874
+F3,platt,42019,9448,0.07389,0.26844,0.01379,0.0965,0.0874
+F3,beta,42019,9448,0.07384,0.26717,0.01015,0.0958,0.0874
+F3,isotonic,42019,9448,0.07377,0.26672,0.00898,0.0954,0.0874
+F4,raw,51467,12226,0.08050,0.28652,0.02155,0.1131,0.0967
+F4,platt,51467,12226,0.07999,0.28387,0.01045,0.0960,0.0967
+F4,beta,51467,12226,0.07993,0.28302,0.01060,0.0948,0.0967
+F4,isotonic,51467,12226,0.07978,0.28233,0.00635,0.0947,0.0967
+F5,raw,63693,0,-,-,-,-,-
+F5,platt,63693,0,-,-,-,-,-
+F5,beta,63693,0,-,-,-,-,-
+F5,isotonic,63693,0,-,-,-,-,-
+
+Pooled metrics
+variant,n,brier,log_loss,ece,predicted,actual
+raw,43635,0.08079,0.28661,0.02464,0.1165,0.0974
+platt,43635,0.08005,0.28341,0.01210,0.0994,0.0974
+beta,43635,0.07998,0.28251,0.00957,0.0989,0.0974
+isotonic,43635,0.07985,0.28188,0.00420,0.0987,0.0974
+
+Promotion gate
+variant,evaluated_folds,fold_wins,probability_gate,market_roi_gate,decision
+platt,4,4,FAIL,UNAVAILABLE,KEEP_RESEARCH
+beta,4,4,FAIL,UNAVAILABLE,KEEP_RESEARCH
+isotonic,4,4,FAIL,UNAVAILABLE,KEEP_RESEARCH
+
+Decision
+No calibrator is promoted unless all five folds exist, at least four beat raw on both Brier and log-loss, pooled ECE <= 2pp, and the fixed real-price ROI gate is non-negative.
+The public Fair Odds Lab remains on the incumbent probability until every gate passes.

@@ -60,6 +60,8 @@ PUBLIC_MIN_MODEL_PROB_PCT = 20.0
 PUBLIC_MAX_MARKET_ODDS = 6.0
 PUBLIC_OFFICIAL_LINEUP_WINDOW_MINUTES = 0
 FAIR_ODDS_LAB_POLICY_REASON = "fair_odds_lab_likely_starters_top5_edge6_prob20_odds6"
+GOALSCORER_MODEL_VERSION = "goalscorer_v1_raw"
+GOALSCORER_CALIBRATION_VERSION = "raw_incumbent_v0"
 DEFENSIVE_POSITION_TOKENS = {
     "GK",
     "D",
@@ -216,6 +218,12 @@ FAIR_ODDS_LAB_LOG_FIELDS = [
     "lineup_state",
     "model_p_atgs",
     "model_fair_odds",
+    "model_version",
+    "calibration_version",
+    "p_calibrated",
+    "edge_vs_novig_pp",
+    "pinnacle_odds_at_publish",
+    "tracking_tier",
     "best_bookmaker",
     "best_bookmaker_odds",
     "ev",
@@ -1261,6 +1269,20 @@ def exposure_row_from_candidate(candidate: Candidate) -> dict[str, str]:
         "lineup_state": clean_text(row.get("lineup_state")) or lineup_label(row),
         "model_p_atgs": fmt_decimal(candidate.model_prob_pct / 100, 6),
         "model_fair_odds": fmt_decimal(candidate.fair_odds, 4),
+        "model_version": clean_text(row.get("model_version"), GOALSCORER_MODEL_VERSION),
+        "calibration_version": clean_text(
+            row.get("calibration_version"),
+            GOALSCORER_CALIBRATION_VERSION,
+        ),
+        # The incumbent is uncalibrated. Keeping the value explicit makes the
+        # forward cutover auditable without pretending a calibrator is live.
+        "p_calibrated": fmt_decimal(candidate.model_prob_pct / 100, 6),
+        # ATGS is one-sided in the current feed, so a true no-vig probability
+        # and Pinnacle reference do not exist. Record that limitation instead
+        # of manufacturing a comparison from raw implied probability.
+        "edge_vs_novig_pp": "unavailable_one_sided_market",
+        "pinnacle_odds_at_publish": "unavailable",
+        "tracking_tier": "display_row",
         "best_bookmaker": clean_text(row.get("bookmaker"), "Best market"),
         "best_bookmaker_odds": fmt_decimal(candidate.best_odds, 4),
         "ev": fmt_decimal(best_ev, 6),
