@@ -3,6 +3,7 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 import FlagMark from "@/components/FlagMark";
 import PageHomeLink from "@/components/PageHomeLink";
+import ClubPenaltyLeagueLinks from "@/components/ClubPenaltyLeagueLinks";
 import WorldCupTeamIndex from "./WorldCupTeamIndex";
 import {
   CONFEDERATION_ORDER,
@@ -30,6 +31,11 @@ const LATEST_HIERARCHY_UPDATES = [
     team: "Uruguay",
     label: "Bentancur promoted after De Arrascaeta injury",
     summary: "Valverde stays first. Bentancur is now the safer backup after De Arrascaeta became an active injury doubt in Uruguay training.",
+  },
+  {
+    team: "Cabo Verde",
+    label: "Bebe out, Cabral in",
+    summary: "Ryan Mendes remains the high-confidence first choice. Jovane Cabral is now the best in-squad backup after Bebe was left out of the final 26.",
   },
   {
     team: "Australia",
@@ -679,6 +685,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
             </div>
           </div>
         </section>
+        <ClubPenaltyLeagueLinks />
       </main>
 
       <Footer />

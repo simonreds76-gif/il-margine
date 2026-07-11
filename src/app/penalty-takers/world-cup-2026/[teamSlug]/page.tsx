@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Footer from "@/components/Footer";
 import FlagMark from "@/components/FlagMark";
 import PageHomeLink from "@/components/PageHomeLink";
+import ClubPenaltyLeagueLinks from "@/components/ClubPenaltyLeagueLinks";
 import {
   WORLD_CUP_PENALTIES_URL,
   buildWorldCupTeamDescription,
@@ -531,6 +532,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
             ) : null}
           </div>
         </section>
+        <ClubPenaltyLeagueLinks compact />
       </main>
 
       <Footer />

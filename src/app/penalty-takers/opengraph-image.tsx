@@ -1,14 +1,14 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Penalty Takers 2025/26 | Il Margine";
+export const alt = "Penalty Takers 2026/27 | Il Margine";
 export const size = {
   width: 1200,
   height: 630,
 };
 export const contentType = "image/png";
 
-const LEAGUES = ["Serie A", "Premier League", "La Liga", "Bundesliga", "Ligue 1"];
+const LEAGUES = ["Premier League", "Serie A", "La Liga", "Bundesliga", "Ligue 1"];
 
 export default function Image() {
   return new ImageResponse(
@@ -82,7 +82,7 @@ export default function Image() {
             }}
           >
             <span>Penalty Takers</span>
-            <span style={{ color: "#34d399" }}>2025/26</span>
+            <span style={{ color: "#34d399" }}>2026/27</span>
           </div>
 
           <div
@@ -135,7 +135,7 @@ export default function Image() {
               color: "#64748b",
             }}
           >
-            <span>96 teams tracked</span>
+            <span>96 current clubs tracked</span>
             <span>ilmargine.bet</span>
           </div>
         </div>

@@ -1,11 +1,120 @@
 {
+  "_meta": {
+    "schema_version": 2,
+    "league": {
+      "key": "bundesliga",
+      "name": "Bundesliga"
+    },
+    "season": {
+      "label": "2026/27",
+      "status": "preseason"
+    },
+    "relegated": [
+      {
+        "team": "FC Heidenheim",
+        "archived_slug": "fc-heidenheim",
+        "archive": "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json"
+      },
+      {
+        "team": "St. Pauli",
+        "archived_slug": "st-pauli",
+        "archive": "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json"
+      },
+      {
+        "team": "Wolfsburg",
+        "archived_slug": "wolfsburg",
+        "archive": "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json"
+      }
+    ],
+    "promoted": [
+      "SC Paderborn 07",
+      "Schalke 04",
+      "SV Elversberg"
+    ],
+    "last_verified": "2026-07-10",
+    "public_updated_at": "2026-07-10",
+    "membership_source": "https://media.dfl.de/sites/3/2026/07/EN_eFyJmg6k_Bundesliga_Fixture-List_2026_27.pdf"
+  },
   "Augsburg": {
     "primary": "Alexis Claude-Maurice",
     "secondary": "Michael Gregoritsch",
     "tertiary": "Samuel Essende",
     "last_updated": "2026-03-21",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-21",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_augsburg_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Alexis Claude-Maurice",
+          "secondary": "Michael Gregoritsch",
+          "tertiary": "Samuel Essende"
+        },
+        "to": {
+          "primary": "Alexis Claude-Maurice",
+          "secondary": "Michael Gregoritsch",
+          "tertiary": "Samuel Essende"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_augsburg_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Alexis Claude-Maurice",
+      "secondary": "Michael Gregoritsch",
+      "tertiary": "Samuel Essende",
+      "archive": "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Bayer Leverkusen": {
     "primary": "Patrik Schick",
@@ -13,7 +122,80 @@
     "tertiary": "Victor Boniface",
     "last_updated": "2026-03-21",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-21",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_bayer_leverkusen_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Patrik Schick",
+          "secondary": "Álex Grimaldo",
+          "tertiary": "Victor Boniface"
+        },
+        "to": {
+          "primary": "Patrik Schick",
+          "secondary": "Álex Grimaldo",
+          "tertiary": "Victor Boniface"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_bayer_leverkusen_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Patrik Schick",
+      "secondary": "Álex Grimaldo",
+      "tertiary": "Victor Boniface",
+      "archive": "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Bayern Munich": {
     "primary": "Harry Kane",
@@ -21,7 +203,80 @@
     "tertiary": "Jamal Musiala",
     "last_updated": "2026-03-20",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-20",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_bayern_munich_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Harry Kane",
+          "secondary": "Michael Olise",
+          "tertiary": "Jamal Musiala"
+        },
+        "to": {
+          "primary": "Harry Kane",
+          "secondary": "Michael Olise",
+          "tertiary": "Jamal Musiala"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_bayern_munich_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Harry Kane",
+      "secondary": "Michael Olise",
+      "tertiary": "Jamal Musiala",
+      "archive": "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Borussia Dortmund": {
     "primary": "Ramy Bensebaini",
@@ -29,7 +284,80 @@
     "tertiary": "Emre Can",
     "last_updated": "2026-03-20",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-20",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_borussia_dortmund_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Ramy Bensebaini",
+          "secondary": "Marcel Sabitzer",
+          "tertiary": "Emre Can"
+        },
+        "to": {
+          "primary": "Ramy Bensebaini",
+          "secondary": "Marcel Sabitzer",
+          "tertiary": "Emre Can"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_borussia_dortmund_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Ramy Bensebaini",
+      "secondary": "Marcel Sabitzer",
+      "tertiary": "Emre Can",
+      "archive": "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Borussia M.Gladbach": {
     "primary": "Kevin Diks",
@@ -37,7 +365,80 @@
     "tertiary": "Tim Kleindienst",
     "last_updated": "2026-03-20",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-20",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_borussia_m_gladbach_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Kevin Diks",
+          "secondary": "Kevin Stöger",
+          "tertiary": "Tim Kleindienst"
+        },
+        "to": {
+          "primary": "Kevin Diks",
+          "secondary": "Kevin Stöger",
+          "tertiary": "Tim Kleindienst"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_borussia_m_gladbach_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Kevin Diks",
+      "secondary": "Kevin Stöger",
+      "tertiary": "Tim Kleindienst",
+      "archive": "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Eintracht Frankfurt": {
     "primary": "Jonathan Burkardt",
@@ -45,7 +446,80 @@
     "tertiary": "Michy Batshuayi",
     "last_updated": "2026-03-15",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-15",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_eintracht_frankfurt_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Jonathan Burkardt",
+          "secondary": "Can Uzun",
+          "tertiary": "Michy Batshuayi"
+        },
+        "to": {
+          "primary": "Jonathan Burkardt",
+          "secondary": "Can Uzun",
+          "tertiary": "Michy Batshuayi"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_eintracht_frankfurt_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Jonathan Burkardt",
+      "secondary": "Can Uzun",
+      "tertiary": "Michy Batshuayi",
+      "archive": "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "FC Cologne": {
     "primary": "Gian-Luca Waldschmidt",
@@ -53,15 +527,80 @@
     "tertiary": "Isak Johannesson",
     "last_updated": "2026-04-13",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
-  },
-  "FC Heidenheim": {
-    "primary": "Arijon Ibrahimovic",
-    "secondary": "Marvin Pieringer",
-    "tertiary": "Budu Zivzivadze",
-    "last_updated": "2026-03-20",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-04-13",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_fc_cologne_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Gian-Luca Waldschmidt",
+          "secondary": "Saïd El Mala",
+          "tertiary": "Isak Johannesson"
+        },
+        "to": {
+          "primary": "Gian-Luca Waldschmidt",
+          "secondary": "Saïd El Mala",
+          "tertiary": "Isak Johannesson"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_fc_cologne_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Gian-Luca Waldschmidt",
+      "secondary": "Saïd El Mala",
+      "tertiary": "Isak Johannesson",
+      "archive": "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Freiburg": {
     "primary": "Vincenzo Grifo",
@@ -69,7 +608,80 @@
     "tertiary": "Lucas Höler",
     "last_updated": "2026-03-21",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-21",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_freiburg_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Vincenzo Grifo",
+          "secondary": "Igor Matanovic",
+          "tertiary": "Lucas Höler"
+        },
+        "to": {
+          "primary": "Vincenzo Grifo",
+          "secondary": "Igor Matanovic",
+          "tertiary": "Lucas Höler"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_freiburg_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Vincenzo Grifo",
+      "secondary": "Igor Matanovic",
+      "tertiary": "Lucas Höler",
+      "archive": "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Hamburger SV": {
     "primary": "Luka Vuskovic",
@@ -77,7 +689,80 @@
     "tertiary": "Jean-Luc Dompe",
     "last_updated": "2026-04-26",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-04-26",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_hamburger_sv_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Luka Vuskovic",
+          "secondary": "Robert Glatzel",
+          "tertiary": "Jean-Luc Dompe"
+        },
+        "to": {
+          "primary": "Luka Vuskovic",
+          "secondary": "Robert Glatzel",
+          "tertiary": "Jean-Luc Dompe"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_hamburger_sv_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Luka Vuskovic",
+      "secondary": "Robert Glatzel",
+      "tertiary": "Jean-Luc Dompe",
+      "archive": "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Hoffenheim": {
     "primary": "Andrej Kramaric",
@@ -85,7 +770,80 @@
     "tertiary": "Umut Tohumcu",
     "last_updated": "2026-03-20",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-20",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_hoffenheim_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Andrej Kramaric",
+          "secondary": "Muhammed Damar",
+          "tertiary": "Umut Tohumcu"
+        },
+        "to": {
+          "primary": "Andrej Kramaric",
+          "secondary": "Muhammed Damar",
+          "tertiary": "Umut Tohumcu"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_hoffenheim_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Andrej Kramaric",
+      "secondary": "Muhammed Damar",
+      "tertiary": "Umut Tohumcu",
+      "archive": "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Mainz 05": {
     "primary": "Nadiem Amiri",
@@ -93,7 +851,80 @@
     "tertiary": "Anthony Caci",
     "last_updated": "2026-03-20",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-20",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_mainz_05_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Nadiem Amiri",
+          "secondary": "Paul Nebel",
+          "tertiary": "Anthony Caci"
+        },
+        "to": {
+          "primary": "Nadiem Amiri",
+          "secondary": "Paul Nebel",
+          "tertiary": "Anthony Caci"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_mainz_05_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Nadiem Amiri",
+      "secondary": "Paul Nebel",
+      "tertiary": "Anthony Caci",
+      "archive": "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "RasenBallsport Leipzig": {
     "primary": "Xavi Simons",
@@ -101,15 +932,173 @@
     "tertiary": "Christoph Baumgartner",
     "last_updated": "2026-03-20",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-20",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_rasenballsport_leipzig_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Xavi Simons",
+          "secondary": "Loïs Openda",
+          "tertiary": "Christoph Baumgartner"
+        },
+        "to": {
+          "primary": "Xavi Simons",
+          "secondary": "Loïs Openda",
+          "tertiary": "Christoph Baumgartner"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_rasenballsport_leipzig_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Xavi Simons",
+      "secondary": "Loïs Openda",
+      "tertiary": "Christoph Baumgartner",
+      "archive": "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
-  "St. Pauli": {
-    "primary": "Danel Sinani",
-    "secondary": "Martijn Kaars",
-    "tertiary": "Eric Smith",
-    "last_updated": "2026-03-21",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+  "SC Paderborn 07": {
+    "primary": "",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-10",
+    "hierarchy_status": "unknown",
+    "confidence": {
+      "primary": "low",
+      "secondary": "low",
+      "tertiary": "low"
+    },
+    "condition_note": "Newly promoted club; the 2026/27 order is not yet verified.",
+    "last_verified": {
+      "date": "2026-07-10",
+      "by": "Il Margine",
+      "method": "league_membership_audit"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [],
+    "change_log": [],
+    "flags": {
+      "carryover_from_previous_season": false,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": null,
+    "player_ids": {},
+    "source": "https://media.dfl.de/sites/3/2026/07/EN_eFyJmg6k_Bundesliga_Fixture-List_2026_27.pdf",
+    "cross_check": "Official 2026/27 league roster"
+  },
+  "SV Elversberg": {
+    "primary": "",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-10",
+    "hierarchy_status": "unknown",
+    "confidence": {
+      "primary": "low",
+      "secondary": "low",
+      "tertiary": "low"
+    },
+    "condition_note": "Newly promoted club; the 2026/27 order is not yet verified.",
+    "last_verified": {
+      "date": "2026-07-10",
+      "by": "Il Margine",
+      "method": "league_membership_audit"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [],
+    "change_log": [],
+    "flags": {
+      "carryover_from_previous_season": false,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": null,
+    "player_ids": {},
+    "source": "https://media.dfl.de/sites/3/2026/07/EN_eFyJmg6k_Bundesliga_Fixture-List_2026_27.pdf",
+    "cross_check": "Official 2026/27 league roster"
+  },
+  "Schalke 04": {
+    "primary": "",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-10",
+    "hierarchy_status": "unknown",
+    "confidence": {
+      "primary": "low",
+      "secondary": "low",
+      "tertiary": "low"
+    },
+    "condition_note": "Newly promoted club; the 2026/27 order is not yet verified.",
+    "last_verified": {
+      "date": "2026-07-10",
+      "by": "Il Margine",
+      "method": "league_membership_audit"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [],
+    "change_log": [],
+    "flags": {
+      "carryover_from_previous_season": false,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": null,
+    "player_ids": {},
+    "source": "https://media.dfl.de/sites/3/2026/07/EN_eFyJmg6k_Bundesliga_Fixture-List_2026_27.pdf",
+    "cross_check": "Official 2026/27 league roster"
   },
   "Union Berlin": {
     "primary": "Derrick Kohn",
@@ -117,7 +1106,80 @@
     "tertiary": "Andrej Ilic",
     "last_updated": "2026-03-20",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-20",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_union_berlin_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Derrick Kohn",
+          "secondary": "Leopold Querfeld",
+          "tertiary": "Andrej Ilic"
+        },
+        "to": {
+          "primary": "Derrick Kohn",
+          "secondary": "Leopold Querfeld",
+          "tertiary": "Andrej Ilic"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_union_berlin_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Derrick Kohn",
+      "secondary": "Leopold Querfeld",
+      "tertiary": "Andrej Ilic",
+      "archive": "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "VfB Stuttgart": {
     "primary": "Maximilian Mittelstädt",
@@ -125,7 +1187,80 @@
     "tertiary": "Deniz Undav",
     "last_updated": "2026-03-20",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-20",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_vfb_stuttgart_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Maximilian Mittelstädt",
+          "secondary": "Ermedin Demirovic",
+          "tertiary": "Deniz Undav"
+        },
+        "to": {
+          "primary": "Maximilian Mittelstädt",
+          "secondary": "Ermedin Demirovic",
+          "tertiary": "Deniz Undav"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_vfb_stuttgart_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Maximilian Mittelstädt",
+      "secondary": "Ermedin Demirovic",
+      "tertiary": "Deniz Undav",
+      "archive": "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json"
+    },
+    "player_ids": {}
   },
   "Werder Bremen": {
     "primary": "Romano Schmid",
@@ -133,14 +1268,79 @@
     "tertiary": "Jens Stage",
     "last_updated": "2026-03-16",
     "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
-  },
-  "Wolfsburg": {
-    "primary": "Christian Eriksen",
-    "secondary": "Mohammed Amoura",
-    "tertiary": "Lovro Majer",
-    "last_updated": "2026-03-20",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check"
+    "cross_check": "Il Margine internal cross-check",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-03-16",
+      "by": "Il Margine",
+      "method": "prior_season_carryover"
+    },
+    "public_updated_at": "2026-07-10",
+    "latest_evidence": null,
+    "evidence_log": [
+      {
+        "id": "evt_20260710_werder_bremen_rollover",
+        "date": "2026-07-10",
+        "season": "2026/27",
+        "type": "editorial_note",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": null,
+        "sources": [],
+        "detection": "manual",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-10T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-10",
+        "season": "2026/27",
+        "change_type": "season_rollover",
+        "from": {
+          "primary": "Romano Schmid",
+          "secondary": "Marvin Ducksch",
+          "tertiary": "Jens Stage"
+        },
+        "to": {
+          "primary": "Romano Schmid",
+          "secondary": "Marvin Ducksch",
+          "tertiary": "Jens Stage"
+        },
+        "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+        "evidence_ids": [
+          "evt_20260710_werder_bremen_rollover"
+        ],
+        "detection": "manual",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-10T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": true,
+      "weak_evidence": true,
+      "stale_override": null
+    },
+    "prior_season": {
+      "label": "2025/26",
+      "primary": "Romano Schmid",
+      "secondary": "Marvin Ducksch",
+      "tertiary": "Jens Stage",
+      "archive": "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json"
+    },
+    "player_ids": {}
   }
 }

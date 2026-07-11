@@ -39,6 +39,7 @@ EXPECTED_AUDITED_HIERARCHY = {
     "Korea Republic": ("Son Heung-min", "Hwang Hee-chan"),
     "Spain": ("Mikel Oyarzabal", "Lamine Yamal"),
     "Switzerland": ("Granit Xhaka", "Breel Embolo"),
+    "Uruguay": ("Federico Valverde", "Rodrigo Bentancur"),
 }
 
 EXPECTED_LATEST_UPDATE_TEAMS = set(EXPECTED_AUDITED_HIERARCHY)

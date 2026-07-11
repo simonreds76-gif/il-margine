@@ -1,7 +1,13 @@
 import { MetadataRoute } from "next";
 import { BASE_URL, FAIR_ODDS_INDEXABLE } from "@/lib/config";
 import { RESOURCES } from "@/lib/resources";
-import { readAllClubPenaltyTeams } from "@/lib/club-penalty-takers";
+import {
+  CLUB_LEAGUES,
+  clubPenaltyLeagueUrl,
+  getClubPenaltySeason,
+  readAllClubPenaltyTeams,
+  readClubPenaltyData,
+} from "@/lib/club-penalty-takers";
 import { readWorldCupData, worldCupTeamUrl, WORLD_CUP_PENALTIES_URL } from "@/lib/world-cup-penalties";
 
 const STATIC_LAST_MODIFIED = new Date("2026-05-12T00:00:00Z");
@@ -11,7 +17,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const worldCupLastModified = worldCupData?.last_verified
     ? new Date(`${worldCupData.last_verified}T12:00:00Z`)
     : STATIC_LAST_MODIFIED;
-  const clubPenaltyTeams = await readAllClubPenaltyTeams().catch(() => []);
+  const [clubPenaltyTeams, clubPenaltyLeagues] = await Promise.all([
+    readAllClubPenaltyTeams().catch(() => []),
+    readClubPenaltyData().catch(() => []),
+  ]);
+  const clubPenaltySeason = getClubPenaltySeason();
+  const clubPenaltyLastModified = new Date(`${clubPenaltySeason.published_at}T12:00:00Z`);
 
   const entries: MetadataRoute.Sitemap = [
     { url: BASE_URL, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "daily", priority: 1 },
@@ -20,13 +31,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/track-record`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE_URL}/fair-odds-lab`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "daily", priority: 0.8 },
     { url: `${BASE_URL}/anytime-goalscorer`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "daily", priority: 0.8 },
-    { url: `${BASE_URL}/penalty-takers`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE_URL}/penalty-takers`, lastModified: clubPenaltyLastModified, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE_URL}/penalty-takers/methodology`, lastModified: clubPenaltyLastModified, changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE_URL}/world-cup-2026-free-picks`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "daily", priority: 0.85 },
+    ...CLUB_LEAGUES.map((leagueConfig) => {
+      const league = clubPenaltyLeagues.find((candidate) => candidate.key === leagueConfig.key);
+      return {
+        url: clubPenaltyLeagueUrl(leagueConfig.key),
+        lastModified: league?.publicUpdatedAt ? new Date(`${league.publicUpdatedAt}T12:00:00Z`) : clubPenaltyLastModified,
+        changeFrequency: "weekly" as const,
+        priority: 0.78,
+      };
+    }),
     ...clubPenaltyTeams.map((team) => ({
       url: team.absoluteUrl,
-      lastModified: team.lastUpdated ? new Date(`${team.lastUpdated}T12:00:00Z`) : STATIC_LAST_MODIFIED,
-      changeFrequency: "weekly" as const,
-      priority: 0.62,
+      lastModified: team.publicUpdatedAt ? new Date(`${team.publicUpdatedAt}T12:00:00Z`) : clubPenaltyLastModified,
+      changeFrequency: team.isArchived ? "monthly" as const : "weekly" as const,
+      priority: team.isArchived ? 0.45 : 0.62,
     })),
     ...(worldCupData
       ? [
