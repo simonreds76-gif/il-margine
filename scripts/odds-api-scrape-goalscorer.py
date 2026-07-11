@@ -69,6 +69,20 @@ LEAGUE_CONFIGS = {
 }
 
 
+def snapshot_kind_for(captured_at: str, kickoff_at: str) -> str:
+    try:
+        captured = datetime.fromisoformat(captured_at.replace("Z", "+00:00"))
+        kickoff = datetime.fromisoformat(kickoff_at.replace("Z", "+00:00"))
+    except (AttributeError, ValueError):
+        return "live_capture"
+    lead_minutes = (kickoff - captured).total_seconds() / 60.0
+    if 0.0 <= lead_minutes <= 10.0:
+        return "pre_kickoff_5"
+    if 10.0 < lead_minutes <= 40.0:
+        return "pre_kickoff_30"
+    return "live_capture"
+
+
 def _norm_league_text(value: str) -> str:
     normalized = html.unescape((value or "").strip().lower())
     normalized = unicodedata.normalize("NFD", normalized)
@@ -187,7 +201,7 @@ def _extract_atgs_rows_for_market(bookmaker: str, event: dict, market: dict, com
                     "event_id": str(event.get("id") or ""),
                     "kickoff_at": kickoff_at,
                     "minutes_to_kickoff": "",
-                    "snapshot_kind": "live_capture",
+                    "snapshot_kind": snapshot_kind_for(captured_at, kickoff_at),
                     "bookmaker": bookmaker,
                     "competition": str((event.get("league") or {}).get("name") or competition_label),
                     "market": "ATGS",
@@ -229,7 +243,7 @@ def _extract_atgs_rows_for_market(bookmaker: str, event: dict, market: dict, com
                 "event_id": str(event.get("id") or ""),
                 "kickoff_at": kickoff_at,
                 "minutes_to_kickoff": "",
-                "snapshot_kind": "live_capture",
+                "snapshot_kind": snapshot_kind_for(captured_at, kickoff_at),
                 "bookmaker": bookmaker,
                 "competition": str((event.get("league") or {}).get("name") or competition_label),
                 "market": "ATGS",

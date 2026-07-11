@@ -58,6 +58,11 @@ artifacts=(
 
   data/goalscorer/fair-odds-lab-*-signals.csv
   data/goalscorer/fair-odds-lab-*-performance.txt
+  data/goalscorer/fair-odds-lab-clv.csv
+  data/goalscorer/fair-odds-lab-clv-weekly.txt
+  data/goalscorer/backtest/walkforward-metrics.csv
+  data/goalscorer/backtest/walkforward-report.txt
+  data/goalscorer/backtest/walkforward-calibrators.json
 
   data/goalscorer/penalty-duty-context.json
   data/goalscorer/penalty-duty-review.csv

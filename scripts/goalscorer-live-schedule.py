@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import argparse
+import csv
+import glob
 import json
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
@@ -9,6 +11,8 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 import requests
+
+from settlement_utils import normalize_team_name
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -27,6 +31,7 @@ LEAGUE_CONFIGS = {
     "bundesliga": {"league_id": 54, "label": "Bundesliga", "lineups": "data/goalscorer/bundesliga-confirmed-lineups.json"},
     "ligue-1": {"league_id": 53, "label": "Ligue 1", "lineups": "data/goalscorer/ligue-1-confirmed-lineups.json"},
 }
+TRACKED_SIGNAL_GLOB = "data/goalscorer/fair-odds-lab-*-signals.csv"
 
 
 @dataclass
@@ -64,6 +69,12 @@ def parse_args() -> argparse.Namespace:
         help="Keep retrying briefly after kickoff if confirmed teams are still missing",
     )
     parser.add_argument("--hot-cadence", type=int, default=10, help="Cadence in minutes while lineups are due")
+    parser.add_argument(
+        "--close-window-before-minutes",
+        type=int,
+        default=40,
+        help="Continue price capture for tracked signals this many minutes before kickoff",
+    )
     parser.add_argument(
         "--include-confirmed",
         action="store_true",
@@ -126,6 +137,56 @@ def _classify_fixture(
     return None
 
 
+def _fixture_key(match_date: str, home_team: str, away_team: str) -> tuple[str, str, str]:
+    teams = sorted([normalize_team_name(home_team), normalize_team_name(away_team)])
+    return str(match_date)[:10], teams[0], teams[1]
+
+
+def _load_tracked_signal_fixtures() -> dict[str, set[tuple[str, str, str]]]:
+    tracked: dict[str, set[tuple[str, str, str]]] = {league: set() for league in LEAGUE_CONFIGS}
+    pattern = str(ROOT / TRACKED_SIGNAL_GLOB)
+    for raw_path in sorted(glob.glob(pattern)):
+        path = Path(raw_path)
+        league = path.name.removeprefix("fair-odds-lab-").removesuffix("-signals.csv")
+        if league not in tracked:
+            continue
+        with path.open("r", encoding="utf-8-sig", newline="") as handle:
+            for row in csv.DictReader(handle):
+                match_date = str(row.get("date") or "")[:10]
+                home = str(row.get("home_team") or "")
+                away = str(row.get("away_team") or "")
+                if match_date and home and away:
+                    tracked[league].add(_fixture_key(match_date, home, away))
+    return tracked
+
+
+def _effective_fixture_tier(
+    now_utc: datetime,
+    kickoff_utc: datetime,
+    *,
+    already_confirmed: bool,
+    tracked_signal: bool,
+    lineup_window_before_minutes: int,
+    lineup_grace_after_minutes: int,
+    close_window_before_minutes: int,
+    include_distant: bool,
+    include_confirmed: bool,
+) -> str | None:
+    minutes_to_kickoff = int((kickoff_utc - now_utc).total_seconds() // 60)
+    if already_confirmed:
+        if tracked_signal and 0 <= minutes_to_kickoff <= close_window_before_minutes:
+            return "close"
+        if not include_confirmed:
+            return None
+    return _classify_fixture(
+        now_utc,
+        kickoff_utc,
+        lineup_window_before_minutes,
+        lineup_grace_after_minutes,
+        include_distant=include_distant,
+    )
+
+
 def _read_json(path: Path) -> dict[str, Any] | None:
     if not path.exists():
         return None
@@ -174,6 +235,7 @@ def main() -> int:
         for league in requested_leagues
         if league in LEAGUE_CONFIGS
     }
+    tracked_signals = _load_tracked_signal_fixtures()
 
     fixtures_by_league: Dict[str, List[FixtureWindow]] = {
         league: [] for league in requested_leagues if league in LEAGUE_CONFIGS
@@ -191,18 +253,25 @@ def main() -> int:
                 kickoff_utc = _parse_kickoff(match)
                 if kickoff_utc is None or kickoff_utc > lookahead_limit:
                     continue
-                tier = _classify_fixture(
+                match_id = int(match.get("id")) if match.get("id") else None
+                already_confirmed = bool(match_id and match_id in confirmed_by_league.get(league_key, set()))
+                home_name = str(match.get("home", {}).get("name") or "").strip()
+                away_name = str(match.get("away", {}).get("name") or "").strip()
+                tracked_signal = _fixture_key(kickoff_utc.date().isoformat(), home_name, away_name) in tracked_signals.get(league_key, set())
+                tier = _effective_fixture_tier(
                     now_utc,
                     kickoff_utc,
-                    args.lineup_window_before_minutes,
-                    args.lineup_grace_after_minutes,
+                    already_confirmed=already_confirmed,
+                    tracked_signal=tracked_signal,
+                    lineup_window_before_minutes=args.lineup_window_before_minutes,
+                    lineup_grace_after_minutes=args.lineup_grace_after_minutes,
+                    close_window_before_minutes=args.close_window_before_minutes,
                     include_distant=args.include_distant_fixtures,
+                    include_confirmed=args.include_confirmed,
                 )
                 if tier is None:
                     continue
-                match_id = int(match.get("id")) if match.get("id") else None
-                already_confirmed = bool(match_id and match_id in confirmed_by_league.get(league_key, set()))
-                if already_confirmed and not args.include_confirmed:
+                if already_confirmed and tier != "close" and not args.include_confirmed:
                     continue
                 minutes_to_kickoff = int((kickoff_utc - now_utc).total_seconds() // 60)
                 fixtures_by_league.setdefault(league_key, []).append(
@@ -210,21 +279,22 @@ def main() -> int:
                         tier=tier,
                         kickoff_utc=kickoff_utc,
                         minutes_to_kickoff=minutes_to_kickoff,
-                        home_team=str(match.get("home", {}).get("name") or "").strip(),
-                        away_team=str(match.get("away", {}).get("name") or "").strip(),
+                        home_team=home_name,
+                        away_team=away_name,
                         match_id=match_id,
                         already_confirmed=already_confirmed,
                     )
                 )
 
-    tier_priority = {"lineup": 0, "grace": 1, "distant": 2}
-    cadence_map = {"lineup": args.hot_cadence, "grace": args.hot_cadence, "distant": 0, "off": 0}
+    tier_priority = {"close": 0, "lineup": 1, "grace": 2, "distant": 3}
+    cadence_map = {"close": args.hot_cadence, "lineup": args.hot_cadence, "grace": args.hot_cadence, "distant": 0, "off": 0}
     payload = {
         "generated_at": now_utc.replace(microsecond=0).isoformat(),
         "mode": "official-lineup-window",
         "lookahead_hours": args.lookahead_hours,
         "lineup_window_before_minutes": args.lineup_window_before_minutes,
         "lineup_grace_after_minutes": args.lineup_grace_after_minutes,
+        "close_window_before_minutes": args.close_window_before_minutes,
         "leagues": [],
     }
 
@@ -236,7 +306,11 @@ def main() -> int:
             fixtures_by_league.get(league_key, []),
             key=lambda item: (tier_priority.get(item.tier, 99), item.kickoff_utc),
         )
-        active_fixtures = [item for item in fixtures if item.tier in {"lineup", "grace"} and not item.already_confirmed]
+        active_fixtures = [
+            item
+            for item in fixtures
+            if (item.tier in {"lineup", "grace"} and not item.already_confirmed) or item.tier == "close"
+        ]
         tier = active_fixtures[0].tier if active_fixtures else "off"
         next_kickoff_source = active_fixtures[0] if active_fixtures else (fixtures[0] if fixtures else None)
         next_kickoff = (
@@ -253,6 +327,7 @@ def main() -> int:
                 "active_fixture_count": len(active_fixtures),
                 "lineup_count": sum(1 for item in active_fixtures if item.tier == "lineup"),
                 "grace_count": sum(1 for item in active_fixtures if item.tier == "grace"),
+                "close_count": sum(1 for item in active_fixtures if item.tier == "close"),
                 "distant_count": sum(1 for item in fixtures if item.tier == "distant"),
                 "stored_confirmed_count": len(confirmed_by_league.get(league_key, set())),
                 "next_kickoff_utc": next_kickoff,

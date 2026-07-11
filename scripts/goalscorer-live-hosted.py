@@ -208,7 +208,7 @@ def main() -> int:
             message=f"Running {league} ({tier} tier)",
         )
 
-        live_proc = run_cmd([
+        live_args = [
             sys.executable,
             str(ROOT / "scripts" / "run-goalscorer-pipeline.py"),
             "--league", league,
@@ -219,7 +219,15 @@ def main() -> int:
             "--odds-api-bookmakers", "Bet365",
             "--bookmaker", "Bet365",
             "--track-shadow",
-        ])
+        ]
+        if (
+            (os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or os.environ.get("SUPABASE_URL"))
+            and (os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_KEY"))
+        ):
+            live_args.append("--supabase")
+        else:
+            warnings.append("Goalscorer odds capture is local-only: Supabase credentials are missing.")
+        live_proc = run_cmd(live_args)
         if live_proc.returncode != 0:
             failed_count += 1
             entry.update({
@@ -269,6 +277,16 @@ def main() -> int:
     write_json(SCHEDULE_STATE_FILE, schedule_payload)
 
     if ran_count > 0:
+        clv_args = [sys.executable, str(ROOT / "scripts" / "goalscorer-clv-monitor.py")]
+        if (
+            (os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or os.environ.get("SUPABASE_URL"))
+            and (os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_KEY"))
+        ):
+            clv_args.append("--supabase")
+        clv_proc = run_cmd(clv_args)
+        if clv_proc.returncode != 0:
+            warnings.append(f"goalscorer CLV monitor failed ({clv_proc.returncode})")
+
         snapshot_args = [sys.executable, str(ROOT / "scripts" / "goalscorer-live-snapshot.py")]
         supabase_upload_enabled = os.environ.get("ENABLE_SUPABASE_SNAPSHOT_UPLOADS", "0").strip() == "1"
         if (
