@@ -27,6 +27,7 @@ REQUIRED_PLAYER_LOGS = {
 FAILURE_COOLDOWN_MINUTES = 60
 FAILURE_THRESHOLD = 3
 DETAIL_CADENCE_HOT_MINUTES = 60
+CLV_CADENCE_MINUTES = 360
 
 
 def now_utc_iso() -> str:
@@ -118,7 +119,9 @@ def main() -> int:
     current_league = ""
     previous_status = read_json(STATUS_FILE) or {}
     last_successful_finished_at = str(previous_status.get("last_successful_finished_at") or "") or None
-    state = build_default_state(read_json(SCHEDULE_STATE_FILE))
+    previous_schedule = read_json(SCHEDULE_STATE_FILE) or {}
+    state = build_default_state(previous_schedule)
+    last_clv_run_at = str(previous_schedule.get("last_clv_run_at") or "")
 
     write_status(
         state="running",
@@ -146,6 +149,7 @@ def main() -> int:
     plan = json.loads(plan_proc.stdout or "{}")
     plan_lookup = {str(item.get("league")): item for item in plan.get("leagues", [])}
     ran_count = 0
+    close_run_count = 0
     failed_count = 0
 
     for league in LEAGUES:
@@ -217,16 +221,20 @@ def main() -> int:
             "--lineup-days-ahead", "3",
             "--fetch-odds-api",
             "--odds-api-bookmakers", "Bet365",
+            "--odds-api-days-ahead", "1",
             "--bookmaker", "Bet365",
             "--track-shadow",
         ]
-        if (
+        supabase_available = bool(
             (os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or os.environ.get("SUPABASE_URL"))
             and (os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_KEY"))
-        ):
+        )
+        # Persist only the dedicated close tier. Lineup/grace refreshes still
+        # build the page locally but must not multiply database snapshots.
+        if tier == "close" and supabase_available:
             live_args.append("--supabase")
-        else:
-            warnings.append("Goalscorer odds capture is local-only: Supabase credentials are missing.")
+        elif tier == "close":
+            warnings.append("Goalscorer close capture is local-only: Supabase credentials are missing.")
         live_proc = run_cmd(live_args)
         if live_proc.returncode != 0:
             failed_count += 1
@@ -242,10 +250,12 @@ def main() -> int:
             continue
 
         ran_count += 1
+        if tier == "close":
+            close_run_count += 1
         successful_run_at = now_utc_iso()
         detail_run_at = ""
         run_detail_tasks = False
-        if tier not in {"lineup", "grace"}:
+        if tier not in {"lineup", "grace", "close"}:
             run_detail_tasks = not (last_detail_age is not None and last_detail_age < DETAIL_CADENCE_HOT_MINUTES)
 
         if run_detail_tasks:
@@ -272,20 +282,25 @@ def main() -> int:
     schedule_payload = {
         "updated_at": now_utc_iso(),
         "reason": "cycle",
+        "last_clv_run_at": last_clv_run_at,
         "leagues": state,
     }
-    write_json(SCHEDULE_STATE_FILE, schedule_payload)
 
     if ran_count > 0:
-        clv_args = [sys.executable, str(ROOT / "scripts" / "goalscorer-clv-monitor.py")]
-        if (
-            (os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or os.environ.get("SUPABASE_URL"))
-            and (os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_KEY"))
-        ):
-            clv_args.append("--supabase")
-        clv_proc = run_cmd(clv_args)
-        if clv_proc.returncode != 0:
-            warnings.append(f"goalscorer CLV monitor failed ({clv_proc.returncode})")
+        clv_age = iso_age_minutes(last_clv_run_at)
+        clv_due = close_run_count > 0 and (clv_age is None or clv_age >= CLV_CADENCE_MINUTES)
+        if clv_due:
+            clv_args = [sys.executable, str(ROOT / "scripts" / "goalscorer-clv-monitor.py")]
+            if supabase_available:
+                clv_args.append("--supabase")
+            clv_proc = run_cmd(clv_args)
+            if clv_proc.returncode != 0:
+                warnings.append(f"goalscorer CLV monitor failed ({clv_proc.returncode})")
+            else:
+                last_clv_run_at = now_utc_iso()
+                schedule_payload["last_clv_run_at"] = last_clv_run_at
+
+        write_json(SCHEDULE_STATE_FILE, schedule_payload)
 
         snapshot_args = [sys.executable, str(ROOT / "scripts" / "goalscorer-live-snapshot.py")]
         supabase_upload_enabled = os.environ.get("ENABLE_SUPABASE_SNAPSHOT_UPLOADS", "0").strip() == "1"
@@ -314,6 +329,8 @@ def main() -> int:
             message=final_message,
         )
         return 0
+
+    write_json(SCHEDULE_STATE_FILE, schedule_payload)
 
     if failed_count > 0:
         write_status(

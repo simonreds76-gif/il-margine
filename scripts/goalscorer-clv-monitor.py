@@ -216,7 +216,7 @@ def load_live_history_captures(pattern: str) -> list[dict]:
     return captures
 
 
-def load_supabase_captures(start_date: str, end_date: str) -> list[dict]:
+def load_supabase_captures(signal_dates: list[str]) -> list[dict]:
     import requests
 
     load_env()
@@ -228,34 +228,36 @@ def load_supabase_captures(start_date: str, end_date: str) -> list[dict]:
     headers = {"apikey": key, "Authorization": f"Bearer {key}"}
     endpoint = f"{base}/rest/v1/goalscorer_odds_history"
     rows: list[dict] = []
-    offset = 0
     page_size = 1000
-    while True:
-        response = requests.get(
-            endpoint,
-            headers=headers,
-            params={
-                "select": "captured_at,match_date,event_id,kickoff_at,snapshot_kind,bookmaker,competition,market,home_team,away_team,player_name,player_team,odds_decimal,source,notes",
-                "match_date": f"gte.{start_date}",
-                "and": f"(match_date.lte.{end_date})",
-                "order": "captured_at.asc",
-                "limit": str(page_size),
-                "offset": str(offset),
-            },
-            timeout=45,
-        )
-        if not response.ok:
-            raise SystemExit(f"Supabase goalscorer odds load failed: {response.status_code} {response.text[:300]}")
-        page = response.json()
-        if not isinstance(page, list):
-            raise SystemExit("Supabase goalscorer odds load returned a non-list payload.")
-        for raw in page:
-            parsed = capture_row(raw, source_file="supabase:goalscorer_odds_history", source_kind="supabase_history")
-            if parsed:
-                rows.append(parsed)
-        if len(page) < page_size:
-            break
-        offset += page_size
+    unique_dates = sorted({str(value)[:10] for value in signal_dates if value})
+    for start in range(0, len(unique_dates), 30):
+        date_chunk = unique_dates[start : start + 30]
+        offset = 0
+        while True:
+            response = requests.get(
+                endpoint,
+                headers=headers,
+                params={
+                    "select": "captured_at,match_date,event_id,kickoff_at,snapshot_kind,bookmaker,competition,market,home_team,away_team,player_name,player_team,odds_decimal,source,notes",
+                    "match_date": f"in.({','.join(date_chunk)})",
+                    "order": "captured_at.asc",
+                    "limit": str(page_size),
+                    "offset": str(offset),
+                },
+                timeout=45,
+            )
+            if not response.ok:
+                raise SystemExit(f"Supabase goalscorer odds load failed: {response.status_code} {response.text[:300]}")
+            page = response.json()
+            if not isinstance(page, list):
+                raise SystemExit("Supabase goalscorer odds load returned a non-list payload.")
+            for raw in page:
+                parsed = capture_row(raw, source_file="supabase:goalscorer_odds_history", source_kind="supabase_history")
+                if parsed:
+                    rows.append(parsed)
+            if len(page) < page_size:
+                break
+            offset += page_size
     return rows
 
 
@@ -532,7 +534,7 @@ def main() -> None:
     signals = load_signals(args.signals_glob)
     signal_dates = [str(row.get("date") or "")[:10] for row in signals if row.get("date")]
     supabase_captures = (
-        load_supabase_captures(min(signal_dates), max(signal_dates))
+        load_supabase_captures(signal_dates)
         if args.supabase and signal_dates
         else []
     )
