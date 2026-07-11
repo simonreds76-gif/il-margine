@@ -267,6 +267,48 @@ export type GoalscorerMonitorSnapshot = {
     }>;
     raw_monitor_summary: string;
   };
+  research_status?: {
+    status: "RESEARCH_ONLY";
+    model_variant: string;
+    updated_at: string | null;
+    parity: {
+      decision: string;
+      golden_rows: number;
+      mean_abs_delta: number | null;
+      max_abs_delta: number | null;
+      gate: number | null;
+    };
+    calibration: {
+      candidate: string;
+      n: number;
+      brier: number | null;
+      log_loss: number | null;
+      ece: number | null;
+      predicted: number | null;
+      actual: number | null;
+      evaluated_folds: number;
+      fold_wins: number;
+      probability_gate: string;
+      market_roi_gate: string;
+      decision: string;
+    };
+    segments: {
+      rows: number;
+      position_sub_rows: number;
+      minutes_gap_pct: number | null;
+      minutes_gate: string;
+    };
+    clv: {
+      signals: number;
+      captures_loaded: number;
+      matched: number;
+      coverage_pct: number;
+      true_closes: number;
+      lagged_closes: number;
+      pinnacle_references: number;
+      missing: number;
+    };
+  };
 };
 
 const SNAPSHOT_TABLE = "goalscorer_live_snapshot";

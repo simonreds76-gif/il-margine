@@ -1472,6 +1472,12 @@ def main() -> None:
     parser.add_argument("--penalty-hierarchy", default=DEFAULT_PENALTY_HIERARCHY, help="Penalty taker hierarchy JSON")
     parser.add_argument("--penalty-baseline-evidence", default=DEFAULT_PENALTY_BASELINE_EVIDENCE, help="Optional penalty baseline evidence JSON")
     parser.add_argument("--penalty-baseline-overrides", default=DEFAULT_PENALTY_BASELINE_OVERRIDES, help="Optional manual penalty baseline override JSON")
+    parser.add_argument(
+        "--skip-roster-fetch",
+        action="store_true",
+        help="Use historical player metadata only; intended for deterministic parity tests",
+    )
+    parser.add_argument("--v2-repair", action="store_true", help="Enable research-only minutes/share repair")
     args = parser.parse_args()
 
     print("\n" + "=" * 64)
@@ -1479,7 +1485,9 @@ def main() -> None:
     print("=" * 64)
 
     model_mod = runpy.run_path(str(ROOT / "scripts" / "goalscorer-model.py"), run_name="goalscorer_model")
+    model_mod["V2_REPAIR_ENABLED"] = bool(args.v2_repair)
     load_match_logs = model_mod["load_match_logs"]
+    load_match_logs.__globals__["V2_REPAIR_ENABLED"] = bool(args.v2_repair)
     PlayerHistory = model_mod["PlayerHistory"]
     TeamHistory = model_mod["TeamHistory"]
     RECENT_WINDOW = model_mod["RECENT_WINDOW"]
@@ -1487,6 +1495,8 @@ def main() -> None:
     MIN_PLAYER_MATCHES = model_mod["MIN_PLAYER_MATCHES"]
     globals()["LEAGUE_AVG"] = model_mod["LEAGUE_AVG"]
     expected_minutes_from_summary = model_mod["expected_minutes_from_summary"]
+    expected_minutes_for_lineup = model_mod["expected_minutes_for_lineup"]
+    allocate_team_shares = model_mod["allocate_team_shares"]
     build_player_propensity = model_mod["build_player_propensity"]
     build_player_raw_share = model_mod["build_player_raw_share"]
     build_team_expected_npxg = model_mod["build_team_expected_npxg"]
@@ -1524,11 +1534,14 @@ def main() -> None:
         key = _norm_text(row.player_name)
         current = latest_player_meta.get(key)
         if current is None or row.match_date_str > current["match_date"]:
+            latest_position = coarse_position(row.position)
+            if args.v2_repair and latest_position.upper() == "SUB":
+                latest_position = str((current or {}).get("position") or "Unknown")
             latest_player_meta[key] = {
                 "player_id": row.player_id,
                 "team": row.team,
                 "team_key": row.team_key,
-                "position": row.position,
+                "position": latest_position,
                 "player_key": key,
                 "match_date": row.match_date_str,
                 "games": 0.0,
@@ -1539,11 +1552,14 @@ def main() -> None:
         players_by_team_key[meta["team_key"]].append(meta)
 
     roster_seasons = {_fixture_season_start(row["match_date"]) for row in odds_rows if row.get("match_date")}
-    roster_by_player_key, roster_by_team_key = _load_understat_rosters(
-        roster_seasons,
-        team_key_func,
-        UNDERSTAT_LEAGUE_SLUGS[args.league],
-    )
+    if args.skip_roster_fetch:
+        roster_by_player_key, roster_by_team_key = {}, {}
+    else:
+        roster_by_player_key, roster_by_team_key = _load_understat_rosters(
+            roster_seasons,
+            team_key_func,
+            UNDERSTAT_LEAGUE_SLUGS[args.league],
+        )
 
     player_histories: Dict[str, object] = defaultdict(PlayerHistory)
     team_histories: Dict[str, object] = defaultdict(TeamHistory)
@@ -1846,17 +1862,26 @@ def main() -> None:
             candidate["lineup_state"] = lineup_state
             candidate["lineup_match_name"] = lineup_match_name
 
+            if args.v2_repair:
+                candidate["expected_minutes"] = expected_minutes_for_lineup(
+                    candidate["player_recent"],
+                    lineup_state,
+                )
             if lineup_state == "starter":
-                candidate["expected_minutes"] = CONFIRMED_STARTER_MINUTES
+                if not args.v2_repair:
+                    candidate["expected_minutes"] = CONFIRMED_STARTER_MINUTES
                 stats["confirmed_starter_rows"] += 1
             elif lineup_state == "expected_starter":
-                candidate["expected_minutes"] = max(candidate["expected_minutes"], EXPECTED_STARTER_MINUTES)
+                if not args.v2_repair:
+                    candidate["expected_minutes"] = max(candidate["expected_minutes"], EXPECTED_STARTER_MINUTES)
                 stats["expected_starter_rows"] += 1
             elif lineup_state == "bench":
-                candidate["expected_minutes"] = CONFIRMED_BENCH_MINUTES
+                if not args.v2_repair:
+                    candidate["expected_minutes"] = CONFIRMED_BENCH_MINUTES
                 stats["confirmed_bench_rows"] += 1
             elif lineup_state == "expected_bench":
-                candidate["expected_minutes"] = min(candidate["expected_minutes"], EXPECTED_BENCH_MINUTES)
+                if not args.v2_repair:
+                    candidate["expected_minutes"] = min(candidate["expected_minutes"], EXPECTED_BENCH_MINUTES)
                 stats["expected_bench_rows"] += 1
             elif lineup_state == "not_in_squad":
                 candidate["expected_minutes"] = 0.0
@@ -1887,8 +1912,6 @@ def main() -> None:
                 _defense_fallback,
             ) = build_team_expected_npxg(team_summary, opponent_summary, sample["is_home"])
 
-            team_propensity_total = 0.0
-            raw_share_total = 0.0
             for candidate in team_candidates:
                 player_display_name = candidate["player_meta"].get("player_name", candidate["odds_row"]["player_name"])
                 hierarchy_entry = penalty_hierarchy.get(candidate["player_team_key"])
@@ -1997,7 +2020,9 @@ def main() -> None:
                             team_summary,
                             candidate["expected_minutes"],
                             prior_share=hierarchy_share_prior,
-                            prior_sample=hierarchy_share_prior_weight,
+                            prior_sample=(
+                                hierarchy_share_prior_weight if hierarchy_share_prior_weight > 0 else 1.5
+                            ) if args.v2_repair else hierarchy_share_prior_weight,
                             evidence_share=evidence_share,
                             evidence_sample=evidence_sample,
                             evidence_source=evidence_source,
@@ -2010,6 +2035,8 @@ def main() -> None:
                     "propensity": propensity,
                     "raw_share": raw_share,
                     "share_prior": share_prior,
+                    "fallback_share_weight": propensity,
+                    "share_eligible": candidate.get("lineup_state") not in {"not_in_squad", "expected_out"},
                     "penalty_lambda": penalty_lambda,
                     "penalty_share": penalty_share,
                     "baseline_penalty_share": baseline_penalty_share if method == "model" else 0.0,
@@ -2031,51 +2058,43 @@ def main() -> None:
                     "attack_factor": attack_factor,
                     "opp_factor": opp_factor,
                 }
-                team_propensity_total += propensity
-                raw_share_total += raw_share
-
-            if raw_share_total > 0:
-                fallback_seed_total = 0.0
-                for candidate in team_candidates:
-                    if candidate.get("lineup_state") not in {"starter", "expected_starter"}:
-                        continue
-                    key = (candidate["player_id"], candidate["player_team_key"])
-                    prediction = computed_predictions[key]
-                    if prediction["raw_share"] > 0:
-                        continue
-                    fallback_seed_total += prediction.get("share_prior", 0.0)
-
-                fallback_pool = STARTER_FALLBACK_SHARE_POOL if fallback_seed_total > 0 else 0.0
-                raw_pool = max(0.0, (1.0 - UNALLOCATED_SHARE_FLOOR) - fallback_pool)
-                for candidate in team_candidates:
-                    key = (candidate["player_id"], candidate["player_team_key"])
-                    prediction = computed_predictions[key]
-                    if prediction["raw_share"] > 0:
-                        prediction["team_share_seed"] = (prediction["raw_share"] / raw_share_total) * raw_pool
-                    elif (
-                        fallback_seed_total > 0
-                        and candidate.get("lineup_state") in {"starter", "expected_starter"}
-                        and prediction.get("share_prior", 0.0) > 0
-                    ):
-                        prediction["team_share_seed"] = (
-                            prediction["share_prior"] / fallback_seed_total
-                        ) * fallback_pool
-                    else:
-                        prediction["team_share_seed"] = 0.0
-            elif team_propensity_total > 0:
-                for candidate in team_candidates:
-                    key = (candidate["player_id"], candidate["player_team_key"])
-                    computed_predictions[key]["team_share_seed"] = (
-                        computed_predictions[key]["propensity"] / team_propensity_total
-                    ) * (1.0 - UNALLOCATED_SHARE_FLOOR)
+            prediction_rows = [
+                computed_predictions[(candidate["player_id"], candidate["player_team_key"])]
+                for candidate in team_candidates
+            ]
+            if args.v2_repair:
+                allocated_shares = allocate_team_shares(prediction_rows)
+                for prediction, allocated_share in zip(prediction_rows, allocated_shares):
+                    prediction["team_share_seed"] = allocated_share
             else:
-                team_propensity_total = float(len(team_candidates)) or 1.0
-                for candidate in team_candidates:
-                    key = (candidate["player_id"], candidate["player_team_key"])
-                    computed_predictions[key]["propensity"] = 1.0
-                    computed_predictions[key]["team_share_seed"] = (1.0 / team_propensity_total) * (
-                        1.0 - UNALLOCATED_SHARE_FLOOR
+                raw_share_total = sum(prediction["raw_share"] for prediction in prediction_rows)
+                if raw_share_total > 0:
+                    fallback_seed_total = sum(
+                        prediction.get("share_prior", 0.0)
+                        for candidate, prediction in zip(team_candidates, prediction_rows)
+                        if candidate.get("lineup_state") in {"starter", "expected_starter"}
+                        and prediction["raw_share"] <= 0
                     )
+                    fallback_pool = STARTER_FALLBACK_SHARE_POOL if fallback_seed_total > 0 else 0.0
+                    raw_pool = max(0.0, (1.0 - UNALLOCATED_SHARE_FLOOR) - fallback_pool)
+                    for candidate, prediction in zip(team_candidates, prediction_rows):
+                        if prediction["raw_share"] > 0:
+                            prediction["team_share_seed"] = prediction["raw_share"] / raw_share_total * raw_pool
+                        elif (
+                            fallback_seed_total > 0
+                            and candidate.get("lineup_state") in {"starter", "expected_starter"}
+                            and prediction.get("share_prior", 0.0) > 0
+                        ):
+                            prediction["team_share_seed"] = prediction["share_prior"] / fallback_seed_total * fallback_pool
+                        else:
+                            prediction["team_share_seed"] = 0.0
+                else:
+                    propensity_total = sum(prediction["propensity"] for prediction in prediction_rows)
+                    propensity_total = propensity_total if propensity_total > 0 else (float(len(prediction_rows)) or 1.0)
+                    for prediction in prediction_rows:
+                        prediction["team_share_seed"] = (
+                            prediction["propensity"] / propensity_total
+                        ) * (1.0 - UNALLOCATED_SHARE_FLOOR)
 
             for candidate in team_candidates:
                 key = (candidate["player_id"], candidate["player_team_key"])

@@ -623,6 +623,7 @@ export default async function GoalscorerMonitorPage() {
   const publicNow = numericSum(snapshot.league_cards.map((c) => c.public_now));
   const shadowNow = numericSum(snapshot.league_cards.map((c) => c.shadow_now));
   const heartbeat = hostedHeartbeat(snapshot);
+  const research = snapshot.research_status;
 
   const activePenaltyRows: SnapshotPenaltyRow[] = snapshot.penalty_watchlist.rows
     .filter((row) => !penaltyState[row.row_id])
@@ -683,6 +684,62 @@ export default async function GoalscorerMonitorPage() {
             tone={toneClass(snapshot.diagnostics.avg_ev_pct)}
           />
         </section>
+
+        {/* -- Research model gate ------------------------------------------ */}
+        {research ? (
+          <SectionCard
+            title="Goalscorer v2 Research Gate"
+            subtitle="Expected-minutes and absolute-share repair. Internal evidence only; public Fair Odds Lab remains on the incumbent model."
+            collapsible
+            defaultOpen
+          >
+            <div className="flex flex-wrap items-center gap-2">
+              <StatusPill
+                label={`Parity ${research.parity.decision}`}
+                tone={research.parity.decision === "PASS" ? statusTone("healthy") : statusTone("failed")}
+              />
+              <StatusPill label="Public unchanged" tone={statusTone("warning")} />
+              <span className="text-xs text-slate-500">
+                {research.model_variant.replaceAll("_", " ")}
+                {research.updated_at ? ` | refreshed ${formatDateTimeLabel(research.updated_at)}` : ""}
+              </span>
+            </div>
+
+            <div className="mt-4 grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
+              <StatCard
+                compact
+                label="Live/backtest parity"
+                value={research.parity.max_abs_delta === null ? "-" : `${(research.parity.max_abs_delta * 100).toFixed(3)}pp`}
+                detail={`${research.parity.golden_rows} golden rows | gate ${research.parity.gate === null ? "-" : `${(research.parity.gate * 100).toFixed(2)}pp`}`}
+                tone={research.parity.decision === "PASS" ? "text-emerald-300" : "text-rose-300"}
+              />
+              <StatCard
+                compact
+                label="Beta candidate ECE"
+                value={research.calibration.ece === null ? "-" : `${(research.calibration.ece * 100).toFixed(2)}%`}
+                detail={`${research.calibration.fold_wins}/${research.calibration.evaluated_folds} fold wins | ${research.calibration.decision.replaceAll("_", " ").toLowerCase()}`}
+              />
+              <StatCard
+                compact
+                label="Segment integrity"
+                value={research.segments.minutes_gate}
+                detail={`${research.segments.rows.toLocaleString()} rows | Sub rows ${research.segments.position_sub_rows}`}
+                tone={research.segments.minutes_gate === "PASS" ? "text-emerald-300" : "text-amber-300"}
+              />
+              <StatCard
+                compact
+                label="Real-price CLV coverage"
+                value={`${research.clv.matched}/${research.clv.signals}`}
+                detail={`${research.clv.coverage_pct.toFixed(1)}% matched | ${research.clv.true_closes} true closes`}
+                tone={research.clv.matched > 0 ? "text-emerald-300" : "text-amber-300"}
+              />
+            </div>
+
+            <p className="mt-3 text-xs leading-5 text-slate-500">
+              Promotion remains blocked until the fifth walk-forward fold exists and real captured ATGS prices prove non-negative ROI/CLV. Probability improvements alone do not create a betting edge.
+            </p>
+          </SectionCard>
+        ) : null}
 
         {/* -- League Scoreboard ----------------------------------------------- */}
         <SectionCard

@@ -60,6 +60,7 @@ def expand_league_files(league: str) -> list[Path]:
 
 def build_base_rows() -> tuple[list[dict], list[dict]]:
     model = runpy.run_path(str(ROOT / "scripts" / "goalscorer-model.py"), run_name="goalscorer_walkforward_model")
+    model["run_backtest"].__globals__["V2_REPAIR_ENABLED"] = True
     rows: list[dict] = []
     inputs: list[dict] = []
     for league in LEAGUES:
@@ -214,6 +215,7 @@ def write_outputs(fold_metrics: list[dict], detail_rows: list[dict], payload: di
         "",
         f"Generated UTC: {datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00', 'Z')}",
         "Status: RESEARCH_ONLY_NOT_LIVE",
+        "Model variant: v2_minutes_absolute_share_repair",
         "Registered: 2026-07-11",
         f"Live proxy: method=model, expected_minutes>={MIN_EXPECTED_MINUTES:.0f}, position_group!=Sub",
         "ROI/market gate: unavailable until historical ATGS price coverage exists",
