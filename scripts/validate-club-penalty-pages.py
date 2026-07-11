@@ -42,6 +42,7 @@ def main() -> int:
             errors.append(message)
 
     season = load(DATA / "club-penalty-season.json")
+    logo_manifest = load(DATA / "team-logo-map.json")
     check(season.get("label") == "2026/27", "Season config must publish 2026/27")
     check(season.get("status") == "preseason", "Season must remain preseason until league kickoff")
     check(season.get("league_start_dates", {}).get("epl") == "2026-08-21", "Premier League start date must match the released fixture list")
@@ -83,6 +84,21 @@ def main() -> int:
             check(url not in all_urls, f"Duplicate team URL: {url}")
             all_urls.add(url)
 
+            logo_entry = (
+                logo_manifest.get("leagues", {})
+                .get(league, {})
+                .get("teams", {})
+                .get(team, {})
+            )
+            logo_path = str(logo_entry.get("logo_path") or "")
+            check(bool(logo_path), f"{league}/{team}: active club crest missing from manifest")
+            if logo_path:
+                crest_file = ROOT / "public" / logo_path.lstrip("/")
+                check(crest_file.exists(), f"{league}/{team}: crest file missing: {logo_path}")
+                if crest_file.exists():
+                    check(crest_file.stat().st_size > 512, f"{league}/{team}: crest file is unexpectedly small")
+                    check(crest_file.read_bytes()[:8] == b"\x89PNG\r\n\x1a\n", f"{league}/{team}: crest is not a PNG")
+
         raw = current_path.read_text(encoding="utf-8")
         check(not BAD_TEXT.search(raw), f"{league}: mojibake detected")
 
@@ -92,6 +108,11 @@ def main() -> int:
         ROOT / "src" / "app" / "penalty-takers" / "[leagueSlug]" / "page.tsx": ["generateStaticParams", "archivedTeams"],
         ROOT / "src" / "app" / "penalty-takers" / "methodology" / "page.tsx": ["Absence is not a promotion", "Shootouts are supporting evidence"],
         ROOT / "src" / "app" / "sitemap.ts": ["CLUB_LEAGUES", "/penalty-takers/methodology"],
+        ROOT / ".github" / "workflows" / "club-penalty-weekly-evidence.yml": [
+            'cron: "20 6 * * 1"',
+            "goalscorer-live-penalty-review.py",
+            "Public hierarchies are unchanged until editorial approval.",
+        ],
     }
     for path, needles in source_checks.items():
         text = path.read_text(encoding="utf-8")
