@@ -68,6 +68,26 @@ LOCAL_TEAM_ALIASES = {
     "cologne": "fc cologne",
 }
 
+# FotMob retired the league-table endpoint used by this script in July 2026.
+# Keep verified IDs for newly promoted clubs so crest refreshes remain reliable
+# while the existing manifest covers clubs that were already cached.
+STATIC_TEAM_IDS = {
+    "coventry city": 8669,
+    "hull city": 8667,
+    "ipswich": 9902,
+    "frosinone": 9891,
+    "monza": 6504,
+    "venezia": 7881,
+    "deportivo la coruna": 9783,
+    "malaga": 9864,
+    "racing santander": 8696,
+    "sc paderborn 07": 8460,
+    "schalke 04": 10189,
+    "sv elversberg": 8232,
+    "le mans": 8682,
+    "troyes": 10242,
+}
+
 
 @dataclass(frozen=True)
 class TeamLookup:
@@ -108,7 +128,32 @@ def _slugify(value: str) -> str:
 
 def _load_penalty_teams(path: Path) -> List[str]:
     payload = json.loads(path.read_text(encoding="utf-8"))
-    return list(payload.keys())
+    return [name for name, entry in payload.items() if not name.startswith("_") and isinstance(entry, dict)]
+
+
+def _lookup_from_manifest(entry: dict) -> Optional[TeamLookup]:
+    try:
+        team_id = int(entry.get("fotmob_team_id"))
+    except (TypeError, ValueError):
+        return None
+    name = str(entry.get("fotmob_name") or "").strip()
+    short_name = str(entry.get("fotmob_short_name") or name).strip()
+    page_url = str(entry.get("page_url") or "").strip()
+    team_key = str(entry.get("team_key") or "").strip()
+    return TeamLookup(team_id, name, short_name, page_url, {team_key} if team_key else set())
+
+
+def _static_lookup(team_name: str, team_key: str) -> Optional[TeamLookup]:
+    team_id = STATIC_TEAM_IDS.get(team_key)
+    if team_id is None:
+        return None
+    return TeamLookup(
+        team_id=team_id,
+        fotmob_name=team_name,
+        fotmob_short_name=team_name,
+        page_url=f"/teams/{team_id}/overview/{_slugify(team_key)}",
+        candidate_keys={team_key},
+    )
 
 
 def _extract_table_rows(payload: dict) -> List[dict]:
@@ -218,6 +263,9 @@ def _download_logo(session: requests.Session, team_id: int, output_path: Path) -
 def cache_logos(leagues: Iterable[str], force: bool) -> dict:
     team_key_func = _load_team_key()
     league_configs = _load_league_configs()
+    existing_manifest = {}
+    if MANIFEST_PATH.exists():
+        existing_manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     manifest = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "source": "fotmob",
@@ -229,8 +277,18 @@ def cache_logos(leagues: Iterable[str], force: bool) -> dict:
         for league_slug in leagues:
             config = league_configs[league_slug]
             penalty_path = ROOT / config["penalty_hierarchy"]
-            league_rows = _fetch_league_rows(session, int(config["league_id"]))
-            lookup_by_key = _build_team_lookup(league_rows, team_key_func)
+            try:
+                league_rows = _fetch_league_rows(session, int(config["league_id"]))
+                lookup_by_key = _build_team_lookup(league_rows, team_key_func)
+            except (requests.RequestException, RuntimeError) as exc:
+                lookup_by_key = {}
+                print(f"{league_slug}: league lookup unavailable ({exc}); using cached and verified team IDs")
+
+            existing_teams = (
+                existing_manifest.get("leagues", {})
+                .get(league_slug, {})
+                .get("teams", {})
+            )
 
             league_manifest = {
                 "label": config["label"],
@@ -241,6 +299,10 @@ def cache_logos(leagues: Iterable[str], force: bool) -> dict:
             for team_name in _load_penalty_teams(penalty_path):
                 team_key = _normalized_team_key(team_name, team_key_func)
                 lookup = lookup_by_key.get(team_key)
+                if not lookup:
+                    lookup = _lookup_from_manifest(existing_teams.get(team_name, {}))
+                if not lookup:
+                    lookup = _static_lookup(team_name, team_key)
                 if not lookup:
                     missing.append(team_name)
                     continue
