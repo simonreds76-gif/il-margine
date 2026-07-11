@@ -62,6 +62,52 @@ jobs:
               handle.write(summary)
           PY
 
+      - name: Ignore timestamp-only changes
+        run: |
+          python - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+
+          paths = [
+              Path("data/goalscorer/penalty-duty-live-review.json"),
+              Path("data/goalscorer/epl-penalty-duty-live-review.json"),
+              Path("data/goalscorer/la-liga-penalty-duty-live-review.json"),
+              Path("data/goalscorer/bundesliga-penalty-duty-live-review.json"),
+              Path("data/goalscorer/ligue-1-penalty-duty-live-review.json"),
+              Path("data/goalscorer/penalty-baseline-evidence.json"),
+              Path("data/goalscorer/epl-penalty-baseline-evidence.json"),
+              Path("data/goalscorer/la-liga-penalty-baseline-evidence.json"),
+              Path("data/goalscorer/bundesliga-penalty-baseline-evidence.json"),
+              Path("data/goalscorer/ligue-1-penalty-baseline-evidence.json"),
+          ]
+
+          def semantic(payload):
+              if isinstance(payload, dict):
+                  return {key: semantic(value) for key, value in payload.items() if key != "generated_at"}
+              if isinstance(payload, list):
+                  return [semantic(value) for value in payload]
+              return payload
+
+          restored = 0
+          for path in paths:
+              if not path.exists():
+                  continue
+              previous = subprocess.run(
+                  ["git", "show", f"HEAD:{path.as_posix()}"],
+                  check=False,
+                  capture_output=True,
+              )
+              if previous.returncode != 0:
+                  continue
+              old_payload = json.loads(previous.stdout.decode("utf-8"))
+              new_payload = json.loads(path.read_text(encoding="utf-8"))
+              if semantic(old_payload) == semantic(new_payload):
+                  path.write_bytes(previous.stdout)
+                  restored += 1
+          print(f"Restored {restored} timestamp-only artifact(s).")
+          PY
+
       - name: Validate public hierarchy safety
         run: python scripts/validate-club-penalty-pages.py
 
