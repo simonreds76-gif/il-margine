@@ -1313,19 +1313,19 @@ function ResearchGatesPanel({
         <MetricTile
           label="Spread shape"
           value={String(spread.promotion_status || "BLOCKED")}
-          sub={`${numeric(spread.real_line_rows).toFixed(0)}/600 real lines | ${numeric(spread.settled_shadow_bets).toFixed(0)}/200 settled | CLV ${numeric(spread.mean_clv_pct) >= 0 ? "+" : ""}${numeric(spread.mean_clv_pct).toFixed(2)}%`}
+          sub={`${numeric(spread.real_line_rows).toFixed(0)}/600 scored | ${numeric(spread.captured_line_offers).toFixed(0)} captured | ${numeric(spread.settled_shadow_bets).toFixed(0)}/200 settled | CLV ${numeric(spread.mean_clv_pct) >= 0 ? "+" : ""}${numeric(spread.mean_clv_pct).toFixed(2)}%`}
           tone={gateTone(spread.promotion_status)}
         />
         <MetricTile
           label="Total-games shape"
           value={String(totals.promotion_status || "BLOCKED")}
-          sub={`${numeric(totals.real_line_rows).toFixed(0)}/600 reproducible paired real lines`}
+          sub={`${numeric(totals.real_line_rows).toFixed(0)}/600 scored | ${numeric(totals.captured_line_offers).toFixed(0)} captured complete offers`}
           tone={gateTone(totals.promotion_status)}
         />
         <MetricTile
           label="Bet365 aces / DFs"
           value={String(props.promotion_status || "BLOCKED")}
-          sub={`${numeric(props.line_rows).toFixed(0)}/300 lines | ${numeric(props.distinct_events).toFixed(0)}/100 events | ${numeric(props.settled_shadow_bets).toFixed(0)} settled`}
+          sub={`${numeric(props.line_rows).toFixed(0)}/300 unique offers | ${numeric(props.snapshot_rows).toFixed(0)} snapshots | ${numeric(props.distinct_events).toFixed(0)}/100 events | ${numeric(props.settled_shadow_bets).toFixed(0)} settled`}
           tone={gateTone(props.promotion_status)}
         />
         <MetricTile

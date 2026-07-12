@@ -58,6 +58,7 @@ jobs:
           python scripts/corners-v0-clv-monitor.py
           python scripts/tennis-model-variants-shadow.py
           python scripts/backtest-tennis-player-props-v2.py
+          python scripts/tennis-derivatives-pinnacle-coverage.py --allow-missing-creds
           python scripts/tennis-derivatives-evidence-report.py
           if [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
             python scripts/goalscorer-clv-monitor.py --supabase
@@ -104,6 +105,7 @@ jobs:
             data/tennis-props/backtest/aces-dfs-v2-rung1-report.txt
             data/vnext/tennis-derivatives-evidence-status.json
             data/vnext/tennis-derivatives-evidence-report.txt
+            data/vnext/tennis-derivatives-pinnacle-coverage.json
             data/goalscorer/fair-odds-lab-clv.csv
             data/goalscorer/fair-odds-lab-clv-weekly.txt
             data/goalscorer/backtest/parity-report.txt

@@ -9,11 +9,14 @@ import math
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
 PROPS_INBOX = ROOT / "data" / "tennis-props" / "inbox"
+PROPS_SHADOW = ROOT / "data" / "tennis-props" / "shadow" / "aces-dfs-shadow-signals.csv"
 SPREAD_DATASET = ROOT / "data" / "backtest" / "spread-v1-training-dataset.csv"
 SPREAD_CLV = ROOT / "data" / "backtest" / "strict-clv-audit-spreadv1-2026.csv"
+PINNACLE_COVERAGE = ROOT / "data" / "vnext" / "tennis-derivatives-pinnacle-coverage.json"
 PROPS_GATE = ROOT / "data" / "tennis-props" / "backtest" / "aces-dfs-v2-rung1-gate.json"
 OUT_JSON = ROOT / "data" / "vnext" / "tennis-derivatives-evidence-status.json"
 OUT_TXT = ROOT / "data" / "vnext" / "tennis-derivatives-evidence-report.txt"
@@ -54,33 +57,69 @@ def mean(values: list[float]) -> float | None:
     return sum(values) / len(values) if values else None
 
 
-def props_status(rows: list[dict[str, str]]) -> dict[str, object]:
+def league_count(coverage: dict[str, Any], field: str, league: str) -> int:
+    values = coverage.get(field)
+    if not isinstance(values, dict):
+        return 0
+    return int(number(values.get(league)) or 0)
+
+
+def props_status(rows: list[dict[str, str]], shadow_rows: list[dict[str, str]]) -> dict[str, object]:
     events = {str(row.get("event_id") or "") for row in rows if row.get("event_id")}
+    offers = {
+        (
+            str(row.get("event_id") or ""),
+            str(row.get("player") or ""),
+            str(row.get("market") or ""),
+            str(row.get("line") or ""),
+        )
+        for row in rows
+        if row.get("event_id")
+    }
     dates = sorted({str(row.get("date") or "") for row in rows if row.get("date")})
     markets = Counter(str(row.get("market") or "unknown") for row in rows)
     tours = Counter(str(row.get("tour") or "unknown") for row in rows)
-    row_gate = len(rows) >= 300
+    settled = [row for row in shadow_rows if str(row.get("settlement_status") or "").lower() == "settled"]
+    pending = [row for row in shadow_rows if str(row.get("settlement_status") or "").lower() == "pending"]
+    voids = [row for row in shadow_rows if str(row.get("settlement_status") or "").lower() == "void"]
+    clv = [value for row in settled if (value := number(row.get("clv_pct"))) is not None]
+    avg_clv = mean(clv)
+    positive_clv = 100.0 * sum(value > 0 for value in clv) / len(clv) if clv else None
+    pnl = sum(number(row.get("pnl")) or 0.0 for row in settled)
+    roi = 100.0 * pnl / len(settled) if settled else None
+    row_gate = len(offers) >= 300
     event_gate = len(events) >= 100
+    settled_gate = len(settled) >= 300
+    clv_gate = avg_clv is not None and avg_clv >= 0.5
+    gates = {
+        "unique_line_offers_300": row_gate,
+        "distinct_events_100": event_gate,
+        "settled_shadow_bets_300": settled_gate,
+        "mean_clv_0_5pct": clv_gate,
+    }
     return {
         "status": "COLLECTING" if rows else "NO_CAPTURE",
-        "promotion_status": "BLOCKED_REAL_LINE_SAMPLE",
-        "line_rows": len(rows),
+        "promotion_status": "PASS" if all(gates.values()) else "BLOCKED_REAL_LINE_SAMPLE",
+        "snapshot_rows": len(rows),
+        "line_rows": len(offers),
         "distinct_events": len(events),
         "dates": dates,
         "markets": dict(markets),
         "tours": dict(tours),
-        "settled_shadow_bets": 0,
-        "gates": {
-            "line_rows_300": row_gate,
-            "distinct_events_100": event_gate,
-            "settled_shadow_bets_300": False,
-            "mean_clv_0_5pct": False,
-        },
-        "reason": "Captured prices exist, but current Sackmann results stop before Wimbledon; no July prop line can be honestly settled yet.",
+        "settled_shadow_bets": len(settled),
+        "pending_shadow_bets": len(pending),
+        "void_shadow_bets": len(voids),
+        "clv_rows": len(clv),
+        "mean_clv_pct": avg_clv,
+        "positive_clv_share_pct": positive_clv,
+        "pnl_units": pnl,
+        "roi_pct": roi,
+        "gates": gates,
+        "reason": "Collection and settlement are active; promotion remains blocked until every registered real-price gate passes.",
     }
 
 
-def spread_status(dataset: list[dict[str, str]], clv_rows: list[dict[str, str]]) -> dict[str, object]:
+def spread_status(dataset: list[dict[str, str]], clv_rows: list[dict[str, str]], coverage: dict[str, Any]) -> dict[str, object]:
     clv = [value for row in clv_rows if (value := number(row.get("clv_implied_delta_pct"))) is not None]
     settled = [row for row in clv_rows if str(row.get("bet_outcome") or "").upper() in {"WIN", "LOSS", "PUSH"}]
     avg_clv = mean(clv)
@@ -95,6 +134,9 @@ def spread_status(dataset: list[dict[str, str]], clv_rows: list[dict[str, str]])
         "status": "COLLECTING" if dataset else "NO_CAPTURE",
         "promotion_status": "PASS" if all(gates.values()) else "BLOCKED_REAL_LINE_SAMPLE",
         "real_line_rows": len(dataset),
+        "captured_line_offers": league_count(coverage, "unique_line_offers_by_league", "ATP"),
+        "captured_matches": league_count(coverage, "unique_matches_by_league", "ATP"),
+        "captured_challenger_line_offers": league_count(coverage, "unique_line_offers_by_league", "Challenger"),
         "settled_shadow_bets": len(settled),
         "clv_rows": len(clv),
         "mean_clv_pct": avg_clv,
@@ -117,12 +159,17 @@ def main() -> int:
     parser.add_argument("--props-inbox", type=Path, default=PROPS_INBOX)
     parser.add_argument("--spread-dataset", type=Path, default=SPREAD_DATASET)
     parser.add_argument("--spread-clv", type=Path, default=SPREAD_CLV)
+    parser.add_argument("--props-shadow", type=Path, default=PROPS_SHADOW)
+    parser.add_argument("--pinnacle-coverage", type=Path, default=PINNACLE_COVERAGE)
     parser.add_argument("--out-json", type=Path, default=OUT_JSON)
     parser.add_argument("--out-txt", type=Path, default=OUT_TXT)
     args = parser.parse_args()
 
-    props = props_status(props_history_rows(args.props_inbox))
-    spread = spread_status(csv_rows(args.spread_dataset), csv_rows(args.spread_clv))
+    pinnacle = json.loads(args.pinnacle_coverage.read_text(encoding="utf-8")) if args.pinnacle_coverage.exists() else {}
+    spread_coverage = pinnacle.get("spread") if isinstance(pinnacle.get("spread"), dict) else {}
+    total_coverage = pinnacle.get("total") if isinstance(pinnacle.get("total"), dict) else {}
+    props = props_status(props_history_rows(args.props_inbox), csv_rows(args.props_shadow))
+    spread = spread_status(csv_rows(args.spread_dataset), csv_rows(args.spread_clv), spread_coverage)
     props_model = json.loads(PROPS_GATE.read_text(encoding="utf-8")) if PROPS_GATE.exists() else {"status": "MISSING"}
     payload = {
         "version": "tennis-serve-derivatives-0.1",
@@ -131,9 +178,12 @@ def main() -> int:
         "overall_status": "BLOCKED",
         "spread_shape": spread,
         "total_games_shape": {
-            "status": "BLOCKED",
+            "status": "COLLECTING" if total_coverage else "BLOCKED",
             "promotion_status": "BLOCKED_NO_REGISTERED_REAL_LINE_DATASET",
             "real_line_rows": 0,
+            "captured_line_offers": league_count(total_coverage, "unique_line_offers_by_league", "ATP"),
+            "captured_matches": league_count(total_coverage, "unique_matches_by_league", "ATP"),
+            "captured_challenger_line_offers": league_count(total_coverage, "unique_line_offers_by_league", "Challenger"),
             "reason": "No reproducible paired Pinnacle total-games dataset is committed yet; synthetic total prices are forbidden as evidence.",
         },
         "aces_dfs": props,
@@ -153,19 +203,27 @@ def main() -> int:
         "",
         "Spread shape",
         f"- Real line rows: {spread['real_line_rows']} / 600",
+        f"- Captured ATP offers awaiting scoring: {spread['captured_line_offers']} across {spread['captured_matches']} matches",
+        f"- Challenger inventory kept separate: {spread['captured_challenger_line_offers']} offers",
         f"- Settled shadow: {spread['settled_shadow_bets']} / 200",
         f"- Mean CLV: {fmt(spread['mean_clv_pct'])}% / +1.00%",
         f"- Positive CLV share: {fmt(spread['positive_clv_share_pct'])}% / 55.00%",
         f"- Status: {spread['promotion_status']}",
         "",
         "Total-games shape",
-        "- Real paired line rows: 0 / 600",
+        "- Scored real paired line rows: 0 / 600",
+        f"- Captured ATP offers awaiting scoring: {league_count(total_coverage, 'unique_line_offers_by_league', 'ATP')} across {league_count(total_coverage, 'unique_matches_by_league', 'ATP')} matches",
+        f"- Challenger inventory kept separate: {league_count(total_coverage, 'unique_line_offers_by_league', 'Challenger')} offers",
         "- Status: BLOCKED_NO_REGISTERED_REAL_LINE_DATASET",
         "",
         "Aces / double faults",
-        f"- Captured Bet365 line rows: {props['line_rows']} / 300",
+        f"- Captured Bet365 snapshots: {props['snapshot_rows']}",
+        f"- Unique Bet365 line offers: {props['line_rows']} / 300",
         f"- Distinct events: {props['distinct_events']} / 100",
         f"- Settled shadow: {props['settled_shadow_bets']} / 300",
+        f"- Pending / void: {props['pending_shadow_bets']} / {props['void_shadow_bets']}",
+        f"- Mean CLV: {fmt(props['mean_clv_pct'])}% / +0.50%",
+        f"- ROI: {fmt(props['roi_pct'])}% (research only)",
         f"- Status: {props['promotion_status']}",
         "",
         f"Props v2 rung 1: {props_model.get('status', 'MISSING')} ({props_model.get('routing', 'blocked')})",
