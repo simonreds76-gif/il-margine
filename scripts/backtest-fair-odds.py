@@ -536,11 +536,15 @@ def _is_supported_tour(name: str, rank: int | None) -> bool:
         return False
     if "ITF" in u or "FUTURES" in u:
         return False
-    if rank is not None and rank <= 3:
+    # OnCourt uses rank 4 for Grand Slams. Excluding it silently removed all
+    # prior Slam point counts from historical player states.
+    if rank is not None and rank in {1, 2, 3, 4}:
         return True
     if "CHALLENGER" in u:
         return True
-    if "ATP" in u or "MASTERS" in u or "GRAND SLAM" in u:
+    if "ATP" in u or "MASTERS" in u or "GRAND SLAM" in u or any(
+        token in u for token in ("WIMBLEDON", "ROLAND GARROS", "FRENCH OPEN", "US OPEN", "U.S. OPEN", "AUSTRALIAN OPEN")
+    ):
         return True
     return False
 
@@ -633,16 +637,47 @@ def _filter_candidates_with_abbrev(
     return filtered if filtered else candidates
 
 
+def _candidate_matches_short_surname(
+    pid: int,
+    parsed: dict[str, Any],
+    player_meta: dict[int, dict[str, str]],
+) -> bool:
+    """Reject resolver fallbacks that do not contain the requested surname.
+
+    Some weak id-map paths can return a globally unique last-token candidate
+    even when that token came from the abbreviated given-name position. That
+    previously mapped names such as ``Gomez F.`` to unrelated players. A false
+    identity contaminates every historical feature, so ambiguous is safer.
+    """
+    surname = str(parsed.get("surname_norm") or "").strip()
+    candidate = str(player_meta.get(int(pid), {}).get("norm") or "").strip()
+    if not surname or not candidate:
+        return False
+    surname_tokens = surname.split()
+    candidate_tokens = candidate.split()
+    width = len(surname_tokens)
+    return any(candidate_tokens[index : index + width] == surname_tokens for index in range(len(candidate_tokens) - width + 1))
+
+
 def _resolve_short_name_to_oncourt_id(
     short_name: str,
     indexes: tuple[dict[str, dict[str, set[int]]], dict[int, set[str]], dict[int, dict[str, Any]]],
     player_meta: dict[int, dict[str, str]],
     popularity_by_pid: dict[int, int] | None = None,
+    activity_years_by_pid: dict[int, set[int]] | None = None,
+    target_years: set[int] | None = None,
 ) -> tuple[int | None, str | None]:
     parsed = _parse_tennis_data_short_name(short_name)
     surname_norm = parsed.get("surname_norm") or ""
     surname_tokens = parsed.get("surname_tokens") or []
     abbr = parsed.get("abbr") or ""
+
+    def active_for_source(pid: int) -> bool:
+        if not activity_years_by_pid or not target_years:
+            return True
+        active_years = activity_years_by_pid.get(int(pid), set())
+        expanded = {year + offset for year in target_years for offset in (-1, 0, 1)}
+        return bool(active_years & expanded)
 
     candidates_to_try: list[str] = []
     if surname_norm and abbr:
@@ -675,7 +710,7 @@ def _resolve_short_name_to_oncourt_id(
         tried.add(key)
         pid, method = idmap._resolve_oncourt_id(cand, indexes, source_meta=None)
         base_method = (method or "").split("_meta_")[0]
-        if pid is not None and base_method in safe_methods:
+        if pid is not None and base_method in safe_methods and _candidate_matches_short_surname(pid, parsed, player_meta) and active_for_source(pid):
             return pid, f"{method}_short"
 
     indexes_map = indexes[0]
@@ -692,7 +727,24 @@ def _resolve_short_name_to_oncourt_id(
             weak |= set(indexes_map["last_two"].get(last_two, set()))
             weak |= set(indexes_map["first_last_two"].get(f"{first} {last_two}", set()))
 
+        # Tennis-Data often abbreviates only one component of a compound
+        # surname (for example Martinez P. -> Pedro Martinez Portero). Search
+        # normalized singles names as a fail-safe before declaring it absent.
+        for candidate_pid, meta in player_meta.items():
+            candidate_tokens = str(meta.get("norm") or "").split()
+            width = len(surname_tokens)
+            contains_surname = any(
+                candidate_tokens[index : index + width] == surname_tokens
+                for index in range(len(candidate_tokens) - width + 1)
+            )
+            first_token = str(meta.get("first_token") or "")
+            initials = str(meta.get("initials") or "")
+            if contains_surname and (first_token.startswith(abbr) or initials.startswith(abbr)):
+                weak.add(int(candidate_pid))
+
     weak = _filter_candidates_with_abbrev(weak, parsed, player_meta)
+    weak = {pid for pid in weak if _candidate_matches_short_surname(pid, parsed, player_meta)}
+    weak = {pid for pid in weak if active_for_source(pid)}
     if len(weak) == 1:
         return next(iter(weak)), "short_custom"
 
@@ -726,6 +778,8 @@ def _build_tennis_data_name_map(
     short_names: set[str],
     oncourt_players: list[dict[str, Any]],
     popularity_by_pid: dict[int, int] | None = None,
+    activity_years_by_pid: dict[int, set[int]] | None = None,
+    source_years_by_name: dict[str, set[int]] | None = None,
 ) -> tuple[dict[str, int], dict[str, Any]]:
     singles_players = [r for r in oncourt_players if "/" not in (r.get("name") or "")]
     indexes = idmap._build_oncourt_indexes(singles_players)
@@ -741,6 +795,8 @@ def _build_tennis_data_name_map(
             indexes,
             player_meta,
             popularity_by_pid=popularity_by_pid,
+            activity_years_by_pid=activity_years_by_pid,
+            target_years=(source_years_by_name or {}).get(short_name),
         )
         if pid is None:
             unresolved.append(short_name)
@@ -2410,6 +2466,32 @@ def _load_player_popularity(
     return dict(pop)
 
 
+def _load_player_activity_years(
+    games_path: Path,
+    tours: dict[int, dict[str, Any]],
+) -> dict[int, set[int]]:
+    activity: dict[int, set[int]] = defaultdict(set)
+    with open(games_path, "r", encoding="utf-8-sig", newline="") as f:
+        for row in csv.DictReader(f):
+            winner_id = _int(row.get("winner_id"))
+            loser_id = _int(row.get("loser_id"))
+            tour_id = _int(row.get("tour_id"))
+            if winner_id is None or loser_id is None or tour_id is None:
+                continue
+            tour = tours.get(tour_id)
+            if not tour or not tour.get("is_supported"):
+                continue
+            game_date = _to_date(row.get("date"))
+            if game_date is None:
+                date_ord = tour.get("date_ord")
+                game_date = date.fromordinal(int(date_ord)) if date_ord else None
+            if game_date is None:
+                continue
+            activity[int(winner_id)].add(game_date.year)
+            activity[int(loser_id)].add(game_date.year)
+    return dict(activity)
+
+
 def _load_stat_map(path: Path) -> dict[tuple[int, int, int, int], deque[tuple[int, ...]]]:
     stat_map: dict[tuple[int, int, int, int], deque[tuple[int, ...]]] = defaultdict(deque)
     with open(path, "r", encoding="utf-8-sig", newline="") as f:
@@ -2797,6 +2879,11 @@ def main() -> None:
         default=None,
         help="Backtest XLSX files (default: data/backtest/atp-2024.xlsx data/backtest/atp-2025.xlsx)",
     )
+    parser.add_argument(
+        "--oncourt-dir",
+        default=str((ROOT / "data" / "oncourt").as_posix()),
+        help="OnCourt export directory (default: data/oncourt).",
+    )
     parser.add_argument("--include-2026", action="store_true", help="Also include data/backtest/atp-2026.xlsx")
     parser.add_argument("--thresholds", default="2,5,10", help="Value%% thresholds (percent, comma-separated)")
     parser.add_argument("--limit-matches", type=int, default=None, help="Process first N matches after sorting (debug)")
@@ -3028,7 +3115,9 @@ def main() -> None:
     cpi_surface_stats: dict[str, tuple[float, float]] = {}
 
     if args.challenger:
-        data_oncourt = ROOT / "data" / "oncourt"
+        data_oncourt = Path(args.oncourt_dir)
+        if not data_oncourt.is_absolute():
+            data_oncourt = ROOT / data_oncourt
         pinnacle_dir = ROOT / "data"
         print("Loading Challenger matches (oncourt_games + pinnacle-odds CSV)...")
         matches, skip_from_xlsx, short_names = _load_challenger_matches(
@@ -3086,7 +3175,9 @@ def main() -> None:
     if skip_from_xlsx:
         print(f"  Skipped while reading XLSX: {dict(skip_from_xlsx)}")
 
-    data_oncourt = ROOT / "data" / "oncourt"
+    data_oncourt = Path(args.oncourt_dir)
+    if not data_oncourt.is_absolute():
+        data_oncourt = ROOT / data_oncourt
     players_path = data_oncourt / "players_atp.csv"
     games_path = data_oncourt / "games_atp.csv"
     stat_path = data_oncourt / "stat_atp.csv"
@@ -3105,6 +3196,7 @@ def main() -> None:
     lefties = _load_lefties(categories_path, set(players_by_id.keys()))
     tours = _load_tour_info(tours_path, courts_path)
     popularity_by_pid = _load_player_popularity(games_path, players_by_id, tours)
+    activity_years_by_pid = _load_player_activity_years(games_path, tours)
 
     if args.challenger:
         name_map = {}
@@ -3112,15 +3204,22 @@ def main() -> None:
         print("Challenger: using OnCourt IDs directly (no tennis-data mapping).")
     else:
         print("Mapping tennis-data names to OnCourt IDs...")
+        source_years_by_name: dict[str, set[int]] = defaultdict(set)
+        for match in matches:
+            source_years_by_name[match.winner_name_short].add(match.year)
+            source_years_by_name[match.loser_name_short].add(match.year)
         name_map, map_report = _build_tennis_data_name_map(
             short_names,
             oncourt_players,
             popularity_by_pid=popularity_by_pid,
+            activity_years_by_pid=activity_years_by_pid,
+            source_years_by_name=dict(source_years_by_name),
         )
         print(f"  OnCourt players: {len(oncourt_players):,}")
         print(f"  Lefties from categories_atp.csv: {len(lefties):,}")
         print(f"  OnCourt index players (singles only): {map_report['oncourt_index_players']:,}")
         print(f"  Popularity rows: {len(popularity_by_pid):,}")
+        print(f"  Activity-year rows: {len(activity_years_by_pid):,}")
         print(f"  Tennis-data short names: {map_report['source_names']:,}")
         print(f"  Mapped short names: {map_report['mapped_names']:,}")
         print(f"  Unmapped short names: {map_report['unmapped_names']:,}")

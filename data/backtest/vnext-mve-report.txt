@@ -1,0 +1,33 @@
+Tennis vNext MVE Paired Evaluation
+Version: vnext-mve-0.1
+Status: research-only; no routing, staking or public signal changes
+
+Locked design
+- ATP hard courts; ATP/Grand Slam only
+- Train 2015-2023; validation 2024; single-shot test 2025
+- Five binomial processes; no CPI, event, H2H or fatigue terms
+- Hyperparameters selected only by 2024 validation match log-loss
+
+Selected hyperparameters
+- pooling_strength: 25
+- state_half_life_days: 365
+- state_prior_precision: 100
+- validation rows: 1275
+- validation vNext log-loss: 0.615197
+
+Locked 2025 paired test
+- incumbent hard rows available: 1370
+- incumbent source suffix: vnext-idclean
+- paired count/model rows: 1177 (85.9% coverage)
+- incumbent log-loss: 0.618036
+- vNext log-loss: 0.640310
+- paired log-loss delta: +0.022274 (gate <= -0.0040)
+- tournament-week bootstrap 95% CI: [+0.006692, +0.037341]
+- incumbent Brier: 0.215181
+- vNext Brier: 0.224693
+- paired Brier delta: +0.009512
+- incumbent ECE: 0.031440
+- vNext raw ECE: 0.030784 (gate <= 0.0349)
+
+VERDICT: FAIL_MVE
+Proceed to CPI/event/simulator stages only if both registered MVE gates pass.

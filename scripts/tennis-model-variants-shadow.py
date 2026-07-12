@@ -540,7 +540,7 @@ def _write_report(path: Path, rows: list[dict[str, str]]) -> None:
         "",
         "Purpose: compare candidate model changes without changing live fair-odds routing.",
         "A variant marked pending needs its suffixed backtest CSVs generated with --run-model-reruns.",
-        "A variant marked stale_ok is the last successful summary retained because the heavy rerun source CSVs were unavailable in this environment.",
+        "A variant marked identity_stale predates the fail-closed identity/history repair and is not comparable until regenerated.",
         "",
     ]
     for row in rows:
@@ -589,9 +589,9 @@ def main() -> int:
 
         for profile in variant.profiles:
             previous = previous_summary.get((variant.name, profile))
-            if not rows and previous and previous.get("status") in {"ok", "stale_ok"}:
+            if not rows and previous and previous.get("status") in {"ok", "stale_ok", "identity_stale"}:
                 retained = dict(previous)
-                retained["status"] = "stale_ok"
+                retained["status"] = "identity_stale"
                 retained["stale_since"] = previous.get("stale_since") or generated
                 retained["description"] = variant.description
                 retained["source_suffix"] = variant.source_suffix

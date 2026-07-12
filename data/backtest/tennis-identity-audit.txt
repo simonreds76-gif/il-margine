@@ -1,0 +1,47 @@
+Tennis Historical Identity Integrity Audit
+Years: 2022,2023,2024,2025
+Baseline git ref: 4585e625a
+Status: historical evidence repair; stale hard-calibration routing de-promoted separately
+
+Coverage
+- committed rows: 9889
+- identity-clean rows: 10065
+- stable paired rows: 9864
+- paired rows with changed player IDs: 929 (9.4%)
+- mean absolute probability move: 4.60pp
+- max absolute probability move: 60.19pp
+
+Probability quality (same available Pinnacle rows)
+- committed log-loss: 0.623005
+- identity-clean log-loss: 0.602293
+- committed ECE: 0.052116
+- identity-clean ECE: 0.010591
+
+Registered policy profiles, 2022-2025
+- strict committed: n=370 tier ROI +12.92%
+- strict identity-clean: n=465 tier ROI +12.13%
+- volume_200 hard committed: n=590 tier ROI +14.16%
+- volume_200 hard identity-clean: n=793 tier ROI +10.53%
+
+Decision
+- Identity-clean 2022-2025 artifacts were generated under the 'vnext-idclean' suffix and copied to the canonical working-tree CSVs; the immutable comparison baseline is 4585e625a.
+- Live/local daily pricing already uses direct OnCourt IDs; this finding is primarily a historical evidence problem.
+- The identity-clean baseline invalidated the previously promoted hard Platt overlay, so that overlay is now research-only until it is refit and passes a new registered holdout.
+- Do not promote vNext from this audit; its separate registered MVE failed.
+
+Largest identity-driven probability changes
+- 2023-02-28 Abierto Mexicano: Alejandro Pascacio F. (24232) vs Yoshihito Nishioka (24225) -> Frances Tiafoe (29939) vs Yoshihito Nishioka (24225); p1 0.089->0.690
+- 2024-02-20 Rio Open: Alejandro Pascacio F. (24232) vs Stan Wawrinka (1092) -> Facundo Diaz Acosta (64741) vs Stan Wawrinka (1092); p1 0.054->0.641
+- 2024-04-06 U.S. Men's Clay Court Championships: Alejandro Pascacio F. (24232) vs Jordan Thompson (22433) -> Frances Tiafoe (29939) vs Jordan Thompson (22433); p1 0.180->0.729
+- 2023-01-20 Australian Open: Karen Khachanov (25543) vs Alejandro Pascacio F. (24232) -> Karen Khachanov (25543) vs Frances Tiafoe (29939); p1 0.954->0.427
+- 2024-04-05 Estoril Open: Pablo Martinez (5829) vs Richard Gasquet (674) -> Pedro Martinez Portero (27358) vs Richard Gasquet (674); p1 0.180->0.694
+- 2024-01-14 Australian Open: Alejandro Pascacio F. (24232) vs Borna Coric (25165) -> Frances Tiafoe (29939) vs Borna Coric (25165); p1 0.152->0.663
+- 2022-10-07 Rakuten Japan Open Tennis Championships: Alejandro Pascacio F. (24232) vs Miomir Kecmanovic (34337) -> Frances Tiafoe (29939) vs Miomir Kecmanovic (34337); p1 0.069->0.577
+- 2022-08-29 US Open: Tim Van Rijthoven (29959) vs Zhuo Zhang (26496) -> Tim Van Rijthoven (29959) vs Zhizhen Zhang (26140); p1 0.810->0.305
+- 2025-02-26 Abierto Mexicano: Alejandro Pascacio F. (24232) vs Alexandre Muller (28108) -> Frances Tiafoe (29939) vs Alexandre Muller (28108); p1 0.180->0.682
+- 2023-10-26 Vienna Open: Alejandro Pascacio F. (24232) vs Gael Monfils (5917) -> Frances Tiafoe (29939) vs Gael Monfils (5917); p1 0.244->0.743
+- 2024-04-05 U.S. Men's Clay Court Championships: Alejandro Pascacio F. (24232) vs James Duckworth (11517) -> Frances Tiafoe (29939) vs James Duckworth (11517); p1 0.322->0.821
+- 2022-02-24 Abierto Mexicano: Vinay Kumar T (49583) vs Dusan Lajovic (12190) -> Tommy Paul (29935) vs Dusan Lajovic (12190); p1 0.202->0.701
+- 2024-01-03 Hong Kong Tennis Open: Alejandro Pascacio F. (24232) vs Miomir Kecmanovic (34337) -> Frances Tiafoe (29939) vs Miomir Kecmanovic (34337); p1 0.195->0.690
+- 2022-04-25 Millennium Estoril Open: Alejandro Pascacio F. (24232) vs Dusan Lajovic (12190) -> Frances Tiafoe (29939) vs Dusan Lajovic (12190); p1 0.180->0.670
+- 2023-08-05 Citi Open: Daniel Evans (9305) vs Alejandro Pascacio F. (24232) -> Daniel Evans (9305) vs Frances Tiafoe (29939); p1 0.831->0.346

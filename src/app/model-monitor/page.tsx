@@ -1070,18 +1070,18 @@ export default async function ModelMonitorPage() {
       title: "Hard Cal Strict",
       row: variantRow("hardcal_strict_live", "strict"),
       baseline: baselineVariantStrict,
-      badge: "candidate",
-      tone: "emerald",
-      note: "Best practical upgrade: improves strict tier ROI and calibration. Only suitable inside strict/volume hard gates.",
+      badge: "de-promoted",
+      tone: "rose",
+      note: "Identity-clean regeneration makes the raw baseline better calibrated and slightly more profitable. Hard calibration is disabled pending a fresh fit.",
     },
     {
       key: "hardcal-volume",
       title: "Hard Cal Volume",
       row: variantRow("hardcal_strict_live", "volume_200_hard"),
       baseline: baselineVariantVolume,
-      badge: "watch",
-      tone: "amber",
-      note: "Corrected harness still shows a small lift, but strict-only is the live promotion. Volume needs explicit approval before routing.",
+      badge: "rejected",
+      tone: "rose",
+      note: "The stale calibration roughly halves identity-clean volume ROI and worsens ECE. It is not eligible for routing.",
     },
     {
       key: "h2h-strict",
@@ -1637,9 +1637,9 @@ export default async function ModelMonitorPage() {
                     );
                   })}
                 </div>
-                <div className="mt-4 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-sm leading-6 text-emerald-50">
-                  Current interpretation: the only model change with a promotion case is <span className="font-semibold text-white">Hard calibration inside strict/volume only</span>.
-                  H2H, heavier fatigue, tournament-form cap expansion, clay calibration, and ATP250-hard expansion stay shadow until they beat the existing lane on ROI and calibration together.
+                <div className="mt-4 rounded-xl border border-amber-500/20 bg-amber-500/10 p-4 text-sm leading-6 text-amber-50">
+                  Current interpretation: <span className="font-semibold text-white">identity-clean raw baseline is the control</span>. Hard calibration is de-promoted;
+                  H2H, fatigue and tournament-cap rows are stale until regenerated through the repaired identity/history loader.
                 </div>
               </>
             )}
