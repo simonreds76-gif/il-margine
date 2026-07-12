@@ -23,7 +23,7 @@ const TENNIS_MONITOR_ENABLED =
 type LaneView = {
   id: TennisResearchLaneId;
   title: string;
-  state: "LIVE ALIAS" | "SHADOW LIVE" | "SHADOW PLANNED" | "DEFERRED" | "DISABLED";
+  state: "LIVE ALIAS" | "SHADOW LIVE" | "SHADOW PLANNED" | "DEFERRED" | "DISABLED" | "PAUSED - IDENTITY STALE";
   badgeTone: string;
   market: string;
   summary: string;
@@ -51,6 +51,12 @@ type LaneStats = {
 
 type VNextResearchSummary = {
   verdict: string;
+  residualVerdict: string;
+  residualRows?: number;
+  residualDelta?: number;
+  residualCiHigh?: number;
+  residualWorstFold?: number;
+  countsIdentityVerdict: string;
   pairedRows?: number;
   coveragePct?: number;
   logLossDelta?: number;
@@ -69,9 +75,20 @@ function reportNumber(text: string | null, pattern: RegExp): number | undefined 
   return Number.isFinite(parsed) ? parsed : undefined;
 }
 
-function parseVNextResearchSummary(vnext: string | null, identity: string | null): VNextResearchSummary {
+function parseVNextResearchSummary(
+  vnext: string | null,
+  identity: string | null,
+  residual: string | null,
+  countsIdentity: string | null,
+): VNextResearchSummary {
   return {
     verdict: vnext?.match(/VERDICT:\s*([^\r\n]+)/)?.[1]?.trim() || "NOT RUN",
+    residualVerdict: residual?.match(/VERDICT:\s*([^\r\n]+)/)?.[1]?.trim() || "NOT RUN",
+    residualRows: reportNumber(residual, /OOF rows:\s*(\d+)/i),
+    residualDelta: reportNumber(residual, /Delta log-loss:\s*([+-]?[\d.]+)/i),
+    residualCiHigh: reportNumber(residual, /bootstrap 95% CI:\s*\[[^,]+,\s*([+-]?[\d.]+)\]/i),
+    residualWorstFold: reportNumber(residual, /Worst fold delta:\s*([+-]?[\d.]+)/i),
+    countsIdentityVerdict: countsIdentity?.match(/VERDICT:\s*([^\r\n]+)/)?.[1]?.trim() || "NOT RUN",
     pairedRows: reportNumber(vnext, /paired count\/model rows:\s*(\d+)/i),
     coveragePct: reportNumber(vnext, /paired count\/model rows:[^\r\n]*\(([+-]?[\d.]+)% coverage\)/i),
     logLossDelta: reportNumber(vnext, /paired log-loss delta:\s*([+-]?[\d.]+)/i),
@@ -86,19 +103,22 @@ function parseVNextResearchSummary(vnext: string | null, identity: string | null
 
 function VNextResearchCard({ summary }: { summary: VNextResearchSummary }) {
   const failed = summary.verdict.includes("FAIL");
+  const residualFailed = summary.residualVerdict.includes("FAIL");
   return (
     <section className="rounded-2xl border border-amber-500/25 bg-[linear-gradient(135deg,rgba(120,53,15,0.16),rgba(2,6,23,0.82)_42%,rgba(15,23,42,0.9))] p-5 shadow-[0_18px_60px_rgba(2,6,23,0.28)]">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-300">Architecture decision</p>
-          <h2 className="mt-2 text-xl font-semibold text-slate-100">vNext MVE and historical identity audit</h2>
+          <h2 className="mt-2 text-xl font-semibold text-slate-100">vNext registered decisions and identity audit</h2>
           <p className="mt-2 max-w-4xl text-sm leading-6 text-slate-400">
-            The unified point-level MVE was tested once against the identity-clean incumbent. It is research evidence only and cannot route signals.
+            Two locked ATP-hard experiments have now tested point information against the identity-clean incumbent. Both
+            are research evidence only and neither can route signals.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <StatusPill label={summary.verdict.replaceAll("_", " ")} tone={failed ? badgeTones.disabled : badgeTones.live} />
-          <StatusPill label="IDENTITY REPAIR REQUIRED" tone={badgeTones.shadow} />
+          <StatusPill label={summary.residualVerdict.replaceAll("_", " ")} tone={residualFailed ? badgeTones.disabled : badgeTones.live} />
+          <StatusPill label={`COUNTS ID ${summary.countsIdentityVerdict}`} tone={summary.countsIdentityVerdict === "PASS" ? badgeTones.live : badgeTones.disabled} />
         </div>
       </div>
       <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-8">
@@ -111,12 +131,20 @@ function VNextResearchCard({ summary }: { summary: VNextResearchSummary }) {
         <EmptyMetric label="Clean ECE" value={formatNumber(summary.cleanEce ?? null, "", 4)} />
         <EmptyMetric label="Clean strict" value={summary.cleanStrictBets == null ? "-" : `${summary.cleanStrictBets} / ${formatNumber(summary.cleanStrictRoi ?? null, "%")}`} />
       </div>
+      <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <EmptyMetric label="v0.2 OOF rows" value={summary.residualRows == null ? "-" : String(summary.residualRows)} />
+        <EmptyMetric label="v0.2 LL delta" value={formatNumber(summary.residualDelta ?? null, "", 6)} />
+        <EmptyMetric label="v0.2 CI high" value={formatNumber(summary.residualCiHigh ?? null, "", 6)} />
+        <EmptyMetric label="Worst fold" value={formatNumber(summary.residualWorstFold ?? null, "", 6)} />
+      </div>
       <div className="mt-4 grid gap-3 md:grid-cols-2">
         <p className="rounded-xl border border-rose-500/20 bg-rose-500/8 px-4 py-3 text-sm leading-6 text-rose-100">
-          vNext failed the registered log-loss gate. Do not add CPI, event effects or simulator integration to this version.
+          v0.1 replacement and v0.2 anchored residual both failed their registered improvement gates. Further ML feature
+          rungs are shelved; do not add CPI, event, fatigue or H2H terms to rescue the result.
         </p>
         <p className="rounded-xl border border-amber-500/20 bg-amber-500/8 px-4 py-3 text-sm leading-6 text-amber-100">
-          Regenerate 2022-2025 with the fail-closed resolver before treating historical strict/volume headlines as final evidence.
+          Identity-clean strict remains the control. Point-level work now moves to derivatives and aces/DFs, where serve
+          levels may improve count and line pricing without changing ML routing.
         </p>
       </div>
     </section>
@@ -151,6 +179,8 @@ type ProofReportLoad = {
 };
 
 type CpiSummary = {
+  identityPaused: boolean;
+  identityStatus: string | null;
   headlineRows: CsvRow[];
   candidateRows: CsvRow[];
   overlayRows: CsvRow[];
@@ -225,11 +255,11 @@ const laneViews: Record<TennisResearchLaneId, LaneView> = {
   cpi_speed_shadow: {
     id: "cpi_speed_shadow",
     title: "CPI speed shadow",
-    state: "SHADOW LIVE",
-    badgeTone: badgeTones.shadow,
+    state: "PAUSED - IDENTITY STALE",
+    badgeTone: badgeTones.disabled,
     market: "ML by court speed",
     summary:
-      "ATP-only ML shadow lane using lagged CPI z-score gates. It admits only cells that passed the 2024 train and 2025 holdout gate; no live staking or public routing.",
+      "Historical CPI pass cells predate the identity repair. Signal attachment is fail-closed until every gate is regenerated with identity_basis=idclean_v1.",
   },
   challenger_hc: {
     id: "challenger_hc",
@@ -739,7 +769,7 @@ async function loadLaneStats(id: TennisResearchLaneId): Promise<LaneStats> {
 }
 
 async function loadCpiSummary(): Promise<CpiSummary> {
-  const [csv, overlayCsv, overlayReport, regimeCsv, regimeReport, gateCsv, factorCsv, gateReport] = await Promise.all([
+  const [csv, overlayCsv, overlayReport, regimeCsv, regimeReport, gateCsv, factorCsv, gateReport, identityStatus] = await Promise.all([
     readKnownFile("data/backtest/cpi-all-surfaces-cells.csv"),
     readKnownFile("data/backtest/cpi-shadow-overlay-cells.csv"),
     readKnownFile("data/backtest/cpi-shadow-overlay-report.txt"),
@@ -748,9 +778,13 @@ async function loadCpiSummary(): Promise<CpiSummary> {
     readKnownFile("data/backtest/cpi-regime-shadow-gates.csv"),
     readKnownFile("data/backtest/cpi-regime-shadow-value-factors.csv"),
     readKnownFile("data/backtest/cpi-regime-shadow-report.txt"),
+    readKnownFile("data/backtest/cpi-regime-shadow-identity-status.txt"),
   ]);
+  const identityPaused = !identityStatus?.includes("VERDICT: IDCLEAN_VALID");
   if (!csv) {
     return {
+      identityPaused,
+      identityStatus,
       headlineRows: [],
       candidateRows: [],
       overlayRows: [],
@@ -807,7 +841,7 @@ async function loadCpiSummary(): Promise<CpiSummary> {
     )
     .sort((left, right) => (regimeOrder.get(left.value) ?? 99) - (regimeOrder.get(right.value) ?? 99));
   const gateOrder = new Map(["PASS_SHADOW", "WATCH"].map((status, index) => [status, index]));
-  const regimeGateRows = regimeGateRowsRaw
+  const regimeGateRows = (identityPaused ? [] : regimeGateRowsRaw)
     .filter((row) => row.status === "PASS_SHADOW" || row.status === "WATCH")
     .sort((left, right) => {
       const statusDiff = (gateOrder.get(left.status) ?? 99) - (gateOrder.get(right.status) ?? 99);
@@ -819,6 +853,8 @@ async function loadCpiSummary(): Promise<CpiSummary> {
   const regimeVerdict = regimeReport?.match(/Verdict:\s*([^\r\n]+)/)?.[1]?.trim() ?? null;
   const regimeGateVerdict = gateReport?.match(/Verdict:\s*([^\r\n]+)/)?.[1]?.trim() ?? null;
   return {
+    identityPaused,
+    identityStatus,
     headlineRows,
     candidateRows,
     overlayRows,
@@ -860,6 +896,13 @@ function CpiSurfaceSpeedCard({ summary }: { summary: CpiSummary }) {
             Lagged Tennis Abstract court-speed buckets across Hard, Clay and Grass. This is a research map for future
             gates and overlays; it does not change live staking by itself.
           </p>
+          {summary.identityPaused ? (
+            <div className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm leading-6 text-amber-100">
+              <span className="font-semibold">CPI signals paused:</span> the visible historical cells were fitted before
+              the identity repair. They remain diagnostic only; current signal attachment is blocked until an
+              identity-clean gate file is registered.
+            </div>
+          ) : null}
         </div>
         <div className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-200">
           prior editions only
@@ -1359,11 +1402,13 @@ export default async function TennisMonitorPage() {
   const proofReportRows = await loadProofReport();
   const proofRows = proofReportRows?.rows ?? proofRowsFromStats(statsByLane);
   const cpiSummary = await loadCpiSummary();
-  const [vnextReport, identityReport] = await Promise.all([
+  const [vnextReport, identityReport, residualReport, countsIdentityReport] = await Promise.all([
     readKnownFile("data/backtest/vnext-mve-report.txt"),
     readKnownFile("data/backtest/tennis-identity-audit.txt"),
+    readKnownFile("data/backtest/vnext-v02-folds-report.txt"),
+    readKnownFile("data/backtest/vnext-counts-identity-check.txt"),
   ]);
-  const vnextSummary = parseVNextResearchSummary(vnextReport, identityReport);
+  const vnextSummary = parseVNextResearchSummary(vnextReport, identityReport, residualReport, countsIdentityReport);
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">

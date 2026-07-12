@@ -120,11 +120,15 @@ def main() -> int:
     for name in required:
         path = args.oncourt_dir / name
         inputs[name] = {"bytes": path.stat().st_size, "sha256": sha256_file(path)}
+    try:
+        artifact_path = str(output.resolve().relative_to(ROOT.resolve()))
+    except ValueError:
+        artifact_path = str(output)
     manifest = {
         "version": VERSION,
         "registered": True,
         "scope": {"tour": "ATP", "surface": args.surface, "start_year": args.start_year, "end_year": args.end_year},
-        "artifact": {"path": str(output), "format": "csv.gz", "rows": row_count, "sha256": sha256_file(output)},
+        "artifact": {"path": artifact_path, "format": "csv.gz", "rows": row_count, "sha256": sha256_file(output)},
         "inputs": inputs,
         "counters": dict(counters),
         "reconciliation": {"passed": reconciliation["passed"], "sample_size": reconciliation["sample_size"], "sample_seed": reconciliation["sample_seed"]},

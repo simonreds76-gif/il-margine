@@ -154,6 +154,7 @@ CPI_SPEED_Z_SLOW = env_float("CPI_SPEED_Z_SLOW", -0.50)
 CPI_SPEED_Z_CAP = env_float("CPI_SPEED_Z_CAP", 3.0)
 CPI_SPEED_ALLOWED_CONFIDENCE = {"high", "medium"}
 CPI_SPEED_ALLOWED_STATUSES = {"PASS_SHADOW"}
+CPI_SPEED_REQUIRED_IDENTITY_BASIS = "idclean_v1"
 SPREAD_V1_CLAY_FAV_STALE_DAYS = env_int("SPREAD_V1_CLAY_FAV_STALE_DAYS", 14)
 ALLOWED_SEGMENT = "Hard|Masters 1000"
 ALLOWED_CONFIDENCE = {"high"}
@@ -1217,9 +1218,15 @@ def load_cpi_speed_pass_gates(path: Path) -> set[tuple[str, str]]:
         with path.open("r", encoding="utf-8-sig", newline="") as f:
             for row in csv.DictReader(f):
                 status = (row.get("status") or "").strip()
+                identity_basis = (row.get("identity_basis") or "").strip()
                 segment = (row.get("segment") or "").strip()
                 value = (row.get("value") or "").strip()
-                if status in CPI_SPEED_ALLOWED_STATUSES and segment and value:
+                if (
+                    status in CPI_SPEED_ALLOWED_STATUSES
+                    and identity_basis == CPI_SPEED_REQUIRED_IDENTITY_BASIS
+                    and segment
+                    and value
+                ):
                     gates.add((segment, value))
     except Exception:
         return set()
@@ -2068,7 +2075,11 @@ def main() -> int:
             surface_speed_surface_stats,
         ) = load_surface_speed_context(DEFAULT_SURFACE_SPEED_FILE)
         if not cpi_speed_pass_gates:
-            print(f"WARNING: no CPI speed PASS_SHADOW gates loaded from {args.cpi_speed_gates_file}; lane will be empty.")
+            print(
+                "WARNING: no identity-clean CPI speed PASS_SHADOW gates loaded from "
+                f"{args.cpi_speed_gates_file}; required identity_basis={CPI_SPEED_REQUIRED_IDENTITY_BASIS}; "
+                "lane will be empty."
+            )
 
     injury_index = load_recent_injury_index(
         Path(args.injury_csv),
