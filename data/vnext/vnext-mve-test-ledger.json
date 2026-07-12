@@ -1,0 +1,18 @@
+{
+  "incumbent_suffix": "vnext-idclean",
+  "input_sha256": "9e0ef149ffff6e41bef97dc010081e25a00608ebc0e5098c768f33036d430bfc",
+  "registration_sha256": "877cb578dcc88e91dda243d9e85c0d1a2cdb625aab97689f0231b1c6e0eaef46",
+  "selected_hyperparameters": {
+    "brier": 0.21468281568661488,
+    "ece": 0.03157312421697236,
+    "half_life_days": 365.0,
+    "log_loss": 0.6151971846313711,
+    "n": 1275,
+    "pooling_strength": 25.0,
+    "prior_precision": 100.0
+  },
+  "test_rows": 1177,
+  "test_window": "2025-01-01/2025-12-31",
+  "verdict": "FAIL_MVE",
+  "version": "vnext-mve-0.1"
+}

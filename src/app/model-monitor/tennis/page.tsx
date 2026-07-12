@@ -49,6 +49,80 @@ type LaneStats = {
   latestSignals: CsvRow[];
 };
 
+type VNextResearchSummary = {
+  verdict: string;
+  pairedRows?: number;
+  coveragePct?: number;
+  logLossDelta?: number;
+  rawEce?: number;
+  changedIdentityPct?: number;
+  cleanLogLoss?: number;
+  cleanEce?: number;
+  cleanStrictBets?: number;
+  cleanStrictRoi?: number;
+};
+
+function reportNumber(text: string | null, pattern: RegExp): number | undefined {
+  const match = text?.match(pattern)?.[1];
+  if (match == null) return undefined;
+  const parsed = Number(match);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
+function parseVNextResearchSummary(vnext: string | null, identity: string | null): VNextResearchSummary {
+  return {
+    verdict: vnext?.match(/VERDICT:\s*([^\r\n]+)/)?.[1]?.trim() || "NOT RUN",
+    pairedRows: reportNumber(vnext, /paired count\/model rows:\s*(\d+)/i),
+    coveragePct: reportNumber(vnext, /paired count\/model rows:[^\r\n]*\(([+-]?[\d.]+)% coverage\)/i),
+    logLossDelta: reportNumber(vnext, /paired log-loss delta:\s*([+-]?[\d.]+)/i),
+    rawEce: reportNumber(vnext, /vNext raw ECE:\s*([\d.]+)/i),
+    changedIdentityPct: reportNumber(identity, /changed player IDs:[^\r\n]*\(([\d.]+)%\)/i),
+    cleanLogLoss: reportNumber(identity, /identity-clean log-loss:\s*([\d.]+)/i),
+    cleanEce: reportNumber(identity, /identity-clean ECE:\s*([\d.]+)/i),
+    cleanStrictBets: reportNumber(identity, /strict identity-clean:\s*n=(\d+)/i),
+    cleanStrictRoi: reportNumber(identity, /strict identity-clean:[^\r\n]*tier ROI\s*([+-]?[\d.]+)%/i),
+  };
+}
+
+function VNextResearchCard({ summary }: { summary: VNextResearchSummary }) {
+  const failed = summary.verdict.includes("FAIL");
+  return (
+    <section className="rounded-2xl border border-amber-500/25 bg-[linear-gradient(135deg,rgba(120,53,15,0.16),rgba(2,6,23,0.82)_42%,rgba(15,23,42,0.9))] p-5 shadow-[0_18px_60px_rgba(2,6,23,0.28)]">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-300">Architecture decision</p>
+          <h2 className="mt-2 text-xl font-semibold text-slate-100">vNext MVE and historical identity audit</h2>
+          <p className="mt-2 max-w-4xl text-sm leading-6 text-slate-400">
+            The unified point-level MVE was tested once against the identity-clean incumbent. It is research evidence only and cannot route signals.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <StatusPill label={summary.verdict.replaceAll("_", " ")} tone={failed ? badgeTones.disabled : badgeTones.live} />
+          <StatusPill label="IDENTITY REPAIR REQUIRED" tone={badgeTones.shadow} />
+        </div>
+      </div>
+      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-8">
+        <EmptyMetric label="Paired rows" value={summary.pairedRows == null ? "-" : String(summary.pairedRows)} />
+        <EmptyMetric label="Coverage" value={formatNumber(summary.coveragePct ?? null, "%")} />
+        <EmptyMetric label="vNext LL delta" value={formatNumber(summary.logLossDelta ?? null, "", 4)} />
+        <EmptyMetric label="vNext raw ECE" value={formatNumber(summary.rawEce ?? null, "", 4)} />
+        <EmptyMetric label="IDs changed" value={formatNumber(summary.changedIdentityPct ?? null, "%")} />
+        <EmptyMetric label="Clean log-loss" value={formatNumber(summary.cleanLogLoss ?? null, "", 4)} />
+        <EmptyMetric label="Clean ECE" value={formatNumber(summary.cleanEce ?? null, "", 4)} />
+        <EmptyMetric label="Clean strict" value={summary.cleanStrictBets == null ? "-" : `${summary.cleanStrictBets} / ${formatNumber(summary.cleanStrictRoi ?? null, "%")}`} />
+      </div>
+      <div className="mt-4 grid gap-3 md:grid-cols-2">
+        <p className="rounded-xl border border-rose-500/20 bg-rose-500/8 px-4 py-3 text-sm leading-6 text-rose-100">
+          vNext failed the registered log-loss gate. Do not add CPI, event effects or simulator integration to this version.
+        </p>
+        <p className="rounded-xl border border-amber-500/20 bg-amber-500/8 px-4 py-3 text-sm leading-6 text-amber-100">
+          Regenerate 2022-2025 with the fail-closed resolver before treating historical strict/volume headlines as final evidence.
+        </p>
+      </div>
+    </section>
+  );
+}
+
 
 type ProofRow = {
   lane: string;
@@ -1285,6 +1359,11 @@ export default async function TennisMonitorPage() {
   const proofReportRows = await loadProofReport();
   const proofRows = proofReportRows?.rows ?? proofRowsFromStats(statsByLane);
   const cpiSummary = await loadCpiSummary();
+  const [vnextReport, identityReport] = await Promise.all([
+    readKnownFile("data/backtest/vnext-mve-report.txt"),
+    readKnownFile("data/backtest/tennis-identity-audit.txt"),
+  ]);
+  const vnextSummary = parseVNextResearchSummary(vnextReport, identityReport);
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
@@ -1295,6 +1374,10 @@ export default async function TennisMonitorPage() {
           reportAge={proofReportRows?.ageLabel ?? null}
           reportStale={proofReportRows?.stale ?? true}
         />
+
+        <div className="mt-6">
+          <VNextResearchCard summary={vnextSummary} />
+        </div>
 
         <div className="mt-6">
           <ProofDashboard rows={proofRows} fromReport={proofReportRows !== null} reportAge={proofReportRows?.ageLabel ?? null} reportStale={proofReportRows?.stale ?? true} />

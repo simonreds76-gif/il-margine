@@ -35,6 +35,8 @@ const KNOWN_PROJECT_FILE_PATHS = {
   "data/backtest/cpi-regime-shadow-gates.csv": path.join(process.cwd(), "data/backtest/cpi-regime-shadow-gates.csv"),
   "data/backtest/cpi-regime-shadow-value-factors.csv": path.join(process.cwd(), "data/backtest/cpi-regime-shadow-value-factors.csv"),
   "data/backtest/cpi-regime-shadow-report.txt": path.join(process.cwd(), "data/backtest/cpi-regime-shadow-report.txt"),
+  "data/backtest/vnext-mve-report.txt": path.join(process.cwd(), "data/backtest/vnext-mve-report.txt"),
+  "data/backtest/tennis-identity-audit.txt": path.join(process.cwd(), "data/backtest/tennis-identity-audit.txt"),
   "data/backtest/signals-current.json": path.join(process.cwd(), "data/backtest/signals-current.json"),
   "data/backtest/strict-signals-archive.csv": path.join(process.cwd(), "data/backtest/strict-signals-archive.csv"),
   "data/backtest/strict-signals-challenger-ml-archive.csv": path.join(process.cwd(), "data/backtest/strict-signals-challenger-ml-archive.csv"),

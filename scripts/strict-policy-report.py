@@ -1842,9 +1842,8 @@ def main() -> int:
     parser.add_argument(
         "--hard-calibration-live",
         action="store_true",
-        default=env_bool(os.environ.get("STRICT_HARD_CALIBRATION_LIVE"), False)
-        or (os.environ.get("STRICT_POLICY_HARD_CALIBRATION_MODE", "").strip().lower() == "strict_volume"),
-        help="Use hard-court calibration for strict/volume ML values only",
+        default=False,
+        help="Research override only: use hard-court calibration for strict/volume ML values (default off after identity-clean audit)",
     )
     parser.add_argument("--compare-overlay", action="store_true", help="Compute and print base vs overlay side-by-side")
     parser.add_argument("--compare-output", default=str(DEFAULT_COMPARE_OUTPUT), help="CSV path for side-by-side tracking")

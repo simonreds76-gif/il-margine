@@ -303,9 +303,15 @@ const HARD_CALIBRATION_PARAMS_FILE = resolveConfiguredRouteFilePath(
   process.env.HARD_CALIBRATION_PARAMS_FILE,
   "data/backtest/calibration-params-2022-2026-review.json",
 );
+// Identity-clean 2022-2025 regeneration invalidated the old Platt promotion:
+// raw baseline ECE 0.01059 vs hard-cal ECE 0.02100. Keep the overlay visible
+// for research, but hard-disable it from policy routing until it is refit and
+// passes a new registered holdout.
+const STRICT_HARD_CALIBRATION_EVIDENCE_VALID = false;
 const STRICT_HARD_CALIBRATION_LIVE =
-  parseBoolEnv("STRICT_HARD_CALIBRATION_LIVE", false) ||
-  (process.env.STRICT_POLICY_HARD_CALIBRATION_MODE ?? "").trim().toLowerCase() === "strict_volume";
+  STRICT_HARD_CALIBRATION_EVIDENCE_VALID &&
+  (parseBoolEnv("STRICT_HARD_CALIBRATION_LIVE", false) ||
+    (process.env.STRICT_POLICY_HARD_CALIBRATION_MODE ?? "").trim().toLowerCase() === "strict_volume");
 
 interface HardCalibrationParams {
   A: number;

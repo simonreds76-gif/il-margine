@@ -1,0 +1,37 @@
+{
+  "registered": true,
+  "version": "vnext-mve-0.1",
+  "registered_at": "2026-07-12",
+  "scope": {
+    "tour": "ATP",
+    "surface": "Hard",
+    "levels": ["ATP", "Grand Slam"],
+    "train": "2015-01-01/2023-12-31",
+    "validation": "2024-01-01/2024-12-31",
+    "test": "2025-01-01/2025-12-31"
+  },
+  "processes": ["first_in", "first_win", "second_win", "double_fault", "ace"],
+  "model": "penalized-binomial hierarchical serve/return effects with causal mean-reverting online residual states",
+  "implementation_note": "NumPy/SciPy MAP MVE replaces the proposed NumPyro SVI implementation because JAX/NumPyro and pyarrow are not installed. The mathematical scope and locked evaluation remain unchanged.",
+  "hyperparameter_grid": {
+    "pooling_strength": [25.0, 75.0, 200.0],
+    "state_half_life_days": [90.0, 180.0, 365.0],
+    "state_prior_precision": [100.0, 300.0, 900.0]
+  },
+  "selection_metric": "validation match log-loss",
+  "test_evaluations_allowed": 1,
+  "promotion_gates": {
+    "paired_log_loss_delta_max": -0.004,
+    "raw_ece_max": 0.0349
+  },
+  "routing": "research_only",
+  "forbidden": [
+    "CPI slopes",
+    "event effects",
+    "H2H residual",
+    "fatigue covariate",
+    "new selection thresholds",
+    "live routing changes",
+    "post-test tuning"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "artifact": {
+    "format": "csv.gz",
+    "path": "data\\vnext\\serve-counts-atp.csv.gz",
+    "rows": 137658,
+    "sha256": "9e0ef149ffff6e41bef97dc010081e25a00608ebc0e5098c768f33036d430bfc"
+  },
+  "counters": {
+    "invalid_second_won": 5,
+    "matches": 68829,
+    "missing_or_team_player": 20763,
+    "missing_stat_row": 1497,
+    "player_rows": 137658,
+    "unsupported_tour": 757130,
+    "zero_serve_points": 2
+  },
+  "inputs": {
+    "courts.csv": {
+      "bytes": 73,
+      "sha256": "8307c5764d802621c8dbf972e80809d120287ff2c57258cc340e4863ee72e2ed"
+    },
+    "games_atp.csv": {
+      "bytes": 49561108,
+      "sha256": "ed8760cdacc3192c5196636640ed2ff22bf45b51baebe548b7c21c0b4efed25d"
+    },
+    "players_atp.csv": {
+      "bytes": 6015232,
+      "sha256": "b262e998ab62aa5f3b1133814e193d9c58935bfaacd9f817887e3beaa042851e"
+    },
+    "stat_atp.csv": {
+      "bytes": 46356033,
+      "sha256": "045c7d94f61ab58b953b3404817af1f32f0b8c098923fce855dc7f2348715c6d"
+    },
+    "tours_atp.csv": {
+      "bytes": 960332,
+      "sha256": "554a22c06774b54a441b63c49085183598a8db45c7ff06fd42aea50f6c5a8ee4"
+    }
+  },
+  "reconciliation": {
+    "passed": true,
+    "sample_seed": 20260712,
+    "sample_size": 20
+  },
+  "registered": true,
+  "scope": {
+    "end_year": 2025,
+    "start_year": 2015,
+    "surface": "Hard",
+    "tour": "ATP"
+  },
+  "version": "vnext-mve-0.1"
+}

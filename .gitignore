@@ -160,3 +160,10 @@ env.local
 # local tennis proof reports
 data/backtest/tennis-shadow-proof-report.csv
 data/backtest/tennis-shadow-proof-report.txt
+
+# tennis vNext generated research artifacts
+data/vnext/serve-counts-*.csv.gz
+data/vnext/serve-counts-*.parquet
+data/vnext/params-*.json
+data/vnext/*-predictions.csv
+data/backtest/backtest-results-*-vnext-idclean.csv
