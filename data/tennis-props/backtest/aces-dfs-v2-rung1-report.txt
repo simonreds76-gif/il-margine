@@ -1,0 +1,15 @@
+Tennis Props v2 - Registered Rung 1
+Generated UTC: 2026-07-12T21:52:05.230096+00:00
+Train: 2022-2024 | untouched test: 2025
+Incumbent means unchanged; only negative-binomial dispersion changes.
+Gate: every tour/market cell must have MAE delta <= 0 and log-loss delta <= -0.001.
+
+Tour Market      N   MAE current/v2  LL current/v2   Delta LL   Gate
+ATP  aces   1016   4.1173/4.1173     0.662894/0.662118  -0.000776   FAIL
+ATP  dfs    1016   2.1679/2.1679     0.657153/0.654528  -0.002625   PASS
+WTA  aces   1016   1.7786/1.7786     0.653361/0.653246  -0.000115   FAIL
+WTA  dfs    1016   1.8972/1.8972     0.672905/0.672286  -0.000619   FAIL
+
+VERDICT: FAIL
+Routing: blocked
+Next: keep incumbent; do not wire v2
