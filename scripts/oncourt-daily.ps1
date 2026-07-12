@@ -30,8 +30,8 @@ if ([string]::IsNullOrWhiteSpace($env:STRICT_CLAY_BO3_ENABLED)) { $env:STRICT_CL
 if ([string]::IsNullOrWhiteSpace($env:STRICT_GRASS_BO3_ENABLED)) { $env:STRICT_GRASS_BO3_ENABLED = "1" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_CPI_SPEED_SHADOW_ENABLED)) { $env:STRICT_CPI_SPEED_SHADOW_ENABLED = "1" }
 if ([string]::IsNullOrWhiteSpace($env:CLAY_BO3_ML_ENABLE)) { $env:CLAY_BO3_ML_ENABLE = "0" }
-if ([string]::IsNullOrWhiteSpace($env:STRICT_POLICY_HARD_CALIBRATION_MODE)) { $env:STRICT_POLICY_HARD_CALIBRATION_MODE = "strict_volume" }
-if ([string]::IsNullOrWhiteSpace($env:STRICT_HARD_CALIBRATION_LIVE)) { $env:STRICT_HARD_CALIBRATION_LIVE = "1" }
+if ([string]::IsNullOrWhiteSpace($env:STRICT_POLICY_HARD_CALIBRATION_MODE)) { $env:STRICT_POLICY_HARD_CALIBRATION_MODE = "off" }
+if ([string]::IsNullOrWhiteSpace($env:STRICT_HARD_CALIBRATION_LIVE)) { $env:STRICT_HARD_CALIBRATION_LIVE = "0" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_HARD_CALIBRATION_PROFILES)) { $env:STRICT_HARD_CALIBRATION_PROFILES = "strict" }
 # Scheduled runs are hard-safe: clay spread-v1 can only be enabled by a manual research run.
 $env:SPREAD_V1_ENABLE_CLAY = "0"
@@ -201,10 +201,12 @@ if ($LASTEXITCODE -ne 0) {
 
 # Step 3: Compute player stats (extended writes both v2 and backwards-compat tables)
 Log "=== Step 3/10: Compute player stats (extended) ==="
-& python scripts\oncourt-compute-player-stats-extended.py 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "ERROR: Player stats failed (exit $LASTEXITCODE)"
-    exit 1
+$playerStatsExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\oncourt-compute-player-stats-extended.py") -Label "player stats extended" -TimeoutSeconds 900
+if ($playerStatsExit -ne 0) {
+    # The previous valid player_surface_stats snapshot remains usable. Do not
+    # suppress the rest of the nightly evidence/settlement pipeline because a
+    # stats-table REST write failed transiently.
+    Log "WARNING: Player stats refresh failed/timed out (exit $playerStatsExit); continuing with the last valid stats snapshot."
 }
 
 # Step 4: Refresh TennisExplorer injured/returning CSV
