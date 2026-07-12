@@ -295,6 +295,9 @@ const GRASS_BO3_SIGNAL_ARCHIVE_CSV = projectFilePath("data/backtest/strict-signa
 const CPI_SPEED_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-cpi_speed-live.csv");
 const CPI_SPEED_SIGNAL_ARCHIVE_CSV = projectFilePath("data/backtest/strict-signals-cpi_speed-archive.csv");
 const CPI_SPEED_SIGNAL_LEGACY_CSV = projectFilePath("data/backtest/strict-signals-cpi_speed.csv");
+// Existing CPI pass cells were fitted before the fail-closed identity repair.
+// Keep their archive measurable, but never attach stale rows as current signals.
+const CPI_SPEED_IDENTITY_EVIDENCE_VALID = false;
 const FAIR_ODDS_TENNIS_SPREADS_ENABLED = parseBoolEnv("FAIR_ODDS_TENNIS_SPREADS_ENABLED", false);
 const INTERNAL_RESEARCH_LANES = process.env.INTERNAL_RESEARCH_LANES === "1";
 const FAIR_ODDS_SPREAD_V1_ENABLED = parseBoolEnv("FAIR_ODDS_SPREAD_V1_ENABLED", INTERNAL_RESEARCH_LANES);
@@ -3262,7 +3265,7 @@ async function run(): Promise<Response> {
   const grassBo3SignalsCsv = INTERNAL_RESEARCH_LANES
     ? loadActiveShadowSignals(GRASS_BO3_SIGNAL_CSV, "grass_bo3", today)
     : [];
-  const cpiSpeedSignalsCsv = INTERNAL_RESEARCH_LANES
+  const cpiSpeedSignalsCsv = INTERNAL_RESEARCH_LANES && CPI_SPEED_IDENTITY_EVIDENCE_VALID
     ? loadActiveShadowSignals([CPI_SPEED_SIGNAL_CSV, CPI_SPEED_SIGNAL_LEGACY_CSV], "cpi_speed_shadow", today)
     : [];
   const cpiSpeedPerformance = INTERNAL_RESEARCH_LANES
@@ -3849,6 +3852,7 @@ async function run(): Promise<Response> {
     signals_grass_bo3: grassBo3SignalsCsv,
     signals_cpi_speed: cpiSpeedSignalsCsv,
     cpi_speed_performance: cpiSpeedPerformance,
+    cpi_speed_evidence_status: CPI_SPEED_IDENTITY_EVIDENCE_VALID ? "idclean_valid" : "paused_identity_stale",
     challenger_nearmisses: challengerNearmisses,
     signals_spread_v1: spreadSignalsSpreadV1,
     signal_attachment,

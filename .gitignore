@@ -166,4 +166,6 @@ data/vnext/serve-counts-*.csv.gz
 data/vnext/serve-counts-*.parquet
 data/vnext/params-*.json
 data/vnext/*-predictions.csv
+data/vnext/*-features.csv
+data/vnext/*-fold-predictions.csv
 data/backtest/backtest-results-*-vnext-idclean.csv

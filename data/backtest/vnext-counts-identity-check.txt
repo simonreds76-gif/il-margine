@@ -1,0 +1,23 @@
+Tennis vNext Counts and Props Identity Check
+Version: vnext-counts-identity-0.1
+VERDICT: PASS
+
+OnCourt point-count path
+- Identity source: direct winner_id/loser_id from games_atp.csv joined to the same IDs in stat_atp.csv.
+- Tennis-Data short-name resolver used: NO
+- Manifest input hashes matched: True
+- Extracted player-match rows: 137658
+- Independent reconciliation checks: 20/20
+- Known historical collision IDs correctly separated: 6/6
+
+Sackmann props path
+- Identity source: native Sackmann winner_id/loser_id; ATP and WTA namespaces remain separate.
+- Tennis-Data short-name resolver used: NO
+- Source match rows scanned: 61738
+- Baseline identity rows verified: 7850/7850
+- Ambiguous explicit aliases: 0
+- Surname-only live-board fallback present: NO
+
+Decision
+- Count extraction and props history are not contaminated by the repaired Tennis-Data short-name bridge.
+- Live props matching remains full normalized name plus explicit alias only; unresolved names must stay unresolved.

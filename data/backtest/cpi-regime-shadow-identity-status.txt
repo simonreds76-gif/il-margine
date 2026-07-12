@@ -1,0 +1,18 @@
+CPI Speed Shadow Identity Status
+Version: cpi-speed-identity-gate-0.1
+VERDICT: PAUSED_IDENTITY_STALE
+
+Reason
+- The existing cpi-regime-shadow-gates.csv was fitted on pre-repair historical identities.
+- It does not declare identity_basis=idclean_v1.
+- Historical reports and settled archives remain visible for diagnosis only.
+
+Fail-closed behavior
+- strict-policy-report.py accepts CPI pass cells only when identity_basis=idclean_v1.
+- the fair-odds API does not attach previously written CPI live/legacy rows.
+- no public, internal, staking or settlement path is allowed to treat these cells as current signals.
+
+Reactivation requirement
+- Regenerate the CPI cells from canonical identity-clean backtest CSVs.
+- Add identity_basis=idclean_v1 to every regenerated gate row.
+- Re-run the registered temporal gate and live CLV review before changing this verdict.

@@ -1,0 +1,26 @@
+Tennis vNext v0.2 Anchored Residual - Rolling Folds
+Version: vnext-residual-0.2
+Scope: ATP hard, identity-clean incumbent anchor
+2025 STATUS: EXPOSED DIAGNOSTIC ONLY - excluded from every decision below
+
+Registered rung 1
+- opponent-adjusted serve/return point differential
+- uncertainty gate from static and causal dynamic process precision
+- incumbent recovered exactly at theta=0
+
+Fold 1: train_n=3133 test_n=566 theta=+0.016081 inc=0.593254 residual=0.593232 delta=-0.000022
+Fold 2: train_n=3699 test_n=685 theta=+0.018650 inc=0.624390 residual=0.624338 delta=-0.000052
+Fold 3: train_n=4384 test_n=540 theta=+0.024920 inc=0.590530 residual=0.590483 delta=-0.000046
+Fold 4: train_n=4924 test_n=726 theta=+0.028206 inc=0.627458 residual=0.627405 delta=-0.000053
+Fold 5: train_n=5650 test_n=552 theta=+0.032671 inc=0.581920 residual=0.581851 delta=-0.000069
+Fold 6: train_n=6202 test_n=749 theta=+0.036476 inc=0.626118 residual=0.626004 delta=-0.000113
+
+OOF rows: 3818
+Incumbent log-loss: 0.609767
+Residual log-loss: 0.609706
+Delta log-loss: -0.000062 (gate <= -0.0015)
+Tournament-week bootstrap 95% CI: [-0.000085, -0.000039] (upper gate < 0)
+Worst fold delta: -0.000022 (gate <= +0.0010)
+
+VERDICT: FAIL_RUNG_1
+Subsequent feature rungs and live shadow wiring remain blocked unless this rung passes all gates.

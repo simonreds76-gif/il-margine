@@ -51,6 +51,8 @@ class ProcessModel:
     pooling_strength: float
     iterations: int
     max_delta: float
+    server_information: np.ndarray | None = None
+    return_information: np.ndarray | None = None
 
     def __post_init__(self) -> None:
         self._index = {int(player_id): idx for idx, player_id in enumerate(self.player_ids.tolist())}
@@ -70,6 +72,13 @@ class ProcessModel:
     def probability(self, server_id: int, returner_id: int, server_delta: float = 0.0, return_delta: float = 0.0) -> float:
         return float(sigmoid(self.eta(server_id, returner_id, server_delta, return_delta)))
 
+    def precision(self, player_id: int, role: str) -> float:
+        idx = self._index.get(int(player_id))
+        values = self.server_information if role == "server" else self.return_information
+        if idx is None or values is None:
+            return float(self.pooling_strength)
+        return float(max(values[idx], self.pooling_strength))
+
     def to_json(self) -> dict[str, object]:
         return {
             "name": self.name,
@@ -80,6 +89,8 @@ class ProcessModel:
             "player_ids": self.player_ids.astype(int).tolist(),
             "server_effects": self.server_effects.tolist(),
             "return_effects": None if self.return_effects is None else self.return_effects.tolist(),
+            "server_information": None if self.server_information is None else self.server_information.tolist(),
+            "return_information": None if self.return_information is None else self.return_information.tolist(),
         }
 
     @classmethod
@@ -93,6 +104,8 @@ class ProcessModel:
             player_ids=np.asarray(payload["player_ids"], dtype=np.int64),
             server_effects=np.asarray(payload["server_effects"], dtype=float),
             return_effects=None if payload.get("return_effects") is None else np.asarray(payload["return_effects"], dtype=float),
+            server_information=None if payload.get("server_information") is None else np.asarray(payload["server_information"], dtype=float),
+            return_information=None if payload.get("return_information") is None else np.asarray(payload["return_information"], dtype=float),
         )
 
 
@@ -142,7 +155,18 @@ def fit_process(rows: list[dict[str, object]], name: str, pooling_strength: floa
         if max_delta < 1e-7:
             break
 
-    return ProcessModel(name, intercept, player_ids, server_effects, return_effects, pooling_strength, iteration, max_delta)
+    return ProcessModel(
+        name,
+        intercept,
+        player_ids,
+        server_effects,
+        return_effects,
+        pooling_strength,
+        iteration,
+        max_delta,
+        server_information=np.asarray(server_information, dtype=float),
+        return_information=None if return_effects is None else np.asarray(return_information, dtype=float),
+    )
 
 
 class DynamicResiduals:
@@ -159,6 +183,9 @@ class DynamicResiduals:
 
     def value(self, process: str, role: str, player_id: int, date_ord: int) -> float:
         return self._at((process, role, int(player_id)), date_ord)[0]
+
+    def precision(self, process: str, role: str, player_id: int, date_ord: int) -> float:
+        return self._at((process, role, int(player_id)), date_ord)[1]
 
     def update(self, process: str, role: str, player_id: int, date_ord: int, gradient: float, information: float) -> None:
         key = (process, role, int(player_id))

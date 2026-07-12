@@ -241,6 +241,7 @@ interface ApiResponse {
   signals_grass_bo3?: SignalSummary[];
   signals_cpi_speed?: SignalSummary[];
   cpi_speed_performance?: SignalPerformanceSummary;
+  cpi_speed_evidence_status?: "idclean_valid" | "paused_identity_stale";
   challenger_nearmisses?: ChallengerNearmiss[];
   signals_clay_guarded?: SignalSummary[];
   signals_clay_2026?: SignalSummary[];
@@ -1676,6 +1677,13 @@ export default function FairOddsPage() {
                       </div>
                     </summary>
                     <div className="border-t border-slate-800/70 px-3 pb-3 pt-3">
+                      {section.key === "cpi-speed" && data.cpi_speed_evidence_status === "paused_identity_stale" ? (
+                        <div className="mb-3 rounded-xl border border-amber-400/25 bg-amber-400/10 px-3 py-2.5 text-[12px] leading-5 text-amber-100">
+                          <span className="font-semibold">Paused:</span> historical CPI pass cells predate the identity
+                          repair. No current CPI signals are attached until the gates are regenerated on
+                          identity-clean history.
+                        </div>
+                      ) : null}
                       {section.key === "cpi-speed" && data.cpi_speed_performance ? (
                         <div className="mb-3 rounded-xl border border-indigo-400/20 bg-indigo-400/8 p-3">
                           <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
