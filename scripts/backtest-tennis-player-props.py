@@ -74,7 +74,9 @@ class EvalRow:
     tournament: str
     round: str
     surface: str
+    player_id: str
     player: str
+    opponent_id: str
     opponent: str
     actual_aces: int
     actual_dfs: int
@@ -503,7 +505,9 @@ def evaluate(sackmann_dir: Path, years: list[int], eval_years: set[int]) -> list
                     tournament=slam,
                     round=str(row.get("round") or ""),
                     surface=surface,
+                    player_id=player_id,
                     player=player,
+                    opponent_id=opponent_id,
                     opponent=opponent,
                     actual_aces=parse_int(row.get(f"{prefix}_ace")),
                     actual_dfs=parse_int(row.get(f"{prefix}_df")),
@@ -636,7 +640,9 @@ def write_rows(path: Path, rows: list[EvalRow]) -> None:
         "tournament",
         "round",
         "surface",
+        "player_id",
         "player",
+        "opponent_id",
         "opponent",
         "actual_aces",
         "projected_aces",
@@ -662,7 +668,9 @@ def write_rows(path: Path, rows: list[EvalRow]) -> None:
                     "tournament": row.tournament,
                     "round": row.round,
                     "surface": row.surface,
+                    "player_id": row.player_id,
                     "player": row.player,
+                    "opponent_id": row.opponent_id,
                     "opponent": row.opponent,
                     "actual_aces": row.actual_aces,
                     "projected_aces": f"{row.projected_aces:.3f}",

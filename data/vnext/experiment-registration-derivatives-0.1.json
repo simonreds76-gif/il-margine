@@ -1,0 +1,39 @@
+{
+  "registered": true,
+  "version": "tennis-serve-derivatives-0.1",
+  "registered_at": "2026-07-12",
+  "objective": "Test whether identity-clean serve-level estimates add value for spread, total-games and player-prop pricing without changing moneyline routing.",
+  "lanes": [
+    {
+      "name": "spread_shape",
+      "price_source": "captured Pinnacle spread pairs",
+      "minimum_real_line_rows": 600,
+      "minimum_settled_shadow_bets": 200,
+      "minimum_mean_clv_pct": 1.0,
+      "minimum_positive_clv_share_pct": 55.0
+    },
+    {
+      "name": "total_games_shape",
+      "price_source": "captured Pinnacle total pairs",
+      "minimum_real_line_rows": 600,
+      "minimum_settled_shadow_bets": 200,
+      "minimum_mean_clv_pct": 1.0,
+      "minimum_positive_clv_share_pct": 55.0
+    },
+    {
+      "name": "aces_dfs",
+      "price_source": "captured Bet365 player-prop lines",
+      "minimum_real_line_rows": 300,
+      "minimum_distinct_events": 100,
+      "minimum_settled_shadow_bets": 300,
+      "minimum_mean_clv_pct": 0.5
+    }
+  ],
+  "forbidden": [
+    "synthetic odds as ROI evidence",
+    "moneyline routing changes",
+    "threshold sweeps selected on the evaluation sample",
+    "promotion while any real-line sample gate is blocked"
+  ],
+  "routing": "shadow_evidence_only"
+}

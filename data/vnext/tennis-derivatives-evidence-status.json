@@ -1,0 +1,59 @@
+{
+  "version": "tennis-serve-derivatives-0.1",
+  "generated_at": "2026-07-12T21:52:05.789211+00:00",
+  "moneyline_routing_changed": false,
+  "overall_status": "BLOCKED",
+  "spread_shape": {
+    "status": "COLLECTING",
+    "promotion_status": "BLOCKED_REAL_LINE_SAMPLE",
+    "real_line_rows": 188,
+    "settled_shadow_bets": 34,
+    "clv_rows": 34,
+    "mean_clv_pct": -0.009660691510560149,
+    "positive_clv_share_pct": 35.294117647058826,
+    "gates": {
+      "real_line_rows_600": false,
+      "settled_shadow_bets_200": false,
+      "mean_clv_1pct": false,
+      "positive_clv_share_55pct": false
+    },
+    "reason": "The existing spread correction regressed on validation; base-only shadow evidence remains below promotion gates."
+  },
+  "total_games_shape": {
+    "status": "BLOCKED",
+    "promotion_status": "BLOCKED_NO_REGISTERED_REAL_LINE_DATASET",
+    "real_line_rows": 0,
+    "reason": "No reproducible paired Pinnacle total-games dataset is committed yet; synthetic total prices are forbidden as evidence."
+  },
+  "aces_dfs": {
+    "status": "COLLECTING",
+    "promotion_status": "BLOCKED_REAL_LINE_SAMPLE",
+    "line_rows": 137,
+    "distinct_events": 4,
+    "dates": [
+      "2026-07-10",
+      "2026-07-11",
+      "2026-07-12"
+    ],
+    "markets": {
+      "match_aces": 77,
+      "match_double_faults": 60
+    },
+    "tours": {
+      "ATP": 92,
+      "WTA": 45
+    },
+    "settled_shadow_bets": 0,
+    "gates": {
+      "line_rows_300": false,
+      "distinct_events_100": false,
+      "settled_shadow_bets_300": false,
+      "mean_clv_0_5pct": false
+    },
+    "reason": "Captured prices exist, but current Sackmann results stop before Wimbledon; no July prop line can be honestly settled yet."
+  },
+  "props_v2_rung1": {
+    "status": "FAIL",
+    "routing": "blocked"
+  }
+}

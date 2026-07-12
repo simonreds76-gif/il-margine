@@ -48,6 +48,8 @@ const SHADOW_PERFORMANCE_PATH = path.join(SHADOW_DIR, "aces-dfs-shadow-performan
 const MODEL_SUMMARY_PATH = path.join(PROPS_DIR, "model-monitor-summary.csv");
 const MODEL_REPORT_PATH = path.join(PROPS_DIR, "model-monitor-report.txt");
 const TOTALS_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-totals-gate.json");
+const PROPS_V2_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-v2-rung1-gate.json");
+const DERIVATIVES_STATUS_PATH = path.join(ROOT, "data", "vnext", "tennis-derivatives-evidence-status.json");
 
 function parseCsv(text: string): CsvRow[] {
   const rows: string[][] = [];
@@ -1277,6 +1279,69 @@ function ModelTrackerPanel({ rows, stamp }: { rows: CsvRow[]; stamp: string }) {
   );
 }
 
+function numeric(value: unknown): number {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function ResearchGatesPanel({
+  evidence,
+  evidenceStamp,
+  propsV2,
+  propsV2Stamp,
+}: {
+  evidence: JsonRecord;
+  evidenceStamp: string;
+  propsV2: JsonRecord;
+  propsV2Stamp: string;
+}) {
+  const spread = record(evidence.spread_shape);
+  const totals = record(evidence.total_games_shape);
+  const props = record(evidence.aces_dfs);
+  const propsCells = Array.isArray(propsV2.cells) ? propsV2.cells.map(record) : [];
+  const propsPass = propsCells.filter((cell) => cell.passed === true).length;
+  const gateTone = (status: unknown) => status === "PASS"
+    ? "text-emerald-300"
+    : "text-amber-300";
+
+  return (
+    <SectionCard
+      title="Research Gates"
+      subtitle={`Registered evidence only. Status ${evidenceStamp}; props v2 ${propsV2Stamp}. No blocked lane changes live routing.`}
+    >
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <MetricTile
+          label="Spread shape"
+          value={String(spread.promotion_status || "BLOCKED")}
+          sub={`${numeric(spread.real_line_rows).toFixed(0)}/600 real lines | ${numeric(spread.settled_shadow_bets).toFixed(0)}/200 settled | CLV ${numeric(spread.mean_clv_pct) >= 0 ? "+" : ""}${numeric(spread.mean_clv_pct).toFixed(2)}%`}
+          tone={gateTone(spread.promotion_status)}
+        />
+        <MetricTile
+          label="Total-games shape"
+          value={String(totals.promotion_status || "BLOCKED")}
+          sub={`${numeric(totals.real_line_rows).toFixed(0)}/600 reproducible paired real lines`}
+          tone={gateTone(totals.promotion_status)}
+        />
+        <MetricTile
+          label="Bet365 aces / DFs"
+          value={String(props.promotion_status || "BLOCKED")}
+          sub={`${numeric(props.line_rows).toFixed(0)}/300 lines | ${numeric(props.distinct_events).toFixed(0)}/100 events | ${numeric(props.settled_shadow_bets).toFixed(0)} settled`}
+          tone={gateTone(props.promotion_status)}
+        />
+        <MetricTile
+          label="Props v2 rung 1"
+          value={String(propsV2.status || "MISSING")}
+          sub={`${propsPass}/${propsCells.length || 4} tour-market cells passed | incumbent remains active`}
+          tone={gateTone(propsV2.status)}
+        />
+      </div>
+      <p className="mt-3 text-xs text-slate-500">
+        Current result: hierarchical dispersion helped ATP double-fault pricing, but failed the all-cell promotion rule. Spread and totals remain sample-blocked; synthetic odds never count as ROI evidence.
+      </p>
+    </SectionCard>
+  );
+}
+
 export default async function TennisPropsMonitorPage({ searchParams }: { searchParams?: SearchParamsInput }) {
   if (!MODEL_MONITOR_ENABLED) notFound();
   const resolvedSearchParams: Record<string, string | string[] | undefined> = searchParams ? await searchParams : {};
@@ -1302,6 +1367,10 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     shadowPerformanceStamp,
     totalsGate,
     totalsGateStamp,
+    derivativesEvidence,
+    derivativesEvidenceStamp,
+    propsV2Gate,
+    propsV2GateStamp,
   ] = await Promise.all([
     readCsv(BOARD_PATH),
     fileStamp(BOARD_PATH),
@@ -1319,6 +1388,10 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     fileStamp(SHADOW_PERFORMANCE_PATH),
     readJson(TOTALS_GATE_PATH),
     fileStamp(TOTALS_GATE_PATH),
+    readJson(DERIVATIVES_STATUS_PATH),
+    fileStamp(DERIVATIVES_STATUS_PATH),
+    readJson(PROPS_V2_GATE_PATH),
+    fileStamp(PROPS_V2_GATE_PATH),
   ]);
 
   const comparisonRows = latestComparisonPath ? await readCsv(latestComparisonPath) : [];
@@ -1446,6 +1519,13 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
             />
 
             <ModelTrackerPanel rows={modelSummaryRows} stamp={modelSummaryStamp} />
+
+            <ResearchGatesPanel
+              evidence={derivativesEvidence}
+              evidenceStamp={derivativesEvidenceStamp}
+              propsV2={propsV2Gate}
+              propsV2Stamp={propsV2GateStamp}
+            />
 
             <FeedDiagnosticsPanel
               lineRows={lineRows}
