@@ -201,10 +201,12 @@ if ($LASTEXITCODE -ne 0) {
 
 # Step 3: Compute player stats (extended writes both v2 and backwards-compat tables)
 Log "=== Step 3/10: Compute player stats (extended) ==="
-& python scripts\oncourt-compute-player-stats-extended.py 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "ERROR: Player stats failed (exit $LASTEXITCODE)"
-    exit 1
+$playerStatsExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\oncourt-compute-player-stats-extended.py") -Label "player stats extended" -TimeoutSeconds 900
+if ($playerStatsExit -ne 0) {
+    # The previous valid player_surface_stats snapshot remains usable. Do not
+    # suppress the rest of the nightly evidence/settlement pipeline because a
+    # stats-table REST write failed transiently.
+    Log "WARNING: Player stats refresh failed/timed out (exit $playerStatsExit); continuing with the last valid stats snapshot."
 }
 
 # Step 4: Refresh TennisExplorer injured/returning CSV

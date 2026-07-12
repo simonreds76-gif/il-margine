@@ -77,6 +77,14 @@ def run_shadow_tracking(as_of: str) -> None:
     run(
         [
             sys.executable,
+            str(ROOT / "scripts" / "tennis-props-build-price-history.py"),
+        ],
+        "Consolidate append-only Bet365 price history",
+        fatal=False,
+    )
+    run(
+        [
+            sys.executable,
             str(ROOT / "scripts" / "tennis-props-shadow-tracker.py"),
             "--date",
             as_of,

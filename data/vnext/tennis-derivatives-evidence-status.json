@@ -1,12 +1,15 @@
 {
   "version": "tennis-serve-derivatives-0.1",
-  "generated_at": "2026-07-12T21:52:05.789211+00:00",
+  "generated_at": "2026-07-12T22:24:57.029120+00:00",
   "moneyline_routing_changed": false,
   "overall_status": "BLOCKED",
   "spread_shape": {
     "status": "COLLECTING",
     "promotion_status": "BLOCKED_REAL_LINE_SAMPLE",
     "real_line_rows": 188,
+    "captured_line_offers": 21,
+    "captured_matches": 16,
+    "captured_challenger_line_offers": 115,
     "settled_shadow_bets": 34,
     "clv_rows": 34,
     "mean_clv_pct": -0.009660691510560149,
@@ -20,15 +23,19 @@
     "reason": "The existing spread correction regressed on validation; base-only shadow evidence remains below promotion gates."
   },
   "total_games_shape": {
-    "status": "BLOCKED",
+    "status": "COLLECTING",
     "promotion_status": "BLOCKED_NO_REGISTERED_REAL_LINE_DATASET",
     "real_line_rows": 0,
+    "captured_line_offers": 18,
+    "captured_matches": 16,
+    "captured_challenger_line_offers": 99,
     "reason": "No reproducible paired Pinnacle total-games dataset is committed yet; synthetic total prices are forbidden as evidence."
   },
   "aces_dfs": {
     "status": "COLLECTING",
     "promotion_status": "BLOCKED_REAL_LINE_SAMPLE",
-    "line_rows": 137,
+    "snapshot_rows": 137,
+    "line_rows": 65,
     "distinct_events": 4,
     "dates": [
       "2026-07-10",
@@ -44,13 +51,20 @@
       "WTA": 45
     },
     "settled_shadow_bets": 0,
+    "pending_shadow_bets": 0,
+    "void_shadow_bets": 0,
+    "clv_rows": 0,
+    "mean_clv_pct": null,
+    "positive_clv_share_pct": null,
+    "pnl_units": 0,
+    "roi_pct": null,
     "gates": {
-      "line_rows_300": false,
+      "unique_line_offers_300": false,
       "distinct_events_100": false,
       "settled_shadow_bets_300": false,
       "mean_clv_0_5pct": false
     },
-    "reason": "Captured prices exist, but current Sackmann results stop before Wimbledon; no July prop line can be honestly settled yet."
+    "reason": "Collection and settlement are active; promotion remains blocked until every registered real-price gate passes."
   },
   "props_v2_rung1": {
     "status": "FAIL",
