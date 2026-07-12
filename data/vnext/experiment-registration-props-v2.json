@@ -1,0 +1,39 @@
+{
+  "registered": true,
+  "version": "tennis-props-v2-rung-1",
+  "registered_at": "2026-07-12",
+  "objective": "Replace hand-set ace and double-fault tail dispersion with causal hierarchical estimates without changing the incumbent count mean.",
+  "scope": {
+    "tours": ["ATP", "WTA"],
+    "markets": ["aces", "dfs"],
+    "events": ["Australian Open", "Roland Garros", "Wimbledon", "US Open"],
+    "train_years": [2022, 2023, 2024],
+    "untouched_test_year": 2025,
+    "identity_basis": "Sackmann player_id; T0 identity audit passed"
+  },
+  "rung": {
+    "order": 1,
+    "name": "hierarchical_count_dispersion",
+    "mean_model": "incumbent unchanged",
+    "distribution": "negative_binomial",
+    "hierarchy": ["tour_market", "tour_market_tournament", "tour_market_player"],
+    "fixed_shrinkage": {
+      "tournament_prior_matches": 300,
+      "player_prior_matches": 30,
+      "minimum_group_matches": 8
+    },
+    "alpha_grid": [0.01, 1.5]
+  },
+  "acceptance": {
+    "count_mae_delta_max_each_tour_market": 0.0,
+    "synthetic_ou_log_loss_delta_max_each_tour_market": -0.001,
+    "all_four_tour_market_cells_must_pass": true
+  },
+  "forbidden": [
+    "changing the projection mean in this rung",
+    "choosing shrinkage from 2025 results",
+    "using Bet365 July 2026 prices as a training set",
+    "live or staking integration before the registered gate passes"
+  ],
+  "routing": "research_only"
+}

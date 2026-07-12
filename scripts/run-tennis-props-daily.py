@@ -100,6 +100,14 @@ def run_shadow_tracking(as_of: str) -> None:
         "Build tennis props model monitor report",
         fatal=False,
     )
+    run(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "tennis-derivatives-evidence-report.py"),
+        ],
+        "Refresh tennis derivative evidence gates",
+        fatal=False,
+    )
 
 
 def main() -> int:
