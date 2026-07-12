@@ -46,6 +46,14 @@ function Set-ScheduledTaskBatteryFriendly([string]$taskName) {
         -replace '<DisallowStartIfOnBatteries>true</DisallowStartIfOnBatteries>', '<DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>' `
         -replace '<StopIfGoingOnBatteries>true</StopIfGoingOnBatteries>', '<StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>'
 
+    # A sleeping/offline laptop must catch up the daily refresh when it next
+    # becomes available instead of silently leaving yesterday's board live.
+    if ($patchedXml -match '<StartWhenAvailable>.*?</StartWhenAvailable>') {
+        $patchedXml = [regex]::Replace($patchedXml, '<StartWhenAvailable>.*?</StartWhenAvailable>', '<StartWhenAvailable>true</StartWhenAvailable>')
+    } else {
+        $patchedXml = $patchedXml -replace '</Settings>', "    <StartWhenAvailable>true</StartWhenAvailable>`r`n  </Settings>"
+    }
+
     $tmpPath = Join-Path ([System.IO.Path]::GetTempPath()) "$taskName.xml"
     Set-Content -Path $tmpPath -Value $patchedXml -Encoding Unicode
     schtasks /Create /TN $taskName /XML $tmpPath /F | Out-Null
