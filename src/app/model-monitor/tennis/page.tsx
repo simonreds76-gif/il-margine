@@ -271,7 +271,35 @@ type ExtremeGapReport = {
 
 type ExtremeGapLoad = {
   report: ExtremeGapReport | null;
+  historical: HistoricalGapReport | null;
   liveRows: CsvRow[];
+};
+
+type HistoricalGapPerformance = {
+  settled: number;
+  wins: number;
+  losses: number;
+  pushes: number;
+  pnl_units: number;
+  roi_pct: number | null;
+  roi_95ci_pct: [number, number] | null;
+};
+
+type HistoricalGapReport = {
+  status: string;
+  screening_verdict: string;
+  anomalies: number;
+  ml: HistoricalGapPerformance;
+  paired_real_spread_matches: number;
+  spread: HistoricalGapPerformance;
+  spread_rescues: number;
+  ml_losses_with_spread: number;
+  long_ev_100_plus: {
+    anomalies: number;
+    paired_spread_anomalies: number;
+    ml: HistoricalGapPerformance;
+    spread: HistoricalGapPerformance;
+  };
 };
 
 const badgeTones = {
@@ -808,7 +836,7 @@ function gapMetricValue(value: number | null, suffix = "%") {
 }
 
 function ExtremeGapLab({ data }: { data: ExtremeGapLoad }) {
-  const { report, liveRows } = data;
+  const { report, historical, liveRows } = data;
   const ml = report?.ml;
   const spread = report?.spread;
   const spreadRescues = report?.paired_outcomes?.ml_loss__spread_win ?? 0;
@@ -886,6 +914,36 @@ function ExtremeGapLab({ data }: { data: ExtremeGapLoad }) {
         </div>
       </div>
 
+      <div className="mt-4 rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-4 md:p-5">
+        <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-300">Historical reality check</p>
+            <p className="mt-2 text-sm leading-6 text-slate-300">
+              Fixed live thresholds replayed against real recorded ML prices. Handicap results use only the smaller real 2026 spread-capture subset; no synthetic spread prices.
+            </p>
+          </div>
+          <StatusPill label={(historical?.screening_verdict ?? "NOT RUN").replaceAll("_", " ")} tone={badgeTones.deferred} />
+        </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-xl border border-slate-800 bg-slate-950/50 p-3">
+            <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500">Extreme ML replay</p>
+            <p className="mt-2 font-semibold tabular-nums text-slate-100">{historical?.ml.settled ?? 0} bets · <span className={metricTone(historical?.ml.roi_pct)}>{gapMetricValue(historical?.ml.roi_pct ?? null)} ROI</span></p>
+          </div>
+          <div className="rounded-xl border border-slate-800 bg-slate-950/50 p-3">
+            <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500">Real paired spreads</p>
+            <p className="mt-2 font-semibold tabular-nums text-slate-100">{historical?.spread.settled ?? 0} bets · <span className={metricTone(historical?.spread.roi_pct)}>{gapMetricValue(historical?.spread.roi_pct ?? null)} ROI</span></p>
+          </div>
+          <div className="rounded-xl border border-slate-800 bg-slate-950/50 p-3">
+            <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500">ML EV ≥100% spreads</p>
+            <p className="mt-2 font-semibold tabular-nums text-slate-100">{historical?.long_ev_100_plus.spread.settled ?? 0} bets · <span className={metricTone(historical?.long_ev_100_plus.spread.roi_pct)}>{gapMetricValue(historical?.long_ev_100_plus.spread.roi_pct ?? null)} ROI</span></p>
+          </div>
+          <div className="rounded-xl border border-slate-800 bg-slate-950/50 p-3">
+            <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500">Spread rescued ML loss</p>
+            <p className="mt-2 font-semibold tabular-nums text-slate-100">{historical?.spread_rescues ?? 0} / {historical?.ml_losses_with_spread ?? 0}</p>
+          </div>
+        </div>
+      </div>
+
       <div className="mt-5 overflow-hidden rounded-2xl border border-slate-800 bg-slate-950/45">
         <div className="grid grid-cols-[minmax(0,1fr)_64px_64px] gap-3 border-b border-slate-800 px-4 py-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 sm:grid-cols-[minmax(0,1.5fr)_80px_82px_minmax(0,1fr)]">
           <span>Current match / paired test</span><span>Gap</span><span>ML EV</span><span className="hidden sm:block">Likely cause</span>
@@ -915,11 +973,13 @@ function ExtremeGapLab({ data }: { data: ExtremeGapLoad }) {
 }
 
 async function loadExtremeGapLab(): Promise<ExtremeGapLoad> {
-  const [reportText, liveText] = await Promise.all([
+  const [reportText, historicalText, liveText] = await Promise.all([
     readKnownFile("data/backtest/tennis-model-market-gap-report.json"),
+    readKnownFile("data/backtest/tennis-model-market-gap-historical-report.json"),
     readKnownFile("data/backtest/tennis-model-market-gap-live.csv"),
   ]);
   let report: ExtremeGapReport | null = null;
+  let historical: HistoricalGapReport | null = null;
   if (reportText) {
     try {
       report = JSON.parse(reportText) as ExtremeGapReport;
@@ -927,7 +987,14 @@ async function loadExtremeGapLab(): Promise<ExtremeGapLoad> {
       report = null;
     }
   }
-  return { report, liveRows: liveText ? parseCsv(liveText) : [] };
+  if (historicalText) {
+    try {
+      historical = JSON.parse(historicalText) as HistoricalGapReport;
+    } catch {
+      historical = null;
+    }
+  }
+  return { report, historical, liveRows: liveText ? parseCsv(liveText) : [] };
 }
 
 async function loadProofReport(): Promise<ProofReportLoad | null> {

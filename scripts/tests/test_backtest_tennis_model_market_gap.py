@@ -1,0 +1,103 @@
+from __future__ import annotations
+
+import importlib.util
+import sys
+import unittest
+from pathlib import Path
+
+
+SCRIPTS = Path(__file__).resolve().parents[1]
+
+
+def load_script():
+    spec = importlib.util.spec_from_file_location("backtest_tennis_model_market_gap", SCRIPTS / "backtest-tennis-model-market-gap.py")
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+MODEL = load_script()
+
+
+class HistoricalGapReplayTests(unittest.TestCase):
+    def spread_row(self) -> dict[str, str]:
+        return {
+            "date_iso": "2026-07-13",
+            "captured_at": "2026-07-13T10:00:00+00:00",
+            "surface": "Hard",
+            "series": "ATP",
+            "league": "ATP",
+            "player1": "Player One",
+            "player2": "Player Two",
+            "p1_match_prob": "0.80",
+            "spread_line": "-2.5",
+            "spread_odds1": "1.90",
+            "spread_odds2": "1.90",
+            "margin_p1": "3",
+        }
+
+    def test_paired_replay_orients_reversed_ml_history(self) -> None:
+        history = {
+            "capture_date": "2026-07-13",
+            "captured_at": "2026-07-13T09:00:00+00:00",
+            "player1_name": "Player Two",
+            "player2_name": "Player One",
+            "odds1": "1.50",
+            "odds2": "2.50",
+            "league_name": "ATP Test",
+        }
+        rows, reasons = MODEL.replay_paired_spreads(
+            [self.spread_row()],
+            MODEL.history_index([history]),
+        )
+        self.assertFalse(reasons)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["selected_player"], "Player One")
+        self.assertEqual(rows[0]["selected_ml_odds"], 2.5)
+        self.assertEqual(rows[0]["spread_selected_line"], -2.5)
+        self.assertEqual(rows[0]["spread_outcome"], "WIN")
+
+    def test_history_after_spread_capture_is_rejected(self) -> None:
+        history = {
+            "capture_date": "2026-07-13",
+            "captured_at": "2026-07-13T11:00:00+00:00",
+            "player1_name": "Player One",
+            "player2_name": "Player Two",
+            "odds1": "2.50",
+            "odds2": "1.50",
+        }
+        rows, reasons = MODEL.replay_paired_spreads(
+            [self.spread_row()],
+            MODEL.history_index([history]),
+        )
+        self.assertEqual(rows, [])
+        self.assertEqual(reasons["no_ml_snapshot_before_spread_capture"], 1)
+
+    def test_historical_report_cannot_promote_small_positive_subset(self) -> None:
+        paired = []
+        for index in range(5):
+            paired.append(
+                {
+                    "ml_outcome": "LOSS",
+                    "ml_pnl_units": -1.0,
+                    "spread_outcome": "WIN",
+                    "spread_pnl_units": 0.9,
+                    "spread_available": "1",
+                    "ml_ev_pct": 150.0,
+                    "year": "2026",
+                    "surface": "Hard",
+                    "series": "ATP",
+                    "ev_bucket": "100-200%",
+                    "gap_bucket": "25pp+",
+                    "diagnosis_primary": "paired_capture_gap",
+                }
+            )
+        report = MODEL.build_report([], paired, 0, MODEL.Counter())
+        self.assertEqual(report["screening_verdict"], "INSUFFICIENT_REAL_SPREAD_SAMPLE")
+        self.assertEqual(report["long_ev_100_plus"]["spread"]["settled"], 5)
+
+
+if __name__ == "__main__":
+    unittest.main()
