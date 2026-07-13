@@ -85,6 +85,11 @@ def finite_float(value: Any) -> float | None:
     return parsed
 
 
+def number(value: Any, default: float = 0.0) -> float:
+    parsed = finite_float(value)
+    return parsed if parsed is not None else default
+
+
 def avg(values: list[float]) -> float | None:
     return sum(values) / len(values) if values else None
 
@@ -286,6 +291,17 @@ def ml_gap_guard_summary() -> dict[str, Any]:
     }
 
 
+def tennis_props_v3_snapshot() -> dict[str, Any]:
+    raw = os.environ.get("TENNIS_PROPS_V3_WEEKLY_JSON", "").strip()
+    if not raw:
+        return {}
+    try:
+        payload = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        return {"_error": f"repository variable JSON is invalid: {exc}"}
+    return payload if isinstance(payload, dict) else {"_error": "repository variable is not a JSON object"}
+
+
 def weighted_last90_delta(promotion: dict[str, Any]) -> dict[str, Any]:
     total_n = 0
     current_sum = 0.0
@@ -333,6 +349,7 @@ def build_payload() -> dict[str, Any]:
     team_clv_rows = load_csv(OUT_DIR / "team-shots-v3-ema20-clv-monitor.csv")
     corners_clv_rows = load_csv(OUT_DIR / "corners-v0-clv-monitor.csv")
     tennis_gap_guard = ml_gap_guard_summary()
+    tennis_props_v3 = tennis_props_v3_snapshot()
 
     payload = {
         "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
@@ -360,6 +377,7 @@ def build_payload() -> dict[str, Any]:
             "clv": clv_summary(corners_clv_rows),
         },
         "tennis_ml_gap_guard": tennis_gap_guard,
+        "tennis_props_v3": tennis_props_v3,
     }
     payload["status"] = {
         "pause_required": bool(
@@ -375,6 +393,7 @@ def render_report(payload: dict[str, Any]) -> str:
     team = payload["team_shots_v3_ema20"]
     corners = payload["corners_v0"]
     tennis = payload["tennis_ml_gap_guard"]
+    tennis_props_v3 = payload.get("tennis_props_v3") or {}
     team_gate = team["segment_gate"]
     team_clv = team["clv"]
     corners_clv = corners["clv"]
@@ -443,6 +462,27 @@ def render_report(payload: dict[str, Any]) -> str:
     for year, summary in tennis.get("etch_type_years", {}).items():
         lines.append(f"- {year}: {format_bet_summary(summary)}")
 
+    if tennis_props_v3 and not tennis_props_v3.get("_error"):
+        atp_v3 = tennis_props_v3.get("atp") or {}
+        evidence_v3 = tennis_props_v3.get("evidence") or {}
+        lines.extend(
+            [
+                "",
+                "## Tennis Props v3 Prospective Evidence",
+                "",
+                f"- Snapshot: {tennis_props_v3.get('generated_at', '-')}",
+                f"- ATP aces gate: {atp_v3.get('status', 'UNKNOWN')} on {', '.join(atp_v3.get('surfaces') or []) or 'no verified surface'}",
+                f"- Holdout MAE improvement: {number(atp_v3.get('mae_improvement_pct')):+.2f}%",
+                f"- Prospective sample: {int(number(evidence_v3.get('settled')))} settled, {int(number(evidence_v3.get('pending')))} pending, {int(number(evidence_v3.get('distinct_events')))} events",
+                f"- P/L: {number(evidence_v3.get('pnl_units')):+.2f}u; ROI {number(evidence_v3.get('roi_pct')):+.2f}%",
+                f"- CLV: {number(evidence_v3.get('mean_clv_pct')):+.2f}% across {int(number(evidence_v3.get('clv_coverage')))} rows",
+                f"- Sellability: {evidence_v3.get('status', 'BLOCKED')} - {evidence_v3.get('reason', 'no evidence')}",
+                "- Scope remains ATP aces on verified Hard/Clay only; shadow-only until every real-price gate passes.",
+            ]
+        )
+    elif tennis_props_v3.get("_error"):
+        lines.extend(["", "## Tennis Props v3 Prospective Evidence", "", f"- Snapshot unavailable: {tennis_props_v3['_error']}"])
+
     lines.extend(
         [
             "",
@@ -451,6 +491,7 @@ def render_report(payload: dict[str, Any]) -> str:
             "- Team-shots V3 is not proven profitable live yet; it is the first broad research candidate that passed the backtest segment gates.",
             "- Corners V0 is narrower and deliberately blocked in two leagues. That is a discipline feature, not a failure.",
             "- Tennis ML gap-guard remains a safety brake. The backtest is not stable enough to unblock those big market-disagreement ML dogs.",
+            "- Tennis props v3 remains prospective shadow evidence; historical accuracy alone does not authorise tips.",
             "- The next real evidence is CLV and settled live sample. Until 50 settled picks, do not overreact to wins/losses.",
             "",
         ]
@@ -462,20 +503,30 @@ def telegram_text(payload: dict[str, Any]) -> str:
     team = payload["team_shots_v3_ema20"]
     corners = payload["corners_v0"]
     tennis = payload["tennis_ml_gap_guard"]
+    tennis_props_v3 = payload.get("tennis_props_v3") or {}
     team_clv = team["clv"]
     corners_clv = corners["clv"]
-    return "\n".join(
-        [
+    lines = [
             "Il Margine weekly research report",
             f"Generated: {payload['generated_at']}",
             "",
             f"Team Shots V3 EMA20: {len(team['allowed_leagues'])}/5 leagues, {team_clv['published_picks']} picks, {team_clv['settled']} settled, avg CLV {pct((team_clv['avg_published_to_close_clv'] or 0) * 100) if team_clv['avg_published_to_close_clv'] is not None else '-'}",
             f"Corners V0: {len(corners['allowed_leagues'])}/5 leagues, blocked {join_leagues(corners['blocked_leagues'])}, {corners_clv['published_picks']} picks, {corners_clv['settled']} settled, avg CLV {pct((corners_clv['avg_published_to_close_clv'] or 0) * 100) if corners_clv['avg_published_to_close_clv'] is not None else '-'}",
             f"Tennis ML gap guard: Etch/Fils-type {format_bet_summary(tennis['etch_type'])}; recent 2024-26 {format_bet_summary(tennis['etch_type_recent'])}",
-            "",
-            "Read: observe football live sample. Keep tennis ML gap guard active; quiet audit only.",
-        ]
-    )
+    ]
+    if tennis_props_v3 and not tennis_props_v3.get("_error"):
+        atp_v3 = tennis_props_v3.get("atp") or {}
+        evidence_v3 = tennis_props_v3.get("evidence") or {}
+        lines.append(
+            "Tennis aces v3: "
+            f"ATP {atp_v3.get('status', 'UNKNOWN')} ({', '.join(atp_v3.get('surfaces') or []) or 'no surfaces'}), "
+            f"{int(number(evidence_v3.get('settled')))} settled/{int(number(evidence_v3.get('pending')))} pending, "
+            f"P/L {number(evidence_v3.get('pnl_units')):+.2f}u, ROI {number(evidence_v3.get('roi_pct')):+.2f}%, "
+            f"CLV {number(evidence_v3.get('mean_clv_pct')):+.2f}% ({int(number(evidence_v3.get('clv_coverage')))}), "
+            f"sellability {evidence_v3.get('status', 'BLOCKED')}"
+        )
+    lines.extend(["", "Read: observe live samples. Keep tennis ML gap guard active and aces v3 shadow-only."])
+    return "\n".join(lines)
 
 
 def post_telegram(message: str) -> bool:

@@ -55,16 +55,21 @@ function Set-ScheduledTaskBatteryFriendly([string]$taskName) {
     }
 
     $tmpPath = Join-Path ([System.IO.Path]::GetTempPath()) "$taskName.xml"
-    Set-Content -Path $tmpPath -Value $patchedXml -Encoding Unicode
-    schtasks /Create /TN $taskName /XML $tmpPath /F | Out-Null
-    Remove-Item -LiteralPath $tmpPath -Force -ErrorAction SilentlyContinue
+    try {
+        Set-Content -Path $tmpPath -Value $patchedXml -Encoding Unicode
+        schtasks /Create /TN $taskName /XML $tmpPath /F | Out-Null
+        if ($LASTEXITCODE -ne 0) { throw "Unable to update scheduled task settings for $taskName (exit $LASTEXITCODE)" }
+    } finally {
+        Remove-Item -LiteralPath $tmpPath -Force -ErrorAction SilentlyContinue
+    }
 }
 
 function Set-ScheduledTaskBridgeHardening(
     [string]$taskName,
     [string]$executionTimeLimit = "PT10M",
     [string]$restartInterval = "PT5M",
-    [int]$restartCount = 2
+    [int]$restartCount = 2,
+    [switch]$HighestRunLevel
 ) {
     $xml = schtasks /Query /TN $taskName /XML
     if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($xml)) {
@@ -72,12 +77,14 @@ function Set-ScheduledTaskBridgeHardening(
     }
 
     $patchedXml = $xml
-    if ($patchedXml -match '<RunLevel>.*?</RunLevel>') {
-        $patchedXml = [regex]::Replace($patchedXml, '<RunLevel>.*?</RunLevel>', '<RunLevel>HighestAvailable</RunLevel>')
-    } elseif ($patchedXml -match '</LogonType>') {
-        $patchedXml = $patchedXml -replace '</LogonType>', "</LogonType>`r`n      <RunLevel>HighestAvailable</RunLevel>"
-    } else {
-        throw "Scheduled task XML for $taskName is missing <LogonType>"
+    if ($HighestRunLevel) {
+        if ($patchedXml -match '<RunLevel>.*?</RunLevel>') {
+            $patchedXml = [regex]::Replace($patchedXml, '<RunLevel>.*?</RunLevel>', '<RunLevel>HighestAvailable</RunLevel>')
+        } elseif ($patchedXml -match '</LogonType>') {
+            $patchedXml = $patchedXml -replace '</LogonType>', "</LogonType>`r`n      <RunLevel>HighestAvailable</RunLevel>"
+        } else {
+            throw "Scheduled task XML for $taskName is missing <LogonType>"
+        }
     }
 
     if ($patchedXml -match '<WakeToRun>.*?</WakeToRun>') {
@@ -114,6 +121,7 @@ function Set-ScheduledTaskBridgeHardening(
     try {
         Set-Content -Path $tmpPath -Value $patchedXml -Encoding Unicode
         schtasks /Create /TN $taskName /XML $tmpPath /F | Out-Null
+        if ($LASTEXITCODE -ne 0) { throw "Unable to harden scheduled task $taskName (exit $LASTEXITCODE)" }
     } finally {
         Remove-Item -LiteralPath $tmpPath -Force -ErrorAction SilentlyContinue
     }
@@ -137,6 +145,7 @@ Set-ScheduledTaskBatteryFriendly "IlMargine-Weekly"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Tennis-Close-Capture"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Tennis-Health-AM"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Tennis-Health-PM"
+Set-ScheduledTaskBridgeHardening "IlMargine-Weekly" -executionTimeLimit "PT6H" -restartInterval "PT15M" -restartCount 1
 Set-ScheduledTaskBridgeHardening "IlMargine-Tennis-Close-Capture"
 Set-ScheduledTaskBridgeHardening "IlMargine-Tennis-Health-AM" -executionTimeLimit "PT5M" -restartCount 1
 Set-ScheduledTaskBridgeHardening "IlMargine-Tennis-Health-PM" -executionTimeLimit "PT5M" -restartCount 1

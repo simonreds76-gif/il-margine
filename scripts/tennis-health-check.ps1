@@ -4,7 +4,8 @@
 
 param(
     [int]$StaleHours = 15,
-    [int]$AlertCooldownMinutes = 180
+    [int]$AlertCooldownMinutes = 180,
+    [switch]$NoNotify
 )
 
 $ErrorActionPreference = "Stop"
@@ -27,6 +28,11 @@ $laneConfigs = @(
     @{ Name = "Volume 200 shadow"; Path = "data\backtest\strict-policy-performance-volume200-weekly.csv" },
     @{ Name = "Spread v1 shadow"; Path = "data\backtest\strict-policy-performance-spreadv1-weekly.csv" },
     @{ Name = "CPI speed shadow"; Path = "data\backtest\strict-policy-performance-cpi_speed-weekly.csv" }
+)
+
+$artifactConfigs = @(
+    @{ Name = "Tennis props daily board"; Path = "data\tennis-props\player-props-board.csv"; MaxAgeHours = 30 },
+    @{ Name = "Aces v3 weekly refit"; Path = "data\tennis-props\backtest\aces-dfs-v3-all-tour-gate.json"; MaxAgeHours = 192; TimestampField = "generated_at" }
 )
 
 $taskNames = @(
@@ -93,7 +99,7 @@ function Get-TaskFailureFreshHours([string]$taskName) {
     switch ($taskName) {
         "IlMargine-Daily" { return 6 }
         "IlMargine-Daily-AM" { return 6 }
-        "IlMargine-Weekly" { return 8 }
+        "IlMargine-Weekly" { return 36 }
         "IlMargine-Tennis-Close-Capture" { return 2 }
         default { return 6 }
     }
@@ -111,6 +117,12 @@ function Get-TaskRecoveryLogInfo([string]$taskName) {
             return @{
                 Path = "data\oncourt-am-refresh.log"
                 Pattern = "AM Tennis Refresh finished at (?<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})"
+            }
+        }
+        "IlMargine-Weekly" {
+            return @{
+                Path = "data\oncourt-weekly.log"
+                Pattern = "Weekly Full Load finished at (?<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})"
             }
         }
         default {
@@ -206,6 +218,36 @@ function Get-LaneHealth($config, [datetimeoffset]$nowUtc, [int]$staleHours) {
         age_hours = if ($null -eq $ageHours) { $null } else { [Math]::Round($ageHours, 2) }
         stale = $isStale
         detail = if ($generated) { $null } else { "Missing generated_utc" }
+    }
+}
+
+function Get-ArtifactHealth($config, [datetimeoffset]$nowUtc) {
+    $path = Join-Path $root $config.Path
+    if (!(Test-Path $path)) {
+        return [ordered]@{
+            name = $config.Name; path = $config.Path; status = "missing"; generated_at = $null
+            latest_signal_date = $null; age_hours = $null; stale = $true; detail = "Missing file"
+        }
+    }
+
+    $generated = $null
+    if ($config.TimestampField) {
+        $payload = Read-JsonFile $path
+        if ($payload) { $generated = Parse-DateTimeOffsetValue $payload.($config.TimestampField) }
+    } else {
+        $generated = [DateTimeOffset](Get-Item $path).LastWriteTime
+    }
+    $ageHours = if ($generated) { [Math]::Max(0, ($nowUtc - $generated.ToUniversalTime()).TotalHours) } else { $null }
+    $isStale = ($null -eq $generated) -or ($ageHours -gt [double]$config.MaxAgeHours)
+    return [ordered]@{
+        name = $config.Name
+        path = $config.Path
+        status = if ($isStale) { "stale" } else { "ok" }
+        generated_at = if ($generated) { $generated.ToUniversalTime().ToString("o") } else { $null }
+        latest_signal_date = $null
+        age_hours = if ($null -eq $ageHours) { $null } else { [Math]::Round($ageHours, 2) }
+        stale = $isStale
+        detail = if ($generated) { $null } else { "Missing or invalid timestamp" }
     }
 }
 
@@ -374,7 +416,10 @@ Import-EnvFiles
 
 $nowUtc = [DateTimeOffset]::UtcNow
 $previousHealth = Read-JsonFile $healthFile
-$laneHealth = @($laneConfigs | ForEach-Object { Get-LaneHealth $_ $nowUtc $StaleHours })
+$laneHealth = @(
+    $laneConfigs | ForEach-Object { Get-LaneHealth $_ $nowUtc $StaleHours }
+    $artifactConfigs | ForEach-Object { Get-ArtifactHealth $_ $nowUtc }
+)
 $taskHealth = @($taskNames | ForEach-Object { Get-TaskHealth $_ })
 $activeRecoveryTasks = @(Get-ActiveLaneRecoveryTasks $taskHealth)
 
@@ -424,12 +469,14 @@ Log $message
 
 $nextAlertedAt = $previousHealth.last_alerted_at
 $nextAlertKey = $previousHealth.last_alert_key
-if ($shouldAlert) {
+if ($shouldAlert -and -not $NoNotify) {
     if (Post-Alert $message) {
         $nextAlertedAt = $nowUtc.ToString("o")
         $nextAlertKey = $alertKey
         Log "Alert posted."
     }
+} elseif ($shouldAlert) {
+    Log "Alert suppressed by -NoNotify."
 }
 
 Write-HealthFile -State "alert" -Message $message -Lanes $laneHealth -Tasks $taskHealth -LastAlertedAt $nextAlertedAt -LastAlertKey $nextAlertKey

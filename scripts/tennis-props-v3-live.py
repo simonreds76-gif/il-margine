@@ -199,7 +199,7 @@ def main() -> int:
     model_path = ROOT / str(atp_gate.get("model_path") or "")
     if not model_path.exists():
         print(f"ATP v3 live model missing: {model_path}")
-        return 0
+        return 2
 
     board_rows = read_csv(args.board)
     if not board_rows:

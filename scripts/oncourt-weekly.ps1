@@ -377,12 +377,20 @@ finally {
     }
 }
 
+Log "=== Post-step: Tennis props v3 weekly evidence report ==="
+$v3WeeklyReportExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-props-v3-weekly-report.py") -Label "tennis props v3 weekly report" -TimeoutSeconds 90
+if ($v3WeeklyReportExit -ne 0) {
+    Log "ERROR: tennis props v3 weekly report failed (exit $v3WeeklyReportExit)"
+    Set-RunStatusFailure "TennisPropsV3WeeklyReportFailed" "tennis props v3 weekly report failed (exit $v3WeeklyReportExit)"
+}
+
 Log "============================================"
 Log "  Weekly Full Load finished at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Log "============================================"
-    $runStatusFinal = "ok"
-    $runStatusErrorType = $null
-    $runStatusErrorMessage = $null
+    if ([string]::IsNullOrWhiteSpace($runStatusErrorType)) {
+        $runStatusFinal = "ok"
+        $runStatusErrorMessage = $null
+    }
 }
 catch {
     $runStatusErrorRecord = $_
@@ -393,4 +401,6 @@ finally {
     Complete-RunStatus -Run $runStatus -Status $runStatusFinal -ErrorRecord $runStatusErrorRecord -ErrorType $runStatusErrorType -ErrorMessage $runStatusErrorMessage
     Exit-TaskLock $lockHandle
 }
+
+if ($runStatusFinal -ne "ok") { exit 1 }
 
