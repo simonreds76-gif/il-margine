@@ -30,6 +30,8 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
+from football_counts import prob_over as count_prob_over
+
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -70,32 +72,20 @@ def poisson_prob_over(line: float, lam: float) -> float:
     """P(X > line) for half-goal/half-shot lines."""
     if lam <= 0:
         return 0.0
-    cutoff = int(math.floor(line))
-    cdf = 0.0
-    for k in range(cutoff + 1):
-        cdf += math.exp((k * math.log(lam)) - lam - math.lgamma(k + 1))
-    return clamp(1.0 - cdf, 1e-6, 1.0 - 1e-6)
+    return clamp(count_prob_over(line, lam, distribution="poisson"), 1e-6, 1.0 - 1e-6)
 
 
 def negative_binomial_prob_over(line: float, mean_count: float, alpha: float) -> float:
     """P(X > line) for NB2 variance = mean + alpha * mean^2."""
     if mean_count <= 0:
         return 0.0
-    if alpha <= 1e-6:
-        return poisson_prob_over(line, mean_count)
-
-    cutoff = int(math.floor(line))
-    size = 1.0 / alpha
-    success_prob = size / (size + mean_count)
-    success_prob = clamp(success_prob, 1e-9, 1.0 - 1e-9)
-
-    pmf = math.exp(size * math.log(success_prob))
-    cdf = pmf
-    fail_prob = 1.0 - success_prob
-    for k in range(cutoff):
-        pmf *= ((k + size) / (k + 1.0)) * fail_prob
-        cdf += pmf
-    return clamp(1.0 - cdf, 1e-6, 1.0 - 1e-6)
+    probability = count_prob_over(
+        line,
+        mean_count,
+        distribution="negative_binomial",
+        alpha=alpha,
+    )
+    return clamp(probability, 1e-6, 1.0 - 1e-6)
 
 
 def brier(prob: float, actual: bool) -> float:

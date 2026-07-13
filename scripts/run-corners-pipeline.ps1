@@ -369,13 +369,13 @@ try {
                 Log "  Football-Data refresh complete"
             }
 
-            $fbrefArgs = @("scripts/fbref-download-shooting.py") + $leagueArgs + @("--seasons", $currentSeason)
-            $fbrefResult = & python @fbrefArgs 2>&1
+            $understatArgs = @("scripts/understat-download-shots.py") + $leagueArgs + @("--seasons", $currentSeason)
+            $understatResult = & python @understatArgs 2>&1
             if ($LASTEXITCODE -ne 0) {
-                Add-WarningMessage "FBRef/Understat refresh returned exit code $LASTEXITCODE."
-                $fbrefResult | ForEach-Object { Log "  $_" }
+                Add-WarningMessage "Football-Data/Understat refresh returned exit code $LASTEXITCODE."
+                $understatResult | ForEach-Object { Log "  $_" }
             } else {
-                Log "  FBRef/Understat refresh complete"
+                Log "  Football-Data/Understat refresh complete"
             }
         } catch {
             Add-WarningMessage "Team shots historical refresh threw an exception: $_"
