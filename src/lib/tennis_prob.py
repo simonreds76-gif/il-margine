@@ -4,6 +4,7 @@ p_A = P(A wins point when A serves), p_B = P(B wins point when B serves).
 Best-of-3: set 1 A serves first, set 2 B, set 3 A.
 """
 
+from dataclasses import dataclass
 from functools import lru_cache
 
 
@@ -177,6 +178,175 @@ def expected_total_games_best_of_5(p_a: float, p_b: float) -> float:
     e_4 = e_a + e_b + e_a + e_b
     e_5 = e_a + e_b + e_a + e_b + e_a
     return p_30 * e_3 + p_31 * e_4 + p_32 * e_5
+
+
+@dataclass(frozen=True)
+class ServicePointExpectation:
+    """Expected service workload for both players in one match."""
+
+    player_a_points: float
+    player_b_points: float
+    player_a_games: float
+    player_b_games: float
+    total_service_games: float
+
+
+def expected_points_in_service_game(p_server: float) -> float:
+    """Expected points played in an advantage game at serve-point probability p."""
+    p = max(0.01, min(0.99, p_server))
+    q = 1.0 - p
+    p_end_4 = p**4 + q**4
+    p_end_5 = 4.0 * (p**4 * q + q**4 * p)
+    p_end_6 = 10.0 * (p**4 * q**2 + q**4 * p**2)
+    p_deuce = 20.0 * p**3 * q**3
+    expected_from_deuce = 2.0 / max(1e-12, p * p + q * q)
+    return (
+        4.0 * p_end_4
+        + 5.0 * p_end_5
+        + 6.0 * p_end_6
+        + p_deuce * (6.0 + expected_from_deuce)
+    )
+
+
+def expected_tiebreak_service_points(
+    p_a: float,
+    p_b: float,
+    a_serves_first: bool = True,
+    *,
+    max_points: int = 200,
+) -> tuple[float, float]:
+    """Expected points served by A and B in a standard first-to-seven tiebreak."""
+    pa = max(0.01, min(0.99, p_a))
+    pb = max(0.01, min(0.99, p_b))
+    states: dict[tuple[int, int], float] = {(0, 0): 1.0}
+    expected_a = 0.0
+    expected_b = 0.0
+
+    for total in range(max_points):
+        next_states: dict[tuple[int, int], float] = {}
+        for (a, b), reach in states.items():
+            if reach <= 0.0 or a + b != total:
+                continue
+            if (a >= 7 or b >= 7) and abs(a - b) >= 2:
+                continue
+            a_serves = _tb_server_is_a(total) if a_serves_first else not _tb_server_is_a(total)
+            if a_serves:
+                expected_a += reach
+                p_a_wins_point = pa
+            else:
+                expected_b += reach
+                p_a_wins_point = 1.0 - pb
+            next_states[(a + 1, b)] = next_states.get((a + 1, b), 0.0) + reach * p_a_wins_point
+            next_states[(a, b + 1)] = next_states.get((a, b + 1), 0.0) + reach * (1.0 - p_a_wins_point)
+        states = next_states
+        if sum(states.values()) < 1e-12:
+            break
+    return expected_a, expected_b
+
+
+@lru_cache(maxsize=16384)
+def _expected_service_games_set(
+    a: int,
+    b: int,
+    pa_int: int,
+    pb_int: int,
+    a_serves: bool,
+) -> tuple[float, float, float]:
+    """Expected A games, B games and probability of a tiebreak from a set state."""
+    if (a >= 6 or b >= 6) and abs(a - b) >= 2:
+        return 0.0, 0.0, 0.0
+    if a == 6 and b == 6:
+        return 0.0, 0.0, 1.0
+
+    p_a = pa_int / 10000.0
+    p_b = pb_int / 10000.0
+    p_win_game = prob_game(p_a) if a_serves else 1.0 - prob_game(p_b)
+    win = _expected_service_games_set(a + 1, b, pa_int, pb_int, not a_serves)
+    lose = _expected_service_games_set(a, b + 1, pa_int, pb_int, not a_serves)
+    current_a = 1.0 if a_serves else 0.0
+    current_b = 0.0 if a_serves else 1.0
+    return (
+        current_a + p_win_game * win[0] + (1.0 - p_win_game) * lose[0],
+        current_b + p_win_game * win[1] + (1.0 - p_win_game) * lose[1],
+        p_win_game * win[2] + (1.0 - p_win_game) * lose[2],
+    )
+
+
+def expected_service_points_set(
+    p_a: float,
+    p_b: float,
+    a_serves_first: bool = True,
+) -> tuple[float, float, float, float]:
+    """Expected service points and service games for A and B in one set."""
+    pa = max(0.01, min(0.99, p_a))
+    pb = max(0.01, min(0.99, p_b))
+    pa_int = int(round(pa * 10000))
+    pb_int = int(round(pb * 10000))
+    games_a, games_b, p_tiebreak = _expected_service_games_set(
+        0,
+        0,
+        pa_int,
+        pb_int,
+        a_serves_first,
+    )
+    tb_a, tb_b = expected_tiebreak_service_points(pa, pb, a_serves_first)
+    points_a = games_a * expected_points_in_service_game(pa) + p_tiebreak * tb_a
+    points_b = games_b * expected_points_in_service_game(pb) + p_tiebreak * tb_b
+    return points_a, points_b, games_a, games_b
+
+
+def _service_point_expectation_for_order(
+    p_a: float,
+    p_b: float,
+    best_of: int,
+    a_serves_first_set_one: bool,
+) -> ServicePointExpectation:
+    sets_to_win = 3 if best_of >= 5 else 2
+    set_count = 5 if sets_to_win == 3 else 3
+    starts = [a_serves_first_set_one if index % 2 == 0 else not a_serves_first_set_one for index in range(set_count)]
+    set_win_probs = [prob_set(p_a, p_b, start) for start in starts]
+    set_workloads = [expected_service_points_set(p_a, p_b, start) for start in starts]
+
+    reach = [1.0] * set_count
+    if sets_to_win == 2:
+        s1, s2 = set_win_probs[:2]
+        reach[2] = s1 * (1.0 - s2) + (1.0 - s1) * s2
+    else:
+        s1, s2, s3, s4 = set_win_probs[:4]
+        reach[3] = 1.0 - (s1 * s2 * s3 + (1.0 - s1) * (1.0 - s2) * (1.0 - s3))
+        reach[4] = (
+            s1 * s2 * (1.0 - s3) * (1.0 - s4)
+            + s1 * (1.0 - s2) * s3 * (1.0 - s4)
+            + s1 * (1.0 - s2) * (1.0 - s3) * s4
+            + (1.0 - s1) * s2 * s3 * (1.0 - s4)
+            + (1.0 - s1) * s2 * (1.0 - s3) * s4
+            + (1.0 - s1) * (1.0 - s2) * s3 * s4
+        )
+
+    points_a = sum(weight * workload[0] for weight, workload in zip(reach, set_workloads, strict=True))
+    points_b = sum(weight * workload[1] for weight, workload in zip(reach, set_workloads, strict=True))
+    games_a = sum(weight * workload[2] for weight, workload in zip(reach, set_workloads, strict=True))
+    games_b = sum(weight * workload[3] for weight, workload in zip(reach, set_workloads, strict=True))
+    return ServicePointExpectation(
+        player_a_points=points_a,
+        player_b_points=points_b,
+        player_a_games=games_a,
+        player_b_games=games_b,
+        total_service_games=games_a + games_b,
+    )
+
+
+def expected_match_service_points(p_a: float, p_b: float, best_of: int = 3) -> ServicePointExpectation:
+    """Expected match service workload, averaged over the unknown first server."""
+    first_a = _service_point_expectation_for_order(p_a, p_b, best_of, True)
+    first_b = _service_point_expectation_for_order(p_a, p_b, best_of, False)
+    return ServicePointExpectation(
+        player_a_points=(first_a.player_a_points + first_b.player_a_points) / 2.0,
+        player_b_points=(first_a.player_b_points + first_b.player_b_points) / 2.0,
+        player_a_games=(first_a.player_a_games + first_b.player_a_games) / 2.0,
+        player_b_games=(first_a.player_b_games + first_b.player_b_games) / 2.0,
+        total_service_games=(first_a.total_service_games + first_b.total_service_games) / 2.0,
+    )
 
 
 # ── O/U game distribution ──────────────────────────────────────────

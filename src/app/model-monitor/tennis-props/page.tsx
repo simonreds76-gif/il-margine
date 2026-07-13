@@ -49,6 +49,7 @@ const MODEL_SUMMARY_PATH = path.join(PROPS_DIR, "model-monitor-summary.csv");
 const MODEL_REPORT_PATH = path.join(PROPS_DIR, "model-monitor-report.txt");
 const TOTALS_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-totals-gate.json");
 const PROPS_V2_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-v2-rung1-gate.json");
+const SERVICE_POINTS_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-service-points-gate.json");
 const DERIVATIVES_STATUS_PATH = path.join(ROOT, "data", "vnext", "tennis-derivatives-evidence-status.json");
 
 function parseCsv(text: string): CsvRow[] {
@@ -1173,6 +1174,7 @@ function FeedDiagnosticsPanel({
   const mainLines = matchedRows.filter((row) => row.main_line === "true").length;
   const twoWayRows = matchedRows.filter((row) => row.price_pair_status === "two_way").length;
   const rawMarketRows = auditRows.filter((row) => row.market_name);
+  const unsupportedLadder = twoWayRows > 0 && mainLines === 0;
   return (
     <SectionCard
       title="Why No Bet? Feed Diagnostics"
@@ -1185,6 +1187,12 @@ function FeedDiagnosticsPanel({
         <MetricTile label="Best available" value={String(bestAvailable)} sub="closest ladder row per market" tone="text-cyan-300" />
         <MetricTile label="Usable main" value={String(mainLines)} sub="strict gate candidate" tone={mainLines ? "text-emerald-300" : "text-amber-300"} />
       </div>
+      {unsupportedLadder ? (
+        <div className="mt-3 rounded-2xl border border-amber-500/25 bg-amber-500/10 px-4 py-3 text-xs leading-relaxed text-amber-100">
+          <span className="font-black uppercase tracking-[0.12em] text-amber-200">Unsupported alternate ladder:</span>{" "}
+          Bet365 supplied two-way thresholds, but none resembles a balanced main line. Deep alternates remain blocked; the system will not manufacture a recommendation from them.
+        </div>
+      ) : null}
       <div className="mt-3 grid gap-3 lg:grid-cols-4">
         <CountList title="Blockers" rows={topBlockReasons(matchedRows)} tone="text-amber-300" />
         <CountList title="Line quality" rows={topCounts(matchedRows, "line_quality")} tone="text-cyan-300" />
@@ -1289,11 +1297,15 @@ function ResearchGatesPanel({
   evidenceStamp,
   propsV2,
   propsV2Stamp,
+  servicePointsGate,
+  servicePointsStamp,
 }: {
   evidence: JsonRecord;
   evidenceStamp: string;
   propsV2: JsonRecord;
   propsV2Stamp: string;
+  servicePointsGate: JsonRecord;
+  servicePointsStamp: string;
 }) {
   const spread = record(evidence.spread_shape);
   const totals = record(evidence.total_games_shape);
@@ -1307,9 +1319,9 @@ function ResearchGatesPanel({
   return (
     <SectionCard
       title="Research Gates"
-      subtitle={`Registered evidence only. Status ${evidenceStamp}; props v2 ${propsV2Stamp}. No blocked lane changes live routing.`}
+      subtitle={`Registered evidence only. Status ${evidenceStamp}; props v2 ${propsV2Stamp}; service points ${servicePointsStamp}. No blocked lane changes live routing.`}
     >
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
         <MetricTile
           label="Spread shape"
           value={String(spread.promotion_status || "BLOCKED")}
@@ -1334,9 +1346,15 @@ function ResearchGatesPanel({
           sub={`${propsPass}/${propsCells.length || 4} tour-market cells passed | incumbent remains active`}
           tone={gateTone(propsV2.status)}
         />
+        <MetricTile
+          label="Service-point recursion"
+          value={String(servicePointsGate.status || "MISSING")}
+          sub={`Routing ${String(servicePointsGate.routing || "blocked").replaceAll("_", " ")} | incumbent unchanged`}
+          tone={gateTone(servicePointsGate.status)}
+        />
       </div>
       <p className="mt-3 text-xs text-slate-500">
-        Current result: hierarchical dispersion helped ATP double-fault pricing, but failed the all-cell promotion rule. Spread and totals remain sample-blocked; synthetic odds never count as ROI evidence.
+        Current result: hierarchical dispersion helped ATP double-fault pricing but failed the all-cell rule. Matchup-recursion service points also failed all four tour-market gates, so the simpler incumbent remains active. Synthetic odds never count as ROI evidence.
       </p>
     </SectionCard>
   );
@@ -1371,6 +1389,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     derivativesEvidenceStamp,
     propsV2Gate,
     propsV2GateStamp,
+    servicePointsGate,
+    servicePointsGateStamp,
   ] = await Promise.all([
     readCsv(BOARD_PATH),
     fileStamp(BOARD_PATH),
@@ -1392,6 +1412,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     fileStamp(DERIVATIVES_STATUS_PATH),
     readJson(PROPS_V2_GATE_PATH),
     fileStamp(PROPS_V2_GATE_PATH),
+    readJson(SERVICE_POINTS_GATE_PATH),
+    fileStamp(SERVICE_POINTS_GATE_PATH),
   ]);
 
   const comparisonRows = latestComparisonPath ? await readCsv(latestComparisonPath) : [];
@@ -1525,6 +1547,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
               evidenceStamp={derivativesEvidenceStamp}
               propsV2={propsV2Gate}
               propsV2Stamp={propsV2GateStamp}
+              servicePointsGate={servicePointsGate}
+              servicePointsStamp={servicePointsGateStamp}
             />
 
             <FeedDiagnosticsPanel
