@@ -225,6 +225,39 @@ type CpiSummary = {
   reportAvailable: boolean;
 };
 
+type ExtremeGapMetric = {
+  signals: number;
+  pending: number;
+  settled: number;
+  wins: number;
+  losses: number;
+  voids: number;
+  pnl_units: number;
+  roi_pct: number | null;
+  clv_rows: number;
+  avg_clv_pct: number | null;
+  positive_clv_pct: number | null;
+};
+
+type ExtremeGapReport = {
+  generated_at: string;
+  status: string;
+  anomalies: number;
+  ml: ExtremeGapMetric;
+  spread: ExtremeGapMetric;
+  paired_settled: number;
+  paired_outcomes: Record<string, number>;
+  spread_promotion_gate: {
+    passes: boolean;
+    rule: string;
+  };
+};
+
+type ExtremeGapLoad = {
+  report: ExtremeGapReport | null;
+  liveRows: CsvRow[];
+};
+
 const badgeTones = {
   live: "border-emerald-500/25 bg-emerald-500/10 text-emerald-300",
   shadow: "border-cyan-500/25 bg-cyan-500/10 text-cyan-300",
@@ -752,6 +785,106 @@ function TennisDecisionBoard({
       </div>
     </section>
   );
+}
+
+function gapMetricValue(value: number | null, suffix = "%") {
+  return value == null ? "n/a" : `${value >= 0 ? "+" : ""}${value.toFixed(2)}${suffix}`;
+}
+
+function ExtremeGapLab({ data }: { data: ExtremeGapLoad }) {
+  const { report, liveRows } = data;
+  const ml = report?.ml;
+  const spread = report?.spread;
+  const spreadRescues = report?.paired_outcomes?.ml_loss__spread_win ?? 0;
+  const currentMlRows = liveRows.filter((row) => row.bet_type !== "spread").slice(0, 8);
+  const spreadByAnomaly = new Map(
+    liveRows.filter((row) => row.bet_type === "spread").map((row) => [row.anomaly_id, row]),
+  );
+  return (
+    <section id="extreme-gap-lab" className="rounded-3xl border border-rose-500/20 bg-[radial-gradient(circle_at_top_right,rgba(244,63,94,0.13),transparent_36%),linear-gradient(135deg,rgba(15,23,42,0.97),rgba(2,6,23,0.98))] p-5 md:p-6">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-rose-300">Extreme gap lab</p>
+            <StatusPill label="RESEARCH ONLY" tone={badgeTones.disabled} />
+            <StatusPill label={report?.spread_promotion_gate?.passes ? "GATE PASSED" : "GUARD ACTIVE"} tone={report?.spread_promotion_gate?.passes ? badgeTones.live : badgeTones.disabled} />
+          </div>
+          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-50">When the model and Pinnacle violently disagree</h2>
+          <p className="mt-2 max-w-4xl text-sm leading-6 text-slate-400">
+            Every large gap is frozen as two separate tests: the model&apos;s ML side and that same player on the available Pinnacle spread. A huge EV is treated as a fault signal first, not a tip.
+          </p>
+        </div>
+        <div className="rounded-2xl border border-slate-800 bg-slate-950/55 px-4 py-3 text-sm text-slate-300">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Sell gate</p>
+          <p className="mt-1 max-w-sm text-xs leading-5 text-slate-400">{report?.spread_promotion_gate?.rule ?? "n>=200 plus positive ROI and CLV proof"}</p>
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+        <div className="rounded-2xl border border-slate-800 bg-slate-950/55 p-4">
+          <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Today&apos;s anomalies</p>
+          <p className="mt-2 text-2xl font-semibold tabular-nums text-white">{new Set(liveRows.map((row) => row.anomaly_id).filter(Boolean)).size}</p>
+        </div>
+        <div className="rounded-2xl border border-slate-800 bg-slate-950/55 p-4">
+          <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">ML settled / ROI</p>
+          <p className="mt-2 text-lg font-semibold tabular-nums text-slate-100">{ml?.settled ?? 0} / <span className={metricTone(ml?.roi_pct)}>{gapMetricValue(ml?.roi_pct ?? null)}</span></p>
+        </div>
+        <div className="rounded-2xl border border-slate-800 bg-slate-950/55 p-4">
+          <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Spread settled / ROI</p>
+          <p className="mt-2 text-lg font-semibold tabular-nums text-slate-100">{spread?.settled ?? 0} / <span className={metricTone(spread?.roi_pct)}>{gapMetricValue(spread?.roi_pct ?? null)}</span></p>
+        </div>
+        <div className="rounded-2xl border border-slate-800 bg-slate-950/55 p-4">
+          <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Spread CLV</p>
+          <p className="mt-2 text-lg font-semibold tabular-nums text-slate-100"><span className={metricTone(spread?.avg_clv_pct)}>{gapMetricValue(spread?.avg_clv_pct ?? null)}</span> <span className="text-xs text-slate-500">n={spread?.clv_rows ?? 0}</span></p>
+        </div>
+        <div className="rounded-2xl border border-slate-800 bg-slate-950/55 p-4">
+          <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Spread rescued ML loss</p>
+          <p className="mt-2 text-2xl font-semibold tabular-nums text-cyan-200">{spreadRescues}</p>
+        </div>
+      </div>
+
+      <div className="mt-5 overflow-hidden rounded-2xl border border-slate-800 bg-slate-950/45">
+        <div className="grid grid-cols-[minmax(0,1fr)_64px_64px] gap-3 border-b border-slate-800 px-4 py-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 sm:grid-cols-[minmax(0,1.5fr)_80px_82px_minmax(0,1fr)]">
+          <span>Current match / paired test</span><span>Gap</span><span>ML EV</span><span className="hidden sm:block">Likely cause</span>
+        </div>
+        {currentMlRows.map((row) => {
+          const pairedSpread = spreadByAnomaly.get(row.anomaly_id);
+          const cause = (row.diagnosis_primary || "unexplained").replaceAll("_", " ");
+          return (
+            <div key={`${row.anomaly_id}-${row.signal_profile}`} className="grid grid-cols-[minmax(0,1fr)_64px_64px] gap-3 border-b border-slate-900 px-4 py-3 text-xs last:border-0 sm:grid-cols-[minmax(0,1.5fr)_80px_82px_minmax(0,1fr)]">
+              <div className="min-w-0">
+                <p className="truncate font-semibold text-slate-200">{row.player1} vs {row.player2}</p>
+                <p className="mt-1 truncate text-slate-500">
+                  {row.selected_player}{pairedSpread ? ` | ${pairedSpread.side} ${pairedSpread.spread_line} @ ${pairedSpread.spread_odds}` : " | no spread captured"}
+                </p>
+                <p className="mt-1 truncate text-[10px] text-slate-600 sm:hidden">{cause}</p>
+              </div>
+              <span className="font-semibold tabular-nums text-rose-200">{nullableMetric(row.model_market_gap_pp)?.toFixed(1) ?? "-"}pp</span>
+              <span className="font-semibold tabular-nums text-amber-200">{nullableMetric(row.value_pct)?.toFixed(1) ?? "-"}%</span>
+              <span className="hidden break-words text-slate-400 sm:block">{cause}</span>
+            </div>
+          );
+        })}
+        {liveRows.length === 0 ? <p className="px-4 py-6 text-sm text-slate-500">No current anomaly snapshot yet. The morning and nightly fair-odds runs now create it automatically.</p> : null}
+      </div>
+    </section>
+  );
+}
+
+async function loadExtremeGapLab(): Promise<ExtremeGapLoad> {
+  const [reportText, liveText] = await Promise.all([
+    readKnownFile("data/backtest/tennis-model-market-gap-report.json"),
+    readKnownFile("data/backtest/tennis-model-market-gap-live.csv"),
+  ]);
+  let report: ExtremeGapReport | null = null;
+  if (reportText) {
+    try {
+      report = JSON.parse(reportText) as ExtremeGapReport;
+    } catch {
+      report = null;
+    }
+  }
+  return { report, liveRows: liveText ? parseCsv(liveText) : [] };
 }
 
 async function loadProofReport(): Promise<ProofReportLoad | null> {
@@ -1613,6 +1746,7 @@ export default async function TennisMonitorPage() {
     readKnownFile("data/backtest/vnext-counts-identity-check.txt"),
   ]);
   const vnextSummary = parseVNextResearchSummary(vnextReport, identityReport, residualReport, countsIdentityReport);
+  const extremeGapLab = await loadExtremeGapLab();
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
@@ -1629,6 +1763,10 @@ export default async function TennisMonitorPage() {
         </div>
 
         <div className="mt-6">
+          <ExtremeGapLab data={extremeGapLab} />
+        </div>
+
+        <div className="mt-6">
           <ProofDashboard rows={proofRows} fromReport={proofReportRows !== null} reportAge={proofReportRows?.ageLabel ?? null} reportStale={proofReportRows?.stale ?? true} />
         </div>
 
@@ -1637,6 +1775,15 @@ export default async function TennisMonitorPage() {
         </div>
 
         <nav className="mt-6 flex flex-wrap gap-2" aria-label="Tennis research lanes">
+          <a
+            href="#extreme-gap-lab"
+            className={cn(
+              "rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] transition-colors",
+              "border-rose-500/30 bg-rose-500/10 text-rose-200 hover:border-rose-400/60",
+            )}
+          >
+            Extreme gap lab
+          </a>
           <a
             href="#tennis-proof"
             className={cn(

@@ -135,6 +135,16 @@ def main() -> int:
         timeout_seconds=step_timeout,
     )
 
+    # Research-only anomaly capture. This never changes routing or stakes: it
+    # freezes extreme ML gaps and the same player's real Pinnacle handicap so
+    # nightly settlement can test the two hypotheses independently.
+    run_cmd(
+        [sys.executable, str(ROOT / "scripts" / "tennis-model-market-gap-audit.py")],
+        label="3b/5 Extreme model/market gap audit (research only)",
+        fatal=False,
+        timeout_seconds=step_timeout,
+    )
+
     if not args.skip_strict_report:
         strict_cmd = [
             sys.executable,

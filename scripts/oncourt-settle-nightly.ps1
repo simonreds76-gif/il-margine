@@ -180,6 +180,30 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: tennis-shadow-proof-report failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Post-step: Settle extreme model/market gap hypotheses ==="
+& python scripts\settle-strict-signals.py --csv data\backtest\tennis-model-market-gap-archive.csv --no-backup 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: extreme-gap hypothesis settlement failed (exit $LASTEXITCODE), continuing..."
+}
+
+Log "=== Post-step: Extreme-gap ML closing-line audit ==="
+& python scripts\audit-strict-clv.py --signals data\backtest\tennis-model-market-gap-archive.csv --bet-type match --detail-csv data\backtest\tennis-model-market-gap-clv-ml.csv --summary-txt data\backtest\tennis-model-market-gap-clv-ml.txt --unmatched-csv data\backtest\tennis-model-market-gap-clv-ml-unmatched.csv 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: extreme-gap ML CLV audit failed (exit $LASTEXITCODE), continuing..."
+}
+
+Log "=== Post-step: Extreme-gap spread closing-line audit ==="
+& python scripts\audit-strict-clv.py --signals data\backtest\tennis-model-market-gap-archive.csv --bet-type spread --detail-csv data\backtest\tennis-model-market-gap-clv-spread.csv --summary-txt data\backtest\tennis-model-market-gap-clv-spread.txt --unmatched-csv data\backtest\tennis-model-market-gap-clv-spread-unmatched.csv 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: extreme-gap spread CLV audit failed (exit $LASTEXITCODE), continuing..."
+}
+
+Log "=== Post-step: Extreme model/market gap report ==="
+& python scripts\tennis-model-market-gap-report.py 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: extreme-gap report failed (exit $LASTEXITCODE), continuing..."
+}
+
 Log "============================================"
 Log "  Nightly tennis settlement finished at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Log "============================================"
