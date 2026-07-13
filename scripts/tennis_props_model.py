@@ -8,6 +8,12 @@ from functools import lru_cache
 import json
 import math
 from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+from src.lib.tennis_prob import expected_match_service_points
 
 DEFAULT_COUNT_DISPERSION_ALPHA = {
     ("ATP", "aces"): 0.35,
@@ -30,7 +36,6 @@ SLAM_COUNT_BIAS_CORRECTION = {
     ("WTA", "Wimbledon"): {"aces": 0.000, "dfs": 0.231},
 }
 
-ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_TIEBREAK_CALIBRATION_PATH = ROOT / "data" / "tennis-props" / "tiebreak-calibration.json"
 DEFAULT_BREAK_GATE_PATH = ROOT / "data" / "tennis-props" / "backtest" / "breaks-stage0-gate.json"
 _TIEBREAK_CALIBRATION_OVERRIDE: dict[str, object] | None = None
@@ -576,6 +581,7 @@ def project_player(
     slam_matches: int,
     same_tournament_row: dict[str, str] | None = None,
     current_tournament_env_row: dict[str, str] | None = None,
+    service_points_mode: str = "incumbent",
 ) -> Projection:
     tour_norm = tour.lower()
     ace_prior_weight = 400.0 if tour_norm == "atp" else 600.0
@@ -702,8 +708,20 @@ def project_player(
 
     ace_rate_adj = _clip(ace_rate * slam_ace_factor * current_env_ace_factor * ret_factor, 0.002, 0.28)
     df_rate_adj = _clip(df_rate * slam_df_factor * current_env_df_factor, 0.002, 0.16)
+    best_of = 5 if str(factor_row.get("tournament") or "").strip() in {"Australian Open", "Roland Garros", "Wimbledon", "US Open"} and tour.upper() == "ATP" else 3
     expected_service_games = max(4.0, expected_match_games * 0.5)
     expected_service_points = expected_service_games * _clip(svpt_per_svg, 4.8, 8.6)
+    if service_points_mode == "matchup_recursion":
+        workload = expected_match_service_points(
+            player_service_point_win,
+            opponent_service_point_win,
+            best_of=best_of,
+        )
+        expected_service_games = max(4.0, workload.player_a_games)
+        expected_service_points = max(20.0, workload.player_a_points)
+        notes.append("SERVICE_POINTS_RECURSION_SHADOW")
+    elif service_points_mode != "incumbent":
+        raise ValueError(f"Unsupported service_points_mode: {service_points_mode}")
 
     # Breaks are game-count props, so estimate them from both sides: a player's
     # return break rate and the opponent's broken rate. Keep it market-research
@@ -727,7 +745,6 @@ def project_player(
     expected_breaks_for = break_rate_adj * expected_service_games
     expected_broken = broken_rate_adj * expected_service_games
     expected_total_breaks = expected_breaks_for + expected_broken
-    best_of = 5 if str(factor_row.get("tournament") or "").strip() in {"Australian Open", "Roland Garros", "Wimbledon", "US Open"} and tour.upper() == "ATP" else 3
     first_set_tiebreak_base_prob = _set_tiebreak_prob(player_service_point_win, opponent_service_point_win, True)
     venue_first_set_tiebreak_factor = _float(factor_row.get("first_set_tiebreak_factor"), 1.0) or 1.0
     venue_match_tiebreak_factor = _float(factor_row.get("match_tiebreak_factor"), 1.0) or 1.0

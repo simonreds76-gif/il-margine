@@ -1,0 +1,100 @@
+{
+  "version": "tennis-props-service-points-v1",
+  "generated_at": "2026-07-13T14:17:42.511254+00:00",
+  "status": "FAIL",
+  "routing": "blocked",
+  "diagnostic_test_year": 2025,
+  "registered_change": "expected service points only; ace/DF rates and dispersion unchanged",
+  "minimum_logloss_improvement": 0.001,
+  "service_points": {
+    "ATP": {
+      "n": 1016,
+      "current_mae": 27.952531496062992,
+      "candidate_mae": 33.285561023622044,
+      "mae_delta": 5.333029527559052,
+      "passed": false
+    },
+    "WTA": {
+      "n": 1016,
+      "current_mae": 17.357815944881892,
+      "candidate_mae": 20.0635718503937,
+      "mae_delta": 2.7057559055118077,
+      "passed": false
+    }
+  },
+  "cells": [
+    {
+      "tour": "ATP",
+      "market": "aces",
+      "n": 1016,
+      "mae_current": 4.117339566929133,
+      "mae_candidate": 4.483794291338582,
+      "mae_delta": 0.36645472440944893,
+      "logloss_current": 0.6628943038231335,
+      "logloss_candidate": 0.6761375770892222,
+      "logloss_delta": 0.013243273266088651,
+      "bias_current": 0.2281801181102362,
+      "bias_candidate": 1.7134616141732284,
+      "passed_market": false,
+      "service_points_mae_current": 27.952531496062992,
+      "service_points_mae_candidate": 33.285561023622044,
+      "service_points_mae_delta": 5.333029527559052,
+      "passed": false
+    },
+    {
+      "tour": "ATP",
+      "market": "dfs",
+      "n": 1016,
+      "mae_current": 2.167869094488189,
+      "mae_candidate": 2.3107519685039373,
+      "mae_delta": 0.1428828740157484,
+      "logloss_current": 0.6571526218449159,
+      "logloss_candidate": 0.6792792405114033,
+      "logloss_delta": 0.022126618666487463,
+      "bias_current": 0.034294291338582666,
+      "bias_candidate": 0.6893700787401574,
+      "passed_market": false,
+      "service_points_mae_current": 27.952531496062992,
+      "service_points_mae_candidate": 33.285561023622044,
+      "service_points_mae_delta": 5.333029527559052,
+      "passed": false
+    },
+    {
+      "tour": "WTA",
+      "market": "aces",
+      "n": 1016,
+      "mae_current": 1.7785561023622047,
+      "mae_candidate": 1.8864133858267718,
+      "mae_delta": 0.10785728346456702,
+      "logloss_current": 0.6533609699224987,
+      "logloss_candidate": 0.6584219499404359,
+      "logloss_delta": 0.0050609800179372,
+      "bias_current": 0.05192027559055118,
+      "bias_candidate": 0.5094488188976378,
+      "passed_market": false,
+      "service_points_mae_current": 17.357815944881892,
+      "service_points_mae_candidate": 20.0635718503937,
+      "service_points_mae_delta": 2.7057559055118077,
+      "passed": false
+    },
+    {
+      "tour": "WTA",
+      "market": "dfs",
+      "n": 1016,
+      "mae_current": 1.897232283464567,
+      "mae_candidate": 1.9579409448818899,
+      "mae_delta": 0.060708661417322896,
+      "logloss_current": 0.6729053048818561,
+      "logloss_candidate": 0.6704577062957534,
+      "logloss_delta": -0.0024475985861026617,
+      "bias_current": -0.1789448818897638,
+      "bias_candidate": 0.36028149606299215,
+      "passed_market": false,
+      "service_points_mae_current": 17.357815944881892,
+      "service_points_mae_candidate": 20.0635718503937,
+      "service_points_mae_delta": 2.7057559055118077,
+      "passed": false
+    }
+  ],
+  "next_action": "keep incumbent service-point driver"
+}

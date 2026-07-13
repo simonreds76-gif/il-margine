@@ -1,0 +1,16 @@
+Tennis Props - Registered Service-Point Recursion Experiment
+Generated UTC: 2026-07-13T14:17:42.511254+00:00
+Diagnostic test year: 2025
+Change: expected service points only; incumbent ace/DF rates and dispersion unchanged.
+Gate: service-point MAE must improve and every tour/market must have MAE <= incumbent plus log-loss delta <= -0.001.
+
+Tour Market     N   SP MAE current/candidate   Count MAE current/candidate   LL current/candidate   Delta LL   Gate
+ATP  aces   1016   27.9525/33.2856              4.1173/4.4838                  0.662894/0.676138  +0.013243   FAIL
+ATP  dfs    1016   27.9525/33.2856              2.1679/2.3108                  0.657153/0.679279  +0.022127   FAIL
+WTA  aces   1016   17.3578/20.0636              1.7786/1.8864                  0.653361/0.658422  +0.005061   FAIL
+WTA  dfs    1016   17.3578/20.0636              1.8972/1.9579                  0.672905/0.670458  -0.002448   FAIL
+
+VERDICT: FAIL
+Routing: blocked
+Next: keep incumbent service-point driver
+This is outcome-only evidence. It is not ROI or CLV evidence.

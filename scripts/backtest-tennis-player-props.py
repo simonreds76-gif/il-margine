@@ -91,7 +91,13 @@ class EvalRow:
     ace_confidence: str
     df_confidence: str
     notes: str
+    actual_service_points: int
     expected_service_points: float
+    candidate_expected_service_points: float
+    candidate_projected_aces: float
+    candidate_projected_dfs: float
+    player_service_point_win: float
+    opponent_service_point_win: float
     same_tournament_matches: int
 
 
@@ -525,6 +531,16 @@ def evaluate(sackmann_dir: Path, years: list[int], eval_years: set[int]) -> list
                 slam_matches=slam_prior_matches(tour, player_id, slam, match_date, events_by_player),
                 same_tournament_row=same,
             )
+            candidate = project_player(
+                tour=tour,
+                player_rows=player_rows,
+                opponent_rows=opponent_rows,
+                factor_row=factor,
+                expected_match_games=expected_match_games,
+                slam_matches=slam_prior_matches(tour, player_id, slam, match_date, events_by_player),
+                same_tournament_row=same,
+                service_points_mode="matchup_recursion",
+            )
             naive_aces, naive_dfs = naive_projection(
                 player_rows,
                 factor,
@@ -552,7 +568,13 @@ def evaluate(sackmann_dir: Path, years: list[int], eval_years: set[int]) -> list
                     ace_confidence=projection.ace_confidence,
                     df_confidence=projection.df_confidence,
                     notes=";".join(projection.notes),
+                    actual_service_points=parse_int(row.get(f"{prefix}_svpt")),
                     expected_service_points=projection.expected_service_points,
+                    candidate_expected_service_points=candidate.expected_service_points,
+                    candidate_projected_aces=candidate.expected_aces,
+                    candidate_projected_dfs=candidate.expected_dfs,
+                    player_service_point_win=projection.player_service_point_win,
+                    opponent_service_point_win=projection.opponent_service_point_win,
                     same_tournament_matches=projection.same_tournament_matches,
                 )
             )
@@ -687,8 +709,14 @@ def write_rows(path: Path, rows: list[EvalRow]) -> None:
         "ace_confidence",
         "df_confidence",
         "expected_service_points",
+        "candidate_expected_service_points",
+        "candidate_projected_aces",
+        "candidate_projected_dfs",
+        "player_service_point_win",
+        "opponent_service_point_win",
         "same_tournament_matches",
         "notes",
+        "actual_service_points",
     ]
     with path.open("w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fields)
@@ -715,8 +743,14 @@ def write_rows(path: Path, rows: list[EvalRow]) -> None:
                     "ace_confidence": row.ace_confidence,
                     "df_confidence": row.df_confidence,
                     "expected_service_points": f"{row.expected_service_points:.3f}",
+                    "candidate_expected_service_points": f"{row.candidate_expected_service_points:.3f}",
+                    "candidate_projected_aces": f"{row.candidate_projected_aces:.3f}",
+                    "candidate_projected_dfs": f"{row.candidate_projected_dfs:.3f}",
+                    "player_service_point_win": f"{row.player_service_point_win:.6f}",
+                    "opponent_service_point_win": f"{row.opponent_service_point_win:.6f}",
                     "same_tournament_matches": row.same_tournament_matches,
                     "notes": row.notes,
+                    "actual_service_points": row.actual_service_points,
                 }
             )
 
