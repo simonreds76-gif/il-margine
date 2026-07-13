@@ -107,20 +107,27 @@ def build_factor_row(*, tour: str, tournament: str, surface: str, as_of: date, m
     target_df = stage0.safe_div(target_totals["dfs"], target_totals["svpt"])
     fallback_games = 38.5 if tour == "atp" and fallback_best_of == 5 else 21.5
     match_games = stage0.safe_div(match_games_sum, match_games_n) or fallback_games
+    venue_matches = int(target_totals["matches"] / 2)
+    sample_weight = venue_matches / (venue_matches + 100.0) if venue_matches > 0 else 0.0
+    raw_ace_factor = (target_ace / base_ace) if target_ace and base_ace else 1.0
+    raw_df_factor = (target_df / base_df) if target_df and base_df else 1.0
     return {
         "tour": tour.upper(),
         "tournament": tournament,
         "surface": surface,
         "year": "PAST_ONLY",
-        "matches": str(int(target_totals["matches"] / 2)),
+        "matches": str(venue_matches),
         "ace_rate": stage0.fmt(target_ace),
         "df_rate": stage0.fmt(target_df),
         "svpt_per_svgame": stage0.fmt(stage0.safe_div(target_totals["svpt"], target_totals["svgms"]) or 6.35, 4),
         "match_games_per_match": stage0.fmt(match_games, 3),
         "tour_surface_baseline_ace": stage0.fmt(base_ace),
         "tour_surface_baseline_df": stage0.fmt(base_df),
-        "ace_factor": stage0.fmt((target_ace / base_ace) if target_ace and base_ace else 1.0, 4),
-        "df_factor": stage0.fmt((target_df / base_df) if target_df and base_df else 1.0, 4),
+        "raw_ace_factor": stage0.fmt(raw_ace_factor, 4),
+        "raw_df_factor": stage0.fmt(raw_df_factor, 4),
+        "sample_weight": stage0.fmt(sample_weight, 4),
+        "ace_factor": stage0.fmt(stage0.shrink_venue_factor(raw_ace_factor, venue_matches), 4),
+        "df_factor": stage0.fmt(stage0.shrink_venue_factor(raw_df_factor, venue_matches), 4),
         "sample_flag": "OK" if target_totals["matches"] >= 80 and base_totals["matches"] >= 250 else "LOW_SAMPLE",
     }
 
@@ -202,6 +209,7 @@ def evaluate(sackmann_dir: Path, years: list[int], eval_years: set[int], allowed
                 expected_match_games=expected_match_games,
                 slam_matches=tournament_prior_matches(events_by_player, tour, player_id, tournament_key, match_date),
                 same_tournament_row=same,
+                apply_slam_bias_correction=False,
             )
             naive_aces, naive_dfs = stage0.naive_projection(player_rows, factor, projection.expected_service_points, tour)
             rows.append(
@@ -212,7 +220,9 @@ def evaluate(sackmann_dir: Path, years: list[int], eval_years: set[int], allowed
                     tournament=tournament,
                     round=str(row.get("round") or ""),
                     surface=surface,
+                    player_id=player_id,
                     player=player,
+                    opponent_id=opponent_id,
                     opponent=opponent,
                     actual_aces=stage0.parse_int(row.get(f"{prefix}_ace")),
                     actual_dfs=stage0.parse_int(row.get(f"{prefix}_df")),
@@ -223,8 +233,17 @@ def evaluate(sackmann_dir: Path, years: list[int], eval_years: set[int], allowed
                     ace_confidence=projection.ace_confidence,
                     df_confidence=projection.df_confidence,
                     notes=";".join(list(projection.notes) + [f"VENUE_SCOPE:{tournament_key}", f"VENUE_SAMPLE:{factor.get('sample_flag')}"]),
+                    actual_service_points=stage0.parse_int(row.get(f"{prefix}_svpt")),
                     expected_service_points=projection.expected_service_points,
+                    candidate_expected_service_points=projection.expected_service_points,
+                    candidate_projected_aces=projection.expected_aces,
+                    candidate_projected_dfs=projection.expected_dfs,
+                    player_service_point_win=projection.player_service_point_win,
+                    opponent_service_point_win=projection.opponent_service_point_win,
                     same_tournament_matches=projection.same_tournament_matches,
+                    ace_rate_pre_opponent=projection.ace_rate_pre_opponent,
+                    opponent_return_ratio=projection.opponent_return_ratio,
+                    opponent_return_factor=projection.opponent_return_factor,
                 )
             )
             coverage[(match_date.year, tour.upper(), surface, "included_sides")] += 1

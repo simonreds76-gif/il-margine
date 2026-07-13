@@ -1,17 +1,17 @@
 Tennis Match-Total Aces/DF Stage-0
-Generated UTC: 2026-07-10T13:52:35+00:00
-Train years: 2023, 2024
+Generated UTC: 2026-07-13T15:19:17+00:00
+Train years: 2022, 2023, 2024
 Untouched holdout year: 2025
 Outcome-only validation. No odds, ROI or CLV evidence.
 Dispersion is fitted separately for model and naive means on training seasons only.
 
 match_aces: PASS
-  ATP: PASS n=1524 train=1016 holdout=508 alpha=0.165974 MAE=6.665242/6.929199 LL=0.656826/0.68097 Brier=0.231909/0.243934 bias=0.632963
-  WTA: PASS n=1524 train=1016 holdout=508 alpha=0.227966 MAE=2.681778/2.821427 LL=0.653722/0.673191 Brier=0.231458/0.240101 bias=0.103841
+  ATP: PASS n=2032 train=1524 holdout=508 alpha=0.174805 MAE=6.656882/6.925606 LL=0.653103/0.680338 Brier=0.230278/0.243628 bias=0.83413
+  WTA: PASS n=2032 train=1524 holdout=508 alpha=0.236216 MAE=2.705317/2.821427 LL=0.653519/0.673181 Brier=0.231434/0.240096 bias=0.252171
 
 match_double_faults: PASS
-  ATP: PASS n=1524 train=1016 holdout=508 alpha=0.137694 MAE=3.395323/3.515028 LL=0.654177/0.696131 Brier=0.231159/0.251454 bias=0.095173
-  WTA: PASS n=1524 train=1016 holdout=508 alpha=0.134748 MAE=2.829764/3.010183 LL=0.663444/0.694664 Brier=0.236311/0.250727 bias=-0.35789
+  ATP: PASS n=2032 train=1524 holdout=508 alpha=0.133876 MAE=3.323781/3.486209 LL=0.66062/0.691854 Brier=0.234444/0.249359 bias=-0.267915
+  WTA: PASS n=2032 train=1524 holdout=508 alpha=0.13442 MAE=2.833295/3.010183 LL=0.666788/0.694705 Brier=0.237963/0.250747 bias=-0.378102
 
 Gate interpretation
 - A market is shadow-eligible only when ATP and WTA both pass coverage, MAE, log-loss and Brier gates.
