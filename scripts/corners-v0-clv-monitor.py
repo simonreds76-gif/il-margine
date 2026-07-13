@@ -19,6 +19,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from clv_snapshot_utils import close_lag_minutes, is_true_close, snapshot_at_or_before, snapshot_price
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PICKS = ROOT / "data" / "football-form" / "corners-v0-published-picks.csv"
@@ -47,6 +49,8 @@ OUTPUT_FIELDS = [
     "pinnacle_price_3h_pre_kickoff",
     "pinnacle_price_1h_pre_kickoff",
     "pinnacle_price_close",
+    "close_lag_minutes",
+    "true_close",
     "published_to_close_clv",
     "model_to_close_clv",
     "pinnacle_movement_to_close",
@@ -173,14 +177,7 @@ def build_pinnacle_index(rows: list[dict[str, str]]) -> dict[str, list[dict[str,
 
 
 def price_at_or_before(items: list[dict[str, Any]], target: datetime | None) -> float | None:
-    if not items:
-        return None
-    if target is None:
-        return items[-1]["odds"]
-    candidates = [item for item in items if item["captured_at"] <= target]
-    if candidates:
-        return candidates[-1]["odds"]
-    return None
+    return snapshot_price(snapshot_at_or_before(items, target))
 
 
 def row_bool(value: Any) -> bool:
@@ -239,7 +236,9 @@ def build_pick_row(
     price_publication = price_at_or_before(items, published)
     price_3h = price_at_or_before(items, kickoff - timedelta(hours=3) if kickoff else None)
     price_1h = price_at_or_before(items, kickoff - timedelta(hours=1) if kickoff else None)
-    close = price_at_or_before(items, kickoff)
+    close_snapshot = snapshot_at_or_before(items, kickoff)
+    close = snapshot_price(close_snapshot)
+    close_lag = close_lag_minutes(close_snapshot, kickoff)
     model_fair = pf(pick.get("model_fair_odds") or pick.get("model_fair"))
     model_prob = pf(pick.get("model_implied_prob") or pick.get("model_prob"))
     if model_prob is None and model_fair and model_fair > 1:
@@ -293,6 +292,8 @@ def build_pick_row(
         "pinnacle_price_3h_pre_kickoff": round(price_3h, 6) if price_3h else "",
         "pinnacle_price_1h_pre_kickoff": round(price_1h, 6) if price_1h else "",
         "pinnacle_price_close": round(close, 6) if close else "",
+        "close_lag_minutes": close_lag if close_lag is not None else "",
+        "true_close": "true" if is_true_close(close_lag) else "false",
         "published_to_close_clv": published_to_close_clv,
         "model_to_close_clv": model_to_close_clv,
         "pinnacle_movement_to_close": movement_to_close,
@@ -312,6 +313,14 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         writer = csv.DictWriter(handle, fieldnames=OUTPUT_FIELDS)
         writer.writeheader()
         writer.writerows(rows)
+
+
+def display_path(path: Path) -> str:
+    resolved = path if path.is_absolute() else ROOT / path
+    try:
+        return str(resolved.relative_to(ROOT)).replace("\\", "/")
+    except ValueError:
+        return str(path).replace("\\", "/")
 
 
 def avg(values: list[float]) -> float | None:
@@ -392,6 +401,20 @@ def render_report(rows: list[dict[str, Any]], picks_path: Path, pinnacle_path: P
     pnl_values = [pf(row.get("pnl_units")) for row in settled if pf(row.get("pnl_units")) is not None]
     total_pnl = sum(value for value in pnl_values if value is not None)
     avg_clv = avg([value for value in clv_values if value is not None])
+    now = datetime.now(UTC)
+    close_eligible = [
+        row
+        for row in rows
+        if (parse_dt(row.get("kickoff_utc")) or datetime.max.replace(tzinfo=UTC)) <= now
+    ]
+    true_close_rows = [row for row in close_eligible if row_bool(row.get("true_close"))]
+    true_close_clv = [
+        value
+        for value in (pf(row.get("published_to_close_clv")) for row in true_close_rows)
+        if value is not None
+    ]
+    close_coverage = len(true_close_rows) / len(close_eligible) if close_eligible else None
+    avg_true_close_clv = avg(true_close_clv)
     lines = [
         "# Corners V0 CLV Monitor",
         "",
@@ -407,6 +430,8 @@ def render_report(rows: list[dict[str, Any]], picks_path: Path, pinnacle_path: P
         f"- Open/pending: {len(open_rows)}",
         f"- Settled PnL: {total_pnl:+.2f}u" if settled else "- Settled PnL: -",
         f"- Picks with close: {len(with_close)}",
+        f"- True-close coverage (<=120m): {len(true_close_rows)}/{len(close_eligible)} ({close_coverage:.1%})" if close_coverage is not None else "- True-close coverage (<=120m): -",
+        f"- Average true-close CLV: {avg_true_close_clv:+.2%} (n={len(true_close_clv)})" if avg_true_close_clv is not None else "- Average true-close CLV: -",
         f"- Hard-guard blocked: {len(blocked)}",
         f"- Average published-to-close CLV: {avg_clv:+.2%}" if avg_clv is not None else "- Average published-to-close CLV: -",
         f"- Allowed-league config valid: {'yes' if allowed_config.get('config_valid') else 'no'}",
@@ -436,6 +461,7 @@ def render_report(rows: list[dict[str, Any]], picks_path: Path, pinnacle_path: P
         "- `current_model_would_have_priced` must be true for publication while canonical-only evidence is below threshold.",
         "- `time_to_kickoff_hours` records publication timing so CLV can be interpreted by lead time.",
         "- `published_to_close_clv` tracks the taken/published Pinnacle price versus close.",
+        "- `close_lag_minutes` records how far the selected close snapshot was from kickoff; `true_close=true` requires <=120 minutes.",
         "- `model_to_close_clv` tracks the model-implied probability versus close.",
         "- `confidence_guard_applied=true` means the row must not be treated as a published pick.",
         "",
@@ -493,8 +519,8 @@ def main() -> None:
     write_csv(args.output, rows)
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(render_report(rows, args.picks, args.pinnacle, allowed_config), encoding="utf-8")
-    print(f"Wrote {args.output.relative_to(ROOT)}")
-    print(f"Wrote {args.report.relative_to(ROOT)}")
+    print(f"Wrote {display_path(args.output)}")
+    print(f"Wrote {display_path(args.report)}")
 
 
 if __name__ == "__main__":
