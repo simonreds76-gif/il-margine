@@ -76,6 +76,8 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
       - name: Build and send weekly report
+        env:
+          TENNIS_PROPS_V3_WEEKLY_JSON: '${{ vars.TENNIS_PROPS_V3_WEEKLY_JSON }}'
         run: |
           python scripts/football-counts-vnext-gate.py
           python scripts/weekly-research-report.py
