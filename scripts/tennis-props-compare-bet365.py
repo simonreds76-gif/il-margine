@@ -442,6 +442,11 @@ def main() -> None:
     parser.add_argument("--lines", default="")
     parser.add_argument("--out", default="")
     parser.add_argument("--unmatched-out", default="")
+    parser.add_argument(
+        "--market-filter",
+        default="",
+        help="Optional comma-separated normalized markets to compare.",
+    )
     parser.add_argument("--min-value", type=float, default=0.10)
     parser.add_argument("--min-novig-edge", type=float, default=0.05)
     parser.add_argument("--max-model-market-gap", type=float, default=0.12)
@@ -495,12 +500,19 @@ def main() -> None:
     rows: list[dict[str, str]] = []
     unmatched_rows: list[dict[str, str]] = []
     now_utc = datetime.now(timezone.utc)
+    market_filter = {
+        item.strip().lower().replace(" ", "_")
+        for item in args.market_filter.split(",")
+        if item.strip()
+    }
     for line in line_rows:
         line_date = str(line.get("date") or args.date)
         line_tour = str(line.get("tour") or "").upper()
         line_player = str(line.get("player") or "").strip()
         line_opponent = str(line.get("opponent") or "").strip()
         line_market = str(line.get("market") or "").strip()
+        if market_filter and line_market.lower().replace(" ", "_") not in market_filter:
+            continue
         totals_passed, totals_alpha = totals_gate_result(totals_gate, line_tour, line_market)
         requires_exact_pair = is_match_total_count_market(line_market)
         original_player = line_player
@@ -644,6 +656,17 @@ def main() -> None:
         line_value = parse_float(line.get("line"))
         over_odds = parse_float(line.get("over_odds"))
         under_odds = parse_float(line.get("under_odds"))
+        distribution_alpha = totals_alpha if is_match_total_count_market(market) else None
+        if board_row and market.lower().replace(" ", "_") in {"aces", "ace", "player_aces", "match_aces"}:
+            distribution_alpha = parse_float(board_row.get("aces_alpha"), distribution_alpha)
+            if is_match_total_count_market(market) and counterpart_row and left_mean is not None and right_mean is not None:
+                counterpart_alpha = parse_float(counterpart_row.get("aces_alpha"))
+                if distribution_alpha is not None and counterpart_alpha is not None and left_mean + right_mean > 0:
+                    # Match the variance of two independent NB2 player counts.
+                    distribution_alpha = (
+                        distribution_alpha * left_mean * left_mean
+                        + counterpart_alpha * right_mean * right_mean
+                    ) / ((left_mean + right_mean) ** 2)
         if mean is not None and line_value is not None:
             if args.distribution == "poisson":
                 p_over, p_under, p_push = poisson_line_probabilities(line_value, mean)
@@ -652,7 +675,7 @@ def main() -> None:
                     line_value,
                     mean,
                     distribution=args.distribution,
-                    alpha=totals_alpha if is_match_total_count_market(market) else None,
+                    alpha=distribution_alpha,
                     tour=str(line.get("tour") or ""),
                     market=market,
                 )
@@ -729,7 +752,7 @@ def main() -> None:
                 "match_source": match_source,
                 "scope": "match_total" if is_match_total_count_market(market) else "player",
                 "totals_stage0_passed": bool_text(totals_passed) if is_match_total_count_market(market) else "false",
-                "totals_alpha": fmt(totals_alpha, 6),
+                "totals_alpha": fmt(distribution_alpha, 6),
                 "projection_mean": fmt(mean, 3),
                 "projection_p1": fmt(left_mean, 3),
                 "projection_p2": fmt(right_mean, 3),

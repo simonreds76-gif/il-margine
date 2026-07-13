@@ -71,6 +71,21 @@ def run_comparison(as_of: str) -> None:
         "Compare Bet365 lines with projections",
         fatal=False,
     )
+    v3_board = PROPS_DIR / "shadow" / "aces-v3-projection-board.csv"
+    if has_market_rows(v3_board):
+        run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "tennis-props-compare-bet365.py"),
+                "--date", as_of,
+                "--board", str(v3_board),
+                "--out", str(PROPS_DIR / f"comparison-v3-aces-{as_of}.csv"),
+                "--unmatched-out", str(PROPS_DIR / f"comparison-v3-aces-{as_of}-unmatched.csv"),
+                "--market-filter", "aces,ace,player_aces,match_aces",
+            ],
+            "Compare v3 ATP ace shadow projections with Bet365",
+            fatal=False,
+        )
 
 
 def run_shadow_tracking(as_of: str) -> None:
@@ -82,6 +97,31 @@ def run_shadow_tracking(as_of: str) -> None:
         "Consolidate append-only Bet365 price history",
         fatal=False,
     )
+    v3_comparison = PROPS_DIR / f"comparison-v3-aces-{as_of}.csv"
+    if has_market_rows(v3_comparison):
+        run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "tennis-props-shadow-tracker.py"),
+                "--date", as_of,
+                "--comparison", str(v3_comparison),
+                "--signals", str(PROPS_DIR / "shadow" / "aces-v3-shadow-signals.csv"),
+                "--performance", str(PROPS_DIR / "shadow" / "aces-v3-shadow-performance.txt"),
+                "--allow-medium", "--allow-notes", "--allow-watch",
+            ],
+            "Append v3 ATP ace prospective shadow signals",
+            fatal=False,
+        )
+        run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "tennis-props-settle-shadow.py"),
+                "--signals", str(PROPS_DIR / "shadow" / "aces-v3-shadow-signals.csv"),
+                "--performance", str(PROPS_DIR / "shadow" / "aces-v3-shadow-performance.txt"),
+            ],
+            "Settle v3 ATP ace prospective shadow signals",
+            fatal=False,
+        )
     run(
         [
             sys.executable,
@@ -184,6 +224,11 @@ def main() -> int:
         ],
         "Build tennis props projection board",
         fatal=True,
+    )
+    run(
+        [sys.executable, str(ROOT / "scripts" / "tennis-props-v3-live.py")],
+        "Build v3 ATP ace prospective shadow board",
+        fatal=False,
     )
 
     if args.skip_odds:

@@ -1,0 +1,605 @@
+{
+  "version": "tennis-props-v3-all-tour-1",
+  "generated_at": "2026-07-13T18:41:06.437523+00:00",
+  "status": "PARTIAL_PASS",
+  "routing": "atp_aces_hard_clay_prospective_shadow",
+  "train_years": [
+    2023,
+    2024
+  ],
+  "validation_year": 2025,
+  "untouched_test_year": 2026,
+  "minimums": {
+    "test_rows_per_cell": 900,
+    "mae_improvement_pct": 1.0,
+    "logloss_improvement": 0.002,
+    "max_surface_mae_regression_pct": 2.0,
+    "max_surface_logloss_regression": 0.003
+  },
+  "cells": {
+    "ATP_aces": {
+      "passed": true,
+      "train_n": 11124,
+      "validation_n": 5176,
+      "test_n": 2372,
+      "best_iteration": 879,
+      "incumbent_alpha": 0.22040255685667853,
+      "candidate_alpha": 0.17636488378592965,
+      "incumbent_mae": 3.050387534258389,
+      "candidate_mae": 2.937437308230212,
+      "mae_improvement_pct": 3.7028156180043275,
+      "incumbent_rmse": 4.051816373688969,
+      "candidate_rmse": 3.941870179495184,
+      "incumbent_bias": 0.008387983523228152,
+      "candidate_bias": -0.026259500439339237,
+      "incumbent_logloss": 0.6764007391616598,
+      "candidate_logloss": 0.6600623077994867,
+      "logloss_delta": -0.016338431362173056,
+      "incumbent_brier": 0.2417359747089787,
+      "candidate_brier": 0.2342168612677641,
+      "brier_delta": -0.007519113441214614,
+      "surfaces": {
+        "Clay": {
+          "n": 1054,
+          "incumbent_mae": 2.3112311112041852,
+          "candidate_mae": 2.236380777016021,
+          "mae_improvement_pct": 3.2385482276225597,
+          "incumbent_rmse": 3.016872391302954,
+          "candidate_rmse": 2.885718770068797,
+          "incumbent_bias": 0.10501871956911114,
+          "candidate_bias": 0.2996852530000798,
+          "incumbent_logloss": 0.6667219343744432,
+          "candidate_logloss": 0.6528858907316959,
+          "logloss_delta": -0.013836043642747264,
+          "incumbent_brier": 0.23698849589460136,
+          "candidate_brier": 0.23092482918115143,
+          "brier_delta": -0.006063666713449933,
+          "guard_passed": true
+        },
+        "Hard": {
+          "n": 1318,
+          "incumbent_mae": 3.6414883460179723,
+          "candidate_mae": 3.498069769459163,
+          "mae_improvement_pct": 3.9384604022044933,
+          "incumbent_rmse": 4.718850835192077,
+          "candidate_rmse": 4.615725967610787,
+          "incumbent_bias": -0.06888727883819878,
+          "candidate_bias": -0.28691638217313864,
+          "incumbent_logloss": 0.6841408455696464,
+          "candidate_logloss": 0.6658012634819234,
+          "logloss_delta": -0.018339582087723016,
+          "incumbent_brier": 0.24553251694748682,
+          "candidate_brier": 0.23684948783778667,
+          "brier_delta": -0.008683029109700147,
+          "guard_passed": true
+        }
+      },
+      "model_path": "data\\tennis-props\\models\\v3-atp-aces.txt",
+      "top_features": [
+        {
+          "feature": "incumbent_aces",
+          "gain": 233002.5476899147
+        },
+        {
+          "feature": "player_ace_rate_blend",
+          "gain": 35378.642867565155
+        },
+        {
+          "feature": "player_career4y_ace_rate",
+          "gain": 20824.150097846985
+        },
+        {
+          "feature": "player_height",
+          "gain": 17765.68235564232
+        },
+        {
+          "feature": "opponent_aces_allowed_blend",
+          "gain": 14878.074798107147
+        },
+        {
+          "feature": "opponent_career4y_aces_allowed_rate",
+          "gain": 11761.919622659683
+        },
+        {
+          "feature": "player_l24m_ace_rate",
+          "gain": 11317.62481212616
+        },
+        {
+          "feature": "opponent_l24m_aces_allowed_rate",
+          "gain": 10316.742380142212
+        },
+        {
+          "feature": "venue_df_factor",
+          "gain": 7989.603057861328
+        },
+        {
+          "feature": "player_career4y_first_win_pct",
+          "gain": 6623.458495855331
+        },
+        {
+          "feature": "venue_ace_factor",
+          "gain": 6234.137635707855
+        },
+        {
+          "feature": "expected_match_games",
+          "gain": 6062.679915189743
+        }
+      ]
+    },
+    "ATP_dfs": {
+      "passed": false,
+      "train_n": 11124,
+      "validation_n": 5176,
+      "test_n": 2372,
+      "best_iteration": 496,
+      "incumbent_alpha": 0.19070544200106096,
+      "candidate_alpha": 0.18351141666573867,
+      "incumbent_mae": 1.4311566928379649,
+      "candidate_mae": 1.430626065284001,
+      "mae_improvement_pct": 0.03707683139234723,
+      "incumbent_rmse": 1.8790672461975395,
+      "candidate_rmse": 1.8864270943629675,
+      "incumbent_bias": 0.21495032524521263,
+      "candidate_bias": 0.1335848273013807,
+      "incumbent_logloss": 0.6599962845600923,
+      "candidate_logloss": 0.6618111934591276,
+      "logloss_delta": 0.0018149088990353501,
+      "incumbent_brier": 0.23372794419486206,
+      "candidate_brier": 0.2345834647419158,
+      "brier_delta": 0.0008555205470537341,
+      "surfaces": {
+        "Clay": {
+          "n": 1054,
+          "incumbent_mae": 1.3808148210496232,
+          "candidate_mae": 1.3875152306115728,
+          "mae_improvement_pct": -0.48525040865771674,
+          "incumbent_rmse": 1.791923351548192,
+          "candidate_rmse": 1.8086116476178973,
+          "incumbent_bias": 0.051439518610927805,
+          "candidate_bias": -0.021275005435149884,
+          "incumbent_logloss": 0.6694495491248664,
+          "candidate_logloss": 0.6748097351988429,
+          "logloss_delta": 0.005360186073976481,
+          "incumbent_brier": 0.2383534127561282,
+          "candidate_brier": 0.24089669678920014,
+          "brier_delta": 0.002543284033071941,
+          "guard_passed": false
+        },
+        "Hard": {
+          "n": 1318,
+          "incumbent_mae": 1.4714149120070938,
+          "candidate_mae": 1.465101649308841,
+          "mae_improvement_pct": 0.4290606712447471,
+          "incumbent_rmse": 1.9459496813185797,
+          "candidate_rmse": 1.9464184524029944,
+          "incumbent_bias": 0.3457093466356042,
+          "candidate_bias": 0.2574256950588186,
+          "incumbent_logloss": 0.6524365418808268,
+          "candidate_logloss": 0.6514163049965633,
+          "logloss_delta": -0.001020236884263448,
+          "incumbent_brier": 0.23002897312993453,
+          "candidate_brier": 0.22953479510774455,
+          "brier_delta": -0.0004941780221899839,
+          "guard_passed": true
+        }
+      },
+      "model_path": "data\\tennis-props\\models\\v3-atp-dfs.txt",
+      "top_features": [
+        {
+          "feature": "incumbent_dfs",
+          "gain": 70891.27772593498
+        },
+        {
+          "feature": "venue_df_factor",
+          "gain": 7377.340516090393
+        },
+        {
+          "feature": "player_df_rate_blend",
+          "gain": 6234.100978136063
+        },
+        {
+          "feature": "level",
+          "gain": 5556.73947763443
+        },
+        {
+          "feature": "player_l24m_df_rate",
+          "gain": 5328.492706775665
+        },
+        {
+          "feature": "venue_history_matches",
+          "gain": 2547.69109582901
+        },
+        {
+          "feature": "expected_match_games",
+          "gain": 2156.6201326847076
+        },
+        {
+          "feature": "round",
+          "gain": 1470.5548861026764
+        },
+        {
+          "feature": "player_career4y_df_rate",
+          "gain": 1455.826382637024
+        },
+        {
+          "feature": "venue_ace_factor",
+          "gain": 1447.6037302017212
+        },
+        {
+          "feature": "expected_service_points",
+          "gain": 1315.7567565441132
+        },
+        {
+          "feature": "player_l12m_ace_rate",
+          "gain": 1280.8590302467346
+        }
+      ]
+    },
+    "WTA_aces": {
+      "passed": true,
+      "train_n": 10200,
+      "validation_n": 4814,
+      "test_n": 2224,
+      "best_iteration": 434,
+      "incumbent_alpha": 0.35034740779280904,
+      "candidate_alpha": 0.2969513134027506,
+      "incumbent_mae": 1.7729254494397697,
+      "candidate_mae": 1.7151129634430389,
+      "mae_improvement_pct": 3.260852621580852,
+      "incumbent_rmse": 2.414517477187725,
+      "candidate_rmse": 2.3398317919401093,
+      "incumbent_bias": 0.009012500545094613,
+      "candidate_bias": -0.05632910213289807,
+      "incumbent_logloss": 0.6694248867819865,
+      "candidate_logloss": 0.6557078967204484,
+      "logloss_delta": -0.013716990061538148,
+      "incumbent_brier": 0.23834596568503086,
+      "candidate_brier": 0.2319003110855477,
+      "brier_delta": -0.006445654599483153,
+      "surfaces": {
+        "Clay": {
+          "n": 816,
+          "incumbent_mae": 1.5333325045242576,
+          "candidate_mae": 1.467953296826555,
+          "mae_improvement_pct": 4.263863676325552,
+          "incumbent_rmse": 2.083411891355627,
+          "candidate_rmse": 2.0570139744232305,
+          "incumbent_bias": -0.12140299540190522,
+          "candidate_bias": -0.3922766396580739,
+          "incumbent_logloss": 0.6767453079347897,
+          "candidate_logloss": 0.677332538338202,
+          "logloss_delta": 0.0005872304034122422,
+          "incumbent_brier": 0.24198488577070773,
+          "candidate_brier": 0.24179951434709518,
+          "brier_delta": -0.00018537142361255143,
+          "guard_passed": true
+        },
+        "Hard": {
+          "n": 1408,
+          "incumbent_mae": 1.9117804516067145,
+          "candidate_mae": 1.858353224777592,
+          "mae_improvement_pct": 2.7946319246135576,
+          "incumbent_rmse": 2.587084387924833,
+          "candidate_rmse": 2.489072367793928,
+          "incumbent_bias": 0.08459420842346953,
+          "candidate_bias": 0.1383677662055561,
+          "incumbent_logloss": 0.665182369977521,
+          "candidate_logloss": 0.6431754339647049,
+          "logloss_delta": -0.022006936012816114,
+          "incumbent_brier": 0.2362370460899227,
+          "candidate_brier": 0.22616327283169632,
+          "brier_delta": -0.010073773258226365,
+          "guard_passed": true
+        }
+      },
+      "model_path": "data\\tennis-props\\models\\v3-wta-aces.txt",
+      "top_features": [
+        {
+          "feature": "incumbent_aces",
+          "gain": 109905.13736438751
+        },
+        {
+          "feature": "player_career4y_ace_rate",
+          "gain": 27956.603091716766
+        },
+        {
+          "feature": "opponent_career4y_aces_allowed_rate",
+          "gain": 16100.893639564514
+        },
+        {
+          "feature": "player_ace_rate_blend",
+          "gain": 8487.72358417511
+        },
+        {
+          "feature": "opponent_aces_allowed_blend",
+          "gain": 8288.37376666069
+        },
+        {
+          "feature": "player_l24m_ace_rate",
+          "gain": 7076.049945354462
+        },
+        {
+          "feature": "opponent_l24m_aces_allowed_rate",
+          "gain": 3926.1879868507385
+        },
+        {
+          "feature": "player_height",
+          "gain": 2486.342565059662
+        },
+        {
+          "feature": "player_career4y_first_serve_pct",
+          "gain": 2437.080813884735
+        },
+        {
+          "feature": "player_l12m_first_serve_pct",
+          "gain": 2380.6785774230957
+        },
+        {
+          "feature": "venue_df_factor",
+          "gain": 2077.756192445755
+        },
+        {
+          "feature": "player_rank",
+          "gain": 1965.7916922569275
+        }
+      ]
+    },
+    "WTA_dfs": {
+      "passed": false,
+      "train_n": 10200,
+      "validation_n": 4814,
+      "test_n": 2224,
+      "best_iteration": 244,
+      "incumbent_alpha": 0.15448055774465952,
+      "candidate_alpha": 0.1549555133055759,
+      "incumbent_mae": 1.8073549667401496,
+      "candidate_mae": 1.8285249738835023,
+      "mae_improvement_pct": -1.171325364022772,
+      "incumbent_rmse": 2.2994416505689825,
+      "candidate_rmse": 2.3275129317551424,
+      "incumbent_bias": 0.07448793705555667,
+      "candidate_bias": 0.11631134308208532,
+      "incumbent_logloss": 0.6794795173945354,
+      "candidate_logloss": 0.6832246478009582,
+      "logloss_delta": 0.0037451304064227697,
+      "incumbent_brier": 0.24321911025819598,
+      "candidate_brier": 0.245010305965305,
+      "brier_delta": 0.0017911957071090057,
+      "surfaces": {
+        "Clay": {
+          "n": 816,
+          "incumbent_mae": 1.8909511742485958,
+          "candidate_mae": 1.906962439829693,
+          "mae_improvement_pct": -0.8467307775653955,
+          "incumbent_rmse": 2.427804297708587,
+          "candidate_rmse": 2.4423060870130873,
+          "incumbent_bias": -0.06318408884660873,
+          "candidate_bias": -0.06479658929777053,
+          "incumbent_logloss": 0.6807879163036005,
+          "candidate_logloss": 0.6837735227986192,
+          "logloss_delta": 0.0029856064950187777,
+          "incumbent_brier": 0.24387030961110553,
+          "candidate_brier": 0.24519532392040064,
+          "brier_delta": 0.0013250143092951028,
+          "guard_passed": true
+        },
+        "Hard": {
+          "n": 1408,
+          "incumbent_mae": 1.758907164661391,
+          "candidate_mae": 1.7830668970283237,
+          "mae_improvement_pct": -1.3735649528486462,
+          "incumbent_rmse": 2.22165764178114,
+          "candidate_rmse": 2.2583158850956506,
+          "incumbent_bias": 0.15427513388522074,
+          "candidate_bias": 0.2212716220749563,
+          "incumbent_logloss": 0.6787212407540545,
+          "candidate_logloss": 0.68290654979095,
+          "logloss_delta": 0.004185309036895513,
+          "incumbent_brier": 0.2428417106332143,
+          "candidate_brier": 0.24490307965042002,
+          "brier_delta": 0.0020613690172057164,
+          "guard_passed": false
+        }
+      },
+      "model_path": "data\\tennis-props\\models\\v3-wta-dfs.txt",
+      "top_features": [
+        {
+          "feature": "incumbent_dfs",
+          "gain": 42337.32968044281
+        },
+        {
+          "feature": "player_career4y_df_rate",
+          "gain": 14906.749654769897
+        },
+        {
+          "feature": "venue_df_factor",
+          "gain": 6157.261995315552
+        },
+        {
+          "feature": "player_df_rate_blend",
+          "gain": 5598.067663192749
+        },
+        {
+          "feature": "player_l24m_df_rate",
+          "gain": 3568.811532974243
+        },
+        {
+          "feature": "player_l12m_df_rate",
+          "gain": 1691.78697681427
+        },
+        {
+          "feature": "player_rank",
+          "gain": 1631.905945301056
+        },
+        {
+          "feature": "surface_prior_df_rate",
+          "gain": 1580.3823580741882
+        },
+        {
+          "feature": "round",
+          "gain": 1438.3341388702393
+        },
+        {
+          "feature": "player_career4y_first_win_pct",
+          "gain": 946.9107928276062
+        },
+        {
+          "feature": "player_height",
+          "gain": 899.2357630729675
+        },
+        {
+          "feature": "player_l12m_first_serve_pct",
+          "gain": 861.9295291900635
+        }
+      ]
+    }
+  },
+  "market_gates": {
+    "aces": {
+      "status": "PASS",
+      "routing": "outcome_shadow_eligible",
+      "passed_cells": 2,
+      "total_cells": 2,
+      "evaluated_surfaces": [
+        "Clay",
+        "Hard"
+      ],
+      "unverified_surfaces": [
+        "Grass"
+      ]
+    },
+    "dfs": {
+      "status": "FAIL",
+      "routing": "blocked",
+      "passed_cells": 0,
+      "total_cells": 2,
+      "evaluated_surfaces": [
+        "Clay",
+        "Hard"
+      ],
+      "unverified_surfaces": [
+        "Grass"
+      ]
+    }
+  },
+  "deployment_safe_aces": {
+    "ATP": {
+      "status": "PASS",
+      "passed": true,
+      "mae_improvement_pct": 3.3335103960491357,
+      "logloss_delta": -0.013396899357459913,
+      "brier_delta": -0.006146245186697069,
+      "candidate_alpha": 0.1800339589347608,
+      "surfaces": {
+        "Clay": {
+          "n": 1054,
+          "incumbent_mae": 2.3112311112041852,
+          "candidate_mae": 2.276941544571329,
+          "mae_improvement_pct": 1.4836061381585963,
+          "incumbent_rmse": 3.016872391302954,
+          "candidate_rmse": 2.9223537618027153,
+          "incumbent_bias": 0.10501871956911114,
+          "candidate_bias": 0.34057780166717466,
+          "incumbent_logloss": 0.6667219343744432,
+          "candidate_logloss": 0.6586827449054637,
+          "logloss_delta": -0.008039189468979413,
+          "incumbent_brier": 0.23698849589460136,
+          "candidate_brier": 0.23370388057725436,
+          "brier_delta": -0.0032846153173470005,
+          "guard_passed": true
+        },
+        "Hard": {
+          "n": 1318,
+          "incumbent_mae": 3.6414883460179723,
+          "candidate_mae": 3.485907479135433,
+          "mae_improvement_pct": 4.272452692390719,
+          "incumbent_rmse": 4.718850835192077,
+          "candidate_rmse": 4.617401718896661,
+          "incumbent_bias": -0.06888727883819878,
+          "candidate_bias": -0.3640607684328926,
+          "incumbent_logloss": 0.6841408455696464,
+          "candidate_logloss": 0.6664594043135079,
+          "logloss_delta": -0.017681441256138464,
+          "incumbent_brier": 0.24553251694748682,
+          "candidate_brier": 0.23709783634174955,
+          "brier_delta": -0.008434680605737266,
+          "guard_passed": true
+        }
+      },
+      "model_path": "data\\tennis-props\\models\\v3-atp-aces-live.txt",
+      "feature_count": 77
+    },
+    "WTA": {
+      "status": "FAIL",
+      "passed": false,
+      "mae_improvement_pct": 3.017562841622831,
+      "logloss_delta": -0.012948162649715989,
+      "brier_delta": -0.005969241133674363,
+      "candidate_alpha": 0.30018957080814784,
+      "surfaces": {
+        "Clay": {
+          "n": 816,
+          "incumbent_mae": 1.5333325045242576,
+          "candidate_mae": 1.481658760380487,
+          "mae_improvement_pct": 3.3700286135787185,
+          "incumbent_rmse": 2.083411891355627,
+          "candidate_rmse": 2.0636155109944485,
+          "incumbent_bias": -0.12140299540190522,
+          "candidate_bias": -0.4026336370299215,
+          "incumbent_logloss": 0.6767453079347897,
+          "candidate_logloss": 0.6819199872074502,
+          "logloss_delta": 0.005174679272660465,
+          "incumbent_brier": 0.24198488577070773,
+          "candidate_brier": 0.2441534647947567,
+          "brier_delta": 0.002168579024048961,
+          "guard_passed": false
+        },
+        "Hard": {
+          "n": 1408,
+          "incumbent_mae": 1.9117804516067145,
+          "candidate_mae": 1.8572234124115845,
+          "mae_improvement_pct": 2.853729315480693,
+          "incumbent_rmse": 2.587084387924833,
+          "candidate_rmse": 2.4824014139318504,
+          "incumbent_bias": 0.08459420842346953,
+          "candidate_bias": 0.16229208136029508,
+          "incumbent_logloss": 0.665182369977521,
+          "candidate_logloss": 0.641731196668246,
+          "logloss_delta": -0.023451173309275042,
+          "incumbent_brier": 0.2362370460899227,
+          "candidate_brier": 0.2255515682739314,
+          "brier_delta": -0.010685477815991273,
+          "guard_passed": true
+        }
+      },
+      "model_path": "data\\tennis-props\\models\\v3-wta-aces-live.txt",
+      "feature_count": 77
+    }
+  },
+  "deployment_scope": {
+    "tour": "ATP",
+    "market": "player_aces",
+    "surfaces": [
+      "Clay",
+      "Hard"
+    ],
+    "permission": "prospective_shadow_only",
+    "wta": "blocked_by_clay_surface_guard",
+    "grass": "blocked_unverified_2026_test"
+  },
+  "sellability_gate": {
+    "status": "BLOCKED",
+    "reason": "settled 0/300; events 0/100; CLV coverage 0/300; mean CLV +0.00%/+1.00%",
+    "settled_real_lines": 0,
+    "distinct_events": 0,
+    "clv_coverage": 0,
+    "mean_clv_pct": 0.0,
+    "roi_pct": 0.0,
+    "minimum_settled_real_lines": 300,
+    "minimum_distinct_events": 100,
+    "required_mean_clv_pct": 1.0,
+    "required_roi_pct": 0.0,
+    "source": "data\\tennis-props\\shadow\\aces-v3-shadow-signals.csv"
+  },
+  "next_action": "log deployment-safe ATP v3 aces and incumbent prospectively on Hard/Clay; retain incumbent for WTA/DFs and keep Grass blocked"
+}

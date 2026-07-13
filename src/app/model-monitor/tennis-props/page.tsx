@@ -45,6 +45,7 @@ const INBOX_DIR = path.join(PROPS_DIR, "inbox");
 const SHADOW_DIR = path.join(PROPS_DIR, "shadow");
 const SHADOW_SIGNALS_PATH = path.join(SHADOW_DIR, "aces-dfs-shadow-signals.csv");
 const SHADOW_PERFORMANCE_PATH = path.join(SHADOW_DIR, "aces-dfs-shadow-performance.txt");
+const V3_SHADOW_SIGNALS_PATH = path.join(SHADOW_DIR, "aces-v3-shadow-signals.csv");
 const MODEL_SUMMARY_PATH = path.join(PROPS_DIR, "model-monitor-summary.csv");
 const MODEL_REPORT_PATH = path.join(PROPS_DIR, "model-monitor-report.txt");
 const TOTALS_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-totals-gate.json");
@@ -52,6 +53,7 @@ const PROPS_V2_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-v2-rung1-g
 const SERVICE_POINTS_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-service-points-gate.json");
 const OPPONENT_RETURN_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-opponent-return-gate.json");
 const RATE_RECENCY_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-rate-recency-gate.json");
+const PROPS_V3_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-v3-all-tour-gate.json");
 const DERIVATIVES_STATUS_PATH = path.join(ROOT, "data", "vnext", "tennis-derivatives-evidence-status.json");
 
 function parseCsv(text: string): CsvRow[] {
@@ -1305,6 +1307,10 @@ function ResearchGatesPanel({
   opponentReturnStamp,
   rateRecencyGate,
   rateRecencyStamp,
+  propsV3Gate,
+  propsV3Stamp,
+  propsV3ShadowRows,
+  propsV3ShadowStamp,
 }: {
   evidence: JsonRecord;
   evidenceStamp: string;
@@ -1316,6 +1322,10 @@ function ResearchGatesPanel({
   opponentReturnStamp: string;
   rateRecencyGate: JsonRecord;
   rateRecencyStamp: string;
+  propsV3Gate: JsonRecord;
+  propsV3Stamp: string;
+  propsV3ShadowRows: CsvRow[];
+  propsV3ShadowStamp: string;
 }) {
   const spread = record(evidence.spread_shape);
   const totals = record(evidence.total_games_shape);
@@ -1328,6 +1338,11 @@ function ResearchGatesPanel({
     return [record(markets.aces), record(markets.dfs)];
   });
   const recencyPass = recencyCells.filter((cell) => cell.passed === true).length;
+  const v3Sellability = record(propsV3Gate.sellability_gate);
+  const v3Deployment = record(propsV3Gate.deployment_safe_aces);
+  const v3Atp = record(v3Deployment.ATP);
+  const v3Wta = record(v3Deployment.WTA);
+  const v3Shadow = shadowStats(propsV3ShadowRows);
   const gateTone = (status: unknown) => status === "PASS"
     ? "text-emerald-300"
     : "text-amber-300";
@@ -1335,9 +1350,9 @@ function ResearchGatesPanel({
   return (
     <SectionCard
       title="Research Gates"
-      subtitle={`Registered evidence only. Status ${evidenceStamp}; props v2 ${propsV2Stamp}; service points ${servicePointsStamp}; opponent return ${opponentReturnStamp}; recency ${rateRecencyStamp}. No blocked lane changes live routing.`}
+      subtitle={`Registered evidence only. Status ${evidenceStamp}; props v2 ${propsV2Stamp}; service points ${servicePointsStamp}; opponent return ${opponentReturnStamp}; recency ${rateRecencyStamp}; all-tour v3 ${propsV3Stamp}. No blocked lane changes live routing.`}
     >
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-7">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-8">
         <MetricTile
           label="Spread shape"
           value={String(spread.promotion_status || "BLOCKED")}
@@ -1380,9 +1395,15 @@ function ResearchGatesPanel({
           sub={`${recencyPass}/${recencyCells.length || 4} cells passed | L12M weight 1.0 retained`}
           tone={gateTone(rateRecencyGate.status)}
         />
+        <MetricTile
+          label="All-tour ace challenger"
+          value={String(propsV3Gate.status || "MISSING")}
+          sub={`Deployable ATP ${String(v3Atp.status || "MISSING")} | WTA ${String(v3Wta.status || "BLOCKED")} | ${v3Shadow.settled} settled / ${v3Shadow.pending} pending | ${String(v3Sellability.status || "BLOCKED")} for tips | ${propsV3ShadowStamp}`}
+          tone={gateTone(propsV3Gate.status)}
+        />
       </div>
       <p className="mt-3 text-xs text-slate-500">
-        Current result: hierarchical dispersion, matchup-recursion service points, opponent-return exponent and global player-rate recency all failed their registered all-cell rules. WTA aces alone improved under heavier recency, but no isolated post-holdout promotion is allowed. Synthetic odds never count as ROI evidence.
+        Current result: the richer all-main-tour v3 ace challenger beat the incumbent for ATP and WTA on untouched 2026 Hard/Clay data. The daily reproducible version passed only for ATP Hard/Clay, so that is the sole prospective shadow route. WTA, double faults and Grass remain blocked. With zero settled Bet365 shadow bets, no props tip is sellable yet. Synthetic odds never count as ROI evidence.
       </p>
     </SectionCard>
   );
@@ -1423,6 +1444,10 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     opponentReturnGateStamp,
     rateRecencyGate,
     rateRecencyGateStamp,
+    propsV3Gate,
+    propsV3GateStamp,
+    propsV3ShadowRows,
+    propsV3ShadowStamp,
   ] = await Promise.all([
     readCsv(BOARD_PATH),
     fileStamp(BOARD_PATH),
@@ -1450,6 +1475,10 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     fileStamp(OPPONENT_RETURN_GATE_PATH),
     readJson(RATE_RECENCY_GATE_PATH),
     fileStamp(RATE_RECENCY_GATE_PATH),
+    readJson(PROPS_V3_GATE_PATH),
+    fileStamp(PROPS_V3_GATE_PATH),
+    readCsv(V3_SHADOW_SIGNALS_PATH),
+    fileStamp(V3_SHADOW_SIGNALS_PATH),
   ]);
 
   const comparisonRows = latestComparisonPath ? await readCsv(latestComparisonPath) : [];
@@ -1589,6 +1618,10 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
               opponentReturnStamp={opponentReturnGateStamp}
               rateRecencyGate={rateRecencyGate}
               rateRecencyStamp={rateRecencyGateStamp}
+              propsV3Gate={propsV3Gate}
+              propsV3Stamp={propsV3GateStamp}
+              propsV3ShadowRows={propsV3ShadowRows}
+              propsV3ShadowStamp={propsV3ShadowStamp}
             />
 
             <FeedDiagnosticsPanel
