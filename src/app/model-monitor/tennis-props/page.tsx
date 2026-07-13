@@ -50,6 +50,7 @@ const MODEL_REPORT_PATH = path.join(PROPS_DIR, "model-monitor-report.txt");
 const TOTALS_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-totals-gate.json");
 const PROPS_V2_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-v2-rung1-gate.json");
 const SERVICE_POINTS_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-service-points-gate.json");
+const OPPONENT_RETURN_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-opponent-return-gate.json");
 const DERIVATIVES_STATUS_PATH = path.join(ROOT, "data", "vnext", "tennis-derivatives-evidence-status.json");
 
 function parseCsv(text: string): CsvRow[] {
@@ -1299,6 +1300,8 @@ function ResearchGatesPanel({
   propsV2Stamp,
   servicePointsGate,
   servicePointsStamp,
+  opponentReturnGate,
+  opponentReturnStamp,
 }: {
   evidence: JsonRecord;
   evidenceStamp: string;
@@ -1306,6 +1309,8 @@ function ResearchGatesPanel({
   propsV2Stamp: string;
   servicePointsGate: JsonRecord;
   servicePointsStamp: string;
+  opponentReturnGate: JsonRecord;
+  opponentReturnStamp: string;
 }) {
   const spread = record(evidence.spread_shape);
   const totals = record(evidence.total_games_shape);
@@ -1319,9 +1324,9 @@ function ResearchGatesPanel({
   return (
     <SectionCard
       title="Research Gates"
-      subtitle={`Registered evidence only. Status ${evidenceStamp}; props v2 ${propsV2Stamp}; service points ${servicePointsStamp}. No blocked lane changes live routing.`}
+      subtitle={`Registered evidence only. Status ${evidenceStamp}; props v2 ${propsV2Stamp}; service points ${servicePointsStamp}; opponent return ${opponentReturnStamp}. No blocked lane changes live routing.`}
     >
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
         <MetricTile
           label="Spread shape"
           value={String(spread.promotion_status || "BLOCKED")}
@@ -1352,9 +1357,15 @@ function ResearchGatesPanel({
           sub={`Routing ${String(servicePointsGate.routing || "blocked").replaceAll("_", " ")} | incumbent unchanged`}
           tone={gateTone(servicePointsGate.status)}
         />
+        <MetricTile
+          label="Opponent-return ace rate"
+          value={String(opponentReturnGate.status || "MISSING")}
+          sub={`Routing ${String(opponentReturnGate.routing || "blocked").replaceAll("_", " ")} | exponent 0.60 retained`}
+          tone={gateTone(opponentReturnGate.status)}
+        />
       </div>
       <p className="mt-3 text-xs text-slate-500">
-        Current result: hierarchical dispersion helped ATP double-fault pricing but failed the all-cell rule. Matchup-recursion service points also failed all four tour-market gates, so the simpler incumbent remains active. Synthetic odds never count as ROI evidence.
+        Current result: hierarchical dispersion and matchup-recursion service points failed their all-cell rules. The train-only opponent-return exponent also failed its ATP/WTA holdout gate, so exponent 0.60 remains active. Synthetic odds never count as ROI evidence.
       </p>
     </SectionCard>
   );
@@ -1391,6 +1402,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     propsV2GateStamp,
     servicePointsGate,
     servicePointsGateStamp,
+    opponentReturnGate,
+    opponentReturnGateStamp,
   ] = await Promise.all([
     readCsv(BOARD_PATH),
     fileStamp(BOARD_PATH),
@@ -1414,6 +1427,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     fileStamp(PROPS_V2_GATE_PATH),
     readJson(SERVICE_POINTS_GATE_PATH),
     fileStamp(SERVICE_POINTS_GATE_PATH),
+    readJson(OPPONENT_RETURN_GATE_PATH),
+    fileStamp(OPPONENT_RETURN_GATE_PATH),
   ]);
 
   const comparisonRows = latestComparisonPath ? await readCsv(latestComparisonPath) : [];
@@ -1549,6 +1564,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
               propsV2Stamp={propsV2GateStamp}
               servicePointsGate={servicePointsGate}
               servicePointsStamp={servicePointsGateStamp}
+              opponentReturnGate={opponentReturnGate}
+              opponentReturnStamp={opponentReturnGateStamp}
             />
 
             <FeedDiagnosticsPanel
