@@ -1,6 +1,6 @@
 # Team Shots Unified Backfill Validation
 
-Generated: 2026-07-13  
+Generated: 2026-07-13
 Status: **research input only; do not replace the live v3 lane**
 
 ## Coverage
