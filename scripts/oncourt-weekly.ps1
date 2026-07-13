@@ -221,6 +221,12 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: clay bo3 signal analysis failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Step 11d/12: Snapshot extreme model/market gap evidence ==="
+& python scripts\tennis-model-market-gap-report.py --weekly-snapshot-csv data\backtest\tennis-model-market-gap-weekly.csv 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: extreme gap weekly review failed (exit $LASTEXITCODE), continuing..."
+}
+
 # Step 12: Append Pinnacle history capture (weekly checkpoint)
 Log "=== Step 12/12: Append Pinnacle history capture (weekly) ==="
 & python scripts\pinnacle-capture-history.py --capture-mode weekly 2>&1 | ForEach-Object { Log $_ }

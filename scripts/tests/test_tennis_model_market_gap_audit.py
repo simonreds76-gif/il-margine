@@ -4,7 +4,7 @@ import importlib.util
 import sys
 import tempfile
 import unittest
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 
@@ -122,6 +122,42 @@ class TennisModelMarketGapAuditTests(unittest.TestCase):
         self.assertEqual(report["paired_settled"], 1)
         self.assertEqual(report["paired_outcomes"]["ml_loss__spread_win"], 1)
         self.assertEqual(report["spread"]["pnl_units"], 0.95)
+        self.assertEqual(report["weekly_review"]["verdict"], "KEEP_COLLECTING")
+        self.assertFalse(report["weekly_review"]["automatic_promotion"])
+
+    def test_long_ev_handicap_subset_is_reported_separately(self) -> None:
+        base = {
+            "anomaly_id": "long-ev",
+            "date": "2026-07-13",
+            "player1_id": "10",
+            "player2_id": "20",
+            "settlement_status": "settled",
+            "stake_units": "1",
+            "diagnosis_primary": "component_disagreement",
+            "surface": "Hard",
+            "series": "ATP",
+            "ev_bucket": "100-200%",
+            "gap_bucket": "25pp+",
+            "value_pct": "150",
+        }
+        rows = [
+            {**base, "hypothesis": "extreme_ml_side", "bet_type": "match", "bet_outcome": "LOSS", "selected_odds": "3.9"},
+            {**base, "hypothesis": "same_player_spread", "bet_type": "spread", "bet_outcome": "WIN", "selected_odds": "1.95"},
+        ]
+        report = REPORT.build_report(rows, [], [], today=date(2026, 7, 13))
+        self.assertEqual(report["long_ev_100_plus"]["spread"]["settled"], 1)
+        self.assertEqual(report["segments"]["ev_bucket"]["100-200%"]["spread_rescues"], 1)
+
+    def test_weekly_snapshot_is_upserted_by_week(self) -> None:
+        report = REPORT.build_report([], [], [], today=date(2026, 7, 13))
+        generated = datetime(2026, 7, 13, 9, tzinfo=timezone.utc)
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "weekly.csv"
+            REPORT.write_weekly_snapshot(path, report, generated=generated)
+            REPORT.write_weekly_snapshot(path, report, generated=generated)
+            rows = REPORT.load_csv(path)
+            self.assertEqual(len(rows), 1)
+            self.assertEqual(rows[0]["week_start"], "2026-07-13")
 
 
 if __name__ == "__main__":

@@ -247,6 +247,22 @@ type ExtremeGapReport = {
   spread: ExtremeGapMetric;
   paired_settled: number;
   paired_outcomes: Record<string, number>;
+  spread_rescues?: number;
+  spread_rescue_rate_pct?: number | null;
+  windows?: {
+    last_7_days: { spread: ExtremeGapMetric };
+    last_30_days: { spread: ExtremeGapMetric };
+  };
+  long_ev_100_plus?: {
+    ml: ExtremeGapMetric;
+    spread: ExtremeGapMetric;
+  };
+  weekly_review?: {
+    verdict: string;
+    reason: string;
+    handicap_trustworthy_live: boolean;
+    automatic_promotion: boolean;
+  };
   spread_promotion_gate: {
     passes: boolean;
     rule: string;
@@ -796,6 +812,10 @@ function ExtremeGapLab({ data }: { data: ExtremeGapLoad }) {
   const ml = report?.ml;
   const spread = report?.spread;
   const spreadRescues = report?.paired_outcomes?.ml_loss__spread_win ?? 0;
+  const reviewVerdict = report?.weekly_review?.verdict ?? "KEEP COLLECTING";
+  const reviewReason = report?.weekly_review?.reason ?? "Waiting for enough settled prices and closing-line evidence.";
+  const trailing30Spread = report?.windows?.last_30_days?.spread;
+  const longEvSpread = report?.long_ev_100_plus?.spread;
   const currentMlRows = liveRows.filter((row) => row.bet_type !== "spread").slice(0, 8);
   const spreadByAnomaly = new Map(
     liveRows.filter((row) => row.bet_type === "spread").map((row) => [row.anomaly_id, row]),
@@ -807,7 +827,7 @@ function ExtremeGapLab({ data }: { data: ExtremeGapLoad }) {
           <div className="flex flex-wrap items-center gap-2">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-rose-300">Extreme gap lab</p>
             <StatusPill label="RESEARCH ONLY" tone={badgeTones.disabled} />
-            <StatusPill label={report?.spread_promotion_gate?.passes ? "GATE PASSED" : "GUARD ACTIVE"} tone={report?.spread_promotion_gate?.passes ? badgeTones.live : badgeTones.disabled} />
+            <StatusPill label={report?.spread_promotion_gate?.passes ? "REVIEW CANDIDATE" : reviewVerdict.replaceAll("_", " ")} tone={report?.spread_promotion_gate?.passes ? badgeTones.live : badgeTones.disabled} />
           </div>
           <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-50">When the model and Pinnacle violently disagree</h2>
           <p className="mt-2 max-w-4xl text-sm leading-6 text-slate-400">
@@ -815,8 +835,9 @@ function ExtremeGapLab({ data }: { data: ExtremeGapLoad }) {
           </p>
         </div>
         <div className="rounded-2xl border border-slate-800 bg-slate-950/55 px-4 py-3 text-sm text-slate-300">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Sell gate</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Promotion review gate</p>
           <p className="mt-1 max-w-sm text-xs leading-5 text-slate-400">{report?.spread_promotion_gate?.rule ?? "n>=200 plus positive ROI and CLV proof"}</p>
+          <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-amber-300">Never auto-promoted</p>
         </div>
       </div>
 
@@ -840,6 +861,28 @@ function ExtremeGapLab({ data }: { data: ExtremeGapLoad }) {
         <div className="rounded-2xl border border-slate-800 bg-slate-950/55 p-4">
           <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Spread rescued ML loss</p>
           <p className="mt-2 text-2xl font-semibold tabular-nums text-cyan-200">{spreadRescues}</p>
+        </div>
+      </div>
+
+      <div className="mt-4 grid gap-3 lg:grid-cols-3">
+        <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-amber-300">Weekly decision</p>
+          <p className="mt-2 text-lg font-semibold text-slate-100">{reviewVerdict.replaceAll("_", " ")}</p>
+          <p className="mt-2 text-xs leading-5 text-slate-400">{reviewReason}</p>
+        </div>
+        <div className="rounded-2xl border border-slate-800 bg-slate-950/55 p-4">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Last 30 days · spread</p>
+          <p className="mt-2 text-lg font-semibold tabular-nums text-slate-100">
+            {trailing30Spread?.settled ?? 0} settled · <span className={metricTone(trailing30Spread?.roi_pct)}>{gapMetricValue(trailing30Spread?.roi_pct ?? null)} ROI</span>
+          </p>
+          <p className="mt-2 text-xs text-slate-500">CLV {gapMetricValue(trailing30Spread?.avg_clv_pct ?? null)} · n={trailing30Spread?.clv_rows ?? 0}</p>
+        </div>
+        <div className="rounded-2xl border border-slate-800 bg-slate-950/55 p-4">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">ML EV ≥100% · paired spread</p>
+          <p className="mt-2 text-lg font-semibold tabular-nums text-slate-100">
+            {longEvSpread?.settled ?? 0} settled · <span className={metricTone(longEvSpread?.roi_pct)}>{gapMetricValue(longEvSpread?.roi_pct ?? null)} ROI</span>
+          </p>
+          <p className="mt-2 text-xs text-slate-500">CLV {gapMetricValue(longEvSpread?.avg_clv_pct ?? null)} · n={longEvSpread?.clv_rows ?? 0}</p>
         </div>
       </div>
 
