@@ -41,8 +41,8 @@ jobs:
       - name: Refresh Football-Data historical base
         run: python scripts/footballdata-download-historical.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2025 --overwrite
 
-      - name: Refresh FBRef / Understat shooting data
-        run: python scripts/fbref-download-shooting.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2025
+      - name: Refresh Football-Data shots with Understat xG
+        run: python scripts/understat-download-shots.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2025
 
       - name: Build canonical football form layer
         run: python scripts/build-football-form-layer.py

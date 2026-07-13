@@ -9,6 +9,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from statistics import mean
 
+from football_counts import nb_cdf as shared_nb_cdf
+from football_counts import poisson_cdf as shared_poisson_cdf
+
 
 ROOT = Path(__file__).resolve().parents[1]
 PREDICTIONS = ROOT / "data" / "team-shots" / "team-shots-predictions.csv"
@@ -125,34 +128,11 @@ def load_predictions() -> dict[tuple[str, str, str], dict[str, str]]:
 
 
 def poisson_cdf(k: int, mu: float) -> float:
-    if k < 0:
-        return 0.0
-    if mu <= 0:
-        return 1.0
-    pmf = math.exp(-mu)
-    total = pmf
-    for x in range(1, k + 1):
-        pmf *= mu / x
-        total += pmf
-    return min(max(total, 0.0), 1.0)
+    return shared_poisson_cdf(k, mu)
 
 
 def negbin_cdf(k: int, mu: float, alpha: float) -> float:
-    if k < 0:
-        return 0.0
-    if mu <= 0:
-        return 1.0
-    if alpha <= 0:
-        return poisson_cdf(k, mu)
-    r = 1.0 / alpha
-    p = r / (r + mu)
-    log_p = math.log(p)
-    log_1mp = math.log1p(-p)
-    total = 0.0
-    for x in range(k + 1):
-        log_pmf = math.lgamma(x + r) - math.lgamma(r) - math.lgamma(x + 1) + r * log_p + x * log_1mp
-        total += math.exp(log_pmf)
-    return min(max(total, 0.0), 1.0)
+    return shared_nb_cdf(k, mu, alpha)
 
 
 def over_prob(line: float, mu: float, alpha: float) -> float:

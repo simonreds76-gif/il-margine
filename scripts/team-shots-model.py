@@ -8,9 +8,9 @@ fair over/under probabilities for standard lines.
 
 Supports two input formats:
   --input (legacy): data/team-shots/historical/all-historical-matches.csv
-  --fbref          : data/team-shots/fbref/all-fbref-matches.csv (xG-enriched)
+  --understat      : data/team-shots/understat/all-understat-matches.csv
 
-When the FBref file is provided, the model uses xG-based features (rolling xG
+When the Understat overlay file is provided, the model uses xG-based features (rolling xG
 attack/defence ratios) blended with shot-volume features for a richer lambda.
 
 Outputs:
@@ -35,7 +35,8 @@ from team_shots_probability import fair_odds, prob_over as surface_prob_over
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_INPUT = ROOT / "data" / "team-shots" / "historical" / "all-historical-matches.csv"
-DEFAULT_FBREF = ROOT / "data" / "team-shots" / "fbref" / "all-fbref-matches.csv"
+DEFAULT_UNDERSTAT = ROOT / "data" / "team-shots" / "understat" / "all-understat-matches.csv"
+LEGACY_FBREF = ROOT / "data" / "team-shots" / "fbref" / "all-fbref-matches.csv"
 DEFAULT_OUTPUT = ROOT / "data" / "team-shots" / "team-shots-predictions.csv"
 DEFAULT_CALIBRATION = ROOT / "data" / "team-shots" / "team-shots-calibration.txt"
 
@@ -277,8 +278,8 @@ def load_matches(path: Path) -> List[MatchRow]:
     return rows
 
 
-def load_fbref_matches(path: Path) -> List[MatchRow]:
-    """Load the xG-enriched CSV from fbref-download-shooting.py."""
+def load_understat_matches(path: Path) -> List[MatchRow]:
+    """Load Football-Data match counts with the Understat xG overlay."""
     rows: List[MatchRow] = []
     with open(path, "r", encoding="utf-8") as fh:
         reader = csv.DictReader(fh)
@@ -690,8 +691,14 @@ OUTPUT_FIELDS = [
 def main() -> None:
     parser = argparse.ArgumentParser(description="Team shots prediction model")
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
-    parser.add_argument("--fbref", type=Path, default=None,
-                        help="xG-enriched CSV from fbref-download-shooting.py")
+    parser.add_argument(
+        "--understat",
+        "--fbref",
+        dest="understat",
+        type=Path,
+        default=None,
+        help="Football-Data counts with Understat xG (legacy alias: --fbref)",
+    )
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--calibration", type=Path, default=DEFAULT_CALIBRATION)
     parser.add_argument("--holdout-start", type=str, default=None,
@@ -710,7 +717,10 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    fbref_path = args.fbref or DEFAULT_FBREF
+    understat_path = args.understat or DEFAULT_UNDERSTAT
+    if args.understat is None and not understat_path.exists() and LEGACY_FBREF.exists():
+        print(f"WARNING: using deprecated xG artifact {LEGACY_FBREF}")
+        understat_path = LEGACY_FBREF
     fallback_matches: List[MatchRow] = []
     primary_matches: List[MatchRow] = []
 
@@ -719,9 +729,9 @@ def main() -> None:
         fallback_matches = load_matches(args.input)
         print(f"  {len(fallback_matches)} fallback matches loaded")
 
-    if fbref_path.exists():
-        print(f"Loading xG-enriched matches from {fbref_path}")
-        primary_matches = load_fbref_matches(fbref_path)
+    if understat_path.exists():
+        print(f"Loading Understat-enriched matches from {understat_path}")
+        primary_matches = load_understat_matches(understat_path)
         xg_count = sum(1 for m in primary_matches if m.home_xg > 0)
         print(f"  {len(primary_matches)} xG-enriched matches loaded ({xg_count} with xG)")
 

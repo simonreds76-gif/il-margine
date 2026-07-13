@@ -62,10 +62,10 @@ class DatasetConfig:
 
 DATASETS: tuple[DatasetConfig, ...] = (
     DatasetConfig(
-        key="team_shots_fbref_matches",
-        path="data/team-shots/fbref/all-fbref-matches.csv",
+        key="team_shots_understat_matches",
+        path="data/team-shots/understat/all-understat-matches.csv",
         owner="team-shots",
-        source_role="FBref match-level shots, SOT, corners, xG, and 1X2 odds",
+        source_role="Football-Data match counts and odds with an Understat xG overlay",
         required_groups=("xg", "shots", "shots_on_target", "corners", "book_odds"),
     ),
     DatasetConfig(
@@ -120,7 +120,7 @@ MODEL_FILES = [
     "scripts/goalscorer-live-compare.py",
     "scripts/goalscorer-shadow-tracker.py",
     "scripts/understat-scrape-serie-a.py",
-    "scripts/fbref-download-shooting.py",
+    "scripts/understat-download-shots.py",
     "scripts/fbref-scrape-serie-a.py",
     "scripts/fotmob_match_stats.py",
     "scripts/fotmob-fetch-lineups.py",

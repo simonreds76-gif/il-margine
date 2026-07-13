@@ -34,7 +34,8 @@ from settlement_utils import normalize_team_name  # noqa: E402
 
 
 DEFAULT_MATCH_BASE = ROOT / "data" / "corners-ou" / "historical" / "all-historical-matches.csv"
-DEFAULT_XG_SOURCE = ROOT / "data" / "team-shots" / "fbref" / "all-fbref-matches.csv"
+DEFAULT_XG_SOURCE = ROOT / "data" / "team-shots" / "understat" / "all-understat-matches.csv"
+LEGACY_XG_SOURCE = ROOT / "data" / "team-shots" / "fbref" / "all-fbref-matches.csv"
 DEFAULT_OUTPUT_DIR = ROOT / "data" / "football-form"
 
 WINDOWS = (5, 10)
@@ -322,7 +323,7 @@ def overlay_xg(matches: dict[tuple[str, str, str, str], Match], path: Path) -> d
                 stats["with_xg"] += 1
                 match.home_xg = home_xg
                 match.away_xg = away_xg
-                match.xg_source = "fbref"
+                match.xg_source = "understat"
     return stats
 
 
@@ -799,7 +800,7 @@ def render_report(
         "- Current-match raw stats are included for backtests; model training must avoid using current_* as predictors for pre-match bets.",
         "- Venue-split rolling shots, SOT, and corners are included so live models do not have to rebuild those histories separately.",
         "- Opponent strength is currently a bookmaker 1X2 proxy from previous matches, not an Elo system.",
-        "- xG is overlaid where FBref data matches the Football-Data fixture key; older historical rows remain shots/corners only.",
+        "- Understat xG is overlaid where it matches the Football-Data fixture key; older historical rows remain shots/corners only.",
         "",
     ])
     return "\n".join(lines)
@@ -808,7 +809,7 @@ def render_report(
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build canonical football team form tables.")
     parser.add_argument("--match-base", type=Path, default=DEFAULT_MATCH_BASE)
-    parser.add_argument("--xg-source", type=Path, default=DEFAULT_XG_SOURCE)
+    parser.add_argument("--xg-source", type=Path, default=None)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--version-label", default=default_version_label())
     parser.add_argument("--skip-validation", action="store_true")
@@ -816,7 +817,11 @@ def main() -> int:
     args = parser.parse_args()
 
     matches = load_match_base(args.match_base)
-    xg_overlay_stats = overlay_xg(matches, args.xg_source)
+    xg_source = args.xg_source or DEFAULT_XG_SOURCE
+    if args.xg_source is None and not xg_source.exists() and LEGACY_XG_SOURCE.exists():
+        print(f"WARNING: using deprecated xG artifact {LEGACY_XG_SOURCE}")
+        xg_source = LEGACY_XG_SOURCE
+    xg_overlay_stats = overlay_xg(matches, xg_source)
     match_rows = sorted(matches.values(), key=lambda match: (match.match_date, match.league, match.home_team, match.away_team))
     team_rows = [team_row for match in match_rows for team_row in team_rows_from_match(match)]
     rolling_rows = build_rolling_rows(team_rows)
