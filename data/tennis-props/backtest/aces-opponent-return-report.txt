@@ -1,0 +1,14 @@
+Tennis Props - Opponent Return Ace-Rate Experiment
+Generated UTC: 2026-07-13T15:19:22.373756+00:00
+Train: years before 2025; untouched holdout: 2025
+Change: opponent first-return exponent only. All other mean and distribution components fixed.
+Historical validation disables post-hoc Slam count corrections and uses production-compatible shrunk venue factors.
+
+Tour Train/Holdout Exp current/selected Train NLL gain Holdout MAE current/candidate Holdout LL current/candidate Delta LL Gate
+ATP 1524/ 508 0.60/0.35 +0.001302 6.6569/6.6326 0.653103/0.652952 -0.000151 FAIL
+WTA 1524/ 508 0.60/1.00 +0.002654 2.7053/2.7067 0.653519/0.652113 -0.001406 FAIL
+
+VERDICT: FAIL
+Routing: blocked
+Next: keep exponent 0.6
+Outcome-only evidence; no ROI or CLV claim.

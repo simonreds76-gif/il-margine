@@ -58,6 +58,10 @@ class Projection:
     expected_service_games: float
     ace_rate: float
     df_rate: float
+    ace_rate_pre_opponent: float
+    opponent_return_ratio: float
+    opponent_return_factor: float
+    ace_count_correction: float
     break_rate: float
     broken_rate: float
     player_service_point_win: float
@@ -582,6 +586,8 @@ def project_player(
     same_tournament_row: dict[str, str] | None = None,
     current_tournament_env_row: dict[str, str] | None = None,
     service_points_mode: str = "incumbent",
+    ace_return_exponent: float = 0.6,
+    apply_slam_bias_correction: bool = True,
 ) -> Projection:
     tour_norm = tour.lower()
     ace_prior_weight = 400.0 if tour_norm == "atp" else 600.0
@@ -704,9 +710,11 @@ def project_player(
     current_env_match_tiebreak_factor = _float(current_env_row.get("match_tiebreak_factor"), 1.0) or 1.0
     if current_env_weight > 0 and current_env_matches > 0:
         notes.append(f"EVENT_ENV_N{current_env_matches}")
-    ret_factor = _clip((prior_ret_first / max(0.18, opp_ret_first)) ** 0.6, 0.76, 1.22)
+    opponent_return_ratio = prior_ret_first / max(0.18, opp_ret_first)
+    ret_factor = _clip(opponent_return_ratio ** ace_return_exponent, 0.76, 1.22)
 
-    ace_rate_adj = _clip(ace_rate * slam_ace_factor * current_env_ace_factor * ret_factor, 0.002, 0.28)
+    ace_rate_pre_opponent = ace_rate * slam_ace_factor * current_env_ace_factor
+    ace_rate_adj = _clip(ace_rate_pre_opponent * ret_factor, 0.002, 0.28)
     df_rate_adj = _clip(df_rate * slam_df_factor * current_env_df_factor, 0.002, 0.16)
     best_of = 5 if str(factor_row.get("tournament") or "").strip() in {"Australian Open", "Roland Garros", "Wimbledon", "US Open"} and tour.upper() == "ATP" else 3
     expected_service_games = max(4.0, expected_match_games * 0.5)
@@ -803,8 +811,10 @@ def project_player(
     )
     tournament = str(factor_row.get("tournament") or "").strip()
     correction = SLAM_COUNT_BIAS_CORRECTION.get((tour.upper(), tournament))
-    if correction:
-        expected_aces = max(0.0, expected_aces + _clip(correction.get("aces", 0.0), -0.90, 0.90))
+    ace_count_correction = 0.0
+    if correction and apply_slam_bias_correction:
+        ace_count_correction = _clip(correction.get("aces", 0.0), -0.90, 0.90)
+        expected_aces = max(0.0, expected_aces + ace_count_correction)
         expected_dfs = max(0.0, expected_dfs + _clip(correction.get("dfs", 0.0), -0.70, 0.70))
 
     l12 = player_rows.get("L12M") or {}
@@ -863,6 +873,10 @@ def project_player(
         expected_service_games=expected_service_games,
         ace_rate=ace_rate_adj,
         df_rate=df_rate_adj,
+        ace_rate_pre_opponent=ace_rate_pre_opponent,
+        opponent_return_ratio=opponent_return_ratio,
+        opponent_return_factor=ret_factor,
+        ace_count_correction=ace_count_correction,
         break_rate=break_rate_adj,
         broken_rate=broken_rate_adj,
         player_service_point_win=player_service_point_win,

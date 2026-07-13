@@ -153,7 +153,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Log "=== Post-step: Refresh match-total aces/DF holdout gate ==="
-& python scripts\backtest-tennis-player-props.py --start-year 2022 --end-year 2026 --eval-years 2023 2024 2025 --out-csv data\tennis-props\backtest\aces-dfs-totals-source-rows.csv --out-txt data\tennis-props\backtest\aces-dfs-totals-source-report.txt 2>&1 | ForEach-Object { Log $_ }
+& python scripts\backtest-tennis-player-props.py --start-year 2022 --end-year 2026 --eval-years 2022 2023 2024 2025 --out-csv data\tennis-props\backtest\aces-dfs-totals-source-rows.csv --out-txt data\tennis-props\backtest\aces-dfs-totals-source-report.txt 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: tennis props totals source refresh failed (exit $LASTEXITCODE), keeping the last verified gate."
 }
@@ -165,6 +165,10 @@ else {
     & python scripts\backtest-tennis-props-service-points.py --source data\tennis-props\backtest\aces-dfs-totals-source-rows.csv 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
         Log "WARNING: tennis props service-point experiment failed (exit $LASTEXITCODE), keeping the last verified gate."
+    }
+    & python scripts\backtest-tennis-props-opponent-return.py --source data\tennis-props\backtest\aces-dfs-totals-source-rows.csv 2>&1 | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) {
+        Log "WARNING: tennis props opponent-return experiment failed (exit $LASTEXITCODE), keeping the last verified gate."
     }
 }
 

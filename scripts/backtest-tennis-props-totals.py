@@ -247,12 +247,12 @@ def evaluate_market(
     }
 
 
-def build_gate(rows: list[TotalRow]) -> dict[str, object]:
+def build_gate(rows: list[TotalRow], source: Path = DEFAULT_SOURCE) -> dict[str, object]:
     years = sorted({row.year for row in rows})
     holdout_year = max(years)
     gate: dict[str, object] = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "source": str(DEFAULT_SOURCE.relative_to(ROOT)),
+        "source": str(source.relative_to(ROOT)) if source.is_relative_to(ROOT) else str(source),
         "train_years": [year for year in years if year < holdout_year],
         "holdout_year": holdout_year,
         "minimums": {
@@ -352,7 +352,7 @@ def main() -> int:
     rows = aggregate_matches(read_csv(args.source))
     if not rows:
         raise SystemExit(f"No complete match pairs found in {args.source}")
-    gate = build_gate(rows)
+    gate = build_gate(rows, args.source)
     write_rows(args.out_rows, rows)
     write_report(args.out_report, gate)
     args.out_gate.parent.mkdir(parents=True, exist_ok=True)

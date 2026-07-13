@@ -99,6 +99,9 @@ class EvalRow:
     player_service_point_win: float
     opponent_service_point_win: float
     same_tournament_matches: int
+    ace_rate_pre_opponent: float = 0.0
+    opponent_return_ratio: float = 1.0
+    opponent_return_factor: float = 1.0
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -218,6 +221,12 @@ def safe_div(num: float, den: float) -> float | None:
 
 def fmt(value: float | None, digits: int = 6) -> str:
     return "" if value is None or not math.isfinite(value) else f"{value:.{digits}f}"
+
+
+def shrink_venue_factor(raw_factor: float, matches: int, prior_matches: float = 100.0) -> float:
+    """Match the production venue-factor shrinkage without future data."""
+    sample_weight = matches / (matches + prior_matches) if matches > 0 else 0.0
+    return 1.0 + (raw_factor - 1.0) * sample_weight
 
 
 def totals_row(tour: str, player_id: str, player_name: str, surface: str, window: str, totals: dict[str, float]) -> dict[str, str]:
@@ -421,20 +430,27 @@ def build_factor_row(
     slam_df = safe_div(slam_totals["dfs"], slam_totals["svpt"])
     fallback_games = 38.5 if tour == "atp" and fallback_best_of == 5 else 21.5
     match_games = safe_div(match_games_sum, match_games_n) or fallback_games
+    venue_matches = int(slam_totals["matches"] / 2)
+    sample_weight = venue_matches / (venue_matches + 100.0) if venue_matches > 0 else 0.0
+    raw_ace_factor = (slam_ace / base_ace) if slam_ace and base_ace else 1.0
+    raw_df_factor = (slam_df / base_df) if slam_df and base_df else 1.0
     return {
         "tour": tour.upper(),
         "tournament": slam,
         "surface": surface,
         "year": "PAST_ONLY",
-        "matches": str(int(slam_totals["matches"] / 2)),
+        "matches": str(venue_matches),
         "ace_rate": fmt(slam_ace),
         "df_rate": fmt(slam_df),
         "svpt_per_svgame": fmt(safe_div(slam_totals["svpt"], slam_totals["svgms"]) or 6.35, 4),
         "match_games_per_match": fmt(match_games, 3),
         "tour_surface_baseline_ace": fmt(base_ace),
         "tour_surface_baseline_df": fmt(base_df),
-        "ace_factor": fmt((slam_ace / base_ace) if slam_ace and base_ace else 1.0, 4),
-        "df_factor": fmt((slam_df / base_df) if slam_df and base_df else 1.0, 4),
+        "raw_ace_factor": fmt(raw_ace_factor, 4),
+        "raw_df_factor": fmt(raw_df_factor, 4),
+        "sample_weight": fmt(sample_weight, 4),
+        "ace_factor": fmt(shrink_venue_factor(raw_ace_factor, venue_matches), 4),
+        "df_factor": fmt(shrink_venue_factor(raw_df_factor, venue_matches), 4),
         "sample_flag": "OK" if slam_totals["matches"] >= 160 and base_totals["matches"] >= 400 else "LOW_SAMPLE",
     }
 
@@ -530,6 +546,7 @@ def evaluate(sackmann_dir: Path, years: list[int], eval_years: set[int]) -> list
                 expected_match_games=expected_match_games,
                 slam_matches=slam_prior_matches(tour, player_id, slam, match_date, events_by_player),
                 same_tournament_row=same,
+                apply_slam_bias_correction=False,
             )
             candidate = project_player(
                 tour=tour,
@@ -540,6 +557,7 @@ def evaluate(sackmann_dir: Path, years: list[int], eval_years: set[int]) -> list
                 slam_matches=slam_prior_matches(tour, player_id, slam, match_date, events_by_player),
                 same_tournament_row=same,
                 service_points_mode="matchup_recursion",
+                apply_slam_bias_correction=False,
             )
             naive_aces, naive_dfs = naive_projection(
                 player_rows,
@@ -576,6 +594,9 @@ def evaluate(sackmann_dir: Path, years: list[int], eval_years: set[int]) -> list
                     player_service_point_win=projection.player_service_point_win,
                     opponent_service_point_win=projection.opponent_service_point_win,
                     same_tournament_matches=projection.same_tournament_matches,
+                    ace_rate_pre_opponent=projection.ace_rate_pre_opponent,
+                    opponent_return_ratio=projection.opponent_return_ratio,
+                    opponent_return_factor=projection.opponent_return_factor,
                 )
             )
     return rows
@@ -715,6 +736,9 @@ def write_rows(path: Path, rows: list[EvalRow]) -> None:
         "player_service_point_win",
         "opponent_service_point_win",
         "same_tournament_matches",
+        "ace_rate_pre_opponent",
+        "opponent_return_ratio",
+        "opponent_return_factor",
         "notes",
         "actual_service_points",
     ]
@@ -749,6 +773,9 @@ def write_rows(path: Path, rows: list[EvalRow]) -> None:
                     "player_service_point_win": f"{row.player_service_point_win:.6f}",
                     "opponent_service_point_win": f"{row.opponent_service_point_win:.6f}",
                     "same_tournament_matches": row.same_tournament_matches,
+                    "ace_rate_pre_opponent": f"{row.ace_rate_pre_opponent:.8f}",
+                    "opponent_return_ratio": f"{row.opponent_return_ratio:.8f}",
+                    "opponent_return_factor": f"{row.opponent_return_factor:.8f}",
                     "notes": row.notes,
                     "actual_service_points": row.actual_service_points,
                 }
@@ -763,6 +790,7 @@ def write_report(path: Path, rows: list[EvalRow], *, years: list[int], sackmann_
     lines.append(f"Sackmann dir: {sackmann_dir}")
     lines.append(f"Evaluation years: {', '.join(map(str, years))}")
     lines.append("Outcome-only validation. No odds, no ROI, no CLV.")
+    lines.append("Integrity: post-hoc Slam count corrections disabled; venue factors use production-compatible causal shrinkage.")
     lines.append(
         "Synthetic O/U log-loss uses negative-binomial tails with alpha: "
         "ATP aces 0.35, WTA aces 0.50, ATP DFs 0.10, WTA DFs 0.20."
