@@ -51,6 +51,7 @@ const TOTALS_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-totals-gate.
 const PROPS_V2_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-v2-rung1-gate.json");
 const SERVICE_POINTS_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-service-points-gate.json");
 const OPPONENT_RETURN_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-opponent-return-gate.json");
+const RATE_RECENCY_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-rate-recency-gate.json");
 const DERIVATIVES_STATUS_PATH = path.join(ROOT, "data", "vnext", "tennis-derivatives-evidence-status.json");
 
 function parseCsv(text: string): CsvRow[] {
@@ -1302,6 +1303,8 @@ function ResearchGatesPanel({
   servicePointsStamp,
   opponentReturnGate,
   opponentReturnStamp,
+  rateRecencyGate,
+  rateRecencyStamp,
 }: {
   evidence: JsonRecord;
   evidenceStamp: string;
@@ -1311,12 +1314,20 @@ function ResearchGatesPanel({
   servicePointsStamp: string;
   opponentReturnGate: JsonRecord;
   opponentReturnStamp: string;
+  rateRecencyGate: JsonRecord;
+  rateRecencyStamp: string;
 }) {
   const spread = record(evidence.spread_shape);
   const totals = record(evidence.total_games_shape);
   const props = record(evidence.aces_dfs);
   const propsCells = Array.isArray(propsV2.cells) ? propsV2.cells.map(record) : [];
   const propsPass = propsCells.filter((cell) => cell.passed === true).length;
+  const recencyTours = record(rateRecencyGate.tours);
+  const recencyCells = ["ATP", "WTA"].flatMap((tour) => {
+    const markets = record(recencyTours[tour]);
+    return [record(markets.aces), record(markets.dfs)];
+  });
+  const recencyPass = recencyCells.filter((cell) => cell.passed === true).length;
   const gateTone = (status: unknown) => status === "PASS"
     ? "text-emerald-300"
     : "text-amber-300";
@@ -1324,9 +1335,9 @@ function ResearchGatesPanel({
   return (
     <SectionCard
       title="Research Gates"
-      subtitle={`Registered evidence only. Status ${evidenceStamp}; props v2 ${propsV2Stamp}; service points ${servicePointsStamp}; opponent return ${opponentReturnStamp}. No blocked lane changes live routing.`}
+      subtitle={`Registered evidence only. Status ${evidenceStamp}; props v2 ${propsV2Stamp}; service points ${servicePointsStamp}; opponent return ${opponentReturnStamp}; recency ${rateRecencyStamp}. No blocked lane changes live routing.`}
     >
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-7">
         <MetricTile
           label="Spread shape"
           value={String(spread.promotion_status || "BLOCKED")}
@@ -1363,9 +1374,15 @@ function ResearchGatesPanel({
           sub={`Routing ${String(opponentReturnGate.routing || "blocked").replaceAll("_", " ")} | exponent 0.60 retained`}
           tone={gateTone(opponentReturnGate.status)}
         />
+        <MetricTile
+          label="Player-rate recency"
+          value={String(rateRecencyGate.status || "MISSING")}
+          sub={`${recencyPass}/${recencyCells.length || 4} cells passed | L12M weight 1.0 retained`}
+          tone={gateTone(rateRecencyGate.status)}
+        />
       </div>
       <p className="mt-3 text-xs text-slate-500">
-        Current result: hierarchical dispersion and matchup-recursion service points failed their all-cell rules. The train-only opponent-return exponent also failed its ATP/WTA holdout gate, so exponent 0.60 remains active. Synthetic odds never count as ROI evidence.
+        Current result: hierarchical dispersion, matchup-recursion service points, opponent-return exponent and global player-rate recency all failed their registered all-cell rules. WTA aces alone improved under heavier recency, but no isolated post-holdout promotion is allowed. Synthetic odds never count as ROI evidence.
       </p>
     </SectionCard>
   );
@@ -1404,6 +1421,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     servicePointsGateStamp,
     opponentReturnGate,
     opponentReturnGateStamp,
+    rateRecencyGate,
+    rateRecencyGateStamp,
   ] = await Promise.all([
     readCsv(BOARD_PATH),
     fileStamp(BOARD_PATH),
@@ -1429,6 +1448,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     fileStamp(SERVICE_POINTS_GATE_PATH),
     readJson(OPPONENT_RETURN_GATE_PATH),
     fileStamp(OPPONENT_RETURN_GATE_PATH),
+    readJson(RATE_RECENCY_GATE_PATH),
+    fileStamp(RATE_RECENCY_GATE_PATH),
   ]);
 
   const comparisonRows = latestComparisonPath ? await readCsv(latestComparisonPath) : [];
@@ -1566,6 +1587,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
               servicePointsStamp={servicePointsGateStamp}
               opponentReturnGate={opponentReturnGate}
               opponentReturnStamp={opponentReturnGateStamp}
+              rateRecencyGate={rateRecencyGate}
+              rateRecencyStamp={rateRecencyGateStamp}
             />
 
             <FeedDiagnosticsPanel
