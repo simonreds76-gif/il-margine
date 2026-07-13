@@ -1,0 +1,16 @@
+Tennis Props - Player Rate Recency Experiment
+Generated UTC: 2026-07-13T16:39:28.510653+00:00
+Train: years before 2025; untouched holdout: 2025
+Change: L12M player ace/DF rate weight only; L24M=0.55 and career_4y=0.25 stay fixed.
+Opponent, venue, same-tournament, workload and negative-binomial family stay fixed.
+
+Tour Market Train/Holdout L12 current/selected Train NLL gain MAE current/candidate LL current/candidate Delta LL Gate
+ATP aces 1524/ 508 1.00/3.00 +0.004864 6.6569/6.6789 0.653103/0.654473 +0.001370 FAIL
+ATP dfs  1524/ 508 1.00/1.25 +0.000071 3.3238/3.3245 0.660620/0.660362 -0.000258 FAIL
+WTA aces 1524/ 508 1.00/3.00 +0.005251 2.7053/2.7037 0.653519/0.651317 -0.002202 PASS
+WTA dfs  1524/ 508 1.00/3.00 +0.005614 2.8333/2.8334 0.666788/0.667503 +0.000715 FAIL
+
+VERDICT: FAIL
+Routing: blocked
+Next: keep L12M weight 1.0
+Outcome-only evidence; no ROI or CLV claim.
