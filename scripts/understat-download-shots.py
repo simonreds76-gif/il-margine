@@ -192,11 +192,16 @@ def fetch_understat_xg(league_key: str, season_start: int) -> Dict[str, Dict[str
     return result
 
 
-def load_footballdata_season(league_key: str, season_start: int) -> List[dict]:
+def load_footballdata_season(
+    league_key: str,
+    season_start: int,
+    *,
+    football_data_dir: Path = FOOTBALLDATA_DIR,
+) -> List[dict]:
     """Load one Football-Data.co.uk CSV and return rows with standardised columns."""
     end_year = season_start + 1
     filename = f"{league_key}-{season_start}-{end_year}.csv"
-    path = FOOTBALLDATA_DIR / filename
+    path = football_data_dir / filename
 
     if not path.exists():
         return []
@@ -284,9 +289,11 @@ def main() -> None:
     parser.add_argument("--seasons", nargs="+", type=int, default=DEFAULT_SEASONS)
     parser.add_argument("--skip-xg", action="store_true",
                         help="Skip Understat xG fetch (use only Football-Data.co.uk)")
+    parser.add_argument("--football-data-dir", type=Path, default=FOOTBALLDATA_DIR)
+    parser.add_argument("--output", type=Path, default=OUTPUT_FILE)
     args = parser.parse_args()
 
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    args.output.parent.mkdir(parents=True, exist_ok=True)
 
     all_rows: List[dict] = []
     total_matched = 0
@@ -298,7 +305,11 @@ def main() -> None:
         print(f"{'='*50}")
 
         for season in args.seasons:
-            fd_rows = load_footballdata_season(league, season)
+            fd_rows = load_footballdata_season(
+                league,
+                season,
+                football_data_dir=args.football_data_dir,
+            )
             if not fd_rows:
                 print(f"  {season}-{season+1}: no data")
                 continue
@@ -325,7 +336,7 @@ def main() -> None:
         r.pop("_norm_home", None)
         r.pop("_norm_away", None)
 
-    with open(OUTPUT_FILE, "w", newline="", encoding="utf-8") as fh:
+    with open(args.output, "w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=OUTPUT_COLUMNS, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(all_rows)
@@ -336,7 +347,7 @@ def main() -> None:
     print(f"  Total matches: {len(all_rows)}")
     print(f"  xG coverage:   {total_matched}/{total_rows} "
           f"({total_matched/total_rows*100:.1f}%)" if total_rows else "  xG coverage: N/A")
-    print(f"  Output:         {OUTPUT_FILE}")
+    print(f"  Output:         {args.output}")
 
     xg_rows = [r for r in all_rows if r.get("home_xg") not in ("", None)]
     print(f"  Rows with xG:   {len(xg_rows)}")
