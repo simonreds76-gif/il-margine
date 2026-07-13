@@ -1,0 +1,21 @@
+Tennis Props v3 - All Main Tour Challenger
+Generated UTC: 2026-07-13T18:41:06.437523+00:00
+Train: 2023, 2024; validation: 2025; untouched test: 2026 YTD
+Model: regularised LightGBM Poisson mean with causal rolling player, opponent, venue, rank and workload features.
+Permission: outcome shadow only. Real Bet365 settlement gate remains mandatory.
+
+Tour Market N(test) MAE incumbent/candidate Improve LL incumbent/candidate Delta Brier delta Surface guard Gate
+ATP aces   2372 3.0504/2.9374 +3.70% 0.676401/0.660062 -0.016338 -0.007519 PASS PASS
+ATP dfs    2372 1.4312/1.4306 +0.04% 0.659996/0.661811 +0.001815 +0.000856 FAIL FAIL
+WTA aces   2224 1.7729/1.7151 +3.26% 0.669425/0.655708 -0.013717 -0.006446 PASS PASS
+WTA dfs    2224 1.8074/1.8285 -1.17% 0.679480/0.683225 +0.003745 +0.001791 FAIL FAIL
+
+VERDICT: PARTIAL_PASS
+Routing: atp_aces_hard_clay_prospective_shadow
+Aces market: PASS (2/2 cells; surfaces Clay, Hard; unverified Grass)
+DF market: FAIL (0/2 cells)
+Deployable ATP aces: PASS (MAE +3.33%; log-loss delta -0.013397)
+Deployable WTA aces: FAIL (Clay guard failed; no WTA routing)
+Sellability: BLOCKED - settled 0/300; events 0/100; CLV coverage 0/300; mean CLV +0.00%/+1.00%
+Next: log deployment-safe ATP v3 aces and incumbent prospectively on Hard/Clay; retain incumbent for WTA/DFs and keep Grass blocked
+No ROI or sellability claim is allowed from outcome-only evidence.
