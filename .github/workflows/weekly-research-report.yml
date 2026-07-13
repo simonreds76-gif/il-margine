@@ -59,6 +59,8 @@ jobs:
           python scripts/tennis-model-variants-shadow.py
 
       - name: Build and send weekly report
+        env:
+          TENNIS_PROPS_V3_WEEKLY_JSON: ${{ vars.TENNIS_PROPS_V3_WEEKLY_JSON }}
         run: python scripts/weekly-research-report.py
 
       - name: Upload hosted monitor snapshots
