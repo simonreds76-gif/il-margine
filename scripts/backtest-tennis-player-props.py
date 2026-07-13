@@ -102,6 +102,23 @@ class EvalRow:
     ace_rate_pre_opponent: float = 0.0
     opponent_return_ratio: float = 1.0
     opponent_return_factor: float = 1.0
+    prior_ace_rate: float = 0.0
+    prior_df_rate: float = 0.0
+    ace_environment_factor: float = 1.0
+    df_environment_factor: float = 1.0
+    same_tournament_ace_rate: float = 0.0
+    same_tournament_df_rate: float = 0.0
+    same_tournament_ace_weight: float = 0.0
+    same_tournament_df_weight: float = 0.0
+    l12m_svpt: int = 0
+    l12m_ace_rate: float = 0.0
+    l12m_df_rate: float = 0.0
+    l24m_svpt: int = 0
+    l24m_ace_rate: float = 0.0
+    l24m_df_rate: float = 0.0
+    career_4y_svpt: int = 0
+    career_4y_ace_rate: float = 0.0
+    career_4y_df_rate: float = 0.0
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -548,6 +565,17 @@ def evaluate(sackmann_dir: Path, years: list[int], eval_years: set[int]) -> list
                 same_tournament_row=same,
                 apply_slam_bias_correction=False,
             )
+            same_values = same or {}
+            same_svpt = parse_int(same_values.get("svpt"))
+            same_ace_rate = parse_int(same_values.get("aces")) / same_svpt if same_svpt > 0 else 0.0
+            same_df_rate = parse_int(same_values.get("dfs")) / same_svpt if same_svpt > 0 else 0.0
+            prior_ace = float(factor.get("tour_surface_baseline_ace") or (0.065 if tour == "atp" else 0.027))
+            prior_df = float(factor.get("tour_surface_baseline_df") or (0.035 if tour == "atp" else 0.048))
+            slam_ace_factor = float(factor.get("ace_factor") or 1.0)
+            slam_df_factor = float(factor.get("df_factor") or 1.0)
+            l12m = player_rows.get("L12M") or {}
+            l24m = player_rows.get("L24M") or {}
+            career_4y = player_rows.get("career_4y") or {}
             candidate = project_player(
                 tour=tour,
                 player_rows=player_rows,
@@ -597,6 +625,23 @@ def evaluate(sackmann_dir: Path, years: list[int], eval_years: set[int]) -> list
                     ace_rate_pre_opponent=projection.ace_rate_pre_opponent,
                     opponent_return_ratio=projection.opponent_return_ratio,
                     opponent_return_factor=projection.opponent_return_factor,
+                    prior_ace_rate=prior_ace,
+                    prior_df_rate=prior_df,
+                    ace_environment_factor=slam_ace_factor * projection.current_env_ace_factor,
+                    df_environment_factor=slam_df_factor * projection.current_env_df_factor,
+                    same_tournament_ace_rate=same_ace_rate,
+                    same_tournament_df_rate=same_df_rate,
+                    same_tournament_ace_weight=projection.same_tournament_ace_weight,
+                    same_tournament_df_weight=projection.same_tournament_df_weight,
+                    l12m_svpt=parse_int(l12m.get("svpt")),
+                    l12m_ace_rate=float(l12m.get("ace_rate") or 0.0),
+                    l12m_df_rate=float(l12m.get("df_rate") or 0.0),
+                    l24m_svpt=parse_int(l24m.get("svpt")),
+                    l24m_ace_rate=float(l24m.get("ace_rate") or 0.0),
+                    l24m_df_rate=float(l24m.get("df_rate") or 0.0),
+                    career_4y_svpt=parse_int(career_4y.get("svpt")),
+                    career_4y_ace_rate=float(career_4y.get("ace_rate") or 0.0),
+                    career_4y_df_rate=float(career_4y.get("df_rate") or 0.0),
                 )
             )
     return rows
@@ -739,6 +784,23 @@ def write_rows(path: Path, rows: list[EvalRow]) -> None:
         "ace_rate_pre_opponent",
         "opponent_return_ratio",
         "opponent_return_factor",
+        "prior_ace_rate",
+        "prior_df_rate",
+        "ace_environment_factor",
+        "df_environment_factor",
+        "same_tournament_ace_rate",
+        "same_tournament_df_rate",
+        "same_tournament_ace_weight",
+        "same_tournament_df_weight",
+        "l12m_svpt",
+        "l12m_ace_rate",
+        "l12m_df_rate",
+        "l24m_svpt",
+        "l24m_ace_rate",
+        "l24m_df_rate",
+        "career_4y_svpt",
+        "career_4y_ace_rate",
+        "career_4y_df_rate",
         "notes",
         "actual_service_points",
     ]
@@ -776,6 +838,23 @@ def write_rows(path: Path, rows: list[EvalRow]) -> None:
                     "ace_rate_pre_opponent": f"{row.ace_rate_pre_opponent:.8f}",
                     "opponent_return_ratio": f"{row.opponent_return_ratio:.8f}",
                     "opponent_return_factor": f"{row.opponent_return_factor:.8f}",
+                    "prior_ace_rate": f"{row.prior_ace_rate:.8f}",
+                    "prior_df_rate": f"{row.prior_df_rate:.8f}",
+                    "ace_environment_factor": f"{row.ace_environment_factor:.8f}",
+                    "df_environment_factor": f"{row.df_environment_factor:.8f}",
+                    "same_tournament_ace_rate": f"{row.same_tournament_ace_rate:.8f}",
+                    "same_tournament_df_rate": f"{row.same_tournament_df_rate:.8f}",
+                    "same_tournament_ace_weight": f"{row.same_tournament_ace_weight:.8f}",
+                    "same_tournament_df_weight": f"{row.same_tournament_df_weight:.8f}",
+                    "l12m_svpt": row.l12m_svpt,
+                    "l12m_ace_rate": f"{row.l12m_ace_rate:.8f}",
+                    "l12m_df_rate": f"{row.l12m_df_rate:.8f}",
+                    "l24m_svpt": row.l24m_svpt,
+                    "l24m_ace_rate": f"{row.l24m_ace_rate:.8f}",
+                    "l24m_df_rate": f"{row.l24m_df_rate:.8f}",
+                    "career_4y_svpt": row.career_4y_svpt,
+                    "career_4y_ace_rate": f"{row.career_4y_ace_rate:.8f}",
+                    "career_4y_df_rate": f"{row.career_4y_df_rate:.8f}",
                     "notes": row.notes,
                     "actual_service_points": row.actual_service_points,
                 }

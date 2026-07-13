@@ -170,6 +170,10 @@ else {
     if ($LASTEXITCODE -ne 0) {
         Log "WARNING: tennis props opponent-return experiment failed (exit $LASTEXITCODE), keeping the last verified gate."
     }
+    & python scripts\backtest-tennis-props-rate-recency.py --source data\tennis-props\backtest\aces-dfs-totals-source-rows.csv 2>&1 | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) {
+        Log "WARNING: tennis props rate-recency experiment failed (exit $LASTEXITCODE), keeping the last verified gate."
+    }
 }
 
 # Step 5: Recompute H2H
