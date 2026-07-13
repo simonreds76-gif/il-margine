@@ -174,6 +174,18 @@ else {
     if ($LASTEXITCODE -ne 0) {
         Log "WARNING: tennis props rate-recency experiment failed (exit $LASTEXITCODE), keeping the last verified gate."
     }
+
+    Log "=== Post-step: Refresh all-tour tennis props v3 challenger ==="
+    & python scripts\build-tennis-props-v3-dataset.py --start-year 2022 --end-year 2026 --output-start-year 2023 2>&1 | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) {
+        Log "WARNING: tennis props v3 dataset refresh failed (exit $LASTEXITCODE), keeping the last verified gate."
+    }
+    else {
+        & python scripts\fit-tennis-props-v3.py 2>&1 | ForEach-Object { Log $_ }
+        if ($LASTEXITCODE -ne 0) {
+            Log "WARNING: tennis props v3 challenger fit failed (exit $LASTEXITCODE), keeping the last verified gate."
+        }
+    }
 }
 
 # Step 5: Recompute H2H
