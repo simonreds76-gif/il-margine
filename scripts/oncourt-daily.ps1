@@ -249,7 +249,8 @@ if ($LASTEXITCODE -ne 0) {
 Log "=== Step 6c/10: Tennis aces/DF research board ==="
 $tennisPropsExit = Invoke-LoggedProcessWithRetry -FilePath "python" -ArgumentList @("scripts\run-tennis-props-daily.py", "--max-events", "64") -Label "tennis props aces/DF board" -TimeoutSeconds 900 -Attempts 1
 if ($tennisPropsExit -ne 0) {
-    Log "WARNING: tennis props aces/DF board failed/timed out (exit $tennisPropsExit), continuing..."
+    Log "ERROR: tennis props aces/DF board failed/timed out (exit $tennisPropsExit); continuing remaining diagnostics"
+    Set-RunStatusFailure "TennisPropsFailed" "tennis props aces/DF board failed/timed out (exit $tennisPropsExit)"
 }
 
 # Step 7: Strict policy report + overlay comparison (auto-append CSVs)
@@ -400,9 +401,10 @@ if ($spreadFitExit -ne 0) {
 Log "============================================"
 Log "  Daily Pipeline finished at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Log "============================================"
-    $runStatusFinal = "ok"
-    $runStatusErrorType = $null
-    $runStatusErrorMessage = $null
+    if ([string]::IsNullOrWhiteSpace($runStatusErrorType)) {
+        $runStatusFinal = "ok"
+        $runStatusErrorMessage = $null
+    }
 }
 catch {
     $runStatusErrorRecord = $_
@@ -413,3 +415,5 @@ finally {
     Complete-RunStatus -Run $runStatus -Status $runStatusFinal -ErrorRecord $runStatusErrorRecord -ErrorType $runStatusErrorType -ErrorMessage $runStatusErrorMessage
     Exit-TaskLock $lockHandle
 }
+
+if ($runStatusFinal -ne "ok") { exit 1 }

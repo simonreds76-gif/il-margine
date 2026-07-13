@@ -179,7 +179,8 @@ try {
     # yesterday's board after a false timeout.
     $tennisPropsBoardExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\build-tennis-props-board.py", "--as-of", (Get-Date -Format "yyyy-MM-dd")) -Label "tennis props projection board" -TimeoutSeconds 600
     if ($tennisPropsBoardExit -ne 0) {
-        Log "WARNING: tennis props projection board failed/timed out (exit $tennisPropsBoardExit), continuing..."
+        Log "ERROR: tennis props projection board failed/timed out (exit $tennisPropsBoardExit); continuing remaining diagnostics"
+        Set-RunStatusFailure "TennisPropsBoardFailed" "tennis props projection board failed/timed out (exit $tennisPropsBoardExit)"
     }
 
     Log "=== Step 4/8: Append Pinnacle history capture (daily) ==="
@@ -317,9 +318,10 @@ try {
     Log "============================================"
     Log "  AM Tennis Refresh finished at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
     Log "============================================"
-    $runStatusFinal = "ok"
-    $runStatusErrorType = $null
-    $runStatusErrorMessage = $null
+    if ([string]::IsNullOrWhiteSpace($runStatusErrorType)) {
+        $runStatusFinal = "ok"
+        $runStatusErrorMessage = $null
+    }
 }
 catch {
     $runStatusErrorRecord = $_
@@ -330,4 +332,6 @@ finally {
     Complete-RunStatus -Run $runStatus -Status $runStatusFinal -ErrorRecord $runStatusErrorRecord -ErrorType $runStatusErrorType -ErrorMessage $runStatusErrorMessage
     Exit-TaskLock $lockHandle
 }
+
+if ($runStatusFinal -ne "ok") { exit 1 }
 

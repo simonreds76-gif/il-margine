@@ -84,7 +84,7 @@ def run_comparison(as_of: str) -> None:
                 "--market-filter", "aces,ace,player_aces,match_aces",
             ],
             "Compare v3 ATP ace shadow projections with Bet365",
-            fatal=False,
+            fatal=True,
         )
 
 
@@ -110,7 +110,7 @@ def run_shadow_tracking(as_of: str) -> None:
                 "--allow-medium", "--allow-notes", "--allow-watch",
             ],
             "Append v3 ATP ace prospective shadow signals",
-            fatal=False,
+            fatal=True,
         )
         run(
             [
@@ -120,7 +120,7 @@ def run_shadow_tracking(as_of: str) -> None:
                 "--performance", str(PROPS_DIR / "shadow" / "aces-v3-shadow-performance.txt"),
             ],
             "Settle v3 ATP ace prospective shadow signals",
-            fatal=False,
+            fatal=True,
         )
     run(
         [
@@ -228,7 +228,7 @@ def main() -> int:
     run(
         [sys.executable, str(ROOT / "scripts" / "tennis-props-v3-live.py")],
         "Build v3 ATP ace prospective shadow board",
-        fatal=False,
+        fatal=True,
     )
 
     if args.skip_odds:
