@@ -53,6 +53,7 @@ OUTPUT_FIELDS = [
     "matchday",
     "team_neff",
     "opponent_neff",
+    "model_mean",
     "distribution_parameter",
     "signal_status",
     "pinnacle_price_at_publication",

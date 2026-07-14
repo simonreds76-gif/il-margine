@@ -1,0 +1,63 @@
+{
+  "generated_at_utc": "2026-07-14T18:36:08Z",
+  "source": "data/corners-ou/historical/all-historical-matches.csv",
+  "source_matches": 21589,
+  "method": {
+    "window": 20,
+    "decay": 0.93,
+    "minimum_team_matches": 5,
+    "same_day_updates": "blocked"
+  },
+  "metrics": {
+    "shots": {
+      "observations": 41990,
+      "model_actual_correlation": 0.4474152533866028,
+      "model_mae": 3.6367142561355603,
+      "league_baseline_mae": 4.029215009255629,
+      "mae_improvement": 0.09741370272334525,
+      "match_total_mean": 24.691480983925512,
+      "match_total_variance": 34.2265942440908,
+      "match_total_variance_to_mean": 1.3861701639675956
+    },
+    "shots_on_target": {
+      "observations": 41990,
+      "model_actual_correlation": 0.3848172050252162,
+      "model_mae": 1.8270903241123844,
+      "league_baseline_mae": 1.965573179593252,
+      "mae_improvement": 0.07045418451910541,
+      "match_total_mean": 8.79848983184324,
+      "match_total_variance": 10.411258721788107,
+      "match_total_variance_to_mean": 1.1833006482667037
+    },
+    "corners": {
+      "observations": 41990,
+      "model_actual_correlation": 0.27345118459462253,
+      "model_mae": 2.1513438100482656,
+      "league_baseline_mae": 2.241655574117378,
+      "mae_improvement": 0.04028797515187912,
+      "match_total_mean": 9.842405151248437,
+      "match_total_variance": 11.610481901442935,
+      "match_total_variance_to_mean": 1.1796386882092766
+    },
+    "fouls": {
+      "observations": 41990,
+      "model_actual_correlation": 0.4393797480999401,
+      "model_mae": 2.9220423465877623,
+      "league_baseline_mae": 3.192023639198683,
+      "mae_improvement": 0.08457997907518511,
+      "match_total_mean": 25.048408764534212,
+      "match_total_variance": 39.76949934406846,
+      "match_total_variance_to_mean": 1.5877056190642214
+    },
+    "cards": {
+      "observations": 33042,
+      "model_actual_correlation": 0.22393418614409455,
+      "model_mae": 1.0293761552980996,
+      "league_baseline_mae": 1.0390871459068665,
+      "mae_improvement": 0.0093456940998838,
+      "match_total_mean": 4.9346938775510205,
+      "match_total_variance": 4.027573452846063,
+      "match_total_variance_to_mean": 0.8161749346131393
+    }
+  }
+}

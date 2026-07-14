@@ -20,6 +20,7 @@ def run(*args: str) -> None:
 
 
 def main() -> int:
+    run(str(SCRIPTS / "football-counts-capture-coverage.py"))
     run(str(SCRIPTS / "publish-football-vnext-shadow.py"))
     run(
         str(SCRIPTS / "team-shots-v1-clv-monitor.py"),

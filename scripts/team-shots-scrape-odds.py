@@ -107,6 +107,46 @@ def inclusive_days_to_iso(days_ahead: int) -> str:
     return horizon.replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
+def parse_kickoff(value: object) -> Optional[datetime]:
+    """Parse provider ISO timestamps or Unix seconds into UTC."""
+    if value is None:
+        return None
+    if isinstance(value, (int, float)) or str(value).strip().isdigit():
+        try:
+            return datetime.fromtimestamp(int(value), tz=timezone.utc)
+        except (OverflowError, OSError, TypeError, ValueError):
+            return None
+    raw = str(value).strip()
+    if not raw:
+        return None
+    try:
+        parsed = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def within_kickoff_window(
+    value: object,
+    max_minutes: int,
+    *,
+    now: Optional[datetime] = None,
+) -> bool:
+    """Return true when kickoff is upcoming and inside the requested window."""
+    if max_minutes <= 0:
+        return True
+    kickoff = parse_kickoff(value)
+    if kickoff is None:
+        return False
+    current = now or datetime.now(timezone.utc)
+    if current.tzinfo is None:
+        current = current.replace(tzinfo=timezone.utc)
+    minutes = (kickoff - current.astimezone(timezone.utc)).total_seconds() / 60.0
+    return 0.0 < minutes <= float(max_minutes)
+
+
 def load_env() -> None:
     for name in (".env.local", "env.local"):
         path = ROOT / name
@@ -258,6 +298,7 @@ def scrape_odds_api(
     league_key: str,
     bookmakers_str: str,
     days_ahead: int = 3,
+    kickoff_within_minutes: int = 0,
 ) -> tuple[list[dict], int, list[str]]:
     config = LEAGUE_CONFIGS[league_key]
     now = datetime.now(timezone.utc)
@@ -314,7 +355,19 @@ def scrape_odds_api(
         events = []
 
     matched = [e for e in events if _looks_like_league(e.get("league") or {}, config)]
-    print(f"  [odds-api.io] {len(matched)} events found")
+    league_events = len(matched)
+    if kickoff_within_minutes > 0:
+        matched = [
+            event
+            for event in matched
+            if within_kickoff_window(event.get("date"), kickoff_within_minutes, now=now)
+        ]
+        print(
+            f"  [odds-api.io] {len(matched)}/{league_events} events within "
+            f"{kickoff_within_minutes}m of kickoff"
+        )
+    else:
+        print(f"  [odds-api.io] {len(matched)} events found")
     if not matched:
         return [], 0, provider_errors
 
@@ -485,6 +538,7 @@ def scrape_betsapi(
     api_key: str,
     league_key: str,
     days_ahead: int = 3,
+    kickoff_within_minutes: int = 0,
 ) -> tuple[list[dict], int]:
     config = LEAGUE_CONFIGS[league_key]
     print(f"  [betsapi] Discovering bet365 events for {config['label']}...")
@@ -497,7 +551,19 @@ def scrape_betsapi(
     resp.raise_for_status()
     data = resp.json()
     events = data.get("results") or []
-    print(f"  [betsapi] {len(events)} upcoming events")
+    discovered = len(events)
+    if kickoff_within_minutes > 0:
+        events = [
+            event
+            for event in events
+            if within_kickoff_window(event.get("time"), kickoff_within_minutes)
+        ]
+        print(
+            f"  [betsapi] {len(events)}/{discovered} events within "
+            f"{kickoff_within_minutes}m of kickoff"
+        )
+    else:
+        print(f"  [betsapi] {len(events)} upcoming events")
 
     rows: List[dict] = []
     captured = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
@@ -598,6 +664,12 @@ def main() -> None:
     parser.add_argument("--bookmakers", default=DEFAULT_BOOKMAKERS)
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     parser.add_argument("--days-ahead", type=int, default=3)
+    parser.add_argument(
+        "--kickoff-within-minutes",
+        type=int,
+        default=0,
+        help="Only request detailed odds for events starting within this many minutes (0 disables).",
+    )
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--discover-bookmakers", action="store_true",
                         help="List all bookmakers available on your account and exit")
@@ -641,7 +713,11 @@ def main() -> None:
             if args.source in ("auto", "odds-api") and odds_api_key:
                 print("  Source: Odds-API.io")
                 rows, events_found, provider_errors = scrape_odds_api(
-                    odds_api_key, league, args.bookmakers, args.days_ahead
+                    odds_api_key,
+                    league,
+                    args.bookmakers,
+                    args.days_ahead,
+                    args.kickoff_within_minutes,
                 )
                 run_status["events_found"] += events_found
                 run_status["provider_errors"].extend(provider_errors)
@@ -651,7 +727,12 @@ def main() -> None:
 
             if not rows and args.source in ("auto", "betsapi") and betsapi_key:
                 print("  Source: BetsAPI (bet365)")
-                rows, events_found = scrape_betsapi(betsapi_key, league, args.days_ahead)
+                rows, events_found = scrape_betsapi(
+                    betsapi_key,
+                    league,
+                    args.days_ahead,
+                    args.kickoff_within_minutes,
+                )
                 run_status["events_found"] += events_found
                 run_status["sources_used"].append("betsapi")
                 if rows:

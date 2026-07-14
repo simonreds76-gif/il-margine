@@ -53,12 +53,14 @@ class FootballVnextShadowTests(unittest.TestCase):
         row = SHADOW.candidate_row(
             model=SHADOW.TEAM_MODEL, source=source, team="Arsenal", side="over",
             probability=0.55, raw_probability=0.57, market_probability=0.51, edge=0.0725,
-            matchday=2, team_neff=20, opponent_neff=20, distribution_parameter=0.1,
+            matchday=2, team_neff=20, opponent_neff=20, model_mean=13.2,
+            distribution_parameter=0.1,
             status="blocked", blocked_reason="matchdays_1_to_3",
         )
         self.assertEqual(row["current_model_would_have_priced"], "false")
         self.assertEqual(row["confidence_guard_applied"], "true")
         self.assertEqual(row["signal_status"], "blocked")
+        self.assertEqual(row["model_mean"], 13.2)
 
 
 if __name__ == "__main__":

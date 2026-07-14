@@ -52,6 +52,7 @@ EXTRA_FIELDS = [
     "matchday",
     "team_neff",
     "opponent_neff",
+    "model_mean",
     "distribution_parameter",
     "signal_status",
 ]
@@ -127,6 +128,7 @@ def candidate_row(
     matchday: int,
     team_neff: int,
     opponent_neff: int,
+    model_mean: float,
     distribution_parameter: float,
     status: str,
     blocked_reason: str = "",
@@ -171,6 +173,7 @@ def candidate_row(
         "matchday": matchday,
         "team_neff": team_neff,
         "opponent_neff": opponent_neff,
+        "model_mean": round(model_mean, 6),
         "distribution_parameter": round(distribution_parameter, 8),
         "signal_status": status,
     }
@@ -288,7 +291,8 @@ def score_team_shots(
                 model=TEAM_MODEL, source=source, team=team, side=side, probability=probability,
                 raw_probability=raw_probability, market_probability=market_probability, edge=edge,
                 matchday=matchday, team_neff=team_neff, opponent_neff=opponent_neff,
-                distribution_parameter=alpha, status=status, blocked_reason=";".join(blocked),
+                model_mean=lam, distribution_parameter=alpha, status=status,
+                blocked_reason=";".join(blocked),
             )
             candidates.append(row)
             if not blocked:
@@ -482,7 +486,8 @@ def score_corners(
                 model=CORNERS_MODEL, source={**source, "bookmaker": "Pinnacle"}, team="", side=side,
                 probability=probability, raw_probability=probability, market_probability=market_probability,
                 edge=edge, matchday=matchday, team_neff=home_neff, opponent_neff=away_neff,
-                distribution_parameter=alpha, status=status, blocked_reason=";".join(blocked),
+                model_mean=lam, distribution_parameter=alpha, status=status,
+                blocked_reason=";".join(blocked),
             )
             candidates.append(row)
             if not blocked:

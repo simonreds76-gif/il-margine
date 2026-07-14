@@ -101,6 +101,7 @@ def _scrape_league(
     league_id: int,
     captured_at: str,
     verbose: bool,
+    kickoff_within_minutes: int = 0,
 ) -> List[Dict]:
     rows: List[Dict] = []
     try:
@@ -130,6 +131,12 @@ def _scrape_league(
             if verbose:
                 print(f"    [{home} v {away}] skip already started ({kickoff_iso})")
             continue
+        if kickoff_within_minutes > 0:
+            if kickoff_dt is None or captured_dt is None:
+                continue
+            minutes_to_kickoff = (kickoff_dt - captured_dt).total_seconds() / 60.0
+            if not 0.0 < minutes_to_kickoff <= float(kickoff_within_minutes):
+                continue
 
         try:
             markets = _get(f"matchups/{matchup_id}/markets/related/straight")
@@ -215,6 +222,12 @@ def main() -> None:
     parser.add_argument("--dry-run", action="store_true", help="Fetch but do not write")
     parser.add_argument("--verbose", "-v", action="store_true")
     parser.add_argument("--bucket-hours", type=int, default=6, choices=(1, 2, 3, 4, 6, 8, 12, 24))
+    parser.add_argument(
+        "--kickoff-within-minutes",
+        type=int,
+        default=0,
+        help="Only request detailed markets for fixtures starting within this many minutes (0 disables).",
+    )
     args = parser.parse_args()
 
     print("=" * 50)
@@ -240,7 +253,13 @@ def main() -> None:
 
     all_new: List[Dict] = []
     for league_key, league_id in leagues_to_scrape.items():
-        rows = _scrape_league(league_key, league_id, captured_at, args.verbose)
+        rows = _scrape_league(
+            league_key,
+            league_id,
+            captured_at,
+            args.verbose,
+            args.kickoff_within_minutes,
+        )
         for row in rows:
             k = (
                 row["match_date"],

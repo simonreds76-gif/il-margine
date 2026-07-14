@@ -54,6 +54,7 @@ OUTPUT_FIELDS = [
     "matchday",
     "team_neff",
     "opponent_neff",
+    "model_mean",
     "distribution_parameter",
     "signal_status",
     "book_price_at_publication",
@@ -446,6 +447,16 @@ def render_report(rows: list[dict[str, Any]], picks_path: Path, odds_path: Path,
     ]
     close_coverage = len(true_close_rows) / len(close_eligible) if close_eligible else None
     avg_true_close_clv = avg(true_close_clv)
+    mean_bias_values = [
+        actual - model_mean
+        for row in settled
+        if (actual := pf(row.get("actual_team_shots"))) is not None
+        and (model_mean := pf(row.get("model_mean"))) is not None
+    ]
+    mean_bias = avg(mean_bias_values)
+    active_over = sum(1 for row in active_rows if str(row.get("side") or "").strip().lower() == "over")
+    active_under = sum(1 for row in active_rows if str(row.get("side") or "").strip().lower() == "under")
+    registered_vig_share = pf(allowed_config.get("registered_over_vig_share"))
     model = str(allowed_config.get("model") or "team-shots-research")
     lines = [
         f"# Team-Shots CLV Monitor: `{model}`",
@@ -464,6 +475,9 @@ def render_report(rows: list[dict[str, Any]], picks_path: Path, odds_path: Path,
         f"- Picks with close: {len(with_close)}",
         f"- True-close coverage (<=120m): {len(true_close_rows)}/{len(close_eligible)} ({close_coverage:.1%})" if close_coverage is not None else "- True-close coverage (<=120m): -",
         f"- Average true-close CLV: {avg_true_close_clv:+.2%} (n={len(true_close_clv)})" if avg_true_close_clv is not None else "- Average true-close CLV: -",
+        f"- Running mean bias (actual - model): {mean_bias:+.3f} shots (n={len(mean_bias_values)})" if mean_bias is not None else "- Running mean bias (actual - model): -",
+        f"- Active side mix: Over {active_over} / Under {active_under}",
+        f"- Registered Over vig allocation: {registered_vig_share:.1%} (descriptive refits must not alter the lock)" if registered_vig_share is not None else "- Registered Over vig allocation: -",
         f"- Hard-guard blocked: {len(blocked)}",
         f"- Average published-to-close CLV: {avg_clv:+.2%}" if avg_clv is not None else "- Average published-to-close CLV: -",
         f"- Allowed-league config valid: {'yes' if allowed_config.get('config_valid') else 'no'}",
@@ -495,6 +509,8 @@ def render_report(rows: list[dict[str, Any]], picks_path: Path, odds_path: Path,
         "- `published_to_close_clv` tracks the captured bookmaker price versus close.",
         "- `close_lag_minutes` records how far the selected close snapshot was from kickoff; `true_close=true` requires <=120 minutes.",
         "- `model_to_close_clv` tracks the model-implied probability versus close.",
+        "- `model_mean` preserves the frozen count expectation so weekly actual-minus-model bias is observable.",
+        "- Side mix is diagnostic: strong Over shading can make Under selections dominant by construction.",
         "- `confidence_guard_applied=true` means the row must not be treated as a published pick.",
         "",
         "## De-Promotion Rules",
