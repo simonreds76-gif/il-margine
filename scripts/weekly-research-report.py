@@ -395,6 +395,7 @@ def build_payload() -> dict[str, Any]:
     team_promo = load_json(OUT_DIR / "team-shots-v3-ema20-promotion-check.json")
     corners_allowed = load_json(OUT_DIR / "corners-v0-allowed-leagues.json")
     corners_diag = load_json(OUT_DIR / "corners-total-diagnostic.json")
+    football_counts_vnext = load_json(OUT_DIR / "football-counts-vnext-gate.json")
 
     team_clv_rows = load_csv(OUT_DIR / "team-shots-v3-ema20-clv-monitor.csv")
     corners_clv_rows = load_csv(OUT_DIR / "corners-v0-clv-monitor.csv")
@@ -427,6 +428,7 @@ def build_payload() -> dict[str, Any]:
             },
             "clv": clv_summary(corners_clv_rows),
         },
+        "football_counts_vnext": football_counts_vnext,
         "tennis_ml_gap_guard": tennis_gap_guard,
         "tennis_props_v3": tennis_props_v3,
         "goalscorer_v2": goalscorer_research,
@@ -444,6 +446,7 @@ def build_payload() -> dict[str, Any]:
 def render_report(payload: dict[str, Any]) -> str:
     team = payload["team_shots_v3_ema20"]
     corners = payload["corners_v0"]
+    vnext = payload.get("football_counts_vnext") or {}
     tennis = payload["tennis_ml_gap_guard"]
     tennis_props_v3 = payload.get("tennis_props_v3") or {}
     goalscorer = payload["goalscorer_v2"]
@@ -456,6 +459,12 @@ def render_report(payload: dict[str, Any]) -> str:
         "",
         f"- Generated: {payload['generated_at']}",
         f"- Overall read: {'PAUSE REQUIRED' if payload['status']['pause_required'] else 'observe live sample'}",
+        "",
+        "## Football Counts vNext",
+        "",
+        f"- Team Shots v4: count {((vnext.get('team_shots_v4') or {}).get('count_gate') or 'NOT_RUN')}; prospective {((vnext.get('team_shots_v4') or {}).get('prospective_status') or 'BLOCKED')}; market gate remains blocked.",
+        f"- Corners v3: count {((vnext.get('corners_v3') or {}).get('count_gate') or 'NOT_RUN')}; prospective {((vnext.get('corners_v3') or {}).get('prospective_status') or 'BLOCKED')}; market gate remains blocked.",
+        "- Neither experiment changes live routing or stakes.",
         "",
         "## Team Shots V3 EMA20 Research",
         "",
@@ -571,6 +580,7 @@ def render_report(payload: dict[str, Any]) -> str:
 def telegram_text(payload: dict[str, Any]) -> str:
     team = payload["team_shots_v3_ema20"]
     corners = payload["corners_v0"]
+    vnext = payload.get("football_counts_vnext") or {}
     tennis = payload["tennis_ml_gap_guard"]
     tennis_props_v3 = payload.get("tennis_props_v3") or {}
     goalscorer = payload["goalscorer_v2"]
@@ -582,6 +592,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
         "",
         f"Team Shots V3 EMA20: {len(team['allowed_leagues'])}/5 leagues, {team_clv['published_picks']} picks, {team_clv['settled']} settled, avg CLV {pct((team_clv['avg_published_to_close_clv'] or 0) * 100) if team_clv['avg_published_to_close_clv'] is not None else '-'}",
         f"Corners V0: {len(corners['allowed_leagues'])}/5 leagues, blocked {join_leagues(corners['blocked_leagues'])}, {corners_clv['published_picks']} picks, {corners_clv['settled']} settled, avg CLV {pct((corners_clv['avg_published_to_close_clv'] or 0) * 100) if corners_clv['avg_published_to_close_clv'] is not None else '-'}",
+        f"Football counts vNext: Team Shots {((vnext.get('team_shots_v4') or {}).get('count_gate') or 'NOT_RUN')}, Corners {((vnext.get('corners_v3') or {}).get('count_gate') or 'NOT_RUN')}; both market-gated shadow only",
         f"Goalscorer V2: parity {goalscorer['parity_decision']}, Beta {goalscorer['beta_fold_wins']}/{goalscorer['beta_folds']} fold wins, CLV coverage {goalscorer['matched_closes']}/{goalscorer['signals']}; research only",
         f"Tennis ML gap guard: Etch/Fils-type {format_bet_summary(tennis['etch_type'])}; recent 2024-26 {format_bet_summary(tennis['etch_type_recent'])}",
     ]
