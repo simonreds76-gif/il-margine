@@ -4,7 +4,7 @@ Verified: 2026-07-14
 
 ## Decision
 
-The next useful free source is **API-Football**, which is already partially integrated and has an `API_FOOTBALL_KEY` configured in GitHub Actions. Do not add another frequent workflow. Expand the existing capped settlement path and, once the club season starts, use one nightly collection pass for source-agreement evidence.
+The next useful free source is **API-Football**, which is already partially integrated and has an `API_FOOTBALL_KEY` configured in GitHub Actions. Do not add another frequent workflow. Keep the capped settlement fallback, and use the existing season-gated daily vNext pass for source-agreement evidence once the club season starts.
 
 The most important local finding is that a new historical provider is not needed for team fouls or cards. The existing 21,589-match Football-Data archive has 100% foul coverage, 97.3% card coverage and 21.7% referee-name coverage. The blocker for a sellable fouls/cards product is captured market prices and bookmaker-definition validation, not historical outcomes.
 
@@ -50,10 +50,21 @@ These are features, not new betting products. Each must beat the current walk-fo
 - Preserve unavailable values as `null`. Missing SOT is not zero SOT.
 - Do not pool definitions across providers until agreement is at least 97% within one count for SOT and separately audited for each new count field.
 - Do not create a sellable fouls/cards lane until real market prices are captured. Predictable counts without odds are not a betting edge.
-- Do not add another 10-minute scheduler. Piggyback one bounded nightly collection on the existing settlement workflow if a full current-season archive is approved.
+- Do not add another scheduler. Piggyback one bounded daily collection on the existing season-gated football vNext discovery run.
 
 ## Recommended next acquisition
 
 When the club season resumes, collect one API-Football post-match snapshot for every top-five fixture once per night. A normal full top-five round requires roughly five fixture-list calls plus one statistics call per match, which fits within the 100-request daily free quota. Store raw provider values and provenance, then compare API-Football against Football-Data.co.uk and FotMob before any field enters a model.
 
 Player-level match statistics should not be collected in the same free-tier pass: one additional player-stat request per fixture can exhaust the 100-call allowance on a full weekend. Add those only for shortlisted fixtures or after a measured model need.
+
+## Implemented acquisition layer
+
+Implemented on 2026-07-14:
+
+- `scripts/capture-api-football-counts.py` archives completed top-five fixtures once per day, deduplicated by API fixture ID.
+- The collector uses at most 90 of the 100 free daily requests, checks today plus the previous two UTC dates, and requests statistics only for fixtures absent from the archive.
+- `scripts/api-football-source-agreement.py` compares API-Football with the existing Football-Data archive by date and normalized home/away identity.
+- Coverage, exact agreement, within-one agreement and MAE are reported per count field. The result is diagnostic-only and does not alter model inputs.
+- Collection runs only in the existing `football-counts-vnext-shadow.yml` 08:15 UTC daily discovery pass, which remains season-gated until 2026-08-01. No new cron and no database write were added.
+- The Monday research report surfaces archive freshness and cross-provider match coverage automatically.

@@ -47,12 +47,20 @@ jobs:
 
       - name: Refresh current-season count inputs
         if: steps.season.outputs.active == 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *')
+        env:
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
         shell: bash
         run: |
           python scripts/footballdata-download-historical.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2026 --overwrite || echo "::warning::Football-Data current-season refresh was unavailable."
           python scripts/understat-download-shots.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2026 || echo "::warning::Understat current-season aggregate refresh was unavailable."
           python scripts/understat-download-corner-features.py --seasons 2026 || echo "::warning::Understat corner-event refresh was unavailable."
           python scripts/build-football-form-layer.py
+          if [ -n "${API_FOOTBALL_KEY:-}" ]; then
+            python scripts/capture-api-football-counts.py --days-back 2 --max-requests 90 || echo "::warning::API-Football count archive refresh reported an error; existing archive retained."
+          else
+            echo "::warning::API_FOOTBALL_KEY is missing; API-Football count archive skipped."
+          fi
+          python scripts/api-football-source-agreement.py --allow-empty
 
       - name: Capture paired market prices
         if: steps.season.outputs.active == 'true'
