@@ -9,7 +9,9 @@ Market detection: 'total' markets at period=0 with line >= 7.0 are corners.
 Goals totals sit at lines 1.5-5.5 - no ambiguity.
 
 Run this before/after placing corners bets to build a CLV log.
-One snapshot per (match, line, side) per calendar day is stored.
+One snapshot per (match, line, side) per six-hour UTC bucket is stored. This
+keeps capture volume bounded while allowing a later pre-kickoff price to act as
+the close instead of permanently retaining the first price seen that day.
 
 Usage:
   python scripts/pinnacle-scrape-corners.py
@@ -180,8 +182,16 @@ def _scrape_league(
     return rows
 
 
-def _load_existing_keys(path: Path) -> set:
-    """Return set of (match_date, home, away, line, side, capture_day) already stored."""
+def _capture_bucket(captured_at: str, bucket_hours: int = 6) -> str:
+    parsed = _parse_iso_datetime(captured_at)
+    if parsed is None:
+        return captured_at[:10]
+    bucket = (parsed.hour // bucket_hours) * bucket_hours
+    return f"{parsed:%Y-%m-%d}T{bucket:02d}"
+
+
+def _load_existing_keys(path: Path, bucket_hours: int = 6) -> set:
+    """Return set of (match, line, side, capture bucket) keys already stored."""
     keys: set = set()
     if not path.exists():
         return keys
@@ -193,7 +203,7 @@ def _load_existing_keys(path: Path) -> set:
                 (row.get("away_team") or "").lower(),
                 str(row.get("line", "")),
                 (row.get("side") or "").lower(),
-                (row.get("captured_at") or "")[:10],
+                _capture_bucket(row.get("captured_at") or "", bucket_hours),
             ))
     return keys
 
@@ -204,6 +214,7 @@ def main() -> None:
     parser.add_argument("--leagues", default="", help="Comma-separated leagues to scrape (default all Big 5)")
     parser.add_argument("--dry-run", action="store_true", help="Fetch but do not write")
     parser.add_argument("--verbose", "-v", action="store_true")
+    parser.add_argument("--bucket-hours", type=int, default=6, choices=(1, 2, 3, 4, 6, 8, 12, 24))
     args = parser.parse_args()
 
     print("=" * 50)
@@ -211,9 +222,9 @@ def main() -> None:
     print("=" * 50)
 
     captured_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    today = captured_at[:10]
+    capture_bucket = _capture_bucket(captured_at, args.bucket_hours)
 
-    existing_keys = _load_existing_keys(args.output)
+    existing_keys = _load_existing_keys(args.output, args.bucket_hours)
     print(f"  Existing snapshots: {len(existing_keys)}")
     print(f"  Capture time:       {captured_at}\n")
 
@@ -237,7 +248,7 @@ def main() -> None:
                 row["away_team"].lower(),
                 str(row["line"]),
                 row["side"].lower(),
-                today,
+                capture_bucket,
             )
             if k not in existing_keys:
                 all_new.append(row)

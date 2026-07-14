@@ -1,0 +1,90 @@
+name: Football Counts vNext Shadow
+
+on:
+  schedule:
+    - cron: "15 8 * * *"
+    - cron: "15 17 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: golden-with-speed-insights-branch-writes
+  cancel-in-progress: false
+
+jobs:
+  shadow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Seasonal gate
+        id: season
+        shell: bash
+        run: |
+          if [[ "$(date -u +%F)" < "2026-08-01" && "${{ github.event_name }}" != "workflow_dispatch" ]]; then
+            echo "active=false" >> "$GITHUB_OUTPUT"
+            echo "Football vNext capture stays dormant until 2026-08-01."
+          else
+            echo "active=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v5
+        if: steps.season.outputs.active == 'true'
+        with:
+          ref: golden-with-speed-insights
+          token: ${{ github.token }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        if: steps.season.outputs.active == 'true'
+        with:
+          python-version: "3.11"
+
+      - name: Install Python dependency
+        if: steps.season.outputs.active == 'true'
+        run: pip install requests
+
+      - name: Refresh current-season count inputs
+        if: steps.season.outputs.active == 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *')
+        shell: bash
+        run: |
+          python scripts/footballdata-download-historical.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2026 --overwrite || echo "::warning::Football-Data current-season refresh was unavailable."
+          python scripts/understat-download-shots.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2026 || echo "::warning::Understat current-season aggregate refresh was unavailable."
+          python scripts/understat-download-corner-features.py --seasons 2026 || echo "::warning::Understat corner-event refresh was unavailable."
+          python scripts/build-football-form-layer.py
+
+      - name: Capture paired market prices
+        if: steps.season.outputs.active == 'true'
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          ODDS_API_IO_KEY: ${{ secrets.ODDS_API_KEY }}
+          BETS_API_KEY: ${{ secrets.BETS_API_KEY }}
+        shell: bash
+        run: |
+          if [ -n "${ODDS_API_KEY:-}${ODDS_API_IO_KEY:-}${BETS_API_KEY:-}" ]; then
+            python scripts/team-shots-scrape-odds.py --all-leagues --bookmakers "Bet365" --days-ahead 7
+          else
+            echo "::warning::No team-shots odds key; Team Shots v4 cannot emit this scan."
+          fi
+          python scripts/pinnacle-scrape-corners.py
+
+      - name: Score, settle and audit vNext shadow signals
+        if: steps.season.outputs.active == 'true'
+        run: |
+          python scripts/run-football-vnext-shadow.py
+          python scripts/team-shots-live-snapshot.py
+          python scripts/corners-live-snapshot.py
+
+      - name: Commit append-only evidence
+        if: steps.season.outputs.active == 'true'
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/football-form/ data/team-shots/inbox/ data/team-shots/understat/ data/corners-ou/pinnacle-corners-odds.csv
+          if git diff --cached --quiet; then
+            echo "No vNext signal or evidence changes."
+            exit 0
+          fi
+          git commit -m "chore: refresh football vnext shadow evidence"
+          bash scripts/ci-safe-push.sh golden-with-speed-insights

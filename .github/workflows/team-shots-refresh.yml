@@ -96,7 +96,9 @@ jobs:
           python scripts/corners-v0-clv-monitor.py
 
       - name: Settle football research lanes before snapshot
-        run: python scripts/settle-football-research-lanes.py
+        run: |
+          python scripts/settle-football-research-lanes.py
+          python scripts/run-football-vnext-shadow.py
 
       - name: Generate team-shots snapshot artifact
         run: python scripts/team-shots-live-snapshot.py

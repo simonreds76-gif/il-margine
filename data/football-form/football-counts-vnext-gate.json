@@ -1,15 +1,41 @@
 {
-  "generated_at": "2026-07-14T11:57:10Z",
+  "generated_at": "2026-07-14T14:19:28Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
     "market_gate": "BLOCKED_PENDING_2026_27_TRUE_CLOSE_SAMPLE",
-    "live_routing": false
+    "live_routing": false,
+    "prospective": {
+      "signals": 0,
+      "settled": 0,
+      "pending": 0,
+      "pnl_units": 0,
+      "roi": null,
+      "true_close_n": 0,
+      "true_close_coverage": null,
+      "mean_true_close_clv": null,
+      "side_counts": {},
+      "dominant_side_share": 0.0
+    },
+    "promotion_gate": "BLOCKED"
   },
   "corners_v3": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
     "market_gate": "BLOCKED_PENDING_2026_27_PINNACLE_SAMPLE",
-    "live_routing": false
+    "live_routing": false,
+    "prospective": {
+      "signals": 0,
+      "settled": 0,
+      "pending": 0,
+      "pnl_units": 0,
+      "roi": null,
+      "true_close_n": 0,
+      "true_close_coverage": null,
+      "mean_true_close_clv": null,
+      "side_counts": {},
+      "dominant_side_share": 0.0
+    },
+    "promotion_gate": "BLOCKED"
   }
 }

@@ -19,12 +19,14 @@ import {
   TeamLabel,
   EmptyState,
 } from "../shared";
+import FootballVnextShadowPanel, { type FootballVnextGate } from "@/components/model-monitor/FootballVnextShadowPanel";
 
 export const dynamic = "force-dynamic";
 
 
 
 type CsvRow = Record<string, string>;
+type FootballCountsGatePayload = { team_shots_v4?: FootballVnextGate; corners_v3?: FootballVnextGate };
 type TeamShotsLiveLine = {
   bookmaker: string;
   line: number;
@@ -1094,6 +1096,12 @@ export default async function TeamShotsMonitorPage() {
 
     scrapeStatus,
 
+    teamShotsV4ClvCsv,
+
+    vnextCandidatesCsv,
+
+    vnextGate,
+
   ] = await Promise.all([
 
     readFile("data/team-shots/team-shots-calibration.txt"),
@@ -1140,6 +1148,12 @@ export default async function TeamShotsMonitorPage() {
     inspectTeamShotsLiveSource("data/team-shots/team-shots-comparison.csv"),
 
     readJson<TeamShotsScrapeStatus>("data/team-shots/team-shots-scrape-last-run.json"),
+
+    readFile("data/football-form/team-shots-v4-shadow-clv.csv"),
+
+    readFile("data/football-form/football-counts-vnext-candidates.csv"),
+
+    readJson<FootballCountsGatePayload>("data/football-form/football-counts-vnext-gate.json"),
 
   ]);
 
@@ -1929,6 +1943,8 @@ function LiveLineTable({
   const teamShotsV3BlockedLeagues =
     teamShotsV3AllowedConfig?.blocked_leagues ?? teamShotsV3PromotionCheck?.blocked_leagues ?? [];
   const teamShotsV3Clv = parseClvMonitorSummary(teamShotsV3ClvReport);
+  const teamShotsV4ClvRows = teamShotsV4ClvCsv ? parseCsvCached(teamShotsV4ClvCsv) : [];
+  const vnextCandidateRows = vnextCandidatesCsv ? parseCsvCached(vnextCandidatesCsv) : [];
   const teamShotsV3ClvRows = teamShotsV3ClvCsv ? parseCsvCached(teamShotsV3ClvCsv) : [];
   const teamShotsV3Summary = researchBetSummary(teamShotsV3ClvRows);
   const teamShotsV3SideRows = (["over", "under"] as const).map((side) => {
@@ -1987,6 +2003,14 @@ function LiveLineTable({
             </p>
           </section>
         ) : null}
+
+        <FootballVnextShadowPanel
+          title="Team Shots v4 Prospective Lane"
+          model="team_shots_v4"
+          rows={teamShotsV4ClvRows}
+          candidates={vnextCandidateRows}
+          gate={vnextGate?.team_shots_v4 ?? null}
+        />
 
         {/* Pipeline health */}
         <SectionCard collapsible title="Pipeline Health" subtitle={pipelineStateValue}>
@@ -2102,8 +2126,8 @@ function LiveLineTable({
         <SectionCard
           collapsible
           defaultOpen
-          title="Team Shots V3 EMA20"
-          subtitle="Active team-shots model | canonical_form_v3_ema20_nb | live P/L and CLV watch"
+          title="Legacy Team Shots V3 Control"
+          subtitle="Frozen comparison lane | canonical_form_v3_ema20_nb | retained so v4 can be judged against its predecessor"
         >
           {teamShotsV3PromotionCheck || teamShotsV3Lane ? (
             <>

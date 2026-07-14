@@ -338,6 +338,7 @@ def live_form_row(
     venue: str,
     home: str,
     away: str,
+    baseline_cache: dict[tuple[str, date], dict[str, Any]] | None = None,
 ) -> dict[str, Any] | None:
     key = team_key(team)
     history = [
@@ -373,7 +374,14 @@ def live_form_row(
         "market_team_win_prob": "",
         "market_opp_win_prob": "",
     }
-    out.update(league_baseline(by_league.get(league, []), fixture_date))
+    baseline_key = (league, fixture_date)
+    if baseline_cache is not None and baseline_key in baseline_cache:
+        baseline = baseline_cache[baseline_key]
+    else:
+        baseline = league_baseline(by_league.get(league, []), fixture_date)
+        if baseline_cache is not None:
+            baseline_cache[baseline_key] = baseline
+    out.update(baseline)
     for window in FORM_BUILD.WINDOWS:
         out.update(FORM_BUILD.summarize_window(history, window))
         out.update(FORM_BUILD.relative_window_fields(out, window))
@@ -406,7 +414,7 @@ def latest_team_shots_odds(rows: list[dict[str, str]], now: datetime) -> list[di
     for row in rows:
         kickoff = parse_dt(row.get("kickoff_at"))
         captured = parse_dt(row.get("captured_at"))
-        if not kickoff or not captured or kickoff <= now:
+        if not kickoff or not captured or kickoff <= now or captured > now:
             continue
         league = league_slug(row.get("competition") or row.get("league", ""))
         home = clean_display_team(row.get("home_team", "").strip())
@@ -555,7 +563,7 @@ def latest_corners_odds(rows: list[dict[str, str]], now: datetime) -> list[dict[
     for row in rows:
         kickoff = parse_dt(row.get("kickoff_iso"))
         captured = parse_dt(row.get("captured_at"))
-        if not kickoff or not captured or kickoff <= now:
+        if not kickoff or not captured or kickoff <= now or captured > now:
             continue
         league = league_slug(row.get("league", ""))
         home = clean_display_team(row.get("home_team", "").strip())
