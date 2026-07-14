@@ -90,6 +90,25 @@ def nb_pmf(k: int, mean: float, alpha: float) -> float:
     return math.exp(log_pmf)
 
 
+def nb_log_pmf(k: int, mean: float, alpha: float) -> float:
+    """Return log P(X=k), using the Poisson limit when alpha is zero."""
+    if k < 0:
+        return -math.inf
+    mu = max(MIN_MEAN, float(mean))
+    dispersion = float(alpha)
+    if dispersion <= 0.0:
+        return (k * math.log(mu)) - mu - math.lgamma(k + 1)
+    r = 1.0 / dispersion
+    success = r / (r + mu)
+    return (
+        math.lgamma(k + r)
+        - math.lgamma(r)
+        - math.lgamma(k + 1)
+        + (r * math.log(success))
+        + (k * math.log1p(-success))
+    )
+
+
 def nb_cdf(k: int, mean: float, alpha: float) -> float:
     """Return P(X<=k) for an NB2 count with ``(mean, alpha)``."""
     if k < 0:
@@ -172,6 +191,48 @@ def fit_dispersion_alpha(
         return MIN_ALPHA
     alpha = (variance - mean) / (mean * mean)
     return max(MIN_ALPHA, min(MAX_ALPHA, alpha))
+
+
+def fit_dispersion_alpha_mle(
+    observations: Iterable[tuple[float, float]],
+    *,
+    fallback: float = 1.0 / 80.0,
+    min_sample: int = 30,
+) -> float:
+    """Fit NB2 alpha against frozen, observation-specific means."""
+    rows = [
+        (max(0, int(round(actual))), max(MIN_MEAN, float(mean)))
+        for actual, mean in observations
+        if math.isfinite(float(actual)) and math.isfinite(float(mean)) and float(actual) >= 0.0
+    ]
+    if len(rows) < min_sample:
+        return float(fallback)
+
+    def objective(log_alpha: float) -> float:
+        alpha = math.exp(log_alpha)
+        return -sum(nb_log_pmf(actual, mean, alpha) for actual, mean in rows)
+
+    low = math.log(MIN_ALPHA)
+    high = math.log(MAX_ALPHA)
+    golden = (math.sqrt(5.0) - 1.0) / 2.0
+    left = high - (golden * (high - low))
+    right = low + (golden * (high - low))
+    left_value = objective(left)
+    right_value = objective(right)
+    for _ in range(80):
+        if left_value <= right_value:
+            high = right
+            right = left
+            right_value = left_value
+            left = high - (golden * (high - low))
+            left_value = objective(left)
+        else:
+            low = left
+            left = right
+            left_value = right_value
+            right = low + (golden * (high - low))
+            right_value = objective(right)
+    return max(MIN_ALPHA, min(MAX_ALPHA, math.exp((low + high) / 2.0)))
 
 
 def invert_mean_for_over_prob(
