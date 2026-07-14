@@ -89,6 +89,12 @@ class FootballCountsTests(unittest.TestCase):
         r = corners_nb.fit_dispersion(values)
         self.assertAlmostEqual(counts.alpha_to_r(alpha), r, places=12)
 
+    def test_mle_dispersion_uses_frozen_means(self) -> None:
+        observations = [(value, 10.0) for value in [2, 4, 6, 8, 10, 12, 14, 16, 18, 20] * 5]
+        alpha = counts.fit_dispersion_alpha_mle(observations)
+        self.assertGreater(alpha, counts.MIN_ALPHA)
+        self.assertLessEqual(alpha, counts.MAX_ALPHA)
+
 
 if __name__ == "__main__":
     unittest.main()
