@@ -1,6 +1,6 @@
 # Team-Shots CLV Monitor: `canonical_form_v3_ema20_nb`
 
-Generated: 2026-07-14T18:04:33Z
+Generated: 2026-07-14T20:05:58Z
 Picks input: `data/football-form/team-shots-v3-ema20-published-picks.csv`
 Odds input: `data/team-shots/team-shots-odds-history.csv`
 
@@ -14,6 +14,9 @@ Odds input: `data/team-shots/team-shots-odds-history.csv`
 - Picks with close: 72
 - True-close coverage (<=120m): 7/72 (9.7%)
 - Average true-close CLV: +0.00% (n=7)
+- Running mean bias (actual - model): -
+- Active side mix: Over 23 / Under 45
+- Registered Over vig allocation: -
 - Hard-guard blocked: 4
 - Average published-to-close CLV: +0.35%
 - Allowed-league config valid: yes
@@ -56,6 +59,8 @@ Odds input: `data/team-shots/team-shots-odds-history.csv`
 - `published_to_close_clv` tracks the captured bookmaker price versus close.
 - `close_lag_minutes` records how far the selected close snapshot was from kickoff; `true_close=true` requires <=120 minutes.
 - `model_to_close_clv` tracks the model-implied probability versus close.
+- `model_mean` preserves the frozen count expectation so weekly actual-minus-model bias is observable.
+- Side mix is diagnostic: strong Over shading can make Under selections dominant by construction.
 - `confidence_guard_applied=true` means the row must not be treated as a published pick.
 
 ## De-Promotion Rules
