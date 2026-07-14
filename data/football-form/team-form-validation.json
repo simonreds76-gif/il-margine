@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-07-14T13:10:56+00:00",
+  "checked_at": "2026-07-14T17:04:41+00:00",
   "files": {
     "team-match-base.csv": {
       "age_days": 51,
@@ -36,7 +36,7 @@
       },
       "market_team_win_prob_coverage": 0.9997,
       "rows": 43178,
-      "xg_coverage": 0.0739
+      "xg_coverage": 0.9154
     },
     "team-rolling-form.csv": {
       "age_days": 51,
@@ -73,7 +73,7 @@
       },
       "market_team_win_prob_coverage": 0.9997,
       "rows": 43178,
-      "xg_coverage": 0.0739
+      "xg_coverage": 0.9154
     }
   },
   "issues": [
@@ -108,11 +108,6 @@
       "level": "error"
     },
     {
-      "code": "team_match_base_xg_coverage_low",
-      "detail": "xG coverage 7.4%",
-      "level": "warning"
-    },
-    {
       "code": "team_rolling_form_stale",
       "detail": "latest date 2026-05-24 is 51d old; max 21d",
       "level": "error"
@@ -141,11 +136,6 @@
       "code": "team_rolling_form_serie_a_stale",
       "detail": "serie-a latest date 2026-05-24 is 51d old; max 21d",
       "level": "error"
-    },
-    {
-      "code": "team_rolling_form_xg_coverage_low",
-      "detail": "xG coverage 7.4%",
-      "level": "warning"
     }
   ],
   "status": "error"

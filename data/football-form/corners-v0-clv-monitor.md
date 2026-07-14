@@ -1,6 +1,6 @@
-# Corners V0 CLV Monitor
+# Corners CLV Monitor: `canonical_form_v0`
 
-Generated: 2026-07-14T13:10:58Z
+Generated: 2026-07-14T17:04:43Z
 Picks input: `data/football-form/corners-v0-published-picks.csv`
 Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 
@@ -12,6 +12,8 @@ Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 - Open/pending: 0
 - Settled PnL: -1.12u
 - Picks with close: 48
+- True-close coverage (<=120m): 1/48 (2.1%)
+- Average true-close CLV: +0.00% (n=1)
 - Hard-guard blocked: 48
 - Average published-to-close CLV: +0.40%
 - Allowed-league config valid: yes
@@ -38,12 +40,13 @@ Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 - `current_model_would_have_priced` must be true for publication while canonical-only evidence is below threshold.
 - `time_to_kickoff_hours` records publication timing so CLV can be interpreted by lead time.
 - `published_to_close_clv` tracks the taken/published Pinnacle price versus close.
+- `close_lag_minutes` records how far the selected close snapshot was from kickoff; `true_close=true` requires <=120 minutes.
 - `model_to_close_clv` tracks the model-implied probability versus close.
 - `confidence_guard_applied=true` means the row must not be treated as a published pick.
 
 ## De-Promotion Rules
 
-- Pause corners v0 if 30-day rolling CLV is below 0 with at least 50 settled picks.
+- Pause `canonical_form_v0` if 30-day rolling CLV is below 0 with at least 50 settled picks.
 - Pause corners v0 if rolling 90-day production Brier exceeds 1.05x the pre-promotion backtest Brier.
 
 ## Re-Promotion Rules After A Pause

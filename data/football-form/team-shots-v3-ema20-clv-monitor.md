@@ -1,6 +1,6 @@
 # Team-Shots CLV Monitor: `canonical_form_v3_ema20_nb`
 
-Generated: 2026-07-14T13:10:58Z
+Generated: 2026-07-14T17:04:42Z
 Picks input: `data/football-form/team-shots-v3-ema20-published-picks.csv`
 Odds input: `data/team-shots/team-shots-odds-history.csv`
 
@@ -12,6 +12,8 @@ Odds input: `data/team-shots/team-shots-odds-history.csv`
 - Open/pending: 0
 - Settled PnL: +10.93u
 - Picks with close: 72
+- True-close coverage (<=120m): 7/72 (9.7%)
+- Average true-close CLV: +0.00% (n=7)
 - Hard-guard blocked: 4
 - Average published-to-close CLV: +0.35%
 - Allowed-league config valid: yes
@@ -52,6 +54,7 @@ Odds input: `data/team-shots/team-shots-odds-history.csv`
 - `current_model_would_have_priced` must be true while canonical-only evidence is blocked.
 - `time_to_kickoff_hours` records publication timing so CLV can be interpreted by lead time.
 - `published_to_close_clv` tracks the captured bookmaker price versus close.
+- `close_lag_minutes` records how far the selected close snapshot was from kickoff; `true_close=true` requires <=120 minutes.
 - `model_to_close_clv` tracks the model-implied probability versus close.
 - `confidence_guard_applied=true` means the row must not be treated as a published pick.
 
