@@ -3,7 +3,8 @@ name: Football Counts vNext Shadow
 on:
   schedule:
     - cron: "15 8 * * *"
-    - cron: "15 17 * * *"
+    # Near-kickoff capture. Scrapers make detailed odds calls only inside 90m.
+    - cron: "*/30 9-22 * * *"
   workflow_dispatch:
 
 permissions:
@@ -59,17 +60,30 @@ jobs:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           ODDS_API_IO_KEY: ${{ secrets.ODDS_API_KEY }}
           BETS_API_KEY: ${{ secrets.BETS_API_KEY }}
+          EVENT_NAME: ${{ github.event_name }}
+          SCHEDULE_EXPR: ${{ github.event.schedule }}
         shell: bash
         run: |
+          TEAM_ARGS=(--all-leagues --bookmakers "Bet365")
+          CORNER_ARGS=()
+          if [[ "$EVENT_NAME" == "schedule" && "$SCHEDULE_EXPR" != "15 8 * * *" ]]; then
+            TEAM_ARGS+=(--days-ahead 1 --kickoff-within-minutes 90)
+            CORNER_ARGS+=(--bucket-hours 1 --kickoff-within-minutes 90)
+            echo "Near-kickoff mode: detailed odds calls are limited to fixtures starting within 90 minutes."
+          else
+            TEAM_ARGS+=(--days-ahead 7)
+            CORNER_ARGS+=(--bucket-hours 6)
+            echo "Daily discovery mode: capturing publication prices for the seven-day board."
+          fi
           if [ -n "${ODDS_API_KEY:-}${ODDS_API_IO_KEY:-}${BETS_API_KEY:-}" ]; then
-            python scripts/team-shots-scrape-odds.py --all-leagues --bookmakers "Bet365" --days-ahead 7
+            python scripts/team-shots-scrape-odds.py "${TEAM_ARGS[@]}"
           else
             echo "::warning::No team-shots odds key; Team Shots v4 cannot emit this scan."
           fi
-          python scripts/pinnacle-scrape-corners.py
+          python scripts/pinnacle-scrape-corners.py "${CORNER_ARGS[@]}"
 
       - name: Score, settle and audit vNext shadow signals
-        if: steps.season.outputs.active == 'true'
+        if: steps.season.outputs.active == 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *')
         run: |
           python scripts/run-football-vnext-shadow.py
           python scripts/team-shots-live-snapshot.py
@@ -81,7 +95,13 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/football-form/ data/team-shots/inbox/ data/team-shots/understat/ data/corners-ou/pinnacle-corners-odds.csv
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" || "${{ github.event.schedule }}" == "15 8 * * *" ]]; then
+            git add data/football-form/ data/team-shots/inbox/ data/team-shots/understat/ data/corners-ou/pinnacle-corners-odds.csv
+          else
+            # Near-kickoff runs store prices only. Reports are rebuilt once daily,
+            # avoiding timestamp-only commits every 30 minutes.
+            git add data/team-shots/inbox/ data/corners-ou/pinnacle-corners-odds.csv
+          fi
           if git diff --cached --quiet; then
             echo "No vNext signal or evidence changes."
             exit 0
