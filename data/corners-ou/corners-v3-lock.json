@@ -1,0 +1,24 @@
+{
+  "experiment": "corners_v3",
+  "locked_on": "2026-07-14",
+  "status": "prospective_shadow_authorized",
+  "live_routing": false,
+  "mean_model": "nb_regression_cf_ca_wide_block_tempo",
+  "distribution": "nb2_fitted_alpha",
+  "event_feature_history": "understat_2019_2026_lagged_ema20",
+  "locked_window": "2026-2027_MD4_through_2026-11-30",
+  "selection_rules": {
+    "minimum_edge": 0.03,
+    "matchdays_1_to_3": "blocked",
+    "side_mix_over_80_percent": "stop_and_investigate",
+    "real_pinnacle_prices_only": true
+  },
+  "promotion_gates": {
+    "scored_lines": 400,
+    "settled_selections": 100,
+    "true_close_coverage": 0.5,
+    "mean_true_close_clv": 0.0,
+    "market_brier_and_log_loss": "must_beat_devigged_pinnacle"
+  },
+  "reset_rule": "Any post-lock change to mean, dispersion, blend, shading or selection restarts the window."
+}
