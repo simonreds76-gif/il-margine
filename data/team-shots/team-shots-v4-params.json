@@ -1,0 +1,693 @@
+{
+  "distribution": "nb2_hierarchical_team_alpha",
+  "frozen_at": "2026-07-14T12:45:52Z",
+  "league_alpha": {
+    "bundesliga": 0.04236965112774994,
+    "epl": 0.0486128276149427,
+    "la-liga": 0.04270814834348447,
+    "ligue-1": 0.04580945079175649,
+    "serie-a": 0.04049152871771317
+  },
+  "market": {
+    "blend": "shading_aware_logit",
+    "model_weight": 0.18,
+    "over_vig_share": 0.856
+  },
+  "mean_model": "canonical_form_v3_ema20_frozen",
+  "model": "team_shots_v4",
+  "pooled_alpha": 0.04407060974386249,
+  "schema_version": 1,
+  "team_alpha": {
+    "bundesliga|1 koln": {
+      "alpha": 0.04362288037131547,
+      "sample": 331
+    },
+    "bundesliga|augsburg": {
+      "alpha": 0.043872394756834666,
+      "sample": 397
+    },
+    "bundesliga|bayern munich": {
+      "alpha": 0.03171856744567377,
+      "sample": 397
+    },
+    "bundesliga|bielefeld": {
+      "alpha": 0.04348986326645552,
+      "sample": 61
+    },
+    "bundesliga|bochum": {
+      "alpha": 0.06443079713089679,
+      "sample": 129
+    },
+    "bundesliga|borussia monchengladbach": {
+      "alpha": 0.042836656270376784,
+      "sample": 401
+    },
+    "bundesliga|darmstadt": {
+      "alpha": 0.03609695464879204,
+      "sample": 96
+    },
+    "bundesliga|dortmund": {
+      "alpha": 0.0461903722706983,
+      "sample": 396
+    },
+    "bundesliga|ein frankfurt": {
+      "alpha": 0.03638038268062175,
+      "sample": 399
+    },
+    "bundesliga|fortuna dusseldorf": {
+      "alpha": 0.0540763839533358,
+      "sample": 62
+    },
+    "bundesliga|freiburg": {
+      "alpha": 0.055447125704077296,
+      "sample": 367
+    },
+    "bundesliga|greuther furth": {
+      "alpha": 0.04353879439604724,
+      "sample": 28
+    },
+    "bundesliga|hamburg": {
+      "alpha": 0.056956146221706146,
+      "sample": 162
+    },
+    "bundesliga|hannover": {
+      "alpha": 0.04535910916423423,
+      "sample": 128
+    },
+    "bundesliga|heidenheim": {
+      "alpha": 0.06534926308631699,
+      "sample": 95
+    },
+    "bundesliga|hertha": {
+      "alpha": 0.04713827276730027,
+      "sample": 297
+    },
+    "bundesliga|hoffenheim": {
+      "alpha": 0.040321275770606735,
+      "sample": 397
+    },
+    "bundesliga|holstein kiel": {
+      "alpha": 0.04119802399397446,
+      "sample": 28
+    },
+    "bundesliga|ingolstadt": {
+      "alpha": 0.050486517610792,
+      "sample": 62
+    },
+    "bundesliga|leverkusen": {
+      "alpha": 0.04430550733172335,
+      "sample": 397
+    },
+    "bundesliga|mainz": {
+      "alpha": 0.04388766950395844,
+      "sample": 397
+    },
+    "bundesliga|nurnberg": {
+      "alpha": 0.031021206337790354,
+      "sample": 28
+    },
+    "bundesliga|paderborn": {
+      "alpha": 0.03327361267037489,
+      "sample": 62
+    },
+    "bundesliga|rb leipzig": {
+      "alpha": 0.03933786923213575,
+      "sample": 331
+    },
+    "bundesliga|schalke 04": {
+      "alpha": 0.041959712229401425,
+      "sample": 265
+    },
+    "bundesliga|st pauli": {
+      "alpha": 0.05031223853047348,
+      "sample": 62
+    },
+    "bundesliga|stuttgart": {
+      "alpha": 0.039790887048120824,
+      "sample": 331
+    },
+    "bundesliga|union berlin": {
+      "alpha": 0.05041109802149219,
+      "sample": 230
+    },
+    "bundesliga|werder bremen": {
+      "alpha": 0.02582291922668956,
+      "sample": 362
+    },
+    "bundesliga|wolfsburg": {
+      "alpha": 0.031867817509081166,
+      "sample": 396
+    },
+    "epl|arsenal": {
+      "alpha": 0.04362212977332458,
+      "sample": 448
+    },
+    "epl|aston villa": {
+      "alpha": 0.04621927044542727,
+      "sample": 332
+    },
+    "epl|bournemouth": {
+      "alpha": 0.04880978079178124,
+      "sample": 332
+    },
+    "epl|brentford": {
+      "alpha": 0.054847858148503695,
+      "sample": 184
+    },
+    "epl|brighton": {
+      "alpha": 0.046505938176270266,
+      "sample": 332
+    },
+    "epl|burnley": {
+      "alpha": 0.053022554075616575,
+      "sample": 333
+    },
+    "epl|cardiff": {
+      "alpha": 0.05639925170762587,
+      "sample": 32
+    },
+    "epl|chelsea": {
+      "alpha": 0.04429876833347268,
+      "sample": 447
+    },
+    "epl|crystal palace": {
+      "alpha": 0.06234973044205024,
+      "sample": 444
+    },
+    "epl|everton": {
+      "alpha": 0.0352705185721514,
+      "sample": 444
+    },
+    "epl|fulham": {
+      "alpha": 0.050428124294618355,
+      "sample": 219
+    },
+    "epl|huddersfield": {
+      "alpha": 0.11532330057181003,
+      "sample": 69
+    },
+    "epl|hull": {
+      "alpha": 0.03768899009586121,
+      "sample": 70
+    },
+    "epl|ipswich": {
+      "alpha": 0.04966200688251615,
+      "sample": 32
+    },
+    "epl|leeds": {
+      "alpha": 0.04857346439581239,
+      "sample": 146
+    },
+    "epl|leicester": {
+      "alpha": 0.07382029040683964,
+      "sample": 369
+    },
+    "epl|liverpool": {
+      "alpha": 0.03845388681197716,
+      "sample": 445
+    },
+    "epl|luton": {
+      "alpha": 0.05230908413235944,
+      "sample": 32
+    },
+    "epl|man city": {
+      "alpha": 0.03952021068379479,
+      "sample": 442
+    },
+    "epl|man united": {
+      "alpha": 0.05786387107492402,
+      "sample": 449
+    },
+    "epl|middlesbrough": {
+      "alpha": 0.03745840544908632,
+      "sample": 32
+    },
+    "epl|newcastle": {
+      "alpha": 0.057922652121866626,
+      "sample": 407
+    },
+    "epl|norwich": {
+      "alpha": 0.03567109904171734,
+      "sample": 108
+    },
+    "epl|nott m forest": {
+      "alpha": 0.04839180598630761,
+      "sample": 146
+    },
+    "epl|qpr": {
+      "alpha": 0.053070110547432624,
+      "sample": 32
+    },
+    "epl|sheffield united": {
+      "alpha": 0.05471050560785387,
+      "sample": 107
+    },
+    "epl|southampton": {
+      "alpha": 0.04654588655536554,
+      "sample": 369
+    },
+    "epl|stoke": {
+      "alpha": 0.02399795827643251,
+      "sample": 144
+    },
+    "epl|sunderland": {
+      "alpha": 0.02839556002500034,
+      "sample": 143
+    },
+    "epl|swansea": {
+      "alpha": 0.05524298270431462,
+      "sample": 145
+    },
+    "epl|tottenham": {
+      "alpha": 0.04132217338798181,
+      "sample": 447
+    },
+    "epl|watford": {
+      "alpha": 0.04504424672646661,
+      "sample": 220
+    },
+    "epl|west brom": {
+      "alpha": 0.05976062903224297,
+      "sample": 181
+    },
+    "epl|west ham": {
+      "alpha": 0.04872587187883552,
+      "sample": 445
+    },
+    "epl|wolves": {
+      "alpha": 0.06222969092866071,
+      "sample": 295
+    },
+    "la-liga|alaves": {
+      "alpha": 0.05059175739461579,
+      "sample": 335
+    },
+    "la-liga|almeria": {
+      "alpha": 0.07410278808793777,
+      "sample": 108
+    },
+    "la-liga|ath bilbao": {
+      "alpha": 0.0310681747336524,
+      "sample": 446
+    },
+    "la-liga|ath madrid": {
+      "alpha": 0.04291123262483242,
+      "sample": 444
+    },
+    "la-liga|barcelona": {
+      "alpha": 0.030120374056272374,
+      "sample": 443
+    },
+    "la-liga|betis": {
+      "alpha": 0.04342296552533748,
+      "sample": 412
+    },
+    "la-liga|cadiz": {
+      "alpha": 0.061513808426802215,
+      "sample": 146
+    },
+    "la-liga|celta": {
+      "alpha": 0.06868878605959339,
+      "sample": 446
+    },
+    "la-liga|cordoba": {
+      "alpha": 0.04500939412806902,
+      "sample": 32
+    },
+    "la-liga|eibar": {
+      "alpha": 0.03423543121502424,
+      "sample": 258
+    },
+    "la-liga|elche": {
+      "alpha": 0.0607235065249263,
+      "sample": 183
+    },
+    "la-liga|espanol": {
+      "alpha": 0.049993900839125895,
+      "sample": 373
+    },
+    "la-liga|getafe": {
+      "alpha": 0.04501096819023658,
+      "sample": 409
+    },
+    "la-liga|girona": {
+      "alpha": 0.04887573875214995,
+      "sample": 221
+    },
+    "la-liga|granada": {
+      "alpha": 0.04306749473201936,
+      "sample": 258
+    },
+    "la-liga|huesca": {
+      "alpha": 0.06468170669303867,
+      "sample": 69
+    },
+    "la-liga|la coruna": {
+      "alpha": 0.045068683810438194,
+      "sample": 142
+    },
+    "la-liga|las palmas": {
+      "alpha": 0.057979348547787676,
+      "sample": 184
+    },
+    "la-liga|leganes": {
+      "alpha": 0.055388620168574,
+      "sample": 183
+    },
+    "la-liga|levante": {
+      "alpha": 0.03713941350778614,
+      "sample": 296
+    },
+    "la-liga|malaga": {
+      "alpha": 0.03084949362552653,
+      "sample": 144
+    },
+    "la-liga|mallorca": {
+      "alpha": 0.049117169605938434,
+      "sample": 222
+    },
+    "la-liga|osasuna": {
+      "alpha": 0.030584313605522474,
+      "sample": 297
+    },
+    "la-liga|oviedo": {
+      "alpha": 0.03839620515540901,
+      "sample": 32
+    },
+    "la-liga|real madrid": {
+      "alpha": 0.025092416867854583,
+      "sample": 445
+    },
+    "la-liga|sevilla": {
+      "alpha": 0.038837061031512854,
+      "sample": 447
+    },
+    "la-liga|sociedad": {
+      "alpha": 0.03463980049059468,
+      "sample": 444
+    },
+    "la-liga|sp gijon": {
+      "alpha": 0.04106671927567912,
+      "sample": 68
+    },
+    "la-liga|valencia": {
+      "alpha": 0.04323246061981434,
+      "sample": 445
+    },
+    "la-liga|valladolid": {
+      "alpha": 0.04989736118085052,
+      "sample": 184
+    },
+    "la-liga|vallecano": {
+      "alpha": 0.04946881494046546,
+      "sample": 295
+    },
+    "la-liga|villarreal": {
+      "alpha": 0.04221988591086194,
+      "sample": 447
+    },
+    "ligue-1|ajaccio": {
+      "alpha": 0.09893006112856945,
+      "sample": 32
+    },
+    "ligue-1|ajaccio gfco": {
+      "alpha": 0.05490250498870942,
+      "sample": 32
+    },
+    "ligue-1|amiens": {
+      "alpha": 0.06011252671422125,
+      "sample": 98
+    },
+    "ligue-1|angers": {
+      "alpha": 0.04981973355824023,
+      "sample": 351
+    },
+    "ligue-1|auxerre": {
+      "alpha": 0.02376743419758303,
+      "sample": 100
+    },
+    "ligue-1|bastia": {
+      "alpha": 0.07547853357347564,
+      "sample": 107
+    },
+    "ligue-1|bordeaux": {
+      "alpha": 0.04440156507445842,
+      "sample": 285
+    },
+    "ligue-1|brest": {
+      "alpha": 0.05079434062808435,
+      "sample": 235
+    },
+    "ligue-1|caen": {
+      "alpha": 0.029206605988765275,
+      "sample": 183
+    },
+    "ligue-1|clermont": {
+      "alpha": 0.04517599392928959,
+      "sample": 103
+    },
+    "ligue-1|dijon": {
+      "alpha": 0.029740938178686824,
+      "sample": 174
+    },
+    "ligue-1|evian thonon gaillard": {
+      "alpha": 0.030571380951441768,
+      "sample": 32
+    },
+    "ligue-1|guingamp": {
+      "alpha": 0.07189423192682526,
+      "sample": 181
+    },
+    "ligue-1|le havre": {
+      "alpha": 0.03624001246853744,
+      "sample": 96
+    },
+    "ligue-1|lens": {
+      "alpha": 0.06277016357804815,
+      "sample": 247
+    },
+    "ligue-1|lille": {
+      "alpha": 0.035192818143339466,
+      "sample": 423
+    },
+    "ligue-1|lorient": {
+      "alpha": 0.07182219020125727,
+      "sample": 286
+    },
+    "ligue-1|lyon": {
+      "alpha": 0.05698515415873579,
+      "sample": 421
+    },
+    "ligue-1|marseille": {
+      "alpha": 0.0401730755984242,
+      "sample": 423
+    },
+    "ligue-1|metz": {
+      "alpha": 0.055842267487088725,
+      "sample": 277
+    },
+    "ligue-1|monaco": {
+      "alpha": 0.047436072435501346,
+      "sample": 425
+    },
+    "ligue-1|montpellier": {
+      "alpha": 0.03983916857036822,
+      "sample": 388
+    },
+    "ligue-1|nancy": {
+      "alpha": 0.03057138095116645,
+      "sample": 32
+    },
+    "ligue-1|nantes": {
+      "alpha": 0.03729366435242261,
+      "sample": 425
+    },
+    "ligue-1|nice": {
+      "alpha": 0.03590495762191928,
+      "sample": 424
+    },
+    "ligue-1|nimes": {
+      "alpha": 0.05370693229060283,
+      "sample": 97
+    },
+    "ligue-1|paris": {
+      "alpha": 0.039445287252533295,
+      "sample": 28
+    },
+    "ligue-1|paris sg": {
+      "alpha": 0.030497700983759278,
+      "sample": 422
+    },
+    "ligue-1|reims": {
+      "alpha": 0.04827574737290102,
+      "sample": 317
+    },
+    "ligue-1|rennes": {
+      "alpha": 0.05294609902558905,
+      "sample": 424
+    },
+    "ligue-1|st etienne": {
+      "alpha": 0.04168363451651624,
+      "sample": 320
+    },
+    "ligue-1|strasbourg": {
+      "alpha": 0.04980999977052704,
+      "sample": 311
+    },
+    "ligue-1|toulouse": {
+      "alpha": 0.040383105960776655,
+      "sample": 350
+    },
+    "ligue-1|troyes": {
+      "alpha": 0.05155852742971847,
+      "sample": 145
+    },
+    "serie-a|atalanta": {
+      "alpha": 0.04873320011691834,
+      "sample": 443
+    },
+    "serie-a|benevento": {
+      "alpha": 0.07624352204039408,
+      "sample": 70
+    },
+    "serie-a|bologna": {
+      "alpha": 0.021767352568183136,
+      "sample": 406
+    },
+    "serie-a|brescia": {
+      "alpha": 0.03751286242462018,
+      "sample": 32
+    },
+    "serie-a|cagliari": {
+      "alpha": 0.05065322520575756,
+      "sample": 371
+    },
+    "serie-a|carpi": {
+      "alpha": 0.043211140316387134,
+      "sample": 32
+    },
+    "serie-a|cesena": {
+      "alpha": 0.04969100975953901,
+      "sample": 32
+    },
+    "serie-a|chievo": {
+      "alpha": 0.04432351328352712,
+      "sample": 184
+    },
+    "serie-a|como": {
+      "alpha": 0.02904488502860402,
+      "sample": 70
+    },
+    "serie-a|cremonese": {
+      "alpha": 0.03642576630096379,
+      "sample": 70
+    },
+    "serie-a|crotone": {
+      "alpha": 0.03335893040047828,
+      "sample": 107
+    },
+    "serie-a|empoli": {
+      "alpha": 0.049035438566406464,
+      "sample": 295
+    },
+    "serie-a|fiorentina": {
+      "alpha": 0.046047188508374706,
+      "sample": 445
+    },
+    "serie-a|frosinone": {
+      "alpha": 0.042436984964162004,
+      "sample": 108
+    },
+    "serie-a|genoa": {
+      "alpha": 0.03881380660033184,
+      "sample": 410
+    },
+    "serie-a|internazionale": {
+      "alpha": 0.03556290531537204,
+      "sample": 445
+    },
+    "serie-a|juventus": {
+      "alpha": 0.03936675798223214,
+      "sample": 446
+    },
+    "serie-a|lazio": {
+      "alpha": 0.04256413390106894,
+      "sample": 447
+    },
+    "serie-a|lecce": {
+      "alpha": 0.05497346609710939,
+      "sample": 183
+    },
+    "serie-a|milan": {
+      "alpha": 0.034949113412834944,
+      "sample": 446
+    },
+    "serie-a|monza": {
+      "alpha": 0.0650650728931591,
+      "sample": 108
+    },
+    "serie-a|napoli": {
+      "alpha": 0.022179248789312173,
+      "sample": 441
+    },
+    "serie-a|palermo": {
+      "alpha": 0.03456432814258348,
+      "sample": 106
+    },
+    "serie-a|parma": {
+      "alpha": 0.06838484061179573,
+      "sample": 221
+    },
+    "serie-a|pescara": {
+      "alpha": 0.04288921395527451,
+      "sample": 32
+    },
+    "serie-a|pisa": {
+      "alpha": 0.03856411130346384,
+      "sample": 32
+    },
+    "serie-a|roma": {
+      "alpha": 0.03937405054952393,
+      "sample": 441
+    },
+    "serie-a|salernitana": {
+      "alpha": 0.0493057278888812,
+      "sample": 108
+    },
+    "serie-a|sampdoria": {
+      "alpha": 0.026139396712735265,
+      "sample": 333
+    },
+    "serie-a|sassuolo": {
+      "alpha": 0.04154581404908343,
+      "sample": 407
+    },
+    "serie-a|spal": {
+      "alpha": 0.026883938914639815,
+      "sample": 107
+    },
+    "serie-a|spezia": {
+      "alpha": 0.04240435772158303,
+      "sample": 107
+    },
+    "serie-a|torino": {
+      "alpha": 0.04336090158718695,
+      "sample": 442
+    },
+    "serie-a|udinese": {
+      "alpha": 0.0371081671262143,
+      "sample": 442
+    },
+    "serie-a|venezia": {
+      "alpha": 0.029465104983904263,
+      "sample": 70
+    },
+    "serie-a|verona": {
+      "alpha": 0.057825329043840676,
+      "sample": 371
+    }
+  },
+  "team_alpha_prior_weight": 60,
+  "training_rows": 41778,
+  "training_through": "2026-05-24"
+}

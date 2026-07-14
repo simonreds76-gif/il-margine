@@ -246,6 +246,8 @@ def main() -> None:
     parser.add_argument("--corners", type=Path, default=DEFAULT_CORNERS)
     parser.add_argument("--team-audit", type=Path, default=DEFAULT_TEAM_AUDIT)
     parser.add_argument("--corners-audit", type=Path, default=DEFAULT_CORNERS_AUDIT)
+    parser.add_argument("--team-model", default="team-shots-v3-ema20-research")
+    parser.add_argument("--corners-model", default="corners-v0-research")
     parser.add_argument("--snapshot-date", type=str, default=None)
     args = parser.parse_args()
 
@@ -281,7 +283,7 @@ def main() -> None:
     now_utc = datetime.now(timezone.utc)
     team_audit = build_settlement_audit(
         rows=team_rows,
-        model="team-shots-v3-ema20-research",
+        model=args.team_model,
         now_utc=now_utc,
         settled_this_run=team_settled,
         is_pending=is_pending,
@@ -293,7 +295,7 @@ def main() -> None:
     )
     corners_audit = build_settlement_audit(
         rows=corner_rows,
-        model="corners-v0-research",
+        model=args.corners_model,
         now_utc=now_utc,
         settled_this_run=corner_settled,
         is_pending=is_pending,

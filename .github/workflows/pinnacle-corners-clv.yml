@@ -39,6 +39,7 @@ jobs:
             --report data/football-form/team-shots-v3-ema20-clv-monitor.md \
             --allowed-config data/football-form/team-shots-v3-ema20-allowed-leagues.json
           python scripts/corners-v0-clv-monitor.py
+          python scripts/run-football-vnext-shadow.py
 
       - name: Generate corners snapshot artifact
         run: python scripts/corners-live-snapshot.py

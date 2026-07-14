@@ -17,12 +17,14 @@ import {
   StatusPill,
   EmptyState,
 } from "../shared";
+import FootballVnextShadowPanel, { type FootballVnextGate } from "@/components/model-monitor/FootballVnextShadowPanel";
 
 export const dynamic = "force-dynamic";
 
 import { MODEL_MONITOR_ENABLED } from "../shared";
 
 type CsvRow = Record<string, string>;
+type FootballCountsGatePayload = { team_shots_v4?: FootballVnextGate; corners_v3?: FootballVnextGate };
 type CurrentValueSignal = { row: CsvRow; displayDate: string; edgeValue: number };
 type ConsensusState = "aligned" | "divergent" | "conflict" | "extreme";
 type TeamPropsStatus = {
@@ -773,6 +775,9 @@ export default async function CornersMonitorPage() {
     predictionsMtime,
     snapshotGeneratedAt,
     shortlistSource,
+    cornersV3ClvCsv,
+    vnextCandidatesCsv,
+    vnextGate,
   ] = await Promise.all([
       readFile("data/corners-ou/corners-ou-calibration.txt"),
       readJson<CornersCalibrationParams>("data/corners-ou/corners-calibration-params.json"),
@@ -798,6 +803,9 @@ export default async function CornersMonitorPage() {
       readKnownFileMtime("data/corners-ou/corners-ou-predictions.csv"),
       readCornersLiveSnapshotGeneratedAt(),
       inspectCornersLiveSource("data/shortlist/signals-latest.csv"),
+      readFile("data/football-form/corners-v3-shadow-clv.csv"),
+      readFile("data/football-form/football-counts-vnext-candidates.csv"),
+      readJson<FootballCountsGatePayload>("data/football-form/football-counts-vnext-gate.json"),
     ]);
 
   const backtestRows = backtestCsv ? parseCsvCached(backtestCsv) : [];
@@ -811,6 +819,8 @@ export default async function CornersMonitorPage() {
       ? predictionsSummary.prediction_count
       : predictions.length;
   const pinnacleRows = pinnacleCornersCsv ? parseCsvCached(pinnacleCornersCsv) : [];
+  const cornersV3ClvRows = cornersV3ClvCsv ? parseCsvCached(cornersV3ClvCsv) : [];
+  const vnextCandidateRows = vnextCandidatesCsv ? parseCsvCached(vnextCandidatesCsv) : [];
   const valueBets = valueBetsCsv ? parseCsvCached(valueBetsCsv) : [];
   const valueBetsV31 = valueBetsV31Csv ? parseCsvCached(valueBetsV31Csv) : [];
   const signals = signalsCsv ? parseCsvCached(signalsCsv) : [];
@@ -1202,6 +1212,14 @@ export default async function CornersMonitorPage() {
           </section>
         ) : null}
 
+        <FootballVnextShadowPanel
+          title="Corners v3 Prospective Lane"
+          model="corners_v3"
+          rows={cornersV3ClvRows}
+          candidates={vnextCandidateRows}
+          gate={vnextGate?.corners_v3 ?? null}
+        />
+
         <SectionCard
           collapsible
           defaultOpen
@@ -1318,8 +1336,8 @@ export default async function CornersMonitorPage() {
         <SectionCard
           collapsible
           defaultOpen
-          title="Corners V0 Research Partial"
-          subtitle="Active research lane | canonical_form_v0 | total-corners CLV watch"
+          title="Legacy Corners V0 Control"
+          subtitle="Frozen comparison lane | canonical_form_v0 | retained only to benchmark the new corners v3 prospective model"
         >
           {cornersV0Lane || cornersAllowedConfig ? (
             <>

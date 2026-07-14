@@ -1,0 +1,22 @@
+{
+  "allowed_leagues": [
+    "bundesliga",
+    "epl",
+    "la-liga",
+    "ligue-1",
+    "serie-a"
+  ],
+  "blocked_leagues": [],
+  "canonical_only_allowed": true,
+  "lane": "prospective_shadow",
+  "market": "corners_total",
+  "model": "corners_v3",
+  "live_routing": false,
+  "rules": [
+    "paired real Pinnacle prices only",
+    "matchdays 1-3 blocked",
+    "minimum model edge 3%",
+    "one strongest signal per fixture",
+    "research-only until the registered real-price gates pass"
+  ]
+}

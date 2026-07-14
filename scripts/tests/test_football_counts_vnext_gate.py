@@ -43,6 +43,46 @@ class FootballCountsVnextGateTests(unittest.TestCase):
         failing = {**passing, "v3_log_loss": "0.65"}
         self.assertFalse(GATE.corners_count_gate([passing, failing], report))
 
+    def test_live_summary_excludes_blocked_and_guarded_rows(self) -> None:
+        rows = [
+            {"side": "over", "result": "won", "pnl_units": "1.0", "true_close": "true", "published_to_close_clv": "0.02"},
+            {"side": "under", "result": "lost", "pnl_units": "-1.0", "true_close": "false"},
+            {"side": "over", "result": "won", "pnl_units": "1.0", "blocked_reason": "matchdays_1_to_3"},
+            {"side": "over", "result": "won", "pnl_units": "1.0", "confidence_guard_applied": "true"},
+        ]
+        summary = GATE.live_summary(rows)
+        self.assertEqual(summary["signals"], 2)
+        self.assertEqual(summary["settled"], 2)
+        self.assertEqual(summary["pnl_units"], 0.0)
+        self.assertEqual(summary["true_close_n"], 1)
+        self.assertEqual(summary["mean_true_close_clv"], 0.02)
+
+    def test_corners_zero_clv_can_pass_at_the_registered_threshold(self) -> None:
+        team_fold = {
+            "status": "OK", "hierarchical_mle_brier": "0.19", "fixed_alpha_025_brier": "0.20",
+            "hierarchical_mle_log_loss": "0.56", "fixed_alpha_025_log_loss": "0.57",
+        }
+        corners_fold = {
+            "status": "OK", "v3_mae": "2.70", "baseline_mae": "2.80", "v3_brier": "0.21",
+            "baseline_brier": "0.22", "v3_log_loss": "0.61", "baseline_log_loss": "0.64",
+        }
+        corners_live = [
+            {
+                "side": "over" if index % 2 == 0 else "under",
+                "result": "won" if index % 2 == 0 else "lost",
+                "pnl_units": "1" if index % 2 == 0 else "-1",
+                "true_close": "true",
+                "published_to_close_clv": "0.0",
+            }
+            for index in range(100)
+        ]
+        payload = GATE.build_payload(
+            [team_fold, team_fold], "Count-distribution gate: **PASS**",
+            [corners_fold, corners_fold], "Count-model gate: **PASS**",
+            [], corners_live,
+        )
+        self.assertEqual(payload["corners_v3"]["promotion_gate"], "PASS")
+
 
 if __name__ == "__main__":
     unittest.main()

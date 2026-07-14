@@ -56,6 +56,7 @@ jobs:
             --report data/football-form/team-shots-v3-ema20-clv-monitor.md \
             --allowed-config data/football-form/team-shots-v3-ema20-allowed-leagues.json
           python scripts/corners-v0-clv-monitor.py
+          python scripts/run-football-vnext-shadow.py
           python scripts/tennis-model-variants-shadow.py
           python scripts/backtest-tennis-player-props-v2.py
           python scripts/tennis-derivatives-pinnacle-coverage.py --allow-missing-creds
@@ -107,6 +108,10 @@ jobs:
             data/corners-ou/corners-v3-lock.json
             data/football-form/team-shots-v3-ema20-clv-monitor.md
             data/football-form/corners-v0-clv-monitor.md
+            data/football-form/team-shots-v4-shadow-clv.md
+            data/football-form/corners-v3-shadow-clv.md
+            data/football-form/team-shots-v4-settlement-audit.json
+            data/football-form/corners-v3-settlement-audit.json
             data/backtest/model-variants-shadow.csv
             data/backtest/model-variants-shadow-report.txt
             data/tennis-props/backtest/aces-dfs-v2-rung1-gate.json
