@@ -67,6 +67,24 @@ def _extract_stat_int(stat_rows: Iterable[dict], names: Iterable[str]) -> Option
     return None
 
 
+def _stats_for_team(stats_response: List[dict], team_id: Optional[int], fallback_index: int) -> list[dict]:
+    """Return the correct team's stats without trusting API response order."""
+    if team_id is not None:
+        for row in stats_response:
+            candidate_id = _safe_int((row.get("team") or {}).get("id"))
+            if candidate_id == team_id:
+                return row.get("statistics") or []
+    if 0 <= fallback_index < len(stats_response):
+        return stats_response[fallback_index].get("statistics") or []
+    return []
+
+
+def _sum_optional(left: Optional[int], right: Optional[int]) -> Optional[int]:
+    if left is None or right is None:
+        return None
+    return left + right
+
+
 def _request(path: str, params: dict) -> dict:
     response = requests.get(
         f"{BASE_URL}/{path.lstrip('/')}",
@@ -171,10 +189,11 @@ def fetch_api_football_results(
             if len(stats_response) < 2:
                 continue
 
-            home_stats = stats_response[0]
-            away_stats = stats_response[1]
-            home_values = home_stats.get("statistics") or []
-            away_values = away_stats.get("statistics") or []
+            teams = fixture_row.get("teams") or {}
+            home_team_id = _safe_int((teams.get("home") or {}).get("id"))
+            away_team_id = _safe_int((teams.get("away") or {}).get("id"))
+            home_values = _stats_for_team(stats_response, home_team_id, 0)
+            away_values = _stats_for_team(stats_response, away_team_id, 1)
 
             home_shots = _extract_stat_int(home_values, ("Total Shots",))
             away_shots = _extract_stat_int(away_values, ("Total Shots",))
@@ -182,21 +201,60 @@ def fetch_api_football_results(
             away_sot = _extract_stat_int(away_values, ("Shots on Goal", "Shots on Target"))
             home_corners = _extract_stat_int(home_values, ("Corner Kicks",))
             away_corners = _extract_stat_int(away_values, ("Corner Kicks",))
+            home_fouls = _extract_stat_int(home_values, ("Fouls",))
+            away_fouls = _extract_stat_int(away_values, ("Fouls",))
+            home_yellow_cards = _extract_stat_int(home_values, ("Yellow Cards",))
+            away_yellow_cards = _extract_stat_int(away_values, ("Yellow Cards",))
+            home_red_cards = _extract_stat_int(home_values, ("Red Cards",))
+            away_red_cards = _extract_stat_int(away_values, ("Red Cards",))
+            home_offsides = _extract_stat_int(home_values, ("Offsides",))
+            away_offsides = _extract_stat_int(away_values, ("Offsides",))
+            home_blocked_shots = _extract_stat_int(home_values, ("Blocked Shots",))
+            away_blocked_shots = _extract_stat_int(away_values, ("Blocked Shots",))
+            home_goalkeeper_saves = _extract_stat_int(home_values, ("Goalkeeper Saves",))
+            away_goalkeeper_saves = _extract_stat_int(away_values, ("Goalkeeper Saves",))
 
-            if home_shots is None and away_shots is None and home_corners is None and away_corners is None:
+            if all(
+                value is None
+                for value in (
+                    home_shots,
+                    away_shots,
+                    home_sot,
+                    away_sot,
+                    home_corners,
+                    away_corners,
+                    home_fouls,
+                    away_fouls,
+                    home_yellow_cards,
+                    away_yellow_cards,
+                )
+            ):
                 continue
 
             key = build_fixture_key(fixture_date, target["home_team"], target["away_team"])
             results[key] = {
                 "home_team": home_norm,
                 "away_team": away_norm,
-                "home_shots": home_shots or 0,
-                "away_shots": away_shots or 0,
-                "home_sot": home_sot or 0,
-                "away_sot": away_sot or 0,
-                "home_corners": home_corners or 0,
-                "away_corners": away_corners or 0,
-                "total_corners": (home_corners or 0) + (away_corners or 0),
+                "home_shots": home_shots,
+                "away_shots": away_shots,
+                "home_sot": home_sot,
+                "away_sot": away_sot,
+                "home_corners": home_corners,
+                "away_corners": away_corners,
+                "total_corners": _sum_optional(home_corners, away_corners),
+                "home_fouls": home_fouls,
+                "away_fouls": away_fouls,
+                "home_yellow_cards": home_yellow_cards,
+                "away_yellow_cards": away_yellow_cards,
+                "home_red_cards": home_red_cards,
+                "away_red_cards": away_red_cards,
+                "home_offsides": home_offsides,
+                "away_offsides": away_offsides,
+                "home_blocked_shots": home_blocked_shots,
+                "away_blocked_shots": away_blocked_shots,
+                "home_goalkeeper_saves": home_goalkeeper_saves,
+                "away_goalkeeper_saves": away_goalkeeper_saves,
+                "referee": str((fixture_row.get("fixture") or {}).get("referee") or "").strip() or None,
                 "source": "api-football",
                 "fixture_id": fixture_id,
             }

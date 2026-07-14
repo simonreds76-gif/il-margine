@@ -175,13 +175,13 @@ def fetch_fotmob_recent_results(league_key: str, target_dates: Iterable[str]) ->
 
             key = f"{match_date}|{normalize_team_name(home_team)}|{normalize_team_name(away_team)}"
             results[key] = {
-                "home_shots": shots[0] if shots else 0,
-                "away_shots": shots[1] if shots else 0,
-                "home_sot": shots_on_target[0] if shots_on_target else 0,
-                "away_sot": shots_on_target[1] if shots_on_target else 0,
-                "home_corners": corners[0] if corners else 0,
-                "away_corners": corners[1] if corners else 0,
-                "total_corners": (corners[0] + corners[1]) if corners else 0,
+                "home_shots": shots[0] if shots else None,
+                "away_shots": shots[1] if shots else None,
+                "home_sot": shots_on_target[0] if shots_on_target else None,
+                "away_sot": shots_on_target[1] if shots_on_target else None,
+                "home_corners": corners[0] if corners else None,
+                "away_corners": corners[1] if corners else None,
+                "total_corners": (corners[0] + corners[1]) if corners else None,
                 "source": "fotmob",
                 "match_id": match_id,
             }

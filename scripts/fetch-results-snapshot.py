@@ -41,6 +41,16 @@ DEFAULT_PENDING_PATHS = [SHORTLIST_SETTLED, TEAM_SHOTS_SIGNALS, TEAM_SHOTS_V3_RE
 DEFAULT_API_FOOTBALL_MAX_REQUESTS = 10
 
 
+def optional_int(value: object) -> int | None:
+    text = str(value or "").strip()
+    if not text:
+        return None
+    try:
+        return int(float(text))
+    except (TypeError, ValueError):
+        return None
+
+
 def load_env() -> None:
     for name in (".env.local", "env.local"):
         path = ROOT / name
@@ -85,23 +95,36 @@ def fetch_football_data_results(league: str) -> tuple[Dict[str, dict], dict]:
         latest_available = max(latest_available, match_date.isoformat()) if latest_available else match_date.isoformat()
         home = row.get("HomeTeam", "")
         away = row.get("AwayTeam", "")
-        hs = (row.get("HS") or "").strip()
-        a_s = (row.get("AS") or "").strip()
-        hc = (row.get("HC") or "").strip()
-        ac = (row.get("AC") or "").strip()
-        if not any([hs, a_s, hc, ac]):
+        home_shots = optional_int(row.get("HS"))
+        away_shots = optional_int(row.get("AS"))
+        home_sot = optional_int(row.get("HST"))
+        away_sot = optional_int(row.get("AST"))
+        home_corners = optional_int(row.get("HC"))
+        away_corners = optional_int(row.get("AC"))
+        if all(value is None for value in (home_shots, away_shots, home_sot, away_sot, home_corners, away_corners)):
             continue
         key = build_fixture_key(match_date, home, away)
         results[key] = {
             "home_team": normalize_team_name(home),
             "away_team": normalize_team_name(away),
-            "home_shots": int(float(hs or 0)),
-            "away_shots": int(float(a_s or 0)),
-            "home_sot": int(float((row.get("HST") or 0) or 0)),
-            "away_sot": int(float((row.get("AST") or 0) or 0)),
-            "home_corners": int(float(hc or 0)),
-            "away_corners": int(float(ac or 0)),
-            "total_corners": int(float(hc or 0)) + int(float(ac or 0)),
+            "home_shots": home_shots,
+            "away_shots": away_shots,
+            "home_sot": home_sot,
+            "away_sot": away_sot,
+            "home_corners": home_corners,
+            "away_corners": away_corners,
+            "total_corners": (
+                home_corners + away_corners
+                if home_corners is not None and away_corners is not None
+                else None
+            ),
+            "home_fouls": optional_int(row.get("HF")),
+            "away_fouls": optional_int(row.get("AF")),
+            "home_yellow_cards": optional_int(row.get("HY")),
+            "away_yellow_cards": optional_int(row.get("AY")),
+            "home_red_cards": optional_int(row.get("HR")),
+            "away_red_cards": optional_int(row.get("AR")),
+            "referee": str(row.get("Referee") or "").strip() or None,
             "source": "football-data",
         }
 
@@ -244,13 +267,13 @@ def main() -> int:
             normalized_fotmob[normalized_key] = {
                 "home_team": normalize_team_name(home),
                 "away_team": normalize_team_name(away),
-                "home_shots": int(row.get("home_shots", 0) or 0),
-                "away_shots": int(row.get("away_shots", 0) or 0),
-                "home_sot": int(row.get("home_sot", 0) or 0),
-                "away_sot": int(row.get("away_sot", 0) or 0),
-                "home_corners": int(row.get("home_corners", 0) or 0),
-                "away_corners": int(row.get("away_corners", 0) or 0),
-                "total_corners": int(row.get("total_corners", 0) or 0),
+                "home_shots": optional_int(row.get("home_shots")),
+                "away_shots": optional_int(row.get("away_shots")),
+                "home_sot": optional_int(row.get("home_sot")),
+                "away_sot": optional_int(row.get("away_sot")),
+                "home_corners": optional_int(row.get("home_corners")),
+                "away_corners": optional_int(row.get("away_corners")),
+                "total_corners": optional_int(row.get("total_corners")),
                 "source": "fotmob",
                 "match_id": row.get("match_id"),
             }
