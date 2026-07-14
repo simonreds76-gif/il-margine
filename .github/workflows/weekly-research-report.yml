@@ -27,7 +27,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install Python deps
-        run: pip install requests
+        run: pip install requests numpy scipy
 
       - name: Create .env.local
         run: |
@@ -58,6 +58,9 @@ jobs:
           python scripts/corners-v0-clv-monitor.py
           python scripts/run-football-vnext-shadow.py
           python scripts/api-football-source-agreement.py --allow-empty
+          python scripts/fouls-empirical-baseline.py
+          python scripts/team-fouls-v1-folds.py
+          python scripts/fouls-definition-agreement.py --allow-empty
           python scripts/tennis-model-variants-shadow.py
           python scripts/backtest-tennis-player-props-v2.py
           python scripts/tennis-derivatives-pinnacle-coverage.py --allow-missing-creds
@@ -117,6 +120,16 @@ jobs:
             data/football-form/api-football-counts-health.md
             data/football-form/api-football-source-agreement.json
             data/football-form/api-football-source-agreement.md
+            data/football-form/fouls-empirical-baseline.json
+            data/football-form/fouls-empirical-baseline.md
+            data/football-form/team-fouls-v1-fold-report.json
+            data/football-form/team-fouls-v1-fold-report.md
+            data/football-form/team-fouls-v1-fold-results.csv
+            data/football-form/team-fouls-definition-agreement.json
+            data/football-form/team-fouls-definition-agreement.md
+            data/football-form/team-fouls-fotmob-agreement.csv
+            data/football-form/team-fouls-fotmob-agreement.json
+            data/football-form/team-fouls-fotmob-agreement.md
             data/backtest/model-variants-shadow.csv
             data/backtest/model-variants-shadow-report.txt
             data/tennis-props/backtest/aces-dfs-v2-rung1-gate.json

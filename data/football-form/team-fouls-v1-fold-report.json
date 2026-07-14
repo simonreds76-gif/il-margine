@@ -1,0 +1,545 @@
+{
+  "decision": {
+    "count_gate_pass": false,
+    "gates": {
+      "feature_ladder": false,
+      "folds_complete": true,
+      "hierarchical_nb_cells": false,
+      "mae_improvement": true,
+      "market_prices": false,
+      "reliability": false,
+      "total_variance": true
+    },
+    "hierarchical_nb_cells": 10,
+    "hierarchical_nb_wins": 2,
+    "ladder_checks": [
+      {
+        "delta_mae": 0.008310989168583749,
+        "delta_nll": 0.0013869479865378231,
+        "from": "core",
+        "n": 748,
+        "passed": false,
+        "scope": "epl",
+        "season": "2024-2025",
+        "to": "core_referee"
+      },
+      {
+        "delta_mae": -0.02370008678090718,
+        "delta_nll": -0.007030819107013198,
+        "from": "core_referee",
+        "n": 3454,
+        "passed": true,
+        "scope": "all",
+        "season": "2024-2025",
+        "to": "core_referee_market"
+      },
+      {
+        "delta_mae": 8.871843952862335e-05,
+        "delta_nll": 1.5460183072857347e-05,
+        "from": "core_referee_market",
+        "n": 3454,
+        "passed": false,
+        "scope": "all",
+        "season": "2024-2025",
+        "to": "full"
+      },
+      {
+        "delta_mae": -0.00784468288538065,
+        "delta_nll": -0.002570502888655124,
+        "from": "core",
+        "n": 760,
+        "passed": true,
+        "scope": "epl",
+        "season": "2025-2026",
+        "to": "core_referee"
+      },
+      {
+        "delta_mae": -0.016510268043386844,
+        "delta_nll": -0.005328054058659326,
+        "from": "core_referee",
+        "n": 3468,
+        "passed": true,
+        "scope": "all",
+        "season": "2025-2026",
+        "to": "core_referee_market"
+      },
+      {
+        "delta_mae": -0.00010443911919111315,
+        "delta_nll": -7.241733878160517e-05,
+        "from": "core_referee_market",
+        "n": 3468,
+        "passed": false,
+        "scope": "all",
+        "season": "2025-2026",
+        "to": "full"
+      }
+    ],
+    "mae_checks": [
+      {
+        "improvement_pct": 7.687644029159185,
+        "season": "2024-2025"
+      },
+      {
+        "improvement_pct": 8.285651336299455,
+        "season": "2025-2026"
+      }
+    ],
+    "market_gate_pass": false,
+    "signals_authorized": false,
+    "status": "COUNT_GATE_FAIL_MARKET_BLOCKED"
+  },
+  "folds": [
+    {
+      "causal_baseline_mae": 3.075242712182472,
+      "coefficients": {
+        "intercept": -0.015994998248070113,
+        "opening_closeness": 0.03833264885507607,
+        "opening_strength": -0.017909030660097684,
+        "opponent_cards": -0.0005669360224394769,
+        "opponent_drawn": 0.06541810685241965,
+        "referee_epl": 0.015426775317334716,
+        "team_cards": -2.4426956164966336e-05,
+        "team_committed": 0.06808145018693985
+      },
+      "distribution": {
+        "by_league": [
+          {
+            "fixed_alpha_brier": 0.1777975084291014,
+            "hierarchical_nb_brier": 0.1778177844919483,
+            "league": "bundesliga",
+            "matches": 586,
+            "poisson_brier": 0.17801711626265618
+          },
+          {
+            "fixed_alpha_brier": 0.18144442238035308,
+            "hierarchical_nb_brier": 0.18124382125881222,
+            "league": "epl",
+            "matches": 748,
+            "poisson_brier": 0.1812267507203731
+          },
+          {
+            "fixed_alpha_brier": 0.19296876378988065,
+            "hierarchical_nb_brier": 0.19250228453092244,
+            "league": "la-liga",
+            "matches": 760,
+            "poisson_brier": 0.19211103486938033
+          },
+          {
+            "fixed_alpha_brier": 0.20138638685464805,
+            "hierarchical_nb_brier": 0.20135454997689578,
+            "league": "ligue-1",
+            "matches": 612,
+            "poisson_brier": 0.2013150201578571
+          },
+          {
+            "fixed_alpha_brier": 0.19741818330253952,
+            "hierarchical_nb_brier": 0.19687675912770572,
+            "league": "serie-a",
+            "matches": 748,
+            "poisson_brier": 0.196831499031588
+          }
+        ],
+        "empirical_total_vmr": 1.3727451743900692,
+        "fixed_alpha_brier": 0.19035416856560744,
+        "fixed_alpha_log_loss": 0.561232487296907,
+        "hierarchical_nb_brier": 0.1900886325045629,
+        "hierarchical_nb_log_loss": 0.560384758625401,
+        "league_alpha": {
+          "bundesliga": 0.005852888017328821,
+          "epl": 0.0020000000036067226,
+          "la-liga": 0.00676322527230178,
+          "ligue-1": 0.004882476362486579,
+          "serie-a": 0.004432633843613075
+        },
+        "poisson_brier": 0.19001585980941588,
+        "poisson_log_loss": 0.5601634162447386,
+        "pooled_alpha": 0.004421500344677084,
+        "priced_total_vmr": 1.4312111885263439,
+        "reliability": {
+          "bins": [
+            {
+              "actual": 0.07775020678246485,
+              "bin": 1,
+              "gap": -0.0004019053741131512,
+              "n": 2418,
+              "predicted": 0.0773483014083517
+            },
+            {
+              "actual": 0.1567411083540116,
+              "bin": 2,
+              "gap": 6.149702306362803e-06,
+              "n": 2418,
+              "predicted": 0.15674725805631795
+            },
+            {
+              "actual": 0.21762515515101366,
+              "bin": 3,
+              "gap": 0.005440789153259268,
+              "n": 2417,
+              "predicted": 0.22306594430427293
+            },
+            {
+              "actual": 0.28329197684036395,
+              "bin": 4,
+              "gap": 0.006558667048008615,
+              "n": 2418,
+              "predicted": 0.28985064388837256
+            },
+            {
+              "actual": 0.3626964433416046,
+              "bin": 5,
+              "gap": -0.0013463073175014606,
+              "n": 2418,
+              "predicted": 0.36135013602410315
+            },
+            {
+              "actual": 0.4400330851943755,
+              "bin": 6,
+              "gap": -0.002775883059029427,
+              "n": 2418,
+              "predicted": 0.4372572021353461
+            },
+            {
+              "actual": 0.532671629445823,
+              "bin": 7,
+              "gap": -0.015270641262595697,
+              "n": 2418,
+              "predicted": 0.5174009881832273
+            },
+            {
+              "actual": 0.6036408771203972,
+              "bin": 8,
+              "gap": -0.0019072708798013593,
+              "n": 2417,
+              "predicted": 0.6017336062405958
+            },
+            {
+              "actual": 0.695616211745244,
+              "bin": 9,
+              "gap": -0.0021596558958471013,
+              "n": 2418,
+              "predicted": 0.6934565558493969
+            },
+            {
+              "actual": 0.8101736972704715,
+              "bin": 10,
+              "gap": 0.0009116833418127968,
+              "n": 2418,
+              "predicted": 0.8110853806122843
+            }
+          ],
+          "max_abs_gap": 0.015270641262595697
+        },
+        "residual_nu": {
+          "bundesliga": 0.009426023258796322,
+          "epl": 0.0064070174391918835,
+          "la-liga": 0.0019489309562178677,
+          "ligue-1": 0.010050881615465333,
+          "serie-a": 0.010045039544873768
+        },
+        "total_vmr_gap": 0.058466014136274724
+      },
+      "rungs": {
+        "core": {
+          "alpha": 0.006077023429200074,
+          "bias": -0.0013542222488239209,
+          "mae": 2.860583841660908,
+          "nll": 2.685849903800194
+        },
+        "core_referee": {
+          "alpha": 0.005947404143081958,
+          "bias": 0.023960180990723424,
+          "mae": 2.8624403677786017,
+          "nll": 2.6861784813858445
+        },
+        "core_referee_market": {
+          "alpha": 0.00441958769162035,
+          "bias": 0.02486679053888765,
+          "mae": 2.8387402809976945,
+          "nll": 2.6791476622788313
+        },
+        "full": {
+          "alpha": 0.004454966764937767,
+          "bias": 0.02521649641597113,
+          "mae": 2.838828999437223,
+          "nll": 2.679163122461904
+        }
+      },
+      "season": "2024-2025",
+      "status": "OK",
+      "train": 34850,
+      "transitions": [
+        {
+          "delta_mae": 0.008310989168583749,
+          "delta_nll": 0.0013869479865378231,
+          "from": "core",
+          "n": 748,
+          "scope": "epl",
+          "to": "core_referee"
+        },
+        {
+          "delta_mae": -0.02370008678090718,
+          "delta_nll": -0.007030819107013198,
+          "from": "core_referee",
+          "n": 3454,
+          "scope": "all",
+          "to": "core_referee_market"
+        },
+        {
+          "delta_mae": 8.871843952862335e-05,
+          "delta_nll": 1.5460183072857347e-05,
+          "from": "core_referee_market",
+          "n": 3454,
+          "scope": "all",
+          "to": "full"
+        }
+      ],
+      "validation_legs": 3454,
+      "validation_matches": 1727
+    },
+    {
+      "causal_baseline_mae": 3.042545116904369,
+      "coefficients": {
+        "intercept": -0.016110846954396296,
+        "opening_closeness": 0.037825832708090104,
+        "opening_strength": -0.018365980057301973,
+        "opponent_cards": -0.00010879708313775911,
+        "opponent_drawn": 0.06564788731121333,
+        "referee_epl": 0.014512684004576549,
+        "team_cards": -0.0009186793153882704,
+        "team_committed": 0.07011810876425369
+      },
+      "distribution": {
+        "by_league": [
+          {
+            "fixed_alpha_brier": 0.16699137607945372,
+            "hierarchical_nb_brier": 0.16670501684419145,
+            "league": "bundesliga",
+            "matches": 612,
+            "poisson_brier": 0.16661075557336696
+          },
+          {
+            "fixed_alpha_brier": 0.17796574269756224,
+            "hierarchical_nb_brier": 0.17765132311800297,
+            "league": "epl",
+            "matches": 760,
+            "poisson_brier": 0.1776716715706462
+          },
+          {
+            "fixed_alpha_brier": 0.19568367317614102,
+            "hierarchical_nb_brier": 0.1950692863066493,
+            "league": "la-liga",
+            "matches": 748,
+            "poisson_brier": 0.19504657168244552
+          },
+          {
+            "fixed_alpha_brier": 0.1980436253676752,
+            "hierarchical_nb_brier": 0.197763869935688,
+            "league": "ligue-1",
+            "matches": 600,
+            "poisson_brier": 0.19783596793568445
+          },
+          {
+            "fixed_alpha_brier": 0.18945820021458873,
+            "hierarchical_nb_brier": 0.18840282697511698,
+            "league": "serie-a",
+            "matches": 748,
+            "poisson_brier": 0.1882199630811897
+          }
+        ],
+        "empirical_total_vmr": 1.4593579543460864,
+        "fixed_alpha_brier": 0.18580305165157032,
+        "fixed_alpha_log_loss": 0.5503773921968815,
+        "hierarchical_nb_brier": 0.18527506879310846,
+        "hierarchical_nb_log_loss": 0.548705375844612,
+        "league_alpha": {
+          "bundesliga": 0.005847773101291541,
+          "epl": 0.0020000000036067226,
+          "la-liga": 0.006800482290497579,
+          "ligue-1": 0.004896737318368447,
+          "serie-a": 0.005041159257904913
+        },
+        "poisson_brier": 0.1852310269807396,
+        "poisson_log_loss": 0.5485239380069749,
+        "pooled_alpha": 0.00460418138851036,
+        "priced_total_vmr": 1.4820131690962515,
+        "reliability": {
+          "bins": [
+            {
+              "actual": 0.06507413509060955,
+              "bin": 1,
+              "gap": 0.007652532029441411,
+              "n": 2428,
+              "predicted": 0.07272666712005096
+            },
+            {
+              "actual": 0.14132674083230326,
+              "bin": 2,
+              "gap": 0.007159534782441468,
+              "n": 2427,
+              "predicted": 0.14848627561474473
+            },
+            {
+              "actual": 0.21869851729818782,
+              "bin": 3,
+              "gap": -0.0013867477269914885,
+              "n": 2428,
+              "predicted": 0.21731176957119633
+            },
+            {
+              "actual": 0.28141738772146685,
+              "bin": 4,
+              "gap": 0.0045744884705948285,
+              "n": 2427,
+              "predicted": 0.2859918761920617
+            },
+            {
+              "actual": 0.35502471169686983,
+              "bin": 5,
+              "gap": 0.002928954127079386,
+              "n": 2428,
+              "predicted": 0.3579536658239492
+            },
+            {
+              "actual": 0.4316309719934102,
+              "bin": 6,
+              "gap": 0.0030713340040049997,
+              "n": 2428,
+              "predicted": 0.4347023059974152
+            },
+            {
+              "actual": 0.5109188298310672,
+              "bin": 7,
+              "gap": 0.0043262628139367765,
+              "n": 2427,
+              "predicted": 0.515245092645004
+            },
+            {
+              "actual": 0.6161449752883031,
+              "bin": 8,
+              "gap": -0.015467534472731748,
+              "n": 2428,
+              "predicted": 0.6006774408155714
+            },
+            {
+              "actual": 0.6983930778739185,
+              "bin": 9,
+              "gap": -0.0023378896044196074,
+              "n": 2427,
+              "predicted": 0.6960551882694989
+            },
+            {
+              "actual": 0.8422570016474464,
+              "bin": 10,
+              "gap": -0.020906302248916653,
+              "n": 2428,
+              "predicted": 0.8213506993985298
+            }
+          ],
+          "max_abs_gap": 0.020906302248916653
+        },
+        "residual_nu": {
+          "bundesliga": 0.00930779141442277,
+          "epl": 0.006330860371322392,
+          "la-liga": 0.0019489309562178677,
+          "ligue-1": 0.009881130283285505,
+          "serie-a": 0.008743475364637286
+        },
+        "total_vmr_gap": 0.022655214750165076
+      },
+      "rungs": {
+        "core": {
+          "alpha": 0.00623452317618016,
+          "bias": -0.06355582215419525,
+          "mae": 2.808706681767564,
+          "nll": 2.6679892308463518
+        },
+        "core_referee": {
+          "alpha": 0.006092559192122044,
+          "bias": -0.0525956200064205,
+          "mae": 2.807065143930646,
+          "nll": 2.6674627156086586
+        },
+        "core_referee_market": {
+          "alpha": 0.004577209742358765,
+          "bias": 0.0014770830654114977,
+          "mae": 2.7905548758872594,
+          "nll": 2.6621346615499992
+        },
+        "full": {
+          "alpha": 0.004614986965255255,
+          "bias": 0.0033731644374566778,
+          "mae": 2.7904504367680683,
+          "nll": 2.6620622442112176
+        }
+      },
+      "season": "2025-2026",
+      "status": "OK",
+      "train": 38304,
+      "transitions": [
+        {
+          "delta_mae": -0.00784468288538065,
+          "delta_nll": -0.002570502888655124,
+          "from": "core",
+          "n": 760,
+          "scope": "epl",
+          "to": "core_referee"
+        },
+        {
+          "delta_mae": -0.016510268043386844,
+          "delta_nll": -0.005328054058659326,
+          "from": "core_referee",
+          "n": 3468,
+          "scope": "all",
+          "to": "core_referee_market"
+        },
+        {
+          "delta_mae": -0.00010443911919111315,
+          "delta_nll": -7.241733878160517e-05,
+          "from": "core_referee_market",
+          "n": 3468,
+          "scope": "all",
+          "to": "full"
+        }
+      ],
+      "validation_legs": 3468,
+      "validation_matches": 1734
+    }
+  ],
+  "generated_at": "2026-07-14T22:49:36Z",
+  "market_gate": "BLOCKED_TEAM_FOULS_NOT_OBSERVED",
+  "registered": {
+    "ema_decay": 0.93,
+    "features": [
+      "team_committed",
+      "opponent_drawn",
+      "referee_epl",
+      "opening_closeness",
+      "opening_strength",
+      "team_cards",
+      "opponent_cards"
+    ],
+    "fixed_alpha": 0.025,
+    "lines": [
+      9.5,
+      10.5,
+      11.5,
+      12.5,
+      13.5,
+      14.5,
+      15.5
+    ],
+    "minimum_history": 6,
+    "referee_k": 18.0,
+    "team_alpha_k": 60.0,
+    "validation_seasons": [
+      "2024-2025",
+      "2025-2026"
+    ],
+    "window": 20
+  },
+  "sample_legs": 41772,
+  "sample_matches": 20886,
+  "source": "data/corners-ou/historical/all-historical-matches.csv",
+  "status": "RESEARCH_ONLY"
+}

@@ -1,0 +1,170 @@
+{
+  "cards": {
+    "away_leg_vmr": 0.9045694747857176,
+    "home_leg_vmr": 0.9568062479684544,
+    "match_total_vmr": 1.1233524760335856,
+    "verdict": "REJECT_DEDICATED_MODEL"
+  },
+  "feature_priors": {
+    "away_fouls_vs_away_yellows_correlation": 0.3711327033177588,
+    "home_fouls_vs_home_yellows_correlation": 0.37125688003396073,
+    "opening_1x2_closeness_vs_total_fouls_correlation": 0.20236620673672806,
+    "total_shots_vs_total_fouls_correlation": -0.18264857565254952
+  },
+  "generated_at": "2026-07-14T22:48:10Z",
+  "leg_structure": {
+    "bundesliga": {
+      "alpha_away_after_raw_frailty": 0.005185795899176435,
+      "alpha_home_after_raw_frailty": 0.002074053595156368,
+      "away_gap": 0.5113048215745035,
+      "away_mean": 12.650503949877418,
+      "away_vmr": 1.4307621999933833,
+      "home_away_correlation": 0.2549747296242295,
+      "home_mean": 12.139199128302915,
+      "home_vmr": 1.3755777044955952,
+      "n": 3671,
+      "nu_hat_raw_ceiling": 0.028865195405210084,
+      "total_vmr": 1.7613666667731307
+    },
+    "epl": {
+      "alpha_away_after_raw_frailty": 0.0030804782688297356,
+      "alpha_home_after_raw_frailty": -0.00048408736704612723,
+      "away_gap": 0.3587719298245613,
+      "away_mean": 10.965789473684211,
+      "away_vmr": 1.1510411798635056,
+      "home_away_correlation": 0.10210787848129024,
+      "home_mean": 10.60701754385965,
+      "home_vmr": 1.108290097556163,
+      "n": 4560,
+      "nu_hat_raw_ceiling": 0.010693375426426356,
+      "total_vmr": 1.245332290389292
+    },
+    "la-liga": {
+      "alpha_away_after_raw_frailty": 0.022138218598831305,
+      "alpha_home_after_raw_frailty": 0.01934548079416691,
+      "away_gap": -0.0004385964912287932,
+      "away_mean": 13.346710526315789,
+      "away_vmr": 1.3214842125153174,
+      "home_away_correlation": 0.01996766028408258,
+      "home_mean": 13.347149122807018,
+      "home_vmr": 1.2842196891148396,
+      "n": 4560,
+      "nu_hat_raw_ceiling": 0.0019489309562178677,
+      "total_vmr": 1.3288638893741205
+    },
+    "ligue-1": {
+      "alpha_away_after_raw_frailty": 0.005105892880018087,
+      "alpha_home_after_raw_frailty": -0.0015912658188599223,
+      "away_gap": 0.38857412653446666,
+      "away_mean": 12.904390934844193,
+      "away_vmr": 1.2400760720891992,
+      "home_away_correlation": 0.1437106552396428,
+      "home_mean": 12.515816808309726,
+      "home_vmr": 1.1490265438226088,
+      "n": 4236,
+      "nu_hat_raw_ceiling": 0.013498322793652366,
+      "total_vmr": 1.366772197410717
+    },
+    "pooled": {
+      "alpha_away_after_raw_frailty": 0.009307945013088133,
+      "alpha_home_after_raw_frailty": 0.0062423574287129545,
+      "away_gap": 0.31287348867373943,
+      "away_mean": 12.680641126603975,
+      "away_vmr": 1.3659693060375755,
+      "home_away_correlation": 0.18241988626105268,
+      "home_mean": 12.367767637930235,
+      "home_vmr": 1.3190251541201943,
+      "n": 21587,
+      "nu_hat_raw_ceiling": 0.01955252839545051,
+      "total_vmr": 1.5876320699087545
+    },
+    "serie-a": {
+      "alpha_away_after_raw_frailty": 0.008678518995532208,
+      "alpha_home_after_raw_frailty": 0.003985075967833072,
+      "away_gap": 0.35021929824561404,
+      "away_mean": 13.545833333333333,
+      "away_vmr": 1.337894750333231,
+      "home_away_correlation": 0.1670172565407041,
+      "home_mean": 13.195614035087718,
+      "home_vmr": 1.2672258239829448,
+      "n": 4560,
+      "nu_hat_raw_ceiling": 0.016266033474469466,
+      "total_vmr": 1.520474380621517
+    }
+  },
+  "line_grid_and_span": {
+    "first_season": "2014-2015",
+    "last_season": "2025-2026",
+    "leg_quantiles": {
+      "p10": 7.0,
+      "p25": 10.0,
+      "p50": 12.0,
+      "p75": 15.0,
+      "p90": 18.0
+    },
+    "registered_line_grid": [
+      9.5,
+      10.5,
+      11.5,
+      12.5,
+      13.5,
+      14.5,
+      15.5
+    ],
+    "validation_seasons": [
+      "2024-2025",
+      "2025-2026"
+    ]
+  },
+  "market_gate": "BLOCKED_TEAM_FOULS_NOT_OBSERVED",
+  "referee": {
+    "coverage_by_league": {
+      "bundesliga": {
+        "coverage": 0.0,
+        "usable": 3671,
+        "with_referee": 0
+      },
+      "epl": {
+        "coverage": 1.0,
+        "usable": 4560,
+        "with_referee": 4560
+      },
+      "la-liga": {
+        "coverage": 0.0,
+        "usable": 4560,
+        "with_referee": 0
+      },
+      "ligue-1": {
+        "coverage": 0.0,
+        "usable": 4236,
+        "with_referee": 0
+      },
+      "serie-a": {
+        "coverage": 0.0,
+        "usable": 4560,
+        "with_referee": 0
+      }
+    },
+    "eligible_epl_referees": 36,
+    "empirical_k": 18.586847830647876,
+    "grand_mean_total_fouls_unweighted": 21.811939575490108,
+    "highest_referee": {
+      "matches": 21,
+      "mean_total_fouls": 25.095238095238095,
+      "referee": "P Dowd"
+    },
+    "lowest_referee": {
+      "matches": 208,
+      "mean_total_fouls": 18.860576923076923,
+      "referee": "A Marriner"
+    },
+    "minimum_referee_matches": 10,
+    "registered_k": 18,
+    "true_between_referee_sd": 1.1526792511701627,
+    "within_referee_sd": 4.969484580653743
+  },
+  "source": "data/corners-ou/historical/all-historical-matches.csv",
+  "source_rows": 21589,
+  "status": "REGISTERED_RESEARCH_BASELINE",
+  "usable_rows": 21587
+}

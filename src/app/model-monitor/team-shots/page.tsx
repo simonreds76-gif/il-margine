@@ -38,6 +38,38 @@ type CountMarketCoveragePayload = {
   generated_at?: string;
   categories?: Record<string, CountMarketCoverageItem>;
 };
+type TeamFoulsM1Payload = {
+  generated_at?: string;
+  usable_rows?: number;
+  status?: string;
+  market_gate?: string;
+};
+type TeamFoulsFoldPayload = {
+  generated_at?: string;
+  sample_matches?: number;
+  decision?: {
+    status?: string;
+    count_gate_pass?: boolean;
+    signals_authorized?: boolean;
+    gates?: Record<string, boolean>;
+    mae_checks?: Array<{ season?: string; improvement_pct?: number }>;
+    hierarchical_nb_wins?: number;
+    hierarchical_nb_cells?: number;
+  };
+};
+type TeamFoulsAgreementPayload = {
+  generated_at?: string;
+  status?: string;
+  settlement_source_authorized?: boolean;
+  api_football?: {
+    comparable_team_values?: number;
+    within_one_pct?: number;
+  };
+  fotmob?: {
+    comparable_team_values?: number;
+    within_one_pct?: number;
+  };
+};
 type TeamShotsLiveLine = {
   bookmaker: string;
   line: number;
@@ -1115,6 +1147,12 @@ export default async function TeamShotsMonitorPage() {
 
     countMarketCoverage,
 
+    teamFoulsM1,
+
+    teamFoulsF1,
+
+    teamFoulsM2,
+
   ] = await Promise.all([
 
     readFile("data/team-shots/team-shots-calibration.txt"),
@@ -1169,6 +1207,12 @@ export default async function TeamShotsMonitorPage() {
     readJson<FootballCountsGatePayload>("data/football-form/football-counts-vnext-gate.json"),
 
     readJson<CountMarketCoveragePayload>("data/football-form/football-count-market-coverage.json"),
+
+    readJson<TeamFoulsM1Payload>("data/football-form/fouls-empirical-baseline.json"),
+
+    readJson<TeamFoulsFoldPayload>("data/football-form/team-fouls-v1-fold-report.json"),
+
+    readJson<TeamFoulsAgreementPayload>("data/football-form/team-fouls-definition-agreement.json"),
 
   ]);
 
@@ -2026,6 +2070,77 @@ function LiveLineTable({
           candidates={vnextCandidateRows}
           gate={vnextGate?.team_shots_v4 ?? null}
         />
+
+        <SectionCard
+          collapsible
+          title="Team Fouls v1 Research Gate"
+          subtitle="Count validation only. No foul bet is authorized until prices, source agreement, and prospective CLV all pass."
+        >
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <StatCard
+              label="M1 empirical base"
+              value={teamFoulsM1?.usable_rows ? `${teamFoulsM1.usable_rows.toLocaleString()} matches` : "Missing"}
+              tone={statTone(teamFoulsM1?.usable_rows ? "green" : "red")}
+              detail={teamFoulsM1?.status?.replaceAll("_", " ")}
+            />
+            <StatCard
+              label="F1 count gate"
+              value={teamFoulsF1?.decision?.count_gate_pass ? "PASS" : "FAIL"}
+              tone={statTone(teamFoulsF1?.decision?.count_gate_pass ? "green" : "red")}
+              detail={`${teamFoulsF1?.sample_matches?.toLocaleString() ?? 0} tested matches`}
+            />
+            <StatCard
+              label="M2 source agreement"
+              value={(teamFoulsM2?.status ?? "NOT RUN").replaceAll("_", " ")}
+              tone={statTone(teamFoulsM2?.settlement_source_authorized ? "green" : "amber")}
+              detail={`API ${teamFoulsM2?.api_football?.comparable_team_values ?? 0} | FotMob ${teamFoulsM2?.fotmob?.comparable_team_values ?? 0} team values`}
+            />
+            <StatCard
+              label="Market / signals"
+              value="BLOCKED"
+              tone={statTone("red")}
+              detail="No paired team-fouls O/U prices"
+            />
+          </div>
+
+          <div className="mt-4 rounded-2xl border border-slate-800 bg-slate-950/45 p-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <StatusPill
+                label={teamFoulsF1?.decision?.status?.replaceAll("_", " ") ?? "F1 NOT RUN"}
+                tone={
+                  teamFoulsF1?.decision?.count_gate_pass
+                    ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-300"
+                    : "border-rose-500/20 bg-rose-500/10 text-rose-300"
+                }
+              />
+              {(teamFoulsF1?.decision?.mae_checks ?? []).map((check) => (
+                <span key={check.season} className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-300">
+                  {check.season}: MAE {typeof check.improvement_pct === "number" ? `${check.improvement_pct.toFixed(1)}% better` : "-"}
+                </span>
+              ))}
+            </div>
+            <p className="mt-3 text-sm leading-6 text-slate-300">
+              The causal mean model cleared the 5% accuracy target in both holdouts. The registered full model still failed because referee and cards did not add enough, hierarchical NB beat both controls in only {teamFoulsF1?.decision?.hierarchical_nb_wins ?? 0}/{teamFoulsF1?.decision?.hierarchical_nb_cells ?? 0} league-fold cells, and calibration narrowly missed one fold.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {Object.entries(teamFoulsF1?.decision?.gates ?? {}).map(([gate, passed]) => (
+                <span
+                  key={gate}
+                  className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] ${
+                    passed
+                      ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-300"
+                      : "border-rose-500/20 bg-rose-500/10 text-rose-300"
+                  }`}
+                >
+                  {passed ? "Pass" : "Fail"} {gate.replaceAll("_", " ")}
+                </span>
+              ))}
+            </div>
+            <p className="mt-3 text-xs text-slate-500">
+              Next registered candidate: retain the proven core + opening-market mean features, remove failed complexity, and re-test without changing the holdout or thresholds. This is not permission to bet.
+            </p>
+          </div>
+        </SectionCard>
 
         <SectionCard
           collapsible

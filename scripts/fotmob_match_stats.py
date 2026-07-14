@@ -4,7 +4,7 @@ Fetch recent finished football match stats from FotMob.
 
 This is a settlement fallback for football props when Football-Data season CSVs
 lag behind current fixtures. It extracts full-time team shots, shots on target,
-and corners from FotMob's post-match page payload.
+corners, and fouls from FotMob's post-match page payload.
 """
 
 from __future__ import annotations
@@ -154,7 +154,8 @@ def fetch_fotmob_recent_results(league_key: str, target_dates: Iterable[str]) ->
             shots = _extract_stat_pair(stats_payload, "total_shots")
             shots_on_target = _extract_stat_pair(stats_payload, "ShotsOnTarget")
             corners = _extract_stat_pair(stats_payload, "corners")
-            if shots is None and shots_on_target is None and corners is None:
+            fouls = _extract_stat_pair(stats_payload, "fouls")
+            if shots is None and shots_on_target is None and corners is None and fouls is None:
                 continue
 
             home_team = str(
@@ -182,6 +183,9 @@ def fetch_fotmob_recent_results(league_key: str, target_dates: Iterable[str]) ->
                 "home_corners": corners[0] if corners else None,
                 "away_corners": corners[1] if corners else None,
                 "total_corners": (corners[0] + corners[1]) if corners else None,
+                "home_fouls": fouls[0] if fouls else None,
+                "away_fouls": fouls[1] if fouls else None,
+                "total_fouls": (fouls[0] + fouls[1]) if fouls else None,
                 "source": "fotmob",
                 "match_id": match_id,
             }

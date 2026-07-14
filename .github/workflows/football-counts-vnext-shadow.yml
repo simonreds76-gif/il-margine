@@ -61,6 +61,8 @@ jobs:
             echo "::warning::API_FOOTBALL_KEY is missing; API-Football count archive skipped."
           fi
           python scripts/api-football-source-agreement.py --allow-empty
+          python scripts/fouls-fotmob-definition-agreement.py --dates-per-league 1 --allow-empty
+          python scripts/fouls-definition-agreement.py --allow-empty
 
       - name: Capture paired market prices
         if: steps.season.outputs.active == 'true'
