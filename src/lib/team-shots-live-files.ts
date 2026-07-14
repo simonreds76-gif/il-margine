@@ -58,6 +58,8 @@ const TEAM_SHOTS_MARKET_FILES = [
   "data/football-form/team-shots-v3-ema20-published-picks.csv",
   "data/football-form/team-shots-v3-ema20-clv-monitor.csv",
   "data/football-form/team-shots-v3-ema20-clv-monitor.md",
+  "data/football-form/football-count-market-coverage.json",
+  "data/football-form/football-count-market-coverage.md",
   "data/football-form/weekly-research-report.json",
   "data/football-form/weekly-research-report.md",
   "data/team-shots/team-shots-comparison.csv",

@@ -34,6 +34,8 @@ from typing import Dict, List, Optional
 
 import requests
 
+from football_count_markets import append_market_inventory, build_market_inventory_rows
+
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_OUT_DIR = ROOT / "data" / "team-shots" / "inbox"
 RUN_STATUS_PATH = ROOT / "data" / "team-shots" / "team-shots-scrape-last-run.json"
@@ -299,6 +301,7 @@ def scrape_odds_api(
     bookmakers_str: str,
     days_ahead: int = 3,
     kickoff_within_minutes: int = 0,
+    market_inventory: Optional[List[dict]] = None,
 ) -> tuple[list[dict], int, list[str]]:
     config = LEAGUE_CONFIGS[league_key]
     now = datetime.now(timezone.utc)
@@ -404,6 +407,9 @@ def scrape_odds_api(
             for mn in sorted(sample_markets)[:30]:
                 shots_flag = " <-- possible?" if "shot" in mn.lower() else ""
                 print(f"    - {mn}{shots_flag}")
+
+    if market_inventory is not None:
+        market_inventory.extend(build_market_inventory_rows(payload, config["competition"], captured))
 
     return rows, len(matched), provider_errors
 
@@ -663,6 +669,12 @@ def main() -> None:
     parser.add_argument("--source", choices=["auto", "odds-api", "betsapi"], default="auto")
     parser.add_argument("--bookmakers", default=DEFAULT_BOOKMAKERS)
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
+    parser.add_argument(
+        "--market-audit-out",
+        type=Path,
+        default=None,
+        help="Append the raw market inventory returned by the existing odds call (no extra API request).",
+    )
     parser.add_argument("--days-ahead", type=int, default=3)
     parser.add_argument(
         "--kickoff-within-minutes",
@@ -703,6 +715,7 @@ def main() -> None:
     }
 
     total_written = 0
+    market_inventory_rows: List[dict] = []
     try:
         for league in leagues:
             config = LEAGUE_CONFIGS[league]
@@ -718,6 +731,7 @@ def main() -> None:
                     args.bookmakers,
                     args.days_ahead,
                     args.kickoff_within_minutes,
+                    market_inventory_rows,
                 )
                 run_status["events_found"] += events_found
                 run_status["provider_errors"].extend(provider_errors)
@@ -765,6 +779,12 @@ def main() -> None:
 
         if not args.dry_run and args.all_leagues:
             print(f"\n  Total team shots rows written: {total_written}")
+        if args.market_audit_out and not args.dry_run:
+            added = append_market_inventory(args.market_audit_out, market_inventory_rows)
+            print(
+                f"  Market inventory: {added} new rows / {len(market_inventory_rows)} observed "
+                f"-> {args.market_audit_out}"
+            )
         print("\n  Done.\n")
         run_status["success"] = True
     except Exception as exc:

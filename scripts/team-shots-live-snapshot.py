@@ -58,6 +58,8 @@ SNAPSHOT_FILES = [
     "data/football-form/football-counts-vnext-candidates.csv",
     "data/football-form/football-counts-vnext-gate.json",
     "data/football-form/football-counts-vnext-gate.md",
+    "data/football-form/football-count-market-coverage.json",
+    "data/football-form/football-count-market-coverage.md",
     "data/football-form/weekly-research-report.json",
     "data/football-form/weekly-research-report.md",
     "data/team-shots/shadow/team-shots-shadow-signals.csv",

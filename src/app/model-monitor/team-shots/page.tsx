@@ -27,6 +27,17 @@ export const dynamic = "force-dynamic";
 
 type CsvRow = Record<string, string>;
 type FootballCountsGatePayload = { team_shots_v4?: FootballVnextGate; corners_v3?: FootballVnextGate };
+type CountMarketCoverageItem = {
+  status?: string;
+  events?: number;
+  paired_price_events?: number;
+  pairing_unknown_events?: number;
+  raw_market_names?: string[];
+};
+type CountMarketCoveragePayload = {
+  generated_at?: string;
+  categories?: Record<string, CountMarketCoverageItem>;
+};
 type TeamShotsLiveLine = {
   bookmaker: string;
   line: number;
@@ -1102,6 +1113,8 @@ export default async function TeamShotsMonitorPage() {
 
     vnextGate,
 
+    countMarketCoverage,
+
   ] = await Promise.all([
 
     readFile("data/team-shots/team-shots-calibration.txt"),
@@ -1154,6 +1167,8 @@ export default async function TeamShotsMonitorPage() {
     readFile("data/football-form/football-counts-vnext-candidates.csv"),
 
     readJson<FootballCountsGatePayload>("data/football-form/football-counts-vnext-gate.json"),
+
+    readJson<CountMarketCoveragePayload>("data/football-form/football-count-market-coverage.json"),
 
   ]);
 
@@ -2011,6 +2026,50 @@ function LiveLineTable({
           candidates={vnextCandidateRows}
           gate={vnextGate?.team_shots_v4 ?? null}
         />
+
+        <SectionCard
+          collapsible
+          title="Next Count-Market Coverage"
+          subtitle="Observed through the configured Bet365 feed; this is a price-availability gate, not a betting signal."
+        >
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {[
+              ["Team fouls", "team_fouls_total"],
+              ["Match fouls", "match_fouls_total"],
+              ["Team cards", "team_cards_total"],
+              ["Match cards", "match_cards_total"],
+            ].map(([label, category]) => {
+              const item = countMarketCoverage?.categories?.[category];
+              const status = item?.status ?? "NOT_AUDITED";
+              const tone =
+                status === "PAIRED_PRICES_OBSERVED"
+                  ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-300"
+                  : status === "MARKET_NAME_ONLY"
+                    ? "border-amber-500/20 bg-amber-500/10 text-amber-300"
+                    : "border-slate-600/40 bg-slate-700/40 text-slate-400";
+              return (
+                <div key={category} className="rounded-2xl border border-slate-800 bg-slate-950/45 p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <div className="text-sm font-semibold text-white">{label}</div>
+                      <div className="mt-1 text-xs text-slate-500">
+                        {item?.events ?? 0} events | {item?.paired_price_events ?? 0} paired O/U
+                      </div>
+                    </div>
+                    <StatusPill label={status.replaceAll("_", " ")} tone={tone} />
+                  </div>
+                  <p className="mt-3 text-xs leading-5 text-slate-400">
+                    {(item?.raw_market_names ?? []).join(", ") || "No matching market returned by the feed."}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+          <p className="mt-3 text-xs text-slate-500">
+            Team Fouls v1 remains blocked until paired prices are observed and bookmaker settlement definitions match the result source.
+            {countMarketCoverage?.generated_at ? ` Last audit ${formatDateTime(countMarketCoverage.generated_at)}.` : ""}
+          </p>
+        </SectionCard>
 
         {/* Pipeline health */}
         <SectionCard collapsible title="Pipeline Health" subtitle={pipelineStateValue}>

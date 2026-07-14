@@ -199,6 +199,8 @@ const KNOWN_PROJECT_FILE_PATHS = {
   "data/football-form/team-shots-v3-ema20-published-picks.csv": path.join(process.cwd(), "data/football-form/team-shots-v3-ema20-published-picks.csv"),
   "data/football-form/team-shots-v3-ema20-clv-monitor.csv": path.join(process.cwd(), "data/football-form/team-shots-v3-ema20-clv-monitor.csv"),
   "data/football-form/team-shots-v3-ema20-clv-monitor.md": path.join(process.cwd(), "data/football-form/team-shots-v3-ema20-clv-monitor.md"),
+  "data/football-form/football-count-market-coverage.json": path.join(process.cwd(), "data/football-form/football-count-market-coverage.json"),
+  "data/football-form/football-count-market-coverage.md": path.join(process.cwd(), "data/football-form/football-count-market-coverage.md"),
   "data/football-form/weekly-research-report.json": path.join(process.cwd(), "data/football-form/weekly-research-report.json"),
   "data/football-form/weekly-research-report.md": path.join(process.cwd(), "data/football-form/weekly-research-report.md"),
   "data/team-shots/team-shots-predictions.csv": path.join(process.cwd(), "data/team-shots/team-shots-predictions.csv"),

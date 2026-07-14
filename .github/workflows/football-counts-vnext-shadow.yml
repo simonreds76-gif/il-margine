@@ -79,12 +79,15 @@ jobs:
             CORNER_ARGS+=(--bucket-hours 1 --kickoff-within-minutes 90)
             echo "Near-kickoff mode: detailed odds calls are limited to fixtures starting within 90 minutes."
           else
-            TEAM_ARGS+=(--days-ahead 7)
+            TEAM_ARGS+=(--days-ahead 7 --market-audit-out data/football-form/football-count-market-inventory.csv)
             CORNER_ARGS+=(--bucket-hours 6)
             echo "Daily discovery mode: capturing publication prices for the seven-day board."
           fi
           if [ -n "${ODDS_API_KEY:-}${ODDS_API_IO_KEY:-}${BETS_API_KEY:-}" ]; then
             python scripts/team-shots-scrape-odds.py "${TEAM_ARGS[@]}"
+            if [[ "$EVENT_NAME" != "schedule" || "$SCHEDULE_EXPR" == "15 8 * * *" ]]; then
+              python scripts/football-count-market-coverage.py
+            fi
           else
             echo "::warning::No team-shots odds key; Team Shots v4 cannot emit this scan."
           fi
