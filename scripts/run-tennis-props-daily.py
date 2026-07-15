@@ -32,9 +32,22 @@ def load_env() -> None:
                 os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
 
 
-def run(cmd: list[str], label: str, *, fatal: bool = True) -> int:
+def run(
+    cmd: list[str],
+    label: str,
+    *,
+    fatal: bool = True,
+    timeout_seconds: int | None = None,
+) -> int:
     print(f"\n=== {label} ===")
-    result = subprocess.run(cmd, cwd=str(ROOT))
+    try:
+        result = subprocess.run(cmd, cwd=str(ROOT), timeout=timeout_seconds)
+    except subprocess.TimeoutExpired:
+        msg = f"{label} timed out after {timeout_seconds}s"
+        if fatal:
+            raise SystemExit(msg)
+        print(f"WARNING: {msg}")
+        return 124
     if result.returncode != 0:
         msg = f"{label} failed with exit {result.returncode}"
         if fatal:
@@ -131,6 +144,7 @@ def run_shadow_tracking(as_of: str) -> None:
         ],
         "Update all-main-line Bet365 observation benchmark",
         fatal=False,
+        timeout_seconds=300,
     )
     run(
         [

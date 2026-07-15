@@ -1,6 +1,7 @@
 # Il Margine - Tennis automation watchdog
-# Purpose: detect stale tennis output files or failed/missing scheduled tasks and
-# optionally post a webhook alert.
+# Purpose: read existing tennis artifacts, detect stale output files or
+# failed/missing scheduled tasks, and optionally post an alert. This watchdog
+# must not rebuild model artifacts itself.
 
 param(
     [int]$StaleHours = 15,
@@ -47,37 +48,6 @@ function Log($msg) {
     $line = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') $msg"
     Write-Host $line
     Add-Content -Path $logFile -Value $line
-}
-
-function Refresh-TennisPropsBenchmark {
-    $steps = @(
-        @{ Script = "scripts\tennis-props-compare-bet365.py"; Label = "Bet365 props comparison" },
-        @{ Script = "scripts\tennis-props-market-observations.py"; Label = "Bet365 props benchmark" }
-    )
-    $allOk = $true
-
-    foreach ($step in $steps) {
-        $scriptPath = Join-Path $root $step.Script
-        if (!(Test-Path $scriptPath)) {
-            Log "$($step.Label) refresh skipped: missing $($step.Script)"
-            $allOk = $false
-            continue
-        }
-
-        Log "Refreshing $($step.Label)..."
-        try {
-            & python $scriptPath 2>&1 | ForEach-Object { Log "  $_" }
-            if ($LASTEXITCODE -ne 0) {
-                Log "$($step.Label) refresh failed (exit $LASTEXITCODE); health checks will use the last report."
-                $allOk = $false
-            }
-        } catch {
-            Log "$($step.Label) refresh failed: $($_.Exception.Message)"
-            $allOk = $false
-        }
-    }
-
-    return $allOk
 }
 
 function Import-EnvFiles {
@@ -445,7 +415,6 @@ function Post-Alert([string]$message) {
 }
 
 Import-EnvFiles
-Refresh-TennisPropsBenchmark | Out-Null
 
 $nowUtc = [DateTimeOffset]::UtcNow
 $previousHealth = Read-JsonFile $healthFile
