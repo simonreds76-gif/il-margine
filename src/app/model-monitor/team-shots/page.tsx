@@ -2101,6 +2101,7 @@ function LiveLineTable({
         />
 
         <SectionCard
+          id="team-fouls"
           collapsible
           title="Team Fouls Research Gate"
           subtitle="Count validation only. No foul bet is authorized until prices, source agreement, and prospective CLV all pass."

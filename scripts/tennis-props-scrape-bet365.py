@@ -47,6 +47,19 @@ SUPPORTED_TOURNAMENT_KEYWORDS = (
     ("Berlin", ("berlin", "bett1open", "bett1 open")),
     ("Eastbourne", ("eastbourne",)),
     ("Bad Homburg", ("bad homburg",)),
+    ("Bastad", ("bastad", "båstad", "nordea open")),
+    ("Gstaad", ("gstaad", "swiss open")),
+    ("Umag", ("umag", "croatia open")),
+)
+LOWER_TIER_KEYWORDS = (
+    "challenger",
+    "itf",
+    "utr",
+    "junior",
+    "juniors",
+    "boys",
+    "girls",
+    "wta 125",
 )
 ZERO_ROW_PROBE_PARAMS: tuple[tuple[str, dict[str, str]], ...] = (
     ("baseline", {}),
@@ -334,8 +347,19 @@ def event_text(event: dict[str, Any]) -> str:
 
 
 def is_supported_tournament_event(event: dict[str, Any]) -> bool:
-    text = norm(event_text(event))
-    return any(contains_keyword(text, keyword) for _, keywords in SUPPORTED_TOURNAMENT_KEYWORDS for keyword in keywords)
+    """Keep ATP/WTA tour events and reject lower-tier feeds.
+
+    The previous seasonal tournament whitelist silently discarded every event
+    after the grass swing and also admitted Challenger events whose city name
+    matched a main-tour tournament. The provider league is the durable tier
+    signal; the keyword table is now only for canonical tournament naming.
+    """
+    league = str((event.get("league") or {}).get("name") or event.get("league") or "")
+    league_text = norm(league)
+    full_text = norm(event_text(event))
+    if any(contains_keyword(full_text, keyword) for keyword in LOWER_TIER_KEYWORDS):
+        return False
+    return contains_keyword(league_text, "atp") or contains_keyword(league_text, "wta")
 
 
 def is_singles_event(event: dict[str, Any]) -> bool:
@@ -651,6 +675,14 @@ def main() -> None:
     events = [event for event in events if is_supported_tournament_event(event) and is_singles_event(event)]
     events = events[: max(0, args.max_events)] if args.max_events else events
     print(f"odds-api.io tennis events returned: {raw_event_count}; supported singles selected: {len(events)}")
+    selected_tournaments: dict[str, int] = defaultdict(int)
+    for event in events:
+        selected_tournaments[tournament_from_event(event)] += 1
+    if selected_tournaments:
+        print(
+            "selected main-tour events: "
+            + ", ".join(f"{name}={count}" for name, count in sorted(selected_tournaments.items()))
+        )
     if not events:
         return
 
@@ -658,9 +690,11 @@ def main() -> None:
     rows: list[dict[str, str]] = []
     audit_rows: list[dict[str, str]] = []
     captured_at = now.replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    audited_event_ids: set[str] = set()
     for event in payload:
         for bookmaker, markets in (event.get("bookmakers") or {}).items():
             for market in markets or []:
+                audited_event_ids.add(str(event.get("id") or ""))
                 market_name = str(market.get("name") or "")
                 odds_list = market.get("odds") or market.get("outcomes") or []
                 labels = []
@@ -686,6 +720,27 @@ def main() -> None:
                     }
                 )
                 rows.extend(extract_rows(event, bookmaker, market, captured_at=captured_at))
+
+    # A header-only audit hid whether discovery failed or the provider returned
+    # no Bet365 payload. Preserve one explicit row per selected empty event.
+    for event in events:
+        event_id = str(event.get("id") or "")
+        if event_id in audited_event_ids:
+            continue
+        audit_rows.append(
+            {
+                "captured_at": captured_at,
+                "event_id": event_id,
+                "kickoff_at": str(event.get("date") or ""),
+                "bookmaker": args.bookmakers,
+                "league": str((event.get("league") or {}).get("name") or event.get("league") or ""),
+                "home": str(event.get("home") or ""),
+                "away": str(event.get("away") or ""),
+                "market_name": "<NO_BET365_MARKETS_RETURNED>",
+                "odds_count": "0",
+                "sample_labels": "",
+            }
+        )
 
     out = Path(args.out) if args.out else OUT_DIR / f"bet365-lines-{args.date}.csv"
     audit_out = Path(args.audit_out) if args.audit_out else OUT_DIR / f"bet365-tennis-market-audit-{args.date}.csv"

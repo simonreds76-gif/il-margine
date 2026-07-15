@@ -450,7 +450,7 @@ export function MonitorNav({
         Assist Value
       </Link>
       <Link href="/model-monitor/team-shots" className={cn(base, current === "team-shots" && active)}>
-        Team Shots
+        Shots / Fouls
       </Link>
       <Link href="/model-monitor/corners" className={cn(base, current === "corners" && active)}>
         Corners
@@ -489,12 +489,14 @@ export function HeroCard({
  * compatible: existing callers without them get a plain non-collapsible card.
  */
 export function SectionCard({
+  id,
   title,
   subtitle,
   collapsible = false,
   defaultOpen = true,
   children,
 }: {
+  id?: string;
   title: ReactNode;
   subtitle?: string;
   collapsible?: boolean;
@@ -506,7 +508,7 @@ export function SectionCard({
 
   if (collapsible) {
     return (
-      <details open={defaultOpen} className={cn("group", shell)}>
+      <details id={id} open={defaultOpen} className={cn("group scroll-mt-6", shell)}>
         <summary className="flex cursor-pointer select-none list-none items-center justify-between gap-4 rounded-2xl px-5 py-4 transition-colors hover:bg-white/[0.02] marker:hidden group-open:rounded-b-none">
           <div className="min-w-0">
             <h2 className="text-[15px] font-semibold text-slate-100">{title}</h2>
@@ -524,7 +526,7 @@ export function SectionCard({
   }
 
   return (
-    <section className={cn(shell, "p-5")}>
+    <section id={id} className={cn(shell, "scroll-mt-6 p-5")}>
       <div className="mb-4">
         <h2 className="text-[15px] font-semibold text-slate-100">{title}</h2>
         {subtitle ? <p className="mt-0.5 text-xs text-slate-500">{subtitle}</p> : null}

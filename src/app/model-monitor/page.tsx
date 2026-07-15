@@ -1436,7 +1436,7 @@ export default async function ModelMonitorPage() {
             Goalscorer Preview
           </Link>
           <Link href="/model-monitor/team-shots" className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300">
-            Team Shots
+            Shots / Fouls
           </Link>
           <Link href="/model-monitor/corners" className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300">
             Corners / O-U
@@ -1562,6 +1562,16 @@ export default async function ModelMonitorPage() {
               <div className="text-lg font-semibold text-white">Team Shots Monitor</div>
               <p className="mt-2 text-sm leading-6 text-slate-400">
                 Base, venue, and recent lambdas with shadow bets, settled ledger, and comparison diagnostics.
+              </p>
+            </Link>
+            <Link
+              href="/model-monitor/team-shots#team-fouls"
+              className="rounded-2xl border border-emerald-500/20 bg-[linear-gradient(180deg,rgba(6,78,59,0.18),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-emerald-400/40"
+            >
+              <div className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300">Team Fouls F2</div>
+              <div className="text-lg font-semibold text-white">Team Fouls Research Gate</div>
+              <p className="mt-2 text-sm leading-6 text-slate-400">
+                F1/F2 holdout accuracy, FotMob source agreement, live Bet365 market probe, and the explicit signal block.
               </p>
             </Link>
             <Link
