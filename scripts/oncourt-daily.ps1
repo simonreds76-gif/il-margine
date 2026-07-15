@@ -1,5 +1,6 @@
 # Il Margine - Daily Scheduled Task (runs nightly at 22:30)
-# Fully automatic: extract -> sync -> stats -> injury/CPI refresh -> odds -> strict report append
+# Fast nightly path: extract -> current schedule sync -> odds/props/signals -> settlement.
+# Slow model-prior refreshes (extended stats, CPI and spread refits) run weekly.
 
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
@@ -14,10 +15,10 @@ New-Item -ItemType Directory -Force -Path $dataDir | Out-Null
 $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 $logFile = Join-Path $dataDir "oncourt-daily.log"
 
-# Choose sync args once here:
-#   @("--quick")                  = fast daily including players/rankings
-#   @("--recent")                 = last 365 days games/stat
-$syncArgs = @("--recent")
+# Nightly pricing only needs current players/tours/schedule in Supabase.
+# Fresh local games/stat CSVs remain available to settlement; the Sunday
+# weekly task owns historical uploads and slow player-profile rebuilds.
+$syncArgs = @("--quick")
 $syncLabel = ($syncArgs -join " ")
 # Enable trimmed shadow profile by default for scheduled runs (override with env if needed)
 if ([string]::IsNullOrWhiteSpace($env:STRICT_POLICY_VOLUME_MODE)) { $env:STRICT_POLICY_VOLUME_MODE = "volume_200" }
@@ -35,11 +36,6 @@ if ([string]::IsNullOrWhiteSpace($env:STRICT_HARD_CALIBRATION_LIVE)) { $env:STRI
 if ([string]::IsNullOrWhiteSpace($env:STRICT_HARD_CALIBRATION_PROFILES)) { $env:STRICT_HARD_CALIBRATION_PROFILES = "strict" }
 # Scheduled runs are hard-safe: clay spread-v1 can only be enabled by a manual research run.
 $env:SPREAD_V1_ENABLE_CLAY = "0"
-$spreadFitFiles = @(
-    "data/backtest/backtest-results-2025.csv",
-    "data/backtest/backtest-results-2026.csv"
-)
-$spreadRefreshTimeoutSeconds = 240
 $dailyOddsTimeoutSeconds = 1800
 $shadowLaneTimeoutSeconds = 300
 if (-not [string]::IsNullOrWhiteSpace($env:TENNIS_DAILY_ODDS_TOTAL_TIMEOUT_SECONDS)) {
@@ -199,15 +195,9 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# Step 3: Compute player stats (extended writes both v2 and backwards-compat tables)
-Log "=== Step 3/10: Compute player stats (extended) ==="
-$playerStatsExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\oncourt-compute-player-stats-extended.py") -Label "player stats extended" -TimeoutSeconds 900
-if ($playerStatsExit -ne 0) {
-    # The previous valid player_surface_stats snapshot remains usable. Do not
-    # suppress the rest of the nightly evidence/settlement pipeline because a
-    # stats-table REST write failed transiently.
-    Log "WARNING: Player stats refresh failed/timed out (exit $playerStatsExit); continuing with the last valid stats snapshot."
-}
+# Extended 12m/36m profiles are slow-moving model priors. Rebuilding them here
+# added up to 15 minutes and frequently timed out; Sunday weekly owns the job.
+Log "=== Step 3/10: Extended player stats skipped (weekly refresh) ==="
 
 # Step 4: Refresh TennisExplorer injured/returning CSV
 Log "=== Step 4/10: Refresh injured players list (TennisExplorer) ==="
@@ -216,12 +206,10 @@ if ($injuredExit -ne 0) {
     Log "WARNING: injured players scrape failed (exit $injuredExit), continuing..."
 }
 
-# Step 5: Refresh Tennis Abstract CPI/surface-speed table
-Log "=== Step 5/10: Refresh CPI surface-speed table ==="
-$surfaceSpeedExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\scrape-tennisabstract-surface-speed.py") -Label "CPI surface-speed refresh"
-if ($surfaceSpeedExit -ne 0) {
-    Log "WARNING: CPI surface-speed refresh failed (exit $surfaceSpeedExit), continuing..."
-}
+# Tournament CPI is refreshed by the Sunday weekly model task. Daily pricing
+# consumes the last verified table instead of spending several minutes on the
+# same two season pages every night.
+Log "=== Step 5/10: CPI surface-speed refresh skipped (weekly refresh) ==="
 
 # Step 6: Pinnacle odds + fair odds
 Log "=== Step 6/10: Pinnacle odds + fair odds ==="
@@ -385,17 +373,7 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: nightly tennis settlement failed (exit $LASTEXITCODE), continuing..."
 }
 
-Log "=== Post-step: Refresh spread_v1 calibration + correction model (non-blocking) ==="
-$handicapArgs = @("scripts\handicap-calibration.py", "--line-source", "auto", "--files") + $spreadFitFiles
-$handicapExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList $handicapArgs -Label "handicap calibration refresh" -TimeoutSeconds $spreadRefreshTimeoutSeconds
-if ($handicapExit -ne 0) {
-    Log "WARNING: handicap calibration refresh failed (exit $handicapExit), continuing..."
-}
-$spreadFitArgs = @("scripts\fit-spread-v1-model.py", "--files") + $spreadFitFiles
-$spreadFitExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList $spreadFitArgs -Label "spread_v1 correction fit" -TimeoutSeconds $spreadRefreshTimeoutSeconds
-if ($spreadFitExit -ne 0) {
-    Log "WARNING: spread_v1 correction fit failed (exit $spreadFitExit), continuing..."
-}
+Log "=== Post-step: Spread calibration/refit skipped (weekly refresh) ==="
 
 Log "============================================"
 Log "  Daily Pipeline finished at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
