@@ -250,6 +250,16 @@ def canonical_tournament_name(value: object) -> str | None:
         return "Eastbourne"
     if "bad homburg" in lower:
         return "Bad Homburg"
+    if "bastad" in lower or "nordea open" in lower:
+        return "Bastad"
+    if "gstaad" in lower or "swiss open" in lower:
+        return "Gstaad"
+    if "umag" in lower or "croatia open" in lower:
+        return "Umag"
+    if "iasi" in lower:
+        return "Iasi"
+    if "athens" in lower:
+        return "Athens"
     return None
 
 
@@ -523,7 +533,9 @@ def oncourt_schedule_rows(tour_code: str, include_completed: bool, board_date: s
             continue
         if "/" in p1 or "/" in p2:
             continue
-        schedule_date = str(row.get("date") or "").strip() or (tour_start.isoformat() if tour_start else board_date)
+        # OnCourt leaves upcoming match dates blank. The tournament start date
+        # is not the match date and caused current lines to miss the daily board.
+        schedule_date = str(row.get("date") or "").strip() or board_date
         rows.append(
             {
                 "date": schedule_date,
