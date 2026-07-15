@@ -1,0 +1,38 @@
+{
+  "bookmaker": "Bet365",
+  "decision": "The configured Bet365 feed did not return a foul market in the probed events. M0 remains blocked.",
+  "endpoint": "/v3/odds/multi",
+  "error": null,
+  "events_probed": 10,
+  "generated_at": "2026-07-15T11:28:25Z",
+  "labels": {
+    "all_market_labels": [
+      "Bet365 (no latency): ML",
+      "Bet365 (no latency): Spread",
+      "Bet365 (no latency): Totals",
+      "Bet365: Alternative Asian Handicap",
+      "Bet365: Alternative Goal Line",
+      "Bet365: Corners",
+      "Bet365: Corners 2-Way",
+      "Bet365: Corners Totals",
+      "Bet365: Corners Totals HT",
+      "Bet365: Correct Score",
+      "Bet365: Double Chance",
+      "Bet365: Draw No Bet",
+      "Bet365: Goals Over/Under",
+      "Bet365: Half Time Result",
+      "Bet365: ML",
+      "Bet365: Spread",
+      "Bet365: Spread HT",
+      "Bet365: Totals",
+      "Bet365: Totals HT"
+    ],
+    "bookmaker_event_payloads": 8,
+    "card_market_labels": [],
+    "events_with_foul_markets": 0,
+    "foul_market_labels": [],
+    "paired_foul_lines": []
+  },
+  "requests_used": 2,
+  "status": "NO_FOUL_MARKETS_RETURNED"
+}
