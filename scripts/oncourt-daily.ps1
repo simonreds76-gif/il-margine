@@ -36,7 +36,7 @@ if ([string]::IsNullOrWhiteSpace($env:STRICT_HARD_CALIBRATION_LIVE)) { $env:STRI
 if ([string]::IsNullOrWhiteSpace($env:STRICT_HARD_CALIBRATION_PROFILES)) { $env:STRICT_HARD_CALIBRATION_PROFILES = "strict" }
 # Scheduled runs are hard-safe: clay spread-v1 can only be enabled by a manual research run.
 $env:SPREAD_V1_ENABLE_CLAY = "0"
-$dailyOddsTimeoutSeconds = 1800
+$dailyOddsTimeoutSeconds = 1200
 $shadowLaneTimeoutSeconds = 300
 if (-not [string]::IsNullOrWhiteSpace($env:TENNIS_DAILY_ODDS_TOTAL_TIMEOUT_SECONDS)) {
     $parsedDailyOddsTimeout = 0
@@ -213,7 +213,7 @@ Log "=== Step 5/10: CPI surface-speed refresh skipped (weekly refresh) ==="
 
 # Step 6: Pinnacle odds + fair odds
 Log "=== Step 6/10: Pinnacle odds + fair odds ==="
-$step6Exit = Invoke-LoggedProcessWithRetry -FilePath "python" -ArgumentList @("scripts\run-daily-odds.py", "--skip-strict-report") -Label "Pinnacle/fair-odds" -TimeoutSeconds $dailyOddsTimeoutSeconds -Attempts 3
+$step6Exit = Invoke-LoggedProcessWithRetry -FilePath "python" -ArgumentList @("scripts\run-daily-odds.py", "--skip-strict-report") -Label "Pinnacle/fair-odds" -TimeoutSeconds $dailyOddsTimeoutSeconds -Attempts 1
 $step6Lines = @($script:LastProcessOutputLines | ForEach-Object { "$_" })
 if ($step6Exit -ne 0) {
     Log "ERROR: Pinnacle/fair-odds failed (exit $step6Exit)"
