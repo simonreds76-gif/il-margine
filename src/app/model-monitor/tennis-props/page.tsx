@@ -45,6 +45,8 @@ const INBOX_DIR = path.join(PROPS_DIR, "inbox");
 const SHADOW_DIR = path.join(PROPS_DIR, "shadow");
 const SHADOW_SIGNALS_PATH = path.join(SHADOW_DIR, "aces-dfs-shadow-signals.csv");
 const SHADOW_PERFORMANCE_PATH = path.join(SHADOW_DIR, "aces-dfs-shadow-performance.txt");
+const MARKET_OBSERVATIONS_PATH = path.join(SHADOW_DIR, "market-observations.csv");
+const MARKET_OBSERVATIONS_REPORT_PATH = path.join(SHADOW_DIR, "market-observations-report.txt");
 const MODEL_SUMMARY_PATH = path.join(PROPS_DIR, "model-monitor-summary.csv");
 const MODEL_REPORT_PATH = path.join(PROPS_DIR, "model-monitor-report.txt");
 const TOTALS_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-totals-gate.json");
@@ -286,6 +288,33 @@ function shadowStats(rows: CsvRow[]): { settled: number; pending: number; voided
     clvCount: clvRows.length,
     meanClv,
     positiveClv: clvRows.length ? clvRows.filter((row) => n(row.clv_pct) > 0).length / clvRows.length * 100 : 0,
+  };
+}
+
+function meanNumeric(rows: CsvRow[], field: string): number | null {
+  const values = rows
+    .map((row) => Number.parseFloat(row[field] || ""))
+    .filter(Number.isFinite);
+  return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
+}
+
+function benchmarkStats(rows: CsvRow[]) {
+  const settled = rows.filter((row) => row.settlement_status === "settled");
+  const scored = settled.filter((row) => row.outcome_over === "0" || row.outcome_over === "1");
+  const modelBrier = meanNumeric(scored, "model_brier");
+  const marketBrier = meanNumeric(scored, "observed_market_brier");
+  return {
+    observations: rows.length,
+    settled: settled.length,
+    scored: scored.length,
+    pending: rows.filter((row) => row.settlement_status === "pending").length,
+    modelMae: meanNumeric(settled, "model_count_abs_error"),
+    marketMae: meanNumeric(settled, "observed_market_count_abs_error"),
+    closeMae: meanNumeric(settled, "closing_market_count_abs_error"),
+    modelBrier,
+    marketBrier,
+    closeBrier: meanNumeric(scored, "closing_market_brier"),
+    brierDelta: modelBrier != null && marketBrier != null ? marketBrier - modelBrier : null,
   };
 }
 
@@ -1279,6 +1308,50 @@ function ModelTrackerPanel({ rows, stamp }: { rows: CsvRow[]; stamp: string }) {
   );
 }
 
+function MarketBenchmarkPanel({ rows, stamp }: { rows: CsvRow[]; stamp: string }) {
+  const overall = benchmarkStats(rows);
+  const groups = ["match_aces", "match_double_faults"].map((market) => ({
+    market,
+    stats: benchmarkStats(rows.filter((row) => row.market === market)),
+  }));
+  const metric = (value: number | null, digits: number) => value == null ? "-" : value.toFixed(digits);
+  const deltaTone = overall.brierDelta == null
+    ? "text-slate-400"
+    : overall.brierDelta > 0
+      ? "text-emerald-300"
+      : "text-rose-300";
+
+  return (
+    <SectionCard
+      title="Model vs Bet365 Benchmark"
+      subtitle={`Every clean Bet365 main line is observed and settled, even when the official decision is NO BET. Updated ${stamp}.`}
+    >
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <MetricTile label="Observed lines" value={String(overall.observations)} sub={`${overall.settled} settled / ${overall.pending} pending`} tone="text-cyan-300" />
+        <MetricTile label="Count MAE" value={metric(overall.modelMae, 2)} sub={`Bet365 open ${metric(overall.marketMae, 2)}`} tone={overall.modelMae != null && overall.marketMae != null && overall.modelMae < overall.marketMae ? "text-emerald-300" : "text-slate-100"} />
+        <MetricTile label="Model Brier" value={metric(overall.modelBrier, 3)} sub={`${overall.scored} non-push outcomes`} tone="text-slate-100" />
+        <MetricTile label="Bet365 Brier" value={metric(overall.marketBrier, 3)} sub={`close ${metric(overall.closeBrier, 3)}`} tone="text-slate-100" />
+        <MetricTile label="Brier edge" value={overall.brierDelta == null ? "-" : `${overall.brierDelta >= 0 ? "+" : ""}${overall.brierDelta.toFixed(3)}`} sub="positive = our model better" tone={deltaTone} />
+      </div>
+      <div className="mt-3 grid gap-3 lg:grid-cols-2">
+        {groups.map(({ market, stats }) => (
+          <div key={market} className="rounded-2xl border border-slate-800/80 bg-slate-950/60 p-4">
+            <div className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-500">{market.replaceAll("_", " ")}</div>
+            <div className="mt-2 flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-400">
+              <span><strong className="font-mono text-slate-100">{stats.settled}</strong> settled</span>
+              <span>MAE <strong className="font-mono text-cyan-200">{metric(stats.modelMae, 2)}</strong> vs book <strong className="font-mono text-slate-200">{metric(stats.marketMae, 2)}</strong></span>
+              <span>Brier delta <strong className={cn("font-mono", stats.brierDelta != null && stats.brierDelta > 0 ? "text-emerald-300" : "text-slate-200")}>{stats.brierDelta == null ? "-" : `${stats.brierDelta >= 0 ? "+" : ""}${stats.brierDelta.toFixed(3)}`}</strong></span>
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="mt-3 text-xs leading-relaxed text-slate-500">
+        Evidence gate: no automatic parameter change and no sellable claim before at least 100 settled clean lines. Actual counts remain the training target; Bet365 open/close is the benchmark challenger.
+      </p>
+    </SectionCard>
+  );
+}
+
 function numeric(value: unknown): number {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : 0;
@@ -1365,6 +1438,9 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     shadowRows,
     shadowStamp,
     shadowPerformanceStamp,
+    marketObservationRows,
+    marketObservationStamp,
+    marketObservationReportStamp,
     totalsGate,
     totalsGateStamp,
     derivativesEvidence,
@@ -1386,6 +1462,9 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     readCsv(SHADOW_SIGNALS_PATH),
     fileStamp(SHADOW_SIGNALS_PATH),
     fileStamp(SHADOW_PERFORMANCE_PATH),
+    readCsv(MARKET_OBSERVATIONS_PATH),
+    fileStamp(MARKET_OBSERVATIONS_PATH),
+    fileStamp(MARKET_OBSERVATIONS_REPORT_PATH),
     readJson(TOTALS_GATE_PATH),
     fileStamp(TOTALS_GATE_PATH),
     readJson(DERIVATIVES_STATUS_PATH),
@@ -1418,6 +1497,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
   const allLineRowsForPanel = showAllLines ? visibleAllLineRows : visibleAllLineRows.filter((row) => row.main_line === "true" || row.best_available_line === "true" || row.bettable === "true");
   const sortedShadowRows = [...shadowRows].sort(shadowSort);
   const shadow = shadowStats(shadowRows);
+  const marketBenchmark = benchmarkStats(marketObservationRows);
   const todayIso = londonDateIso();
   const latestLinesDate = latestLinesPath ? path.basename(latestLinesPath).match(/bet365-lines-(\d{4}-\d{2}-\d{2})\.csv$/)?.[1] ?? "" : "";
   const hasTodayLines = latestLinesDate === todayIso;
@@ -1447,13 +1527,14 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
           </div>
         </HeroCard>
 
-        <section className="my-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
+        <section className="my-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-7">
           <StatCard label="Verdict" value={bettableRows.length ? `${bettableRows.length} BET NOW` : "NO BET"} detail={`${nearMissRows.length} near miss / ${blockedExamples.length} blocked`} tone={bettableRows.length ? "text-emerald-300" : "text-amber-300"} />
           <StatCard label="Bet365 lines" value={String(decisionRows.length)} detail={`${matchedDecisionRows.length} matched / ${lineRows.length} raw rows`} tone={decisionRows.length ? "text-cyan-300" : "text-slate-400"} />
           <StatCard label="Match rate" value={`${matchedRate.toFixed(0)}%`} detail={`comparison ${comparisonStamp}`} tone={matchedRate >= 95 ? "text-emerald-300" : matchedRate ? "text-amber-300" : "text-slate-400"} />
           <StatCard label="Line freshness" value={lineStatus} detail={latestLinesPath ? `${latestLinesDate || "unknown date"} · ${lineStamp}` : "No Bet365 file found"} tone={lineStatus === "FRESH" ? "text-emerald-300" : "text-amber-300"} />
           <StatCard label="Projection rows" value={String(sortedBoard.length)} detail={`${countBy(sortedBoard, "tour", "ATP")} ATP / ${countBy(sortedBoard, "tour", "WTA")} WTA`} />
           <StatCard label="Shadow evidence" value={String(shadowRows.length)} detail={`${shadow.settled} settled / ${shadow.pending} pending`} tone={shadowRows.length ? "text-amber-300" : "text-slate-400"} />
+          <StatCard label="Market benchmark" value={String(marketBenchmark.observations)} detail={`${marketBenchmark.settled} settled / ${marketBenchmark.pending} pending`} tone={marketBenchmark.observations ? "text-cyan-300" : "text-slate-400"} />
         </section>
 
         <div className="mb-6">
@@ -1470,6 +1551,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
           <div><span className="text-slate-500">Model report:</span> <span className="text-slate-200">{modelReportStamp}</span></div>
           <div><span className="text-slate-500">Shadow:</span> <span className="text-slate-200">{shadowStamp}</span></div>
           <div><span className="text-slate-500">Shadow perf:</span> <span className="text-slate-200">{shadowPerformanceStamp}</span></div>
+          <div><span className="text-slate-500">Market benchmark:</span> <span className="text-slate-200">{marketObservationStamp}</span></div>
+          <div><span className="text-slate-500">Benchmark report:</span> <span className="text-slate-200">{marketObservationReportStamp}</span></div>
         </section>
 
         {boardStale ? (
@@ -1519,6 +1602,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
             />
 
             <ModelTrackerPanel rows={modelSummaryRows} stamp={modelSummaryStamp} />
+
+            <MarketBenchmarkPanel rows={marketObservationRows} stamp={marketObservationReportStamp} />
 
             <ResearchGatesPanel
               evidence={derivativesEvidence}
@@ -1571,6 +1656,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
                 <div><span className="text-slate-500">Lines:</span> {latestLinesPath ? path.basename(latestLinesPath) : "missing"}</div>
                 <div><span className="text-slate-500">Comparison:</span> {latestComparisonPath ? path.basename(latestComparisonPath) : "missing"}</div>
                 <div><span className="text-slate-500">Shadow:</span> data/tennis-props/shadow/aces-dfs-shadow-signals.csv</div>
+                <div><span className="text-slate-500">Market benchmark:</span> data/tennis-props/shadow/market-observations.csv</div>
               </div>
             </SectionCard>
           </div>
