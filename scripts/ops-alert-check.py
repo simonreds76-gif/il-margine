@@ -28,6 +28,15 @@ PINNACLE_SLOT_TOLERANCE = timedelta(
     minutes=int(os.environ.get("OPS_ALERT_PINNACLE_SLOT_TOLERANCE_MINUTES", "5"))
 )
 
+# The database view intentionally exposes every run older than 15 minutes.
+# Long local OnCourt pipelines need a higher alert ceiling because their
+# bounded extraction/model stages routinely exceed that global floor.
+PIPELINE_STUCK_LIMITS_SECONDS = {
+    "oncourt-daily": 90 * 60,
+    "oncourt-am-refresh": 60 * 60,
+    "oncourt-weekly": 180 * 60,
+}
+
 
 def load_env_files() -> None:
     for path in ENV_FILES:
@@ -190,6 +199,25 @@ def filter_schedule_aware_silent_rows(rows: list[dict[str, Any]]) -> list[dict[s
             continue
         filtered.append(row)
 
+    return filtered
+
+
+def filter_pipeline_aware_stuck_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Keep long-running pipelines only after their realistic alert ceiling."""
+    filtered: list[dict[str, Any]] = []
+    for row in rows:
+        pipeline = str(row.get("pipeline") or "").strip()
+        limit_seconds = PIPELINE_STUCK_LIMITS_SECONDS.get(pipeline)
+        if limit_seconds is None:
+            filtered.append(row)
+            continue
+        try:
+            age_seconds = float(row.get("age_seconds"))
+        except (TypeError, ValueError):
+            filtered.append(row)
+            continue
+        if age_seconds >= limit_seconds:
+            filtered.append(row)
     return filtered
 
 
@@ -386,6 +414,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"OPS_ALERT_BACKEND {backend_used}")
 
     stuck = [row for row in stuck_rows if row.get("pipeline") not in ignore_stuck]
+    stuck = filter_pipeline_aware_stuck_rows(stuck)
     silent = [row for row in silent_rows if row.get("pipeline") not in ignore_silent]
     silent = filter_schedule_aware_silent_rows(silent)
 
