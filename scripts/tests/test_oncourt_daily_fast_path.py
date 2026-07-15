@@ -37,6 +37,11 @@ class NightlyFastPathTests(unittest.TestCase):
             with self.subTest(command=command):
                 self.assertIn(command, DAILY)
 
+    def test_fair_odds_does_not_repeat_long_timeouts(self) -> None:
+        self.assertIn("$dailyOddsTimeoutSeconds = 1200", DAILY)
+        self.assertIn("-Attempts 1", DAILY)
+        self.assertNotIn("-Attempts 3", DAILY)
+
 
 if __name__ == "__main__":
     unittest.main()
