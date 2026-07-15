@@ -1,6 +1,7 @@
 # Il Margine - Tennis automation watchdog
-# Purpose: detect stale tennis output files or failed/missing scheduled tasks and
-# optionally post a webhook alert.
+# Purpose: read existing tennis artifacts, detect stale output files or
+# failed/missing scheduled tasks, and optionally post an alert. This watchdog
+# must not rebuild model artifacts itself.
 
 param(
     [int]$StaleHours = 15,
