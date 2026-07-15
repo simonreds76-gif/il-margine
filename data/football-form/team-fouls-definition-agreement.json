@@ -1,7 +1,7 @@
 {
   "api_football": {
     "comparable_team_values": 0,
-    "exact_pct": 0.0,
+    "exact_pct": null,
     "mae": null,
     "matched_fixtures": 0,
     "passed": false,
@@ -9,12 +9,12 @@
   },
   "decision": "Settlement definitions remain blocked until both independent sources pass the registered agreement threshold.",
   "fotmob": {
-    "comparable_team_values": 56,
-    "mae": 0.21428571428571427,
+    "comparable_team_values": 68,
+    "mae": 0.17647058823529413,
     "passed": false,
-    "within_one_pct": 96.42857142857143
+    "within_one_pct": 97.05882352941177
   },
-  "generated_at": "2026-07-14T23:07:28Z",
+  "generated_at": "2026-07-15T10:55:43Z",
   "requirements": {
     "independent_sources_required": [
       "api-football",

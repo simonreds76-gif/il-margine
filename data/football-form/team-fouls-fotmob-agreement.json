@@ -1,13 +1,19 @@
 {
-  "generated_at": "2026-07-14T23:06:47Z",
+  "generated_at": "2026-07-15T10:55:42Z",
+  "new_comparable_team_values": 12,
   "source": "Football-Data vs FotMob full-time fouls",
   "summary": {
-    "attempted_matches": 36,
-    "comparable_team_values": 56,
-    "exact_pct": 96.42857142857143,
-    "mae": 0.21428571428571427,
-    "matched_matches": 28,
+    "attempted_matches": 38,
+    "comparable_team_values": 68,
+    "exact_pct": 97.05882352941177,
+    "mae": 0.17647058823529413,
+    "matched_matches": 34,
     "passed": false,
-    "within_one_pct": 96.42857142857143
+    "within_one_pct": 97.05882352941177
+  },
+  "target": {
+    "reached": false,
+    "team_values": 200,
+    "within_one_pct": 97.0
   }
 }

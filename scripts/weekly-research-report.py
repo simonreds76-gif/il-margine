@@ -400,6 +400,7 @@ def build_payload() -> dict[str, Any]:
     api_football_agreement = load_json(OUT_DIR / "api-football-source-agreement.json")
     team_fouls_m1 = load_json(OUT_DIR / "fouls-empirical-baseline.json")
     team_fouls_f1 = load_json(OUT_DIR / "team-fouls-v1-fold-report.json")
+    team_fouls_f2 = load_json(OUT_DIR / "team-fouls-f2-fold-report.json")
     team_fouls_m2 = load_json(OUT_DIR / "team-fouls-definition-agreement.json")
 
     team_clv_rows = load_csv(OUT_DIR / "team-shots-v3-ema20-clv-monitor.csv")
@@ -441,6 +442,7 @@ def build_payload() -> dict[str, Any]:
         "team_fouls_v1": {
             "m1": team_fouls_m1,
             "f1": team_fouls_f1,
+            "f2": team_fouls_f2,
             "m2": team_fouls_m2,
         },
         "tennis_ml_gap_guard": tennis_gap_guard,
@@ -467,6 +469,7 @@ def render_report(payload: dict[str, Any]) -> str:
     team_fouls = payload.get("team_fouls_v1") or {}
     team_fouls_f1 = team_fouls.get("f1") or {}
     team_fouls_decision = team_fouls_f1.get("decision") or {}
+    team_fouls_f2_decision = ((team_fouls.get("f2") or {}).get("decision") or {})
     team_fouls_m2 = team_fouls.get("m2") or {}
     tennis = payload["tennis_ml_gap_guard"]
     tennis_props_v3 = payload.get("tennis_props_v3") or {}
@@ -488,7 +491,7 @@ def render_report(payload: dict[str, Any]) -> str:
         "- Neither experiment changes live routing or stakes.",
         f"- API-Football count archive: {api_health.get('archive_rows', 0)} fixtures; latest {api_health.get('latest_fixture_date') or '-'}; last run {api_health.get('requests_used', 0)}/{api_health.get('max_requests', 0)} requests.",
         f"- Cross-provider agreement: {api_agreement.get('matched_fixtures', 0)}/{api_agreement.get('api_rows', 0)} API fixtures matched; status {api_agreement.get('status', 'NOT_RUN')}.",
-        f"- Team Fouls v1: count {team_fouls_decision.get('status', 'NOT_RUN')}; M2 {team_fouls_m2.get('status', 'NOT_RUN')}; market prices BLOCKED; signals disabled.",
+        f"- Team Fouls: F1 {team_fouls_decision.get('status', 'NOT_RUN')}; F2 {team_fouls_f2_decision.get('status', 'NOT_RUN')}; M2 {team_fouls_m2.get('status', 'NOT_RUN')}; market prices BLOCKED; signals disabled.",
         "- New provider fields remain diagnostic-only until source definitions and coverage are accepted.",
         "",
         "## Team Shots V3 EMA20 Research",
@@ -611,6 +614,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
     api_agreement = api_counts.get("agreement") or {}
     team_fouls = payload.get("team_fouls_v1") or {}
     team_fouls_decision = ((team_fouls.get("f1") or {}).get("decision") or {})
+    team_fouls_f2_decision = ((team_fouls.get("f2") or {}).get("decision") or {})
     team_fouls_m2 = team_fouls.get("m2") or {}
     tennis = payload["tennis_ml_gap_guard"]
     tennis_props_v3 = payload.get("tennis_props_v3") or {}
@@ -625,7 +629,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
         f"Corners V0: {len(corners['allowed_leagues'])}/5 leagues, blocked {join_leagues(corners['blocked_leagues'])}, {corners_clv['published_picks']} picks, {corners_clv['settled']} settled, avg CLV {pct((corners_clv['avg_published_to_close_clv'] or 0) * 100) if corners_clv['avg_published_to_close_clv'] is not None else '-'}",
         f"Football counts vNext: Team Shots {((vnext.get('team_shots_v4') or {}).get('count_gate') or 'NOT_RUN')}, Corners {((vnext.get('corners_v3') or {}).get('count_gate') or 'NOT_RUN')}; both market-gated shadow only",
         f"Count-source health: API-Football {api_health.get('archive_rows', 0)} archived, latest {api_health.get('latest_fixture_date') or '-'}, agreement {api_agreement.get('matched_fixtures', 0)}/{api_agreement.get('api_rows', 0)}",
-        f"Team Fouls v1: {team_fouls_decision.get('status', 'NOT_RUN')}; sources {team_fouls_m2.get('status', 'NOT_RUN')}; no signals",
+        f"Team Fouls: F1 {team_fouls_decision.get('status', 'NOT_RUN')}; F2 {team_fouls_f2_decision.get('status', 'NOT_RUN')}; sources {team_fouls_m2.get('status', 'NOT_RUN')}; no signals",
         f"Goalscorer V2: parity {goalscorer['parity_decision']}, Beta {goalscorer['beta_fold_wins']}/{goalscorer['beta_folds']} fold wins, CLV coverage {goalscorer['matched_closes']}/{goalscorer['signals']}; research only",
         f"Tennis ML gap guard: Etch/Fils-type {format_bet_summary(tennis['etch_type'])}; recent 2024-26 {format_bet_summary(tennis['etch_type_recent'])}",
     ]

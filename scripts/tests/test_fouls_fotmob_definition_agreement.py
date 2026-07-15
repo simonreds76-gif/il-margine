@@ -39,6 +39,23 @@ class FoulsFotMobAgreementTests(unittest.TestCase):
         self.assertEqual(summary["within_one_pct"], 100.0)
         self.assertEqual(summary["mae"], 0.5)
 
+    def test_target_requires_sample_and_agreement(self) -> None:
+        self.assertFalse(
+            MODULE.agreement_target_reached(
+                {"comparable_team_values": 199, "within_one_pct": 100.0}, 200, 97.0
+            )
+        )
+        self.assertFalse(
+            MODULE.agreement_target_reached(
+                {"comparable_team_values": 200, "within_one_pct": 96.9}, 200, 97.0
+            )
+        )
+        self.assertTrue(
+            MODULE.agreement_target_reached(
+                {"comparable_team_values": 200, "within_one_pct": 97.0}, 200, 97.0
+            )
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -55,6 +55,13 @@ type TeamFoulsFoldPayload = {
     mae_checks?: Array<{ season?: string; improvement_pct?: number }>;
     hierarchical_nb_wins?: number;
     hierarchical_nb_cells?: number;
+    fold_checks?: Array<{
+      season?: string;
+      mae_improvement_pct?: number;
+      opening_strength_pass?: boolean;
+      f1_distribution_pass?: boolean;
+      reliability_pass?: boolean;
+    }>;
   };
 };
 type TeamFoulsAgreementPayload = {
@@ -68,6 +75,20 @@ type TeamFoulsAgreementPayload = {
   fotmob?: {
     comparable_team_values?: number;
     within_one_pct?: number;
+  };
+};
+type FootballFoulMarketProbePayload = {
+  generated_at?: string;
+  status?: string;
+  events_probed?: number;
+  decision?: string;
+  labels?: {
+    paired_foul_lines?: Array<{
+      event_id?: string;
+      bookmaker?: string;
+      market_name?: string;
+      line?: number;
+    }>;
   };
 };
 type TeamShotsLiveLine = {
@@ -1151,7 +1172,11 @@ export default async function TeamShotsMonitorPage() {
 
     teamFoulsF1,
 
+    teamFoulsF2,
+
     teamFoulsM2,
+
+    footballFoulMarketProbe,
 
   ] = await Promise.all([
 
@@ -1212,7 +1237,11 @@ export default async function TeamShotsMonitorPage() {
 
     readJson<TeamFoulsFoldPayload>("data/football-form/team-fouls-v1-fold-report.json"),
 
+    readJson<TeamFoulsFoldPayload>("data/football-form/team-fouls-f2-fold-report.json"),
+
     readJson<TeamFoulsAgreementPayload>("data/football-form/team-fouls-definition-agreement.json"),
+
+    readJson<FootballFoulMarketProbePayload>("data/football-form/football-foul-market-probe.json"),
 
   ]);
 
@@ -2073,10 +2102,10 @@ function LiveLineTable({
 
         <SectionCard
           collapsible
-          title="Team Fouls v1 Research Gate"
+          title="Team Fouls Research Gate"
           subtitle="Count validation only. No foul bet is authorized until prices, source agreement, and prospective CLV all pass."
         >
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
             <StatCard
               label="M1 empirical base"
               value={teamFoulsM1?.usable_rows ? `${teamFoulsM1.usable_rows.toLocaleString()} matches` : "Missing"}
@@ -2090,6 +2119,12 @@ function LiveLineTable({
               detail={`${teamFoulsF1?.sample_matches?.toLocaleString() ?? 0} tested matches`}
             />
             <StatCard
+              label="F2 Poisson gate"
+              value={teamFoulsF2?.decision?.count_gate_pass ? "PASS" : "FAIL"}
+              tone={statTone(teamFoulsF2?.decision?.count_gate_pass ? "green" : "red")}
+              detail={`${teamFoulsF2?.sample_matches?.toLocaleString() ?? 0} tested matches`}
+            />
+            <StatCard
               label="M2 source agreement"
               value={(teamFoulsM2?.status ?? "NOT RUN").replaceAll("_", " ")}
               tone={statTone(teamFoulsM2?.settlement_source_authorized ? "green" : "amber")}
@@ -2097,9 +2132,13 @@ function LiveLineTable({
             />
             <StatCard
               label="Market / signals"
-              value="BLOCKED"
-              tone={statTone("red")}
-              detail="No paired team-fouls O/U prices"
+              value={(footballFoulMarketProbe?.status ?? "NOT PROBED").replaceAll("_", " ")}
+              tone={statTone(footballFoulMarketProbe?.status === "PAIRED_FOUL_PRICES_RETURNED" ? "green" : "red")}
+              detail={
+                footballFoulMarketProbe?.generated_at
+                  ? `${footballFoulMarketProbe.events_probed ?? 0} events | ${formatDateTime(footballFoulMarketProbe.generated_at)}`
+                  : "Run the bounded GitHub feed probe"
+              }
             />
           </div>
 
@@ -2137,9 +2176,45 @@ function LiveLineTable({
               ))}
             </div>
             <p className="mt-3 text-xs text-slate-500">
-              Next registered candidate: retain the proven core + opening-market mean features, remove failed complexity, and re-test without changing the holdout or thresholds. This is not permission to bet.
+              F1 remains the richer control. F2 retained only team form, opponent fouls drawn and opening-market strength with Poisson tails. Its mean stayed strong, but it did not beat F1 distribution scores and the market-strength increment failed one locked fold.
             </p>
           </div>
+
+          <div className="mt-4 rounded-2xl border border-slate-800 bg-slate-950/45 p-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <StatusPill
+                label={teamFoulsF2?.decision?.status?.replaceAll("_", " ") ?? "F2 NOT RUN"}
+                tone={
+                  teamFoulsF2?.decision?.count_gate_pass
+                    ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-300"
+                    : "border-rose-500/20 bg-rose-500/10 text-rose-300"
+                }
+              />
+              {(teamFoulsF2?.decision?.fold_checks ?? []).map((check) => (
+                <span key={check.season} className="rounded-full border border-sky-500/20 bg-sky-500/10 px-2.5 py-1 text-[11px] font-semibold text-sky-200">
+                  {check.season}: MAE {typeof check.mae_improvement_pct === "number" ? `${check.mae_improvement_pct.toFixed(1)}% better` : "-"}
+                </span>
+              ))}
+            </div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {Object.entries(teamFoulsF2?.decision?.gates ?? {}).map(([gate, passed]) => (
+                <span
+                  key={gate}
+                  className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] ${
+                    passed
+                      ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-300"
+                      : "border-rose-500/20 bg-rose-500/10 text-rose-300"
+                  }`}
+                >
+                  {passed ? "Pass" : "Fail"} {gate.replaceAll("_", " ")}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <p className="mt-4 text-xs leading-5 text-slate-500">
+            Latest price-feed decision: {footballFoulMarketProbe?.decision ?? "No bounded Bet365 foul-market probe has been recorded yet."}
+          </p>
         </SectionCard>
 
         <SectionCard
@@ -2181,7 +2256,7 @@ function LiveLineTable({
             })}
           </div>
           <p className="mt-3 text-xs text-slate-500">
-            Team Fouls v1 remains blocked until paired prices are observed and bookmaker settlement definitions match the result source.
+            Team Fouls remains blocked until paired prices are observed and bookmaker settlement definitions match the result source.
             {countMarketCoverage?.generated_at ? ` Last audit ${formatDateTime(countMarketCoverage.generated_at)}.` : ""}
           </p>
         </SectionCard>

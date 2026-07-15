@@ -21,6 +21,8 @@ DEFAULT_CSV = ROOT / "data" / "football-form" / "team-fouls-fotmob-agreement.csv
 DEFAULT_JSON = ROOT / "data" / "football-form" / "team-fouls-fotmob-agreement.json"
 DEFAULT_REPORT = ROOT / "data" / "football-form" / "team-fouls-fotmob-agreement.md"
 LEAGUES = ("epl", "serie-a", "la-liga", "bundesliga", "ligue-1")
+DEFAULT_TARGET_TEAM_VALUES = 200
+DEFAULT_TARGET_WITHIN_ONE_PCT = 97.0
 
 
 def count(value: Any) -> int | None:
@@ -140,6 +142,17 @@ def summarize(rows: list[dict[str, Any]], attempted_matches: int) -> dict[str, A
     }
 
 
+def agreement_target_reached(
+    summary: dict[str, Any],
+    target_team_values: int,
+    target_within_one_pct: float,
+) -> bool:
+    return (
+        int(summary.get("comparable_team_values") or 0) >= target_team_values
+        and float(summary.get("within_one_pct") or 0.0) >= target_within_one_pct
+    )
+
+
 def render(payload: dict[str, Any]) -> str:
     summary = payload["summary"]
     mae = "-" if summary["mae"] is None else f"{summary['mae']:.3f}"
@@ -169,11 +182,26 @@ def main() -> int:
     parser.add_argument("--json-out", type=Path, default=DEFAULT_JSON)
     parser.add_argument("--report-out", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--dates-per-league", type=int, default=2)
+    parser.add_argument("--target-team-values", type=int, default=DEFAULT_TARGET_TEAM_VALUES)
+    parser.add_argument("--target-within-one-pct", type=float, default=DEFAULT_TARGET_WITHIN_ONE_PCT)
     parser.add_argument("--allow-empty", action="store_true")
     args = parser.parse_args()
 
     reference = load_reference(args.source)
     existing = load_existing(args.csv_out)
+    existing_matches = len({row_key(row)[:4] for row in existing})
+    existing_summary = summarize(existing, existing_matches)
+    if agreement_target_reached(
+        existing_summary,
+        args.target_team_values,
+        args.target_within_one_pct,
+    ):
+        print(
+            "FotMob foul agreement target already passed: "
+            f"{existing_summary['comparable_team_values']} team values; "
+            f"{existing_summary['within_one_pct']:.2f}% within one. No network calls made."
+        )
+        return 0
     completed_dates = {
         (str(row["date"]), str(row["league"]))
         for row in existing
@@ -195,12 +223,20 @@ def main() -> int:
     combined = {row_key(row): row for row in existing}
     combined.update({row_key(row): row for row in fresh})
     compared = sorted(combined.values(), key=row_key)
-    existing_matches = len({row_key(row)[:4] for row in existing})
     summary = summarize(compared, existing_matches + len(selected))
     payload = {
         "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "source": "Football-Data vs FotMob full-time fouls",
         "new_comparable_team_values": len(fresh),
+        "target": {
+            "team_values": args.target_team_values,
+            "within_one_pct": args.target_within_one_pct,
+            "reached": agreement_target_reached(
+                summary,
+                args.target_team_values,
+                args.target_within_one_pct,
+            ),
+        },
         "summary": summary,
     }
     args.csv_out.parent.mkdir(parents=True, exist_ok=True)
