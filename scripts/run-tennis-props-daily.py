@@ -125,6 +125,16 @@ def run_shadow_tracking(as_of: str) -> None:
     run(
         [
             sys.executable,
+            str(ROOT / "scripts" / "tennis-props-market-observations.py"),
+            "--comparison",
+            str(PROPS_DIR / f"comparison-{as_of}.csv"),
+        ],
+        "Update all-main-line Bet365 observation benchmark",
+        fatal=False,
+    )
+    run(
+        [
+            sys.executable,
             str(ROOT / "scripts" / "tennis-props-shadow-tracker.py"),
             "--date",
             as_of,

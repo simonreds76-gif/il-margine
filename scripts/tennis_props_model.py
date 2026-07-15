@@ -1005,7 +1005,7 @@ def negative_binomial_line_probabilities(line: float, mean: float, alpha: float)
 
 def resolve_count_dispersion(tour: str, market: str) -> float:
     tour_key = str(tour or "").upper()
-    market_key = "dfs" if str(market or "").lower().replace(" ", "_") in {"double_faults", "double_fault", "df", "dfs"} else "aces"
+    market_key = "dfs" if str(market or "").lower().replace(" ", "_") in {"double_faults", "double_fault", "df", "dfs", "match_double_faults"} else "aces"
     return DEFAULT_COUNT_DISPERSION_ALPHA.get((tour_key, market_key), 0.25 if market_key == "aces" else 0.12)
 
 

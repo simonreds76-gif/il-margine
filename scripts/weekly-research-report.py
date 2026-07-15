@@ -25,6 +25,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = ROOT / "data" / "football-form"
 DEFAULT_JSON = OUT_DIR / "weekly-research-report.json"
 DEFAULT_REPORT = OUT_DIR / "weekly-research-report.md"
+TENNIS_PROPS_OBSERVATIONS = ROOT / "data" / "tennis-props" / "shadow" / "market-observations.csv"
 
 TEAM_SHOTS_MODEL = "canonical_form_v3_ema20_nb"
 CORNERS_MODEL = "canonical_form_v0"
@@ -352,6 +353,32 @@ def tennis_props_v3_snapshot() -> dict[str, Any]:
     return payload if isinstance(payload, dict) else {"_error": "repository variable is not a JSON object"}
 
 
+def tennis_props_market_benchmark() -> dict[str, Any]:
+    rows = load_csv(TENNIS_PROPS_OBSERVATIONS)
+    settled = [row for row in rows if row.get("settlement_status") == "settled"]
+    scored = [row for row in settled if row.get("outcome_over") in {"0", "1"}]
+
+    def mean(field: str, sample: list[dict[str, str]]) -> float | None:
+        values = [pf(row.get(field)) for row in sample]
+        numeric = [value for value in values if value is not None]
+        return sum(numeric) / len(numeric) if numeric else None
+
+    model_brier = mean("model_brier", scored)
+    market_brier = mean("observed_market_brier", scored)
+    return {
+        "observations": len(rows),
+        "settled": len(settled),
+        "scored": len(scored),
+        "pending": sum((row.get("settlement_status") or "pending") == "pending" for row in rows),
+        "model_count_mae": mean("model_count_abs_error", settled),
+        "market_count_mae": mean("observed_market_count_abs_error", settled),
+        "model_brier": model_brier,
+        "market_brier": market_brier,
+        "brier_delta_vs_market": (market_brier - model_brier) if market_brier is not None and model_brier is not None else None,
+        "status": "REVIEW_REQUIRED" if len(settled) >= 100 else "EVIDENCE_BUILDING",
+    }
+
+
 def weighted_last90_delta(promotion: dict[str, Any]) -> dict[str, Any]:
     total_n = 0
     current_sum = 0.0
@@ -407,6 +434,7 @@ def build_payload() -> dict[str, Any]:
     corners_clv_rows = load_csv(OUT_DIR / "corners-v0-clv-monitor.csv")
     tennis_gap_guard = ml_gap_guard_summary()
     tennis_props_v3 = tennis_props_v3_snapshot()
+    tennis_props_benchmark = tennis_props_market_benchmark()
     goalscorer_research = goalscorer_research_summary()
 
     payload = {
@@ -447,6 +475,7 @@ def build_payload() -> dict[str, Any]:
         },
         "tennis_ml_gap_guard": tennis_gap_guard,
         "tennis_props_v3": tennis_props_v3,
+        "tennis_props_market_benchmark": tennis_props_benchmark,
         "goalscorer_v2": goalscorer_research,
     }
     payload["status"] = {
@@ -473,6 +502,7 @@ def render_report(payload: dict[str, Any]) -> str:
     team_fouls_m2 = team_fouls.get("m2") or {}
     tennis = payload["tennis_ml_gap_guard"]
     tennis_props_v3 = payload.get("tennis_props_v3") or {}
+    tennis_props_benchmark = payload.get("tennis_props_market_benchmark") or {}
     goalscorer = payload["goalscorer_v2"]
     team_gate = team["segment_gate"]
     team_clv = team["clv"]
@@ -591,6 +621,19 @@ def render_report(payload: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
+            "## Tennis Props Model vs Bet365",
+            "",
+            f"- Status: {tennis_props_benchmark.get('status', 'EVIDENCE_BUILDING')}",
+            f"- Clean main lines: {tennis_props_benchmark.get('observations', 0)} observed, {tennis_props_benchmark.get('settled', 0)} settled, {tennis_props_benchmark.get('pending', 0)} pending.",
+            f"- Count MAE: model {number(tennis_props_benchmark.get('model_count_mae')):.3f}; observed Bet365-implied mean {number(tennis_props_benchmark.get('market_count_mae')):.3f}.",
+            f"- Brier: model {number(tennis_props_benchmark.get('model_brier')):.4f}; Bet365 {number(tennis_props_benchmark.get('market_brier')):.4f}; delta {number(tennis_props_benchmark.get('brier_delta_vs_market')):+.4f} (positive favours the model).",
+            "- No automatic parameter change; 100 settled clean lines triggers a registered challenger review, not promotion.",
+        ]
+    )
+
+    lines.extend(
+        [
+            "",
             "## Plain-English Read",
             "",
             "- Team-shots V3 is not proven profitable live yet; it is the first broad research candidate that passed the backtest segment gates.",
@@ -618,6 +661,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
     team_fouls_m2 = team_fouls.get("m2") or {}
     tennis = payload["tennis_ml_gap_guard"]
     tennis_props_v3 = payload.get("tennis_props_v3") or {}
+    tennis_props_benchmark = payload.get("tennis_props_market_benchmark") or {}
     goalscorer = payload["goalscorer_v2"]
     team_clv = team["clv"]
     corners_clv = corners["clv"]
@@ -647,6 +691,12 @@ def telegram_text(payload: dict[str, Any]) -> str:
         )
     elif tennis_props_v3.get("_error"):
         lines.append(f"Tennis props v3: snapshot unavailable ({tennis_props_v3['_error']})")
+    lines.append(
+        "Tennis props vs Bet365: "
+        f"{tennis_props_benchmark.get('settled', 0)}/{tennis_props_benchmark.get('observations', 0)} settled, "
+        f"Brier delta {number(tennis_props_benchmark.get('brier_delta_vs_market')):+.4f}, "
+        f"{tennis_props_benchmark.get('status', 'EVIDENCE_BUILDING')}"
+    )
     lines.extend(
         [
             "",
