@@ -37,7 +37,9 @@ class TennisPropsTournamentSelectionTests(unittest.TestCase):
             "ATP Challenger - Gstaad",
             "ITF Women - Bastad",
             "WTA 125 - Hamburg",
+            "WTA 125K - Rome, Italy",
             "ATP - Wimbledon Juniors",
+            "WTA - Athens, Greece, Doubles",
         ):
             with self.subTest(league=league):
                 self.assertFalse(MODULE.is_supported_tournament_event(event(league)))

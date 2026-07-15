@@ -60,6 +60,8 @@ LOWER_TIER_KEYWORDS = (
     "boys",
     "girls",
     "wta 125",
+    "wta 125k",
+    "doubles",
 )
 ZERO_ROW_PROBE_PARAMS: tuple[tuple[str, dict[str, str]], ...] = (
     ("baseline", {}),
