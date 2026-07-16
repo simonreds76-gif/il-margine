@@ -2,7 +2,9 @@ name: Ops Alert Check
 
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    # Hourly is sufficient for the current alert SLA and halves routine
+    # Supabase health reads plus conditional orphan-cleanup attempts.
+    - cron: "15 * * * *"
   workflow_dispatch:
 
 permissions:

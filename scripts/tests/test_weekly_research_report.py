@@ -34,12 +34,16 @@ class WeeklyResearchReportTests(unittest.TestCase):
 
     def test_assist_workflow_has_a_fixed_weekly_api_ceiling(self) -> None:
         workflow = (ROOT / ".github" / "workflows" / "assist-value-shadow.yml").read_text(encoding="utf-8")
-        self.assertIn('cron: "10 7 * * 5"', workflow)
+        self.assertIn('cron: "10 7 * * 0,5,6"', workflow)
         self.assertIn("--max-events-per-league 10", workflow)
         self.assertIn("--max-odds-requests-per-league 1", workflow)
         self.assertIn("--disable-global-fallback", workflow)
         self.assertNotIn("SUPABASE_SERVICE_ROLE_KEY", workflow)
         self.assertNotIn("DATABASE_URL", workflow)
+
+    def test_weekly_payload_includes_automation_budget(self) -> None:
+        payload = REPORT["build_payload"]()
+        self.assertIn("automation_budget", payload)
 
 
 if __name__ == "__main__":

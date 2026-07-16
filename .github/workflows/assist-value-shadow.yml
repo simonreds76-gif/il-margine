@@ -1,10 +1,11 @@
 name: Assist Value Shadow
 
 on:
-  # One capture per football weekend. The scheduled path is hard-capped at
-  # ten odds-api.io HTTP calls and does not touch Supabase.
+  # Three weekend snapshots improve price and near-close coverage across the
+  # registered 90-calendar-day span. Every run stays capped at ten Odds-API.io
+  # calls and does not touch Supabase.
   schedule:
-    - cron: "10 7 * * 5" # Friday 07:10 UTC; captures the weekend once.
+    - cron: "10 7 * * 0,5,6" # Friday-Sunday 07:10 UTC.
   workflow_dispatch:
     inputs:
       refresh_role_sources:
@@ -68,7 +69,7 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.refresh_role_sources }}" = "true" ]; then
             REFRESH_FLAGS="--refresh-role-sources"
           fi
-          if [ "${{ github.event.schedule }}" = "10 7 * * 5" ]; then
+          if [ "${{ github.event.schedule }}" = "10 7 * * 0,5,6" ]; then
             REFRESH_FLAGS="--refresh-role-sources"
           fi
           python scripts/run-assist-value-shadow.py ${REFRESH_FLAGS} \
