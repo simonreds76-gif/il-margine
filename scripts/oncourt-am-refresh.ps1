@@ -315,6 +315,12 @@ try {
 
     Log "=== Post-step: spread_v1 refresh skipped in AM task (nightly/weekly only) ==="
 
+    Log "=== Post-step: Daily tennis Telegram digest ==="
+    $digestExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py") -Label "daily tennis Telegram digest" -TimeoutSeconds 90
+    if ($digestExit -ne 0) {
+        Log "WARNING: daily tennis Telegram digest failed/timed out (exit $digestExit); signal generation remains valid."
+    }
+
     Log "============================================"
     Log "  AM Tennis Refresh finished at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
     Log "============================================"
