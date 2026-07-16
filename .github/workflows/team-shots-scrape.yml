@@ -1,13 +1,6 @@
 name: Team Shots Weekly Scrape
 
 on:
-  schedule:
-    - cron: "0 10 * * 4" # Thursday 10am UTC = 11am BST
-    - cron: "20 11 * * 4" # Thursday backstop if GitHub drops/delays the first scheduled run
-    - cron: "0 10 * * 5" # Friday 10am UTC = 11am BST
-    - cron: "0 15 * * 5" # Friday 3pm UTC = 4pm BST
-    - cron: "0 13 * * 6" # Saturday 1pm UTC = 2pm BST
-    - cron: "0 13 * * 0" # Sunday 1pm UTC = 2pm BST
   workflow_dispatch:
 
 permissions:
@@ -36,55 +29,14 @@ jobs:
       - name: Create .env.local
         run: |
           : > .env.local
-          if [ -n "${{ secrets.ODDS_API_KEY }}" ]; then
-            echo "ODDS_API_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
-            echo "ODDS_API_IO_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
-          fi
+          echo "ODDS_API_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
+          echo "ODDS_API_IO_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
           if [ -n "${{ secrets.THE_ODDS_API_KEY }}" ]; then
             echo "THE_ODDS_API_KEY=${{ secrets.THE_ODDS_API_KEY }}" >> .env.local
           fi
 
-      - name: Guard team-shots scrape credentials
-        env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-          ODDS_API_IO_KEY: ${{ secrets.ODDS_API_KEY }}
-          BETS_API_KEY: ${{ secrets.BETS_API_KEY }}
-          OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
-          OPS_ALERT_TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: |
-          if [ -n "${ODDS_API_KEY:-}${ODDS_API_IO_KEY:-}${BETS_API_KEY:-}" ]; then
-            echo "Team-shots scrape credential present."
-            exit 0
-          fi
-
-          export ALERT_MESSAGE="Ops alert: team-shots scrape key missing in Team Shots Weekly Scrape. Bet365 team-shots odds scrape cannot run, so this workflow is stopping instead of producing stale/no odds. Run: ${RUN_URL}"
-          echo "::error::${ALERT_MESSAGE}"
-
-          if [ -z "${OPS_ALERT_TELEGRAM_BOT_TOKEN:-}" ] || [ -z "${OPS_ALERT_TELEGRAM_CHAT_ID:-}" ]; then
-            echo "::error::Telegram ops alert credentials are missing, so the scrape-key alert could not be sent."
-            exit 1
-          fi
-
-          python - <<'PY'
-          import os
-          import urllib.parse
-          import urllib.request
-
-          token = os.environ["OPS_ALERT_TELEGRAM_BOT_TOKEN"]
-          chat_id = os.environ["OPS_ALERT_TELEGRAM_CHAT_ID"]
-          text = os.environ["ALERT_MESSAGE"]
-          data = urllib.parse.urlencode({"chat_id": chat_id, "text": text}).encode()
-          urllib.request.urlopen(f"https://api.telegram.org/bot{token}/sendMessage", data=data, timeout=20).read()
-          PY
-          exit 1
-
       - name: Scrape odds
-        env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-          ODDS_API_IO_KEY: ${{ secrets.ODDS_API_KEY }}
-          BETS_API_KEY: ${{ secrets.BETS_API_KEY }}
-        run: python scripts/team-shots-scrape-odds.py --all-leagues --bookmakers "Bet365"
+        run: python scripts/team-shots-scrape-odds.py --all-leagues --bookmakers "Bet365" --days-ahead 7
 
       - name: Archive odds
         run: python scripts/team-shots-odds-archive.py

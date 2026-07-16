@@ -47,12 +47,22 @@ jobs:
 
       - name: Refresh current-season count inputs
         if: steps.season.outputs.active == 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *')
+        env:
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
         shell: bash
         run: |
           python scripts/footballdata-download-historical.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2026 --overwrite || echo "::warning::Football-Data current-season refresh was unavailable."
           python scripts/understat-download-shots.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2026 || echo "::warning::Understat current-season aggregate refresh was unavailable."
           python scripts/understat-download-corner-features.py --seasons 2026 || echo "::warning::Understat corner-event refresh was unavailable."
           python scripts/build-football-form-layer.py
+          if [ -n "${API_FOOTBALL_KEY:-}" ]; then
+            python scripts/capture-api-football-counts.py --days-back 2 --max-requests 90 || echo "::warning::API-Football count archive refresh reported an error; existing archive retained."
+          else
+            echo "::warning::API_FOOTBALL_KEY is missing; API-Football count archive skipped."
+          fi
+          python scripts/api-football-source-agreement.py --allow-empty
+          python scripts/fouls-fotmob-definition-agreement.py --dates-per-league 1 --allow-empty
+          python scripts/fouls-definition-agreement.py --allow-empty
 
       - name: Capture paired market prices
         if: steps.season.outputs.active == 'true'
@@ -67,16 +77,19 @@ jobs:
           TEAM_ARGS=(--all-leagues --bookmakers "Bet365")
           CORNER_ARGS=()
           if [[ "$EVENT_NAME" == "schedule" && "$SCHEDULE_EXPR" != "15 8 * * *" ]]; then
-            TEAM_ARGS+=(--days-ahead 1 --kickoff-within-minutes 90)
+            TEAM_ARGS+=(--days-ahead 1 --kickoff-within-minutes 90 --max-events-per-league 10 --max-odds-requests-per-league 1 --max-odds-api-http-requests 35)
             CORNER_ARGS+=(--bucket-hours 1 --kickoff-within-minutes 90)
             echo "Near-kickoff mode: detailed odds calls are limited to fixtures starting within 90 minutes."
           else
-            TEAM_ARGS+=(--days-ahead 7)
+            TEAM_ARGS+=(--days-ahead 7 --max-events-per-league 20 --max-odds-requests-per-league 2 --max-odds-api-http-requests 50 --market-audit-out data/football-form/football-count-market-inventory.csv)
             CORNER_ARGS+=(--bucket-hours 6)
             echo "Daily discovery mode: capturing publication prices for the seven-day board."
           fi
           if [ -n "${ODDS_API_KEY:-}${ODDS_API_IO_KEY:-}${BETS_API_KEY:-}" ]; then
             python scripts/team-shots-scrape-odds.py "${TEAM_ARGS[@]}"
+            if [[ "$EVENT_NAME" != "schedule" || "$SCHEDULE_EXPR" == "15 8 * * *" ]]; then
+              python scripts/football-count-market-coverage.py
+            fi
           else
             echo "::warning::No team-shots odds key; Team Shots v4 cannot emit this scan."
           fi

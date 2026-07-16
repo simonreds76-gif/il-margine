@@ -10,13 +10,21 @@ on:
         required: false
         default: "close"
         type: string
+      coverage_mode:
+        description: "League coverage mode"
+        required: false
+        default: "active"
+        type: choice
+        options:
+          - active
+          - all
 
 permissions:
   contents: read
 
 concurrency:
   group: pinnacle-capture-history
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   capture:
@@ -33,7 +41,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install Python deps
-        run: pip install requests
+        run: python -m pip install requests psycopg2-binary
 
       - name: Create .env.local
         run: |
@@ -61,4 +69,22 @@ jobs:
         env:
           RUN_STATUS_HOST: github-actions
           CAPTURE_MODE: ${{ github.event.inputs.capture_mode || 'close' }}
-        run: python scripts/pinnacle-capture-history.py --capture-mode "${CAPTURE_MODE}"
+          COVERAGE_MODE: ${{ github.event.inputs.coverage_mode || 'active' }}
+        run: |
+          args=(--capture-mode "${CAPTURE_MODE}")
+          if [ "${COVERAGE_MODE}" = "all" ]; then
+            args+=(--all-leagues)
+            echo "Coverage: all leagues (manual/debug only)"
+          else
+            echo "Coverage: active leagues"
+          fi
+          python scripts/pinnacle-capture-history.py "${args[@]}"
+
+      - name: Upload local Pinnacle history CSV
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pinnacle-history-${{ github.run_id }}
+          path: data/pinnacle-history/pinnacle-history-*.csv
+          if-no-files-found: ignore
+          retention-days: 14

@@ -1,9 +1,11 @@
 name: Assist Value Shadow
 
 on:
+  # Three weekend snapshots improve price and near-close coverage across the
+  # registered 90-calendar-day span. Every run stays capped at ten Odds-API.io
+  # calls and does not touch Supabase.
   schedule:
-    - cron: "10 7 * * *"
-    - cron: "*/30 8-22 * * *"
+    - cron: "10 7 * * 0,5,6" # Friday-Sunday 07:10 UTC.
   workflow_dispatch:
     inputs:
       refresh_role_sources:
@@ -20,7 +22,10 @@ concurrency:
 
 jobs:
   assist-shadow:
+    # Fail closed unless explicitly enabled in repo variables.
+    if: ${{ vars.ASSIST_VALUE_SHADOW_ENABLED == '1' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
         with:
@@ -32,10 +37,24 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Check club-season window
+        id: season
+        shell: bash
+        run: |
+          month="$(date -u +%m)"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "${month}" -ge 8 ] || [ "${month}" -le 5 ]; then
+            echo "active=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "active=false" >> "$GITHUB_OUTPUT"
+            echo "Assist capture skipped outside August-May club season."
+          fi
+
       - name: Install Python deps
+        if: steps.season.outputs.active == 'true'
         run: pip install requests
 
       - name: Create .env.local
+        if: steps.season.outputs.active == 'true'
         run: |
           : > .env.local
           if [ -n "${{ secrets.ODDS_API_KEY }}" ]; then
@@ -44,33 +63,67 @@ jobs:
           fi
 
       - name: Run assist value shadow lane
+        if: steps.season.outputs.active == 'true'
         run: |
           REFRESH_FLAGS=""
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.refresh_role_sources }}" = "true" ]; then
             REFRESH_FLAGS="--refresh-role-sources"
           fi
-          if [ "${{ github.event.schedule }}" = "10 7 * * *" ]; then
+          if [ "${{ github.event.schedule }}" = "10 7 * * 0,5,6" ]; then
             REFRESH_FLAGS="--refresh-role-sources"
           fi
-          python scripts/run-assist-value-shadow.py ${REFRESH_FLAGS} --allow-odds-failure --days-ahead 3
+          python scripts/run-assist-value-shadow.py ${REFRESH_FLAGS} \
+            --allow-odds-failure \
+            --days-ahead 3 \
+            --max-events-per-league 10 \
+            --max-odds-requests-per-league 1 \
+            --disable-global-fallback
 
       - name: Fetch FotMob assist settlement data
+        if: steps.season.outputs.active == 'true'
         run: |
           python scripts/fotmob-fetch-match-detail.py \
             --league epl la-liga ligue-1 serie-a bundesliga \
             --days-back 14
 
       - name: Settle assist value shadow signals
+        if: steps.season.outputs.active == 'true'
         run: python scripts/assist-value-settle.py
 
+      - name: Settle locked v1 prospective signals
+        if: steps.season.outputs.active == 'true'
+        run: |
+          python scripts/assist-value-settle.py \
+            --signals data/assist-value/research/assist-value-v1-prospective.csv \
+            --summary data/assist-value/research/assist-value-v1-prospective-performance.txt
+
+      - name: Rebuild assist research gates
+        if: steps.season.outputs.active == 'true'
+        run: python scripts/assist-value-research-gates.py
+
       - name: Commit and push if new shadow data
+        if: steps.season.outputs.active == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if [ -d data/assist-value ]; then
-            git add -f data/assist-value/
-            git add -u data/assist-value || true
-          fi
+          git add -f \
+            data/assist-value/assist-value-shadow-board.csv \
+            data/assist-value/assist-value-shadow-report.txt \
+            data/assist-value/assist-value-shadow-signals.csv \
+            data/assist-value/assist-value-model-report.txt \
+            data/assist-value/assist-value-shadow-performance.txt \
+            data/assist-value/rotowire-setpiece-roles.csv \
+            data/assist-value/rotowire-source-status.csv \
+            data/assist-value/fpl-setpiece-roles.csv \
+            data/assist-value/setpiecetakers-source-status.csv \
+            data/assist-value/setpiece-source-audit.md \
+            data/assist-value/setpiece-source-audit.json \
+            data/assist-value/assist-market-audit-*.csv \
+            data/assist-value/research/assist-value-market-history.csv \
+            data/assist-value/research/assist-value-v1-prospective.csv \
+            data/assist-value/research/assist-value-v1-prospective-performance.txt \
+            data/assist-value/research/assist-value-gates.json \
+            data/assist-value/research/assist-value-research-report.md 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "No assist value shadow changes to commit."
             exit 0

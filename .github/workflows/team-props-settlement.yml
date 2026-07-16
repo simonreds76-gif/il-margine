@@ -1,9 +1,6 @@
 name: Team Props Settlement
 
 on:
-  schedule:
-    - cron: "30 23 * * *" # Nightly settlement after most match windows
-    - cron: "45 08 * * *" # Morning rerun to catch late-posted results without relying on local tasks
   workflow_dispatch:
 
 permissions:
@@ -182,7 +179,7 @@ jobs:
             python scripts/team-shots-live-snapshot.py --supabase
             python scripts/corners-live-snapshot.py --supabase
           else
-            echo "Supabase snapshot upload disabled or key missing; team-props hosted snapshot upload skipped."
+            echo "::warning::Supabase snapshot upload disabled or key missing; team-props hosted snapshot upload skipped."
           fi
 
       - name: Commit and push if new data

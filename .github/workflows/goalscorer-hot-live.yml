@@ -1,8 +1,6 @@
 name: Goalscorer Hot Live Poll
 
 on:
-  schedule:
-    - cron: "*/20 6-22 * * *"
   workflow_dispatch:
     inputs:
       reason:
@@ -56,6 +54,8 @@ jobs:
           fi
 
       - name: Run hosted hot live poll
+        env:
+          ASSIST_VALUE_SHADOW_ENABLED: ${{ vars.ASSIST_VALUE_SHADOW_ENABLED }}
         run: python scripts/goalscorer-live-hosted.py
 
       - name: Build goalscorer monitor snapshot
@@ -87,15 +87,17 @@ jobs:
           fi
 
       - name: Commit and push if new data
+        env:
+          ASSIST_VALUE_SHADOW_ENABLED: ${{ vars.ASSIST_VALUE_SHADOW_ENABLED }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if [ -d data/goalscorer ]; then
-            git add -f data/goalscorer/
-            git add -u data/goalscorer || true
-          fi
-          if [ -d public/fair-odds-lab ]; then
-            git add -f public/fair-odds-lab/
+          bash scripts/git-add-goalscorer-deploy-artifacts.sh
+          if [ "${ASSIST_VALUE_SHADOW_ENABLED:-0}" = "1" ]; then
+            git add -f \
+              data/assist-value/assist-value-shadow-signals.csv \
+              data/assist-value/assist-value-model-report.txt \
+              data/assist-value/research/assist-value-v1-prospective.csv 2>/dev/null || true
           fi
           if git diff --cached --quiet; then
             echo "No goalscorer live changes to commit."

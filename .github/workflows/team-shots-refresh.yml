@@ -38,46 +38,11 @@ jobs:
             echo "THE_ODDS_API_KEY=${{ secrets.THE_ODDS_API_KEY }}" >> .env.local
           fi
 
-      - name: Guard team-shots scrape credentials
-        env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-          ODDS_API_IO_KEY: ${{ secrets.ODDS_API_KEY }}
-          BETS_API_KEY: ${{ secrets.BETS_API_KEY }}
-          OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
-          OPS_ALERT_TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: |
-          if [ -n "${ODDS_API_KEY:-}${ODDS_API_IO_KEY:-}${BETS_API_KEY:-}" ]; then
-            echo "Team-shots scrape credential present."
-            exit 0
-          fi
-
-          export ALERT_MESSAGE="Ops alert: team-shots scrape key missing in Team Shots Refresh. Bet365 team-shots odds scrape cannot run, so this workflow is stopping instead of publishing stale picks. Run: ${RUN_URL}"
-          echo "::error::${ALERT_MESSAGE}"
-
-          if [ -z "${OPS_ALERT_TELEGRAM_BOT_TOKEN:-}" ] || [ -z "${OPS_ALERT_TELEGRAM_CHAT_ID:-}" ]; then
-            echo "::error::Telegram ops alert credentials are missing, so the scrape-key alert could not be sent."
-            exit 1
-          fi
-
-          python - <<'PY'
-          import os
-          import urllib.parse
-          import urllib.request
-
-          token = os.environ["OPS_ALERT_TELEGRAM_BOT_TOKEN"]
-          chat_id = os.environ["OPS_ALERT_TELEGRAM_CHAT_ID"]
-          text = os.environ["ALERT_MESSAGE"]
-          data = urllib.parse.urlencode({"chat_id": chat_id, "text": text}).encode()
-          urllib.request.urlopen(f"https://api.telegram.org/bot{token}/sendMessage", data=data, timeout=20).read()
-          PY
-          exit 1
-
       - name: Refresh Football-Data historical base
         run: python scripts/footballdata-download-historical.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2025 --overwrite
 
-      - name: Refresh FBRef / Understat shooting data
-        run: python scripts/fbref-download-shooting.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2025
+      - name: Refresh Football-Data shots with Understat xG
+        run: python scripts/understat-download-shots.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2025
 
       - name: Build canonical football form layer
         run: python scripts/build-football-form-layer.py
@@ -94,12 +59,11 @@ jobs:
       - name: Fit team-shots v2 calibration diagnostics
         run: python scripts/team-shots-fit-calibration.py --predictions data/team-shots/team-shots-predictions.v2-nb.csv --params-out data/team-shots/team-shots-calibration-params.v2-nb.json --diag-out data/team-shots/team-shots-calibration-diagnostics.v2-nb.txt
 
-      - name: Optional scrape + upcoming + compare + shadow
+      - name: Optional upcoming + compare + shadow
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           ODDS_API_IO_KEY: ${{ secrets.ODDS_API_KEY }}
           BETS_API_KEY: ${{ secrets.BETS_API_KEY }}
-          THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
         run: |
           if [ -n "${ODDS_API_KEY:-}${ODDS_API_IO_KEY:-}${BETS_API_KEY:-}" ]; then
             python scripts/team-shots-scrape-odds.py --all-leagues --bookmakers "Bet365" --days-ahead 7
@@ -111,8 +75,7 @@ jobs:
             python scripts/team-shots-compare.py --predictions data/team-shots/team-shots-predictions.v2-nb.csv --upcoming data/team-shots/team-shots-upcoming.v2-nb-raw.csv --no-calibration --output data/team-shots/team-shots-comparison.v2-nb-raw.csv --summary data/team-shots/team-shots-comparison.v2-nb-raw.txt
             python scripts/team-shots-shadow-tracker.py --comparison data/team-shots/team-shots-comparison.v2-nb-raw.csv --scanner data/team-shots/team-shots-scanner.v2-nb-raw.csv --signals data/team-shots/shadow/team-shots-shadow-signals.v2-nb-raw-live-dry-run.csv --summary data/team-shots/shadow/team-shots-shadow-performance.v2-nb-raw-live-dry-run.txt --policy-version lambda-shots-nb-v2-raw --min-edge 0.12
           else
-            echo "::error::No team-shots scrape key configured; guard step should have stopped this workflow before stale odds were published."
-            exit 1
+            echo "::warning::No team-shots odds API key configured; skipping scrape/upcoming/compare/shadow."
           fi
 
       - name: Settle team-shots shadow signals
@@ -133,7 +96,9 @@ jobs:
           python scripts/corners-v0-clv-monitor.py
 
       - name: Settle football research lanes before snapshot
-        run: python scripts/settle-football-research-lanes.py
+        run: |
+          python scripts/settle-football-research-lanes.py
+          python scripts/run-football-vnext-shadow.py
 
       - name: Generate team-shots snapshot artifact
         run: python scripts/team-shots-live-snapshot.py
