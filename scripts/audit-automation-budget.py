@@ -92,12 +92,12 @@ def observe_windows_tasks() -> dict[str, dict[str, str]]:
     return observed
 
 
-def build_report(config: dict[str, Any]) -> dict[str, Any]:
+def build_report(config: dict[str, Any], workflows_dir: Path = WORKFLOWS) -> dict[str, Any]:
     errors: list[str] = []
     warnings: list[str] = []
     registered_files = {str(row["file"]): row for row in config["github_workflows"]}
     actual_scheduled: dict[str, list[str]] = {}
-    for path in sorted(WORKFLOWS.glob("*.yml")):
+    for path in sorted(workflows_dir.glob("*.yml")):
         crons = workflow_crons(path)
         if crons:
             actual_scheduled[path.name] = crons
@@ -185,6 +185,7 @@ def build_report(config: dict[str, Any]) -> dict[str, Any]:
 
     return {
         "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+        "workflow_directory": str(workflows_dir),
         "status": "FAIL" if errors else "PASS",
         "errors": errors,
         "warnings": warnings,
@@ -205,6 +206,7 @@ def render_markdown(report: dict[str, Any]) -> str:
         "",
         f"- Generated: {report['generated_at']}",
         f"- Status: **{report['status']}**",
+        f"- Effective workflow source: `{report['workflow_directory']}`",
         "- Any newly scheduled workflow that is not registered fails this audit.",
         "",
         "## Provider Ceilings",
@@ -257,12 +259,18 @@ def render_markdown(report: dict[str, Any]) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
+    parser.add_argument(
+        "--workflows-dir",
+        type=Path,
+        default=WORKFLOWS,
+        help="Workflow directory that GitHub actually schedules from (normally the default branch checkout).",
+    )
     parser.add_argument("--json", type=Path, default=DEFAULT_JSON)
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--strict", action="store_true")
     args = parser.parse_args()
 
-    report = build_report(load_json(args.config))
+    report = build_report(load_json(args.config), args.workflows_dir)
     args.json.parent.mkdir(parents=True, exist_ok=True)
     args.json.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     args.report.write_text(render_markdown(report), encoding="utf-8")
