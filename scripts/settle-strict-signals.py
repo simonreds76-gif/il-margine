@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import os
 import re
 import shutil
@@ -42,6 +43,7 @@ DEFAULT_CSV = STRICT_SIGNAL_PATHS.archive
 LOCAL_PLAYERS_CSV = ROOT / "data" / "oncourt" / "players_atp.csv"
 LOCAL_GAMES_CSV = ROOT / "data" / "oncourt" / "games_atp.csv"
 LOCAL_TODAY_CSV = ROOT / "data" / "oncourt" / "today_atp.csv"
+LOCAL_GAMES_WINDOW_CACHE = ROOT / "data" / "oncourt" / "settlement-games-window-cache.json"
 
 SETTLEMENT_FIELDS = [
     "settlement_status",
@@ -70,6 +72,8 @@ RETRYABLE_STATUSES = {
 
 HTTP_TIMEOUT = 45
 PAGE_LIMIT = 1000
+SETTLEMENT_CACHE_LOOKBACK_DAYS = 120
+SETTLEMENT_CACHE_LOOKAHEAD_DAYS = 7
 
 
 def load_env() -> None:
@@ -328,7 +332,7 @@ def load_local_today_rows(path: Path) -> list[dict[str, Any]]:
     return rows_all
 
 
-def load_local_games_window(path: Path, start_d: date, end_d: date) -> list[dict[str, Any]]:
+def _scan_local_games_window(path: Path, start_d: date, end_d: date) -> list[dict[str, Any]]:
     if not path.exists():
         return []
     rows_all: list[dict[str, Any]] = []
@@ -347,6 +351,84 @@ def load_local_games_window(path: Path, start_d: date, end_d: date) -> list[dict
                 continue
             rows_all.append({"winner_id": w, "loser_id": l, "date": wd, "result": row.get("result")})
     return rows_all
+
+
+def _games_source_signature(path: Path) -> dict[str, int]:
+    stat = path.stat()
+    return {"size": stat.st_size, "mtime_ns": stat.st_mtime_ns}
+
+
+def load_local_games_window(
+    path: Path,
+    start_d: date,
+    end_d: date,
+    *,
+    cache_path: Path = LOCAL_GAMES_WINDOW_CACHE,
+) -> list[dict[str, Any]]:
+    """Load a result window, reusing it across the nightly lane processes.
+
+    The cache is accepted only when the source file signature matches and the
+    cached date range fully covers the request. This preserves settlement
+    behaviour while avoiding repeated scans of the large OnCourt export.
+    """
+    if not path.exists():
+        return []
+    signature = _games_source_signature(path)
+    try:
+        payload = json.loads(cache_path.read_text(encoding="utf-8"))
+        cached_start = parse_date(payload.get("start"))
+        cached_end = parse_date(payload.get("end"))
+        if (
+            payload.get("source") == signature
+            and cached_start is not None
+            and cached_end is not None
+            and cached_start <= start_d
+            and cached_end >= end_d
+        ):
+            rows: list[dict[str, Any]] = []
+            for item in payload.get("rows") or []:
+                match_date = parse_date(item.get("date"))
+                if match_date is None or match_date < start_d or match_date > end_d:
+                    continue
+                rows.append(
+                    {
+                        "winner_id": int(item["winner_id"]),
+                        "loser_id": int(item["loser_id"]),
+                        "date": match_date,
+                        "result": item.get("result"),
+                    }
+                )
+            print(f"Reused local games window cache: {len(rows):,} rows")
+            return rows
+    except (OSError, ValueError, TypeError, KeyError, json.JSONDecodeError):
+        pass
+
+    cache_start = start_d - timedelta(days=SETTLEMENT_CACHE_LOOKBACK_DAYS)
+    cache_end = end_d + timedelta(days=SETTLEMENT_CACHE_LOOKAHEAD_DAYS)
+    cached_rows = _scan_local_games_window(path, cache_start, cache_end)
+    payload = {
+        "version": 1,
+        "source": signature,
+        "start": cache_start.isoformat(),
+        "end": cache_end.isoformat(),
+        "rows": [
+            {
+                "winner_id": row["winner_id"],
+                "loser_id": row["loser_id"],
+                "date": row["date"].isoformat(),
+                "result": row.get("result"),
+            }
+            for row in cached_rows
+        ],
+    }
+    try:
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        tmp = cache_path.with_suffix(cache_path.suffix + ".tmp")
+        tmp.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
+        tmp.replace(cache_path)
+    except OSError as exc:
+        print(f"WARNING: could not write local games window cache ({exc})")
+    return [row for row in cached_rows if start_d <= row["date"] <= end_d]
 
 
 def choose_match_for_signal(signal_date: date, cand1: set[int], cand2: set[int], games: list[dict[str, Any]]) -> tuple[str, dict[str, Any] | None, str]:
@@ -499,15 +581,19 @@ def main() -> int:
         print(f"Loaded local games fallback rows: {len(local_games_rows):,}")
         print(f"Loaded local today schedule rows: {len(local_today_rows):,}")
 
-    print("Loading player index...")
-    players = load_local_players(LOCAL_PLAYERS_CSV)
-    source = "local players_atp.csv"
-    if not players:
-        base, headers = supabase_base_and_headers()
-        players = fetch_all_players(base, headers)
-        source = "Supabase oncourt_players"
-    print(f"  loaded players: {len(players):,} ({source})")
-    p_index = build_player_index(players)
+    p_index: dict[str, Any] = {}
+    if pending_dates:
+        print("Loading player index...")
+        players = load_local_players(LOCAL_PLAYERS_CSV)
+        source = "local players_atp.csv"
+        if not players:
+            base, headers = supabase_base_and_headers()
+            players = fetch_all_players(base, headers)
+            source = "Supabase oncourt_players"
+        print(f"  loaded players: {len(players):,} ({source})")
+        p_index = build_player_index(players)
+    else:
+        print("No unsettled rows; skipped local games and player-index loading.")
 
     games_cache: dict[tuple[str, str], list[dict[str, Any]]] = {}
     today_cache: dict[str, list[dict[str, Any]]] = {}
