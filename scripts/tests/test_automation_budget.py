@@ -25,6 +25,12 @@ class AutomationBudgetTests(unittest.TestCase):
             report["providers"]["api_football"]["requests_per_day"],
         )
 
+    def test_explicit_effective_workflow_directory_is_reported(self) -> None:
+        workflows = ROOT / ".github" / "workflows"
+        report = AUDIT["build_report"](CONFIG, workflows)
+        self.assertEqual(report["workflow_directory"], str(workflows))
+        self.assertEqual(report["status"], "PASS", report["errors"])
+
     def test_assist_collects_three_weekend_snapshots_without_database_access(self) -> None:
         workflow = next(row for row in CONFIG["github_workflows"] if row["file"] == "assist-value-shadow.yml")
         slots = AUDIT["expand_week"](workflow["schedules"][0]["cron"])

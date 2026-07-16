@@ -22,6 +22,16 @@ jobs:
           token: ${{ github.token }}
           fetch-depth: 1
 
+      - name: Check out effective default-branch schedules
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          path: .effective-default-branch
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            .github/workflows
+
       - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
@@ -88,7 +98,9 @@ jobs:
         env:
           TENNIS_PROPS_V3_WEEKLY_JSON: '${{ vars.TENNIS_PROPS_V3_WEEKLY_JSON }}'
         run: |
-          python scripts/audit-automation-budget.py --strict
+          python scripts/audit-automation-budget.py \
+            --workflows-dir .effective-default-branch/.github/workflows \
+            --strict
           python scripts/football-counts-vnext-gate.py
           python scripts/weekly-research-report.py
 
