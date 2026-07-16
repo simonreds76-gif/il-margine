@@ -26,6 +26,8 @@ OUT_DIR = ROOT / "data" / "football-form"
 DEFAULT_JSON = OUT_DIR / "weekly-research-report.json"
 DEFAULT_REPORT = OUT_DIR / "weekly-research-report.md"
 TENNIS_PROPS_OBSERVATIONS = ROOT / "data" / "tennis-props" / "shadow" / "market-observations.csv"
+ASSIST_GATES = ROOT / "data" / "assist-value" / "research" / "assist-value-gates.json"
+ASSIST_PROSPECTIVE = ROOT / "data" / "assist-value" / "research" / "assist-value-v1-prospective.csv"
 
 TEAM_SHOTS_MODEL = "canonical_form_v3_ema20_nb"
 CORNERS_MODEL = "canonical_form_v0"
@@ -86,6 +88,53 @@ def labelled_float(text: str, label: str) -> float | None:
     return float(match.group(0)) if match else None
 
 
+def truthy(value: Any) -> bool:
+    return str(value or "").strip().lower() in {"1", "true", "yes", "y", "settled"}
+
+
+def evidence_freshness(value: str, *, stale_after_days: int = 8) -> dict[str, Any]:
+    text = str(value or "").strip()
+    if not text:
+        return {"generated_at": "", "age_days": None, "status": "MISSING"}
+    try:
+        parsed = datetime.fromisoformat(text.replace("Z", "+00:00")).astimezone(UTC)
+    except ValueError:
+        try:
+            parsed = datetime.fromisoformat(text[:10]).replace(tzinfo=UTC)
+        except ValueError:
+            return {"generated_at": text, "age_days": None, "status": "INVALID"}
+    age_days = max(0.0, (datetime.now(UTC) - parsed).total_seconds() / 86400.0)
+    return {
+        "generated_at": text,
+        "age_days": round(age_days, 2),
+        "status": "STALE" if age_days > stale_after_days else "FRESH",
+    }
+
+
+def settled_ledger_summary(rows: list[dict[str, str]], *, stake_field: str) -> dict[str, Any]:
+    settled = [
+        row
+        for row in rows
+        if truthy(row.get("settled")) or str(row.get("bet_outcome") or "").strip().lower() in {"won", "lost", "push", "void"}
+    ]
+    wins = sum(str(row.get("bet_outcome") or "").strip().lower() == "won" for row in settled)
+    losses = sum(str(row.get("bet_outcome") or "").strip().lower() == "lost" for row in settled)
+    pushes = sum(str(row.get("bet_outcome") or "").strip().lower() in {"push", "void"} for row in settled)
+    pnl = sum(number(row.get("pnl_units")) for row in settled)
+    staked = sum(max(0.0, number(row.get(stake_field), 1.0)) for row in settled)
+    return {
+        "registered": len(rows),
+        "settled": len(settled),
+        "pending": max(0, len(rows) - len(settled)),
+        "wins": wins,
+        "losses": losses,
+        "pushes_or_voids": pushes,
+        "pnl_units": round(pnl, 4),
+        "staked_units": round(staked, 4),
+        "roi_pct": round(pnl / staked * 100.0, 2) if staked else None,
+    }
+
+
 def goalscorer_research_summary() -> dict[str, Any]:
     backtest_dir = ROOT / "data" / "goalscorer" / "backtest"
     parity = load_text(backtest_dir / "parity-report.txt")
@@ -93,6 +142,15 @@ def goalscorer_research_summary() -> dict[str, Any]:
     clv_rows = load_csv(ROOT / "data" / "goalscorer" / "fair-odds-lab-clv.csv")
     matched = [row for row in clv_rows if str(row.get("close_odds") or "").strip()]
     true_closes = [row for row in clv_rows if row.get("close_status") == "true_close"]
+    signal_rows: list[dict[str, str]] = []
+    for league in ("serie-a", "epl", "la-liga", "bundesliga", "ligue-1"):
+        signal_rows.extend(load_csv(ROOT / "data" / "goalscorer" / f"fair-odds-lab-{league}-signals.csv"))
+    ledger = settled_ledger_summary(signal_rows, stake_field="recommended_stake_units")
+    activity_values = [
+        str(row.get("settled_at") or row.get("compared_at") or row.get("kickoff") or "").strip()
+        for row in signal_rows
+    ]
+    latest_activity = max((value for value in activity_values if value), default="")
     beta_gate = re.search(
         r"^beta,(\d+),(\d+),([^,]+),([^,]+),([^\n]+)$",
         walkforward,
@@ -116,6 +174,51 @@ def goalscorer_research_summary() -> dict[str, Any]:
         "probability_gate": beta_gate.group(3) if beta_gate else "NOT_RUN",
         "market_roi_gate": beta_gate.group(4) if beta_gate else "UNAVAILABLE",
         "decision": beta_gate.group(5).strip() if beta_gate else "KEEP_RESEARCH",
+        "ledger": ledger,
+        "freshness": evidence_freshness(latest_activity),
+    }
+
+
+def assist_value_research_summary() -> dict[str, Any]:
+    gates = load_json(ASSIST_GATES)
+    prospective_rows = load_csv(ASSIST_PROSPECTIVE)
+    prospective = settled_ledger_summary(prospective_rows, stake_field="stake_units")
+    backtest = gates.get("backtest") or {}
+    settlement = gates.get("settlement") or {}
+    market = gates.get("market") or {}
+    gate_prospective = gates.get("prospective") or {}
+    if gates.get("reactivation_ready"):
+        decision = "REVIEW_FOR_REACTIVATION"
+    elif market.get("status") != "PASS":
+        decision = "KEEP_FROZEN_MARKET_EVIDENCE"
+    elif gate_prospective.get("status") != "PASS":
+        decision = "KEEP_FROZEN_PROSPECTIVE_SAMPLE"
+    else:
+        decision = "KEEP_FROZEN_GATE_REVIEW"
+    calibration = market.get("one_sided_margin_calibration") or {}
+    return {
+        "label": "Assist Value V1 Research",
+        "lane_status": gates.get("lane_status", "FROZEN_RESEARCH"),
+        "reactivation_ready": bool(gates.get("reactivation_ready")),
+        "decision": decision,
+        "backtest_status": backtest.get("status", "NOT_RUN"),
+        "test_rows": int((((backtest.get("splits") or {}).get("test") or {}).get("calibrated") or {}).get("n") or 0),
+        "test_brier": (((backtest.get("splits") or {}).get("test") or {}).get("calibrated") or {}).get("brier"),
+        "settlement_status": settlement.get("status", "NOT_RUN"),
+        "settlement_agreement_pct": number(settlement.get("agreement_rate")) * 100.0,
+        "market_status": market.get("status", "NOT_RUN"),
+        "market_rows": int(market.get("matched_participants") or 0),
+        "market_calendar_span_days": int(calibration.get("calendar_span_days") or 0),
+        "prospective_target": int(gate_prospective.get("target_minimum") or 100),
+        "prospective": prospective,
+        "freshness": evidence_freshness(str(gates.get("generated_at") or "")),
+        "automation": {
+            "capture_schedule": "Friday 07:10 UTC, August-May",
+            "max_paid_api_calls_per_run": 10,
+            "database_reads_per_capture": 0,
+            "database_writes_per_capture": 0,
+            "lineup_refresh_reuses_captured_prices": True,
+        },
     }
 
 
@@ -436,6 +539,7 @@ def build_payload() -> dict[str, Any]:
     tennis_props_v3 = tennis_props_v3_snapshot()
     tennis_props_benchmark = tennis_props_market_benchmark()
     goalscorer_research = goalscorer_research_summary()
+    assist_value_research = assist_value_research_summary()
 
     payload = {
         "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
@@ -477,12 +581,22 @@ def build_payload() -> dict[str, Any]:
         "tennis_props_v3": tennis_props_v3,
         "tennis_props_market_benchmark": tennis_props_benchmark,
         "goalscorer_v2": goalscorer_research,
+        "assist_value_v1": assist_value_research,
     }
+    stale_models = [
+        name
+        for name, summary in (
+            ("goalscorer_v2", goalscorer_research),
+            ("assist_value_v1", assist_value_research),
+        )
+        if (summary.get("freshness") or {}).get("status") in {"MISSING", "INVALID", "STALE"}
+    ]
     payload["status"] = {
         "pause_required": bool(
             payload["team_shots_v3_ema20"]["clv"]["pause_rule_fired"]
             or payload["corners_v0"]["clv"]["pause_rule_fired"]
         ),
+        "stale_models": stale_models,
         "read": "observe_live_sample",
     }
     return payload
@@ -504,9 +618,14 @@ def render_report(payload: dict[str, Any]) -> str:
     tennis_props_v3 = payload.get("tennis_props_v3") or {}
     tennis_props_benchmark = payload.get("tennis_props_market_benchmark") or {}
     goalscorer = payload["goalscorer_v2"]
+    assist = payload["assist_value_v1"]
     team_gate = team["segment_gate"]
     team_clv = team["clv"]
     corners_clv = corners["clv"]
+    team_v4 = (vnext.get("team_shots_v4") or {})
+    corners_v3 = (vnext.get("corners_v3") or {})
+    team_v4_live = team_v4.get("prospective") or {}
+    corners_v3_live = corners_v3.get("prospective") or {}
 
     lines = [
         "# Weekly Research Lane Report",
@@ -516,8 +635,10 @@ def render_report(payload: dict[str, Any]) -> str:
         "",
         "## Football Counts vNext",
         "",
-        f"- Team Shots v4: count {((vnext.get('team_shots_v4') or {}).get('count_gate') or 'NOT_RUN')}; prospective {((vnext.get('team_shots_v4') or {}).get('prospective_status') or 'BLOCKED')}; market gate remains blocked.",
-        f"- Corners v3: count {((vnext.get('corners_v3') or {}).get('count_gate') or 'NOT_RUN')}; prospective {((vnext.get('corners_v3') or {}).get('prospective_status') or 'BLOCKED')}; market gate remains blocked.",
+        f"- Team Shots v4: count {team_v4.get('count_gate', 'NOT_RUN')}; prospective {team_v4.get('prospective_status', 'BLOCKED')}; promotion {team_v4.get('promotion_gate', 'BLOCKED')}.",
+        f"- Team Shots v4 evidence: {team_v4_live.get('signals', 0)} signals, {team_v4_live.get('settled', 0)} settled, {number(team_v4_live.get('pnl_units')):+.2f}u, ROI {pct(number(team_v4_live.get('roi')) * 100) if team_v4_live.get('roi') is not None else '-'}, true-close CLV {pct(number(team_v4_live.get('mean_true_close_clv')) * 100) if team_v4_live.get('mean_true_close_clv') is not None else '-'}.",
+        f"- Corners v3: count {corners_v3.get('count_gate', 'NOT_RUN')}; prospective {corners_v3.get('prospective_status', 'BLOCKED')}; promotion {corners_v3.get('promotion_gate', 'BLOCKED')}.",
+        f"- Corners v3 evidence: {corners_v3_live.get('signals', 0)} signals, {corners_v3_live.get('settled', 0)} settled, {number(corners_v3_live.get('pnl_units')):+.2f}u, ROI {pct(number(corners_v3_live.get('roi')) * 100) if corners_v3_live.get('roi') is not None else '-'}, true-close CLV {pct(number(corners_v3_live.get('mean_true_close_clv')) * 100) if corners_v3_live.get('mean_true_close_clv') is not None else '-'}.",
         "- Neither experiment changes live routing or stakes.",
         f"- API-Football count archive: {api_health.get('archive_rows', 0)} fixtures; latest {api_health.get('latest_fixture_date') or '-'}; last run {api_health.get('requests_used', 0)}/{api_health.get('max_requests', 0)} requests.",
         f"- Cross-provider agreement: {api_agreement.get('matched_fixtures', 0)}/{api_agreement.get('api_rows', 0)} API fixtures matched; status {api_agreement.get('status', 'NOT_RUN')}.",
@@ -569,7 +690,20 @@ def render_report(payload: dict[str, Any]) -> str:
             f"- Live/backtest parity: {goalscorer['parity_decision']} | max drift {pct(goalscorer['parity_max_delta_pp'], 3)}.",
             f"- Beta calibration: {goalscorer['beta_fold_wins']}/{goalscorer['beta_folds']} fold wins | probability gate {goalscorer['probability_gate']} | market gate {goalscorer['market_roi_gate']}.",
             f"- Real-price CLV coverage: {goalscorer['matched_closes']}/{goalscorer['signals']} ({goalscorer['clv_coverage_pct']:.1f}%) | true closes {goalscorer['true_closes']}.",
+            f"- Settled ledger: {goalscorer['ledger']['settled']}/{goalscorer['ledger']['registered']} settled, {goalscorer['ledger']['wins']}W/{goalscorer['ledger']['losses']}L, {goalscorer['ledger']['pnl_units']:+.2f}u, ROI {pct(goalscorer['ledger']['roi_pct'])}.",
+            f"- Evidence freshness: {goalscorer['freshness']['status']} ({goalscorer['freshness']['generated_at'] or 'missing'}).",
             f"- Decision: {goalscorer['decision'].replace('_', ' ').lower()} until the fifth fold and real-price evidence exist.",
+            "",
+            "## Assist Value V1 Research Gate",
+            "",
+            f"- Lane: {assist['lane_status']} | decision {assist['decision']} | reactivation ready {'YES' if assist['reactivation_ready'] else 'NO'}.",
+            f"- Historical gate: {assist['backtest_status']} on {assist['test_rows']:,} test rows; calibrated Brier {number(assist['test_brier']):.5f}.",
+            f"- Settlement gate: {assist['settlement_status']} | player-assist agreement {assist['settlement_agreement_pct']:.2f}%.",
+            f"- Market gate: {assist['market_status']} | {assist['market_rows']} matched player prices across {assist['market_calendar_span_days']} calendar days.",
+            f"- Prospective ledger: {assist['prospective']['settled']}/{assist['prospective']['registered']} settled (target {assist['prospective_target']}), {assist['prospective']['pnl_units']:+.2f}u, ROI {pct(assist['prospective']['roi_pct'])}.",
+            f"- Evidence freshness: {assist['freshness']['status']} ({assist['freshness']['generated_at'] or 'missing'}).",
+            f"- Automation budget: {assist['automation']['capture_schedule']}; <= {assist['automation']['max_paid_api_calls_per_run']} odds-api calls per run; zero database reads/writes.",
+            "- No public output, staking, database writes or automatic promotion are authorised.",
             "",
             "## Tennis ML Gap-Guard Quiet Audit",
             "",
@@ -639,6 +773,7 @@ def render_report(payload: dict[str, Any]) -> str:
             "- Team-shots V3 is not proven profitable live yet; it is the first broad research candidate that passed the backtest segment gates.",
             "- Corners V0 is narrower and deliberately blocked in two leagues. That is a discipline feature, not a failure.",
             "- Goalscorer V2 fixes live/backtest mechanics, but it is not a betting edge until captured prices validate it.",
+            "- Assist V1 passed count calibration and settlement integrity, but remains frozen until 90-day market calibration and 100 prospective settled signals pass.",
             "- Tennis ML gap-guard remains a safety brake. The backtest is not stable enough to unblock those big market-disagreement ML dogs.",
             "- Tennis props v3 remains prospective shadow evidence; historical accuracy alone does not authorise tips.",
             "- The next real evidence is CLV and settled live sample. Until 50 settled picks, do not overreact to wins/losses.",
@@ -663,18 +798,24 @@ def telegram_text(payload: dict[str, Any]) -> str:
     tennis_props_v3 = payload.get("tennis_props_v3") or {}
     tennis_props_benchmark = payload.get("tennis_props_market_benchmark") or {}
     goalscorer = payload["goalscorer_v2"]
+    assist = payload["assist_value_v1"]
     team_clv = team["clv"]
     corners_clv = corners["clv"]
+    team_v4 = (vnext.get("team_shots_v4") or {})
+    corners_v3 = (vnext.get("corners_v3") or {})
+    team_v4_live = team_v4.get("prospective") or {}
+    corners_v3_live = corners_v3.get("prospective") or {}
     lines = [
-        "Il Margine weekly research report",
+        "Il Margine weekly model evidence",
         f"Generated: {payload['generated_at']}",
         "",
-        f"Team Shots V3 EMA20: {len(team['allowed_leagues'])}/5 leagues, {team_clv['published_picks']} picks, {team_clv['settled']} settled, avg CLV {pct((team_clv['avg_published_to_close_clv'] or 0) * 100) if team_clv['avg_published_to_close_clv'] is not None else '-'}",
-        f"Corners V0: {len(corners['allowed_leagues'])}/5 leagues, blocked {join_leagues(corners['blocked_leagues'])}, {corners_clv['published_picks']} picks, {corners_clv['settled']} settled, avg CLV {pct((corners_clv['avg_published_to_close_clv'] or 0) * 100) if corners_clv['avg_published_to_close_clv'] is not None else '-'}",
-        f"Football counts vNext: Team Shots {((vnext.get('team_shots_v4') or {}).get('count_gate') or 'NOT_RUN')}, Corners {((vnext.get('corners_v3') or {}).get('count_gate') or 'NOT_RUN')}; both market-gated shadow only",
+        f"Team Shots v4: {team_v4.get('prospective_status', 'BLOCKED')} | {team_v4_live.get('settled', 0)} settled | {number(team_v4_live.get('pnl_units')):+.2f}u | ROI {pct(number(team_v4_live.get('roi')) * 100) if team_v4_live.get('roi') is not None else '-'} | CLV {pct(number(team_v4_live.get('mean_true_close_clv')) * 100) if team_v4_live.get('mean_true_close_clv') is not None else '-'} | promotion {team_v4.get('promotion_gate', 'BLOCKED')}",
+        f"Corners v3: {corners_v3.get('prospective_status', 'BLOCKED')} | {corners_v3_live.get('settled', 0)} settled | {number(corners_v3_live.get('pnl_units')):+.2f}u | ROI {pct(number(corners_v3_live.get('roi')) * 100) if corners_v3_live.get('roi') is not None else '-'} | CLV {pct(number(corners_v3_live.get('mean_true_close_clv')) * 100) if corners_v3_live.get('mean_true_close_clv') is not None else '-'} | promotion {corners_v3.get('promotion_gate', 'BLOCKED')}",
+        f"Legacy controls: Team Shots V3 {team_clv['settled']} settled/{team_clv['pnl_units']:+.2f}u; Corners V0 {corners_clv['settled']} settled/{corners_clv['pnl_units']:+.2f}u",
         f"Count-source health: API-Football {api_health.get('archive_rows', 0)} archived, latest {api_health.get('latest_fixture_date') or '-'}, agreement {api_agreement.get('matched_fixtures', 0)}/{api_agreement.get('api_rows', 0)}",
         f"Team Fouls: F1 {team_fouls_decision.get('status', 'NOT_RUN')}; F2 {team_fouls_f2_decision.get('status', 'NOT_RUN')}; sources {team_fouls_m2.get('status', 'NOT_RUN')}; no signals",
-        f"Goalscorer V2: parity {goalscorer['parity_decision']}, Beta {goalscorer['beta_fold_wins']}/{goalscorer['beta_folds']} fold wins, CLV coverage {goalscorer['matched_closes']}/{goalscorer['signals']}; research only",
+        f"Goalscorer V2: {goalscorer['ledger']['settled']} settled | {goalscorer['ledger']['pnl_units']:+.2f}u | ROI {pct(goalscorer['ledger']['roi_pct'])} | CLV {goalscorer['matched_closes']}/{goalscorer['signals']} | {goalscorer['decision']}",
+        f"Assist V1: {assist['lane_status']} | backtest {assist['backtest_status']} | settlement {assist['settlement_status']} | market {assist['market_status']} ({assist['market_calendar_span_days']}/90d) | prospective {assist['prospective']['settled']}/{assist['prospective_target']} | <=10 API calls/week | {assist['decision']}",
         f"Tennis ML gap guard: Etch/Fils-type {format_bet_summary(tennis['etch_type'])}; recent 2024-26 {format_bet_summary(tennis['etch_type_recent'])}",
     ]
     if tennis_props_v3 and not tennis_props_v3.get("_error"):
@@ -700,7 +841,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
-            "Read: observe live samples. Keep tennis ML gap guard active and aces v3 shadow-only.",
+            "Read: all promotion gates remain fail-closed. No weekly report changes routing or stakes.",
         ]
     )
     return "\n".join(lines)

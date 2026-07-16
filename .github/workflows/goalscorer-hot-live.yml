@@ -54,6 +54,8 @@ jobs:
           fi
 
       - name: Run hosted hot live poll
+        env:
+          ASSIST_VALUE_SHADOW_ENABLED: ${{ vars.ASSIST_VALUE_SHADOW_ENABLED }}
         run: python scripts/goalscorer-live-hosted.py
 
       - name: Build goalscorer monitor snapshot
@@ -85,10 +87,18 @@ jobs:
           fi
 
       - name: Commit and push if new data
+        env:
+          ASSIST_VALUE_SHADOW_ENABLED: ${{ vars.ASSIST_VALUE_SHADOW_ENABLED }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           bash scripts/git-add-goalscorer-deploy-artifacts.sh
+          if [ "${ASSIST_VALUE_SHADOW_ENABLED:-0}" = "1" ]; then
+            git add -f \
+              data/assist-value/assist-value-shadow-signals.csv \
+              data/assist-value/assist-value-model-report.txt \
+              data/assist-value/research/assist-value-v1-prospective.csv 2>/dev/null || true
+          fi
           if git diff --cached --quiet; then
             echo "No goalscorer live changes to commit."
             exit 0

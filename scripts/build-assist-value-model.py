@@ -29,7 +29,13 @@ DEFAULT_BOARD = "data/assist-value/assist-value-shadow-board.csv"
 DEFAULT_PLAYER_LOGS = "data/goalscorer/*-player-match-logs-*.csv"
 DEFAULT_OUT = "data/assist-value/assist-value-shadow-signals.csv"
 DEFAULT_REPORT = "data/assist-value/assist-value-model-report.txt"
-DEFAULT_LINEUPS = "data/goalscorer/confirmed-lineups.json"
+DEFAULT_LINEUPS = [
+    "data/goalscorer/confirmed-lineups.json",
+    "data/goalscorer/epl-confirmed-lineups.json",
+    "data/goalscorer/la-liga-confirmed-lineups.json",
+    "data/goalscorer/bundesliga-confirmed-lineups.json",
+    "data/goalscorer/ligue-1-confirmed-lineups.json",
+]
 DEFAULT_RESEARCH_GATES = "data/assist-value/research/assist-value-gates.json"
 
 MODEL_VERSION = "assist_research_v1"
@@ -516,6 +522,13 @@ def load_lineup_index(path: str) -> dict[tuple[str, str, str], dict]:
     return index
 
 
+def load_lineup_indexes(paths: Iterable[str]) -> dict[tuple[str, str, str], dict]:
+    merged: dict[tuple[str, str, str], dict] = {}
+    for path in paths:
+        merged.update(load_lineup_index(path))
+    return merged
+
+
 def _name_in_list(player_name: str, values: Iterable[object]) -> bool:
     target = norm_text(player_name)
     if not target:
@@ -788,7 +801,7 @@ def main() -> None:
     parser.add_argument("--player-logs", nargs="+", default=[DEFAULT_PLAYER_LOGS])
     parser.add_argument("--out", default=DEFAULT_OUT)
     parser.add_argument("--report-out", default=DEFAULT_REPORT)
-    parser.add_argument("--lineups", default=DEFAULT_LINEUPS)
+    parser.add_argument("--lineups", nargs="+", default=DEFAULT_LINEUPS)
     parser.add_argument("--research-gates", default=DEFAULT_RESEARCH_GATES)
     args = parser.parse_args()
 
@@ -796,7 +809,7 @@ def main() -> None:
     board_rows = read_csvs([args.board])
     player_logs = read_csvs(args.player_logs)
     indexes, team_index = build_indexes(player_logs)
-    lineup_index = load_lineup_index(args.lineups)
+    lineup_index = load_lineup_indexes(args.lineups)
     calibration = load_research_calibration(args.research_gates)
     generated_at = now_utc_iso()
     rows = [

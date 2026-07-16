@@ -101,7 +101,7 @@ def main() -> int:
             fields.append(field)
     _write(Path(args.ledger), rows, fields)
     print(f"Assist v1 prospective ledger: added {added}, total {len(rows)} -> {args.ledger}")
-    return added
+    return 0
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 # Assist Value Research Gates
 
-Generated: `2026-07-16T14:39:01Z`
+Generated: `2026-07-16T16:31:40Z`
 Lane status: **FROZEN_RESEARCH**
 Reactivation ready: **NO**
 
@@ -32,7 +32,7 @@ Reactivation ready: **NO**
 
 - Gate: **FAIL**
 - Matched participating players: 1,300
-- Old matched shadow signals: 9
+- Old matched shadow signals: 0
 - Captured calendar span: 8 days (minimum 90)
 - Margin-adjustment holdout rows: 598
 - Reason blocked: `one_sided_margin_adjustment_needs_90_days_and_prospective_confirmation`

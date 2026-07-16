@@ -67,8 +67,16 @@ jobs:
           python scripts/tennis-props-market-observations.py
           python scripts/tennis-derivatives-pinnacle-coverage.py --allow-missing-creds
           python scripts/tennis-derivatives-evidence-report.py
+          python scripts/assist-value-settle.py
+          python scripts/assist-value-settle.py \
+            --signals data/assist-value/research/assist-value-v1-prospective.csv \
+            --summary data/assist-value/research/assist-value-v1-prospective-performance.txt
+          python scripts/assist-value-research-gates.py
           if [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
-            python scripts/goalscorer-clv-monitor.py --supabase
+            python scripts/goalscorer-clv-monitor.py --supabase || {
+              echo "::warning::Goalscorer Supabase CLV read failed; rebuilding from local history instead."
+              python scripts/goalscorer-clv-monitor.py
+            }
           else
             python scripts/goalscorer-clv-monitor.py
           fi
@@ -151,3 +159,8 @@ jobs:
             data/goalscorer/backtest/parity-report.txt
             data/goalscorer/backtest/walkforward-report.txt
             data/goalscorer/backtest/segment-diagnostics.txt
+            data/assist-value/research/assist-value-gates.json
+            data/assist-value/research/assist-value-research-report.md
+            data/assist-value/research/assist-value-market-history.csv
+            data/assist-value/research/assist-value-v1-prospective.csv
+            data/assist-value/research/assist-value-v1-prospective-performance.txt
