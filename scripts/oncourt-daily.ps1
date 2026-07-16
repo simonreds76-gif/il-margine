@@ -92,7 +92,13 @@ function Invoke-LoggedProcess {
         if ($TimeoutSeconds -gt 0) {
             if (-not $proc.WaitForExit($TimeoutSeconds * 1000)) {
                 $timedOut = $true
-                Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+                try {
+                    # Stop the complete Python process tree so timed-out child stages
+                    # cannot keep writing artifacts while the nightly run continues.
+                    Start-Process -FilePath "taskkill.exe" -ArgumentList @("/PID", "$($proc.Id)", "/T", "/F") -WindowStyle Hidden -Wait | Out-Null
+                } catch {
+                    Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+                }
                 $proc.WaitForExit(10000) | Out-Null
                 Log "WARNING: $Label timed out after ${TimeoutSeconds}s and was stopped."
             }

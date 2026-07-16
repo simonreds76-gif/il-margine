@@ -42,6 +42,10 @@ class NightlyFastPathTests(unittest.TestCase):
         self.assertIn("-Attempts 1", DAILY)
         self.assertNotIn("-Attempts 3", DAILY)
 
+    def test_timeout_kills_the_complete_process_tree(self) -> None:
+        self.assertIn('Start-Process -FilePath "taskkill.exe"', DAILY)
+        self.assertIn('"/T"', DAILY)
+
 
 if __name__ == "__main__":
     unittest.main()

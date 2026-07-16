@@ -73,6 +73,10 @@ CURRENT_ENV_TIEBREAK_MIN = 0.90
 CURRENT_ENV_TIEBREAK_MAX = 1.12
 CURRENT_ENV_MAX_WEIGHT = 0.10
 CURRENT_ENV_FULL_MATCHES = 20.0
+_CURRENT_EVENT_ROWS_CACHE: dict[
+    tuple[str, tuple[str, ...]],
+    tuple[list[dict[str, str]], list[dict[str, str]]],
+] = {}
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -80,6 +84,36 @@ def read_csv(path: Path) -> list[dict[str, str]]:
         return []
     with path.open("r", encoding="utf-8-sig", newline="") as f:
         return list(csv.DictReader(f))
+
+
+def _read_current_event_rows(path: Path, tour_ids: set[str]) -> list[dict[str, str]]:
+    """Read only rows belonging to scheduled events from a large OnCourt export."""
+    if not path.exists() or not tour_ids:
+        return []
+    with path.open("r", encoding="utf-8-sig", newline="") as f:
+        return [
+            row
+            for row in csv.DictReader(f)
+            if str(row.get("tour_id") or "").strip() in tour_ids
+        ]
+
+
+def load_current_event_rows(
+    tour_lower: str,
+    tour_ids: set[str],
+) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
+    """Load current-event stat/game rows once per tour for all board features."""
+    cache_key = (tour_lower, tuple(sorted(tour_ids)))
+    cached = _CURRENT_EVENT_ROWS_CACHE.get(cache_key)
+    if cached is not None:
+        return cached
+
+    rows = (
+        _read_current_event_rows(ONCOURT_DIR / f"stat_{tour_lower}.csv", tour_ids),
+        _read_current_event_rows(ONCOURT_DIR / f"games_{tour_lower}.csv", tour_ids),
+    )
+    _CURRENT_EVENT_ROWS_CACHE[cache_key] = rows
+    return rows
 
 
 def write_csv(path: Path, rows: list[dict[str, str]], fieldnames: list[str]) -> None:
@@ -599,11 +633,10 @@ def load_current_tournament_stats(schedules: list[dict[str, str]], as_of: date) 
     totals: dict[tuple[str, str, str], dict[str, int]] = defaultdict(dict)
     for tour, tour_ids in tour_ids_by_tour.items():
         tour_lower = tour.lower()
+        stat_rows, game_rows = load_current_event_rows(tour_lower, tour_ids)
         stat_index: dict[tuple[str, str, str, str], dict[str, str]] = {}
-        for row in read_csv(ONCOURT_DIR / f"stat_{tour_lower}.csv"):
+        for row in stat_rows:
             tour_id = str(row.get("tour_id") or "").strip()
-            if tour_id not in tour_ids:
-                continue
             key = (
                 str(row.get("winner_id") or "").strip(),
                 str(row.get("loser_id") or "").strip(),
@@ -612,10 +645,8 @@ def load_current_tournament_stats(schedules: list[dict[str, str]], as_of: date) 
             )
             stat_index.setdefault(key, row)
 
-        for game in read_csv(ONCOURT_DIR / f"games_{tour_lower}.csv"):
+        for game in game_rows:
             tour_id = str(game.get("tour_id") or "").strip()
-            if tour_id not in tour_ids:
-                continue
             match_date = parse_date(game.get("date"))
             if match_date is None or match_date >= as_of:
                 continue
@@ -686,11 +717,10 @@ def load_current_tournament_environment(
 
     for tour, tour_ids in tour_ids_by_tour.items():
         tour_lower = tour.lower()
+        stat_rows, game_rows = load_current_event_rows(tour_lower, tour_ids)
         stat_index: dict[tuple[str, str, str, str], dict[str, str]] = {}
-        for row in read_csv(ONCOURT_DIR / f"stat_{tour_lower}.csv"):
+        for row in stat_rows:
             tour_id = str(row.get("tour_id") or "").strip()
-            if tour_id not in tour_ids:
-                continue
             key = (
                 str(row.get("winner_id") or "").strip(),
                 str(row.get("loser_id") or "").strip(),
@@ -699,10 +729,8 @@ def load_current_tournament_environment(
             )
             stat_index.setdefault(key, row)
 
-        for game in read_csv(ONCOURT_DIR / f"games_{tour_lower}.csv"):
+        for game in game_rows:
             tour_id = str(game.get("tour_id") or "").strip()
-            if tour_id not in tour_ids:
-                continue
             match_date = parse_date(game.get("date"))
             if match_date is None or match_date >= as_of:
                 continue
@@ -907,15 +935,20 @@ def load_current_tournament_logs(schedules: list[dict[str, str]], as_of: date) -
     if not tour_ids_by_tour:
         return {}
 
+    tournament_names = {
+        (str(row.get("tour") or "").upper(), str(row.get("tour_id") or "").strip()): str(
+            row.get("tournament") or ""
+        ).strip()
+        for row in schedules
+    }
     logs: dict[tuple[str, str, str], list[dict[str, str]]] = defaultdict(list)
     for tour, tour_ids in tour_ids_by_tour.items():
         tour_lower = tour.lower()
         player_names = load_oncourt_player_names(tour_lower)
+        stat_rows, game_rows = load_current_event_rows(tour_lower, tour_ids)
         stat_index: dict[tuple[str, str, str, str], dict[str, str]] = {}
-        for row in read_csv(ONCOURT_DIR / f"stat_{tour_lower}.csv"):
+        for row in stat_rows:
             tour_id = str(row.get("tour_id") or "").strip()
-            if tour_id not in tour_ids:
-                continue
             key = (
                 str(row.get("winner_id") or "").strip(),
                 str(row.get("loser_id") or "").strip(),
@@ -924,10 +957,8 @@ def load_current_tournament_logs(schedules: list[dict[str, str]], as_of: date) -
             )
             stat_index.setdefault(key, row)
 
-        for game in read_csv(ONCOURT_DIR / f"games_{tour_lower}.csv"):
+        for game in game_rows:
             tour_id = str(game.get("tour_id") or "").strip()
-            if tour_id not in tour_ids:
-                continue
             match_date = parse_date(game.get("date"))
             if match_date is None or match_date >= as_of:
                 continue
@@ -943,11 +974,7 @@ def load_current_tournament_logs(schedules: list[dict[str, str]], as_of: date) -
                 continue
             winner_name = player_names.get(winner_id, winner_id)
             loser_name = player_names.get(loser_id, loser_id)
-            tournament_name = ""
-            for schedule in schedules:
-                if str(schedule.get("tour") or "").upper() == tour and str(schedule.get("tour_id") or "") == tour_id:
-                    tournament_name = str(schedule.get("tournament") or "")
-                    break
+            tournament_name = tournament_names.get((tour, tour_id), "")
             base = {
                 "date": match_date.isoformat(),
                 "round": round_label(round_id, tournament_name),
