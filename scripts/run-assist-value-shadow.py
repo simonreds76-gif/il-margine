@@ -91,6 +91,9 @@ def main() -> None:
     parser.add_argument("--leagues", default=",".join(DEFAULT_LEAGUES))
     parser.add_argument("--bookmakers", default="Bet365")
     parser.add_argument("--days-ahead", type=int, default=3)
+    parser.add_argument("--max-events-per-league", type=int, default=0)
+    parser.add_argument("--max-odds-requests-per-league", type=int, default=0)
+    parser.add_argument("--disable-global-fallback", action="store_true")
     parser.add_argument("--refresh-role-sources", action="store_true")
     parser.add_argument(
         "--strict-source-audit",
@@ -125,8 +128,7 @@ def main() -> None:
     if not args.skip_odds:
         inbox_before = snapshot_inbox_files()
         for league in parse_leagues(args.leagues):
-            run_cmd(
-                [
+            scrape_cmd = [
                     sys.executable,
                     str(ROOT / "scripts" / "odds-api-scrape-assists.py"),
                     "--league",
@@ -139,7 +141,15 @@ def main() -> None:
                     str(ROOT / "data" / "assist-value" / "inbox"),
                     "--market-audit-out",
                     str(ROOT / "data" / "assist-value" / f"assist-market-audit-{league}.csv"),
-                ],
+                ]
+            if args.max_events_per_league > 0:
+                scrape_cmd.extend(["--max-events", str(args.max_events_per_league)])
+            if args.max_odds_requests_per_league > 0:
+                scrape_cmd.extend(["--max-odds-requests", str(args.max_odds_requests_per_league)])
+            if args.disable_global_fallback:
+                scrape_cmd.append("--disable-global-fallback")
+            run_cmd(
+                scrape_cmd,
                 allow_failure=args.allow_odds_failure,
             )
         fresh_odds_files = new_or_updated_inbox_files(inbox_before)
@@ -185,6 +195,13 @@ def main() -> None:
             "data/assist-value/assist-value-shadow-signals.csv",
             "--report-out",
             "data/assist-value/assist-value-model-report.txt",
+        ]
+    )
+
+    run_cmd(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "assist-value-market-history.py"),
         ]
     )
 

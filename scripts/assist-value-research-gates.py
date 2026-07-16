@@ -25,7 +25,7 @@ from typing import Iterable
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_LOG_GLOB = "data/goalscorer/*-player-match-logs-20*.csv"
 DEFAULT_RESULTS_DIR = ROOT / "data" / "goalscorer" / "match-results"
-DEFAULT_MARKET = ROOT / "data" / "assist-value" / "assist-value-shadow-signals.csv"
+DEFAULT_MARKET = ROOT / "data" / "assist-value" / "research" / "assist-value-market-history.csv"
 DEFAULT_PROSPECTIVE = ROOT / "data" / "assist-value" / "research" / "assist-value-v1-prospective.csv"
 DEFAULT_OUT_DIR = ROOT / "data" / "assist-value" / "research"
 

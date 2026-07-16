@@ -28,6 +28,7 @@ FAILURE_COOLDOWN_MINUTES = 60
 FAILURE_THRESHOLD = 3
 DETAIL_CADENCE_HOT_MINUTES = 60
 CLV_CADENCE_MINUTES = 360
+ASSIST_BOARD = ROOT / "data" / "assist-value" / "assist-value-shadow-board.csv"
 
 
 def now_utc_iso() -> str:
@@ -67,6 +68,21 @@ def run_cmd(args: list[str]) -> subprocess.CompletedProcess[str]:
         encoding="utf-8",
         errors="replace",
     )
+
+
+def refresh_assist_from_confirmed_lineups() -> list[str]:
+    """Reprice captured Assist rows after lineup refresh without another API call."""
+    if os.environ.get("ASSIST_VALUE_SHADOW_ENABLED", "0").strip() != "1":
+        return []
+    if not ASSIST_BOARD.exists():
+        return ["Assist confirmed-lineup refresh skipped: no captured Assist board exists."]
+    model_proc = run_cmd([sys.executable, str(ROOT / "scripts" / "build-assist-value-model.py")])
+    if model_proc.returncode != 0:
+        return [f"Assist confirmed-lineup model refresh failed ({model_proc.returncode})."]
+    tracker_proc = run_cmd([sys.executable, str(ROOT / "scripts" / "assist-value-prospective-tracker.py")])
+    if tracker_proc.returncode != 0:
+        return [f"Assist prospective registration failed ({tracker_proc.returncode})."]
+    return []
 
 
 def build_default_state(previous: dict[str, Any] | None) -> dict[str, Any]:
@@ -287,6 +303,7 @@ def main() -> int:
     }
 
     if ran_count > 0:
+        warnings.extend(refresh_assist_from_confirmed_lineups())
         clv_age = iso_age_minutes(last_clv_run_at)
         clv_due = close_run_count > 0 and (clv_age is None or clv_age >= CLV_CADENCE_MINUTES)
         if clv_due:

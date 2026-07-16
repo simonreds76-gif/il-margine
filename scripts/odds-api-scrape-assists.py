@@ -408,6 +408,7 @@ def discover_league_events(
     bookmakers: List[str],
     now: datetime,
     days_ahead: int,
+    allow_global_fallback: bool = True,
 ) -> List[dict]:
     base_params = {
         "apiKey": api_key,
@@ -433,6 +434,9 @@ def discover_league_events(
     if discovered:
         return list(discovered.values())
 
+    if not allow_global_fallback:
+        return []
+
     events = fetch_json("events", base_params)
     if not isinstance(events, list):
         return []
@@ -455,6 +459,23 @@ def main() -> None:
     parser.add_argument("--market-audit-out", default="")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--days-ahead", type=int, default=3)
+    parser.add_argument(
+        "--max-events",
+        type=int,
+        default=0,
+        help="Hard cap on events sent to odds/multi; 0 means no cap.",
+    )
+    parser.add_argument(
+        "--max-odds-requests",
+        type=int,
+        default=0,
+        help="Hard cap on odds/multi calls; 0 means no cap.",
+    )
+    parser.add_argument(
+        "--disable-global-fallback",
+        action="store_true",
+        help="Do not make a second unfiltered /events request when bookmaker discovery is empty.",
+    )
     args = parser.parse_args()
 
     load_env()
@@ -474,7 +495,18 @@ def main() -> None:
         raise SystemExit("Provide at least one bookmaker name via --bookmakers.")
     print(f"  Event discovery books: {', '.join(bookmakers)}")
 
-    target_events = discover_league_events(api_key, args.league, league_config, bookmakers, now, args.days_ahead)
+    target_events = discover_league_events(
+        api_key,
+        args.league,
+        league_config,
+        bookmakers,
+        now,
+        args.days_ahead,
+        allow_global_fallback=not args.disable_global_fallback,
+    )
+    target_events.sort(key=lambda event: str(event.get("date") or ""))
+    if args.max_events > 0:
+        target_events = target_events[: args.max_events]
     print(f"  {league_config['label']} events found: {len(target_events):,}")
     if not target_events:
         print(f"  No {league_config['label']} events returned from the current source feed.")
@@ -483,7 +515,15 @@ def main() -> None:
     all_rows: List[dict] = []
     market_audit_rows: List[dict] = []
     bookmaker_list = ",".join(bookmakers)
-    for event_ids in chunked([str(event["id"]) for event in target_events], 10):
+    odds_chunks = list(chunked([str(event["id"]) for event in target_events], 10))
+    if args.max_odds_requests > 0:
+        odds_chunks = odds_chunks[: args.max_odds_requests]
+    print(
+        "  Request plan: "
+        f"event discovery <= {len(bookmakers) + (0 if args.disable_global_fallback else 1)} call(s); "
+        f"odds/multi <= {len(odds_chunks)} call(s)"
+    )
+    for event_ids in odds_chunks:
         payloads: List[dict] = []
         try:
             odds_payload = fetch_json(

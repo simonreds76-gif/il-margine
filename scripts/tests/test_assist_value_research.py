@@ -1,9 +1,14 @@
 from __future__ import annotations
 
 import runpy
+import csv
+import json
+import sys
+import tempfile
 import unittest
 from datetime import datetime, timedelta
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -11,6 +16,7 @@ MODEL = runpy.run_path(str(ROOT / "scripts" / "build-assist-value-model.py"), ru
 RESEARCH = runpy.run_path(str(ROOT / "scripts" / "assist-value-research-gates.py"), run_name="assist_value_research_test")
 TRACKER = runpy.run_path(str(ROOT / "scripts" / "assist-value-prospective-tracker.py"), run_name="assist_value_tracker_test")
 BACKFILL = runpy.run_path(str(ROOT / "scripts" / "backfill-assist-match-results.py"), run_name="assist_value_backfill_test")
+MARKET_HISTORY = runpy.run_path(str(ROOT / "scripts" / "assist-value-market-history.py"), run_name="assist_value_market_history_test")
 
 
 class AssistValueResearchTests(unittest.TestCase):
@@ -53,6 +59,31 @@ class AssistValueResearchTests(unittest.TestCase):
         }
         self.assertEqual(MODEL["lineup_state"](base_row, "arsenal", lineup_index), "confirmed_starter")
         self.assertEqual(MODEL["lineup_minutes"](48.0, "confirmed_starter"), (60.0, "confirmed_starter_plus_median5"))
+
+    def test_lineup_indexes_merge_all_leagues(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            paths = []
+            for index, (home, away) in enumerate((("Arsenal", "Chelsea"), ("Milan", "Inter"))):
+                path = Path(temp_dir) / f"lineups-{index}.json"
+                path.write_text(
+                    json.dumps(
+                        {
+                            "fixtures": [
+                                {
+                                    "match_date": "2026-08-15",
+                                    "home_team": home,
+                                    "away_team": away,
+                                    "lineup_type": "standard",
+                                }
+                            ]
+                        }
+                    ),
+                    encoding="utf-8",
+                )
+                paths.append(str(path))
+            merged = MODEL["load_lineup_indexes"](paths)
+            self.assertIn(("2026-08-15", "arsenal", "chelsea"), merged)
+            self.assertIn(("2026-08-15", "milan", "inter"), merged)
 
     def test_research_calibration_reduces_systematic_overestimate(self) -> None:
         probabilities = [0.20] * 100 + [0.40] * 100
@@ -106,6 +137,50 @@ class AssistValueResearchTests(unittest.TestCase):
         second, added_again = TRACKER["update_ledger"]([base, later], first, "2026-08-15T13:32:00Z")
         self.assertEqual(added, 1)
         self.assertEqual(first[0]["market_odds"], "4.20")
+        self.assertEqual(added_again, 0)
+        self.assertEqual(len(second), 1)
+
+    def test_prospective_tracker_successful_append_exits_zero(self) -> None:
+        signal = {
+            "model_version": "assist_research_v1",
+            "signal_status": "shadow_signal",
+            "lineup_state": "confirmed_starter",
+            "market_odds": "4.50",
+            "captured_at": "2026-08-15T13:00:00Z",
+            "kickoff_at": "2026-08-15T14:00:00Z",
+            "match_date": "2026-08-15",
+            "league_key": "epl",
+            "home_team": "Arsenal",
+            "away_team": "Chelsea",
+            "player_name": "Test Creator",
+            "bookmaker": "Bet365",
+        }
+        with tempfile.TemporaryDirectory() as temp_dir:
+            signals = Path(temp_dir) / "signals.csv"
+            ledger = Path(temp_dir) / "ledger.csv"
+            with signals.open("w", encoding="utf-8", newline="") as handle:
+                writer = csv.DictWriter(handle, fieldnames=list(signal))
+                writer.writeheader()
+                writer.writerow(signal)
+            with patch.object(sys, "argv", ["tracker", "--signals", str(signals), "--ledger", str(ledger)]):
+                self.assertEqual(TRACKER["main"](), 0)
+            with ledger.open("r", encoding="utf-8", newline="") as handle:
+                self.assertEqual(len(list(csv.DictReader(handle))), 1)
+
+    def test_market_history_is_append_only_and_deduplicated(self) -> None:
+        row = {
+            "model_version": "assist_research_v1",
+            "captured_at": "2026-08-15T10:00:00Z",
+            "match_date": "2026-08-15",
+            "home_team": "Arsenal",
+            "away_team": "Chelsea",
+            "player_name": "Test Creator",
+            "bookmaker": "Bet365",
+            "market_odds": "4.50",
+        }
+        first, added = MARKET_HISTORY["append_rows"]([row, row], [])
+        second, added_again = MARKET_HISTORY["append_rows"]([row], first)
+        self.assertEqual(added, 1)
         self.assertEqual(added_again, 0)
         self.assertEqual(len(second), 1)
 
