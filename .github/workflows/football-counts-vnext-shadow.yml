@@ -77,11 +77,11 @@ jobs:
           TEAM_ARGS=(--all-leagues --bookmakers "Bet365")
           CORNER_ARGS=()
           if [[ "$EVENT_NAME" == "schedule" && "$SCHEDULE_EXPR" != "15 8 * * *" ]]; then
-            TEAM_ARGS+=(--days-ahead 1 --kickoff-within-minutes 90)
+            TEAM_ARGS+=(--days-ahead 1 --kickoff-within-minutes 90 --max-events-per-league 10 --max-odds-requests-per-league 1 --max-odds-api-http-requests 35)
             CORNER_ARGS+=(--bucket-hours 1 --kickoff-within-minutes 90)
             echo "Near-kickoff mode: detailed odds calls are limited to fixtures starting within 90 minutes."
           else
-            TEAM_ARGS+=(--days-ahead 7 --market-audit-out data/football-form/football-count-market-inventory.csv)
+            TEAM_ARGS+=(--days-ahead 7 --max-events-per-league 20 --max-odds-requests-per-league 2 --max-odds-api-http-requests 50 --market-audit-out data/football-form/football-count-market-inventory.csv)
             CORNER_ARGS+=(--bucket-hours 6)
             echo "Daily discovery mode: capturing publication prices for the seven-day board."
           fi

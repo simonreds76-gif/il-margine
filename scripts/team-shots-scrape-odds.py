@@ -101,6 +101,29 @@ OUTPUT_FIELDS = [
 
 RETRY_ATTEMPTS = 3
 RETRY_BACKOFF_SECONDS = 2.0
+_ODDS_API_HTTP_REQUEST_LIMIT = 0
+_ODDS_API_HTTP_REQUEST_COUNT = 0
+
+
+def configure_odds_api_http_budget(limit: int) -> None:
+    """Set a process-wide hard ceiling, including retries and fallbacks."""
+    global _ODDS_API_HTTP_REQUEST_LIMIT, _ODDS_API_HTTP_REQUEST_COUNT
+    _ODDS_API_HTTP_REQUEST_LIMIT = max(int(limit), 0)
+    _ODDS_API_HTTP_REQUEST_COUNT = 0
+
+
+def odds_api_get(url: str, **kwargs: object) -> requests.Response:
+    global _ODDS_API_HTTP_REQUEST_COUNT
+    if (
+        _ODDS_API_HTTP_REQUEST_LIMIT > 0
+        and _ODDS_API_HTTP_REQUEST_COUNT >= _ODDS_API_HTTP_REQUEST_LIMIT
+    ):
+        raise RuntimeError(
+            "Odds-API.io HTTP request budget exhausted "
+            f"({_ODDS_API_HTTP_REQUEST_COUNT}/{_ODDS_API_HTTP_REQUEST_LIMIT})"
+        )
+    _ODDS_API_HTTP_REQUEST_COUNT += 1
+    return requests.get(url, **kwargs)
 
 
 def inclusive_days_to_iso(days_ahead: int) -> str:
@@ -302,6 +325,8 @@ def scrape_odds_api(
     days_ahead: int = 3,
     kickoff_within_minutes: int = 0,
     market_inventory: Optional[List[dict]] = None,
+    max_events: int = 0,
+    max_odds_requests: int = 0,
 ) -> tuple[list[dict], int, list[str]]:
     config = LEAGUE_CONFIGS[league_key]
     now = datetime.now(timezone.utc)
@@ -320,7 +345,7 @@ def scrape_odds_api(
     try:
         resp = None
         for attempt in range(RETRY_ATTEMPTS):
-            resp = requests.get(f"{BASE_URL_ODDS_API}/events", params=params, timeout=30)
+            resp = odds_api_get(f"{BASE_URL_ODDS_API}/events", params=params, timeout=30)
             try:
                 resp.raise_for_status()
                 events = resp.json()
@@ -350,7 +375,7 @@ def scrape_odds_api(
             "to": to_iso,
         }
         print("  [odds-api.io] /events with status=pending returned 5xx; retrying without status filter.")
-        fallback_resp = requests.get(f"{BASE_URL_ODDS_API}/events", params=fallback_params, timeout=30)
+        fallback_resp = odds_api_get(f"{BASE_URL_ODDS_API}/events", params=fallback_params, timeout=30)
         fallback_resp.raise_for_status()
         events = fallback_resp.json()
 
@@ -371,6 +396,9 @@ def scrape_odds_api(
         )
     else:
         print(f"  [odds-api.io] {len(matched)} events found")
+    matched.sort(key=lambda event: str(event.get("date") or ""))
+    if max_events > 0:
+        matched = matched[:max_events]
     if not matched:
         return [], 0, provider_errors
 
@@ -378,7 +406,12 @@ def scrape_odds_api(
     captured = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
     event_ids = [str(e["id"]) for e in matched]
-    payload, payload_errors = _fetch_odds_api_payload(api_key, event_ids, bookmakers_str)
+    payload, payload_errors = _fetch_odds_api_payload(
+        api_key,
+        event_ids,
+        bookmakers_str,
+        max_requests=max_odds_requests,
+    )
     provider_errors.extend(payload_errors)
     rows = _extract_odds_api_rows(payload, config, captured)
 
@@ -388,7 +421,12 @@ def scrape_odds_api(
         if fallback_books:
             retry_books = ",".join(requested + fallback_books)
             print(f"  [odds-api.io] No team shots found for {config['label']} with {bookmakers_str}; retrying {retry_books}.")
-            retry_payload, retry_errors = _fetch_odds_api_payload(api_key, event_ids, retry_books)
+            retry_payload, retry_errors = _fetch_odds_api_payload(
+                api_key,
+                event_ids,
+                retry_books,
+                max_requests=max_odds_requests,
+            )
             provider_errors.extend(retry_errors)
             rows = _extract_odds_api_rows(retry_payload, config, captured)
             if rows:
@@ -414,11 +452,18 @@ def scrape_odds_api(
     return rows, len(matched), provider_errors
 
 
-def _fetch_odds_api_payload(api_key: str, event_ids: List[str], bookmakers_str: str) -> tuple[list[dict], list[str]]:
+def _fetch_odds_api_payload(
+    api_key: str,
+    event_ids: List[str],
+    bookmakers_str: str,
+    max_requests: int = 0,
+) -> tuple[list[dict], list[str]]:
     payload: List[dict] = []
     errors: List[str] = []
-    for i in range(0, len(event_ids), 10):
-        chunk = event_ids[i : i + 10]
+    chunks = [event_ids[i : i + 10] for i in range(0, len(event_ids), 10)]
+    if max_requests > 0:
+        chunks = chunks[:max_requests]
+    for chunk in chunks:
         chunk_payload, chunk_errors = _fetch_odds_api_multi_chunk(api_key, chunk, bookmakers_str)
         errors.extend(chunk_errors)
         if isinstance(chunk_payload, list):
@@ -487,7 +532,7 @@ def _fetch_odds_api_multi_chunk(api_key: str, event_ids: List[str], bookmakers_s
     params = {"apiKey": api_key, "eventIds": ",".join(event_ids), "bookmakers": bookmakers_str}
     response = None
     for attempt in range(RETRY_ATTEMPTS):
-        response = requests.get(f"{BASE_URL_ODDS_API}/odds/multi", params=params, timeout=30)
+        response = odds_api_get(f"{BASE_URL_ODDS_API}/odds/multi", params=params, timeout=30)
         if response.status_code < 500:
             break
         if attempt < RETRY_ATTEMPTS - 1:
@@ -511,7 +556,7 @@ def _fetch_odds_api_multi_chunk(api_key: str, event_ids: List[str], bookmakers_s
     for bookmaker in bookmakers:
         for attempt in range(RETRY_ATTEMPTS):
             try:
-                single_resp = requests.get(
+                single_resp = odds_api_get(
                     f"{BASE_URL_ODDS_API}/odds/multi",
                     params={"apiKey": api_key, "eventIds": ",".join(event_ids), "bookmakers": bookmaker},
                     timeout=30,
@@ -646,7 +691,7 @@ def write_rows(rows: List[dict], out_dir: Path, league_key: str, dry_run: bool =
 
 def list_available_bookmakers(api_key: str) -> None:
     """Print all bookmakers available on this odds-api.io account."""
-    resp = requests.get(
+    resp = odds_api_get(
         f"{BASE_URL_ODDS_API}/bookmakers",
         params={"apiKey": api_key},
         timeout=30,
@@ -682,10 +727,29 @@ def main() -> None:
         default=0,
         help="Only request detailed odds for events starting within this many minutes (0 disables).",
     )
+    parser.add_argument(
+        "--max-events-per-league",
+        type=int,
+        default=0,
+        help="Hard cap on events sent to detailed odds calls for each league; 0 disables.",
+    )
+    parser.add_argument(
+        "--max-odds-requests-per-league",
+        type=int,
+        default=0,
+        help="Hard cap on odds/multi calls for each league; 0 disables.",
+    )
+    parser.add_argument(
+        "--max-odds-api-http-requests",
+        type=int,
+        default=0,
+        help="Process-wide hard cap including discovery, retries, and fallbacks; 0 disables.",
+    )
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--discover-bookmakers", action="store_true",
                         help="List all bookmakers available on your account and exit")
     args = parser.parse_args()
+    configure_odds_api_http_budget(args.max_odds_api_http_requests)
 
     leagues = LIVE_LEAGUES if args.all_leagues else [args.league or "epl"]
 
@@ -712,6 +776,7 @@ def main() -> None:
         "sources_used": [],
         "run_url": _run_url_from_env(),
         "success": False,
+        "odds_api_http_request_limit": _ODDS_API_HTTP_REQUEST_LIMIT,
     }
 
     total_written = 0
@@ -732,6 +797,8 @@ def main() -> None:
                     args.days_ahead,
                     args.kickoff_within_minutes,
                     market_inventory_rows,
+                    args.max_events_per_league,
+                    args.max_odds_requests_per_league,
                 )
                 run_status["events_found"] += events_found
                 run_status["provider_errors"].extend(provider_errors)
@@ -791,6 +858,7 @@ def main() -> None:
         run_status["error"] = str(exc)
         raise
     finally:
+        run_status["odds_api_http_requests"] = _ODDS_API_HTTP_REQUEST_COUNT
         _write_run_status(run_status)
 
 

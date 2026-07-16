@@ -28,6 +28,7 @@ DEFAULT_REPORT = OUT_DIR / "weekly-research-report.md"
 TENNIS_PROPS_OBSERVATIONS = ROOT / "data" / "tennis-props" / "shadow" / "market-observations.csv"
 ASSIST_GATES = ROOT / "data" / "assist-value" / "research" / "assist-value-gates.json"
 ASSIST_PROSPECTIVE = ROOT / "data" / "assist-value" / "research" / "assist-value-v1-prospective.csv"
+AUTOMATION_BUDGET = ROOT / "data" / "ops" / "automation-budget-report.json"
 
 TEAM_SHOTS_MODEL = "canonical_form_v3_ema20_nb"
 CORNERS_MODEL = "canonical_form_v0"
@@ -213,8 +214,10 @@ def assist_value_research_summary() -> dict[str, Any]:
         "prospective": prospective,
         "freshness": evidence_freshness(str(gates.get("generated_at") or "")),
         "automation": {
-            "capture_schedule": "Friday 07:10 UTC, August-May",
+            "capture_schedule": "Friday-Sunday 07:10 UTC, August-May",
+            "captures_per_week": 3,
             "max_paid_api_calls_per_run": 10,
+            "max_paid_api_calls_per_week": 30,
             "database_reads_per_capture": 0,
             "database_writes_per_capture": 0,
             "lineup_refresh_reuses_captured_prices": True,
@@ -540,6 +543,7 @@ def build_payload() -> dict[str, Any]:
     tennis_props_benchmark = tennis_props_market_benchmark()
     goalscorer_research = goalscorer_research_summary()
     assist_value_research = assist_value_research_summary()
+    automation_budget = load_json(AUTOMATION_BUDGET)
 
     payload = {
         "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
@@ -582,6 +586,7 @@ def build_payload() -> dict[str, Any]:
         "tennis_props_market_benchmark": tennis_props_benchmark,
         "goalscorer_v2": goalscorer_research,
         "assist_value_v1": assist_value_research,
+        "automation_budget": automation_budget,
     }
     stale_models = [
         name
@@ -619,6 +624,8 @@ def render_report(payload: dict[str, Any]) -> str:
     tennis_props_benchmark = payload.get("tennis_props_market_benchmark") or {}
     goalscorer = payload["goalscorer_v2"]
     assist = payload["assist_value_v1"]
+    automation = payload.get("automation_budget") or {}
+    odds_budget = (automation.get("providers") or {}).get("odds_api_io") or {}
     team_gate = team["segment_gate"]
     team_clv = team["clv"]
     corners_clv = corners["clv"]
@@ -702,8 +709,14 @@ def render_report(payload: dict[str, Any]) -> str:
             f"- Market gate: {assist['market_status']} | {assist['market_rows']} matched player prices across {assist['market_calendar_span_days']} calendar days.",
             f"- Prospective ledger: {assist['prospective']['settled']}/{assist['prospective']['registered']} settled (target {assist['prospective_target']}), {assist['prospective']['pnl_units']:+.2f}u, ROI {pct(assist['prospective']['roi_pct'])}.",
             f"- Evidence freshness: {assist['freshness']['status']} ({assist['freshness']['generated_at'] or 'missing'}).",
-            f"- Automation budget: {assist['automation']['capture_schedule']}; <= {assist['automation']['max_paid_api_calls_per_run']} odds-api calls per run; zero database reads/writes.",
+            f"- Automation budget: {assist['automation']['capture_schedule']}; <= {assist['automation']['max_paid_api_calls_per_run']} Odds-API calls/run and <= {assist['automation']['max_paid_api_calls_per_week']} calls/week; zero database reads/writes.",
             "- No public output, staking, database writes or automatic promotion are authorised.",
+            "",
+            "## Automation Budget",
+            "",
+            f"- Registry status: {automation.get('status', 'NOT_RUN')}; every scheduled GitHub workflow must be registered.",
+            f"- Odds-API.io worst registered hour: {odds_budget.get('max_requests_in_one_hour', '-')} / {odds_budget.get('requests_per_hour', '-')} requests.",
+            f"- Registered database envelope: {(automation.get('database') or {}).get('registered_reads_per_week_max', '-')} reads/week and {(automation.get('database') or {}).get('registered_writes_per_week_max', '-')} writes/week maximum.",
             "",
             "## Tennis ML Gap-Guard Quiet Audit",
             "",
@@ -799,6 +812,8 @@ def telegram_text(payload: dict[str, Any]) -> str:
     tennis_props_benchmark = payload.get("tennis_props_market_benchmark") or {}
     goalscorer = payload["goalscorer_v2"]
     assist = payload["assist_value_v1"]
+    automation = payload.get("automation_budget") or {}
+    odds_budget = (automation.get("providers") or {}).get("odds_api_io") or {}
     team_clv = team["clv"]
     corners_clv = corners["clv"]
     team_v4 = (vnext.get("team_shots_v4") or {})
@@ -815,7 +830,8 @@ def telegram_text(payload: dict[str, Any]) -> str:
         f"Count-source health: API-Football {api_health.get('archive_rows', 0)} archived, latest {api_health.get('latest_fixture_date') or '-'}, agreement {api_agreement.get('matched_fixtures', 0)}/{api_agreement.get('api_rows', 0)}",
         f"Team Fouls: F1 {team_fouls_decision.get('status', 'NOT_RUN')}; F2 {team_fouls_f2_decision.get('status', 'NOT_RUN')}; sources {team_fouls_m2.get('status', 'NOT_RUN')}; no signals",
         f"Goalscorer V2: {goalscorer['ledger']['settled']} settled | {goalscorer['ledger']['pnl_units']:+.2f}u | ROI {pct(goalscorer['ledger']['roi_pct'])} | CLV {goalscorer['matched_closes']}/{goalscorer['signals']} | {goalscorer['decision']}",
-        f"Assist V1: {assist['lane_status']} | backtest {assist['backtest_status']} | settlement {assist['settlement_status']} | market {assist['market_status']} ({assist['market_calendar_span_days']}/90d) | prospective {assist['prospective']['settled']}/{assist['prospective_target']} | <=10 API calls/week | {assist['decision']}",
+        f"Assist V1: {assist['lane_status']} | backtest {assist['backtest_status']} | settlement {assist['settlement_status']} | market {assist['market_status']} ({assist['market_calendar_span_days']}/90d) | prospective {assist['prospective']['settled']}/{assist['prospective_target']} | <=30 API calls/week | {assist['decision']}",
+        f"Automation: {automation.get('status', 'NOT_RUN')} | Odds-API worst hour {odds_budget.get('max_requests_in_one_hour', '-')}/{odds_budget.get('requests_per_hour', '-')} | DB writes/week max {(automation.get('database') or {}).get('registered_writes_per_week_max', '-')}",
         f"Tennis ML gap guard: Etch/Fils-type {format_bet_summary(tennis['etch_type'])}; recent 2024-26 {format_bet_summary(tennis['etch_type_recent'])}",
     ]
     if tennis_props_v3 and not tennis_props_v3.get("_error"):

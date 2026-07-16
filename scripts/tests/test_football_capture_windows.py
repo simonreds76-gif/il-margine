@@ -5,9 +5,12 @@ import sys
 import unittest
 from datetime import UTC, datetime
 from pathlib import Path
+from unittest.mock import patch
 
 
 SCRIPTS = Path(__file__).resolve().parents[1]
+if str(SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS))
 SPEC = importlib.util.spec_from_file_location(
     "team_shots_capture_window",
     SCRIPTS / "team-shots-scrape-odds.py",
@@ -59,6 +62,18 @@ class FootballCaptureWindowTests(unittest.TestCase):
 
     def test_zero_disables_filter(self) -> None:
         self.assertTrue(CAPTURE.within_kickoff_window("not-a-date", 0, now=self.now))
+
+    def test_odds_api_http_budget_includes_retries_and_fallbacks(self) -> None:
+        response = object()
+        CAPTURE.configure_odds_api_http_budget(1)
+        try:
+            with patch.object(CAPTURE.requests, "get", return_value=response) as request:
+                self.assertIs(CAPTURE.odds_api_get("https://example.test"), response)
+                with self.assertRaisesRegex(RuntimeError, "request budget exhausted"):
+                    CAPTURE.odds_api_get("https://example.test/retry")
+                request.assert_called_once()
+        finally:
+            CAPTURE.configure_odds_api_http_budget(0)
 
 
 if __name__ == "__main__":

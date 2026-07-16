@@ -86,6 +86,7 @@ jobs:
 
       - name: Build and send weekly report
         run: |
+          python scripts/audit-automation-budget.py --strict
           python scripts/football-counts-vnext-gate.py
           python scripts/weekly-research-report.py
 
@@ -114,6 +115,8 @@ jobs:
           path: |
             data/football-form/weekly-research-report.md
             data/football-form/weekly-research-report.json
+            data/ops/automation-budget-report.md
+            data/ops/automation-budget-report.json
             data/football-form/football-counts-vnext-gate.md
             data/football-form/football-counts-vnext-gate.json
             data/team-shots/team-shots-v4-fold-report.md

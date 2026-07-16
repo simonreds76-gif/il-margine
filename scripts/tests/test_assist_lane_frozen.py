@@ -26,10 +26,12 @@ class AssistLaneFrozenTests(unittest.TestCase):
         self.assertNotIn("$includeAssistValue = $syncAll -or $AssistValue", SYNC)
         self.assertNotIn('"-AssistValue"', DEV_SYNC)
 
-    def test_workflow_is_manual_and_fail_closed(self) -> None:
+    def test_workflow_is_budgeted_and_fail_closed(self) -> None:
         self.assertIn("workflow_dispatch:", WORKFLOW)
-        self.assertNotIn("schedule:", WORKFLOW)
+        self.assertIn('cron: "10 7 * * 0,5,6"', WORKFLOW)
         self.assertIn("vars.ASSIST_VALUE_SHADOW_ENABLED == '1'", WORKFLOW)
+        self.assertIn("--max-odds-requests-per-league 1", WORKFLOW)
+        self.assertNotIn("SUPABASE_SERVICE_ROLE_KEY", WORKFLOW)
 
     def test_monitor_index_labels_lane_paused(self) -> None:
         self.assertIn("Assist Research Archive", MONITOR)

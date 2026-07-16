@@ -177,3 +177,7 @@ data/vnext/*-predictions.csv
 data/vnext/*-features.csv
 data/vnext/*-fold-predictions.csv
 data/backtest/backtest-results-*-vnext-idclean.csv
+
+# generated automation-budget audit artifacts (uploaded by Actions)
+data/ops/automation-budget-report.json
+data/ops/automation-budget-report.md
