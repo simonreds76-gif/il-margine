@@ -63,7 +63,7 @@ jobs:
           fi
 
       - name: Guard fallback API credits
-        if: ${{ github.event_name == 'schedule' && github.event.schedule == '25 11 * * *' }}
+        if: ${{ github.event_name == 'schedule' && github.event.schedule != '25 8 * * *' }}
         id: fallback_guard
         shell: bash
         run: |
