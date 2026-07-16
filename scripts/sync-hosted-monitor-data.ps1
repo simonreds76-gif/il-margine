@@ -19,7 +19,9 @@ $syncAll = -not ($TeamShots -or $Corners -or $Goalscorer -or $AssistValue -or $T
 $includeTeamShots = $syncAll -or $TeamShots
 $includeCorners = $syncAll -or $Corners
 $includeGoalscorer = $syncAll -or $Goalscorer
-$includeAssistValue = $syncAll -or $AssistValue
+# Assist Value is frozen. Preserve an explicit manual sync path, but do not
+# refresh its large shadow artifacts during normal localhost startup.
+$includeAssistValue = $AssistValue
 $includeTennisProps = $syncAll -or $TennisProps
 $includeSettlement = $syncAll -or $Settlement -or $TeamShots -or $Corners
 
@@ -242,4 +244,6 @@ function Show-AssistValueStatus($Path) {
     }
 }
 
-Show-AssistValueStatus (Join-Path $repoRoot "data/assist-value/assist-value-shadow-signals.csv")
+if ($includeAssistValue) {
+    Show-AssistValueStatus (Join-Path $repoRoot "data/assist-value/assist-value-shadow-signals.csv")
+}

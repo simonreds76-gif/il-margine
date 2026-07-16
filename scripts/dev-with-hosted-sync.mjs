@@ -35,7 +35,6 @@ function runHostedSync() {
       resolve(scriptDir, "sync-hosted-monitor-data.ps1"),
       "-Settlement",
       "-Goalscorer",
-      "-AssistValue",
       "-TennisProps",
     ],
     {
