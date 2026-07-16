@@ -1,0 +1,60 @@
+name: Tennis Daily Signal Digest
+
+on:
+  workflow_dispatch:
+    inputs:
+      payload_b64:
+        description: Base64-encoded JSON array of Telegram messages
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tennis-daily-signal-digest
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      DIGEST_PAYLOAD_B64: ${{ inputs.payload_b64 }}
+      OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
+      OPS_ALERT_TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
+    steps:
+      - name: Send private tennis digest
+        shell: python
+        run: |
+          import base64
+          import json
+          import os
+          import urllib.request
+
+          token = os.environ.get("OPS_ALERT_TELEGRAM_BOT_TOKEN", "").strip()
+          chat_id = os.environ.get("OPS_ALERT_TELEGRAM_CHAT_ID", "").strip()
+          if not token or not chat_id:
+              raise SystemExit("Missing OPS alert Telegram credentials")
+
+          raw = base64.b64decode(os.environ["DIGEST_PAYLOAD_B64"], validate=True)
+          messages = json.loads(raw.decode("utf-8"))
+          if not isinstance(messages, list) or not messages:
+              raise SystemExit("Digest payload must be a non-empty message list")
+
+          for message in messages:
+              if not isinstance(message, str) or not message.strip() or len(message) > 4096:
+                  raise SystemExit("Invalid Telegram message in digest payload")
+              payload = json.dumps({
+                  "chat_id": chat_id,
+                  "text": message,
+                  "disable_web_page_preview": True,
+              }).encode("utf-8")
+              request = urllib.request.Request(
+                  f"https://api.telegram.org/bot{token}/sendMessage",
+                  data=payload,
+                  headers={"Content-Type": "application/json"},
+                  method="POST",
+              )
+              with urllib.request.urlopen(request, timeout=20) as response:
+                  response.read()
