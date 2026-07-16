@@ -1,6 +1,6 @@
 # Corners CLV Monitor: `canonical_form_v0`
 
-Generated: 2026-07-16T11:27:24Z
+Generated: 2026-07-16T12:55:37Z
 Picks input: `data/football-form/corners-v0-published-picks.csv`
 Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 
