@@ -188,6 +188,17 @@ def main() -> None:
         ]
     )
 
+    run_cmd(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "assist-value-prospective-tracker.py"),
+            "--signals",
+            "data/assist-value/assist-value-shadow-signals.csv",
+            "--ledger",
+            "data/assist-value/research/assist-value-v1-prospective.csv",
+        ]
+    )
+
     print("\n  Done.\n")
 
 
