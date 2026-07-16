@@ -64,6 +64,15 @@ jobs:
       - name: Settle assist value shadow signals
         run: python scripts/assist-value-settle.py
 
+      - name: Settle locked v1 prospective signals
+        run: |
+          python scripts/assist-value-settle.py \
+            --signals data/assist-value/research/assist-value-v1-prospective.csv \
+            --summary data/assist-value/research/assist-value-v1-prospective-performance.txt
+
+      - name: Rebuild assist research gates
+        run: python scripts/assist-value-research-gates.py
+
       - name: Commit and push if new shadow data
         run: |
           git config user.name "github-actions[bot]"

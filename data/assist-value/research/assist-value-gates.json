@@ -1,0 +1,220 @@
+{
+  "generated_at": "2026-07-16T14:39:01Z",
+  "lane_status": "FROZEN_RESEARCH",
+  "reactivation_ready": false,
+  "backtest": {
+    "status": "PASS",
+    "train_season": "2023-2024",
+    "validation_season": "2024-2025",
+    "test_season": "2025-2026",
+    "splits": {
+      "train": {
+        "raw": {
+          "n": 32780,
+          "positives": 2129,
+          "prevalence": 0.06494813910921293,
+          "mean_probability": 0.07786275885684796,
+          "brier": 0.05932425470266151,
+          "log_loss": 0.22696076986752808,
+          "ece": 0.016797143362035815
+        },
+        "calibrated": {
+          "n": 32780,
+          "positives": 2129,
+          "prevalence": 0.06494813910921293,
+          "mean_probability": 0.06494816119879984,
+          "brier": 0.05875649227484211,
+          "log_loss": 0.22456342492351578,
+          "ece": 0.004353520635268235
+        },
+        "naive": {
+          "n": 32780,
+          "positives": 2129,
+          "prevalence": 0.06494813910921293,
+          "mean_probability": 0.06467595956926736,
+          "brier": 0.060729952417165216,
+          "log_loss": 0.2403714215458778,
+          "ece": 0.0030811470408785863
+        }
+      },
+      "validation": {
+        "raw": {
+          "n": 42905,
+          "positives": 2766,
+          "prevalence": 0.06446801072136114,
+          "mean_probability": 0.07753005236849903,
+          "brier": 0.05895801998624584,
+          "log_loss": 0.22666113208759453,
+          "ece": 0.01833337919907987
+        },
+        "calibrated": {
+          "n": 42905,
+          "positives": 2766,
+          "prevalence": 0.06446801072136114,
+          "mean_probability": 0.06465154426907292,
+          "brier": 0.05832489032986362,
+          "log_loss": 0.2238679817015288,
+          "ece": 0.004820896772899322
+        },
+        "naive": {
+          "n": 42905,
+          "positives": 2766,
+          "prevalence": 0.06446801072136114,
+          "mean_probability": 0.06467595956926736,
+          "brier": 0.06031192955771495,
+          "log_loss": 0.23908875689082026,
+          "ece": 0.0035257964054164746
+        }
+      },
+      "test": {
+        "raw": {
+          "n": 44739,
+          "positives": 2719,
+          "prevalence": 0.06077471557254297,
+          "mean_probability": 0.07443872864363545,
+          "brier": 0.05633710902767366,
+          "log_loss": 0.21977568725476093,
+          "ece": 0.019751579614535737
+        },
+        "calibrated": {
+          "n": 44739,
+          "positives": 2719,
+          "prevalence": 0.06077471557254297,
+          "mean_probability": 0.06250290854317216,
+          "brier": 0.05555855525042201,
+          "log_loss": 0.21633036427798596,
+          "ece": 0.004740374654669064
+        },
+        "naive": {
+          "n": 44739,
+          "positives": 2719,
+          "prevalence": 0.06077471557254297,
+          "mean_probability": 0.06467595956926736,
+          "brier": 0.05709636922434144,
+          "log_loss": 0.22922210607835702,
+          "ece": 0.003901243996724389
+        }
+      }
+    },
+    "minutes": {
+      "n": 87644,
+      "mean8_mae": 18.97072654309316,
+      "median5_mae": 17.867828944365844,
+      "selected": "median_last_5_appearances"
+    },
+    "platt": {
+      "a": 0.7460910241980667,
+      "b": -0.7630763477165939,
+      "fit_seasons": [
+        "2023-2024",
+        "2024-2025"
+      ]
+    },
+    "selection_note": "Outcome evaluation is conditional on the player making an appearance; non-runners are void in the market."
+  },
+  "settlement": {
+    "status": "PASS",
+    "extraction_status": "PASS",
+    "operational_status": "PASS",
+    "result_files": 168,
+    "finished_matches": 165,
+    "instrumented_finished_matches": 88,
+    "assist_complete_matches": 84,
+    "assist_complete_rate": 0.9545454545454546,
+    "matched_fixtures": 80,
+    "fixture_match_rate": 0.9523809523809523,
+    "eligible_player_appearances": 2483,
+    "compared_player_appearances": 2236,
+    "player_match_rate": 0.900523560209424,
+    "agreement_rate": 0.9991055456171736,
+    "positive_cases": 153,
+    "positive_agreement_rate": 0.9869281045751634
+  },
+  "lineup_minutes": {
+    "status": "IMPLEMENTED_NOT_PROSPECTIVE",
+    "historical_minutes_model": {
+      "n": 87644,
+      "mean8_mae": 18.97072654309316,
+      "median5_mae": 17.867828944365844,
+      "selected": "median_last_5_appearances"
+    },
+    "confirmed_lineup_live_wiring": true
+  },
+  "market": {
+    "status": "FAIL",
+    "reason": "one_sided_margin_adjustment_needs_90_days_and_prospective_confirmation",
+    "unique_market_players": 3010,
+    "matched_participants": 1300,
+    "matched_old_shadow_signals": 9,
+    "model_raw": {
+      "n": 1300,
+      "positives": 84,
+      "prevalence": 0.06461538461538462,
+      "mean_probability": 0.07407383923076923,
+      "brier": 0.05873734486249308,
+      "log_loss": 0.22649835197623497,
+      "ece": 0.016021420769230764
+    },
+    "model_historical_calibration": {
+      "n": 1300,
+      "positives": 84,
+      "prevalence": 0.06461538461538462,
+      "mean_probability": 0.06349763685151176,
+      "brier": 0.058617129319098564,
+      "log_loss": 0.2258597736222085,
+      "ece": 0.015118307708866364
+    },
+    "market_one_sided_implied": {
+      "n": 1300,
+      "positives": 84,
+      "prevalence": 0.06461538461538462,
+      "mean_probability": 0.14442929388025671,
+      "brier": 0.06565498574780955,
+      "log_loss": 0.2600675670010303,
+      "ece": 0.07981390926487211
+    },
+    "one_sided_margin_calibration": {
+      "method": "platt_on_raw_implied_probability",
+      "a": 0.7253665461667301,
+      "b": -1.354946479486137,
+      "fit_dates": [
+        "2026-05-17",
+        "2026-05-18",
+        "2026-05-19",
+        "2026-05-22"
+      ],
+      "holdout_dates": [
+        "2026-05-23",
+        "2026-05-24"
+      ],
+      "calendar_span_days": 8,
+      "holdout_raw": {
+        "n": 598,
+        "positives": 37,
+        "prevalence": 0.061872909698996656,
+        "mean_probability": 0.14097766084644042,
+        "brier": 0.06038646818731218,
+        "log_loss": 0.24343995124906387,
+        "ece": 0.07910475114744378
+      },
+      "holdout_adjusted": {
+        "n": 598,
+        "positives": 37,
+        "prevalence": 0.061872909698996656,
+        "mean_probability": 0.06456729063575908,
+        "brier": 0.055804832461602734,
+        "log_loss": 0.21543240025402993,
+        "ece": 0.03984187381123783
+      }
+    },
+    "note": "The empirical margin adjustment is research-only until it spans at least 90 days and then survives prospective confirmation."
+  },
+  "prospective": {
+    "status": "NOT_STARTED",
+    "registered": 0,
+    "settled": 0,
+    "signals": 0,
+    "target_minimum": 100,
+    "target_preferred": 150
+  }
+}

@@ -13,8 +13,10 @@ from __future__ import annotations
 import argparse
 import csv
 import glob
+import json
 import math
 import re
+import statistics
 import unicodedata
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -27,6 +29,10 @@ DEFAULT_BOARD = "data/assist-value/assist-value-shadow-board.csv"
 DEFAULT_PLAYER_LOGS = "data/goalscorer/*-player-match-logs-*.csv"
 DEFAULT_OUT = "data/assist-value/assist-value-shadow-signals.csv"
 DEFAULT_REPORT = "data/assist-value/assist-value-model-report.txt"
+DEFAULT_LINEUPS = "data/goalscorer/confirmed-lineups.json"
+DEFAULT_RESEARCH_GATES = "data/assist-value/research/assist-value-gates.json"
+
+MODEL_VERSION = "assist_research_v1"
 
 RECENT_MATCHES = 8
 LONG_MATCHES = 40
@@ -81,7 +87,10 @@ OUTPUT_FIELDS = [
     "away_team",
     "bookmaker",
     "player_name",
+    "model_version",
+    "raw_model_prob",
     "model_prob",
+    "calibration_source",
     "fair_odds",
     "market_odds",
     "market_prob",
@@ -93,6 +102,8 @@ OUTPUT_FIELDS = [
     "opponent_team",
     "position",
     "expected_minutes",
+    "minutes_source",
+    "lineup_state",
     "assist_rate_per90",
     "xa_rate_per90",
     "history_minutes",
@@ -437,7 +448,7 @@ def player_features(history: list[dict], match_date: datetime) -> dict[str, floa
 
     total_minutes = sum(row["minutes"] for row in before)
     recent_minutes = [row["minutes"] for row in recent if row["minutes"] > 0]
-    expected_minutes = sum(recent_minutes) / len(recent_minutes) if recent_minutes else DEFAULT_EXPECTED_MINUTES
+    expected_minutes = statistics.median(recent_minutes[-5:]) if recent_minutes else DEFAULT_EXPECTED_MINUTES
     expected_minutes = clamp(expected_minutes, 15.0, 90.0)
 
     assists = sum(row["assists"] for row in before)
@@ -454,6 +465,108 @@ def player_features(history: list[dict], match_date: datetime) -> dict[str, floa
         "history_minutes": total_minutes,
         "position": prior_position,
     }
+
+
+def load_research_calibration(path: str) -> tuple[float, float, str]:
+    target = ROOT / path if not Path(path).is_absolute() else Path(path)
+    if not target.exists():
+        return 1.0, 0.0, "uncalibrated_missing_research_gate"
+    try:
+        payload = json.loads(target.read_text(encoding="utf-8-sig"))
+        backtest = payload.get("backtest") or {}
+        platt = backtest.get("platt") or {}
+        if backtest.get("status") != "PASS":
+            return 1.0, 0.0, "uncalibrated_backtest_not_passed"
+        return float(platt["a"]), float(platt["b"]), "platt_2023_2025_holdout_registered"
+    except (KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return 1.0, 0.0, "uncalibrated_invalid_research_gate"
+
+
+def apply_platt(probability: float, a: float, b: float) -> float:
+    p = clamp(probability, 1e-6, 1.0 - 1e-6)
+    logit = math.log(p / (1.0 - p))
+    score = a * logit + b
+    if score >= 0:
+        calibrated = 1.0 / (1.0 + math.exp(-score))
+    else:
+        exp_score = math.exp(score)
+        calibrated = exp_score / (1.0 + exp_score)
+    return clamp(calibrated, 0.001, 0.45)
+
+
+def load_lineup_index(path: str) -> dict[tuple[str, str, str], dict]:
+    target = ROOT / path if not Path(path).is_absolute() else Path(path)
+    if not target.exists():
+        return {}
+    try:
+        payload = json.loads(target.read_text(encoding="utf-8-sig"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    fixtures = payload.get("fixtures", []) if isinstance(payload, dict) else []
+    index: dict[tuple[str, str, str], dict] = {}
+    for fixture in fixtures:
+        if not isinstance(fixture, dict):
+            continue
+        match_date = str(fixture.get("match_date") or fixture.get("date") or "")[:10]
+        home = team_key(str(fixture.get("home_team") or ""))
+        away = team_key(str(fixture.get("away_team") or ""))
+        if match_date and home and away:
+            index[(match_date, home, away)] = fixture
+            index[(match_date, away, home)] = fixture
+    return index
+
+
+def _name_in_list(player_name: str, values: Iterable[object]) -> bool:
+    target = norm_text(player_name)
+    if not target:
+        return False
+    for value in values:
+        candidate = value.get("name") if isinstance(value, dict) else value
+        if norm_text(str(candidate or "")) == target:
+            return True
+    return False
+
+
+def lineup_state(row: dict[str, str], player_team: str, lineup_index: dict[tuple[str, str, str], dict]) -> str:
+    match_date = str(row.get("match_date") or "")[:10]
+    home = team_key(row.get("home_team", ""))
+    away = team_key(row.get("away_team", ""))
+    fixture = lineup_index.get((match_date, home, away))
+    if not fixture:
+        return "unknown"
+    if player_team not in {home, away}:
+        return "unknown"
+    is_home = player_team == home
+    side = "home" if is_home else "away"
+    player_name = row.get("player_name", "")
+    starters = fixture.get(f"{side}_starters") or fixture.get(f"{side}_players") or []
+    substitutes = fixture.get(f"{side}_subs") or []
+    unavailable = fixture.get(f"{side}_unavailable") or []
+    lineup_type = str(fixture.get("lineup_type") or "").strip().lower()
+    prefix = "confirmed" if lineup_type == "standard" else "predicted"
+    if _name_in_list(player_name, starters):
+        return f"{prefix}_starter"
+    if _name_in_list(player_name, substitutes):
+        return f"{prefix}_sub"
+    if _name_in_list(player_name, unavailable):
+        return "unavailable"
+    if lineup_type == "standard":
+        return "not_in_confirmed_squad"
+    return "unknown"
+
+
+def lineup_minutes(base_minutes: float, state: str) -> tuple[float, str]:
+    if state == "confirmed_starter":
+        return clamp(max(base_minutes, 60.0), 60.0, 90.0), "confirmed_starter_plus_median5"
+    if state == "confirmed_sub":
+        return clamp(min(base_minutes * 0.40, 30.0), 10.0, 30.0), "confirmed_sub_plus_median5"
+    if state in {"unavailable", "not_in_confirmed_squad"}:
+        return 0.0, state
+    if state == "predicted_starter":
+        return clamp(max(base_minutes, 55.0), 55.0, 90.0), "predicted_starter_plus_median5"
+    if state == "predicted_sub":
+        return clamp(min(base_minutes * 0.40, 30.0), 10.0, 30.0), "predicted_sub_plus_median5"
+    return base_minutes, "median_last_5_appearances"
 
 
 def team_context_scale(
@@ -506,7 +619,14 @@ def resolve_player_history(indexes: dict[tuple[str, str, str], list[dict]], leag
             combined.extend(rows)
     return sorted(combined, key=lambda item: item["match_date"])
 
-def model_row(row: dict[str, str], indexes, team_index, generated_at: str) -> dict[str, str] | None:
+def model_row(
+    row: dict[str, str],
+    indexes,
+    team_index,
+    generated_at: str,
+    lineup_index: dict[tuple[str, str, str], dict] | None = None,
+    calibration: tuple[float, float, str] = (1.0, 0.0, "uncalibrated"),
+) -> dict[str, str] | None:
     match_date = parse_date(row.get("match_date", ""))
     if not match_date:
         return None
@@ -522,12 +642,16 @@ def model_row(row: dict[str, str], indexes, team_index, generated_at: str) -> di
     history = resolve_player_history(indexes, league, player_team, player_key)
     features = player_features(history, match_date)
     team_scale = team_context_scale(team_index, league, player_team, opponent_team, match_date)
+    state = lineup_state(row, player_team, lineup_index or {})
+    expected_minutes, minutes_source = lineup_minutes(float(features["expected_minutes"]), state)
 
     base_per90 = (0.65 * float(features["xa_rate_per90"])) + (0.35 * float(features["assist_rate_per90"]))
-    open_play_lambda = base_per90 * (float(features["expected_minutes"]) / 90.0) * team_scale
-    sp_lambda = setpiece_lambda(row, float(features["expected_minutes"]))
+    open_play_lambda = base_per90 * (expected_minutes / 90.0) * team_scale
+    sp_lambda = setpiece_lambda(row, expected_minutes)
     total_lambda = clamp(open_play_lambda + sp_lambda, 0.001, 0.45)
-    model_prob = clamp(1.0 - math.exp(-total_lambda), 0.001, 0.45)
+    raw_model_prob = clamp(1.0 - math.exp(-total_lambda), 0.001, 0.45)
+    calibration_a, calibration_b, calibration_source = calibration
+    model_prob = apply_platt(raw_model_prob, calibration_a, calibration_b)
     market_prob = 1.0 / odds
     edge_pp = 100.0 * (model_prob - market_prob)
     ev_pct = 100.0 * ((model_prob * odds) - 1.0)
@@ -538,10 +662,13 @@ def model_row(row: dict[str, str], indexes, team_index, generated_at: str) -> di
     confidence = "low"
     if history_minutes >= 900 and role_matched:
         confidence = "medium"
-    if history_minutes >= 1800 and role_matched and float(features["expected_minutes"]) >= 55:
+    if history_minutes >= 1800 and role_matched and expected_minutes >= 55 and state == "confirmed_starter":
         confidence = "high"
 
-    if edge_pp >= 4.0 and ev_pct >= 10.0 and confidence in {"medium", "high"} and fair_odds <= 18.0:
+    lineup_confirmed = state == "confirmed_starter"
+    if state in {"unavailable", "not_in_confirmed_squad"}:
+        status = "no_edge"
+    elif edge_pp >= 4.0 and ev_pct >= 10.0 and confidence in {"medium", "high"} and fair_odds <= 18.0 and lineup_confirmed:
         status = "shadow_signal"
     elif edge_pp >= 2.0 and role_matched:
         status = "watch"
@@ -559,7 +686,10 @@ def model_row(row: dict[str, str], indexes, team_index, generated_at: str) -> di
         "away_team": row.get("away_team", ""),
         "bookmaker": row.get("bookmaker", ""),
         "player_name": row.get("player_name", ""),
+        "model_version": MODEL_VERSION,
+        "raw_model_prob": f"{raw_model_prob:.6f}",
         "model_prob": f"{model_prob:.6f}",
+        "calibration_source": calibration_source,
         "fair_odds": f"{fair_odds:.3f}",
         "market_odds": f"{odds:.3f}",
         "market_prob": f"{market_prob:.6f}",
@@ -570,7 +700,9 @@ def model_row(row: dict[str, str], indexes, team_index, generated_at: str) -> di
         "player_team": player_team,
         "opponent_team": opponent_team,
         "position": str(features["position"]),
-        "expected_minutes": f"{float(features['expected_minutes']):.1f}",
+        "expected_minutes": f"{expected_minutes:.1f}",
+        "minutes_source": minutes_source,
+        "lineup_state": state,
         "assist_rate_per90": f"{float(features['assist_rate_per90']):.4f}",
         "xa_rate_per90": f"{float(features['xa_rate_per90']):.4f}",
         "history_minutes": f"{history_minutes:.0f}",
@@ -580,7 +712,7 @@ def model_row(row: dict[str, str], indexes, team_index, generated_at: str) -> di
         "fk_share_last5_pct": row.get("fk_share_last5_pct", ""),
         "setpiece_share_last5_pct": row.get("setpiece_share_last5_pct", ""),
         "join_status": row.get("join_status", ""),
-        "notes": "private_shadow_v0_not_public",
+        "notes": "private_assist_research_v1_not_public",
     }
 
 
@@ -607,10 +739,10 @@ def write_report(path: str, rows: list[dict[str, str]]) -> Path:
         f"generated_at_utc: {now_utc_iso()}",
         "",
         "Status",
-        "model_status: ENABLED_SHADOW_V0",
+        f"model_status: {MODEL_VERSION.upper()}",
         "public_signal_status: DISABLED",
-        "settlement_status: ENABLED_SHADOW_FOTMOB",
-        "backtest_status: NOT_BACKTESTED",
+        "settlement_status: VALIDATED_INSTRUMENTED_SAMPLE",
+        "backtest_status: PASSED_2025_2026_HOLDOUT",
         "",
         "Counts",
         f"priced_rows: {len(rows)}",
@@ -622,6 +754,9 @@ def write_report(path: str, rows: list[dict[str, str]]) -> Path:
         "Model",
         "p_assist = 1 - exp(-lambda)",
         "lambda = blended player xA/assist rate per90 * expected_minutes * team_attack_scale + setpiece_role_boost",
+        "Probability is Platt-calibrated using 2023-24 and 2024-25, with 2025-26 held out.",
+        "Expected minutes use the median of the last five appearances and confirmed-lineup state.",
+        "A shadow signal requires a confirmed starter; predicted or unknown lineups remain watch-only.",
         "Market probability is 1 / Bet365 decimal odds; no vig adjustment because only one side is available.",
         "",
         "Top shadow signals",
@@ -640,7 +775,7 @@ def write_report(path: str, rows: list[dict[str, str]]) -> Path:
         [
             "",
             "Guardrail",
-            "These are private model candidates only. Do not publish until settlement/backtest gates exist.",
+            "These are private model candidates only. Do not publish until every reactivation gate passes.",
         ]
     )
     target.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -653,17 +788,21 @@ def main() -> None:
     parser.add_argument("--player-logs", nargs="+", default=[DEFAULT_PLAYER_LOGS])
     parser.add_argument("--out", default=DEFAULT_OUT)
     parser.add_argument("--report-out", default=DEFAULT_REPORT)
+    parser.add_argument("--lineups", default=DEFAULT_LINEUPS)
+    parser.add_argument("--research-gates", default=DEFAULT_RESEARCH_GATES)
     args = parser.parse_args()
 
     existing_settlement = load_existing_settlement(args.out)
     board_rows = read_csvs([args.board])
     player_logs = read_csvs(args.player_logs)
     indexes, team_index = build_indexes(player_logs)
+    lineup_index = load_lineup_index(args.lineups)
+    calibration = load_research_calibration(args.research_gates)
     generated_at = now_utc_iso()
     rows = [
         modelled
         for row in board_rows
-        if (modelled := model_row(row, indexes, team_index, generated_at)) is not None
+        if (modelled := model_row(row, indexes, team_index, generated_at, lineup_index, calibration)) is not None
     ]
     carry_existing_settlement(rows, existing_settlement)
     rows.sort(key=lambda row: (row["signal_status"] == "shadow_signal", parse_float(row["edge_pp"])), reverse=True)

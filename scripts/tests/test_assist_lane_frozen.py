@@ -15,8 +15,9 @@ WORKFLOW = (ROOT / ".github" / "workflows" / "assist-value-shadow.yml").read_tex
 class AssistLaneFrozenTests(unittest.TestCase):
     def test_monitor_is_an_archive_not_a_signal_board(self) -> None:
         self.assertIn("Assist Value Research Archive", PAGE)
-        self.assertIn("Frozen lane, not a betting product", PAGE)
-        self.assertIn("No current candidates, P/L chart or ROI panel", PAGE)
+        self.assertIn("Frozen lane, measured rebuild in progress", PAGE)
+        self.assertIn("No candidates, P/L chart or ROI panel", PAGE)
+        self.assertIn("Hard blocked", PAGE)
         self.assertNotIn('title="Assist Value Signals"', PAGE)
         self.assertNotIn('title="League P/L"', PAGE)
 
