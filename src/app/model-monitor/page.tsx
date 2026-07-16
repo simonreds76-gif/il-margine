@@ -1538,10 +1538,13 @@ export default async function ModelMonitorPage() {
               href="/model-monitor/assist-value"
               className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-sky-500/30"
             >
-              <div className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-sky-300">Assist Value</div>
-              <div className="text-lg font-semibold text-white">Assist Shadow Monitor</div>
+              <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
+                Assist Value
+                <span className="rounded-full border border-rose-500/25 bg-rose-500/10 px-2 py-0.5 text-[9px] tracking-[0.16em] text-rose-300">Paused</span>
+              </div>
+              <div className="text-lg font-semibold text-white">Assist Research Archive</div>
               <p className="mt-2 text-sm leading-6 text-slate-400">
-                Bet365 assist odds, model edge, and set-piece-role context. Monitor-visible, not public-lab wired.
+                Frozen, unbacktested research lane. Scripts and source evidence are preserved for a future rebuild.
               </p>
             </Link>
             <Link
