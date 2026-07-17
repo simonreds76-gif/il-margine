@@ -77,6 +77,11 @@ def main() -> int:
         description="Daily odds pipeline: Pinnacle -> fair odds -> strict report + shadow profiles"
     )
     parser.add_argument("--skip-strict-report", action="store_true", help="Skip strict policy report step")
+    parser.add_argument(
+        "--skip-recent-activity",
+        action="store_true",
+        help="Skip the current-fixture form/fatigue refresh (manual diagnostics only)",
+    )
     parser.add_argument("--strict-policy-mode", choices=("base", "overlay"), default=os.environ.get("STRICT_POLICY_PRODUCTION_MODE", "base"))
     parser.add_argument("--strict-report-date", default="", help="Optional UTC date YYYY-MM-DD passed to strict report")
     parser.add_argument("--strict-report-output", default=str(STRICT_SIGNAL_PATHS.live))
@@ -107,23 +112,33 @@ def main() -> int:
     os.environ.setdefault("STRICT_HARD_CALIBRATION_LIVE", "0")
     os.environ.setdefault("STRICT_HARD_CALIBRATION_PROFILES", "strict")
 
+    if not args.skip_recent_activity:
+        run_cmd(
+            [sys.executable, str(ROOT / "scripts" / "oncourt-compute-recent-activity.py")],
+            label="1/6 Recent activity (form/fatigue/rust inputs)",
+            fatal=True,
+            timeout_seconds=step_timeout,
+        )
+    else:
+        print("\n=== 1/6 Recent activity skipped (--skip-recent-activity) ===")
+
     run_cmd(
         [sys.executable, str(ROOT / "scripts" / "pinnacle-scrape-odds.py"), "--active-leagues-only"],
-        label="1/5 Pinnacle scraper (writes to bookmaker_odds_snapshot)",
+        label="2/6 Pinnacle scraper (writes to bookmaker_odds_snapshot)",
         fatal=True,
         timeout_seconds=step_timeout,
     )
 
     run_cmd(
         [sys.executable, str(ROOT / "scripts" / "oncourt-compute-fair-odds.py"), "--skip-handicap-values"],
-        label="2/5 Fair odds pipeline",
+        label="3/6 Fair odds pipeline",
         fatal=True,
         timeout_seconds=step_timeout,
     )
 
     run_cmd(
         [sys.executable, str(ROOT / "scripts" / "compute-handicap-values.py")],
-        label="3/5 Handicap values (spread edge)",
+        label="4/6 Handicap values (spread edge)",
         fatal=False,
         timeout_seconds=step_timeout,
     )
@@ -133,7 +148,7 @@ def main() -> int:
     # nightly settlement can test the two hypotheses independently.
     run_cmd(
         [sys.executable, str(ROOT / "scripts" / "tennis-model-market-gap-audit.py")],
-        label="3b/5 Extreme model/market gap audit (research only)",
+        label="4b/6 Extreme model/market gap audit (research only)",
         fatal=False,
         timeout_seconds=step_timeout,
     )
@@ -167,7 +182,7 @@ def main() -> int:
 
         run_cmd(
             strict_cmd,
-            label=f"4a/5 Strict report (production mode: {args.strict_policy_mode}; compare: {args.strict_compare_overlay})",
+            label=f"5a/6 Strict report (production mode: {args.strict_policy_mode}; compare: {args.strict_compare_overlay})",
             fatal=False,
             timeout_seconds=step_timeout,
         )
@@ -183,7 +198,7 @@ def main() -> int:
             spread_cmd.extend(["--date", args.strict_report_date])
         run_cmd(
             spread_cmd,
-            label="4b/5 Spread v1 Shadow append",
+            label="5b/6 Spread v1 Shadow append",
             fatal=False,
             timeout_seconds=step_timeout,
             env_overrides={"SPREAD_V1_ENABLE_CORRECTION_ONLY": "1"},
@@ -200,7 +215,7 @@ def main() -> int:
             cpi_speed_cmd.extend(["--date", args.strict_report_date])
         run_cmd(
             cpi_speed_cmd,
-            label="5a/5 CPI speed-regime Shadow append",
+            label="6a/6 CPI speed-regime Shadow append",
             fatal=False,
             timeout_seconds=step_timeout,
             env_overrides={"INTERNAL_RESEARCH_LANES": "1"},
@@ -208,13 +223,13 @@ def main() -> int:
 
         run_cmd(
             [sys.executable, str(ROOT / "scripts" / "tennis-shadow-proof-report.py")],
-            label="5b/5 Tennis lane proof report",
+            label="6b/6 Tennis lane proof report",
             fatal=False,
             timeout_seconds=step_timeout,
         )
     else:
-        print("\n=== 4/5 Strict report skipped (--skip-strict-report) ===")
-        print("=== 5/5 Shadow appenders skipped (--skip-strict-report) ===")
+        print("\n=== 5/6 Strict report skipped (--skip-strict-report) ===")
+        print("=== 6/6 Shadow appenders skipped (--skip-strict-report) ===")
 
     print("\nDone. Pinnacle snapshot + daily_fair_odds updated.")
     if not args.skip_strict_report:
