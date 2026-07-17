@@ -285,6 +285,22 @@ type HistoricalGapPerformance = {
   roi_95ci_pct: [number, number] | null;
 };
 
+type GapThresholdPartition = {
+  threshold_pp: number;
+  candidates: number;
+  allowed: HistoricalGapPerformance;
+  blocked: HistoricalGapPerformance;
+  gap_blocked: HistoricalGapPerformance;
+  side_flip_blocked: HistoricalGapPerformance;
+  blocked_side_flips: number;
+};
+
+type GapThresholdProfile = {
+  description: string;
+  candidates: number;
+  cutoffs: Record<string, GapThresholdPartition>;
+};
+
 type HistoricalGapReport = {
   status: string;
   screening_verdict: string;
@@ -299,6 +315,16 @@ type HistoricalGapReport = {
     paired_spread_anomalies: number;
     ml: HistoricalGapPerformance;
     spread: HistoricalGapPerformance;
+  };
+  threshold_audit?: {
+    status: string;
+    locked_guard_pp: number;
+    thresholds_pp: number[];
+    decision: string;
+    warning: string;
+    profiles: Record<string, GapThresholdProfile>;
+    locked_10pp_by_surface: Record<string, GapThresholdPartition>;
+    locked_10pp_by_year: Record<string, GapThresholdPartition>;
   };
 };
 
@@ -835,6 +861,27 @@ function gapMetricValue(value: number | null, suffix = "%") {
   return value == null ? "n/a" : `${value >= 0 ? "+" : ""}${value.toFixed(2)}${suffix}`;
 }
 
+function gapDiagnosisLabel(row: CsvRow) {
+  const tags = String(row.diagnosis_tags || "")
+    .split("|")
+    .map((tag) => tag.trim())
+    .filter(Boolean);
+  const priority = [
+    "component_disagreement",
+    "serve_return_market_outlier",
+    "elo_market_outlier",
+    "point_shape_divergence",
+    "large_calibration_shift",
+    "low_12m_sample",
+    "inactivity_45d",
+    "partial_coverage",
+  ];
+  const selected = priority.filter((tag) => tags.includes(tag)).slice(0, 3);
+  return (selected.length > 0 ? selected : [String(row.diagnosis_primary || "unexplained")])
+    .map((tag) => tag.replaceAll("_", " "))
+    .join(" · ");
+}
+
 function ExtremeGapLab({ data }: { data: ExtremeGapLoad }) {
   const { report, historical, liveRows } = data;
   const ml = report?.ml;
@@ -844,6 +891,7 @@ function ExtremeGapLab({ data }: { data: ExtremeGapLoad }) {
   const reviewReason = report?.weekly_review?.reason ?? "Waiting for enough settled prices and closing-line evidence.";
   const trailing30Spread = report?.windows?.last_30_days?.spread;
   const longEvSpread = report?.long_ev_100_plus?.spread;
+  const thresholdProfiles = historical?.threshold_audit?.profiles ?? {};
   const currentMlRows = liveRows.filter((row) => row.bet_type !== "spread").slice(0, 8);
   const spreadByAnomaly = new Map(
     liveRows.filter((row) => row.bet_type === "spread").map((row) => [row.anomaly_id, row]),
@@ -942,6 +990,42 @@ function ExtremeGapLab({ data }: { data: ExtremeGapLoad }) {
             <p className="mt-2 font-semibold tabular-nums text-slate-100">{historical?.spread_rescues ?? 0} / {historical?.ml_losses_with_spread ?? 0}</p>
           </div>
         </div>
+        {Object.keys(thresholdProfiles).length > 0 ? (
+          <div className="mt-4 border-t border-cyan-500/15 pt-4">
+            <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-300">Is 10pp the right cutoff?</p>
+                <p className="mt-1 text-xs leading-5 text-slate-400">
+                  Same historical sample at 5, 10, 15 and 20pp. Favourite-side flips remain a separate hard guard, so they cannot distort the gap comparison.
+                </p>
+              </div>
+              <StatusPill label="DESCRIPTIVE - LIVE RULE LOCKED" tone={badgeTones.deferred} />
+            </div>
+            <div className="mt-3 grid gap-3 xl:grid-cols-3">
+              {Object.entries(thresholdProfiles).map(([profile, payload]) => (
+                <div key={profile} className="overflow-hidden rounded-xl border border-slate-800 bg-slate-950/55">
+                  <div className="border-b border-slate-800 px-3 py-3">
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-200">{profile.replaceAll("_", " ")}</p>
+                    <p className="mt-1 text-[10px] leading-4 text-slate-500">{payload.description} n={payload.candidates}</p>
+                  </div>
+                  <div className="grid grid-cols-[44px_1fr_1fr] gap-2 border-b border-slate-800 px-3 py-2 text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-600">
+                    <span>Cut</span><span>Allowed</span><span>Gap blocked</span>
+                  </div>
+                  {Object.entries(payload.cutoffs).map(([cutoff, partition]) => (
+                    <div key={cutoff} className={`grid grid-cols-[44px_1fr_1fr] gap-2 border-b border-slate-900 px-3 py-2.5 text-[11px] last:border-0 ${Number(cutoff) === historical?.threshold_audit?.locked_guard_pp ? "bg-cyan-500/[0.07]" : ""}`}>
+                      <span className={Number(cutoff) === historical?.threshold_audit?.locked_guard_pp ? "font-semibold text-cyan-200" : "text-slate-500"}>{cutoff}pp</span>
+                      <span className="tabular-nums text-slate-300">n={partition.allowed.settled} <b className={metricTone(partition.allowed.roi_pct)}>{gapMetricValue(partition.allowed.roi_pct)}</b></span>
+                      <span className="tabular-nums text-slate-300">n={partition.gap_blocked.settled} <b className={metricTone(partition.gap_blocked.roi_pct)}>{gapMetricValue(partition.gap_blocked.roi_pct)}</b></span>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+            <p className="mt-3 text-[10px] leading-4 text-amber-200/80">
+              ROI here is retrospective diagnosis, not a promotion result. A cutoff cannot be selected from the same sample used to compare it; forward ROI and CLV remain mandatory.
+            </p>
+          </div>
+        ) : null}
       </div>
 
       <div className="mt-5 overflow-hidden rounded-2xl border border-slate-800 bg-slate-950/45">
@@ -950,7 +1034,7 @@ function ExtremeGapLab({ data }: { data: ExtremeGapLoad }) {
         </div>
         {currentMlRows.map((row) => {
           const pairedSpread = spreadByAnomaly.get(row.anomaly_id);
-          const cause = (row.diagnosis_primary || "unexplained").replaceAll("_", " ");
+          const cause = gapDiagnosisLabel(row);
           return (
             <div key={`${row.anomaly_id}-${row.signal_profile}`} className="grid grid-cols-[minmax(0,1fr)_64px_64px] gap-3 border-b border-slate-900 px-4 py-3 text-xs last:border-0 sm:grid-cols-[minmax(0,1.5fr)_80px_82px_minmax(0,1fr)]">
               <div className="min-w-0">
