@@ -98,6 +98,32 @@ class HistoricalGapReplayTests(unittest.TestCase):
         self.assertEqual(report["screening_verdict"], "INSUFFICIENT_REAL_SPREAD_SAMPLE")
         self.assertEqual(report["long_ev_100_plus"]["spread"]["settled"], 5)
 
+    def test_threshold_partition_is_disjoint_and_keeps_side_flips_blocked(self) -> None:
+        rows = [
+            {"ml_outcome": "WIN", "ml_pnl_units": 1.0, "model_market_gap_pp": 8.0, "side_flip": 0},
+            {"ml_outcome": "LOSS", "ml_pnl_units": -1.0, "model_market_gap_pp": 12.0, "side_flip": 0},
+            {"ml_outcome": "LOSS", "ml_pnl_units": -1.0, "model_market_gap_pp": 4.0, "side_flip": 1},
+        ]
+        result = MODEL.threshold_partition(rows, 10.0)
+        self.assertEqual(result["allowed"]["settled"], 1)
+        self.assertEqual(result["blocked"]["settled"], 2)
+        self.assertEqual(result["gap_blocked"]["settled"], 1)
+        self.assertEqual(result["side_flip_blocked"]["settled"], 1)
+        self.assertEqual(result["blocked_side_flips"], 1)
+
+    def test_registered_profiles_are_evaluated_without_the_gap_guard(self) -> None:
+        row = {
+            "surface": "Hard",
+            "series": "Masters 1000",
+            "confidence": "high",
+            "ml_ev_pct": 16.0,
+            "short_favorite_guard": 0,
+        }
+        self.assertTrue(MODEL.profile_eligible(row, "strict"))
+        self.assertTrue(MODEL.profile_eligible(row, "volume_200"))
+        row["short_favorite_guard"] = 1
+        self.assertFalse(MODEL.profile_eligible(row, "strict"))
+
 
 if __name__ == "__main__":
     unittest.main()

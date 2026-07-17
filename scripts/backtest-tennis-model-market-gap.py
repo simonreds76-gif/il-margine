@@ -29,6 +29,9 @@ DEFAULT_PAIRED_RESULTS = ROOT / "data" / "backtest" / "tennis-model-market-gap-h
 DEFAULT_JSON = ROOT / "data" / "backtest" / "tennis-model-market-gap-historical-report.json"
 DEFAULT_TEXT = ROOT / "data" / "backtest" / "tennis-model-market-gap-historical-report.txt"
 SIDE_FLIP_BUFFER = 0.03
+SHORT_FAVORITE_PROB_MAX = 0.80
+THRESHOLD_SWEEP_PP = (5.0, 10.0, 15.0, 20.0)
+LOCKED_GUARD_PP = 10.0
 
 
 def load_csv(path: Path) -> list[dict[str, str]]:
@@ -258,6 +261,13 @@ def replay_rows(
             "selected_ml_odds": round(selected_odds, 4),
             "ml_ev_pct": round(selected_ev, 4),
             "model_market_gap_pp": round(favourite_gap_pp, 4),
+            "confidence": (row.get("confidence") or "").strip().lower(),
+            "model_favorite_prob": round(max(model_p1, model_p2), 8),
+            "market_favorite_prob": round(max(market_p1, market_p2), 8),
+            "short_favorite_guard": int(
+                max(model_p1, model_p2) > SHORT_FAVORITE_PROB_MAX
+                or max(market_p1, market_p2) > SHORT_FAVORITE_PROB_MAX
+            ),
             "ev_bucket": ev_bucket(selected_ev),
             "gap_bucket": gap_bucket(favourite_gap_pp),
             "diagnosis_primary": diagnosis(row, model_p1, market_p1),
@@ -395,12 +405,118 @@ def segment_report(rows: list[dict[str, Any]], field: str) -> dict[str, Any]:
     return output
 
 
+def profile_eligible(row: dict[str, Any], profile: str) -> bool:
+    """Apply the registered profile rules without the model/market gap guard."""
+    if bool(int(row.get("short_favorite_guard") or 0)):
+        return False
+    surface = str(row.get("surface") or "")
+    series = str(row.get("series") or "")
+    confidence = str(row.get("confidence") or "").lower()
+    value = float(row.get("ml_ev_pct") or 0.0)
+    if profile == "broad_value_10":
+        return value >= 10.0
+    if profile == "strict":
+        return surface == "Hard" and series == "Masters 1000" and confidence == "high" and value >= 10.0
+    if profile == "volume_200":
+        if confidence not in {"high", "medium"}:
+            return False
+        rules = (
+            ("Hard", "Masters 1000", "high", 15.0),
+            ("Hard", "Masters 1000", "medium", 30.0),
+            ("Hard", "Grand Slam", confidence, 5.0),
+            ("Hard", "ATP500", confidence, 10.0),
+            ("Clay", "ATP500", confidence, 10.0),
+        )
+        return any(
+            surface == rule_surface
+            and series == rule_series
+            and confidence == rule_confidence
+            and value >= min_value
+            for rule_surface, rule_series, rule_confidence, min_value in rules
+        )
+    raise ValueError(f"Unknown threshold-audit profile: {profile}")
+
+
+def threshold_partition(rows: list[dict[str, Any]], threshold_pp: float) -> dict[str, Any]:
+    allowed = [
+        row
+        for row in rows
+        if not bool(int(row.get("side_flip") or 0))
+        and float(row.get("model_market_gap_pp") or 0.0) <= threshold_pp
+    ]
+    gap_blocked = [
+        row
+        for row in rows
+        if not bool(int(row.get("side_flip") or 0))
+        and float(row.get("model_market_gap_pp") or 0.0) > threshold_pp
+    ]
+    side_flip_blocked = [row for row in rows if bool(int(row.get("side_flip") or 0))]
+    blocked = gap_blocked + side_flip_blocked
+    return {
+        "threshold_pp": threshold_pp,
+        "candidates": len(rows),
+        "allowed": performance(allowed, "ml", include_ci=False),
+        "blocked": performance(blocked, "ml", include_ci=False),
+        "gap_blocked": performance(gap_blocked, "ml", include_ci=False),
+        "side_flip_blocked": performance(side_flip_blocked, "ml", include_ci=False),
+        "blocked_side_flips": len(side_flip_blocked),
+    }
+
+
+def build_threshold_audit(universe: list[dict[str, Any]]) -> dict[str, Any]:
+    profiles = {
+        "broad_value_10": "All otherwise-eligible selections with raw value >=10%.",
+        "strict": "Hard | Masters 1000 | high confidence | raw value >=10%.",
+        "volume_200": "Current registered volume_200 cells and value floors.",
+    }
+    profile_reports: dict[str, Any] = {}
+    for profile, description in profiles.items():
+        candidates = [row for row in universe if profile_eligible(row, profile)]
+        profile_reports[profile] = {
+            "description": description,
+            "candidates": len(candidates),
+            "cutoffs": {
+                f"{threshold:g}": threshold_partition(candidates, threshold)
+                for threshold in THRESHOLD_SWEEP_PP
+            },
+        }
+
+    broad = [row for row in universe if profile_eligible(row, "broad_value_10")]
+    fixed_surface = {
+        surface: threshold_partition(
+            [row for row in broad if str(row.get("surface") or "unknown") == surface],
+            LOCKED_GUARD_PP,
+        )
+        for surface in sorted({str(row.get("surface") or "unknown") for row in broad})
+    }
+    fixed_year = {
+        year: threshold_partition(
+            [row for row in broad if str(row.get("year") or "unknown") == year],
+            LOCKED_GUARD_PP,
+        )
+        for year in sorted({str(row.get("year") or "unknown") for row in broad})
+    }
+    return {
+        "status": "DESCRIPTIVE_ONLY_NO_AUTOMATIC_POLICY_CHANGE",
+        "locked_guard_pp": LOCKED_GUARD_PP,
+        "thresholds_pp": list(THRESHOLD_SWEEP_PP),
+        "short_favorite_guard_preserved": "model or market favourite probability >80%",
+        "side_flip_guard_preserved": True,
+        "profiles": profile_reports,
+        "locked_10pp_by_surface": fixed_surface,
+        "locked_10pp_by_year": fixed_year,
+        "decision": "KEEP_LOCKED_PENDING_FORWARD_ROI_AND_CLV",
+        "warning": "Do not select the best cutoff from this same retrospective sample.",
+    }
+
+
 def build_report(
     rows: list[dict[str, Any]],
     paired: list[dict[str, Any]],
     source_rows: int,
     reasons: Counter[str],
     paired_reasons: Counter[str] | None = None,
+    universe: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     ml_losses = [row for row in paired if row.get("ml_outcome") == "LOSS"]
     spread_rescues = sum(row.get("spread_outcome") == "WIN" for row in ml_losses)
@@ -432,6 +548,7 @@ def build_report(
             "spread": performance(long_ev_paired, "spread"),
         },
         "screening_verdict": verdict,
+        "threshold_audit": build_threshold_audit(universe or rows),
         "segments": {
             field: segment_report(rows, field)
             for field in ("year", "surface", "series", "ev_bucket", "gap_bucket", "diagnosis_primary")
@@ -481,6 +598,27 @@ def report_text(report: dict[str, Any]) -> str:
     ]
     for year, segment in report["segments"]["year"].items():
         lines.append(f"  {year}: ML {format_perf(segment['ml'])} | Spread {format_perf(segment['spread'])}")
+    threshold_audit = report["threshold_audit"]
+    lines.extend([
+        "",
+        "Gap guard threshold audit (descriptive only)",
+        "  Cutoffs are compared on the same historical sample. The live 10pp rule is not auto-changed.",
+    ])
+    for profile, payload in threshold_audit["profiles"].items():
+        lines.append(f"  [{profile}] {payload['description']}")
+        for cutoff, result in payload["cutoffs"].items():
+            lines.append(
+                f"    {cutoff}pp: allowed {format_perf(result['allowed'])} | "
+                f"gap-blocked {format_perf(result['gap_blocked'])} | "
+                f"side-flips {format_perf(result['side_flip_blocked'])}"
+            )
+    lines.append("  Locked 10pp surface cuts (broad value >=10%)")
+    for surface, result in threshold_audit["locked_10pp_by_surface"].items():
+        lines.append(
+            f"    {surface}: allowed {format_perf(result['allowed'])} | "
+            f"gap-blocked {format_perf(result['gap_blocked'])} | "
+            f"side-flips {format_perf(result['side_flip_blocked'])}"
+        )
     lines.extend(["", "Limitations"] + [f"- {item}" for item in report["limitations"]])
     return "\n".join(lines) + "\n"
 
@@ -520,14 +658,21 @@ def main() -> int:
     history_rows: list[dict[str, str]] = []
     for path in sorted(Path(args.history_dir).glob("pinnacle-history-*.csv")):
         history_rows.extend(load_csv(path))
-    rows, reasons = replay_rows(backtest_rows, {}, args.min_ev_pct, args.min_gap_pp)
+    universe, reasons = replay_rows(backtest_rows, {}, -1_000_000_000.0, 1_000_000_000.0)
+    rows = [
+        row
+        for row in universe
+        if float(row["ml_ev_pct"]) >= args.min_ev_pct
+        or float(row["model_market_gap_pp"]) >= args.min_gap_pp
+        or bool(int(row.get("side_flip") or 0))
+    ]
     paired_rows, paired_reasons = replay_paired_spreads(
         spread_rows,
         history_index(history_rows),
         args.min_ev_pct,
         args.min_gap_pp,
     )
-    report = build_report(rows, paired_rows, len(backtest_rows), reasons, paired_reasons)
+    report = build_report(rows, paired_rows, len(backtest_rows), reasons, paired_reasons, universe=universe)
     results_path, paired_results_path, json_path, text_path = Path(args.results), Path(args.paired_results), Path(args.json), Path(args.text)
     write_csv(results_path, rows)
     write_csv(paired_results_path, paired_rows)
