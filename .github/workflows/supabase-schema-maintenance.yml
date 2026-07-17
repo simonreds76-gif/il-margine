@@ -10,6 +10,7 @@ on:
         type: choice
         options:
           - bookmaker-history-schedule
+          - run-status-active-cadence
 
 permissions:
   contents: read
@@ -48,4 +49,9 @@ jobs:
           fi
 
       - name: Apply bookmaker history schedule columns
+        if: inputs.task == 'bookmaker-history-schedule'
         run: python scripts/migrate-bookmaker-odds-history-schedule.py
+
+      - name: Apply active run-status cadence
+        if: inputs.task == 'run-status-active-cadence'
+        run: python scripts/migrate-run-status-active-cadence.py
