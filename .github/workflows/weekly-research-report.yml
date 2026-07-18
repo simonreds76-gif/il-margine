@@ -73,6 +73,8 @@ jobs:
           python scripts/team-fouls-f2-folds.py
           python scripts/fouls-definition-agreement.py --allow-empty
           python scripts/tennis-model-variants-shadow.py
+          python scripts/backtest-tennis-model-market-gap.py
+          python scripts/tennis-model-market-gap-report.py
           python scripts/backtest-tennis-player-props-v2.py
           python scripts/tennis-props-market-observations.py
           python scripts/tennis-derivatives-pinnacle-coverage.py --allow-missing-creds
@@ -160,6 +162,10 @@ jobs:
             data/football-form/team-fouls-fotmob-agreement.md
             data/backtest/model-variants-shadow.csv
             data/backtest/model-variants-shadow-report.txt
+            data/backtest/tennis-model-market-gap-historical-report.json
+            data/backtest/tennis-model-market-gap-historical-report.txt
+            data/backtest/tennis-model-market-gap-report.json
+            data/backtest/tennis-model-market-gap-report.txt
             data/tennis-props/backtest/aces-dfs-v2-rung1-gate.json
             data/tennis-props/backtest/aces-dfs-v2-rung1-report.txt
             data/tennis-props/shadow/market-observations.csv
