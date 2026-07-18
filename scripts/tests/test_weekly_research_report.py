@@ -64,6 +64,16 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertIn("Inactive tennis research (not tips)", message)
         self.assertLessEqual(len(message), 4096)
 
+    def test_tennis_only_telegram_report_is_complete_and_compact(self) -> None:
+        message = REPORT["tennis_telegram_text"](REPORT["build_payload"]())
+        self.assertIn("Il Margine weekly tennis evidence", message)
+        self.assertIn("Strict [CORE]", message)
+        self.assertIn("Volume 200 [VOLUME]", message)
+        self.assertIn("Strict gap 10-20pp [0.5u provisional]", message)
+        self.assertIn("Inactive research (not tips)", message)
+        self.assertIn("Aces/DF vs Bet365", message)
+        self.assertLessEqual(len(message), 4096)
+
 
 if __name__ == "__main__":
     unittest.main()
