@@ -328,6 +328,47 @@ type HistoricalGapReport = {
   };
 };
 
+type GuardPerformance = {
+  bets: number;
+  wins: number;
+  losses: number;
+  pnl_units: number;
+  roi_pct: number | null;
+  win_rate_pct: number | null;
+  avg_odds: number | null;
+};
+
+type GuardReplayEntry = {
+  flagged: GuardPerformance;
+  unique: GuardPerformance;
+  marginal_removed: GuardPerformance;
+  survivors_without_this_guard: GuardPerformance;
+  first_hit_bets: number;
+};
+
+type GuardProfileAudit = {
+  before_guards: GuardPerformance;
+  after_all_replayable_guards: GuardPerformance;
+  blocked_by_any: GuardPerformance;
+  guards: Record<string, GuardReplayEntry>;
+};
+
+type GuardInventoryEntry = {
+  id: string;
+  decision: string;
+  evidence: string;
+  live_scope?: string;
+};
+
+type TennisGuardAudit = {
+  generated_at: string;
+  status: string;
+  rows_loaded: number;
+  profile_descriptions: Record<string, string>;
+  profiles: Record<string, GuardProfileAudit>;
+  inventory: Record<string, GuardInventoryEntry[]>;
+};
+
 const badgeTones = {
   live: "border-emerald-500/25 bg-emerald-500/10 text-emerald-300",
   shadow: "border-cyan-500/25 bg-cyan-500/10 text-cyan-300",
@@ -1056,6 +1097,167 @@ function ExtremeGapLab({ data }: { data: ExtremeGapLoad }) {
   );
 }
 
+const guardLabels: Record<string, string> = {
+  model_favourite_below_1_25: "Model favourite <1.25",
+  market_favourite_below_1_25: "Pinnacle favourite <1.25",
+  model_market_side_flip: "Model / market side flip",
+  model_market_gap_above_10pp: "Model / market gap >10pp",
+  atp500_hard_short_favourite: "ATP500 Hard favourite <1.80",
+  masters_hard_heavy_favourite_dog: "Masters Hard heavy-favourite dog",
+};
+
+function guardDecisionTone(decision: string): string {
+  if (decision.startsWith("KEEP")) return badgeTones.live;
+  if (decision.includes("SHADOW") || decision.includes("PROSPECTIVE") || decision.includes("TRACK")) return badgeTones.shadow;
+  if (decision === "STRATEGY_DEFINITION" || decision === "PRODUCT_STATUS" || decision === "OFF") return badgeTones.deferred;
+  return badgeTones.disabled;
+}
+
+function guardRoi(metric: GuardPerformance | undefined): string {
+  if (!metric || metric.roi_pct == null) return "n/a";
+  return `${metric.roi_pct >= 0 ? "+" : ""}${metric.roi_pct.toFixed(2)}%`;
+}
+
+function TennisGuardAuditCard({ audit }: { audit: TennisGuardAudit | null }) {
+  if (!audit) {
+    return (
+      <section id="guard-audit" className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-5">
+        <div className="flex flex-wrap items-center gap-2">
+          <h2 className="text-xl font-semibold text-slate-100">Tennis Guard Audit</h2>
+          <StatusPill label="NOT RUN" tone={badgeTones.disabled} />
+        </div>
+        <p className="mt-2 text-sm text-slate-400">
+          Run `python scripts/tennis-guard-audit.py` to replay every reconstructable ML guard and expose the remaining
+          prospective-only protections.
+        </p>
+      </section>
+    );
+  }
+
+  const replayable = audit.inventory.replayable_ml_guards ?? [];
+  const strict = audit.profiles.strict;
+  const replayEntries = replayable.map((item) => ({ item, replay: strict?.guards[item.id] }));
+  const strictBlockedBetter =
+    strict?.blocked_by_any.roi_pct != null &&
+    strict.after_all_replayable_guards.roi_pct != null &&
+    strict.blocked_by_any.roi_pct > strict.after_all_replayable_guards.roi_pct;
+
+  return (
+    <section id="guard-audit" className="rounded-3xl border border-amber-500/20 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.12),transparent_34%),linear-gradient(135deg,rgba(15,23,42,0.97),rgba(2,6,23,0.98))] p-5 md:p-6">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-300">Guard control</p>
+            <StatusPill label="AUDIT ONLY" tone={badgeTones.disabled} />
+          </div>
+          <h2 className="mt-3 text-2xl font-semibold text-slate-50">Every filter, its evidence and what it removed</h2>
+          <p className="mt-2 max-w-4xl text-sm leading-6 text-slate-400">
+            Historical blocked ROI is diagnostic, not permission to invert a rule. Unique rows show each guard&apos;s
+            contribution after overlap; spread conflicts and probability modifiers stay separate until their own
+            prospective or ablation tests exist.
+          </p>
+        </div>
+        <div className="rounded-xl border border-slate-800 bg-slate-950/55 px-4 py-3 text-xs text-slate-400">
+          <p><span className="font-semibold text-slate-200">{audit.rows_loaded.toLocaleString()}</span> ATP matches</p>
+          <p className="mt-1">2022-2025 identity-clean replay</p>
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-3 lg:grid-cols-3">
+        {Object.entries(audit.profiles).map(([profileName, profile]) => (
+          <div key={profileName} className="rounded-2xl border border-slate-800 bg-slate-950/55 p-4">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+              {profileName.replaceAll("_", " ")}
+            </p>
+            <p className="mt-2 text-xs leading-5 text-slate-400">{audit.profile_descriptions[profileName]}</p>
+            <div className="mt-4 grid grid-cols-3 gap-2 text-xs">
+              <div>
+                <p className="text-slate-600">Before</p>
+                <p className="mt-1 font-semibold tabular-nums text-slate-200">{profile.before_guards.bets}</p>
+                <p className={cn("mt-0.5 tabular-nums", metricTone(profile.before_guards.roi_pct))}>{guardRoi(profile.before_guards)}</p>
+              </div>
+              <div>
+                <p className="text-slate-600">Allowed</p>
+                <p className="mt-1 font-semibold tabular-nums text-slate-200">{profile.after_all_replayable_guards.bets}</p>
+                <p className={cn("mt-0.5 tabular-nums", metricTone(profile.after_all_replayable_guards.roi_pct))}>{guardRoi(profile.after_all_replayable_guards)}</p>
+              </div>
+              <div>
+                <p className="text-slate-600">Blocked</p>
+                <p className="mt-1 font-semibold tabular-nums text-slate-200">{profile.blocked_by_any.bets}</p>
+                <p className={cn("mt-0.5 tabular-nums", metricTone(profile.blocked_by_any.roi_pct))}>{guardRoi(profile.blocked_by_any)}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-5 overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/45">
+        <table className="min-w-full text-left text-xs">
+          <thead className="border-b border-slate-800 text-[10px] uppercase tracking-[0.14em] text-slate-500">
+            <tr>
+              <th className="px-4 py-3 font-semibold">Strict ML guard</th>
+              <th className="px-3 py-3 font-semibold">Decision</th>
+              <th className="px-3 py-3 font-semibold">Flagged</th>
+              <th className="px-3 py-3 font-semibold">Blocked ROI</th>
+              <th className="px-3 py-3 font-semibold">Unique</th>
+              <th className="px-4 py-3 font-semibold">Evidence status</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-900 text-slate-300">
+            {replayEntries.map(({ item, replay }) => (
+              <tr key={item.id}>
+                <td className="px-4 py-3 font-semibold text-slate-100">{guardLabels[item.id] ?? item.id.replaceAll("_", " ")}</td>
+                <td className="px-3 py-3"><StatusPill label={item.decision.replaceAll("_", " ")} tone={guardDecisionTone(item.decision)} /></td>
+                <td className="px-3 py-3 tabular-nums">{replay?.flagged.bets ?? 0}</td>
+                <td className={cn("px-3 py-3 font-semibold tabular-nums", metricTone(replay?.flagged.roi_pct))}>{guardRoi(replay?.flagged)}</td>
+                <td className="px-3 py-3 tabular-nums">{replay?.unique.bets ?? 0} / {guardRoi(replay?.unique)}</td>
+                <td className="max-w-md px-4 py-3 leading-5 text-slate-400">{item.evidence}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <details className="mt-4 rounded-2xl border border-slate-800 bg-slate-950/40 p-4">
+        <summary className="cursor-pointer text-sm font-semibold text-slate-200">Show spread guards, model modifiers and operational filters</summary>
+        <div className="mt-4 grid gap-3 lg:grid-cols-3">
+          {Object.entries(audit.inventory)
+            .filter(([category]) => category !== "replayable_ml_guards")
+            .map(([category, entries]) => (
+              <div key={category} className="rounded-xl border border-slate-800/80 bg-slate-950/55 p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-500">{category.replaceAll("_", " ")}</p>
+                <div className="mt-3 space-y-3">
+                  {entries.map((entry) => (
+                    <div key={entry.id}>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="text-xs font-semibold text-slate-200">{entry.id.replaceAll("_", " ")}</p>
+                        <StatusPill label={entry.decision.replaceAll("_", " ")} tone={guardDecisionTone(entry.decision)} />
+                      </div>
+                      <p className="mt-1 text-[11px] leading-5 text-slate-500">{entry.evidence}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+        </div>
+      </details>
+
+      {strictBlockedBetter ? (
+        <p className="mt-4 rounded-xl border border-rose-500/20 bg-rose-500/5 px-4 py-3 text-xs leading-5 text-rose-100">
+          Critical finding: strict bets blocked by the current combined replay returned better historically than the
+          allowed set. The model-favourite &lt;1.25 guard remains supported, but the blanket 10pp and side-flip vetoes are
+          under review and must be measured separately going forward.
+        </p>
+      ) : (
+        <p className="mt-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 px-4 py-3 text-xs leading-5 text-emerald-100">
+          Combined strict filtering improved historical ROI in the current replay. Individual guards still require
+          overlap-aware attribution before any threshold changes.
+        </p>
+      )}
+    </section>
+  );
+}
+
 async function loadExtremeGapLab(): Promise<ExtremeGapLoad> {
   const [reportText, historicalText, liveText] = await Promise.all([
     readKnownFile("data/backtest/tennis-model-market-gap-report.json"),
@@ -1079,6 +1281,16 @@ async function loadExtremeGapLab(): Promise<ExtremeGapLoad> {
     }
   }
   return { report, historical, liveRows: liveText ? parseCsv(liveText) : [] };
+}
+
+async function loadTennisGuardAudit(): Promise<TennisGuardAudit | null> {
+  const text = await readKnownFile("data/backtest/tennis-guard-audit.json");
+  if (!text) return null;
+  try {
+    return JSON.parse(text) as TennisGuardAudit;
+  } catch {
+    return null;
+  }
 }
 
 async function loadProofReport(): Promise<ProofReportLoad | null> {
@@ -1940,7 +2152,7 @@ export default async function TennisMonitorPage() {
     readKnownFile("data/backtest/vnext-counts-identity-check.txt"),
   ]);
   const vnextSummary = parseVNextResearchSummary(vnextReport, identityReport, residualReport, countsIdentityReport);
-  const extremeGapLab = await loadExtremeGapLab();
+  const [extremeGapLab, guardAudit] = await Promise.all([loadExtremeGapLab(), loadTennisGuardAudit()]);
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
@@ -1958,6 +2170,10 @@ export default async function TennisMonitorPage() {
 
         <div className="mt-6">
           <ExtremeGapLab data={extremeGapLab} />
+        </div>
+
+        <div className="mt-6">
+          <TennisGuardAuditCard audit={guardAudit} />
         </div>
 
         <div className="mt-6">
@@ -1995,6 +2211,15 @@ export default async function TennisMonitorPage() {
             )}
           >
             Side-flip ledger
+          </a>
+          <a
+            href="#guard-audit"
+            className={cn(
+              "rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] transition-colors",
+              "border-amber-500/30 bg-amber-500/10 text-amber-200 hover:border-amber-400/60",
+            )}
+          >
+            Guard audit
           </a>
           <a
             href="#cpi-surface-speed"
