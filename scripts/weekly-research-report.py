@@ -29,6 +29,21 @@ TENNIS_PROPS_OBSERVATIONS = ROOT / "data" / "tennis-props" / "shadow" / "market-
 ASSIST_GATES = ROOT / "data" / "assist-value" / "research" / "assist-value-gates.json"
 ASSIST_PROSPECTIVE = ROOT / "data" / "assist-value" / "research" / "assist-value-v1-prospective.csv"
 AUTOMATION_BUDGET = ROOT / "data" / "ops" / "automation-budget-report.json"
+TENNIS_GAP_REPORT = ROOT / "data" / "backtest" / "tennis-model-market-gap-report.json"
+TENNIS_LANE_FILES = {
+    "strict": ROOT / "data" / "backtest" / "strict-policy-performance-weekly.csv",
+    "volume_200": ROOT / "data" / "backtest" / "strict-policy-performance-volume200-weekly.csv",
+    "spread_v1": ROOT / "data" / "backtest" / "strict-policy-performance-spreadv1-weekly.csv",
+    "grass_bo3": ROOT / "data" / "backtest" / "strict-policy-performance-grass_bo3-weekly.csv",
+    "clay_bo3": ROOT / "data" / "backtest" / "strict-policy-performance-clay_bo3-weekly.csv",
+    "cpi_speed": ROOT / "data" / "backtest" / "strict-policy-performance-cpi_speed-weekly.csv",
+    "challenger": ROOT / "data" / "backtest" / "strict-policy-performance-challenger-ml-weekly.csv",
+}
+TENNIS_CLV_FILES = {
+    "strict": ROOT / "data" / "backtest" / "strict-clv-audit-2026.csv",
+    "volume_200": ROOT / "data" / "backtest" / "strict-clv-audit-volume200-2026.csv",
+    "spread_v1": ROOT / "data" / "backtest" / "strict-clv-audit-spreadv1-2026.csv",
+}
 
 TEAM_SHOTS_MODEL = "canonical_form_v3_ema20_nb"
 CORNERS_MODEL = "canonical_form_v0"
@@ -300,6 +315,79 @@ def clv_summary(rows: list[dict[str, str]]) -> dict[str, Any]:
     }
 
 
+def tennis_lane_performance(path: Path) -> dict[str, Any]:
+    rows = load_csv(path)
+    if not rows:
+        return {"status": "MISSING", "settled": 0, "pnl_units": 0.0, "roi_pct": None}
+
+    latest_generated = max(str(row.get("generated_utc") or "") for row in rows)
+    latest_rows = [row for row in rows if str(row.get("generated_utc") or "") == latest_generated]
+
+    def select(period: str) -> dict[str, str] | None:
+        candidates = [
+            row
+            for row in latest_rows
+            if row.get("scope") == "all_time"
+            and row.get("eval_period") == period
+            and row.get("league_scope") == "combined"
+            and row.get("policy_mode") == "base"
+            and not str(row.get("bet_type") or "").strip()
+        ]
+        return candidates[0] if candidates else None
+
+    # Current-policy evidence is preferred; older files may only contain overall rows.
+    row = select("clean") or select("overall")
+    if row is None:
+        return {
+            "status": "NO_COMBINED_ROW",
+            "generated_at": latest_generated,
+            "settled": 0,
+            "pnl_units": 0.0,
+            "roi_pct": None,
+        }
+    return {
+        "status": "OK",
+        "generated_at": latest_generated,
+        "as_of_date": row.get("as_of_date") or "",
+        "evidence_period": row.get("eval_period") or "overall",
+        "signals": int(number(row.get("signals"))),
+        "settled": int(number(row.get("settled"))),
+        "pending": int(number(row.get("unsettled"))),
+        "wins": int(number(row.get("wins"))),
+        "losses": int(number(row.get("losses"))),
+        "staked_units": round(number(row.get("staked_units")), 4),
+        "pnl_units": round(number(row.get("pnl_units")), 4),
+        "roi_pct": finite_float(row.get("roi_pct")),
+    }
+
+
+def tennis_lane_clv(path: Path) -> dict[str, Any]:
+    rows = load_csv(path)
+    values = [
+        value
+        for value in (finite_float(row.get("clv_implied_delta_pct")) for row in rows)
+        if value is not None
+    ]
+    return {
+        "rows": len(values),
+        "avg_clv_pct": round(avg(values), 4) if values else None,
+        "positive_clv_pct": round(100.0 * sum(value > 0 for value in values) / len(values), 2) if values else None,
+    }
+
+
+def tennis_model_evidence_summary() -> dict[str, Any]:
+    lanes = {name: tennis_lane_performance(path) for name, path in TENNIS_LANE_FILES.items()}
+    for name, path in TENNIS_CLV_FILES.items():
+        lanes.setdefault(name, {})["clv"] = tennis_lane_clv(path)
+    gap_report = load_json(TENNIS_GAP_REPORT)
+    replacements = ((gap_report.get("ml_guard_replacement") or {}).get("experiments") or {})
+    return {
+        "lanes": lanes,
+        "gap_status": (gap_report.get("ml_guard_replacement") or {}).get("status", "NOT_RUN"),
+        "gap_replacements": replacements,
+    }
+
+
 def empty_bet_summary() -> dict[str, Any]:
     return {
         "n": 0,
@@ -539,6 +627,7 @@ def build_payload() -> dict[str, Any]:
     team_clv_rows = load_csv(OUT_DIR / "team-shots-v3-ema20-clv-monitor.csv")
     corners_clv_rows = load_csv(OUT_DIR / "corners-v0-clv-monitor.csv")
     tennis_gap_guard = ml_gap_guard_summary()
+    tennis_model_evidence = tennis_model_evidence_summary()
     tennis_props_v3 = tennis_props_v3_snapshot()
     tennis_props_benchmark = tennis_props_market_benchmark()
     goalscorer_research = goalscorer_research_summary()
@@ -582,12 +671,15 @@ def build_payload() -> dict[str, Any]:
             "m2": team_fouls_m2,
         },
         "tennis_ml_gap_guard": tennis_gap_guard,
+        "tennis_model_evidence": tennis_model_evidence,
         "tennis_props_v3": tennis_props_v3,
         "tennis_props_market_benchmark": tennis_props_benchmark,
         "goalscorer_v2": goalscorer_research,
         "assist_value_v1": assist_value_research,
         "automation_budget": automation_budget,
     }
+
+
     stale_models = [
         name
         for name, summary in (
@@ -808,6 +900,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
     team_fouls_f2_decision = ((team_fouls.get("f2") or {}).get("decision") or {})
     team_fouls_m2 = team_fouls.get("m2") or {}
     tennis = payload["tennis_ml_gap_guard"]
+    tennis_model_evidence = payload.get("tennis_model_evidence") or {}
     tennis_props_v3 = payload.get("tennis_props_v3") or {}
     tennis_props_benchmark = payload.get("tennis_props_market_benchmark") or {}
     goalscorer = payload["goalscorer_v2"]
@@ -820,6 +913,27 @@ def telegram_text(payload: dict[str, Any]) -> str:
     corners_v3 = (vnext.get("corners_v3") or {})
     team_v4_live = team_v4.get("prospective") or {}
     corners_v3_live = corners_v3.get("prospective") or {}
+    tennis_lanes = tennis_model_evidence.get("lanes") or {}
+    gap_replacements = tennis_model_evidence.get("gap_replacements") or {}
+
+    def tennis_lane_line(label: str, key: str, status: str) -> str:
+        lane = tennis_lanes.get(key) or {}
+        clv = lane.get("clv") or {}
+        return (
+            f"{label} [{status}]: {lane.get('settled', 0)} settled | "
+            f"{number(lane.get('pnl_units')):+.2f}u | ROI {pct(lane.get('roi_pct'))} | "
+            f"CLV {pct(clv.get('avg_clv_pct'), 2)} n={clv.get('rows', 0)}"
+        )
+
+    def replacement_line(label: str, key: str) -> str:
+        experiment = gap_replacements.get(key) or {}
+        performance = experiment.get("performance") or {}
+        return (
+            f"{label} [0.5u provisional]: {performance.get('settled', 0)}/150 settled | "
+            f"{number(performance.get('pnl_units')):+.2f}u | ROI {pct(performance.get('roi_pct'))} | "
+            f"CLV {pct(performance.get('avg_clv_pct'), 2)} n={performance.get('clv_rows', 0)} | "
+            f"{experiment.get('verdict', 'FORWARD_SAMPLE_BUILDING')}"
+        )
     lines = [
         "Il Margine weekly model evidence",
         f"Generated: {payload['generated_at']}",
@@ -832,7 +946,24 @@ def telegram_text(payload: dict[str, Any]) -> str:
         f"Goalscorer V2: {goalscorer['ledger']['settled']} settled | {goalscorer['ledger']['pnl_units']:+.2f}u | ROI {pct(goalscorer['ledger']['roi_pct'])} | CLV {goalscorer['matched_closes']}/{goalscorer['signals']} | {goalscorer['decision']}",
         f"Assist V1: {assist['lane_status']} | backtest {assist['backtest_status']} | settlement {assist['settlement_status']} | market {assist['market_status']} ({assist['market_calendar_span_days']}/90d) | prospective {assist['prospective']['settled']}/{assist['prospective_target']} | <=30 API calls/week | {assist['decision']}",
         f"Automation: {automation.get('status', 'NOT_RUN')} | Odds-API worst hour {odds_budget.get('max_requests_in_one_hour', '-')}/{odds_budget.get('requests_per_hour', '-')} | DB writes/week max {(automation.get('database') or {}).get('registered_writes_per_week_max', '-')}",
-        f"Tennis ML gap guard: Etch/Fils-type {format_bet_summary(tennis['etch_type'])}; recent 2024-26 {format_bet_summary(tennis['etch_type_recent'])}",
+        tennis_lane_line("Tennis Strict", "strict", "CORE"),
+        tennis_lane_line("Tennis Volume 200", "volume_200", "VOLUME"),
+        tennis_lane_line("Tennis Spread v1", "spread_v1", "PAUSED/RESEARCH"),
+        replacement_line("Strict gap 10-20pp", "strict_gap_10_20_same_side"),
+        replacement_line("Volume gap 10-15pp", "volume200_gap_10_15_same_side"),
+        (
+            "Inactive tennis research (not tips): "
+            + "; ".join(
+                f"{label} n={int(number((tennis_lanes.get(key) or {}).get('settled')))} "
+                f"ROI={pct((tennis_lanes.get(key) or {}).get('roi_pct'))}"
+                for label, key in (
+                    ("Grass", "grass_bo3"),
+                    ("Clay", "clay_bo3"),
+                    ("CPI", "cpi_speed"),
+                    ("Challenger", "challenger"),
+                )
+            )
+        ),
     ]
     if tennis_props_v3 and not tennis_props_v3.get("_error"):
         atp_v3 = tennis_props_v3.get("atp") or {}

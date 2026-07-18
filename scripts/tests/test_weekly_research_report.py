@@ -45,6 +45,25 @@ class WeeklyResearchReportTests(unittest.TestCase):
         payload = REPORT["build_payload"]()
         self.assertIn("automation_budget", payload)
 
+    def test_weekly_payload_includes_every_tennis_lane(self) -> None:
+        payload = REPORT["build_payload"]()
+        tennis = payload["tennis_model_evidence"]
+        self.assertEqual(
+            set(tennis["lanes"]),
+            {"strict", "volume_200", "spread_v1", "grass_bo3", "clay_bo3", "cpi_speed", "challenger"},
+        )
+        self.assertIn("strict_gap_10_20_same_side", tennis["gap_replacements"])
+        self.assertIn("volume200_gap_10_15_same_side", tennis["gap_replacements"])
+
+    def test_telegram_report_contains_core_provisional_and_inactive_tennis(self) -> None:
+        message = REPORT["telegram_text"](REPORT["build_payload"]())
+        self.assertIn("Tennis Strict [CORE]", message)
+        self.assertIn("Tennis Volume 200 [VOLUME]", message)
+        self.assertIn("Strict gap 10-20pp [0.5u provisional]", message)
+        self.assertIn("Volume gap 10-15pp [0.5u provisional]", message)
+        self.assertIn("Inactive tennis research (not tips)", message)
+        self.assertLessEqual(len(message), 4096)
+
 
 if __name__ == "__main__":
     unittest.main()
