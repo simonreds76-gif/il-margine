@@ -100,7 +100,11 @@ def row_in_replacement_experiment(row: dict[str, str], experiment: dict[str, Any
 
 
 def replacement_quality_eligible(row: dict[str, str]) -> bool:
+    if row.get("replacement_quality_eligible") not in {None, ""}:
+        return truthy(row.get("replacement_quality_eligible"))
     if row.get("replacement_forward_eligible") not in {None, ""}:
+        # Files written before replacement_quality_eligible existed used the
+        # forward flag as the quality flag.
         return truthy(row.get("replacement_forward_eligible"))
     quality = str(row.get("diagnostic_quality") or "").upper()
     tags = {item for item in str(row.get("diagnosis_tags") or "").split("|") if item}
@@ -273,8 +277,14 @@ def replacement_experiment_report(
             if (row.get("bet_type") or "match").lower() != "spread"
             and row_in_replacement_experiment(row, definition)
         ]
-        eligible = [row for row in captured if replacement_quality_eligible(row)]
-        metric = performance(eligible, clv_for_signals(eligible, ml_clv_rows))
+        quality_eligible = [row for row in captured if replacement_quality_eligible(row)]
+        # The forward sample must match the registered historical definition.
+        # Quality remains a diagnostic split rather than a post-hoc filter.
+        metric = performance(captured, clv_for_signals(captured, ml_clv_rows))
+        quality_metric = performance(
+            quality_eligible,
+            clv_for_signals(quality_eligible, ml_clv_rows),
+        )
         historical = historical_experiments.get(experiment_id, {})
         historical_pass = bool(historical.get("passes_retrospective_screen"))
         checks = {
@@ -300,22 +310,23 @@ def replacement_experiment_report(
         output[experiment_id] = {
             **definition,
             "captured": len(captured),
-            "quality_eligible": len(eligible),
-            "excluded_low_quality": len(captured) - len(eligible),
+            "quality_eligible": len(quality_eligible),
+            "excluded_low_quality": len(captured) - len(quality_eligible),
             "performance": metric,
+            "quality_performance": quality_metric,
             "checks": checks,
             "passes": passes,
             "verdict": verdict,
             "historical": historical,
             "by_surface": {
                 surface: performance(
-                    [row for row in eligible if (row.get("surface") or "unknown") == surface],
+                    [row for row in captured if (row.get("surface") or "unknown") == surface],
                     clv_for_signals(
-                        [row for row in eligible if (row.get("surface") or "unknown") == surface],
+                        [row for row in captured if (row.get("surface") or "unknown") == surface],
                         ml_clv_rows,
                     ),
                 )
-                for surface in sorted({row.get("surface") or "unknown" for row in eligible})
+                for surface in sorted({row.get("surface") or "unknown" for row in captured})
             },
         }
     return output
@@ -421,7 +432,7 @@ def build_report(
             "registered_at": "2026-07-18",
             "status": "SHADOW_ONLY_NO_LIVE_ROUTING_CHANGE",
             "automatic_promotion": False,
-            "rule": "Per cohort: historical screen plus n>=150 forward settled, ROI>0, mean CLV>=+0.5%, positive CLV share>=55%, then manual review.",
+            "rule": "Per registered cohort: provisional 0.5u tracking, then n>=150 forward settled, ROI>0, mean CLV>=+0.5%, positive CLV share>=55%, then manual review. Quality is reported separately.",
             "experiments": replacement_experiments,
             "side_flip_by_surface": side_flip_surface_report(archive, ml_clv_rows),
         },
@@ -491,8 +502,8 @@ def report_text(report: dict[str, Any]) -> str:
         )
     lines.extend(
         [
-            "  Side flips remain surface-split shadow evidence only.",
-            "  Live routing is unchanged; automatic promotion is disabled.",
+            "  Registered same-side cohorts appear as provisional 0.5u private-ops selections.",
+            "  Side flips remain surface-split shadow evidence only; public routing is unchanged.",
         ]
     )
     return "\n".join(lines) + "\n"

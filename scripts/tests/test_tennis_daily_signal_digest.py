@@ -64,6 +64,34 @@ class TennisDailySignalDigestTests(unittest.TestCase):
         assert signal is not None
         self.assertIn("Player Two -4 games @ 1.855", signal.selection)
 
+    def test_registered_gap_candidate_is_provisional_half_unit(self) -> None:
+        signal = MODULE.gap_replacement_signal(
+            {
+                "date": "2026-07-16",
+                "player1": "Player One",
+                "player2": "Player Two",
+                "selected_player": "Player One",
+                "selected_side": "P1",
+                "bet_type": "match",
+                "selected_odds": "2.75",
+                "fair_odds1": "2.10",
+                "value_pct": "30.95",
+                "model_market_gap_pp": "12.4",
+                "diagnostic_quality": "LOW",
+                "replacement_cohorts": "volume200_gap_10_15_same_side",
+                "replacement_forward_eligible": "1",
+                "settlement_status": "pending",
+            },
+            "2026-07-16",
+        )
+        self.assertIsNotNone(signal)
+        assert signal is not None
+        self.assertEqual(signal.section, "PROVISIONAL ML EXPANSION")
+        self.assertEqual(signal.labels, ["VOL200 GAP"])
+        self.assertIn("gap 12.4pp", signal.selection)
+        self.assertIn("quality LOW", signal.selection)
+        self.assertTrue(signal.selection.endswith("0.5u"))
+
     def test_render_stays_within_telegram_limit(self) -> None:
         signals = [
             MODULE.Signal(

@@ -28,6 +28,7 @@ BACKTEST = ROOT / "data" / "backtest"
 PROPS = ROOT / "data" / "tennis-props"
 DEFAULT_REPORT = BACKTEST / "tennis-daily-signal-digest.txt"
 DEFAULT_STATE = BACKTEST / "tennis-daily-signal-digest-state.json"
+DEFAULT_GAP_LIVE = BACKTEST / "tennis-model-market-gap-live.csv"
 DEFAULT_REPOSITORY = "simonreds76-gif/il-margine"
 DEFAULT_WORKFLOW = "tennis-daily-signal-digest.yml"
 TELEGRAM_LIMIT = 3900
@@ -148,6 +149,57 @@ def row_to_signal(row: dict[str, str], lane: Lane, target_date: str) -> Signal |
     )
 
 
+def gap_replacement_signal(row: dict[str, str], target_date: str) -> Signal | None:
+    if row.get("date") != target_date or not is_pending(row):
+        return None
+    if (row.get("bet_type") or "match").strip().lower() == "spread":
+        return None
+    cohorts = [item for item in (row.get("replacement_cohorts") or "").split("|") if item]
+    forward_flag = (row.get("replacement_forward_eligible") or "1").strip().lower()
+    if not cohorts or forward_flag not in {"1", "true", "yes"}:
+        return None
+
+    player1 = (row.get("player1") or "").strip()
+    player2 = (row.get("player2") or "").strip()
+    selected = (row.get("selected_player") or "").strip()
+    selected_side = (row.get("selected_side") or row.get("side") or "").strip().upper()
+    odds = parse_float(row.get("selected_odds"))
+    if not player1 or not player2 or not selected or selected_side not in {"P1", "P2"} or odds is None:
+        return None
+
+    fair = parse_float(row.get("fair_odds1" if selected_side == "P1" else "fair_odds2"))
+    edge = parse_float(row.get("value_pct"))
+    gap = parse_float(row.get("model_market_gap_pp"))
+    quality = (row.get("diagnostic_quality") or "UNKNOWN").strip().upper()
+    labels: list[str] = []
+    if "strict_gap_10_20_same_side" in cohorts:
+        labels.append("STRICT GAP")
+    if "volume200_gap_10_15_same_side" in cohorts:
+        labels.append("VOL200 GAP")
+    if not labels:
+        labels.append("ML GAP")
+
+    selection = f"{selected} ML @ {fmt_odds(odds)}"
+    if fair is not None:
+        selection += f" | fair {fmt_odds(fair)}"
+    if edge is not None:
+        selection += f" | edge {edge:+.1f}%"
+    if gap is not None:
+        selection += f" | gap {gap:.1f}pp"
+    selection += f" | quality {quality} | 0.5u"
+    pair = tuple(sorted((norm(player1), norm(player2))))
+    return Signal(
+        section="PROVISIONAL ML EXPANSION",
+        priority=15,
+        labels=labels,
+        match=f"{player1} vs {player2}",
+        selection=selection,
+        edge_pct=edge,
+        time_utc=(row.get("time_utc") or "").strip(),
+        key=(target_date, *pair, norm(selected), "ml"),
+    )
+
+
 def props_signals(target_date: str) -> list[Signal]:
     path = PROPS / f"comparison-{target_date}.csv"
     signals: list[Signal] = []
@@ -213,6 +265,21 @@ def collect_signals(target_date: str) -> tuple[list[Signal], list[str]]:
                     merged[signal.key] = signal
         lane_counts[lane.label] = count
 
+    gap_count = 0
+    for row in read_csv(DEFAULT_GAP_LIVE):
+        signal = gap_replacement_signal(row, target_date)
+        if signal is None:
+            continue
+        gap_count += 1
+        existing = merged.get(signal.key)
+        if existing is None:
+            merged[signal.key] = signal
+        else:
+            for label in signal.labels:
+                if label not in existing.labels:
+                    existing.labels.append(label)
+    lane_counts["GUARD EXPANSION"] = gap_count
+
     props = props_signals(target_date)
     lane_counts["ACES/DF"] = len(props)
     for signal in props:
@@ -229,6 +296,8 @@ def collect_signals(target_date: str) -> tuple[list[Signal], list[str]]:
     empty = [lane.label for lane in LANES if lane_counts.get(lane.label, 0) == 0]
     if lane_counts.get("ACES/DF", 0) == 0:
         empty.append("ACES/DF")
+    if lane_counts.get("GUARD EXPANSION", 0) == 0:
+        empty.append("GUARD EXPANSION")
     return signals, empty
 
 
@@ -247,7 +316,7 @@ def render_messages(target_date: str, signals: list[Signal], empty_lanes: list[s
         blocks.append("\nNo qualifying signals today.")
     if empty_lanes:
         blocks.append("\nNo signals: " + ", ".join(empty_lanes))
-    blocks.append("\nShadow/research lanes are monitoring signals, not promoted live bets.")
+    blocks.append("\nProvisional ML expansion selections use 0.5u and keep a separate forward ROI/CLV record. Shadow/research lanes are monitoring signals, not promoted live bets.")
 
     messages: list[str] = []
     current = header

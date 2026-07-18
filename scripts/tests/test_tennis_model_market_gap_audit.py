@@ -100,6 +100,42 @@ class TennisModelMarketGapAuditTests(unittest.TestCase):
         self.assertIn(rows[0]["guard_cohort"], {"gap_only", "side_flip_and_gap", "side_flip_only", "ev_only_control"})
         self.assertIn("replacement_forward_eligible", rows[0])
 
+    def test_registered_forward_sample_keeps_low_quality_rows_but_tags_quality(self) -> None:
+        fair = self.sample_fair()
+        fair.update(
+            {
+                "surface": "Clay",
+                "confidence": "high",
+                "p1_win_prob": 0.67,
+                "p2_win_prob": 0.33,
+                "match_count_12m_p1": 8,
+                "match_count_12m_p2": 9,
+            }
+        )
+        pin = {
+            "player1_name": "Player One",
+            "player2_name": "Player Two",
+            "odds1": "1.25",
+            "odds2": "4.50",
+            "league": "ATP",
+            "league_name": "ATP 500 Test",
+            "match_date": "2026-07-13",
+        }
+        rows, _ = AUDIT.anomaly_rows(
+            [fair],
+            [pin],
+            {10: "Player One", 20: "Player Two"},
+            {99: {"name": "ATP 500 Test", "rank": 2}},
+            datetime(2026, 7, 13, 8, tzinfo=timezone.utc),
+            30.0,
+            10.0,
+        )
+        ml = rows[0]
+        self.assertEqual(ml["replacement_cohorts"], "volume200_gap_10_15_same_side")
+        self.assertEqual(ml["replacement_forward_eligible"], "1")
+        self.assertEqual(ml["replacement_quality_eligible"], "0")
+        self.assertEqual(ml["replacement_stake_units"], 0.5)
+
     def test_first_observation_dedup_does_not_replace_price(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp) / "archive.csv"
@@ -197,6 +233,43 @@ class TennisModelMarketGapAuditTests(unittest.TestCase):
         experiment = report["ml_guard_replacement"]["experiments"]["strict_gap_10_20_same_side"]
         self.assertEqual(experiment["verdict"], "FORWARD_SAMPLE_BUILDING")
         self.assertFalse(report["ml_guard_replacement"]["automatic_promotion"])
+
+    def test_replacement_report_scores_full_cohort_and_keeps_quality_cut(self) -> None:
+        historical = {
+            "threshold_audit": {
+                "registered_replacement_experiments": {
+                    "experiments": {
+                        "volume200_gap_10_15_same_side": {"passes_retrospective_screen": True},
+                    }
+                }
+            }
+        }
+        row = {
+            "anomaly_id": "guard-low",
+            "date": "2026-07-13",
+            "settlement_status": "settled",
+            "bet_outcome": "WIN",
+            "bet_type": "match",
+            "selected_odds": "2.0",
+            "stake_units": "1",
+            "surface": "Clay",
+            "series": "ATP500",
+            "confidence": "high",
+            "value_pct": "20",
+            "model_p1": "0.62",
+            "market_p1_devig": "0.50",
+            "model_market_gap_pp": "12",
+            "side_flip": "0",
+            "diagnostic_quality": "LOW",
+            "replacement_forward_eligible": "1",
+            "replacement_quality_eligible": "0",
+            "replacement_cohorts": "volume200_gap_10_15_same_side",
+        }
+        report = REPORT.build_report([row], [], [], historical_report=historical)
+        experiment = report["ml_guard_replacement"]["experiments"]["volume200_gap_10_15_same_side"]
+        self.assertEqual(experiment["performance"]["settled"], 1)
+        self.assertEqual(experiment["quality_performance"]["settled"], 0)
+        self.assertEqual(experiment["quality_eligible"], 0)
 
 
 if __name__ == "__main__":
