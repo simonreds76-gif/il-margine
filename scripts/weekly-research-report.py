@@ -994,6 +994,78 @@ def telegram_text(payload: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def tennis_telegram_text(payload: dict[str, Any]) -> str:
+    evidence = payload.get("tennis_model_evidence") or {}
+    lanes = evidence.get("lanes") or {}
+    replacements = evidence.get("gap_replacements") or {}
+    props_v3 = payload.get("tennis_props_v3") or {}
+    props_benchmark = payload.get("tennis_props_market_benchmark") or {}
+
+    def lane_line(label: str, key: str, status: str) -> str:
+        lane = lanes.get(key) or {}
+        clv = lane.get("clv") or {}
+        return (
+            f"{label} [{status}]: {lane.get('settled', 0)} settled | "
+            f"{number(lane.get('pnl_units')):+.2f}u | ROI {pct(lane.get('roi_pct'))} | "
+            f"CLV {pct(clv.get('avg_clv_pct'), 2)} n={clv.get('rows', 0)}"
+        )
+
+    def replacement_line(label: str, key: str) -> str:
+        experiment = replacements.get(key) or {}
+        performance = experiment.get("performance") or {}
+        return (
+            f"{label} [0.5u provisional]: {performance.get('settled', 0)}/150 settled | "
+            f"{number(performance.get('pnl_units')):+.2f}u | ROI {pct(performance.get('roi_pct'))} | "
+            f"CLV {pct(performance.get('avg_clv_pct'), 2)} n={performance.get('clv_rows', 0)} | "
+            f"{experiment.get('verdict', 'FORWARD_SAMPLE_BUILDING')}"
+        )
+
+    lines = [
+        "Il Margine weekly tennis evidence",
+        f"Generated: {payload['generated_at']}",
+        "",
+        lane_line("Strict", "strict", "CORE"),
+        lane_line("Volume 200", "volume_200", "VOLUME"),
+        lane_line("Spread v1", "spread_v1", "PAUSED/RESEARCH"),
+        replacement_line("Strict gap 10-20pp", "strict_gap_10_20_same_side"),
+        replacement_line("Volume gap 10-15pp", "volume200_gap_10_15_same_side"),
+        (
+            "Inactive research (not tips): "
+            + "; ".join(
+                f"{label} n={int(number((lanes.get(key) or {}).get('settled')))} "
+                f"ROI={pct((lanes.get(key) or {}).get('roi_pct'))}"
+                for label, key in (
+                    ("Grass", "grass_bo3"),
+                    ("Clay", "clay_bo3"),
+                    ("CPI", "cpi_speed"),
+                    ("Challenger", "challenger"),
+                )
+            )
+        ),
+    ]
+    if props_v3 and not props_v3.get("_error"):
+        atp = props_v3.get("atp") or {}
+        proof = props_v3.get("evidence") or {}
+        lines.append(
+            "Aces/DF v3: "
+            f"{proof.get('settled', 0)} settled | ROI {number(proof.get('roi_pct')):+.2f}% | "
+            f"CLV {number(proof.get('mean_clv_pct')):+.2f}% | {atp.get('status', 'UNKNOWN')}"
+        )
+    lines.extend(
+        [
+            (
+                "Aces/DF vs Bet365: "
+                f"{props_benchmark.get('settled', 0)}/{props_benchmark.get('observations', 0)} settled | "
+                f"Brier delta {number(props_benchmark.get('brier_delta_vs_market')):+.4f} | "
+                f"{props_benchmark.get('status', 'EVIDENCE_BUILDING')}"
+            ),
+            "",
+            "No automatic promotion: provisional lanes remain 0.5u until their registered gates pass.",
+        ]
+    )
+    return "\n".join(lines)
+
+
 def post_telegram(message: str) -> bool:
     token = os.environ.get("OPS_ALERT_TELEGRAM_BOT_TOKEN", "").strip()
     chat_id = os.environ.get("OPS_ALERT_TELEGRAM_CHAT_ID", "").strip()
@@ -1028,6 +1100,7 @@ def main() -> int:
     parser.add_argument("--json", type=Path, default=DEFAULT_JSON)
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--no-telegram", action="store_true")
+    parser.add_argument("--tennis-only-telegram", action="store_true")
     args = parser.parse_args()
 
     load_env_files()
@@ -1044,7 +1117,8 @@ def main() -> int:
     print(f"Wrote {display_path(args.report)}")
 
     if not args.no_telegram:
-        post_telegram(telegram_text(payload))
+        message = tennis_telegram_text(payload) if args.tennis_only_telegram else telegram_text(payload)
+        post_telegram(message)
 
     return 0
 
