@@ -124,6 +124,28 @@ class HistoricalGapReplayTests(unittest.TestCase):
         row["short_favorite_guard"] = 1
         self.assertFalse(MODEL.profile_eligible(row, "strict"))
 
+    def test_registered_replacement_experiments_are_frozen_and_same_side_only(self) -> None:
+        definition = MODEL.REGISTERED_REPLACEMENT_EXPERIMENTS["strict_gap_10_20_same_side"]
+        base = {
+            "surface": "Hard",
+            "series": "Masters 1000",
+            "confidence": "high",
+            "ml_ev_pct": 18.0,
+            "short_favorite_guard": 0,
+            "side_flip": 0,
+            "ml_outcome": "WIN",
+            "ml_pnl_units": 1.0,
+        }
+        rows = [
+            {**base, "model_market_gap_pp": 10.1},
+            {**base, "model_market_gap_pp": 20.0},
+            {**base, "model_market_gap_pp": 20.1},
+            {**base, "model_market_gap_pp": 12.0, "side_flip": 1},
+        ]
+        selected = MODEL.registered_replacement_rows(rows, definition)
+        self.assertEqual(len(selected), 2)
+        self.assertEqual([row["model_market_gap_pp"] for row in selected], [10.1, 20.0])
+
 
 if __name__ == "__main__":
     unittest.main()

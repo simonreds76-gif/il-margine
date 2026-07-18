@@ -38,6 +38,8 @@ DEFAULT_TOURS = ROOT / "data" / "oncourt" / "tours_atp.csv"
 DEFAULT_MIN_EV_PCT = 30.0
 DEFAULT_GAP_PP = 10.0
 SIDE_FLIP_BUFFER = 0.03
+SHORT_FAVORITE_PROB_MAX = 0.80
+REGISTERED_REPLACEMENT_AT = "2026-07-18"
 
 SETTLEMENT_FIELDS = [
     "settlement_status",
@@ -346,6 +348,75 @@ def diagnosis(
     return tags, primary, quality
 
 
+def policy_profile_eligible(
+    surface: str,
+    series: str,
+    confidence: str,
+    value_pct: float,
+    short_favorite_guard: bool,
+    profile: str,
+) -> bool:
+    if short_favorite_guard:
+        return False
+    confidence = confidence.lower()
+    if profile == "strict":
+        return surface == "Hard" and series == "Masters 1000" and confidence == "high" and value_pct >= 10.0
+    if profile == "volume_200":
+        if confidence not in {"high", "medium"}:
+            return False
+        rules = (
+            ("Hard", "Masters 1000", "high", 15.0),
+            ("Hard", "Masters 1000", "medium", 30.0),
+            ("Hard", "Grand Slam", confidence, 5.0),
+            ("Hard", "ATP500", confidence, 10.0),
+            ("Clay", "ATP500", confidence, 10.0),
+        )
+        return any(
+            surface == rule_surface
+            and series == rule_series
+            and confidence == rule_confidence
+            and value_pct >= minimum
+            for rule_surface, rule_series, rule_confidence, minimum in rules
+        )
+    return False
+
+
+def guard_cohort(side_flip: bool, gap_pp: float) -> str:
+    gap_blocked = gap_pp > DEFAULT_GAP_PP
+    if side_flip and gap_blocked:
+        return "side_flip_and_gap"
+    if side_flip:
+        return "side_flip_only"
+    if gap_blocked:
+        return "gap_only"
+    return "ev_only_control"
+
+
+def registered_replacement_cohorts(
+    surface: str,
+    series: str,
+    confidence: str,
+    value_pct: float,
+    gap_pp: float,
+    side_flip: bool,
+    short_favorite_guard: bool,
+) -> list[str]:
+    if side_flip or short_favorite_guard:
+        return []
+    cohorts: list[str] = []
+    if (
+        10.0 < gap_pp <= 20.0
+        and policy_profile_eligible(surface, series, confidence, value_pct, short_favorite_guard, "strict")
+    ):
+        cohorts.append("strict_gap_10_20_same_side")
+    if (
+        10.0 < gap_pp <= 15.0
+        and policy_profile_eligible(surface, series, confidence, value_pct, short_favorite_guard, "volume_200")
+    ):
+        cohorts.append("volume200_gap_10_15_same_side")
+    return cohorts
+
+
 def anomaly_rows(
     fair_rows: list[dict[str, Any]],
     pinnacle_rows: list[dict[str, str]],
@@ -431,6 +502,28 @@ def anomaly_rows(
         selected_odds = odds1 if selected_side == "P1" else odds2
         gap_bucket = "25pp+" if favorite_gap >= 0.25 else "15-25pp" if favorite_gap >= 0.15 else "10-15pp" if favorite_gap >= 0.10 else "ev_only"
         ev_bucket = "100%+" if selected_ev >= 100 else "50-100%" if selected_ev >= 50 else "30-50%" if selected_ev >= 30 else "under_30%"
+        model_favorite_prob = max(model_p1, model_p2)
+        market_favorite_prob = max(market_p1, market_p2)
+        short_favorite_guard = (
+            model_favorite_prob > SHORT_FAVORITE_PROB_MAX
+            or market_favorite_prob > SHORT_FAVORITE_PROB_MAX
+        )
+        confidence = str(fair.get("confidence") or "").strip().lower()
+        surface = str(fair.get("surface") or "").strip()
+        replacement_cohorts = registered_replacement_cohorts(
+            surface,
+            series,
+            confidence,
+            selected_ev,
+            favorite_gap * 100.0,
+            side_flip,
+            short_favorite_guard,
+        )
+        policy_profiles = [
+            profile
+            for profile in ("strict", "volume_200")
+            if policy_profile_eligible(surface, series, confidence, selected_ev, short_favorite_guard, profile)
+        ]
         common: dict[str, Any] = {
             "anomaly_id": anomaly_id,
             "date": match_date,
@@ -458,6 +551,14 @@ def anomaly_rows(
             "model_market_gap_pp": round(favorite_gap * 100.0, 4),
             "selected_probability_gap_pp": round((selected_model_prob - selected_market_prob) * 100.0, 4),
             "side_flip": "1" if side_flip else "0",
+            "model_favorite_prob": round(model_favorite_prob, 8),
+            "market_favorite_prob": round(market_favorite_prob, 8),
+            "short_favorite_guard": "1" if short_favorite_guard else "0",
+            "guard_cohort": guard_cohort(side_flip, favorite_gap * 100.0),
+            "policy_profiles": "|".join(policy_profiles),
+            "replacement_cohorts": "|".join(replacement_cohorts),
+            "replacement_forward_eligible": "1" if replacement_cohorts and quality != "LOW" else "0",
+            "replacement_registered_at": REGISTERED_REPLACEMENT_AT if replacement_cohorts else "",
             "gap_bucket": gap_bucket,
             "ev_bucket": ev_bucket,
             "value_pct": round(selected_ev, 4),
