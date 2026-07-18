@@ -267,6 +267,28 @@ type ExtremeGapReport = {
     passes: boolean;
     rule: string;
   };
+  ml_guard_replacement?: {
+    registered_at: string;
+    status: string;
+    automatic_promotion: boolean;
+    rule: string;
+    experiments: Record<string, {
+      description: string;
+      captured: number;
+      quality_eligible: number;
+      excluded_low_quality: number;
+      performance: ExtremeGapMetric;
+      passes: boolean;
+      verdict: string;
+      historical?: {
+        passes_retrospective_screen?: boolean;
+        performance?: HistoricalGapPerformance;
+        positive_material_years?: number;
+        material_years?: number;
+      };
+    }>;
+    side_flip_by_surface: Record<string, ExtremeGapMetric>;
+  };
 };
 
 type ExtremeGapLoad = {
@@ -325,6 +347,23 @@ type HistoricalGapReport = {
     profiles: Record<string, GapThresholdProfile>;
     locked_10pp_by_surface: Record<string, GapThresholdPartition>;
     locked_10pp_by_year: Record<string, GapThresholdPartition>;
+    registered_replacement_experiments?: {
+      registered_at: string;
+      status: string;
+      automatic_promotion: boolean;
+      forward_gate: string;
+      experiments: Record<string, {
+        description: string;
+        performance: HistoricalGapPerformance;
+        positive_material_years: number;
+        material_years: number;
+        passes_retrospective_screen: boolean;
+      }>;
+      side_flip_surface_diagnostics: Record<string, {
+        performance: HistoricalGapPerformance;
+        passes_retrospective_screen: boolean;
+      }>;
+    };
   };
 };
 
@@ -933,6 +972,9 @@ function ExtremeGapLab({ data }: { data: ExtremeGapLoad }) {
   const trailing30Spread = report?.windows?.last_30_days?.spread;
   const longEvSpread = report?.long_ev_100_plus?.spread;
   const thresholdProfiles = historical?.threshold_audit?.profiles ?? {};
+  const guardReplacement = report?.ml_guard_replacement;
+  const replacementExperiments = guardReplacement?.experiments ?? {};
+  const historicalSideFlips = historical?.threshold_audit?.registered_replacement_experiments?.side_flip_surface_diagnostics ?? {};
   const currentMlRows = liveRows.filter((row) => row.bet_type !== "spread").slice(0, 8);
   const spreadByAnomaly = new Map(
     liveRows.filter((row) => row.bet_type === "spread").map((row) => [row.anomaly_id, row]),
@@ -1001,6 +1043,84 @@ function ExtremeGapLab({ data }: { data: ExtremeGapLoad }) {
           </p>
           <p className="mt-2 text-xs text-slate-500">CLV {gapMetricValue(longEvSpread?.avg_clv_pct ?? null)} · n={longEvSpread?.clv_rows ?? 0}</p>
         </div>
+      </div>
+
+      <div className="mt-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.06] p-4 md:p-5">
+        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-300">Registered ML guard replacement</p>
+            <h3 className="mt-2 text-lg font-semibold text-slate-100">Test the blocked ML bets, not the losing handicap shortcut</h3>
+            <p className="mt-2 max-w-4xl text-xs leading-5 text-slate-400">
+              Strict tests same-side gaps from 10-20pp. Volume 200 tests 10-15pp. Low-quality or partial inputs are excluded from forward proof, and live routing remains unchanged.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <StatusPill label="SHADOW ONLY" tone={badgeTones.shadow} />
+            <StatusPill label="NO AUTO PROMOTION" tone={badgeTones.disabled} />
+          </div>
+        </div>
+
+        <div className="mt-4 grid gap-3 xl:grid-cols-2">
+          {Object.entries(replacementExperiments).map(([experimentId, experiment]) => {
+            const forward = experiment.performance;
+            const backtest = experiment.historical?.performance;
+            return (
+              <div key={experimentId} className="rounded-2xl border border-slate-800 bg-slate-950/55 p-4">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <div>
+                    <p className="text-sm font-semibold text-slate-100">{experimentId.startsWith("strict") ? "Strict ML gap replacement" : "Volume 200 gap replacement"}</p>
+                    <p className="mt-1 text-[11px] text-slate-500">{experiment.description}</p>
+                  </div>
+                  <StatusPill label={experiment.verdict.replaceAll("_", " ")} tone={experiment.passes ? badgeTones.live : badgeTones.shadow} />
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.13em] text-slate-600">Backtest</p>
+                    <p className="mt-1 font-semibold tabular-nums text-slate-200">n={backtest?.settled ?? 0}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.13em] text-slate-600">Historical ROI</p>
+                    <p className={cn("mt-1 font-semibold tabular-nums", metricTone(backtest?.roi_pct))}>{gapMetricValue(backtest?.roi_pct ?? null)}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.13em] text-slate-600">Forward settled</p>
+                    <p className="mt-1 font-semibold tabular-nums text-slate-200">{forward.settled} / 150</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.13em] text-slate-600">Forward ROI / CLV</p>
+                    <p className="mt-1 font-semibold tabular-nums text-slate-200">
+                      <span className={metricTone(forward.roi_pct)}>{gapMetricValue(forward.roi_pct)}</span>
+                      <span className="text-slate-600"> / </span>
+                      <span className={metricTone(forward.avg_clv_pct)}>{gapMetricValue(forward.avg_clv_pct)}</span>
+                    </p>
+                  </div>
+                </div>
+                <p className="mt-3 border-t border-slate-800 pt-3 text-[10px] leading-4 text-slate-500">
+                  Captured {experiment.captured} · quality eligible {experiment.quality_eligible} · excluded low-quality {experiment.excluded_low_quality}. Historical screen {experiment.historical?.passes_retrospective_screen ? "passed" : "not passed"}; forward ROI and CLV still decide promotion.
+                </p>
+              </div>
+            );
+          })}
+          {Object.keys(replacementExperiments).length === 0 ? (
+            <p className="rounded-xl border border-slate-800 bg-slate-950/55 p-4 text-sm text-slate-500">Run the nightly gap report to populate the registered replacement cohorts.</p>
+          ) : null}
+        </div>
+
+        <details className="mt-4 border-t border-emerald-500/15 pt-4">
+          <summary className="cursor-pointer text-xs font-semibold uppercase tracking-[0.14em] text-slate-300">Side-flip evidence by surface</summary>
+          <div className="mt-3 grid gap-3 sm:grid-cols-3">
+            {Object.entries(historicalSideFlips).map(([surface, evidence]) => (
+              <div key={surface} className="rounded-xl border border-slate-800 bg-slate-950/45 p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="font-semibold text-slate-200">{surface}</p>
+                  <StatusPill label={evidence.passes_retrospective_screen ? "SCREEN PASS" : "SCREEN FAIL"} tone={evidence.passes_retrospective_screen ? badgeTones.deferred : badgeTones.disabled} />
+                </div>
+                <p className="mt-2 text-xs tabular-nums text-slate-400">n={evidence.performance.settled} · <span className={metricTone(evidence.performance.roi_pct)}>{gapMetricValue(evidence.performance.roi_pct)} ROI</span></p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-[10px] leading-4 text-amber-200/80">A historical surface pass is not a tip. Every side flip stays blocked and separately monitored until forward CLV and ROI establish an edge.</p>
+        </details>
       </div>
 
       <div className="mt-4 rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-4 md:p-5">
@@ -2155,7 +2275,7 @@ export default async function TennisMonitorPage() {
   const [extremeGapLab, guardAudit] = await Promise.all([loadExtremeGapLab(), loadTennisGuardAudit()]);
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
+    <main className="min-h-screen overflow-x-hidden bg-slate-950 text-slate-100">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <TennisDecisionBoard
           rows={proofRows}

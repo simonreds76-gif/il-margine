@@ -32,6 +32,20 @@ SIDE_FLIP_BUFFER = 0.03
 SHORT_FAVORITE_PROB_MAX = 0.80
 THRESHOLD_SWEEP_PP = (5.0, 10.0, 15.0, 20.0)
 LOCKED_GUARD_PP = 10.0
+REGISTERED_REPLACEMENT_EXPERIMENTS = {
+    "strict_gap_10_20_same_side": {
+        "profile": "strict",
+        "min_gap_pp_exclusive": 10.0,
+        "max_gap_pp_inclusive": 20.0,
+        "description": "Strict-eligible, same-side selections blocked only by a model/market gap above 10pp and at most 20pp.",
+    },
+    "volume200_gap_10_15_same_side": {
+        "profile": "volume_200",
+        "min_gap_pp_exclusive": 10.0,
+        "max_gap_pp_inclusive": 15.0,
+        "description": "Volume-200-eligible, same-side selections blocked only by a model/market gap above 10pp and at most 15pp.",
+    },
+}
 
 
 def load_csv(path: Path) -> list[dict[str, str]]:
@@ -463,6 +477,87 @@ def threshold_partition(rows: list[dict[str, Any]], threshold_pp: float) -> dict
     }
 
 
+def registered_replacement_rows(universe: list[dict[str, Any]], experiment: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return the frozen cohort for a forward guard-replacement experiment."""
+    minimum = float(experiment["min_gap_pp_exclusive"])
+    maximum = float(experiment["max_gap_pp_inclusive"])
+    profile = str(experiment["profile"])
+    return [
+        row
+        for row in universe
+        if profile_eligible(row, profile)
+        and not bool(int(row.get("side_flip") or 0))
+        and minimum < float(row.get("model_market_gap_pp") or 0.0) <= maximum
+    ]
+
+
+def historical_screening(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    by_year = {
+        year: performance(
+            [row for row in rows if str(row.get("year") or "unknown") == year],
+            "ml",
+            include_ci=False,
+        )
+        for year in sorted({str(row.get("year") or "unknown") for row in rows})
+    }
+    material_years = [metric for metric in by_year.values() if metric["settled"] >= 20]
+    positive_years = sum((metric["roi_pct"] or 0.0) > 0 for metric in material_years)
+    overall = performance(rows, "ml")
+    checks = {
+        "settled_at_least_100": overall["settled"] >= 100,
+        "roi_positive": overall["roi_pct"] is not None and overall["roi_pct"] > 0,
+        "at_least_two_positive_material_years": len(material_years) >= 2 and positive_years >= 2,
+        "no_material_year_below_minus_15pct": all(
+            metric["roi_pct"] is not None and metric["roi_pct"] >= -15.0 for metric in material_years
+        ),
+    }
+    return {
+        "performance": overall,
+        "by_year": by_year,
+        "material_years": len(material_years),
+        "positive_material_years": positive_years,
+        "checks": checks,
+        "passes_retrospective_screen": all(checks.values()),
+        "decision": "FORWARD_PROOF_REQUIRED",
+    }
+
+
+def build_registered_replacement_experiments(universe: list[dict[str, Any]]) -> dict[str, Any]:
+    experiments: dict[str, Any] = {}
+    for experiment_id, definition in REGISTERED_REPLACEMENT_EXPERIMENTS.items():
+        rows = registered_replacement_rows(universe, definition)
+        experiments[experiment_id] = {
+            **definition,
+            **historical_screening(rows),
+            "by_surface": {
+                surface: performance(
+                    [row for row in rows if str(row.get("surface") or "unknown") == surface],
+                    "ml",
+                    include_ci=False,
+                )
+                for surface in sorted({str(row.get("surface") or "unknown") for row in rows})
+            },
+        }
+
+    broad = [row for row in universe if profile_eligible(row, "broad_value_10")]
+    side_flips = [row for row in broad if bool(int(row.get("side_flip") or 0))]
+    side_flip_surfaces = {
+        surface: historical_screening(
+            [row for row in side_flips if str(row.get("surface") or "unknown") == surface]
+        )
+        for surface in sorted({str(row.get("surface") or "unknown") for row in side_flips})
+    }
+    return {
+        "registered_at": "2026-07-18",
+        "status": "SHADOW_ONLY_NO_LIVE_ROUTING_CHANGE",
+        "automatic_promotion": False,
+        "forward_gate": "n>=150 settled, ROI>0, mean CLV>=+0.5%, positive CLV share>=55%; manual model-risk review required",
+        "experiments": experiments,
+        "side_flip_surface_diagnostics": side_flip_surfaces,
+        "warning": "Retrospective screening can reject a cohort but cannot promote it. Forward frozen prices and CLV are mandatory.",
+    }
+
+
 def build_threshold_audit(universe: list[dict[str, Any]]) -> dict[str, Any]:
     profiles = {
         "broad_value_10": "All otherwise-eligible selections with raw value >=10%.",
@@ -507,6 +602,7 @@ def build_threshold_audit(universe: list[dict[str, Any]]) -> dict[str, Any]:
         "locked_10pp_by_year": fixed_year,
         "decision": "KEEP_LOCKED_PENDING_FORWARD_ROI_AND_CLV",
         "warning": "Do not select the best cutoff from this same retrospective sample.",
+        "registered_replacement_experiments": build_registered_replacement_experiments(universe),
     }
 
 
@@ -619,6 +715,21 @@ def report_text(report: dict[str, Any]) -> str:
             f"gap-blocked {format_perf(result['gap_blocked'])} | "
             f"side-flips {format_perf(result['side_flip_blocked'])}"
         )
+    registered = threshold_audit["registered_replacement_experiments"]
+    lines.extend(
+        [
+            "",
+            "Registered guard-replacement experiments (retrospective screen only)",
+            f"  Status: {registered['status']}",
+        ]
+    )
+    for experiment_id, experiment in registered["experiments"].items():
+        lines.append(
+            f"  {experiment_id}: {format_perf(experiment['performance'])} | "
+            f"years +ROI {experiment['positive_material_years']}/{experiment['material_years']} | "
+            f"screen={'PASS' if experiment['passes_retrospective_screen'] else 'FAIL'}"
+        )
+    lines.append("  Side flips remain surface-split shadow evidence; they are not part of either replacement cohort.")
     lines.extend(["", "Limitations"] + [f"- {item}" for item in report["limitations"]])
     return "\n".join(lines) + "\n"
 

@@ -19,6 +19,21 @@ DEFAULT_SPREAD_CLV = ROOT / "data" / "backtest" / "tennis-model-market-gap-clv-s
 DEFAULT_JSON = ROOT / "data" / "backtest" / "tennis-model-market-gap-report.json"
 DEFAULT_TEXT = ROOT / "data" / "backtest" / "tennis-model-market-gap-report.txt"
 DEFAULT_WEEKLY = ROOT / "data" / "backtest" / "tennis-model-market-gap-weekly.csv"
+DEFAULT_HISTORICAL = ROOT / "data" / "backtest" / "tennis-model-market-gap-historical-report.json"
+REPLACEMENT_EXPERIMENTS = {
+    "strict_gap_10_20_same_side": {
+        "profile": "strict",
+        "min_gap_pp_exclusive": 10.0,
+        "max_gap_pp_inclusive": 20.0,
+        "description": "Strict eligible, same-side, gap >10pp and <=20pp.",
+    },
+    "volume200_gap_10_15_same_side": {
+        "profile": "volume_200",
+        "min_gap_pp_exclusive": 10.0,
+        "max_gap_pp_inclusive": 15.0,
+        "description": "Volume 200 eligible, same-side, gap >10pp and <=15pp.",
+    },
+}
 
 
 def load_csv(path: Path) -> list[dict[str, str]]:
@@ -33,6 +48,72 @@ def number(value: Any, default: float = 0.0) -> float:
         return float(value)
     except (TypeError, ValueError):
         return default
+
+
+def truthy(value: Any) -> bool:
+    return str(value or "").strip().lower() in {"1", "true", "yes", "y"}
+
+
+def policy_profile_eligible(row: dict[str, str], profile: str) -> bool:
+    model_favorite = number(row.get("model_favorite_prob"), max(number(row.get("model_p1")), 1.0 - number(row.get("model_p1"))))
+    market_favorite = number(row.get("market_favorite_prob"), max(number(row.get("market_p1_devig")), 1.0 - number(row.get("market_p1_devig"))))
+    short_guard = truthy(row.get("short_favorite_guard")) or model_favorite > 0.80 or market_favorite > 0.80
+    if short_guard:
+        return False
+    surface = str(row.get("surface") or "")
+    series = str(row.get("series") or "")
+    confidence = str(row.get("confidence") or "").lower()
+    value = number(row.get("value_pct"))
+    if profile == "strict":
+        return surface == "Hard" and series == "Masters 1000" and confidence == "high" and value >= 10.0
+    if profile == "volume_200":
+        if confidence not in {"high", "medium"}:
+            return False
+        rules = (
+            ("Hard", "Masters 1000", "high", 15.0),
+            ("Hard", "Masters 1000", "medium", 30.0),
+            ("Hard", "Grand Slam", confidence, 5.0),
+            ("Hard", "ATP500", confidence, 10.0),
+            ("Clay", "ATP500", confidence, 10.0),
+        )
+        return any(
+            surface == rule_surface
+            and series == rule_series
+            and confidence == rule_confidence
+            and value >= minimum
+            for rule_surface, rule_series, rule_confidence, minimum in rules
+        )
+    return False
+
+
+def row_in_replacement_experiment(row: dict[str, str], experiment: dict[str, Any]) -> bool:
+    explicit = {item for item in str(row.get("replacement_cohorts") or "").split("|") if item}
+    experiment_id = next((key for key, value in REPLACEMENT_EXPERIMENTS.items() if value == experiment), "")
+    if experiment_id and experiment_id in explicit:
+        return True
+    gap = number(row.get("model_market_gap_pp"))
+    return (
+        not truthy(row.get("side_flip"))
+        and policy_profile_eligible(row, str(experiment["profile"]))
+        and float(experiment["min_gap_pp_exclusive"]) < gap <= float(experiment["max_gap_pp_inclusive"])
+    )
+
+
+def replacement_quality_eligible(row: dict[str, str]) -> bool:
+    if row.get("replacement_forward_eligible") not in {None, ""}:
+        return truthy(row.get("replacement_forward_eligible"))
+    quality = str(row.get("diagnostic_quality") or "").upper()
+    tags = {item for item in str(row.get("diagnosis_tags") or "").split("|") if item}
+    return quality != "LOW" and "partial_coverage" not in tags and "low_12m_sample" not in tags
+
+
+def load_json(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {}
 
 
 def is_settled_bet(row: dict[str, str]) -> bool:
@@ -174,6 +255,93 @@ def segment_summary(
     }
 
 
+def replacement_experiment_report(
+    archive: list[dict[str, str]],
+    ml_clv_rows: list[dict[str, str]],
+    historical_report: dict[str, Any],
+) -> dict[str, Any]:
+    historical_experiments = (
+        historical_report.get("threshold_audit", {})
+        .get("registered_replacement_experiments", {})
+        .get("experiments", {})
+    )
+    output: dict[str, Any] = {}
+    for experiment_id, definition in REPLACEMENT_EXPERIMENTS.items():
+        captured = [
+            row
+            for row in archive
+            if (row.get("bet_type") or "match").lower() != "spread"
+            and row_in_replacement_experiment(row, definition)
+        ]
+        eligible = [row for row in captured if replacement_quality_eligible(row)]
+        metric = performance(eligible, clv_for_signals(eligible, ml_clv_rows))
+        historical = historical_experiments.get(experiment_id, {})
+        historical_pass = bool(historical.get("passes_retrospective_screen"))
+        checks = {
+            "historical_screen_passed": historical_pass,
+            "settled_150": metric["settled"] >= 150,
+            "roi_positive": metric["roi_pct"] is not None and metric["roi_pct"] > 0,
+            "clv_at_least_0_5pct": metric["avg_clv_pct"] is not None and metric["avg_clv_pct"] >= 0.5,
+            "positive_clv_at_least_55pct": metric["positive_clv_pct"] is not None and metric["positive_clv_pct"] >= 55,
+        }
+        passes = all(checks.values())
+        if not historical:
+            verdict = "HISTORICAL_SCREEN_NOT_RUN"
+        elif not historical_pass:
+            verdict = "HISTORICAL_SCREEN_FAILED"
+        elif passes:
+            verdict = "MANUAL_REVIEW_CANDIDATE"
+        elif metric["settled"] < 50:
+            verdict = "FORWARD_SAMPLE_BUILDING"
+        elif metric["avg_clv_pct"] is not None and metric["avg_clv_pct"] < 0:
+            verdict = "PAUSE_NEGATIVE_CLV"
+        else:
+            verdict = "KEEP_COLLECTING"
+        output[experiment_id] = {
+            **definition,
+            "captured": len(captured),
+            "quality_eligible": len(eligible),
+            "excluded_low_quality": len(captured) - len(eligible),
+            "performance": metric,
+            "checks": checks,
+            "passes": passes,
+            "verdict": verdict,
+            "historical": historical,
+            "by_surface": {
+                surface: performance(
+                    [row for row in eligible if (row.get("surface") or "unknown") == surface],
+                    clv_for_signals(
+                        [row for row in eligible if (row.get("surface") or "unknown") == surface],
+                        ml_clv_rows,
+                    ),
+                )
+                for surface in sorted({row.get("surface") or "unknown" for row in eligible})
+            },
+        }
+    return output
+
+
+def side_flip_surface_report(
+    archive: list[dict[str, str]],
+    ml_clv_rows: list[dict[str, str]],
+) -> dict[str, Any]:
+    ml_rows = [
+        row
+        for row in archive
+        if (row.get("bet_type") or "match").lower() != "spread" and truthy(row.get("side_flip"))
+    ]
+    return {
+        surface: performance(
+            [row for row in ml_rows if (row.get("surface") or "unknown") == surface],
+            clv_for_signals(
+                [row for row in ml_rows if (row.get("surface") or "unknown") == surface],
+                ml_clv_rows,
+            ),
+        )
+        for surface in sorted({row.get("surface") or "unknown" for row in ml_rows})
+    }
+
+
 def review_assessment(spread_perf: dict[str, Any], gate_passes: bool) -> tuple[str, str]:
     settled = spread_perf["settled"]
     roi = spread_perf["roi_pct"]
@@ -198,6 +366,7 @@ def build_report(
     ml_clv_rows: list[dict[str, str]],
     spread_clv_rows: list[dict[str, str]],
     today: date | None = None,
+    historical_report: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     today = today or datetime.now(timezone.utc).date()
     all_time = cohort_summary(archive, ml_clv_rows, spread_clv_rows)
@@ -223,6 +392,11 @@ def build_report(
         "series": segment_summary(archive, ml_clv_rows, spread_clv_rows, "series"),
         "diagnosis": segment_summary(archive, ml_clv_rows, spread_clv_rows, "diagnosis_primary"),
     }
+    replacement_experiments = replacement_experiment_report(
+        archive,
+        ml_clv_rows,
+        historical_report or {},
+    )
     return {
         "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "status": "RESEARCH_ONLY",
@@ -242,6 +416,14 @@ def build_report(
             "passes": gate_passes,
             "checks": gate_checks,
             "rule": "n>=200, ROI>0, mean CLV>=+0.5%, positive CLV share>=55%",
+        },
+        "ml_guard_replacement": {
+            "registered_at": "2026-07-18",
+            "status": "SHADOW_ONLY_NO_LIVE_ROUTING_CHANGE",
+            "automatic_promotion": False,
+            "rule": "Per cohort: historical screen plus n>=150 forward settled, ROI>0, mean CLV>=+0.5%, positive CLV share>=55%, then manual review.",
+            "experiments": replacement_experiments,
+            "side_flip_by_surface": side_flip_surface_report(archive, ml_clv_rows),
         },
     }
 
@@ -301,6 +483,18 @@ def report_text(report: dict[str, Any]) -> str:
             "A large ML EV is not proof of spread value. Only settled ROI plus closing-line evidence can establish that.",
         ]
     )
+    lines.extend(["", "ML guard replacement experiments"])
+    for experiment_id, experiment in report["ml_guard_replacement"]["experiments"].items():
+        lines.append(
+            f"  {experiment_id}: {experiment['verdict']} | captured={experiment['captured']} "
+            f"eligible={experiment['quality_eligible']} | {format_metric(experiment['performance'])}"
+        )
+    lines.extend(
+        [
+            "  Side flips remain surface-split shadow evidence only.",
+            "  Live routing is unchanged; automatic promotion is disabled.",
+        ]
+    )
     return "\n".join(lines) + "\n"
 
 
@@ -326,6 +520,13 @@ def write_weekly_snapshot(path: Path, report: dict[str, Any], generated: datetim
         "spread_rescue_rate_pct": report["spread_rescue_rate_pct"],
         "gate_passes": int(report["spread_promotion_gate"]["passes"]),
     }
+    for experiment_id, experiment in report["ml_guard_replacement"]["experiments"].items():
+        metric = experiment["performance"]
+        prefix = experiment_id.replace("_same_side", "")
+        row[f"{prefix}_verdict"] = experiment["verdict"]
+        row[f"{prefix}_settled"] = metric["settled"]
+        row[f"{prefix}_roi_pct"] = metric["roi_pct"]
+        row[f"{prefix}_avg_clv_pct"] = metric["avg_clv_pct"]
     fields = list(row)
     existing = load_csv(path)
     by_week = {existing_row.get("week_start") or "": existing_row for existing_row in existing}
@@ -345,12 +546,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--json", default=str(DEFAULT_JSON))
     parser.add_argument("--text", default=str(DEFAULT_TEXT))
     parser.add_argument("--weekly-snapshot-csv", default="")
+    parser.add_argument("--historical-json", default=str(DEFAULT_HISTORICAL))
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-    report = build_report(load_csv(Path(args.archive)), load_csv(Path(args.ml_clv)), load_csv(Path(args.spread_clv)))
+    report = build_report(
+        load_csv(Path(args.archive)),
+        load_csv(Path(args.ml_clv)),
+        load_csv(Path(args.spread_clv)),
+        historical_report=load_json(Path(args.historical_json)),
+    )
     json_path, text_path = Path(args.json), Path(args.text)
     json_path.parent.mkdir(parents=True, exist_ok=True)
     text_path.parent.mkdir(parents=True, exist_ok=True)
@@ -362,6 +569,8 @@ def main() -> int:
     print(format_metric(report["spread"]))
     print(f"Weekly verdict: {report['weekly_review']['verdict']}")
     print(f"Spread gate: {'REVIEW CANDIDATE' if report['spread_promotion_gate']['passes'] else 'FAIL'}")
+    for experiment_id, experiment in report["ml_guard_replacement"]["experiments"].items():
+        print(f"Guard replacement {experiment_id}: {experiment['verdict']}")
     return 0
 
 

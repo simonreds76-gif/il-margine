@@ -97,6 +97,8 @@ class TennisModelMarketGapAuditTests(unittest.TestCase):
         self.assertEqual(rows[1]["side"], "P1+")
         self.assertEqual(rows[1]["spread_line"], 4.5)
         self.assertEqual(rows[1]["spread_odds"], 1.95)
+        self.assertIn(rows[0]["guard_cohort"], {"gap_only", "side_flip_and_gap", "side_flip_only", "ev_only_control"})
+        self.assertIn("replacement_forward_eligible", rows[0])
 
     def test_first_observation_dedup_does_not_replace_price(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
@@ -158,6 +160,43 @@ class TennisModelMarketGapAuditTests(unittest.TestCase):
             rows = REPORT.load_csv(path)
             self.assertEqual(len(rows), 1)
             self.assertEqual(rows[0]["week_start"], "2026-07-13")
+
+    def test_guard_replacement_forward_gate_never_auto_promotes(self) -> None:
+        historical = {
+            "threshold_audit": {
+                "registered_replacement_experiments": {
+                    "experiments": {
+                        "strict_gap_10_20_same_side": {"passes_retrospective_screen": True},
+                    }
+                }
+            }
+        }
+        row = {
+            "anomaly_id": "guard-1",
+            "date": "2026-07-13",
+            "player1_id": "1",
+            "player2_id": "2",
+            "settlement_status": "settled",
+            "bet_outcome": "WIN",
+            "bet_type": "match",
+            "selected_odds": "2.0",
+            "stake_units": "1",
+            "surface": "Hard",
+            "series": "Masters 1000",
+            "confidence": "high",
+            "value_pct": "20",
+            "model_p1": "0.62",
+            "market_p1_devig": "0.50",
+            "model_market_gap_pp": "12",
+            "side_flip": "0",
+            "diagnostic_quality": "HIGH",
+            "replacement_forward_eligible": "1",
+            "replacement_cohorts": "strict_gap_10_20_same_side",
+        }
+        report = REPORT.build_report([row], [], [], historical_report=historical)
+        experiment = report["ml_guard_replacement"]["experiments"]["strict_gap_10_20_same_side"]
+        self.assertEqual(experiment["verdict"], "FORWARD_SAMPLE_BUILDING")
+        self.assertFalse(report["ml_guard_replacement"]["automatic_promotion"])
 
 
 if __name__ == "__main__":
