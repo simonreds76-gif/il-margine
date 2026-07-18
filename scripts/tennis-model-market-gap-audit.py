@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Capture extreme tennis model/market disagreements as research hypotheses.
 
-This lane never publishes or stakes a bet. It freezes the first observed ML
-price and, when available, the same player's Pinnacle handicap so the two ideas
-can be settled independently. The resulting archive answers whether extreme ML
-gaps identify useful handicap spots or mostly expose data/model failures.
+This lane never changes public fair-odds routing. It freezes the first observed
+ML price and, when available, the same player's Pinnacle handicap so the two
+ideas can be settled independently. Registered ML replacement cohorts may be
+shown in the private ops digest as provisional selections while their own
+forward ROI and CLV evidence accumulates.
 """
 
 from __future__ import annotations
@@ -557,7 +558,13 @@ def anomaly_rows(
             "guard_cohort": guard_cohort(side_flip, favorite_gap * 100.0),
             "policy_profiles": "|".join(policy_profiles),
             "replacement_cohorts": "|".join(replacement_cohorts),
-            "replacement_forward_eligible": "1" if replacement_cohorts and quality != "LOW" else "0",
+            # Keep the forward sample identical to the registered historical
+            # cohort. Quality is reported as a separate diagnostic cut instead
+            # of becoming an untested post-registration exclusion.
+            "replacement_forward_eligible": "1" if replacement_cohorts else "0",
+            "replacement_quality_eligible": "1" if replacement_cohorts and quality != "LOW" else "0",
+            "replacement_stake_units": 0.5 if replacement_cohorts else "",
+            "replacement_status": "provisional_0_5u" if replacement_cohorts else "",
             "replacement_registered_at": REGISTERED_REPLACEMENT_AT if replacement_cohorts else "",
             "gap_bucket": gap_bucket,
             "ev_bucket": ev_bucket,

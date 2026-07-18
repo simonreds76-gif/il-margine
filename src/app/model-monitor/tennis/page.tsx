@@ -278,6 +278,7 @@ type ExtremeGapReport = {
       quality_eligible: number;
       excluded_low_quality: number;
       performance: ExtremeGapMetric;
+      quality_performance?: ExtremeGapMetric;
       passes: boolean;
       verdict: string;
       historical?: {
@@ -976,6 +977,7 @@ function ExtremeGapLab({ data }: { data: ExtremeGapLoad }) {
   const replacementExperiments = guardReplacement?.experiments ?? {};
   const historicalSideFlips = historical?.threshold_audit?.registered_replacement_experiments?.side_flip_surface_diagnostics ?? {};
   const currentMlRows = liveRows.filter((row) => row.bet_type !== "spread").slice(0, 8);
+  const replacementCandidates = currentMlRows.filter((row) => Boolean(row.replacement_cohorts));
   const spreadByAnomaly = new Map(
     liveRows.filter((row) => row.bet_type === "spread").map((row) => [row.anomaly_id, row]),
   );
@@ -1051,13 +1053,42 @@ function ExtremeGapLab({ data }: { data: ExtremeGapLoad }) {
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-300">Registered ML guard replacement</p>
             <h3 className="mt-2 text-lg font-semibold text-slate-100">Test the blocked ML bets, not the losing handicap shortcut</h3>
             <p className="mt-2 max-w-4xl text-xs leading-5 text-slate-400">
-              Strict tests same-side gaps from 10-20pp. Volume 200 tests 10-15pp. Low-quality or partial inputs are excluded from forward proof, and live routing remains unchanged.
+              Strict tests same-side gaps from 10-20pp. Volume 200 tests 10-15pp. The exact registered cohort is now shown at 0.5u in the private morning digest; quality remains visible as a separate evidence cut.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <StatusPill label="SHADOW ONLY" tone={badgeTones.shadow} />
-            <StatusPill label="NO AUTO PROMOTION" tone={badgeTones.disabled} />
+            <StatusPill label="PROVISIONAL 0.5U" tone={badgeTones.shadow} />
+            <StatusPill label="PRIVATE OPS" tone={badgeTones.deferred} />
           </div>
+        </div>
+
+        <div className="mt-4 overflow-hidden rounded-2xl border border-emerald-500/20 bg-slate-950/55">
+          <div className="flex items-center justify-between gap-3 border-b border-slate-800 px-4 py-3">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-300">Today&apos;s provisional selections</p>
+              <p className="mt-1 text-[11px] text-slate-500">Deduplicated after Strict and Volume 200. Each selection is tracked at its first recorded price.</p>
+            </div>
+            <span className="rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-1 text-xs font-semibold tabular-nums text-emerald-200">{replacementCandidates.length}</span>
+          </div>
+          {replacementCandidates.map((row) => {
+            const cohort = (row.replacement_cohorts || "").includes("strict_gap") ? "STRICT GAP" : "VOL200 GAP";
+            const quality = (row.diagnostic_quality || "UNKNOWN").toUpperCase();
+            return (
+              <div key={`replacement-${row.anomaly_id}`} className="grid gap-2 border-b border-slate-900 px-4 py-3 last:border-0 sm:grid-cols-[minmax(0,1.5fr)_90px_90px_90px] sm:items-center">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-slate-100">{row.selected_player} ML @ {row.selected_odds}</p>
+                  <p className="mt-1 truncate text-xs text-slate-500">{row.player1} vs {row.player2} · {cohort}</p>
+                </div>
+                <p className="text-xs tabular-nums text-slate-300"><span className="text-slate-600">Edge </span>{nullableMetric(row.value_pct)?.toFixed(1) ?? "-"}%</p>
+                <p className="text-xs tabular-nums text-slate-300"><span className="text-slate-600">Gap </span>{nullableMetric(row.model_market_gap_pp)?.toFixed(1) ?? "-"}pp</p>
+                <div className="flex items-center gap-2 sm:justify-end">
+                  <StatusPill label={quality} tone={quality === "LOW" ? badgeTones.deferred : badgeTones.shadow} />
+                  <span className="text-xs font-semibold text-emerald-200">0.5u</span>
+                </div>
+              </div>
+            );
+          })}
+          {replacementCandidates.length === 0 ? <p className="px-4 py-5 text-sm text-slate-500">No registered guard-expansion selection in the current snapshot.</p> : null}
         </div>
 
         <div className="mt-4 grid gap-3 xl:grid-cols-2">
@@ -1096,7 +1127,7 @@ function ExtremeGapLab({ data }: { data: ExtremeGapLoad }) {
                   </div>
                 </div>
                 <p className="mt-3 border-t border-slate-800 pt-3 text-[10px] leading-4 text-slate-500">
-                  Captured {experiment.captured} · quality eligible {experiment.quality_eligible} · excluded low-quality {experiment.excluded_low_quality}. Historical screen {experiment.historical?.passes_retrospective_screen ? "passed" : "not passed"}; forward ROI and CLV still decide promotion.
+                  Full cohort captured {experiment.captured} · quality-clean {experiment.quality_eligible} · low-quality diagnostic {experiment.excluded_low_quality}. Historical screen {experiment.historical?.passes_retrospective_screen ? "passed" : "not passed"}; forward ROI and CLV still decide full-stake promotion.
                 </p>
               </div>
             );
