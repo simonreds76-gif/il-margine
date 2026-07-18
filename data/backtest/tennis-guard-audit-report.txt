@@ -1,0 +1,94 @@
+TENNIS FAIR-ODDS GUARD AUDIT
+Generated: 2026-07-18T00:06:36.964304+00:00
+Historical rows loaded: 10065
+
+METHOD
+- Replays reconstructable ML guards on identity-clean ATP 2022-2025 result rows.
+- Blocked ROI is descriptive, not proof that a guard should be inverted or removed.
+- Unique/marginal rows prevent overlapping guards from claiming the same result twice.
+- Spread conflicts and embedded probability modifiers require separate prospective/ablation evidence.
+
+PROFILE broad_value_10
+  All ATP rows with model value >=10%
+  Before: n=5578 ROI=-2.219% P/L=-123.770u
+  After all replayable guards: n=1823 ROI=-3.59% P/L=-65.440u
+  Blocked: n=3755 ROI=-1.553% P/L=-58.330u
+  Guard attribution:
+    model_favourite_below_1_25: flagged=830 ROI=-15.352% | unique=17 ROI=19.412% | first_hit=830
+    market_favourite_below_1_25: flagged=1484 ROI=-16.94% | unique=368 ROI=-17.033% | first_hit=865
+    model_market_side_flip: flagged=844 ROI=6.566% | unique=708 ROI=8.588% | first_hit=829
+    model_market_gap_above_10pp: flagged=1906 ROI=4.008% | unique=1041 ROI=11.251% | first_hit=1124
+    atp500_hard_short_favourite: flagged=340 ROI=0.326% | unique=107 ROI=-2.57% | first_hit=107
+    masters_hard_heavy_favourite_dog: flagged=168 ROI=0.875% | unique=0 ROI=None% | first_hit=0
+
+PROFILE strict
+  Hard | Masters 1000 | high confidence | value >=10%
+  Before: n=870 ROI=9.931% P/L=+86.400u
+  After all replayable guards: n=336 ROI=3.658% P/L=+12.290u
+  Blocked: n=534 ROI=13.878% P/L=+74.110u
+  Guard attribution:
+    model_favourite_below_1_25: flagged=72 ROI=-37.181% | unique=1 ROI=37.0% | first_hit=72
+    market_favourite_below_1_25: flagged=261 ROI=-1.134% | unique=39 ROI=3.0% | first_hit=191
+    model_market_side_flip: flagged=145 ROI=30.248% | unique=129 ROI=31.38% | first_hit=144
+    model_market_gap_above_10pp: flagged=248 ROI=17.548% | unique=127 ROI=24.748% | first_hit=127
+    atp500_hard_short_favourite: flagged=0 ROI=None% | unique=0 ROI=None% | first_hit=0
+    masters_hard_heavy_favourite_dog: flagged=152 ROI=7.882% | unique=0 ROI=None% | first_hit=0
+
+PROFILE volume_200_policy
+  All rows matching the registered Volume 200 segment thresholds
+  Before: n=2115 ROI=-0.188% P/L=-3.970u
+  After all replayable guards: n=528 ROI=6.53% P/L=+34.480u
+  Blocked: n=1587 ROI=-2.423% P/L=-38.450u
+  Guard attribution:
+    model_favourite_below_1_25: flagged=421 ROI=-24.755% | unique=13 ROI=9.308% | first_hit=421
+    market_favourite_below_1_25: flagged=669 ROI=-19.577% | unique=93 ROI=-28.495% | first_hit=355
+    model_market_side_flip: flagged=287 ROI=8.129% | unique=225 ROI=12.369% | first_hit=284
+    model_market_gap_above_10pp: flagged=754 ROI=10.054% | unique=337 ROI=15.786% | first_hit=420
+    atp500_hard_short_favourite: flagged=340 ROI=0.326% | unique=107 ROI=-2.57% | first_hit=107
+    masters_hard_heavy_favourite_dog: flagged=150 ROI=2.18% | unique=0 ROI=None% | first_hit=0
+
+DECISION INVENTORY
+  replayable_ml_guards
+    model_favourite_below_1_25: KEEP - 2022-2025 A/B report; improved every reported surface and series
+    market_favourite_below_1_25: REVIEW_REDUNDANCY - No independent registered A/B found; overlaps model/gap guards
+    model_market_side_flip: SHADOW_SEPARATELY - Added after mismatch incidents, not a registered threshold test; no frozen prospective promotion proof
+    model_market_gap_above_10pp: REVIEW_BY_SURFACE_PROFILE - Introduced 2026-04-24 after mismatch incidents; no threshold sweep, and blocked historical bets are not uniformly bad
+    atp500_hard_short_favourite: KEEP_AS_PROFILE_FILTER - Locked policy A/B improved pooled ROI but remained negative overall
+    masters_hard_heavy_favourite_dog: KEEP_AND_TRACK_PROSPECTIVELY - Narrow retrospective tail; needs prospective isolated tracking
+  spread_and_cross_market_guards
+    point_probability_shape_within_8pp: PROSPECTIVE_ONLY - Not reconstructable from ML result CSVs; stored point probabilities require dedicated spread replay
+    extreme_favourite_plus_games_dog_spread: REVIEW_WITH_REAL_SPREAD_ODDS - Logic-derived proxy; no independent registered A/B found
+    same_match_favourite_handicap_conflict: TRACK_CONFLICT_OUTCOMES - Cross-market consistency rule; historical ML files do not preserve candidate spread state
+    opposite_side_handicap_conflict: TRACK_CONFLICT_OUTCOMES - API/report parity repaired; historical ML files do not preserve candidate spread state
+    spread_v1_line_shape: KEEP_AS_PROFILE_FILTER - Segment rule from the 2026-04-24 live audit; needs a larger real-price sample
+    spread_v1_edge_band: STRATEGY_DEFINITION - Fixed shadow-profile band; values outside it remain non-actionable
+    clay_bo3_handicap_edge_band: STRATEGY_DEFINITION - Shadow profile boundary; not a general spread safety rule
+    clay_ml_opposite_spread_suppression: TRACK_CONFLICT_OUTCOMES - Cross-lane consistency filter; blocked candidates are not yet persisted for settlement
+  model_probability_modifiers
+    elo_magnitude: ABLATION_REQUIRED - Embedded before calibration
+    surface_rank_conflict: ABLATION_REQUIRED - Embedded before calibration
+    surface_points_mismatch: ABLATION_REQUIRED - Embedded before calibration
+    series_probability: ABLATION_REQUIRED - Embedded after calibration
+    low_confidence_dog: ABLATION_REQUIRED - Embedded probability adjustment
+    stepup_dog: ABLATION_REQUIRED - Embedded probability adjustment
+    class_gap: ABLATION_REQUIRED - Rank/Elo mismatch correction embedded in final probability
+    probability_delta_caps: KEEP_SAFETY_CAP - Bounds component and final adjustments; calibration impact still needs attribution
+    hard_overlay_favourite_cap: KEEP_SAFETY_CAP - Caps hard-overlay favourite probabilities by series/confidence; only relevant when the hard overlay is enabled
+  strategy_and_operational_filters
+    strict_segment_confidence_value: STRATEGY_DEFINITION - Hard Masters/high/>=10%; not a model guard
+    volume_200_segment_thresholds: STRATEGY_DEFINITION - Registered profile rules; not a model guard
+    challenger_research_lane_disabled: PRODUCT_STATUS - High coverage/high confidence/10-15% edge still lacks mature ROI and CLV proof
+    clay_bo3_profile: SHADOW_ONLY - High confidence, 5-13% ML; dog handicap 6-25%; ML routing disabled by default
+    grass_bo3_profile: SHADOW_ONLY - ATP250/500, 10-30%, favourite agreement, lagged CPI required; missing and slow CPI blocked
+    cpi_speed_identity_gate: PAUSED - Requires PASS_SHADOW and idclean_v1; current historical identity evidence invalid
+    injury_overlay: OFF - Disabled pending validation
+    tournament_overlay: OFF - Disabled by default; when enabled it also requires a matched segment, minimum n and minimum shrunk ROI
+    missing_or_invalid_pinnacle_odds: KEEP - Cannot calculate takeable EV without a matched two-way market
+    ambiguous_player_pairing: KEEP - Fail-closed identity protection against wrong-opponent prices
+    stale_schedule_and_pairing_suppression: KEEP - Data-integrity guard, not an edge filter
+
+CURRENT CONCLUSION
+- Keep the model-favourite <1.25 protection; it has the strongest documented A/B evidence.
+- Do not treat the blanket 10pp gap or side-flip veto as validated edge protection. Keep collecting them as isolated shadow cohorts.
+- Do not remove cross-market guards from an ML-only replay; first persist and settle their blocked candidates.
+- Embedded probability modifiers need controlled model ablations, not a routing-guard ROI table.

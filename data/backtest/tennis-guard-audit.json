@@ -1,0 +1,2261 @@
+{
+  "generated_at": "2026-07-18T00:06:36.964304+00:00",
+  "status": "AUDIT_ONLY_NO_LIVE_CHANGE",
+  "rows_loaded": 10065,
+  "source_counts": {
+    "data\\backtest\\backtest-results-2022.csv": 2528,
+    "data\\backtest\\backtest-results-2023.csv": 2594,
+    "data\\backtest\\backtest-results-2024.csv": 2578,
+    "data\\backtest\\backtest-results-2025.csv": 2365
+  },
+  "constants": {
+    "model_favourite_odds_min": 1.25,
+    "market_favourite_odds_min": 1.25,
+    "model_market_gap_max_pp": 10.0,
+    "side_flip_buffer_pp": 3.0,
+    "atp500_hard_short_favourite_max_odds": 1.8,
+    "heavy_favourite_dog_min_prob": 0.74
+  },
+  "profile_descriptions": {
+    "broad_value_10": "All ATP rows with model value >=10%",
+    "strict": "Hard | Masters 1000 | high confidence | value >=10%",
+    "volume_200_policy": "All rows matching the registered Volume 200 segment thresholds"
+  },
+  "profiles": {
+    "broad_value_10": {
+      "before_guards": {
+        "bets": 5578,
+        "wins": 1948,
+        "losses": 3630,
+        "pnl_units": -123.77,
+        "roi_pct": -2.219,
+        "win_rate_pct": 34.923,
+        "avg_odds": 4.481
+      },
+      "after_all_replayable_guards": {
+        "bets": 1823,
+        "wins": 683,
+        "losses": 1140,
+        "pnl_units": -65.44,
+        "roi_pct": -3.59,
+        "win_rate_pct": 37.466,
+        "avg_odds": 2.8
+      },
+      "blocked_by_any": {
+        "bets": 3755,
+        "wins": 1265,
+        "losses": 2490,
+        "pnl_units": -58.33,
+        "roi_pct": -1.553,
+        "win_rate_pct": 33.688,
+        "avg_odds": 5.298
+      },
+      "guards": {
+        "model_favourite_below_1_25": {
+          "flagged": {
+            "bets": 830,
+            "wins": 207,
+            "losses": 623,
+            "pnl_units": -127.42,
+            "roi_pct": -15.352,
+            "win_rate_pct": 24.94,
+            "avg_odds": 11.171
+          },
+          "unique": {
+            "bets": 17,
+            "wins": 15,
+            "losses": 2,
+            "pnl_units": 3.3,
+            "roi_pct": 19.412,
+            "win_rate_pct": 88.235,
+            "avg_odds": 1.352
+          },
+          "marginal_removed": {
+            "bets": 17,
+            "wins": 15,
+            "losses": 2,
+            "pnl_units": 3.3,
+            "roi_pct": 19.412,
+            "win_rate_pct": 88.235,
+            "avg_odds": 1.352
+          },
+          "survivors_without_this_guard": {
+            "bets": 1840,
+            "wins": 698,
+            "losses": 1142,
+            "pnl_units": -62.14,
+            "roi_pct": -3.377,
+            "win_rate_pct": 37.935,
+            "avg_odds": 2.787
+          },
+          "first_hit_bets": 830,
+          "surface": {
+            "Hard": {
+              "bets": 469,
+              "wins": 124,
+              "losses": 345,
+              "pnl_units": -99.09,
+              "roi_pct": -21.128,
+              "win_rate_pct": 26.439,
+              "avg_odds": 10.985
+            },
+            "Clay": {
+              "bets": 225,
+              "wins": 53,
+              "losses": 172,
+              "pnl_units": 1.34,
+              "roi_pct": 0.596,
+              "win_rate_pct": 23.556,
+              "avg_odds": 11.509
+            },
+            "Grass": {
+              "bets": 136,
+              "wins": 30,
+              "losses": 106,
+              "pnl_units": -29.67,
+              "roi_pct": -21.816,
+              "win_rate_pct": 22.059,
+              "avg_odds": 11.257
+            }
+          },
+          "year": {
+            "2022": {
+              "bets": 207,
+              "wins": 58,
+              "losses": 149,
+              "pnl_units": -39.11,
+              "roi_pct": -18.894,
+              "win_rate_pct": 28.019,
+              "avg_odds": 9.639
+            },
+            "2023": {
+              "bets": 220,
+              "wins": 45,
+              "losses": 175,
+              "pnl_units": -65.82,
+              "roi_pct": -29.918,
+              "win_rate_pct": 20.455,
+              "avg_odds": 11.972
+            },
+            "2024": {
+              "bets": 224,
+              "wins": 53,
+              "losses": 171,
+              "pnl_units": -23.78,
+              "roi_pct": -10.616,
+              "win_rate_pct": 23.661,
+              "avg_odds": 11.479
+            },
+            "2025": {
+              "bets": 179,
+              "wins": 51,
+              "losses": 128,
+              "pnl_units": 1.29,
+              "roi_pct": 0.721,
+              "win_rate_pct": 28.492,
+              "avg_odds": 11.575
+            }
+          }
+        },
+        "market_favourite_below_1_25": {
+          "flagged": {
+            "bets": 1484,
+            "wins": 181,
+            "losses": 1303,
+            "pnl_units": -251.39,
+            "roi_pct": -16.94,
+            "win_rate_pct": 12.197,
+            "avg_odds": 9.623
+          },
+          "unique": {
+            "bets": 368,
+            "wins": 58,
+            "losses": 310,
+            "pnl_units": -62.68,
+            "roi_pct": -17.033,
+            "win_rate_pct": 15.761,
+            "avg_odds": 5.472
+          },
+          "marginal_removed": {
+            "bets": 368,
+            "wins": 58,
+            "losses": 310,
+            "pnl_units": -62.68,
+            "roi_pct": -17.033,
+            "win_rate_pct": 15.761,
+            "avg_odds": 5.472
+          },
+          "survivors_without_this_guard": {
+            "bets": 2191,
+            "wins": 741,
+            "losses": 1450,
+            "pnl_units": -128.12,
+            "roi_pct": -5.848,
+            "win_rate_pct": 33.82,
+            "avg_odds": 3.249
+          },
+          "first_hit_bets": 865,
+          "surface": {
+            "Hard": {
+              "bets": 808,
+              "wins": 98,
+              "losses": 710,
+              "pnl_units": -138.18,
+              "roi_pct": -17.101,
+              "win_rate_pct": 12.129,
+              "avg_odds": 9.723
+            },
+            "Clay": {
+              "bets": 455,
+              "wins": 57,
+              "losses": 398,
+              "pnl_units": -64.29,
+              "roi_pct": -14.13,
+              "win_rate_pct": 12.527,
+              "avg_odds": 9.162
+            },
+            "Grass": {
+              "bets": 221,
+              "wins": 26,
+              "losses": 195,
+              "pnl_units": -48.92,
+              "roi_pct": -22.136,
+              "win_rate_pct": 11.765,
+              "avg_odds": 10.207
+            }
+          },
+          "year": {
+            "2022": {
+              "bets": 385,
+              "wins": 48,
+              "losses": 337,
+              "pnl_units": -74.11,
+              "roi_pct": -19.249,
+              "win_rate_pct": 12.468,
+              "avg_odds": 8.817
+            },
+            "2023": {
+              "bets": 412,
+              "wins": 44,
+              "losses": 368,
+              "pnl_units": -130.97,
+              "roi_pct": -31.789,
+              "win_rate_pct": 10.68,
+              "avg_odds": 9.73
+            },
+            "2024": {
+              "bets": 375,
+              "wins": 40,
+              "losses": 335,
+              "pnl_units": -61.56,
+              "roi_pct": -16.416,
+              "win_rate_pct": 10.667,
+              "avg_odds": 9.966
+            },
+            "2025": {
+              "bets": 312,
+              "wins": 49,
+              "losses": 263,
+              "pnl_units": 15.25,
+              "roi_pct": 4.888,
+              "win_rate_pct": 15.705,
+              "avg_odds": 10.064
+            }
+          }
+        },
+        "model_market_side_flip": {
+          "flagged": {
+            "bets": 844,
+            "wins": 381,
+            "losses": 463,
+            "pnl_units": 55.42,
+            "roi_pct": 6.566,
+            "win_rate_pct": 45.142,
+            "avg_odds": 2.442
+          },
+          "unique": {
+            "bets": 708,
+            "wins": 331,
+            "losses": 377,
+            "pnl_units": 60.8,
+            "roi_pct": 8.588,
+            "win_rate_pct": 46.751,
+            "avg_odds": 2.352
+          },
+          "marginal_removed": {
+            "bets": 708,
+            "wins": 331,
+            "losses": 377,
+            "pnl_units": 60.8,
+            "roi_pct": 8.588,
+            "win_rate_pct": 46.751,
+            "avg_odds": 2.352
+          },
+          "survivors_without_this_guard": {
+            "bets": 2531,
+            "wins": 1014,
+            "losses": 1517,
+            "pnl_units": -4.64,
+            "roi_pct": -0.183,
+            "win_rate_pct": 40.063,
+            "avg_odds": 2.675
+          },
+          "first_hit_bets": 829,
+          "surface": {
+            "Hard": {
+              "bets": 487,
+              "wins": 232,
+              "losses": 255,
+              "pnl_units": 57.16,
+              "roi_pct": 11.737,
+              "win_rate_pct": 47.639,
+              "avg_odds": 2.428
+            },
+            "Clay": {
+              "bets": 253,
+              "wins": 105,
+              "losses": 148,
+              "pnl_units": -6.77,
+              "roi_pct": -2.676,
+              "win_rate_pct": 41.502,
+              "avg_odds": 2.412
+            },
+            "Grass": {
+              "bets": 104,
+              "wins": 44,
+              "losses": 60,
+              "pnl_units": 5.03,
+              "roi_pct": 4.837,
+              "win_rate_pct": 42.308,
+              "avg_odds": 2.579
+            }
+          },
+          "year": {
+            "2022": {
+              "bets": 192,
+              "wins": 90,
+              "losses": 102,
+              "pnl_units": 18.65,
+              "roi_pct": 9.714,
+              "win_rate_pct": 46.875,
+              "avg_odds": 2.488
+            },
+            "2023": {
+              "bets": 223,
+              "wins": 115,
+              "losses": 108,
+              "pnl_units": 46.96,
+              "roi_pct": 21.058,
+              "win_rate_pct": 51.57,
+              "avg_odds": 2.373
+            },
+            "2024": {
+              "bets": 230,
+              "wins": 89,
+              "losses": 141,
+              "pnl_units": -15.81,
+              "roi_pct": -6.874,
+              "win_rate_pct": 38.696,
+              "avg_odds": 2.512
+            },
+            "2025": {
+              "bets": 199,
+              "wins": 87,
+              "losses": 112,
+              "pnl_units": 5.62,
+              "roi_pct": 2.824,
+              "win_rate_pct": 43.719,
+              "avg_odds": 2.392
+            }
+          }
+        },
+        "model_market_gap_above_10pp": {
+          "flagged": {
+            "bets": 1906,
+            "wins": 744,
+            "losses": 1162,
+            "pnl_units": 76.4,
+            "roi_pct": 4.008,
+            "win_rate_pct": 39.035,
+            "avg_odds": 4.229
+          },
+          "unique": {
+            "bets": 1041,
+            "wins": 458,
+            "losses": 583,
+            "pnl_units": 117.12,
+            "roi_pct": 11.251,
+            "win_rate_pct": 43.996,
+            "avg_odds": 2.747
+          },
+          "marginal_removed": {
+            "bets": 1041,
+            "wins": 458,
+            "losses": 583,
+            "pnl_units": 117.12,
+            "roi_pct": 11.251,
+            "win_rate_pct": 43.996,
+            "avg_odds": 2.747
+          },
+          "survivors_without_this_guard": {
+            "bets": 2864,
+            "wins": 1141,
+            "losses": 1723,
+            "pnl_units": 51.68,
+            "roi_pct": 1.804,
+            "win_rate_pct": 39.839,
+            "avg_odds": 2.781
+          },
+          "first_hit_bets": 1124,
+          "surface": {
+            "Hard": {
+              "bets": 1117,
+              "wins": 447,
+              "losses": 670,
+              "pnl_units": 53.17,
+              "roi_pct": 4.76,
+              "win_rate_pct": 40.018,
+              "avg_odds": 3.753
+            },
+            "Clay": {
+              "bets": 464,
+              "wins": 189,
+              "losses": 275,
+              "pnl_units": 55.83,
+              "roi_pct": 12.032,
+              "win_rate_pct": 40.733,
+              "avg_odds": 4.147
+            },
+            "Grass": {
+              "bets": 325,
+              "wins": 108,
+              "losses": 217,
+              "pnl_units": -32.6,
+              "roi_pct": -10.031,
+              "win_rate_pct": 33.231,
+              "avg_odds": 5.98
+            }
+          },
+          "year": {
+            "2022": {
+              "bets": 510,
+              "wins": 186,
+              "losses": 324,
+              "pnl_units": -7.68,
+              "roi_pct": -1.506,
+              "win_rate_pct": 36.471,
+              "avg_odds": 3.992
+            },
+            "2023": {
+              "bets": 486,
+              "wins": 193,
+              "losses": 293,
+              "pnl_units": 18.59,
+              "roi_pct": 3.825,
+              "win_rate_pct": 39.712,
+              "avg_odds": 4.243
+            },
+            "2024": {
+              "bets": 486,
+              "wins": 180,
+              "losses": 306,
+              "pnl_units": 25.35,
+              "roi_pct": 5.216,
+              "win_rate_pct": 37.037,
+              "avg_odds": 4.391
+            },
+            "2025": {
+              "bets": 424,
+              "wins": 185,
+              "losses": 239,
+              "pnl_units": 40.14,
+              "roi_pct": 9.467,
+              "win_rate_pct": 43.632,
+              "avg_odds": 4.312
+            }
+          }
+        },
+        "atp500_hard_short_favourite": {
+          "flagged": {
+            "bets": 340,
+            "wins": 149,
+            "losses": 191,
+            "pnl_units": 1.11,
+            "roi_pct": 0.326,
+            "win_rate_pct": 43.824,
+            "avg_odds": 3.889
+          },
+          "unique": {
+            "bets": 107,
+            "wins": 46,
+            "losses": 61,
+            "pnl_units": -2.75,
+            "roi_pct": -2.57,
+            "win_rate_pct": 42.991,
+            "avg_odds": 2.6
+          },
+          "marginal_removed": {
+            "bets": 107,
+            "wins": 46,
+            "losses": 61,
+            "pnl_units": -2.75,
+            "roi_pct": -2.57,
+            "win_rate_pct": 42.991,
+            "avg_odds": 2.6
+          },
+          "survivors_without_this_guard": {
+            "bets": 1930,
+            "wins": 729,
+            "losses": 1201,
+            "pnl_units": -68.19,
+            "roi_pct": -3.533,
+            "win_rate_pct": 37.772,
+            "avg_odds": 2.789
+          },
+          "first_hit_bets": 107,
+          "surface": {
+            "Hard": {
+              "bets": 340,
+              "wins": 149,
+              "losses": 191,
+              "pnl_units": 1.11,
+              "roi_pct": 0.326,
+              "win_rate_pct": 43.824,
+              "avg_odds": 3.889
+            },
+            "Clay": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            },
+            "Grass": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            }
+          },
+          "year": {
+            "2022": {
+              "bets": 85,
+              "wins": 31,
+              "losses": 54,
+              "pnl_units": 2.38,
+              "roi_pct": 2.8,
+              "win_rate_pct": 36.471,
+              "avg_odds": 4.455
+            },
+            "2023": {
+              "bets": 90,
+              "wins": 44,
+              "losses": 46,
+              "pnl_units": 15.21,
+              "roi_pct": 16.9,
+              "win_rate_pct": 48.889,
+              "avg_odds": 3.866
+            },
+            "2024": {
+              "bets": 65,
+              "wins": 25,
+              "losses": 40,
+              "pnl_units": -7.96,
+              "roi_pct": -12.246,
+              "win_rate_pct": 38.462,
+              "avg_odds": 3.869
+            },
+            "2025": {
+              "bets": 100,
+              "wins": 49,
+              "losses": 51,
+              "pnl_units": -8.52,
+              "roi_pct": -8.52,
+              "win_rate_pct": 49.0,
+              "avg_odds": 3.442
+            }
+          }
+        },
+        "masters_hard_heavy_favourite_dog": {
+          "flagged": {
+            "bets": 168,
+            "wins": 20,
+            "losses": 148,
+            "pnl_units": 1.47,
+            "roi_pct": 0.875,
+            "win_rate_pct": 11.905,
+            "avg_odds": 9.38
+          },
+          "unique": {
+            "bets": 0,
+            "wins": 0,
+            "losses": 0,
+            "pnl_units": 0,
+            "roi_pct": null,
+            "win_rate_pct": null,
+            "avg_odds": null
+          },
+          "marginal_removed": {
+            "bets": 0,
+            "wins": 0,
+            "losses": 0,
+            "pnl_units": 0,
+            "roi_pct": null,
+            "win_rate_pct": null,
+            "avg_odds": null
+          },
+          "survivors_without_this_guard": {
+            "bets": 1823,
+            "wins": 683,
+            "losses": 1140,
+            "pnl_units": -65.44,
+            "roi_pct": -3.59,
+            "win_rate_pct": 37.466,
+            "avg_odds": 2.8
+          },
+          "first_hit_bets": 0,
+          "surface": {
+            "Hard": {
+              "bets": 168,
+              "wins": 20,
+              "losses": 148,
+              "pnl_units": 1.47,
+              "roi_pct": 0.875,
+              "win_rate_pct": 11.905,
+              "avg_odds": 9.38
+            },
+            "Clay": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            },
+            "Grass": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            }
+          },
+          "year": {
+            "2022": {
+              "bets": 23,
+              "wins": 4,
+              "losses": 19,
+              "pnl_units": 3.14,
+              "roi_pct": 13.652,
+              "win_rate_pct": 17.391,
+              "avg_odds": 7.593
+            },
+            "2023": {
+              "bets": 40,
+              "wins": 4,
+              "losses": 36,
+              "pnl_units": -13.39,
+              "roi_pct": -33.475,
+              "win_rate_pct": 10.0,
+              "avg_odds": 9.716
+            },
+            "2024": {
+              "bets": 59,
+              "wins": 7,
+              "losses": 52,
+              "pnl_units": 10.0,
+              "roi_pct": 16.949,
+              "win_rate_pct": 11.864,
+              "avg_odds": 9.992
+            },
+            "2025": {
+              "bets": 46,
+              "wins": 5,
+              "losses": 41,
+              "pnl_units": 1.72,
+              "roi_pct": 3.739,
+              "win_rate_pct": 10.87,
+              "avg_odds": 9.196
+            }
+          }
+        }
+      },
+      "overlap_counts": {
+        "model_favourite_below_1_25|market_favourite_below_1_25": 619,
+        "market_favourite_below_1_25|model_market_gap_above_10pp": 495,
+        "model_favourite_below_1_25|model_market_gap_above_10pp": 274,
+        "market_favourite_below_1_25|masters_hard_heavy_favourite_dog": 168,
+        "model_market_gap_above_10pp|atp500_hard_short_favourite": 143,
+        "model_market_side_flip|model_market_gap_above_10pp": 110,
+        "model_favourite_below_1_25|atp500_hard_short_favourite": 87,
+        "market_favourite_below_1_25|atp500_hard_short_favourite": 77,
+        "model_favourite_below_1_25|masters_hard_heavy_favourite_dog": 77,
+        "model_market_gap_above_10pp|masters_hard_heavy_favourite_dog": 41,
+        "model_market_side_flip|atp500_hard_short_favourite": 27,
+        "market_favourite_below_1_25|model_market_side_flip": 10,
+        "model_favourite_below_1_25|model_market_side_flip": 6
+      }
+    },
+    "strict": {
+      "before_guards": {
+        "bets": 870,
+        "wins": 306,
+        "losses": 564,
+        "pnl_units": 86.4,
+        "roi_pct": 9.931,
+        "win_rate_pct": 35.172,
+        "avg_odds": 4.299
+      },
+      "after_all_replayable_guards": {
+        "bets": 336,
+        "wins": 128,
+        "losses": 208,
+        "pnl_units": 12.29,
+        "roi_pct": 3.658,
+        "win_rate_pct": 38.095,
+        "avg_odds": 3.008
+      },
+      "blocked_by_any": {
+        "bets": 534,
+        "wins": 178,
+        "losses": 356,
+        "pnl_units": 74.11,
+        "roi_pct": 13.878,
+        "win_rate_pct": 33.333,
+        "avg_odds": 5.112
+      },
+      "guards": {
+        "model_favourite_below_1_25": {
+          "flagged": {
+            "bets": 72,
+            "wins": 7,
+            "losses": 65,
+            "pnl_units": -26.77,
+            "roi_pct": -37.181,
+            "win_rate_pct": 9.722,
+            "avg_odds": 11.295
+          },
+          "unique": {
+            "bets": 1,
+            "wins": 1,
+            "losses": 0,
+            "pnl_units": 0.37,
+            "roi_pct": 37.0,
+            "win_rate_pct": 100.0,
+            "avg_odds": 1.37
+          },
+          "marginal_removed": {
+            "bets": 1,
+            "wins": 1,
+            "losses": 0,
+            "pnl_units": 0.37,
+            "roi_pct": 37.0,
+            "win_rate_pct": 100.0,
+            "avg_odds": 1.37
+          },
+          "survivors_without_this_guard": {
+            "bets": 337,
+            "wins": 129,
+            "losses": 208,
+            "pnl_units": 12.66,
+            "roi_pct": 3.757,
+            "win_rate_pct": 38.279,
+            "avg_odds": 3.003
+          },
+          "first_hit_bets": 72,
+          "surface": {
+            "Hard": {
+              "bets": 72,
+              "wins": 7,
+              "losses": 65,
+              "pnl_units": -26.77,
+              "roi_pct": -37.181,
+              "win_rate_pct": 9.722,
+              "avg_odds": 11.295
+            },
+            "Clay": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            },
+            "Grass": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            }
+          },
+          "year": {
+            "2022": {
+              "bets": 8,
+              "wins": 2,
+              "losses": 6,
+              "pnl_units": -5.22,
+              "roi_pct": -65.25,
+              "win_rate_pct": 25.0,
+              "avg_odds": 6.374
+            },
+            "2023": {
+              "bets": 20,
+              "wins": 2,
+              "losses": 18,
+              "pnl_units": -5.84,
+              "roi_pct": -29.2,
+              "win_rate_pct": 10.0,
+              "avg_odds": 11.747
+            },
+            "2024": {
+              "bets": 28,
+              "wins": 2,
+              "losses": 26,
+              "pnl_units": -7.71,
+              "roi_pct": -27.536,
+              "win_rate_pct": 7.143,
+              "avg_odds": 12.739
+            },
+            "2025": {
+              "bets": 16,
+              "wins": 1,
+              "losses": 15,
+              "pnl_units": -8.0,
+              "roi_pct": -50.0,
+              "win_rate_pct": 6.25,
+              "avg_odds": 10.665
+            }
+          }
+        },
+        "market_favourite_below_1_25": {
+          "flagged": {
+            "bets": 261,
+            "wins": 37,
+            "losses": 224,
+            "pnl_units": -2.96,
+            "roi_pct": -1.134,
+            "win_rate_pct": 14.176,
+            "avg_odds": 7.659
+          },
+          "unique": {
+            "bets": 39,
+            "wins": 8,
+            "losses": 31,
+            "pnl_units": 1.17,
+            "roi_pct": 3.0,
+            "win_rate_pct": 20.513,
+            "avg_odds": 4.912
+          },
+          "marginal_removed": {
+            "bets": 39,
+            "wins": 8,
+            "losses": 31,
+            "pnl_units": 1.17,
+            "roi_pct": 3.0,
+            "win_rate_pct": 20.513,
+            "avg_odds": 4.912
+          },
+          "survivors_without_this_guard": {
+            "bets": 375,
+            "wins": 136,
+            "losses": 239,
+            "pnl_units": 13.46,
+            "roi_pct": 3.589,
+            "win_rate_pct": 36.267,
+            "avg_odds": 3.206
+          },
+          "first_hit_bets": 191,
+          "surface": {
+            "Hard": {
+              "bets": 261,
+              "wins": 37,
+              "losses": 224,
+              "pnl_units": -2.96,
+              "roi_pct": -1.134,
+              "win_rate_pct": 14.176,
+              "avg_odds": 7.659
+            },
+            "Clay": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            },
+            "Grass": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            }
+          },
+          "year": {
+            "2022": {
+              "bets": 49,
+              "wins": 6,
+              "losses": 43,
+              "pnl_units": -11.98,
+              "roi_pct": -24.449,
+              "win_rate_pct": 12.245,
+              "avg_odds": 6.224
+            },
+            "2023": {
+              "bets": 69,
+              "wins": 12,
+              "losses": 57,
+              "pnl_units": -2.14,
+              "roi_pct": -3.101,
+              "win_rate_pct": 17.391,
+              "avg_odds": 7.675
+            },
+            "2024": {
+              "bets": 83,
+              "wins": 12,
+              "losses": 71,
+              "pnl_units": 12.84,
+              "roi_pct": 15.47,
+              "win_rate_pct": 14.458,
+              "avg_odds": 8.432
+            },
+            "2025": {
+              "bets": 60,
+              "wins": 7,
+              "losses": 53,
+              "pnl_units": -1.68,
+              "roi_pct": -2.8,
+              "win_rate_pct": 11.667,
+              "avg_odds": 7.743
+            }
+          }
+        },
+        "model_market_side_flip": {
+          "flagged": {
+            "bets": 145,
+            "wins": 81,
+            "losses": 64,
+            "pnl_units": 43.86,
+            "roi_pct": 30.248,
+            "win_rate_pct": 55.862,
+            "avg_odds": 2.395
+          },
+          "unique": {
+            "bets": 129,
+            "wins": 74,
+            "losses": 55,
+            "pnl_units": 40.48,
+            "roi_pct": 31.38,
+            "win_rate_pct": 57.364,
+            "avg_odds": 2.313
+          },
+          "marginal_removed": {
+            "bets": 129,
+            "wins": 74,
+            "losses": 55,
+            "pnl_units": 40.48,
+            "roi_pct": 31.38,
+            "win_rate_pct": 57.364,
+            "avg_odds": 2.313
+          },
+          "survivors_without_this_guard": {
+            "bets": 465,
+            "wins": 202,
+            "losses": 263,
+            "pnl_units": 52.77,
+            "roi_pct": 11.348,
+            "win_rate_pct": 43.441,
+            "avg_odds": 2.815
+          },
+          "first_hit_bets": 144,
+          "surface": {
+            "Hard": {
+              "bets": 145,
+              "wins": 81,
+              "losses": 64,
+              "pnl_units": 43.86,
+              "roi_pct": 30.248,
+              "win_rate_pct": 55.862,
+              "avg_odds": 2.395
+            },
+            "Clay": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            },
+            "Grass": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            }
+          },
+          "year": {
+            "2022": {
+              "bets": 35,
+              "wins": 21,
+              "losses": 14,
+              "pnl_units": 14.57,
+              "roi_pct": 41.629,
+              "win_rate_pct": 60.0,
+              "avg_odds": 2.528
+            },
+            "2023": {
+              "bets": 38,
+              "wins": 18,
+              "losses": 20,
+              "pnl_units": 4.08,
+              "roi_pct": 10.737,
+              "win_rate_pct": 47.368,
+              "avg_odds": 2.382
+            },
+            "2024": {
+              "bets": 36,
+              "wins": 19,
+              "losses": 17,
+              "pnl_units": 9.14,
+              "roi_pct": 25.389,
+              "win_rate_pct": 52.778,
+              "avg_odds": 2.389
+            },
+            "2025": {
+              "bets": 36,
+              "wins": 23,
+              "losses": 13,
+              "pnl_units": 16.07,
+              "roi_pct": 44.639,
+              "win_rate_pct": 63.889,
+              "avg_odds": 2.286
+            }
+          }
+        },
+        "model_market_gap_above_10pp": {
+          "flagged": {
+            "bets": 248,
+            "wins": 80,
+            "losses": 168,
+            "pnl_units": 43.52,
+            "roi_pct": 17.548,
+            "win_rate_pct": 32.258,
+            "avg_odds": 4.96
+          },
+          "unique": {
+            "bets": 127,
+            "wins": 58,
+            "losses": 69,
+            "pnl_units": 31.43,
+            "roi_pct": 24.748,
+            "win_rate_pct": 45.669,
+            "avg_odds": 3.042
+          },
+          "marginal_removed": {
+            "bets": 127,
+            "wins": 58,
+            "losses": 69,
+            "pnl_units": 31.43,
+            "roi_pct": 24.748,
+            "win_rate_pct": 45.669,
+            "avg_odds": 3.042
+          },
+          "survivors_without_this_guard": {
+            "bets": 463,
+            "wins": 186,
+            "losses": 277,
+            "pnl_units": 43.72,
+            "roi_pct": 9.443,
+            "win_rate_pct": 40.173,
+            "avg_odds": 3.017
+          },
+          "first_hit_bets": 127,
+          "surface": {
+            "Hard": {
+              "bets": 248,
+              "wins": 80,
+              "losses": 168,
+              "pnl_units": 43.52,
+              "roi_pct": 17.548,
+              "win_rate_pct": 32.258,
+              "avg_odds": 4.96
+            },
+            "Clay": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            },
+            "Grass": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            }
+          },
+          "year": {
+            "2022": {
+              "bets": 57,
+              "wins": 15,
+              "losses": 42,
+              "pnl_units": -13.44,
+              "roi_pct": -23.579,
+              "win_rate_pct": 26.316,
+              "avg_odds": 4.261
+            },
+            "2023": {
+              "bets": 66,
+              "wins": 18,
+              "losses": 48,
+              "pnl_units": -7.79,
+              "roi_pct": -11.803,
+              "win_rate_pct": 27.273,
+              "avg_odds": 4.966
+            },
+            "2024": {
+              "bets": 67,
+              "wins": 22,
+              "losses": 45,
+              "pnl_units": 28.85,
+              "roi_pct": 43.06,
+              "win_rate_pct": 32.836,
+              "avg_odds": 5.348
+            },
+            "2025": {
+              "bets": 58,
+              "wins": 25,
+              "losses": 33,
+              "pnl_units": 35.9,
+              "roi_pct": 61.897,
+              "win_rate_pct": 43.103,
+              "avg_odds": 5.191
+            }
+          }
+        },
+        "atp500_hard_short_favourite": {
+          "flagged": {
+            "bets": 0,
+            "wins": 0,
+            "losses": 0,
+            "pnl_units": 0,
+            "roi_pct": null,
+            "win_rate_pct": null,
+            "avg_odds": null
+          },
+          "unique": {
+            "bets": 0,
+            "wins": 0,
+            "losses": 0,
+            "pnl_units": 0,
+            "roi_pct": null,
+            "win_rate_pct": null,
+            "avg_odds": null
+          },
+          "marginal_removed": {
+            "bets": 0,
+            "wins": 0,
+            "losses": 0,
+            "pnl_units": 0,
+            "roi_pct": null,
+            "win_rate_pct": null,
+            "avg_odds": null
+          },
+          "survivors_without_this_guard": {
+            "bets": 336,
+            "wins": 128,
+            "losses": 208,
+            "pnl_units": 12.29,
+            "roi_pct": 3.658,
+            "win_rate_pct": 38.095,
+            "avg_odds": 3.008
+          },
+          "first_hit_bets": 0,
+          "surface": {
+            "Hard": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            },
+            "Clay": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            },
+            "Grass": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            }
+          },
+          "year": {
+            "2022": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            },
+            "2023": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            },
+            "2024": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            },
+            "2025": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            }
+          }
+        },
+        "masters_hard_heavy_favourite_dog": {
+          "flagged": {
+            "bets": 152,
+            "wins": 19,
+            "losses": 133,
+            "pnl_units": 11.98,
+            "roi_pct": 7.882,
+            "win_rate_pct": 12.5,
+            "avg_odds": 9.279
+          },
+          "unique": {
+            "bets": 0,
+            "wins": 0,
+            "losses": 0,
+            "pnl_units": 0,
+            "roi_pct": null,
+            "win_rate_pct": null,
+            "avg_odds": null
+          },
+          "marginal_removed": {
+            "bets": 0,
+            "wins": 0,
+            "losses": 0,
+            "pnl_units": 0,
+            "roi_pct": null,
+            "win_rate_pct": null,
+            "avg_odds": null
+          },
+          "survivors_without_this_guard": {
+            "bets": 336,
+            "wins": 128,
+            "losses": 208,
+            "pnl_units": 12.29,
+            "roi_pct": 3.658,
+            "win_rate_pct": 38.095,
+            "avg_odds": 3.008
+          },
+          "first_hit_bets": 0,
+          "surface": {
+            "Hard": {
+              "bets": 152,
+              "wins": 19,
+              "losses": 133,
+              "pnl_units": 11.98,
+              "roi_pct": 7.882,
+              "win_rate_pct": 12.5,
+              "avg_odds": 9.279
+            },
+            "Clay": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            },
+            "Grass": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            }
+          },
+          "year": {
+            "2022": {
+              "bets": 19,
+              "wins": 4,
+              "losses": 15,
+              "pnl_units": 7.14,
+              "roi_pct": 37.579,
+              "win_rate_pct": 21.053,
+              "avg_odds": 7.651
+            },
+            "2023": {
+              "bets": 37,
+              "wins": 4,
+              "losses": 33,
+              "pnl_units": -10.39,
+              "roi_pct": -28.081,
+              "win_rate_pct": 10.811,
+              "avg_odds": 9.42
+            },
+            "2024": {
+              "bets": 54,
+              "wins": 6,
+              "losses": 48,
+              "pnl_units": 9.51,
+              "roi_pct": 17.611,
+              "win_rate_pct": 11.111,
+              "avg_odds": 10.136
+            },
+            "2025": {
+              "bets": 42,
+              "wins": 5,
+              "losses": 37,
+              "pnl_units": 5.72,
+              "roi_pct": 13.619,
+              "win_rate_pct": 11.905,
+              "avg_odds": 8.79
+            }
+          }
+        }
+      },
+      "overlap_counts": {
+        "market_favourite_below_1_25|masters_hard_heavy_favourite_dog": 152,
+        "market_favourite_below_1_25|model_market_gap_above_10pp": 105,
+        "model_favourite_below_1_25|market_favourite_below_1_25": 70,
+        "model_favourite_below_1_25|masters_hard_heavy_favourite_dog": 70,
+        "model_market_gap_above_10pp|masters_hard_heavy_favourite_dog": 35,
+        "model_market_side_flip|model_market_gap_above_10pp": 16,
+        "model_favourite_below_1_25|model_market_gap_above_10pp": 12,
+        "market_favourite_below_1_25|model_market_side_flip": 1
+      }
+    },
+    "volume_200_policy": {
+      "before_guards": {
+        "bets": 2115,
+        "wins": 746,
+        "losses": 1369,
+        "pnl_units": -3.97,
+        "roi_pct": -0.188,
+        "win_rate_pct": 35.272,
+        "avg_odds": 5.006
+      },
+      "after_all_replayable_guards": {
+        "bets": 528,
+        "wins": 212,
+        "losses": 316,
+        "pnl_units": 34.48,
+        "roi_pct": 6.53,
+        "win_rate_pct": 40.152,
+        "avg_odds": 2.941
+      },
+      "blocked_by_any": {
+        "bets": 1587,
+        "wins": 534,
+        "losses": 1053,
+        "pnl_units": -38.45,
+        "roi_pct": -2.423,
+        "win_rate_pct": 33.648,
+        "avg_odds": 5.693
+      },
+      "guards": {
+        "model_favourite_below_1_25": {
+          "flagged": {
+            "bets": 421,
+            "wins": 113,
+            "losses": 308,
+            "pnl_units": -104.22,
+            "roi_pct": -24.755,
+            "win_rate_pct": 26.841,
+            "avg_odds": 11.131
+          },
+          "unique": {
+            "bets": 13,
+            "wins": 11,
+            "losses": 2,
+            "pnl_units": 1.21,
+            "roi_pct": 9.308,
+            "win_rate_pct": 84.615,
+            "avg_odds": 1.291
+          },
+          "marginal_removed": {
+            "bets": 13,
+            "wins": 11,
+            "losses": 2,
+            "pnl_units": 1.21,
+            "roi_pct": 9.308,
+            "win_rate_pct": 84.615,
+            "avg_odds": 1.291
+          },
+          "survivors_without_this_guard": {
+            "bets": 541,
+            "wins": 223,
+            "losses": 318,
+            "pnl_units": 35.69,
+            "roi_pct": 6.597,
+            "win_rate_pct": 41.22,
+            "avg_odds": 2.902
+          },
+          "first_hit_bets": 421,
+          "surface": {
+            "Hard": {
+              "bets": 392,
+              "wins": 106,
+              "losses": 286,
+              "pnl_units": -92.78,
+              "roi_pct": -23.668,
+              "win_rate_pct": 27.041,
+              "avg_odds": 11.249
+            },
+            "Clay": {
+              "bets": 29,
+              "wins": 7,
+              "losses": 22,
+              "pnl_units": -11.44,
+              "roi_pct": -39.448,
+              "win_rate_pct": 24.138,
+              "avg_odds": 9.533
+            },
+            "Grass": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            }
+          },
+          "year": {
+            "2022": {
+              "bets": 99,
+              "wins": 31,
+              "losses": 68,
+              "pnl_units": -13.45,
+              "roi_pct": -13.586,
+              "win_rate_pct": 31.313,
+              "avg_odds": 9.802
+            },
+            "2023": {
+              "bets": 107,
+              "wins": 20,
+              "losses": 87,
+              "pnl_units": -54.45,
+              "roi_pct": -50.888,
+              "win_rate_pct": 18.692,
+              "avg_odds": 12.511
+            },
+            "2024": {
+              "bets": 112,
+              "wins": 32,
+              "losses": 80,
+              "pnl_units": 1.18,
+              "roi_pct": 1.054,
+              "win_rate_pct": 28.571,
+              "avg_odds": 11.431
+            },
+            "2025": {
+              "bets": 103,
+              "wins": 30,
+              "losses": 73,
+              "pnl_units": -37.5,
+              "roi_pct": -36.408,
+              "win_rate_pct": 29.126,
+              "avg_odds": 10.647
+            }
+          }
+        },
+        "market_favourite_below_1_25": {
+          "flagged": {
+            "bets": 669,
+            "wins": 83,
+            "losses": 586,
+            "pnl_units": -130.97,
+            "roi_pct": -19.577,
+            "win_rate_pct": 12.407,
+            "avg_odds": 10.094
+          },
+          "unique": {
+            "bets": 93,
+            "wins": 13,
+            "losses": 80,
+            "pnl_units": -26.5,
+            "roi_pct": -28.495,
+            "win_rate_pct": 13.978,
+            "avg_odds": 5.433
+          },
+          "marginal_removed": {
+            "bets": 93,
+            "wins": 13,
+            "losses": 80,
+            "pnl_units": -26.5,
+            "roi_pct": -28.495,
+            "win_rate_pct": 13.978,
+            "avg_odds": 5.433
+          },
+          "survivors_without_this_guard": {
+            "bets": 621,
+            "wins": 225,
+            "losses": 396,
+            "pnl_units": 7.98,
+            "roi_pct": 1.285,
+            "win_rate_pct": 36.232,
+            "avg_odds": 3.315
+          },
+          "first_hit_bets": 355,
+          "surface": {
+            "Hard": {
+              "bets": 628,
+              "wins": 79,
+              "losses": 549,
+              "pnl_units": -113.61,
+              "roi_pct": -18.091,
+              "win_rate_pct": 12.58,
+              "avg_odds": 10.163
+            },
+            "Clay": {
+              "bets": 41,
+              "wins": 4,
+              "losses": 37,
+              "pnl_units": -17.36,
+              "roi_pct": -42.341,
+              "win_rate_pct": 9.756,
+              "avg_odds": 9.045
+            },
+            "Grass": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            }
+          },
+          "year": {
+            "2022": {
+              "bets": 172,
+              "wins": 23,
+              "losses": 149,
+              "pnl_units": -34.2,
+              "roi_pct": -19.884,
+              "win_rate_pct": 13.372,
+              "avg_odds": 9.083
+            },
+            "2023": {
+              "bets": 175,
+              "wins": 17,
+              "losses": 158,
+              "pnl_units": -72.68,
+              "roi_pct": -41.531,
+              "win_rate_pct": 9.714,
+              "avg_odds": 10.599
+            },
+            "2024": {
+              "bets": 166,
+              "wins": 23,
+              "losses": 143,
+              "pnl_units": 11.25,
+              "roi_pct": 6.777,
+              "win_rate_pct": 13.855,
+              "avg_odds": 10.587
+            },
+            "2025": {
+              "bets": 156,
+              "wins": 20,
+              "losses": 136,
+              "pnl_units": -35.34,
+              "roi_pct": -22.654,
+              "win_rate_pct": 12.821,
+              "avg_odds": 10.121
+            }
+          }
+        },
+        "model_market_side_flip": {
+          "flagged": {
+            "bets": 287,
+            "wins": 133,
+            "losses": 154,
+            "pnl_units": 23.33,
+            "roi_pct": 8.129,
+            "win_rate_pct": 46.341,
+            "avg_odds": 2.428
+          },
+          "unique": {
+            "bets": 225,
+            "wins": 110,
+            "losses": 115,
+            "pnl_units": 27.83,
+            "roi_pct": 12.369,
+            "win_rate_pct": 48.889,
+            "avg_odds": 2.337
+          },
+          "marginal_removed": {
+            "bets": 225,
+            "wins": 110,
+            "losses": 115,
+            "pnl_units": 27.83,
+            "roi_pct": 12.369,
+            "win_rate_pct": 48.889,
+            "avg_odds": 2.337
+          },
+          "survivors_without_this_guard": {
+            "bets": 753,
+            "wins": 322,
+            "losses": 431,
+            "pnl_units": 62.31,
+            "roi_pct": 8.275,
+            "win_rate_pct": 42.762,
+            "avg_odds": 2.761
+          },
+          "first_hit_bets": 284,
+          "surface": {
+            "Hard": {
+              "bets": 266,
+              "wins": 126,
+              "losses": 140,
+              "pnl_units": 28.83,
+              "roi_pct": 10.838,
+              "win_rate_pct": 47.368,
+              "avg_odds": 2.436
+            },
+            "Clay": {
+              "bets": 21,
+              "wins": 7,
+              "losses": 14,
+              "pnl_units": -5.5,
+              "roi_pct": -26.19,
+              "win_rate_pct": 33.333,
+              "avg_odds": 2.328
+            },
+            "Grass": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            }
+          },
+          "year": {
+            "2022": {
+              "bets": 67,
+              "wins": 31,
+              "losses": 36,
+              "pnl_units": 5.05,
+              "roi_pct": 7.537,
+              "win_rate_pct": 46.269,
+              "avg_odds": 2.572
+            },
+            "2023": {
+              "bets": 72,
+              "wins": 34,
+              "losses": 38,
+              "pnl_units": 9.53,
+              "roi_pct": 13.236,
+              "win_rate_pct": 47.222,
+              "avg_odds": 2.416
+            },
+            "2024": {
+              "bets": 73,
+              "wins": 32,
+              "losses": 41,
+              "pnl_units": 2.35,
+              "roi_pct": 3.219,
+              "win_rate_pct": 43.836,
+              "avg_odds": 2.428
+            },
+            "2025": {
+              "bets": 75,
+              "wins": 36,
+              "losses": 39,
+              "pnl_units": 6.4,
+              "roi_pct": 8.533,
+              "win_rate_pct": 48.0,
+              "avg_odds": 2.309
+            }
+          }
+        },
+        "model_market_gap_above_10pp": {
+          "flagged": {
+            "bets": 754,
+            "wins": 304,
+            "losses": 450,
+            "pnl_units": 75.81,
+            "roi_pct": 10.054,
+            "win_rate_pct": 40.318,
+            "avg_odds": 3.961
+          },
+          "unique": {
+            "bets": 337,
+            "wins": 143,
+            "losses": 194,
+            "pnl_units": 53.2,
+            "roi_pct": 15.786,
+            "win_rate_pct": 42.433,
+            "avg_odds": 2.942
+          },
+          "marginal_removed": {
+            "bets": 337,
+            "wins": 143,
+            "losses": 194,
+            "pnl_units": 53.2,
+            "roi_pct": 15.786,
+            "win_rate_pct": 42.433,
+            "avg_odds": 2.942
+          },
+          "survivors_without_this_guard": {
+            "bets": 865,
+            "wins": 355,
+            "losses": 510,
+            "pnl_units": 87.68,
+            "roi_pct": 10.136,
+            "win_rate_pct": 41.04,
+            "avg_odds": 2.942
+          },
+          "first_hit_bets": 420,
+          "surface": {
+            "Hard": {
+              "bets": 702,
+              "wins": 278,
+              "losses": 424,
+              "pnl_units": 56.93,
+              "roi_pct": 8.11,
+              "win_rate_pct": 39.601,
+              "avg_odds": 4.017
+            },
+            "Clay": {
+              "bets": 52,
+              "wins": 26,
+              "losses": 26,
+              "pnl_units": 18.88,
+              "roi_pct": 36.308,
+              "win_rate_pct": 50.0,
+              "avg_odds": 3.208
+            },
+            "Grass": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            }
+          },
+          "year": {
+            "2022": {
+              "bets": 207,
+              "wins": 75,
+              "losses": 132,
+              "pnl_units": -1.2,
+              "roi_pct": -0.58,
+              "win_rate_pct": 36.232,
+              "avg_odds": 3.78
+            },
+            "2023": {
+              "bets": 180,
+              "wins": 69,
+              "losses": 111,
+              "pnl_units": 0.15,
+              "roi_pct": 0.083,
+              "win_rate_pct": 38.333,
+              "avg_odds": 4.225
+            },
+            "2024": {
+              "bets": 175,
+              "wins": 68,
+              "losses": 107,
+              "pnl_units": 33.34,
+              "roi_pct": 19.051,
+              "win_rate_pct": 38.857,
+              "avg_odds": 4.028
+            },
+            "2025": {
+              "bets": 192,
+              "wins": 92,
+              "losses": 100,
+              "pnl_units": 43.52,
+              "roi_pct": 22.667,
+              "win_rate_pct": 47.917,
+              "avg_odds": 3.849
+            }
+          }
+        },
+        "atp500_hard_short_favourite": {
+          "flagged": {
+            "bets": 340,
+            "wins": 149,
+            "losses": 191,
+            "pnl_units": 1.11,
+            "roi_pct": 0.326,
+            "win_rate_pct": 43.824,
+            "avg_odds": 3.889
+          },
+          "unique": {
+            "bets": 107,
+            "wins": 46,
+            "losses": 61,
+            "pnl_units": -2.75,
+            "roi_pct": -2.57,
+            "win_rate_pct": 42.991,
+            "avg_odds": 2.6
+          },
+          "marginal_removed": {
+            "bets": 107,
+            "wins": 46,
+            "losses": 61,
+            "pnl_units": -2.75,
+            "roi_pct": -2.57,
+            "win_rate_pct": 42.991,
+            "avg_odds": 2.6
+          },
+          "survivors_without_this_guard": {
+            "bets": 635,
+            "wins": 258,
+            "losses": 377,
+            "pnl_units": 31.73,
+            "roi_pct": 4.997,
+            "win_rate_pct": 40.63,
+            "avg_odds": 2.884
+          },
+          "first_hit_bets": 107,
+          "surface": {
+            "Hard": {
+              "bets": 340,
+              "wins": 149,
+              "losses": 191,
+              "pnl_units": 1.11,
+              "roi_pct": 0.326,
+              "win_rate_pct": 43.824,
+              "avg_odds": 3.889
+            },
+            "Clay": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            },
+            "Grass": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            }
+          },
+          "year": {
+            "2022": {
+              "bets": 85,
+              "wins": 31,
+              "losses": 54,
+              "pnl_units": 2.38,
+              "roi_pct": 2.8,
+              "win_rate_pct": 36.471,
+              "avg_odds": 4.455
+            },
+            "2023": {
+              "bets": 90,
+              "wins": 44,
+              "losses": 46,
+              "pnl_units": 15.21,
+              "roi_pct": 16.9,
+              "win_rate_pct": 48.889,
+              "avg_odds": 3.866
+            },
+            "2024": {
+              "bets": 65,
+              "wins": 25,
+              "losses": 40,
+              "pnl_units": -7.96,
+              "roi_pct": -12.246,
+              "win_rate_pct": 38.462,
+              "avg_odds": 3.869
+            },
+            "2025": {
+              "bets": 100,
+              "wins": 49,
+              "losses": 51,
+              "pnl_units": -8.52,
+              "roi_pct": -8.52,
+              "win_rate_pct": 49.0,
+              "avg_odds": 3.442
+            }
+          }
+        },
+        "masters_hard_heavy_favourite_dog": {
+          "flagged": {
+            "bets": 150,
+            "wins": 17,
+            "losses": 133,
+            "pnl_units": 3.27,
+            "roi_pct": 2.18,
+            "win_rate_pct": 11.333,
+            "avg_odds": 9.669
+          },
+          "unique": {
+            "bets": 0,
+            "wins": 0,
+            "losses": 0,
+            "pnl_units": 0,
+            "roi_pct": null,
+            "win_rate_pct": null,
+            "avg_odds": null
+          },
+          "marginal_removed": {
+            "bets": 0,
+            "wins": 0,
+            "losses": 0,
+            "pnl_units": 0,
+            "roi_pct": null,
+            "win_rate_pct": null,
+            "avg_odds": null
+          },
+          "survivors_without_this_guard": {
+            "bets": 528,
+            "wins": 212,
+            "losses": 316,
+            "pnl_units": 34.48,
+            "roi_pct": 6.53,
+            "win_rate_pct": 40.152,
+            "avg_odds": 2.941
+          },
+          "first_hit_bets": 0,
+          "surface": {
+            "Hard": {
+              "bets": 150,
+              "wins": 17,
+              "losses": 133,
+              "pnl_units": 3.27,
+              "roi_pct": 2.18,
+              "win_rate_pct": 11.333,
+              "avg_odds": 9.669
+            },
+            "Clay": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            },
+            "Grass": {
+              "bets": 0,
+              "wins": 0,
+              "losses": 0,
+              "pnl_units": 0,
+              "roi_pct": null,
+              "win_rate_pct": null,
+              "avg_odds": null
+            }
+          },
+          "year": {
+            "2022": {
+              "bets": 20,
+              "wins": 3,
+              "losses": 17,
+              "pnl_units": 1.23,
+              "roi_pct": 6.15,
+              "win_rate_pct": 15.0,
+              "avg_odds": 7.903
+            },
+            "2023": {
+              "bets": 36,
+              "wins": 3,
+              "losses": 33,
+              "pnl_units": -15.19,
+              "roi_pct": -42.194,
+              "win_rate_pct": 8.333,
+              "avg_odds": 10.113
+            },
+            "2024": {
+              "bets": 52,
+              "wins": 6,
+              "losses": 46,
+              "pnl_units": 11.51,
+              "roi_pct": 22.135,
+              "win_rate_pct": 11.538,
+              "avg_odds": 10.287
+            },
+            "2025": {
+              "bets": 42,
+              "wins": 5,
+              "losses": 37,
+              "pnl_units": 5.72,
+              "roi_pct": 13.619,
+              "win_rate_pct": 11.905,
+              "avg_odds": 9.363
+            }
+          }
+        }
+      },
+      "overlap_counts": {
+        "model_favourite_below_1_25|market_favourite_below_1_25": 314,
+        "market_favourite_below_1_25|model_market_gap_above_10pp": 208,
+        "market_favourite_below_1_25|masters_hard_heavy_favourite_dog": 150,
+        "model_market_gap_above_10pp|atp500_hard_short_favourite": 143,
+        "model_favourite_below_1_25|model_market_gap_above_10pp": 112,
+        "model_favourite_below_1_25|atp500_hard_short_favourite": 87,
+        "market_favourite_below_1_25|atp500_hard_short_favourite": 77,
+        "model_favourite_below_1_25|masters_hard_heavy_favourite_dog": 69,
+        "model_market_gap_above_10pp|masters_hard_heavy_favourite_dog": 41,
+        "model_market_side_flip|model_market_gap_above_10pp": 39,
+        "model_market_side_flip|atp500_hard_short_favourite": 27,
+        "market_favourite_below_1_25|model_market_side_flip": 2,
+        "model_favourite_below_1_25|model_market_side_flip": 1
+      }
+    }
+  },
+  "inventory": {
+    "replayable_ml_guards": [
+      {
+        "id": "model_favourite_below_1_25",
+        "live_scope": "ML all ATP lanes",
+        "evidence": "2022-2025 A/B report; improved every reported surface and series",
+        "decision": "KEEP"
+      },
+      {
+        "id": "market_favourite_below_1_25",
+        "live_scope": "ML all ATP lanes",
+        "evidence": "No independent registered A/B found; overlaps model/gap guards",
+        "decision": "REVIEW_REDUNDANCY"
+      },
+      {
+        "id": "model_market_side_flip",
+        "live_scope": "ML all ATP lanes; folded into the 10pp composite guard",
+        "evidence": "Added after mismatch incidents, not a registered threshold test; no frozen prospective promotion proof",
+        "decision": "SHADOW_SEPARATELY"
+      },
+      {
+        "id": "model_market_gap_above_10pp",
+        "live_scope": "ML all ATP lanes",
+        "evidence": "Introduced 2026-04-24 after mismatch incidents; no threshold sweep, and blocked historical bets are not uniformly bad",
+        "decision": "REVIEW_BY_SURFACE_PROFILE"
+      },
+      {
+        "id": "atp500_hard_short_favourite",
+        "live_scope": "ATP500 Hard high-confidence ML; outside current strict Masters segment",
+        "evidence": "Locked policy A/B improved pooled ROI but remained negative overall",
+        "decision": "KEEP_AS_PROFILE_FILTER"
+      },
+      {
+        "id": "masters_hard_heavy_favourite_dog",
+        "live_scope": "Strict Masters Hard dog ML only, model favourite >=74%",
+        "evidence": "Narrow retrospective tail; needs prospective isolated tracking",
+        "decision": "KEEP_AND_TRACK_PROSPECTIVELY"
+      }
+    ],
+    "spread_and_cross_market_guards": [
+      {
+        "id": "point_probability_shape_within_8pp",
+        "live_scope": "Trusted handicap display/signal eligibility",
+        "evidence": "Not reconstructable from ML result CSVs; stored point probabilities require dedicated spread replay",
+        "decision": "PROSPECTIVE_ONLY"
+      },
+      {
+        "id": "extreme_favourite_plus_games_dog_spread",
+        "live_scope": "Plus-games dog spreads when model or market favourite <1.25",
+        "evidence": "Logic-derived proxy; no independent registered A/B found",
+        "decision": "REVIEW_WITH_REAL_SPREAD_ODDS"
+      },
+      {
+        "id": "same_match_favourite_handicap_conflict",
+        "live_scope": "Strict dog ML vetoed by >=20% model-favourite handicap edge",
+        "evidence": "Cross-market consistency rule; historical ML files do not preserve candidate spread state",
+        "decision": "TRACK_CONFLICT_OUTCOMES"
+      },
+      {
+        "id": "opposite_side_handicap_conflict",
+        "live_scope": "ML side vetoed by opposite handicap edge >=20%",
+        "evidence": "API/report parity repaired; historical ML files do not preserve candidate spread state",
+        "decision": "TRACK_CONFLICT_OUTCOMES"
+      },
+      {
+        "id": "spread_v1_line_shape",
+        "live_scope": "Spread v1 favourite handicaps only, absolute line 2.0 to 3.5",
+        "evidence": "Segment rule from the 2026-04-24 live audit; needs a larger real-price sample",
+        "decision": "KEEP_AS_PROFILE_FILTER"
+      },
+      {
+        "id": "spread_v1_edge_band",
+        "live_scope": "Spread v1 edge 10% to 18%",
+        "evidence": "Fixed shadow-profile band; values outside it remain non-actionable",
+        "decision": "STRATEGY_DEFINITION"
+      },
+      {
+        "id": "clay_bo3_handicap_edge_band",
+        "live_scope": "Clay bo3 dog handicap edge 6% to 25%",
+        "evidence": "Shadow profile boundary; not a general spread safety rule",
+        "decision": "STRATEGY_DEFINITION"
+      },
+      {
+        "id": "clay_ml_opposite_spread_suppression",
+        "live_scope": "Clay ML display when Spread v1 points to the other player at a near-pick line",
+        "evidence": "Cross-lane consistency filter; blocked candidates are not yet persisted for settlement",
+        "decision": "TRACK_CONFLICT_OUTCOMES"
+      }
+    ],
+    "model_probability_modifiers": [
+      {
+        "id": "elo_magnitude",
+        "decision": "ABLATION_REQUIRED",
+        "evidence": "Embedded before calibration"
+      },
+      {
+        "id": "surface_rank_conflict",
+        "decision": "ABLATION_REQUIRED",
+        "evidence": "Embedded before calibration"
+      },
+      {
+        "id": "surface_points_mismatch",
+        "decision": "ABLATION_REQUIRED",
+        "evidence": "Embedded before calibration"
+      },
+      {
+        "id": "series_probability",
+        "decision": "ABLATION_REQUIRED",
+        "evidence": "Embedded after calibration"
+      },
+      {
+        "id": "low_confidence_dog",
+        "decision": "ABLATION_REQUIRED",
+        "evidence": "Embedded probability adjustment"
+      },
+      {
+        "id": "stepup_dog",
+        "decision": "ABLATION_REQUIRED",
+        "evidence": "Embedded probability adjustment"
+      },
+      {
+        "id": "class_gap",
+        "decision": "ABLATION_REQUIRED",
+        "evidence": "Rank/Elo mismatch correction embedded in final probability"
+      },
+      {
+        "id": "probability_delta_caps",
+        "decision": "KEEP_SAFETY_CAP",
+        "evidence": "Bounds component and final adjustments; calibration impact still needs attribution"
+      },
+      {
+        "id": "hard_overlay_favourite_cap",
+        "decision": "KEEP_SAFETY_CAP",
+        "evidence": "Caps hard-overlay favourite probabilities by series/confidence; only relevant when the hard overlay is enabled"
+      }
+    ],
+    "strategy_and_operational_filters": [
+      {
+        "id": "strict_segment_confidence_value",
+        "decision": "STRATEGY_DEFINITION",
+        "evidence": "Hard Masters/high/>=10%; not a model guard"
+      },
+      {
+        "id": "volume_200_segment_thresholds",
+        "decision": "STRATEGY_DEFINITION",
+        "evidence": "Registered profile rules; not a model guard"
+      },
+      {
+        "id": "challenger_research_lane_disabled",
+        "decision": "PRODUCT_STATUS",
+        "evidence": "High coverage/high confidence/10-15% edge still lacks mature ROI and CLV proof"
+      },
+      {
+        "id": "clay_bo3_profile",
+        "decision": "SHADOW_ONLY",
+        "evidence": "High confidence, 5-13% ML; dog handicap 6-25%; ML routing disabled by default"
+      },
+      {
+        "id": "grass_bo3_profile",
+        "decision": "SHADOW_ONLY",
+        "evidence": "ATP250/500, 10-30%, favourite agreement, lagged CPI required; missing and slow CPI blocked"
+      },
+      {
+        "id": "cpi_speed_identity_gate",
+        "decision": "PAUSED",
+        "evidence": "Requires PASS_SHADOW and idclean_v1; current historical identity evidence invalid"
+      },
+      {
+        "id": "injury_overlay",
+        "decision": "OFF",
+        "evidence": "Disabled pending validation"
+      },
+      {
+        "id": "tournament_overlay",
+        "decision": "OFF",
+        "evidence": "Disabled by default; when enabled it also requires a matched segment, minimum n and minimum shrunk ROI"
+      },
+      {
+        "id": "missing_or_invalid_pinnacle_odds",
+        "decision": "KEEP",
+        "evidence": "Cannot calculate takeable EV without a matched two-way market"
+      },
+      {
+        "id": "ambiguous_player_pairing",
+        "decision": "KEEP",
+        "evidence": "Fail-closed identity protection against wrong-opponent prices"
+      },
+      {
+        "id": "stale_schedule_and_pairing_suppression",
+        "decision": "KEEP",
+        "evidence": "Data-integrity guard, not an edge filter"
+      }
+    ]
+  }
+}

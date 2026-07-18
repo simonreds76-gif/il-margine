@@ -257,6 +257,12 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: extreme gap weekly review failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Step 11f/12: Audit fair-odds guard evidence and overlap ==="
+& python scripts\tennis-guard-audit.py 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: tennis guard audit failed (exit $LASTEXITCODE), keeping the previous report."
+}
+
 # Step 12: Append Pinnacle history capture (weekly checkpoint)
 Log "=== Step 12/12: Append Pinnacle history capture (weekly) ==="
 & python scripts\pinnacle-capture-history.py --capture-mode weekly 2>&1 | ForEach-Object { Log $_ }

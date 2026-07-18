@@ -1096,6 +1096,19 @@ def has_favorite_spread_conflict(
     return spread_line > 0 and handicap_edge_p2 >= HANDICAP_MIN_EDGE_PCT
 
 
+def has_opposite_side_handicap_conflict(
+    side: str,
+    handicap_edge_p1: float | None,
+    handicap_edge_p2: float | None,
+) -> bool:
+    """Match the API veto when the opposing ML side has a strong handicap edge."""
+    if side == "P1":
+        return handicap_edge_p2 is not None and handicap_edge_p2 >= HANDICAP_MIN_EDGE_PCT
+    if side == "P2":
+        return handicap_edge_p1 is not None and handicap_edge_p1 >= HANDICAP_MIN_EDGE_PCT
+    return False
+
+
 def strict_min_value_for(surface: str, series_bucket: str, confidence: str) -> float | None:
     segment_key = f"{surface}|{series_bucket}"
     if segment_key != ALLOWED_SEGMENT:
@@ -2474,6 +2487,11 @@ def main() -> int:
             and has_favorite_spread_conflict(model_favorite_side, sl, he1, he2)
             and side != model_favorite_side
         )
+        strict_opposite_handicap_conflict = (
+            strict_min_value is not None
+            and not inj_any
+            and has_opposite_side_handicap_conflict(side, he1, he2)
+        )
         heavy_favorite_dog_excluded = is_excluded_heavy_favorite_dog(
             surface,
             series_bucket,
@@ -2506,6 +2524,7 @@ def main() -> int:
             and value_pct >= strict_min_value
             and not heavy_favorite_dog_excluded
             and not strict_favorite_spread_conflict
+            and not strict_opposite_handicap_conflict
         )
         volume_match = (
             volume_min_value is not None
