@@ -213,8 +213,8 @@ def check_telegram_cta() -> None:
     for label, text in files.items():
         check_no_mojibake(label, text)
 
-    if "https://t.me/IlMargineWC" not in files["config"]:
-        fail("Telegram config must default to https://t.me/IlMargineWC")
+    if "https://t.me/IlMargineAlerts" not in files["config"]:
+        fail("Telegram config must default to https://t.me/IlMargineAlerts")
     if "X-Robots-Tag" not in files["telegram_route"] or "noindex, nofollow" not in files["telegram_route"]:
         fail("Telegram redirect route must be noindex/nofollow")
     if "X-Robots-Tag" not in files["generic_telegram_route"] or "noindex, nofollow" not in files["generic_telegram_route"]:
