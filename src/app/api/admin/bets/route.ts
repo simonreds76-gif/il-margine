@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createHmac } from "crypto";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
-import { postWorldCupTipToTelegram } from "@/lib/world-cup-telegram";
+import { postPlayerPropTipToTelegram } from "@/lib/player-props-telegram";
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const COOKIE_NAME = "admin_session";
@@ -35,9 +35,9 @@ export async function POST(req: Request) {
     .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
 
-  const telegram = await postWorldCupTipToTelegram(data);
+  const telegram = await postPlayerPropTipToTelegram(data);
   if (telegram.status === "failed") {
-    console.warn("World Cup Telegram post failed:", telegram.reason);
+    console.warn("Player props Telegram post failed:", telegram.reason);
   }
 
   return NextResponse.json({ id: data.id, telegram });

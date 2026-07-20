@@ -91,24 +91,6 @@ export default function PenaltyTakersClient({ leagues, totalTeams, season }: Pro
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <main className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
-        <section className="pt-6">
-          <Link href="/penalty-takers/world-cup-2026" className="group block overflow-hidden rounded-[26px] border border-amber-400/20 bg-[linear-gradient(135deg,rgba(20,18,12,0.98),rgba(16,18,24,0.98))] p-5 transition hover:border-amber-300/35">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-amber-400/20 bg-amber-500/10">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/world-cup-2026-logo.png" alt="FIFA World Cup 2026 logo" className="h-10 w-10 object-contain" />
-                </div>
-                <div>
-                  <div className="text-sm font-semibold text-slate-100">World Cup 2026 penalty takers</div>
-                  <p className="mt-1 text-sm text-slate-400">The live 48-nation evidence file remains available throughout the tournament.</p>
-                </div>
-              </div>
-              <span className="text-sm font-medium text-amber-200">Open World Cup board -&gt;</span>
-            </div>
-          </Link>
-        </section>
-
         <section className="pt-8 pb-12 md:pb-16">
           <PageHomeLink className="mb-8" />
           <div className="relative overflow-hidden rounded-[34px] border border-slate-800/80 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_38%),linear-gradient(150deg,#07100f,#0f1722_58%,#11131b)] p-6 sm:p-9 lg:p-11">
@@ -156,6 +138,25 @@ export default function PenaltyTakersClient({ leagues, totalTeams, season }: Pro
           <h2 className="text-xl font-semibold text-slate-100">How these orders are verified</h2>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">Read the rules for in-match penalties, absences, shootouts, misses, corrections and human approval.</p>
           <Link href="/penalty-takers/methodology" className="mt-4 inline-flex text-sm font-semibold text-emerald-300 hover:text-emerald-200">Read the methodology -&gt;</Link>
+        </section>
+
+        <section className="mt-8">
+          <Link href="/penalty-takers/world-cup-2026" className="group block overflow-hidden rounded-[26px] border border-amber-400/15 bg-[linear-gradient(135deg,rgba(20,18,12,0.82),rgba(16,18,24,0.92))] p-5 transition hover:border-amber-300/30">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-amber-400/15 bg-amber-500/8">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/world-cup-2026-logo.png" alt="FIFA World Cup 2026 logo" className="h-10 w-10 object-contain" />
+                </div>
+                <div>
+                  <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-amber-300/80">Tournament archive</div>
+                  <div className="mt-1 text-sm font-semibold text-slate-100">World Cup 2026 penalty takers</div>
+                  <p className="mt-1 text-sm text-slate-400">The final 48-nation hierarchy and dated evidence pages remain available as a permanent archive.</p>
+                </div>
+              </div>
+              <span className="text-sm font-medium text-amber-200">Open archive -&gt;</span>
+            </div>
+          </Link>
         </section>
       </main>
       <Footer />

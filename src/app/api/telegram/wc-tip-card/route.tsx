@@ -238,7 +238,8 @@ async function fetchImageDataUrl(imageUrl: string | null): Promise<string | null
 }
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const event = truncate(param(url, "event", "World Cup"), 64);
+  const worldCup = param(url, "scope", "worldcup") === "worldcup";
+  const event = truncate(param(url, "event", worldCup ? "World Cup" : "Player props"), 64);
   const player = truncate(param(url, "player"), 46);
   const selection = truncate(param(url, "selection", "Selection"), 58);
   const odds = truncate(param(url, "odds", "-"), 12);
@@ -293,7 +294,7 @@ export async function GET(request: Request) {
                 fontWeight: 800,
               }}
             >
-              Il Margine WC Pick
+              {worldCup ? "Il Margine WC Pick" : "Il Margine Player Prop"}
             </div>
             <div style={{ marginTop: 10, color: "#cbd5e1", fontSize: 28, fontWeight: 700 }}>{event}</div>
           </div>
@@ -310,7 +311,7 @@ export async function GET(request: Request) {
               background: "rgba(6,78,59,0.38)",
             }}
           >
-            Free World Cup Picks
+            {worldCup ? "World Cup Archive" : "Free Pick Alerts"}
           </div>
         </div>
 

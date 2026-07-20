@@ -22,9 +22,12 @@ TEAM_PAGE_PATH = ROOT / "src" / "app" / "penalty-takers" / "world-cup-2026" / "[
 LIB_PATH = ROOT / "src" / "lib" / "world-cup-penalties.ts"
 CONFIG_PATH = ROOT / "src" / "lib" / "config.ts"
 NAV_PATH = ROOT / "src" / "components" / "GlobalNav.tsx"
+PENALTY_LANDING_PATH = ROOT / "src" / "app" / "penalty-takers" / "PenaltyTakersClient.tsx"
+PLAYER_PROPS_PATH = ROOT / "src" / "app" / "player-props" / "PlayerPropsClient.tsx"
 OVERLAYS_PATH = ROOT / "src" / "components" / "RouteScopedOverlays.tsx"
 TELEGRAM_OVERLAY_PATH = ROOT / "src" / "components" / "WorldCupTelegramOverlay.tsx"
 TELEGRAM_ROUTE_PATH = ROOT / "src" / "app" / "go" / "world-cup-telegram" / "route.ts"
+GENERIC_TELEGRAM_ROUTE_PATH = ROOT / "src" / "app" / "go" / "telegram" / "route.ts"
 WC_FREE_PAGE_PATH = ROOT / "src" / "app" / "world-cup-2026-free-picks" / "page.tsx"
 SITEMAP_PATH = ROOT / "src" / "app" / "sitemap.ts"
 PROXY_PATH = ROOT / "src" / "proxy.ts"
@@ -197,9 +200,12 @@ def check_telegram_cta() -> None:
     files = {
         "config": read_text(CONFIG_PATH),
         "nav": read_text(NAV_PATH),
+        "penalty_landing": read_text(PENALTY_LANDING_PATH),
+        "player_props": read_text(PLAYER_PROPS_PATH),
         "overlays": read_text(OVERLAYS_PATH),
         "telegram_overlay": read_text(TELEGRAM_OVERLAY_PATH),
         "telegram_route": read_text(TELEGRAM_ROUTE_PATH),
+        "generic_telegram_route": read_text(GENERIC_TELEGRAM_ROUTE_PATH),
         "wc_free_page": read_text(WC_FREE_PAGE_PATH),
         "sitemap": read_text(SITEMAP_PATH),
         "proxy": read_text(PROXY_PATH),
@@ -211,16 +217,22 @@ def check_telegram_cta() -> None:
         fail("Telegram config must default to https://t.me/IlMargineWC")
     if "X-Robots-Tag" not in files["telegram_route"] or "noindex, nofollow" not in files["telegram_route"]:
         fail("Telegram redirect route must be noindex/nofollow")
-    if "/brand/world-cup-2026-free-picks.png" not in files["nav"]:
-        fail("global nav must use the World Cup CTA logo")
+    if "X-Robots-Tag" not in files["generic_telegram_route"] or "noindex, nofollow" not in files["generic_telegram_route"]:
+        fail("generic Telegram redirect route must be noindex/nofollow")
+    if "/world-cup-2026-free-picks" in files["nav"]:
+        fail("completed World Cup campaign must not be promoted in global navigation")
+    if "Never miss a player-prop pick" not in files["player_props"] or "/go/telegram?source=player_props_alerts" not in files["player_props"]:
+        fail("player-props page missing the contextual Telegram alerts CTA")
+    club_index = files["penalty_landing"].find("Club penalty takers")
+    archive_index = files["penalty_landing"].find("Tournament archive")
+    if club_index < 0 or archive_index < 0 or club_index > archive_index:
+        fail("club 2026/27 penalty board must appear before the World Cup archive")
     if "WorldCupTelegramOverlay" not in files["overlays"]:
         fail("route-scoped overlays must mount the World Cup Telegram overlay")
-    if "onClick={closeModal}" not in files["telegram_overlay"]:
-        fail("Telegram modal close handler is missing")
-    if "onClick={(event) => event.stopPropagation()}" not in files["telegram_overlay"]:
-        fail("Telegram modal content must stop backdrop-click propagation")
-    if "Join Free on Telegram" not in files["telegram_overlay"]:
-        fail("Telegram overlay missing primary CTA")
+    if "setShowBar(false)" not in files["telegram_overlay"] or "Close Telegram prompt" not in files["telegram_overlay"]:
+        fail("World Cup archive bar close handler is missing")
+    if "Join Free" not in files["telegram_overlay"]:
+        fail("World Cup archive bar missing Telegram CTA")
     if "world-cup-2026-free-picks" not in files["sitemap"]:
         fail("World Cup free picks landing page missing from sitemap")
     if 'url.searchParams.has("q")' not in files["proxy"] or "NextResponse.redirect" not in files["proxy"]:
