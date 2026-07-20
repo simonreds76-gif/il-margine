@@ -12,6 +12,8 @@ export async function GET() {
     `- ${BASE_URL}/`,
     `- ${BASE_URL}/tennis-tips`,
     `- ${BASE_URL}/player-props`,
+    `- ${BASE_URL}/world-cup-2026-free-picks`,
+    `- ${BASE_URL}/penalty-takers/world-cup-2026`,
     `- ${BASE_URL}/fair-odds-lab`,
     `- ${BASE_URL}/atp-tennis`,
     `- ${BASE_URL}/track-record`,

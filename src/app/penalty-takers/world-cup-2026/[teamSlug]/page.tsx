@@ -7,6 +7,7 @@ import PageHomeLink from "@/components/PageHomeLink";
 import ClubPenaltyLeagueLinks from "@/components/ClubPenaltyLeagueLinks";
 import {
   WORLD_CUP_PENALTIES_URL,
+  WORLD_CUP_ARCHIVE_DATE,
   buildWorldCupTeamDescription,
   buildWorldCupTeamLead,
   buildWorldCupTeamTitle,
@@ -214,6 +215,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
     name: title,
     description,
     url: pageUrl,
+    dateModified: WORLD_CUP_ARCHIVE_DATE,
     about: {
       "@type": "SportsTeam",
       name: team.team,
@@ -227,16 +229,16 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
   };
 
   const quickAnswer = !primary
-    ? `We are still researching ${team.team}'s penalty order for World Cup 2026 and need another clean senior signal before naming a first-choice taker.`
+    ? `The ${team.team} World Cup 2026 file closed without enough clean senior evidence to name a first-choice taker.`
     : secondary
-      ? `${primary} is our current ${team.team} penalty taker call, with ${secondary} next in line if the order changes.`
-      : `${primary} is our current ${team.team} penalty taker call. We do not name a firm backup yet because the secondary order is still too thin or too mixed.`;
+      ? `Our final filed ${team.team} hierarchy had ${primary} first, with ${secondary} next in line.`
+      : `Our final filed ${team.team} hierarchy had ${primary} first. The evidence was not strong enough to name a firm backup.`;
 
   const worldCupAnswer = !primary
-    ? `Right now we are not willing to publish a firmer World Cup 2026 penalty order for ${team.team} until the evidence file tightens.`
+    ? `The archived World Cup 2026 file does not publish a firmer ${team.team} penalty order because the evidence never became strong enough.`
     : secondary
-      ? `For World Cup 2026, ${primary} is the current first-choice call for ${team.team}, with ${secondary} the closest backup if the tournament order shifts.`
-      : `For World Cup 2026, ${primary} is the current first-choice call for ${team.team}. The backup line stays open because the next layer of evidence is still mixed.`;
+      ? `For World Cup 2026, the final filed order placed ${primary} first for ${team.team}, with ${secondary} as the closest backup.`
+      : `For World Cup 2026, the final filed order placed ${primary} first for ${team.team}. The backup remained open because the supporting evidence was mixed.`;
 
   const faqData = {
     "@context": "https://schema.org",
@@ -282,6 +284,13 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
             <span>/</span>
             <span className="text-slate-200">{team.team}</span>
           </div>
+
+          <section className="mb-6 rounded-2xl border border-amber-400/25 bg-amber-400/8 p-4 sm:p-5">
+            <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-amber-200">Tournament archive</div>
+            <p className="mt-2 text-sm leading-6 text-slate-200">
+              World Cup 2026 is complete. This page preserves the final hierarchy filed on {lastVerifiedLabel} and the evidence available at that point. Verified tournament penalty outcomes will be added as a separate audit layer rather than rewritten into the original call.
+            </p>
+          </section>
 
           <div className="relative overflow-hidden rounded-[32px] border border-slate-800/80 bg-[linear-gradient(160deg,rgba(4,10,18,0.98),rgba(6,22,20,0.96))] shadow-[0_18px_48px_rgba(0,0,0,0.24)] sm:shadow-[0_28px_80px_rgba(0,0,0,0.28)]">
             <div className={`pointer-events-none absolute inset-x-0 top-0 h-16 sm:h-28 bg-gradient-to-r ${style.band}`} />
@@ -332,7 +341,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
                       </span>
                     ) : null}
                     <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300 sm:text-xs sm:tracking-[0.18em]">
-                      Current file: {lastVerifiedLabel}
+                      Final filed hierarchy: {lastVerifiedLabel}
                     </span>
                     <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-[10px] text-slate-400 sm:text-xs">
                       Il Margine file
@@ -350,7 +359,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
                           1
                         </div>
                         <div>
-                          <div className="text-[10px] uppercase tracking-[0.18em] text-slate-400">Current primary</div>
+                          <div className="text-[10px] uppercase tracking-[0.18em] text-slate-400">Final filed primary</div>
                           <div className={`mt-1.5 text-2xl font-semibold tracking-tight ${team.likely_primary ? style.primary : "text-slate-200"}`}>
                             {team.likely_primary || "Board still building"}
                           </div>
@@ -394,8 +403,8 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
               <p>{visibleNote}</p>
               <p>
                 If you searched for <span className="text-slate-100">{team.team} penalty taker</span>, the hierarchy
-                at the top is the quickest answer we are willing to publish right now. The evidence trail underneath
-                shows why that order makes the cut.
+                at the top is the final tournament-cycle answer we filed. The evidence trail underneath shows why that
+                order was published.
               </p>
             </div>
           </div>
@@ -407,8 +416,8 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
               <p>{worldCupAnswer}</p>
               <p>{visibleSquadStatus}</p>
               {visibleSquadNote ? <p>{visibleSquadNote}</p> : null}
-              <p>A fresh in-match penalty can move this page quickly, especially if it contradicts the current lead or happens with the full-strength tournament pool on the pitch.</p>
-              <p>For the more conditional boards, one more clean senior penalty is often enough to sharpen the backup line or flip the order outright.</p>
+              <p>This section records the squad and hierarchy context that informed the published World Cup call.</p>
+              <p>Tournament outcomes are being checked separately so the original forecast remains distinguishable from the final event record.</p>
               <p>
                 Spot a hierarchy shift, a squad-specific wrinkle or a stronger team signal?{" "}
                 <a href="mailto:contact@ilmargine.bet" className="border-b border-emerald-500/30 text-emerald-400 hover:text-emerald-300">
@@ -447,7 +456,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
               <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Il Margine File</div>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Internal hierarchy checks</h2>
               <div className="mt-5 space-y-3 text-sm leading-7 text-slate-300">
-                <p>We keep the public page focused on the answer: current primary, closest backup and the match evidence that moves the hierarchy.</p>
+                <p>We keep the public archive focused on the filed primary, closest backup and the match evidence that shaped the hierarchy.</p>
                 <p>The internal file stays broader so we can re-check squad context, event timing and backup pressure without turning the page into a raw research appendix.</p>
               </div>
             </div>

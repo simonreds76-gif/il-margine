@@ -7,9 +7,7 @@ import WorldCupTelegramOverlay from "@/components/WorldCupTelegramOverlay";
 function shouldShowWorldCupTelegram(pathname: string | null): boolean {
   if (!pathname) return false;
   return (
-    pathname === "/" ||
-    pathname.startsWith("/penalty-takers") ||
-    pathname.startsWith("/anytime-goalscorer") ||
+    pathname.startsWith("/penalty-takers/world-cup-2026") ||
     pathname.startsWith("/world-cup-2026-free-picks")
   );
 }

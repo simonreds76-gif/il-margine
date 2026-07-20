@@ -197,6 +197,69 @@ export async function fetchMarketPayload(scope: "tennis" | "props") {
   };
 }
 
+export type WorldCupRecordSummary = {
+  totalBets: number;
+  wins: number;
+  losses: number;
+  pending: number;
+  totalProfit: number;
+  totalStake: number;
+  roi: number;
+  avgOdds: number;
+  isFinal: boolean;
+};
+
+export async function fetchWorldCupRecordSummary(): Promise<WorldCupRecordSummary | null> {
+  if (!hasSupabaseAdminConfig()) return null;
+
+  const supabase = getSupabaseAdmin();
+  const [statsResponse, pendingResponse] = await withTimeout(
+    Promise.all([
+      supabase.from("category_stats").select("*").eq("market", "props"),
+      supabase
+        .from("bets")
+        .select("market, category, event")
+        .eq("market", "props")
+        .eq("status", "pending")
+        .limit(500),
+    ]),
+    "World Cup public record query",
+  );
+  const error = statsResponse.error || pendingResponse.error;
+  if (error) throw new Error(error.message);
+
+  const rows = (statsResponse.data ?? []).filter(
+    (row) => getDisplayBetCategory({ market: row.market, category: row.category, event: null }) === "worldcup",
+  );
+  if (rows.length === 0) return null;
+
+  const totalBets = rows.reduce((sum, row) => sum + (Number(row.total_bets) || 0), 0);
+  const wins = rows.reduce((sum, row) => sum + (Number(row.wins) || 0), 0);
+  const losses = rows.reduce((sum, row) => sum + (Number(row.losses) || 0), 0);
+  // category_stats can retain a stale pending count; the bets ledger is authoritative.
+  const pending = (pendingResponse.data ?? []).filter(
+    (row) => getDisplayBetCategory({ market: row.market, category: row.category, event: row.event }) === "worldcup",
+  ).length;
+  const totalProfit = roundUnits(rows.reduce((sum, row) => sum + (Number(row.total_profit) || 0), 0));
+  const totalStake = roundUnits(rows.reduce((sum, row) => sum + (Number(row.total_stake) || 0), 0));
+  const oddsWeight = rows.reduce(
+    (sum, row) => sum + (Number(row.avg_odds) || 0) * (Number(row.total_bets) || 0),
+    0,
+  );
+
+  return {
+    totalBets,
+    wins,
+    losses,
+    pending,
+    totalProfit,
+    totalStake,
+    roi: totalStake > 0 ? roundUnits((totalProfit / totalStake) * 100) : 0,
+    avgOdds: totalBets > 0 ? roundUnits(oddsWeight / totalBets) : 0,
+    isFinal: totalBets > 0 && pending === 0,
+  };
+}
+
 export async function fetchCalculatorPayload() {
   if (!hasSupabaseAdminConfig()) return { stats: [] };
 

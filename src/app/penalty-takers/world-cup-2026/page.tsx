@@ -7,6 +7,7 @@ import ClubPenaltyLeagueLinks from "@/components/ClubPenaltyLeagueLinks";
 import WorldCupTeamIndex from "./WorldCupTeamIndex";
 import {
   CONFEDERATION_ORDER,
+  WORLD_CUP_ARCHIVE_DATE,
   WORLD_CUP_PENALTIES_URL,
   WORLD_CUP_GROUP_ORDER,
   WORLD_CUP_GROUPS,
@@ -22,7 +23,7 @@ import { BASE_URL } from "@/lib/config";
 
 const PAGE_TITLE = "World Cup 2026 Penalty Takers by Nation";
 const PAGE_DESCRIPTION =
-  "Who takes penalties for every qualified nation at the 2026 FIFA World Cup? First-choice and backup penalty takers from the Il Margine World Cup intelligence file.";
+  "World Cup 2026 penalty taker archive for all 48 nations: the final filed first-choice and backup hierarchies, with the dated evidence behind every call.";
 
 const FEATURED_TEAMS = ["Germany", "France", "Brazil", "Argentina", "England", "Spain", "Japan", "Netherlands", "USA", "Mexico"];
 
@@ -40,7 +41,7 @@ const LATEST_HIERARCHY_UPDATES = [
   {
     team: "Australia",
     label: "Boyle cut, hierarchy rebuilt",
-    summary: "Hrustic leads only if on the pitch; Toure is the practical fallback, with Leckie, Irankunda and Mabil live depending on the XI.",
+    summary: "Hrustic led only if on the pitch; Toure was the practical fallback, with Leckie, Irankunda and Mabil available depending on the XI.",
   },
   {
     team: "Brazil",
@@ -60,7 +61,7 @@ const LATEST_HIERARCHY_UPDATES = [
   {
     team: "Switzerland",
     label: "Xhaka first, Embolo now backup",
-    summary: "Xhaka still owns the qualifier trail. Embolo's Jordan penalty moves him into the live secondary line ahead of Ricardo Rodriguez.",
+    summary: "Xhaka owned the qualifier trail. Embolo's Jordan penalty moved him into the secondary line ahead of Ricardo Rodriguez.",
   },
   {
     team: "Curacao",
@@ -274,7 +275,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
     name: PAGE_TITLE,
     description: PAGE_DESCRIPTION,
     url: WORLD_CUP_PENALTIES_URL,
-    dateModified: data.last_verified,
+    dateModified: WORLD_CUP_ARCHIVE_DATE,
     inLanguage: "en-GB",
     isPartOf: {
       "@type": "WebSite",
@@ -349,10 +350,14 @@ export default async function WorldCup2026PenaltyTakersPage() {
                 penalty takers
               </h1>
               <p className="mt-5 max-w-3xl text-[15px] leading-7 text-slate-300 sm:text-lg sm:leading-8">
-                First-choice and backup penalty takers for every qualified nation at the 2026 FIFA World Cup.
+                Final filed first-choice and backup penalty hierarchies for every nation at the 2026 FIFA World Cup.
                 If you are searching for France penalty taker, Germany penalty taker or Australia penalty taker, each
-                nation page gives the current World Cup call, backup order and evidence trail.
+                nation page preserves the tournament-cycle call, backup order and evidence trail.
               </p>
+
+              <div className="mt-5 rounded-2xl border border-amber-400/25 bg-amber-400/8 p-4 text-sm leading-6 text-slate-200">
+                <span className="font-semibold text-amber-200">Tournament complete:</span> this is the historical research file. The original hierarchy calls remain dated and visible while verified penalty outcomes are prepared as a separate audit layer.
+              </div>
 
               <div className="mt-6 flex flex-wrap gap-2">
                 <span className="rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-300">
@@ -423,7 +428,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
               <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Latest penalty taker updates</h2>
               <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-400">
                 The teams whose World Cup penalty order we re-checked most recently this cycle. Each card opens the
-                full team page with the current call, backup order and evidence trail.
+                full team page with the final filed call, backup order and evidence trail.
               </p>
             </div>
             <div className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-400">
@@ -480,7 +485,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
             <div>
               <h2 className="text-2xl font-semibold tracking-tight text-slate-100">Browse by World Cup 2026 group</h2>
               <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-400">
-                Group A through Group L of the 2026 FIFA World Cup, with each team&apos;s current first-choice penalty taker.
+                Group A through Group L of the 2026 FIFA World Cup, with each team&apos;s final filed first-choice penalty taker.
               </p>
             </div>
             <div className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-400">
@@ -606,7 +611,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
 
                               <div className="mt-8 grid gap-3">
                                 <div className="rounded-2xl border border-white/10 bg-slate-950/35 p-4">
-                                  <div className="text-[10px] uppercase tracking-[0.18em] text-slate-400">Current primary</div>
+                                  <div className="text-[10px] uppercase tracking-[0.18em] text-slate-400">Final filed primary</div>
                                   <div className={`mt-2 text-3xl font-semibold tracking-tight ${primary ? confStyle.primary : "text-slate-200"}`}>
                                     {primary || "Board still building"}
                                   </div>
@@ -662,7 +667,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
             <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
               <p>Senior in-match penalties come first. Squad confirmation, event timelines and repeat pressure evidence tighten the call when the file is still mixed.</p>
               <p>Shoot-outs can support the order, but they do not automatically overrule a stronger recent in-match trail. When the file is mixed, the page says so plainly in the note instead of hiding behind a vague label.</p>
-              <p>Now that the field is complete, the live work is less about qualification slots and more about hierarchy drift. The goal is simple: give the country-level answer quickly, then show the evidence that justifies it.</p>
+              <p>The tournament-cycle research is now frozen as an archive. The goal remains simple: preserve the country-level answer we filed, then show the dated evidence that justified it.</p>
             </div>
           </div>
         </section>
@@ -672,7 +677,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
             <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Help Tighten The Board</div>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Closer to one of the squads?</h2>
             <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">
-              If you cover one of the qualified teams locally, work around the squad, or simply have stronger information on a live hierarchy shift, send it through. Useful corrections beat stale consensus every time.
+              If you have a stronger source for a tournament penalty event or hierarchy decision, send it through. Corrections will be added transparently to the outcome audit without rewriting the original filed call.
             </p>
             <div className="mt-5 flex flex-wrap items-center gap-3">
               <a

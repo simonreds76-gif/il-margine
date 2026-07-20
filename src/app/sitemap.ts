@@ -8,15 +8,13 @@ import {
   readAllClubPenaltyTeams,
   readClubPenaltyData,
 } from "@/lib/club-penalty-takers";
-import { readWorldCupData, worldCupTeamUrl, WORLD_CUP_PENALTIES_URL } from "@/lib/world-cup-penalties";
+import { readWorldCupData, worldCupTeamUrl, WORLD_CUP_ARCHIVE_DATE, WORLD_CUP_PENALTIES_URL } from "@/lib/world-cup-penalties";
 
 const STATIC_LAST_MODIFIED = new Date("2026-05-12T00:00:00Z");
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const worldCupData = await readWorldCupData().catch(() => null);
-  const worldCupLastModified = worldCupData?.last_verified
-    ? new Date(`${worldCupData.last_verified}T12:00:00Z`)
-    : STATIC_LAST_MODIFIED;
+  const worldCupLastModified = new Date(`${WORLD_CUP_ARCHIVE_DATE}T12:00:00Z`);
   const [clubPenaltyTeams, clubPenaltyLeagues] = await Promise.all([
     readAllClubPenaltyTeams().catch(() => []),
     readClubPenaltyData().catch(() => []),
@@ -33,7 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/anytime-goalscorer`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "daily", priority: 0.8 },
     { url: `${BASE_URL}/penalty-takers`, lastModified: clubPenaltyLastModified, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/penalty-takers/methodology`, lastModified: clubPenaltyLastModified, changeFrequency: "monthly", priority: 0.5 },
-    { url: `${BASE_URL}/world-cup-2026-free-picks`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "daily", priority: 0.85 },
+    { url: `${BASE_URL}/world-cup-2026-free-picks`, lastModified: new Date("2026-07-20T12:00:00Z"), changeFrequency: "monthly", priority: 0.85 },
     ...CLUB_LEAGUES.map((leagueConfig) => {
       const league = clubPenaltyLeagues.find((candidate) => candidate.key === leagueConfig.key);
       return {
@@ -51,11 +49,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
     ...(worldCupData
       ? [
-          { url: WORLD_CUP_PENALTIES_URL, lastModified: worldCupLastModified, changeFrequency: "weekly" as const, priority: 0.9 },
+          { url: WORLD_CUP_PENALTIES_URL, lastModified: worldCupLastModified, changeFrequency: "yearly" as const, priority: 0.9 },
           ...worldCupData.teams.map((team) => ({
             url: worldCupTeamUrl(team.team),
             lastModified: worldCupLastModified,
-            changeFrequency: "weekly" as const,
+            changeFrequency: "yearly" as const,
             priority: 0.65,
           })),
         ]
