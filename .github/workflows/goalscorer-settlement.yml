@@ -245,6 +245,15 @@ jobs:
       - name: Build goalscorer monitor snapshot
         run: python scripts/build-goalscorer-monitor-snapshot.py
 
+      - name: Alert new penalty review tickets
+        continue-on-error: true
+        env:
+          OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
+          OPS_ALERT_TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
+          PENALTY_REVIEW_URL: "http://localhost:3000/model-monitor/goalscorer#penalty-watchlist"
+          GITHUB_RUN_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        run: python scripts/club-penalty-review-alert.py --base-ref HEAD
+
       - name: Upload goalscorer monitor snapshot
         env:
           ENABLE_SUPABASE_SNAPSHOT_UPLOADS: ${{ vars.ENABLE_SUPABASE_SNAPSHOT_UPLOADS }}

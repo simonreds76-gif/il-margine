@@ -812,39 +812,41 @@ export default async function GoalscorerMonitorPage() {
         </SectionCard>
 
         {/* -- Penalty Watchlist ----------------------------------------------- */}
-        <SectionCard
-          title={`Penalty Watchlist${activePenaltyRows.length ? ` | ${activePenaltyRows.length} active` : ""}`}
-          subtitle="Enriched in the snapshot - includes on-pitch-at-penalty resolution."
-          collapsible
-          defaultOpen
-        >
-          <div className="space-y-3">
-            {activePenaltyRows.length === 0 ? (
-              <EmptyState message="No active penalty review rows in the current snapshot." />
-            ) : (
-              activePenaltyRows.map((row) => <PenaltyReviewCard key={row.row_id} row={row} />)
-            )}
-          </div>
-
-          {/* Resolved rows - collapsed */}
-          <details className="group mt-4 rounded-xl border border-slate-800/50 bg-slate-950/30">
-            <summary className="flex cursor-pointer select-none list-none items-center justify-between gap-3 px-4 py-3 marker:hidden hover:bg-white/[0.02]">
-              <span className="text-xs font-medium text-slate-500">
-                Resolved rows ({resolvedPenaltyRows.length})
-              </span>
-              <span className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-700 transition-transform duration-200 group-open:rotate-180">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden><polyline points="6 9 12 15 18 9" /></svg>
-              </span>
-            </summary>
-            <div className="space-y-3 border-t border-slate-800/50 px-4 pb-4 pt-3">
-              {resolvedPenaltyRows.length === 0 ? (
-                <EmptyState message="No penalty rows have been resolved yet." />
+        <div id="penalty-watchlist" className="scroll-mt-24">
+          <SectionCard
+            title={`Penalty Watchlist${activePenaltyRows.length ? ` | ${activePenaltyRows.length} active` : ""}`}
+            subtitle="Includes on-pitch context. Resolving a ticket never edits the public hierarchy automatically."
+            collapsible
+            defaultOpen
+          >
+            <div className="space-y-3">
+              {activePenaltyRows.length === 0 ? (
+                <EmptyState message="No active penalty review rows in the current snapshot." />
               ) : (
-                resolvedPenaltyRows.map((row) => <PenaltyReviewCard key={row.row_id} row={row} />)
+                activePenaltyRows.map((row) => <PenaltyReviewCard key={row.row_id} row={row} />)
               )}
             </div>
-          </details>
-        </SectionCard>
+
+            {/* Resolved rows - collapsed */}
+            <details className="group mt-4 rounded-xl border border-slate-800/50 bg-slate-950/30">
+              <summary className="flex cursor-pointer select-none list-none items-center justify-between gap-3 px-4 py-3 marker:hidden hover:bg-white/[0.02]">
+                <span className="text-xs font-medium text-slate-500">
+                  Resolved rows ({resolvedPenaltyRows.length})
+                </span>
+                <span className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-700 transition-transform duration-200 group-open:rotate-180">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden><polyline points="6 9 12 15 18 9" /></svg>
+                </span>
+              </summary>
+              <div className="space-y-3 border-t border-slate-800/50 px-4 pb-4 pt-3">
+                {resolvedPenaltyRows.length === 0 ? (
+                  <EmptyState message="No penalty rows have been resolved yet." />
+                ) : (
+                  resolvedPenaltyRows.map((row) => <PenaltyReviewCard key={row.row_id} row={row} />)
+                )}
+              </div>
+            </details>
+          </SectionCard>
+        </div>
 
         {/* -- Recent Shadow Settlements ---------------------------------------- */}
         <SectionCard
