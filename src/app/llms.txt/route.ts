@@ -15,6 +15,8 @@ export async function GET() {
     `- Home: ${BASE_URL}/`,
     `- Tennis Tips: ${BASE_URL}/tennis-tips`,
     `- Player Props: ${BASE_URL}/player-props`,
+    `- World Cup 2026 Picks Archive: ${BASE_URL}/world-cup-2026-free-picks`,
+    `- World Cup 2026 Penalty Takers: ${BASE_URL}/penalty-takers/world-cup-2026`,
     `- Goalscorer Fair Odds Lab: ${BASE_URL}/fair-odds-lab`,
     `- ATP Tennis: ${BASE_URL}/atp-tennis`,
     `- Track Record: ${BASE_URL}/track-record`,

@@ -117,10 +117,22 @@ export default function PlayerProps({
     };
   }, [fetchData, hasInitialPayload]);
 
-  // Scroll to #picks when landing from homepage link (client-side nav doesn't scroll to hash)
   useEffect(() => {
-    if (typeof window === "undefined" || window.location.hash !== "#picks" || loading) return;
-    const el = document.getElementById("picks");
+    if (typeof window === "undefined") return;
+    const competition = new URLSearchParams(window.location.search).get("comp");
+    if (competition === "worldcup") setActiveLeague("worldcup");
+  }, []);
+
+  // Client-side navigation does not reliably scroll after the record payload hydrates.
+  useEffect(() => {
+    if (typeof window === "undefined" || loading) return;
+    const targetId = window.location.hash === "#picks"
+      ? "picks"
+      : window.location.hash === "#competition-record"
+        ? "competition-record"
+        : null;
+    if (!targetId) return;
+    const el = document.getElementById(targetId);
     if (!el) return;
     requestAnimationFrame(() => requestAnimationFrame(() => el.scrollIntoView({ behavior: "smooth", block: "start" })));
   }, [loading]);
@@ -273,7 +285,7 @@ export default function PlayerProps({
       </section>
 
       {/* League Tabs */}
-      <section className="py-12 md:py-16 border-b border-slate-800/50">
+      <section id="competition-record" className="scroll-mt-24 py-12 md:py-16 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8">
             {leagueConfig.map((league) => {

@@ -52,6 +52,7 @@ export type WorldCupPenaltyData = {
 };
 
 export const WORLD_CUP_PENALTIES_URL = `${BASE_URL}/penalty-takers/world-cup-2026`;
+export const WORLD_CUP_ARCHIVE_DATE = "2026-07-20";
 
 export const CONFEDERATION_ORDER = ["UEFA", "CONMEBOL", "Concacaf", "AFC", "CAF", "OFC"];
 export const WORLD_CUP_GROUP_ORDER = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"];
@@ -187,7 +188,7 @@ export function formatAuditDate(value: string | undefined): string {
   }).format(date);
 }
 
-export function publicPenaltyEvidenceText(value: string | undefined, fallback = "Il Margine file still being built from the current cycle."): string {
+export function publicPenaltyEvidenceText(value: string | undefined, fallback = "Il Margine archive contains the evidence available during the 2026 tournament cycle."): string {
   const text = (value || fallback).trim();
   if (!text) return fallback;
 
@@ -274,9 +275,9 @@ export function buildWorldCupTeamDescription(team: TeamRow): string {
   const primary = team.likely_primary?.trim() || "still being researched";
   const secondary = team.likely_secondary?.trim();
   if (secondary) {
-    return `Who is ${team.team}'s penalty taker for the 2026 World Cup? ${primary} is the current first-choice call, with ${secondary} next in line if the order shifts. Read the evidence trail and backup context.`;
+    return `${team.team} penalty taker archive for the 2026 World Cup. Our final filed hierarchy had ${primary} first, with ${secondary} next in line. Review the dated evidence trail and backup context.`;
   }
-  return `Who is ${team.team}'s penalty taker for the 2026 World Cup? ${primary} is the current first-choice call. Read the latest evidence trail and why the backup order is still thinner than the lead.`;
+  return `${team.team} penalty taker archive for the 2026 World Cup. Our final filed hierarchy had ${primary} first. Review the dated evidence trail and why the backup order remained less certain.`;
 }
 
 export function buildWorldCupTeamLead(team: TeamRow): string {
@@ -284,12 +285,12 @@ export function buildWorldCupTeamLead(team: TeamRow): string {
   const secondary = team.likely_secondary?.trim();
 
   if (!primary) {
-    return `We are still building the ${team.team} penalty taker file for World Cup 2026 and need another clean senior signal before we publish a firmer first-choice call.`;
+    return `The ${team.team} World Cup 2026 file closed without enough clean senior evidence for a firm first-choice call.`;
   }
 
   if (secondary) {
-    return `${primary} is our current ${team.team} penalty taker call for World Cup 2026, with ${secondary} the closest backup if the order changes.`;
+    return `Our final filed ${team.team} hierarchy for World Cup 2026 had ${primary} first, with ${secondary} as the closest backup.`;
   }
 
-  return `${primary} is our current ${team.team} penalty taker call for World Cup 2026. We do not name a backup yet because the secondary order is still too thin or too mixed.`;
+  return `Our final filed ${team.team} hierarchy for World Cup 2026 had ${primary} first. The evidence was not strong enough to name a firm backup.`;
 }
