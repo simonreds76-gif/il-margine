@@ -1,9 +1,9 @@
 # Team Fouls v1: FotMob Definition Agreement
 
-Generated: 2026-07-20T10:28:01Z
+Generated: 2026-07-21T10:05:41Z
 Status: **WAIT/FAIL**
 
-- Matched fixtures: 62/67
+- Matched fixtures: 62/70
 - Comparable team values: 124 (required 200)
 - Exact agreement: 98.4%
 - Within one foul: 98.4% (required 97.0%)
