@@ -50,6 +50,8 @@ SUPPORTED_TOURNAMENT_KEYWORDS = (
     ("Bastad", ("bastad", "båstad", "nordea open")),
     ("Gstaad", ("gstaad", "swiss open")),
     ("Umag", ("umag", "croatia open")),
+    ("Estoril", ("estoril",)),
+    ("Kitzbuhel", ("kitzbuhel", "kitzbühel")),
 )
 LOWER_TIER_KEYWORDS = (
     "challenger",
@@ -333,6 +335,9 @@ def tournament_from_event(event: dict[str, Any]) -> str:
     for tournament, keywords in SUPPORTED_TOURNAMENT_KEYWORDS:
         if any(contains_keyword(haystack, keyword) for keyword in keywords):
             return tournament
+    main_tour_match = re.match(r"^(?:ATP|WTA)\s*-\s*([^,]+)", league, flags=re.I)
+    if main_tour_match:
+        return main_tour_match.group(1).strip()
     return league or "Tennis"
 
 
@@ -387,9 +392,12 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any], 
     raw_labels: dict[tuple[str, str, str], list[str]] = defaultdict(list)
     yes_no_market = is_yes_no_market(market_key)
     real_players = real_event_players(home, away)
+    market_text = norm(market_name)
+    is_team_count_total = market_key in {"aces", "double_faults"} and "team total" in market_text
     is_match_count_total = (
         market_key in {"aces", "double_faults"}
-        and "total" in norm(market_name)
+        and "total" in market_text
+        and not is_team_count_total
         and len(real_players) == 2
     )
     output_market = (
@@ -422,7 +430,19 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any], 
         under_price = parse_decimal(prop.get("under")) or (None if yes_no_market else away_side_price)
         yes_price = parse_decimal(prop.get("yes") or prop.get("Yes")) or (home_side_price if yes_no_market else None)
         no_price = parse_decimal(prop.get("no") or prop.get("No")) or (away_side_price if yes_no_market else None)
-        player_name = resolve_prop_player(prop, label, market_name, home, away, match_level_market=match_level_market)
+        if is_team_count_total and market_text.endswith(" away"):
+            player_name = clean_player(away)
+        elif is_team_count_total and market_text.endswith(" home"):
+            player_name = clean_player(home)
+        else:
+            player_name = resolve_prop_player(
+                prop,
+                label,
+                market_name,
+                home,
+                away,
+                match_level_market=match_level_market,
+            )
         if over_price or under_price:
             if not player_name:
                 continue

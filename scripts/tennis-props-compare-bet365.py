@@ -118,6 +118,38 @@ def compatible_player_name(left: object, right: object) -> bool:
     return bool(left_last and left_last == right_last and len(left_last) >= 4)
 
 
+def can_fallback_player_only(player: object, opponent: object) -> bool:
+    """Only allow player-only matching when one side is genuinely missing.
+
+    If both names are present, ignoring the opponent can attach yesterday's
+    price to the same player's next-round match.
+    """
+    if is_placeholder_player(player):
+        return not is_placeholder_player(opponent)
+    return not is_placeholder_player(player) and is_placeholder_player(opponent)
+
+
+def normalize_legacy_team_total_row(row: dict[str, str]) -> dict[str, str]:
+    """Repair team-total rows written by the pre-2026-07-21 scraper.
+
+    The old parser treated Bet365's player/team totals as match totals and
+    assigned Away ladders to the home player. Keep this compatibility layer in
+    the comparator so already-captured files remain usable without another API
+    request.
+    """
+    normalized = dict(row)
+    raw_market = norm_name(row.get("raw_market_name"))
+    market = str(row.get("market") or "").strip().lower()
+    if "team total" not in raw_market or market not in MATCH_TOTAL_MARKETS:
+        return normalized
+
+    normalized["market"] = "double_faults" if "double faults" in raw_market else "aces"
+    if raw_market.endswith(" away"):
+        normalized["player"] = str(row.get("opponent") or "")
+        normalized["opponent"] = str(row.get("player") or "")
+    return normalized
+
+
 def parse_float(value: object, default: float | None = None) -> float | None:
     try:
         text = str(value or "").strip()
@@ -466,7 +498,7 @@ def main() -> None:
         if args.unmatched_out
         else PROPS_DIR / f"comparison-{args.date}-unmatched.csv"
     )
-    line_rows = read_csv(lines_path)
+    line_rows = [normalize_legacy_team_total_row(row) for row in read_csv(lines_path)]
     if not lines_path.exists():
         print(f"Lines file not found: {lines_path}")
         return
@@ -579,7 +611,9 @@ def main() -> None:
                 unmatched_reason = "AMBIGUOUS_PAIR_ALIAS_ANY_DATE"
             else:
                 unmatched_reason = unmatched_reason or "PAIR_NOT_ON_BOARD"
-        if board_row is None and not requires_exact_pair:
+        if board_row is None and not requires_exact_pair and can_fallback_player_only(
+            original_player, original_opponent
+        ):
             lookup_player = ""
             if is_placeholder_player(original_player) and original_opponent:
                 lookup_player = original_opponent

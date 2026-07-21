@@ -26,6 +26,8 @@ class TennisPropsTournamentSelectionTests(unittest.TestCase):
             "ATP - Bastad, Sweden",
             "ATP - Gstaad, Switzerland",
             "ATP - Umag, Croatia",
+            "ATP - Estoril, Portugal",
+            "ATP - Kitzbuhel, Austria",
             "WTA - Hamburg, Germany",
         ):
             with self.subTest(league=league):
@@ -53,6 +55,54 @@ class TennisPropsTournamentSelectionTests(unittest.TestCase):
         self.assertEqual(MODULE.tournament_from_event(event("ATP - Bastad, Sweden")), "Bastad")
         self.assertEqual(MODULE.tournament_from_event(event("ATP - Gstaad, Switzerland")), "Gstaad")
         self.assertEqual(MODULE.tournament_from_event(event("ATP - Umag, Croatia")), "Umag")
+        self.assertEqual(MODULE.tournament_from_event(event("ATP - Estoril, Portugal")), "Estoril")
+        self.assertEqual(MODULE.tournament_from_event(event("ATP - Kitzbuhel, Austria")), "Kitzbuhel")
+
+    def test_unknown_main_tour_name_uses_league_location(self) -> None:
+        self.assertEqual(MODULE.tournament_from_event(event("ATP - Los Cabos, Mexico")), "Los Cabos")
+
+
+class TennisPropsMarketShapeTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.fixture = {
+            "id": "72987034",
+            "date": "2026-07-22T11:00:00Z",
+            "league": {"name": "ATP - Estoril, Portugal"},
+            "home": "Bueno, Gonzalo",
+            "away": "Pereira, Tiago",
+        }
+
+    def test_team_total_away_is_assigned_to_away_player(self) -> None:
+        rows = MODULE.extract_rows(
+            self.fixture,
+            "Bet365",
+            {"name": "Team Total (Aces) Away", "odds": [{"hdp": 2.5, "over": "1.83"}]},
+        )
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["market"], "aces")
+        self.assertEqual(rows[0]["player"], "Tiago Pereira")
+        self.assertEqual(rows[0]["opponent"], "Gonzalo Bueno")
+        self.assertEqual(rows[0]["over_odds"], "1.8300")
+
+    def test_team_total_home_is_assigned_to_home_player(self) -> None:
+        rows = MODULE.extract_rows(
+            self.fixture,
+            "Bet365",
+            {"name": "Team Total (Double Faults) Home", "odds": [{"hdp": 1.5, "over": "2.10"}]},
+        )
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["market"], "double_faults")
+        self.assertEqual(rows[0]["player"], "Gonzalo Bueno")
+        self.assertEqual(rows[0]["opponent"], "Tiago Pereira")
+
+    def test_plain_totals_remain_match_level(self) -> None:
+        rows = MODULE.extract_rows(
+            self.fixture,
+            "Bet365",
+            {"name": "Totals (Aces)", "odds": [{"hdp": 4.5, "over": "1.66"}]},
+        )
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["market"], "match_aces")
 
 
 if __name__ == "__main__":

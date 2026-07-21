@@ -290,11 +290,33 @@ def canonical_tournament_name(value: object) -> str | None:
         return "Gstaad"
     if "umag" in lower or "croatia open" in lower:
         return "Umag"
+    if "estoril" in lower:
+        return "Estoril"
+    if "kitzbuhel" in lower or "kitzbühel" in lower:
+        return "Kitzbuhel"
     if "iasi" in lower:
         return "Iasi"
     if "athens" in lower:
         return "Athens"
     return None
+
+
+def scheduled_tournament_name(value: object) -> str | None:
+    """Return a stable name for a supported main-tour schedule event.
+
+    Known aliases keep their historical names. Unknown ATP/WTA main-tour
+    events fall back to OnCourt's location suffix instead of disappearing
+    from the board until an alias is added manually.
+    """
+    canonical = canonical_tournament_name(value)
+    if canonical:
+        return canonical
+    raw = re.sub(r"\s+", " ", str(value or "")).strip()
+    if not raw:
+        return None
+    parts = re.split(r"\s+-\s+", raw)
+    fallback = parts[-1].strip(" -") if len(parts) > 1 else raw
+    return fallback or None
 
 
 def is_supported_main_tour(tour: dict[str, str]) -> bool:
@@ -556,7 +578,7 @@ def oncourt_schedule_rows(tour_code: str, include_completed: bool, board_date: s
         tour_start = parse_date(tour.get("date"))
         if tour_start and tour_start > board_dt + timedelta(days=1):
             continue
-        tournament = canonical_tournament_name(tour.get("name"))
+        tournament = scheduled_tournament_name(tour.get("name"))
         if not tournament:
             continue
         p1 = player_names.get(str(row.get("player1_id") or "").strip(), "")

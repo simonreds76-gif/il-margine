@@ -24,10 +24,19 @@ class CurrentTournamentAliasTests(unittest.TestCase):
             "Nordea Open - Bastad": "Bastad",
             "EFG Swiss Open - Gstaad": "Gstaad",
             "Plava Laguna Croatia Open - Umag": "Umag",
+            "Millennium Estoril Open - Estoril": "Estoril",
+            "Generali Open - Kitzbuhel": "Kitzbuhel",
+            "Generali Open - Kitzbühel": "Kitzbuhel",
         }
         for raw, expected in aliases.items():
             with self.subTest(raw=raw):
                 self.assertEqual(MODULE.canonical_tournament_name(raw), expected)
+
+    def test_unknown_main_tour_schedule_uses_location_suffix(self) -> None:
+        self.assertEqual(
+            MODULE.scheduled_tournament_name("Mifel Tennis Open - Los Cabos"),
+            "Los Cabos",
+        )
 
 
 class CurrentEventRowsCacheTests(unittest.TestCase):
