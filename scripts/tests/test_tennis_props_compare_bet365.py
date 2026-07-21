@@ -3,6 +3,8 @@ from __future__ import annotations
 import importlib.util
 import sys
 import unittest
+from argparse import Namespace
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 
@@ -62,6 +64,64 @@ class PlayerOnlyFallbackTests(unittest.TestCase):
 
     def test_placeholder_player_can_use_named_opponent(self) -> None:
         self.assertTrue(MODULE.can_fallback_player_only("Total", "Gonzalo Bueno"))
+
+
+class OverOnlyDecisionTests(unittest.TestCase):
+    @staticmethod
+    def row(value_over_pct: str = "20.0") -> dict[str, str]:
+        now = datetime.now(timezone.utc)
+        return {
+            "date": "2026-07-22",
+            "tour": "ATP",
+            "tournament": "Kitzbuhel",
+            "player": "Player One",
+            "opponent": "Player Two",
+            "market": "match_aces",
+            "scope": "match_total",
+            "line": "10.5",
+            "over_odds": "2.10",
+            "under_odds": "",
+            "price_pair_status": "over_only",
+            "line_quality": "one_sided",
+            "matched_board": "yes",
+            "totals_stage0_passed": "true",
+            "projection_mean": "12.0",
+            "projection_p1": "6.0",
+            "projection_p2": "6.0",
+            "confidence": "MED",
+            "combined_surface_svpt_sample": "2500",
+            "capture_ts": now.isoformat(),
+            "match_start_utc": (now + timedelta(hours=12)).isoformat(),
+            "notes": "",
+            "value_over_pct": value_over_pct,
+            "value_under_pct": "",
+            "edge_over_novig_pct": "",
+            "edge_under_novig_pct": "",
+            "model_market_gap_pp": "",
+        }
+
+    @staticmethod
+    def args() -> Namespace:
+        return Namespace(
+            min_value=0.10,
+            min_novig_edge=0.05,
+            min_one_sided_value=0.15,
+            max_model_market_gap=0.12,
+        )
+
+    def test_central_over_only_price_can_pass_on_raw_ev(self) -> None:
+        rows = [self.row()]
+        MODULE.apply_decision_gates(rows, self.args(), datetime.now(timezone.utc))
+        self.assertEqual(rows[0]["best_available_line"], "true")
+        self.assertEqual(rows[0]["decision_mode"], "over_only_raw_ev")
+        self.assertEqual(rows[0]["bettable"], "true")
+        self.assertEqual(rows[0]["recommended_side"], "OVER")
+
+    def test_over_only_price_below_stricter_ev_gate_is_blocked(self) -> None:
+        rows = [self.row("12.0")]
+        MODULE.apply_decision_gates(rows, self.args(), datetime.now(timezone.utc))
+        self.assertEqual(rows[0]["bettable"], "false")
+        self.assertIn("EDGE_BELOW_GATE", rows[0]["block_reasons"])
 
 
 if __name__ == "__main__":

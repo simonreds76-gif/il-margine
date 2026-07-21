@@ -28,6 +28,8 @@ MATCH_TOTAL_MARKETS = {"match_aces", "match_double_faults"}
 CONFIDENCE_RANK = {"LOW": 0, "MED": 1, "HIGH": 2}
 MIN_COMBINED_SAMPLE = 800.0
 STALE_CAPTURE_HOURS = 6.0
+OVER_ONLY_MIN_ODDS = 1.40
+OVER_ONLY_MAX_ODDS = 3.50
 UNMATCHED_FIELDS = [
     "date",
     "tour",
@@ -308,6 +310,27 @@ def select_main_lines(rows: list[dict[str, str]]) -> None:
             row["group_line_count"] = str(group_size)
             row["complete_line_count"] = str(complete_count)
         if not two_way_candidates:
+            over_only_candidates = [
+                row
+                for row in group_rows
+                if row.get("matched_board") == "yes"
+                and row.get("price_pair_status") == "over_only"
+                and OVER_ONLY_MIN_ODDS
+                <= (parse_float(row.get("over_odds"), 0.0) or 0.0)
+                <= OVER_ONLY_MAX_ODDS
+            ]
+
+            def over_only_score(row: dict[str, str]) -> tuple[float, float]:
+                odds = parse_float(row.get("over_odds"), 0.0) or 0.0
+                mean = parse_float(row.get("projection_mean"), 0.0) or 0.0
+                line_value = parse_float(row.get("line"), mean) or mean
+                return (abs((1.0 / odds) - 0.5), abs(line_value - mean))
+
+            ranked_over = sorted(over_only_candidates, key=over_only_score)
+            for index, row in enumerate(ranked_over, start=1):
+                row["line_rank"] = str(index)
+            if ranked_over:
+                ranked_over[0]["best_available_line"] = "true"
             continue
 
         def score(row: dict[str, str]) -> tuple[float, float, float]:
@@ -334,6 +357,12 @@ def select_main_lines(rows: list[dict[str, str]]) -> None:
 
 
 def best_candidate(row: dict[str, str], args: argparse.Namespace) -> tuple[str, float] | None:
+    if row.get("price_pair_status") == "over_only":
+        raw_over = (parse_float(row.get("value_over_pct"), 0.0) or 0.0) / 100.0
+        if row.get("best_available_line") == "true" and raw_over >= args.min_one_sided_value:
+            return "OVER", raw_over
+        return None
+
     candidates: list[tuple[str, float, float]] = []
     for side, raw_field, ratio_field in (
         ("OVER", "value_over_pct", "edge_over_novig_pct"),
@@ -355,16 +384,25 @@ def apply_decision_gates(rows: list[dict[str, str]], args: argparse.Namespace, n
         reasons: list[str] = []
         market = str(row.get("market") or "")
         scope = str(row.get("scope") or "")
+        over_only_mode = (
+            row.get("price_pair_status") == "over_only"
+            and row.get("best_available_line") == "true"
+        )
+        row["decision_mode"] = "over_only_raw_ev" if over_only_mode else "two_way_novig"
         if scope != "match_total" or market not in MATCH_TOTAL_MARKETS:
             reasons.append("PLAYER_LINE_RESEARCH_ONLY")
         if scope == "match_total" and row.get("totals_stage0_passed") != "true":
             reasons.append("TOTALS_STAGE0_BLOCKED")
         if row.get("matched_board") != "yes":
             reasons.append("NO_BOARD_MATCH")
-        if row.get("line_quality") != "complete":
-            reasons.append(f"LINE_{str(row.get('line_quality') or 'UNKNOWN').upper()}")
-        if row.get("main_line") != "true":
-            reasons.append("NOT_MAIN_LINE")
+        if over_only_mode:
+            if row.get("best_available_line") != "true":
+                reasons.append("NOT_BEST_AVAILABLE_OVER")
+        else:
+            if row.get("line_quality") != "complete":
+                reasons.append(f"LINE_{str(row.get('line_quality') or 'UNKNOWN').upper()}")
+            if row.get("main_line") != "true":
+                reasons.append("NOT_MAIN_LINE")
         if not row.get("capture_ts"):
             reasons.append("MISSING_CAPTURE_TS")
         else:
@@ -476,6 +514,12 @@ def main() -> None:
     parser.add_argument("--unmatched-out", default="")
     parser.add_argument("--min-value", type=float, default=0.10)
     parser.add_argument("--min-novig-edge", type=float, default=0.05)
+    parser.add_argument(
+        "--min-one-sided-value",
+        type=float,
+        default=0.15,
+        help="Minimum raw EV for a central Over-only ladder price (no under/no-vig price available).",
+    )
     parser.add_argument("--max-model-market-gap", type=float, default=0.12)
     parser.add_argument(
         "--max-date-drift-days",
@@ -775,6 +819,7 @@ def main() -> None:
                 "line_quality": line_quality,
                 "line_quality_reason": line_quality_reason,
                 "price_pair_status": price_status,
+                "decision_mode": "",
                 "main_line": "false",
                 "best_available_line": "false",
                 "line_rank": "",
@@ -838,6 +883,7 @@ def main() -> None:
         "line_quality",
         "line_quality_reason",
         "price_pair_status",
+        "decision_mode",
         "main_line",
         "best_available_line",
         "line_rank",
