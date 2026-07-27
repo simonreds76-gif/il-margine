@@ -7,6 +7,8 @@ import { slugifyTip, parseTipSlugId } from "@/lib/slugify";
 import { isWorldCupPropsTip, WORLD_CUP_TIP_IMAGE_PATH } from "@/lib/world-cup-tips";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import MarketBadge from "@/components/MarketBadge";
+import PropsAlertsCta from "@/components/PropsAlertsCta";
+import TipPageTracker from "@/components/TipPageTracker";
 import Footer from "@/components/Footer";
 import { formatStake, formatMatchDate, formatOdds } from "@/lib/format";
 
@@ -19,6 +21,21 @@ function displaySelection(selection: string): string {
   const s = (selection || "").trim();
   if (s.toUpperCase() === "ML") return "Moneyline";
   return s;
+}
+
+function formatAuditTimestamp(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/London",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(date);
 }
 
 interface PageProps {
@@ -62,6 +79,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       siteName: "Il Margine",
       title,
       description,
+      publishedTime: bet.posted_at,
+      modifiedTime: bet.settled_at ?? bet.posted_at,
       images: [
         {
           url: worldCupGraphic ?? DEFAULT_SOCIAL_IMAGE,
@@ -112,9 +131,12 @@ export default async function TipPage({ params }: PageProps) {
 
   const heroName = bet.player || displaySelection(bet.selection);
   const heroSelection = bet.player ? displaySelection(bet.selection) : null;
+  const postedLabel = formatAuditTimestamp(bet.posted_at);
+  const settledLabel = formatAuditTimestamp(bet.settled_at);
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
+      <TipPageTracker betId={bet.id} market={bet.market} category={bet.category} status={bet.status} />
       {/* Hero: player name huge, selection as accent subtitle, match as context */}
       <section className="relative pt-6 pb-10 md:pt-8 md:pb-14 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/20 via-transparent to-transparent pointer-events-none" />
@@ -143,6 +165,25 @@ export default async function TipPage({ params }: PageProps) {
             <p className="text-xl sm:text-2xl font-medium text-emerald-400 mb-3">{heroSelection}</p>
           )}
           <p className="text-slate-500 text-base">{bet.event}</p>
+          <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-slate-800/70 pt-4 text-xs text-slate-500">
+            {postedLabel ? (
+              <span>
+                Published{" "}
+                <time dateTime={bet.posted_at} className="font-mono text-slate-300">
+                  {postedLabel}
+                </time>
+              </span>
+            ) : null}
+            {settledLabel ? (
+              <span>
+                Settled{" "}
+                <time dateTime={bet.settled_at ?? undefined} className="font-mono text-slate-300">
+                  {settledLabel}
+                </time>
+              </span>
+            ) : null}
+            <span>Times shown in London time</span>
+          </div>
         </div>
       </section>
 
@@ -152,7 +193,7 @@ export default async function TipPage({ params }: PageProps) {
           <div className="rounded-xl border border-slate-700/80 bg-slate-900/80 shadow-xl ring-1 ring-slate-800/60 overflow-hidden">
             <div className="grid grid-cols-3 divide-x divide-slate-700/60">
               <div className="p-6 text-center">
-                <span className="block text-[11px] font-medium uppercase tracking-widest text-slate-500 mb-2">Odds</span>
+                <span className="block text-[11px] font-medium uppercase tracking-widest text-slate-500 mb-2">Posted odds</span>
                 <span className="block font-mono text-2xl sm:text-3xl font-bold text-white">{formatOdds(bet.odds)}</span>
               </div>
               <div className="p-6 text-center">
@@ -184,6 +225,8 @@ export default async function TipPage({ params }: PageProps) {
               </div>
             )}
           </div>
+
+          {bet.market === "props" ? <PropsAlertsCta source="props_tip_page" className="mt-6" /> : null}
 
           <div className="mt-8 flex flex-wrap gap-4">
             <Link

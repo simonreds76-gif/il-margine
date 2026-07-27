@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BetMobileMeta from "@/components/BetMobileMeta";
@@ -14,6 +13,7 @@ import ResultBadge from "@/components/ResultBadge";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import PageHomeLink from "@/components/PageHomeLink";
+import SampleSizeBadge from "@/components/SampleSizeBadge";
 import { normalizeBetCategory } from "@/lib/bet-category";
 import { formatMatchDate, formatOdds } from "@/lib/format";
 import { slugifyTip } from "@/lib/slugify";
@@ -40,7 +40,6 @@ export default function TennisTips({
   initialStats = [],
   initialProgressionRows = [],
 }: TennisTipsClientProps) {
-  const router = useRouter();
   const [activeCategory, setActiveCategory] = useState("all");
   const [pendingBets, setPendingBets] = useState<Bet[]>(initialPendingBets);
   const [recentBets, setRecentBets] = useState<Bet[]>(initialRecentBets);
@@ -263,6 +262,90 @@ export default function TennisTips({
         </div>
       </section>
 
+      {/* Active Picks - id for deep link from homepage */}
+      <section id="picks" className="py-12 md:py-16 border-b border-slate-800/50 scroll-mt-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <span className="text-xs font-mono text-emerald-400 mb-2 block">ACTIVE SELECTIONS</span>
+              <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Current Picks</h2>
+            </div>
+          </div>
+          <p className="text-slate-500 text-xs mb-3">Stake in units (1u = your standard stake). We typically recommend 0.5u-2u per pick.</p>
+          <p className="text-slate-500 text-xs mb-6 italic">
+            <strong className="text-slate-400 not-italic">ML (Moneyline):</strong> A straight win bet with no handicap attached.
+          </p>
+
+          {loading ? (
+            <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
+              <p className="text-slate-500">Loading...</p>
+            </div>
+          ) : filteredPending.length > 0 ? (
+            <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
+              {/* Desktop Table */}
+              <div className="hidden md:block overflow-x-auto -mx-4 sm:mx-0">
+                <PublicBetsTable bets={displayedPending} mode="pending" playerHeader="Pick" />
+              </div>
+              {/* Mobile Cards */}
+              <div className="md:hidden divide-y divide-slate-600">
+                {displayedPending.map((pick) => (
+                  <Link
+                    key={pick.id}
+                    href={`/tips/${slugifyTip(pick.event, pick.id)}`}
+                    className="block cursor-pointer p-5 hover:bg-slate-800/20 active:bg-slate-800/30"
+                  >
+                    <div className="mb-3 flex items-start gap-3">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center">
+                        <MarketBadge market={pick.market} category={pick.category} event={pick.event} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="mb-1 flex items-center justify-between gap-3">
+                          <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(pick.match_date)}</span>
+                          <span className="text-xs font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-400">
+                            PENDING
+                          </span>
+                        </div>
+                        <div className="font-medium text-slate-200 mb-1 leading-snug">
+                          {pick.event}
+                        </div>
+                        <div className="text-sm text-slate-400 leading-snug">
+                          {pick.player && <span>{pick.player} | </span>}
+                          {pick.selection}
+                        </div>
+                      </div>
+                    </div>
+                    <BetMobileMeta odds={pick.odds} bookmaker={pick.bookmaker} stake={pick.stake} />
+                  </Link>
+                ))}
+              </div>
+
+              {/* Show More/Less Button */}
+              {filteredPending.length > 5 && (
+                <div className="border-t border-slate-800 p-4 text-center">
+                  <button
+                    onClick={() => setShowAllPending(!showAllPending)}
+                    className="text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
+                  >
+                    {showAllPending ? (
+                      <>Show Less ({filteredPending.length - 5} hidden)</>
+                    ) : (
+                      <>Show All ({filteredPending.length - 5} more)</>
+                    )}
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
+              <p className="text-slate-500">No active selections at the moment</p>
+            </div>
+          )}
+          <p className="mt-5 text-sm text-slate-500">
+            Tennis picks are posted on this page only. Bookmark it to check the latest card.
+          </p>
+        </div>
+      </section>
+
       {/* Category Tabs */}
       <section className="py-12 md:py-16 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -291,16 +374,27 @@ export default function TennisTips({
                   </span>
                   <div className="min-w-0">
                     <span className="block truncate font-medium">{cat.name}</span>
-                    <div className="mt-1 flex gap-3 text-xs">
-                      <span>{catStats.total_bets} bets</span>
-                      <span className={`${roiToneClass(catStats.roi)} font-mono`}>
-                        {catStats.roi > 0 ? "+" : ""}{catStats.roi.toFixed(1)}% ROI
-                      </span>
+                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+                      {catStats.total_bets > 0 ? (
+                        <>
+                          <span>{catStats.total_bets} bets</span>
+                          <span className={`${catStats.total_bets < 50 ? "text-slate-400/70" : roiToneClass(catStats.roi)} font-mono`}>
+                            {catStats.roi > 0 ? "+" : ""}{catStats.roi.toFixed(1)}% ROI
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-slate-500">0 bets</span>
+                      )}
                     </div>
+                    <SampleSizeBadge settled={catStats.total_bets} compact className="mt-1.5" />
                   </div>
                 </button>
               );
             })}
+          </div>
+
+          <div className="mb-4">
+            <SampleSizeBadge settled={currentStats.total_bets} />
           </div>
 
           {/* Stats */}
@@ -313,21 +407,23 @@ export default function TennisTips({
               </div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className={`text-2xl font-bold ${roiToneClass(currentStats.roi)} font-mono mb-2`}>{currentStats.roi > 0 ? "+" : ""}{currentStats.roi.toFixed(1)}%</div>
+              <div className={`text-2xl font-bold ${currentStats.total_bets < 50 ? "text-slate-300/70" : roiToneClass(currentStats.roi)} font-mono mb-2`}>
+                {currentStats.total_bets > 0 ? `${currentStats.roi > 0 ? "+" : ""}${currentStats.roi.toFixed(1)}%` : "—"}
+              </div>
               <div className="text-xs text-slate-500 mb-3">ROI</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                 <div className={`h-full bg-gradient-to-r ${roiBar} rounded-full`} style={{ width: `${Math.min(Math.abs(currentStats.roi) * 4, 100)}%` }} />
               </div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className="text-2xl font-bold text-slate-100 font-mono mb-2">{currentStats.win_rate.toFixed(1)}%</div>
+              <div className="text-2xl font-bold text-slate-100 font-mono mb-2">{currentStats.total_bets > 0 ? `${currentStats.win_rate.toFixed(1)}%` : "—"}</div>
               <div className="text-xs text-slate-500 mb-3">Win Rate</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                 <div className={`h-full bg-gradient-to-r ${neutralBar} rounded-full`} style={{ width: `${currentStats.win_rate}%` }} />
               </div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className="text-2xl font-bold text-slate-100 font-mono mb-2">{formatOdds(currentStats.avg_odds)}</div>
+              <div className="text-2xl font-bold text-slate-100 font-mono mb-2">{currentStats.total_bets > 0 ? formatOdds(currentStats.avg_odds) : "—"}</div>
               <div className="text-xs text-slate-500 mb-3">Avg Odds</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                 <div className={`h-full bg-gradient-to-r ${neutralBar} rounded-full`} style={{ width: `${(currentStats.avg_odds / 3) * 100}%` }} />
@@ -343,95 +439,6 @@ export default function TennisTips({
             P/L progression shows any pre-tracking baseline as a dashed aggregate summary, then uses settled public
             ledger rows for the selected tab.
           </p>
-        </div>
-      </section>
-
-      {/* Active Picks - id for deep link from homepage */}
-      <section id="picks" className="py-12 md:py-16 border-b border-slate-800/50 scroll-mt-6">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <span className="text-xs font-mono text-emerald-400 mb-2 block">ACTIVE SELECTIONS</span>
-              <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Current Picks</h2>
-            </div>
-          </div>
-          <p className="text-slate-500 text-xs mb-3">Stake in units (1u = your standard stake). We typically recommend 0.5u-2u per pick.</p>
-          <p className="text-slate-500 text-xs mb-6 italic">
-            <strong className="text-slate-400 not-italic">ML (Moneyline):</strong> A straight win bet with no handicap attached.
-          </p>
-
-          {loading ? (
-            <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
-              <p className="text-slate-500">Loading...</p>
-            </div>
-          ) : filteredPending.length > 0 ? (
-            <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
-              {/* Desktop Table */}
-              <div className="hidden md:block overflow-x-auto -mx-4 sm:mx-0">
-                <PublicBetsTable bets={displayedPending} mode="pending" playerHeader="Pick" />
-              </div>
-              {/* Mobile Cards */}
-              <div className="md:hidden divide-y divide-slate-600">
-                {displayedPending.map((pick) => (
-                  <div
-                    key={pick.id}
-                    role="link"
-                    tabIndex={0}
-                    className="block cursor-pointer p-5 hover:bg-slate-800/20 active:bg-slate-800/30"
-                    onClick={() => router.push(`/tips/${slugifyTip(pick.event, pick.id)}`)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        router.push(`/tips/${slugifyTip(pick.event, pick.id)}`);
-                      }
-                    }}
-                  >
-                    <div className="mb-3 flex items-start gap-3">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center">
-                        <MarketBadge market={pick.market} category={pick.category} event={pick.event} />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="mb-1 flex items-center justify-between gap-3">
-                          <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(pick.match_date)}</span>
-                          <span className="text-xs font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-400">
-                            PENDING
-                          </span>
-                        </div>
-                        <div className="font-medium text-slate-200 mb-1 leading-snug">
-                          {pick.event}
-                        </div>
-                        <div className="text-sm text-slate-400 leading-snug">
-                          {pick.player && <span>{pick.player} | </span>}
-                          {pick.selection}
-                        </div>
-                      </div>
-                    </div>
-                    <BetMobileMeta odds={pick.odds} bookmaker={pick.bookmaker} stake={pick.stake} />
-                  </div>
-                ))}
-              </div>
-
-              {/* Show More/Less Button */}
-              {filteredPending.length > 5 && (
-                <div className="border-t border-slate-800 p-4 text-center">
-                  <button
-                    onClick={() => setShowAllPending(!showAllPending)}
-                    className="text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
-                  >
-                    {showAllPending ? (
-                      <>Show Less ({filteredPending.length - 5} hidden)</>
-                    ) : (
-                      <>Show All ({filteredPending.length - 5} more)</>
-                    )}
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
-              <p className="text-slate-500">No active selections at the moment</p>
-            </div>
-          )}
         </div>
       </section>
 
@@ -515,18 +522,10 @@ export default function TennisTips({
               {/* Mobile Cards */}
               <div className="md:hidden divide-y divide-slate-600">
                 {displayedRecent.map((result) => (
-                  <div
+                  <Link
                     key={result.id}
-                    role="link"
-                    tabIndex={0}
+                    href={`/tips/${slugifyTip(result.event, result.id)}`}
                     className="block cursor-pointer p-5 hover:bg-slate-800/20 active:bg-slate-800/30"
-                    onClick={() => router.push(`/tips/${slugifyTip(result.event, result.id)}`)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        router.push(`/tips/${slugifyTip(result.event, result.id)}`);
-                      }
-                    }}
                   >
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
@@ -551,7 +550,7 @@ export default function TennisTips({
                       profitLoss={result.profit_loss}
                       showProfit
                     />
-                  </div>
+                  </Link>
                 ))}
               </div>
 
