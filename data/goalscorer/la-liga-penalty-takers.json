@@ -31,31 +31,36 @@
       "Malaga",
       "Racing Santander"
     ],
-    "last_verified": "2026-07-10",
-    "public_updated_at": "2026-07-10",
+    "last_verified": "2026-07-27",
+    "public_updated_at": "2026-07-27",
     "membership_source": "https://www.laliga.com/en-GB/laliga-easports/clubs"
   },
   "Alaves": {
-    "primary": "Carlos Vicente",
-    "secondary": "Lucas Boyé",
-    "tertiary": "Antonio Martínez",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "primary": "Lucas Boyé",
+    "secondary": "Antonio \"Toni\" Martínez",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "Noticias de Álava",
+    "cross_check": "Betfair España",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
+      "primary": "high",
+      "secondary": "high",
       "tertiary": "low"
     },
-    "condition_note": "",
+    "condition_note": "The third position is unresolved.",
     "last_verified": {
-      "date": "2026-03-16",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_alaves_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 3
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_alaves_rollover",
@@ -75,6 +80,44 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_alaves_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "The permanent transfer ended Carlos Vicente's spell at Alavés, so he cannot remain in the 2026/27 hierarchy. The specialist review explicitly placed penalty responsibility with Lucas Boyé after Carlos Vicente's winter departure. Boyé converted a regular-time penalty against Valencia with Toni Martínez starting, directly supporting Boyé above Martínez.",
+        "sources": [
+          {
+            "label": "Noticias de Álava",
+            "url": "https://www.noticiasdealava.eus/alaves/2026/01/27/alaves-oficializa-venta-carlos-vicente-mercado-birmingham-10621728.html",
+            "date": "2026-01-27",
+            "note": "The permanent transfer ended Carlos Vicente's spell at Alavés, so he cannot remain in the 2026/27 hierarchy."
+          },
+          {
+            "label": "Betfair España",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-estos-son-los-lanzadores-de-los-20-equipos-160226-1245.html",
+            "date": "2026-02-16",
+            "note": "The specialist review explicitly placed penalty responsibility with Lucas Boyé after Carlos Vicente's winter departure."
+          },
+          {
+            "label": "Cadena SER Vitoria",
+            "url": "https://cadenaser.com/euskadi/2026/03/08/derrota-cruel-en-mestalla-3-2-ser-vitoria/",
+            "date": "2026-03-08",
+            "note": "Boyé converted a regular-time penalty against Valencia with Toni Martínez starting, directly supporting Boyé above Martínez."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -100,11 +143,36 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Carlos Vicente",
+          "secondary": "Lucas Boyé",
+          "tertiary": "Antonio Martínez"
+        },
+        "to": {
+          "primary": "Lucas Boyé",
+          "secondary": "Antonio \"Toni\" Martínez",
+          "tertiary": ""
+        },
+        "reason": "The third position is unresolved.",
+        "evidence_ids": [
+          "evt_20260727_alaves_research_01",
+          "evt_20260727_alaves_research_02",
+          "evt_20260727_alaves_research_03"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -118,25 +186,30 @@
   },
   "Athletic Club": {
     "primary": "Oihan Sancet",
-    "secondary": "Nico Williams",
-    "tertiary": "Gorka Guruzeta",
-    "last_updated": "2026-03-15",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "Transfermarkt",
+    "cross_check": "El País",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
+      "primary": "high",
+      "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "",
+    "condition_note": "The backup order is unresolved between Gorka Guruzeta and Nico Williams.",
     "last_verified": {
-      "date": "2026-03-15",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_athletic_club_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 2
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_athletic_club_rollover",
@@ -156,6 +229,38 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_athletic_club_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Sancet's documented conversion supports his position as the incumbent primary taker. Guruzeta converted after Sancet had been substituted. The event establishes Guruzeta as cover but does not displace Sancet or prove the full backup order.",
+        "sources": [
+          {
+            "label": "Transfermarkt",
+            "url": "https://www.transfermarkt.es/oihan-sancet/elfmetertore/spieler/571020",
+            "date": "2025-08-25",
+            "note": "Sancet's documented conversion supports his position as the incumbent primary taker."
+          },
+          {
+            "label": "El País",
+            "url": "https://elpais.com/deportes/futbol/2026-02-20/guruzeta-decide-desde-los-once-metros-y-deja-sin-premio-al-elche.html",
+            "date": "2026-02-20",
+            "note": "Guruzeta converted after Sancet had been substituted. The event establishes Guruzeta as cover but does not displace Sancet or prove the full backup order."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 2 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -181,11 +286,35 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Oihan Sancet",
+          "secondary": "Nico Williams",
+          "tertiary": "Gorka Guruzeta"
+        },
+        "to": {
+          "primary": "Oihan Sancet",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "The backup order is unresolved between Gorka Guruzeta and Nico Williams.",
+        "evidence_ids": [
+          "evt_20260727_athletic_club_research_01",
+          "evt_20260727_athletic_club_research_02"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -199,25 +328,30 @@
   },
   "Atletico Madrid": {
     "primary": "Julián Álvarez",
-    "secondary": "Antoine Griezmann",
-    "tertiary": "Alexander Sørloth",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "UEFA",
+    "cross_check": "AS",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "medium",
-      "secondary": "medium",
+      "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "",
+    "condition_note": "Both backup positions are unresolved. Recheck immediately if Julián Álvarez leaves.",
     "last_verified": {
-      "date": "2026-03-16",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_atletico_madrid_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 3
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_atletico_madrid_rollover",
@@ -237,6 +371,44 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_atletico_madrid_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Álvarez converted a regular-time penalty in the Champions League semifinal first leg, providing recent high-level role evidence. Griezmann's move to Orlando removes him from the 2026/27 hierarchy. Álvarez remained at Atlético at the audit cutoff, but active transfer reporting makes the recommendation conditional on his continued registration.",
+        "sources": [
+          {
+            "label": "UEFA",
+            "url": "https://www.uefa.com/uefachampionsleague/news/02a4-2081fa8b7112-8f4474ea29c4-1000--atleti-1-1-arsenal-viktor-gyokeres-and-julian-alvarez-on-ta/",
+            "date": "2026-04-29",
+            "note": "Álvarez converted a regular-time penalty in the Champions League semifinal first leg, providing recent high-level role evidence."
+          },
+          {
+            "label": "AS",
+            "url": "https://as.com/futbol/el-atletico-hace-oficial-la-marcha-de-griezmann-a-orlando-f202603-n/",
+            "date": "2026-03-24",
+            "note": "Griezmann's move to Orlando removes him from the 2026/27 hierarchy."
+          },
+          {
+            "label": "Cadena SER",
+            "url": "https://cadenaser.com/nacional/2026/07/24/la-opcion-gyokeres-abre-la-puerta-de-salida-a-julian-alvarez-el-atletico-solo-contempla-un-destino-para-el-argentino-si-no-quiere-seguir-cadena-ser/",
+            "date": "2026-07-24",
+            "note": "Álvarez remained at Atlético at the audit cutoff, but active transfer reporting makes the recommendation conditional on his continued registration."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -262,11 +434,36 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Julián Álvarez",
+          "secondary": "Antoine Griezmann",
+          "tertiary": "Alexander Sørloth"
+        },
+        "to": {
+          "primary": "Julián Álvarez",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "Both backup positions are unresolved. Recheck immediately if Julián Álvarez leaves.",
+        "evidence_ids": [
+          "evt_20260727_atletico_madrid_research_01",
+          "evt_20260727_atletico_madrid_research_02",
+          "evt_20260727_atletico_madrid_research_03"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -280,25 +477,30 @@
   },
   "Barcelona": {
     "primary": "Lamine Yamal",
-    "secondary": "Robert Lewandowski",
-    "tertiary": "Raphinha",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
-    "hierarchy_status": "probable",
+    "secondary": "Raphinha",
+    "tertiary": "Robert Lewandowski",
+    "last_updated": "2026-07-27",
+    "source": "AS",
+    "cross_check": "Marca",
+    "hierarchy_status": "disputed",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
-      "tertiary": "low"
+      "tertiary": "medium"
     },
-    "condition_note": "",
+    "condition_note": "These names form an unordered committee. Their array position is not a claimed fixed sequence.",
     "last_verified": {
-      "date": "2026-03-16",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_barcelona_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 2
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_barcelona_rollover",
@@ -318,6 +520,38 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_barcelona_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Reporting described penalty management as free rather than fixed. Raphinha had taken the previous two attempts before Lamine Yamal's subsequent attempt. Lamine took the most penalties in 2025/26, Raphinha recorded a perfect conversion rate, and Lewandowski missed two of three. The mixed usage supports a committee rather than the filed sequence.",
+        "sources": [
+          {
+            "label": "AS",
+            "url": "https://as.com/futbol/primera/flick-tibio-en-la-gestion-de-los-penaltis-f202602-n/",
+            "date": "2026-02-17",
+            "note": "Reporting described penalty management as free rather than fixed. Raphinha had taken the previous two attempts before Lamine Yamal's subsequent attempt."
+          },
+          {
+            "label": "Marca",
+            "url": "https://us.marca.com/soccer/la-liga/2026/06/12/6a2c1094268e3e817e8b4594.html",
+            "date": "2026-06-12",
+            "note": "Lamine took the most penalties in 2025/26, Raphinha recorded a perfect conversion rate, and Lewandowski missed two of three. The mixed usage supports a committee rather than the filed sequence."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 2 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -343,10 +577,34 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Lamine Yamal",
+          "secondary": "Robert Lewandowski",
+          "tertiary": "Raphinha"
+        },
+        "to": {
+          "primary": "Lamine Yamal",
+          "secondary": "Raphinha",
+          "tertiary": "Robert Lewandowski"
+        },
+        "reason": "These names form an unordered committee. Their array position is not a claimed fixed sequence.",
+        "evidence_ids": [
+          "evt_20260727_barcelona_research_01",
+          "evt_20260727_barcelona_research_02"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
+      "carryover_from_previous_season": false,
       "weak_evidence": true,
       "stale_override": null
     },
@@ -363,23 +621,28 @@
     "primary": "Borja Iglesias",
     "secondary": "Iago Aspas",
     "tertiary": "Marcos Alonso",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "last_updated": "2026-07-27",
+    "source": "La Voz de Galicia",
+    "cross_check": "Betfair España",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
-      "tertiary": "low"
+      "primary": "high",
+      "secondary": "high",
+      "tertiary": "high"
     },
-    "condition_note": "",
+    "condition_note": "Retain the filed hierarchy.",
     "last_verified": {
-      "date": "2026-03-16",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_celta_vigo_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 2
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_celta_vigo_rollover",
@@ -399,6 +662,38 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_celta_vigo_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "The report recorded nine conversions from nine regular-time penalties: Borja Iglesias four, Iago Aspas two, Marcos Alonso one, and one each for two other players. It separately identified Copa shootout misses, which are excluded. The specialist review independently placed Borja Iglesias first.",
+        "sources": [
+          {
+            "label": "La Voz de Galicia",
+            "url": "https://www.lavozdegalicia.es/noticia/gradario/2026/06/05/celta-cerro-pasado-curso-pleno-100-penaltis/00031780687434837947976.htm",
+            "date": "2026-06-06",
+            "note": "The report recorded nine conversions from nine regular-time penalties: Borja Iglesias four, Iago Aspas two, Marcos Alonso one, and one each for two other players. It separately identified Copa shootout misses, which are excluded."
+          },
+          {
+            "label": "Betfair España",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-estos-son-los-lanzadores-de-los-20-equipos-160226-1245.html",
+            "date": "2026-02-16",
+            "note": "The specialist review independently placed Borja Iglesias first."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 2 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -424,11 +719,35 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "preseason_reverification",
+        "from": {
+          "primary": "Borja Iglesias",
+          "secondary": "Iago Aspas",
+          "tertiary": "Marcos Alonso"
+        },
+        "to": {
+          "primary": "Borja Iglesias",
+          "secondary": "Iago Aspas",
+          "tertiary": "Marcos Alonso"
+        },
+        "reason": "Retain the filed hierarchy.",
+        "evidence_ids": [
+          "evt_20260727_celta_vigo_research_01",
+          "evt_20260727_celta_vigo_research_02"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -441,57 +760,132 @@
     "player_ids": {}
   },
   "Deportivo La Coruna": {
+    "primary": "Yeremay Hernández",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "high",
+      "secondary": "low",
+      "tertiary": "low"
+    },
+    "condition_note": "Both backup positions are unresolved.",
+    "last_verified": {
+      "date": "2026-07-27",
+      "by": "Il Margine",
+      "method": "multi_source_preseason_research"
+    },
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_deportivo_la_coruna_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 3
+    },
+    "evidence_log": [
+      {
+        "id": "evt_20260727_deportivo_la_coruna_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Yeremay converted the winning regular-time league penalty. The club history records further 2025/26 attempts by Yeremay, including the latest listed April event. Yeremay stated that he remained a Deportivo player under contract through 2030.",
+        "sources": [
+          {
+            "label": "LaLiga",
+            "url": "https://iaas-public-front-pro.laliga.com/partido/temporada-2025-2026-laliga-hypermotion-cultural-leonesa-rc-deportivo-24",
+            "date": "2026-01-31",
+            "note": "Yeremay converted the winning regular-time league penalty."
+          },
+          {
+            "label": "Transfermarkt",
+            "url": "https://www.transfermarkt.es/deportivo-la-coruna/elfmeterschuetzen/verein/897",
+            "date": "2026-04-20",
+            "note": "The club history records further 2025/26 attempts by Yeremay, including the latest listed April event."
+          },
+          {
+            "label": "Cadena SER",
+            "url": "https://cadenaser.com/nacional/2026/05/29/yeremay-aparca-los-rumores-tras-lograr-el-objetivo-del-ascenso-tengo-contrato-hasta-2030-y-soy-jugador-del-depor-cadena-ser/",
+            "date": "2026-05-29",
+            "note": "Yeremay stated that he remained a Deportivo player under contract through 2030."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "to": {
+          "primary": "Yeremay Hernández",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "Both backup positions are unresolved.",
+        "evidence_ids": [
+          "evt_20260727_deportivo_la_coruna_research_01",
+          "evt_20260727_deportivo_la_coruna_research_02",
+          "evt_20260727_deportivo_la_coruna_research_03"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
+      "stale_override": null
+    },
+    "prior_season": null,
+    "player_ids": {},
+    "source": "LaLiga",
+    "cross_check": "Transfermarkt"
+  },
+  "Elche": {
     "primary": "",
     "secondary": "",
     "tertiary": "",
-    "last_updated": "2026-07-10",
+    "last_updated": "2026-07-27",
+    "source": "El País",
+    "cross_check": "El País",
     "hierarchy_status": "unknown",
     "confidence": {
       "primary": "low",
       "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Newly promoted club; the 2026/27 order is not yet verified.",
+    "condition_note": "The entire current hierarchy is unresolved.",
     "last_verified": {
-      "date": "2026-07-10",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "league_membership_audit"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
-    "evidence_log": [],
-    "change_log": [],
-    "flags": {
-      "carryover_from_previous_season": false,
-      "weak_evidence": true,
-      "stale_override": null
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_elche_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 5
     },
-    "prior_season": null,
-    "player_ids": {},
-    "source": "https://www.laliga.com/en-GB/laliga-easports/clubs",
-    "cross_check": "Official 2026/27 league roster"
-  },
-  "Elche": {
-    "primary": "Rafa Mir",
-    "secondary": "André Silva",
-    "tertiary": "Aleix Febas",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
-    "hierarchy_status": "probable",
-    "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
-      "tertiary": "low"
-    },
-    "condition_note": "",
-    "last_verified": {
-      "date": "2026-03-16",
-      "by": "Il Margine",
-      "method": "prior_season_carryover"
-    },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
     "evidence_log": [
       {
         "id": "evt_20260710_elche_rollover",
@@ -511,6 +905,56 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_elche_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Silva converted while Mir was not on the pitch. This established Silva as cover at that time, not precedence over Mir. Silva converted another regular-time penalty late in the season. Silva's departure removed him from the 2026/27 hierarchy.",
+        "sources": [
+          {
+            "label": "El País",
+            "url": "https://elpais.com/deportes/futbol/2026-02-20/guruzeta-decide-desde-los-once-metros-y-deja-sin-premio-al-elche.html",
+            "date": "2026-02-20",
+            "note": "Silva converted while Mir was not on the pitch. This established Silva as cover at that time, not precedence over Mir."
+          },
+          {
+            "label": "El País",
+            "url": "https://elpais.com/deportes/futbol/2026-04-22/el-elche-se-oxigena-y-derrota-a-un-atletico-de-bolo-veraniego.html",
+            "date": "2026-04-22",
+            "note": "Silva converted another regular-time penalty late in the season."
+          },
+          {
+            "label": "Onda Cero",
+            "url": "https://www.ondacero.es/emisoras/comunidad-valenciana/elche/noticias/oficial-andre-silva-deja-elche-jugar-oporto_202606126a2bf8f10f0ef63eb6687002.html",
+            "date": "2026-06-12",
+            "note": "Silva's departure removed him from the 2026/27 hierarchy."
+          },
+          {
+            "label": "Cadena SER Elche",
+            "url": "https://cadenaser.com/comunitat-valenciana/2026/06/18/el-elche-cf-rescinde-el-contrato-de-rafa-mir-tras-su-condena-por-agresion-sexual-y-lesiones-radio-elche/",
+            "date": "2026-06-18",
+            "note": "The termination removed Mir from the 2026/27 hierarchy."
+          },
+          {
+            "label": "AS",
+            "url": "https://as.com/futbol/primera/el-elche-empata-a-nada-frente-al-johor-ante-la-mirada-de-bragarnik-f202607-n/",
+            "date": "2026-07-24",
+            "note": "The preseason report described the attack as depleted after the departures of Álvaro Rodríguez, Rafa Mir, and André Silva, without identifying a new penalty taker."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -536,10 +980,37 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Rafa Mir",
+          "secondary": "André Silva",
+          "tertiary": "Aleix Febas"
+        },
+        "to": {
+          "primary": "",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "The entire current hierarchy is unresolved.",
+        "evidence_ids": [
+          "evt_20260727_elche_research_01",
+          "evt_20260727_elche_research_02",
+          "evt_20260727_elche_research_03",
+          "evt_20260727_elche_research_04",
+          "evt_20260727_elche_research_05"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
+      "carryover_from_previous_season": false,
       "weak_evidence": true,
       "stale_override": null
     },
@@ -553,26 +1024,31 @@
     "player_ids": {}
   },
   "Espanyol": {
-    "primary": "Javi Puado",
-    "secondary": "Kike Garcia",
-    "tertiary": "Roberto Fernandez",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "primary": "Kike García",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "Mundo Deportivo",
+    "cross_check": "RCD Espanyol",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "medium",
-      "secondary": "medium",
+      "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "",
+    "condition_note": "The backup order is unresolved between Javi Puado and Roberto Fernández.",
     "last_verified": {
-      "date": "2026-03-16",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_espanyol_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 3
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_espanyol_rollover",
@@ -592,6 +1068,44 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_espanyol_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Puado converted before Kike García joined, so the event does not establish precedence over the later signing. Kike converted with Puado involved in the match, providing the strongest direct evidence against Puado remaining undisputed first choice. Kike took and missed the later league penalty. A miss alone does not remove him from the role.",
+        "sources": [
+          {
+            "label": "Mundo Deportivo",
+            "url": "https://www.mundodeportivo.com/futbol/rcd-espanyol/20250824/1002519792/puado-falla-dos-veces-marca-penalti-mandar-var-repetir-lanzamiento.html",
+            "date": "2025-08-24",
+            "note": "Puado converted before Kike García joined, so the event does not establish precedence over the later signing."
+          },
+          {
+            "label": "RCD Espanyol",
+            "url": "https://www.rcdespanyol.com/en/new/monday-night-mayhem-in-win-against-rcd-mallorca/19079",
+            "date": "2025-09-15",
+            "note": "Kike converted with Puado involved in the match, providing the strongest direct evidence against Puado remaining undisputed first choice."
+          },
+          {
+            "label": "El País",
+            "url": "https://elpais.com/deportes/futbol/2026-04-23/camello-desata-la-locura-en-vallecas-y-el-espanyol-sigue-sin-ganar-en-2026.html",
+            "date": "2026-04-23",
+            "note": "Kike took and missed the later league penalty. A miss alone does not remove him from the role."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -617,11 +1131,36 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Javi Puado",
+          "secondary": "Kike Garcia",
+          "tertiary": "Roberto Fernandez"
+        },
+        "to": {
+          "primary": "Kike García",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "The backup order is unresolved between Javi Puado and Roberto Fernández.",
+        "evidence_ids": [
+          "evt_20260727_espanyol_research_01",
+          "evt_20260727_espanyol_research_02",
+          "evt_20260727_espanyol_research_03"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -634,26 +1173,31 @@
     "player_ids": {}
   },
   "Getafe": {
-    "primary": "Mauro Arambarri",
+    "primary": "Martín Satriano",
     "secondary": "Borja Mayoral",
-    "tertiary": "Martín Satriano",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "Telemadrid",
+    "cross_check": "AS",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
+      "primary": "high",
+      "secondary": "high",
       "tertiary": "low"
     },
-    "condition_note": "",
+    "condition_note": "The third position is unresolved.",
     "last_verified": {
-      "date": "2026-03-16",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_getafe_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 3
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_getafe_rollover",
@@ -673,6 +1217,44 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_getafe_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Arambarri's departure removes the filed primary from the current hierarchy. Satriano converted against Tenerife and was explicitly described as the new specialist after Arambarri and Luis Milla left. Mayoral's continuing contract supports retaining him as a current backup candidate rather than primary.",
+        "sources": [
+          {
+            "label": "Telemadrid",
+            "url": "https://www.telemadrid.es/programas/deportes-tn/El-Getafe-presenta-a-los-cuatro-nuevos-fichajes-2-2904929513--20260707035000.html",
+            "date": "2026-07-07",
+            "note": "Arambarri's departure removes the filed primary from the current hierarchy."
+          },
+          {
+            "label": "AS",
+            "url": "https://as.com/futbol/primera/satriano-asume-galones-f202607-n/",
+            "date": "2026-07-23",
+            "note": "Satriano converted against Tenerife and was explicitly described as the new specialist after Arambarri and Luis Milla left."
+          },
+          {
+            "label": "Mundo Deportivo",
+            "url": "https://www.mundodeportivo.com/futbol/getafe/20260420/1004172672/borja-mayoral-piensa-proxima-temporada.html",
+            "date": "2026-04-20",
+            "note": "Mayoral's continuing contract supports retaining him as a current backup candidate rather than primary."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -698,11 +1280,36 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Mauro Arambarri",
+          "secondary": "Borja Mayoral",
+          "tertiary": "Martín Satriano"
+        },
+        "to": {
+          "primary": "Martín Satriano",
+          "secondary": "Borja Mayoral",
+          "tertiary": ""
+        },
+        "reason": "The third position is unresolved.",
+        "evidence_ids": [
+          "evt_20260727_getafe_research_01",
+          "evt_20260727_getafe_research_02",
+          "evt_20260727_getafe_research_03"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -715,26 +1322,31 @@
     "player_ids": {}
   },
   "Levante": {
-    "primary": "Morales",
-    "secondary": "Adrián De la Fuente",
-    "tertiary": "Karl Etta Eyong",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
-    "hierarchy_status": "probable",
+    "primary": "",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "Eurosport",
+    "cross_check": "Cadena SER Valencia",
+    "hierarchy_status": "unknown",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
+      "primary": "low",
+      "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "",
+    "condition_note": "The hierarchy is unresolved. Adrián de la Fuente is the best-evidenced current candidate.",
     "last_verified": {
-      "date": "2026-03-16",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_levante_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 3
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_levante_rollover",
@@ -754,6 +1366,44 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_levante_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Morales was the evidenced incumbent during 2025/26. De la Fuente took and missed with Morales unavailable; Etta Eyong entered later. This proves candidacy but not permanent succession. The club announcement removes Morales from the 2026/27 hierarchy.",
+        "sources": [
+          {
+            "label": "Eurosport",
+            "url": "https://www.eurosport.es/futbol/la-liga/2025-2026/video-penalti-levante-barcelona-mano-balde-disparo-morales-polemica-hoy_sto23214069/story.shtml",
+            "date": "2025-08-23",
+            "note": "Morales was the evidenced incumbent during 2025/26."
+          },
+          {
+            "label": "Cadena SER Valencia",
+            "url": "https://cadenaser.com/comunitat-valenciana/2026/04/13/el-levante-mantiene-viva-la-llama-radio-valencia/",
+            "date": "2026-04-13",
+            "note": "De la Fuente took and missed with Morales unavailable; Etta Eyong entered later. This proves candidacy but not permanent succession."
+          },
+          {
+            "label": "Levante UD",
+            "url": "https://www.levanteud.com/en/news/levante-ud-and-jose-morales-part-ways",
+            "date": "2026-05-28",
+            "note": "The club announcement removes Morales from the 2026/27 hierarchy."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -779,10 +1429,35 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Morales",
+          "secondary": "Adrián De la Fuente",
+          "tertiary": "Karl Etta Eyong"
+        },
+        "to": {
+          "primary": "",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "The hierarchy is unresolved. Adrián de la Fuente is the best-evidenced current candidate.",
+        "evidence_ids": [
+          "evt_20260727_levante_research_01",
+          "evt_20260727_levante_research_02",
+          "evt_20260727_levante_research_03"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
+      "carryover_from_previous_season": false,
       "weak_evidence": true,
       "stale_override": null
     },
@@ -796,57 +1471,139 @@
     "player_ids": {}
   },
   "Malaga": {
-    "primary": "",
-    "secondary": "",
+    "primary": "Chupe",
+    "secondary": "Adrián Niño",
     "tertiary": "",
-    "last_updated": "2026-07-10",
-    "hierarchy_status": "unknown",
+    "last_updated": "2026-07-27",
+    "hierarchy_status": "probable",
     "confidence": {
-      "primary": "low",
-      "secondary": "low",
+      "primary": "high",
+      "secondary": "high",
       "tertiary": "low"
     },
-    "condition_note": "Newly promoted club; the 2026/27 order is not yet verified.",
+    "condition_note": "The third position is unresolved.",
     "last_verified": {
-      "date": "2026-07-10",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "league_membership_audit"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
-    "evidence_log": [],
-    "change_log": [],
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_malaga_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 4
+    },
+    "evidence_log": [
+      {
+        "id": "evt_20260727_malaga_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Chupe had taken the preceding penalties despite two consecutive misses. The report questioned whether he would retain the next attempt but did not establish a replacement. The event history records Chupe taking further penalties on May 2 and May 31, demonstrating that the earlier misses did not immediately remove him. The report reaffirmed Chupe's penalty contribution and identified Adrián Niño as another capable specialist.",
+        "sources": [
+          {
+            "label": "Málaga Hoy",
+            "url": "https://www.malagahoy.es/malaga_cf/penaltis-lunar-malaga-cf_0_2006053282.html",
+            "date": "2026-03-03",
+            "note": "Chupe had taken the preceding penalties despite two consecutive misses. The report questioned whether he would retain the next attempt but did not establish a replacement."
+          },
+          {
+            "label": "Transfermarkt",
+            "url": "https://www.transfermarkt.us/fc-malaga/elfmeterschuetzen/verein/1084",
+            "date": "2026-05-31",
+            "note": "The event history records Chupe taking further penalties on May 2 and May 31, demonstrating that the earlier misses did not immediately remove him."
+          },
+          {
+            "label": "AS",
+            "url": "https://as.com/futbol/segunda/chupe-somos-ninos-que-tienen-el-sueno-de-conseguir-el-ascenso-f202606-n/",
+            "date": "2026-06-02",
+            "note": "The report reaffirmed Chupe's penalty contribution and identified Adrián Niño as another capable specialist."
+          },
+          {
+            "label": "Cadena SER Málaga",
+            "url": "https://cadenaser.com/andalucia/2026/07/13/el-malaga-regresa-al-trabajo-en-su-vuelta-a-primera-division-ser-malaga/",
+            "date": "2026-07-13",
+            "note": "The preseason report confirms Chupe remained with the squad at the audit cutoff."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "to": {
+          "primary": "Chupe",
+          "secondary": "Adrián Niño",
+          "tertiary": ""
+        },
+        "reason": "The third position is unresolved.",
+        "evidence_ids": [
+          "evt_20260727_malaga_research_01",
+          "evt_20260727_malaga_research_02",
+          "evt_20260727_malaga_research_03",
+          "evt_20260727_malaga_research_04"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
+      }
+    ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": null,
     "player_ids": {},
-    "source": "https://www.laliga.com/en-GB/laliga-easports/clubs",
-    "cross_check": "Official 2026/27 league roster"
+    "source": "Málaga Hoy",
+    "cross_check": "Transfermarkt"
   },
   "Osasuna": {
     "primary": "Ante Budimir",
-    "secondary": "Aimar Oroz",
-    "tertiary": "Ruben Garcia",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "Cadena SER",
+    "cross_check": "CA Osasuna",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
+      "primary": "high",
+      "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "",
+    "condition_note": "Both backup positions are unresolved.",
     "last_verified": {
-      "date": "2026-03-16",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_osasuna_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 3
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_osasuna_rollover",
@@ -866,6 +1623,44 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_osasuna_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Budimir won and converted the regular-time penalty. Budimir took the later penalty and had it saved. A miss does not by itself remove the role. The preseason report expected Budimir's return and provided no evidence of a hierarchy change.",
+        "sources": [
+          {
+            "label": "Cadena SER",
+            "url": "https://cadenaser.com/nacional/2026/02/21/era-penalti-de-courtois-sobre-budimir-iturralde-gonzalez-resuelve-la-polemica-del-osasuna-real-madrid-cadena-ser/",
+            "date": "2026-02-21",
+            "note": "Budimir won and converted the regular-time penalty."
+          },
+          {
+            "label": "CA Osasuna",
+            "url": "https://www.osasuna.es/en/athletic-osasuna-match-recap-21-04-2026",
+            "date": "2026-04-21",
+            "note": "Budimir took the later penalty and had it saved. A miss does not by itself remove the role."
+          },
+          {
+            "label": "AS",
+            "url": "https://as.com/futbol/osasuna-espera-a-budimir-f202607-n/",
+            "date": "2026-07-26",
+            "note": "The preseason report expected Budimir's return and provided no evidence of a hierarchy change."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -891,11 +1686,36 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Ante Budimir",
+          "secondary": "Aimar Oroz",
+          "tertiary": "Ruben Garcia"
+        },
+        "to": {
+          "primary": "Ante Budimir",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "Both backup positions are unresolved.",
+        "evidence_ids": [
+          "evt_20260727_osasuna_research_01",
+          "evt_20260727_osasuna_research_02",
+          "evt_20260727_osasuna_research_03"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -908,57 +1728,132 @@
     "player_ids": {}
   },
   "Racing Santander": {
-    "primary": "",
+    "primary": "Andrés Martín",
     "secondary": "",
     "tertiary": "",
-    "last_updated": "2026-07-10",
-    "hierarchy_status": "unknown",
+    "last_updated": "2026-07-27",
+    "hierarchy_status": "probable",
     "confidence": {
-      "primary": "low",
+      "primary": "high",
       "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Newly promoted club; the 2026/27 order is not yet verified.",
+    "condition_note": "Both backup positions are unresolved.",
     "last_verified": {
-      "date": "2026-07-10",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "league_membership_audit"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
-    "evidence_log": [],
-    "change_log": [],
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_racing_santander_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 3
+    },
+    "evidence_log": [
+      {
+        "id": "evt_20260727_racing_santander_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Andrés converted with Juan Carlos Arana also on the pitch, providing useful direct hierarchy evidence. Andrés converted another high-pressure regular-time penalty in the match that secured promotion. The preseason report confirms Andrés remained in the squad at the audit cutoff.",
+        "sources": [
+          {
+            "label": "Cadena SER Santander",
+            "url": "https://cadenaser.com/cantabria/2026/01/03/tomeo-lo-hizo-todo-en-zorrilla-1-1-radio-santander/",
+            "date": "2026-01-03",
+            "note": "Andrés converted with Juan Carlos Arana also on the pitch, providing useful direct hierarchy evidence."
+          },
+          {
+            "label": "El País",
+            "url": "https://elpais.com/deportes/futbol/2026-05-16/el-racing-de-santander-vuelve-a-primera-14-anos-despues.html",
+            "date": "2026-05-16",
+            "note": "Andrés converted another high-pressure regular-time penalty in the match that secured promotion."
+          },
+          {
+            "label": "EFE",
+            "url": "https://efe.com/deportes/2026-07-13/racing-pretemporada-con-canales-y-sin-salinas-y-puerta/",
+            "date": "2026-07-13",
+            "note": "The preseason report confirms Andrés remained in the squad at the audit cutoff."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "to": {
+          "primary": "Andrés Martín",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "Both backup positions are unresolved.",
+        "evidence_ids": [
+          "evt_20260727_racing_santander_research_01",
+          "evt_20260727_racing_santander_research_02",
+          "evt_20260727_racing_santander_research_03"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
+      }
+    ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": null,
     "player_ids": {},
-    "source": "https://www.laliga.com/en-GB/laliga-easports/clubs",
-    "cross_check": "Official 2026/27 league roster"
+    "source": "Cadena SER Santander",
+    "cross_check": "El País"
   },
   "Rayo Vallecano": {
     "primary": "Isi Palazón",
-    "secondary": "Jorge De Frutos",
-    "tertiary": "Pedro Díaz",
-    "last_updated": "2026-03-15",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "secondary": "Jorge de Frutos",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "Transfermarkt",
+    "cross_check": "Cadena SER",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "",
+    "condition_note": "The third position is unresolved. Temporary suspension absence must not be treated as permanent promotion for De Frutos.",
     "last_verified": {
-      "date": "2026-03-15",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_rayo_vallecano_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 3
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_rayo_vallecano_rollover",
@@ -978,6 +1873,44 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_rayo_vallecano_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "The event history records multiple league attempts by Isi before Jorge de Frutos took the March penalty. De Frutos converted, establishing him as demonstrated cover without proving a permanent change above Isi. The ban was issued with fewer than seven league rounds remaining, so availability at the start of 2026/27 requires confirmation. This is an availability condition, not hierarchy evidence.",
+        "sources": [
+          {
+            "label": "Transfermarkt",
+            "url": "https://www.transfermarkt.es/rayo-vallecano/elfmeterschuetzen/verein/367",
+            "date": "2026-03-04",
+            "note": "The event history records multiple league attempts by Isi before Jorge de Frutos took the March penalty."
+          },
+          {
+            "label": "Cadena SER",
+            "url": "https://cadenaser.com/nacional/2026/03/04/rayo-vallecano-3-0-real-oviedo-resumen-resultado-y-goles-del-partido-de-la-jornada-23-de-laliga-ea-sports-cadena-ser/",
+            "date": "2026-03-04",
+            "note": "De Frutos converted, establishing him as demonstrated cover without proving a permanent change above Isi."
+          },
+          {
+            "label": "EFE",
+            "url": "https://efe.com/deportes/2026-04-29/isi-palazon-sancionado-partidos/",
+            "date": "2026-04-29",
+            "note": "The ban was issued with fewer than seven league rounds remaining, so availability at the start of 2026/27 requires confirmation. This is an availability condition, not hierarchy evidence."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -1003,11 +1936,36 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Isi Palazón",
+          "secondary": "Jorge De Frutos",
+          "tertiary": "Pedro Díaz"
+        },
+        "to": {
+          "primary": "Isi Palazón",
+          "secondary": "Jorge de Frutos",
+          "tertiary": ""
+        },
+        "reason": "The third position is unresolved. Temporary suspension absence must not be treated as permanent promotion for De Frutos.",
+        "evidence_ids": [
+          "evt_20260727_rayo_vallecano_research_01",
+          "evt_20260727_rayo_vallecano_research_02",
+          "evt_20260727_rayo_vallecano_research_03"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -1020,26 +1978,31 @@
     "player_ids": {}
   },
   "Real Betis": {
-    "primary": "Juan Camilo Hernández",
-    "secondary": "Ezequiel Ávila",
-    "tertiary": "Antony",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "primary": "Juan Camilo \"Cucho\" Hernández",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "UEFA",
+    "cross_check": "AS",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
+      "primary": "high",
+      "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "",
+    "condition_note": "Both backup positions are unresolved.",
     "last_verified": {
-      "date": "2026-03-16",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_real_betis_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 3
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_real_betis_rollover",
@@ -1059,6 +2022,44 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_real_betis_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Cucho converted a regular-time penalty in the Europa League quarterfinal, providing recent high-level primary evidence. Ávila's departure removes him from the filed 2026/27 hierarchy. Cucho remained part of the current squad and no source established a different primary.",
+        "sources": [
+          {
+            "label": "UEFA",
+            "url": "https://www.uefa.com/uefaeuropaleague/news/02a4-20578bd4db52-6385146b3f8a-1000--braga-1-1-real-betis-cucho-hernandez-penalty-earns-visito/",
+            "date": "2026-04-08",
+            "note": "Cucho converted a regular-time penalty in the Europa League quarterfinal, providing recent high-level primary evidence."
+          },
+          {
+            "label": "AS",
+            "url": "https://as.com/futbol/primera/chimy-punto-y-final-f202605-n/",
+            "date": "2026-05-26",
+            "note": "Ávila's departure removes him from the filed 2026/27 hierarchy."
+          },
+          {
+            "label": "AS",
+            "url": "https://as.com/futbol/primera/pellegrini-suspira-por-el-nueve-f202607-n/",
+            "date": "2026-07-26",
+            "note": "Cucho remained part of the current squad and no source established a different primary."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -1084,11 +2085,36 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Juan Camilo Hernández",
+          "secondary": "Ezequiel Ávila",
+          "tertiary": "Antony"
+        },
+        "to": {
+          "primary": "Juan Camilo \"Cucho\" Hernández",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "Both backup positions are unresolved.",
+        "evidence_ids": [
+          "evt_20260727_real_betis_research_01",
+          "evt_20260727_real_betis_research_02",
+          "evt_20260727_real_betis_research_03"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -1101,26 +2127,31 @@
     "player_ids": {}
   },
   "Real Madrid": {
-    "primary": "Kylian Mbappe-Lottin",
-    "secondary": "Vinícius Júnior",
-    "tertiary": "Jude Bellingham",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "primary": "Kylian Mbappé",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "Mundo Deportivo",
+    "cross_check": "Marca",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
+      "primary": "high",
+      "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "",
+    "condition_note": "The backup order is unresolved between Vinícius Júnior and Jude Bellingham.",
     "last_verified": {
-      "date": "2026-03-16",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_real_madrid_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 2
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_real_madrid_rollover",
@@ -1140,6 +2171,38 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_real_madrid_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Contemporary reporting stated that Mbappé was the designated first option. Mbappé converted against Rayo and was again described as first option. The article documented attempts by all three players without establishing a fixed backup sequence.",
+        "sources": [
+          {
+            "label": "Mundo Deportivo",
+            "url": "https://www.mundodeportivo.com/futbol/real-madrid/20251102/1002561894/penaltis-favor-le-han-pitado-real-madrid-temporada.html",
+            "date": "2025-11-02",
+            "note": "Contemporary reporting stated that Mbappé was the designated first option."
+          },
+          {
+            "label": "Marca",
+            "url": "https://amp.marca.com/futbol/real-madrid/2026/02/03/mbappe-cierra-crisis-penaltis.html",
+            "date": "2026-02-03",
+            "note": "Mbappé converted against Rayo and was again described as first option. The article documented attempts by all three players without establishing a fixed backup sequence."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 2 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -1165,11 +2228,35 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Kylian Mbappe-Lottin",
+          "secondary": "Vinícius Júnior",
+          "tertiary": "Jude Bellingham"
+        },
+        "to": {
+          "primary": "Kylian Mbappé",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "The backup order is unresolved between Vinícius Júnior and Jude Bellingham.",
+        "evidence_ids": [
+          "evt_20260727_real_madrid_research_01",
+          "evt_20260727_real_madrid_research_02"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -1184,24 +2271,29 @@
   "Real Sociedad": {
     "primary": "Mikel Oyarzabal",
     "secondary": "Brais Méndez",
-    "tertiary": "Takefusa Kubo",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "LaLiga",
+    "cross_check": "Transfermarkt",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
+      "primary": "high",
+      "secondary": "high",
       "tertiary": "low"
     },
-    "condition_note": "",
+    "condition_note": "The third position is unresolved.",
     "last_verified": {
-      "date": "2026-03-16",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_real_sociedad_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 3
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_real_sociedad_rollover",
@@ -1221,6 +2313,44 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_real_sociedad_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Brais converted a late penalty while Oyarzabal had played and scored, establishing genuine delegation or cover rather than a simple absence event. Oyarzabal subsequently took the later listed penalty, supporting his retention as primary above Brais. Temporary preseason availability differences provide no basis for promoting Kubo into the hierarchy.",
+        "sources": [
+          {
+            "label": "LaLiga",
+            "url": "https://www.laliga.com/partido/temporada-2025-2026-laliga-ea-sports-real-sociedad-rc-celta-21",
+            "date": "2026-01-25",
+            "note": "Brais converted a late penalty while Oyarzabal had played and scored, establishing genuine delegation or cover rather than a simple absence event."
+          },
+          {
+            "label": "Transfermarkt",
+            "url": "https://www.transfermarkt.fr/real-sociedad-san-sebastian/elfmeterschuetzen/verein/681",
+            "date": "2026-03-15",
+            "note": "Oyarzabal subsequently took the later listed penalty, supporting his retention as primary above Brais."
+          },
+          {
+            "label": "AS",
+            "url": "https://as.com/futbol/primera/kubo-regresa-a-zubieta-para-iniciar-un-ano-importante-en-la-real-f202607-n/",
+            "date": "2026-07-23",
+            "note": "Temporary preseason availability differences provide no basis for promoting Kubo into the hierarchy."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -1246,11 +2376,36 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Mikel Oyarzabal",
+          "secondary": "Brais Méndez",
+          "tertiary": "Takefusa Kubo"
+        },
+        "to": {
+          "primary": "Mikel Oyarzabal",
+          "secondary": "Brais Méndez",
+          "tertiary": ""
+        },
+        "reason": "The third position is unresolved.",
+        "evidence_ids": [
+          "evt_20260727_real_sociedad_research_01",
+          "evt_20260727_real_sociedad_research_02",
+          "evt_20260727_real_sociedad_research_03"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -1263,26 +2418,31 @@
     "player_ids": {}
   },
   "Sevilla": {
-    "primary": "Akor Adams",
-    "secondary": "Isaac Romero",
-    "tertiary": "Ruben Vargas",
-    "last_updated": "2026-03-15",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
-    "hierarchy_status": "probable",
+    "primary": "",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "Cadena SER",
+    "cross_check": "Venezia FC",
+    "hierarchy_status": "unknown",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
+      "primary": "low",
+      "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "",
+    "condition_note": "The hierarchy is unresolved. Isaac Romero is the leading candidate, not a confirmed primary.",
     "last_verified": {
-      "date": "2026-03-15",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_sevilla_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 4
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_sevilla_rollover",
@@ -1302,6 +2462,50 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_sevilla_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Akor converted against Atlético with Isaac Romero and Ruben Vargas involved, strongly confirming Akor's former precedence. The permanent move removes Akor from the 2026/27 hierarchy. Isaac's prior conversion makes him a candidate but does not prove the current primary role.",
+        "sources": [
+          {
+            "label": "Cadena SER",
+            "url": "https://cadenaser.com/nacional/2026/04/11/sevilla-2-1-atletico-de-madrid-resumen-resultado-y-goles-del-partido-de-la-jornada-31-de-laliga-cadena-ser/",
+            "date": "2026-04-11",
+            "note": "Akor converted against Atlético with Isaac Romero and Ruben Vargas involved, strongly confirming Akor's former precedence."
+          },
+          {
+            "label": "Venezia FC",
+            "url": "https://en.veneziafc.it/news/akor-adams-joins-venezia-fc",
+            "date": "2026-07-22",
+            "note": "The permanent move removes Akor from the 2026/27 hierarchy."
+          },
+          {
+            "label": "Transfermarkt",
+            "url": "https://www.transfermarkt.es/isaac-romero/elfmetertore/spieler/687609",
+            "date": "2025-01-18",
+            "note": "Isaac's prior conversion makes him a candidate but does not prove the current primary role."
+          },
+          {
+            "label": "AS",
+            "url": "https://as.com/futbol/primera/luis-garcia-exige-un-nueve-f202607-n/",
+            "date": "2026-07-21",
+            "note": "Current reporting described Isaac's role in attack but did not assign him penalty responsibility."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -1327,10 +2531,36 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Akor Adams",
+          "secondary": "Isaac Romero",
+          "tertiary": "Ruben Vargas"
+        },
+        "to": {
+          "primary": "",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "The hierarchy is unresolved. Isaac Romero is the leading candidate, not a confirmed primary.",
+        "evidence_ids": [
+          "evt_20260727_sevilla_research_01",
+          "evt_20260727_sevilla_research_02",
+          "evt_20260727_sevilla_research_03",
+          "evt_20260727_sevilla_research_04"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
+      "carryover_from_previous_season": false,
       "weak_evidence": true,
       "stale_override": null
     },
@@ -1344,26 +2574,31 @@
     "player_ids": {}
   },
   "Valencia": {
-    "primary": "Largie Ramazani",
+    "primary": "Hugo Duro",
     "secondary": "Pepelu",
-    "tertiary": "Hugo Duro",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "El País",
+    "cross_check": "AS",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "",
+    "condition_note": "The third position is unresolved. Recheck if Ramazani completes a new move back to Valencia.",
     "last_verified": {
-      "date": "2026-03-16",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_valencia_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 4
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_valencia_rollover",
@@ -1383,6 +2618,50 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_valencia_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Ramazani converted against Espanyol while registered on a season-long loan. Duro converted a regular-time penalty, providing role evidence independent of Ramazani's later departure. Duro took and missed the later league penalty. The same review documented earlier misses by Pepelu and Ramazani, confirming multiple takers but Duro as the latest.",
+        "sources": [
+          {
+            "label": "El País",
+            "url": "https://elpais.com/deportes/futbol/2026-01-24/el-valencia-de-repente-es-indestructible-un-gol-en-el-anadido-le-da-la-victoria-ante-el-espanyol.html",
+            "date": "2026-01-24",
+            "note": "Ramazani converted against Espanyol while registered on a season-long loan."
+          },
+          {
+            "label": "AS",
+            "url": "https://as.com/futbol/primera/hugo-duro-cesarini-f202603-n/",
+            "date": "2026-03-08",
+            "note": "Duro converted a regular-time penalty, providing role evidence independent of Ramazani's later departure."
+          },
+          {
+            "label": "AS",
+            "url": "https://as.com/futbol/primera/el-valencia-falla-en-san-mames-su-cuarto-penalti-f202605-n/",
+            "date": "2026-05-10",
+            "note": "Duro took and missed the later league penalty. The same review documented earlier misses by Pepelu and Ramazani, confirming multiple takers but Duro as the latest."
+          },
+          {
+            "label": "Leeds United",
+            "url": "https://www.leedsunited.com/en/news/largie-ramazani-joins-valencia-cf-on-loan",
+            "date": "2025-08-28",
+            "note": "The official terms covered only the 2025/26 season. No completed return transfer was found by the audit cutoff."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -1408,11 +2687,37 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Largie Ramazani",
+          "secondary": "Pepelu",
+          "tertiary": "Hugo Duro"
+        },
+        "to": {
+          "primary": "Hugo Duro",
+          "secondary": "Pepelu",
+          "tertiary": ""
+        },
+        "reason": "The third position is unresolved. Recheck if Ramazani completes a new move back to Valencia.",
+        "evidence_ids": [
+          "evt_20260727_valencia_research_01",
+          "evt_20260727_valencia_research_02",
+          "evt_20260727_valencia_research_03",
+          "evt_20260727_valencia_research_04"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -1426,25 +2731,30 @@
   },
   "Villarreal": {
     "primary": "Gerard Moreno",
-    "secondary": "Nicolas Pepe",
-    "tertiary": "Daniel Parejo",
-    "last_updated": "2026-04-26",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "secondary": "Nicolas Pépé",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "Transfermarkt",
+    "cross_check": "Cadena SER",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
+      "primary": "high",
+      "secondary": "high",
       "tertiary": "low"
     },
-    "condition_note": "",
+    "condition_note": "The third position is unresolved.",
     "last_verified": {
-      "date": "2026-04-26",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_villarreal_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 4
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_villarreal_rollover",
@@ -1464,6 +2774,50 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_villarreal_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Gerard took the latest listed penalty before the final match, supporting his retention as primary. Parejo took the final-day penalty with Gerard absent from the match record. The event therefore does not supersede Gerard. The club's farewell removes Parejo from the 2026/27 hierarchy.",
+        "sources": [
+          {
+            "label": "Transfermarkt",
+            "url": "https://www.transfermarkt.us/fc-villarreal/elfmeterschuetzen/verein/1050",
+            "date": "2026-04-26",
+            "note": "Gerard took the latest listed penalty before the final match, supporting his retention as primary."
+          },
+          {
+            "label": "Cadena SER",
+            "url": "https://cadenaser.com/nacional/2026/05/24/villarreal-5-1-atletico-de-madrid-resumen-resultado-y-goles-del-partido-de-la-jornada-38-de-laliga-ea-sports-cadena-ser/",
+            "date": "2026-05-24",
+            "note": "Parejo took the final-day penalty with Gerard absent from the match record. The event therefore does not supersede Gerard."
+          },
+          {
+            "label": "Villarreal CF",
+            "url": "https://villarrealcf.es/un-final-por-todo-lo-alto/",
+            "date": "2026-05-24",
+            "note": "The club's farewell removes Parejo from the 2026/27 hierarchy."
+          },
+          {
+            "label": "AS",
+            "url": "https://as.com/futbol/primera/pepe-sera-groguet-hasta-2028-n/",
+            "date": "2025-07-16",
+            "note": "Pépé's continuing contract supports retaining him as a current candidate, although direct evidence for a fixed second-choice role remains limited."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -1489,11 +2843,37 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Gerard Moreno",
+          "secondary": "Nicolas Pepe",
+          "tertiary": "Daniel Parejo"
+        },
+        "to": {
+          "primary": "Gerard Moreno",
+          "secondary": "Nicolas Pépé",
+          "tertiary": ""
+        },
+        "reason": "The third position is unresolved.",
+        "evidence_ids": [
+          "evt_20260727_villarreal_research_01",
+          "evt_20260727_villarreal_research_02",
+          "evt_20260727_villarreal_research_03",
+          "evt_20260727_villarreal_research_04"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {

@@ -60,6 +60,8 @@ def main() -> int:
 
         check(meta.get("schema_version") == 2, f"{league}: schema_version must be 2")
         check(meta.get("season", {}).get("label") == season["label"], f"{league}: season mismatch")
+        check(meta.get("last_verified") == "2026-07-27", f"{league}: audit verification date is stale")
+        check(meta.get("public_updated_at") == "2026-07-27", f"{league}: public update date is stale")
         check(len(teams) == expected["count"], f"{league}: expected {expected['count']} active teams, found {len(teams)}")
         check(expected["promoted"].issubset(teams), f"{league}: promoted teams missing")
         check(expected["relegated"].isdisjoint(teams), f"{league}: relegated teams still active")
@@ -75,10 +77,42 @@ def main() -> int:
             for field in ("primary", "secondary", "tertiary", "last_updated"):
                 check(field in entry, f"{league}/{team}: missing {field}")
             check(entry.get("hierarchy_status") in {"confirmed", "probable", "conditional", "disputed", "unknown"}, f"{league}/{team}: invalid hierarchy_status")
+            is_researched = entry.get("last_verified", {}).get("method") == "multi_source_preseason_research"
+            research_events = [
+                event
+                for event in entry.get("evidence_log", [])
+                if event.get("detection") == "manual_multi_source_research"
+                and event.get("review", {}).get("status") == "approved"
+            ]
+            check(is_researched, f"{league}/{team}: multi-source preseason verification missing")
+            check(bool(research_events), f"{league}/{team}: approved research evidence missing")
+            if research_events:
+                source_urls = [
+                    source.get("url")
+                    for event in research_events
+                    for source in event.get("sources", [])
+                    if source.get("url")
+                ]
+                check(bool(source_urls), f"{league}/{team}: research event has no source URLs")
+                check(all(str(url).startswith("https://") for url in source_urls), f"{league}/{team}: research source URL must be HTTPS")
+            has_named_primary = bool(str(entry.get("primary") or "").strip())
+            has_explicit_unresolved_state = (
+                entry.get("hierarchy_status") in {"unknown", "disputed"}
+                and bool(str(entry.get("condition_note") or "").strip())
+            )
+            check(
+                has_named_primary or has_explicit_unresolved_state,
+                f"{league}/{team}: needs a named primary or an explicit unresolved state",
+            )
+            check(
+                entry.get("flags", {}).get("carryover_from_previous_season") is False,
+                f"{league}/{team}: researched hierarchy must not remain labelled as carryover",
+            )
             if team in expected["promoted"]:
-                check(entry.get("hierarchy_status") == "unknown", f"{league}/{team}: promoted team must start unknown")
-            else:
-                check(entry.get("flags", {}).get("carryover_from_previous_season") is True, f"{league}/{team}: carryover flag missing")
+                check(
+                    is_researched and (has_named_primary or has_explicit_unresolved_state),
+                    f"{league}/{team}: promoted team needs researched evidence or an explicit unresolved state",
+                )
 
             url = f"/penalty-takers/{league}/{slug(team)}"
             check(url not in all_urls, f"Duplicate team URL: {url}")

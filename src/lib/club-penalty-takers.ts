@@ -22,7 +22,13 @@ type PenaltyTeamRow = {
   condition_note?: string;
   last_verified?: { date?: string; by?: string; method?: string };
   public_updated_at?: string;
-  evidence_log?: Array<{ review?: { status?: string } }>;
+  evidence_log?: Array<{
+    date?: string;
+    context?: string;
+    editorial_note?: string;
+    sources?: Array<{ label?: string; url?: string | null; date?: string; note?: string }>;
+    review?: { status?: string };
+  }>;
   change_log?: Array<{ change_type?: string; changed_at?: string; reason?: string }>;
   flags?: { carryover_from_previous_season?: boolean; weak_evidence?: boolean };
 };
@@ -79,6 +85,7 @@ export type ClubPenaltyTeam = {
   isArchived: boolean;
   weakEvidence: boolean;
   evidenceCount: number;
+  evidenceSources: Array<{ label: string; url: string; date: string; note: string }>;
   seasonLabel: string;
   seasonStatus: string;
   logoPath: string;
@@ -262,6 +269,20 @@ function mapTeam(
   const isArchived = Boolean(options.archived);
   const isCarryover = !isArchived && Boolean(entry.flags?.carryover_from_previous_season);
   const approvedEvidence = (entry.evidence_log ?? []).filter((evidence) => evidence.review?.status === "approved").length;
+  const evidenceSources = (entry.evidence_log ?? [])
+    .filter((evidence) => evidence.review?.status === "approved")
+    .flatMap((evidence) =>
+      (evidence.sources ?? []).map((source) => ({
+        label: cleanClubPenaltyText(source.label) || "Source",
+        url: cleanClubPenaltyText(source.url ?? ""),
+        date: cleanClubPenaltyText(source.date || evidence.date),
+        note: cleanClubPenaltyText(source.note || evidence.context || evidence.editorial_note),
+      })),
+    )
+    .filter((source) => /^https?:\/\//i.test(source.url))
+    .filter((source, index, rows) => rows.findIndex((row) => row.url === source.url) === index)
+    .slice(-6)
+    .reverse();
 
   return {
     leagueKey: league.key,
@@ -287,6 +308,7 @@ function mapTeam(
     isArchived,
     weakEvidence: isArchived ? false : Boolean(entry.flags?.weak_evidence),
     evidenceCount: approvedEvidence,
+    evidenceSources,
     seasonLabel: isArchived ? CLUB_PENALTY_PREVIOUS_SEASON : CLUB_PENALTY_SEASON,
     seasonStatus: isArchived ? "archived" : clubPenaltySeason.status,
     logoPath: findLogoPath(league.key, teamName, manifest),
@@ -361,7 +383,14 @@ export function buildClubPenaltyLead(team: ClubPenaltyTeam): string {
     return `This is the final archived ${team.seasonLabel} order. ${team.team} is not part of the current ${team.leagueLabel} board.`;
   }
   if (team.hierarchyStatus === "unknown") {
-    return `${team.team} are newly tracked for ${CLUB_PENALTY_SEASON}. We are not naming a penalty taker until the evidence is strong enough.`;
+    return team.conditionNote
+      ? `${team.team}'s current penalty hierarchy remains under review. ${team.conditionNote}`
+      : `${team.team}'s current penalty hierarchy is not verified. We are not naming a taker until the evidence is strong enough.`;
+  }
+  if (team.hierarchyStatus === "disputed") {
+    return team.conditionNote
+      ? `${team.team}'s order is disputed. ${team.conditionNote}`
+      : `${team.team}'s current penalty-taker order is disputed and remains under review.`;
   }
   if (team.isCarryover) {
     return `${team.primary} leads the carried-over ${team.team} order, with ${team.secondary} next. This hierarchy is being re-verified through preseason and the opening weeks.`;

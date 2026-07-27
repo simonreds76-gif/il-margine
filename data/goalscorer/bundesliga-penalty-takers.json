@@ -31,17 +31,17 @@
       "Schalke 04",
       "SV Elversberg"
     ],
-    "last_verified": "2026-07-10",
-    "public_updated_at": "2026-07-10",
+    "last_verified": "2026-07-27",
+    "public_updated_at": "2026-07-27",
     "membership_source": "https://media.dfl.de/sites/3/2026/07/EN_eFyJmg6k_Bundesliga_Fixture-List_2026_27.pdf"
   },
   "Augsburg": {
-    "primary": "Alexis Claude-Maurice",
-    "secondary": "Michael Gregoritsch",
-    "tertiary": "Samuel Essende",
-    "last_updated": "2026-03-21",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "primary": "Fabian Rieder",
+    "secondary": "Alexis Claude-Maurice",
+    "tertiary": "Michael Gregoritsch",
+    "last_updated": "2026-07-27",
+    "source": "FC Augsburg",
+    "cross_check": "FC Augsburg",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "medium",
@@ -50,12 +50,17 @@
     },
     "condition_note": "",
     "last_verified": {
-      "date": "2026-03-21",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_augsburg_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 4
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_augsburg_rollover",
@@ -75,6 +80,50 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_augsburg_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Alexis Claude-Maurice took and missed a regular-time penalty in the 84th minute. Fabian Rieder converted a late regular-time penalty to win the match. Rieder directly described stepping up confidently to take the late penalty.",
+        "sources": [
+          {
+            "label": "FC Augsburg",
+            "url": "https://www.fcaugsburg.de/en/article/another-draw-for-fca-as-four-goals-shared-against-hoffenheim-23021",
+            "date": "2026-04-10",
+            "note": "Alexis Claude-Maurice took and missed a regular-time penalty in the 84th minute."
+          },
+          {
+            "label": "FC Augsburg",
+            "url": "https://www.fcaugsburg.de/en/article/fca-net-late-goal-to-win-2-1-in-leverkusen-23045",
+            "date": "2026-04-18",
+            "note": "Fabian Rieder converted a late regular-time penalty to win the match."
+          },
+          {
+            "label": "FC Augsburg",
+            "url": "https://www.fcaugsburg.de/en/article/rieder-extremely-proud-of-the-team-23046",
+            "date": "2026-04-18",
+            "note": "Rieder directly described stepping up confidently to take the late penalty."
+          },
+          {
+            "label": "DFB Datencenter",
+            "url": "https://datencenter.dfb.de/datencenter/bundesliga/2025-2026/30-spieltag/bayer-leverkusen-fc-augsburg-2398806",
+            "date": "2026-04-18",
+            "note": "Claude-Maurice had been substituted in the 60th minute, so Rieder's later attempt was not a direct on-pitch precedence test."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -100,11 +149,37 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Alexis Claude-Maurice",
+          "secondary": "Michael Gregoritsch",
+          "tertiary": "Samuel Essende"
+        },
+        "to": {
+          "primary": "Fabian Rieder",
+          "secondary": "Alexis Claude-Maurice",
+          "tertiary": "Michael Gregoritsch"
+        },
+        "reason": "Current hierarchy checked against the 2026/27 multi-source preseason audit.",
+        "evidence_ids": [
+          "evt_20260727_augsburg_research_01",
+          "evt_20260727_augsburg_research_02",
+          "evt_20260727_augsburg_research_03",
+          "evt_20260727_augsburg_research_04"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -118,25 +193,30 @@
   },
   "Bayer Leverkusen": {
     "primary": "Patrik Schick",
-    "secondary": "Álex Grimaldo",
-    "tertiary": "Victor Boniface",
-    "last_updated": "2026-03-21",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "Bayer 04 Leverkusen",
+    "cross_check": "VfB Stuttgart",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
+      "primary": "high",
+      "secondary": "low",
       "tertiary": "low"
     },
     "condition_note": "",
     "last_verified": {
-      "date": "2026-03-21",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_bayer_leverkusen_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 3
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_bayer_leverkusen_rollover",
@@ -156,6 +236,44 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_bayer_leverkusen_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Patrik Schick converted a first-half regular-time penalty while Álex Grimaldo was also playing. Grimaldo converted a regular-time penalty in a match Schick did not start, supporting alternate capability but not precedence. The club confirmed Grimaldo's departure, invalidating the filed secondary slot without automatically promoting Victor Boniface.",
+        "sources": [
+          {
+            "label": "Bayer 04 Leverkusen",
+            "url": "https://www.bayer04.de/en-us/news/bundesliga/schick-fires-werkself-to-2-1-derby-win-in-cologne",
+            "date": "2026-04-25",
+            "note": "Patrik Schick converted a first-half regular-time penalty while Álex Grimaldo was also playing."
+          },
+          {
+            "label": "VfB Stuttgart",
+            "url": "https://www.vfb.de/en/vfb/team/saison/bundesliga/2526/16-leverkusen-vfb-stuttgart-/",
+            "date": "2026-01-10",
+            "note": "Grimaldo converted a regular-time penalty in a match Schick did not start, supporting alternate capability but not precedence."
+          },
+          {
+            "label": "Bayer 04 Leverkusen",
+            "url": "https://www.bayer04.de/en-us/news/bayer04/farewell-to-a-star-player-grimaldo-leaves-bayer-04-for-atletico-madrid",
+            "date": "2026-06-30",
+            "note": "The club confirmed Grimaldo's departure, invalidating the filed secondary slot without automatically promoting Victor Boniface."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -181,11 +299,36 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Patrik Schick",
+          "secondary": "Álex Grimaldo",
+          "tertiary": "Victor Boniface"
+        },
+        "to": {
+          "primary": "Patrik Schick",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "Current hierarchy checked against the 2026/27 multi-source preseason audit.",
+        "evidence_ids": [
+          "evt_20260727_bayer_leverkusen_research_01",
+          "evt_20260727_bayer_leverkusen_research_02",
+          "evt_20260727_bayer_leverkusen_research_03"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -199,25 +342,30 @@
   },
   "Bayern Munich": {
     "primary": "Harry Kane",
-    "secondary": "Michael Olise",
-    "tertiary": "Jamal Musiala",
-    "last_updated": "2026-03-20",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "secondary": "Jamal Musiala",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "Bundesliga",
+    "cross_check": "FC Bayern Munich",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
+      "primary": "high",
+      "secondary": "low",
       "tertiary": "low"
     },
     "condition_note": "",
     "last_verified": {
-      "date": "2026-03-20",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_bayern_munich_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 3
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_bayern_munich_rollover",
@@ -237,6 +385,44 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_bayern_munich_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "The official season table records 11 league penalty attempts for Harry Kane, the strongest current-volume evidence in the squad. Kane converted a regular-time penalty in the DFB-Pokal final. Jamal Musiala converted his first Bundesliga penalty while Kane was injured and Michael Olise did not start, establishing alternate capability but not direct precedence over Olise.",
+        "sources": [
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-07-27",
+            "note": "The official season table records 11 league penalty attempts for Harry Kane, the strongest current-volume evidence in the squad."
+          },
+          {
+            "label": "FC Bayern Munich",
+            "url": "https://fcbayern.com/de/news/spielberichte/2026/05/spielbericht-dfb-pokal-fc-bayern-vfb-stuttgart",
+            "date": "2026-05-23",
+            "note": "Kane converted a regular-time penalty in the DFB-Pokal final."
+          },
+          {
+            "label": "FC Bayern Munich",
+            "url": "https://fcbayern.com/de/news/spielberichte/2026/03/spielbericht-bundesliga-fc-bayern-borussia-moenchengladbach",
+            "date": "2026-03-06",
+            "note": "Jamal Musiala converted his first Bundesliga penalty while Kane was injured and Michael Olise did not start, establishing alternate capability but not direct precedence over Olise."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -262,11 +448,36 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Harry Kane",
+          "secondary": "Michael Olise",
+          "tertiary": "Jamal Musiala"
+        },
+        "to": {
+          "primary": "Harry Kane",
+          "secondary": "Jamal Musiala",
+          "tertiary": ""
+        },
+        "reason": "Current hierarchy checked against the 2026/27 multi-source preseason audit.",
+        "evidence_ids": [
+          "evt_20260727_bayern_munich_research_01",
+          "evt_20260727_bayern_munich_research_02",
+          "evt_20260727_bayern_munich_research_03"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -280,25 +491,30 @@
   },
   "Borussia Dortmund": {
     "primary": "Ramy Bensebaini",
-    "secondary": "Marcel Sabitzer",
-    "tertiary": "Emre Can",
-    "last_updated": "2026-03-20",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "secondary": "Emre Can",
+    "tertiary": "Félix Nmecha",
+    "last_updated": "2026-07-27",
+    "source": "Borussia Dortmund",
+    "cross_check": "Borussia Dortmund",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
+      "primary": "high",
       "secondary": "medium",
       "tertiary": "low"
     },
     "condition_note": "",
     "last_verified": {
-      "date": "2026-03-20",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_borussia_dortmund_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 4
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_borussia_dortmund_rollover",
@@ -318,6 +534,50 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_borussia_dortmund_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Félix Nmecha missed a first-half regular-time penalty. Substitute Ramy Bensebaini then converted two penalties while Nmecha remained on the field, directly establishing Bensebaini's precedence. The club reported that Bensebaini had converted all nine of his Bundesliga penalties and that Nmecha's miss was his first attempt. The club reported an ACL rupture for Emre Can and a knee-ligament injury for Nmecha, making the depth recommendation availability-dependent.",
+        "sources": [
+          {
+            "label": "Borussia Dortmund",
+            "url": "https://www.bvb.de/de/en/news/news-overview/news.html/2026/3/21/3-2-from-0-2-down-BVBs-second-half-onslaught-against-HSV.html",
+            "date": "2026-03-21",
+            "note": "Félix Nmecha missed a first-half regular-time penalty. Substitute Ramy Bensebaini then converted two penalties while Nmecha remained on the field, directly establishing Bensebaini's precedence."
+          },
+          {
+            "label": "Borussia Dortmund",
+            "url": "https://www.bvb.de/de/en/news/news-overview/news.html/2026/3/21/Facts-15-0-shots-on-goal-in-the-second-45-minutes.html",
+            "date": "2026-03-21",
+            "note": "The club reported that Bensebaini had converted all nine of his Bundesliga penalties and that Nmecha's miss was his first attempt."
+          },
+          {
+            "label": "Borussia Dortmund",
+            "url": "https://www.bvb.de/de/en/news/news-overview/news.html/2026/4/18/Two-handball-penalties-as-BVB-lose-2-1-at-Hoffenheim.html",
+            "date": "2026-04-18",
+            "note": "The club reported an ACL rupture for Emre Can and a knee-ligament injury for Nmecha, making the depth recommendation availability-dependent."
+          },
+          {
+            "label": "SetPieceTakers",
+            "url": "https://data.setpiecetakers.com/penalties/bundesliga",
+            "date": "2026-03-20",
+            "note": "The supporting ledger recorded Emre Can at 3/3 and did not provide equivalent recent penalty evidence for Marcel Sabitzer."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -343,11 +603,37 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Ramy Bensebaini",
+          "secondary": "Marcel Sabitzer",
+          "tertiary": "Emre Can"
+        },
+        "to": {
+          "primary": "Ramy Bensebaini",
+          "secondary": "Emre Can",
+          "tertiary": "Félix Nmecha"
+        },
+        "reason": "Current hierarchy checked against the 2026/27 multi-source preseason audit.",
+        "evidence_ids": [
+          "evt_20260727_borussia_dortmund_research_01",
+          "evt_20260727_borussia_dortmund_research_02",
+          "evt_20260727_borussia_dortmund_research_03",
+          "evt_20260727_borussia_dortmund_research_04"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -361,25 +647,30 @@
   },
   "Borussia M.Gladbach": {
     "primary": "Kevin Diks",
-    "secondary": "Kevin Stöger",
-    "tertiary": "Tim Kleindienst",
-    "last_updated": "2026-03-20",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "Bundesliga",
+    "cross_check": "Bundesliga",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
+      "primary": "high",
+      "secondary": "low",
       "tertiary": "low"
     },
     "condition_note": "",
     "last_verified": {
-      "date": "2026-03-20",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_borussia_m_gladbach_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 3
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_borussia_m_gladbach_rollover",
@@ -399,6 +690,44 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_borussia_m_gladbach_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Kevin Diks converted a regular-time penalty. Diks converted a 90+4 regular-time penalty to win the match. The supporting ledger recorded Diks at 4/4 and Kevin Stöger at 0/1, with no recent evidence settling the remaining backup order.",
+        "sources": [
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/de/bundesliga/news/borussia-moenchengladbach-fc-augsburg-spieltag-16-spielbericht-highlights-35510",
+            "date": "2026-01-11",
+            "note": "Kevin Diks converted a regular-time penalty."
+          },
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/de/bundesliga/news/borussia-moenchengladbach-1-fc-union-berlin-spieltag-24-spielbericht-highlights-36208",
+            "date": "2026-02-28",
+            "note": "Diks converted a 90+4 regular-time penalty to win the match."
+          },
+          {
+            "label": "SetPieceTakers",
+            "url": "https://data.setpiecetakers.com/penalties/bundesliga",
+            "date": "2026-03-20",
+            "note": "The supporting ledger recorded Diks at 4/4 and Kevin Stöger at 0/1, with no recent evidence settling the remaining backup order."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -424,11 +753,36 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Kevin Diks",
+          "secondary": "Kevin Stöger",
+          "tertiary": "Tim Kleindienst"
+        },
+        "to": {
+          "primary": "Kevin Diks",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "Current hierarchy checked against the 2026/27 multi-source preseason audit.",
+        "evidence_ids": [
+          "evt_20260727_borussia_m_gladbach_research_01",
+          "evt_20260727_borussia_m_gladbach_research_02",
+          "evt_20260727_borussia_m_gladbach_research_03"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -444,23 +798,28 @@
     "primary": "Jonathan Burkardt",
     "secondary": "Can Uzun",
     "tertiary": "Michy Batshuayi",
-    "last_updated": "2026-03-15",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "last_updated": "2026-07-27",
+    "source": "Eintracht Frankfurt",
+    "cross_check": "Eintracht Frankfurt",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
+      "primary": "high",
       "secondary": "medium",
       "tertiary": "low"
     },
     "condition_note": "",
     "last_verified": {
-      "date": "2026-03-15",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_eintracht_frankfurt_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 4
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_eintracht_frankfurt_rollover",
@@ -480,6 +839,50 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_eintracht_frankfurt_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Jonathan Burkardt entered as a substitute and converted regular-time penalties in the 72nd minute and stoppage time. Burkardt converted a preseason regular-time penalty after Can Uzun was fouled. Burkardt, Uzun, and Michy Batshuayi were all listed in the current squad at the audit cutoff.",
+        "sources": [
+          {
+            "label": "Eintracht Frankfurt",
+            "url": "https://en.eintracht.de/2025-2026/bundesliga/schedule/eintracht-frankfurt-vfb-stuttgart/lineup/",
+            "date": "2026-05-16",
+            "note": "Jonathan Burkardt entered as a substitute and converted regular-time penalties in the 72nd minute and stoppage time."
+          },
+          {
+            "label": "Eintracht Frankfurt",
+            "url": "https://en.eintracht.de/news/30-gegen-trabzonspor-178366/",
+            "date": "2026-07-26",
+            "note": "Burkardt converted a preseason regular-time penalty after Can Uzun was fouled."
+          },
+          {
+            "label": "Eintracht Frankfurt",
+            "url": "https://profis.eintracht.de/kader/",
+            "date": "2026-07-27",
+            "note": "Burkardt, Uzun, and Michy Batshuayi were all listed in the current squad at the audit cutoff."
+          },
+          {
+            "label": "SetPieceTakers",
+            "url": "https://data.setpiecetakers.com/penalties/bundesliga",
+            "date": "2026-03-20",
+            "note": "The supporting ledger recorded Burkardt at 2/2, Uzun at 1/1, and Batshuayi at 1/1."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -505,11 +908,37 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "preseason_reverification",
+        "from": {
+          "primary": "Jonathan Burkardt",
+          "secondary": "Can Uzun",
+          "tertiary": "Michy Batshuayi"
+        },
+        "to": {
+          "primary": "Jonathan Burkardt",
+          "secondary": "Can Uzun",
+          "tertiary": "Michy Batshuayi"
+        },
+        "reason": "Current hierarchy checked against the 2026/27 multi-source preseason audit.",
+        "evidence_ids": [
+          "evt_20260727_eintracht_frankfurt_research_01",
+          "evt_20260727_eintracht_frankfurt_research_02",
+          "evt_20260727_eintracht_frankfurt_research_03",
+          "evt_20260727_eintracht_frankfurt_research_04"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -524,24 +953,29 @@
   "FC Cologne": {
     "primary": "Gian-Luca Waldschmidt",
     "secondary": "Saïd El Mala",
-    "tertiary": "Isak Johannesson",
-    "last_updated": "2026-04-13",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "1. FC Köln",
+    "cross_check": "1. FC Köln",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
+      "primary": "high",
       "secondary": "medium",
       "tertiary": "low"
     },
     "condition_note": "",
     "last_verified": {
-      "date": "2026-04-13",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_fc_cologne_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 3
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_fc_cologne_rollover",
@@ -561,6 +995,44 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_fc_cologne_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Saïd El Mala converted an early regular-time penalty. Gian-Luca Waldschmidt did not enter until the 76th minute, so the attempt did not establish El Mala over Waldschmidt. Waldschmidt entered in the 79th minute and converted in the 86th while El Mala remained on the field, directly supporting Waldschmidt's precedence. Waldschmidt directly discussed taking responsibility for the penalty and handling the pressure.",
+        "sources": [
+          {
+            "label": "1. FC Köln",
+            "url": "https://fc.de/aktuelles/news/fc-gewinnt-nervenschlacht-gegen-bremen",
+            "date": "2026-04-12",
+            "note": "Saïd El Mala converted an early regular-time penalty. Gian-Luca Waldschmidt did not enter until the 76th minute, so the attempt did not establish El Mala over Waldschmidt."
+          },
+          {
+            "label": "1. FC Köln",
+            "url": "https://fc.de/aktuelles/news/fc-holt-spaet-einen-punkt-auf-st-pauli",
+            "date": "2026-04-17",
+            "note": "Waldschmidt entered in the 79th minute and converted in the 86th while El Mala remained on the field, directly supporting Waldschmidt's precedence."
+          },
+          {
+            "label": "1. FC Köln",
+            "url": "https://fc.de/aktuelles/news/waldschmidt-ueber-elfer-habe-druck-gespuert",
+            "date": "2026-04-17",
+            "note": "Waldschmidt directly discussed taking responsibility for the penalty and handling the pressure."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -586,11 +1058,36 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Gian-Luca Waldschmidt",
+          "secondary": "Saïd El Mala",
+          "tertiary": "Isak Johannesson"
+        },
+        "to": {
+          "primary": "Gian-Luca Waldschmidt",
+          "secondary": "Saïd El Mala",
+          "tertiary": ""
+        },
+        "reason": "Current hierarchy checked against the 2026/27 multi-source preseason audit.",
+        "evidence_ids": [
+          "evt_20260727_fc_cologne_research_01",
+          "evt_20260727_fc_cologne_research_02",
+          "evt_20260727_fc_cologne_research_03"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -605,24 +1102,29 @@
   "Freiburg": {
     "primary": "Vincenzo Grifo",
     "secondary": "Igor Matanovic",
-    "tertiary": "Lucas Höler",
-    "last_updated": "2026-03-21",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "SC Freiburg",
+    "cross_check": "SetPieceTakers",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
+      "primary": "high",
       "secondary": "medium",
       "tertiary": "low"
     },
     "condition_note": "",
     "last_verified": {
-      "date": "2026-03-21",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_freiburg_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 3
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_freiburg_rollover",
@@ -642,6 +1144,44 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_freiburg_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Vincenzo Grifo converted a regular-time penalty. The supporting ledger recorded Grifo at 4/4 and Igor Matanovic at 1/2. Lucas Höler converted in the DFB-Pokal shootout. The attempt was excluded from the regular-time hierarchy.",
+        "sources": [
+          {
+            "label": "SC Freiburg",
+            "url": "https://www.scfreiburg.com/fr/latest/news/first-team/match-reports/2025/26/une-victoire-contre-le-hsv-pour-bien-debuter-lannee/",
+            "date": "2026-01-10",
+            "note": "Vincenzo Grifo converted a regular-time penalty."
+          },
+          {
+            "label": "SetPieceTakers",
+            "url": "https://data.setpiecetakers.com/penalties/bundesliga",
+            "date": "2026-03-20",
+            "note": "The supporting ledger recorded Grifo at 4/4 and Igor Matanovic at 1/2."
+          },
+          {
+            "label": "SC Freiburg",
+            "url": "https://www.scfreiburg.com/en/latest/news/first-team/match-reports/2025/26/sc-into-semi-finals-after-dramatic-shoot-out-win",
+            "date": "2026-02-11",
+            "note": "Lucas Höler converted in the DFB-Pokal shootout. The attempt was excluded from the regular-time hierarchy."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -667,11 +1207,36 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Vincenzo Grifo",
+          "secondary": "Igor Matanovic",
+          "tertiary": "Lucas Höler"
+        },
+        "to": {
+          "primary": "Vincenzo Grifo",
+          "secondary": "Igor Matanovic",
+          "tertiary": ""
+        },
+        "reason": "Current hierarchy checked against the 2026/27 multi-source preseason audit.",
+        "evidence_ids": [
+          "evt_20260727_freiburg_research_01",
+          "evt_20260727_freiburg_research_02",
+          "evt_20260727_freiburg_research_03"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -684,26 +1249,31 @@
     "player_ids": {}
   },
   "Hamburger SV": {
-    "primary": "Luka Vuskovic",
-    "secondary": "Robert Glatzel",
-    "tertiary": "Jean-Luc Dompe",
-    "last_updated": "2026-04-26",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "primary": "Robert Glatzel",
+    "secondary": "Jean-Luc Dompe",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "Hamburger SV",
+    "cross_check": "Hamburger SV",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
+      "primary": "high",
       "secondary": "medium",
       "tertiary": "low"
     },
     "condition_note": "",
     "last_verified": {
-      "date": "2026-04-26",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_hamburger_sv_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 5
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_hamburger_sv_rollover",
@@ -723,6 +1293,56 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_hamburger_sv_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Luka Vuskovic and Jean-Luc Dompe each converted a regular-time penalty. Robert Glatzel took and converted a regular-time penalty. Glatzel directly stated that he and Fabio Vieira were the assigned penalty takers.",
+        "sources": [
+          {
+            "label": "Hamburger SV",
+            "url": "https://www.hsv.de/en/news/spot-kicks-galore-as-hsv-win-2-1-in-wolfsburg",
+            "date": "2026-03-07",
+            "note": "Luka Vuskovic and Jean-Luc Dompe each converted a regular-time penalty."
+          },
+          {
+            "label": "Hamburger SV",
+            "url": "https://www.hsv.de/en/news/hsv-beaten-2-1-by-tsg-hoffenheim",
+            "date": "2026-04-25",
+            "note": "Robert Glatzel took and converted a regular-time penalty."
+          },
+          {
+            "label": "Hamburger SV",
+            "url": "https://www.hsv.de/en/news/minor-errors-decided-the-game-thats-disappointing",
+            "date": "2026-04-25",
+            "note": "Glatzel directly stated that he and Fabio Vieira were the assigned penalty takers."
+          },
+          {
+            "label": "Hamburger SV",
+            "url": "https://www.hsv.de/en/news/hsv-thanks-six-loan-players",
+            "date": "2026-06-30",
+            "note": "The club confirmed that Fabio Vieira and Vuskovic would return to their parent clubs after their loans."
+          },
+          {
+            "label": "Tottenham Hotspur",
+            "url": "https://www.tottenhamhotspur.com/news/1078172/vuskovic-departs",
+            "date": "2026-07-14",
+            "note": "Tottenham confirmed Vuskovic's permanent departure to Brighton, leaving him outside the current HSV hierarchy."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -748,11 +1368,38 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Luka Vuskovic",
+          "secondary": "Robert Glatzel",
+          "tertiary": "Jean-Luc Dompe"
+        },
+        "to": {
+          "primary": "Robert Glatzel",
+          "secondary": "Jean-Luc Dompe",
+          "tertiary": ""
+        },
+        "reason": "Current hierarchy checked against the 2026/27 multi-source preseason audit.",
+        "evidence_ids": [
+          "evt_20260727_hamburger_sv_research_01",
+          "evt_20260727_hamburger_sv_research_02",
+          "evt_20260727_hamburger_sv_research_03",
+          "evt_20260727_hamburger_sv_research_04",
+          "evt_20260727_hamburger_sv_research_05"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -766,25 +1413,30 @@
   },
   "Hoffenheim": {
     "primary": "Andrej Kramaric",
-    "secondary": "Muhammed Damar",
-    "tertiary": "Umut Tohumcu",
-    "last_updated": "2026-03-20",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "Bundesliga",
+    "cross_check": "Bundesliga",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
+      "primary": "high",
+      "secondary": "low",
       "tertiary": "low"
     },
     "condition_note": "",
     "last_verified": {
-      "date": "2026-03-20",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_hoffenheim_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 3
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_hoffenheim_rollover",
@@ -804,6 +1456,44 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_hoffenheim_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Andrej Kramaric converted two regular-time penalties and extended his reported sequence to 17 consecutive Bundesliga conversions. Kramaric's contract extension confirmed his continuing availability for the 2026/27 hierarchy. Damar's transfer invalidated the filed secondary slot without establishing Umut Tohumcu as the replacement.",
+        "sources": [
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/en/bundesliga/news/hoffenheim-borussia-dortmund-match-report-highlights-matchday-30-36955",
+            "date": "2026-04-18",
+            "note": "Andrej Kramaric converted two regular-time penalties and extended his reported sequence to 17 consecutive Bundesliga conversions."
+          },
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/en/bundesliga/news/andrej-kramaric-extends-hoffenheim-contract-croatia-37154",
+            "date": "2026-05-02",
+            "note": "Kramaric's contract extension confirmed his continuing availability for the 2026/27 hierarchy."
+          },
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/en/bundesliga/news/muhammed-damar-joins-wolfsburg-hoffenheim-38338/",
+            "date": "2026-07-23",
+            "note": "Damar's transfer invalidated the filed secondary slot without establishing Umut Tohumcu as the replacement."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -829,11 +1519,36 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Andrej Kramaric",
+          "secondary": "Muhammed Damar",
+          "tertiary": "Umut Tohumcu"
+        },
+        "to": {
+          "primary": "Andrej Kramaric",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "Current hierarchy checked against the 2026/27 multi-source preseason audit.",
+        "evidence_ids": [
+          "evt_20260727_hoffenheim_research_01",
+          "evt_20260727_hoffenheim_research_02",
+          "evt_20260727_hoffenheim_research_03"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -847,25 +1562,30 @@
   },
   "Mainz 05": {
     "primary": "Nadiem Amiri",
-    "secondary": "Paul Nebel",
-    "tertiary": "Anthony Caci",
-    "last_updated": "2026-03-20",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "1. FSV Mainz 05",
+    "cross_check": "Bundesliga",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
+      "primary": "high",
+      "secondary": "low",
       "tertiary": "low"
     },
     "condition_note": "",
     "last_verified": {
-      "date": "2026-03-20",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_mainz_05_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 3
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_mainz_05_rollover",
@@ -885,6 +1605,44 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_mainz_05_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Nadiem Amiri converted a last-kick regular-time penalty to equalise. The official season table records eight attempts and eight conversions for Amiri. The transfer centre did not record a departure for any filed player by the audit cutoff, but no direct evidence established the backup order.",
+        "sources": [
+          {
+            "label": "1. FSV Mainz 05",
+            "url": "https://www.mainz05.de/en/news-en/bmgm05-match-report-bundesliga-190426",
+            "date": "2026-04-19",
+            "note": "Nadiem Amiri converted a last-kick regular-time penalty to equalise."
+          },
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-07-27",
+            "note": "The official season table records eight attempts and eight conversions for Amiri."
+          },
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/en/bundesliga/news/official-bundesliga-transfer-centre-summer-2026-37051/",
+            "date": "2026-07-27",
+            "note": "The transfer centre did not record a departure for any filed player by the audit cutoff, but no direct evidence established the backup order."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -910,11 +1668,36 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Nadiem Amiri",
+          "secondary": "Paul Nebel",
+          "tertiary": "Anthony Caci"
+        },
+        "to": {
+          "primary": "Nadiem Amiri",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "Current hierarchy checked against the 2026/27 multi-source preseason audit.",
+        "evidence_ids": [
+          "evt_20260727_mainz_05_research_01",
+          "evt_20260727_mainz_05_research_02",
+          "evt_20260727_mainz_05_research_03"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -927,26 +1710,31 @@
     "player_ids": {}
   },
   "RasenBallsport Leipzig": {
-    "primary": "Xavi Simons",
-    "secondary": "Loïs Openda",
+    "primary": "Rômulo",
+    "secondary": "David Raum",
     "tertiary": "Christoph Baumgartner",
-    "last_updated": "2026-03-20",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "last_updated": "2026-07-27",
+    "source": "Bundesliga",
+    "cross_check": "Bundesliga",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "medium",
-      "secondary": "medium",
+      "secondary": "low",
       "tertiary": "low"
     },
     "condition_note": "",
     "last_verified": {
-      "date": "2026-03-20",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_rasenballsport_leipzig_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 5
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_rasenballsport_leipzig_rollover",
@@ -966,6 +1754,56 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_rasenballsport_leipzig_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Xavi Simons' departure invalidated the filed primary before the 2025/26 penalty evidence window. Openda joined Juventus on loan with a purchase obligation, invalidating the filed secondary slot. Rômulo took and missed a regular-time penalty while David Raum and Christoph Baumgartner were in the starting side, directly supporting Rômulo as the provisional primary.",
+        "sources": [
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/de/bundesliga/news/xavi-simons-rb-leipzig-transfer-abschied-33722",
+            "date": "2025-08-29",
+            "note": "Xavi Simons' departure invalidated the filed primary before the 2025/26 penalty evidence window."
+          },
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/de/bundesliga/news/rb-leipzig-lutsharel-geertruida-afc-sunderland-transfer-33805",
+            "date": "2025-09-01",
+            "note": "Openda joined Juventus on loan with a purchase obligation, invalidating the filed secondary slot."
+          },
+          {
+            "label": "Hamburger SV",
+            "url": "https://www.hsv.de/en/news/hsv-beaten-2-1-by-rb-leipzig",
+            "date": "2026-03-01",
+            "note": "Rômulo took and missed a regular-time penalty while David Raum and Christoph Baumgartner were in the starting side, directly supporting Rômulo as the provisional primary."
+          },
+          {
+            "label": "SetPieceTakers",
+            "url": "https://data.setpiecetakers.com/penalties/bundesliga",
+            "date": "2026-03-20",
+            "note": "The supporting ledger recorded Raum at 1/1, Baumgartner at 0/1, and Rômulo at 0/1."
+          },
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/en/bundesliga/clubs/rb-leipzig/squad",
+            "date": "2026-07-27",
+            "note": "The current squad included Rômulo, Raum, and Baumgartner and excluded the two departed filed leaders."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -991,11 +1829,38 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Xavi Simons",
+          "secondary": "Loïs Openda",
+          "tertiary": "Christoph Baumgartner"
+        },
+        "to": {
+          "primary": "Rômulo",
+          "secondary": "David Raum",
+          "tertiary": "Christoph Baumgartner"
+        },
+        "reason": "Current hierarchy checked against the 2026/27 multi-source preseason audit.",
+        "evidence_ids": [
+          "evt_20260727_rasenballsport_leipzig_research_01",
+          "evt_20260727_rasenballsport_leipzig_research_02",
+          "evt_20260727_rasenballsport_leipzig_research_03",
+          "evt_20260727_rasenballsport_leipzig_research_04",
+          "evt_20260727_rasenballsport_leipzig_research_05"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -1008,26 +1873,117 @@
     "player_ids": {}
   },
   "SC Paderborn 07": {
-    "primary": "",
+    "primary": "Mika Baur",
     "secondary": "",
     "tertiary": "",
-    "last_updated": "2026-07-10",
-    "hierarchy_status": "unknown",
+    "last_updated": "2026-07-27",
+    "hierarchy_status": "conditional",
     "confidence": {
       "primary": "low",
       "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Newly promoted club; the 2026/27 order is not yet verified.",
+    "condition_note": "Mika Baur is the only current player with a documented regular-time attempt after Filip Bilbija's departure, but transfer interest makes the call provisional.",
     "last_verified": {
-      "date": "2026-07-10",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "league_membership_audit"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
-    "evidence_log": [],
-    "change_log": [],
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_sc_paderborn_07_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 6
+    },
+    "evidence_log": [
+      {
+        "id": "evt_20260727_sc_paderborn_07_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "The player table records Filip Bilbija taking six penalties and converting four; the club table records nine total penalties, making Bilbija the previous volume leader. Mika Baur converted a regular-time penalty in the 65th minute. Derby confirmed Bilbija's arrival. His departure does not itself promote Baur, whose recommendation is based separately on his documented attempt.",
+        "sources": [
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/de/2bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-07-27",
+            "note": "The player table records Filip Bilbija taking six penalties and converting four; the club table records nine total penalties, making Bilbija the previous volume leader."
+          },
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/de/2bundesliga/news/sc-paderborn-07-hertha-bsc-spieltag-23-spielbericht-highlights-36138",
+            "date": "2026-02-22",
+            "note": "Mika Baur converted a regular-time penalty in the 65th minute."
+          },
+          {
+            "label": "Derby County",
+            "url": "https://www.dcfc.co.uk/news/2026/07/interview-bilbija-confident-and-excited-after-joining-the-rams",
+            "date": "2026-07-22",
+            "note": "Derby confirmed Bilbija's arrival. His departure does not itself promote Baur, whose recommendation is based separately on his documented attempt."
+          },
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/de/spieler/mika-baur",
+            "date": "2026-07-27",
+            "note": "The official player profile still listed Baur with Paderborn at the audit cutoff."
+          },
+          {
+            "label": "Reddit r/scpaderborn",
+            "url": "https://www.reddit.com/r/scpaderborn/comments/1v2w9i6/baur/",
+            "date": "2026-07-21",
+            "note": "The community post relayed a report of Celtic interest and was retained only as a roster-risk lead, not as confirmation."
+          },
+          {
+            "label": "Celtic Quick News",
+            "url": "https://www.celticquicknews.co.uk/celtic-in-4-3m-baur-hitch/",
+            "date": "2026-07-24",
+            "note": "The report said fee talks had stalled, reinforcing uncertainty without establishing a completed transfer."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "to": {
+          "primary": "Mika Baur",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "Current hierarchy checked against the 2026/27 multi-source preseason audit.",
+        "evidence_ids": [
+          "evt_20260727_sc_paderborn_07_research_01",
+          "evt_20260727_sc_paderborn_07_research_02",
+          "evt_20260727_sc_paderborn_07_research_03",
+          "evt_20260727_sc_paderborn_07_research_04",
+          "evt_20260727_sc_paderborn_07_research_05",
+          "evt_20260727_sc_paderborn_07_research_06"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
+      }
+    ],
     "flags": {
       "carryover_from_previous_season": false,
       "weak_evidence": true,
@@ -1035,92 +1991,258 @@
     },
     "prior_season": null,
     "player_ids": {},
-    "source": "https://media.dfl.de/sites/3/2026/07/EN_eFyJmg6k_Bundesliga_Fixture-List_2026_27.pdf",
-    "cross_check": "Official 2026/27 league roster"
+    "source": "Bundesliga",
+    "cross_check": "Bundesliga"
   },
   "SV Elversberg": {
-    "primary": "",
+    "primary": "Lukas Petkov",
     "secondary": "",
     "tertiary": "",
-    "last_updated": "2026-07-10",
-    "hierarchy_status": "unknown",
-    "confidence": {
-      "primary": "low",
-      "secondary": "low",
-      "tertiary": "low"
-    },
-    "condition_note": "Newly promoted club; the 2026/27 order is not yet verified.",
-    "last_verified": {
-      "date": "2026-07-10",
-      "by": "Il Margine",
-      "method": "league_membership_audit"
-    },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
-    "evidence_log": [],
-    "change_log": [],
-    "flags": {
-      "carryover_from_previous_season": false,
-      "weak_evidence": true,
-      "stale_override": null
-    },
-    "prior_season": null,
-    "player_ids": {},
-    "source": "https://media.dfl.de/sites/3/2026/07/EN_eFyJmg6k_Bundesliga_Fixture-List_2026_27.pdf",
-    "cross_check": "Official 2026/27 league roster"
-  },
-  "Schalke 04": {
-    "primary": "",
-    "secondary": "",
-    "tertiary": "",
-    "last_updated": "2026-07-10",
-    "hierarchy_status": "unknown",
-    "confidence": {
-      "primary": "low",
-      "secondary": "low",
-      "tertiary": "low"
-    },
-    "condition_note": "Newly promoted club; the 2026/27 order is not yet verified.",
-    "last_verified": {
-      "date": "2026-07-10",
-      "by": "Il Margine",
-      "method": "league_membership_audit"
-    },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
-    "evidence_log": [],
-    "change_log": [],
-    "flags": {
-      "carryover_from_previous_season": false,
-      "weak_evidence": true,
-      "stale_override": null
-    },
-    "prior_season": null,
-    "player_ids": {},
-    "source": "https://media.dfl.de/sites/3/2026/07/EN_eFyJmg6k_Bundesliga_Fixture-List_2026_27.pdf",
-    "cross_check": "Official 2026/27 league roster"
-  },
-  "Union Berlin": {
-    "primary": "Derrick Kohn",
-    "secondary": "Leopold Querfeld",
-    "tertiary": "Andrej Ilic",
-    "last_updated": "2026-03-20",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "last_updated": "2026-07-27",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
+      "primary": "high",
+      "secondary": "low",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-07-27",
+      "by": "Il Margine",
+      "method": "multi_source_preseason_research"
+    },
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_sv_elversberg_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 5
+    },
+    "evidence_log": [
+      {
+        "id": "evt_20260727_sv_elversberg_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Lukas Petkov converted a regular-time penalty. Carlo Sickinger missed a regular-time penalty. This isolated attempt does not establish him as the current backup. Petkov took and missed a regular-time penalty.",
+        "sources": [
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/de/2bundesliga/news/1-fc-kaiserslautern-sv-elversberg-spieltag-20-spielbericht-highlights-35847",
+            "date": "2026-01-31",
+            "note": "Lukas Petkov converted a regular-time penalty."
+          },
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/de/2bundesliga/news/sv-elversberg-eintracht-braunschweig-spieltag-23-spielbericht-highlights-36113",
+            "date": "2026-02-21",
+            "note": "Carlo Sickinger missed a regular-time penalty. This isolated attempt does not establish him as the current backup."
+          },
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/de/2bundesliga/news/spvgg-greuther-fuerth-sv-elversberg-spieltag-26-spielbericht-highlights-36435",
+            "date": "2026-03-13",
+            "note": "Petkov took and missed a regular-time penalty."
+          },
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/de/2bundesliga/news/hannover-96-sv-elversberg-spieltag-28-spielbericht-highlights-36764",
+            "date": "2026-04-05",
+            "note": "Petkov took and converted the club's latest documented regular-time penalty after his earlier miss."
+          },
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/de/spieler/lukas-petkov",
+            "date": "2026-07-27",
+            "note": "The official profile continued to list Petkov with the club at the audit cutoff."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "to": {
+          "primary": "Lukas Petkov",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "Current hierarchy checked against the 2026/27 multi-source preseason audit.",
+        "evidence_ids": [
+          "evt_20260727_sv_elversberg_research_01",
+          "evt_20260727_sv_elversberg_research_02",
+          "evt_20260727_sv_elversberg_research_03",
+          "evt_20260727_sv_elversberg_research_04",
+          "evt_20260727_sv_elversberg_research_05"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
+      "stale_override": null
+    },
+    "prior_season": null,
+    "player_ids": {},
+    "source": "Bundesliga",
+    "cross_check": "Bundesliga"
+  },
+  "Schalke 04": {
+    "primary": "Kenan Karaman",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "hierarchy_status": "confirmed",
+    "confidence": {
+      "primary": "high",
+      "secondary": "low",
+      "tertiary": "low"
+    },
+    "condition_note": "",
+    "last_verified": {
+      "date": "2026-07-27",
+      "by": "Il Margine",
+      "method": "multi_source_preseason_research"
+    },
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_schalke_04_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 4
+    },
+    "evidence_log": [
+      {
+        "id": "evt_20260727_schalke_04_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "The official club table records five league penalties. The official player table records Kenan Karaman taking and converting five penalties, accounting for every club attempt. Karaman converted a documented regular-time penalty.",
+        "sources": [
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/de/2bundesliga/statistiken/clubs/elfmeter",
+            "date": "2026-07-27",
+            "note": "The official club table records five league penalties."
+          },
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/de/2bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-07-27",
+            "note": "The official player table records Kenan Karaman taking and converting five penalties, accounting for every club attempt."
+          },
+          {
+            "label": "Bundesliga",
+            "url": "https://www.bundesliga.com/de/2bundesliga/news/fortuna-duesseldorf-fc-schalke-04-spieltag-15-spielbericht-highlights-35075",
+            "date": "2025-12-05",
+            "note": "Karaman converted a documented regular-time penalty."
+          },
+          {
+            "label": "FC Schalke 04",
+            "url": "https://schalke04.de/kader-2025-2026/",
+            "date": "2026-07-27",
+            "note": "Karaman remained listed in the squad at the audit cutoff."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      }
+    ],
+    "change_log": [
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "to": {
+          "primary": "Kenan Karaman",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "Current hierarchy checked against the 2026/27 multi-source preseason audit.",
+        "evidence_ids": [
+          "evt_20260727_schalke_04_research_01",
+          "evt_20260727_schalke_04_research_02",
+          "evt_20260727_schalke_04_research_03",
+          "evt_20260727_schalke_04_research_04"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
+      }
+    ],
+    "flags": {
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
+      "stale_override": null
+    },
+    "prior_season": null,
+    "player_ids": {},
+    "source": "Bundesliga",
+    "cross_check": "Bundesliga"
+  },
+  "Union Berlin": {
+    "primary": "Derrick Köhn",
+    "secondary": "Leopold Querfeld",
+    "tertiary": "Andrej Ilic",
+    "last_updated": "2026-07-27",
+    "source": "1. FC Union Berlin",
+    "cross_check": "1. FC Union Berlin",
+    "hierarchy_status": "probable",
+    "confidence": {
+      "primary": "high",
       "secondary": "medium",
       "tertiary": "low"
     },
     "condition_note": "",
     "last_verified": {
-      "date": "2026-03-20",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_union_berlin_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 4
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_union_berlin_rollover",
@@ -1140,6 +2262,50 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_union_berlin_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Andrej Ilic took and missed a regular-time penalty. Leopold Querfeld converted a late regular-time penalty. Querfeld converted his second regular-time penalty in consecutive matches.",
+        "sources": [
+          {
+            "label": "1. FC Union Berlin",
+            "url": "https://www.fc-union-berlin.de/en/matchcenter-zYpcDAoGr7ELuuyErhZDECroc?section=report",
+            "date": "2025-09-28",
+            "note": "Andrej Ilic took and missed a regular-time penalty."
+          },
+          {
+            "label": "1. FC Union Berlin",
+            "url": "https://www.fc-union-berlin.de/en/matchcenter-1Oo7q1iJBHCbv8WGea7qlAyCJ?section=report",
+            "date": "2026-02-06",
+            "note": "Leopold Querfeld converted a late regular-time penalty."
+          },
+          {
+            "label": "1. FC Union Berlin",
+            "url": "https://www.fc-union-berlin.de/en/news/union-lose-hard-fought-game-in-hamburg-3-2-ZqMV22",
+            "date": "2026-02-14",
+            "note": "Querfeld converted his second regular-time penalty in consecutive matches."
+          },
+          {
+            "label": "1. FC Union Berlin",
+            "url": "https://www.fc-union-berlin.de/en/news/ten-man-union-lose-4-1-to-bremen-W106oH",
+            "date": "2026-03-08",
+            "note": "Derrick Köhn took and converted the later regular-time penalty, supporting his filed precedence over Querfeld."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -1165,11 +2331,37 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Derrick Kohn",
+          "secondary": "Leopold Querfeld",
+          "tertiary": "Andrej Ilic"
+        },
+        "to": {
+          "primary": "Derrick Köhn",
+          "secondary": "Leopold Querfeld",
+          "tertiary": "Andrej Ilic"
+        },
+        "reason": "Current hierarchy checked against the 2026/27 multi-source preseason audit.",
+        "evidence_ids": [
+          "evt_20260727_union_berlin_research_01",
+          "evt_20260727_union_berlin_research_02",
+          "evt_20260727_union_berlin_research_03",
+          "evt_20260727_union_berlin_research_04"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -1183,25 +2375,30 @@
   },
   "VfB Stuttgart": {
     "primary": "Maximilian Mittelstädt",
-    "secondary": "Ermedin Demirovic",
-    "tertiary": "Deniz Undav",
-    "last_updated": "2026-03-20",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "VfB Stuttgart",
+    "cross_check": "VfB Stuttgart",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
+      "primary": "high",
+      "secondary": "low",
       "tertiary": "low"
     },
     "condition_note": "",
     "last_verified": {
-      "date": "2026-03-20",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_vfb_stuttgart_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 4
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_vfb_stuttgart_rollover",
@@ -1221,6 +2418,50 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_vfb_stuttgart_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Maximilian Mittelstädt converted a regular-time penalty while Deniz Undav started. Ermedin Demirovic entered only in the 88th minute. Undav missed a regular-time penalty after Demirovic had been substituted, so the event cannot rank Undav above or below Demirovic. Mittelstädt converted a regular-time penalty with both Demirovic and Undav starting, directly confirming his primary position.",
+        "sources": [
+          {
+            "label": "VfB Stuttgart",
+            "url": "https://www.vfb.de/en/vfb/team/saison/bundesliga/2526/16-leverkusen-vfb-stuttgart-/",
+            "date": "2026-01-10",
+            "note": "Maximilian Mittelstädt converted a regular-time penalty while Deniz Undav started. Ermedin Demirovic entered only in the 88th minute."
+          },
+          {
+            "label": "VfB Stuttgart",
+            "url": "https://www.vfb.de/en/vfb/team/saison/bundesliga/2526/29-vfb-stuttgart----hamburger-sv-/",
+            "date": "2026-04-12",
+            "note": "Undav missed a regular-time penalty after Demirovic had been substituted, so the event cannot rank Undav above or below Demirovic."
+          },
+          {
+            "label": "VfB Stuttgart",
+            "url": "https://www.vfb.de/en/vfb/team/saison/bundesliga/2526/33-vfb-stuttgart----leverkusen--/",
+            "date": "2026-05-09",
+            "note": "Mittelstädt converted a regular-time penalty with both Demirovic and Undav starting, directly confirming his primary position."
+          },
+          {
+            "label": "SetPieceTakers",
+            "url": "https://data.setpiecetakers.com/penalties/bundesliga",
+            "date": "2026-03-20",
+            "note": "The supporting ledger recorded Demirovic at 1/1 but did not resolve his current precedence relative to Undav."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -1246,11 +2487,37 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Maximilian Mittelstädt",
+          "secondary": "Ermedin Demirovic",
+          "tertiary": "Deniz Undav"
+        },
+        "to": {
+          "primary": "Maximilian Mittelstädt",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "Current hierarchy checked against the 2026/27 multi-source preseason audit.",
+        "evidence_ids": [
+          "evt_20260727_vfb_stuttgart_research_01",
+          "evt_20260727_vfb_stuttgart_research_02",
+          "evt_20260727_vfb_stuttgart_research_03",
+          "evt_20260727_vfb_stuttgart_research_04"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -1264,25 +2531,30 @@
   },
   "Werder Bremen": {
     "primary": "Romano Schmid",
-    "secondary": "Marvin Ducksch",
-    "tertiary": "Jens Stage",
-    "last_updated": "2026-03-16",
-    "source": "Il Margine internal audit",
-    "cross_check": "Il Margine internal cross-check",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-07-27",
+    "source": "SV Werder Bremen",
+    "cross_check": "1. FC Köln",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
+      "primary": "high",
+      "secondary": "low",
       "tertiary": "low"
     },
     "condition_note": "",
     "last_verified": {
-      "date": "2026-03-16",
+      "date": "2026-07-27",
       "by": "Il Margine",
-      "method": "prior_season_carryover"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-10",
-    "latest_evidence": null,
+    "public_updated_at": "2026-07-27",
+    "latest_evidence": {
+      "id": "evt_20260727_werder_bremen_research",
+      "date": "2026-07-27",
+      "type": "multi_source_preseason_research",
+      "source_count": 3
+    },
     "evidence_log": [
       {
         "id": "evt_20260710_werder_bremen_rollover",
@@ -1302,6 +2574,44 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+      },
+      {
+        "id": "evt_20260727_werder_bremen_research",
+        "date": "2026-07-27",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Werder confirmed Ducksch's transfer to Birmingham City, invalidating the filed secondary slot. Romano Schmid converted a regular-time penalty in the 75th minute. Schmid and Jens Stage were listed for 2026/27, but the squad listing provides no direct evidence that Stage inherits the departed secondary slot.",
+        "sources": [
+          {
+            "label": "SV Werder Bremen",
+            "url": "https://www.werder.de/news/maenner/2025-2026/pm-ducksch-07082025",
+            "date": "2025-08-07",
+            "note": "Werder confirmed Ducksch's transfer to Birmingham City, invalidating the filed secondary slot."
+          },
+          {
+            "label": "1. FC Köln",
+            "url": "https://fc.de/aktuelles/news/fc-gewinnt-nervenschlacht-gegen-bremen",
+            "date": "2026-04-12",
+            "note": "Romano Schmid converted a regular-time penalty in the 75th minute."
+          },
+          {
+            "label": "SV Werder Bremen",
+            "url": "https://www.werder.de/en/news/first-team/2026-2027/shirt-numbers-15072026",
+            "date": "2026-07-15",
+            "note": "Schmid and Jens Stage were listed for 2026/27, but the squad listing provides no direct evidence that Stage inherits the departed secondary slot."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-27T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -1327,11 +2637,36 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-27",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Romano Schmid",
+          "secondary": "Marvin Ducksch",
+          "tertiary": "Jens Stage"
+        },
+        "to": {
+          "primary": "Romano Schmid",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "Current hierarchy checked against the 2026/27 multi-source preseason audit.",
+        "evidence_ids": [
+          "evt_20260727_werder_bremen_research_01",
+          "evt_20260727_werder_bremen_research_02",
+          "evt_20260727_werder_bremen_research_03"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-27T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
-      "carryover_from_previous_season": true,
-      "weak_evidence": true,
+      "carryover_from_previous_season": false,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {

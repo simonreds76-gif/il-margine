@@ -284,9 +284,9 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
                         <p className="mt-4 max-w-3xl rounded-2xl border border-slate-600/60 bg-slate-950/60 px-4 py-3 text-sm leading-6 text-slate-300">
                           Archived record: {team.team} are not on the current {team.leagueLabel} board. This page preserves the final {team.seasonLabel} hierarchy and URL.
                         </p>
-                      ) : team.hierarchyStatus === "unknown" ? (
+                      ) : team.hierarchyStatus === "unknown" || team.hierarchyStatus === "disputed" ? (
                         <p className="mt-4 max-w-3xl rounded-2xl border border-amber-300/25 bg-amber-400/10 px-4 py-3 text-sm leading-6 text-amber-100">
-                          New for {CLUB_PENALTY_SEASON}: no public hierarchy is claimed until direct preseason or competitive evidence supports it.
+                          {team.conditionNote || `No public hierarchy is claimed until direct preseason or competitive evidence supports it for ${CLUB_PENALTY_SEASON}.`}
                         </p>
                       ) : team.isCarryover ? (
                         <p className="mt-4 max-w-3xl rounded-2xl border border-cyan-300/20 bg-cyan-400/8 px-4 py-3 text-sm leading-6 text-cyan-100">
@@ -348,6 +348,21 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Last verified: {team.lastUpdatedLabel || "awaiting direct evidence"}</h2>
             <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
               <p>Public file updated: {team.publicUpdatedLabel || "not available"}.</p>
+              {team.evidenceSources.length ? (
+                <div>
+                  <p className="font-medium text-slate-100">Evidence checked</p>
+                  <ul className="mt-2 space-y-2">
+                    {team.evidenceSources.slice(0, 4).map((source) => (
+                      <li key={source.url} className="rounded-xl border border-slate-800 bg-slate-950/55 px-3 py-2.5">
+                        <a href={source.url} target="_blank" rel="noreferrer" className="font-medium text-emerald-300 hover:text-emerald-200">
+                          {source.label}
+                        </a>
+                        {source.note ? <span className="mt-1 block text-xs leading-5 text-slate-400">{source.note}</span> : null}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
               <p>
                 We update the order only when the evidence changes: penalties taken or missed, lineup context, injuries, suspensions, transfers, coaching comments, or strong league-specific signals.
               </p>

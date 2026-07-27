@@ -1,0 +1,1026 @@
+{
+  "audit": {
+    "league": "Bundesliga",
+    "season": "2026/27",
+    "audit_date": "2026-07-27",
+    "status": "preseason",
+    "clubs_expected": 18,
+    "files_read": [
+      "C:/Users/44746/Downloads/il-margine/.worktrees/model-audit-integrity/data/goalscorer/bundesliga-penalty-takers.json",
+      "C:/Users/44746/Downloads/il-margine/.worktrees/model-audit-integrity/data/goalscorer/club-penalty-season.json"
+    ],
+    "method": [
+      "Regular-time penalties were evaluated separately from shootouts.",
+      "A penalty taken while a filed player was absent or already substituted does not establish precedence over that player.",
+      "A departure or absence does not automatically promote the next filed player.",
+      "Official club, league, and federation sources were preferred over specialist and community sources.",
+      "Specialist history was used as supporting evidence rather than as a substitute for current direct evidence.",
+      "Community and media leads were retained only as leads and were not treated as dispositive evidence."
+    ],
+    "priority_definitions": {
+      "P0": "Invalid or empty hierarchy requiring immediate correction.",
+      "P1": "Material correction required before publication or the next data refresh.",
+      "P2": "Primary is usable but hierarchy depth remains unresolved.",
+      "P3": "Current hierarchy is broadly usable and requires only routine monitoring."
+    },
+    "confidence_scale": [
+      "VERY_HIGH",
+      "HIGH",
+      "MEDIUM",
+      "LOW",
+      "UNRESOLVED"
+    ]
+  },
+  "clubs": [
+    {
+      "club": "Augsburg",
+      "filed_hierarchy": [
+        "Alexis Claude-Maurice",
+        "Michael Gregoritsch",
+        "Samuel Essende"
+      ],
+      "verdict": "PROVISIONAL_REORDER",
+      "recommended_hierarchy": [
+        "Fabian Rieder",
+        "Alexis Claude-Maurice",
+        "Michael Gregoritsch"
+      ],
+      "confidence": {
+        "overall": "MEDIUM",
+        "by_position": [
+          "MEDIUM",
+          "MEDIUM",
+          "LOW"
+        ]
+      },
+      "priority": "P1",
+      "evidence": [
+        {
+          "date": "2026-04-10",
+          "type": "OFFICIAL_MATCH_REPORT_REGULAR_TIME",
+          "source": "FC Augsburg",
+          "title": "Another draw for FCA as four goals shared against Hoffenheim",
+          "url": "https://www.fcaugsburg.de/en/article/another-draw-for-fca-as-four-goals-shared-against-hoffenheim-23021",
+          "summary": "Alexis Claude-Maurice took and missed a regular-time penalty in the 84th minute."
+        },
+        {
+          "date": "2026-04-18",
+          "type": "OFFICIAL_MATCH_REPORT_REGULAR_TIME",
+          "source": "FC Augsburg",
+          "title": "FCA net late goal to win 2-1 in Leverkusen",
+          "url": "https://www.fcaugsburg.de/en/article/fca-net-late-goal-to-win-2-1-in-leverkusen-23045",
+          "summary": "Fabian Rieder converted a late regular-time penalty to win the match."
+        },
+        {
+          "date": "2026-04-18",
+          "type": "OFFICIAL_INTERVIEW",
+          "source": "FC Augsburg",
+          "title": "Rieder: Extremely proud of the team",
+          "url": "https://www.fcaugsburg.de/en/article/rieder-extremely-proud-of-the-team-23046",
+          "summary": "Rieder directly described stepping up confidently to take the late penalty."
+        },
+        {
+          "date": "2026-04-18",
+          "type": "OFFICIAL_MATCH_RECORD",
+          "source": "DFB Datencenter",
+          "title": "Bayer Leverkusen - FC Augsburg",
+          "url": "https://datencenter.dfb.de/datencenter/bundesliga/2025-2026/30-spieltag/bayer-leverkusen-fc-augsburg-2398806",
+          "summary": "Claude-Maurice had been substituted in the 60th minute, so Rieder's later attempt was not a direct on-pitch precedence test."
+        }
+      ]
+    },
+    {
+      "club": "Bayer Leverkusen",
+      "filed_hierarchy": [
+        "Patrik Schick",
+        "Álex Grimaldo",
+        "Victor Boniface"
+      ],
+      "verdict": "PRIMARY_CONFIRMED_SECONDARY_DEPARTED",
+      "recommended_hierarchy": [
+        "Patrik Schick",
+        null,
+        null
+      ],
+      "confidence": {
+        "overall": "HIGH",
+        "by_position": [
+          "HIGH",
+          "UNRESOLVED",
+          "UNRESOLVED"
+        ]
+      },
+      "priority": "P1",
+      "evidence": [
+        {
+          "date": "2026-04-25",
+          "type": "OFFICIAL_MATCH_REPORT_REGULAR_TIME",
+          "source": "Bayer 04 Leverkusen",
+          "title": "Schick fires Werkself to 2-1 derby win in Cologne",
+          "url": "https://www.bayer04.de/en-us/news/bundesliga/schick-fires-werkself-to-2-1-derby-win-in-cologne",
+          "summary": "Patrik Schick converted a first-half regular-time penalty while Álex Grimaldo was also playing."
+        },
+        {
+          "date": "2026-01-10",
+          "type": "OFFICIAL_MATCH_RECORD_REGULAR_TIME",
+          "source": "VfB Stuttgart",
+          "title": "Bayer 04 Leverkusen - VfB Stuttgart",
+          "url": "https://www.vfb.de/en/vfb/team/saison/bundesliga/2526/16-leverkusen-vfb-stuttgart-/",
+          "summary": "Grimaldo converted a regular-time penalty in a match Schick did not start, supporting alternate capability but not precedence."
+        },
+        {
+          "date": "2026-06-30",
+          "type": "OFFICIAL_TRANSFER",
+          "source": "Bayer 04 Leverkusen",
+          "title": "Farewell to a star player: Grimaldo leaves Bayer 04 for Atlético Madrid",
+          "url": "https://www.bayer04.de/en-us/news/bayer04/farewell-to-a-star-player-grimaldo-leaves-bayer-04-for-atletico-madrid",
+          "summary": "The club confirmed Grimaldo's departure, invalidating the filed secondary slot without automatically promoting Victor Boniface."
+        }
+      ]
+    },
+    {
+      "club": "Bayern Munich",
+      "filed_hierarchy": [
+        "Harry Kane",
+        "Michael Olise",
+        "Jamal Musiala"
+      ],
+      "verdict": "PRIMARY_CONFIRMED_SECONDARY_UNSUPPORTED",
+      "recommended_hierarchy": [
+        "Harry Kane",
+        "Jamal Musiala",
+        null
+      ],
+      "confidence": {
+        "overall": "HIGH",
+        "by_position": [
+          "VERY_HIGH",
+          "LOW",
+          "UNRESOLVED"
+        ]
+      },
+      "priority": "P2",
+      "evidence": [
+        {
+          "date": "2026-07-27",
+          "type": "OFFICIAL_SEASON_STATISTICS",
+          "source": "Bundesliga",
+          "title": "2025/26 player penalty statistics",
+          "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+          "summary": "The official season table records 11 league penalty attempts for Harry Kane, the strongest current-volume evidence in the squad."
+        },
+        {
+          "date": "2026-05-23",
+          "type": "OFFICIAL_MATCH_REPORT_REGULAR_TIME",
+          "source": "FC Bayern Munich",
+          "title": "DFB-Pokal final match report: FC Bayern - VfB Stuttgart",
+          "url": "https://fcbayern.com/de/news/spielberichte/2026/05/spielbericht-dfb-pokal-fc-bayern-vfb-stuttgart",
+          "summary": "Kane converted a regular-time penalty in the DFB-Pokal final."
+        },
+        {
+          "date": "2026-03-06",
+          "type": "OFFICIAL_MATCH_REPORT_REGULAR_TIME",
+          "source": "FC Bayern Munich",
+          "title": "Bundesliga match report: FC Bayern - Borussia Mönchengladbach",
+          "url": "https://fcbayern.com/de/news/spielberichte/2026/03/spielbericht-bundesliga-fc-bayern-borussia-moenchengladbach",
+          "summary": "Jamal Musiala converted his first Bundesliga penalty while Kane was injured and Michael Olise did not start, establishing alternate capability but not direct precedence over Olise."
+        }
+      ]
+    },
+    {
+      "club": "Borussia Dortmund",
+      "filed_hierarchy": [
+        "Ramy Bensebaini",
+        "Marcel Sabitzer",
+        "Emre Can"
+      ],
+      "verdict": "PRIMARY_CONFIRMED_DEPTH_REORDERED_INJURY_CONDITIONED",
+      "recommended_hierarchy": [
+        "Ramy Bensebaini",
+        "Emre Can",
+        "Félix Nmecha"
+      ],
+      "confidence": {
+        "overall": "MEDIUM",
+        "by_position": [
+          "HIGH",
+          "MEDIUM",
+          "LOW"
+        ]
+      },
+      "priority": "P2",
+      "evidence": [
+        {
+          "date": "2026-03-21",
+          "type": "OFFICIAL_MATCH_REPORT_REGULAR_TIME",
+          "source": "Borussia Dortmund",
+          "title": "3-2 from 0-2 down: BVB's second-half onslaught against HSV",
+          "url": "https://www.bvb.de/de/en/news/news-overview/news.html/2026/3/21/3-2-from-0-2-down-BVBs-second-half-onslaught-against-HSV.html",
+          "summary": "Félix Nmecha missed a first-half regular-time penalty. Substitute Ramy Bensebaini then converted two penalties while Nmecha remained on the field, directly establishing Bensebaini's precedence."
+        },
+        {
+          "date": "2026-03-21",
+          "type": "OFFICIAL_MATCH_FACTS",
+          "source": "Borussia Dortmund",
+          "title": "Facts: 15-0 shots on goal in the second 45 minutes",
+          "url": "https://www.bvb.de/de/en/news/news-overview/news.html/2026/3/21/Facts-15-0-shots-on-goal-in-the-second-45-minutes.html",
+          "summary": "The club reported that Bensebaini had converted all nine of his Bundesliga penalties and that Nmecha's miss was his first attempt."
+        },
+        {
+          "date": "2026-04-18",
+          "type": "OFFICIAL_INJURY_REPORT",
+          "source": "Borussia Dortmund",
+          "title": "Two handball penalties as BVB lose 2-1 at Hoffenheim",
+          "url": "https://www.bvb.de/de/en/news/news-overview/news.html/2026/4/18/Two-handball-penalties-as-BVB-lose-2-1-at-Hoffenheim.html",
+          "summary": "The club reported an ACL rupture for Emre Can and a knee-ligament injury for Nmecha, making the depth recommendation availability-dependent."
+        },
+        {
+          "date": "2026-03-20",
+          "type": "SPECIALIST_HISTORY",
+          "source": "SetPieceTakers",
+          "title": "Bundesliga penalty takers",
+          "url": "https://data.setpiecetakers.com/penalties/bundesliga",
+          "summary": "The supporting ledger recorded Emre Can at 3/3 and did not provide equivalent recent penalty evidence for Marcel Sabitzer."
+        }
+      ]
+    },
+    {
+      "club": "Borussia M.Gladbach",
+      "filed_hierarchy": [
+        "Kevin Diks",
+        "Kevin Stöger",
+        "Tim Kleindienst"
+      ],
+      "verdict": "PRIMARY_CONFIRMED_DEPTH_UNPROVEN",
+      "recommended_hierarchy": [
+        "Kevin Diks",
+        null,
+        null
+      ],
+      "confidence": {
+        "overall": "HIGH",
+        "by_position": [
+          "HIGH",
+          "UNRESOLVED",
+          "UNRESOLVED"
+        ]
+      },
+      "priority": "P2",
+      "evidence": [
+        {
+          "date": "2026-01-11",
+          "type": "LEAGUE_MATCH_REPORT_REGULAR_TIME",
+          "source": "Bundesliga",
+          "title": "Borussia Mönchengladbach - FC Augsburg, matchday 16",
+          "url": "https://www.bundesliga.com/de/bundesliga/news/borussia-moenchengladbach-fc-augsburg-spieltag-16-spielbericht-highlights-35510",
+          "summary": "Kevin Diks converted a regular-time penalty."
+        },
+        {
+          "date": "2026-02-28",
+          "type": "LEAGUE_MATCH_REPORT_REGULAR_TIME",
+          "source": "Bundesliga",
+          "title": "Borussia Mönchengladbach - 1. FC Union Berlin, matchday 24",
+          "url": "https://www.bundesliga.com/de/bundesliga/news/borussia-moenchengladbach-1-fc-union-berlin-spieltag-24-spielbericht-highlights-36208",
+          "summary": "Diks converted a 90+4 regular-time penalty to win the match."
+        },
+        {
+          "date": "2026-03-20",
+          "type": "SPECIALIST_HISTORY",
+          "source": "SetPieceTakers",
+          "title": "Bundesliga penalty takers",
+          "url": "https://data.setpiecetakers.com/penalties/bundesliga",
+          "summary": "The supporting ledger recorded Diks at 4/4 and Kevin Stöger at 0/1, with no recent evidence settling the remaining backup order."
+        }
+      ]
+    },
+    {
+      "club": "Eintracht Frankfurt",
+      "filed_hierarchy": [
+        "Jonathan Burkardt",
+        "Can Uzun",
+        "Michy Batshuayi"
+      ],
+      "verdict": "PRIMARY_CONFIRMED_DEPTH_RETAINED_PROVISIONALLY",
+      "recommended_hierarchy": [
+        "Jonathan Burkardt",
+        "Can Uzun",
+        "Michy Batshuayi"
+      ],
+      "confidence": {
+        "overall": "MEDIUM",
+        "by_position": [
+          "HIGH",
+          "MEDIUM",
+          "LOW"
+        ]
+      },
+      "priority": "P3",
+      "evidence": [
+        {
+          "date": "2026-05-16",
+          "type": "OFFICIAL_MATCH_RECORD_REGULAR_TIME",
+          "source": "Eintracht Frankfurt",
+          "title": "Eintracht Frankfurt - VfB Stuttgart lineup and match record",
+          "url": "https://en.eintracht.de/2025-2026/bundesliga/schedule/eintracht-frankfurt-vfb-stuttgart/lineup/",
+          "summary": "Jonathan Burkardt entered as a substitute and converted regular-time penalties in the 72nd minute and stoppage time."
+        },
+        {
+          "date": "2026-07-26",
+          "type": "OFFICIAL_PRESEASON_MATCH_REPORT_REGULAR_TIME",
+          "source": "Eintracht Frankfurt",
+          "title": "3-0 gegen Trabzonspor",
+          "url": "https://en.eintracht.de/news/30-gegen-trabzonspor-178366/",
+          "summary": "Burkardt converted a preseason regular-time penalty after Can Uzun was fouled."
+        },
+        {
+          "date": "2026-07-27",
+          "type": "OFFICIAL_SQUAD_SNAPSHOT",
+          "source": "Eintracht Frankfurt",
+          "title": "First-team squad",
+          "url": "https://profis.eintracht.de/kader/",
+          "summary": "Burkardt, Uzun, and Michy Batshuayi were all listed in the current squad at the audit cutoff."
+        },
+        {
+          "date": "2026-03-20",
+          "type": "SPECIALIST_HISTORY",
+          "source": "SetPieceTakers",
+          "title": "Bundesliga penalty takers",
+          "url": "https://data.setpiecetakers.com/penalties/bundesliga",
+          "summary": "The supporting ledger recorded Burkardt at 2/2, Uzun at 1/1, and Batshuayi at 1/1."
+        }
+      ]
+    },
+    {
+      "club": "FC Cologne",
+      "filed_hierarchy": [
+        "Gian-Luca Waldschmidt",
+        "Saïd El Mala",
+        "Isak Johannesson"
+      ],
+      "verdict": "TOP_TWO_CONFIRMED_TERTIARY_UNPROVEN",
+      "recommended_hierarchy": [
+        "Gian-Luca Waldschmidt",
+        "Saïd El Mala",
+        null
+      ],
+      "confidence": {
+        "overall": "MEDIUM",
+        "by_position": [
+          "HIGH",
+          "MEDIUM",
+          "UNRESOLVED"
+        ]
+      },
+      "priority": "P3",
+      "evidence": [
+        {
+          "date": "2026-04-12",
+          "type": "OFFICIAL_MATCH_REPORT_REGULAR_TIME",
+          "source": "1. FC Köln",
+          "title": "FC gewinnt Nervenschlacht gegen Bremen",
+          "url": "https://fc.de/aktuelles/news/fc-gewinnt-nervenschlacht-gegen-bremen",
+          "summary": "Saïd El Mala converted an early regular-time penalty. Gian-Luca Waldschmidt did not enter until the 76th minute, so the attempt did not establish El Mala over Waldschmidt."
+        },
+        {
+          "date": "2026-04-17",
+          "type": "OFFICIAL_MATCH_REPORT_REGULAR_TIME",
+          "source": "1. FC Köln",
+          "title": "FC holt spät einen Punkt auf St. Pauli",
+          "url": "https://fc.de/aktuelles/news/fc-holt-spaet-einen-punkt-auf-st-pauli",
+          "summary": "Waldschmidt entered in the 79th minute and converted in the 86th while El Mala remained on the field, directly supporting Waldschmidt's precedence."
+        },
+        {
+          "date": "2026-04-17",
+          "type": "OFFICIAL_INTERVIEW",
+          "source": "1. FC Köln",
+          "title": "Waldschmidt über Elfer: Habe Druck gespürt",
+          "url": "https://fc.de/aktuelles/news/waldschmidt-ueber-elfer-habe-druck-gespuert",
+          "summary": "Waldschmidt directly discussed taking responsibility for the penalty and handling the pressure."
+        }
+      ]
+    },
+    {
+      "club": "Freiburg",
+      "filed_hierarchy": [
+        "Vincenzo Grifo",
+        "Igor Matanovic",
+        "Lucas Höler"
+      ],
+      "verdict": "TOP_TWO_SUPPORTED_TERTIARY_SHOOTOUT_ONLY",
+      "recommended_hierarchy": [
+        "Vincenzo Grifo",
+        "Igor Matanovic",
+        null
+      ],
+      "confidence": {
+        "overall": "MEDIUM",
+        "by_position": [
+          "HIGH",
+          "MEDIUM",
+          "UNRESOLVED"
+        ]
+      },
+      "priority": "P2",
+      "evidence": [
+        {
+          "date": "2026-01-10",
+          "type": "OFFICIAL_MATCH_REPORT_REGULAR_TIME",
+          "source": "SC Freiburg",
+          "title": "Une victoire contre le HSV pour bien débuter l'année",
+          "url": "https://www.scfreiburg.com/fr/latest/news/first-team/match-reports/2025/26/une-victoire-contre-le-hsv-pour-bien-debuter-lannee/",
+          "summary": "Vincenzo Grifo converted a regular-time penalty."
+        },
+        {
+          "date": "2026-03-20",
+          "type": "SPECIALIST_HISTORY",
+          "source": "SetPieceTakers",
+          "title": "Bundesliga penalty takers",
+          "url": "https://data.setpiecetakers.com/penalties/bundesliga",
+          "summary": "The supporting ledger recorded Grifo at 4/4 and Igor Matanovic at 1/2."
+        },
+        {
+          "date": "2026-02-11",
+          "type": "OFFICIAL_MATCH_REPORT_SHOOTOUT",
+          "source": "SC Freiburg",
+          "title": "SC into semi-finals after dramatic shoot-out win",
+          "url": "https://www.scfreiburg.com/en/latest/news/first-team/match-reports/2025/26/sc-into-semi-finals-after-dramatic-shoot-out-win",
+          "summary": "Lucas Höler converted in the DFB-Pokal shootout. The attempt was excluded from the regular-time hierarchy."
+        }
+      ]
+    },
+    {
+      "club": "Hamburger SV",
+      "filed_hierarchy": [
+        "Luka Vuskovic",
+        "Robert Glatzel",
+        "Jean-Luc Dompe"
+      ],
+      "verdict": "REORDER_FILED_PRIMARY_DEPARTED",
+      "recommended_hierarchy": [
+        "Robert Glatzel",
+        "Jean-Luc Dompe",
+        null
+      ],
+      "confidence": {
+        "overall": "MEDIUM",
+        "by_position": [
+          "HIGH",
+          "MEDIUM",
+          "UNRESOLVED"
+        ]
+      },
+      "priority": "P1",
+      "evidence": [
+        {
+          "date": "2026-03-07",
+          "type": "OFFICIAL_MATCH_REPORT_REGULAR_TIME",
+          "source": "Hamburger SV",
+          "title": "Spot kicks galore as HSV win 2-1 in Wolfsburg",
+          "url": "https://www.hsv.de/en/news/spot-kicks-galore-as-hsv-win-2-1-in-wolfsburg",
+          "summary": "Luka Vuskovic and Jean-Luc Dompe each converted a regular-time penalty."
+        },
+        {
+          "date": "2026-04-25",
+          "type": "OFFICIAL_MATCH_REPORT_REGULAR_TIME",
+          "source": "Hamburger SV",
+          "title": "HSV beaten 2-1 by TSG Hoffenheim",
+          "url": "https://www.hsv.de/en/news/hsv-beaten-2-1-by-tsg-hoffenheim",
+          "summary": "Robert Glatzel took and converted a regular-time penalty."
+        },
+        {
+          "date": "2026-04-25",
+          "type": "OFFICIAL_INTERVIEW",
+          "source": "Hamburger SV",
+          "title": "Minor errors decided the game, that's disappointing",
+          "url": "https://www.hsv.de/en/news/minor-errors-decided-the-game-thats-disappointing",
+          "summary": "Glatzel directly stated that he and Fabio Vieira were the assigned penalty takers."
+        },
+        {
+          "date": "2026-06-30",
+          "type": "OFFICIAL_LOAN_DEPARTURE",
+          "source": "Hamburger SV",
+          "title": "HSV thanks six loan players",
+          "url": "https://www.hsv.de/en/news/hsv-thanks-six-loan-players",
+          "summary": "The club confirmed that Fabio Vieira and Vuskovic would return to their parent clubs after their loans."
+        },
+        {
+          "date": "2026-07-14",
+          "type": "OFFICIAL_TRANSFER",
+          "source": "Tottenham Hotspur",
+          "title": "Vuskovic departs",
+          "url": "https://www.tottenhamhotspur.com/news/1078172/vuskovic-departs",
+          "summary": "Tottenham confirmed Vuskovic's permanent departure to Brighton, leaving him outside the current HSV hierarchy."
+        }
+      ]
+    },
+    {
+      "club": "Hoffenheim",
+      "filed_hierarchy": [
+        "Andrej Kramaric",
+        "Muhammed Damar",
+        "Umut Tohumcu"
+      ],
+      "verdict": "PRIMARY_CONFIRMED_SECONDARY_DEPARTED",
+      "recommended_hierarchy": [
+        "Andrej Kramaric",
+        null,
+        null
+      ],
+      "confidence": {
+        "overall": "HIGH",
+        "by_position": [
+          "VERY_HIGH",
+          "UNRESOLVED",
+          "UNRESOLVED"
+        ]
+      },
+      "priority": "P1",
+      "evidence": [
+        {
+          "date": "2026-04-18",
+          "type": "LEAGUE_MATCH_REPORT_REGULAR_TIME",
+          "source": "Bundesliga",
+          "title": "Hoffenheim - Borussia Dortmund, matchday 30",
+          "url": "https://www.bundesliga.com/en/bundesliga/news/hoffenheim-borussia-dortmund-match-report-highlights-matchday-30-36955",
+          "summary": "Andrej Kramaric converted two regular-time penalties and extended his reported sequence to 17 consecutive Bundesliga conversions."
+        },
+        {
+          "date": "2026-05-02",
+          "type": "OFFICIAL_CONTRACT",
+          "source": "Bundesliga",
+          "title": "Andrej Kramaric extends Hoffenheim contract",
+          "url": "https://www.bundesliga.com/en/bundesliga/news/andrej-kramaric-extends-hoffenheim-contract-croatia-37154",
+          "summary": "Kramaric's contract extension confirmed his continuing availability for the 2026/27 hierarchy."
+        },
+        {
+          "date": "2026-07-23",
+          "type": "OFFICIAL_TRANSFER",
+          "source": "Bundesliga",
+          "title": "Muhammed Damar joins Wolfsburg from Hoffenheim",
+          "url": "https://www.bundesliga.com/en/bundesliga/news/muhammed-damar-joins-wolfsburg-hoffenheim-38338/",
+          "summary": "Damar's transfer invalidated the filed secondary slot without establishing Umut Tohumcu as the replacement."
+        }
+      ]
+    },
+    {
+      "club": "Mainz 05",
+      "filed_hierarchy": [
+        "Nadiem Amiri",
+        "Paul Nebel",
+        "Anthony Caci"
+      ],
+      "verdict": "PRIMARY_CONFIRMED_DEPTH_UNPROVEN",
+      "recommended_hierarchy": [
+        "Nadiem Amiri",
+        null,
+        null
+      ],
+      "confidence": {
+        "overall": "HIGH",
+        "by_position": [
+          "VERY_HIGH",
+          "UNRESOLVED",
+          "UNRESOLVED"
+        ]
+      },
+      "priority": "P2",
+      "evidence": [
+        {
+          "date": "2026-04-19",
+          "type": "OFFICIAL_MATCH_REPORT_REGULAR_TIME",
+          "source": "1. FSV Mainz 05",
+          "title": "Borussia Mönchengladbach - Mainz 05 match report",
+          "url": "https://www.mainz05.de/en/news-en/bmgm05-match-report-bundesliga-190426",
+          "summary": "Nadiem Amiri converted a last-kick regular-time penalty to equalise."
+        },
+        {
+          "date": "2026-07-27",
+          "type": "OFFICIAL_SEASON_STATISTICS",
+          "source": "Bundesliga",
+          "title": "2025/26 player penalty statistics",
+          "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+          "summary": "The official season table records eight attempts and eight conversions for Amiri."
+        },
+        {
+          "date": "2026-07-27",
+          "type": "TRANSFER_SNAPSHOT",
+          "source": "Bundesliga",
+          "title": "Official Bundesliga transfer centre, summer 2026",
+          "url": "https://www.bundesliga.com/en/bundesliga/news/official-bundesliga-transfer-centre-summer-2026-37051/",
+          "summary": "The transfer centre did not record a departure for any filed player by the audit cutoff, but no direct evidence established the backup order."
+        }
+      ]
+    },
+    {
+      "club": "RasenBallsport Leipzig",
+      "filed_hierarchy": [
+        "Xavi Simons",
+        "Loïs Openda",
+        "Christoph Baumgartner"
+      ],
+      "verdict": "REPLACE_FILED_ORDER",
+      "recommended_hierarchy": [
+        "Rômulo",
+        "David Raum",
+        "Christoph Baumgartner"
+      ],
+      "confidence": {
+        "overall": "LOW",
+        "by_position": [
+          "MEDIUM",
+          "LOW",
+          "LOW"
+        ]
+      },
+      "priority": "P0",
+      "evidence": [
+        {
+          "date": "2025-08-29",
+          "type": "OFFICIAL_TRANSFER",
+          "source": "Bundesliga",
+          "title": "Xavi Simons leaves RB Leipzig",
+          "url": "https://www.bundesliga.com/de/bundesliga/news/xavi-simons-rb-leipzig-transfer-abschied-33722",
+          "summary": "Xavi Simons' departure invalidated the filed primary before the 2025/26 penalty evidence window."
+        },
+        {
+          "date": "2025-09-01",
+          "type": "OFFICIAL_TRANSFER",
+          "source": "Bundesliga",
+          "title": "Loïs Openda leaves RB Leipzig",
+          "url": "https://www.bundesliga.com/de/bundesliga/news/rb-leipzig-lutsharel-geertruida-afc-sunderland-transfer-33805",
+          "summary": "Openda joined Juventus on loan with a purchase obligation, invalidating the filed secondary slot."
+        },
+        {
+          "date": "2026-03-01",
+          "type": "OFFICIAL_MATCH_REPORT_REGULAR_TIME",
+          "source": "Hamburger SV",
+          "title": "HSV beaten 2-1 by RB Leipzig",
+          "url": "https://www.hsv.de/en/news/hsv-beaten-2-1-by-rb-leipzig",
+          "summary": "Rômulo took and missed a regular-time penalty while David Raum and Christoph Baumgartner were in the starting side, directly supporting Rômulo as the provisional primary."
+        },
+        {
+          "date": "2026-03-20",
+          "type": "SPECIALIST_HISTORY",
+          "source": "SetPieceTakers",
+          "title": "Bundesliga penalty takers",
+          "url": "https://data.setpiecetakers.com/penalties/bundesliga",
+          "summary": "The supporting ledger recorded Raum at 1/1, Baumgartner at 0/1, and Rômulo at 0/1."
+        },
+        {
+          "date": "2026-07-27",
+          "type": "OFFICIAL_SQUAD_SNAPSHOT",
+          "source": "Bundesliga",
+          "title": "RB Leipzig squad",
+          "url": "https://www.bundesliga.com/en/bundesliga/clubs/rb-leipzig/squad",
+          "summary": "The current squad included Rômulo, Raum, and Baumgartner and excluded the two departed filed leaders."
+        }
+      ]
+    },
+    {
+      "club": "SC Paderborn 07",
+      "filed_hierarchy": [],
+      "verdict": "FILL_PROVISIONAL_PRIMARY_ROSTER_RISK",
+      "recommended_hierarchy": [
+        "Mika Baur",
+        null,
+        null
+      ],
+      "confidence": {
+        "overall": "LOW",
+        "by_position": [
+          "LOW",
+          "UNRESOLVED",
+          "UNRESOLVED"
+        ]
+      },
+      "priority": "P0",
+      "evidence": [
+        {
+          "date": "2026-07-27",
+          "type": "OFFICIAL_SEASON_STATISTICS",
+          "source": "Bundesliga",
+          "title": "2025/26 2. Bundesliga club and player penalty statistics",
+          "url": "https://www.bundesliga.com/de/2bundesliga/statistiken/spieler/elfmeter",
+          "summary": "The player table records Filip Bilbija taking six penalties and converting four; the club table records nine total penalties, making Bilbija the previous volume leader."
+        },
+        {
+          "date": "2026-02-22",
+          "type": "LEAGUE_MATCH_REPORT_REGULAR_TIME",
+          "source": "Bundesliga",
+          "title": "SC Paderborn 07 - Hertha BSC, matchday 23",
+          "url": "https://www.bundesliga.com/de/2bundesliga/news/sc-paderborn-07-hertha-bsc-spieltag-23-spielbericht-highlights-36138",
+          "summary": "Mika Baur converted a regular-time penalty in the 65th minute."
+        },
+        {
+          "date": "2026-07-22",
+          "type": "OFFICIAL_TRANSFER",
+          "source": "Derby County",
+          "title": "Bilbija confident and excited after joining the Rams",
+          "url": "https://www.dcfc.co.uk/news/2026/07/interview-bilbija-confident-and-excited-after-joining-the-rams",
+          "summary": "Derby confirmed Bilbija's arrival. His departure does not itself promote Baur, whose recommendation is based separately on his documented attempt."
+        },
+        {
+          "date": "2026-07-27",
+          "type": "OFFICIAL_PLAYER_PROFILE_SNAPSHOT",
+          "source": "Bundesliga",
+          "title": "Mika Baur player profile",
+          "url": "https://www.bundesliga.com/de/spieler/mika-baur",
+          "summary": "The official player profile still listed Baur with Paderborn at the audit cutoff."
+        },
+        {
+          "date": "2026-07-21",
+          "type": "COMMUNITY_TRANSFER_LEAD",
+          "source": "Reddit r/scpaderborn",
+          "title": "Baur",
+          "url": "https://www.reddit.com/r/scpaderborn/comments/1v2w9i6/baur/",
+          "summary": "The community post relayed a report of Celtic interest and was retained only as a roster-risk lead, not as confirmation."
+        },
+        {
+          "date": "2026-07-24",
+          "type": "MEDIA_TRANSFER_LEAD",
+          "source": "Celtic Quick News",
+          "title": "Celtic in £4.3m Baur hitch",
+          "url": "https://www.celticquicknews.co.uk/celtic-in-4-3m-baur-hitch/",
+          "summary": "The report said fee talks had stalled, reinforcing uncertainty without establishing a completed transfer."
+        }
+      ]
+    },
+    {
+      "club": "SV Elversberg",
+      "filed_hierarchy": [],
+      "verdict": "FILL_PRIMARY",
+      "recommended_hierarchy": [
+        "Lukas Petkov",
+        null,
+        null
+      ],
+      "confidence": {
+        "overall": "HIGH",
+        "by_position": [
+          "HIGH",
+          "UNRESOLVED",
+          "UNRESOLVED"
+        ]
+      },
+      "priority": "P1",
+      "evidence": [
+        {
+          "date": "2026-01-31",
+          "type": "LEAGUE_MATCH_REPORT_REGULAR_TIME",
+          "source": "Bundesliga",
+          "title": "1. FC Kaiserslautern - SV Elversberg, matchday 20",
+          "url": "https://www.bundesliga.com/de/2bundesliga/news/1-fc-kaiserslautern-sv-elversberg-spieltag-20-spielbericht-highlights-35847",
+          "summary": "Lukas Petkov converted a regular-time penalty."
+        },
+        {
+          "date": "2026-02-21",
+          "type": "LEAGUE_MATCH_REPORT_REGULAR_TIME",
+          "source": "Bundesliga",
+          "title": "SV Elversberg - Eintracht Braunschweig, matchday 23",
+          "url": "https://www.bundesliga.com/de/2bundesliga/news/sv-elversberg-eintracht-braunschweig-spieltag-23-spielbericht-highlights-36113",
+          "summary": "Carlo Sickinger missed a regular-time penalty. This isolated attempt does not establish him as the current backup."
+        },
+        {
+          "date": "2026-03-13",
+          "type": "LEAGUE_MATCH_REPORT_REGULAR_TIME",
+          "source": "Bundesliga",
+          "title": "SpVgg Greuther Fürth - SV Elversberg, matchday 26",
+          "url": "https://www.bundesliga.com/de/2bundesliga/news/spvgg-greuther-fuerth-sv-elversberg-spieltag-26-spielbericht-highlights-36435",
+          "summary": "Petkov took and missed a regular-time penalty."
+        },
+        {
+          "date": "2026-04-05",
+          "type": "LEAGUE_MATCH_REPORT_REGULAR_TIME",
+          "source": "Bundesliga",
+          "title": "Hannover 96 - SV Elversberg, matchday 28",
+          "url": "https://www.bundesliga.com/de/2bundesliga/news/hannover-96-sv-elversberg-spieltag-28-spielbericht-highlights-36764",
+          "summary": "Petkov took and converted the club's latest documented regular-time penalty after his earlier miss."
+        },
+        {
+          "date": "2026-07-27",
+          "type": "OFFICIAL_PLAYER_PROFILE_SNAPSHOT",
+          "source": "Bundesliga",
+          "title": "Lukas Petkov player profile",
+          "url": "https://www.bundesliga.com/de/spieler/lukas-petkov",
+          "summary": "The official profile continued to list Petkov with the club at the audit cutoff."
+        }
+      ]
+    },
+    {
+      "club": "Schalke 04",
+      "filed_hierarchy": [],
+      "verdict": "FILL_PRIMARY",
+      "recommended_hierarchy": [
+        "Kenan Karaman",
+        null,
+        null
+      ],
+      "confidence": {
+        "overall": "VERY_HIGH",
+        "by_position": [
+          "VERY_HIGH",
+          "UNRESOLVED",
+          "UNRESOLVED"
+        ]
+      },
+      "priority": "P1",
+      "evidence": [
+        {
+          "date": "2026-07-27",
+          "type": "OFFICIAL_SEASON_STATISTICS",
+          "source": "Bundesliga",
+          "title": "2025/26 2. Bundesliga club penalty statistics",
+          "url": "https://www.bundesliga.com/de/2bundesliga/statistiken/clubs/elfmeter",
+          "summary": "The official club table records five league penalties."
+        },
+        {
+          "date": "2026-07-27",
+          "type": "OFFICIAL_SEASON_STATISTICS",
+          "source": "Bundesliga",
+          "title": "2025/26 2. Bundesliga player penalty statistics",
+          "url": "https://www.bundesliga.com/de/2bundesliga/statistiken/spieler/elfmeter",
+          "summary": "The official player table records Kenan Karaman taking and converting five penalties, accounting for every club attempt."
+        },
+        {
+          "date": "2025-12-05",
+          "type": "LEAGUE_MATCH_REPORT_REGULAR_TIME",
+          "source": "Bundesliga",
+          "title": "Fortuna Düsseldorf - FC Schalke 04, matchday 15",
+          "url": "https://www.bundesliga.com/de/2bundesliga/news/fortuna-duesseldorf-fc-schalke-04-spieltag-15-spielbericht-highlights-35075",
+          "summary": "Karaman converted a documented regular-time penalty."
+        },
+        {
+          "date": "2026-07-27",
+          "type": "OFFICIAL_SQUAD_SNAPSHOT",
+          "source": "FC Schalke 04",
+          "title": "First-team squad",
+          "url": "https://schalke04.de/kader-2025-2026/",
+          "summary": "Karaman remained listed in the squad at the audit cutoff."
+        }
+      ]
+    },
+    {
+      "club": "Union Berlin",
+      "filed_hierarchy": [
+        "Derrick Kohn",
+        "Leopold Querfeld",
+        "Andrej Ilic"
+      ],
+      "verdict": "ORDER_CONFIRMED_TERTIARY_WEAK",
+      "recommended_hierarchy": [
+        "Derrick Köhn",
+        "Leopold Querfeld",
+        "Andrej Ilic"
+      ],
+      "confidence": {
+        "overall": "MEDIUM",
+        "by_position": [
+          "HIGH",
+          "MEDIUM",
+          "LOW"
+        ]
+      },
+      "priority": "P3",
+      "evidence": [
+        {
+          "date": "2025-09-28",
+          "type": "OFFICIAL_MATCH_REPORT_REGULAR_TIME",
+          "source": "1. FC Union Berlin",
+          "title": "Official match report and matchcenter",
+          "url": "https://www.fc-union-berlin.de/en/matchcenter-zYpcDAoGr7ELuuyErhZDECroc?section=report",
+          "summary": "Andrej Ilic took and missed a regular-time penalty."
+        },
+        {
+          "date": "2026-02-06",
+          "type": "OFFICIAL_MATCH_REPORT_REGULAR_TIME",
+          "source": "1. FC Union Berlin",
+          "title": "Official match report and matchcenter",
+          "url": "https://www.fc-union-berlin.de/en/matchcenter-1Oo7q1iJBHCbv8WGea7qlAyCJ?section=report",
+          "summary": "Leopold Querfeld converted a late regular-time penalty."
+        },
+        {
+          "date": "2026-02-14",
+          "type": "OFFICIAL_MATCH_REPORT_REGULAR_TIME",
+          "source": "1. FC Union Berlin",
+          "title": "Union lose hard-fought game in Hamburg 3-2",
+          "url": "https://www.fc-union-berlin.de/en/news/union-lose-hard-fought-game-in-hamburg-3-2-ZqMV22",
+          "summary": "Querfeld converted his second regular-time penalty in consecutive matches."
+        },
+        {
+          "date": "2026-03-08",
+          "type": "OFFICIAL_MATCH_REPORT_REGULAR_TIME",
+          "source": "1. FC Union Berlin",
+          "title": "Ten-man Union lose 4-1 to Bremen",
+          "url": "https://www.fc-union-berlin.de/en/news/ten-man-union-lose-4-1-to-bremen-W106oH",
+          "summary": "Derrick Köhn took and converted the later regular-time penalty, supporting his filed precedence over Querfeld."
+        }
+      ]
+    },
+    {
+      "club": "VfB Stuttgart",
+      "filed_hierarchy": [
+        "Maximilian Mittelstädt",
+        "Ermedin Demirovic",
+        "Deniz Undav"
+      ],
+      "verdict": "PRIMARY_CONFIRMED_BACKUP_ORDER_UNRESOLVED",
+      "recommended_hierarchy": [
+        "Maximilian Mittelstädt",
+        null,
+        null
+      ],
+      "confidence": {
+        "overall": "HIGH",
+        "by_position": [
+          "HIGH",
+          "UNRESOLVED",
+          "UNRESOLVED"
+        ]
+      },
+      "priority": "P2",
+      "evidence": [
+        {
+          "date": "2026-01-10",
+          "type": "OFFICIAL_MATCH_RECORD_REGULAR_TIME",
+          "source": "VfB Stuttgart",
+          "title": "Bayer 04 Leverkusen - VfB Stuttgart",
+          "url": "https://www.vfb.de/en/vfb/team/saison/bundesliga/2526/16-leverkusen-vfb-stuttgart-/",
+          "summary": "Maximilian Mittelstädt converted a regular-time penalty while Deniz Undav started. Ermedin Demirovic entered only in the 88th minute."
+        },
+        {
+          "date": "2026-04-12",
+          "type": "OFFICIAL_MATCH_RECORD_REGULAR_TIME",
+          "source": "VfB Stuttgart",
+          "title": "VfB Stuttgart - Hamburger SV",
+          "url": "https://www.vfb.de/en/vfb/team/saison/bundesliga/2526/29-vfb-stuttgart----hamburger-sv-/",
+          "summary": "Undav missed a regular-time penalty after Demirovic had been substituted, so the event cannot rank Undav above or below Demirovic."
+        },
+        {
+          "date": "2026-05-09",
+          "type": "OFFICIAL_MATCH_RECORD_REGULAR_TIME",
+          "source": "VfB Stuttgart",
+          "title": "VfB Stuttgart - Bayer 04 Leverkusen",
+          "url": "https://www.vfb.de/en/vfb/team/saison/bundesliga/2526/33-vfb-stuttgart----leverkusen--/",
+          "summary": "Mittelstädt converted a regular-time penalty with both Demirovic and Undav starting, directly confirming his primary position."
+        },
+        {
+          "date": "2026-03-20",
+          "type": "SPECIALIST_HISTORY",
+          "source": "SetPieceTakers",
+          "title": "Bundesliga penalty takers",
+          "url": "https://data.setpiecetakers.com/penalties/bundesliga",
+          "summary": "The supporting ledger recorded Demirovic at 1/1 but did not resolve his current precedence relative to Undav."
+        }
+      ]
+    },
+    {
+      "club": "Werder Bremen",
+      "filed_hierarchy": [
+        "Romano Schmid",
+        "Marvin Ducksch",
+        "Jens Stage"
+      ],
+      "verdict": "PRIMARY_CONFIRMED_SECONDARY_DEPARTED",
+      "recommended_hierarchy": [
+        "Romano Schmid",
+        null,
+        null
+      ],
+      "confidence": {
+        "overall": "HIGH",
+        "by_position": [
+          "HIGH",
+          "UNRESOLVED",
+          "UNRESOLVED"
+        ]
+      },
+      "priority": "P1",
+      "evidence": [
+        {
+          "date": "2025-08-07",
+          "type": "OFFICIAL_TRANSFER",
+          "source": "SV Werder Bremen",
+          "title": "Marvin Ducksch leaves Werder Bremen",
+          "url": "https://www.werder.de/news/maenner/2025-2026/pm-ducksch-07082025",
+          "summary": "Werder confirmed Ducksch's transfer to Birmingham City, invalidating the filed secondary slot."
+        },
+        {
+          "date": "2026-04-12",
+          "type": "OFFICIAL_MATCH_REPORT_REGULAR_TIME",
+          "source": "1. FC Köln",
+          "title": "FC gewinnt Nervenschlacht gegen Bremen",
+          "url": "https://fc.de/aktuelles/news/fc-gewinnt-nervenschlacht-gegen-bremen",
+          "summary": "Romano Schmid converted a regular-time penalty in the 75th minute."
+        },
+        {
+          "date": "2026-07-15",
+          "type": "OFFICIAL_SQUAD_SNAPSHOT",
+          "source": "SV Werder Bremen",
+          "title": "Shirt numbers for the 2026/27 season",
+          "url": "https://www.werder.de/en/news/first-team/2026-2027/shirt-numbers-15072026",
+          "summary": "Schmid and Jens Stage were listed for 2026/27, but the squad listing provides no direct evidence that Stage inherits the departed secondary slot."
+        }
+      ]
+    }
+  ]
+}
