@@ -2,14 +2,13 @@
 
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { questionSlug } from "@/lib/parse-faq";
 import { type Bet, type Bookmaker, type MarketStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats } from "@/lib/baseline";
 import BetMobileMeta from "@/components/BetMobileMeta";
-import MarketBadge from "@/components/MarketBadge";
 import PublicBetsTable from "@/components/PublicBetsTable";
 import ResultBadge from "@/components/ResultBadge";
+import TodaysEdge from "@/components/TodaysEdge";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import LabNotesSection from "@/components/LabNotesSection";
@@ -22,36 +21,11 @@ const HOMEPAGE_KEYFRAMES = `
   from { opacity: 0; transform: translateY(18px); }
   to { opacity: 1; transform: translateY(0); }
 }
-@keyframes homepage-edge-row {
-  from { opacity: 0.08; transform: translateX(-4px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-@keyframes homepage-edge-result {
-  0% { opacity: 0; transform: scale(0.96); border-color: rgba(87,209,150,0.08); background: transparent; }
-  100% { opacity: 1; transform: scale(1); border-color: rgba(87,209,150,0.35); background: rgba(87,209,150,0.08); }
-}
-@keyframes homepage-edge-scan {
-  0% { top: -2px; opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { top: calc(100% + 2px); opacity: 0; }
-}
-@keyframes homepage-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.2; }
-}
 @keyframes homepage-underline {
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }
 }
 `;
-
-const EDGE_ROWS = [
-  ["Bookmaker Odds", "2.10"],
-  ["Implied Probability", "47.62%"],
-  ["Our Fair Odds", "1.89"],
-  ["True Probability", "52.91%"],
-] as const;
 
 const COMPILER_CARDS = [
   {
@@ -140,115 +114,6 @@ function HomepageReveal({ children, delay = 0, className = "" }: { children: Rea
       }}
     >
       {children}
-    </div>
-  );
-}
-
-function HomepageEdgeCard() {
-  return (
-    <div className="relative overflow-hidden rounded-2xl border border-slate-700/40 bg-[#0a0d12] p-6 shadow-2xl shadow-black/35 md:p-7">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.02]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px)",
-          backgroundSize: "18px 18px",
-        }}
-      />
-      <div
-        className="absolute top-0 left-[8%] right-[8%] h-px"
-        style={{ background: "linear-gradient(90deg, transparent, rgba(87,209,150,0.4), transparent)" }}
-      />
-      <div
-        className="pointer-events-none absolute left-0 right-0 h-px"
-        style={{
-          background: "linear-gradient(90deg, transparent 5%, rgba(87,209,150,0.3) 50%, transparent 95%)",
-          animation: "homepage-edge-scan 3s ease-in-out 1.7s both",
-        }}
-      />
-
-      <div className="relative">
-        <div className="mb-4 flex items-center justify-between">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[rgba(87,209,150,0.90)]">
-            How we find edge
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="h-[5px] w-[5px] rounded-full bg-[var(--brand-green)]" style={{ animation: "homepage-pulse 2s ease-in-out infinite" }} />
-            <span className="text-[9px] font-mono uppercase tracking-[0.16em] text-slate-600">Live example</span>
-          </span>
-        </div>
-
-        <div className="font-mono text-[14px] md:text-[15px]">
-          {EDGE_ROWS.map(([label, value], index) => (
-            <div
-              key={label}
-              className="flex items-center justify-between border-b border-slate-800/40 py-[9px]"
-              style={{
-                animation: "homepage-edge-row 0.55s cubic-bezier(0.16,1,0.3,1) both",
-                animationDelay: `${700 + index * 180}ms`,
-              }}
-            >
-              <span className="text-slate-400">{label}</span>
-              <span className="text-[15px] font-semibold tabular-nums text-slate-100 md:text-base">{value}</span>
-            </div>
-          ))}
-
-          <div
-            className="-mx-1.5 mt-3 flex items-center justify-between rounded-xl border px-4 py-3.5"
-            style={{
-              animation: "homepage-edge-result 0.7s cubic-bezier(0.16,1,0.3,1) both",
-              animationDelay: "1450ms",
-            }}
-          >
-            <span className="text-[14px] font-semibold text-[var(--brand-green)] md:text-[15px]">Mathematical Edge</span>
-            <span className="font-mono text-[30px] font-black tracking-[-0.04em] text-[var(--brand-green)] md:text-[32px]">+11.1%</span>
-          </div>
-        </div>
-
-        <p className="mt-3 font-mono text-[10px] leading-relaxed text-slate-600">
-          When their price exceeds fair value, we act.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function ProofStatCard({
-  label,
-  value,
-  sub,
-  accent = false,
-}: {
-  label: string;
-  value: string;
-  sub: string;
-  accent?: boolean;
-}) {
-  return (
-    <div
-      className={`relative overflow-hidden rounded-2xl border p-5 md:p-6 ${
-        accent ? "border-[rgba(87,209,150,0.20)] bg-[#0c0f14]" : "border-slate-700/40 bg-[#0c0f14]"
-      }`}
-    >
-      {accent ? (
-        <div
-          className="absolute top-0 left-[10%] right-[10%] h-px"
-          style={{ background: "linear-gradient(90deg, transparent, rgba(87,209,150,0.35), transparent)" }}
-        />
-      ) : null}
-      <span
-        className="pointer-events-none absolute -right-3 -bottom-4 select-none font-mono text-[80px] font-black leading-none"
-        style={{ color: accent ? "rgba(87,209,150,0.025)" : "rgba(255,255,255,0.015)" }}
-      >
-        {value.replace(/[^0-9.%+]/g, "")}
-      </span>
-      <div className="relative">
-        <div className="text-[10px] font-mono font-bold uppercase tracking-[0.14em] text-slate-500">{label}</div>
-        <div className={`mt-3 font-mono text-[2.2rem] font-extrabold leading-none tracking-tight tabular-nums md:text-[2.5rem] ${accent ? "text-[var(--brand-green)]" : "text-slate-100"}`}>
-          {value}
-        </div>
-        <div className="mt-3 font-mono text-[11px] leading-relaxed text-slate-500">{sub}</div>
-      </div>
     </div>
   );
 }
@@ -399,10 +264,8 @@ export default function HomepageClient({
   initialLabNotes = [],
   currentlyWatching = null,
 }: HomepageClientProps) {
-  const router = useRouter();
   const [recentBets, setRecentBets] = useState<HomepageBet[]>(initialRecentBets);
   const [pendingBets, setPendingBets] = useState<HomepageBet[]>(initialPendingBets);
-  const [showAllPending, setShowAllPending] = useState(false);
   const [last7DaysProfit, setLast7DaysProfit] = useState<number | null>(initialLast7?.total ?? null);
   const [last7DaysCount, setLast7DaysCount] = useState<number>(initialLast7?.count ?? 0);
   const [last7Error, setLast7Error] = useState<boolean>(!initialLast7);
@@ -463,7 +326,6 @@ export default function HomepageClient({
   }, [fetchData, hasInitialPayload]);
 
   const displayStats = combinedStats ?? getBaselineDisplayStats();
-  const displayedPendingBets = showAllPending ? pendingBets : pendingBets.slice(0, 5);
   const trackingPeriod = getTrackingMonths();
   const heroProofStats = [
     {
@@ -523,7 +385,7 @@ export default function HomepageClient({
         <div className="pointer-events-none absolute -right-36 top-0 h-[420px] w-[420px] rounded-full bg-[rgba(87,209,150,0.035)] blur-[120px]" />
 
         <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="grid items-start gap-8 lg:grid-cols-[1.2fr,0.8fr] lg:gap-16">
+          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(23rem,0.92fr)] lg:gap-10 xl:gap-14">
             <div className="lg:py-4">
               <HomepageReveal delay={80}>
                 <h1 className="text-[3rem] font-semibold leading-[0.98] tracking-[-0.045em] text-white sm:text-6xl md:text-7xl">
@@ -595,7 +457,7 @@ export default function HomepageClient({
                 <div className="mt-8 max-w-3xl rounded-[1.4rem] border border-[rgba(87,209,150,0.22)] bg-[linear-gradient(135deg,rgba(87,209,150,0.13),rgba(9,13,19,0.78)_34%,rgba(9,13,19,0.96))] p-2 shadow-[0_24px_80px_rgba(0,0,0,0.32)]">
                   <div className="mb-2 flex items-center justify-between px-2 pt-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.82)]">
                     <span>Public record</span>
-                    <span className="text-slate-500">Updated live</span>
+                    <span className="text-slate-500">Updated within a minute</span>
                   </div>
                   <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                     {heroProofStats.map((stat) => (
@@ -614,45 +476,15 @@ export default function HomepageClient({
             </div>
 
             <HomepageReveal delay={380} className="lg:mt-8">
-              <HomepageEdgeCard />
+              <TodaysEdge
+                picks={pendingBets}
+                lastSettled={recentBets[0] ?? null}
+                last7Profit={last7DaysProfit}
+              />
             </HomepageReveal>
           </div>
         </div>
       </section>
-
-      <section className="border-b border-slate-800/30 bg-[#0b0e13] py-16 md:py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.95)]">
-                Verified performance
-              </span>
-              <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Track record</h2>
-            </div>
-            <Link href="/track-record" className="shrink-0 text-sm font-medium text-slate-500 transition-colors hover:text-[var(--brand-green)]">
-              Full details {"\u2192"}
-            </Link>
-          </div>
-
-          <div className="grid gap-3 md:grid-cols-3">
-            <ProofStatCard
-              label="Overall ROI"
-              value={`${displayStats.overall.roi > 0 ? "+" : ""}${displayStats.overall.roi.toFixed(1)}%`}
-              sub="Combined public record across player props and ATP tennis"
-              accent
-            />
-            <ProofStatCard
-              label="Settled bets"
-              value={`${displayStats.overall.total_bets.toLocaleString()}+`}
-              sub="Every settled public pick stays in the record"
-            />
-            <ProofStatCard label="Tracking period" value={trackingPeriod} sub="Month-by-month record stays visible" accent />
-          </div>
-
-        </div>
-      </section>
-
-      <MonthlyBreakdownSection scope="combined" />
 
       <section id="markets" className="border-b border-slate-800/30 py-16 md:py-20 scroll-mt-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -680,87 +512,9 @@ export default function HomepageClient({
         </div>
       </section>
 
-      {pendingBets.length > 0 ? (
-        <section id="active-picks" className="scroll-mt-20 border-b border-slate-800/30 bg-[#0b0e13] py-16 md:py-20">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-8 sm:mb-10">
-              <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.95)]">Live now</span>
-              <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Active picks</h2>
-            </div>
-            <p className="mb-6 text-xs text-slate-500">Stake in units (1u = your standard stake). We typically recommend 0.5u to 2u per pick.</p>
-            <div className="overflow-hidden rounded-2xl border border-slate-700/40 bg-[#0c0f14]">
-              <div className="hidden overflow-x-auto md:block">
-                <PublicBetsTable bets={displayedPendingBets} mode="pending" />
-              </div>
-              <div className="divide-y divide-slate-800/40 md:hidden">
-                {displayedPendingBets.map((bet) => (
-                  <div
-                    key={bet.id}
-                    role="link"
-                    tabIndex={0}
-                    className="block cursor-pointer p-5 hover:bg-slate-800/20 active:bg-slate-800/30"
-                    onClick={() => router.push(`/tips/${slugifyTip(bet.event, bet.id)}`)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        router.push(`/tips/${slugifyTip(bet.event, bet.id)}`);
-                      }
-                    }}
-                  >
-                    <div className="mb-3 flex items-start gap-3">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-700/60 bg-slate-950/70">
-                        <MarketBadge market={bet.market} category={bet.category} event={bet.event} />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="mb-1 flex items-center justify-between gap-3">
-                          <span className="text-xs whitespace-nowrap text-slate-500">{formatMatchDate(bet.match_date)}</span>
-                          <span className="rounded bg-amber-500/20 px-2 py-0.5 font-mono text-xs text-amber-400">PENDING</span>
-                        </div>
-                        <div className="mb-1 font-medium leading-snug text-slate-200">{bet.event}</div>
-                        <div className="text-sm leading-snug text-slate-300">
-                          {bet.player ? <span>{bet.player} - </span> : null}
-                          {bet.selection}
-                        </div>
-                      </div>
-                    </div>
-                    <BetMobileMeta odds={bet.odds} bookmaker={bet.bookmaker} stake={bet.stake} />
-                  </div>
-                ))}
-              </div>
-              {pendingBets.length > 5 ? (
-                <div className="border-t border-slate-800/40 p-4 text-center">
-                  <button
-                    onClick={() => setShowAllPending(!showAllPending)}
-                    className="text-sm font-medium text-[var(--brand-green)] transition-colors hover:text-[var(--brand-green)]"
-                  >
-                    {showAllPending ? `Show Less (${pendingBets.length - 5} hidden)` : `Show All Active Picks (${pendingBets.length - 5} more)`}
-                  </button>
-                </div>
-              ) : null}
-            </div>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <Link
-                href="/tennis-tips#picks"
-                className="inline-flex items-center gap-3 rounded-full border border-slate-700/70 bg-slate-900/45 px-4 py-2.5 text-sm text-slate-200 transition-all hover:border-[rgba(87,209,150,0.35)] hover:bg-slate-900/70 hover:text-white"
-              >
-                <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-[var(--brand-green)]">Tennis</span>
-                <span className="font-medium">Open latest tips</span>
-              </Link>
-              <Link
-                href="/player-props#picks"
-                className="inline-flex items-center gap-3 rounded-full border border-slate-700/70 bg-slate-900/45 px-4 py-2.5 text-sm text-slate-200 transition-all hover:border-[rgba(87,209,150,0.35)] hover:bg-slate-900/70 hover:text-white"
-              >
-                <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-[var(--brand-green)]">Props</span>
-                <span className="font-medium">Open latest props</span>
-              </Link>
-            </div>
-          </div>
-        </section>
-      ) : null}
-
       <section className="border-b border-slate-800/30 py-16 md:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-[1fr,0.9fr] lg:gap-16">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:gap-16">
             <div className="lg:sticky lg:top-28 lg:self-start">
               <div className="mb-5 flex items-center gap-3">
                 <div className="h-10 w-[3px] rounded-full bg-[var(--brand-green)]" />
@@ -840,18 +594,10 @@ export default function HomepageClient({
               </div>
               <div className="divide-y divide-slate-800/40 md:hidden">
                 {recentBets.slice(0, 5).map((bet) => (
-                  <div
+                  <Link
                     key={bet.id}
-                    role="link"
-                    tabIndex={0}
+                    href={`/tips/${slugifyTip(bet.event, bet.id)}`}
                     className="block cursor-pointer p-5 hover:bg-slate-800/20 active:bg-slate-800/30"
-                    onClick={() => router.push(`/tips/${slugifyTip(bet.event, bet.id)}`)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        router.push(`/tips/${slugifyTip(bet.event, bet.id)}`);
-                      }
-                    }}
                   >
                     <div className="mb-2 flex items-start justify-between">
                       <div className="flex-1">
@@ -874,7 +620,7 @@ export default function HomepageClient({
                       profitLoss={bet.profit_loss}
                       showProfit
                     />
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -890,6 +636,8 @@ export default function HomepageClient({
           </div>
         </section>
       ) : null}
+
+      <MonthlyBreakdownSection scope="combined" />
 
       <section className="border-b border-slate-800/30 bg-[#0b0e13] py-16 md:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -937,7 +685,7 @@ export default function HomepageClient({
                 {
                   q: "How do I follow Il Margine's betting tips?",
                   title: "Where do the tips actually get posted?",
-                  summary: "Directly on the site. You get the market, price, bookmaker, and stake there without Telegram or a paywall.",
+                  summary: "Every pick is posted on the site. Football player-prop picks can also reach you through our free Telegram alerts.",
                 },
                 {
                   q: "Why does ROI matter more than win rate?",

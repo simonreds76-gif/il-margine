@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import ProfitProgressionPanel, { type CategoryProgressionRow } from "@/components/ProfitProgressionPanel";
 import PlayerPropsMatchGroups from "@/components/PlayerPropsMatchGroups";
+import PropsAlertsCta from "@/components/PropsAlertsCta";
+import SampleSizeBadge from "@/components/SampleSizeBadge";
 
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
@@ -254,6 +255,11 @@ export default function PlayerProps({
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
+      <PropsAlertsCta
+        source="player_props_persistent"
+        variant="pill"
+        className="fixed bottom-5 right-5 z-40 hidden lg:inline-flex"
+      />
       {/* Nav */}
             {/* Navigation is now in GlobalNav component in layout.tsx */}
 
@@ -285,6 +291,35 @@ export default function PlayerProps({
         </div>
       </section>
 
+      {/* Active Picks - id for deep link from homepage */}
+      <section id="picks" className="py-12 md:py-16 border-b border-slate-800/50 scroll-mt-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <span className="text-xs font-mono text-emerald-400 mb-2 block">ACTIVE SELECTIONS</span>
+              <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Current Picks</h2>
+            </div>
+            <span className="text-xs text-slate-500 hidden sm:block">Updates on site within a minute</span>
+          </div>
+          <p className="text-slate-500 text-xs mb-6">Stake in units (1u = your standard stake). We typically recommend 0.5u-2u per pick.</p>
+
+          {loading ? (
+            <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
+              <p className="text-slate-500">Loading...</p>
+            </div>
+          ) : filteredPending.length > 0 ? (
+            <PlayerPropsMatchGroups bets={filteredPending} mode="pending" />
+          ) : (
+            <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
+              <p className="text-slate-500">No active selections at the moment</p>
+              <p className="text-xs text-slate-600 mt-2">Check back soon for new selections</p>
+            </div>
+          )}
+
+          <PropsAlertsCta source="player_props_alerts" className="mt-6" />
+        </div>
+      </section>
+
       {/* League Tabs */}
       <section id="competition-record" className="scroll-mt-24 py-12 md:py-16 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -313,16 +348,27 @@ export default function PlayerProps({
                   </span>
                   <div className="min-w-0">
                     <span className="block truncate font-medium">{league.name}</span>
-                    <div className="mt-1 flex gap-3 text-xs">
-                      <span>{leagueStats.total_bets} bets</span>
-                      <span className={`${roiToneClass(leagueStats.roi)} font-mono`}>
-                        {leagueStats.roi > 0 ? "+" : ""}{leagueStats.roi.toFixed(1)}% ROI
-                      </span>
+                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+                      {leagueStats.total_bets > 0 ? (
+                        <>
+                          <span>{leagueStats.total_bets} bets</span>
+                          <span className={`${leagueStats.total_bets < 50 ? "text-slate-400/70" : roiToneClass(leagueStats.roi)} font-mono`}>
+                            {leagueStats.roi > 0 ? "+" : ""}{leagueStats.roi.toFixed(1)}% ROI
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-slate-500">0 bets</span>
+                      )}
                     </div>
+                    <SampleSizeBadge settled={leagueStats.total_bets} compact className="mt-1.5" />
                   </div>
                 </button>
               );
             })}
+          </div>
+
+          <div className="mb-4">
+            <SampleSizeBadge settled={currentStats.total_bets} />
           </div>
 
           {/* Stats */}
@@ -335,21 +381,23 @@ export default function PlayerProps({
               </div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className={`text-2xl font-bold ${roiToneClass(currentStats.roi)} font-mono mb-2`}>{currentStats.roi > 0 ? "+" : ""}{currentStats.roi.toFixed(1)}%</div>
+              <div className={`text-2xl font-bold ${currentStats.total_bets < 50 ? "text-slate-300/70" : roiToneClass(currentStats.roi)} font-mono mb-2`}>
+                {currentStats.total_bets > 0 ? `${currentStats.roi > 0 ? "+" : ""}${currentStats.roi.toFixed(1)}%` : "—"}
+              </div>
               <div className="text-xs text-slate-500 mb-3">ROI</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                 <div className={`h-full bg-gradient-to-r ${roiBar} rounded-full`} style={{ width: `${Math.min(Math.abs(currentStats.roi) * 3, 100)}%` }} />
               </div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className="text-2xl font-bold text-slate-100 font-mono mb-2">{currentStats.win_rate.toFixed(1)}%</div>
+              <div className="text-2xl font-bold text-slate-100 font-mono mb-2">{currentStats.total_bets > 0 ? `${currentStats.win_rate.toFixed(1)}%` : "—"}</div>
               <div className="text-xs text-slate-500 mb-3">Win Rate</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                 <div className={`h-full bg-gradient-to-r ${neutralBar} rounded-full`} style={{ width: `${currentStats.win_rate}%` }} />
               </div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className="text-2xl font-bold text-slate-100 font-mono mb-2">{formatOdds(currentStats.avg_odds)}</div>
+              <div className="text-2xl font-bold text-slate-100 font-mono mb-2">{currentStats.total_bets > 0 ? formatOdds(currentStats.avg_odds) : "—"}</div>
               <div className="text-xs text-slate-500 mb-3">Avg Odds</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                 <div className={`h-full bg-gradient-to-r ${neutralBar} rounded-full`} style={{ width: `${(currentStats.avg_odds / 3) * 100}%` }} />
@@ -365,59 +413,6 @@ export default function PlayerProps({
             progression shows any pre-tracking baseline as a dashed aggregate summary, then uses settled public ledger
             rows for the selected tab.
           </p>
-        </div>
-      </section>
-
-      {/* Active Picks - id for deep link from homepage */}
-      <section id="picks" className="py-12 md:py-16 border-b border-slate-800/50 scroll-mt-6">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <span className="text-xs font-mono text-emerald-400 mb-2 block">ACTIVE SELECTIONS</span>
-              <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Current Picks</h2>
-            </div>
-            <span className="text-xs text-slate-500 hidden sm:block">Updated in real-time on site</span>
-          </div>
-          <p className="text-slate-500 text-xs mb-6">Stake in units (1u = your standard stake). We typically recommend 0.5u-2u per pick.</p>
-
-          {loading ? (
-            <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
-              <p className="text-slate-500">Loading...</p>
-            </div>
-          ) : filteredPending.length > 0 ? (
-            <PlayerPropsMatchGroups bets={filteredPending} mode="pending" />
-          ) : (
-            <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
-              <p className="text-slate-500">No active selections at the moment</p>
-              <p className="text-xs text-slate-600 mt-2">Check back soon for new selections</p>
-            </div>
-          )}
-
-          <div className="mt-6 p-4 bg-slate-900/30 rounded-lg border border-slate-800 text-center">
-            <div className="flex flex-col gap-4 text-left sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-start gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-sky-400/25 bg-sky-400/10 text-sky-300">
-                  <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true" fill="currentColor">
-                    <path d="M21.8 3.6 18.6 20c-.2 1.2-.9 1.5-1.9.9l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9-8.1c.4-.4-.1-.6-.6-.2L6.1 13.8l-4.8-1.5c-1-.3-1-1 .2-1.5L20.3 3.5c.9-.3 1.7.2 1.5 1.1Z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-slate-100">Never miss a player-prop pick</h3>
-                  <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-400">
-                    Join the free Telegram alerts channel. Every new selection is sent with the odds, stake and a link to the full pick as soon as it is posted.
-                  </p>
-                </div>
-              </div>
-              <Link
-                href="/go/telegram?source=player_props_alerts"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl border border-sky-300/30 bg-sky-400/12 px-5 py-3 text-sm font-semibold text-sky-100 transition hover:border-sky-300/50 hover:bg-sky-400/20"
-              >
-                Join free alerts
-              </Link>
-            </div>
-          </div>
         </div>
       </section>
 
