@@ -4,8 +4,10 @@
     "odds_api_io": {
       "label": "Odds-API.io free plan",
       "requests_per_hour": 100,
-      "bookmakers": 2,
-      "source": "https://odds-api.io/#pricing"
+      "requests_per_day": 500,
+      "bookmaker_scope": "recreational only",
+      "effective_from": "2026-07-26",
+      "source": "https://docs.odds-api.io/changelog#free-tier-changes"
     },
     "api_football": {
       "label": "API-Football free-plan allowance",
@@ -52,8 +54,8 @@
           "request_caps": {"odds_api_io": 50, "api_football": 90}
         },
         {
-          "cron": "*/30 9-22 * * *",
-          "request_caps": {"odds_api_io": 35}
+          "cron": "15 9-22 * * *",
+          "request_caps": {"odds_api_io": 25}
         }
       ]
     },

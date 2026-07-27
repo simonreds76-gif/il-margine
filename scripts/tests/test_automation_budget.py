@@ -21,6 +21,10 @@ class AutomationBudgetTests(unittest.TestCase):
             report["providers"]["odds_api_io"]["requests_per_hour"],
         )
         self.assertLessEqual(
+            report["providers"]["odds_api_io"]["max_requests_in_one_day"],
+            report["providers"]["odds_api_io"]["requests_per_day"],
+        )
+        self.assertLessEqual(
             report["providers"]["api_football"]["max_requests_in_one_day"],
             report["providers"]["api_football"]["requests_per_day"],
         )
@@ -42,14 +46,18 @@ class AutomationBudgetTests(unittest.TestCase):
         counts_workflow = (ROOT / ".github" / "workflows" / "football-counts-vnext-shadow.yml").read_text(encoding="utf-8")
         scraper = (ROOT / "scripts" / "team-shots-scrape-odds.py").read_text(encoding="utf-8")
         tennis = (ROOT / ".github" / "workflows" / "tennis-props-bet365-refresh.yml").read_text(encoding="utf-8")
+        tennis_scraper = (ROOT / "scripts" / "tennis-props-scrape-bet365.py").read_text(encoding="utf-8")
         self.assertIn("--max-odds-requests-per-league 1", counts_workflow)
         self.assertIn("--max-odds-requests-per-league 2", counts_workflow)
-        self.assertIn("--max-odds-api-http-requests 35", counts_workflow)
+        self.assertIn('cron: "15 9-22 * * *"', counts_workflow)
+        self.assertIn("--max-odds-api-http-requests 25", counts_workflow)
         self.assertIn("--max-odds-api-http-requests 50", counts_workflow)
         self.assertIn('"--max-odds-requests-per-league"', scraper)
         self.assertIn('"--max-odds-api-http-requests"', scraper)
         self.assertIn("Odds-API.io HTTP request budget exhausted", scraper)
         self.assertIn("github.event.schedule != '25 8 * * *'", tennis)
+        self.assertIn("if args.probe_markets:", tennis_scraper)
+        self.assertNotIn("if args.probe_markets or not rows:", tennis_scraper)
 
 
 if __name__ == "__main__":

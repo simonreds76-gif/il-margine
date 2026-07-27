@@ -771,7 +771,9 @@ def main() -> None:
     # the golden data branch remains the only runtime branch dependency.
     history_out = Path(args.history_out) if args.history_out else OUT_DIR / f"bet365-lines-history-{month}.csv"
     print(f"parsed supported tennis market rows: {len(rows)}")
-    if args.probe_markets or not rows:
+    # Diagnostic endpoint probes are intentionally manual. A normal zero-row
+    # capture must remain inside the registered eight-request workflow ceiling.
+    if args.probe_markets:
         run_zero_row_market_probe(api_key, payload or events, args.bookmakers)
     if args.dry_run:
         for row in rows[:20]:
