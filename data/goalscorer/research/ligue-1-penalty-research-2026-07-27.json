@@ -1,0 +1,911 @@
+{
+  "schema_version": "1.0",
+  "audit": {
+    "league": "Ligue 1",
+    "season": "2026/27",
+    "researched_at": "2026-07-27",
+    "clubs_expected": 18,
+    "clubs_researched": 18,
+    "input_files": [
+      "C:\\Users\\44746\\Downloads\\il-margine\\.worktrees\\model-audit-integrity\\data\\goalscorer\\ligue-1-penalty-takers.json",
+      "C:\\Users\\44746\\Downloads\\il-margine\\.worktrees\\model-audit-integrity\\data\\goalscorer\\club-penalty-season.json"
+    ],
+    "output_file": "C:\\Users\\44746\\Downloads\\il-margine\\.worktrees\\model-audit-integrity\\data\\goalscorer\\research\\ligue-1-penalty-research-2026-07-27.json",
+    "season_config": {
+      "status": "preseason",
+      "ligue_1_start": "2026-08-21",
+      "membership_source": "https://ligue1.com/en/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released"
+    },
+    "method": [
+      "Regular-time penalties were evaluated separately from shootouts.",
+      "A backup was not promoted solely because the filed primary was absent, injured or departed.",
+      "Current official events and direct hierarchy statements outweighed historical totals.",
+      "Official Ligue 1 Fantasy and Transfermarkt histories were supporting evidence rather than substitutes for current direct evidence.",
+      "X and Reddit leads were not used dispositively without corroboration from a higher-tier source."
+    ]
+  },
+  "verdict_definitions": {
+    "KEEP": "Retain the filed order because available evidence does not justify a change.",
+    "REVIEW": "The filed primary remains plausible, but part of the current hierarchy is uncertain.",
+    "CHANGE_CANDIDATE": "Evidence supports changing or vacating at least one material position.",
+    "UNRESOLVED": "No current order can be recommended defensibly."
+  },
+  "clubs": [
+    {
+      "club": "Angers SCO",
+      "filed_hierarchy": [
+        "Goduine Koyalipou",
+        "Branco van den Boomen",
+        "Amine Sbaï"
+      ],
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_hierarchy": [
+        null,
+        "Branco van den Boomen",
+        "Amine Sbaï"
+      ],
+      "confidence": "LOW",
+      "priority": "HIGH",
+      "reason": "Koyalipou is no longer at Angers. Van den Boomen and Sbaï have prior attempts, but no current direct evidence establishes either as the 2026/27 primary.",
+      "evidence": [
+        {
+          "date": "2026-05-03",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "AJ Auxerre",
+          "title": "En maîtrise, l'AJA domine Angers",
+          "url": "https://www.aja.fr/en-maitrise-laja-domine-angers/",
+          "summary": "Van den Boomen had a 51st-minute penalty saved before Koyalipou converted a separate 77th-minute penalty. The sequence does not establish a coexistence hierarchy because the two attempts occurred in different availability contexts."
+        },
+        {
+          "date": "2026-05-11",
+          "type": "SPECIALIST_HIERARCHY",
+          "source": "Ligue 1 Fantasy",
+          "title": "FL1 : Les tireurs de pénaltys et de coups de pied arrêtés par club",
+          "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+          "summary": "Recorded Koyalipou at 1/1, Sbaï at 0/1 and Van den Boomen at 0/1 after matchday 33."
+        },
+        {
+          "date": "2026-07-16",
+          "type": "SQUAD_STATUS",
+          "source": "KV Kortrijk",
+          "title": "Goduine Koyalipou joins KV Kortrijk",
+          "url": "https://www.kvk.be/nieuws/goduine-koyalipou/",
+          "summary": "KV Kortrijk announced Koyalipou's arrival on loan from RC Lens, confirming that the filed Angers primary is not in the current Angers squad."
+        }
+      ]
+    },
+    {
+      "club": "AJ Auxerre",
+      "filed_hierarchy": [
+        "Lassine Sinayoko",
+        "Josué Casimir",
+        null
+      ],
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_hierarchy": [
+        null,
+        "Josué Casimir",
+        null
+      ],
+      "confidence": "LOW",
+      "priority": "HIGH",
+      "reason": "Sinayoko has transferred to Paris FC. Casimir has a documented attempt but subsequently lost the role to Sinayoko, so his current promotion cannot be assumed.",
+      "evidence": [
+        {
+          "date": "2025-08-17",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "L'Équipe",
+          "title": "Auxerre 1-0 Lorient, Ligue 1 : résumé du match",
+          "url": "https://www.lequipe.fr/Football/match-direct/ligue-1/2025-2026/auxerre-lorient-live/675797",
+          "summary": "Casimir missed a 69th-minute penalty while Sinayoko was also in the starting XI. Later events during the season placed Sinayoko ahead."
+        },
+        {
+          "date": "2026-05-11",
+          "type": "SPECIALIST_HIERARCHY",
+          "source": "Ligue 1 Fantasy",
+          "title": "FL1 : Les tireurs de pénaltys et de coups de pied arrêtés par club",
+          "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+          "summary": "Recorded Sinayoko at 3/4 and Casimir at 0/1."
+        },
+        {
+          "date": "2026-07-21",
+          "type": "SQUAD_STATUS",
+          "source": "Le Parisien",
+          "title": "Le Paris FC officialise l'arrivée de Lassine Sinayoko",
+          "url": "https://www.leparisien.fr/sports/football/paris-fc/le-profil-parfait-pour-une-belle-integration-le-paris-fc-officialise-larrivee-de-lassine-sinayoko-21-07-2026-5GPSEYE5YVBHRPQ6YNQRRLDQGI.php",
+          "summary": "Reported Paris FC's official signing of Sinayoko through 2029, confirming his departure from Auxerre."
+        }
+      ]
+    },
+    {
+      "club": "Stade Brestois 29",
+      "filed_hierarchy": [
+        "Romain Del Castillo",
+        "Kenny Lala",
+        "Ludovic Ajorque"
+      ],
+      "verdict": "REVIEW",
+      "recommended_hierarchy": [
+        "Romain Del Castillo",
+        null,
+        null
+      ],
+      "confidence": "MEDIUM",
+      "priority": "MEDIUM",
+      "reason": "Del Castillo is strongly established as primary, but no recent direct or specialist evidence supports Lala and Ajorque as the ordered backups.",
+      "evidence": [
+        {
+          "date": "2026-02-01",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "L'Équipe",
+          "title": "Caractère retrouvé, remontée, réconciliation avec les supporters : Nice avance malgré son match nul",
+          "url": "https://www.lequipe.fr/Football/Article/Caractere-retrouve-remontee-reconciliation-avec-les-supporters-nice-avance-malgre-son-match-nul/1638628",
+          "summary": "Del Castillo converted Brest's 15th-minute penalty at Nice."
+        },
+        {
+          "date": "2026-05-11",
+          "type": "SPECIALIST_HIERARCHY",
+          "source": "Ligue 1 Fantasy",
+          "title": "FL1 : Les tireurs de pénaltys et de coups de pied arrêtés par club",
+          "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+          "summary": "Listed Del Castillo as Brest's only penalty taker and recorded six conversions from eight attempts."
+        },
+        {
+          "date": "2026-02-01",
+          "type": "COMMUNITY_LEAD",
+          "source": "Reddit",
+          "title": "Nice 0-1 Brest - Romain Del Castillo penalty 15'",
+          "url": "https://www.reddit.com/r/soccer/comments/1qt5bxz/nice_01_brest_romain_del_castillo_penalty_15/",
+          "summary": "A community-posted clip corroborated the Nice event but supplied no additional hierarchy evidence and was not used independently."
+        }
+      ]
+    },
+    {
+      "club": "Le Havre AC",
+      "filed_hierarchy": [
+        "Yanis Zouaoui",
+        "Issa Soumaré",
+        "Abdoulaye Touré"
+      ],
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_hierarchy": [
+        "Yanis Zouaoui",
+        null,
+        "Abdoulaye Touré"
+      ],
+      "confidence": "MEDIUM",
+      "priority": "HIGH",
+      "reason": "Zouaoui has late-season primary evidence, but Soumaré has left for Rennes. Touré remains a candidate with prior history but is not automatically promoted into the vacant second slot.",
+      "evidence": [
+        {
+          "date": "2026-04-26",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "Le Havre AC",
+          "title": "HAC - FC Metz : une amère folie",
+          "url": "https://hac.football/fr/posts/hac-fc-metz-une-amere-folie",
+          "summary": "Zouaoui converted against Metz in a late-season competitive match, providing the strongest recent evidence for the primary slot."
+        },
+        {
+          "date": "2026-05-11",
+          "type": "SPECIALIST_HIERARCHY",
+          "source": "Ligue 1 Fantasy",
+          "title": "FL1 : Les tireurs de pénaltys et de coups de pied arrêtés par club",
+          "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+          "summary": "Recorded Soumaré at 1/3, Zouaoui at 1/1, Sofiane Boufal at 0/1 and Touré at 0/1."
+        },
+        {
+          "date": "2026-06-16",
+          "type": "SQUAD_STATUS",
+          "source": "Stade Rennais",
+          "title": "Issa Soumaré est Rouge et Noir",
+          "url": "https://www.staderennais.com/en/news/issa-soumare-est-rouge-et-noir",
+          "summary": "Rennes announced Soumaré's signing, confirming that Le Havre's filed second taker has departed."
+        }
+      ]
+    },
+    {
+      "club": "Le Mans FC",
+      "filed_hierarchy": [
+        null,
+        null,
+        null
+      ],
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_hierarchy": [
+        "Dame Gueye",
+        "Antoine Rabillard",
+        null
+      ],
+      "confidence": "MEDIUM",
+      "priority": "HIGH",
+      "reason": "The blank filing omits two current players with recent regular-time penalty history. Gueye has the larger recent sample and remains active in the current preseason group.",
+      "evidence": [
+        {
+          "date": "2025-08-22",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "L'Équipe",
+          "title": "Le Mans 1-0 Bastia, Ligue 2 : résumé du match",
+          "url": "https://www.lequipe.fr/Football/match-direct/ligue-2/2025-2026/le-mans-bastia-live/676119",
+          "summary": "Gueye converted Le Mans' 90+3-minute penalty against Bastia."
+        },
+        {
+          "date": "2025/26",
+          "type": "SUPPORTING_HISTORY",
+          "source": "Transfermarkt",
+          "title": "Le Mans FC - Penalty statistics",
+          "url": "https://www.transfermarkt.com/le-mans-fc/elfmeterstatistik/verein/1164",
+          "summary": "The 2025/26 supporting record showed Gueye with three converted regular-time penalties and Rabillard with one."
+        },
+        {
+          "date": "2026-06-23",
+          "type": "SQUAD_STATUS",
+          "source": "Le Mans FC",
+          "title": "Antoine Rabillard prolonge",
+          "url": "https://www.lemansfc.fr/index.php?actu=4075&section=actualites-contenu",
+          "summary": "Le Mans announced Rabillard's contract extension, confirming that he remains a current candidate."
+        },
+        {
+          "date": "2026-07-19",
+          "type": "PRESEASON_SQUAD_STATUS",
+          "source": "Le Mans FC",
+          "title": "LMFC vs VFC : 2-3",
+          "url": "https://lemansfc.fr/index.php?actu=4105&section=actualites-contenu",
+          "summary": "Gueye played in Le Mans' first 2026/27 preparation match and scored from open play, confirming current squad involvement."
+        }
+      ]
+    },
+    {
+      "club": "RC Lens",
+      "filed_hierarchy": [
+        "Florian Thauvin",
+        "Odsonne Édouard",
+        "Wesley Saïd"
+      ],
+      "verdict": "KEEP",
+      "recommended_hierarchy": [
+        "Florian Thauvin",
+        "Odsonne Édouard",
+        "Wesley Saïd"
+      ],
+      "confidence": "HIGH",
+      "priority": "LOW",
+      "reason": "A direct report identifies Thauvin as the designated taker, while the event and specialist records support Édouard and Saïd as alternatives.",
+      "evidence": [
+        {
+          "date": "2025-10-26",
+          "type": "DIRECT_STATEMENT",
+          "source": "L'Équipe",
+          "title": "Florian Thauvin n'avait pas forcément envie de tirer le penalty face à l'OM",
+          "url": "https://www.lequipe.fr/Football/Actualites/Florian-thauvin-n-avait-pas-forcement-envie-de-tirer-le-penalty-face-a-l-om/1604808",
+          "summary": "The report identified Thauvin as Lens' designated taker and explained that he allowed Édouard to take against Marseille."
+        },
+        {
+          "date": "2026-05-11",
+          "type": "SPECIALIST_HIERARCHY",
+          "source": "Ligue 1 Fantasy",
+          "title": "FL1 : Les tireurs de pénaltys et de coups de pied arrêtés par club",
+          "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+          "summary": "Recorded Thauvin at 2/3, Édouard at 1/1 and Saïd at 1/1."
+        },
+        {
+          "date": "2026-07-25",
+          "type": "PRESEASON_REGULAR_TIME_PENALTY",
+          "source": "RC Lens",
+          "title": "RC Lens - Royal Charleroi SC : match de préparation",
+          "url": "https://www.rclens.fr/fr/rclens-royal-charleroi-sc-preparation-20260725",
+          "summary": "Thorgan Hazard took a friendly penalty in the second-half XI after Thauvin and Édouard had played in the first half. The event therefore does not change the filed hierarchy."
+        }
+      ]
+    },
+    {
+      "club": "LOSC Lille",
+      "filed_hierarchy": [
+        "Olivier Giroud",
+        "Matias Fernandez-Pardo",
+        "Nabil Bentaleb"
+      ],
+      "verdict": "KEEP",
+      "recommended_hierarchy": [
+        "Olivier Giroud",
+        "Matias Fernandez-Pardo",
+        "Nabil Bentaleb"
+      ],
+      "confidence": "HIGH",
+      "priority": "LOW",
+      "reason": "Giroud took a competitive penalty while Fernandez-Pardo was also playing, and the official specialist order exactly matches the filing.",
+      "evidence": [
+        {
+          "date": "2026-02-22",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "LOSC",
+          "title": "Angers-LOSC (0-1) : une victoire fondatrice",
+          "url": "https://www.losc.fr/actualites/2026-02-22/angers-losc-le-compte-rendu",
+          "summary": "Giroud converted a first-half penalty at Angers while Fernandez-Pardo was also in Lille's starting XI."
+        },
+        {
+          "date": "2026-05-11",
+          "type": "SPECIALIST_HIERARCHY",
+          "source": "Ligue 1 Fantasy",
+          "title": "FL1 : Les tireurs de pénaltys et de coups de pied arrêtés par club",
+          "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+          "summary": "Recorded Giroud at 3/4, Fernandez-Pardo at 2/2 and Bentaleb at 1/1."
+        },
+        {
+          "date": "2026-06-08",
+          "type": "SQUAD_STATUS",
+          "source": "Ligue 1",
+          "title": "En prolongeant, Olivier Giroud va entrer dans l'histoire",
+          "url": "https://ligue1.com/fr/articles/l1_article_5277-en-prolongeant-olivier-giroud-va-entrer-dans-l-histoire",
+          "summary": "Confirmed Giroud's extension for the 2026/27 season."
+        }
+      ]
+    },
+    {
+      "club": "FC Lorient",
+      "filed_hierarchy": [
+        "Pablo Pagis",
+        "Bamba Dieng",
+        "Aiyegun Tosin"
+      ],
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_hierarchy": [
+        "Aiyegun Tosin",
+        null,
+        null
+      ],
+      "confidence": "MEDIUM",
+      "priority": "HIGH",
+      "reason": "Pagis and Dieng have left. Aiyegun has independent current-preseason penalty evidence, making him the only defensible current recommendation.",
+      "evidence": [
+        {
+          "date": "2026-05-11",
+          "type": "SPECIALIST_HIERARCHY",
+          "source": "Ligue 1 Fantasy",
+          "title": "FL1 : Les tireurs de pénaltys et de coups de pied arrêtés par club",
+          "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+          "summary": "Recorded Pagis at 2/2, Dieng at 1/1 and Aiyegun at 0/1."
+        },
+        {
+          "date": "2026-07-11",
+          "type": "PRESEASON_REGULAR_TIME_PENALTY",
+          "source": "L'Équipe",
+          "title": "Concarneau 1-2 Lorient, match amical",
+          "url": "https://www.lequipe.fr/Football/match-direct/matches-amicaux-l1-intersaison/2026-2027/concarneau-lorient-live/695545",
+          "summary": "Aiyegun converted Lorient's 58th-minute penalty in the current preseason."
+        },
+        {
+          "date": "2026-07-17",
+          "type": "SQUAD_STATUS",
+          "source": "FC Lorient",
+          "title": "Pablo Pagis s'engage avec le Paris FC",
+          "url": "https://www.fclorient.bzh/pablo-pagis-sengage-avec-le-paris-fc/",
+          "summary": "Lorient announced Pagis' permanent transfer to Paris FC."
+        },
+        {
+          "date": "2026-05-16",
+          "type": "SQUAD_STATUS",
+          "source": "L'Équipe",
+          "title": "Bamba Dieng ne prolongera pas à Lorient",
+          "url": "https://www.lequipe.fr/Football/Actualites/Mercato-bamba-dieng-ne-prolongera-pas-a-lorient/1676203",
+          "summary": "Reported that Dieng would not extend his Lorient contract."
+        }
+      ]
+    },
+    {
+      "club": "Olympique Lyonnais",
+      "filed_hierarchy": [
+        "Corentin Tolisso",
+        "Endrick",
+        "Ainsley Maitland-Niles"
+      ],
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_hierarchy": [
+        "Corentin Tolisso",
+        null,
+        "Ainsley Maitland-Niles"
+      ],
+      "confidence": "MEDIUM",
+      "priority": "HIGH",
+      "reason": "Tolisso is independently established as primary. Endrick's loan has ended, while Maitland-Niles is retained in his existing third slot rather than promoted automatically.",
+      "evidence": [
+        {
+          "date": "2026-03-08",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "L'Équipe",
+          "title": "OL 1-1 Paris FC, Ligue 1 : résumé du match",
+          "url": "https://www.lequipe.fr/Football/match-direct/ligue-1/2025-2026/lyon-paris-fc-live/676013",
+          "summary": "Tolisso converted a 90+6-minute penalty while Endrick was also on the pitch."
+        },
+        {
+          "date": "2026-05-11",
+          "type": "SPECIALIST_HIERARCHY",
+          "source": "Ligue 1 Fantasy",
+          "title": "FL1 : Les tireurs de pénaltys et de coups de pied arrêtés par club",
+          "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+          "summary": "Recorded Tolisso at 2/3, Endrick at 1/1 and Maitland-Niles at 0/1."
+        },
+        {
+          "date": "2025-12-23",
+          "type": "SQUAD_STATUS",
+          "source": "Real Madrid",
+          "title": "Comunicado Oficial: Endrick",
+          "url": "https://www.realmadrid.com/pt-PT/noticias/club/conferencias-de-imprensa/comunicado-oficial-endrick-23-12-2025",
+          "summary": "The official loan announcement specified that Endrick's Lyon spell ended on June 30, 2026."
+        }
+      ]
+    },
+    {
+      "club": "Olympique de Marseille",
+      "filed_hierarchy": [
+        "Mason Greenwood",
+        "Amine Gouiri",
+        "Pierre-Emile Højbjerg"
+      ],
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_hierarchy": [
+        null,
+        "Amine Gouiri",
+        "Pierre-Emile Højbjerg"
+      ],
+      "confidence": "LOW",
+      "priority": "HIGH",
+      "reason": "Greenwood has transferred to Fenerbahçe. No current regular-time event or direct statement establishes Gouiri or Højbjerg as Marseille's replacement primary.",
+      "evidence": [
+        {
+          "date": "2026-05-11",
+          "type": "SPECIALIST_HIERARCHY",
+          "source": "Ligue 1 Fantasy",
+          "title": "FL1 : Les tireurs de pénaltys et de coups de pied arrêtés par club",
+          "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+          "summary": "Listed Greenwood as Marseille's only penalty taker and recorded six conversions from eight attempts."
+        },
+        {
+          "date": "2026-07-14",
+          "type": "SQUAD_STATUS",
+          "source": "L'Équipe",
+          "title": "C'est officiel : Mason Greenwood quitte l'OM et rejoint Fenerbahçe",
+          "url": "https://www.lequipe.fr/Football/Actualites/C-est-officiel-mason-greenwood-quitte-l-om-et-rejoint-fenerbahce/1704380",
+          "summary": "Confirmed Greenwood's permanent transfer from Marseille to Fenerbahçe."
+        },
+        {
+          "date": "2026-07-21",
+          "type": "SQUAD_STATUS",
+          "source": "UEFA",
+          "title": "Mason Greenwood | Fenerbahçe | UEFA Champions League 2026/27",
+          "url": "https://www.uefa.com/uefachampionsleague/clubs/players/250116767--mason-greenwood/",
+          "summary": "UEFA's 2026/27 competition profile lists Greenwood as a Fenerbahçe player."
+        }
+      ]
+    },
+    {
+      "club": "AS Monaco",
+      "filed_hierarchy": [
+        "Folarin Balogun",
+        "Ansu Fati",
+        null
+      ],
+      "verdict": "KEEP",
+      "recommended_hierarchy": [
+        "Folarin Balogun",
+        "Ansu Fati",
+        null
+      ],
+      "confidence": "HIGH",
+      "priority": "LOW",
+      "reason": "Multiple coexistence events and the season totals support Balogun ahead of Fati. No third taker reaches the evidence threshold.",
+      "evidence": [
+        {
+          "date": "2026-03-22",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "AS Monaco",
+          "title": "A resilient AS Monaco beat Lyon to close on the podium",
+          "url": "https://www.asmonaco.com/en/news/a-resilient-as-monaco-beat-lyon-to-close-on-the-podium",
+          "summary": "Balogun won and converted Monaco's penalty after Fati had entered the match."
+        },
+        {
+          "date": "2026-04-19",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "AS Monaco",
+          "title": "A spirited AS Monaco share the points with AJ Auxerre",
+          "url": "https://www.asmonaco.com/en/news/un-as-monaco-a-reaction-partage-les-points-avec-l-aj-auxerre",
+          "summary": "Balogun again won and converted a penalty while Fati was involved in the match."
+        },
+        {
+          "date": "2026-05-11",
+          "type": "SPECIALIST_HIERARCHY",
+          "source": "Ligue 1 Fantasy",
+          "title": "FL1 : Les tireurs de pénaltys et de coups de pied arrêtés par club",
+          "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+          "summary": "Recorded Balogun at 3/3 and Fati at 3/4."
+        },
+        {
+          "date": "2026-06-30",
+          "type": "SQUAD_STATUS",
+          "source": "AS Monaco",
+          "title": "Ansu Fati with AS Monaco until 2030",
+          "url": "https://www.asmonaco.com/en/news/ansu-fati-avec-l-as-monaco-jusqu-en-2030",
+          "summary": "Monaco announced Fati's permanent signing, confirming that both recommended players remain current."
+        }
+      ]
+    },
+    {
+      "club": "OGC Nice",
+      "filed_hierarchy": [
+        "Sofiane Diop",
+        "Elye Wahi",
+        "Terem Moffi"
+      ],
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_hierarchy": [
+        "Sofiane Diop",
+        null,
+        "Terem Moffi"
+      ],
+      "confidence": "MEDIUM",
+      "priority": "HIGH",
+      "reason": "Diop remains supported as primary. Wahi's loan has ended, and Moffi is retained in his existing third slot rather than promoted solely because Wahi departed.",
+      "evidence": [
+        {
+          "date": "2026-05-11",
+          "type": "SPECIALIST_HIERARCHY",
+          "source": "Ligue 1 Fantasy",
+          "title": "FL1 : Les tireurs de pénaltys et de coups de pied arrêtés par club",
+          "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+          "summary": "Recorded Diop at 2/2 and Wahi at 1/1."
+        },
+        {
+          "date": "2026-04-22",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "OGC Nice",
+          "title": "Le Gym reach the Coupe de France final",
+          "url": "https://www.ogcnice.com/en/resume/130266/le-gym-reach-the-coupe-de-france-final.html",
+          "summary": "Wahi converted a penalty while Diop was an unused substitute. Because Diop was absent from the pitch, the event does not displace him."
+        },
+        {
+          "date": "2026-01-01",
+          "type": "SQUAD_STATUS",
+          "source": "Eintracht Frankfurt",
+          "title": "Abgang Elye Wahi",
+          "url": "https://profis.eintracht.de/news/abgang-elye-wahi-174538/",
+          "summary": "The official loan announcement stated that Wahi's Nice spell lasted only to the end of 2025/26."
+        },
+        {
+          "date": "2026-07-18",
+          "type": "PRESEASON_REGULAR_TIME_PENALTY",
+          "source": "OGC Nice",
+          "title": "Une bonne mise en route",
+          "url": "https://www.ogcnice.com/fr/article/130582/une-bonne-mise-en-route.html",
+          "summary": "A youth player took a friendly penalty in a different half from Diop. The event does not establish a new senior hierarchy."
+        }
+      ]
+    },
+    {
+      "club": "Paris FC",
+      "filed_hierarchy": [
+        "Ilan Kebbal",
+        "Jean-Philippe Krasso",
+        "Willem Geubbels"
+      ],
+      "verdict": "REVIEW",
+      "recommended_hierarchy": [
+        "Ilan Kebbal",
+        null,
+        null
+      ],
+      "conditional_candidates": [
+        "Lassine Sinayoko",
+        "Pablo Pagis",
+        "Jean-Philippe Krasso",
+        "Willem Geubbels"
+      ],
+      "confidence": "LOW",
+      "priority": "HIGH",
+      "reason": "Kebbal remains the incumbent, but Paris FC has added two proven takers in Sinayoko and Pagis while the filed backups face uncertain futures. No Paris FC event currently ranks the new candidates.",
+      "evidence": [
+        {
+          "date": "2026-05-11",
+          "type": "SPECIALIST_HIERARCHY",
+          "source": "Ligue 1 Fantasy",
+          "title": "FL1 : Les tireurs de pénaltys et de coups de pied arrêtés par club",
+          "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+          "summary": "Recorded Kebbal at 3/4, Krasso at 1/1 and Geubbels at 1/1."
+        },
+        {
+          "date": "2026-07-17",
+          "type": "SQUAD_STATUS",
+          "source": "FC Lorient",
+          "title": "Pablo Pagis s'engage avec le Paris FC",
+          "url": "https://www.fclorient.bzh/pablo-pagis-sengage-avec-le-paris-fc/",
+          "summary": "Confirmed Paris FC's signing of Pagis, who had converted both of his Lorient penalties in 2025/26."
+        },
+        {
+          "date": "2026-07-21",
+          "type": "SQUAD_STATUS",
+          "source": "Le Parisien",
+          "title": "Le Paris FC officialise l'arrivée de Lassine Sinayoko",
+          "url": "https://www.leparisien.fr/sports/football/paris-fc/le-profil-parfait-pour-une-belle-integration-le-paris-fc-officialise-larrivee-de-lassine-sinayoko-21-07-2026-5GPSEYE5YVBHRPQ6YNQRRLDQGI.php",
+          "summary": "Confirmed Paris FC's signing of Sinayoko, Auxerre's 3/4 taker from 2025/26."
+        },
+        {
+          "date": "2026-07-23",
+          "type": "SQUAD_STATUS",
+          "source": "L'Équipe",
+          "title": "Arrivées de Sinayoko et de Pagis, départs probables de Geubbels et de Krasso",
+          "url": "https://www.lequipe.fr/Football/Article/Arrivees-de-sinayoko-et-de-pagis-departs-probables-de-geubbels-et-de-krasso-l-ambitieuse-refonte-du-secteur-offensif-du-paris-fc-au-mercato/1706636",
+          "summary": "Reported that both filed backups could leave during Paris FC's attacking rebuild."
+        }
+      ]
+    },
+    {
+      "club": "Paris Saint-Germain",
+      "filed_hierarchy": [
+        "Ousmane Dembélé",
+        "Khvicha Kvaratskhelia",
+        "Vitinha"
+      ],
+      "verdict": "KEEP",
+      "recommended_hierarchy": [
+        "Ousmane Dembélé",
+        "Khvicha Kvaratskhelia",
+        "Vitinha"
+      ],
+      "confidence": "HIGH",
+      "priority": "LOW",
+      "reason": "The latest high-stakes regular-time event directly confirms Dembélé, with Kvaratskhelia winning the penalty and Vitinha participating in the handover and protection process.",
+      "evidence": [
+        {
+          "date": "2026-05-30",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "Paris Saint-Germain",
+          "title": "Paris vs Arsenal",
+          "url": "https://www.psg.fr/matchs/football-masculin/20252026/paris-vs-arsenal-2026-05-30",
+          "summary": "Dembélé converted the 65th-minute penalty after Kvaratskhelia won it, with Vitinha also on the pitch."
+        },
+        {
+          "date": "2026-06-02",
+          "type": "DIRECT_HIERARCHY_EVENT",
+          "source": "L'Équipe",
+          "title": "Achraf Hakimi et Vitinha, gardes du corps d'Ousmane Dembélé avant son but sur penalty",
+          "url": "https://www.lequipe.fr/Football/Actualites/Achraf-hakimi-et-vitinha-gardes-du-corps-d-ousmane-dembele-avant-son-but-sur-penalty-contre-arsenal-en-finale-de-ligue-des-champions/1681122",
+          "summary": "Reported that Vitinha and Hakimi protected the spot and then delivered the ball to Dembélé."
+        },
+        {
+          "date": "2026-05-30",
+          "type": "SHOOTOUT_EXCLUSION",
+          "source": "Ligue 1",
+          "title": "PSG retain Champions League crown after dramatic penalty shootout win over Arsenal",
+          "url": "https://ligue1.com/en/articles/l1_article_5200-psg-retain-champions-league-crown-after-dramatic-penalty-shootout-win-over-arsenal",
+          "summary": "The source distinguishes Dembélé's regular-time penalty from the later shootout. Shootout takers were excluded from this hierarchy."
+        }
+      ]
+    },
+    {
+      "club": "Stade Rennais",
+      "filed_hierarchy": [
+        "Esteban Lepaul",
+        "Ludovic Blas",
+        null
+      ],
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_hierarchy": [
+        "Ludovic Blas",
+        "Esteban Lepaul",
+        null
+      ],
+      "confidence": "HIGH",
+      "priority": "HIGH",
+      "reason": "Lepaul directly stated that Blas was first in the hierarchy and gave him both Brest penalties, contradicting the filed order.",
+      "evidence": [
+        {
+          "date": "2026-04-04",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "Stade Rennais",
+          "title": "Brest vs Rennes",
+          "url": "https://www.staderennais.com/matchs/2026-04-04-brest-vs-rennes",
+          "summary": "Lepaul converted two regular-time penalties while Blas remained on the pitch until the 88th minute."
+        },
+        {
+          "date": "2026-04-05",
+          "type": "DIRECT_STATEMENT",
+          "source": "L'Équipe",
+          "title": "Après son doublé à Brest, Esteban Lepaul plus que jamais candidat au titre de meilleur buteur",
+          "url": "https://www.lequipe.fr/Football/Article/Apres-son-double-a-brest-esteban-lepaul-plus-que-jamais-candidat-au-titre-de-meilleur-buteur-de-ligue-1/1665220",
+          "summary": "Lepaul explained that he was second in the hierarchy and that Blas, the first taker, gave him both penalties."
+        },
+        {
+          "date": "2026-05-11",
+          "type": "SPECIALIST_HIERARCHY",
+          "source": "Ligue 1 Fantasy",
+          "title": "FL1 : Les tireurs de pénaltys et de coups de pied arrêtés par club",
+          "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+          "summary": "Recorded raw totals of Lepaul 3/4 and Blas 2/2, but the direct statement resolves the hierarchy that the totals alone cannot show."
+        }
+      ]
+    },
+    {
+      "club": "RC Strasbourg Alsace",
+      "filed_hierarchy": [
+        "Joaquin Panichelli",
+        "Julio Enciso",
+        "Emmanuel Emegha"
+      ],
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_hierarchy": [
+        "Joaquin Panichelli",
+        "Julio Enciso",
+        null
+      ],
+      "confidence": "HIGH",
+      "priority": "HIGH",
+      "reason": "Direct evidence establishes Panichelli first and Enciso as his absence replacement. Emegha has joined Chelsea, so the third slot must be vacated.",
+      "evidence": [
+        {
+          "date": "2026-03-03",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "L'Équipe",
+          "title": "Strasbourg écarte Reims dans la douleur et rejoint les demi-finales de la Coupe de France",
+          "url": "https://www.lequipe.fr/Football/Actualites/Strasbourg-ecarte-reims-dans-la-douleur-et-rejoint-les-demi-finales-de-la-coupe-de-france/1656564",
+          "summary": "Panichelli converted Strasbourg's first penalty. Enciso took a later penalty only after Panichelli had been substituted."
+        },
+        {
+          "date": "2026-05-08",
+          "type": "DIRECT_STATEMENT",
+          "source": "L'Équipe",
+          "title": "Un penalty raté, aucun tir tenté, seulement trente ballons touchés : la triste soirée de Julio Enciso",
+          "url": "https://www.lequipe.fr/Football/Actualites/Un-penalty-rate-aucun-tir-tente-seulement-trente-ballons-touches-la-triste-soiree-de-julio-enciso-avec-strasbourg/1674059",
+          "summary": "The reporting explicitly identified Panichelli as the designated taker and Enciso as the replacement while Panichelli was injured."
+        },
+        {
+          "date": "2026-07-22",
+          "type": "INJURY_STATUS",
+          "source": "Le Progrès",
+          "title": "Joaquin Panichelli sur le chemin du retour",
+          "url": "https://www.leprogres.fr/videos/racing-club-de-strasbourg-joaquin-panichelli-sur-le-chemin-du-retour-3vp3q8r",
+          "summary": "Reported that Panichelli remained in ACL rehabilitation with the Strasbourg group. His temporary absence does not promote Enciso."
+        },
+        {
+          "date": "2025-09-12",
+          "type": "SQUAD_STATUS",
+          "source": "Chelsea FC",
+          "title": "Chelsea agree deal to sign Emanuel Emegha",
+          "url": "https://www.chelseafc.com/en/news/article/chelsea-agree-deal-to-sign-emanuel-emegha",
+          "summary": "Chelsea's official agreement specified that Emegha would join in 2026, removing him from Strasbourg's 2026/27 hierarchy."
+        }
+      ]
+    },
+    {
+      "club": "Toulouse FC",
+      "filed_hierarchy": [
+        "Aron Dønnum",
+        "Djibril Sidibé",
+        "Frank Magri"
+      ],
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_hierarchy": [
+        "Aron Dønnum",
+        null,
+        null
+      ],
+      "confidence": "MEDIUM",
+      "priority": "HIGH",
+      "reason": "Dønnum remains current and strongly supported, but both filed backups have left. No current event establishes their replacements.",
+      "evidence": [
+        {
+          "date": "2025-10-29",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "Toulouse FC",
+          "title": "Le compte rendu de TéFéCé - Stade Rennais",
+          "url": "https://www.toulousefc.com/play/blog/2025/10/le-compte-rendu-de-tefece-stade-rennais-10eme-journee-de-ligue-1-mcdonald-s",
+          "summary": "Dønnum won and converted Toulouse's 85th-minute penalty."
+        },
+        {
+          "date": "2026-05-11",
+          "type": "SPECIALIST_HIERARCHY",
+          "source": "Ligue 1 Fantasy",
+          "title": "FL1 : Les tireurs de pénaltys et de coups de pied arrêtés par club",
+          "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+          "summary": "Recorded Dønnum at 3/3, Sidibé at 1/2, Magri at 0/1 and Cristian Cásseres Jr at 0/1."
+        },
+        {
+          "date": "2026-05-19",
+          "type": "SQUAD_STATUS",
+          "source": "Toulouse FC",
+          "title": "Le TéFéCé remercie ses Violets en fin de contrat et fin de prêt",
+          "url": "https://www.toulousefc.com/play/blog/2026/05/des-departs-au-sein-de-l-effectif",
+          "summary": "Toulouse officially confirmed Magri's departure."
+        },
+        {
+          "date": "2026-07-02",
+          "type": "SQUAD_STATUS",
+          "source": "L'Équipe",
+          "title": "Djibril Sidibé annonce son départ de Toulouse",
+          "url": "https://www.lequipe.fr/Football/Actualites/-j-aurais-aime-que-l-histoire-se-termine-autrement-djibril-sidibe-annonce-son-depart-de-toulouse-avec-un-pincement-au-coeur/1700624",
+          "summary": "Reported Sidibé's departure after his Toulouse contract expired."
+        },
+        {
+          "date": "2026-03-04",
+          "type": "SHOOTOUT_EXCLUSION",
+          "source": "Toulouse FC",
+          "title": "OM-TéFéCé (2-2, 3-4 TAB), quart de finale de Coupe de France",
+          "url": "https://www.toulousefc.com/play/blog/2026/03/le-compte-rendu-de-om-tefece-2-2-3-4-tab-quart-de-finale-de-coupe-de-france",
+          "summary": "The Marseille cup tie ended in a shootout. Those kicks were excluded from the regular-time hierarchy."
+        }
+      ]
+    },
+    {
+      "club": "ESTAC Troyes",
+      "filed_hierarchy": [
+        null,
+        null,
+        null
+      ],
+      "verdict": "UNRESOLVED",
+      "recommended_hierarchy": [
+        null,
+        null,
+        null
+      ],
+      "confidence": "LOW",
+      "priority": "HIGH",
+      "reason": "The only strongly evidenced 2025/26 taker, Tawfik Bentayeb, has returned from loan. No current regular-time event or direct statement identifies his replacement.",
+      "evidence": [
+        {
+          "date": "2026-03-21",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "ESTAC Troyes",
+          "title": "L'ESTAC réalise la passe de cinq face à Dunkerque",
+          "url": "https://www.estac.fr/lestac-realise-la-passe-de-cinq-face-a-dunkerque-5-1-j28/",
+          "summary": "Bentayeb converted Troyes' first-half penalty against Dunkerque."
+        },
+        {
+          "date": "2026-05-09",
+          "type": "SPECIALIST_HISTORY",
+          "source": "Ligue 1",
+          "title": "Tawfik Bentayeb, Top scoreur de la saison en Ligue 2 BKT",
+          "url": "https://ligue1.com/fr/articles/l1_article_5049-",
+          "summary": "Credited Bentayeb with 18 league goals, including four penalties, during Troyes' promotion season."
+        },
+        {
+          "date": "2026-06-28",
+          "type": "SQUAD_STATUS",
+          "source": "ESTAC Troyes",
+          "title": "Tawfik, Xavier, Mounaïm, Hugo : merci",
+          "url": "https://www.estac.fr/tawfik-xavier-mounaim-hugo-merci/",
+          "summary": "ESTAC confirmed that Bentayeb's one-season loan had ended and thanked him on departure."
+        }
+      ]
+    }
+  ],
+  "community_search": {
+    "x": {
+      "status": "CHECKED",
+      "summary": "Searches primarily returned official-club post mirrors, match updates and transfer discussion. No X-only hierarchy claim was used as dispositive evidence."
+    },
+    "reddit": {
+      "status": "CHECKED",
+      "summary": "Relevant clips and discussions were checked for events and squad leads. The Brest clip is retained as a corroborating community lead; no Reddit-only hierarchy claim determined a recommendation."
+    }
+  },
+  "source_hubs_checked": [
+    {
+      "source": "Official 2026/27 Ligue 1 calendar",
+      "url": "https://ligue1.com/en/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released"
+    },
+    {
+      "source": "Official Ligue 1 Fantasy penalty takers",
+      "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526"
+    },
+    {
+      "source": "Transfermarkt supporting penalty history",
+      "url": "https://www.transfermarkt.com/ligue-1/elfmeterschuetzen/wettbewerb/FR1"
+    }
+  ],
+  "limitations": [
+    "The audit was completed during preseason before the configured 2026/27 Ligue 1 start date.",
+    "No 2026/27 competitive Ligue 1 regular-time penalty had occurred at the audit date.",
+    "Current-preseason penalties were used only when the taker's availability context was clear.",
+    "A backup was not promoted solely because a filed player was absent, injured or had departed.",
+    "Shootout attempts were identified separately and excluded from regular-time hierarchy inference.",
+    "Transfer activity after 2026-07-27 may change unresolved or low-confidence orders."
+  ]
+}

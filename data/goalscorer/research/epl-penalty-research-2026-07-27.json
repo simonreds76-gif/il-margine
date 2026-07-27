@@ -1,0 +1,1235 @@
+{
+  "audit": {
+    "competition": "Premier League",
+    "league_key": "epl",
+    "season": "2026/27",
+    "season_status": "preseason",
+    "audit_date": "2026-07-27",
+    "club_count": 20,
+    "filed_hierarchy_path": "data/goalscorer/epl-penalty-takers.json",
+    "season_config_path": "data/goalscorer/club-penalty-season.json",
+    "methodology": [
+      "Competitive in-match penalties are treated separately from penalty shootouts.",
+      "Shootout-only evidence is excluded from hierarchy decisions.",
+      "A penalty taken while the filed primary was absent establishes backup capability but does not by itself promote that player.",
+      "Unsupported recommended positions are null rather than inferred from absence.",
+      "Official club, league and competition sources are preferred over specialist, media and community sources."
+    ],
+    "verdict_counts": {
+      "KEEP": 5,
+      "REVIEW": 7,
+      "CHANGE_CANDIDATE": 8,
+      "UNRESOLVED": 0
+    }
+  },
+  "verdict_definitions": {
+    "KEEP": "The complete filed hierarchy remains the recommended hierarchy.",
+    "REVIEW": "The filed primary remains recommended, but at least one lower position needs review.",
+    "CHANGE_CANDIDATE": "The recommended primary differs from the filed primary, or an empty filed row can now be populated.",
+    "UNRESOLVED": "No defensible current primary was identified."
+  },
+  "source_tier_definitions": {
+    "TIER_1_OFFICIAL": "Official club, Premier League, UEFA or direct manager evidence.",
+    "TIER_2_SPECIALIST_MEDIA": "Specialist set-piece source or reliable national or local media.",
+    "TIER_3_SUPPORTING": "Transfermarkt history or community lead used only as supporting evidence."
+  },
+  "clubs": [
+    {
+      "club": "Arsenal",
+      "filed_hierarchy": {
+        "primary": "Bukayo Saka",
+        "secondary": "Viktor Gyokeres",
+        "tertiary": "Martin Odegaard"
+      },
+      "verdict": "KEEP",
+      "recommended_hierarchy": {
+        "primary": "Bukayo Saka",
+        "secondary": "Viktor Gyokeres",
+        "tertiary": "Martin Odegaard"
+      },
+      "confidence": "MEDIUM",
+      "confidence_note": "The complete order matches the current specialist hierarchy, but the recent Gyokeres penalty occurred while Saka was absent.",
+      "priority": "MEDIUM",
+      "evidence": [
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_HIERARCHY",
+          "source": "Fantasy Football Scout",
+          "title": "FPL 2026/27: Premier League Set-Piece Takers",
+          "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "HIERARCHY",
+          "summary": "Lists Saka, Gyokeres and Odegaard in the exact filed order.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-04-11",
+          "type": "MATCH_REPORT",
+          "source": "AFC Bournemouth",
+          "title": "Leaders beaten by record-breaking Cherries",
+          "url": "https://www.afcb.co.uk/news/2026/april/11/match-report-v-brentford/",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Gyokeres converted Arsenal's league penalty against Bournemouth. Saka was absent from Arsenal's matchday side, so the event supports Gyokeres as cover rather than promotion.",
+          "filed_primary_on_pitch": "NO"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CAREER_HISTORY",
+          "source": "Opta Analyst",
+          "title": "Best Penalty Takers in the Premier League",
+          "url": "https://theanalyst.com/articles/best-penalty-takers-in-the-premier-league",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "SUPPORTING_HISTORY",
+          "summary": "Records Saka's strong Premier League penalty conversion record. This supports capability but is not a current same-pitch hierarchy test.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        }
+      ]
+    },
+    {
+      "club": "Aston Villa",
+      "filed_hierarchy": {
+        "primary": "Ollie Watkins",
+        "secondary": "Emiliano Buendia",
+        "tertiary": "Youri Tielemans"
+      },
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_hierarchy": {
+        "primary": "Emiliano Buendia",
+        "secondary": "Ollie Watkins",
+        "tertiary": "Youri Tielemans"
+      },
+      "confidence": "HIGH",
+      "confidence_note": "Buendia took a recent competitive penalty while Watkins and Tielemans were both on the pitch.",
+      "priority": "CRITICAL",
+      "evidence": [
+        {
+          "date": "2026-05-07",
+          "type": "MATCH_REPORT",
+          "source": "Aston Villa",
+          "title": "Report: Aston Villa 4-0 Nottingham Forest",
+          "url": "https://www.avfc.co.uk/news/2026/may/07/report-aston-villa-nottingham-forest/",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Buendia converted a Europa League penalty while Watkins and Tielemans were both starting, directly placing Buendia ahead of the filed primary in a same-pitch event.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-05-31",
+          "type": "PLAYER_INTERVIEW",
+          "source": "Aston Villa",
+          "title": "Feature: May 2026 in quotes",
+          "url": "https://www.avfc.co.uk/news/2026/may/31/feature-may-2026-in-quotes/",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "ASSIGNMENT_CONFIRMATION",
+          "summary": "Buendia described assuming responsibility for the decisive penalty, supporting deliberate assignment rather than an accidental handover.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_HIERARCHY",
+          "source": "Fantasy Football Scout",
+          "title": "FPL 2026/27: Premier League Set-Piece Takers",
+          "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "HIERARCHY",
+          "summary": "Lists Buendia ahead of Watkins.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CAREER_HISTORY",
+          "source": "Transfermarkt",
+          "title": "Youri Tielemans - Penalty goals",
+          "url": "https://www.transfermarkt.com/youri-tielemans/elfmetertore/spieler/249565",
+          "source_tier": "TIER_3_SUPPORTING",
+          "penalty_context": "SUPPORTING_HISTORY",
+          "summary": "Tielemans has substantial career penalty history, supporting retention as tertiary without establishing current Villa priority.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        }
+      ]
+    },
+    {
+      "club": "Bournemouth",
+      "filed_hierarchy": {
+        "primary": "Eli Junior Kroupi",
+        "secondary": "Marcus Tavernier",
+        "tertiary": "Evanilson"
+      },
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_hierarchy": {
+        "primary": "Justin Kluivert",
+        "secondary": "Eli Junior Kroupi",
+        "tertiary": "Marcus Tavernier"
+      },
+      "confidence": "MEDIUM",
+      "confidence_note": "Kroupi's recent penalties establish him ahead of Tavernier, but Kluivert was unavailable and therefore cannot be demoted from those events alone.",
+      "priority": "HIGH",
+      "evidence": [
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_HIERARCHY",
+          "source": "Fantasy Football Scout",
+          "title": "FPL 2026/27: Premier League Set-Piece Takers",
+          "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "HIERARCHY",
+          "summary": "Lists Kluivert, Kroupi and Tavernier in that order.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_SQUAD",
+          "source": "Premier League",
+          "title": "Bournemouth Squad Information 2026/27",
+          "url": "https://www.premierleague.com/en/clubs/91/bournemouth/squad",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "ROSTER",
+          "summary": "Confirms Kluivert, Kroupi and Tavernier remain current Bournemouth squad members.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-05-03",
+          "type": "MATCH_REPORT",
+          "source": "AFC Bournemouth",
+          "title": "Cherries shine in strong showing against Crystal Palace",
+          "url": "https://www.afcb.co.uk/news/2026/may/03/cherries-shine-in-strong-showing-against-crystal-palace/",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Kroupi converted with Tavernier and Evanilson starting. Kluivert was absent, so the event establishes Kroupi over Tavernier in that state but does not demote Kluivert.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2024-11-30",
+          "type": "MATCH_REPORT",
+          "source": "AFC Bournemouth",
+          "title": "Kluivert makes Premier League history in Wolves win",
+          "url": "https://www.afcb.co.uk/news/2024/november/30/kluivert-makes-premier-league-history-in-wolves-win/",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Kluivert converted three regular-time penalties in one Premier League match, providing strong incumbent history.",
+          "filed_primary_on_pitch": "NO"
+        },
+        {
+          "date": "2026-03-20",
+          "type": "COMMUNITY_LEAD",
+          "source": "Reddit - r/FantasyPL",
+          "title": "Kroupi takes the penalty while Tavernier is on pitch",
+          "url": "https://www.reddit.com/r/FantasyPL/comments/1rz973s/kroupi_takes_the_penalty_while_tavernier_is_on/",
+          "source_tier": "TIER_3_SUPPORTING",
+          "penalty_context": "REGULAR_TIME_LEAD",
+          "summary": "Flagged Kroupi taking ahead of Tavernier. The later official May report independently corroborates that relationship.",
+          "filed_primary_on_pitch": "YES"
+        }
+      ]
+    },
+    {
+      "club": "Brentford",
+      "filed_hierarchy": {
+        "primary": "Thiago",
+        "secondary": "Kevin Schade",
+        "tertiary": "Dango Ouattara"
+      },
+      "verdict": "REVIEW",
+      "recommended_hierarchy": {
+        "primary": "Thiago",
+        "secondary": "Kevin Schade",
+        "tertiary": "Fábio Carvalho"
+      },
+      "confidence": "HIGH",
+      "confidence_note": "Thiago is directly established as primary; the complete lower order relies on the current specialist hierarchy.",
+      "priority": "MEDIUM",
+      "evidence": [
+        {
+          "date": "2026-04-11",
+          "type": "MATCH_REPORT",
+          "source": "Brentford",
+          "title": "Brentford 2-2 Everton",
+          "url": "https://www.brentfordfc.com/en/news/article/match-reports-brentford-2-everton-2-premier-league-igor-thiago-11-04-2026",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Thiago converted while Schade and Ouattara were also starting, directly confirming the filed primary.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-02-21",
+          "type": "CLUB_PREVIEW",
+          "source": "Brentford",
+          "title": "Brentford v Brighton and Hove Albion preview",
+          "url": "https://www.brentfordfc.com/en/news/article/match-previews-brentford-v-brighton-and-hove-albion-premier-league-21-02-2026",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "SEASON_HISTORY",
+          "summary": "Reported Thiago leading the Premier League for penalty goals, with six scored and one missed.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_HIERARCHY",
+          "source": "Fantasy Football Scout",
+          "title": "FPL 2026/27: Premier League Set-Piece Takers",
+          "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "HIERARCHY",
+          "summary": "Lists Thiago, Schade, Carvalho and Mathias Jensen. Ouattara is omitted from the penalty order.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        }
+      ]
+    },
+    {
+      "club": "Brighton",
+      "filed_hierarchy": {
+        "primary": "Danny Welbeck",
+        "secondary": "Matt O'Reilly",
+        "tertiary": "James Milner"
+      },
+      "verdict": "REVIEW",
+      "recommended_hierarchy": {
+        "primary": "Danny Welbeck",
+        "secondary": "Matt O'Reilly",
+        "tertiary": null
+      },
+      "confidence": "HIGH",
+      "confidence_note": "The first two positions are directly established. No current evidence supports a tertiary.",
+      "priority": "MEDIUM",
+      "evidence": [
+        {
+          "date": "2025-08-24",
+          "type": "MATCH_REPORT",
+          "source": "Brighton and Hove Albion",
+          "title": "Everton v Brighton match report",
+          "url": "https://www.brightonandhovealbion.com/media-article/pl-evebha-everton-match-report",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Welbeck took a regular-time penalty with O'Reilly also on the pitch, directly placing Welbeck ahead.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2025-08-15",
+          "type": "MATCH_REPORT",
+          "source": "Brighton and Hove Albion",
+          "title": "Brighton v Fulham match report",
+          "url": "https://www.brightonandhovealbion.com/media-article/mft-pl-bhaful-match-report",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "O'Reilly converted before Welbeck entered in the 70th minute, establishing O'Reilly as cover rather than primary.",
+          "filed_primary_on_pitch": "NO"
+        },
+        {
+          "date": "2025-08-18",
+          "type": "PLAYER_INTERVIEW",
+          "source": "Brighton and Hove Albion",
+          "title": "Matt O'Reilly interview after Fulham",
+          "url": "https://www.brightonandhovealbion.com/media-article/mft-interviews-matt-o-riley-bha-fulham-august-2025",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "ASSIGNMENT_CONFIRMATION",
+          "summary": "O'Reilly described a structured process and acknowledged Welbeck as another taker.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_HIERARCHY",
+          "source": "Fantasy Football Scout",
+          "title": "FPL 2026/27: Premier League Set-Piece Takers",
+          "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "HIERARCHY",
+          "summary": "Lists Welbeck and O'Reilly only. No current source justified Milner or another tertiary.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        }
+      ]
+    },
+    {
+      "club": "Chelsea",
+      "filed_hierarchy": {
+        "primary": "Cole Palmer",
+        "secondary": "Enzo Fernández",
+        "tertiary": "João Pedro"
+      },
+      "verdict": "REVIEW",
+      "recommended_hierarchy": {
+        "primary": "Cole Palmer",
+        "secondary": "Enzo Fernández",
+        "tertiary": "Estêvão"
+      },
+      "confidence": "HIGH",
+      "confidence_note": "Palmer and Fernandez are established by match evidence; the tertiary change comes from the current specialist hierarchy.",
+      "priority": "MEDIUM",
+      "evidence": [
+        {
+          "date": "2026-01-17",
+          "type": "MATCH_REPORT",
+          "source": "Chelsea",
+          "title": "Chelsea 2-0 Brentford",
+          "url": "https://www.chelseafc.com/en/news/article/match-report-chelsea-2-0-brentford",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Palmer converted with Fernandez and Joao Pedro both starting.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2025-08-30",
+          "type": "MATCH_REPORT",
+          "source": "Chelsea",
+          "title": "Chelsea 2-0 Fulham",
+          "url": "https://www.chelseafc.com/en/news/article/match-report-chelsea-2-0-fulham",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Fernandez converted while Palmer was unavailable and Joao Pedro started, supporting Fernandez as deputy.",
+          "filed_primary_on_pitch": "NO"
+        },
+        {
+          "date": "2026-02-07",
+          "type": "MATCH_REPORT",
+          "source": "Chelsea",
+          "title": "Wolves 1-3 Chelsea",
+          "url": "https://www.chelseafc.com/en/news/article/match-report-wolves-1-3-chelsea",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Palmer converted two penalties; Fernandez started and Joao Pedro won the second.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_HIERARCHY",
+          "source": "Fantasy Football Scout",
+          "title": "FPL 2026/27: Premier League Set-Piece Takers",
+          "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "HIERARCHY",
+          "summary": "Lists Palmer, Fernandez and Estevao, prompting tertiary review.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        }
+      ]
+    },
+    {
+      "club": "Coventry City",
+      "filed_hierarchy": {
+        "primary": null,
+        "secondary": null,
+        "tertiary": null
+      },
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_hierarchy": {
+        "primary": "Haji Wright",
+        "secondary": "Victor Torp",
+        "tertiary": "Brandon Thomas-Asante"
+      },
+      "confidence": "MEDIUM",
+      "confidence_note": "Wright has current competitive evidence; the lower order relies on specialist assessment.",
+      "priority": "HIGH",
+      "evidence": [
+        {
+          "date": "2026-02-16",
+          "type": "MATCH_REPORT",
+          "source": "The Guardian",
+          "title": "Coventry v Middlesbrough Championship match report",
+          "url": "https://www.theguardian.com/football/2026/feb/16/coventry-middlesbrough-championship-match-report",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Wright completed his hat-trick through a regular-time penalty.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-02-16",
+          "type": "MATCH_REPORT",
+          "source": "BBC Sport",
+          "title": "Coventry City v Middlesbrough",
+          "url": "https://www.bbc.co.uk/sport/football/live/cze03ypy54et",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Independently records Wright's regular-time conversion.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_HIERARCHY",
+          "source": "Fantasy Football Scout",
+          "title": "FPL 2026/27: Premier League Set-Piece Takers",
+          "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "HIERARCHY",
+          "summary": "Lists Wright, Torp, Thomas-Asante and Matt Grimes.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        }
+      ]
+    },
+    {
+      "club": "Crystal Palace",
+      "filed_hierarchy": {
+        "primary": "Jean-Philippe Mateta",
+        "secondary": "Ismaila Sarr",
+        "tertiary": "Justin Devenny"
+      },
+      "verdict": "KEEP",
+      "recommended_hierarchy": {
+        "primary": "Jean-Philippe Mateta",
+        "secondary": "Ismaila Sarr",
+        "tertiary": "Justin Devenny"
+      },
+      "confidence": "HIGH",
+      "confidence_note": "Mateta has same-pitch priority over Sarr and the complete filed order matches the current specialist hierarchy.",
+      "priority": "LOW",
+      "evidence": [
+        {
+          "date": "2025-10-18",
+          "type": "MATCH_REPORT",
+          "source": "Crystal Palace",
+          "title": "Crystal Palace v Bournemouth match report",
+          "url": "https://www.cpfc.co.uk/news/first-team/match-report-highlights-live-blog-crystal-palace-bournemouth-october-2025/",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Mateta converted a stoppage-time penalty while Sarr also started.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-04-09",
+          "type": "MATCH_REPORT",
+          "source": "Crystal Palace",
+          "title": "Crystal Palace v Fiorentina first-leg report",
+          "url": "https://www.cpfc.co.uk/news/match-reports/live-blog-highlights-report-crystal-palace-v-fiorentina-first-leg/",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Mateta converted another competitive regular-time penalty, with Sarr involved in the match.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_HIERARCHY",
+          "source": "Fantasy Football Scout",
+          "title": "FPL 2026/27: Premier League Set-Piece Takers",
+          "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "HIERARCHY",
+          "summary": "Lists Mateta, Sarr and Devenny in the exact filed order.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        }
+      ]
+    },
+    {
+      "club": "Everton",
+      "filed_hierarchy": {
+        "primary": "Iliman Ndiaye",
+        "secondary": "Beto",
+        "tertiary": "Thierno Barry"
+      },
+      "verdict": "REVIEW",
+      "recommended_hierarchy": {
+        "primary": "Iliman Ndiaye",
+        "secondary": "James Garner",
+        "tertiary": "Beto"
+      },
+      "confidence": "HIGH",
+      "confidence_note": "Ndiaye is directly established as primary and Garner took ahead of Beto and Barry when Ndiaye was absent.",
+      "priority": "MEDIUM",
+      "evidence": [
+        {
+          "date": "2026-02-09",
+          "type": "MATCH_REPORT",
+          "source": "Premier League",
+          "title": "Everton v Bournemouth match report",
+          "url": "https://www.premierleague.com/en/news/4586593/match-report",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Ndiaye converted a regular-time penalty against Bournemouth.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-01-10",
+          "type": "MATCH_ANALYSIS",
+          "source": "Fantasy Football Scout",
+          "title": "FPL notes: Kluivert latest, penalty takers and Kroupi starts again",
+          "url": "https://www.fantasyfootballscout.co.uk/2026/01/13/fpl-notes-kluivert-latest-pen-takers-kroupi-starts-again",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "REGULAR_TIME_AND_SHOOTOUT_DISTINGUISHED",
+          "summary": "Garner converted an 89th-minute in-match penalty while Beto and Barry were on the pitch and Ndiaye was at AFCON. Their later shootout misses are excluded from hierarchy evidence.",
+          "filed_primary_on_pitch": "NO"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_HIERARCHY",
+          "source": "Fantasy Football Scout",
+          "title": "FPL 2026/27: Premier League Set-Piece Takers",
+          "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "HIERARCHY",
+          "summary": "Lists Ndiaye, Garner and Beto.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        }
+      ]
+    },
+    {
+      "club": "Fulham",
+      "filed_hierarchy": {
+        "primary": "Raúl Jiménez",
+        "secondary": "Harry Wilson",
+        "tertiary": "Alex Iwobi"
+      },
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_hierarchy": {
+        "primary": "Antonee Robinson",
+        "secondary": null,
+        "tertiary": null
+      },
+      "confidence": "LOW_MEDIUM",
+      "confidence_note": "Robinson has a manager-confirmed assignment and current specialist support, but no defensible second or third choice was found after the departures.",
+      "priority": "CRITICAL",
+      "evidence": [
+        {
+          "date": "2026-03-21",
+          "type": "MATCH_REPORT",
+          "source": "Fulham",
+          "title": "Fulham 3-1 Burnley",
+          "url": "https://www.fulhamfc.com/news/2026/march/21/fulham-3-1-burnley/",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Jimenez converted as Fulham's established first-choice taker.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-05-17",
+          "type": "MANAGER_INTERVIEW",
+          "source": "Fulham",
+          "title": "Post-Wolves press conference",
+          "url": "https://www.fulhamfc.com/news/2026/may/17/post-wolves-presser/",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "ASSIGNMENT_CONFIRMATION",
+          "summary": "Marco Silva said Jimenez was first choice but not on the pitch and Robinson had been selected to take the regular-time penalty.",
+          "filed_primary_on_pitch": "NO"
+        },
+        {
+          "date": "2026-06-09",
+          "type": "ROSTER_DEPARTURE",
+          "source": "Fulham",
+          "title": "Raul leaves Fulham",
+          "url": "https://www.fulhamfc.com/news/2026/june/09/raul-leaves-fulham/",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "ROSTER",
+          "summary": "The filed primary left Fulham and is ineligible for 2026/27. The departure alone is not used to promote a backup.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-07-08",
+          "type": "ROSTER_DEPARTURE",
+          "source": "Fulham",
+          "title": "Harry Wilson leaves Fulham",
+          "url": "https://www.fulhamfc.com/news/2026/july/08/harry-wilson-leaves-fulham/",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "ROSTER",
+          "summary": "The filed secondary also left Fulham and is ineligible for 2026/27.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_HIERARCHY",
+          "source": "Fantasy Football Scout",
+          "title": "FPL 2026/27: Premier League Set-Piece Takers",
+          "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "HIERARCHY",
+          "summary": "Lists Robinson alone. No source established defensible second or third choices.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        }
+      ]
+    },
+    {
+      "club": "Hull City",
+      "filed_hierarchy": {
+        "primary": null,
+        "secondary": null,
+        "tertiary": null
+      },
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_hierarchy": {
+        "primary": "Oli McBurnie",
+        "secondary": null,
+        "tertiary": null
+      },
+      "confidence": "MEDIUM_HIGH",
+      "confidence_note": "McBurnie has current competitive evidence and specialist support, but no defensible backups were found.",
+      "priority": "HIGH",
+      "evidence": [
+        {
+          "date": "2026-05-03",
+          "type": "CLUB_INTERVIEW",
+          "source": "Hull City",
+          "title": "Coyle: Dare to dream",
+          "url": "https://www.wearehullcity.co.uk/news/2026/may/03/coyle-dare-to-dream/",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Club coverage records McBurnie taking and converting the preceding match's regular-time penalty.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-05-02",
+          "type": "MATCH_REPORT",
+          "source": "BBC Sport",
+          "title": "Hull City v Norwich City",
+          "url": "https://www.bbc.co.uk/sport/football/live/c3r2dxr9exet",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Independently records McBurnie's regular-time conversion.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_HIERARCHY",
+          "source": "Fantasy Football Scout",
+          "title": "FPL 2026/27: Premier League Set-Piece Takers",
+          "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "HIERARCHY",
+          "summary": "Lists McBurnie alone. No backups are inferred from absence.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        }
+      ]
+    },
+    {
+      "club": "Ipswich Town",
+      "filed_hierarchy": {
+        "primary": null,
+        "secondary": null,
+        "tertiary": null
+      },
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_hierarchy": {
+        "primary": "Jack Clarke",
+        "secondary": "Jaden Philogene-Bidace",
+        "tertiary": "George Hirst"
+      },
+      "confidence": "HIGH",
+      "confidence_note": "Clarke has repeated competitive conversions and explicit manager confirmation; the manager also identified the fallback context.",
+      "priority": "HIGH",
+      "evidence": [
+        {
+          "date": "2026-01-24",
+          "type": "MATCH_CENTRE",
+          "source": "Ipswich Town",
+          "title": "Ipswich Town v Sheffield United",
+          "url": "https://www.itfc.co.uk/match/men/2025-26/g2566711",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Clarke converted a regular-time penalty.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-04-11",
+          "type": "MANAGER_INTERVIEW",
+          "source": "Local club media via Yahoo Sport",
+          "title": "Why Philogene took Town's deadlock-breaking penalty",
+          "url": "https://uk.sports.yahoo.com/news/why-philogene-took-towns-deadlock-144401420.html",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "ASSIGNMENT_CONFIRMATION",
+          "summary": "Kieran McKenna identified Clarke as the nominated taker when starting. Philogene took when Clarke was absent, with Hirst another experienced option.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-04-19",
+          "type": "MATCH_REPORT",
+          "source": "The Guardian",
+          "title": "Ipswich v Middlesbrough Championship match report",
+          "url": "https://www.theguardian.com/football/2026/apr/19/ipswich-middlesbrough-championship-match-report",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Clarke converted another regular-time penalty.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_HIERARCHY",
+          "source": "Fantasy Football Scout",
+          "title": "FPL 2026/27: Premier League Set-Piece Takers",
+          "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "HIERARCHY",
+          "summary": "Lists Clarke, Philogene-Bidace and Hirst in that order.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        }
+      ]
+    },
+    {
+      "club": "Leeds",
+      "filed_hierarchy": {
+        "primary": "Dominic Calvert-Lewin",
+        "secondary": "Lukas Nmecha",
+        "tertiary": "Joel Piroe"
+      },
+      "verdict": "KEEP",
+      "recommended_hierarchy": {
+        "primary": "Dominic Calvert-Lewin",
+        "secondary": "Lukas Nmecha",
+        "tertiary": "Joel Piroe"
+      },
+      "confidence": "HIGH",
+      "confidence_note": "Calvert-Lewin took with Nmecha on the pitch and the complete order matches the current specialist hierarchy.",
+      "priority": "LOW",
+      "evidence": [
+        {
+          "date": "2026-05-11",
+          "type": "MATCH_REPORT",
+          "source": "Leeds United",
+          "title": "Tottenham Hotspur 1-1 Leeds United",
+          "url": "https://www.leedsunited.com/en/news/report-tottenham-hotspur-1-1-leeds-united",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Calvert-Lewin converted in the 74th minute after Nmecha had entered in the 63rd, directly establishing the filed first-two order. Piroe was unused.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_HIERARCHY",
+          "source": "Fantasy Football Scout",
+          "title": "FPL 2026/27: Premier League Set-Piece Takers",
+          "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "HIERARCHY",
+          "summary": "Lists Calvert-Lewin, Nmecha and Piroe in the exact filed order.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-03-20",
+          "type": "COMMUNITY_LEAD",
+          "source": "Reddit - r/LeedsUnited",
+          "title": "Why didn't Nmecha take the penalty?",
+          "url": "https://www.reddit.com/r/LeedsUnited/comments/1rv5rer/why_didnt_nmecha_take_the_penalty/",
+          "source_tier": "TIER_3_SUPPORTING",
+          "penalty_context": "HIERARCHY_LEAD",
+          "summary": "Supporter discussion identified Calvert-Lewin as taker when present and Nmecha as cover. The later official Tottenham report provides the decisive corroboration.",
+          "filed_primary_on_pitch": "YES"
+        }
+      ]
+    },
+    {
+      "club": "Liverpool",
+      "filed_hierarchy": {
+        "primary": "Mohamed Salah",
+        "secondary": "Dominik Szoboszlai",
+        "tertiary": "Alexis Mac Allister"
+      },
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_hierarchy": {
+        "primary": "Dominik Szoboszlai",
+        "secondary": "Cody Gakpo",
+        "tertiary": "Alexis Mac Allister"
+      },
+      "confidence": "MEDIUM",
+      "confidence_note": "Salah has departed. Szoboszlai has taken in Salah's absence and the post-Salah specialist order supports him, but there is no post-departure same-pitch competitive test.",
+      "priority": "CRITICAL",
+      "evidence": [
+        {
+          "date": "2026-05",
+          "type": "ROSTER_DEPARTURE",
+          "source": "Liverpool",
+          "title": "Mohamed Salah to leave Liverpool at end of season",
+          "url": "https://www.liverpoolfc.com/news/mohamed-salah-leave-liverpool-end-season?amp=1",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "ROSTER",
+          "summary": "The filed primary is no longer eligible for 2026/27. The departure alone is not used to promote Szoboszlai.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-01-17",
+          "type": "MATCH_REPORT",
+          "source": "Liverpool",
+          "title": "Liverpool held to 1-1 draw by Burnley at Anfield",
+          "url": "https://www.liverpoolfc.com/news/liverpool-held-1-1-draw-burnley-anfield?amp=1",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Szoboszlai took a regular-time penalty while Salah was at AFCON. Gakpo started and Mac Allister entered later.",
+          "filed_primary_on_pitch": "NO"
+        },
+        {
+          "date": "2026-02-14",
+          "type": "MATCH_REPORT",
+          "source": "Liverpool",
+          "title": "Liverpool score three to beat Brighton and progress in FA Cup",
+          "url": "https://www.liverpoolfc.com/news/liverpool-score-three-beat-brighton-and-progress-fa-cup?amp=1",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Salah converted while Szoboszlai and Mac Allister started, confirming Salah still led before his departure.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_HIERARCHY",
+          "source": "Fantasy Football Scout",
+          "title": "FPL 2026/27: Premier League Set-Piece Takers",
+          "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "HIERARCHY",
+          "summary": "The current post-Salah projection is Szoboszlai, Gakpo and Mac Allister.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        }
+      ]
+    },
+    {
+      "club": "Manchester City",
+      "filed_hierarchy": {
+        "primary": "Erling Haaland",
+        "secondary": "Omar Marmoush",
+        "tertiary": "Phil Foden"
+      },
+      "verdict": "REVIEW",
+      "recommended_hierarchy": {
+        "primary": "Erling Haaland",
+        "secondary": "Omar Marmoush",
+        "tertiary": "Jérémy Doku"
+      },
+      "confidence": "HIGH",
+      "confidence_note": "Haaland is directly established. The lower order, especially Doku over Foden, relies on current specialist assessment.",
+      "priority": "MEDIUM",
+      "evidence": [
+        {
+          "date": "2026-01-07",
+          "type": "MATCH_REPORT",
+          "source": "Manchester City",
+          "title": "City share the Premier League spoils with Brighton",
+          "url": "https://www.mancity.com/news/mens/manchester-city-v-brighton-premier-league-match-report-2026-63903408",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Haaland converted with Doku starting. Marmoush was not in the matchday side.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-02-08",
+          "type": "MATCH_CENTRE",
+          "source": "Manchester City",
+          "title": "Liverpool v Manchester City",
+          "url": "https://www.mancity.com/matchday/fixtures/mens/2025/premier-league/liverpool-v-man-city-8-feb-2026",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Haaland converted the stoppage-time penalty. Marmoush had started but was substituted in the 61st minute.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_HIERARCHY",
+          "source": "Fantasy Football Scout",
+          "title": "FPL 2026/27: Premier League Set-Piece Takers",
+          "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "HIERARCHY",
+          "summary": "Lists Haaland, Marmoush, Doku and Matheus Nunes. Foden is omitted from the penalty hierarchy.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        }
+      ]
+    },
+    {
+      "club": "Manchester United",
+      "filed_hierarchy": {
+        "primary": "Bruno Fernandes",
+        "secondary": "Bryan Mbeumo",
+        "tertiary": "Matheus Cunha"
+      },
+      "verdict": "KEEP",
+      "recommended_hierarchy": {
+        "primary": "Bruno Fernandes",
+        "secondary": "Bryan Mbeumo",
+        "tertiary": "Matheus Cunha"
+      },
+      "confidence": "HIGH",
+      "confidence_note": "Fernandes took with both backups starting. The backup order is supported by career history but remains untested for current United duty.",
+      "priority": "LOW",
+      "evidence": [
+        {
+          "date": "2025-08-24",
+          "type": "MATCH_REPORT",
+          "source": "Manchester United",
+          "title": "Fulham 1 United 1",
+          "url": "https://www.manutd.com/en/news/match-report-fulham-v-man-utd-24-august-2025",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Fernandes took the regular-time penalty with Mbeumo and Cunha both starting.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_HIERARCHY",
+          "source": "Fantasy Football Scout",
+          "title": "FPL 2026/27: Premier League Set-Piece Takers",
+          "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "HIERARCHY",
+          "summary": "Lists Fernandes as clear primary but does not rank backups.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CAREER_HISTORY",
+          "source": "Transfermarkt",
+          "title": "Bryan Mbeumo - Penalty goals",
+          "url": "https://www.transfermarkt.co.uk/bryan-mbeumo/elfmetertore/spieler/413039",
+          "source_tier": "TIER_3_SUPPORTING",
+          "penalty_context": "SUPPORTING_HISTORY",
+          "summary": "Records 11 career conversions, supporting backup capability without proving current United duty.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CAREER_HISTORY",
+          "source": "Transfermarkt",
+          "title": "Matheus Cunha - Penalty goals",
+          "url": "https://www.transfermarkt.com/matheus-cunha/elfmetertore/spieler/517894",
+          "source_tier": "TIER_3_SUPPORTING",
+          "penalty_context": "SUPPORTING_HISTORY",
+          "summary": "Records seven scored and two missed, supporting tertiary capability.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        }
+      ],
+      "excluded_evidence_note": "The Grimsby shootout was excluded from duty ranking."
+    },
+    {
+      "club": "Newcastle United",
+      "filed_hierarchy": {
+        "primary": "Anthony Gordon",
+        "secondary": "Bruno Guimarães",
+        "tertiary": "Harvey Barnes"
+      },
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_hierarchy": {
+        "primary": "Bruno Guimarães",
+        "secondary": "Nick Woltemade",
+        "tertiary": null
+      },
+      "confidence": "MEDIUM",
+      "confidence_note": "Gordon has departed. Bruno has regular-time evidence and current specialist support, but there is no same-pitch post-Gordon test and no defensible tertiary.",
+      "priority": "CRITICAL",
+      "evidence": [
+        {
+          "date": "2026-07",
+          "type": "ROSTER_DEPARTURE",
+          "source": "Newcastle United",
+          "title": "Anthony Gordon signs for Barcelona",
+          "url": "https://www.newcastleunited.com/en/news/anthony-gordon-signs-for-barcelona",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "ROSTER",
+          "summary": "The filed primary is no longer eligible. The departure alone is not used to promote Bruno.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-02-07",
+          "type": "MATCH_REPORT",
+          "source": "Newcastle United",
+          "title": "Newcastle United v Brentford report",
+          "url": "https://www.newcastleunited.com/en/news/brentford-h-report-25-26",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Bruno converted a regular-time penalty while Gordon was absent.",
+          "filed_primary_on_pitch": "NO"
+        },
+        {
+          "date": "2026-03-04",
+          "type": "MATCH_REPORT",
+          "source": "Newcastle United",
+          "title": "Newcastle United v Manchester United report",
+          "url": "https://www.newcastleunited.com/en/news/manchester-united-h-25-26-report",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Gordon converted while Bruno was absent, showing the pre-transfer hierarchy was not tested with both present in this event.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_HIERARCHY",
+          "source": "Fantasy Football Scout",
+          "title": "FPL 2026/27: Premier League Set-Piece Takers",
+          "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "HIERARCHY",
+          "summary": "The current projection lists Bruno followed by Woltemade, supplying support beyond Gordon's absence.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        }
+      ],
+      "excluded_evidence_note": "Shootout conversions were not used, and no current regular-time evidence justified Barnes or another tertiary."
+    },
+    {
+      "club": "Nottingham Forest",
+      "filed_hierarchy": {
+        "primary": "Chris Wood",
+        "secondary": "Morgan Gibbs-White",
+        "tertiary": "Igor Jesus"
+      },
+      "verdict": "KEEP",
+      "recommended_hierarchy": {
+        "primary": "Chris Wood",
+        "secondary": "Morgan Gibbs-White",
+        "tertiary": "Igor Jesus"
+      },
+      "confidence": "HIGH",
+      "confidence_note": "Wood has current same-pitch priority and the complete filed order matches the current specialist hierarchy.",
+      "priority": "LOW",
+      "evidence": [
+        {
+          "date": "2026-04-30",
+          "type": "MATCH_REPORT",
+          "source": "UEFA",
+          "title": "Nottingham Forest 1-0 Aston Villa",
+          "url": "https://www.uefa.com/uefaeuropaleague/news/02a4-2083fe52cee8-b4a0593e0ad4-1000--nottingham-forest-1-0-aston-villa-chris-wood-penalty-swin/",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Wood converted a Europa League penalty with Gibbs-White and Igor Jesus starting.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-01-22",
+          "type": "MATCH_REPORT",
+          "source": "Nottingham Forest",
+          "title": "Forest narrowly beaten by Braga",
+          "url": "https://www.nottinghamforest.co.uk/news/2026/january/22/forest-narrowly-beaten-by-braga/",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Gibbs-White took a regular-time penalty while Wood was unavailable, supporting deputy capability without promotion.",
+          "filed_primary_on_pitch": "NO"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_HIERARCHY",
+          "source": "Fantasy Football Scout",
+          "title": "FPL 2026/27: Premier League Set-Piece Takers",
+          "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "HIERARCHY",
+          "summary": "Lists Wood, Gibbs-White and Igor Jesus in the exact filed order, followed by James McAtee.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        }
+      ]
+    },
+    {
+      "club": "Sunderland",
+      "filed_hierarchy": {
+        "primary": "Habib Diarra",
+        "secondary": "Enzo Le Fee",
+        "tertiary": "Patrick Roberts"
+      },
+      "verdict": "REVIEW",
+      "recommended_hierarchy": {
+        "primary": "Habib Diarra",
+        "secondary": "Enzo Le Fee",
+        "tertiary": null
+      },
+      "confidence": "HIGH",
+      "confidence_note": "Diarra took with Le Fee on the pitch, directly establishing the first two. No current evidence supports a tertiary.",
+      "priority": "MEDIUM",
+      "evidence": [
+        {
+          "date": "2026-03-03",
+          "type": "MATCH_REPORT",
+          "source": "Leeds United",
+          "title": "Leeds United 0-1 Sunderland",
+          "url": "https://www.leedsunited.com/en/news/report-leeds-united-0-1-sunderland",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Diarra converted with Le Fee starting alongside him, providing a decisive same-pitch ordering.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-01-07",
+          "type": "MANAGER_INTERVIEW",
+          "source": "Sunderland",
+          "title": "Le Bris on defeat at Brentford",
+          "url": "https://www.safc.com/news/2026/january/07/Le-Bris-on-defeat-at-Brentford/",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Le Fee took and missed while Diarra was away at AFCON, supporting Le Fee as cover only.",
+          "filed_primary_on_pitch": "NO"
+        },
+        {
+          "date": "2025-08-30",
+          "type": "MATCH_SHEET",
+          "source": "Transfermarkt",
+          "title": "Sunderland v Brentford match sheet",
+          "url": "https://www.transfermarkt.co.uk/afc-sunderland_brentford-fc/index/spielbericht/4625801",
+          "source_tier": "TIER_3_SUPPORTING",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Records Le Fee's earlier penalty, won by Diarra. The later March same-pitch event supports Diarra having moved ahead.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_HIERARCHY",
+          "source": "Fantasy Football Scout",
+          "title": "FPL 2026/27: Premier League Set-Piece Takers",
+          "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "HIERARCHY",
+          "summary": "Lists Diarra then Le Fee, but no third taker.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        }
+      ]
+    },
+    {
+      "club": "Tottenham",
+      "filed_hierarchy": {
+        "primary": "Dominic Solanke",
+        "secondary": "Mathys Tel",
+        "tertiary": "Richarlison"
+      },
+      "verdict": "REVIEW",
+      "recommended_hierarchy": {
+        "primary": "Dominic Solanke",
+        "secondary": "Mohammed Kudus",
+        "tertiary": "Xavi Simons"
+      },
+      "confidence": "MEDIUM_LOW",
+      "confidence_note": "Solanke's support predates the newer Spurs penalty events. Kudus and Xavi have current competitive regular-time evidence, but Solanke was absent from those events.",
+      "priority": "HIGH",
+      "evidence": [
+        {
+          "date": "2025-12-09",
+          "type": "MATCH_REPORT",
+          "source": "Tottenham Hotspur",
+          "title": "Spurs 3-0 Slavia Prague",
+          "url": "https://www.tottenhamhotspur.com/news/2025/december/spurs-vs-slavia-prague-uefa-champions-league-match-report-december-2025/",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Kudus took the first in-match penalty while Richarlison and Xavi started. Kudus and Richarlison were substituted before Xavi took the second. Solanke was absent.",
+          "filed_primary_on_pitch": "NO"
+        },
+        {
+          "date": "2025-04-18",
+          "type": "PLAYER_INTERVIEW",
+          "source": "Tottenham Hotspur",
+          "title": "Dominic Solanke on his penalty against Eintracht Frankfurt",
+          "url": "https://www.tottenhamhotspur.com/news/2025/april/dominic-solanke-on-his-penalty-against-eintracht-frankfurt-in-the-uefa-europa-league-it-was-loud-i-needed-to-stay-cold-in-that-moment/",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "REGULAR_TIME",
+          "summary": "Solanke converted a high-stakes Europa League penalty, supporting incumbent history but predating Kudus and Xavi's Spurs events.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-04-12",
+          "type": "MATCH_REPORT",
+          "source": "Tottenham Hotspur",
+          "title": "Narrow defeat in the north east",
+          "url": "https://www.tottenhamhotspur.com/news/1020060/narrow-defeat-in-the-north-east",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "LEAGUE_CONTEXT",
+          "summary": "Spurs noted they had almost received their first league penalty of the season, explaining the absence of a current league same-pitch test.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_HIERARCHY",
+          "source": "Fantasy Football Scout",
+          "title": "FPL 2026/27: Premier League Set-Piece Takers",
+          "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+          "source_tier": "TIER_2_SPECIALIST_MEDIA",
+          "penalty_context": "HIERARCHY",
+          "summary": "Lists Solanke, Kudus, Xavi and Richarlison.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        },
+        {
+          "date": "2026-07-27",
+          "type": "CURRENT_SQUAD",
+          "source": "Tottenham Hotspur",
+          "title": "Men's First Team Squad",
+          "url": "https://www.tottenhamhotspur.com/teams/mens/squad",
+          "source_tier": "TIER_1_OFFICIAL",
+          "penalty_context": "ROSTER",
+          "summary": "Confirms Solanke, Kudus, Xavi, Tel and Richarlison remain current options.",
+          "filed_primary_on_pitch": "NOT_APPLICABLE"
+        }
+      ],
+      "excluded_evidence_note": "Tel's UEFA Super Cup attempt was a shootout penalty and was excluded from hierarchy evidence."
+    }
+  ]
+}

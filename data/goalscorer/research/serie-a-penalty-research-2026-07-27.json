@@ -1,0 +1,1075 @@
+{
+  "audit": {
+    "league": "Serie A",
+    "season": "2026/27",
+    "researched_at": "2026-07-27T14:05:58.9918668Z",
+    "clubs_expected": 20,
+    "clubs_researched": 20,
+    "files_read": [
+      "C:\\Users\\44746\\Downloads\\il-margine\\.worktrees\\model-audit-integrity\\data\\goalscorer\\serie-a-penalty-takers.json",
+      "C:\\Users\\44746\\Downloads\\il-margine\\.worktrees\\model-audit-integrity\\data\\goalscorer\\club-penalty-season.json"
+    ],
+    "files_modified": [],
+    "season_config": {
+      "status": "preseason",
+      "serie_a_start": "2026-08-22",
+      "source": "https://en.legaseriea.it/serie-a/news/looking-forward-to-the-2026-27-serie-a-fixture-list"
+    },
+    "method": [
+      "Regular-time penalties were evaluated separately from shootouts.",
+      "A penalty taken while the filed primary was absent does not promote the taker.",
+      "Current official events and explicit manager statements outweigh historical totals.",
+      "Specialist hierarchy articles were used where direct current events did not settle the order.",
+      "Community leads were not used as dispositive evidence without independent confirmation."
+    ]
+  },
+  "verdict_definitions": {
+    "KEEP": "Retain the filed order because available evidence does not justify a change.",
+    "REVIEW": "The filed primary remains plausible, but backup order or current hierarchy is uncertain.",
+    "CHANGE_CANDIDATE": "Evidence supports a concrete change to at least one material position.",
+    "UNRESOLVED": "No current order can be recommended defensibly."
+  },
+  "clubs": [
+    {
+      "club": "AC Milan",
+      "filed_order": [
+        "Christian Pulisic",
+        "Rafael Leão",
+        "Christopher Nkunku"
+      ],
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_order": [
+        "Christopher Nkunku",
+        "Gonçalo Ramos",
+        "Christian Pulisic"
+      ],
+      "confidence": "MEDIUM",
+      "priority": "HIGH",
+      "reason": "Nkunku has the strongest recent conversion record and took Milan's latest competitive regular-time penalty. Fresh specialist sources agree that Leão is no longer the appropriate second choice. Pulisic was absent when Nkunku took against Genoa, so that event alone is not treated as displacement; the recommendation also relies on the current specialist consensus.",
+      "evidence": [
+        {
+          "date": "2026-05-17",
+          "source": "AC Milan",
+          "url": "https://www.acmilan.com/en/news/articles/serie-a/2026-05-17/rossoneri-defeat-genoa-on-md37",
+          "source_tier": "A_OFFICIAL",
+          "evidence_type": "MATCH_REPORT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Nkunku converted Milan's 51st-minute penalty against Genoa. Pulisic entered after Nkunku was substituted.",
+          "filed_primary_on_pitch": "NO"
+        },
+        {
+          "date": "2026-07-24",
+          "source": "SOS Fanta",
+          "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Lists Nkunku, Ramos and Pulisic as the current Milan contest and records Nkunku at five conversions from five in 2025/26.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-07-23",
+          "source": "Goal Italia",
+          "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Ranks Nkunku, Ramos and Pulisic for Milan.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "club": "Atalanta",
+      "filed_order": [
+        "Gianluca Scamacca",
+        "Charles De Ketelaere",
+        "Éderson"
+      ],
+      "verdict": "KEEP",
+      "recommended_order": [
+        "Gianluca Scamacca",
+        "Charles De Ketelaere",
+        "Éderson"
+      ],
+      "confidence": "HIGH",
+      "priority": "LOW",
+      "reason": "Scamacca is supported by a competitive penalty taken while De Ketelaere was also available and by fresh specialist consensus. Samardžić remains a plausible backup, but there is insufficient on-pitch evidence to overwrite the filed backup order.",
+      "evidence": [
+        {
+          "date": "2026-02-05",
+          "source": "Atalanta",
+          "url": "https://www.atalanta.it/news/notte-magica-in-coppa-italia-3-0-alla-juve-ed-e-semifinale",
+          "source_tier": "A_OFFICIAL",
+          "evidence_type": "MATCH_REPORT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Scamacca converted a 27th-minute Coppa Italia penalty against Juventus while De Ketelaere was also in the starting side.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-04-23",
+          "source": "Atalanta",
+          "url": "https://en.atalanta.it/news/two-goals-ruled-out-then-lazio-prevail-on-penalties",
+          "source_tier": "A_OFFICIAL",
+          "evidence_type": "MATCH_REPORT",
+          "penalty_context": "SHOOTOUT",
+          "claim": "Scamacca and De Ketelaere missed in a shootout against Lazio. These attempts were excluded from regular-time hierarchy inference.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-07-24",
+          "source": "SOS Fanta",
+          "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Names Scamacca first after three conversions from three, with Samardžić, Éderson and De Ketelaere among the alternatives.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "club": "Bologna",
+      "filed_order": [
+        "Riccardo Orsolini",
+        "Federico Bernardeschi",
+        "Santiago Castro"
+      ],
+      "verdict": "REVIEW",
+      "recommended_order": [
+        "Riccardo Orsolini",
+        "Federico Bernardeschi",
+        "Lewis Ferguson"
+      ],
+      "confidence": "MEDIUM",
+      "priority": "MEDIUM",
+      "reason": "Orsolini remains the established primary and took a competitive penalty with Bernardeschi available. Current specialist evidence prefers Ferguson rather than Castro as the third option.",
+      "evidence": [
+        {
+          "date": "2026-03-22",
+          "source": "La Repubblica Bologna",
+          "url": "https://bologna.repubblica.it/cronaca/2026/03/22/news/bologna_lazio_partita_risultati_orsolini_sbaglia_un_rigore-425238776/amp/",
+          "source_tier": "A_EVENT",
+          "evidence_type": "MATCH_REPORT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Orsolini took Bologna's penalty against Lazio while Bernardeschi was also on the pitch; the attempt was saved.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-07-25",
+          "source": "Calcio Bologna",
+          "url": "https://www.calciobologna.it/2026/07/25/bologna-iraklis-amichevole-tabellino-rowe-dallinga/",
+          "source_tier": "B_LOCAL_MEDIA",
+          "evidence_type": "MATCH_REPORT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Rowe converted a 58th-minute friendly penalty. Orsolini and Bernardeschi entered after the penalty, so the event does not promote Rowe.",
+          "filed_primary_on_pitch": "NO"
+        },
+        {
+          "date": "2026-07-24",
+          "source": "SOS Fanta",
+          "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Calls Orsolini the certain first taker, Bernardeschi the alternate and Ferguson the third option.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "club": "Cagliari",
+      "filed_order": [
+        "Yerry Mina",
+        "Sebastiano Esposito",
+        "Gianluca Gaetano"
+      ],
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_order": [
+        "Sebastiano Esposito",
+        "Gennaro Borrelli",
+        "Yerry Mina"
+      ],
+      "confidence": "HIGH",
+      "priority": "HIGH",
+      "reason": "Esposito converted a competitive penalty while Mina was playing. Both fresh specialist sources place Esposito first and treat Mina only as a secondary candidate.",
+      "evidence": [
+        {
+          "date": "2026-04-04",
+          "source": "Cagliari Calcio",
+          "url": "https://cagliaricalcio.com/news/match-report-sassuolo-cagliari-2-1/",
+          "source_tier": "A_OFFICIAL",
+          "evidence_type": "MATCH_REPORT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Esposito converted Cagliari's penalty against Sassuolo; the match report lists Mina in the starting side.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-07-24",
+          "source": "SOS Fanta",
+          "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Names Esposito first, with Mina and Borrelli as alternatives.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-07-23",
+          "source": "Goal Italia",
+          "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Ranks Esposito, Borrelli and Mina.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "club": "Como",
+      "filed_order": [
+        "Lucas Da Cunha",
+        "Martin Baturina",
+        "Tasos Douvikas"
+      ],
+      "verdict": "REVIEW",
+      "recommended_order": [
+        "Lucas Da Cunha",
+        "Tasos Douvikas",
+        "Martin Baturina"
+      ],
+      "confidence": "MEDIUM",
+      "priority": "MEDIUM",
+      "reason": "Da Cunha is firmly supported as primary. Douvikas has the stronger direct and specialist case as first backup, but Goal Italia instead places Nico Paz between Da Cunha and Douvikas.",
+      "evidence": [
+        {
+          "date": "2026-01-24",
+          "source": "AS",
+          "url": "https://as.com/futbol/internacional/cesc-crea-un-monstruo-f202601-n/",
+          "source_tier": "A_EVENT",
+          "evidence_type": "MATCH_REPORT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Da Cunha converted a 59th-minute penalty while Douvikas and Baturina were also in Como's starting side.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-07-24",
+          "source": "SOS Fanta",
+          "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Names Da Cunha first after four conversions from four, Douvikas as first alternative and Baturina as another candidate.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-07-23",
+          "source": "Goal Italia",
+          "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Ranks Da Cunha, Nico Paz and Douvikas.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "club": "Fiorentina",
+      "filed_order": [
+        "Albert Gudmundsson",
+        "Rolando Mandragora",
+        "Moise Kean"
+      ],
+      "verdict": "KEEP",
+      "recommended_order": [
+        "Albert Gudmundsson",
+        "Rolando Mandragora",
+        "Moise Kean"
+      ],
+      "confidence": "MEDIUM",
+      "priority": "LOW",
+      "reason": "Gudmundsson took Fiorentina's current preseason penalty and is first in both fresh specialist assessments. Kean and Mandragora's relative backup order remains disputed, so there is insufficient evidence to overwrite the filed order.",
+      "evidence": [
+        {
+          "date": "2026-07-22",
+          "source": "SportMediaset",
+          "url": "https://amp.sportmediaset.mediaset.it/sportmediaset/article/114707862",
+          "source_tier": "A_EVENT",
+          "evidence_type": "MATCH_REPORT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Gudmundsson converted Fiorentina's preseason penalty against Gubbio. Kean entered for the second half and was not on the pitch for the penalty.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-07-23",
+          "source": "Goal Italia",
+          "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Ranks Gudmundsson, Mandragora and Kean, matching the filed order.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-07-24",
+          "source": "SOS Fanta",
+          "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Places Gudmundsson first but identifies Kean before Mandragora among the alternatives.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "club": "Frosinone",
+      "filed_order": [
+        null,
+        null,
+        null
+      ],
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_order": [
+        "Giacomo Calò",
+        "Antonio Raimondo",
+        null
+      ],
+      "confidence": "HIGH",
+      "priority": "HIGH",
+      "reason": "Calò has multiple recent competitive conversions and unanimous current specialist support. Raimondo is only a provisional backup; no third option reached the evidence threshold.",
+      "evidence": [
+        {
+          "date": "2026-05-08",
+          "source": "Gianluca Di Marzio",
+          "url": "https://www.gianlucadimarzio.com/news-calcio/rigore-per-il-frosinone-dopo-ofr-calo-segna-l-1-0-492051",
+          "source_tier": "A_EVENT",
+          "evidence_type": "MATCH_REPORT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Calò converted Frosinone's promotion-day penalty.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-04-25",
+          "source": "RaiNews Lazio",
+          "url": "https://www.rainews.it/amp/tgr/lazio/articoli/2026/04/il-frosinone-supera-la-carrarese-e-sogna-la-a-efdebf07-5327-4217-8eea-54c4804abf49.html",
+          "source_tier": "A_EVENT",
+          "evidence_type": "MATCH_REPORT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Calò converted another competitive penalty against Carrarese.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-07-24",
+          "source": "SOS Fanta",
+          "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Names Calò first after five conversions from five; Raimondo is described only as the current backup hypothesis.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "club": "Genoa",
+      "filed_order": [
+        "Ruslan Malinovskiy",
+        "Junior Messias",
+        "Lorenzo Colombo"
+      ],
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_order": [
+        "Lorenzo Colombo",
+        "Junior Messias",
+        "Vitinha"
+      ],
+      "confidence": "HIGH",
+      "priority": "HIGH",
+      "reason": "Malinovskyi has departed. Colombo took Genoa's first current preseason penalty and both fresh specialist sources rank him first.",
+      "evidence": [
+        {
+          "date": "2026-07-19",
+          "source": "ANSA",
+          "url": "https://www.ansa.it/sito/notizie/sport/calcio/2026/07/19/genoa-colombo-e-puzcka-rimontano-il-trento-la-prima-uscita-e-2-1_f5fb6842-b0fe-4857-a54b-84bb04703519.html",
+          "source_tier": "A_EVENT",
+          "evidence_type": "MATCH_REPORT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Colombo won and converted Genoa's preseason penalty against Trento.",
+          "filed_primary_on_pitch": "NO"
+        },
+        {
+          "date": "2026-07-24",
+          "source": "SOS Fanta",
+          "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Reports Malinovskyi's departure and names Colombo the current first candidate, followed by candidates including Messias and Vitinha.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-07-23",
+          "source": "Goal Italia",
+          "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Ranks Colombo, Messias and Vitinha.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "club": "Inter",
+      "filed_order": [
+        "Hakan Calhanoglu",
+        "Lautaro Martínez",
+        "Piotr Zielinski"
+      ],
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_order": [
+        "Hakan Calhanoglu",
+        "Piotr Zielinski",
+        "Lautaro Martínez"
+      ],
+      "confidence": "HIGH",
+      "priority": "MEDIUM",
+      "reason": "Calhanoglu remains first. His official post-match account explicitly identifies Zielinski as the other active taker, and SOS Fanta places Zielinski second. Goal Italia retains Lautaro second, so the change is confined to the backup order.",
+      "evidence": [
+        {
+          "date": "2026-02-28",
+          "source": "Inter",
+          "url": "https://www.inter.it/en/news/interview-calhanoglu-goal-sommer-carlos-augusto-inter-genoa-serie-a-2025-2026",
+          "source_tier": "A_OFFICIAL",
+          "evidence_type": "PLAYER_STATEMENT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Calhanoglu converted against Genoa and said he asked Zielinski whether he wanted the penalty because he felt it was Zielinski's turn.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-07-24",
+          "source": "SOS Fanta",
+          "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Names Calhanoglu first, Zielinski second and treats Lautaro as a possible third option.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-07-23",
+          "source": "Goal Italia",
+          "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Ranks Calhanoglu, Lautaro and Zielinski, preserving the filed backup order.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "club": "Juventus",
+      "filed_order": [
+        "Kenan Yildiz",
+        "Dusan Vlahovic",
+        "Jonathan Christian David"
+      ],
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_order": [
+        "Manuel Locatelli",
+        "Kenan Yildiz",
+        "Jonathan Christian David"
+      ],
+      "confidence": "MEDIUM",
+      "priority": "HIGH",
+      "reason": "Vlahović's prior contract ended and no official return was found. More importantly, Spalletti explicitly described Locatelli as the penalty taker after Locatelli took with Yildiz available.",
+      "evidence": [
+        {
+          "date": "2026-03-22",
+          "source": "La Gazzetta dello Sport",
+          "url": "https://www.gazzetta.it/Calcio/Serie-A/Juventus/22-03-2026/juve-il-caso-dei-rigori-locatelli-yildiz-e-lo-sfogo-di-spalletti.shtml",
+          "source_tier": "A_EVENT",
+          "evidence_type": "MANAGER_STATEMENT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Locatelli took the penalty with Yildiz available. Spalletti said he allowed Locatelli to take it because Locatelli was the penalty taker.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-01-03",
+          "source": "Sky Sport Italia",
+          "url": "https://sport.sky.it/calcio/serie-a/2026/01/03/juventus-lecce-spalletti-intervista-video",
+          "source_tier": "A_EVENT",
+          "evidence_type": "MANAGER_STATEMENT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "David took and missed after Yildiz and Locatelli ceded the penalty; Spalletti nevertheless described David as a penalty taker.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-06-04",
+          "source": "Corriere della Sera Torino",
+          "url": "https://torino.corriere.it/notizie/sport/juventus/26_giugno_04/vlahovic-dice-addio-alla-juventus-stop-al-rinnovo-del-contratto-il-serbo-lascia-dopo-4-anni-e-mezzo-168-presenze-e-68-gol-fe1fd7c6-0d3d-487d-8af8-9a6876cabxlk_amp.shtml",
+          "source_tier": "B_LOCAL_MEDIA",
+          "evidence_type": "SQUAD_STATUS",
+          "penalty_context": "SQUAD_STATUS",
+          "claim": "Reports that Vlahović's Juventus contract would expire without renewal.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "club": "Lazio",
+      "filed_order": [
+        "Mattia Zaccagni",
+        "Danilo Cataldi",
+        "Pedro"
+      ],
+      "verdict": "REVIEW",
+      "recommended_order": [
+        "Mattia Zaccagni",
+        "Danilo Cataldi",
+        "Kenneth Taylor"
+      ],
+      "confidence": "LOW",
+      "priority": "HIGH",
+      "reason": "Zaccagni remains a leading candidate but missed his latest identified competitive penalty. Fresh sources agree Cataldi remains involved but differ over whether Taylor is level with or behind Zaccagni. The managerial change further reduces the value of older events.",
+      "evidence": [
+        {
+          "date": "2026-04-20",
+          "source": "FantaMaster",
+          "url": "https://www.fantamaster.it/rigorista-lazio-errore-zaccagni-gerarchie-ultime-giornate-fantacalcio/",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "MATCH_ANALYSIS",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Reports that Zaccagni took and missed Lazio's competitive penalty against Napoli on 18 April.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-07-24",
+          "source": "SOS Fanta",
+          "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Describes an open contest between Zaccagni and Kenneth Taylor, with Cataldi close behind.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-07-23",
+          "source": "Goal Italia",
+          "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Ranks Zaccagni, Cataldi and Kenneth Taylor.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "club": "Lecce",
+      "filed_order": [
+        "Nikola Stulic",
+        "Tete Morente",
+        "Francesco Camarda"
+      ],
+      "verdict": "REVIEW",
+      "recommended_order": [
+        "Nikola Štulić",
+        "Santiago Pierotti",
+        null
+      ],
+      "confidence": "MEDIUM",
+      "priority": "MEDIUM",
+      "reason": "Štulić is supported by the current preseason event and both specialist sources. Morente and Camarda lack current supporting evidence; Pierotti is the only recurring backup candidate, and no third option is established.",
+      "evidence": [
+        {
+          "date": "2026-07-25",
+          "source": "Leccezionale Salento",
+          "url": "https://leccezionale.it/2026/07/25/lecce-con-listra-e-pareggio-in-gol-stulic-e-maleh/",
+          "source_tier": "B_LOCAL_MEDIA",
+          "evidence_type": "MATCH_REPORT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Štulić won and converted Lecce's early preseason penalty against Istra while Pierotti was also in the starting side.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-07-23",
+          "source": "Goal Italia",
+          "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Ranks Štulić first and Pierotti second.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-07-24",
+          "source": "SOS Fanta",
+          "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Names Štulić first but says no alternative is established; Pierotti and Gallo are only options.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "club": "Monza",
+      "filed_order": [
+        null,
+        null,
+        null
+      ],
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_order": [
+        "Matteo Pessina",
+        "Patrick Cutrone",
+        "Andrea Petagna"
+      ],
+      "confidence": "HIGH",
+      "priority": "HIGH",
+      "reason": "Pessina converted multiple recent competitive regular-time penalties and is first in the current specialist hierarchy.",
+      "evidence": [
+        {
+          "date": "2026-04-06",
+          "source": "AC Monza",
+          "url": "https://www.acmonza.com/en/news/catanzaro-monza-match-report/",
+          "source_tier": "A_OFFICIAL",
+          "evidence_type": "MATCH_REPORT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Pessina converted Monza's 96th-minute competitive penalty against Catanzaro.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-02-08",
+          "source": "AC Monza",
+          "url": "https://www.acmonza.com/it/news/monza-avellino-report-08022026/",
+          "source_tier": "A_OFFICIAL",
+          "evidence_type": "MATCH_REPORT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Pessina converted the decisive competitive penalty against Avellino.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-07-23",
+          "source": "Goal Italia",
+          "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Ranks Pessina, Cutrone and Petagna.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "club": "Napoli",
+      "filed_order": [
+        "Kevin De Bruyne",
+        "Rasmus Højlund",
+        "Scott McTominay"
+      ],
+      "verdict": "UNRESOLVED",
+      "recommended_order": [
+        null,
+        null,
+        null
+      ],
+      "confidence": "LOW",
+      "priority": "HIGH",
+      "reason": "Fresh specialist sources make Lukaku first only conditionally on his remaining with Napoli. His club status is unresolved in the available official record. In the latest friendly, Giovane took with Højlund on the pitch, but De Bruyne was absent; that cannot establish a new primary and weakens confidence in the filed backup order.",
+      "conditional_candidates": [
+        "Romelu Lukaku",
+        "Kevin De Bruyne",
+        "Rasmus Højlund",
+        "Giovane"
+      ],
+      "evidence": [
+        {
+          "date": "2026-07-26",
+          "source": "SSC Napoli",
+          "url": "https://sscnapoli.it/match-report-napoli-carrarese-2-0/",
+          "source_tier": "A_OFFICIAL",
+          "evidence_type": "MATCH_REPORT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Giovane converted the friendly penalty against Carrarese while Højlund was playing. De Bruyne and the other post-World Cup returnees were absent.",
+          "filed_primary_on_pitch": "NO"
+        },
+        {
+          "date": "2026-03-31",
+          "source": "SSC Napoli",
+          "url": "https://sscnapoli.it/nota-del-club-5/",
+          "source_tier": "A_OFFICIAL",
+          "evidence_type": "SQUAD_STATUS",
+          "penalty_context": "SQUAD_STATUS",
+          "claim": "Napoli stated that Lukaku had not reported for training and reserved the right to take further action.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-07-24",
+          "source": "SOS Fanta",
+          "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Names Lukaku first only if he stays, followed by De Bruyne and Højlund as candidates.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-07-23",
+          "source": "Goal Italia",
+          "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Ranks Lukaku, De Bruyne and Højlund but does not resolve Lukaku's status condition.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "club": "Parma Calcio 1913",
+      "filed_order": [
+        "Mateo Pellegrino",
+        "Gabriel Strefezza",
+        "Adrián Bernabé"
+      ],
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_order": [
+        "Mateo Pellegrino",
+        "Adrian Benedyczak",
+        "Adrián Bernabé"
+      ],
+      "confidence": "MEDIUM",
+      "priority": "HIGH",
+      "reason": "Pellegrino is first in both fresh specialist assessments. Strefezza's official arrangement covered only 2025/26 and July reporting described a return as a transfer target, not a completed registration.",
+      "evidence": [
+        {
+          "date": "2026-02-02",
+          "source": "Parma Calcio 1913",
+          "url": "https://www.parmacalcio1913.com/en/main-news/gabriel-strefezza-e-gialloblu/",
+          "source_tier": "A_OFFICIAL",
+          "evidence_type": "SQUAD_STATUS",
+          "penalty_context": "SQUAD_STATUS",
+          "claim": "The official announcement states that Strefezza joined on loan through the end of the 2025/26 season.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-07-08",
+          "source": "Forza Parma",
+          "url": "https://www.forzaparma.it/2026/07/08/strefezza-resta-un-obiettivo-ma-la-trattativa-e-in-salita/",
+          "source_tier": "B_LOCAL_MEDIA",
+          "evidence_type": "SQUAD_STATUS",
+          "penalty_context": "SQUAD_STATUS",
+          "claim": "Describes Strefezza as a transfer objective with negotiations still difficult, not as a current Parma player.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-07-24",
+          "source": "SOS Fanta",
+          "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Names Pellegrino first and Benedyczak as the current alternative.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-07-23",
+          "source": "Goal Italia",
+          "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Ranks Pellegrino first and Bernabé second.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "club": "Roma",
+      "filed_order": [
+        "Paulo Dybala",
+        "Donyell Malen",
+        "Lorenzo Pellegrini"
+      ],
+      "verdict": "KEEP",
+      "recommended_order": [
+        "Paulo Dybala",
+        "Donyell Malen",
+        "Lorenzo Pellegrini"
+      ],
+      "confidence": "MEDIUM",
+      "priority": "LOW",
+      "reason": "Dybala converted Roma's current preseason penalty and SOS Fanta calls him the unambiguous first taker. Goal Italia ranks Malen first, but that conflicts with the direct current event and is insufficient to displace Dybala.",
+      "evidence": [
+        {
+          "date": "2026-07-19",
+          "source": "La Gazzetta dello Sport",
+          "url": "https://www.gazzetta.it/Calcio/Serie-A/Roma/19-07-2026/dybala-da-spettacolo-la-roma-ne-fa-6-in-amichevole.shtml",
+          "source_tier": "A_EVENT",
+          "evidence_type": "MATCH_REPORT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Dybala converted Roma's penalty in the preseason match against the Primavera.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-07-24",
+          "source": "SOS Fanta",
+          "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Calls Dybala the clear first taker and Malen second.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-07-23",
+          "source": "Goal Italia",
+          "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Ranks Malen before Dybala, creating a specialist-source conflict.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "club": "Sassuolo",
+      "filed_order": [
+        "Domenico Berardi",
+        "Armand Lauriente",
+        "Andrea Pinamonti"
+      ],
+      "verdict": "CHANGE_CANDIDATE",
+      "recommended_order": [
+        "Domenico Berardi",
+        "Andrea Pinamonti",
+        "Armand Laurienté"
+      ],
+      "confidence": "MEDIUM",
+      "priority": "MEDIUM",
+      "reason": "Berardi remains the clear primary. Both fresh specialist sources put Pinamonti second, ahead of Laurienté.",
+      "evidence": [
+        {
+          "date": "2026-02-20",
+          "source": "Transfermarkt",
+          "url": "https://www.transfermarkt.it/spielbericht/index/spielbericht/4620974",
+          "source_tier": "B_SUPPORTING_HISTORY",
+          "evidence_type": "PENALTY_HISTORY",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Records Berardi taking Sassuolo's penalty against Verona. The penalty was saved, and Berardi scored from the rebound.",
+          "filed_primary_on_pitch": "YES"
+        },
+        {
+          "date": "2026-07-24",
+          "source": "SOS Fanta",
+          "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Names Berardi first and Pinamonti second.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-07-23",
+          "source": "Goal Italia",
+          "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Also ranks Berardi first and Pinamonti second.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "club": "Torino",
+      "filed_order": [
+        "Nikola Vlasic",
+        "Duván Zapata",
+        "Giovanni Simeone"
+      ],
+      "verdict": "REVIEW",
+      "recommended_order": [
+        "Nikola Vlašić",
+        "Sandro Kulenović",
+        "Duván Zapata"
+      ],
+      "confidence": "MEDIUM",
+      "priority": "MEDIUM",
+      "reason": "Kulenović took Torino's current preseason penalty, but Vlašić was absent, so the event does not promote Kulenović over the filed primary. SOS Fanta retains Vlašić first and makes Kulenović the leading backup.",
+      "evidence": [
+        {
+          "date": "2026-07-22",
+          "source": "La Gazzetta dello Sport",
+          "url": "https://www.gazzetta.it/en/football/teams/torino/news/22-07-2026/torino-kulenovic-s-penalty-decides-second-friendly-alcione-beaten-1-0.shtml",
+          "source_tier": "A_EVENT",
+          "evidence_type": "MATCH_REPORT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Kulenović converted Torino's friendly penalty against Alcione. Vlašić was not in the reported lineup.",
+          "filed_primary_on_pitch": "NO"
+        },
+        {
+          "date": "2026-07-22",
+          "source": "La Stampa",
+          "url": "https://www.lastampa.it/sport/2026/07/22/news/il_toro_fatica_ma_batte_l_alcione_milano_decide_il_rigore_di_kulenovic-15696702/amp/",
+          "source_tier": "B_LOCAL_MEDIA",
+          "evidence_type": "MATCH_REPORT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Reports that Kulenović replaced Simeone and converted; Zapata had not played in Torino's first two friendlies.",
+          "filed_primary_on_pitch": "NO"
+        },
+        {
+          "date": "2026-07-24",
+          "source": "SOS Fanta",
+          "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Names Vlašić first, Kulenović second and Zapata third.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "club": "Udinese",
+      "filed_order": [
+        "Keinan Davis",
+        "Oumar Solet",
+        "Nicolo Zaniolo"
+      ],
+      "verdict": "KEEP",
+      "recommended_order": [
+        "Keinan Davis",
+        "Oumar Solet",
+        "Nicolò Zaniolo"
+      ],
+      "confidence": "MEDIUM",
+      "priority": "LOW",
+      "reason": "Fresh specialist sources agree with the filed order. Solet's competitive penalty occurred while Davis was injured, so it cannot promote Solet over Davis. An earlier local hierarchy report placed Zaniolo second, but the later specialist consensus has Solet second.",
+      "evidence": [
+        {
+          "date": "2026-02-08",
+          "source": "TuttoUdinese",
+          "url": "https://www.tuttoudinese.it/notizie/lecce-udinese-si-presenta-solet-dal-dischetto-il-motivo-179838",
+          "source_tier": "B_LOCAL_MEDIA",
+          "evidence_type": "MATCH_REPORT",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Solet converted against Lecce with the coach's approval. The report says Davis was first but injured, Zaniolo was second but on the bench, and Solet was then third.",
+          "filed_primary_on_pitch": "NO"
+        },
+        {
+          "date": "2026-07-24",
+          "source": "SOS Fanta",
+          "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Ranks Davis first, Solet second and treats Zaniolo as speculative behind them.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-07-23",
+          "source": "Goal Italia",
+          "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Ranks Davis, Solet and Zaniolo, matching the filed order.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "club": "Venezia",
+      "filed_order": [
+        null,
+        null,
+        null
+      ],
+      "verdict": "UNRESOLVED",
+      "recommended_order": [
+        null,
+        null,
+        null
+      ],
+      "confidence": "LOW",
+      "priority": "HIGH",
+      "reason": "Current specialist sources disagree over Adams and Rrahmani. The latest usable competitive history also shows Yeboah and Adorante sharing two regular-time penalties in the same match. No current preseason event or official statement resolves the 2026/27 hierarchy.",
+      "conditional_candidates": [
+        "Akor Adams",
+        "Albion Rrahmani",
+        "Andrea Adorante",
+        "John Yeboah"
+      ],
+      "evidence": [
+        {
+          "date": "2026-01-10",
+          "source": "Lega B",
+          "url": "https://www.legab.it/seriebkt/partita/2025-2026/stagione-regolare/reggiana-vs-venezia",
+          "source_tier": "A_OFFICIAL",
+          "evidence_type": "MATCH_EVENT_LOG",
+          "penalty_context": "REGULAR_TIME",
+          "claim": "Yeboah converted Venezia's first penalty at 34 minutes and Adorante took and missed a second penalty at 45+5 while both were on the pitch.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-07-24",
+          "source": "SOS Fanta",
+          "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Names Rrahmani as the leading candidate, with Adorante and Yeboah as alternatives.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        },
+        {
+          "date": "2026-07-23",
+          "source": "Goal Italia",
+          "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+          "source_tier": "B_SPECIALIST",
+          "evidence_type": "CURRENT_HIERARCHY",
+          "penalty_context": "HIERARCHY",
+          "claim": "Ranks Adams first and Rrahmani second, conflicting with SOS Fanta.",
+          "filed_primary_on_pitch": "UNKNOWN"
+        }
+      ]
+    }
+  ],
+  "community_search": {
+    "x": "No X post was promoted to evidence because no directly verifiable, dated first-party hierarchy statement was found.",
+    "reddit": "Relevant roster and transfer leads were checked for Milan, Juventus, Napoli and Venezia. None was used as dispositive hierarchy evidence without an official or established-media confirmation."
+  },
+  "source_hubs_checked": [
+    {
+      "source": "SOS Fanta",
+      "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/"
+    },
+    {
+      "source": "Goal Italia",
+      "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419"
+    },
+    {
+      "source": "Sky Sport Italia 2025/26 hierarchy history",
+      "url": "https://sport.sky.it/fantacalcio/2026/02/03/rigoristi-serie-a-fantacalcio-2025-2026"
+    },
+    {
+      "source": "Transfermarkt penalty history",
+      "url": "https://www.transfermarkt.it/serie-a/elfmeterschuetzen/wettbewerb/IT1/saison_id/gesamt"
+    }
+  ],
+  "limitations": [
+    "The audit was completed during preseason, before the configured 2026/27 Serie A start date.",
+    "Transfer activity and post-World Cup player returns can still alter several hierarchies.",
+    "No backup was promoted solely because the filed primary was absent.",
+    "Shootout attempts were identified separately and were not treated as regular-time hierarchy evidence.",
+    "Napoli and Venezia were left unresolved rather than converting conditional or conflicting reports into invented orders."
+  ]
+}

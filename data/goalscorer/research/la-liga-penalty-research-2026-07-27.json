@@ -1,0 +1,987 @@
+{
+  "audit": {
+    "league": "La Liga",
+    "season": "2026/27",
+    "as_of": "2026-07-27",
+    "season_status": "preseason",
+    "season_start": "2026-08-16",
+    "club_count_expected": 20,
+    "filed_hierarchy_source": "data/goalscorer/la-liga-penalty-takers.json",
+    "season_config_source": "data/goalscorer/club-penalty-season.json",
+    "shootout_policy": "Penalty-shootout attempts are excluded. Regular-time and extra-time match penalties are evaluated as role evidence.",
+    "absence_policy": "A taker's absence does not automatically promote the player who took in his absence.",
+    "social_media_policy": "X and Reddit were used as discovery leads only. No social-only claim determines a verdict.",
+    "confidence_definition": "Confidence measures confidence in the recommended hierarchy, not the player's penalty-taking ability."
+  },
+  "priority_definitions": {
+    "P0": "Publish blocker: filed primary is absent, hierarchy is blank, or the current hierarchy is materially wrong.",
+    "P1": "Material correction or availability condition that should be resolved before the relevant matchday.",
+    "P2": "Filed primary can remain, but backup depth or conditions require monitoring."
+  },
+  "clubs": [
+    {
+      "club": "Alavés",
+      "filed_hierarchy": [
+        "Carlos Vicente",
+        "Lucas Boyé",
+        "Antonio Martínez"
+      ],
+      "verdict": {
+        "code": "REJECT",
+        "summary": "The filed primary left in January. Lucas Boyé has both post-transfer specialist support and a subsequent regular-time conversion ahead of Toni Martínez."
+      },
+      "recommended_hierarchy": [
+        "Lucas Boyé",
+        "Antonio \"Toni\" Martínez",
+        null
+      ],
+      "recommended_notes": "The third position is unresolved.",
+      "confidence": "HIGH_PRIMARY_MEDIUM_DEPTH",
+      "priority": "P0",
+      "evidence": [
+        {
+          "date": "2026-01-27",
+          "type": "PERSONNEL",
+          "source": "Noticias de Álava",
+          "title": "Carlos Vicente transferred to Birmingham City",
+          "url": "https://www.noticiasdealava.eus/alaves/2026/01/27/alaves-oficializa-venta-carlos-vicente-mercado-birmingham-10621728.html",
+          "summary": "The permanent transfer ended Carlos Vicente's spell at Alavés, so he cannot remain in the 2026/27 hierarchy."
+        },
+        {
+          "date": "2026-02-16",
+          "type": "SPECIALIST_HIERARCHY",
+          "source": "Betfair España",
+          "title": "Post-transfer responsibility assigned to Lucas Boyé",
+          "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-estos-son-los-lanzadores-de-los-20-equipos-160226-1245.html",
+          "summary": "The specialist review explicitly placed penalty responsibility with Lucas Boyé after Carlos Vicente's winter departure."
+        },
+        {
+          "date": "2026-03-08",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "Cadena SER Vitoria",
+          "title": "Lucas Boyé converts at Mestalla",
+          "url": "https://cadenaser.com/euskadi/2026/03/08/derrota-cruel-en-mestalla-3-2-ser-vitoria/",
+          "summary": "Boyé converted a regular-time penalty against Valencia with Toni Martínez starting, directly supporting Boyé above Martínez."
+        }
+      ]
+    },
+    {
+      "club": "Athletic Club",
+      "filed_hierarchy": [
+        "Oihan Sancet",
+        "Nico Williams",
+        "Gorka Guruzeta"
+      ],
+      "verdict": {
+        "code": "RETAIN_PRIMARY_QUALIFY_DEPTH",
+        "summary": "Oihan Sancet remains supported as primary. Guruzeta has demonstrated cover only after Sancet left the pitch, while the order between Guruzeta and Nico Williams is not established."
+      },
+      "recommended_hierarchy": [
+        "Oihan Sancet",
+        null,
+        null
+      ],
+      "recommended_notes": "The backup order is unresolved between Gorka Guruzeta and Nico Williams.",
+      "confidence": "HIGH_PRIMARY_LOW_DEPTH",
+      "priority": "P2",
+      "evidence": [
+        {
+          "date": "2025-08-25",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "Transfermarkt",
+          "title": "Oihan Sancet converts an early-season league penalty",
+          "url": "https://www.transfermarkt.es/oihan-sancet/elfmetertore/spieler/571020",
+          "summary": "Sancet's documented conversion supports his position as the incumbent primary taker."
+        },
+        {
+          "date": "2026-02-20",
+          "type": "REGULAR_TIME_PENALTY_ABSENCE_CONTEXT",
+          "source": "El País",
+          "title": "Guruzeta converts after Sancet is substituted",
+          "url": "https://elpais.com/deportes/futbol/2026-02-20/guruzeta-decide-desde-los-once-metros-y-deja-sin-premio-al-elche.html",
+          "summary": "Guruzeta converted after Sancet had been substituted. The event establishes Guruzeta as cover but does not displace Sancet or prove the full backup order."
+        }
+      ]
+    },
+    {
+      "club": "Atlético Madrid",
+      "filed_hierarchy": [
+        "Julián Álvarez",
+        "Antoine Griezmann",
+        "Alexander Sørloth"
+      ],
+      "verdict": {
+        "code": "AMEND",
+        "summary": "Julián Álvarez remains the supported primary while he remains at the club. Antoine Griezmann has left, and Sørloth cannot be promoted solely because of that departure."
+      },
+      "recommended_hierarchy": [
+        "Julián Álvarez",
+        null,
+        null
+      ],
+      "recommended_notes": "Both backup positions are unresolved. Recheck immediately if Julián Álvarez leaves.",
+      "confidence": "MEDIUM_HIGH_CONDITIONAL",
+      "priority": "P1",
+      "evidence": [
+        {
+          "date": "2026-04-29",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "UEFA",
+          "title": "Julián Álvarez converts against Arsenal",
+          "url": "https://www.uefa.com/uefachampionsleague/news/02a4-2081fa8b7112-8f4474ea29c4-1000--atleti-1-1-arsenal-viktor-gyokeres-and-julian-alvarez-on-ta/",
+          "summary": "Álvarez converted a regular-time penalty in the Champions League semifinal first leg, providing recent high-level role evidence."
+        },
+        {
+          "date": "2026-03-24",
+          "type": "PERSONNEL",
+          "source": "AS",
+          "title": "Antoine Griezmann's summer departure announced",
+          "url": "https://as.com/futbol/el-atletico-hace-oficial-la-marcha-de-griezmann-a-orlando-f202603-n/",
+          "summary": "Griezmann's move to Orlando removes him from the 2026/27 hierarchy."
+        },
+        {
+          "date": "2026-07-24",
+          "type": "CURRENT_STATUS",
+          "source": "Cadena SER",
+          "title": "Julián Álvarez remains subject to transfer reporting",
+          "url": "https://cadenaser.com/nacional/2026/07/24/la-opcion-gyokeres-abre-la-puerta-de-salida-a-julian-alvarez-el-atletico-solo-contempla-un-destino-para-el-argentino-si-no-quiere-seguir-cadena-ser/",
+          "summary": "Álvarez remained at Atlético at the audit cutoff, but active transfer reporting makes the recommendation conditional on his continued registration."
+        }
+      ]
+    },
+    {
+      "club": "Barcelona",
+      "filed_hierarchy": [
+        "Lamine Yamal",
+        "Robert Lewandowski",
+        "Raphinha"
+      ],
+      "verdict": {
+        "code": "REJECT_FIXED_ORDER",
+        "summary": "The evidence supports a discretionary three-player committee rather than a stable linear hierarchy."
+      },
+      "recommended_hierarchy": [
+        "Lamine Yamal",
+        "Raphinha",
+        "Robert Lewandowski"
+      ],
+      "recommended_notes": "These names form an unordered committee. Their array position is not a claimed fixed sequence.",
+      "confidence": "MEDIUM_COMMITTEE_LOW_SEQUENCE",
+      "priority": "P1",
+      "evidence": [
+        {
+          "date": "2026-02-17",
+          "type": "MANAGEMENT_HIERARCHY",
+          "source": "AS",
+          "title": "Penalty management described as discretionary",
+          "url": "https://as.com/futbol/primera/flick-tibio-en-la-gestion-de-los-penaltis-f202602-n/",
+          "summary": "Reporting described penalty management as free rather than fixed. Raphinha had taken the previous two attempts before Lamine Yamal's subsequent attempt."
+        },
+        {
+          "date": "2026-06-12",
+          "type": "SEASON_REVIEW",
+          "source": "Marca",
+          "title": "Three-player penalty record reviewed",
+          "url": "https://us.marca.com/soccer/la-liga/2026/06/12/6a2c1094268e3e817e8b4594.html",
+          "summary": "Lamine took the most penalties in 2025/26, Raphinha recorded a perfect conversion rate, and Lewandowski missed two of three. The mixed usage supports a committee rather than the filed sequence."
+        }
+      ]
+    },
+    {
+      "club": "Celta Vigo",
+      "filed_hierarchy": [
+        "Borja Iglesias",
+        "Iago Aspas",
+        "Marcos Alonso"
+      ],
+      "verdict": {
+        "code": "RETAIN",
+        "summary": "The filed order is supported by a complete regular-time season review and specialist consensus."
+      },
+      "recommended_hierarchy": [
+        "Borja Iglesias",
+        "Iago Aspas",
+        "Marcos Alonso"
+      ],
+      "recommended_notes": "Retain the filed hierarchy.",
+      "confidence": "HIGH",
+      "priority": "P2",
+      "evidence": [
+        {
+          "date": "2026-06-06",
+          "type": "SEASON_REVIEW_REGULAR_TIME",
+          "source": "La Voz de Galicia",
+          "title": "Celta finishes with a perfect regular-time penalty record",
+          "url": "https://www.lavozdegalicia.es/noticia/gradario/2026/06/05/celta-cerro-pasado-curso-pleno-100-penaltis/00031780687434837947976.htm",
+          "summary": "The report recorded nine conversions from nine regular-time penalties: Borja Iglesias four, Iago Aspas two, Marcos Alonso one, and one each for two other players. It separately identified Copa shootout misses, which are excluded."
+        },
+        {
+          "date": "2026-02-16",
+          "type": "SPECIALIST_HIERARCHY",
+          "source": "Betfair España",
+          "title": "Borja Iglesias listed as first-choice taker",
+          "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-estos-son-los-lanzadores-de-los-20-equipos-160226-1245.html",
+          "summary": "The specialist review independently placed Borja Iglesias first."
+        }
+      ]
+    },
+    {
+      "club": "Deportivo La Coruña",
+      "filed_hierarchy": [
+        null,
+        null,
+        null
+      ],
+      "verdict": {
+        "code": "FILL_PRIMARY",
+        "summary": "Yeremay Hernández is strongly supported as primary, but the promoted club's backup order is not established."
+      },
+      "recommended_hierarchy": [
+        "Yeremay Hernández",
+        null,
+        null
+      ],
+      "recommended_notes": "Both backup positions are unresolved.",
+      "confidence": "HIGH_PRIMARY_LOW_DEPTH",
+      "priority": "P0",
+      "evidence": [
+        {
+          "date": "2026-01-31",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "LaLiga",
+          "title": "Yeremay converts the winner against Cultural Leonesa",
+          "url": "https://iaas-public-front-pro.laliga.com/partido/temporada-2025-2026-laliga-hypermotion-cultural-leonesa-rc-deportivo-24",
+          "summary": "Yeremay converted the winning regular-time league penalty."
+        },
+        {
+          "date": "2026-04-20",
+          "type": "SUPPORTING_HISTORY",
+          "source": "Transfermarkt",
+          "title": "Yeremay remains the documented taker",
+          "url": "https://www.transfermarkt.es/deportivo-la-coruna/elfmeterschuetzen/verein/897",
+          "summary": "The club history records further 2025/26 attempts by Yeremay, including the latest listed April event."
+        },
+        {
+          "date": "2026-05-29",
+          "type": "CURRENT_STATUS",
+          "source": "Cadena SER",
+          "title": "Yeremay confirms contract through 2030",
+          "url": "https://cadenaser.com/nacional/2026/05/29/yeremay-aparca-los-rumores-tras-lograr-el-objetivo-del-ascenso-tengo-contrato-hasta-2030-y-soy-jugador-del-depor-cadena-ser/",
+          "summary": "Yeremay stated that he remained a Deportivo player under contract through 2030."
+        }
+      ]
+    },
+    {
+      "club": "Elche",
+      "filed_hierarchy": [
+        "Rafa Mir",
+        "André Silva",
+        "Aleix Febas"
+      ],
+      "verdict": {
+        "code": "REJECT",
+        "summary": "Both evidenced takers have left. Aleix Febas cannot be promoted merely because the players above him departed."
+      },
+      "recommended_hierarchy": [
+        null,
+        null,
+        null
+      ],
+      "recommended_notes": "The entire current hierarchy is unresolved.",
+      "confidence": "LOW",
+      "priority": "P0",
+      "evidence": [
+        {
+          "date": "2026-02-20",
+          "type": "REGULAR_TIME_PENALTY_ABSENCE_CONTEXT",
+          "source": "El País",
+          "title": "André Silva converts before Rafa Mir enters",
+          "url": "https://elpais.com/deportes/futbol/2026-02-20/guruzeta-decide-desde-los-once-metros-y-deja-sin-premio-al-elche.html",
+          "summary": "Silva converted while Mir was not on the pitch. This established Silva as cover at that time, not precedence over Mir."
+        },
+        {
+          "date": "2026-04-22",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "El País",
+          "title": "André Silva converts against Atlético",
+          "url": "https://elpais.com/deportes/futbol/2026-04-22/el-elche-se-oxigena-y-derrota-a-un-atletico-de-bolo-veraniego.html",
+          "summary": "Silva converted another regular-time penalty late in the season."
+        },
+        {
+          "date": "2026-06-12",
+          "type": "PERSONNEL",
+          "source": "Onda Cero",
+          "title": "André Silva leaves for Porto",
+          "url": "https://www.ondacero.es/emisoras/comunidad-valenciana/elche/noticias/oficial-andre-silva-deja-elche-jugar-oporto_202606126a2bf8f10f0ef63eb6687002.html",
+          "summary": "Silva's departure removed him from the 2026/27 hierarchy."
+        },
+        {
+          "date": "2026-06-18",
+          "type": "PERSONNEL",
+          "source": "Cadena SER Elche",
+          "title": "Rafa Mir's association with the club terminated",
+          "url": "https://cadenaser.com/comunitat-valenciana/2026/06/18/el-elche-cf-rescinde-el-contrato-de-rafa-mir-tras-su-condena-por-agresion-sexual-y-lesiones-radio-elche/",
+          "summary": "The termination removed Mir from the 2026/27 hierarchy."
+        },
+        {
+          "date": "2026-07-24",
+          "type": "PRESEASON_STATUS",
+          "source": "AS",
+          "title": "No successor emerges in the depleted preseason attack",
+          "url": "https://as.com/futbol/primera/el-elche-empata-a-nada-frente-al-johor-ante-la-mirada-de-bragarnik-f202607-n/",
+          "summary": "The preseason report described the attack as depleted after the departures of Álvaro Rodríguez, Rafa Mir, and André Silva, without identifying a new penalty taker."
+        }
+      ]
+    },
+    {
+      "club": "Espanyol",
+      "filed_hierarchy": [
+        "Javi Puado",
+        "Kike García",
+        "Roberto Fernández"
+      ],
+      "verdict": {
+        "code": "AMEND_PRIMARY",
+        "summary": "Kike García has the strongest current primary evidence. Javi Puado and Roberto Fernández remain an unordered cover pool."
+      },
+      "recommended_hierarchy": [
+        "Kike García",
+        null,
+        null
+      ],
+      "recommended_notes": "The backup order is unresolved between Javi Puado and Roberto Fernández.",
+      "confidence": "MEDIUM",
+      "priority": "P1",
+      "evidence": [
+        {
+          "date": "2025-08-24",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "Mundo Deportivo",
+          "title": "Javi Puado converts a retaken penalty",
+          "url": "https://www.mundodeportivo.com/futbol/rcd-espanyol/20250824/1002519792/puado-falla-dos-veces-marca-penalti-mandar-var-repetir-lanzamiento.html",
+          "summary": "Puado converted before Kike García joined, so the event does not establish precedence over the later signing."
+        },
+        {
+          "date": "2025-09-15",
+          "type": "REGULAR_TIME_PENALTY_ON_PITCH_CONTEXT",
+          "source": "RCD Espanyol",
+          "title": "Kike García converts against Mallorca",
+          "url": "https://www.rcdespanyol.com/en/new/monday-night-mayhem-in-win-against-rcd-mallorca/19079",
+          "summary": "Kike converted with Puado involved in the match, providing the strongest direct evidence against Puado remaining undisputed first choice."
+        },
+        {
+          "date": "2026-04-23",
+          "type": "LATEST_REGULAR_TIME_ATTEMPT",
+          "source": "El País",
+          "title": "Kike García takes the later league penalty",
+          "url": "https://elpais.com/deportes/futbol/2026-04-23/camello-desata-la-locura-en-vallecas-y-el-espanyol-sigue-sin-ganar-en-2026.html",
+          "summary": "Kike took and missed the later league penalty. A miss alone does not remove him from the role."
+        }
+      ]
+    },
+    {
+      "club": "Getafe",
+      "filed_hierarchy": [
+        "Mauro Arambarri",
+        "Borja Mayoral",
+        "Martín Satriano"
+      ],
+      "verdict": {
+        "code": "REJECT",
+        "summary": "Mauro Arambarri has left and Martín Satriano has been explicitly assigned specialist status during preseason."
+      },
+      "recommended_hierarchy": [
+        "Martín Satriano",
+        "Borja Mayoral",
+        null
+      ],
+      "recommended_notes": "The third position is unresolved.",
+      "confidence": "HIGH_PRIMARY_MEDIUM_DEPTH",
+      "priority": "P0",
+      "evidence": [
+        {
+          "date": "2026-07-07",
+          "type": "PERSONNEL",
+          "source": "Telemadrid",
+          "title": "Mauro Arambarri leaves in the summer squad changes",
+          "url": "https://www.telemadrid.es/programas/deportes-tn/El-Getafe-presenta-a-los-cuatro-nuevos-fichajes-2-2904929513--20260707035000.html",
+          "summary": "Arambarri's departure removes the filed primary from the current hierarchy."
+        },
+        {
+          "date": "2026-07-23",
+          "type": "PRESEASON_PENALTY_AND_HIERARCHY",
+          "source": "AS",
+          "title": "Martín Satriano assumes penalty responsibility",
+          "url": "https://as.com/futbol/primera/satriano-asume-galones-f202607-n/",
+          "summary": "Satriano converted against Tenerife and was explicitly described as the new specialist after Arambarri and Luis Milla left."
+        },
+        {
+          "date": "2026-04-20",
+          "type": "CURRENT_STATUS",
+          "source": "Mundo Deportivo",
+          "title": "Borja Mayoral remains contracted for 2026/27",
+          "url": "https://www.mundodeportivo.com/futbol/getafe/20260420/1004172672/borja-mayoral-piensa-proxima-temporada.html",
+          "summary": "Mayoral's continuing contract supports retaining him as a current backup candidate rather than primary."
+        }
+      ]
+    },
+    {
+      "club": "Levante",
+      "filed_hierarchy": [
+        "Morales",
+        "Adrián De la Fuente",
+        "Karl Etta Eyong"
+      ],
+      "verdict": {
+        "code": "REJECT_PRIMARY",
+        "summary": "Morales has left. Adrián de la Fuente has demonstrated cover, but the event occurred without Morales and does not prove inherited first-choice status."
+      },
+      "recommended_hierarchy": [
+        null,
+        null,
+        null
+      ],
+      "recommended_notes": "The hierarchy is unresolved. Adrián de la Fuente is the best-evidenced current candidate.",
+      "confidence": "LOW",
+      "priority": "P0",
+      "evidence": [
+        {
+          "date": "2025-08-23",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "Eurosport",
+          "title": "Morales converts against Barcelona",
+          "url": "https://www.eurosport.es/futbol/la-liga/2025-2026/video-penalti-levante-barcelona-mano-balde-disparo-morales-polemica-hoy_sto23214069/story.shtml",
+          "summary": "Morales was the evidenced incumbent during 2025/26."
+        },
+        {
+          "date": "2026-04-13",
+          "type": "REGULAR_TIME_PENALTY_ABSENCE_CONTEXT",
+          "source": "Cadena SER Valencia",
+          "title": "Adrián de la Fuente takes against Getafe",
+          "url": "https://cadenaser.com/comunitat-valenciana/2026/04/13/el-levante-mantiene-viva-la-llama-radio-valencia/",
+          "summary": "De la Fuente took and missed with Morales unavailable; Etta Eyong entered later. This proves candidacy but not permanent succession."
+        },
+        {
+          "date": "2026-05-28",
+          "type": "PERSONNEL",
+          "source": "Levante UD",
+          "title": "José Morales and Levante part ways",
+          "url": "https://www.levanteud.com/en/news/levante-ud-and-jose-morales-part-ways",
+          "summary": "The club announcement removes Morales from the 2026/27 hierarchy."
+        }
+      ]
+    },
+    {
+      "club": "Málaga",
+      "filed_hierarchy": [
+        null,
+        null,
+        null
+      ],
+      "verdict": {
+        "code": "FILL_PRIMARY",
+        "summary": "Chupe remained the taker despite mid-season misses. Adrián Niño has supporting specialist evidence, but the third position is unresolved."
+      },
+      "recommended_hierarchy": [
+        "Chupe",
+        "Adrián Niño",
+        null
+      ],
+      "recommended_notes": "The third position is unresolved.",
+      "confidence": "HIGH_PRIMARY_LOW_MEDIUM_DEPTH",
+      "priority": "P0",
+      "evidence": [
+        {
+          "date": "2026-03-03",
+          "type": "REGULAR_TIME_ROLE_REVIEW",
+          "source": "Málaga Hoy",
+          "title": "Chupe's role questioned after consecutive misses",
+          "url": "https://www.malagahoy.es/malaga_cf/penaltis-lunar-malaga-cf_0_2006053282.html",
+          "summary": "Chupe had taken the preceding penalties despite two consecutive misses. The report questioned whether he would retain the next attempt but did not establish a replacement."
+        },
+        {
+          "date": "2026-05-31",
+          "type": "CONTINUED_REGULAR_TIME_ROLE",
+          "source": "Transfermarkt",
+          "title": "Chupe continues taking penalties after the misses",
+          "url": "https://www.transfermarkt.us/fc-malaga/elfmeterschuetzen/verein/1084",
+          "summary": "The event history records Chupe taking further penalties on May 2 and May 31, demonstrating that the earlier misses did not immediately remove him."
+        },
+        {
+          "date": "2026-06-02",
+          "type": "SPECIALIST_DEPTH",
+          "source": "AS",
+          "title": "Chupe's role reaffirmed and Adrián Niño identified as a specialist",
+          "url": "https://as.com/futbol/segunda/chupe-somos-ninos-que-tienen-el-sueno-de-conseguir-el-ascenso-f202606-n/",
+          "summary": "The report reaffirmed Chupe's penalty contribution and identified Adrián Niño as another capable specialist."
+        },
+        {
+          "date": "2026-07-13",
+          "type": "PRESEASON_STATUS",
+          "source": "Cadena SER Málaga",
+          "title": "Chupe remains in the promoted preseason squad",
+          "url": "https://cadenaser.com/andalucia/2026/07/13/el-malaga-regresa-al-trabajo-en-su-vuelta-a-primera-division-ser-malaga/",
+          "summary": "The preseason report confirms Chupe remained with the squad at the audit cutoff."
+        }
+      ]
+    },
+    {
+      "club": "Osasuna",
+      "filed_hierarchy": [
+        "Ante Budimir",
+        "Aimar Oroz",
+        "Ruben García"
+      ],
+      "verdict": {
+        "code": "RETAIN_PRIMARY_QUALIFY_DEPTH",
+        "summary": "Ante Budimir remains strongly supported as primary. The filed backup sequence lacks sufficient direct current evidence."
+      },
+      "recommended_hierarchy": [
+        "Ante Budimir",
+        null,
+        null
+      ],
+      "recommended_notes": "Both backup positions are unresolved.",
+      "confidence": "HIGH_PRIMARY_LOW_DEPTH",
+      "priority": "P2",
+      "evidence": [
+        {
+          "date": "2026-02-21",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "Cadena SER",
+          "title": "Ante Budimir converts against Real Madrid",
+          "url": "https://cadenaser.com/nacional/2026/02/21/era-penalti-de-courtois-sobre-budimir-iturralde-gonzalez-resuelve-la-polemica-del-osasuna-real-madrid-cadena-ser/",
+          "summary": "Budimir won and converted the regular-time penalty."
+        },
+        {
+          "date": "2026-04-21",
+          "type": "LATEST_REGULAR_TIME_ATTEMPT",
+          "source": "CA Osasuna",
+          "title": "Budimir takes the penalty against Athletic",
+          "url": "https://www.osasuna.es/en/athletic-osasuna-match-recap-21-04-2026",
+          "summary": "Budimir took the later penalty and had it saved. A miss does not by itself remove the role."
+        },
+        {
+          "date": "2026-07-26",
+          "type": "PRESEASON_STATUS",
+          "source": "AS",
+          "title": "Budimir remains part of the current squad",
+          "url": "https://as.com/futbol/osasuna-espera-a-budimir-f202607-n/",
+          "summary": "The preseason report expected Budimir's return and provided no evidence of a hierarchy change."
+        }
+      ]
+    },
+    {
+      "club": "Racing Santander",
+      "filed_hierarchy": [
+        null,
+        null,
+        null
+      ],
+      "verdict": {
+        "code": "FILL_PRIMARY",
+        "summary": "Andrés Martín is strongly supported as primary through repeated regular-time conversions, including with another attacking candidate on the pitch."
+      },
+      "recommended_hierarchy": [
+        "Andrés Martín",
+        null,
+        null
+      ],
+      "recommended_notes": "Both backup positions are unresolved.",
+      "confidence": "HIGH_PRIMARY_LOW_DEPTH",
+      "priority": "P0",
+      "evidence": [
+        {
+          "date": "2026-01-03",
+          "type": "REGULAR_TIME_PENALTY_ON_PITCH_CONTEXT",
+          "source": "Cadena SER Santander",
+          "title": "Andrés Martín converts at Valladolid",
+          "url": "https://cadenaser.com/cantabria/2026/01/03/tomeo-lo-hizo-todo-en-zorrilla-1-1-radio-santander/",
+          "summary": "Andrés converted with Juan Carlos Arana also on the pitch, providing useful direct hierarchy evidence."
+        },
+        {
+          "date": "2026-05-16",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "El País",
+          "title": "Andrés Martín converts in the promotion-clinching match",
+          "url": "https://elpais.com/deportes/futbol/2026-05-16/el-racing-de-santander-vuelve-a-primera-14-anos-despues.html",
+          "summary": "Andrés converted another high-pressure regular-time penalty in the match that secured promotion."
+        },
+        {
+          "date": "2026-07-13",
+          "type": "PRESEASON_STATUS",
+          "source": "EFE",
+          "title": "Andrés remains with the promoted squad",
+          "url": "https://efe.com/deportes/2026-07-13/racing-pretemporada-con-canales-y-sin-salinas-y-puerta/",
+          "summary": "The preseason report confirms Andrés remained in the squad at the audit cutoff."
+        }
+      ]
+    },
+    {
+      "club": "Rayo Vallecano",
+      "filed_hierarchy": [
+        "Isi Palazón",
+        "Jorge De Frutos",
+        "Pedro Díaz"
+      ],
+      "verdict": {
+        "code": "RETAIN_FIRST_TWO_WITH_CONDITION",
+        "summary": "Isi Palazón remains the supported primary and Jorge de Frutos is demonstrated cover. The third position is unsupported, and Isi's suspension requires an availability check."
+      },
+      "recommended_hierarchy": [
+        "Isi Palazón",
+        "Jorge de Frutos",
+        null
+      ],
+      "recommended_notes": "The third position is unresolved. Temporary suspension absence must not be treated as permanent promotion for De Frutos.",
+      "confidence": "MEDIUM",
+      "priority": "P1",
+      "evidence": [
+        {
+          "date": "2026-03-04",
+          "type": "REGULAR_TIME_HISTORY",
+          "source": "Transfermarkt",
+          "title": "Isi remains the repeated taker before De Frutos covers",
+          "url": "https://www.transfermarkt.es/rayo-vallecano/elfmeterschuetzen/verein/367",
+          "summary": "The event history records multiple league attempts by Isi before Jorge de Frutos took the March penalty."
+        },
+        {
+          "date": "2026-03-04",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "Cadena SER",
+          "title": "Jorge de Frutos converts against Oviedo",
+          "url": "https://cadenaser.com/nacional/2026/03/04/rayo-vallecano-3-0-real-oviedo-resumen-resultado-y-goles-del-partido-de-la-jornada-23-de-laliga-ea-sports-cadena-ser/",
+          "summary": "De Frutos converted, establishing him as demonstrated cover without proving a permanent change above Isi."
+        },
+        {
+          "date": "2026-04-29",
+          "type": "AVAILABILITY",
+          "source": "EFE",
+          "title": "Isi Palazón receives a seven-match suspension",
+          "url": "https://efe.com/deportes/2026-04-29/isi-palazon-sancionado-partidos/",
+          "summary": "The ban was issued with fewer than seven league rounds remaining, so availability at the start of 2026/27 requires confirmation. This is an availability condition, not hierarchy evidence."
+        }
+      ]
+    },
+    {
+      "club": "Real Betis",
+      "filed_hierarchy": [
+        "Juan Camilo Hernández",
+        "Ezequiel Ávila",
+        "Antony"
+      ],
+      "verdict": {
+        "code": "AMEND_DEPTH",
+        "summary": "Cucho Hernández remains the supported primary. Ezequiel Ávila has left, and Antony cannot be promoted without direct role evidence."
+      },
+      "recommended_hierarchy": [
+        "Juan Camilo \"Cucho\" Hernández",
+        null,
+        null
+      ],
+      "recommended_notes": "Both backup positions are unresolved.",
+      "confidence": "HIGH_PRIMARY_LOW_DEPTH",
+      "priority": "P1",
+      "evidence": [
+        {
+          "date": "2026-04-08",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "UEFA",
+          "title": "Cucho Hernández converts against Braga",
+          "url": "https://www.uefa.com/uefaeuropaleague/news/02a4-20578bd4db52-6385146b3f8a-1000--braga-1-1-real-betis-cucho-hernandez-penalty-earns-visito/",
+          "summary": "Cucho converted a regular-time penalty in the Europa League quarterfinal, providing recent high-level primary evidence."
+        },
+        {
+          "date": "2026-05-26",
+          "type": "PERSONNEL",
+          "source": "AS",
+          "title": "Ezequiel Ávila's departure confirmed",
+          "url": "https://as.com/futbol/primera/chimy-punto-y-final-f202605-n/",
+          "summary": "Ávila's departure removes him from the filed 2026/27 hierarchy."
+        },
+        {
+          "date": "2026-07-26",
+          "type": "PRESEASON_STATUS",
+          "source": "AS",
+          "title": "Cucho remains the expected attacking reference",
+          "url": "https://as.com/futbol/primera/pellegrini-suspira-por-el-nueve-f202607-n/",
+          "summary": "Cucho remained part of the current squad and no source established a different primary."
+        }
+      ]
+    },
+    {
+      "club": "Real Madrid",
+      "filed_hierarchy": [
+        "Kylian Mbappe-Lottin",
+        "Vinícius Júnior",
+        "Jude Bellingham"
+      ],
+      "verdict": {
+        "code": "RETAIN_PRIMARY_QUALIFY_DEPTH",
+        "summary": "Kylian Mbappé is the supported first option. Current evidence does not establish a fixed order between Vinícius Júnior and Jude Bellingham."
+      },
+      "recommended_hierarchy": [
+        "Kylian Mbappé",
+        null,
+        null
+      ],
+      "recommended_notes": "The backup order is unresolved between Vinícius Júnior and Jude Bellingham.",
+      "confidence": "HIGH_PRIMARY_LOW_DEPTH",
+      "priority": "P2",
+      "evidence": [
+        {
+          "date": "2025-11-02",
+          "type": "MANAGERIAL_HIERARCHY",
+          "source": "Mundo Deportivo",
+          "title": "Mbappé identified as the designated first taker",
+          "url": "https://www.mundodeportivo.com/futbol/real-madrid/20251102/1002561894/penaltis-favor-le-han-pitado-real-madrid-temporada.html",
+          "summary": "Contemporary reporting stated that Mbappé was the designated first option."
+        },
+        {
+          "date": "2026-02-03",
+          "type": "REGULAR_TIME_AND_SEASON_REVIEW",
+          "source": "Marca",
+          "title": "Mbappé converts and remains first option",
+          "url": "https://amp.marca.com/futbol/real-madrid/2026/02/03/mbappe-cierra-crisis-penaltis.html",
+          "summary": "Mbappé converted against Rayo and was again described as first option. The article documented attempts by all three players without establishing a fixed backup sequence."
+        }
+      ]
+    },
+    {
+      "club": "Real Sociedad",
+      "filed_hierarchy": [
+        "Mikel Oyarzabal",
+        "Brais Méndez",
+        "Takefusa Kubo"
+      ],
+      "verdict": {
+        "code": "RETAIN_FIRST_TWO_QUALIFY_THIRD",
+        "summary": "Mikel Oyarzabal remains primary and Brais Méndez is demonstrated second-choice or delegated cover. Takefusa Kubo lacks direct current penalty-role evidence."
+      },
+      "recommended_hierarchy": [
+        "Mikel Oyarzabal",
+        "Brais Méndez",
+        null
+      ],
+      "recommended_notes": "The third position is unresolved.",
+      "confidence": "HIGH_FIRST_TWO_LOW_THIRD",
+      "priority": "P2",
+      "evidence": [
+        {
+          "date": "2026-01-25",
+          "type": "REGULAR_TIME_PENALTY_ON_PITCH_CONTEXT",
+          "source": "LaLiga",
+          "title": "Brais Méndez converts while Oyarzabal participates",
+          "url": "https://www.laliga.com/partido/temporada-2025-2026-laliga-ea-sports-real-sociedad-rc-celta-21",
+          "summary": "Brais converted a late penalty while Oyarzabal had played and scored, establishing genuine delegation or cover rather than a simple absence event."
+        },
+        {
+          "date": "2026-03-15",
+          "type": "LATER_REGULAR_TIME_HISTORY",
+          "source": "Transfermarkt",
+          "title": "Oyarzabal takes the later listed penalty",
+          "url": "https://www.transfermarkt.fr/real-sociedad-san-sebastian/elfmeterschuetzen/verein/681",
+          "summary": "Oyarzabal subsequently took the later listed penalty, supporting his retention as primary above Brais."
+        },
+        {
+          "date": "2026-07-23",
+          "type": "PRESEASON_STATUS",
+          "source": "AS",
+          "title": "Kubo returns before Oyarzabal's scheduled preseason return",
+          "url": "https://as.com/futbol/primera/kubo-regresa-a-zubieta-para-iniciar-un-ano-importante-en-la-real-f202607-n/",
+          "summary": "Temporary preseason availability differences provide no basis for promoting Kubo into the hierarchy."
+        }
+      ]
+    },
+    {
+      "club": "Sevilla",
+      "filed_hierarchy": [
+        "Akor Adams",
+        "Isaac Romero",
+        "Ruben Vargas"
+      ],
+      "verdict": {
+        "code": "REJECT",
+        "summary": "Akor Adams has left. Isaac Romero and Ruben Vargas cannot inherit places automatically, although Isaac is the best-evidenced candidate."
+      },
+      "recommended_hierarchy": [
+        null,
+        null,
+        null
+      ],
+      "recommended_notes": "The hierarchy is unresolved. Isaac Romero is the leading candidate, not a confirmed primary.",
+      "confidence": "LOW",
+      "priority": "P0",
+      "evidence": [
+        {
+          "date": "2026-04-11",
+          "type": "REGULAR_TIME_PENALTY_ON_PITCH_CONTEXT",
+          "source": "Cadena SER",
+          "title": "Akor Adams converts with other candidates involved",
+          "url": "https://cadenaser.com/nacional/2026/04/11/sevilla-2-1-atletico-de-madrid-resumen-resultado-y-goles-del-partido-de-la-jornada-31-de-laliga-cadena-ser/",
+          "summary": "Akor converted against Atlético with Isaac Romero and Ruben Vargas involved, strongly confirming Akor's former precedence."
+        },
+        {
+          "date": "2026-07-22",
+          "type": "PERSONNEL",
+          "source": "Venezia FC",
+          "title": "Akor Adams joins Venezia",
+          "url": "https://en.veneziafc.it/news/akor-adams-joins-venezia-fc",
+          "summary": "The permanent move removes Akor from the 2026/27 hierarchy."
+        },
+        {
+          "date": "2025-01-18",
+          "type": "SUPPORTING_HISTORY",
+          "source": "Transfermarkt",
+          "title": "Isaac Romero has a prior converted penalty",
+          "url": "https://www.transfermarkt.es/isaac-romero/elfmetertore/spieler/687609",
+          "summary": "Isaac's prior conversion makes him a candidate but does not prove the current primary role."
+        },
+        {
+          "date": "2026-07-21",
+          "type": "PRESEASON_STATUS",
+          "source": "AS",
+          "title": "Isaac's attacking importance noted without penalty assignment",
+          "url": "https://as.com/futbol/primera/luis-garcia-exige-un-nueve-f202607-n/",
+          "summary": "Current reporting described Isaac's role in attack but did not assign him penalty responsibility."
+        }
+      ]
+    },
+    {
+      "club": "Valencia",
+      "filed_hierarchy": [
+        "Largie Ramazani",
+        "Pepelu",
+        "Hugo Duro"
+      ],
+      "verdict": {
+        "code": "REJECT",
+        "summary": "Largie Ramazani's loan ended. Hugo Duro took the latest two identified league penalties, independently supporting him above Pepelu."
+      },
+      "recommended_hierarchy": [
+        "Hugo Duro",
+        "Pepelu",
+        null
+      ],
+      "recommended_notes": "The third position is unresolved. Recheck if Ramazani completes a new move back to Valencia.",
+      "confidence": "MEDIUM",
+      "priority": "P0",
+      "evidence": [
+        {
+          "date": "2026-01-24",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "El País",
+          "title": "Largie Ramazani converts during his loan",
+          "url": "https://elpais.com/deportes/futbol/2026-01-24/el-valencia-de-repente-es-indestructible-un-gol-en-el-anadido-le-da-la-victoria-ante-el-espanyol.html",
+          "summary": "Ramazani converted against Espanyol while registered on a season-long loan."
+        },
+        {
+          "date": "2026-03-08",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "AS",
+          "title": "Hugo Duro converts against Alavés",
+          "url": "https://as.com/futbol/primera/hugo-duro-cesarini-f202603-n/",
+          "summary": "Duro converted a regular-time penalty, providing role evidence independent of Ramazani's later departure."
+        },
+        {
+          "date": "2026-05-10",
+          "type": "LATEST_REGULAR_TIME_ATTEMPT",
+          "source": "AS",
+          "title": "Hugo Duro takes the later penalty at San Mamés",
+          "url": "https://as.com/futbol/primera/el-valencia-falla-en-san-mames-su-cuarto-penalti-f202605-n/",
+          "summary": "Duro took and missed the later league penalty. The same review documented earlier misses by Pepelu and Ramazani, confirming multiple takers but Duro as the latest."
+        },
+        {
+          "date": "2025-08-28",
+          "type": "CONTRACT_STATUS",
+          "source": "Leeds United",
+          "title": "Ramazani joins on a season-long loan",
+          "url": "https://www.leedsunited.com/en/news/largie-ramazani-joins-valencia-cf-on-loan",
+          "summary": "The official terms covered only the 2025/26 season. No completed return transfer was found by the audit cutoff."
+        }
+      ]
+    },
+    {
+      "club": "Villarreal",
+      "filed_hierarchy": [
+        "Gerard Moreno",
+        "Nicolas Pepe",
+        "Daniel Parejo"
+      ],
+      "verdict": {
+        "code": "AMEND_DEPTH",
+        "summary": "Gerard Moreno remains primary and Nicolas Pépé remains a current candidate. Daniel Parejo's farewell penalty occurred with Gerard absent and Parejo has since left."
+      },
+      "recommended_hierarchy": [
+        "Gerard Moreno",
+        "Nicolas Pépé",
+        null
+      ],
+      "recommended_notes": "The third position is unresolved.",
+      "confidence": "HIGH_PRIMARY_MEDIUM_DEPTH",
+      "priority": "P1",
+      "evidence": [
+        {
+          "date": "2026-04-26",
+          "type": "REGULAR_TIME_PENALTY",
+          "source": "Transfermarkt",
+          "title": "Gerard Moreno takes the latest pre-finale penalty",
+          "url": "https://www.transfermarkt.us/fc-villarreal/elfmeterschuetzen/verein/1050",
+          "summary": "Gerard took the latest listed penalty before the final match, supporting his retention as primary."
+        },
+        {
+          "date": "2026-05-24",
+          "type": "REGULAR_TIME_PENALTY_ABSENCE_CONTEXT",
+          "source": "Cadena SER",
+          "title": "Daniel Parejo takes a farewell penalty",
+          "url": "https://cadenaser.com/nacional/2026/05/24/villarreal-5-1-atletico-de-madrid-resumen-resultado-y-goles-del-partido-de-la-jornada-38-de-laliga-ea-sports-cadena-ser/",
+          "summary": "Parejo took the final-day penalty with Gerard absent from the match record. The event therefore does not supersede Gerard."
+        },
+        {
+          "date": "2026-05-24",
+          "type": "PERSONNEL",
+          "source": "Villarreal CF",
+          "title": "Parejo's departure marked after the final match",
+          "url": "https://villarrealcf.es/un-final-por-todo-lo-alto/",
+          "summary": "The club's farewell removes Parejo from the 2026/27 hierarchy."
+        },
+        {
+          "date": "2025-07-16",
+          "type": "CONTRACT_STATUS",
+          "source": "AS",
+          "title": "Nicolas Pépé contracted through 2028",
+          "url": "https://as.com/futbol/primera/pepe-sera-groguet-hasta-2028-n/",
+          "summary": "Pépé's continuing contract supports retaining him as a current candidate, although direct evidence for a fixed second-choice role remains limited."
+        }
+      ]
+    }
+  ],
+  "source_hubs_checked": [
+    {
+      "source": "FútbolFantasy",
+      "url": "https://www.futbolfantasy.com/analytics/balon-parado",
+      "purpose": "Specialist set-piece cross-check"
+    },
+    {
+      "source": "Set Piece Takers",
+      "url": "https://data.setpiecetakers.com/penalties/la-liga",
+      "purpose": "Specialist penalty hierarchy cross-check"
+    },
+    {
+      "source": "Jornada Perfecta",
+      "url": "https://www.jornadaperfecta.com/guias/lanzadores-laliga-25-26/",
+      "purpose": "Spanish fantasy and specialist cross-check"
+    },
+    {
+      "source": "Transfermarkt",
+      "url": "https://www.transfermarkt.com/laliga/elfmeterschuetzen/wettbewerb/ES1/saison_id/2025/plus/",
+      "purpose": "Supporting event history and player status"
+    }
+  ],
+  "limitations": [
+    "The audit was performed during preseason, before the first 2026/27 competitive match.",
+    "Unresolved slots are represented by JSON null and are not automatic promotions from the filed hierarchy.",
+    "Current transfer situations and late preseason friendlies can change the hierarchy after the audit cutoff.",
+    "Penalty-shootout attempts were excluded from hierarchy decisions."
+  ]
+}
