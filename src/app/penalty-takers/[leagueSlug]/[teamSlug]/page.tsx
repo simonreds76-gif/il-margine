@@ -350,17 +350,23 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
               <p>Public file updated: {team.publicUpdatedLabel || "not available"}.</p>
               {team.evidenceSources.length ? (
                 <div>
-                  <p className="font-medium text-slate-100">Evidence checked</p>
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <p className="font-medium text-slate-100">Evidence checked</p>
+                    <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.15em] text-emerald-200">
+                      {team.evidenceSources.length} sources reviewed
+                    </span>
+                  </div>
                   <ul className="mt-2 space-y-2">
                     {team.evidenceSources.slice(0, 4).map((source) => (
                       <li key={source.url} className="rounded-xl border border-slate-800 bg-slate-950/55 px-3 py-2.5">
-                        <a href={source.url} target="_blank" rel="noreferrer" className="font-medium text-emerald-300 hover:text-emerald-200">
-                          {source.label}
-                        </a>
+                        <span className="font-medium text-emerald-300">{source.label}</span>
                         {source.note ? <span className="mt-1 block text-xs leading-5 text-slate-400">{source.note}</span> : null}
                       </li>
                     ))}
                   </ul>
+                  <p className="mt-2 text-xs leading-5 text-slate-500">
+                    Source URLs are retained in the internal review file so the public page stays focused on the hierarchy.
+                  </p>
                 </div>
               ) : null}
               <p>
