@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import BookmakerLogo from "@/components/BookmakerLogo";
+import MarketBadge from "@/components/MarketBadge";
 import TrackedLink from "@/components/TrackedLink";
 import type { Bet, Bookmaker } from "@/lib/supabase";
 import { formatOdds, formatStake } from "@/lib/format";
@@ -150,7 +151,16 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
                 className="group block px-4 py-3.5 transition hover:bg-slate-800/35"
               >
                 <div className="flex items-center justify-between gap-3 text-[10px] font-mono uppercase tracking-[0.11em] text-slate-500">
-                  <span>{laneLabel(pick.market)} · {dateChip(pick.match_date)}</span>
+                  <div className="flex min-w-0 items-center gap-2">
+                    <MarketBadge
+                      market={pick.market}
+                      category={pick.category}
+                      event={pick.event}
+                      compact
+                      className="rounded-md border border-white/[0.06] bg-black/20 px-0.5"
+                    />
+                    <span className="truncate">{laneLabel(pick.market)} · {dateChip(pick.match_date)}</span>
+                  </div>
                   <span>{publishedTime(pick.posted_at)}</span>
                 </div>
                 <div className="mt-2 text-sm font-semibold leading-snug text-slate-100 group-hover:text-emerald-100">
