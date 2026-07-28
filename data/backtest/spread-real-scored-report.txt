@@ -1,0 +1,38 @@
+IL MARGINE - Canonical Tennis Spread Real-Price Scorer
+
+Purpose: identity-safe settlement and real-price scoring only.
+This artifact does not authorise a live spread betting lane.
+
+History files read: 2721
+Valid unique spread snapshots: 87001
+
+ATP:
+- scored matches: 1433
+- non-push / pushes: 1356 / 77
+- real-market M0 Brier: 0.249920
+- real-market M0 log loss: 0.692990
+- true-close eligible: 441/1433
+- publication timing: {'inferred_prior_day': 679, 'same_day_unverified': 162, 'verified_prestart': 592}
+
+Challenger:
+- scored matches: 3400
+- non-push / pushes: 3259 / 141
+- real-market M0 Brier: 0.249211
+- real-market M0 log loss: 0.691577
+- true-close eligible: 1174/3400
+- publication timing: {'inferred_prior_day': 1169, 'same_day_unverified': 875, 'verified_prestart': 1356}
+
+Unmatched/dropped snapshots by reason:
+- unscorable_result: 6461
+- unresolved_full_name: 5492
+- result_not_found_in_window: 3479
+- snapshot_not_prestart: 698
+- incomplete_spread_or_ml_price: 295
+- ambiguous_capture_window: 51
+
+Integrity rules:
+- No surname-only or fuzzy identity fallback.
+- ATP and Challenger outputs are separate.
+- Integer handicap pushes are preserved, never mirrored as losses.
+- CLV eligibility requires a same-line snapshot within 12h of known kickoff.
+- Same-day captures without kickoff remain explicitly unverified.

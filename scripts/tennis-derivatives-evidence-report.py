@@ -14,7 +14,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent.parent
 PROPS_INBOX = ROOT / "data" / "tennis-props" / "inbox"
 PROPS_SHADOW = ROOT / "data" / "tennis-props" / "shadow" / "aces-dfs-shadow-signals.csv"
-SPREAD_DATASET = ROOT / "data" / "backtest" / "spread-v1-training-dataset.csv"
+SPREAD_DATASET = ROOT / "data" / "backtest" / "spread-real-scored-atp.csv"
 SPREAD_CLV = ROOT / "data" / "backtest" / "strict-clv-audit-spreadv1-2026.csv"
 PINNACLE_COVERAGE = ROOT / "data" / "vnext" / "tennis-derivatives-pinnacle-coverage.json"
 REGISTRATION = ROOT / "data" / "vnext" / "experiment-registration-derivatives-0.1.json"
@@ -181,6 +181,15 @@ def props_status(rows: list[dict[str, str]], shadow_rows: list[dict[str, str]]) 
 def spread_status(dataset: list[dict[str, str]], clv_rows: list[dict[str, str]], coverage: dict[str, Any]) -> dict[str, object]:
     clv = [value for row in clv_rows if (value := number(row.get("clv_implied_delta_pct"))) is not None]
     settled = [row for row in clv_rows if str(row.get("bet_outcome") or "").upper() in {"WIN", "LOSS", "PUSH"}]
+    non_push = [row for row in dataset if str(row.get("p1_cover_result") or "").upper() in {"WIN", "LOSS"}]
+    market_brier = mean(
+        [value for row in non_push if (value := number(row.get("market_brier"))) is not None]
+    )
+    verified_prestart = sum(
+        str(row.get("publication_timing_quality") or "") == "verified_prestart"
+        for row in dataset
+    )
+    true_close_rows = sum(str(row.get("clv_eligible") or "") == "1" for row in dataset)
     avg_clv = mean(clv)
     positive_share = (100.0 * sum(value > 0 for value in clv) / len(clv)) if clv else None
     gates = {
@@ -189,10 +198,20 @@ def spread_status(dataset: list[dict[str, str]], clv_rows: list[dict[str, str]],
         "mean_clv_1pct": avg_clv is not None and avg_clv >= 1.0,
         "positive_clv_share_55pct": positive_share is not None and positive_share >= 55.0,
     }
+    if all(gates.values()):
+        promotion_status = "PASS"
+    elif not gates["real_line_rows_600"]:
+        promotion_status = "BLOCKED_REAL_LINE_SAMPLE"
+    else:
+        promotion_status = "BLOCKED_PROSPECTIVE_EVIDENCE"
     return {
         "status": "COLLECTING" if dataset else "NO_CAPTURE",
-        "promotion_status": "PASS" if all(gates.values()) else "BLOCKED_REAL_LINE_SAMPLE",
+        "promotion_status": promotion_status,
         "real_line_rows": len(dataset),
+        "non_push_rows": len(non_push),
+        "market_brier": market_brier,
+        "verified_prestart_rows": verified_prestart,
+        "true_close_rows": true_close_rows,
         "captured_line_offers": league_count(coverage, "unique_line_offers_by_league", "ATP"),
         "captured_matches": league_count(coverage, "unique_matches_by_league", "ATP"),
         "captured_challenger_line_offers": league_count(coverage, "unique_line_offers_by_league", "Challenger"),
@@ -201,7 +220,11 @@ def spread_status(dataset: list[dict[str, str]], clv_rows: list[dict[str, str]],
         "mean_clv_pct": avg_clv,
         "positive_clv_share_pct": positive_share,
         "gates": gates,
-        "reason": "The existing spread correction regressed on validation; base-only shadow evidence remains below promotion gates.",
+        "reason": (
+            "The canonical scorer removes the stale 188-row bottleneck. "
+            "The existing spread correction regressed on validation and "
+            "prospective ROI/CLV gates remain blocked."
+        ),
     }
 
 
@@ -257,7 +280,11 @@ def main() -> int:
         "",
         "Spread shape",
         f"- Real line rows: {spread['real_line_rows']} / 600",
-        f"- Captured ATP offers awaiting scoring: {spread['captured_line_offers']} across {spread['captured_matches']} matches",
+        f"- Scored non-push rows: {spread['non_push_rows']}",
+        f"- Market baseline Brier: {fmt(spread['market_brier'], 5)}",
+        f"- Verified pre-start rows: {spread['verified_prestart_rows']}",
+        f"- True-close eligible rows: {spread['true_close_rows']}",
+        f"- Captured ATP coverage inventory: {spread['captured_line_offers']} offers across {spread['captured_matches']} dated pairs",
         f"- Challenger inventory kept separate: {spread['captured_challenger_line_offers']} offers",
         f"- Settled shadow: {spread['settled_shadow_bets']} / 200",
         f"- Mean CLV: {fmt(spread['mean_clv_pct'])}% / +1.00%",

@@ -99,6 +99,52 @@ class TennisEvidenceCollectionTests(unittest.TestCase):
         self.assertLess(status["roi_pct"], 0)
         self.assertGreater(status["model_brier"], status["market_brier"])
 
+    def test_spread_status_uses_canonical_scored_rows(self) -> None:
+        scored = [
+            {
+                "p1_cover_result": "WIN",
+                "market_brier": "0.24",
+                "publication_timing_quality": "verified_prestart",
+                "clv_eligible": "1",
+            },
+            {
+                "p1_cover_result": "LOSS",
+                "market_brier": "0.26",
+                "publication_timing_quality": "inferred_prior_day",
+                "clv_eligible": "0",
+            },
+            {
+                "p1_cover_result": "PUSH",
+                "market_brier": "",
+                "publication_timing_quality": "same_day_unverified",
+                "clv_eligible": "0",
+            },
+        ]
+        status = EVIDENCE.spread_status(scored, [], {})
+        self.assertEqual(status["real_line_rows"], 3)
+        self.assertEqual(status["non_push_rows"], 2)
+        self.assertEqual(status["market_brier"], 0.25)
+        self.assertEqual(status["verified_prestart_rows"], 1)
+        self.assertEqual(status["true_close_rows"], 1)
+        self.assertEqual(status["promotion_status"], "BLOCKED_REAL_LINE_SAMPLE")
+
+    def test_spread_status_moves_to_prospective_gate_after_600_rows(self) -> None:
+        scored = [
+            {
+                "p1_cover_result": "WIN",
+                "market_brier": "0.24",
+                "publication_timing_quality": "verified_prestart",
+                "clv_eligible": "1",
+            }
+            for _ in range(600)
+        ]
+        status = EVIDENCE.spread_status(scored, [], {})
+        self.assertTrue(status["gates"]["real_line_rows_600"])
+        self.assertEqual(
+            status["promotion_status"],
+            "BLOCKED_PROSPECTIVE_EVIDENCE",
+        )
+
     def test_remote_and_local_duplicate_snapshots_are_merged(self) -> None:
         row = {
             "captured_at": "2026-07-12T08:00:00Z",
