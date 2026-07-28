@@ -3,7 +3,7 @@ import "server-only";
 import { promises as fs } from "fs";
 import path from "path";
 
-export type PenaltyReviewResolution = "dismissed" | "done";
+export type PenaltyReviewResolution = "accepted" | "ignored" | "deferred" | "applied";
 
 export type PenaltyReviewStateEntry = {
   status: PenaltyReviewResolution;
@@ -19,16 +19,33 @@ const STATE_PATH = path.join(process.cwd(), "data/goalscorer/penalty-duty-review
 
 function normalizeEntry(value: unknown): PenaltyReviewStateEntry | null {
   if (!value || typeof value !== "object") return null;
-  const status = typeof (value as { status?: unknown }).status === "string" ? (value as { status: string }).status : "";
+  const rawStatus =
+    typeof (value as { status?: unknown }).status === "string"
+      ? (value as { status: string }).status
+      : "";
   const updatedAt =
     typeof (value as { updated_at?: unknown }).updated_at === "string"
       ? (value as { updated_at: string }).updated_at
       : "";
 
-  if (status !== "dismissed" && status !== "done") return null;
+  // Preserve review decisions made before the four-state ticket lifecycle.
+  const status =
+    rawStatus === "dismissed"
+      ? "ignored"
+      : rawStatus === "done"
+        ? "applied"
+        : rawStatus;
+  if (
+    status !== "accepted" &&
+    status !== "ignored" &&
+    status !== "deferred" &&
+    status !== "applied"
+  ) {
+    return null;
+  }
   if (!updatedAt) return null;
   return {
-    status,
+    status: status as PenaltyReviewResolution,
     updated_at: updatedAt,
   };
 }

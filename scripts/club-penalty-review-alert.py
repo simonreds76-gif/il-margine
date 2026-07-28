@@ -30,6 +30,14 @@ REVIEW_FILES = (
 )
 ACTIONABLE_PRIORITIES = {"high", "medium"}
 PRIORITY_ORDER = {"high": 0, "medium": 1, "low": 2}
+HIERARCHY_FILES = {
+    "serie-a": Path("data/goalscorer/serie-a-penalty-takers.json"),
+    "epl": Path("data/goalscorer/epl-penalty-takers.json"),
+    "la-liga": Path("data/goalscorer/la-liga-penalty-takers.json"),
+    "bundesliga": Path("data/goalscorer/bundesliga-penalty-takers.json"),
+    "ligue-1": Path("data/goalscorer/ligue-1-penalty-takers.json"),
+}
+PRIORITY_HIERARCHY_STATUSES = {"conditional", "disputed"}
 
 
 def normalise(value: object) -> str:
@@ -48,6 +56,30 @@ def row_identity(row: dict) -> str:
             normalise(row.get("actual_taker")),
         ]
     )
+
+def team_identity(row: dict) -> str:
+    return f"{str(row.get('league') or '').strip().lower()}|{normalise(row.get('team'))}"
+
+
+def priority_hierarchy_teams() -> dict[str, str]:
+    teams: dict[str, str] = {}
+    for league, relative in HIERARCHY_FILES.items():
+        path = ROOT / relative
+        if not path.exists():
+            continue
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if not isinstance(payload, dict):
+            continue
+        for team, entry in payload.items():
+            if str(team).startswith("_") or not isinstance(entry, dict):
+                continue
+            status = str(entry.get("hierarchy_status") or "unknown").strip().lower()
+            if status in PRIORITY_HIERARCHY_STATUSES:
+                teams[f"{league}|{normalise(team)}"] = status
+    return teams
 
 
 def payload_rows(raw: bytes | str) -> list[dict]:
@@ -95,15 +127,25 @@ def dedupe_rows(rows: Iterable[dict]) -> dict[str, dict]:
     return deduped
 
 
-def new_actionable_rows(current: Iterable[dict], previous: Iterable[dict]) -> list[dict]:
+def new_actionable_rows(
+    current: Iterable[dict],
+    previous: Iterable[dict],
+    priority_teams: dict[str, str] | None = None,
+) -> list[dict]:
     previous_ids = set(dedupe_rows(previous))
-    rows = [
-        row
-        for identity, row in dedupe_rows(current).items()
-        if identity not in previous_ids and str(row.get("review_priority") or "").lower() in ACTIONABLE_PRIORITIES
-    ]
+    priority_teams = priority_teams or {}
+    rows = []
+    for identity, row in dedupe_rows(current).items():
+        hierarchy_status = priority_teams.get(team_identity(row), "")
+        review_priority = str(row.get("review_priority") or "").lower()
+        if identity in previous_ids:
+            continue
+        if review_priority not in ACTIONABLE_PRIORITIES and not hierarchy_status:
+            continue
+        rows.append({**row, "public_hierarchy_status": hierarchy_status or "stable"})
     rows.sort(
         key=lambda row: (
+            0 if str(row.get("public_hierarchy_status") or "") in PRIORITY_HIERARCHY_STATUSES else 1,
             PRIORITY_ORDER.get(str(row.get("review_priority") or "low").lower(), 9),
             str(row.get("date") or ""),
             str(row.get("team") or ""),
@@ -132,9 +174,11 @@ def build_message(rows: list[dict], review_url: str, run_url: str = "") -> str:
         taker = compact(row.get("actual_taker"), 42)
         result = compact(row.get("event_result") or row.get("event_type"), 32)
         primary = compact(row.get("primary_pre_match"), 42) or "not filed"
+        hierarchy_status = compact(row.get("public_hierarchy_status"), 20).upper()
         lines.extend(
             [
                 f"[{priority}] {league} | {team}",
+                f"Public hierarchy: {hierarchy_status}",
                 f"{taker}: {result} vs {opponent}",
                 f"Filed primary: {primary}",
                 f"Reason: {compact(row.get('review_type'), 55)}",
@@ -148,8 +192,10 @@ def build_message(rows: list[dict], review_url: str, run_url: str = "") -> str:
             "Review on your PC:",
             review_url,
             "",
-            "After editing: Hierarchy updated = sorted",
-            "Keep current order = ignore",
+            "Accept evidence = keep open until hierarchy is edited",
+            "Ignore = close with no public change",
+            "Defer = park for more evidence",
+            "Mark applied only after the hierarchy and audit date are updated",
         ]
     )
     if run_url:
@@ -182,7 +228,11 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
-    rows = new_actionable_rows(current_rows(REVIEW_FILES), previous_rows(REVIEW_FILES, args.base_ref))
+    rows = new_actionable_rows(
+        current_rows(REVIEW_FILES),
+        previous_rows(REVIEW_FILES, args.base_ref),
+        priority_hierarchy_teams(),
+    )
     if not rows:
         print("PENALTY_REVIEW_TELEGRAM no_new_actionable_tickets")
         return 0

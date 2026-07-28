@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { readPenaltyReviewState } from "@/lib/goalscorer-penalty-review-state";
 import { type GoalscorerMonitorSnapshot, readGoalscorerMonitorSnapshot } from "@/lib/goalscorer-monitor-snapshot";
 
-import { PenaltyReviewActions } from "./PenaltyReviewActions";
+import { PenaltyReviewActions, type PenaltyReviewStatus } from "./PenaltyReviewActions";
 import {
   EmptyState,
   HeroCard,
@@ -30,7 +30,7 @@ import {
 export const dynamic = "force-dynamic";
 
 type SnapshotPenaltyRow = GoalscorerMonitorSnapshot["penalty_watchlist"]["rows"][number] & {
-  resolutionStatus?: "dismissed" | "done";
+  resolutionStatus?: PenaltyReviewStatus;
   resolutionUpdatedAt?: string;
 };
 
@@ -112,9 +112,11 @@ function reviewPriorityTone(priority?: string) {
   return "bg-slate-700/40 text-slate-400 border-slate-600/40";
 }
 
-function resolutionTone(status?: "dismissed" | "done") {
-  if (status === "done")      return "bg-emerald-500/10 text-emerald-300 border-emerald-500/20";
-  if (status === "dismissed") return "bg-slate-700/40 text-slate-400 border-slate-600/40";
+function resolutionTone(status?: PenaltyReviewStatus) {
+  if (status === "applied")  return "bg-emerald-500/10 text-emerald-300 border-emerald-500/20";
+  if (status === "accepted") return "bg-cyan-500/10 text-cyan-300 border-cyan-500/20";
+  if (status === "deferred") return "bg-amber-500/10 text-amber-300 border-amber-500/20";
+  if (status === "ignored")  return "bg-slate-700/40 text-slate-400 border-slate-600/40";
   return "bg-cyan-500/10 text-cyan-300 border-cyan-500/20";
 }
 
@@ -183,6 +185,16 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
         <div className="flex shrink-0 flex-wrap items-center gap-1.5">
           {row.review_priority ? (
             <StatusPill label={row.review_priority} tone={reviewPriorityTone(row.review_priority)} />
+          ) : null}
+          {row.hierarchy_status ? (
+            <StatusPill
+              label={`${row.hierarchy_status} hierarchy`}
+              tone={
+                row.hierarchy_status === "conditional" || row.hierarchy_status === "disputed"
+                  ? "bg-amber-500/10 text-amber-300 border-amber-500/20"
+                  : "bg-slate-700/40 text-slate-400 border-slate-600/40"
+              }
+            />
           ) : null}
           {row.event_result ? (
             <StatusPill
@@ -260,7 +272,7 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
         </p>
       ) : null}
       {row.row_id ? (
-        <PenaltyReviewActions rowId={row.row_id} resolvedStatus={row.resolutionStatus} />
+        <PenaltyReviewActions rowId={row.row_id} status={row.resolutionStatus} />
       ) : null}
       {row.resolutionUpdatedAt ? (
         <p className="mt-2 text-[11px] text-slate-600">
@@ -633,8 +645,27 @@ export default async function GoalscorerMonitorPage() {
       resolutionUpdatedAt: penaltyState[row.row_id]?.updated_at,
     }));
 
+  const acceptedPenaltyRows: SnapshotPenaltyRow[] = snapshot.penalty_watchlist.rows
+    .filter((row) => penaltyState[row.row_id]?.status === "accepted")
+    .map((row) => ({
+      ...row,
+      resolutionStatus: penaltyState[row.row_id]?.status,
+      resolutionUpdatedAt: penaltyState[row.row_id]?.updated_at,
+    }));
+
+  const deferredPenaltyRows: SnapshotPenaltyRow[] = snapshot.penalty_watchlist.rows
+    .filter((row) => penaltyState[row.row_id]?.status === "deferred")
+    .map((row) => ({
+      ...row,
+      resolutionStatus: penaltyState[row.row_id]?.status,
+      resolutionUpdatedAt: penaltyState[row.row_id]?.updated_at,
+    }));
+
   const resolvedPenaltyRows: SnapshotPenaltyRow[] = snapshot.penalty_watchlist.rows
-    .filter((row) => penaltyState[row.row_id])
+    .filter((row) => {
+      const status = penaltyState[row.row_id]?.status;
+      return status === "ignored" || status === "applied";
+    })
     .map((row) => ({
       ...row,
       resolutionStatus: penaltyState[row.row_id]?.status,
@@ -671,7 +702,7 @@ export default async function GoalscorerMonitorPage() {
           <StatCard
             label="Penalty reviews"
             value={String(activePenaltyRows.length)}
-            detail={resolvedPenaltyRows.length ? `${resolvedPenaltyRows.length} resolved` : undefined}
+            detail={`${acceptedPenaltyRows.length} accepted | ${deferredPenaltyRows.length} deferred`}
           />
           <StatCard
             label="Flagged fixtures"
@@ -815,7 +846,7 @@ export default async function GoalscorerMonitorPage() {
         <div id="penalty-watchlist" className="scroll-mt-24">
           <SectionCard
             title={`Penalty Watchlist${activePenaltyRows.length ? ` | ${activePenaltyRows.length} active` : ""}`}
-            subtitle="Includes on-pitch context. Resolving a ticket never edits the public hierarchy automatically."
+            subtitle="Conditional and disputed clubs are prioritised. Ticket actions never edit the public hierarchy automatically."
             collapsible
             defaultOpen
           >
@@ -827,11 +858,50 @@ export default async function GoalscorerMonitorPage() {
               )}
             </div>
 
+            <div className="mt-5 border-t border-slate-800/60 pt-4">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <h3 className="text-sm font-semibold text-cyan-200">
+                    Accepted, awaiting hierarchy edit ({acceptedPenaltyRows.length})
+                  </h3>
+                  <p className="mt-1 text-xs text-slate-500">
+                    “Mark applied” is blocked until the observed taker appears in the hierarchy and both audit dates cover the event.
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                {acceptedPenaltyRows.length === 0 ? (
+                  <EmptyState message="No accepted evidence is waiting for a hierarchy edit." />
+                ) : (
+                  acceptedPenaltyRows.map((row) => <PenaltyReviewCard key={row.row_id} row={row} />)
+                )}
+              </div>
+            </div>
+
+            {/* Deferred rows - collapsed */}
+            <details className="group mt-4 rounded-xl border border-slate-800/50 bg-slate-950/30">
+              <summary className="flex cursor-pointer select-none list-none items-center justify-between gap-3 px-4 py-3 marker:hidden hover:bg-white/[0.02]">
+                <span className="text-xs font-medium text-slate-500">
+                  Deferred for more evidence ({deferredPenaltyRows.length})
+                </span>
+                <span className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-700 transition-transform duration-200 group-open:rotate-180">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden><polyline points="6 9 12 15 18 9" /></svg>
+                </span>
+              </summary>
+              <div className="space-y-3 border-t border-slate-800/50 px-4 pb-4 pt-3">
+                {deferredPenaltyRows.length === 0 ? (
+                  <EmptyState message="No penalty tickets are currently deferred." />
+                ) : (
+                  deferredPenaltyRows.map((row) => <PenaltyReviewCard key={row.row_id} row={row} />)
+                )}
+              </div>
+            </details>
+
             {/* Resolved rows - collapsed */}
             <details className="group mt-4 rounded-xl border border-slate-800/50 bg-slate-950/30">
               <summary className="flex cursor-pointer select-none list-none items-center justify-between gap-3 px-4 py-3 marker:hidden hover:bg-white/[0.02]">
                 <span className="text-xs font-medium text-slate-500">
-                  Resolved rows ({resolvedPenaltyRows.length})
+                  Applied or ignored ({resolvedPenaltyRows.length})
                 </span>
                 <span className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-700 transition-transform duration-200 group-open:rotate-180">
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden><polyline points="6 9 12 15 18 9" /></svg>
@@ -839,7 +909,7 @@ export default async function GoalscorerMonitorPage() {
               </summary>
               <div className="space-y-3 border-t border-slate-800/50 px-4 pb-4 pt-3">
                 {resolvedPenaltyRows.length === 0 ? (
-                  <EmptyState message="No penalty rows have been resolved yet." />
+                  <EmptyState message="No penalty tickets have been applied or ignored." />
                 ) : (
                   resolvedPenaltyRows.map((row) => <PenaltyReviewCard key={row.row_id} row={row} />)
                 )}

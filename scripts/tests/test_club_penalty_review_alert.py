@@ -33,6 +33,16 @@ class ClubPenaltyReviewAlertTests(unittest.TestCase):
         result = MODULE.new_actionable_rows(current, previous)
         self.assertEqual([item["actual_taker"] for item in result], ["New Taker"])
 
+    def test_low_priority_row_is_actionable_for_conditional_hierarchy(self):
+        candidate = row(priority="low", taker="Conditional Candidate")
+        result = MODULE.new_actionable_rows(
+            [candidate],
+            [],
+            {"epl|examplefc": "conditional"},
+        )
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["public_hierarchy_status"], "conditional")
+
     def test_identity_normalises_accents_and_spacing(self):
         first = row(taker="Kylian Mbappe")
         second = row(taker="Kylian  Mbappe")
@@ -41,8 +51,9 @@ class ClubPenaltyReviewAlertTests(unittest.TestCase):
     def test_message_contains_review_actions_and_link(self):
         message = MODULE.build_message([row()], "http://localhost:3000/model-monitor/goalscorer#penalty-watchlist")
         self.assertIn("1 new ticket(s): 1 high, 0 medium", message)
-        self.assertIn("After editing: Hierarchy updated = sorted", message)
-        self.assertIn("Keep current order = ignore", message)
+        self.assertIn("Accept evidence = keep open", message)
+        self.assertIn("Ignore = close", message)
+        self.assertIn("Defer = park", message)
         self.assertIn("#penalty-watchlist", message)
 
 

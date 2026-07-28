@@ -110,8 +110,10 @@ export type GoalscorerPenaltyWatchlistRow = {
   review_source?: string;
   review_priority?: string;
   review_type?: string;
+  hierarchy_status?: string;
   match?: string;
   team?: string;
+  public_team?: string;
   opponent?: string;
   actual_taker?: string;
   actual_role_pre_match?: string;

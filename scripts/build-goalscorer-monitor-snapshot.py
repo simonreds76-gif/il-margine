@@ -1252,6 +1252,14 @@ def read_penalty_review_rows(config: dict[str, str]) -> tuple[list[dict[str, Any
     merged = merge_penalty_review_rows([*settled_rows, *live_rows])
     context_payload = read_json(config["penalty_context_json"]) or {}
     baselines = read_json(config["penalty_takers_json"]) or {}
+    hierarchy_by_team = {
+        team_key(team_name): {
+            "public_team": str(team_name),
+            "hierarchy_status": str(entry.get("hierarchy_status") or "unknown").strip().lower(),
+        }
+        for team_name, entry in (baselines.items() if isinstance(baselines, dict) else [])
+        if not str(team_name).startswith("_") and isinstance(entry, dict)
+    }
     maps = build_penalty_context_maps([row for row in (context_payload.get("rows") or []) if isinstance(row, dict)], baselines if isinstance(baselines, dict) else {}, config["key"])
     enriched = [enrich_penalty_review_row_with_match_result(enrich_penalty_review_row_from_context(row, config["key"], maps)) for row in merged]
     latest_generated = newest_timestamp([(settled_payload.get("generated_at") if isinstance(settled_payload, dict) else None), (live_payload.get("generated_at") if isinstance(live_payload, dict) else None)])
@@ -1261,6 +1269,8 @@ def read_penalty_review_rows(config: dict[str, str]) -> tuple[list[dict[str, Any
             "row_id": penalty_review_identity(row),
             "date": row.get("date"), "league": decode_html_value(row.get("league")), "review_source": decode_html_value(row.get("review_source")),
             "review_priority": decode_html_value(row.get("review_priority")), "review_type": decode_html_value(row.get("review_type")), "match": decode_html_value(row.get("match")),
+            "public_team": hierarchy_by_team.get(team_key(row.get("team")), {}).get("public_team", ""),
+            "hierarchy_status": hierarchy_by_team.get(team_key(row.get("team")), {}).get("hierarchy_status", "unknown"),
             "team": decode_html_value(row.get("team")), "opponent": decode_html_value(row.get("opponent")), "actual_taker": decode_html_value(row.get("actual_taker")),
             "actual_role_pre_match": decode_html_value(row.get("actual_role_pre_match")), "penalties_attempted": parse_int(row.get("penalties_attempted")),
             "penalties_scored": parse_int(row.get("penalties_scored")), "distinct_takers_in_match": parse_int(row.get("distinct_takers_in_match")),
@@ -1272,7 +1282,12 @@ def read_penalty_review_rows(config: dict[str, str]) -> tuple[list[dict[str, Any
             "editorial_note": decode_html_value(row.get("editorial_note")), "context_generated_at": row.get("context_generated_at"), "context_source_path": decode_html_value(row.get("context_source_path")),
             "primary_on_pitch_at_penalty": decode_html_value(row.get("primary_on_pitch_at_penalty")), "active_on_pitch_at_penalty": decode_html_value(row.get("active_on_pitch_at_penalty")), "actual_taker_on_pitch_at_penalty": decode_html_value(row.get("actual_taker_on_pitch_at_penalty")),
         })
-    rows.sort(key=lambda row: (-priority_rank(str(row.get("review_priority") or "")), -(parse_iso(str(row.get("date") or "")) or datetime(1970, 1, 1, tzinfo=UTC)).timestamp(), f"{row.get('team') or ''}{row.get('actual_taker') or ''}"))
+    rows.sort(key=lambda row: (
+        0 if row.get("hierarchy_status") in {"conditional", "disputed"} else 1,
+        -priority_rank(str(row.get("review_priority") or "")),
+        -(parse_iso(str(row.get("date") or "")) or datetime(1970, 1, 1, tzinfo=UTC)).timestamp(),
+        f"{row.get('team') or ''}{row.get('actual_taker') or ''}",
+    ))
     return rows, latest_generated
 
 
