@@ -1379,9 +1379,15 @@ function ResearchGatesPanel({
   const props = record(evidence.aces_dfs);
   const propsCells = Array.isArray(propsV2.cells) ? propsV2.cells.map(record) : [];
   const propsPass = propsCells.filter((cell) => cell.passed === true).length;
-  const gateTone = (status: unknown) => status === "PASS"
-    ? "text-emerald-300"
-    : "text-amber-300";
+  const gateTone = (status: unknown) => {
+    if (status === "PASS") return "text-emerald-300";
+    if (status === "TESTED_AND_REJECTED") return "text-rose-300";
+    return "text-amber-300";
+  };
+  const totalsRejected = totals.promotion_status === "TESTED_AND_REJECTED";
+  const totalsSub = totalsRejected
+    ? `${numeric(totals.real_line_rows).toFixed(0)} scored | ROI ${numeric(totals.roi_pct).toFixed(2)}% | CLV ${numeric(totals.mean_clv_pct).toFixed(3)}% | Brier model ${numeric(totals.model_brier).toFixed(5)} vs market ${numeric(totals.market_brier).toFixed(5)}`
+    : `${numeric(totals.real_line_rows).toFixed(0)}/600 scored | ${numeric(totals.captured_line_offers).toFixed(0)} captured complete offers`;
 
   return (
     <SectionCard
@@ -1398,7 +1404,7 @@ function ResearchGatesPanel({
         <MetricTile
           label="Total-games shape"
           value={String(totals.promotion_status || "BLOCKED")}
-          sub={`${numeric(totals.real_line_rows).toFixed(0)}/600 scored | ${numeric(totals.captured_line_offers).toFixed(0)} captured complete offers`}
+          sub={totalsSub}
           tone={gateTone(totals.promotion_status)}
         />
         <MetricTile
@@ -1415,7 +1421,7 @@ function ResearchGatesPanel({
         />
       </div>
       <p className="mt-3 text-xs text-slate-500">
-        Current result: hierarchical dispersion helped ATP double-fault pricing, but failed the all-cell promotion rule. Spread and totals remain sample-blocked; synthetic odds never count as ROI evidence.
+        Current result: hierarchical dispersion helped ATP double-fault pricing, but failed the all-cell promotion rule. Totals were tested on real Pinnacle prices and rejected; spread remains sample-blocked. Synthetic odds never count as ROI evidence.
       </p>
     </SectionCard>
   );

@@ -35,5 +35,31 @@
     "threshold sweeps selected on the evaluation sample",
     "promotion while any real-line sample gate is blocked"
   ],
+  "evaluations": [
+    {
+      "lane": "total_games_shape",
+      "evaluated_at": "2026-07-28",
+      "status": "TESTED_AND_REJECTED",
+      "capture_window_start": "2026-03-01",
+      "capture_window_end": "2026-07-28",
+      "settled_joined_rows": 7673,
+      "scored_non_push_rows": 7427,
+      "best_model": "corrected_empirical_spw",
+      "best_model_brier": 0.2604,
+      "market_brier": 0.24982,
+      "constant_brier": 0.24997,
+      "edge_threshold_pct": 5.0,
+      "priced_bets": 6676,
+      "roi_pct": -3.84,
+      "roi_ci95_pct": [
+        -6.12,
+        -1.74
+      ],
+      "mean_clv_pct": -0.086,
+      "positive_clv_share_moved_pct": 38.3,
+      "decision": "No totals betting lane. Retain corrected probabilities as diagnostics only.",
+      "audit": "docs/audits/tennis-match-totals-audit-2026-07-28.md"
+    }
+  ],
   "routing": "shadow_evidence_only"
 }

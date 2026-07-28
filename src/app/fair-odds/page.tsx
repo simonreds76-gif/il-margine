@@ -1863,9 +1863,21 @@ export default function FairOddsPage() {
                   <th className="text-center px-2 py-3 font-semibold text-slate-300" colSpan={2}>Fair Odds</th>
                   <th className="text-center px-2 py-3 font-semibold text-slate-300" colSpan={2}>Pinnacle</th>
                   <th className="text-center px-2 py-3 font-semibold text-emerald-500/70" title="Value % = (Pinnacle / Our odds) - 1; positive = value at Pinnacle">Best Value</th>
-                  <th className="text-center px-2 py-3 font-semibold">E[G]</th>
+                  <th
+                    className="text-center px-2 py-3 font-semibold"
+                    title="Expected total games (model mean). This is not the median O/U line."
+                  >
+                    E[G] mean
+                  </th>
                   <th className="text-center px-2 py-3 font-semibold text-slate-400">Spread</th>
-                  {SHOW_OU_COLUMNS && <th className="text-left px-2 py-3 font-semibold">O/U Fair</th>}
+                  {SHOW_OU_COLUMNS && (
+                    <th
+                      className="text-left px-2 py-3 font-semibold"
+                      title="Diagnostic fair prices only. The real-price totals backtest failed and this is not a betting lane."
+                    >
+                      O/U diagnostic
+                    </th>
+                  )}
                   {SHOW_OU_COLUMNS && <th className="text-left px-2 py-3 font-semibold">O/U Pin</th>}
                   {showStats && (
                     <th className="text-center px-2 py-3 font-medium text-[10px]" title="S% R% T (serve, return, total)">
@@ -2142,7 +2154,10 @@ function MatchRow({
           </div>
         </td>
 
-        <td className="text-center px-2 py-2.5 font-mono tabular-nums text-sm text-slate-300 overflow-hidden">
+        <td
+          className="text-center px-2 py-2.5 font-mono tabular-nums text-sm text-slate-300 overflow-hidden"
+          title="Expected total games (model mean), not the median O/U line"
+        >
           {m.expected_total_games != null ? m.expected_total_games.toFixed(1) : "--"}
         </td>
 

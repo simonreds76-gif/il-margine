@@ -17,6 +17,7 @@ PROPS_SHADOW = ROOT / "data" / "tennis-props" / "shadow" / "aces-dfs-shadow-sign
 SPREAD_DATASET = ROOT / "data" / "backtest" / "spread-v1-training-dataset.csv"
 SPREAD_CLV = ROOT / "data" / "backtest" / "strict-clv-audit-spreadv1-2026.csv"
 PINNACLE_COVERAGE = ROOT / "data" / "vnext" / "tennis-derivatives-pinnacle-coverage.json"
+REGISTRATION = ROOT / "data" / "vnext" / "experiment-registration-derivatives-0.1.json"
 PROPS_GATE = ROOT / "data" / "tennis-props" / "backtest" / "aces-dfs-v2-rung1-gate.json"
 OUT_JSON = ROOT / "data" / "vnext" / "tennis-derivatives-evidence-status.json"
 OUT_TXT = ROOT / "data" / "vnext" / "tennis-derivatives-evidence-report.txt"
@@ -62,6 +63,64 @@ def league_count(coverage: dict[str, Any], field: str, league: str) -> int:
     if not isinstance(values, dict):
         return 0
     return int(number(values.get(league)) or 0)
+
+
+def registered_evaluation(registration: dict[str, Any], lane: str) -> dict[str, Any]:
+    evaluations = registration.get("evaluations")
+    if not isinstance(evaluations, list):
+        return {}
+    matches = [
+        item for item in evaluations
+        if isinstance(item, dict) and str(item.get("lane") or "") == lane
+    ]
+    return matches[-1] if matches else {}
+
+
+def total_games_status(
+    evaluation: dict[str, Any],
+    coverage: dict[str, Any],
+) -> dict[str, object]:
+    if evaluation.get("status") == "TESTED_AND_REJECTED":
+        return {
+            "status": "TESTED",
+            "promotion_status": "TESTED_AND_REJECTED",
+            "evaluated_at": evaluation.get("evaluated_at"),
+            "settled_joined_rows": int(number(evaluation.get("settled_joined_rows")) or 0),
+            "real_line_rows": int(number(evaluation.get("scored_non_push_rows")) or 0),
+            "priced_bets": int(number(evaluation.get("priced_bets")) or 0),
+            "edge_threshold_pct": number(evaluation.get("edge_threshold_pct")),
+            "roi_pct": number(evaluation.get("roi_pct")),
+            "roi_ci95_pct": evaluation.get("roi_ci95_pct"),
+            "mean_clv_pct": number(evaluation.get("mean_clv_pct")),
+            "positive_clv_share_moved_pct": number(evaluation.get("positive_clv_share_moved_pct")),
+            "market_brier": number(evaluation.get("market_brier")),
+            "model_brier": number(evaluation.get("best_model_brier")),
+            "best_model": evaluation.get("best_model"),
+            "captured_line_offers": league_count(coverage, "unique_line_offers_by_league", "ATP"),
+            "captured_matches": league_count(coverage, "unique_matches_by_league", "ATP"),
+            "captured_challenger_line_offers": league_count(
+                coverage,
+                "unique_line_offers_by_league",
+                "Challenger",
+            ),
+            "reason": str(
+                evaluation.get("decision")
+                or "Tested on real Pinnacle totals and rejected as a betting lane."
+            ),
+        }
+    return {
+        "status": "COLLECTING" if coverage else "BLOCKED",
+        "promotion_status": "BLOCKED_NO_REGISTERED_REAL_LINE_DATASET",
+        "real_line_rows": 0,
+        "captured_line_offers": league_count(coverage, "unique_line_offers_by_league", "ATP"),
+        "captured_matches": league_count(coverage, "unique_matches_by_league", "ATP"),
+        "captured_challenger_line_offers": league_count(
+            coverage,
+            "unique_line_offers_by_league",
+            "Challenger",
+        ),
+        "reason": "No registered real-line evaluation exists.",
+    }
 
 
 def props_status(rows: list[dict[str, str]], shadow_rows: list[dict[str, str]]) -> dict[str, object]:
@@ -161,6 +220,7 @@ def main() -> int:
     parser.add_argument("--spread-clv", type=Path, default=SPREAD_CLV)
     parser.add_argument("--props-shadow", type=Path, default=PROPS_SHADOW)
     parser.add_argument("--pinnacle-coverage", type=Path, default=PINNACLE_COVERAGE)
+    parser.add_argument("--registration", type=Path, default=REGISTRATION)
     parser.add_argument("--out-json", type=Path, default=OUT_JSON)
     parser.add_argument("--out-txt", type=Path, default=OUT_TXT)
     args = parser.parse_args()
@@ -168,6 +228,8 @@ def main() -> int:
     pinnacle = json.loads(args.pinnacle_coverage.read_text(encoding="utf-8")) if args.pinnacle_coverage.exists() else {}
     spread_coverage = pinnacle.get("spread") if isinstance(pinnacle.get("spread"), dict) else {}
     total_coverage = pinnacle.get("total") if isinstance(pinnacle.get("total"), dict) else {}
+    registration = json.loads(args.registration.read_text(encoding="utf-8")) if args.registration.exists() else {}
+    totals = total_games_status(registered_evaluation(registration, "total_games_shape"), total_coverage)
     props = props_status(props_history_rows(args.props_inbox), csv_rows(args.props_shadow))
     spread = spread_status(csv_rows(args.spread_dataset), csv_rows(args.spread_clv), spread_coverage)
     props_model = json.loads(PROPS_GATE.read_text(encoding="utf-8")) if PROPS_GATE.exists() else {"status": "MISSING"}
@@ -177,15 +239,7 @@ def main() -> int:
         "moneyline_routing_changed": False,
         "overall_status": "BLOCKED",
         "spread_shape": spread,
-        "total_games_shape": {
-            "status": "COLLECTING" if total_coverage else "BLOCKED",
-            "promotion_status": "BLOCKED_NO_REGISTERED_REAL_LINE_DATASET",
-            "real_line_rows": 0,
-            "captured_line_offers": league_count(total_coverage, "unique_line_offers_by_league", "ATP"),
-            "captured_matches": league_count(total_coverage, "unique_matches_by_league", "ATP"),
-            "captured_challenger_line_offers": league_count(total_coverage, "unique_line_offers_by_league", "Challenger"),
-            "reason": "No reproducible paired Pinnacle total-games dataset is committed yet; synthetic total prices are forbidden as evidence.",
-        },
+        "total_games_shape": totals,
         "aces_dfs": props,
         "props_v2_rung1": {
             "status": props_model.get("status", "MISSING"),
@@ -211,10 +265,14 @@ def main() -> int:
         f"- Status: {spread['promotion_status']}",
         "",
         "Total-games shape",
-        "- Scored real paired line rows: 0 / 600",
-        f"- Captured ATP offers awaiting scoring: {league_count(total_coverage, 'unique_line_offers_by_league', 'ATP')} across {league_count(total_coverage, 'unique_matches_by_league', 'ATP')} matches",
-        f"- Challenger inventory kept separate: {league_count(total_coverage, 'unique_line_offers_by_league', 'Challenger')} offers",
-        "- Status: BLOCKED_NO_REGISTERED_REAL_LINE_DATASET",
+        f"- Scored non-push real paired rows: {totals['real_line_rows']}",
+        f"- Settled joined rows: {totals.get('settled_joined_rows', 0)}",
+        f"- ROI at registered threshold: {fmt(totals.get('roi_pct'))}%",
+        f"- ROI CI95: {totals.get('roi_ci95_pct', 'n/a')}",
+        f"- Mean CLV: {fmt(totals.get('mean_clv_pct'), 3)}%",
+        f"- Brier, best model / market: {fmt(totals.get('model_brier'), 5)} / {fmt(totals.get('market_brier'), 5)}",
+        f"- Status: {totals['promotion_status']}",
+        f"- Decision: {totals['reason']}",
         "",
         "Aces / double faults",
         f"- Captured Bet365 snapshots: {props['snapshot_rows']}",

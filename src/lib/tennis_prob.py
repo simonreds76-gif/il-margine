@@ -183,11 +183,7 @@ def expected_total_games_best_of_5(p_a: float, p_b: float) -> float:
 
 
 def _set_outcome_distribution(p_a: float, p_b: float, a_serves_first: bool) -> dict:
-    """P(set ends with G total games, A wins/loses) via forward-probability propagation.
-
-    Returns dict mapping (total_games, a_won: bool) -> probability.
-    Possible game totals per set: 6,7,8,9,10,12,13 (13 = 7-6 TB counted as 1 game).
-    """
+    """Return P(games, A won, A serves first next set) for one set."""
     p_a = max(0.01, min(0.99, p_a))
     p_b = max(0.01, min(0.99, p_b))
     pg_a = prob_game(p_a)
@@ -195,6 +191,11 @@ def _set_outcome_distribution(p_a: float, p_b: float, a_serves_first: bool) -> d
 
     reach = {(0, 0): 1.0}
     outcomes = {}
+
+    def add_outcome(games: int, a_won: bool, probability: float) -> None:
+        next_a_serves_first = a_serves_first if games % 2 == 0 else not a_serves_first
+        key = (games, a_won, next_a_serves_first)
+        outcomes[key] = outcomes.get(key, 0.0) + probability
 
     for total in range(13):
         for a in range(min(total + 1, 8)):
@@ -206,15 +207,15 @@ def _set_outcome_distribution(p_a: float, p_b: float, a_serves_first: bool) -> d
                 continue
 
             if a >= 6 and a - b >= 2:
-                outcomes[(a + b, True)] = outcomes.get((a + b, True), 0.0) + p_state
+                add_outcome(a + b, True, p_state)
                 continue
             if b >= 6 and b - a >= 2:
-                outcomes[(a + b, False)] = outcomes.get((a + b, False), 0.0) + p_state
+                add_outcome(a + b, False, p_state)
                 continue
             if a == 6 and b == 6:
                 p_tb = prob_tiebreak(p_a, p_b, a_serves_first)
-                outcomes[(13, True)] = outcomes.get((13, True), 0.0) + p_state * p_tb
-                outcomes[(13, False)] = outcomes.get((13, False), 0.0) + p_state * (1.0 - p_tb)
+                add_outcome(13, True, p_state * p_tb)
+                add_outcome(13, False, p_state * (1.0 - p_tb))
                 continue
 
             a_serves_this = ((total % 2 == 0) == a_serves_first)
@@ -226,61 +227,104 @@ def _set_outcome_distribution(p_a: float, p_b: float, a_serves_first: bool) -> d
     return outcomes
 
 
+def _match_games_pmf_for_first_server(
+    p_a: float,
+    p_b: float,
+    best_of: int,
+    a_serves_first: bool,
+) -> dict:
+    if best_of not in (3, 5):
+        raise ValueError("best_of must be 3 or 5")
+    sets_to_win = best_of // 2 + 1
+    states = {(0, 0, 0, a_serves_first): 1.0}
+    completed = {}
+    set_distributions = {
+        True: _set_outcome_distribution(p_a, p_b, True),
+        False: _set_outcome_distribution(p_a, p_b, False),
+    }
+
+    while states:
+        next_states = {}
+        for (sets_a, sets_b, total_games, next_a_serves), state_probability in states.items():
+            if sets_a == sets_to_win or sets_b == sets_to_win:
+                completed[total_games] = completed.get(total_games, 0.0) + state_probability
+                continue
+
+            set_distribution = set_distributions[next_a_serves]
+            for (set_games, a_won, following_a_serves), set_probability in set_distribution.items():
+                key = (
+                    sets_a + int(a_won),
+                    sets_b + int(not a_won),
+                    total_games + set_games,
+                    following_a_serves,
+                )
+                next_states[key] = next_states.get(key, 0.0) + state_probability * set_probability
+        states = next_states
+
+    total_probability = sum(completed.values())
+    if total_probability <= 0.0:
+        raise RuntimeError("total-games PMF has no probability mass")
+    return {games: probability / total_probability for games, probability in completed.items()}
+
+
+def match_games_pmf(
+    p_a: float,
+    p_b: float,
+    best_of: int = 3,
+    average_first_server: bool = True,
+) -> dict:
+    """PMF of match total games with serve order propagated across sets."""
+    p_a = int(round(max(0.01, min(0.99, p_a)) * 10000)) / 10000.0
+    p_b = int(round(max(0.01, min(0.99, p_b)) * 10000)) / 10000.0
+    first_a = _match_games_pmf_for_first_server(p_a, p_b, best_of, True)
+    if not average_first_server:
+        return first_a
+    first_b = _match_games_pmf_for_first_server(p_a, p_b, best_of, False)
+    games = set(first_a) | set(first_b)
+    return {
+        total: 0.5 * first_a.get(total, 0.0) + 0.5 * first_b.get(total, 0.0)
+        for total in games
+    }
+
+
 def _match_games_pmf(p_a: float, p_b: float) -> dict:
-    """PMF of total games in a best-of-3 match. Returns dict: total_games -> probability."""
-    s1 = _set_outcome_distribution(p_a, p_b, a_serves_first=True)
-    s2 = _set_outcome_distribution(p_a, p_b, a_serves_first=False)
-
-    def split(dist):
-        wins, losses = {}, {}
-        for (g, won), p in dist.items():
-            (wins if won else losses)[g] = (wins if won else losses).get(g, 0.0) + p
-        return wins, losses
-
-    s1w, s1l = split(s1)
-    s2w, s2l = split(s2)
-    # s3 same as s1 (A serves first)
-    s3w, s3l = s1w, s1l
-
-    pmf = {}
-
-    def add(g, p):
-        pmf[g] = pmf.get(g, 0.0) + p
-
-    # 2-0 for A: A wins s1, A wins s2
-    for g1, p1 in s1w.items():
-        for g2, p2 in s2w.items():
-            add(g1 + g2, p1 * p2)
-    # 0-2 for B: B wins s1, B wins s2
-    for g1, p1 in s1l.items():
-        for g2, p2 in s2l.items():
-            add(g1 + g2, p1 * p2)
-    # 2-1 for A (A-B-A)
-    for g1, p1 in s1w.items():
-        for g2, p2 in s2l.items():
-            for g3, p3 in s3w.items():
-                add(g1 + g2 + g3, p1 * p2 * p3)
-    # 2-1 for A (B-A-A)
-    for g1, p1 in s1l.items():
-        for g2, p2 in s2w.items():
-            for g3, p3 in s3w.items():
-                add(g1 + g2 + g3, p1 * p2 * p3)
-    # 1-2 for B (A-B-B)
-    for g1, p1 in s1w.items():
-        for g2, p2 in s2l.items():
-            for g3, p3 in s3l.items():
-                add(g1 + g2 + g3, p1 * p2 * p3)
-    # 1-2 for B (B-A-B)
-    for g1, p1 in s1l.items():
-        for g2, p2 in s2w.items():
-            for g3, p3 in s3l.items():
-                add(g1 + g2 + g3, p1 * p2 * p3)
-
-    return pmf
+    """Backward-compatible best-of-3 PMF wrapper."""
+    return match_games_pmf(p_a, p_b, best_of=3)
 
 
-def prob_over_games(p_a: float, p_b: float, line: float) -> float:
-    """P(total games in best-of-3 > line). For half-integer lines this is clean;
-    for integer lines, exact-on-line is excluded (push)."""
-    pmf = _match_games_pmf(p_a, p_b)
-    return sum(p for g, p in pmf.items() if g > line)
+def over_push_under_from_pmf(pmf: dict, line: float) -> tuple[float, float, float]:
+    """Return full over, push and under probabilities at a totals line."""
+    p_over = sum(probability for games, probability in pmf.items() if games > line + 1e-9)
+    p_push = sum(probability for games, probability in pmf.items() if abs(games - line) <= 1e-9)
+    p_under = sum(probability for games, probability in pmf.items() if games < line - 1e-9)
+    total = p_over + p_push + p_under
+    if total <= 0.0:
+        raise RuntimeError("total-games probabilities have no mass")
+    return p_over / total, p_push / total, p_under / total
+
+
+def over_push_under_games(
+    p_a: float,
+    p_b: float,
+    line: float,
+    best_of: int = 3,
+) -> tuple[float, float, float]:
+    return over_push_under_from_pmf(match_games_pmf(p_a, p_b, best_of=best_of), line)
+
+
+def fair_total_prices(p_over: float, p_push: float, p_under: float) -> tuple[float, float]:
+    """Return refund-aware fair decimal prices for over and under."""
+    active_mass = max(0.0, 1.0 - p_push)
+    if active_mass <= 0.0 or p_over <= 0.0 or p_under <= 0.0:
+        raise ValueError("over and under probabilities must both be positive")
+    return active_mass / p_over, active_mass / p_under
+
+
+def expected_total_games_from_pmf(pmf: dict) -> float:
+    return sum(float(games) * probability for games, probability in pmf.items())
+
+
+def prob_over_games(p_a: float, p_b: float, line: float, best_of: int = 3) -> float:
+    """P(total games > line); exact integer-line outcomes are pushes."""
+    p_over, _, _ = over_push_under_games(p_a, p_b, line, best_of=best_of)
+    return p_over

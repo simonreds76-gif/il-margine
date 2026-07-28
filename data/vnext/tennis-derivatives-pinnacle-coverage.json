@@ -1,49 +1,53 @@
 {
   "version": "tennis-derivative-coverage-v1",
-  "generated_at": "2026-07-12T22:24:56.260080+00:00",
-  "window_start": "2026-07-12",
-  "window_end": "2026-07-12",
-  "snapshot_rows": 558,
-  "first_capture_at": "2026-07-12T01:02:41.495402+00:00",
-  "last_capture_at": "2026-07-12T21:45:43.118348+00:00",
+  "generated_at": "2026-07-28T13:36:17.498431+00:00",
+  "window_start": "2026-03-01",
+  "window_end": "2026-07-28",
+  "snapshot_rows": 129263,
+  "first_capture_at": "2026-03-13T17:35:58.656786+00:00",
+  "last_capture_at": "2026-07-28T13:34:54.583389+00:00",
   "league_snapshot_rows": {
-    "ATP": 79,
-    "Challenger": 479
+    "Challenger": 74299,
+    "ATP": 54964
+  },
+  "snapshot_rows_by_source": {
+    "supabase": 128867,
+    "local": 396
   },
   "spread": {
-    "complete_snapshot_rows": 556,
-    "unique_line_offers": 136,
-    "unique_matches": 87,
-    "unique_close_offers": 136,
+    "complete_snapshot_rows": 128699,
+    "unique_line_offers": 13991,
+    "unique_matches": 8738,
+    "unique_close_offers": 12553,
     "complete_snapshots_by_league": {
-      "ATP": 77,
-      "Challenger": 479
+      "Challenger": 74009,
+      "ATP": 54690
     },
     "unique_line_offers_by_league": {
-      "ATP": 21,
-      "Challenger": 115
+      "ATP": 4815,
+      "Challenger": 9176
     },
     "unique_matches_by_league": {
-      "ATP": 16,
-      "Challenger": 71
+      "ATP": 2846,
+      "Challenger": 5892
     }
   },
   "total": {
-    "complete_snapshot_rows": 554,
-    "unique_line_offers": 117,
-    "unique_matches": 87,
-    "unique_close_offers": 117,
+    "complete_snapshot_rows": 128715,
+    "unique_line_offers": 11871,
+    "unique_matches": 8928,
+    "unique_close_offers": 10319,
     "complete_snapshots_by_league": {
-      "ATP": 76,
-      "Challenger": 478
+      "Challenger": 73937,
+      "ATP": 54778
     },
     "unique_line_offers_by_league": {
-      "ATP": 18,
-      "Challenger": 99
+      "ATP": 4318,
+      "Challenger": 7553
     },
     "unique_matches_by_league": {
-      "ATP": 16,
-      "Challenger": 71
+      "ATP": 2954,
+      "Challenger": 5974
     }
   }
 }
