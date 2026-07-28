@@ -21,6 +21,9 @@ LEAGUES = {
     "ligue-1": {"count": 18, "promoted": {"Le Mans", "Troyes"}, "relegated": {"Metz", "Nantes"}},
 }
 BAD_TEXT = re.compile(r"(?:Ã.|Â.|â.|�)")
+AGENT_AUDIT_PATTERN = re.compile(
+    r"agent-(?:epl|serie-a|la-liga|bundesliga|ligue-1)-hierarchy-audit-(\d{4}-\d{2}-\d{2})\.json$"
+)
 
 
 def load(path: Path) -> dict:
@@ -34,6 +37,21 @@ def slug(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
 
 
+def latest_agent_audit_dates() -> dict[str, str]:
+    dates_by_league: dict[str, str] = {}
+    research_dir = DATA / "research"
+    for league in LEAGUES:
+        dates = []
+        for path in research_dir.glob(f"agent-{league}-hierarchy-audit-*.json"):
+            match = AGENT_AUDIT_PATTERN.fullmatch(path.name)
+            if match:
+                dates.append(match.group(1))
+        if not dates:
+            raise AssertionError(f"{league}: no agent hierarchy audit found")
+        dates_by_league[league] = max(dates)
+    return dates_by_league
+
+
 def main() -> int:
     errors: list[str] = []
 
@@ -43,6 +61,7 @@ def main() -> int:
 
     season = load(DATA / "club-penalty-season.json")
     logo_manifest = load(DATA / "team-logo-map.json")
+    audit_dates = latest_agent_audit_dates()
     check(season.get("label") == "2026/27", "Season config must publish 2026/27")
     check(season.get("status") == "preseason", "Season must remain preseason until league kickoff")
     check(season.get("league_start_dates", {}).get("epl") == "2026-08-21", "Premier League start date must match the released fixture list")
@@ -51,6 +70,7 @@ def main() -> int:
 
     all_urls: set[str] = set()
     for league, expected in LEAGUES.items():
+        audit_date = audit_dates[league]
         current_path = DATA / f"{league}-penalty-takers.json"
         archive_path = archive_dir / current_path.name
         current = load(current_path)
@@ -60,8 +80,8 @@ def main() -> int:
 
         check(meta.get("schema_version") == 2, f"{league}: schema_version must be 2")
         check(meta.get("season", {}).get("label") == season["label"], f"{league}: season mismatch")
-        check(meta.get("last_verified") == "2026-07-27", f"{league}: audit verification date is stale")
-        check(meta.get("public_updated_at") == "2026-07-27", f"{league}: public update date is stale")
+        check(meta.get("last_verified") == audit_date, f"{league}: audit verification date is stale")
+        check(meta.get("public_updated_at") == audit_date, f"{league}: public update date is stale")
         check(len(teams) == expected["count"], f"{league}: expected {expected['count']} active teams, found {len(teams)}")
         check(expected["promoted"].issubset(teams), f"{league}: promoted teams missing")
         check(expected["relegated"].isdisjoint(teams), f"{league}: relegated teams still active")
@@ -95,14 +115,18 @@ def main() -> int:
                 ]
                 check(bool(source_urls), f"{league}/{team}: research event has no source URLs")
                 check(all(str(url).startswith("https://") for url in source_urls), f"{league}/{team}: research source URL must be HTTPS")
-            has_named_primary = bool(str(entry.get("primary") or "").strip())
-            has_explicit_unresolved_state = (
-                entry.get("hierarchy_status") in {"unknown", "disputed"}
-                and bool(str(entry.get("condition_note") or "").strip())
-            )
+            for position in ("primary", "secondary", "tertiary"):
+                check(
+                    bool(str(entry.get(position) or "").strip()),
+                    f"{league}/{team}: {position} candidate must be named; express uncertainty in status/note",
+                )
+            hierarchy_names = {
+                re.sub(r"[^a-z0-9]+", " ", str(entry.get(position) or "").lower()).strip()
+                for position in ("primary", "secondary", "tertiary")
+            }
             check(
-                has_named_primary or has_explicit_unresolved_state,
-                f"{league}/{team}: needs a named primary or an explicit unresolved state",
+                len(hierarchy_names) == 3,
+                f"{league}/{team}: primary, secondary and tertiary must be distinct players",
             )
             check(
                 entry.get("flags", {}).get("carryover_from_previous_season") is False,
@@ -110,8 +134,11 @@ def main() -> int:
             )
             if team in expected["promoted"]:
                 check(
-                    is_researched and (has_named_primary or has_explicit_unresolved_state),
-                    f"{league}/{team}: promoted team needs researched evidence or an explicit unresolved state",
+                    is_researched and all(
+                        bool(str(entry.get(position) or "").strip())
+                        for position in ("primary", "secondary", "tertiary")
+                    ),
+                    f"{league}/{team}: promoted team needs three researched candidates",
                 )
 
             url = f"/penalty-takers/{league}/{slug(team)}"
