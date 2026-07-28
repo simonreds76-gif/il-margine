@@ -59,6 +59,51 @@ def load_env():
 
 load_env()
 
+
+def _http_request_with_retry(
+    request_func,
+    request_exception,
+    method,
+    request_url,
+    *,
+    retries,
+    retry_base_sleep,
+    retry_status,
+    timeout,
+    sleep_func=time.sleep,
+    **kwargs,
+):
+    """Retry transient Supabase reads and idempotency-protected writes."""
+    method_upper = str(method or "GET").upper()
+    kwargs.setdefault("timeout", timeout)
+    last_exc = None
+    for attempt in range(1, retries + 1):
+        try:
+            response = request_func(method_upper, request_url, **kwargs)
+            if response.status_code not in retry_status or attempt >= retries:
+                return response
+            delay = retry_base_sleep * attempt
+            print(
+                f"  WARNING: Supabase {method_upper} {response.status_code} at {request_url}; "
+                f"retry {attempt}/{retries} in {delay:.1f}s"
+            )
+            sleep_func(delay)
+        except request_exception as exc:
+            last_exc = exc
+            if attempt >= retries:
+                raise
+            delay = retry_base_sleep * attempt
+            print(
+                f"  WARNING: Supabase {method_upper} transient error at {request_url}: {exc}; "
+                f"retry {attempt}/{retries} in {delay:.1f}s"
+            )
+            sleep_func(delay)
+
+    if last_exc is not None:
+        raise last_exc
+    return request_func(method_upper, request_url, **kwargs)
+
+
 # ─── CALIBRATION CONSTANTS (Codex full calibration pass) ───────────
 HYBRID_ELO_WEIGHT_DEFAULT = 0.58
 HYBRID_ELO_WEIGHT_MIN_MATCHES = 28
@@ -1222,37 +1267,17 @@ def main():
     _requests_request = requests.request
 
     def _request_with_retry(method, request_url, **kwargs):
-        method_upper = str(method or "GET").upper()
-        if method_upper not in {"GET", "HEAD"}:
-            return _requests_request(method_upper, request_url, **kwargs)
-
-        kwargs.setdefault("timeout", REQ_TIMEOUT)
-        last_exc = None
-        for attempt in range(1, SUPABASE_READ_RETRIES + 1):
-            try:
-                resp = _requests_request(method_upper, request_url, **kwargs)
-                if resp.status_code not in SUPABASE_READ_RETRY_STATUS or attempt >= SUPABASE_READ_RETRIES:
-                    return resp
-                delay = SUPABASE_READ_RETRY_BASE_SLEEP * attempt
-                print(
-                    f"  WARNING: Supabase {method_upper} {resp.status_code} at {request_url}; "
-                    f"retry {attempt}/{SUPABASE_READ_RETRIES} in {delay:.1f}s"
-                )
-                time.sleep(delay)
-            except requests.exceptions.RequestException as exc:
-                last_exc = exc
-                if attempt >= SUPABASE_READ_RETRIES:
-                    raise
-                delay = SUPABASE_READ_RETRY_BASE_SLEEP * attempt
-                print(
-                    f"  WARNING: Supabase {method_upper} transient error at {request_url}: {exc}; "
-                    f"retry {attempt}/{SUPABASE_READ_RETRIES} in {delay:.1f}s"
-                )
-                time.sleep(delay)
-
-        if last_exc is not None:
-            raise last_exc
-        return _requests_request(method_upper, request_url, **kwargs)
+        return _http_request_with_retry(
+            _requests_request,
+            requests.exceptions.RequestException,
+            method,
+            request_url,
+            retries=SUPABASE_READ_RETRIES,
+            retry_base_sleep=SUPABASE_READ_RETRY_BASE_SLEEP,
+            retry_status=SUPABASE_READ_RETRY_STATUS,
+            timeout=REQ_TIMEOUT,
+            **kwargs,
+        )
 
     def _get_with_retry(request_url, **kwargs):
         return _request_with_retry("GET", request_url, **kwargs)
