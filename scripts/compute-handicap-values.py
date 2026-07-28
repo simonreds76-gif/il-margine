@@ -41,9 +41,8 @@ import requests
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _SCRIPT_DIR)
 sys.path.insert(0, os.path.dirname(_SCRIPT_DIR))
-from handicap_probs import prob_p1_covers_plus
+from handicap_probs import cover_probs, match_margin_pmf, match_win_probability
 from spread_v1_model import apply_correction
-from src.lib.tennis_prob import prob_match_best_of_3
 
 
 POINT_CLAMP = (0.42, 0.80)
@@ -108,6 +107,7 @@ def _fetch_rest_paged(base_url: str, table: str, headers: dict, params: dict, *,
 def _solve_spw_for_match_prob(
     p1_win: float,
     avg_spw: float,
+    best_of: str = "bo3",
     clamp_lo: float = POINT_CLAMP[0],
     clamp_hi: float = POINT_CLAMP[1],
     tol: float = 5e-4,
@@ -115,7 +115,7 @@ def _solve_spw_for_match_prob(
 ):
     """
     Solve symmetric point-win probabilities around avg_spw such that the implied
-    best-of-3 match win probability matches the final fair-odds `p1_win`.
+    match win probability matches the final fair-odds `p1_win`.
     """
     p1_win = _clamp(p1_win, 0.02, 0.98)
     avg_spw = _clamp(avg_spw, clamp_lo + 0.01, clamp_hi - 0.01)
@@ -125,7 +125,7 @@ def _solve_spw_for_match_prob(
         mid = (lo + hi) / 2.0
         p_a = _clamp(avg_spw + mid, clamp_lo, clamp_hi)
         p_b = _clamp(avg_spw - mid, clamp_lo, clamp_hi)
-        implied = prob_match_best_of_3(p_a, p_b)
+        implied = match_win_probability(p_a, p_b, best_of)
         if abs(implied - p1_win) < tol:
             return (p_a, p_b)
         if implied < p1_win:
@@ -137,6 +137,48 @@ def _solve_spw_for_match_prob(
         _clamp(avg_spw + mid, clamp_lo, clamp_hi),
         _clamp(avg_spw - mid, clamp_lo, clamp_hi),
     )
+
+
+def _is_grand_slam_event(tour_meta: dict | None) -> bool:
+    if not isinstance(tour_meta, dict):
+        return False
+    tour_name = str(tour_meta.get("name") or "").upper()
+    return any(
+        token in tour_name
+        for token in (
+            "AUSTRALIAN OPEN",
+            "ROLAND GARROS",
+            "WIMBLEDON",
+            "US OPEN",
+            "GRAND SLAM",
+        )
+    )
+
+
+def _is_best_of_five_match(tour_meta: dict | None, round_id: int | None) -> bool:
+    """ATP Slam main draws are BO5; qualifying rounds remain BO3."""
+    try:
+        round_number = int(round_id or 0)
+    except (TypeError, ValueError):
+        round_number = 0
+    return _is_grand_slam_event(tour_meta) and round_number >= 4
+
+
+def _shape_cover_probabilities(
+    p_a: float,
+    p_b: float,
+    line: float,
+    best_of: str,
+) -> tuple[float, float, float]:
+    """Return push-conditional P1/P2 prices and the explicit push mass."""
+    p1_win, p_push, p1_loss = cover_probs(
+        match_margin_pmf(p_a, p_b, best_of),
+        line,
+    )
+    non_push = p1_win + p1_loss
+    if non_push <= 1e-12:
+        return 0.5, 0.5, p_push
+    return p1_win / non_push, p1_loss / non_push, p_push
 
 
 def _parse_point_prob(value) -> float | None:
@@ -494,7 +536,7 @@ def main():
     if calibration.enabled:
         print(
             "Handicap calibration: ON "
-            f"(shift={calibration.line_shift:+.3f}, a={calibration.platt_a:+.4f}, b={calibration.platt_b:+.4f}) "
+            f"(legacy shift ignored, a={calibration.platt_a:+.4f}, b={calibration.platt_b:+.4f}) "
             f"source={calibration.source}"
         )
     else:
@@ -523,12 +565,13 @@ def main():
             "oncourt_today",
             headers,
             {
-                "select": "tour_id,player1_id,player2_id,result",
+                "select": "tour_id,round_id,player1_id,player2_id,result",
                 "order": "tour_id.asc,round_id.asc,draw.asc,player1_id.asc,player2_id.asc",
             },
             timeout=30,
         )
         open_pair_keys: set[tuple[int, int, int]] = set()
+        round_by_pair: dict[tuple[int, int, int], int | None] = {}
         for today_row in today_rows:
             if str(today_row.get("result") or "").strip():
                 continue
@@ -538,8 +581,14 @@ def main():
                 p2 = int(today_row["player2_id"])
             except (KeyError, TypeError, ValueError):
                 continue
+            try:
+                round_id = int(today_row.get("round_id"))
+            except (TypeError, ValueError):
+                round_id = None
             open_pair_keys.add((tid, p1, p2))
             open_pair_keys.add((tid, p2, p1))
+            round_by_pair[(tid, p1, p2)] = round_id
+            round_by_pair[(tid, p2, p1)] = round_id
         if open_pair_keys:
             before = len(fair_rows)
             fair_rows = [
@@ -557,8 +606,17 @@ def main():
                     in open_pair_keys
                 )
             ]
+            for row in fair_rows:
+                row["round_id"] = round_by_pair.get(
+                    (
+                        int(row["tour_id"]),
+                        int(row["player1_id"]),
+                        int(row["player2_id"]),
+                    )
+                )
             print(f"Filtered daily_fair_odds to open OnCourt rows: {len(fair_rows)}/{before}")
     except Exception as exc:
+        round_by_pair = {}
         print(f"WARNING: oncourt_today open-row filter skipped: {exc}")
 
     player_ids = set()
@@ -734,12 +792,46 @@ def main():
     correction_reason_counts: Counter[str] = Counter()
     correction_applied = 0
     correction_sign_flip_guarded = 0
+    bo5_suppressed = 0
+    push_masses: list[float] = []
     for m in matched:
         fo, pin, pin_reversed_for_fair = m["fair"], m["pinnacle"], m["pin_reversed_for_fair"]
         p1_win_prob = float(fo.get("p1_win_prob") or 0.0)
         surface = (fo.get("surface") or "").strip() or "N/A"
         tid = fo.get("tour_id")
         meta = tour_meta.get(int(tid)) if tid is not None and int(tid) in tour_meta else None
+        round_id = fo.get("round_id")
+        is_bo5 = _is_best_of_five_match(meta, round_id)
+        best_of = "bo5" if is_bo5 else "bo3"
+        slam_format_unknown = (
+            _is_grand_slam_event(meta)
+            and round_id in (None, "")
+        )
+        if (
+            (is_bo5 or slam_format_unknown)
+            and not _env_bool("SPREAD_V1_ALLOW_BO5", False)
+        ):
+            # The BO5 mathematics is now correct, but it has not passed a
+            # real-price holdout. Remove stale edges rather than publishing it.
+            patch = {
+                "spread_line": None,
+                "spread_odds1": None,
+                "spread_odds2": None,
+                "handicap_edge_p1": None,
+                "handicap_edge_p2": None,
+            }
+            if args.dry_run:
+                bo5_suppressed += 1
+            else:
+                resp = requests.patch(
+                    f"{url}/rest/v1/daily_fair_odds?id=eq.{fo['id']}",
+                    headers={**headers, "Content-Type": "application/json", "Prefer": "return=minimal"},
+                    json=patch,
+                    timeout=10,
+                )
+                if resp.ok:
+                    bo5_suppressed += 1
+            continue
         if surface == "N/A" and tid is not None:
             court_name = courts.get(int(meta["court_id"])) if meta and meta.get("court_id") is not None else ""
             surface = _court_to_surface(court_name)
@@ -749,19 +841,19 @@ def main():
         p_a_old = _parse_point_prob(fo.get("p_a"))
         p_b_old = _parse_point_prob(fo.get("p_b"))
         if p_a_old is not None and p_b_old is not None:
-            implied_from_stored = prob_match_best_of_3(p_a_old, p_b_old)
+            implied_from_stored = match_win_probability(p_a_old, p_b_old, best_of)
             implied_match_old.append(implied_from_stored)
             if abs(implied_from_stored - p1_win_prob) <= POINT_PROB_MATCH_PROB_GAP_MAX:
                 p_a, p_b = p_a_old, p_b_old
                 used_stored_point_probs += 1
             else:
-                p_a, p_b = _solve_spw_for_match_prob(p1_win_prob, avg_spw_surface)
+                p_a, p_b = _solve_spw_for_match_prob(p1_win_prob, avg_spw_surface, best_of)
                 fallback_solved_point_probs += 1
                 fallback_divergent_point_probs += 1
         else:
-            p_a, p_b = _solve_spw_for_match_prob(p1_win_prob, avg_spw_surface)
+            p_a, p_b = _solve_spw_for_match_prob(p1_win_prob, avg_spw_surface, best_of)
             fallback_solved_point_probs += 1
-        implied_match_new.append(prob_match_best_of_3(p_a, p_b))
+        implied_match_new.append(match_win_probability(p_a, p_b, best_of))
         pin_line = float(pin.get("spread_line") or 0.0)
 
         # Snapshot semantics (after scrape normalization):
@@ -808,22 +900,25 @@ def main():
         # Signed line from OUR P1 perspective:
         #   +x => P1 +x
         #   -x => P1 -x
-        model_p1_raw = prob_p1_covers_plus(p_a, p_b, line)
-        model_p1_shifted = prob_p1_covers_plus(p_a, p_b, line + calibration.line_shift)
+        model_p1_raw, raw_model_p2, push_mass = _shape_cover_probabilities(
+            p_a,
+            p_b,
+            line,
+            best_of,
+        )
+        push_masses.append(push_mass)
 
         implied1 = 1.0 / spread_odds1
         implied2 = 1.0 / spread_odds2
-        raw_model_p2 = _clamp(1.0 - model_p1_raw, 1e-6, 1.0 - 1e-6)
         raw_edge1 = (model_p1_raw - implied1) / implied1 * 100 if implied1 > 0 else None
         raw_edge2 = (raw_model_p2 - implied2) / implied2 * 100 if implied2 > 0 else None
 
-        model_p1_base = _calibrate_prob(model_p1_shifted, calibration)
-        tour_name_upper = str(meta.get("name") or "").upper() if isinstance(meta, dict) else ""
-        is_grand_slam = bool(
-            (isinstance(meta, dict) and int(meta.get("rank") or 0) == 1)
-            or any(token in tour_name_upper for token in ["AUSTRALIAN OPEN", "ROLAND GARROS", "WIMBLEDON", "US OPEN", "GRAND SLAM"])
-        )
-        best_of = "bo5" if is_grand_slam else "bo3"
+        # The old universal +0.5 line shift hid the integer-push bug and is no
+        # longer part of pricing. Calibrate both non-push sides symmetrically.
+        calibrated_p1 = _calibrate_prob(model_p1_raw, calibration)
+        calibrated_p2 = _calibrate_prob(raw_model_p2, calibration)
+        calibrated_total = calibrated_p1 + calibrated_p2
+        model_p1_base = calibrated_p1 / calibrated_total
         model_p1, correction_reason = apply_correction(
             calibration.payload,
             base_prob=model_p1_base,
@@ -905,6 +1000,17 @@ def main():
         f"fallback_reverse_solve={fallback_solved_point_probs} "
         f"fallback_divergent_gap={fallback_divergent_point_probs}"
     )
+    if bo5_suppressed:
+        print(
+            "BO5 spread rows suppressed pending real-price validation: "
+            f"{bo5_suppressed}"
+        )
+    if push_masses:
+        print(
+            "Explicit push mass: "
+            f"mean={mean(push_masses):.3%} max={max(push_masses):.3%} "
+            f"integer_rows={sum(1 for value in push_masses if value > 1e-12)}"
+        )
     print("Edge diagnostics (P1 +line):")
     summarize_edges("raw", edge_raw_p1)
     summarize_edges("cal", edge_cal_p1)

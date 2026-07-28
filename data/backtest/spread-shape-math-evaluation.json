@@ -1,0 +1,83 @@
+{
+  "version": "spread-shape-math-0.2",
+  "input": "data/backtest/spread-real-scored-atp.csv",
+  "rows_scored": 1433,
+  "evaluation": {
+    "status": "TESTED_AND_REJECTED",
+    "edge_threshold_pct": 5.0,
+    "priced_bets": 645,
+    "pnl_units": -38.965,
+    "roi_pct": -6.04108527131783,
+    "roi_ci95_pct": [
+      -13.152248062015506,
+      1.2792248062015494
+    ],
+    "clv_rows": 224,
+    "mean_clv_pct": -0.003977182321428571,
+    "positive_clv_share_moved_pct": 42.5531914893617,
+    "segments": {
+      "all": {
+        "rows": 1433,
+        "non_push_rows": 1356,
+        "market_brier": 0.24992018401815905,
+        "old_brier": 0.2661771294976748,
+        "corrected_brier": 0.2609926073803367,
+        "market_log_loss": 0.69298991338791,
+        "old_log_loss": 0.7356407276650421,
+        "corrected_log_loss": 0.718329849552629,
+        "mean_push_mass": 0.05184753847004363
+      },
+      "bo3": {
+        "rows": 1330,
+        "non_push_rows": 1256,
+        "market_brier": 0.24973325964710608,
+        "old_brier": 0.25839159392674754,
+        "corrected_brier": 0.2597068864902645,
+        "market_log_loss": 0.6926158954341979,
+        "old_log_loss": 0.712517141527629,
+        "corrected_log_loss": 0.7157648170892363,
+        "mean_push_mass": 0.05206005780311283
+      },
+      "bo5": {
+        "rows": 103,
+        "non_push_rows": 100,
+        "market_brier": 0.2522679541185845,
+        "old_brier": 0.36396345626852095,
+        "corrected_brier": 0.2771412617596432,
+        "market_log_loss": 0.6976875788865359,
+        "old_log_loss": 1.0260729695509498,
+        "corrected_log_loss": 0.750546657292841,
+        "mean_push_mass": 0.04910335679060636
+      },
+      "integer": {
+        "rows": 706,
+        "non_push_rows": 629,
+        "market_brier": 0.25020649511130383,
+        "old_brier": 0.26882682717334117,
+        "corrected_brier": 0.26523969995338875,
+        "market_log_loss": 0.693559896820858,
+        "old_log_loss": 0.7394869708406636,
+        "corrected_log_loss": 0.7277660718477471,
+        "mean_push_mass": 0.1052372841750319
+      },
+      "half": {
+        "rows": 727,
+        "non_push_rows": 727,
+        "market_brier": 0.24967246781790037,
+        "old_brier": 0.2638846125265687,
+        "corrected_brier": 0.25731802522290925,
+        "market_log_loss": 0.6924967640353321,
+        "old_log_loss": 0.7323129601857216,
+        "corrected_log_loss": 0.7101656352147621,
+        "mean_push_mass": 0.0
+      }
+    },
+    "gates": {
+      "corrected_brier_beats_market": false,
+      "priced_bets_200": true,
+      "mean_clv_1pct": false,
+      "positive_clv_55pct": false,
+      "roi_ci_lower_above_minus_2pct": false
+    }
+  }
+}

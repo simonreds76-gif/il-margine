@@ -3,8 +3,8 @@ IL MARGINE - Canonical Tennis Spread Real-Price Scorer
 Purpose: identity-safe settlement and real-price scoring only.
 This artifact does not authorise a live spread betting lane.
 
-History files read: 2721
-Valid unique spread snapshots: 87001
+History files read: 2722
+Valid unique spread snapshots: 87039
 
 ATP:
 - scored matches: 1433
@@ -24,8 +24,8 @@ Challenger:
 
 Unmatched/dropped snapshots by reason:
 - unscorable_result: 6461
-- unresolved_full_name: 5492
-- result_not_found_in_window: 3479
+- unresolved_full_name: 5494
+- result_not_found_in_window: 3517
 - snapshot_not_prestart: 698
 - incomplete_spread_or_ml_price: 295
 - ambiguous_capture_window: 51
