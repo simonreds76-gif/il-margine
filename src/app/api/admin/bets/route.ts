@@ -1,11 +1,26 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createHmac } from "crypto";
+import { revalidatePath } from "next/cache";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { postPlayerPropTipToTelegram } from "@/lib/player-props-telegram";
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const COOKIE_NAME = "admin_session";
+const PUBLIC_BET_PATHS = [
+  "/",
+  "/player-props",
+  "/tennis-tips",
+  "/track-record",
+  "/calculator",
+] as const;
+
+function revalidatePublicBetSurfaces() {
+  for (const path of PUBLIC_BET_PATHS) {
+    revalidatePath(path);
+  }
+  revalidatePath("/tips/[slugId]", "page");
+}
 
 function getSignedToken(): string {
   if (!ADMIN_PASSWORD) return "";
@@ -35,6 +50,8 @@ export async function POST(req: Request) {
     .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
 
+  revalidatePublicBetSurfaces();
+
   const telegram = await postPlayerPropTipToTelegram(data);
   if (telegram.status === "failed") {
     console.warn("Player props Telegram post failed:", telegram.reason);
@@ -55,6 +72,7 @@ export async function PATCH(req: Request) {
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
   const { error } = await supabase.from("bets").update(updates).eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  revalidatePublicBetSurfaces();
   return NextResponse.json({ ok: true });
 }
 
@@ -71,5 +89,6 @@ export async function DELETE(req: Request) {
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
   const { error } = await supabase.from("bets").delete().eq("id", Number(id));
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  revalidatePublicBetSurfaces();
   return NextResponse.json({ ok: true });
 }
