@@ -1,27 +1,31 @@
 Tennis Serve-Derivatives Evidence Ledger
-Generated UTC: 2026-07-12T22:24:57.029120+00:00
+Generated UTC: 2026-07-28T14:33:28.507233+00:00
 Moneyline routing changed: NO
 Overall: BLOCKED (research collection only)
 
 Spread shape
 - Real line rows: 188 / 600
-- Captured ATP offers awaiting scoring: 21 across 16 matches
-- Challenger inventory kept separate: 115 offers
+- Captured ATP offers awaiting scoring: 5089 across 3079 matches
+- Challenger inventory kept separate: 9527 offers
 - Settled shadow: 34 / 200
 - Mean CLV: -0.01% / +1.00%
 - Positive CLV share: 35.29% / 55.00%
 - Status: BLOCKED_REAL_LINE_SAMPLE
 
 Total-games shape
-- Scored real paired line rows: 0 / 600
-- Captured ATP offers awaiting scoring: 18 across 16 matches
-- Challenger inventory kept separate: 99 offers
-- Status: BLOCKED_NO_REGISTERED_REAL_LINE_DATASET
+- Scored non-push real paired rows: 7427
+- Settled joined rows: 7673
+- ROI at registered threshold: -3.84%
+- ROI CI95: [-6.12, -1.74]
+- Mean CLV: -0.086%
+- Brier, best model / market: 0.26040 / 0.24982
+- Status: TESTED_AND_REJECTED
+- Decision: No totals betting lane. Retain corrected probabilities as diagnostics only.
 
 Aces / double faults
-- Captured Bet365 snapshots: 137
-- Unique Bet365 line offers: 65 / 300
-- Distinct events: 4 / 100
+- Captured Bet365 snapshots: 3384
+- Unique Bet365 line offers: 2123 / 300
+- Distinct events: 139 / 100
 - Settled shadow: 0 / 300
 - Pending / void: 0 / 0
 - Mean CLV: n/a% / +0.50%

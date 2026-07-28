@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import os
 import re
@@ -17,6 +18,7 @@ import requests
 
 ROOT = Path(__file__).resolve().parent.parent
 OUTPUT = ROOT / "data" / "vnext" / "tennis-derivatives-pinnacle-coverage.json"
+LOCAL_HISTORY = ROOT / "data" / "pinnacle-history"
 HTTP_TIMEOUT = 30
 
 
@@ -36,7 +38,11 @@ def load_env() -> None:
 def rest_config() -> tuple[str, dict[str, str]]:
     load_env()
     base = (os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or "").rstrip("/")
-    key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or ""
+    key = (
+        os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+        or os.environ.get("NEXT_PUBLIC_SUPABASE_ANON_KEY")
+        or ""
+    )
     if not base or not key:
         raise RuntimeError("Missing Supabase REST credentials")
     return f"{base}/rest/v1", {"apikey": key, "Authorization": f"Bearer {key}"}
@@ -87,6 +93,61 @@ def fetch_rows(start_date: date, end_date: date) -> list[dict[str, Any]]:
     return rows
 
 
+def _date_from_path(path: Path) -> str:
+    match = re.search(r"(20\d{2})-?(\d{2})-?(\d{2})", path.stem)
+    return f"{match.group(1)}-{match.group(2)}-{match.group(3)}" if match else ""
+
+
+def load_local_rows(start_date: date, end_date: date) -> list[dict[str, Any]]:
+    """Load tracked daily snapshots plus optional ignored high-frequency history."""
+    paths = list((ROOT / "data").glob("pinnacle-odds-20*.csv"))
+    if LOCAL_HISTORY.exists():
+        paths.extend(LOCAL_HISTORY.glob("pinnacle-history-*.csv"))
+    rows: list[dict[str, Any]] = []
+    for path in sorted(set(paths)):
+        fallback_date = _date_from_path(path)
+        try:
+            with path.open("r", encoding="utf-8-sig", newline="") as handle:
+                for row in csv.DictReader(handle):
+                    capture_date = str(row.get("capture_date") or fallback_date)[:10]
+                    try:
+                        parsed_date = date.fromisoformat(capture_date)
+                    except ValueError:
+                        continue
+                    if parsed_date < start_date or parsed_date > end_date:
+                        continue
+                    normalized = dict(row)
+                    normalized["capture_date"] = capture_date
+                    normalized.setdefault("captured_at", str(row.get("captured_at") or ""))
+                    normalized.setdefault("capture_mode", str(row.get("capture_mode") or "local_snapshot"))
+                    normalized.setdefault("bookmaker", str(row.get("bookmaker") or "Pinnacle"))
+                    normalized["_coverage_source"] = "local"
+                    rows.append(normalized)
+        except (OSError, csv.Error) as exc:
+            print(f"WARNING: skipping unreadable local capture {path}: {exc}")
+    return rows
+
+
+def merge_rows(*groups: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    rows_by_key: dict[tuple[str, ...], dict[str, Any]] = {}
+    for rows in groups:
+        for row in rows:
+            key = (
+                str(row.get("captured_at") or row.get("capture_date") or ""),
+                str(row.get("league") or ""),
+                text_key(row.get("player1_name")),
+                text_key(row.get("player2_name")),
+                str(row.get("spread_line") or ""),
+                str(row.get("spread_odds1") or ""),
+                str(row.get("spread_odds2") or ""),
+                str(row.get("ou_line") or ""),
+                str(row.get("ou_over") or ""),
+                str(row.get("ou_under") or ""),
+            )
+            rows_by_key[key] = row
+    return list(rows_by_key.values())
+
+
 def text_key(value: object) -> str:
     text = unicodedata.normalize("NFKD", str(value or "").lower())
     text = "".join(char for char in text if not unicodedata.combining(char))
@@ -117,6 +178,9 @@ def summarise(rows: list[dict[str, Any]], start_date: date, end_date: date) -> d
         "first_capture_at": captures[0] if captures else None,
         "last_capture_at": captures[-1] if captures else None,
         "league_snapshot_rows": dict(league_rows),
+        "snapshot_rows_by_source": dict(
+            Counter(str(row.get("_coverage_source") or "supabase") for row in rows)
+        ),
     }
     for market in ("spread", "total"):
         complete = [row for row in rows if complete_pair(row, market)]
@@ -154,19 +218,29 @@ def summarise(rows: list[dict[str, Any]], start_date: date, end_date: date) -> d
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--start-date", default="2026-07-12")
+    parser.add_argument("--start-date", default="2026-03-01")
     parser.add_argument("--end-date", default=date.today().isoformat())
     parser.add_argument("--output", type=Path, default=OUTPUT)
     parser.add_argument("--allow-missing-creds", action="store_true")
+    parser.add_argument("--local-only", action="store_true")
+    parser.add_argument("--no-local", action="store_true")
     args = parser.parse_args()
     start_date = date.fromisoformat(args.start_date)
     end_date = date.fromisoformat(args.end_date)
-    try:
-        rows = fetch_rows(start_date, end_date)
-    except (RuntimeError, requests.RequestException) as exc:
-        if not args.allow_missing_creds:
-            raise
-        print(f"WARNING: Pinnacle coverage refresh skipped: {exc}")
+    remote_rows: list[dict[str, Any]] = []
+    if not args.local_only:
+        try:
+            remote_rows = fetch_rows(start_date, end_date)
+            for row in remote_rows:
+                row["_coverage_source"] = "supabase"
+        except (RuntimeError, requests.RequestException) as exc:
+            if not args.allow_missing_creds:
+                raise
+            print(f"WARNING: Supabase coverage unavailable; continuing with local captures: {exc}")
+    local_rows = [] if args.no_local else load_local_rows(start_date, end_date)
+    rows = merge_rows(remote_rows, local_rows)
+    if not rows and args.allow_missing_creds:
+        print("WARNING: no Pinnacle coverage rows available")
         return 0
     payload = summarise(rows, start_date, end_date)
     args.output.parent.mkdir(parents=True, exist_ok=True)

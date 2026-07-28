@@ -21,11 +21,12 @@ _script_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(_script_dir, ".."))
 sys.path.insert(0, _script_dir)
 from src.lib.tennis_prob import (
+    expected_total_games_from_pmf,
+    fair_total_prices,
+    match_games_pmf,
+    over_push_under_from_pmf,
     prob_match_best_of_3,
     prob_match_best_of_5,
-    expected_total_games_best_of_3,
-    expected_total_games_best_of_5,
-    prob_over_games,
 )
 from injury_overlay import env_bool, load_recent_injury_index
 from class_gap import apply_class_gap
@@ -113,6 +114,45 @@ DEFAULT_ELO = 1500
 # Market-like half-point menu. We still publish 3 lines per match, centered on
 # the model median, but draw from a broader realistic set.
 STANDARD_OU_LINES = [x + 0.5 for x in range(18, 28)]  # 18.5 .. 27.5
+
+
+def _is_best_of_five_match(series_bucket, round_id):
+    """ATP Grand Slam main draws are BO5; qualifying rounds remain BO3."""
+    try:
+        numeric_round = int(round_id)
+    except (TypeError, ValueError):
+        return False
+    return series_bucket == "Grand Slam" and numeric_round >= 4
+
+
+def _build_ou_data(
+    match_pmf,
+    *,
+    confidence,
+    is_best_of_5,
+    ou_shift,
+    tournament_total_adjustment,
+):
+    """Build diagnostic BO3 totals with full push-aware probabilities."""
+    if confidence == "none" or is_best_of_5:
+        return {}
+
+    line_probs = []
+    for line in STANDARD_OU_LINES:
+        effective_line = line + ou_shift - tournament_total_adjustment
+        p_over, p_push, p_under = over_push_under_from_pmf(match_pmf, effective_line)
+        line_probs.append((line, p_over, p_push, p_under))
+
+    median_idx = min(range(len(line_probs)), key=lambda i: abs(line_probs[i][1] - 0.50))
+    median_idx = max(1, min(len(line_probs) - 2, median_idx))
+    ou_data = {}
+    for idx_offset, display_idx in enumerate(range(median_idx - 1, median_idx + 2)):
+        line, p_over, p_push, p_under = line_probs[display_idx]
+        fair_over, fair_under = fair_total_prices(p_over, p_push, p_under)
+        ou_data[f"ou_line_{idx_offset + 1}"] = round(line, 1)
+        ou_data[f"ou_over_{idx_offset + 1}"] = round(fair_over, 3)
+        ou_data[f"ou_under_{idx_offset + 1}"] = round(fair_under, 3)
+    return ou_data
 # O/U calibration: model has been running high on totals; shift thresholds up
 # when pricing P(over), equivalent to shifting our distribution left.
 OU_LINE_SHIFT_BY_SURFACE = {"Hard": 2.6, "Clay": 2.9, "Grass": 1.8, "I.hard": 2.4, "N/A": 2.5}
@@ -1267,6 +1307,7 @@ def main():
     _requests_request = requests.request
 
     def _request_with_retry(method, request_url, **kwargs):
+        request_timeout = kwargs.pop("timeout", REQ_TIMEOUT)
         return _http_request_with_retry(
             _requests_request,
             requests.exceptions.RequestException,
@@ -1275,7 +1316,7 @@ def main():
             retries=SUPABASE_READ_RETRIES,
             retry_base_sleep=SUPABASE_READ_RETRY_BASE_SLEEP,
             retry_status=SUPABASE_READ_RETRY_STATUS,
-            timeout=REQ_TIMEOUT,
+            timeout=request_timeout,
             **kwargs,
         )
 
@@ -2834,7 +2875,10 @@ def main():
         series_bucket = _series_bucket_from_tour(tour_name, tour_rank_by_id.get(tid))
         is_challenger = _is_challenger_tour(tour_name)
         current_class_score = _tour_class_score(tour_rank_by_id.get(tid), tour_name)
+        # Preserve the existing ML solve in this totals-only correction. The
+        # actual match format below is used only by the totals diagnostic.
         is_best_of_5 = series_bucket == "Grand Slam"
+        totals_best_of_5 = _is_best_of_five_match(series_bucket, round_id)
 
         cpi_value = None
         cpi_year = None
@@ -3648,14 +3692,20 @@ def main():
             clamp_lo=POINT_CLAMP[0], clamp_hi=POINT_CLAMP[1],
             prob_fn=prob_match_fn,
         )
-        exp_games = expected_total_games_best_of_5(p_a_eg, p_b_eg) if is_best_of_5 else expected_total_games_best_of_3(p_a_eg, p_b_eg)
+        match_pmf = match_games_pmf(p_a_eg, p_b_eg, best_of=5 if totals_best_of_5 else 3)
+        exp_games = expected_total_games_from_pmf(match_pmf)
 
         # Tournament residual shift (e.g. court speed effects not captured by venue SPW)
         tour_shift_entry = tour_shift_lookup.get((tid, surface)) if tid is not None else None
         tour_shift = _float((tour_shift_entry or {}).get("shift_from_surface"))
+        tournament_total_adjustment = 0.0
         if tour_shift is not None:
             raw_add = TOURNAMENT_TOTAL_WEIGHT * tour_shift
-            exp_games += max(-TOURNAMENT_TOTAL_SHIFT_CAP, min(TOURNAMENT_TOTAL_SHIFT_CAP, raw_add))
+            tournament_total_adjustment = max(
+                -TOURNAMENT_TOTAL_SHIFT_CAP,
+                min(TOURNAMENT_TOTAL_SHIFT_CAP, raw_add),
+            )
+            exp_games += tournament_total_adjustment
         exp_games = max(12.0, min(48.0, exp_games))
 
         # Market calibration for totals: our raw model tends to run high on E[G].
@@ -3672,22 +3722,13 @@ def main():
 
         # O/U: use STANDARD bookie lines (not centred on mean E[G]).
         # Find the line where P(over) crosses 50% (median), then show that line ± 1 — like Pinnacle.
-        ou_data = {}
-        if confidence != "none":
-            line_probs = []
-            for line in STANDARD_OU_LINES:
-                p_over = prob_over_games(p_a_eg, p_b_eg, line + ou_shift)
-                p_over = max(0.01, min(0.99, p_over))
-                line_probs.append((line, p_over))
-            median_idx = min(range(len(line_probs)), key=lambda i: abs(line_probs[i][1] - 0.50))
-            median_idx = max(1, min(len(line_probs) - 2, median_idx))
-            for idx_offset, display_idx in enumerate(range(median_idx - 1, median_idx + 2)):
-                line, p_over = line_probs[display_idx]
-                fair_over = round(1.0 / p_over, 3)
-                fair_under = round(1.0 / (1.0 - p_over), 3)
-                ou_data[f"ou_line_{idx_offset + 1}"] = round(line, 1)
-                ou_data[f"ou_over_{idx_offset + 1}"] = fair_over
-                ou_data[f"ou_under_{idx_offset + 1}"] = fair_under
+        ou_data = _build_ou_data(
+            match_pmf,
+            confidence=confidence,
+            is_best_of_5=totals_best_of_5,
+            ou_shift=ou_shift,
+            tournament_total_adjustment=tournament_total_adjustment,
+        )
 
         if do_debug:
             n1, n2 = name_by_player.get(p1, ""), name_by_player.get(p2, "")

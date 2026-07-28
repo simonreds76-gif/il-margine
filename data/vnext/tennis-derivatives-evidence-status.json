@@ -1,15 +1,15 @@
 {
   "version": "tennis-serve-derivatives-0.1",
-  "generated_at": "2026-07-12T22:24:57.029120+00:00",
+  "generated_at": "2026-07-28T14:33:28.507233+00:00",
   "moneyline_routing_changed": false,
   "overall_status": "BLOCKED",
   "spread_shape": {
     "status": "COLLECTING",
     "promotion_status": "BLOCKED_REAL_LINE_SAMPLE",
     "real_line_rows": 188,
-    "captured_line_offers": 21,
-    "captured_matches": 16,
-    "captured_challenger_line_offers": 115,
+    "captured_line_offers": 5089,
+    "captured_matches": 3079,
+    "captured_challenger_line_offers": 9527,
     "settled_shadow_bets": 34,
     "clv_rows": 34,
     "mean_clv_pct": -0.009660691510560149,
@@ -23,32 +23,54 @@
     "reason": "The existing spread correction regressed on validation; base-only shadow evidence remains below promotion gates."
   },
   "total_games_shape": {
-    "status": "COLLECTING",
-    "promotion_status": "BLOCKED_NO_REGISTERED_REAL_LINE_DATASET",
-    "real_line_rows": 0,
-    "captured_line_offers": 18,
-    "captured_matches": 16,
-    "captured_challenger_line_offers": 99,
-    "reason": "No reproducible paired Pinnacle total-games dataset is committed yet; synthetic total prices are forbidden as evidence."
+    "status": "TESTED",
+    "promotion_status": "TESTED_AND_REJECTED",
+    "evaluated_at": "2026-07-28",
+    "settled_joined_rows": 7673,
+    "real_line_rows": 7427,
+    "priced_bets": 6676,
+    "edge_threshold_pct": 5.0,
+    "roi_pct": -3.84,
+    "roi_ci95_pct": [
+      -6.12,
+      -1.74
+    ],
+    "mean_clv_pct": -0.086,
+    "positive_clv_share_moved_pct": 38.3,
+    "market_brier": 0.24982,
+    "model_brier": 0.2604,
+    "best_model": "corrected_empirical_spw",
+    "captured_line_offers": 4572,
+    "captured_matches": 3187,
+    "captured_challenger_line_offers": 7882,
+    "reason": "No totals betting lane. Retain corrected probabilities as diagnostics only."
   },
   "aces_dfs": {
     "status": "COLLECTING",
     "promotion_status": "BLOCKED_REAL_LINE_SAMPLE",
-    "snapshot_rows": 137,
-    "line_rows": 65,
-    "distinct_events": 4,
+    "snapshot_rows": 3384,
+    "line_rows": 2123,
+    "distinct_events": 139,
     "dates": [
       "2026-07-10",
       "2026-07-11",
-      "2026-07-12"
+      "2026-07-12",
+      "2026-07-15",
+      "2026-07-16",
+      "2026-07-17",
+      "2026-07-18",
+      "2026-07-19",
+      "2026-07-20",
+      "2026-07-21",
+      "2026-07-22"
     ],
     "markets": {
-      "match_aces": 77,
-      "match_double_faults": 60
+      "match_aces": 1485,
+      "match_double_faults": 1899
     },
     "tours": {
-      "ATP": 92,
-      "WTA": 45
+      "ATP": 1779,
+      "WTA": 1605
     },
     "settled_shadow_bets": 0,
     "pending_shadow_bets": 0,
@@ -59,8 +81,8 @@
     "pnl_units": 0,
     "roi_pct": null,
     "gates": {
-      "unique_line_offers_300": false,
-      "distinct_events_100": false,
+      "unique_line_offers_300": true,
+      "distinct_events_100": true,
       "settled_shadow_bets_300": false,
       "mean_clv_0_5pct": false
     },

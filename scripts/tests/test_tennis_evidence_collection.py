@@ -70,6 +70,56 @@ class TennisEvidenceCollectionTests(unittest.TestCase):
         self.assertEqual(status["mean_clv_pct"], 1.2)
         self.assertEqual(status["pnl_units"], 0.91)
 
+    def test_totals_registered_rejection_replaces_false_sample_block(self) -> None:
+        evaluation = {
+            "status": "TESTED_AND_REJECTED",
+            "settled_joined_rows": 7673,
+            "scored_non_push_rows": 7427,
+            "priced_bets": 6676,
+            "edge_threshold_pct": 5.0,
+            "roi_pct": -3.84,
+            "roi_ci95_pct": [-6.12, -1.74],
+            "mean_clv_pct": -0.086,
+            "positive_clv_share_moved_pct": 38.3,
+            "market_brier": 0.24982,
+            "best_model_brier": 0.26040,
+            "best_model": "corrected_empirical_spw",
+            "decision": "No totals betting lane.",
+        }
+        coverage = {
+            "unique_line_offers_by_league": {"ATP": 157, "Challenger": 228},
+            "unique_matches_by_league": {"ATP": 150},
+        }
+
+        status = EVIDENCE.total_games_status(evaluation, coverage)
+
+        self.assertEqual(status["promotion_status"], "TESTED_AND_REJECTED")
+        self.assertEqual(status["real_line_rows"], 7427)
+        self.assertEqual(status["settled_joined_rows"], 7673)
+        self.assertLess(status["roi_pct"], 0)
+        self.assertGreater(status["model_brier"], status["market_brier"])
+
+    def test_remote_and_local_duplicate_snapshots_are_merged(self) -> None:
+        row = {
+            "captured_at": "2026-07-12T08:00:00Z",
+            "league": "ATP",
+            "player1_name": "Player One",
+            "player2_name": "Player Two",
+            "spread_line": "2.5",
+            "spread_odds1": "1.91",
+            "spread_odds2": "1.95",
+            "ou_line": "22.5",
+            "ou_over": "1.90",
+            "ou_under": "1.96",
+        }
+
+        merged = COVERAGE.merge_rows(
+            [{**row, "_coverage_source": "supabase"}],
+            [{**row, "_coverage_source": "local"}],
+        )
+
+        self.assertEqual(len(merged), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

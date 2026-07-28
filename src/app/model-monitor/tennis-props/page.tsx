@@ -199,7 +199,10 @@ function effectiveLineQuality(row: CsvRow): string {
 }
 
 function isTrustedComparisonRow(row: CsvRow): boolean {
-  return row.matched_board === "yes" && effectiveLineQuality(row) === "complete";
+  return row.matched_board === "yes" && (
+    effectiveLineQuality(row) === "complete"
+    || row.decision_mode === "over_only_raw_ev"
+  );
 }
 
 function isMatchTotalComparisonRow(row: CsvRow): boolean {
@@ -897,8 +900,9 @@ function groupComparisonByMatch(rows: CsvRow[]): { date: string; matches: { key:
 function ComparisonLineCard({ row }: { row: CsvRow }) {
   const quality = effectiveLineQuality(row);
   const trustedLine = isTrustedComparisonRow(row);
-  const bestSide = n(row.value_under_pct) > n(row.value_over_pct) ? "UNDER" : "OVER";
-  const bestValue = trustedLine ? Math.max(n(row.value_over_pct), n(row.value_under_pct)) : 0;
+  const overOnlyMode = row.decision_mode === "over_only_raw_ev";
+  const bestSide = overOnlyMode ? "OVER" : n(row.value_under_pct) > n(row.value_over_pct) ? "UNDER" : "OVER";
+  const bestValue = trustedLine ? (overOnlyMode ? n(row.value_over_pct) : Math.max(n(row.value_over_pct), n(row.value_under_pct))) : 0;
   const bestNovigEdge = bestSide === "UNDER" ? n(row.edge_under_novig_pct) : n(row.edge_over_novig_pct);
   const blockedReason = row.blocked_reason || rowRejectionReason(row);
   const lineStatus = row.main_line === "true" ? "main line" : row.best_available_line === "true" ? "best available" : quality;
@@ -929,18 +933,18 @@ function ComparisonLineCard({ row }: { row: CsvRow }) {
           </div>
         </div>
         <div className="text-right">
-          <div className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">{trustedLine ? "best value" : "audit only"}</div>
+          <div className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">{trustedLine ? (overOnlyMode ? "raw Over EV" : "best value") : "audit only"}</div>
           <div className={cn("font-mono text-2xl font-black", trustedLine && bestValue > 0 ? "text-emerald-300" : "text-slate-500")}>
             {trustedLine ? `${bestSide} ${fmt(bestValue, 1)}%` : quality.replaceAll("_", " ")}
           </div>
-          {trustedLine ? <div className="mt-1 font-mono text-[11px] text-slate-500">no-vig edge {bestNovigEdge > 0 ? "+" : ""}{fmt(bestNovigEdge, 1)}%</div> : null}
+          {trustedLine ? <div className="mt-1 font-mono text-[11px] text-slate-500">{overOnlyMode ? "under price unavailable" : `no-vig edge ${bestNovigEdge > 0 ? "+" : ""}${fmt(bestNovigEdge, 1)}%`}</div> : null}
         </div>
       </div>
       <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
         <MetricTile label="Over price" value={fmt(row.over_odds, 2)} sub={`fair ${fmt(row.fair_over_odds, 2)}`} tone="text-slate-100" />
         <MetricTile label="Under price" value={fmt(row.under_odds, 2)} sub={`fair ${fmt(row.fair_under_odds, 2)}`} tone="text-slate-100" />
-        <MetricTile label="Over value" value={trustedLine ? `${fmt(row.value_over_pct, 1)}%` : "audit"} sub={trustedLine ? `no-vig ${n(row.edge_over_novig_pct) > 0 ? "+" : ""}${fmt(row.edge_over_novig_pct, 1)}%` : undefined} tone={trustedLine && n(row.value_over_pct) > 0 ? "text-emerald-300" : "text-slate-500"} />
-        <MetricTile label="Under value" value={trustedLine ? `${fmt(row.value_under_pct, 1)}%` : "audit"} sub={trustedLine ? `no-vig ${n(row.edge_under_novig_pct) > 0 ? "+" : ""}${fmt(row.edge_under_novig_pct, 1)}%` : undefined} tone={trustedLine && n(row.value_under_pct) > 0 ? "text-emerald-300" : "text-slate-500"} />
+        <MetricTile label="Over value" value={trustedLine ? `${fmt(row.value_over_pct, 1)}%` : "audit"} sub={trustedLine ? (overOnlyMode ? "raw EV at offered price" : `no-vig ${n(row.edge_over_novig_pct) > 0 ? "+" : ""}${fmt(row.edge_over_novig_pct, 1)}%`) : undefined} tone={trustedLine && n(row.value_over_pct) > 0 ? "text-emerald-300" : "text-slate-500"} />
+        <MetricTile label="Under value" value={overOnlyMode ? "not supplied" : trustedLine ? `${fmt(row.value_under_pct, 1)}%` : "audit"} sub={!overOnlyMode && trustedLine ? `no-vig ${n(row.edge_under_novig_pct) > 0 ? "+" : ""}${fmt(row.edge_under_novig_pct, 1)}%` : undefined} tone={trustedLine && !overOnlyMode && n(row.value_under_pct) > 0 ? "text-emerald-300" : "text-slate-500"} />
       </div>
       {row.line_quality_reason || row.raw_market_name ? (
         <div className="mt-2 rounded-xl border border-slate-800 bg-slate-950/70 px-3 py-2 text-[11px] leading-relaxed text-slate-500">
@@ -1012,10 +1016,12 @@ function ComparisonTable({ rows, hasLinesFile }: { rows: CsvRow[]; hasLinesFile:
 
 
 function rowBestSide(row: CsvRow): string {
+  if (row.decision_mode === "over_only_raw_ev") return "OVER";
   return n(row.value_under_pct) > n(row.value_over_pct) ? "UNDER" : "OVER";
 }
 
 function rowBestValue(row: CsvRow): number {
+  if (row.decision_mode === "over_only_raw_ev") return n(row.value_over_pct);
   return Math.max(n(row.value_over_pct), n(row.value_under_pct));
 }
 
@@ -1132,7 +1138,7 @@ function RecommendationPanel({
     return (
       <SectionCard
         title="BET NOW: Bet365 Match-Total Props"
-        subtitle="These are the only lines passing every live gate: match-total market, main complete line, fresh capture, MED+ confidence, enough sample, and raw/no-vig edge."
+        subtitle="Two-way prices require raw plus no-vig edge. Bet365 Over-only prices use the central ladder quote and a stricter raw-EV gate; an under price is not required to evaluate the offered Over."
       >
         <div className="grid gap-3 lg:grid-cols-2">
           {actionableRows.slice(0, 8).map((row, index) => <ComparisonLineCard key={`${row.player}-${row.market}-${row.line}-${index}`} row={row} />)}
@@ -1159,14 +1165,14 @@ function RecommendationPanel({
             <MetricTile label="Recommended" value="0" sub="official bets" tone="text-slate-400" />
             <MetricTile label="Matched lines" value={`${matchedCount}`} sub={`${totalCount} captured`} tone="text-cyan-300" />
             <MetricTile label="Required conf" value="MED+" sub="800 svpt sample" tone="text-emerald-300" />
-            <MetricTile label="Line type" value="clean" sub="complete two-way" tone="text-amber-300" />
+            <MetricTile label="Line type" value="priced" sub="two-way or central Over" tone="text-amber-300" />
           </div>
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
           <MiniBadge label="needs MED+ confidence" tone="border-emerald-500/25 bg-emerald-500/10 text-emerald-300" />
-          <MiniBadge label="needs main complete line" tone="border-cyan-500/25 bg-cyan-500/10 text-cyan-200" />
+          <MiniBadge label="main two-way or central Over" tone="border-cyan-500/25 bg-cyan-500/10 text-cyan-200" />
           <MiniBadge label="no board warnings" tone="border-slate-700/70 bg-slate-800/60 text-slate-300" />
-          <MiniBadge label="needs raw + no-vig edge" tone="border-amber-500/25 bg-amber-500/10 text-amber-300" />
+          <MiniBadge label="two-way: raw + no-vig | Over-only: raw EV 15%+" tone="border-amber-500/25 bg-amber-500/10 text-amber-300" />
         </div>
       </div>
       {watchRows.length ? (
@@ -1416,9 +1422,15 @@ function ResearchGatesPanel({
   const v3Atp = record(v3Deployment.ATP);
   const v3Wta = record(v3Deployment.WTA);
   const v3Shadow = shadowStats(propsV3ShadowRows);
-  const gateTone = (status: unknown) => status === "PASS"
-    ? "text-emerald-300"
-    : "text-amber-300";
+  const gateTone = (status: unknown) => {
+    if (status === "PASS") return "text-emerald-300";
+    if (status === "TESTED_AND_REJECTED") return "text-rose-300";
+    return "text-amber-300";
+  };
+  const totalsRejected = totals.promotion_status === "TESTED_AND_REJECTED";
+  const totalsSub = totalsRejected
+    ? `${numeric(totals.real_line_rows).toFixed(0)} scored | ROI ${numeric(totals.roi_pct).toFixed(2)}% | CLV ${numeric(totals.mean_clv_pct).toFixed(3)}% | Brier model ${numeric(totals.model_brier).toFixed(5)} vs market ${numeric(totals.market_brier).toFixed(5)}`
+    : `${numeric(totals.real_line_rows).toFixed(0)}/600 scored | ${numeric(totals.captured_line_offers).toFixed(0)} captured complete offers`;
 
   return (
     <SectionCard
@@ -1435,7 +1447,7 @@ function ResearchGatesPanel({
         <MetricTile
           label="Total-games shape"
           value={String(totals.promotion_status || "BLOCKED")}
-          sub={`${numeric(totals.real_line_rows).toFixed(0)}/600 scored | ${numeric(totals.captured_line_offers).toFixed(0)} captured complete offers`}
+          sub={totalsSub}
           tone={gateTone(totals.promotion_status)}
         />
         <MetricTile
@@ -1476,7 +1488,7 @@ function ResearchGatesPanel({
         />
       </div>
       <p className="mt-3 text-xs text-slate-500">
-        Current result: the richer all-main-tour v3 ace challenger beat the incumbent for ATP and WTA on untouched 2026 Hard/Clay data. The daily reproducible version passed only for ATP Hard/Clay, so that is the sole prospective shadow route. WTA, double faults and Grass remain blocked. With zero settled Bet365 shadow bets, no props tip is sellable yet. Synthetic odds never count as ROI evidence.
+        Current result: the richer all-main-tour v3 ace challenger beat the incumbent for ATP and WTA on untouched 2026 Hard/Clay data. The daily reproducible version passed only for ATP Hard/Clay, so that is the sole prospective shadow route. WTA, double faults and Grass remain blocked. Totals were tested on real Pinnacle prices and rejected; spread remains sample-blocked. With zero settled Bet365 shadow bets, no props tip is sellable yet. Synthetic odds never count as ROI evidence.
       </p>
     </SectionCard>
   );
@@ -1575,7 +1587,10 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
   const matchedDecisionRows = decisionRows.filter((row) => row.matched_board === "yes");
   const bettableRows = matchedDecisionRows.filter(isBettableComparisonRow);
   const nearMissRows = matchedDecisionRows
-    .filter((row) => !isBettableComparisonRow(row) && row.main_line === "true" && effectiveLineQuality(row) === "complete")
+    .filter((row) => !isBettableComparisonRow(row) && (
+      (row.main_line === "true" && effectiveLineQuality(row) === "complete")
+      || (row.best_available_line === "true" && row.price_pair_status === "over_only")
+    ))
     .sort((a, b) => rowBestValue(b) - rowBestValue(a));
   const blockedExamples = matchedDecisionRows
     .filter((row) => !isBettableComparisonRow(row))
@@ -1605,7 +1620,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
 
         <HeroCard title="Tennis Props Decision Board" eyebrow="Bet365 aces / double-faults monitor">
           <p className="text-slate-300">
-            Decision first: Bet365 match-total aces and double-fault lines are compared against the projection board, then gated for main line, stale capture, sample, confidence, market disagreement, and raw/no-vig edge.
+            Decision first: Bet365 match-total aces and double-fault lines are compared against the projection board. Two-way quotes use raw and no-vig edge; central Over-only quotes can qualify on a stricter raw-EV gate.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             <StatusPill label="Decision board default" tone="border-emerald-500/25 bg-emerald-500/10 text-emerald-300" />
