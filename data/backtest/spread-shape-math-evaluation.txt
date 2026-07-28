@@ -1,0 +1,33 @@
+IL MARGINE - Tennis Spread Mathematics Real-Price Evaluation
+
+Fixed experiment: de-vigged Pinnacle ML -> neutral surface serve shape -> handicap.
+No threshold sweep. Prices and settlement are real captured Pinnacle rows.
+
+Rows scored: 1433
+Fixed edge threshold: 5.0%
+Priced bets: 645
+P/L: -38.97u
+ROI: -6.04%
+ROI CI95: [-13.152248062015506, 1.2792248062015494]
+Mean CLV: -0.004%
+Positive CLV share (moved): 42.55%
+
+Probability scoring:
+- all: n=1356 market=0.249920 old=0.266177 corrected=0.260993 push=5.18%
+- bo3: n=1256 market=0.249733 old=0.258392 corrected=0.259707 push=5.21%
+- bo5: n=100 market=0.252268 old=0.363963 corrected=0.277141 push=4.91%
+- integer: n=629 market=0.250206 old=0.268827 corrected=0.265240 push=10.52%
+- half: n=727 market=0.249672 old=0.263885 corrected=0.257318 push=0.00%
+
+Decision: TESTED_AND_REJECTED
+Gates:
+- corrected_brier_beats_market: FAIL
+- priced_bets_200: PASS
+- mean_clv_1pct: FAIL
+- positive_clv_55pct: FAIL
+- roi_ci_lower_above_minus_2pct: FAIL
+
+Interpretation:
+- The old column reproduces the former BO3-only, push-as-opposite-side mathematics.
+- The corrected column uses explicit pushes, neutral first-server averaging and BO5 Slam main draws.
+- A mathematics fix is retained even when the betting lane fails; failure blocks signals, not correctness.

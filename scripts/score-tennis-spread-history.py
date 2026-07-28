@@ -57,6 +57,7 @@ OUTPUT_FIELDS = [
     "tour_id",
     "tour_name",
     "tour_rank",
+    "surface",
     "round_id",
     "result",
     "result_join_method",
@@ -270,6 +271,18 @@ class Tour:
     tour_id: int
     name: str
     rank: int | None
+    court_id: int | None = None
+
+    @property
+    def surface(self) -> str:
+        return {
+            1: "Hard",
+            2: "Clay",
+            3: "I.hard",
+            4: "Carpet",
+            5: "Grass",
+            6: "Acrylic",
+        }.get(self.court_id, "N/A")
 
 
 @dataclass(frozen=True)
@@ -401,6 +414,7 @@ def load_tours(path: Path) -> dict[int, Tour]:
             tour_id=tour_id,
             name=str(row.get("name") or "").strip(),
             rank=parse_int(row.get("rank")),
+            court_id=parse_int(row.get("court_id")),
         )
     return tours
 
@@ -786,6 +800,7 @@ def score_match(
         "tour_id": game.tour_id,
         "tour_name": tour.name,
         "tour_rank": tour.rank if tour.rank is not None else "",
+        "surface": tour.surface,
         "round_id": game.round_id if game.round_id is not None else "",
         "result": game.result,
         "result_join_method": join_method,

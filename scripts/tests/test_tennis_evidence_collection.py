@@ -145,6 +145,24 @@ class TennisEvidenceCollectionTests(unittest.TestCase):
             "BLOCKED_PROSPECTIVE_EVIDENCE",
         )
 
+    def test_spread_status_exposes_registered_shape_rejection(self) -> None:
+        evaluation = {
+            "status": "TESTED_AND_REJECTED",
+            "best_model": "push_bo3_bo5",
+            "best_model_brier": 0.26099,
+            "market_brier": 0.24992,
+            "roi_pct": -6.04,
+            "mean_clv_pct": -0.004,
+            "decision": "No standalone shape lane.",
+        }
+        status = EVIDENCE.spread_status([], [], {}, evaluation)
+        self.assertEqual(status["shape_model_status"], "TESTED_AND_REJECTED")
+        self.assertGreater(
+            status["shape_model_brier"],
+            status["shape_market_brier"],
+        )
+        self.assertLess(status["shape_roi_pct"], 0)
+
     def test_remote_and_local_duplicate_snapshots_are_merged(self) -> None:
         row = {
             "captured_at": "2026-07-12T08:00:00Z",

@@ -1,6 +1,6 @@
 {
   "version": "tennis-serve-derivatives-0.1",
-  "generated_at": "2026-07-28T16:00:09.253018+00:00",
+  "generated_at": "2026-07-28T16:42:38.223817+00:00",
   "moneyline_routing_changed": false,
   "overall_status": "BLOCKED",
   "spread_shape": {
@@ -24,7 +24,14 @@
       "mean_clv_1pct": false,
       "positive_clv_share_55pct": false
     },
-    "reason": "The canonical scorer removes the stale 188-row bottleneck. The existing spread correction regressed on validation and prospective ROI/CLV gates remain blocked."
+    "shape_model_status": "TESTED_AND_REJECTED",
+    "shape_model": "market_ml_neutral_surface_shape_push_bo3_bo5",
+    "shape_model_brier": 0.260993,
+    "shape_market_brier": 0.24992,
+    "shape_roi_pct": -6.04,
+    "shape_mean_clv_pct": -0.004,
+    "shape_decision": "Keep corrected push and BO5 mathematics, but do not create a standalone spread-shape betting lane. BO5 spread signals remain suppressed pending a future validated model.",
+    "reason": "The canonical scorer removes the stale 188-row bottleneck. The corrected push/BO5 shape model was tested and rejected; prospective ROI/CLV gates remain blocked."
   },
   "total_games_shape": {
     "status": "TESTED",
@@ -52,29 +59,23 @@
   "aces_dfs": {
     "status": "COLLECTING",
     "promotion_status": "BLOCKED_REAL_LINE_SAMPLE",
-    "snapshot_rows": 3384,
-    "line_rows": 2123,
-    "distinct_events": 139,
+    "snapshot_rows": 1219,
+    "line_rows": 711,
+    "distinct_events": 51,
     "dates": [
       "2026-07-10",
       "2026-07-11",
       "2026-07-12",
       "2026-07-15",
-      "2026-07-16",
-      "2026-07-17",
-      "2026-07-18",
-      "2026-07-19",
-      "2026-07-20",
-      "2026-07-21",
-      "2026-07-22"
+      "2026-07-16"
     ],
     "markets": {
-      "match_aces": 1485,
-      "match_double_faults": 1899
+      "match_aces": 537,
+      "match_double_faults": 682
     },
     "tours": {
-      "ATP": 1779,
-      "WTA": 1605
+      "ATP": 610,
+      "WTA": 609
     },
     "settled_shadow_bets": 0,
     "pending_shadow_bets": 0,
@@ -86,7 +87,7 @@
     "roi_pct": null,
     "gates": {
       "unique_line_offers_300": true,
-      "distinct_events_100": true,
+      "distinct_events_100": false,
       "settled_shadow_bets_300": false,
       "mean_clv_0_5pct": false
     },

@@ -59,6 +59,31 @@
       "positive_clv_share_moved_pct": 38.3,
       "decision": "No totals betting lane. Retain corrected probabilities as diagnostics only.",
       "audit": "docs/audits/tennis-match-totals-audit-2026-07-28.md"
+    },
+    {
+      "lane": "spread_shape",
+      "evaluated_at": "2026-07-28",
+      "status": "TESTED_AND_REJECTED",
+      "capture_window_start": "2026-03-14",
+      "capture_window_end": "2026-07-27",
+      "scored_rows": 1433,
+      "scored_non_push_rows": 1356,
+      "best_model": "market_ml_neutral_surface_shape_push_bo3_bo5",
+      "old_model_brier": 0.266177,
+      "best_model_brier": 0.260993,
+      "market_brier": 0.249920,
+      "edge_threshold_pct": 5.0,
+      "priced_bets": 645,
+      "pnl_units": -38.965,
+      "roi_pct": -6.04,
+      "roi_ci95_pct": [
+        -13.15,
+        1.28
+      ],
+      "mean_clv_pct": -0.004,
+      "positive_clv_share_moved_pct": 42.55,
+      "decision": "Keep corrected push and BO5 mathematics, but do not create a standalone spread-shape betting lane. BO5 spread signals remain suppressed pending a future validated model.",
+      "audit": "data/backtest/spread-shape-math-evaluation.txt"
     }
   ],
   "routing": "shadow_evidence_only"

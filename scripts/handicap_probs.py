@@ -216,6 +216,174 @@ def game_margin_pmf_bo3(p_a: float, p_b: float) -> Dict[int, float]:
     return dict(cached)
 
 
+def _best_of_sets(best_of: str | int) -> int:
+    text = str(best_of).strip().lower()
+    if text in {"5", "bo5", "best_of_5", "best-of-5"}:
+        return 5
+    if text in {"3", "bo3", "best_of_3", "best-of-3"}:
+        return 3
+    raise ValueError(f"Unsupported best_of value: {best_of!r}")
+
+
+@lru_cache(maxsize=8192)
+def _match_outcome_pmf_cached(pa_int: int, pb_int: int, best_of: int) -> tuple:
+    """Aggregate match margins and winner while carrying the next server."""
+    p_a = pa_int / 10000.0
+    p_b = pb_int / 10000.0
+    sets_to_win = best_of // 2 + 1
+    # The pricing rows do not identify the first server. Averaging both possible
+    # starters avoids giving Player A a hidden serving-order advantage.
+    active: Dict[Tuple[int, int, bool, int], float] = {
+        (0, 0, True, 0): 0.5,
+        (0, 0, False, 0): 0.5,
+    }
+    completed: Dict[Tuple[int, bool], float] = {}
+
+    for _ in range(best_of):
+        next_active: Dict[Tuple[int, int, bool, int], float] = {}
+        for (sets_a, sets_b, a_serves_next, margin), state_prob in active.items():
+            set_dist = set_score_distribution(
+                p_a,
+                p_b,
+                a_serves_first=a_serves_next,
+            )
+            for (games_a, games_b), set_prob in set_dist.items():
+                probability = state_prob * set_prob
+                if probability < 1e-15:
+                    continue
+                next_sets_a = sets_a + int(games_a > games_b)
+                next_sets_b = sets_b + int(games_b > games_a)
+                next_margin = margin + games_a - games_b
+                if next_sets_a == sets_to_win or next_sets_b == sets_to_win:
+                    outcome = (next_margin, next_sets_a == sets_to_win)
+                    completed[outcome] = (
+                        completed.get(outcome, 0.0) + probability
+                    )
+                    continue
+                next_server = (
+                    a_serves_next
+                    if (games_a + games_b) % 2 == 0
+                    else not a_serves_next
+                )
+                key = (next_sets_a, next_sets_b, next_server, next_margin)
+                next_active[key] = next_active.get(key, 0.0) + probability
+        active = next_active
+
+    total = sum(completed.values())
+    if total <= 0:
+        raise RuntimeError("Match-margin PMF has no probability mass")
+    return tuple(
+        (margin, player_a_won, probability / total)
+        for (margin, player_a_won), probability in sorted(completed.items())
+    )
+
+
+def match_margin_pmf(
+    p_a: float,
+    p_b: float,
+    best_of: str | int = "bo3",
+) -> Dict[int, float]:
+    """Return P(games_A - games_B) for a BO3 or BO5 match."""
+    pa_int = int(round(max(0.01, min(0.99, p_a)) * 10000))
+    pb_int = int(round(max(0.01, min(0.99, p_b)) * 10000))
+    margin_pmf: Dict[int, float] = {}
+    for margin, _, probability in _match_outcome_pmf_cached(
+        pa_int,
+        pb_int,
+        _best_of_sets(best_of),
+    ):
+        margin_pmf[margin] = margin_pmf.get(margin, 0.0) + probability
+    return margin_pmf
+
+
+@lru_cache(maxsize=16384)
+def _match_win_probability_cached(
+    pa_int: int,
+    pb_int: int,
+    best_of: int,
+) -> float:
+    """Fast match-win recursion used by the reverse point-probability solver."""
+    p_a = pa_int / 10000.0
+    p_b = pb_int / 10000.0
+    sets_to_win = best_of // 2 + 1
+    active: Dict[Tuple[int, int, bool], float] = {
+        (0, 0, True): 0.5,
+        (0, 0, False): 0.5,
+    }
+    player_a_wins = 0.0
+
+    for _ in range(best_of):
+        next_active: Dict[Tuple[int, int, bool], float] = {}
+        for (sets_a, sets_b, a_serves_next), state_prob in active.items():
+            for (games_a, games_b), set_prob in set_score_distribution(
+                p_a,
+                p_b,
+                a_serves_first=a_serves_next,
+            ).items():
+                probability = state_prob * set_prob
+                next_sets_a = sets_a + int(games_a > games_b)
+                next_sets_b = sets_b + int(games_b > games_a)
+                if next_sets_a == sets_to_win:
+                    player_a_wins += probability
+                    continue
+                if next_sets_b == sets_to_win:
+                    continue
+                next_server = (
+                    a_serves_next
+                    if (games_a + games_b) % 2 == 0
+                    else not a_serves_next
+                )
+                key = (next_sets_a, next_sets_b, next_server)
+                next_active[key] = next_active.get(key, 0.0) + probability
+        active = next_active
+    return player_a_wins
+
+
+def match_win_probability(
+    p_a: float,
+    p_b: float,
+    best_of: str | int = "bo3",
+) -> float:
+    """Return P(Player A wins the match) for a BO3 or BO5 match."""
+    pa_int = int(round(max(0.01, min(0.99, p_a)) * 10000))
+    pb_int = int(round(max(0.01, min(0.99, p_b)) * 10000))
+    return _match_win_probability_cached(
+        pa_int,
+        pb_int,
+        _best_of_sets(best_of),
+    )
+
+
+def cover_probs(
+    pmf: Dict[int, float],
+    line: float,
+) -> Tuple[float, float, float]:
+    """Return explicit win, push and loss probabilities for player A +line."""
+    p_win = p_push = p_loss = 0.0
+    for margin, probability in pmf.items():
+        adjusted_margin = float(margin) + float(line)
+        if adjusted_margin > 1e-9:
+            p_win += probability
+        elif adjusted_margin < -1e-9:
+            p_loss += probability
+        else:
+            p_push += probability
+    total = p_win + p_push + p_loss
+    if total <= 0:
+        raise ValueError("Cannot price an empty margin PMF")
+    return p_win / total, p_push / total, p_loss / total
+
+
+def p_cover_conditional(
+    pmf: Dict[int, float],
+    line: float,
+) -> float:
+    """Return the two-way fair cover probability conditional on no push."""
+    p_win, p_push, _ = cover_probs(pmf, line)
+    non_push = 1.0 - p_push
+    return p_win / non_push if non_push > 1e-12 else 0.5
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # Handicap probabilities
 # ══════════════════════════════════════════════════════════════════════════════
@@ -271,16 +439,20 @@ def expected_game_margin(p_a: float, p_b: float) -> float:
     return sum(margin * prob for margin, prob in pmf.items())
 
 
-def prob_p1_covers_plus(p_a: float, p_b: float, line: float) -> float:
+def prob_p1_covers_plus(
+    p_a: float,
+    p_b: float,
+    line: float,
+    best_of: str | int = "bo3",
+) -> float:
     """
-    P(P1 covers +line). P1 +line means we add line to P1's games.
-    Covers if (games_P1 + line) > games_P2, i.e. games_P1 - games_P2 > -line.
-    With margin = games_P1 - games_P2 (p_a = P1 serve, p_b = P2 serve):
-    Returns P(margin > -line). Works for both fav and dog.
+    Two-way fair P(P1 covers +line), conditional on an integer-line non-push.
+
+    Kept for compatibility. New code should call match_margin_pmf(),
+    cover_probs() and p_cover_conditional() explicitly.
     """
-    pmf = game_margin_pmf_bo3(p_a, p_b)
-    threshold = -line
-    return sum(p for m, p in pmf.items() if m > threshold)
+    pmf = match_margin_pmf(p_a, p_b, best_of=best_of)
+    return p_cover_conditional(pmf, line)
 
 
 def prob_p2_covers_minus(p_a: float, p_b: float, line: float) -> float:

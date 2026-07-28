@@ -178,7 +178,13 @@ def props_status(rows: list[dict[str, str]], shadow_rows: list[dict[str, str]]) 
     }
 
 
-def spread_status(dataset: list[dict[str, str]], clv_rows: list[dict[str, str]], coverage: dict[str, Any]) -> dict[str, object]:
+def spread_status(
+    dataset: list[dict[str, str]],
+    clv_rows: list[dict[str, str]],
+    coverage: dict[str, Any],
+    evaluation: dict[str, Any] | None = None,
+) -> dict[str, object]:
+    evaluation = evaluation or {}
     clv = [value for row in clv_rows if (value := number(row.get("clv_implied_delta_pct"))) is not None]
     settled = [row for row in clv_rows if str(row.get("bet_outcome") or "").upper() in {"WIN", "LOSS", "PUSH"}]
     non_push = [row for row in dataset if str(row.get("p1_cover_result") or "").upper() in {"WIN", "LOSS"}]
@@ -220,9 +226,16 @@ def spread_status(dataset: list[dict[str, str]], clv_rows: list[dict[str, str]],
         "mean_clv_pct": avg_clv,
         "positive_clv_share_pct": positive_share,
         "gates": gates,
+        "shape_model_status": evaluation.get("status") or "NOT_EVALUATED",
+        "shape_model": evaluation.get("best_model"),
+        "shape_model_brier": number(evaluation.get("best_model_brier")),
+        "shape_market_brier": number(evaluation.get("market_brier")),
+        "shape_roi_pct": number(evaluation.get("roi_pct")),
+        "shape_mean_clv_pct": number(evaluation.get("mean_clv_pct")),
+        "shape_decision": evaluation.get("decision"),
         "reason": (
             "The canonical scorer removes the stale 188-row bottleneck. "
-            "The existing spread correction regressed on validation and "
+            "The corrected push/BO5 shape model was tested and rejected; "
             "prospective ROI/CLV gates remain blocked."
         ),
     }
@@ -254,7 +267,12 @@ def main() -> int:
     registration = json.loads(args.registration.read_text(encoding="utf-8")) if args.registration.exists() else {}
     totals = total_games_status(registered_evaluation(registration, "total_games_shape"), total_coverage)
     props = props_status(props_history_rows(args.props_inbox), csv_rows(args.props_shadow))
-    spread = spread_status(csv_rows(args.spread_dataset), csv_rows(args.spread_clv), spread_coverage)
+    spread = spread_status(
+        csv_rows(args.spread_dataset),
+        csv_rows(args.spread_clv),
+        spread_coverage,
+        registered_evaluation(registration, "spread_shape"),
+    )
     props_model = json.loads(PROPS_GATE.read_text(encoding="utf-8")) if PROPS_GATE.exists() else {"status": "MISSING"}
     payload = {
         "version": "tennis-serve-derivatives-0.1",
@@ -289,6 +307,7 @@ def main() -> int:
         f"- Settled shadow: {spread['settled_shadow_bets']} / 200",
         f"- Mean CLV: {fmt(spread['mean_clv_pct'])}% / +1.00%",
         f"- Positive CLV share: {fmt(spread['positive_clv_share_pct'])}% / 55.00%",
+        f"- Shape model: {spread['shape_model_status']} | Brier {fmt(spread['shape_model_brier'], 5)} vs market {fmt(spread['shape_market_brier'], 5)} | ROI {fmt(spread['shape_roi_pct'])}% | CLV {fmt(spread['shape_mean_clv_pct'], 3)}%",
         f"- Status: {spread['promotion_status']}",
         "",
         "Total-games shape",

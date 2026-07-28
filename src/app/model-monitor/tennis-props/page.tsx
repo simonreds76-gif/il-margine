@@ -1428,6 +1428,10 @@ function ResearchGatesPanel({
     return "text-amber-300";
   };
   const totalsRejected = totals.promotion_status === "TESTED_AND_REJECTED";
+  const spreadShapeRejected = spread.shape_model_status === "TESTED_AND_REJECTED";
+  const spreadSub = spreadShapeRejected
+    ? `${numeric(spread.real_line_rows).toFixed(0)} scored | shape rejected: ROI ${numeric(spread.shape_roi_pct).toFixed(2)}% | CLV ${numeric(spread.shape_mean_clv_pct).toFixed(3)}% | Brier ${numeric(spread.shape_model_brier).toFixed(5)} vs market ${numeric(spread.shape_market_brier).toFixed(5)} | prospective ${numeric(spread.settled_shadow_bets).toFixed(0)}/200`
+    : `${numeric(spread.real_line_rows).toFixed(0)}/600 scored | ${numeric(spread.captured_line_offers).toFixed(0)} captured | ${numeric(spread.settled_shadow_bets).toFixed(0)}/200 settled | CLV ${numeric(spread.mean_clv_pct) >= 0 ? "+" : ""}${numeric(spread.mean_clv_pct).toFixed(2)}%`;
   const totalsSub = totalsRejected
     ? `${numeric(totals.real_line_rows).toFixed(0)} scored | ROI ${numeric(totals.roi_pct).toFixed(2)}% | CLV ${numeric(totals.mean_clv_pct).toFixed(3)}% | Brier model ${numeric(totals.model_brier).toFixed(5)} vs market ${numeric(totals.market_brier).toFixed(5)}`
     : `${numeric(totals.real_line_rows).toFixed(0)}/600 scored | ${numeric(totals.captured_line_offers).toFixed(0)} captured complete offers`;
@@ -1441,7 +1445,7 @@ function ResearchGatesPanel({
         <MetricTile
           label="Spread shape"
           value={String(spread.promotion_status || "BLOCKED")}
-          sub={`${numeric(spread.real_line_rows).toFixed(0)}/600 scored | ${numeric(spread.captured_line_offers).toFixed(0)} captured | ${numeric(spread.settled_shadow_bets).toFixed(0)}/200 settled | CLV ${numeric(spread.mean_clv_pct) >= 0 ? "+" : ""}${numeric(spread.mean_clv_pct).toFixed(2)}%`}
+          sub={spreadSub}
           tone={gateTone(spread.promotion_status)}
         />
         <MetricTile
@@ -1488,7 +1492,7 @@ function ResearchGatesPanel({
         />
       </div>
       <p className="mt-3 text-xs text-slate-500">
-        Current result: the richer all-main-tour v3 ace challenger beat the incumbent for ATP and WTA on untouched 2026 Hard/Clay data. The daily reproducible version passed only for ATP Hard/Clay, so that is the sole prospective shadow route. WTA, double faults and Grass remain blocked. Totals were tested on real Pinnacle prices and rejected; spread remains sample-blocked. With zero settled Bet365 shadow bets, no props tip is sellable yet. Synthetic odds never count as ROI evidence.
+        Current result: the richer all-main-tour v3 ace challenger beat the incumbent for ATP and WTA on untouched 2026 Hard/Clay data. The daily reproducible version passed only for ATP Hard/Clay, so that is the sole prospective shadow route. WTA, double faults and Grass remain blocked. Totals and the corrected spread-shape model were tested on real Pinnacle prices and rejected; the separate prospective spread lane remains evidence-blocked. With zero settled Bet365 shadow bets, no props tip is sellable yet. Synthetic odds never count as ROI evidence.
       </p>
     </SectionCard>
   );
