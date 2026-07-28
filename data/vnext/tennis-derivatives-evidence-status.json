@@ -1,12 +1,16 @@
 {
   "version": "tennis-serve-derivatives-0.1",
-  "generated_at": "2026-07-28T14:33:28.507233+00:00",
+  "generated_at": "2026-07-28T16:00:09.253018+00:00",
   "moneyline_routing_changed": false,
   "overall_status": "BLOCKED",
   "spread_shape": {
     "status": "COLLECTING",
-    "promotion_status": "BLOCKED_REAL_LINE_SAMPLE",
-    "real_line_rows": 188,
+    "promotion_status": "BLOCKED_PROSPECTIVE_EVIDENCE",
+    "real_line_rows": 1433,
+    "non_push_rows": 1356,
+    "market_brier": 0.24992018443952801,
+    "verified_prestart_rows": 592,
+    "true_close_rows": 441,
     "captured_line_offers": 5089,
     "captured_matches": 3079,
     "captured_challenger_line_offers": 9527,
@@ -15,12 +19,12 @@
     "mean_clv_pct": -0.009660691510560149,
     "positive_clv_share_pct": 35.294117647058826,
     "gates": {
-      "real_line_rows_600": false,
+      "real_line_rows_600": true,
       "settled_shadow_bets_200": false,
       "mean_clv_1pct": false,
       "positive_clv_share_55pct": false
     },
-    "reason": "The existing spread correction regressed on validation; base-only shadow evidence remains below promotion gates."
+    "reason": "The canonical scorer removes the stale 188-row bottleneck. The existing spread correction regressed on validation and prospective ROI/CLV gates remain blocked."
   },
   "total_games_shape": {
     "status": "TESTED",
