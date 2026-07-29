@@ -9,11 +9,13 @@ rule has fired. It must not fail just because no research picks exist yet.
 from __future__ import annotations
 
 import argparse
+import base64
 import csv
 import json
 import math
 import os
 import re
+import subprocess
 import sys
 import urllib.request
 from datetime import UTC, datetime
@@ -31,6 +33,8 @@ TENNIS_PROPS_PIPELINE_HEALTH = ROOT / "data" / "tennis-props" / "pipeline-health
 TENNIS_PROPS_DECISION_JSON = ROOT / "data" / "tennis-props" / "shadow" / "aces-dfs-weekly-decision.json"
 TENNIS_PROPS_DECISION_REPORT = ROOT / "data" / "tennis-props" / "shadow" / "aces-dfs-weekly-decision.txt"
 TENNIS_PROPS_V3_LOCAL_JSON = ROOT / "data" / "tennis-props" / "backtest" / "aces-v3-weekly-report.json"
+TELEGRAM_RELAY_REPOSITORY = "simonreds76-gif/il-margine"
+TELEGRAM_RELAY_WORKFLOW = "tennis-daily-signal-digest.yml"
 ASSIST_GATES = ROOT / "data" / "assist-value" / "research" / "assist-value-gates.json"
 ASSIST_PROSPECTIVE = ROOT / "data" / "assist-value" / "research" / "assist-value-v1-prospective.csv"
 AUTOMATION_BUDGET = ROOT / "data" / "ops" / "automation-budget-report.json"
@@ -1397,12 +1401,63 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def github_token_from_credential_manager() -> str:
+    result = subprocess.run(
+        ["git", "credential-manager", "get"],
+        input="protocol=https\nhost=github.com\n\n",
+        capture_output=True,
+        text=True,
+        timeout=10,
+        check=False,
+    )
+    if result.returncode != 0:
+        raise RuntimeError("Windows Git Credential Manager could not provide GitHub authentication")
+    fields: dict[str, str] = {}
+    for line in result.stdout.splitlines():
+        key, separator, value = line.partition("=")
+        if separator:
+            fields[key.strip()] = value.strip()
+    token = fields.get("password", "")
+    if not token:
+        raise RuntimeError("GitHub credential is missing from Windows Git Credential Manager")
+    return token
+
+
+def dispatch_telegram_relay(message: str) -> None:
+    encoded = base64.b64encode(
+        json.dumps([message], ensure_ascii=False).encode("utf-8")
+    ).decode("ascii")
+    repository = os.environ.get("TENNIS_DIGEST_GITHUB_REPOSITORY", TELEGRAM_RELAY_REPOSITORY)
+    payload = json.dumps(
+        {"ref": "main", "inputs": {"payload_b64": encoded}}
+    ).encode("utf-8")
+    request = urllib.request.Request(
+        f"https://api.github.com/repos/{repository}/actions/workflows/{TELEGRAM_RELAY_WORKFLOW}/dispatches",
+        data=payload,
+        headers={
+            "Accept": "application/vnd.github+json",
+            "Authorization": f"Bearer {github_token_from_credential_manager()}",
+            "Content-Type": "application/json",
+            "User-Agent": "il-margine-weekly-report",
+            "X-GitHub-Api-Version": "2022-11-28",
+        },
+        method="POST",
+    )
+    with urllib.request.urlopen(request, timeout=30) as response:
+        response.read()
+
+
 def post_telegram(message: str) -> bool:
     token = os.environ.get("OPS_ALERT_TELEGRAM_BOT_TOKEN", "").strip()
     chat_id = os.environ.get("OPS_ALERT_TELEGRAM_CHAT_ID", "").strip()
     if not token or not chat_id:
-        print("WEEKLY_REPORT_TELEGRAM skipped missing creds")
-        return False
+        try:
+            dispatch_telegram_relay(message)
+            print("WEEKLY_REPORT_TELEGRAM relay dispatched")
+            return True
+        except Exception as exc:
+            print(f"Warning: telegram relay dispatch failed: {exc}", file=sys.stderr)
+            return False
     payload = json.dumps(
         {
             "chat_id": chat_id,

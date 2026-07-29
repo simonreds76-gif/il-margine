@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import json
+import os
 import runpy
 import tempfile
 import unittest
@@ -182,6 +183,24 @@ class WeeklyResearchReportTests(unittest.TestCase):
         script = (ROOT / "scripts" / "oncourt-weekly.ps1").read_text(encoding="utf-8")
         self.assertIn('"scripts\\tennis-props-v3-weekly-report.py", "--no-telegram"', script)
         self.assertEqual(script.count("--tennis-only-telegram"), 1)
+
+    def test_telegram_uses_github_relay_when_local_secrets_are_absent(self) -> None:
+        post = REPORT["post_telegram"]
+        globals_map = post.__globals__
+        original_relay = globals_map["dispatch_telegram_relay"]
+        original_token = os.environ.pop("OPS_ALERT_TELEGRAM_BOT_TOKEN", None)
+        original_chat = os.environ.pop("OPS_ALERT_TELEGRAM_CHAT_ID", None)
+        relayed: list[str] = []
+        globals_map["dispatch_telegram_relay"] = relayed.append
+        try:
+            self.assertTrue(post("weekly evidence"))
+        finally:
+            globals_map["dispatch_telegram_relay"] = original_relay
+            if original_token is not None:
+                os.environ["OPS_ALERT_TELEGRAM_BOT_TOKEN"] = original_token
+            if original_chat is not None:
+                os.environ["OPS_ALERT_TELEGRAM_CHAT_ID"] = original_chat
+        self.assertEqual(relayed, ["weekly evidence"])
 
 
 if __name__ == "__main__":
