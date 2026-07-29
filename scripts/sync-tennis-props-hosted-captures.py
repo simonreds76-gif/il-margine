@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Synchronize hosted Bet365 tennis-props captures into the local checkout.
+"""Synchronize hosted tennis-props odds captures into the local checkout.
 
-The GitHub workflow owns Odds-API capture. The Windows projection pipeline owns
+The GitHub workflow owns Bet365/BetMGM capture. The Windows projection pipeline owns
 the OnCourt-backed board and comparison. This script joins those two halves
 without making another provider request or touching the active git branch.
 """
@@ -128,7 +128,12 @@ def synchronize(
 
     for offset in range(max(0, lookback_days) + 1):
         day = (target_date - timedelta(days=offset)).isoformat()
-        for stem in ("bet365-lines", "bet365-tennis-market-audit"):
+        for stem in (
+            "bet365-lines",
+            "bet365-tennis-market-audit",
+            "betmgm-most-aces-1x2",
+            "betmgm-tennis-market-audit",
+        ):
             relative = f"data/tennis-props/inbox/{stem}-{day}.csv"
             content = remote_blob(remote_ref, relative)
             if content is None:
@@ -144,15 +149,16 @@ def synchronize(
         for offset in range(max(0, lookback_days) + 1)
     }
     for month in sorted(months):
-        relative = f"data/tennis-props/inbox/bet365-lines-history-{month}.csv"
-        content = remote_blob(remote_ref, relative)
-        if content is None:
-            missing.append(relative)
-            continue
-        added = merge_history(ROOT / relative, content)
-        history_added += added
-        if added:
-            copied.append(relative)
+        for stem in ("bet365-lines-history", "betmgm-most-aces-history"):
+            relative = f"data/tennis-props/inbox/{stem}-{month}.csv"
+            content = remote_blob(remote_ref, relative)
+            if content is None:
+                missing.append(relative)
+                continue
+            added = merge_history(ROOT / relative, content)
+            history_added += added
+            if added:
+                copied.append(relative)
 
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
