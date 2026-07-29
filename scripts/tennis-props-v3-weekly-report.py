@@ -72,7 +72,7 @@ def evidence(signals: list[dict[str, str]], gate: dict[str, Any]) -> dict[str, A
         pair = sorted(((row.get("player") or "").strip(), (row.get("opponent") or "").strip()))
         event_keys.add(f"pair:{row.get('date', '')}|{row.get('tour', '')}|{'|'.join(pair)}")
 
-    clv = [number(row.get("clv_pct")) for row in settled if (row.get("clv_pct") or "").strip()]
+    clv = [number(row.get("clv_pct")) for row in signals if (row.get("clv_pct") or "").strip()]
     pnl = sum(number(row.get("pnl")) for row in settled)
     settled_count = len(settled)
     sell_gate = gate.get("sellability_gate") if isinstance(gate.get("sellability_gate"), dict) else {}

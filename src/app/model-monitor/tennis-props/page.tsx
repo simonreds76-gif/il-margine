@@ -46,6 +46,10 @@ const SHADOW_DIR = path.join(PROPS_DIR, "shadow");
 const SHADOW_SIGNALS_PATH = path.join(SHADOW_DIR, "aces-dfs-shadow-signals.csv");
 const SHADOW_PERFORMANCE_PATH = path.join(SHADOW_DIR, "aces-dfs-shadow-performance.txt");
 const V3_SHADOW_SIGNALS_PATH = path.join(SHADOW_DIR, "aces-v3-shadow-signals.csv");
+const MOST_ACES_BOARD_PATH = path.join(SHADOW_DIR, "most-aces-1x2-board.csv");
+const MOST_ACES_OBSERVATIONS_PATH = path.join(SHADOW_DIR, "most-aces-1x2-observations.csv");
+const MOST_ACES_REPORT_PATH = path.join(SHADOW_DIR, "most-aces-1x2-performance.txt");
+const MOST_ACES_STAGE0_PATH = path.join(PROPS_DIR, "backtest", "most-aces-1x2-stage0.json");
 const MARKET_OBSERVATIONS_PATH = path.join(SHADOW_DIR, "market-observations.csv");
 const MARKET_OBSERVATIONS_REPORT_PATH = path.join(SHADOW_DIR, "market-observations-report.txt");
 const MODEL_SUMMARY_PATH = path.join(PROPS_DIR, "model-monitor-summary.csv");
@@ -1375,6 +1379,96 @@ function numeric(value: unknown): number {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+function MostAcesPanel({
+  rows,
+  observations,
+  validation,
+  stamp,
+}: {
+  rows: CsvRow[];
+  observations: CsvRow[];
+  validation: JsonRecord;
+  stamp: string;
+}) {
+  const today = londonDateIso();
+  const visible = rows
+    .filter((row) => row.date >= today)
+    .sort((a, b) => a.date.localeCompare(b.date) || a.tournament.localeCompare(b.tournament))
+    .slice(0, 16);
+  const observationMap = new Map(
+    observations.map((row) => [
+      `${row.date}|${[row.player1, row.player2].sort().join("|")}`,
+      row,
+    ]),
+  );
+  const correlated = record(validation.correlated);
+  const outcomes = record(validation.outcomes);
+  return (
+    <SectionCard
+      title="BetMGM Most Aces 1X2"
+      subtitle={`Correlated ATP Hard/Clay shadow pricer. Stage-0 ${String(validation.status || "MISSING")} on ${String(correlated.n || 0)} untouched matches; real-price report ${stamp}.`}
+    >
+      <div className="mb-4 grid gap-3 sm:grid-cols-4">
+        <MetricTile
+          label="Stage-0"
+          value={String(validation.status || "MISSING")}
+          sub={`${String(correlated.n || 0)} matches`}
+          tone={String(validation.status || "").toUpperCase() === "PASS" ? "text-emerald-300" : "text-amber-300"}
+        />
+        <MetricTile label="Brier" value={Number(correlated.brier || 0).toFixed(4)} sub="correlated 1X2" tone="text-cyan-300" />
+        <MetricTile label="Accuracy" value={`${Number(correlated.accuracy_pct || 0).toFixed(1)}%`} sub="three-way favourite" tone="text-slate-100" />
+        <MetricTile label="Draws" value={String(outcomes.DRAW || 0)} sub="10.2% in holdout" tone="text-amber-300" />
+      </div>
+      <p className="mb-4 rounded-2xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-xs leading-relaxed text-amber-100/80">
+        Fair odds are live research prices, not tips. A row becomes a shadow candidate only after all three BetMGM prices are captured, de-vigged and compared with the model.
+      </p>
+      {visible.length ? (
+        <div className="grid gap-3 lg:grid-cols-2">
+          {visible.map((row) => {
+            const key = `${row.date}|${[row.player1, row.player2].sort().join("|")}`;
+            const observed = observationMap.get(key);
+            return (
+              <article key={key} className="rounded-3xl border border-slate-800 bg-slate-950/65 p-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <div className="text-[10px] font-black uppercase tracking-[0.15em] text-cyan-300">{row.tournament} · {row.surface} · {dateLabel(row.date)}</div>
+                    <h3 className="mt-1 font-black text-slate-100">{row.player1} vs {row.player2}</h3>
+                    <p className="mt-1 text-xs text-slate-500">Projected aces {fmt(row.player1_mean, 1)} - {fmt(row.player2_mean, 1)} · correlation {fmt(row.rho, 2)}</p>
+                  </div>
+                  <MiniBadge
+                    label={observed?.bet_eligible === "yes" ? "SHADOW CANDIDATE" : observed ? "MARKET MATCHED" : "AWAITING BETMGM"}
+                    tone={observed?.bet_eligible === "yes" ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-200" : "border-amber-500/25 bg-amber-500/10 text-amber-200"}
+                  />
+                </div>
+                <div className="mt-4 grid grid-cols-3 gap-2">
+                  {[
+                    ["P1", row.fair_player1, observed?.open_player1_odds],
+                    ["Draw", row.fair_draw, observed?.open_draw_odds],
+                    ["P2", row.fair_player2, observed?.open_player2_odds],
+                  ].map(([label, fair, market]) => (
+                    <div key={label} className="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 text-center">
+                      <div className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">{label}</div>
+                      <div className="mt-1 font-mono text-xl font-black text-emerald-300">{fmt(fair, 2)}</div>
+                      <div className="mt-1 text-[10px] text-slate-500">{market ? `BetMGM ${fmt(market, 2)}` : "fair odds"}</div>
+                    </div>
+                  ))}
+                </div>
+                {observed ? (
+                  <div className="mt-3 text-xs text-slate-400">
+                    Best model side <span className="font-black text-slate-100">{observed.recommended_side}</span>
+                    {" · "}value {fmt(observed[`value_${observed.recommended_side === "P1" ? "player1" : observed.recommended_side === "P2" ? "player2" : "draw"}_pct`], 1)}%
+                    {" · "}{observed.eligibility_reason}
+                  </div>
+                ) : null}
+              </article>
+            );
+          })}
+        </div>
+      ) : <EmptyState message="No eligible ATP Hard/Clay Most Aces projections on the current board." />}
+    </SectionCard>
+  );
+}
+
 function ResearchGatesPanel({
   evidence,
   evidenceStamp,
@@ -1540,6 +1634,10 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     propsV3GateStamp,
     propsV3ShadowRows,
     propsV3ShadowStamp,
+    mostAcesRows,
+    mostAcesObservations,
+    mostAcesValidation,
+    mostAcesReportStamp,
   ] = await Promise.all([
     readCsv(BOARD_PATH),
     fileStamp(BOARD_PATH),
@@ -1574,6 +1672,10 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     fileStamp(PROPS_V3_GATE_PATH),
     readCsv(V3_SHADOW_SIGNALS_PATH),
     fileStamp(V3_SHADOW_SIGNALS_PATH),
+    readCsv(MOST_ACES_BOARD_PATH),
+    readCsv(MOST_ACES_OBSERVATIONS_PATH),
+    readJson(MOST_ACES_STAGE0_PATH),
+    fileStamp(MOST_ACES_REPORT_PATH),
   ]);
 
   const comparisonRows = latestComparisonPath ? await readCsv(latestComparisonPath) : [];
@@ -1711,6 +1813,13 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
 
             <MarketBenchmarkPanel rows={marketObservationRows} stamp={marketObservationReportStamp} />
 
+            <MostAcesPanel
+              rows={mostAcesRows}
+              observations={mostAcesObservations}
+              validation={mostAcesValidation}
+              stamp={mostAcesReportStamp}
+            />
+
             <ResearchGatesPanel
               evidence={derivativesEvidence}
               evidenceStamp={derivativesEvidenceStamp}
@@ -1773,6 +1882,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
                 <div><span className="text-slate-500">Comparison:</span> {latestComparisonPath ? path.basename(latestComparisonPath) : "missing"}</div>
                 <div><span className="text-slate-500">Shadow:</span> data/tennis-props/shadow/aces-dfs-shadow-signals.csv</div>
                 <div><span className="text-slate-500">Market benchmark:</span> data/tennis-props/shadow/market-observations.csv</div>
+                <div><span className="text-slate-500">Most Aces:</span> data/tennis-props/shadow/most-aces-1x2-observations.csv</div>
               </div>
             </SectionCard>
           </div>

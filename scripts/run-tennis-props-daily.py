@@ -65,6 +65,10 @@ def lines_file(as_of: str) -> Path:
     return PROPS_DIR / "inbox" / f"bet365-lines-{as_of}.csv"
 
 
+def most_aces_lines_file(as_of: str) -> Path:
+    return PROPS_DIR / "inbox" / f"betmgm-most-aces-1x2-{as_of}.csv"
+
+
 def has_market_rows(path: Path) -> bool:
     if not path.exists():
         return False
@@ -98,6 +102,32 @@ def select_market_file(as_of: str, lookback_days: int = 3) -> Path | None:
         if has_market_rows(candidate) and any(day >= as_of for day in market_event_dates(candidate)):
             return candidate
     return None
+
+
+def select_most_aces_file(as_of: str, lookback_days: int = 3) -> Path | None:
+    exact = most_aces_lines_file(as_of)
+    if has_market_rows(exact):
+        return exact
+    target = date.fromisoformat(as_of)
+    for offset in range(1, max(0, lookback_days) + 1):
+        candidate = most_aces_lines_file((target - timedelta(days=offset)).isoformat())
+        if has_market_rows(candidate) and any(day >= as_of for day in market_event_dates(candidate)):
+            return candidate
+    return None
+
+
+def run_most_aces_shadow(as_of: str, capture: Path | None = None) -> None:
+    run(
+        [sys.executable, str(ROOT / "scripts" / "build-tennis-most-aces-board.py")],
+        "Build correlated Most Aces 1X2 fair board",
+        fatal=False,
+        timeout_seconds=180,
+    )
+    cmd = [sys.executable, str(ROOT / "scripts" / "tennis-most-aces-shadow.py")]
+    selected = capture or select_most_aces_file(as_of)
+    if selected and has_market_rows(selected):
+        cmd.extend(["--capture", str(selected)])
+    run(cmd, "Update BetMGM Most Aces 1X2 shadow evidence", fatal=False)
 
 
 def run_comparison(as_of: str, market_file: Path) -> bool:
@@ -145,6 +175,7 @@ def run_shadow_tracking(as_of: str) -> None:
         "Consolidate append-only Bet365 price history",
         fatal=False,
     )
+    run_most_aces_shadow(as_of)
     v3_comparison = PROPS_DIR / f"comparison-v3-aces-{as_of}.csv"
     if has_market_rows(v3_comparison):
         run(
@@ -352,6 +383,12 @@ def main() -> int:
         "Build v3 ATP ace prospective shadow board",
         fatal=False,
     )
+    run(
+        [sys.executable, str(ROOT / "scripts" / "build-tennis-most-aces-board.py")],
+        "Build correlated Most Aces 1X2 fair board",
+        fatal=False,
+        timeout_seconds=180,
+    )
 
     if not args.skip_hosted_sync:
         sync_hosted_captures(args.as_of, args.hosted_lookback_days)
@@ -397,6 +434,22 @@ def main() -> int:
         ],
         "Scrape Bet365 aces/DF lines",
         fatal=args.require_odds,
+    )
+    run(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "tennis-most-aces-capture.py"),
+            "--date",
+            args.as_of,
+            "--days-ahead",
+            str(args.days_ahead),
+            "--max-events",
+            str(args.max_events),
+            "--bookmakers",
+            "BetMGM",
+        ],
+        "Scrape BetMGM Most Aces 1X2 prices",
+        fatal=False,
     )
     market_file = select_market_file(args.as_of)
     if scrape_exit == 0:

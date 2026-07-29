@@ -1,0 +1,11 @@
+Most Aces 1X2 stage-0 outcome validation
+Generated UTC: 2026-07-29T11:20:19+00:00
+Status: PASS | Scope: ATP Hard/Clay untouched 2026
+Matches: 1186 | Draws: 121 (10.2%)
+Independent NB2: Brier 0.463933 | log-loss 0.794829 | accuracy 65.4%
+Correlated NB2: Brier 0.461791 | log-loss 0.790134 | accuracy 65.5%
+Delta correlated-independent: Brier -0.002142 | log-loss -0.004695
+Hard: n=659 | Brier 0.416249 vs 0.418601 | log-loss 0.714703 vs 0.718832
+Clay: n=527 | Brier 0.518739 vs 0.520619 | log-loss 0.884458 vs 0.889860
+
+This validates probability shape only. Profitability requires captured BetMGM 1X2 prices, settlement and CLV.

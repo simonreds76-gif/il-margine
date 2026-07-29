@@ -197,6 +197,7 @@ class ShadowSettlementPriceTests(unittest.TestCase):
             "line": "9.5",
             "side": "OVER",
             "selected_odds": "3.40",
+            "logged_at_utc": "2026-07-29T08:10:00Z",
             "match_start_utc": "2026-07-29T17:00:00Z",
         }
         history = [
@@ -204,6 +205,11 @@ class ShadowSettlementPriceTests(unittest.TestCase):
                 **signal,
                 "capture_ts": "2026-07-29T08:00:00Z",
                 "over_odds": "3.40",
+            },
+            {
+                **signal,
+                "capture_ts": "2026-07-29T08:30:00Z",
+                "over_odds": "3.30",
             },
             {
                 **signal,
@@ -221,9 +227,24 @@ class ShadowSettlementPriceTests(unittest.TestCase):
             by_pair.setdefault(SETTLE.history_key(row, fallback=True), []).append(row)
 
         self.assertTrue(SETTLE.enrich_closing_price(signal, by_event, by_pair))
-        self.assertEqual(signal["closing_odds"], "3.400")
-        self.assertEqual(signal["clv_pct"], "0.000")
+        self.assertEqual(signal["closing_odds"], "3.300")
+        self.assertGreater(float(signal["clv_pct"]), 0.0)
         self.assertEqual(signal["closing_snapshot_count"], "1")
+
+    def test_registration_capture_is_not_a_close(self) -> None:
+        signal = {
+            "event_id": "1", "date": "2026-07-29", "tour": "ATP",
+            "bookmaker": "Bet365", "player": "Player One", "opponent": "Player Two",
+            "market": "aces", "line": "9.5", "side": "OVER",
+            "selected_odds": "3.40", "logged_at_utc": "2026-07-29T08:10:00Z",
+            "match_start_utc": "2026-07-29T17:00:00Z",
+        }
+        capture = {**signal, "capture_ts": "2026-07-29T08:00:00Z", "over_odds": "3.40"}
+        by_event = {SETTLE.history_key(capture): [capture]}
+        by_pair = {SETTLE.history_key(capture, fallback=True): [capture]}
+        self.assertFalse(SETTLE.enrich_closing_price(signal, by_event, by_pair))
+        self.assertEqual(signal["closing_odds"], "")
+        self.assertEqual(signal["clv_pct"], "")
 
 
 class DailyMarketSelectionTests(unittest.TestCase):

@@ -1,0 +1,17 @@
+{
+  "version": "most-aces-1x2-v1",
+  "status": "REGISTERED_SHADOW",
+  "scope": "ATP player match aces, Hard and Clay only",
+  "distribution": "NB2 marginals with Gaussian copula",
+  "rho": 0.22,
+  "rho_fit_rows": 1524,
+  "rho_fit_source": "aces-dfs-totals-source-rows.csv ATP Hard/Clay paired matches, 2022-2025",
+  "rho_fit_method": "Pearson correlation of paired standardised ace-count residuals",
+  "simulations": 16384,
+  "promotion_status": "BLOCKED_PENDING_REAL_BETMGM_1X2_EVIDENCE",
+  "notes": [
+    "v3 ATP ace projections stay frozen as the marginal mean input",
+    "WTA, Grass and double faults are excluded",
+    "BetMGM prices must be three-way de-vigged before value is assessed"
+  ]
+}

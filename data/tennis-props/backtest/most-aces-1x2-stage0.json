@@ -1,0 +1,55 @@
+{
+  "generated_at_utc": "2026-07-29T11:20:19+00:00",
+  "status": "PASS",
+  "scope": "ATP Hard/Clay untouched 2026",
+  "rho": 0.22,
+  "simulations": 2048,
+  "outcomes": {
+    "P1": 692,
+    "DRAW": 121,
+    "P2": 373
+  },
+  "independent": {
+    "n": 1186,
+    "brier": 0.46393273814570796,
+    "logloss": 0.794828649094881,
+    "accuracy_pct": 65.43001686340641
+  },
+  "correlated": {
+    "n": 1186,
+    "brier": 0.46179062640687063,
+    "logloss": 0.7901335991246051,
+    "accuracy_pct": 65.51433389544688
+  },
+  "surfaces": {
+    "Hard": {
+      "independent": {
+        "n": 659,
+        "brier": 0.41860133092148955,
+        "logloss": 0.718832017791931,
+        "accuracy_pct": 69.3474962063733
+      },
+      "correlated": {
+        "n": 659,
+        "brier": 0.41624898505319413,
+        "logloss": 0.7147030568046618,
+        "accuracy_pct": 69.49924127465857
+      }
+    },
+    "Clay": {
+      "independent": {
+        "n": 527,
+        "brier": 0.5206185016386109,
+        "logloss": 0.8898604897564449,
+        "accuracy_pct": 60.53130929791271
+      },
+      "correlated": {
+        "n": 527,
+        "brier": 0.5187392822931568,
+        "logloss": 0.8844575600142494,
+        "accuracy_pct": 60.53130929791271
+      }
+    }
+  },
+  "interpretation": "Outcome calibration only; no historical BetMGM prices, ROI or CLV."
+}
