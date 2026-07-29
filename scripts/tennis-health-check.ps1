@@ -233,6 +233,7 @@ function Get-ArtifactHealth($config, [datetimeoffset]$nowUtc) {
         }
     }
 
+    $payload = $null
     $generated = $null
     if ($config.TimestampField) {
         $payload = Read-JsonFile $path
@@ -242,15 +243,23 @@ function Get-ArtifactHealth($config, [datetimeoffset]$nowUtc) {
     }
     $ageHours = if ($generated) { [Math]::Max(0, ($nowUtc - $generated.ToUniversalTime()).TotalHours) } else { $null }
     $isStale = ($null -eq $generated) -or ($ageHours -gt [double]$config.MaxAgeHours)
+    $isStructuralFailure = $payload -and $payload.structural_error -eq $true
+    $status = if ($isStructuralFailure) { "failed" } elseif ($isStale) { "stale" } else { "ok" }
     return [ordered]@{
         name = $config.Name
         path = $config.Path
-        status = if ($isStale) { "stale" } else { "ok" }
+        status = $status
         generated_at = if ($generated) { $generated.ToUniversalTime().ToString("o") } else { $null }
-        latest_signal_date = $null
+        latest_signal_date = if ($payload -and $payload.as_of) { "$($payload.as_of)" } else { $null }
         age_hours = if ($null -eq $ageHours) { $null } else { [Math]::Round($ageHours, 2) }
         stale = $isStale
-        detail = if ($generated) { $null } else { "Missing or invalid timestamp" }
+        detail = if ($isStructuralFailure) {
+            "Pipeline state=$($payload.state)"
+        } elseif ($generated) {
+            $null
+        } else {
+            "Missing or invalid timestamp"
+        }
     }
 }
 

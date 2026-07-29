@@ -238,6 +238,13 @@ class PipelineHealthTests(unittest.TestCase):
             self.assertEqual(payload["state"], "COMPARISON_MISSING")
             self.assertTrue(payload["structural_error"])
 
+    def test_windows_watchdog_evaluates_pipeline_health_artifact(self) -> None:
+        watchdog = (SCRIPTS / "tennis-health-check.ps1").read_text(encoding="utf-8")
+        self.assertIn("function Get-ArtifactHealth", watchdog)
+        self.assertIn("pipeline-health.json", watchdog)
+        self.assertIn("$artifactConfigs | ForEach-Object { Get-ArtifactHealth", watchdog)
+        self.assertIn("$payload.structural_error", watchdog)
+
 
 if __name__ == "__main__":
     unittest.main()
