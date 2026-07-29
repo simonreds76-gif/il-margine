@@ -37,6 +37,7 @@ SUMMARY_FIELDS = [
     "best_available_rows",
     "main_line_rows",
     "bettable_rows",
+    "trackable_shadow_rows",
     "top_blocker",
     "avg_best_raw_edge_pct",
     "avg_best_novig_edge_pct",
@@ -163,6 +164,7 @@ def summarize_rows(
     best_available = [row for row in rows if row.get("best_available_line") == "true"]
     main_line = [row for row in rows if row.get("main_line") == "true"]
     bettable = [row for row in rows if row.get("bettable") == "true"]
+    trackable_shadow = [row for row in rows if row.get("trackable_shadow") == "true"]
     blockers = Counter(first_blocker(row) for row in rows if row.get("bettable") != "true")
     edge_values = [value for value in (best_edge(row) for row in best_available or main_line or matched) if value is not None]
     novig_values = [value for value in (best_novig_edge(row) for row in best_available or main_line or matched) if value is not None]
@@ -181,6 +183,7 @@ def summarize_rows(
         "best_available_rows": str(len(best_available)),
         "main_line_rows": str(len(main_line)),
         "bettable_rows": str(len(bettable)),
+        "trackable_shadow_rows": str(len(trackable_shadow)),
         "top_blocker": blockers.most_common(1)[0][0] if blockers else "none",
         "avg_best_raw_edge_pct": fmt(mean(edge_values), 1) if edge_values else "",
         "avg_best_novig_edge_pct": fmt(mean(novig_values), 1) if novig_values else "",
@@ -238,6 +241,7 @@ def write_report(path: Path, rows: list[dict[str, str]]) -> None:
             f"{row['period_type']} {row['period']}: rows={row['line_rows']} matched={row['matched_rows']} "
             f"two_way={row['two_way_rows']} best_available={row['best_available_rows']} "
             f"main={row['main_line_rows']} bettable={row['bettable_rows']} "
+            f"shadow_candidates={row['trackable_shadow_rows']} "
             f"top_blocker={row['top_blocker']} shadow_settled={row['shadow_settled']} "
             f"pnl={row['shadow_pnl_units']}u roi={row['shadow_roi_pct']}%"
         )
@@ -259,6 +263,7 @@ def write_report(path: Path, rows: list[dict[str, str]]) -> None:
         "",
         "Interpretation:",
         "- bettable_rows is the only count that can become a recommendation candidate.",
+        "- trackable_shadow_rows are prospective over-only observations, never public recommendations.",
         "- two_way_rows shows whether odds-api is giving both sides of a line.",
         "- best_available_rows shows the closest ladder row even when it is still blocked.",
         "- main_line_rows should rise only if the feed contains clean, fairly balanced two-way lines.",

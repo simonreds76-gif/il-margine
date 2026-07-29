@@ -115,13 +115,17 @@ $assistValueFiles = @(
     "data/assist-value/assist-market-audit-ligue-1.csv"
 )
 
-$todayUtc = (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd")
-$monthUtc = (Get-Date).ToUniversalTime().ToString("yyyy-MM")
+$utcNow = (Get-Date).ToUniversalTime()
+$todayUtc = $utcNow.ToString("yyyy-MM-dd")
+$monthUtc = $utcNow.ToString("yyyy-MM")
 $tennisPropsFiles = @(
-    "data/tennis-props/inbox/bet365-lines-$todayUtc.csv",
-    "data/tennis-props/inbox/bet365-tennis-market-audit-$todayUtc.csv",
     "data/tennis-props/inbox/bet365-lines-history-$monthUtc.csv"
 )
+0..3 | ForEach-Object {
+    $captureDate = $utcNow.AddDays(-$_).ToString("yyyy-MM-dd")
+    $tennisPropsFiles += "data/tennis-props/inbox/bet365-lines-$captureDate.csv"
+    $tennisPropsFiles += "data/tennis-props/inbox/bet365-tennis-market-audit-$captureDate.csv"
+}
 
 $files = New-Object System.Collections.Generic.List[string]
 if ($includeTeamShots) { $teamShotsFiles | ForEach-Object { [void]$files.Add($_) } }

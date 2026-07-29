@@ -28,6 +28,10 @@ MATCH_TOTAL_MARKETS = {"match_aces", "match_double_faults"}
 CONFIDENCE_RANK = {"LOW": 0, "MED": 1, "HIGH": 2}
 MIN_COMBINED_SAMPLE = 800.0
 STALE_CAPTURE_HOURS = 6.0
+ONE_SIDED_SHADOW_CAPTURE_HOURS = 18.0
+ONE_SIDED_MIN_ODDS = 1.50
+ONE_SIDED_MAX_ODDS = 3.50
+ONE_SIDED_MIN_VALUE = 0.08
 UNMATCHED_FIELDS = [
     "date",
     "tour",
@@ -116,6 +120,28 @@ def compatible_player_name(left: object, right: object) -> bool:
     left_last = left_parts[-1] if left_parts else ""
     right_last = right_parts[-1] if right_parts else ""
     return bool(left_last and left_last == right_last and len(left_last) >= 4)
+
+
+def can_fallback_player_only(player: object, opponent: object) -> bool:
+    """Allow player-only matching only when one side is genuinely missing."""
+    if is_placeholder_player(player):
+        return not is_placeholder_player(opponent)
+    return not is_placeholder_player(player) and is_placeholder_player(opponent)
+
+
+def normalize_legacy_team_total_row(row: dict[str, str]) -> dict[str, str]:
+    """Repair team-total rows emitted by the pre-2026-07-21 scraper."""
+    normalized = dict(row)
+    raw_market = norm_name(row.get("raw_market_name"))
+    market = str(row.get("market") or "").strip().lower()
+    if "team total" not in raw_market or market not in MATCH_TOTAL_MARKETS:
+        return normalized
+
+    normalized["market"] = "double_faults" if "double faults" in raw_market else "aces"
+    if raw_market.endswith(" away"):
+        normalized["player"] = str(row.get("opponent") or "")
+        normalized["opponent"] = str(row.get("player") or "")
+    return normalized
 
 
 def parse_float(value: object, default: float | None = None) -> float | None:
@@ -211,12 +237,18 @@ def bool_text(value: bool) -> str:
 
 def line_group_key(row: dict[str, str]) -> tuple[str, str, str, str, str]:
     players = " v ".join(sorted([norm_name(row.get("player")), norm_name(row.get("opponent"))]))
+    market = str(row.get("market") or "")
+    identity = (
+        players
+        if is_match_total_count_market(market)
+        else f"{norm_name(row.get('player'))} @ {players}"
+    )
     return (
         str(row.get("date") or ""),
         str(row.get("tour") or "").upper(),
         str(row.get("tournament") or ""),
-        players,
-        str(row.get("market") or ""),
+        identity,
+        market,
     )
 
 
@@ -276,6 +308,31 @@ def select_main_lines(rows: list[dict[str, str]]) -> None:
             row["group_line_count"] = str(group_size)
             row["complete_line_count"] = str(complete_count)
         if not two_way_candidates:
+            # Odds-API currently exposes Bet365 player-count ladders as
+            # over-only prices. Select exactly one representative row for
+            # prospective shadow evaluation without pretending it is a
+            # complete two-way main line.
+            over_only_candidates = [
+                row
+                for row in group_rows
+                if row.get("matched_board") == "yes"
+                and row.get("price_pair_status") == "over_only"
+                and ONE_SIDED_MIN_ODDS
+                <= (parse_float(row.get("over_odds"), 0.0) or 0.0)
+                <= ONE_SIDED_MAX_ODDS
+            ]
+
+            def over_only_score(row: dict[str, str]) -> tuple[float, float]:
+                odds = parse_float(row.get("over_odds"), 0.0) or 0.0
+                mean = parse_float(row.get("projection_mean"), 0.0) or 0.0
+                line_value = parse_float(row.get("line"), mean) or mean
+                return (abs(odds - 2.0), abs(line_value - mean))
+
+            ranked_over_only = sorted(over_only_candidates, key=over_only_score)
+            for index, row in enumerate(ranked_over_only, start=1):
+                row["line_rank"] = str(index)
+            if ranked_over_only:
+                ranked_over_only[0]["best_available_line"] = "true"
             continue
 
         def score(row: dict[str, str]) -> tuple[float, float, float]:
@@ -363,6 +420,47 @@ def apply_decision_gates(rows: list[dict[str, str]], args: argparse.Namespace, n
         row["bettable"] = bool_text(not reasons and candidate is not None)
         row["recommended_side"] = candidate[0] if not reasons and candidate is not None else ""
         row["blocked_reason"] = "" if row["bettable"] == "true" else (row["block_reasons"].split("|")[0] if row["block_reasons"] else "GATE_BLOCKED")
+
+        shadow_reasons: list[str] = []
+        if scope != "player" or market in MATCH_TOTAL_MARKETS:
+            shadow_reasons.append("NOT_PLAYER_PROP")
+        if row.get("matched_board") != "yes":
+            shadow_reasons.append("NO_BOARD_MATCH")
+        if row.get("price_pair_status") != "over_only":
+            shadow_reasons.append("NOT_OVER_ONLY")
+        if row.get("best_available_line") != "true":
+            shadow_reasons.append("NOT_BEST_AVAILABLE_LINE")
+        if not row.get("capture_ts"):
+            shadow_reasons.append("MISSING_CAPTURE_TS")
+        else:
+            shadow_age = hours_since(row.get("capture_ts"), now)
+            if shadow_age is not None and shadow_age > ONE_SIDED_SHADOW_CAPTURE_HOURS:
+                shadow_reasons.append("STALE_CAPTURE")
+        if not row.get("match_start_utc"):
+            shadow_reasons.append("MISSING_MATCH_START")
+        elif start is not None and start <= now:
+            shadow_reasons.append("MATCH_STARTED")
+        if confidence_rank(row.get("confidence")) < confidence_rank("MED"):
+            shadow_reasons.append("CONF_BELOW_MED")
+        if sample < MIN_COMBINED_SAMPLE:
+            shadow_reasons.append("SAMPLE_BELOW_800")
+        over_odds = parse_float(row.get("over_odds"), 0.0) or 0.0
+        if not (ONE_SIDED_MIN_ODDS <= over_odds <= ONE_SIDED_MAX_ODDS):
+            shadow_reasons.append("PRICE_OUTSIDE_RESEARCH_RANGE")
+        raw_over = (parse_float(row.get("value_over_pct"), 0.0) or 0.0) / 100.0
+        if raw_over < ONE_SIDED_MIN_VALUE:
+            shadow_reasons.append("EDGE_BELOW_GATE")
+
+        trackable_shadow = not shadow_reasons
+        row["trackable_shadow"] = bool_text(trackable_shadow)
+        row["shadow_side"] = "OVER" if trackable_shadow else ""
+        row["shadow_block_reasons"] = "|".join(dict.fromkeys(shadow_reasons))
+        if row["bettable"] == "true":
+            row["decision_mode"] = "two_way_decision"
+        elif trackable_shadow:
+            row["decision_mode"] = "one_sided_over_shadow"
+        else:
+            row["decision_mode"] = "blocked"
 
 
 def market_mean(board_row: dict[str, str], market: str) -> float | None:
@@ -471,7 +569,7 @@ def main() -> None:
         if args.unmatched_out
         else PROPS_DIR / f"comparison-{args.date}-unmatched.csv"
     )
-    line_rows = read_csv(lines_path)
+    line_rows = [normalize_legacy_team_total_row(row) for row in read_csv(lines_path)]
     if not lines_path.exists():
         print(f"Lines file not found: {lines_path}")
         return
@@ -591,7 +689,9 @@ def main() -> None:
                 unmatched_reason = "AMBIGUOUS_PAIR_ALIAS_ANY_DATE"
             else:
                 unmatched_reason = unmatched_reason or "PAIR_NOT_ON_BOARD"
-        if board_row is None and not requires_exact_pair:
+        if board_row is None and not requires_exact_pair and can_fallback_player_only(
+            original_player, original_opponent
+        ):
             lookup_player = ""
             if is_placeholder_player(original_player) and original_opponent:
                 lookup_player = original_opponent
@@ -850,6 +950,10 @@ def main() -> None:
         "edge_over_novig_pct",
         "edge_under_novig_pct",
         "model_market_gap_pp",
+        "decision_mode",
+        "trackable_shadow",
+        "shadow_side",
+        "shadow_block_reasons",
         "blocked_reason",
         "block_reasons",
         "bettable",

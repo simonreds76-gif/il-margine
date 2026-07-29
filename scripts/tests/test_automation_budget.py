@@ -49,7 +49,8 @@ class AutomationBudgetTests(unittest.TestCase):
         self.assertIn('"--max-odds-requests-per-league"', scraper)
         self.assertIn('"--max-odds-api-http-requests"', scraper)
         self.assertIn("Odds-API.io HTTP request budget exhausted", scraper)
-        self.assertIn("github.event.schedule != '25 8 * * *'", tennis)
+        self.assertIn("github.event.schedule == '25 11 * * *'", tennis)
+        self.assertEqual(CONFIG["provider_limits"]["odds_api_io"]["requests_per_day"], 500)
 
 
 if __name__ == "__main__":

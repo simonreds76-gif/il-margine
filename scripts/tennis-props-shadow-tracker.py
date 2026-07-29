@@ -66,6 +66,8 @@ FIELDNAMES = [
     "edge_over_novig_pct",
     "edge_under_novig_pct",
     "matched_board",
+    "decision_mode",
+    "price_pair_status",
     "notes",
     "source_file",
     "settlement_status",
@@ -179,10 +181,16 @@ def build_signal(row: dict[str, str], source: Path, args: argparse.Namespace) ->
         return None
     if scope == "match_total" and (row.get("bettable") or "").strip().lower() != "true":
         return None
-    if scope != "match_total" and row.get("notes") and not args.allow_notes:
-        return None
-
-    picked = pick_side(row, args.min_value, args.allow_watch)
+    if scope != "match_total":
+        if (row.get("trackable_shadow") or "").strip().lower() != "true":
+            return None
+        if (row.get("decision_mode") or "").strip() != "one_sided_over_shadow":
+            return None
+        if (row.get("shadow_side") or "").strip().upper() != "OVER":
+            return None
+        picked = pick_side(row, args.min_value, True)
+    else:
+        picked = pick_side(row, args.min_value, args.allow_watch)
     if picked is None:
         return None
     side, value_pct, selected_odds = picked
@@ -233,6 +241,8 @@ def build_signal(row: dict[str, str], source: Path, args: argparse.Namespace) ->
         "edge_over_novig_pct": row.get("edge_over_novig_pct", ""),
         "edge_under_novig_pct": row.get("edge_under_novig_pct", ""),
         "matched_board": row.get("matched_board", ""),
+        "decision_mode": row.get("decision_mode", ""),
+        "price_pair_status": row.get("price_pair_status", ""),
         "notes": row.get("notes", ""),
         "source_file": str(source.relative_to(ROOT)) if source.is_relative_to(ROOT) else str(source),
         "settlement_status": "pending",
@@ -281,11 +291,6 @@ def write_performance(path: Path, rows: list[dict[str, str]]) -> None:
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def latest_comparison() -> Path | None:
-    files = sorted(PROPS_DIR.glob("comparison-*.csv"), key=lambda p: p.stat().st_mtime, reverse=True)
-    return files[0] if files else None
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description="Append Bet365 aces/DF comparison rows to the internal shadow tracker")
     parser.add_argument("--date", default=date.today().isoformat())
@@ -300,8 +305,6 @@ def main() -> int:
     args = parser.parse_args()
 
     comparison = Path(args.comparison) if args.comparison else PROPS_DIR / f"comparison-{args.date}.csv"
-    if not comparison.exists():
-        comparison = latest_comparison() or comparison
     if not comparison.exists():
         print(f"Comparison file not found: {comparison}")
         return 0

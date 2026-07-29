@@ -33,6 +33,7 @@ $laneConfigs = @(
 
 $artifactConfigs = @(
     @{ Name = "Tennis props daily board"; Path = "data\tennis-props\player-props-board.csv"; MaxAgeHours = 30 },
+    @{ Name = "Tennis props capture pipeline"; Path = "data\tennis-props\pipeline-health.json"; MaxAgeHours = 30; TimestampField = "generated_at" },
     @{ Name = "Bet365 props benchmark"; Path = "data\tennis-props\shadow\market-observations-report.txt"; MaxAgeHours = 30 },
     @{ Name = "Aces v3 weekly refit"; Path = "data\tennis-props\backtest\aces-dfs-v3-all-tour-gate.json"; MaxAgeHours = 192; TimestampField = "generated_at" }
 )

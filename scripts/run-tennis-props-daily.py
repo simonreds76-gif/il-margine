@@ -9,10 +9,11 @@ captures Bet365 aces/DF lines and writes the comparison file.
 from __future__ import annotations
 
 import argparse
+import csv
 import os
 import subprocess
 import sys
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 
 
@@ -73,13 +74,42 @@ def has_market_rows(path: Path) -> bool:
         return False
 
 
-def run_comparison(as_of: str) -> None:
-    run(
+def market_event_dates(path: Path) -> set[str]:
+    if not has_market_rows(path):
+        return set()
+    try:
+        with path.open("r", encoding="utf-8-sig", newline="") as handle:
+            return {
+                str(row.get("date") or "").strip()
+                for row in csv.DictReader(handle)
+                if str(row.get("date") or "").strip()
+            }
+    except (OSError, csv.Error):
+        return set()
+
+
+def select_market_file(as_of: str, lookback_days: int = 3) -> Path | None:
+    exact = lines_file(as_of)
+    if has_market_rows(exact):
+        return exact
+    target = date.fromisoformat(as_of)
+    for offset in range(1, max(0, lookback_days) + 1):
+        candidate = lines_file((target - timedelta(days=offset)).isoformat())
+        if has_market_rows(candidate) and any(day >= as_of for day in market_event_dates(candidate)):
+            return candidate
+    return None
+
+
+def run_comparison(as_of: str, market_file: Path) -> bool:
+    comparison = PROPS_DIR / f"comparison-{as_of}.csv"
+    exit_code = run(
         [
             sys.executable,
             str(ROOT / "scripts" / "tennis-props-compare-bet365.py"),
             "--date",
             as_of,
+            "--lines",
+            str(market_file),
         ],
         "Compare Bet365 lines with projections",
         fatal=False,
@@ -91,14 +121,16 @@ def run_comparison(as_of: str) -> None:
                 sys.executable,
                 str(ROOT / "scripts" / "tennis-props-compare-bet365.py"),
                 "--date", as_of,
+                "--lines", str(market_file),
                 "--board", str(v3_board),
                 "--out", str(PROPS_DIR / f"comparison-v3-aces-{as_of}.csv"),
                 "--unmatched-out", str(PROPS_DIR / f"comparison-v3-aces-{as_of}-unmatched.csv"),
                 "--market-filter", "aces,ace,player_aces,match_aces",
             ],
             "Compare v3 ATP ace shadow projections with Bet365",
-            fatal=True,
+            fatal=False,
         )
+    return exit_code == 0 and has_market_rows(comparison)
 
 
 def run_shadow_tracking(as_of: str) -> None:
@@ -135,27 +167,34 @@ def run_shadow_tracking(as_of: str) -> None:
             "Settle v3 ATP ace prospective shadow signals",
             fatal=True,
         )
-    run(
-        [
-            sys.executable,
-            str(ROOT / "scripts" / "tennis-props-market-observations.py"),
-            "--comparison",
-            str(PROPS_DIR / f"comparison-{as_of}.csv"),
-        ],
-        "Update all-main-line Bet365 observation benchmark",
-        fatal=False,
-        timeout_seconds=300,
-    )
-    run(
-        [
-            sys.executable,
-            str(ROOT / "scripts" / "tennis-props-shadow-tracker.py"),
-            "--date",
-            as_of,
-        ],
-        "Append tennis props shadow signals",
-        fatal=False,
-    )
+    comparison = PROPS_DIR / f"comparison-{as_of}.csv"
+    if has_market_rows(comparison):
+        run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "tennis-props-market-observations.py"),
+                "--comparison",
+                str(comparison),
+            ],
+            "Update all-main-line Bet365 observation benchmark",
+            fatal=False,
+            timeout_seconds=300,
+        )
+        run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "tennis-props-shadow-tracker.py"),
+                "--date",
+                as_of,
+                "--comparison",
+                str(comparison),
+                "--allow-medium",
+            ],
+            "Append tennis props shadow signals",
+            fatal=False,
+        )
+    else:
+        print(f"WARNING: exact-date comparison missing; shadow append skipped: {comparison}")
     run(
         [
             sys.executable,
@@ -182,6 +221,22 @@ def run_shadow_tracking(as_of: str) -> None:
     )
 
 
+def write_pipeline_health(as_of: str, market_file: Path | None, *, strict: bool = False) -> int:
+    cmd = [
+        sys.executable,
+        str(ROOT / "scripts" / "tennis-props-pipeline-health.py"),
+        "--date",
+        as_of,
+        "--lines",
+        str(market_file or lines_file(as_of)),
+        "--comparison",
+        str(PROPS_DIR / f"comparison-{as_of}.csv"),
+    ]
+    if strict:
+        cmd.append("--strict")
+    return run(cmd, "Write tennis props pipeline health", fatal=False)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build tennis aces/DF projections and optional Bet365 comparison")
     parser.add_argument("--as-of", default=date.today().isoformat())
@@ -190,6 +245,8 @@ def main() -> int:
     parser.add_argument("--refresh-sackmann", action="store_true", help="Download fresh ATP/WTA Sackmann CSVs first")
     parser.add_argument("--skip-odds", action="store_true", help="Do not scrape Bet365 lines even if a key is configured")
     parser.add_argument("--require-odds", action="store_true", help="Fail if the Bet365 odds scrape cannot run")
+    parser.add_argument("--skip-hosted-sync", action="store_true", help="Do not sync captures from the golden data branch")
+    parser.add_argument("--hosted-lookback-days", type=int, default=7)
     parser.add_argument("--days-ahead", type=int, default=2)
     parser.add_argument("--max-events", type=int, default=64)
     args = parser.parse_args()
@@ -252,23 +309,44 @@ def main() -> int:
     run(
         [sys.executable, str(ROOT / "scripts" / "tennis-props-v3-live.py")],
         "Build v3 ATP ace prospective shadow board",
-        fatal=True,
+        fatal=False,
     )
+
+    if not args.skip_hosted_sync:
+        run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "sync-tennis-props-hosted-captures.py"),
+                "--as-of",
+                args.as_of,
+                "--lookback-days",
+                str(args.hosted_lookback_days),
+            ],
+            "Sync hosted Bet365 tennis-props captures",
+            fatal=False,
+            timeout_seconds=120,
+        )
 
     if args.skip_odds:
         print("\nBet365 scrape skipped by --skip-odds.")
-        if has_market_rows(lines_file(args.as_of)):
-            print("Hosted/local Bet365 lines file exists; refreshing comparison.")
-            run_comparison(args.as_of)
+        market_file = select_market_file(args.as_of)
+        if market_file:
+            print(f"Using hosted/local Bet365 capture: {market_file}")
+            run_comparison(args.as_of, market_file)
         run_shadow_tracking(args.as_of)
-        return 0
+        return write_pipeline_health(args.as_of, market_file, strict=bool(market_file))
     if not has_odds_key():
-        if has_market_rows(lines_file(args.as_of)):
-            print("\nLocal odds key missing, but today's hosted Bet365 lines file exists; refreshing comparison.")
-            run_comparison(args.as_of)
+        market_file = select_market_file(args.as_of)
+        if market_file:
+            print(f"\nLocal odds key missing; using hosted Bet365 capture: {market_file}")
+            run_comparison(args.as_of, market_file)
             run_shadow_tracking(args.as_of)
+            health_exit = write_pipeline_health(args.as_of, market_file, strict=True)
+            if health_exit != 0:
+                return health_exit
             return 0
         msg = "No local ODDS_API_KEY / ODDS_API_IO_KEY configured; projections refreshed, Bet365 scrape skipped."
+        write_pipeline_health(args.as_of, None)
         if args.require_odds:
             raise SystemExit(msg)
         print(f"\nWARNING: {msg}")
@@ -291,9 +369,15 @@ def main() -> int:
         "Scrape Bet365 aces/DF lines",
         fatal=args.require_odds,
     )
+    market_file = select_market_file(args.as_of)
     if scrape_exit == 0:
-        run_comparison(args.as_of)
+        market_file = lines_file(args.as_of) if has_market_rows(lines_file(args.as_of)) else market_file
+        if market_file:
+            run_comparison(args.as_of, market_file)
     run_shadow_tracking(args.as_of)
+    health_exit = write_pipeline_health(args.as_of, market_file, strict=bool(market_file))
+    if health_exit != 0:
+        return health_exit
 
     return 0
 

@@ -3,8 +3,9 @@ name: Football Counts vNext Shadow
 on:
   schedule:
     - cron: "15 8 * * *"
-    # Near-kickoff capture. Scrapers make detailed odds calls only inside 90m.
-    - cron: "*/30 9-22 * * *"
+    # Near-kickoff shadow capture every two hours. Scrapers make detailed odds
+    # calls only inside 90m, keeping the shared free-plan daily cap intact.
+    - cron: "15 9,11,13,15,17,19,21 * * *"
   workflow_dispatch:
 
 permissions:
@@ -112,7 +113,7 @@ jobs:
             git add data/football-form/ data/team-shots/inbox/ data/team-shots/understat/ data/corners-ou/pinnacle-corners-odds.csv
           else
             # Near-kickoff runs store prices only. Reports are rebuilt once daily,
-            # avoiding timestamp-only commits every 30 minutes.
+            # avoiding timestamp-only commits on every near-kickoff scan.
             git add data/team-shots/inbox/ data/corners-ou/pinnacle-corners-odds.csv
           fi
           if git diff --cached --quiet; then
