@@ -246,6 +246,21 @@ class ShadowSettlementPriceTests(unittest.TestCase):
         self.assertEqual(signal["closing_odds"], "")
         self.assertEqual(signal["clv_pct"], "")
 
+    def test_candidate_rejects_old_same_pair_match(self) -> None:
+        signal = {
+            "date": "2026-07-29",
+            "tournament": "Washington",
+            "player": "Player One",
+            "opponent": "Player Two",
+        }
+        old_candidate = {
+            "tourney_date": "20260325",
+            "tourney_name": "Miami",
+            "winner_name": "Player One",
+            "loser_name": "Player Two",
+        }
+        self.assertIsNone(SETTLE.choose_candidate(signal, [old_candidate]))
+
 
 class DailyMarketSelectionTests(unittest.TestCase):
     def test_uses_recent_capture_when_it_contains_target_date_events(self) -> None:
@@ -363,6 +378,11 @@ class ComparisonInputFilterTests(unittest.TestCase):
         ]
         kept = COMPARE.filter_line_rows_by_market(rows, "aces,match_aces")
         self.assertEqual([row["market"] for row in kept], ["aces", "match_aces"])
+
+    def test_daily_pipeline_registers_aces_over_v4(self) -> None:
+        daily_script = (SCRIPTS / "run-tennis-props-daily.py").read_text(encoding="utf-8")
+        self.assertIn("tennis-props-aces-over-v4.py", daily_script)
+        self.assertIn("Register and score ATP ace-over v4 challenger", daily_script)
 
 
 class HostedSyncTests(unittest.TestCase):

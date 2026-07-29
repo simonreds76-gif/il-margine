@@ -451,6 +451,19 @@ def tournament_overlap(signal_tournament: str, sackmann_tournament: str) -> bool
 def choose_candidate(signal: dict[str, str], candidates: list[dict[str, str]]) -> dict[str, str] | None:
     if not candidates:
         return None
+    signal_date = parse_signal_date(signal.get("date"))
+    if signal_date:
+        dated = [(row, parse_sackmann_date(row.get("tourney_date"))) for row in candidates]
+        with_dates = [(row, candidate_date) for row, candidate_date in dated if candidate_date is not None]
+        if with_dates:
+            nearby = [
+                row
+                for row, candidate_date in with_dates
+                if abs((candidate_date - signal_date).days) <= 3
+            ]
+            if not nearby:
+                return None
+            candidates = nearby
     tournament = signal.get("tournament", "")
     overlapped = [r for r in candidates if tournament_overlap(tournament, r.get("tourney_name", ""))]
     if overlapped:
@@ -463,7 +476,6 @@ def choose_candidate(signal: dict[str, str], candidates: list[dict[str, str]]) -
         # result. Leave it pending for manual review instead.
         return None
 
-    signal_date = parse_signal_date(signal.get("date"))
     if signal_date:
         dated = [(row, parse_sackmann_date(row.get("tourney_date"))) for row in pool]
         with_dates = [(row, dt) for row, dt in dated if dt is not None]
@@ -536,13 +548,20 @@ def main() -> int:
     clv_updated = sum(enrich_closing_price(row, history_by_event, history_by_pair) for row in rows)
     oncourt_index = load_oncourt_index(Path(args.oncourt_dir), pending_rows)
     sackmann_index = load_sackmann_index(Path(args.sackmann_dir))
-    now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    now_dt = datetime.now(timezone.utc)
+    now = now_dt.isoformat(timespec="seconds")
     settled_now = 0
     still_pending = 0
 
     for row in rows:
         status = (row.get("settlement_status") or "pending").lower()
         if status not in {"", "pending"}:
+            continue
+        match_start = parse_utc_datetime(row.get("match_start_utc"))
+        if match_start is not None and match_start > now_dt:
+            row["settlement_status"] = "pending"
+            row["settlement_note"] = "match_not_started"
+            still_pending += 1
             continue
         year = parse_year(row.get("date"))
         tour = (row.get("tour") or "").upper()
