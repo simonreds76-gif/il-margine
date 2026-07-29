@@ -204,9 +204,14 @@ def props_signals(target_date: str) -> list[Signal]:
     path = PROPS / f"comparison-{target_date}.csv"
     signals: list[Signal] = []
     for row in read_csv(path):
-        if (row.get("bettable") or "").strip().lower() not in {"1", "true", "yes"}:
+        if (row.get("date") or "").strip() != target_date:
             continue
-        side = (row.get("recommended_side") or "").strip().upper()
+        is_bettable = (row.get("bettable") or "").strip().lower() in {"1", "true", "yes"}
+        is_shadow = (row.get("trackable_shadow") or "").strip().lower() in {"1", "true", "yes"}
+        if not is_bettable and not is_shadow:
+            continue
+        side_field = "recommended_side" if is_bettable else "shadow_side"
+        side = (row.get(side_field) or "").strip().upper()
         if side not in {"OVER", "UNDER"}:
             continue
         player = (row.get("player") or "").strip()
@@ -228,12 +233,14 @@ def props_signals(target_date: str) -> list[Signal]:
             selection += f" | fair {fmt_odds(fair)}"
         if edge is not None:
             selection += f" | edge {edge:+.1f}%"
+        if is_shadow and not is_bettable:
+            selection += " | shadow evidence only"
         pair = tuple(sorted((norm(player), norm(opponent))))
         signals.append(
             Signal(
-                section="BET365 PROPS / RESEARCH",
-                priority=40,
-                labels=["ACES/DF"],
+                section="BET365 PROPS" if is_bettable else "BET365 PROPS WATCHLIST",
+                priority=40 if is_bettable else 45,
+                labels=["ACES/DF"] if is_bettable else ["ACES/DF WATCH"],
                 match=f"{player} vs {opponent}",
                 selection=selection,
                 edge_pct=edge,
