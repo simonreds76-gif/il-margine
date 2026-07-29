@@ -26,6 +26,11 @@ OUT_DIR = ROOT / "data" / "football-form"
 DEFAULT_JSON = OUT_DIR / "weekly-research-report.json"
 DEFAULT_REPORT = OUT_DIR / "weekly-research-report.md"
 TENNIS_PROPS_OBSERVATIONS = ROOT / "data" / "tennis-props" / "shadow" / "market-observations.csv"
+TENNIS_PROPS_SHADOW_SIGNALS = ROOT / "data" / "tennis-props" / "shadow" / "aces-dfs-shadow-signals.csv"
+TENNIS_PROPS_PIPELINE_HEALTH = ROOT / "data" / "tennis-props" / "pipeline-health.json"
+TENNIS_PROPS_DECISION_JSON = ROOT / "data" / "tennis-props" / "shadow" / "aces-dfs-weekly-decision.json"
+TENNIS_PROPS_DECISION_REPORT = ROOT / "data" / "tennis-props" / "shadow" / "aces-dfs-weekly-decision.txt"
+TENNIS_PROPS_V3_LOCAL_JSON = ROOT / "data" / "tennis-props" / "backtest" / "aces-v3-weekly-report.json"
 ASSIST_GATES = ROOT / "data" / "assist-value" / "research" / "assist-value-gates.json"
 ASSIST_PROSPECTIVE = ROOT / "data" / "assist-value" / "research" / "assist-value-v1-prospective.csv"
 AUTOMATION_BUDGET = ROOT / "data" / "ops" / "automation-budget-report.json"
@@ -381,6 +386,8 @@ def tennis_model_evidence_summary() -> dict[str, Any]:
         lanes.setdefault(name, {})["clv"] = tennis_lane_clv(path)
     gap_report = load_json(TENNIS_GAP_REPORT)
     replacements = ((gap_report.get("ml_guard_replacement") or {}).get("experiments") or {})
+    for key in ("strict_gap_10_20_same_side", "volume200_gap_10_15_same_side"):
+        replacements.setdefault(key, {"verdict": "NOT_RUN", "performance": {}})
     return {
         "lanes": lanes,
         "gap_status": (gap_report.get("ml_guard_replacement") or {}).get("status", "NOT_RUN"),
@@ -536,10 +543,286 @@ def ml_gap_guard_summary() -> dict[str, Any]:
     }
 
 
+def tennis_props_shadow_decision(
+    signals_path: Path = TENNIS_PROPS_SHADOW_SIGNALS,
+    health_path: Path = TENNIS_PROPS_PIPELINE_HEALTH,
+) -> dict[str, Any]:
+    rows = load_csv(signals_path)
+    health = load_json(health_path)
+    settled = [
+        row
+        for row in rows
+        if (row.get("settlement_status") or "").strip().lower() == "settled"
+    ]
+    pending = [
+        row
+        for row in rows
+        if (row.get("settlement_status") or "pending").strip().lower() in {"", "pending"}
+    ]
+    voids = [
+        row
+        for row in rows
+        if (row.get("settlement_status") or "").strip().lower() == "void"
+    ]
+    wins = sum((row.get("result") or "").strip().lower() == "win" for row in settled)
+    losses = sum((row.get("result") or "").strip().lower() == "loss" for row in settled)
+    pushes = sum((row.get("result") or "").strip().lower() == "push" for row in settled)
+    pnl = sum(number(row.get("pnl")) for row in settled)
+    staked = float(len(settled))
+    roi_pct = pnl / staked * 100.0 if staked else None
+
+    clv_values = [
+        value
+        for value in (
+            finite_float(row.get("clv_pct"))
+            for row in rows
+            if (row.get("settlement_status") or "").strip().lower() != "void"
+        )
+        if value is not None
+    ]
+    mean_clv_pct = avg(clv_values)
+    positive_clv_pct = (
+        sum(value > 0 for value in clv_values) / len(clv_values) * 100.0
+        if clv_values
+        else None
+    )
+    clv_coverage_pct = len(clv_values) / len(rows) * 100.0 if rows else 0.0
+
+    scored: list[tuple[float, float]] = []
+    for row in settled:
+        result = (row.get("result") or "").strip().lower()
+        fair_odds = finite_float(row.get("fair_odds"))
+        if result not in {"win", "loss"} or fair_odds is None or fair_odds <= 1.0:
+            continue
+        scored.append((1.0 / fair_odds, 1.0 if result == "win" else 0.0))
+    predicted_hit_pct = avg([probability for probability, _ in scored])
+    actual_hit_pct = avg([outcome for _, outcome in scored])
+    brier = avg([(probability - outcome) ** 2 for probability, outcome in scored])
+    calibration_gap_pp = (
+        abs((actual_hit_pct or 0.0) - (predicted_hit_pct or 0.0)) * 100.0
+        if scored
+        else None
+    )
+
+    slam_aliases = {
+        "australian open": "Australian Open",
+        "roland garros": "Roland Garros",
+        "french open": "Roland Garros",
+        "wimbledon": "Wimbledon",
+        "us open": "US Open",
+        "u s open": "US Open",
+    }
+    settled_slams: set[str] = set()
+    for row in settled:
+        tournament = re.sub(r"[^a-z0-9]+", " ", str(row.get("tournament") or "").lower()).strip()
+        for alias, canonical in slam_aliases.items():
+            if alias in tournament:
+                settled_slams.add(canonical)
+                break
+
+    market_rows: list[dict[str, Any]] = []
+    for market in ("aces", "double_faults"):
+        subset = [row for row in rows if (row.get("market") or "").strip().lower() == market]
+        subset_settled = [
+            row for row in subset if (row.get("settlement_status") or "").strip().lower() == "settled"
+        ]
+        subset_pnl = sum(number(row.get("pnl")) for row in subset_settled)
+        market_rows.append(
+            {
+                "market": market,
+                "registered": len(subset),
+                "settled": len(subset_settled),
+                "pnl_units": round(subset_pnl, 4),
+                "roi_pct": round(subset_pnl / len(subset_settled) * 100.0, 2)
+                if subset_settled
+                else None,
+            }
+        )
+
+    structural_ok = bool(health) and not bool(health.get("structural_error"))
+    two_way_rows = int(number(health.get("two_way_rows")))
+    price_integrity_pass = two_way_rows > 0
+    gates = {
+        "settled_sample": {"pass": len(settled) >= 300, "observed": len(settled), "target": 300},
+        "slam_coverage": {
+            "pass": len(settled_slams) >= 2,
+            "observed": len(settled_slams),
+            "target": 2,
+            "events": sorted(settled_slams),
+        },
+        "roi": {"pass": roi_pct is not None and roi_pct >= 0.0, "observed_pct": roi_pct, "target_pct": 0.0},
+        "clv_coverage": {
+            "pass": len(clv_values) >= 300,
+            "observed": len(clv_values),
+            "target": 300,
+            "coverage_pct": round(clv_coverage_pct, 2),
+        },
+        "mean_clv": {
+            "pass": mean_clv_pct is not None and mean_clv_pct >= 1.0,
+            "observed_pct": mean_clv_pct,
+            "target_pct": 1.0,
+        },
+        "positive_clv": {
+            "pass": positive_clv_pct is not None and positive_clv_pct >= 55.0,
+            "observed_pct": positive_clv_pct,
+            "target_pct": 55.0,
+        },
+        "calibration_sample": {"pass": len(scored) >= 100, "observed": len(scored), "target": 100},
+        "calibration_brier": {
+            "pass": brier is not None and brier <= 0.25,
+            "observed": brier,
+            "maximum": 0.25,
+        },
+        "calibration_gap": {
+            "pass": calibration_gap_pp is not None and calibration_gap_pp <= 5.0,
+            "observed_pp": calibration_gap_pp,
+            "maximum_pp": 5.0,
+        },
+        "price_integrity": {
+            "pass": price_integrity_pass,
+            "observed_two_way_rows": two_way_rows,
+            "requirement": "two-way prices or a separately approved one-sided pricing policy",
+        },
+        "pipeline_health": {
+            "pass": structural_ok,
+            "state": health.get("state", "MISSING"),
+            "structural_error": health.get("structural_error") if health else None,
+        },
+    }
+    failed_gates = [name for name, gate in gates.items() if not gate["pass"]]
+    blockers: list[str] = []
+    if not rows:
+        blockers.append("local shadow ledger is missing or empty")
+    if len(settled) < 300:
+        blockers.append(f"settled sample {len(settled)}/300")
+    if len(settled_slams) < 2:
+        blockers.append(f"Slam coverage {len(settled_slams)}/2")
+    if len(clv_values) < 300:
+        blockers.append(f"CLV sample {len(clv_values)}/300")
+    if len(scored) < 100:
+        blockers.append(f"calibration sample {len(scored)}/100")
+    if not price_integrity_pass:
+        blockers.append(f"one-sided price feed ({two_way_rows} two-way rows)")
+    if not structural_ok:
+        blockers.append(f"pipeline health {health.get('state', 'MISSING')}")
+
+    return {
+        "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+        "lane": "aces_dfs_canonical_shadow",
+        "status": "REVIEW_FOR_PROMOTION" if not failed_gates else "COLLECTING_EVIDENCE",
+        "automatic_promotion": False,
+        "registered": len(rows),
+        "settled": len(settled),
+        "pending": len(pending),
+        "void": len(voids),
+        "record": {"wins": wins, "losses": losses, "pushes": pushes},
+        "staked_units": staked,
+        "pnl_units": round(pnl, 4),
+        "roi_pct": round(roi_pct, 2) if roi_pct is not None else None,
+        "clv": {
+            "rows": len(clv_values),
+            "coverage_pct": round(clv_coverage_pct, 2),
+            "mean_pct": round(mean_clv_pct, 4) if mean_clv_pct is not None else None,
+            "positive_pct": round(positive_clv_pct, 2) if positive_clv_pct is not None else None,
+        },
+        "calibration": {
+            "rows": len(scored),
+            "brier": round(brier, 6) if brier is not None else None,
+            "predicted_hit_pct": round(predicted_hit_pct * 100.0, 2) if predicted_hit_pct is not None else None,
+            "actual_hit_pct": round(actual_hit_pct * 100.0, 2) if actual_hit_pct is not None else None,
+            "absolute_gap_pp": round(calibration_gap_pp, 2) if calibration_gap_pp is not None else None,
+            "pushes_excluded": True,
+        },
+        "settled_slams": sorted(settled_slams),
+        "by_market": market_rows,
+        "feed": {
+            "state": health.get("state", "MISSING"),
+            "line_rows": int(number(health.get("line_rows"))),
+            "matched_rows": int(number(health.get("matched_rows"))),
+            "match_rate_pct": finite_float(health.get("match_rate_pct")),
+            "two_way_rows": two_way_rows,
+            "over_only_rows": int(number(health.get("over_only_rows"))),
+            "public_bettable_rows": int(number(health.get("public_bettable_rows"))),
+            "top_shadow_blocker": health.get("top_shadow_blocker", ""),
+        },
+        "gates": gates,
+        "failed_gates": failed_gates,
+        "blockers": blockers,
+        "gate_rule": (
+            "Human review only after 300 settled lines across at least two Slams, non-negative ROI, "
+            "mean CLV >= +1%, positive CLV >= 55%, at least 100 calibrated win/loss rows with "
+            "Brier <= 0.25 and absolute calibration gap <= 5pp, plus approved price integrity "
+            "and a healthy pipeline."
+        ),
+    }
+
+
+def tennis_props_shadow_decision_report(summary: dict[str, Any]) -> str:
+    record = summary["record"]
+    clv = summary["clv"]
+    calibration = summary["calibration"]
+    feed = summary["feed"]
+    blockers = "; ".join(summary["blockers"]) or "none"
+    mean_clv = pct(clv["mean_pct"], 2)
+    positive_clv = f"{clv['positive_pct']:.1f}%" if clv["positive_pct"] is not None else "-"
+    predicted_hit = (
+        f"{calibration['predicted_hit_pct']:.1f}%"
+        if calibration["predicted_hit_pct"] is not None
+        else "-"
+    )
+    actual_hit = (
+        f"{calibration['actual_hit_pct']:.1f}%"
+        if calibration["actual_hit_pct"] is not None
+        else "-"
+    )
+    calibration_gap = (
+        f"{calibration['absolute_gap_pp']:.1f}pp"
+        if calibration["absolute_gap_pp"] is not None
+        else "-"
+    )
+    market_lines = [
+        (
+            f"- {row['market']}: {row['settled']}/{row['registered']} settled, "
+            f"{row['pnl_units']:+.2f}u, ROI {pct(row['roi_pct'])}"
+        )
+        for row in summary["by_market"]
+    ]
+    return "\n".join(
+        [
+            "Tennis Aces/DF Weekly Decision Report",
+            f"Generated UTC: {summary['generated_at']}",
+            f"Status: {summary['status']} (never auto-promoted)",
+            "",
+            f"Sample: {summary['settled']}/{summary['registered']} settled; {summary['pending']} pending; {summary['void']} void",
+            f"Record: {record['wins']}W/{record['losses']}L/{record['pushes']}P",
+            f"P/L: {summary['pnl_units']:+.2f}u | ROI: {pct(summary['roi_pct'])}",
+            f"CLV: {mean_clv} mean; {positive_clv} positive; n={clv['rows']}",
+            (
+                "Calibration: "
+                f"Brier {calibration['brier'] if calibration['brier'] is not None else '-'}; "
+                f"predicted {predicted_hit}; actual {actual_hit}; gap {calibration_gap}; "
+                f"n={calibration['rows']}"
+            ),
+            (
+                "Feed: "
+                f"{feed['state']}; matched {feed['matched_rows']}/{feed['line_rows']}; "
+                f"two-way {feed['two_way_rows']}; over-only {feed['over_only_rows']}; "
+                f"public bettable {feed['public_bettable_rows']}"
+            ),
+            "",
+            "By market:",
+            *market_lines,
+            "",
+            f"Blockers: {blockers}",
+            f"Promotion gate: {summary['gate_rule']}",
+        ]
+    )
+
+
 def tennis_props_v3_snapshot() -> dict[str, Any]:
     raw = os.environ.get("TENNIS_PROPS_V3_WEEKLY_JSON", "").strip()
     if not raw:
-        return {}
+        return load_json(TENNIS_PROPS_V3_LOCAL_JSON)
     try:
         payload = json.loads(raw)
     except json.JSONDecodeError as exc:
@@ -630,6 +913,7 @@ def build_payload() -> dict[str, Any]:
     tennis_model_evidence = tennis_model_evidence_summary()
     tennis_props_v3 = tennis_props_v3_snapshot()
     tennis_props_benchmark = tennis_props_market_benchmark()
+    tennis_props_shadow = tennis_props_shadow_decision()
     goalscorer_research = goalscorer_research_summary()
     assist_value_research = assist_value_research_summary()
     automation_budget = load_json(AUTOMATION_BUDGET)
@@ -674,6 +958,7 @@ def build_payload() -> dict[str, Any]:
         "tennis_model_evidence": tennis_model_evidence,
         "tennis_props_v3": tennis_props_v3,
         "tennis_props_market_benchmark": tennis_props_benchmark,
+        "tennis_props_shadow_decision": tennis_props_shadow,
         "goalscorer_v2": goalscorer_research,
         "assist_value_v1": assist_value_research,
         "automation_budget": automation_budget,
@@ -714,6 +999,7 @@ def render_report(payload: dict[str, Any]) -> str:
     tennis = payload["tennis_ml_gap_guard"]
     tennis_props_v3 = payload.get("tennis_props_v3") or {}
     tennis_props_benchmark = payload.get("tennis_props_market_benchmark") or {}
+    tennis_props_shadow = payload.get("tennis_props_shadow_decision") or {}
     goalscorer = payload["goalscorer_v2"]
     assist = payload["assist_value_v1"]
     automation = payload.get("automation_budget") or {}
@@ -860,6 +1146,10 @@ def render_report(payload: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
+            "## Tennis Aces/DF Prospective Decision",
+            "",
+            tennis_props_shadow_decision_report(tennis_props_shadow),
+            "",
             "## Tennis Props Model vs Bet365",
             "",
             f"- Status: {tennis_props_benchmark.get('status', 'EVIDENCE_BUILDING')}",
@@ -903,6 +1193,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
     tennis_model_evidence = payload.get("tennis_model_evidence") or {}
     tennis_props_v3 = payload.get("tennis_props_v3") or {}
     tennis_props_benchmark = payload.get("tennis_props_market_benchmark") or {}
+    tennis_props_shadow = payload.get("tennis_props_shadow_decision") or {}
     goalscorer = payload["goalscorer_v2"]
     assist = payload["assist_value_v1"]
     automation = payload.get("automation_budget") or {}
@@ -985,6 +1276,18 @@ def telegram_text(payload: dict[str, Any]) -> str:
         f"Brier delta {number(tennis_props_benchmark.get('brier_delta_vs_market')):+.4f}, "
         f"{tennis_props_benchmark.get('status', 'EVIDENCE_BUILDING')}"
     )
+    props_clv = tennis_props_shadow.get("clv") or {}
+    props_calibration = tennis_props_shadow.get("calibration") or {}
+    lines.append(
+        "Aces/DF decision: "
+        f"{tennis_props_shadow.get('settled', 0)}/{tennis_props_shadow.get('registered', 0)} settled | "
+        f"{number(tennis_props_shadow.get('pnl_units')):+.2f}u | "
+        f"ROI {pct(tennis_props_shadow.get('roi_pct'))} | "
+        f"CLV {pct(props_clv.get('mean_pct'), 2)} n={props_clv.get('rows', 0)} | "
+        f"Brier {props_calibration.get('brier') if props_calibration.get('brier') is not None else '-'} "
+        f"n={props_calibration.get('rows', 0)} | "
+        f"{tennis_props_shadow.get('status', 'COLLECTING_EVIDENCE')}"
+    )
     lines.extend(
         [
             "",
@@ -1000,6 +1303,7 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     replacements = evidence.get("gap_replacements") or {}
     props_v3 = payload.get("tennis_props_v3") or {}
     props_benchmark = payload.get("tennis_props_market_benchmark") or {}
+    props_shadow = payload.get("tennis_props_shadow_decision") or {}
 
     def lane_line(label: str, key: str, status: str) -> str:
         lane = lanes.get(key) or {}
@@ -1051,6 +1355,33 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
             f"{proof.get('settled', 0)} settled | ROI {number(proof.get('roi_pct')):+.2f}% | "
             f"CLV {number(proof.get('mean_clv_pct')):+.2f}% | {atp.get('status', 'UNKNOWN')}"
         )
+    shadow_clv = props_shadow.get("clv") or {}
+    shadow_calibration = props_shadow.get("calibration") or {}
+    lines.extend(
+        [
+            (
+                "Aces/DF canonical shadow: "
+                f"{props_shadow.get('settled', 0)}/{props_shadow.get('registered', 0)} settled | "
+                f"{number(props_shadow.get('pnl_units')):+.2f}u | "
+                f"ROI {pct(props_shadow.get('roi_pct'))} | "
+                f"CLV {pct(shadow_clv.get('mean_pct'), 2)} "
+                f"({shadow_clv.get('positive_pct') if shadow_clv.get('positive_pct') is not None else '-'}% positive, n={shadow_clv.get('rows', 0)}) | "
+                f"{props_shadow.get('status', 'COLLECTING_EVIDENCE')}"
+            ),
+            (
+                "Aces/DF calibration: "
+                f"Brier {shadow_calibration.get('brier') if shadow_calibration.get('brier') is not None else '-'} | "
+                f"gap {shadow_calibration.get('absolute_gap_pp') if shadow_calibration.get('absolute_gap_pp') is not None else '-'}pp | "
+                f"n={shadow_calibration.get('rows', 0)}"
+            ),
+            "Aces/DF blockers: " + ("; ".join(props_shadow.get("blockers") or []) or "none"),
+            (
+                "Aces/DF promotion gate: 300 settled across 2 Slams; ROI >= 0; "
+                "mean CLV >= +1% and >=55% positive; calibration n>=100, "
+                "Brier <=0.25 and gap <=5pp; approved prices + healthy pipeline. Human review only."
+            ),
+        ]
+    )
     lines.extend(
         [
             (
@@ -1106,15 +1437,27 @@ def main() -> int:
     load_env_files()
     payload = build_payload()
     report = render_report(payload)
+    tennis_props_decision = payload["tennis_props_shadow_decision"]
 
     args.json.parent.mkdir(parents=True, exist_ok=True)
     args.json.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(report, encoding="utf-8")
+    TENNIS_PROPS_DECISION_JSON.parent.mkdir(parents=True, exist_ok=True)
+    TENNIS_PROPS_DECISION_JSON.write_text(
+        json.dumps(tennis_props_decision, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    TENNIS_PROPS_DECISION_REPORT.write_text(
+        tennis_props_shadow_decision_report(tennis_props_decision) + "\n",
+        encoding="utf-8",
+    )
 
     print(report)
     print(f"Wrote {display_path(args.json)}")
     print(f"Wrote {display_path(args.report)}")
+    print(f"Wrote {display_path(TENNIS_PROPS_DECISION_JSON)}")
+    print(f"Wrote {display_path(TENNIS_PROPS_DECISION_REPORT)}")
 
     if not args.no_telegram:
         message = tennis_telegram_text(payload) if args.tennis_only_telegram else telegram_text(payload)

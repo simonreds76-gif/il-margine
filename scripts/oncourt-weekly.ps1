@@ -342,10 +342,16 @@ finally {
 }
 
 Log "=== Post-step: Tennis props v3 weekly evidence report ==="
-$v3WeeklyReportExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-props-v3-weekly-report.py") -Label "tennis props v3 weekly report" -TimeoutSeconds 90
-if ($v3WeeklyReportExit -ne 0) {
-    Log "ERROR: tennis props v3 weekly report failed (exit $v3WeeklyReportExit)"
-    Set-RunStatusFailure "TennisPropsV3WeeklyReportFailed" "tennis props v3 weekly report failed (exit $v3WeeklyReportExit)"
+if (Test-Path "scripts\tennis-props-v3-weekly-report.py") {
+    # The consolidated tennis report below owns Telegram delivery.
+    $v3WeeklyReportExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-props-v3-weekly-report.py", "--no-telegram") -Label "tennis props v3 weekly report" -TimeoutSeconds 90
+    if ($v3WeeklyReportExit -ne 0) {
+        Log "ERROR: tennis props v3 weekly report failed (exit $v3WeeklyReportExit)"
+        Set-RunStatusFailure "TennisPropsV3WeeklyReportFailed" "tennis props v3 weekly report failed (exit $v3WeeklyReportExit)"
+    }
+}
+else {
+    Log "Tennis props v3 report script is not installed in this checkout; canonical aces/DF evidence still reports below."
 }
 
 Log "=== Post-step: Send weekly tennis evidence to Telegram ==="
