@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import csv
+import json
 import runpy
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -10,6 +13,15 @@ REPORT = runpy.run_path(str(ROOT / "scripts" / "weekly-research-report.py"), run
 
 
 class WeeklyResearchReportTests(unittest.TestCase):
+    @staticmethod
+    def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        fields = sorted({key for row in rows for key in row})
+        with path.open("w", encoding="utf-8", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=fields)
+            writer.writeheader()
+            writer.writerows(rows)
+
     def test_settled_ledger_summary_uses_real_stakes(self) -> None:
         rows = [
             {"settled": "1", "bet_outcome": "won", "stake": "0.5", "pnl_units": "1.0"},
@@ -72,7 +84,104 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertIn("Strict gap 10-20pp [0.5u provisional]", message)
         self.assertIn("Inactive research (not tips)", message)
         self.assertIn("Aces/DF vs Bet365", message)
+        self.assertIn("Aces/DF promotion gate", message)
         self.assertLessEqual(len(message), 4096)
+
+    def test_tennis_props_decision_fails_closed_on_thin_sample(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            signals = root / "signals.csv"
+            health = root / "health.json"
+            self.write_csv(
+                signals,
+                [
+                    {
+                        "settlement_status": "settled",
+                        "result": "win",
+                        "pnl": "1.5",
+                        "fair_odds": "2.0",
+                        "clv_pct": "2.0",
+                        "market": "aces",
+                        "tournament": "Wimbledon",
+                    },
+                    {
+                        "settlement_status": "pending",
+                        "result": "",
+                        "pnl": "",
+                        "fair_odds": "2.2",
+                        "clv_pct": "-1.0",
+                        "market": "double_faults",
+                        "tournament": "Washington",
+                    },
+                ],
+            )
+            health.write_text(
+                json.dumps(
+                    {
+                        "state": "SHADOW_EVIDENCE_READY",
+                        "structural_error": False,
+                        "line_rows": 20,
+                        "matched_rows": 10,
+                        "two_way_rows": 0,
+                        "over_only_rows": 20,
+                    }
+                ),
+                encoding="utf-8",
+            )
+            summary = REPORT["tennis_props_shadow_decision"](signals, health)
+
+        self.assertEqual(summary["status"], "COLLECTING_EVIDENCE")
+        self.assertFalse(summary["automatic_promotion"])
+        self.assertEqual(summary["settled"], 1)
+        self.assertEqual(summary["pnl_units"], 1.5)
+        self.assertEqual(summary["calibration"]["rows"], 1)
+        self.assertIn("settled_sample", summary["failed_gates"])
+        self.assertIn("price_integrity", summary["failed_gates"])
+
+    def test_tennis_props_decision_only_requests_review_after_every_gate(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            signals = root / "signals.csv"
+            health = root / "health.json"
+            rows: list[dict[str, str]] = []
+            for index in range(300):
+                won = index % 2 == 0
+                rows.append(
+                    {
+                        "settlement_status": "settled",
+                        "result": "win" if won else "loss",
+                        "pnl": "1.10" if won else "-1.0",
+                        "fair_odds": "2.0",
+                        "clv_pct": "2.0" if index < 180 else "0.0",
+                        "market": "aces" if index % 3 else "double_faults",
+                        "tournament": "Wimbledon" if index < 150 else "US Open",
+                    }
+                )
+            self.write_csv(signals, rows)
+            health.write_text(
+                json.dumps(
+                    {
+                        "state": "BETTABLE_READY",
+                        "structural_error": False,
+                        "line_rows": 500,
+                        "matched_rows": 450,
+                        "two_way_rows": 200,
+                        "over_only_rows": 300,
+                    }
+                ),
+                encoding="utf-8",
+            )
+            summary = REPORT["tennis_props_shadow_decision"](signals, health)
+
+        self.assertEqual(summary["status"], "REVIEW_FOR_PROMOTION")
+        self.assertFalse(summary["automatic_promotion"])
+        self.assertEqual(summary["failed_gates"], [])
+        self.assertEqual(summary["settled_slams"], ["US Open", "Wimbledon"])
+
+    def test_local_weekly_task_sends_one_consolidated_tennis_message(self) -> None:
+        script = (ROOT / "scripts" / "oncourt-weekly.ps1").read_text(encoding="utf-8")
+        self.assertIn('"scripts\\tennis-props-v3-weekly-report.py", "--no-telegram"', script)
+        self.assertEqual(script.count("--tennis-only-telegram"), 1)
 
 
 if __name__ == "__main__":
