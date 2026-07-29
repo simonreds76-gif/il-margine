@@ -180,6 +180,12 @@ try {
     $tennisPropsBoardExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\build-tennis-props-board.py", "--as-of", (Get-Date -Format "yyyy-MM-dd")) -Label "tennis props projection board" -TimeoutSeconds 600
     if ($tennisPropsBoardExit -ne 0) {
         Log "WARNING: tennis props projection board failed/timed out (exit $tennisPropsBoardExit), continuing..."
+    } else {
+        Log "=== Step 3c/8: Tennis props hosted-price comparison ==="
+        $tennisPropsCompareExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\run-tennis-props-daily.py", "--as-of", (Get-Date -Format "yyyy-MM-dd"), "--comparison-only") -Label "tennis props hosted-price comparison" -TimeoutSeconds 300
+        if ($tennisPropsCompareExit -ne 0) {
+            Log "WARNING: tennis props hosted-price comparison failed (exit $tennisPropsCompareExit), continuing..."
+        }
     }
 
     Log "=== Step 4/8: Append Pinnacle history capture (daily) ==="
