@@ -49,7 +49,9 @@ function dateChip(value: string | null): string {
 
 function publishedTime(value: string): string {
   const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? "Published" : `Posted ${londonTime.format(date)}`;
+  return Number.isNaN(date.getTime())
+    ? "Published"
+    : `Posted ${londonDate.format(date)} · ${londonTime.format(date)}`;
 }
 
 function laneLabel(market: string): string {
