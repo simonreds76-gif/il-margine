@@ -208,9 +208,12 @@ def enrich_closing_price(
     by_pair: dict[tuple[object, ...], list[dict[str, str]]],
 ) -> bool:
     match_start = parse_utc_datetime(signal.get("match_start_utc"))
+    registered_at = parse_utc_datetime(signal.get("logged_at_utc") or signal.get("capture_ts"))
     side = str(signal.get("side") or "").upper()
     selected_odds = parse_float(signal.get("selected_odds"))
-    if match_start is None or side not in {"OVER", "UNDER"} or selected_odds is None:
+    for field in ("closing_odds", "closing_ts_utc", "closing_snapshot_count", "clv_pct", "clv_method"):
+        signal[field] = ""
+    if match_start is None or registered_at is None or side not in {"OVER", "UNDER"} or selected_odds is None:
         return False
     candidates = by_event.get(history_key(signal), [])
     method = "event_id_latest_prestart"
@@ -222,7 +225,13 @@ def enrich_closing_price(
     for row in candidates:
         captured_at = parse_utc_datetime(row.get("capture_ts"))
         odds = parse_float(row.get(price_field))
-        if captured_at is None or odds is None or odds <= 1.0 or captured_at > match_start:
+        if (
+            captured_at is None
+            or odds is None
+            or odds <= 1.0
+            or captured_at <= registered_at
+            or captured_at > match_start
+        ):
             continue
         priced.append((captured_at, odds))
     if not priced:
@@ -469,10 +478,15 @@ def write_performance(path: Path, rows: list[dict[str, str]]) -> None:
     voids = [r for r in rows if (r.get("settlement_status") or "").lower() == "void"]
     pnl = sum(parse_float(r.get("pnl")) or 0.0 for r in settled)
     roi = pnl / len(settled) * 100.0 if settled else 0.0
-    settled_clv = [parse_float(r.get("clv_pct")) for r in settled]
-    settled_clv = [value for value in settled_clv if value is not None]
-    mean_clv = sum(settled_clv) / len(settled_clv) if settled_clv else 0.0
-    positive_clv = sum(value > 0 for value in settled_clv) / len(settled_clv) * 100.0 if settled_clv else 0.0
+    now = datetime.now(timezone.utc)
+    started = [
+        row for row in rows
+        if (parse_utc_datetime(row.get("match_start_utc")) or datetime.max.replace(tzinfo=timezone.utc)) <= now
+    ]
+    clv_values = [parse_float(r.get("clv_pct")) for r in started]
+    clv_values = [value for value in clv_values if value is not None]
+    mean_clv = sum(clv_values) / len(clv_values) if clv_values else 0.0
+    positive_clv = sum(value > 0 for value in clv_values) / len(clv_values) * 100.0 if clv_values else 0.0
 
     def bucket(label: str, key: str) -> list[str]:
         out = [f"\n{label}:"]
@@ -490,7 +504,7 @@ def write_performance(path: Path, rows: list[dict[str, str]]) -> None:
         "Status: internal shadow only; no public betting record or live staking.",
         f"Rows: {len(rows)} | settled: {len(settled)} | pending: {len(pending)} | void: {len(voids)}",
         f"PnL: {pnl:+.2f}u | ROI: {roi:+.1f}%",
-        f"CLV: coverage={len(settled_clv)}/{len(settled)} | mean={mean_clv:+.2f}% | positive={positive_clv:.1f}%",
+        f"CLV: coverage={len(clv_values)}/{len(started)} started rows | mean={mean_clv:+.2f}% | positive={positive_clv:.1f}%",
         "Promotion guard: do not read ROI seriously before 300 settled lines across at least two Slams.",
     ]
     for label, key in [("By market", "market"), ("By side", "side"), ("By tour", "tour"), ("By confidence", "confidence")]:
