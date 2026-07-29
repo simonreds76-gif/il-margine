@@ -85,6 +85,8 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertIn("Strict gap 10-20pp [0.5u provisional]", message)
         self.assertIn("Inactive research (not tips)", message)
         self.assertIn("Aces/DF vs Bet365", message)
+        self.assertIn("Aces Over v4 [PRE_FIT]", message)
+        self.assertIn("Most Aces 1X2 [outcome only]", message)
         self.assertIn("Aces/DF promotion gate", message)
         self.assertLessEqual(len(message), 4096)
 

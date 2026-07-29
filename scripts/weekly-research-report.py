@@ -33,6 +33,8 @@ TENNIS_PROPS_PIPELINE_HEALTH = ROOT / "data" / "tennis-props" / "pipeline-health
 TENNIS_PROPS_DECISION_JSON = ROOT / "data" / "tennis-props" / "shadow" / "aces-dfs-weekly-decision.json"
 TENNIS_PROPS_DECISION_REPORT = ROOT / "data" / "tennis-props" / "shadow" / "aces-dfs-weekly-decision.txt"
 TENNIS_PROPS_V3_LOCAL_JSON = ROOT / "data" / "tennis-props" / "backtest" / "aces-v3-weekly-report.json"
+TENNIS_PROPS_V4_JSON = ROOT / "data" / "tennis-props" / "backtest" / "aces-over-v4-weekly-report.json"
+TENNIS_MOST_ACES_FORECAST_JSON = ROOT / "data" / "tennis-props" / "shadow" / "most-aces-1x2-forecast-report.json"
 TELEGRAM_RELAY_REPOSITORY = "simonreds76-gif/il-margine"
 TELEGRAM_RELAY_WORKFLOW = "tennis-daily-signal-digest.yml"
 ASSIST_GATES = ROOT / "data" / "assist-value" / "research" / "assist-value-gates.json"
@@ -916,6 +918,8 @@ def build_payload() -> dict[str, Any]:
     tennis_gap_guard = ml_gap_guard_summary()
     tennis_model_evidence = tennis_model_evidence_summary()
     tennis_props_v3 = tennis_props_v3_snapshot()
+    tennis_props_v4 = load_json(TENNIS_PROPS_V4_JSON)
+    tennis_most_aces_forecast = load_json(TENNIS_MOST_ACES_FORECAST_JSON)
     tennis_props_benchmark = tennis_props_market_benchmark()
     tennis_props_shadow = tennis_props_shadow_decision()
     goalscorer_research = goalscorer_research_summary()
@@ -961,6 +965,8 @@ def build_payload() -> dict[str, Any]:
         "tennis_ml_gap_guard": tennis_gap_guard,
         "tennis_model_evidence": tennis_model_evidence,
         "tennis_props_v3": tennis_props_v3,
+        "tennis_props_v4": tennis_props_v4,
+        "tennis_most_aces_forecast": tennis_most_aces_forecast,
         "tennis_props_market_benchmark": tennis_props_benchmark,
         "tennis_props_shadow_decision": tennis_props_shadow,
         "goalscorer_v2": goalscorer_research,
@@ -1306,6 +1312,8 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     lanes = evidence.get("lanes") or {}
     replacements = evidence.get("gap_replacements") or {}
     props_v3 = payload.get("tennis_props_v3") or {}
+    props_v4 = payload.get("tennis_props_v4") or {}
+    most_aces = payload.get("tennis_most_aces_forecast") or {}
     props_benchmark = payload.get("tennis_props_market_benchmark") or {}
     props_shadow = payload.get("tennis_props_shadow_decision") or {}
 
@@ -1358,6 +1366,25 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
             "Aces/DF v3: "
             f"{proof.get('settled', 0)} settled | ROI {number(proof.get('roi_pct')):+.2f}% | "
             f"CLV {number(proof.get('mean_clv_pct')):+.2f}% | {atp.get('status', 'UNKNOWN')}"
+        )
+    if props_v4 and not props_v4.get("_error"):
+        lines.append(
+            "Aces Over v4 [PRE_FIT]: "
+            f"{props_v4.get('rows_settled', 0)}/{props_v4.get('minimum_prefit_settled', 200)} settled | "
+            f"{props_v4.get('rows_registered', 0)} registered | "
+            f"CLV {number(props_v4.get('clv_mean_pct')):+.2f}% "
+            f"n={props_v4.get('clv_coverage', 0)} | no tips before gate"
+        )
+    if most_aces and not most_aces.get("_error"):
+        accuracy = most_aces.get("accuracy_pct")
+        brier = most_aces.get("brier")
+        accuracy_text = "-" if accuracy is None else f"{number(accuracy):.1f}%"
+        brier_text = "-" if brier is None else f"{number(brier):.4f}"
+        lines.append(
+            "Most Aces 1X2 [outcome only]: "
+            f"{most_aces.get('rows_settled', 0)}/{most_aces.get('rows_registered', 0)} settled | "
+            f"accuracy {accuracy_text} | Brier {brier_text} | "
+            "no prices/ROI/CLV"
         )
     shadow_clv = props_shadow.get("clv") or {}
     shadow_calibration = props_shadow.get("calibration") or {}

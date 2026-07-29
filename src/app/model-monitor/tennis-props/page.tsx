@@ -19,6 +19,7 @@ export const dynamic = "force-dynamic";
 type CsvRow = Record<string, string>;
 type JsonRecord = Record<string, unknown>;
 type ProjectionSortKey = "schedule" | "aces" | "dfs" | "match_tb" | "first_tb" | "breaks";
+type MostAcesSortKey = "schedule" | "favourite" | "closest";
 type MonitorTab = "decision" | "projections";
 type SearchParamsInput = Promise<Record<string, string | string[] | undefined>>;
 type TournamentRoundLog = {
@@ -50,8 +51,9 @@ const V4_OBSERVATIONS_PATH = path.join(SHADOW_DIR, "aces-over-v4-observations.cs
 const V4_REPORT_PATH = path.join(PROPS_DIR, "backtest", "aces-over-v4-weekly-report.json");
 const MOST_ACES_BOARD_PATH = path.join(SHADOW_DIR, "most-aces-1x2-board.csv");
 const MOST_ACES_OBSERVATIONS_PATH = path.join(SHADOW_DIR, "most-aces-1x2-observations.csv");
-const MOST_ACES_REPORT_PATH = path.join(SHADOW_DIR, "most-aces-1x2-performance.txt");
 const MOST_ACES_STAGE0_PATH = path.join(PROPS_DIR, "backtest", "most-aces-1x2-stage0.json");
+const MOST_ACES_FORECASTS_PATH = path.join(SHADOW_DIR, "most-aces-1x2-forecasts.csv");
+const MOST_ACES_FORECAST_REPORT_PATH = path.join(SHADOW_DIR, "most-aces-1x2-forecast-report.json");
 const MARKET_OBSERVATIONS_PATH = path.join(SHADOW_DIR, "market-observations.csv");
 const MARKET_OBSERVATIONS_REPORT_PATH = path.join(SHADOW_DIR, "market-observations-report.txt");
 const MODEL_SUMMARY_PATH = path.join(PROPS_DIR, "model-monitor-summary.csv");
@@ -1381,6 +1383,12 @@ function numeric(value: unknown): number {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+function validMostAcesSort(value: string | string[] | undefined): MostAcesSortKey {
+  const raw = Array.isArray(value) ? value[0] : value;
+  if (raw === "favourite" || raw === "closest") return raw;
+  return "schedule";
+}
+
 function AcesOverV4Panel({
   rows,
   report,
@@ -1401,9 +1409,15 @@ function AcesOverV4Panel({
   const acceptRate = Number(report.ladder_accept_rate_pct);
   const integrity = record(report.integrity);
   const progress = target > 0 ? Math.min(100, settled / target * 100) : 0;
-  const recent = [...rows]
+  const recentFixtures = [...rows]
     .sort((a, b) => (b.registered_at_utc || "").localeCompare(a.registered_at_utc || ""))
-    .slice(0, 6);
+    .reduce<Map<string, CsvRow[]>>((groups, row) => {
+      const pair = [row.player || "", row.opponent || ""].sort().join("|");
+      const key = row.event_id || `${row.date}|${row.tour}|${row.tournament}|${pair}`;
+      groups.set(key, [...(groups.get(key) ?? []), row]);
+      return groups;
+    }, new Map());
+  const recent = [...recentFixtures.entries()].slice(0, 4);
 
   return (
     <SectionCard
@@ -1441,23 +1455,40 @@ function AcesOverV4Panel({
 
       {recent.length ? (
         <div className="mt-4 grid gap-2 lg:grid-cols-2">
-          {recent.map((row) => (
-            <div key={row.observation_id} className="rounded-2xl border border-slate-800/80 bg-slate-950/60 px-4 py-3">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <div className="font-bold text-slate-100">{row.player} <span className="font-normal text-slate-500">vs {row.opponent}</span></div>
-                  <div className="mt-1 text-[11px] text-slate-500">{row.tournament} · Over {fmt(row.line, 1)} @ {fmt(row.selected_odds, 2)}</div>
+          {recent.map(([key, fixtureRows]) => {
+            const first = fixtureRows[0];
+            return (
+              <article key={key} className="overflow-hidden rounded-2xl border border-slate-800/80 bg-slate-950/60">
+                <div className="border-b border-slate-800/80 px-4 py-3">
+                  <div className="font-bold text-slate-100">{first.player} <span className="font-normal text-slate-500">vs {first.opponent}</span></div>
+                  <div className="mt-1 text-[11px] uppercase tracking-[0.12em] text-slate-500">
+                    {first.tournament} / {dateLabel(first.date)} / {fixtureRows.length} player market{fixtureRows.length === 1 ? "" : "s"}
+                  </div>
                 </div>
-                <MiniBadge label={(row.settlement_status || "pending").toUpperCase()} tone={row.settlement_status === "settled" ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300" : "border-amber-500/25 bg-amber-500/10 text-amber-300"} />
-              </div>
-              <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px] text-slate-400">
-                <span>v3 μ {fmt(row.mu_v3, 2)}</span>
-                <span>market μ {fmt(row.mu_mkt, 2)}</span>
-                <span>shape RMSE {fmt(row.ladder_shape_rmse, 3)}</span>
-                <span>{row.ladder_points} points</span>
-              </div>
-            </div>
-          ))}
+                <div className="divide-y divide-slate-800/70">
+                  {fixtureRows
+                    .sort((a, b) => (a.player || "").localeCompare(b.player || ""))
+                    .map((row) => (
+                      <div key={row.observation_id} className="px-4 py-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <div className="text-[10px] font-black uppercase tracking-[0.14em] text-cyan-300">{row.player} player market</div>
+                            <div className="mt-1 font-mono text-sm font-black text-slate-100">Over {fmt(row.line, 1)} @ {fmt(row.selected_odds, 2)}</div>
+                          </div>
+                          <MiniBadge label={(row.settlement_status || "pending").toUpperCase()} tone={row.settlement_status === "settled" ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300" : "border-amber-500/25 bg-amber-500/10 text-amber-300"} />
+                        </div>
+                        <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px] text-slate-400">
+                          <span>v3 mean {fmt(row.mu_v3, 2)}</span>
+                          <span>market mean {fmt(row.mu_mkt, 2)}</span>
+                          <span>shape RMSE {fmt(row.ladder_shape_rmse, 3)}</span>
+                          <span>{row.ladder_points} ladder points</span>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </article>
+            );
+          })}
         </div>
       ) : <EmptyState message="No eligible ATP Hard/Clay ace ladders have been registered yet." />}
     </SectionCard>
@@ -1467,93 +1498,151 @@ function AcesOverV4Panel({
 function MostAcesPanel({
   rows,
   observations,
+  forecasts,
+  forecastReport,
   validation,
   stamp,
+  sortKey,
 }: {
   rows: CsvRow[];
   observations: CsvRow[];
+  forecasts: CsvRow[];
+  forecastReport: JsonRecord;
   validation: JsonRecord;
   stamp: string;
+  sortKey: MostAcesSortKey;
 }) {
   const today = londonDateIso();
-  const visible = rows
-    .filter((row) => row.date >= today)
-    .sort((a, b) => a.date.localeCompare(b.date) || a.tournament.localeCompare(b.tournament))
-    .slice(0, 16);
+  const probability = (row: CsvRow) => Math.max(n(row.p_player1), n(row.p_draw), n(row.p_player2));
+  const visible = rows.filter((row) => row.date >= today);
+  visible.sort((a, b) => {
+    if (sortKey === "favourite") return probability(b) - probability(a);
+    if (sortKey === "closest") return Math.abs(n(a.player1_mean) - n(a.player2_mean)) - Math.abs(n(b.player1_mean) - n(b.player2_mean));
+    return a.date.localeCompare(b.date)
+      || a.tournament.localeCompare(b.tournament)
+      || a.player1.localeCompare(b.player1);
+  });
   const observationMap = new Map(
     observations.map((row) => [
       `${row.date}|${[row.player1, row.player2].sort().join("|")}`,
       row,
     ]),
   );
+  const forecastMap = new Map(
+    forecasts.map((row) => [
+      `${row.date}|${[row.player1, row.player2].sort().join("|")}`,
+      row,
+    ]),
+  );
   const correlated = record(validation.correlated);
   const outcomes = record(validation.outcomes);
+  const settled = numeric(forecastReport.rows_settled);
+  const accuracy = Number(forecastReport.accuracy_pct);
+  const forwardBrier = Number(forecastReport.brier);
+  const sortOptions: { key: MostAcesSortKey; label: string }[] = [
+    { key: "schedule", label: "Schedule" },
+    { key: "favourite", label: "Strongest call" },
+    { key: "closest", label: "Closest matchup" },
+  ];
+
   return (
     <SectionCard
       title="BetMGM Most Aces 1X2"
-      subtitle={`Correlated ATP Hard/Clay shadow pricer. Stage-0 ${String(validation.status || "MISSING")} on ${String(correlated.n || 0)} untouched matches; real-price report ${stamp}.`}
+      subtitle={`Correlated ATP Hard/Clay shadow pricer. Stage-0 ${String(validation.status || "MISSING")} on ${String(correlated.n || 0)} untouched matches; current artifact ${stamp}.`}
     >
-      <div className="mb-4 grid gap-3 sm:grid-cols-4">
-        <MetricTile
-          label="Stage-0"
-          value={String(validation.status || "MISSING")}
-          sub={`${String(correlated.n || 0)} matches`}
-          tone={String(validation.status || "").toUpperCase() === "PASS" ? "text-emerald-300" : "text-amber-300"}
-        />
+      <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+        <MetricTile label="Stage-0" value={String(validation.status || "MISSING")} sub={`${String(correlated.n || 0)} matches`} tone={String(validation.status || "").toUpperCase() === "PASS" ? "text-emerald-300" : "text-amber-300"} />
         <MetricTile label="Brier" value={Number(correlated.brier || 0).toFixed(4)} sub="correlated 1X2" tone="text-cyan-300" />
         <MetricTile label="Accuracy" value={`${Number(correlated.accuracy_pct || 0).toFixed(1)}%`} sub="three-way favourite" tone="text-slate-100" />
         <MetricTile label="Draws" value={String(outcomes.DRAW || 0)} sub="10.2% in holdout" tone="text-amber-300" />
+        <MetricTile label="Forward settled" value={String(settled)} sub={`${numeric(forecastReport.rows_registered)} registered`} tone={settled ? "text-cyan-300" : "text-slate-400"} />
+        <MetricTile label="Forward score" value={Number.isFinite(accuracy) ? `${accuracy.toFixed(1)}%` : "-"} sub={Number.isFinite(forwardBrier) ? `Brier ${forwardBrier.toFixed(4)}` : "awaiting results"} tone={settled ? "text-emerald-300" : "text-slate-400"} />
       </div>
-      <p className="mb-4 rounded-2xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-xs leading-relaxed text-amber-100/80">
-        Fair odds are live research prices, not tips. A row becomes a shadow candidate only after all three BetMGM prices are captured, de-vigged and compared with the model.
-      </p>
+
+      <div className="mb-4 flex flex-col gap-3 rounded-2xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-xs leading-relaxed text-amber-100/80 sm:flex-row sm:items-center sm:justify-between">
+        <p>
+          {observations.length
+            ? `${observations.length} BetMGM market capture${observations.length === 1 ? "" : "s"} matched. Value and CLV remain shadow-only.`
+            : "BetMGM lists Stat Bets on its site, but the configured odds feed has not exposed the three-way prices. Fair-odds forecasts are still registered and scored from actual ace counts; no ROI or value is claimed."}
+        </p>
+        <div className="flex shrink-0 flex-wrap gap-2">
+          {sortOptions.map((option) => (
+            <Link
+              key={option.key}
+              href={`/model-monitor/tennis-props?tab=decision&mostAcesSort=${option.key}`}
+              className={cn(
+                "rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] transition",
+                sortKey === option.key
+                  ? "border-cyan-400/40 bg-cyan-500/15 text-cyan-100"
+                  : "border-slate-700 bg-slate-950/40 text-slate-400 hover:text-slate-100",
+              )}
+            >
+              {option.label}
+            </Link>
+          ))}
+        </div>
+      </div>
+
       {visible.length ? (
-        <div className="grid gap-3 lg:grid-cols-2">
-          {visible.map((row) => {
-            const key = `${row.date}|${[row.player1, row.player2].sort().join("|")}`;
-            const observed = observationMap.get(key);
-            return (
-              <article key={key} className="rounded-3xl border border-slate-800 bg-slate-950/65 p-4">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <div className="text-[10px] font-black uppercase tracking-[0.15em] text-cyan-300">{row.tournament} · {row.surface} · {dateLabel(row.date)}</div>
-                    <h3 className="mt-1 font-black text-slate-100">{row.player1} vs {row.player2}</h3>
-                    <p className="mt-1 text-xs text-slate-500">Projected aces {fmt(row.player1_mean, 1)} - {fmt(row.player2_mean, 1)} · correlation {fmt(row.rho, 2)}</p>
-                  </div>
-                  <MiniBadge
-                    label={observed?.bet_eligible === "yes" ? "SHADOW CANDIDATE" : observed ? "MARKET MATCHED" : "AWAITING BETMGM"}
-                    tone={observed?.bet_eligible === "yes" ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-200" : "border-amber-500/25 bg-amber-500/10 text-amber-200"}
-                  />
-                </div>
-                <div className="mt-4 grid grid-cols-3 gap-2">
-                  {[
-                    ["P1", row.fair_player1, observed?.open_player1_odds],
-                    ["Draw", row.fair_draw, observed?.open_draw_odds],
-                    ["P2", row.fair_player2, observed?.open_player2_odds],
-                  ].map(([label, fair, market]) => (
-                    <div key={label} className="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 text-center">
-                      <div className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">{label}</div>
-                      <div className="mt-1 font-mono text-xl font-black text-emerald-300">{fmt(fair, 2)}</div>
-                      <div className="mt-1 text-[10px] text-slate-500">{market ? `BetMGM ${fmt(market, 2)}` : "fair odds"}</div>
+        <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950/55">
+          <div className="hidden grid-cols-[minmax(0,1.7fr)_110px_120px_repeat(3,72px)_110px] gap-3 border-b border-slate-800 bg-slate-900/70 px-4 py-3 text-[10px] font-black uppercase tracking-[0.14em] text-slate-500 lg:grid">
+            <span>Fixture</span><span>Ace forecast</span><span>Model call</span>
+            <span className="text-center">P1</span><span className="text-center">Draw</span><span className="text-center">P2</span><span>Outcome</span>
+          </div>
+          <div className="divide-y divide-slate-800/80">
+            {visible.map((row) => {
+              const key = `${row.date}|${[row.player1, row.player2].sort().join("|")}`;
+              const observed = observationMap.get(key);
+              const forecast = forecastMap.get(key);
+              const call = [
+                { probability: n(row.p_player1), player: row.player1 },
+                { probability: n(row.p_draw), player: "Draw" },
+                { probability: n(row.p_player2), player: row.player2 },
+              ].sort((a, b) => b.probability - a.probability)[0];
+              return (
+                <article key={key} className="px-4 py-4 transition hover:bg-slate-900/45">
+                  <div className="grid gap-3 lg:grid-cols-[minmax(0,1.7fr)_110px_120px_repeat(3,72px)_110px] lg:items-center">
+                    <div>
+                      <div className="text-[10px] font-black uppercase tracking-[0.15em] text-cyan-300">{row.tournament} / {row.surface} / {dateLabel(row.date)}</div>
+                      <h3 className="mt-1 font-black text-slate-100">{row.player1} vs {row.player2}</h3>
                     </div>
-                  ))}
-                </div>
-                {observed ? (
-                  <div className="mt-3 text-xs text-slate-400">
-                    Best model side <span className="font-black text-slate-100">{observed.recommended_side}</span>
-                    {" · "}value {fmt(observed[`value_${observed.recommended_side === "P1" ? "player1" : observed.recommended_side === "P2" ? "player2" : "draw"}_pct`], 1)}%
-                    {" · "}{observed.eligibility_reason}
+                    <div className="font-mono text-sm text-slate-300">
+                      <span className="font-black text-slate-50">{fmt(row.player1_mean, 1)}</span><span className="mx-1 text-slate-600">-</span><span className="font-black text-slate-50">{fmt(row.player2_mean, 1)}</span>
+                    </div>
+                    <div><div className="text-xs font-black text-emerald-300">{call.player}</div><div className="font-mono text-[10px] text-slate-500">{(call.probability * 100).toFixed(1)}%</div></div>
+                    {[
+                      ["P1", row.fair_player1, observed?.open_player1_odds],
+                      ["D", row.fair_draw, observed?.open_draw_odds],
+                      ["P2", row.fair_player2, observed?.open_player2_odds],
+                    ].map(([label, fair, market]) => (
+                      <div key={label} className="rounded-xl border border-slate-800 bg-slate-900/70 px-2 py-2 text-center">
+                        <div className="text-[9px] font-black uppercase tracking-[0.12em] text-slate-500">{label}</div>
+                        <div className="font-mono text-sm font-black text-emerald-300">{fmt(fair, 2)}</div>
+                        {market ? <div className="font-mono text-[9px] text-cyan-300">MGM {fmt(market, 2)}</div> : null}
+                      </div>
+                    ))}
+                    <div className="text-xs">
+                      {forecast?.settlement_status === "settled" ? (
+                        <>
+                          <div className={cn("font-black", forecast.prediction_correct === "yes" ? "text-emerald-300" : "text-rose-300")}>
+                            {forecast.actual_player1_aces}-{forecast.actual_player2_aces} / {forecast.prediction_correct === "yes" ? "correct" : "miss"}
+                          </div>
+                          <div className="text-[10px] text-slate-500">Brier {fmt(forecast.model_brier, 3)}</div>
+                        </>
+                      ) : (
+                        <MiniBadge label={observed?.bet_eligible === "yes" ? "SHADOW VALUE" : "FORECAST"} tone={observed?.bet_eligible === "yes" ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-200" : "border-slate-700 bg-slate-900 text-slate-400"} />
+                      )}
+                    </div>
                   </div>
-                ) : null}
-              </article>
-            );
-          })}
+                </article>
+              );
+            })}
+          </div>
         </div>
       ) : <EmptyState message="No eligible ATP Hard/Clay Most Aces projections on the current board." />}
     </SectionCard>
   );
 }
-
 function ResearchGatesPanel({
   evidence,
   evidenceStamp,
@@ -1681,6 +1770,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
   if (!MODEL_MONITOR_ENABLED) notFound();
   const resolvedSearchParams: Record<string, string | string[] | undefined> = searchParams ? await searchParams : {};
   const projectionSortKey = validProjectionSort(resolvedSearchParams.propsSort);
+  const mostAcesSortKey = validMostAcesSort(resolvedSearchParams.mostAcesSort);
   const activeTab = validMonitorTab(resolvedSearchParams.tab);
   const showAllLines = resolvedSearchParams.showAll === "1";
   const showHiddenLines = resolvedSearchParams.showHidden === "1";
@@ -1724,6 +1814,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     propsV4Stamp,
     mostAcesRows,
     mostAcesObservations,
+    mostAcesForecasts,
+    mostAcesForecastReport,
     mostAcesValidation,
     mostAcesReportStamp,
   ] = await Promise.all([
@@ -1765,8 +1857,10 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     fileStamp(V4_REPORT_PATH),
     readCsv(MOST_ACES_BOARD_PATH),
     readCsv(MOST_ACES_OBSERVATIONS_PATH),
+    readCsv(MOST_ACES_FORECASTS_PATH),
+    readJson(MOST_ACES_FORECAST_REPORT_PATH),
     readJson(MOST_ACES_STAGE0_PATH),
-    fileStamp(MOST_ACES_REPORT_PATH),
+    fileStamp(MOST_ACES_FORECAST_REPORT_PATH),
   ]);
 
   const comparisonRows = latestComparisonPath ? await readCsv(latestComparisonPath) : [];
@@ -1909,8 +2003,11 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
             <MostAcesPanel
               rows={mostAcesRows}
               observations={mostAcesObservations}
+              forecasts={mostAcesForecasts}
+              forecastReport={mostAcesForecastReport}
               validation={mostAcesValidation}
               stamp={mostAcesReportStamp}
+              sortKey={mostAcesSortKey}
             />
 
             <ResearchGatesPanel

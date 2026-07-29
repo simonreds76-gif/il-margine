@@ -116,10 +116,25 @@ def select_most_aces_file(as_of: str, lookback_days: int = 3) -> Path | None:
     return None
 
 
-def run_most_aces_shadow(as_of: str, capture: Path | None = None) -> None:
+def refresh_derived_ace_boards() -> None:
+    """Rebuild every ace board that depends on the main projection artifact."""
+    run(
+        [sys.executable, str(ROOT / "scripts" / "tennis-props-v3-live.py")],
+        "Build v3 ATP ace prospective shadow board",
+        fatal=False,
+    )
     run(
         [sys.executable, str(ROOT / "scripts" / "build-tennis-most-aces-board.py")],
         "Build correlated Most Aces 1X2 fair board",
+        fatal=False,
+        timeout_seconds=180,
+    )
+
+
+def run_most_aces_shadow(as_of: str, capture: Path | None = None) -> None:
+    run(
+        [sys.executable, str(ROOT / "scripts" / "tennis-most-aces-forecast.py")],
+        "Register and score Most Aces 1X2 outcome forecasts",
         fatal=False,
         timeout_seconds=180,
     )
@@ -302,6 +317,7 @@ def sync_hosted_captures(as_of: str, lookback_days: int) -> None:
 def run_comparison_only(as_of: str, *, skip_sync: bool, lookback_days: int) -> int:
     if not skip_sync:
         sync_hosted_captures(as_of, lookback_days)
+    refresh_derived_ace_boards()
     market_file = select_market_file(as_of)
     if market_file is None:
         print(f"WARNING: no hosted/local Bet365 capture contains {as_of} events.")
@@ -390,17 +406,7 @@ def main() -> int:
         "Build tennis props projection board",
         fatal=True,
     )
-    run(
-        [sys.executable, str(ROOT / "scripts" / "tennis-props-v3-live.py")],
-        "Build v3 ATP ace prospective shadow board",
-        fatal=False,
-    )
-    run(
-        [sys.executable, str(ROOT / "scripts" / "build-tennis-most-aces-board.py")],
-        "Build correlated Most Aces 1X2 fair board",
-        fatal=False,
-        timeout_seconds=180,
-    )
+    refresh_derived_ace_boards()
 
     if not args.skip_hosted_sync:
         sync_hosted_captures(args.as_of, args.hosted_lookback_days)
