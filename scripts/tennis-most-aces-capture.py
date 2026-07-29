@@ -21,7 +21,7 @@ FIELDS = [
     "raw_market_name", "raw_outcome_count", "raw_label_sample",
 ]
 AUDIT_FIELDS = [
-    "captured_at", "event_id", "kickoff_at", "bookmaker", "tour", "tournament",
+    "captured_at", "source_endpoint", "event_id", "kickoff_at", "bookmaker", "tour", "tournament",
     "player1", "player2", "market_name", "recognized_most_aces", "odds_count",
     "sample_labels",
 ]
@@ -152,7 +152,7 @@ def extract_rows(payload: list[dict[str, Any]], captured_at: str, common) -> lis
 
 
 def extract_audit_rows(
-    payload: list[dict[str, Any]], captured_at: str, common
+    payload: list[dict[str, Any]], captured_at: str, common, *, source_endpoint: str
 ) -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
     for event in payload:
@@ -164,6 +164,7 @@ def extract_audit_rows(
                 outcomes = market.get("odds") or market.get("outcomes") or []
                 rows.append({
                     "captured_at": captured_at,
+                    "source_endpoint": source_endpoint,
                     "event_id": str(event.get("id") or ""),
                     "kickoff_at": str(event.get("date") or ""),
                     "bookmaker": bookmaker,
@@ -177,6 +178,23 @@ def extract_audit_rows(
                     "sample_labels": " | ".join(outcome_label(row) for row in outcomes[:5]),
                 })
     return rows
+
+
+def fetch_single_event_odds(
+    common, api_key: str, events: list[dict[str, Any]], bookmakers: str
+) -> list[dict[str, Any]]:
+    payload: list[dict[str, Any]] = []
+    for event in events:
+        data = common.fetch_json("odds", {
+            "apiKey": api_key,
+            "eventId": str(event.get("id") or ""),
+            "bookmakers": bookmakers,
+        })
+        if isinstance(data, dict):
+            payload.append(data)
+        elif isinstance(data, list):
+            payload.extend(data)
+    return payload
 
 
 def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
@@ -235,7 +253,30 @@ def main() -> int:
     payload = common.fetch_multi(api_key, [str(event.get("id")) for event in events], args.bookmakers)
     captured_at = now.replace(microsecond=0).isoformat().replace("+00:00", "Z")
     rows = extract_rows(payload, captured_at, common)
-    audit_rows = extract_audit_rows(payload, captured_at, common)
+    audit_rows = extract_audit_rows(
+        payload, captured_at, common, source_endpoint="odds/multi"
+    )
+
+    # odds/multi can expose only headline markets while /odds carries player props.
+    # Probe at most five ATP events first, then expand only after proving coverage.
+    if not rows:
+        atp_events = [event for event in events if common.tour_from_event(event) == "ATP"]
+        probe_events = atp_events[:5]
+        probe_payload = fetch_single_event_odds(
+            common, api_key, probe_events, args.bookmakers
+        )
+        audit_rows.extend(extract_audit_rows(
+            probe_payload, captured_at, common, source_endpoint="odds"
+        ))
+        rows = extract_rows(probe_payload, captured_at, common)
+        if rows and len(atp_events) > len(probe_events):
+            remaining_payload = fetch_single_event_odds(
+                common, api_key, atp_events[len(probe_events):], args.bookmakers
+            )
+            audit_rows.extend(extract_audit_rows(
+                remaining_payload, captured_at, common, source_endpoint="odds"
+            ))
+            rows.extend(extract_rows(remaining_payload, captured_at, common))
     output = Path(args.out) if args.out else INBOX / f"betmgm-most-aces-1x2-{args.date}.csv"
     history = Path(args.history_out) if args.history_out else INBOX / f"betmgm-most-aces-history-{args.date[:7]}.csv"
     audit = Path(args.audit_out) if args.audit_out else INBOX / f"betmgm-tennis-market-audit-{args.date}.csv"

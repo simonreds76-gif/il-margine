@@ -79,10 +79,31 @@ class MostAcesCaptureTests(unittest.TestCase):
             }],
             "2026-07-29T10:00:00Z",
             Common(),
+            source_endpoint="odds/multi",
         )
         self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["source_endpoint"], "odds/multi")
         self.assertEqual(rows[0]["market_name"], "Ace Match Winner")
         self.assertEqual(rows[0]["recognized_most_aces"], "no")
+
+    def test_single_event_fetch_wraps_dict_and_list_payloads(self) -> None:
+        class Common:
+            calls = 0
+
+            @classmethod
+            def fetch_json(cls, _path, _params):
+                cls.calls += 1
+                if cls.calls == 1:
+                    return {"id": "one"}
+                return [{"id": "two"}]
+
+        rows = MODULE.fetch_single_event_odds(
+            Common(),
+            "key",
+            [{"id": "one"}, {"id": "two"}],
+            "BetMGM",
+        )
+        self.assertEqual([row["id"] for row in rows], ["one", "two"])
 
 
 if __name__ == "__main__":
