@@ -31,6 +31,7 @@ TRACKER = load_script("tennis-props-shadow-tracker.py", "props_tracker_plumbing"
 DAILY = load_script("run-tennis-props-daily.py", "props_daily_plumbing")
 SYNC = load_script("sync-tennis-props-hosted-captures.py", "props_sync_plumbing")
 HEALTH = load_script("tennis-props-pipeline-health.py", "props_health_plumbing")
+SETTLE = load_script("tennis-props-settle-shadow.py", "props_settle_plumbing")
 
 
 def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
@@ -181,6 +182,48 @@ class ShadowTrackerTests(unittest.TestCase):
             finally:
                 TRACKER.PROPS_DIR = old_props
                 sys.argv = old_argv
+
+
+class ShadowSettlementPriceTests(unittest.TestCase):
+    def test_player_prop_closing_price_cannot_cross_players(self) -> None:
+        signal = {
+            "event_id": "73087108",
+            "date": "2026-07-29",
+            "tour": "ATP",
+            "bookmaker": "Bet365",
+            "player": "Aleksandar Vukic",
+            "opponent": "Lorenzo Musetti",
+            "market": "aces",
+            "line": "9.5",
+            "side": "OVER",
+            "selected_odds": "3.40",
+            "match_start_utc": "2026-07-29T17:00:00Z",
+        }
+        history = [
+            {
+                **signal,
+                "capture_ts": "2026-07-29T08:00:00Z",
+                "over_odds": "3.40",
+            },
+            {
+                **signal,
+                "player": "Lorenzo Musetti",
+                "opponent": "Aleksandar Vukic",
+                "capture_ts": "2026-07-29T09:00:00Z",
+                "over_odds": "6.00",
+            },
+        ]
+
+        by_event: dict[tuple[object, ...], list[dict[str, str]]] = {}
+        by_pair: dict[tuple[object, ...], list[dict[str, str]]] = {}
+        for row in history:
+            by_event.setdefault(SETTLE.history_key(row), []).append(row)
+            by_pair.setdefault(SETTLE.history_key(row, fallback=True), []).append(row)
+
+        self.assertTrue(SETTLE.enrich_closing_price(signal, by_event, by_pair))
+        self.assertEqual(signal["closing_odds"], "3.400")
+        self.assertEqual(signal["clv_pct"], "0.000")
+        self.assertEqual(signal["closing_snapshot_count"], "1")
 
 
 class DailyMarketSelectionTests(unittest.TestCase):
