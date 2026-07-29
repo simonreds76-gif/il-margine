@@ -1,0 +1,28 @@
+Most Aces 1X2 stage-0 outcome validation
+Generated UTC: 2026-07-29T16:31:52+00:00
+Status: PASS | Scope: ATP Hard/Clay untouched 2026 using exact deployment-safe live ace model
+Production model: data\tennis-props\models\v3-atp-aces-live.txt | alpha 0.180034
+Matches: 1186 | Draws: 121 (10.2%)
+Independent NB2: Brier 0.466848 | log-loss 0.798816 | accuracy 65.9%
+Correlated NB2: Brier 0.464476 | log-loss 0.793376 | accuracy 65.9%
+Delta correlated-independent: Brier -0.002372 | log-loss -0.005440
+Quote-ready quality slice: n=963 | Brier 0.460561 | log-loss 0.785260
+Evidence RECENT: n=963 | Brier 0.460561 | log-loss 0.785260 | accuracy 65.8%
+Evidence HISTORICAL: n=24 | Brier 0.537996 | log-loss 0.898587 | accuracy 58.3%
+Evidence INSUFFICIENT: n=199 | Brier 0.474554 | log-loss 0.819962 | accuracy 66.8%
+Hard: n=659 | Brier 0.416382 vs 0.419193 | log-loss 0.713766 vs 0.719204
+Clay: n=527 | Brier 0.524617 vs 0.526439 | log-loss 0.892925 vs 0.898368
+
+Reliability (all P1/draw/P2 probabilities):
+0.0-0.1: n=886 | predicted 6.6% | actual 7.2% | gap -0.7pp
+0.1-0.2: n=648 | predicted 13.9% | actual 14.0% | gap -0.1pp
+0.2-0.3: n=340 | predicted 24.7% | actual 24.7% | gap -0.0pp
+0.3-0.4: n=360 | predicted 35.0% | actual 28.3% | gap +6.7pp
+0.4-0.5: n=354 | predicted 45.0% | actual 46.6% | gap -1.6pp
+0.5-0.6: n=290 | predicted 55.0% | actual 55.9% | gap -0.9pp
+0.6-0.7: n=260 | predicted 65.0% | actual 68.5% | gap -3.4pp
+0.7-0.8: n=214 | predicted 74.7% | actual 73.8% | gap +0.9pp
+0.8-0.9: n=143 | predicted 84.6% | actual 84.6% | gap -0.0pp
+0.9-1.0: n=63 | predicted 93.6% | actual 96.8% | gap -3.2pp
+
+This validates probability shape only. Profitability requires captured BetMGM 1X2 prices, settlement and CLV.

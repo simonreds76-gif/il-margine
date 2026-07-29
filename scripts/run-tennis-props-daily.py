@@ -19,6 +19,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PROPS_DIR = ROOT / "data" / "tennis-props"
+MOST_ACES_DIRECT_BOARD = PROPS_DIR / "shadow" / "most-aces-direct-1x2-board.csv"
 
 
 def load_env() -> None:
@@ -65,6 +66,10 @@ def lines_file(as_of: str) -> Path:
     return PROPS_DIR / "inbox" / f"bet365-lines-{as_of}.csv"
 
 
+def most_aces_lines_file(as_of: str) -> Path:
+    return PROPS_DIR / "inbox" / f"betmgm-most-aces-1x2-{as_of}.csv"
+
+
 def has_market_rows(path: Path) -> bool:
     if not path.exists():
         return False
@@ -100,6 +105,66 @@ def select_market_file(as_of: str, lookback_days: int = 3) -> Path | None:
     return None
 
 
+def select_most_aces_file(as_of: str, lookback_days: int = 3) -> Path | None:
+    exact = most_aces_lines_file(as_of)
+    if has_market_rows(exact):
+        return exact
+    target = date.fromisoformat(as_of)
+    for offset in range(1, max(0, lookback_days) + 1):
+        candidate = most_aces_lines_file((target - timedelta(days=offset)).isoformat())
+        if has_market_rows(candidate) and any(day >= as_of for day in market_event_dates(candidate)):
+            return candidate
+    return None
+
+
+def refresh_derived_ace_boards(as_of: str) -> None:
+    """Rebuild every ace board that depends on the main projection artifact."""
+    run(
+        [sys.executable, str(ROOT / "scripts" / "tennis-props-v3-live.py")],
+        "Build v3 ATP ace prospective shadow board",
+        fatal=False,
+    )
+    run(
+        [sys.executable, str(ROOT / "scripts" / "build-tennis-most-aces-board.py")],
+        "Build correlated Most Aces 1X2 fair board",
+        fatal=False,
+        timeout_seconds=180,
+    )
+    run(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "tennis-most-aces-direct-live.py"),
+            "--as-of",
+            as_of,
+        ],
+        "Build direct Most Aces 1X2 prospective shadow board",
+        fatal=False,
+        timeout_seconds=180,
+    )
+
+
+def run_most_aces_shadow(as_of: str, capture: Path | None = None) -> None:
+    forecast_cmd = [
+        sys.executable,
+        str(ROOT / "scripts" / "tennis-most-aces-forecast.py"),
+    ]
+    if has_market_rows(MOST_ACES_DIRECT_BOARD):
+        forecast_cmd.extend(["--additional-board", str(MOST_ACES_DIRECT_BOARD)])
+    run(
+        forecast_cmd,
+        "Register and score A0 plus Direct Most Aces 1X2 forecasts",
+        fatal=False,
+        timeout_seconds=240,
+    )
+    cmd = [sys.executable, str(ROOT / "scripts" / "tennis-most-aces-shadow.py")]
+    if has_market_rows(MOST_ACES_DIRECT_BOARD):
+        cmd.extend(["--additional-board", str(MOST_ACES_DIRECT_BOARD)])
+    selected = capture or select_most_aces_file(as_of)
+    if selected and has_market_rows(selected):
+        cmd.extend(["--capture", str(selected)])
+    run(cmd, "Update BetMGM Most Aces 1X2 shadow evidence", fatal=False)
+
+
 def run_comparison(as_of: str, market_file: Path) -> bool:
     comparison = PROPS_DIR / f"comparison-{as_of}.csv"
     # A failed rebuild must not leave a same-date file that looks current.
@@ -117,6 +182,22 @@ def run_comparison(as_of: str, market_file: Path) -> bool:
         "Compare Bet365 lines with projections",
         fatal=False,
     )
+    v3_board = PROPS_DIR / "shadow" / "aces-v3-projection-board.csv"
+    if has_market_rows(v3_board):
+        run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "tennis-props-compare-bet365.py"),
+                "--date", as_of,
+                "--lines", str(market_file),
+                "--board", str(v3_board),
+                "--out", str(PROPS_DIR / f"comparison-v3-aces-{as_of}.csv"),
+                "--unmatched-out", str(PROPS_DIR / f"comparison-v3-aces-{as_of}-unmatched.csv"),
+                "--market-filter", "aces,ace,player_aces,match_aces",
+            ],
+            "Compare v3 ATP ace shadow projections with Bet365",
+            fatal=False,
+        )
     return exit_code == 0 and has_market_rows(comparison)
 
 
@@ -128,6 +209,44 @@ def run_shadow_tracking(as_of: str) -> None:
         ],
         "Consolidate append-only Bet365 price history",
         fatal=False,
+    )
+    run_most_aces_shadow(as_of)
+    v3_comparison = PROPS_DIR / f"comparison-v3-aces-{as_of}.csv"
+    if has_market_rows(v3_comparison):
+        run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "tennis-props-shadow-tracker.py"),
+                "--date", as_of,
+                "--comparison", str(v3_comparison),
+                "--signals", str(PROPS_DIR / "shadow" / "aces-v3-shadow-signals.csv"),
+                "--performance", str(PROPS_DIR / "shadow" / "aces-v3-shadow-performance.txt"),
+                "--allow-medium", "--allow-notes", "--allow-watch",
+            ],
+            "Append v3 ATP ace prospective shadow signals",
+            fatal=True,
+        )
+        run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "tennis-props-settle-shadow.py"),
+                "--signals", str(PROPS_DIR / "shadow" / "aces-v3-shadow-signals.csv"),
+                "--performance", str(PROPS_DIR / "shadow" / "aces-v3-shadow-performance.txt"),
+            ],
+            "Settle v3 ATP ace prospective shadow signals",
+            fatal=True,
+        )
+    v4_cmd = [
+        sys.executable,
+        str(ROOT / "scripts" / "tennis-props-aces-over-v4.py"),
+    ]
+    if has_market_rows(v3_comparison):
+        v4_cmd.extend(["--comparison", str(v3_comparison)])
+    run(
+        v4_cmd,
+        "Register and score ATP ace-over v4 challenger",
+        fatal=False,
+        timeout_seconds=180,
     )
     comparison = PROPS_DIR / f"comparison-{as_of}.csv"
     if has_market_rows(comparison):
@@ -218,6 +337,7 @@ def sync_hosted_captures(as_of: str, lookback_days: int) -> None:
 def run_comparison_only(as_of: str, *, skip_sync: bool, lookback_days: int) -> int:
     if not skip_sync:
         sync_hosted_captures(as_of, lookback_days)
+    refresh_derived_ace_boards(as_of)
     market_file = select_market_file(as_of)
     if market_file is None:
         print(f"WARNING: no hosted/local Bet365 capture contains {as_of} events.")
@@ -299,6 +419,20 @@ def main() -> int:
     run(
         [
             sys.executable,
+            str(ROOT / "scripts" / "tennis-props-activity.py"),
+            "--as-of",
+            args.as_of,
+            "--start-year",
+            str(args.start_year),
+            "--end-year",
+            str(args.end_year),
+        ],
+        "Build coverage-inclusive tennis props activity",
+        fatal=True,
+    )
+    run(
+        [
+            sys.executable,
             str(ROOT / "scripts" / "build-tennis-props-board.py"),
             "--as-of",
             args.as_of,
@@ -306,6 +440,7 @@ def main() -> int:
         "Build tennis props projection board",
         fatal=True,
     )
+    refresh_derived_ace_boards(args.as_of)
 
     if not args.skip_hosted_sync:
         sync_hosted_captures(args.as_of, args.hosted_lookback_days)
@@ -351,6 +486,22 @@ def main() -> int:
         ],
         "Scrape Bet365 aces/DF lines",
         fatal=args.require_odds,
+    )
+    run(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "tennis-most-aces-capture.py"),
+            "--date",
+            args.as_of,
+            "--days-ahead",
+            str(args.days_ahead),
+            "--max-events",
+            str(args.max_events),
+            "--bookmakers",
+            "BetMGM",
+        ],
+        "Scrape BetMGM Most Aces 1X2 prices",
+        fatal=False,
     )
     market_file = select_market_file(args.as_of)
     if scrape_exit == 0:

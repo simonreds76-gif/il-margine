@@ -19,6 +19,7 @@ export const dynamic = "force-dynamic";
 type CsvRow = Record<string, string>;
 type JsonRecord = Record<string, unknown>;
 type ProjectionSortKey = "schedule" | "aces" | "dfs" | "match_tb" | "first_tb" | "breaks";
+type MostAcesSortKey = "schedule" | "favourite" | "closest";
 type MonitorTab = "decision" | "projections";
 type SearchParamsInput = Promise<Record<string, string | string[] | undefined>>;
 type TournamentRoundLog = {
@@ -45,12 +46,27 @@ const INBOX_DIR = path.join(PROPS_DIR, "inbox");
 const SHADOW_DIR = path.join(PROPS_DIR, "shadow");
 const SHADOW_SIGNALS_PATH = path.join(SHADOW_DIR, "aces-dfs-shadow-signals.csv");
 const SHADOW_PERFORMANCE_PATH = path.join(SHADOW_DIR, "aces-dfs-shadow-performance.txt");
+const V3_SHADOW_SIGNALS_PATH = path.join(SHADOW_DIR, "aces-v3-shadow-signals.csv");
+const V4_OBSERVATIONS_PATH = path.join(SHADOW_DIR, "aces-over-v4-observations.csv");
+const V4_REPORT_PATH = path.join(PROPS_DIR, "backtest", "aces-over-v4-weekly-report.json");
+const MOST_ACES_BOARD_PATH = path.join(SHADOW_DIR, "most-aces-1x2-board.csv");
+const MOST_ACES_DIRECT_BOARD_PATH = path.join(SHADOW_DIR, "most-aces-direct-1x2-board.csv");
+const MOST_ACES_OBSERVATIONS_PATH = path.join(SHADOW_DIR, "most-aces-1x2-observations.csv");
+const MOST_ACES_STAGE0_PATH = path.join(PROPS_DIR, "backtest", "most-aces-1x2-stage0.json");
+const MOST_ACES_DIRECT_RESULT_PATH = path.join(PROPS_DIR, "experiments", "most-aces-direct-1x2", "result.json");
+const MOST_ACES_DIRECT_PARITY_PATH = path.join(SHADOW_DIR, "most-aces-direct-1x2-live-parity.json");
+const MOST_ACES_FORECASTS_PATH = path.join(SHADOW_DIR, "most-aces-1x2-forecasts.csv");
+const MOST_ACES_FORECAST_REPORT_PATH = path.join(SHADOW_DIR, "most-aces-1x2-forecast-report.json");
 const MARKET_OBSERVATIONS_PATH = path.join(SHADOW_DIR, "market-observations.csv");
 const MARKET_OBSERVATIONS_REPORT_PATH = path.join(SHADOW_DIR, "market-observations-report.txt");
 const MODEL_SUMMARY_PATH = path.join(PROPS_DIR, "model-monitor-summary.csv");
 const MODEL_REPORT_PATH = path.join(PROPS_DIR, "model-monitor-report.txt");
 const TOTALS_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-totals-gate.json");
 const PROPS_V2_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-v2-rung1-gate.json");
+const SERVICE_POINTS_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-service-points-gate.json");
+const OPPONENT_RETURN_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-opponent-return-gate.json");
+const RATE_RECENCY_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-rate-recency-gate.json");
+const PROPS_V3_GATE_PATH = path.join(PROPS_DIR, "backtest", "aces-dfs-v3-all-tour-gate.json");
 const DERIVATIVES_STATUS_PATH = path.join(ROOT, "data", "vnext", "tennis-derivatives-evidence-status.json");
 
 function parseCsv(text: string): CsvRow[] {
@@ -629,9 +645,9 @@ function ProjectionSortControls({ active }: { active: ProjectionSortKey }) {
 
 function MetricTile({ label, value, sub, tone }: { label: string; value: string; sub?: string; tone: string }) {
   return (
-    <div className="rounded-2xl border border-slate-800/80 bg-slate-950/70 p-3">
+    <div className="min-w-0 rounded-2xl border border-slate-800/80 bg-slate-950/70 p-3">
       <div className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-500">{label}</div>
-      <div className={cn("mt-1 font-mono text-2xl font-black leading-none", tone)}>{value}</div>
+      <div className={cn("mt-1 break-words font-mono text-xl font-black leading-none sm:text-2xl", tone)}>{value}</div>
       {sub ? <div className="mt-1 text-[11px] leading-snug text-slate-500">{sub}</div> : null}
     </div>
   );
@@ -1208,6 +1224,7 @@ function FeedDiagnosticsPanel({
   const mainLines = matchedRows.filter((row) => row.main_line === "true").length;
   const twoWayRows = matchedRows.filter((row) => row.price_pair_status === "two_way").length;
   const rawMarketRows = auditRows.filter((row) => row.market_name);
+  const unsupportedLadder = twoWayRows > 0 && mainLines === 0;
   return (
     <SectionCard
       title="Why No Bet? Feed Diagnostics"
@@ -1220,6 +1237,12 @@ function FeedDiagnosticsPanel({
         <MetricTile label="Best available" value={String(bestAvailable)} sub="closest ladder row per market" tone="text-cyan-300" />
         <MetricTile label="Usable main" value={String(mainLines)} sub="strict gate candidate" tone={mainLines ? "text-emerald-300" : "text-amber-300"} />
       </div>
+      {unsupportedLadder ? (
+        <div className="mt-3 rounded-2xl border border-amber-500/25 bg-amber-500/10 px-4 py-3 text-xs leading-relaxed text-amber-100">
+          <span className="font-black uppercase tracking-[0.12em] text-amber-200">Unsupported alternate ladder:</span>{" "}
+          Bet365 supplied two-way thresholds, but none resembles a balanced main line. Deep alternates remain blocked; the system will not manufacture a recommendation from them.
+        </div>
+      ) : null}
       <div className="mt-3 grid gap-3 lg:grid-cols-4">
         <CountList title="Blockers" rows={topBlockReasons(matchedRows)} tone="text-amber-300" />
         <CountList title="Line quality" rows={topCounts(matchedRows, "line_quality")} tone="text-cyan-300" />
@@ -1363,28 +1386,455 @@ function numeric(value: unknown): number {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+function validMostAcesSort(value: string | string[] | undefined): MostAcesSortKey {
+  const raw = Array.isArray(value) ? value[0] : value;
+  if (raw === "favourite" || raw === "closest") return raw;
+  return "schedule";
+}
+
+function AcesOverV4Panel({
+  rows,
+  report,
+  stamp,
+}: {
+  rows: CsvRow[];
+  report: JsonRecord;
+  stamp: string;
+}) {
+  const status = String(report.status || "NOT STARTED");
+  const registered = numeric(report.rows_registered ?? rows.length);
+  const settled = numeric(report.rows_settled);
+  const scored = numeric(report.rows_scored);
+  const target = numeric(report.minimum_prefit_settled || 200);
+  const promotionSample = numeric(report.promotion_sample);
+  const clvCoverage = numeric(report.clv_coverage);
+  const clvMean = Number(report.clv_mean_pct);
+  const acceptRate = Number(report.ladder_accept_rate_pct);
+  const integrity = record(report.integrity);
+  const progress = target > 0 ? Math.min(100, settled / target * 100) : 0;
+  const recentFixtures = [...rows]
+    .sort((a, b) => (b.registered_at_utc || "").localeCompare(a.registered_at_utc || ""))
+    .reduce<Map<string, CsvRow[]>>((groups, row) => {
+      const pair = [row.player || "", row.opponent || ""].sort().join("|");
+      const key = row.event_id || `${row.date}|${row.tour}|${row.tournament}|${pair}`;
+      groups.set(key, [...(groups.get(key) ?? []), row]);
+      return groups;
+    }, new Map());
+  const recent = [...recentFixtures.entries()].slice(0, 4);
+
+  return (
+    <SectionCard
+      title="ATP Aces Over v4"
+      subtitle={`Registered market-anchored challenger. v3 remains frozen and live routing is unchanged. Updated ${stamp}.`}
+    >
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+        <MetricTile label="Status" value={status.replaceAll("_", " ")} sub="shadow only" tone={status === "PRE_FIT" ? "text-amber-300" : "text-cyan-300"} />
+        <MetricTile label="Registered" value={String(registered)} sub={`${settled}/${target} settled before first fit`} tone="text-cyan-300" />
+        <MetricTile label="Scored" value={String(scored)} sub={`${numeric(report.rows_pushed)} pushes / ${numeric(report.rows_pending)} pending`} tone="text-slate-100" />
+        <MetricTile label="Ladder health" value={Number.isFinite(acceptRate) ? `${acceptRate.toFixed(1)}%` : "-"} sub={`${numeric(report.ladder_groups_accepted)}/${numeric(report.ladder_groups_seen)} accepted`} tone={acceptRate >= 95 ? "text-emerald-300" : "text-amber-300"} />
+        <MetricTile label="Genuine CLV" value={Number.isFinite(clvMean) ? `${clvMean >= 0 ? "+" : ""}${clvMean.toFixed(2)}%` : "-"} sub={`${clvCoverage}/${registered} later closes`} tone={Number.isFinite(clvMean) && clvMean >= 0 ? "text-emerald-300" : "text-slate-400"} />
+        <MetricTile label="Promotion sample" value={String(promotionSample)} sub="600 rows + all gates required" tone="text-slate-400" />
+      </div>
+
+      <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-900">
+        <div className="h-full rounded-full bg-gradient-to-r from-amber-400 to-cyan-400" style={{ width: `${progress}%` }} />
+      </div>
+      <div className="mt-2 flex flex-wrap justify-between gap-2 text-[11px] text-slate-500">
+        <span>PRE_FIT collection {progress.toFixed(1)}%</span>
+        <span>Integrity: {numeric(integrity.player_key_collisions)} player collisions / {numeric(integrity.open_as_close_rows)} open-as-close</span>
+      </div>
+
+      {promotionSample > 0 ? (
+        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+          <MetricTile label="v3 Brier" value={fmt(String(report.brier_v3), 4)} tone="text-slate-100" />
+          <MetricTile label="v4 Brier" value={fmt(String(report.brier_v4), 4)} tone="text-cyan-300" />
+          <MetricTile label="Market Brier" value={fmt(String(report.brier_market), 4)} tone="text-slate-100" />
+        </div>
+      ) : (
+        <div className="mt-4 rounded-2xl border border-amber-500/20 bg-amber-500/8 px-4 py-3 text-xs leading-relaxed text-amber-100/80">
+          No v4 tips and no v4 performance claim yet. Until 200 settled registrations, v4 is mathematically identical to v3; these rows establish an honest, frozen baseline for the later walk-forward test.
+        </div>
+      )}
+
+      {recent.length ? (
+        <div className="mt-4 grid gap-2 lg:grid-cols-2">
+          {recent.map(([key, fixtureRows]) => {
+            const first = fixtureRows[0];
+            return (
+              <article key={key} className="overflow-hidden rounded-2xl border border-slate-800/80 bg-slate-950/60">
+                <div className="border-b border-slate-800/80 px-4 py-3">
+                  <div className="font-bold text-slate-100">{first.player} <span className="font-normal text-slate-500">vs {first.opponent}</span></div>
+                  <div className="mt-1 text-[11px] uppercase tracking-[0.12em] text-slate-500">
+                    {first.tournament} / {dateLabel(first.date)} / {fixtureRows.length} player market{fixtureRows.length === 1 ? "" : "s"}
+                  </div>
+                </div>
+                <div className="divide-y divide-slate-800/70">
+                  {fixtureRows
+                    .sort((a, b) => (a.player || "").localeCompare(b.player || ""))
+                    .map((row) => (
+                      <div key={row.observation_id} className="px-4 py-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <div className="text-[10px] font-black uppercase tracking-[0.14em] text-cyan-300">{row.player} player market</div>
+                            <div className="mt-1 font-mono text-sm font-black text-slate-100">Over {fmt(row.line, 1)} @ {fmt(row.selected_odds, 2)}</div>
+                          </div>
+                          <MiniBadge label={(row.settlement_status || "pending").toUpperCase()} tone={row.settlement_status === "settled" ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300" : "border-amber-500/25 bg-amber-500/10 text-amber-300"} />
+                        </div>
+                        <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px] text-slate-400">
+                          <span>v3 mean {fmt(row.mu_v3, 2)}</span>
+                          <span>market mean {fmt(row.mu_mkt, 2)}</span>
+                          <span>shape RMSE {fmt(row.ladder_shape_rmse, 3)}</span>
+                          <span>{row.ladder_points} ladder points</span>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      ) : <EmptyState message="No eligible ATP Hard/Clay ace ladders have been registered yet." />}
+    </SectionCard>
+  );
+}
+
+function MostAcesPanel({
+  rows,
+  directRows,
+  observations,
+  forecasts,
+  forecastReport,
+  validation,
+  directValidation,
+  directParity,
+  stamp,
+  sortKey,
+}: {
+  rows: CsvRow[];
+  directRows: CsvRow[];
+  observations: CsvRow[];
+  forecasts: CsvRow[];
+  forecastReport: JsonRecord;
+  validation: JsonRecord;
+  directValidation: JsonRecord;
+  directParity: JsonRecord;
+  stamp: string;
+  sortKey: MostAcesSortKey;
+}) {
+  const today = londonDateIso();
+  const probability = (row: CsvRow) => Math.max(n(row.p_player1), n(row.p_draw), n(row.p_player2));
+  const visible = rows.filter((row) => row.date >= today);
+  visible.sort((a, b) => {
+    if (sortKey === "favourite") return probability(b) - probability(a);
+    if (sortKey === "closest") return Math.abs(n(a.player1_mean) - n(a.player2_mean)) - Math.abs(n(b.player1_mean) - n(b.player2_mean));
+    return a.date.localeCompare(b.date)
+      || a.tournament.localeCompare(b.tournament)
+      || a.player1.localeCompare(b.player1);
+  });
+  const observationMap = new Map(
+    observations.map((row) => [
+      `${row.date}|${[row.player1, row.player2].sort().join("|")}`,
+      row,
+    ]),
+  );
+  const forecastMap = new Map(
+    forecasts.map((row) => [
+      `${row.date}|${[row.player1, row.player2].sort().join("|")}|${row.model}`,
+      row,
+    ]),
+  );
+  const directMap = new Map(
+    directRows.map((row) => [
+      `${row.date}|${[row.player1, row.player2].sort().join("|")}`,
+      row,
+    ]),
+  );
+  const correlated = record(validation.correlated);
+  const outcomes = record(validation.outcomes);
+  const modelSummaries = record(forecastReport.models);
+  const controlForward = record(modelSummaries[rows[0]?.model || ""]);
+  const directForward = record(modelSummaries.most_aces_direct_1x2_v1);
+  const pairedForward = record(forecastReport.paired_comparison);
+  const settled = numeric(controlForward.rows_settled);
+  const accuracy = Number(controlForward.accuracy_pct);
+  const forwardBrier = Number(controlForward.brier);
+  const directResults = record(directValidation.results);
+  const directSelection = record(directResults.selection_2025);
+  const directDiagnostic = record(directResults.diagnostic_2026);
+  const directSelectionComparison = record(directSelection.comparison);
+  const directDiagnosticComparison = record(directDiagnostic.comparison);
+  const directPassed = String(directValidation.status || "").toUpperCase() === "PASS";
+  const directParityActive = String(directParity.status || "").toUpperCase() === "ACTIVE";
+  const sortOptions: { key: MostAcesSortKey; label: string }[] = [
+    { key: "schedule", label: "Schedule" },
+    { key: "favourite", label: "Strongest call" },
+    { key: "closest", label: "Closest matchup" },
+  ];
+
+  return (
+    <SectionCard
+      title="BetMGM Most Aces 1X2"
+      subtitle={`Correlated ATP Hard/Clay shadow pricer. Stage-0 ${String(validation.status || "MISSING")} on ${String(correlated.n || 0)} untouched matches; current artifact ${stamp}.`}
+    >
+      <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+        <MetricTile label="Stage-0" value={String(validation.status || "MISSING")} sub={`${String(correlated.n || 0)} matches`} tone={String(validation.status || "").toUpperCase() === "PASS" ? "text-emerald-300" : "text-amber-300"} />
+        <MetricTile label="Brier" value={Number(correlated.brier || 0).toFixed(4)} sub="correlated 1X2" tone="text-cyan-300" />
+        <MetricTile label="Accuracy" value={`${Number(correlated.accuracy_pct || 0).toFixed(1)}%`} sub="three-way favourite" tone="text-slate-100" />
+        <MetricTile label="Draws" value={String(outcomes.DRAW || 0)} sub="10.2% in holdout" tone="text-amber-300" />
+        <MetricTile label="A0 forward settled" value={String(settled)} sub={`${numeric(controlForward.rows_registered)} registered`} tone={settled ? "text-cyan-300" : "text-slate-400"} />
+        <MetricTile label="Forward score" value={Number.isFinite(accuracy) ? `${accuracy.toFixed(1)}%` : "-"} sub={Number.isFinite(forwardBrier) ? `Brier ${forwardBrier.toFixed(4)}` : "awaiting results"} tone={settled ? "text-emerald-300" : "text-slate-400"} />
+      </div>
+
+      {Object.keys(directValidation).length ? (
+        <div className={cn(
+          "mb-4 rounded-2xl border px-4 py-4",
+          directPassed
+            ? "border-emerald-500/25 bg-emerald-500/10"
+            : "border-amber-500/25 bg-amber-500/10",
+        )}>
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <div className="text-[10px] font-black uppercase tracking-[0.16em] text-emerald-300">
+                Direct P1 / Draw / P2 experiment
+              </div>
+              <div className="mt-1 text-sm font-black text-slate-100">
+                {directPassed ? "Passed retrospective gates - prospective shadow eligible" : "Retrospective gates blocked"}
+              </div>
+              <p className="mt-1 max-w-3xl text-xs leading-relaxed text-slate-400">
+                Trained directly on the three-way Most Aces outcome with mirrored player order. Exact causal rank/activity feature parity is now used for the prospective shadow rows shown below.
+              </p>
+            </div>
+            <div className="grid shrink-0 grid-cols-2 gap-2 sm:grid-cols-4">
+              <MetricTile label="2025 Brier" value={fmt(String(directSelectionComparison.direct_brier), 4)} sub={`${fmt(String(Number(directSelectionComparison.brier_delta) * 1000), 1)} x10^-3 vs A0`} tone="text-emerald-300" />
+              <MetricTile label="2025 log-loss" value={fmt(String(directSelectionComparison.direct_logloss), 4)} sub={`${fmt(String(Number(directSelectionComparison.logloss_delta) * 1000), 1)} x10^-3 vs A0`} tone="text-emerald-300" />
+              <MetricTile label="2026 Brier" value={fmt(String(directDiagnosticComparison.direct_brier), 4)} sub={`${fmt(String(Number(directDiagnosticComparison.brier_delta) * 1000), 1)} x10^-3 vs A0`} tone="text-cyan-300" />
+              <MetricTile
+                label="Routing"
+                value="SHADOW"
+                sub={directParityActive ? `${numeric(directParity.scored_rows)} live rows` : "live parity blocked"}
+                tone={directParityActive ? "text-emerald-300" : "text-amber-300"}
+              />
+            </div>
+          </div>
+          <div className="mt-3 grid gap-2 sm:grid-cols-3">
+            <MetricTile label="Direct forward settled" value={String(numeric(directForward.rows_settled))} sub={`${numeric(directForward.rows_pending)} pending`} tone={numeric(directForward.rows_settled) ? "text-cyan-300" : "text-slate-400"} />
+            <MetricTile label="Paired events" value={String(numeric(pairedForward.paired_events))} sub="same fixtures, A0 vs Direct" tone="text-slate-100" />
+            <MetricTile
+              label="Paired Brier delta"
+              value={Number.isFinite(Number(pairedForward.brier_delta_direct_minus_control)) ? Number(pairedForward.brier_delta_direct_minus_control).toFixed(4) : "-"}
+              sub="negative favours Direct"
+              tone={Number(pairedForward.brier_delta_direct_minus_control) < 0 ? "text-emerald-300" : "text-slate-400"}
+            />
+          </div>
+        </div>
+      ) : null}
+
+      <div className="mb-4 flex flex-col gap-3 rounded-2xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-xs leading-relaxed text-amber-100/80 sm:flex-row sm:items-center sm:justify-between">
+        <p>
+          {observations.length
+            ? `${observations.length} BetMGM market capture${observations.length === 1 ? "" : "s"} matched. Value and CLV remain shadow-only.`
+            : "BetMGM lists Stat Bets on its site, but the configured odds feed has not exposed the three-way prices. Fair-odds forecasts are still registered and scored from actual ace counts; no ROI or value is claimed."}
+        </p>
+        <div className="flex shrink-0 flex-wrap gap-2">
+          {sortOptions.map((option) => (
+            <Link
+              key={option.key}
+              href={`/model-monitor/tennis-props?tab=decision&mostAcesSort=${option.key}`}
+              className={cn(
+                "rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] transition",
+                sortKey === option.key
+                  ? "border-cyan-400/40 bg-cyan-500/15 text-cyan-100"
+                  : "border-slate-700 bg-slate-950/40 text-slate-400 hover:text-slate-100",
+              )}
+            >
+              {option.label}
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {visible.length ? (
+        <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950/55">
+          <div className="hidden grid-cols-[minmax(0,1.7fr)_110px_120px_repeat(3,72px)_110px] gap-3 border-b border-slate-800 bg-slate-900/70 px-4 py-3 text-[10px] font-black uppercase tracking-[0.14em] text-slate-500 lg:grid">
+            <span>Fixture</span><span>Ace forecast</span><span>Model call</span>
+            <span className="text-center">P1</span><span className="text-center">Draw</span><span className="text-center">P2</span><span>Outcome</span>
+          </div>
+          <div className="divide-y divide-slate-800/80">
+            {visible.map((row) => {
+              const key = `${row.date}|${[row.player1, row.player2].sort().join("|")}`;
+              const observed = observationMap.get(key);
+              const forecast = forecastMap.get(`${key}|${row.model}`);
+              const direct = directMap.get(key);
+              const directForecast = direct
+                ? forecastMap.get(`${key}|${direct.model}`)
+                : undefined;
+              const quoteReady = row.quote_status === "READY";
+              const historicalEstimate = row.quote_status === "HISTORICAL_ESTIMATE";
+              const coverageGapEstimate = row.quote_status === "COVERAGE_GAP_ESTIMATE";
+              const quoteVisible = quoteReady || historicalEstimate || coverageGapEstimate;
+              const call = [
+                { probability: n(row.p_player1), player: row.player1 },
+                { probability: n(row.p_draw), player: "Draw" },
+                { probability: n(row.p_player2), player: row.player2 },
+              ].sort((a, b) => b.probability - a.probability)[0];
+              return (
+                <article key={key} className="px-4 py-4 transition hover:bg-slate-900/45">
+                  <div className="grid gap-3 lg:grid-cols-[minmax(0,1.7fr)_110px_120px_repeat(3,72px)_110px] lg:items-center">
+                    <div>
+                      <div className="text-[10px] font-black uppercase tracking-[0.15em] text-cyan-300">{row.tournament} / {row.surface} / {dateLabel(row.date)}</div>
+                      <h3 className="mt-1 font-black text-slate-100">{row.player1} vs {row.player2}</h3>
+                    </div>
+                    <div className="font-mono text-sm text-slate-300">
+                      <span className="font-black text-slate-50">{fmt(row.player1_mean, 1)}</span><span className="mx-1 text-slate-600">-</span><span className="font-black text-slate-50">{fmt(row.player2_mean, 1)}</span>
+                    </div>
+                    <div><div className="text-xs font-black text-emerald-300">{call.player}</div><div className="font-mono text-[10px] text-slate-500">{(call.probability * 100).toFixed(1)}%</div></div>
+                    {[
+                      ["P1", row.fair_player1, observed?.open_player1_odds],
+                      ["D", row.fair_draw, observed?.open_draw_odds],
+                      ["P2", row.fair_player2, observed?.open_player2_odds],
+                    ].map(([label, fair, market]) => (
+                      <div key={label} className="rounded-xl border border-slate-800 bg-slate-900/70 px-2 py-2 text-center">
+                        <div className="text-[9px] font-black uppercase tracking-[0.12em] text-slate-500">{label}</div>
+                        <div className={cn("font-mono text-sm font-black", quoteReady ? "text-emerald-300" : historicalEstimate || coverageGapEstimate ? "text-amber-200" : "text-slate-600")}>
+                          {quoteVisible ? fmt(fair, 2) : "-"}
+                        </div>
+                        {quoteReady && market ? <div className="font-mono text-[9px] text-cyan-300">MGM {fmt(market, 2)}</div> : null}
+                      </div>
+                    ))}
+                    <div className="text-xs">
+                      {forecast?.settlement_status === "settled" ? (
+                        <>
+                          <div className={cn("font-black", forecast.prediction_correct === "yes" ? "text-emerald-300" : "text-rose-300")}>
+                            {forecast.actual_player1_aces}-{forecast.actual_player2_aces} / {forecast.prediction_correct === "yes" ? "correct" : "miss"}
+                          </div>
+                          <div className="text-[10px] text-slate-500">Brier {fmt(forecast.model_brier, 3)}</div>
+                        </>
+                      ) : (
+                        <MiniBadge
+                          label={coverageGapEstimate ? "ACTIVE / COVERAGE GAP" : historicalEstimate ? "STALE-FORM ESTIMATE" : !quoteReady ? "PRICE BLOCKED" : observed?.bet_eligible === "yes" ? "SHADOW VALUE" : "FORECAST"}
+                          tone={historicalEstimate || coverageGapEstimate ? "border-amber-500/30 bg-amber-500/10 text-amber-200" : !quoteReady ? "border-rose-500/30 bg-rose-500/10 text-rose-200" : observed?.bet_eligible === "yes" ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-200" : "border-slate-700 bg-slate-900 text-slate-400"}
+                        />
+                      )}
+                    </div>
+                  </div>
+                  {direct ? (
+                    <div className="mt-3 rounded-xl border border-cyan-500/20 bg-cyan-500/5 px-3 py-3">
+                      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                        <div>
+                          <div className="text-[9px] font-black uppercase tracking-[0.15em] text-cyan-300">
+                            Direct 1X2 prospective shadow
+                          </div>
+                          <div className="mt-1 text-xs text-slate-400">
+                            Frozen three-way classifier / exact live features / L1 probability change vs A0 {(n(direct.probability_l1_delta) * 100).toFixed(1)}pp
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-3 gap-2">
+                          {[
+                            ["P1", direct.fair_player1, direct.p_player1],
+                            ["D", direct.fair_draw, direct.p_draw],
+                            ["P2", direct.fair_player2, direct.p_player2],
+                          ].map(([label, fair, probabilityValue]) => (
+                            <div key={label} className="min-w-[72px] rounded-lg border border-cyan-500/15 bg-slate-950/55 px-2 py-1.5 text-center">
+                              <div className="text-[8px] font-black uppercase tracking-[0.12em] text-slate-500">{label}</div>
+                              <div className="font-mono text-sm font-black text-cyan-200">{fmt(fair, 2)}</div>
+                              <div className="font-mono text-[9px] text-slate-500">{(n(probabilityValue) * 100).toFixed(1)}%</div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="min-w-[110px] text-xs">
+                          {directForecast?.settlement_status === "settled" ? (
+                            <>
+                              <div className={cn("font-black", directForecast.prediction_correct === "yes" ? "text-emerald-300" : "text-rose-300")}>
+                                {directForecast.actual_player1_aces}-{directForecast.actual_player2_aces} / {directForecast.prediction_correct === "yes" ? "correct" : "miss"}
+                              </div>
+                              <div className="text-[10px] text-slate-500">Brier {fmt(directForecast.model_brier, 3)}</div>
+                            </>
+                          ) : (
+                            <MiniBadge label="TIMESTAMPED" tone="border-cyan-500/30 bg-cyan-500/10 text-cyan-200" />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ) : null}
+                  {coverageGapEstimate ? (
+                    <div className="mt-3 break-all rounded-xl border border-amber-500/20 bg-amber-500/5 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.08em] text-amber-200/80">
+                      Active player, but recent lower-level performance is not yet level-adjusted. Research only: {row.quote_reason}
+                    </div>
+                  ) : historicalEstimate ? (
+                    <div className="mt-3 break-all rounded-xl border border-amber-500/20 bg-amber-500/5 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.08em] text-amber-200/80">
+                      Historical estimate only, not bet-eligible: {row.quote_reason || "current-form sample below the registered minimum"}
+                    </div>
+                  ) : !quoteReady ? (
+                    <div className="mt-3 break-all rounded-xl border border-amber-500/20 bg-amber-500/5 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.08em] text-amber-200/80">
+                      Fair price withheld: {row.quote_reason || "input quality below the registered minimum"}
+                    </div>
+                  ) : null}
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      ) : <EmptyState message="No eligible ATP Hard/Clay Most Aces projections on the current board." />}
+    </SectionCard>
+  );
+}
 function ResearchGatesPanel({
   evidence,
   evidenceStamp,
   propsV2,
   propsV2Stamp,
+  servicePointsGate,
+  servicePointsStamp,
+  opponentReturnGate,
+  opponentReturnStamp,
+  rateRecencyGate,
+  rateRecencyStamp,
+  propsV3Gate,
+  propsV3Stamp,
+  propsV3ShadowRows,
+  propsV3ShadowStamp,
 }: {
   evidence: JsonRecord;
   evidenceStamp: string;
   propsV2: JsonRecord;
   propsV2Stamp: string;
+  servicePointsGate: JsonRecord;
+  servicePointsStamp: string;
+  opponentReturnGate: JsonRecord;
+  opponentReturnStamp: string;
+  rateRecencyGate: JsonRecord;
+  rateRecencyStamp: string;
+  propsV3Gate: JsonRecord;
+  propsV3Stamp: string;
+  propsV3ShadowRows: CsvRow[];
+  propsV3ShadowStamp: string;
 }) {
   const spread = record(evidence.spread_shape);
   const totals = record(evidence.total_games_shape);
   const props = record(evidence.aces_dfs);
   const propsCells = Array.isArray(propsV2.cells) ? propsV2.cells.map(record) : [];
   const propsPass = propsCells.filter((cell) => cell.passed === true).length;
+  const recencyTours = record(rateRecencyGate.tours);
+  const recencyCells = ["ATP", "WTA"].flatMap((tour) => {
+    const markets = record(recencyTours[tour]);
+    return [record(markets.aces), record(markets.dfs)];
+  });
+  const recencyPass = recencyCells.filter((cell) => cell.passed === true).length;
+  const v3Sellability = record(propsV3Gate.sellability_gate);
+  const v3Deployment = record(propsV3Gate.deployment_safe_aces);
+  const v3Atp = record(v3Deployment.ATP);
+  const v3Wta = record(v3Deployment.WTA);
+  const v3Shadow = shadowStats(propsV3ShadowRows);
   const gateTone = (status: unknown) => {
     if (status === "PASS") return "text-emerald-300";
     if (status === "TESTED_AND_REJECTED") return "text-rose-300";
     return "text-amber-300";
   };
   const totalsRejected = totals.promotion_status === "TESTED_AND_REJECTED";
+  const spreadShapeRejected = spread.shape_model_status === "TESTED_AND_REJECTED";
+  const spreadSub = spreadShapeRejected
+    ? `${numeric(spread.real_line_rows).toFixed(0)} scored | shape rejected: ROI ${numeric(spread.shape_roi_pct).toFixed(2)}% | CLV ${numeric(spread.shape_mean_clv_pct).toFixed(3)}% | Brier ${numeric(spread.shape_model_brier).toFixed(5)} vs market ${numeric(spread.shape_market_brier).toFixed(5)} | prospective ${numeric(spread.settled_shadow_bets).toFixed(0)}/200`
+    : `${numeric(spread.real_line_rows).toFixed(0)}/600 scored | ${numeric(spread.captured_line_offers).toFixed(0)} captured | ${numeric(spread.settled_shadow_bets).toFixed(0)}/200 settled | CLV ${numeric(spread.mean_clv_pct) >= 0 ? "+" : ""}${numeric(spread.mean_clv_pct).toFixed(2)}%`;
   const totalsSub = totalsRejected
     ? `${numeric(totals.real_line_rows).toFixed(0)} scored | ROI ${numeric(totals.roi_pct).toFixed(2)}% | CLV ${numeric(totals.mean_clv_pct).toFixed(3)}% | Brier model ${numeric(totals.model_brier).toFixed(5)} vs market ${numeric(totals.market_brier).toFixed(5)}`
     : `${numeric(totals.real_line_rows).toFixed(0)}/600 scored | ${numeric(totals.captured_line_offers).toFixed(0)} captured complete offers`;
@@ -1392,13 +1842,13 @@ function ResearchGatesPanel({
   return (
     <SectionCard
       title="Research Gates"
-      subtitle={`Registered evidence only. Status ${evidenceStamp}; props v2 ${propsV2Stamp}. No blocked lane changes live routing.`}
+      subtitle={`Registered evidence only. Status ${evidenceStamp}; props v2 ${propsV2Stamp}; service points ${servicePointsStamp}; opponent return ${opponentReturnStamp}; recency ${rateRecencyStamp}; all-tour v3 ${propsV3Stamp}. No blocked lane changes live routing.`}
     >
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-8">
         <MetricTile
           label="Spread shape"
           value={String(spread.promotion_status || "BLOCKED")}
-          sub={`${numeric(spread.real_line_rows).toFixed(0)}/600 scored | ${numeric(spread.captured_line_offers).toFixed(0)} captured | ${numeric(spread.settled_shadow_bets).toFixed(0)}/200 settled | CLV ${numeric(spread.mean_clv_pct) >= 0 ? "+" : ""}${numeric(spread.mean_clv_pct).toFixed(2)}%`}
+          sub={spreadSub}
           tone={gateTone(spread.promotion_status)}
         />
         <MetricTile
@@ -1419,9 +1869,33 @@ function ResearchGatesPanel({
           sub={`${propsPass}/${propsCells.length || 4} tour-market cells passed | incumbent remains active`}
           tone={gateTone(propsV2.status)}
         />
+        <MetricTile
+          label="Service-point recursion"
+          value={String(servicePointsGate.status || "MISSING")}
+          sub={`Routing ${String(servicePointsGate.routing || "blocked").replaceAll("_", " ")} | incumbent unchanged`}
+          tone={gateTone(servicePointsGate.status)}
+        />
+        <MetricTile
+          label="Opponent-return ace rate"
+          value={String(opponentReturnGate.status || "MISSING")}
+          sub={`Routing ${String(opponentReturnGate.routing || "blocked").replaceAll("_", " ")} | exponent 0.60 retained`}
+          tone={gateTone(opponentReturnGate.status)}
+        />
+        <MetricTile
+          label="Player-rate recency"
+          value={String(rateRecencyGate.status || "MISSING")}
+          sub={`${recencyPass}/${recencyCells.length || 4} cells passed | L12M weight 1.0 retained`}
+          tone={gateTone(rateRecencyGate.status)}
+        />
+        <MetricTile
+          label="All-tour ace challenger"
+          value={String(propsV3Gate.status || "MISSING")}
+          sub={`Deployable ATP ${String(v3Atp.status || "MISSING")} | WTA ${String(v3Wta.status || "BLOCKED")} | ${v3Shadow.settled} settled / ${v3Shadow.pending} pending | ${String(v3Sellability.status || "BLOCKED")} for tips | ${propsV3ShadowStamp}`}
+          tone={gateTone(propsV3Gate.status)}
+        />
       </div>
       <p className="mt-3 text-xs text-slate-500">
-        Current result: hierarchical dispersion helped ATP double-fault pricing, but failed the all-cell promotion rule. Totals were tested on real Pinnacle prices and rejected; spread remains sample-blocked. Synthetic odds never count as ROI evidence.
+        Current result: the richer all-main-tour v3 ace challenger beat the incumbent for ATP and WTA on untouched 2026 Hard/Clay data. The daily reproducible version passed only for ATP Hard/Clay, so that is the sole prospective shadow route. WTA, double faults and Grass remain blocked. Totals and the corrected spread-shape model were tested on real Pinnacle prices and rejected; the separate prospective spread lane remains evidence-blocked. With zero settled Bet365 shadow bets, no props tip is sellable yet. Synthetic odds never count as ROI evidence.
       </p>
     </SectionCard>
   );
@@ -1431,6 +1905,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
   if (!MODEL_MONITOR_ENABLED) notFound();
   const resolvedSearchParams: Record<string, string | string[] | undefined> = searchParams ? await searchParams : {};
   const projectionSortKey = validProjectionSort(resolvedSearchParams.propsSort);
+  const mostAcesSortKey = validMostAcesSort(resolvedSearchParams.mostAcesSort);
   const activeTab = validMonitorTab(resolvedSearchParams.tab);
   const showAllLines = resolvedSearchParams.showAll === "1";
   const showHiddenLines = resolvedSearchParams.showHidden === "1";
@@ -1459,6 +1934,28 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     derivativesEvidenceStamp,
     propsV2Gate,
     propsV2GateStamp,
+    servicePointsGate,
+    servicePointsGateStamp,
+    opponentReturnGate,
+    opponentReturnGateStamp,
+    rateRecencyGate,
+    rateRecencyGateStamp,
+    propsV3Gate,
+    propsV3GateStamp,
+    propsV3ShadowRows,
+    propsV3ShadowStamp,
+    propsV4Rows,
+    propsV4Report,
+    propsV4Stamp,
+    mostAcesRows,
+    mostAcesObservations,
+    mostAcesForecasts,
+    mostAcesForecastReport,
+    mostAcesValidation,
+    mostAcesDirectValidation,
+    mostAcesDirectRows,
+    mostAcesDirectParity,
+    mostAcesReportStamp,
   ] = await Promise.all([
     readCsv(BOARD_PATH),
     fileStamp(BOARD_PATH),
@@ -1483,6 +1980,28 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     fileStamp(DERIVATIVES_STATUS_PATH),
     readJson(PROPS_V2_GATE_PATH),
     fileStamp(PROPS_V2_GATE_PATH),
+    readJson(SERVICE_POINTS_GATE_PATH),
+    fileStamp(SERVICE_POINTS_GATE_PATH),
+    readJson(OPPONENT_RETURN_GATE_PATH),
+    fileStamp(OPPONENT_RETURN_GATE_PATH),
+    readJson(RATE_RECENCY_GATE_PATH),
+    fileStamp(RATE_RECENCY_GATE_PATH),
+    readJson(PROPS_V3_GATE_PATH),
+    fileStamp(PROPS_V3_GATE_PATH),
+    readCsv(V3_SHADOW_SIGNALS_PATH),
+    fileStamp(V3_SHADOW_SIGNALS_PATH),
+    readCsv(V4_OBSERVATIONS_PATH),
+    readJson(V4_REPORT_PATH),
+    fileStamp(V4_REPORT_PATH),
+    readCsv(MOST_ACES_BOARD_PATH),
+    readCsv(MOST_ACES_OBSERVATIONS_PATH),
+    readCsv(MOST_ACES_FORECASTS_PATH),
+    readJson(MOST_ACES_FORECAST_REPORT_PATH),
+    readJson(MOST_ACES_STAGE0_PATH),
+    readJson(MOST_ACES_DIRECT_RESULT_PATH),
+    readCsv(MOST_ACES_DIRECT_BOARD_PATH),
+    readJson(MOST_ACES_DIRECT_PARITY_PATH),
+    fileStamp(MOST_ACES_FORECAST_REPORT_PATH),
   ]);
 
   const comparisonRows = latestComparisonPath ? await readCsv(latestComparisonPath) : [];
@@ -1618,13 +2137,38 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
 
             <ModelTrackerPanel rows={modelSummaryRows} stamp={modelSummaryStamp} />
 
+            <AcesOverV4Panel rows={propsV4Rows} report={propsV4Report} stamp={propsV4Stamp} />
+
             <MarketBenchmarkPanel rows={marketObservationRows} stamp={marketObservationReportStamp} />
+
+            <MostAcesPanel
+              rows={mostAcesRows}
+              directRows={mostAcesDirectRows}
+              observations={mostAcesObservations}
+              forecasts={mostAcesForecasts}
+              forecastReport={mostAcesForecastReport}
+              validation={mostAcesValidation}
+              directValidation={mostAcesDirectValidation}
+              directParity={mostAcesDirectParity}
+              stamp={mostAcesReportStamp}
+              sortKey={mostAcesSortKey}
+            />
 
             <ResearchGatesPanel
               evidence={derivativesEvidence}
               evidenceStamp={derivativesEvidenceStamp}
               propsV2={propsV2Gate}
               propsV2Stamp={propsV2GateStamp}
+              servicePointsGate={servicePointsGate}
+              servicePointsStamp={servicePointsGateStamp}
+              opponentReturnGate={opponentReturnGate}
+              opponentReturnStamp={opponentReturnGateStamp}
+              rateRecencyGate={rateRecencyGate}
+              rateRecencyStamp={rateRecencyGateStamp}
+              propsV3Gate={propsV3Gate}
+              propsV3Stamp={propsV3GateStamp}
+              propsV3ShadowRows={propsV3ShadowRows}
+              propsV3ShadowStamp={propsV3ShadowStamp}
             />
 
             <FeedDiagnosticsPanel
@@ -1672,6 +2216,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
                 <div><span className="text-slate-500">Comparison:</span> {latestComparisonPath ? path.basename(latestComparisonPath) : "missing"}</div>
                 <div><span className="text-slate-500">Shadow:</span> data/tennis-props/shadow/aces-dfs-shadow-signals.csv</div>
                 <div><span className="text-slate-500">Market benchmark:</span> data/tennis-props/shadow/market-observations.csv</div>
+                <div><span className="text-slate-500">Aces Over v4:</span> data/tennis-props/shadow/aces-over-v4-observations.csv</div>
+                <div><span className="text-slate-500">Most Aces:</span> data/tennis-props/shadow/most-aces-1x2-observations.csv</div>
               </div>
             </SectionCard>
           </div>

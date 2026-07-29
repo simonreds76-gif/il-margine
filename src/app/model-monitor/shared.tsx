@@ -504,7 +504,7 @@ export function SectionCard({
   children: ReactNode;
 }) {
   const shell =
-    "rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] shadow-[0_8px_32px_rgba(0,0,0,0.28)]";
+    "min-w-0 rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] shadow-[0_8px_32px_rgba(0,0,0,0.28)]";
 
   if (collapsible) {
     return (

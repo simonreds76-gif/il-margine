@@ -1,0 +1,407 @@
+{
+  "version": "most-aces-direct-1x2-v1",
+  "generated_at_utc": "2026-07-29T18:59:18+00:00",
+  "status": "PASS",
+  "routing": "EXPERIMENT_ONLY_NO_LIVE_CHANGE",
+  "chronology": {
+    "development_train": 2023,
+    "iteration_and_temperature": 2024,
+    "frozen_train": [
+      2023,
+      2024
+    ],
+    "selection": 2025,
+    "diagnostic_only": 2026
+  },
+  "best_iteration": 145,
+  "temperature": 1.0355892018501225,
+  "a0_alpha": 0.1800339589347608,
+  "gates": {
+    "selection_brier": true,
+    "selection_logloss": true,
+    "selection_accuracy": true,
+    "surface_brier": true,
+    "draw_calibration": true,
+    "symmetry": true,
+    "selection_sample": true,
+    "diagnostic_brier": true,
+    "diagnostic_logloss": true
+  },
+  "results": {
+    "selection_2025": {
+      "comparison": {
+        "n": 2293,
+        "a0_brier": 0.4402760513162592,
+        "direct_brier": 0.43383805465182124,
+        "brier_delta": -0.0064379966644379505,
+        "a0_logloss": 0.7561630684910926,
+        "direct_logloss": 0.7506481949288446,
+        "logloss_delta": -0.005514873562248002,
+        "accuracy_delta_pp": 1.3955516790231144,
+        "brier_gate": true,
+        "logloss_gate": true,
+        "accuracy_gate": true
+      },
+      "a0": {
+        "n": 2293,
+        "brier": 0.4402760513162592,
+        "logloss": 0.7561630684910926,
+        "accuracy_pct": 67.16092455298735,
+        "predicted_draw_pct": 9.025963019243349,
+        "actual_draw_pct": 8.5041430440471,
+        "surfaces": {
+          "Hard": {
+            "n": 1533,
+            "brier": 0.41118072545847234,
+            "logloss": 0.7105331782918339,
+            "accuracy_pct": 69.6020874103066,
+            "predicted_draw_pct": 7.664964530332681,
+            "actual_draw_pct": 7.045009784735812
+          },
+          "Clay": {
+            "n": 760,
+            "brier": 0.49896438623729505,
+            "logloss": 0.8482033601693338,
+            "accuracy_pct": 62.23684210526316,
+            "predicted_draw_pct": 11.771240234375,
+            "actual_draw_pct": 11.447368421052632
+          }
+        },
+        "evidence": {
+          "RECENT": {
+            "n": 2236,
+            "brier": 0.43911451943658547,
+            "logloss": 0.7539240862169784,
+            "accuracy_pct": 67.12880143112702,
+            "predicted_draw_pct": 9.012086489546064,
+            "actual_draw_pct": 8.49731663685152
+          },
+          "COVERAGE_GAP": {
+            "n": 42,
+            "brier": 0.4978526433308919,
+            "logloss": 0.8321539288119698,
+            "accuracy_pct": 66.66666666666666,
+            "predicted_draw_pct": 9.948149181547619,
+            "actual_draw_pct": 7.142857142857142
+          },
+          "HISTORICAL": {
+            "n": 6,
+            "brier": 0.5817131201426188,
+            "logloss": 1.1828792313261973,
+            "accuracy_pct": 66.66666666666666,
+            "predicted_draw_pct": 5.1025390625,
+            "actual_draw_pct": 16.666666666666664
+          },
+          "INSUFFICIENT": {
+            "n": 9,
+            "brier": 0.36587005191379124,
+            "logloss": 0.6733243189835346,
+            "accuracy_pct": 77.77777777777779,
+            "predicted_draw_pct": 10.785590277777777,
+            "actual_draw_pct": 11.11111111111111
+          }
+        }
+      },
+      "direct": {
+        "n": 2293,
+        "brier": 0.43383805465182124,
+        "logloss": 0.7506481949288446,
+        "accuracy_pct": 68.55647623201047,
+        "predicted_draw_pct": 9.193862688383167,
+        "actual_draw_pct": 8.5041430440471,
+        "surfaces": {
+          "Hard": {
+            "n": 1533,
+            "brier": 0.4028270142971246,
+            "logloss": 0.7012774961533881,
+            "accuracy_pct": 71.16764514024788,
+            "predicted_draw_pct": 7.299540612931328,
+            "actual_draw_pct": 7.045009784735812
+          },
+          "Clay": {
+            "n": 760,
+            "brier": 0.4963905873672818,
+            "logloss": 0.8502340912746011,
+            "accuracy_pct": 63.28947368421053,
+            "predicted_draw_pct": 13.014909716893253,
+            "actual_draw_pct": 11.447368421052632
+          }
+        },
+        "evidence": {
+          "RECENT": {
+            "n": 2236,
+            "brier": 0.4337124724254613,
+            "logloss": 0.7505033872706987,
+            "accuracy_pct": 68.51520572450805,
+            "predicted_draw_pct": 9.162859176576898,
+            "actual_draw_pct": 8.49731663685152
+          },
+          "COVERAGE_GAP": {
+            "n": 42,
+            "brier": 0.47804598332579007,
+            "logloss": 0.8083920705130867,
+            "accuracy_pct": 66.66666666666666,
+            "predicted_draw_pct": 11.265971000779794,
+            "actual_draw_pct": 7.142857142857142
+          },
+          "HISTORICAL": {
+            "n": 6,
+            "brier": 0.47717962639197764,
+            "logloss": 0.7982406282351534,
+            "accuracy_pct": 66.66666666666666,
+            "predicted_draw_pct": 5.811665745919453,
+            "actual_draw_pct": 16.666666666666664
+          },
+          "INSUFFICIENT": {
+            "n": 9,
+            "brier": 0.22984021280663372,
+            "logloss": 0.48542514484420785,
+            "accuracy_pct": 88.88888888888889,
+            "predicted_draw_pct": 9.481472125376479,
+            "actual_draw_pct": 11.11111111111111
+          }
+        }
+      },
+      "raw_symmetry_gap": 0.007756411067119597
+    },
+    "diagnostic_2026": {
+      "comparison": {
+        "n": 1186,
+        "a0_brier": 0.4644429546986623,
+        "direct_brier": 0.45728025732834016,
+        "brier_delta": -0.0071626973703221575,
+        "a0_logloss": 0.7931936515906249,
+        "direct_logloss": 0.78909853747197,
+        "logloss_delta": -0.00409511411865493,
+        "accuracy_delta_pp": 0.5902192242833024,
+        "brier_gate": true,
+        "logloss_gate": false,
+        "accuracy_gate": true
+      },
+      "a0": {
+        "n": 1186,
+        "brier": 0.4644429546986623,
+        "logloss": 0.7931936515906249,
+        "accuracy_pct": 66.02023608768971,
+        "predicted_draw_pct": 9.332059245889544,
+        "actual_draw_pct": 10.202360876897133,
+        "surfaces": {
+          "Hard": {
+            "n": 659,
+            "brier": 0.41637456181921256,
+            "logloss": 0.7137606843828911,
+            "accuracy_pct": 70.40971168437025,
+            "predicted_draw_pct": 7.066222496206373,
+            "actual_draw_pct": 6.980273141122914
+          },
+          "Clay": {
+            "n": 527,
+            "brier": 0.5245512486408965,
+            "logloss": 0.8925225422735407,
+            "accuracy_pct": 60.53130929791271,
+            "predicted_draw_pct": 12.165430058111955,
+            "actual_draw_pct": 14.231499051233396
+          }
+        },
+        "evidence": {
+          "RECENT": {
+            "n": 1162,
+            "brier": 0.4635887765638184,
+            "logloss": 0.7911595650626306,
+            "accuracy_pct": 66.26506024096386,
+            "predicted_draw_pct": 9.319238449333046,
+            "actual_draw_pct": 10.068846815834767
+          },
+          "COVERAGE_GAP": {
+            "n": 17,
+            "brier": 0.5346201167387121,
+            "logloss": 0.9420480085370244,
+            "accuracy_pct": 47.05882352941176,
+            "predicted_draw_pct": 9.285960477941178,
+            "actual_draw_pct": 17.647058823529413
+          },
+          "HISTORICAL": {
+            "n": 1,
+            "brier": 0.3660883903503418,
+            "logloss": 0.6170183722075452,
+            "accuracy_pct": 100.0,
+            "predicted_draw_pct": 7.51953125,
+            "actual_draw_pct": 0.0
+          },
+          "INSUFFICIENT": {
+            "n": 6,
+            "brier": 0.44742592175801593,
+            "logloss": 0.7947369443945607,
+            "accuracy_pct": 66.66666666666666,
+            "predicted_draw_pct": 12.247721354166668,
+            "actual_draw_pct": 16.666666666666664
+          }
+        }
+      },
+      "direct": {
+        "n": 1186,
+        "brier": 0.45728025732834016,
+        "logloss": 0.78909853747197,
+        "accuracy_pct": 66.61045531197301,
+        "predicted_draw_pct": 10.021806774698163,
+        "actual_draw_pct": 10.202360876897133,
+        "surfaces": {
+          "Hard": {
+            "n": 659,
+            "brier": 0.40314864760825386,
+            "logloss": 0.7032023623846312,
+            "accuracy_pct": 71.47192716236722,
+            "predicted_draw_pct": 7.039903824001245,
+            "actual_draw_pct": 6.980273141122914
+          },
+          "Clay": {
+            "n": 527,
+            "brier": 0.5249704486101938,
+            "logloss": 0.8965095040422856,
+            "accuracy_pct": 60.53130929791271,
+            "predicted_draw_pct": 13.750600028036434,
+            "actual_draw_pct": 14.231499051233396
+          }
+        },
+        "evidence": {
+          "RECENT": {
+            "n": 1162,
+            "brier": 0.4555827121303311,
+            "logloss": 0.7866478032482705,
+            "accuracy_pct": 66.7814113597246,
+            "predicted_draw_pct": 9.99918343486346,
+            "actual_draw_pct": 10.068846815834767
+          },
+          "COVERAGE_GAP": {
+            "n": 17,
+            "brier": 0.5834221711756067,
+            "logloss": 0.9818997272669625,
+            "accuracy_pct": 58.82352941176471,
+            "predicted_draw_pct": 11.704703392545305,
+            "actual_draw_pct": 17.647058823529413
+          },
+          "HISTORICAL": {
+            "n": 1,
+            "brier": 0.7903686402824353,
+            "logloss": 1.1401282370003067,
+            "accuracy_pct": 0.0,
+            "predicted_draw_pct": 12.06620131606214,
+            "actual_draw_pct": 0.0
+          },
+          "INSUFFICIENT": {
+            "n": 6,
+            "brier": 0.3731213576164896,
+            "logloss": 0.6589490777879069,
+            "accuracy_pct": 66.66666666666666,
+            "predicted_draw_pct": 9.294254081891369,
+            "actual_draw_pct": 16.666666666666664
+          }
+        }
+      },
+      "raw_symmetry_gap": 0.007851573811625026
+    }
+  },
+  "top_features": [
+    {
+      "feature": "incumbent_aces_diff",
+      "gain": 18751.202355861664,
+      "splits": 240
+    },
+    {
+      "feature": "player_career4y_ace_rate_diff",
+      "gain": 9177.162648200989,
+      "splits": 204
+    },
+    {
+      "feature": "player_height_diff",
+      "gain": 7112.536580324173,
+      "splits": 209
+    },
+    {
+      "feature": "player_ace_rate_blend_diff",
+      "gain": 5150.057955026627,
+      "splits": 144
+    },
+    {
+      "feature": "player_l12m_ace_rate_diff",
+      "gain": 5094.25904750824,
+      "splits": 71
+    },
+    {
+      "feature": "opponent_l12m_aces_allowed_rate_diff",
+      "gain": 4183.342801809311,
+      "splits": 164
+    },
+    {
+      "feature": "opponent_aces_allowed_blend_diff",
+      "gain": 4008.7036695480347,
+      "splits": 267
+    },
+    {
+      "feature": "opponent_career4y_aces_allowed_rate_diff",
+      "gain": 3588.265543937683,
+      "splits": 210
+    },
+    {
+      "feature": "player_rank_diff",
+      "gain": 2876.7210149765015,
+      "splits": 232
+    },
+    {
+      "feature": "player_l12m_first_win_pct_diff",
+      "gain": 2430.806757926941,
+      "splits": 192
+    },
+    {
+      "feature": "incumbent_aces_sum",
+      "gain": 2370.7170696258545,
+      "splits": 158
+    },
+    {
+      "feature": "opponent_l24m_aces_allowed_rate_diff",
+      "gain": 2265.053099155426,
+      "splits": 156
+    },
+    {
+      "feature": "player_activity_rank_log_change_365d_sum",
+      "gain": 2029.3694467544556,
+      "splits": 277
+    },
+    {
+      "feature": "player_activity_lower_share_l365d_diff",
+      "gain": 1654.8299260139465,
+      "splits": 197
+    },
+    {
+      "feature": "player_age_diff",
+      "gain": 1299.9762704372406,
+      "splits": 158
+    },
+    {
+      "feature": "opponent_return_factor_sum",
+      "gain": 1242.3651640415192,
+      "splits": 139
+    },
+    {
+      "feature": "player_l24m_ace_rate_diff",
+      "gain": 1169.7387783527374,
+      "splits": 126
+    },
+    {
+      "feature": "player_activity_matches_l365d_all_sum",
+      "gain": 1137.2722127437592,
+      "splits": 155
+    },
+    {
+      "feature": "player_ace_rate_blend_sum",
+      "gain": 1092.4357147216797,
+      "splits": 106
+    },
+    {
+      "feature": "player_l12m_second_win_pct_sum",
+      "gain": 1083.1075160503387,
+      "splits": 146
+    }
+  ],
+  "decision": "Eligible for frozen prospective shadow only"
+}

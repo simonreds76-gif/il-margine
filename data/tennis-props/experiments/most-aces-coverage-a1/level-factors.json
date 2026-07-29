@@ -1,0 +1,33 @@
+{
+  "version": "atp-qual-chall-level-factor-v1",
+  "generated_at_utc": "2026-07-29T17:45:13+00:00",
+  "development_years": [
+    2023,
+    2024
+  ],
+  "method": "paired player-surface weighted log main/lower ace-rate ratio",
+  "minimum_service_points_each_source": 250,
+  "winsorisation": "5th/95th percentile of paired log ratios",
+  "global": {
+    "ace_count_factor": 0.9981782534908575,
+    "paired_player_surfaces": 372,
+    "effective_weight": 322391.0
+  },
+  "surfaces": {
+    "Hard": {
+      "ace_count_factor": 1.0063105571902267,
+      "paired_players": 183,
+      "effective_weight": 174832.0
+    },
+    "Clay": {
+      "ace_count_factor": 1.0211693120597038,
+      "paired_players": 134,
+      "effective_weight": 123400.0
+    },
+    "Grass": {
+      "ace_count_factor": 0.8278269329778007,
+      "paired_players": 55,
+      "effective_weight": 24159.0
+    }
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "generated_at_utc": "2026-07-29T21:17:52+00:00",
+  "status": "EVIDENCE_BUILDING",
+  "rows_registered": 43,
+  "rows_settled": 4,
+  "rows_pending": 39,
+  "rows_void": 0,
+  "rows_quote_ready": 19,
+  "rows_price_blocked": 6,
+  "accuracy_pct": 100.0,
+  "brier": 0.1818365,
+  "logloss": 0.4014105,
+  "player_count_mae": 2.9922500000000003,
+  "predicted_draw_rate_pct": 0.0,
+  "actual_draw_rate_pct": 0.0,
+  "models": {
+    "most_aces_direct_1x2_v1": {
+      "rows_registered": 5,
+      "rows_settled": 0,
+      "rows_pending": 5,
+      "rows_void": 0,
+      "accuracy_pct": null,
+      "brier": null,
+      "logloss": null,
+      "predicted_draw_rate_pct": null,
+      "actual_draw_rate_pct": null
+    },
+    "v3_aces_gaussian_copula_nb2": {
+      "rows_registered": 16,
+      "rows_settled": 2,
+      "rows_pending": 14,
+      "rows_void": 0,
+      "accuracy_pct": 100.0,
+      "brier": 0.1818365,
+      "logloss": 0.4014105,
+      "predicted_draw_rate_pct": 0.0,
+      "actual_draw_rate_pct": 0.0
+    },
+    "v3_aces_gaussian_copula_nb2_evidence_tiers_v3": {
+      "rows_registered": 6,
+      "rows_settled": 0,
+      "rows_pending": 6,
+      "rows_void": 0,
+      "accuracy_pct": null,
+      "brier": null,
+      "logloss": null,
+      "predicted_draw_rate_pct": null,
+      "actual_draw_rate_pct": null
+    },
+    "v3_aces_gaussian_copula_nb2_input_guard_v2": {
+      "rows_registered": 16,
+      "rows_settled": 2,
+      "rows_pending": 14,
+      "rows_void": 0,
+      "accuracy_pct": 100.0,
+      "brier": 0.1818365,
+      "logloss": 0.4014105,
+      "predicted_draw_rate_pct": 0.0,
+      "actual_draw_rate_pct": 0.0
+    }
+  },
+  "paired_comparison": {
+    "status": "AWAITING_PAIRED_SETTLEMENTS",
+    "review_stage": "BUILDING",
+    "next_review_at": 50,
+    "direct_model": "most_aces_direct_1x2_v1",
+    "control_model": "v3_aces_gaussian_copula_nb2_evidence_tiers_v3",
+    "paired_events": 0,
+    "direct_brier": null,
+    "control_brier": null,
+    "brier_delta_direct_minus_control": null,
+    "direct_logloss": null,
+    "control_logloss": null,
+    "logloss_delta_direct_minus_control": null
+  },
+  "minimum_review_sample": 200,
+  "can_claim_profitability": false,
+  "notes": [
+    "Outcome-only validation; no bookmaker prices, ROI, value or CLV.",
+    "Parameters remain frozen until a registered review at 200 settled forecasts."
+  ]
+}

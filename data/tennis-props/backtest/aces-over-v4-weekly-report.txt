@@ -1,0 +1,16 @@
+ATP Aces Over v4 Registered Challenger
+Generated UTC: 2026-07-29T14:16:34+00:00
+Status: PRE_FIT
+Scope: ATP player aces, Hard/Clay, shadow only
+Routing: shadow only; v3 production/recommendation logic is unchanged.
+
+Registered 8 | settled 0 | scored 0 | pushed 0 | pending 8 | void 0
+Pre-fit progress: 0/200 settled. PRE_FIT rows are excluded from promotion.
+Walk-forward promotion sample: 0 | Brier v3 - vs v4 - vs market -
+Signals after fit: 0 | P/L +0.00u | ROI -%
+CLV coverage 6/8 | mean 2.21% | positive 16.7%
+Ladder acceptance 100.0% (8/8) | rejects {}
+Integrity: {'player_key_collisions': 0, 'open_as_close_rows': 0, 'frozen_hash_failures': 0}
+
+Promotion remains blocked until the registered walk-forward sample reaches 600 rows,
+150 events, and the Brier, calibration, surface, CLV and integrity gates all pass.

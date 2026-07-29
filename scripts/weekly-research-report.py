@@ -33,6 +33,11 @@ TENNIS_PROPS_PIPELINE_HEALTH = ROOT / "data" / "tennis-props" / "pipeline-health
 TENNIS_PROPS_DECISION_JSON = ROOT / "data" / "tennis-props" / "shadow" / "aces-dfs-weekly-decision.json"
 TENNIS_PROPS_DECISION_REPORT = ROOT / "data" / "tennis-props" / "shadow" / "aces-dfs-weekly-decision.txt"
 TENNIS_PROPS_V3_LOCAL_JSON = ROOT / "data" / "tennis-props" / "backtest" / "aces-v3-weekly-report.json"
+TENNIS_PROPS_V4_JSON = ROOT / "data" / "tennis-props" / "backtest" / "aces-over-v4-weekly-report.json"
+TENNIS_MOST_ACES_FORECAST_JSON = ROOT / "data" / "tennis-props" / "shadow" / "most-aces-1x2-forecast-report.json"
+TENNIS_MOST_ACES_OBSERVATIONS = ROOT / "data" / "tennis-props" / "shadow" / "most-aces-1x2-observations.csv"
+TENNIS_MOST_ACES_A0_MODEL = "v3_aces_gaussian_copula_nb2"
+TENNIS_MOST_ACES_DIRECT_MODEL = "most_aces_direct_1x2_v1"
 TELEGRAM_RELAY_REPOSITORY = "simonreds76-gif/il-margine"
 TELEGRAM_RELAY_WORKFLOW = "tennis-daily-signal-digest.yml"
 ASSIST_GATES = ROOT / "data" / "assist-value" / "research" / "assist-value-gates.json"
@@ -115,6 +120,45 @@ def labelled_float(text: str, label: str) -> float | None:
 
 def truthy(value: Any) -> bool:
     return str(value or "").strip().lower() in {"1", "true", "yes", "y", "settled"}
+
+
+def most_aces_review_stage(paired_events: int) -> tuple[str, int | None]:
+    if paired_events < 50:
+        return "BUILDING", 50
+    if paired_events < 100:
+        return "EARLY_QA", 100
+    if paired_events < 200:
+        return "DIRECTIONAL_ONLY", 200
+    return "REGISTERED_REVIEW", None
+
+
+def most_aces_price_summary(
+    rows: list[dict[str, str]] | None = None,
+) -> dict[str, dict[str, Any]]:
+    source = load_csv(TENNIS_MOST_ACES_OBSERVATIONS) if rows is None else rows
+    summaries: dict[str, dict[str, Any]] = {}
+    for model in sorted({row.get("model", "") for row in source if row.get("model")}):
+        model_rows = [row for row in source if row.get("model") == model]
+        settled = [
+            row for row in model_rows if row.get("settlement_status") == "settled"
+        ]
+        eligible = [row for row in settled if row.get("bet_eligible") == "yes"]
+        pnl = sum(number(row.get("pnl")) for row in eligible)
+        clv = [
+            number(row.get("clv_pct"))
+            for row in model_rows
+            if str(row.get("clv_pct") or "").strip()
+        ]
+        summaries[model] = {
+            "registered": len(model_rows),
+            "settled": len(settled),
+            "eligible_settled": len(eligible),
+            "pnl_units": round(pnl, 4),
+            "roi_pct": round(100.0 * pnl / len(eligible), 2) if eligible else None,
+            "clv_rows": len(clv),
+            "mean_clv_pct": round(sum(clv) / len(clv), 3) if clv else None,
+        }
+    return summaries
 
 
 def evidence_freshness(value: str, *, stale_after_days: int = 8) -> dict[str, Any]:
@@ -916,6 +960,9 @@ def build_payload() -> dict[str, Any]:
     tennis_gap_guard = ml_gap_guard_summary()
     tennis_model_evidence = tennis_model_evidence_summary()
     tennis_props_v3 = tennis_props_v3_snapshot()
+    tennis_props_v4 = load_json(TENNIS_PROPS_V4_JSON)
+    tennis_most_aces_forecast = load_json(TENNIS_MOST_ACES_FORECAST_JSON)
+    tennis_most_aces_prices = most_aces_price_summary()
     tennis_props_benchmark = tennis_props_market_benchmark()
     tennis_props_shadow = tennis_props_shadow_decision()
     goalscorer_research = goalscorer_research_summary()
@@ -961,6 +1008,9 @@ def build_payload() -> dict[str, Any]:
         "tennis_ml_gap_guard": tennis_gap_guard,
         "tennis_model_evidence": tennis_model_evidence,
         "tennis_props_v3": tennis_props_v3,
+        "tennis_props_v4": tennis_props_v4,
+        "tennis_most_aces_forecast": tennis_most_aces_forecast,
+        "tennis_most_aces_prices": tennis_most_aces_prices,
         "tennis_props_market_benchmark": tennis_props_benchmark,
         "tennis_props_shadow_decision": tennis_props_shadow,
         "goalscorer_v2": goalscorer_research,
@@ -1306,6 +1356,9 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     lanes = evidence.get("lanes") or {}
     replacements = evidence.get("gap_replacements") or {}
     props_v3 = payload.get("tennis_props_v3") or {}
+    props_v4 = payload.get("tennis_props_v4") or {}
+    most_aces = payload.get("tennis_most_aces_forecast") or {}
+    most_aces_prices = payload.get("tennis_most_aces_prices") or {}
     props_benchmark = payload.get("tennis_props_market_benchmark") or {}
     props_shadow = payload.get("tennis_props_shadow_decision") or {}
 
@@ -1358,6 +1411,87 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
             "Aces/DF v3: "
             f"{proof.get('settled', 0)} settled | ROI {number(proof.get('roi_pct')):+.2f}% | "
             f"CLV {number(proof.get('mean_clv_pct')):+.2f}% | {atp.get('status', 'UNKNOWN')}"
+        )
+    if props_v4 and not props_v4.get("_error"):
+        lines.append(
+            "Aces Over v4 [PRE_FIT]: "
+            f"{props_v4.get('rows_settled', 0)}/{props_v4.get('minimum_prefit_settled', 200)} settled | "
+            f"{props_v4.get('rows_registered', 0)} registered | "
+            f"CLV {number(props_v4.get('clv_mean_pct')):+.2f}% "
+            f"n={props_v4.get('clv_coverage', 0)} | no tips before gate"
+        )
+    if most_aces and not most_aces.get("_error"):
+        models = most_aces.get("models") or {}
+        paired = most_aces.get("paired_comparison") or {}
+        a0_model = paired.get("control_model")
+        if not a0_model or a0_model not in models:
+            a0_candidates = [
+                (name, summary)
+                for name, summary in models.items()
+                if str(name).startswith("v3_aces_gaussian")
+            ]
+            a0_model = (
+                TENNIS_MOST_ACES_A0_MODEL
+                if TENNIS_MOST_ACES_A0_MODEL in models
+                else (
+                    max(
+                        a0_candidates,
+                        key=lambda item: int(number(item[1].get("rows_registered"))),
+                    )[0]
+                    if a0_candidates
+                    else ""
+                )
+            )
+        a0 = models.get(a0_model) or {}
+        direct = models.get(TENNIS_MOST_ACES_DIRECT_MODEL) or {}
+        paired_events = int(number(paired.get("paired_events")))
+        fallback_stage, fallback_next_review = most_aces_review_stage(paired_events)
+        review_stage = paired.get("review_stage") or fallback_stage
+        next_review_at = (
+            paired.get("next_review_at")
+            if "next_review_at" in paired
+            else fallback_next_review
+        )
+
+        def model_metric(model: dict[str, Any], key: str) -> str:
+            value = model.get(key)
+            return "-" if value is None else f"{number(value):.4f}"
+
+        lines.extend(
+            [
+                (
+                    "Most Aces A0 [outcome only]: "
+                    f"{a0.get('rows_settled', 0)}/{a0.get('rows_registered', 0)} settled | "
+                    f"Brier {model_metric(a0, 'brier')} | logloss {model_metric(a0, 'logloss')}"
+                ),
+                (
+                    "Most Aces Direct [prospective shadow]: "
+                    f"{direct.get('rows_settled', 0)}/{direct.get('rows_registered', 0)} settled | "
+                    f"Brier {model_metric(direct, 'brier')} | logloss {model_metric(direct, 'logloss')}"
+                ),
+                (
+                    "Direct vs A0 paired: "
+                    f"n={paired_events}/200 | "
+                    f"Brier delta {model_metric(paired, 'brier_delta_direct_minus_control')} | "
+                    f"logloss delta {model_metric(paired, 'logloss_delta_direct_minus_control')} | "
+                    f"{review_stage}"
+                    + (
+                        f" (next {next_review_at})"
+                        if next_review_at
+                        else " (review due)"
+                    )
+                ),
+                "Paired A0/Direct forecast comparison is outcome-only; price evidence is separate below.",
+            ]
+        )
+        direct_prices = most_aces_prices.get(TENNIS_MOST_ACES_DIRECT_MODEL) or {}
+        lines.append(
+            "Most Aces Direct vs BetMGM: "
+            f"{direct_prices.get('eligible_settled', 0)} eligible settled | "
+            f"{number(direct_prices.get('pnl_units')):+.2f}u | "
+            f"ROI {pct(direct_prices.get('roi_pct'))} | "
+            f"CLV {pct(direct_prices.get('mean_clv_pct'), 2)} "
+            f"n={direct_prices.get('clv_rows', 0)} | shadow only"
         )
     shadow_clv = props_shadow.get("clv") or {}
     shadow_calibration = props_shadow.get("calibration") or {}

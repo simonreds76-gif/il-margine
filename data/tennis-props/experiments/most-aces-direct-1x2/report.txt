@@ -1,0 +1,10 @@
+Most Aces Direct 1X2 registered experiment
+Status: PASS | EXPERIMENT_ONLY_NO_LIVE_CHANGE
+Development best iteration: 145 | temperature: 1.0356
+Selection 2025: Brier 0.440276 -> 0.433838 (-0.006438); log-loss 0.756163 -> 0.750648 (-0.005515)
+Diagnostic 2026: Brier 0.464443 -> 0.457280 (-0.007163); log-loss 0.793194 -> 0.789099 (-0.004095)
+Selection draw calibration: predicted 9.19% vs actual 8.50%
+Raw symmetry gap: 0.007756
+Gates: selection_brier=PASS, selection_logloss=PASS, selection_accuracy=PASS, surface_brier=PASS, draw_calibration=PASS, symmetry=PASS, selection_sample=PASS, diagnostic_brier=PASS, diagnostic_logloss=PASS
+Decision: Eligible for frozen prospective shadow only
+No production or public fair-odds routing changed.

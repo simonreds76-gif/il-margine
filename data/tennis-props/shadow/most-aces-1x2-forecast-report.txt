@@ -1,0 +1,32 @@
+Most Aces 1X2 outcome forecast evidence
+Generated UTC: 2026-07-29T21:17:52+00:00
+Status: EVIDENCE_BUILDING
+Rows: 43 | settled: 4 | pending: 39 | void: 0
+Quote quality: ready 19 | blocked 6
+Three-way accuracy: 100.0%
+Brier: 0.1818 | log loss: 0.4014
+Player ace-count MAE: 2.992
+Draw rate: predicted 0.0% | actual 0.0%
+No profitability claim: prices, value, ROI and CLV are unavailable.
+Review gate: 200 settled prospective forecasts; no automatic parameter changes.
+
+Model: most_aces_direct_1x2_v1
+Rows: 5 | settled: 0 | pending: 5 | void: 0
+Accuracy: - | Brier: - | log loss: -
+
+Model: v3_aces_gaussian_copula_nb2
+Rows: 16 | settled: 2 | pending: 14 | void: 0
+Accuracy: 100.0% | Brier: 0.1818 | log loss: 0.4014
+
+Model: v3_aces_gaussian_copula_nb2_evidence_tiers_v3
+Rows: 6 | settled: 0 | pending: 6 | void: 0
+Accuracy: - | Brier: - | log loss: -
+
+Model: v3_aces_gaussian_copula_nb2_input_guard_v2
+Rows: 16 | settled: 2 | pending: 14 | void: 0
+Accuracy: 100.0% | Brier: 0.1818 | log loss: 0.4014
+
+Direct vs count-derived paired comparison
+Status: AWAITING_PAIRED_SETTLEMENTS
+Review stage: BUILDING | next checkpoint: 50
+Paired events: 0

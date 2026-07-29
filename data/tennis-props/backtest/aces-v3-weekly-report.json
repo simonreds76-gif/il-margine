@@ -1,0 +1,37 @@
+{
+  "generated_at": "2026-07-29T11:37:47Z",
+  "model_generated_at": "2026-07-13T18:41:06.437523+00:00",
+  "model_status": "PARTIAL_PASS",
+  "routing": "atp_aces_hard_clay_prospective_shadow",
+  "atp": {
+    "status": "PASS",
+    "mae_improvement_pct": 3.3335103960491357,
+    "logloss_delta": -0.013396899357459913,
+    "surfaces": [
+      "Clay",
+      "Hard"
+    ]
+  },
+  "wta": {
+    "status": "FAIL",
+    "mae_improvement_pct": 3.017562841622831,
+    "logloss_delta": -0.012948162649715989
+  },
+  "evidence": {
+    "status": "BLOCKED",
+    "reason": "settled 0/300; events 0/100; CLV coverage 0/300; mean CLV +0.00%/+1.00%",
+    "signals": 1,
+    "pending": 1,
+    "settled": 0,
+    "distinct_events": 0,
+    "pnl_units": 0,
+    "roi_pct": 0.0,
+    "clv_coverage": 0,
+    "mean_clv_pct": 0.0,
+    "positive_clv_pct": 0.0,
+    "minimum_settled": 300,
+    "minimum_events": 100,
+    "required_clv_pct": 1.0,
+    "required_roi_pct": 0.0
+  }
+}

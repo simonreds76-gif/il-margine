@@ -85,6 +85,8 @@ def empty_totals() -> dict[str, float]:
         "svgms": 0,
         "aces": 0,
         "dfs": 0,
+        "opponent_aces": 0,
+        "opponent_svpt": 0,
         "breaks_for": 0,
         "broken": 0,
         "return_games": 0,
@@ -136,6 +138,8 @@ def add_side(
     totals["svgms"] += service_games
     totals["aces"] += parse_int(row.get(f"{prefix}_ace"))
     totals["dfs"] += parse_int(row.get(f"{prefix}_df"))
+    totals["opponent_aces"] += parse_int(row.get(f"{opp_prefix}_ace"))
+    totals["opponent_svpt"] += opp_svpt
     totals["breaks_for"] += max(0, opp_bp_faced - opp_bp_saved)
     totals["broken"] += max(0, bp_faced - bp_saved)
     totals["return_games"] += opp_service_games
@@ -183,6 +187,8 @@ def totals_row(
         "svgms": str(int(totals["svgms"])),
         "aces": str(int(totals["aces"])),
         "dfs": str(int(totals["dfs"])),
+        "opponent_aces": str(int(totals["opponent_aces"])),
+        "opponent_svpt": str(int(totals["opponent_svpt"])),
         "breaks_for": str(int(totals["breaks_for"])),
         "broken": str(int(totals["broken"])),
         "return_games": str(int(totals["return_games"])),
@@ -193,6 +199,7 @@ def totals_row(
         "match_tiebreaks": str(int(totals["match_tiebreaks"])),
         "ace_rate": fmt(safe_div(totals["aces"], totals["svpt"])),
         "df_rate": fmt(safe_div(totals["dfs"], totals["svpt"])),
+        "aces_allowed_rate": fmt(safe_div(totals["opponent_aces"], totals["opponent_svpt"])),
         "break_for_rate": fmt(safe_div(totals["breaks_for"], totals["return_games"])),
         "broken_rate": fmt(safe_div(totals["broken"], totals["service_games_break_sample"])),
         "tiebreak_set_rate": fmt(safe_div(totals["tiebreak_sets"], totals["sets_played"])),
@@ -276,6 +283,8 @@ def main() -> None:
         "svgms",
         "aces",
         "dfs",
+        "opponent_aces",
+        "opponent_svpt",
         "breaks_for",
         "broken",
         "return_games",
@@ -286,6 +295,7 @@ def main() -> None:
         "match_tiebreaks",
         "ace_rate",
         "df_rate",
+        "aces_allowed_rate",
         "break_for_rate",
         "broken_rate",
         "tiebreak_set_rate",

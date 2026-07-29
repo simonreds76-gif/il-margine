@@ -1,0 +1,33 @@
+{
+  "version": "most-aces-1x2-v3-evidence-tiers",
+  "status": "REGISTERED_SHADOW",
+  "scope": "ATP player match aces, Hard and Clay only",
+  "distribution": "NB2 marginals with Gaussian copula",
+  "rho": 0.22,
+  "rho_fit_rows": 1524,
+  "rho_fit_source": "aces-dfs-totals-source-rows.csv ATP Hard/Clay paired matches, 2022-2025",
+  "rho_fit_method": "Pearson correlation of paired standardised ace-count residuals",
+  "simulations": 16384,
+  "input_quality_gate": {
+    "minimum_l12m_matches": 4,
+    "minimum_l12m_service_points": 250,
+    "historical_estimate_minimum_l24m_matches": 12,
+    "historical_estimate_minimum_l24m_service_points": 800,
+    "historical_estimate_minimum_career4y_matches": 20,
+    "historical_estimate_minimum_career4y_service_points": 1500,
+    "historical_estimate_action": "display_and_score_but_never_register_as_value_bet",
+    "coverage_gap_activity_source": "player-props-activity.csv including main, qualifying and Challenger matches",
+    "coverage_gap_action": "display_and_score_but_never_register_as_value_bet until a level-adjusted arm passes",
+    "unresolved_player_names": "block_price",
+    "missing_opponent_history": "block_price"
+  },
+  "promotion_status": "BLOCKED_PENDING_REAL_BETMGM_1X2_EVIDENCE",
+  "notes": [
+    "v3 ATP ace projections stay frozen as the marginal mean input",
+    "thin L12M samples with substantial L24M/career evidence remain visible as stale-form research estimates",
+    "active players whose recent lower-level performance is absent from the main-tour baseline are labelled coverage-gap estimates, not stale",
+    "untouched 2026 historical-tier calibration is weaker than recent-ready calibration and cannot create automatic bets",
+    "WTA, Grass and double faults are excluded",
+    "BetMGM prices must be three-way de-vigged before value is assessed"
+  ]
+}

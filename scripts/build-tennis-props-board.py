@@ -9,11 +9,15 @@ import json
 import math
 import os
 import re
-import unicodedata
 from collections import defaultdict
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
+from tennis_props_names import (
+    baseline_names_by_tour,
+    norm_name as normalize_player_name,
+    resolve_baseline_name,
+)
 from tennis_props_model import project_player
 
 
@@ -24,6 +28,7 @@ SACKMANN_DIR = DATA_DIR / "sackmann"
 PROPS_DIR = DATA_DIR / "tennis-props"
 INBOX_DIR = PROPS_DIR / "inbox"
 DEFAULT_BASELINE = PROPS_DIR / "player-props-baseline.csv"
+DEFAULT_ACTIVITY = PROPS_DIR / "player-props-activity.csv"
 DEFAULT_FACTORS = PROPS_DIR / "slam-venue-factors.csv"
 DEFAULT_SURFACE_BASELINES = PROPS_DIR / "tour-surface-baselines.csv"
 DEFAULT_ALIASES = PROPS_DIR / "player-name-aliases.csv"
@@ -137,11 +142,7 @@ def load_env() -> None:
 
 
 def norm_name(value: object) -> str:
-    text = unicodedata.normalize("NFKD", str(value or ""))
-    text = "".join(ch for ch in text if not unicodedata.combining(ch))
-    text = text.lower()
-    text = re.sub(r"[^a-z0-9]+", " ", text)
-    return " ".join(text.split())
+    return normalize_player_name(value)
 
 
 def parse_float(value: object, default: float | None = None) -> float | None:
@@ -382,6 +383,18 @@ def load_baseline(path: Path) -> dict[tuple[str, str, str], dict[str, dict[str, 
             str(row.get("surface") or "").strip(),
         )
         out[key][str(row.get("window") or "")] = row
+    return out
+
+
+def load_activity(path: Path) -> dict[tuple[str, str, str], dict[str, str]]:
+    out: dict[tuple[str, str, str], dict[str, str]] = {}
+    for row in read_csv(path):
+        key = (
+            str(row.get("tour") or "").upper(),
+            norm_name(row.get("player_name")),
+            str(row.get("window") or ""),
+        )
+        out[key] = row
     return out
 
 
@@ -1053,10 +1066,12 @@ def project_side(
     opponent: str,
     player_id: str,
     baseline: dict[tuple[str, str, str], dict[str, dict[str, str]]],
+    activity: dict[tuple[str, str, str], dict[str, str]],
     factors: dict[tuple[str, str, str], dict[str, str]],
     surface_baselines: dict[tuple[str, str], dict[str, str]],
     tournament_samples: dict[tuple[str, str, str], int],
     aliases: dict[tuple[str, str], str],
+    baseline_names: dict[str, set[str]],
     current_tournament_stats: dict[tuple[str, str, str], dict[str, str]],
     current_tournament_logs: dict[tuple[str, str, str], list[dict[str, str]]],
     current_tournament_environment: dict[tuple[str, str], dict[str, str]],
@@ -1065,12 +1080,25 @@ def project_side(
     tour = schedule["tour"].upper()
     surface = schedule["surface"]
     tournament = schedule["tournament"]
-    player_lookup = aliases.get((tour, norm_name(player)), norm_name(player))
-    opponent_lookup = aliases.get((tour, norm_name(opponent)), norm_name(opponent))
+    player_resolution = resolve_baseline_name(
+        tour=tour,
+        value=player,
+        available_names=baseline_names,
+        aliases=aliases,
+    )
+    opponent_resolution = resolve_baseline_name(
+        tour=tour,
+        value=opponent,
+        available_names=baseline_names,
+        aliases=aliases,
+    )
+    player_lookup = player_resolution.name
+    opponent_lookup = opponent_resolution.name
     player_rows = baseline.get((tour, player_lookup, surface), {})
     opponent_rows = baseline.get((tour, opponent_lookup, surface), {})
     player_all_rows = baseline.get((tour, player_lookup, "All"), {})
     opponent_all_rows = baseline.get((tour, opponent_lookup, "All"), {})
+    player_activity_l12m = activity.get((tour, player_lookup, "L12M"), {})
     factor = factors.get((tour, tournament, surface)) or {}
     factor_source = "venue" if factor else ""
     factor_clipped = False
@@ -1117,9 +1145,15 @@ def project_side(
         same_tournament_row=same_tournament_row,
         current_tournament_env_row=current_env_row,
     )
+    l12m = player_rows.get("L12M") or {}
+    l24m = player_rows.get("L24M") or {}
     career = player_rows.get("career_4y") or {}
     notes = list(projection.notes)
     tiebreak_notes = list(projection.tiebreak_notes)
+    if not player_resolution.resolved:
+        notes.append("PLAYER_NAME_UNRESOLVED")
+    if not opponent_resolution.resolved:
+        notes.append("OPPONENT_NAME_UNRESOLVED")
     if factor_source == "surface_baseline":
         notes.append("SURFACE_BASELINE_ONLY")
     elif not factor:
@@ -1141,10 +1175,17 @@ def project_side(
     return {
         "date": schedule["date"],
         "tour": tour,
+        "tour_id": str(schedule.get("tour_id") or ""),
         "tournament": tournament,
         "round": schedule["round"],
         "player": player,
         "opponent": opponent,
+        "player_id": str(player_id or ""),
+        "opponent_id": str(
+            schedule.get("player2_id")
+            if str(schedule.get("player1_id") or "") == str(player_id or "")
+            else schedule.get("player1_id") or ""
+        ),
         "surface": surface,
         "projected_aces": fmt(projection.expected_aces),
         "projected_dfs": fmt(projection.expected_dfs),
@@ -1166,6 +1207,22 @@ def project_side(
         "expected_match_games": fmt(expected_games or default_match_games(tour, tournament), 1),
         "expected_match_games_source": expected_games_source,
         "expected_match_games_confidence": expected_games_confidence,
+        "player_baseline_name": player_lookup,
+        "opponent_baseline_name": opponent_lookup,
+        "player_name_resolution": player_resolution.method,
+        "opponent_name_resolution": opponent_resolution.method,
+        "player_l12m_svpt_sample": str(parse_int(l12m.get("svpt"))),
+        "player_l12m_matches": str(parse_int(l12m.get("matches"))),
+        "player_l24m_svpt_sample": str(parse_int(l24m.get("svpt"))),
+        "player_l24m_matches": str(parse_int(l24m.get("matches"))),
+        "player_career4y_svpt_sample": str(parse_int(career.get("svpt"))),
+        "player_career4y_matches": str(parse_int(career.get("matches"))),
+        "player_activity_l12m_matches": str(parse_int(player_activity_l12m.get("matches"))),
+        "player_activity_l12m_svpt": str(parse_int(player_activity_l12m.get("svpt"))),
+        "player_activity_l12m_main_matches": str(parse_int(player_activity_l12m.get("main_matches"))),
+        "player_activity_l12m_qual_chall_matches": str(parse_int(player_activity_l12m.get("qual_chall_matches"))),
+        "player_activity_last_match_date": str(player_activity_l12m.get("last_match_date") or ""),
+        "player_activity_days_since_last_match": str(player_activity_l12m.get("days_since_last_match") or ""),
         "player_surface_svpt_sample": str(parse_int(career.get("svpt"))),
         "player_surface_matches": str(parse_int(career.get("matches"))),
         "player_slam_sample": str(tournament_n),
@@ -1217,6 +1274,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--as-of", default=date.today().isoformat())
     parser.add_argument("--baseline", default=str(DEFAULT_BASELINE))
+    parser.add_argument("--activity", default=str(DEFAULT_ACTIVITY))
     parser.add_argument("--factors", default=str(DEFAULT_FACTORS))
     parser.add_argument("--surface-baselines", default=str(DEFAULT_SURFACE_BASELINES))
     parser.add_argument("--aliases", default=str(DEFAULT_ALIASES))
@@ -1233,6 +1291,8 @@ def main() -> None:
 
     as_of = datetime.strptime(args.as_of, "%Y-%m-%d").date()
     baseline = load_baseline(Path(args.baseline))
+    activity = load_activity(Path(args.activity))
+    baseline_names = baseline_names_by_tour(baseline)
     factors = load_factors(Path(args.factors))
     surface_baselines = load_surface_baselines(Path(args.surface_baselines))
     aliases = load_aliases(Path(args.aliases))
@@ -1264,10 +1324,12 @@ def main() -> None:
             opponent=schedule["player2"],
             player_id=str(schedule.get("player1_id") or ""),
             baseline=baseline,
+            activity=activity,
             factors=factors,
             surface_baselines=surface_baselines,
             tournament_samples=tournament_samples,
             aliases=aliases,
+            baseline_names=baseline_names,
             current_tournament_stats=current_tournament_stats,
             current_tournament_logs=current_tournament_logs,
             current_tournament_environment=current_tournament_environment,
@@ -1279,10 +1341,12 @@ def main() -> None:
             opponent=schedule["player1"],
             player_id=str(schedule.get("player2_id") or ""),
             baseline=baseline,
+            activity=activity,
             factors=factors,
             surface_baselines=surface_baselines,
             tournament_samples=tournament_samples,
             aliases=aliases,
+            baseline_names=baseline_names,
             current_tournament_stats=current_tournament_stats,
             current_tournament_logs=current_tournament_logs,
             current_tournament_environment=current_tournament_environment,
@@ -1294,10 +1358,13 @@ def main() -> None:
     fieldnames = [
         "date",
         "tour",
+        "tour_id",
         "tournament",
         "round",
         "player",
         "opponent",
+        "player_id",
+        "opponent_id",
         "surface",
         "projected_aces",
         "projected_dfs",
@@ -1319,6 +1386,22 @@ def main() -> None:
         "expected_match_games",
         "expected_match_games_source",
         "expected_match_games_confidence",
+        "player_baseline_name",
+        "opponent_baseline_name",
+        "player_name_resolution",
+        "opponent_name_resolution",
+        "player_l12m_svpt_sample",
+        "player_l12m_matches",
+        "player_l24m_svpt_sample",
+        "player_l24m_matches",
+        "player_career4y_svpt_sample",
+        "player_career4y_matches",
+        "player_activity_l12m_matches",
+        "player_activity_l12m_svpt",
+        "player_activity_l12m_main_matches",
+        "player_activity_l12m_qual_chall_matches",
+        "player_activity_last_match_date",
+        "player_activity_days_since_last_match",
         "player_surface_svpt_sample",
         "player_surface_matches",
         "player_slam_sample",

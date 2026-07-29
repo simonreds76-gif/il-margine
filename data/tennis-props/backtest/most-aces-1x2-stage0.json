@@ -1,0 +1,158 @@
+{
+  "generated_at_utc": "2026-07-29T16:31:52+00:00",
+  "status": "PASS",
+  "scope": "ATP Hard/Clay untouched 2026 using exact deployment-safe live ace model",
+  "source": "data\\tennis-props\\backtest\\aces-dfs-v3-all-tour-features.csv",
+  "production_model_path": "data\\tennis-props\\models\\v3-atp-aces-live.txt",
+  "production_alpha": 0.1800339589347608,
+  "rho": 0.22,
+  "simulations": 2048,
+  "outcomes": {
+    "P1": 692,
+    "DRAW": 121,
+    "P2": 373
+  },
+  "independent": {
+    "n": 1186,
+    "brier": 0.4668479471196907,
+    "logloss": 0.7988155452388617,
+    "accuracy_pct": 65.93591905564924
+  },
+  "correlated": {
+    "n": 1186,
+    "brier": 0.46447620464215594,
+    "logloss": 0.7933758332530536,
+    "accuracy_pct": 65.85160202360876
+  },
+  "quote_ready_correlated": {
+    "n": 963,
+    "brier": 0.460561308657764,
+    "logloss": 0.7852597966766016,
+    "accuracy_pct": 65.83592938733126
+  },
+  "quote_ready_n": 963,
+  "price_blocked_n": 223,
+  "evidence_tiers": {
+    "RECENT": {
+      "n": 963,
+      "brier": 0.460561308657764,
+      "logloss": 0.7852597966766016,
+      "accuracy_pct": 65.83592938733126
+    },
+    "HISTORICAL": {
+      "n": 24,
+      "brier": 0.5379959146181742,
+      "logloss": 0.8985869938650559,
+      "accuracy_pct": 58.333333333333336
+    },
+    "INSUFFICIENT": {
+      "n": 199,
+      "brier": 0.4745544548609748,
+      "logloss": 0.8199621416371499,
+      "accuracy_pct": 66.83417085427136
+    }
+  },
+  "reliability": [
+    {
+      "bin": "0.0-0.1",
+      "n": 886,
+      "predicted": 0.06564296610468397,
+      "actual": 0.07223476297968397,
+      "gap": -0.006591796875
+    },
+    {
+      "bin": "0.1-0.2",
+      "n": 648,
+      "predicted": 0.13944046585648148,
+      "actual": 0.1404320987654321,
+      "gap": -0.0009916329089506293
+    },
+    {
+      "bin": "0.2-0.3",
+      "n": 340,
+      "predicted": 0.24658490349264706,
+      "actual": 0.24705882352941178,
+      "gap": -0.00047392003676471894
+    },
+    {
+      "bin": "0.3-0.4",
+      "n": 360,
+      "predicted": 0.3500759548611111,
+      "actual": 0.2833333333333333,
+      "gap": 0.06674262152777777
+    },
+    {
+      "bin": "0.4-0.5",
+      "n": 354,
+      "predicted": 0.4499070334569209,
+      "actual": 0.4661016949152542,
+      "gap": -0.016194661458333315
+    },
+    {
+      "bin": "0.5-0.6",
+      "n": 290,
+      "predicted": 0.5495841190732759,
+      "actual": 0.5586206896551724,
+      "gap": -0.009036570581896552
+    },
+    {
+      "bin": "0.6-0.7",
+      "n": 260,
+      "predicted": 0.6504713792067308,
+      "actual": 0.6846153846153846,
+      "gap": -0.03414400540865381
+    },
+    {
+      "bin": "0.7-0.8",
+      "n": 214,
+      "predicted": 0.7471319180782711,
+      "actual": 0.7383177570093458,
+      "gap": 0.008814161068925297
+    },
+    {
+      "bin": "0.8-0.9",
+      "n": 143,
+      "predicted": 0.8459762893356644,
+      "actual": 0.8461538461538461,
+      "gap": -0.00017755681818176772
+    },
+    {
+      "bin": "0.9-1.0",
+      "n": 63,
+      "predicted": 0.9362986731150794,
+      "actual": 0.9682539682539683,
+      "gap": -0.03195529513888884
+    }
+  ],
+  "surfaces": {
+    "Hard": {
+      "independent": {
+        "n": 659,
+        "brier": 0.4191934992120794,
+        "logloss": 0.7192036707052936,
+        "accuracy_pct": 70.40971168437027
+      },
+      "correlated": {
+        "n": 659,
+        "brier": 0.4163815805148644,
+        "logloss": 0.7137664917818279,
+        "accuracy_pct": 70.40971168437027
+      }
+    },
+    "Clay": {
+      "independent": {
+        "n": 527,
+        "brier": 0.5264386134785445,
+        "logloss": 0.8983681549497181,
+        "accuracy_pct": 60.3415559772296
+      },
+      "correlated": {
+        "n": 527,
+        "brier": 0.5246173000878582,
+        "logloss": 0.8929252754343395,
+        "accuracy_pct": 60.15180265654649
+      }
+    }
+  },
+  "interpretation": "Outcome calibration only; no historical BetMGM prices, ROI or CLV."
+}

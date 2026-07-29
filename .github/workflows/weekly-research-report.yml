@@ -95,6 +95,8 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
       - name: Build and send weekly report
+        env:
+          TENNIS_PROPS_V3_WEEKLY_JSON: '${{ vars.TENNIS_PROPS_V3_WEEKLY_JSON }}'
         run: |
           python scripts/audit-automation-budget.py \
             --workflows-dir .effective-default-branch/.github/workflows \

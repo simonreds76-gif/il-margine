@@ -1,0 +1,25 @@
+{
+  "generated_at_utc": "2026-07-29T21:16:18+00:00",
+  "feature_as_of": "2026-07-29",
+  "model": "most_aces_direct_1x2_v1",
+  "status": "ACTIVE",
+  "routing": "PROSPECTIVE_SHADOW_ONLY",
+  "input_rows": 6,
+  "scored_rows": 5,
+  "blocked_rows": 1,
+  "blocked": [
+    {
+      "fixture": "Edward Winter vs Jenson Brooksby",
+      "reason": "Sackmann player ID missing: Edward Winter"
+    }
+  ],
+  "rank_sources": {
+    "sackmann_latest": 10
+  },
+  "feature_count": 58,
+  "mean_symmetry_gap": 0.007041591070349422,
+  "notes": [
+    "The live scorer uses the same causal state and pair algebra as the frozen retrospective model.",
+    "No betting, public routing, ROI or CLV claim is enabled."
+  ]
+}
