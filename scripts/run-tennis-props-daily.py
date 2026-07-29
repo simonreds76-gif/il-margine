@@ -102,6 +102,9 @@ def select_market_file(as_of: str, lookback_days: int = 3) -> Path | None:
 
 def run_comparison(as_of: str, market_file: Path) -> bool:
     comparison = PROPS_DIR / f"comparison-{as_of}.csv"
+    # A failed rebuild must not leave a same-date file that looks current.
+    if comparison.exists():
+        comparison.unlink()
     exit_code = run(
         [
             sys.executable,
@@ -237,6 +240,36 @@ def write_pipeline_health(as_of: str, market_file: Path | None, *, strict: bool 
     return run(cmd, "Write tennis props pipeline health", fatal=False)
 
 
+def sync_hosted_captures(as_of: str, lookback_days: int) -> None:
+    run(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "sync-tennis-props-hosted-captures.py"),
+            "--as-of",
+            as_of,
+            "--lookback-days",
+            str(lookback_days),
+        ],
+        "Sync hosted Bet365 tennis-props captures",
+        fatal=False,
+        timeout_seconds=120,
+    )
+
+
+def run_comparison_only(as_of: str, *, skip_sync: bool, lookback_days: int) -> int:
+    if not skip_sync:
+        sync_hosted_captures(as_of, lookback_days)
+    market_file = select_market_file(as_of)
+    if market_file is None:
+        print(f"WARNING: no hosted/local Bet365 capture contains {as_of} events.")
+        return write_pipeline_health(as_of, None)
+    print(f"Using hosted/local Bet365 capture: {market_file}")
+    if not run_comparison(as_of, market_file):
+        return write_pipeline_health(as_of, market_file, strict=True)
+    run_shadow_tracking(as_of)
+    return write_pipeline_health(as_of, market_file, strict=True)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build tennis aces/DF projections and optional Bet365 comparison")
     parser.add_argument("--as-of", default=date.today().isoformat())
@@ -245,6 +278,7 @@ def main() -> int:
     parser.add_argument("--refresh-sackmann", action="store_true", help="Download fresh ATP/WTA Sackmann CSVs first")
     parser.add_argument("--skip-odds", action="store_true", help="Do not scrape Bet365 lines even if a key is configured")
     parser.add_argument("--require-odds", action="store_true", help="Fail if the Bet365 odds scrape cannot run")
+    parser.add_argument("--comparison-only", action="store_true", help="Sync hosted prices and refresh comparison/tracking without rebuilding projections")
     parser.add_argument("--skip-hosted-sync", action="store_true", help="Do not sync captures from the golden data branch")
     parser.add_argument("--hosted-lookback-days", type=int, default=7)
     parser.add_argument("--days-ahead", type=int, default=2)
@@ -253,6 +287,13 @@ def main() -> int:
 
     load_env()
     PROPS_DIR.mkdir(parents=True, exist_ok=True)
+
+    if args.comparison_only:
+        return run_comparison_only(
+            args.as_of,
+            skip_sync=args.skip_hosted_sync,
+            lookback_days=args.hosted_lookback_days,
+        )
 
     if args.refresh_sackmann:
         run(
@@ -313,19 +354,7 @@ def main() -> int:
     )
 
     if not args.skip_hosted_sync:
-        run(
-            [
-                sys.executable,
-                str(ROOT / "scripts" / "sync-tennis-props-hosted-captures.py"),
-                "--as-of",
-                args.as_of,
-                "--lookback-days",
-                str(args.hosted_lookback_days),
-            ],
-            "Sync hosted Bet365 tennis-props captures",
-            fatal=False,
-            timeout_seconds=120,
-        )
+        sync_hosted_captures(args.as_of, args.hosted_lookback_days)
 
     if args.skip_odds:
         print("\nBet365 scrape skipped by --skip-odds.")

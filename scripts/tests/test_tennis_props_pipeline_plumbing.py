@@ -207,6 +207,31 @@ class DailyMarketSelectionTests(unittest.TestCase):
             finally:
                 DAILY.PROPS_DIR = old_props
 
+    def test_failed_comparison_removes_same_date_stale_output(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            old_props = DAILY.PROPS_DIR
+            old_run = DAILY.run
+            DAILY.PROPS_DIR = Path(tmp)
+            comparison = DAILY.PROPS_DIR / "comparison-2026-07-29.csv"
+            write_csv(comparison, [{"date": "2026-07-29", "matched_board": "yes"}])
+            DAILY.run = lambda *args, **kwargs: 1
+            try:
+                self.assertFalse(
+                    DAILY.run_comparison(
+                        "2026-07-29",
+                        DAILY.PROPS_DIR / "lines.csv",
+                    )
+                )
+                self.assertFalse(comparison.exists())
+            finally:
+                DAILY.PROPS_DIR = old_props
+                DAILY.run = old_run
+
+    def test_am_task_runs_lightweight_hosted_comparison(self) -> None:
+        am_script = (SCRIPTS / "oncourt-am-refresh.ps1").read_text(encoding="utf-8")
+        self.assertIn("run-tennis-props-daily.py", am_script)
+        self.assertIn("--comparison-only", am_script)
+
 
 class HostedSyncTests(unittest.TestCase):
     def test_history_merge_is_append_only_and_deduplicated(self) -> None:
