@@ -92,7 +92,7 @@ jobs:
             ${EXTRA_ARGS}
 
       - name: Scrape BetMGM Most Aces 1X2
-        if: ${{ always() }}
+        if: ${{ always() && (github.event_name == 'workflow_dispatch' || github.event.schedule == '25 15 * * *') }}
         env:
           DAYS_AHEAD: ${{ github.event.inputs.days_ahead || '2' }}
           MAX_EVENTS: ${{ github.event.inputs.max_events || '64' }}
