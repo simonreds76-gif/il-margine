@@ -179,11 +179,30 @@ def frozen_digest(row: dict[str, str]) -> str:
 
 def assert_integrity(rows: list[dict[str, str]]) -> None:
     ids: set[str] = set()
+    semantic_keys: set[tuple[str, str, str]] = set()
     for index, row in enumerate(rows, start=2):
         row_id = str(row.get("observation_id") or "")
         if not row_id or row_id in ids:
             raise RuntimeError(f"v4 ledger duplicate/missing observation_id at CSV row {index}")
         ids.add(row_id)
+        semantic_key = (
+            str(row.get("event_id") or "").strip()
+            or "|".join(
+                [
+                    str(row.get("date") or ""),
+                    str(row.get("tour") or "").upper(),
+                    *SETTLE.pair_key(row.get("player"), row.get("opponent")),
+                ]
+            ),
+            SETTLE.norm_text(row.get("player")),
+            str(row.get("market") or "aces").strip().lower(),
+        )
+        if semantic_key in semantic_keys:
+            raise RuntimeError(
+                "v4 ledger duplicate event/player/market at CSV row "
+                f"{index}: {'|'.join(semantic_key)}"
+            )
+        semantic_keys.add(semantic_key)
         expected = frozen_digest(row)
         if str(row.get("frozen_sha256") or "") != expected:
             raise RuntimeError(f"v4 frozen-field integrity failure: {row_id}")

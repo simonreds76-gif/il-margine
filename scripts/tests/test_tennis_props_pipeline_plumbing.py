@@ -384,6 +384,35 @@ class ComparisonInputFilterTests(unittest.TestCase):
         self.assertIn("tennis-props-aces-over-v4.py", daily_script)
         self.assertIn("Register and score ATP ace-over v4 challenger", daily_script)
 
+    def test_comparison_only_refreshes_derived_ace_boards_first(self) -> None:
+        calls: list[str] = []
+        old_refresh = DAILY.refresh_derived_ace_boards
+        old_select = DAILY.select_market_file
+        old_compare = DAILY.run_comparison
+        old_tracking = DAILY.run_shadow_tracking
+        old_health = DAILY.write_pipeline_health
+        DAILY.refresh_derived_ace_boards = lambda: calls.append("refresh")
+        DAILY.select_market_file = lambda _as_of: Path("capture.csv")
+        DAILY.run_comparison = lambda _as_of, _path: calls.append("compare") or True
+        DAILY.run_shadow_tracking = lambda _as_of: calls.append("tracking")
+        DAILY.write_pipeline_health = lambda *_args, **_kwargs: 0
+        try:
+            self.assertEqual(
+                DAILY.run_comparison_only(
+                    "2026-07-29",
+                    skip_sync=True,
+                    lookback_days=3,
+                ),
+                0,
+            )
+        finally:
+            DAILY.refresh_derived_ace_boards = old_refresh
+            DAILY.select_market_file = old_select
+            DAILY.run_comparison = old_compare
+            DAILY.run_shadow_tracking = old_tracking
+            DAILY.write_pipeline_health = old_health
+        self.assertEqual(calls, ["refresh", "compare", "tracking"])
+
 
 class HostedSyncTests(unittest.TestCase):
     def test_history_merge_is_append_only_and_deduplicated(self) -> None:

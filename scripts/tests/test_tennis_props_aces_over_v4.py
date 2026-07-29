@@ -102,6 +102,25 @@ class RegistrationTests(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             V4.assert_integrity([row])
 
+    def test_integrity_rejects_duplicate_event_player_market(self) -> None:
+        first = {field: "" for field in V4.FIELDNAMES}
+        first.update(
+            {
+                "observation_id": "one",
+                "event_id": "123",
+                "player": "Player One",
+                "opponent": "Player Two",
+                "market": "aces",
+            }
+        )
+        first["frozen_sha256"] = V4.frozen_digest(first)
+        second = dict(first)
+        second["observation_id"] = "two"
+        second["line"] = "9.5"
+        second["frozen_sha256"] = V4.frozen_digest(second)
+        with self.assertRaisesRegex(RuntimeError, "duplicate event/player/market"):
+            V4.assert_integrity([first, second])
+
     def test_future_row_cannot_settle_from_old_same_pair_result(self) -> None:
         from datetime import UTC, datetime
         from unittest.mock import patch
