@@ -46,6 +46,8 @@ const SHADOW_DIR = path.join(PROPS_DIR, "shadow");
 const SHADOW_SIGNALS_PATH = path.join(SHADOW_DIR, "aces-dfs-shadow-signals.csv");
 const SHADOW_PERFORMANCE_PATH = path.join(SHADOW_DIR, "aces-dfs-shadow-performance.txt");
 const V3_SHADOW_SIGNALS_PATH = path.join(SHADOW_DIR, "aces-v3-shadow-signals.csv");
+const V4_OBSERVATIONS_PATH = path.join(SHADOW_DIR, "aces-over-v4-observations.csv");
+const V4_REPORT_PATH = path.join(PROPS_DIR, "backtest", "aces-over-v4-weekly-report.json");
 const MOST_ACES_BOARD_PATH = path.join(SHADOW_DIR, "most-aces-1x2-board.csv");
 const MOST_ACES_OBSERVATIONS_PATH = path.join(SHADOW_DIR, "most-aces-1x2-observations.csv");
 const MOST_ACES_REPORT_PATH = path.join(SHADOW_DIR, "most-aces-1x2-performance.txt");
@@ -1379,6 +1381,89 @@ function numeric(value: unknown): number {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+function AcesOverV4Panel({
+  rows,
+  report,
+  stamp,
+}: {
+  rows: CsvRow[];
+  report: JsonRecord;
+  stamp: string;
+}) {
+  const status = String(report.status || "NOT STARTED");
+  const registered = numeric(report.rows_registered ?? rows.length);
+  const settled = numeric(report.rows_settled);
+  const scored = numeric(report.rows_scored);
+  const target = numeric(report.minimum_prefit_settled || 200);
+  const promotionSample = numeric(report.promotion_sample);
+  const clvCoverage = numeric(report.clv_coverage);
+  const clvMean = Number(report.clv_mean_pct);
+  const acceptRate = Number(report.ladder_accept_rate_pct);
+  const integrity = record(report.integrity);
+  const progress = target > 0 ? Math.min(100, settled / target * 100) : 0;
+  const recent = [...rows]
+    .sort((a, b) => (b.registered_at_utc || "").localeCompare(a.registered_at_utc || ""))
+    .slice(0, 6);
+
+  return (
+    <SectionCard
+      title="ATP Aces Over v4"
+      subtitle={`Registered market-anchored challenger. v3 remains frozen and live routing is unchanged. Updated ${stamp}.`}
+    >
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+        <MetricTile label="Status" value={status.replaceAll("_", " ")} sub="shadow only" tone={status === "PRE_FIT" ? "text-amber-300" : "text-cyan-300"} />
+        <MetricTile label="Registered" value={String(registered)} sub={`${settled}/${target} settled before first fit`} tone="text-cyan-300" />
+        <MetricTile label="Scored" value={String(scored)} sub={`${numeric(report.rows_pushed)} pushes / ${numeric(report.rows_pending)} pending`} tone="text-slate-100" />
+        <MetricTile label="Ladder health" value={Number.isFinite(acceptRate) ? `${acceptRate.toFixed(1)}%` : "-"} sub={`${numeric(report.ladder_groups_accepted)}/${numeric(report.ladder_groups_seen)} accepted`} tone={acceptRate >= 95 ? "text-emerald-300" : "text-amber-300"} />
+        <MetricTile label="Genuine CLV" value={Number.isFinite(clvMean) ? `${clvMean >= 0 ? "+" : ""}${clvMean.toFixed(2)}%` : "-"} sub={`${clvCoverage}/${registered} later closes`} tone={Number.isFinite(clvMean) && clvMean >= 0 ? "text-emerald-300" : "text-slate-400"} />
+        <MetricTile label="Promotion sample" value={String(promotionSample)} sub="600 rows + all gates required" tone="text-slate-400" />
+      </div>
+
+      <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-900">
+        <div className="h-full rounded-full bg-gradient-to-r from-amber-400 to-cyan-400" style={{ width: `${progress}%` }} />
+      </div>
+      <div className="mt-2 flex flex-wrap justify-between gap-2 text-[11px] text-slate-500">
+        <span>PRE_FIT collection {progress.toFixed(1)}%</span>
+        <span>Integrity: {numeric(integrity.player_key_collisions)} player collisions / {numeric(integrity.open_as_close_rows)} open-as-close</span>
+      </div>
+
+      {promotionSample > 0 ? (
+        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+          <MetricTile label="v3 Brier" value={fmt(String(report.brier_v3), 4)} tone="text-slate-100" />
+          <MetricTile label="v4 Brier" value={fmt(String(report.brier_v4), 4)} tone="text-cyan-300" />
+          <MetricTile label="Market Brier" value={fmt(String(report.brier_market), 4)} tone="text-slate-100" />
+        </div>
+      ) : (
+        <div className="mt-4 rounded-2xl border border-amber-500/20 bg-amber-500/8 px-4 py-3 text-xs leading-relaxed text-amber-100/80">
+          No v4 tips and no v4 performance claim yet. Until 200 settled registrations, v4 is mathematically identical to v3; these rows establish an honest, frozen baseline for the later walk-forward test.
+        </div>
+      )}
+
+      {recent.length ? (
+        <div className="mt-4 grid gap-2 lg:grid-cols-2">
+          {recent.map((row) => (
+            <div key={row.observation_id} className="rounded-2xl border border-slate-800/80 bg-slate-950/60 px-4 py-3">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="font-bold text-slate-100">{row.player} <span className="font-normal text-slate-500">vs {row.opponent}</span></div>
+                  <div className="mt-1 text-[11px] text-slate-500">{row.tournament} · Over {fmt(row.line, 1)} @ {fmt(row.selected_odds, 2)}</div>
+                </div>
+                <MiniBadge label={(row.settlement_status || "pending").toUpperCase()} tone={row.settlement_status === "settled" ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300" : "border-amber-500/25 bg-amber-500/10 text-amber-300"} />
+              </div>
+              <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px] text-slate-400">
+                <span>v3 μ {fmt(row.mu_v3, 2)}</span>
+                <span>market μ {fmt(row.mu_mkt, 2)}</span>
+                <span>shape RMSE {fmt(row.ladder_shape_rmse, 3)}</span>
+                <span>{row.ladder_points} points</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : <EmptyState message="No eligible ATP Hard/Clay ace ladders have been registered yet." />}
+    </SectionCard>
+  );
+}
+
 function MostAcesPanel({
   rows,
   observations,
@@ -1634,6 +1719,9 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     propsV3GateStamp,
     propsV3ShadowRows,
     propsV3ShadowStamp,
+    propsV4Rows,
+    propsV4Report,
+    propsV4Stamp,
     mostAcesRows,
     mostAcesObservations,
     mostAcesValidation,
@@ -1672,6 +1760,9 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     fileStamp(PROPS_V3_GATE_PATH),
     readCsv(V3_SHADOW_SIGNALS_PATH),
     fileStamp(V3_SHADOW_SIGNALS_PATH),
+    readCsv(V4_OBSERVATIONS_PATH),
+    readJson(V4_REPORT_PATH),
+    fileStamp(V4_REPORT_PATH),
     readCsv(MOST_ACES_BOARD_PATH),
     readCsv(MOST_ACES_OBSERVATIONS_PATH),
     readJson(MOST_ACES_STAGE0_PATH),
@@ -1811,6 +1902,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
 
             <ModelTrackerPanel rows={modelSummaryRows} stamp={modelSummaryStamp} />
 
+            <AcesOverV4Panel rows={propsV4Rows} report={propsV4Report} stamp={propsV4Stamp} />
+
             <MarketBenchmarkPanel rows={marketObservationRows} stamp={marketObservationReportStamp} />
 
             <MostAcesPanel
@@ -1882,6 +1975,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
                 <div><span className="text-slate-500">Comparison:</span> {latestComparisonPath ? path.basename(latestComparisonPath) : "missing"}</div>
                 <div><span className="text-slate-500">Shadow:</span> data/tennis-props/shadow/aces-dfs-shadow-signals.csv</div>
                 <div><span className="text-slate-500">Market benchmark:</span> data/tennis-props/shadow/market-observations.csv</div>
+                <div><span className="text-slate-500">Aces Over v4:</span> data/tennis-props/shadow/aces-over-v4-observations.csv</div>
                 <div><span className="text-slate-500">Most Aces:</span> data/tennis-props/shadow/most-aces-1x2-observations.csv</div>
               </div>
             </SectionCard>

@@ -201,6 +201,18 @@ def run_shadow_tracking(as_of: str) -> None:
             "Settle v3 ATP ace prospective shadow signals",
             fatal=True,
         )
+    v4_cmd = [
+        sys.executable,
+        str(ROOT / "scripts" / "tennis-props-aces-over-v4.py"),
+    ]
+    if has_market_rows(v3_comparison):
+        v4_cmd.extend(["--comparison", str(v3_comparison)])
+    run(
+        v4_cmd,
+        "Register and score ATP ace-over v4 challenger",
+        fatal=False,
+        timeout_seconds=180,
+    )
     comparison = PROPS_DIR / f"comparison-{as_of}.csv"
     if has_market_rows(comparison):
         run(
