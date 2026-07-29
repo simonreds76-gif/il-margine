@@ -3,8 +3,8 @@ name: Tennis Props Bet365 Refresh
 on:
   schedule:
     - cron: "25 8 * * *"
-    # GitHub occasionally delays or drops a scheduled run. This fallback is
-    # credit-safe: it only scrapes when the morning capture has no usable rows.
+    # GitHub occasionally delays or drops a scheduled run. The 11:25 slot is a
+    # credit-safe fallback; 15:25 is a deliberate fresh pre-nightly capture.
     - cron: "25 11 * * *"
     - cron: "25 15 * * *"
   workflow_dispatch:
@@ -59,7 +59,7 @@ jobs:
           fi
 
       - name: Guard fallback API credits
-        if: ${{ github.event_name == 'schedule' && github.event.schedule != '25 8 * * *' }}
+        if: ${{ github.event_name == 'schedule' && github.event.schedule == '25 11 * * *' }}
         id: fallback_guard
         shell: bash
         run: |

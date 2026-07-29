@@ -54,7 +54,7 @@
           "request_caps": {"odds_api_io": 50, "api_football": 90}
         },
         {
-          "cron": "15 9-22 * * *",
+          "cron": "15 9,11,13,15,17,19,21 * * *",
           "request_caps": {"odds_api_io": 25}
         }
       ]
@@ -102,7 +102,7 @@
       "schedules": [
         {"cron": "25 8 * * *", "request_caps": {"odds_api_io": 8}},
         {"cron": "25 11 * * *", "request_caps": {"odds_api_io": 8}, "conditional": "skip when the morning file has usable rows"},
-        {"cron": "25 15 * * *", "request_caps": {"odds_api_io": 8}, "conditional": "skip when an earlier file has usable rows"}
+        {"cron": "25 15 * * *", "request_caps": {"odds_api_io": 8}}
       ]
     },
     {

@@ -49,15 +49,16 @@ class AutomationBudgetTests(unittest.TestCase):
         tennis_scraper = (ROOT / "scripts" / "tennis-props-scrape-bet365.py").read_text(encoding="utf-8")
         self.assertIn("--max-odds-requests-per-league 1", counts_workflow)
         self.assertIn("--max-odds-requests-per-league 2", counts_workflow)
-        self.assertIn('cron: "15 9-22 * * *"', counts_workflow)
+        self.assertIn('cron: "15 9,11,13,15,17,19,21 * * *"', counts_workflow)
         self.assertIn("--max-odds-api-http-requests 25", counts_workflow)
         self.assertIn("--max-odds-api-http-requests 50", counts_workflow)
         self.assertIn('"--max-odds-requests-per-league"', scraper)
         self.assertIn('"--max-odds-api-http-requests"', scraper)
         self.assertIn("Odds-API.io HTTP request budget exhausted", scraper)
-        self.assertIn("github.event.schedule != '25 8 * * *'", tennis)
+        self.assertIn("github.event.schedule == '25 11 * * *'", tennis)
         self.assertIn("if args.probe_markets:", tennis_scraper)
         self.assertNotIn("if args.probe_markets or not rows:", tennis_scraper)
+        self.assertEqual(CONFIG["provider_limits"]["odds_api_io"]["requests_per_day"], 500)
 
 
 if __name__ == "__main__":

@@ -30,6 +30,12 @@ $laneConfigs = @(
     @{ Name = "CPI speed shadow"; Path = "data\backtest\strict-policy-performance-cpi_speed-weekly.csv" }
 )
 
+$artifactConfigs = @(
+    @{ Name = "Tennis props daily board"; Path = "data\tennis-props\player-props-board.csv"; MaxAgeHours = 30 },
+    @{ Name = "Tennis props capture pipeline"; Path = "data\tennis-props\pipeline-health.json"; MaxAgeHours = 30; TimestampField = "generated_at" },
+    @{ Name = "Bet365 props benchmark"; Path = "data\tennis-props\shadow\market-observations-report.txt"; MaxAgeHours = 30 }
+)
+
 $taskNames = @(
     "IlMargine-Daily",
     "IlMargine-Daily-AM",
@@ -210,6 +216,59 @@ function Get-LaneHealth($config, [datetimeoffset]$nowUtc, [int]$staleHours) {
     }
 }
 
+function Get-ArtifactHealth($config, [datetimeoffset]$nowUtc) {
+    $path = Join-Path $root $config.Path
+    if (!(Test-Path $path)) {
+        return [ordered]@{
+            name = $config.Name
+            path = $config.Path
+            status = "missing"
+            generated_at = $null
+            latest_signal_date = $null
+            age_hours = $null
+            stale = $true
+            detail = "Missing file"
+        }
+    }
+
+    $payload = $null
+    $generated = $null
+    if ($config.TimestampField) {
+        $payload = Read-JsonFile $path
+        if ($payload) {
+            $generated = Parse-DateTimeOffsetValue $payload.($config.TimestampField)
+        }
+    } else {
+        $generated = [DateTimeOffset](Get-Item $path).LastWriteTimeUtc
+    }
+
+    $ageHours = if ($generated) {
+        [Math]::Max(0, ($nowUtc - $generated.ToUniversalTime()).TotalHours)
+    } else {
+        $null
+    }
+    $isStale = ($null -eq $generated) -or ($ageHours -gt [double]$config.MaxAgeHours)
+    $isStructuralFailure = $payload -and $payload.structural_error -eq $true
+    $status = if ($isStructuralFailure) { "failed" } elseif ($isStale) { "stale" } else { "ok" }
+
+    return [ordered]@{
+        name = $config.Name
+        path = $config.Path
+        status = $status
+        generated_at = if ($generated) { $generated.ToUniversalTime().ToString("o") } else { $null }
+        latest_signal_date = if ($payload -and $payload.as_of) { "$($payload.as_of)" } else { $null }
+        age_hours = if ($null -eq $ageHours) { $null } else { [Math]::Round($ageHours, 2) }
+        stale = $isStale
+        detail = if ($isStructuralFailure) {
+            "Pipeline state=$($payload.state)"
+        } elseif ($null -eq $generated) {
+            "Missing or invalid timestamp"
+        } else {
+            $null
+        }
+    }
+}
+
 function Get-TaskHealth([string]$taskName) {
     try {
         $task = Get-ScheduledTask -TaskName $taskName -ErrorAction Stop
@@ -375,7 +434,10 @@ Import-EnvFiles
 
 $nowUtc = [DateTimeOffset]::UtcNow
 $previousHealth = Read-JsonFile $healthFile
-$laneHealth = @($laneConfigs | ForEach-Object { Get-LaneHealth $_ $nowUtc $StaleHours })
+$laneHealth = @(
+    $laneConfigs | ForEach-Object { Get-LaneHealth $_ $nowUtc $StaleHours }
+    $artifactConfigs | ForEach-Object { Get-ArtifactHealth $_ $nowUtc }
+)
 $taskHealth = @($taskNames | ForEach-Object { Get-TaskHealth $_ })
 $activeRecoveryTasks = @(Get-ActiveLaneRecoveryTasks $taskHealth)
 
