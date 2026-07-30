@@ -1,0 +1,1065 @@
+{
+  "_meta": {
+    "schema_version": 2,
+    "audit_type": "current_squad_first_penalty_hierarchy_audit",
+    "league": "bundesliga",
+    "season": "2026/27",
+    "as_of": "2026-07-30",
+    "methodology": [
+      "Verified 2026/27 Bundesliga membership against the official DFL fixture list.",
+      "Applied a current-squad gate before considering penalty evidence; rumours alone did not remove a player and no departed player was retained.",
+      "Prioritised direct same-match on-pitch precedence, then 2026 preseason and 2025/26 competitive regular-time penalties.",
+      "Used official club and Bundesliga/DFL sources first, then Kicker, LigaInsider and credible German or local reporting.",
+      "Used career penalty records only as fallback evidence where no current-club hierarchy event existed.",
+      "Excluded shootouts from regular-time hierarchy evidence and labelled any shootout-only evidence explicitly."
+    ]
+  },
+  "clubs": [
+    {
+      "club": "Augsburg",
+      "recommended_order": {
+        "primary": "Fabian Rieder",
+        "secondary": "Alexis Claude-Maurice",
+        "tertiary": "Michael Gregoritsch"
+      },
+      "status": "provisional",
+      "per_position_confidence": {
+        "primary": "high",
+        "secondary": "medium",
+        "tertiary": "medium"
+      },
+      "rationale": "Rieder converted two 2025/26 league penalties and took the October penalty after Claude-Maurice had entered at half-time, giving direct on-pitch precedence. Claude-Maurice remains the most credible deputy despite his April miss. Gregoritsch converted at Wolfsburg when Rieder was no longer available for the kick.",
+      "uncertainty_note": "No 2026/27 competitive penalty has confirmed whether Rieder retains the role. The secondary and tertiary order has no direct same-match test.",
+      "transfer_conditions": [
+        "If Alexis Claude-Maurice completes a transfer, Michael Gregoritsch moves to secondary pending a new signing or preseason penalty event."
+      ],
+      "sources": [
+        {
+          "label": "FC Augsburg",
+          "url": "https://www.fcaugsburg.de/article/trainingsauftakt-erste-einheit-auf-dem-platz-23251",
+          "date": "2026-07-13",
+          "evidence": "Current preseason status for Rieder and Gregoritsch."
+        },
+        {
+          "label": "Kicker",
+          "url": "https://www.kicker.de/bundesliga/fc-augsburg/elfmeter-schuetzen",
+          "date": "2026-07-30",
+          "evidence": "2025/26 taker totals: Rieder 2/2, Claude-Maurice 1/2 and Gregoritsch 1/1."
+        },
+        {
+          "label": "DFB Datencenter",
+          "url": "https://datencenter.dfb.de/datencenter/bundesliga/2025-2026/7-spieltag/1-fc-koeln-fc-augsburg-2398461",
+          "date": "2025-10-18",
+          "evidence": "Rieder took the penalty while Claude-Maurice was already on the pitch."
+        }
+      ],
+      "squad_membership": {
+        "primary": {
+          "player": "Fabian Rieder",
+          "status": "confirmed",
+          "source_url": "https://www.fcaugsburg.de/article/trainingsauftakt-erste-einheit-auf-dem-platz-23251",
+          "checked_at": "2026-07-30"
+        },
+        "secondary": {
+          "player": "Alexis Claude-Maurice",
+          "status": "confirmed",
+          "source_url": "https://www.fcaugsburg.de/team/player/alexis-claude-maurice-282",
+          "checked_at": "2026-07-30"
+        },
+        "tertiary": {
+          "player": "Michael Gregoritsch",
+          "status": "confirmed",
+          "source_url": "https://www.fcaugsburg.de/article/trainingsauftakt-erste-einheit-auf-dem-platz-23251",
+          "checked_at": "2026-07-30"
+        }
+      }
+    },
+    {
+      "club": "Bayer Leverkusen",
+      "recommended_order": {
+        "primary": "Patrik Schick",
+        "secondary": "Aleix García",
+        "tertiary": "Ibrahim Maza"
+      },
+      "status": "provisional",
+      "per_position_confidence": {
+        "primary": "high",
+        "secondary": "medium",
+        "tertiary": "low"
+      },
+      "rationale": "Schick converted Leverkusen's late April league penalty and is the strongest current-club regular-time incumbent. García converted a Champions League penalty in 2025/26. Maza has no equivalent senior Leverkusen event and is retained only as a career and role fallback.",
+      "uncertainty_note": "The tertiary slot is weak and could be overtaken by another attacker during the remaining preseason.",
+      "transfer_conditions": [
+        "Re-audit if Aleix García completes a transfer or if another current forward takes a 2026 preseason penalty."
+      ],
+      "sources": [
+        {
+          "label": "Bayer 04",
+          "url": "https://www.bayer04.de/pt-br/news/bayer04/veja-todos-os-jogadores-do-bayer-04-leverkusen-para-a-temporada-202627",
+          "date": "2026-07-15",
+          "evidence": "Published roster includes Schick, García and Maza."
+        },
+        {
+          "label": "Bayer 04",
+          "url": "https://www.bayer04.de/en-us/news/bundesliga/schick-fires-werkself-to-2-1-derby-win-in-cologne",
+          "date": "2026-04-25",
+          "evidence": "Schick converted the decisive regular-time penalty at Köln."
+        },
+        {
+          "label": "Bundesliga",
+          "url": "https://www.bundesliga.com/en/champions-league/matchday/2025-2026/3/bayer-04-leverkusen-vs-paris-saint-germain-fc/liveticker",
+          "date": "2025-10-21",
+          "evidence": "García converted a Champions League regular-time penalty."
+        }
+      ],
+      "squad_membership": {
+        "primary": {
+          "player": "Patrik Schick",
+          "status": "confirmed",
+          "source_url": "https://www.bayer04.de/pt-br/news/bayer04/veja-todos-os-jogadores-do-bayer-04-leverkusen-para-a-temporada-202627",
+          "checked_at": "2026-07-30"
+        },
+        "secondary": {
+          "player": "Aleix García",
+          "status": "confirmed",
+          "source_url": "https://www.bayer04.de/pt-br/news/bayer04/veja-todos-os-jogadores-do-bayer-04-leverkusen-para-a-temporada-202627",
+          "checked_at": "2026-07-30"
+        },
+        "tertiary": {
+          "player": "Ibrahim Maza",
+          "status": "confirmed",
+          "source_url": "https://www.bayer04.de/pt-br/news/bayer04/veja-todos-os-jogadores-do-bayer-04-leverkusen-para-a-temporada-202627",
+          "checked_at": "2026-07-30"
+        }
+      }
+    },
+    {
+      "club": "Bayern Munich",
+      "recommended_order": {
+        "primary": "Harry Kane",
+        "secondary": "Jamal Musiala",
+        "tertiary": "Michael Olise"
+      },
+      "status": "provisional",
+      "per_position_confidence": {
+        "primary": "high",
+        "secondary": "medium",
+        "tertiary": "low"
+      },
+      "rationale": "Kane remains Bayern's dominant high-volume penalty taker. Musiala converted when Kane was unavailable in March 2026. Olise has no recent Bayern first-team penalty event and is a role and career fallback.",
+      "uncertainty_note": "The tertiary order is not directly tested at Bayern.",
+      "transfer_conditions": [],
+      "sources": [
+        {
+          "label": "FC Bayern",
+          "url": "https://fcbayern.com/de/teams/profis",
+          "date": "2026-07-30",
+          "evidence": "Live 2026/27 professional squad confirms all three players."
+        },
+        {
+          "label": "Kicker",
+          "url": "https://www.kicker.de/bundesliga/fc-bayern-muenchen/elfmeter-schuetzen",
+          "date": "2026-07-30",
+          "evidence": "Kane's 2025/26 penalty volume and perfect conversion record dominate the club."
+        },
+        {
+          "label": "FC Bayern",
+          "url": "https://fcbayern.com/de/news/spielberichte/2026/03/spielbericht-bundesliga-fc-bayern-borussia-moenchengladbach",
+          "date": "2026-03-06",
+          "evidence": "Musiala converted in Kane's absence."
+        }
+      ],
+      "squad_membership": {
+        "primary": {
+          "player": "Harry Kane",
+          "status": "confirmed",
+          "source_url": "https://fcbayern.com/de/teams/profis",
+          "checked_at": "2026-07-30"
+        },
+        "secondary": {
+          "player": "Jamal Musiala",
+          "status": "confirmed",
+          "source_url": "https://fcbayern.com/de/teams/profis",
+          "checked_at": "2026-07-30"
+        },
+        "tertiary": {
+          "player": "Michael Olise",
+          "status": "confirmed",
+          "source_url": "https://fcbayern.com/de/teams/profis",
+          "checked_at": "2026-07-30"
+        }
+      }
+    },
+    {
+      "club": "Borussia Dortmund",
+      "recommended_order": {
+        "primary": "Ramy Bensebaini",
+        "secondary": "Emre Can",
+        "tertiary": "Felix Nmecha"
+      },
+      "status": "provisional",
+      "per_position_confidence": {
+        "primary": "high",
+        "secondary": "medium",
+        "tertiary": "low"
+      },
+      "rationale": "After Nmecha missed against HSV, Bensebaini converted two later penalties while Nmecha remained on the pitch, establishing a direct takeover. Can had converted three league penalties before injury and remains the experienced deputy. Nmecha drops to third after the miss and same-match replacement.",
+      "uncertainty_note": "Can and Nmecha have injury-related availability risk; the practical matchday deputy may differ while either is unavailable.",
+      "transfer_conditions": [],
+      "sources": [
+        {
+          "label": "Borussia Dortmund",
+          "url": "https://www.bvb.de/de/de/mannschaften/fussball/profis.html",
+          "date": "2026-07-30",
+          "evidence": "Current professional squad confirms all three players."
+        },
+        {
+          "label": "Borussia Dortmund",
+          "url": "https://www.bvb.de/de/en/news/news-overview/news.html/2026/3/21/3-2-from-0-2-down-BVBs-second-half-onslaught-against-HSV.html",
+          "date": "2026-03-21",
+          "evidence": "Nmecha missed before Bensebaini converted twice with Nmecha still playing."
+        },
+        {
+          "label": "Borussia Dortmund",
+          "url": "https://www.bvb.de/de/de/aktuelles/news/news.html/2026/3/21/BVB-verlaengert-mit-Emre-Can.html",
+          "date": "2026-03-21",
+          "evidence": "Can's contract extension confirms continued membership."
+        }
+      ],
+      "squad_membership": {
+        "primary": {
+          "player": "Ramy Bensebaini",
+          "status": "confirmed",
+          "source_url": "https://www.bvb.de/de/de/mannschaften/fussball/profis.html",
+          "checked_at": "2026-07-30"
+        },
+        "secondary": {
+          "player": "Emre Can",
+          "status": "confirmed",
+          "source_url": "https://www.bvb.de/de/de/mannschaften/fussball/profis.html",
+          "checked_at": "2026-07-30"
+        },
+        "tertiary": {
+          "player": "Felix Nmecha",
+          "status": "confirmed",
+          "source_url": "https://www.bvb.de/de/de/mannschaften/fussball/profis.html",
+          "checked_at": "2026-07-30"
+        }
+      }
+    },
+    {
+      "club": "Borussia M.Gladbach",
+      "recommended_order": {
+        "primary": "Kevin Diks",
+        "secondary": "Robin Hack",
+        "tertiary": "Kevin Stöger"
+      },
+      "status": "provisional",
+      "per_position_confidence": {
+        "primary": "high",
+        "secondary": "medium",
+        "tertiary": "low"
+      },
+      "rationale": "Diks converted all four 2025/26 league penalties. Hack converted the 18 July friendly penalty and local reporting identifies him as the revised plan B. Stöger remains an experienced fallback but missed his latest relevant club attempt and has no later precedence over Hack.",
+      "uncertainty_note": "The backup order is based on preseason reporting rather than a direct same-match competitive test.",
+      "transfer_conditions": [],
+      "sources": [
+        {
+          "label": "Borussia Mönchengladbach",
+          "url": "https://shop.borussia.de/de-de/c/home-trikot",
+          "date": "2026-07-30",
+          "evidence": "2026/27 club roster merchandise confirms Diks and Hack."
+        },
+        {
+          "label": "GladbachLive",
+          "url": "https://www.gladbachlive.de/news/elfer-raetsel-geloest-gladbachs-neue-hackordnung-vom-punkt-1331515",
+          "date": "2026-07-22",
+          "evidence": "Reports Diks as first choice and Hack as plan B after Hack's preseason conversion."
+        },
+        {
+          "label": "Bundesliga",
+          "url": "https://www.bundesliga.com/de/bundesliga/news/borussia-moenchengladbach-fc-augsburg-spieltag-16-spielbericht-highlights-35510",
+          "date": "2026-01-11",
+          "evidence": "Diks converted a competitive league penalty."
+        }
+      ],
+      "squad_membership": {
+        "primary": {
+          "player": "Kevin Diks",
+          "status": "confirmed",
+          "source_url": "https://shop.borussia.de/de-de/c/home-trikot",
+          "checked_at": "2026-07-30"
+        },
+        "secondary": {
+          "player": "Robin Hack",
+          "status": "confirmed",
+          "source_url": "https://shop.borussia.de/de-de/c/home-trikot",
+          "checked_at": "2026-07-30"
+        },
+        "tertiary": {
+          "player": "Kevin Stöger",
+          "status": "confirmed",
+          "source_url": "https://www.bundesliga.com/de/spieler/kevin-stoger",
+          "checked_at": "2026-07-30"
+        }
+      }
+    },
+    {
+      "club": "Eintracht Frankfurt",
+      "recommended_order": {
+        "primary": "Jonathan Burkardt",
+        "secondary": "Michy Batshuayi",
+        "tertiary": "Can Uzun"
+      },
+      "status": "provisional",
+      "per_position_confidence": {
+        "primary": "high",
+        "secondary": "medium",
+        "tertiary": "low"
+      },
+      "rationale": "Burkardt converted twice against Stuttgart and converted the 26 July preseason penalty with Uzun on the pitch. Batshuayi has a successful Frankfurt competitive penalty and therefore ranks above Uzun, who has no equivalent Eintracht first-team event.",
+      "uncertainty_note": "Batshuayi versus Uzun has not been tested with both available for the same penalty; the correction follows current-club evidence rather than projected minutes.",
+      "transfer_conditions": [],
+      "sources": [
+        {
+          "label": "Eintracht Frankfurt",
+          "url": "https://profis.eintracht.de/kader/",
+          "date": "2026-07-30",
+          "evidence": "Current squad confirms Burkardt, Batshuayi and Uzun."
+        },
+        {
+          "label": "Eintracht Frankfurt",
+          "url": "https://profis.eintracht.de/news/30-gegen-trabzonspor-178363/",
+          "date": "2026-07-26",
+          "evidence": "Burkardt converted a preseason penalty while Uzun was playing."
+        },
+        {
+          "label": "Eintracht Frankfurt",
+          "url": "https://profis.eintracht.de/news/ausgleich-in-der-nachspielzeit-173748/",
+          "date": "2025-11-30",
+          "evidence": "Batshuayi converted a competitive regular-time penalty."
+        }
+      ],
+      "squad_membership": {
+        "primary": {
+          "player": "Jonathan Burkardt",
+          "status": "confirmed",
+          "source_url": "https://profis.eintracht.de/kader/",
+          "checked_at": "2026-07-30"
+        },
+        "secondary": {
+          "player": "Michy Batshuayi",
+          "status": "confirmed",
+          "source_url": "https://profis.eintracht.de/kader/",
+          "checked_at": "2026-07-30"
+        },
+        "tertiary": {
+          "player": "Can Uzun",
+          "status": "confirmed",
+          "source_url": "https://profis.eintracht.de/kader/",
+          "checked_at": "2026-07-30"
+        }
+      }
+    },
+    {
+      "club": "FC Cologne",
+      "recommended_order": {
+        "primary": "Luca Waldschmidt",
+        "secondary": "Said El Mala",
+        "tertiary": "Marius Bülter"
+      },
+      "status": "provisional",
+      "per_position_confidence": {
+        "primary": "high",
+        "secondary": "medium",
+        "tertiary": "medium"
+      },
+      "rationale": "The official current name is Luca Waldschmidt. El Mala handed Waldschmidt the ball for the April penalty while both were on the pitch, establishing Waldschmidt first. El Mala had converted the prior club penalty. Bülter converted in the 18 July friendly after Waldschmidt and El Mala had left with the first-half group.",
+      "uncertainty_note": "Bülter's event did not directly test him against Waldschmidt or El Mala because they were no longer playing.",
+      "transfer_conditions": [],
+      "sources": [
+        {
+          "label": "1. FC Köln",
+          "url": "https://fc.de/en/teams/men/squad",
+          "date": "2026-07-30",
+          "evidence": "Current squad confirms Luca Waldschmidt, Said El Mala and Marius Bülter and resolves Waldschmidt's name."
+        },
+        {
+          "label": "1. FC Köln",
+          "url": "https://fc.de/aktuelles/news/waldschmidt-ueber-elfer-habe-druck-gespuert",
+          "date": "2026-04-17",
+          "evidence": "El Mala yielded the penalty to Waldschmidt while both were playing."
+        },
+        {
+          "label": "1. FC Köln",
+          "url": "https://fc.de/aktuelles/news/fc-startet-mit-sieg-in-den-testspiel-sommer",
+          "date": "2026-07-18",
+          "evidence": "Bülter converted a preseason penalty for the second-half group."
+        }
+      ],
+      "squad_membership": {
+        "primary": {
+          "player": "Luca Waldschmidt",
+          "status": "confirmed",
+          "source_url": "https://fc.de/en/teams/men/squad",
+          "checked_at": "2026-07-30"
+        },
+        "secondary": {
+          "player": "Said El Mala",
+          "status": "confirmed",
+          "source_url": "https://fc.de/en/teams/men/squad",
+          "checked_at": "2026-07-30"
+        },
+        "tertiary": {
+          "player": "Marius Bülter",
+          "status": "confirmed",
+          "source_url": "https://fc.de/en/teams/men/squad",
+          "checked_at": "2026-07-30"
+        }
+      }
+    },
+    {
+      "club": "Freiburg",
+      "recommended_order": {
+        "primary": "Vincenzo Grifo",
+        "secondary": "Igor Matanović",
+        "tertiary": "Lucas Höler"
+      },
+      "status": "provisional",
+      "per_position_confidence": {
+        "primary": "high",
+        "secondary": "medium",
+        "tertiary": "low"
+      },
+      "rationale": "Grifo converted all four 2025/26 league penalties and remains the clear incumbent. Matanović took two league penalties and converted one. Höler's latest relevant conversion was in a shootout, so it is labelled and weighted below regular-time evidence.",
+      "uncertainty_note": "Höler has no recent regular-time club penalty establishing tertiary precedence.",
+      "transfer_conditions": [],
+      "sources": [
+        {
+          "label": "SC Freiburg",
+          "url": "https://www.scfreiburg.com/en/teams/first-team/squad",
+          "date": "2026-07-30",
+          "evidence": "Current first-team squad confirms all three players."
+        },
+        {
+          "label": "Kicker",
+          "url": "https://www.kicker.de/bundesliga/sc-freiburg/elfmeter-schuetzen",
+          "date": "2026-07-30",
+          "evidence": "Grifo recorded 4/4 and Matanović 1/2 in 2025/26 league play."
+        },
+        {
+          "label": "SC Freiburg",
+          "url": "https://www.scfreiburg.com/en/latest/news/first-team/match-reports/2025/26/sc-into-semi-finals-after-dramatic-shoot-out-win",
+          "date": "2026-02-11",
+          "evidence": "Höler conversion was a shootout penalty, not regular time."
+        }
+      ],
+      "squad_membership": {
+        "primary": {
+          "player": "Vincenzo Grifo",
+          "status": "confirmed",
+          "source_url": "https://www.scfreiburg.com/en/teams/first-team/squad",
+          "checked_at": "2026-07-30"
+        },
+        "secondary": {
+          "player": "Igor Matanović",
+          "status": "confirmed",
+          "source_url": "https://www.scfreiburg.com/en/teams/first-team/squad",
+          "checked_at": "2026-07-30"
+        },
+        "tertiary": {
+          "player": "Lucas Höler",
+          "status": "confirmed",
+          "source_url": "https://www.scfreiburg.com/en/teams/first-team/squad",
+          "checked_at": "2026-07-30"
+        }
+      }
+    },
+    {
+      "club": "Hamburger SV",
+      "recommended_order": {
+        "primary": "Jean-Luc Dompé",
+        "secondary": "Albert Grønbæk",
+        "tertiary": "Rayan Philippe"
+      },
+      "status": "provisional",
+      "per_position_confidence": {
+        "primary": "medium",
+        "secondary": "medium",
+        "tertiary": "low"
+      },
+      "rationale": "Dompé converted a competitive league penalty at Wolfsburg. Grønbæk converted the 25 July preseason penalty, but Dompé was absent, so no direct precedence exists between them. Philippe is retained as the best current attacking career fallback.",
+      "uncertainty_note": "The hierarchy is materially rebuilt and remains untested with Dompé and Grønbæk simultaneously available for a penalty.",
+      "transfer_conditions": [],
+      "sources": [
+        {
+          "label": "Hamburger SV",
+          "url": "https://www.hsv.de/en/news/hsv-depart-for-denmark-training-camp-with-27-man-squad",
+          "date": "2026-07-20",
+          "evidence": "Current preseason squad confirms Dompé, Grønbæk and Philippe."
+        },
+        {
+          "label": "Hamburger SV",
+          "url": "https://www.hsv.de/en/news/spot-kicks-galore-as-hsv-win-2-1-in-wolfsburg",
+          "date": "2026-03-07",
+          "evidence": "Dompé converted a competitive regular-time penalty."
+        },
+        {
+          "label": "Hamburger SV",
+          "url": "https://www.hsv.de/news/31-hsv-gewinnt-testspiel-gegen-heidenheim",
+          "date": "2026-07-25",
+          "evidence": "Grønbæk converted a preseason regular-time penalty while Dompé was absent."
+        }
+      ],
+      "squad_membership": {
+        "primary": {
+          "player": "Jean-Luc Dompé",
+          "status": "confirmed",
+          "source_url": "https://www.hsv.de/en/news/hsv-depart-for-denmark-training-camp-with-27-man-squad",
+          "checked_at": "2026-07-30"
+        },
+        "secondary": {
+          "player": "Albert Grønbæk",
+          "status": "confirmed",
+          "source_url": "https://www.hsv.de/en/news/hsv-depart-for-denmark-training-camp-with-27-man-squad",
+          "checked_at": "2026-07-30"
+        },
+        "tertiary": {
+          "player": "Rayan Philippe",
+          "status": "confirmed",
+          "source_url": "https://www.hsv.de/en/news/hsv-depart-for-denmark-training-camp-with-27-man-squad",
+          "checked_at": "2026-07-30"
+        }
+      }
+    },
+    {
+      "club": "Hoffenheim",
+      "recommended_order": {
+        "primary": "Andrej Kramarić",
+        "secondary": "Tim Lemperle",
+        "tertiary": "Fisnik Asllani"
+      },
+      "status": "provisional",
+      "per_position_confidence": {
+        "primary": "high",
+        "secondary": "medium",
+        "tertiary": "low"
+      },
+      "rationale": "Kramarić converted both April penalties against Dortmund while Lemperle and Asllani started, directly confirming primary precedence. Lemperle has the stronger senior club and career fallback record; Asllani has no current-club penalty event establishing precedence.",
+      "uncertainty_note": "The deputy order is inferred because Kramarić took the available penalties whenever all three were present.",
+      "transfer_conditions": [],
+      "sources": [
+        {
+          "label": "Bundesliga",
+          "url": "https://www.bundesliga.com/en/bundesliga/news/andrej-kramaric-extends-hoffenheim-contract-croatia-37154",
+          "date": "2026-05-01",
+          "evidence": "Kramarić contract extension confirms 2026/27 membership."
+        },
+        {
+          "label": "Kicker",
+          "url": "https://www.kicker.de/hoffenheim-gegen-dortmund-2026-bundesliga-5051020/spielbericht",
+          "date": "2026-04-18",
+          "evidence": "Kramarić converted twice while Lemperle and Asllani started."
+        },
+        {
+          "label": "TSG Hoffenheim",
+          "url": "https://s3.tsg-hoffenheim.de/public/Medien/Allgemein/TSG-Hoffenheim-Pressemappe-2025-2026.pdf",
+          "date": "2026-07-30",
+          "evidence": "Official club player records support Lemperle and Asllani membership, cross-checked against current match coverage."
+        }
+      ],
+      "squad_membership": {
+        "primary": {
+          "player": "Andrej Kramarić",
+          "status": "confirmed",
+          "source_url": "https://www.bundesliga.com/en/bundesliga/news/andrej-kramaric-extends-hoffenheim-contract-croatia-37154",
+          "checked_at": "2026-07-30"
+        },
+        "secondary": {
+          "player": "Tim Lemperle",
+          "status": "confirmed",
+          "source_url": "https://s3.tsg-hoffenheim.de/public/Medien/Allgemein/TSG-Hoffenheim-Pressemappe-2025-2026.pdf",
+          "checked_at": "2026-07-30"
+        },
+        "tertiary": {
+          "player": "Fisnik Asllani",
+          "status": "confirmed",
+          "source_url": "https://s3.tsg-hoffenheim.de/public/Medien/Allgemein/TSG-Hoffenheim-Pressemappe-2025-2026.pdf",
+          "checked_at": "2026-07-30"
+        }
+      }
+    },
+    {
+      "club": "Mainz 05",
+      "recommended_order": {
+        "primary": "Nadiem Amiri",
+        "secondary": "Paul Nebel",
+        "tertiary": "Phillip Tietz"
+      },
+      "status": "provisional",
+      "per_position_confidence": {
+        "primary": "high",
+        "secondary": "medium",
+        "tertiary": "low"
+      },
+      "rationale": "Amiri's perfect eight-penalty 2025/26 record makes him the clear incumbent. Nebel converted against Kaiserslautern during Amiri's post-World Cup absence. Tietz has no current Mainz conversion and remains a senior career fallback.",
+      "uncertainty_note": "Nebel's preseason kick did not test direct precedence against Amiri because Amiri had not yet returned.",
+      "transfer_conditions": [],
+      "sources": [
+        {
+          "label": "Mainz 05",
+          "url": "https://www.mainz05.de/news/trainingsauftakt-sommervorbereitung-profis-2627",
+          "date": "2026-07-01",
+          "evidence": "Current preseason status confirms Amiri and Tietz; Amiri's delayed return is explained."
+        },
+        {
+          "label": "Bundesliga",
+          "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+          "date": "2026-07-30",
+          "evidence": "Amiri recorded eight converted penalties in 2025/26."
+        },
+        {
+          "label": "Mainz 05",
+          "url": "https://www.mainz05.de/news/testspiel-gegen-den-1-fc-kaiserslautern",
+          "date": "2026-07-17",
+          "evidence": "Nebel converted a preseason penalty while Amiri was absent."
+        }
+      ],
+      "squad_membership": {
+        "primary": {
+          "player": "Nadiem Amiri",
+          "status": "confirmed",
+          "source_url": "https://www.mainz05.de/news/trainingsauftakt-sommervorbereitung-profis-2627",
+          "checked_at": "2026-07-30"
+        },
+        "secondary": {
+          "player": "Paul Nebel",
+          "status": "confirmed",
+          "source_url": "https://www.mainz05.de/tab/kader",
+          "checked_at": "2026-07-30"
+        },
+        "tertiary": {
+          "player": "Phillip Tietz",
+          "status": "confirmed",
+          "source_url": "https://www.mainz05.de/news/trainingsauftakt-sommervorbereitung-profis-2627",
+          "checked_at": "2026-07-30"
+        }
+      }
+    },
+    {
+      "club": "RasenBallsport Leipzig",
+      "recommended_order": {
+        "primary": "Rômulo",
+        "secondary": "David Raum",
+        "tertiary": "Christoph Baumgartner"
+      },
+      "status": "provisional",
+      "per_position_confidence": {
+        "primary": "medium",
+        "secondary": "medium",
+        "tertiary": "low"
+      },
+      "rationale": "Rômulo took the March penalty while Raum and Baumgartner were both on the pitch, establishing direct selection despite the miss. Raum converted his only 2025/26 league penalty. Baumgartner missed his attempt and is third.",
+      "uncertainty_note": "Rômulo's direct precedence is offset by the miss; Baumgartner also has an availability concern entering preseason.",
+      "transfer_conditions": [],
+      "sources": [
+        {
+          "label": "RB Leipzig",
+          "url": "https://rbleipzig.com/de/news/rueckblick-suedafrika-tour-rb-leipzig",
+          "date": "2026-07-16",
+          "evidence": "Current July club coverage confirms Rômulo's continued squad membership."
+        },
+        {
+          "label": "Hamburger SV",
+          "url": "https://www.hsv.de/en/news/hsv-beaten-2-1-by-rb-leipzig",
+          "date": "2026-03-01",
+          "evidence": "Rômulo took the penalty with Raum and Baumgartner playing."
+        },
+        {
+          "label": "Kicker",
+          "url": "https://www.kicker.de/bundesliga/rb-leipzig/elfmeter-schuetzen",
+          "date": "2026-07-30",
+          "evidence": "Raum 1/1, Rômulo 0/1 and Baumgartner 0/1 in 2025/26 league play."
+        }
+      ],
+      "squad_membership": {
+        "primary": {
+          "player": "Rômulo",
+          "status": "confirmed",
+          "source_url": "https://rbleipzig.com/de/news/rueckblick-suedafrika-tour-rb-leipzig",
+          "checked_at": "2026-07-30"
+        },
+        "secondary": {
+          "player": "David Raum",
+          "status": "confirmed",
+          "source_url": "https://homejersey.rbleipzig.com/de",
+          "checked_at": "2026-07-30"
+        },
+        "tertiary": {
+          "player": "Christoph Baumgartner",
+          "status": "confirmed",
+          "source_url": "https://rbleipzig.com/news/christoph-baumgartner-kapitaen-bundesliga-rb-leipzig",
+          "checked_at": "2026-07-30"
+        }
+      }
+    },
+    {
+      "club": "SC Paderborn 07",
+      "recommended_order": {
+        "primary": "Mika Baur",
+        "secondary": "Sebastian Klaas",
+        "tertiary": "Sven Michel"
+      },
+      "status": "provisional",
+      "per_position_confidence": {
+        "primary": "medium",
+        "secondary": "medium",
+        "tertiary": "low"
+      },
+      "rationale": "Klaas converted in December while Baur was present, but Baur then took the later February penalty while Klaas remained on the pitch. The later direct event supports Baur first and Klaas second. Michel has no equivalent recent Paderborn event and is a career fallback.",
+      "uncertainty_note": "The two evidenced takers reversed direct precedence during the season, so the gap between Baur and Klaas is narrow.",
+      "transfer_conditions": [
+        "If Mika Baur completes a transfer, Sebastian Klaas becomes the provisional primary."
+      ],
+      "sources": [
+        {
+          "label": "SC Paderborn 07",
+          "url": "https://www.scp07.de/Newsarchiv/Auf-ins-Trainingslager.html",
+          "date": "2026-07-12",
+          "evidence": "Current training-camp squad confirms Baur, Klaas and Michel."
+        },
+        {
+          "label": "Bundesliga",
+          "url": "https://www.bundesliga.com/de/2bundesliga/news/sc-paderborn-07-hertha-bsc-spieltag-23-spielbericht-highlights-36138",
+          "date": "2026-02-22",
+          "evidence": "Baur converted while Klaas was still on the pitch."
+        },
+        {
+          "label": "Kicker",
+          "url": "https://www.kicker.de/paderborn-gegen-darmstadt-2025-bundesliga-5051194/spielinfo",
+          "date": "2025-12-19",
+          "evidence": "Klaas converted the earlier penalty while Baur was playing."
+        }
+      ],
+      "squad_membership": {
+        "primary": {
+          "player": "Mika Baur",
+          "status": "confirmed",
+          "source_url": "https://www.scp07.de/Newsarchiv/Auf-ins-Trainingslager.html",
+          "checked_at": "2026-07-30"
+        },
+        "secondary": {
+          "player": "Sebastian Klaas",
+          "status": "confirmed",
+          "source_url": "https://www.scp07.de/Newsarchiv/Auf-ins-Trainingslager.html",
+          "checked_at": "2026-07-30"
+        },
+        "tertiary": {
+          "player": "Sven Michel",
+          "status": "confirmed",
+          "source_url": "https://www.scp07.de/Newsarchiv/Auf-ins-Trainingslager.html",
+          "checked_at": "2026-07-30"
+        }
+      }
+    },
+    {
+      "club": "SV Elversberg",
+      "recommended_order": {
+        "primary": "Lukas Petkov",
+        "secondary": "Francis Onyeka",
+        "tertiary": "Maurice Krattenmacher"
+      },
+      "status": "provisional",
+      "per_position_confidence": {
+        "primary": "medium",
+        "secondary": "low",
+        "tertiary": "low"
+      },
+      "rationale": "Petkov was Elversberg's highest-volume current taker and converted the latest documented competitive penalty in April. Onyeka and Krattenmacher have no senior Elversberg regular-time penalty event, so their order is based on role and career fallback evidence.",
+      "uncertainty_note": "Both deputy positions are weak and could change on the next preseason penalty.",
+      "transfer_conditions": [],
+      "sources": [
+        {
+          "label": "SV Elversberg",
+          "url": "https://sv07elversberg.de/trainingslager-in-barneveld-eine-woche-vorbereitung-in-den-niederlanden/",
+          "date": "2026-07-20",
+          "evidence": "Current camp squad confirms Onyeka and Krattenmacher."
+        },
+        {
+          "label": "SV Elversberg",
+          "url": "https://sv07elversberg.de/knappe-testspiel-niederlage-sve-unterliegt-viktoria-koeln-mit-12/",
+          "date": "2026-07-18",
+          "evidence": "Current preseason report confirms Petkov."
+        },
+        {
+          "label": "Bundesliga",
+          "url": "https://www.bundesliga.com/de/2bundesliga/news/hannover-96-sv-elversberg-spieltag-28-spielbericht-highlights-36764",
+          "date": "2026-04-05",
+          "evidence": "Petkov converted the latest documented competitive penalty."
+        }
+      ],
+      "squad_membership": {
+        "primary": {
+          "player": "Lukas Petkov",
+          "status": "confirmed",
+          "source_url": "https://sv07elversberg.de/knappe-testspiel-niederlage-sve-unterliegt-viktoria-koeln-mit-12/",
+          "checked_at": "2026-07-30"
+        },
+        "secondary": {
+          "player": "Francis Onyeka",
+          "status": "confirmed",
+          "source_url": "https://sv07elversberg.de/trainingslager-in-barneveld-eine-woche-vorbereitung-in-den-niederlanden/",
+          "checked_at": "2026-07-30"
+        },
+        "tertiary": {
+          "player": "Maurice Krattenmacher",
+          "status": "confirmed",
+          "source_url": "https://sv07elversberg.de/trainingslager-in-barneveld-eine-woche-vorbereitung-in-den-niederlanden/",
+          "checked_at": "2026-07-30"
+        }
+      }
+    },
+    {
+      "club": "Schalke 04",
+      "recommended_order": {
+        "primary": "Kenan Karaman",
+        "secondary": "Moussa Sylla",
+        "tertiary": "Junior Adamu"
+      },
+      "status": "provisional",
+      "per_position_confidence": {
+        "primary": "high",
+        "secondary": "medium",
+        "tertiary": "low"
+      },
+      "rationale": "Karaman converted all five Schalke league penalties in 2025/26 and is the clear incumbent. Sylla's senior career record is the strongest deputy fallback. Adamu has a senior European conversion but no Schalke penalty event.",
+      "uncertainty_note": "The deputy positions have not been directly tested at Schalke because Karaman took every league penalty.",
+      "transfer_conditions": [],
+      "sources": [
+        {
+          "label": "Schalke 04",
+          "url": "https://schalke04.de/kader-2026-2027/",
+          "date": "2026-07-30",
+          "evidence": "Official 2026/27 squad confirms all three players."
+        },
+        {
+          "label": "Kicker",
+          "url": "https://www.kicker.de/2-bundesliga/fc-schalke-04/elfmeter-schuetzen",
+          "date": "2026-07-30",
+          "evidence": "Karaman recorded five goals from five league penalties."
+        },
+        {
+          "label": "Bundesliga",
+          "url": "https://www.bundesliga.com/de/bundesliga/news/fc-bologna-sc-freiburg-europa-league-ligaphase-2-spieltag-34161",
+          "date": "2025-10-02",
+          "evidence": "Adamu has a senior European regular-time conversion, used only as fallback evidence."
+        }
+      ],
+      "squad_membership": {
+        "primary": {
+          "player": "Kenan Karaman",
+          "status": "confirmed",
+          "source_url": "https://schalke04.de/kader-2026-2027/",
+          "checked_at": "2026-07-30"
+        },
+        "secondary": {
+          "player": "Moussa Sylla",
+          "status": "confirmed",
+          "source_url": "https://schalke04.de/kader-2026-2027/",
+          "checked_at": "2026-07-30"
+        },
+        "tertiary": {
+          "player": "Junior Adamu",
+          "status": "confirmed",
+          "source_url": "https://schalke04.de/kader-2026-2027/",
+          "checked_at": "2026-07-30"
+        }
+      }
+    },
+    {
+      "club": "Union Berlin",
+      "recommended_order": {
+        "primary": "Derrick Köhn",
+        "secondary": "Leopold Querfeld",
+        "tertiary": "Andrej Ilić"
+      },
+      "status": "provisional",
+      "per_position_confidence": {
+        "primary": "medium",
+        "secondary": "medium",
+        "tertiary": "low"
+      },
+      "rationale": "Querfeld converted two February penalties, then Köhn took and converted the later March penalty, supporting a latest-event takeover. Ilić missed his only 2025/26 attempt and ranks third.",
+      "uncertainty_note": "Köhn and Querfeld have not yet been tested by a 2026/27 competitive penalty, and the latest-event takeover could reflect match-specific assignment.",
+      "transfer_conditions": [],
+      "sources": [
+        {
+          "label": "Union Berlin",
+          "url": "https://www.fc-union-berlin.de/de-e/fussball/profis-maenner/kader-F0GX",
+          "date": "2026-07-30",
+          "evidence": "Official 2026/27 squad confirms Köhn, Querfeld and Ilić."
+        },
+        {
+          "label": "Union Berlin",
+          "url": "https://www.fc-union-berlin.de/en/news/union-lose-hard-fought-game-in-hamburg-3-2-ZqMV22",
+          "date": "2026-02-14",
+          "evidence": "Querfeld converted a competitive penalty."
+        },
+        {
+          "label": "Union Berlin",
+          "url": "https://www.fc-union-berlin.de/en/news/ten-man-union-lose-4-1-to-bremen-W106oH",
+          "date": "2026-03-08",
+          "evidence": "Köhn converted Union's later competitive penalty."
+        },
+        {
+          "label": "Union Berlin",
+          "url": "https://www.fc-union-berlin.de/en/matchcenter-zYpcDAoGr7ELuuyErhZDECroc?section=report",
+          "date": "2025-09-28",
+          "evidence": "Ilić missed his documented 2025/26 attempt."
+        }
+      ],
+      "squad_membership": {
+        "primary": {
+          "player": "Derrick Köhn",
+          "status": "confirmed",
+          "source_url": "https://www.fc-union-berlin.de/de-e/fussball/profis-maenner/kader-F0GX",
+          "checked_at": "2026-07-30"
+        },
+        "secondary": {
+          "player": "Leopold Querfeld",
+          "status": "confirmed",
+          "source_url": "https://www.fc-union-berlin.de/de-e/fussball/profis-maenner/kader-F0GX",
+          "checked_at": "2026-07-30"
+        },
+        "tertiary": {
+          "player": "Andrej Ilić",
+          "status": "confirmed",
+          "source_url": "https://www.fc-union-berlin.de/de-e/fussball/profis-maenner/kader-F0GX",
+          "checked_at": "2026-07-30"
+        }
+      }
+    },
+    {
+      "club": "VfB Stuttgart",
+      "recommended_order": {
+        "primary": "Maximilian Mittelstädt",
+        "secondary": "Ermedin Demirović",
+        "tertiary": "Deniz Undav"
+      },
+      "status": "provisional",
+      "per_position_confidence": {
+        "primary": "high",
+        "secondary": "medium",
+        "tertiary": "low"
+      },
+      "rationale": "Mittelstädt converted in May while Demirović and Undav both started, giving direct precedence over both. Demirović has the stronger senior career record for the deputy slot. Undav missed the April penalty after Demirović had been substituted.",
+      "uncertainty_note": "The secondary versus tertiary order remains career-based because the Undav miss did not directly test him against Demirović.",
+      "transfer_conditions": [],
+      "sources": [
+        {
+          "label": "VfB Stuttgart",
+          "url": "https://www.vfb.de/de/1893/profis/kader/saisonen/2026-2027/kader/",
+          "date": "2026-07-30",
+          "evidence": "Official 2026/27 squad confirms all three players."
+        },
+        {
+          "label": "VfB Stuttgart",
+          "url": "https://www.vfb.de/en/vfb/team/saison/bundesliga/2526/33-vfb-stuttgart----leverkusen--/",
+          "date": "2026-05-09",
+          "evidence": "Mittelstädt converted while Demirović and Undav were selected."
+        },
+        {
+          "label": "VfB Stuttgart",
+          "url": "https://www.vfb.de/en/vfb/team/saison/bundesliga/2526/29-vfb-stuttgart----hamburger-sv-/",
+          "date": "2026-04-12",
+          "evidence": "Undav missed after Demirović had left the match."
+        }
+      ],
+      "squad_membership": {
+        "primary": {
+          "player": "Maximilian Mittelstädt",
+          "status": "confirmed",
+          "source_url": "https://www.vfb.de/de/1893/profis/kader/saisonen/2026-2027/kader/",
+          "checked_at": "2026-07-30"
+        },
+        "secondary": {
+          "player": "Ermedin Demirović",
+          "status": "confirmed",
+          "source_url": "https://www.vfb.de/de/1893/profis/kader/saisonen/2026-2027/kader/",
+          "checked_at": "2026-07-30"
+        },
+        "tertiary": {
+          "player": "Deniz Undav",
+          "status": "confirmed",
+          "source_url": "https://www.vfb.de/de/1893/profis/kader/saisonen/2026-2027/kader/",
+          "checked_at": "2026-07-30"
+        }
+      }
+    },
+    {
+      "club": "Werder Bremen",
+      "recommended_order": {
+        "primary": "Romano Schmid",
+        "secondary": "Cedric Itten",
+        "tertiary": "Salim Musah"
+      },
+      "status": "provisional",
+      "per_position_confidence": {
+        "primary": "high",
+        "secondary": "medium",
+        "tertiary": "low"
+      },
+      "rationale": "Schmid took all three Werder league penalties in 2025/26 and remains the clear incumbent. Itten's substantial senior career record and expected first-team role make him the practical deputy. Musah won and converted the 25 July preseason penalty; Schmid and Itten were absent, so it does not establish direct precedence over either.",
+      "uncertainty_note": "The rebuilt backup order has no direct same-match test. Musah's event came in a preseason lineup without Schmid or Itten.",
+      "transfer_conditions": [
+        "Re-audit if Werder signs another senior penalty-specialist striker before the registration window closes."
+      ],
+      "sources": [
+        {
+          "label": "Werder Bremen",
+          "url": "https://www.werder.de/news/maenner/2026-2027/rueckennummern-15072026",
+          "date": "2026-07-15",
+          "evidence": "Current squad-number update confirms Schmid, Itten and Musah."
+        },
+        {
+          "label": "Kicker",
+          "url": "https://www.kicker.de/bundesliga/werder-bremen/elfmeter-schuetzen",
+          "date": "2026-07-30",
+          "evidence": "Schmid was Werder's only 2025/26 league taker, recording three attempts and two goals."
+        },
+        {
+          "label": "Werder Bremen",
+          "url": "https://www.werder.de/news/maenner/2026-2027/test-bochum-25072026",
+          "date": "2026-07-25",
+          "evidence": "Musah won and converted a preseason penalty while Schmid and Itten were absent."
+        },
+        {
+          "label": "Werder Bremen",
+          "url": "https://www.werder.de/en/news/first-team/2026-2027/itten-transfer-21062026",
+          "date": "2026-06-21",
+          "evidence": "Official signing confirms Itten's current membership."
+        }
+      ],
+      "squad_membership": {
+        "primary": {
+          "player": "Romano Schmid",
+          "status": "confirmed",
+          "source_url": "https://www.werder.de/news/maenner/2026-2027/rueckennummern-15072026",
+          "checked_at": "2026-07-30"
+        },
+        "secondary": {
+          "player": "Cedric Itten",
+          "status": "confirmed",
+          "source_url": "https://www.werder.de/news/maenner/2026-2027/rueckennummern-15072026",
+          "checked_at": "2026-07-30"
+        },
+        "tertiary": {
+          "player": "Salim Musah",
+          "status": "confirmed",
+          "source_url": "https://www.werder.de/news/maenner/2026-2027/rueckennummern-15072026",
+          "checked_at": "2026-07-30"
+        }
+      }
+    }
+  ]
+}

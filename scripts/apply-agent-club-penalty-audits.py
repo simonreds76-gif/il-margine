@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data" / "goalscorer"
 RESEARCH_DIR = DATA_DIR / "research"
 LEAGUES = ("epl", "serie-a", "la-liga", "bundesliga", "ligue-1")
+POSITIONS = ("primary", "secondary", "tertiary")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -124,6 +125,43 @@ def recommended_order(row: dict[str, Any]) -> dict[str, str]:
     return order
 
 
+def confirmed_squad_membership(
+    row: dict[str, Any],
+    order: dict[str, str],
+) -> dict[str, dict[str, str]]:
+    raw = row.get("squad_membership")
+    if not isinstance(raw, dict):
+        raise ValueError(f"{row.get('club')}: squad_membership must verify all three candidates")
+
+    verified: dict[str, dict[str, str]] = {}
+    for position in POSITIONS:
+        player = order[position]
+        item = raw.get(position)
+        if not isinstance(item, dict):
+            raise ValueError(f"{row.get('club')}/{player}: missing {position} squad verification")
+        membership_player = str(item.get("player") or "").strip()
+        status = str(item.get("status") or "").strip().lower()
+        source_url = str(item.get("source_url") or "").strip()
+        checked_at = str(item.get("checked_at") or "").strip()
+        if normalize(membership_player) != normalize(player):
+            raise ValueError(
+                f"{row.get('club')}/{position}: squad verification names {membership_player!r}, expected {player!r}"
+            )
+        if status != "confirmed":
+            raise ValueError(f"{row.get('club')}/{player}: current squad status is not confirmed")
+        if not source_url.startswith("https://"):
+            raise ValueError(f"{row.get('club')}/{player}: current squad source must be HTTPS")
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", checked_at):
+            raise ValueError(f"{row.get('club')}/{player}: checked_at must be YYYY-MM-DD")
+        verified[position] = {
+            "player": player,
+            "status": status,
+            "source_url": source_url,
+            "checked_at": checked_at,
+        }
+    return verified
+
+
 def source_rows(row: dict[str, Any]) -> list[dict[str, Any]]:
     rows = row.get("sources") or []
     return [source for source in rows if isinstance(source, dict)]
@@ -206,6 +244,28 @@ def condition_note(row: dict[str, Any]) -> str:
     return " ".join(part for part in parts if part)
 
 
+def valid_change_log(
+    changes: list[dict[str, Any]],
+    evidence_log: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Keep only history entries whose evidence references still resolve."""
+    evidence_ids = {
+        str(item.get("id") or "").strip()
+        for item in evidence_log
+        if isinstance(item, dict) and str(item.get("id") or "").strip()
+    }
+    valid: list[dict[str, Any]] = []
+    for item in changes:
+        if not isinstance(item, dict):
+            continue
+        referenced = item.get("evidence_ids")
+        if not isinstance(referenced, list) or not referenced:
+            continue
+        if all(str(evidence_id) in evidence_ids for evidence_id in referenced):
+            valid.append(item)
+    return valid
+
+
 def apply_league(league: str, audit_date: str, write: bool) -> tuple[int, int]:
     hierarchy_path = DATA_DIR / f"{league}-penalty-takers.json"
     audit_path = RESEARCH_DIR / f"agent-{league}-hierarchy-audit-{audit_date}.json"
@@ -232,6 +292,7 @@ def apply_league(league: str, audit_date: str, write: bool) -> tuple[int, int]:
             raise ValueError(f"{league}/{team}: blank recommended positions: {missing}")
         if len({normalize(player) for player in after.values()}) != 3:
             raise ValueError(f"{league}/{team}: recommended positions must name three distinct players")
+        squad_membership = confirmed_squad_membership(row, after)
 
         entry = hierarchy[team]
         current = {
@@ -243,6 +304,17 @@ def apply_league(league: str, audit_date: str, write: bool) -> tuple[int, int]:
         event = evidence_event(team, row, audit_date, season)
         confidence = confidence_values(row)
         sources = source_rows(row)
+        if len(sources) < 2:
+            raise ValueError(f"{league}/{team}: at least two research sources are required")
+        invalid_source_urls = [
+            source.get("url")
+            for source in sources
+            if not str(source.get("url") or "").startswith("https://")
+        ]
+        if invalid_source_urls:
+            raise ValueError(
+                f"{league}/{team}: research sources must use HTTPS URLs: {invalid_source_urls}"
+            )
         labels = [
             str(
                 source.get("label")
@@ -285,9 +357,13 @@ def apply_league(league: str, audit_date: str, write: bool) -> tuple[int, int]:
         ] + [event]
 
         change_type = "preseason_reverification" if before == after else "hierarchy_research_update"
+        existing_changes = valid_change_log(
+            entry.get("change_log", []),
+            entry["evidence_log"],
+        )
         entry["change_log"] = [
             item
-            for item in entry.get("change_log", [])
+            for item in existing_changes
             if not (
                 item.get("changed_at") == audit_date
                 and item.get("change_type") in {"preseason_reverification", "hierarchy_research_update"}
@@ -311,6 +387,7 @@ def apply_league(league: str, audit_date: str, write: bool) -> tuple[int, int]:
         flags["carryover_from_previous_season"] = False
         flags["weak_evidence"] = entry["hierarchy_status"] in {"conditional", "disputed"} or "low" in confidence.values()
         entry["flags"] = flags
+        entry["squad_membership"] = squad_membership
 
     if mapped != expected:
         raise ValueError(

@@ -24,6 +24,7 @@ BAD_TEXT = re.compile(r"(?:Ã.|Â.|â.|�)")
 AGENT_AUDIT_PATTERN = re.compile(
     r"agent-(?:epl|serie-a|la-liga|bundesliga|ligue-1)-hierarchy-audit-(\d{4}-\d{2}-\d{2})\.json$"
 )
+POSITIONS = ("primary", "secondary", "tertiary")
 
 
 def load(path: Path) -> dict:
@@ -35,6 +36,10 @@ def load(path: Path) -> dict:
 
 def slug(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
+
+
+def normalize_name(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", " ", value.lower()).strip()
 
 
 def latest_agent_audit_dates() -> dict[str, str]:
@@ -106,6 +111,22 @@ def main() -> int:
             ]
             check(is_researched, f"{league}/{team}: multi-source preseason verification missing")
             check(bool(research_events), f"{league}/{team}: approved research evidence missing")
+            evidence_ids = {
+                str(event.get("id") or "").strip()
+                for event in entry.get("evidence_log", [])
+                if isinstance(event, dict) and str(event.get("id") or "").strip()
+            }
+            for change in entry.get("change_log", []):
+                referenced_ids = change.get("evidence_ids") if isinstance(change, dict) else None
+                check(
+                    isinstance(referenced_ids, list) and bool(referenced_ids),
+                    f"{league}/{team}: change log entry has no evidence references",
+                )
+                if isinstance(referenced_ids, list):
+                    check(
+                        all(str(evidence_id) in evidence_ids for evidence_id in referenced_ids),
+                        f"{league}/{team}: change log contains dangling evidence references",
+                    )
             if research_events:
                 source_urls = [
                     source.get("url")
@@ -113,9 +134,9 @@ def main() -> int:
                     for source in event.get("sources", [])
                     if source.get("url")
                 ]
-                check(bool(source_urls), f"{league}/{team}: research event has no source URLs")
+                check(len(source_urls) >= 2, f"{league}/{team}: research event needs at least two source URLs")
                 check(all(str(url).startswith("https://") for url in source_urls), f"{league}/{team}: research source URL must be HTTPS")
-            for position in ("primary", "secondary", "tertiary"):
+            for position in POSITIONS:
                 check(
                     bool(str(entry.get(position) or "").strip()),
                     f"{league}/{team}: {position} candidate must be named; express uncertainty in status/note",
@@ -132,6 +153,31 @@ def main() -> int:
                 entry.get("flags", {}).get("carryover_from_previous_season") is False,
                 f"{league}/{team}: researched hierarchy must not remain labelled as carryover",
             )
+            squad_membership = entry.get("squad_membership")
+            check(isinstance(squad_membership, dict), f"{league}/{team}: current-squad verification missing")
+            if isinstance(squad_membership, dict):
+                for position in POSITIONS:
+                    player = str(entry.get(position) or "").strip()
+                    membership = squad_membership.get(position)
+                    check(isinstance(membership, dict), f"{league}/{team}/{player}: {position} squad verification missing")
+                    if not isinstance(membership, dict):
+                        continue
+                    check(
+                        normalize_name(str(membership.get("player") or "")) == normalize_name(player),
+                        f"{league}/{team}/{position}: squad verification player mismatch",
+                    )
+                    check(
+                        str(membership.get("status") or "").lower() == "confirmed",
+                        f"{league}/{team}/{player}: player is not confirmed in the current 2026/27 squad",
+                    )
+                    check(
+                        str(membership.get("source_url") or "").startswith("https://"),
+                        f"{league}/{team}/{player}: squad verification source must be HTTPS",
+                    )
+                    check(
+                        str(membership.get("checked_at") or "") == audit_date,
+                        f"{league}/{team}/{player}: squad verification is stale",
+                    )
             if team in expected["promoted"]:
                 check(
                     is_researched and all(

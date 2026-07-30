@@ -1,0 +1,1530 @@
+{
+    "_meta":  {
+                  "schema_version":  2,
+                  "audit_type":  "current_squad_first_penalty_hierarchy_audit",
+                  "league":  "serie-a",
+                  "season":  "2026/27",
+                  "as_of":  "2026-07-30",
+                  "methodology":  [
+                                      "Treat every pre-existing name and hierarchy as untrusted; confirm current 2026/27 club membership before evaluating penalty evidence.",
+                                      "Use official club squad, preseason call-up, signing, renewal, transfer, and contract sources for membership; reject rumours, departed players, and players without a confirmed current agreement.",
+                                      "Prioritize 2026 preseason and 2025/26 competitive in-match penalties, especially like-for-like events where rival takers were also available.",
+                                      "Use official match reports and statements first, then Fantacalcio/SOS Fanta set-piece analysis and credible Italian or local club reporting; career logs are fallback evidence only.",
+                                      "Exclude shootout attempts from regular-time hierarchy inference unless explicitly labelled; no shootout evidence determines a recommended position in this audit.",
+                                      "Confidence is assigned per position; every non-stable hierarchy remains provisional through the summer transfer window and must be rechecked after material squad or coaching changes."
+                                  ]
+              },
+    "clubs":  [
+                  {
+                      "club":  "AC Milan",
+                      "recommended_order":  {
+                                                "primary":  "Christopher Nkunku",
+                                                "secondary":  "Gonçalo Ramos",
+                                                "tertiary":  "Christian Pulisic"
+                                            },
+                      "status":  {
+                                     "classification":  "provisional_disputed",
+                                     "note":  "No like-for-like 2026/27 penalty has settled the Nkunku-Ramos-Pulisic contest under the new coach."
+                                 },
+                      "per_position_confidence":  {
+                                                      "primary":  "medium",
+                                                      "secondary":  "medium",
+                                                      "tertiary":  "medium"
+                                                  },
+                      "rationale":  "Nkunku converted Milan's latest identified competitive penalty and finished 2025/26 with the strongest current club volume. Goal ranks Nkunku, Ramos and Pulisic in the filed order, while SOS Fanta describes the same three-player contest and notes that Ramos may gain leverage through starting status. The direct Nkunku event did not include Pulisic, so it supports Nkunku without proving a settled three-way order. Preseason coaching decisions under Amorim are still needed to move this above medium confidence. Rafael Leão remains an emergency candidate but is behind the recommended three in the current specialist consensus.",
+                      "uncertainty_note":  "No like-for-like 2026/27 penalty has settled the Nkunku-Ramos-Pulisic contest under the new coach.",
+                      "transfer_conditions":  [
+                                                  "A summer exit by Nkunku or Pulisic, or an unexpected change to Ramos's starting role, requires an immediate reorder."
+                                              ],
+                      "sources":  [
+                                      {
+                                          "title":  "AC Milan",
+                                          "url":  "https://www.acmilan.com/en/news/articles/serie-a/2026-05-17/rossoneri-defeat-genoa-on-md37",
+                                          "date":  "2026-05-17",
+                                          "evidence":  "Nkunku converted a 51st-minute regular-time penalty; Pulisic entered after Nkunku had been substituted."
+                                      },
+                                      {
+                                          "title":  "Fantacalcio",
+                                          "url":  "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+                                          "date":  "2026-04-25",
+                                          "evidence":  "The season sequence showed Nkunku taking three penalties and identified him as the principal taker, with Pulisic a possible fallback."
+                                      },
+                                      {
+                                          "title":  "SOS Fanta",
+                                          "url":  "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+                                          "date":  "2026-07-29",
+                                          "evidence":  "Names Nkunku, Ramos and Pulisic as the live contest and records Nkunku at 5/5 in 2025/26."
+                                      },
+                                      {
+                                          "title":  "Goal Italia",
+                                          "url":  "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+                                          "date":  "2026-07-23",
+                                          "evidence":  "Ranks Nkunku first, Ramos second and Pulisic third."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://www.acmilan.com/it/squadre/prima-squadra-maschile",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Christopher Nkunku as a current 2026/27 club player at the audit cutoff."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://www.acmilan.com/it/news/articoli/media/2026-06-30/comunicato-ufficiale-goncalo-ramos",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Gonçalo Ramos as a current 2026/27 club player at the audit cutoff."
+                                      }
+                                  ],
+                      "squad_membership":  {
+                                               "primary":  {
+                                                               "player":  "Christopher Nkunku",
+                                                               "status":  "confirmed",
+                                                               "source_url":  "https://www.acmilan.com/it/squadre/prima-squadra-maschile",
+                                                               "checked_at":  "2026-07-30"
+                                                           },
+                                               "secondary":  {
+                                                                 "player":  "Gonçalo Ramos",
+                                                                 "status":  "confirmed",
+                                                                 "source_url":  "https://www.acmilan.com/it/news/articoli/media/2026-06-30/comunicato-ufficiale-goncalo-ramos",
+                                                                 "checked_at":  "2026-07-30"
+                                                             },
+                                               "tertiary":  {
+                                                                "player":  "Christian Pulisic",
+                                                                "status":  "confirmed",
+                                                                "source_url":  "https://www.acmilan.com/it/squadre/prima-squadra-maschile",
+                                                                "checked_at":  "2026-07-30"
+                                                            }
+                                           }
+                  },
+                  {
+                      "club":  "Atalanta",
+                      "recommended_order":  {
+                                                "primary":  "Gianluca Scamacca",
+                                                "secondary":  "Lazar Samardžić",
+                                                "tertiary":  "Éderson"
+                                            },
+                      "status":  {
+                                     "classification":  "provisional_disputed",
+                                     "note":  "Scamacca is well supported, but Samardžić and Éderson are ordered from conversion volume rather than a current like-for-like event."
+                                 },
+                      "per_position_confidence":  {
+                                                      "primary":  "high",
+                                                      "secondary":  "low",
+                                                      "tertiary":  "low"
+                                                  },
+                      "rationale":  "Scamacca's primary position is supported by a competitive conversion with De Ketelaere starting and by the 2025/26 event sequence. For the backups, current SOS Fanta gives Samardžić 2/2 and Éderson 1/1, while De Ketelaere was 0/1; Fantacalcio also records Éderson taking successfully when Scamacca was absent. Goal still puts De Ketelaere second, so the backup reorder is evidence-led but low confidence. Sarri's arrival resets the tactical hierarchy. Samardžić is preferred to Éderson only as the best practical ordering from conversion volume; the two backup slots remain close.",
+                      "uncertainty_note":  "Scamacca is well supported, but Samardžić and Éderson are ordered from conversion volume rather than a current like-for-like event.",
+                      "transfer_conditions":  [
+                                                  "Any summer departure involving Samardžić or Éderson, or the arrival of a specialist forward, changes the backup order. If Sarri publicly designates De Ketelaere or uses him on the next like-for-like penalty, restore him to the top three."
+                                              ],
+                      "sources":  [
+                                      {
+                                          "title":  "Atalanta",
+                                          "url":  "https://www.atalanta.it/news/notte-magica-in-coppa-italia-3-0-alla-juve-ed-e-semifinale",
+                                          "date":  "2026-02-05",
+                                          "evidence":  "Scamacca converted a regular-time penalty while De Ketelaere was also in the starting side."
+                                      },
+                                      {
+                                          "title":  "Fantacalcio",
+                                          "url":  "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+                                          "date":  "2026-04-25",
+                                          "evidence":  "Lists the league sequence as Scamacca, Scamacca, Éderson and notes Samardžić's successful Champions League penalty."
+                                      },
+                                      {
+                                          "title":  "SOS Fanta",
+                                          "url":  "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+                                          "date":  "2026-07-29",
+                                          "evidence":  "Places Scamacca in pole and lists Samardžić and Éderson immediately behind from 2025/26 conversion evidence."
+                                      },
+                                      {
+                                          "title":  "Goal Italia",
+                                          "url":  "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+                                          "date":  "2026-07-23",
+                                          "evidence":  "Ranks Scamacca, De Ketelaere and Samardžić, demonstrating that the backup order is disputed."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://www.atalanta.it/news/preseason-2026-27-i-giocatori-convocati-per-l-inizio-della-preparazione?appview=true",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Gianluca Scamacca as a current 2026/27 club player at the audit cutoff."
+                                      }
+                                  ],
+                      "squad_membership":  {
+                                               "primary":  {
+                                                               "player":  "Gianluca Scamacca",
+                                                               "status":  "confirmed",
+                                                               "source_url":  "https://www.atalanta.it/news/preseason-2026-27-i-giocatori-convocati-per-l-inizio-della-preparazione?appview=true",
+                                                               "checked_at":  "2026-07-30"
+                                                           },
+                                               "secondary":  {
+                                                                 "player":  "Lazar Samardžić",
+                                                                 "status":  "confirmed",
+                                                                 "source_url":  "https://www.atalanta.it/news/preseason-2026-27-i-giocatori-convocati-per-l-inizio-della-preparazione?appview=true",
+                                                                 "checked_at":  "2026-07-30"
+                                                             },
+                                               "tertiary":  {
+                                                                "player":  "Éderson",
+                                                                "status":  "confirmed",
+                                                                "source_url":  "https://www.atalanta.it/news/preseason-2026-27-i-giocatori-convocati-per-l-inizio-della-preparazione?appview=true",
+                                                                "checked_at":  "2026-07-30"
+                                                            }
+                                           }
+                  },
+                  {
+                      "club":  "Bologna",
+                      "recommended_order":  {
+                                                "primary":  "Riccardo Orsolini",
+                                                "secondary":  "Federico Bernardeschi",
+                                                "tertiary":  "Lewis Ferguson"
+                                            },
+                      "status":  {
+                                     "classification":  "provisional_probable",
+                                     "note":  "The first two are strongly supported; Ferguson is a career-record fallback and the new coaching cycle remains provisional."
+                                 },
+                      "per_position_confidence":  {
+                                                      "primary":  "high",
+                                                      "secondary":  "high",
+                                                      "tertiary":  "medium"
+                                                  },
+                      "rationale":  "Orsolini took Bologna's latest competitive penalty with Bernardeschi on the pitch. Bernardeschi's own 2025/26 penalty came after replacing Orsolini, preserving the first two positions. SOS Fanta identifies Ferguson as the third option from a 16/17 career record. Jonathan Rowe's 25 July friendly conversion does not displace the filed three because Orsolini and Bernardeschi entered only after that penalty.",
+                      "uncertainty_note":  "The first two are strongly supported; Ferguson is a career-record fallback and the new coaching cycle remains provisional.",
+                      "transfer_conditions":  [
+                                                  "Reassess after any departure, prolonged absence, or specialist signing affecting the named three."
+                                              ],
+                      "sources":  [
+                                      {
+                                          "title":  "La Repubblica Bologna",
+                                          "url":  "https://bologna.repubblica.it/cronaca/2026/03/22/news/bologna_lazio_partita_risultati_orsolini_sbaglia_un_rigore-425238776/amp/",
+                                          "date":  "2026-03-22",
+                                          "evidence":  "Orsolini took the regular-time penalty with Bernardeschi available on the pitch."
+                                      },
+                                      {
+                                          "title":  "Calcio Bologna",
+                                          "url":  "https://www.calciobologna.it/2026/07/25/bologna-iraklis-amichevole-tabellino-rowe-dallinga/",
+                                          "date":  "2026-07-25",
+                                          "evidence":  "Rowe converted before Orsolini and Bernardeschi entered, so the event does not establish precedence over them."
+                                      },
+                                      {
+                                          "title":  "Fantacalcio",
+                                          "url":  "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+                                          "date":  "2026-04-25",
+                                          "evidence":  "Confirms Orsolini as designated taker and Bernardeschi as the fallback when Orsolini had been replaced."
+                                      },
+                                      {
+                                          "title":  "SOS Fanta",
+                                          "url":  "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+                                          "date":  "2026-07-29",
+                                          "evidence":  "Ranks Orsolini first, Bernardeschi second and Ferguson third."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://www.bolognafc.it/domani-la-ripresa-delle-attivita-i-calciatori-convocati/",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Riccardo Orsolini as a current 2026/27 club player at the audit cutoff."
+                                      }
+                                  ],
+                      "squad_membership":  {
+                                               "primary":  {
+                                                               "player":  "Riccardo Orsolini",
+                                                               "status":  "confirmed",
+                                                               "source_url":  "https://www.bolognafc.it/domani-la-ripresa-delle-attivita-i-calciatori-convocati/",
+                                                               "checked_at":  "2026-07-30"
+                                                           },
+                                               "secondary":  {
+                                                                 "player":  "Federico Bernardeschi",
+                                                                 "status":  "confirmed",
+                                                                 "source_url":  "https://www.bolognafc.it/domani-la-ripresa-delle-attivita-i-calciatori-convocati/",
+                                                                 "checked_at":  "2026-07-30"
+                                                             },
+                                               "tertiary":  {
+                                                                "player":  "Lewis Ferguson",
+                                                                "status":  "confirmed",
+                                                                "source_url":  "https://www.bolognafc.it/domani-la-ripresa-delle-attivita-i-calciatori-convocati/",
+                                                                "checked_at":  "2026-07-30"
+                                                            }
+                                           }
+                  },
+                  {
+                      "club":  "Cagliari",
+                      "recommended_order":  {
+                                                "primary":  "Sebastiano Esposito",
+                                                "secondary":  "Gennaro Borrelli",
+                                                "tertiary":  "Yerry Mina"
+                                            },
+                      "status":  {
+                                     "classification":  "provisional_probable",
+                                     "note":  "Borrelli and Esposito have not yet been tested together on a current competitive penalty."
+                                 },
+                      "per_position_confidence":  {
+                                                      "primary":  "high",
+                                                      "secondary":  "medium",
+                                                      "tertiary":  "medium"
+                                                  },
+                      "rationale":  "Esposito converted a competitive penalty while Mina was playing and has the strongest career record in the current squad. Goal ranks Borrelli second and Mina third; SOS Fanta treats both as alternatives but notes Borrelli's 2/2 record against Mina's 1/2 at Cagliari. The secondary order is inferred because Borrelli and Esposito have not been tested together on a current competitive penalty.",
+                      "uncertainty_note":  "Borrelli and Esposito have not yet been tested together on a current competitive penalty.",
+                      "transfer_conditions":  [
+                                                  "Cagliari is expected to add an attacker; an incoming proven penalty taker could enter above Borrelli and Mina."
+                                              ],
+                      "sources":  [
+                                      {
+                                          "title":  "Cagliari Calcio",
+                                          "url":  "https://cagliaricalcio.com/news/match-report-sassuolo-cagliari-2-1/",
+                                          "date":  "2026-04-04",
+                                          "evidence":  "Esposito converted Cagliari's penalty while Mina was in the starting side."
+                                      },
+                                      {
+                                          "title":  "Fantacalcio",
+                                          "url":  "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+                                          "date":  "2026-04-25",
+                                          "evidence":  "Records Esposito as one of Cagliari's two season takers and notes that the two takers had not appeared together."
+                                      },
+                                      {
+                                          "title":  "SOS Fanta",
+                                          "url":  "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+                                          "date":  "2026-07-29",
+                                          "evidence":  "Names Esposito first and Borrelli and Mina as the principal alternatives."
+                                      },
+                                      {
+                                          "title":  "Goal Italia",
+                                          "url":  "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+                                          "date":  "2026-07-23",
+                                          "evidence":  "Ranks Esposito, Borrelli and Mina in the filed order."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://app.cagliaricalcio.com/contents/precampionato-202627-al-via-il-raduno-wdce4vd48w7",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Sebastiano Esposito as a current 2026/27 club player at the audit cutoff."
+                                      }
+                                  ],
+                      "squad_membership":  {
+                                               "primary":  {
+                                                               "player":  "Sebastiano Esposito",
+                                                               "status":  "confirmed",
+                                                               "source_url":  "https://app.cagliaricalcio.com/contents/precampionato-202627-al-via-il-raduno-wdce4vd48w7",
+                                                               "checked_at":  "2026-07-30"
+                                                           },
+                                               "secondary":  {
+                                                                 "player":  "Gennaro Borrelli",
+                                                                 "status":  "confirmed",
+                                                                 "source_url":  "https://app.cagliaricalcio.com/contents/precampionato-202627-al-via-il-raduno-wdce4vd48w7",
+                                                                 "checked_at":  "2026-07-30"
+                                                             },
+                                               "tertiary":  {
+                                                                "player":  "Yerry Mina",
+                                                                "status":  "confirmed",
+                                                                "source_url":  "https://app.cagliaricalcio.com/contents/precampionato-202627-al-via-il-raduno-wdce4vd48w7",
+                                                                "checked_at":  "2026-07-30"
+                                                            }
+                                           }
+                  },
+                  {
+                      "club":  "Como",
+                      "recommended_order":  {
+                                                "primary":  "Lucas Da Cunha",
+                                                "secondary":  "Tasos Douvikas",
+                                                "tertiary":  "Martin Baturina"
+                                            },
+                      "status":  {
+                                     "classification":  "provisional_probable",
+                                     "note":  "The primary is clear; the backup order conflicts with some boards that still place Nico Paz higher."
+                                 },
+                      "per_position_confidence":  {
+                                                      "primary":  "high",
+                                                      "secondary":  "medium",
+                                                      "tertiary":  "medium"
+                                                  },
+                      "rationale":  "Da Cunha converted four from four in 2025/26 and took a competitive penalty with Douvikas and Baturina starting. Fantacalcio's season audit says Douvikas likely passed Nico Paz after Paz's misses. Baturina later converted in the Coppa Italia when both Da Cunha and Douvikas were absent, giving him better current tertiary evidence than Paz. Goal still ranks Nico Paz second, but that conflicts with his three Serie A misses and with the later specialist event analysis.",
+                      "uncertainty_note":  "The primary is clear; the backup order conflicts with some boards that still place Nico Paz higher.",
+                      "transfer_conditions":  [
+                                                  "A new specialist signing could alter the backup order; SOS Fanta explicitly flags that possibility."
+                                              ],
+                      "sources":  [
+                                      {
+                                          "title":  "AS",
+                                          "url":  "https://as.com/futbol/internacional/cesc-crea-un-monstruo-f202601-n/",
+                                          "date":  "2026-01-24",
+                                          "evidence":  "Da Cunha converted a regular-time penalty with Douvikas and Baturina in the starting side."
+                                      },
+                                      {
+                                          "title":  "Fantacalcio",
+                                          "url":  "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+                                          "date":  "2026-04-25",
+                                          "evidence":  "Calls Da Cunha the clear primary and says Douvikas probably moved ahead of Nico Paz."
+                                      },
+                                      {
+                                          "title":  "Fantacalcio",
+                                          "url":  "https://www.fantacalcio.it/amp/news/calcio-italia/10_02_2026/como-baturina-rigorista-al-san-paolo-cambia-la-gerarchia-488896",
+                                          "date":  "2026-02-10",
+                                          "evidence":  "Baturina converted in the Coppa Italia while Da Cunha and Douvikas were absent; the report also rules against Nico Paz after three Serie A misses."
+                                      },
+                                      {
+                                          "title":  "SOS Fanta",
+                                          "url":  "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+                                          "date":  "2026-07-29",
+                                          "evidence":  "Names Da Cunha first, Douvikas the first alternative and Baturina among the other candidates."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://comofootball.com/en/players/",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Lucas Da Cunha as a current 2026/27 club player at the audit cutoff."
+                                      }
+                                  ],
+                      "squad_membership":  {
+                                               "primary":  {
+                                                               "player":  "Lucas Da Cunha",
+                                                               "status":  "confirmed",
+                                                               "source_url":  "https://comofootball.com/en/players/",
+                                                               "checked_at":  "2026-07-30"
+                                                           },
+                                               "secondary":  {
+                                                                 "player":  "Tasos Douvikas",
+                                                                 "status":  "confirmed",
+                                                                 "source_url":  "https://comofootball.com/en/players/",
+                                                                 "checked_at":  "2026-07-30"
+                                                             },
+                                               "tertiary":  {
+                                                                "player":  "Martin Baturina",
+                                                                "status":  "confirmed",
+                                                                "source_url":  "https://comofootball.com/en/players/",
+                                                                "checked_at":  "2026-07-30"
+                                                            }
+                                           }
+                  },
+                  {
+                      "club":  "Fiorentina",
+                      "recommended_order":  {
+                                                "primary":  "Albert Guðmundsson",
+                                                "secondary":  "Moise Kean",
+                                                "tertiary":  "Rolando Mandragora"
+                                            },
+                      "status":  {
+                                     "classification":  "provisional_conditional",
+                                     "note":  "The 22 July penalty confirms Guðmundsson but did not test him directly against Kean on the pitch."
+                                 },
+                      "per_position_confidence":  {
+                                                      "primary":  "high",
+                                                      "secondary":  "medium",
+                                                      "tertiary":  "medium"
+                                                  },
+                      "rationale":  "Gudmundsson converted the first penalty of Grosso's preseason. The completed 2025/26 event audit explicitly describes the established grid as Gudmundsson, Kean, Mandragora, and the newer SOS Fanta assessment says Gudmundsson and Kean are the clear top two. Goal's Gudmundsson-Mandragora-Kean order is the minority view and predates the 27 July specialist update. Kean was not on the pitch for Gudmundsson's 22 July friendly penalty, so that event confirms Gudmundsson but does not settle the backup order by itself.",
+                      "uncertainty_note":  "The 22 July penalty confirms Guðmundsson but did not test him directly against Kean on the pitch.",
+                      "transfer_conditions":  [
+                                                  "If Kean leaves before the window closes, Mandragora becomes the practical secondary. A specialist attacking signing could enter the top three under new coach Fabio Grosso."
+                                              ],
+                      "sources":  [
+                                      {
+                                          "title":  "SportMediaset",
+                                          "url":  "https://amp.sportmediaset.mediaset.it/sportmediaset/article/114707862",
+                                          "date":  "2026-07-22",
+                                          "evidence":  "Gudmundsson converted the penalty; Kean entered only for the second half."
+                                      },
+                                      {
+                                          "title":  "Fantacalcio",
+                                          "url":  "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+                                          "date":  "2026-04-25",
+                                          "evidence":  "States that the defined 2025/26 grid was Gudmundsson first, Kean second and Mandragora third."
+                                      },
+                                      {
+                                          "title":  "SOS Fanta",
+                                          "url":  "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+                                          "date":  "2026-07-29",
+                                          "evidence":  "Treats Gudmundsson and Kean as the clear first two, with Mandragora behind them."
+                                      },
+                                      {
+                                          "title":  "Goal Italia",
+                                          "url":  "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+                                          "date":  "2026-07-23",
+                                          "evidence":  "Ranks Gudmundsson, Mandragora and Kean, preserving the existing backup order."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://www.acffiorentina.com/pages/prima-squadra-maschile",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Albert Guðmundsson as a current 2026/27 club player at the audit cutoff."
+                                      }
+                                  ],
+                      "squad_membership":  {
+                                               "primary":  {
+                                                               "player":  "Albert Guðmundsson",
+                                                               "status":  "confirmed",
+                                                               "source_url":  "https://www.acffiorentina.com/pages/prima-squadra-maschile",
+                                                               "checked_at":  "2026-07-30"
+                                                           },
+                                               "secondary":  {
+                                                                 "player":  "Moise Kean",
+                                                                 "status":  "confirmed",
+                                                                 "source_url":  "https://www.acffiorentina.com/pages/prima-squadra-maschile",
+                                                                 "checked_at":  "2026-07-30"
+                                                             },
+                                               "tertiary":  {
+                                                                "player":  "Rolando Mandragora",
+                                                                "status":  "confirmed",
+                                                                "source_url":  "https://www.acffiorentina.com/pages/prima-squadra-maschile",
+                                                                "checked_at":  "2026-07-30"
+                                                            }
+                                           }
+                  },
+                  {
+                      "club":  "Frosinone",
+                      "recommended_order":  {
+                                                "primary":  "Giacomo Calò",
+                                                "secondary":  "Ben Lhassine Kone",
+                                                "tertiary":  "Antonio Raimondo"
+                                            },
+                      "status":  {
+                                     "classification":  "provisional_probable",
+                                     "note":  "Raimondo is a projected tertiary with weak direct evidence; the promoted squad is still being built."
+                                 },
+                      "per_position_confidence":  {
+                                                      "primary":  "high",
+                                                      "secondary":  "medium",
+                                                      "tertiary":  "low"
+                                                  },
+                      "rationale":  "Calò converted five from five in the promotion season. The official Carrarese report supplies the missing depth evidence: Kone converted the second penalty after Calò and Raimondo had both been substituted. That makes Kone a stronger practical secondary than Raimondo, whose only professional penalty cited by SOS Fanta was missed. Raimondo remains the best third candidate from starting role and current specialist expectation. Kone's penalty was taken after the first two recommended names had left the field, so it proves fallback status rather than precedence over Calò. Raimondo's tertiary position remains an informed projection.",
+                      "uncertainty_note":  "Raimondo is a projected tertiary with weak direct evidence; the promoted squad is still being built.",
+                      "transfer_conditions":  [
+                                                  "Frosinone is still building a Serie A attack; a proven penalty-taking forward would likely replace Raimondo in the top three and could challenge Kone. Recheck Kone's role if the midfield changes materially before the window closes."
+                                              ],
+                      "sources":  [
+                                      {
+                                          "title":  "Frosinone Calcio",
+                                          "url":  "https://www.frosinonecalcio.com/frosinone-carrarese-3-0/",
+                                          "date":  "2026-04-25",
+                                          "evidence":  "Calò converted at 54 minutes; after Calò and Raimondo were substituted, Kone converted the 90th-minute penalty."
+                                      },
+                                      {
+                                          "title":  "Gianluca Di Marzio",
+                                          "url":  "https://www.gianlucadimarzio.com/news-calcio/rigore-per-il-frosinone-dopo-ofr-calo-segna-l-1-0-492051",
+                                          "date":  "2026-05-08",
+                                          "evidence":  "Calò converted another competitive penalty in the promotion-clinching run."
+                                      },
+                                      {
+                                          "title":  "Frosinone Calcio",
+                                          "url":  "https://www.frosinonecalcio.com/preseason-i-convocati/",
+                                          "date":  "2026-07-12",
+                                          "evidence":  "Lists Calò, Kone and Raimondo in the current preseason group."
+                                      },
+                                      {
+                                          "title":  "SOS Fanta",
+                                          "url":  "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+                                          "date":  "2026-07-29",
+                                          "evidence":  "Names Calò first and describes Raimondo only as a speculative alternative while warning that the market can change the order."
+                                      }
+                                  ],
+                      "squad_membership":  {
+                                               "primary":  {
+                                                               "player":  "Giacomo Calò",
+                                                               "status":  "confirmed",
+                                                               "source_url":  "https://www.frosinonecalcio.com/preseason-i-convocati/",
+                                                               "checked_at":  "2026-07-30"
+                                                           },
+                                               "secondary":  {
+                                                                 "player":  "Ben Lhassine Kone",
+                                                                 "status":  "confirmed",
+                                                                 "source_url":  "https://www.frosinonecalcio.com/preseason-i-convocati/",
+                                                                 "checked_at":  "2026-07-30"
+                                                             },
+                                               "tertiary":  {
+                                                                "player":  "Antonio Raimondo",
+                                                                "status":  "confirmed",
+                                                                "source_url":  "https://www.frosinonecalcio.com/preseason-i-convocati/",
+                                                                "checked_at":  "2026-07-30"
+                                                            }
+                                           }
+                  },
+                  {
+                      "club":  "Genoa",
+                      "recommended_order":  {
+                                                "primary":  "Lorenzo Colombo",
+                                                "secondary":  "Junior Messias",
+                                                "tertiary":  "Vitinha"
+                                            },
+                      "status":  {
+                                     "classification":  "provisional_disputed",
+                                     "note":  "Colombo's lead rests on a preseason penalty and specialist consensus, not a competitive like-for-like event."
+                                 },
+                      "per_position_confidence":  {
+                                                      "primary":  "medium",
+                                                      "secondary":  "medium",
+                                                      "tertiary":  "low"
+                                                  },
+                      "rationale":  "With Malinovskyi departed, Colombo converted Genoa's first current preseason penalty. Messias was the 2025/26 vice-taker when Malinovskyi was absent, and both current specialist boards rank Colombo, Messias and Vitinha in the filed order. Colombo's primary evidence is still a friendly plus specialist consensus, not a competitive like-for-like event under the final 2026/27 squad.",
+                      "uncertainty_note":  "Colombo's lead rests on a preseason penalty and specialist consensus, not a competitive like-for-like event.",
+                      "transfer_conditions":  [
+                                                  "A specialist signing or a departure among Colombo, Messias or Vitinha requires a reorder."
+                                              ],
+                      "sources":  [
+                                      {
+                                          "title":  "ANSA",
+                                          "url":  "https://www.ansa.it/sito/notizie/sport/calcio/2026/07/19/genoa-colombo-e-puzcka-rimontano-il-trento-la-prima-uscita-e-2-1_f5fb6842-b0fe-4857-a54b-84bb04703519.html",
+                                          "date":  "2026-07-19",
+                                          "evidence":  "Colombo won and converted Genoa's first preseason penalty."
+                                      },
+                                      {
+                                          "title":  "Fantacalcio",
+                                          "url":  "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+                                          "date":  "2026-04-25",
+                                          "evidence":  "Records Messias scoring when Malinovskyi was absent and identifies him as the 2025/26 vice-taker."
+                                      },
+                                      {
+                                          "title":  "SOS Fanta",
+                                          "url":  "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+                                          "date":  "2026-07-29",
+                                          "evidence":  "Names Colombo first after Malinovskyi's departure and lists Messias and Vitinha among the leading alternatives."
+                                      },
+                                      {
+                                          "title":  "Goal Italia",
+                                          "url":  "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+                                          "date":  "2026-07-23",
+                                          "evidence":  "Ranks Colombo, Messias and Vitinha in the filed order."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://genoacfc.it/prima-squadra-maschile/",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Lorenzo Colombo as a current 2026/27 club player at the audit cutoff."
+                                      }
+                                  ],
+                      "squad_membership":  {
+                                               "primary":  {
+                                                               "player":  "Lorenzo Colombo",
+                                                               "status":  "confirmed",
+                                                               "source_url":  "https://genoacfc.it/prima-squadra-maschile/",
+                                                               "checked_at":  "2026-07-30"
+                                                           },
+                                               "secondary":  {
+                                                                 "player":  "Junior Messias",
+                                                                 "status":  "confirmed",
+                                                                 "source_url":  "https://genoacfc.it/prima-squadra-maschile/",
+                                                                 "checked_at":  "2026-07-30"
+                                                             },
+                                               "tertiary":  {
+                                                                "player":  "Vitinha",
+                                                                "status":  "confirmed",
+                                                                "source_url":  "https://genoacfc.it/prima-squadra-maschile/",
+                                                                "checked_at":  "2026-07-30"
+                                                            }
+                                           }
+                  },
+                  {
+                      "club":  "Inter",
+                      "recommended_order":  {
+                                                "primary":  "Hakan Çalhanoğlu",
+                                                "secondary":  "Piotr Zieliński",
+                                                "tertiary":  "Lautaro Martínez"
+                                            },
+                      "status":  {
+                                     "classification":  "stable",
+                                     "note":  "The first two positions are supported by direct club evidence; Lautaro is a seniority-based tertiary with weaker recent data."
+                                 },
+                      "per_position_confidence":  {
+                                                      "primary":  "high",
+                                                      "secondary":  "high",
+                                                      "tertiary":  "medium"
+                                                  },
+                      "rationale":  "Calhanoglu remains the clear designated taker. Inter's official post-match account and Fantacalcio's season event audit identify Zielinski as the taker in Calhanoglu's absence. Lautaro is the practical third by seniority but has not taken an Inter league penalty recently and has a materially weaker conversion record. Goal reverses Lautaro and Zielinski, but direct 2025/26 evidence and Calhanoglu's own account support the filed order.",
+                      "uncertainty_note":  "The first two positions are supported by direct club evidence; Lautaro is a seniority-based tertiary with weaker recent data.",
+                      "transfer_conditions":  [
+                                                  "Reassess after any departure, prolonged absence, or specialist signing affecting the named three."
+                                              ],
+                      "sources":  [
+                                      {
+                                          "title":  "Inter",
+                                          "url":  "https://www.inter.it/en/news/interview-calhanoglu-goal-sommer-carlos-augusto-inter-genoa-serie-a-2025-2026",
+                                          "date":  "2026-02-28",
+                                          "evidence":  "After converting, Calhanoglu said he had asked Zielinski whether he wanted it because it was Zielinski's turn."
+                                      },
+                                      {
+                                          "title":  "Fantacalcio",
+                                          "url":  "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+                                          "date":  "2026-04-25",
+                                          "evidence":  "Shows Calhanoglu taking five of six league penalties and Zielinski taking the other in his absence."
+                                      },
+                                      {
+                                          "title":  "SOS Fanta",
+                                          "url":  "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+                                          "date":  "2026-07-29",
+                                          "evidence":  "Ranks Calhanoglu first, Zielinski second and Lautaro as the possible third."
+                                      },
+                                      {
+                                          "title":  "Goal Italia",
+                                          "url":  "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+                                          "date":  "2026-07-23",
+                                          "evidence":  "Ranks Lautaro second and Zielinski third, contrary to the direct event evidence."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://www.inter.it/it/teams/prima-squadra",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Hakan Çalhanoğlu as a current 2026/27 club player at the audit cutoff."
+                                      }
+                                  ],
+                      "squad_membership":  {
+                                               "primary":  {
+                                                               "player":  "Hakan Çalhanoğlu",
+                                                               "status":  "confirmed",
+                                                               "source_url":  "https://www.inter.it/it/teams/prima-squadra",
+                                                               "checked_at":  "2026-07-30"
+                                                           },
+                                               "secondary":  {
+                                                                 "player":  "Piotr Zieliński",
+                                                                 "status":  "confirmed",
+                                                                 "source_url":  "https://www.inter.it/it/teams/prima-squadra",
+                                                                 "checked_at":  "2026-07-30"
+                                                             },
+                                               "tertiary":  {
+                                                                "player":  "Lautaro Martínez",
+                                                                "status":  "confirmed",
+                                                                "source_url":  "https://www.inter.it/it/teams/prima-squadra",
+                                                                "checked_at":  "2026-07-30"
+                                                            }
+                                           }
+                  },
+                  {
+                      "club":  "Juventus",
+                      "recommended_order":  {
+                                                "primary":  "Manuel Locatelli",
+                                                "secondary":  "Kenan Yıldız",
+                                                "tertiary":  "Jonathan David"
+                                            },
+                      "status":  {
+                                     "classification":  "provisional_disputed",
+                                     "note":  "Coach designation supports Locatelli, but current specialist sources split between Locatelli and Yıldız."
+                                 },
+                      "per_position_confidence":  {
+                                                      "primary":  "medium",
+                                                      "secondary":  "medium",
+                                                      "tertiary":  "low"
+                                                  },
+                      "rationale":  "Spalletti explicitly called Locatelli the penalty taker after Locatelli took with Yildiz available. Yildiz and David also took during 2025/26, but those attempts included delegated or situational choices and all three had misses. The coach's designation is stronger than the current specialist split and supports retaining Locatelli first. SOS Fanta calls Locatelli-Yildiz an open contest and Goal puts Yildiz first. The order is usable, not settled.",
+                      "uncertainty_note":  "Coach designation supports Locatelli, but current specialist sources split between Locatelli and Yıldız.",
+                      "transfer_conditions":  [
+                                                  "Juventus is expected to add an attacker; an incoming high-volume specialist could enter at primary or secondary. Vlahović is excluded because his prior contract ended and no official return was found at the cutoff."
+                                              ],
+                      "sources":  [
+                                      {
+                                          "title":  "La Gazzetta dello Sport",
+                                          "url":  "https://www.gazzetta.it/Calcio/Serie-A/Juventus/22-03-2026/juve-il-caso-dei-rigori-locatelli-yildiz-e-lo-sfogo-di-spalletti.shtml",
+                                          "date":  "2026-03-22",
+                                          "evidence":  "Locatelli took with Yildiz available, and Spalletti stated that Locatelli was the penalty taker."
+                                      },
+                                      {
+                                          "title":  "Sky Sport Italia",
+                                          "url":  "https://sport.sky.it/calcio/serie-a/2026/01/03/juventus-lecce-spalletti-intervista-video",
+                                          "date":  "2026-01-03",
+                                          "evidence":  "David took and missed after Yildiz and Locatelli ceded the ball; Spalletti still described David as a valid taker."
+                                      },
+                                      {
+                                          "title":  "Fantacalcio",
+                                          "url":  "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+                                          "date":  "2026-04-25",
+                                          "evidence":  "Records the sequence Vlahović, Yildiz, David, Yildiz, Locatelli and three consecutive misses by the current candidates."
+                                      },
+                                      {
+                                          "title":  "SOS Fanta",
+                                          "url":  "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+                                          "date":  "2026-07-29",
+                                          "evidence":  "Treats Locatelli and Yildiz as the open leading pair with David also in contention."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://www.juventus.com/it/squadre/prima-squadra-maschile/rosa/",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Manuel Locatelli as a current 2026/27 club player at the audit cutoff."
+                                      }
+                                  ],
+                      "squad_membership":  {
+                                               "primary":  {
+                                                               "player":  "Manuel Locatelli",
+                                                               "status":  "confirmed",
+                                                               "source_url":  "https://www.juventus.com/it/squadre/prima-squadra-maschile/rosa/",
+                                                               "checked_at":  "2026-07-30"
+                                                           },
+                                               "secondary":  {
+                                                                 "player":  "Kenan Yıldız",
+                                                                 "status":  "confirmed",
+                                                                 "source_url":  "https://www.juventus.com/it/squadre/prima-squadra-maschile/rosa/",
+                                                                 "checked_at":  "2026-07-30"
+                                                             },
+                                               "tertiary":  {
+                                                                "player":  "Jonathan David",
+                                                                "status":  "confirmed",
+                                                                "source_url":  "https://www.juventus.com/it/squadre/prima-squadra-maschile/rosa/",
+                                                                "checked_at":  "2026-07-30"
+                                                            }
+                                           }
+                  },
+                  {
+                      "club":  "Lazio",
+                      "recommended_order":  {
+                                                "primary":  "Mattia Zaccagni",
+                                                "secondary":  "Kenneth Taylor",
+                                                "tertiary":  "Danilo Cataldi"
+                                            },
+                      "status":  {
+                                     "classification":  "provisional_disputed",
+                                     "note":  "Gattuso has not supplied a like-for-like preseason penalty, so the order partly inherits Sarri-era evidence."
+                                 },
+                      "per_position_confidence":  {
+                                                      "primary":  "medium",
+                                                      "secondary":  "medium",
+                                                      "tertiary":  "low"
+                                                  },
+                      "rationale":  "Zaccagni took the latest competitive penalty with Cataldi available, which preserves him first despite the miss. Sarri's April description of the dressing-room list named Zaccagni with Taylor and Pedro, and the 27 July SOS Fanta update frames Zaccagni-Taylor as the leading contest with Cataldi just behind. That evidence is stronger and newer than Goal's Zaccagni-Cataldi-Taylor order. Gattuso is a new coach and has not supplied a like-for-like preseason penalty. Cataldi also missed early preparation after surgery, reducing confidence in his immediate role.",
+                      "uncertainty_note":  "Gattuso has not supplied a like-for-like preseason penalty, so the order partly inherits Sarri-era evidence.",
+                      "transfer_conditions":  [
+                                                  "Any departure involving Taylor or Zaccagni requires a reorder. A new attacking specialist or a Gattuso designation can supersede the inherited Sarri-era evidence."
+                                              ],
+                      "sources":  [
+                                      {
+                                          "title":  "Lalaziosiamonoi",
+                                          "url":  "https://www.lalaziosiamonoi.it/news/lazio-zaccagni-non-e-piu-il-rigorista-sarri-fa-chiarezza-sulla-gerarchia-243801",
+                                          "date":  "2026-04-18",
+                                          "evidence":  "Reports Sarri saying the dressing-room list read Zaccagni, with Taylor and Pedro in parentheses."
+                                      },
+                                      {
+                                          "title":  "FantaMaster",
+                                          "url":  "https://www.fantamaster.it/rigorista-lazio-errore-zaccagni-gerarchie-ultime-giornate-fantacalcio/",
+                                          "date":  "2026-04-20",
+                                          "evidence":  "Reports that Zaccagni took and missed the 18 April competitive penalty."
+                                      },
+                                      {
+                                          "title":  "SOS Fanta",
+                                          "url":  "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+                                          "date":  "2026-07-29",
+                                          "evidence":  "Describes Zaccagni and Taylor as the leading pair, with Cataldi narrowly behind."
+                                      },
+                                      {
+                                          "title":  "Goal Italia",
+                                          "url":  "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+                                          "date":  "2026-07-23",
+                                          "evidence":  "Ranks Zaccagni, Cataldi and Taylor in the existing order."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://www.sslazio.it/it/team/lazio/squadra",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Mattia Zaccagni as a current 2026/27 club player at the audit cutoff."
+                                      }
+                                  ],
+                      "squad_membership":  {
+                                               "primary":  {
+                                                               "player":  "Mattia Zaccagni",
+                                                               "status":  "confirmed",
+                                                               "source_url":  "https://www.sslazio.it/it/team/lazio/squadra",
+                                                               "checked_at":  "2026-07-30"
+                                                           },
+                                               "secondary":  {
+                                                                 "player":  "Kenneth Taylor",
+                                                                 "status":  "confirmed",
+                                                                 "source_url":  "https://www.sslazio.it/it/team/lazio/squadra",
+                                                                 "checked_at":  "2026-07-30"
+                                                             },
+                                               "tertiary":  {
+                                                                "player":  "Danilo Cataldi",
+                                                                "status":  "confirmed",
+                                                                "source_url":  "https://www.sslazio.it/it/team/lazio/squadra",
+                                                                "checked_at":  "2026-07-30"
+                                                            }
+                                           }
+                  },
+                  {
+                      "club":  "Lecce",
+                      "recommended_order":  {
+                                                "primary":  "Nikola Štulić",
+                                                "secondary":  "Santiago Pierotti",
+                                                "tertiary":  "Antonino Gallo"
+                                            },
+                      "status":  {
+                                     "classification":  "provisional_probable",
+                                     "note":  "Only Štulić has direct current evidence; Pierotti and Gallo remain projections."
+                                 },
+                      "per_position_confidence":  {
+                                                      "primary":  "medium",
+                                                      "secondary":  "low",
+                                                      "tertiary":  "low"
+                                                  },
+                      "rationale":  "Štulić converted a current preseason penalty with Pierotti starting and is first in both current specialist boards. Pierotti is the recurring backup candidate. SOS Fanta explicitly names Gallo as the other in-squad option, making him the most defensible practical tertiary rather than leaving the position blank. Only Štulić has direct current evidence. Pierotti and Gallo are projections, and the hierarchy remains one of the league's thinnest.",
+                      "uncertainty_note":  "Only Štulić has direct current evidence; Pierotti and Gallo remain projections.",
+                      "transfer_conditions":  [
+                                                  "A specialist attacking arrival could enter first or second. Francesco Camarda is excluded because AC Milan officially exercised its buy-back and he rejoined Milan from 1 July 2026."
+                                              ],
+                      "sources":  [
+                                      {
+                                          "title":  "Leccezionale Salento",
+                                          "url":  "https://leccezionale.it/2026/07/25/lecce-con-listra-e-pareggio-in-gol-stulic-e-maleh/",
+                                          "date":  "2026-07-25",
+                                          "evidence":  "Štulić won and converted Lecce's penalty while Pierotti was also in the starting side."
+                                      },
+                                      {
+                                          "title":  "AC Milan",
+                                          "url":  "https://www.acmilan.com/en/news/articles/media/2026-06-18/official-statement-francesco-camarda",
+                                          "date":  "2026-06-18",
+                                          "evidence":  "Milan exercised the buy-back clause and confirmed Camarda would rejoin from 1 July."
+                                      },
+                                      {
+                                          "title":  "SOS Fanta",
+                                          "url":  "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+                                          "date":  "2026-07-29",
+                                          "evidence":  "Names Štulić first and Pierotti and Gallo as the current alternatives."
+                                      },
+                                      {
+                                          "title":  "Goal Italia",
+                                          "url":  "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+                                          "date":  "2026-07-23",
+                                          "evidence":  "Ranks Štulić first and Pierotti second but does not provide a third candidate."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://uslecce.it/raduno-in-sede/",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Nikola Štulić as a current 2026/27 club player at the audit cutoff."
+                                      }
+                                  ],
+                      "squad_membership":  {
+                                               "primary":  {
+                                                               "player":  "Nikola Štulić",
+                                                               "status":  "confirmed",
+                                                               "source_url":  "https://uslecce.it/raduno-in-sede/",
+                                                               "checked_at":  "2026-07-30"
+                                                           },
+                                               "secondary":  {
+                                                                 "player":  "Santiago Pierotti",
+                                                                 "status":  "confirmed",
+                                                                 "source_url":  "https://uslecce.it/raduno-in-sede/",
+                                                                 "checked_at":  "2026-07-30"
+                                                             },
+                                               "tertiary":  {
+                                                                "player":  "Antonino Gallo",
+                                                                "status":  "confirmed",
+                                                                "source_url":  "https://uslecce.it/raduno-in-sede/",
+                                                                "checked_at":  "2026-07-30"
+                                                            }
+                                           }
+                  },
+                  {
+                      "club":  "Monza",
+                      "recommended_order":  {
+                                                "primary":  "Matteo Pessina",
+                                                "secondary":  "Patrick Cutrone",
+                                                "tertiary":  "Andrea Petagna"
+                                            },
+                      "status":  {
+                                     "classification":  "provisional_probable",
+                                     "note":  "Cutrone versus Petagna depends on lineup availability and lacks a current direct comparison."
+                                 },
+                      "per_position_confidence":  {
+                                                      "primary":  "high",
+                                                      "secondary":  "medium",
+                                                      "tertiary":  "medium"
+                                                  },
+                      "rationale":  "Pessina converted multiple competitive penalties in the promotion season and has a 16/17 career record cited by current specialists. Goal and SOS Fanta agree that Cutrone and Petagna are the practical alternatives in that order. The backup order depends heavily on which striker is on the pitch; neither has current like-for-like evidence over the other.",
+                      "uncertainty_note":  "Cutrone versus Petagna depends on lineup availability and lacks a current direct comparison.",
+                      "transfer_conditions":  [
+                                                  "Cutrone and Petagna are both market-sensitive; a departure or a new starting striker requires a backup reorder."
+                                              ],
+                      "sources":  [
+                                      {
+                                          "title":  "AC Monza",
+                                          "url":  "https://www.acmonza.com/en/news/catanzaro-monza-match-report/",
+                                          "date":  "2026-04-06",
+                                          "evidence":  "Pessina converted Monza's 96th-minute competitive penalty."
+                                      },
+                                      {
+                                          "title":  "AC Monza",
+                                          "url":  "https://www.acmonza.com/it/news/monza-avellino-report-08022026/",
+                                          "date":  "2026-02-08",
+                                          "evidence":  "Pessina converted the decisive competitive penalty against Avellino."
+                                      },
+                                      {
+                                          "title":  "SOS Fanta",
+                                          "url":  "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+                                          "date":  "2026-07-29",
+                                          "evidence":  "Calls Pessina the certain first taker and names Cutrone and Petagna as the main backups."
+                                      },
+                                      {
+                                          "title":  "Goal Italia",
+                                          "url":  "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+                                          "date":  "2026-07-23",
+                                          "evidence":  "Ranks Pessina, Cutrone and Petagna in the filed order."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://www.acmonza.com/it/news/monza-catanzaro-i-convocati-finale-playoff-ritorno/",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Matteo Pessina as a current 2026/27 club player at the audit cutoff."
+                                      }
+                                  ],
+                      "squad_membership":  {
+                                               "primary":  {
+                                                               "player":  "Matteo Pessina",
+                                                               "status":  "confirmed",
+                                                               "source_url":  "https://www.acmonza.com/it/news/monza-catanzaro-i-convocati-finale-playoff-ritorno/",
+                                                               "checked_at":  "2026-07-30"
+                                                           },
+                                               "secondary":  {
+                                                                 "player":  "Patrick Cutrone",
+                                                                 "status":  "confirmed",
+                                                                 "source_url":  "https://www.acmonza.com/it/news/monza-catanzaro-i-convocati-finale-playoff-ritorno/",
+                                                                 "checked_at":  "2026-07-30"
+                                                             },
+                                               "tertiary":  {
+                                                                "player":  "Andrea Petagna",
+                                                                "status":  "confirmed",
+                                                                "source_url":  "https://www.acmonza.com/it/news/monza-catanzaro-i-convocati-finale-playoff-ritorno/",
+                                                                "checked_at":  "2026-07-30"
+                                                            }
+                                           }
+                  },
+                  {
+                      "club":  "Napoli",
+                      "recommended_order":  {
+                                                "primary":  "Romelu Lukaku",
+                                                "secondary":  "Kevin De Bruyne",
+                                                "tertiary":  "Giovane"
+                                            },
+                      "status":  {
+                                     "classification":  "provisional_conditional",
+                                     "note":  "Lukaku is a roster-confirmed but conditional primary because retention and first-team reintegration were unresolved at the cutoff; Giovane versus Højlund is also unsettled."
+                                 },
+                      "per_position_confidence":  {
+                                                      "primary":  "low",
+                                                      "secondary":  "high",
+                                                      "tertiary":  "low"
+                                                  },
+                      "rationale":  "Both current specialist boards make Lukaku first if he remains and is reintegrated, with De Bruyne next. Napoli's official March statement leaves Lukaku's group status unresolved, so his first position is explicitly conditional. For practical third depth, Giovane converted Allegri's 26 July friendly penalty with Højlund on the pitch; that direct current-coach signal narrowly outweighs older specialist projections that put Højlund third. If Lukaku is not retained or reintegrated, the practical order becomes De Bruyne, Giovane, Højlund. Højlund remains the closest omitted candidate and should replace Lukaku in the displayed three if the Belgian leaves.",
+                      "uncertainty_note":  "Lukaku is a roster-confirmed but conditional primary because retention and first-team reintegration were unresolved at the cutoff; Giovane versus Højlund is also unsettled.",
+                      "transfer_conditions":  [
+                                                  "Lukaku retained and reintegrated: keep Lukaku first. Lukaku leaves or remains outside the group: use Kevin De Bruyne first, Giovane second and Rasmus Højlund third. A major attacking signing with established penalty volume can enter the top three."
+                                              ],
+                      "sources":  [
+                                      {
+                                          "title":  "SSC Napoli",
+                                          "url":  "https://sscnapoli.it/nota-del-club-5/",
+                                          "date":  "2026-03-31",
+                                          "evidence":  "Napoli stated that Lukaku had not reported for training and reserved decisions on his continued group activity."
+                                      },
+                                      {
+                                          "title":  "SSC Napoli",
+                                          "url":  "https://sscnapoli.it/match-report-napoli-carrarese-2-0/",
+                                          "date":  "2026-07-26",
+                                          "evidence":  "Giovane converted the penalty with Højlund in the starting side; De Bruyne and the post-World Cup returnees were absent."
+                                      },
+                                      {
+                                          "title":  "Fantacalcio",
+                                          "url":  "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+                                          "date":  "2026-04-25",
+                                          "evidence":  "Records De Bruyne taking three league penalties and Højlund one in De Bruyne's absence."
+                                      },
+                                      {
+                                          "title":  "SOS Fanta",
+                                          "url":  "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+                                          "date":  "2026-07-29",
+                                          "evidence":  "Names Lukaku first only if he stays, with De Bruyne and Højlund the established alternatives."
+                                      },
+                                      {
+                                          "title":  "Goal Italia",
+                                          "url":  "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+                                          "date":  "2026-07-23",
+                                          "evidence":  "Ranks Lukaku, De Bruyne and Højlund without resolving Lukaku's club-status condition."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://sscnapoli.it/en/nota-del-club-5/",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Romelu Lukaku as a current 2026/27 club player at the audit cutoff."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://sscnapoli.it/squadra/",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Kevin De Bruyne as a current 2026/27 club player at the audit cutoff."
+                                      }
+                                  ],
+                      "squad_membership":  {
+                                               "primary":  {
+                                                               "player":  "Romelu Lukaku",
+                                                               "status":  "confirmed",
+                                                               "source_url":  "https://sscnapoli.it/en/nota-del-club-5/",
+                                                               "checked_at":  "2026-07-30"
+                                                           },
+                                               "secondary":  {
+                                                                 "player":  "Kevin De Bruyne",
+                                                                 "status":  "confirmed",
+                                                                 "source_url":  "https://sscnapoli.it/squadra/",
+                                                                 "checked_at":  "2026-07-30"
+                                                             },
+                                               "tertiary":  {
+                                                                "player":  "Giovane",
+                                                                "status":  "confirmed",
+                                                                "source_url":  "https://sscnapoli.it/match-report-napoli-carrarese-2-0/",
+                                                                "checked_at":  "2026-07-30"
+                                                            }
+                                           }
+                  },
+                  {
+                      "club":  "Parma Calcio 1913",
+                      "recommended_order":  {
+                                                "primary":  "Adrian Benedyczak",
+                                                "secondary":  "Mateo Pellegrino",
+                                                "tertiary":  "Adrián Bernabé"
+                                            },
+                      "status":  {
+                                     "classification":  "provisional_disputed",
+                                     "note":  "Direct match evidence favors Benedyczak, while current broad specialist boards favor Pellegrino because of expected playing time."
+                                 },
+                      "per_position_confidence":  {
+                                                      "primary":  "medium",
+                                                      "secondary":  "medium",
+                                                      "tertiary":  "low"
+                                                  },
+                      "rationale":  "Benedyczak took and converted against Pisa with Pellegrino on the pitch, the cleanest like-for-like event in Parma's file. Fantacalcio's completed season audit and Goal's dedicated event analysis both concluded that Benedyczak was the favored taker when available. The newer broad specialist boards prefer Pellegrino, so the direct-event-based swap is material but remains disputed. Benedyczak may not start regularly, meaning Pellegrino can still take many penalties in practice. Bernabé is retained as the third technical option, but there is no current direct event establishing him there.",
+                      "uncertainty_note":  "Direct match evidence favors Benedyczak, while current broad specialist boards favor Pellegrino because of expected playing time.",
+                      "transfer_conditions":  [
+                                                  "If Benedyczak leaves or remains a marginal substitute, Pellegrino is the practical primary. Pellegrino is also market-sensitive; a departure would move Bernabé up and require a new third candidate. Strefezza is excluded because his official Parma loan ended with 2025/26 and he was absent from the 10 July preseason squad."
+                                              ],
+                      "sources":  [
+                                      {
+                                          "title":  "Goal Italia",
+                                          "url":  "https://www.goal.com/it/liste/chi-e-rigorista-parma-benedyczak-pellegrino-gerarchia/blt76d634fa3ba7d869",
+                                          "date":  "2025-12-08",
+                                          "evidence":  "Concludes Benedyczak was the principal taker after he converted with Pellegrino playing."
+                                      },
+                                      {
+                                          "title":  "Fantacalcio",
+                                          "url":  "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+                                          "date":  "2026-04-25",
+                                          "evidence":  "Notes that Benedyczak took the only Parma penalty for which both he and Pellegrino were on the pitch and therefore favored Benedyczak next."
+                                      },
+                                      {
+                                          "title":  "Parma Calcio 1913",
+                                          "url":  "https://www.parmacalcio1913.com/news/parma-al-via-la-stagione-2026-2027-raduno-a-collecchio-dal-25-luglio-ritiro-in-trentino/",
+                                          "date":  "2026-07-10",
+                                          "evidence":  "Lists Benedyczak, Pellegrino and Bernabé in the preseason group and does not list Strefezza."
+                                      },
+                                      {
+                                          "title":  "SOS Fanta",
+                                          "url":  "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+                                          "date":  "2026-07-29",
+                                          "evidence":  "Ranks Pellegrino first and Benedyczak as the current alternative, creating a conflict with the direct event."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://www.parmacalcio1913.com/news/mateo-pellegrino-rinnova-in-gialloblu-fino-al-2030/",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Mateo Pellegrino as a current 2026/27 club player at the audit cutoff."
+                                      }
+                                  ],
+                      "squad_membership":  {
+                                               "primary":  {
+                                                               "player":  "Adrian Benedyczak",
+                                                               "status":  "confirmed",
+                                                               "source_url":  "https://www.parmacalcio1913.com/news/parma-al-via-la-stagione-2026-2027-raduno-a-collecchio-dal-25-luglio-ritiro-in-trentino/",
+                                                               "checked_at":  "2026-07-30"
+                                                           },
+                                               "secondary":  {
+                                                                 "player":  "Mateo Pellegrino",
+                                                                 "status":  "confirmed",
+                                                                 "source_url":  "https://www.parmacalcio1913.com/news/mateo-pellegrino-rinnova-in-gialloblu-fino-al-2030/",
+                                                                 "checked_at":  "2026-07-30"
+                                                             },
+                                               "tertiary":  {
+                                                                "player":  "Adrián Bernabé",
+                                                                "status":  "confirmed",
+                                                                "source_url":  "https://www.parmacalcio1913.com/news/parma-al-via-la-stagione-2026-2027-raduno-a-collecchio-dal-25-luglio-ritiro-in-trentino/",
+                                                                "checked_at":  "2026-07-30"
+                                                            }
+                                           }
+                  },
+                  {
+                      "club":  "Roma",
+                      "recommended_order":  {
+                                                "primary":  "Donyell Malen",
+                                                "secondary":  "Paulo Dybala",
+                                                "tertiary":  "Matías Soulé"
+                                            },
+                      "status":  {
+                                     "classification":  "provisional_probable",
+                                     "note":  "Malen over Dybala is supported by late-2025/26 like-for-like usage; Soulé is a provisional tertiary without comparable current penalty evidence."
+                                 },
+                      "per_position_confidence":  {
+                                                      "primary":  "high",
+                                                      "secondary":  "high",
+                                                      "tertiary":  "low"
+                                                  },
+                      "rationale":  "Malen took and converted Roma's 10 May competitive penalty against Parma with Dybala on the pitch; Gazzetta reported that Dybala handed him the ball. Malen then took again against Verona on 24 May with Dybala available, establishing the strongest late-season like-for-like signal. Dybala remains the high-confidence second choice. His July friendly penalty came while Malen was on post-World-Cup leave and does not reverse the order. Soulé is the best confirmed current tertiary after Lorenzo Pellegrini's contract expired without an official extension by the cutoff.",
+                      "uncertainty_note":  "Malen over Dybala is supported by late-2025/26 like-for-like usage; Soulé is a provisional tertiary without comparable current penalty evidence.",
+                      "transfer_conditions":  [
+                                                  "A departure or extended unavailability involving Malen or Dybala requires a reorder.",
+                                                  "Reassess Soulé if a current teammate takes a like-for-like penalty with both Malen and Dybala absent."
+                                              ],
+                      "sources":  [
+                                      {
+                                          "title":  "AS Roma",
+                                          "url":  "https://www.asroma.com/it/notizie/75327/da-impazzire-parma-roma-2-3",
+                                          "date":  "2026-05-10",
+                                          "evidence":  "Official match report for Malen taking and scoring the competitive penalty against Parma."
+                                      },
+                                      {
+                                          "title":  "La Gazzetta dello Sport",
+                                          "url":  "https://www.gazzetta.it/calcio/fantanews/strumenti-fantacalcio/rigoristi/10-05-2026/rigorista-roma-dybala-lascia-pallone-malen-cambiano-gerarchie-fanta.shtml",
+                                          "date":  "2026-05-10",
+                                          "evidence":  "Reports Dybala yielding the penalty to Malen despite being on the pitch."
+                                      },
+                                      {
+                                          "title":  "AS Roma",
+                                          "url":  "https://www.asroma.com/it/notizie/75418/il-comunicato-su-donyell-malen",
+                                          "date":  "2026-06-01",
+                                          "evidence":  "Confirms Malen remains a Roma player for 2026/27."
+                                      },
+                                      {
+                                          "title":  "AS Roma",
+                                          "url":  "https://www.asroma.com/en/news/75594/as-roma-and-paulo-dybala-together-until-2027",
+                                          "date":  "2026-07-01",
+                                          "evidence":  "Confirms Dybala contract through 2027."
+                                      },
+                                      {
+                                          "title":  "SOS Fanta",
+                                          "url":  "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+                                          "date":  "2026-07-29",
+                                          "evidence":  "Current specialist board used as a secondary cross-check; direct like-for-like match evidence is weighted more heavily."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://www.asroma.com/it/maschile/rosa-e-staff",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Matías Soulé as a current 2026/27 club player at the audit cutoff."
+                                      }
+                                  ],
+                      "squad_membership":  {
+                                               "primary":  {
+                                                               "player":  "Donyell Malen",
+                                                               "status":  "confirmed",
+                                                               "source_url":  "https://www.asroma.com/it/notizie/75418/il-comunicato-su-donyell-malen",
+                                                               "checked_at":  "2026-07-30"
+                                                           },
+                                               "secondary":  {
+                                                                 "player":  "Paulo Dybala",
+                                                                 "status":  "confirmed",
+                                                                 "source_url":  "https://www.asroma.com/en/news/75594/as-roma-and-paulo-dybala-together-until-2027",
+                                                                 "checked_at":  "2026-07-30"
+                                                             },
+                                               "tertiary":  {
+                                                                "player":  "Matías Soulé",
+                                                                "status":  "confirmed",
+                                                                "source_url":  "https://www.asroma.com/it/maschile/rosa-e-staff",
+                                                                "checked_at":  "2026-07-30"
+                                                            }
+                                           }
+                  },
+                  {
+                      "club":  "Sassuolo",
+                      "recommended_order":  {
+                                                "primary":  "Domenico Berardi",
+                                                "secondary":  "Andrea Pinamonti",
+                                                "tertiary":  "Armand Laurienté"
+                                            },
+                      "status":  {
+                                     "classification":  "stable",
+                                     "note":  "Berardi and Pinamonti are strong; Laurienté is supported mainly by older specialist history."
+                                 },
+                      "per_position_confidence":  {
+                                                      "primary":  "high",
+                                                      "secondary":  "high",
+                                                      "tertiary":  "medium"
+                                                  },
+                      "rationale":  "Berardi remained the clear first taker throughout 2025/26. Pinamonti took in Berardi's absence and both current specialist sources call him the first backup. Laurienté has historical specialist support as the practical third but no recent like-for-like event. The first two positions are substantially stronger than the tertiary.",
+                      "uncertainty_note":  "Berardi and Pinamonti are strong; Laurienté is supported mainly by older specialist history.",
+                      "transfer_conditions":  [
+                                                  "A departure by Berardi, Pinamonti or Laurienté would materially reorder the hierarchy."
+                                              ],
+                      "sources":  [
+                                      {
+                                          "title":  "Transfermarkt",
+                                          "url":  "https://www.transfermarkt.it/spielbericht/index/spielbericht/4620974",
+                                          "date":  "2026-02-20",
+                                          "evidence":  "Records Berardi taking Sassuolo's penalty against Verona."
+                                      },
+                                      {
+                                          "title":  "Fantacalcio",
+                                          "url":  "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+                                          "date":  "2026-04-25",
+                                          "evidence":  "Shows Berardi taking three league penalties and Pinamonti taking the one for which Berardi was absent."
+                                      },
+                                      {
+                                          "title":  "SOS Fanta",
+                                          "url":  "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+                                          "date":  "2026-07-29",
+                                          "evidence":  "Calls Berardi the certain first taker and Pinamonti the certain first backup."
+                                      },
+                                      {
+                                          "title":  "FantaMaster",
+                                          "url":  "https://www.fantamaster.it/rigoristi-tiratori-seriea-2025-2026-punizioni-corner-gerarchie-20-squadre/",
+                                          "date":  "2025-10-23",
+                                          "evidence":  "Lists Berardi, Pinamonti and Laurienté, supporting the practical tertiary."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://www.sassuolocalcio.it/in-evidenza/ronzone-2026-i-convocati-per-il-ritiro/",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Domenico Berardi as a current 2026/27 club player at the audit cutoff."
+                                      }
+                                  ],
+                      "squad_membership":  {
+                                               "primary":  {
+                                                               "player":  "Domenico Berardi",
+                                                               "status":  "confirmed",
+                                                               "source_url":  "https://www.sassuolocalcio.it/in-evidenza/ronzone-2026-i-convocati-per-il-ritiro/",
+                                                               "checked_at":  "2026-07-30"
+                                                           },
+                                               "secondary":  {
+                                                                 "player":  "Andrea Pinamonti",
+                                                                 "status":  "confirmed",
+                                                                 "source_url":  "https://www.sassuolocalcio.it/in-evidenza/ronzone-2026-i-convocati-per-il-ritiro/",
+                                                                 "checked_at":  "2026-07-30"
+                                                             },
+                                               "tertiary":  {
+                                                                "player":  "Armand Laurienté",
+                                                                "status":  "confirmed",
+                                                                "source_url":  "https://www.sassuolocalcio.it/in-evidenza/ronzone-2026-i-convocati-per-il-ritiro/",
+                                                                "checked_at":  "2026-07-30"
+                                                            }
+                                           }
+                  },
+                  {
+                      "club":  "Torino",
+                      "recommended_order":  {
+                                                "primary":  "Nikola Vlašić",
+                                                "secondary":  "Sandro Kulenović",
+                                                "tertiary":  "Duván Zapata"
+                                            },
+                      "status":  {
+                                     "classification":  "provisional_probable",
+                                     "note":  "Kulenović's preseason conversion came while Vlašić was absent, and his rotational role limits certainty."
+                                 },
+                      "per_position_confidence":  {
+                                                      "primary":  "high",
+                                                      "secondary":  "medium",
+                                                      "tertiary":  "low"
+                                                  },
+                      "rationale":  "Vlašić converted four consecutive 2025/26 league penalties and is the clear primary. Kulenović converted Torino's 22 July friendly penalty while Vlašić was absent and has a stronger career record than Zapata. The newer SOS Fanta order exactly matches the file. Kulenović's role may be rotational, so Zapata can still be the practical on-pitch fallback in some lineups.",
+                      "uncertainty_note":  "Kulenović's preseason conversion came while Vlašić was absent, and his rotational role limits certainty.",
+                      "transfer_conditions":  [
+                                                  "A transfer or reduced role for Kulenović would restore Zapata to secondary. Any departure involving Vlašić requires a full review."
+                                              ],
+                      "sources":  [
+                                      {
+                                          "title":  "La Gazzetta dello Sport",
+                                          "url":  "https://www.gazzetta.it/en/football/teams/torino/news/22-07-2026/torino-kulenovic-s-penalty-decides-second-friendly-alcione-beaten-1-0.shtml",
+                                          "date":  "2026-07-22",
+                                          "evidence":  "Kulenović converted the decisive friendly penalty; Vlašić was not in the reported lineup."
+                                      },
+                                      {
+                                          "title":  "Fantacalcio",
+                                          "url":  "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+                                          "date":  "2026-04-25",
+                                          "evidence":  "Records Vlašić converting all four of his season attempts and identifies him as designated taker."
+                                      },
+                                      {
+                                          "title":  "SOS Fanta",
+                                          "url":  "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+                                          "date":  "2026-07-29",
+                                          "evidence":  "Ranks Vlašić first, Kulenović second and Zapata third."
+                                      },
+                                      {
+                                          "title":  "La Stampa",
+                                          "url":  "https://www.lastampa.it/sport/2026/07/22/news/il_toro_fatica_ma_batte_l_alcione_milano_decide_il_rigore_di_kulenovic-15696702/amp/",
+                                          "date":  "2026-07-22",
+                                          "evidence":  "Reports Kulenović replacing Simeone and converting, while Zapata missed Torino's first two friendlies."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://www.torinofc.it/news/12/07/2026/il-torino-pinzolo_43728",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Nikola Vlašić as a current 2026/27 club player at the audit cutoff."
+                                      }
+                                  ],
+                      "squad_membership":  {
+                                               "primary":  {
+                                                               "player":  "Nikola Vlašić",
+                                                               "status":  "confirmed",
+                                                               "source_url":  "https://www.torinofc.it/news/12/07/2026/il-torino-pinzolo_43728",
+                                                               "checked_at":  "2026-07-30"
+                                                           },
+                                               "secondary":  {
+                                                                 "player":  "Sandro Kulenović",
+                                                                 "status":  "confirmed",
+                                                                 "source_url":  "https://www.torinofc.it/news/12/07/2026/il-torino-pinzolo_43728",
+                                                                 "checked_at":  "2026-07-30"
+                                                             },
+                                               "tertiary":  {
+                                                                "player":  "Duván Zapata",
+                                                                "status":  "confirmed",
+                                                                "source_url":  "https://www.torinofc.it/news/12/07/2026/il-torino-pinzolo_43728",
+                                                                "checked_at":  "2026-07-30"
+                                                            }
+                                           }
+                  },
+                  {
+                      "club":  "Udinese",
+                      "recommended_order":  {
+                                                "primary":  "Keinan Davis",
+                                                "secondary":  "Oumar Solet",
+                                                "tertiary":  "Nicolò Zaniolo"
+                                            },
+                      "status":  {
+                                     "classification":  "provisional_probable",
+                                     "note":  "Solet took only when Davis was injured; Zaniolo has no cited senior in-match penalty attempt."
+                                 },
+                      "per_position_confidence":  {
+                                                      "primary":  "high",
+                                                      "secondary":  "medium",
+                                                      "tertiary":  "low"
+                                                  },
+                      "rationale":  "Davis converted four from four in 2025/26 and took every league penalty for which he was available. Solet converted when Davis was injured and did so with coach approval. Both current specialist boards rank Davis, Solet and Zaniolo in the filed order. Zaniolo remains speculative because he has no senior penalty attempt in the cited history.",
+                      "uncertainty_note":  "Solet took only when Davis was injured; Zaniolo has no cited senior in-match penalty attempt.",
+                      "transfer_conditions":  [
+                                                  "Solet's secondary position is conditional on remaining at Udinese, as current specialist coverage flags his future. A departure by Davis requires a fresh primary decision rather than an automatic promotion."
+                                              ],
+                      "sources":  [
+                                      {
+                                          "title":  "TuttoUdinese",
+                                          "url":  "https://www.tuttoudinese.it/notizie/lecce-udinese-si-presenta-solet-dal-dischetto-il-motivo-179838",
+                                          "date":  "2026-02-08",
+                                          "evidence":  "Solet converted with the coach's approval while Davis was injured and Zaniolo was on the bench."
+                                      },
+                                      {
+                                          "title":  "Fantacalcio",
+                                          "url":  "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+                                          "date":  "2026-04-25",
+                                          "evidence":  "Records Davis, Davis, Davis, Solet, Davis and identifies Davis as the designated taker."
+                                      },
+                                      {
+                                          "title":  "SOS Fanta",
+                                          "url":  "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+                                          "date":  "2026-07-29",
+                                          "evidence":  "Ranks Davis first, Solet second and treats Zaniolo as the speculative third."
+                                      },
+                                      {
+                                          "title":  "Goal Italia",
+                                          "url":  "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+                                          "date":  "2026-07-23",
+                                          "evidence":  "Ranks Davis, Solet and Zaniolo in the filed order."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://www.udinese.it/news/squadra/i-convocati-per-il-ritiro-di-lienz",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Keinan Davis as a current 2026/27 club player at the audit cutoff."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://www.udinese.it/news/squadra/nicolo-zaniolo-e-bianconero-a-titolo-definitivo",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Nicolò Zaniolo as a current 2026/27 club player at the audit cutoff."
+                                      }
+                                  ],
+                      "squad_membership":  {
+                                               "primary":  {
+                                                               "player":  "Keinan Davis",
+                                                               "status":  "confirmed",
+                                                               "source_url":  "https://www.udinese.it/news/squadra/i-convocati-per-il-ritiro-di-lienz",
+                                                               "checked_at":  "2026-07-30"
+                                                           },
+                                               "secondary":  {
+                                                                 "player":  "Oumar Solet",
+                                                                 "status":  "confirmed",
+                                                                 "source_url":  "https://www.udinese.it/news/squadra/i-convocati-per-il-ritiro-di-lienz",
+                                                                 "checked_at":  "2026-07-30"
+                                                             },
+                                               "tertiary":  {
+                                                                "player":  "Nicolò Zaniolo",
+                                                                "status":  "confirmed",
+                                                                "source_url":  "https://www.udinese.it/news/squadra/nicolo-zaniolo-e-bianconero-a-titolo-definitivo",
+                                                                "checked_at":  "2026-07-30"
+                                                            }
+                                           }
+                  },
+                  {
+                      "club":  "Venezia",
+                      "recommended_order":  {
+                                                "primary":  "Akor Adams",
+                                                "secondary":  "Albion Rrahmani",
+                                                "tertiary":  "Lion Lauberbach"
+                                            },
+                      "status":  {
+                                     "classification":  "provisional_disputed",
+                                     "note":  "Adams and Rrahmani have not yet been compared on the pitch for a Venezia penalty; Lauberbach's event occurred after Rrahmani went off and without Adams available."
+                                 },
+                      "per_position_confidence":  {
+                                                      "primary":  "low",
+                                                      "secondary":  "low",
+                                                      "tertiary":  "medium"
+                                                  },
+                      "rationale":  "Venezia officially signed Adams on 22 July. Goal ranks Adams ahead of Rrahmani, while SOS Fanta treats the two new forwards as the leading head-to-head; Adams's 3/3 at Sevilla gives him the narrow practical edge. The latest event adds a usable third: Lauberbach converted against Galatasaray on 27 July with Yeboah on the pitch, after Rrahmani had gone off and while Adams was not yet ready. The Adams-Rrahmani order is not settled by a like-for-like Venezia penalty. Lauberbach's event establishes him over Yeboah in that lineup but not over the absent Adams or substituted Rrahmani. Adorante is omitted from the three because he underwent back surgery on 25 July.",
+                      "uncertainty_note":  "Adams and Rrahmani have not yet been compared on the pitch for a Venezia penalty; Lauberbach's event occurred after Rrahmani went off and without Adams available.",
+                      "transfer_conditions":  [
+                                                  "If preseason or competitive evidence shows Rrahmani taking with Adams on the pitch, move Rrahmani to primary. When Adorante returns from back surgery, reassess him against Lauberbach for tertiary. A departure by Yeboah does not alter the recommended three but reduces depth."
+                                              ],
+                      "sources":  [
+                                      {
+                                          "title":  "Venezia FC",
+                                          "url":  "https://www.veneziafc.it/news/akor-adams-al-venezia-fc",
+                                          "date":  "2026-07-22",
+                                          "evidence":  "Confirms Adams's permanent transfer from Sevilla and contract through 2030."
+                                      },
+                                      {
+                                          "title":  "Tutto Venezia Sport",
+                                          "url":  "https://www.tuttoveneziasport.it/primo-piano/diretta-amichevole-galatasaray-venezia-0-3-finita-lauberbach-trova-la-doppietta-allo-scadere-26283",
+                                          "date":  "2026-07-27",
+                                          "evidence":  "Lauberbach converted the 75th-minute penalty with Yeboah on the pitch; Rrahmani had left at 62 minutes and Adams was not considered ready."
+                                      },
+                                      {
+                                          "title":  "Tutto Venezia Sport",
+                                          "url":  "https://www.tuttoveneziasport.it/primo-piano/venezia-adorante-operato-tempi-recupero-26278",
+                                          "date":  "2026-07-25",
+                                          "evidence":  "Reports that Adorante underwent back surgery and began rehabilitation."
+                                      },
+                                      {
+                                          "title":  "SOS Fanta",
+                                          "url":  "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+                                          "date":  "2026-07-29",
+                                          "evidence":  "Treats Adams and Rrahmani as the two leading candidates and cites their recent conversion records."
+                                      },
+                                      {
+                                          "title":  "Goal Italia",
+                                          "url":  "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+                                          "date":  "2026-07-23",
+                                          "evidence":  "Ranks Adams first and Rrahmani second."
+                                      },
+                                      {
+                                          "title":  "Official squad membership check",
+                                          "url":  "https://www.veneziafc.it/news/i-convocati-per-il-ritiro-di-falcade",
+                                          "date":  "2026-07-30",
+                                          "evidence":  "Confirms Albion Rrahmani as a current 2026/27 club player at the audit cutoff."
+                                      }
+                                  ],
+                      "squad_membership":  {
+                                               "primary":  {
+                                                               "player":  "Akor Adams",
+                                                               "status":  "confirmed",
+                                                               "source_url":  "https://www.veneziafc.it/news/akor-adams-al-venezia-fc",
+                                                               "checked_at":  "2026-07-30"
+                                                           },
+                                               "secondary":  {
+                                                                 "player":  "Albion Rrahmani",
+                                                                 "status":  "confirmed",
+                                                                 "source_url":  "https://www.veneziafc.it/news/i-convocati-per-il-ritiro-di-falcade",
+                                                                 "checked_at":  "2026-07-30"
+                                                             },
+                                               "tertiary":  {
+                                                                "player":  "Lion Lauberbach",
+                                                                "status":  "confirmed",
+                                                                "source_url":  "https://www.veneziafc.it/news/i-convocati-per-il-ritiro-di-falcade",
+                                                                "checked_at":  "2026-07-30"
+                                                            }
+                                           }
+                  }
+              ]
+}

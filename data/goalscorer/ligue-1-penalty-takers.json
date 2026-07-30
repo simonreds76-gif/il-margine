@@ -25,35 +25,35 @@
       "Le Mans",
       "Troyes"
     ],
-    "last_verified": "2026-07-28",
-    "public_updated_at": "2026-07-28",
+    "last_verified": "2026-07-30",
+    "public_updated_at": "2026-07-30",
     "membership_source": "https://ligue1.com/en/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released"
   },
   "Angers": {
     "primary": "Branco van den Boomen",
     "secondary": "Amine Sbaï",
     "tertiary": "Amine El Ouazzani",
-    "last_updated": "2026-07-28",
+    "last_updated": "2026-07-30",
     "source": "AJ Auxerre",
-    "cross_check": "Ligue 1 Fantasy",
+    "cross_check": "Ligue 1",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "medium",
       "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Koyalipou has left and the file has no primary. Van den Boomen and Sbaï are the only retained players with 2025/26 league attempts; van den Boomen's broader dead-ball role makes him the least-speculative primary. El Ouazzani is included as the new senior striker, but all three ranks remain preseason projections. Conditions: The first competitive penalty involving van den Boomen and Sbaï should override this low-sample ordering. If El Ouazzani becomes the regular centre-forward and takes a preseason or competitive penalty, promote him above Sbaï and reassess the primary.",
+    "condition_note": "Van den Boomen and Sbaï are the retained 2025/26 takers, both 0/1. Van den Boomen's broader dead-ball role gives him the least-speculative lead; El Ouazzani is the new senior-striker fallback. No 2026/27 coexistence penalty has established this order. Conditions: The first competitive penalty with Van den Boomen and Sbaï both available should override this order. Promote El Ouazzani if he becomes the regular centre-forward and takes the first current-season penalty.",
     "last_verified": {
-      "date": "2026-07-28",
+      "date": "2026-07-30",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-28",
+    "public_updated_at": "2026-07-30",
     "latest_evidence": {
-      "id": "evt_20260728_angers_research",
-      "date": "2026-07-28",
+      "id": "evt_20260730_angers_research",
+      "date": "2026-07-30",
       "type": "multi_source_preseason_research",
-      "source_count": 5
+      "source_count": 4
     },
     "evidence_log": [
       {
@@ -162,6 +162,50 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260730_angers_research",
+        "date": "2026-07-30",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Van den Boomen and Sbaï are the retained 2025/26 takers, both 0/1. Van den Boomen's broader dead-ball role gives him the least-speculative lead; El Ouazzani is the new senior-striker fallback.",
+        "sources": [
+          {
+            "label": "AJ Auxerre",
+            "url": "https://www.aja.fr/en-maitrise-laja-domine-angers/",
+            "date": "2026-05-03",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Ligue 1",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+            "date": "2026-05-11",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Angers SCO",
+            "url": "https://angers-sco.fr/amine-el-ouazzani-nouvel-attaquant-dangers-sco-%E2%9C%8D%EF%B8%8F/",
+            "date": "2026-07-20",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Angers SCO",
+            "url": "https://angers-sco.fr/equipe-pro/effectif/",
+            "date": "2026-07-30",
+            "note": "Source reviewed."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-30T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -189,31 +233,6 @@
         "article_slug": null
       },
       {
-        "changed_at": "2026-07-27",
-        "season": "2026/27",
-        "change_type": "hierarchy_research_update",
-        "from": {
-          "primary": "Goduine Koyalipou",
-          "secondary": "Branco van den Boomen",
-          "tertiary": "Amine Sbaï"
-        },
-        "to": {
-          "primary": "",
-          "secondary": "Branco van den Boomen",
-          "tertiary": "Amine Sbaï"
-        },
-        "reason": "Koyalipou is no longer at Angers. Van den Boomen and Sbaï have prior attempts, but no current direct evidence establishes either as the 2026/27 primary.",
-        "evidence_ids": [
-          "evt_20260727_angers_research_01",
-          "evt_20260727_angers_research_02",
-          "evt_20260727_angers_research_03"
-        ],
-        "detection": "manual_multi_source_research",
-        "approved_by": "Il Margine",
-        "approved_at": "2026-07-27T12:00:00Z",
-        "article_slug": null
-      },
-      {
         "changed_at": "2026-07-28",
         "season": "2026/27",
         "change_type": "hierarchy_research_update",
@@ -235,6 +254,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-28T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-30",
+        "season": "2026/27",
+        "change_type": "preseason_reverification",
+        "from": {
+          "primary": "Branco van den Boomen",
+          "secondary": "Amine Sbaï",
+          "tertiary": "Amine El Ouazzani"
+        },
+        "to": {
+          "primary": "Branco van den Boomen",
+          "secondary": "Amine Sbaï",
+          "tertiary": "Amine El Ouazzani"
+        },
+        "reason": "Van den Boomen and Sbaï are the retained 2025/26 takers, both 0/1. Van den Boomen's broader dead-ball role gives him the least-speculative lead; El Ouazzani is the new senior-striker fallback. No 2026/27 coexistence penalty has established this order. Conditions: The first competitive penalty with Van den Boomen and Sbaï both available should override this order. Promote El Ouazzani if he becomes the regular centre-forward and takes the first current-season penalty.",
+        "evidence_ids": [
+          "evt_20260730_angers_research"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-30T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -249,33 +291,53 @@
       "tertiary": "Amine Sbaï",
       "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
     },
-    "player_ids": {}
+    "player_ids": {},
+    "squad_membership": {
+      "primary": {
+        "player": "Branco van den Boomen",
+        "status": "confirmed",
+        "source_url": "https://angers-sco.fr/equipe-pro/effectif/",
+        "checked_at": "2026-07-30"
+      },
+      "secondary": {
+        "player": "Amine Sbaï",
+        "status": "confirmed",
+        "source_url": "https://angers-sco.fr/equipe-pro/effectif/",
+        "checked_at": "2026-07-30"
+      },
+      "tertiary": {
+        "player": "Amine El Ouazzani",
+        "status": "confirmed",
+        "source_url": "https://angers-sco.fr/equipe-pro/effectif/",
+        "checked_at": "2026-07-30"
+      }
+    }
   },
   "Auxerre": {
     "primary": "Romain Faivre",
     "secondary": "Josué Casimir",
     "tertiary": "Danny Namaso",
-    "last_updated": "2026-07-28",
-    "source": "L'Équipe",
-    "cross_check": "Ligue 1 Fantasy",
-    "hierarchy_status": "conditional",
+    "last_updated": "2026-07-30",
+    "source": "AJ Auxerre",
+    "cross_check": "Ligue 1",
+    "hierarchy_status": "probable",
     "confidence": {
       "primary": "medium",
       "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Sinayoko's departure removes the established taker. Faivre's strong career record and retained creative role are more persuasive than Casimir's single miss. Namaso supplies a practical attacking fallback, but no 2026/27 event has established any order. Conditions: Casimir was ruled out for four to six weeks with a knee problem on July 8; while absent, Faivre is the practical matchday primary. A first-team penalty for Namaso or a new attacking signing should trigger immediate review.",
+    "condition_note": "Faivre's 10/11 career return and creative role are stronger than Casimir's single 2025/26 miss. Namaso is the practical attacking fallback. No current-season penalty or direct club designation establishes precedence. Conditions: The first regular-time attempt by any of the three is hierarchy-setting. Reassess immediately if Auxerre signs a proven penalty-taking forward.",
     "last_verified": {
-      "date": "2026-07-28",
+      "date": "2026-07-30",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-28",
+    "public_updated_at": "2026-07-30",
     "latest_evidence": {
-      "id": "evt_20260728_auxerre_research",
-      "date": "2026-07-28",
+      "id": "evt_20260730_auxerre_research",
+      "date": "2026-07-30",
       "type": "multi_source_preseason_research",
-      "source_count": 6
+      "source_count": 4
     },
     "evidence_log": [
       {
@@ -390,6 +452,50 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260730_auxerre_research",
+        "date": "2026-07-30",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Faivre's 10/11 career return and creative role are stronger than Casimir's single 2025/26 miss. Namaso is the practical attacking fallback.",
+        "sources": [
+          {
+            "label": "AJ Auxerre",
+            "url": "https://www.aja.fr/romain-faivre-reste-auxerrois/",
+            "date": "2026-07-03",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Ligue 1",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+            "date": "2026-05-11",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Transfermarkt",
+            "url": "https://www.transfermarkt.co.uk/romain-faivre/elfmetertore/spieler/555076",
+            "date": "2026-07-28",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/ligue-1/page-tableau-des-transferts",
+            "date": "2026-07-30",
+            "note": "Source reviewed."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-30T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -417,31 +523,6 @@
         "article_slug": null
       },
       {
-        "changed_at": "2026-07-27",
-        "season": "2026/27",
-        "change_type": "hierarchy_research_update",
-        "from": {
-          "primary": "Lassine Sinayoko",
-          "secondary": "Josue Casimir",
-          "tertiary": ""
-        },
-        "to": {
-          "primary": "",
-          "secondary": "Josué Casimir",
-          "tertiary": ""
-        },
-        "reason": "Sinayoko has transferred to Paris FC. Casimir has a documented attempt but subsequently lost the role to Sinayoko, so his current promotion cannot be assumed.",
-        "evidence_ids": [
-          "evt_20260727_auxerre_research_01",
-          "evt_20260727_auxerre_research_02",
-          "evt_20260727_auxerre_research_03"
-        ],
-        "detection": "manual_multi_source_research",
-        "approved_by": "Il Margine",
-        "approved_at": "2026-07-27T12:00:00Z",
-        "article_slug": null
-      },
-      {
         "changed_at": "2026-07-28",
         "season": "2026/27",
         "change_type": "hierarchy_research_update",
@@ -463,6 +544,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-28T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-30",
+        "season": "2026/27",
+        "change_type": "preseason_reverification",
+        "from": {
+          "primary": "Romain Faivre",
+          "secondary": "Josué Casimir",
+          "tertiary": "Danny Namaso"
+        },
+        "to": {
+          "primary": "Romain Faivre",
+          "secondary": "Josué Casimir",
+          "tertiary": "Danny Namaso"
+        },
+        "reason": "Faivre's 10/11 career return and creative role are stronger than Casimir's single 2025/26 miss. Namaso is the practical attacking fallback. No current-season penalty or direct club designation establishes precedence. Conditions: The first regular-time attempt by any of the three is hierarchy-setting. Reassess immediately if Auxerre signs a proven penalty-taking forward.",
+        "evidence_ids": [
+          "evt_20260730_auxerre_research"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-30T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -477,33 +581,53 @@
       "tertiary": "",
       "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
     },
-    "player_ids": {}
+    "player_ids": {},
+    "squad_membership": {
+      "primary": {
+        "player": "Romain Faivre",
+        "status": "confirmed",
+        "source_url": "https://www.aja.fr/romain-faivre-reste-auxerrois/",
+        "checked_at": "2026-07-30"
+      },
+      "secondary": {
+        "player": "Josué Casimir",
+        "status": "confirmed",
+        "source_url": "https://ligue1.com/en/articles/l1_article_5488-",
+        "checked_at": "2026-07-30"
+      },
+      "tertiary": {
+        "player": "Danny Namaso",
+        "status": "confirmed",
+        "source_url": "https://ligue1.com/en/articles/l1_article_5488-",
+        "checked_at": "2026-07-30"
+      }
+    }
   },
   "Brest": {
     "primary": "Romain Del Castillo",
     "secondary": "Ludovic Ajorque",
     "tertiary": "Kenny Lala",
-    "last_updated": "2026-07-28",
-    "source": "L'Équipe",
-    "cross_check": "Ligue 1 Fantasy",
+    "last_updated": "2026-07-30",
+    "source": "Ligue 1",
+    "cross_check": "L'Équipe",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "high",
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Del Castillo is firmly established. There is no recent Brest coexistence event for the backups, so Ajorque's 10-for-15 career record is preferred to Lala's one recorded conversion. This reverses the older rollover backup order but is explicitly provisional. Conditions: If Ajorque is not a regular starter, Lala becomes the practical second candidate. Any preseason or competitive penalty taken while Del Castillo is absent should be used to reset the backup order.",
+    "condition_note": "Del Castillo was Brest's sole 2025/26 taker at 6/8 and was explicitly described as the taker. Ajorque's striker role and Lala's dead-ball role make them the practical backups. There is no observed Brest penalty without Del Castillo to resolve the backups. Conditions: If Del Castillo is unavailable, the first attempt involving Ajorque and Lala should replace the inferred backup order.",
     "last_verified": {
-      "date": "2026-07-28",
+      "date": "2026-07-30",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-28",
+    "public_updated_at": "2026-07-30",
     "latest_evidence": {
-      "id": "evt_20260728_brest_research",
-      "date": "2026-07-28",
+      "id": "evt_20260730_brest_research",
+      "date": "2026-07-30",
       "type": "multi_source_preseason_research",
-      "source_count": 5
+      "source_count": 3
     },
     "evidence_log": [
       {
@@ -612,6 +736,44 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260730_brest_research",
+        "date": "2026-07-30",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Del Castillo was Brest's sole 2025/26 taker at 6/8 and was explicitly described as the taker. Ajorque's striker role and Lala's dead-ball role make them the practical backups.",
+        "sources": [
+          {
+            "label": "Ligue 1",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+            "date": "2026-05-11",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/Actualites/Del-castillo-aurait-du-nettoyer-sa-semelle-a-ironise-eric-roy-apres-le-gros-manque-de-son-joueur-sur-penalty-face-au-psg/1604720",
+            "date": "2025-10-25",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/Actualites/-oui-il-nous-faut-des-recrues-julien-lachuer-le-nouvel-entraineur-de-brest-espere-des-retouches-et-des-jeunes/1703291",
+            "date": "2026-07-10",
+            "note": "Source reviewed."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-30T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -639,31 +801,6 @@
         "article_slug": null
       },
       {
-        "changed_at": "2026-07-27",
-        "season": "2026/27",
-        "change_type": "hierarchy_research_update",
-        "from": {
-          "primary": "Romain Del Castillo",
-          "secondary": "Kenny Lala",
-          "tertiary": "Ludovic Ajorque"
-        },
-        "to": {
-          "primary": "Romain Del Castillo",
-          "secondary": "",
-          "tertiary": ""
-        },
-        "reason": "Del Castillo is strongly established as primary, but no recent direct or specialist evidence supports Lala and Ajorque as the ordered backups.",
-        "evidence_ids": [
-          "evt_20260727_brest_research_01",
-          "evt_20260727_brest_research_02",
-          "evt_20260727_brest_research_03"
-        ],
-        "detection": "manual_multi_source_research",
-        "approved_by": "Il Margine",
-        "approved_at": "2026-07-27T12:00:00Z",
-        "article_slug": null
-      },
-      {
         "changed_at": "2026-07-28",
         "season": "2026/27",
         "change_type": "hierarchy_research_update",
@@ -685,6 +822,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-28T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-30",
+        "season": "2026/27",
+        "change_type": "preseason_reverification",
+        "from": {
+          "primary": "Romain Del Castillo",
+          "secondary": "Ludovic Ajorque",
+          "tertiary": "Kenny Lala"
+        },
+        "to": {
+          "primary": "Romain Del Castillo",
+          "secondary": "Ludovic Ajorque",
+          "tertiary": "Kenny Lala"
+        },
+        "reason": "Del Castillo was Brest's sole 2025/26 taker at 6/8 and was explicitly described as the taker. Ajorque's striker role and Lala's dead-ball role make them the practical backups. There is no observed Brest penalty without Del Castillo to resolve the backups. Conditions: If Del Castillo is unavailable, the first attempt involving Ajorque and Lala should replace the inferred backup order.",
+        "evidence_ids": [
+          "evt_20260730_brest_research"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-30T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -699,33 +859,53 @@
       "tertiary": "Ludovic Ajorque",
       "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
     },
-    "player_ids": {}
+    "player_ids": {},
+    "squad_membership": {
+      "primary": {
+        "player": "Romain Del Castillo",
+        "status": "confirmed",
+        "source_url": "https://www.lequipe.fr/Football/Actualites/-oui-il-nous-faut-des-recrues-julien-lachuer-le-nouvel-entraineur-de-brest-espere-des-retouches-et-des-jeunes/1703291",
+        "checked_at": "2026-07-30"
+      },
+      "secondary": {
+        "player": "Ludovic Ajorque",
+        "status": "confirmed",
+        "source_url": "https://www.lequipe.fr/Football/Actualites/-oui-il-nous-faut-des-recrues-julien-lachuer-le-nouvel-entraineur-de-brest-espere-des-retouches-et-des-jeunes/1703291",
+        "checked_at": "2026-07-30"
+      },
+      "tertiary": {
+        "player": "Kenny Lala",
+        "status": "confirmed",
+        "source_url": "https://www.lequipe.fr/Football/Actualites/-oui-il-nous-faut-des-recrues-julien-lachuer-le-nouvel-entraineur-de-brest-espere-des-retouches-et-des-jeunes/1703291",
+        "checked_at": "2026-07-30"
+      }
+    }
   },
   "Le Havre": {
     "primary": "Yanis Zouaoui",
-    "secondary": "Abdoulaye Touré",
-    "tertiary": "Mbwana Ally Samatta",
-    "last_updated": "2026-07-28",
+    "secondary": "Mbwana Ally Samatta",
+    "tertiary": "Rassoul Ndiaye",
+    "last_updated": "2026-07-30",
     "source": "Le Havre AC",
-    "cross_check": "Ligue 1 Fantasy",
+    "cross_check": "Ligue 1",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "high",
       "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Soumaré has left. Zouaoui's late-season conversion supports primary status. Touré is the only other retained player with a documented 2025/26 attempt, while Samatta is the most practical current attacking fallback despite no direct hierarchy evidence. Conditions: Touré's second-place rank is weak because his only 2025/26 attempt was missed. A new forward or a Samatta departure before the window closes would require the third slot to be replaced.",
+    "condition_note": "Zouaoui converted his only 2025/26 penalty and remains a principal dead-ball taker. Samatta has limited career penalty experience and a confirmed extension; Ndiaye is the retained set-piece fallback. Neither backup took a 2025/26 Le Havre regular-time penalty. Conditions: A new attacker with a strong penalty record may enter above Samatta. Any current-season attempt without Zouaoui should supersede the backups.",
     "last_verified": {
-      "date": "2026-07-28",
+      "date": "2026-07-30",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-28",
+    "public_updated_at": "2026-07-30",
     "latest_evidence": {
-      "id": "evt_20260728_le-havre_research",
-      "date": "2026-07-28",
+      "id": "evt_20260730_le-havre_research",
+      "date": "2026-07-30",
       "type": "multi_source_preseason_research",
-      "source_count": 5
+      "source_count": 4
     },
     "evidence_log": [
       {
@@ -834,6 +1014,50 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260730_le-havre_research",
+        "date": "2026-07-30",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Zouaoui converted his only 2025/26 penalty and remains a principal dead-ball taker. Samatta has limited career penalty experience and a confirmed extension; Ndiaye is the retained set-piece fallback.",
+        "sources": [
+          {
+            "label": "Le Havre AC",
+            "url": "https://hac.football/fr/posts/hac-fc-metz-une-amere-folie",
+            "date": "2026-04-26",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Ligue 1",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+            "date": "2026-05-11",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/Actualites/Le-milieu-offensif-kaito-mizuta-s-engage-trois-ans-au-havre-et-devient-le-deuxieme-japonais-a-rejoindre-le-club-doyen/1702310",
+            "date": "2026-07-07",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/ligue-1/page-tableau-des-transferts",
+            "date": "2026-07-30",
+            "note": "Source reviewed."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-30T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -861,31 +1085,6 @@
         "article_slug": null
       },
       {
-        "changed_at": "2026-07-27",
-        "season": "2026/27",
-        "change_type": "hierarchy_research_update",
-        "from": {
-          "primary": "Yanis Zouaoui",
-          "secondary": "Issa Soumare",
-          "tertiary": "Abdoulaye Toure"
-        },
-        "to": {
-          "primary": "Yanis Zouaoui",
-          "secondary": "",
-          "tertiary": "Abdoulaye Touré"
-        },
-        "reason": "Zouaoui has late-season primary evidence, but Soumaré has left for Rennes. Touré remains a candidate with prior history but is not automatically promoted into the vacant second slot.",
-        "evidence_ids": [
-          "evt_20260727_le_havre_research_01",
-          "evt_20260727_le_havre_research_02",
-          "evt_20260727_le_havre_research_03"
-        ],
-        "detection": "manual_multi_source_research",
-        "approved_by": "Il Margine",
-        "approved_at": "2026-07-27T12:00:00Z",
-        "article_slug": null
-      },
-      {
         "changed_at": "2026-07-28",
         "season": "2026/27",
         "change_type": "hierarchy_research_update",
@@ -907,6 +1106,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-28T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-30",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Yanis Zouaoui",
+          "secondary": "Abdoulaye Touré",
+          "tertiary": "Mbwana Ally Samatta"
+        },
+        "to": {
+          "primary": "Yanis Zouaoui",
+          "secondary": "Mbwana Ally Samatta",
+          "tertiary": "Rassoul Ndiaye"
+        },
+        "reason": "Zouaoui converted his only 2025/26 penalty and remains a principal dead-ball taker. Samatta has limited career penalty experience and a confirmed extension; Ndiaye is the retained set-piece fallback. Neither backup took a 2025/26 Le Havre regular-time penalty. Conditions: A new attacker with a strong penalty record may enter above Samatta. Any current-season attempt without Zouaoui should supersede the backups.",
+        "evidence_ids": [
+          "evt_20260730_le-havre_research"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-30T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -921,31 +1143,51 @@
       "tertiary": "Abdoulaye Toure",
       "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
     },
-    "player_ids": {}
+    "player_ids": {},
+    "squad_membership": {
+      "primary": {
+        "player": "Yanis Zouaoui",
+        "status": "confirmed",
+        "source_url": "https://hac.football/fr/players",
+        "checked_at": "2026-07-30"
+      },
+      "secondary": {
+        "player": "Mbwana Ally Samatta",
+        "status": "confirmed",
+        "source_url": "https://www.lequipe.fr/Football/Actualites/Le-milieu-offensif-kaito-mizuta-s-engage-trois-ans-au-havre-et-devient-le-deuxieme-japonais-a-rejoindre-le-club-doyen/1702310",
+        "checked_at": "2026-07-30"
+      },
+      "tertiary": {
+        "player": "Rassoul Ndiaye",
+        "status": "confirmed",
+        "source_url": "https://hac.football/fr/players",
+        "checked_at": "2026-07-30"
+      }
+    }
   },
   "Le Mans": {
     "primary": "Dame Gueye",
     "secondary": "Louis Mafouta",
     "tertiary": "Antoine Rabillard",
-    "last_updated": "2026-07-28",
+    "last_updated": "2026-07-30",
     "hierarchy_status": "conditional",
     "confidence": {
       "primary": "high",
       "secondary": "medium",
-      "tertiary": "low"
+      "tertiary": "medium"
     },
-    "condition_note": "Gueye retains first place because he was perfect for Le Mans in the promotion season. Mafouta's large career sample makes him a stronger practical backup than Rabillard, but no coexistence event yet justifies displacing the incumbent. Conditions: A penalty awarded with Gueye and Mafouta both on the pitch is the key unresolved precedence test. If Mafouta becomes the undisputed starting number nine and takes the first penalty, move him to primary.",
+    "condition_note": "Gueye converted three 2025/26 regular-time penalties. Mafouta arrives with a 24/29 career record, while Rabillard also took a promotion-season penalty. Gueye and Mafouta have not yet produced a coexistence penalty. Conditions: If Mafouta takes the first penalty with Gueye on the pitch, move him to primary. Retain Rabillard third unless a new proven taker joins.",
     "last_verified": {
-      "date": "2026-07-28",
+      "date": "2026-07-30",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-28",
+    "public_updated_at": "2026-07-30",
     "latest_evidence": {
-      "id": "evt_20260728_le-mans_research",
-      "date": "2026-07-28",
+      "id": "evt_20260730_le-mans_research",
+      "date": "2026-07-30",
       "type": "multi_source_preseason_research",
-      "source_count": 7
+      "source_count": 4
     },
     "evidence_log": [
       {
@@ -1059,35 +1301,53 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 7 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260730_le-mans_research",
+        "date": "2026-07-30",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Gueye converted three 2025/26 regular-time penalties. Mafouta arrives with a 24/29 career record, while Rabillard also took a promotion-season penalty.",
+        "sources": [
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/match-direct/ligue-2/2025-2026/le-mans-bastia-live/676119",
+            "date": "2025-08-22",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Le Mans FC",
+            "url": "https://lemansfc.fr/index.php?actu=4105&section=actualites-contenu",
+            "date": "2026-07-19",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/Actualites/Mercato-le-mans-officialise-l-arrivee-de-l-attaquant-de-guingamp-louis-mafouta-jusqu-en-2028/1703559",
+            "date": "2026-07-11",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Le Mans FC",
+            "url": "https://www.lemansfc.fr/index.php?actu=4075&section=actualites-contenu",
+            "date": "2026-06-23",
+            "note": "Source reviewed."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-30T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
-      {
-        "changed_at": "2026-07-27",
-        "season": "2026/27",
-        "change_type": "hierarchy_research_update",
-        "from": {
-          "primary": "",
-          "secondary": "",
-          "tertiary": ""
-        },
-        "to": {
-          "primary": "Dame Gueye",
-          "secondary": "Antoine Rabillard",
-          "tertiary": ""
-        },
-        "reason": "The blank filing omits two current players with recent regular-time penalty history. Gueye has the larger recent sample and remains active in the current preseason group.",
-        "evidence_ids": [
-          "evt_20260727_le_mans_research_01",
-          "evt_20260727_le_mans_research_02",
-          "evt_20260727_le_mans_research_03",
-          "evt_20260727_le_mans_research_04"
-        ],
-        "detection": "manual_multi_source_research",
-        "approved_by": "Il Margine",
-        "approved_at": "2026-07-27T12:00:00Z",
-        "article_slug": null
-      },
       {
         "changed_at": "2026-07-28",
         "season": "2026/27",
@@ -1110,6 +1370,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-28T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-30",
+        "season": "2026/27",
+        "change_type": "preseason_reverification",
+        "from": {
+          "primary": "Dame Gueye",
+          "secondary": "Louis Mafouta",
+          "tertiary": "Antoine Rabillard"
+        },
+        "to": {
+          "primary": "Dame Gueye",
+          "secondary": "Louis Mafouta",
+          "tertiary": "Antoine Rabillard"
+        },
+        "reason": "Gueye converted three 2025/26 regular-time penalties. Mafouta arrives with a 24/29 career record, while Rabillard also took a promotion-season penalty. Gueye and Mafouta have not yet produced a coexistence penalty. Conditions: If Mafouta takes the first penalty with Gueye on the pitch, move him to primary. Retain Rabillard third unless a new proven taker joins.",
+        "evidence_ids": [
+          "evt_20260730_le-mans_research"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-30T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -1120,33 +1403,53 @@
     "prior_season": null,
     "player_ids": {},
     "source": "L'Équipe",
-    "cross_check": "Transfermarkt"
+    "cross_check": "Le Mans FC",
+    "squad_membership": {
+      "primary": {
+        "player": "Dame Gueye",
+        "status": "confirmed",
+        "source_url": "https://lemansfc.fr/index.php?actu=4105&section=actualites-contenu",
+        "checked_at": "2026-07-30"
+      },
+      "secondary": {
+        "player": "Louis Mafouta",
+        "status": "confirmed",
+        "source_url": "https://www.lequipe.fr/Football/Actualites/Mercato-le-mans-officialise-l-arrivee-de-l-attaquant-de-guingamp-louis-mafouta-jusqu-en-2028/1703559",
+        "checked_at": "2026-07-30"
+      },
+      "tertiary": {
+        "player": "Antoine Rabillard",
+        "status": "confirmed",
+        "source_url": "https://www.lemansfc.fr/index.php?actu=4075&section=actualites-contenu",
+        "checked_at": "2026-07-30"
+      }
+    }
   },
   "Lens": {
     "primary": "Florian Thauvin",
     "secondary": "Odsonne Édouard",
-    "tertiary": "Wesley Saïd",
-    "last_updated": "2026-07-28",
+    "tertiary": "Thorgan Hazard",
+    "last_updated": "2026-07-30",
     "source": "L'Équipe",
-    "cross_check": "Ligue 1 Fantasy",
-    "hierarchy_status": "confirmed",
+    "cross_check": "Ligue 1",
+    "hierarchy_status": "probable",
     "confidence": {
       "primary": "high",
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "A direct report resolves the order: Thauvin was designated, Édouard received a delegated attempt, and the specialist review records Saïd as another successful alternative. Hazard's friendly penalty came in a separate XI and does not displace the top three. Conditions: If Thauvin leaves or is unavailable, Édouard becomes primary and Saïd second. Thorgan Hazard is the next watchlist candidate after taking a penalty for a separate preseason XI.",
+    "condition_note": "Thauvin was explicitly the designated taker and delegated one attempt to Édouard; their 2025/26 returns were 2/3 and 1/1. Hazard converted a 2026 preseason penalty. Hazard's attempt came in a separate-half lineup and does not place him above Édouard. Conditions: Promote Hazard only if he takes a penalty while a higher-ranked taker is present. A current competitive penalty overrides the preseason-only tertiary evidence.",
     "last_verified": {
-      "date": "2026-07-28",
+      "date": "2026-07-30",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-28",
+    "public_updated_at": "2026-07-30",
     "latest_evidence": {
-      "id": "evt_20260728_lens_research",
-      "date": "2026-07-28",
+      "id": "evt_20260730_lens_research",
+      "date": "2026-07-30",
       "type": "multi_source_preseason_research",
-      "source_count": 3
+      "source_count": 4
     },
     "evidence_log": [
       {
@@ -1243,6 +1546,50 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260730_lens_research",
+        "date": "2026-07-30",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Thauvin was explicitly the designated taker and delegated one attempt to Édouard; their 2025/26 returns were 2/3 and 1/1. Hazard converted a 2026 preseason penalty.",
+        "sources": [
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/Actualites/Florian-thauvin-n-avait-pas-forcement-envie-de-tirer-le-penalty-face-a-l-om/1604808",
+            "date": "2025-10-26",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Ligue 1",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+            "date": "2026-05-11",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "RC Lens",
+            "url": "https://www.rclens.fr/fr/rclens-royal-charleroi-sc-preparation-20260725",
+            "date": "2026-07-25",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/ligue-1/page-tableau-des-transferts",
+            "date": "2026-07-30",
+            "note": "Source reviewed."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-30T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -1270,31 +1617,6 @@
         "article_slug": null
       },
       {
-        "changed_at": "2026-07-27",
-        "season": "2026/27",
-        "change_type": "hierarchy_research_update",
-        "from": {
-          "primary": "Florian Thauvin",
-          "secondary": "Odsonne Edouard",
-          "tertiary": "Wesley Said"
-        },
-        "to": {
-          "primary": "Florian Thauvin",
-          "secondary": "Odsonne Édouard",
-          "tertiary": "Wesley Saïd"
-        },
-        "reason": "A direct report identifies Thauvin as the designated taker, while the event and specialist records support Édouard and Saïd as alternatives.",
-        "evidence_ids": [
-          "evt_20260727_lens_research_01",
-          "evt_20260727_lens_research_02",
-          "evt_20260727_lens_research_03"
-        ],
-        "detection": "manual_multi_source_research",
-        "approved_by": "Il Margine",
-        "approved_at": "2026-07-27T12:00:00Z",
-        "article_slug": null
-      },
-      {
         "changed_at": "2026-07-28",
         "season": "2026/27",
         "change_type": "preseason_reverification",
@@ -1316,6 +1638,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-28T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-30",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Florian Thauvin",
+          "secondary": "Odsonne Édouard",
+          "tertiary": "Wesley Saïd"
+        },
+        "to": {
+          "primary": "Florian Thauvin",
+          "secondary": "Odsonne Édouard",
+          "tertiary": "Thorgan Hazard"
+        },
+        "reason": "Thauvin was explicitly the designated taker and delegated one attempt to Édouard; their 2025/26 returns were 2/3 and 1/1. Hazard converted a 2026 preseason penalty. Hazard's attempt came in a separate-half lineup and does not place him above Édouard. Conditions: Promote Hazard only if he takes a penalty while a higher-ranked taker is present. A current competitive penalty overrides the preseason-only tertiary evidence.",
+        "evidence_ids": [
+          "evt_20260730_lens_research"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-30T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -1330,33 +1675,53 @@
       "tertiary": "Wesley Said",
       "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
     },
-    "player_ids": {}
+    "player_ids": {},
+    "squad_membership": {
+      "primary": {
+        "player": "Florian Thauvin",
+        "status": "confirmed",
+        "source_url": "https://www.rclens.fr/fr/rclens-royal-charleroi-sc-preparation-20260725",
+        "checked_at": "2026-07-30"
+      },
+      "secondary": {
+        "player": "Odsonne Édouard",
+        "status": "confirmed",
+        "source_url": "https://www.rclens.fr/fr/rclens-royal-charleroi-sc-preparation-20260725",
+        "checked_at": "2026-07-30"
+      },
+      "tertiary": {
+        "player": "Thorgan Hazard",
+        "status": "confirmed",
+        "source_url": "https://www.rclens.fr/fr/rclens-royal-charleroi-sc-preparation-20260725",
+        "checked_at": "2026-07-30"
+      }
+    }
   },
   "Lille": {
     "primary": "Olivier Giroud",
     "secondary": "Matias Fernandez-Pardo",
-    "tertiary": "Nabil Bentaleb",
-    "last_updated": "2026-07-28",
+    "tertiary": "Marius Broholm",
+    "last_updated": "2026-07-30",
     "source": "LOSC",
-    "cross_check": "Ligue 1 Fantasy",
+    "cross_check": "LOSC",
     "hierarchy_status": "confirmed",
     "confidence": {
       "primary": "high",
       "secondary": "high",
       "tertiary": "medium"
     },
-    "condition_note": "The existing order is exactly supported by the official specialist review, while Giroud's penalty with Fernandez-Pardo on the pitch supplies direct precedence evidence. Giroud's extension removes the main contract uncertainty. Conditions: Marius Broholm, also 1-for-1 in 2025/26, is the fourth candidate if Bentaleb is absent or leaves.",
+    "condition_note": "Giroud took a 2025/26 penalty while Fernandez-Pardo was playing; their totals were 3/4 and 2/2. Broholm converted his only competitive attempt. Broholm's tertiary rank has not been tested with either senior taker present. Conditions: If Giroud is not starting, Fernandez-Pardo is the practical primary. A Broholm attempt with either senior taker present requires reordering.",
     "last_verified": {
-      "date": "2026-07-28",
+      "date": "2026-07-30",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-28",
+    "public_updated_at": "2026-07-30",
     "latest_evidence": {
-      "id": "evt_20260728_lille_research",
-      "date": "2026-07-28",
+      "id": "evt_20260730_lille_research",
+      "date": "2026-07-30",
       "type": "multi_source_preseason_research",
-      "source_count": 3
+      "source_count": 5
     },
     "evidence_log": [
       {
@@ -1453,6 +1818,56 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260730_lille_research",
+        "date": "2026-07-30",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Giroud took a 2025/26 penalty while Fernandez-Pardo was playing; their totals were 3/4 and 2/2. Broholm converted his only competitive attempt.",
+        "sources": [
+          {
+            "label": "LOSC",
+            "url": "https://losc.fr/actualites/2026-06-08/une-faim-de-dogue-pour-olivier-giroud-qui-prolonge-dun",
+            "date": "2026-06-08",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "LOSC",
+            "url": "https://www.losc.fr/actualites/2026-02-22/angers-losc-le-compte-rendu",
+            "date": "2026-02-22",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Ligue 1",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+            "date": "2026-05-11",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "LOSC",
+            "url": "https://www.losc.fr/actualites/2025-11-24/la-victoire-contre-le-pfc-en-photos",
+            "date": "2025-11-24",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/ligue-1/page-tableau-des-transferts",
+            "date": "2026-07-30",
+            "note": "Source reviewed."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-30T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -1480,31 +1895,6 @@
         "article_slug": null
       },
       {
-        "changed_at": "2026-07-27",
-        "season": "2026/27",
-        "change_type": "preseason_reverification",
-        "from": {
-          "primary": "Olivier Giroud",
-          "secondary": "Matias Fernandez-Pardo",
-          "tertiary": "Nabil Bentaleb"
-        },
-        "to": {
-          "primary": "Olivier Giroud",
-          "secondary": "Matias Fernandez-Pardo",
-          "tertiary": "Nabil Bentaleb"
-        },
-        "reason": "Giroud took a competitive penalty while Fernandez-Pardo was also playing, and the official specialist order exactly matches the filing.",
-        "evidence_ids": [
-          "evt_20260727_lille_research_01",
-          "evt_20260727_lille_research_02",
-          "evt_20260727_lille_research_03"
-        ],
-        "detection": "manual_multi_source_research",
-        "approved_by": "Il Margine",
-        "approved_at": "2026-07-27T12:00:00Z",
-        "article_slug": null
-      },
-      {
         "changed_at": "2026-07-28",
         "season": "2026/27",
         "change_type": "preseason_reverification",
@@ -1526,6 +1916,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-28T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-30",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Olivier Giroud",
+          "secondary": "Matias Fernandez-Pardo",
+          "tertiary": "Nabil Bentaleb"
+        },
+        "to": {
+          "primary": "Olivier Giroud",
+          "secondary": "Matias Fernandez-Pardo",
+          "tertiary": "Marius Broholm"
+        },
+        "reason": "Giroud took a 2025/26 penalty while Fernandez-Pardo was playing; their totals were 3/4 and 2/2. Broholm converted his only competitive attempt. Broholm's tertiary rank has not been tested with either senior taker present. Conditions: If Giroud is not starting, Fernandez-Pardo is the practical primary. A Broholm attempt with either senior taker present requires reordering.",
+        "evidence_ids": [
+          "evt_20260730_lille_research"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-30T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -1540,33 +1953,53 @@
       "tertiary": "Nabil Bentaleb",
       "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
     },
-    "player_ids": {}
+    "player_ids": {},
+    "squad_membership": {
+      "primary": {
+        "player": "Olivier Giroud",
+        "status": "confirmed",
+        "source_url": "https://losc.fr/actualites/2026-06-08/une-faim-de-dogue-pour-olivier-giroud-qui-prolonge-dun",
+        "checked_at": "2026-07-30"
+      },
+      "secondary": {
+        "player": "Matias Fernandez-Pardo",
+        "status": "confirmed",
+        "source_url": "https://www.losc.fr/actualites/2026-02-22/angers-losc-le-compte-rendu",
+        "checked_at": "2026-07-30"
+      },
+      "tertiary": {
+        "player": "Marius Broholm",
+        "status": "confirmed",
+        "source_url": "https://www.losc.fr/actualites/2025-06-18/le-milieu-offensif-international-espoirs-norvegien-marius-broholm-rejoint-le-losc",
+        "checked_at": "2026-07-30"
+      }
+    }
   },
   "Lorient": {
     "primary": "Aiyegun Tosin",
     "secondary": "Mohamed Bamba",
-    "tertiary": "Laurent Abergel",
-    "last_updated": "2026-07-28",
-    "source": "Ligue 1 Fantasy",
-    "cross_check": "L'Équipe",
+    "tertiary": "Arsène Kouassi",
+    "last_updated": "2026-07-30",
+    "source": "Lorient Infos",
+    "cross_check": "Ligue 1",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "medium",
       "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "The two established 2025/26 takers have left. Tosin's July friendly conversion makes him the practical primary. Bamba has a direct but unsuccessful prior attempt; Abergel is a low-confidence tertiary based on current role and dead-ball responsibility rather than penalty evidence. Conditions: A competitive attempt should replace the preseason evidence immediately. If Lorient signs a senior penalty-taking forward, that player should be assessed above Abergel and potentially above Bamba.",
+    "condition_note": "Tosin converted Lorient's observed 2026 preseason penalty after both he and Bamba went 0/1 in 2025/26. Kouassi is the least-speculative third option because of his retained direct-free-kick role. Bamba has no successful current-team penalty and Kouassi has no regular-time attempt. Conditions: A new proven centre-forward should be assessed above Kouassi and possibly Bamba. The first competitive penalty is hierarchy-setting.",
     "last_verified": {
-      "date": "2026-07-28",
+      "date": "2026-07-30",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-28",
+    "public_updated_at": "2026-07-30",
     "latest_evidence": {
-      "id": "evt_20260728_lorient_research",
-      "date": "2026-07-28",
+      "id": "evt_20260730_lorient_research",
+      "date": "2026-07-30",
       "type": "multi_source_preseason_research",
-      "source_count": 6
+      "source_count": 4
     },
     "evidence_log": [
       {
@@ -1687,6 +2120,50 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260730_lorient_research",
+        "date": "2026-07-30",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Tosin converted Lorient's observed 2026 preseason penalty after both he and Bamba went 0/1 in 2025/26. Kouassi is the least-speculative third option because of his retained direct-free-kick role.",
+        "sources": [
+          {
+            "label": "Lorient Infos",
+            "url": "https://lorient-infos.fr/match-de-preparation-le-fc-lorient-simpose-face-a-concarneau-2-1-au-stade-guy-piriou/",
+            "date": "2026-07-11",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Ligue 1",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+            "date": "2026-05-11",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "FC Lorient",
+            "url": "https://www.fclorient.bzh/lequipe-professionnelle-2026-2027/",
+            "date": "2026-07-30",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/ligue-1/page-tableau-des-transferts",
+            "date": "2026-07-30",
+            "note": "Source reviewed."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-30T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -1714,32 +2191,6 @@
         "article_slug": null
       },
       {
-        "changed_at": "2026-07-27",
-        "season": "2026/27",
-        "change_type": "hierarchy_research_update",
-        "from": {
-          "primary": "Pablo Pagis",
-          "secondary": "Bamba Dieng",
-          "tertiary": "Aiyegun Tosin"
-        },
-        "to": {
-          "primary": "Aiyegun Tosin",
-          "secondary": "",
-          "tertiary": ""
-        },
-        "reason": "Pagis and Dieng have left. Aiyegun has independent current-preseason penalty evidence, making him the only defensible current recommendation.",
-        "evidence_ids": [
-          "evt_20260727_lorient_research_01",
-          "evt_20260727_lorient_research_02",
-          "evt_20260727_lorient_research_03",
-          "evt_20260727_lorient_research_04"
-        ],
-        "detection": "manual_multi_source_research",
-        "approved_by": "Il Margine",
-        "approved_at": "2026-07-27T12:00:00Z",
-        "article_slug": null
-      },
-      {
         "changed_at": "2026-07-28",
         "season": "2026/27",
         "change_type": "hierarchy_research_update",
@@ -1761,6 +2212,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-28T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-30",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Aiyegun Tosin",
+          "secondary": "Mohamed Bamba",
+          "tertiary": "Laurent Abergel"
+        },
+        "to": {
+          "primary": "Aiyegun Tosin",
+          "secondary": "Mohamed Bamba",
+          "tertiary": "Arsène Kouassi"
+        },
+        "reason": "Tosin converted Lorient's observed 2026 preseason penalty after both he and Bamba went 0/1 in 2025/26. Kouassi is the least-speculative third option because of his retained direct-free-kick role. Bamba has no successful current-team penalty and Kouassi has no regular-time attempt. Conditions: A new proven centre-forward should be assessed above Kouassi and possibly Bamba. The first competitive penalty is hierarchy-setting.",
+        "evidence_ids": [
+          "evt_20260730_lorient_research"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-30T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -1775,33 +2249,53 @@
       "tertiary": "Aiyegun Tosin",
       "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
     },
-    "player_ids": {}
+    "player_ids": {},
+    "squad_membership": {
+      "primary": {
+        "player": "Aiyegun Tosin",
+        "status": "confirmed",
+        "source_url": "https://www.fclorient.bzh/lequipe-professionnelle-2026-2027/",
+        "checked_at": "2026-07-30"
+      },
+      "secondary": {
+        "player": "Mohamed Bamba",
+        "status": "confirmed",
+        "source_url": "https://www.fclorient.bzh/lequipe-professionnelle-2026-2027/",
+        "checked_at": "2026-07-30"
+      },
+      "tertiary": {
+        "player": "Arsène Kouassi",
+        "status": "confirmed",
+        "source_url": "https://www.fclorient.bzh/lequipe-professionnelle-2026-2027/",
+        "checked_at": "2026-07-30"
+      }
+    }
   },
   "Lyon": {
     "primary": "Corentin Tolisso",
-    "secondary": "Pavel Šulc",
-    "tertiary": "Ainsley Maitland-Niles",
-    "last_updated": "2026-07-28",
+    "secondary": "Loïs Openda",
+    "tertiary": "Pavel Šulc",
+    "last_updated": "2026-07-30",
     "source": "L'Équipe",
-    "cross_check": "Ligue 1 Fantasy",
+    "cross_check": "Olympique-et-Lyonnais",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "high",
-      "secondary": "medium",
+      "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Endrick's loan ended, while Tolisso has reinforced his primary status by taking both current-preseason penalties. Šulc's larger career penalty sample makes him the strongest replacement backup ahead of Maitland-Niles. Conditions: Šulc's second rank assumes he remains in Lyon's first-team plans and earns regular minutes. If Šulc leaves, Maitland-Niles moves second and the third slot must be reassessed.",
+    "condition_note": "Tolisso took both observed 2026 preseason penalties. Openda's confirmed arrival and 14/18 career record place him above Šulc's 7/10 as the practical specialist fallback. Neither backup has taken an OL penalty with Tolisso present. Conditions: The first penalty after Openda joins team training is a direct precedence test. If Openda is not a regular starter, Šulc becomes practical second choice.",
     "last_verified": {
-      "date": "2026-07-28",
+      "date": "2026-07-30",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-28",
+    "public_updated_at": "2026-07-30",
     "latest_evidence": {
-      "id": "evt_20260728_lyon_research",
-      "date": "2026-07-28",
+      "id": "evt_20260730_lyon_research",
+      "date": "2026-07-30",
       "type": "multi_source_preseason_research",
-      "source_count": 6
+      "source_count": 4
     },
     "evidence_log": [
       {
@@ -1916,6 +2410,50 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260730_lyon_research",
+        "date": "2026-07-30",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Tolisso took both observed 2026 preseason penalties. Openda's confirmed arrival and 14/18 career record place him above Šulc's 7/10 as the practical specialist fallback.",
+        "sources": [
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/Actualites/La-preparation-avance-bien-porte-par-corentin-tolisso-et-dominik-greif-l-ol-enchaine-un-troisieme-succes-en-autant-de-matches-amicaux/1704641",
+            "date": "2026-07-15",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Olympique-et-Lyonnais",
+            "url": "https://www.olympique-et-lyonnais.com/ol-tolisso-continue-son-sans-faute-en-preparation%2C403462.html",
+            "date": "2026-07-18",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/Actualites/L-olympique-lyonnais-officialise-l-arrivee-en-pret-de-lois-openda/1707631",
+            "date": "2026-07-28",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Transfermarkt",
+            "url": "https://www.transfermarkt.co.uk/lois-openda/elfmetertore/spieler/368887",
+            "date": "2026-07-28",
+            "note": "Source reviewed."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-30T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -1943,31 +2481,6 @@
         "article_slug": null
       },
       {
-        "changed_at": "2026-07-27",
-        "season": "2026/27",
-        "change_type": "hierarchy_research_update",
-        "from": {
-          "primary": "Corentin Tolisso",
-          "secondary": "Endrick",
-          "tertiary": "Ainsley Maitland-Niles"
-        },
-        "to": {
-          "primary": "Corentin Tolisso",
-          "secondary": "",
-          "tertiary": "Ainsley Maitland-Niles"
-        },
-        "reason": "Tolisso is independently established as primary. Endrick's loan has ended, while Maitland-Niles is retained in his existing third slot rather than promoted automatically.",
-        "evidence_ids": [
-          "evt_20260727_lyon_research_01",
-          "evt_20260727_lyon_research_02",
-          "evt_20260727_lyon_research_03"
-        ],
-        "detection": "manual_multi_source_research",
-        "approved_by": "Il Margine",
-        "approved_at": "2026-07-27T12:00:00Z",
-        "article_slug": null
-      },
-      {
         "changed_at": "2026-07-28",
         "season": "2026/27",
         "change_type": "hierarchy_research_update",
@@ -1989,6 +2502,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-28T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-30",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Corentin Tolisso",
+          "secondary": "Pavel Šulc",
+          "tertiary": "Ainsley Maitland-Niles"
+        },
+        "to": {
+          "primary": "Corentin Tolisso",
+          "secondary": "Loïs Openda",
+          "tertiary": "Pavel Šulc"
+        },
+        "reason": "Tolisso took both observed 2026 preseason penalties. Openda's confirmed arrival and 14/18 career record place him above Šulc's 7/10 as the practical specialist fallback. Neither backup has taken an OL penalty with Tolisso present. Conditions: The first penalty after Openda joins team training is a direct precedence test. If Openda is not a regular starter, Šulc becomes practical second choice.",
+        "evidence_ids": [
+          "evt_20260730_lyon_research"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-30T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -2003,33 +2539,53 @@
       "tertiary": "Ainsley Maitland-Niles",
       "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
     },
-    "player_ids": {}
+    "player_ids": {},
+    "squad_membership": {
+      "primary": {
+        "player": "Corentin Tolisso",
+        "status": "confirmed",
+        "source_url": "https://www.lequipe.fr/Football/Actualites/La-preparation-avance-bien-porte-par-corentin-tolisso-et-dominik-greif-l-ol-enchaine-un-troisieme-succes-en-autant-de-matches-amicaux/1704641",
+        "checked_at": "2026-07-30"
+      },
+      "secondary": {
+        "player": "Loïs Openda",
+        "status": "confirmed",
+        "source_url": "https://www.lequipe.fr/Football/Actualites/L-olympique-lyonnais-officialise-l-arrivee-en-pret-de-lois-openda/1707631",
+        "checked_at": "2026-07-30"
+      },
+      "tertiary": {
+        "player": "Pavel Šulc",
+        "status": "confirmed",
+        "source_url": "https://www.lequipe.fr/Football/ligue-1/page-tableau-des-transferts",
+        "checked_at": "2026-07-30"
+      }
+    }
   },
   "Marseille": {
-    "primary": "Amine Gouiri",
-    "secondary": "Himad Abdelli",
+    "primary": "Himad Abdelli",
+    "secondary": "Amine Gouiri",
     "tertiary": "Pierre-Emile Højbjerg",
-    "last_updated": "2026-07-28",
-    "source": "Ligue 1 Fantasy",
-    "cross_check": "L'Équipe",
+    "last_updated": "2026-07-30",
+    "source": "Ligue 1",
+    "cross_check": "Transfermarkt",
     "hierarchy_status": "conditional",
     "confidence": {
       "primary": "low",
       "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Greenwood's transfer leaves no demonstrated successor. Gouiri ranks first on practical lineup probability. Abdelli is the squad's strongest recorded specialist and should outrank Gouiri whenever both are regular starters, but his uncertain role prevents an unconditional primary recommendation. Conditions: If Abdelli becomes a regular starter, move him to primary on the strength of his 14-for-15 career record. If Abdelli is transferred or remains outside the regular rotation, the matchday order is Gouiri then Højbjerg, with a new tertiary required. The first post-Greenwood competitive attempt is decisive because no current direct statement exists.",
+    "condition_note": "No current OM event establishes the new order. Abdelli is the only current candidate with strong recent evidence: 2/2 in 2025/26 and 14/15 career. Gouiri and Højbjerg follow from attacking and dead-ball roles. Abdelli's primary rank applies only when selected; no direct OM designation exists. Conditions: If Abdelli is not in the starting XI, Gouiri is practical matchday primary. The first competitive OM penalty must supersede this career-based projection. Any incoming proven specialist should be assessed immediately.",
     "last_verified": {
-      "date": "2026-07-28",
+      "date": "2026-07-30",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-28",
+    "public_updated_at": "2026-07-30",
     "latest_evidence": {
-      "id": "evt_20260728_marseille_research",
-      "date": "2026-07-28",
+      "id": "evt_20260730_marseille_research",
+      "date": "2026-07-30",
       "type": "multi_source_preseason_research",
-      "source_count": 5
+      "source_count": 3
     },
     "evidence_log": [
       {
@@ -2138,6 +2694,44 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260730_marseille_research",
+        "date": "2026-07-30",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "No current OM event establishes the new order. Abdelli is the only current candidate with strong recent evidence: 2/2 in 2025/26 and 14/15 career. Gouiri and Højbjerg follow from attacking and dead-ball roles.",
+        "sources": [
+          {
+            "label": "Ligue 1",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+            "date": "2026-05-11",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Transfermarkt",
+            "url": "https://www.transfermarkt.co.uk/himad-abdelli/elfmetertore/spieler/592979",
+            "date": "2026-07-28",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Olympique de Marseille",
+            "url": "https://www.om.fr/fr/equipe/hommes",
+            "date": "2026-07-30",
+            "note": "Source reviewed."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-30T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -2165,31 +2759,6 @@
         "article_slug": null
       },
       {
-        "changed_at": "2026-07-27",
-        "season": "2026/27",
-        "change_type": "hierarchy_research_update",
-        "from": {
-          "primary": "Mason Greenwood",
-          "secondary": "Amine Gouiri",
-          "tertiary": "Pierre-Emile Hojbjerg"
-        },
-        "to": {
-          "primary": "",
-          "secondary": "Amine Gouiri",
-          "tertiary": "Pierre-Emile Højbjerg"
-        },
-        "reason": "Greenwood has transferred to Fenerbahçe. No current regular-time event or direct statement establishes Gouiri or Højbjerg as Marseille's replacement primary.",
-        "evidence_ids": [
-          "evt_20260727_marseille_research_01",
-          "evt_20260727_marseille_research_02",
-          "evt_20260727_marseille_research_03"
-        ],
-        "detection": "manual_multi_source_research",
-        "approved_by": "Il Margine",
-        "approved_at": "2026-07-27T12:00:00Z",
-        "article_slug": null
-      },
-      {
         "changed_at": "2026-07-28",
         "season": "2026/27",
         "change_type": "hierarchy_research_update",
@@ -2211,6 +2780,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-28T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-30",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Amine Gouiri",
+          "secondary": "Himad Abdelli",
+          "tertiary": "Pierre-Emile Højbjerg"
+        },
+        "to": {
+          "primary": "Himad Abdelli",
+          "secondary": "Amine Gouiri",
+          "tertiary": "Pierre-Emile Højbjerg"
+        },
+        "reason": "No current OM event establishes the new order. Abdelli is the only current candidate with strong recent evidence: 2/2 in 2025/26 and 14/15 career. Gouiri and Højbjerg follow from attacking and dead-ball roles. Abdelli's primary rank applies only when selected; no direct OM designation exists. Conditions: If Abdelli is not in the starting XI, Gouiri is practical matchday primary. The first competitive OM penalty must supersede this career-based projection. Any incoming proven specialist should be assessed immediately.",
+        "evidence_ids": [
+          "evt_20260730_marseille_research"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-30T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -2225,13 +2817,33 @@
       "tertiary": "Pierre-Emile Hojbjerg",
       "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
     },
-    "player_ids": {}
+    "player_ids": {},
+    "squad_membership": {
+      "primary": {
+        "player": "Himad Abdelli",
+        "status": "confirmed",
+        "source_url": "https://www.om.fr/fr/equipe/hommes",
+        "checked_at": "2026-07-30"
+      },
+      "secondary": {
+        "player": "Amine Gouiri",
+        "status": "confirmed",
+        "source_url": "https://www.om.fr/fr/equipe/hommes",
+        "checked_at": "2026-07-30"
+      },
+      "tertiary": {
+        "player": "Pierre-Emile Højbjerg",
+        "status": "confirmed",
+        "source_url": "https://www.om.fr/fr/equipe/hommes",
+        "checked_at": "2026-07-30"
+      }
+    }
   },
   "Monaco": {
     "primary": "Folarin Balogun",
     "secondary": "Ansu Fati",
     "tertiary": "Denis Zakaria",
-    "last_updated": "2026-07-28",
+    "last_updated": "2026-07-30",
     "source": "AS Monaco",
     "cross_check": "AS Monaco",
     "hierarchy_status": "confirmed",
@@ -2240,18 +2852,18 @@
       "secondary": "high",
       "tertiary": "medium"
     },
-    "condition_note": "Balogun and Fati are directly ranked by coexistence events. Zakaria is the best-supported practical third candidate because of his perfect five-penalty senior record and current leadership role. Conditions: If Balogun is sold, Fati becomes primary and Zakaria second. A new senior striker with an established penalty record could enter ahead of Zakaria before the window closes.",
+    "condition_note": "Balogun converted regular-time penalties with Fati available and finished 3/3 versus Fati's 3/4. Zakaria's 5/5 career record makes him the strongest tertiary. The tertiary has not been tested in a Monaco regular-time coexistence event. Conditions: If Balogun leaves, Fati becomes primary and Zakaria second. Reassess after the first penalty involving Monaco's latest attacking arrival.",
     "last_verified": {
-      "date": "2026-07-28",
+      "date": "2026-07-30",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-28",
+    "public_updated_at": "2026-07-30",
     "latest_evidence": {
-      "id": "evt_20260728_monaco_research",
-      "date": "2026-07-28",
+      "id": "evt_20260730_monaco_research",
+      "date": "2026-07-30",
       "type": "multi_source_preseason_research",
-      "source_count": 6
+      "source_count": 5
     },
     "evidence_log": [
       {
@@ -2372,6 +2984,56 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260730_monaco_research",
+        "date": "2026-07-30",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Balogun converted regular-time penalties with Fati available and finished 3/3 versus Fati's 3/4. Zakaria's 5/5 career record makes him the strongest tertiary.",
+        "sources": [
+          {
+            "label": "AS Monaco",
+            "url": "https://www.asmonaco.com/en/news/a-resilient-as-monaco-beat-lyon-to-close-on-the-podium",
+            "date": "2026-03-22",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "AS Monaco",
+            "url": "https://www.asmonaco.com/en/news/un-as-monaco-a-reaction-partage-les-points-avec-l-aj-auxerre",
+            "date": "2026-04-19",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Ligue 1",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+            "date": "2026-05-11",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "AS Monaco",
+            "url": "https://www.asmonaco.com/fr/pros/joueurs",
+            "date": "2026-07-30",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/ligue-1/page-tableau-des-transferts",
+            "date": "2026-07-30",
+            "note": "Source reviewed."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-30T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -2399,32 +3061,6 @@
         "article_slug": null
       },
       {
-        "changed_at": "2026-07-27",
-        "season": "2026/27",
-        "change_type": "preseason_reverification",
-        "from": {
-          "primary": "Folarin Balogun",
-          "secondary": "Ansu Fati",
-          "tertiary": ""
-        },
-        "to": {
-          "primary": "Folarin Balogun",
-          "secondary": "Ansu Fati",
-          "tertiary": ""
-        },
-        "reason": "Multiple coexistence events and the season totals support Balogun ahead of Fati. No third taker reaches the evidence threshold.",
-        "evidence_ids": [
-          "evt_20260727_monaco_research_01",
-          "evt_20260727_monaco_research_02",
-          "evt_20260727_monaco_research_03",
-          "evt_20260727_monaco_research_04"
-        ],
-        "detection": "manual_multi_source_research",
-        "approved_by": "Il Margine",
-        "approved_at": "2026-07-27T12:00:00Z",
-        "article_slug": null
-      },
-      {
         "changed_at": "2026-07-28",
         "season": "2026/27",
         "change_type": "hierarchy_research_update",
@@ -2446,6 +3082,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-28T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-30",
+        "season": "2026/27",
+        "change_type": "preseason_reverification",
+        "from": {
+          "primary": "Folarin Balogun",
+          "secondary": "Ansu Fati",
+          "tertiary": "Denis Zakaria"
+        },
+        "to": {
+          "primary": "Folarin Balogun",
+          "secondary": "Ansu Fati",
+          "tertiary": "Denis Zakaria"
+        },
+        "reason": "Balogun converted regular-time penalties with Fati available and finished 3/3 versus Fati's 3/4. Zakaria's 5/5 career record makes him the strongest tertiary. The tertiary has not been tested in a Monaco regular-time coexistence event. Conditions: If Balogun leaves, Fati becomes primary and Zakaria second. Reassess after the first penalty involving Monaco's latest attacking arrival.",
+        "evidence_ids": [
+          "evt_20260730_monaco_research"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-30T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -2460,14 +3119,34 @@
       "tertiary": "",
       "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
     },
-    "player_ids": {}
+    "player_ids": {},
+    "squad_membership": {
+      "primary": {
+        "player": "Folarin Balogun",
+        "status": "confirmed",
+        "source_url": "https://www.asmonaco.com/fr/pros/joueurs",
+        "checked_at": "2026-07-30"
+      },
+      "secondary": {
+        "player": "Ansu Fati",
+        "status": "confirmed",
+        "source_url": "https://www.asmonaco.com/fr/pros/joueurs",
+        "checked_at": "2026-07-30"
+      },
+      "tertiary": {
+        "player": "Denis Zakaria",
+        "status": "confirmed",
+        "source_url": "https://www.asmonaco.com/fr/pros/joueurs",
+        "checked_at": "2026-07-30"
+      }
+    }
   },
   "Nice": {
     "primary": "Sofiane Diop",
     "secondary": "Terem Moffi",
     "tertiary": "Jonathan Clauss",
-    "last_updated": "2026-07-28",
-    "source": "Ligue 1 Fantasy",
+    "last_updated": "2026-07-30",
+    "source": "Ligue 1",
     "cross_check": "OGC Nice",
     "hierarchy_status": "conditional",
     "confidence": {
@@ -2475,18 +3154,18 @@
       "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Wahi's loan ended, leaving Diop as the clear primary. Moffi is the strongest current attacking candidate but is not in a stable squad position. Clauss is a low-confidence third based on seniority and set-piece responsibility, not a demonstrated Nice penalty hierarchy. Conditions: Nice are seeking to transfer Moffi; if he leaves, Clauss moves second and the next senior attacking signing becomes the leading tertiary candidate. Any new number nine with a strong penalty record should be assessed immediately against Diop.",
+    "condition_note": "Diop converted both 2025/26 attempts and is the only retained successful Nice taker. Moffi is the senior-striker fallback; Clauss remains the direct-free-kick specialist. Moffi is back in the squad but his transfer situation remains unresolved. Conditions: If Moffi leaves, Clauss moves second and a new attacker becomes tertiary. A new number nine with strong penalty history must be assessed against Diop.",
     "last_verified": {
-      "date": "2026-07-28",
+      "date": "2026-07-30",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-28",
+    "public_updated_at": "2026-07-30",
     "latest_evidence": {
-      "id": "evt_20260728_nice_research",
-      "date": "2026-07-28",
+      "id": "evt_20260730_nice_research",
+      "date": "2026-07-30",
       "type": "multi_source_preseason_research",
-      "source_count": 7
+      "source_count": 4
     },
     "evidence_log": [
       {
@@ -2613,6 +3292,50 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 7 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260730_nice_research",
+        "date": "2026-07-30",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Diop converted both 2025/26 attempts and is the only retained successful Nice taker. Moffi is the senior-striker fallback; Clauss remains the direct-free-kick specialist.",
+        "sources": [
+          {
+            "label": "Ligue 1",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+            "date": "2026-05-11",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "OGC Nice",
+            "url": "https://www.ogcnice.com/fr/f/equipes/2026-2027/equipe-pro",
+            "date": "2026-07-30",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/Actualites/Dans-l-attente-d-un-transfert-terem-moffi-a-la-reprise-de-nice/1702485",
+            "date": "2026-07-08",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/ligue-1/page-tableau-des-transferts",
+            "date": "2026-07-30",
+            "note": "Source reviewed."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-30T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -2640,32 +3363,6 @@
         "article_slug": null
       },
       {
-        "changed_at": "2026-07-27",
-        "season": "2026/27",
-        "change_type": "hierarchy_research_update",
-        "from": {
-          "primary": "Sofiane Diop",
-          "secondary": "Elye Wahi",
-          "tertiary": "Terem Moffi"
-        },
-        "to": {
-          "primary": "Sofiane Diop",
-          "secondary": "",
-          "tertiary": "Terem Moffi"
-        },
-        "reason": "Diop remains supported as primary. Wahi's loan has ended, and Moffi is retained in his existing third slot rather than promoted solely because Wahi departed.",
-        "evidence_ids": [
-          "evt_20260727_nice_research_01",
-          "evt_20260727_nice_research_02",
-          "evt_20260727_nice_research_03",
-          "evt_20260727_nice_research_04"
-        ],
-        "detection": "manual_multi_source_research",
-        "approved_by": "Il Margine",
-        "approved_at": "2026-07-27T12:00:00Z",
-        "article_slug": null
-      },
-      {
         "changed_at": "2026-07-28",
         "season": "2026/27",
         "change_type": "hierarchy_research_update",
@@ -2687,6 +3384,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-28T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-30",
+        "season": "2026/27",
+        "change_type": "preseason_reverification",
+        "from": {
+          "primary": "Sofiane Diop",
+          "secondary": "Terem Moffi",
+          "tertiary": "Jonathan Clauss"
+        },
+        "to": {
+          "primary": "Sofiane Diop",
+          "secondary": "Terem Moffi",
+          "tertiary": "Jonathan Clauss"
+        },
+        "reason": "Diop converted both 2025/26 attempts and is the only retained successful Nice taker. Moffi is the senior-striker fallback; Clauss remains the direct-free-kick specialist. Moffi is back in the squad but his transfer situation remains unresolved. Conditions: If Moffi leaves, Clauss moves second and a new attacker becomes tertiary. A new number nine with strong penalty history must be assessed against Diop.",
+        "evidence_ids": [
+          "evt_20260730_nice_research"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-30T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -2701,14 +3421,34 @@
       "tertiary": "Terem Moffi",
       "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
     },
-    "player_ids": {}
+    "player_ids": {},
+    "squad_membership": {
+      "primary": {
+        "player": "Sofiane Diop",
+        "status": "confirmed",
+        "source_url": "https://www.ogcnice.com/fr/f/equipes/2026-2027/equipe-pro",
+        "checked_at": "2026-07-30"
+      },
+      "secondary": {
+        "player": "Terem Moffi",
+        "status": "confirmed",
+        "source_url": "https://www.ogcnice.com/fr/f/equipes/2026-2027/equipe-pro",
+        "checked_at": "2026-07-30"
+      },
+      "tertiary": {
+        "player": "Jonathan Clauss",
+        "status": "confirmed",
+        "source_url": "https://www.ogcnice.com/fr/f/equipes/2026-2027/equipe-pro",
+        "checked_at": "2026-07-30"
+      }
+    }
   },
   "Paris FC": {
     "primary": "Ilan Kebbal",
-    "secondary": "Lassine Sinayoko",
-    "tertiary": "Pablo Pagis",
-    "last_updated": "2026-07-28",
-    "source": "Ligue 1 Fantasy",
+    "secondary": "Pablo Pagis",
+    "tertiary": "Lassine Sinayoko",
+    "last_updated": "2026-07-30",
+    "source": "Ligue 1",
     "cross_check": "FC Lorient",
     "hierarchy_status": "conditional",
     "confidence": {
@@ -2716,16 +3456,16 @@
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Kebbal remains the incumbent. Sinayoko and Pagis both arrive with stronger and more current evidence than the outgoing or transfer-listed backups. Sinayoko's larger primary-taker sample narrowly places him second. Conditions: A coexistence penalty involving Kebbal, Sinayoko and Pagis is required to confirm the new order. If Kebbal leaves, Sinayoko becomes the provisional primary and Pagis second.",
+    "condition_note": "Kebbal is the incumbent 3/4 taker. Pagis' 2/2 2025/26 return gives him a narrow backup edge over Sinayoko's 3/4 after both joined the club. No Paris FC coexistence penalty exists between the incumbent and new forwards. Conditions: A penalty awarded with all three available is the decisive hierarchy test. If Kebbal leaves, Pagis is provisional primary ahead of Sinayoko.",
     "last_verified": {
-      "date": "2026-07-28",
+      "date": "2026-07-30",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-28",
+    "public_updated_at": "2026-07-30",
     "latest_evidence": {
-      "id": "evt_20260728_paris-fc_research",
-      "date": "2026-07-28",
+      "id": "evt_20260730_paris-fc_research",
+      "date": "2026-07-30",
       "type": "multi_source_preseason_research",
       "source_count": 4
     },
@@ -2836,6 +3576,50 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260730_paris-fc_research",
+        "date": "2026-07-30",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Kebbal is the incumbent 3/4 taker. Pagis' 2/2 2025/26 return gives him a narrow backup edge over Sinayoko's 3/4 after both joined the club.",
+        "sources": [
+          {
+            "label": "Ligue 1",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+            "date": "2026-05-11",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "FC Lorient",
+            "url": "https://www.fclorient.bzh/pablo-pagis-sengage-avec-le-paris-fc/",
+            "date": "2026-07-17",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Le Parisien",
+            "url": "https://www.leparisien.fr/sports/football/paris-fc/le-profil-parfait-pour-une-belle-integration-le-paris-fc-officialise-larrivee-de-lassine-sinayoko-21-07-2026-5GPSEYE5YVBHRPQ6YNQRRLDQGI.php",
+            "date": "2026-07-21",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Paris FC",
+            "url": "https://parisfc.fr/pro-homme/joueurs-staff/",
+            "date": "2026-07-30",
+            "note": "Source reviewed."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-30T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -2863,32 +3647,6 @@
         "article_slug": null
       },
       {
-        "changed_at": "2026-07-27",
-        "season": "2026/27",
-        "change_type": "hierarchy_research_update",
-        "from": {
-          "primary": "Ilan Kebbal",
-          "secondary": "Jean-Philippe Krasso",
-          "tertiary": "Willem Geubbels"
-        },
-        "to": {
-          "primary": "Ilan Kebbal",
-          "secondary": "",
-          "tertiary": ""
-        },
-        "reason": "Kebbal remains the incumbent, but Paris FC has added two proven takers in Sinayoko and Pagis while the filed backups face uncertain futures. No Paris FC event currently ranks the new candidates.",
-        "evidence_ids": [
-          "evt_20260727_paris_fc_research_01",
-          "evt_20260727_paris_fc_research_02",
-          "evt_20260727_paris_fc_research_03",
-          "evt_20260727_paris_fc_research_04"
-        ],
-        "detection": "manual_multi_source_research",
-        "approved_by": "Il Margine",
-        "approved_at": "2026-07-27T12:00:00Z",
-        "article_slug": null
-      },
-      {
         "changed_at": "2026-07-28",
         "season": "2026/27",
         "change_type": "hierarchy_research_update",
@@ -2910,6 +3668,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-28T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-30",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Ilan Kebbal",
+          "secondary": "Lassine Sinayoko",
+          "tertiary": "Pablo Pagis"
+        },
+        "to": {
+          "primary": "Ilan Kebbal",
+          "secondary": "Pablo Pagis",
+          "tertiary": "Lassine Sinayoko"
+        },
+        "reason": "Kebbal is the incumbent 3/4 taker. Pagis' 2/2 2025/26 return gives him a narrow backup edge over Sinayoko's 3/4 after both joined the club. No Paris FC coexistence penalty exists between the incumbent and new forwards. Conditions: A penalty awarded with all three available is the decisive hierarchy test. If Kebbal leaves, Pagis is provisional primary ahead of Sinayoko.",
+        "evidence_ids": [
+          "evt_20260730_paris-fc_research"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-30T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -2924,13 +3705,33 @@
       "tertiary": "Willem Geubbels",
       "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
     },
-    "player_ids": {}
+    "player_ids": {},
+    "squad_membership": {
+      "primary": {
+        "player": "Ilan Kebbal",
+        "status": "confirmed",
+        "source_url": "https://parisfc.fr/pro-homme/joueurs-staff/",
+        "checked_at": "2026-07-30"
+      },
+      "secondary": {
+        "player": "Pablo Pagis",
+        "status": "confirmed",
+        "source_url": "https://parisfc.fr/pro-homme/joueurs-staff/",
+        "checked_at": "2026-07-30"
+      },
+      "tertiary": {
+        "player": "Lassine Sinayoko",
+        "status": "confirmed",
+        "source_url": "https://parisfc.fr/pro-homme/joueurs-staff/",
+        "checked_at": "2026-07-30"
+      }
+    }
   },
   "Paris Saint Germain": {
     "primary": "Ousmane Dembélé",
     "secondary": "Khvicha Kvaratskhelia",
-    "tertiary": "Gonçalo Ramos",
-    "last_updated": "2026-07-28",
+    "tertiary": "Nuno Mendes",
+    "last_updated": "2026-07-30",
     "source": "Paris Saint-Germain",
     "cross_check": "L'Équipe",
     "hierarchy_status": "probable",
@@ -2939,16 +3740,16 @@
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "The Champions League final confirms Dembélé. Kvaratskhelia remains the best-supported second candidate. Vitinha's role in protecting and delivering the ball to Dembélé is not evidence that he is the next taker; Ramos has two actual regular-time attempts and therefore moves into third. Conditions: If Dembélé is absent, Kvaratskhelia is the provisional primary and Ramos the provisional second. A direct PSG statement or coexistence event between Kvaratskhelia and Ramos would resolve the backup order.",
+    "condition_note": "Dembélé took and converted the Champions League final penalty with Kvaratskhelia present. Kvaratskhelia and Nuno Mendes each converted their sole 2025/26 league attempt. The second-versus-third order has no direct coexistence test. Conditions: If Dembélé is unavailable, the next regular-time attempt resolves the backups. Any new forward with an established penalty role should be reviewed.",
     "last_verified": {
-      "date": "2026-07-28",
+      "date": "2026-07-30",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-28",
+    "public_updated_at": "2026-07-30",
     "latest_evidence": {
-      "id": "evt_20260728_paris-saint-germain_research",
-      "date": "2026-07-28",
+      "id": "evt_20260730_paris-saint-germain_research",
+      "date": "2026-07-30",
       "type": "multi_source_preseason_research",
       "source_count": 4
     },
@@ -3059,6 +3860,50 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260730_paris-saint-germain_research",
+        "date": "2026-07-30",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Dembélé took and converted the Champions League final penalty with Kvaratskhelia present. Kvaratskhelia and Nuno Mendes each converted their sole 2025/26 league attempt.",
+        "sources": [
+          {
+            "label": "Paris Saint-Germain",
+            "url": "https://www.psg.fr/matchs/football-masculin/20252026/paris-vs-arsenal-2026-05-30",
+            "date": "2026-05-30",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/Actualites/Le-penalty-transforme-par-ousmane-dembele-pour-egaliser-contre-arsenal-en-finale-de-la-ligue-des-champions/1680348",
+            "date": "2026-05-30",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Ligue 1",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+            "date": "2026-05-11",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/ligue-1/page-tableau-des-transferts",
+            "date": "2026-07-30",
+            "note": "Source reviewed."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-30T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -3086,31 +3931,6 @@
         "article_slug": null
       },
       {
-        "changed_at": "2026-07-27",
-        "season": "2026/27",
-        "change_type": "hierarchy_research_update",
-        "from": {
-          "primary": "Ousmane Dembele",
-          "secondary": "Khvicha Kvaratskhelia",
-          "tertiary": "Vitinha"
-        },
-        "to": {
-          "primary": "Ousmane Dembélé",
-          "secondary": "Khvicha Kvaratskhelia",
-          "tertiary": "Vitinha"
-        },
-        "reason": "The latest high-stakes regular-time event directly confirms Dembélé, with Kvaratskhelia winning the penalty and Vitinha participating in the handover and protection process.",
-        "evidence_ids": [
-          "evt_20260727_paris_saint_germain_research_01",
-          "evt_20260727_paris_saint_germain_research_02",
-          "evt_20260727_paris_saint_germain_research_03"
-        ],
-        "detection": "manual_multi_source_research",
-        "approved_by": "Il Margine",
-        "approved_at": "2026-07-27T12:00:00Z",
-        "article_slug": null
-      },
-      {
         "changed_at": "2026-07-28",
         "season": "2026/27",
         "change_type": "hierarchy_research_update",
@@ -3132,6 +3952,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-28T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-30",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Ousmane Dembélé",
+          "secondary": "Khvicha Kvaratskhelia",
+          "tertiary": "Gonçalo Ramos"
+        },
+        "to": {
+          "primary": "Ousmane Dembélé",
+          "secondary": "Khvicha Kvaratskhelia",
+          "tertiary": "Nuno Mendes"
+        },
+        "reason": "Dembélé took and converted the Champions League final penalty with Kvaratskhelia present. Kvaratskhelia and Nuno Mendes each converted their sole 2025/26 league attempt. The second-versus-third order has no direct coexistence test. Conditions: If Dembélé is unavailable, the next regular-time attempt resolves the backups. Any new forward with an established penalty role should be reviewed.",
+        "evidence_ids": [
+          "evt_20260730_paris-saint-germain_research"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-30T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -3146,13 +3989,33 @@
       "tertiary": "Vitinha",
       "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
     },
-    "player_ids": {}
+    "player_ids": {},
+    "squad_membership": {
+      "primary": {
+        "player": "Ousmane Dembélé",
+        "status": "confirmed",
+        "source_url": "https://www.psg.fr/equipes/equipe-premiere/effectif",
+        "checked_at": "2026-07-30"
+      },
+      "secondary": {
+        "player": "Khvicha Kvaratskhelia",
+        "status": "confirmed",
+        "source_url": "https://www.psg.fr/equipes/equipe-premiere/effectif",
+        "checked_at": "2026-07-30"
+      },
+      "tertiary": {
+        "player": "Nuno Mendes",
+        "status": "confirmed",
+        "source_url": "https://www.psg.fr/equipes/equipe-premiere/effectif",
+        "checked_at": "2026-07-30"
+      }
+    }
   },
   "Rennes": {
     "primary": "Ludovic Blas",
-    "secondary": "Esteban Lepaul",
+    "secondary": "Estéban Lepaul",
     "tertiary": "Issa Soumaré",
-    "last_updated": "2026-07-28",
+    "last_updated": "2026-07-30",
     "source": "Stade Rennais",
     "cross_check": "L'Équipe",
     "hierarchy_status": "confirmed",
@@ -3161,16 +4024,16 @@
       "secondary": "high",
       "tertiary": "low"
     },
-    "condition_note": "The first two positions are unusually well resolved by Lepaul's direct statement. Soumaré is the only new current player with repeated recent regular-time attempts, making him the practical third despite a poor conversion record. Conditions: If Blas leaves, Lepaul becomes primary. Soumaré's third rank should be reassessed if he is not a regular attacker or Rennes signs another proven taker.",
+    "condition_note": "Lepaul explicitly identified Blas as first and himself as second after Blas delegated two penalties. Soumaré is the only current tertiary with repeated 2025/26 attempts. Soumaré converted only one of three attempts and has no Rennes penalty event. Conditions: If Blas leaves, Lepaul becomes primary. Reassess Soumaré if he is not a regular attacker or another proven taker joins.",
     "last_verified": {
-      "date": "2026-07-28",
+      "date": "2026-07-30",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-28",
+    "public_updated_at": "2026-07-30",
     "latest_evidence": {
-      "id": "evt_20260728_rennes_research",
-      "date": "2026-07-28",
+      "id": "evt_20260730_rennes_research",
+      "date": "2026-07-30",
       "type": "multi_source_preseason_research",
       "source_count": 4
     },
@@ -3275,6 +4138,50 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260730_rennes_research",
+        "date": "2026-07-30",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Lepaul explicitly identified Blas as first and himself as second after Blas delegated two penalties. Soumaré is the only current tertiary with repeated 2025/26 attempts.",
+        "sources": [
+          {
+            "label": "Stade Rennais",
+            "url": "https://www.staderennais.com/matchs/2026-04-04-brest-vs-rennes",
+            "date": "2026-04-04",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/Article/Apres-son-double-a-brest-esteban-lepaul-plus-que-jamais-candidat-au-titre-de-meilleur-buteur-de-ligue-1/1665220",
+            "date": "2026-04-05",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Ligue 1",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+            "date": "2026-05-11",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Stade Rennais",
+            "url": "https://www.staderennais.com/en/news/issa-soumare-est-rouge-et-noir",
+            "date": "2026-06-16",
+            "note": "Source reviewed."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-30T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -3302,31 +4209,6 @@
         "article_slug": null
       },
       {
-        "changed_at": "2026-07-27",
-        "season": "2026/27",
-        "change_type": "hierarchy_research_update",
-        "from": {
-          "primary": "Esteban Lepaul",
-          "secondary": "Ludovic Blas",
-          "tertiary": ""
-        },
-        "to": {
-          "primary": "Ludovic Blas",
-          "secondary": "Esteban Lepaul",
-          "tertiary": ""
-        },
-        "reason": "Lepaul directly stated that Blas was first in the hierarchy and gave him both Brest penalties, contradicting the filed order.",
-        "evidence_ids": [
-          "evt_20260727_rennes_research_01",
-          "evt_20260727_rennes_research_02",
-          "evt_20260727_rennes_research_03"
-        ],
-        "detection": "manual_multi_source_research",
-        "approved_by": "Il Margine",
-        "approved_at": "2026-07-27T12:00:00Z",
-        "article_slug": null
-      },
-      {
         "changed_at": "2026-07-28",
         "season": "2026/27",
         "change_type": "hierarchy_research_update",
@@ -3348,6 +4230,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-28T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-30",
+        "season": "2026/27",
+        "change_type": "hierarchy_research_update",
+        "from": {
+          "primary": "Ludovic Blas",
+          "secondary": "Esteban Lepaul",
+          "tertiary": "Issa Soumaré"
+        },
+        "to": {
+          "primary": "Ludovic Blas",
+          "secondary": "Estéban Lepaul",
+          "tertiary": "Issa Soumaré"
+        },
+        "reason": "Lepaul explicitly identified Blas as first and himself as second after Blas delegated two penalties. Soumaré is the only current tertiary with repeated 2025/26 attempts. Soumaré converted only one of three attempts and has no Rennes penalty event. Conditions: If Blas leaves, Lepaul becomes primary. Reassess Soumaré if he is not a regular attacker or another proven taker joins.",
+        "evidence_ids": [
+          "evt_20260730_rennes_research"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-30T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -3362,13 +4267,33 @@
       "tertiary": "",
       "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
     },
-    "player_ids": {}
+    "player_ids": {},
+    "squad_membership": {
+      "primary": {
+        "player": "Ludovic Blas",
+        "status": "confirmed",
+        "source_url": "https://www.lequipe.fr/Football/ligue-1/page-tableau-des-transferts",
+        "checked_at": "2026-07-30"
+      },
+      "secondary": {
+        "player": "Estéban Lepaul",
+        "status": "confirmed",
+        "source_url": "https://www.lequipe.fr/Football/ligue-1/page-tableau-des-transferts",
+        "checked_at": "2026-07-30"
+      },
+      "tertiary": {
+        "player": "Issa Soumaré",
+        "status": "confirmed",
+        "source_url": "https://www.staderennais.com/en/news/issa-soumare-est-rouge-et-noir",
+        "checked_at": "2026-07-30"
+      }
+    }
   },
   "Strasbourg": {
     "primary": "Joaquin Panichelli",
     "secondary": "Julio Enciso",
     "tertiary": "Diego Moreira",
-    "last_updated": "2026-07-28",
+    "last_updated": "2026-07-30",
     "source": "L'Équipe",
     "cross_check": "L'Équipe",
     "hierarchy_status": "conditional",
@@ -3377,18 +4302,18 @@
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Panichelli remains the hierarchy primary even though Enciso is the practical active taker during rehabilitation. Emegha and Barco have left. Moreira is the least-speculative current attacking fallback, but he has no direct penalty evidence and is being courted in the market. Conditions: Until Panichelli is medically available, Enciso is the practical matchday primary. Enciso and Moreira are both subject to reported transfer interest; if either leaves, the hierarchy must be rebuilt around Panichelli and the incoming centre-forward. If Panichelli suffers a delayed return, the first competitive replacement penalty is decisive.",
+    "condition_note": "Panichelli was explicitly the designated taker at 5/6. Enciso took over only after Panichelli was substituted or injured. Moreira is the retained attacking and set-piece fallback. Panichelli remains in ACL rehabilitation, making Enciso practical active primary. Conditions: Until Panichelli is medically available, Enciso is matchday primary. Any completed transfer involving a backup requires immediate reassessment. If rehabilitation is delayed, the first replacement penalty is decisive.",
     "last_verified": {
-      "date": "2026-07-28",
+      "date": "2026-07-30",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-28",
+    "public_updated_at": "2026-07-30",
     "latest_evidence": {
-      "id": "evt_20260728_strasbourg_research",
-      "date": "2026-07-28",
+      "id": "evt_20260730_strasbourg_research",
+      "date": "2026-07-30",
       "type": "multi_source_preseason_research",
-      "source_count": 7
+      "source_count": 4
     },
     "evidence_log": [
       {
@@ -3521,6 +4446,50 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 7 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260730_strasbourg_research",
+        "date": "2026-07-30",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Panichelli was explicitly the designated taker at 5/6. Enciso took over only after Panichelli was substituted or injured. Moreira is the retained attacking and set-piece fallback.",
+        "sources": [
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/Actualites/Strasbourg-ecarte-reims-dans-la-douleur-et-rejoint-les-demi-finales-de-la-coupe-de-france/1656564",
+            "date": "2026-03-03",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/Actualites/Un-penalty-rate-aucun-tir-tente-seulement-trente-ballons-touches-la-triste-soiree-de-julio-enciso-avec-strasbourg/1674059",
+            "date": "2026-05-08",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Le Progrès",
+            "url": "https://www.leprogres.fr/videos/racing-club-de-strasbourg-joaquin-panichelli-sur-le-chemin-du-retour-3vp3q8r",
+            "date": "2026-07-22",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Ligue 1",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+            "date": "2026-05-11",
+            "note": "Source reviewed."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-30T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -3548,32 +4517,6 @@
         "article_slug": null
       },
       {
-        "changed_at": "2026-07-27",
-        "season": "2026/27",
-        "change_type": "hierarchy_research_update",
-        "from": {
-          "primary": "Joaquin Panichelli",
-          "secondary": "Julio Enciso",
-          "tertiary": "Emmanuel Emegha"
-        },
-        "to": {
-          "primary": "Joaquin Panichelli",
-          "secondary": "Julio Enciso",
-          "tertiary": ""
-        },
-        "reason": "Direct evidence establishes Panichelli first and Enciso as his absence replacement. Emegha has joined Chelsea, so the third slot must be vacated.",
-        "evidence_ids": [
-          "evt_20260727_strasbourg_research_01",
-          "evt_20260727_strasbourg_research_02",
-          "evt_20260727_strasbourg_research_03",
-          "evt_20260727_strasbourg_research_04"
-        ],
-        "detection": "manual_multi_source_research",
-        "approved_by": "Il Margine",
-        "approved_at": "2026-07-27T12:00:00Z",
-        "article_slug": null
-      },
-      {
         "changed_at": "2026-07-28",
         "season": "2026/27",
         "change_type": "hierarchy_research_update",
@@ -3595,6 +4538,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-28T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-30",
+        "season": "2026/27",
+        "change_type": "preseason_reverification",
+        "from": {
+          "primary": "Joaquin Panichelli",
+          "secondary": "Julio Enciso",
+          "tertiary": "Diego Moreira"
+        },
+        "to": {
+          "primary": "Joaquin Panichelli",
+          "secondary": "Julio Enciso",
+          "tertiary": "Diego Moreira"
+        },
+        "reason": "Panichelli was explicitly the designated taker at 5/6. Enciso took over only after Panichelli was substituted or injured. Moreira is the retained attacking and set-piece fallback. Panichelli remains in ACL rehabilitation, making Enciso practical active primary. Conditions: Until Panichelli is medically available, Enciso is matchday primary. Any completed transfer involving a backup requires immediate reassessment. If rehabilitation is delayed, the first replacement penalty is decisive.",
+        "evidence_ids": [
+          "evt_20260730_strasbourg_research"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-30T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -3609,33 +4575,53 @@
       "tertiary": "Emmanuel Emegha",
       "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
     },
-    "player_ids": {}
+    "player_ids": {},
+    "squad_membership": {
+      "primary": {
+        "player": "Joaquin Panichelli",
+        "status": "confirmed",
+        "source_url": "https://www.rcstrasbourgalsace.fr/equipe/equipe-premiere/",
+        "checked_at": "2026-07-30"
+      },
+      "secondary": {
+        "player": "Julio Enciso",
+        "status": "confirmed",
+        "source_url": "https://www.rcstrasbourgalsace.fr/equipe/equipe-premiere/",
+        "checked_at": "2026-07-30"
+      },
+      "tertiary": {
+        "player": "Diego Moreira",
+        "status": "confirmed",
+        "source_url": "https://www.rcstrasbourgalsace.fr/equipe/equipe-premiere/",
+        "checked_at": "2026-07-30"
+      }
+    }
   },
   "Toulouse": {
     "primary": "Aron Dønnum",
     "secondary": "Cristian Cásseres Jr.",
     "tertiary": "Yann Gboho",
-    "last_updated": "2026-07-28",
+    "last_updated": "2026-07-30",
     "source": "Toulouse FC",
-    "cross_check": "Ligue 1 Fantasy",
+    "cross_check": "Ligue 1",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "high",
       "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Sidibé and Magri have left. Dønnum is clear. Cásseres ranks second solely because he has a current-team attempt; Gboho is a practical attacking fallback with a mixed historical record. Neither backup is confirmed. Conditions: If Dønnum is absent, the first competitive penalty should be treated as a hierarchy-setting event. A new centre-forward with penalty history should enter above Gboho and may enter above Cásseres.",
+    "condition_note": "Dønnum converted all three 2025/26 penalties. Cásseres is the only retained player with another Toulouse regular-time attempt, although he missed; Gboho is the practical attacking fallback. Neither backup is confirmed, and Gboho's evidence is mostly historical. Conditions: If Dønnum is absent, the first competitive penalty is hierarchy-setting. A new proven centre-forward should enter above Gboho and may enter above Cásseres.",
     "last_verified": {
-      "date": "2026-07-28",
+      "date": "2026-07-30",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-28",
+    "public_updated_at": "2026-07-30",
     "latest_evidence": {
-      "id": "evt_20260728_toulouse_research",
-      "date": "2026-07-28",
+      "id": "evt_20260730_toulouse_research",
+      "date": "2026-07-30",
       "type": "multi_source_preseason_research",
-      "source_count": 7
+      "source_count": 4
     },
     "evidence_log": [
       {
@@ -3768,6 +4754,50 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 7 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260730_toulouse_research",
+        "date": "2026-07-30",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Dønnum converted all three 2025/26 penalties. Cásseres is the only retained player with another Toulouse regular-time attempt, although he missed; Gboho is the practical attacking fallback.",
+        "sources": [
+          {
+            "label": "Toulouse FC",
+            "url": "https://www.toulousefc.com/play/blog/2025/10/le-compte-rendu-de-tefece-stade-rennais-10eme-journee-de-ligue-1-mcdonald-s",
+            "date": "2025-10-29",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Ligue 1",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+            "date": "2026-05-11",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Toulouse FC",
+            "url": "https://www.toulousefc.com/equipes/equipe-professionnelle/effectif",
+            "date": "2026-07-30",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/ligue-1/page-tableau-des-transferts",
+            "date": "2026-07-30",
+            "note": "Source reviewed."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-30T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -3795,33 +4825,6 @@
         "article_slug": null
       },
       {
-        "changed_at": "2026-07-27",
-        "season": "2026/27",
-        "change_type": "hierarchy_research_update",
-        "from": {
-          "primary": "Aron Donnum",
-          "secondary": "Djibril Sidibe",
-          "tertiary": "Frank Magri"
-        },
-        "to": {
-          "primary": "Aron Dønnum",
-          "secondary": "",
-          "tertiary": ""
-        },
-        "reason": "Dønnum remains current and strongly supported, but both filed backups have left. No current event establishes their replacements.",
-        "evidence_ids": [
-          "evt_20260727_toulouse_research_01",
-          "evt_20260727_toulouse_research_02",
-          "evt_20260727_toulouse_research_03",
-          "evt_20260727_toulouse_research_04",
-          "evt_20260727_toulouse_research_05"
-        ],
-        "detection": "manual_multi_source_research",
-        "approved_by": "Il Margine",
-        "approved_at": "2026-07-27T12:00:00Z",
-        "article_slug": null
-      },
-      {
         "changed_at": "2026-07-28",
         "season": "2026/27",
         "change_type": "hierarchy_research_update",
@@ -3843,6 +4846,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-28T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-30",
+        "season": "2026/27",
+        "change_type": "preseason_reverification",
+        "from": {
+          "primary": "Aron Dønnum",
+          "secondary": "Cristian Cásseres Jr.",
+          "tertiary": "Yann Gboho"
+        },
+        "to": {
+          "primary": "Aron Dønnum",
+          "secondary": "Cristian Cásseres Jr.",
+          "tertiary": "Yann Gboho"
+        },
+        "reason": "Dønnum converted all three 2025/26 penalties. Cásseres is the only retained player with another Toulouse regular-time attempt, although he missed; Gboho is the practical attacking fallback. Neither backup is confirmed, and Gboho's evidence is mostly historical. Conditions: If Dønnum is absent, the first competitive penalty is hierarchy-setting. A new proven centre-forward should enter above Gboho and may enter above Cásseres.",
+        "evidence_ids": [
+          "evt_20260730_toulouse_research"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-30T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -3857,31 +4883,51 @@
       "tertiary": "Frank Magri",
       "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
     },
-    "player_ids": {}
+    "player_ids": {},
+    "squad_membership": {
+      "primary": {
+        "player": "Aron Dønnum",
+        "status": "confirmed",
+        "source_url": "https://www.toulousefc.com/equipes/equipe-professionnelle/effectif",
+        "checked_at": "2026-07-30"
+      },
+      "secondary": {
+        "player": "Cristian Cásseres Jr.",
+        "status": "confirmed",
+        "source_url": "https://www.toulousefc.com/equipes/equipe-professionnelle/effectif",
+        "checked_at": "2026-07-30"
+      },
+      "tertiary": {
+        "player": "Yann Gboho",
+        "status": "confirmed",
+        "source_url": "https://www.toulousefc.com/equipes/equipe-professionnelle/effectif",
+        "checked_at": "2026-07-30"
+      }
+    }
   },
   "Troyes": {
     "primary": "Renaud Ripart",
     "secondary": "Antoine Mille",
     "tertiary": "Mouhamed Diop",
-    "last_updated": "2026-07-28",
+    "last_updated": "2026-07-30",
     "hierarchy_status": "conditional",
     "confidence": {
       "primary": "medium",
       "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Bentayeb's loan ended after he took all four promotion-season penalties. Ripart's exceptional career record makes him the clear practical replacement among retained players. Mille and Diop are selected for current role and minutes, not demonstrated penalty precedence. Conditions: Troyes resumed with a reduced squad and are expected to add attackers; any proven penalty-taking forward could enter the top two. If Ripart is not a regular starter, the hierarchy remains unresolved until the first competitive event.",
+    "condition_note": "Ripart's 13/14 career record makes him the strongest current replacement for the promotion-season role. Mille and Diop rank from current minutes and attacking responsibility, not direct penalty evidence. Troyes are still completing the promoted squad and neither backup has a recent attempt. Conditions: Any incoming proven penalty-taking forward could enter the top two. If Ripart is not a regular starter, wait for the first competitive event.",
     "last_verified": {
-      "date": "2026-07-28",
+      "date": "2026-07-30",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-28",
+    "public_updated_at": "2026-07-30",
     "latest_evidence": {
-      "id": "evt_20260728_troyes_research",
-      "date": "2026-07-28",
+      "id": "evt_20260730_troyes_research",
+      "date": "2026-07-30",
       "type": "multi_source_preseason_research",
-      "source_count": 8
+      "source_count": 4
     },
     "evidence_log": [
       {
@@ -3995,34 +5041,53 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 8 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260730_troyes_research",
+        "date": "2026-07-30",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Ripart's 13/14 career record makes him the strongest current replacement for the promotion-season role. Mille and Diop rank from current minutes and attacking responsibility, not direct penalty evidence.",
+        "sources": [
+          {
+            "label": "ESTAC Troyes",
+            "url": "https://www.estac.fr/renaud-ripart-poursuit-laventure-en-bleu-blanc/",
+            "date": "2026-07-09",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "Transfermarkt",
+            "url": "https://www.transfermarkt.com/renaud-ripart/elfmetertore/spieler/234802",
+            "date": "2026-07-28",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "ESTAC Troyes",
+            "url": "https://www.estac.fr/lestac-version-2025-2026-une-saison-xxl-en-chiffres/",
+            "date": "2026-05-19",
+            "note": "Source reviewed."
+          },
+          {
+            "label": "ESTAC Troyes",
+            "url": "https://www.estac.fr/equipe-premiere/effectif/",
+            "date": "2026-07-30",
+            "note": "Source reviewed."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-07-30T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
-      {
-        "changed_at": "2026-07-27",
-        "season": "2026/27",
-        "change_type": "preseason_reverification",
-        "from": {
-          "primary": "",
-          "secondary": "",
-          "tertiary": ""
-        },
-        "to": {
-          "primary": "",
-          "secondary": "",
-          "tertiary": ""
-        },
-        "reason": "The only strongly evidenced 2025/26 taker, Tawfik Bentayeb, has returned from loan. No current regular-time event or direct statement identifies his replacement.",
-        "evidence_ids": [
-          "evt_20260727_troyes_research_01",
-          "evt_20260727_troyes_research_02",
-          "evt_20260727_troyes_research_03"
-        ],
-        "detection": "manual_multi_source_research",
-        "approved_by": "Il Margine",
-        "approved_at": "2026-07-27T12:00:00Z",
-        "article_slug": null
-      },
       {
         "changed_at": "2026-07-28",
         "season": "2026/27",
@@ -4045,6 +5110,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-28T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-07-30",
+        "season": "2026/27",
+        "change_type": "preseason_reverification",
+        "from": {
+          "primary": "Renaud Ripart",
+          "secondary": "Antoine Mille",
+          "tertiary": "Mouhamed Diop"
+        },
+        "to": {
+          "primary": "Renaud Ripart",
+          "secondary": "Antoine Mille",
+          "tertiary": "Mouhamed Diop"
+        },
+        "reason": "Ripart's 13/14 career record makes him the strongest current replacement for the promotion-season role. Mille and Diop rank from current minutes and attacking responsibility, not direct penalty evidence. Troyes are still completing the promoted squad and neither backup has a recent attempt. Conditions: Any incoming proven penalty-taking forward could enter the top two. If Ripart is not a regular starter, wait for the first competitive event.",
+        "evidence_ids": [
+          "evt_20260730_troyes_research"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-07-30T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -4055,6 +5143,26 @@
     "prior_season": null,
     "player_ids": {},
     "source": "ESTAC Troyes",
-    "cross_check": "Ligue 1"
+    "cross_check": "Transfermarkt",
+    "squad_membership": {
+      "primary": {
+        "player": "Renaud Ripart",
+        "status": "confirmed",
+        "source_url": "https://www.estac.fr/equipe-premiere/effectif/",
+        "checked_at": "2026-07-30"
+      },
+      "secondary": {
+        "player": "Antoine Mille",
+        "status": "confirmed",
+        "source_url": "https://www.estac.fr/equipe-premiere/effectif/",
+        "checked_at": "2026-07-30"
+      },
+      "tertiary": {
+        "player": "Mouhamed Diop",
+        "status": "confirmed",
+        "source_url": "https://www.estac.fr/equipe-premiere/effectif/",
+        "checked_at": "2026-07-30"
+      }
+    }
   }
 }

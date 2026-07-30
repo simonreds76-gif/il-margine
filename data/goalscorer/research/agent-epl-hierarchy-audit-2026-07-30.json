@@ -1,0 +1,408 @@
+{
+  "_meta": {
+    "schema_version": 2,
+    "audit_type": "current_squad_first_penalty_hierarchy_audit",
+    "league": "epl",
+    "season": "2026/27",
+    "as_of": "2026-07-30",
+    "methodology": [
+      "Verify every candidate against an official club or league current-squad, retained-list, contract or confirmed-transfer source before evaluating penalty evidence.",
+      "Reject rumours and exclude officially departed players at the audit cutoff.",
+      "Prioritise 2026 preseason and 2025/26 competitive in-match penalties, especially same-pitch ordering and absence substitutions.",
+      "Use official reports and statements first, then set-piece specialists and credible local reporting; use historical career logs only as fallback.",
+      "Keep shootout evidence separate from regular-time assignments and label shootout-only uncertainty explicitly.",
+      "Assign confidence per position and provisional or conditional status when the complete order has not been directly observed."
+    ]
+  },
+  "clubs": [
+    {
+      "club": "Arsenal",
+      "recommended_order": {"primary":"Bukayo Saka","secondary":"Viktor Gyokeres","tertiary":"Martin Odegaard"},
+      "status": {"classification":"disputed","note":"The top two are situational rather than conclusively ordered."},
+      "per_position_confidence": {"primary":"medium","secondary":"medium","tertiary":"medium"},
+      "rationale": "Saka converted with Gyokeres available in October 2025; Gyokeres then converted with Saka playing in December. Saka remains the best primary projection, Gyokeres is a live co-primary, and Odegaard is the practical third option.",
+      "uncertainty_note": "No 2026 preseason penalty resolved the Saka-Gyokeres conflict.",
+      "transfer_conditions": [],
+      "sources": [
+        {"date":"2026-07-30","type":"official_squad","source":"Arsenal","title":"Men first-team players","url":"https://www.arsenal.com/men/players","summary":"Confirms Saka, Gyokeres and Odegaard remain current Arsenal players."},
+        {"date":"2025-10-04","type":"league_match_report","source":"Premier League","title":"Saka and Rice on target as Arsenal go top","url":"https://www.premierleague.com/en/news/4430596/saka-and-rice-on-target-as-arsenal-go-top","summary":"Saka converted while Gyokeres was involved in the match."},
+        {"date":"2025-12-20","type":"league_match_report","source":"Premier League","title":"Everton 0-1 Arsenal","url":"https://www.premierleague.com/en/news/4513421/everton-0-1-arsenal-match-report-20-december-2025","summary":"Gyokeres converted the winning penalty while Saka played."}
+      ],
+      "squad_membership": {
+        "primary":{"player":"Bukayo Saka","status":"confirmed","source_url":"https://www.arsenal.com/men/players","checked_at":"2026-07-30"},
+        "secondary":{"player":"Viktor Gyokeres","status":"confirmed","source_url":"https://www.arsenal.com/men/players","checked_at":"2026-07-30"},
+        "tertiary":{"player":"Martin Odegaard","status":"confirmed","source_url":"https://www.arsenal.com/men/players","checked_at":"2026-07-30"}
+      }
+    },
+    {
+      "club": "Aston Villa",
+      "recommended_order": {"primary":"Emiliano Buendia","secondary":"Ollie Watkins","tertiary":"Tammy Abraham"},
+      "status": {"classification":"probable","note":"Primary is directly evidenced; tertiary is a career-history fallback."},
+      "per_position_confidence": {"primary":"high","secondary":"medium","tertiary":"low"},
+      "rationale": "Buendia took the May 2026 competitive penalty with Watkins starting. Watkins remains the specialist deputy. Abraham is current and experienced but has not been tested in this Villa hierarchy.",
+      "uncertainty_note": "Abraham has no current same-pitch Villa assignment evidence.",
+      "transfer_conditions": [],
+      "sources": [
+        {"date":"2026-07-30","type":"league_squad","source":"Premier League","title":"Aston Villa 2026/27 squad","url":"https://www.premierleague.com/en/clubs/7/aston-villa/squad","summary":"Confirms all three candidates in the current squad."},
+        {"date":"2026-05-07","type":"official_match_report","source":"Aston Villa","title":"Aston Villa v Nottingham Forest report","url":"https://www.avfc.co.uk/news/2026/may/07/report-aston-villa-nottingham-forest/","summary":"Buendia converted with Watkins in the starting team."},
+        {"date":"2026-01-27","type":"official_transfer","source":"Aston Villa","title":"Tammy Abraham returns to Aston Villa","url":"https://www.avfc.co.uk/news/2026/january/27/signing-abraham-out-to-create-more-villa-memories/","summary":"Confirms Abraham joined the current Villa squad."}
+      ],
+      "squad_membership": {
+        "primary":{"player":"Emiliano Buendia","status":"confirmed","source_url":"https://www.premierleague.com/en/clubs/7/aston-villa/squad","checked_at":"2026-07-30"},
+        "secondary":{"player":"Ollie Watkins","status":"confirmed","source_url":"https://www.premierleague.com/en/clubs/7/aston-villa/squad","checked_at":"2026-07-30"},
+        "tertiary":{"player":"Tammy Abraham","status":"confirmed","source_url":"https://www.avfc.co.uk/news/2026/january/27/signing-abraham-out-to-create-more-villa-memories/","checked_at":"2026-07-30"}
+      }
+    },
+    {
+      "club": "Bournemouth",
+      "recommended_order": {"primary":"Justin Kluivert","secondary":"Eli Junior Kroupi","tertiary":"Marcus Tavernier"},
+      "status": {"classification":"disputed","note":"Current order combines incumbent status with later 2025/26 events."},
+      "per_position_confidence": {"primary":"medium","secondary":"medium","tertiary":"medium"},
+      "rationale": "Kluivert retains the incumbent edge. Tavernier took in January with Kroupi starting, but Kroupi took the later May penalty with Tavernier playing, supporting Kroupi above Tavernier.",
+      "uncertainty_note": "Kluivert lacked a recent same-pitch test and Kroupi was reported injured for three to four months on 29 July.",
+      "transfer_conditions": [],
+      "sources": [
+        {"date":"2026-07-30","type":"league_squad","source":"Premier League","title":"Bournemouth 2026/27 squad","url":"https://www.premierleague.com/en/clubs/91/bournemouth/squad","summary":"Confirms Kluivert, Kroupi and Tavernier as current squad members."},
+        {"date":"2026-01-19","type":"official_match_report","source":"AFC Bournemouth","title":"Brighton 1-1 Bournemouth","url":"https://www.afcb.co.uk/news/2026/january/19/bournemouth-held-to-1-1-draw-at-brighton-as-tavernier-penalty-cancelled-out-late/","summary":"Tavernier converted while Kroupi started."},
+        {"date":"2026-05-03","type":"official_match_report","source":"AFC Bournemouth","title":"Bournemouth v Crystal Palace report","url":"https://www.afcb.co.uk/news/2026/may/03/cherries-shine-in-strong-showing-against-crystal-palace/","summary":"Kroupi converted with Tavernier playing."},
+        {"date":"2026-07-29","type":"credible_report","source":"Cadena SER","title":"Kroupi injury report","url":"https://cadenaser.com/nacional/2026/07/29/eli-junior-kroupi-alternativa-del-barca-para-reforzar-el-ataque-lesionado-para-los-proximos-tres-o-cuatro-meses-cadena-ser/","summary":"Reports an expected absence of three to four months; this affects availability, not squad status."}
+      ],
+      "squad_membership": {
+        "primary":{"player":"Justin Kluivert","status":"confirmed","source_url":"https://www.premierleague.com/en/clubs/91/bournemouth/squad","checked_at":"2026-07-30"},
+        "secondary":{"player":"Eli Junior Kroupi","status":"confirmed","source_url":"https://www.premierleague.com/en/clubs/91/bournemouth/squad","checked_at":"2026-07-30"},
+        "tertiary":{"player":"Marcus Tavernier","status":"confirmed","source_url":"https://www.premierleague.com/en/clubs/91/bournemouth/squad","checked_at":"2026-07-30"}
+      }
+    },
+    {
+      "club": "Brentford",
+      "recommended_order": {"primary":"Igor Thiago","secondary":"Kevin Schade","tertiary":"Fabio Carvalho"},
+      "status": {"classification":"probable","note":"Thiago is established; the lower order remains projected."},
+      "per_position_confidence": {"primary":"high","secondary":"medium","tertiary":"low"},
+      "rationale": "Thiago has repeated 2025/26 in-match evidence and converted with Schade playing. Schade is the best current deputy projection. Carvalho is a current-squad career fallback without a demonstrated Brentford assignment.",
+      "uncertainty_note": "No competitive event directly ordered Schade and Carvalho.",
+      "transfer_conditions": [],
+      "sources": [
+        {"date":"2026-07-30","type":"official_squad","source":"Brentford","title":"Brentford 2026/27 FPL prices","url":"https://www.brentfordfc.com/en/news/article/fpl-brentford-fantasy-premier-league-prices-2026-27-igor-thiago","summary":"Official current-season list includes Thiago, Schade and Carvalho."},
+        {"date":"2026-04-11","type":"official_match_report","source":"Brentford","title":"Brentford 2-2 Everton","url":"https://www.brentfordfc.com/en/news/article/match-reports-brentford-2-everton-2-premier-league-igor-thiago-11-04-2026","summary":"Thiago converted with Schade involved."},
+        {"date":"2026-02-21","type":"official_match_preview","source":"Brentford","title":"Brentford v Brighton preview","url":"https://www.brentfordfc.com/en/news/article/match-previews-brentford-v-brighton-and-hove-albion-premier-league-21-02-2026","summary":"Records Thiago having scored six penalties and missed one."}
+      ],
+      "squad_membership": {
+        "primary":{"player":"Igor Thiago","status":"confirmed","source_url":"https://www.brentfordfc.com/en/news/article/fpl-brentford-fantasy-premier-league-prices-2026-27-igor-thiago","checked_at":"2026-07-30"},
+        "secondary":{"player":"Kevin Schade","status":"confirmed","source_url":"https://www.brentfordfc.com/en/news/article/fpl-brentford-fantasy-premier-league-prices-2026-27-igor-thiago","checked_at":"2026-07-30"},
+        "tertiary":{"player":"Fabio Carvalho","status":"confirmed","source_url":"https://www.brentfordfc.com/en/news/article/fpl-brentford-fantasy-premier-league-prices-2026-27-igor-thiago","checked_at":"2026-07-30"}
+      }
+    },
+    {
+      "club": "Brighton",
+      "recommended_order": {"primary":"Danny Welbeck","secondary":"Matt O'Riley","tertiary":"Pascal Gross"},
+      "status": {"classification":"probable","note":"The first two are supported by club evidence; Gross is an untested returning fallback."},
+      "per_position_confidence": {"primary":"high","secondary":"high","tertiary":"low"},
+      "rationale": "Welbeck took with O'Riley playing, after O'Riley described the role as shared and named Welbeck. Gross has strong historical ability but no post-return assignment.",
+      "uncertainty_note": "The return of Gross could alter the lower order, but no current event demonstrates that.",
+      "transfer_conditions": [],
+      "sources": [
+        {"date":"2026-07-30","type":"league_squad","source":"Premier League","title":"Brighton 2026/27 squad","url":"https://www.premierleague.com/en/clubs/36/brighton-and-hove-albion/squad","summary":"Confirms all three candidates in the current squad."},
+        {"date":"2025-08-24","type":"official_match_report","source":"Brighton and Hove Albion","title":"Everton v Brighton report","url":"https://www.brightonandhovealbion.com/media-article/pl-evebha-everton-match-report","summary":"Welbeck took the penalty with O'Riley playing."},
+        {"date":"2025-08-18","type":"official_statement","source":"Brighton and Hove Albion","title":"Matt O'Riley interview","url":"https://www.brightonandhovealbion.com/media-article/mft-interviews-matt-o-riley-bha-fulham-august-2025","summary":"O'Riley described a shared assignment and identified Welbeck."},
+        {"date":"2026-01-02","type":"official_transfer","source":"Brighton and Hove Albion","title":"Pascal Gross returns","url":"https://www.brightonandhovealbion.com/media-article/mft-transfer-news-pascal-gross-borussia-dortmund-january-2026","summary":"Confirms Gross returned to the club."}
+      ],
+      "squad_membership": {
+        "primary":{"player":"Danny Welbeck","status":"confirmed","source_url":"https://www.premierleague.com/en/clubs/36/brighton-and-hove-albion/squad","checked_at":"2026-07-30"},
+        "secondary":{"player":"Matt O'Riley","status":"confirmed","source_url":"https://www.premierleague.com/en/clubs/36/brighton-and-hove-albion/squad","checked_at":"2026-07-30"},
+        "tertiary":{"player":"Pascal Gross","status":"confirmed","source_url":"https://www.premierleague.com/en/clubs/36/brighton-and-hove-albion/squad","checked_at":"2026-07-30"}
+      }
+    },    {
+      "club": "Chelsea",
+      "recommended_order": {"primary":"Cole Palmer","secondary":"Enzo Fernandez","tertiary":"Estevao"},
+      "status": {"classification":"confirmed","note":"All three positions have current competitive support."},
+      "per_position_confidence": {"primary":"high","secondary":"high","tertiary":"medium"},
+      "rationale": "Palmer remains the clear primary. Enzo has taken when Palmer did not, and Enzo and Estevao both converted against Ajax in an order consistent with Enzo second and Estevao third.",
+      "uncertainty_note": "Estevao has less evidence volume than the first two, but the observed ordering is usable.",
+      "transfer_conditions": [],
+      "sources": [
+        {"date":"2026-07-30","type":"official_squad","source":"Chelsea","title":"Chelsea 2026/27 FPL prices","url":"https://www.chelseafc.com/en/news/article/fpl-2026-27-chelsea-player-prices-revealed","summary":"Official current-season list includes Palmer, Enzo and Estevao."},
+        {"date":"2026-01-17","type":"official_match_report","source":"Chelsea","title":"Chelsea 2-0 Brentford","url":"https://www.chelseafc.com/en/news/article/match-report-chelsea-2-0-brentford","summary":"Palmer converted the penalty."},
+        {"date":"2025-10-22","type":"official_match_report","source":"Chelsea","title":"Chelsea 5-1 Ajax","url":"https://www.chelseafc.com/en/news/article/match-report-chelsea-5-1-ajax","summary":"Enzo and Estevao both converted in-match penalties."}
+      ],
+      "squad_membership": {
+        "primary":{"player":"Cole Palmer","status":"confirmed","source_url":"https://www.chelseafc.com/en/news/article/fpl-2026-27-chelsea-player-prices-revealed","checked_at":"2026-07-30"},
+        "secondary":{"player":"Enzo Fernandez","status":"confirmed","source_url":"https://www.chelseafc.com/en/news/article/fpl-2026-27-chelsea-player-prices-revealed","checked_at":"2026-07-30"},
+        "tertiary":{"player":"Estevao","status":"confirmed","source_url":"https://www.chelseafc.com/en/news/article/fpl-2026-27-chelsea-player-prices-revealed","checked_at":"2026-07-30"}
+      }
+    },
+    {
+      "club": "Coventry City",
+      "recommended_order": {"primary":"Haji Wright","secondary":"Victor Torp","tertiary":"Brandon Thomas-Asante"},
+      "status": {"classification":"confirmed","note":"The current squad and promotion-season competitive record support this order."},
+      "per_position_confidence": {"primary":"high","secondary":"medium","tertiary":"medium"},
+      "rationale": "Wright remained the leading in-match taker. Torp and Thomas-Asante are the next current specialists based on the competitive club log.",
+      "uncertainty_note": "The lower two have fewer decisive same-pitch tests than Wright.",
+      "transfer_conditions": [],
+      "sources": [
+        {"date":"2026-07-30","type":"league_squad","source":"Premier League","title":"Coventry City 2026/27 squad","url":"https://www.premierleague.com/en/clubs/9/coventry-city/squad","summary":"Confirms all three candidates in the current squad."},
+        {"date":"2026-02-16","type":"match_report","source":"BBC Sport","title":"Coventry City live report","url":"https://www.bbc.co.uk/sport/football/live/cze03ypy54et","summary":"Records Wright as an in-match penalty taker."},
+        {"date":"2026-07-30","type":"career_log","source":"Transfermarkt","title":"Coventry City penalty takers","url":"https://www.transfermarkt.co.uk/coventry-city/elfmeterschuetzen/verein/990","summary":"Cross-checks the club penalty history for Wright, Torp and Thomas-Asante."}
+      ],
+      "squad_membership": {
+        "primary":{"player":"Haji Wright","status":"confirmed","source_url":"https://www.premierleague.com/en/clubs/9/coventry-city/squad","checked_at":"2026-07-30"},
+        "secondary":{"player":"Victor Torp","status":"confirmed","source_url":"https://www.premierleague.com/en/clubs/9/coventry-city/squad","checked_at":"2026-07-30"},
+        "tertiary":{"player":"Brandon Thomas-Asante","status":"confirmed","source_url":"https://www.premierleague.com/en/clubs/9/coventry-city/squad","checked_at":"2026-07-30"}
+      }
+    },
+    {
+      "club": "Crystal Palace",
+      "recommended_order": {"primary":"Jean-Philippe Mateta","secondary":"Ismaila Sarr","tertiary":"Justin Devenny"},
+      "status": {"classification":"probable","note":"The first two are directly ordered; tertiary evidence is shootout-only."},
+      "per_position_confidence": {"primary":"high","secondary":"high","tertiary":"low"},
+      "rationale": "Mateta took with Sarr playing. Sarr took when Mateta was benched, establishing him as deputy. Devenny is the best current third candidate but has only shootout and set-piece specialist support.",
+      "uncertainty_note": "Devenny has no confirmed regular-time Palace assignment; his evidence is shootout-only.",
+      "transfer_conditions": [],
+      "sources": [
+        {"date":"2026-07-30","type":"official_squad","source":"Crystal Palace","title":"Crystal Palace first team","url":"https://www.cpfc.co.uk/teams/first-team/","summary":"Confirms Mateta, Sarr and Devenny as current first-team players."},
+        {"date":"2025-10-18","type":"official_match_report","source":"Crystal Palace","title":"Crystal Palace v Bournemouth report","url":"https://www.cpfc.co.uk/news/first-team/match-report-highlights-live-blog-crystal-palace-bournemouth-october-2025/","summary":"Mateta took with Sarr playing."},
+        {"date":"2026-05-17","type":"official_match_report","source":"Crystal Palace","title":"Brentford v Crystal Palace","url":"https://www.cpfc.co.uk/matches/men/epl/2025-26/brentford-vs-crystal-palace-2026-05-17/2562258/","summary":"Sarr took while Mateta started on the bench."},
+        {"date":"2026-07-30","type":"set_piece_specialist","source":"Fantasy Football Scout","title":"Premier League set-piece takers","url":"https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers","summary":"Lists the Palace candidates; Devenny support is not regular-time evidence."}
+      ],
+      "squad_membership": {
+        "primary":{"player":"Jean-Philippe Mateta","status":"confirmed","source_url":"https://www.cpfc.co.uk/teams/first-team/","checked_at":"2026-07-30"},
+        "secondary":{"player":"Ismaila Sarr","status":"confirmed","source_url":"https://www.cpfc.co.uk/teams/first-team/","checked_at":"2026-07-30"},
+        "tertiary":{"player":"Justin Devenny","status":"confirmed","source_url":"https://www.cpfc.co.uk/teams/first-team/","checked_at":"2026-07-30"}
+      }
+    },
+    {
+      "club": "Everton",
+      "recommended_order": {"primary":"Iliman Ndiaye","secondary":"James Garner","tertiary":"Beto"},
+      "status": {"classification":"conditional","note":"Top two are supported; tertiary and transfer-window stability remain uncertain."},
+      "per_position_confidence": {"primary":"high","secondary":"high","tertiary":"low"},
+      "rationale": "Ndiaye is the primary. Garner took during Ndiaye absence and is the demonstrated deputy. Beto is a current-squad fallback without a decisive assignment.",
+      "uncertainty_note": "Ndiaye was linked with a move, but no official transfer existed by the cutoff.",
+      "transfer_conditions": ["Re-audit immediately if Everton officially transfers Iliman Ndiaye before the deadline."],
+      "sources": [
+        {"date":"2026-07-30","type":"official_squad","source":"Everton","title":"Everton men team","url":"https://www.evertonfc.com/teams/men","summary":"Current official team material confirms Ndiaye, Garner and Beto remain Everton players."},
+        {"date":"2026-02-09","type":"league_match_report","source":"Premier League","title":"Everton match report","url":"https://www.premierleague.com/en/news/4586593/match-report","summary":"Records Ndiaye current penalty evidence."},
+        {"date":"2026-01-13","type":"set_piece_specialist","source":"Fantasy Football Scout","title":"FPL notes: penalty takers","url":"https://www.fantasyfootballscout.co.uk/2026/01/13/fpl-notes-kluivert-latest-pen-takers-kroupi-starts-again","summary":"Documents Garner taking during Ndiaye AFCON absence."}
+      ],
+      "squad_membership": {
+        "primary":{"player":"Iliman Ndiaye","status":"confirmed","source_url":"https://www.evertonfc.com/teams/men","checked_at":"2026-07-30"},
+        "secondary":{"player":"James Garner","status":"confirmed","source_url":"https://www.evertonfc.com/teams/men","checked_at":"2026-07-30"},
+        "tertiary":{"player":"Beto","status":"confirmed","source_url":"https://www.evertonfc.com/teams/men","checked_at":"2026-07-30"}
+      }
+    },
+    {
+      "club": "Fulham",
+      "recommended_order": {"primary":"Antonee Robinson","secondary":"Sasa Lukic","tertiary":"Rodrigo Muniz"},
+      "status": {"classification":"provisional","note":"A new head coach makes the prior assignment vulnerable to reset."},
+      "per_position_confidence": {"primary":"medium","secondary":"low","tertiary":"low"},
+      "rationale": "Robinson converted with Lukic and Muniz starting, and the former head coach confirmed he was selected. Lukic and Muniz remain weak fallback projections.",
+      "uncertainty_note": "The Robinson event occurred under Marco Silva before Alvaro Arbeloa became head coach.",
+      "transfer_conditions": [],
+      "sources": [
+        {"date":"2026-07-23","type":"official_squad","source":"Fulham","title":"Fulham 2026/27 FPL prices","url":"https://www.fulhamfc.com/news/2026/july/23/fpl-prices-revealed/","summary":"Confirms Robinson, Lukic and Muniz in the current squad."},
+        {"date":"2026-05-17","type":"official_match_report","source":"Fulham","title":"Wolves 1-1 Fulham","url":"https://www.fulhamfc.com/news/2026/may/17/wolves-1-1-fulham/","summary":"Robinson converted with Lukic and Muniz starting."},
+        {"date":"2026-05-17","type":"official_statement","source":"Fulham","title":"Post-Wolves press conference","url":"https://www.fulhamfc.com/news/2026/may/17/post-wolves-presser/","summary":"Marco Silva confirmed Robinson had been selected."},
+        {"date":"2026-07-07","type":"official_appointment","source":"Fulham","title":"Alvaro Arbeloa appointed head coach","url":"https://www.fulhamfc.com/news/2026/july/07/alvaro-arbeloa-appointed-fulham-head-coach/","summary":"Confirms the coaching change that may reset set-piece assignments."}
+      ],
+      "squad_membership": {
+        "primary":{"player":"Antonee Robinson","status":"confirmed","source_url":"https://www.fulhamfc.com/news/2026/july/23/fpl-prices-revealed/","checked_at":"2026-07-30"},
+        "secondary":{"player":"Sasa Lukic","status":"confirmed","source_url":"https://www.fulhamfc.com/news/2026/july/23/fpl-prices-revealed/","checked_at":"2026-07-30"},
+        "tertiary":{"player":"Rodrigo Muniz","status":"confirmed","source_url":"https://www.fulhamfc.com/news/2026/july/23/fpl-prices-revealed/","checked_at":"2026-07-30"}
+      }
+    },    {
+      "club": "Hull City",
+      "recommended_order": {"primary":"Oli McBurnie","secondary":"David Akintola","tertiary":"Lewie Coyle"},
+      "status": {"classification":"provisional","note":"Only McBurnie has persuasive regular-time evidence; lower positions are shootout-only."},
+      "per_position_confidence": {"primary":"high","secondary":"low","tertiary":"low"},
+      "rationale": "McBurnie is the regular-time primary. Akintola and Coyle are forced lower-order selections from the January shootout; Akintola converted and Coyle missed.",
+      "uncertainty_note": "Shootout order and single-kick outcomes do not establish a regular-time hierarchy.",
+      "transfer_conditions": [],
+      "sources": [
+        {"date":"2026-05-03","type":"official_report","source":"Hull City","title":"Coyle: Dare to dream","url":"https://www.wearehullcity.co.uk/news/2026/may/03/coyle-dare-to-dream/","summary":"References McBurnie regular-time penalty evidence during the promotion run."},
+        {"date":"2026-01-11","type":"official_shootout_report","source":"Hull City","title":"Hull City v Blackburn Rovers","url":"https://www.wearehullcity.co.uk/news/2026/january/11/hull-city-vs-blackburn-rovers/","summary":"Coyle missed, McBurnie scored and Akintola converted the fifth shootout kick."},
+        {"date":"2026-02-11","type":"official_contract","source":"Hull City","title":"Coyle signs long-term contract","url":"https://www.wearehullcity.co.uk/news/2026/february/11/coyle-signs-long-term-contract-at-hull-city/","summary":"Confirms Coyle remains under contract."},
+        {"date":"2025-08-15","type":"official_transfer","source":"Hull City","title":"Hull City complete Akintola signing","url":"https://www.wearehullcity.co.uk/news/2025/august/15/hull-city-complete-akintola-signing/","summary":"Confirms Akintola joined Hull City."}
+      ],
+      "squad_membership": {
+        "primary":{"player":"Oli McBurnie","status":"confirmed","source_url":"https://www.wearehullcity.co.uk/news/2026/may/03/coyle-dare-to-dream/","checked_at":"2026-07-30"},
+        "secondary":{"player":"David Akintola","status":"confirmed","source_url":"https://www.wearehullcity.co.uk/news/2025/august/15/hull-city-complete-akintola-signing/","checked_at":"2026-07-30"},
+        "tertiary":{"player":"Lewie Coyle","status":"confirmed","source_url":"https://www.wearehullcity.co.uk/news/2026/february/11/coyle-signs-long-term-contract-at-hull-city/","checked_at":"2026-07-30"}
+      }
+    },
+    {
+      "club": "Ipswich Town",
+      "recommended_order": {"primary":"Jack Clarke","secondary":"Jaden Philogene","tertiary":"George Hirst"},
+      "status": {"classification":"confirmed","note":"Current retained-list and manager evidence support all three positions."},
+      "per_position_confidence": {"primary":"high","secondary":"high","tertiary":"medium"},
+      "rationale": "Clarke has the strongest recent assignment. McKenna explicitly discussed Clarke, Philogene and Hirst as the relevant penalty options, supporting the recommended order.",
+      "uncertainty_note": "Hirst has less recent direct evidence than Clarke and Philogene.",
+      "transfer_conditions": [],
+      "sources": [
+        {"date":"2026-06-15","type":"official_squad","source":"Ipswich Town","title":"Ipswich Town retained list","url":"https://www.itfc.co.uk/news/2026/june/15/retained-list-confirmed/","summary":"Confirms Clarke, Philogene and Hirst were retained for 2026/27."},
+        {"date":"2026-01-24","type":"official_match_record","source":"Ipswich Town","title":"Ipswich Town match record","url":"https://www.itfc.co.uk/match/men/2025-26/g2566711","summary":"Records Clarke current competitive penalty evidence."},
+        {"date":"2026-01-25","type":"local_report","source":"East Anglian Daily Times via Yahoo Sport","title":"Why Philogene took Town penalty","url":"https://uk.sports.yahoo.com/news/why-philogene-took-towns-deadlock-144401420.html","summary":"Reports McKenna discussing Clarke, Philogene and Hirst as options."}
+      ],
+      "squad_membership": {
+        "primary":{"player":"Jack Clarke","status":"confirmed","source_url":"https://www.itfc.co.uk/news/2026/june/15/retained-list-confirmed/","checked_at":"2026-07-30"},
+        "secondary":{"player":"Jaden Philogene","status":"confirmed","source_url":"https://www.itfc.co.uk/news/2026/june/15/retained-list-confirmed/","checked_at":"2026-07-30"},
+        "tertiary":{"player":"George Hirst","status":"confirmed","source_url":"https://www.itfc.co.uk/news/2026/june/15/retained-list-confirmed/","checked_at":"2026-07-30"}
+      }
+    },
+    {
+      "club": "Leeds",
+      "recommended_order": {"primary":"Dominic Calvert-Lewin","secondary":"Lukas Nmecha","tertiary":"Joel Piroe"},
+      "status": {"classification":"confirmed","note":"The current squad and same-pitch competitive evidence support the order."},
+      "per_position_confidence": {"primary":"high","secondary":"high","tertiary":"medium"},
+      "rationale": "Calvert-Lewin converted with Nmecha on the pitch and has repeated recent assignments. Nmecha is the next current specialist, with Piroe the proven fallback.",
+      "uncertainty_note": "Piroe has not recently challenged the first two in a decisive same-pitch event.",
+      "transfer_conditions": [],
+      "sources": [
+        {"date":"2026-07-21","type":"official_squad","source":"Leeds United","title":"USA preseason travelling squad","url":"https://www.leedsunited.com/en/news/travelling-squad-named-for-usa-pre-season-tour","summary":"Confirms Calvert-Lewin, Nmecha and Piroe in the current preseason squad."},
+        {"date":"2026-05-11","type":"official_match_report","source":"Leeds United","title":"Tottenham Hotspur 1-1 Leeds United","url":"https://www.leedsunited.com/en/news/report-tottenham-hotspur-1-1-leeds-united","summary":"Calvert-Lewin converted with Nmecha on the pitch."},
+        {"date":"2026-01-07","type":"official_match_report","source":"Leeds United","title":"Newcastle United 4-3 Leeds United","url":"https://www.leedsunited.com/en/news/report-newcastle-united-4-3-leeds-united","summary":"Provides an earlier Calvert-Lewin penalty assignment."}
+      ],
+      "squad_membership": {
+        "primary":{"player":"Dominic Calvert-Lewin","status":"confirmed","source_url":"https://www.leedsunited.com/en/news/travelling-squad-named-for-usa-pre-season-tour","checked_at":"2026-07-30"},
+        "secondary":{"player":"Lukas Nmecha","status":"confirmed","source_url":"https://www.leedsunited.com/en/news/travelling-squad-named-for-usa-pre-season-tour","checked_at":"2026-07-30"},
+        "tertiary":{"player":"Joel Piroe","status":"confirmed","source_url":"https://www.leedsunited.com/en/news/travelling-squad-named-for-usa-pre-season-tour","checked_at":"2026-07-30"}
+      }
+    },
+    {
+      "club": "Liverpool",
+      "recommended_order": {"primary":"Dominik Szoboszlai","secondary":"Cody Gakpo","tertiary":"Alexander Isak"},
+      "status": {"classification":"provisional","note":"The hierarchy is being rebuilt after Mohamed Salah's departure."},
+      "per_position_confidence": {"primary":"medium","secondary":"medium","tertiary":"low"},
+      "rationale": "Szoboszlai took with Gakpo playing in January. Gakpo remains the best deputy projection. Isak is preferred to Alexis Mac Allister as tertiary because he is current and has materially stronger regular-time career penalty evidence.",
+      "uncertainty_note": "Isak has no Liverpool penalty assignment yet, and Szoboszlai missed his observed kick.",
+      "transfer_conditions": [],
+      "sources": [
+        {"date":"2026-07-30","type":"official_squad","source":"Liverpool","title":"Liverpool 2026/27 FPL prices","url":"https://www.liverpoolfc.com/news/fantasy-premier-league-liverpool-player-prices-2026-27-revealed","summary":"Official current-season list confirms Szoboszlai, Gakpo and Isak."},
+        {"date":"2026-01-17","type":"official_match_report","source":"Liverpool","title":"Liverpool held by Burnley at Anfield","url":"https://www.liverpoolfc.com/news/liverpool-held-1-1-draw-burnley-anfield?amp=1","summary":"Szoboszlai took and missed with Gakpo playing."},
+        {"date":"2025-09-01","type":"official_transfer","source":"Liverpool","title":"Liverpool complete Alexander Isak signing","url":"https://www.liverpoolfc.com/news/liverpool-complete-signing-alexander-isak","summary":"Confirms Isak is a Liverpool player."},
+        {"date":"2026-05-24","type":"official_transfer","source":"Liverpool","title":"Mohamed Salah to leave Liverpool","url":"https://www.liverpoolfc.com/news/mohamed-salah-leave-liverpool-end-season?amp=1","summary":"Confirms the former primary is no longer eligible for 2026/27."}
+      ],
+      "squad_membership": {
+        "primary":{"player":"Dominik Szoboszlai","status":"confirmed","source_url":"https://www.liverpoolfc.com/news/fantasy-premier-league-liverpool-player-prices-2026-27-revealed","checked_at":"2026-07-30"},
+        "secondary":{"player":"Cody Gakpo","status":"confirmed","source_url":"https://www.liverpoolfc.com/news/fantasy-premier-league-liverpool-player-prices-2026-27-revealed","checked_at":"2026-07-30"},
+        "tertiary":{"player":"Alexander Isak","status":"confirmed","source_url":"https://www.liverpoolfc.com/news/fantasy-premier-league-liverpool-player-prices-2026-27-revealed","checked_at":"2026-07-30"}
+      }
+    },
+    {
+      "club": "Manchester City",
+      "recommended_order": {"primary":"Erling Haaland","secondary":"Omar Marmoush","tertiary":"Jeremy Doku"},
+      "status": {"classification":"probable","note":"First and second are credible; tertiary is a weak current-squad projection."},
+      "per_position_confidence": {"primary":"high","secondary":"high","tertiary":"low"},
+      "rationale": "Haaland remains the regular primary. Guardiola has acknowledged players handing a penalty to Marmoush, supporting him as deputy. Doku has no equivalent Manchester City regular-time evidence.",
+      "uncertainty_note": "No competitive event establishes Doku as third choice.",
+      "transfer_conditions": [],
+      "sources": [
+        {"date":"2026-06-19","type":"official_squad","source":"Manchester City","title":"West Ham v Manchester City team news","url":"https://www.mancity.com/news/mens/west-ham-v-manchester-city-team-news-tactics-and-stats-63909107","summary":"Current official team material includes Haaland, Marmoush and Doku."},
+        {"date":"2026-01-07","type":"official_match_report","source":"Manchester City","title":"Manchester City v Brighton report","url":"https://www.mancity.com/news/mens/manchester-city-v-brighton-premier-league-match-report-2026-63903408","summary":"Haaland took with Doku starting."},
+        {"date":"2025-05-17","type":"official_statement","source":"Manchester City","title":"Guardiola FA Cup final reaction","url":"https://www.mancity.com/citytv/mens/pep-guardiola-fa-cup-final-2025-reaction-63883081","summary":"Guardiola said players decided to hand a penalty to Marmoush."}
+      ],
+      "squad_membership": {
+        "primary":{"player":"Erling Haaland","status":"confirmed","source_url":"https://www.mancity.com/news/mens/west-ham-v-manchester-city-team-news-tactics-and-stats-63909107","checked_at":"2026-07-30"},
+        "secondary":{"player":"Omar Marmoush","status":"confirmed","source_url":"https://www.mancity.com/news/mens/west-ham-v-manchester-city-team-news-tactics-and-stats-63909107","checked_at":"2026-07-30"},
+        "tertiary":{"player":"Jeremy Doku","status":"confirmed","source_url":"https://www.mancity.com/news/mens/west-ham-v-manchester-city-team-news-tactics-and-stats-63909107","checked_at":"2026-07-30"}
+      }
+    },    {
+      "club": "Manchester United",
+      "recommended_order": {"primary":"Bruno Fernandes","secondary":"Bryan Mbeumo","tertiary":"Youri Tielemans"},
+      "status": {"classification":"probable","note":"Bruno is established; lower positions rely partly on pre-United evidence."},
+      "per_position_confidence": {"primary":"high","secondary":"medium","tertiary":"medium"},
+      "rationale": "Bruno took with Mbeumo available and remains the clear primary. Mbeumo has an established Brentford record. Tielemans is a confirmed United player with current international and career evidence but no United assignment.",
+      "uncertainty_note": "No United event directly orders Mbeumo and Tielemans.",
+      "transfer_conditions": [],
+      "sources": [
+        {"date":"2026-07-30","type":"official_squad","source":"Manchester United","title":"Manchester United men team","url":"https://www.manutd.com/en/teams/mens-team?matchId=2561969","summary":"Confirms Fernandes, Mbeumo and Tielemans in the current squad."},
+        {"date":"2025-08-24","type":"official_match_report","source":"Manchester United","title":"Fulham v Manchester United","url":"https://www.manutd.com/en/news/match-report-fulham-v-man-utd-24-august-2025","summary":"Bruno took with Mbeumo available."},
+        {"date":"2026-07-14","type":"official_squad","source":"Manchester United","title":"Youri Tielemans player page","url":"https://www.manutd.com/en/teams/mens-team/youri-tielemans","summary":"Confirms Tielemans is a current Manchester United player."},
+        {"date":"2026-07-01","type":"international_match_report","source":"Associated Press","title":"Belgium World Cup report","url":"https://apnews.com/article/461f08dc7297b99741a449cdcbd89ac6","summary":"Records a current Tielemans international penalty conversion."}
+      ],
+      "squad_membership": {
+        "primary":{"player":"Bruno Fernandes","status":"confirmed","source_url":"https://www.manutd.com/en/teams/mens-team?matchId=2561969","checked_at":"2026-07-30"},
+        "secondary":{"player":"Bryan Mbeumo","status":"confirmed","source_url":"https://www.manutd.com/en/teams/mens-team?matchId=2561969","checked_at":"2026-07-30"},
+        "tertiary":{"player":"Youri Tielemans","status":"confirmed","source_url":"https://www.manutd.com/en/teams/mens-team/youri-tielemans","checked_at":"2026-07-30"}
+      }
+    },
+    {
+      "club": "Newcastle United",
+      "recommended_order": {"primary":"Bruno Guimaraes","secondary":"Nick Woltemade","tertiary":"Harvey Barnes"},
+      "status": {"classification":"conditional","note":"The first two have competitive support; Barnes evidence is shootout-only."},
+      "per_position_confidence": {"primary":"medium","secondary":"high","tertiary":"low"},
+      "rationale": "Bruno took in February with Woltemade available, while Woltemade has an earlier competitive conversion. Barnes is the practical third candidate but his current supporting event is a shootout.",
+      "uncertainty_note": "Bruno has transfer speculation but remains officially a Newcastle player; Barnes has no recent regular-time assignment.",
+      "transfer_conditions": ["Re-audit immediately if Newcastle officially transfers Bruno Guimaraes before the deadline."],
+      "sources": [
+        {"date":"2026-07-30","type":"official_squad","source":"Newcastle United","title":"Bruno Guimaraes player page","url":"https://www.newcastleunited.com/en/teams/mens-team/bruno-guimaraes","summary":"Confirms Bruno remains a current Newcastle player."},
+        {"date":"2026-07-30","type":"league_squad","source":"Premier League","title":"Newcastle United 2026/27 squad","url":"https://www.premierleague.com/en/clubs/4/newcastle/squad","summary":"Confirms Woltemade and the current Newcastle squad."},
+        {"date":"2026-07-30","type":"official_squad","source":"Newcastle United","title":"Harvey Barnes player page","url":"https://www.newcastleunited.com/en/teams/mens-team/harvey-barnes","summary":"Confirms Barnes remains a current Newcastle player."},
+        {"date":"2026-02-07","type":"official_match_report","source":"Newcastle United","title":"Newcastle v Brentford report","url":"https://www.newcastleunited.com/en/news/brentford-h-report-25-26","summary":"Bruno took the penalty with Woltemade available."},
+        {"date":"2025-10-05","type":"league_match_report","source":"Premier League","title":"Newcastle beat Nottingham Forest","url":"https://www.premierleague.com/en/news/4430603/guimaraes-scores-stunner-as-newcastle-see-off-forest","summary":"Records Woltemade current competitive penalty evidence."},
+        {"date":"2026-01-10","type":"official_shootout_report","source":"Newcastle United","title":"Newcastle v Bournemouth FA Cup report","url":"https://www.newcastleunited.com/en/news/afc-bournemouth-fa-cup-h-report-25-26","summary":"Barnes scored in the shootout; this is not regular-time evidence."}
+      ],
+      "squad_membership": {
+        "primary":{"player":"Bruno Guimaraes","status":"confirmed","source_url":"https://www.newcastleunited.com/en/teams/mens-team/bruno-guimaraes","checked_at":"2026-07-30"},
+        "secondary":{"player":"Nick Woltemade","status":"confirmed","source_url":"https://www.premierleague.com/en/clubs/4/newcastle/squad","checked_at":"2026-07-30"},
+        "tertiary":{"player":"Harvey Barnes","status":"confirmed","source_url":"https://www.newcastleunited.com/en/teams/mens-team/harvey-barnes","checked_at":"2026-07-30"}
+      }
+    },
+    {
+      "club": "Nottingham Forest",
+      "recommended_order": {"primary":"Chris Wood","secondary":"Morgan Gibbs-White","tertiary":"Igor Jesus"},
+      "status": {"classification":"confirmed","note":"Recent same-pitch and absence evidence support the complete order."},
+      "per_position_confidence": {"primary":"high","secondary":"high","tertiary":"high"},
+      "rationale": "Wood converted with Gibbs-White and Igor Jesus starting. Gibbs-White took when Wood was unavailable, placing him second. Igor Jesus is the remaining current specialist behind both.",
+      "uncertainty_note": "Normal matchday availability can activate the lower positions, but the hierarchy itself is well supported.",
+      "transfer_conditions": [],
+      "sources": [
+        {"date":"2026-07-30","type":"league_squad","source":"Premier League","title":"Nottingham Forest 2026/27 FPL prices","url":"https://www.premierleague.com/en/news/4680932/fpl-prices-announced","summary":"Current-season list includes Wood, Gibbs-White and Igor Jesus."},
+        {"date":"2026-04-30","type":"competition_match_report","source":"UEFA","title":"Nottingham Forest 1-0 Aston Villa","url":"https://www.uefa.com/uefaeuropaleague/news/02a4-2083fe52cee8-b4a0593e0ad4-1000--nottingham-forest-1-0-aston-villa-chris-wood-penalty-swin/","summary":"Wood converted with Gibbs-White and Igor Jesus starting."},
+        {"date":"2026-01-22","type":"official_match_report","source":"Nottingham Forest","title":"Forest narrowly beaten by Braga","url":"https://www.nottinghamforest.co.uk/news/2026/january/22/forest-narrowly-beaten-by-braga/","summary":"Gibbs-White took when Wood was unavailable."}
+      ],
+      "squad_membership": {
+        "primary":{"player":"Chris Wood","status":"confirmed","source_url":"https://www.premierleague.com/en/news/4680932/fpl-prices-announced","checked_at":"2026-07-30"},
+        "secondary":{"player":"Morgan Gibbs-White","status":"confirmed","source_url":"https://www.premierleague.com/en/news/4680932/fpl-prices-announced","checked_at":"2026-07-30"},
+        "tertiary":{"player":"Igor Jesus","status":"confirmed","source_url":"https://www.premierleague.com/en/news/4680932/fpl-prices-announced","checked_at":"2026-07-30"}
+      }
+    },
+    {
+      "club": "Sunderland",
+      "recommended_order": {"primary":"Habib Diarra","secondary":"Enzo Le Fee","tertiary":"Granit Xhaka"},
+      "status": {"classification":"probable","note":"The first two are directly ordered; Xhaka is a mixed shootout and international fallback."},
+      "per_position_confidence": {"primary":"high","secondary":"high","tertiary":"low"},
+      "rationale": "Diarra converted with Le Fee available. Le Fee took while Diarra was at AFCON. Xhaka is the best current tertiary based on a Sunderland shootout conversion and international regular-time history.",
+      "uncertainty_note": "Xhaka has no Sunderland regular-time assignment and was the subject of rejected transfer interest.",
+      "transfer_conditions": ["Re-audit if Sunderland accepts an official offer for Granit Xhaka before the deadline."],
+      "sources": [
+        {"date":"2026-05-17","type":"official_squad","source":"Sunderland","title":"Le Bris praises Sunderland character","url":"https://www.safc.com/news/2026/may/17/le-bris-praises-sunderland-character-after-comeback-victory/","summary":"Current official squad material includes Diarra, Le Fee and Xhaka."},
+        {"date":"2026-03-03","type":"official_match_report","source":"Leeds United","title":"Leeds United 0-1 Sunderland","url":"https://www.leedsunited.com/en/news/report-leeds-united-0-1-sunderland","summary":"Diarra converted with Le Fee available."},
+        {"date":"2026-01-07","type":"official_match_report","source":"Sunderland","title":"Le Bris on defeat at Brentford","url":"https://www.safc.com/news/2026/january/07/Le-Bris-on-defeat-at-Brentford/","summary":"Le Fee took while Diarra was away at AFCON."},
+        {"date":"2026-01-10","type":"shootout_report","source":"BBC Sport","title":"Sunderland FA Cup shootout report","url":"https://www.bbc.co.uk/sport/football/articles/c3e241x533do","summary":"Xhaka converted in the shootout; this is shootout-only club evidence."},
+        {"date":"2026-07-26","type":"credible_report","source":"The Guardian","title":"Le Bris says Chelsea pursuit of Xhaka is closed","url":"https://www.theguardian.com/football/2026/jul/26/regis-le-bris-says-chelseas-pursuit-of-sunderland-captain-xhaka-is-closed","summary":"Reports Sunderland rejected the bid and the head coach considered the pursuit closed."}
+      ],
+      "squad_membership": {
+        "primary":{"player":"Habib Diarra","status":"confirmed","source_url":"https://www.safc.com/news/2026/may/17/le-bris-praises-sunderland-character-after-comeback-victory/","checked_at":"2026-07-30"},
+        "secondary":{"player":"Enzo Le Fee","status":"confirmed","source_url":"https://www.safc.com/news/2026/may/17/le-bris-praises-sunderland-character-after-comeback-victory/","checked_at":"2026-07-30"},
+        "tertiary":{"player":"Granit Xhaka","status":"confirmed","source_url":"https://www.safc.com/news/2026/may/17/le-bris-praises-sunderland-character-after-comeback-victory/","checked_at":"2026-07-30"}
+      }
+    },
+    {
+      "club": "Tottenham",
+      "recommended_order": {"primary":"Dominic Solanke","secondary":"Mohammed Kudus","tertiary":"Xavi Simons"},
+      "status": {"classification":"probable","note":"The order is the best practical projection but the top two lack a same-pitch test."},
+      "per_position_confidence": {"primary":"medium","secondary":"medium","tertiary":"medium"},
+      "rationale": "Solanke has the strongest incumbent Tottenham regular-time history. Kudus took the first penalty against Slavia Prague and Xavi took the second after Kudus was substituted; Solanke was absent.",
+      "uncertainty_note": "A competitive event with Solanke and Kudus together is needed to settle the primary role.",
+      "transfer_conditions": [],
+      "sources": [
+        {"date":"2026-07-30","type":"official_squad","source":"Tottenham Hotspur","title":"Tottenham 2026/27 FPL prices","url":"https://www.tottenhamhotspur.com/news/1079489","summary":"Official current-season list confirms Solanke, Kudus and Xavi."},
+        {"date":"2025-12-09","type":"official_match_report","source":"Tottenham Hotspur","title":"Tottenham v Slavia Prague","url":"https://www.tottenhamhotspur.com/news/1009022/perfect-home-record-in-champions-league-continues","summary":"Kudus took the first penalty; Xavi took the second after Kudus left the pitch. Solanke was absent."},
+        {"date":"2025-04-18","type":"official_statement","source":"Tottenham Hotspur","title":"Solanke on Eintracht Frankfurt penalty","url":"https://www.tottenhamhotspur.com/news/2025/april/dominic-solanke-on-his-penalty-against-eintracht-frankfurt-in-the-uefa-europa-league-it-was-loud-i-needed-to-stay-cold-in-that-moment/","summary":"Records Solanke established Tottenham regular-time penalty evidence."}
+      ],
+      "squad_membership": {
+        "primary":{"player":"Dominic Solanke","status":"confirmed","source_url":"https://www.tottenhamhotspur.com/news/1079489","checked_at":"2026-07-30"},
+        "secondary":{"player":"Mohammed Kudus","status":"confirmed","source_url":"https://www.tottenhamhotspur.com/news/1079489","checked_at":"2026-07-30"},
+        "tertiary":{"player":"Xavi Simons","status":"confirmed","source_url":"https://www.tottenhamhotspur.com/news/1079489","checked_at":"2026-07-30"}
+      }
+    }
+  ]
+}
