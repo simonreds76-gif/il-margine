@@ -21,7 +21,6 @@ function revalidatePublicBetSurfaces() {
   }
   revalidatePath("/tips/[slugId]", "page");
   revalidatePath("/betting-tips/[slugId]", "page");
-  revalidatePath("/sitemap.xml");
 }
 
 function getSignedToken(): string {

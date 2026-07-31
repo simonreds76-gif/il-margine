@@ -6,7 +6,7 @@ import MarketBadge from "@/components/MarketBadge";
 import TrackedLink from "@/components/TrackedLink";
 import type { Bet, Bookmaker } from "@/lib/supabase";
 import { formatOdds, formatStake } from "@/lib/format";
-import { slugifyTip } from "@/lib/slugify";
+import { publicTipPath } from "@/lib/tip-seo";
 import { track } from "@/lib/analytics";
 
 type EdgeBet = Bet & {
@@ -147,7 +147,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
             {visible.map((pick) => (
               <TrackedLink
                 key={pick.id}
-                href={`/tips/${slugifyTip(pick.event, pick.id)}`}
+                href={publicTipPath(pick)}
                 eventName="homepage_to_pick_click"
                 eventParams={{ bet_id: pick.id, market: pick.market, source: "todays_edge" }}
                 className="group block px-4 py-3.5 transition hover:bg-slate-800/35"

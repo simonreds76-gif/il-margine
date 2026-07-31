@@ -2,7 +2,7 @@ import "server-only";
 
 import { BASE_URL } from "@/lib/config";
 import { formatMatchDate, formatOdds, formatStake } from "@/lib/format";
-import { slugifyTip } from "@/lib/slugify";
+import { publicTipPath } from "@/lib/tip-seo";
 import { isWorldCupPropsTip } from "@/lib/world-cup-tips";
 
 type BookmakerShape = {
@@ -59,8 +59,8 @@ function bookmakerLabel(tip: PlayerPropsTelegramTip): string | null {
   return bookmaker?.short_name || bookmaker?.name || null;
 }
 
-export function playerPropsTipUrl(tip: Pick<PlayerPropsTelegramTip, "id" | "event">): string {
-  return `${BASE_URL}/tips/${slugifyTip(tip.event || "player-prop-tip", tip.id)}`;
+export function playerPropsTipUrl(tip: PlayerPropsTelegramTip): string {
+  return `${BASE_URL}${publicTipPath(tip)}`;
 }
 
 function displayOdds(value: PlayerPropsTelegramTip["odds"]): string {

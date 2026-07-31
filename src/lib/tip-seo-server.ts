@@ -4,6 +4,8 @@ import { cache } from "react";
 import { getSupabaseAdmin, hasSupabaseAdminConfig } from "@/lib/supabase-server";
 import {
   assessTipSeoReadiness,
+  parseTipPreviewSlug,
+  tipFixtureHash,
   tipFixtureKey,
   tipPreviewPath,
   type TipSeoAssessment,
@@ -41,131 +43,217 @@ export type SeoTipFixture = {
   canonicalPath: string;
   datePublished: string;
   dateModified: string;
+  allVoid: boolean;
 };
 
 type SitemapTipRow = Pick<
   SeoTipBet,
-  "id" | "market" | "event" | "match_date" | "notes" | "posted_at" | "settled_at"
+  | "id"
+  | "market"
+  | "category"
+  | "event"
+  | "match_date"
+  | "odds"
+  | "stake"
+  | "status"
+  | "posted_at"
+  | "settled_at"
 >;
 
-function maxTimestamp(values: Array<string | null | undefined>): string {
-  return values.filter(Boolean).sort().at(-1) || new Date(0).toISOString();
+const FIXTURE_PAGE_SIZE = 500;
+const MAX_FIXTURE_DAY_PAGES = 40;
+const SITEMAP_PAGE_SIZE = 1000;
+const MAX_SITEMAP_PAGES = 100;
+
+function maxTimestamp(values: Array<string | null | undefined>, fallback: string): string {
+  const valid = values.filter(Boolean).sort();
+  return valid.at(-1) || fallback;
 }
 
-function minTimestamp(values: Array<string | null | undefined>): string {
-  return values.filter(Boolean).sort().at(0) || new Date(0).toISOString();
+function minTimestamp(values: Array<string | null | undefined>, fallback: string): string {
+  const valid = values.filter(Boolean).sort();
+  return valid.at(0) || fallback;
 }
 
-export const fetchSeoTipFixture = cache(async (seedId: number): Promise<SeoTipFixture | null> => {
-  if (!hasSupabaseAdminConfig()) return null;
-  const supabase = getSupabaseAdmin();
-  const seedResponse = await supabase
-    .from("bets")
-    .select("*, bookmaker:bookmakers(*)")
-    .eq("id", seedId)
-    .single();
-  if (seedResponse.error || !seedResponse.data) return null;
+function fixtureFallbackTimestamp(matchDate: string): string {
+  return `${matchDate}T12:00:00.000Z`;
+}
 
-  const seed = seedResponse.data as SeoTipBet;
-  if (!assessTipSeoReadiness(seed).eligible) return null;
+function isFixtureEligible(bets: Array<Pick<SeoTipBet, keyof SitemapTipRow>>): boolean {
+  return bets.some((bet) => assessTipSeoReadiness(bet).eligible);
+}
 
-  const fixtureResponse = await supabase
-    .from("bets")
-    .select("*, bookmaker:bookmakers(*)")
-    .eq("market", seed.market)
-    .eq("match_date", seed.match_date)
-    .order("id", { ascending: true });
-  if (fixtureResponse.error || !fixtureResponse.data?.length) return null;
+async function fetchFixtureDayRows(
+  market: "tennis" | "props",
+  matchDate: string,
+): Promise<SeoTipBet[]> {
+  const rows: SeoTipBet[] = [];
+  let afterId: number | null = null;
 
-  const seedFixtureKey = tipFixtureKey(seed);
-  const bets = (fixtureResponse.data as SeoTipBet[]).filter(
-    (bet) => tipFixtureKey(bet) === seedFixtureKey && assessTipSeoReadiness(bet).eligible,
+  for (let pageNumber = 0; pageNumber < MAX_FIXTURE_DAY_PAGES; pageNumber += 1) {
+    let query = getSupabaseAdmin()
+      .from("bets")
+      .select("*, bookmaker:bookmakers(*)")
+      .eq("market", market)
+      .eq("match_date", matchDate)
+      .order("id", { ascending: true })
+      .limit(FIXTURE_PAGE_SIZE);
+    if (afterId !== null) query = query.gt("id", afterId);
+
+    const response = await query;
+    if (response.error) {
+      throw new Error(`[tip-seo] fixture query failed: ${response.error.message}`);
+    }
+    const page = (response.data ?? []) as SeoTipBet[];
+    rows.push(...page);
+    if (page.length < FIXTURE_PAGE_SIZE) return rows;
+    afterId = page[page.length - 1].id;
+  }
+
+  throw new Error(
+    `[tip-seo] fixture query exceeded ${FIXTURE_PAGE_SIZE * MAX_FIXTURE_DAY_PAGES} rows for ${market} ${matchDate}`,
   );
-  if (!bets.length) return null;
+}
+
+export const fetchSeoTipFixture = cache(async (slug: string): Promise<SeoTipFixture | null> => {
+  if (!hasSupabaseAdminConfig()) return null;
+  const parsed = parseTipPreviewSlug(slug);
+  if (!parsed) return null;
+
+  let rows: SeoTipBet[] = [];
+  let fixtureRows: SeoTipBet[] = [];
+
+  if (parsed.kind === "legacy") {
+    const seedResponse = await getSupabaseAdmin()
+      .from("bets")
+      .select("*, bookmaker:bookmakers(*)")
+      .eq("id", parsed.seedId)
+      .maybeSingle();
+    if (seedResponse.error) {
+      throw new Error(`[tip-seo] legacy seed query failed: ${seedResponse.error.message}`);
+    }
+    if (!seedResponse.data) return null;
+    const legacySeed = seedResponse.data as SeoTipBet;
+    if (legacySeed.market !== "tennis" && legacySeed.market !== "props") return null;
+    if (!legacySeed.match_date) return null;
+    rows = await fetchFixtureDayRows(legacySeed.market, legacySeed.match_date);
+    const key = tipFixtureKey(legacySeed);
+    fixtureRows = rows.filter((bet) => tipFixtureKey(bet) === key);
+  } else {
+    rows = await fetchFixtureDayRows(parsed.market, parsed.matchDate);
+    const grouped = new Map<string, SeoTipBet[]>();
+    for (const bet of rows) {
+      if (tipFixtureHash(bet) !== parsed.fixtureHash) continue;
+      const key = tipFixtureKey(bet);
+      const group = grouped.get(key) ?? [];
+      group.push(bet);
+      grouped.set(key, group);
+    }
+    if (grouped.size !== 1) return null;
+    fixtureRows = Array.from(grouped.values())[0];
+  }
+
+  if (!fixtureRows.length || !isFixtureEligible(fixtureRows)) return null;
+  const bets = [...fixtureRows].sort((left, right) => left.id - right.id);
+  const seed = bets[0];
   const analyses = bets
     .map((bet) => ({ bet, assessment: assessTipSeoReadiness(bet) }))
     .filter((entry) => Boolean(entry.assessment.analysis.trim()));
+  const fallbackTimestamp = fixtureFallbackTimestamp(seed.match_date);
 
-  const canonicalId = Math.min(...bets.map((bet) => bet.id));
-  const canonicalBet = bets.find((bet) => bet.id === canonicalId) ?? seed;
   return {
-    seed: canonicalBet,
+    seed,
     bets,
     analyses,
-    canonicalId,
-    canonicalPath: tipPreviewPath(canonicalBet),
-    datePublished: minTimestamp(bets.map((bet) => bet.posted_at)),
-    dateModified: maxTimestamp(bets.flatMap((bet) => [bet.posted_at, bet.settled_at])),
+    canonicalId: seed.id,
+    canonicalPath: tipPreviewPath(seed),
+    datePublished: minTimestamp(bets.map((bet) => bet.posted_at), fallbackTimestamp),
+    dateModified: maxTimestamp(
+      bets.flatMap((bet) => [bet.posted_at, bet.settled_at]),
+      fallbackTimestamp,
+    ),
+    allVoid: bets.every((bet) => bet.status === "void"),
   };
 });
+
+async function fetchSitemapRows(sitemapCutoff: string): Promise<SitemapTipRow[]> {
+  const rows: SitemapTipRow[] = [];
+  let beforeId: number | null = null;
+
+  for (let pageNumber = 0; pageNumber < MAX_SITEMAP_PAGES; pageNumber += 1) {
+    let query = getSupabaseAdmin()
+      .from("bets")
+      .select("id, market, category, event, match_date, odds, stake, status, posted_at, settled_at")
+      .in("market", ["tennis", "props"])
+      .gte("match_date", sitemapCutoff)
+      .order("id", { ascending: false })
+      .limit(SITEMAP_PAGE_SIZE);
+    if (beforeId !== null) query = query.lt("id", beforeId);
+
+    const response = await query;
+    if (response.error) {
+      throw new Error(`[tip-seo] sitemap preview query failed: ${response.error.message}`);
+    }
+    const page = (response.data ?? []) as SitemapTipRow[];
+    rows.push(...page);
+    if (page.length < SITEMAP_PAGE_SIZE) return rows;
+    beforeId = page[page.length - 1].id;
+  }
+
+  throw new Error(
+    `[tip-seo] sitemap query exceeded ${SITEMAP_PAGE_SIZE * MAX_SITEMAP_PAGES} rows inside the 400-day window`,
+  );
+}
 
 export async function fetchSeoTipSitemapState(): Promise<{
   previews: Array<{ url: string; lastModified: Date }>;
   latestByMarket: Partial<Record<"tennis" | "props", Date>>;
 }> {
   if (!hasSupabaseAdminConfig()) return { previews: [], latestByMarket: {} };
-  const supabase = getSupabaseAdmin();
   const sitemapCutoff = new Date(Date.now() - 400 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-  const previewRowsPromise = (async () => {
-    const rows: SitemapTipRow[] = [];
-    const pageSize = 1000;
-    const maxRows = 3000;
-    for (let offset = 0; offset < maxRows; offset += pageSize) {
-      const response = await supabase
-        .from("bets")
-        .select("id, market, event, match_date, notes, posted_at, settled_at")
-        .in("market", ["tennis", "props"])
-        .gte("match_date", sitemapCutoff)
-        .order("posted_at", { ascending: false })
-        .range(offset, offset + pageSize - 1);
-      if (response.error) return { rows, error: response.error.message };
-      const page = (response.data ?? []) as SitemapTipRow[];
-      rows.push(...page);
-      if (page.length < pageSize) break;
-    }
-    return { rows, error: null };
-  })();
-  const [previewResult, latestResponse] = await Promise.all([
-    previewRowsPromise,
-    supabase
+  const [previewRows, latestResponse] = await Promise.all([
+    fetchSitemapRows(sitemapCutoff),
+    getSupabaseAdmin()
       .from("bets")
       .select("market, posted_at, settled_at")
       .in("market", ["tennis", "props"])
-      .order("posted_at", { ascending: false })
+      .order("id", { ascending: false })
       .limit(200),
   ]);
 
-  if (previewResult.error) {
-    console.error("[tip-seo] sitemap preview query failed", previewResult.error);
-  }
   if (latestResponse.error) {
-    console.error("[tip-seo] sitemap hub freshness query failed", latestResponse.error.message);
+    throw new Error(`[tip-seo] sitemap hub freshness query failed: ${latestResponse.error.message}`);
   }
 
   const grouped = new Map<string, SitemapTipRow[]>();
-  for (const raw of previewResult.rows) {
-    if (!assessTipSeoReadiness(raw).eligible) continue;
+  for (const raw of previewRows) {
     const key = tipFixtureKey(raw);
     const rows = grouped.get(key) ?? [];
     rows.push(raw);
     grouped.set(key, rows);
   }
 
-  const previews = Array.from(grouped.values()).map((rows) => {
-    const canonical = [...rows].sort((a, b) => a.id - b.id)[0]!;
-    const lastModified = maxTimestamp(rows.flatMap((row) => [row.posted_at, row.settled_at]));
-    return {
-      url: tipPreviewPath(canonical),
-      lastModified: new Date(lastModified),
-    };
-  });
+  const previews = Array.from(grouped.values())
+    .filter((rows) => isFixtureEligible(rows) && !rows.every((row) => row.status === "void"))
+    .map((rows) => {
+      const representative = [...rows].sort((left, right) => left.id - right.id)[0];
+      const fallbackTimestamp = fixtureFallbackTimestamp(representative.match_date);
+      const lastModified = maxTimestamp(
+        rows.flatMap((row) => [row.posted_at, row.settled_at]),
+        fallbackTimestamp,
+      );
+      return {
+        url: tipPreviewPath(representative),
+        lastModified: new Date(lastModified),
+      };
+    });
 
   const latestByMarket: Partial<Record<"tennis" | "props", Date>> = {};
   for (const row of latestResponse.data ?? []) {
     const market = row.market as "tennis" | "props";
     if (market !== "tennis" && market !== "props") continue;
-    const timestamp = maxTimestamp([row.posted_at, row.settled_at]);
-    const date = new Date(timestamp);
+    const fallback = new Date().toISOString();
+    const date = new Date(maxTimestamp([row.posted_at, row.settled_at], fallback));
     if (!latestByMarket[market] || date > latestByMarket[market]!) {
       latestByMarket[market] = date;
     }

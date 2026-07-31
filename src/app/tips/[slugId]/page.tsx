@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import type { Metadata } from "next";
 import { supabase } from "@/lib/supabase";
 import { BASE_URL } from "@/lib/config";
@@ -115,12 +115,12 @@ export default async function TipPage({ params }: PageProps) {
   if (!bet) notFound();
 
   if (assessTipSeoReadiness(bet).eligible) {
-    redirect(tipPreviewPath(bet));
+    permanentRedirect(tipPreviewPath(bet));
   }
 
   const canonicalSlug = slugifyTip(bet.event, bet.id);
   if (slugId !== canonicalSlug) {
-    redirect(`/tips/${canonicalSlug}`);
+    permanentRedirect(`/tips/${canonicalSlug}`);
   }
 
   const listHref = bet.market === "tennis" ? "/tennis-tips" : bet.market === "props" ? "/player-props" : "/";

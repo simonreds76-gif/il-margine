@@ -1,10 +1,10 @@
 import { ImageResponse } from "next/og";
-import { parseTipSlugId } from "@/lib/slugify";
 import { fetchSeoTipFixture } from "@/lib/tip-seo-server";
 
 export const alt = "Il Margine betting preview";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+export const revalidate = 3600;
 
 interface ImageProps {
   params: Promise<{ slugId: string }>;
@@ -12,8 +12,7 @@ interface ImageProps {
 
 export default async function Image({ params }: ImageProps) {
   const { slugId } = await params;
-  const id = parseTipSlugId(slugId);
-  const fixture = id === null ? null : await fetchSeoTipFixture(id);
+  const fixture = await fetchSeoTipFixture(slugId);
   const event = fixture?.seed.event || "Il Margine betting preview";
   const eyebrow = fixture?.seed.market === "props" ? "PLAYER PROPS" : "TENNIS MATCH";
   const pickCount = fixture?.bets.length || 0;
@@ -114,7 +113,7 @@ export default async function Image({ params }: ImageProps) {
 
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", color: "#94a3b8", fontSize: 21 }}>
             <div style={{ display: "flex" }}>
-              Posted prices | Original reasoning | Transparent settlement
+              Posted prices | Tracked picks | Transparent settlement
             </div>
             <div style={{ display: "flex", color: "#e2e8f0", fontWeight: 700 }}>
               {pickCount} tracked {pickCount === 1 ? "selection" : "selections"}

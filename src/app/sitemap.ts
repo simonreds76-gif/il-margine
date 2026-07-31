@@ -12,10 +12,6 @@ import { readWorldCupData, worldCupTeamUrl, WORLD_CUP_ARCHIVE_DATE, WORLD_CUP_PE
 import { fetchSeoTipSitemapState } from "@/lib/tip-seo-server";
 
 const STATIC_LAST_MODIFIED = new Date("2026-05-12T00:00:00Z");
-const EMPTY_TIP_SEO_STATE: Awaited<ReturnType<typeof fetchSeoTipSitemapState>> = {
-  previews: [],
-  latestByMarket: {},
-};
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -24,7 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [clubPenaltyTeams, clubPenaltyLeagues, tipSeoState] = await Promise.all([
     readAllClubPenaltyTeams().catch(() => []),
     readClubPenaltyData().catch(() => []),
-    fetchSeoTipSitemapState().catch(() => EMPTY_TIP_SEO_STATE),
+    fetchSeoTipSitemapState(),
   ]);
   const clubPenaltySeason = getClubPenaltySeason();
   const clubPenaltyLastModified = new Date(`${clubPenaltySeason.published_at}T12:00:00Z`);

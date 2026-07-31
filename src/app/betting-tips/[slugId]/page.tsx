@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import Footer from "@/components/Footer";
 import MarketBadge from "@/components/MarketBadge";
@@ -8,10 +8,9 @@ import PropsAlertsCta from "@/components/PropsAlertsCta";
 import TipPageTracker from "@/components/TipPageTracker";
 import { BASE_URL } from "@/lib/config";
 import { formatMatchDate, formatOdds, formatStake } from "@/lib/format";
-import { parseTipSlugId } from "@/lib/slugify";
 import { fetchSeoTipFixture, type SeoTipBet } from "@/lib/tip-seo-server";
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 interface PageProps {
   params: Promise<{ slugId: string }>;
@@ -65,6 +64,17 @@ function formatPublishedDate(value: string): string {
   }).format(date);
 }
 
+function formatSeoDate(value: string): string {
+  const date = new Date(`${value}T12:00:00Z`);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(date);
+}
+
 function previewDescription(fixture: Awaited<ReturnType<typeof fetchSeoTipFixture>>): string {
   if (!fixture) return "";
   const selections = fixture.bets.slice(0, 3).map(selectionLabel).join(", ");
@@ -74,20 +84,16 @@ function previewDescription(fixture: Awaited<ReturnType<typeof fetchSeoTipFixtur
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slugId } = await params;
-  const id = parseTipSlugId(slugId);
-  if (id === null) {
-    return { title: "Betting preview not found", robots: { index: false, follow: true } };
-  }
-
-  const fixture = await fetchSeoTipFixture(id);
+  const fixture = await fetchSeoTipFixture(slugId);
   if (!fixture) {
     return { title: "Betting preview not found", robots: { index: false, follow: true } };
   }
 
+  const dateLabel = formatSeoDate(fixture.seed.match_date);
   const title =
     fixture.seed.market === "tennis"
-      ? `${fixture.seed.event} Prediction & Betting Tips`
-      : `${fixture.seed.event} Player Props & Betting Tips`;
+      ? `${fixture.seed.event} Prediction & Betting Tips - ${dateLabel}`
+      : `${fixture.seed.event} Player Props & Betting Tips - ${dateLabel}`;
   const description = previewDescription(fixture);
   const canonicalUrl = `${BASE_URL}${fixture.canonicalPath}`;
   const imageUrl = `${canonicalUrl}/opengraph-image`;
@@ -96,16 +102,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title,
     description,
     alternates: { canonical: canonicalUrl },
-    robots: { index: true, follow: true },
+    robots: { index: !fixture.allVoid, follow: true },
     openGraph: {
-      type: "article",
+      type: "website",
       locale: "en_GB",
       url: canonicalUrl,
       siteName: "Il Margine",
       title,
       description,
-      publishedTime: fixture.datePublished,
-      modifiedTime: fixture.dateModified,
       images: [{ url: imageUrl, width: 1200, height: 630, alt: `${fixture.seed.event} betting preview` }],
     },
     twitter: {
@@ -119,12 +123,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function BettingPreviewPage({ params }: PageProps) {
   const { slugId } = await params;
-  const id = parseTipSlugId(slugId);
-  if (id === null) notFound();
-
-  const fixture = await fetchSeoTipFixture(id);
+  const fixture = await fetchSeoTipFixture(slugId);
   if (!fixture) notFound();
-  if (`/betting-tips/${slugId}` !== fixture.canonicalPath) redirect(fixture.canonicalPath);
+  if (`/betting-tips/${slugId}` !== fixture.canonicalPath) permanentRedirect(fixture.canonicalPath);
 
   const hub = hubFor(fixture.seed.market);
   const description = previewDescription(fixture);
@@ -141,10 +142,10 @@ export default async function BettingPreviewPage({ params }: PageProps) {
       ];
   const settled = fixture.bets.filter((bet) => bet.status !== "pending");
   const totalProfit = settled.reduce((sum, bet) => sum + Number(bet.profit_loss || 0), 0);
-  const articleSchema = {
+  const webPageSchema = {
     "@context": "https://schema.org",
-    "@type": "Article",
-    headline:
+    "@type": "WebPage",
+    name:
       fixture.seed.market === "tennis"
         ? `${fixture.seed.event} prediction and betting tips`
         : `${fixture.seed.event} player props and betting tips`,
@@ -153,12 +154,23 @@ export default async function BettingPreviewPage({ params }: PageProps) {
     datePublished: fixture.datePublished,
     dateModified: fixture.dateModified,
     mainEntityOfPage: canonicalUrl,
-    author: { "@type": "Organization", name: "Il Margine", url: BASE_URL },
-    publisher: {
-      "@type": "Organization",
-      name: "Il Margine",
-      url: BASE_URL,
-      logo: { "@type": "ImageObject", url: `${BASE_URL}/logo.png` },
+    about: {
+      "@type": "SportsEvent",
+      name: fixture.seed.event,
+      startDate: fixture.seed.match_date,
+    },
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: fixture.bets.length,
+      itemListElement: fixture.bets.map((bet, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "Thing",
+          name: selectionLabel(bet),
+          description: `${selectionLabel(bet)} at ${formatOdds(bet.odds)}, ${formatStake(bet.stake)} units.`,
+        },
+      })),
     },
   };
   const breadcrumbSchema = {
@@ -179,7 +191,7 @@ export default async function BettingPreviewPage({ params }: PageProps) {
         category={fixture.seed.category}
         status={fixture.seed.status}
       />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
       <main>
