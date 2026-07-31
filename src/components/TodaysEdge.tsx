@@ -100,10 +100,10 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
               Today&apos;s Edge
             </h2>
           </div>
-          <span className={`rounded-full border px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.13em] ${
+          <span className={`rounded-full border px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] ${
             picks.length > 0
               ? "border-emerald-300/25 bg-emerald-400/10 text-emerald-200"
-              : "border-slate-700 bg-slate-900/70 text-slate-500"
+              : "border-slate-700 bg-slate-900/70 text-slate-400"
           }`}>
             {picks.length > 0 ? `${picks.length} active` : "No active picks"}
           </span>
@@ -134,7 +134,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
               className={`min-h-9 shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition ${
                 filter === id
                   ? "border-emerald-300/35 bg-emerald-400/12 text-emerald-100"
-                  : "border-slate-700/70 bg-slate-900/55 text-slate-400 hover:border-slate-600 hover:text-slate-200 disabled:cursor-not-allowed disabled:opacity-35"
+                  : "border-slate-700/70 bg-slate-900/55 text-slate-300 hover:border-slate-600 hover:text-slate-100 disabled:cursor-not-allowed disabled:border-slate-700/70 disabled:bg-slate-900/30 disabled:text-slate-400 disabled:hover:border-slate-700/70 disabled:hover:text-slate-400"
               }`}
             >
               {label} {counts[id]}
@@ -152,7 +152,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
                 eventParams={{ bet_id: pick.id, market: pick.market, source: "todays_edge" }}
                 className="group block px-4 py-3.5 transition hover:bg-slate-800/35"
               >
-                <div className="flex items-center justify-between gap-3 text-[10px] font-mono uppercase tracking-[0.11em] text-slate-500">
+                <div className="flex items-center justify-between gap-3 font-mono text-[11px] uppercase tracking-[0.1em] text-slate-400">
                   <div className="flex min-w-0 items-center gap-2">
                     <MarketBadge
                       market={pick.market}
@@ -188,7 +188,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
             <p className="font-semibold text-slate-200">
               {picks.length === 0 ? "Nothing is priced badly enough right now." : `No ${filter === "props" ? "football props" : "tennis picks"} active.`}
             </p>
-            <p className="mt-2 text-sm leading-6 text-slate-500">
+            <p className="mt-2 text-sm leading-6 text-slate-400">
               We post when the number is wrong, not to fill a daily quota.
             </p>
           </div>
@@ -204,7 +204,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
             {visible.length > 0 ? "Open full card" : "See the public record"} →
           </TrackedLink>
           {lastSettled ? (
-            <span className="min-w-0 truncate text-xs text-slate-600">
+            <span className="min-w-0 truncate text-xs text-slate-400">
               Last settled: {lastSettled.event} · {Number(lastSettled.profit_loss) >= 0 ? "+" : ""}
               {Number(lastSettled.profit_loss || 0).toFixed(2)}u
             </span>
@@ -226,7 +226,7 @@ function EdgeMetric({
 }) {
   return (
     <div className="rounded-lg px-2 py-2 text-center">
-      <div className="font-mono text-[8px] font-bold uppercase tracking-[0.12em] text-slate-600">{label}</div>
+      <div className="font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-slate-400 sm:text-[11px] sm:tracking-[0.12em]">{label}</div>
       <div className={`mt-1 font-mono text-sm font-black tabular-nums ${
         positive === undefined ? "text-slate-100" : positive ? "text-emerald-300" : "text-rose-300"
       }`}>

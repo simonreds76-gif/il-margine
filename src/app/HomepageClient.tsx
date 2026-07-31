@@ -131,7 +131,7 @@ function MarketCard({
       className={`group relative flex h-full min-h-[160px] flex-col overflow-hidden rounded-2xl border p-5 transition-all duration-300 md:p-6 ${
         active
           ? "border-[rgba(87,209,150,0.20)] bg-[#0c0f14] hover:-translate-y-[2px] hover:border-[rgba(87,209,150,0.30)] hover:shadow-[0_12px_48px_rgba(87,209,150,0.04)]"
-          : "border-slate-700/40 bg-[#0c0f14] opacity-70"
+          : "border-slate-700/40 bg-[#0c0f14] opacity-90"
       }`}
     >
       {active ? (
@@ -144,19 +144,19 @@ function MarketCard({
         <div className="mb-3 flex items-center gap-2.5">
           <h3 className="text-[15px] font-semibold text-slate-200">{market.name}</h3>
           <span
-            className={`rounded-full border px-2.5 py-[2px] text-[8px] font-mono font-bold uppercase tracking-[0.16em] ${
+            className={`rounded-full border px-2.5 py-[2px] text-[10px] font-mono font-bold uppercase tracking-[0.14em] ${
               active
                 ? "border-[rgba(87,209,150,0.20)] bg-[rgba(87,209,150,0.08)] text-[rgba(87,209,150,0.85)]"
-                : "border-slate-700/40 bg-slate-800/50 text-slate-600"
+                : "border-slate-700/40 bg-slate-800/50 text-slate-400"
             }`}
           >
             {active ? (market.id === "atg" ? "Model" : "Active") : "Soon"}
           </span>
         </div>
-        <p className="text-[13px] leading-[1.65] text-slate-500 transition-colors duration-300 group-hover:text-slate-400">{market.description}</p>
+        <p className="text-[13px] leading-[1.65] text-slate-400 transition-colors duration-300 group-hover:text-slate-300">{market.description}</p>
         {active && market.profit ? (
           <div className="mt-4 flex items-baseline gap-4 font-mono text-[12px]">
-            {market.bets ? <span className="tabular-nums text-slate-400/80">{market.bets} bets</span> : null}
+            {market.bets ? <span className="tabular-nums text-slate-400">{market.bets} bets</span> : null}
             <span className="font-semibold tabular-nums text-[rgba(87,209,150,0.90)]">{market.profit}</span>
           </div>
         ) : null}
@@ -182,8 +182,8 @@ function ExploreCard({ href, title, body }: { href: string; title: string; body:
       className="group flex h-full flex-col rounded-xl border border-slate-700/40 bg-[#0c0f14] p-4 transition-all duration-300 hover:-translate-y-[1px] hover:border-[rgba(87,209,150,0.20)] sm:p-5"
     >
       <h3 className="mb-1 text-[14px] font-semibold text-slate-200 transition-colors group-hover:text-white">{title}</h3>
-      <p className="text-[12px] leading-[1.6] text-slate-600 transition-colors group-hover:text-slate-500">{body}</p>
-      <span className="mt-auto inline-flex w-full items-center justify-between pt-4 font-mono text-[10px] uppercase tracking-[0.16em] text-[rgba(87,209,150,0.45)] transition-colors group-hover:text-[rgba(87,209,150,0.85)]">
+      <p className="text-[13px] leading-[1.6] text-slate-400 transition-colors group-hover:text-slate-300">{body}</p>
+      <span className="mt-auto inline-flex w-full items-center justify-between pt-4 font-mono text-[11px] uppercase tracking-[0.15em] text-[rgba(87,209,150,0.78)] transition-colors group-hover:text-[var(--brand-green)]">
         View page {"\u2192"}
       </span>
     </Link>
@@ -439,14 +439,14 @@ export default function HomepageClient({
               </HomepageReveal>
 
               <HomepageReveal delay={520}>
-                <div className="mt-7 flex flex-wrap items-center gap-3 font-mono text-xs text-slate-500">
+                <div className="mt-7 flex flex-wrap items-center gap-3 font-mono text-xs text-slate-400">
                   {[
                     "Free picks",
                     "No sign-up",
                     "Transparent results",
                   ].map((item) => (
                     <span key={item} className="inline-flex items-center gap-2">
-                      <span className="h-[3px] w-[3px] rounded-full bg-slate-500" />
+                      <span className="h-[3px] w-[3px] rounded-full bg-slate-600" />
                       {item}
                     </span>
                   ))}
@@ -457,12 +457,12 @@ export default function HomepageClient({
                 <div className="mt-8 max-w-3xl rounded-[1.4rem] border border-[rgba(87,209,150,0.22)] bg-[linear-gradient(135deg,rgba(87,209,150,0.13),rgba(9,13,19,0.78)_34%,rgba(9,13,19,0.96))] p-2 shadow-[0_24px_80px_rgba(0,0,0,0.32)]">
                   <div className="mb-2 flex items-center justify-between px-2 pt-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.82)]">
                     <span>Public record</span>
-                    <span className="text-slate-500">Updated within a minute</span>
+                    <span className="text-slate-400">Updated within a minute</span>
                   </div>
                   <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                     {heroProofStats.map((stat) => (
                       <div key={stat.label} className="rounded-xl border border-white/[0.06] bg-slate-950/55 px-2 py-3 text-center sm:rounded-2xl sm:px-4 sm:py-4 sm:text-left">
-                        <div className="font-mono text-[8px] font-bold uppercase leading-tight tracking-[0.11em] text-slate-500 sm:text-[10px] sm:tracking-[0.14em]">
+                        <div className="font-mono text-[10px] font-bold uppercase leading-tight tracking-[0.09em] text-slate-400 sm:text-[11px] sm:tracking-[0.14em]">
                           {stat.label}
                         </div>
                         <div className="mt-2 font-mono text-lg font-black leading-none tracking-tight text-[var(--brand-green)] sm:text-2xl">
@@ -553,9 +553,9 @@ export default function HomepageClient({
                     {item.number}
                   </span>
                   <div className="relative">
-                    <span className="font-mono text-[10px] font-bold text-[rgba(87,209,150,0.35)]">{item.number}</span>
+                    <span className="font-mono text-[10px] font-bold text-[rgba(87,209,150,0.70)]">{item.number}</span>
                     <h3 className="mt-1 text-[14px] font-semibold text-slate-200">{item.title}</h3>
-                    <p className="mt-1.5 text-[12px] leading-[1.6] text-slate-600 transition-colors duration-300 group-hover:text-slate-500">
+                    <p className="mt-1.5 text-[13px] leading-[1.6] text-slate-400 transition-colors duration-300 group-hover:text-slate-300">
                       {item.body}
                     </p>
                   </div>
@@ -581,13 +581,13 @@ export default function HomepageClient({
                   }`}
                 >
                   Last 7 days: {last7DaysProfit > 0 ? "+" : ""}{last7DaysProfit.toFixed(2)}u
-                  <span className="ml-1 font-normal text-slate-500">
+                  <span className="ml-1 font-normal text-slate-400">
                     ({last7DaysCount} bet{last7DaysCount !== 1 ? "s" : ""})
                   </span>
                 </span>
               ) : null}
             </div>
-            <p className="mb-6 text-xs text-slate-500">Stake in units (1u = your standard stake). We typically recommend 0.5u to 2u per pick.</p>
+            <p className="mb-6 text-xs text-slate-400">Stake in units (1u = your standard stake). We typically recommend 0.5u to 2u per pick.</p>
             <div className="overflow-hidden rounded-2xl border border-slate-700/40 bg-[#0c0f14]">
               <div className="hidden overflow-x-auto md:block">
                 <PublicBetsTable bets={recentBets.slice(0, 5)} mode="settled" />
@@ -602,7 +602,7 @@ export default function HomepageClient({
                     <div className="mb-2 flex items-start justify-between">
                       <div className="flex-1">
                         <div className="mb-1 flex items-center gap-2">
-                          <span className="text-xs whitespace-nowrap text-slate-500">{formatMatchDate(bet.match_date)}</span>
+                          <span className="text-xs whitespace-nowrap text-slate-400">{formatMatchDate(bet.match_date)}</span>
                         </div>
                         <div className="mb-1 font-medium text-slate-200">{bet.event}</div>
                         <div className="mb-1 text-sm text-slate-300">
@@ -700,8 +700,8 @@ export default function HomepageClient({
                 className="group flex h-full flex-col rounded-xl border border-slate-700/40 bg-[#0c0f14] p-4 text-left transition-all duration-300 hover:-translate-y-[1px] hover:border-[rgba(87,209,150,0.25)] sm:p-5"
               >
                 <h3 className="mb-2 text-[15px] font-medium text-slate-200 transition-colors group-hover:text-white">{item.title}</h3>
-                <p className="text-sm leading-relaxed text-slate-500 transition-colors group-hover:text-slate-400">{item.summary}</p>
-                <span className="mt-auto pt-4 font-mono text-[10px] uppercase tracking-[0.16em] text-[rgba(87,209,150,0.45)] transition-colors group-hover:text-[rgba(87,209,150,0.85)]">
+                <p className="text-sm leading-relaxed text-slate-400 transition-colors group-hover:text-slate-300">{item.summary}</p>
+                <span className="mt-auto pt-4 font-mono text-[11px] uppercase tracking-[0.15em] text-[rgba(87,209,150,0.78)] transition-colors group-hover:text-[var(--brand-green)]">
                   Read answer {"\u2192"}
                 </span>
               </Link>
@@ -747,11 +747,11 @@ export default function HomepageClient({
       </section>
 
       <div className="mx-auto max-w-6xl px-4 pb-14 sm:px-6 lg:px-8">
-        <div className="rounded-xl border border-amber-500/10 bg-amber-500/[0.03] px-5 py-4 text-[12px] leading-relaxed text-slate-500">
-          <strong className="text-amber-400/80">Responsible gambling:</strong> Past performance does not guarantee future results. Only bet what you can afford to lose.{" "}
-          <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-slate-400 underline underline-offset-2">BeGambleAware</a>
+        <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.05] px-5 py-4 text-[13px] leading-relaxed text-slate-300">
+          <strong className="text-amber-400">Responsible gambling:</strong> Past performance does not guarantee future results. Only bet what you can afford to lose.{" "}
+          <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-slate-200 underline underline-offset-2">BeGambleAware</a>
           <span className="px-1.5 text-slate-500">|</span>
-          <a href="https://www.gamcare.org.uk" target="_blank" rel="noopener noreferrer" className="text-slate-400 underline underline-offset-2">GamCare</a>
+          <a href="https://www.gamcare.org.uk" target="_blank" rel="noopener noreferrer" className="text-slate-200 underline underline-offset-2">GamCare</a>
         </div>
       </div>
 

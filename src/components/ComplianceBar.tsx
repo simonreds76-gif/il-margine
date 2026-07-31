@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 
 /** Site-wide compliance bar: 18+, BeGambleAware, Gamble Responsibly. Below nav, above content. */
@@ -33,7 +32,7 @@ export default function ComplianceBar() {
               className="h-6 w-auto min-w-[90px]"
             />
           </a>
-          <span className="text-xs text-slate-500">Gamble responsibly</span>
+          <span className="text-xs font-medium text-slate-300">Gamble responsibly</span>
         </div>
       </div>
     </div>

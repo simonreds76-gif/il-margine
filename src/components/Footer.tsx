@@ -25,14 +25,14 @@ export default function Footer({ className = "" }: FooterProps) {
             />
           </Link>
           <div className="flex flex-col items-center md:items-end gap-3">
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-slate-500">
-              <Link href="/faq" className="hover:text-slate-300">Frequently Asked Questions</Link>
-              <Link href="/contact" className="hover:text-slate-300">Contact</Link>
-              <Link href="/disclaimer" className="hover:text-slate-300">Disclaimer</Link>
-              <Link href="/privacy-policy" className="hover:text-slate-300">Privacy Policy</Link>
-              <Link href="/cookies-policy" className="hover:text-slate-300">Cookies Policy</Link>
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-slate-400">
+              <Link href="/faq" className="hover:text-white">Frequently Asked Questions</Link>
+              <Link href="/contact" className="hover:text-white">Contact</Link>
+              <Link href="/disclaimer" className="hover:text-white">Disclaimer</Link>
+              <Link href="/privacy-policy" className="hover:text-white">Privacy Policy</Link>
+              <Link href="/cookies-policy" className="hover:text-white">Cookies Policy</Link>
             </div>
-            <div className="text-xs text-slate-500">Gamble responsibly. 18+ only.</div>
+            <div className="text-xs text-slate-400">Gamble responsibly. 18+ only.</div>
           </div>
         </div>
       </div>

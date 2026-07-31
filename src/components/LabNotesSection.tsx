@@ -22,17 +22,17 @@ function LabNoteCard({ note }: { note: Resource }) {
       className="group block h-full rounded-xl border border-slate-800/60 bg-[#0c0f14] p-5 transition-colors hover:border-emerald-500/30 hover:bg-slate-900/60"
     >
       <div className="flex flex-wrap items-center gap-3">
-        <time dateTime={note.datePublished} className="font-mono text-xs text-slate-500">
+        <time dateTime={note.datePublished} className="font-mono text-xs text-slate-400">
           {formatLabNoteDate(note.datePublished)}
         </time>
-        <span className="rounded-full border border-slate-700/60 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.16em] text-slate-400">
+        <span className="rounded-full border border-slate-600/60 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.16em] text-slate-300">
           {note.tag ?? note.category}
         </span>
       </div>
       <h3 className="mt-3 text-lg font-semibold leading-snug text-slate-100 transition-colors group-hover:text-emerald-300">
         {note.title}
       </h3>
-      <p className="mt-2 text-sm leading-relaxed text-slate-500 transition-colors group-hover:text-slate-400">
+      <p className="mt-2 text-sm leading-relaxed text-slate-400 transition-colors group-hover:text-slate-300">
         {note.excerpt ?? note.description}
       </p>
     </Link>
@@ -64,7 +64,7 @@ export default function LabNotesSection({
         </div>
         {currentlyWatching ? (
           <p className="mt-4 text-sm leading-relaxed text-slate-400">
-            <span className="mr-2 font-mono text-xs uppercase tracking-wider text-emerald-400/80">
+            <span className="mr-2 font-mono text-xs uppercase tracking-wider text-emerald-300/90">
               Currently watching:
             </span>
             <span className="italic">{currentlyWatching}</span>
