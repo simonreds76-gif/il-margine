@@ -57,6 +57,8 @@ class WeeklyResearchReportTests(unittest.TestCase):
     def test_weekly_payload_includes_automation_budget(self) -> None:
         payload = REPORT["build_payload"]()
         self.assertIn("automation_budget", payload)
+        self.assertIn("tennis_venue_ace_factor_v1", payload)
+        self.assertFalse(payload["tennis_venue_ace_factor_v1"]["automatic_promotion"])
 
     def test_weekly_payload_includes_every_tennis_lane(self) -> None:
         payload = REPORT["build_payload"]()
@@ -86,6 +88,8 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertIn("Inactive research (not tips)", message)
         self.assertIn("Aces/DF vs Bet365", message)
         self.assertIn("Aces Over v4 [PRE_FIT]", message)
+        self.assertIn("Venue ace v1 [SHADOW]", message)
+        self.assertIn("NOT SELLABLE", message)
         self.assertIn("Most Aces A0 [outcome only]", message)
         self.assertIn("Most Aces Direct [prospective shadow]", message)
         self.assertIn("Direct vs A0 paired", message)

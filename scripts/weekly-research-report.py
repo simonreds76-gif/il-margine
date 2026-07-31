@@ -34,6 +34,9 @@ TENNIS_PROPS_DECISION_JSON = ROOT / "data" / "tennis-props" / "shadow" / "aces-d
 TENNIS_PROPS_DECISION_REPORT = ROOT / "data" / "tennis-props" / "shadow" / "aces-dfs-weekly-decision.txt"
 TENNIS_PROPS_V3_LOCAL_JSON = ROOT / "data" / "tennis-props" / "backtest" / "aces-v3-weekly-report.json"
 TENNIS_PROPS_V4_JSON = ROOT / "data" / "tennis-props" / "backtest" / "aces-over-v4-weekly-report.json"
+TENNIS_VENUE_ACE_FACTORS = ROOT / "data" / "tennis-props" / "venue-ace-factors.csv"
+TENNIS_VENUE_ACE_V1_OBSERVATIONS = ROOT / "data" / "tennis-props" / "shadow" / "venue-ace-factor-v1-observations.csv"
+TENNIS_VENUE_ACE_V1_GATE = ROOT / "data" / "tennis-props" / "backtest" / "venue-ace-factor-v1-gate.json"
 TENNIS_MOST_ACES_FORECAST_JSON = ROOT / "data" / "tennis-props" / "shadow" / "most-aces-1x2-forecast-report.json"
 TENNIS_MOST_ACES_OBSERVATIONS = ROOT / "data" / "tennis-props" / "shadow" / "most-aces-1x2-observations.csv"
 TENNIS_MOST_ACES_A0_MODEL = "v3_aces_gaussian_copula_nb2"
@@ -867,6 +870,62 @@ def tennis_props_shadow_decision_report(summary: dict[str, Any]) -> str:
     )
 
 
+def venue_ace_factor_v1_summary() -> dict[str, Any]:
+    factors = load_csv(TENNIS_VENUE_ACE_FACTORS)
+    observations = load_csv(TENNIS_VENUE_ACE_V1_OBSERVATIONS)
+    gate_payload = load_json(TENNIS_VENUE_ACE_V1_GATE)
+    scope_factors = [
+        row
+        for row in factors
+        if str(row.get("tour") or "").upper() == "ATP"
+        and str(row.get("surface") or "") in {"Hard", "Clay"}
+    ]
+    eligible = [
+        row for row in scope_factors if str(row.get("eligible") or "").lower() == "true"
+    ]
+    settled = [row for row in observations if str(row.get("settlement_status") or "").lower() == "settled"]
+    pending = [row for row in observations if str(row.get("settlement_status") or "").lower() == "pending"]
+    pnl_units = sum(number(row.get("pnl")) for row in settled)
+    clv_values = [
+        number(row.get("clv_pct"))
+        for row in observations
+        if str(row.get("clv_pct") or "").strip()
+    ]
+    factor_values = [number(row.get("ace_factor"), 1.0) for row in eligible]
+    paired = ((gate_payload.get("paired_scoring") or {}).get("overall") or {}) if gate_payload else {}
+    return {
+        "status": "PROSPECTIVE_SHADOW",
+        "automatic_promotion": False,
+        "eligible_venues": len(eligible),
+        "total_venues": len(scope_factors),
+        "factor_min": min(factor_values) if factor_values else None,
+        "factor_max": max(factor_values) if factor_values else None,
+        "registered": len(observations),
+        "settled": len(settled),
+        "pending": len(pending),
+        "distinct_events": len(
+            {
+                str(row.get("event_id") or row.get("signal_id") or "")
+                for row in observations
+                if str(row.get("event_id") or row.get("signal_id") or "")
+            }
+        ),
+        "pnl_units": pnl_units,
+        "roi_pct": (pnl_units / len(settled) * 100.0) if settled else None,
+        "clv_rows": len(clv_values),
+        "mean_clv_pct": (sum(clv_values) / len(clv_values)) if clv_values else None,
+        "paired_rows": int(number(paired.get("n"))),
+        "control_brier": finite_float(paired.get("control_brier")),
+        "candidate_brier": finite_float(paired.get("candidate_brier")),
+        "brier_delta": finite_float(paired.get("brier_delta")),
+        "passed_gate_count": int(number(gate_payload.get("passed_gate_count"))) if gate_payload else 0,
+        "total_gate_count": int(number(gate_payload.get("total_gate_count"))) if gate_payload else 5,
+        "promotion_target_rows": 600,
+        "promotion_target_events": 150,
+        "decision": "NOT_SELLABLE",
+    }
+
+
 def tennis_props_v3_snapshot() -> dict[str, Any]:
     raw = os.environ.get("TENNIS_PROPS_V3_WEEKLY_JSON", "").strip()
     if not raw:
@@ -961,6 +1020,7 @@ def build_payload() -> dict[str, Any]:
     tennis_model_evidence = tennis_model_evidence_summary()
     tennis_props_v3 = tennis_props_v3_snapshot()
     tennis_props_v4 = load_json(TENNIS_PROPS_V4_JSON)
+    tennis_venue_ace_v1 = venue_ace_factor_v1_summary()
     tennis_most_aces_forecast = load_json(TENNIS_MOST_ACES_FORECAST_JSON)
     tennis_most_aces_prices = most_aces_price_summary()
     tennis_props_benchmark = tennis_props_market_benchmark()
@@ -1009,6 +1069,7 @@ def build_payload() -> dict[str, Any]:
         "tennis_model_evidence": tennis_model_evidence,
         "tennis_props_v3": tennis_props_v3,
         "tennis_props_v4": tennis_props_v4,
+        "tennis_venue_ace_factor_v1": tennis_venue_ace_v1,
         "tennis_most_aces_forecast": tennis_most_aces_forecast,
         "tennis_most_aces_prices": tennis_most_aces_prices,
         "tennis_props_market_benchmark": tennis_props_benchmark,
@@ -1052,6 +1113,7 @@ def render_report(payload: dict[str, Any]) -> str:
     team_fouls_m2 = team_fouls.get("m2") or {}
     tennis = payload["tennis_ml_gap_guard"]
     tennis_props_v3 = payload.get("tennis_props_v3") or {}
+    tennis_venue_ace_v1 = payload.get("tennis_venue_ace_factor_v1") or {}
     tennis_props_benchmark = payload.get("tennis_props_market_benchmark") or {}
     tennis_props_shadow = payload.get("tennis_props_shadow_decision") or {}
     goalscorer = payload["goalscorer_v2"]
@@ -1200,6 +1262,33 @@ def render_report(payload: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
+            "## Venue Ace Factor v1",
+            "",
+            (
+                f"- Status: {tennis_venue_ace_v1.get('status', 'NOT_RUN')} / "
+                f"{tennis_venue_ace_v1.get('decision', 'NOT_SELLABLE')}"
+            ),
+            (
+                f"- Venue coverage: {tennis_venue_ace_v1.get('eligible_venues', 0)}/"
+                f"{tennis_venue_ace_v1.get('total_venues', 0)} eligible."
+            ),
+            (
+                f"- Prospective evidence: {tennis_venue_ace_v1.get('settled', 0)}/"
+                f"{tennis_venue_ace_v1.get('promotion_target_rows', 600)} settled across "
+                f"{tennis_venue_ace_v1.get('distinct_events', 0)}/"
+                f"{tennis_venue_ace_v1.get('promotion_target_events', 150)} events; "
+                f"P/L {number(tennis_venue_ace_v1.get('pnl_units')):+.2f}u; "
+                f"ROI {pct(tennis_venue_ace_v1.get('roi_pct'))}; "
+                f"CLV {pct(tennis_venue_ace_v1.get('mean_clv_pct'), 2)} "
+                f"n={tennis_venue_ace_v1.get('clv_rows', 0)}."
+            ),
+            "- Shadow only. This block never changes routing, stakes or public recommendations.",
+        ]
+    )
+
+    lines.extend(
+        [
+            "",
             "## Tennis Aces/DF Prospective Decision",
             "",
             tennis_props_shadow_decision_report(tennis_props_shadow),
@@ -1246,6 +1335,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
     tennis = payload["tennis_ml_gap_guard"]
     tennis_model_evidence = payload.get("tennis_model_evidence") or {}
     tennis_props_v3 = payload.get("tennis_props_v3") or {}
+    tennis_venue_ace_v1 = payload.get("tennis_venue_ace_factor_v1") or {}
     tennis_props_benchmark = payload.get("tennis_props_market_benchmark") or {}
     tennis_props_shadow = payload.get("tennis_props_shadow_decision") or {}
     goalscorer = payload["goalscorer_v2"]
@@ -1325,6 +1415,18 @@ def telegram_text(payload: dict[str, Any]) -> str:
     elif tennis_props_v3.get("_error"):
         lines.append(f"Tennis props v3: snapshot unavailable ({tennis_props_v3['_error']})")
     lines.append(
+        "Venue ace v1 [SHADOW]: "
+        f"venues {tennis_venue_ace_v1.get('eligible_venues', 0)}/"
+        f"{tennis_venue_ace_v1.get('total_venues', 0)} | "
+        f"{tennis_venue_ace_v1.get('settled', 0)}/"
+        f"{tennis_venue_ace_v1.get('promotion_target_rows', 600)} settled | "
+        f"ROI {pct(tennis_venue_ace_v1.get('roi_pct'))} | "
+        f"CLV {pct(tennis_venue_ace_v1.get('mean_clv_pct'), 2)} "
+        f"n={tennis_venue_ace_v1.get('clv_rows', 0)} | "
+        f"Brier delta {number(tennis_venue_ace_v1.get('brier_delta')):+.4f} "
+        f"n={tennis_venue_ace_v1.get('paired_rows', 0)} | NOT SELLABLE"
+    )
+    lines.append(
         "Tennis props vs Bet365: "
         f"{tennis_props_benchmark.get('settled', 0)}/{tennis_props_benchmark.get('observations', 0)} settled, "
         f"Brier delta {number(tennis_props_benchmark.get('brier_delta_vs_market')):+.4f}, "
@@ -1357,6 +1459,7 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     replacements = evidence.get("gap_replacements") or {}
     props_v3 = payload.get("tennis_props_v3") or {}
     props_v4 = payload.get("tennis_props_v4") or {}
+    venue_ace_v1 = payload.get("tennis_venue_ace_factor_v1") or {}
     most_aces = payload.get("tennis_most_aces_forecast") or {}
     most_aces_prices = payload.get("tennis_most_aces_prices") or {}
     props_benchmark = payload.get("tennis_props_market_benchmark") or {}
@@ -1420,6 +1523,19 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
             f"CLV {number(props_v4.get('clv_mean_pct')):+.2f}% "
             f"n={props_v4.get('clv_coverage', 0)} | no tips before gate"
         )
+    lines.append(
+        "Venue ace v1 [SHADOW]: "
+        f"venues {venue_ace_v1.get('eligible_venues', 0)}/"
+        f"{venue_ace_v1.get('total_venues', 0)} | "
+        f"{venue_ace_v1.get('settled', 0)}/"
+        f"{venue_ace_v1.get('promotion_target_rows', 600)} settled | "
+        f"events {venue_ace_v1.get('distinct_events', 0)}/"
+        f"{venue_ace_v1.get('promotion_target_events', 150)} | "
+        f"ROI {pct(venue_ace_v1.get('roi_pct'))} | "
+        f"CLV {pct(venue_ace_v1.get('mean_clv_pct'), 2)} | "
+        f"Brier delta {number(venue_ace_v1.get('brier_delta')):+.4f} "
+        f"n={venue_ace_v1.get('paired_rows', 0)} | NOT SELLABLE"
+    )
     if most_aces and not most_aces.get("_error"):
         models = most_aces.get("models") or {}
         paired = most_aces.get("paired_comparison") or {}

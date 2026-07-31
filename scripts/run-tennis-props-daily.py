@@ -20,6 +20,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 PROPS_DIR = ROOT / "data" / "tennis-props"
 MOST_ACES_DIRECT_BOARD = PROPS_DIR / "shadow" / "most-aces-direct-1x2-board.csv"
+VENUE_ACE_V1_BOARD = PROPS_DIR / "shadow" / "venue-ace-factor-v1-projection-board.csv"
 
 
 def load_env() -> None:
@@ -198,6 +199,21 @@ def run_comparison(as_of: str, market_file: Path) -> bool:
             "Compare v3 ATP ace shadow projections with Bet365",
             fatal=False,
         )
+    if has_market_rows(VENUE_ACE_V1_BOARD):
+        run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "tennis-props-compare-bet365.py"),
+                "--date", as_of,
+                "--lines", str(market_file),
+                "--board", str(VENUE_ACE_V1_BOARD),
+                "--out", str(PROPS_DIR / f"comparison-venue-ace-v1-{as_of}.csv"),
+                "--unmatched-out", str(PROPS_DIR / f"comparison-venue-ace-v1-{as_of}-unmatched.csv"),
+                "--market-filter", "aces,ace,player_aces,match_aces",
+            ],
+            "Compare venue ace factor v1 shadow projections with Bet365",
+            fatal=False,
+        )
     return exit_code == 0 and has_market_rows(comparison)
 
 
@@ -235,6 +251,31 @@ def run_shadow_tracking(as_of: str) -> None:
             ],
             "Settle v3 ATP ace prospective shadow signals",
             fatal=True,
+        )
+    venue_comparison = PROPS_DIR / f"comparison-venue-ace-v1-{as_of}.csv"
+    if has_market_rows(venue_comparison):
+        venue_signals = PROPS_DIR / "shadow" / "venue-ace-factor-v1-observations.csv"
+        venue_performance = PROPS_DIR / "shadow" / "venue-ace-factor-v1-performance.txt"
+        run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "tennis-venue-ace-factor-v1-observations.py"),
+                "--date", as_of,
+                "--comparison", str(venue_comparison),
+                "--observations", str(venue_signals),
+            ],
+            "Append paired venue ace factor v1 control/candidate observations",
+            fatal=False,
+        )
+        run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "tennis-props-settle-shadow.py"),
+                "--signals", str(venue_signals),
+                "--performance", str(venue_performance),
+            ],
+            "Settle venue ace factor v1 prospective shadow observations",
+            fatal=False,
         )
     v4_cmd = [
         sys.executable,
@@ -290,6 +331,14 @@ def run_shadow_tracking(as_of: str) -> None:
             str(ROOT / "scripts" / "tennis-props-model-report.py"),
         ],
         "Build tennis props model monitor report",
+        fatal=False,
+    )
+    run(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "tennis-venue-ace-factor-v1-report.py"),
+        ],
+        "Build venue ace factor v1 shadow gate report",
         fatal=False,
     )
     run(
