@@ -25,6 +25,10 @@ on:
         description: "Force odds-api.io tennis market endpoint probes in logs"
         type: boolean
         default: false
+      price_shape_probe:
+        description: "Run the bounded three-request Bet365 ladder diagnostic"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -92,7 +96,7 @@ jobs:
             ${EXTRA_ARGS}
 
       - name: Scrape BetMGM Most Aces 1X2
-        if: ${{ always() && (github.event_name == 'workflow_dispatch' || github.event.schedule == '25 15 * * *') }}
+        if: ${{ always() && github.event.inputs.price_shape_probe != 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '25 15 * * *') }}
         env:
           DAYS_AHEAD: ${{ github.event.inputs.days_ahead || '2' }}
           MAX_EVENTS: ${{ github.event.inputs.max_events || '64' }}
@@ -102,6 +106,13 @@ jobs:
             --days-ahead "${DAYS_AHEAD}" \
             --max-events "${MAX_EVENTS}" \
             --bookmakers "BetMGM"
+
+      - name: Probe Bet365 tennis price shape
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.price_shape_probe == 'true' }}
+        run: |
+          python scripts/probe-tennis-props-price-shape.py \
+            --date "$(date -u +%F)" \
+            --bookmaker "Bet365"
 
       - name: Build append-only Bet365 price history
         if: always()
@@ -119,6 +130,7 @@ jobs:
             data/tennis-props/inbox/betmgm-most-aces-1x2-*.csv
             data/tennis-props/inbox/betmgm-most-aces-history-*.csv
             data/tennis-props/inbox/betmgm-tennis-market-audit-*.csv
+            data/tennis-props/inbox/bet365-price-shape-probe-*.json
           if-no-files-found: warn
 
       - name: Commit captured odds
