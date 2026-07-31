@@ -72,6 +72,15 @@ FIELDNAMES = [
     "pnl",
     "settled_at_utc",
     "settlement_note",
+    "control_projection_mean",
+    "candidate_projection_mean",
+    "control_p_over_no_push",
+    "candidate_p_over_no_push",
+    "venue_v1_factor",
+    "venue_v1_control_factor",
+    "venue_v1_prior_svpt",
+    "venue_v1_source_seasons",
+    "venue_v1_model",
 ]
 
 

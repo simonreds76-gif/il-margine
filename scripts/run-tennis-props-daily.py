@@ -19,6 +19,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PROPS_DIR = ROOT / "data" / "tennis-props"
+MOST_ACES_DIRECT_BOARD = PROPS_DIR / "shadow" / "most-aces-direct-1x2-board.csv"
+VENUE_ACE_V1_BOARD = PROPS_DIR / "shadow" / "venue-ace-factor-v1-projection-board.csv"
 
 
 def load_env() -> None:
@@ -116,7 +118,7 @@ def select_most_aces_file(as_of: str, lookback_days: int = 3) -> Path | None:
     return None
 
 
-def refresh_derived_ace_boards() -> None:
+def refresh_derived_ace_boards(as_of: str) -> None:
     """Rebuild every ace board that depends on the main projection artifact."""
     run(
         [sys.executable, str(ROOT / "scripts" / "tennis-props-v3-live.py")],
@@ -129,16 +131,35 @@ def refresh_derived_ace_boards() -> None:
         fatal=False,
         timeout_seconds=180,
     )
-
-
-def run_most_aces_shadow(as_of: str, capture: Path | None = None) -> None:
     run(
-        [sys.executable, str(ROOT / "scripts" / "tennis-most-aces-forecast.py")],
-        "Register and score Most Aces 1X2 outcome forecasts",
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "tennis-most-aces-direct-live.py"),
+            "--as-of",
+            as_of,
+        ],
+        "Build direct Most Aces 1X2 prospective shadow board",
         fatal=False,
         timeout_seconds=180,
     )
+
+
+def run_most_aces_shadow(as_of: str, capture: Path | None = None) -> None:
+    forecast_cmd = [
+        sys.executable,
+        str(ROOT / "scripts" / "tennis-most-aces-forecast.py"),
+    ]
+    if has_market_rows(MOST_ACES_DIRECT_BOARD):
+        forecast_cmd.extend(["--additional-board", str(MOST_ACES_DIRECT_BOARD)])
+    run(
+        forecast_cmd,
+        "Register and score A0 plus Direct Most Aces 1X2 forecasts",
+        fatal=False,
+        timeout_seconds=240,
+    )
     cmd = [sys.executable, str(ROOT / "scripts" / "tennis-most-aces-shadow.py")]
+    if has_market_rows(MOST_ACES_DIRECT_BOARD):
+        cmd.extend(["--additional-board", str(MOST_ACES_DIRECT_BOARD)])
     selected = capture or select_most_aces_file(as_of)
     if selected and has_market_rows(selected):
         cmd.extend(["--capture", str(selected)])
@@ -178,6 +199,21 @@ def run_comparison(as_of: str, market_file: Path) -> bool:
             "Compare v3 ATP ace shadow projections with Bet365",
             fatal=False,
         )
+    if has_market_rows(VENUE_ACE_V1_BOARD):
+        run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "tennis-props-compare-bet365.py"),
+                "--date", as_of,
+                "--lines", str(market_file),
+                "--board", str(VENUE_ACE_V1_BOARD),
+                "--out", str(PROPS_DIR / f"comparison-venue-ace-v1-{as_of}.csv"),
+                "--unmatched-out", str(PROPS_DIR / f"comparison-venue-ace-v1-{as_of}-unmatched.csv"),
+                "--market-filter", "aces,ace,player_aces,match_aces",
+            ],
+            "Compare venue ace factor v1 shadow projections with Bet365",
+            fatal=False,
+        )
     return exit_code == 0 and has_market_rows(comparison)
 
 
@@ -215,6 +251,31 @@ def run_shadow_tracking(as_of: str) -> None:
             ],
             "Settle v3 ATP ace prospective shadow signals",
             fatal=True,
+        )
+    venue_comparison = PROPS_DIR / f"comparison-venue-ace-v1-{as_of}.csv"
+    if has_market_rows(venue_comparison):
+        venue_signals = PROPS_DIR / "shadow" / "venue-ace-factor-v1-observations.csv"
+        venue_performance = PROPS_DIR / "shadow" / "venue-ace-factor-v1-performance.txt"
+        run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "tennis-venue-ace-factor-v1-observations.py"),
+                "--date", as_of,
+                "--comparison", str(venue_comparison),
+                "--observations", str(venue_signals),
+            ],
+            "Append paired venue ace factor v1 control/candidate observations",
+            fatal=False,
+        )
+        run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "tennis-props-settle-shadow.py"),
+                "--signals", str(venue_signals),
+                "--performance", str(venue_performance),
+            ],
+            "Settle venue ace factor v1 prospective shadow observations",
+            fatal=False,
         )
     v4_cmd = [
         sys.executable,
@@ -275,6 +336,14 @@ def run_shadow_tracking(as_of: str) -> None:
     run(
         [
             sys.executable,
+            str(ROOT / "scripts" / "tennis-venue-ace-factor-v1-report.py"),
+        ],
+        "Build venue ace factor v1 shadow gate report",
+        fatal=False,
+    )
+    run(
+        [
+            sys.executable,
             str(ROOT / "scripts" / "tennis-derivatives-evidence-report.py"),
         ],
         "Refresh tennis derivative evidence gates",
@@ -317,7 +386,7 @@ def sync_hosted_captures(as_of: str, lookback_days: int) -> None:
 def run_comparison_only(as_of: str, *, skip_sync: bool, lookback_days: int) -> int:
     if not skip_sync:
         sync_hosted_captures(as_of, lookback_days)
-    refresh_derived_ace_boards()
+    refresh_derived_ace_boards(as_of)
     market_file = select_market_file(as_of)
     if market_file is None:
         print(f"WARNING: no hosted/local Bet365 capture contains {as_of} events.")
@@ -399,6 +468,20 @@ def main() -> int:
     run(
         [
             sys.executable,
+            str(ROOT / "scripts" / "tennis-props-activity.py"),
+            "--as-of",
+            args.as_of,
+            "--start-year",
+            str(args.start_year),
+            "--end-year",
+            str(args.end_year),
+        ],
+        "Build coverage-inclusive tennis props activity",
+        fatal=True,
+    )
+    run(
+        [
+            sys.executable,
             str(ROOT / "scripts" / "build-tennis-props-board.py"),
             "--as-of",
             args.as_of,
@@ -406,7 +489,7 @@ def main() -> int:
         "Build tennis props projection board",
         fatal=True,
     )
-    refresh_derived_ace_boards()
+    refresh_derived_ace_boards(args.as_of)
 
     if not args.skip_hosted_sync:
         sync_hosted_captures(args.as_of, args.hosted_lookback_days)

@@ -57,6 +57,8 @@ class WeeklyResearchReportTests(unittest.TestCase):
     def test_weekly_payload_includes_automation_budget(self) -> None:
         payload = REPORT["build_payload"]()
         self.assertIn("automation_budget", payload)
+        self.assertIn("tennis_venue_ace_factor_v1", payload)
+        self.assertFalse(payload["tennis_venue_ace_factor_v1"]["automatic_promotion"])
 
     def test_weekly_payload_includes_every_tennis_lane(self) -> None:
         payload = REPORT["build_payload"]()
@@ -86,9 +88,49 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertIn("Inactive research (not tips)", message)
         self.assertIn("Aces/DF vs Bet365", message)
         self.assertIn("Aces Over v4 [PRE_FIT]", message)
-        self.assertIn("Most Aces 1X2 [outcome only]", message)
+        self.assertIn("Venue ace v1 [SHADOW]", message)
+        self.assertIn("NOT SELLABLE", message)
+        self.assertIn("Most Aces A0 [outcome only]", message)
+        self.assertIn("Most Aces Direct [prospective shadow]", message)
+        self.assertIn("Direct vs A0 paired", message)
+        self.assertIn("price evidence is separate below", message)
+        self.assertIn("Most Aces Direct vs BetMGM", message)
         self.assertIn("Aces/DF promotion gate", message)
         self.assertLessEqual(len(message), 4096)
+
+    def test_most_aces_stale_json_falls_back_to_next_checkpoint(self) -> None:
+        payload = REPORT["build_payload"]()
+        payload["tennis_most_aces_forecast"] = {
+            "models": {},
+            "paired_comparison": {"paired_events": 0},
+        }
+        message = REPORT["tennis_telegram_text"](payload)
+        self.assertIn("Direct vs A0 paired: n=0/200", message)
+        self.assertIn("BUILDING (next 50)", message)
+        self.assertNotIn("BUILDING (review due)", message)
+
+    def test_most_aces_price_summary_is_model_specific(self) -> None:
+        rows = [
+            {
+                "model": "most_aces_direct_1x2_v1",
+                "settlement_status": "settled",
+                "bet_eligible": "yes",
+                "pnl": "1.5",
+                "clv_pct": "2.0",
+            },
+            {
+                "model": "v3_aces_gaussian_copula_nb2",
+                "settlement_status": "settled",
+                "bet_eligible": "yes",
+                "pnl": "-1.0",
+                "clv_pct": "-0.5",
+            },
+        ]
+        summary = REPORT["most_aces_price_summary"](rows)
+        direct = summary["most_aces_direct_1x2_v1"]
+        self.assertEqual(direct["eligible_settled"], 1)
+        self.assertEqual(direct["pnl_units"], 1.5)
+        self.assertEqual(direct["mean_clv_pct"], 2.0)
 
     def test_tennis_props_decision_fails_closed_on_thin_sample(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

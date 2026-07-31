@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import csv
 import re
+import unicodedata
 from collections import defaultdict
 from datetime import date, datetime
 from pathlib import Path
@@ -25,7 +26,13 @@ ONCOURT_DIR = ROOT / "data" / "oncourt"
 OUT_DIR = ROOT / "data" / "tennis-props"
 DEFAULT_OUT = OUT_DIR / "slam-venue-factors.csv"
 DEFAULT_BASELINE_OUT = OUT_DIR / "tour-surface-baselines.csv"
+DEFAULT_CANDIDATE_OUT = OUT_DIR / "venue-ace-factors.csv"
 ONCOURT_MAIN_TOUR_RANKS = {"2", "3", "4"}
+VENUE_FACTOR_PRIOR_SEASONS = 3
+VENUE_FACTOR_SHRINK_SVPT = 1500.0
+VENUE_FACTOR_MIN_SVPT = 3000.0
+VENUE_FACTOR_MIN = 0.60
+VENUE_FACTOR_MAX = 2.20
 SLAMS = {
     "australian open": "Australian Open",
     "roland garros": "Roland Garros",
@@ -66,7 +73,47 @@ def canonical_tournament_name(value: object) -> str | None:
         return "Bad Homburg"
     if "mallorca" in lower:
         return "Mallorca"
+    if "bastad" in lower or "nordea open" in lower:
+        return "Bastad"
+    if "gstaad" in lower or "swiss open" in lower:
+        return "Gstaad"
+    if "umag" in lower or "croatia open" in lower:
+        return "Umag"
+    if "estoril" in lower:
+        return "Estoril"
+    if "kitzbuhel" in lower or "kitzbühel" in lower:
+        return "Kitzbuhel"
+    if "iasi" in lower:
+        return "Iasi"
+    if "athens" in lower:
+        return "Athens"
     return None
+
+
+def candidate_tournament_name(value: object) -> str | None:
+    """Return a stable location label without expanding the live factor scope.
+
+    The legacy factor file intentionally keeps its curated tournament list.
+    The registered venue candidate needs every main-tour venue, so unknown
+    events fall back to the location suffix used by the live schedule.
+    """
+    canonical = canonical_tournament_name(value)
+    if canonical:
+        return canonical
+    raw = re.sub(r"\s+", " ", str(value or "")).strip()
+    if not raw:
+        return None
+    raw = re.sub(r"\s+\d{4}$", "", raw).strip()
+    parts = re.split(r"\s+-\s+", raw)
+    fallback = parts[-1].strip(" -") if len(parts) > 1 else raw
+    fallback = re.sub(r"^(?:ATP|WTA)\s+", "", fallback, flags=re.I).strip()
+    return fallback or None
+
+
+def venue_key(value: object) -> str:
+    text = unicodedata.normalize("NFKD", str(value or ""))
+    text = "".join(ch for ch in text if not unicodedata.combining(ch)).lower()
+    return re.sub(r"[^a-z0-9]+", " ", text).strip()
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -272,6 +319,68 @@ def subtract_totals(total: dict[str, float], part: dict[str, float]) -> dict[str
     return out
 
 
+def merge_totals(rows: list[dict[str, float]]) -> dict[str, float]:
+    merged = empty_totals()
+    for row in rows:
+        for key in merged:
+            merged[key] += float(row.get(key, 0.0))
+    return merged
+
+
+def candidate_factor_rows(
+    event_totals: dict[tuple[str, str, str, int], dict[str, float]],
+    surface_totals: dict[tuple[str, str, int], dict[str, float]],
+    *,
+    target_season: int,
+) -> list[dict[str, str]]:
+    source_years = tuple(range(target_season - VENUE_FACTOR_PRIOR_SEASONS, target_season))
+    if any(year >= target_season for year in source_years):
+        raise ValueError("Venue factor source seasons must be strictly before target season")
+    event_keys = sorted({(tour, tournament, surface) for tour, tournament, surface, _ in event_totals})
+    rows: list[dict[str, str]] = []
+    for tour, tournament, surface in event_keys:
+        event = merge_totals(
+            [event_totals.get((tour, tournament, surface, year), empty_totals()) for year in source_years]
+        )
+        baseline = merge_totals(
+            [surface_totals.get((tour, surface, year), empty_totals()) for year in source_years]
+        )
+        n_prior = float(event.get("svpt", 0.0))
+        event_rate = rate(event.get("aces", 0.0), n_prior)
+        baseline_rate = rate(baseline.get("aces", 0.0), baseline.get("svpt", 0.0))
+        raw_factor = (
+            event_rate / baseline_rate
+            if event_rate is not None and baseline_rate is not None and baseline_rate > 0
+            else None
+        )
+        eligible = n_prior >= VENUE_FACTOR_MIN_SVPT and raw_factor is not None
+        shrink_weight = n_prior / (n_prior + VENUE_FACTOR_SHRINK_SVPT) if n_prior > 0 else 0.0
+        unbounded = 1.0 + ((raw_factor or 1.0) - 1.0) * shrink_weight if eligible else 1.0
+        factor = min(VENUE_FACTOR_MAX, max(VENUE_FACTOR_MIN, unbounded))
+        rows.append(
+            {
+                "tour": tour.upper(),
+                "tournament": tournament,
+                "venue_key": venue_key(tournament),
+                "surface": surface,
+                "target_season": str(target_season),
+                "source_start_season": str(source_years[0]),
+                "source_end_season": str(source_years[-1]),
+                "matches": str(int(event.get("matches", 0.0))),
+                "n_prior_svpt": str(int(n_prior)),
+                "ace_rate": fmt(event_rate),
+                "tour_surface_ace_rate": fmt(baseline_rate),
+                "raw_ace_factor": fmt(raw_factor, 6),
+                "shrink_weight": fmt(shrink_weight, 6),
+                "ace_factor": fmt(factor, 6),
+                "clipped": "true" if eligible and abs(factor - unbounded) > 1e-12 else "false",
+                "eligible": "true" if eligible else "false",
+                "status": "OK" if eligible else "INSUFFICIENT_PRIOR_SVPT",
+            }
+        )
+    return rows
+
+
 def rate(num: float, den: float) -> float | None:
     return None if den <= 0 else num / den
 
@@ -373,17 +482,25 @@ def surface_baseline_row(
 
 
 def main() -> None:
+    global SACKMANN_DIR, ONCOURT_DIR
     parser = argparse.ArgumentParser()
     parser.add_argument("--start-year", type=int, default=2022)
     parser.add_argument("--end-year", type=int, default=min(date.today().year, 2026))
     parser.add_argument("--out", default=str(DEFAULT_OUT))
     parser.add_argument("--baseline-out", default=str(DEFAULT_BASELINE_OUT))
+    parser.add_argument("--candidate-out", default=str(DEFAULT_CANDIDATE_OUT))
+    parser.add_argument("--candidate-target-season", type=int, default=0)
+    parser.add_argument("--sackmann-dir", default=str(SACKMANN_DIR))
+    parser.add_argument("--oncourt-dir", default=str(ONCOURT_DIR))
     args = parser.parse_args()
+    SACKMANN_DIR = Path(args.sackmann_dir)
+    ONCOURT_DIR = Path(args.oncourt_dir)
 
     event_totals: dict[tuple[str, str, str, int], dict[str, float]] = defaultdict(empty_totals)
     surface_totals: dict[tuple[str, str, int], dict[str, float]] = defaultdict(empty_totals)
     agg_event: dict[tuple[str, str, str], dict[str, float]] = defaultdict(empty_totals)
     agg_surface: dict[tuple[str, str], dict[str, float]] = defaultdict(empty_totals)
+    candidate_event_totals: dict[tuple[str, str, str, int], dict[str, float]] = defaultdict(empty_totals)
 
     def process_row(tour: str, year: int, row: dict[str, str]) -> None:
         match_year = parse_year(row.get("tourney_date")) or year
@@ -397,6 +514,9 @@ def main() -> None:
         if tournament:
             add_match(event_totals[(tour, tournament, surface, match_year)], row)
             add_match(agg_event[(tour, tournament, surface)], row)
+        candidate_tournament = candidate_tournament_name(row.get("tourney_name"))
+        if candidate_tournament:
+            add_match(candidate_event_totals[(tour, candidate_tournament, surface, match_year)], row)
 
     for tour in ("atp", "wta"):
         sackmann_years: set[int] = set()
@@ -502,6 +622,45 @@ def main() -> None:
         writer.writeheader()
         writer.writerows(baseline_rows)
     print(f"Saved {len(baseline_rows)} surface baseline rows: {baseline_out}")
+
+    target_season = args.candidate_target_season or (args.end_year + 1)
+    if target_season <= args.end_year:
+        raise SystemExit("candidate target season must be later than the factor input end year")
+    candidate_rows = candidate_factor_rows(
+        candidate_event_totals,
+        surface_totals,
+        target_season=target_season,
+    )
+    candidate_out = Path(args.candidate_out)
+    candidate_out.parent.mkdir(parents=True, exist_ok=True)
+    candidate_fields = [
+        "tour",
+        "tournament",
+        "venue_key",
+        "surface",
+        "target_season",
+        "source_start_season",
+        "source_end_season",
+        "matches",
+        "n_prior_svpt",
+        "ace_rate",
+        "tour_surface_ace_rate",
+        "raw_ace_factor",
+        "shrink_weight",
+        "ace_factor",
+        "clipped",
+        "eligible",
+        "status",
+    ]
+    with candidate_out.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=candidate_fields)
+        writer.writeheader()
+        writer.writerows(candidate_rows)
+    eligible_count = sum(row["eligible"] == "true" for row in candidate_rows)
+    print(
+        f"Saved {len(candidate_rows)} venue candidate rows ({eligible_count} eligible) "
+        f"for {target_season}: {candidate_out}"
+    )
 
 
 if __name__ == "__main__":

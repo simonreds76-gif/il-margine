@@ -21,6 +21,8 @@ DEFAULT_BASELINE = PROPS_DIR / "player-props-baseline.csv"
 DEFAULT_SURFACE_BASELINES = PROPS_DIR / "tour-surface-baselines.csv"
 DEFAULT_GATE = PROPS_DIR / "backtest" / "aces-dfs-v3-all-tour-gate.json"
 DEFAULT_OUT = PROPS_DIR / "shadow" / "aces-v3-projection-board.csv"
+DEFAULT_VENUE_FACTORS = PROPS_DIR / "venue-ace-factors.csv"
+DEFAULT_VENUE_OUT = PROPS_DIR / "shadow" / "venue-ace-factor-v1-projection-board.csv"
 WINDOWS = ("L12M", "L24M", "career_4y")
 WINDOW_WEIGHTS = {"L12M": 1.0, "L24M": 0.55, "career_4y": 0.25}
 
@@ -62,6 +64,37 @@ def number(value: object, fallback: float = 0.0) -> float:
     except (TypeError, ValueError):
         return fallback
     return parsed if math.isfinite(parsed) else fallback
+
+
+def venue_key(value: object) -> str:
+    text = unicodedata.normalize("NFKD", str(value or ""))
+    text = "".join(ch for ch in text if not unicodedata.combining(ch)).lower()
+    return re.sub(r"[^a-z0-9]+", " ", text).strip()
+
+
+def venue_factor_index(rows: list[dict[str, str]]) -> dict[tuple[str, str, str, int], dict[str, str]]:
+    index: dict[tuple[str, str, str, int], dict[str, str]] = {}
+    for row in rows:
+        try:
+            target_season = int(str(row.get("target_season") or ""))
+        except ValueError:
+            continue
+        key = (
+            str(row.get("tour") or "").upper(),
+            str(row.get("venue_key") or venue_key(row.get("tournament"))),
+            str(row.get("surface") or ""),
+            target_season,
+        )
+        index[key] = row
+    return index
+
+
+def projection_season(row: dict[str, str]) -> int | None:
+    text = str(row.get("date") or "")
+    try:
+        return int(text[:4]) if len(text) >= 4 else None
+    except ValueError:
+        return None
 
 
 def baseline_index(rows: list[dict[str, str]]) -> dict[tuple[str, str, str], dict[str, dict[str, str]]]:
@@ -188,6 +221,8 @@ def main() -> int:
     parser.add_argument("--surface-baselines", type=Path, default=DEFAULT_SURFACE_BASELINES)
     parser.add_argument("--gate", type=Path, default=DEFAULT_GATE)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    parser.add_argument("--venue-factors", type=Path, default=DEFAULT_VENUE_FACTORS)
+    parser.add_argument("--venue-out", type=Path, default=DEFAULT_VENUE_OUT)
     args = parser.parse_args()
 
     gate = read_json(args.gate)
@@ -208,7 +243,9 @@ def main() -> int:
     booster = lgb.Booster(model_file=str(model_path))
     baselines = baseline_index(read_csv(args.baseline))
     surfaces = surface_index(read_csv(args.surface_baselines))
+    venue_factors = venue_factor_index(read_csv(args.venue_factors))
     output: list[dict[str, str]] = []
+    venue_output: list[dict[str, str]] = []
     for row in board_rows:
         if str(row.get("tour") or "").upper() != "ATP" or str(row.get("surface") or "") not in {"Hard", "Clay"}:
             continue
@@ -234,6 +271,61 @@ def main() -> int:
         })
         output.append(out_row)
 
+        season = projection_season(row)
+        venue_row = venue_factors.get(
+            (
+                str(row.get("tour") or "").upper(),
+                venue_key(row.get("tournament")),
+                str(row.get("surface") or ""),
+                season or 0,
+            )
+        )
+        if not venue_row or str(venue_row.get("eligible") or "").lower() != "true":
+            continue
+        venue_factor = number(venue_row.get("ace_factor"), 1.0)
+        incumbent_factor = max(0.01, number(row.get("venue_ace_factor"), 1.0))
+        venue_input = dict(row)
+        venue_input["venue_ace_factor"] = f"{venue_factor:.6f}"
+        venue_input["projected_aces"] = f"{incumbent * venue_factor / incumbent_factor:.6f}"
+        venue_features = build_feature_row(
+            venue_input,
+            baselines,
+            surfaces,
+            baseline_names,
+            aliases,
+        )
+        venue_frame = pd.DataFrame([venue_features])
+        venue_missing = [name for name in booster.feature_name() if name not in venue_frame.columns]
+        if venue_missing:
+            raise RuntimeError(f"Missing venue candidate features: {', '.join(venue_missing)}")
+        venue_frame = venue_frame[booster.feature_name()]
+        venue_frame["surface"] = pd.Categorical(venue_frame["surface"], categories=categories)
+        venue_projection = max(0.01, float(booster.predict(venue_frame)[0]))
+        venue_out_row = dict(out_row)
+        venue_out_row.update(
+            {
+                "control_projected_aces": f"{candidate:.3f}",
+                "projected_aces": f"{venue_projection:.3f}",
+                "venue_v1_ace_delta": f"{venue_projection - candidate:+.3f}",
+                "venue_v1_factor": f"{venue_factor:.6f}",
+                "venue_v1_control_factor": f"{incumbent_factor:.6f}",
+                "venue_v1_prior_svpt": str(venue_row.get("n_prior_svpt") or ""),
+                "venue_v1_source_seasons": (
+                    f"{venue_row.get('source_start_season')}-{venue_row.get('source_end_season')}"
+                ),
+                "venue_v1_model": "venue-ace-factor-v1",
+                "notes": "|".join(
+                    part
+                    for part in (
+                        out_row.get("notes", ""),
+                        "VENUE_ACE_FACTOR_V1_SHADOW",
+                    )
+                    if part
+                ),
+            }
+        )
+        venue_output.append(venue_out_row)
+
     if not output:
         print("Projection board has no eligible ATP Hard/Clay rows; keeping the last v3 board.")
         return 0
@@ -241,6 +333,28 @@ def main() -> int:
     extra_fields = ["incumbent_projected_aces", "v3_ace_delta", "aces_alpha", "v3_eligible", "v3_model"]
     write_csv(args.out, output, original_fields + [field for field in extra_fields if field not in original_fields])
     print(f"V3 ATP ace prospective board: {len(output)} rows -> {args.out}")
+    venue_extra_fields = [
+        "control_projected_aces",
+        "venue_v1_ace_delta",
+        "venue_v1_factor",
+        "venue_v1_control_factor",
+        "venue_v1_prior_svpt",
+        "venue_v1_source_seasons",
+        "venue_v1_model",
+    ]
+    if venue_output:
+        write_csv(
+            args.venue_out,
+            venue_output,
+            original_fields
+            + [field for field in extra_fields if field not in original_fields]
+            + [field for field in venue_extra_fields if field not in original_fields and field not in extra_fields],
+        )
+        print(f"Venue ace factor v1 shadow board: {len(venue_output)} rows -> {args.venue_out}")
+    else:
+        if args.venue_out.exists():
+            args.venue_out.unlink()
+        print("Venue ace factor v1 has no eligible rows; stale candidate board removed.")
     return 0
 
 
