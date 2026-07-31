@@ -13,7 +13,7 @@ import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import LabNotesSection from "@/components/LabNotesSection";
 import { formatMatchDate } from "@/lib/format";
-import { slugifyTip } from "@/lib/slugify";
+import { publicTipPath } from "@/lib/tip-seo";
 import type { Resource } from "@/lib/resources";
 
 const HOMEPAGE_KEYFRAMES = `
@@ -596,7 +596,7 @@ export default function HomepageClient({
                 {recentBets.slice(0, 5).map((bet) => (
                   <Link
                     key={bet.id}
-                    href={`/tips/${slugifyTip(bet.event, bet.id)}`}
+                    href={publicTipPath(bet)}
                     className="block cursor-pointer p-5 hover:bg-slate-800/20 active:bg-slate-800/30"
                   >
                     <div className="mb-2 flex items-start justify-between">

@@ -10,7 +10,7 @@ import PnL from "@/components/PnL";
 import ResultBadge from "@/components/ResultBadge";
 import { getDisplayBetCategory } from "@/lib/bet-category";
 import { formatMatchDate, formatOdds, formatStake } from "@/lib/format";
-import { slugifyTip } from "@/lib/slugify";
+import { publicTipPath } from "@/lib/tip-seo";
 import teamLogoManifest from "../../data/goalscorer/team-logo-map.json";
 
 type Mode = "pending" | "settled";
@@ -375,7 +375,7 @@ function PickMetric({ label, value, className = "" }: { label: string; value: st
 }
 
 function PickRow({ bet, mode }: { bet: Bet; mode: Mode }) {
-  const href = `/tips/${slugifyTip(bet.event, bet.id)}`;
+  const href = publicTipPath(bet);
   return (
     <Link href={href} className="block transition-colors hover:bg-slate-800/30 active:bg-slate-800/40">
       <div className="hidden items-center gap-3 px-4 py-3 sm:flex">
