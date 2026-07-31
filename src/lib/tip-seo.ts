@@ -1,7 +1,6 @@
 import { slugifyTip } from "@/lib/slugify";
 
 export const TIP_SEO_MARKER = "[[SEO_READY_V1]]";
-export const TIP_SEO_MIN_ANALYSIS_CHARS = 220;
 
 type TipSeoCandidate = {
   id: number;
@@ -17,27 +16,14 @@ export type TipSeoAssessment = {
   reason: string | null;
 };
 
-export function hasTipSeoMarker(notes?: string | null): boolean {
-  return String(notes || "").trimStart().startsWith(TIP_SEO_MARKER);
-}
-
 export function stripTipSeoMarker(notes?: string | null): string {
   const value = String(notes || "").trim();
   if (!value.startsWith(TIP_SEO_MARKER)) return value;
   return value.slice(TIP_SEO_MARKER.length).trim();
 }
 
-export function buildStoredTipNotes(analysis: string, seoReady: boolean): string | null {
-  const clean = stripTipSeoMarker(analysis);
-  if (!clean) return null;
-  return seoReady ? `${TIP_SEO_MARKER}\n${clean}` : clean;
-}
-
 export function assessTipSeoReadiness(tip: TipSeoCandidate): TipSeoAssessment {
   const analysis = stripTipSeoMarker(tip.notes);
-  if (!hasTipSeoMarker(tip.notes)) {
-    return { eligible: false, analysis, reason: "not_approved" };
-  }
   if (tip.market !== "tennis" && tip.market !== "props") {
     return { eligible: false, analysis, reason: "unsupported_market" };
   }
@@ -46,9 +32,6 @@ export function assessTipSeoReadiness(tip: TipSeoCandidate): TipSeoAssessment {
   }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(String(tip.match_date || ""))) {
     return { eligible: false, analysis, reason: "missing_match_date" };
-  }
-  if (analysis.length < TIP_SEO_MIN_ANALYSIS_CHARS) {
-    return { eligible: false, analysis, reason: "analysis_too_short" };
   }
   return { eligible: true, analysis, reason: null };
 }

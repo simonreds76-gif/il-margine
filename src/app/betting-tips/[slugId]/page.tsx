@@ -131,8 +131,14 @@ export default async function BettingPreviewPage({ params }: PageProps) {
   const canonicalUrl = `${BASE_URL}${fixture.canonicalPath}`;
   const imageUrl = `${canonicalUrl}/opengraph-image`;
   const reasoning = Array.from(
-    new Set(fixture.approved.map((entry) => entry.assessment.analysis.trim()).filter(Boolean)),
+    new Set(fixture.analyses.map((entry) => entry.assessment.analysis.trim()).filter(Boolean)),
   );
+  const analysisCopy = reasoning.length
+    ? reasoning
+    : [
+        `Il Margine logged ${fixture.bets.length} ${fixture.bets.length === 1 ? "selection" : "selections"} for ${fixture.seed.event} before the match. The ledger preserves the original pick, price, stake and bookmaker.`,
+        "This page updates the same public record after settlement. Posted odds are not replaced with later market prices.",
+      ];
   const settled = fixture.bets.filter((bet) => bet.status !== "pending");
   const totalProfit = settled.reduce((sum, bet) => sum + Number(bet.profit_loss || 0), 0);
   const articleSchema = {
@@ -205,7 +211,7 @@ export default async function BettingPreviewPage({ params }: PageProps) {
               {fixture.seed.event}
             </h1>
             <p className="mt-4 max-w-3xl text-lg leading-relaxed text-slate-300">
-              Prediction, posted prices and the reasoning behind our tracked selections for this fixture.
+              Posted selections, prices and transparent settlement for this fixture.
             </p>
             <div className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-xs text-slate-500">
               <span>
@@ -271,10 +277,14 @@ export default async function BettingPreviewPage({ params }: PageProps) {
             </section>
 
             <section aria-labelledby="analysis-heading" className="rounded-2xl border border-slate-800 bg-slate-900/45 p-6 md:p-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-300">Match analysis</p>
-              <h2 id="analysis-heading" className="mt-2 text-2xl font-bold text-white">Why these bets</h2>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-300">
+                {reasoning.length ? "Match analysis" : "Recorded betting view"}
+              </p>
+              <h2 id="analysis-heading" className="mt-2 text-2xl font-bold text-white">
+                {reasoning.length ? "Why these bets" : "What this page records"}
+              </h2>
               <div className="mt-5 space-y-5 text-base leading-8 text-slate-300">
-                {reasoning.map((paragraph, index) => <p key={`${index}-${paragraph.slice(0, 20)}`}>{paragraph}</p>)}
+                {analysisCopy.map((paragraph, index) => <p key={`${index}-${paragraph.slice(0, 20)}`}>{paragraph}</p>)}
               </div>
             </section>
 

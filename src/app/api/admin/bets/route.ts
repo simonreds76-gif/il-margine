@@ -4,7 +4,6 @@ import { createHmac } from "crypto";
 import { revalidatePath } from "next/cache";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { postPlayerPropTipToTelegram } from "@/lib/player-props-telegram";
-import { assessTipSeoReadiness, hasTipSeoMarker } from "@/lib/tip-seo";
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const COOKIE_NAME = "admin_session";
@@ -23,19 +22,6 @@ function revalidatePublicBetSurfaces() {
   revalidatePath("/tips/[slugId]", "page");
   revalidatePath("/betting-tips/[slugId]", "page");
   revalidatePath("/sitemap.xml");
-}
-
-function seoValidationError(candidate: Record<string, unknown>): string | null {
-  if (!hasTipSeoMarker(candidate.notes as string | null | undefined)) return null;
-  const assessment = assessTipSeoReadiness({
-    id: Number(candidate.id ?? 0),
-    market: String(candidate.market ?? ""),
-    event: String(candidate.event ?? ""),
-    match_date: String(candidate.match_date ?? ""),
-    notes: String(candidate.notes ?? ""),
-  });
-  if (assessment.eligible) return null;
-  return `Search preview rejected: ${assessment.reason || "invalid SEO fields"}.`;
 }
 
 function getSignedToken(): string {
@@ -59,8 +45,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Server misconfigured: add SUPABASE_SERVICE_ROLE_KEY in Vercel." }, { status: 500 });
   }
   const body = await req.json();
-  const seoError = seoValidationError(body);
-  if (seoError) return NextResponse.json({ error: seoError }, { status: 400 });
   const { data, error } = await supabase
     .from("bets")
     .insert([body])
@@ -88,8 +72,6 @@ export async function PATCH(req: Request) {
   }
   const { id, ...updates } = await req.json();
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
-  const seoError = seoValidationError({ id, ...updates });
-  if (seoError) return NextResponse.json({ error: seoError }, { status: 400 });
   const { error } = await supabase.from("bets").update(updates).eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
   revalidatePublicBetSurfaces();

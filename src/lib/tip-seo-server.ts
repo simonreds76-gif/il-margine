@@ -36,7 +36,7 @@ export type SeoTipBet = {
 export type SeoTipFixture = {
   seed: SeoTipBet;
   bets: SeoTipBet[];
-  approved: Array<{ bet: SeoTipBet; assessment: TipSeoAssessment }>;
+  analyses: Array<{ bet: SeoTipBet; assessment: TipSeoAssessment }>;
   canonicalId: number;
   canonicalPath: string;
   datePublished: string;
@@ -79,20 +79,19 @@ export const fetchSeoTipFixture = cache(async (seedId: number): Promise<SeoTipFi
 
   const seedFixtureKey = tipFixtureKey(seed);
   const bets = (fixtureResponse.data as SeoTipBet[]).filter(
-    (bet) => tipFixtureKey(bet) === seedFixtureKey,
+    (bet) => tipFixtureKey(bet) === seedFixtureKey && assessTipSeoReadiness(bet).eligible,
   );
   if (!bets.length) return null;
-  const approved = bets
+  const analyses = bets
     .map((bet) => ({ bet, assessment: assessTipSeoReadiness(bet) }))
-    .filter((entry) => entry.assessment.eligible);
-  if (!approved.length) return null;
+    .filter((entry) => Boolean(entry.assessment.analysis.trim()));
 
-  const canonicalId = Math.min(...approved.map((entry) => entry.bet.id));
-  const canonicalBet = approved.find((entry) => entry.bet.id === canonicalId)?.bet ?? seed;
+  const canonicalId = Math.min(...bets.map((bet) => bet.id));
+  const canonicalBet = bets.find((bet) => bet.id === canonicalId) ?? seed;
   return {
-    seed,
+    seed: canonicalBet,
     bets,
-    approved,
+    analyses,
     canonicalId,
     canonicalPath: tipPreviewPath(canonicalBet),
     datePublished: minTimestamp(bets.map((bet) => bet.posted_at)),
@@ -106,14 +105,28 @@ export async function fetchSeoTipSitemapState(): Promise<{
 }> {
   if (!hasSupabaseAdminConfig()) return { previews: [], latestByMarket: {} };
   const supabase = getSupabaseAdmin();
-  const [approvedResponse, latestResponse] = await Promise.all([
-    supabase
-      .from("bets")
-      .select("id, market, event, match_date, notes, posted_at, settled_at")
-      .in("market", ["tennis", "props"])
-      .like("notes", "[[SEO_READY_V1]]%")
-      .order("posted_at", { ascending: false })
-      .limit(1000),
+  const sitemapCutoff = new Date(Date.now() - 400 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const previewRowsPromise = (async () => {
+    const rows: SitemapTipRow[] = [];
+    const pageSize = 1000;
+    const maxRows = 3000;
+    for (let offset = 0; offset < maxRows; offset += pageSize) {
+      const response = await supabase
+        .from("bets")
+        .select("id, market, event, match_date, notes, posted_at, settled_at")
+        .in("market", ["tennis", "props"])
+        .gte("match_date", sitemapCutoff)
+        .order("posted_at", { ascending: false })
+        .range(offset, offset + pageSize - 1);
+      if (response.error) return { rows, error: response.error.message };
+      const page = (response.data ?? []) as SitemapTipRow[];
+      rows.push(...page);
+      if (page.length < pageSize) break;
+    }
+    return { rows, error: null };
+  })();
+  const [previewResult, latestResponse] = await Promise.all([
+    previewRowsPromise,
     supabase
       .from("bets")
       .select("market, posted_at, settled_at")
@@ -122,15 +135,15 @@ export async function fetchSeoTipSitemapState(): Promise<{
       .limit(200),
   ]);
 
-  if (approvedResponse.error) {
-    console.error("[tip-seo] sitemap preview query failed", approvedResponse.error.message);
+  if (previewResult.error) {
+    console.error("[tip-seo] sitemap preview query failed", previewResult.error);
   }
   if (latestResponse.error) {
     console.error("[tip-seo] sitemap hub freshness query failed", latestResponse.error.message);
   }
 
   const grouped = new Map<string, SitemapTipRow[]>();
-  for (const raw of (approvedResponse.data ?? []) as SitemapTipRow[]) {
+  for (const raw of previewResult.rows) {
     if (!assessTipSeoReadiness(raw).eligible) continue;
     const key = tipFixtureKey(raw);
     const rows = grouped.get(key) ?? [];
