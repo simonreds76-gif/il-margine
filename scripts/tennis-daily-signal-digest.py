@@ -28,9 +28,11 @@ BACKTEST = ROOT / "data" / "backtest"
 PROPS = ROOT / "data" / "tennis-props"
 DEFAULT_REPORT = BACKTEST / "tennis-daily-signal-digest.txt"
 DEFAULT_STATE = BACKTEST / "tennis-daily-signal-digest-state.json"
+DEFAULT_READY_STATE = BACKTEST / "tennis-signal-generation-status.json"
 DEFAULT_GAP_LIVE = BACKTEST / "tennis-model-market-gap-live.csv"
 DEFAULT_REPOSITORY = "simonreds76-gif/il-margine"
 DEFAULT_WORKFLOW = "tennis-daily-signal-digest.yml"
+DEFAULT_REF = "golden-with-speed-insights"
 TELEGRAM_LIMIT = 3900
 
 
@@ -348,6 +350,11 @@ def load_state(path: Path) -> dict[str, str]:
         return {}
 
 
+def signal_generation_is_ready(path: Path, target_date: str) -> bool:
+    state = load_state(path)
+    return state.get("date") == target_date and state.get("status") == "ok"
+
+
 def github_token_from_credential_manager() -> str:
     result = subprocess.run(
         ["git", "credential-manager", "get"],
@@ -400,9 +407,11 @@ def main() -> int:
     parser.add_argument("--date", default=date.today().isoformat())
     parser.add_argument("--report", default=str(DEFAULT_REPORT))
     parser.add_argument("--state", default=str(DEFAULT_STATE))
+    parser.add_argument("--ready-state", default=str(DEFAULT_READY_STATE))
     parser.add_argument("--repository", default=os.environ.get("TENNIS_DIGEST_GITHUB_REPOSITORY", DEFAULT_REPOSITORY))
     parser.add_argument("--workflow", default=DEFAULT_WORKFLOW)
-    parser.add_argument("--ref", default="main")
+    parser.add_argument("--ref", default=os.environ.get("TENNIS_DIGEST_GITHUB_REF", DEFAULT_REF))
+    parser.add_argument("--require-ready", action="store_true")
     parser.add_argument("--print-only", action="store_true")
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args()
@@ -411,6 +420,10 @@ def main() -> int:
         date.fromisoformat(args.date)
     except ValueError as exc:
         raise SystemExit(f"Invalid --date: {args.date}") from exc
+
+    if args.require_ready and not signal_generation_is_ready(Path(args.ready_state), args.date):
+        print(f"Telegram digest skipped: signal generation is not ready for {args.date}.")
+        return 0
 
     signals, empty_lanes = collect_signals(args.date)
     messages = render_messages(args.date, signals, empty_lanes)

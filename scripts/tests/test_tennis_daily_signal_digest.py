@@ -166,6 +166,18 @@ class TennisDailySignalDigestTests(unittest.TestCase):
             path.write_text('{"date":"2026-07-16","digest_hash":"abc"}', encoding="utf-8")
             self.assertEqual(MODULE.load_state(path)["digest_hash"], "abc")
 
+    def test_ready_state_requires_matching_date_and_ok_status(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "ready.json"
+            path.write_text('{"date":"2026-07-16","status":"ok"}', encoding="utf-8")
+            self.assertTrue(MODULE.signal_generation_is_ready(path, "2026-07-16"))
+            self.assertFalse(MODULE.signal_generation_is_ready(path, "2026-07-17"))
+            path.write_text('{"date":"2026-07-16","status":"failed"}', encoding="utf-8")
+            self.assertFalse(MODULE.signal_generation_is_ready(path, "2026-07-16"))
+
+    def test_digest_dispatch_defaults_to_golden(self) -> None:
+        self.assertEqual(MODULE.DEFAULT_REF, "golden-with-speed-insights")
+
 
 if __name__ == "__main__":
     unittest.main()
