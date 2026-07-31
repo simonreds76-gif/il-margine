@@ -38,6 +38,27 @@ def parse_timestamp(value: object) -> datetime | None:
     return parsed.astimezone(timezone.utc)
 
 
+def event_date_counts(rows: list[dict[str, str]], as_of: str) -> tuple[int, int]:
+    target = date.fromisoformat(as_of)
+    eligible = 0
+    past = 0
+    for row in rows:
+        raw = str(row.get("date") or "").strip()
+        if not raw:
+            eligible += 1
+            continue
+        try:
+            event_date = date.fromisoformat(raw)
+        except ValueError:
+            eligible += 1
+            continue
+        if event_date < target:
+            past += 1
+        else:
+            eligible += 1
+    return eligible, past
+
+
 def build_health(
     as_of: str,
     lines_path: Path,
@@ -66,6 +87,7 @@ def build_health(
     match_count = sum(row.get("matched_board") == "yes" for row in comparison_rows)
     two_way_count = sum(row.get("price_pair_status") == "two_way" for row in comparison_rows)
     over_only_count = sum(row.get("price_pair_status") == "over_only" for row in comparison_rows)
+    eligible_line_count, past_line_count = event_date_counts(line_rows, as_of)
     trackable_count = sum(row.get("trackable_shadow") == "true" for row in comparison_rows)
     bettable_count = sum(row.get("bettable") == "true" for row in comparison_rows)
     blockers = Counter(
@@ -84,6 +106,9 @@ def build_health(
     elif not match_count:
         state = "BOARD_MATCH_FAILED"
         structural_error = True
+    elif not two_way_count and over_only_count:
+        state = "TWO_WAY_PRICES_MISSING"
+        structural_error = True
     elif trackable_count:
         state = "SHADOW_EVIDENCE_READY"
     elif two_way_count:
@@ -101,13 +126,19 @@ def build_health(
         "lines_file": str(lines_path),
         "comparison_file": str(comparison_path),
         "line_rows": len(line_rows),
+        "eligible_line_rows": eligible_line_count,
+        "past_event_line_rows": past_line_count,
         "comparison_rows": len(comparison_rows),
         "matched_rows": match_count,
+        "unmatched_rows": max(0, len(comparison_rows) - match_count),
         "match_rate_pct": round(match_count / len(comparison_rows) * 100.0, 1)
         if comparison_rows
         else 0.0,
         "two_way_rows": two_way_count,
         "over_only_rows": over_only_count,
+        "two_way_rate_pct": round(two_way_count / len(comparison_rows) * 100.0, 1)
+        if comparison_rows
+        else 0.0,
         "trackable_shadow_rows": trackable_count,
         "public_bettable_rows": bettable_count,
         "shadow_signals_for_event_date": len(as_of_signals),
@@ -127,9 +158,10 @@ def write_report(path: Path, payload: dict[str, object]) -> None:
         f"State: {payload['state']}",
         "",
         f"Captured lines: {payload['line_rows']} ({payload['lines_file']})",
+        f"Eligible event-date lines: {payload['eligible_line_rows']} (past excluded: {payload['past_event_line_rows']})",
         f"Comparison rows: {payload['comparison_rows']} ({payload['comparison_file']})",
-        f"Board matches: {payload['matched_rows']} ({payload['match_rate_pct']}%)",
-        f"Price shape: two-way={payload['two_way_rows']}, over-only={payload['over_only_rows']}",
+        f"Board matches: {payload['matched_rows']} ({payload['match_rate_pct']}%; unmatched={payload['unmatched_rows']})",
+        f"Price shape: two-way={payload['two_way_rows']} ({payload['two_way_rate_pct']}%), over-only={payload['over_only_rows']}",
         f"Prospective shadow candidates: {payload['trackable_shadow_rows']}",
         f"Public bettable candidates: {payload['public_bettable_rows']}",
         f"Signals for event date: {payload['shadow_signals_for_event_date']}",
@@ -138,6 +170,7 @@ def write_report(path: Path, payload: dict[str, object]) -> None:
         "",
         "Interpretation:",
         "- Over-only prices are prospective research evidence, not public recommendations.",
+        "- A populated comparison with zero two-way prices is a feed-shape failure, not a no-edge day.",
         "- No qualifying edge is a valid result; a missing comparison after capture is not.",
     ]
     path.parent.mkdir(parents=True, exist_ok=True)
