@@ -30,6 +30,7 @@ if ([string]::IsNullOrWhiteSpace($env:STRICT_HARD_CALIBRATION_PROFILES)) { $env:
 # Scheduled runs are hard-safe: clay spread-v1 can only be enabled by a manual research run.
 $env:SPREAD_V1_ENABLE_CLAY = "0"
 $dailyOddsTimeoutSeconds = 1200
+$strictReportTimeoutSeconds = 600
 $shadowLaneTimeoutSeconds = 300
 if (-not [string]::IsNullOrWhiteSpace($env:TENNIS_DAILY_ODDS_TOTAL_TIMEOUT_SECONDS)) {
     $parsedDailyOddsTimeout = 0
@@ -173,48 +174,27 @@ try {
         exit 1
     }
 
-    Log "=== Step 3b/8: Tennis props projection board ==="
-    # Historical OnCourt scans can slow down while the morning fair-odds job is
-    # still releasing memory. Allow enough time to finish instead of retaining
-    # yesterday's board after a false timeout.
-    $tennisPropsBoardExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\build-tennis-props-board.py", "--as-of", (Get-Date -Format "yyyy-MM-dd")) -Label "tennis props projection board" -TimeoutSeconds 600
-    if ($tennisPropsBoardExit -ne 0) {
-        Log "ERROR: tennis props projection board failed/timed out (exit $tennisPropsBoardExit); continuing remaining diagnostics"
-        Set-RunStatusFailure "TennisPropsBoardFailed" "tennis props projection board failed/timed out (exit $tennisPropsBoardExit)"
-    } else {
-        Log "=== Step 3c/8: Tennis props hosted-price comparison ==="
-        $tennisPropsCompareExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\run-tennis-props-daily.py", "--as-of", (Get-Date -Format "yyyy-MM-dd"), "--comparison-only") -Label "tennis props hosted-price comparison" -TimeoutSeconds 300
-        if ($tennisPropsCompareExit -ne 0) {
-            Log "ERROR: tennis props hosted-price comparison failed (exit $tennisPropsCompareExit); continuing remaining diagnostics"
-            Set-RunStatusFailure "TennisPropsComparisonFailed" "tennis props hosted-price comparison failed (exit $tennisPropsCompareExit)"
-        }
-    }
-
-    Log "=== Step 4/8: Append Pinnacle history capture (daily) ==="
-    & python scripts\pinnacle-capture-history.py --capture-mode daily 2>&1 | ForEach-Object { Log $_ }
-    if ($LASTEXITCODE -ne 0) {
-        Log "WARNING: Pinnacle history append failed (exit $LASTEXITCODE), continuing..."
-    }
-
-    Log "=== Step 5/8: Strict policy report (--append --compare-overlay) ==="
-    & python scripts\strict-policy-report.py --append --compare-overlay 2>&1 | ForEach-Object { Log $_ }
-    if ($LASTEXITCODE -ne 0) {
-        Log "ERROR: strict-policy-report failed (exit $LASTEXITCODE)"
-        Set-RunStatusFailure "StrictPolicyReportFailed" "strict-policy-report failed (exit $LASTEXITCODE)"
+    # Generate every ML/spread signal before optional props work. The Telegram
+    # digest must not wait behind a slow projection-board rebuild.
+    Log "=== Step 4/8: Strict policy report (--append --compare-overlay) ==="
+    $strictExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\strict-policy-report.py", "--append", "--compare-overlay") -Label "strict policy report" -TimeoutSeconds $strictReportTimeoutSeconds
+    if ($strictExit -ne 0) {
+        Log "ERROR: strict-policy-report failed/timed out (exit $strictExit)"
+        Set-RunStatusFailure "StrictPolicyReportFailed" "strict-policy-report failed/timed out (exit $strictExit)"
         exit 1
     }
 
     if ($null -ne $volumeCfg) {
-        Log "=== Step 6/8: $($volumeCfg.Label) shadow (signal-profile=$($volumeCfg.Profile)) ==="
+        Log "=== Step 5/8: $($volumeCfg.Label) shadow (signal-profile=$($volumeCfg.Profile)) ==="
         & python scripts\strict-policy-report.py --append --signal-profile $volumeCfg.Profile --output "data\backtest\strict-signals-$($volumeCfg.Tag)-live.csv" --internal-output "data\backtest\strict-signals-$($volumeCfg.Tag)-internal-live.csv" 2>&1 | ForEach-Object { Log $_ }
         if ($LASTEXITCODE -ne 0) {
             Log "WARNING: $($volumeCfg.Profile) shadow append failed (exit $LASTEXITCODE), continuing..."
         }
     } else {
-        Log "=== Step 6/8: Volume shadow skipped (STRICT_POLICY_VOLUME_MODE=$volumeMode) ==="
+        Log "=== Step 5/8: Volume shadow skipped (STRICT_POLICY_VOLUME_MODE=$volumeMode) ==="
     }
 
-    Log "=== Step 7/8: Research shadow lanes ==="
+    Log "=== Step 6/8: Research shadow lanes ==="
     if ($spreadV1ShadowEnabled) {
         $prevSpreadV1CorrectionOnly = $env:SPREAD_V1_ENABLE_CORRECTION_ONLY
         $env:SPREAD_V1_ENABLE_CORRECTION_ONLY = "1"
@@ -317,15 +297,43 @@ try {
         Log "CPI speed-regime shadow skipped (STRICT_CPI_SPEED_SHADOW_ENABLED=0)."
     }
 
-    Log "=== Step 8/8: Settlement/performance skipped in AM task ==="
+    $signalReadyPath = Join-Path $root "data\backtest\tennis-signal-generation-status.json"
+    @{
+        date = (Get-Date -Format "yyyy-MM-dd")
+        status = "ok"
+        completed_at = (Get-Date).ToUniversalTime().ToString("o")
+        pipeline = "oncourt-am-refresh"
+    } | ConvertTo-Json | Set-Content -Path $signalReadyPath -Encoding ASCII
+
+    Log "=== Step 7/8: Settlement/performance skipped in AM task ==="
     Log "Nightly tennis settlement/performance is handled by oncourt-daily.ps1 at 22:30 to keep AM refresh fast."
 
     Log "=== Post-step: spread_v1 refresh skipped in AM task (nightly/weekly only) ==="
 
     Log "=== Post-step: Daily tennis Telegram digest ==="
-    $digestExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py") -Label "daily tennis Telegram digest" -TimeoutSeconds 90
+    $digestExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--require-ready") -Label "daily tennis Telegram digest" -TimeoutSeconds 90
     if ($digestExit -ne 0) {
         Log "WARNING: daily tennis Telegram digest failed/timed out (exit $digestExit); signal generation remains valid."
+    }
+
+    Log "=== Step 8a/8: Optional tennis props projection board ==="
+    # Historical OnCourt scans are useful for the props monitor but are not
+    # allowed to delay the daily ML/spread betting alert.
+    $tennisPropsBoardExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\build-tennis-props-board.py", "--as-of", (Get-Date -Format "yyyy-MM-dd")) -Label "tennis props projection board" -TimeoutSeconds 600
+    if ($tennisPropsBoardExit -ne 0) {
+        Log "WARNING: tennis props projection board failed/timed out (exit $tennisPropsBoardExit), continuing..."
+    } else {
+        Log "=== Step 8b/8: Optional tennis props hosted-price comparison ==="
+        $tennisPropsCompareExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\run-tennis-props-daily.py", "--as-of", (Get-Date -Format "yyyy-MM-dd"), "--comparison-only") -Label "tennis props hosted-price comparison" -TimeoutSeconds 300
+        if ($tennisPropsCompareExit -ne 0) {
+            Log "WARNING: tennis props hosted-price comparison failed (exit $tennisPropsCompareExit), continuing..."
+        }
+    }
+
+    Log "=== Step 8c/8: Append Pinnacle history capture (daily) ==="
+    & python scripts\pinnacle-capture-history.py --capture-mode daily 2>&1 | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) {
+        Log "WARNING: Pinnacle history append failed (exit $LASTEXITCODE), continuing..."
     }
 
     Log "============================================"
