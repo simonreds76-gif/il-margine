@@ -16,7 +16,7 @@ import PageHomeLink from "@/components/PageHomeLink";
 import SampleSizeBadge from "@/components/SampleSizeBadge";
 import { normalizeBetCategory } from "@/lib/bet-category";
 import { formatMatchDate, formatOdds } from "@/lib/format";
-import { slugifyTip } from "@/lib/slugify";
+import { publicTipPath } from "@/lib/tip-seo";
 
 type TennisTipsClientProps = {
   initialPendingBets?: Bet[];
@@ -291,7 +291,7 @@ export default function TennisTips({
                 {displayedPending.map((pick) => (
                   <Link
                     key={pick.id}
-                    href={`/tips/${slugifyTip(pick.event, pick.id)}`}
+                    href={publicTipPath(pick)}
                     className="block cursor-pointer p-5 hover:bg-slate-800/20 active:bg-slate-800/30"
                   >
                     <div className="mb-3 flex items-start gap-3">
@@ -524,7 +524,7 @@ export default function TennisTips({
                 {displayedRecent.map((result) => (
                   <Link
                     key={result.id}
-                    href={`/tips/${slugifyTip(result.event, result.id)}`}
+                    href={publicTipPath(result)}
                     className="block cursor-pointer p-5 hover:bg-slate-800/20 active:bg-slate-800/30"
                   >
                     <div className="flex items-start justify-between mb-2">

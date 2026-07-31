@@ -11,6 +11,7 @@ import PropsAlertsCta from "@/components/PropsAlertsCta";
 import TipPageTracker from "@/components/TipPageTracker";
 import Footer from "@/components/Footer";
 import { formatStake, formatMatchDate, formatOdds } from "@/lib/format";
+import { assessTipSeoReadiness, stripTipSeoMarker, tipPreviewPath } from "@/lib/tip-seo";
 
 /** Revalidate tip pages every 60s so settled status and new tips show without full dynamic. */
 export const revalidate = 60;
@@ -67,11 +68,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       : `Player props tip: ${bet.event}. ${bet.player ? bet.player + " - " : ""}${bet.selection} at ${formatOdds(bet.odds)}. Il Margine.`;
   const url = `${BASE_URL}/tips/${canonicalSlug}`;
   const worldCupGraphic = isWorldCupPropsTip(bet) ? `${BASE_URL}${WORLD_CUP_TIP_IMAGE_PATH}` : null;
+  const seoAssessment = assessTipSeoReadiness(bet);
+  const canonicalUrl = seoAssessment.eligible ? `${BASE_URL}${tipPreviewPath(bet)}` : url;
 
   return {
     title,
     description,
-    alternates: { canonical: url },
+    alternates: { canonical: canonicalUrl },
     openGraph: {
       type: "article",
       locale: "en_GB",
@@ -110,6 +113,10 @@ export default async function TipPage({ params }: PageProps) {
   if (id === null) notFound();
   const bet = await getBet(id);
   if (!bet) notFound();
+
+  if (assessTipSeoReadiness(bet).eligible) {
+    redirect(tipPreviewPath(bet));
+  }
 
   const canonicalSlug = slugifyTip(bet.event, bet.id);
   if (slugId !== canonicalSlug) {
@@ -218,10 +225,10 @@ export default async function TipPage({ params }: PageProps) {
               </div>
             )}
 
-            {bet.notes && (
+            {stripTipSeoMarker(bet.notes) && (
               <div className="border-t border-slate-700/60 px-6 py-5">
                 <span className="text-sm font-medium uppercase tracking-widest text-slate-500 block mb-2">Notes</span>
-                <p className="text-slate-300 text-sm leading-relaxed">{bet.notes}</p>
+                <p className="text-slate-300 text-sm leading-relaxed">{stripTipSeoMarker(bet.notes)}</p>
               </div>
             )}
           </div>

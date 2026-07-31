@@ -7,7 +7,7 @@ import MarketBadge from "@/components/MarketBadge";
 import PnL from "@/components/PnL";
 import ResultBadge from "@/components/ResultBadge";
 import { formatMatchDate, formatOdds, formatStake } from "@/lib/format";
-import { slugifyTip } from "@/lib/slugify";
+import { publicTipPath } from "@/lib/tip-seo";
 
 type PublicBet = Bet & {
   bookmaker?: Bookmaker | Bookmaker[] | null;
@@ -92,7 +92,7 @@ export default function PublicBetsTable({
             <td className={td.date}>{formatMatchDate(bet.match_date)}</td>
             <td className={td.match}>
               <Link
-                href={`/tips/${slugifyTip(bet.event, bet.id)}`}
+                href={publicTipPath(bet)}
                 className="block min-w-0 transition-colors hover:text-emerald-400"
                 title={bet.event}
               >

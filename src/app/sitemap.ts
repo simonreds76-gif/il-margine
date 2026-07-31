@@ -9,23 +9,46 @@ import {
   readClubPenaltyData,
 } from "@/lib/club-penalty-takers";
 import { readWorldCupData, worldCupTeamUrl, WORLD_CUP_ARCHIVE_DATE, WORLD_CUP_PENALTIES_URL } from "@/lib/world-cup-penalties";
+import { fetchSeoTipSitemapState } from "@/lib/tip-seo-server";
 
 const STATIC_LAST_MODIFIED = new Date("2026-05-12T00:00:00Z");
+const EMPTY_TIP_SEO_STATE: Awaited<ReturnType<typeof fetchSeoTipSitemapState>> = {
+  previews: [],
+  latestByMarket: {},
+};
+export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const worldCupData = await readWorldCupData().catch(() => null);
   const worldCupLastModified = new Date(`${WORLD_CUP_ARCHIVE_DATE}T12:00:00Z`);
-  const [clubPenaltyTeams, clubPenaltyLeagues] = await Promise.all([
+  const [clubPenaltyTeams, clubPenaltyLeagues, tipSeoState] = await Promise.all([
     readAllClubPenaltyTeams().catch(() => []),
     readClubPenaltyData().catch(() => []),
+    fetchSeoTipSitemapState().catch(() => EMPTY_TIP_SEO_STATE),
   ]);
   const clubPenaltySeason = getClubPenaltySeason();
   const clubPenaltyLastModified = new Date(`${clubPenaltySeason.published_at}T12:00:00Z`);
 
   const entries: MetadataRoute.Sitemap = [
     { url: BASE_URL, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "daily", priority: 1 },
-    { url: `${BASE_URL}/tennis-tips`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "daily", priority: 0.9 },
-    { url: `${BASE_URL}/player-props`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "daily", priority: 0.9 },
+    {
+      url: `${BASE_URL}/tennis-tips`,
+      lastModified: tipSeoState.latestByMarket.tennis ?? STATIC_LAST_MODIFIED,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/player-props`,
+      lastModified: tipSeoState.latestByMarket.props ?? STATIC_LAST_MODIFIED,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    ...tipSeoState.previews.map((preview) => ({
+      url: `${BASE_URL}${preview.url}`,
+      lastModified: preview.lastModified,
+      changeFrequency: "daily" as const,
+      priority: 0.72,
+    })),
     { url: `${BASE_URL}/track-record`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE_URL}/fair-odds-lab`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "daily", priority: 0.8 },
     { url: `${BASE_URL}/anytime-goalscorer`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "daily", priority: 0.8 },

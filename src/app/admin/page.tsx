@@ -4,6 +4,12 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import dynamic from "next/dynamic";
 import { supabase, Bet, Bookmaker } from "@/lib/supabase";
 import { formatOdds } from "@/lib/format";
+import {
+  TIP_SEO_MIN_ANALYSIS_CHARS,
+  buildStoredTipNotes,
+  hasTipSeoMarker,
+  stripTipSeoMarker,
+} from "@/lib/tip-seo";
 
 const MonthlyBreakdown = dynamic(() => import("@/components/MonthlyBreakdown"), {
   ssr: false,
@@ -58,6 +64,7 @@ export default function AdminPanel() {
     stake: "1",
     match_date: "",
     notes: "",
+    seo_ready: false,
     status: "won" as "won" | "lost" | "void",
   });
 
@@ -73,6 +80,7 @@ export default function AdminPanel() {
     stake: "1",
     match_date: new Date().toISOString().slice(0, 10),
     notes: "",
+    seo_ready: false,
   });
 
   const categories = {
@@ -272,6 +280,14 @@ export default function AdminPanel() {
 
   const handleAddBet = async (e: React.FormEvent) => {
     e.preventDefault();
+    const cleanNotes = stripTipSeoMarker(form.notes);
+    if (form.seo_ready && cleanNotes.length < TIP_SEO_MIN_ANALYSIS_CHARS) {
+      setMessage({
+        type: "error",
+        text: `Search previews require at least ${TIP_SEO_MIN_ANALYSIS_CHARS} characters of original match reasoning.`,
+      });
+      return;
+    }
     setLoading(true);
     setMessage(null);
     const res = await fetch("/api/admin/bets", {
@@ -287,7 +303,7 @@ export default function AdminPanel() {
         bookmaker_id: parseInt(form.bookmaker_id),
         stake: Math.round(parseFloat(form.stake) * 100) / 100,
         match_date: form.match_date || null,
-        notes: form.notes || null,
+        notes: buildStoredTipNotes(cleanNotes, form.seo_ready),
       }),
     });
     const data = await res.json().catch(() => ({}));
@@ -302,7 +318,16 @@ export default function AdminPanel() {
         successText += ` Telegram not posted (${data.telegram.reason || "skipped"}).`;
       }
       setMessage({ type: "success", text: successText });
-      setForm({ ...form, event: "", player: "", selection: "", odds: "", match_date: new Date().toISOString().slice(0, 10), notes: "" });
+      setForm({
+        ...form,
+        event: "",
+        player: "",
+        selection: "",
+        odds: "",
+        match_date: new Date().toISOString().slice(0, 10),
+        notes: "",
+        seo_ready: false,
+      });
       fetchPendingBets();
       fetchPendingCount();
     } else {
@@ -367,7 +392,8 @@ export default function AdminPanel() {
       bookmaker_id: String(bet.bookmaker_id),
       stake: String(bet.stake),
       match_date: bet.match_date ? bet.match_date.slice(0, 10) : new Date().toISOString().slice(0, 10),
-      notes: bet.notes || "",
+      notes: stripTipSeoMarker(bet.notes),
+      seo_ready: hasTipSeoMarker(bet.notes),
       status: (bet.status === "won" || bet.status === "lost" || bet.status === "void" ? bet.status : "won") as "won" | "lost" | "void",
     });
   };
@@ -376,6 +402,14 @@ export default function AdminPanel() {
   const handleSaveEdit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingBet) return;
+    const cleanNotes = stripTipSeoMarker(editForm.notes);
+    if (editForm.seo_ready && cleanNotes.length < TIP_SEO_MIN_ANALYSIS_CHARS) {
+      setMessage({
+        type: "error",
+        text: `Search previews require at least ${TIP_SEO_MIN_ANALYSIS_CHARS} characters of original match reasoning.`,
+      });
+      return;
+    }
     setLoading(true);
     setMessage(null);
 
@@ -389,7 +423,7 @@ export default function AdminPanel() {
       bookmaker_id: parseInt(editForm.bookmaker_id),
       stake: Math.round(parseFloat(editForm.stake) * 100) / 100,
       match_date: editForm.match_date || null,
-      notes: editForm.notes || null,
+      notes: buildStoredTipNotes(cleanNotes, editForm.seo_ready),
     };
 
     // If settled, include status and recalc profit_loss from new odds/stake/status
@@ -693,14 +727,35 @@ export default function AdminPanel() {
 
             {/* Notes */}
             <div>
-              <label className="block text-xs text-slate-500 mb-1">Notes (optional)</label>
-              <input
-                type="text"
-                placeholder="Any notes..."
+              <div className="mb-1 flex items-center justify-between gap-3">
+                <label className="block text-xs text-slate-500">Original reasoning (optional)</label>
+                <span className={`text-xs font-mono ${form.notes.trim().length >= TIP_SEO_MIN_ANALYSIS_CHARS ? "text-emerald-400" : "text-slate-500"}`}>
+                  {form.notes.trim().length}/{TIP_SEO_MIN_ANALYSIS_CHARS}
+                </span>
+              </div>
+              <textarea
+                rows={5}
+                placeholder="Explain the matchup, relevant form or model angle, and why the posted price is attractive. Do not paste generic or duplicated copy."
                 value={form.notes}
                 onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                className="w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 focus:outline-none focus:border-emerald-500"
+                className="w-full resize-y bg-slate-800 border border-slate-700 rounded px-4 py-3 focus:outline-none focus:border-emerald-500"
               />
+              {(form.market === "props" || form.market === "tennis") && (
+                <label className="mt-3 flex cursor-pointer items-start gap-3 rounded-lg border border-slate-700 bg-slate-900/60 p-3">
+                  <input
+                    type="checkbox"
+                    checked={form.seo_ready}
+                    onChange={(e) => setForm({ ...form, seo_ready: e.target.checked })}
+                    className="mt-0.5 h-4 w-4 accent-emerald-500"
+                  />
+                  <span>
+                    <span className="block text-sm font-medium text-slate-200">Search preview</span>
+                    <span className="mt-1 block text-xs leading-relaxed text-slate-500">
+                      Creates one indexable preview for this fixture and groups every pick on the same match. Requires unique reasoning; the public ledger remains unchanged.
+                    </span>
+                  </span>
+                </label>
+              )}
             </div>
 
             {/* Submit */}
@@ -1037,13 +1092,34 @@ export default function AdminPanel() {
                 </div>
               </div>
               <div>
-                <label className="block text-xs text-slate-500 mb-1">Notes (optional)</label>
-                <input
-                  type="text"
+                <div className="mb-1 flex items-center justify-between gap-3">
+                  <label className="block text-xs text-slate-500">Original reasoning (optional)</label>
+                  <span className={`text-xs font-mono ${editForm.notes.trim().length >= TIP_SEO_MIN_ANALYSIS_CHARS ? "text-emerald-400" : "text-slate-500"}`}>
+                    {editForm.notes.trim().length}/{TIP_SEO_MIN_ANALYSIS_CHARS}
+                  </span>
+                </div>
+                <textarea
+                  rows={5}
                   value={editForm.notes}
                   onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
-                  className="w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 focus:outline-none focus:border-emerald-500"
+                  className="w-full resize-y bg-slate-800 border border-slate-700 rounded px-4 py-3 focus:outline-none focus:border-emerald-500"
                 />
+                {(editForm.market === "props" || editForm.market === "tennis") && (
+                  <label className="mt-3 flex cursor-pointer items-start gap-3 rounded-lg border border-slate-700 bg-slate-900/60 p-3">
+                    <input
+                      type="checkbox"
+                      checked={editForm.seo_ready}
+                      onChange={(e) => setEditForm({ ...editForm, seo_ready: e.target.checked })}
+                      className="mt-0.5 h-4 w-4 accent-emerald-500"
+                    />
+                    <span>
+                      <span className="block text-sm font-medium text-slate-200">Search preview</span>
+                      <span className="mt-1 block text-xs leading-relaxed text-slate-500">
+                        Approves this fixture for indexing. Untick it to remove the fixture from the approved sitemap without changing the bet record.
+                      </span>
+                    </span>
+                  </label>
+                )}
               </div>
               <div className="flex gap-2 pt-2">
                 <button
