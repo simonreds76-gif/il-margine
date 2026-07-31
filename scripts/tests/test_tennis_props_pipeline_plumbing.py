@@ -414,6 +414,28 @@ class ComparisonInputFilterTests(unittest.TestCase):
         self.assertEqual(calls, ["refresh", "compare", "tracking"])
 
 
+class ComparisonInputFilterTests(unittest.TestCase):
+    def test_excludes_only_event_rows_before_as_of(self) -> None:
+        rows = [
+            {"date": "2026-07-30", "market": "aces"},
+            {"date": "2026-07-31", "market": "aces"},
+            {"date": "2026-08-01", "market": "double_faults"},
+            {"date": "", "market": "aces"},
+        ]
+        kept, excluded = COMPARE.filter_line_rows_for_as_of(rows, "2026-07-31")
+        self.assertEqual(excluded, 1)
+        self.assertEqual([row["date"] for row in kept], ["2026-07-31", "2026-08-01", ""])
+
+    def test_market_filter_supports_v3_aces_comparison(self) -> None:
+        rows = [
+            {"market": "aces"},
+            {"market": "match_aces"},
+            {"market": "double_faults"},
+        ]
+        kept = COMPARE.filter_line_rows_by_market(rows, "aces,match_aces")
+        self.assertEqual([row["market"] for row in kept], ["aces", "match_aces"])
+
+
 class HostedSyncTests(unittest.TestCase):
     def test_history_merge_is_append_only_and_deduplicated(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
