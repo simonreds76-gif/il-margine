@@ -67,6 +67,43 @@ def read_json(path: Path) -> dict[str, object]:
     return payload if isinstance(payload, dict) else {}
 
 
+def filter_line_rows_for_as_of(
+    rows: list[dict[str, str]], as_of: str
+) -> tuple[list[dict[str, str]], int]:
+    """Exclude completed event dates when a prior capture is reused."""
+    target = date.fromisoformat(as_of)
+    kept: list[dict[str, str]] = []
+    excluded = 0
+    for row in rows:
+        raw_date = str(row.get("date") or "").strip()
+        if not raw_date:
+            kept.append(row)
+            continue
+        try:
+            event_date = date.fromisoformat(raw_date)
+        except ValueError:
+            kept.append(row)
+            continue
+        if event_date < target:
+            excluded += 1
+            continue
+        kept.append(row)
+    return kept, excluded
+
+
+def filter_line_rows_by_market(
+    rows: list[dict[str, str]], market_filter: str
+) -> list[dict[str, str]]:
+    allowed = {
+        item.strip().lower()
+        for item in str(market_filter or "").split(",")
+        if item.strip()
+    }
+    if not allowed:
+        return rows
+    return [row for row in rows if str(row.get("market") or "").strip().lower() in allowed]
+
+
 def totals_gate_result(gate: dict[str, object], tour: str, market: str) -> tuple[bool, float | None]:
     markets = gate.get("markets")
     if not isinstance(markets, dict):
@@ -543,7 +580,7 @@ def main() -> None:
     parser.add_argument(
         "--market-filter",
         default="",
-        help="Optional comma-separated normalized markets to compare.",
+        help="Optional comma-separated market keys to retain before matching.",
     )
     parser.add_argument("--min-value", type=float, default=0.10)
     parser.add_argument("--min-novig-edge", type=float, default=0.05)
@@ -569,12 +606,17 @@ def main() -> None:
         if args.unmatched_out
         else PROPS_DIR / f"comparison-{args.date}-unmatched.csv"
     )
-    line_rows = [normalize_legacy_team_total_row(row) for row in read_csv(lines_path)]
     if not lines_path.exists():
         print(f"Lines file not found: {lines_path}")
         return
+    input_line_rows = [normalize_legacy_team_total_row(row) for row in read_csv(lines_path)]
+    line_rows, stale_event_rows = filter_line_rows_for_as_of(input_line_rows, args.date)
+    line_rows = filter_line_rows_by_market(line_rows, args.market_filter)
     if not line_rows:
-        print(f"Lines file has no market rows: {lines_path}")
+        print(
+            f"Lines file has no eligible market rows: {lines_path} "
+            f"(input={len(input_line_rows)}, past_event_rows_excluded={stale_event_rows})"
+        )
         return
     board_rows = read_csv(Path(args.board))
     totals_gate = read_json(Path(args.totals_gate))
@@ -963,6 +1005,14 @@ def main() -> None:
     print(f"Saved {len(rows)} rows: {out_path}")
     write_csv(unmatched_out_path, unmatched_rows, UNMATCHED_FIELDS)
     print(f"Saved {len(unmatched_rows)} unmatched rows: {unmatched_out_path}")
+    print(
+        "Comparison funnel: "
+        f"input={len(input_line_rows)} "
+        f"past_event_rows_excluded={stale_event_rows} "
+        f"eligible={len(line_rows)} "
+        f"matched={sum(row.get('matched_board') == 'yes' for row in rows)} "
+        f"unmatched={len(unmatched_rows)}"
+    )
     if not lines_path.exists():
         print(f"Lines file not found: {lines_path}")
 

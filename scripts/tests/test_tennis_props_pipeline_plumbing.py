@@ -346,6 +346,28 @@ class DailyMarketSelectionTests(unittest.TestCase):
         self.assertEqual(calls, ["refresh", "compare", "tracking"])
 
 
+class ComparisonInputFilterTests(unittest.TestCase):
+    def test_excludes_only_event_rows_before_as_of(self) -> None:
+        rows = [
+            {"date": "2026-07-30", "market": "aces"},
+            {"date": "2026-07-31", "market": "aces"},
+            {"date": "2026-08-01", "market": "double_faults"},
+            {"date": "", "market": "aces"},
+        ]
+        kept, excluded = COMPARE.filter_line_rows_for_as_of(rows, "2026-07-31")
+        self.assertEqual(excluded, 1)
+        self.assertEqual([row["date"] for row in kept], ["2026-07-31", "2026-08-01", ""])
+
+    def test_market_filter_supports_v3_aces_comparison(self) -> None:
+        rows = [
+            {"market": "aces"},
+            {"market": "match_aces"},
+            {"market": "double_faults"},
+        ]
+        kept = COMPARE.filter_line_rows_by_market(rows, "aces,match_aces")
+        self.assertEqual([row["market"] for row in kept], ["aces", "match_aces"])
+
+
 class HostedSyncTests(unittest.TestCase):
     def test_history_merge_is_append_only_and_deduplicated(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -375,6 +397,43 @@ class PipelineHealthTests(unittest.TestCase):
             )
             self.assertEqual(payload["state"], "COMPARISON_MISSING")
             self.assertTrue(payload["structural_error"])
+
+    def test_one_sided_only_comparison_is_structural_error(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            lines = base / "lines.csv"
+            comparison = base / "comparison.csv"
+            signals = base / "signals.csv"
+            write_csv(
+                lines,
+                [
+                    {"date": "2026-07-28", "capture_ts": "2026-07-29T08:00:00Z"},
+                    {"date": "2026-07-29", "capture_ts": "2026-07-29T08:00:00Z"},
+                ],
+            )
+            write_csv(
+                comparison,
+                [
+                    {
+                        "date": "2026-07-29",
+                        "matched_board": "yes",
+                        "price_pair_status": "over_only",
+                        "trackable_shadow": "true",
+                        "bettable": "false",
+                    }
+                ],
+            )
+            payload = HEALTH.build_health(
+                "2026-07-29",
+                lines,
+                comparison,
+                signals,
+                now=datetime(2026, 7, 29, 9, tzinfo=timezone.utc),
+            )
+            self.assertEqual(payload["state"], "TWO_WAY_PRICES_MISSING")
+            self.assertTrue(payload["structural_error"])
+            self.assertEqual(payload["past_event_line_rows"], 1)
+            self.assertEqual(payload["eligible_line_rows"], 1)
 
     def test_windows_watchdog_evaluates_pipeline_health_artifact(self) -> None:
         watchdog = (SCRIPTS / "tennis-health-check.ps1").read_text(encoding="utf-8")
