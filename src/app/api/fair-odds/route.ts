@@ -153,6 +153,8 @@ export interface FairOddsRow {
   ml_short_fav_market_guard?: boolean;
   ml_model_market_gap_guard?: boolean;
   ml_model_market_side_flip_guard?: boolean;
+  ml_model_market_side_flip_detected?: boolean;
+  ml_hard_masters_side_flip_allowed?: boolean;
   ml_model_market_fav_gap?: number;
   short_fav_dog_spread_guard_p1?: boolean;
   short_fav_dog_spread_guard_p2?: boolean;
@@ -2831,6 +2833,19 @@ async function run(): Promise<Response> {
       modelFavoriteSide !== pinFavoriteSide &&
       Math.abs(pinP1NoVig - 0.5) >= MODEL_MARKET_FAV_SIDE_FLIP_BUFFER &&
       Math.abs(policyP1WinProb - 0.5) >= MODEL_MARKET_FAV_SIDE_FLIP_BUFFER;
+    // The blanket side-flip veto removed the strongest historical strict cell.
+    // Restore only the registered Hard/Masters/high-confidence cohort while
+    // keeping the 10pp gap cap and every independent safety guard intact.
+    const hardMastersSideFlipAllowed =
+      modelMarketFavoriteSideMismatch &&
+      league === "ATP" &&
+      surfaceKey === "hard" &&
+      seriesBucket === "Masters 1000" &&
+      confidence === "high" &&
+      modelMarketFavoriteGap != null &&
+      modelMarketFavoriteGap <= MODEL_MARKET_FAV_PROB_GAP_MAX;
+    const modelMarketSideFlipExcluded =
+      modelMarketFavoriteSideMismatch && !hardMastersSideFlipAllowed;
     const hasCurrentSpreadData =
       pinnacle != null &&
       r.spread_line != null &&
@@ -2883,7 +2898,7 @@ async function run(): Promise<Response> {
       STRICT_POLICY_MODE &&
       ((modelMarketFavoriteGap != null &&
         modelMarketFavoriteGap > MODEL_MARKET_FAV_PROB_GAP_MAX) ||
-        modelMarketFavoriteSideMismatch);
+        modelMarketSideFlipExcluded);
     const challengerValueExcluded = league === "Challenger";
     const injuryExcluded = STRICT_POLICY_MODE && STRICT_INJURY_OVERLAY_ENABLED && recentInjuredAny;
     const mispriceExcluded = modelFavOddsMispriceExcluded || pinFavOddsMispriceExcluded || modelMarketGapExcluded;
@@ -3116,20 +3131,20 @@ async function run(): Promise<Response> {
       pinnacleShortFavoriteExcluded: pinFavOddsMispriceExcluded,
       modelShortFavoriteExcluded: modelFavOddsMispriceExcluded,
       modelMarketGapExcluded,
-      modelMarketSideFlipExcluded: modelMarketFavoriteSideMismatch,
+      modelMarketSideFlipExcluded,
       challengerValueExcluded,
       heavyFavoriteDogExcluded: strictHeavyFavoriteDogExcludedP1 || strictHeavyFavoriteDogExcludedP2,
       favoriteSpreadConflictExcluded: strictFavoriteSpreadConflictP1 || strictFavoriteSpreadConflictP2,
       oppositeSideHandicapConflictExcluded:
         strictOppositeHandicapConflictP1 || strictOppositeHandicapConflictP2,
     });
-    const blockedReason = displayGuardReason ?? firstBlockedReason({
+    const blockedReason = policyMatch ? undefined : displayGuardReason ?? firstBlockedReason({
       hasPositiveRawValue,
-      recentInjuredAny,
+      recentInjuredAny: injuryExcluded,
       pinnacleShortFavoriteExcluded: pinFavOddsMispriceExcluded,
       modelShortFavoriteExcluded: modelFavOddsMispriceExcluded,
       modelMarketGapExcluded,
-      modelMarketSideFlipExcluded: modelMarketFavoriteSideMismatch,
+      modelMarketSideFlipExcluded,
       challengerValueExcluded,
       atp500HardShortFavoriteExcluded: shortFavoriteExcluded,
       heavyFavoriteDogExcluded: strictHeavyFavoriteDogExcludedP1 || strictHeavyFavoriteDogExcludedP2,
@@ -3223,7 +3238,9 @@ async function run(): Promise<Response> {
       ml_short_fav_model_guard: modelFavOddsMispriceExcluded,
       ml_short_fav_market_guard: pinFavOddsMispriceExcluded,
       ml_model_market_gap_guard: modelMarketGapExcluded,
-      ml_model_market_side_flip_guard: modelMarketFavoriteSideMismatch,
+      ml_model_market_side_flip_guard: modelMarketSideFlipExcluded,
+      ml_model_market_side_flip_detected: modelMarketFavoriteSideMismatch,
+      ml_hard_masters_side_flip_allowed: hardMastersSideFlipAllowed,
       ml_model_market_fav_gap:
         modelMarketFavoriteGap != null ? Math.round(modelMarketFavoriteGap * 10000) / 10000 : undefined,
       short_fav_dog_spread_guard_p1: shortFavDogSpreadGuardP1,

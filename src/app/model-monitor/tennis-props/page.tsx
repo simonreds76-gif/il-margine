@@ -1565,6 +1565,38 @@ function MostAcesPanel({
   const directDiagnosticComparison = record(directDiagnostic.comparison);
   const directPassed = String(directValidation.status || "").toUpperCase() === "PASS";
   const directParityActive = String(directParity.status || "").toUpperCase() === "ACTIVE";
+  const settledForecastRows = forecasts.filter((row) => row.settlement_status === "settled");
+  const pendingForecastRows = forecasts.filter((row) => row.settlement_status === "pending");
+  const voidForecastRows = forecasts.filter((row) => row.settlement_status === "void");
+  const modelPriority = (model: string) => {
+    if (model === "most_aces_direct_1x2_v1") return 4;
+    if (model.includes("evidence_tiers")) return 3;
+    if (model.includes("input_guard")) return 2;
+    return 1;
+  };
+  const latestSettledByFixture = new Map<string, CsvRow>();
+  for (const row of settledForecastRows) {
+    const key = `${row.date}|${[row.player1, row.player2].sort().join("|")}`;
+    const current = latestSettledByFixture.get(key);
+    if (
+      !current
+      || modelPriority(row.model) > modelPriority(current.model)
+      || (modelPriority(row.model) === modelPriority(current.model)
+        && row.registered_at_utc > current.registered_at_utc)
+    ) {
+      latestSettledByFixture.set(key, row);
+    }
+  }
+  const recentSettledForecasts = [...latestSettledByFixture.values()]
+    .sort((a, b) => (b.settled_at_utc || b.date).localeCompare(a.settled_at_utc || a.date))
+    .slice(0, 12);
+  const modelLabel = (model: string) => model === "most_aces_direct_1x2_v1"
+    ? "DIRECT V1"
+    : model.includes("evidence_tiers")
+      ? "A0 V3"
+      : model.includes("input_guard")
+        ? "A0 V2"
+        : "A0 LEGACY";
   const sortOptions: { key: MostAcesSortKey; label: string }[] = [
     { key: "schedule", label: "Schedule" },
     { key: "favourite", label: "Strongest call" },
@@ -1576,13 +1608,14 @@ function MostAcesPanel({
       title="BetMGM Most Aces 1X2"
       subtitle={`Correlated ATP Hard/Clay shadow pricer. Stage-0 ${String(validation.status || "MISSING")} on ${String(correlated.n || 0)} untouched matches; current artifact ${stamp}.`}
     >
-      <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+      <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-7">
         <MetricTile label="Stage-0" value={String(validation.status || "MISSING")} sub={`${String(correlated.n || 0)} matches`} tone={String(validation.status || "").toUpperCase() === "PASS" ? "text-emerald-300" : "text-amber-300"} />
         <MetricTile label="Brier" value={Number(correlated.brier || 0).toFixed(4)} sub="correlated 1X2" tone="text-cyan-300" />
         <MetricTile label="Accuracy" value={`${Number(correlated.accuracy_pct || 0).toFixed(1)}%`} sub="three-way favourite" tone="text-slate-100" />
         <MetricTile label="Draws" value={String(outcomes.DRAW || 0)} sub="10.2% in holdout" tone="text-amber-300" />
         <MetricTile label="A0 forward settled" value={String(settled)} sub={`${numeric(controlForward.rows_registered)} registered`} tone={settled ? "text-cyan-300" : "text-slate-400"} />
         <MetricTile label="Forward score" value={Number.isFinite(accuracy) ? `${accuracy.toFixed(1)}%` : "-"} sub={Number.isFinite(forwardBrier) ? `Brier ${forwardBrier.toFixed(4)}` : "awaiting results"} tone={settled ? "text-emerald-300" : "text-slate-400"} />
+        <MetricTile label="BetMGM prices" value={String(observations.length)} sub={observations.length ? "captured 1X2 quotes" : "FEED EMPTY - no ROI/CLV"} tone={observations.length ? "text-emerald-300" : "text-rose-300"} />
       </div>
 
       {Object.keys(directValidation).length ? (
@@ -1775,6 +1808,57 @@ function MostAcesPanel({
           </div>
         </div>
       ) : <EmptyState message="No eligible ATP Hard/Clay Most Aces projections on the current board." />}
+
+      <div className="mt-5 overflow-hidden rounded-2xl border border-slate-800 bg-slate-950/55">
+        <div className="flex flex-col gap-2 border-b border-slate-800 bg-slate-900/70 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <div className="text-[10px] font-black uppercase tracking-[0.15em] text-cyan-300">Latest settled evidence</div>
+            <div className="mt-1 text-sm font-black text-slate-100">Actual ace counts and forecast score</div>
+          </div>
+          <div className="flex flex-wrap gap-2 text-[10px] font-black uppercase tracking-[0.1em]">
+            <span className="rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1.5 text-emerald-300">{settledForecastRows.length} settled</span>
+            <span className="rounded-full border border-amber-500/25 bg-amber-500/10 px-3 py-1.5 text-amber-300">{pendingForecastRows.length} pending</span>
+            <span className="rounded-full border border-slate-700 bg-slate-900 px-3 py-1.5 text-slate-400">{voidForecastRows.length} void</span>
+          </div>
+        </div>
+        {recentSettledForecasts.length ? (
+          <div className="divide-y divide-slate-800/80">
+            {recentSettledForecasts.map((row) => {
+              const correct = row.prediction_correct === "yes";
+              const predicted = row.predicted_outcome === "P1"
+                ? row.player1
+                : row.predicted_outcome === "P2"
+                  ? row.player2
+                  : "Draw";
+              return (
+                <div key={row.forecast_id} className="grid gap-3 px-4 py-3 sm:grid-cols-[90px_minmax(0,1.5fr)_minmax(0,1fr)_110px_90px] sm:items-center">
+                  <div>
+                    <div className="font-mono text-[11px] text-slate-400">{dateLabel(row.date)}</div>
+                    <div className="mt-1 text-[9px] font-black uppercase tracking-[0.12em] text-cyan-300">{modelLabel(row.model)}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs font-black text-slate-100">{row.player1} vs {row.player2}</div>
+                    <div className="mt-1 text-[10px] text-slate-500">{row.tournament} / {row.surface}</div>
+                  </div>
+                  <div className="text-xs">
+                    <span className="text-slate-500">Call </span><span className="font-black text-slate-200">{predicted}</span>
+                  </div>
+                  <div className="font-mono text-sm font-black text-slate-100">{row.actual_player1_aces}-{row.actual_player2_aces} aces</div>
+                  <div className="sm:text-right">
+                    <div className={cn("text-xs font-black uppercase", correct ? "text-emerald-300" : "text-rose-300")}>{correct ? "Correct" : "Miss"}</div>
+                    <div className="mt-1 font-mono text-[9px] text-slate-500">Brier {fmt(row.model_brier, 3)}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : <div className="px-4 py-5 text-sm text-slate-500">No settled Most Aces forecasts yet.</div>}
+        {pendingForecastRows.length ? (
+          <div className="border-t border-amber-500/15 bg-amber-500/5 px-4 py-3 text-xs text-amber-100/80">
+            Pending result lookup: {pendingForecastRows.slice(0, 3).map((row) => `${row.player1} vs ${row.player2}`).join("; ")}{pendingForecastRows.length > 3 ? ` +${pendingForecastRows.length - 3} more` : ""}.
+          </div>
+        ) : null}
+      </div>
     </SectionCard>
   );
 }

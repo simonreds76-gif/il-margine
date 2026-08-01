@@ -230,7 +230,10 @@ class DailyMarketSelectionTests(unittest.TestCase):
     def test_am_task_runs_lightweight_hosted_comparison(self) -> None:
         am_script = (SCRIPTS / "oncourt-am-refresh.ps1").read_text(encoding="utf-8")
         self.assertIn("run-tennis-props-daily.py", am_script)
+        self.assertIn("--capture-only", am_script)
         self.assertIn("--comparison-only", am_script)
+        self.assertLess(am_script.index("--capture-only"), am_script.index("build-tennis-props-board.py"))
+        self.assertIn("--skip-hosted-sync", am_script)
 
 
 class ComparisonInputFilterTests(unittest.TestCase):

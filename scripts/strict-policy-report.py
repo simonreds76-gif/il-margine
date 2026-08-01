@@ -1033,6 +1033,73 @@ def match_pinnacle_rows(
     return matched
 
 
+def load_local_pinnacle_snapshot(snapshot_date: str) -> list[dict[str, Any]]:
+    """Load the latest local capture for each same-day Pinnacle pairing.
+
+    The fair-odds API already merges these files with the database snapshot.
+    Signal generation must use the same source or it silently misses matches
+    captured after the morning database snapshot.
+    """
+    history_dir = ROOT / "data" / "pinnacle-history"
+    token = snapshot_date.replace("-", "")
+    latest: dict[tuple[str, str, str], tuple[str, dict[str, Any]]] = {}
+    for csv_path in sorted(history_dir.glob(f"pinnacle-history-{token}-*.csv")):
+        try:
+            with csv_path.open("r", encoding="utf-8-sig", newline="") as handle:
+                for row in csv.DictReader(handle):
+                    if str(row.get("bookmaker") or "").strip().lower() != "pinnacle":
+                        continue
+                    league = str(row.get("league") or "").strip()
+                    if league not in {"ATP", "Challenger"}:
+                        continue
+                    p1 = str(row.get("player1_name") or "").strip()
+                    p2 = str(row.get("player2_name") or "").strip()
+                    if not p1 or not p2 or _is_doubles_name(p1) or _is_doubles_name(p2):
+                        continue
+                    try:
+                        odds1 = float(row.get("odds1") or 0)
+                        odds2 = float(row.get("odds2") or 0)
+                    except (TypeError, ValueError):
+                        continue
+                    if odds1 <= 1 or odds2 <= 1:
+                        continue
+                    pair_key = tuple(sorted((_full_name(p1), _full_name(p2)))) + (league,)
+                    captured_at = str(row.get("captured_at") or "")
+                    candidate = {
+                        "player1_name": p1,
+                        "player2_name": p2,
+                        "odds1": odds1,
+                        "odds2": odds2,
+                        "league": league,
+                    }
+                    current = latest.get(pair_key)
+                    if current is None or captured_at >= current[0]:
+                        latest[pair_key] = (captured_at, candidate)
+        except (OSError, csv.Error):
+            continue
+    return [item[1] for item in latest.values()]
+
+
+def allow_hard_masters_side_flip(
+    *,
+    detected: bool,
+    league: str,
+    surface: str,
+    series_bucket: str,
+    confidence: str,
+    model_market_fav_gap: float,
+) -> bool:
+    """Allow only the registered strict Hard/Masters/high side-flip cohort."""
+    return (
+        detected
+        and league == "ATP"
+        and surface == "Hard"
+        and series_bucket == "Masters 1000"
+        and confidence == "high"
+        and model_market_fav_gap <= MISPRICE_MODEL_MARKET_FAV_GAP_MAX
+    )
+
+
 def is_excluded_short_favorite(surface: str, series_bucket: str, confidence: str, our_odds1: float, our_odds2: float) -> bool:
     if not EXCLUDE_ATP500_HARD_SHORT_FAVORITES:
         return False
@@ -2217,6 +2284,15 @@ def main() -> int:
 
     snapshot_date_used = today
     pin_rows = fetch_pinnacle_snapshot(snapshot_date_used)
+    local_pin_rows = load_local_pinnacle_snapshot(snapshot_date_used)
+    if local_pin_rows:
+        # Local rows come first so exact duplicate pairings keep the freshest
+        # capture when match_pinnacle_rows collapses candidates by identity.
+        pin_rows = local_pin_rows + pin_rows
+        print(
+            f"Merged {len(local_pin_rows)} latest local Pinnacle pairings "
+            f"with {len(pin_rows) - len(local_pin_rows)} database snapshot rows."
+        )
     if not pin_rows:
         # The evening pipeline often crosses midnight UTC after scraping odds.
         # Reuse the previous snapshot instead of publishing a false empty lane.
@@ -2393,6 +2469,17 @@ def main() -> int:
             model_favorite_side != pin_favorite_side
             and abs(pin_p1_no_vig - 0.5) >= MISPRICE_MODEL_MARKET_FAV_SIDE_FLIP_BUFFER
             and abs(policy_p1_win_prob - 0.5) >= MISPRICE_MODEL_MARKET_FAV_SIDE_FLIP_BUFFER
+        )
+        hard_masters_side_flip_allowed = allow_hard_masters_side_flip(
+            detected=model_market_side_flip_excluded,
+            league=league,
+            surface=surface,
+            series_bucket=series_bucket,
+            confidence=confidence,
+            model_market_fav_gap=model_market_fav_gap,
+        )
+        model_market_side_flip_excluded = (
+            model_market_side_flip_excluded and not hard_masters_side_flip_allowed
         )
         model_market_gap_excluded = (
             model_market_fav_gap > MISPRICE_MODEL_MARKET_FAV_GAP_MAX

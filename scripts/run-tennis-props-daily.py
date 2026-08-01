@@ -383,6 +383,43 @@ def sync_hosted_captures(as_of: str, lookback_days: int) -> None:
     )
 
 
+def capture_market_prices(args: argparse.Namespace) -> int:
+    """Capture prices before the slow projection build can hit its timeout."""
+    if args.skip_odds:
+        print("\nMarket capture skipped by --skip-odds.")
+        return 0
+    if not has_odds_key():
+        print("\nWARNING: no local odds-api key; live market capture skipped.")
+        return 0
+    scrape_exit = run(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "tennis-props-scrape-bet365.py"),
+            "--date", args.as_of,
+            "--days-ahead", str(args.days_ahead),
+            "--max-events", str(args.max_events),
+            "--bookmakers", "Bet365",
+        ],
+        "Capture Bet365 aces/DF lines before projections",
+        fatal=args.require_odds,
+        timeout_seconds=180,
+    )
+    run(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "tennis-most-aces-capture.py"),
+            "--date", args.as_of,
+            "--days-ahead", str(args.days_ahead),
+            "--max-events", str(args.max_events),
+            "--bookmakers", "BetMGM",
+        ],
+        "Capture BetMGM Most Aces 1X2 before projections",
+        fatal=False,
+        timeout_seconds=180,
+    )
+    return scrape_exit
+
+
 def run_comparison_only(as_of: str, *, skip_sync: bool, lookback_days: int) -> int:
     if not skip_sync:
         sync_hosted_captures(as_of, lookback_days)
@@ -407,6 +444,7 @@ def main() -> int:
     parser.add_argument("--skip-odds", action="store_true", help="Do not scrape Bet365 lines even if a key is configured")
     parser.add_argument("--require-odds", action="store_true", help="Fail if the Bet365 odds scrape cannot run")
     parser.add_argument("--comparison-only", action="store_true", help="Sync hosted prices and refresh comparison/tracking without rebuilding projections")
+    parser.add_argument("--capture-only", action="store_true", help="Capture Bet365/BetMGM prices without rebuilding projections")
     parser.add_argument("--skip-hosted-sync", action="store_true", help="Do not sync captures from the golden data branch")
     parser.add_argument("--hosted-lookback-days", type=int, default=7)
     parser.add_argument("--days-ahead", type=int, default=2)
@@ -416,12 +454,20 @@ def main() -> int:
     load_env()
     PROPS_DIR.mkdir(parents=True, exist_ok=True)
 
+    if args.capture_only:
+        return capture_market_prices(args)
+
     if args.comparison_only:
         return run_comparison_only(
             args.as_of,
             skip_sync=args.skip_hosted_sync,
             lookback_days=args.hosted_lookback_days,
         )
+
+    # Capture first. The projection board can take several minutes and is
+    # deliberately timeout-bounded by the scheduled task; prices must not be
+    # lost merely because that independent research build runs long.
+    early_scrape_exit = capture_market_prices(args)
 
     if args.refresh_sackmann:
         run(
@@ -520,38 +566,7 @@ def main() -> int:
         run_shadow_tracking(args.as_of)
         return 0
 
-    scrape_exit = run(
-        [
-            sys.executable,
-            str(ROOT / "scripts" / "tennis-props-scrape-bet365.py"),
-            "--date",
-            args.as_of,
-            "--days-ahead",
-            str(args.days_ahead),
-            "--max-events",
-            str(args.max_events),
-            "--bookmakers",
-            "Bet365",
-        ],
-        "Scrape Bet365 aces/DF lines",
-        fatal=args.require_odds,
-    )
-    run(
-        [
-            sys.executable,
-            str(ROOT / "scripts" / "tennis-most-aces-capture.py"),
-            "--date",
-            args.as_of,
-            "--days-ahead",
-            str(args.days_ahead),
-            "--max-events",
-            str(args.max_events),
-            "--bookmakers",
-            "BetMGM",
-        ],
-        "Scrape BetMGM Most Aces 1X2 prices",
-        fatal=False,
-    )
+    scrape_exit = early_scrape_exit
     market_file = select_market_file(args.as_of)
     if scrape_exit == 0:
         market_file = lines_file(args.as_of) if has_market_rows(lines_file(args.as_of)) else market_file
