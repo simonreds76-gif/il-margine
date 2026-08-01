@@ -28,8 +28,11 @@ BACKTEST = ROOT / "data" / "backtest"
 PROPS = ROOT / "data" / "tennis-props"
 DEFAULT_REPORT = BACKTEST / "tennis-daily-signal-digest.txt"
 DEFAULT_STATE = BACKTEST / "tennis-daily-signal-digest-state.json"
+DEFAULT_READY_STATE = BACKTEST / "tennis-signal-generation-status.json"
+DEFAULT_GAP_LIVE = BACKTEST / "tennis-model-market-gap-live.csv"
 DEFAULT_REPOSITORY = "simonreds76-gif/il-margine"
 DEFAULT_WORKFLOW = "tennis-daily-signal-digest.yml"
+DEFAULT_REF = "golden-with-speed-insights"
 TELEGRAM_LIMIT = 3900
 
 
@@ -148,13 +151,92 @@ def row_to_signal(row: dict[str, str], lane: Lane, target_date: str) -> Signal |
     )
 
 
+def gap_replacement_signal(row: dict[str, str], target_date: str) -> Signal | None:
+    if row.get("date") != target_date or not is_pending(row):
+        return None
+    if (row.get("bet_type") or "match").strip().lower() == "spread":
+        return None
+
+    cohorts = [item for item in (row.get("replacement_cohorts") or "").split("|") if item]
+    forward_flag = (row.get("replacement_forward_eligible") or "1").strip().lower()
+    gap = parse_float(row.get("model_market_gap_pp"))
+    policy_profiles = {
+        item for item in (row.get("policy_profiles") or "").split("|") if item
+    }
+    side_flip = (row.get("side_flip") or "").strip().lower() in {"1", "true", "yes"}
+    short_favorite = (row.get("short_favorite_guard") or "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+    }
+    hard_side_flip_candidate = (
+        side_flip
+        and (row.get("surface") or "").strip().lower() == "hard"
+        and gap is not None
+        and gap <= 10.0
+        and bool(policy_profiles & {"strict", "volume_200"})
+        and (row.get("data_coverage_tag") or "").strip().upper() == "HIGH"
+        and not short_favorite
+    )
+    registered_gap_candidate = bool(cohorts) and forward_flag in {"1", "true", "yes"}
+    if not registered_gap_candidate and not hard_side_flip_candidate:
+        return None
+
+    player1 = (row.get("player1") or "").strip()
+    player2 = (row.get("player2") or "").strip()
+    selected = (row.get("selected_player") or "").strip()
+    selected_side = (row.get("selected_side") or row.get("side") or "").strip().upper()
+    odds = parse_float(row.get("selected_odds"))
+    if not player1 or not player2 or not selected or selected_side not in {"P1", "P2"} or odds is None:
+        return None
+
+    fair = parse_float(row.get("fair_odds1" if selected_side == "P1" else "fair_odds2"))
+    edge = parse_float(row.get("value_pct"))
+    quality = (row.get("diagnostic_quality") or "UNKNOWN").strip().upper()
+    labels: list[str] = []
+    if "strict_gap_10_20_same_side" in cohorts:
+        labels.append("STRICT GAP")
+    if "volume200_gap_10_15_same_side" in cohorts:
+        labels.append("VOL200 GAP")
+    if hard_side_flip_candidate:
+        labels.append("HARD FLIP")
+    if not labels:
+        labels.append("ML GAP")
+
+    selection = f"{selected} ML @ {fmt_odds(odds)}"
+    if fair is not None:
+        selection += f" | fair {fmt_odds(fair)}"
+    if edge is not None:
+        selection += f" | edge {edge:+.1f}%"
+    if gap is not None:
+        selection += f" | gap {gap:.1f}pp"
+    if hard_side_flip_candidate:
+        selection += " | model/market side flip"
+    selection += f" | quality {quality} | 0.5u"
+    pair = tuple(sorted((norm(player1), norm(player2))))
+    return Signal(
+        section="PROVISIONAL HARD ML" if hard_side_flip_candidate else "PROVISIONAL ML EXPANSION",
+        priority=14 if hard_side_flip_candidate else 15,
+        labels=labels,
+        match=f"{player1} vs {player2}",
+        selection=selection,
+        edge_pct=edge,
+        time_utc=(row.get("time_utc") or "").strip(),
+        key=(target_date, *pair, norm(selected), "ml"),
+    )
+
 def props_signals(target_date: str) -> list[Signal]:
     path = PROPS / f"comparison-{target_date}.csv"
     signals: list[Signal] = []
     for row in read_csv(path):
-        if (row.get("bettable") or "").strip().lower() not in {"1", "true", "yes"}:
+        if (row.get("date") or "").strip() != target_date:
             continue
-        side = (row.get("recommended_side") or "").strip().upper()
+        is_bettable = (row.get("bettable") or "").strip().lower() in {"1", "true", "yes"}
+        is_shadow = (row.get("trackable_shadow") or "").strip().lower() in {"1", "true", "yes"}
+        if not is_bettable and not is_shadow:
+            continue
+        side_field = "recommended_side" if is_bettable else "shadow_side"
+        side = (row.get(side_field) or "").strip().upper()
         if side not in {"OVER", "UNDER"}:
             continue
         player = (row.get("player") or "").strip()
@@ -176,12 +258,14 @@ def props_signals(target_date: str) -> list[Signal]:
             selection += f" | fair {fmt_odds(fair)}"
         if edge is not None:
             selection += f" | edge {edge:+.1f}%"
+        if is_shadow and not is_bettable:
+            selection += " | shadow evidence only"
         pair = tuple(sorted((norm(player), norm(opponent))))
         signals.append(
             Signal(
-                section="BET365 PROPS / RESEARCH",
-                priority=40,
-                labels=["ACES/DF"],
+                section="BET365 PROPS" if is_bettable else "BET365 PROPS WATCHLIST",
+                priority=40 if is_bettable else 45,
+                labels=["ACES/DF"] if is_bettable else ["ACES/DF WATCH"],
                 match=f"{player} vs {opponent}",
                 selection=selection,
                 edge_pct=edge,
@@ -213,6 +297,21 @@ def collect_signals(target_date: str) -> tuple[list[Signal], list[str]]:
                     merged[signal.key] = signal
         lane_counts[lane.label] = count
 
+    gap_count = 0
+    for row in read_csv(DEFAULT_GAP_LIVE):
+        signal = gap_replacement_signal(row, target_date)
+        if signal is None:
+            continue
+        gap_count += 1
+        existing = merged.get(signal.key)
+        if existing is None:
+            merged[signal.key] = signal
+        else:
+            for label in signal.labels:
+                if label not in existing.labels:
+                    existing.labels.append(label)
+    lane_counts["GUARD EXPANSION"] = gap_count
+
     props = props_signals(target_date)
     lane_counts["ACES/DF"] = len(props)
     for signal in props:
@@ -229,6 +328,8 @@ def collect_signals(target_date: str) -> tuple[list[Signal], list[str]]:
     empty = [lane.label for lane in LANES if lane_counts.get(lane.label, 0) == 0]
     if lane_counts.get("ACES/DF", 0) == 0:
         empty.append("ACES/DF")
+    if lane_counts.get("GUARD EXPANSION", 0) == 0:
+        empty.append("GUARD EXPANSION")
     return signals, empty
 
 
@@ -247,7 +348,7 @@ def render_messages(target_date: str, signals: list[Signal], empty_lanes: list[s
         blocks.append("\nNo qualifying signals today.")
     if empty_lanes:
         blocks.append("\nNo signals: " + ", ".join(empty_lanes))
-    blocks.append("\nShadow/research lanes are monitoring signals, not promoted live bets.")
+    blocks.append("\nProvisional ML expansion selections use 0.5u and keep a separate forward ROI/CLV record. Shadow/research lanes are monitoring signals, not promoted live bets.")
 
     messages: list[str] = []
     current = header
@@ -270,6 +371,11 @@ def load_state(path: Path) -> dict[str, str]:
         return payload if isinstance(payload, dict) else {}
     except (OSError, json.JSONDecodeError):
         return {}
+
+
+def signal_generation_is_ready(path: Path, target_date: str) -> bool:
+    state = load_state(path)
+    return state.get("date") == target_date and state.get("status") == "ok"
 
 
 def github_token_from_credential_manager() -> str:
@@ -324,9 +430,11 @@ def main() -> int:
     parser.add_argument("--date", default=date.today().isoformat())
     parser.add_argument("--report", default=str(DEFAULT_REPORT))
     parser.add_argument("--state", default=str(DEFAULT_STATE))
+    parser.add_argument("--ready-state", default=str(DEFAULT_READY_STATE))
     parser.add_argument("--repository", default=os.environ.get("TENNIS_DIGEST_GITHUB_REPOSITORY", DEFAULT_REPOSITORY))
     parser.add_argument("--workflow", default=DEFAULT_WORKFLOW)
-    parser.add_argument("--ref", default="main")
+    parser.add_argument("--ref", default=os.environ.get("TENNIS_DIGEST_GITHUB_REF", DEFAULT_REF))
+    parser.add_argument("--require-ready", action="store_true")
     parser.add_argument("--print-only", action="store_true")
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args()
@@ -335,6 +443,10 @@ def main() -> int:
         date.fromisoformat(args.date)
     except ValueError as exc:
         raise SystemExit(f"Invalid --date: {args.date}") from exc
+
+    if args.require_ready and not signal_generation_is_ready(Path(args.ready_state), args.date):
+        print(f"Telegram digest skipped: signal generation is not ready for {args.date}.")
+        return 0
 
     signals, empty_lanes = collect_signals(args.date)
     messages = render_messages(args.date, signals, empty_lanes)

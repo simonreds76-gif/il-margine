@@ -64,6 +64,146 @@ class TennisDailySignalDigestTests(unittest.TestCase):
         assert signal is not None
         self.assertIn("Player Two -4 games @ 1.855", signal.selection)
 
+    def test_registered_gap_candidate_is_provisional_half_unit(self) -> None:
+        signal = MODULE.gap_replacement_signal(
+            {
+                "date": "2026-07-16",
+                "player1": "Player One",
+                "player2": "Player Two",
+                "selected_player": "Player One",
+                "selected_side": "P1",
+                "bet_type": "match",
+                "selected_odds": "2.75",
+                "fair_odds1": "2.10",
+                "value_pct": "30.95",
+                "model_market_gap_pp": "12.4",
+                "diagnostic_quality": "LOW",
+                "replacement_cohorts": "volume200_gap_10_15_same_side",
+                "replacement_forward_eligible": "1",
+                "settlement_status": "pending",
+            },
+            "2026-07-16",
+        )
+        self.assertIsNotNone(signal)
+        assert signal is not None
+        self.assertEqual(signal.section, "PROVISIONAL ML EXPANSION")
+        self.assertEqual(signal.labels, ["VOL200 GAP"])
+        self.assertIn("gap 12.4pp", signal.selection)
+        self.assertIn("quality LOW", signal.selection)
+        self.assertTrue(signal.selection.endswith("0.5u"))
+
+    def test_hard_side_flip_candidate_is_private_half_unit_shadow(self) -> None:
+        signal = MODULE.gap_replacement_signal(
+            {
+                "date": "2026-08-01",
+                "surface": "Hard",
+                "player1": "Player One",
+                "player2": "Player Two",
+                "selected_player": "Player Two",
+                "selected_side": "P2",
+                "bet_type": "match",
+                "selected_odds": "2.28",
+                "fair_odds2": "1.85",
+                "value_pct": "23.25",
+                "model_market_gap_pp": "3.31",
+                "diagnostic_quality": "HIGH",
+                "data_coverage_tag": "HIGH",
+                "side_flip": "1",
+                "short_favorite_guard": "0",
+                "policy_profiles": "volume_200",
+                "settlement_status": "pending",
+            },
+            "2026-08-01",
+        )
+        self.assertIsNotNone(signal)
+        assert signal is not None
+        self.assertEqual(signal.section, "PROVISIONAL HARD ML")
+        self.assertEqual(signal.labels, ["HARD FLIP"])
+        self.assertIn("model/market side flip", signal.selection)
+        self.assertTrue(signal.selection.endswith("0.5u"))
+
+    def test_hard_side_flip_candidate_keeps_safety_exclusions(self) -> None:
+        base = {
+            "date": "2026-08-01",
+            "surface": "Hard",
+            "player1": "Player One",
+            "player2": "Player Two",
+            "selected_player": "Player Two",
+            "selected_side": "P2",
+            "bet_type": "match",
+            "selected_odds": "2.28",
+            "model_market_gap_pp": "3.31",
+            "diagnostic_quality": "HIGH",
+            "data_coverage_tag": "HIGH",
+            "side_flip": "1",
+            "short_favorite_guard": "0",
+            "policy_profiles": "volume_200",
+            "settlement_status": "pending",
+        }
+        for override in (
+            {"surface": "Clay"},
+            {"model_market_gap_pp": "10.01"},
+            {"policy_profiles": ""},
+            {"data_coverage_tag": "PARTIAL"},
+            {"short_favorite_guard": "1"},
+        ):
+            with self.subTest(override=override):
+                self.assertIsNone(
+                    MODULE.gap_replacement_signal({**base, **override}, "2026-08-01")
+                )
+
+    def test_over_only_trackable_prop_is_rendered_as_shadow_watchlist(self) -> None:
+        original_read_csv = MODULE.read_csv
+        MODULE.read_csv = lambda _path: [
+            {
+                "date": "2026-07-29",
+                "player": "Aleksandar Vukic",
+                "opponent": "Lorenzo Musetti",
+                "market": "aces",
+                "line": "9.5",
+                "over_odds": "3.40",
+                "fair_over_odds": "2.515",
+                "value_over_pct": "35.17",
+                "trackable_shadow": "true",
+                "shadow_side": "OVER",
+                "bettable": "false",
+                "recommended_side": "",
+                "match_start_utc": "2026-07-29T17:00:00Z",
+            }
+        ]
+        try:
+            signals = MODULE.props_signals("2026-07-29")
+        finally:
+            MODULE.read_csv = original_read_csv
+
+        self.assertEqual(len(signals), 1)
+        self.assertEqual(signals[0].section, "BET365 PROPS WATCHLIST")
+        self.assertEqual(signals[0].labels, ["ACES/DF WATCH"])
+        self.assertIn("Vukic aces Over 9.5 @ 3.4", signals[0].selection)
+        self.assertIn("fair 2.515", signals[0].selection)
+        self.assertTrue(signals[0].selection.endswith("shadow evidence only"))
+
+    def test_props_watchlist_excludes_other_event_dates(self) -> None:
+        original_read_csv = MODULE.read_csv
+        MODULE.read_csv = lambda _path: [
+            {
+                "date": "2026-07-30",
+                "player": "Alejandro Tabilo",
+                "opponent": "Terence Atmane",
+                "market": "aces",
+                "line": "9.5",
+                "over_odds": "3.50",
+                "trackable_shadow": "true",
+                "shadow_side": "OVER",
+            }
+        ]
+        try:
+            signals = MODULE.props_signals("2026-07-29")
+        finally:
+            MODULE.read_csv = original_read_csv
+
+        self.assertEqual(signals, [])
+
     def test_render_stays_within_telegram_limit(self) -> None:
         signals = [
             MODULE.Signal(
@@ -85,6 +225,18 @@ class TennisDailySignalDigestTests(unittest.TestCase):
             path = Path(temp_dir) / "state.json"
             path.write_text('{"date":"2026-07-16","digest_hash":"abc"}', encoding="utf-8")
             self.assertEqual(MODULE.load_state(path)["digest_hash"], "abc")
+
+    def test_ready_state_requires_matching_date_and_ok_status(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "ready.json"
+            path.write_text('{"date":"2026-07-16","status":"ok"}', encoding="utf-8")
+            self.assertTrue(MODULE.signal_generation_is_ready(path, "2026-07-16"))
+            self.assertFalse(MODULE.signal_generation_is_ready(path, "2026-07-17"))
+            path.write_text('{"date":"2026-07-16","status":"failed"}', encoding="utf-8")
+            self.assertFalse(MODULE.signal_generation_is_ready(path, "2026-07-16"))
+
+    def test_digest_dispatch_defaults_to_golden(self) -> None:
+        self.assertEqual(MODULE.DEFAULT_REF, "golden-with-speed-insights")
 
 
 if __name__ == "__main__":
