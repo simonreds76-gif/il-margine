@@ -2373,6 +2373,15 @@ export default async function TennisMonitorPage() {
             Guard audit
           </a>
           <a
+            href="#strict-side-flip-cohort"
+            className={cn(
+              "rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] transition-colors",
+              "border-cyan-500/30 bg-cyan-500/10 text-cyan-200 hover:border-cyan-400/60",
+            )}
+          >
+            Side-flip ledger
+          </a>
+          <a
             href="#cpi-surface-speed"
             className={cn(
               "rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] transition-colors",
