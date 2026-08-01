@@ -156,9 +156,30 @@ def gap_replacement_signal(row: dict[str, str], target_date: str) -> Signal | No
         return None
     if (row.get("bet_type") or "match").strip().lower() == "spread":
         return None
+
     cohorts = [item for item in (row.get("replacement_cohorts") or "").split("|") if item]
     forward_flag = (row.get("replacement_forward_eligible") or "1").strip().lower()
-    if not cohorts or forward_flag not in {"1", "true", "yes"}:
+    gap = parse_float(row.get("model_market_gap_pp"))
+    policy_profiles = {
+        item for item in (row.get("policy_profiles") or "").split("|") if item
+    }
+    side_flip = (row.get("side_flip") or "").strip().lower() in {"1", "true", "yes"}
+    short_favorite = (row.get("short_favorite_guard") or "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+    }
+    hard_side_flip_candidate = (
+        side_flip
+        and (row.get("surface") or "").strip().lower() == "hard"
+        and gap is not None
+        and gap <= 10.0
+        and bool(policy_profiles & {"strict", "volume_200"})
+        and (row.get("data_coverage_tag") or "").strip().upper() == "HIGH"
+        and not short_favorite
+    )
+    registered_gap_candidate = bool(cohorts) and forward_flag in {"1", "true", "yes"}
+    if not registered_gap_candidate and not hard_side_flip_candidate:
         return None
 
     player1 = (row.get("player1") or "").strip()
@@ -171,13 +192,14 @@ def gap_replacement_signal(row: dict[str, str], target_date: str) -> Signal | No
 
     fair = parse_float(row.get("fair_odds1" if selected_side == "P1" else "fair_odds2"))
     edge = parse_float(row.get("value_pct"))
-    gap = parse_float(row.get("model_market_gap_pp"))
     quality = (row.get("diagnostic_quality") or "UNKNOWN").strip().upper()
     labels: list[str] = []
     if "strict_gap_10_20_same_side" in cohorts:
         labels.append("STRICT GAP")
     if "volume200_gap_10_15_same_side" in cohorts:
         labels.append("VOL200 GAP")
+    if hard_side_flip_candidate:
+        labels.append("HARD FLIP")
     if not labels:
         labels.append("ML GAP")
 
@@ -188,11 +210,13 @@ def gap_replacement_signal(row: dict[str, str], target_date: str) -> Signal | No
         selection += f" | edge {edge:+.1f}%"
     if gap is not None:
         selection += f" | gap {gap:.1f}pp"
+    if hard_side_flip_candidate:
+        selection += " | model/market side flip"
     selection += f" | quality {quality} | 0.5u"
     pair = tuple(sorted((norm(player1), norm(player2))))
     return Signal(
-        section="PROVISIONAL ML EXPANSION",
-        priority=15,
+        section="PROVISIONAL HARD ML" if hard_side_flip_candidate else "PROVISIONAL ML EXPANSION",
+        priority=14 if hard_side_flip_candidate else 15,
         labels=labels,
         match=f"{player1} vs {player2}",
         selection=selection,
@@ -200,7 +224,6 @@ def gap_replacement_signal(row: dict[str, str], target_date: str) -> Signal | No
         time_utc=(row.get("time_utc") or "").strip(),
         key=(target_date, *pair, norm(selected), "ml"),
     )
-
 
 def props_signals(target_date: str) -> list[Signal]:
     path = PROPS / f"comparison-{target_date}.csv"

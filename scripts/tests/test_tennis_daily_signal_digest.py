@@ -92,6 +92,66 @@ class TennisDailySignalDigestTests(unittest.TestCase):
         self.assertIn("quality LOW", signal.selection)
         self.assertTrue(signal.selection.endswith("0.5u"))
 
+    def test_hard_side_flip_candidate_is_private_half_unit_shadow(self) -> None:
+        signal = MODULE.gap_replacement_signal(
+            {
+                "date": "2026-08-01",
+                "surface": "Hard",
+                "player1": "Player One",
+                "player2": "Player Two",
+                "selected_player": "Player Two",
+                "selected_side": "P2",
+                "bet_type": "match",
+                "selected_odds": "2.28",
+                "fair_odds2": "1.85",
+                "value_pct": "23.25",
+                "model_market_gap_pp": "3.31",
+                "diagnostic_quality": "HIGH",
+                "data_coverage_tag": "HIGH",
+                "side_flip": "1",
+                "short_favorite_guard": "0",
+                "policy_profiles": "volume_200",
+                "settlement_status": "pending",
+            },
+            "2026-08-01",
+        )
+        self.assertIsNotNone(signal)
+        assert signal is not None
+        self.assertEqual(signal.section, "PROVISIONAL HARD ML")
+        self.assertEqual(signal.labels, ["HARD FLIP"])
+        self.assertIn("model/market side flip", signal.selection)
+        self.assertTrue(signal.selection.endswith("0.5u"))
+
+    def test_hard_side_flip_candidate_keeps_safety_exclusions(self) -> None:
+        base = {
+            "date": "2026-08-01",
+            "surface": "Hard",
+            "player1": "Player One",
+            "player2": "Player Two",
+            "selected_player": "Player Two",
+            "selected_side": "P2",
+            "bet_type": "match",
+            "selected_odds": "2.28",
+            "model_market_gap_pp": "3.31",
+            "diagnostic_quality": "HIGH",
+            "data_coverage_tag": "HIGH",
+            "side_flip": "1",
+            "short_favorite_guard": "0",
+            "policy_profiles": "volume_200",
+            "settlement_status": "pending",
+        }
+        for override in (
+            {"surface": "Clay"},
+            {"model_market_gap_pp": "10.01"},
+            {"policy_profiles": ""},
+            {"data_coverage_tag": "PARTIAL"},
+            {"short_favorite_guard": "1"},
+        ):
+            with self.subTest(override=override):
+                self.assertIsNone(
+                    MODULE.gap_replacement_signal({**base, **override}, "2026-08-01")
+                )
+
     def test_over_only_trackable_prop_is_rendered_as_shadow_watchlist(self) -> None:
         original_read_csv = MODULE.read_csv
         MODULE.read_csv = lambda _path: [
