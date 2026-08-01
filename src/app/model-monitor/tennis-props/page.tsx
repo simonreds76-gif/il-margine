@@ -2179,9 +2179,10 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
           </section>
         ) : null}
 
-        <nav className="mb-6 grid gap-3 sm:grid-cols-2">
+        <nav className="mb-6 grid gap-3 sm:grid-cols-3">
           <TabLink active={activeTab === "decision"} href="/model-monitor/tennis-props?tab=decision" label="Decision Board" detail="BET NOW / near miss / blocked lines" />
           <TabLink active={activeTab === "projections"} href="/model-monitor/tennis-props?tab=projections" label="Projections" detail="Aces, DFs, breaks, tie-break simulation" />
+          <TabLink active={false} href="/model-monitor/tennis-props?tab=decision#most-aces-evidence" label="Most Aces Evidence" detail="Fair odds, settled scores, model accuracy" />
         </nav>
 
         {activeTab === "decision" && todayBoardRows.length ? (
@@ -2219,24 +2220,26 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
               totalCount={decisionRows.length}
             />
 
+            <div id="most-aces-evidence" className="scroll-mt-6">
+              <MostAcesPanel
+                rows={mostAcesRows}
+                directRows={mostAcesDirectRows}
+                observations={mostAcesObservations}
+                forecasts={mostAcesForecasts}
+                forecastReport={mostAcesForecastReport}
+                validation={mostAcesValidation}
+                directValidation={mostAcesDirectValidation}
+                directParity={mostAcesDirectParity}
+                stamp={mostAcesReportStamp}
+                sortKey={mostAcesSortKey}
+              />
+            </div>
+
             <ModelTrackerPanel rows={modelSummaryRows} stamp={modelSummaryStamp} />
 
             <AcesOverV4Panel rows={propsV4Rows} report={propsV4Report} stamp={propsV4Stamp} />
 
             <MarketBenchmarkPanel rows={marketObservationRows} stamp={marketObservationReportStamp} />
-
-            <MostAcesPanel
-              rows={mostAcesRows}
-              directRows={mostAcesDirectRows}
-              observations={mostAcesObservations}
-              forecasts={mostAcesForecasts}
-              forecastReport={mostAcesForecastReport}
-              validation={mostAcesValidation}
-              directValidation={mostAcesDirectValidation}
-              directParity={mostAcesDirectParity}
-              stamp={mostAcesReportStamp}
-              sortKey={mostAcesSortKey}
-            />
 
             <ResearchGatesPanel
               evidence={derivativesEvidence}
