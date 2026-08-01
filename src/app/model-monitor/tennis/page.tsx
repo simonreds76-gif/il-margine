@@ -49,6 +49,35 @@ type LaneStats = {
   latestSignals: CsvRow[];
 };
 
+type SideFlipCohortSummary = {
+  rows: CsvRow[];
+  pending: number;
+  settled: number;
+  wins: number;
+  losses: number;
+  pnlUnits: number;
+  roiPct: number | null;
+  clvRows: number;
+  avgClvPct: number | null;
+  positiveClvPct: number | null;
+};
+
+const SIDE_FLIP_RETROSPECTIVE = {
+  sample: 129,
+  wins: 74,
+  losses: 55,
+  pnlUnits: 40.48,
+  roiPct: 31.38,
+  bootstrapLowPct: 11.31,
+  bootstrapHighPct: 50.89,
+  yearlyRoiPct: [
+    ["2022", 44.79],
+    ["2023", 20.23],
+    ["2024", 22.72],
+    ["2025", 39.97],
+  ] as const,
+};
+
 type VNextResearchSummary = {
   verdict: string;
   residualVerdict: string;
@@ -565,6 +594,87 @@ function rowPnlUnits(row: CsvRow): number | null {
         : toNumber(row.pin_odds1);
   if (!odds) return null;
   return (odds - 1) * stake;
+}
+
+function normalizedTwoWayProbabilities(odds1: number | null, odds2: number | null): [number, number] | null {
+  if (odds1 == null || odds2 == null || odds1 <= 1 || odds2 <= 1) return null;
+  const inverse1 = 1 / odds1;
+  const inverse2 = 1 / odds2;
+  const total = inverse1 + inverse2;
+  if (!(total > 0)) return null;
+  return [inverse1 / total, inverse2 / total];
+}
+
+function isAllowedStrictSideFlip(row: CsvRow): boolean {
+  if ((row.bet_type || "match").trim().toLowerCase() !== "match") return false;
+  if ((row.surface || "").trim().toLowerCase() !== "hard") return false;
+  if ((row.series || "").trim().toLowerCase() !== "masters 1000") return false;
+  if ((row.confidence || "").trim().toLowerCase() !== "high") return false;
+  if (row.league && row.league.trim().toLowerCase() !== "atp") return false;
+
+  const model = normalizedTwoWayProbabilities(toNumber(row.our_odds1), toNumber(row.our_odds2));
+  const market = normalizedTwoWayProbabilities(toNumber(row.pin_odds1), toNumber(row.pin_odds2));
+  if (!model || !market) return false;
+
+  const modelSide = model[0] >= model[1] ? "P1" : "P2";
+  const marketSide = market[0] >= market[1] ? "P1" : "P2";
+  const modelFavoriteProb = Math.max(...model);
+  const marketFavoriteProb = Math.max(...market);
+  return (
+    modelSide !== marketSide &&
+    Math.abs(model[0] - 0.5) >= 0.03 &&
+    Math.abs(market[0] - 0.5) >= 0.03 &&
+    Math.abs(modelFavoriteProb - marketFavoriteProb) <= 0.1
+  );
+}
+
+function signalClvKey(row: CsvRow): string {
+  return [
+    row.match_date || row.signal_date || row.date || "",
+    (row.player1 || "").trim().toLowerCase(),
+    (row.player2 || "").trim().toLowerCase(),
+    (row.side || "").trim().toUpperCase(),
+  ].join("|");
+}
+
+async function loadSideFlipCohort(): Promise<SideFlipCohortSummary> {
+  const files = TENNIS_MONITOR_FILES.hard_bo3;
+  const [liveCsv, archiveCsv, clvCsv] = await Promise.all([
+    readKnownFile(files.live),
+    readKnownFile(files.archive),
+    readKnownFile(files.clvAuditCsv),
+  ]);
+  const allRows = latestCapturedRows(
+    [...(archiveCsv ? parseCsv(archiveCsv) : []), ...(liveCsv ? parseCsv(liveCsv) : [])],
+    Number.POSITIVE_INFINITY,
+  ).filter(isAllowedStrictSideFlip);
+  const clvByKey = new Map(
+    (clvCsv ? parseCsv(clvCsv) : []).map((row) => [signalClvKey(row), row] as const),
+  );
+  const rows = allRows
+    .map((row) => {
+      const clv = clvByKey.get(signalClvKey(row));
+      return clv ? { ...row, cohort_clv_pct: clv.clv_implied_delta_pct || clv.clv_pct || "" } : row;
+    })
+    .sort((left, right) => rowSignalTimestamp(right) - rowSignalTimestamp(left));
+  const settled = settledRows(rows);
+  const wins = settled.filter(isWon).length;
+  const losses = settled.filter(isLost).length;
+  const pnlUnits = settled.map(rowPnlUnits).filter((value): value is number => value !== null).reduce((sum, value) => sum + value, 0);
+  const stakedUnits = settled.reduce((sum, row) => sum + (toNumber(row.stake_units) ?? 1), 0);
+  const clvValues = rows.map((row) => toNumber(row.cohort_clv_pct)).filter((value): value is number => value !== null);
+  return {
+    rows,
+    pending: rows.filter(isPendingRow).length,
+    settled: settled.length,
+    wins,
+    losses,
+    pnlUnits,
+    roiPct: stakedUnits > 0 ? (pnlUnits / stakedUnits) * 100 : null,
+    clvRows: clvValues.length,
+    avgClvPct: avg(clvValues),
+    positiveClvPct: clvValues.length ? (clvValues.filter((value) => value > 0).length / clvValues.length) * 100 : null,
+  };
 }
 
 function avg(values: number[]): number | null {
@@ -1954,6 +2064,99 @@ function ProofDashboard({
     </section>
   );
 }
+
+function SideFlipCohortPanel({ summary }: { summary: SideFlipCohortSummary }) {
+  const liveVerdict = summary.settled === 0 ? "AWAITING RESULTS" : summary.settled < 30 ? "TOO EARLY" : "REVIEW FORWARD EVIDENCE";
+  return (
+    <section
+      id="strict-side-flip-cohort"
+      className="rounded-2xl border border-cyan-500/25 bg-[radial-gradient(circle_at_top_left,rgba(6,182,212,0.14),transparent_36%),rgba(2,6,23,0.78)] p-5 shadow-[0_18px_60px_rgba(2,6,23,0.28)]"
+    >
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300">Strict ML expansion audit</p>
+          <h2 className="mt-2 text-xl font-semibold text-slate-100">Hard Masters side-flip cohort</h2>
+          <p className="mt-2 max-w-4xl text-sm leading-6 text-slate-400">
+            Only ATP Hard / Masters 1000 / HIGH rows where model and market choose opposite favourites and their
+            favourite-probability magnitudes differ by no more than 10pp. This is not a blanket permission for every
+            model/market disagreement.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <StatusPill label="LIVE INSIDE STRICT" tone={badgeTones.live} />
+          <StatusPill label={liveVerdict} tone={proofTone(liveVerdict)} />
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
+        <EmptyMetric label="Backtest" value={`${SIDE_FLIP_RETROSPECTIVE.sample} bets`} />
+        <EmptyMetric label="Backtest W-L" value={`${SIDE_FLIP_RETROSPECTIVE.wins}W-${SIDE_FLIP_RETROSPECTIVE.losses}L`} />
+        <EmptyMetric label="Backtest P/L" value={formatNumber(SIDE_FLIP_RETROSPECTIVE.pnlUnits, "u", 2)} />
+        <EmptyMetric label="Backtest ROI" value={formatNumber(SIDE_FLIP_RETROSPECTIVE.roiPct, "%", 2)} />
+        <EmptyMetric label="Forward settled" value={`${summary.settled} (${summary.wins}W-${summary.losses}L)`} />
+        <EmptyMetric label="Forward ROI" value={formatNumber(summary.roiPct, "%", 2)} />
+      </div>
+
+      <div className="mt-3 grid gap-3 lg:grid-cols-2">
+        <div className="rounded-xl border border-cyan-500/20 bg-cyan-500/8 p-4 text-sm leading-6 text-cyan-50">
+          <p className="font-semibold">Retrospective evidence is strong, not certain.</p>
+          <p className="mt-1 text-cyan-100/75">
+            Positive in all four years: {SIDE_FLIP_RETROSPECTIVE.yearlyRoiPct.map(([year, roi]) => `${year} ${roi.toFixed(1)}%`).join(" / ")}.
+            Bootstrap ROI interval: {SIDE_FLIP_RETROSPECTIVE.bootstrapLowPct.toFixed(1)}% to {SIDE_FLIP_RETROSPECTIVE.bootstrapHighPct.toFixed(1)}%.
+          </p>
+        </div>
+        <div className="rounded-xl border border-amber-500/20 bg-amber-500/8 p-4 text-sm leading-6 text-amber-50">
+          <p className="font-semibold">Forward proof is the decision-maker.</p>
+          <p className="mt-1 text-amber-100/75">
+            Pending {summary.pending}; settled {summary.settled}; CLV {summary.clvRows} rows, avg {formatNumber(summary.avgClvPct, "%", 2)}, positive {formatNumber(summary.positiveClvPct, "%")}.
+            The cohort was selected after retrospective review, so it cannot be called guaranteed or fully validated yet.
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-4 overflow-x-auto rounded-xl border border-slate-800/80 bg-slate-950/50">
+        <div className="border-b border-slate-800 px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+          Forward settlement ledger
+        </div>
+        {summary.rows.length ? (
+          <table className="min-w-full text-left text-xs">
+            <thead className="text-slate-500">
+              <tr>
+                <th className="px-4 py-3 font-medium">Date</th>
+                <th className="px-4 py-3 font-medium">Match</th>
+                <th className="px-4 py-3 font-medium">Pick</th>
+                <th className="px-4 py-3 font-medium">Edge</th>
+                <th className="px-4 py-3 font-medium">Result</th>
+                <th className="px-4 py-3 font-medium">P/L</th>
+                <th className="px-4 py-3 font-medium">CLV</th>
+              </tr>
+            </thead>
+            <tbody className="text-slate-300">
+              {summary.rows.slice(0, 12).map((row, index) => {
+                const odds = row.side === "P2" ? toNumber(row.pin_odds2) : toNumber(row.pin_odds1);
+                const pnl = rowPnlUnits(row);
+                const status = isWon(row) ? "WIN" : isLost(row) ? "LOSS" : "PENDING";
+                return (
+                  <tr key={`${logicalCsvSignalKey(row)}-${index}`} className="border-t border-slate-800/70">
+                    <td className="whitespace-nowrap px-4 py-3 text-slate-500">{row.match_date || row.date || "-"}</td>
+                    <td className="px-4 py-3">{row.player1 || "-"} vs {row.player2 || "-"}</td>
+                    <td className="whitespace-nowrap px-4 py-3 font-semibold text-slate-100">{row.side || "-"} @ {odds?.toFixed(2) ?? "-"}</td>
+                    <td className="whitespace-nowrap px-4 py-3 text-cyan-300">{formatSignedPct(row.value_pct)}</td>
+                    <td className={cn("whitespace-nowrap px-4 py-3 font-semibold", status === "WIN" ? "text-emerald-300" : status === "LOSS" ? "text-rose-300" : "text-amber-300")}>{status}</td>
+                    <td className={cn("whitespace-nowrap px-4 py-3 font-semibold tabular-nums", metricTone(pnl))}>{formatNumber(pnl, "u", 2)}</td>
+                    <td className={cn("whitespace-nowrap px-4 py-3 font-semibold tabular-nums", metricTone(toNumber(row.cohort_clv_pct)))}>{formatNumber(toNumber(row.cohort_clv_pct), "%", 2)}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        ) : (
+          <p className="px-4 py-5 text-sm text-slate-500">No qualifying 2026 side-flip rows have been recorded yet.</p>
+        )}
+      </div>
+    </section>
+  );
+}
 function LaneCard({ lane, stats }: { lane: LaneView; stats: LaneStats }) {
   const files = TENNIS_MONITOR_FILES[lane.id];
   const proofLabel =
@@ -2092,6 +2295,7 @@ export default async function TennisMonitorPage() {
   const proofReportRows = await loadProofReport();
   const proofRows = proofReportRows?.rows ?? proofRowsFromStats(statsByLane);
   const cpiSummary = await loadCpiSummary();
+  const sideFlipSummary = await loadSideFlipCohort();
   const [vnextReport, identityReport, residualReport, countsIdentityReport] = await Promise.all([
     readKnownFile("data/backtest/vnext-mve-report.txt"),
     readKnownFile("data/backtest/tennis-identity-audit.txt"),
@@ -2127,6 +2331,10 @@ export default async function TennisMonitorPage() {
           <ProofDashboard rows={proofRows} fromReport={proofReportRows !== null} reportAge={proofReportRows?.ageLabel ?? null} reportStale={proofReportRows?.stale ?? true} />
         </div>
 
+        <div className="mt-6">
+          <SideFlipCohortPanel summary={sideFlipSummary} />
+        </div>
+
         <nav className="mt-6 flex flex-wrap gap-2" aria-label="Tennis research lanes">
           <a
             href="#extreme-gap-lab"
@@ -2154,6 +2362,15 @@ export default async function TennisMonitorPage() {
             )}
           >
             Guard audit
+          </a>
+          <a
+            href="#strict-side-flip-cohort"
+            className={cn(
+              "rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] transition-colors",
+              "border-cyan-500/30 bg-cyan-500/10 text-cyan-200 hover:border-cyan-400/60",
+            )}
+          >
+            Side-flip ledger
           </a>
           <a
             href="#cpi-surface-speed"
