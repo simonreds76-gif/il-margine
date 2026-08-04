@@ -17,6 +17,7 @@ from settlement_utils import normalize_team_name
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_API = ROOT / "data" / "football-form" / "api-football-counts.csv"
 DEFAULT_REFERENCE = ROOT / "data" / "team-shots" / "historical" / "all-historical-matches.csv"
+DEFAULT_HISTORICAL_REFERENCE_DIR = ROOT / "data" / "corners-ou" / "historical"
 DEFAULT_JSON = ROOT / "data" / "football-form" / "api-football-source-agreement.json"
 DEFAULT_MD = ROOT / "data" / "football-form" / "api-football-source-agreement.md"
 FIELD_MAP = {
@@ -34,6 +35,21 @@ def load_csv(path: Path) -> list[dict[str, str]]:
         return []
     with path.open("r", encoding="utf-8-sig", errors="replace", newline="") as handle:
         return list(csv.DictReader(handle))
+
+
+def load_reference_rows(
+    primary: Path = DEFAULT_REFERENCE,
+    historical_directory: Path = DEFAULT_HISTORICAL_REFERENCE_DIR,
+) -> list[dict[str, str]]:
+    rows = load_csv(primary)
+    for path in sorted(historical_directory.glob("*-2024-2025.csv")):
+        rows.extend(load_csv(path))
+    deduplicated: dict[tuple[str, str, str], dict[str, str]] = {}
+    for row in rows:
+        key = fixture_key(row, api=False)
+        if key is not None:
+            deduplicated[key] = row
+    return list(deduplicated.values())
 
 
 def parse_date(value: str) -> Optional[str]:
@@ -134,12 +150,16 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Audit API-Football vs Football-Data count agreement.")
     parser.add_argument("--api", type=Path, default=DEFAULT_API)
     parser.add_argument("--reference", type=Path, default=DEFAULT_REFERENCE)
+    parser.add_argument("--historical-reference-dir", type=Path, default=DEFAULT_HISTORICAL_REFERENCE_DIR)
     parser.add_argument("--json-out", type=Path, default=DEFAULT_JSON)
     parser.add_argument("--report-out", type=Path, default=DEFAULT_MD)
     parser.add_argument("--allow-empty", action="store_true")
     args = parser.parse_args()
 
-    payload = build_agreement(load_csv(args.api), load_csv(args.reference))
+    payload = build_agreement(
+        load_csv(args.api),
+        load_reference_rows(args.reference, args.historical_reference_dir),
+    )
     args.json_out.parent.mkdir(parents=True, exist_ok=True)
     args.json_out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     args.report_out.write_text(render_markdown(payload), encoding="utf-8")

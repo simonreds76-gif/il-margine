@@ -40,6 +40,30 @@ def fixture() -> dict:
 
 
 class CaptureApiFootballCountsTests(unittest.TestCase):
+    def test_historical_backfill_selects_dense_uncaptured_dates_and_stops_at_target(self) -> None:
+        reference_rows = [
+            {"Date": "31/08/2024", "HomeTeam": f"Home {index}", "AwayTeam": f"Away {index}"}
+            for index in range(4)
+        ] + [
+            {"Date": "14/09/2024", "HomeTeam": "Home X", "AwayTeam": "Away X"}
+        ]
+        selected = MODULE.select_historical_backfill_dates(
+            reference_rows,
+            [],
+            max_requests=20,
+            target_team_values=6,
+        )
+        self.assertEqual(selected, [date(2024, 8, 31)])
+        self.assertEqual(
+            MODULE.select_historical_backfill_dates(
+                reference_rows,
+                [{"date": "2024-08-31", "home_fouls": "10", "away_fouls": "11"}] * 3,
+                max_requests=20,
+                target_team_values=6,
+            ),
+            [],
+        )
+
     def test_archives_uncaptured_fixture_and_deduplicates_rerun(self) -> None:
         calls: list[tuple[str, dict]] = []
 

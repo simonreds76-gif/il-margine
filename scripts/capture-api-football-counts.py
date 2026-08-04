@@ -13,6 +13,7 @@ import csv
 import json
 import os
 import tempfile
+from collections import defaultdict
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Callable, Iterable, Optional
@@ -25,6 +26,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT = ROOT / "data" / "football-form" / "api-football-counts.csv"
 DEFAULT_HEALTH_JSON = ROOT / "data" / "football-form" / "api-football-counts-health.json"
 DEFAULT_HEALTH_MD = ROOT / "data" / "football-form" / "api-football-counts-health.md"
+DEFAULT_HISTORICAL_REFERENCE_DIR = ROOT / "data" / "corners-ou" / "historical"
 FINISHED_STATUSES = {"FT", "AET", "PEN"}
 COUNT_FIELDS = (
     "home_shots",
@@ -104,6 +106,77 @@ def write_archive_atomic(path: Path, rows: Iterable[dict]) -> None:
         writer.writerows(ordered)
         temporary = Path(handle.name)
     temporary.replace(path)
+
+
+def _parse_reference_date(value: object) -> Optional[date]:
+    text = str(value or "").strip()[:10]
+    for fmt in ("%d/%m/%Y", "%Y-%m-%d", "%d/%m/%y"):
+        try:
+            return datetime.strptime(text, fmt).date()
+        except ValueError:
+            pass
+    return None
+
+
+def _fixture_identity(day: object, home: object, away: object) -> tuple[str, str, str]:
+    return (
+        str(day or "").strip()[:10],
+        normalize_team_name(str(home or "")),
+        normalize_team_name(str(away or "")),
+    )
+
+
+def historical_reference_rows(directory: Path = DEFAULT_HISTORICAL_REFERENCE_DIR) -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    for path in sorted(directory.glob("*-2024-2025.csv")):
+        with path.open("r", encoding="utf-8-sig", errors="replace", newline="") as handle:
+            rows.extend(csv.DictReader(handle))
+    return rows
+
+
+def select_historical_backfill_dates(
+    reference_rows: list[dict[str, str]],
+    existing_rows: list[dict[str, str]],
+    *,
+    max_requests: int,
+    target_team_values: int,
+) -> list[date]:
+    existing_team_values = sum(
+        str(row.get(field) if row.get(field) is not None else "").strip() != ""
+        for row in existing_rows
+        for field in ("home_fouls", "away_fouls")
+    )
+    if existing_team_values >= target_team_values:
+        return []
+
+    existing_keys = {
+        _fixture_identity(row.get("date"), row.get("home_team"), row.get("away_team"))
+        for row in existing_rows
+    }
+    candidates: dict[date, set[tuple[str, str, str]]] = defaultdict(set)
+    for row in reference_rows:
+        day = _parse_reference_date(row.get("Date"))
+        if day is None or _season_for_day(day) > 2024:
+            continue
+        key = _fixture_identity(day.isoformat(), row.get("HomeTeam"), row.get("AwayTeam"))
+        if key not in existing_keys and key[1] and key[2]:
+            candidates[day].add(key)
+
+    requests_left = max_requests
+    needed_fixtures = max(1, (target_team_values - existing_team_values + 1) // 2)
+    selected: list[date] = []
+    expected_fixtures = 0
+    league_listing_cost = len(LEAGUE_CONFIGS)
+    for day, keys in sorted(candidates.items(), key=lambda item: (-len(item[1]), item[0])):
+        cost = league_listing_cost + len(keys)
+        if cost > requests_left:
+            continue
+        selected.append(day)
+        requests_left -= cost
+        expected_fixtures += len(keys)
+        if expected_fixtures >= needed_fixtures:
+            break
+    return sorted(selected, reverse=True)
 
 
 def _fixture_date(row: dict, fallback: date) -> str:
@@ -288,6 +361,9 @@ def main() -> int:
     parser.add_argument("--health-json", type=Path, default=DEFAULT_HEALTH_JSON)
     parser.add_argument("--health-report", type=Path, default=DEFAULT_HEALTH_MD)
     parser.add_argument("--allow-missing-key", action="store_true")
+    parser.add_argument("--historical-backfill", action="store_true")
+    parser.add_argument("--historical-reference-dir", type=Path, default=DEFAULT_HISTORICAL_REFERENCE_DIR)
+    parser.add_argument("--target-team-values", type=int, default=200)
     args = parser.parse_args()
 
     load_env_files()
@@ -300,7 +376,21 @@ def main() -> int:
     if args.max_requests <= 0 or args.max_requests > 100:
         raise SystemExit("--max-requests must be between 1 and 100")
 
-    if args.date:
+    existing_rows = read_archive(args.output)
+    if args.historical_backfill:
+        if args.date:
+            raise SystemExit("--historical-backfill cannot be combined with --date")
+        target_dates = select_historical_backfill_dates(
+            historical_reference_rows(args.historical_reference_dir),
+            existing_rows,
+            max_requests=args.max_requests,
+            target_team_values=args.target_team_values,
+        )
+        print(
+            "API-Football historical backfill dates: "
+            + (", ".join(day.isoformat() for day in target_dates) if target_dates else "target already met/no candidates")
+        )
+    elif args.date:
         target_dates = [date.fromisoformat(value) for value in args.date]
     else:
         today = datetime.now(UTC).date()
@@ -308,7 +398,7 @@ def main() -> int:
 
     rows, health = collect_counts(
         target_dates,
-        read_archive(args.output),
+        existing_rows,
         max_requests=args.max_requests,
     )
     write_archive_atomic(args.output, rows)

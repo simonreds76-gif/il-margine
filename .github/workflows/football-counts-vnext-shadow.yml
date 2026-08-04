@@ -57,7 +57,7 @@ jobs:
           python scripts/understat-download-corner-features.py --seasons 2026 || echo "::warning::Understat corner-event refresh was unavailable."
           python scripts/build-football-form-layer.py
           if [ -n "${API_FOOTBALL_KEY:-}" ]; then
-            python scripts/capture-api-football-counts.py --days-back 2 --max-requests 90 || echo "::warning::API-Football count archive refresh reported an error; existing archive retained."
+            python scripts/capture-api-football-counts.py --historical-backfill --target-team-values 200 --max-requests 90 || echo "::warning::API-Football historical agreement backfill reported an error; existing archive retained."
           else
             echo "::warning::API_FOOTBALL_KEY is missing; API-Football count archive skipped."
           fi

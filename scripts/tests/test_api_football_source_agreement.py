@@ -3,6 +3,8 @@ from __future__ import annotations
 import importlib.util
 import sys
 import unittest
+import csv
+import tempfile
 from pathlib import Path
 
 
@@ -20,6 +22,24 @@ SPEC.loader.exec_module(MODULE)
 
 
 class ApiFootballSourceAgreementTests(unittest.TestCase):
+    def test_reference_loader_includes_2024_25_historical_files(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            primary = root / "primary.csv"
+            historical = root / "historical"
+            historical.mkdir()
+            fields = ["Date", "HomeTeam", "AwayTeam", "HF", "AF"]
+            for path, row in (
+                (primary, ["15/08/2026", "Arsenal", "Chelsea", "9", "12"]),
+                (historical / "epl-2024-2025.csv", ["31/08/2024", "Arsenal", "Brighton", "10", "11"]),
+            ):
+                with path.open("w", encoding="utf-8", newline="") as handle:
+                    writer = csv.writer(handle)
+                    writer.writerow(fields)
+                    writer.writerow(row)
+            rows = MODULE.load_reference_rows(primary, historical)
+        self.assertEqual(len(rows), 2)
+
     def test_reports_exact_within_one_and_missing_coverage(self) -> None:
         api_rows = [
             {
