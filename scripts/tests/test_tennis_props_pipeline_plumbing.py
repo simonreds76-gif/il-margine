@@ -234,6 +234,16 @@ class DailyMarketSelectionTests(unittest.TestCase):
         self.assertIn("--comparison-only", am_script)
         self.assertLess(am_script.index("--capture-only"), am_script.index("build-tennis-props-board.py"))
         self.assertIn("--skip-hosted-sync", am_script)
+        self.assertIn('"--require-ready", "--new-only"', am_script)
+        self.assertIn('"scripts\\tennis-evidence-snapshot.py", "--supabase"', am_script)
+
+    def test_nightly_task_publishes_compact_tennis_evidence_after_settlement(self) -> None:
+        nightly = (SCRIPTS / "oncourt-daily.ps1").read_text(encoding="utf-8")
+        self.assertLess(
+            nightly.index("oncourt-settle-nightly.ps1"),
+            nightly.index("tennis-evidence-snapshot.py"),
+        )
+        self.assertIn('"scripts\\tennis-evidence-snapshot.py", "--supabase"', nightly)
 
 
 class ComparisonInputFilterTests(unittest.TestCase):

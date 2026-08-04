@@ -337,6 +337,18 @@ try {
         Log "WARNING: tennis props hosted-price comparison failed (exit $tennisPropsCompareExit), continuing..."
     }
 
+    Log "=== Step 8c.1/8: Telegram tennis props delta ==="
+    $propsDigestExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--require-ready", "--new-only") -Label "daily tennis Telegram props delta" -TimeoutSeconds 90
+    if ($propsDigestExit -ne 0) {
+        Log "WARNING: daily tennis Telegram props delta failed/timed out (exit $propsDigestExit); evidence collection remains valid."
+    }
+
+    Log "=== Step 8c.2/8: Compact tennis evidence snapshot ==="
+    $evidenceSnapshotExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-evidence-snapshot.py", "--supabase") -Label "tennis evidence snapshot" -TimeoutSeconds 120
+    if ($evidenceSnapshotExit -ne 0) {
+        Log "WARNING: tennis evidence snapshot failed/timed out (exit $evidenceSnapshotExit), continuing..."
+    }
+
     Log "=== Step 8d/8: Append Pinnacle history capture (daily) ==="
     & python scripts\pinnacle-capture-history.py --capture-mode daily 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {

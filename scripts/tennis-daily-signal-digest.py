@@ -19,7 +19,7 @@ import sys
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import UTC, date, datetime
 from pathlib import Path
 
 
@@ -308,6 +308,10 @@ def collect_signals(target_date: str) -> tuple[list[Signal], list[str]]:
             merged[signal.key] = signal
         else:
             for label in signal.labels:
+                if label == "HARD FLIP" and existing.section == "CORE":
+                    label = "APPROVED MASTERS FLIP"
+                    if "approved Hard/Masters side-flip" not in existing.selection:
+                        existing.selection += " | approved Hard/Masters side-flip"
                 if label not in existing.labels:
                     existing.labels.append(label)
     lane_counts["GUARD EXPANSION"] = gap_count
@@ -333,9 +337,18 @@ def collect_signals(target_date: str) -> tuple[list[Signal], list[str]]:
     return signals, empty
 
 
-def render_messages(target_date: str, signals: list[Signal], empty_lanes: list[str]) -> list[str]:
+def render_messages(
+    target_date: str,
+    signals: list[Signal],
+    empty_lanes: list[str],
+    *,
+    update_only: bool = False,
+) -> list[str]:
     display_date = date.fromisoformat(target_date).strftime("%a %d %b").upper()
-    header = f"IL MARGINE TENNIS SIGNALS — {display_date}\nGenerated after the morning odds refresh."
+    title = "IL MARGINE TENNIS SIGNAL UPDATE" if update_only else "IL MARGINE TENNIS SIGNALS"
+    header = f"{title} - {display_date}\nGenerated from the latest completed odds refresh."
+    if update_only:
+        header += "\nOnly selections not included in the earlier alert are shown."
     blocks: list[str] = []
     current_section = ""
     for signal in signals:
@@ -348,7 +361,11 @@ def render_messages(target_date: str, signals: list[Signal], empty_lanes: list[s
         blocks.append("\nNo qualifying signals today.")
     if empty_lanes:
         blocks.append("\nNo signals: " + ", ".join(empty_lanes))
-    blocks.append("\nProvisional ML expansion selections use 0.5u and keep a separate forward ROI/CLV record. Shadow/research lanes are monitoring signals, not promoted live bets.")
+    blocks.append(
+        "\nStatus guide: CORE and TRACKED EXPANSION are betting lanes at the stake shown. "
+        "APPROVED MASTERS FLIP is a scoped Strict bet. PROVISIONAL selections are 0.5u "
+        "forward trials. SHADOW/RESEARCH and WATCHLIST rows are evidence only, not bets."
+    )
 
     messages: list[str] = []
     current = header
@@ -358,12 +375,12 @@ def render_messages(target_date: str, signals: list[Signal], empty_lanes: list[s
             current = candidate
             continue
         messages.append(current)
-        current = f"IL MARGINE TENNIS SIGNALS — {display_date} (continued)\n{block}"
+        current = f"{title} - {display_date} (continued)\n{block}"
     messages.append(current)
     return messages
 
 
-def load_state(path: Path) -> dict[str, str]:
+def load_state(path: Path) -> dict[str, object]:
     if not path.exists():
         return {}
     try:
@@ -378,30 +395,72 @@ def signal_generation_is_ready(path: Path, target_date: str) -> bool:
     return state.get("date") == target_date and state.get("status") == "ok"
 
 
-def github_token_from_credential_manager() -> str:
-    result = subprocess.run(
-        ["git", "credential-manager", "get"],
-        input="protocol=https\nhost=github.com\n\n",
-        capture_output=True,
-        text=True,
-        timeout=10,
-    )
-    if result.returncode != 0:
-        raise RuntimeError("Windows Git Credential Manager could not provide GitHub authentication")
-    fields: dict[str, str] = {}
-    for line in result.stdout.splitlines():
-        key, separator, value = line.partition("=")
-        if separator:
-            fields[key.strip()] = value.strip()
-    token = fields.get("password", "")
-    if not token:
-        raise RuntimeError("GitHub credential is missing from Windows Git Credential Manager")
-    return token
+def signal_id(signal: Signal) -> str:
+    return "|".join(signal.key)
+
+
+def new_signals_since_state(
+    signals: list[Signal], state: dict[str, object], target_date: str
+) -> list[Signal]:
+    if state.get("date") != target_date:
+        return signals
+    previous = state.get("signal_ids")
+    if not isinstance(previous, list):
+        # A legacy state cannot prove which individual selections were sent.
+        return signals
+    previous_ids = {str(value) for value in previous}
+    return [signal for signal in signals if signal_id(signal) not in previous_ids]
+
+
+def github_token() -> str:
+    for name in ("GH_TOKEN", "GITHUB_TOKEN"):
+        token = os.environ.get(name, "").strip()
+        if token:
+            return token
+
+    errors: list[str] = []
+    try:
+        result = subprocess.run(
+            ["gh", "auth", "token"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+        token = result.stdout.strip()
+        if result.returncode == 0 and token:
+            return token
+        errors.append(f"gh auth token exit {result.returncode}")
+    except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
+        errors.append(f"gh auth token: {type(exc).__name__}")
+
+    try:
+        result = subprocess.run(
+            ["git", "credential-manager", "get"],
+            input="protocol=https\nhost=github.com\n\n",
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        fields: dict[str, str] = {}
+        for line in result.stdout.splitlines():
+            key, separator, value = line.partition("=")
+            if separator:
+                fields[key.strip()] = value.strip()
+        token = fields.get("password", "")
+        if result.returncode == 0 and token:
+            return token
+        errors.append(f"credential-manager exit {result.returncode}")
+    except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
+        errors.append(f"credential-manager: {type(exc).__name__}")
+
+    raise RuntimeError("GitHub authentication unavailable (" + "; ".join(errors) + ")")
 
 
 def dispatch(messages: list[str], *, repository: str, workflow: str, ref: str) -> None:
     encoded = base64.b64encode(json.dumps(messages, ensure_ascii=False).encode("utf-8")).decode("ascii")
-    token = github_token_from_credential_manager()
+    token = github_token()
     payload = json.dumps({"ref": ref, "inputs": {"payload_b64": encoded}}).encode("utf-8")
     request = urllib.request.Request(
         f"https://api.github.com/repos/{repository}/actions/workflows/{workflow}/dispatches",
@@ -437,6 +496,11 @@ def main() -> int:
     parser.add_argument("--require-ready", action="store_true")
     parser.add_argument("--print-only", action="store_true")
     parser.add_argument("--force", action="store_true")
+    parser.add_argument(
+        "--new-only",
+        action="store_true",
+        help="For a second same-day pass, send only selections absent from the earlier alert.",
+    )
     args = parser.parse_args()
 
     try:
@@ -466,13 +530,50 @@ def main() -> int:
         print("Telegram digest unchanged; dispatch skipped.")
         return 0
 
-    dispatch(messages, repository=args.repository, workflow=args.workflow, ref=args.ref)
+    dispatch_signals = signals
+    dispatch_messages = messages
+    if args.new_only and not args.force:
+        dispatch_signals = new_signals_since_state(signals, state, args.date)
+        if not dispatch_signals:
+            state_path.parent.mkdir(parents=True, exist_ok=True)
+            state_path.write_text(
+                json.dumps(
+                    {
+                        "date": args.date,
+                        "digest_hash": digest_hash,
+                        "messages": len(messages),
+                        "signal_ids": [signal_id(signal) for signal in signals],
+                        "updated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+                    },
+                    indent=2,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            print("Telegram digest has no new selections; dispatch skipped.")
+            return 0
+        dispatch_messages = render_messages(args.date, dispatch_signals, [], update_only=True)
+
+    dispatch(dispatch_messages, repository=args.repository, workflow=args.workflow, ref=args.ref)
     state_path.parent.mkdir(parents=True, exist_ok=True)
     state_path.write_text(
-        json.dumps({"date": args.date, "digest_hash": digest_hash, "messages": len(messages)}, indent=2) + "\n",
+        json.dumps(
+            {
+                "date": args.date,
+                "digest_hash": digest_hash,
+                "messages": len(messages),
+                "signal_ids": [signal_id(signal) for signal in signals],
+                "dispatched_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+            },
+            indent=2,
+        )
+        + "\n",
         encoding="utf-8",
     )
-    print(f"Telegram relay dispatched: {len(signals)} unique signals in {len(messages)} message(s)")
+    print(
+        f"Telegram relay dispatched: {len(dispatch_signals)} new unique signals "
+        f"in {len(dispatch_messages)} message(s)"
+    )
     return 0
 
 

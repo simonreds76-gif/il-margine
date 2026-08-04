@@ -72,16 +72,19 @@ class WeeklyResearchReportTests(unittest.TestCase):
 
     def test_telegram_report_contains_core_provisional_and_inactive_tennis(self) -> None:
         message = REPORT["telegram_text"](REPORT["build_payload"]())
+        self.assertIn("Tennis evidence source:", message)
         self.assertIn("Tennis Strict [CORE]", message)
         self.assertIn("Tennis Volume 200 [VOLUME]", message)
         self.assertIn("Strict gap 10-20pp [0.5u provisional]", message)
         self.assertIn("Volume gap 10-15pp [0.5u provisional]", message)
         self.assertIn("Inactive tennis research (not tips)", message)
+        self.assertIn("Hard side-flip evidence [BROAD DIAGNOSTIC]", message)
         self.assertLessEqual(len(message), 4096)
 
     def test_tennis_only_telegram_report_is_complete_and_compact(self) -> None:
         message = REPORT["tennis_telegram_text"](REPORT["build_payload"]())
         self.assertIn("Il Margine weekly tennis evidence", message)
+        self.assertIn("Evidence source:", message)
         self.assertIn("Strict [CORE]", message)
         self.assertIn("Volume 200 [VOLUME]", message)
         self.assertIn("Strict gap 10-20pp [0.5u provisional]", message)
@@ -96,7 +99,20 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertIn("price evidence is separate below", message)
         self.assertIn("Most Aces Direct vs BetMGM", message)
         self.assertIn("Aces/DF promotion gate", message)
+        self.assertIn("Hard side-flip evidence [BROAD DIAGNOSTIC]", message)
         self.assertLessEqual(len(message), 4096)
+
+    def test_missing_local_gap_evidence_is_not_rendered_as_zero_results(self) -> None:
+        payload = REPORT["build_payload"]()
+        payload["tennis_model_evidence"] = {
+            "lanes": payload["tennis_model_evidence"]["lanes"],
+            "gap_source_status": "SOURCE_MISSING",
+            "gap_replacements": {},
+            "side_flip_by_surface": {},
+        }
+        message = REPORT["tennis_telegram_text"](payload)
+        self.assertIn("SOURCE_MISSING - local prospective evidence unavailable", message)
+        self.assertNotIn("0/150 settled", message)
 
     def test_most_aces_stale_json_falls_back_to_next_checkpoint(self) -> None:
         payload = REPORT["build_payload"]()

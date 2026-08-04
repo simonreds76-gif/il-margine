@@ -5,6 +5,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / "tennis-daily-signal-digest.py"
@@ -219,6 +220,32 @@ class TennisDailySignalDigestTests(unittest.TestCase):
         messages = MODULE.render_messages("2026-07-16", signals, [])
         self.assertGreater(len(messages), 1)
         self.assertTrue(all(len(message) <= MODULE.TELEGRAM_LIMIT for message in messages))
+
+    def test_new_only_state_returns_only_unseen_selections(self) -> None:
+        old = MODULE.Signal("CORE", 0, ["STRICT"], "A vs B", "A ML", 10.0, key=("old",))
+        new = MODULE.Signal("BET365 PROPS", 40, ["ACES/DF"], "C vs D", "C aces Over", 9.0, key=("new",))
+        state = {"date": "2026-08-04", "signal_ids": [MODULE.signal_id(old)]}
+        self.assertEqual(
+            MODULE.new_signals_since_state([old, new], state, "2026-08-04"),
+            [new],
+        )
+
+    def test_update_message_explains_that_only_new_props_are_included(self) -> None:
+        signal = MODULE.Signal(
+            "BET365 PROPS", 40, ["ACES/DF"], "A vs B", "A aces Over 7.5 @ 2", 9.0, key=("new",)
+        )
+        message = MODULE.render_messages("2026-08-04", [signal], [], update_only=True)[0]
+        self.assertIn("TENNIS SIGNAL UPDATE", message)
+        self.assertIn("Only selections not included in the earlier alert", message)
+        self.assertIn("evidence only, not bets", message)
+
+    def test_github_auth_prefers_gh_cli_before_credential_manager(self) -> None:
+        completed = MODULE.subprocess.CompletedProcess(["gh", "auth", "token"], 0, "token-from-gh\n", "")
+        with patch.dict(MODULE.os.environ, {"GH_TOKEN": "", "GITHUB_TOKEN": ""}, clear=False), patch.object(
+            MODULE.subprocess, "run", return_value=completed
+        ) as run:
+            self.assertEqual(MODULE.github_token(), "token-from-gh")
+        self.assertEqual(run.call_args.args[0], ["gh", "auth", "token"])
 
     def test_same_digest_state_can_be_loaded(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

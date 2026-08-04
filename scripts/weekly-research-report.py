@@ -17,6 +17,8 @@ import os
 import re
 import subprocess
 import sys
+import urllib.error
+import urllib.parse
 import urllib.request
 from datetime import UTC, datetime
 from pathlib import Path
@@ -47,6 +49,9 @@ ASSIST_GATES = ROOT / "data" / "assist-value" / "research" / "assist-value-gates
 ASSIST_PROSPECTIVE = ROOT / "data" / "assist-value" / "research" / "assist-value-v1-prospective.csv"
 AUTOMATION_BUDGET = ROOT / "data" / "ops" / "automation-budget-report.json"
 TENNIS_GAP_REPORT = ROOT / "data" / "backtest" / "tennis-model-market-gap-report.json"
+TENNIS_EVIDENCE_SNAPSHOT_LOCAL = ROOT / "data" / "tennis-props" / "tennis-evidence-snapshot.json"
+TENNIS_EVIDENCE_SNAPSHOT_KEY = "tennis_evidence_v1"
+TENNIS_EVIDENCE_SNAPSHOT_TABLE = "goalscorer_live_snapshot"
 TENNIS_LANE_FILES = {
     "strict": ROOT / "data" / "backtest" / "strict-policy-performance-weekly.csv",
     "volume_200": ROOT / "data" / "backtest" / "strict-policy-performance-volume200-weekly.csv",
@@ -96,6 +101,47 @@ def load_json(path: Path) -> dict[str, Any]:
         return json.loads(path.read_text(encoding="utf-8"))
     except Exception as exc:
         return {"_error": f"{display_path(path)} parse failed: {exc}"}
+
+
+def load_tennis_evidence_snapshot() -> dict[str, Any]:
+    local = load_json(TENNIS_EVIDENCE_SNAPSHOT_LOCAL)
+    if isinstance(local.get("sections"), dict):
+        return {**local, "_source": "local_snapshot"}
+
+    if os.environ.get("TENNIS_EVIDENCE_SNAPSHOT_DISABLE", "").strip().lower() in {"1", "true", "yes"}:
+        return {"_status": "DISABLED", "_source": "none"}
+
+    base = (os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or os.environ.get("SUPABASE_URL") or "").rstrip("/")
+    key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_KEY") or ""
+    if not base or not key:
+        return {"_status": "SOURCE_MISSING", "_source": "none"}
+
+    query = urllib.parse.urlencode(
+        {
+            "snapshot_key": f"eq.{TENNIS_EVIDENCE_SNAPSHOT_KEY}",
+            "select": "updated_at,payload",
+            "limit": "1",
+        }
+    )
+    request = urllib.request.Request(
+        f"{base}/rest/v1/{TENNIS_EVIDENCE_SNAPSHOT_TABLE}?{query}",
+        headers={
+            "apikey": key,
+            "Authorization": f"Bearer {key}",
+            "Accept": "application/json",
+        },
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=30) as response:
+            rows = json.loads(response.read().decode("utf-8"))
+    except (OSError, TimeoutError, urllib.error.URLError, json.JSONDecodeError) as exc:
+        return {"_status": "FETCH_FAILED", "_source": "supabase", "_error": str(exc)}
+    if not isinstance(rows, list) or not rows:
+        return {"_status": "SOURCE_MISSING", "_source": "supabase"}
+    payload = rows[0].get("payload") if isinstance(rows[0], dict) else None
+    if not isinstance(payload, dict) or not isinstance(payload.get("sections"), dict):
+        return {"_status": "INVALID", "_source": "supabase"}
+    return {**payload, "_source": "supabase"}
 
 
 def load_csv(path: Path) -> list[dict[str, str]]:
@@ -436,13 +482,16 @@ def tennis_model_evidence_summary() -> dict[str, Any]:
     for name, path in TENNIS_CLV_FILES.items():
         lanes.setdefault(name, {})["clv"] = tennis_lane_clv(path)
     gap_report = load_json(TENNIS_GAP_REPORT)
-    replacements = ((gap_report.get("ml_guard_replacement") or {}).get("experiments") or {})
+    gap_replacement = gap_report.get("ml_guard_replacement") or {}
+    replacements = gap_replacement.get("experiments") or {}
     for key in ("strict_gap_10_20_same_side", "volume200_gap_10_15_same_side"):
         replacements.setdefault(key, {"verdict": "NOT_RUN", "performance": {}})
     return {
         "lanes": lanes,
-        "gap_status": (gap_report.get("ml_guard_replacement") or {}).get("status", "NOT_RUN"),
+        "gap_source_status": "OK" if TENNIS_GAP_REPORT.exists() and gap_report else "SOURCE_MISSING",
+        "gap_status": gap_replacement.get("status", "SOURCE_MISSING"),
         "gap_replacements": replacements,
+        "side_flip_by_surface": gap_replacement.get("side_flip_by_surface") or {},
     }
 
 
@@ -893,8 +942,9 @@ def venue_ace_factor_v1_summary() -> dict[str, Any]:
     ]
     factor_values = [number(row.get("ace_factor"), 1.0) for row in eligible]
     paired = ((gate_payload.get("paired_scoring") or {}).get("overall") or {}) if gate_payload else {}
+    source_missing = not TENNIS_VENUE_ACE_FACTORS.exists() and not TENNIS_VENUE_ACE_V1_OBSERVATIONS.exists()
     return {
-        "status": "PROSPECTIVE_SHADOW",
+        "status": "SOURCE_MISSING" if source_missing else "PROSPECTIVE_SHADOW",
         "automatic_promotion": False,
         "eligible_venues": len(eligible),
         "total_venues": len(scope_factors),
@@ -922,7 +972,7 @@ def venue_ace_factor_v1_summary() -> dict[str, Any]:
         "total_gate_count": int(number(gate_payload.get("total_gate_count"))) if gate_payload else 5,
         "promotion_target_rows": 600,
         "promotion_target_events": 150,
-        "decision": "NOT_SELLABLE",
+        "decision": "SOURCE_MISSING" if source_missing else "NOT_SELLABLE",
     }
 
 
@@ -959,7 +1009,13 @@ def tennis_props_market_benchmark() -> dict[str, Any]:
         "model_brier": model_brier,
         "market_brier": market_brier,
         "brier_delta_vs_market": (market_brier - model_brier) if market_brier is not None and model_brier is not None else None,
-        "status": "REVIEW_REQUIRED" if len(settled) >= 100 else "EVIDENCE_BUILDING",
+        "status": (
+            "SOURCE_MISSING"
+            if not TENNIS_PROPS_OBSERVATIONS.exists()
+            else "REVIEW_REQUIRED"
+            if len(settled) >= 100
+            else "EVIDENCE_BUILDING"
+        ),
     }
 
 
@@ -1028,6 +1084,19 @@ def build_payload() -> dict[str, Any]:
     goalscorer_research = goalscorer_research_summary()
     assist_value_research = assist_value_research_summary()
     automation_budget = load_json(AUTOMATION_BUDGET)
+    tennis_snapshot = load_tennis_evidence_snapshot()
+    snapshot_sections = tennis_snapshot.get("sections") if isinstance(tennis_snapshot, dict) else None
+    snapshot_freshness = evidence_freshness(str(tennis_snapshot.get("generated_at") or ""))
+    if isinstance(snapshot_sections, dict) and snapshot_freshness["status"] in {"FRESH", "STALE"}:
+        tennis_gap_guard = snapshot_sections.get("tennis_ml_gap_guard") or tennis_gap_guard
+        tennis_model_evidence = snapshot_sections.get("tennis_model_evidence") or tennis_model_evidence
+        tennis_props_v3 = snapshot_sections.get("tennis_props_v3") or tennis_props_v3
+        tennis_props_v4 = snapshot_sections.get("tennis_props_v4") or tennis_props_v4
+        tennis_venue_ace_v1 = snapshot_sections.get("tennis_venue_ace_factor_v1") or tennis_venue_ace_v1
+        tennis_most_aces_forecast = snapshot_sections.get("tennis_most_aces_forecast") or tennis_most_aces_forecast
+        tennis_most_aces_prices = snapshot_sections.get("tennis_most_aces_prices") or tennis_most_aces_prices
+        tennis_props_benchmark = snapshot_sections.get("tennis_props_market_benchmark") or tennis_props_benchmark
+        tennis_props_shadow = snapshot_sections.get("tennis_props_shadow_decision") or tennis_props_shadow
 
     payload = {
         "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
@@ -1074,6 +1143,13 @@ def build_payload() -> dict[str, Any]:
         "tennis_most_aces_prices": tennis_most_aces_prices,
         "tennis_props_market_benchmark": tennis_props_benchmark,
         "tennis_props_shadow_decision": tennis_props_shadow,
+        "tennis_evidence_source": {
+            "status": snapshot_freshness["status"] if isinstance(snapshot_sections, dict) else tennis_snapshot.get("_status", "SOURCE_MISSING"),
+            "source": tennis_snapshot.get("_source", "none"),
+            "generated_at": tennis_snapshot.get("generated_at", ""),
+            "age_days": snapshot_freshness.get("age_days"),
+            "error": tennis_snapshot.get("_error", ""),
+        },
         "goalscorer_v2": goalscorer_research,
         "assist_value_v1": assist_value_research,
         "automation_budget": automation_budget,
@@ -1350,6 +1426,9 @@ def telegram_text(payload: dict[str, Any]) -> str:
     corners_v3_live = corners_v3.get("prospective") or {}
     tennis_lanes = tennis_model_evidence.get("lanes") or {}
     gap_replacements = tennis_model_evidence.get("gap_replacements") or {}
+    gap_source_status = tennis_model_evidence.get("gap_source_status", "SOURCE_MISSING")
+    side_flip_by_surface = tennis_model_evidence.get("side_flip_by_surface") or {}
+    tennis_evidence_source = payload.get("tennis_evidence_source") or {}
 
     def tennis_lane_line(label: str, key: str, status: str) -> str:
         lane = tennis_lanes.get(key) or {}
@@ -1361,6 +1440,8 @@ def telegram_text(payload: dict[str, Any]) -> str:
         )
 
     def replacement_line(label: str, key: str) -> str:
+        if gap_source_status != "OK":
+            return f"{label} [0.5u provisional]: SOURCE_MISSING - local prospective evidence unavailable"
         experiment = gap_replacements.get(key) or {}
         performance = experiment.get("performance") or {}
         return (
@@ -1369,9 +1450,27 @@ def telegram_text(payload: dict[str, Any]) -> str:
             f"CLV {pct(performance.get('avg_clv_pct'), 2)} n={performance.get('clv_rows', 0)} | "
             f"{experiment.get('verdict', 'FORWARD_SAMPLE_BUILDING')}"
         )
+
+    def hard_side_flip_line() -> str:
+        hard = side_flip_by_surface.get("Hard") or side_flip_by_surface.get("hard") or {}
+        if gap_source_status != "OK":
+            return "Hard side-flip evidence [BROAD DIAGNOSTIC]: SOURCE_MISSING"
+        return (
+            "Hard side-flip evidence [BROAD DIAGNOSTIC]: "
+            f"{hard.get('settled', hard.get('bets', 0))} settled | "
+            f"{number(hard.get('pnl_units')):+.2f}u | ROI {pct(hard.get('roi_pct'))} | "
+            f"CLV {pct(hard.get('avg_clv_pct'), 2)} n={hard.get('clv_rows', 0)} | "
+            "not one sellable lane; only scoped Hard/Masters/HIGH <=10pp rows enter Strict"
+        )
     lines = [
         "Il Margine weekly model evidence",
         f"Generated: {payload['generated_at']}",
+        (
+            "Tennis evidence source: "
+            f"{tennis_evidence_source.get('status', 'SOURCE_MISSING')} "
+            f"({tennis_evidence_source.get('source', 'none')}; "
+            f"{tennis_evidence_source.get('generated_at') or 'missing'})"
+        ),
         "",
         f"Team Shots v4: {team_v4.get('prospective_status', 'BLOCKED')} | {team_v4_live.get('settled', 0)} settled | {number(team_v4_live.get('pnl_units')):+.2f}u | ROI {pct(number(team_v4_live.get('roi')) * 100) if team_v4_live.get('roi') is not None else '-'} | CLV {pct(number(team_v4_live.get('mean_true_close_clv')) * 100) if team_v4_live.get('mean_true_close_clv') is not None else '-'} | promotion {team_v4.get('promotion_gate', 'BLOCKED')}",
         f"Corners v3: {corners_v3.get('prospective_status', 'BLOCKED')} | {corners_v3_live.get('settled', 0)} settled | {number(corners_v3_live.get('pnl_units')):+.2f}u | ROI {pct(number(corners_v3_live.get('roi')) * 100) if corners_v3_live.get('roi') is not None else '-'} | CLV {pct(number(corners_v3_live.get('mean_true_close_clv')) * 100) if corners_v3_live.get('mean_true_close_clv') is not None else '-'} | promotion {corners_v3.get('promotion_gate', 'BLOCKED')}",
@@ -1386,6 +1485,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
         tennis_lane_line("Tennis Spread v1", "spread_v1", "PAUSED/RESEARCH"),
         replacement_line("Strict gap 10-20pp", "strict_gap_10_20_same_side"),
         replacement_line("Volume gap 10-15pp", "volume200_gap_10_15_same_side"),
+        hard_side_flip_line(),
         (
             "Inactive tennis research (not tips): "
             + "; ".join(
@@ -1416,6 +1516,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
         lines.append(f"Tennis props v3: snapshot unavailable ({tennis_props_v3['_error']})")
     lines.append(
         "Venue ace v1 [SHADOW]: "
+        + ("SOURCE_MISSING" if tennis_venue_ace_v1.get("status") == "SOURCE_MISSING" else
         f"venues {tennis_venue_ace_v1.get('eligible_venues', 0)}/"
         f"{tennis_venue_ace_v1.get('total_venues', 0)} | "
         f"{tennis_venue_ace_v1.get('settled', 0)}/"
@@ -1424,13 +1525,14 @@ def telegram_text(payload: dict[str, Any]) -> str:
         f"CLV {pct(tennis_venue_ace_v1.get('mean_clv_pct'), 2)} "
         f"n={tennis_venue_ace_v1.get('clv_rows', 0)} | "
         f"Brier delta {number(tennis_venue_ace_v1.get('brier_delta')):+.4f} "
-        f"n={tennis_venue_ace_v1.get('paired_rows', 0)} | NOT SELLABLE"
+        f"n={tennis_venue_ace_v1.get('paired_rows', 0)} | NOT SELLABLE")
     )
     lines.append(
         "Tennis props vs Bet365: "
+        + ("SOURCE_MISSING" if tennis_props_benchmark.get("status") == "SOURCE_MISSING" else
         f"{tennis_props_benchmark.get('settled', 0)}/{tennis_props_benchmark.get('observations', 0)} settled, "
         f"Brier delta {number(tennis_props_benchmark.get('brier_delta_vs_market')):+.4f}, "
-        f"{tennis_props_benchmark.get('status', 'EVIDENCE_BUILDING')}"
+        f"{tennis_props_benchmark.get('status', 'EVIDENCE_BUILDING')}")
     )
     props_clv = tennis_props_shadow.get("clv") or {}
     props_calibration = tennis_props_shadow.get("calibration") or {}
@@ -1464,6 +1566,9 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     most_aces_prices = payload.get("tennis_most_aces_prices") or {}
     props_benchmark = payload.get("tennis_props_market_benchmark") or {}
     props_shadow = payload.get("tennis_props_shadow_decision") or {}
+    source = payload.get("tennis_evidence_source") or {}
+    gap_source_status = evidence.get("gap_source_status", "SOURCE_MISSING")
+    side_flip_by_surface = evidence.get("side_flip_by_surface") or {}
 
     def lane_line(label: str, key: str, status: str) -> str:
         lane = lanes.get(key) or {}
@@ -1475,6 +1580,8 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
         )
 
     def replacement_line(label: str, key: str) -> str:
+        if gap_source_status != "OK":
+            return f"{label} [0.5u provisional]: SOURCE_MISSING - local prospective evidence unavailable"
         experiment = replacements.get(key) or {}
         performance = experiment.get("performance") or {}
         return (
@@ -1484,15 +1591,33 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
             f"{experiment.get('verdict', 'FORWARD_SAMPLE_BUILDING')}"
         )
 
+    def hard_side_flip_line() -> str:
+        hard = side_flip_by_surface.get("Hard") or side_flip_by_surface.get("hard") or {}
+        if gap_source_status != "OK":
+            return "Hard side-flip evidence [BROAD DIAGNOSTIC]: SOURCE_MISSING"
+        return (
+            "Hard side-flip evidence [BROAD DIAGNOSTIC]: "
+            f"{hard.get('settled', hard.get('bets', 0))} settled | "
+            f"{number(hard.get('pnl_units')):+.2f}u | ROI {pct(hard.get('roi_pct'))} | "
+            f"CLV {pct(hard.get('avg_clv_pct'), 2)} n={hard.get('clv_rows', 0)} | "
+            "only scoped Masters/HIGH <=10pp rows are Strict"
+        )
+
     lines = [
         "Il Margine weekly tennis evidence",
         f"Generated: {payload['generated_at']}",
+        (
+            "Evidence source: "
+            f"{source.get('status', 'SOURCE_MISSING')} "
+            f"({source.get('source', 'none')}; {source.get('generated_at') or 'missing'})"
+        ),
         "",
         lane_line("Strict", "strict", "CORE"),
         lane_line("Volume 200", "volume_200", "VOLUME"),
         lane_line("Spread v1", "spread_v1", "PAUSED/RESEARCH"),
         replacement_line("Strict gap 10-20pp", "strict_gap_10_20_same_side"),
         replacement_line("Volume gap 10-15pp", "volume200_gap_10_15_same_side"),
+        hard_side_flip_line(),
         (
             "Inactive research (not tips): "
             + "; ".join(
@@ -1652,25 +1777,49 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
 
 
 def github_token_from_credential_manager() -> str:
-    result = subprocess.run(
-        ["git", "credential-manager", "get"],
-        input="protocol=https\nhost=github.com\n\n",
-        capture_output=True,
-        text=True,
-        timeout=10,
-        check=False,
-    )
-    if result.returncode != 0:
-        raise RuntimeError("Windows Git Credential Manager could not provide GitHub authentication")
-    fields: dict[str, str] = {}
-    for line in result.stdout.splitlines():
-        key, separator, value = line.partition("=")
-        if separator:
-            fields[key.strip()] = value.strip()
-    token = fields.get("password", "")
-    if not token:
-        raise RuntimeError("GitHub credential is missing from Windows Git Credential Manager")
-    return token
+    for name in ("GH_TOKEN", "GITHUB_TOKEN"):
+        token = os.environ.get(name, "").strip()
+        if token:
+            return token
+
+    errors: list[str] = []
+    try:
+        result = subprocess.run(
+            ["gh", "auth", "token"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+        token = result.stdout.strip()
+        if result.returncode == 0 and token:
+            return token
+        errors.append(f"gh auth token exit {result.returncode}")
+    except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
+        errors.append(f"gh auth token: {type(exc).__name__}")
+
+    try:
+        result = subprocess.run(
+            ["git", "credential-manager", "get"],
+            input="protocol=https\nhost=github.com\n\n",
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        fields: dict[str, str] = {}
+        for line in result.stdout.splitlines():
+            key, separator, value = line.partition("=")
+            if separator:
+                fields[key.strip()] = value.strip()
+        token = fields.get("password", "")
+        if result.returncode == 0 and token:
+            return token
+        errors.append(f"credential-manager exit {result.returncode}")
+    except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
+        errors.append(f"credential-manager: {type(exc).__name__}")
+
+    raise RuntimeError("GitHub authentication unavailable (" + "; ".join(errors) + ")")
 
 
 def dispatch_telegram_relay(message: str) -> None:
@@ -1678,9 +1827,8 @@ def dispatch_telegram_relay(message: str) -> None:
         json.dumps([message], ensure_ascii=False).encode("utf-8")
     ).decode("ascii")
     repository = os.environ.get("TENNIS_DIGEST_GITHUB_REPOSITORY", TELEGRAM_RELAY_REPOSITORY)
-    payload = json.dumps(
-        {"ref": "main", "inputs": {"payload_b64": encoded}}
-    ).encode("utf-8")
+    ref = os.environ.get("TENNIS_DIGEST_GITHUB_REF", "golden-with-speed-insights")
+    payload = json.dumps({"ref": ref, "inputs": {"payload_b64": encoded}}).encode("utf-8")
     request = urllib.request.Request(
         f"https://api.github.com/repos/{repository}/actions/workflows/{TELEGRAM_RELAY_WORKFLOW}/dispatches",
         data=payload,
