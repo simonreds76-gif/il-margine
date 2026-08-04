@@ -28,6 +28,7 @@ DEFAULT_OUTPUT = ROOT / "data" / "tennis-props" / "tennis-evidence-snapshot.json
 DEFAULT_SNAPSHOT_KEY = "tennis_evidence_v1"
 SNAPSHOT_TABLE = "goalscorer_live_snapshot"
 SCHEMA_VERSION = 1
+VOLATILE_HASH_KEYS = {"age_days", "checked_at", "created_at", "generated_at", "updated_at"}
 
 
 def load_env_files() -> None:
@@ -84,6 +85,19 @@ def source_metadata(module: Any) -> dict[str, dict[str, Any]]:
     return output
 
 
+def stable_hash_value(value: Any) -> Any:
+    """Remove wall-clock fields while retaining every evidence value and source mtime."""
+    if isinstance(value, dict):
+        return {
+            key: stable_hash_value(item)
+            for key, item in value.items()
+            if key not in VOLATILE_HASH_KEYS
+        }
+    if isinstance(value, list):
+        return [stable_hash_value(item) for item in value]
+    return value
+
+
 def build_snapshot() -> dict[str, Any]:
     module = load_report_module()
     sections = {
@@ -104,7 +118,7 @@ def build_snapshot() -> dict[str, Any]:
         "sections": sections,
     }
     payload_hash = hashlib.sha256(
-        json.dumps(stable, ensure_ascii=False, sort_keys=True).encode("utf-8")
+        json.dumps(stable_hash_value(stable), ensure_ascii=False, sort_keys=True).encode("utf-8")
     ).hexdigest()
     return {
         **stable,
