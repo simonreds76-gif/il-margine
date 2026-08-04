@@ -114,6 +114,28 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertIn("SOURCE_MISSING - local prospective evidence unavailable", message)
         self.assertNotIn("0/150 settled", message)
 
+    def test_local_snapshot_does_not_replace_canonical_tennis_lanes(self) -> None:
+        build_payload = REPORT["build_payload"]
+        globals_map = build_payload.__globals__
+        original_loader = globals_map["load_tennis_evidence_snapshot"]
+        globals_map["load_tennis_evidence_snapshot"] = lambda: {
+            "generated_at": "2026-08-04T10:00:00Z",
+            "_source": "test",
+            "sections": {
+                "tennis_model_evidence": {
+                    "lanes": {"strict": {"settled": 1}},
+                    "gap_source_status": "OK",
+                    "side_flip_by_surface": {"Hard": {"settled": 52}},
+                }
+            },
+        }
+        try:
+            payload = build_payload()
+        finally:
+            globals_map["load_tennis_evidence_snapshot"] = original_loader
+        self.assertNotEqual(payload["tennis_model_evidence"]["lanes"]["strict"].get("settled"), 1)
+        self.assertEqual(payload["tennis_model_evidence"]["side_flip_by_surface"]["Hard"]["settled"], 52)
+
     def test_most_aces_stale_json_falls_back_to_next_checkpoint(self) -> None:
         payload = REPORT["build_payload"]()
         payload["tennis_most_aces_forecast"] = {

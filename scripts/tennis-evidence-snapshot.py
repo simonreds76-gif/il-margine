@@ -100,9 +100,17 @@ def stable_hash_value(value: Any) -> Any:
 
 def build_snapshot() -> dict[str, Any]:
     module = load_report_module()
+    tennis_model_evidence = module.tennis_model_evidence_summary()
+    # Canonical Strict/Volume/Spread ledgers are available to the hosted runner.
+    # Only transport the ignored local experiments that GitHub cannot reconstruct.
+    local_model_evidence = {
+        key: value
+        for key, value in tennis_model_evidence.items()
+        if key != "lanes"
+    }
     sections = {
         "tennis_ml_gap_guard": module.ml_gap_guard_summary(),
-        "tennis_model_evidence": module.tennis_model_evidence_summary(),
+        "tennis_model_evidence": local_model_evidence,
         "tennis_props_v3": module.tennis_props_v3_snapshot(),
         "tennis_props_v4": module.load_json(module.TENNIS_PROPS_V4_JSON),
         "tennis_venue_ace_factor_v1": module.venue_ace_factor_v1_summary(),

@@ -21,6 +21,7 @@ class TennisEvidenceSnapshotTests(unittest.TestCase):
         payload = MODULE.build_snapshot()
         self.assertEqual(payload["schema_version"], 1)
         self.assertIn("tennis_model_evidence", payload["sections"])
+        self.assertNotIn("lanes", payload["sections"]["tennis_model_evidence"])
         self.assertIn("tennis_props_market_benchmark", payload["sections"])
         self.assertIn("tennis_props_shadow_decision", payload["sections"])
 

@@ -1088,8 +1088,10 @@ def build_payload() -> dict[str, Any]:
     snapshot_sections = tennis_snapshot.get("sections") if isinstance(tennis_snapshot, dict) else None
     snapshot_freshness = evidence_freshness(str(tennis_snapshot.get("generated_at") or ""))
     if isinstance(snapshot_sections, dict) and snapshot_freshness["status"] in {"FRESH", "STALE"}:
-        tennis_gap_guard = snapshot_sections.get("tennis_ml_gap_guard") or tennis_gap_guard
-        tennis_model_evidence = snapshot_sections.get("tennis_model_evidence") or tennis_model_evidence
+        snapshot_model_evidence = snapshot_sections.get("tennis_model_evidence") or {}
+        for key in ("gap_source_status", "gap_status", "gap_replacements", "side_flip_by_surface"):
+            if key in snapshot_model_evidence:
+                tennis_model_evidence[key] = snapshot_model_evidence[key]
         tennis_props_v3 = snapshot_sections.get("tennis_props_v3") or tennis_props_v3
         tennis_props_v4 = snapshot_sections.get("tennis_props_v4") or tennis_props_v4
         tennis_venue_ace_v1 = snapshot_sections.get("tennis_venue_ace_factor_v1") or tennis_venue_ace_v1
