@@ -1,6 +1,6 @@
 # Football Team Form Layer Report
 
-Generated: 2026-08-03T11:46:44+00:00
+Generated: 2026-08-04T10:58:38+00:00
 
 ## Outputs
 
@@ -22,8 +22,8 @@ Generated: 2026-08-03T11:46:44+00:00
 ```json
 {
   "matched": 0,
-  "rows": 0,
-  "unmatched": 0,
+  "rows": 5,
+  "unmatched": 5,
   "with_xg": 0
 }
 ```

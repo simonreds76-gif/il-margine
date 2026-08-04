@@ -1,6 +1,6 @@
 # Football Form Layer Validation
 
-Generated: 2026-08-03T11:46:47+00:00
+Generated: 2026-08-04T10:58:41+00:00
 Status: **ERROR**
 
 ## Files
@@ -12,18 +12,18 @@ Status: **ERROR**
 
 ## Issues
 
-- **error** `team_match_base_stale`: latest date 2026-05-24 is 71d old; max 21d
-- **error** `team_match_base_bundesliga_stale`: bundesliga latest date 2026-05-16 is 79d old; max 21d
-- **error** `team_match_base_epl_stale`: epl latest date 2026-05-24 is 71d old; max 21d
-- **error** `team_match_base_la_liga_stale`: la-liga latest date 2026-05-24 is 71d old; max 21d
-- **error** `team_match_base_ligue_1_stale`: ligue-1 latest date 2026-05-17 is 78d old; max 21d
-- **error** `team_match_base_serie_a_stale`: serie-a latest date 2026-05-24 is 71d old; max 21d
-- **error** `team_rolling_form_stale`: latest date 2026-05-24 is 71d old; max 21d
-- **error** `team_rolling_form_bundesliga_stale`: bundesliga latest date 2026-05-16 is 79d old; max 21d
-- **error** `team_rolling_form_epl_stale`: epl latest date 2026-05-24 is 71d old; max 21d
-- **error** `team_rolling_form_la_liga_stale`: la-liga latest date 2026-05-24 is 71d old; max 21d
-- **error** `team_rolling_form_ligue_1_stale`: ligue-1 latest date 2026-05-17 is 78d old; max 21d
-- **error** `team_rolling_form_serie_a_stale`: serie-a latest date 2026-05-24 is 71d old; max 21d
+- **error** `team_match_base_stale`: latest date 2026-05-24 is 72d old; max 21d
+- **error** `team_match_base_bundesliga_stale`: bundesliga latest date 2026-05-16 is 80d old; max 21d
+- **error** `team_match_base_epl_stale`: epl latest date 2026-05-24 is 72d old; max 21d
+- **error** `team_match_base_la_liga_stale`: la-liga latest date 2026-05-24 is 72d old; max 21d
+- **error** `team_match_base_ligue_1_stale`: ligue-1 latest date 2026-05-17 is 79d old; max 21d
+- **error** `team_match_base_serie_a_stale`: serie-a latest date 2026-05-24 is 72d old; max 21d
+- **error** `team_rolling_form_stale`: latest date 2026-05-24 is 72d old; max 21d
+- **error** `team_rolling_form_bundesliga_stale`: bundesliga latest date 2026-05-16 is 80d old; max 21d
+- **error** `team_rolling_form_epl_stale`: epl latest date 2026-05-24 is 72d old; max 21d
+- **error** `team_rolling_form_la_liga_stale`: la-liga latest date 2026-05-24 is 72d old; max 21d
+- **error** `team_rolling_form_ligue_1_stale`: ligue-1 latest date 2026-05-17 is 79d old; max 21d
+- **error** `team_rolling_form_serie_a_stale`: serie-a latest date 2026-05-24 is 72d old; max 21d
 
 ## Per-League Freshness
 
@@ -31,18 +31,18 @@ Status: **ERROR**
 
 | League | Latest date | Age days |
 | --- | --- | ---: |
-| bundesliga | 2026-05-16 | 79 |
-| epl | 2026-05-24 | 71 |
-| la-liga | 2026-05-24 | 71 |
-| ligue-1 | 2026-05-17 | 78 |
-| serie-a | 2026-05-24 | 71 |
+| bundesliga | 2026-05-16 | 80 |
+| epl | 2026-05-24 | 72 |
+| la-liga | 2026-05-24 | 72 |
+| ligue-1 | 2026-05-17 | 79 |
+| serie-a | 2026-05-24 | 72 |
 
 ### team-rolling-form.csv
 
 | League | Latest date | Age days |
 | --- | --- | ---: |
-| bundesliga | 2026-05-16 | 79 |
-| epl | 2026-05-24 | 71 |
-| la-liga | 2026-05-24 | 71 |
-| ligue-1 | 2026-05-17 | 78 |
-| serie-a | 2026-05-24 | 71 |
+| bundesliga | 2026-05-16 | 80 |
+| epl | 2026-05-24 | 72 |
+| la-liga | 2026-05-24 | 72 |
+| ligue-1 | 2026-05-17 | 79 |
+| serie-a | 2026-05-24 | 72 |
