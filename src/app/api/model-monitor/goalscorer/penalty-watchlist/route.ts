@@ -21,34 +21,49 @@ async function validateAppliedTicket(id: string) {
     readGoalscorerMonitorSnapshot(),
     readClubPenaltyData(),
   ]);
-  const row = snapshot?.penalty_watchlist.rows.find((candidate) => candidate.row_id === id);
-  if (!row) {
+  const eventRow = snapshot?.penalty_watchlist.rows.find((candidate) => candidate.row_id === id);
+  const sourceRow = snapshot?.preseason_role_review?.rows.find((candidate) => candidate.row_id === id);
+  if (!eventRow && !sourceRow) {
     throw new Error("Ticket is no longer present in the current review snapshot");
   }
 
-  const normalizedLeague = normalizeClubPenaltyKey(row.league ?? "");
+  const normalizedLeague = normalizeClubPenaltyKey(eventRow?.league ?? sourceRow?.league ?? "");
   const league = leagues.find(
     (candidate) =>
       normalizeClubPenaltyKey(candidate.key) === normalizedLeague ||
       normalizeClubPenaltyKey(candidate.label) === normalizedLeague,
   );
-  const normalizedTeam = normalizeClubPenaltyKey(row.public_team || row.team || "");
+  const normalizedTeam = normalizeClubPenaltyKey(
+    eventRow?.public_team || eventRow?.team || sourceRow?.team || "",
+  );
   const team = league?.teams.find(
     (candidate) => normalizeClubPenaltyKey(candidate.team) === normalizedTeam,
   );
   if (!league || !team) {
-    throw new Error(`Cannot map ${row.team || "ticket team"} to a current club hierarchy`);
-  }
-
-  const actualTaker = normalizeClubPenaltyKey(row.actual_taker ?? "");
-  const hierarchy = [team.primary, team.secondary, team.tertiary].map(normalizeClubPenaltyKey);
-  if (!actualTaker || !hierarchy.includes(actualTaker)) {
     throw new Error(
-      `${row.actual_taker || "The observed taker"} is not in ${team.team}'s published hierarchy yet`,
+      `Cannot map ${eventRow?.team || sourceRow?.team || "ticket team"} to a current club hierarchy`,
     );
   }
 
-  const eventStamp = dateStamp(row.date);
+  if (sourceRow) {
+    const proposedPrimary = normalizeClubPenaltyKey(sourceRow.proposed_primary ?? "");
+    if (!proposedPrimary || normalizeClubPenaltyKey(team.primary) !== proposedPrimary) {
+      throw new Error(
+        `${sourceRow.proposed_primary || "The proposed primary"} is not ${team.team}'s published primary yet`,
+      );
+    }
+  } else if (eventRow) {
+    const actualTaker = normalizeClubPenaltyKey(eventRow.actual_taker ?? "");
+    const hierarchy = [team.primary, team.secondary, team.tertiary].map(normalizeClubPenaltyKey);
+    if (!actualTaker || !hierarchy.includes(actualTaker)) {
+      throw new Error(
+        `${eventRow.actual_taker || "The observed taker"} is not in ${team.team}'s published hierarchy yet`,
+      );
+    }
+  }
+
+  const evidenceDate = (eventRow?.date || sourceRow?.generated_at || "").slice(0, 10);
+  const eventStamp = dateStamp(evidenceDate);
   const verifiedStamp = dateStamp(team.lastUpdated);
   const publicStamp = dateStamp(team.publicUpdatedAt);
   if (
@@ -59,7 +74,7 @@ async function validateAppliedTicket(id: string) {
       publicStamp < eventStamp)
   ) {
     throw new Error(
-      `${team.team}'s verification and public update dates must be ${row.date} or later`,
+      `${team.team}'s verification and public update dates must be ${evidenceDate} or later`,
     );
   }
 
@@ -126,7 +141,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, validation });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
-    const status = message.includes("published hierarchy") || message.includes("verification") || message.includes("Cannot map")
+    const status = message.includes("published hierarchy") || message.includes("published primary") || message.includes("verification") || message.includes("Cannot map")
       ? 409
       : 500;
     return NextResponse.json({ ok: false, error: message }, { status });

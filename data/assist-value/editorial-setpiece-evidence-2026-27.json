@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "season": "2026/27",
+  "league": "epl",
+  "mode": "internal_research_evidence",
+  "public_source_links": false,
+  "automatic_model_use": false,
+  "source": {
+    "publisher": "The Analyst",
+    "partner": "Solio Analytics",
+    "published_date": "2026-08-07",
+    "url": "https://theanalyst.com/articles/fpl-set-piece-stats-projections-tips-premier-league-2026-27"
+  },
+  "notes": [
+    "Use as a current role cross-check, not as an automatic public hierarchy update.",
+    "Side-specific corner candidates can support Assist V1 only after validation against official FPL and observed match events."
+  ],
+  "teams": [
+    {"team": "Arsenal", "left_corners": ["Declan Rice"], "right_corners": ["Bukayo Saka"]},
+    {"team": "Aston Villa", "left_corners": ["Matty Cash"], "right_corners": ["Lucas Digne", "John McGinn"]},
+    {"team": "Bournemouth", "left_corners": ["Alex Scott", "Justin Kluivert"], "right_corners": ["Marcus Tavernier", "David Brooks"]},
+    {"team": "Brentford", "left_corners": ["Mathias Jensen", "Mikkel Damsgaard"], "right_corners": ["Vitaly Janelt", "Dango Ouattara"]},
+    {"team": "Brighton", "left_corners": ["Pascal Gross", "Ferdi Kadioglu"], "right_corners": ["Maxim De Cuyper", "Yankuba Minteh"]},
+    {"team": "Chelsea", "left_corners": ["Reece James", "Enzo Fernandez"], "right_corners": ["Pedro Neto", "Estevao"]},
+    {"team": "Coventry City", "left_corners": ["Matt Grimes", "Victor Torp"], "right_corners": ["Matt Grimes", "Jack Rudoni"]},
+    {"team": "Crystal Palace", "left_corners": ["Yeremy Pino", "Daniel Munoz"], "right_corners": ["Adam Wharton", "Will Hughes"]},
+    {"team": "Everton", "left_corners": ["James Garner"], "right_corners": ["Kiernan Dewsbury-Hall"]},
+    {"team": "Fulham", "left_corners": ["Sasa Lukic", "Alex Iwobi"], "right_corners": ["Sasa Lukic", "Oscar Bobb"]},
+    {"team": "Hull City", "left_corners": ["Regan Slater", "Ryan Giles"], "right_corners": ["Mohamed Belloumi", "Ryan Giles"]},
+    {"team": "Ipswich Town", "left_corners": ["Marcelino Nunez", "Jack Clarke"], "right_corners": ["Leif Davis", "Marcelino Nunez"]},
+    {"team": "Leeds", "left_corners": ["Anton Stach"], "right_corners": ["Harry Wilson", "Anton Stach"]},
+    {"team": "Liverpool", "left_corners": ["Dominik Szoboszlai", "Cody Gakpo"], "right_corners": ["Dominik Szoboszlai", "Florian Wirtz"]},
+    {"team": "Manchester City", "left_corners": ["Rayan Cherki", "Reijnders"], "right_corners": ["Phil Foden", "Rayan Cherki"]},
+    {"team": "Manchester United", "left_corners": ["Bruno Fernandes"], "right_corners": ["Bryan Mbeumo", "Luke Shaw"]},
+    {"team": "Newcastle United", "left_corners": ["Bruno Guimaraes", "Jacob Murphy"], "right_corners": ["Lewis Hall"]},
+    {"team": "Nottingham Forest", "left_corners": ["Neco Williams", "Dan Ndoye"], "right_corners": ["Omari Hutchinson", "Callum Hudson-Odoi"]},
+    {"team": "Sunderland", "left_corners": ["Enzo Le Fee", "Trai Hume"], "right_corners": ["Granit Xhaka"]},
+    {"team": "Tottenham", "left_corners": ["Pedro Porro", "Mathys Tel"], "right_corners": ["Mohammed Kudus", "Pedro Porro"]}
+  ]
+}

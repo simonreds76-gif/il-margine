@@ -45,6 +45,7 @@ LEAGUE_CONFIGS: list[dict[str, str]] = [
         "lineups_json": "data/goalscorer/epl-confirmed-lineups.json",
         "penalty_review_json": "data/goalscorer/epl-penalty-duty-review.json",
         "live_penalty_review_json": "data/goalscorer/epl-penalty-duty-live-review.json",
+        "preseason_role_review_json": "data/goalscorer/epl-preseason-penalty-role-review.json",
         "penalty_context_json": "data/goalscorer/epl/penalty-duty-context.json",
         "penalty_takers_json": "data/goalscorer/epl-penalty-takers.json",
         "shadow_signals_csv": "data/goalscorer/epl-shadow-signals.csv",
@@ -1411,6 +1412,8 @@ def build_snapshot(snapshot_key: str) -> dict[str, Any]:
     raw_monitor_summary_chunks: list[str] = []
     penalty_watchlist_rows: list[dict[str, Any]] = []
     penalty_generated_values: list[str | None] = []
+    preseason_role_review_rows: list[dict[str, Any]] = []
+    preseason_role_generated_values: list[str | None] = []
     all_active_rows: list[dict[str, str]] = []
     all_public_signal_rows: list[dict[str, str]] = []
     comparison_mtims: list[str | None] = []
@@ -1525,6 +1528,13 @@ def build_snapshot(snapshot_key: str) -> dict[str, Any]:
         rows, latest_generated = read_penalty_review_rows(config)
         penalty_watchlist_rows.extend(rows)
         penalty_generated_values.append(latest_generated)
+        preseason_path = config.get("preseason_role_review_json")
+        if preseason_path:
+            preseason_payload = read_json(preseason_path) or {}
+            preseason_role_review_rows.extend(
+                row for row in (preseason_payload.get("rows") or []) if isinstance(row, dict)
+            )
+            preseason_role_generated_values.append(preseason_payload.get("generated_at"))
 
     live_bets.sort(key=lambda row: (kickoff_sort_value(str(row.get("kickoff") or "")), 0 if row.get("status") == "PUBLIC" else 1, -((row.get("edge_pct") or 0) if isinstance(row.get("edge_pct"), (int, float)) else 0)))
     shadow_recent_rows.sort(key=lambda row: shadow_row_activity_time({"settled_at": row.get("settled_at", ""), "compared_at": row.get("compared_at", ""), "kickoff": row.get("kickoff", ""), "date": row.get("date", "")}), reverse=True)
@@ -1555,6 +1565,7 @@ def build_snapshot(snapshot_key: str) -> dict[str, Any]:
         "fixture_health": {"rows": fixture_health_rows, "clean_count": clean_count, "degraded_count": degraded_count, "quarantined_count": quarantined_count, "hidden_pending_count": hidden_pending_count, "hidden_expected_count": hidden_expected_count, "flagged_rows": flagged_rows},
         "fixture_lineups": fixture_lineups,
         "penalty_watchlist": {"generated_at": newest_timestamp(penalty_generated_values), "row_count": len(penalty_watchlist_rows), "rows": penalty_watchlist_rows},
+        "preseason_role_review": {"generated_at": newest_timestamp(preseason_role_generated_values), "row_count": len(preseason_role_review_rows), "rows": preseason_role_review_rows},
         "shadow_summary": {"by_league": shadow_by_league, "recent_rows": shadow_recent_rows[:50], "settled_today": shadow_today_rows, "settled_yesterday": shadow_yesterday_rows},
         "public_summary": {"by_league": public_by_league},
         "diagnostics": {"matched_rows": len(all_active_rows), "suppressed_rows": sum(1 for row in all_active_rows if effective_monitor_action(row) == "suppress"), "fixtures_with_confirmed_lineups": sum(parse_int(parse_summary_metrics(read_text(config["comparison_txt"])).get("Fixtures With Confirmed Lineups")) or 0 for config in LEAGUE_CONFIGS), "fixtures_with_expected_xis": sum(parse_int(parse_summary_metrics(read_text(config["comparison_txt"])).get("Fixtures With Expected Lineups")) or 0 for config in LEAGUE_CONFIGS), "history_mapped_rows": sum(1 for row in all_active_rows if row.get("resolver_source") == "history"), "roster_mapped_rows": sum(1 for row in all_active_rows if row.get("resolver_source") == "live_roster"), "fallback_rows": sum(parse_int(parse_summary_metrics(read_text(config["comparison_txt"])).get("Fallback Rows")) or 0 for config in LEAGUE_CONFIGS), "low_confidence_rows": sum(1 for row in all_active_rows if row.get("signal_confidence") == "low"), "missing_player_history_rows": sum(parse_int(parse_summary_metrics(read_text(config["comparison_txt"])).get("Missing Player History")) or 0 for config in LEAGUE_CONFIGS), "starter_rows": sum(1 for row in all_active_rows if row.get("lineup_status", "").lower() == "confirmed_starter"), "expected_starter_rows": sum(1 for row in all_active_rows if row.get("lineup_status", "").lower() == "expected_starter"), "avg_ev_pct": avg_ev_pct, "source_feed_gap_leagues": source_feed_gap_leagues, "raw_monitor_summary": "\n\n".join(raw_monitor_summary_chunks)},

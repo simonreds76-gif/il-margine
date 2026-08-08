@@ -34,6 +34,11 @@ type SnapshotPenaltyRow = GoalscorerMonitorSnapshot["penalty_watchlist"]["rows"]
   resolutionUpdatedAt?: string;
 };
 
+type SnapshotRoleRow = NonNullable<GoalscorerMonitorSnapshot["preseason_role_review"]>["rows"][number] & {
+  resolutionStatus?: PenaltyReviewStatus;
+  resolutionUpdatedAt?: string;
+};
+
 function numericSum(values: Array<number | null | undefined>): number {
   return values.reduce<number>((total, v) => total + (v ?? 0), 0);
 }
@@ -274,6 +279,69 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
       {row.row_id ? (
         <PenaltyReviewActions rowId={row.row_id} status={row.resolutionStatus} />
       ) : null}
+      {row.resolutionUpdatedAt ? (
+        <p className="mt-2 text-[11px] text-slate-600">
+          Updated {formatDateTimeLabel(row.resolutionUpdatedAt)}
+        </p>
+      ) : null}
+    </article>
+  );
+}
+
+function PreseasonRoleReviewCard({ row }: { row: SnapshotRoleRow }) {
+  return (
+    <article className="rounded-xl border border-slate-800 bg-slate-950/50 p-4">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">
+            {row.season} source check
+          </div>
+          <div className="mt-1">
+            <TeamLabel league="epl" team={row.team} iconSize={22} teamClassName="text-base font-semibold text-white" />
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          <StatusPill label={row.review_priority} tone={reviewPriorityTone(row.review_priority)} />
+          <StatusPill
+            label={row.review_type.replaceAll("_", " ")}
+            tone="bg-cyan-500/10 text-cyan-300 border-cyan-500/20"
+          />
+          <StatusPill
+            label={row.resolutionStatus ? row.resolutionStatus.replaceAll("_", " ") : "active"}
+            tone={resolutionTone(row.resolutionStatus)}
+          />
+        </div>
+      </div>
+
+      <div className="mt-4 grid gap-2 sm:grid-cols-3">
+        <StatCard compact label="Current primary" value={row.current_primary || "Unknown"} />
+        <StatCard compact label="Source first order" value={row.proposed_primary || "No ranked player"} />
+        <StatCard
+          compact
+          label="Automatic change"
+          value="Blocked"
+          detail="Human evidence review required"
+          tone="text-amber-300"
+        />
+      </div>
+
+      {row.fpl_penalty_order.length ? (
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {row.fpl_penalty_order.map((item) => (
+            <span
+              key={`${item.order}-${item.element_id}-${item.player}`}
+              className="rounded-full border border-slate-800 bg-slate-900/60 px-2.5 py-1 text-xs text-slate-300"
+            >
+              {item.order}. {item.player}
+            </span>
+          ))}
+        </div>
+      ) : null}
+
+      <p className="mt-3 border-t border-slate-800/60 pt-3 text-xs leading-5 text-slate-400">
+        {row.reason} Verify squad status and direct match evidence before changing the public hierarchy.
+      </p>
+      <PenaltyReviewActions rowId={row.row_id} status={row.resolutionStatus} mode="source" />
       {row.resolutionUpdatedAt ? (
         <p className="mt-2 text-[11px] text-slate-600">
           Updated {formatDateTimeLabel(row.resolutionUpdatedAt)}
@@ -672,6 +740,22 @@ export default async function GoalscorerMonitorPage() {
       resolutionUpdatedAt: penaltyState[row.row_id]?.updated_at,
     }));
 
+  const sourceRoleRows = snapshot.preseason_role_review?.rows || [];
+  const activeSourceRoleRows: SnapshotRoleRow[] = sourceRoleRows
+    .filter((row) => !penaltyState[row.row_id])
+    .map((row) => ({
+      ...row,
+      resolutionStatus: penaltyState[row.row_id]?.status,
+      resolutionUpdatedAt: penaltyState[row.row_id]?.updated_at,
+    }));
+  const resolvedSourceRoleRows: SnapshotRoleRow[] = sourceRoleRows
+    .filter((row) => Boolean(penaltyState[row.row_id]))
+    .map((row) => ({
+      ...row,
+      resolutionStatus: penaltyState[row.row_id]?.status,
+      resolutionUpdatedAt: penaltyState[row.row_id]?.updated_at,
+    }));
+
   return (
     <div className="min-h-screen bg-[#0a0f19] px-4 py-10 text-slate-200 sm:px-6">
       <div className="mx-auto flex max-w-7xl flex-col gap-4">
@@ -700,9 +784,9 @@ export default async function GoalscorerMonitorPage() {
           <StatCard label="Public now"      value={String(publicNow)}      detail="Rows surfaced to public" />
           <StatCard label="Shadow now"      value={String(shadowNow)}      detail="Shadow rows still open" />
           <StatCard
-            label="Penalty reviews"
-            value={String(activePenaltyRows.length)}
-            detail={`${acceptedPenaltyRows.length} accepted | ${deferredPenaltyRows.length} deferred`}
+            label="Evidence reviews"
+            value={String(activePenaltyRows.length + activeSourceRoleRows.length)}
+            detail={`${activeSourceRoleRows.length} source | ${activePenaltyRows.length} match-event`}
           />
           <StatCard
             label="Flagged fixtures"
@@ -842,6 +926,33 @@ export default async function GoalscorerMonitorPage() {
           <LiveBetsTable rows={snapshot.live_bets} />
         </SectionCard>
 
+        <div id="preseason-role-review" className="scroll-mt-24">
+          <SectionCard
+            title={`Preseason Role Review${activeSourceRoleRows.length ? ` | ${activeSourceRoleRows.length} active` : ""}`}
+            subtitle="Official FPL role fields are evidence tickets only. They never rewrite the public hierarchy automatically."
+            collapsible
+            defaultOpen
+          >
+            <div className="space-y-3">
+              {activeSourceRoleRows.length === 0 ? (
+                <EmptyState message="No active preseason role conflicts in the current snapshot." />
+              ) : (
+                activeSourceRoleRows.map((row) => <PreseasonRoleReviewCard key={row.row_id} row={row} />)
+              )}
+            </div>
+            {resolvedSourceRoleRows.length ? (
+              <details className="group mt-4 rounded-xl border border-slate-800/50 bg-slate-950/30">
+                <summary className="cursor-pointer select-none px-4 py-3 text-xs font-medium text-slate-500">
+                  Resolved source rows ({resolvedSourceRoleRows.length})
+                </summary>
+                <div className="space-y-3 border-t border-slate-800/50 px-4 pb-4 pt-3">
+                  {resolvedSourceRoleRows.map((row) => <PreseasonRoleReviewCard key={row.row_id} row={row} />)}
+                </div>
+              </details>
+            ) : null}
+          </SectionCard>
+        </div>
+
         {/* -- Penalty Watchlist ----------------------------------------------- */}
         <div id="penalty-watchlist" className="scroll-mt-24">
           <SectionCard
@@ -965,4 +1076,3 @@ export default async function GoalscorerMonitorPage() {
     </div>
   );
 }
-

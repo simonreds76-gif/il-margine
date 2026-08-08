@@ -1,0 +1,287 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-07T23:59:54+00:00",
+  "league": "epl",
+  "season": "2026/27",
+  "source": {
+    "name": "official_fpl_role_fields",
+    "url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+    "public_source_link": false
+  },
+  "mode": "internal_evidence_only",
+  "auto_apply": false,
+  "row_count": 6,
+  "rows": [
+    {
+      "row_id": "fpl-role|epl|2026/27|brighton",
+      "generated_at": "2026-08-07T23:59:54+00:00",
+      "season": "2026/27",
+      "league": "epl",
+      "team": "Brighton",
+      "review_source": "official_fpl_role_fields",
+      "review_priority": "high",
+      "review_type": "primary_not_in_current_roster",
+      "current_primary": "Danny Welbeck",
+      "current_secondary": "Matt O'Riley",
+      "current_tertiary": "Pascal Gross",
+      "proposed_primary": "Pascal Groß",
+      "fpl_penalty_order": [
+        {
+          "order": 1,
+          "player": "Pascal Groß",
+          "web_name": "Groß",
+          "element_id": "124",
+          "status": "a"
+        },
+        {
+          "order": 2,
+          "player": "Matt O'Riley",
+          "web_name": "O'Riley",
+          "element_id": "126",
+          "status": "a"
+        }
+      ],
+      "current_primary_in_fpl_roster": false,
+      "reason": "Our current primary is absent from the official FPL 2026/27 squad roster.",
+      "editorial_note": "Our current primary is absent from the official FPL 2026/27 squad roster. Current order: Danny Welbeck / Matt O'Riley. FPL reference: 1. Pascal Groß, 2. Matt O'Riley. Review squad status and direct match evidence before applying any hierarchy change.",
+      "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+      "public_source_link": false,
+      "auto_apply": false,
+      "status": "active"
+    },
+    {
+      "row_id": "fpl-role|epl|2026/27|newcastle-united",
+      "generated_at": "2026-08-07T23:59:54+00:00",
+      "season": "2026/27",
+      "league": "epl",
+      "team": "Newcastle United",
+      "review_source": "official_fpl_role_fields",
+      "review_priority": "high",
+      "review_type": "primary_not_in_current_roster",
+      "current_primary": "Bruno Guimaraes",
+      "current_secondary": "Nick Woltemade",
+      "current_tertiary": "Harvey Barnes",
+      "proposed_primary": "Nick Woltemade",
+      "fpl_penalty_order": [
+        {
+          "order": 1,
+          "player": "Nick Woltemade",
+          "web_name": "Woltemade",
+          "element_id": "463",
+          "status": "a"
+        },
+        {
+          "order": 2,
+          "player": "William Osula",
+          "web_name": "Osula",
+          "element_id": "465",
+          "status": "a"
+        },
+        {
+          "order": 3,
+          "player": "Bruno Guimarães Rodriguez Moura",
+          "web_name": "Bruno G.",
+          "element_id": "452",
+          "status": "a"
+        },
+        {
+          "order": 4,
+          "player": "Yoane Wissa",
+          "web_name": "Wissa",
+          "element_id": "464",
+          "status": "a"
+        }
+      ],
+      "current_primary_in_fpl_roster": false,
+      "reason": "Our current primary is absent from the official FPL 2026/27 squad roster.",
+      "editorial_note": "Our current primary is absent from the official FPL 2026/27 squad roster. Current order: Bruno Guimaraes / Nick Woltemade. FPL reference: 1. Nick Woltemade, 2. William Osula, 3. Bruno Guimarães Rodriguez Moura, 4. Yoane Wissa. Review squad status and direct match evidence before applying any hierarchy change.",
+      "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+      "public_source_link": false,
+      "auto_apply": false,
+      "status": "active"
+    },
+    {
+      "row_id": "fpl-role|epl|2026/27|bournemouth",
+      "generated_at": "2026-08-07T23:59:54+00:00",
+      "season": "2026/27",
+      "league": "epl",
+      "team": "Bournemouth",
+      "review_source": "official_fpl_role_fields",
+      "review_priority": "medium",
+      "review_type": "official_order_conflict",
+      "current_primary": "Justin Kluivert",
+      "current_secondary": "Eli Junior Kroupi",
+      "current_tertiary": "Marcus Tavernier",
+      "proposed_primary": "Junior Kroupi",
+      "fpl_penalty_order": [
+        {
+          "order": 1,
+          "player": "Junior Kroupi",
+          "web_name": "Kroupi.Jr",
+          "element_id": "78",
+          "status": "i"
+        },
+        {
+          "order": 2,
+          "player": "Justin Kluivert",
+          "web_name": "Kluivert",
+          "element_id": "70",
+          "status": "a"
+        },
+        {
+          "order": 3,
+          "player": "Marcus Tavernier",
+          "web_name": "Tavernier",
+          "element_id": "68",
+          "status": "a"
+        }
+      ],
+      "current_primary_in_fpl_roster": true,
+      "reason": "The official FPL first penalty order differs from our current primary.",
+      "editorial_note": "The official FPL first penalty order differs from our current primary. Current order: Justin Kluivert / Eli Junior Kroupi. FPL reference: 1. Junior Kroupi, 2. Justin Kluivert, 3. Marcus Tavernier. Review squad status and direct match evidence before applying any hierarchy change.",
+      "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+      "public_source_link": false,
+      "auto_apply": false,
+      "status": "active"
+    },
+    {
+      "row_id": "fpl-role|epl|2026/27|hull-city",
+      "generated_at": "2026-08-07T23:59:54+00:00",
+      "season": "2026/27",
+      "league": "epl",
+      "team": "Hull City",
+      "review_source": "official_fpl_role_fields",
+      "review_priority": "medium",
+      "review_type": "official_order_conflict",
+      "current_primary": "Oli McBurnie",
+      "current_secondary": "David Akintola",
+      "current_tertiary": "Lewie Coyle",
+      "proposed_primary": "Matt Crooks",
+      "fpl_penalty_order": [
+        {
+          "order": 1,
+          "player": "Matt Crooks",
+          "web_name": "Crooks",
+          "element_id": "289",
+          "status": "a"
+        },
+        {
+          "order": 2,
+          "player": "Oli McBurnie",
+          "web_name": "McBurnie",
+          "element_id": "295",
+          "status": "a"
+        }
+      ],
+      "current_primary_in_fpl_roster": true,
+      "reason": "The official FPL first penalty order differs from our current primary.",
+      "editorial_note": "The official FPL first penalty order differs from our current primary. Current order: Oli McBurnie / David Akintola. FPL reference: 1. Matt Crooks, 2. Oli McBurnie. Review squad status and direct match evidence before applying any hierarchy change.",
+      "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+      "public_source_link": false,
+      "auto_apply": false,
+      "status": "active"
+    },
+    {
+      "row_id": "fpl-role|epl|2026/27|ipswich-town",
+      "generated_at": "2026-08-07T23:59:54+00:00",
+      "season": "2026/27",
+      "league": "epl",
+      "team": "Ipswich Town",
+      "review_source": "official_fpl_role_fields",
+      "review_priority": "medium",
+      "review_type": "official_order_conflict",
+      "current_primary": "Jack Clarke",
+      "current_secondary": "Jaden Philogene",
+      "current_tertiary": "George Hirst",
+      "proposed_primary": "George Hirst",
+      "fpl_penalty_order": [
+        {
+          "order": 1,
+          "player": "George Hirst",
+          "web_name": "Hirst",
+          "element_id": "317",
+          "status": "a"
+        },
+        {
+          "order": 2,
+          "player": "Jack Clarke",
+          "web_name": "Clarke",
+          "element_id": "313",
+          "status": "a"
+        },
+        {
+          "order": 3,
+          "player": "Jaden Philogene",
+          "web_name": "Philogene",
+          "element_id": "318",
+          "status": "a"
+        }
+      ],
+      "current_primary_in_fpl_roster": true,
+      "reason": "The official FPL first penalty order differs from our current primary.",
+      "editorial_note": "The official FPL first penalty order differs from our current primary. Current order: Jack Clarke / Jaden Philogene. FPL reference: 1. George Hirst, 2. Jack Clarke, 3. Jaden Philogene. Review squad status and direct match evidence before applying any hierarchy change.",
+      "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+      "public_source_link": false,
+      "auto_apply": false,
+      "status": "active"
+    },
+    {
+      "row_id": "fpl-role|epl|2026/27|liverpool",
+      "generated_at": "2026-08-07T23:59:54+00:00",
+      "season": "2026/27",
+      "league": "epl",
+      "team": "Liverpool",
+      "review_source": "official_fpl_role_fields",
+      "review_priority": "medium",
+      "review_type": "official_order_conflict",
+      "current_primary": "Dominik Szoboszlai",
+      "current_secondary": "Cody Gakpo",
+      "current_tertiary": "Alexander Isak",
+      "proposed_primary": "Alexander Isak",
+      "fpl_penalty_order": [
+        {
+          "order": 1,
+          "player": "Alexander Isak",
+          "web_name": "Isak",
+          "element_id": "379",
+          "status": "a"
+        },
+        {
+          "order": 2,
+          "player": "Dominik Szoboszlai",
+          "web_name": "Szoboszlai",
+          "element_id": "368",
+          "status": "a"
+        },
+        {
+          "order": 3,
+          "player": "Cody Gakpo",
+          "web_name": "Gakpo",
+          "element_id": "367",
+          "status": "a"
+        },
+        {
+          "order": 4,
+          "player": "Florian Wirtz",
+          "web_name": "Wirtz",
+          "element_id": "366",
+          "status": "a"
+        },
+        {
+          "order": 5,
+          "player": "Alexis Mac Allister",
+          "web_name": "Mac Allister",
+          "element_id": "372",
+          "status": "a"
+        }
+      ],
+      "current_primary_in_fpl_roster": true,
+      "reason": "The official FPL first penalty order differs from our current primary.",
+      "editorial_note": "The official FPL first penalty order differs from our current primary. Current order: Dominik Szoboszlai / Cody Gakpo. FPL reference: 1. Alexander Isak, 2. Dominik Szoboszlai, 3. Cody Gakpo, 4. Florian Wirtz, 5. Alexis Mac Allister. Review squad status and direct match evidence before applying any hierarchy change.",
+      "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+      "public_source_link": false,
+      "auto_apply": false,
+      "status": "active"
+    }
+  ]
+}

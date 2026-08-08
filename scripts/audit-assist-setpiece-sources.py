@@ -18,7 +18,7 @@ import re
 import sys
 import time
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
@@ -42,6 +42,16 @@ SETPIECETAKERS_LEAGUES = ["premier-league", "bundesliga", "la-liga", "serie-a", 
 SETPIECETAKERS_CATEGORIES = ["corners", "freekicks", "penalties"]
 
 FPL_BOOTSTRAP_URL = "https://fantasy.premierleague.com/api/bootstrap-static/"
+DEFAULT_FPL_HIERARCHY_PATH = Path("data/goalscorer/epl-penalty-takers.json")
+DEFAULT_FPL_SEASON = "2026/27"
+FPL_SNAPSHOT_MAX_AGE_DAYS = 7
+FPL_TEAM_ALIASES = {
+    "Man City": "Manchester City",
+    "Man Utd": "Manchester United",
+    "Newcastle": "Newcastle United",
+    "Nott'm Forest": "Nottingham Forest",
+    "Spurs": "Tottenham",
+}
 
 
 @dataclass
@@ -259,14 +269,60 @@ def audit_rotowire(timeout: int) -> tuple[list[dict[str, Any]], list[dict[str, A
     return role_rows, team_status
 
 
-def audit_fpl(timeout: int) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+def load_expected_fpl_teams(path: Path) -> tuple[list[str], str]:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return [], ""
+    if not isinstance(payload, dict):
+        return [], ""
+    teams = sorted(str(team).strip() for team in payload if team != "_meta" and str(team).strip())
+    meta = payload.get("_meta") if isinstance(payload.get("_meta"), dict) else {}
+    season = meta.get("season") if isinstance(meta.get("season"), dict) else {}
+    return teams, str(season.get("label") or "").strip()
+
+
+def audit_fpl(
+    timeout: int,
+    *,
+    fetched_at: str,
+    expected_teams_path: Path = DEFAULT_FPL_HIERARCHY_PATH,
+    expected_season: str = DEFAULT_FPL_SEASON,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     fetched = fetch_text(FPL_BOOTSTRAP_URL, timeout=timeout)
     if not fetched.ok:
-        return [], {"source": "fpl_api", "ok": False, "reason": fetched.error, "players_with_roles": 0}
+        return [], [], {"source": "fpl_api", "ok": False, "reason": fetched.error, "players_with_roles": 0}
     data = json.loads(fetched.text)
     teams = {team["id"]: team["name"] for team in data.get("teams", [])}
+    expected_teams, registered_season = load_expected_fpl_teams(expected_teams_path)
+    source_season = registered_season or expected_season
+    live_team_names = sorted(teams.values())
+    canonical_live_team_names = sorted(FPL_TEAM_ALIASES.get(team, team) for team in live_team_names)
+    missing_expected_teams = sorted(set(expected_teams) - set(canonical_live_team_names))
+    unexpected_live_teams = sorted(set(canonical_live_team_names) - set(expected_teams))
+    team_set_matches = bool(expected_teams) and not missing_expected_teams and not unexpected_live_teams
+    valid_until = (
+        datetime.fromisoformat(fetched_at.replace("Z", "+00:00")) + timedelta(days=FPL_SNAPSHOT_MAX_AGE_DAYS)
+    ).isoformat()
     role_rows: list[dict[str, Any]] = []
+    roster_rows: list[dict[str, Any]] = []
     for player in data.get("elements", []):
+        team_name = teams.get(player.get("team"), "")
+        full_name = f"{player.get('first_name', '')} {player.get('second_name', '')}".strip()
+        web_name = player.get("web_name", "")
+        roster_rows.append(
+            {
+                "source": "fpl_api",
+                "source_season": source_season,
+                "source_fetched_at_utc": fetched_at,
+                "team": team_name,
+                "player_name": full_name,
+                "web_name": web_name,
+                "element_id": player.get("id", ""),
+                "status": player.get("status", ""),
+                "chance_of_playing_next_round": player.get("chance_of_playing_next_round", ""),
+            }
+        )
         corner_order = player.get("corners_and_indirect_freekicks_order")
         direct_fk_order = player.get("direct_freekicks_order")
         penalty_order = player.get("penalties_order")
@@ -275,9 +331,12 @@ def audit_fpl(timeout: int) -> tuple[list[dict[str, Any]], dict[str, Any]]:
         role_rows.append(
             {
                 "source": "fpl_api",
+                "source_season": source_season,
+                "source_fetched_at_utc": fetched_at,
                 "league": "epl",
-                "team": teams.get(player.get("team"), ""),
-                "player_name": player.get("web_name", ""),
+                "team": team_name,
+                "player_name": full_name,
+                "web_name": web_name,
                 "element_id": player.get("id", ""),
                 "corner_indirect_fk_order": corner_order if corner_order is not None else "",
                 "direct_fk_order": direct_fk_order if direct_fk_order is not None else "",
@@ -289,13 +348,33 @@ def audit_fpl(timeout: int) -> tuple[list[dict[str, Any]], dict[str, Any]]:
         )
     status = {
         "source": "fpl_api",
-        "ok": bool(role_rows),
-        "reason": "ok" if role_rows else "no_role_rows",
+        "ok": bool(role_rows) and team_set_matches and len(teams) == 20,
+        "reason": (
+            "ok"
+            if role_rows and team_set_matches and len(teams) == 20
+            else "team_set_mismatch"
+            if role_rows and expected_teams and not team_set_matches
+            else "expected_team_registry_unavailable"
+            if role_rows and not expected_teams
+            else "unexpected_team_count"
+            if role_rows and len(teams) != 20
+            else "no_role_rows"
+        ),
+        "source_season": source_season,
+        "fetched_at_utc": fetched_at,
+        "valid_until_utc": valid_until,
+        "max_age_days": FPL_SNAPSHOT_MAX_AGE_DAYS,
         "teams": len(teams),
+        "team_names": live_team_names,
+        "canonical_team_names": canonical_live_team_names,
+        "expected_team_names": expected_teams,
+        "team_set_matches": team_set_matches,
+        "missing_expected_teams": missing_expected_teams,
+        "unexpected_live_teams": unexpected_live_teams,
         "players": len(data.get("elements", [])),
         "players_with_roles": len(role_rows),
     }
-    return role_rows, status
+    return role_rows, roster_rows, status
 
 
 def audit_setpiecetakers(timeout: int) -> list[dict[str, Any]]:
@@ -340,7 +419,12 @@ def write_csv(path: Path, rows: list[dict[str, Any]], fieldnames: list[str] | No
     if fieldnames is None:
         fieldnames = sorted({key for row in rows for key in row.keys()})
     with path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames, extrasaction="ignore")
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=fieldnames,
+            extrasaction="ignore",
+            lineterminator="\n",
+        )
         writer.writeheader()
         writer.writerows(rows)
 
@@ -405,6 +489,8 @@ def build_report(
             "rotowire_roles": str(out_dir / "rotowire-setpiece-roles.csv"),
             "rotowire_status": str(out_dir / "rotowire-source-status.csv"),
             "fpl_roles": str(out_dir / "fpl-setpiece-roles.csv"),
+            "fpl_roster": str(out_dir / "fpl-player-roster.csv"),
+            "fpl_status": str(out_dir / "fpl-source-status.json"),
             "setpiecetakers_status": str(out_dir / "setpiecetakers-source-status.csv"),
         },
     }
@@ -445,6 +531,9 @@ def build_report(
             f"- Teams: `{fpl_status.get('teams', 0)}`",
             f"- Players: `{fpl_status.get('players', 0)}`",
             f"- Players with set-piece role fields: `{fpl_status.get('players_with_roles', 0)}`",
+            f"- Registered season: `{fpl_status.get('source_season', '')}`",
+            f"- Exact 20-team roster match: `{'YES' if fpl_status.get('team_set_matches') else 'NO'}`",
+            f"- Snapshot valid until UTC: `{fpl_status.get('valid_until_utc', '')}`",
             "",
             "## SetPieceTakers",
             "",
@@ -479,6 +568,8 @@ def build_report(
             f"- `{out_dir / 'rotowire-setpiece-roles.csv'}`",
             f"- `{out_dir / 'rotowire-source-status.csv'}`",
             f"- `{out_dir / 'fpl-setpiece-roles.csv'}`",
+            f"- `{out_dir / 'fpl-player-roster.csv'}`",
+            f"- `{out_dir / 'fpl-source-status.json'}`",
             f"- `{out_dir / 'setpiecetakers-source-status.csv'}`",
             f"- `{out_dir / 'setpiece-source-audit.json'}`",
             "",
@@ -494,22 +585,45 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out-dir", default="data/assist-value", type=Path)
     parser.add_argument("--timeout", default=25, type=int)
+    parser.add_argument("--fpl-hierarchy", default=DEFAULT_FPL_HIERARCHY_PATH, type=Path)
+    parser.add_argument("--fpl-season", default=DEFAULT_FPL_SEASON)
+    parser.add_argument(
+        "--fpl-only",
+        action="store_true",
+        help="Refresh only official FPL role/roster artifacts without overwriting the full Big-5 audit.",
+    )
     args = parser.parse_args()
 
     fetched_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     out_dir: Path = args.out_dir
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    print("Auditing official FPL API set-piece order fields...", file=sys.stderr)
+    fpl_rows, fpl_roster_rows, fpl_status = audit_fpl(
+        args.timeout,
+        fetched_at=fetched_at,
+        expected_teams_path=args.fpl_hierarchy,
+        expected_season=args.fpl_season,
+    )
+    write_csv(out_dir / "fpl-setpiece-roles.csv", fpl_rows)
+    write_csv(out_dir / "fpl-player-roster.csv", fpl_roster_rows)
+    (out_dir / "fpl-source-status.json").write_text(
+        json.dumps(fpl_status, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
+    if args.fpl_only:
+        print("PASS_FPL_SOURCE" if fpl_status.get("ok") else "FAIL_FPL_SOURCE")
+        print(f"fpl_teams={fpl_status.get('teams', 0)}")
+        print(f"fpl_players_with_roles={fpl_status.get('players_with_roles', 0)}")
+        print(f"fpl_team_set_matches={str(bool(fpl_status.get('team_set_matches'))).lower()}")
+        return 0 if fpl_status.get("ok") else 1
+
     print("Auditing RotoWire public set-piece blocks...", file=sys.stderr)
     rotowire_rows, rotowire_status = audit_rotowire(args.timeout)
-    print("Auditing official FPL API set-piece order fields...", file=sys.stderr)
-    fpl_rows, fpl_status = audit_fpl(args.timeout)
     print("Auditing SetPieceTakers freshness/export state...", file=sys.stderr)
     spt_status = audit_setpiecetakers(args.timeout)
 
     write_csv(out_dir / "rotowire-setpiece-roles.csv", rotowire_rows)
     write_csv(out_dir / "rotowire-source-status.csv", rotowire_status)
-    write_csv(out_dir / "fpl-setpiece-roles.csv", fpl_rows)
     write_csv(out_dir / "setpiecetakers-source-status.csv", spt_status)
 
     report_md, report_json = build_report(

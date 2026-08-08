@@ -22,6 +22,8 @@ ROLE_SOURCE_FILES = [
     ROOT / "data" / "assist-value" / "rotowire-setpiece-roles.csv",
     ROOT / "data" / "assist-value" / "rotowire-source-status.csv",
     ROOT / "data" / "assist-value" / "fpl-setpiece-roles.csv",
+    ROOT / "data" / "assist-value" / "fpl-player-roster.csv",
+    ROOT / "data" / "assist-value" / "fpl-source-status.json",
     ROOT / "data" / "assist-value" / "setpiecetakers-source-status.csv",
     ROOT / "data" / "assist-value" / "setpiece-source-audit.md",
     ROOT / "data" / "assist-value" / "setpiece-source-audit.json",

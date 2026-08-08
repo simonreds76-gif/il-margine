@@ -143,6 +143,33 @@ export type GoalscorerPenaltyWatchlistRow = {
   actual_taker_on_pitch_at_penalty?: string;
 };
 
+export type GoalscorerPreseasonRoleReviewRow = {
+  row_id: string;
+  generated_at: string;
+  season: string;
+  league: string;
+  team: string;
+  review_source: string;
+  review_priority: string;
+  review_type: string;
+  current_primary: string;
+  current_secondary: string;
+  current_tertiary: string;
+  proposed_primary: string;
+  fpl_penalty_order: Array<{
+    order: number | null;
+    player: string;
+    web_name: string;
+    element_id: string;
+    status: string;
+  }>;
+  current_primary_in_fpl_roster: boolean;
+  reason: string;
+  editorial_note: string;
+  auto_apply: false;
+  status: string;
+};
+
 export type GoalscorerLineupSignal = {
   key: string;
   name: string;
@@ -220,6 +247,11 @@ export type GoalscorerMonitorSnapshot = {
     generated_at: string | null;
     row_count: number;
     rows: GoalscorerPenaltyWatchlistRow[];
+  };
+  preseason_role_review?: {
+    generated_at: string | null;
+    row_count: number;
+    rows: GoalscorerPreseasonRoleReviewRow[];
   };
   shadow_summary: {
     by_league: Array<{
@@ -364,6 +396,8 @@ function snapshotFreshness(payload: GoalscorerMonitorSnapshot | null): number {
     parseSnapshotTimestamp(payload.source_status?.settlement_updated_at),
     parseSnapshotTimestamp(payload.source_status?.expected_refresh_updated_at),
     parseSnapshotTimestamp(payload.source_status?.hot_live_updated_at),
+    parseSnapshotTimestamp(payload.preseason_role_review?.generated_at),
+    parseSnapshotTimestamp(payload.generated_at),
   );
 }
 
@@ -440,6 +474,11 @@ function normalizeSnapshot(payload: GoalscorerMonitorSnapshot | null): Goalscore
       recent_rows: normalizeSettledRows(payload.shadow_summary?.recent_rows).slice(0, 50),
       settled_today: normalizeSettledRows(payload.shadow_summary?.settled_today),
       settled_yesterday: normalizeSettledRows(payload.shadow_summary?.settled_yesterday),
+    },
+    preseason_role_review: payload.preseason_role_review || {
+      generated_at: null,
+      row_count: 0,
+      rows: [],
     },
     diagnostics: {
       matched_rows: diagnostics.matched_rows ?? 0,

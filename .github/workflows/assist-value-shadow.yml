@@ -86,6 +86,17 @@ jobs:
             --league epl la-liga ligue-1 serie-a bundesliga \
             --days-back 14
 
+      - name: Build EPL preseason penalty-role review
+        if: steps.season.outputs.active == 'true'
+        run: python scripts/build-fpl-penalty-role-review.py
+
+      - name: Alert changed EPL penalty-role reviews
+        if: steps.season.outputs.active == 'true'
+        env:
+          OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
+          OPS_ALERT_TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
+        run: python scripts/telegram-penalty-role-review.py
+
       - name: Settle assist value shadow signals
         if: steps.season.outputs.active == 'true'
         run: python scripts/assist-value-settle.py
@@ -115,6 +126,8 @@ jobs:
             data/assist-value/rotowire-setpiece-roles.csv \
             data/assist-value/rotowire-source-status.csv \
             data/assist-value/fpl-setpiece-roles.csv \
+            data/assist-value/fpl-player-roster.csv \
+            data/assist-value/fpl-source-status.json \
             data/assist-value/setpiecetakers-source-status.csv \
             data/assist-value/setpiece-source-audit.md \
             data/assist-value/setpiece-source-audit.json \
@@ -123,7 +136,10 @@ jobs:
             data/assist-value/research/assist-value-v1-prospective.csv \
             data/assist-value/research/assist-value-v1-prospective-performance.txt \
             data/assist-value/research/assist-value-gates.json \
-            data/assist-value/research/assist-value-research-report.md 2>/dev/null || true
+            data/assist-value/research/assist-value-research-report.md \
+            data/goalscorer/epl-preseason-penalty-role-review.csv \
+            data/goalscorer/epl-preseason-penalty-role-review.json \
+            data/goalscorer/epl-preseason-penalty-role-alert-state.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "No assist value shadow changes to commit."
             exit 0

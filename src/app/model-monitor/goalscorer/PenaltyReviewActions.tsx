@@ -8,6 +8,7 @@ export type PenaltyReviewStatus = "accepted" | "ignored" | "deferred" | "applied
 type Props = {
   rowId: string;
   status?: PenaltyReviewStatus;
+  mode?: "event" | "source";
 };
 
 async function updateResolution(
@@ -121,7 +122,39 @@ function actionsFor(status?: PenaltyReviewStatus): Action[] {
   ];
 }
 
-function statusDescription(status?: PenaltyReviewStatus): string {
+function sourceActionsFor(status?: PenaltyReviewStatus): Action[] {
+  if (status) {
+    return [
+      {
+        label: "Restore ticket",
+        status: "active",
+        successText: "Returned to active review",
+        className: restoreClass,
+      },
+    ];
+  }
+  return [
+    {
+      label: "Hierarchy updated",
+      status: "applied",
+      successText: "Hierarchy change validated",
+      className: primaryClass,
+    },
+    {
+      label: "Keep current order",
+      status: "ignored",
+      successText: "Closed with no public change",
+      className: neutralClass,
+    },
+  ];
+}
+
+function statusDescription(status?: PenaltyReviewStatus, mode: "event" | "source" = "event"): string {
+  if (mode === "source") {
+    if (status === "ignored") return "Closed after review; the current public order is unchanged.";
+    if (status === "applied") return "Closed after the reviewed hierarchy update passed validation.";
+    return "Choose an outcome only after checking squad status and direct match evidence.";
+  }
   if (status === "accepted") return "Evidence accepted. Edit the hierarchy, evidence log and audit date before marking applied.";
   if (status === "deferred") return "Parked until stronger evidence arrives.";
   if (status === "ignored") return "Closed with the current public order unchanged.";
@@ -129,7 +162,7 @@ function statusDescription(status?: PenaltyReviewStatus): string {
   return "Review the event before changing any public hierarchy.";
 }
 
-export function PenaltyReviewActions({ rowId, status }: Props) {
+export function PenaltyReviewActions({ rowId, status, mode = "event" }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -153,7 +186,7 @@ export function PenaltyReviewActions({ rowId, status }: Props) {
   return (
     <div className="mt-4">
       <div className="flex flex-wrap items-center gap-2">
-        {actionsFor(status).map((action) => (
+        {(mode === "source" ? sourceActionsFor(status) : actionsFor(status)).map((action) => (
           <button
             key={action.status}
             type="button"
@@ -167,7 +200,7 @@ export function PenaltyReviewActions({ rowId, status }: Props) {
         {isPending ? <span className="text-xs text-cyan-200">Saving...</span> : null}
         {!isPending && statusText ? <span className="text-xs text-emerald-300">{statusText}</span> : null}
       </div>
-      <p className="mt-2 text-xs text-slate-500">{statusDescription(status)}</p>
+      <p className="mt-2 text-xs text-slate-500">{statusDescription(status, mode)}</p>
       {error ? <p className="mt-2 text-xs font-medium text-rose-300">{error}</p> : null}
     </div>
   );
