@@ -154,10 +154,11 @@ export default async function BettingPreviewPage({ params }: PageProps) {
     datePublished: fixture.datePublished,
     dateModified: fixture.dateModified,
     mainEntityOfPage: canonicalUrl,
+    // This is a betting-analysis page, not a ticketable event page. Using
+    // SportsEvent here makes Google require venue, organizer and offer data.
     about: {
-      "@type": "SportsEvent",
+      "@type": "Thing",
       name: fixture.seed.event,
-      startDate: fixture.seed.match_date,
     },
     mainEntity: {
       "@type": "ItemList",
