@@ -31,8 +31,8 @@
       "Hull City",
       "Ipswich Town"
     ],
-    "last_verified": "2026-07-30",
-    "public_updated_at": "2026-07-30",
+    "last_verified": "2026-08-08",
+    "public_updated_at": "2026-08-08",
     "membership_source": "https://www.premierleague.com/en/news/4675508/premier-league-fixture-schedulereleased-for-season-202627"
   },
   "Arsenal": {
@@ -592,30 +592,30 @@
     }
   },
   "Bournemouth": {
-    "primary": "Justin Kluivert",
-    "secondary": "Eli Junior Kroupi",
+    "primary": "Junior Kroupi",
+    "secondary": "Justin Kluivert",
     "tertiary": "Marcus Tavernier",
-    "last_updated": "2026-07-30",
-    "source": "Premier League",
-    "cross_check": "AFC Bournemouth",
-    "hierarchy_status": "disputed",
+    "last_updated": "2026-08-08",
+    "source": "https://fantasy.premierleague.com/api/bootstrap-static/",
+    "cross_check": "Existing multi-source preseason dossier and ongoing competitive match review.",
+    "hierarchy_status": "conditional",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Kluivert retains the incumbent edge. Tavernier took in January with Kroupi starting, but Kroupi took the later May penalty with Tavernier playing, supporting Kroupi above Tavernier. Kluivert lacked a recent same-pitch test and Kroupi was reported injured for three to four months on 29 July.",
+    "condition_note": "Official FPL 2026/27 role fields place Junior Kroupi first, ahead of Justin Kluivert and Marcus Tavernier. Kroupi was listed injured when the review was generated, so Kluivert is the practical on-pitch alternative while he is unavailable. A competitive same-pitch event is still needed to confirm the order.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-08",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-08",
     "latest_evidence": {
-      "id": "evt_20260730_bournemouth_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260808_bournemouth_fpl_role_review",
+      "date": "2026-08-08",
+      "type": "official_fpl_role_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -774,6 +774,32 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260808_bournemouth_fpl_role_review",
+        "date": "2026-08-08",
+        "season": "2026/27",
+        "type": "official_fpl_role_review",
+        "penalty_kind": null,
+        "competition": "Premier League",
+        "match": null,
+        "context": "Official FPL 2026/27 role fields place Junior Kroupi first, ahead of Justin Kluivert and Marcus Tavernier. Kroupi was listed injured when the review was generated, so Kluivert is the practical on-pitch alternative while he is unavailable. A competitive same-pitch event is still needed to confirm the order.",
+        "sources": [
+          {
+            "label": "Official Fantasy Premier League",
+            "url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+            "date": "2026-08-08",
+            "note": "The official 2026/27 set-piece role fields list Junior Kroupi first for Bournemouth."
+          }
+        ],
+        "detection": "official_fpl_role_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-08T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Applied after editorial review; direct competitive evidence remains the confirmation standard."
       }
     ],
     "change_log": [
@@ -845,6 +871,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-08",
+        "season": "2026/27",
+        "change_type": "official_preseason_role_update",
+        "from": {
+          "primary": "Justin Kluivert",
+          "secondary": "Eli Junior Kroupi",
+          "tertiary": "Marcus Tavernier"
+        },
+        "to": {
+          "primary": "Junior Kroupi",
+          "secondary": "Justin Kluivert",
+          "tertiary": "Marcus Tavernier"
+        },
+        "reason": "Official FPL 2026/27 role fields place Junior Kroupi first, ahead of Justin Kluivert and Marcus Tavernier. Kroupi was listed injured when the review was generated, so Kluivert is the practical on-pitch alternative while he is unavailable. A competitive same-pitch event is still needed to confirm the order.",
+        "evidence_ids": [
+          "evt_20260808_bournemouth_fpl_role_review"
+        ],
+        "detection": "official_fpl_role_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-08T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -862,22 +911,22 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Justin Kluivert",
+        "player": "Junior Kroupi",
         "status": "confirmed",
-        "source_url": "https://www.premierleague.com/en/clubs/91/bournemouth/squad",
-        "checked_at": "2026-07-30"
+        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "checked_at": "2026-08-08"
       },
       "secondary": {
-        "player": "Eli Junior Kroupi",
+        "player": "Justin Kluivert",
         "status": "confirmed",
-        "source_url": "https://www.premierleague.com/en/clubs/91/bournemouth/squad",
-        "checked_at": "2026-07-30"
+        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "checked_at": "2026-08-08"
       },
       "tertiary": {
         "player": "Marcus Tavernier",
         "status": "confirmed",
-        "source_url": "https://www.premierleague.com/en/clubs/91/bournemouth/squad",
-        "checked_at": "2026-07-30"
+        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "checked_at": "2026-08-08"
       }
     }
   },
@@ -1148,30 +1197,30 @@
     }
   },
   "Brighton": {
-    "primary": "Danny Welbeck",
+    "primary": "Pascal Gross",
     "secondary": "Matt O'Riley",
-    "tertiary": "Pascal Gross",
-    "last_updated": "2026-07-30",
-    "source": "Premier League",
-    "cross_check": "Brighton and Hove Albion",
+    "tertiary": "Danny Welbeck",
+    "last_updated": "2026-08-08",
+    "source": "https://fantasy.premierleague.com/api/bootstrap-static/",
+    "cross_check": "Existing multi-source preseason dossier and ongoing competitive match review.",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
-      "secondary": "high",
-      "tertiary": "low"
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "medium"
     },
-    "condition_note": "Welbeck took with O'Riley playing, after O'Riley described the role as shared and named Welbeck. Gross has strong historical ability but no post-return assignment. The return of Gross could alter the lower order, but no current event demonstrates that.",
+    "condition_note": "Official FPL 2026/27 role fields place Pascal Gross first and Matt O'Riley second. This preseason order supersedes the previous Welbeck-led projection, but Welbeck's direct 2025/26 assignment remains relevant and the hierarchy stays probable until a competitive same-pitch event confirms it.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-08",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-08",
     "latest_evidence": {
-      "id": "evt_20260730_brighton_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260808_brighton_fpl_role_review",
+      "date": "2026-08-08",
+      "type": "official_fpl_role_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -1330,6 +1379,32 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260808_brighton_fpl_role_review",
+        "date": "2026-08-08",
+        "season": "2026/27",
+        "type": "official_fpl_role_review",
+        "penalty_kind": null,
+        "competition": "Premier League",
+        "match": null,
+        "context": "Official FPL 2026/27 role fields place Pascal Gross first and Matt O'Riley second. This preseason order supersedes the previous Welbeck-led projection, but Welbeck's direct 2025/26 assignment remains relevant and the hierarchy stays probable until a competitive same-pitch event confirms it.",
+        "sources": [
+          {
+            "label": "Official Fantasy Premier League",
+            "url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+            "date": "2026-08-08",
+            "note": "The official 2026/27 set-piece role fields list Pascal Gross first for Brighton."
+          }
+        ],
+        "detection": "official_fpl_role_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-08T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Applied after editorial review; direct competitive evidence remains the confirmation standard."
       }
     ],
     "change_log": [
@@ -1401,6 +1476,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-08",
+        "season": "2026/27",
+        "change_type": "official_preseason_role_update",
+        "from": {
+          "primary": "Danny Welbeck",
+          "secondary": "Matt O'Riley",
+          "tertiary": "Pascal Gross"
+        },
+        "to": {
+          "primary": "Pascal Gross",
+          "secondary": "Matt O'Riley",
+          "tertiary": "Danny Welbeck"
+        },
+        "reason": "Official FPL 2026/27 role fields place Pascal Gross first and Matt O'Riley second. This preseason order supersedes the previous Welbeck-led projection, but Welbeck's direct 2025/26 assignment remains relevant and the hierarchy stays probable until a competitive same-pitch event confirms it.",
+        "evidence_ids": [
+          "evt_20260808_brighton_fpl_role_review"
+        ],
+        "detection": "official_fpl_role_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-08T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -1418,22 +1516,22 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Danny Welbeck",
+        "player": "Pascal Gross",
         "status": "confirmed",
-        "source_url": "https://www.premierleague.com/en/clubs/36/brighton-and-hove-albion/squad",
-        "checked_at": "2026-07-30"
+        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "checked_at": "2026-08-08"
       },
       "secondary": {
         "player": "Matt O'Riley",
         "status": "confirmed",
-        "source_url": "https://www.premierleague.com/en/clubs/36/brighton-and-hove-albion/squad",
-        "checked_at": "2026-07-30"
+        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "checked_at": "2026-08-08"
       },
       "tertiary": {
-        "player": "Pascal Gross",
+        "player": "Danny Welbeck",
         "status": "confirmed",
-        "source_url": "https://www.premierleague.com/en/clubs/36/brighton-and-hove-albion/squad",
-        "checked_at": "2026-07-30"
+        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "checked_at": "2026-08-08"
       }
     }
   },
@@ -2792,28 +2890,28 @@
     }
   },
   "Hull City": {
-    "primary": "Oli McBurnie",
-    "secondary": "David Akintola",
-    "tertiary": "Lewie Coyle",
-    "last_updated": "2026-07-30",
+    "primary": "Matt Crooks",
+    "secondary": "Oli McBurnie",
+    "tertiary": "David Akintola",
+    "last_updated": "2026-08-08",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
-      "secondary": "low",
+      "primary": "medium",
+      "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "McBurnie is the regular-time primary. Akintola and Coyle are forced lower-order selections from the January shootout; Akintola converted and Coyle missed. Shootout order and single-kick outcomes do not establish a regular-time hierarchy.",
+    "condition_note": "Official FPL 2026/27 role fields place Matt Crooks first and Oli McBurnie second. Crooks therefore leads the preseason projection, while McBurnie's regular-time evidence makes him the strongest deputy. David Akintola remains a lower-confidence third option based mainly on shootout evidence.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-08",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-08",
     "latest_evidence": {
-      "id": "evt_20260730_hull-city_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260808_hull-city_fpl_role_review",
+      "date": "2026-08-08",
+      "type": "official_fpl_role_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -2947,6 +3045,32 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260808_hull-city_fpl_role_review",
+        "date": "2026-08-08",
+        "season": "2026/27",
+        "type": "official_fpl_role_review",
+        "penalty_kind": null,
+        "competition": "Premier League",
+        "match": null,
+        "context": "Official FPL 2026/27 role fields place Matt Crooks first and Oli McBurnie second. Crooks therefore leads the preseason projection, while McBurnie's regular-time evidence makes him the strongest deputy. David Akintola remains a lower-confidence third option based mainly on shootout evidence.",
+        "sources": [
+          {
+            "label": "Official Fantasy Premier League",
+            "url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+            "date": "2026-08-08",
+            "note": "The official 2026/27 set-piece role fields list Matt Crooks first for Hull City."
+          }
+        ],
+        "detection": "official_fpl_role_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-08T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Applied after editorial review; direct competitive evidence remains the confirmation standard."
       }
     ],
     "change_log": [
@@ -2995,6 +3119,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-08",
+        "season": "2026/27",
+        "change_type": "official_preseason_role_update",
+        "from": {
+          "primary": "Oli McBurnie",
+          "secondary": "David Akintola",
+          "tertiary": "Lewie Coyle"
+        },
+        "to": {
+          "primary": "Matt Crooks",
+          "secondary": "Oli McBurnie",
+          "tertiary": "David Akintola"
+        },
+        "reason": "Official FPL 2026/27 role fields place Matt Crooks first and Oli McBurnie second. Crooks therefore leads the preseason projection, while McBurnie's regular-time evidence makes him the strongest deputy. David Akintola remains a lower-confidence third option based mainly on shootout evidence.",
+        "evidence_ids": [
+          "evt_20260808_hull-city_fpl_role_review"
+        ],
+        "detection": "official_fpl_role_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-08T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -3004,52 +3151,52 @@
     },
     "prior_season": null,
     "player_ids": {},
-    "source": "Hull City",
-    "cross_check": "Hull City",
+    "source": "https://fantasy.premierleague.com/api/bootstrap-static/",
+    "cross_check": "Existing multi-source preseason dossier and ongoing competitive match review.",
     "squad_membership": {
       "primary": {
-        "player": "Oli McBurnie",
+        "player": "Matt Crooks",
         "status": "confirmed",
-        "source_url": "https://www.wearehullcity.co.uk/news/2026/may/03/coyle-dare-to-dream/",
-        "checked_at": "2026-07-30"
+        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "checked_at": "2026-08-08"
       },
       "secondary": {
-        "player": "David Akintola",
+        "player": "Oli McBurnie",
         "status": "confirmed",
-        "source_url": "https://www.wearehullcity.co.uk/news/2025/august/15/hull-city-complete-akintola-signing/",
-        "checked_at": "2026-07-30"
+        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "checked_at": "2026-08-08"
       },
       "tertiary": {
-        "player": "Lewie Coyle",
+        "player": "David Akintola",
         "status": "confirmed",
-        "source_url": "https://www.wearehullcity.co.uk/news/2026/february/11/coyle-signs-long-term-contract-at-hull-city/",
-        "checked_at": "2026-07-30"
+        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "checked_at": "2026-08-08"
       }
     }
   },
   "Ipswich Town": {
-    "primary": "Jack Clarke",
-    "secondary": "Jaden Philogene",
-    "tertiary": "George Hirst",
-    "last_updated": "2026-07-30",
-    "hierarchy_status": "confirmed",
+    "primary": "George Hirst",
+    "secondary": "Jack Clarke",
+    "tertiary": "Jaden Philogene",
+    "last_updated": "2026-08-08",
+    "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
-      "secondary": "high",
+      "primary": "medium",
+      "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Clarke has the strongest recent assignment. McKenna explicitly discussed Clarke, Philogene and Hirst as the relevant penalty options, supporting the recommended order. Hirst has less recent direct evidence than Clarke and Philogene.",
+    "condition_note": "Official FPL 2026/27 role fields place George Hirst first, followed by Jack Clarke and Jaden Philogene. This reverses the earlier Clarke-led projection, but all three remain credible options from the existing multi-source research. Competitive same-pitch evidence will determine whether the preseason order holds.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-08",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-08",
     "latest_evidence": {
-      "id": "evt_20260730_ipswich-town_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260808_ipswich-town_fpl_role_review",
+      "date": "2026-08-08",
+      "type": "official_fpl_role_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -3177,6 +3324,32 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260808_ipswich-town_fpl_role_review",
+        "date": "2026-08-08",
+        "season": "2026/27",
+        "type": "official_fpl_role_review",
+        "penalty_kind": null,
+        "competition": "Premier League",
+        "match": null,
+        "context": "Official FPL 2026/27 role fields place George Hirst first, followed by Jack Clarke and Jaden Philogene. This reverses the earlier Clarke-led projection, but all three remain credible options from the existing multi-source research. Competitive same-pitch evidence will determine whether the preseason order holds.",
+        "sources": [
+          {
+            "label": "Official Fantasy Premier League",
+            "url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+            "date": "2026-08-08",
+            "note": "The official 2026/27 set-piece role fields list George Hirst first for Ipswich Town."
+          }
+        ],
+        "detection": "official_fpl_role_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-08T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Applied after editorial review; direct competitive evidence remains the confirmation standard."
       }
     ],
     "change_log": [
@@ -3225,35 +3398,58 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-08",
+        "season": "2026/27",
+        "change_type": "official_preseason_role_update",
+        "from": {
+          "primary": "Jack Clarke",
+          "secondary": "Jaden Philogene",
+          "tertiary": "George Hirst"
+        },
+        "to": {
+          "primary": "George Hirst",
+          "secondary": "Jack Clarke",
+          "tertiary": "Jaden Philogene"
+        },
+        "reason": "Official FPL 2026/27 role fields place George Hirst first, followed by Jack Clarke and Jaden Philogene. This reverses the earlier Clarke-led projection, but all three remain credible options from the existing multi-source research. Competitive same-pitch evidence will determine whether the preseason order holds.",
+        "evidence_ids": [
+          "evt_20260808_ipswich-town_fpl_role_review"
+        ],
+        "detection": "official_fpl_role_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-08T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": false,
+      "weak_evidence": true,
       "stale_override": null
     },
     "prior_season": null,
     "player_ids": {},
-    "source": "Ipswich Town",
-    "cross_check": "Ipswich Town",
+    "source": "https://fantasy.premierleague.com/api/bootstrap-static/",
+    "cross_check": "Existing multi-source preseason dossier and ongoing competitive match review.",
     "squad_membership": {
       "primary": {
-        "player": "Jack Clarke",
-        "status": "confirmed",
-        "source_url": "https://www.itfc.co.uk/news/2026/june/15/retained-list-confirmed/",
-        "checked_at": "2026-07-30"
-      },
-      "secondary": {
-        "player": "Jaden Philogene",
-        "status": "confirmed",
-        "source_url": "https://www.itfc.co.uk/news/2026/june/15/retained-list-confirmed/",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
         "player": "George Hirst",
         "status": "confirmed",
-        "source_url": "https://www.itfc.co.uk/news/2026/june/15/retained-list-confirmed/",
-        "checked_at": "2026-07-30"
+        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "checked_at": "2026-08-08"
+      },
+      "secondary": {
+        "player": "Jack Clarke",
+        "status": "confirmed",
+        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "checked_at": "2026-08-08"
+      },
+      "tertiary": {
+        "player": "Jaden Philogene",
+        "status": "confirmed",
+        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "checked_at": "2026-08-08"
       }
     }
   },
@@ -3524,30 +3720,30 @@
     }
   },
   "Liverpool": {
-    "primary": "Dominik Szoboszlai",
-    "secondary": "Cody Gakpo",
-    "tertiary": "Alexander Isak",
-    "last_updated": "2026-07-30",
-    "source": "Liverpool",
-    "cross_check": "Liverpool",
+    "primary": "Alexander Isak",
+    "secondary": "Dominik Szoboszlai",
+    "tertiary": "Cody Gakpo",
+    "last_updated": "2026-08-08",
+    "source": "https://fantasy.premierleague.com/api/bootstrap-static/",
+    "cross_check": "Existing multi-source preseason dossier and ongoing competitive match review.",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
-      "tertiary": "low"
+      "tertiary": "medium"
     },
-    "condition_note": "Szoboszlai took with Gakpo playing in January. Gakpo remains the best deputy projection. Isak is preferred to Alexis Mac Allister as tertiary because he is current and has materially stronger regular-time career penalty evidence. Isak has no Liverpool penalty assignment yet, and Szoboszlai missed his observed kick.",
+    "condition_note": "Official FPL 2026/27 role fields place Alexander Isak first, followed by Dominik Szoboszlai and Cody Gakpo. Isak's strong career penalty evidence supports the preseason promotion, while Szoboszlai's Liverpool assignment keeps him a credible deputy. The order remains probable pending direct competitive confirmation.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-08",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-08",
     "latest_evidence": {
-      "id": "evt_20260730_liverpool_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260808_liverpool_fpl_role_review",
+      "date": "2026-08-08",
+      "type": "official_fpl_role_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -3712,6 +3908,32 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260808_liverpool_fpl_role_review",
+        "date": "2026-08-08",
+        "season": "2026/27",
+        "type": "official_fpl_role_review",
+        "penalty_kind": null,
+        "competition": "Premier League",
+        "match": null,
+        "context": "Official FPL 2026/27 role fields place Alexander Isak first, followed by Dominik Szoboszlai and Cody Gakpo. Isak's strong career penalty evidence supports the preseason promotion, while Szoboszlai's Liverpool assignment keeps him a credible deputy. The order remains probable pending direct competitive confirmation.",
+        "sources": [
+          {
+            "label": "Official Fantasy Premier League",
+            "url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+            "date": "2026-08-08",
+            "note": "The official 2026/27 set-piece role fields list Alexander Isak first for Liverpool."
+          }
+        ],
+        "detection": "official_fpl_role_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-08T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Applied after editorial review; direct competitive evidence remains the confirmation standard."
       }
     ],
     "change_log": [
@@ -3783,6 +4005,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-08",
+        "season": "2026/27",
+        "change_type": "official_preseason_role_update",
+        "from": {
+          "primary": "Dominik Szoboszlai",
+          "secondary": "Cody Gakpo",
+          "tertiary": "Alexander Isak"
+        },
+        "to": {
+          "primary": "Alexander Isak",
+          "secondary": "Dominik Szoboszlai",
+          "tertiary": "Cody Gakpo"
+        },
+        "reason": "Official FPL 2026/27 role fields place Alexander Isak first, followed by Dominik Szoboszlai and Cody Gakpo. Isak's strong career penalty evidence supports the preseason promotion, while Szoboszlai's Liverpool assignment keeps him a credible deputy. The order remains probable pending direct competitive confirmation.",
+        "evidence_ids": [
+          "evt_20260808_liverpool_fpl_role_review"
+        ],
+        "detection": "official_fpl_role_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-08T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -3800,22 +4045,22 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Dominik Szoboszlai",
-        "status": "confirmed",
-        "source_url": "https://www.liverpoolfc.com/news/fantasy-premier-league-liverpool-player-prices-2026-27-revealed",
-        "checked_at": "2026-07-30"
-      },
-      "secondary": {
-        "player": "Cody Gakpo",
-        "status": "confirmed",
-        "source_url": "https://www.liverpoolfc.com/news/fantasy-premier-league-liverpool-player-prices-2026-27-revealed",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
         "player": "Alexander Isak",
         "status": "confirmed",
-        "source_url": "https://www.liverpoolfc.com/news/fantasy-premier-league-liverpool-player-prices-2026-27-revealed",
-        "checked_at": "2026-07-30"
+        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "checked_at": "2026-08-08"
+      },
+      "secondary": {
+        "player": "Dominik Szoboszlai",
+        "status": "confirmed",
+        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "checked_at": "2026-08-08"
+      },
+      "tertiary": {
+        "player": "Cody Gakpo",
+        "status": "confirmed",
+        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "checked_at": "2026-08-08"
       }
     }
   },
@@ -4376,30 +4621,30 @@
     }
   },
   "Newcastle United": {
-    "primary": "Bruno Guimaraes",
-    "secondary": "Nick Woltemade",
+    "primary": "Nick Woltemade",
+    "secondary": "Bruno Guimaraes",
     "tertiary": "Harvey Barnes",
-    "last_updated": "2026-07-30",
-    "source": "Newcastle United",
-    "cross_check": "Premier League",
+    "last_updated": "2026-08-08",
+    "source": "https://fantasy.premierleague.com/api/bootstrap-static/",
+    "cross_check": "Existing multi-source preseason dossier and ongoing competitive match review.",
     "hierarchy_status": "conditional",
     "confidence": {
       "primary": "medium",
-      "secondary": "high",
+      "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Bruno took in February with Woltemade available, while Woltemade has an earlier competitive conversion. Barnes is the practical third candidate but his current supporting event is a shootout. Bruno has transfer speculation but remains officially a Newcastle player; Barnes has no recent regular-time assignment. Conditions: Re-audit immediately if Newcastle officially transfers Bruno Guimaraes before the deadline.",
+    "condition_note": "Official FPL 2026/27 role fields place Nick Woltemade first. Bruno Guimaraes remains the leading deputy because of his recent direct assignment, with Harvey Barnes third. The order is conditional until competitive same-pitch evidence resolves the conflict between the official preseason role field and prior match evidence.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-08",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-08",
     "latest_evidence": {
-      "id": "evt_20260730_newcastle-united_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 6
+      "id": "evt_20260808_newcastle-united_fpl_role_review",
+      "date": "2026-08-08",
+      "type": "official_fpl_role_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -4576,6 +4821,32 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260808_newcastle-united_fpl_role_review",
+        "date": "2026-08-08",
+        "season": "2026/27",
+        "type": "official_fpl_role_review",
+        "penalty_kind": null,
+        "competition": "Premier League",
+        "match": null,
+        "context": "Official FPL 2026/27 role fields place Nick Woltemade first. Bruno Guimaraes remains the leading deputy because of his recent direct assignment, with Harvey Barnes third. The order is conditional until competitive same-pitch evidence resolves the conflict between the official preseason role field and prior match evidence.",
+        "sources": [
+          {
+            "label": "Official Fantasy Premier League",
+            "url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+            "date": "2026-08-08",
+            "note": "The official 2026/27 set-piece role fields list Nick Woltemade first for Newcastle United."
+          }
+        ],
+        "detection": "official_fpl_role_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-08T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Applied after editorial review; direct competitive evidence remains the confirmation standard."
       }
     ],
     "change_log": [
@@ -4647,6 +4918,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-08",
+        "season": "2026/27",
+        "change_type": "official_preseason_role_update",
+        "from": {
+          "primary": "Bruno Guimaraes",
+          "secondary": "Nick Woltemade",
+          "tertiary": "Harvey Barnes"
+        },
+        "to": {
+          "primary": "Nick Woltemade",
+          "secondary": "Bruno Guimaraes",
+          "tertiary": "Harvey Barnes"
+        },
+        "reason": "Official FPL 2026/27 role fields place Nick Woltemade first. Bruno Guimaraes remains the leading deputy because of his recent direct assignment, with Harvey Barnes third. The order is conditional until competitive same-pitch evidence resolves the conflict between the official preseason role field and prior match evidence.",
+        "evidence_ids": [
+          "evt_20260808_newcastle-united_fpl_role_review"
+        ],
+        "detection": "official_fpl_role_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-08T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -4664,22 +4958,22 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Bruno Guimaraes",
-        "status": "confirmed",
-        "source_url": "https://www.newcastleunited.com/en/teams/mens-team/bruno-guimaraes",
-        "checked_at": "2026-07-30"
-      },
-      "secondary": {
         "player": "Nick Woltemade",
         "status": "confirmed",
-        "source_url": "https://www.premierleague.com/en/clubs/4/newcastle/squad",
-        "checked_at": "2026-07-30"
+        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "checked_at": "2026-08-08"
+      },
+      "secondary": {
+        "player": "Bruno Guimaraes",
+        "status": "confirmed",
+        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "checked_at": "2026-08-08"
       },
       "tertiary": {
         "player": "Harvey Barnes",
         "status": "confirmed",
-        "source_url": "https://www.newcastleunited.com/en/teams/mens-team/harvey-barnes",
-        "checked_at": "2026-07-30"
+        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "checked_at": "2026-08-08"
       }
     }
   },

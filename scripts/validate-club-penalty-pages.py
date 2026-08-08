@@ -42,6 +42,12 @@ def normalize_name(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", " ", value.lower()).strip()
 
 
+def date_is_current_or_newer(value: object, baseline: str) -> bool:
+    """Allow targeted editorial updates after the latest full-league audit."""
+    candidate = str(value or "").strip()
+    return bool(re.fullmatch(r"\d{4}-\d{2}-\d{2}", candidate)) and candidate >= baseline
+
+
 def latest_agent_audit_dates() -> dict[str, str]:
     dates_by_league: dict[str, str] = {}
     research_dir = DATA / "research"
@@ -85,8 +91,14 @@ def main() -> int:
 
         check(meta.get("schema_version") == 2, f"{league}: schema_version must be 2")
         check(meta.get("season", {}).get("label") == season["label"], f"{league}: season mismatch")
-        check(meta.get("last_verified") == audit_date, f"{league}: audit verification date is stale")
-        check(meta.get("public_updated_at") == audit_date, f"{league}: public update date is stale")
+        check(
+            date_is_current_or_newer(meta.get("last_verified"), audit_date),
+            f"{league}: audit verification date predates the latest full-league audit",
+        )
+        check(
+            date_is_current_or_newer(meta.get("public_updated_at"), audit_date),
+            f"{league}: public update date predates the latest full-league audit",
+        )
         check(len(teams) == expected["count"], f"{league}: expected {expected['count']} active teams, found {len(teams)}")
         check(expected["promoted"].issubset(teams), f"{league}: promoted teams missing")
         check(expected["relegated"].isdisjoint(teams), f"{league}: relegated teams still active")
@@ -175,8 +187,8 @@ def main() -> int:
                         f"{league}/{team}/{player}: squad verification source must be HTTPS",
                     )
                     check(
-                        str(membership.get("checked_at") or "") == audit_date,
-                        f"{league}/{team}/{player}: squad verification is stale",
+                        date_is_current_or_newer(membership.get("checked_at"), audit_date),
+                        f"{league}/{team}/{player}: squad verification predates the latest full-league audit",
                     )
             if team in expected["promoted"]:
                 check(
