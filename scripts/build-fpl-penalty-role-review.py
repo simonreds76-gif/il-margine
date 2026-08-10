@@ -71,6 +71,10 @@ def names_match(expected: Any, *, player_name: Any, web_name: Any = "") -> bool:
     full_tokens = full.split()
     if web and (target == web or (target_tokens and target_tokens[-1] == web)):
         return True
+    # FPL can include additional legal-name tokens after the familiar name,
+    # e.g. "Bruno Guimaraes" vs "Bruno Guimaraes Rodriguez Moura".
+    if len(target_tokens) >= 2 and all(token in full_tokens for token in target_tokens):
+        return True
     return bool(target_tokens and full_tokens and target_tokens[-1] == full_tokens[-1])
 
 

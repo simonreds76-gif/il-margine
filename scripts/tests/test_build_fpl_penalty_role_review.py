@@ -65,6 +65,13 @@ class FplPenaltyRoleReviewTests(unittest.TestCase):
                 web_name="Groß",
             )
         )
+        self.assertTrue(
+            MODULE["names_match"](
+                "Bruno Guimaraes",
+                player_name="Bruno Guimaraes Rodriguez Moura",
+                web_name="Bruno G.",
+            )
+        )
 
 
 if __name__ == "__main__":

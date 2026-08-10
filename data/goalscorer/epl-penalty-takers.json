@@ -31,8 +31,8 @@
       "Hull City",
       "Ipswich Town"
     ],
-    "last_verified": "2026-08-08",
-    "public_updated_at": "2026-08-08",
+    "last_verified": "2026-08-10",
+    "public_updated_at": "2026-08-10",
     "membership_source": "https://www.premierleague.com/en/news/4675508/premier-league-fixture-schedulereleased-for-season-202627"
   },
   "Arsenal": {
@@ -1199,28 +1199,28 @@
   "Brighton": {
     "primary": "Pascal Gross",
     "secondary": "Matt O'Riley",
-    "tertiary": "Danny Welbeck",
-    "last_updated": "2026-08-08",
-    "source": "https://fantasy.premierleague.com/api/bootstrap-static/",
-    "cross_check": "Existing multi-source preseason dossier and ongoing competitive match review.",
+    "tertiary": "Ibrahim Osman",
+    "last_updated": "2026-08-10",
+    "source": "Brighton and Hove Albion",
+    "cross_check": "Premier League competitive penalty record and Chelsea transfer confirmation.",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
-      "tertiary": "medium"
+      "tertiary": "low"
     },
-    "condition_note": "Official FPL 2026/27 role fields place Pascal Gross first and Matt O'Riley second. This preseason order supersedes the previous Welbeck-led projection, but Welbeck's direct 2025/26 assignment remains relevant and the hierarchy stays probable until a competitive same-pitch event confirms it.",
+    "condition_note": "Gross is the strongest current primary after taking Brighton's first post-Welbeck preseason penalty. O'Riley has the better competitive backup record; Osman is a documented emergency third after converting in an additional preseason period. Competitive confirmation is still required.",
     "last_verified": {
-      "date": "2026-08-08",
+      "date": "2026-08-10",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-08-08",
+    "public_updated_at": "2026-08-10",
     "latest_evidence": {
-      "id": "evt_20260808_brighton_fpl_role_review",
-      "date": "2026-08-08",
-      "type": "official_fpl_role_review",
-      "source_count": 1
+      "id": "evt_20260810_brighton_current_squad_review",
+      "date": "2026-08-10",
+      "type": "multi_source_preseason_research",
+      "source_count": 4
     },
     "evidence_log": [
       {
@@ -1405,6 +1405,50 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Applied after editorial review; direct competitive evidence remains the confirmation standard."
+      },
+      {
+        "id": "evt_20260810_brighton_current_squad_review",
+        "date": "2026-08-10",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": "Premier League",
+        "match": null,
+        "context": "Welbeck has left Brighton. Gross took and scored Brighton's first August 2026 preseason penalty; Osman won and converted a later penalty in the extended period. O'Riley ranks second because of his recent competitive Premier League conversions, although the post-Welbeck lower order has not been tested with all candidates available.",
+        "sources": [
+          {
+            "label": "Chelsea FC",
+            "url": "https://www.chelseafc.com/en/news/article/summer-transfers-2026-all-the-chelsea-ins-outs-and-new-contracts-so-far",
+            "date": "2026-08-01",
+            "note": "Confirms Welbeck left Brighton for Chelsea."
+          },
+          {
+            "label": "Brighton and Hove Albion",
+            "url": "https://www.brightonandhovealbion.com/media-article/mft-match-report-bha-albion-show-set-piece-threat-in-win-over-strasbourg",
+            "date": "2026-08-01",
+            "note": "Gross converted the first penalty; Osman later won and converted another in the additional period."
+          },
+          {
+            "label": "Premier League",
+            "url": "https://www.premierleague.com/en/news/4374227/munizs-late-equaliser-rescues-point-for-fulham-at-brighton",
+            "date": "2025-08-15",
+            "note": "O'Riley converted a competitive Premier League penalty."
+          },
+          {
+            "label": "Brighton and Hove Albion",
+            "url": "https://www.brightonandhovealbion.com/media-article/mft-transfer-news-matt-o-riley-marseille-return-february-2026",
+            "date": "2026-02-02",
+            "note": "Confirms O'Riley returned to Brighton and remains a current candidate."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-10T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 current source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -1499,6 +1543,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-08-08T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-10",
+        "season": "2026/27",
+        "change_type": "current_squad_hierarchy_correction",
+        "from": {
+          "primary": "Pascal Gross",
+          "secondary": "Matt O'Riley",
+          "tertiary": "Danny Welbeck"
+        },
+        "to": {
+          "primary": "Pascal Gross",
+          "secondary": "Matt O'Riley",
+          "tertiary": "Ibrahim Osman"
+        },
+        "reason": "Welbeck has left Brighton. Gross took and scored Brighton's first August 2026 preseason penalty; Osman won and converted a later penalty in the extended period. O'Riley ranks second because of his recent competitive Premier League conversions, although the post-Welbeck lower order has not been tested with all candidates available. Conditions: recheck the first competitive penalty with Gross and O'Riley both available.",
+        "evidence_ids": [
+          "evt_20260810_brighton_current_squad_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-10T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -1518,20 +1585,20 @@
       "primary": {
         "player": "Pascal Gross",
         "status": "confirmed",
-        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-08"
+        "source_url": "https://www.brightonandhovealbion.com/media-article/mft-transfer-news-pascal-gross-borussia-dortmund-january-2026",
+        "checked_at": "2026-08-10"
       },
       "secondary": {
         "player": "Matt O'Riley",
         "status": "confirmed",
-        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-08"
+        "source_url": "https://www.brightonandhovealbion.com/media-article/mft-transfer-news-matt-o-riley-marseille-return-february-2026",
+        "checked_at": "2026-08-10"
       },
       "tertiary": {
-        "player": "Danny Welbeck",
+        "player": "Ibrahim Osman",
         "status": "confirmed",
-        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-08"
+        "source_url": "https://www.brightonandhovealbion.com/media-article/mft-match-report-bha-albion-show-set-piece-threat-in-win-over-strasbourg",
+        "checked_at": "2026-08-10"
       }
     }
   },
@@ -3720,30 +3787,30 @@
     }
   },
   "Liverpool": {
-    "primary": "Alexander Isak",
-    "secondary": "Dominik Szoboszlai",
+    "primary": "Dominik Szoboszlai",
+    "secondary": "Alexander Isak",
     "tertiary": "Cody Gakpo",
-    "last_updated": "2026-08-08",
-    "source": "https://fantasy.premierleague.com/api/bootstrap-static/",
-    "cross_check": "Existing multi-source preseason dossier and ongoing competitive match review.",
-    "hierarchy_status": "probable",
+    "last_updated": "2026-08-10",
+    "source": "Liverpool FC",
+    "cross_check": "Official FPL role fields and Opta penalty record.",
+    "hierarchy_status": "disputed",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Official FPL 2026/27 role fields place Alexander Isak first, followed by Dominik Szoboszlai and Cody Gakpo. Isak's strong career penalty evidence supports the preseason promotion, while Szoboszlai's Liverpool assignment keeps him a credible deputy. The order remains probable pending direct competitive confirmation.",
+    "condition_note": "Szoboszlai is the evidence-led primary after taking with Gakpo on the pitch. Isak remains a credible co-primary and official FPL currently ranks him first, but Liverpool have not produced a same-pitch competitive test between the two. Recheck the first penalty with both available.",
     "last_verified": {
-      "date": "2026-08-08",
+      "date": "2026-08-10",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-08-08",
+    "public_updated_at": "2026-08-10",
     "latest_evidence": {
-      "id": "evt_20260808_liverpool_fpl_role_review",
-      "date": "2026-08-08",
-      "type": "official_fpl_role_review",
-      "source_count": 1
+      "id": "evt_20260810_liverpool_current_squad_review",
+      "date": "2026-08-10",
+      "type": "multi_source_preseason_research",
+      "source_count": 4
     },
     "evidence_log": [
       {
@@ -3934,6 +4001,50 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Applied after editorial review; direct competitive evidence remains the confirmation standard."
+      },
+      {
+        "id": "evt_20260810_liverpool_current_squad_review",
+        "date": "2026-08-10",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": "Premier League",
+        "match": null,
+        "context": "Szoboszlai took Liverpool's January 2026 penalty with Gakpo on the pitch. Isak is an elite candidate and official FPL projects him first, but no Liverpool penalty with both Szoboszlai and Isak available has established that order. Szoboszlai is therefore the evidence-led primary, Isak the live challenger and Gakpo third.",
+        "sources": [
+          {
+            "label": "Liverpool FC",
+            "url": "https://www.liverpoolfc.com/news/liverpool-held-1-1-draw-burnley-anfield?amp=1",
+            "date": "2026-01-17",
+            "note": "Szoboszlai took the penalty while Gakpo was in the starting XI."
+          },
+          {
+            "label": "Liverpool FC",
+            "url": "https://www.liverpoolfc.com/news/liverpool-complete-signing-alexander-isak",
+            "date": "2025-09-01",
+            "note": "Confirms Isak is a current Liverpool player."
+          },
+          {
+            "label": "Opta Analyst",
+            "url": "https://theanalyst.com/articles/best-penalty-takers-in-the-premier-league",
+            "date": "2026-05-04",
+            "note": "Documents Isak as an excellent Premier League penalty taker, supporting his deputy/co-primary case."
+          },
+          {
+            "label": "Official Fantasy Premier League",
+            "url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+            "date": "2026-08-10",
+            "note": "Current role fields project Isak first, creating a genuine unresolved conflict rather than competitive proof."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-10T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 4 current source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -4028,6 +4139,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-08-08T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-10",
+        "season": "2026/27",
+        "change_type": "current_squad_hierarchy_correction",
+        "from": {
+          "primary": "Alexander Isak",
+          "secondary": "Dominik Szoboszlai",
+          "tertiary": "Cody Gakpo"
+        },
+        "to": {
+          "primary": "Dominik Szoboszlai",
+          "secondary": "Alexander Isak",
+          "tertiary": "Cody Gakpo"
+        },
+        "reason": "Szoboszlai took Liverpool's January 2026 penalty with Gakpo on the pitch. Isak is an elite candidate and official FPL projects him first, but no Liverpool penalty with both Szoboszlai and Isak available has established that order. Szoboszlai is therefore the evidence-led primary, Isak the live challenger and Gakpo third. Conditions: recheck the first competitive penalty with Szoboszlai and Isak both available.",
+        "evidence_ids": [
+          "evt_20260810_liverpool_current_squad_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-10T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -4045,22 +4179,22 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Alexander Isak",
-        "status": "confirmed",
-        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-08"
-      },
-      "secondary": {
         "player": "Dominik Szoboszlai",
         "status": "confirmed",
         "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-08"
+        "checked_at": "2026-08-10"
+      },
+      "secondary": {
+        "player": "Alexander Isak",
+        "status": "confirmed",
+        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "checked_at": "2026-08-10"
       },
       "tertiary": {
         "player": "Cody Gakpo",
         "status": "confirmed",
         "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-08"
+        "checked_at": "2026-08-10"
       }
     }
   },
@@ -4622,29 +4756,29 @@
   },
   "Newcastle United": {
     "primary": "Nick Woltemade",
-    "secondary": "Bruno Guimaraes",
+    "secondary": "Fabian Schar",
     "tertiary": "Harvey Barnes",
-    "last_updated": "2026-08-08",
-    "source": "https://fantasy.premierleague.com/api/bootstrap-static/",
-    "cross_check": "Existing multi-source preseason dossier and ongoing competitive match review.",
+    "last_updated": "2026-08-10",
+    "source": "Newcastle United",
+    "cross_check": "Premier League role analysis and official FPL current roster.",
     "hierarchy_status": "conditional",
     "confidence": {
       "primary": "medium",
-      "secondary": "medium",
+      "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Official FPL 2026/27 role fields place Nick Woltemade first. Bruno Guimaraes remains the leading deputy because of his recent direct assignment, with Harvey Barnes third. The order is conditional until competitive same-pitch evidence resolves the conflict between the official preseason role field and prior match evidence.",
+    "condition_note": "Woltemade is the best current primary after the departures of Gordon and Bruno. Schar has a prior Newcastle regulation conversion but has fitness/selection risk; if he is absent, Barnes is the practical deputy. The first 2026/27 competitive penalty is a mandatory recheck.",
     "last_verified": {
-      "date": "2026-08-08",
+      "date": "2026-08-10",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-08-08",
+    "public_updated_at": "2026-08-10",
     "latest_evidence": {
-      "id": "evt_20260808_newcastle-united_fpl_role_review",
-      "date": "2026-08-08",
-      "type": "official_fpl_role_review",
-      "source_count": 1
+      "id": "evt_20260810_newcastle_current_squad_review",
+      "date": "2026-08-10",
+      "type": "multi_source_preseason_research",
+      "source_count": 6
     },
     "evidence_log": [
       {
@@ -4847,6 +4981,62 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Applied after editorial review; direct competitive evidence remains the confirmation standard."
+      },
+      {
+        "id": "evt_20260810_newcastle_current_squad_review",
+        "date": "2026-08-10",
+        "season": "2026/27",
+        "type": "multi_source_preseason_research",
+        "penalty_kind": null,
+        "competition": "Premier League",
+        "match": null,
+        "context": "Bruno Guimaraes and Anthony Gordon have left Newcastle. Woltemade has the strongest current regular-time claim; Schar has an established Newcastle regulation penalty and Barnes is the best available attacking fallback, although the lower order remains weakly evidenced.",
+        "sources": [
+          {
+            "label": "Newcastle United",
+            "url": "https://www.newcastleunited.com/en/news/bruno-guimaraes-leaves",
+            "date": "2026-08-08",
+            "note": "Confirms Bruno Guimaraes left Newcastle for Arsenal."
+          },
+          {
+            "label": "Newcastle United",
+            "url": "https://www.newcastleunited.com/en/news/anthony-gordon-signs-for-barcelona",
+            "date": "2026-05-29",
+            "note": "Confirms the previous first-choice candidate left Newcastle."
+          },
+          {
+            "label": "Premier League",
+            "url": "https://www.premierleague.com/en/news/4438318/who-are-the-best-newcastle-picks-in-fantasy",
+            "date": "2025-10-15",
+            "note": "Shows Gordon took ahead of Woltemade when both were on the pitch; Woltemade later took after Gordon left the field."
+          },
+          {
+            "label": "Newcastle United",
+            "url": "https://www.newcastleunited.com/en/news/nottingham-forest-h-report-25-26",
+            "date": "2025-10-05",
+            "note": "Woltemade converted Newcastle's regulation penalty."
+          },
+          {
+            "label": "Newcastle United",
+            "url": "https://www.newcastleunited.com/en/matches/mens-team/newcastle-united-v-afc-wimbledon-english-league-cup-20241001",
+            "date": "2024-10-01",
+            "note": "Schar converted a regulation penalty in a Newcastle side that included Barnes and Osula."
+          },
+          {
+            "label": "Official Fantasy Premier League",
+            "url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+            "date": "2026-08-10",
+            "note": "Current roster and role feed retains Woltemade as Newcastle's highest-listed penalty candidate."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-10T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Reviewed 6 current source records for the 2026/27 hierarchy."
       }
     ],
     "change_log": [
@@ -4941,6 +5131,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-08-08T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-10",
+        "season": "2026/27",
+        "change_type": "current_squad_hierarchy_correction",
+        "from": {
+          "primary": "Nick Woltemade",
+          "secondary": "Bruno Guimaraes",
+          "tertiary": "Harvey Barnes"
+        },
+        "to": {
+          "primary": "Nick Woltemade",
+          "secondary": "Fabian Schar",
+          "tertiary": "Harvey Barnes"
+        },
+        "reason": "Bruno Guimaraes and Anthony Gordon have left Newcastle. Woltemade has the strongest current regular-time claim; Schar has an established Newcastle regulation penalty and Barnes is the best available attacking fallback, although the lower order remains weakly evidenced. Conditions: if Schar is absent, Barnes moves to second; recheck the first competitive award.",
+        "evidence_ids": [
+          "evt_20260810_newcastle_current_squad_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-10T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -4961,19 +5174,19 @@
         "player": "Nick Woltemade",
         "status": "confirmed",
         "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-08"
+        "checked_at": "2026-08-10"
       },
       "secondary": {
-        "player": "Bruno Guimaraes",
+        "player": "Fabian Schar",
         "status": "confirmed",
-        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-08"
+        "source_url": "https://www.newcastleunited.com/en/news/fabian-schaer-extends-newcastle-united-stay",
+        "checked_at": "2026-08-10"
       },
       "tertiary": {
         "player": "Harvey Barnes",
         "status": "confirmed",
         "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-08"
+        "checked_at": "2026-08-10"
       }
     }
   },
