@@ -162,7 +162,7 @@ def clean_player(value: object) -> str:
         if last.strip() and first.strip():
             text = f"{first.strip()} {last.strip()}"
     text = re.sub(r"\s*\(\d+\)\s*", " ", text)
-    text = re.sub(r"\b(over|under|aces?|double faults?|dfs?|df)\b", " ", text, flags=re.I)
+    text = re.sub(r"\b(over|under|aces?|double faults?|dfs?|df|service breaks?|breaks?)\b", " ", text, flags=re.I)
     text = re.sub(r"\d+\.?\d*", " ", text)
     text = re.sub(r"\s+", " ", text)
     return text.strip(" -:|")
@@ -197,6 +197,12 @@ def identify_market(name: str) -> str | None:
         if "total" in text:
             return "total_tiebreaks"
         return "first_set_tiebreak" if has_first_set else "match_tiebreak"
+    if "break" in text:
+        if "team total" in text or "player total" in text:
+            return "player_breaks"
+        if "total" in text:
+            return "match_breaks"
+        return "player_breaks"
     if has_first_set and "total" in text and "game" in text:
         return "first_set_total_games"
     if "double fault" in text or re.search(r"\bdfs?\b", text):
@@ -393,18 +399,25 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any], 
     yes_no_market = is_yes_no_market(market_key)
     real_players = real_event_players(home, away)
     market_text = norm(market_name)
-    is_team_count_total = market_key in {"aces", "double_faults"} and "team total" in market_text
-    is_match_count_total = (
-        market_key in {"aces", "double_faults"}
-        and "total" in market_text
-        and not is_team_count_total
-        and len(real_players) == 2
+    is_team_count_total = (
+        market_key in {"aces", "double_faults", "player_breaks"}
+        and "team total" in market_text
     )
+    is_match_count_total = (
+        (
+            market_key in {"aces", "double_faults"}
+            and "total" in market_text
+            and not is_team_count_total
+        )
+        or market_key == "match_breaks"
+    ) and len(real_players) == 2
     output_market = (
         "match_aces"
         if is_match_count_total and market_key == "aces"
         else "match_double_faults"
         if is_match_count_total and market_key == "double_faults"
+        else "match_breaks"
+        if is_match_count_total and market_key == "match_breaks"
         else market_key
     )
     match_level_market = (

@@ -58,6 +58,8 @@ FIELDNAMES = [
     "distribution",
     "totals_alpha",
     "totals_stage0_passed",
+    "breaks_alpha",
+    "breaks_stage0_passed",
     "value_over_pct",
     "value_under_pct",
     "value_pct",
@@ -173,24 +175,30 @@ def fair_odds_for_side(row: dict[str, str], side: str) -> str:
 
 def build_signal(row: dict[str, str], source: Path, args: argparse.Namespace) -> dict[str, str] | None:
     scope = (row.get("scope") or "player").strip().lower()
+    decision_mode = (row.get("decision_mode") or "").strip()
+    is_break_shadow = decision_mode == "breaks_shadow"
     confidence = (row.get("confidence") or "").strip().upper()
-    allowed_conf = {"HIGH", "MED"} if scope == "match_total" or args.allow_medium else {"HIGH"}
+    allowed_conf = {"HIGH", "MED"} if scope == "match_total" or is_break_shadow or args.allow_medium else {"HIGH"}
     if confidence not in allowed_conf:
         return None
     if (row.get("matched_board") or "").strip().lower() != "yes":
         return None
-    if scope == "match_total" and (row.get("bettable") or "").strip().lower() != "true":
-        return None
-    if scope != "match_total":
+    if is_break_shadow:
         if (row.get("trackable_shadow") or "").strip().lower() != "true":
             return None
-        if (row.get("decision_mode") or "").strip() != "one_sided_over_shadow":
+        picked = pick_side(row, args.min_value, True)
+    elif scope == "match_total":
+        if (row.get("bettable") or "").strip().lower() != "true":
+            return None
+        picked = pick_side(row, args.min_value, args.allow_watch)
+    else:
+        if (row.get("trackable_shadow") or "").strip().lower() != "true":
+            return None
+        if decision_mode != "one_sided_over_shadow":
             return None
         if (row.get("shadow_side") or "").strip().upper() != "OVER":
             return None
         picked = pick_side(row, args.min_value, True)
-    else:
-        picked = pick_side(row, args.min_value, args.allow_watch)
     if picked is None:
         return None
     side, value_pct, selected_odds = picked
@@ -233,6 +241,8 @@ def build_signal(row: dict[str, str], source: Path, args: argparse.Namespace) ->
         "distribution": row.get("distribution", ""),
         "totals_alpha": row.get("totals_alpha", ""),
         "totals_stage0_passed": row.get("totals_stage0_passed", ""),
+        "breaks_alpha": row.get("breaks_alpha", ""),
+        "breaks_stage0_passed": row.get("breaks_stage0_passed", ""),
         "value_over_pct": row.get("value_over_pct", ""),
         "value_under_pct": row.get("value_under_pct", ""),
         "value_pct": fmt_float(value_pct, 2),

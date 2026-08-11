@@ -1,0 +1,18 @@
+Tennis service breaks Stage-0
+
+Status: PASS
+Evidence: outcome-only walk-forward validation; no synthetic ROI and no Bet365 price claim.
+Provider audit: the 2026-08-11 exact unfiltered Bet365 payload for Merida-Tien exposed no service-break market.
+Train years: [2023, 2024] | Holdout years: [2025, 2026]
+
+player_breaks: PASS
+  ATP: n=7548 negative_binomial alpha=0.07 MAE=1.362 (naive 1.541) bias=+0.144 Brier=0.1508 (Poisson 0.1508, naive 0.1699) ECE=0.0197 PASS
+  WTA: n=7466 poisson alpha=0.05 MAE=1.660 (naive 1.789) bias=-0.116 Brier=0.1955 (Poisson 0.1955, naive 0.2167) ECE=0.0481 PASS
+
+match_breaks: PASS
+  ATP: n=3774 negative_binomial alpha=0.02 MAE=1.824 (naive 2.242) bias=+0.288 Brier=0.1419 (Poisson 0.1420, naive 0.1729) ECE=0.0371 PASS
+  WTA: n=3733 poisson alpha=0.03 MAE=2.307 (naive 2.440) bias=-0.232 Brier=0.1773 (Poisson 0.1773, naive 0.1982) ECE=0.0134 PASS
+
+Decision
+- Fair-odds ladders may be shown as internal research even when the gate fails.
+- No break bet becomes a recommendation without a captured real price and a separate prospective gate.

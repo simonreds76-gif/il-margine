@@ -18,7 +18,12 @@ from tennis_props_names import (
     norm_name as normalize_player_name,
     resolve_baseline_name,
 )
-from tennis_props_model import project_player
+from tennis_props_model import (
+    count_line_probabilities,
+    project_player,
+    push_adjusted_fair_odds,
+    resolve_break_distribution,
+)
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -228,6 +233,35 @@ def append_note(value: str, note: str) -> str:
     return "|".join(notes)
 
 
+def break_fair_odds_ladder(mean: float | None, tour: str, scope: str) -> tuple[str, str, str]:
+    if mean is None or mean <= 0:
+        return "", "poisson", "OUTCOME_GATE_MISSING"
+    distribution, alpha, passed = resolve_break_distribution(tour, scope)
+    centre = math.floor(mean) + 0.5
+    lines = sorted({max(0.5, centre - 1.0), max(0.5, centre), centre + 1.0})
+    ladder: list[dict[str, object]] = []
+    for line in lines:
+        p_over, p_under, p_push = count_line_probabilities(
+            line,
+            mean,
+            distribution=distribution,
+            alpha=alpha,
+            tour=tour,
+            market=scope,
+        )
+        ladder.append(
+            {
+                "line": line,
+                "over_pct": round(p_over * 100.0, 1),
+                "under_pct": round(p_under * 100.0, 1),
+                "fair_over": round(push_adjusted_fair_odds(p_over, p_push) or 0.0, 2),
+                "fair_under": round(push_adjusted_fair_odds(p_under, p_push) or 0.0, 2),
+            }
+        )
+    status = "OUTCOME_PASS_PRICE_FEED_MISSING" if passed else "OUTCOME_GATE_MISSING"
+    return json.dumps(ladder, separators=(",", ":")), distribution, status
+
+
 def normalize_match_break_totals(row_a: dict[str, str], row_b: dict[str, str]) -> None:
     """Break totals are match-level: A breaks + B breaks, identical on both rows."""
     a_breaks = parse_float(row_a.get("projected_breaks_for"))
@@ -239,6 +273,15 @@ def normalize_match_break_totals(row_a: dict[str, str], row_b: dict[str, str]) -
     row_b["projected_broken"] = fmt(a_breaks)
     row_a["projected_total_breaks"] = fmt(total_breaks)
     row_b["projected_total_breaks"] = fmt(total_breaks)
+    ladder, distribution, status = break_fair_odds_ladder(
+        total_breaks,
+        str(row_a.get("tour") or ""),
+        "match_breaks",
+    )
+    for row in (row_a, row_b):
+        row["match_break_fair_odds_json"] = ladder
+        row["match_break_distribution"] = distribution
+        row["match_break_model_status"] = status
     row_a["break_notes"] = append_note(row_a.get("break_notes", ""), "MATCH_LEVEL_TOTAL")
     row_b["break_notes"] = append_note(row_b.get("break_notes", ""), "MATCH_LEVEL_TOTAL")
 
@@ -1145,6 +1188,11 @@ def project_side(
         same_tournament_row=same_tournament_row,
         current_tournament_env_row=current_env_row,
     )
+    player_break_ladder, player_break_distribution, player_break_status = break_fair_odds_ladder(
+        projection.expected_breaks_for,
+        tour,
+        "player_breaks",
+    )
     l12m = player_rows.get("L12M") or {}
     l24m = player_rows.get("L24M") or {}
     career = player_rows.get("career_4y") or {}
@@ -1192,6 +1240,12 @@ def project_side(
         "projected_breaks_for": fmt(projection.expected_breaks_for),
         "projected_broken": fmt(projection.expected_broken),
         "projected_total_breaks": fmt(projection.expected_total_breaks),
+        "player_break_fair_odds_json": player_break_ladder,
+        "player_break_distribution": player_break_distribution,
+        "player_break_model_status": player_break_status,
+        "match_break_fair_odds_json": "",
+        "match_break_distribution": "",
+        "match_break_model_status": "",
         "first_set_tiebreak_pct": fmt(projection.first_set_tiebreak_prob * 100.0, 1),
         "match_tiebreak_pct": fmt(projection.match_tiebreak_prob * 100.0, 1),
         "first_set_tiebreak_fair_yes": fmt(projection.first_set_tiebreak_fair_yes, 2),
@@ -1371,6 +1425,12 @@ def main() -> None:
         "projected_breaks_for",
         "projected_broken",
         "projected_total_breaks",
+        "player_break_fair_odds_json",
+        "player_break_distribution",
+        "player_break_model_status",
+        "match_break_fair_odds_json",
+        "match_break_distribution",
+        "match_break_model_status",
         "first_set_tiebreak_pct",
         "match_tiebreak_pct",
         "first_set_tiebreak_fair_yes",

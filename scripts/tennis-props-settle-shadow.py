@@ -56,6 +56,8 @@ FIELDNAMES = [
     "distribution",
     "totals_alpha",
     "totals_stage0_passed",
+    "breaks_alpha",
+    "breaks_stage0_passed",
     "value_over_pct",
     "value_under_pct",
     "value_pct",
@@ -265,10 +267,25 @@ def market_count(row: dict[str, str], player_norm: str, market: str) -> tuple[in
         if left is None or right is None:
             return None, "missing_match_df_stats"
         return int(round(left + right)), "ok"
+    if lower == "match_breaks":
+        winner_breaks = parse_float(row.get("l_bpFaced"))
+        winner_saved = parse_float(row.get("l_bpSaved"))
+        loser_breaks = parse_float(row.get("w_bpFaced"))
+        loser_saved = parse_float(row.get("w_bpSaved"))
+        if None in {winner_breaks, winner_saved, loser_breaks, loser_saved}:
+            return None, "missing_match_break_stats"
+        total = max(0.0, winner_breaks - winner_saved) + max(0.0, loser_breaks - loser_saved)
+        return int(round(total)), "ok"
     if lower in {"aces", "ace", "player_aces"}:
         raw = row.get("w_ace") if is_winner else row.get("l_ace")
     elif lower in {"double_faults", "double_fault", "dfs", "df"}:
         raw = row.get("w_df") if is_winner else row.get("l_df")
+    elif lower == "player_breaks":
+        faced = parse_float(row.get("l_bpFaced") if is_winner else row.get("w_bpFaced"))
+        saved = parse_float(row.get("l_bpSaved") if is_winner else row.get("w_bpSaved"))
+        if faced is None or saved is None:
+            return None, "missing_player_break_stats"
+        return int(round(max(0.0, faced - saved))), "ok"
     else:
         return None, "unsupported_market"
     parsed = parse_float(raw)

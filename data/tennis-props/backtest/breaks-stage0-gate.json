@@ -1,0 +1,109 @@
+{
+  "status": "PASS",
+  "method": "walk_forward_player_opponent_break_rates_plus_event_environment_registered_count_family",
+  "train_years": [
+    2023,
+    2024
+  ],
+  "holdout_years": [
+    2025,
+    2026
+  ],
+  "real_price_evidence": false,
+  "scopes": {
+    "player_breaks": {
+      "passed": true,
+      "tours": {
+        "ATP": {
+          "passed": true,
+          "distribution": "negative_binomial",
+          "model_alpha": 0.07,
+          "train_n": 11816,
+          "holdout_n": 7548,
+          "n": 7548.0,
+          "mae": 1.361961,
+          "naive_mae": 1.540645,
+          "bias": 0.143843,
+          "rmse": 1.654778,
+          "actual_mean": 2.445813,
+          "projected_mean": 2.589656,
+          "brier": 0.150845,
+          "poisson_brier": 0.150814,
+          "naive_brier": 0.169912,
+          "ece": 0.019679,
+          "poisson_ece": 0.016471,
+          "selected_brier": 0.150845,
+          "selected_ece": 0.019679
+        },
+        "WTA": {
+          "passed": true,
+          "distribution": "poisson",
+          "model_alpha": 0.05,
+          "train_n": 10520,
+          "holdout_n": 7466,
+          "n": 7466.0,
+          "mae": 1.659975,
+          "naive_mae": 1.788588,
+          "bias": -0.11589,
+          "rmse": 2.008408,
+          "actual_mean": 3.680284,
+          "projected_mean": 3.564394,
+          "brier": 0.195594,
+          "poisson_brier": 0.195536,
+          "naive_brier": 0.216734,
+          "ece": 0.046627,
+          "poisson_ece": 0.048098,
+          "selected_brier": 0.195536,
+          "selected_ece": 0.048098
+        }
+      }
+    },
+    "match_breaks": {
+      "passed": true,
+      "tours": {
+        "ATP": {
+          "passed": true,
+          "distribution": "negative_binomial",
+          "model_alpha": 0.02,
+          "train_n": 5908,
+          "holdout_n": 3774,
+          "n": 3774.0,
+          "mae": 1.823585,
+          "naive_mae": 2.241775,
+          "bias": 0.287685,
+          "rmse": 2.29917,
+          "actual_mean": 4.891627,
+          "projected_mean": 5.179312,
+          "brier": 0.141861,
+          "poisson_brier": 0.141964,
+          "naive_brier": 0.172932,
+          "ece": 0.037114,
+          "poisson_ece": 0.036818,
+          "selected_brier": 0.141861,
+          "selected_ece": 0.037114
+        },
+        "WTA": {
+          "passed": true,
+          "distribution": "poisson",
+          "model_alpha": 0.03,
+          "train_n": 5260,
+          "holdout_n": 3733,
+          "n": 3733.0,
+          "mae": 2.306529,
+          "naive_mae": 2.439823,
+          "bias": -0.23178,
+          "rmse": 2.949755,
+          "actual_mean": 7.360568,
+          "projected_mean": 7.128788,
+          "brier": 0.177604,
+          "poisson_brier": 0.177318,
+          "naive_brier": 0.198225,
+          "ece": 0.019222,
+          "poisson_ece": 0.013389,
+          "selected_brier": 0.177318,
+          "selected_ece": 0.013389
+        }
+      }
+    }
+  }
+}

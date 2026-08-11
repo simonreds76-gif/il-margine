@@ -104,6 +104,29 @@ class TennisPropsMarketShapeTests(unittest.TestCase):
         self.assertEqual(len(rows), 1)
         self.assertEqual(rows[0]["market"], "match_aces")
 
+    def test_plain_break_totals_are_match_level(self) -> None:
+        rows = MODULE.extract_rows(
+            self.fixture,
+            "Bet365",
+            {"name": "Totals (Service Breaks)", "odds": [{"hdp": 6.5, "over": "1.90", "under": "1.83"}]},
+        )
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["market"], "match_breaks")
+        self.assertEqual(rows[0]["line"], "6.5")
+
+    def test_team_break_total_is_assigned_to_player(self) -> None:
+        rows = MODULE.extract_rows(
+            self.fixture,
+            "Bet365",
+            {"name": "Team Total (Breaks) Away", "odds": [{"hdp": 2.5, "over": "2.00"}]},
+        )
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["market"], "player_breaks")
+        self.assertEqual(rows[0]["player"], "Tiago Pereira")
+
+    def test_tiebreak_is_not_misclassified_as_service_break(self) -> None:
+        self.assertEqual(MODULE.identify_market("Tie Break in Match"), "match_tiebreak")
+
 
 if __name__ == "__main__":
     unittest.main()

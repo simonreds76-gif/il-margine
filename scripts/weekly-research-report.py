@@ -36,6 +36,7 @@ TENNIS_PROPS_DECISION_JSON = ROOT / "data" / "tennis-props" / "shadow" / "aces-d
 TENNIS_PROPS_DECISION_REPORT = ROOT / "data" / "tennis-props" / "shadow" / "aces-dfs-weekly-decision.txt"
 TENNIS_PROPS_V3_LOCAL_JSON = ROOT / "data" / "tennis-props" / "backtest" / "aces-v3-weekly-report.json"
 TENNIS_PROPS_V4_JSON = ROOT / "data" / "tennis-props" / "backtest" / "aces-over-v4-weekly-report.json"
+TENNIS_BREAKS_V1_GATE = ROOT / "data" / "tennis-props" / "backtest" / "breaks-stage0-gate.json"
 TENNIS_VENUE_ACE_FACTORS = ROOT / "data" / "tennis-props" / "venue-ace-factors.csv"
 TENNIS_VENUE_ACE_V1_OBSERVATIONS = ROOT / "data" / "tennis-props" / "shadow" / "venue-ace-factor-v1-observations.csv"
 TENNIS_VENUE_ACE_V1_GATE = ROOT / "data" / "tennis-props" / "backtest" / "venue-ace-factor-v1-gate.json"
@@ -101,6 +102,21 @@ def load_json(path: Path) -> dict[str, Any]:
         return json.loads(path.read_text(encoding="utf-8"))
     except Exception as exc:
         return {"_error": f"{display_path(path)} parse failed: {exc}"}
+
+
+def tennis_breaks_gate_line(gate: dict[str, Any]) -> str:
+    if not gate or gate.get("_error"):
+        return "Service Breaks v1: SOURCE_MISSING"
+    scopes = gate.get("scopes") or {}
+    player = scopes.get("player_breaks") or {}
+    match = scopes.get("match_breaks") or {}
+    status = "OUTCOME_PASS" if gate.get("status") == "PASS" else "OUTCOME_FAIL"
+    return (
+        f"Service Breaks v1 [INTERNAL]: {status} | "
+        f"player ATP/WTA {'PASS' if player.get('passed') else 'FAIL'} | "
+        f"match ATP/WTA {'PASS' if match.get('passed') else 'FAIL'} | "
+        "real Bet365 price feed MISSING | 0 prospective | NOT SELLABLE"
+    )
 
 
 def load_tennis_evidence_snapshot() -> dict[str, Any]:
@@ -1103,6 +1119,7 @@ def build_payload() -> dict[str, Any]:
     tennis_model_evidence = tennis_model_evidence_summary()
     tennis_props_v3 = tennis_props_v3_snapshot()
     tennis_props_v4 = load_json(TENNIS_PROPS_V4_JSON)
+    tennis_breaks_v1 = load_json(TENNIS_BREAKS_V1_GATE)
     tennis_venue_ace_v1 = venue_ace_factor_v1_summary()
     tennis_most_aces_forecast = load_json(TENNIS_MOST_ACES_FORECAST_JSON)
     tennis_most_aces_prices = most_aces_price_summary()
@@ -1167,6 +1184,7 @@ def build_payload() -> dict[str, Any]:
         "tennis_model_evidence": tennis_model_evidence,
         "tennis_props_v3": tennis_props_v3,
         "tennis_props_v4": tennis_props_v4,
+        "tennis_breaks_v1": tennis_breaks_v1,
         "tennis_venue_ace_factor_v1": tennis_venue_ace_v1,
         "tennis_most_aces_forecast": tennis_most_aces_forecast,
         "tennis_most_aces_prices": tennis_most_aces_prices,
@@ -1221,6 +1239,7 @@ def render_report(payload: dict[str, Any]) -> str:
     tennis_venue_ace_v1 = payload.get("tennis_venue_ace_factor_v1") or {}
     tennis_props_benchmark = payload.get("tennis_props_market_benchmark") or {}
     tennis_props_shadow = payload.get("tennis_props_shadow_decision") or {}
+    tennis_breaks_v1 = payload.get("tennis_breaks_v1") or {}
     goalscorer = payload["goalscorer_v2"]
     assist = payload["assist_value_v1"]
     automation = payload.get("automation_budget") or {}
@@ -1398,6 +1417,8 @@ def render_report(payload: dict[str, Any]) -> str:
             "",
             tennis_props_shadow_decision_report(tennis_props_shadow),
             "",
+            tennis_breaks_gate_line(tennis_breaks_v1),
+            "",
             "## Tennis Props Model vs Bet365",
             "",
             f"- Status: {tennis_props_benchmark.get('status', 'EVIDENCE_BUILDING')}",
@@ -1443,6 +1464,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
     tennis_venue_ace_v1 = payload.get("tennis_venue_ace_factor_v1") or {}
     tennis_props_benchmark = payload.get("tennis_props_market_benchmark") or {}
     tennis_props_shadow = payload.get("tennis_props_shadow_decision") or {}
+    tennis_breaks_v1 = payload.get("tennis_breaks_v1") or {}
     goalscorer = payload["goalscorer_v2"]
     assist = payload["assist_value_v1"]
     automation = payload.get("automation_budget") or {}
@@ -1581,6 +1603,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
         f"n={props_calibration.get('rows', 0)} | "
         f"{tennis_props_shadow.get('status', 'COLLECTING_EVIDENCE')}"
     )
+    lines.append(tennis_breaks_gate_line(tennis_breaks_v1))
     lines.extend(
         [
             "",
@@ -1592,6 +1615,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
 
 def tennis_telegram_text(payload: dict[str, Any]) -> str:
     evidence = payload.get("tennis_model_evidence") or {}
+    tennis_breaks_v1 = payload.get("tennis_breaks_v1") or {}
     lanes = evidence.get("lanes") or {}
     replacements = evidence.get("gap_replacements") or {}
     props_v3 = payload.get("tennis_props_v3") or {}
@@ -1810,6 +1834,7 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
                 f"Brier delta {number(props_benchmark.get('brier_delta_vs_market')):+.4f} | "
                 f"{props_benchmark.get('status', 'EVIDENCE_BUILDING')}"
             ),
+            tennis_breaks_gate_line(tennis_breaks_v1),
             "",
             "No automatic promotion: provisional lanes remain 0.5u until their registered gates pass.",
         ]

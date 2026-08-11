@@ -71,7 +71,7 @@ class OverOnlyDecisionTests(unittest.TestCase):
     def row(value_over_pct: str = "20.0") -> dict[str, str]:
         now = datetime.now(timezone.utc)
         return {
-            "date": "2026-07-22",
+            "date": now.date().isoformat(),
             "tour": "ATP",
             "tournament": "Kitzbuhel",
             "player": "Player One",
@@ -109,19 +109,60 @@ class OverOnlyDecisionTests(unittest.TestCase):
             max_model_market_gap=0.12,
         )
 
-    def test_central_over_only_price_can_pass_on_raw_ev(self) -> None:
+    def test_one_sided_match_total_remains_fail_closed(self) -> None:
         rows = [self.row()]
         MODULE.apply_decision_gates(rows, self.args(), datetime.now(timezone.utc))
         self.assertEqual(rows[0]["best_available_line"], "true")
-        self.assertEqual(rows[0]["decision_mode"], "over_only_raw_ev")
-        self.assertEqual(rows[0]["bettable"], "true")
-        self.assertEqual(rows[0]["recommended_side"], "OVER")
+        self.assertEqual(rows[0]["decision_mode"], "blocked")
+        self.assertEqual(rows[0]["bettable"], "false")
+        self.assertIn("LINE_ONE_SIDED", rows[0]["block_reasons"])
 
     def test_over_only_price_below_stricter_ev_gate_is_blocked(self) -> None:
         rows = [self.row("12.0")]
         MODULE.apply_decision_gates(rows, self.args(), datetime.now(timezone.utc))
         self.assertEqual(rows[0]["bettable"], "false")
         self.assertIn("EDGE_BELOW_GATE", rows[0]["block_reasons"])
+
+
+class BreakMarketTests(unittest.TestCase):
+    def test_break_means_use_player_break_projection(self) -> None:
+        board = {"projected_breaks_for": "3.125", "projected_total_breaks": "7.0"}
+        self.assertEqual(MODULE.market_mean(board, "player_breaks"), 3.125)
+        self.assertEqual(MODULE.market_mean(board, "match_breaks"), 3.125)
+
+    def test_break_gate_selects_registered_distribution(self) -> None:
+        gate = {
+            "scopes": {
+                "match_breaks": {
+                    "passed": True,
+                    "tours": {"ATP": {"passed": True, "distribution": "negative_binomial", "model_alpha": 0.02}},
+                }
+            }
+        }
+        self.assertEqual(
+            MODULE.break_gate_result(gate, "ATP", "match_breaks"),
+            (True, "negative_binomial", 0.02),
+        )
+
+    def test_break_price_is_trackable_shadow_but_never_bettable(self) -> None:
+        now = datetime.now(timezone.utc)
+        row = {
+            "market": "match_breaks",
+            "breaks_stage0_passed": "true",
+            "matched_board": "yes",
+            "confidence": "MED",
+            "capture_ts": now.isoformat(),
+            "match_start_utc": (now + timedelta(hours=5)).isoformat(),
+            "over_odds": "2.60",
+            "value_over_pct": "12.0",
+            "under_odds": "1.55",
+            "value_under_pct": "-8.0",
+        }
+        MODULE.apply_break_shadow_gates([row], now)
+        self.assertEqual(row["decision_mode"], "breaks_shadow")
+        self.assertEqual(row["shadow_side"], "OVER")
+        self.assertEqual(row["trackable_shadow"], "true")
+        self.assertEqual(row["bettable"], "false")
 
 
 if __name__ == "__main__":

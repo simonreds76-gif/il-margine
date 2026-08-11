@@ -54,6 +54,10 @@ class SideEvent:
     opponent_id: str
     aces: int
     dfs: int
+    breaks_for: int
+    broken: int
+    return_games: int
+    service_games_break_sample: int
     svpt: int
     svgms: int
     first_in: int
@@ -162,6 +166,10 @@ def empty_totals() -> dict[str, float]:
         "svgms": 0,
         "aces": 0,
         "dfs": 0,
+        "breaks_for": 0,
+        "broken": 0,
+        "return_games": 0,
+        "service_games_break_sample": 0,
         "first_in": 0,
         "first_won": 0,
         "second_won": 0,
@@ -184,6 +192,10 @@ def add_event(totals: dict[str, float], event: SideEvent) -> None:
     totals["svgms"] += event.svgms
     totals["aces"] += event.aces
     totals["dfs"] += event.dfs
+    totals["breaks_for"] += event.breaks_for
+    totals["broken"] += event.broken
+    totals["return_games"] += event.return_games
+    totals["service_games_break_sample"] += event.service_games_break_sample
     totals["first_in"] += event.first_in
     totals["first_won"] += event.first_won
     totals["second_won"] += event.second_won
@@ -215,8 +227,14 @@ def totals_row(tour: str, player_id: str, player_name: str, surface: str, window
         "svgms": str(int(totals["svgms"])),
         "aces": str(int(totals["aces"])),
         "dfs": str(int(totals["dfs"])),
+        "breaks_for": str(int(totals["breaks_for"])),
+        "broken": str(int(totals["broken"])),
+        "return_games": str(int(totals["return_games"])),
+        "service_games_break_sample": str(int(totals["service_games_break_sample"])),
         "ace_rate": fmt(safe_div(totals["aces"], totals["svpt"])),
         "df_rate": fmt(safe_div(totals["dfs"], totals["svpt"])),
+        "break_for_rate": fmt(safe_div(totals["breaks_for"], totals["return_games"])),
+        "broken_rate": fmt(safe_div(totals["broken"], totals["service_games_break_sample"])),
         "first_serve_pct": fmt(safe_div(totals["first_in"], totals["svpt"])),
         "first_serve_win_pct": fmt(safe_div(totals["first_won"], totals["first_in"])),
         "second_serve_win_pct": fmt(safe_div(totals["second_won"], totals["second_attempts"])),
@@ -241,6 +259,14 @@ def side_event(tour: str, row: dict[str, str], match_date: date, *, prefix: str,
     opp_svpt = parse_int(row.get(f"{opp_prefix}_svpt"))
     if svpt <= 0 or opp_svpt <= 0:
         return None
+    service_games = parse_int(row.get(f"{prefix}_SvGms"))
+    opponent_service_games = parse_int(row.get(f"{opp_prefix}_SvGms"))
+    bp_faced = parse_int(row.get(f"{prefix}_bpFaced"))
+    bp_saved = parse_int(row.get(f"{prefix}_bpSaved"))
+    opponent_bp_faced = parse_int(row.get(f"{opp_prefix}_bpFaced"))
+    opponent_bp_saved = parse_int(row.get(f"{opp_prefix}_bpSaved"))
+    if service_games <= 0 or opponent_service_games <= 0:
+        return None
     return SideEvent(
         tour=tour,
         match_date=match_date,
@@ -254,8 +280,12 @@ def side_event(tour: str, row: dict[str, str], match_date: date, *, prefix: str,
         opponent_id=opponent_id,
         aces=parse_int(row.get(f"{prefix}_ace")),
         dfs=parse_int(row.get(f"{prefix}_df")),
+        breaks_for=max(0, opponent_bp_faced - opponent_bp_saved),
+        broken=max(0, bp_faced - bp_saved),
+        return_games=opponent_service_games,
+        service_games_break_sample=service_games,
         svpt=svpt,
-        svgms=parse_int(row.get(f"{prefix}_SvGms")),
+        svgms=service_games,
         first_in=parse_int(row.get(f"{prefix}_1stIn")),
         first_won=parse_int(row.get(f"{prefix}_1stWon")),
         second_won=parse_int(row.get(f"{prefix}_2ndWon")),
@@ -340,6 +370,10 @@ def build_same_tournament_row(
         "svpt": str(int(totals["svpt"])),
         "aces": str(int(totals["aces"])),
         "dfs": str(int(totals["dfs"])),
+        "breaks_for": str(int(totals["breaks_for"])),
+        "broken": str(int(totals["broken"])),
+        "return_games": str(int(totals["return_games"])),
+        "service_games_break_sample": str(int(totals["service_games_break_sample"])),
     }
 
 

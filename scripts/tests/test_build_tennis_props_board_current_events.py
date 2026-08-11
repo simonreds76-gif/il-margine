@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 import unittest
 from pathlib import Path
@@ -66,6 +67,23 @@ class CurrentEventRowsCacheTests(unittest.TestCase):
         for raw, expected in aliases.items():
             with self.subTest(raw=raw):
                 self.assertEqual(MODULE.canonical_tournament_name(raw), expected)
+
+
+class BreakFairOddsTests(unittest.TestCase):
+    def test_match_ladder_contains_central_half_line(self) -> None:
+        payload, distribution, status = MODULE.break_fair_odds_ladder(6.114, "ATP", "match_breaks")
+        rows = json.loads(payload)
+        central = next(row for row in rows if row["line"] == 6.5)
+        self.assertEqual(distribution, "negative_binomial")
+        self.assertEqual(status, "OUTCOME_PASS_PRICE_FEED_MISSING")
+        self.assertAlmostEqual(central["fair_over"], 2.43, places=2)
+
+    def test_match_total_is_identical_on_both_player_rows(self) -> None:
+        left = {"tour": "ATP", "projected_breaks_for": "2.909", "break_notes": ""}
+        right = {"tour": "ATP", "projected_breaks_for": "3.205", "break_notes": ""}
+        MODULE.normalize_match_break_totals(left, right)
+        self.assertEqual(left["projected_total_breaks"], right["projected_total_breaks"])
+        self.assertEqual(left["match_break_fair_odds_json"], right["match_break_fair_odds_json"])
 
 
 if __name__ == "__main__":

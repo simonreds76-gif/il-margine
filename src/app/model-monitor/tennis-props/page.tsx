@@ -503,6 +503,25 @@ function parseTournamentRoundLog(value: string | undefined): TournamentRoundLog[
   }
 }
 
+type BreakFairOddsRow = {
+  line: number;
+  over_pct: number;
+  under_pct: number;
+  fair_over: number;
+  fair_under: number;
+};
+
+function parseBreakFairOdds(value: string | undefined): BreakFairOddsRow[] {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((row) => row && Number.isFinite(Number(row.line))) as BreakFairOddsRow[];
+  } catch {
+    return [];
+  }
+}
+
 function MiniBadge({ label, tone }: { label: string; tone: string }) {
   return (
     <span className={cn("inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em]", tone)}>
@@ -653,6 +672,58 @@ function MetricTile({ label, value, sub, tone }: { label: string; value: string;
   );
 }
 
+function BreakFairOddsPanel({
+  title,
+  mean,
+  ladderJson,
+  distribution,
+  status,
+}: {
+  title: string;
+  mean: string | undefined;
+  ladderJson: string | undefined;
+  distribution: string | undefined;
+  status: string | undefined;
+}) {
+  const ladder = parseBreakFairOdds(ladderJson);
+  return (
+    <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/[0.06] p-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <div className="text-[10px] font-black uppercase tracking-[0.16em] text-cyan-300">{title}</div>
+          <div className="mt-1 font-mono text-lg font-black text-slate-100">mean {fmt(mean, 1)}</div>
+        </div>
+        <MiniBadge
+          label={status === "OUTCOME_PASS_PRICE_FEED_MISSING" ? "outcome model passed" : "research only"}
+          tone={status === "OUTCOME_PASS_PRICE_FEED_MISSING" ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-200" : "border-amber-500/25 bg-amber-500/10 text-amber-200"}
+        />
+      </div>
+      {ladder.length ? (
+        <div className="mt-3 overflow-x-auto">
+          <table className="min-w-full text-xs">
+            <thead className="text-left uppercase tracking-[0.12em] text-slate-600">
+              <tr><th className="pb-1 pr-3">Line</th><th className="pb-1 pr-3">Over fair</th><th className="pb-1 pr-3">Under fair</th><th className="pb-1">Over %</th></tr>
+            </thead>
+            <tbody>
+              {ladder.map((row) => (
+                <tr key={`${title}-${row.line}`} className="border-t border-slate-800/70">
+                  <td className="py-1.5 pr-3 font-mono font-black text-slate-200">{row.line.toFixed(1)}</td>
+                  <td className="py-1.5 pr-3 font-mono font-black text-emerald-300">{row.fair_over.toFixed(2)}</td>
+                  <td className="py-1.5 pr-3 font-mono font-black text-rose-300">{row.fair_under.toFixed(2)}</td>
+                  <td className="py-1.5 font-mono text-slate-400">{row.over_pct.toFixed(1)}%</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : <div className="mt-2 text-xs text-slate-600">No validated ladder available.</div>}
+      <div className="mt-2 text-[10px] uppercase tracking-[0.1em] text-slate-600">
+        {String(distribution || "poisson").replaceAll("_", " ")} · no Bet365 break price in provider feed · not a tip
+      </div>
+    </div>
+  );
+}
+
 function CountList({ title, rows, tone = "text-slate-200" }: { title: string; rows: { label: string; count: number }[]; tone?: string }) {
   return (
     <div className="rounded-2xl border border-slate-800/80 bg-slate-950/70 p-3">
@@ -739,6 +810,16 @@ function ProjectionPlayerCard({ row }: { row: CsvRow }) {
         <MetricTile label="Projected times broken" value={fmt(row.projected_broken, 1)} sub="player-specific" tone="text-amber-300" />
       </div>
 
+      <div className="mt-3">
+        <BreakFairOddsPanel
+          title={`${row.player || "Player"} breaks won`}
+          mean={row.projected_breaks_for}
+          ladderJson={row.player_break_fair_odds_json}
+          distribution={row.player_break_distribution}
+          status={row.player_break_model_status}
+        />
+      </div>
+
       <div className="mt-4">
           <details className="group rounded-2xl border border-slate-800/80 bg-slate-950/55 p-3">
             <summary className="cursor-pointer list-none text-xs font-black uppercase tracking-[0.14em] text-slate-400 transition group-open:text-emerald-300">
@@ -803,6 +884,15 @@ function ProjectionTable({ rows, sortKey }: { rows: CsvRow[]; sortKey: Projectio
                     </div>
                   </div>
                 </summary>
+                <div className="border-t border-slate-800/80 px-4 pt-4 sm:px-5 sm:pt-5">
+                  <BreakFairOddsPanel
+                    title="Match total service breaks"
+                    mean={first.projected_total_breaks}
+                    ladderJson={first.match_break_fair_odds_json}
+                    distribution={first.match_break_distribution}
+                    status={first.match_break_model_status}
+                  />
+                </div>
                 <div className="grid gap-4 border-t border-slate-800/80 p-4 sm:p-5 xl:grid-cols-2">
                   {match.rows.map((row, index) => (
                     <ProjectionPlayerCard key={`${group.date}-${row.tour}-${row.player}-${row.opponent}-${index}`} row={row} />

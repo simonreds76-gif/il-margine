@@ -32,6 +32,7 @@ SLAM_COUNT_BIAS_CORRECTION = {
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_TIEBREAK_CALIBRATION_PATH = ROOT / "data" / "tennis-props" / "tiebreak-calibration.json"
+DEFAULT_BREAK_GATE_PATH = ROOT / "data" / "tennis-props" / "backtest" / "breaks-stage0-gate.json"
 _TIEBREAK_CALIBRATION_OVERRIDE: dict[str, object] | None = None
 
 
@@ -976,6 +977,42 @@ def resolve_count_dispersion(tour: str, market: str) -> float:
     tour_key = str(tour or "").upper()
     market_key = "dfs" if str(market or "").lower().replace(" ", "_") in {"double_faults", "double_fault", "df", "dfs", "match_double_faults"} else "aces"
     return DEFAULT_COUNT_DISPERSION_ALPHA.get((tour_key, market_key), 0.25 if market_key == "aces" else 0.12)
+
+
+@lru_cache(maxsize=4)
+def load_break_gate(path: str = str(DEFAULT_BREAK_GATE_PATH)) -> dict[str, object]:
+    gate_path = Path(path)
+    if not gate_path.exists():
+        return {}
+    try:
+        payload = json.loads(gate_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def resolve_break_distribution(
+    tour: str,
+    scope: str,
+    *,
+    gate_path: Path | str = DEFAULT_BREAK_GATE_PATH,
+) -> tuple[str, float | None, bool]:
+    """Return the training-selected count family and outcome-only gate state."""
+    gate = load_break_gate(str(gate_path))
+    scopes = gate.get("scopes")
+    scope_row = scopes.get(scope) if isinstance(scopes, dict) else None
+    tours = scope_row.get("tours") if isinstance(scope_row, dict) else None
+    row = tours.get(str(tour or "").upper()) if isinstance(tours, dict) else None
+    if not isinstance(row, dict):
+        return "poisson", None, False
+    distribution = str(row.get("distribution") or "poisson")
+    alpha_raw = row.get("model_alpha")
+    try:
+        alpha = float(alpha_raw) if alpha_raw is not None else None
+    except (TypeError, ValueError):
+        alpha = None
+    passed = bool(scope_row.get("passed")) and bool(row.get("passed"))
+    return distribution, alpha, passed
 
 
 def count_line_probabilities(

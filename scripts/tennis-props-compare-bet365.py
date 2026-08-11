@@ -24,7 +24,9 @@ PROPS_DIR = ROOT / "data" / "tennis-props"
 INBOX_DIR = PROPS_DIR / "inbox"
 DEFAULT_BOARD = PROPS_DIR / "player-props-board.csv"
 DEFAULT_TOTALS_GATE = PROPS_DIR / "backtest" / "aces-dfs-totals-gate.json"
-MATCH_TOTAL_MARKETS = {"match_aces", "match_double_faults"}
+DEFAULT_BREAK_GATE = PROPS_DIR / "backtest" / "breaks-stage0-gate.json"
+BREAK_MARKETS = {"player_breaks", "match_breaks"}
+MATCH_TOTAL_MARKETS = {"match_aces", "match_double_faults", "match_breaks"}
 CONFIDENCE_RANK = {"LOW": 0, "MED": 1, "HIGH": 2}
 MIN_COMBINED_SAMPLE = 800.0
 STALE_CAPTURE_HOURS = 6.0
@@ -117,6 +119,22 @@ def totals_gate_result(gate: dict[str, object], tour: str, market: str) -> tuple
         return False, None
     alpha = parse_float(tour_row.get("model_alpha"))
     return alpha is not None and alpha > 0, alpha
+
+
+def break_gate_result(
+    gate: dict[str, object], tour: str, market: str
+) -> tuple[bool, str, float | None]:
+    scope = "match_breaks" if market == "match_breaks" else "player_breaks"
+    scopes = gate.get("scopes")
+    scope_row = scopes.get(scope) if isinstance(scopes, dict) else None
+    tours = scope_row.get("tours") if isinstance(scope_row, dict) else None
+    row = tours.get(str(tour or "").upper()) if isinstance(tours, dict) else None
+    if not isinstance(scope_row, dict) or not isinstance(row, dict):
+        return False, "poisson", None
+    alpha = parse_float(row.get("model_alpha"))
+    distribution = str(row.get("distribution") or "poisson")
+    passed = scope_row.get("passed") is True and row.get("passed") is True
+    return passed, distribution, alpha
 
 
 def write_csv(path: Path, rows: list[dict[str, str]], fieldnames: list[str]) -> None:
@@ -516,6 +534,8 @@ def market_mean(board_row: dict[str, str], market: str) -> float | None:
         return parse_float(board_row.get("projected_aces"))
     if lower in {"double_faults", "double_fault", "dfs", "df", "match_double_faults"}:
         return parse_float(board_row.get("projected_dfs"))
+    if lower in BREAK_MARKETS:
+        return parse_float(board_row.get("projected_breaks_for"))
     return None
 
 
@@ -525,11 +545,62 @@ def market_confidence(board_row: dict[str, str], market: str) -> str:
         return str(board_row.get("ace_confidence") or "")
     if lower in {"double_faults", "double_fault", "dfs", "df", "match_double_faults"}:
         return str(board_row.get("df_confidence") or "")
+    if lower in BREAK_MARKETS:
+        return str(board_row.get("break_confidence") or "")
     return ""
 
 
 def is_match_total_count_market(market: str) -> bool:
-    return market.lower().replace(" ", "_") in {"match_aces", "match_double_faults"}
+    return market.lower().replace(" ", "_") in MATCH_TOTAL_MARKETS
+
+
+def apply_break_shadow_gates(rows: list[dict[str, str]], now: datetime) -> None:
+    """Break prices are evidence-only until prospective ROI/CLV is established."""
+    for row in rows:
+        if str(row.get("market") or "").lower() not in BREAK_MARKETS:
+            continue
+        reasons: list[str] = []
+        if row.get("breaks_stage0_passed") != "true":
+            reasons.append("OUTCOME_GATE_FAIL")
+        if row.get("matched_board") != "yes":
+            reasons.append("NO_BOARD_MATCH")
+        if confidence_rank(row.get("confidence")) < confidence_rank("MED"):
+            reasons.append("CONF_BELOW_MED")
+        if not row.get("capture_ts"):
+            reasons.append("MISSING_CAPTURE_TS")
+        else:
+            capture_age = hours_since(row.get("capture_ts"), now)
+            if capture_age is not None and capture_age > ONE_SIDED_SHADOW_CAPTURE_HOURS:
+                reasons.append("STALE_CAPTURE")
+        start = parse_timestamp(row.get("match_start_utc"))
+        if start is None:
+            reasons.append("MISSING_MATCH_START")
+        elif start <= now:
+            reasons.append("MATCH_STARTED")
+        candidates: list[tuple[str, float]] = []
+        for side, value_key, odds_key in (
+            ("OVER", "value_over_pct", "over_odds"),
+            ("UNDER", "value_under_pct", "under_odds"),
+        ):
+            value = parse_float(row.get(value_key))
+            odds = parse_float(row.get(odds_key))
+            if (
+                value is not None
+                and value >= ONE_SIDED_MIN_VALUE * 100.0
+                and odds is not None
+                and ONE_SIDED_MIN_ODDS <= odds <= ONE_SIDED_MAX_ODDS
+            ):
+                candidates.append((side, value))
+        if not candidates:
+            reasons.append("NO_SIDE_ABOVE_SHADOW_EDGE")
+        selected = max(candidates, key=lambda item: item[1])[0] if candidates else ""
+        trackable = not reasons
+        row["bettable"] = "false"
+        row["recommended_side"] = ""
+        row["trackable_shadow"] = bool_text(trackable)
+        row["shadow_side"] = selected if trackable else ""
+        row["decision_mode"] = "breaks_shadow" if trackable else "breaks_blocked"
+        row["shadow_block_reasons"] = "|".join(reasons)
 
 
 def combine_confidence(left: str, right: str) -> str:
@@ -584,6 +655,7 @@ def main() -> None:
     parser.add_argument("--date", default=date.today().isoformat())
     parser.add_argument("--board", default=str(DEFAULT_BOARD))
     parser.add_argument("--totals-gate", default=str(DEFAULT_TOTALS_GATE))
+    parser.add_argument("--breaks-gate", default=str(DEFAULT_BREAK_GATE))
     parser.add_argument("--lines", default="")
     parser.add_argument("--out", default="")
     parser.add_argument("--unmatched-out", default="")
@@ -630,6 +702,7 @@ def main() -> None:
         return
     board_rows = read_csv(Path(args.board))
     totals_gate = read_json(Path(args.totals_gate))
+    breaks_gate = read_json(Path(args.breaks_gate))
     board = {
         (
             str(row.get("date") or ""),
@@ -657,6 +730,9 @@ def main() -> None:
         line_opponent = str(line.get("opponent") or "").strip()
         line_market = str(line.get("market") or "").strip()
         totals_passed, totals_alpha = totals_gate_result(totals_gate, line_tour, line_market)
+        breaks_passed, breaks_distribution, breaks_alpha = break_gate_result(
+            breaks_gate, line_tour, line_market
+        )
         requires_exact_pair = is_match_total_count_market(line_market)
         original_player = line_player
         original_opponent = line_opponent
@@ -802,14 +878,23 @@ def main() -> None:
         over_odds = parse_float(line.get("over_odds"))
         under_odds = parse_float(line.get("under_odds"))
         if mean is not None and line_value is not None:
-            if args.distribution == "poisson":
+            selected_distribution = (
+                breaks_distribution if market in BREAK_MARKETS else args.distribution
+            )
+            if selected_distribution == "poisson":
                 p_over, p_under, p_push = poisson_line_probabilities(line_value, mean)
             else:
                 p_over, p_under, p_push = count_line_probabilities(
                     line_value,
                     mean,
-                    distribution=args.distribution,
-                    alpha=totals_alpha if is_match_total_count_market(market) else None,
+                    distribution=selected_distribution,
+                    alpha=(
+                        breaks_alpha
+                        if market in BREAK_MARKETS
+                        else totals_alpha
+                        if is_match_total_count_market(market)
+                        else None
+                    ),
                     tour=str(line.get("tour") or ""),
                     market=market,
                 )
@@ -886,8 +971,10 @@ def main() -> None:
                 "matched_board": "yes" if board_row else "no",
                 "match_source": match_source,
                 "scope": "match_total" if is_match_total_count_market(market) else "player",
-                "totals_stage0_passed": bool_text(totals_passed) if is_match_total_count_market(market) else "false",
+                "totals_stage0_passed": bool_text(totals_passed) if market in {"match_aces", "match_double_faults"} else "false",
                 "totals_alpha": fmt(totals_alpha, 6),
+                "breaks_stage0_passed": bool_text(breaks_passed) if market in BREAK_MARKETS else "false",
+                "breaks_alpha": fmt(breaks_alpha, 6),
                 "projection_mean": fmt(mean, 3),
                 "projection_p1": fmt(left_mean, 3),
                 "projection_p2": fmt(right_mean, 3),
@@ -910,7 +997,7 @@ def main() -> None:
                 "fair_p_over": fmt(p_over),
                 "fair_p_under": fmt(p_under),
                 "fair_p_push": fmt(p_push),
-                "distribution": args.distribution,
+                "distribution": selected_distribution if mean is not None and line_value is not None else args.distribution,
                 "fair_over_odds": fmt(fair_over, 3),
                 "fair_under_odds": fmt(fair_under, 3),
                 "value_over_pct": fmt((value_over * 100.0) if value_over is not None else None, 2),
@@ -930,6 +1017,7 @@ def main() -> None:
         )
 
     apply_decision_gates(rows, args, now_utc)
+    apply_break_shadow_gates(rows, now_utc)
 
     fieldnames = [
         "date",
@@ -950,6 +1038,8 @@ def main() -> None:
         "scope",
         "totals_stage0_passed",
         "totals_alpha",
+        "breaks_stage0_passed",
+        "breaks_alpha",
         "matched_board",
         "match_source",
         "projection_mean",
