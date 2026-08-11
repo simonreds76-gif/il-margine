@@ -184,6 +184,36 @@ class TennisDailySignalDigestTests(unittest.TestCase):
         self.assertIn("fair 2.515", signals[0].selection)
         self.assertTrue(signals[0].selection.endswith("shadow evidence only"))
 
+    def test_service_break_market_has_its_own_research_label(self) -> None:
+        original_read_csv = MODULE.read_csv
+        MODULE.read_csv = lambda _path: [
+            {
+                "date": "2026-08-11",
+                "player": "Nishesh Basavareddy",
+                "opponent": "Learner Tien",
+                "market": "match_breaks",
+                "line": "6.5",
+                "over_odds": "1.90",
+                "fair_over_odds": "2.43",
+                "value_over_pct": "-21.95",
+                "trackable_shadow": "true",
+                "shadow_side": "OVER",
+                "bettable": "false",
+                "recommended_side": "",
+                "match_start_utc": "2026-08-11T17:00:00Z",
+            }
+        ]
+        try:
+            signals = MODULE.props_signals("2026-08-11")
+        finally:
+            MODULE.read_csv = original_read_csv
+
+        self.assertEqual(len(signals), 1)
+        self.assertEqual(signals[0].section, "BET365 BREAKS WATCHLIST")
+        self.assertEqual(signals[0].labels, ["BREAKS WATCH"])
+        self.assertIn("Match service breaks Over 6.5 @ 1.9", signals[0].selection)
+        self.assertTrue(signals[0].selection.endswith("shadow evidence only"))
+
     def test_props_watchlist_excludes_other_event_dates(self) -> None:
         original_read_csv = MODULE.read_csv
         MODULE.read_csv = lambda _path: [

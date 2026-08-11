@@ -252,7 +252,13 @@ def props_signals(target_date: str) -> list[Signal]:
             subject = "Match"
         else:
             subject = player
-        market_label = "aces" if "ace" in market else "double faults"
+        is_service_break_market = "break" in market and "tiebreak" not in market and "tie_break" not in market
+        if is_service_break_market:
+            market_label = "service breaks"
+        elif "ace" in market:
+            market_label = "aces"
+        else:
+            market_label = "double faults"
         selection = f"{subject} {market_label} {side.title()} {line:g} @ {fmt_odds(odds)}"
         if fair is not None:
             selection += f" | fair {fmt_odds(fair)}"
@@ -261,11 +267,17 @@ def props_signals(target_date: str) -> list[Signal]:
         if is_shadow and not is_bettable:
             selection += " | shadow evidence only"
         pair = tuple(sorted((norm(player), norm(opponent))))
+        if is_service_break_market:
+            section = "BET365 BREAKS" if is_bettable else "BET365 BREAKS WATCHLIST"
+            labels = ["BREAKS"] if is_bettable else ["BREAKS WATCH"]
+        else:
+            section = "BET365 PROPS" if is_bettable else "BET365 PROPS WATCHLIST"
+            labels = ["ACES/DF"] if is_bettable else ["ACES/DF WATCH"]
         signals.append(
             Signal(
-                section="BET365 PROPS" if is_bettable else "BET365 PROPS WATCHLIST",
+                section=section,
                 priority=40 if is_bettable else 45,
-                labels=["ACES/DF"] if is_bettable else ["ACES/DF WATCH"],
+                labels=labels,
                 match=f"{player} vs {opponent}",
                 selection=selection,
                 edge_pct=edge,
