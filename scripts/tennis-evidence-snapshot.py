@@ -27,7 +27,7 @@ REPORT_SCRIPT = ROOT / "scripts" / "weekly-research-report.py"
 DEFAULT_OUTPUT = ROOT / "data" / "tennis-props" / "tennis-evidence-snapshot.json"
 DEFAULT_SNAPSHOT_KEY = "tennis_evidence_v1"
 SNAPSHOT_TABLE = "goalscorer_live_snapshot"
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 VOLATILE_HASH_KEYS = {"age_days", "checked_at", "created_at", "generated_at", "updated_at"}
 
 
@@ -66,6 +66,12 @@ def source_metadata(module: Any) -> dict[str, dict[str, Any]]:
         "most_aces_forecast": module.TENNIS_MOST_ACES_FORECAST_JSON,
         "most_aces_observations": module.TENNIS_MOST_ACES_OBSERVATIONS,
     }
+    paths.update(
+        {f"lane_{name}": path for name, path in module.TENNIS_LANE_FILES.items()}
+    )
+    paths.update(
+        {f"lane_clv_{name}": path for name, path in module.TENNIS_CLV_FILES.items()}
+    )
     output: dict[str, dict[str, Any]] = {}
     for name, path in paths.items():
         exists = path.exists()
@@ -101,16 +107,12 @@ def stable_hash_value(value: Any) -> Any:
 def build_snapshot() -> dict[str, Any]:
     module = load_report_module()
     tennis_model_evidence = module.tennis_model_evidence_summary()
-    # Canonical Strict/Volume/Spread ledgers are available to the hosted runner.
-    # Only transport the ignored local experiments that GitHub cannot reconstruct.
-    local_model_evidence = {
-        key: value
-        for key, value in tennis_model_evidence.items()
-        if key != "lanes"
-    }
     sections = {
         "tennis_ml_gap_guard": module.ml_gap_guard_summary(),
-        "tennis_model_evidence": local_model_evidence,
+        # The Windows pipeline owns the current lane ledgers. Hosted copies can
+        # lag for months, so transport their compact summaries with the other
+        # local evidence instead of reconstructing them on GitHub.
+        "tennis_model_evidence": tennis_model_evidence,
         "tennis_props_v3": module.tennis_props_v3_snapshot(),
         "tennis_props_v4": module.load_json(module.TENNIS_PROPS_V4_JSON),
         "tennis_venue_ace_factor_v1": module.venue_ace_factor_v1_summary(),

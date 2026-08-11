@@ -477,6 +477,32 @@ def tennis_lane_clv(path: Path) -> dict[str, Any]:
     }
 
 
+def tennis_lane_source_summary(lanes: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    """Report whether the three decision-lane summaries were regenerated recently."""
+    required = ("strict", "volume_200", "spread_v1")
+    per_lane = {
+        name: evidence_freshness(str((lanes.get(name) or {}).get("generated_at") or ""), stale_after_days=3)
+        for name in required
+    }
+    statuses = {summary["status"] for summary in per_lane.values()}
+    if statuses & {"MISSING", "INVALID"}:
+        status = "SOURCE_MISSING"
+    elif "STALE" in statuses:
+        status = "STALE"
+    else:
+        status = "FRESH"
+    generated = [
+        summary["generated_at"]
+        for summary in per_lane.values()
+        if summary.get("generated_at")
+    ]
+    return {
+        "status": status,
+        "oldest_generated_at": min(generated) if generated else "",
+        "lanes": per_lane,
+    }
+
+
 def tennis_model_evidence_summary() -> dict[str, Any]:
     lanes = {name: tennis_lane_performance(path) for name, path in TENNIS_LANE_FILES.items()}
     for name, path in TENNIS_CLV_FILES.items():
@@ -488,6 +514,7 @@ def tennis_model_evidence_summary() -> dict[str, Any]:
         replacements.setdefault(key, {"verdict": "NOT_RUN", "performance": {}})
     return {
         "lanes": lanes,
+        "lane_source": tennis_lane_source_summary(lanes),
         "gap_source_status": "OK" if TENNIS_GAP_REPORT.exists() and gap_report else "SOURCE_MISSING",
         "gap_status": gap_replacement.get("status", "SOURCE_MISSING"),
         "gap_replacements": replacements,
@@ -1089,7 +1116,7 @@ def build_payload() -> dict[str, Any]:
     snapshot_freshness = evidence_freshness(str(tennis_snapshot.get("generated_at") or ""))
     if isinstance(snapshot_sections, dict) and snapshot_freshness["status"] in {"FRESH", "STALE"}:
         snapshot_model_evidence = snapshot_sections.get("tennis_model_evidence") or {}
-        for key in ("gap_source_status", "gap_status", "gap_replacements", "side_flip_by_surface"):
+        for key in ("lanes", "lane_source", "gap_source_status", "gap_status", "gap_replacements", "side_flip_by_surface"):
             if key in snapshot_model_evidence:
                 tennis_model_evidence[key] = snapshot_model_evidence[key]
         tennis_props_v3 = snapshot_sections.get("tennis_props_v3") or tennis_props_v3
@@ -1431,6 +1458,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
     gap_source_status = tennis_model_evidence.get("gap_source_status", "SOURCE_MISSING")
     side_flip_by_surface = tennis_model_evidence.get("side_flip_by_surface") or {}
     tennis_evidence_source = payload.get("tennis_evidence_source") or {}
+    tennis_lane_source = tennis_model_evidence.get("lane_source") or {}
 
     def tennis_lane_line(label: str, key: str, status: str) -> str:
         lane = tennis_lanes.get(key) or {}
@@ -1468,10 +1496,15 @@ def telegram_text(payload: dict[str, Any]) -> str:
         "Il Margine weekly model evidence",
         f"Generated: {payload['generated_at']}",
         (
-            "Tennis evidence source: "
+            "Tennis prospective evidence source: "
             f"{tennis_evidence_source.get('status', 'SOURCE_MISSING')} "
             f"({tennis_evidence_source.get('source', 'none')}; "
             f"{tennis_evidence_source.get('generated_at') or 'missing'})"
+        ),
+        (
+            "Tennis lane summaries: "
+            f"{tennis_lane_source.get('status', 'SOURCE_MISSING')} "
+            f"(oldest core generation {tennis_lane_source.get('oldest_generated_at') or 'missing'})"
         ),
         "",
         f"Team Shots v4: {team_v4.get('prospective_status', 'BLOCKED')} | {team_v4_live.get('settled', 0)} settled | {number(team_v4_live.get('pnl_units')):+.2f}u | ROI {pct(number(team_v4_live.get('roi')) * 100) if team_v4_live.get('roi') is not None else '-'} | CLV {pct(number(team_v4_live.get('mean_true_close_clv')) * 100) if team_v4_live.get('mean_true_close_clv') is not None else '-'} | promotion {team_v4.get('promotion_gate', 'BLOCKED')}",
@@ -1569,6 +1602,7 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     props_benchmark = payload.get("tennis_props_market_benchmark") or {}
     props_shadow = payload.get("tennis_props_shadow_decision") or {}
     source = payload.get("tennis_evidence_source") or {}
+    lane_source = evidence.get("lane_source") or {}
     gap_source_status = evidence.get("gap_source_status", "SOURCE_MISSING")
     side_flip_by_surface = evidence.get("side_flip_by_surface") or {}
 
@@ -1609,9 +1643,14 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
         "Il Margine weekly tennis evidence",
         f"Generated: {payload['generated_at']}",
         (
-            "Evidence source: "
+            "Prospective evidence source: "
             f"{source.get('status', 'SOURCE_MISSING')} "
             f"({source.get('source', 'none')}; {source.get('generated_at') or 'missing'})"
+        ),
+        (
+            "Lane summaries: "
+            f"{lane_source.get('status', 'SOURCE_MISSING')} "
+            f"(oldest core generation {lane_source.get('oldest_generated_at') or 'missing'})"
         ),
         "",
         lane_line("Strict", "strict", "CORE"),

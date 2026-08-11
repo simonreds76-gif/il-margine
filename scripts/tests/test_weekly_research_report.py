@@ -72,7 +72,8 @@ class WeeklyResearchReportTests(unittest.TestCase):
 
     def test_telegram_report_contains_core_provisional_and_inactive_tennis(self) -> None:
         message = REPORT["telegram_text"](REPORT["build_payload"]())
-        self.assertIn("Tennis evidence source:", message)
+        self.assertIn("Tennis prospective evidence source:", message)
+        self.assertIn("Tennis lane summaries:", message)
         self.assertIn("Tennis Strict [CORE]", message)
         self.assertIn("Tennis Volume 200 [VOLUME]", message)
         self.assertIn("Strict gap 10-20pp [0.5u provisional]", message)
@@ -84,7 +85,8 @@ class WeeklyResearchReportTests(unittest.TestCase):
     def test_tennis_only_telegram_report_is_complete_and_compact(self) -> None:
         message = REPORT["tennis_telegram_text"](REPORT["build_payload"]())
         self.assertIn("Il Margine weekly tennis evidence", message)
-        self.assertIn("Evidence source:", message)
+        self.assertIn("Prospective evidence source:", message)
+        self.assertIn("Lane summaries:", message)
         self.assertIn("Strict [CORE]", message)
         self.assertIn("Volume 200 [VOLUME]", message)
         self.assertIn("Strict gap 10-20pp [0.5u provisional]", message)
@@ -114,16 +116,18 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertIn("SOURCE_MISSING - local prospective evidence unavailable", message)
         self.assertNotIn("0/150 settled", message)
 
-    def test_local_snapshot_does_not_replace_canonical_tennis_lanes(self) -> None:
+    def test_fresh_local_snapshot_replaces_stale_hosted_tennis_lanes(self) -> None:
         build_payload = REPORT["build_payload"]
         globals_map = build_payload.__globals__
         original_loader = globals_map["load_tennis_evidence_snapshot"]
+        generated_at = REPORT["datetime"].now(REPORT["UTC"]).replace(microsecond=0).isoformat().replace("+00:00", "Z")
         globals_map["load_tennis_evidence_snapshot"] = lambda: {
-            "generated_at": "2026-08-04T10:00:00Z",
+            "generated_at": generated_at,
             "_source": "test",
             "sections": {
                 "tennis_model_evidence": {
                     "lanes": {"strict": {"settled": 1}},
+                    "lane_source": {"status": "FRESH", "oldest_generated_at": "2026-08-04T09:00:00Z"},
                     "gap_source_status": "OK",
                     "side_flip_by_surface": {"Hard": {"settled": 52}},
                 }
@@ -133,8 +137,19 @@ class WeeklyResearchReportTests(unittest.TestCase):
             payload = build_payload()
         finally:
             globals_map["load_tennis_evidence_snapshot"] = original_loader
-        self.assertNotEqual(payload["tennis_model_evidence"]["lanes"]["strict"].get("settled"), 1)
+        self.assertEqual(payload["tennis_model_evidence"]["lanes"]["strict"].get("settled"), 1)
+        self.assertEqual(payload["tennis_model_evidence"]["lane_source"]["status"], "FRESH")
         self.assertEqual(payload["tennis_model_evidence"]["side_flip_by_surface"]["Hard"]["settled"], 52)
+
+    def test_lane_source_detects_stale_core_lane(self) -> None:
+        summary = REPORT["tennis_lane_source_summary"](
+            {
+                "strict": {"generated_at": "2026-04-25T00:00:00Z"},
+                "volume_200": {"generated_at": "2026-08-04T00:00:00Z"},
+                "spread_v1": {"generated_at": "2026-08-04T00:00:00Z"},
+            }
+        )
+        self.assertEqual(summary["status"], "STALE")
 
     def test_most_aces_stale_json_falls_back_to_next_checkpoint(self) -> None:
         payload = REPORT["build_payload"]()

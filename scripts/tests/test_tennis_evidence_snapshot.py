@@ -19,9 +19,11 @@ SPEC.loader.exec_module(MODULE)
 class TennisEvidenceSnapshotTests(unittest.TestCase):
     def test_snapshot_contains_all_hosted_tennis_sections(self) -> None:
         payload = MODULE.build_snapshot()
-        self.assertEqual(payload["schema_version"], 1)
+        self.assertEqual(payload["schema_version"], 2)
         self.assertIn("tennis_model_evidence", payload["sections"])
-        self.assertNotIn("lanes", payload["sections"]["tennis_model_evidence"])
+        self.assertIn("lanes", payload["sections"]["tennis_model_evidence"])
+        self.assertIn("lane_source", payload["sections"]["tennis_model_evidence"])
+        self.assertIn("lane_strict", payload["source_files"])
         self.assertIn("tennis_props_market_benchmark", payload["sections"])
         self.assertIn("tennis_props_shadow_decision", payload["sections"])
 
