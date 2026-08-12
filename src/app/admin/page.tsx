@@ -350,6 +350,23 @@ export default function AdminPanel() {
     }
   };
 
+  const handleTelegramPost = async (betId: number) => {
+    setLoading(true);
+    setMessage(null);
+    const res = await fetch("/api/admin/bets", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: betId, action: "post_telegram" }),
+    });
+    const data = await res.json().catch(() => ({}));
+    setLoading(false);
+    if (res.ok) {
+      setMessage({ type: "success", text: "Player-prop alert posted to Telegram." });
+    } else {
+      setMessage({ type: "error", text: data.error || "Failed to post player-prop alert" });
+    }
+  };
+
   const handleDelete = async (betId: number) => {
     if (!confirm("Are you sure you want to delete this bet?")) return;
     const res = await fetch(`/api/admin/bets?id=${betId}`, { method: "DELETE" });
@@ -767,6 +784,15 @@ export default function AdminPanel() {
                     >
                       Edit
                     </button>
+                    {bet.market === "props" && (
+                      <button
+                        onClick={() => handleTelegramPost(bet.id)}
+                        disabled={loading}
+                        className="px-3 bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 py-2 rounded text-sm font-medium transition-colors"
+                      >
+                        Post to Telegram
+                      </button>
+                    )}
                     <button
                       onClick={() => handleSettle(bet.id, "won")}
                       disabled={loading}
