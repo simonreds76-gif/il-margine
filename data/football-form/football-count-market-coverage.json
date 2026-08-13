@@ -55,15 +55,16 @@
       ],
       "competitions": [
         "England - Premier League",
+        "La Liga",
         "Spain - LaLiga"
       ],
-      "events": 11,
+      "events": 13,
       "paired_price_events": 0,
       "pairing_unknown_events": 11,
       "raw_market_names": [
         "Player To Be Fouled"
       ],
-      "rows": 11,
+      "rows": 13,
       "status": "MARKET_NAME_ONLY"
     },
     "player_fouls_committed": {
@@ -72,15 +73,16 @@
       ],
       "competitions": [
         "England - Premier League",
+        "La Liga",
         "Spain - LaLiga"
       ],
-      "events": 11,
+      "events": 12,
       "paired_price_events": 0,
       "pairing_unknown_events": 11,
       "raw_market_names": [
         "Player Fouls Committed"
       ],
-      "rows": 11,
+      "rows": 12,
       "status": "MARKET_NAME_ONLY"
     },
     "team_cards_total": {
@@ -113,7 +115,7 @@
       "status": "NOT_OBSERVED"
     }
   },
-  "generated_at": "2026-08-12T09:33:40Z",
+  "generated_at": "2026-08-13T09:35:54Z",
   "policy": {
     "definition_gate": "Bookmaker settlement definitions must be reconciled against the result source before ROI is scored.",
     "live_staking": "BLOCKED",
