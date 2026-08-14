@@ -1,6 +1,6 @@
 # Assist Value Research Gates
 
-Generated: `2026-07-16T16:31:40Z`
+Generated: `2026-08-14T08:25:19Z`
 Lane status: **FROZEN_RESEARCH**
 Reactivation ready: **NO**
 
@@ -18,15 +18,15 @@ Reactivation ready: **NO**
 
 ## Settlement Validation
 
-- Overall gate: **PASS**
-- Extractor accuracy: **PASS**
-- Operational coverage: **PASS**
-- Compared player appearances: 2,236
-- Assist agreement: 99.91%
-- Positive assist cases: 153; agreement 98.69%
-- Assist-complete instrumented fixtures: 84/88 (95.45%)
-- Legacy pre-instrumentation fixtures excluded from completeness denominator: 77
-- Player matching coverage: 90.05%
+- Overall gate: **FAIL**
+- Extractor accuracy: **FAIL**
+- Operational coverage: **FAIL**
+- Compared player appearances: 0
+- Assist agreement: 0.00%
+- Positive assist cases: 0; agreement 0.00%
+- Assist-complete instrumented fixtures: 0/0 (0.00%)
+- Legacy pre-instrumentation fixtures excluded from completeness denominator: 0
+- Player matching coverage: 0.00%
 
 ## Market Evidence
 

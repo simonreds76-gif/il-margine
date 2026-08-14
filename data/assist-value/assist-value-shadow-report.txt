@@ -1,5 +1,5 @@
 Assist Value Shadow Report
-generated_at_utc: 2026-07-03T15:13:59Z
+generated_at_utc: 2026-08-14T08:25:06Z
 
 Status
 shadow_status: ENABLED_RESEARCH_ONLY
@@ -8,60 +8,60 @@ model_status: NOT_FITTED
 fair_odds_status: NOT_AUTHORISED
 
 Inputs
-raw_odds_rows_loaded: 56460
+raw_odds_rows_loaded: 213
 role_players_loaded: 1030
 
 Join
-shadow_rows_assist_only: 3010
-role_matched_rows: 1052
-role_match_rate_pct: 34.95
-ambiguous_player_rows: 1
-unmatched_player_rows: 1957
+shadow_rows_assist_only: 213
+role_matched_rows: 59
+role_match_rate_pct: 27.70
+ambiguous_player_rows: 0
+unmatched_player_rows: 154
 
 Interpretation
 This board is an evidence layer only: Bet365 assist market rows enriched with RotoWire set-piece role shares.
 It is not a betting model, not a public Fair Odds Lab lane, and not a value signal.
 
 Top role-matched rows
- - Luis Milla | Elche CF vs Getafe CF | odds 6.0000 | setpiece_last5 96.88 | corners_last5 100.0 | fk_last5 100.0
- - Luis Milla | Getafe CF vs CA Osasuna | odds 5.0000 | setpiece_last5 96.88 | corners_last5 100.0 | fk_last5 100.0
- - Gauthier Hein | OGC Nice vs FC Metz | odds 7.0000 | setpiece_last5 94.12 | corners_last5 90.91 | fk_last5 100.0
- - Kevin Danois | Lille OSC vs AJ Auxerre | odds 8.5000 | setpiece_last5 78.95 | corners_last5 78.95 | fk_last5 0.0
- - Trent Alexander-Arnold | Sevilla FC vs Real Madrid | odds 4.5000 | setpiece_last5 78.57 | corners_last5 78.95 | fk_last5 77.78
- - Trent Alexander-Arnold | Real Madrid vs Athletic Bilbao | odds 3.7500 | setpiece_last5 78.57 | corners_last5 78.95 | fk_last5 77.78
- - James Garner | Everton FC vs Sunderland AFC | odds 4.5000 | setpiece_last5 75.0 | corners_last5 72.0 | fk_last5 85.71
- - James Garner | Tottenham Hotspur vs Everton FC | odds 6.5000 | setpiece_last5 75.0 | corners_last5 72.0 | fk_last5 85.71
- - Santi Cazorla | Real Oviedo vs Deportivo Alaves | odds 7.0000 | setpiece_last5 75.0 | corners_last5 68.75 | fk_last5 83.33
- - Santi Cazorla | RCD Mallorca vs Real Oviedo | odds 8.0000 | setpiece_last5 75.0 | corners_last5 68.75 | fk_last5 83.33
- - Pablo Pagis | FC Lorient vs Le Havre AC | odds 5.5000 | setpiece_last5 72.0 | corners_last5 83.33 | fk_last5 63.64
- - Branco van den Boomen | Stade Brest 29 vs Angers SCO | odds 7.0000 | setpiece_last5 70.0 | corners_last5 78.57 | fk_last5 50.0
- - Mateus Mane | Wolverhampton Wanderers vs Fulham FC | odds 8.0000 | setpiece_last5 67.57 | corners_last5 75.0 | fk_last5 62.5
- - Mateus Mane | Burnley FC vs Wolverhampton Wanderers | odds 7.0000 | setpiece_last5 67.57 | corners_last5 75.0 | fk_last5 62.5
- - Dominik Szoboszlai | Liverpool FC vs Brentford FC | odds 4.3330 | setpiece_last5 65.85 | corners_last5 57.69 | fk_last5 80.0
- - Bruno Fernandes | Brighton & Hove Albion vs Manchester United | odds 2.6250 | setpiece_last5 65.38 | corners_last5 59.09 | fk_last5 100.0
- - Sebastian Szymanski | Olympique Marseille vs Stade Rennais FC | odds 4.5000 | setpiece_last5 64.44 | corners_last5 65.79 | fk_last5 66.67
- - Lucas Da Cunha | US Cremonese vs Como 1907 | odds 5.0000 | setpiece_last5 58.62 | corners_last5 60.0 | fk_last5 50.0
- - Mathias Jensen | Brentford FC vs Crystal Palace | odds 4.3330 | setpiece_last5 58.62 | corners_last5 57.89 | fk_last5 66.67
- - Mathias Jensen | Liverpool FC vs Brentford FC | odds 5.0000 | setpiece_last5 58.62 | corners_last5 57.89 | fk_last5 66.67
+ - Jon Ander Olasagasti | Espanyol Barcelona vs Levante UD | odds 10.0000 | setpiece_last5 58.33 | corners_last5 63.64 | fk_last5 50.0
+ - Ruben Vargas | Sevilla FC vs Rayo Vallecano | odds 5.0000 | setpiece_last5 56.52 | corners_last5 57.14 | fk_last5 55.56
+ - Denis Suarez | Deportivo Alaves vs Getafe CF | odds 7.0000 | setpiece_last5 38.24 | corners_last5 41.67 | fk_last5 33.33
+ - Hugo Alvarez | RC Celta de Vigo vs CA Osasuna | odds 6.0000 | setpiece_last5 25.0 | corners_last5 30.0 | fk_last5 0.0
+ - Alberto Moleiro | Racing Santander vs Villarreal CF | odds 5.0000 | setpiece_last5 24.14 | corners_last5 27.27 | fk_last5 20.0
+ - Jon Moncayola | RC Celta de Vigo vs CA Osasuna | odds 7.5000 | setpiece_last5 18.92 | corners_last5 20.83 | fk_last5 15.38
+ - Sergi Cardona | Racing Santander vs Villarreal CF | odds 7.5000 | setpiece_last5 17.24 | corners_last5 18.18 | fk_last5 20.0
+ - Florian Lejeune | Sevilla FC vs Rayo Vallecano | odds 11.0000 | setpiece_last5 13.64 | corners_last5 0.0 | fk_last5 50.0
+ - Aimar Oroz | RC Celta de Vigo vs CA Osasuna | odds 6.5000 | setpiece_last5 10.81 | corners_last5 16.67 | fk_last5 0.0
+ - Pere Milla | Espanyol Barcelona vs Levante UD | odds 5.5000 | setpiece_last5 10.34 | corners_last5 5.0 | fk_last5 22.22
+ - Hugo Sotelo | Espanyol Barcelona vs Levante UD | odds 8.5000 | setpiece_last5 8.33 | corners_last5 10.0 | fk_last5 0.0
+ - Adria Pedrosa | Sevilla FC vs Rayo Vallecano | odds 7.5000 | setpiece_last5 8.0 | corners_last5 0.0 | fk_last5 14.29
+ - Nicolas Pepe | Racing Santander vs Villarreal CF | odds 4.5000 | setpiece_last5 6.9 | corners_last5 9.09 | fk_last5 0.0
+ - Lucas Boye | Deportivo Alaves vs Getafe CF | odds 7.5000 | setpiece_last5 5.88 | corners_last5 0.0 | fk_last5 22.22
+ - Kike Barja | RC Celta de Vigo vs CA Osasuna | odds 7.0000 | setpiece_last5 5.41 | corners_last5 8.33 | fk_last5 0.0
+ - Randy Nteka | Sevilla FC vs Rayo Vallecano | odds 8.0000 | setpiece_last5 4.55 | corners_last5 0.0 | fk_last5 0.0
+ - Gabriel Suazo | Sevilla FC vs Rayo Vallecano | odds 7.0000 | setpiece_last5 4.35 | corners_last5 0.0 | fk_last5 11.11
+ - Pol Lozano | Espanyol Barcelona vs Levante UD | odds 8.5000 | setpiece_last5 3.45 | corners_last5 5.0 | fk_last5 0.0
+ - Georges Mikautadze | Racing Santander vs Villarreal CF | odds 5.0000 | setpiece_last5 3.45 | corners_last5 4.55 | fk_last5 0.0
+ - Ayoze Perez | Racing Santander vs Villarreal CF | odds 5.5000 | setpiece_last5 3.45 | corners_last5 0.0 | fk_last5 0.0
 
 Unmatched sample
- - Jorgen Larsen | Brentford FC vs Crystal Palace
- - Evann Guessand | Brentford FC vs Crystal Palace
- - Michael Kayode | Brentford FC vs Crystal Palace
- - Joel Drakes-Thomas | Brentford FC vs Crystal Palace
- - Jefferson Lerma | Brentford FC vs Crystal Palace
- - Kaden Rodney | Brentford FC vs Crystal Palace
- - Nathan Collins | Brentford FC vs Crystal Palace
- - Rio Cardines | Brentford FC vs Crystal Palace
- - Sepp van den Berg | Brentford FC vs Crystal Palace
- - Tyrick Mitchell | Brentford FC vs Crystal Palace
- - Chadi Riad | Brentford FC vs Crystal Palace
- - Chris Richards | Brentford FC vs Crystal Palace
- - Jaydee Canvot | Brentford FC vs Crystal Palace
- - Maxence Lacroix | Brentford FC vs Crystal Palace
- - Nathaniel Clyne | Brentford FC vs Crystal Palace
- - Daniel Munoz | Brentford FC vs Crystal Palace
- - Chrisantus Uche | Brentford FC vs Crystal Palace
- - Kaye Furo | Brentford FC vs Crystal Palace
- - Reiss Nelson | Brentford FC vs Crystal Palace
- - Ollie Shield | Brentford FC vs Crystal Palace
+ - Alex Freeman | Racing Santander vs Villarreal CF
+ - Sergio Canales | Racing Santander vs Villarreal CF
+ - Andres Martin | Racing Santander vs Villarreal CF
+ - Inigo Vicente | Racing Santander vs Villarreal CF
+ - Carlos Romero | Racing Santander vs Villarreal CF
+ - Jorge Salinas | Racing Santander vs Villarreal CF
+ - Alvaro Mantilla | Racing Santander vs Villarreal CF
+ - Juan Carlos Arana | Racing Santander vs Villarreal CF
+ - Santiago Comesana | Racing Santander vs Villarreal CF
+ - Sergio Martinez | Racing Santander vs Villarreal CF
+ - Inigo Sainz-Maza | Racing Santander vs Villarreal CF
+ - Maguette Gueye | Racing Santander vs Villarreal CF
+ - Pau Navarro | Racing Santander vs Villarreal CF
+ - Renato Veiga | Racing Santander vs Villarreal CF
+ - Juan Foyth | Racing Santander vs Villarreal CF
+ - Willy Kambwala | Racing Santander vs Villarreal CF
+ - Facundo Gonzalez | Racing Santander vs Villarreal CF
+ - Logan Costa | Racing Santander vs Villarreal CF
+ - Pablo Ramon | Racing Santander vs Villarreal CF
+ - Manu Hernando | Racing Santander vs Villarreal CF

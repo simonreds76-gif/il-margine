@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-16T16:31:40Z",
+  "generated_at": "2026-08-14T08:25:19Z",
   "lane_status": "FROZEN_RESEARCH",
   "reactivation_ready": false,
   "backtest": {
@@ -13,27 +13,27 @@
           "n": 32780,
           "positives": 2129,
           "prevalence": 0.06494813910921293,
-          "mean_probability": 0.07786275885684796,
-          "brier": 0.05932425470266151,
-          "log_loss": 0.22696076986752808,
-          "ece": 0.016797143362035815
+          "mean_probability": 0.07786275885684737,
+          "brier": 0.059324254702661575,
+          "log_loss": 0.2269607698675272,
+          "ece": 0.01679714336203591
         },
         "calibrated": {
           "n": 32780,
           "positives": 2129,
           "prevalence": 0.06494813910921293,
-          "mean_probability": 0.06494816119879984,
-          "brier": 0.05875649227484211,
-          "log_loss": 0.22456342492351578,
-          "ece": 0.004353520635268235
+          "mean_probability": 0.06494816119879974,
+          "brier": 0.058756492274842004,
+          "log_loss": 0.22456342492351508,
+          "ece": 0.004353520635268211
         },
         "naive": {
           "n": 32780,
           "positives": 2129,
           "prevalence": 0.06494813910921293,
-          "mean_probability": 0.06467595956926736,
-          "brier": 0.060729952417165216,
-          "log_loss": 0.2403714215458778,
+          "mean_probability": 0.06467595956928288,
+          "brier": 0.06072995241719301,
+          "log_loss": 0.24037142154572705,
           "ece": 0.0030811470408785863
         }
       },
@@ -42,28 +42,28 @@
           "n": 42905,
           "positives": 2766,
           "prevalence": 0.06446801072136114,
-          "mean_probability": 0.07753005236849903,
-          "brier": 0.05895801998624584,
-          "log_loss": 0.22666113208759453,
-          "ece": 0.01833337919907987
+          "mean_probability": 0.07753005236849977,
+          "brier": 0.05895801998624574,
+          "log_loss": 0.22666113208759173,
+          "ece": 0.018333379199079784
         },
         "calibrated": {
           "n": 42905,
           "positives": 2766,
           "prevalence": 0.06446801072136114,
-          "mean_probability": 0.06465154426907292,
-          "brier": 0.05832489032986362,
-          "log_loss": 0.2238679817015288,
-          "ece": 0.004820896772899322
+          "mean_probability": 0.06465154426907267,
+          "brier": 0.058324890329864,
+          "log_loss": 0.22386798170152705,
+          "ece": 0.0048208967728991725
         },
         "naive": {
           "n": 42905,
           "positives": 2766,
           "prevalence": 0.06446801072136114,
-          "mean_probability": 0.06467595956926736,
-          "brier": 0.06031192955771495,
-          "log_loss": 0.23908875689082026,
-          "ece": 0.0035257964054164746
+          "mean_probability": 0.06467595956928353,
+          "brier": 0.060311929557699574,
+          "log_loss": 0.23908875689083184,
+          "ece": 0.0035257964054170067
         }
       },
       "test": {
@@ -71,40 +71,40 @@
           "n": 44739,
           "positives": 2719,
           "prevalence": 0.06077471557254297,
-          "mean_probability": 0.07443872864363545,
-          "brier": 0.05633710902767366,
-          "log_loss": 0.21977568725476093,
-          "ece": 0.019751579614535737
+          "mean_probability": 0.07443872864363557,
+          "brier": 0.05633710902767374,
+          "log_loss": 0.219775687254762,
+          "ece": 0.019751579614535636
         },
         "calibrated": {
           "n": 44739,
           "positives": 2719,
           "prevalence": 0.06077471557254297,
-          "mean_probability": 0.06250290854317216,
-          "brier": 0.05555855525042201,
-          "log_loss": 0.21633036427798596,
-          "ece": 0.004740374654669064
+          "mean_probability": 0.06250290854317145,
+          "brier": 0.05555855525042199,
+          "log_loss": 0.2163303642779868,
+          "ece": 0.004740374654669157
         },
         "naive": {
           "n": 44739,
           "positives": 2719,
           "prevalence": 0.06077471557254297,
-          "mean_probability": 0.06467595956926736,
-          "brier": 0.05709636922434144,
-          "log_loss": 0.22922210607835702,
-          "ece": 0.003901243996724389
+          "mean_probability": 0.06467595956928361,
+          "brier": 0.057096369224329535,
+          "log_loss": 0.22922210607836488,
+          "ece": 0.003901243996722585
         }
       }
     },
     "minutes": {
       "n": 87644,
-      "mean8_mae": 18.97072654309316,
+      "mean8_mae": 18.970726543093164,
       "median5_mae": 17.867828944365844,
       "selected": "median_last_5_appearances"
     },
     "platt": {
-      "a": 0.7460910241980667,
-      "b": -0.7630763477165939,
+      "a": 0.7460910241980668,
+      "b": -0.7630763477165937,
       "fit_seasons": [
         "2023-2024",
         "2024-2025"
@@ -113,28 +113,28 @@
     "selection_note": "Outcome evaluation is conditional on the player making an appearance; non-runners are void in the market."
   },
   "settlement": {
-    "status": "PASS",
-    "extraction_status": "PASS",
-    "operational_status": "PASS",
-    "result_files": 168,
-    "finished_matches": 165,
-    "instrumented_finished_matches": 88,
-    "assist_complete_matches": 84,
-    "assist_complete_rate": 0.9545454545454546,
-    "matched_fixtures": 80,
-    "fixture_match_rate": 0.9523809523809523,
-    "eligible_player_appearances": 2483,
-    "compared_player_appearances": 2236,
-    "player_match_rate": 0.900523560209424,
-    "agreement_rate": 0.9991055456171736,
-    "positive_cases": 153,
-    "positive_agreement_rate": 0.9869281045751634
+    "status": "FAIL",
+    "extraction_status": "FAIL",
+    "operational_status": "FAIL",
+    "result_files": 0,
+    "finished_matches": 0,
+    "instrumented_finished_matches": 0,
+    "assist_complete_matches": 0,
+    "assist_complete_rate": 0.0,
+    "matched_fixtures": 0,
+    "fixture_match_rate": 0.0,
+    "eligible_player_appearances": 0,
+    "compared_player_appearances": 0,
+    "player_match_rate": 0.0,
+    "agreement_rate": 0.0,
+    "positive_cases": 0,
+    "positive_agreement_rate": 0.0
   },
   "lineup_minutes": {
     "status": "IMPLEMENTED_NOT_PROSPECTIVE",
     "historical_minutes_model": {
       "n": 87644,
-      "mean8_mae": 18.97072654309316,
+      "mean8_mae": 18.970726543093164,
       "median5_mae": 17.867828944365844,
       "selected": "median_last_5_appearances"
     },
@@ -143,35 +143,35 @@
   "market": {
     "status": "FAIL",
     "reason": "one_sided_margin_adjustment_needs_90_days_and_prospective_confirmation",
-    "unique_market_players": 3010,
+    "unique_market_players": 3223,
     "matched_participants": 1300,
     "matched_old_shadow_signals": 0,
     "model_raw": {
       "n": 1300,
       "positives": 84,
       "prevalence": 0.06461538461538462,
-      "mean_probability": 0.06562092153846154,
-      "brier": 0.05892466515445539,
-      "log_loss": 0.2285830368456831,
-      "ece": 0.009461364615384618
+      "mean_probability": 0.06562092153846147,
+      "brier": 0.05892466515445546,
+      "log_loss": 0.22858303684568293,
+      "ece": 0.009461364615384603
     },
     "model_historical_calibration": {
       "n": 1300,
       "positives": 84,
       "prevalence": 0.06461538461538462,
-      "mean_probability": 0.058556987444791354,
-      "brier": 0.05912634058784779,
-      "log_loss": 0.22927467467796359,
-      "ece": 0.012832107434619986
+      "mean_probability": 0.058556987444791396,
+      "brier": 0.05912634058784784,
+      "log_loss": 0.2292746746779639,
+      "ece": 0.012832107434619997
     },
     "market_one_sided_implied": {
       "n": 1300,
       "positives": 84,
       "prevalence": 0.06461538461538462,
-      "mean_probability": 0.14442929388025671,
-      "brier": 0.06565498574780955,
-      "log_loss": 0.2600675670010303,
-      "ece": 0.07981390926487213
+      "mean_probability": 0.14442929388025744,
+      "brier": 0.06565498574780984,
+      "log_loss": 0.2600675670010297,
+      "ece": 0.07981390926487192
     },
     "one_sided_margin_calibration": {
       "method": "platt_on_raw_implied_probability",
@@ -192,19 +192,19 @@
         "n": 598,
         "positives": 37,
         "prevalence": 0.061872909698996656,
-        "mean_probability": 0.14097766084644042,
-        "brier": 0.06038646818731218,
-        "log_loss": 0.24343995124906387,
-        "ece": 0.07910475114744378
+        "mean_probability": 0.14097766084644092,
+        "brier": 0.06038646818731211,
+        "log_loss": 0.24343995124906354,
+        "ece": 0.0791047511474438
       },
       "holdout_adjusted": {
         "n": 598,
         "positives": 37,
         "prevalence": 0.061872909698996656,
-        "mean_probability": 0.06456729063575907,
-        "brier": 0.055804832461602734,
-        "log_loss": 0.21543240025402993,
-        "ece": 0.03856643512514036
+        "mean_probability": 0.06456729063575903,
+        "brier": 0.05580483246160267,
+        "log_loss": 0.2154324002540296,
+        "ece": 0.03856643512514037
       }
     },
     "note": "The empirical margin adjustment is research-only until it spans at least 90 days and then survives prospective confirmation."

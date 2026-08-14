@@ -1,36 +1,28 @@
 Assist Value Model Report
-generated_at_utc: 2026-07-03T15:14:05Z
+generated_at_utc: 2026-08-14T08:25:11Z
 
 Status
-model_status: ENABLED_SHADOW_V0
+model_status: ASSIST_RESEARCH_V1
 public_signal_status: DISABLED
-settlement_status: ENABLED_SHADOW_FOTMOB
-backtest_status: NOT_BACKTESTED
+settlement_status: VALIDATED_INSTRUMENTED_SAMPLE
+backtest_status: PASSED_2025_2026_HOLDOUT
 
 Counts
-priced_rows: 3010
-shadow_signals: 12
-watch_rows: 15
-shadow_signals_by_league: epl=2, la-liga=3, ligue-1=1, serie-a=6
+priced_rows: 213
+shadow_signals: 0
+watch_rows: 1
+shadow_signals_by_league: none
 
 Model
 p_assist = 1 - exp(-lambda)
 lambda = blended player xA/assist rate per90 * expected_minutes * team_attack_scale + setpiece_role_boost
+Probability is Platt-calibrated using 2023-24 and 2024-25, with 2025-26 held out.
+Expected minutes use the median of the last five appearances and confirmed-lineup state.
+A shadow signal requires a confirmed starter; predicted or unknown lineups remain watch-only.
 Market probability is 1 / Bet365 decimal odds; no vig adjustment because only one side is available.
 
 Top shadow signals
- - Jon Ander Olasagasti | Real Betis Seville vs Levante UD | fair 4.020 vs market 7.500 | edge 11.54pp | conf medium | setpiece 58.33
- - Federico Dimarco | Bologna FC vs Inter Milano | fair 3.038 vs market 4.500 | edge 10.69pp | conf high | setpiece 32.26
- - Jon Ander Olasagasti | Levante UD vs RCD Mallorca | fair 4.015 vs market 7.000 | edge 10.62pp | conf medium | setpiece 58.33
- - Nicolo Zaniolo | SSC Napoli vs Udinese Calcio | fair 4.858 vs market 7.500 | edge 7.25pp | conf high | setpiece 50.0
- - Gauthier Hein | OGC Nice vs FC Metz | fair 4.646 vs market 7.000 | edge 7.24pp | conf high | setpiece 94.12
- - James Ward-Prowse | Arsenal FC vs Burnley FC | fair 6.742 vs market 12.000 | edge 6.50pp | conf high | setpiece 52.94
- - Luis Milla | Elche CF vs Getafe CF | fair 4.333 vs market 6.000 | edge 6.41pp | conf high | setpiece 96.88
- - Federico Dimarco | Inter Milano vs Hellas Verona | fair 2.873 vs market 3.500 | edge 6.23pp | conf high | setpiece 32.26
- - Nicolo Barella | Bologna FC vs Inter Milano | fair 4.620 vs market 6.000 | edge 4.98pp | conf high | setpiece 19.35
- - Gianluca Gaetano | AC Milan vs Cagliari Calcio | fair 6.220 vs market 9.000 | edge 4.97pp | conf high | setpiece 13.79
- - Anton Stach | West Ham United vs Leeds United | fair 5.277 vs market 7.000 | edge 4.66pp | conf high | setpiece 54.84
- - Rafael Obrador | Cagliari Calcio vs Torino FC | fair 6.572 vs market 9.000 | edge 4.11pp | conf medium | setpiece 35.0
+ - none
 
 Guardrail
-These are private model candidates only. Do not publish until settlement/backtest gates exist.
+These are private model candidates only. Do not publish until every reactivation gate passes.
