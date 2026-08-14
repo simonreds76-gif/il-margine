@@ -420,14 +420,21 @@ def capture_market_prices(args: argparse.Namespace) -> int:
     return scrape_exit
 
 
-def run_comparison_only(as_of: str, *, skip_sync: bool, lookback_days: int) -> int:
+def run_comparison_only(
+    as_of: str,
+    *,
+    skip_sync: bool,
+    lookback_days: int,
+    skip_derived_boards: bool = False,
+) -> int:
     if not skip_sync:
         sync_hosted_captures(as_of, lookback_days)
-    refresh_derived_ace_boards(as_of)
     market_file = select_market_file(as_of)
     if market_file is None:
         print(f"WARNING: no hosted/local Bet365 capture contains {as_of} events.")
         return write_pipeline_health(as_of, None)
+    if not skip_derived_boards:
+        refresh_derived_ace_boards(as_of)
     print(f"Using hosted/local Bet365 capture: {market_file}")
     if not run_comparison(as_of, market_file):
         return write_pipeline_health(as_of, market_file, strict=True)
@@ -444,6 +451,7 @@ def main() -> int:
     parser.add_argument("--skip-odds", action="store_true", help="Do not scrape Bet365 lines even if a key is configured")
     parser.add_argument("--require-odds", action="store_true", help="Fail if the Bet365 odds scrape cannot run")
     parser.add_argument("--comparison-only", action="store_true", help="Sync hosted prices and refresh comparison/tracking without rebuilding projections")
+    parser.add_argument("--skip-derived-boards", action="store_true", help="Skip slow derived ace boards during a fast comparison pass")
     parser.add_argument("--capture-only", action="store_true", help="Capture Bet365/BetMGM prices without rebuilding projections")
     parser.add_argument("--skip-hosted-sync", action="store_true", help="Do not sync captures from the golden data branch")
     parser.add_argument("--hosted-lookback-days", type=int, default=7)
@@ -462,6 +470,7 @@ def main() -> int:
             args.as_of,
             skip_sync=args.skip_hosted_sync,
             lookback_days=args.hosted_lookback_days,
+            skip_derived_boards=args.skip_derived_boards,
         )
 
     # Capture first. The projection board can take several minutes and is

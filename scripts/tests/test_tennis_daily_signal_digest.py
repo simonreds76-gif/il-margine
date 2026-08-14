@@ -295,6 +295,11 @@ class TennisDailySignalDigestTests(unittest.TestCase):
     def test_digest_dispatch_defaults_to_golden(self) -> None:
         self.assertEqual(MODULE.DEFAULT_REF, "golden-with-speed-insights")
 
+    def test_dispatch_prefers_bounded_gh_cli(self) -> None:
+        source = SCRIPT.read_text(encoding="utf-8")
+        self.assertIn('"gh",\n                "workflow",\n                "run"', source)
+        self.assertIn("timeout=20", source)
+
 
 if __name__ == "__main__":
     unittest.main()

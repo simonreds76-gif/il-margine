@@ -85,7 +85,13 @@ function Invoke-LoggedProcess {
         if ($TimeoutSeconds -gt 0) {
             if (-not $proc.WaitForExit($TimeoutSeconds * 1000)) {
                 $timedOut = $true
-                Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+                try {
+                    # Kill the complete Python process tree. The venv launcher can
+                    # otherwise leave a child running after the wrapper times out.
+                    Start-Process -FilePath "taskkill.exe" -ArgumentList @("/PID", "$($proc.Id)", "/T", "/F") -WindowStyle Hidden -Wait | Out-Null
+                } catch {
+                    Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+                }
                 $proc.WaitForExit(10000) | Out-Null
                 Log "WARNING: $Label timed out after ${TimeoutSeconds}s and was stopped."
             }
@@ -151,8 +157,8 @@ try {
         Log "WARNING: 32-bit Python not found at $py32, skipping extract"
     }
 
-    Log "=== Step 2/8: Supabase sync (--quick, includes players) ==="
-    & python scripts\oncourt-load-supabase.py --quick 2>&1 | ForEach-Object { Log $_ }
+    Log "=== Step 2/8: Supabase sync (--quick --skip-players) ==="
+    & python scripts\oncourt-load-supabase.py --quick --skip-players 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
         Log "ERROR: Supabase sync failed (exit $LASTEXITCODE)"
         Set-RunStatusFailure "SupabaseSyncFailed" "Supabase sync failed (exit $LASTEXITCODE)"
@@ -332,7 +338,7 @@ try {
     # Capture and settlement must survive a timeout in the independent,
     # historical projection-board build.
     Log "=== Step 8c/8: Tennis props comparison and settlement ==="
-    $tennisPropsCompareExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\run-tennis-props-daily.py", "--as-of", (Get-Date -Format "yyyy-MM-dd"), "--comparison-only", "--skip-hosted-sync") -Label "tennis props hosted-price comparison" -TimeoutSeconds 420
+    $tennisPropsCompareExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\run-tennis-props-daily.py", "--as-of", (Get-Date -Format "yyyy-MM-dd"), "--comparison-only", "--skip-hosted-sync", "--skip-derived-boards") -Label "tennis props hosted-price comparison" -TimeoutSeconds 180
     if ($tennisPropsCompareExit -ne 0) {
         Log "WARNING: tennis props hosted-price comparison failed (exit $tennisPropsCompareExit), continuing..."
     }

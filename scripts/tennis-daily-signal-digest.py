@@ -472,6 +472,33 @@ def github_token() -> str:
 
 def dispatch(messages: list[str], *, repository: str, workflow: str, ref: str) -> None:
     encoded = base64.b64encode(json.dumps(messages, ensure_ascii=False).encode("utf-8")).decode("ascii")
+    try:
+        result = subprocess.run(
+            [
+                "gh",
+                "workflow",
+                "run",
+                workflow,
+                "--repo",
+                repository,
+                "--ref",
+                ref,
+                "--json",
+            ],
+            input=json.dumps({"payload_b64": encoded}),
+            capture_output=True,
+            text=True,
+            timeout=20,
+            check=False,
+        )
+        if result.returncode == 0:
+            print("GitHub Telegram relay dispatched via gh CLI.")
+            return
+        gh_error = (result.stderr or result.stdout).strip()[:300]
+        print(f"WARNING: gh relay dispatch failed; using HTTP fallback: {gh_error}", file=sys.stderr)
+    except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
+        print(f"WARNING: gh relay dispatch unavailable; using HTTP fallback: {type(exc).__name__}", file=sys.stderr)
+
     token = github_token()
     payload = json.dumps({"ref": ref, "inputs": {"payload_b64": encoded}}).encode("utf-8")
     request = urllib.request.Request(
@@ -487,7 +514,7 @@ def dispatch(messages: list[str], *, repository: str, workflow: str, ref: str) -
         method="POST",
     )
     try:
-        with urllib.request.urlopen(request, timeout=30) as response:
+        with urllib.request.urlopen(request, timeout=15) as response:
             response.read()
     except urllib.error.HTTPError as exc:
         detail = exc.read().decode("utf-8", errors="replace")[:500]

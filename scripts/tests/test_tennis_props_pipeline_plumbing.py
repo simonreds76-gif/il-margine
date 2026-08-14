@@ -207,6 +207,33 @@ class DailyMarketSelectionTests(unittest.TestCase):
             finally:
                 DAILY.PROPS_DIR = old_props
 
+    def test_fast_comparison_skips_derived_ace_boards(self) -> None:
+        old_select = DAILY.select_market_file
+        old_refresh = DAILY.refresh_derived_ace_boards
+        old_compare = DAILY.run_comparison
+        old_tracking = DAILY.run_shadow_tracking
+        old_health = DAILY.write_pipeline_health
+        marker = Path("market.csv")
+        DAILY.select_market_file = lambda _as_of: marker
+        DAILY.refresh_derived_ace_boards = lambda _as_of: self.fail("derived boards should be skipped")
+        DAILY.run_comparison = lambda _as_of, market: market == marker
+        DAILY.run_shadow_tracking = lambda _as_of: None
+        DAILY.write_pipeline_health = lambda *_args, **_kwargs: 0
+        try:
+            result = DAILY.run_comparison_only(
+                "2026-07-29",
+                skip_sync=True,
+                lookback_days=3,
+                skip_derived_boards=True,
+            )
+            self.assertEqual(result, 0)
+        finally:
+            DAILY.select_market_file = old_select
+            DAILY.refresh_derived_ace_boards = old_refresh
+            DAILY.run_comparison = old_compare
+            DAILY.run_shadow_tracking = old_tracking
+            DAILY.write_pipeline_health = old_health
+
     def test_failed_comparison_removes_same_date_stale_output(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             old_props = DAILY.PROPS_DIR
@@ -232,10 +259,16 @@ class DailyMarketSelectionTests(unittest.TestCase):
         self.assertIn("run-tennis-props-daily.py", am_script)
         self.assertIn("--capture-only", am_script)
         self.assertIn("--comparison-only", am_script)
+        self.assertIn("--skip-derived-boards", am_script)
         self.assertLess(am_script.index("--capture-only"), am_script.index("build-tennis-props-board.py"))
         self.assertIn("--skip-hosted-sync", am_script)
         self.assertIn('"--require-ready", "--new-only"', am_script)
         self.assertIn('"scripts\\tennis-evidence-snapshot.py", "--supabase"', am_script)
+
+    def test_am_timeout_kills_complete_process_tree(self) -> None:
+        am_script = (SCRIPTS / "oncourt-am-refresh.ps1").read_text(encoding="utf-8")
+        self.assertIn('Start-Process -FilePath "taskkill.exe"', am_script)
+        self.assertIn('"/T"', am_script)
 
     def test_nightly_task_publishes_compact_tennis_evidence_after_settlement(self) -> None:
         nightly = (SCRIPTS / "oncourt-daily.ps1").read_text(encoding="utf-8")
