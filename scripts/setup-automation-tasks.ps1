@@ -11,6 +11,7 @@ $amRefreshScript = Join-Path $root "scripts\oncourt-am-refresh.ps1"
 $weeklyScript = Join-Path $root "scripts\oncourt-weekly.ps1"
 $closeCaptureScript = Join-Path $root "scripts\pinnacle-close-capture.ps1"
 $healthScript = Join-Path $root "scripts\tennis-health-check.ps1"
+$digestFallbackScript = Join-Path $root "scripts\tennis-digest-fallback.ps1"
 $psExe = "$env:WINDIR\System32\WindowsPowerShell\v1.0\powershell.exe"
 
 if (!(Test-Path $dailyScript)) { throw "Missing $dailyScript" }
@@ -18,12 +19,14 @@ if (!(Test-Path $amRefreshScript)) { throw "Missing $amRefreshScript" }
 if (!(Test-Path $weeklyScript)) { throw "Missing $weeklyScript" }
 if (!(Test-Path $closeCaptureScript)) { throw "Missing $closeCaptureScript" }
 if (!(Test-Path $healthScript)) { throw "Missing $healthScript" }
+if (!(Test-Path $digestFallbackScript)) { throw "Missing $digestFallbackScript" }
 
 $dailyCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File `"$dailyScript`""
 $amRefreshCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File `"$amRefreshScript`""
 $weeklyCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File `"$weeklyScript`""
 $closeCaptureCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File `"$closeCaptureScript`""
 $healthCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File `"$healthScript`""
+$digestFallbackCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File `"$digestFallbackScript`""
 
 function Test-ScheduledTaskExists([string]$taskName) {
     & cmd.exe /c "schtasks /Query /TN `"$taskName`" >nul 2>&1"
@@ -46,17 +49,30 @@ function Set-ScheduledTaskBatteryFriendly([string]$taskName) {
         -replace '<DisallowStartIfOnBatteries>true</DisallowStartIfOnBatteries>', '<DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>' `
         -replace '<StopIfGoingOnBatteries>true</StopIfGoingOnBatteries>', '<StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>'
 
+    # A sleeping/offline laptop must catch up the daily refresh when it next
+    # becomes available instead of silently leaving yesterday's board live.
+    if ($patchedXml -match '<StartWhenAvailable>.*?</StartWhenAvailable>') {
+        $patchedXml = [regex]::Replace($patchedXml, '<StartWhenAvailable>.*?</StartWhenAvailable>', '<StartWhenAvailable>true</StartWhenAvailable>')
+    } else {
+        $patchedXml = $patchedXml -replace '</Settings>', "    <StartWhenAvailable>true</StartWhenAvailable>`r`n  </Settings>"
+    }
+
     $tmpPath = Join-Path ([System.IO.Path]::GetTempPath()) "$taskName.xml"
-    Set-Content -Path $tmpPath -Value $patchedXml -Encoding Unicode
-    schtasks /Create /TN $taskName /XML $tmpPath /F | Out-Null
-    Remove-Item -LiteralPath $tmpPath -Force -ErrorAction SilentlyContinue
+    try {
+        Set-Content -Path $tmpPath -Value $patchedXml -Encoding Unicode
+        schtasks /Create /TN $taskName /XML $tmpPath /F | Out-Null
+        if ($LASTEXITCODE -ne 0) { throw "Unable to update scheduled task settings for $taskName (exit $LASTEXITCODE)" }
+    } finally {
+        Remove-Item -LiteralPath $tmpPath -Force -ErrorAction SilentlyContinue
+    }
 }
 
 function Set-ScheduledTaskBridgeHardening(
     [string]$taskName,
     [string]$executionTimeLimit = "PT10M",
     [string]$restartInterval = "PT5M",
-    [int]$restartCount = 2
+    [int]$restartCount = 2,
+    [switch]$HighestRunLevel
 ) {
     $xml = schtasks /Query /TN $taskName /XML
     if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($xml)) {
@@ -64,12 +80,14 @@ function Set-ScheduledTaskBridgeHardening(
     }
 
     $patchedXml = $xml
-    if ($patchedXml -match '<RunLevel>.*?</RunLevel>') {
-        $patchedXml = [regex]::Replace($patchedXml, '<RunLevel>.*?</RunLevel>', '<RunLevel>HighestAvailable</RunLevel>')
-    } elseif ($patchedXml -match '</LogonType>') {
-        $patchedXml = $patchedXml -replace '</LogonType>', "</LogonType>`r`n      <RunLevel>HighestAvailable</RunLevel>"
-    } else {
-        throw "Scheduled task XML for $taskName is missing <LogonType>"
+    if ($HighestRunLevel) {
+        if ($patchedXml -match '<RunLevel>.*?</RunLevel>') {
+            $patchedXml = [regex]::Replace($patchedXml, '<RunLevel>.*?</RunLevel>', '<RunLevel>HighestAvailable</RunLevel>')
+        } elseif ($patchedXml -match '</LogonType>') {
+            $patchedXml = $patchedXml -replace '</LogonType>', "</LogonType>`r`n      <RunLevel>HighestAvailable</RunLevel>"
+        } else {
+            throw "Scheduled task XML for $taskName is missing <LogonType>"
+        }
     }
 
     if ($patchedXml -match '<WakeToRun>.*?</WakeToRun>') {
@@ -113,6 +131,7 @@ function Set-ScheduledTaskBridgeHardening(
     try {
         Set-Content -Path $tmpPath -Value $patchedXml -Encoding Unicode
         schtasks /Create /TN $taskName /XML $tmpPath /F | Out-Null
+        if ($LASTEXITCODE -ne 0) { throw "Unable to harden scheduled task $taskName (exit $LASTEXITCODE)" }
     } finally {
         Remove-Item -LiteralPath $tmpPath -Force -ErrorAction SilentlyContinue
     }
@@ -129,6 +148,7 @@ schtasks /Create /TN "IlMargine-Weekly" /SC WEEKLY /D SUN /ST 03:00 /TR "$weekly
 schtasks /Create /TN "IlMargine-Tennis-Close-Capture" /SC DAILY /ST 08:00 /RI 30 /DU 16:00 /TR "$closeCaptureCmd" /F | Out-Host
 schtasks /Create /TN "IlMargine-Tennis-Health-AM" /SC DAILY /ST 11:15 /TR "$healthCmd" /F | Out-Host
 schtasks /Create /TN "IlMargine-Tennis-Health-PM" /SC DAILY /ST 23:15 /TR "$healthCmd" /F | Out-Host
+schtasks /Create /TN "IlMargine-Tennis-Digest-AM" /SC DAILY /ST 10:50 /TR "$digestFallbackCmd" /F | Out-Host
 
 Set-ScheduledTaskBatteryFriendly "IlMargine-Daily"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Daily-AM"
@@ -136,11 +156,14 @@ Set-ScheduledTaskBatteryFriendly "IlMargine-Weekly"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Tennis-Close-Capture"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Tennis-Health-AM"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Tennis-Health-PM"
+Set-ScheduledTaskBatteryFriendly "IlMargine-Tennis-Digest-AM"
 Set-ScheduledTaskBridgeHardening "IlMargine-Daily" -executionTimeLimit "PT2H" -restartInterval "PT15M" -restartCount 1
 Set-ScheduledTaskBridgeHardening "IlMargine-Daily-AM" -executionTimeLimit "PT90M" -restartInterval "PT10M" -restartCount 1
+Set-ScheduledTaskBridgeHardening "IlMargine-Weekly" -executionTimeLimit "PT6H" -restartInterval "PT15M" -restartCount 1
 Set-ScheduledTaskBridgeHardening "IlMargine-Tennis-Close-Capture"
 Set-ScheduledTaskBridgeHardening "IlMargine-Tennis-Health-AM" -executionTimeLimit "PT5M" -restartCount 1
 Set-ScheduledTaskBridgeHardening "IlMargine-Tennis-Health-PM" -executionTimeLimit "PT5M" -restartCount 1
+Set-ScheduledTaskBridgeHardening "IlMargine-Tennis-Digest-AM" -executionTimeLimit "PT5M" -restartCount 1
 
 if (Test-ScheduledTaskExists "IlMargine-Tennis-Shadow-Settle") {
     schtasks /Delete /TN "IlMargine-Tennis-Shadow-Settle" /F | Out-Host
@@ -154,6 +177,7 @@ schtasks /Query /TN "IlMargine-Weekly" | Out-Host
 schtasks /Query /TN "IlMargine-Tennis-Close-Capture" | Out-Host
 schtasks /Query /TN "IlMargine-Tennis-Health-AM" | Out-Host
 schtasks /Query /TN "IlMargine-Tennis-Health-PM" | Out-Host
+schtasks /Query /TN "IlMargine-Tennis-Digest-AM" | Out-Host
 Write-Host ""
 Write-Host "Optional immediate test:"
 Write-Host "  schtasks /Run /TN IlMargine-Daily"
