@@ -1,5 +1,5 @@
 Assist Value Shadow Report
-generated_at_utc: 2026-08-14T08:25:06Z
+generated_at_utc: 2026-08-15T07:39:22Z
 
 Status
 shadow_status: ENABLED_RESEARCH_ONLY
@@ -8,23 +8,24 @@ model_status: NOT_FITTED
 fair_odds_status: NOT_AUTHORISED
 
 Inputs
-raw_odds_rows_loaded: 213
+raw_odds_rows_loaded: 263
 role_players_loaded: 1030
 
 Join
-shadow_rows_assist_only: 213
-role_matched_rows: 59
-role_match_rate_pct: 27.70
+shadow_rows_assist_only: 263
+role_matched_rows: 67
+role_match_rate_pct: 25.48
 ambiguous_player_rows: 0
-unmatched_player_rows: 154
+unmatched_player_rows: 196
 
 Interpretation
 This board is an evidence layer only: Bet365 assist market rows enriched with RotoWire set-piece role shares.
 It is not a betting model, not a public Fair Odds Lab lane, and not a value signal.
 
 Top role-matched rows
- - Jon Ander Olasagasti | Espanyol Barcelona vs Levante UD | odds 10.0000 | setpiece_last5 58.33 | corners_last5 63.64 | fk_last5 50.0
+ - Jon Ander Olasagasti | Espanyol Barcelona vs Levante UD | odds 9.0000 | setpiece_last5 58.33 | corners_last5 63.64 | fk_last5 50.0
  - Ruben Vargas | Sevilla FC vs Rayo Vallecano | odds 5.0000 | setpiece_last5 56.52 | corners_last5 57.14 | fk_last5 55.56
+ - Victor Chust | RC Deportivo De A Coruna vs Elche CF | odds 26.0000 | setpiece_last5 56.0 | corners_last5 60.0 | fk_last5 57.14
  - Denis Suarez | Deportivo Alaves vs Getafe CF | odds 7.0000 | setpiece_last5 38.24 | corners_last5 41.67 | fk_last5 33.33
  - Hugo Alvarez | RC Celta de Vigo vs CA Osasuna | odds 6.0000 | setpiece_last5 25.0 | corners_last5 30.0 | fk_last5 0.0
  - Alberto Moleiro | Racing Santander vs Villarreal CF | odds 5.0000 | setpiece_last5 24.14 | corners_last5 27.27 | fk_last5 20.0
@@ -35,33 +36,32 @@ Top role-matched rows
  - Pere Milla | Espanyol Barcelona vs Levante UD | odds 5.5000 | setpiece_last5 10.34 | corners_last5 5.0 | fk_last5 22.22
  - Hugo Sotelo | Espanyol Barcelona vs Levante UD | odds 8.5000 | setpiece_last5 8.33 | corners_last5 10.0 | fk_last5 0.0
  - Adria Pedrosa | Sevilla FC vs Rayo Vallecano | odds 7.5000 | setpiece_last5 8.0 | corners_last5 0.0 | fk_last5 14.29
+ - Gonzalo Villar | RC Deportivo De A Coruna vs Elche CF | odds 9.0000 | setpiece_last5 8.0 | corners_last5 0.0 | fk_last5 14.29
  - Nicolas Pepe | Racing Santander vs Villarreal CF | odds 4.5000 | setpiece_last5 6.9 | corners_last5 9.09 | fk_last5 0.0
+ - Facundo Buonanotte | RC Deportivo De A Coruna vs Elche CF | odds 7.5000 | setpiece_last5 6.45 | corners_last5 9.52 | fk_last5 0.0
+ - Johan Mojica | Deportivo Alaves vs Getafe CF | odds 8.0000 | setpiece_last5 6.25 | corners_last5 0.0 | fk_last5 15.38
  - Lucas Boye | Deportivo Alaves vs Getafe CF | odds 7.5000 | setpiece_last5 5.88 | corners_last5 0.0 | fk_last5 22.22
+ - Enes Unal | Deportivo Alaves vs Getafe CF | odds 8.5000 | setpiece_last5 5.71 | corners_last5 0.0 | fk_last5 28.57
  - Kike Barja | RC Celta de Vigo vs CA Osasuna | odds 7.0000 | setpiece_last5 5.41 | corners_last5 8.33 | fk_last5 0.0
- - Randy Nteka | Sevilla FC vs Rayo Vallecano | odds 8.0000 | setpiece_last5 4.55 | corners_last5 0.0 | fk_last5 0.0
- - Gabriel Suazo | Sevilla FC vs Rayo Vallecano | odds 7.0000 | setpiece_last5 4.35 | corners_last5 0.0 | fk_last5 11.11
- - Pol Lozano | Espanyol Barcelona vs Levante UD | odds 8.5000 | setpiece_last5 3.45 | corners_last5 5.0 | fk_last5 0.0
- - Georges Mikautadze | Racing Santander vs Villarreal CF | odds 5.0000 | setpiece_last5 3.45 | corners_last5 4.55 | fk_last5 0.0
- - Ayoze Perez | Racing Santander vs Villarreal CF | odds 5.5000 | setpiece_last5 3.45 | corners_last5 0.0 | fk_last5 0.0
 
 Unmatched sample
- - Alex Freeman | Racing Santander vs Villarreal CF
- - Sergio Canales | Racing Santander vs Villarreal CF
- - Andres Martin | Racing Santander vs Villarreal CF
- - Inigo Vicente | Racing Santander vs Villarreal CF
- - Carlos Romero | Racing Santander vs Villarreal CF
- - Jorge Salinas | Racing Santander vs Villarreal CF
- - Alvaro Mantilla | Racing Santander vs Villarreal CF
- - Juan Carlos Arana | Racing Santander vs Villarreal CF
- - Santiago Comesana | Racing Santander vs Villarreal CF
- - Sergio Martinez | Racing Santander vs Villarreal CF
- - Inigo Sainz-Maza | Racing Santander vs Villarreal CF
- - Maguette Gueye | Racing Santander vs Villarreal CF
- - Pau Navarro | Racing Santander vs Villarreal CF
- - Renato Veiga | Racing Santander vs Villarreal CF
- - Juan Foyth | Racing Santander vs Villarreal CF
- - Willy Kambwala | Racing Santander vs Villarreal CF
- - Facundo Gonzalez | Racing Santander vs Villarreal CF
- - Logan Costa | Racing Santander vs Villarreal CF
- - Pablo Ramon | Racing Santander vs Villarreal CF
- - Manu Hernando | Racing Santander vs Villarreal CF
+ - Alex Calatrava | Espanyol Barcelona vs Levante UD
+ - Garcia Kike | Espanyol Barcelona vs Levante UD
+ - Omar El Hilali | Espanyol Barcelona vs Levante UD
+ - Eduardo Exposito | Espanyol Barcelona vs Levante UD
+ - Marcos Fernandez | Espanyol Barcelona vs Levante UD
+ - Jofre Carreras | Espanyol Barcelona vs Levante UD
+ - Kareem Tunde | Espanyol Barcelona vs Levante UD
+ - Roger Brugue | Espanyol Barcelona vs Levante UD
+ - Enzo Bardeli | Espanyol Barcelona vs Levante UD
+ - Ruben Sanchez | Espanyol Barcelona vs Levante UD
+ - Tai Abed | Espanyol Barcelona vs Levante UD
+ - Charles Pickel | Espanyol Barcelona vs Levante UD
+ - Rafael Bauza | Espanyol Barcelona vs Levante UD
+ - Roger Hinojo | Espanyol Barcelona vs Levante UD
+ - Gabriel Moscardo | Espanyol Barcelona vs Levante UD
+ - Leandro Cabrera | Espanyol Barcelona vs Levante UD
+ - Urko Gonzalez | Espanyol Barcelona vs Levante UD
+ - Daniel Requena | Espanyol Barcelona vs Levante UD
+ - Clemens Riedel | Espanyol Barcelona vs Levante UD
+ - Xavi Grande | Espanyol Barcelona vs Levante UD
