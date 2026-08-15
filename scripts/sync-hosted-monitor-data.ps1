@@ -6,6 +6,7 @@ param(
     [switch]$TennisProps,
     [switch]$Settlement,
     [string]$RemoteRef = "origin/golden-with-speed-insights",
+    [ValidateRange(1, 30)][int]$ManagedBackupRetention = 7,
     [switch]$NoFetch,
     [switch]$NoBackup
 )
@@ -147,6 +148,7 @@ if (-not $NoBackup) {
     $stamp = Get-Date -Format "yyyyMMdd-HHmmss"
     $backupRoot = Join-Path $repoRoot ".cleanup-backups/hosted-monitor-sync-$stamp"
     New-Item -ItemType Directory -Force -Path $backupRoot | Out-Null
+    Set-Content -LiteralPath (Join-Path $backupRoot ".managed-retention") -Value $stamp -Encoding Ascii
     Write-Host "Backing up existing local monitor artifacts to $backupRoot"
 }
 
@@ -208,6 +210,25 @@ foreach ($relativePath in $files) {
     Write-TextFileWithRetry -Path $targetPath -Content (($content -join "`n") + "`n") -Encoding $utf8NoBom
     Write-Host "Synced: $relativePath"
     $synced += 1
+}
+
+if ($backupRoot) {
+    $cleanupRoot = Join-Path $repoRoot ".cleanup-backups"
+    $managedBackups = @(
+        Get-ChildItem -LiteralPath $cleanupRoot -Directory -Filter "hosted-monitor-sync-*" -ErrorAction SilentlyContinue |
+            Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName ".managed-retention") } |
+            Sort-Object LastWriteTime -Descending
+    )
+    $expiredBackups = @($managedBackups | Select-Object -Skip $ManagedBackupRetention)
+    foreach ($expired in $expiredBackups) {
+        if (-not $expired.FullName.StartsWith(($cleanupRoot + [System.IO.Path]::DirectorySeparatorChar), [System.StringComparison]::OrdinalIgnoreCase)) {
+            throw "Refusing to prune backup outside cleanup root: $($expired.FullName)"
+        }
+        Remove-Item -LiteralPath $expired.FullName -Recurse -Force
+    }
+    if ($expiredBackups.Count -gt 0) {
+        Write-Host "Pruned $($expiredBackups.Count) managed backup(s); retained newest $ManagedBackupRetention."
+    }
 }
 
 Write-Host ""
