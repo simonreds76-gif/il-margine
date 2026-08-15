@@ -12,6 +12,7 @@ $weeklyScript = Join-Path $root "scripts\oncourt-weekly.ps1"
 $closeCaptureScript = Join-Path $root "scripts\pinnacle-close-capture.ps1"
 $healthScript = Join-Path $root "scripts\tennis-health-check.ps1"
 $digestFallbackScript = Join-Path $root "scripts\tennis-digest-fallback.ps1"
+$commandPollerScript = Join-Path $root "scripts\automation-command-poller.ps1"
 $psExe = "$env:WINDIR\System32\WindowsPowerShell\v1.0\powershell.exe"
 
 if (!(Test-Path $dailyScript)) { throw "Missing $dailyScript" }
@@ -20,6 +21,7 @@ if (!(Test-Path $weeklyScript)) { throw "Missing $weeklyScript" }
 if (!(Test-Path $closeCaptureScript)) { throw "Missing $closeCaptureScript" }
 if (!(Test-Path $healthScript)) { throw "Missing $healthScript" }
 if (!(Test-Path $digestFallbackScript)) { throw "Missing $digestFallbackScript" }
+if (!(Test-Path $commandPollerScript)) { throw "Missing $commandPollerScript" }
 
 $dailyCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File `"$dailyScript`""
 $amRefreshCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File `"$amRefreshScript`""
@@ -27,6 +29,7 @@ $weeklyCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -Fil
 $closeCaptureCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File `"$closeCaptureScript`""
 $healthCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File `"$healthScript`""
 $digestFallbackCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File `"$digestFallbackScript`""
+$commandPollerCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File `"$commandPollerScript`""
 
 function Test-ScheduledTaskExists([string]$taskName) {
     & cmd.exe /c "schtasks /Query /TN `"$taskName`" >nul 2>&1"
@@ -72,7 +75,8 @@ function Set-ScheduledTaskBridgeHardening(
     [string]$executionTimeLimit = "PT10M",
     [string]$restartInterval = "PT5M",
     [int]$restartCount = 2,
-    [switch]$HighestRunLevel
+    [switch]$HighestRunLevel,
+    [switch]$DisableWake
 ) {
     $xml = schtasks /Query /TN $taskName /XML
     if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($xml)) {
@@ -90,10 +94,11 @@ function Set-ScheduledTaskBridgeHardening(
         }
     }
 
+    $wakeValue = if ($DisableWake) { "false" } else { "true" }
     if ($patchedXml -match '<WakeToRun>.*?</WakeToRun>') {
-        $patchedXml = [regex]::Replace($patchedXml, '<WakeToRun>.*?</WakeToRun>', '<WakeToRun>true</WakeToRun>')
+        $patchedXml = [regex]::Replace($patchedXml, '<WakeToRun>.*?</WakeToRun>', "<WakeToRun>$wakeValue</WakeToRun>")
     } else {
-        $patchedXml = $patchedXml -replace '</Settings>', "    <WakeToRun>true</WakeToRun>`r`n  </Settings>"
+        $patchedXml = $patchedXml -replace '</Settings>', "    <WakeToRun>$wakeValue</WakeToRun>`r`n  </Settings>"
     }
 
     if ($patchedXml -match '<StartWhenAvailable>.*?</StartWhenAvailable>') {
@@ -149,6 +154,7 @@ schtasks /Create /TN "IlMargine-Tennis-Close-Capture" /SC DAILY /ST 08:00 /RI 30
 schtasks /Create /TN "IlMargine-Tennis-Health-AM" /SC DAILY /ST 11:15 /TR "$healthCmd" /F | Out-Host
 schtasks /Create /TN "IlMargine-Tennis-Health-PM" /SC DAILY /ST 23:15 /TR "$healthCmd" /F | Out-Host
 schtasks /Create /TN "IlMargine-Tennis-Digest-AM" /SC DAILY /ST 10:50 /TR "$digestFallbackCmd" /F | Out-Host
+schtasks /Create /TN "IlMargine-Automation-Command-Poller" /SC MINUTE /MO 2 /TR "$commandPollerCmd" /F | Out-Host
 
 Set-ScheduledTaskBatteryFriendly "IlMargine-Daily"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Daily-AM"
@@ -157,6 +163,7 @@ Set-ScheduledTaskBatteryFriendly "IlMargine-Tennis-Close-Capture"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Tennis-Health-AM"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Tennis-Health-PM"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Tennis-Digest-AM"
+Set-ScheduledTaskBatteryFriendly "IlMargine-Automation-Command-Poller"
 Set-ScheduledTaskBridgeHardening "IlMargine-Daily" -executionTimeLimit "PT2H" -restartInterval "PT15M" -restartCount 1
 Set-ScheduledTaskBridgeHardening "IlMargine-Daily-AM" -executionTimeLimit "PT90M" -restartInterval "PT10M" -restartCount 1
 Set-ScheduledTaskBridgeHardening "IlMargine-Weekly" -executionTimeLimit "PT6H" -restartInterval "PT15M" -restartCount 1
@@ -164,6 +171,7 @@ Set-ScheduledTaskBridgeHardening "IlMargine-Tennis-Close-Capture"
 Set-ScheduledTaskBridgeHardening "IlMargine-Tennis-Health-AM" -executionTimeLimit "PT5M" -restartCount 1
 Set-ScheduledTaskBridgeHardening "IlMargine-Tennis-Health-PM" -executionTimeLimit "PT5M" -restartCount 1
 Set-ScheduledTaskBridgeHardening "IlMargine-Tennis-Digest-AM" -executionTimeLimit "PT5M" -restartCount 1
+Set-ScheduledTaskBridgeHardening "IlMargine-Automation-Command-Poller" -executionTimeLimit "PT2M" -restartCount 1 -DisableWake
 
 if (Test-ScheduledTaskExists "IlMargine-Tennis-Shadow-Settle") {
     schtasks /Delete /TN "IlMargine-Tennis-Shadow-Settle" /F | Out-Host
@@ -178,6 +186,7 @@ schtasks /Query /TN "IlMargine-Tennis-Close-Capture" | Out-Host
 schtasks /Query /TN "IlMargine-Tennis-Health-AM" | Out-Host
 schtasks /Query /TN "IlMargine-Tennis-Health-PM" | Out-Host
 schtasks /Query /TN "IlMargine-Tennis-Digest-AM" | Out-Host
+schtasks /Query /TN "IlMargine-Automation-Command-Poller" | Out-Host
 Write-Host ""
 Write-Host "Optional immediate test:"
 Write-Host "  schtasks /Run /TN IlMargine-Daily"

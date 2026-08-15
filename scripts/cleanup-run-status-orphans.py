@@ -17,6 +17,13 @@ ROOT = Path(__file__).resolve().parents[1]
 ENV_FILES = [ROOT / ".env.local", ROOT / "env.local"]
 TERMINAL_STATUSES = ("ok", "failed", "timeout", "aborted")
 CROSS_HOST_RECOVERY_PIPELINES = {"pinnacle-capture-history"}
+LAPTOP_HARD_TIMEOUT_SECONDS = {
+    # These exceed the matching Windows Task Scheduler execution limits and
+    # include a buffer, so hosted cleanup cannot terminate a legitimate run.
+    "oncourt-am-refresh": 2 * 60 * 60,
+    "oncourt-daily": 3 * 60 * 60,
+    "oncourt-weekly": 7 * 60 * 60,
+}
 
 
 def should_allow_cross_host_recovery(row: dict[str, Any]) -> bool:
@@ -53,6 +60,47 @@ def build_cleanup_payload(
                     "successor_status": successor["status"],
                     "successor_started_at": str(successor["started_at"]),
                     "successor_host": successor.get("host"),
+                    "stale_host": row.get("host"),
+                }
+            },
+        },
+    }
+
+
+def hard_timeout_seconds(row: dict[str, Any]) -> int | None:
+    if str(row.get("host") or "") != "laptop-win":
+        return None
+    return LAPTOP_HARD_TIMEOUT_SECONDS.get(str(row.get("pipeline") or ""))
+
+
+def is_past_hard_timeout(row: dict[str, Any]) -> bool:
+    limit = hard_timeout_seconds(row)
+    if limit is None:
+        return False
+    try:
+        return float(row.get("age_seconds") or 0) >= limit
+    except (TypeError, ValueError):
+        return False
+
+
+def build_hard_timeout_payload(row: dict[str, Any]) -> dict[str, Any]:
+    cleaned_at = datetime.now(timezone.utc).isoformat()
+    limit = hard_timeout_seconds(row)
+    message = (
+        "Marked timeout by cleanup-run-status-orphans because the laptop run "
+        f"exceeded its scheduler limit plus safety buffer ({limit}s)."
+    )
+    return {
+        "message": message,
+        "patch": {
+            "finished_at": cleaned_at,
+            "status": "timeout",
+            "error_type": "SchedulerExecutionLimitExceeded",
+            "error_message": message,
+            "details": {
+                "orphan_cleanup": {
+                    "cleaned_at": cleaned_at,
+                    "hard_timeout_seconds": limit,
                     "stale_host": row.get("host"),
                 }
             },
@@ -189,15 +237,18 @@ def cleanup_via_db(database_url: str, dry_run: bool) -> int:
                         error_type = "RecoveredByPeerHost"
                         reason = "a later terminal run on another host"
                     if successor is None:
-                        continue
-                    successor_row = dict(zip([desc[0] for desc in cur.description or []], successor))
-                    payload = build_cleanup_payload(
-                        row=row,
-                        successor=successor_row,
-                        error_type=error_type,
-                        reason=reason,
-                    )
-                    print(f"ORPHAN {row['run_id']} -> aborted; {payload['message']}")
+                        if not is_past_hard_timeout(row):
+                            continue
+                        payload = build_hard_timeout_payload(row)
+                    else:
+                        successor_row = dict(zip([desc[0] for desc in cur.description or []], successor))
+                        payload = build_cleanup_payload(
+                            row=row,
+                            successor=successor_row,
+                            error_type=error_type,
+                            reason=reason,
+                        )
+                    print(f"ORPHAN {row['run_id']} -> {payload['patch']['status']}; {payload['message']}")
                     if dry_run:
                         cleaned += 1
                         continue
@@ -205,7 +256,7 @@ def cleanup_via_db(database_url: str, dry_run: bool) -> int:
                         """
                         update run_status
                         set finished_at = now(),
-                            status = 'aborted',
+                            status = %s,
                             error_type = %s,
                             error_message = %s,
                             details = details || %s::jsonb
@@ -213,6 +264,7 @@ def cleanup_via_db(database_url: str, dry_run: bool) -> int:
                           and status = 'running'
                         """,
                         (
+                            payload["patch"]["status"],
                             payload["patch"]["error_type"],
                             payload["patch"]["error_message"],
                             json.dumps(payload["patch"]["details"]),
@@ -264,15 +316,18 @@ def cleanup_via_rest(dry_run: bool) -> int:
             error_type = "RecoveredByPeerHost"
             reason = "a later terminal run on another host"
         if not successors:
-            continue
-        successor = successors[0]
-        payload = build_cleanup_payload(
-            row=row,
-            successor=successor,
-            error_type=error_type,
-            reason=reason,
-        )
-        print(f"ORPHAN {row['run_id']} -> aborted; {payload['message']}")
+            if not is_past_hard_timeout(row):
+                continue
+            payload = build_hard_timeout_payload(row)
+        else:
+            successor = successors[0]
+            payload = build_cleanup_payload(
+                row=row,
+                successor=successor,
+                error_type=error_type,
+                reason=reason,
+            )
+        print(f"ORPHAN {row['run_id']} -> {payload['patch']['status']}; {payload['message']}")
         if dry_run:
             cleaned += 1
             continue

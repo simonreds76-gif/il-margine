@@ -30,12 +30,19 @@ if ([string]::IsNullOrWhiteSpace($env:STRICT_HARD_CALIBRATION_PROFILES)) { $env:
 # Scheduled runs are hard-safe: clay spread-v1 can only be enabled by a manual research run.
 $env:SPREAD_V1_ENABLE_CLAY = "0"
 $dailyOddsTimeoutSeconds = 1200
+$supabaseSyncTimeoutSeconds = 600
 $strictReportTimeoutSeconds = 600
 $shadowLaneTimeoutSeconds = 300
 if (-not [string]::IsNullOrWhiteSpace($env:TENNIS_DAILY_ODDS_TOTAL_TIMEOUT_SECONDS)) {
     $parsedDailyOddsTimeout = 0
     if ([int]::TryParse($env:TENNIS_DAILY_ODDS_TOTAL_TIMEOUT_SECONDS, [ref]$parsedDailyOddsTimeout) -and $parsedDailyOddsTimeout -gt 0) {
         $dailyOddsTimeoutSeconds = $parsedDailyOddsTimeout
+    }
+}
+if (-not [string]::IsNullOrWhiteSpace($env:TENNIS_SUPABASE_SYNC_TIMEOUT_SECONDS)) {
+    $parsedSupabaseSyncTimeout = 0
+    if ([int]::TryParse($env:TENNIS_SUPABASE_SYNC_TIMEOUT_SECONDS, [ref]$parsedSupabaseSyncTimeout) -and $parsedSupabaseSyncTimeout -gt 0) {
+        $supabaseSyncTimeoutSeconds = $parsedSupabaseSyncTimeout
     }
 }
 function Test-EnvFlag([string]$value) {
@@ -158,10 +165,16 @@ try {
     }
 
     Log "=== Step 2/8: Supabase sync (--quick --skip-players) ==="
-    & python scripts\oncourt-load-supabase.py --quick --skip-players 2>&1 | ForEach-Object { Log $_ }
-    if ($LASTEXITCODE -ne 0) {
-        Log "ERROR: Supabase sync failed (exit $LASTEXITCODE)"
-        Set-RunStatusFailure "SupabaseSyncFailed" "Supabase sync failed (exit $LASTEXITCODE)"
+    $supabaseSyncExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\oncourt-load-supabase.py", "--quick", "--skip-players") -Label "Supabase quick sync" -TimeoutSeconds $supabaseSyncTimeoutSeconds
+    if ($supabaseSyncExit -ne 0) {
+        Log "ERROR: Supabase sync failed (exit $supabaseSyncExit)"
+        if ($supabaseSyncExit -eq 124) {
+            $runStatusFinal = "timeout"
+            $runStatusErrorType = "SupabaseSyncTimeout"
+            $runStatusErrorMessage = "Supabase quick sync exceeded ${supabaseSyncTimeoutSeconds}s"
+        } else {
+            Set-RunStatusFailure "SupabaseSyncFailed" "Supabase sync failed (exit $supabaseSyncExit)"
+        }
         exit 1
     }
 

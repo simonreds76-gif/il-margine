@@ -44,7 +44,6 @@ export default function AdminPanel() {
   const [adminError, setAdminError] = useState<string | null>(null);
   const [tennisRefreshLoading, setTennisRefreshLoading] = useState(false);
   const [tennisRefreshMessage, setTennisRefreshMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
-  const [isLocalAdmin, setIsLocalAdmin] = useState(false);
   const loadedTabsRef = useRef({
     bookmakers: false,
     pending: false,
@@ -78,10 +77,6 @@ export default function AdminPanel() {
     match_date: new Date().toISOString().slice(0, 10),
     notes: "",
   });
-
-  useEffect(() => {
-    setIsLocalAdmin(["localhost", "127.0.0.1", "::1"].includes(window.location.hostname));
-  }, []);
 
   const categories = {
     props: [
@@ -397,7 +392,7 @@ export default function AdminPanel() {
     if (res.ok) {
       setTennisRefreshMessage({
         type: "success",
-        text: "Fair-odds refresh started. New tennis alerts will reach Telegram when the pipeline finishes.",
+        text: data.message || "Fair-odds refresh started. New tennis alerts will reach Telegram after signal generation.",
       });
     } else {
       setTennisRefreshMessage({ type: "error", text: data.error || "Unable to start tennis refresh" });
@@ -543,15 +538,14 @@ export default function AdminPanel() {
         </div>
       </header>
 
-      {isLocalAdmin && (
-        <section className="border-b border-slate-800 bg-slate-950/40">
+      <section className="border-b border-slate-800 bg-slate-950/40">
           <div className="max-w-4xl mx-auto px-4 py-4">
             <div className="flex flex-col gap-3 rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <div className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">On-demand tennis</div>
                 <h2 className="mt-1 font-semibold text-slate-100">Fair odds + Telegram alerts</h2>
                 <p className="mt-1 text-xs text-slate-400">
-                  Runs the existing fast AM pipeline now. It does not start a second run when tennis automation is active.
+                  Starts the existing AM pipeline now on localhost, or queues it securely for the laptop from the hosted Admin. Duplicate runs are blocked.
                 </p>
               </div>
               <button
@@ -560,7 +554,7 @@ export default function AdminPanel() {
                 disabled={tennisRefreshLoading}
                 className="shrink-0 rounded-lg border border-cyan-400/40 bg-cyan-400/15 px-4 py-3 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-400/25 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {tennisRefreshLoading ? "Starting..." : "Run fair odds now"}
+                {tennisRefreshLoading ? "Requesting..." : "Run fair odds + alerts"}
               </button>
             </div>
             {tennisRefreshMessage && (
@@ -569,8 +563,7 @@ export default function AdminPanel() {
               </p>
             )}
           </div>
-        </section>
-      )}
+      </section>
 
       {/* Tabs */}
       <div className="border-b border-slate-800">

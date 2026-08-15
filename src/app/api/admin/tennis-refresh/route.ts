@@ -1,27 +1,43 @@
 import { execFile } from "node:child_process";
-import { createHmac } from "node:crypto";
+import { randomUUID } from "node:crypto";
 import { promisify } from "node:util";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+
+import { isAdminSession } from "@/lib/admin-auth";
+import { getSupabaseAdmin } from "@/lib/supabase-server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-const COOKIE_NAME = "admin_session";
 const AM_TASK = "IlMargine-Daily-AM";
 const NIGHT_TASK = "IlMargine-Daily";
+const COMMAND_KEY = "automation.tennis_fair_odds_request";
+const ACTIVE_COMMAND_STATES = new Set(["pending", "waiting", "dispatching", "started"]);
+const ACTIVE_COMMAND_MAX_AGE_MS = 3 * 60 * 60 * 1000;
 const execFileAsync = promisify(execFile);
 
-function getSignedToken(): string {
-  if (!ADMIN_PASSWORD) return "";
-  return createHmac("sha256", ADMIN_PASSWORD).update("admin_session").digest("base64url");
+type RefreshCommand = {
+  request_id?: string;
+  requested_at?: string;
+  state?: string;
+  [key: string]: unknown;
+};
+
+function parseCommand(value: unknown): RefreshCommand | null {
+  if (value && typeof value === "object" && !Array.isArray(value)) return value as RefreshCommand;
+  if (typeof value !== "string") return null;
+  try {
+    const parsed: unknown = JSON.parse(value);
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? (parsed as RefreshCommand) : null;
+  } catch {
+    return null;
+  }
 }
 
-async function isAdmin(): Promise<boolean> {
-  if (!ADMIN_PASSWORD) return false;
-  const cookieStore = await cookies();
-  return cookieStore.get(COOKIE_NAME)?.value === getSignedToken();
+function commandIsActive(command: RefreshCommand | null): boolean {
+  if (!command?.state || !ACTIVE_COMMAND_STATES.has(command.state)) return false;
+  const requestedAt = Date.parse(command.requested_at || "");
+  return Number.isFinite(requestedAt) && Date.now() - requestedAt < ACTIVE_COMMAND_MAX_AGE_MS;
 }
 
 function isLocalWindowsRequest(req: Request): boolean {
@@ -46,13 +62,55 @@ async function queryTask(taskName: string): Promise<{ exists: boolean; running: 
   }
 }
 
-export async function POST(req: Request) {
-  if (!(await isAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  if (!isLocalWindowsRequest(req)) {
+async function queueHostedRefresh() {
+  const supabase = getSupabaseAdmin();
+  const { data: currentRow, error: readError } = await supabase
+    .from("site_settings")
+    .select("value")
+    .eq("key", COMMAND_KEY)
+    .maybeSingle();
+  if (readError) throw new Error(`Unable to read refresh queue: ${readError.message}`);
+
+  const current = parseCommand(currentRow?.value);
+  if (commandIsActive(current)) {
     return NextResponse.json(
-      { error: "Manual fair-odds refresh is available only from Admin on localhost." },
-      { status: 400 },
+      {
+        error: "A fair-odds refresh is already queued or running. No duplicate request was created.",
+        command: current,
+      },
+      { status: 409 },
     );
+  }
+
+  const requestedAt = new Date().toISOString();
+  const command: RefreshCommand = {
+    request_id: randomUUID(),
+    requested_at: requestedAt,
+    requested_from: "production_admin",
+    state: "pending",
+  };
+  const { error: writeError } = await supabase
+    .from("site_settings")
+    .upsert({ key: COMMAND_KEY, value: JSON.stringify(command) }, { onConflict: "key" });
+  if (writeError) throw new Error(`Unable to queue refresh: ${writeError.message}`);
+
+  return NextResponse.json({
+    ok: true,
+    mode: "queued",
+    command,
+    message: "Fair-odds refresh queued. The laptop will start it within two minutes and Telegram alerts follow signal generation.",
+  });
+}
+
+export async function POST(req: Request) {
+  if (!(await isAdminSession())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!isLocalWindowsRequest(req)) {
+    try {
+      return await queueHostedRefresh();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unable to queue fair-odds refresh";
+      return NextResponse.json({ error: message }, { status: 500 });
+    }
   }
 
   const [amState, nightState] = await Promise.all([queryTask(AM_TASK), queryTask(NIGHT_TASK)]);
@@ -81,8 +139,10 @@ export async function POST(req: Request) {
 
   return NextResponse.json({
     ok: true,
+    mode: "started",
     task: AM_TASK,
     started_at: new Date().toISOString(),
+    message: "Fair-odds refresh started. Telegram alerts follow signal generation.",
     telegram: "The existing digest sends new alerts after signal generation completes.",
   });
 }
