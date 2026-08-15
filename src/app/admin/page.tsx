@@ -44,9 +44,7 @@ export default function AdminPanel() {
   const [adminError, setAdminError] = useState<string | null>(null);
   const [tennisRefreshLoading, setTennisRefreshLoading] = useState(false);
   const [tennisRefreshMessage, setTennisRefreshMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
-  const [isLocalAdmin] = useState(
-    () => typeof window !== "undefined" && ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname)
-  );
+  const [isLocalAdmin, setIsLocalAdmin] = useState(false);
   const loadedTabsRef = useRef({
     bookmakers: false,
     pending: false,
@@ -80,6 +78,10 @@ export default function AdminPanel() {
     match_date: new Date().toISOString().slice(0, 10),
     notes: "",
   });
+
+  useEffect(() => {
+    setIsLocalAdmin(["localhost", "127.0.0.1", "::1"].includes(window.location.hostname));
+  }, []);
 
   const categories = {
     props: [

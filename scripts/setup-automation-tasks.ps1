@@ -90,6 +90,13 @@ function Set-ScheduledTaskBridgeHardening(
         $patchedXml = $patchedXml -replace '</Settings>', "    <ExecutionTimeLimit>$executionTimeLimit</ExecutionTimeLimit>`r`n  </Settings>"
     }
 
+    # Never launch a second copy while the same pipeline is still active.
+    if ($patchedXml -match '<MultipleInstancesPolicy>.*?</MultipleInstancesPolicy>') {
+        $patchedXml = [regex]::Replace($patchedXml, '<MultipleInstancesPolicy>.*?</MultipleInstancesPolicy>', '<MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>')
+    } else {
+        $patchedXml = $patchedXml -replace '</Settings>', "    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>`r`n  </Settings>"
+    }
+
     $restartBlock = @"
     <RestartOnFailure>
       <Interval>$restartInterval</Interval>
@@ -129,6 +136,8 @@ Set-ScheduledTaskBatteryFriendly "IlMargine-Weekly"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Tennis-Close-Capture"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Tennis-Health-AM"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Tennis-Health-PM"
+Set-ScheduledTaskBridgeHardening "IlMargine-Daily" -executionTimeLimit "PT2H" -restartInterval "PT15M" -restartCount 1
+Set-ScheduledTaskBridgeHardening "IlMargine-Daily-AM" -executionTimeLimit "PT90M" -restartInterval "PT10M" -restartCount 1
 Set-ScheduledTaskBridgeHardening "IlMargine-Tennis-Close-Capture"
 Set-ScheduledTaskBridgeHardening "IlMargine-Tennis-Health-AM" -executionTimeLimit "PT5M" -restartCount 1
 Set-ScheduledTaskBridgeHardening "IlMargine-Tennis-Health-PM" -executionTimeLimit "PT5M" -restartCount 1
