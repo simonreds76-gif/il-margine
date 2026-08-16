@@ -6,11 +6,11 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: weekly-research-report
-  cancel-in-progress: true
+  group: golden-with-speed-insights-branch-writes
+  cancel-in-progress: false
 
 jobs:
   report:
@@ -183,3 +183,24 @@ jobs:
             data/assist-value/research/assist-value-market-history.csv
             data/assist-value/research/assist-value-v1-prospective.csv
             data/assist-value/research/assist-value-v1-prospective-performance.txt
+
+      - name: Publish canonical weekly monitor bundle
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f \
+            data/football-form/weekly-research-report.md \
+            data/football-form/weekly-research-report.json \
+            data/team-shots/team-shots-live-snapshot.json \
+            data/corners-ou/corners-live-snapshot.json \
+            data/goalscorer/goalscorer-monitor-snapshot.json
+          if git diff --cached --quiet; then
+            echo "Canonical weekly monitor bundle is already current."
+            exit 0
+          fi
+          git commit -m "chore: publish weekly model evidence"
+          if ! git diff --quiet; then
+            echo "Discarding non-canonical generated worktree changes before safe push."
+            git restore --worktree .
+          fi
+          bash scripts/ci-safe-push.sh golden-with-speed-insights

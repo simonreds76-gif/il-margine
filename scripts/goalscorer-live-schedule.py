@@ -240,6 +240,7 @@ def main() -> int:
     fixtures_by_league: Dict[str, List[FixtureWindow]] = {
         league: [] for league in requested_leagues if league in LEAGUE_CONFIGS
     }
+    completed_fixtures: list[dict[str, Any]] = []
     for date_str in _fotmob_dates(now_utc, args.lookahead_hours):
         payload = fetch_daily_payload(date_str)
         for league in payload.get("leagues", []):
@@ -248,16 +249,30 @@ def main() -> int:
             if not league_key:
                 continue
             for match in league.get("matches", []):
-                if _is_cancelled_or_finished(match):
-                    continue
                 kickoff_utc = _parse_kickoff(match)
                 if kickoff_utc is None or kickoff_utc > lookahead_limit:
                     continue
                 match_id = int(match.get("id")) if match.get("id") else None
-                already_confirmed = bool(match_id and match_id in confirmed_by_league.get(league_key, set()))
                 home_name = str(match.get("home", {}).get("name") or "").strip()
                 away_name = str(match.get("away", {}).get("name") or "").strip()
                 tracked_signal = _fixture_key(kickoff_utc.date().isoformat(), home_name, away_name) in tracked_signals.get(league_key, set())
+                if _is_cancelled_or_finished(match):
+                    if tracked_signal:
+                        status = match.get("status", {}) or {}
+                        completed_fixtures.append(
+                            {
+                                "league": league_key,
+                                "match_id": match_id,
+                                "match_date": kickoff_utc.date().isoformat(),
+                                "kickoff_utc": kickoff_utc.isoformat().replace("+00:00", "Z"),
+                                "home_team": home_name,
+                                "away_team": away_name,
+                                "finished": bool(status.get("finished")),
+                                "cancelled": bool(status.get("cancelled")),
+                            }
+                        )
+                    continue
+                already_confirmed = bool(match_id and match_id in confirmed_by_league.get(league_key, set()))
                 tier = _effective_fixture_tier(
                     now_utc,
                     kickoff_utc,
@@ -295,6 +310,7 @@ def main() -> int:
         "lineup_window_before_minutes": args.lineup_window_before_minutes,
         "lineup_grace_after_minutes": args.lineup_grace_after_minutes,
         "close_window_before_minutes": args.close_window_before_minutes,
+        "completed_fixtures": completed_fixtures,
         "leagues": [],
     }
 

@@ -54,6 +54,15 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertNotIn("SUPABASE_SERVICE_ROLE_KEY", workflow)
         self.assertNotIn("DATABASE_URL", workflow)
 
+    def test_weekly_workflow_publishes_canonical_monitor_bundle(self) -> None:
+        workflow = (ROOT / ".github" / "workflows" / "weekly-research-report.yml").read_text(encoding="utf-8")
+        self.assertIn("contents: write", workflow)
+        self.assertIn("group: golden-with-speed-insights-branch-writes", workflow)
+        self.assertIn("Publish canonical weekly monitor bundle", workflow)
+        self.assertIn("data/football-form/weekly-research-report.md", workflow)
+        self.assertIn("data/team-shots/team-shots-live-snapshot.json", workflow)
+        self.assertIn("data/corners-ou/corners-live-snapshot.json", workflow)
+
     def test_weekly_payload_includes_automation_budget(self) -> None:
         payload = REPORT["build_payload"]()
         self.assertIn("automation_budget", payload)

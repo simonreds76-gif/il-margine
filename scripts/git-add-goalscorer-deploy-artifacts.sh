@@ -37,6 +37,7 @@ artifacts=(
   data/goalscorer/goalscorer-monitor-snapshot.json
   data/goalscorer/goalscorer-live-status.json
   data/goalscorer/goalscorer-live-schedule-state.json
+  data/goalscorer/goalscorer-match-status.json
   data/goalscorer/goalscorer-health-status.json
   data/goalscorer/goalscorer-live.log
 

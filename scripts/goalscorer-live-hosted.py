@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data" / "goalscorer"
 STATUS_FILE = DATA_DIR / "goalscorer-live-status.json"
 SCHEDULE_STATE_FILE = DATA_DIR / "goalscorer-live-schedule-state.json"
+MATCH_STATUS_FILE = DATA_DIR / "goalscorer-match-status.json"
 
 LEAGUES = ["serie-a", "epl", "la-liga", "bundesliga", "ligue-1"]
 FAILURE_COOLDOWN_MINUTES = 60
@@ -187,6 +188,13 @@ def main() -> int:
         return plan_proc.returncode or 1
 
     plan = json.loads(plan_proc.stdout or "{}")
+    write_json(
+        MATCH_STATUS_FILE,
+        {
+            "generated_at": str(plan.get("generated_at") or now_utc_iso()),
+            "completed_fixtures": plan.get("completed_fixtures", []),
+        },
+    )
     plan_lookup = {str(item.get("league")): item for item in plan.get("leagues", [])}
     ran_count = 0
     close_run_count = 0

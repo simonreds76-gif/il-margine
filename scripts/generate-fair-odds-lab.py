@@ -43,6 +43,7 @@ DEFAULT_MONITOR_SNAPSHOT = Path("data/goalscorer/goalscorer-monitor-snapshot.jso
 DEFAULT_OUTPUT = Path("public/fair-odds-lab/signals.json")
 DEFAULT_TEAM_LOGO_MAP = Path("data/goalscorer/team-logo-map.json")
 DEFAULT_TEAM_KIT_COLORS = Path("data/goalscorer/team-kit-colors.json")
+DEFAULT_MATCH_STATUS = Path("data/goalscorer/goalscorer-match-status.json")
 DEFAULT_TEAM_MATCH_BASE = Path("data/football-form/team-match-base.csv")
 DEFAULT_EXPOSURE_LOG_DIR = Path("data/goalscorer")
 DEFAULT_LINEUP_FIXTURES = [
@@ -336,6 +337,12 @@ def parse_args() -> argparse.Namespace:
         help="Input CSV or live-board JSON. May be supplied multiple times. Defaults to all goalscorer live-board/comparison files.",
     )
     parser.add_argument("--monitor-snapshot", type=Path, default=DEFAULT_MONITOR_SNAPSHOT)
+    parser.add_argument(
+        "--match-status",
+        type=Path,
+        default=DEFAULT_MATCH_STATUS,
+        help="FotMob fixture-status artifact used to remove completed matches immediately.",
+    )
     parser.add_argument("--team-logo-map", type=Path, default=DEFAULT_TEAM_LOGO_MAP)
     parser.add_argument(
         "--team-match-base",
@@ -748,6 +755,29 @@ def load_lineup_fixture_lookup(paths: list[Path]) -> dict[tuple[str, str, str, s
     return lookup
 
 
+def load_completed_fixture_keys(path: Path) -> set[tuple[str, str, str, str]]:
+    if not path.exists():
+        return set()
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8-sig"))
+    except (json.JSONDecodeError, OSError):
+        return set()
+    fixtures = payload.get("completed_fixtures", []) if isinstance(payload, dict) else []
+    keys: set[tuple[str, str, str, str]] = set()
+    for fixture in fixtures:
+        if not isinstance(fixture, dict):
+            continue
+        if not (fixture.get("finished") or fixture.get("cancelled")):
+            continue
+        league = clean_text(fixture.get("league"))
+        match_date = clean_text(fixture.get("match_date"))
+        home = clean_text(fixture.get("home_team"))
+        away = clean_text(fixture.get("away_team"))
+        if league and match_date and home and away:
+            keys.add(lineup_fixture_key(league, match_date, home, away))
+    return keys
+
+
 def is_confirmed_lineup_type(value: Any | None) -> bool:
     return clean_text(value).lower() in {"confirmed", "standard", "confirmed xi", "confirmed_lineup"}
 
@@ -1095,6 +1125,7 @@ def build_candidates_from_rows(
     today_iso: str,
     include_past: bool,
     team_form_index: dict[tuple[str, str], list[dict[str, Any]]],
+    completed_fixture_keys: set[tuple[str, str, str, str]] | None = None,
 ) -> tuple[list[dict[str, Any]], list[Candidate]]:
     raw_future_rows: list[dict[str, Any]] = []
     grouped: dict[tuple[str, str, str, str, str], dict[str, str]] = {}
@@ -1102,6 +1133,14 @@ def build_candidates_from_rows(
 
     for row in all_rows:
         date_key = row_date_key(row)
+        fixture_key = lineup_fixture_key(
+            league_slug(clean_text(row.get("competition"))),
+            date_key,
+            row.get("home_team"),
+            row.get("away_team"),
+        )
+        if completed_fixture_keys and fixture_key in completed_fixture_keys:
+            continue
         if not include_past:
             kickoff_dt = kickoff_datetime_utc(row)
             if kickoff_dt is not None:
@@ -1180,6 +1219,7 @@ def read_grouped_candidates(
     today_iso: str,
     include_past: bool,
     team_form_index: dict[tuple[str, str], list[dict[str, Any]]],
+    completed_fixture_keys: set[tuple[str, str, str, str]],
 ) -> tuple[list[dict[str, Any]], list[Candidate], list[str]]:
     source_paths: list[str] = []
     source_rows: list[dict[str, Any]] = []
@@ -1190,14 +1230,14 @@ def read_grouped_candidates(
             source_rows.extend(rows)
 
     source_rows = enrich_rows_with_lineups(source_rows, load_lineup_fixture_lookup(lineup_fixture_paths))
-    raw_rows, candidates = build_candidates_from_rows(source_rows, today_iso, include_past, team_form_index)
+    raw_rows, candidates = build_candidates_from_rows(source_rows, today_iso, include_past, team_form_index, completed_fixture_keys)
     if raw_rows:
         return raw_rows, candidates, source_paths
 
     monitor_rows = monitor_live_bets_to_rows(monitor_snapshot_path)
     if monitor_rows:
         source_paths = [str(monitor_snapshot_path).replace("\\", "/")]
-        return (*build_candidates_from_rows(monitor_rows, today_iso, include_past, team_form_index), source_paths)
+        return (*build_candidates_from_rows(monitor_rows, today_iso, include_past, team_form_index, completed_fixture_keys), source_paths)
 
     return raw_rows, candidates, source_paths
 
@@ -1548,6 +1588,7 @@ def main() -> None:
     input_paths = args.input or DEFAULT_INPUTS
     lineup_paths = args.lineups or DEFAULT_LINEUP_FIXTURES
     logo_manifest = load_logo_manifest(args.team_logo_map)
+    completed_fixture_keys = load_completed_fixture_keys(args.match_status)
     team_form_index = load_team_match_base_index(args.team_match_base)
     team_form_source = str(args.team_match_base).replace("\\", "/") if team_form_index else ""
     if not team_form_index:
@@ -1560,6 +1601,7 @@ def main() -> None:
         today_iso,
         args.include_past,
         team_form_index,
+        completed_fixture_keys,
     )
 
     values = {
@@ -1626,6 +1668,7 @@ def main() -> None:
             "require_confirmed_starter": not args.allow_projected_lineups,
             "defensive_positions_hidden": sorted(DEFENSIVE_POSITION_TOKENS),
             "post_kickoff_visibility_minutes": int(MATCH_VISIBILITY_AFTER_KICKOFF.total_seconds() / 60),
+            "completed_fixture_filter": "fotmob_status_with_150_minute_fallback",
         },
         "fixtures_evaluated": fixtures_evaluated,
         "signals_qualifying": len(signals),
