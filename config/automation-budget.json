@@ -61,7 +61,13 @@
       "db_reads_max_per_run": 0,
       "db_writes_max_per_run": 7,
       "schedules": [
-        {"cron": "10 10-22 * * *", "request_caps": {"odds_api_io": 15}}
+        {"cron": "10 10-22 * * *", "request_caps": {"odds_api_io": 15}},
+        {
+          "cron": "40 10-22 * * *",
+          "request_caps": {},
+          "db_reads_max_per_run": 0,
+          "db_writes_max_per_run": 0
+        }
       ]
     },
     {

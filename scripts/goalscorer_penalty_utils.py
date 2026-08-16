@@ -43,9 +43,15 @@ def player_match_score(left: str, right: str) -> int:
     if left_last == right_last:
         if left_first == right_first:
             return 96
-        if left_first.startswith(right_first) or right_first.startswith(left_first):
+        # Only accept a differing given name when one side is an initial. Two
+        # complete given names with the same surname are different people.
+        if min(len(left_first), len(right_first)) == 1 and (
+            left_first.startswith(right_first) or right_first.startswith(left_first)
+        ):
             return 90
-        return 82
+        if len(left_tokens) == 1 or len(right_tokens) == 1:
+            return 82
+        return 0
 
     if left_first == right_first:
         last_ratio = SequenceMatcher(None, left_last, right_last).ratio()

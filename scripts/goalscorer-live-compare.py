@@ -282,7 +282,9 @@ def _resolve_player_meta(
     if best_roster is not None:
         return best_roster
 
-    return exact
+    # An exact historical name from a different club is not evidence that the
+    # player belongs to either side in this fixture.
+    return None
 
 
 def _load_csv(path: str) -> List[dict]:

@@ -14,6 +14,8 @@ from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
+from goalscorer_penalty_utils import player_match_score as shared_player_match_score
+
 
 ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_PATH = ROOT / "data" / "goalscorer" / "goalscorer-monitor-snapshot.json"
@@ -812,27 +814,7 @@ def build_settled_row(row: dict[str, str], league_key: str, competition: str | N
 
 
 def player_match_score(left: Any, right: Any) -> int:
-    a = norm_text(left)
-    b = norm_text(right)
-    if not a or not b:
-        return 0
-    if a == b:
-        return 100
-    a_tokens = a.split(" ")
-    b_tokens = b.split(" ")
-    a_first, b_first = a_tokens[0], b_tokens[0]
-    a_last, b_last = a_tokens[-1], b_tokens[-1]
-    if a_last == b_last:
-        if a_first == b_first:
-            return 96
-        if a_first.startswith(b_first) or b_first.startswith(a_first):
-            return 90
-        return 82
-    if a in b or b in a:
-        return 76
-    if len([token for token in a_tokens if token in b_tokens]) >= 2:
-        return 68
-    return 0
+    return shared_player_match_score(str(left or ""), str(right or ""))
 
 
 def resolve_lineup_rows(lineup_players: list[dict[str, Any]], team_rows: list[dict[str, str]]) -> list[dict[str, Any]]:

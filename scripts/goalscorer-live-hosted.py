@@ -145,6 +145,7 @@ def write_status(
 
 def main() -> int:
     run_started_at = now_utc_iso()
+    lineup_only = os.environ.get("GOALSCORER_LINEUP_ONLY", "0").strip() == "1"
     warnings: list[str] = []
     current_league = ""
     previous_status = read_json(STATUS_FILE) or {}
@@ -249,22 +250,25 @@ def main() -> int:
             "--live-only",
             "--fetch-lineups",
             "--lineup-days-ahead", "3",
-            "--fetch-odds-api",
-            "--odds-api-bookmakers", "Bet365",
-            "--odds-api-days-ahead", "1",
-            "--odds-api-max-http-requests", "3",
             "--bookmaker", "Bet365",
             "--track-shadow",
         ]
+        if not lineup_only:
+            live_args.extend([
+                "--fetch-odds-api",
+                "--odds-api-bookmakers", "Bet365",
+                "--odds-api-days-ahead", "1",
+                "--odds-api-max-http-requests", "3",
+            ])
         supabase_available = bool(
             (os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or os.environ.get("SUPABASE_URL"))
             and (os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_KEY"))
         )
         # Persist only the dedicated close tier. Lineup/grace refreshes still
         # build the page locally but must not multiply database snapshots.
-        if tier == "close" and supabase_available:
+        if tier == "close" and not lineup_only and supabase_available:
             live_args.append("--supabase")
-        elif tier == "close":
+        elif tier == "close" and not lineup_only:
             warnings.append("Goalscorer close capture is local-only: Supabase credentials are missing.")
         live_proc = run_cmd(live_args)
         if live_proc.returncode != 0:
@@ -281,7 +285,7 @@ def main() -> int:
             continue
 
         ran_count += 1
-        if tier == "close":
+        if tier == "close" and not lineup_only:
             close_run_count += 1
         successful_run_at = now_utc_iso()
         detail_run_at = ""

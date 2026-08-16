@@ -120,6 +120,8 @@ def build_report(config: dict[str, Any], workflows_dir: Path = WORKFLOWS) -> dic
             errors.append(f"{file_name}: declared crons {declared_crons} != workflow crons {found_crons}")
         runs_week = 0
         provider_week: dict[str, int] = defaultdict(int)
+        reads = 0
+        writes = 0
         for schedule in row["schedules"]:
             try:
                 slots = expand_week(str(schedule["cron"]))
@@ -127,13 +129,13 @@ def build_report(config: dict[str, Any], workflows_dir: Path = WORKFLOWS) -> dic
                 errors.append(f"{file_name}: {exc}")
                 slots = []
             runs_week += len(slots)
+            reads += int(schedule.get("db_reads_max_per_run", row.get("db_reads_max_per_run", 0)) or 0) * len(slots)
+            writes += int(schedule.get("db_writes_max_per_run", row.get("db_writes_max_per_run", 0)) or 0) * len(slots)
             for provider, cap in (schedule.get("request_caps") or {}).items():
                 cap_value = int(cap)
                 provider_week[provider] += cap_value * len(slots)
                 for slot in slots:
                     provider_slots[provider][slot] += cap_value
-        reads = int(row.get("db_reads_max_per_run") or 0) * runs_week
-        writes = int(row.get("db_writes_max_per_run") or 0) * runs_week
         db_reads_week += reads
         db_writes_week += writes
         workflow_rows.append(

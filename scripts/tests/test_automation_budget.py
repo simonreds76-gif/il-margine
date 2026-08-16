@@ -67,6 +67,8 @@ class AutomationBudgetTests(unittest.TestCase):
         self.assertIn('cron: "45 6 * * *"', expected)
         self.assertIn("--odds-api-max-http-requests 3", expected)
         self.assertIn('cron: "10 10-22 * * *"', hot)
+        self.assertIn('cron: "40 10-22 * * *"', hot)
+        self.assertIn("GOALSCORER_LINEUP_ONLY", hot)
         self.assertIn('cron: "45 8 * * *"', settlement)
 
 
