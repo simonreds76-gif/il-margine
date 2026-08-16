@@ -1,6 +1,10 @@
 name: Goalscorer Expected Refresh
 
 on:
+  schedule:
+    # One bounded morning board build. Hot lineup/close refreshes are handled
+    # separately and skip automatically when no fixture is due.
+    - cron: "45 6 * * *"
   workflow_dispatch:
     inputs:
       force_understat:
@@ -109,6 +113,7 @@ jobs:
               --bookmaker Bet365 \
               --fetch-odds-api \
               --odds-api-bookmakers "Bet365" \
+              --odds-api-max-http-requests 3 \
               --fetch-lineups \
               --lineup-days-ahead 3 \
               --track-shadow
