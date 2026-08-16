@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-08-16T15:34:59.764353Z",
+  "generated_at": "2026-08-16T16:40:27.423141Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv"
   ],
   "team_form_source": "/home/runner/work/_temp/football-form/team-match-base.csv",
@@ -46,7 +47,7 @@
         "kickoff_display": "Sun 16 Aug 18:00 UK",
         "fotmob_match_id": "5868015",
         "fotmob_page_url": "/matches/espanyol-vs-levante/2fgcwj#5868015",
-        "lineup_type": "predicted",
+        "lineup_type": "confirmed",
         "venue": ""
       },
       "player": {
@@ -61,8 +62,8 @@
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 42.3,
-        "fair_odds": 2.36
+        "scoring_chance_pct": 49.7,
+        "fair_odds": 2.01
       },
       "market_data": {
         "best_odds": 3.1,
@@ -70,15 +71,15 @@
         "implied_chance_pct": 32.3
       },
       "edge": {
-        "price_gap_pp": 10.0,
+        "price_gap_pp": 17.5,
         "model_advantage": true
       },
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 91
+          "percentile": 95
         },
-        "share_of_team_chances_pct": 38,
+        "share_of_team_chances_pct": 47,
         "share_of_team_chances_percentile": 98,
         "team_attacking_outlook": {
           "tier": "Positive",
@@ -107,13 +108,13 @@
           "corners_against_avg": 4.4
         },
         "fixture_boost_pct": -1,
-        "projected_minutes": 78,
+        "projected_minutes": 85,
         "penalty_role": "Primary",
         "role_adjustment_factor": 1.0,
         "role_adjustment_reason": "",
-        "lineup_confidence": "Projected starter"
+        "lineup_confidence": "Confirmed starter"
       },
-      "confidence_tier": "Medium",
+      "confidence_tier": "High",
       "reasons": [
         "The model price is shorter than the bookmaker's best available price",
         "A large share of the team's chances runs through him",
@@ -134,7 +135,7 @@
         "kickoff_display": "Sun 16 Aug 18:00 UK",
         "fotmob_match_id": "5868015",
         "fotmob_page_url": "/matches/espanyol-vs-levante/2fgcwj#5868015",
-        "lineup_type": "predicted",
+        "lineup_type": "confirmed",
         "venue": ""
       },
       "player": {
@@ -149,8 +150,8 @@
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 36.8,
-        "fair_odds": 2.72
+        "scoring_chance_pct": 40.1,
+        "fair_odds": 2.49
       },
       "market_data": {
         "best_odds": 4.0,
@@ -158,15 +159,15 @@
         "implied_chance_pct": 25.0
       },
       "edge": {
-        "price_gap_pp": 11.8,
+        "price_gap_pp": 15.1,
         "model_advantage": true
       },
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 86
+          "percentile": 93
         },
-        "share_of_team_chances_pct": 24,
+        "share_of_team_chances_pct": 27,
         "share_of_team_chances_percentile": 95,
         "team_attacking_outlook": {
           "tier": "Strong",
@@ -195,15 +196,16 @@
           "tier": "Unknown"
         },
         "fixture_boost_pct": 19,
-        "projected_minutes": 78,
+        "projected_minutes": 85,
         "penalty_role": "Secondary",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Projected starter"
+        "role_adjustment_factor": 1.0714,
+        "role_adjustment_reason": "confirmed_role_delta=+2;usual=ML;today=FW;weight=0.71",
+        "lineup_confidence": "Confirmed starter"
       },
-      "confidence_tier": "Medium",
+      "confidence_tier": "High",
       "reasons": [
         "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
         "Recent chance quality grades as strong",
         "Opponent defensive profile is a positive matchup",
         "The fixture profile adds to his scoring case"
