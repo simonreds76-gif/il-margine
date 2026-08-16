@@ -1,7 +1,40 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-16T00:56:22Z",
+  "generated_at": "2026-08-16T09:14:52Z",
   "league": "la-liga",
-  "row_count": 0,
-  "rows": []
+  "row_count": 2,
+  "rows": [
+    {
+      "team": "Sevilla",
+      "team_key": "sevilla",
+      "player_name": "Jon Guridi",
+      "player_key": "jon guridi",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-08-15"
+    },
+    {
+      "team": "Sevilla",
+      "team_key": "sevilla",
+      "player_name": "Peque Fernández",
+      "player_key": "peque fern ndez",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-08-15"
+    }
+  ]
 }
