@@ -193,17 +193,12 @@ def _norm(text: str) -> str:
 
 def _is_team_shots_market(name: str) -> bool:
     text = (name or "").strip().lower()
-    if "on target" in text or "shots on target" in text:
+    if "player" in text or "on target" in text or "shots on target" in text:
         return False
-    if "shot" in text and ("total" in text or "over" in text or "under" in text or "team" in text):
-        return True
-    if re.search(r"\bshots?\b", text) and re.search(r"\b(o/?u|over|under|total)\b", text):
-        return True
-    if "team shots" in text:
-        return True
-    if "total shots" in text:
-        return True
-    return False
+    return bool(
+        re.search(r"\bshots?\b", text)
+        and re.search(r"\b(team|home|away)\b", text)
+    )
 
 
 def _extract_line_and_side(prop: dict, market_name: str) -> List[dict]:
@@ -486,6 +481,8 @@ def _extract_odds_api_rows(payload: List[dict], config: dict, captured: str) -> 
                     continue
 
                 team = _extract_team_from_market(market_name, home, away)
+                if not team:
+                    continue
                 for prop in market.get("odds") or []:
                     for parsed in _extract_line_and_side(prop, market_name):
                         rows.append({
@@ -649,6 +646,8 @@ def scrape_betsapi(
                 continue
 
             team = _extract_team_from_market(market_name, home, away)
+            if not team:
+                continue
             for prop in market_group.get("odds") or market_group.get("selections") or []:
                 parsed = _extract_line_and_side(prop, market_name)
                 if not parsed:

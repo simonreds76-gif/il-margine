@@ -40,6 +40,7 @@ HEADERS = {
 LEAGUE_CONFIGS = {
     "serie-a": {
         "league_id": 55,
+        "hierarchy": ROOT / "data" / "goalscorer" / "serie-a-penalty-takers.json",
         "context": ROOT / "data" / "goalscorer" / "penalty-duty-context.json",
         "context_history": ROOT / "data" / "goalscorer" / "live-history" / "penalty-duty-context-*.json",
         "output_csv": ROOT / "data" / "goalscorer" / "penalty-duty-live-review.csv",
@@ -47,6 +48,7 @@ LEAGUE_CONFIGS = {
     },
     "epl": {
         "league_id": 47,
+        "hierarchy": ROOT / "data" / "goalscorer" / "epl-penalty-takers.json",
         "context": ROOT / "data" / "goalscorer" / "epl" / "penalty-duty-context.json",
         "context_history": ROOT / "data" / "goalscorer" / "epl" / "live-history" / "penalty-duty-context-*.json",
         "output_csv": ROOT / "data" / "goalscorer" / "epl-penalty-duty-live-review.csv",
@@ -54,6 +56,7 @@ LEAGUE_CONFIGS = {
     },
     "la-liga": {
         "league_id": 87,
+        "hierarchy": ROOT / "data" / "goalscorer" / "la-liga-penalty-takers.json",
         "context": ROOT / "data" / "goalscorer" / "la-liga" / "penalty-duty-context.json",
         "context_history": ROOT / "data" / "goalscorer" / "la-liga" / "live-history" / "penalty-duty-context-*.json",
         "output_csv": ROOT / "data" / "goalscorer" / "la-liga-penalty-duty-live-review.csv",
@@ -61,6 +64,7 @@ LEAGUE_CONFIGS = {
     },
     "bundesliga": {
         "league_id": 54,
+        "hierarchy": ROOT / "data" / "goalscorer" / "bundesliga-penalty-takers.json",
         "context": ROOT / "data" / "goalscorer" / "bundesliga" / "penalty-duty-context.json",
         "context_history": ROOT / "data" / "goalscorer" / "bundesliga" / "live-history" / "penalty-duty-context-*.json",
         "output_csv": ROOT / "data" / "goalscorer" / "bundesliga-penalty-duty-live-review.csv",
@@ -68,6 +72,7 @@ LEAGUE_CONFIGS = {
     },
     "ligue-1": {
         "league_id": 53,
+        "hierarchy": ROOT / "data" / "goalscorer" / "ligue-1-penalty-takers.json",
         "context": ROOT / "data" / "goalscorer" / "ligue-1" / "penalty-duty-context.json",
         "context_history": ROOT / "data" / "goalscorer" / "ligue-1" / "live-history" / "penalty-duty-context-*.json",
         "output_csv": ROOT / "data" / "goalscorer" / "ligue-1-penalty-duty-live-review.csv",
@@ -142,7 +147,7 @@ def _load_json(path: Path) -> dict:
 def _write_csv(path: Path, rows: List[dict]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=FIELDNAMES)
+        writer = csv.DictWriter(handle, fieldnames=FIELDNAMES, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -242,6 +247,42 @@ def _load_context_map(paths: Iterable[Path]) -> Dict[tuple[str, str, str], dict]
     return loaded
 
 
+def _load_hierarchy_map(path: Path, team_key_func) -> Dict[str, dict]:
+    payload = _load_json(path)
+    loaded: Dict[str, dict] = {}
+    if not isinstance(payload, dict):
+        return loaded
+    for team_name, entry in payload.items():
+        if str(team_name).startswith("_") or not isinstance(entry, dict):
+            continue
+        key = str(team_key_func(str(team_name)) or "").strip()
+        if not key:
+            continue
+        last_verified = entry.get("last_verified") if isinstance(entry.get("last_verified"), dict) else {}
+        loaded[key] = {
+            "primary": str(entry.get("primary") or "").strip(),
+            "secondary": str(entry.get("secondary") or "").strip(),
+            "tertiary": str(entry.get("tertiary") or "").strip(),
+            "_generated_at": str(last_verified.get("date") or entry.get("public_updated_at") or ""),
+            "_source_path": _display_path(path),
+        }
+    return loaded
+
+
+def _apply_hierarchy_fallback(context: dict, fallback: dict | None) -> dict:
+    merged = dict(context)
+    if not fallback:
+        return merged
+    for field in ("primary", "secondary", "tertiary"):
+        if not str(merged.get(field) or "").strip():
+            merged[field] = str(fallback.get(field) or "").strip()
+    if not str(merged.get("_generated_at") or "").strip():
+        merged["_generated_at"] = str(fallback.get("_generated_at") or "")
+    if not str(merged.get("_source_path") or "").strip():
+        merged["_source_path"] = str(fallback.get("_source_path") or "")
+    return merged
+
+
 def _blank_context(
     *,
     league_key: str,
@@ -317,6 +358,7 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
     penalty_role_for_player = penalty_utils["penalty_role_for_player"]
 
     context_map = _load_context_map([config["context"], config["context_history"]])
+    hierarchy_map = _load_hierarchy_map(config["hierarchy"], team_key_func)
 
     grouped_events: Dict[tuple[str, str, str, str], List[dict]] = defaultdict(list)
     distinct_takers_by_team_match: Dict[tuple[str, str, str], set[str]] = defaultdict(set)
@@ -448,6 +490,7 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
                 is_home=bool(sample["is_home"]),
             )
         )
+        context = _apply_hierarchy_fallback(context, hierarchy_map.get(team_key))
 
         hierarchy = {
             "primary": context.get("primary", ""),

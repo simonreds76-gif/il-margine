@@ -3,6 +3,8 @@ from __future__ import annotations
 import importlib.util
 import sys
 import unittest
+from collections import defaultdict
+from unittest.mock import patch
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -39,6 +41,12 @@ class FootballVnextShadowTests(unittest.TestCase):
         capped = SHADOW.cap_signals(rows)
         self.assertEqual([row["pick_id"] for row in capped], ["b", "c"])
 
+    def test_team_identity_must_match_the_fixture(self) -> None:
+        self.assertTrue(SHADOW.is_fixture_team("Arsenal", "Arsenal", "Chelsea"))
+        self.assertTrue(SHADOW.is_fixture_team("Chelsea", "Arsenal", "Chelsea"))
+        self.assertFalse(SHADOW.is_fixture_team("", "Arsenal", "Chelsea"))
+        self.assertFalse(SHADOW.is_fixture_team("Player Name", "Arsenal", "Chelsea"))
+
     def test_candidate_row_marks_blocked_rows_as_guarded(self) -> None:
         source = {
             "kickoff": datetime(2026, 8, 22, 14, tzinfo=UTC),
@@ -61,6 +69,35 @@ class FootballVnextShadowTests(unittest.TestCase):
         self.assertEqual(row["confidence_guard_applied"], "true")
         self.assertEqual(row["signal_status"], "blocked")
         self.assertEqual(row["model_mean"], 13.2)
+
+    def test_corners_candidates_store_the_predicted_mean(self) -> None:
+        captured = datetime(2026, 8, 15, 12, tzinfo=UTC)
+        kickoff = datetime(2026, 8, 16, 14, tzinfo=UTC)
+        base = {
+            "league_slug": "epl", "home_team": "Arsenal", "away_team": "Chelsea",
+            "line_label": "10.5", "captured_at_dt": captured, "kickoff": kickoff,
+        }
+        odds_rows = [
+            {**base, "side": "over", "odds": 1.95},
+            {**base, "side": "under", "odds": 1.95},
+        ]
+        states = defaultdict(SHADOW.EventState)
+        form = {"ema20_matches": "20"}
+        with (
+            patch.object(SHADOW.PUB, "latest_corners_odds", return_value=odds_rows),
+            patch.object(SHADOW.PUB, "live_form_row", return_value=form),
+            patch.object(SHADOW, "latest_event_states", return_value=states),
+            patch.object(SHADOW, "corners_features", return_value=(10.0, (0.0,) * 7)),
+            patch.object(SHADOW, "predict_corners_mean", return_value=9.25),
+        ):
+            _accepted, candidates = SHADOW.score_corners(
+                by_team={}, by_league={}, odds_rows=[], event_rows=[],
+                params={"event_min_history": 0, "alpha": 0.1},
+                lock={"selection_rules": {"minimum_edge": 0.03}}, now=captured,
+            )
+        self.assertEqual(len(candidates), 2)
+        self.assertTrue(all(row["model_mean"] == 9.25 for row in candidates))
+
 
 
 if __name__ == "__main__":

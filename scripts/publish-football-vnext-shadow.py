@@ -192,6 +192,11 @@ def cap_signals(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     )
 
 
+def is_fixture_team(team: str, home: str, away: str) -> bool:
+    team_key = PUB.team_key(team)
+    return bool(team_key) and team_key in {PUB.team_key(home), PUB.team_key(away)}
+
+
 def team_alpha(params: dict[str, Any], league: str, team: str) -> float:
     entry = params.get("team_alpha", {}).get(f"{league}|{PUB.team_key(team)}")
     if isinstance(entry, dict) and entry.get("alpha") is not None:
@@ -230,6 +235,8 @@ def score_team_shots(
         day = kickoff.date()
         home, away = over["home_team"], over["away_team"]
         team = over.get("team", "").strip()
+        if not is_fixture_team(team, home, away):
+            continue
         is_home = PUB.team_key(team) == PUB.team_key(home)
         opponent = away if is_home else home
         cache_key = (day.isoformat(), league, PUB.team_key(team), PUB.team_key(opponent))
@@ -486,7 +493,7 @@ def score_corners(
                 model=CORNERS_MODEL, source={**source, "bookmaker": "Pinnacle"}, team="", side=side,
                 probability=probability, raw_probability=probability, market_probability=market_probability,
                 edge=edge, matchday=matchday, team_neff=home_neff, opponent_neff=away_neff,
-                model_mean=lam, distribution_parameter=alpha, status=status,
+                model_mean=predicted_mean, distribution_parameter=alpha, status=status,
                 blocked_reason=";".join(blocked),
             )
             candidates.append(row)

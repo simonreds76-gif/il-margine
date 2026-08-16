@@ -2,6 +2,9 @@ name: Club Penalty Weekly Evidence
 
 on:
   schedule:
+    # Same-night scan for new competitive assignments.
+    - cron: "20 0 * * *"
+    # Wider weekly reconciliation catches delayed provider corrections.
     - cron: "20 6 * * 1"
   workflow_dispatch:
 
@@ -29,11 +32,21 @@ jobs:
       - name: Install dependencies
         run: pip install requests
 
+      - name: Select review window
+        id: window
+        shell: bash
+        run: |
+          if [[ "${{ github.event.schedule }}" == "20 0 * * *" ]]; then
+            echo "days_back=2" >> "$GITHUB_OUTPUT"
+          else
+            echo "days_back=8" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Scan recent penalty events
         run: |
           for league in serie-a epl la-liga bundesliga ligue-1; do
             echo "---- Penalty evidence: ${league}"
-            python scripts/goalscorer-live-penalty-review.py --league "${league}" --days-back 8
+            python scripts/goalscorer-live-penalty-review.py --league "${league}" --days-back "${{ steps.window.outputs.days_back }}"
             python scripts/build-penalty-baseline-evidence.py --league "${league}"
           done
 

@@ -5045,29 +5045,29 @@
   },
   "Sevilla": {
     "primary": "Isaac Romero",
-    "secondary": "Peque Fernández",
-    "tertiary": "Jon Guridi",
-    "last_updated": "2026-07-30",
-    "source": "Cadena SER",
-    "cross_check": "Venezia FC",
+    "secondary": "Jon Guridi",
+    "tertiary": "Peque Fernández",
+    "last_updated": "2026-08-15",
+    "source": "FotMob",
+    "cross_check": "LaLiga",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "medium",
-      "secondary": "low",
-      "tertiary": "low"
+      "secondary": "high",
+      "tertiary": "medium"
     },
-    "condition_note": "Isaac converted competitively in January. Peque, Guridi and Isaac all converted in a July friendly shootout, which provides depth evidence but cannot establish regular-time deputy order. Sevilla's striker recruitment and the lack of regular-time evidence for Peque and Guridi leave the hierarchy exposed to change. Conditions: Reassess after any official striker signing with established penalty history. Peque and Guridi are labelled shootout-only deputies.",
+    "condition_note": "Isaac Romero remains the provisional primary because he converted Sevilla's previous competitive regular-time penalty, but he had been substituted before both penalties against Rayo Vallecano. Jon Guridi took and scored at 52 while Peque Fernández was also on the pitch, establishing Guridi ahead of Peque in the available-player order. Guridi went off injured at 82 and Peque then took and scored at 90. Conditions: the primary-versus-Guridi order remains untested in a competitive match with both players on the pitch and must be reviewed at Sevilla's next penalty.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-15",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-15",
     "latest_evidence": {
-      "id": "evt_20260730_sevilla_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 8
+      "id": "evt_20260815_sevilla_competitive_penalties",
+      "date": "2026-08-15",
+      "type": "competitive_penalty_assignments",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -5268,6 +5268,38 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 8 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260815_sevilla_competitive_penalties",
+        "date": "2026-08-15",
+        "season": "2026/27",
+        "type": "competitive_penalty_assignments",
+        "penalty_kind": "regular_time",
+        "competition": "LaLiga",
+        "match": "Sevilla 2-1 Rayo Vallecano",
+        "context": "Guridi converted at 52 with Peque on the pitch. Guridi left injured at 82 and Peque converted the second penalty at 90. Isaac had been substituted at 46, so the match establishes Guridi above Peque but does not settle Isaac versus Guridi.",
+        "sources": [
+          {
+            "label": "FotMob match events and lineups",
+            "url": "https://www.fotmob.com/matches/rayo-vallecano-vs-sevilla/2k3j3p#5868019",
+            "date": "2026-08-15",
+            "note": "Records both penalty goals and the substitutions that determine who was available."
+          },
+          {
+            "label": "LaLiga",
+            "url": "https://www.laliga.com/partido/temporada-2026-2027-laliga-ea-sports-sevilla-fc-rayo-vallecano-1",
+            "date": "2026-08-15",
+            "note": "Official competition match record for Sevilla against Rayo Vallecano."
+          }
+        ],
+        "detection": "automated_fotmob_live_then_manual_lineup_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-15T22:15:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Competitive evidence reverses the previous Peque/Guridi deputy order."
       }
     ],
     "change_log": [
@@ -5339,6 +5371,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-15",
+        "season": "2026/27",
+        "change_type": "competitive_hierarchy_update",
+        "from": {
+          "primary": "Isaac Romero",
+          "secondary": "Peque Fernández",
+          "tertiary": "Jon Guridi"
+        },
+        "to": {
+          "primary": "Isaac Romero",
+          "secondary": "Jon Guridi",
+          "tertiary": "Peque Fernández"
+        },
+        "reason": "Guridi took the first penalty with Peque available; Peque only took the second after Guridi was substituted. Isaac was already off, so his provisional primary status is retained.",
+        "evidence_ids": [
+          "evt_20260815_sevilla_competitive_penalties"
+        ],
+        "detection": "automated_fotmob_live_then_manual_lineup_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-15T22:15:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -5359,20 +5414,25 @@
         "player": "Isaac Romero",
         "status": "confirmed",
         "source_url": "https://sevillafc.hiwaymedia.io/en/actualidad/noticias/match-report-cordoba-sevilla-fc-friendly-july-2026",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-08-15"
       },
       "secondary": {
-        "player": "Peque Fernández",
-        "status": "confirmed",
-        "source_url": "https://sevillafc.hiwaymedia.io/en/actualidad/noticias/match-report-cordoba-sevilla-fc-friendly-july-2026",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
         "player": "Jon Guridi",
         "status": "confirmed",
         "source_url": "https://sevillafc.hiwaymedia.io/en/actualidad/noticias/match-report-cordoba-sevilla-fc-friendly-july-2026",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-08-15"
+      },
+      "tertiary": {
+        "player": "Peque Fernández",
+        "status": "confirmed",
+        "source_url": "https://sevillafc.hiwaymedia.io/en/actualidad/noticias/match-report-cordoba-sevilla-fc-friendly-july-2026",
+        "checked_at": "2026-08-15"
       }
+    },
+    "latest_match_review": {
+      "date": "2026-08-15",
+      "method": "competitive_match_event_and_lineup_review",
+      "evidence_id": "evt_20260815_sevilla_competitive_penalties"
     }
   },
   "Valencia": {

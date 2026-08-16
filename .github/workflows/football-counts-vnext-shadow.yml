@@ -96,10 +96,17 @@ jobs:
           fi
           python scripts/pinnacle-scrape-corners.py "${CORNER_ARGS[@]}"
 
-      - name: Score, settle and audit vNext shadow signals
-        if: steps.season.outputs.active == 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *')
+      - name: Score current vNext shadow board
+        if: steps.season.outputs.active == 'true'
+        shell: bash
         run: |
-          python scripts/run-football-vnext-shadow.py
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" || "${{ github.event.schedule }}" == "15 8 * * *" ]]; then
+            python scripts/run-football-vnext-shadow.py
+          else
+            # Re-score from the just-captured near-kickoff prices. Settlement
+            # and promotion gates remain on the daily full run.
+            python scripts/publish-football-vnext-shadow.py
+          fi
           python scripts/team-shots-live-snapshot.py
           python scripts/corners-live-snapshot.py
 
@@ -112,9 +119,14 @@ jobs:
           if [[ "${{ github.event_name }}" == "workflow_dispatch" || "${{ github.event.schedule }}" == "15 8 * * *" ]]; then
             git add data/football-form/ data/team-shots/inbox/ data/team-shots/understat/ data/corners-ou/pinnacle-corners-odds.csv
           else
-            # Near-kickoff runs store prices only. Reports are rebuilt once daily,
-            # avoiding timestamp-only commits on every near-kickoff scan.
+            # Near-kickoff runs publish current candidates/signals as well as
+            # the raw prices. Full settlement reports remain daily.
             git add data/team-shots/inbox/ data/corners-ou/pinnacle-corners-odds.csv
+            git add data/football-form/football-counts-vnext-candidates.csv
+            git add data/football-form/team-shots-v4-shadow-signals.csv
+            git add data/football-form/corners-v3-shadow-signals.csv
+            git add data/team-shots/team-shots-live-snapshot.json
+            git add data/corners-ou/corners-live-snapshot.json
           fi
           if git diff --cached --quiet; then
             echo "No vNext signal or evidence changes."
