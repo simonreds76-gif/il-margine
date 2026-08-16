@@ -85,6 +85,13 @@ fi
 
 git add -u data/goalscorer public/fair-odds-lab || true
 
+# This file starts untracked on the first final-status-aware run. Stage it
+# independently so an unrelated missing optional artifact cannot abort the
+# broad allowlist command below before the lifecycle evidence is retained.
+if [[ -f data/goalscorer/goalscorer-match-status.json ]]; then
+  git add -f -- data/goalscorer/goalscorer-match-status.json
+fi
+
 if ((${#artifacts[@]} > 0)); then
   git add -f -- "${artifacts[@]}" 2>/dev/null || true
 fi
