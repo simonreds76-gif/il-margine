@@ -6,11 +6,11 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: weekly-research-report
-  cancel-in-progress: true
+  group: golden-with-speed-insights-branch-writes
+  cancel-in-progress: false
 
 jobs:
   report:
@@ -95,6 +95,10 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
       - name: Build and send weekly report
+        env:
+          TENNIS_PROPS_V3_WEEKLY_JSON: '${{ vars.TENNIS_PROPS_V3_WEEKLY_JSON }}'
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           python scripts/audit-automation-budget.py \
             --workflows-dir .effective-default-branch/.github/workflows \
@@ -164,6 +168,8 @@ jobs:
             data/tennis-props/backtest/aces-dfs-v2-rung1-report.txt
             data/tennis-props/shadow/market-observations.csv
             data/tennis-props/shadow/market-observations-report.txt
+            data/tennis-props/shadow/aces-dfs-weekly-decision.json
+            data/tennis-props/shadow/aces-dfs-weekly-decision.txt
             data/vnext/tennis-derivatives-evidence-status.json
             data/vnext/tennis-derivatives-evidence-report.txt
             data/vnext/tennis-derivatives-pinnacle-coverage.json
@@ -177,3 +183,24 @@ jobs:
             data/assist-value/research/assist-value-market-history.csv
             data/assist-value/research/assist-value-v1-prospective.csv
             data/assist-value/research/assist-value-v1-prospective-performance.txt
+
+      - name: Publish canonical weekly monitor bundle
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f \
+            data/football-form/weekly-research-report.md \
+            data/football-form/weekly-research-report.json \
+            data/team-shots/team-shots-live-snapshot.json \
+            data/corners-ou/corners-live-snapshot.json \
+            data/goalscorer/goalscorer-monitor-snapshot.json
+          if git diff --cached --quiet; then
+            echo "Canonical weekly monitor bundle is already current."
+            exit 0
+          fi
+          git commit -m "chore: publish weekly model evidence"
+          if ! git diff --quiet; then
+            echo "Discarding non-canonical generated worktree changes before safe push."
+            git restore --worktree .
+          fi
+          bash scripts/ci-safe-push.sh golden-with-speed-insights

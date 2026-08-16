@@ -2,9 +2,10 @@ name: Goalscorer Hot Live Poll
 
 on:
   schedule:
-    # Hourly is sufficient for the 70-minute official-lineup window and keeps
-    # the shared free Odds-API allowance below its daily ceiling.
+    # :10 is the full price/close poll. :40 refreshes lineups only, giving the
+    # public board a 30-minute XI cadence without extra Odds-API or DB usage.
     - cron: "10 10-22 * * *"
+    - cron: "40 10-22 * * *"
   workflow_dispatch:
     inputs:
       reason:
@@ -60,6 +61,8 @@ jobs:
       - name: Run hosted hot live poll
         env:
           ASSIST_VALUE_SHADOW_ENABLED: ${{ vars.ASSIST_VALUE_SHADOW_ENABLED }}
+          GOALSCORER_LINEUP_ONLY: ${{ github.event.schedule == '40 10-22 * * *' && '1' || '0' }}
+          GOALSCORER_FORCE_REFRESH: ${{ github.event_name == 'workflow_dispatch' && '1' || '0' }}
         run: python scripts/goalscorer-live-hosted.py
 
       - name: Build goalscorer monitor snapshot
@@ -80,6 +83,7 @@ jobs:
           python scripts/upload-fair-odds-lab-blob.py
 
       - name: Upload goalscorer monitor snapshot
+        if: github.event.schedule != '40 10-22 * * *'
         env:
           ENABLE_SUPABASE_SNAPSHOT_UPLOADS: ${{ vars.ENABLE_SUPABASE_SNAPSHOT_UPLOADS }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
