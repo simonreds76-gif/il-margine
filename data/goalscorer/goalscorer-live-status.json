@@ -1,9 +1,9 @@
 {
-  "state": "idle",
-  "updated_at": "2026-08-16T14:36:45Z",
-  "last_started_at": "2026-08-16T14:36:31Z",
-  "last_finished_at": "2026-08-16T14:36:45Z",
-  "last_successful_finished_at": "2026-08-16T14:36:45Z",
+  "state": "skipped",
+  "updated_at": "2026-08-16T15:34:29Z",
+  "last_started_at": "2026-08-16T15:34:27Z",
+  "last_finished_at": "2026-08-16T15:34:29Z",
+  "last_successful_finished_at": "2026-08-16T15:34:29Z",
   "current_league": "",
   "bookmaker": "Bet365",
   "leagues": [
@@ -14,6 +14,6 @@
     "ligue-1"
   ],
   "warnings": [],
-  "message": "Goalscorer live poll finished (1 league(s) ran).",
+  "message": "Goalscorer live poll skipped: no leagues due in current cadence window.",
   "last_exit_code": 0
 }
