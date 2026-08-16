@@ -102,12 +102,15 @@ def _scrape_league(
     captured_at: str,
     verbose: bool,
     kickoff_within_minutes: int = 0,
+    failed_leagues: list[str] | None = None,
 ) -> List[Dict]:
     rows: List[Dict] = []
     try:
         matchups = _get(f"leagues/{league_id}/matchups?withSpecials=false&brandId=0")
     except Exception as e:
         print(f"  [{league_key}] WARN: could not fetch matchups: {e}")
+        if failed_leagues is not None:
+            failed_leagues.append(league_key)
         return rows
 
     regular = [m for m in matchups if m.get("type") != "special"]
@@ -119,7 +122,14 @@ def _scrape_league(
         away = next((p["name"] for p in participants if p.get("alignment") == "away"), "")
         if not home or not away:
             continue
-        if "(Bookings)" in home or "(Bookings)" in away:
+        # The guest feed also exposes synthetic participant variants such as
+        # "Arsenal (Corners)". They duplicate the real fixture and must not be
+        # treated as a second match when the CLV ledger is keyed by team names.
+        if any(
+            suffix in participant
+            for participant in (home, away)
+            for suffix in ("(Bookings)", "(Corners)")
+        ):
             continue
 
         kickoff_iso = match.get("startTime", "")
@@ -252,6 +262,7 @@ def main() -> None:
             raise SystemExit("No valid leagues requested.")
 
     all_new: List[Dict] = []
+    failed_leagues: list[str] = []
     for league_key, league_id in leagues_to_scrape.items():
         rows = _scrape_league(
             league_key,
@@ -259,6 +270,7 @@ def main() -> None:
             captured_at,
             args.verbose,
             args.kickoff_within_minutes,
+            failed_leagues,
         )
         for row in rows:
             k = (
@@ -273,6 +285,14 @@ def main() -> None:
                 all_new.append(row)
                 existing_keys.add(k)
         time.sleep(0.3)
+
+    if len(failed_leagues) == len(leagues_to_scrape):
+        raise SystemExit(
+            "All requested Pinnacle league matchup fetches failed: "
+            + ", ".join(failed_leagues)
+        )
+    if failed_leagues:
+        print(f"  [warn] failed leagues: {', '.join(failed_leagues)}")
 
     print(f"\n  New rows: {len(all_new)}")
 
@@ -290,7 +310,7 @@ def main() -> None:
     args.output.parent.mkdir(parents=True, exist_ok=True)
     write_header = not args.output.exists()
     with open(args.output, "a", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=OUTPUT_FIELDS)
+        writer = csv.DictWriter(f, fieldnames=OUTPUT_FIELDS, lineterminator="\n")
         if write_header:
             writer.writeheader()
         writer.writerows(all_new)

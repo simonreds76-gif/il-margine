@@ -47,6 +47,13 @@ class FootballVnextShadowTests(unittest.TestCase):
         self.assertFalse(SHADOW.is_fixture_team("", "Arsenal", "Chelsea"))
         self.assertFalse(SHADOW.is_fixture_team("Player Name", "Arsenal", "Chelsea"))
 
+    def test_current_provider_team_names_resolve_to_historical_keys(self) -> None:
+        self.assertEqual(SHADOW.PUB.team_key("Espanyol Barcelona"), "espanol")
+        self.assertEqual(SHADOW.PUB.team_key("Espanyol"), "espanol")
+        self.assertEqual(SHADOW.PUB.team_key("RC Deportivo De A Coruna"), "la coruna")
+        self.assertEqual(SHADOW.PUB.team_key("Deportivo La Coruna"), "la coruna")
+        self.assertEqual(SHADOW.PUB.team_key("Atletico Madrid"), "ath madrid")
+
     def test_candidate_row_marks_blocked_rows_as_guarded(self) -> None:
         source = {
             "kickoff": datetime(2026, 8, 22, 14, tzinfo=UTC),

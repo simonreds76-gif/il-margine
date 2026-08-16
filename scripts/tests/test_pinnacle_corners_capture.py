@@ -5,6 +5,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 SCRIPTS = Path(__file__).resolve().parents[1]
@@ -31,6 +32,31 @@ class PinnacleCornersCaptureTests(unittest.TestCase):
             )
             keys = CAPTURE._load_existing_keys(path)
             self.assertEqual(len(keys), 2)
+
+    def test_synthetic_corners_participants_are_not_a_second_fixture(self) -> None:
+        matchup = {
+            "id": 123,
+            "type": "matchup",
+            "startTime": "2026-08-22T15:00:00Z",
+            "participants": [
+                {"alignment": "home", "name": "Arsenal (Corners)"},
+                {"alignment": "away", "name": "Chelsea (Corners)"},
+            ],
+        }
+        with patch.object(CAPTURE, "_get", return_value=[matchup]):
+            rows = CAPTURE._scrape_league(
+                "epl", 1980, "2026-08-22T10:00:00Z", False
+            )
+        self.assertEqual(rows, [])
+
+    def test_matchup_fetch_failure_is_reported_to_caller(self) -> None:
+        failed: list[str] = []
+        with patch.object(CAPTURE, "_get", side_effect=RuntimeError("blocked")):
+            rows = CAPTURE._scrape_league(
+                "la-liga", 2196, "2026-08-22T10:00:00Z", False, 0, failed
+            )
+        self.assertEqual(rows, [])
+        self.assertEqual(failed, ["la-liga"])
 
 
 if __name__ == "__main__":

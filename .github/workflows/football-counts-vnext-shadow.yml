@@ -88,13 +88,19 @@ jobs:
           fi
           if [ -n "${ODDS_API_KEY:-}${ODDS_API_IO_KEY:-}${BETS_API_KEY:-}" ]; then
             python scripts/team-shots-scrape-odds.py "${TEAM_ARGS[@]}"
+            # v4 reads the canonical archive, not dated inbox files. Archive
+            # every capture before scoring so fresh Bet365 prices are visible.
+            python scripts/team-shots-odds-archive.py
             if [[ "$EVENT_NAME" != "schedule" || "$SCHEDULE_EXPR" == "15 8 * * *" ]]; then
               python scripts/football-count-market-coverage.py
             fi
           else
             echo "::warning::No team-shots odds key; Team Shots v4 cannot emit this scan."
           fi
-          python scripts/pinnacle-scrape-corners.py "${CORNER_ARGS[@]}"
+          # Arcadia blocks GitHub-hosted runner IPs intermittently. Keep Team
+          # Shots collection alive and surface a warning; a local bounded
+          # capture supplies the locked Pinnacle corners lane.
+          python scripts/pinnacle-scrape-corners.py "${CORNER_ARGS[@]}" || echo "::warning::Hosted Pinnacle corners capture unavailable; local capture remains authoritative."
 
       - name: Score current vNext shadow board
         if: steps.season.outputs.active == 'true'
@@ -117,11 +123,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           if [[ "${{ github.event_name }}" == "workflow_dispatch" || "${{ github.event.schedule }}" == "15 8 * * *" ]]; then
-            git add data/football-form/ data/team-shots/inbox/ data/team-shots/understat/ data/corners-ou/pinnacle-corners-odds.csv
+            git add data/football-form/ data/team-shots/inbox/ data/team-shots/understat/ data/team-shots/team-shots-odds-history.csv data/corners-ou/pinnacle-corners-odds.csv
           else
             # Near-kickoff runs publish current candidates/signals as well as
             # the raw prices. Full settlement reports remain daily.
-            git add data/team-shots/inbox/ data/corners-ou/pinnacle-corners-odds.csv
+            git add data/team-shots/inbox/ data/team-shots/team-shots-odds-history.csv data/corners-ou/pinnacle-corners-odds.csv
             git add data/football-form/football-counts-vnext-candidates.csv
             git add data/football-form/team-shots-v4-shadow-signals.csv
             git add data/football-form/corners-v3-shadow-signals.csv

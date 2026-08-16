@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-Merge team-shots odds inbox CSVs into a canonical odds history file.
+Append team-shots odds inbox CSVs to a canonical odds history file.
 
 Only **team total shots** rows are kept (market TEAM_SHOTS). Legacy rows from
-the mistaken player_shots scrape (The Odds API) are dropped on rewrite.
+the mistaken player_shots scrape (The Odds API) are ignored without rewriting
+the append-only history.
 
 Usage:
   python scripts/team-shots-odds-archive.py
@@ -16,7 +17,7 @@ import csv
 import glob
 import os
 from pathlib import Path
-from typing import List, Set
+from typing import Set
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_INPUT_GLOB = "data/team-shots/inbox/*.csv"
@@ -33,9 +34,12 @@ ARCHIVE_FIELDS = [
 def _is_team_total_row(row: dict) -> bool:
     """Keep only team total shots lines; drop player prop rows."""
     m = (row.get("market") or "").strip().lower()
+    team = (row.get("team") or "").strip()
+    if m != "team_shots" or not team:
+        return False
     if m in ("player_shots", "player_shots_on_target"):
         return False
-    if row.get("player") and not (row.get("team") or "").strip():
+    if row.get("player"):
         return False
     return True
 
@@ -53,21 +57,21 @@ def dedup_key(row: dict) -> str:
     ])
 
 
-def load_existing(path: Path) -> tuple[list[dict], set[str], int]:
-    rows: List[dict] = []
+def load_existing(path: Path) -> tuple[int, set[str], int]:
+    kept = 0
     keys: Set[str] = set()
     dropped = 0
     if not path.exists():
-        return rows, keys, dropped
+        return kept, keys, dropped
     with open(path, "r", encoding="utf-8") as fh:
         reader = csv.DictReader(fh)
         for row in reader:
             if not _is_team_total_row(row):
                 dropped += 1
                 continue
-            rows.append(row)
+            kept += 1
             keys.add(dedup_key(row))
-    return rows, keys, dropped
+    return kept, keys, dropped
 
 
 def main() -> None:
@@ -79,11 +83,11 @@ def main() -> None:
     input_pattern = str(ROOT / args.input) if not os.path.isabs(args.input) else args.input
     inbox_files = sorted(glob.glob(input_pattern))
 
-    existing_rows, existing_keys, pruned = load_existing(args.archive)
-    print(f"Existing archive: {len(existing_rows)} team-total rows (dropped {pruned} non-team rows)")
+    existing_count, existing_keys, ignored = load_existing(args.archive)
+    print(f"Existing archive: {existing_count} team-total rows (ignored {ignored} legacy non-team rows)")
     print(f"Inbox files: {len(inbox_files)}")
 
-    new_count = 0
+    new_rows: list[dict] = []
     for fpath in inbox_files:
         with open(fpath, "r", encoding="utf-8") as fh:
             reader = csv.DictReader(fh)
@@ -94,26 +98,32 @@ def main() -> None:
                 if key in existing_keys:
                     continue
                 existing_keys.add(key)
-                existing_rows.append(row)
-                new_count += 1
+                new_rows.append(row)
 
-    if new_count == 0 and pruned == 0:
+    if not new_rows:
         print("No changes.")
         return
 
-    existing_rows.sort(
+    new_rows.sort(
         key=lambda row: (
             (row.get("match_date") or "").strip(),
             (row.get("captured_at") or "").strip(),
         )
     )
     args.archive.parent.mkdir(parents=True, exist_ok=True)
-    with open(args.archive, "w", newline="", encoding="utf-8") as fh:
-        writer = csv.DictWriter(fh, fieldnames=ARCHIVE_FIELDS, extrasaction="ignore")
-        writer.writeheader()
-        writer.writerows(existing_rows)
+    write_header = not args.archive.exists()
+    with open(args.archive, "a", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(
+            fh,
+            fieldnames=ARCHIVE_FIELDS,
+            extrasaction="ignore",
+            lineterminator="\n",
+        )
+        if write_header:
+            writer.writeheader()
+        writer.writerows(new_rows)
 
-    print(f"Added {new_count} new rows -> total {len(existing_rows)}")
+    print(f"Added {len(new_rows)} new rows -> total {existing_count + len(new_rows)}")
     print(f"Archive: {args.archive}")
 
 
