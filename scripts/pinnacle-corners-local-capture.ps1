@@ -21,6 +21,26 @@ function Log([string]$Message) {
     Add-Content -Path $logFile -Value $line
 }
 
+function Invoke-NativeLogged([string]$FilePath, [string[]]$Arguments) {
+    # Windows PowerShell can promote a native process's harmless stderr output
+    # (for example Git's "From https://...") into a terminating ErrorRecord
+    # when ErrorActionPreference is Stop. Capture it under Continue and decide
+    # success solely from the native exit code.
+    $previousPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    try {
+        $output = & $FilePath @Arguments 2>&1
+        $exitCode = $LASTEXITCODE
+    }
+    finally {
+        $ErrorActionPreference = $previousPreference
+    }
+    foreach ($entry in @($output)) {
+        Log ([string]$entry)
+    }
+    return $exitCode
+}
+
 $lockHandle = Enter-TaskLock -LockName "football-corners-capture" -RootPath $root
 if ($null -eq $lockHandle) {
     Log "Another local corners capture is active; skipping."
@@ -37,19 +57,19 @@ try {
     }
 
     Log "Fetching latest $branch before capture."
-    git fetch origin $branch 2>&1 | ForEach-Object { Log $_ }
-    if ($LASTEXITCODE -ne 0) {
-        throw "git fetch failed with exit $LASTEXITCODE"
+    $exitCode = Invoke-NativeLogged "git" @("fetch", "origin", $branch)
+    if ($exitCode -ne 0) {
+        throw "git fetch failed with exit $exitCode"
     }
-    git merge --ff-only "origin/$branch" 2>&1 | ForEach-Object { Log $_ }
-    if ($LASTEXITCODE -ne 0) {
+    $exitCode = Invoke-NativeLogged "git" @("merge", "--ff-only", "origin/$branch")
+    if ($exitCode -ne 0) {
         throw "Capture branch cannot fast-forward to origin/$branch."
     }
 
     Log "Capturing Pinnacle Big-5 corners prices."
-    & python scripts\pinnacle-scrape-corners.py --bucket-hours 2 2>&1 | ForEach-Object { Log $_ }
-    if ($LASTEXITCODE -ne 0) {
-        throw "Pinnacle corners capture failed with exit $LASTEXITCODE"
+    $exitCode = Invoke-NativeLogged "python" @("scripts\pinnacle-scrape-corners.py", "--bucket-hours", "2")
+    if ($exitCode -ne 0) {
+        throw "Pinnacle corners capture failed with exit $exitCode"
     }
 
     git add -- $captureFile
@@ -62,13 +82,14 @@ try {
         exit 0
     }
 
-    git commit -m "chore: capture local pinnacle corners odds" 2>&1 | ForEach-Object { Log $_ }
-    if ($LASTEXITCODE -ne 0) {
+    $exitCode = Invoke-NativeLogged "git" @("commit", "-m", "chore: capture local pinnacle corners odds")
+    if ($exitCode -ne 0) {
         throw "Unable to commit local corners capture."
     }
-    & bash scripts/ci-safe-push.sh $branch 2>&1 | ForEach-Object { Log $_ }
-    if ($LASTEXITCODE -ne 0) {
-        throw "Safe push failed with exit $LASTEXITCODE"
+    $bash = "C:\Program Files\Git\bin\bash.exe"
+    $exitCode = Invoke-NativeLogged $bash @("scripts/ci-safe-push.sh", $branch)
+    if ($exitCode -ne 0) {
+        throw "Safe push failed with exit $exitCode"
     }
     Log "Local corners capture pushed successfully."
 }
