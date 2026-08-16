@@ -1,289 +1,43 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-16T08:58:14Z",
-  "league": "la-liga",
+  "generated_at": "2026-08-16T08:58:23Z",
+  "league_count": 5,
   "row_count": 67,
-  "stats": {
-    "historical_rows": 32218,
-    "odds_rows": 173,
-    "matched_rows": 67,
-    "missing_player_history": 66,
-    "missing_team_mapping": 40,
-    "fallback_rows": 6,
-    "qualified_rows": 9,
-    "roster_resolved_rows": 0,
-    "high_confidence_rows": 0,
-    "medium_confidence_rows": 50,
-    "low_confidence_rows": 17,
-    "public_high_signals": 0,
-    "public_caveat_signals": 9,
-    "shadow_track_rows": 6,
-    "penalty_transfer_rows": 0,
-    "position_upgrade_rows": 0,
-    "role_adjusted_rows": 0,
-    "fixtures_with_confirmed_lineups": 0,
-    "fixtures_with_expected_lineups": 1,
-    "fixtures_clean": 0,
-    "fixtures_degraded": 4,
-    "fixtures_quarantined": 0,
-    "confirmed_starter_rows": 0,
-    "confirmed_bench_rows": 0,
-    "expected_starter_rows": 16,
-    "expected_bench_rows": 0,
-    "expected_out_rows": 3,
-    "not_in_squad_rows": 0,
-    "avg_ev": -0.5566935970149254
-  },
-  "fixtures": [
+  "leagues": [
     {
-      "match_date": "2026-08-16",
-      "home_team": "RC Celta de Vigo",
-      "away_team": "CA Osasuna",
-      "league": "la-liga",
-      "competition": "Spain - LaLiga",
-      "bookmaker": "Bet365",
-      "lineup_input": "none",
-      "trust_tier": "T2",
-      "corruption_score": 1.0,
-      "corruption_flags": [
-        "no_lineup_payload"
-      ],
-      "home_player_checks": [],
-      "away_player_checks": []
+      "league": "serie-a",
+      "label": "Serie A",
+      "path": "data/goalscorer/live-board.json",
+      "row_count": 0,
+      "generated_at": "2026-07-11T19:02:25Z"
     },
     {
-      "match_date": "2026-08-16",
-      "home_team": "Espanyol Barcelona",
-      "away_team": "Levante UD",
-      "league": "la-liga",
-      "competition": "Spain - LaLiga",
-      "bookmaker": "Bet365",
-      "lineup_input": "expected_xi",
-      "trust_tier": "T2",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Marko Dmitrovic",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Omar El Hilali",
-          "status": "plausible",
-          "known_team_keys": [
-            "espanyol"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Unai Núñez",
-          "status": "transfer_unverified",
-          "known_team_keys": [
-            "valencia"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Leandro Cabrera",
-          "status": "plausible",
-          "known_team_keys": [
-            "espanyol"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Quilindschy Hartman",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Urko González",
-          "status": "transfer_unverified",
-          "known_team_keys": [
-            "real sociedad"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Edu Expósito",
-          "status": "plausible",
-          "known_team_keys": [
-            "espanyol"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Tyrhys Dolan",
-          "status": "plausible",
-          "known_team_keys": [
-            "espanyol"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Álex Calatrava",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Javi Hernández",
-          "status": "transfer_unverified",
-          "known_team_keys": [
-            "leganes"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Roberto Fernández",
-          "status": "plausible",
-          "known_team_keys": [
-            "espanyol"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "Mathew Ryan",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Nacho Pérez",
-          "status": "plausible",
-          "known_team_keys": [
-            "levante"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Aïssa Mandi",
-          "status": "transfer_unverified",
-          "known_team_keys": [
-            "villarreal"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Adrián De La Fuente",
-          "status": "plausible",
-          "known_team_keys": [
-            "levante"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Manuel Sánchez",
-          "status": "plausible",
-          "known_team_keys": [
-            "levante"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jon Olasagasti",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Oriol Rey",
-          "status": "plausible",
-          "known_team_keys": [
-            "levante"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Víctor García",
-          "status": "plausible",
-          "known_team_keys": [
-            "levante"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Enzo Bardeli",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Kareem Tunde",
-          "status": "plausible",
-          "known_team_keys": [
-            "levante"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Iván Romero",
-          "status": "plausible",
-          "known_team_keys": [
-            "levante"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
+      "league": "epl",
+      "label": "Premier League",
+      "path": "data/goalscorer/epl/live-board.json",
+      "row_count": 0,
+      "generated_at": "2026-07-11T19:02:27Z"
     },
     {
-      "match_date": "2026-08-16",
-      "home_team": "Racing Santander",
-      "away_team": "Villarreal CF",
       "league": "la-liga",
-      "competition": "Spain - LaLiga",
-      "bookmaker": "Bet365",
-      "lineup_input": "none",
-      "trust_tier": "T2",
-      "corruption_score": 1.0,
-      "corruption_flags": [
-        "no_lineup_payload"
-      ],
-      "home_player_checks": [],
-      "away_player_checks": []
+      "label": "La Liga",
+      "path": "data/goalscorer/la-liga/live-board.json",
+      "row_count": 67,
+      "generated_at": "2026-08-16T08:58:14Z"
     },
     {
-      "match_date": "2026-08-17",
-      "home_team": "RC Deportivo De A Coruna",
-      "away_team": "Elche CF",
-      "league": "la-liga",
-      "competition": "Spain - LaLiga",
-      "bookmaker": "Bet365",
-      "lineup_input": "none",
-      "trust_tier": "T2",
-      "corruption_score": 1.0,
-      "corruption_flags": [
-        "no_lineup_payload"
-      ],
-      "home_player_checks": [],
-      "away_player_checks": []
+      "league": "bundesliga",
+      "label": "Bundesliga",
+      "path": "data/goalscorer/bundesliga/live-board.json",
+      "row_count": 0,
+      "generated_at": "2026-08-16T08:58:21Z"
+    },
+    {
+      "league": "ligue-1",
+      "label": "Ligue 1",
+      "path": "data/goalscorer/ligue-1/live-board.json",
+      "row_count": 0,
+      "generated_at": "2026-08-16T08:58:23Z"
     }
   ],
   "rows": [
