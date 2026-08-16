@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-08-16T13:43:59.056637Z",
+  "generated_at": "2026-08-16T14:16:30.539812Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv"
   ],
   "team_form_source": "/home/runner/work/_temp/football-form/team-match-base.csv",
@@ -27,13 +28,101 @@
     ],
     "post_kickoff_visibility_minutes": 150
   },
-  "fixtures_evaluated": 3,
+  "fixtures_evaluated": 2,
   "signals_qualifying": 2,
   "leagues_covered": [
     "la-liga"
   ],
-  "featured_signal_id": "20260816-ivan-romero-e23018d0e9",
+  "featured_signal_id": "20260816-roberto-fernandez-63ed8d602e",
   "signals": [
+    {
+      "id": "20260816-roberto-fernandez-63ed8d602e",
+      "match": {
+        "home_team": "Espanyol Barcelona",
+        "away_team": "Levante UD",
+        "league": "la-liga",
+        "league_display": "La Liga",
+        "league_logo_path": "/league-logos/la-liga.png",
+        "kickoff_utc": "2026-08-16T17:00:00Z",
+        "kickoff_display": "Sun 16 Aug 18:00 UK",
+        "fotmob_match_id": "5868015",
+        "fotmob_page_url": "/matches/espanyol-vs-levante/2fgcwj#5868015",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Roberto Fernandez",
+        "team": "Espanyol",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/la-liga/espanyol.png",
+        "team_primary_color": "#2563eb",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "vertical-stripes"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 42.3,
+        "fair_odds": 2.36
+      },
+      "market_data": {
+        "best_odds": 3.1,
+        "best_book": "Bet365",
+        "implied_chance_pct": 32.3
+      },
+      "edge": {
+        "price_gap_pp": 10.0,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 91
+        },
+        "share_of_team_chances_pct": 38,
+        "share_of_team_chances_percentile": 98,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 68
+        },
+        "recent_team_form": {
+          "tier": "Unknown"
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 68
+        },
+        "opponent_recent_defence": {
+          "tier": "Unknown",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-23",
+          "xg_for_avg": null,
+          "xg_against_avg": null,
+          "xgd_per90": null,
+          "shots_for_avg": 18.2,
+          "shots_against_avg": 12.4,
+          "sot_for_avg": 6.2,
+          "sot_against_avg": 5.6,
+          "corners_for_avg": 6.8,
+          "corners_against_avg": 4.4
+        },
+        "fixture_boost_pct": -1,
+        "projected_minutes": 78,
+        "penalty_role": "Primary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
     {
       "id": "20260816-ivan-romero-e23018d0e9",
       "match": {
@@ -76,10 +165,10 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 88
+          "percentile": 86
         },
         "share_of_team_chances_pct": 24,
-        "share_of_team_chances_percentile": 94,
+        "share_of_team_chances_percentile": 95,
         "team_attacking_outlook": {
           "tier": "Strong",
           "percentile": 99
@@ -119,95 +208,6 @@
         "Recent chance quality grades as strong",
         "Opponent defensive profile is a positive matchup",
         "The fixture profile adds to his scoring case"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260816-marcos-fernandez-f6a1cba138",
-      "match": {
-        "home_team": "Espanyol Barcelona",
-        "away_team": "Levante UD",
-        "league": "la-liga",
-        "league_display": "La Liga",
-        "league_logo_path": "/league-logos/la-liga.png",
-        "kickoff_utc": "2026-08-16T17:00:00Z",
-        "kickoff_display": "Sun 16 Aug 18:00 UK",
-        "fotmob_match_id": "5868015",
-        "fotmob_page_url": "/matches/espanyol-vs-levante/2fgcwj#5868015",
-        "lineup_type": "predicted",
-        "venue": ""
-      },
-      "player": {
-        "name": "Marcos Fernandez",
-        "team": "Espanyol",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/la-liga/espanyol.png",
-        "team_primary_color": "#2563eb",
-        "team_secondary_color": "#f8fafc",
-        "team_shirt_pattern": "vertical-stripes"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 39.1,
-        "fair_odds": 2.56
-      },
-      "market_data": {
-        "best_odds": 3.1,
-        "best_book": "Bet365",
-        "implied_chance_pct": 32.3
-      },
-      "edge": {
-        "price_gap_pp": 6.9,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 93
-        },
-        "share_of_team_chances_pct": 34,
-        "share_of_team_chances_percentile": 97,
-        "team_attacking_outlook": {
-          "tier": "Strong",
-          "percentile": 78
-        },
-        "recent_team_form": {
-          "tier": "Unknown"
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 78
-        },
-        "opponent_recent_defence": {
-          "tier": "Unknown",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-23",
-          "xg_for_avg": null,
-          "xg_against_avg": null,
-          "xgd_per90": null,
-          "shots_for_avg": 18.2,
-          "shots_against_avg": 12.4,
-          "sot_for_avg": 6.2,
-          "sot_against_avg": 5.6,
-          "corners_for_avg": 6.8,
-          "corners_against_avg": 4.4
-        },
-        "fixture_boost_pct": -1,
-        "projected_minutes": 78,
-        "penalty_role": "Primary",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Opponent defensive profile is a positive matchup",
-        "Primary penalty role adds a clear scoring route"
       ],
       "risk_flags": []
     }
