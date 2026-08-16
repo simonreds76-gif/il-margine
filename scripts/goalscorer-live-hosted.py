@@ -146,6 +146,7 @@ def write_status(
 def main() -> int:
     run_started_at = now_utc_iso()
     lineup_only = os.environ.get("GOALSCORER_LINEUP_ONLY", "0").strip() == "1"
+    force_refresh = os.environ.get("GOALSCORER_FORCE_REFRESH", "0").strip() == "1"
     warnings: list[str] = []
     current_league = ""
     previous_status = read_json(STATUS_FILE) or {}
@@ -163,7 +164,15 @@ def main() -> int:
         message="Goalscorer live poll started",
     )
 
-    plan_proc = run_cmd([sys.executable, str(ROOT / "scripts" / "goalscorer-live-schedule.py"), "--leagues", ",".join(LEAGUES), "--json"])
+    plan_args = [
+        sys.executable,
+        str(ROOT / "scripts" / "goalscorer-live-schedule.py"),
+        "--leagues", ",".join(LEAGUES),
+        "--json",
+    ]
+    if force_refresh:
+        plan_args.append("--include-distant-fixtures")
+    plan_proc = run_cmd(plan_args)
     if plan_proc.returncode != 0:
         warnings.append(f"goalscorer-live-schedule failed ({plan_proc.returncode})")
         write_status(
@@ -190,6 +199,12 @@ def main() -> int:
         tier = str(plan_entry.get("tier") or "off")
         cadence_minutes = int(plan_entry.get("cadence_minutes") or 0)
         active_fixture_count = int(plan_entry.get("active_fixture_count") or 0)
+        if force_refresh and tier == "off":
+            distant_count = int(plan_entry.get("distant_count") or 0)
+            if distant_count > 0:
+                tier = "distant"
+                cadence_minutes = 1
+                active_fixture_count = distant_count
         next_kickoff_utc = str(plan_entry.get("next_kickoff_utc") or "")
 
         last_success_age = iso_age_minutes(entry.get("last_successful_run_at"))
@@ -215,7 +230,7 @@ def main() -> int:
             })
             continue
 
-        if last_success_age is not None and last_success_age < cadence_minutes:
+        if not force_refresh and last_success_age is not None and last_success_age < cadence_minutes:
             entry.update({
                 "last_tier": tier,
                 "last_decision": "waiting",

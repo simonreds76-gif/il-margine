@@ -62,6 +62,7 @@ jobs:
         env:
           ASSIST_VALUE_SHADOW_ENABLED: ${{ vars.ASSIST_VALUE_SHADOW_ENABLED }}
           GOALSCORER_LINEUP_ONLY: ${{ github.event.schedule == '40 10-22 * * *' && '1' || '0' }}
+          GOALSCORER_FORCE_REFRESH: ${{ github.event_name == 'workflow_dispatch' && '1' || '0' }}
         run: python scripts/goalscorer-live-hosted.py
 
       - name: Build goalscorer monitor snapshot

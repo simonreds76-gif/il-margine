@@ -69,6 +69,7 @@ class AutomationBudgetTests(unittest.TestCase):
         self.assertIn('cron: "10 10-22 * * *"', hot)
         self.assertIn('cron: "40 10-22 * * *"', hot)
         self.assertIn("GOALSCORER_LINEUP_ONLY", hot)
+        self.assertIn("GOALSCORER_FORCE_REFRESH", hot)
         self.assertIn('cron: "45 8 * * *"', settlement)
 
 
