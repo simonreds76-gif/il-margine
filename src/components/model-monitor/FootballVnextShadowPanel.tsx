@@ -44,6 +44,21 @@ function resultTone(result: string): string {
   return "text-slate-400";
 }
 
+function blockReasonLabel(reason: string): string {
+  const labels: Record<string, string> = {
+    matchdays_1_to_3: "MD1-3 safety block",
+    edge_below_3pct: "Edge below 3%",
+    canonical_only: "Canonical source required",
+    confidence_guard: "Confidence guard",
+  };
+  return reason
+    .split(";")
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .map((part) => labels[part] ?? part.replaceAll("_", " "))
+    .join(" · ");
+}
+
 function Metric({ label, value, detail, tone = "text-slate-100" }: { label: string; value: string; detail?: string; tone?: string }) {
   return (
     <div className="rounded-xl border border-slate-800 bg-slate-950/55 px-3 py-3">
@@ -83,6 +98,20 @@ export default function FootballVnextShadowPanel({
     : null;
   const modelCandidates = candidates.filter((row) => row.model === model);
   const eligibleCandidates = modelCandidates.filter((row) => row.signal_status === "eligible");
+  const blockedCandidates = modelCandidates.filter(
+    (row) => row.signal_status === "blocked" || Boolean((row.blocked_reason ?? "").trim()),
+  );
+  const strongestBlockedByFixture = new Map<string, Row>();
+  for (const row of blockedCandidates) {
+    const fixtureKey = row.match_id || `${row.match_date}|${row.match}`;
+    const incumbent = strongestBlockedByFixture.get(fixtureKey);
+    if (!incumbent || (numberValue(row.edge) ?? Number.NEGATIVE_INFINITY) > (numberValue(incumbent.edge) ?? Number.NEGATIVE_INFINITY)) {
+      strongestBlockedByFixture.set(fixtureKey, row);
+    }
+  }
+  const blockedWatchlist = [...strongestBlockedByFixture.values()]
+    .sort((a, b) => (numberValue(b.edge) ?? Number.NEGATIVE_INFINITY) - (numberValue(a.edge) ?? Number.NEGATIVE_INFINITY))
+    .slice(0, 8);
   const evidence = gate?.prospective;
 
   return (
@@ -161,6 +190,53 @@ export default function FootballVnextShadowPanel({
           </div>
         )}
       </div>
+
+      {blockedWatchlist.length > 0 ? (
+        <div className="border-t border-slate-800/80 px-4 py-4 sm:px-5">
+          <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
+            <div>
+              <h3 className="text-xs font-semibold uppercase tracking-[0.15em] text-amber-200">Gate-blocked watchlist</h3>
+              <p className="mt-1 text-xs text-slate-500">
+                Strongest priced candidate per fixture. These are visible for evaluation only and are not official tips.
+              </p>
+            </div>
+            <span className="rounded-full border border-amber-400/20 bg-amber-400/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-amber-200">
+              Do not bet as model signals
+            </span>
+          </div>
+          <div className="overflow-x-auto rounded-xl border border-amber-400/15">
+            <table className="w-full min-w-[940px] text-left text-xs">
+              <thead className="bg-slate-950/80 text-[10px] uppercase tracking-[0.12em] text-slate-500">
+                <tr>
+                  <th className="px-3 py-2.5">Kickoff</th><th className="px-3 py-2.5">Match</th><th className="px-3 py-2.5">Closest candidate</th>
+                  <th className="px-3 py-2.5 text-right">Price</th><th className="px-3 py-2.5 text-right">Fair</th><th className="px-3 py-2.5 text-right">Edge</th>
+                  <th className="px-3 py-2.5">Why blocked</th>
+                </tr>
+              </thead>
+              <tbody>
+                {blockedWatchlist.map((row) => {
+                  const price = numberValue(row.book_price_at_publication || row.pinnacle_price_at_publication || row.book_odds);
+                  const fair = numberValue(row.model_fair_odds);
+                  const edge = numberValue(row.edge);
+                  return (
+                    <tr key={`blocked-${row.pick_id}`} className="border-t border-slate-800/80 bg-amber-950/5">
+                      <td className="whitespace-nowrap px-3 py-3 text-slate-400">{(row.kickoff_utc || row.match_date || "-").replace("T", " ").slice(0, 16)}</td>
+                      <td className="px-3 py-3 font-medium text-slate-200">{row.match || "-"}</td>
+                      <td className="px-3 py-3 text-amber-100">{row.selection || "-"}</td>
+                      <td className="px-3 py-3 text-right font-mono text-white">{price?.toFixed(2) ?? "-"}</td>
+                      <td className="px-3 py-3 text-right font-mono text-slate-300">{fair?.toFixed(2) ?? "-"}</td>
+                      <td className={`px-3 py-3 text-right font-mono ${edge !== null && edge > 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                        {percent(edge)}
+                      </td>
+                      <td className="px-3 py-3 text-slate-400">{blockReasonLabel(row.blocked_reason ?? "blocked")}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : null}
 
       {settled.length > 0 ? (
         <details className="border-t border-slate-800/80 px-4 py-3 sm:px-5">
