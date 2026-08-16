@@ -5,7 +5,7 @@ import json
 import os
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -16,14 +16,6 @@ STATUS_FILE = DATA_DIR / "goalscorer-live-status.json"
 SCHEDULE_STATE_FILE = DATA_DIR / "goalscorer-live-schedule-state.json"
 
 LEAGUES = ["serie-a", "epl", "la-liga", "bundesliga", "ligue-1"]
-REQUIRED_PLAYER_LOGS = {
-    "serie-a": DATA_DIR / "serie-a-player-match-logs-2025-2026.csv",
-    "epl": DATA_DIR / "epl-player-match-logs-2025-2026.csv",
-    "la-liga": DATA_DIR / "la-liga-player-match-logs-2025-2026.csv",
-    "bundesliga": DATA_DIR / "bundesliga-player-match-logs-2025-2026.csv",
-    "ligue-1": DATA_DIR / "ligue-1-player-match-logs-2025-2026.csv",
-}
-
 FAILURE_COOLDOWN_MINUTES = 60
 FAILURE_THRESHOLD = 3
 DETAIL_CADENCE_HOT_MINUTES = 60
@@ -57,6 +49,28 @@ def iso_age_minutes(value: str | None) -> float | None:
     except ValueError:
         return None
     return (datetime.now(timezone.utc) - parsed).total_seconds() / 60.0
+
+
+def current_season_label(today: date | None = None) -> str:
+    today = today or datetime.now(timezone.utc).date()
+    start_year = today.year if today.month >= 7 else today.year - 1
+    return f"{start_year}-{start_year + 1}"
+
+
+def csv_has_data_rows(path: Path) -> bool:
+    if not path.exists():
+        return False
+    with path.open("r", encoding="utf-8-sig", errors="replace") as handle:
+        next(handle, None)
+        return any(line.strip() for line in handle)
+
+
+def preferred_player_log(league: str, *, today: date | None = None) -> Path:
+    current = DATA_DIR / f"{league}-player-match-logs-{current_season_label(today)}.csv"
+    if csv_has_data_rows(current):
+        return current
+    candidates = sorted(DATA_DIR.glob(f"{league}-player-match-logs-*.csv"), reverse=True)
+    return next((path for path in candidates if csv_has_data_rows(path)), current)
 
 
 def run_cmd(args: list[str]) -> subprocess.CompletedProcess[str]:
@@ -209,8 +223,8 @@ def main() -> int:
             })
             continue
 
-        required_log = REQUIRED_PLAYER_LOGS[league]
-        if not required_log.exists():
+        required_log = preferred_player_log(league)
+        if not csv_has_data_rows(required_log):
             entry.update({
                 "last_tier": tier,
                 "last_decision": "missing-data",
@@ -238,6 +252,7 @@ def main() -> int:
             "--fetch-odds-api",
             "--odds-api-bookmakers", "Bet365",
             "--odds-api-days-ahead", "1",
+            "--odds-api-max-http-requests", "3",
             "--bookmaker", "Bet365",
             "--track-shadow",
         ]

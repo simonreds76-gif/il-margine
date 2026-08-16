@@ -1,6 +1,9 @@
 name: Goalscorer Settlement
 
 on:
+  schedule:
+    # Morning settlement catches late La Liga kickoffs without duplicate runs.
+    - cron: "45 8 * * *"
   workflow_dispatch:
 
 permissions:

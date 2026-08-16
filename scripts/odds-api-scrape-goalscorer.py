@@ -69,6 +69,26 @@ LEAGUE_CONFIGS = {
 }
 
 
+class RequestBudgetExhausted(RuntimeError):
+    pass
+
+
+class HttpRequestBudget:
+    def __init__(self, limit: int = 0) -> None:
+        self.limit = max(0, int(limit))
+        self.used = 0
+
+    def fetch_json(self, path: str, params: dict) -> dict | list:
+        if self.limit and self.used >= self.limit:
+            raise RequestBudgetExhausted(
+                f"Odds-API HTTP request budget exhausted ({self.used}/{self.limit})"
+            )
+        self.used += 1
+        response = requests.get(f"{BASE_URL}/{path.lstrip('/')}", params=params, timeout=30)
+        response.raise_for_status()
+        return response.json()
+
+
 def snapshot_kind_for(captured_at: str, kickoff_at: str) -> str:
     try:
         captured = datetime.fromisoformat(captured_at.replace("Z", "+00:00"))
@@ -298,12 +318,6 @@ def write_rows(
     return target
 
 
-def fetch_json(path: str, params: dict) -> dict | list:
-    response = requests.get(f"{BASE_URL}/{path.lstrip('/')}", params=params, timeout=30)
-    response.raise_for_status()
-    return response.json()
-
-
 def chunked(values: List[str], size: int) -> Iterable[List[str]]:
     for start in range(0, len(values), size):
         yield values[start : start + size]
@@ -331,6 +345,7 @@ def discover_league_events(
     bookmakers: List[str],
     now: datetime,
     days_ahead: int,
+    budget: HttpRequestBudget,
 ) -> List[dict]:
     base_params = {
         "apiKey": api_key,
@@ -343,7 +358,7 @@ def discover_league_events(
 
     for bookmaker in bookmakers:
         params = {**base_params, "bookmaker": bookmaker}
-        events = fetch_json("events", params)
+        events = budget.fetch_json("events", params)
         if not isinstance(events, list):
             continue
         for event in events:
@@ -356,7 +371,7 @@ def discover_league_events(
     if discovered:
         return list(discovered.values())
 
-    events = fetch_json("events", base_params)
+    events = budget.fetch_json("events", base_params)
     if not isinstance(events, list):
         return []
     matched = [event for event in events if _looks_like_league(event.get("league") or {}, league_config)]
@@ -377,6 +392,12 @@ def main() -> None:
     parser.add_argument("--out-file", default="")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--days-ahead", type=int, default=3)
+    parser.add_argument(
+        "--max-http-requests",
+        type=int,
+        default=0,
+        help="Hard HTTP request cap for this process; 0 means unlimited.",
+    )
     args = parser.parse_args()
 
     load_env()
@@ -396,7 +417,20 @@ def main() -> None:
         raise SystemExit("Provide at least one bookmaker name via --bookmakers.")
     print(f"  Event discovery books: {', '.join(bookmakers)}")
 
-    target_events = discover_league_events(api_key, args.league, league_config, bookmakers, now, args.days_ahead)
+    budget = HttpRequestBudget(args.max_http_requests)
+    try:
+        target_events = discover_league_events(
+            api_key,
+            args.league,
+            league_config,
+            bookmakers,
+            now,
+            args.days_ahead,
+            budget,
+        )
+    except RequestBudgetExhausted as exc:
+        print(f"  {exc}; no event discovery completed.")
+        return
     print(f"  {league_config['label']} events found: {len(target_events):,}")
     if not target_events:
         print(f"  No {league_config['label']} events returned from the current source feed.")
@@ -406,8 +440,9 @@ def main() -> None:
     bookmaker_list = ",".join(bookmakers)
     for event_ids in chunked([str(event["id"]) for event in target_events], 10):
         payloads: List[dict] = []
+        retry_budget_exhausted = False
         try:
-            odds_payload = fetch_json(
+            odds_payload = budget.fetch_json(
                 "odds/multi",
                 {"apiKey": api_key, "eventIds": ",".join(event_ids), "bookmakers": bookmaker_list},
             )
@@ -420,10 +455,14 @@ def main() -> None:
                     print(f"  odds/multi rejected combined bookmaker request ({bookmaker_list}); retrying one book at a time.")
                     for bookmaker in bookmakers:
                         try:
-                            single_payload = fetch_json(
+                            single_payload = budget.fetch_json(
                                 "odds/multi",
                                 {"apiKey": api_key, "eventIds": ",".join(event_ids), "bookmakers": bookmaker},
                             )
+                        except RequestBudgetExhausted as exc:
+                            print(f"  {exc}; keeping rows captured before the cap.")
+                            retry_budget_exhausted = True
+                            break
                         except requests.HTTPError as inner_exc:
                             inner_status = inner_exc.response.status_code if inner_exc.response is not None else None
                             if inner_status == 403:
@@ -437,6 +476,12 @@ def main() -> None:
                     continue
             else:
                 raise
+        except RequestBudgetExhausted as exc:
+            print(f"  {exc}; keeping rows captured before the cap.")
+            break
+
+        if retry_budget_exhausted:
+            break
 
         for event in payloads:
             event_bookmakers = event.get("bookmakers") or {}
@@ -452,6 +497,7 @@ def main() -> None:
                     )
 
     print(f"  ATGS rows scraped: {len(all_rows):,}")
+    print(f"  Odds-API HTTP requests used: {budget.used}/{budget.limit or 'unlimited'}")
     if all_rows:
         sample = all_rows[0]
         print(

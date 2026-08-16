@@ -5,7 +5,7 @@ on:
     - cron: "15 8 * * *"
     # Near-kickoff shadow capture. Detailed odds calls stay inside 90m and the
     # process-wide request cap keeps the shared free plan within budget.
-    - cron: "*/30 9-22 * * *"
+    - cron: "45 9-22 * * *"
   workflow_dispatch:
 
 permissions:
@@ -78,7 +78,7 @@ jobs:
           TEAM_ARGS=(--all-leagues --bookmakers "Bet365")
           CORNER_ARGS=()
           if [[ "$EVENT_NAME" == "schedule" && "$SCHEDULE_EXPR" != "15 8 * * *" ]]; then
-            TEAM_ARGS+=(--days-ahead 1 --kickoff-within-minutes 90 --max-events-per-league 10 --max-odds-requests-per-league 1 --max-odds-api-http-requests 14)
+            TEAM_ARGS+=(--days-ahead 1 --kickoff-within-minutes 90 --max-events-per-league 10 --max-odds-requests-per-league 1 --max-odds-api-http-requests 9)
             CORNER_ARGS+=(--bucket-hours 1 --kickoff-within-minutes 90)
             echo "Near-kickoff mode: detailed odds calls are limited to fixtures starting within 90 minutes."
           else

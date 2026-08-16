@@ -38,7 +38,41 @@
       "db_reads_max_per_run": 0,
       "db_writes_max_per_run": 0,
       "schedules": [
+        {"cron": "20 0 * * *", "request_caps": {}},
         {"cron": "20 6 * * 1", "request_caps": {}}
+      ]
+    },
+    {
+      "file": "goalscorer-expected-refresh.yml",
+      "models": ["goalscorer_v2", "fair_odds_lab"],
+      "season_gate": "August-May with no-fixture-safe outputs",
+      "database_mode": "blob_publish_with_optional_snapshot_upload",
+      "db_reads_max_per_run": 0,
+      "db_writes_max_per_run": 2,
+      "schedules": [
+        {"cron": "45 6 * * *", "request_caps": {"odds_api_io": 15}}
+      ]
+    },
+    {
+      "file": "goalscorer-hot-live.yml",
+      "models": ["goalscorer_v2", "fair_odds_lab"],
+      "season_gate": "fixture-window gate per league",
+      "database_mode": "close_tier_only_with_optional_snapshot_upload",
+      "db_reads_max_per_run": 0,
+      "db_writes_max_per_run": 7,
+      "schedules": [
+        {"cron": "10 10-22 * * *", "request_caps": {"odds_api_io": 15}}
+      ]
+    },
+    {
+      "file": "goalscorer-settlement.yml",
+      "models": ["goalscorer_v2", "fair_odds_lab", "club_penalty_evidence"],
+      "season_gate": "August-May",
+      "database_mode": "settlement_read_with_optional_snapshot_upload",
+      "db_reads_max_per_run": 2,
+      "db_writes_max_per_run": 2,
+      "schedules": [
+        {"cron": "45 8 * * *", "request_caps": {}}
       ]
     },
     {
@@ -54,8 +88,8 @@
           "request_caps": {"odds_api_io": 50, "api_football": 90}
         },
         {
-          "cron": "*/30 9-22 * * *",
-          "request_caps": {"odds_api_io": 14}
+          "cron": "45 9-22 * * *",
+          "request_caps": {"odds_api_io": 9}
         }
       ]
     },

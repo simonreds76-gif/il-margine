@@ -1,6 +1,10 @@
 name: Goalscorer Hot Live Poll
 
 on:
+  schedule:
+    # Hourly is sufficient for the 70-minute official-lineup window and keeps
+    # the shared free Odds-API allowance below its daily ceiling.
+    - cron: "10 10-22 * * *"
   workflow_dispatch:
     inputs:
       reason:

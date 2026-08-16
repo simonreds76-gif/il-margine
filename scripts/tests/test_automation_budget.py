@@ -49,8 +49,8 @@ class AutomationBudgetTests(unittest.TestCase):
         tennis_scraper = (ROOT / "scripts" / "tennis-props-scrape-bet365.py").read_text(encoding="utf-8")
         self.assertIn("--max-odds-requests-per-league 1", counts_workflow)
         self.assertIn("--max-odds-requests-per-league 2", counts_workflow)
-        self.assertIn('cron: "*/30 9-22 * * *"', counts_workflow)
-        self.assertIn("--max-odds-api-http-requests 14", counts_workflow)
+        self.assertIn('cron: "45 9-22 * * *"', counts_workflow)
+        self.assertIn("--max-odds-api-http-requests 9", counts_workflow)
         self.assertIn("--max-odds-api-http-requests 50", counts_workflow)
         self.assertIn('"--max-odds-requests-per-league"', scraper)
         self.assertIn('"--max-odds-api-http-requests"', scraper)
@@ -59,6 +59,15 @@ class AutomationBudgetTests(unittest.TestCase):
         self.assertIn("if args.probe_markets:", tennis_scraper)
         self.assertNotIn("if args.probe_markets or not rows:", tennis_scraper)
         self.assertEqual(CONFIG["provider_limits"]["odds_api_io"]["requests_per_day"], 500)
+
+    def test_goalscorer_refreshes_are_scheduled_and_capped(self) -> None:
+        expected = (ROOT / ".github" / "workflows" / "goalscorer-expected-refresh.yml").read_text(encoding="utf-8")
+        hot = (ROOT / ".github" / "workflows" / "goalscorer-hot-live.yml").read_text(encoding="utf-8")
+        settlement = (ROOT / ".github" / "workflows" / "goalscorer-settlement.yml").read_text(encoding="utf-8")
+        self.assertIn('cron: "45 6 * * *"', expected)
+        self.assertIn("--odds-api-max-http-requests 3", expected)
+        self.assertIn('cron: "10 10-22 * * *"', hot)
+        self.assertIn('cron: "45 8 * * *"', settlement)
 
 
 if __name__ == "__main__":

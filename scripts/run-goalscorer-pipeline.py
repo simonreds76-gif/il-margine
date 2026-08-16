@@ -24,7 +24,7 @@ import json
 import os
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Iterable, List
 
@@ -47,7 +47,6 @@ LEAGUE_CONFIGS = {
         "penalty_baseline_evidence": "data/goalscorer/penalty-baseline-evidence.json",
         "penalty_baseline_overrides": "data/goalscorer/penalty-baseline-overrides.json",
         "lineups": DEFAULT_CONFIRMED_LINEUPS,
-        "player_log": "data/goalscorer/serie-a-player-match-logs-2025-2026.csv",
         "league_id": 55,
         "shadow_signals": DEFAULT_SHADOW_SIGNALS,
         "shadow_summary": DEFAULT_SHADOW_SUMMARY,
@@ -62,7 +61,6 @@ LEAGUE_CONFIGS = {
         "penalty_baseline_evidence": "data/goalscorer/epl-penalty-baseline-evidence.json",
         "penalty_baseline_overrides": "data/goalscorer/epl-penalty-baseline-overrides.json",
         "lineups": "data/goalscorer/epl-confirmed-lineups.json",
-        "player_log": "data/goalscorer/epl-player-match-logs-2025-2026.csv",
         "league_id": 47,
         "shadow_signals": "data/goalscorer/epl-shadow-signals.csv",
         "shadow_summary": "data/goalscorer/epl-shadow-performance.txt",
@@ -77,7 +75,6 @@ LEAGUE_CONFIGS = {
         "penalty_baseline_evidence": "data/goalscorer/la-liga-penalty-baseline-evidence.json",
         "penalty_baseline_overrides": "data/goalscorer/la-liga-penalty-baseline-overrides.json",
         "lineups": "data/goalscorer/la-liga-confirmed-lineups.json",
-        "player_log": "data/goalscorer/la-liga-player-match-logs-2025-2026.csv",
         "league_id": 87,
         "shadow_signals": "data/goalscorer/la-liga-shadow-signals.csv",
         "shadow_summary": "data/goalscorer/la-liga-shadow-performance.txt",
@@ -92,7 +89,6 @@ LEAGUE_CONFIGS = {
         "penalty_baseline_evidence": "data/goalscorer/bundesliga-penalty-baseline-evidence.json",
         "penalty_baseline_overrides": "data/goalscorer/bundesliga-penalty-baseline-overrides.json",
         "lineups": "data/goalscorer/bundesliga-confirmed-lineups.json",
-        "player_log": "data/goalscorer/bundesliga-player-match-logs-2025-2026.csv",
         "league_id": 54,
         "shadow_signals": "data/goalscorer/bundesliga-shadow-signals.csv",
         "shadow_summary": "data/goalscorer/bundesliga-shadow-performance.txt",
@@ -107,7 +103,6 @@ LEAGUE_CONFIGS = {
         "penalty_baseline_evidence": "data/goalscorer/ligue-1-penalty-baseline-evidence.json",
         "penalty_baseline_overrides": "data/goalscorer/ligue-1-penalty-baseline-overrides.json",
         "lineups": "data/goalscorer/ligue-1-confirmed-lineups.json",
-        "player_log": "data/goalscorer/ligue-1-player-match-logs-2025-2026.csv",
         "league_id": 53,
         "shadow_signals": "data/goalscorer/ligue-1-shadow-signals.csv",
         "shadow_summary": "data/goalscorer/ligue-1-shadow-performance.txt",
@@ -138,6 +133,30 @@ def _recent_capture_paths(patterns: Iterable[str], *, newer_than_ts: float) -> L
         except OSError:
             continue
     return sorted(recent)
+
+
+def _current_season_label(today: date | None = None) -> str:
+    today = today or datetime.now(timezone.utc).date()
+    start_year = today.year if today.month >= 7 else today.year - 1
+    return f"{start_year}-{start_year + 1}"
+
+
+def _csv_has_data_rows(path: Path) -> bool:
+    if not path.exists():
+        return False
+    with path.open("r", encoding="utf-8-sig", errors="replace") as handle:
+        next(handle, None)
+        return any(line.strip() for line in handle)
+
+
+def preferred_player_log(league: str, *, today: date | None = None) -> Path:
+    """Prefer the active season, falling back only while its feed is empty."""
+    data_dir = ROOT / "data" / "goalscorer"
+    current = data_dir / f"{league}-player-match-logs-{_current_season_label(today)}.csv"
+    if _csv_has_data_rows(current):
+        return current
+    candidates = sorted(data_dir.glob(f"{league}-player-match-logs-*.csv"), reverse=True)
+    return next((path for path in candidates if _csv_has_data_rows(path)), current)
 
 
 def _run(cmd: List[str], allow_failure: bool = False) -> bool:
@@ -209,6 +228,12 @@ def main() -> None:
     parser.add_argument("--supabase", action="store_true", help="Upload imported odds rows to Supabase")
     parser.add_argument("--fetch-odds-api", action="store_true", help="Fetch live league ATGS prices from odds-api.io into the inbox first")
     parser.add_argument("--odds-api-bookmakers", default="Bet365", help="Comma-separated bookmakers for odds-api.io")
+    parser.add_argument(
+        "--odds-api-max-http-requests",
+        type=int,
+        default=0,
+        help="Hard per-league Odds-API HTTP request cap; 0 means unlimited.",
+    )
     parser.add_argument(
         "--odds-api-days-ahead",
         type=int,
@@ -283,6 +308,8 @@ def main() -> None:
                 str(ROOT / "data" / "goalscorer" / "inbox"),
                 "--days-ahead",
                 str(max(1, args.odds_api_days_ahead)),
+                "--max-http-requests",
+                str(max(0, args.odds_api_max_http_requests)),
             ],
             allow_failure=args.live_only,
         )
@@ -322,7 +349,7 @@ def main() -> None:
                 "--league-id",
                 str(league_config["league_id"]),
                 "--player-log",
-                str(ROOT / league_config["player_log"]),
+                str(preferred_player_log(args.league)),
                 "--out",
                 lineups_path,
             ]
