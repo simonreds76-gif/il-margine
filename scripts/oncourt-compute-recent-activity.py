@@ -42,6 +42,7 @@ DEFAULT_ELO = 1500.0
 REQUEST_TIMEOUT = 45
 UPSERT_BATCH = 200
 ELO_QUERY_BATCH = 150
+PLAYER_QUERY_BATCH = 150
 
 
 def load_env() -> None:
@@ -77,6 +78,13 @@ def safe_int(value: object) -> int | None:
     except (TypeError, ValueError):
         return None
     return parsed if parsed > 0 else None
+
+
+def safe_float(value: object) -> float | None:
+    try:
+        return float(str(value).strip())
+    except (TypeError, ValueError):
+        return None
 
 
 def read_csv(path: Path) -> Iterable[dict[str, str]]:
@@ -283,6 +291,82 @@ def fetch_opponent_elo(base: str, key: str, opponent_ids: set[int]) -> dict[int,
     }
 
 
+def load_fixture_player_rows(players_path: Path, player_ids: set[int]) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for row in read_csv(players_path):
+        player_id = safe_int(row.get("id"))
+        if player_id not in player_ids:
+            continue
+        rows.append(
+            {
+                "id": player_id,
+                "name": (row.get("name") or "").strip(),
+                "birthdate": (row.get("birthdate") or "").strip() or None,
+                "country": (row.get("country") or "").strip(),
+                "atp_rank": safe_int(row.get("atp_rank")),
+                "hard_points": safe_float(row.get("hard_points")),
+                "clay_points": safe_float(row.get("clay_points")),
+                "grass_points": safe_float(row.get("grass_points")),
+            }
+        )
+    return rows
+
+
+def fetch_existing_player_ids(base: str, key: str, player_ids: set[int]) -> set[int]:
+    import requests
+
+    existing: set[int] = set()
+    ordered = sorted(player_ids)
+    for offset in range(0, len(ordered), PLAYER_QUERY_BATCH):
+        batch = ordered[offset : offset + PLAYER_QUERY_BATCH]
+        response = requests.get(
+            f"{base}/rest/v1/oncourt_players",
+            headers=supabase_headers(key),
+            params={
+                "select": "id",
+                "id": "in.(" + ",".join(str(player_id) for player_id in batch) + ")",
+                "limit": len(batch),
+            },
+            timeout=REQUEST_TIMEOUT,
+        )
+        response.raise_for_status()
+        existing.update(
+            player_id
+            for row in response.json()
+            if (player_id := safe_int(row.get("id"))) is not None
+        )
+    return existing
+
+
+def ensure_fixture_players(base: str, key: str, player_ids: set[int], players_path: Path) -> int:
+    import requests
+
+    existing = fetch_existing_player_ids(base, key, player_ids)
+    missing_ids = player_ids - existing
+    if not missing_ids:
+        return 0
+
+    rows = load_fixture_player_rows(players_path, missing_ids)
+    found_ids = {int(row["id"]) for row in rows}
+    unresolved = sorted(missing_ids - found_ids)
+    if unresolved:
+        raise RuntimeError(
+            "Current fixture players are absent from both Supabase and players_atp.csv: "
+            + ", ".join(str(player_id) for player_id in unresolved[:20])
+        )
+
+    response = requests.post(
+        f"{base}/rest/v1/oncourt_players?on_conflict=id",
+        headers=supabase_headers(key, write=True),
+        json=rows,
+        timeout=REQUEST_TIMEOUT,
+    )
+    if not response.ok:
+        detail = response.text.strip().replace("\n", " ")[:800]
+        raise RuntimeError(f"oncourt_players targeted upsert failed: HTTP {response.status_code}: {detail}")
+    return len(rows)
+
+
 def upsert_rows(base: str, key: str, rows: list[dict[str, object]]) -> None:
     import requests
 
@@ -294,7 +378,11 @@ def upsert_rows(base: str, key: str, rows: list[dict[str, object]]) -> None:
             json=batch,
             timeout=REQUEST_TIMEOUT,
         )
-        response.raise_for_status()
+        if not response.ok:
+            detail = response.text.strip().replace("\n", " ")[:800]
+            raise RuntimeError(
+                f"player_recent_activity upsert failed: HTTP {response.status_code}: {detail}"
+            )
 
 
 def write_status(
@@ -382,6 +470,14 @@ def main() -> int:
         key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or ""
         if not base or not key:
             raise RuntimeError("Missing NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY")
+        inserted_players = ensure_fixture_players(
+            base,
+            key,
+            fixture_player_ids,
+            DATA_DIR / "players_atp.csv",
+        )
+        if inserted_players:
+            print(f"  backfilled {inserted_players:,} missing current-fixture players")
         upsert_rows(base, key, rows)
         print(f"  upserted {len(rows):,} rows to player_recent_activity")
 
