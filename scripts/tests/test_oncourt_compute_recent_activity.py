@@ -78,6 +78,46 @@ class RecentActivityTests(unittest.TestCase):
             self.assertEqual(rows[20]["matches_last_21d"], 1)
             self.assertEqual(rows[20]["wins_last_21d"], 0)
 
+    def test_fixture_player_parent_rows_are_targeted_and_typed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            players = Path(tmp) / "players.csv"
+            write_csv(
+                players,
+                ["id", "name", "birthdate", "country", "atp_rank", "hard_points", "clay_points", "grass_points"],
+                [
+                    {
+                        "id": 10,
+                        "name": "Existing Player",
+                        "birthdate": "1995-01-01",
+                        "country": "GBR",
+                        "atp_rank": 50,
+                        "hard_points": 120,
+                        "clay_points": "",
+                        "grass_points": 40.5,
+                    },
+                    {
+                        "id": 131263,
+                        "name": "New Player",
+                        "birthdate": "",
+                        "country": "USA",
+                        "atp_rank": "",
+                        "hard_points": 12.5,
+                        "clay_points": 3,
+                        "grass_points": "",
+                    },
+                ],
+            )
+
+            rows = MODULE.load_fixture_player_rows(players, {131263})
+
+            self.assertEqual(len(rows), 1)
+            self.assertEqual(rows[0]["id"], 131263)
+            self.assertEqual(rows[0]["name"], "New Player")
+            self.assertIsNone(rows[0]["birthdate"])
+            self.assertIsNone(rows[0]["atp_rank"])
+            self.assertEqual(rows[0]["hard_points"], 12.5)
+            self.assertIsNone(rows[0]["grass_points"])
+
 
 if __name__ == "__main__":
     unittest.main()
