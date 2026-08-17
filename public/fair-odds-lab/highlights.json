@@ -1,8 +1,30 @@
 {
-  "generated_at": "2026-08-17T07:39:12Z",
+  "generated_at": "2026-08-17T09:23:03Z",
   "source": "fair_odds_lab_settled_winners",
   "description": "Winning highlights from Fair Odds Lab research signals.",
   "highlights": [
+    {
+      "id": "2026-08-16-la-liga-espanyol-barcelona-vs-levante-ud-roberto-fernandez",
+      "date": "2026-08-16",
+      "kickoff": "2026-08-16T17:00:00Z",
+      "competition": "Spain - LaLiga",
+      "league": "la-liga",
+      "match": "Espanyol Barcelona vs Levante UD",
+      "player": "Roberto Fernandez",
+      "team": "Espanyol",
+      "best_bookmaker": "Bet365",
+      "best_odds": 3.1,
+      "fair_odds": 2.36,
+      "model_chance_pct": 42.3,
+      "market_chance_pct": 32.3,
+      "price_gap_pp": 10.0,
+      "goals_scored": 2,
+      "super_sub_win": false,
+      "super_sub_replacement": "",
+      "super_sub_replacement_goals": 0,
+      "settled_at": "2026-08-17T09:22:57Z",
+      "settlement_note": "scored_2_goals"
+    },
     {
       "id": "2026-05-24-epl-brighton-&-hove-albion-vs-manchester-united-bryan-mbeumo",
       "date": "2026-05-24",
@@ -112,28 +134,6 @@
       "super_sub_replacement_goals": 0,
       "settled_at": "2026-05-18T01:42:51Z",
       "settlement_note": "scored_1_goals"
-    },
-    {
-      "id": "2026-05-15-epl-aston-villa-vs-liverpool-fc-ollie-watkins",
-      "date": "2026-05-15",
-      "kickoff": "2026-05-15T19:00:00Z",
-      "competition": "England - Premier League",
-      "league": "epl",
-      "match": "Aston Villa vs Liverpool FC",
-      "player": "Ollie Watkins",
-      "team": "Aston Villa",
-      "best_bookmaker": "Bet365",
-      "best_odds": 2.88,
-      "fair_odds": 2.38,
-      "model_chance_pct": 42.0,
-      "market_chance_pct": 34.8,
-      "price_gap_pp": 7.2,
-      "goals_scored": 2,
-      "super_sub_win": false,
-      "super_sub_replacement": "",
-      "super_sub_replacement_goals": 0,
-      "settled_at": "2026-05-16T01:30:35Z",
-      "settlement_note": "scored_2_goals"
     }
   ]
 }
