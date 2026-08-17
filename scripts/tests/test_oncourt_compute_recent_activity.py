@@ -51,6 +51,34 @@ class RecentActivityTests(unittest.TestCase):
             )
             self.assertEqual(MODULE.load_fixture_player_ids(today, tours), {10, 20, 70, 80})
 
+    def test_fixture_filter_excludes_oncourt_doubles_team_ids(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            tours = tmp_path / "tours.csv"
+            today = tmp_path / "today.csv"
+            players = tmp_path / "players.csv"
+            write_csv(tours, ["id", "name", "rank"], [{"id": 1, "name": "Prague Challenger", "rank": 1}])
+            write_csv(
+                today,
+                ["tour_id", "player1_id", "player2_id", "result"],
+                [
+                    {"tour_id": 1, "player1_id": 10, "player2_id": 20, "result": ""},
+                    {"tour_id": 1, "player1_id": 30, "player2_id": 40, "result": ""},
+                ],
+            )
+            write_csv(
+                players,
+                ["id", "name"],
+                [
+                    {"id": 10, "name": "Singles One"},
+                    {"id": 20, "name": "Singles Two"},
+                    {"id": 30, "name": "Eduardo Ribeiro/Matias Soto"},
+                    {"id": 40, "name": "Doubles Partner A/Doubles Partner B"},
+                ],
+            )
+
+            self.assertEqual(MODULE.load_fixture_player_ids(today, tours, players), {10, 20})
+
     def test_activity_windows_fatigue_and_opponent_quality(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             games = Path(tmp) / "games.csv"
