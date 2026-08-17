@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-17T18:55:40Z",
+  "updated_at": "2026-08-17T19:11:44Z",
   "reason": "cycle",
   "last_clv_run_at": "",
   "leagues": {
@@ -28,10 +28,10 @@
       "last_detail_run_at": "2026-08-16T18:10:08Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "lineup",
-      "last_decision": "ran",
-      "last_message": "Ran la-liga in lineup tier (cadence 10m, fixtures 1).",
-      "next_kickoff_utc": "2026-08-17T19:00:00Z"
+      "last_tier": "off",
+      "last_decision": "off",
+      "last_message": "Skip la-liga: no upcoming fixtures inside schedule window.",
+      "next_kickoff_utc": ""
     },
     "bundesliga": {
       "last_successful_run_at": "2026-05-16T13:02:45Z",
