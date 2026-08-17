@@ -105,7 +105,7 @@ def is_supported_tour(row: dict[str, str]) -> bool:
     return "CHALLENGER" in upper or "ATP" in upper or "MASTERS" in upper or "GRAND SLAM" in upper
 
 
-def load_fixture_player_ids(today_path: Path, tours_path: Path) -> set[int]:
+def load_fixture_player_ids(today_path: Path, tours_path: Path, players_path: Path | None = None) -> set[int]:
     if not today_path.exists() or not tours_path.exists():
         missing = today_path if not today_path.exists() else tours_path
         raise FileNotFoundError(f"Missing OnCourt input: {missing}")
@@ -115,6 +115,14 @@ def load_fixture_player_ids(today_path: Path, tours_path: Path) -> set[int]:
         for row in read_csv(tours_path)
         if (tour_id := safe_int(row.get("id"))) is not None and is_supported_tour(row)
     }
+    player_names: dict[int, str] = {}
+    if players_path is not None and players_path.exists():
+        player_names = {
+            player_id: (row.get("name") or "").strip()
+            for row in read_csv(players_path)
+            if (player_id := safe_int(row.get("id"))) is not None
+        }
+
     player_ids: set[int] = set()
     for row in read_csv(today_path):
         if (row.get("result") or "").strip():
@@ -126,6 +134,9 @@ def load_fixture_player_ids(today_path: Path, tours_path: Path) -> set[int]:
             continue
         # OnCourt uses a self-pair placeholder while future draw slots are unknown.
         if player1_id == player2_id:
+            continue
+        names = (player_names.get(player1_id, ""), player_names.get(player2_id, ""))
+        if any("/" in name or "&" in name for name in names):
             continue
         player_ids.update((player1_id, player2_id))
     return player_ids
@@ -420,7 +431,11 @@ def main() -> int:
     if as_of is None:
         parser.error("--as-of must be YYYY-MM-DD")
 
-    fixture_player_ids = load_fixture_player_ids(DATA_DIR / "today_atp.csv", DATA_DIR / "tours_atp.csv")
+    fixture_player_ids = load_fixture_player_ids(
+        DATA_DIR / "today_atp.csv",
+        DATA_DIR / "tours_atp.csv",
+        DATA_DIR / "players_atp.csv",
+    )
     if not fixture_player_ids:
         print("Recent activity: no supported unplayed ATP/Challenger fixture players; nothing to update.")
         write_status(as_of=as_of, rows=[], max_source_date=None, dry_run=args.dry_run)
