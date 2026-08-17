@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-26T00:28:27Z",
+  "generated_at": "2026-08-17T22:52:49Z",
   "team_shots_v3_ema20": {
     "label": "Team Shots V3 EMA20 Research",
     "model": "canonical_form_v3_ema20_nb",
@@ -78,13 +78,13 @@
       ]
     },
     "clv": {
-      "published_picks": 12,
-      "settled": 0,
-      "pnl_units": 0,
-      "avg_published_to_close_clv": null,
-      "avg_model_to_close_clv": null,
-      "positive_clv_share": null,
-      "sample_state": "too_early",
+      "published_picks": 73,
+      "settled": 73,
+      "pnl_units": 10.927,
+      "avg_published_to_close_clv": 0.003413493150684931,
+      "avg_model_to_close_clv": 0.20624371232876715,
+      "positive_clv_share": 0.0273972602739726,
+      "sample_state": "actionable",
       "pause_rule_fired": false
     }
   },
@@ -106,14 +106,13 @@
       "last_segment_gate_run": "2026-04-25T19:42:49Z",
       "next_action": "Test a total-corners calibration/pressure correction for Bundesliga and La Liga; pure home/away redistribution cannot move total O/U."
     },
-    "allowed_leagues": [
-      "epl",
-      "ligue-1",
-      "serie-a"
-    ],
+    "allowed_leagues": [],
     "blocked_leagues": [
       "bundesliga",
-      "la-liga"
+      "epl",
+      "la-liga",
+      "ligue-1",
+      "serie-a"
     ],
     "canonical_only_allowed": false,
     "blocked_diagnostic": {
@@ -127,6 +126,16 @@
         "mean_lambda_gap": 0.3233,
         "n": 111
       },
+      "epl": {
+        "canonical_bias": -0.0005,
+        "canonical_mae": 2.5618,
+        "canonical_worse_share": 0.4643,
+        "current_bias": -0.6802,
+        "current_mae": 2.6609,
+        "mae_delta": -0.0991,
+        "mean_lambda_gap": 0.6797,
+        "n": 112
+      },
       "la-liga": {
         "canonical_bias": 0.235,
         "canonical_mae": 2.7749,
@@ -136,21 +145,2727 @@
         "mae_delta": 0.0723,
         "mean_lambda_gap": 0.1245,
         "n": 121
+      },
+      "ligue-1": {
+        "canonical_bias": -0.1644,
+        "canonical_mae": 2.4323,
+        "canonical_worse_share": 0.3774,
+        "current_bias": -0.4586,
+        "current_mae": 2.6322,
+        "mae_delta": -0.1999,
+        "mean_lambda_gap": 0.2942,
+        "n": 106
+      },
+      "serie-a": {
+        "canonical_bias": 0.1357,
+        "canonical_mae": 2.6993,
+        "canonical_worse_share": 0.4833,
+        "current_bias": -1.1419,
+        "current_mae": 2.7384,
+        "mae_delta": -0.039,
+        "mean_lambda_gap": 1.2776,
+        "n": 120
       }
     },
     "clv": {
-      "published_picks": 7,
-      "settled": 0,
-      "pnl_units": 0,
-      "avg_published_to_close_clv": null,
-      "avg_model_to_close_clv": null,
-      "positive_clv_share": null,
+      "published_picks": 48,
+      "settled": 48,
+      "pnl_units": -1.12,
+      "avg_published_to_close_clv": 0.004019583333333333,
+      "avg_model_to_close_clv": 0.14366510416666664,
+      "positive_clv_share": 0.1875,
       "sample_state": "too_early",
       "pause_rule_fired": false
     }
   },
+  "football_counts_vnext": {
+    "generated_at": "2026-08-17T22:52:48Z",
+    "team_shots_v4": {
+      "count_gate": "PASS",
+      "prospective_status": "AUTHORIZED_SHADOW",
+      "market_gate": "BLOCKED_PENDING_2026_27_TRUE_CLOSE_SAMPLE",
+      "live_routing": false,
+      "prospective": {
+        "signals": 0,
+        "settled": 0,
+        "pending": 0,
+        "pnl_units": 0,
+        "roi": null,
+        "true_close_n": 0,
+        "true_close_coverage": null,
+        "mean_true_close_clv": null,
+        "side_counts": {},
+        "dominant_side_share": 0.0
+      },
+      "promotion_gate": "BLOCKED"
+    },
+    "corners_v3": {
+      "count_gate": "PASS",
+      "prospective_status": "AUTHORIZED_SHADOW",
+      "market_gate": "BLOCKED_PENDING_2026_27_PINNACLE_SAMPLE",
+      "live_routing": false,
+      "prospective": {
+        "signals": 0,
+        "settled": 0,
+        "pending": 0,
+        "pnl_units": 0,
+        "roi": null,
+        "true_close_n": 0,
+        "true_close_coverage": null,
+        "mean_true_close_clv": null,
+        "side_counts": {},
+        "dominant_side_share": 0.0
+      },
+      "promotion_gate": "BLOCKED"
+    }
+  },
+  "api_football_counts": {
+    "health": {
+      "archive_rows": 0,
+      "coverage": {
+        "away_blocked_shots": {
+          "pct": 0.0,
+          "present": 0,
+          "rows": 0
+        },
+        "away_corners": {
+          "pct": 0.0,
+          "present": 0,
+          "rows": 0
+        },
+        "away_fouls": {
+          "pct": 0.0,
+          "present": 0,
+          "rows": 0
+        },
+        "away_goalkeeper_saves": {
+          "pct": 0.0,
+          "present": 0,
+          "rows": 0
+        },
+        "away_offsides": {
+          "pct": 0.0,
+          "present": 0,
+          "rows": 0
+        },
+        "away_red_cards": {
+          "pct": 0.0,
+          "present": 0,
+          "rows": 0
+        },
+        "away_shots": {
+          "pct": 0.0,
+          "present": 0,
+          "rows": 0
+        },
+        "away_sot": {
+          "pct": 0.0,
+          "present": 0,
+          "rows": 0
+        },
+        "away_yellow_cards": {
+          "pct": 0.0,
+          "present": 0,
+          "rows": 0
+        },
+        "home_blocked_shots": {
+          "pct": 0.0,
+          "present": 0,
+          "rows": 0
+        },
+        "home_corners": {
+          "pct": 0.0,
+          "present": 0,
+          "rows": 0
+        },
+        "home_fouls": {
+          "pct": 0.0,
+          "present": 0,
+          "rows": 0
+        },
+        "home_goalkeeper_saves": {
+          "pct": 0.0,
+          "present": 0,
+          "rows": 0
+        },
+        "home_offsides": {
+          "pct": 0.0,
+          "present": 0,
+          "rows": 0
+        },
+        "home_red_cards": {
+          "pct": 0.0,
+          "present": 0,
+          "rows": 0
+        },
+        "home_shots": {
+          "pct": 0.0,
+          "present": 0,
+          "rows": 0
+        },
+        "home_sot": {
+          "pct": 0.0,
+          "present": 0,
+          "rows": 0
+        },
+        "home_yellow_cards": {
+          "pct": 0.0,
+          "present": 0,
+          "rows": 0
+        }
+      },
+      "database_writes": 0,
+      "errors": [
+        "fixtures epl 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
+        "fixtures serie-a 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
+        "fixtures la-liga 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
+        "fixtures bundesliga 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
+        "fixtures ligue-1 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
+        "fixtures epl 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
+        "fixtures serie-a 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
+        "fixtures la-liga 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
+        "fixtures bundesliga 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
+        "fixtures ligue-1 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
+        "fixtures epl 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
+        "fixtures serie-a 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
+        "fixtures la-liga 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
+        "fixtures bundesliga 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
+        "fixtures ligue-1 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}"
+      ],
+      "fixtures_discovered": 0,
+      "generated_at": "2026-08-17T09:02:48Z",
+      "latest_fixture_date": null,
+      "max_requests": 90,
+      "new_rows": 0,
+      "requests_used": 15,
+      "skipped_existing": 0,
+      "truncated_by_request_budget": false
+    },
+    "agreement": {
+      "api_rows": 0,
+      "fields": {
+        "corners": {
+          "comparable_team_values": 0,
+          "coverage_pct": 0.0,
+          "exact_pct": 0.0,
+          "mae": null,
+          "possible_team_values": 0,
+          "within_one_pct": 0.0
+        },
+        "fouls": {
+          "comparable_team_values": 0,
+          "coverage_pct": 0.0,
+          "exact_pct": 0.0,
+          "mae": null,
+          "possible_team_values": 0,
+          "within_one_pct": 0.0
+        },
+        "red_cards": {
+          "comparable_team_values": 0,
+          "coverage_pct": 0.0,
+          "exact_pct": 0.0,
+          "mae": null,
+          "possible_team_values": 0,
+          "within_one_pct": 0.0
+        },
+        "shots": {
+          "comparable_team_values": 0,
+          "coverage_pct": 0.0,
+          "exact_pct": 0.0,
+          "mae": null,
+          "possible_team_values": 0,
+          "within_one_pct": 0.0
+        },
+        "shots_on_target": {
+          "comparable_team_values": 0,
+          "coverage_pct": 0.0,
+          "exact_pct": 0.0,
+          "mae": null,
+          "possible_team_values": 0,
+          "within_one_pct": 0.0
+        },
+        "yellow_cards": {
+          "comparable_team_values": 0,
+          "coverage_pct": 0.0,
+          "exact_pct": 0.0,
+          "mae": null,
+          "possible_team_values": 0,
+          "within_one_pct": 0.0
+        }
+      },
+      "generated_at": "2026-08-17T22:50:49Z",
+      "latest_api_fixture_date": null,
+      "match_rate_pct": 0.0,
+      "matched_fixtures": 0,
+      "model_use": "diagnostic_only_until_definitions_and_coverage_are_accepted",
+      "reference_rows": 3504,
+      "status": "no_overlap"
+    }
+  },
+  "team_fouls_v1": {
+    "m1": {
+      "cards": {
+        "away_leg_vmr": 0.9045694747857176,
+        "home_leg_vmr": 0.9568062479684544,
+        "match_total_vmr": 1.1233524760335856,
+        "verdict": "REJECT_DEDICATED_MODEL"
+      },
+      "feature_priors": {
+        "away_fouls_vs_away_yellows_correlation": 0.3711327033177588,
+        "home_fouls_vs_home_yellows_correlation": 0.37125688003396073,
+        "opening_1x2_closeness_vs_total_fouls_correlation": 0.20236620673672806,
+        "total_shots_vs_total_fouls_correlation": -0.1826485756525495
+      },
+      "generated_at": "2026-08-17T22:50:49Z",
+      "leg_structure": {
+        "bundesliga": {
+          "alpha_away_after_raw_frailty": 0.005185795899176435,
+          "alpha_home_after_raw_frailty": 0.002074053595156368,
+          "away_gap": 0.5113048215745035,
+          "away_mean": 12.650503949877418,
+          "away_vmr": 1.4307621999933833,
+          "home_away_correlation": 0.2549747296242295,
+          "home_mean": 12.139199128302915,
+          "home_vmr": 1.3755777044955952,
+          "n": 3671,
+          "nu_hat_raw_ceiling": 0.028865195405210084,
+          "total_vmr": 1.7613666667731307
+        },
+        "epl": {
+          "alpha_away_after_raw_frailty": 0.0030804782688297356,
+          "alpha_home_after_raw_frailty": -0.00048408736704612723,
+          "away_gap": 0.3587719298245613,
+          "away_mean": 10.965789473684211,
+          "away_vmr": 1.1510411798635056,
+          "home_away_correlation": 0.10210787848129024,
+          "home_mean": 10.60701754385965,
+          "home_vmr": 1.108290097556163,
+          "n": 4560,
+          "nu_hat_raw_ceiling": 0.010693375426426356,
+          "total_vmr": 1.245332290389292
+        },
+        "la-liga": {
+          "alpha_away_after_raw_frailty": 0.022138218598831305,
+          "alpha_home_after_raw_frailty": 0.01934548079416691,
+          "away_gap": -0.0004385964912287932,
+          "away_mean": 13.346710526315789,
+          "away_vmr": 1.3214842125153174,
+          "home_away_correlation": 0.01996766028408258,
+          "home_mean": 13.347149122807018,
+          "home_vmr": 1.2842196891148396,
+          "n": 4560,
+          "nu_hat_raw_ceiling": 0.0019489309562178677,
+          "total_vmr": 1.3288638893741205
+        },
+        "ligue-1": {
+          "alpha_away_after_raw_frailty": 0.005105892880018087,
+          "alpha_home_after_raw_frailty": -0.0015912658188599223,
+          "away_gap": 0.38857412653446666,
+          "away_mean": 12.904390934844193,
+          "away_vmr": 1.2400760720891992,
+          "home_away_correlation": 0.1437106552396428,
+          "home_mean": 12.515816808309726,
+          "home_vmr": 1.1490265438226088,
+          "n": 4236,
+          "nu_hat_raw_ceiling": 0.013498322793652366,
+          "total_vmr": 1.366772197410717
+        },
+        "pooled": {
+          "alpha_away_after_raw_frailty": 0.009307945013088133,
+          "alpha_home_after_raw_frailty": 0.0062423574287129545,
+          "away_gap": 0.31287348867373943,
+          "away_mean": 12.680641126603975,
+          "away_vmr": 1.3659693060375755,
+          "home_away_correlation": 0.18241988626105263,
+          "home_mean": 12.367767637930235,
+          "home_vmr": 1.3190251541201943,
+          "n": 21587,
+          "nu_hat_raw_ceiling": 0.01955252839545051,
+          "total_vmr": 1.5876320699087545
+        },
+        "serie-a": {
+          "alpha_away_after_raw_frailty": 0.008678518995532208,
+          "alpha_home_after_raw_frailty": 0.003985075967833072,
+          "away_gap": 0.35021929824561404,
+          "away_mean": 13.545833333333333,
+          "away_vmr": 1.337894750333231,
+          "home_away_correlation": 0.1670172565407041,
+          "home_mean": 13.195614035087718,
+          "home_vmr": 1.2672258239829448,
+          "n": 4560,
+          "nu_hat_raw_ceiling": 0.016266033474469466,
+          "total_vmr": 1.520474380621517
+        }
+      },
+      "line_grid_and_span": {
+        "first_season": "2014-2015",
+        "last_season": "2025-2026",
+        "leg_quantiles": {
+          "p10": 7.0,
+          "p25": 10.0,
+          "p50": 12.0,
+          "p75": 15.0,
+          "p90": 18.0
+        },
+        "registered_line_grid": [
+          9.5,
+          10.5,
+          11.5,
+          12.5,
+          13.5,
+          14.5,
+          15.5
+        ],
+        "validation_seasons": [
+          "2024-2025",
+          "2025-2026"
+        ]
+      },
+      "market_gate": "BLOCKED_TEAM_FOULS_NOT_OBSERVED",
+      "referee": {
+        "coverage_by_league": {
+          "bundesliga": {
+            "coverage": 0.0,
+            "usable": 3671,
+            "with_referee": 0
+          },
+          "epl": {
+            "coverage": 1.0,
+            "usable": 4560,
+            "with_referee": 4560
+          },
+          "la-liga": {
+            "coverage": 0.0,
+            "usable": 4560,
+            "with_referee": 0
+          },
+          "ligue-1": {
+            "coverage": 0.0,
+            "usable": 4236,
+            "with_referee": 0
+          },
+          "serie-a": {
+            "coverage": 0.0,
+            "usable": 4560,
+            "with_referee": 0
+          }
+        },
+        "eligible_epl_referees": 36,
+        "empirical_k": 18.586847830647876,
+        "grand_mean_total_fouls_unweighted": 21.811939575490108,
+        "highest_referee": {
+          "matches": 21,
+          "mean_total_fouls": 25.095238095238095,
+          "referee": "P Dowd"
+        },
+        "lowest_referee": {
+          "matches": 208,
+          "mean_total_fouls": 18.860576923076923,
+          "referee": "A Marriner"
+        },
+        "minimum_referee_matches": 10,
+        "registered_k": 18,
+        "true_between_referee_sd": 1.1526792511701627,
+        "within_referee_sd": 4.969484580653743
+      },
+      "source": "data/corners-ou/historical/all-historical-matches.csv",
+      "source_rows": 21589,
+      "status": "REGISTERED_RESEARCH_BASELINE",
+      "usable_rows": 21587
+    },
+    "f1": {
+      "decision": {
+        "count_gate_pass": false,
+        "gates": {
+          "feature_ladder": false,
+          "folds_complete": true,
+          "hierarchical_nb_cells": false,
+          "mae_improvement": true,
+          "market_prices": false,
+          "reliability": false,
+          "total_variance": true
+        },
+        "hierarchical_nb_cells": 10,
+        "hierarchical_nb_wins": 2,
+        "ladder_checks": [
+          {
+            "delta_mae": 0.008309432102291847,
+            "delta_nll": 0.0013823912093324786,
+            "from": "core",
+            "n": 748,
+            "passed": false,
+            "scope": "epl",
+            "season": "2024-2025",
+            "to": "core_referee"
+          },
+          {
+            "delta_mae": -0.02368935134630412,
+            "delta_nll": -0.007036584225910136,
+            "from": "core_referee",
+            "n": 3454,
+            "passed": true,
+            "scope": "all",
+            "season": "2024-2025",
+            "to": "core_referee_market"
+          },
+          {
+            "delta_mae": 6.919741869237939e-05,
+            "delta_nll": 1.954447333041287e-05,
+            "from": "core_referee_market",
+            "n": 3454,
+            "passed": false,
+            "scope": "all",
+            "season": "2024-2025",
+            "to": "full"
+          },
+          {
+            "delta_mae": -0.00783001465651978,
+            "delta_nll": -0.002555561448026822,
+            "from": "core",
+            "n": 760,
+            "passed": true,
+            "scope": "epl",
+            "season": "2025-2026",
+            "to": "core_referee"
+          },
+          {
+            "delta_mae": -0.016531201062898404,
+            "delta_nll": -0.005330975717676267,
+            "from": "core_referee",
+            "n": 3468,
+            "passed": true,
+            "scope": "all",
+            "season": "2025-2026",
+            "to": "core_referee_market"
+          },
+          {
+            "delta_mae": -8.144745515092922e-05,
+            "delta_nll": -7.031662362866342e-05,
+            "from": "core_referee_market",
+            "n": 3468,
+            "passed": false,
+            "scope": "all",
+            "season": "2025-2026",
+            "to": "full"
+          }
+        ],
+        "mae_checks": [
+          {
+            "improvement_pct": 7.688071222471381,
+            "season": "2024-2025"
+          },
+          {
+            "improvement_pct": 8.2855868191587,
+            "season": "2025-2026"
+          }
+        ],
+        "market_gate_pass": false,
+        "signals_authorized": false,
+        "status": "COUNT_GATE_FAIL_MARKET_BLOCKED"
+      },
+      "folds": [
+        {
+          "causal_baseline_mae": 3.075242712182472,
+          "coefficients": {
+            "intercept": -0.01599363659811152,
+            "opening_closeness": 0.03834430279148505,
+            "opening_strength": -0.017916260142446124,
+            "opponent_cards": -0.0005767009666073238,
+            "opponent_drawn": 0.06541599398529219,
+            "referee_epl": 0.015402001808206623,
+            "team_cards": -4.041409469593897e-05,
+            "team_committed": 0.06811055794665304
+          },
+          "distribution": {
+            "by_league": [
+              {
+                "fixed_alpha_brier": 0.17779704314628492,
+                "hierarchical_nb_brier": 0.17781747875661214,
+                "league": "bundesliga",
+                "matches": 586,
+                "poisson_brier": 0.17801694050562025
+              },
+              {
+                "fixed_alpha_brier": 0.18144190780562003,
+                "hierarchical_nb_brier": 0.1812410979614396,
+                "league": "epl",
+                "matches": 748,
+                "poisson_brier": 0.18122401984403874
+              },
+              {
+                "fixed_alpha_brier": 0.19296706004817646,
+                "hierarchical_nb_brier": 0.1925009037270335,
+                "league": "la-liga",
+                "matches": 760,
+                "poisson_brier": 0.19210986675805763
+              },
+              {
+                "fixed_alpha_brier": 0.20138674681324498,
+                "hierarchical_nb_brier": 0.2013551307909805,
+                "league": "ligue-1",
+                "matches": 612,
+                "poisson_brier": 0.2013156475637255
+              },
+              {
+                "fixed_alpha_brier": 0.19741599611325752,
+                "hierarchical_nb_brier": 0.1968749002276399,
+                "league": "serie-a",
+                "matches": 748,
+                "poisson_brier": 0.1968297753127888
+              }
+            ],
+            "empirical_total_vmr": 1.3727451743900692,
+            "fixed_alpha_brier": 0.19035276030728535,
+            "fixed_alpha_log_loss": 0.5612290170722138,
+            "hierarchical_nb_brier": 0.1900873873982131,
+            "hierarchical_nb_log_loss": 0.5603819562481548,
+            "league_alpha": {
+              "bundesliga": 0.005852573197952074,
+              "epl": 0.0020000000036067226,
+              "la-liga": 0.006762944110629008,
+              "ligue-1": 0.004882865207372854,
+              "serie-a": 0.004432633843730673
+            },
+            "poisson_brier": 0.19001471944375434,
+            "poisson_log_loss": 0.5601610297137798,
+            "pooled_alpha": 0.004421500344677076,
+            "priced_total_vmr": 1.4312897134052847,
+            "reliability": {
+              "bins": [
+                {
+                  "actual": 0.07775020678246485,
+                  "bin": 1,
+                  "gap": -0.00041632179868314467,
+                  "n": 2418,
+                  "predicted": 0.0773338849837817
+                },
+                {
+                  "actual": 0.1567411083540116,
+                  "bin": 2,
+                  "gap": -5.152839015143407e-06,
+                  "n": 2418,
+                  "predicted": 0.15673595551499644
+                },
+                {
+                  "actual": 0.21721141911460487,
+                  "bin": 3,
+                  "gap": 0.005846044501997688,
+                  "n": 2417,
+                  "predicted": 0.22305746361660256
+                },
+                {
+                  "actual": 0.2837055417700579,
+                  "bin": 4,
+                  "gap": 0.0061418756217140325,
+                  "n": 2418,
+                  "predicted": 0.28984741739177194
+                },
+                {
+                  "actual": 0.3626964433416046,
+                  "bin": 5,
+                  "gap": -0.0013479091278126853,
+                  "n": 2418,
+                  "predicted": 0.3613485342137919
+                },
+                {
+                  "actual": 0.4400330851943755,
+                  "bin": 6,
+                  "gap": -0.0027737990652009215,
+                  "n": 2418,
+                  "predicted": 0.4372592861291746
+                },
+                {
+                  "actual": 0.532258064516129,
+                  "bin": 7,
+                  "gap": -0.014854055319286186,
+                  "n": 2418,
+                  "predicted": 0.5174040091968428
+                },
+                {
+                  "actual": 0.604054613156806,
+                  "bin": 8,
+                  "gap": -0.002314681351891723,
+                  "n": 2417,
+                  "predicted": 0.6017399318049143
+                },
+                {
+                  "actual": 0.695616211745244,
+                  "bin": 9,
+                  "gap": -0.0021487616677172694,
+                  "n": 2418,
+                  "predicted": 0.6934674500775267
+                },
+                {
+                  "actual": 0.8101736972704715,
+                  "bin": 10,
+                  "gap": 0.0009308144227446746,
+                  "n": 2418,
+                  "predicted": 0.8111045116932162
+                }
+              ],
+              "max_abs_gap": 0.014854055319286186
+            },
+            "residual_nu": {
+              "bundesliga": 0.009426300640780691,
+              "epl": 0.006406847153891511,
+              "la-liga": 0.0019489309562178677,
+              "ligue-1": 0.010051180186968222,
+              "serie-a": 0.010045015728967066
+            },
+            "total_vmr_gap": 0.0585445390152155
+          },
+          "rungs": {
+            "core": {
+              "alpha": 0.006081988465204304,
+              "bias": -0.0014155274769084036,
+              "mae": 2.860579854750157,
+              "nll": 2.685848753684711
+            },
+            "core_referee": {
+              "alpha": 0.005931441482874802,
+              "bias": 0.023809128326017174,
+              "mae": 2.8624360161336346,
+              "nll": 2.686179942394514
+            },
+            "core_referee_market": {
+              "alpha": 0.004462950432493455,
+              "bias": 0.02481535282896261,
+              "mae": 2.8387466647873305,
+              "nll": 2.679143358168604
+            },
+            "full": {
+              "alpha": 0.0044196858611408926,
+              "bias": 0.02521924218444948,
+              "mae": 2.838815862206023,
+              "nll": 2.6791629026419344
+            }
+          },
+          "season": "2024-2025",
+          "status": "OK",
+          "train": 34850,
+          "transitions": [
+            {
+              "delta_mae": 0.008309432102291847,
+              "delta_nll": 0.0013823912093324786,
+              "from": "core",
+              "n": 748,
+              "scope": "epl",
+              "to": "core_referee"
+            },
+            {
+              "delta_mae": -0.02368935134630412,
+              "delta_nll": -0.007036584225910136,
+              "from": "core_referee",
+              "n": 3454,
+              "scope": "all",
+              "to": "core_referee_market"
+            },
+            {
+              "delta_mae": 6.919741869237939e-05,
+              "delta_nll": 1.954447333041287e-05,
+              "from": "core_referee_market",
+              "n": 3454,
+              "scope": "all",
+              "to": "full"
+            }
+          ],
+          "validation_legs": 3454,
+          "validation_matches": 1727
+        },
+        {
+          "causal_baseline_mae": 3.042545116904369,
+          "coefficients": {
+            "intercept": -0.01610847782596962,
+            "opening_closeness": 0.037827956694299635,
+            "opening_strength": -0.018368140119747314,
+            "opponent_cards": -0.00011328552063922273,
+            "opponent_drawn": 0.0656497456452775,
+            "referee_epl": 0.014514305231071018,
+            "team_cards": -0.0009179114441752652,
+            "team_committed": 0.07011557618658015
+          },
+          "distribution": {
+            "by_league": [
+              {
+                "fixed_alpha_brier": 0.16699147335208386,
+                "hierarchical_nb_brier": 0.16670509567915975,
+                "league": "bundesliga",
+                "matches": 612,
+                "poisson_brier": 0.1666108341044052
+              },
+              {
+                "fixed_alpha_brier": 0.17796579154918016,
+                "hierarchical_nb_brier": 0.17765139138030006,
+                "league": "epl",
+                "matches": 760,
+                "poisson_brier": 0.17767174245842296
+              },
+              {
+                "fixed_alpha_brier": 0.19568352367374545,
+                "hierarchical_nb_brier": 0.19506919029126055,
+                "league": "la-liga",
+                "matches": 748,
+                "poisson_brier": 0.19504649304482186
+              },
+              {
+                "fixed_alpha_brier": 0.19804382607947435,
+                "hierarchical_nb_brier": 0.19776410452970733,
+                "league": "ligue-1",
+                "matches": 600,
+                "poisson_brier": 0.19783621747410407
+              },
+              {
+                "fixed_alpha_brier": 0.1894578874689506,
+                "hierarchical_nb_brier": 0.18840257656895035,
+                "league": "serie-a",
+                "matches": 748,
+                "poisson_brier": 0.1882197480357179
+              }
+            ],
+            "empirical_total_vmr": 1.4593579543460864,
+            "fixed_alpha_brier": 0.18580301454765794,
+            "fixed_alpha_log_loss": 0.5503773408910905,
+            "hierarchical_nb_brier": 0.18527506353343076,
+            "hierarchical_nb_log_loss": 0.5487053883650604,
+            "league_alpha": {
+              "bundesliga": 0.005847870657794325,
+              "epl": 0.0020000000036067226,
+              "la-liga": 0.0068005010534671635,
+              "ligue-1": 0.004896729873782424,
+              "serie-a": 0.0050411592061607195
+            },
+            "poisson_brier": 0.1852310362032878,
+            "poisson_log_loss": 0.5485239779125973,
+            "pooled_alpha": 0.00460418138851036,
+            "priced_total_vmr": 1.4820178087268698,
+            "reliability": {
+              "bins": [
+                {
+                  "actual": 0.06507413509060955,
+                  "bin": 1,
+                  "gap": 0.007653372345655912,
+                  "n": 2428,
+                  "predicted": 0.07272750743626546
+                },
+                {
+                  "actual": 0.14132674083230326,
+                  "bin": 2,
+                  "gap": 0.007161928021666875,
+                  "n": 2427,
+                  "predicted": 0.14848866885397013
+                },
+                {
+                  "actual": 0.21869851729818782,
+                  "bin": 3,
+                  "gap": -0.0013834153861660148,
+                  "n": 2428,
+                  "predicted": 0.2173151019120218
+                },
+                {
+                  "actual": 0.28141738772146685,
+                  "bin": 4,
+                  "gap": 0.004578493073951639,
+                  "n": 2427,
+                  "predicted": 0.2859958807954185
+                },
+                {
+                  "actual": 0.35502471169686983,
+                  "bin": 5,
+                  "gap": 0.002933469754097695,
+                  "n": 2428,
+                  "predicted": 0.3579581814509675
+                },
+                {
+                  "actual": 0.4316309719934102,
+                  "bin": 6,
+                  "gap": 0.0030762341347155275,
+                  "n": 2428,
+                  "predicted": 0.43470720612812574
+                },
+                {
+                  "actual": 0.5109188298310672,
+                  "bin": 7,
+                  "gap": 0.004331502005689658,
+                  "n": 2427,
+                  "predicted": 0.5152503318367568
+                },
+                {
+                  "actual": 0.6161449752883031,
+                  "bin": 8,
+                  "gap": -0.015462279422656988,
+                  "n": 2428,
+                  "predicted": 0.6006826958656462
+                },
+                {
+                  "actual": 0.6983930778739185,
+                  "bin": 9,
+                  "gap": -0.00233284656722077,
+                  "n": 2427,
+                  "predicted": 0.6960602313066977
+                },
+                {
+                  "actual": 0.8422570016474464,
+                  "bin": 10,
+                  "gap": -0.020902143717690724,
+                  "n": 2428,
+                  "predicted": 0.8213548579297557
+                }
+              ],
+              "max_abs_gap": 0.020902143717690724
+            },
+            "residual_nu": {
+              "bundesliga": 0.009307908437519337,
+              "epl": 0.006330786676169668,
+              "la-liga": 0.0019489309562178677,
+              "ligue-1": 0.009881146248911817,
+              "serie-a": 0.008743400648201744
+            },
+            "total_vmr_gap": 0.02265985438078344
+          },
+          "rungs": {
+            "core": {
+              "alpha": 0.006241619961230235,
+              "bias": -0.06343734888692684,
+              "mae": 2.8087198001789995,
+              "nll": 2.6679928570469165
+            },
+            "core_referee": {
+              "alpha": 0.0061092021055989204,
+              "bias": -0.052577223760013184,
+              "mae": 2.807065048249233,
+              "nll": 2.66746353479786
+            },
+            "core_referee_market": {
+              "alpha": 0.004623966470818947,
+              "bias": 0.001159800628027321,
+              "mae": 2.790533847186335,
+              "nll": 2.6621325590801836
+            },
+            "full": {
+              "alpha": 0.004611363963026149,
+              "bias": 0.003416676921280036,
+              "mae": 2.790452399731184,
+              "nll": 2.662062242456555
+            }
+          },
+          "season": "2025-2026",
+          "status": "OK",
+          "train": 38304,
+          "transitions": [
+            {
+              "delta_mae": -0.00783001465651978,
+              "delta_nll": -0.002555561448026822,
+              "from": "core",
+              "n": 760,
+              "scope": "epl",
+              "to": "core_referee"
+            },
+            {
+              "delta_mae": -0.016531201062898404,
+              "delta_nll": -0.005330975717676267,
+              "from": "core_referee",
+              "n": 3468,
+              "scope": "all",
+              "to": "core_referee_market"
+            },
+            {
+              "delta_mae": -8.144745515092922e-05,
+              "delta_nll": -7.031662362866342e-05,
+              "from": "core_referee_market",
+              "n": 3468,
+              "scope": "all",
+              "to": "full"
+            }
+          ],
+          "validation_legs": 3468,
+          "validation_matches": 1734
+        }
+      ],
+      "generated_at": "2026-08-17T22:51:17Z",
+      "market_gate": "BLOCKED_TEAM_FOULS_NOT_OBSERVED",
+      "registered": {
+        "ema_decay": 0.93,
+        "features": [
+          "team_committed",
+          "opponent_drawn",
+          "referee_epl",
+          "opening_closeness",
+          "opening_strength",
+          "team_cards",
+          "opponent_cards"
+        ],
+        "fixed_alpha": 0.025,
+        "lines": [
+          9.5,
+          10.5,
+          11.5,
+          12.5,
+          13.5,
+          14.5,
+          15.5
+        ],
+        "minimum_history": 6,
+        "referee_k": 18.0,
+        "team_alpha_k": 60.0,
+        "validation_seasons": [
+          "2024-2025",
+          "2025-2026"
+        ],
+        "window": 20
+      },
+      "sample_legs": 41772,
+      "sample_matches": 20886,
+      "source": "data/corners-ou/historical/all-historical-matches.csv",
+      "status": "RESEARCH_ONLY"
+    },
+    "f2": {
+      "decision": {
+        "count_gate_pass": false,
+        "fold_checks": [
+          {
+            "baseline_probability_pass": true,
+            "f1_distribution_pass": false,
+            "mae_improvement_pct": 7.178100856178975,
+            "opening_strength_pass": true,
+            "reliability_pass": true,
+            "season": "2024-2025"
+          },
+          {
+            "baseline_probability_pass": true,
+            "f1_distribution_pass": false,
+            "mae_improvement_pct": 7.733264831911304,
+            "opening_strength_pass": false,
+            "reliability_pass": true,
+            "season": "2025-2026"
+          }
+        ],
+        "gates": {
+          "beats_causal_probability_baseline": true,
+          "folds_complete": true,
+          "mae_improvement": true,
+          "market_prices": false,
+          "opening_strength_increment": false,
+          "poisson_beats_f1_distribution": false,
+          "reliability": true,
+          "settlement_definition": false
+        },
+        "market_gate_pass": false,
+        "settlement_gate_pass": false,
+        "signals_authorized": false,
+        "status": "COUNT_GATE_FAIL_EXTERNAL_GATES_BLOCKED"
+      },
+      "folds": [
+        {
+          "baseline_probability": {
+            "brier": 0.20821616497291814,
+            "log_loss": 0.6042487625420692
+          },
+          "causal_baseline_mae": 3.075242712182472,
+          "coefficients": {
+            "intercept": -0.014972365107027954,
+            "opening_strength": -0.015494922638618246,
+            "opponent_drawn": 0.06685316158809677,
+            "team_committed": 0.07401551208994292
+          },
+          "core": {
+            "bias": -0.0013257604554375044,
+            "mae": 2.8605810897262582,
+            "nll": 2.6878140626533593
+          },
+          "f1_control": {
+            "hierarchical_nb_brier": 0.1900873873982131,
+            "hierarchical_nb_log_loss": 0.5603819562481548,
+            "poisson_brier": 0.19001471944375434,
+            "poisson_log_loss": 0.5601610297137798
+          },
+          "f2": {
+            "bias": -0.000788072339270124,
+            "mae": 2.8544986887297203,
+            "nll": 2.6858466967485115
+          },
+          "opening_strength_transition": {
+            "delta_mae": -0.0060824009965378956,
+            "delta_nll": -0.0019673659048478065
+          },
+          "poisson": {
+            "brier": 0.1911903449641711,
+            "by_league": [
+              {
+                "brier": 0.17848754863041658,
+                "league": "bundesliga",
+                "log_loss": 0.532580304943629,
+                "matches": 586,
+                "n": 4102
+              },
+              {
+                "brier": 0.18152658943388963,
+                "league": "epl",
+                "log_loss": 0.5378039515258486,
+                "matches": 748,
+                "n": 5236
+              },
+              {
+                "brier": 0.19360691188775425,
+                "league": "la-liga",
+                "log_loss": 0.5693123426693849,
+                "matches": 760,
+                "n": 5320
+              },
+              {
+                "brier": 0.2010748733908782,
+                "league": "ligue-1",
+                "log_loss": 0.5884447832726122,
+                "matches": 612,
+                "n": 4284
+              },
+              {
+                "brier": 0.2002630796288272,
+                "league": "serie-a",
+                "log_loss": 0.5850940859184159,
+                "matches": 748,
+                "n": 5236
+              }
+            ],
+            "log_loss": 0.5630646724078887,
+            "n": 24178,
+            "reliability": {
+              "bins": [
+                {
+                  "actual": 0.07444168734491315,
+                  "bin": 1,
+                  "gap": -0.0003824128983607039,
+                  "n": 2418,
+                  "predicted": 0.07405927444655244
+                },
+                {
+                  "actual": 0.16459884201819686,
+                  "bin": 2,
+                  "gap": -0.014993743097818563,
+                  "n": 2418,
+                  "predicted": 0.1496050989203783
+                },
+                {
+                  "actual": 0.22341745966073645,
+                  "bin": 3,
+                  "gap": -0.00796913204459651,
+                  "n": 2417,
+                  "predicted": 0.21544832761613994
+                },
+                {
+                  "actual": 0.2894954507857734,
+                  "bin": 4,
+                  "gap": -0.006375231362592215,
+                  "n": 2418,
+                  "predicted": 0.28312021942318116
+                },
+                {
+                  "actual": 0.3651778329197684,
+                  "bin": 5,
+                  "gap": -0.009037209590542716,
+                  "n": 2418,
+                  "predicted": 0.3561406233292257
+                },
+                {
+                  "actual": 0.4371381306865178,
+                  "bin": 6,
+                  "gap": -0.003068488746205189,
+                  "n": 2418,
+                  "predicted": 0.4340696419403126
+                },
+                {
+                  "actual": 0.5244003308519437,
+                  "bin": 7,
+                  "gap": -0.00765858237132655,
+                  "n": 2418,
+                  "predicted": 0.5167417484806172
+                },
+                {
+                  "actual": 0.5941249482829954,
+                  "bin": 8,
+                  "gap": 0.009594173358384084,
+                  "n": 2417,
+                  "predicted": 0.6037191216413795
+                },
+                {
+                  "actual": 0.695616211745244,
+                  "bin": 9,
+                  "gap": 0.0010538007986825582,
+                  "n": 2418,
+                  "predicted": 0.6966700125439266
+                },
+                {
+                  "actual": 0.8118279569892473,
+                  "bin": 10,
+                  "gap": 0.0052279235053236395,
+                  "n": 2418,
+                  "predicted": 0.8170558804945709
+                }
+              ],
+              "max_abs_gap": 0.014993743097818563
+            }
+          },
+          "season": "2024-2025",
+          "status": "OK",
+          "train": 34850,
+          "validation_legs": 3454,
+          "validation_matches": 1727
+        },
+        {
+          "baseline_probability": {
+            "brier": 0.20406054980437655,
+            "log_loss": 0.594394876184235
+          },
+          "causal_baseline_mae": 3.042545116904369,
+          "coefficients": {
+            "intercept": -0.015149336912723558,
+            "opening_strength": -0.01582815684625007,
+            "opponent_drawn": 0.06705777228981037,
+            "team_committed": 0.0754898860150934
+          },
+          "core": {
+            "bias": -0.06335459188160263,
+            "mae": 2.8087164247532246,
+            "nll": 2.66882258373639
+          },
+          "f1_control": {
+            "hierarchical_nb_brier": 0.18527506353343076,
+            "hierarchical_nb_log_loss": 0.5487053883650604,
+            "poisson_brier": 0.1852310362032878,
+            "poisson_log_loss": 0.5485239779125973
+          },
+          "f2": {
+            "bias": -0.06304745448157707,
+            "mae": 2.8072570453837686,
+            "nll": 2.668732065554199
+          },
+          "opening_strength_transition": {
+            "delta_mae": -0.0014593793694559487,
+            "delta_nll": -9.051818219107943e-05
+          },
+          "poisson": {
+            "brier": 0.18666570827359602,
+            "by_league": [
+              {
+                "brier": 0.16827737420198238,
+                "league": "bundesliga",
+                "log_loss": 0.5051804390453654,
+                "matches": 612,
+                "n": 4284
+              },
+              {
+                "brier": 0.1778922228874757,
+                "league": "epl",
+                "log_loss": 0.5316531086988913,
+                "matches": 760,
+                "n": 5320
+              },
+              {
+                "brier": 0.1970179190461674,
+                "league": "la-liga",
+                "log_loss": 0.5766729424368084,
+                "matches": 748,
+                "n": 5236
+              },
+              {
+                "brier": 0.19880186029601263,
+                "league": "ligue-1",
+                "log_loss": 0.5816683884470877,
+                "matches": 600,
+                "n": 4200
+              },
+              {
+                "brier": 0.1905378532922399,
+                "league": "serie-a",
+                "log_loss": 0.5626288098850507,
+                "matches": 748,
+                "n": 5236
+              }
+            ],
+            "log_loss": 0.5520258175063218,
+            "n": 24276,
+            "reliability": {
+              "bins": [
+                {
+                  "actual": 0.06630971993410215,
+                  "bin": 1,
+                  "gap": 0.001295505964735294,
+                  "n": 2428,
+                  "predicted": 0.06760522589883744
+                },
+                {
+                  "actual": 0.14585908529048208,
+                  "bin": 2,
+                  "gap": -0.0062239765163585314,
+                  "n": 2427,
+                  "predicted": 0.13963510877412355
+                },
+                {
+                  "actual": 0.22364085667215816,
+                  "bin": 3,
+                  "gap": -0.016586019364573518,
+                  "n": 2428,
+                  "predicted": 0.20705483730758464
+                },
+                {
+                  "actual": 0.2826534816646065,
+                  "bin": 4,
+                  "gap": -0.006862807389502734,
+                  "n": 2427,
+                  "predicted": 0.2757906742751038
+                },
+                {
+                  "actual": 0.35543657331136735,
+                  "bin": 5,
+                  "gap": -0.006599860752830311,
+                  "n": 2428,
+                  "predicted": 0.34883671255853704
+                },
+                {
+                  "actual": 0.43039538714991765,
+                  "bin": 6,
+                  "gap": -0.0030816686838947005,
+                  "n": 2428,
+                  "predicted": 0.42731371846602295
+                },
+                {
+                  "actual": 0.5179233621755254,
+                  "bin": 7,
+                  "gap": -0.007953577406660028,
+                  "n": 2427,
+                  "predicted": 0.5099697847688653
+                },
+                {
+                  "actual": 0.6070840197693574,
+                  "bin": 8,
+                  "gap": -0.009861472877554456,
+                  "n": 2428,
+                  "predicted": 0.597222546891803
+                },
+                {
+                  "actual": 0.6967449526163988,
+                  "bin": 9,
+                  "gap": -0.001837023195381482,
+                  "n": 2427,
+                  "predicted": 0.6949079294210173
+                },
+                {
+                  "actual": 0.8348434925864909,
+                  "bin": 10,
+                  "gap": -0.011709587849215941,
+                  "n": 2428,
+                  "predicted": 0.823133904737275
+                }
+              ],
+              "max_abs_gap": 0.016586019364573518
+            }
+          },
+          "season": "2025-2026",
+          "status": "OK",
+          "train": 38304,
+          "validation_legs": 3468,
+          "validation_matches": 1734
+        }
+      ],
+      "generated_at": "2026-08-17T22:51:20Z",
+      "market_gate": "BLOCKED_TEAM_FOULS_NOT_OBSERVED",
+      "registered": {
+        "distribution": "poisson",
+        "lines": [
+          9.5,
+          10.5,
+          11.5,
+          12.5,
+          13.5,
+          14.5,
+          15.5
+        ],
+        "maximum_reliability_gap": 0.02,
+        "mean_features": [
+          "team_committed",
+          "opponent_drawn",
+          "opening_strength"
+        ],
+        "minimum_mae_improvement_pct": 5.0,
+        "minimum_opening_strength_nll_gain": 0.0015,
+        "threshold_sweep": false,
+        "validation_seasons": [
+          "2024-2025",
+          "2025-2026"
+        ]
+      },
+      "sample_legs": 41772,
+      "sample_matches": 20886,
+      "settlement_gate": "BLOCKED_SOURCE_AGREEMENT_INCOMPLETE",
+      "source": "data/corners-ou/historical/all-historical-matches.csv",
+      "status": "RESEARCH_ONLY"
+    },
+    "m2": {
+      "api_football": {
+        "comparable_team_values": 0,
+        "exact_pct": 0.0,
+        "mae": null,
+        "matched_fixtures": 0,
+        "passed": false,
+        "within_one_pct": 0.0
+      },
+      "decision": "Settlement definitions remain blocked until both independent sources pass the registered agreement threshold.",
+      "fotmob": {
+        "comparable_team_values": 124,
+        "mae": 0.0967741935483871,
+        "passed": false,
+        "within_one_pct": 98.38709677419355
+      },
+      "generated_at": "2026-08-17T22:51:21Z",
+      "requirements": {
+        "independent_sources_required": [
+          "api-football",
+          "fotmob"
+        ],
+        "minimum_comparable_team_values": 200,
+        "minimum_within_one_pct": 97.0
+      },
+      "settlement_source_authorized": false,
+      "status": "WAIT_OR_FAIL"
+    }
+  },
+  "tennis_ml_gap_guard": {
+    "label": "Tennis ML gap-guard quiet audit",
+    "edge_min_pct": 10.0,
+    "gap_threshold_pp": 10.0,
+    "all_guarded": {
+      "n": 1927,
+      "wins": 753,
+      "losses": 1174,
+      "pnl_units": 71.0,
+      "roi_pct": 3.68,
+      "avg_edge_pct": 60.17,
+      "avg_gap_pp": 14.3
+    },
+    "clay_high_guarded": {
+      "n": 311,
+      "wins": 127,
+      "losses": 184,
+      "pnl_units": 68.68,
+      "roi_pct": 22.08,
+      "avg_edge_pct": 53.03,
+      "avg_gap_pp": 13.48
+    },
+    "clay_high_market_dog": {
+      "n": 231,
+      "wins": 73,
+      "losses": 158,
+      "pnl_units": 60.11,
+      "roi_pct": 26.02,
+      "avg_edge_pct": 64.46,
+      "avg_gap_pp": 13.49
+    },
+    "etch_type": {
+      "n": 78,
+      "wins": 19,
+      "losses": 59,
+      "pnl_units": 33.65,
+      "roi_pct": 43.14,
+      "avg_edge_pct": 80.44,
+      "avg_gap_pp": 12.73
+    },
+    "closest_band": {
+      "n": 7,
+      "wins": 2,
+      "losses": 5,
+      "pnl_units": 0.38,
+      "roi_pct": 5.43,
+      "avg_edge_pct": 42.86,
+      "avg_gap_pp": 13.29
+    },
+    "etch_type_years": {
+      "2022": {
+        "n": 13,
+        "wins": 2,
+        "losses": 11,
+        "pnl_units": -2.57,
+        "roi_pct": -19.77,
+        "avg_edge_pct": 68.08,
+        "avg_gap_pp": 13.88
+      },
+      "2023": {
+        "n": 23,
+        "wins": 7,
+        "losses": 16,
+        "pnl_units": 34.29,
+        "roi_pct": 149.09,
+        "avg_edge_pct": 82.24,
+        "avg_gap_pp": 12.14
+      },
+      "2024": {
+        "n": 16,
+        "wins": 4,
+        "losses": 12,
+        "pnl_units": 4.31,
+        "roi_pct": 26.94,
+        "avg_edge_pct": 84.93,
+        "avg_gap_pp": 12.14
+      },
+      "2025": {
+        "n": 26,
+        "wins": 6,
+        "losses": 20,
+        "pnl_units": -2.38,
+        "roi_pct": -9.15,
+        "avg_edge_pct": 82.27,
+        "avg_gap_pp": 13.04
+      },
+      "2026": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "pnl_units": 0.0,
+        "roi_pct": null,
+        "avg_edge_pct": null,
+        "avg_gap_pp": null
+      }
+    },
+    "etch_type_recent": {
+      "n": 42,
+      "wins": 10,
+      "losses": 32,
+      "pnl_units": 1.93,
+      "roi_pct": 4.6,
+      "avg_edge_pct": 83.29,
+      "avg_gap_pp": 12.7
+    },
+    "read": "interesting_but_keep_shadow_until_live_sample"
+  },
+  "tennis_model_evidence": {
+    "lanes": {
+      "strict": {
+        "status": "OK",
+        "generated_at": "2026-04-25T16:45:17+00:00",
+        "as_of_date": "2026-03-29",
+        "evidence_period": "clean",
+        "signals": 139,
+        "settled": 139,
+        "pending": 0,
+        "wins": 74,
+        "losses": 57,
+        "staked_units": 185.0,
+        "pnl_units": 45.958,
+        "roi_pct": 24.8422,
+        "clv": {
+          "rows": 45,
+          "avg_clv_pct": -0.2085,
+          "positive_clv_pct": 22.22
+        }
+      },
+      "volume_200": {
+        "status": "OK",
+        "generated_at": "2026-04-25T16:45:17+00:00",
+        "as_of_date": "2026-04-25",
+        "evidence_period": "clean",
+        "signals": 0,
+        "settled": 0,
+        "pending": 0,
+        "wins": 0,
+        "losses": 0,
+        "staked_units": 0.0,
+        "pnl_units": 0.0,
+        "roi_pct": null,
+        "clv": {
+          "rows": 0,
+          "avg_clv_pct": null,
+          "positive_clv_pct": null
+        }
+      },
+      "spread_v1": {
+        "status": "OK",
+        "generated_at": "2026-04-25T16:45:17+00:00",
+        "as_of_date": "2026-04-24",
+        "evidence_period": "clean",
+        "signals": 71,
+        "settled": 54,
+        "pending": 17,
+        "wins": 26,
+        "losses": 28,
+        "staked_units": 108.0,
+        "pnl_units": -6.938,
+        "roi_pct": -6.4241,
+        "clv": {
+          "rows": 34,
+          "avg_clv_pct": -0.0097,
+          "positive_clv_pct": 35.29
+        }
+      },
+      "grass_bo3": {
+        "status": "MISSING",
+        "settled": 0,
+        "pnl_units": 0.0,
+        "roi_pct": null
+      },
+      "clay_bo3": {
+        "status": "MISSING",
+        "settled": 0,
+        "pnl_units": 0.0,
+        "roi_pct": null
+      },
+      "cpi_speed": {
+        "status": "OK",
+        "generated_at": "2026-06-24T20:11:18+00:00",
+        "as_of_date": "2026-06-24",
+        "evidence_period": "clean",
+        "signals": 7,
+        "settled": 0,
+        "pending": 7,
+        "wins": 0,
+        "losses": 0,
+        "staked_units": 0.0,
+        "pnl_units": 0.0,
+        "roi_pct": null
+      },
+      "challenger": {
+        "status": "OK",
+        "generated_at": "2026-05-17T19:28:09+00:00",
+        "as_of_date": "2026-05-14",
+        "evidence_period": "clean",
+        "signals": 23,
+        "settled": 23,
+        "pending": 0,
+        "wins": 4,
+        "losses": 11,
+        "staked_units": 15.0,
+        "pnl_units": -2.601,
+        "roi_pct": -17.34
+      }
+    },
+    "lane_source": {
+      "status": "STALE",
+      "oldest_generated_at": "2026-04-25T16:45:17+00:00",
+      "lanes": {
+        "strict": {
+          "generated_at": "2026-04-25T16:45:17+00:00",
+          "age_days": 114.26,
+          "status": "STALE"
+        },
+        "volume_200": {
+          "generated_at": "2026-04-25T16:45:17+00:00",
+          "age_days": 114.26,
+          "status": "STALE"
+        },
+        "spread_v1": {
+          "generated_at": "2026-04-25T16:45:17+00:00",
+          "age_days": 114.26,
+          "status": "STALE"
+        }
+      }
+    },
+    "gap_source_status": "OK",
+    "gap_status": "SHADOW_ONLY_NO_LIVE_ROUTING_CHANGE",
+    "gap_replacements": {
+      "strict_gap_10_20_same_side": {
+        "checks": {
+          "settled_150": false,
+          "roi_positive": true,
+          "clv_at_least_0_5pct": true,
+          "historical_screen_passed": true,
+          "positive_clv_at_least_55pct": false
+        },
+        "passes": false,
+        "profile": "strict",
+        "verdict": "FORWARD_SAMPLE_BUILDING",
+        "captured": 37,
+        "by_surface": {
+          "Hard": {
+            "wins": 18,
+            "voids": 0,
+            "losses": 18,
+            "pending": 1,
+            "roi_pct": 19.4,
+            "settled": 36,
+            "signals": 37,
+            "clv_rows": 19,
+            "pnl_units": 6.983,
+            "avg_gap_pp": 13.08,
+            "avg_clv_pct": 0.535,
+            "avg_value_pct": 33.35,
+            "positive_clv_pct": 47.37
+          }
+        },
+        "historical": {
+          "checks": {
+            "roi_positive": true,
+            "settled_at_least_100": true,
+            "no_material_year_below_minus_15pct": true,
+            "at_least_two_positive_material_years": true
+          },
+          "by_year": {
+            "2022": {
+              "wins": 10,
+              "losses": 22,
+              "pushes": 0,
+              "roi_pct": -14.34,
+              "settled": 32,
+              "pnl_units": -4.59,
+              "roi_95ci_pct": null
+            },
+            "2023": {
+              "wins": 15,
+              "losses": 22,
+              "pushes": 0,
+              "roi_pct": 13.3,
+              "settled": 37,
+              "pnl_units": 4.92,
+              "roi_95ci_pct": null
+            },
+            "2024": {
+              "wins": 15,
+              "losses": 22,
+              "pushes": 0,
+              "roi_pct": 16.41,
+              "settled": 37,
+              "pnl_units": 6.07,
+              "roi_95ci_pct": null
+            },
+            "2025": {
+              "wins": 20,
+              "losses": 18,
+              "pushes": 0,
+              "roi_pct": 48.37,
+              "settled": 38,
+              "pnl_units": 18.38,
+              "roi_95ci_pct": null
+            }
+          },
+          "profile": "strict",
+          "decision": "FORWARD_PROOF_REQUIRED",
+          "by_surface": {
+            "Hard": {
+              "wins": 60,
+              "losses": 84,
+              "pushes": 0,
+              "roi_pct": 17.21,
+              "settled": 144,
+              "pnl_units": 24.78,
+              "roi_95ci_pct": null
+            }
+          },
+          "description": "Strict-eligible, same-side selections blocked only by a model/market gap above 10pp and at most 20pp.",
+          "performance": {
+            "wins": 60,
+            "losses": 84,
+            "pushes": 0,
+            "roi_pct": 17.21,
+            "settled": 144,
+            "pnl_units": 24.78,
+            "roi_95ci_pct": [
+              -6.01,
+              42.56
+            ]
+          },
+          "material_years": 4,
+          "max_gap_pp_inclusive": 20.0,
+          "min_gap_pp_exclusive": 10.0,
+          "positive_material_years": 3,
+          "passes_retrospective_screen": true
+        },
+        "description": "Strict eligible, same-side, gap >10pp and <=20pp.",
+        "performance": {
+          "wins": 18,
+          "voids": 0,
+          "losses": 18,
+          "pending": 1,
+          "roi_pct": 19.4,
+          "settled": 36,
+          "signals": 37,
+          "clv_rows": 19,
+          "pnl_units": 6.983,
+          "avg_gap_pp": 13.08,
+          "avg_clv_pct": 0.535,
+          "avg_value_pct": 33.35,
+          "positive_clv_pct": 47.37
+        },
+        "quality_eligible": 31,
+        "quality_performance": {
+          "wins": 16,
+          "voids": 0,
+          "losses": 14,
+          "pending": 1,
+          "roi_pct": 25.05,
+          "settled": 30,
+          "signals": 31,
+          "clv_rows": 14,
+          "pnl_units": 7.516,
+          "avg_gap_pp": 12.85,
+          "avg_clv_pct": 0.5001,
+          "avg_value_pct": 31.87,
+          "positive_clv_pct": 50.0
+        },
+        "excluded_low_quality": 6,
+        "max_gap_pp_inclusive": 20.0,
+        "min_gap_pp_exclusive": 10.0
+      },
+      "volume200_gap_10_15_same_side": {
+        "checks": {
+          "settled_150": false,
+          "roi_positive": true,
+          "clv_at_least_0_5pct": false,
+          "historical_screen_passed": true,
+          "positive_clv_at_least_55pct": false
+        },
+        "passes": false,
+        "profile": "volume_200",
+        "verdict": "PAUSE_NEGATIVE_CLV",
+        "captured": 55,
+        "by_surface": {
+          "Clay": {
+            "wins": 9,
+            "voids": 0,
+            "losses": 9,
+            "pending": 1,
+            "roi_pct": -4.77,
+            "settled": 18,
+            "signals": 19,
+            "clv_rows": 7,
+            "pnl_units": -0.858,
+            "avg_gap_pp": 11.95,
+            "avg_clv_pct": -0.0714,
+            "avg_value_pct": 22.87,
+            "positive_clv_pct": 28.57
+          },
+          "Hard": {
+            "wins": 18,
+            "voids": 0,
+            "losses": 16,
+            "pending": 2,
+            "roi_pct": 25.06,
+            "settled": 34,
+            "signals": 36,
+            "clv_rows": 15,
+            "pnl_units": 8.52,
+            "avg_gap_pp": 12.26,
+            "avg_clv_pct": -0.4008,
+            "avg_value_pct": 29.22,
+            "positive_clv_pct": 40.0
+          }
+        },
+        "historical": {
+          "checks": {
+            "roi_positive": true,
+            "settled_at_least_100": true,
+            "no_material_year_below_minus_15pct": true,
+            "at_least_two_positive_material_years": true
+          },
+          "by_year": {
+            "2022": {
+              "wins": 31,
+              "losses": 52,
+              "pushes": 0,
+              "roi_pct": -11.6,
+              "settled": 83,
+              "pnl_units": -9.63,
+              "roi_95ci_pct": null
+            },
+            "2023": {
+              "wins": 31,
+              "losses": 40,
+              "pushes": 0,
+              "roi_pct": 16.13,
+              "settled": 71,
+              "pnl_units": 11.45,
+              "roi_95ci_pct": null
+            },
+            "2024": {
+              "wins": 32,
+              "losses": 38,
+              "pushes": 0,
+              "roi_pct": 29.41,
+              "settled": 70,
+              "pnl_units": 20.59,
+              "roi_95ci_pct": null
+            },
+            "2025": {
+              "wins": 49,
+              "losses": 44,
+              "pushes": 0,
+              "roi_pct": 27.28,
+              "settled": 93,
+              "pnl_units": 25.37,
+              "roi_95ci_pct": null
+            }
+          },
+          "profile": "volume_200",
+          "decision": "FORWARD_PROOF_REQUIRED",
+          "by_surface": {
+            "Clay": {
+              "wins": 13,
+              "losses": 12,
+              "pushes": 0,
+              "roi_pct": 28.24,
+              "settled": 25,
+              "pnl_units": 7.06,
+              "roi_95ci_pct": null
+            },
+            "Hard": {
+              "wins": 130,
+              "losses": 162,
+              "pushes": 0,
+              "roi_pct": 13.95,
+              "settled": 292,
+              "pnl_units": 40.72,
+              "roi_95ci_pct": null
+            }
+          },
+          "description": "Volume-200-eligible, same-side selections blocked only by a model/market gap above 10pp and at most 15pp.",
+          "performance": {
+            "wins": 143,
+            "losses": 174,
+            "pushes": 0,
+            "roi_pct": 15.07,
+            "settled": 317,
+            "pnl_units": 47.78,
+            "roi_95ci_pct": [
+              -0.6,
+              31.38
+            ]
+          },
+          "material_years": 4,
+          "max_gap_pp_inclusive": 15.0,
+          "min_gap_pp_exclusive": 10.0,
+          "positive_material_years": 3,
+          "passes_retrospective_screen": true
+        },
+        "description": "Volume 200 eligible, same-side, gap >10pp and <=15pp.",
+        "performance": {
+          "wins": 27,
+          "voids": 0,
+          "losses": 25,
+          "pending": 3,
+          "roi_pct": 14.73,
+          "settled": 52,
+          "signals": 55,
+          "clv_rows": 22,
+          "pnl_units": 7.662,
+          "avg_gap_pp": 12.15,
+          "avg_clv_pct": -0.296,
+          "avg_value_pct": 27.02,
+          "positive_clv_pct": 36.36
+        },
+        "quality_eligible": 35,
+        "quality_performance": {
+          "wins": 18,
+          "voids": 0,
+          "losses": 16,
+          "pending": 1,
+          "roi_pct": 18.04,
+          "settled": 34,
+          "signals": 35,
+          "clv_rows": 14,
+          "pnl_units": 6.133,
+          "avg_gap_pp": 12.15,
+          "avg_clv_pct": -0.7875,
+          "avg_value_pct": 28.2,
+          "positive_clv_pct": 35.71
+        },
+        "excluded_low_quality": 20,
+        "max_gap_pp_inclusive": 15.0,
+        "min_gap_pp_exclusive": 10.0
+      }
+    },
+    "side_flip_by_surface": {
+      "Clay": {
+        "wins": 33,
+        "voids": 0,
+        "losses": 57,
+        "pending": 12,
+        "roi_pct": -8.53,
+        "settled": 90,
+        "signals": 102,
+        "clv_rows": 44,
+        "pnl_units": -7.68,
+        "avg_gap_pp": 8.57,
+        "avg_clv_pct": 0.1376,
+        "avg_value_pct": 118.48,
+        "positive_clv_pct": 40.91
+      },
+      "Hard": {
+        "wins": 52,
+        "voids": 0,
+        "losses": 82,
+        "pending": 13,
+        "roi_pct": 2.64,
+        "settled": 134,
+        "signals": 147,
+        "clv_rows": 82,
+        "pnl_units": 3.54,
+        "avg_gap_pp": 6.75,
+        "avg_clv_pct": 0.6607,
+        "avg_value_pct": 65.59,
+        "positive_clv_pct": 45.12
+      }
+    }
+  },
+  "tennis_props_v3": {
+    "atp": {
+      "status": "PASS",
+      "surfaces": [
+        "Clay",
+        "Hard"
+      ],
+      "logloss_delta": -0.013396899357459913,
+      "mae_improvement_pct": 3.3335103960491357
+    },
+    "wta": {
+      "status": "FAIL",
+      "logloss_delta": -0.012948162649715989,
+      "mae_improvement_pct": 3.017562841622831
+    },
+    "routing": "atp_aces_hard_clay_prospective_shadow",
+    "evidence": {
+      "reason": "settled 0/300; events 0/100; CLV coverage 0/300; mean CLV +0.00%/+1.00%",
+      "status": "BLOCKED",
+      "pending": 1,
+      "roi_pct": 0.0,
+      "settled": 0,
+      "signals": 1,
+      "pnl_units": 0,
+      "clv_coverage": 0,
+      "mean_clv_pct": 0.0,
+      "minimum_events": 100,
+      "distinct_events": 0,
+      "minimum_settled": 300,
+      "positive_clv_pct": 0.0,
+      "required_clv_pct": 1.0,
+      "required_roi_pct": 0.0
+    },
+    "generated_at": "2026-07-29T11:37:47Z",
+    "model_status": "PARTIAL_PASS",
+    "model_generated_at": "2026-07-13T18:41:06.437523+00:00"
+  },
+  "tennis_props_v4": {
+    "scope": "ATP player aces, Hard/Clay, shadow only",
+    "status": "PRE_FIT",
+    "roi_pct": null,
+    "brier_v3": null,
+    "brier_v4": null,
+    "integrity": {
+      "open_as_close_rows": 0,
+      "frozen_hash_failures": 0,
+      "player_key_collisions": 0
+    },
+    "pnl_units": 0,
+    "rows_void": 2,
+    "rows_pushed": 0,
+    "rows_scored": 94,
+    "brier_market": null,
+    "clv_coverage": 72,
+    "clv_mean_pct": 1.7684166666666665,
+    "count_mae_v3": null,
+    "count_mae_v4": null,
+    "generated_at": "2026-08-15T21:39:44+00:00",
+    "rows_pending": 24,
+    "rows_settled": 94,
+    "count_bias_v3": null,
+    "count_bias_v4": null,
+    "clv_null_count": 48,
+    "rows_registered": 120,
+    "signals_settled": 0,
+    "clv_positive_pct": 30.555555555555557,
+    "overround_median": 1.19427,
+    "promotion_sample": 0,
+    "ladder_groups_seen": 44,
+    "ladder_reject_reasons": {},
+    "ladder_accept_rate_pct": 100.0,
+    "ladder_groups_accepted": 44,
+    "minimum_prefit_settled": 200
+  },
+  "tennis_breaks_v1": {
+    "status": "PASS",
+    "method": "walk_forward_player_opponent_break_rates_plus_event_environment_registered_count_family",
+    "train_years": [
+      2023,
+      2024
+    ],
+    "holdout_years": [
+      2025,
+      2026
+    ],
+    "real_price_evidence": false,
+    "scopes": {
+      "player_breaks": {
+        "passed": true,
+        "tours": {
+          "ATP": {
+            "passed": true,
+            "distribution": "negative_binomial",
+            "model_alpha": 0.07,
+            "train_n": 11816,
+            "holdout_n": 7548,
+            "n": 7548.0,
+            "mae": 1.361961,
+            "naive_mae": 1.540645,
+            "bias": 0.143843,
+            "rmse": 1.654778,
+            "actual_mean": 2.445813,
+            "projected_mean": 2.589656,
+            "brier": 0.150845,
+            "poisson_brier": 0.150814,
+            "naive_brier": 0.169912,
+            "ece": 0.019679,
+            "poisson_ece": 0.016471,
+            "selected_brier": 0.150845,
+            "selected_ece": 0.019679
+          },
+          "WTA": {
+            "passed": true,
+            "distribution": "poisson",
+            "model_alpha": 0.05,
+            "train_n": 10520,
+            "holdout_n": 7466,
+            "n": 7466.0,
+            "mae": 1.659975,
+            "naive_mae": 1.788588,
+            "bias": -0.11589,
+            "rmse": 2.008408,
+            "actual_mean": 3.680284,
+            "projected_mean": 3.564394,
+            "brier": 0.195594,
+            "poisson_brier": 0.195536,
+            "naive_brier": 0.216734,
+            "ece": 0.046627,
+            "poisson_ece": 0.048098,
+            "selected_brier": 0.195536,
+            "selected_ece": 0.048098
+          }
+        }
+      },
+      "match_breaks": {
+        "passed": true,
+        "tours": {
+          "ATP": {
+            "passed": true,
+            "distribution": "negative_binomial",
+            "model_alpha": 0.02,
+            "train_n": 5908,
+            "holdout_n": 3774,
+            "n": 3774.0,
+            "mae": 1.823585,
+            "naive_mae": 2.241775,
+            "bias": 0.287685,
+            "rmse": 2.29917,
+            "actual_mean": 4.891627,
+            "projected_mean": 5.179312,
+            "brier": 0.141861,
+            "poisson_brier": 0.141964,
+            "naive_brier": 0.172932,
+            "ece": 0.037114,
+            "poisson_ece": 0.036818,
+            "selected_brier": 0.141861,
+            "selected_ece": 0.037114
+          },
+          "WTA": {
+            "passed": true,
+            "distribution": "poisson",
+            "model_alpha": 0.03,
+            "train_n": 5260,
+            "holdout_n": 3733,
+            "n": 3733.0,
+            "mae": 2.306529,
+            "naive_mae": 2.439823,
+            "bias": -0.23178,
+            "rmse": 2.949755,
+            "actual_mean": 7.360568,
+            "projected_mean": 7.128788,
+            "brier": 0.177604,
+            "poisson_brier": 0.177318,
+            "naive_brier": 0.198225,
+            "ece": 0.019222,
+            "poisson_ece": 0.013389,
+            "selected_brier": 0.177318,
+            "selected_ece": 0.013389
+          }
+        }
+      }
+    }
+  },
+  "tennis_venue_ace_factor_v1": {
+    "status": "PROSPECTIVE_SHADOW",
+    "pending": 0,
+    "roi_pct": -12.749999999999998,
+    "settled": 4,
+    "clv_rows": 0,
+    "decision": "NOT_SELLABLE",
+    "pnl_units": -0.5099999999999999,
+    "factor_max": 1.357331,
+    "factor_min": 0.636276,
+    "registered": 4,
+    "brier_delta": 0.008603280892499982,
+    "paired_rows": 4,
+    "mean_clv_pct": null,
+    "total_venues": 210,
+    "control_brier": 0.2171076991075,
+    "candidate_brier": 0.22571097999999998,
+    "distinct_events": 2,
+    "eligible_venues": 70,
+    "total_gate_count": 5,
+    "passed_gate_count": 1,
+    "automatic_promotion": false,
+    "promotion_target_rows": 600,
+    "promotion_target_events": 150
+  },
+  "tennis_most_aces_forecast": {
+    "brier": 0.44930357407407406,
+    "notes": [
+      "Outcome-only validation; no bookmaker prices, ROI, value or CLV.",
+      "Parameters remain frozen until a registered review at 200 settled forecasts."
+    ],
+    "models": {
+      "most_aces_direct_1x2_v1": {
+        "brier": 0.44038867525773195,
+        "logloss": 0.7598754793814433,
+        "rows_void": 3,
+        "accuracy_pct": 68.55670103092784,
+        "rows_pending": 22,
+        "rows_settled": 194,
+        "rows_registered": 219,
+        "actual_draw_rate_pct": 8.762886597938145,
+        "predicted_draw_rate_pct": 0.0
+      },
+      "v3_aces_gaussian_copula_nb2": {
+        "brier": 0.5613271333333334,
+        "logloss": 0.9549374,
+        "rows_void": 1,
+        "accuracy_pct": 60.0,
+        "rows_pending": 0,
+        "rows_settled": 15,
+        "rows_registered": 16,
+        "actual_draw_rate_pct": 13.333333333333334,
+        "predicted_draw_rate_pct": 0.0
+      },
+      "v3_aces_gaussian_copula_nb2_input_guard_v2": {
+        "brier": 0.5404668666666667,
+        "logloss": 0.927275,
+        "rows_void": 1,
+        "accuracy_pct": 60.0,
+        "rows_pending": 0,
+        "rows_settled": 15,
+        "rows_registered": 16,
+        "actual_draw_rate_pct": 13.333333333333334,
+        "predicted_draw_rate_pct": 0.0
+      },
+      "v3_aces_gaussian_copula_nb2_evidence_tiers_v3": {
+        "brier": 0.44296553365384617,
+        "logloss": 0.7597472884615384,
+        "rows_void": 4,
+        "accuracy_pct": 68.26923076923077,
+        "rows_pending": 24,
+        "rows_settled": 208,
+        "rows_registered": 236,
+        "actual_draw_rate_pct": 8.653846153846153,
+        "predicted_draw_rate_pct": 0.0
+      }
+    },
+    "status": "REVIEW_READY",
+    "logloss": 0.772399224537037,
+    "rows_void": 9,
+    "accuracy_pct": 67.82407407407408,
+    "rows_pending": 46,
+    "rows_settled": 432,
+    "rows_registered": 487,
+    "generated_at_utc": "2026-08-17T21:41:03+00:00",
+    "player_count_mae": 3.111140756302521,
+    "rows_quote_ready": 346,
+    "paired_comparison": {
+      "status": "EVIDENCE_BUILDING",
+      "direct_brier": 0.44038867525773195,
+      "direct_model": "most_aces_direct_1x2_v1",
+      "review_stage": "DIRECTIONAL_ONLY",
+      "control_brier": 0.4279437577319588,
+      "control_model": "v3_aces_gaussian_copula_nb2_evidence_tiers_v3",
+      "paired_events": 194,
+      "direct_logloss": 0.7598754793814433,
+      "next_review_at": 200,
+      "control_logloss": 0.7424415103092783,
+      "brier_delta_direct_minus_control": 0.012444917525773147,
+      "logloss_delta_direct_minus_control": 0.01743396907216499
+    },
+    "rows_price_blocked": 111,
+    "actual_draw_rate_pct": 9.027777777777779,
+    "minimum_review_sample": 200,
+    "can_claim_profitability": false,
+    "predicted_draw_rate_pct": 0.0
+  },
+  "tennis_most_aces_prices": {},
+  "tennis_props_market_benchmark": {
+    "scored": 22,
+    "status": "EVIDENCE_BUILDING",
+    "pending": 0,
+    "settled": 26,
+    "model_brier": 0.19982686363636362,
+    "market_brier": 0.1994765,
+    "observations": 28,
+    "model_count_mae": 2.738692307692308,
+    "market_count_mae": 2.673423076923077,
+    "brier_delta_vs_market": -0.0003503636363636209
+  },
+  "tennis_props_shadow_decision": {
+    "clv": {
+      "rows": 7,
+      "mean_pct": 7.1503,
+      "coverage_pct": 58.33,
+      "positive_pct": 42.86
+    },
+    "feed": {
+      "state": "TWO_WAY_PRICES_MISSING",
+      "line_rows": 1008,
+      "matched_rows": 934,
+      "two_way_rows": 0,
+      "match_rate_pct": 92.7,
+      "over_only_rows": 1008,
+      "top_shadow_blocker": "NOT_BEST_AVAILABLE_LINE",
+      "public_bettable_rows": 0
+    },
+    "lane": "aces_dfs_canonical_shadow",
+    "void": 0,
+    "gates": {
+      "roi": {
+        "pass": true,
+        "target_pct": 0.0,
+        "observed_pct": 52.25
+      },
+      "mean_clv": {
+        "pass": true,
+        "target_pct": 1.0,
+        "observed_pct": 7.150285714285714
+      },
+      "clv_coverage": {
+        "pass": false,
+        "target": 300,
+        "observed": 7,
+        "coverage_pct": 58.33
+      },
+      "positive_clv": {
+        "pass": false,
+        "target_pct": 55.0,
+        "observed_pct": 42.857142857142854
+      },
+      "slam_coverage": {
+        "pass": false,
+        "events": [],
+        "target": 2,
+        "observed": 0
+      },
+      "settled_sample": {
+        "pass": false,
+        "target": 300,
+        "observed": 12
+      },
+      "calibration_gap": {
+        "pass": false,
+        "maximum_pp": 5.0,
+        "observed_pp": 11.387248254261523
+      },
+      "pipeline_health": {
+        "pass": false,
+        "state": "TWO_WAY_PRICES_MISSING",
+        "structural_error": true
+      },
+      "price_integrity": {
+        "pass": false,
+        "requirement": "two-way prices or a separately approved one-sided pricing policy",
+        "observed_two_way_rows": 0
+      },
+      "calibration_brier": {
+        "pass": true,
+        "maximum": 0.25,
+        "observed": 0.21437878638590643
+      },
+      "calibration_sample": {
+        "pass": false,
+        "target": 100,
+        "observed": 12
+      }
+    },
+    "record": {
+      "wins": 7,
+      "losses": 5,
+      "pushes": 0
+    },
+    "status": "COLLECTING_EVIDENCE",
+    "pending": 0,
+    "roi_pct": 52.25,
+    "settled": 12,
+    "blockers": [
+      "settled sample 12/300",
+      "Slam coverage 0/2",
+      "CLV sample 7/300",
+      "calibration sample 12/100",
+      "one-sided price feed (0 two-way rows)",
+      "pipeline health TWO_WAY_PRICES_MISSING"
+    ],
+    "by_market": [
+      {
+        "market": "aces",
+        "roi_pct": 30.0,
+        "settled": 8,
+        "pnl_units": 2.4,
+        "registered": 8
+      },
+      {
+        "market": "double_faults",
+        "roi_pct": 96.75,
+        "settled": 4,
+        "pnl_units": 3.87,
+        "registered": 4
+      }
+    ],
+    "gate_rule": "Human review only after 300 settled lines across at least two Slams, non-negative ROI, mean CLV >= +1%, positive CLV >= 55%, at least 100 calibrated win/loss rows with Brier <= 0.25 and absolute calibration gap <= 5pp, plus approved price integrity and a healthy pipeline.",
+    "pnl_units": 6.27,
+    "registered": 12,
+    "calibration": {
+      "rows": 12,
+      "brier": 0.214379,
+      "actual_hit_pct": 58.33,
+      "absolute_gap_pp": 11.39,
+      "pushes_excluded": true,
+      "predicted_hit_pct": 46.95
+    },
+    "failed_gates": [
+      "settled_sample",
+      "slam_coverage",
+      "clv_coverage",
+      "positive_clv",
+      "calibration_sample",
+      "calibration_gap",
+      "price_integrity",
+      "pipeline_health"
+    ],
+    "generated_at": "2026-08-17T21:49:27Z",
+    "staked_units": 12.0,
+    "settled_slams": [],
+    "automatic_promotion": false
+  },
+  "tennis_evidence_source": {
+    "status": "FRESH",
+    "source": "supabase",
+    "generated_at": "2026-08-17T21:49:27Z",
+    "age_days": 0.04,
+    "error": ""
+  },
+  "goalscorer_v2": {
+    "status": "research_only",
+    "variant": "v2_minutes_absolute_share_repair",
+    "parity_decision": "PASS",
+    "parity_max_delta_pp": 0.004699999999999999,
+    "signals": 41,
+    "matched_closes": 0,
+    "true_closes": 0,
+    "clv_coverage_pct": 0.0,
+    "beta_folds": 4,
+    "beta_fold_wins": 4,
+    "probability_gate": "FAIL",
+    "market_roi_gate": "UNAVAILABLE",
+    "decision": "KEEP_RESEARCH",
+    "ledger": {
+      "registered": 41,
+      "settled": 41,
+      "pending": 0,
+      "wins": 12,
+      "losses": 28,
+      "pushes_or_voids": 1,
+      "pnl_units": -1.75,
+      "staked_units": 41.0,
+      "roi_pct": -4.27
+    },
+    "freshness": {
+      "generated_at": "2026-08-17T09:22:57Z",
+      "age_days": 0.56,
+      "status": "FRESH"
+    }
+  },
+  "assist_value_v1": {
+    "label": "Assist Value V1 Research",
+    "lane_status": "FROZEN_RESEARCH",
+    "reactivation_ready": false,
+    "decision": "KEEP_FROZEN_MARKET_EVIDENCE",
+    "backtest_status": "PASS",
+    "test_rows": 44739,
+    "test_brier": 0.05555855525042199,
+    "settlement_status": "FAIL",
+    "settlement_agreement_pct": 0.0,
+    "market_status": "FAIL",
+    "market_rows": 1300,
+    "market_calendar_span_days": 8,
+    "prospective_target": 100,
+    "prospective": {
+      "registered": 0,
+      "settled": 0,
+      "pending": 0,
+      "wins": 0,
+      "losses": 0,
+      "pushes_or_voids": 0,
+      "pnl_units": 0,
+      "staked_units": 0,
+      "roi_pct": null
+    },
+    "freshness": {
+      "generated_at": "2026-08-17T22:52:41Z",
+      "age_days": 0.0,
+      "status": "FRESH"
+    },
+    "automation": {
+      "capture_schedule": "Friday-Sunday 07:10 UTC, August-May",
+      "captures_per_week": 3,
+      "max_paid_api_calls_per_run": 10,
+      "max_paid_api_calls_per_week": 30,
+      "database_reads_per_capture": 0,
+      "database_writes_per_capture": 0,
+      "lineup_refresh_reuses_captured_prices": true
+    }
+  },
+  "automation_budget": {
+    "generated_at": "2026-08-17T22:52:48Z",
+    "workflow_directory": ".effective-default-branch/.github/workflows",
+    "status": "PASS",
+    "errors": [],
+    "warnings": [],
+    "providers": {
+      "odds_api_io": {
+        "label": "Odds-API.io free plan",
+        "requests_per_hour": 100,
+        "requests_per_day": 500,
+        "bookmaker_scope": "recreational only",
+        "effective_from": "2026-07-26",
+        "source": "https://docs.odds-api.io/changelog#free-tier-changes",
+        "max_requests_in_one_hour": 58,
+        "max_requests_in_one_day": 420,
+        "max_requests_per_week": 2900,
+        "status": "PASS"
+      },
+      "api_football": {
+        "label": "API-Football free-plan allowance",
+        "requests_per_day": 100,
+        "source": "repository hard cap",
+        "max_requests_in_one_hour": 90,
+        "max_requests_in_one_day": 90,
+        "max_requests_per_week": 630,
+        "status": "PASS"
+      }
+    },
+    "github_workflows": [
+      {
+        "file": "assist-value-shadow.yml",
+        "models": [
+          "assist_v1"
+        ],
+        "season_gate": "August-May",
+        "database_mode": "none",
+        "runs_per_week_max": 3,
+        "provider_requests_per_week_max": {
+          "odds_api_io": 30
+        },
+        "db_reads_per_week_max": 0,
+        "db_writes_per_week_max": 0
+      },
+      {
+        "file": "club-penalty-weekly-evidence.yml",
+        "models": [
+          "club_penalty_evidence"
+        ],
+        "season_gate": "always",
+        "database_mode": "none",
+        "runs_per_week_max": 8,
+        "provider_requests_per_week_max": {},
+        "db_reads_per_week_max": 0,
+        "db_writes_per_week_max": 0
+      },
+      {
+        "file": "goalscorer-expected-refresh.yml",
+        "models": [
+          "goalscorer_v2",
+          "fair_odds_lab"
+        ],
+        "season_gate": "August-May with no-fixture-safe outputs",
+        "database_mode": "blob_publish_with_optional_snapshot_upload",
+        "runs_per_week_max": 7,
+        "provider_requests_per_week_max": {
+          "odds_api_io": 105
+        },
+        "db_reads_per_week_max": 0,
+        "db_writes_per_week_max": 14
+      },
+      {
+        "file": "goalscorer-hot-live.yml",
+        "models": [
+          "goalscorer_v2",
+          "fair_odds_lab"
+        ],
+        "season_gate": "fixture-window gate per league",
+        "database_mode": "close_tier_only_with_optional_snapshot_upload",
+        "runs_per_week_max": 182,
+        "provider_requests_per_week_max": {
+          "odds_api_io": 1365
+        },
+        "db_reads_per_week_max": 0,
+        "db_writes_per_week_max": 637
+      },
+      {
+        "file": "goalscorer-settlement.yml",
+        "models": [
+          "goalscorer_v2",
+          "fair_odds_lab",
+          "club_penalty_evidence"
+        ],
+        "season_gate": "August-May",
+        "database_mode": "settlement_read_with_optional_snapshot_upload",
+        "runs_per_week_max": 7,
+        "provider_requests_per_week_max": {},
+        "db_reads_per_week_max": 14,
+        "db_writes_per_week_max": 14
+      },
+      {
+        "file": "football-counts-vnext-shadow.yml",
+        "models": [
+          "team_shots_v4",
+          "corners_v3",
+          "team_fouls_f2"
+        ],
+        "season_gate": "from 2026-08-01",
+        "database_mode": "none",
+        "runs_per_week_max": 105,
+        "provider_requests_per_week_max": {
+          "odds_api_io": 1232,
+          "api_football": 630
+        },
+        "db_reads_per_week_max": 0,
+        "db_writes_per_week_max": 0
+      },
+      {
+        "file": "ops-alert-check.yml",
+        "models": [
+          "operations_health"
+        ],
+        "season_gate": "always",
+        "database_mode": "read_with_conditional_orphan_cleanup",
+        "runs_per_week_max": 168,
+        "provider_requests_per_week_max": {},
+        "db_reads_per_week_max": 336,
+        "db_writes_per_week_max": 168
+      },
+      {
+        "file": "pinnacle-capture-history.yml",
+        "models": [
+          "tennis_ml_clv",
+          "tennis_spread_clv"
+        ],
+        "season_gate": "always",
+        "database_mode": "append_only_history_and_run_status",
+        "runs_per_week_max": 336,
+        "provider_requests_per_week_max": {},
+        "db_reads_per_week_max": 0,
+        "db_writes_per_week_max": 1008
+      },
+      {
+        "file": "team-fouls-source-agreement.yml",
+        "models": [
+          "team_fouls_f2"
+        ],
+        "season_gate": "always",
+        "database_mode": "none",
+        "runs_per_week_max": 7,
+        "provider_requests_per_week_max": {},
+        "db_reads_per_week_max": 0,
+        "db_writes_per_week_max": 0
+      },
+      {
+        "file": "tennis-props-bet365-refresh.yml",
+        "models": [
+          "tennis_aces",
+          "tennis_double_faults"
+        ],
+        "season_gate": "main-tour events only",
+        "database_mode": "none",
+        "runs_per_week_max": 21,
+        "provider_requests_per_week_max": {
+          "odds_api_io": 168
+        },
+        "db_reads_per_week_max": 0,
+        "db_writes_per_week_max": 0
+      },
+      {
+        "file": "weekly-research-report.yml",
+        "models": [
+          "all_model_evidence"
+        ],
+        "season_gate": "always",
+        "database_mode": "read_only_with_local_fallback",
+        "runs_per_week_max": 1,
+        "provider_requests_per_week_max": {},
+        "db_reads_per_week_max": 6,
+        "db_writes_per_week_max": 0
+      }
+    ],
+    "database": {
+      "registered_reads_per_week_max": 356,
+      "registered_writes_per_week_max": 1841,
+      "note": "Counts are bounded workflow operations, not affected-row counts. Pinnacle history remains append-only."
+    },
+    "local_windows_tasks": [
+      {
+        "name": "IlMargine-Daily",
+        "schedule": "daily 22:30 local",
+        "models": [
+          "tennis_all"
+        ],
+        "database_mode": "quick_sync_and_append_only_clv",
+        "observed_status": "UNOBSERVED"
+      },
+      {
+        "name": "IlMargine-Daily-AM",
+        "schedule": "daily 10:05 local",
+        "models": [
+          "tennis_all"
+        ],
+        "database_mode": "quick_sync_and_append_only_clv",
+        "observed_status": "UNOBSERVED"
+      },
+      {
+        "name": "IlMargine-Tennis-Close-Capture",
+        "schedule": "daily 08:00 local",
+        "models": [
+          "tennis_clv"
+        ],
+        "database_mode": "append_only_clv",
+        "observed_status": "UNOBSERVED"
+      },
+      {
+        "name": "IlMargine-Tennis-Health-AM",
+        "schedule": "daily 11:15 local",
+        "models": [
+          "tennis_health"
+        ],
+        "database_mode": "none",
+        "observed_status": "UNOBSERVED"
+      },
+      {
+        "name": "IlMargine-Tennis-Health-PM",
+        "schedule": "daily 23:15 local",
+        "models": [
+          "tennis_health"
+        ],
+        "database_mode": "none",
+        "observed_status": "UNOBSERVED"
+      },
+      {
+        "name": "IlMargine-Weekly",
+        "schedule": "Sunday 03:00 local",
+        "models": [
+          "tennis_weekly_research"
+        ],
+        "database_mode": "full_sync_and_read_only_clv_audits",
+        "observed_status": "UNOBSERVED"
+      }
+    ]
+  },
   "status": {
     "pause_required": false,
+    "stale_models": [],
     "read": "observe_live_sample"
   }
 }
