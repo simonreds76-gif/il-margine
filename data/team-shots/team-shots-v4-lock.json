@@ -9,6 +9,13 @@
   "market_blend": "shading_aware_logit",
   "registered_market_weight": 0.18,
   "registered_over_vig_share": 0.856,
+  "input_files": {
+    "team_rolling_form": {
+      "path": "data/football-form/team-rolling-form.csv",
+      "sha256": "9b78ddcdccc49f2e034e6c622b9c8bfc8cd9d79d9f2e18ea85ea8d62412f9696",
+      "regeneration": "python scripts/build-football-form-layer.py --xg-source data/team-shots/understat/all-understat-matches.csv"
+    }
+  },
   "locked_window": "2026-2027_MD4_through_2026-11-30",
   "selection_rules": {
     "minimum_edge": 0.03,

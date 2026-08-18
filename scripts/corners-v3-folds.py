@@ -33,6 +33,7 @@ if str(SCRIPTS) not in sys.path:
 from football_counts import fit_dispersion_alpha_mle, nb_log_pmf, prob_over  # noqa: E402
 from football_team_names import football_form_team_key  # noqa: E402
 from football_market import brier, log_loss  # noqa: E402
+from model_experiment_integrity import assert_variable_columns, verify_locked_input  # noqa: E402
 
 
 DEFAULT_FORM = ROOT / "data" / "football-form" / "team-rolling-form.csv"
@@ -40,6 +41,7 @@ DEFAULT_EVENTS = ROOT / "data" / "team-shots" / "understat" / "corner-event-feat
 DEFAULT_HISTORICAL = ROOT / "data" / "corners-ou" / "historical" / "all-historical-matches.csv"
 DEFAULT_RESULTS = ROOT / "data" / "corners-ou" / "corners-v3-fold-results.csv"
 DEFAULT_REPORT = ROOT / "data" / "corners-ou" / "corners-v3-fold-report.md"
+DEFAULT_LOCK = ROOT / "data" / "corners-ou" / "corners-v3-lock.json"
 VALIDATION_SEASONS = ("2024-2025", "2025-2026")
 LINES = (7.5, 8.5, 9.5, 10.5, 11.5, 12.5)
 DECAY = 0.93
@@ -276,6 +278,7 @@ def build_samples(
 def fit_model(training: list[Sample], feature_indices: tuple[int, ...] | None = None) -> FittedModel:
     indices = feature_indices or tuple(range(len(FEATURE_NAMES)))
     selected_rows = [tuple(sample.features[index] for index in indices) for sample in training]
+    assert_variable_columns(selected_rows, [FEATURE_NAMES[index] for index in indices])
     feature_columns = list(zip(*selected_rows))
     centers = tuple(mean(column) for column in feature_columns)
     scales = tuple(max(1e-6, pstdev(column)) for column in feature_columns)
@@ -523,8 +526,10 @@ def main() -> int:
     parser.add_argument("--historical", type=Path, default=DEFAULT_HISTORICAL)
     parser.add_argument("--results", type=Path, default=DEFAULT_RESULTS)
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
+    parser.add_argument("--lock", type=Path, default=DEFAULT_LOCK)
     args = parser.parse_args()
 
+    verify_locked_input(args.lock, "team_rolling_form", args.form)
     samples, coverage = build_samples(
         load_csv(args.form),
         load_csv(args.events),
@@ -534,8 +539,8 @@ def main() -> int:
     write_csv(args.results, folds)
     write_report(args.report, coverage, folds)
     print(f"Coverage={coverage['event_coverage']:.1%}; samples={len(samples)}")
-    print(f"Wrote {args.results.relative_to(ROOT)}")
-    print(f"Wrote {args.report.relative_to(ROOT)}")
+    print(f"Wrote {args.results.resolve().relative_to(ROOT)}")
+    print(f"Wrote {args.report.resolve().relative_to(ROOT)}")
     return 0
 
 

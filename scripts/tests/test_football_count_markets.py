@@ -24,6 +24,8 @@ class FootballCountMarketTests(unittest.TestCase):
         self.assertEqual(classify_market("Player To Be Fouled"), "player_fouled")
         self.assertEqual(classify_market("Team Cards Away"), "team_cards_total")
         self.assertEqual(classify_market("Bookings Spread"), "cards_other")
+        self.assertEqual(classify_market("Goalkeeper Saves"), "player_saves")
+        self.assertEqual(classify_market("Team Saves Home"), "team_saves_total")
 
     def test_detects_paired_prices_in_both_provider_shapes(self) -> None:
         combined = {"name": "Team Fouls Home", "odds": [{"hdp": 11.5, "over": "1.90", "under": "1.90"}]}

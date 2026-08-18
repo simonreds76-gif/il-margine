@@ -59,6 +59,13 @@ def classify_market(name: object) -> str:
             return "match_cards_total"
         return "cards_other"
 
+    if "save" in text or "saves" in text:
+        if "goalkeeper" in text or is_player:
+            return "player_saves"
+        if is_team and not is_non_total:
+            return "team_saves_total"
+        return "saves_other"
+
     if "corner" in text:
         return "corners_control"
     if "shot" in text:
