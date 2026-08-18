@@ -1,286 +1,6 @@
 {
   "fixtures": [
     {
-      "fotmob_match_id": 5868014,
-      "fotmob_page_url": "/matches/deportivo-coruna-vs-elche/3bp0b9#5868014",
-      "home_fotmob_team_id": 9783,
-      "away_fotmob_team_id": 10268,
-      "match_date": "2026-08-17",
-      "kickoff_utc": "2026-08-17T19:00:00Z",
-      "home_team": "Deportivo A Coruña",
-      "away_team": "Elche",
-      "home_status": "Confirmed Lineup",
-      "away_status": "Confirmed Lineup",
-      "lineup_type": "standard",
-      "home_formation": "4-4-2",
-      "away_formation": "5-4-1",
-      "home_players": [
-        "Leo Román",
-        "Ximo Navarro",
-        "Lucas Noubi",
-        "Bright Ede",
-        "Giacomo Quagliata",
-        "Adrià Altimira",
-        "Mario Soriano",
-        "Lorenzo Amatucci",
-        "Jonathan Asp",
-        "Pierre-Emerick Aubameyang",
-        "Bil Nsongo"
-      ],
-      "away_players": [
-        "Matías Dituro",
-        "David Affengruber",
-        "Federico Redondo",
-        "Víctor Chust",
-        "Buba Sangaré",
-        "Germán Valera",
-        "Martim Neto",
-        "Gonzalo Villar",
-        "Marc Aguado",
-        "Ali Houary",
-        "Fer Niño"
-      ],
-      "home_starters": [
-        {
-          "name": "Leo Román",
-          "line_index": -1,
-          "line_size": 1,
-          "role_score": 0,
-          "role_group": "GK",
-          "formation": "4-4-2",
-          "position_id": 11
-        },
-        {
-          "name": "Ximo Navarro",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-4-2",
-          "position_id": 32
-        },
-        {
-          "name": "Lucas Noubi",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-4-2",
-          "position_id": 34
-        },
-        {
-          "name": "Bright Ede",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-4-2",
-          "position_id": 36
-        },
-        {
-          "name": "Giacomo Quagliata",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-4-2",
-          "position_id": 38
-        },
-        {
-          "name": "Adrià Altimira",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 72
-        },
-        {
-          "name": "Mario Soriano",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 74
-        },
-        {
-          "name": "Lorenzo Amatucci",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 76
-        },
-        {
-          "name": "Jonathan Asp",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 78
-        },
-        {
-          "name": "Pierre-Emerick Aubameyang",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-4-2",
-          "position_id": 104
-        },
-        {
-          "name": "Bil Nsongo",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-4-2",
-          "position_id": 106
-        }
-      ],
-      "away_starters": [
-        {
-          "name": "Matías Dituro",
-          "line_index": -1,
-          "line_size": 1,
-          "role_score": 0,
-          "role_group": "GK",
-          "formation": "5-4-1",
-          "position_id": 11
-        },
-        {
-          "name": "David Affengruber",
-          "line_index": 0,
-          "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-4-1",
-          "position_id": 33
-        },
-        {
-          "name": "Federico Redondo",
-          "line_index": 0,
-          "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-4-1",
-          "position_id": 35
-        },
-        {
-          "name": "Víctor Chust",
-          "line_index": 0,
-          "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-4-1",
-          "position_id": 37
-        },
-        {
-          "name": "Buba Sangaré",
-          "line_index": 0,
-          "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-4-1",
-          "position_id": 51
-        },
-        {
-          "name": "Germán Valera",
-          "line_index": 0,
-          "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-4-1",
-          "position_id": 59
-        },
-        {
-          "name": "Martim Neto",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "5-4-1",
-          "position_id": 72
-        },
-        {
-          "name": "Gonzalo Villar",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "5-4-1",
-          "position_id": 74
-        },
-        {
-          "name": "Marc Aguado",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "5-4-1",
-          "position_id": 76
-        },
-        {
-          "name": "Ali Houary",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "5-4-1",
-          "position_id": 78
-        },
-        {
-          "name": "Fer Niño",
-          "line_index": 2,
-          "line_size": 1,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "5-4-1",
-          "position_id": 115
-        }
-      ],
-      "home_subs": [
-        "Álvaro Fernández",
-        "Germán Parreno",
-        "Arnau Comas",
-        "Miguel Loureiro",
-        "Angeliño",
-        "Diego Villares",
-        "Luismi Cruz",
-        "Riki Rodríguez",
-        "Teun Gijselhart",
-        "David Mella",
-        "Kevin Sánchez",
-        "Zakaria Eddahchouri"
-      ],
-      "away_subs": [
-        "Alejandro Iturbe",
-        "Bambo Diaby",
-        "Matia Barzic",
-        "Pedro Bigas",
-        "Facundo Buonanotte",
-        "Javi Morcillo",
-        "Alvaro Padilla",
-        "Ezequiel Ponce",
-        "Josan",
-        "Lucas Cepeda",
-        "Nordin",
-        "Tete Morente",
-        "Umaru Konare"
-      ],
-      "home_unavailable": [
-        "Noé",
-        "Yeremay Hernández"
-      ],
-      "away_unavailable": [
-        "Grady Diangana",
-        "Yago Santiago"
-      ]
-    },
-    {
       "fotmob_match_id": 5868012,
       "fotmob_page_url": "/matches/malaga-vs-atletico-madrid/38d3a9#5868012",
       "home_fotmob_team_id": 9906,
@@ -530,11 +250,261 @@
         "Alexander Sørloth"
       ],
       "away_unavailable": [
-        "Adrián Nino",
         "Diego Murillo",
         "Fernando Calero",
         "Aarón Ochoa",
-        "Carlos Dotor"
+        "Carlos Dotor",
+        "Adrián Nino"
+      ]
+    },
+    {
+      "fotmob_match_id": 5868029,
+      "fotmob_page_url": "/matches/rayo-vallecano-vs-deportivo-alaves/2r09ww#5868029",
+      "home_fotmob_team_id": 8370,
+      "away_fotmob_team_id": 9866,
+      "match_date": "2026-08-20",
+      "kickoff_utc": "2026-08-20T19:00:00Z",
+      "home_team": "Rayo Vallecano",
+      "away_team": "Deportivo Alaves",
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "4-2-3-1",
+      "away_formation": "3-5-2",
+      "home_players": [
+        "Augusto Batalla",
+        "Andrei Ratiu",
+        "Florian Lejeune",
+        "Pathé Ciss",
+        "Iván Balliu",
+        "Óscar Valentín",
+        "Unai López",
+        "Jorge de Frutos",
+        "Isi Palazón",
+        "Álvaro Garcia",
+        "Randy Nteka"
+      ],
+      "away_players": [
+        "Antonio Sivera",
+        "Nahuel Tenaglia",
+        "Ville Koski",
+        "Jonny Otto",
+        "Ángel Pérez",
+        "Pablo Ibánez",
+        "Antonio Blanco",
+        "Denis Suárez",
+        "Abderrahman Rebbach",
+        "Toni Martínez",
+        "Aitor Mañas"
+      ],
+      "home_starters": [
+        {
+          "name": "Augusto Batalla",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11
+        },
+        {
+          "name": "Andrei Ratiu",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32
+        },
+        {
+          "name": "Florian Lejeune",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34
+        },
+        {
+          "name": "Pathé Ciss",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36
+        },
+        {
+          "name": "Iván Balliu",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38
+        },
+        {
+          "name": "Óscar Valentín",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64
+        },
+        {
+          "name": "Unai López",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66
+        },
+        {
+          "name": "Jorge de Frutos",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83
+        },
+        {
+          "name": "Isi Palazón",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85
+        },
+        {
+          "name": "Álvaro Garcia",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87
+        },
+        {
+          "name": "Randy Nteka",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Antonio Sivera",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-5-2",
+          "position_id": 11
+        },
+        {
+          "name": "Nahuel Tenaglia",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 33
+        },
+        {
+          "name": "Ville Koski",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 35
+        },
+        {
+          "name": "Jonny Otto",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 37
+        },
+        {
+          "name": "Ángel Pérez",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 71
+        },
+        {
+          "name": "Pablo Ibánez",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 73
+        },
+        {
+          "name": "Antonio Blanco",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 75
+        },
+        {
+          "name": "Denis Suárez",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 77
+        },
+        {
+          "name": "Abderrahman Rebbach",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 79
+        },
+        {
+          "name": "Toni Martínez",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 104
+        },
+        {
+          "name": "Aitor Mañas",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 106
+        }
+      ],
+      "home_subs": [],
+      "away_subs": [],
+      "home_unavailable": [],
+      "away_unavailable": [
+        "Facundo Garcés",
+        "Lucas Boyé"
       ]
     }
   ]
