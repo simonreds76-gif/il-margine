@@ -164,8 +164,8 @@ try {
         Log "WARNING: 32-bit Python not found at $py32, skipping extract"
     }
 
-    Log "=== Step 2/8: Supabase sync (--quick --skip-players) ==="
-    $supabaseSyncExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\oncourt-load-supabase.py", "--quick", "--skip-players") -Label "Supabase quick sync" -TimeoutSeconds $supabaseSyncTimeoutSeconds
+    Log "=== Step 2/8: Supabase sync (--quick --current-players) ==="
+    $supabaseSyncExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\oncourt-load-supabase.py", "--quick", "--current-players") -Label "Supabase quick current-player sync" -TimeoutSeconds $supabaseSyncTimeoutSeconds
     if ($supabaseSyncExit -ne 0) {
         Log "ERROR: Supabase sync failed (exit $supabaseSyncExit)"
         if ($supabaseSyncExit -eq 124) {

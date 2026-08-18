@@ -4,6 +4,7 @@ Phase 1.3: Load OnCourt CSVs into Supabase via PostgREST API.
 Usage:
   python scripts/oncourt-load-supabase.py          # full load (first time)
   python scripts/oncourt-load-supabase.py --quick   # daily: players/tours/today only
+  python scripts/oncourt-load-supabase.py --quick --current-players  # daily: current fixture players/tours/today
   python scripts/oncourt-load-supabase.py --quick --skip-players  # daily: tours/today only
   python scripts/oncourt-load-supabase.py --recent  # last 365 days of games/stat
   python scripts/oncourt-load-supabase.py --batch 10000   # larger batches (faster, may hit limits)
@@ -41,6 +42,7 @@ HAND_SOURCE_CANDIDATES = (
 QUICK = "--quick" in sys.argv
 RECENT = "--recent" in sys.argv
 SKIP_PLAYERS = "--skip-players" in sys.argv
+CURRENT_PLAYERS_ONLY = "--current-players" in sys.argv
 RECENT_DAYS = 365
 
 # Batch size: 5k default. Try --batch 10000 for faster loads (Supabase may allow up to 10k).
@@ -89,6 +91,17 @@ def load_csv(path):
         return []
     with open(path, "r", encoding="utf-8") as f:
         return list(csv.DictReader(f))
+
+
+def current_fixture_player_rows(players_rows, today_rows):
+    """Return the player records referenced by the current OnCourt fixture export."""
+    current_ids = {
+        str(row.get(field) or "").strip()
+        for row in today_rows
+        for field in ("player1_id", "player2_id")
+        if str(row.get(field) or "").strip()
+    }
+    return [row for row in players_rows if str(row.get("id") or "").strip() in current_ids]
 
 
 def _headers():
@@ -463,11 +476,16 @@ def main():
         print("ERROR: SUPABASE_SERVICE_ROLE_KEY is required for OnCourt writes.")
         print("  Refusing to fall back to the anon key because RLS blocks inserts/upserts.")
         sys.exit(1)
+    if SKIP_PLAYERS and CURRENT_PLAYERS_ONLY:
+        print("ERROR: --skip-players and --current-players cannot be used together.")
+        sys.exit(2)
 
     key_type = "service_role"
     mode = "QUICK (players/tours/today only)" if QUICK else "RECENT (last 365d games/stat)" if RECENT else "FULL"
     if SKIP_PLAYERS:
         mode += " + SKIP_PLAYERS"
+    elif CURRENT_PLAYERS_ONLY:
+        mode += " + CURRENT_PLAYERS_ONLY"
     print(f"  Supabase: {SUPABASE_URL[:40]}... (key: {key_type})")
     print(f"  Mode: {mode}  |  Batch: {BATCH:,}")
     print()
@@ -486,9 +504,14 @@ def main():
     if SKIP_PLAYERS:
         print("  oncourt_players: SKIPPED (--skip-players)")
     else:
+        players_rows = load_csv(DATA_DIR / "players_atp.csv")
+        if CURRENT_PLAYERS_ONLY:
+            today_rows = load_csv(DATA_DIR / "today_atp.csv")
+            players_rows = current_fixture_player_rows(players_rows, today_rows)
+            print(f"  oncourt_players: selected {len(players_rows):,} current fixture players")
         _upload_batched(
             "oncourt_players",
-            load_csv(DATA_DIR / "players_atp.csv"),
+            players_rows,
             "id",
             lambda r: {
                 "id": _safe_int(r["id"]),
