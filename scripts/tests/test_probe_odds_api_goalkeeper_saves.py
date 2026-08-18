@@ -29,6 +29,18 @@ class GoalkeeperSavesMarketProbeTests(unittest.TestCase):
         self.assertIsNotNone(selected)
         self.assertEqual(selected["id"], "epl")
 
+    def test_choose_event_rejects_irrelevant_fixture(self) -> None:
+        selected = MODULE.choose_event(
+            [
+                {
+                    "id": "regional",
+                    "date": "2026-08-18T09:00:00Z",
+                    "league": {"name": "Australia Northern Territory Premier League Women"},
+                }
+            ]
+        )
+        self.assertIsNone(selected)
+
     def test_extracts_paired_goalkeeper_save_lines_only(self) -> None:
         payload = [
             {

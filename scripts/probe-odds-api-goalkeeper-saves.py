@@ -24,17 +24,12 @@ ROOT = Path(__file__).resolve().parents[1]
 BASE_URL = "https://api.odds-api.io/v3"
 DEFAULT_JSON = ROOT / "data" / "goalkeeper-saves" / "gk-saves-market-probe.json"
 DEFAULT_REPORT = ROOT / "data" / "goalkeeper-saves" / "gk-saves-market-probe.md"
-PREFERRED_LEAGUE_TOKENS = (
-    "premier league",
-    "england",
-    "serie a",
-    "italy",
-    "la liga",
-    "spain",
-    "bundesliga",
-    "germany",
-    "ligue 1",
-    "france",
+PREFERRED_LEAGUE_PATTERNS = (
+    ("england", "premier league"),
+    ("italy", "serie a"),
+    ("spain", "la liga"),
+    ("germany", "bundesliga"),
+    ("france", "ligue 1"),
 )
 
 
@@ -65,15 +60,21 @@ def event_league_name(event: dict[str, Any]) -> str:
 
 
 def choose_event(events: list[dict[str, Any]]) -> dict[str, Any] | None:
-    candidates = [event for event in events if event.get("id")]
+    candidates = [
+        event
+        for event in events
+        if event.get("id")
+        and any(
+            all(token in event_league_name(event).lower() for token in pattern)
+            for pattern in PREFERRED_LEAGUE_PATTERNS
+        )
+    ]
     if not candidates:
         return None
 
-    def rank(event: dict[str, Any]) -> tuple[int, str]:
-        league = event_league_name(event).lower()
-        preferred = int(not any(token in league for token in PREFERRED_LEAGUE_TOKENS))
+    def rank(event: dict[str, Any]) -> str:
         kickoff = str(event.get("date") or event.get("startTime") or "9999")
-        return preferred, kickoff
+        return kickoff
 
     return min(candidates, key=rank)
 
@@ -208,8 +209,8 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
             status = "GOALKEEPER_SAVE_MARKET_UNPAIRED"
             decision = "Market labels exist, but paired over/under lines are unproven; the market gate remains blocked."
         elif not event_ids:
-            status = "NO_PENDING_EVENTS"
-            decision = "No pending fixtures were available; rerun the bounded probe during an active fixture window."
+            status = "NO_TOP_FIVE_EVENT"
+            decision = "No top-five-league fixture was available in the discovery window; no irrelevant event was probed."
         else:
             status = "NO_GOALKEEPER_SAVE_MARKET_RETURNED"
             decision = "Bet365 goalkeeper-save prices were not returned in this sample; the market gate remains blocked."
@@ -248,7 +249,7 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--bookmaker", default="Bet365")
-    parser.add_argument("--days-ahead", type=int, default=3)
+    parser.add_argument("--days-ahead", type=int, default=14)
     parser.add_argument("--max-events", type=int, default=10)
     parser.add_argument("--event-id", action="append", default=[])
     parser.add_argument("--env-file", type=Path)
