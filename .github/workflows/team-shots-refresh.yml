@@ -2,6 +2,15 @@ name: Team Shots Refresh
 
 on:
   workflow_dispatch:
+    inputs:
+      task:
+        description: "Manual research task"
+        required: true
+        default: "full_refresh"
+        type: choice
+        options:
+          - full_refresh
+          - goalkeeper_saves_probe
 
 permissions:
   contents: write
@@ -12,6 +21,7 @@ concurrency:
 
 jobs:
   refresh:
+    if: inputs.task != 'goalkeeper_saves_probe'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -128,4 +138,36 @@ jobs:
           fi
           git commit -m "chore: hosted team shots refresh"
           bash scripts/ci-safe-push.sh golden-with-speed-insights
+
+  goalkeeper_saves_probe:
+    if: inputs.task == 'goalkeeper_saves_probe'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install Python dependency
+        run: pip install requests
+
+      - name: Probe Bet365 goalkeeper-save market structure
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          ODDS_API_IO_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python scripts/probe-odds-api-goalkeeper-saves.py --bookmaker Bet365 --max-events 10
+
+      - name: Upload goalkeeper-save market probe
+        uses: actions/upload-artifact@v4
+        with:
+          name: goalkeeper-saves-market-probe
+          path: |
+            data/goalkeeper-saves/gk-saves-market-probe.json
+            data/goalkeeper-saves/gk-saves-market-probe.md
 

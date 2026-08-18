@@ -40,12 +40,14 @@ from football_market import (  # noqa: E402
     log_loss,
     shading_aware_devig,
 )
+from model_experiment_integrity import verify_locked_input  # noqa: E402
 
 
 DEFAULT_FORM = ROOT / "data" / "football-form" / "team-rolling-form.csv"
 DEFAULT_ODDS = ROOT / "data" / "team-shots" / "team-shots-odds-history.csv"
 DEFAULT_RESULTS = ROOT / "data" / "team-shots" / "team-shots-v4-fold-results.csv"
 DEFAULT_REPORT = ROOT / "data" / "team-shots" / "team-shots-v4-fold-report.md"
+DEFAULT_LOCK = ROOT / "data" / "team-shots" / "team-shots-v4-lock.json"
 VALIDATION_SEASONS = ("2024-2025", "2025-2026")
 TEAM_PRIOR_WEIGHT = 60
 LINES = (9.5, 10.5, 11.5, 12.5, 13.5, 14.5, 15.5)
@@ -542,8 +544,10 @@ def main() -> int:
     parser.add_argument("--odds", type=Path, default=DEFAULT_ODDS)
     parser.add_argument("--results", type=Path, default=DEFAULT_RESULTS)
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
+    parser.add_argument("--lock", type=Path, default=DEFAULT_LOCK)
     args = parser.parse_args()
 
+    verify_locked_input(args.lock, "team_rolling_form", args.form)
     predictions = build_predictions(load_csv(args.form))
     summaries: list[dict[str, Any]] = []
     for season in VALIDATION_SEASONS:
@@ -553,8 +557,8 @@ def main() -> int:
     write_results(args.results, summary_csv_rows(summaries))
     write_report(args.report, summaries, market)
     print(f"Predictions: {len(predictions)}")
-    print(f"Wrote {args.results.relative_to(ROOT)}")
-    print(f"Wrote {args.report.relative_to(ROOT)}")
+    print(f"Wrote {args.results.resolve().relative_to(ROOT)}")
+    print(f"Wrote {args.report.resolve().relative_to(ROOT)}")
     return 0
 
 

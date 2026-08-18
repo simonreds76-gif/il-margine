@@ -1,0 +1,36 @@
+{
+  "candidate": "goalkeeper-saves-v1-nb2-confirmed-starter",
+  "distribution": "nb2",
+  "do_not_sell": true,
+  "ema_decay": 0.93,
+  "ema_window": 20,
+  "experiment": "goalkeeper_saves_v1",
+  "history_gate": 6,
+  "input_files": {
+    "historical": {
+      "path": "data\\corners-ou\\historical\\all-historical-matches.csv",
+      "sha256": "a9936bf7bc86891618628eb10903e2c6708ca74efd0cee6740240da4e02e6e9e"
+    },
+    "team_rolling_form": {
+      "path": "data\\football-form\\team-rolling-form.csv",
+      "sha256": "9b78ddcdccc49f2e034e6c622b9c8bfc8cd9d79d9f2e18ea85ea8d62412f9696"
+    }
+  },
+  "lines": [
+    1.5,
+    2.5,
+    3.5,
+    4.5,
+    5.5
+  ],
+  "live_routing": false,
+  "promotion_gates": {
+    "beat_devigged_market_brier_and_log_loss": true,
+    "mean_true_close_clv": 0.005,
+    "settled_real_price_selections": 150,
+    "true_close_coverage": 0.7
+  },
+  "publication_gate": "confirmed_starting_goalkeeper_only",
+  "status": "research_count_gate_only",
+  "target": "team_saves_equals_opponent_sot_minus_opponent_goals"
+}
