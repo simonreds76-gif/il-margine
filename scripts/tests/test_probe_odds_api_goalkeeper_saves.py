@@ -7,6 +7,8 @@ from pathlib import Path
 
 
 SCRIPTS = Path(__file__).resolve().parents[1]
+if str(SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS))
 MODULE_PATH = SCRIPTS / "probe-odds-api-goalkeeper-saves.py"
 SPEC = importlib.util.spec_from_file_location("probe_odds_api_goalkeeper_saves", MODULE_PATH)
 if SPEC is None or SPEC.loader is None:
@@ -17,6 +19,16 @@ SPEC.loader.exec_module(MODULE)
 
 
 class GoalkeeperSavesMarketProbeTests(unittest.TestCase):
+    def test_choose_event_prefers_top_five_league(self) -> None:
+        selected = MODULE.choose_event(
+            [
+                {"id": "minor", "date": "2026-08-18T09:00:00Z", "league": {"name": "Other League"}},
+                {"id": "epl", "date": "2026-08-18T19:00:00Z", "league": {"name": "England Premier League"}},
+            ]
+        )
+        self.assertIsNotNone(selected)
+        self.assertEqual(selected["id"], "epl")
+
     def test_extracts_paired_goalkeeper_save_lines_only(self) -> None:
         payload = [
             {

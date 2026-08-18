@@ -24,6 +24,18 @@ ROOT = Path(__file__).resolve().parents[1]
 BASE_URL = "https://api.odds-api.io/v3"
 DEFAULT_JSON = ROOT / "data" / "goalkeeper-saves" / "gk-saves-market-probe.json"
 DEFAULT_REPORT = ROOT / "data" / "goalkeeper-saves" / "gk-saves-market-probe.md"
+PREFERRED_LEAGUE_TOKENS = (
+    "premier league",
+    "england",
+    "serie a",
+    "italy",
+    "la liga",
+    "spain",
+    "bundesliga",
+    "germany",
+    "ligue 1",
+    "france",
+)
 
 
 def load_env(path: Path | None = None) -> None:
@@ -43,6 +55,27 @@ def request_json(path: str, params: dict[str, Any]) -> Any:
     response = requests.get(f"{BASE_URL}{path}", params=params, timeout=45)
     response.raise_for_status()
     return response.json()
+
+
+def event_league_name(event: dict[str, Any]) -> str:
+    league = event.get("league") or ""
+    if isinstance(league, dict):
+        return str(league.get("name") or league.get("slug") or "").strip()
+    return str(league).strip()
+
+
+def choose_event(events: list[dict[str, Any]]) -> dict[str, Any] | None:
+    candidates = [event for event in events if event.get("id")]
+    if not candidates:
+        return None
+
+    def rank(event: dict[str, Any]) -> tuple[int, str]:
+        league = event_league_name(event).lower()
+        preferred = int(not any(token in league for token in PREFERRED_LEAGUE_TOKENS))
+        kickoff = str(event.get("date") or event.get("startTime") or "9999")
+        return preferred, kickoff
+
+    return min(candidates, key=rank)
 
 
 def goalkeeper_save_markets(payload: list[dict[str, Any]]) -> dict[str, Any]:
@@ -132,6 +165,7 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
 
     requests_used = 0
     event_ids = [str(value).strip() for value in args.event_id if str(value).strip()]
+    selected_event: dict[str, Any] | None = None
     try:
         if not event_ids:
             now = datetime.now(UTC)
@@ -151,17 +185,16 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
             )
             requests_used += 1
             events = discovered if isinstance(discovered, list) else []
-            event_ids = [str(event.get("id")) for event in events if event.get("id")][
-                : max(1, min(10, args.max_events))
-            ]
+            selected_event = choose_event(events)
+            event_ids = [str(selected_event.get("id"))] if selected_event else []
 
         odds_payload: list[dict[str, Any]] = []
         if event_ids:
             odds = request_json(
-                "/odds/multi",
+                "/odds",
                 {
                     "apiKey": api_key,
-                    "eventIds": ",".join(event_ids[:10]),
+                    "eventId": event_ids[0],
                     "bookmakers": args.bookmaker,
                 },
             )
@@ -192,9 +225,18 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
         raise RuntimeError(f"Request budget breached: {requests_used}/2")
     return {
         "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
-        "endpoint": "/v3/odds/multi",
+        "endpoint": "/v3/odds",
         "bookmaker": args.bookmaker,
-        "events_probed": len(event_ids[:10]),
+        "events_probed": min(1, len(event_ids)),
+        "selected_event": {
+            "id": str(selected_event.get("id") or ""),
+            "league": event_league_name(selected_event),
+            "home": str(selected_event.get("home") or ""),
+            "away": str(selected_event.get("away") or ""),
+            "date": str(selected_event.get("date") or selected_event.get("startTime") or ""),
+        }
+        if selected_event
+        else {"id": event_ids[0] if event_ids else ""},
         "requests_used": requests_used,
         "status": status,
         "observed": observed,
