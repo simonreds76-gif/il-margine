@@ -28,9 +28,11 @@ PREFERRED_LEAGUE_PATTERNS = (
     ("england", "premier league"),
     ("italy", "serie a"),
     ("spain", "la liga"),
+    ("spain", "laliga"),
     ("germany", "bundesliga"),
     ("france", "ligue 1"),
 )
+EXCLUDED_LEAGUE_TOKENS = ("amateur", "women", "u21", "u23", "youth", "reserve", "cup")
 
 
 def load_env(path: Path | None = None) -> None:
@@ -60,14 +62,16 @@ def event_league_name(event: dict[str, Any]) -> str:
 
 
 def choose_event(events: list[dict[str, Any]]) -> dict[str, Any] | None:
+    def supported(event: dict[str, Any]) -> bool:
+        league = event_league_name(event).lower()
+        if any(token in league for token in EXCLUDED_LEAGUE_TOKENS):
+            return False
+        return any(all(token in league for token in pattern) for pattern in PREFERRED_LEAGUE_PATTERNS)
+
     candidates = [
         event
         for event in events
-        if event.get("id")
-        and any(
-            all(token in event_league_name(event).lower() for token in pattern)
-            for pattern in PREFERRED_LEAGUE_PATTERNS
-        )
+        if event.get("id") and supported(event)
     ]
     if not candidates:
         return None

@@ -30,16 +30,20 @@ class GoalkeeperSavesMarketProbeTests(unittest.TestCase):
         self.assertEqual(selected["id"], "epl")
 
     def test_choose_event_rejects_irrelevant_fixture(self) -> None:
-        selected = MODULE.choose_event(
-            [
-                {
-                    "id": "regional",
-                    "date": "2026-08-18T09:00:00Z",
-                    "league": {"name": "Australia Northern Territory Premier League Women"},
-                }
-            ]
-        )
-        self.assertIsNone(selected)
+        for league in (
+            "Australia Northern Territory Premier League Women",
+            "England Amateur - U21 Premier League Cup, Group C",
+        ):
+            selected = MODULE.choose_event(
+                [
+                    {
+                        "id": "regional",
+                        "date": "2026-08-18T09:00:00Z",
+                        "league": {"name": league},
+                    }
+                ]
+            )
+            self.assertIsNone(selected)
 
     def test_extracts_paired_goalkeeper_save_lines_only(self) -> None:
         payload = [
