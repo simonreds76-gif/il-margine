@@ -67,7 +67,38 @@ class GoalkeeperSavesMarketProbeTests(unittest.TestCase):
         self.assertEqual(observed["market_labels"], ["Bet365: Goalkeeper Saves"])
         self.assertEqual(observed["events_with_goalkeeper_saves"], 1)
         self.assertEqual([row["line"] for row in observed["paired_lines"]], [3.5, 2.5])
+        self.assertEqual([row["line"] for row in observed["over_lines"]], [3.5, 2.5])
         self.assertIn("over", observed["structures"][0]["prop_keys"])
+
+    def test_extracts_over_only_goalkeeper_save_prices(self) -> None:
+        payload = [
+            {
+                "id": "fixture-3",
+                "bookmakers": {
+                    "Bet365": [
+                        {
+                            "name": "Goalkeeper Saves",
+                            "odds": [{"label": "Keeper A", "hdp": 3.5, "over": "1.83"}],
+                        }
+                    ]
+                },
+            }
+        ]
+        observed = MODULE.goalkeeper_save_markets(payload)
+        self.assertEqual(observed["paired_lines"], [])
+        self.assertEqual(
+            observed["over_lines"],
+            [
+                {
+                    "event_id": "fixture-3",
+                    "bookmaker": "Bet365",
+                    "market_name": "Goalkeeper Saves",
+                    "player": "Keeper A",
+                    "line": 3.5,
+                    "over_price": 1.83,
+                }
+            ],
+        )
 
     def test_unpaired_label_does_not_open_market_gate(self) -> None:
         payload = [

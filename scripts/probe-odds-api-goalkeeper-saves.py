@@ -87,6 +87,7 @@ def goalkeeper_save_markets(payload: list[dict[str, Any]]) -> dict[str, Any]:
     labels: set[str] = set()
     events: set[str] = set()
     paired_lines: list[dict[str, Any]] = []
+    over_lines: list[dict[str, Any]] = []
     structures: list[dict[str, Any]] = []
     for event in payload:
         event_id = str(event.get("id") or "")
@@ -113,6 +114,24 @@ def goalkeeper_save_markets(payload: list[dict[str, Any]]) -> dict[str, Any]:
                         ],
                     }
                 )
+                for prop in props:
+                    try:
+                        line = float(prop.get("hdp"))
+                        price = float(prop.get("over"))
+                    except (TypeError, ValueError):
+                        continue
+                    if price <= 1.0:
+                        continue
+                    over_lines.append(
+                        {
+                            "event_id": event_id,
+                            "bookmaker": str(bookmaker),
+                            "market_name": name,
+                            "player": str(prop.get("label") or prop.get("name") or "").strip(),
+                            "line": line,
+                            "over_price": price,
+                        }
+                    )
                 for line, sides in sides_by_line.items():
                     if {"over", "under"}.issubset(sides):
                         paired_lines.append(
@@ -127,6 +146,7 @@ def goalkeeper_save_markets(payload: list[dict[str, Any]]) -> dict[str, Any]:
         "market_labels": sorted(labels),
         "events_with_goalkeeper_saves": len(events),
         "paired_lines": paired_lines,
+        "over_lines": over_lines,
         "structures": structures,
     }
 
@@ -149,6 +169,9 @@ def render(payload: dict[str, Any]) -> str:
     lines.extend(f"- {label}" for label in labels)
     if not labels:
         lines.append("- None in this bounded sample.")
+    if observed.get("over_lines"):
+        lines.append("")
+        lines.append(f"Over-only player lines returned: {len(observed['over_lines'])}.")
     lines.extend(
         [
             "",
@@ -209,6 +232,9 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
         if observed["paired_lines"]:
             status = "PAIRED_GOALKEEPER_SAVE_PRICES_RETURNED"
             decision = "Implement prospective capture and settlement after player identity and line scope are verified."
+        elif observed["over_lines"]:
+            status = "OVER_ONLY_GOALKEEPER_SAVE_PRICES_RETURNED"
+            decision = "Implement prospective Over-only capture; keep signals blocked until player identity, live features and confirmed starters are verified."
         elif observed["market_labels"]:
             status = "GOALKEEPER_SAVE_MARKET_UNPAIRED"
             decision = "Market labels exist, but paired over/under lines are unproven; the market gate remains blocked."
