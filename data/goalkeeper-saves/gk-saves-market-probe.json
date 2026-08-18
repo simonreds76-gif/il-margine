@@ -1,0 +1,127 @@
+{
+  "bookmaker": "Bet365",
+  "decision": "Implement prospective Over-only capture; keep signals blocked until player identity, live features and confirmed starters are verified.",
+  "endpoint": "/v3/odds",
+  "error": null,
+  "events_probed": 1,
+  "generated_at": "2026-08-18T07:32:24Z",
+  "observed": {
+    "events_with_goalkeeper_saves": 1,
+    "market_labels": [
+      "Bet365: Goalkeeper Saves"
+    ],
+    "over_lines": [
+      {
+        "bookmaker": "Bet365",
+        "event_id": "72478448",
+        "line": 1.5,
+        "market_name": "Goalkeeper Saves",
+        "over_price": 1.062,
+        "player": "Alfonso Herrero"
+      },
+      {
+        "bookmaker": "Bet365",
+        "event_id": "72478448",
+        "line": 2.5,
+        "market_name": "Goalkeeper Saves",
+        "over_price": 1.25,
+        "player": "Alfonso Herrero"
+      },
+      {
+        "bookmaker": "Bet365",
+        "event_id": "72478448",
+        "line": 3.5,
+        "market_name": "Goalkeeper Saves",
+        "over_price": 1.615,
+        "player": "Alfonso Herrero"
+      },
+      {
+        "bookmaker": "Bet365",
+        "event_id": "72478448",
+        "line": 4.5,
+        "market_name": "Goalkeeper Saves",
+        "over_price": 2.375,
+        "player": "Alfonso Herrero"
+      },
+      {
+        "bookmaker": "Bet365",
+        "event_id": "72478448",
+        "line": 5.5,
+        "market_name": "Goalkeeper Saves",
+        "over_price": 4.0,
+        "player": "Alfonso Herrero"
+      },
+      {
+        "bookmaker": "Bet365",
+        "event_id": "72478448",
+        "line": 6.5,
+        "market_name": "Goalkeeper Saves",
+        "over_price": 7.0,
+        "player": "Alfonso Herrero"
+      },
+      {
+        "bookmaker": "Bet365",
+        "event_id": "72478448",
+        "line": 0.5,
+        "market_name": "Goalkeeper Saves",
+        "over_price": 1.166,
+        "player": "Jan Oblak"
+      },
+      {
+        "bookmaker": "Bet365",
+        "event_id": "72478448",
+        "line": 1.5,
+        "market_name": "Goalkeeper Saves",
+        "over_price": 1.8,
+        "player": "Jan Oblak"
+      },
+      {
+        "bookmaker": "Bet365",
+        "event_id": "72478448",
+        "line": 2.5,
+        "market_name": "Goalkeeper Saves",
+        "over_price": 3.5,
+        "player": "Jan Oblak"
+      },
+      {
+        "bookmaker": "Bet365",
+        "event_id": "72478448",
+        "line": 3.5,
+        "market_name": "Goalkeeper Saves",
+        "over_price": 8.0,
+        "player": "Jan Oblak"
+      }
+    ],
+    "paired_lines": [],
+    "structures": [
+      {
+        "bookmaker": "Bet365",
+        "event_id": "72478448",
+        "market_name": "Goalkeeper Saves",
+        "odds_count": 10,
+        "prop_keys": [
+          "hdp",
+          "label",
+          "over"
+        ],
+        "sample_labels": [
+          "Alfonso Herrero",
+          "Alfonso Herrero",
+          "Alfonso Herrero",
+          "Alfonso Herrero",
+          "Alfonso Herrero",
+          "Alfonso Herrero"
+        ]
+      }
+    ]
+  },
+  "requests_used": 2,
+  "selected_event": {
+    "away": "Malaga CF",
+    "date": "2026-08-19T19:00:00Z",
+    "home": "Atletico Madrid",
+    "id": "72478448",
+    "league": "Spain - LaLiga"
+  },
+  "status": "OVER_ONLY_GOALKEEPER_SAVE_PRICES_RETURNED"
+}
