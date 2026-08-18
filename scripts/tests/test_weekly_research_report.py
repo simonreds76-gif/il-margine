@@ -66,6 +66,13 @@ class WeeklyResearchReportTests(unittest.TestCase):
     def test_weekly_payload_includes_automation_budget(self) -> None:
         payload = REPORT["build_payload"]()
         self.assertIn("automation_budget", payload)
+        self.assertIn("goalkeeper_saves_v1", payload)
+        self.assertEqual(payload["goalkeeper_saves_v1"]["count_gate"], "PASS")
+        self.assertEqual(
+            payload["goalkeeper_saves_v1"]["market_status"],
+            "OVER_ONLY_GOALKEEPER_SAVE_PRICES_RETURNED",
+        )
+        self.assertFalse(payload["goalkeeper_saves_v1"]["sellable"])
         self.assertIn("tennis_venue_ace_factor_v1", payload)
         self.assertFalse(payload["tennis_venue_ace_factor_v1"]["automatic_promotion"])
 
@@ -89,6 +96,7 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertIn("Volume gap 10-15pp [0.5u provisional]", message)
         self.assertIn("Inactive tennis research (not tips)", message)
         self.assertIn("Hard side-flip evidence [BROAD DIAGNOSTIC]", message)
+        self.assertIn("GK Saves v1: count PASS", message)
         self.assertLessEqual(len(message), 4096)
 
     def test_tennis_only_telegram_report_is_complete_and_compact(self) -> None:
