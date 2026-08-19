@@ -44,6 +44,7 @@ export default function AdminPanel() {
   const [adminError, setAdminError] = useState<string | null>(null);
   const [tennisRefreshLoading, setTennisRefreshLoading] = useState(false);
   const [tennisRefreshMessage, setTennisRefreshMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [tennisRefreshRequestId, setTennisRefreshRequestId] = useState<string | null>(null);
   const loadedTabsRef = useRef({
     bookmakers: false,
     pending: false,
@@ -388,16 +389,72 @@ export default function AdminPanel() {
     setTennisRefreshMessage(null);
     const res = await fetch("/api/admin/tennis-refresh", { method: "POST" });
     const data = await res.json().catch(() => ({}));
-    setTennisRefreshLoading(false);
     if (res.ok) {
+      setTennisRefreshRequestId(data.command?.request_id || null);
       setTennisRefreshMessage({
         type: "success",
-        text: data.message || "Fair-odds refresh started. New tennis alerts will reach Telegram after signal generation.",
+        text: data.message || "Fair-odds refresh queued. Waiting for the laptop pipeline.",
+      });
+    } else if (res.status === 409 && data.command?.request_id) {
+      setTennisRefreshRequestId(data.command.request_id);
+      setTennisRefreshMessage({
+        type: "success",
+        text: "A fair-odds refresh is already active. Following that run instead of creating a duplicate.",
       });
     } else {
+      setTennisRefreshLoading(false);
       setTennisRefreshMessage({ type: "error", text: data.error || "Unable to start tennis refresh" });
     }
   };
+
+  useEffect(() => {
+    if (!tennisRefreshRequestId) return;
+    let cancelled = false;
+
+    const poll = async () => {
+      const res = await fetch(`/api/admin/tennis-refresh?request_id=${encodeURIComponent(tennisRefreshRequestId)}`, {
+        cache: "no-store",
+      });
+      const data = await res.json().catch(() => ({}));
+      if (cancelled) return;
+      if (!res.ok) {
+        setTennisRefreshLoading(false);
+        setTennisRefreshRequestId(null);
+        setTennisRefreshMessage({ type: "error", text: data.error || "Unable to read tennis refresh status" });
+        return;
+      }
+
+      const command = data.command || {};
+      const state = String(command.state || "pending");
+      if (state === "completed") {
+        const count = Number(command.signal_count || 0);
+        setTennisRefreshLoading(false);
+        setTennisRefreshRequestId(null);
+        setTennisRefreshMessage({
+          type: "success",
+          text: `Completed: ${count} current tennis signal${count === 1 ? "" : "s"}. Telegram relay queued successfully.`,
+        });
+      } else if (state === "failed") {
+        setTennisRefreshLoading(false);
+        setTennisRefreshRequestId(null);
+        setTennisRefreshMessage({ type: "error", text: command.error || "Fair-odds refresh failed" });
+      } else {
+        const label = state === "waiting"
+          ? "Waiting for the current tennis job to finish..."
+          : state === "started"
+            ? "Running on the laptop. Fair odds normally take 10-20 minutes..."
+            : "Queued for the laptop; pickup normally takes under two minutes...";
+        setTennisRefreshMessage({ type: "success", text: label });
+      }
+    };
+
+    void poll();
+    const timer = window.setInterval(() => void poll(), 5_000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, [tennisRefreshRequestId]);
 
   // Open edit modal
   const openEdit = (bet: Bet) => {
@@ -554,7 +611,7 @@ export default function AdminPanel() {
                 disabled={tennisRefreshLoading}
                 className="shrink-0 rounded-lg border border-cyan-400/40 bg-cyan-400/15 px-4 py-3 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-400/25 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {tennisRefreshLoading ? "Requesting..." : "Run fair odds + alerts"}
+                {tennisRefreshLoading ? "Refresh in progress..." : "Run fair odds + alerts"}
               </button>
             </div>
             {tennisRefreshMessage && (

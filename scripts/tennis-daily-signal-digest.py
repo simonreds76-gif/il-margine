@@ -574,10 +574,14 @@ def main() -> int:
     if args.new_only and not args.force:
         dispatch_signals = new_signals_since_state(signals, state, args.date)
         if not dispatch_signals:
+            preserved_dispatch = {}
+            if state.get("date") == args.date and state.get("dispatched_at"):
+                preserved_dispatch["dispatched_at"] = state["dispatched_at"]
             state_path.parent.mkdir(parents=True, exist_ok=True)
             state_path.write_text(
                 json.dumps(
                     {
+                        **preserved_dispatch,
                         "date": args.date,
                         "digest_hash": digest_hash,
                         "messages": len(messages),

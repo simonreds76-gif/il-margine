@@ -283,6 +283,40 @@ class TennisDailySignalDigestTests(unittest.TestCase):
             path.write_text('{"date":"2026-07-16","digest_hash":"abc"}', encoding="utf-8")
             self.assertEqual(MODULE.load_state(path)["digest_hash"], "abc")
 
+    def test_new_only_noop_preserves_same_day_dispatch_timestamp(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            state_path = Path(temp_dir) / "state.json"
+            report_path = Path(temp_dir) / "report.txt"
+            ready_path = Path(temp_dir) / "ready.json"
+            ready_path.write_text('{"date":"2026-08-04","status":"ok"}', encoding="utf-8")
+            state_path.write_text(
+                '{"date":"2026-08-04","digest_hash":"old","signal_ids":[],"dispatched_at":"2026-08-04T08:00:00Z"}',
+                encoding="utf-8",
+            )
+            with (
+                patch.object(MODULE, "collect_signals", return_value=([], [])),
+                patch.object(
+                    MODULE.sys,
+                    "argv",
+                    [
+                        str(SCRIPT),
+                        "--date",
+                        "2026-08-04",
+                        "--report",
+                        str(report_path),
+                        "--state",
+                        str(state_path),
+                        "--ready-state",
+                        str(ready_path),
+                        "--new-only",
+                    ],
+                ),
+            ):
+                self.assertEqual(MODULE.main(), 0)
+
+            updated = MODULE.load_state(state_path)
+            self.assertEqual(updated["dispatched_at"], "2026-08-04T08:00:00Z")
+
     def test_ready_state_requires_matching_date_and_ok_status(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             path = Path(temp_dir) / "ready.json"
