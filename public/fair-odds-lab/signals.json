@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-19T20:59:07.076273Z",
+  "generated_at": "2026-08-19T21:38:17.499129Z",
   "source_file": [
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv"
   ],
@@ -28,7 +28,7 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 3,
+  "fixtures_evaluated": 2,
   "signals_qualifying": 1,
   "leagues_covered": [
     "la-liga"
@@ -83,7 +83,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 21
+          "percentile": 26
         },
         "recent_team_form": {
           "tier": "Unknown",
@@ -101,8 +101,8 @@
           "corners_against_avg": 3.4
         },
         "opponent_defensive_weakness": {
-          "tier": "Positive",
-          "percentile": 60
+          "tier": "Average",
+          "percentile": 50
         },
         "opponent_recent_defence": {
           "tier": "Unknown"
