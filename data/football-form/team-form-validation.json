@@ -1,8 +1,8 @@
 {
-  "checked_at": "2026-08-18T09:04:52+00:00",
+  "checked_at": "2026-08-19T09:06:28+00:00",
   "files": {
     "team-match-base.csv": {
-      "age_days": 86,
+      "age_days": 87,
       "critical_coverage": {
         "corners_against": 1.0,
         "corners_for": 1.0,
@@ -14,23 +14,23 @@
       "latest_date": "2026-05-24",
       "league_freshness": {
         "bundesliga": {
-          "age_days": 94,
+          "age_days": 95,
           "latest_date": "2026-05-16"
         },
         "epl": {
-          "age_days": 86,
+          "age_days": 87,
           "latest_date": "2026-05-24"
         },
         "la-liga": {
-          "age_days": 86,
+          "age_days": 87,
           "latest_date": "2026-05-24"
         },
         "ligue-1": {
-          "age_days": 93,
+          "age_days": 94,
           "latest_date": "2026-05-17"
         },
         "serie-a": {
-          "age_days": 86,
+          "age_days": 87,
           "latest_date": "2026-05-24"
         }
       },
@@ -39,7 +39,7 @@
       "xg_coverage": 0.0
     },
     "team-rolling-form.csv": {
-      "age_days": 86,
+      "age_days": 87,
       "critical_coverage": {
         "current_corners_against": 1.0,
         "current_corners_for": 1.0,
@@ -51,23 +51,23 @@
       "latest_date": "2026-05-24",
       "league_freshness": {
         "bundesliga": {
-          "age_days": 94,
+          "age_days": 95,
           "latest_date": "2026-05-16"
         },
         "epl": {
-          "age_days": 86,
+          "age_days": 87,
           "latest_date": "2026-05-24"
         },
         "la-liga": {
-          "age_days": 86,
+          "age_days": 87,
           "latest_date": "2026-05-24"
         },
         "ligue-1": {
-          "age_days": 93,
+          "age_days": 94,
           "latest_date": "2026-05-17"
         },
         "serie-a": {
-          "age_days": 86,
+          "age_days": 87,
           "latest_date": "2026-05-24"
         }
       },
@@ -79,62 +79,62 @@
   "issues": [
     {
       "code": "team_match_base_stale",
-      "detail": "latest date 2026-05-24 is 86d old; max 21d",
+      "detail": "latest date 2026-05-24 is 87d old; max 21d",
       "level": "error"
     },
     {
       "code": "team_match_base_bundesliga_stale",
-      "detail": "bundesliga latest date 2026-05-16 is 94d old; max 21d",
+      "detail": "bundesliga latest date 2026-05-16 is 95d old; max 21d",
       "level": "error"
     },
     {
       "code": "team_match_base_epl_stale",
-      "detail": "epl latest date 2026-05-24 is 86d old; max 21d",
+      "detail": "epl latest date 2026-05-24 is 87d old; max 21d",
       "level": "error"
     },
     {
       "code": "team_match_base_la_liga_stale",
-      "detail": "la-liga latest date 2026-05-24 is 86d old; max 21d",
+      "detail": "la-liga latest date 2026-05-24 is 87d old; max 21d",
       "level": "error"
     },
     {
       "code": "team_match_base_ligue_1_stale",
-      "detail": "ligue-1 latest date 2026-05-17 is 93d old; max 21d",
+      "detail": "ligue-1 latest date 2026-05-17 is 94d old; max 21d",
       "level": "error"
     },
     {
       "code": "team_match_base_serie_a_stale",
-      "detail": "serie-a latest date 2026-05-24 is 86d old; max 21d",
+      "detail": "serie-a latest date 2026-05-24 is 87d old; max 21d",
       "level": "error"
     },
     {
       "code": "team_rolling_form_stale",
-      "detail": "latest date 2026-05-24 is 86d old; max 21d",
+      "detail": "latest date 2026-05-24 is 87d old; max 21d",
       "level": "error"
     },
     {
       "code": "team_rolling_form_bundesliga_stale",
-      "detail": "bundesliga latest date 2026-05-16 is 94d old; max 21d",
+      "detail": "bundesliga latest date 2026-05-16 is 95d old; max 21d",
       "level": "error"
     },
     {
       "code": "team_rolling_form_epl_stale",
-      "detail": "epl latest date 2026-05-24 is 86d old; max 21d",
+      "detail": "epl latest date 2026-05-24 is 87d old; max 21d",
       "level": "error"
     },
     {
       "code": "team_rolling_form_la_liga_stale",
-      "detail": "la-liga latest date 2026-05-24 is 86d old; max 21d",
+      "detail": "la-liga latest date 2026-05-24 is 87d old; max 21d",
       "level": "error"
     },
     {
       "code": "team_rolling_form_ligue_1_stale",
-      "detail": "ligue-1 latest date 2026-05-17 is 93d old; max 21d",
+      "detail": "ligue-1 latest date 2026-05-17 is 94d old; max 21d",
       "level": "error"
     },
     {
       "code": "team_rolling_form_serie_a_stale",
-      "detail": "serie-a latest date 2026-05-24 is 86d old; max 21d",
+      "detail": "serie-a latest date 2026-05-24 is 87d old; max 21d",
       "level": "error"
     }
   ],

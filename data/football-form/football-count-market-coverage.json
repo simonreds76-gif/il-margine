@@ -9,17 +9,19 @@
         "England - Premier League",
         "Germany - Bundesliga",
         "Italy - Serie A",
+        "La Liga",
+        "Premier League",
         "Spain - LaLiga"
       ],
-      "events": 17,
-      "paired_price_events": 0,
+      "events": 28,
+      "paired_price_events": 11,
       "pairing_unknown_events": 17,
       "raw_market_names": [
         "Bookings Totals",
         "Number of Cards In Match"
       ],
-      "rows": 30,
-      "status": "MARKET_NAME_ONLY"
+      "rows": 50,
+      "status": "PAIRED_PRICES_OBSERVED"
     },
     "match_fouls_total": {
       "bookmakers": [],
@@ -39,15 +41,16 @@
         "England - Premier League",
         "Germany - Bundesliga",
         "La Liga",
+        "Premier League",
         "Spain - LaLiga"
       ],
-      "events": 15,
+      "events": 25,
       "paired_price_events": 0,
       "pairing_unknown_events": 14,
       "raw_market_names": [
         "Player Cards"
       ],
-      "rows": 15,
+      "rows": 25,
       "status": "MARKET_NAME_ONLY"
     },
     "player_fouled": {
@@ -57,15 +60,16 @@
       "competitions": [
         "England - Premier League",
         "La Liga",
+        "Premier League",
         "Spain - LaLiga"
       ],
-      "events": 14,
+      "events": 23,
       "paired_price_events": 0,
       "pairing_unknown_events": 13,
       "raw_market_names": [
         "Player To Be Fouled"
       ],
-      "rows": 14,
+      "rows": 23,
       "status": "MARKET_NAME_ONLY"
     },
     "player_fouls_committed": {
@@ -75,15 +79,17 @@
       "competitions": [
         "England - Premier League",
         "La Liga",
+        "Premier League",
+        "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 14,
+      "events": 25,
       "paired_price_events": 0,
       "pairing_unknown_events": 13,
       "raw_market_names": [
         "Player Fouls Committed"
       ],
-      "rows": 14,
+      "rows": 25,
       "status": "MARKET_NAME_ONLY"
     },
     "team_cards_total": {
@@ -93,10 +99,12 @@
       "competitions": [
         "England - Premier League",
         "Germany - Bundesliga",
+        "La Liga",
+        "Premier League",
         "Spain - LaLiga"
       ],
-      "events": 13,
-      "paired_price_events": 0,
+      "events": 24,
+      "paired_price_events": 11,
       "pairing_unknown_events": 13,
       "raw_market_names": [
         "Bookings Totals Away",
@@ -104,8 +112,8 @@
         "Team Cards Away",
         "Team Cards Home"
       ],
-      "rows": 30,
-      "status": "MARKET_NAME_ONLY"
+      "rows": 74,
+      "status": "PAIRED_PRICES_OBSERVED"
     },
     "team_fouls_total": {
       "bookmakers": [],
@@ -118,7 +126,7 @@
       "status": "NOT_OBSERVED"
     }
   },
-  "generated_at": "2026-08-18T09:05:12Z",
+  "generated_at": "2026-08-19T09:06:57Z",
   "policy": {
     "definition_gate": "Bookmaker settlement definitions must be reconciled against the result source before ROI is scored.",
     "live_staking": "BLOCKED",
