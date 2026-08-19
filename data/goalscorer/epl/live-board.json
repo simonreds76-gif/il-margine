@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-11T19:02:27Z",
+  "generated_at": "2026-08-19T07:24:39Z",
   "league": "epl",
   "row_count": 0,
   "stats": {
     "historical_rows": 30722,
-    "odds_rows": 0,
+    "odds_rows": 49,
     "matched_rows": 0,
-    "missing_player_history": 0,
+    "missing_player_history": 49,
     "missing_team_mapping": 0,
     "fallback_rows": 0,
     "qualified_rows": 0,
@@ -24,7 +24,7 @@
     "fixtures_with_confirmed_lineups": 0,
     "fixtures_with_expected_lineups": 0,
     "fixtures_clean": 0,
-    "fixtures_degraded": 0,
+    "fixtures_degraded": 1,
     "fixtures_quarantined": 0,
     "confirmed_starter_rows": 0,
     "confirmed_bench_rows": 0,
@@ -34,6 +34,23 @@
     "not_in_squad_rows": 0,
     "avg_ev": 0.0
   },
-  "fixtures": [],
+  "fixtures": [
+    {
+      "match_date": "2026-08-21",
+      "home_team": "Arsenal FC",
+      "away_team": "Coventry City",
+      "league": "epl",
+      "competition": "England - Premier League",
+      "bookmaker": "Bet365",
+      "lineup_input": "none",
+      "trust_tier": "T2",
+      "corruption_score": 1.0,
+      "corruption_flags": [
+        "no_lineup_payload"
+      ],
+      "home_player_checks": [],
+      "away_player_checks": []
+    }
+  ],
   "rows": []
 }

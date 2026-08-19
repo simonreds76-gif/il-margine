@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-08-18T22:57:04.993491Z",
+  "generated_at": "2026-08-19T07:25:38.828081Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv"
   ],
   "team_form_source": "/home/runner/work/_temp/football-form/team-match-base.csv",
@@ -28,9 +29,99 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 2,
-  "signals_qualifying": 0,
-  "leagues_covered": [],
-  "featured_signal_id": null,
-  "signals": []
+  "fixtures_evaluated": 3,
+  "signals_qualifying": 1,
+  "leagues_covered": [
+    "la-liga"
+  ],
+  "featured_signal_id": "20260821-orri-steinn-oskarsson-9feccacf05",
+  "signals": [
+    {
+      "id": "20260821-orri-steinn-oskarsson-9feccacf05",
+      "match": {
+        "home_team": "Real Betis Seville",
+        "away_team": "Real Sociedad San Sebastian",
+        "league": "la-liga",
+        "league_display": "La Liga",
+        "league_logo_path": "/league-logos/la-liga.png",
+        "kickoff_utc": "2026-08-21T19:00:00Z",
+        "kickoff_display": "Fri 21 Aug 20:00 UK",
+        "fotmob_match_id": "5868023",
+        "fotmob_page_url": "/matches/real-sociedad-vs-real-betis/2fp6jh#5868023",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Orri Steinn Oskarsson",
+        "team": "Real Sociedad",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/la-liga/real-sociedad.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#2563eb",
+        "team_shirt_pattern": "vertical-stripes"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 36.8,
+        "fair_odds": 2.72
+      },
+      "market_data": {
+        "best_odds": 3.4,
+        "best_book": "Bet365",
+        "implied_chance_pct": 29.4
+      },
+      "edge": {
+        "price_gap_pp": 7.4,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 97
+        },
+        "share_of_team_chances_pct": 31,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 21
+        },
+        "recent_team_form": {
+          "tier": "Unknown",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-23",
+          "xg_for_avg": null,
+          "xg_against_avg": null,
+          "xgd_per90": null,
+          "shots_for_avg": 8.6,
+          "shots_against_avg": 18.4,
+          "sot_for_avg": 3.0,
+          "sot_against_avg": 5.8,
+          "corners_for_avg": 3.6,
+          "corners_against_avg": 3.4
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 60
+        },
+        "opponent_recent_defence": {
+          "tier": "Unknown"
+        },
+        "fixture_boost_pct": -13,
+        "projected_minutes": 78,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    }
+  ]
 }

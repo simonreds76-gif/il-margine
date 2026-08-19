@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-18T07:24:56Z",
+  "generated_at": "2026-08-19T07:25:09Z",
   "league": "ligue-1",
   "row_count": 0,
   "stats": {
     "historical_rows": 25039,
-    "odds_rows": 0,
+    "odds_rows": 47,
     "matched_rows": 0,
-    "missing_player_history": 0,
+    "missing_player_history": 47,
     "missing_team_mapping": 0,
     "fallback_rows": 0,
     "qualified_rows": 0,
@@ -24,7 +24,7 @@
     "fixtures_with_confirmed_lineups": 0,
     "fixtures_with_expected_lineups": 0,
     "fixtures_clean": 0,
-    "fixtures_degraded": 0,
+    "fixtures_degraded": 1,
     "fixtures_quarantined": 0,
     "confirmed_starter_rows": 0,
     "confirmed_bench_rows": 0,
@@ -34,6 +34,23 @@
     "not_in_squad_rows": 0,
     "avg_ev": 0.0
   },
-  "fixtures": [],
+  "fixtures": [
+    {
+      "match_date": "2026-08-21",
+      "home_team": "Olympique Marseille",
+      "away_team": "Strasbourg Alsace",
+      "league": "ligue-1",
+      "competition": "France - Ligue 1",
+      "bookmaker": "Bet365",
+      "lineup_input": "none",
+      "trust_tier": "T2",
+      "corruption_score": 1.0,
+      "corruption_flags": [
+        "no_lineup_payload"
+      ],
+      "home_player_checks": [],
+      "away_player_checks": []
+    }
+  ],
   "rows": []
 }
