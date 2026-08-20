@@ -1,0 +1,32 @@
+{
+  "candidate": "goalkeeper-saves-v1-nb2-confirmed-starter",
+  "count_model": "PASS",
+  "current": {
+    "blocked_lines": 0,
+    "eligible_lines": 0,
+    "priced_lines": 0,
+    "signals_added": 0
+  },
+  "evidence": {
+    "clv": null,
+    "clv_matched": 0,
+    "pending": 0,
+    "pnl_units": 0,
+    "roi": null,
+    "settled": 0,
+    "signals": 0,
+    "true_close_coverage": null
+  },
+  "generated_at": "2026-08-20T12:00:37Z",
+  "live_routing": false,
+  "promotion": {
+    "mean_true_close_clv_required": 0.005,
+    "settled_required": 150,
+    "settlement_integrity": "API_FOOTBALL_PLAYER_STATS",
+    "status": "BLOCKED",
+    "true_close_coverage_required": 0.7
+  },
+  "selection_rule": "one strongest O/U side per fixture; edge >=8%; confirmed starting goalkeeper",
+  "sellable": false,
+  "status": "NO_CURRENT_LINES"
+}
