@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-20T17:04:58.537270Z",
+  "generated_at": "2026-08-20T17:44:01.310700Z",
   "source_file": [
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
@@ -98,13 +98,13 @@
           "percentile": 15
         },
         "opponent_recent_defence": {
-          "tier": "Unknown",
+          "tier": "Average",
           "window": 5,
           "matches": 5,
           "through_date": "2026-05-23",
-          "xg_for_avg": null,
-          "xg_against_avg": null,
-          "xgd_per90": null,
+          "xg_for_avg": 1.33,
+          "xg_against_avg": 1.29,
+          "xgd_per90": 0.04,
           "shots_for_avg": 13.4,
           "shots_against_avg": 11.6,
           "sot_for_avg": 4.4,
@@ -179,13 +179,13 @@
           "percentile": 70
         },
         "recent_team_form": {
-          "tier": "Unknown",
+          "tier": "Average",
           "window": 5,
           "matches": 5,
           "through_date": "2026-05-24",
-          "xg_for_avg": null,
-          "xg_against_avg": null,
-          "xgd_per90": null,
+          "xg_for_avg": 1.58,
+          "xg_against_avg": 1.76,
+          "xgd_per90": -0.18,
           "shots_for_avg": 11.8,
           "shots_against_avg": 15.4,
           "sot_for_avg": 3.8,
@@ -275,13 +275,13 @@
           "percentile": 66
         },
         "opponent_recent_defence": {
-          "tier": "Unknown",
+          "tier": "High",
           "window": 5,
           "matches": 5,
           "through_date": "2026-05-24",
-          "xg_for_avg": null,
-          "xg_against_avg": null,
-          "xgd_per90": null,
+          "xg_for_avg": 1.58,
+          "xg_against_avg": 1.76,
+          "xgd_per90": -0.18,
           "shots_for_avg": 11.8,
           "shots_against_avg": 15.4,
           "sot_for_avg": 3.8,
@@ -300,7 +300,8 @@
       "reasons": [
         "The model price is shorter than the bookmaker's best available price",
         "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong"
+        "Recent chance quality grades as strong",
+        "Opponent has been allowing chances recently"
       ],
       "risk_flags": []
     },
@@ -355,13 +356,13 @@
           "percentile": 25
         },
         "recent_team_form": {
-          "tier": "Unknown",
+          "tier": "Quiet",
           "window": 5,
           "matches": 5,
           "through_date": "2026-05-23",
-          "xg_for_avg": null,
-          "xg_against_avg": null,
-          "xgd_per90": null,
+          "xg_for_avg": 1.17,
+          "xg_against_avg": 1.95,
+          "xgd_per90": -0.77,
           "shots_for_avg": 8.6,
           "shots_against_avg": 18.4,
           "sot_for_avg": 3.0,
@@ -442,13 +443,13 @@
           "percentile": 29
         },
         "recent_team_form": {
-          "tier": "Unknown",
+          "tier": "Strong",
           "window": 5,
           "matches": 5,
           "through_date": "2026-05-24",
-          "xg_for_avg": null,
-          "xg_against_avg": null,
-          "xgd_per90": null,
+          "xg_for_avg": 1.66,
+          "xg_against_avg": 0.93,
+          "xgd_per90": 0.73,
           "shots_for_avg": 14.2,
           "shots_against_avg": 9.4,
           "sot_for_avg": 5.2,
@@ -461,13 +462,13 @@
           "percentile": 44
         },
         "opponent_recent_defence": {
-          "tier": "Unknown",
+          "tier": "Positive",
           "window": 5,
           "matches": 5,
           "through_date": "2026-05-24",
-          "xg_for_avg": null,
-          "xg_against_avg": null,
-          "xgd_per90": null,
+          "xg_for_avg": 0.82,
+          "xg_against_avg": 1.46,
+          "xgd_per90": -0.64,
           "shots_for_avg": 8.8,
           "shots_against_avg": 11.8,
           "sot_for_avg": 1.8,
@@ -486,7 +487,9 @@
       "reasons": [
         "The model price is shorter than the bookmaker's best available price",
         "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong"
+        "Recent chance quality grades as strong",
+        "Recent team form supports the attacking case",
+        "Opponent has been allowing chances recently"
       ],
       "risk_flags": []
     }
