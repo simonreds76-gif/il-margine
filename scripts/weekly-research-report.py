@@ -282,9 +282,12 @@ def goalscorer_research_summary() -> dict[str, Any]:
     matched = [row for row in clv_rows if str(row.get("close_odds") or "").strip()]
     true_closes = [row for row in clv_rows if row.get("close_status") == "true_close"]
     signal_rows: list[dict[str, str]] = []
+    quarantine_rows: list[dict[str, str]] = []
     for league in ("serie-a", "epl", "la-liga", "bundesliga", "ligue-1"):
         signal_rows.extend(load_csv(ROOT / "data" / "goalscorer" / f"fair-odds-lab-{league}-signals.csv"))
+        quarantine_rows.extend(load_csv(ROOT / "data" / "goalscorer" / f"fair-odds-lab-{league}-quarantine.csv"))
     ledger = settled_ledger_summary(signal_rows, stake_field="recommended_stake_units")
+    quarantine_ledger = settled_ledger_summary(quarantine_rows, stake_field="evaluation_stake_units")
     activity_values = [
         str(row.get("settled_at") or row.get("compared_at") or row.get("kickoff") or "").strip()
         for row in signal_rows
@@ -314,6 +317,7 @@ def goalscorer_research_summary() -> dict[str, Any]:
         "market_roi_gate": beta_gate.group(4) if beta_gate else "UNAVAILABLE",
         "decision": beta_gate.group(5).strip() if beta_gate else "KEEP_RESEARCH",
         "ledger": ledger,
+        "extreme_gap_quarantine": quarantine_ledger,
         "freshness": evidence_freshness(latest_activity),
     }
 
@@ -1379,6 +1383,7 @@ def render_report(payload: dict[str, Any]) -> str:
             f"- Beta calibration: {goalscorer['beta_fold_wins']}/{goalscorer['beta_folds']} fold wins | probability gate {goalscorer['probability_gate']} | market gate {goalscorer['market_roi_gate']}.",
             f"- Real-price CLV coverage: {goalscorer['matched_closes']}/{goalscorer['signals']} ({goalscorer['clv_coverage_pct']:.1f}%) | true closes {goalscorer['true_closes']}.",
             f"- Settled ledger: {goalscorer['ledger']['settled']}/{goalscorer['ledger']['registered']} settled, {goalscorer['ledger']['wins']}W/{goalscorer['ledger']['losses']}L, {goalscorer['ledger']['pnl_units']:+.2f}u, ROI {pct(goalscorer['ledger']['roi_pct'])}.",
+            f"- Extreme-gap quarantine: {goalscorer['extreme_gap_quarantine']['settled']}/{goalscorer['extreme_gap_quarantine']['registered']} settled, {goalscorer['extreme_gap_quarantine']['pnl_units']:+.2f}u at 1u evaluation stakes, ROI {pct(goalscorer['extreme_gap_quarantine']['roi_pct'])}.",
             f"- Evidence freshness: {goalscorer['freshness']['status']} ({goalscorer['freshness']['generated_at'] or 'missing'}).",
             f"- Decision: {goalscorer['decision'].replace('_', ' ').lower()} until the fifth fold and real-price evidence exist.",
             "",
@@ -1614,6 +1619,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
         f"Team Fouls: F1 {team_fouls_decision.get('status', 'NOT_RUN')}; F2 {team_fouls_f2_decision.get('status', 'NOT_RUN')}; sources {team_fouls_m2.get('status', 'NOT_RUN')}; no signals",
         f"GK Saves v1: count {goalkeeper_saves.get('count_gate', 'NOT_RUN')} n={goalkeeper_saves.get('historical_observations', 0)} | discovery {goalkeeper_saves.get('market_status', 'NOT_RUN')} ({goalkeeper_saves.get('over_lines', 0)} probe Over lines) | capture {goalkeeper_saves.get('capture_status', 'NOT_RUN')} events={goalkeeper_saves.get('capture_events_selected', 0)} rows={goalkeeper_saves.get('capture_rows_observed', 0)} 1X2={goalkeeper_saves.get('capture_three_way_events', 0)} | prospective {goalkeeper_saves.get('prospective_status', 'BLOCKED')} priced={goalkeeper_saves.get('priced_lines', 0)} eligible={goalkeeper_saves.get('eligible_lines', 0)} provisional={goalkeeper_saves.get('provisional_lines', 0)} signals={goalkeeper_saves.get('signals', 0)} settled={goalkeeper_saves.get('settled', 0)} blockers={goalkeeper_saves.get('blocker_counts', {})} ROI={ratio_pct(goalkeeper_saves.get('roi'))} CLV={ratio_pct(goalkeeper_saves.get('clv'))} n={goalkeeper_saves.get('clv_matched', 0)} | promotion BLOCKED",
         f"Goalscorer V2: {goalscorer['ledger']['settled']} settled | {goalscorer['ledger']['pnl_units']:+.2f}u | ROI {pct(goalscorer['ledger']['roi_pct'])} | CLV {goalscorer['matched_closes']}/{goalscorer['signals']} | {goalscorer['decision']}",
+        f"Goalscorer extreme-gap quarantine: {goalscorer['extreme_gap_quarantine']['settled']}/{goalscorer['extreme_gap_quarantine']['registered']} settled | {goalscorer['extreme_gap_quarantine']['pnl_units']:+.2f}u | ROI {pct(goalscorer['extreme_gap_quarantine']['roi_pct'])} | zero-stake research",
         f"Assist V1: {assist['lane_status']} | backtest {assist['backtest_status']} | settlement {assist['settlement_status']} | market {assist['market_status']} ({assist['market_calendar_span_days']}/90d) | prospective {assist['prospective']['settled']}/{assist['prospective_target']} | <=30 API calls/week | {assist['decision']}",
         f"Automation: {automation.get('status', 'NOT_RUN')} | Odds-API worst hour {odds_budget.get('max_requests_in_one_hour', '-')}/{odds_budget.get('requests_per_hour', '-')} | DB writes/week max {(automation.get('database') or {}).get('registered_writes_per_week_max', '-')}",
         tennis_lane_line("Tennis Strict", "strict", "CORE"),

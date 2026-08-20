@@ -61,6 +61,10 @@ PUBLIC_MIN_MODEL_PROB_PCT = 20.0
 PUBLIC_MAX_MARKET_ODDS = 6.0
 PUBLIC_MAX_MODEL_MARKET_GAP_PP = 10.0
 PUBLIC_MAX_MODEL_MARKET_PROBABILITY_RATIO = 1.50
+EXTREME_GAP_QUARANTINE_REASONS = {
+    "model_market_gap_gt_10pp",
+    "model_market_probability_ratio_gt_1_5x",
+}
 PUBLIC_OFFICIAL_LINEUP_WINDOW_MINUTES = 0
 FAIR_ODDS_LAB_POLICY_REASON = "fair_odds_lab_likely_starters_top5_edge6_prob20_odds6"
 GOALSCORER_MODEL_VERSION = "goalscorer_v1_raw"
@@ -243,9 +247,11 @@ FAIR_ODDS_LAB_LOG_FIELDS = [
     "trust_tier",
     "public_action",
     "public_policy_reason",
+    "quarantine_reason",
     "penalty_dependent",
     "penalty_dependency_share",
     "recommended_stake_units",
+    "evaluation_stake_units",
     "recommended_stake_band",
     "recommended_stake_label",
     "super_sub_eligible_bookmaker",
@@ -1283,7 +1289,18 @@ def fmt_decimal(value: float | None, digits: int) -> str:
     return f"{value:.{digits}f}"
 
 
-def exposure_row_from_candidate(candidate: Candidate) -> dict[str, str]:
+def exposure_row_from_candidate(
+    candidate: Candidate,
+    *,
+    tracking_tier: str = "display_row",
+    public_action: str = "surface",
+    public_policy_reason: str = FAIR_ODDS_LAB_POLICY_REASON,
+    quarantine_reason: str = "",
+    recommended_stake_units: str = "1.00",
+    evaluation_stake_units: str = "",
+    recommended_stake_band: str = "research",
+    recommended_stake_label: str = "Research only",
+) -> dict[str, str]:
     row = candidate.row
     date_key = row_date_key(row)
     home_team = clean_text(row.get("home_team"))
@@ -1324,7 +1341,7 @@ def exposure_row_from_candidate(candidate: Candidate) -> dict[str, str]:
         # of manufacturing a comparison from raw implied probability.
         "edge_vs_novig_pp": "unavailable_one_sided_market",
         "pinnacle_odds_at_publish": "unavailable",
-        "tracking_tier": "display_row",
+        "tracking_tier": tracking_tier,
         "best_bookmaker": clean_text(row.get("bookmaker"), "Best market"),
         "best_bookmaker_odds": fmt_decimal(candidate.best_odds, 4),
         "ev": fmt_decimal(best_ev, 6),
@@ -1339,13 +1356,15 @@ def exposure_row_from_candidate(candidate: Candidate) -> dict[str, str]:
         "position": clean_text(row.get("position")),
         "historical_minutes": fmt_decimal(parse_float(row.get("historical_minutes")) or candidate.expected_minutes, 1),
         "trust_tier": clean_text(row.get("trust_tier")),
-        "public_action": "surface",
-        "public_policy_reason": FAIR_ODDS_LAB_POLICY_REASON,
+        "public_action": public_action,
+        "public_policy_reason": public_policy_reason,
+        "quarantine_reason": quarantine_reason,
         "penalty_dependent": "1" if clean_text(row.get("penalty_dependent")).lower() in {"1", "true", "yes"} else "0",
         "penalty_dependency_share": fmt_decimal(parse_float(row.get("penalty_dependency_share")), 4),
-        "recommended_stake_units": "1.00",
-        "recommended_stake_band": "research",
-        "recommended_stake_label": "Research only",
+        "recommended_stake_units": recommended_stake_units,
+        "evaluation_stake_units": evaluation_stake_units,
+        "recommended_stake_band": recommended_stake_band,
+        "recommended_stake_label": recommended_stake_label,
         "super_sub_eligible_bookmaker": "",
         "super_sub_checked": "",
         "super_sub_replacement": "",
@@ -1376,6 +1395,49 @@ def append_exposure_logs(candidates: list[Candidate], log_dir: Path) -> dict[str
             continue
         merged = existing_rows + added_rows
         merged.sort(key=lambda row: (clean_text(row.get("date")), clean_text(row.get("kickoff")), clean_text(row.get("match")), clean_text(row.get("player"))))
+        write_exposure_log(path, merged, fieldnames)
+        added_by_league[league] = len(added_rows)
+    return added_by_league
+
+
+def append_quarantine_logs(
+    entries: list[tuple[Candidate, str]],
+    log_dir: Path,
+) -> dict[str, int]:
+    rows_by_league: dict[str, list[dict[str, str]]] = {}
+    for candidate, reason in entries:
+        league = league_slug(clean_text(candidate.row.get("competition"), "football"))
+        row = exposure_row_from_candidate(
+            candidate,
+            tracking_tier="extreme_gap_quarantine",
+            public_action="quarantine",
+            public_policy_reason="fair_odds_lab_extreme_gap_quarantine_v1",
+            quarantine_reason=reason,
+            recommended_stake_units="0.00",
+            evaluation_stake_units="1.00",
+            recommended_stake_band="zero_stake_shadow",
+            recommended_stake_label="Zero-stake quarantine (1u evaluation)",
+        )
+        rows_by_league.setdefault(league, []).append(row)
+
+    added_by_league: dict[str, int] = {}
+    for league, rows in sorted(rows_by_league.items()):
+        path = fair_odds_lab_log_path(log_dir, league, "quarantine.csv")
+        existing_rows, fieldnames = read_exposure_log(path)
+        existing_keys = {exposure_log_key(row) for row in existing_rows}
+        added_rows = [row for row in rows if exposure_log_key(row) not in existing_keys]
+        if not added_rows:
+            added_by_league[league] = 0
+            continue
+        merged = existing_rows + added_rows
+        merged.sort(
+            key=lambda row: (
+                clean_text(row.get("date")),
+                clean_text(row.get("kickoff")),
+                clean_text(row.get("match")),
+                clean_text(row.get("player")),
+            )
+        )
         write_exposure_log(path, merged, fieldnames)
         added_by_league[league] = len(added_rows)
     return added_by_league
@@ -1638,6 +1700,7 @@ def main() -> None:
     }
 
     qualifying: list[Candidate] = []
+    quarantine_entries: list[tuple[Candidate, str]] = []
     safety_exclusions: dict[str, int] = {}
     for candidate in candidates:
         if candidate.price_gap_pp < args.edge_threshold_pp or candidate.best_odds <= candidate.fair_odds:
@@ -1651,6 +1714,8 @@ def main() -> None:
         )
         if exclusion_reason:
             safety_exclusions[exclusion_reason] = safety_exclusions.get(exclusion_reason, 0) + 1
+            if exclusion_reason in EXTREME_GAP_QUARANTINE_REASONS:
+                quarantine_entries.append((candidate, exclusion_reason))
             continue
         qualifying.append(candidate)
 
@@ -1677,8 +1742,10 @@ def main() -> None:
     signals = [signal for _candidate, signal in signal_entries]
 
     exposure_added_by_league: dict[str, int] = {}
+    quarantine_added_by_league: dict[str, int] = {}
     if not args.skip_exposure_log:
         exposure_added_by_league = append_exposure_logs(selected_candidates, args.exposure_log_dir)
+        quarantine_added_by_league = append_quarantine_logs(quarantine_entries, args.exposure_log_dir)
 
     fixtures_evaluated = len({(row_date_key(row), clean_text(row.get("home_team")), clean_text(row.get("away_team"))) for row in raw_rows})
     leagues_covered = sorted({signal["match"]["league"] for signal in signals})
@@ -1703,6 +1770,12 @@ def main() -> None:
         "fixtures_evaluated": fixtures_evaluated,
         "signals_qualifying": len(signals),
         "safety_exclusions": safety_exclusions,
+        "extreme_gap_quarantine": {
+            "eligible_rows": len(quarantine_entries),
+            "added_by_league": quarantine_added_by_league,
+            "settlement_policy": "zero_stake_shadow_1u_evaluation",
+            "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv",
+        },
         "leagues_covered": leagues_covered,
         "featured_signal_id": signals[0]["id"] if signals else None,
         "signals": signals,

@@ -159,6 +159,20 @@ jobs:
             [bundesliga]="data/goalscorer/fair-odds-lab-bundesliga-performance.txt"
             [ligue-1]="data/goalscorer/fair-odds-lab-ligue-1-performance.txt"
           )
+          declare -A FAIR_ODDS_LAB_QUARANTINE_OUTPUTS=(
+            [serie-a]="data/goalscorer/fair-odds-lab-serie-a-quarantine.csv"
+            [epl]="data/goalscorer/fair-odds-lab-epl-quarantine.csv"
+            [la-liga]="data/goalscorer/fair-odds-lab-la-liga-quarantine.csv"
+            [bundesliga]="data/goalscorer/fair-odds-lab-bundesliga-quarantine.csv"
+            [ligue-1]="data/goalscorer/fair-odds-lab-ligue-1-quarantine.csv"
+          )
+          declare -A FAIR_ODDS_LAB_QUARANTINE_SUMMARIES=(
+            [serie-a]="data/goalscorer/fair-odds-lab-serie-a-quarantine-performance.txt"
+            [epl]="data/goalscorer/fair-odds-lab-epl-quarantine-performance.txt"
+            [la-liga]="data/goalscorer/fair-odds-lab-la-liga-quarantine-performance.txt"
+            [bundesliga]="data/goalscorer/fair-odds-lab-bundesliga-quarantine-performance.txt"
+            [ligue-1]="data/goalscorer/fair-odds-lab-ligue-1-quarantine-performance.txt"
+          )
 
           for league in serie-a epl la-liga bundesliga ligue-1; do
             echo "---- Settle league: ${league} (shadow)"
@@ -178,6 +192,15 @@ jobs:
               --league "${league}" \
               --signals "${FAIR_ODDS_LAB_OUTPUTS[$league]}" \
               --summary "${FAIR_ODDS_LAB_SUMMARIES[$league]}"
+
+            quarantine_signals="${FAIR_ODDS_LAB_QUARANTINE_OUTPUTS[$league]}"
+            if [ -f "${quarantine_signals}" ]; then
+              echo "---- Settle league: ${league} (fair odds lab extreme-gap quarantine)"
+              python scripts/goalscorer-settle.py \
+                --league "${league}" \
+                --signals "${quarantine_signals}" \
+                --summary "${FAIR_ODDS_LAB_QUARANTINE_SUMMARIES[$league]}"
+            fi
           done
 
       - name: Rebuild penalty review and evidence

@@ -116,6 +116,11 @@ $goalscorerFiles = @(
     "data/goalscorer/fair-odds-lab-la-liga-signals.csv",
     "data/goalscorer/fair-odds-lab-bundesliga-signals.csv",
     "data/goalscorer/fair-odds-lab-ligue-1-signals.csv",
+    "data/goalscorer/fair-odds-lab-serie-a-quarantine.csv",
+    "data/goalscorer/fair-odds-lab-epl-quarantine.csv",
+    "data/goalscorer/fair-odds-lab-la-liga-quarantine.csv",
+    "data/goalscorer/fair-odds-lab-bundesliga-quarantine.csv",
+    "data/goalscorer/fair-odds-lab-ligue-1-quarantine.csv",
     "public/fair-odds-lab/signals.json",
     "public/fair-odds-lab/highlights.json"
 )
