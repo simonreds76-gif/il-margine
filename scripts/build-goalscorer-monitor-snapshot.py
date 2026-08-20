@@ -37,6 +37,7 @@ LEAGUE_CONFIGS: list[dict[str, str]] = [
         "penalty_takers_json": "data/goalscorer/serie-a-penalty-takers.json",
         "shadow_signals_csv": "data/goalscorer/goalscorer-shadow-signals.csv",
         "public_signals_csv": "data/goalscorer/goalscorer-public-signals.csv",
+        "quarantine_signals_csv": "data/goalscorer/fair-odds-lab-serie-a-quarantine.csv",
     },
     {
         "key": "epl",
@@ -52,6 +53,7 @@ LEAGUE_CONFIGS: list[dict[str, str]] = [
         "penalty_takers_json": "data/goalscorer/epl-penalty-takers.json",
         "shadow_signals_csv": "data/goalscorer/epl-shadow-signals.csv",
         "public_signals_csv": "data/goalscorer/epl-public-signals.csv",
+        "quarantine_signals_csv": "data/goalscorer/fair-odds-lab-epl-quarantine.csv",
     },
     {
         "key": "la-liga",
@@ -66,6 +68,7 @@ LEAGUE_CONFIGS: list[dict[str, str]] = [
         "penalty_takers_json": "data/goalscorer/la-liga-penalty-takers.json",
         "shadow_signals_csv": "data/goalscorer/la-liga-shadow-signals.csv",
         "public_signals_csv": "data/goalscorer/la-liga-public-signals.csv",
+        "quarantine_signals_csv": "data/goalscorer/fair-odds-lab-la-liga-quarantine.csv",
     },
     {
         "key": "bundesliga",
@@ -80,6 +83,7 @@ LEAGUE_CONFIGS: list[dict[str, str]] = [
         "penalty_takers_json": "data/goalscorer/bundesliga-penalty-takers.json",
         "shadow_signals_csv": "data/goalscorer/bundesliga-shadow-signals.csv",
         "public_signals_csv": "data/goalscorer/bundesliga-public-signals.csv",
+        "quarantine_signals_csv": "data/goalscorer/fair-odds-lab-bundesliga-quarantine.csv",
     },
     {
         "key": "ligue-1",
@@ -94,6 +98,7 @@ LEAGUE_CONFIGS: list[dict[str, str]] = [
         "penalty_takers_json": "data/goalscorer/ligue-1-penalty-takers.json",
         "shadow_signals_csv": "data/goalscorer/ligue-1-shadow-signals.csv",
         "public_signals_csv": "data/goalscorer/ligue-1-public-signals.csv",
+        "quarantine_signals_csv": "data/goalscorer/fair-odds-lab-ligue-1-quarantine.csv",
     },
 ]
 
@@ -789,6 +794,26 @@ def compute_public_summary(rows: list[dict[str, str]]) -> dict[str, Any]:
     }
 
 
+def compute_evidence_summary(rows: list[dict[str, str]], stake_field: str) -> dict[str, Any]:
+    settled = [row for row in rows if is_settled_shadow_row(row)]
+    wins = sum(1 for row in settled if row.get("bet_outcome", "").strip().lower() == "won")
+    losses = sum(1 for row in settled if row.get("bet_outcome", "").strip().lower() == "lost")
+    voids = sum(1 for row in settled if row.get("bet_outcome", "").strip().lower() in {"void", "push"})
+    pnl_units = sum(parse_float(row.get("pnl_units")) or 0 for row in settled)
+    staked_units = sum(max(0.0, parse_float(row.get(stake_field)) or 0.0) for row in settled)
+    return {
+        "registered": len(rows),
+        "settled": len(settled),
+        "pending": len(rows) - len(settled),
+        "wins": wins,
+        "losses": losses,
+        "voids": voids,
+        "staked_units": staked_units,
+        "pnl_units": pnl_units,
+        "roi": (pnl_units / staked_units * 100) if staked_units > 0 else None,
+    }
+
+
 def build_settled_row(row: dict[str, str], league_key: str, competition: str | None = None) -> dict[str, Any]:
     ev_value = parse_float(row.get("ev"))
     return {
@@ -810,6 +835,9 @@ def build_settled_row(row: dict[str, str], league_key: str, competition: str | N
         "bet_outcome": row.get("bet_outcome", ""),
         "settlement_note": row.get("settlement_note", ""),
         "pnl_units": parse_float(row.get("pnl_units")),
+        "tracking_tier": row.get("tracking_tier", ""),
+        "quarantine_reason": row.get("quarantine_reason", ""),
+        "evaluation_stake_units": parse_float(row.get("evaluation_stake_units")),
     }
 
 
@@ -1319,6 +1347,7 @@ def build_research_status() -> dict[str, Any]:
     segments = read_text(segment_path)
     clv = read_text(clv_path)
 
+    pooled_raw = report_csv_row(walkforward, "Pooled metrics", "raw")
     pooled_beta = report_csv_row(walkforward, "Pooled metrics", "beta")
     beta_gate = report_csv_row(walkforward, "Promotion gate", "beta")
     clv_coverage_match = re.search(
@@ -1348,6 +1377,9 @@ def build_research_status() -> dict[str, Any]:
             "ece": parse_float(pooled_beta[4]) if len(pooled_beta) > 4 else None,
             "predicted": parse_float(pooled_beta[5]) if len(pooled_beta) > 5 else None,
             "actual": parse_float(pooled_beta[6]) if len(pooled_beta) > 6 else None,
+            "raw_brier": parse_float(pooled_raw[2]) if len(pooled_raw) > 2 else None,
+            "raw_log_loss": parse_float(pooled_raw[3]) if len(pooled_raw) > 3 else None,
+            "raw_ece": parse_float(pooled_raw[4]) if len(pooled_raw) > 4 else None,
             "evaluated_folds": parse_int(beta_gate[1]) if len(beta_gate) > 1 else 0,
             "fold_wins": parse_int(beta_gate[2]) if len(beta_gate) > 2 else 0,
             "probability_gate": beta_gate[3] if len(beta_gate) > 3 else "NOT_RUN",
@@ -1390,6 +1422,9 @@ def build_snapshot(snapshot_key: str) -> dict[str, Any]:
     shadow_yesterday_rows: list[dict[str, Any]] = []
     shadow_by_league: list[dict[str, Any]] = []
     public_by_league: list[dict[str, Any]] = []
+    quarantine_by_league: list[dict[str, Any]] = []
+    quarantine_recent_rows: list[dict[str, Any]] = []
+    all_quarantine_rows: list[dict[str, str]] = []
     source_feed_gap_leagues: list[dict[str, Any]] = []
     raw_monitor_summary_chunks: list[str] = []
     penalty_watchlist_rows: list[dict[str, Any]] = []
@@ -1416,6 +1451,8 @@ def build_snapshot(snapshot_key: str) -> dict[str, Any]:
 
         shadow_rows = read_csv_rows(config["shadow_signals_csv"])
         public_rows = read_csv_rows(config["public_signals_csv"])
+        quarantine_rows = read_csv_rows(config["quarantine_signals_csv"])
+        all_quarantine_rows.extend(quarantine_rows)
         all_public_signal_rows.extend(public_rows)
         kickoff_lookup = build_kickoff_lookup([*shadow_rows, *public_rows])
 
@@ -1423,6 +1460,7 @@ def build_snapshot(snapshot_key: str) -> dict[str, Any]:
         league_shadow_live = [row for row in active_rows if row.get("shadow_action") == "shadow_track" and row.get("public_action") != "surface"]
         shadow_summary = compute_shadow_summary(shadow_rows)
         public_summary = compute_public_summary(public_rows)
+        quarantine_summary = compute_evidence_summary(quarantine_rows, "evaluation_stake_units")
         output_status = league_output_status(comparison_metrics, bool(comparison_json or comparison_rows))
 
         if output_status["detail"]:
@@ -1446,6 +1484,7 @@ def build_snapshot(snapshot_key: str) -> dict[str, Any]:
         })
         shadow_by_league.append({"key": config["key"], "label": config["label"], "signals": shadow_summary["signals"], "settled": shadow_summary["settled"], "open": shadow_summary["pending"] + shadow_summary["open"], "wins": shadow_summary["wins"], "losses": shadow_summary["losses"], "voids": shadow_summary["voids"], "roi": shadow_summary["roi"], "pnl_units": shadow_summary["pnl_units"]})
         public_by_league.append({"key": config["key"], "label": config["label"], "settled": public_summary["settled"], "wins": public_summary["wins"], "losses": public_summary["losses"], "roi": public_summary["roi"], "pnl_units": public_summary["pnl_units"]})
+        quarantine_by_league.append({"key": config["key"], "label": config["label"], **quarantine_summary})
         raw_monitor_summary_chunks.append(f"=== {config['label']} | {'Updated ' + format_date_time(comparison_mtime) if comparison_mtime else 'Update time unavailable'} ===\n{comparison_text or 'Missing goalscorer live summary.'}")
 
         for row in shadow_rows:
@@ -1457,6 +1496,11 @@ def build_snapshot(snapshot_key: str) -> dict[str, Any]:
                 shadow_today_rows.append(settled_row)
             if is_settled_shadow_row(row) and target_iso == yesterday_iso:
                 shadow_yesterday_rows.append(settled_row)
+
+        for row in quarantine_rows:
+            quarantine_recent_rows.append(
+                build_settled_row(row, config["key"], row.get("competition") or config["label"])
+            )
 
         for row in [*league_public_live, *league_shadow_live]:
             ev_value = parse_float(row.get("ev"))
@@ -1520,6 +1564,8 @@ def build_snapshot(snapshot_key: str) -> dict[str, Any]:
 
     live_bets.sort(key=lambda row: (kickoff_sort_value(str(row.get("kickoff") or "")), 0 if row.get("status") == "PUBLIC" else 1, -((row.get("edge_pct") or 0) if isinstance(row.get("edge_pct"), (int, float)) else 0)))
     shadow_recent_rows.sort(key=lambda row: shadow_row_activity_time({"settled_at": row.get("settled_at", ""), "compared_at": row.get("compared_at", ""), "kickoff": row.get("kickoff", ""), "date": row.get("date", "")}), reverse=True)
+    quarantine_recent_rows.sort(key=lambda row: shadow_row_activity_time({"settled_at": row.get("settled_at", ""), "compared_at": row.get("compared_at", ""), "kickoff": row.get("kickoff", ""), "date": row.get("date", "")}), reverse=True)
+    quarantine_summary = compute_evidence_summary(all_quarantine_rows, "evaluation_stake_units")
     clean_count = sum(1 for row in fixture_health_rows if row.get("trust_tier") == "T1")
     degraded_count = sum(1 for row in fixture_health_rows if row.get("trust_tier") == "T2")
     quarantined_count = sum(1 for row in fixture_health_rows if row.get("trust_tier") == "T3")
@@ -1530,7 +1576,7 @@ def build_snapshot(snapshot_key: str) -> dict[str, Any]:
     avg_ev_pct = (sum(ev_values) / len(ev_values) * 100) if ev_values else None
 
     payload = {
-        "schema_version": 2,
+        "schema_version": 3,
         "generated_at": utc_now_iso(),
         "source_status": {
             "compared_at": newest_timestamp([*(row.get("compared_at") for row in all_active_rows), newest_timestamp(comparison_mtims)]),
@@ -1550,6 +1596,11 @@ def build_snapshot(snapshot_key: str) -> dict[str, Any]:
         "preseason_role_review": {"generated_at": newest_timestamp(preseason_role_generated_values), "row_count": len(preseason_role_review_rows), "rows": preseason_role_review_rows},
         "shadow_summary": {"by_league": shadow_by_league, "recent_rows": shadow_recent_rows[:50], "settled_today": shadow_today_rows, "settled_yesterday": shadow_yesterday_rows},
         "public_summary": {"by_league": public_by_league},
+        "extreme_gap_quarantine": {
+            **quarantine_summary,
+            "by_league": quarantine_by_league,
+            "recent_rows": quarantine_recent_rows[:50],
+        },
         "diagnostics": {"matched_rows": len(all_active_rows), "suppressed_rows": sum(1 for row in all_active_rows if effective_monitor_action(row) == "suppress"), "fixtures_with_confirmed_lineups": sum(parse_int(parse_summary_metrics(read_text(config["comparison_txt"])).get("Fixtures With Confirmed Lineups")) or 0 for config in LEAGUE_CONFIGS), "fixtures_with_expected_xis": sum(parse_int(parse_summary_metrics(read_text(config["comparison_txt"])).get("Fixtures With Expected Lineups")) or 0 for config in LEAGUE_CONFIGS), "history_mapped_rows": sum(1 for row in all_active_rows if row.get("resolver_source") == "history"), "roster_mapped_rows": sum(1 for row in all_active_rows if row.get("resolver_source") == "live_roster"), "fallback_rows": sum(parse_int(parse_summary_metrics(read_text(config["comparison_txt"])).get("Fallback Rows")) or 0 for config in LEAGUE_CONFIGS), "low_confidence_rows": sum(1 for row in all_active_rows if row.get("signal_confidence") == "low"), "missing_player_history_rows": sum(parse_int(parse_summary_metrics(read_text(config["comparison_txt"])).get("Missing Player History")) or 0 for config in LEAGUE_CONFIGS), "starter_rows": sum(1 for row in all_active_rows if row.get("lineup_status", "").lower() == "confirmed_starter"), "expected_starter_rows": sum(1 for row in all_active_rows if row.get("lineup_status", "").lower() == "expected_starter"), "avg_ev_pct": avg_ev_pct, "source_feed_gap_leagues": source_feed_gap_leagues, "raw_monitor_summary": "\n\n".join(raw_monitor_summary_chunks)},
         "research_status": build_research_status(),
         "snapshot_key": snapshot_key,

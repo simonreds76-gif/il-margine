@@ -84,6 +84,9 @@ export type GoalscorerSettledRow = {
   bet_outcome: string;
   settlement_note: string;
   pnl_units: number | null;
+  tracking_tier?: string;
+  quarantine_reason?: string;
+  evaluation_stake_units?: number | null;
 };
 
 export type GoalscorerFixtureHealthRow = {
@@ -281,6 +284,31 @@ export type GoalscorerMonitorSnapshot = {
       pnl_units: number;
     }>;
   };
+  extreme_gap_quarantine: {
+    registered: number;
+    settled: number;
+    pending: number;
+    wins: number;
+    losses: number;
+    voids: number;
+    staked_units: number;
+    pnl_units: number;
+    roi: number | null;
+    by_league: Array<{
+      key: string;
+      label: string;
+      registered: number;
+      settled: number;
+      pending: number;
+      wins: number;
+      losses: number;
+      voids: number;
+      staked_units: number;
+      pnl_units: number;
+      roi: number | null;
+    }>;
+    recent_rows: GoalscorerSettledRow[];
+  };
   diagnostics: {
     matched_rows: number;
     suppressed_rows: number;
@@ -320,6 +348,9 @@ export type GoalscorerMonitorSnapshot = {
       ece: number | null;
       predicted: number | null;
       actual: number | null;
+      raw_brier: number | null;
+      raw_log_loss: number | null;
+      raw_ece: number | null;
       evaluated_folds: number;
       fold_wins: number;
       probability_gate: string;
@@ -475,6 +506,30 @@ function normalizeSnapshot(payload: GoalscorerMonitorSnapshot | null): Goalscore
       settled_today: normalizeSettledRows(payload.shadow_summary?.settled_today),
       settled_yesterday: normalizeSettledRows(payload.shadow_summary?.settled_yesterday),
     },
+    extreme_gap_quarantine: {
+      registered: payload.extreme_gap_quarantine?.registered ?? 0,
+      settled: payload.extreme_gap_quarantine?.settled ?? 0,
+      pending: payload.extreme_gap_quarantine?.pending ?? 0,
+      wins: payload.extreme_gap_quarantine?.wins ?? 0,
+      losses: payload.extreme_gap_quarantine?.losses ?? 0,
+      voids: payload.extreme_gap_quarantine?.voids ?? 0,
+      staked_units: payload.extreme_gap_quarantine?.staked_units ?? 0,
+      pnl_units: payload.extreme_gap_quarantine?.pnl_units ?? 0,
+      roi: payload.extreme_gap_quarantine?.roi ?? null,
+      by_league: payload.extreme_gap_quarantine?.by_league ?? [],
+      recent_rows: normalizeSettledRows(payload.extreme_gap_quarantine?.recent_rows).slice(0, 50),
+    },
+    research_status: payload.research_status
+      ? {
+          ...payload.research_status,
+          calibration: {
+            ...payload.research_status.calibration,
+            raw_brier: payload.research_status.calibration?.raw_brier ?? null,
+            raw_log_loss: payload.research_status.calibration?.raw_log_loss ?? null,
+            raw_ece: payload.research_status.calibration?.raw_ece ?? null,
+          },
+        }
+      : undefined,
     preseason_role_review: payload.preseason_role_review || {
       generated_at: null,
       row_count: 0,

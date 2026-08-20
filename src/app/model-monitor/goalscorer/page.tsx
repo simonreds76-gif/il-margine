@@ -133,6 +133,11 @@ function settlementRowTint(outcome?: string | null) {
   return "";
 }
 
+function evidenceOutcomeLabel(row: SettlementRow) {
+  if (row.settled) return row.bet_outcome || "settled";
+  return "pending";
+}
+
 // --- Penalty review card -----------------------------------------------------
 
 function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
@@ -463,7 +468,7 @@ function SettlementCard({ row }: { row: SettlementRow }) {
             />
           </div>
         </div>
-        <StatusPill label={row.bet_outcome || "unknown"} tone={statusTone(row.bet_outcome)} />
+        <StatusPill label={evidenceOutcomeLabel(row)} tone={statusTone(evidenceOutcomeLabel(row))} />
       </div>
       <div className="mt-1">
         <MatchLabel
@@ -474,6 +479,11 @@ function SettlementCard({ row }: { row: SettlementRow }) {
           textClassName="truncate text-xs text-slate-400"
         />
       </div>
+      {row.quarantine_reason ? (
+        <div className="mt-2 text-[11px] text-amber-300/80">
+          {row.quarantine_reason.replaceAll("_", " ")}
+        </div>
+      ) : null}
       <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs tabular-nums">
         <span className="text-slate-500">
           Odds <span className="text-slate-300">{formatOdds(row.best_bookmaker_odds)}</span>
@@ -500,11 +510,13 @@ function SettlementCard({ row }: { row: SettlementRow }) {
 
 function RecentSettlementsTable({
   rows,
+  emptyMessage = "No settled shadow rows are available in the snapshot yet.",
 }: {
   rows: GoalscorerMonitorSnapshot["shadow_summary"]["recent_rows"];
+  emptyMessage?: string;
 }) {
   if (rows.length === 0) {
-    return <EmptyState message="No settled shadow rows are available in the snapshot yet." />;
+    return <EmptyState message={emptyMessage} />;
   }
 
   return (
@@ -555,6 +567,11 @@ function RecentSettlementsTable({
               >
                 <td className="py-2.5 pr-4">
                   <div className="font-medium leading-tight text-white">{row.player}</div>
+                  {row.quarantine_reason ? (
+                    <div className="mt-0.5 text-[10px] text-amber-300/75">
+                      {row.quarantine_reason.replaceAll("_", " ")}
+                    </div>
+                  ) : null}
                   <div className="mt-1">
                     <TeamLabel
                       league={row.league_key}
@@ -577,7 +594,7 @@ function RecentSettlementsTable({
                   </div>
                 </td>
                 <td className="py-2.5 pr-4">
-                  <StatusPill label={row.bet_outcome || "unknown"} tone={statusTone(row.bet_outcome)} />
+                  <StatusPill label={evidenceOutcomeLabel(row)} tone={statusTone(evidenceOutcomeLabel(row))} />
                 </td>
                 <td className="py-2.5 pr-4 text-right tabular-nums text-slate-300">
                   {formatOdds(row.best_bookmaker_odds)}
@@ -704,6 +721,15 @@ export default async function GoalscorerMonitorPage() {
   const shadowNow = numericSum(snapshot.league_cards.map((c) => c.shadow_now));
   const heartbeat = hostedHeartbeat(snapshot);
   const research = snapshot.research_status;
+  const extremeGap = snapshot.extreme_gap_quarantine;
+  const rawCalibrationEce = research?.calibration.raw_ece ?? null;
+  const betaBrierDelta =
+    research?.calibration.brier !== null &&
+    research?.calibration.brier !== undefined &&
+    research.calibration.raw_brier !== null &&
+    research.calibration.raw_brier !== undefined
+      ? research.calibration.brier - research.calibration.raw_brier
+      : null;
 
   const activePenaltyRows: SnapshotPenaltyRow[] = snapshot.penalty_watchlist.rows
     .filter((row) => !penaltyState[row.row_id])
@@ -832,7 +858,8 @@ export default async function GoalscorerMonitorPage() {
                 compact
                 label="Beta candidate ECE"
                 value={research.calibration.ece === null ? "-" : `${(research.calibration.ece * 100).toFixed(2)}%`}
-                detail={`${research.calibration.fold_wins}/${research.calibration.evaluated_folds} fold wins | ${research.calibration.decision.replaceAll("_", " ").toLowerCase()}`}
+                detail={`Raw ${rawCalibrationEce === null ? "-" : `${(rawCalibrationEce * 100).toFixed(2)}%`} | ${research.calibration.fold_wins}/${research.calibration.evaluated_folds} fold wins`}
+                tone={research.calibration.ece !== null && rawCalibrationEce !== null && research.calibration.ece < rawCalibrationEce ? "text-emerald-300" : "text-amber-300"}
               />
               <StatCard
                 compact
@@ -851,10 +878,53 @@ export default async function GoalscorerMonitorPage() {
             </div>
 
             <p className="mt-3 text-xs leading-5 text-slate-500">
-              Promotion remains blocked until the fifth walk-forward fold exists and real captured ATGS prices prove non-negative ROI/CLV. Probability improvements alone do not create a betting edge.
+              Held-out beta calibration has {betaBrierDelta === null ? "no comparable Brier result yet" : `changed pooled Brier by ${betaBrierDelta >= 0 ? "+" : ""}${betaBrierDelta.toFixed(5)} versus raw`}. Promotion remains blocked until the fifth walk-forward fold exists and real captured ATGS prices prove non-negative ROI/CLV. Probability improvements alone do not create a betting edge.
             </p>
           </SectionCard>
         ) : null}
+
+        <SectionCard
+          title={`Extreme-gap Quarantine | ${extremeGap.registered} registered`}
+          subtitle="Rows rejected by the public 10pp / 1.5x probability guard. Zero recommended stake; tracked at a fixed 1u evaluation stake."
+          collapsible
+          defaultOpen
+        >
+          <div className="flex flex-wrap items-center gap-2">
+            <StatusPill label="Research only" tone={statusTone("warning")} />
+            <StatusPill label="Public routing unchanged" tone={statusTone("healthy")} />
+            <span className="text-xs text-slate-500">
+              The cohort tests whether large disagreements contain edge without exposing public users to unproven prices.
+            </span>
+          </div>
+
+          <div className="mt-4 grid gap-2.5 sm:grid-cols-2 xl:grid-cols-5">
+            <StatCard compact label="Registered" value={String(extremeGap.registered)} detail={`${extremeGap.pending} pending`} />
+            <StatCard compact label="Settled" value={String(extremeGap.settled)} detail={`${extremeGap.wins}W / ${extremeGap.losses}L / ${extremeGap.voids}V`} />
+            <StatCard compact label="Evaluation P&L" value={formatUnits(extremeGap.pnl_units)} tone={toneClass(extremeGap.pnl_units)} detail={`${extremeGap.staked_units.toFixed(2)}u evaluated`} />
+            <StatCard compact label="Evaluation ROI" value={formatPct(extremeGap.roi)} tone={toneClass(extremeGap.roi)} detail="Not a public track record" />
+            <StatCard compact label="Public stake" value="0.00u" detail="Fail-closed guard" />
+          </div>
+
+          {extremeGap.by_league.some((row) => row.registered > 0) ? (
+            <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
+              {extremeGap.by_league.filter((row) => row.registered > 0).map((row) => (
+                <div key={row.key} className="rounded-lg border border-slate-800/60 bg-slate-950/40 px-3 py-2">
+                  <div className="text-xs font-medium text-slate-300">{row.label}</div>
+                  <div className="mt-1 text-[11px] tabular-nums text-slate-500">
+                    {row.settled}/{row.registered} settled | <span className={toneClass(row.pnl_units)}>{formatUnits(row.pnl_units)}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : null}
+
+          <div className="mt-4">
+            <RecentSettlementsTable
+              rows={extremeGap.recent_rows}
+              emptyMessage="No otherwise-eligible extreme-gap rows have been registered yet. The guard remains active and the cohort will populate automatically."
+            />
+          </div>
+        </SectionCard>
 
         {/* -- League Scoreboard ----------------------------------------------- */}
         <SectionCard
