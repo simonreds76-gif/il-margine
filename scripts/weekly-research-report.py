@@ -52,6 +52,7 @@ AUTOMATION_BUDGET = ROOT / "data" / "ops" / "automation-budget-report.json"
 GOALKEEPER_SAVES_EVIDENCE = ROOT / "data" / "goalkeeper-saves" / "gk-saves-v1-evidence.json"
 GOALKEEPER_SAVES_MARKET_PROBE = ROOT / "data" / "goalkeeper-saves" / "gk-saves-market-probe.json"
 GOALKEEPER_SAVES_SHADOW_REPORT = ROOT / "data" / "goalkeeper-saves" / "gk-saves-v1-shadow-report.json"
+GOALKEEPER_SAVES_CAPTURE_STATUS = ROOT / "data" / "goalkeeper-saves" / "gk-saves-capture-status.json"
 TENNIS_GAP_REPORT = ROOT / "data" / "backtest" / "tennis-model-market-gap-report.json"
 TENNIS_EVIDENCE_SNAPSHOT_LOCAL = ROOT / "data" / "tennis-props" / "tennis-evidence-snapshot.json"
 TENNIS_EVIDENCE_SNAPSHOT_KEY = "tennis_evidence_v1"
@@ -365,6 +366,7 @@ def goalkeeper_saves_research_summary() -> dict[str, Any]:
     evidence = load_json(GOALKEEPER_SAVES_EVIDENCE)
     market = load_json(GOALKEEPER_SAVES_MARKET_PROBE)
     prospective = load_json(GOALKEEPER_SAVES_SHADOW_REPORT)
+    capture = load_json(GOALKEEPER_SAVES_CAPTURE_STATUS)
     folds = evidence.get("folds") or []
     count_pass = bool(folds) and all(
         number(((fold.get("models") or {}).get("NB2_FULL") or {}).get("brier"))
@@ -383,6 +385,10 @@ def goalkeeper_saves_research_summary() -> dict[str, Any]:
         "model_samples": int(number(evidence.get("model_samples"))),
         "market_status": market.get("status", "NOT_RUN"),
         "over_lines": len(observed.get("over_lines") or []),
+        "capture_status": capture.get("status", "NOT_RUN"),
+        "capture_events_selected": int(number(capture.get("events_selected"))),
+        "capture_events_with_lines": int(number(capture.get("events_with_lines"))),
+        "capture_rows_observed": int(number(capture.get("rows_observed"))),
         "prospective_status": prospective.get("status", "CAPTURE_NOT_BUILT"),
         "priced_lines": int(number(current.get("priced_lines"))),
         "eligible_lines": int(number(current.get("eligible_lines"))),
@@ -1298,6 +1304,8 @@ def render_report(payload: dict[str, Any]) -> str:
     corners_v3 = (vnext.get("corners_v3") or {})
     team_v4_live = team_v4.get("prospective") or {}
     corners_v3_live = corners_v3.get("prospective") or {}
+    team_v4_scan = team_v4.get("latest_scan") or {}
+    corners_v3_scan = corners_v3.get("latest_scan") or {}
 
     lines = [
         "# Weekly Research Lane Report",
@@ -1309,13 +1317,15 @@ def render_report(payload: dict[str, Any]) -> str:
         "",
         f"- Team Shots v4: count {team_v4.get('count_gate', 'NOT_RUN')}; prospective {team_v4.get('prospective_status', 'BLOCKED')}; promotion {team_v4.get('promotion_gate', 'BLOCKED')}.",
         f"- Team Shots v4 evidence: {team_v4_live.get('signals', 0)} signals, {team_v4_live.get('settled', 0)} settled, {number(team_v4_live.get('pnl_units')):+.2f}u, ROI {pct(number(team_v4_live.get('roi')) * 100) if team_v4_live.get('roi') is not None else '-'}, true-close CLV {pct(number(team_v4_live.get('mean_true_close_clv')) * 100) if team_v4_live.get('mean_true_close_clv') is not None else '-'}.",
+        f"- Team Shots v4 latest scan: {team_v4_scan.get('state', 'NOT_RUN')}; {team_v4_scan.get('scored_rows', 0)} rows / {team_v4_scan.get('scored_fixtures', 0)} fixtures scored; {team_v4_scan.get('edge_pass_but_warmup_blocked_fixtures', 0)} fixtures passed edge but were warm-up blocked; blockers {team_v4_scan.get('blocker_rows') or '-'}.",
         f"- Corners v3: count {corners_v3.get('count_gate', 'NOT_RUN')}; prospective {corners_v3.get('prospective_status', 'BLOCKED')}; promotion {corners_v3.get('promotion_gate', 'BLOCKED')}.",
         f"- Corners v3 evidence: {corners_v3_live.get('signals', 0)} signals, {corners_v3_live.get('settled', 0)} settled, {number(corners_v3_live.get('pnl_units')):+.2f}u, ROI {pct(number(corners_v3_live.get('roi')) * 100) if corners_v3_live.get('roi') is not None else '-'}, true-close CLV {pct(number(corners_v3_live.get('mean_true_close_clv')) * 100) if corners_v3_live.get('mean_true_close_clv') is not None else '-'}.",
+        f"- Corners v3 latest scan: {corners_v3_scan.get('state', 'NOT_RUN')}; {corners_v3_scan.get('scored_rows', 0)} rows / {corners_v3_scan.get('scored_fixtures', 0)} fixtures scored; {corners_v3_scan.get('edge_pass_but_warmup_blocked_fixtures', 0)} fixtures passed edge but were warm-up blocked; blockers {corners_v3_scan.get('blocker_rows') or '-'}.",
         "- Neither experiment changes live routing or stakes.",
         f"- API-Football count archive: {api_health.get('archive_rows', 0)} fixtures; latest {api_health.get('latest_fixture_date') or '-'}; last run {api_health.get('requests_used', 0)}/{api_health.get('max_requests', 0)} requests.",
         f"- Cross-provider agreement: {api_agreement.get('matched_fixtures', 0)}/{api_agreement.get('api_rows', 0)} API fixtures matched; status {api_agreement.get('status', 'NOT_RUN')}.",
         f"- Team Fouls: F1 {team_fouls_decision.get('status', 'NOT_RUN')}; F2 {team_fouls_f2_decision.get('status', 'NOT_RUN')}; M2 {team_fouls_m2.get('status', 'NOT_RUN')}; market prices BLOCKED; signals disabled.",
-        f"- Goalkeeper Saves v1: count {goalkeeper_saves.get('count_gate', 'NOT_RUN')} on {goalkeeper_saves.get('historical_observations', 0):,} observations; market {goalkeeper_saves.get('market_status', 'NOT_RUN')} ({goalkeeper_saves.get('over_lines', 0)} probe Over lines); prospective {goalkeeper_saves.get('prospective_status', 'BLOCKED')} with {goalkeeper_saves.get('priced_lines', 0)} priced lines, {goalkeeper_saves.get('eligible_lines', 0)} eligible, {goalkeeper_saves.get('signals', 0)} signals and {goalkeeper_saves.get('settled', 0)} settled; ROI {ratio_pct(goalkeeper_saves.get('roi'))}, CLV {ratio_pct(goalkeeper_saves.get('clv'))} n={goalkeeper_saves.get('clv_matched', 0)}; promotion BLOCKED.",
+        f"- Goalkeeper Saves v1: count {goalkeeper_saves.get('count_gate', 'NOT_RUN')} on {goalkeeper_saves.get('historical_observations', 0):,} observations; discovery {goalkeeper_saves.get('market_status', 'NOT_RUN')} ({goalkeeper_saves.get('over_lines', 0)} probe Over lines); latest capture {goalkeeper_saves.get('capture_status', 'NOT_RUN')} ({goalkeeper_saves.get('capture_events_selected', 0)} events selected / {goalkeeper_saves.get('capture_rows_observed', 0)} rows); prospective {goalkeeper_saves.get('prospective_status', 'BLOCKED')} with {goalkeeper_saves.get('priced_lines', 0)} priced lines, {goalkeeper_saves.get('eligible_lines', 0)} eligible, {goalkeeper_saves.get('signals', 0)} signals and {goalkeeper_saves.get('settled', 0)} settled; ROI {ratio_pct(goalkeeper_saves.get('roi'))}, CLV {ratio_pct(goalkeeper_saves.get('clv'))} n={goalkeeper_saves.get('clv_matched', 0)}; promotion BLOCKED.",
         "- New provider fields remain diagnostic-only until source definitions and coverage are accepted.",
         "",
         "## Team Shots V3 EMA20 Research",
@@ -1524,6 +1534,8 @@ def telegram_text(payload: dict[str, Any]) -> str:
     corners_v3 = (vnext.get("corners_v3") or {})
     team_v4_live = team_v4.get("prospective") or {}
     corners_v3_live = corners_v3.get("prospective") or {}
+    team_v4_scan = team_v4.get("latest_scan") or {}
+    corners_v3_scan = corners_v3.get("latest_scan") or {}
     tennis_lanes = tennis_model_evidence.get("lanes") or {}
     gap_replacements = tennis_model_evidence.get("gap_replacements") or {}
     gap_source_status = tennis_model_evidence.get("gap_source_status", "SOURCE_MISSING")
@@ -1579,11 +1591,13 @@ def telegram_text(payload: dict[str, Any]) -> str:
         ),
         "",
         f"Team Shots v4: {team_v4.get('prospective_status', 'BLOCKED')} | {team_v4_live.get('settled', 0)} settled | {number(team_v4_live.get('pnl_units')):+.2f}u | ROI {pct(number(team_v4_live.get('roi')) * 100) if team_v4_live.get('roi') is not None else '-'} | CLV {pct(number(team_v4_live.get('mean_true_close_clv')) * 100) if team_v4_live.get('mean_true_close_clv') is not None else '-'} | promotion {team_v4.get('promotion_gate', 'BLOCKED')}",
+        f"Team Shots scan: {team_v4_scan.get('state', 'NOT_RUN')} | scored {team_v4_scan.get('scored_rows', 0)} rows/{team_v4_scan.get('scored_fixtures', 0)} fixtures | edge-pass warmup blocks {team_v4_scan.get('edge_pass_but_warmup_blocked_fixtures', 0)}",
         f"Corners v3: {corners_v3.get('prospective_status', 'BLOCKED')} | {corners_v3_live.get('settled', 0)} settled | {number(corners_v3_live.get('pnl_units')):+.2f}u | ROI {pct(number(corners_v3_live.get('roi')) * 100) if corners_v3_live.get('roi') is not None else '-'} | CLV {pct(number(corners_v3_live.get('mean_true_close_clv')) * 100) if corners_v3_live.get('mean_true_close_clv') is not None else '-'} | promotion {corners_v3.get('promotion_gate', 'BLOCKED')}",
+        f"Corners scan: {corners_v3_scan.get('state', 'NOT_RUN')} | scored {corners_v3_scan.get('scored_rows', 0)} rows/{corners_v3_scan.get('scored_fixtures', 0)} fixtures | edge-pass warmup blocks {corners_v3_scan.get('edge_pass_but_warmup_blocked_fixtures', 0)}",
         f"Legacy controls: Team Shots V3 {team_clv['settled']} settled/{team_clv['pnl_units']:+.2f}u; Corners V0 {corners_clv['settled']} settled/{corners_clv['pnl_units']:+.2f}u",
         f"Count-source health: API-Football {api_health.get('archive_rows', 0)} archived, latest {api_health.get('latest_fixture_date') or '-'}, agreement {api_agreement.get('matched_fixtures', 0)}/{api_agreement.get('api_rows', 0)}",
         f"Team Fouls: F1 {team_fouls_decision.get('status', 'NOT_RUN')}; F2 {team_fouls_f2_decision.get('status', 'NOT_RUN')}; sources {team_fouls_m2.get('status', 'NOT_RUN')}; no signals",
-        f"GK Saves v1: count {goalkeeper_saves.get('count_gate', 'NOT_RUN')} n={goalkeeper_saves.get('historical_observations', 0)} | market {goalkeeper_saves.get('market_status', 'NOT_RUN')} ({goalkeeper_saves.get('over_lines', 0)} probe Over lines) | prospective {goalkeeper_saves.get('prospective_status', 'BLOCKED')} priced={goalkeeper_saves.get('priced_lines', 0)} eligible={goalkeeper_saves.get('eligible_lines', 0)} signals={goalkeeper_saves.get('signals', 0)} settled={goalkeeper_saves.get('settled', 0)} ROI={ratio_pct(goalkeeper_saves.get('roi'))} CLV={ratio_pct(goalkeeper_saves.get('clv'))} n={goalkeeper_saves.get('clv_matched', 0)} | promotion BLOCKED",
+        f"GK Saves v1: count {goalkeeper_saves.get('count_gate', 'NOT_RUN')} n={goalkeeper_saves.get('historical_observations', 0)} | discovery {goalkeeper_saves.get('market_status', 'NOT_RUN')} ({goalkeeper_saves.get('over_lines', 0)} probe Over lines) | capture {goalkeeper_saves.get('capture_status', 'NOT_RUN')} events={goalkeeper_saves.get('capture_events_selected', 0)} rows={goalkeeper_saves.get('capture_rows_observed', 0)} | prospective {goalkeeper_saves.get('prospective_status', 'BLOCKED')} priced={goalkeeper_saves.get('priced_lines', 0)} eligible={goalkeeper_saves.get('eligible_lines', 0)} signals={goalkeeper_saves.get('signals', 0)} settled={goalkeeper_saves.get('settled', 0)} ROI={ratio_pct(goalkeeper_saves.get('roi'))} CLV={ratio_pct(goalkeeper_saves.get('clv'))} n={goalkeeper_saves.get('clv_matched', 0)} | promotion BLOCKED",
         f"Goalscorer V2: {goalscorer['ledger']['settled']} settled | {goalscorer['ledger']['pnl_units']:+.2f}u | ROI {pct(goalscorer['ledger']['roi_pct'])} | CLV {goalscorer['matched_closes']}/{goalscorer['signals']} | {goalscorer['decision']}",
         f"Assist V1: {assist['lane_status']} | backtest {assist['backtest_status']} | settlement {assist['settlement_status']} | market {assist['market_status']} ({assist['market_calendar_span_days']}/90d) | prospective {assist['prospective']['settled']}/{assist['prospective_target']} | <=30 API calls/week | {assist['decision']}",
         f"Automation: {automation.get('status', 'NOT_RUN')} | Odds-API worst hour {odds_budget.get('max_requests_in_one_hour', '-')}/{odds_budget.get('requests_per_hour', '-')} | DB writes/week max {(automation.get('database') or {}).get('registered_writes_per_week_max', '-')}",

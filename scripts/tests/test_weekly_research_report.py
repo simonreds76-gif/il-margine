@@ -72,6 +72,7 @@ class WeeklyResearchReportTests(unittest.TestCase):
             payload["goalkeeper_saves_v1"]["market_status"],
             "OVER_ONLY_GOALKEEPER_SAVE_PRICES_RETURNED",
         )
+        self.assertIn("capture_status", payload["goalkeeper_saves_v1"])
         self.assertFalse(payload["goalkeeper_saves_v1"]["sellable"])
         self.assertIn("tennis_venue_ace_factor_v1", payload)
         self.assertFalse(payload["tennis_venue_ace_factor_v1"]["automatic_promotion"])
@@ -97,6 +98,9 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertIn("Inactive tennis research (not tips)", message)
         self.assertIn("Hard side-flip evidence [BROAD DIAGNOSTIC]", message)
         self.assertIn("GK Saves v1: count PASS", message)
+        self.assertIn("Team Shots scan:", message)
+        self.assertIn("Corners scan:", message)
+        self.assertIn("| capture ", message)
         self.assertLessEqual(len(message), 4096)
 
     def test_tennis_only_telegram_report_is_complete_and_compact(self) -> None:

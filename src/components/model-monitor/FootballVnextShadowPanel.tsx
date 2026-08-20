@@ -13,6 +13,20 @@ type ProspectiveGate = {
   dominant_side_share?: number;
 };
 
+type LatestScan = {
+  state?: string;
+  explanation?: string;
+  scored_rows?: number;
+  scored_fixtures?: number;
+  eligible_rows?: number;
+  blocked_rows?: number;
+  blocker_rows?: Record<string, number>;
+  edge_pass_but_warmup_blocked_fixtures?: number;
+  matchday_min?: number | null;
+  matchday_max?: number | null;
+  next_unlock?: string | null;
+};
+
 export type FootballVnextGate = {
   count_gate?: string;
   prospective_status?: string;
@@ -20,6 +34,7 @@ export type FootballVnextGate = {
   promotion_gate?: string;
   live_routing?: boolean;
   prospective?: ProspectiveGate;
+  latest_scan?: LatestScan;
 };
 
 function numberValue(value: string | number | null | undefined): number | null {
@@ -113,6 +128,12 @@ export default function FootballVnextShadowPanel({
     .sort((a, b) => (numberValue(b.edge) ?? Number.NEGATIVE_INFINITY) - (numberValue(a.edge) ?? Number.NEGATIVE_INFINITY))
     .slice(0, 8);
   const evidence = gate?.prospective;
+  const latestScan = gate?.latest_scan;
+  const scanIsExpectedWarmup = latestScan?.state === "EXPECTED_WARMUP_BLOCK";
+  const scanIsHealthy = scanIsExpectedWarmup || latestScan?.state === "ELIGIBLE_CANDIDATES_PRESENT";
+  const scanBlockers = Object.entries(latestScan?.blocker_rows ?? {})
+    .map(([reason, count]) => `${blockReasonLabel(reason)} ${count}`)
+    .join(" · ");
 
   return (
     <section className="overflow-hidden rounded-2xl border border-cyan-500/25 bg-[linear-gradient(135deg,rgba(8,47,73,.22),rgba(2,6,23,.9)_45%,rgba(15,23,42,.86))] shadow-[0_18px_70px_rgba(2,132,199,.08)]">
@@ -146,6 +167,33 @@ export default function FootballVnextShadowPanel({
         <Metric label="ROI" value={percent(roi)} detail="secondary gate" tone={roi !== null && roi > 0 ? "text-emerald-300" : roi !== null && roi < 0 ? "text-rose-300" : undefined} />
         <Metric label="True close" value={settled.length ? `${trueClose.length}/${settled.length}` : "-"} detail={evidence?.true_close_coverage != null ? `${(evidence.true_close_coverage * 100).toFixed(0)}% coverage` : "awaiting settlements"} />
         <Metric label="Mean CLV" value={percent(meanClv)} detail={`true close n=${trueCloseClv.length}`} tone={meanClv !== null && meanClv > 0 ? "text-emerald-300" : meanClv !== null && meanClv < 0 ? "text-rose-300" : undefined} />
+      </div>
+
+      <div className="border-t border-slate-800/80 px-4 py-4 sm:px-5">
+        <div className={`rounded-xl border px-4 py-3 ${scanIsHealthy ? "border-cyan-400/20 bg-cyan-400/5" : "border-amber-400/20 bg-amber-400/5"}`}>
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">Latest pipeline scan</div>
+              <div className={`mt-1 font-mono text-sm font-semibold ${scanIsHealthy ? "text-cyan-200" : "text-amber-200"}`}>
+                {(latestScan?.state ?? "NOT_RUN").replaceAll("_", " ")}
+              </div>
+              <p className="mt-1 max-w-3xl text-xs leading-5 text-slate-400">
+                {latestScan?.explanation ?? "No reason-coded scan summary has been generated yet."}
+              </p>
+            </div>
+            <div className="grid grid-cols-3 gap-3 text-right text-[11px] text-slate-500">
+              <div><span className="block font-mono text-sm text-slate-200">{latestScan?.scored_rows ?? 0}</span>rows scored</div>
+              <div><span className="block font-mono text-sm text-slate-200">{latestScan?.scored_fixtures ?? 0}</span>fixtures</div>
+              <div><span className="block font-mono text-sm text-amber-200">{latestScan?.edge_pass_but_warmup_blocked_fixtures ?? 0}</span>edge-pass held</div>
+            </div>
+          </div>
+          <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 border-t border-slate-800/70 pt-2 text-[11px] text-slate-500">
+            <span>Matchday range <strong className="font-mono text-slate-300">{latestScan?.matchday_min ?? "-"}–{latestScan?.matchday_max ?? "-"}</strong></span>
+            <span>Eligible rows <strong className="font-mono text-slate-300">{latestScan?.eligible_rows ?? 0}</strong></span>
+            <span>Blocked rows <strong className="font-mono text-slate-300">{latestScan?.blocked_rows ?? 0}</strong></span>
+            <span>Blockers <strong className="font-medium text-slate-300">{scanBlockers || "-"}</strong></span>
+          </div>
+        </div>
       </div>
 
       <div className="border-t border-slate-800/80 px-4 py-4 sm:px-5">

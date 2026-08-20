@@ -18,6 +18,7 @@ DEFAULT_CORNERS_RESULTS = ROOT / "data" / "corners-ou" / "corners-v3-fold-result
 DEFAULT_CORNERS_REPORT = ROOT / "data" / "corners-ou" / "corners-v3-fold-report.md"
 DEFAULT_TEAM_LIVE = ROOT / "data" / "football-form" / "team-shots-v4-shadow-clv.csv"
 DEFAULT_CORNERS_LIVE = ROOT / "data" / "football-form" / "corners-v3-shadow-clv.csv"
+DEFAULT_CANDIDATES = ROOT / "data" / "football-form" / "football-counts-vnext-candidates.csv"
 DEFAULT_JSON = ROOT / "data" / "football-form" / "football-counts-vnext-gate.json"
 DEFAULT_REPORT = ROOT / "data" / "football-form" / "football-counts-vnext-gate.md"
 
@@ -91,6 +92,82 @@ def live_summary(rows: list[dict[str, str]]) -> dict[str, Any]:
     }
 
 
+def candidate_diagnostics(rows: list[dict[str, str]], model: str) -> dict[str, Any]:
+    model_rows = [row for row in rows if str(row.get("model") or "").strip() == model]
+    fixtures = {str(row.get("match_id") or "").strip() for row in model_rows if row.get("match_id")}
+    eligible = [row for row in model_rows if str(row.get("signal_status") or "").lower() == "eligible"]
+    blocked = [row for row in model_rows if row not in eligible]
+    blocker_rows: dict[str, int] = {}
+    matchdays: list[int] = []
+    warmup_only_fixtures: set[str] = set()
+    all_rows_warmup_blocked = bool(blocked)
+    for row in blocked:
+        reasons = {
+            reason.strip()
+            for reason in str(row.get("blocked_reason") or "").split(";")
+            if reason.strip()
+        }
+        if "matchdays_1_to_3" not in reasons:
+            all_rows_warmup_blocked = False
+        for reason in reasons:
+            blocker_rows[reason] = blocker_rows.get(reason, 0) + 1
+        if reasons == {"matchdays_1_to_3"}:
+            warmup_only_fixtures.add(str(row.get("match_id") or "").strip())
+        try:
+            matchdays.append(int(float(str(row.get("matchday") or "0"))))
+        except ValueError:
+            pass
+
+    matchday_max = max(matchdays) if matchdays else None
+    if not model_rows:
+        state = "NO_SCORED_CANDIDATES"
+        explanation = "No paired current market rows reached model scoring. Check capture coverage and fixture joins."
+    elif eligible:
+        state = "ELIGIBLE_CANDIDATES_PRESENT"
+        explanation = "At least one candidate passed every locked shadow gate."
+    elif all_rows_warmup_blocked:
+        state = "EXPECTED_WARMUP_BLOCK"
+        explanation = "Candidates were scored, but the registered matchdays 1-3 safety lock blocked publication."
+    elif matchday_max is not None and matchday_max >= 4:
+        state = "NO_EDGE_AFTER_UNLOCK"
+        explanation = "Current market rows were scored after the warm-up window, but no candidate passed every selection gate."
+    else:
+        state = "ALL_CANDIDATES_FAILED_GATES"
+        explanation = "Candidates were scored, but none passed every locked selection gate."
+
+    return {
+        "state": state,
+        "explanation": explanation,
+        "scored_rows": len(model_rows),
+        "scored_fixtures": len(fixtures),
+        "eligible_rows": len(eligible),
+        "eligible_fixtures": len({str(row.get("match_id") or "") for row in eligible} - {""}),
+        "blocked_rows": len(blocked),
+        "blocker_rows": dict(sorted(blocker_rows.items())),
+        "edge_pass_but_warmup_blocked_fixtures": len(warmup_only_fixtures - {""}),
+        "matchday_min": min(matchdays) if matchdays else None,
+        "matchday_max": matchday_max,
+        "next_unlock": "matchday_4" if state == "EXPECTED_WARMUP_BLOCK" else None,
+        "operational_alert_required": False,
+        "operational_alert_code": None,
+    }
+
+
+def reconcile_cross_model_alert(current: dict[str, Any], peer: dict[str, Any]) -> None:
+    """Use the peer lane as a matchday clock when one market produces no rows."""
+    peer_matchday = peer.get("matchday_max")
+    if current.get("state") != "NO_SCORED_CANDIDATES" or not isinstance(peer_matchday, int) or peer_matchday < 4:
+        return
+    current.update(
+        {
+            "state": "POST_UNLOCK_NO_SCORED_CANDIDATES",
+            "explanation": "The peer football-count lane reached matchday 4+, but this lane produced no scored candidates. Check current price capture and fixture joins.",
+            "operational_alert_required": True,
+            "operational_alert_code": "POST_UNLOCK_NO_SCORED_CANDIDATES",
+        }
+    )
+
+
 def build_payload(
     team_rows: list[dict[str, str]],
     team_report: str,
@@ -98,11 +175,17 @@ def build_payload(
     corners_report: str,
     team_live_rows: list[dict[str, str]] | None = None,
     corners_live_rows: list[dict[str, str]] | None = None,
+    candidate_rows: list[dict[str, str]] | None = None,
 ) -> dict[str, Any]:
     team_pass = team_count_gate(team_rows, team_report)
     corners_pass = corners_count_gate(corners_rows, corners_report)
     team_live = live_summary(team_live_rows or [])
     corners_live = live_summary(corners_live_rows or [])
+    candidates = candidate_rows or []
+    team_scan = candidate_diagnostics(candidates, "team_shots_v4")
+    corners_scan = candidate_diagnostics(candidates, "corners_v3")
+    reconcile_cross_model_alert(team_scan, corners_scan)
+    reconcile_cross_model_alert(corners_scan, team_scan)
     team_close_coverage = team_live["true_close_coverage"]
     team_mean_clv = team_live["mean_true_close_clv"]
     team_roi = team_live["roi"]
@@ -133,6 +216,7 @@ def build_payload(
             "market_gate": "BLOCKED_PENDING_2026_27_TRUE_CLOSE_SAMPLE",
             "live_routing": False,
             "prospective": team_live,
+            "latest_scan": team_scan,
             "promotion_gate": "PASS" if team_promotable else "BLOCKED",
         },
         "corners_v3": {
@@ -141,6 +225,7 @@ def build_payload(
             "market_gate": "BLOCKED_PENDING_2026_27_PINNACLE_SAMPLE",
             "live_routing": False,
             "prospective": corners_live,
+            "latest_scan": corners_scan,
             "promotion_gate": "PASS" if corners_promotable else "BLOCKED",
         },
     }
@@ -162,6 +247,8 @@ def render(payload: dict[str, Any]) -> str:
             f"- Market gate: **{team['market_gate']}**",
             f"- Promotion gate: **{team['promotion_gate']}**",
             f"- Prospective signals: {team['prospective']['signals']} ({team['prospective']['settled']} settled / {team['prospective']['pending']} pending)",
+            f"- Latest scan: **{team['latest_scan']['state']}**; {team['latest_scan']['scored_rows']} rows / {team['latest_scan']['scored_fixtures']} fixtures scored; {team['latest_scan']['edge_pass_but_warmup_blocked_fixtures']} fixtures passed edge but were held only by the warm-up lock.",
+            f"- Blockers: {team['latest_scan']['blocker_rows'] or '-'}",
             f"- P/L / ROI: {team['prospective']['pnl_units']:+.2f}u / {team['prospective']['roi']:+.1%}" if team['prospective']['roi'] is not None else "- P/L / ROI: -",
             f"- True-close coverage: {team['prospective']['true_close_n']}/{team['prospective']['settled']} ({team['prospective']['true_close_coverage']:.1%})" if team['prospective']['true_close_coverage'] is not None else "- True-close coverage: -",
             f"- Mean true-close CLV: {team['prospective']['mean_true_close_clv']:+.2%}" if team['prospective']['mean_true_close_clv'] is not None else "- Mean true-close CLV: -",
@@ -173,6 +260,8 @@ def render(payload: dict[str, Any]) -> str:
             f"- Market gate: **{corners['market_gate']}**",
             f"- Promotion gate: **{corners['promotion_gate']}**",
             f"- Prospective signals: {corners['prospective']['signals']} ({corners['prospective']['settled']} settled / {corners['prospective']['pending']} pending)",
+            f"- Latest scan: **{corners['latest_scan']['state']}**; {corners['latest_scan']['scored_rows']} rows / {corners['latest_scan']['scored_fixtures']} fixtures scored; {corners['latest_scan']['edge_pass_but_warmup_blocked_fixtures']} fixtures passed edge but were held only by the warm-up lock.",
+            f"- Blockers: {corners['latest_scan']['blocker_rows'] or '-'}",
             f"- P/L / ROI: {corners['prospective']['pnl_units']:+.2f}u / {corners['prospective']['roi']:+.1%}" if corners['prospective']['roi'] is not None else "- P/L / ROI: -",
             f"- True-close coverage: {corners['prospective']['true_close_n']}/{corners['prospective']['settled']} ({corners['prospective']['true_close_coverage']:.1%})" if corners['prospective']['true_close_coverage'] is not None else "- True-close coverage: -",
             f"- Mean true-close CLV: {corners['prospective']['mean_true_close_clv']:+.2%}" if corners['prospective']['mean_true_close_clv'] is not None else "- Mean true-close CLV: -",
@@ -191,6 +280,7 @@ def main() -> int:
     parser.add_argument("--corners-report", type=Path, default=DEFAULT_CORNERS_REPORT)
     parser.add_argument("--team-live", type=Path, default=DEFAULT_TEAM_LIVE)
     parser.add_argument("--corners-live", type=Path, default=DEFAULT_CORNERS_LIVE)
+    parser.add_argument("--candidates", type=Path, default=DEFAULT_CANDIDATES)
     parser.add_argument("--json", type=Path, default=DEFAULT_JSON)
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
     args = parser.parse_args()
@@ -202,6 +292,7 @@ def main() -> int:
         args.corners_report.read_text(encoding="utf-8") if args.corners_report.exists() else "",
         load_csv(args.team_live),
         load_csv(args.corners_live),
+        load_csv(args.candidates),
     )
     args.json.parent.mkdir(parents=True, exist_ok=True)
     args.report.parent.mkdir(parents=True, exist_ok=True)

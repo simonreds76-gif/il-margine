@@ -16,6 +16,7 @@ from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
 ENV_FILES = [ROOT / ".env.local", ROOT / "env.local"]
+FOOTBALL_VNEXT_GATE = ROOT / "data" / "football-form" / "football-counts-vnext-gate.json"
 LONDON_TZ = ZoneInfo("Europe/London")
 PINNACLE_PIPELINE = "pinnacle-capture-history"
 PINNACLE_SLOT_START = time(hour=8, minute=0)
@@ -230,10 +231,30 @@ def build_run_url() -> str | None:
     return None
 
 
+def load_football_model_alerts(path: Path = FOOTBALL_VNEXT_GATE) -> list[str]:
+    if not path.exists():
+        return []
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+    alerts: list[str] = []
+    for model, label in (("team_shots_v4", "Team Shots v4"), ("corners_v3", "Corners v3")):
+        scan = (payload.get(model) or {}).get("latest_scan") or {}
+        if not scan.get("operational_alert_required"):
+            continue
+        alerts.append(
+            f"{label}: {scan.get('operational_alert_code') or scan.get('state') or 'UNKNOWN'} "
+            f"({scan.get('scored_rows', 0)} rows / {scan.get('scored_fixtures', 0)} fixtures scored)"
+        )
+    return alerts
+
+
 def render_message(
     *,
     stuck: list[dict[str, Any]],
     silent: list[dict[str, Any]],
+    model_alerts: list[str] | None = None,
 ) -> str:
     lines: list[str] = []
     lines.append("Ops alert check found pipeline issues.")
@@ -255,6 +276,10 @@ def render_message(
         )
     if len(silent) > 5:
         lines.append(f"- ... plus {len(silent) - 5} more silent pipeline(s)")
+
+    model_alerts = model_alerts or []
+    lines.append(f"Model pipeline alerts: {len(model_alerts)}")
+    lines.extend(f"- {alert}" for alert in model_alerts[:5])
 
     run_url = build_run_url()
     if run_url:
@@ -417,12 +442,13 @@ def main(argv: list[str] | None = None) -> int:
     stuck = filter_pipeline_aware_stuck_rows(stuck)
     silent = [row for row in silent_rows if row.get("pipeline") not in ignore_silent]
     silent = filter_schedule_aware_silent_rows(silent)
+    model_alerts = load_football_model_alerts()
 
-    if not stuck and not silent:
-        print("OPS_ALERT_OK stuck=0 silent=0")
+    if not stuck and not silent and not model_alerts:
+        print("OPS_ALERT_OK stuck=0 silent=0 model_alerts=0")
         return 0
 
-    message = render_message(stuck=stuck, silent=silent)
+    message = render_message(stuck=stuck, silent=silent, model_alerts=model_alerts)
     print(message)
 
     bot_token = os.environ.get("OPS_ALERT_TELEGRAM_BOT_TOKEN", "").strip()

@@ -124,6 +124,9 @@ jobs:
             # Re-score from the just-captured near-kickoff prices. Settlement
             # and promotion gates remain on the daily full run.
             python scripts/publish-football-vnext-shadow.py
+            # Refresh reason-coded scan telemetry even when the heavier daily
+            # settlement stack is intentionally skipped.
+            python scripts/football-counts-vnext-gate.py
           fi
           python scripts/team-shots-live-snapshot.py
           python scripts/corners-live-snapshot.py
@@ -156,6 +159,8 @@ jobs:
             # the raw prices. Full settlement reports remain daily.
             git add data/team-shots/inbox/ data/team-shots/team-shots-odds-history.csv data/corners-ou/pinnacle-corners-odds.csv
             git add data/football-form/football-counts-vnext-candidates.csv
+            git add data/football-form/football-counts-vnext-gate.json
+            git add data/football-form/football-counts-vnext-gate.md
             git add data/football-form/team-shots-v4-shadow-signals.csv
             git add data/football-form/corners-v3-shadow-signals.csv
             git add data/team-shots/team-shots-live-snapshot.json
