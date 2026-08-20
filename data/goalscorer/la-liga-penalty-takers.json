@@ -31,8 +31,8 @@
       "Malaga",
       "Racing Santander"
     ],
-    "last_verified": "2026-07-30",
-    "public_updated_at": "2026-07-30",
+    "last_verified": "2026-08-20",
+    "public_updated_at": "2026-08-20",
     "membership_source": "https://www.laliga.com/en-GB/laliga-easports/clubs"
   },
   "Alaves": {
@@ -3615,25 +3615,25 @@
     "primary": "Andrés Martín",
     "secondary": "Sergio Canales",
     "tertiary": "Juan Carlos Arana",
-    "last_updated": "2026-07-30",
-    "hierarchy_status": "probable",
+    "last_updated": "2026-08-20",
+    "hierarchy_status": "confirmed",
     "confidence": {
       "primary": "high",
-      "secondary": "medium",
+      "secondary": "high",
       "tertiary": "low"
     },
-    "condition_note": "Andrés took Racing's competitive penalties during the promotion season. Canales brings strong historical ability after his official return; Arana is practical striker depth without a current assignment. Canales could take over after joining, but no Racing penalty has yet tested the choice with both available. Conditions: Reassess after the first penalty with Andrés Martín and Sergio Canales both on the pitch.",
+    "condition_note": "Andrés Martín converted Racing's first 2026/27 La Liga penalty with Sergio Canales starting and still on the pitch, directly confirming Andrés ahead of Canales. Canales remains the clear deputy; Juan Carlos Arana is untested depth.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-20",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-20",
     "latest_evidence": {
-      "id": "evt_20260730_racing-santander_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 7
+      "id": "evt_20260816_racing_competitive_penalty",
+      "date": "2026-08-16",
+      "type": "competitive_penalty_assignment",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -3785,6 +3785,38 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 7 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260816_racing_competitive_penalty",
+        "date": "2026-08-16",
+        "season": "2026/27",
+        "type": "competitive_penalty_assignment",
+        "penalty_kind": "regular_time",
+        "competition": "La Liga",
+        "match": "Racing Santander 2-2 Villarreal",
+        "context": "Andrés Martín converted Racing's penalty in the 21st minute. Sergio Canales started and remained on the pitch until the 77th minute, so the event directly confirms Andrés ahead of Canales.",
+        "sources": [
+          {
+            "label": "FotMob match event and lineup",
+            "url": "https://www.fotmob.com/matches/racing-santander-vs-villarreal/2ycx33",
+            "date": "2026-08-16",
+            "note": "Records Andrés Martín's penalty and confirms Sergio Canales started and remained on the pitch until 77 minutes."
+          },
+          {
+            "label": "Cadena SER Santander",
+            "url": "https://cadenaser.com/cantabria/2026/08/16/este-racing-promete-2-2-radio-santander/",
+            "date": "2026-08-16",
+            "note": "Match report confirms Andrés Martín converted Racing's first-half penalty."
+          }
+        ],
+        "detection": "automated_event_manual_lineup_verification",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-20T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Direct competitive evidence confirms the existing order and removes the preseason uncertainty between Andrés and Canales."
       }
     ],
     "change_log": [
@@ -3833,11 +3865,34 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-20",
+        "season": "2026/27",
+        "change_type": "competitive_hierarchy_confirmation",
+        "from": {
+          "primary": "Andrés Martín",
+          "secondary": "Sergio Canales",
+          "tertiary": "Juan Carlos Arana"
+        },
+        "to": {
+          "primary": "Andrés Martín",
+          "secondary": "Sergio Canales",
+          "tertiary": "Juan Carlos Arana"
+        },
+        "reason": "Andrés converted with Canales available on the pitch, directly confirming the existing primary/deputy order.",
+        "evidence_ids": [
+          "evt_20260816_racing_competitive_penalty"
+        ],
+        "detection": "competitive_match_event_and_lineup_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-20T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": null,
@@ -3849,20 +3904,25 @@
         "player": "Andrés Martín",
         "status": "confirmed",
         "source_url": "https://www.laliga.com/clubes/r-racing-club/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-08-20"
       },
       "secondary": {
         "player": "Sergio Canales",
         "status": "confirmed",
         "source_url": "https://www.laliga.com/clubes/r-racing-club/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-08-20"
       },
       "tertiary": {
         "player": "Juan Carlos Arana",
         "status": "confirmed",
         "source_url": "https://www.laliga.com/clubes/r-racing-club/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-08-20"
       }
+    },
+    "latest_match_review": {
+      "date": "2026-08-16",
+      "method": "competitive_match_event_and_lineup_review",
+      "evidence_id": "evt_20260816_racing_competitive_penalty"
     }
   },
   "Rayo Vallecano": {

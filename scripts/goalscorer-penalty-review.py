@@ -237,9 +237,9 @@ def _classify_review_type(
             if primary_status in {"confirmed_bench", "expected_bench"}:
                 return "primary_reclaimed_from_bench"
             return "needs_manual_review"
-        if primary_available:
-            return "primary_held"
-        return "needs_manual_review"
+        # The tracked primary taking the penalty directly confirms the filed
+        # hierarchy even when the upstream lineup source is unavailable.
+        return "primary_held"
 
     if actual_role in {"secondary", "tertiary"}:
         if actual_role == active_slot or not primary_available:
