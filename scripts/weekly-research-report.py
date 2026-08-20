@@ -51,6 +51,7 @@ ASSIST_PROSPECTIVE = ROOT / "data" / "assist-value" / "research" / "assist-value
 AUTOMATION_BUDGET = ROOT / "data" / "ops" / "automation-budget-report.json"
 GOALKEEPER_SAVES_EVIDENCE = ROOT / "data" / "goalkeeper-saves" / "gk-saves-v1-evidence.json"
 GOALKEEPER_SAVES_MARKET_PROBE = ROOT / "data" / "goalkeeper-saves" / "gk-saves-market-probe.json"
+GOALKEEPER_SAVES_SHADOW_REPORT = ROOT / "data" / "goalkeeper-saves" / "gk-saves-v1-shadow-report.json"
 TENNIS_GAP_REPORT = ROOT / "data" / "backtest" / "tennis-model-market-gap-report.json"
 TENNIS_EVIDENCE_SNAPSHOT_LOCAL = ROOT / "data" / "tennis-props" / "tennis-evidence-snapshot.json"
 TENNIS_EVIDENCE_SNAPSHOT_KEY = "tennis_evidence_v1"
@@ -363,6 +364,7 @@ def assist_value_research_summary() -> dict[str, Any]:
 def goalkeeper_saves_research_summary() -> dict[str, Any]:
     evidence = load_json(GOALKEEPER_SAVES_EVIDENCE)
     market = load_json(GOALKEEPER_SAVES_MARKET_PROBE)
+    prospective = load_json(GOALKEEPER_SAVES_SHADOW_REPORT)
     folds = evidence.get("folds") or []
     count_pass = bool(folds) and all(
         number(((fold.get("models") or {}).get("NB2_FULL") or {}).get("brier"))
@@ -372,6 +374,8 @@ def goalkeeper_saves_research_summary() -> dict[str, Any]:
         for fold in folds
     )
     observed = market.get("observed") or {}
+    prospective_evidence = prospective.get("evidence") or {}
+    current = prospective.get("current") or {}
     return {
         "candidate": "goalkeeper-saves-v1-nb2-confirmed-starter",
         "count_gate": "PASS" if count_pass else "NOT_RUN_OR_FAIL",
@@ -379,10 +383,16 @@ def goalkeeper_saves_research_summary() -> dict[str, Any]:
         "model_samples": int(number(evidence.get("model_samples"))),
         "market_status": market.get("status", "NOT_RUN"),
         "over_lines": len(observed.get("over_lines") or []),
-        "prospective_status": "CAPTURE_NOT_BUILT",
-        "settled": 0,
-        "roi": None,
-        "clv": None,
+        "prospective_status": prospective.get("status", "CAPTURE_NOT_BUILT"),
+        "priced_lines": int(number(current.get("priced_lines"))),
+        "eligible_lines": int(number(current.get("eligible_lines"))),
+        "signals": int(number(prospective_evidence.get("signals"))),
+        "pending": int(number(prospective_evidence.get("pending"))),
+        "settled": int(number(prospective_evidence.get("settled"))),
+        "roi": finite_float(prospective_evidence.get("roi")),
+        "clv": finite_float(prospective_evidence.get("clv")),
+        "clv_matched": int(number(prospective_evidence.get("clv_matched"))),
+        "true_close_coverage": finite_float(prospective_evidence.get("true_close_coverage")),
         "promotion_gate": "BLOCKED",
         "sellable": False,
     }
@@ -418,6 +428,10 @@ def pct(value: float | None, digits: int = 1) -> str:
     if value is None:
         return "-"
     return f"{value:+.{digits}f}%"
+
+
+def ratio_pct(value: float | None, digits: int = 1) -> str:
+    return pct(value * 100.0 if value is not None else None, digits)
 
 
 def league_title(league: str) -> str:
@@ -1301,7 +1315,7 @@ def render_report(payload: dict[str, Any]) -> str:
         f"- API-Football count archive: {api_health.get('archive_rows', 0)} fixtures; latest {api_health.get('latest_fixture_date') or '-'}; last run {api_health.get('requests_used', 0)}/{api_health.get('max_requests', 0)} requests.",
         f"- Cross-provider agreement: {api_agreement.get('matched_fixtures', 0)}/{api_agreement.get('api_rows', 0)} API fixtures matched; status {api_agreement.get('status', 'NOT_RUN')}.",
         f"- Team Fouls: F1 {team_fouls_decision.get('status', 'NOT_RUN')}; F2 {team_fouls_f2_decision.get('status', 'NOT_RUN')}; M2 {team_fouls_m2.get('status', 'NOT_RUN')}; market prices BLOCKED; signals disabled.",
-        f"- Goalkeeper Saves v1: count {goalkeeper_saves.get('count_gate', 'NOT_RUN')} on {goalkeeper_saves.get('historical_observations', 0):,} observations; market {goalkeeper_saves.get('market_status', 'NOT_RUN')} ({goalkeeper_saves.get('over_lines', 0)} Over lines); prospective {goalkeeper_saves.get('prospective_status', 'BLOCKED')}; promotion BLOCKED.",
+        f"- Goalkeeper Saves v1: count {goalkeeper_saves.get('count_gate', 'NOT_RUN')} on {goalkeeper_saves.get('historical_observations', 0):,} observations; market {goalkeeper_saves.get('market_status', 'NOT_RUN')} ({goalkeeper_saves.get('over_lines', 0)} probe Over lines); prospective {goalkeeper_saves.get('prospective_status', 'BLOCKED')} with {goalkeeper_saves.get('priced_lines', 0)} priced lines, {goalkeeper_saves.get('eligible_lines', 0)} eligible, {goalkeeper_saves.get('signals', 0)} signals and {goalkeeper_saves.get('settled', 0)} settled; ROI {ratio_pct(goalkeeper_saves.get('roi'))}, CLV {ratio_pct(goalkeeper_saves.get('clv'))} n={goalkeeper_saves.get('clv_matched', 0)}; promotion BLOCKED.",
         "- New provider fields remain diagnostic-only until source definitions and coverage are accepted.",
         "",
         "## Team Shots V3 EMA20 Research",
@@ -1569,7 +1583,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
         f"Legacy controls: Team Shots V3 {team_clv['settled']} settled/{team_clv['pnl_units']:+.2f}u; Corners V0 {corners_clv['settled']} settled/{corners_clv['pnl_units']:+.2f}u",
         f"Count-source health: API-Football {api_health.get('archive_rows', 0)} archived, latest {api_health.get('latest_fixture_date') or '-'}, agreement {api_agreement.get('matched_fixtures', 0)}/{api_agreement.get('api_rows', 0)}",
         f"Team Fouls: F1 {team_fouls_decision.get('status', 'NOT_RUN')}; F2 {team_fouls_f2_decision.get('status', 'NOT_RUN')}; sources {team_fouls_m2.get('status', 'NOT_RUN')}; no signals",
-        f"GK Saves v1: count {goalkeeper_saves.get('count_gate', 'NOT_RUN')} n={goalkeeper_saves.get('historical_observations', 0)} | market {goalkeeper_saves.get('market_status', 'NOT_RUN')} ({goalkeeper_saves.get('over_lines', 0)} Over lines) | prospective {goalkeeper_saves.get('prospective_status', 'BLOCKED')} | promotion BLOCKED",
+        f"GK Saves v1: count {goalkeeper_saves.get('count_gate', 'NOT_RUN')} n={goalkeeper_saves.get('historical_observations', 0)} | market {goalkeeper_saves.get('market_status', 'NOT_RUN')} ({goalkeeper_saves.get('over_lines', 0)} probe Over lines) | prospective {goalkeeper_saves.get('prospective_status', 'BLOCKED')} priced={goalkeeper_saves.get('priced_lines', 0)} eligible={goalkeeper_saves.get('eligible_lines', 0)} signals={goalkeeper_saves.get('signals', 0)} settled={goalkeeper_saves.get('settled', 0)} ROI={ratio_pct(goalkeeper_saves.get('roi'))} CLV={ratio_pct(goalkeeper_saves.get('clv'))} n={goalkeeper_saves.get('clv_matched', 0)} | promotion BLOCKED",
         f"Goalscorer V2: {goalscorer['ledger']['settled']} settled | {goalscorer['ledger']['pnl_units']:+.2f}u | ROI {pct(goalscorer['ledger']['roi_pct'])} | CLV {goalscorer['matched_closes']}/{goalscorer['signals']} | {goalscorer['decision']}",
         f"Assist V1: {assist['lane_status']} | backtest {assist['backtest_status']} | settlement {assist['settlement_status']} | market {assist['market_status']} ({assist['market_calendar_span_days']}/90d) | prospective {assist['prospective']['settled']}/{assist['prospective_target']} | <=30 API calls/week | {assist['decision']}",
         f"Automation: {automation.get('status', 'NOT_RUN')} | Odds-API worst hour {odds_budget.get('max_requests_in_one_hour', '-')}/{odds_budget.get('requests_per_hour', '-')} | DB writes/week max {(automation.get('database') or {}).get('registered_writes_per_week_max', '-')}",

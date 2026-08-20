@@ -91,6 +91,44 @@ type FootballFoulMarketProbePayload = {
     }>;
   };
 };
+type GoalkeeperSavesShadowReport = {
+  generated_at?: string;
+  status?: string;
+  count_model?: string;
+  selection_rule?: string;
+  current?: {
+    priced_lines?: number;
+    eligible_lines?: number;
+    blocked_lines?: number;
+    signals_added?: number;
+  };
+  evidence?: {
+    signals?: number;
+    pending?: number;
+    settled?: number;
+    pnl_units?: number;
+    roi?: number | null;
+    clv_matched?: number;
+    true_close_coverage?: number | null;
+    clv?: number | null;
+  };
+  promotion?: {
+    status?: string;
+    settled_required?: number;
+    true_close_coverage_required?: number;
+    mean_true_close_clv_required?: number;
+  };
+};
+type GoalkeeperSavesCaptureStatus = {
+  generated_at?: string;
+  status?: string;
+  requests_used?: number;
+  request_budget?: number;
+  events_selected?: number;
+  events_with_lines?: number;
+  rows_observed?: number;
+  capture_mode?: string;
+};
 type TeamShotsLiveLine = {
   bookmaker: string;
   line: number;
@@ -1178,6 +1216,12 @@ export default async function TeamShotsMonitorPage() {
 
     footballFoulMarketProbe,
 
+    goalkeeperSavesReport,
+
+    goalkeeperSavesCapture,
+
+    goalkeeperSavesCandidatesCsv,
+
   ] = await Promise.all([
 
     readFile("data/team-shots/team-shots-calibration.txt"),
@@ -1242,6 +1286,12 @@ export default async function TeamShotsMonitorPage() {
     readJson<TeamFoulsAgreementPayload>("data/football-form/team-fouls-definition-agreement.json"),
 
     readJson<FootballFoulMarketProbePayload>("data/football-form/football-foul-market-probe.json"),
+
+    readJson<GoalkeeperSavesShadowReport>("data/goalkeeper-saves/gk-saves-v1-shadow-report.json"),
+
+    readJson<GoalkeeperSavesCaptureStatus>("data/goalkeeper-saves/gk-saves-capture-status.json"),
+
+    readFile("data/goalkeeper-saves/gk-saves-v1-candidates.csv"),
 
   ]);
 
@@ -2033,6 +2083,13 @@ function LiveLineTable({
   const teamShotsV3Clv = parseClvMonitorSummary(teamShotsV3ClvReport);
   const teamShotsV4ClvRows = teamShotsV4ClvCsv ? parseCsvCached(teamShotsV4ClvCsv) : [];
   const vnextCandidateRows = vnextCandidatesCsv ? parseCsvCached(vnextCandidatesCsv) : [];
+  const goalkeeperCandidateRows = goalkeeperSavesCandidatesCsv ? parseCsvCached(goalkeeperSavesCandidatesCsv) : [];
+  const goalkeeperTopRows = goalkeeperCandidateRows
+    .filter((row) => row.strongest_for_fixture === "yes")
+    .sort((a, b) => (maybeFloat(b.edge) ?? -999) - (maybeFloat(a.edge) ?? -999))
+    .slice(0, 8);
+  const goalkeeperCurrent = goalkeeperSavesReport?.current;
+  const goalkeeperEvidence = goalkeeperSavesReport?.evidence;
   const teamShotsV3ClvRows = teamShotsV3ClvCsv ? parseCsvCached(teamShotsV3ClvCsv) : [];
   const teamShotsV3Summary = researchBetSummary(teamShotsV3ClvRows);
   const teamShotsV3SideRows = (["over", "under"] as const).map((side) => {
@@ -2099,6 +2156,97 @@ function LiveLineTable({
           candidates={vnextCandidateRows}
           gate={vnextGate?.team_shots_v4 ?? null}
         />
+
+        <SectionCard
+          id="goalkeeper-saves"
+          collapsible
+          title="Goalkeeper Saves v1 Prospective Lane"
+          subtitle="Bet365 O/U prices, confirmed starting goalkeepers, named-player settlement, and true-close evidence. Research shadow only."
+        >
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
+            <StatCard
+              label="Price capture"
+              value={(goalkeeperSavesCapture?.status ?? "NOT RUN").replaceAll("_", " ")}
+              tone={statTone(goalkeeperSavesCapture?.status === "CAPTURED" ? "green" : "amber")}
+              detail={goalkeeperSavesCapture?.generated_at ? formatDateTime(goalkeeperSavesCapture.generated_at) : "Awaiting first scheduled capture"}
+            />
+            <StatCard label="Priced lines" value={`${goalkeeperCurrent?.priced_lines ?? 0}`} detail={`${goalkeeperCurrent?.eligible_lines ?? 0} eligible`} />
+            <StatCard label="Signals" value={`${goalkeeperEvidence?.signals ?? 0}`} detail={`${goalkeeperEvidence?.pending ?? 0} pending`} />
+            <StatCard
+              label="Settled / P&L"
+              value={`${goalkeeperEvidence?.settled ?? 0} / ${formatUnits(goalkeeperEvidence?.pnl_units ?? 0)}`}
+              detail={`ROI ${formatSignedPercent(goalkeeperEvidence?.roi == null ? null : goalkeeperEvidence.roi * 100)}`}
+            />
+            <StatCard
+              label="True-close CLV"
+              value={formatSignedPercent(goalkeeperEvidence?.clv == null ? null : goalkeeperEvidence.clv * 100)}
+              detail={`${goalkeeperEvidence?.clv_matched ?? 0}/${goalkeeperEvidence?.settled ?? 0} matched`}
+            />
+            <StatCard
+              label="Promotion"
+              value={(goalkeeperSavesReport?.promotion?.status ?? "BLOCKED").replaceAll("_", " ")}
+              tone={statTone("red")}
+              detail={`Need ${goalkeeperSavesReport?.promotion?.settled_required ?? 150} settled`}
+            />
+          </div>
+
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <StatusPill
+              label={(goalkeeperSavesReport?.status ?? "NO CURRENT LINES").replaceAll("_", " ")}
+              tone="border-amber-500/20 bg-amber-500/10 text-amber-300"
+            />
+            <span className="text-xs text-slate-500">
+              {goalkeeperSavesReport?.selection_rule ?? "One strongest O/U side per fixture; edge >=8%; confirmed starter only."}
+            </span>
+          </div>
+
+          {goalkeeperTopRows.length ? (
+            <div className="mt-4 overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/45">
+              <table className="min-w-full text-left text-xs">
+                <thead className="border-b border-slate-800 text-[10px] uppercase tracking-[0.14em] text-slate-500">
+                  <tr>
+                    <th className="px-4 py-3">Fixture</th>
+                    <th className="px-4 py-3">Goalkeeper</th>
+                    <th className="px-4 py-3">Book line</th>
+                    <th className="px-4 py-3">Model</th>
+                    <th className="px-4 py-3">Edge</th>
+                    <th className="px-4 py-3">Gate</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/70">
+                  {goalkeeperTopRows.map((row) => {
+                    const edge = maybeFloat(row.edge);
+                    return (
+                      <tr key={`${row.event_id}|${row.goalkeeper}|${row.line}`}>
+                        <td className="px-4 py-3">
+                          <MatchLabel league={row.league} homeTeam={row.home_team} awayTeam={row.away_team} />
+                          <div className="mt-1 text-[11px] text-slate-600">{row.kickoff_at ? formatDateTime(row.kickoff_at) : row.match_date}</div>
+                        </td>
+                        <td className="px-4 py-3 font-semibold text-slate-200">{row.goalkeeper || "-"}</td>
+                        <td className="px-4 py-3 tabular-nums text-slate-300">{(row.side || "over").replace(/^./, (letter) => letter.toUpperCase())} {row.line} @ {formatMaybeFixed(row.odds_decimal)}</td>
+                        <td className="px-4 py-3 tabular-nums text-slate-300">{formatMaybeFixed(row.model_mean)} saves</td>
+                        <td className={`px-4 py-3 font-semibold tabular-nums ${edge !== null && edge >= 0 ? "text-emerald-300" : "text-slate-400"}`}>
+                          {formatSignedPercent(edge === null ? null : edge * 100)}
+                        </td>
+                        <td className="px-4 py-3">
+                          <StatusPill
+                            label={(row.candidate_status || "blocked").replaceAll("_", " ")}
+                            tone={row.candidate_status === "eligible_shadow" ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-300" : "border-slate-700 bg-slate-900 text-slate-400"}
+                          />
+                          {row.blockers ? <div className="mt-1 max-w-xs text-[10px] text-slate-600">{row.blockers.replaceAll("|", " / ")}</div> : null}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm text-slate-400">
+              No current Bet365 goalkeeper-save candidates. The scheduled capture will populate this board when the market is listed.
+            </p>
+          )}
+        </SectionCard>
 
         <SectionCard
           id="team-fouls"

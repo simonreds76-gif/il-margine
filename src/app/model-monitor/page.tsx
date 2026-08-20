@@ -1578,6 +1578,16 @@ export default async function ModelMonitorPage() {
               </p>
             </Link>
             <Link
+              href="/model-monitor/team-shots#goalkeeper-saves"
+              className="rounded-2xl border border-sky-500/20 bg-[linear-gradient(180deg,rgba(14,116,144,0.16),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-sky-400/40"
+            >
+              <div className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-sky-300">Goalkeeper Saves v1</div>
+              <div className="text-lg font-semibold text-white">Saves O/U Evidence</div>
+              <p className="mt-2 text-sm leading-6 text-slate-400">
+                Bet365 O/U lines, confirmed-starter gating, named-player settlement, ROI, true-close CLV, and promotion progress.
+              </p>
+            </Link>
+            <Link
               href="/model-monitor/corners"
               className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-fuchsia-500/30"
             >
