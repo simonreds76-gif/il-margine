@@ -13,13 +13,19 @@ from typing import Any
 
 import requests
 
-from football_count_markets import classify_market, normalize_market_name
+from football_count_markets import (
+    append_market_inventory,
+    build_market_inventory_rows,
+    classify_market,
+    normalize_market_name,
+)
 from goalkeeper_saves_live import ROOT, league_key, parse_float
 
 
 BASE_URL = "https://api.odds-api.io/v3"
 DEFAULT_HISTORY = ROOT / "data" / "goalkeeper-saves" / "gk-saves-odds-history.csv"
 DEFAULT_STATUS = ROOT / "data" / "goalkeeper-saves" / "gk-saves-capture-status.json"
+DEFAULT_MARKET_INVENTORY = ROOT / "data" / "goalkeeper-saves" / "gk-saves-market-inventory.csv"
 FIELDS = [
     "captured_at", "match_date", "event_id", "kickoff_at", "capture_mode",
     "bookmaker", "competition", "league", "home_team", "away_team", "player",
@@ -86,6 +92,33 @@ def decimal_price(prop: dict[str, Any]) -> float | None:
     return None
 
 
+THREE_WAY_MARKET_TOKENS = (
+    "fulltime result", "full time result", "match result", "match odds", "match winner",
+    "1x2", "3way", "three way", "moneyline", "money line", "to win match",
+    "90 minutes", "win draw win",
+)
+
+
+def _direct_three_way_prices(container: dict[str, Any]) -> dict[str, float]:
+    aliases = {
+        "home": ("home", "1"),
+        "draw": ("draw", "tie", "x"),
+        "away": ("away", "2"),
+    }
+    prices: dict[str, float] = {}
+    for side, keys in aliases.items():
+        for key in keys:
+            value = container.get(key)
+            if isinstance(value, dict):
+                price = decimal_price(value)
+            else:
+                price = parse_float(value)
+            if price and price > 1.0:
+                prices[side] = price
+                break
+    return prices
+
+
 def three_way_prices(event: dict[str, Any], bookmaker_name: str) -> tuple[float | None, float | None, float | None]:
     home = str(event.get("home") or "").casefold()
     away = str(event.get("away") or "").casefold()
@@ -94,10 +127,11 @@ def three_way_prices(event: dict[str, Any], bookmaker_name: str) -> tuple[float 
             continue
         for market in markets or []:
             name = normalize_market_name(market.get("name"))
-            if not any(token in name for token in ("fulltime result", "full time result", "match result", "1x2", "moneyline")):
+            if not any(token in name for token in THREE_WAY_MARKET_TOKENS):
                 continue
-            prices: dict[str, float] = {}
+            prices = _direct_three_way_prices(market)
             for prop in market.get("odds") or []:
+                prices.update(_direct_three_way_prices(prop))
                 label = str(prop.get("label") or prop.get("name") or "").strip().casefold()
                 price = decimal_price(prop)
                 if not price:
@@ -111,6 +145,20 @@ def three_way_prices(event: dict[str, Any], bookmaker_name: str) -> tuple[float 
             if {"home", "draw", "away"}.issubset(prices):
                 return prices["home"], prices["draw"], prices["away"]
     return None, None, None
+
+
+def event_three_way_prices(
+    event: dict[str, Any],
+    meta: dict[str, Any],
+    bookmaker_name: str,
+) -> tuple[float | None, float | None, float | None, str]:
+    prices = three_way_prices(event, bookmaker_name)
+    if all(prices):
+        return *prices, "odds_payload"
+    prices = three_way_prices(meta, bookmaker_name)
+    if all(prices):
+        return *prices, "event_metadata"
+    return None, None, None, "missing"
 
 
 def extract_rows(
@@ -129,7 +177,9 @@ def extract_rows(
         away_team = str(event.get("away") or meta.get("away") or "")
         kickoff = str(event.get("date") or meta.get("date") or meta.get("startTime") or "")
         competition = event_league(meta) or event_league(event)
-        home_price, draw_price, away_price = three_way_prices(event, bookmaker_name)
+        home_price, draw_price, away_price, three_way_source = event_three_way_prices(
+            event, meta, bookmaker_name
+        )
         for bookmaker, markets in (event.get("bookmakers") or {}).items():
             if str(bookmaker).casefold() != bookmaker_name.casefold():
                 continue
@@ -162,7 +212,7 @@ def extract_rows(
                             "home_price": f"{home_price:.4f}" if home_price else "",
                             "draw_price": f"{draw_price:.4f}" if draw_price else "",
                             "away_price": f"{away_price:.4f}" if away_price else "",
-                            "source": "odds_api_io",
+                            "source": f"odds_api_io:{three_way_source}",
                         }
                     if has_over:
                         rows.append({**base_row, "side": "over", "odds_decimal": f"{over:.4f}"})
@@ -203,6 +253,7 @@ def main() -> None:
     parser.add_argument("--capture-mode", choices=("publication", "close"), default="publication")
     parser.add_argument("--history", type=Path, default=DEFAULT_HISTORY)
     parser.add_argument("--status", type=Path, default=DEFAULT_STATUS)
+    parser.add_argument("--market-inventory", type=Path, default=DEFAULT_MARKET_INVENTORY)
     args = parser.parse_args()
 
     load_env()
@@ -243,7 +294,28 @@ def main() -> None:
         captured_at=captured_at,
         capture_mode=args.capture_mode,
     )
+    inventory_rows: list[dict[str, Any]] = []
+    event_index = {str(event["id"]): event for event in events}
+    for event in payload:
+        event_id = str(event.get("id") or "")
+        meta = event_index.get(event_id, {})
+        merged_event = {**meta, **event}
+        inventory_rows.extend(
+            build_market_inventory_rows(
+                [merged_event],
+                event_league(meta) or event_league(event),
+                captured_at,
+            )
+        )
+    inventory_added = append_market_inventory(args.market_inventory, inventory_rows)
     added = append_rows(args.history, rows)
+    market_names = sorted(
+        {
+            str(row.get("market_name") or "")
+            for row in inventory_rows
+            if str(row.get("bookmaker") or "").casefold() == args.bookmaker.casefold()
+        }
+    )
     status = {
         "generated_at": captured_at,
         "status": "CAPTURED" if rows else "NO_GOALKEEPER_SAVE_LINES",
@@ -251,8 +323,13 @@ def main() -> None:
         "request_budget": 2,
         "events_selected": len(event_ids),
         "events_with_lines": len({row["event_id"] for row in rows}),
+        "three_way_events": len(
+            {row["event_id"] for row in rows if parse_float(row.get("home_price")) is not None}
+        ),
         "rows_observed": len(rows),
         "rows_added": added,
+        "market_inventory_rows_added": inventory_added,
+        "market_names_observed": market_names,
         "capture_mode": args.capture_mode,
     }
     args.status.parent.mkdir(parents=True, exist_ok=True)

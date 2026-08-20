@@ -214,8 +214,16 @@ def build_features(
         value if index == 4 else _log_positive(value)
         for index, value in enumerate(raw_values)
     )
-    if any(value is None or not math.isfinite(float(value)) for value in values):
+    missing_indexes = [
+        index
+        for index, value in enumerate(values)
+        if value is None or not math.isfinite(float(value))
+    ]
+    # Index 4 is the separately reason-coded contemporaneous 1X2 feature.
+    # Do not mask that supply issue as a second registered-feature failure.
+    if any(index != 4 for index in missing_indexes):
         blockers.append("missing_registered_feature")
+    if missing_indexes:
         return None, sorted(set(blockers))
     return tuple(float(value) for value in values), sorted(set(blockers))
 

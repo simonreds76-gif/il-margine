@@ -1,8 +1,8 @@
 {
-  "checked_at": "2026-08-20T15:57:23+00:00",
+  "checked_at": "2026-08-20T17:06:51+00:00",
   "files": {
     "team-match-base.csv": {
-      "age_days": 88,
+      "age_days": 3,
       "critical_coverage": {
         "corners_against": 1.0,
         "corners_for": 1.0,
@@ -11,7 +11,7 @@
       },
       "duplicates": 0,
       "field_count": 27,
-      "latest_date": "2026-05-24",
+      "latest_date": "2026-08-17",
       "league_freshness": {
         "bundesliga": {
           "age_days": 96,
@@ -22,8 +22,8 @@
           "latest_date": "2026-05-24"
         },
         "la-liga": {
-          "age_days": 88,
-          "latest_date": "2026-05-24"
+          "age_days": 3,
+          "latest_date": "2026-08-17"
         },
         "ligue-1": {
           "age_days": 95,
@@ -35,11 +35,11 @@
         }
       },
       "market_team_win_prob_coverage": 0.9997,
-      "rows": 43178,
-      "xg_coverage": 0.0
+      "rows": 43188,
+      "xg_coverage": 0.9153
     },
     "team-rolling-form.csv": {
-      "age_days": 88,
+      "age_days": 3,
       "critical_coverage": {
         "current_corners_against": 1.0,
         "current_corners_for": 1.0,
@@ -48,7 +48,7 @@
       },
       "duplicates": 0,
       "field_count": 150,
-      "latest_date": "2026-05-24",
+      "latest_date": "2026-08-17",
       "league_freshness": {
         "bundesliga": {
           "age_days": 96,
@@ -59,8 +59,8 @@
           "latest_date": "2026-05-24"
         },
         "la-liga": {
-          "age_days": 88,
-          "latest_date": "2026-05-24"
+          "age_days": 3,
+          "latest_date": "2026-08-17"
         },
         "ligue-1": {
           "age_days": 95,
@@ -72,16 +72,11 @@
         }
       },
       "market_team_win_prob_coverage": 0.9997,
-      "rows": 43178,
-      "xg_coverage": 0.0
+      "rows": 43188,
+      "xg_coverage": 0.9153
     }
   },
   "issues": [
-    {
-      "code": "team_match_base_stale",
-      "detail": "latest date 2026-05-24 is 88d old; max 21d",
-      "level": "error"
-    },
     {
       "code": "team_match_base_bundesliga_stale",
       "detail": "bundesliga latest date 2026-05-16 is 96d old; max 21d",
@@ -90,11 +85,6 @@
     {
       "code": "team_match_base_epl_stale",
       "detail": "epl latest date 2026-05-24 is 88d old; max 21d",
-      "level": "error"
-    },
-    {
-      "code": "team_match_base_la_liga_stale",
-      "detail": "la-liga latest date 2026-05-24 is 88d old; max 21d",
       "level": "error"
     },
     {
@@ -108,11 +98,6 @@
       "level": "error"
     },
     {
-      "code": "team_rolling_form_stale",
-      "detail": "latest date 2026-05-24 is 88d old; max 21d",
-      "level": "error"
-    },
-    {
       "code": "team_rolling_form_bundesliga_stale",
       "detail": "bundesliga latest date 2026-05-16 is 96d old; max 21d",
       "level": "error"
@@ -120,11 +105,6 @@
     {
       "code": "team_rolling_form_epl_stale",
       "detail": "epl latest date 2026-05-24 is 88d old; max 21d",
-      "level": "error"
-    },
-    {
-      "code": "team_rolling_form_la_liga_stale",
-      "detail": "la-liga latest date 2026-05-24 is 88d old; max 21d",
       "level": "error"
     },
     {

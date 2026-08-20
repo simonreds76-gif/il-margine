@@ -282,6 +282,32 @@ def merge_xg(
     return matched, len(fd_rows)
 
 
+def row_key(row: dict) -> tuple[str, str, str, str]:
+    return (
+        str(row.get("date") or "").strip(),
+        str(row.get("league") or "").strip(),
+        _normalise_team(str(row.get("home_team") or "")),
+        _normalise_team(str(row.get("away_team") or "")),
+    )
+
+
+def load_existing_rows(path: Path) -> List[dict]:
+    if not path.exists() or path.stat().st_size == 0:
+        return []
+    with path.open("r", newline="", encoding="utf-8-sig") as handle:
+        return list(csv.DictReader(handle))
+
+
+def merge_existing_rows(existing: List[dict], incoming: List[dict]) -> List[dict]:
+    """Upsert refreshed fixtures without dropping seasons not in this run."""
+    merged = {row_key(row): row for row in existing if all(row_key(row))}
+    for row in incoming:
+        key = row_key(row)
+        if all(key):
+            merged[key] = row
+    return sorted(merged.values(), key=lambda row: (str(row.get("date") or ""), row_key(row)))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Build Football-Data shots with an Understat xG overlay")
     parser.add_argument("--leagues", nargs="+", default=DEFAULT_LEAGUES,
@@ -291,6 +317,16 @@ def main() -> None:
                         help="Skip Understat xG fetch (use only Football-Data.co.uk)")
     parser.add_argument("--football-data-dir", type=Path, default=FOOTBALLDATA_DIR)
     parser.add_argument("--output", type=Path, default=OUTPUT_FILE)
+    parser.add_argument(
+        "--no-merge",
+        action="store_true",
+        help="Replace the output with only this run (unsafe for routine refreshes)",
+    )
+    parser.add_argument(
+        "--allow-shrink",
+        action="store_true",
+        help="Allow a replacement run to write fewer rows than the existing archive",
+    )
     args = parser.parse_args()
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -330,26 +366,39 @@ def main() -> None:
 
             all_rows.extend(fd_rows)
 
-    all_rows.sort(key=lambda r: r["date"])
-
     for r in all_rows:
         r.pop("_norm_home", None)
         r.pop("_norm_away", None)
 
+    existing_rows = load_existing_rows(args.output)
+    output_rows = all_rows if args.no_merge else merge_existing_rows(existing_rows, all_rows)
+    if existing_rows and len(output_rows) < len(existing_rows) and not args.allow_shrink:
+        raise RuntimeError(
+            f"Refusing to shrink {args.output} from {len(existing_rows)} to {len(output_rows)} rows; "
+            "use --allow-shrink only for an intentional archive replacement"
+        )
+
     with open(args.output, "w", newline="", encoding="utf-8") as fh:
-        writer = csv.DictWriter(fh, fieldnames=OUTPUT_COLUMNS, extrasaction="ignore")
+        writer = csv.DictWriter(
+            fh,
+            fieldnames=OUTPUT_COLUMNS,
+            extrasaction="ignore",
+            lineterminator="\n",
+        )
         writer.writeheader()
-        writer.writerows(all_rows)
+        writer.writerows(output_rows)
 
     print(f"\n{'='*50}")
     print(f"  SUMMARY")
     print(f"{'='*50}")
-    print(f"  Total matches: {len(all_rows)}")
+    print(f"  Refreshed:     {len(all_rows)}")
+    print(f"  Preserved:     {max(0, len(output_rows) - len(all_rows))}")
+    print(f"  Total matches: {len(output_rows)}")
     print(f"  xG coverage:   {total_matched}/{total_rows} "
           f"({total_matched/total_rows*100:.1f}%)" if total_rows else "  xG coverage: N/A")
     print(f"  Output:         {args.output}")
 
-    xg_rows = [r for r in all_rows if r.get("home_xg") not in ("", None)]
+    xg_rows = [r for r in output_rows if r.get("home_xg") not in ("", None)]
     print(f"  Rows with xG:   {len(xg_rows)}")
     if xg_rows:
         avg_hxg = sum(_safe_float(r["home_xg"]) for r in xg_rows) / len(xg_rows)

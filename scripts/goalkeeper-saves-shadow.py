@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+from collections import Counter
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -33,13 +34,16 @@ DEFAULT_CANDIDATES = ROOT / "data" / "goalkeeper-saves" / "gk-saves-v1-candidate
 DEFAULT_SIGNALS = ROOT / "data" / "goalkeeper-saves" / "gk-saves-v1-shadow-signals.csv"
 DEFAULT_REPORT = ROOT / "data" / "goalkeeper-saves" / "gk-saves-v1-shadow-report.json"
 DEFAULT_REPORT_MD = ROOT / "data" / "goalkeeper-saves" / "gk-saves-v1-shadow-report.md"
+DEFAULT_PROVISIONAL = ROOT / "data" / "goalkeeper-saves" / "gk-saves-v1-provisional.csv"
 
 CANDIDATE_FIELDS = [
     "generated_at", "event_id", "match_date", "kickoff_at", "league", "home_team", "away_team",
     "team", "opponent", "venue", "goalkeeper", "line", "side", "odds_decimal", "model_mean",
     "model_probability", "push_probability", "fair_odds", "edge", "lineup_status", "lineup_source",
     "capture_mode", "captured_at", "candidate_status", "blockers", "strongest_for_fixture",
+    "three_way_source",
 ]
+PROVISIONAL_FIELDS = CANDIDATE_FIELDS + ["research_only", "not_a_signal"]
 SIGNAL_FIELDS = [
     "signal_id", "created_at", "event_id", "match_date", "kickoff_at", "league", "home_team", "away_team",
     "team", "opponent", "venue", "goalkeeper", "line", "side", "odds_decimal", "model_mean",
@@ -62,6 +66,38 @@ def write_csv(path: Path, rows: list[dict[str, Any]], fields: list[str]) -> None
         writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore", lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
+
+
+INFRASTRUCTURE_BLOCKERS = {
+    "history_lt_6",
+    "effective_history_lt_6",
+    "missing_registered_feature",
+    "missing_three_way_market",
+}
+
+
+def should_preserve_candidate_board(
+    existing: list[dict[str, str]],
+    scanned: list[dict[str, Any]],
+) -> bool:
+    if not existing or not scanned:
+        return False
+    if any(row.get("candidate_status") == "eligible_shadow" or row.get("model_mean") for row in scanned):
+        return False
+    return all(
+        bool(set(str(row.get("blockers") or "").split("|")) & INFRASTRUCTURE_BLOCKERS)
+        for row in scanned
+    )
+
+
+def provisional_rows(candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for row in candidates:
+        blockers = {item for item in str(row.get("blockers") or "").split("|") if item}
+        if blockers != {"predicted_starter"} or parse_float(row.get("edge")) is None:
+            continue
+        rows.append({**row, "research_only": "true", "not_a_signal": "true"})
+    return rows
 
 
 def latest_price_rows(rows: list[dict[str, str]], now: datetime) -> list[dict[str, str]]:
@@ -180,6 +216,7 @@ def build_candidates(
                 "lineup_source": "fotmob_confirmed_lineups" if fixture else "",
                 "capture_mode": price_row.get("capture_mode", ""),
                 "captured_at": price_row.get("captured_at", ""),
+                "three_way_source": str(price_row.get("source") or "").split(":")[-1],
                 "candidate_status": status,
                 "blockers": "|".join(sorted(set(blockers))),
                 "strongest_for_fixture": "no",
@@ -231,6 +268,9 @@ def report_payload(
     signals: list[dict[str, str]],
     generated_at: str,
     added: int,
+    *,
+    board_preserved: bool = False,
+    provisional_count: int = 0,
 ) -> dict[str, Any]:
     settled = [row for row in signals if str(row.get("status") or "").lower() in {"won", "lost", "push", "void"}]
     pending = [row for row in signals if str(row.get("status") or "").lower() == "pending"]
@@ -240,10 +280,21 @@ def report_payload(
     close_coverage = len(clv_values) / len(settled) if settled else None
     eligible = [row for row in candidates if row.get("candidate_status") == "eligible_shadow"]
     blocked = [row for row in candidates if row.get("candidate_status") == "blocked"]
+    blocker_counts = Counter(
+        blocker
+        for row in candidates
+        for blocker in str(row.get("blockers") or "").split("|")
+        if blocker
+    )
     return {
         "generated_at": generated_at,
         "candidate": "goalkeeper-saves-v1-nb2-confirmed-starter",
-        "status": "SIGNALS_COLLECTING" if signals else "CANDIDATES_BLOCKED" if candidates else "NO_CURRENT_LINES",
+        "status": (
+            "SIGNALS_COLLECTING" if signals else
+            "PROVISIONAL_ONLY" if provisional_count else
+            "CANDIDATES_BLOCKED" if candidates else
+            "NO_CURRENT_LINES"
+        ),
         "count_model": "PASS",
         "live_routing": False,
         "sellable": False,
@@ -253,6 +304,9 @@ def report_payload(
             "eligible_lines": len(eligible),
             "blocked_lines": len(blocked),
             "signals_added": added,
+            "provisional_lines": provisional_count,
+            "candidate_board_preserved": board_preserved,
+            "blocker_counts": dict(sorted(blocker_counts.items())),
         },
         "evidence": {
             "signals": len(signals),
@@ -283,7 +337,11 @@ def main() -> None:
     parser.add_argument("--signals", type=Path, default=DEFAULT_SIGNALS)
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--report-md", type=Path, default=DEFAULT_REPORT_MD)
+    parser.add_argument("--provisional", type=Path, default=DEFAULT_PROVISIONAL)
     args = parser.parse_args()
+
+    if not args.form.exists() or args.form.stat().st_size == 0:
+        raise SystemExit(f"FORM_LAYER_MISSING: {args.form}")
 
     now = datetime.now(UTC).replace(microsecond=0)
     generated_at = now.isoformat().replace("+00:00", "Z")
@@ -296,9 +354,21 @@ def main() -> None:
         load_lineup_index(lineup_paths()),
         generated_at,
     )
-    write_csv(args.candidates, candidates, CANDIDATE_FIELDS)
+    existing_candidates = read_csv(args.candidates)
+    board_preserved = should_preserve_candidate_board(existing_candidates, candidates)
+    if not board_preserved:
+        write_csv(args.candidates, candidates, CANDIDATE_FIELDS)
+    provisional = provisional_rows(candidates)
+    write_csv(args.provisional, provisional, PROVISIONAL_FIELDS)
     added, signals = append_signals(args.signals, candidates, generated_at)
-    payload = report_payload(candidates, signals, generated_at, added)
+    payload = report_payload(
+        candidates,
+        signals,
+        generated_at,
+        added,
+        board_preserved=board_preserved,
+        provisional_count=len(provisional),
+    )
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     evidence = payload["evidence"]
@@ -311,6 +381,8 @@ def main() -> None:
         f"- Generated: {generated_at}",
         f"- Status: {payload['status']}",
         f"- Current priced/eligible/blocked: {current['priced_lines']}/{current['eligible_lines']}/{current['blocked_lines']}",
+        f"- Provisional research lines: {current['provisional_lines']} (never appended to the signal ledger)",
+        f"- Candidate board preserved after infrastructure failure: {current['candidate_board_preserved']}",
         f"- Signals: {evidence['signals']} ({evidence['pending']} pending, {evidence['settled']} settled)",
         f"- P/L: {evidence['pnl_units']:+.2f}u; ROI: {evidence['roi'] if evidence['roi'] is not None else '-'}",
         f"- Closing evidence: {evidence['clv_matched']}/{evidence['settled']} matched; mean CLV: {evidence['clv'] if evidence['clv'] is not None else '-'}",

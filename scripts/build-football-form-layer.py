@@ -34,8 +34,10 @@ from settlement_utils import normalize_team_name  # noqa: E402
 
 
 DEFAULT_MATCH_BASE = ROOT / "data" / "corners-ou" / "historical" / "all-historical-matches.csv"
+DEFAULT_CURRENT_MATCH_BASE = ROOT / "data" / "team-shots" / "historical" / "all-historical-matches.csv"
 DEFAULT_XG_SOURCE = ROOT / "data" / "team-shots" / "understat" / "all-understat-matches.csv"
 LEGACY_XG_SOURCE = ROOT / "data" / "team-shots" / "fbref" / "all-fbref-matches.csv"
+DEFAULT_SUPPLEMENTAL_MATCH_BASES = (DEFAULT_CURRENT_MATCH_BASE, DEFAULT_XG_SOURCE)
 DEFAULT_OUTPUT_DIR = ROOT / "data" / "football-form"
 
 WINDOWS = (5, 10)
@@ -293,6 +295,16 @@ def load_match_base(path: Path) -> dict[tuple[str, str, str, str], Match]:
                 b365a=parse_float(row.get("B365A")),
             )
             matches[match_key(match_date, league, home, away)] = match
+    return matches
+
+
+def load_match_bases(primary: Path, supplemental: Iterable[Path]) -> dict[tuple[str, str, str, str], Match]:
+    """Load the durable archive, then upsert fresher current-season sources."""
+    matches = load_match_base(primary)
+    for path in supplemental:
+        if not path.exists() or path.resolve() == primary.resolve():
+            continue
+        matches.update(load_match_base(path))
     return matches
 
 
@@ -809,6 +821,13 @@ def render_report(
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build canonical football team form tables.")
     parser.add_argument("--match-base", type=Path, default=DEFAULT_MATCH_BASE)
+    parser.add_argument(
+        "--supplemental-match-base",
+        type=Path,
+        nargs="*",
+        default=list(DEFAULT_SUPPLEMENTAL_MATCH_BASES),
+        help="Fresher match archives to upsert over the durable historical base",
+    )
     parser.add_argument("--xg-source", type=Path, default=None)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--version-label", default=default_version_label())
@@ -816,7 +835,7 @@ def main() -> int:
     parser.add_argument("--fail-on-validation-error", action="store_true")
     args = parser.parse_args()
 
-    matches = load_match_base(args.match_base)
+    matches = load_match_bases(args.match_base, args.supplemental_match_base)
     xg_source = args.xg_source or DEFAULT_XG_SOURCE
     if args.xg_source is None and not xg_source.exists() and LEGACY_XG_SOURCE.exists():
         print(f"WARNING: using deprecated xG artifact {LEGACY_XG_SOURCE}")

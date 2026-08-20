@@ -55,6 +55,9 @@ jobs:
           python scripts/footballdata-download-historical.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2026 --overwrite || echo "::warning::Football-Data current-season refresh was unavailable."
           python scripts/understat-download-shots.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2026 || echo "::warning::Understat current-season aggregate refresh was unavailable."
           python scripts/understat-download-corner-features.py --seasons 2026 || echo "::warning::Understat corner-event refresh was unavailable."
+          # The builder combines the durable archive with current-season and
+          # Understat supplements. Individual lanes fail closed on missing
+          # registered inputs; generic offseason league staleness is reported.
           python scripts/build-football-form-layer.py
           if [ -n "${API_FOOTBALL_KEY:-}" ]; then
             python scripts/capture-api-football-counts.py --historical-backfill --target-team-values 200 --max-requests 90 || echo "::warning::API-Football historical agreement backfill reported an error; existing archive retained."

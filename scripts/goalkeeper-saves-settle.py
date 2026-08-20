@@ -128,7 +128,18 @@ def latest_close(
     odds_rows: list[dict[str, str]],
     signal: dict[str, str],
 ) -> float | None:
-    candidates = []
+    def timestamp(value: object) -> datetime | None:
+        try:
+            parsed = datetime.fromisoformat(str(value or "").replace("Z", "+00:00"))
+        except ValueError:
+            return None
+        return parsed if parsed.tzinfo else parsed.replace(tzinfo=UTC)
+
+    created_at = timestamp(signal.get("created_at"))
+    kickoff_at = timestamp(signal.get("kickoff_at"))
+    if created_at is None or kickoff_at is None:
+        return None
+    candidates: list[tuple[datetime, float]] = []
     for row in odds_rows:
         if str(row.get("event_id") or "") != str(signal.get("event_id") or ""):
             continue
@@ -138,11 +149,16 @@ def latest_close(
             continue
         if person_match_score(row.get("player"), signal.get("goalkeeper")) < 80:
             continue
-        if str(row.get("captured_at") or "") >= str(signal.get("kickoff_at") or ""):
+        if str(row.get("capture_mode") or "").casefold() != "close":
+            continue
+        captured_at = timestamp(row.get("captured_at"))
+        if captured_at is None or captured_at <= created_at or captured_at >= kickoff_at:
+            continue
+        if kickoff_at - captured_at > timedelta(minutes=120):
             continue
         price = parse_float(row.get("odds_decimal"))
         if price and price > 1.0:
-            candidates.append((str(row.get("captured_at") or ""), price))
+            candidates.append((captured_at, price))
     return max(candidates)[1] if candidates else None
 
 

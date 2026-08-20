@@ -66,6 +66,20 @@ class GoalkeeperSavesLiveTests(unittest.TestCase):
         self.assertIsNotNone(features)
         self.assertEqual(len(features or ()), 9)
 
+    def test_missing_market_is_not_mislabeled_as_missing_registered_feature(self) -> None:
+        features, blockers = live.build_features(
+            histories={"home": self.history("Home", "home"), "away": self.history("Away", "away")},
+            team="Home",
+            opponent="Away",
+            venue="home",
+            kickoff_day=date(2026, 8, 1),
+            home_price=0.0,
+            draw_price=0.0,
+            away_price=0.0,
+        )
+        self.assertIsNone(features)
+        self.assertEqual(blockers, ["missing_three_way_market"])
+
     def test_confirmed_goalkeeper_gate(self) -> None:
         fixture = {
             "lineup_type": "standard",
@@ -111,6 +125,39 @@ class GoalkeeperSavesLiveTests(unittest.TestCase):
         self.assertEqual(rows[0]["home_price"], "2.0000")
         self.assertEqual([row["side"] for row in rows], ["over", "under"])
 
+    def test_capture_accepts_alternate_three_way_shape_and_event_fallback(self) -> None:
+        event = {
+            "id": "1",
+            "date": "2026-08-22T15:00:00Z",
+            "home": "Home",
+            "away": "Away",
+            "bookmakers": {
+                "Bet365": [
+                    {
+                        "name": "Goalkeeper Saves",
+                        "odds": [{"label": "Keeper One", "hdp": 3.5, "over": "1.90"}],
+                    }
+                ]
+            },
+        }
+        meta = {
+            **event,
+            "league": {"name": "England Premier League"},
+            "bookmakers": {
+                "Bet365": [{"name": "Match Winner", "home": 2.0, "draw": 3.5, "away": 4.0}]
+            },
+        }
+        rows = capture.extract_rows(
+            [event],
+            {"1": meta},
+            bookmaker_name="Bet365",
+            captured_at="2026-08-20T10:00:00Z",
+            capture_mode="publication",
+        )
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["home_price"], "2.0000")
+        self.assertEqual(rows[0]["source"], "odds_api_io:event_metadata")
+
     def test_integer_line_prices_include_push_return(self) -> None:
         priced = live.price_side("over", 3.0, 2.20, 3.2, 0.25)
         expected_fair = (1.0 - priced["push_probability"]) / priced["model_probability"]
@@ -135,6 +182,33 @@ class GoalkeeperSavesLiveTests(unittest.TestCase):
         self.assertEqual((added, added_again), (1, 0))
         self.assertEqual(len(rows), 1)
         self.assertEqual(len(rows_again), 1)
+
+    def test_provisional_candidate_never_enters_signal_ledger(self) -> None:
+        candidate = {field: "" for field in shadow.CANDIDATE_FIELDS}
+        candidate.update(
+            {
+                "event_id": "fixture",
+                "goalkeeper": "Keeper",
+                "line": "3.5",
+                "side": "over",
+                "edge": "0.12",
+                "candidate_status": "blocked",
+                "blockers": "predicted_starter",
+                "strongest_for_fixture": "yes",
+            }
+        )
+        self.assertEqual(len(shadow.provisional_rows([candidate])), 1)
+        with tempfile.TemporaryDirectory() as directory:
+            added, rows = shadow.append_signals(
+                Path(directory) / "signals.csv", [candidate], "2026-08-20T10:00:00Z"
+            )
+        self.assertEqual(added, 0)
+        self.assertEqual(rows, [])
+
+    def test_infrastructure_failure_preserves_existing_candidate_board(self) -> None:
+        existing = [{"model_mean": "3.2", "candidate_status": "blocked", "blockers": "predicted_starter"}]
+        scanned = [{"model_mean": "", "candidate_status": "blocked", "blockers": "history_lt_6"}]
+        self.assertTrue(shadow.should_preserve_candidate_board(existing, scanned))
 
     def test_named_goalkeeper_saves_are_extracted(self) -> None:
         payload = {
@@ -168,6 +242,30 @@ class GoalkeeperSavesLiveTests(unittest.TestCase):
         under_signal = {"line": "3.5", "side": "under", "odds_decimal": "1.90", "stake_units": "0.5"}
         settle.settle_row(under_signal, 3, None, "2026-08-20T12:00:00Z")
         self.assertEqual(under_signal["status"], "won")
+
+    def test_close_requires_post_signal_close_capture_near_kickoff(self) -> None:
+        signal = {
+            "event_id": "fixture",
+            "goalkeeper": "Keeper One",
+            "line": "3.5",
+            "side": "over",
+            "created_at": "2026-08-20T12:00:00Z",
+            "kickoff_at": "2026-08-20T15:00:00Z",
+        }
+        base = {
+            "event_id": "fixture",
+            "player": "Keeper One",
+            "line": "3.5",
+            "side": "over",
+            "odds_decimal": "1.80",
+        }
+        rows = [
+            {**base, "capture_mode": "publication", "captured_at": "2026-08-20T14:30:00Z"},
+            {**base, "capture_mode": "close", "captured_at": "2026-08-20T11:00:00Z"},
+        ]
+        self.assertIsNone(settle.latest_close(rows, signal))
+        rows.append({**base, "capture_mode": "close", "captured_at": "2026-08-20T14:00:00Z"})
+        self.assertEqual(settle.latest_close(rows, signal), 1.8)
 
     def test_shadow_report_calculates_true_close_evidence(self) -> None:
         signals = [

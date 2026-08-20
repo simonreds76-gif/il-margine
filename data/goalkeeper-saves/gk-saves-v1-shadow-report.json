@@ -3,8 +3,14 @@
   "count_model": "PASS",
   "current": {
     "blocked_lines": 11,
+    "blocker_counts": {
+      "missing_three_way_market": 11,
+      "predicted_starter": 11
+    },
+    "candidate_board_preserved": true,
     "eligible_lines": 0,
     "priced_lines": 0,
+    "provisional_lines": 0,
     "signals_added": 0
   },
   "evidence": {
@@ -17,7 +23,7 @@
     "signals": 0,
     "true_close_coverage": null
   },
-  "generated_at": "2026-08-20T17:05:33Z",
+  "generated_at": "2026-08-20T17:24:01Z",
   "live_routing": false,
   "promotion": {
     "mean_true_close_clv_required": 0.005,
