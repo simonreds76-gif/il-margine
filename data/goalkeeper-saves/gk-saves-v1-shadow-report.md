@@ -2,7 +2,7 @@
 
 **RESEARCH SHADOW ONLY. No live routing or staking authorization.**
 
-- Generated: 2026-08-20T12:00:37Z
+- Generated: 2026-08-20T13:31:55Z
 - Status: NO_CURRENT_LINES
 - Current priced/eligible/blocked: 0/0/0
 - Signals: 0 (0 pending, 0 settled)
