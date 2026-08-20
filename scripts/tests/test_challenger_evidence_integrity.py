@@ -40,6 +40,19 @@ class ChallengerStakePolicyTests(unittest.TestCase):
             (1.0, 100.0, "flat_match"),
         )
 
+    def test_v2_lane_is_generated_settled_and_reported_automatically(self) -> None:
+        root = SCRIPTS.parent
+        expected_fragments = {
+            "oncourt-am-refresh.ps1": "strict-signals-challenger-ml-v2-live.csv",
+            "oncourt-daily.ps1": "strict-signals-challenger-ml-v2-live.csv",
+            "oncourt-settle-nightly.ps1": "strict-signals-challenger-ml-v2-archive.csv",
+            "oncourt-weekly.ps1": "strict-clv-audit-challenger-ml-v2-2026.csv",
+            "weekly-research-report.py": "strict-policy-performance-challenger-ml-v2-weekly.csv",
+        }
+        for filename, fragment in expected_fragments.items():
+            text = (root / "scripts" / filename).read_text(encoding="utf-8")
+            self.assertIn(fragment, text, filename)
+
 
 class ChallengerEntryOddsTests(unittest.TestCase):
     def test_snapshot_lookup_is_date_aware_and_oriented(self) -> None:
