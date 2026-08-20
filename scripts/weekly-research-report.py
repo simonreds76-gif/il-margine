@@ -274,6 +274,30 @@ def settled_ledger_summary(rows: list[dict[str, str]], *, stake_field: str) -> d
     }
 
 
+def report_csv_section(text: str, heading: str) -> list[dict[str, str]]:
+    """Parse a small CSV table that follows an exact report heading."""
+    lines = text.splitlines()
+    try:
+        start = lines.index(heading) + 1
+    except ValueError:
+        return []
+    while start < len(lines) and not lines[start].strip():
+        start += 1
+    if start >= len(lines):
+        return []
+    table: list[str] = []
+    for line in lines[start:]:
+        if not line.strip():
+            break
+        table.append(line)
+    if len(table) < 2:
+        return []
+    try:
+        return list(csv.DictReader(table))
+    except (csv.Error, TypeError):
+        return []
+
+
 def goalscorer_research_summary() -> dict[str, Any]:
     backtest_dir = ROOT / "data" / "goalscorer" / "backtest"
     parity = load_text(backtest_dir / "parity-report.txt")
@@ -283,9 +307,25 @@ def goalscorer_research_summary() -> dict[str, Any]:
     true_closes = [row for row in clv_rows if row.get("close_status") == "true_close"]
     signal_rows: list[dict[str, str]] = []
     quarantine_rows: list[dict[str, str]] = []
-    for league in ("serie-a", "epl", "la-liga", "bundesliga", "ligue-1"):
+    quarantine_by_league: list[dict[str, Any]] = []
+    league_labels = {
+        "serie-a": "Serie A",
+        "epl": "Premier League",
+        "la-liga": "La Liga",
+        "bundesliga": "Bundesliga",
+        "ligue-1": "Ligue 1",
+    }
+    for league, label in league_labels.items():
         signal_rows.extend(load_csv(ROOT / "data" / "goalscorer" / f"fair-odds-lab-{league}-signals.csv"))
-        quarantine_rows.extend(load_csv(ROOT / "data" / "goalscorer" / f"fair-odds-lab-{league}-quarantine.csv"))
+        league_quarantine = load_csv(ROOT / "data" / "goalscorer" / f"fair-odds-lab-{league}-quarantine.csv")
+        quarantine_rows.extend(league_quarantine)
+        quarantine_by_league.append(
+            {
+                "key": league,
+                "label": label,
+                **settled_ledger_summary(league_quarantine, stake_field="evaluation_stake_units"),
+            }
+        )
     ledger = settled_ledger_summary(signal_rows, stake_field="recommended_stake_units")
     quarantine_ledger = settled_ledger_summary(quarantine_rows, stake_field="evaluation_stake_units")
     activity_values = [
@@ -293,11 +333,37 @@ def goalscorer_research_summary() -> dict[str, Any]:
         for row in signal_rows
     ]
     latest_activity = max((value for value in activity_values if value), default="")
-    beta_gate = re.search(
-        r"^beta,(\d+),(\d+),([^,]+),([^,]+),([^\n]+)$",
-        walkforward,
-        flags=re.MULTILINE,
-    )
+    pooled_rows = {row.get("variant", ""): row for row in report_csv_section(walkforward, "Pooled metrics")}
+    gate_rows = {row.get("variant", ""): row for row in report_csv_section(walkforward, "Promotion gate")}
+    raw_metrics = pooled_rows.get("raw", {})
+    beta_metrics = pooled_rows.get("beta", {})
+    beta_gate = gate_rows.get("beta", {})
+
+    def metric(row: dict[str, str], key: str) -> float | None:
+        value = str(row.get(key) or "").strip()
+        return number(value) if value and value != "-" else None
+
+    raw_brier = metric(raw_metrics, "brier")
+    beta_brier = metric(beta_metrics, "brier")
+    raw_log_loss = metric(raw_metrics, "log_loss")
+    beta_log_loss = metric(beta_metrics, "log_loss")
+    raw_ece = metric(raw_metrics, "ece")
+    beta_ece = metric(beta_metrics, "ece")
+    blockers: list[str] = []
+    evaluated_folds = int(number(beta_gate.get("evaluated_folds")))
+    probability_gate = beta_gate.get("probability_gate") or "NOT_RUN"
+    market_roi_gate = beta_gate.get("market_roi_gate") or "UNAVAILABLE"
+    decision = beta_gate.get("decision") or "KEEP_RESEARCH"
+    if evaluated_folds < 5:
+        blockers.append("fifth fold pending")
+    if probability_gate != "PASS":
+        blockers.append(f"probability gate {probability_gate.lower()}")
+    if market_roi_gate != "PASS":
+        blockers.append(f"market ROI gate {market_roi_gate.lower()}")
+    if not matched:
+        blockers.append("no matched closing prices")
+    if not quarantine_ledger["settled"]:
+        blockers.append("no settled extreme-gap rows")
     return {
         "status": "research_only",
         "variant": labelled_value(walkforward, "Model variant") or "v2_minutes_absolute_share_repair",
@@ -311,13 +377,32 @@ def goalscorer_research_summary() -> dict[str, Any]:
         "matched_closes": len(matched),
         "true_closes": len(true_closes),
         "clv_coverage_pct": (len(matched) / len(clv_rows) * 100) if clv_rows else 0.0,
-        "beta_folds": int(beta_gate.group(1)) if beta_gate else 0,
-        "beta_fold_wins": int(beta_gate.group(2)) if beta_gate else 0,
-        "probability_gate": beta_gate.group(3) if beta_gate else "NOT_RUN",
-        "market_roi_gate": beta_gate.group(4) if beta_gate else "UNAVAILABLE",
-        "decision": beta_gate.group(5).strip() if beta_gate else "KEEP_RESEARCH",
+        "calibration": {
+            "n": int(number(beta_metrics.get("n"))),
+            "raw_brier": raw_brier,
+            "beta_brier": beta_brier,
+            "brier_delta": beta_brier - raw_brier if beta_brier is not None and raw_brier is not None else None,
+            "raw_log_loss": raw_log_loss,
+            "beta_log_loss": beta_log_loss,
+            "log_loss_delta": beta_log_loss - raw_log_loss if beta_log_loss is not None and raw_log_loss is not None else None,
+            "raw_ece": raw_ece,
+            "beta_ece": beta_ece,
+            "ece_delta": beta_ece - raw_ece if beta_ece is not None and raw_ece is not None else None,
+            "raw_predicted": metric(raw_metrics, "predicted"),
+            "beta_predicted": metric(beta_metrics, "predicted"),
+            "actual": metric(beta_metrics, "actual"),
+        },
+        "beta_folds": evaluated_folds,
+        "beta_fold_wins": int(number(beta_gate.get("fold_wins"))),
+        "probability_gate": probability_gate,
+        "market_roi_gate": market_roi_gate,
+        "decision": decision,
+        "blockers": blockers,
         "ledger": ledger,
-        "extreme_gap_quarantine": quarantine_ledger,
+        "extreme_gap_quarantine": {
+            **quarantine_ledger,
+            "by_league": quarantine_by_league,
+        },
         "freshness": evidence_freshness(latest_activity),
     }
 
@@ -443,6 +528,12 @@ def pct(value: float | None, digits: int = 1) -> str:
     if value is None:
         return "-"
     return f"{value:+.{digits}f}%"
+
+
+def fixed(value: float | None, digits: int = 5) -> str:
+    if value is None:
+        return "-"
+    return f"{value:.{digits}f}"
 
 
 def ratio_pct(value: float | None, digits: int = 1) -> str:
@@ -1380,12 +1471,36 @@ def render_report(payload: dict[str, Any]) -> str:
             "",
             "- Public Fair Odds Lab remains on the incumbent model.",
             f"- Live/backtest parity: {goalscorer['parity_decision']} | max drift {pct(goalscorer['parity_max_delta_pp'], 3)}.",
+            (
+                f"- Held-out calibration (n={goalscorer['calibration']['n']:,}): "
+                f"raw -> beta Brier {fixed(goalscorer['calibration']['raw_brier'])} -> {fixed(goalscorer['calibration']['beta_brier'])} "
+                f"(delta {fixed(goalscorer['calibration']['brier_delta'])}); "
+                f"log loss {fixed(goalscorer['calibration']['raw_log_loss'])} -> {fixed(goalscorer['calibration']['beta_log_loss'])} "
+                f"(delta {fixed(goalscorer['calibration']['log_loss_delta'])}); "
+                f"ECE {ratio_pct(goalscorer['calibration']['raw_ece'], 2)} -> {ratio_pct(goalscorer['calibration']['beta_ece'], 2)} "
+                f"(delta {ratio_pct(goalscorer['calibration']['ece_delta'], 2)})."
+            ),
+            (
+                f"- Mean probability: raw {ratio_pct(goalscorer['calibration']['raw_predicted'], 2)} | "
+                f"beta {ratio_pct(goalscorer['calibration']['beta_predicted'], 2)} | "
+                f"actual {ratio_pct(goalscorer['calibration']['actual'], 2)}."
+            ),
             f"- Beta calibration: {goalscorer['beta_fold_wins']}/{goalscorer['beta_folds']} fold wins | probability gate {goalscorer['probability_gate']} | market gate {goalscorer['market_roi_gate']}.",
             f"- Real-price CLV coverage: {goalscorer['matched_closes']}/{goalscorer['signals']} ({goalscorer['clv_coverage_pct']:.1f}%) | true closes {goalscorer['true_closes']}.",
             f"- Settled ledger: {goalscorer['ledger']['settled']}/{goalscorer['ledger']['registered']} settled, {goalscorer['ledger']['wins']}W/{goalscorer['ledger']['losses']}L, {goalscorer['ledger']['pnl_units']:+.2f}u, ROI {pct(goalscorer['ledger']['roi_pct'])}.",
             f"- Extreme-gap quarantine: {goalscorer['extreme_gap_quarantine']['settled']}/{goalscorer['extreme_gap_quarantine']['registered']} settled, {goalscorer['extreme_gap_quarantine']['pnl_units']:+.2f}u at 1u evaluation stakes, ROI {pct(goalscorer['extreme_gap_quarantine']['roi_pct'])}.",
+            "- Extreme-gap by league: "
+            + (
+                "; ".join(
+                    f"{row['label']} {row['settled']}/{row['registered']} settled, {row['pnl_units']:+.2f}u, ROI {pct(row['roi_pct'])}"
+                    for row in goalscorer["extreme_gap_quarantine"]["by_league"]
+                    if row["registered"]
+                )
+                or "no rows registered yet"
+            )
+            + ".",
             f"- Evidence freshness: {goalscorer['freshness']['status']} ({goalscorer['freshness']['generated_at'] or 'missing'}).",
-            f"- Decision: {goalscorer['decision'].replace('_', ' ').lower()} until the fifth fold and real-price evidence exist.",
+            f"- Decision: {goalscorer['decision']} | blockers: {', '.join(goalscorer['blockers']) or 'none'}.",
             "",
             "## Assist Value V1 Research Gate",
             "",
@@ -1618,8 +1733,9 @@ def telegram_text(payload: dict[str, Any]) -> str:
         f"Count-source health: API-Football {api_health.get('archive_rows', 0)} archived, latest {api_health.get('latest_fixture_date') or '-'}, agreement {api_agreement.get('matched_fixtures', 0)}/{api_agreement.get('api_rows', 0)}",
         f"Team Fouls: F1 {team_fouls_decision.get('status', 'NOT_RUN')}; F2 {team_fouls_f2_decision.get('status', 'NOT_RUN')}; sources {team_fouls_m2.get('status', 'NOT_RUN')}; no signals",
         f"GK Saves v1: count {goalkeeper_saves.get('count_gate', 'NOT_RUN')} n={goalkeeper_saves.get('historical_observations', 0)} | discovery {goalkeeper_saves.get('market_status', 'NOT_RUN')} ({goalkeeper_saves.get('over_lines', 0)} probe Over lines) | capture {goalkeeper_saves.get('capture_status', 'NOT_RUN')} events={goalkeeper_saves.get('capture_events_selected', 0)} rows={goalkeeper_saves.get('capture_rows_observed', 0)} 1X2={goalkeeper_saves.get('capture_three_way_events', 0)} | prospective {goalkeeper_saves.get('prospective_status', 'BLOCKED')} priced={goalkeeper_saves.get('priced_lines', 0)} eligible={goalkeeper_saves.get('eligible_lines', 0)} provisional={goalkeeper_saves.get('provisional_lines', 0)} signals={goalkeeper_saves.get('signals', 0)} settled={goalkeeper_saves.get('settled', 0)} blockers={goalkeeper_saves.get('blocker_counts', {})} ROI={ratio_pct(goalkeeper_saves.get('roi'))} CLV={ratio_pct(goalkeeper_saves.get('clv'))} n={goalkeeper_saves.get('clv_matched', 0)} | promotion BLOCKED",
-        f"Goalscorer V2: {goalscorer['ledger']['settled']} settled | {goalscorer['ledger']['pnl_units']:+.2f}u | ROI {pct(goalscorer['ledger']['roi_pct'])} | CLV {goalscorer['matched_closes']}/{goalscorer['signals']} | {goalscorer['decision']}",
-        f"Goalscorer extreme-gap quarantine: {goalscorer['extreme_gap_quarantine']['settled']}/{goalscorer['extreme_gap_quarantine']['registered']} settled | {goalscorer['extreme_gap_quarantine']['pnl_units']:+.2f}u | ROI {pct(goalscorer['extreme_gap_quarantine']['roi_pct'])} | zero-stake research",
+        f"Goalscorer V2: {goalscorer['ledger']['settled']} settled | {goalscorer['ledger']['pnl_units']:+.2f}u | ROI {pct(goalscorer['ledger']['roi_pct'])} | CLV {goalscorer['matched_closes']}/{goalscorer['signals']} | public incumbent",
+        f"Goalscorer beta vs raw n={goalscorer['calibration']['n']}: Brier {fixed(goalscorer['calibration']['raw_brier'])}->{fixed(goalscorer['calibration']['beta_brier'])} ({fixed(goalscorer['calibration']['brier_delta'])}) | ECE {ratio_pct(goalscorer['calibration']['raw_ece'], 2)}->{ratio_pct(goalscorer['calibration']['beta_ece'], 2)} | folds {goalscorer['beta_fold_wins']}/{goalscorer['beta_folds']}",
+        f"Goalscorer gaps [ZERO-STAKE]: {goalscorer['extreme_gap_quarantine']['settled']}/{goalscorer['extreme_gap_quarantine']['registered']} settled | {goalscorer['extreme_gap_quarantine']['pnl_units']:+.2f}u | ROI {pct(goalscorer['extreme_gap_quarantine']['roi_pct'])} | weekly verdict {goalscorer['decision']} | blockers {', '.join(goalscorer['blockers']) or 'none'}",
         f"Assist V1: {assist['lane_status']} | backtest {assist['backtest_status']} | settlement {assist['settlement_status']} | market {assist['market_status']} ({assist['market_calendar_span_days']}/90d) | prospective {assist['prospective']['settled']}/{assist['prospective_target']} | <=30 API calls/week | {assist['decision']}",
         f"Automation: {automation.get('status', 'NOT_RUN')} | Odds-API worst hour {odds_budget.get('max_requests_in_one_hour', '-')}/{odds_budget.get('requests_per_hour', '-')} | DB writes/week max {(automation.get('database') or {}).get('registered_writes_per_week_max', '-')}",
         tennis_lane_line("Tennis Strict", "strict", "CORE"),

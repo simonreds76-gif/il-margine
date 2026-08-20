@@ -77,6 +77,18 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertIn("tennis_venue_ace_factor_v1", payload)
         self.assertFalse(payload["tennis_venue_ace_factor_v1"]["automatic_promotion"])
 
+    def test_goalscorer_weekly_evidence_is_decision_ready(self) -> None:
+        goalscorer = REPORT["build_payload"]()["goalscorer_v2"]
+        calibration = goalscorer["calibration"]
+        self.assertGreater(calibration["n"], 0)
+        self.assertIsNotNone(calibration["raw_brier"])
+        self.assertIsNotNone(calibration["beta_brier"])
+        self.assertIsNotNone(calibration["brier_delta"])
+        self.assertIsNotNone(calibration["raw_ece"])
+        self.assertIsNotNone(calibration["beta_ece"])
+        self.assertEqual(len(goalscorer["extreme_gap_quarantine"]["by_league"]), 5)
+        self.assertTrue(goalscorer["blockers"])
+
     def test_weekly_payload_includes_every_tennis_lane(self) -> None:
         payload = REPORT["build_payload"]()
         tennis = payload["tennis_model_evidence"]
@@ -100,6 +112,9 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertIn("GK Saves v1: count PASS", message)
         self.assertIn("Team Shots scan:", message)
         self.assertIn("Corners scan:", message)
+        self.assertIn("Goalscorer beta vs raw", message)
+        self.assertIn("Goalscorer gaps [ZERO-STAKE]", message)
+        self.assertIn("weekly verdict", message)
         self.assertIn("| capture ", message)
         self.assertLessEqual(len(message), 4096)
 
