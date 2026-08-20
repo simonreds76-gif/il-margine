@@ -1,7 +1,11 @@
 {
-  "generated_at": "2026-08-19T22:57:08.622442Z",
+  "generated_at": "2026-08-20T07:28:28.677605Z",
   "source_file": [
-    "data/goalscorer/la-liga/goalscorer-live-comparison.csv"
+    "data/goalscorer/all-leagues-live-board.json",
+    "data/goalscorer/goalscorer-live-comparison.csv",
+    "data/goalscorer/epl/goalscorer-live-comparison.csv",
+    "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
+    "data/goalscorer/ligue-1/goalscorer-live-comparison.csv"
   ],
   "team_form_source": "/home/runner/work/_temp/football-form/team-match-base.csv",
   "edge_threshold_pp": 6.0,
@@ -28,13 +32,279 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 2,
-  "signals_qualifying": 1,
+  "fixtures_evaluated": 18,
+  "signals_qualifying": 5,
   "leagues_covered": [
-    "la-liga"
+    "epl",
+    "la-liga",
+    "serie-a"
   ],
-  "featured_signal_id": "20260821-orri-steinn-oskarsson-9feccacf05",
+  "featured_signal_id": "20260822-roberto-fernandez-813e33c4a9",
   "signals": [
+    {
+      "id": "20260822-roberto-fernandez-813e33c4a9",
+      "match": {
+        "home_team": "Espanyol Barcelona",
+        "away_team": "Real Madrid",
+        "league": "la-liga",
+        "league_display": "La Liga",
+        "league_logo_path": "/league-logos/la-liga.png",
+        "kickoff_utc": "2026-08-22T19:30:00Z",
+        "kickoff_display": "Sat 22 Aug 20:30 UK",
+        "fotmob_match_id": "5868025",
+        "fotmob_page_url": "/matches/espanyol-vs-real-madrid/2fzhol#5868025",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Roberto Fernandez",
+        "team": "Espanyol",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/la-liga/espanyol.png",
+        "team_primary_color": "#2563eb",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "vertical-stripes"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 45.5,
+        "fair_odds": 2.2
+      },
+      "market_data": {
+        "best_odds": 4.5,
+        "best_book": "Bet365",
+        "implied_chance_pct": 22.2
+      },
+      "edge": {
+        "price_gap_pp": 23.2,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 92
+        },
+        "share_of_team_chances_pct": 49,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 21
+        },
+        "recent_team_form": {
+          "tier": "Unknown"
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 15
+        },
+        "opponent_recent_defence": {
+          "tier": "Unknown",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-23",
+          "xg_for_avg": null,
+          "xg_against_avg": null,
+          "xgd_per90": null,
+          "shots_for_avg": 13.4,
+          "shots_against_avg": 11.6,
+          "sot_for_avg": 4.4,
+          "sot_against_avg": 3.8,
+          "corners_for_avg": 4.8,
+          "corners_against_avg": 3.8
+        },
+        "fixture_boost_pct": -27,
+        "projected_minutes": 78,
+        "penalty_role": "Primary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260822-dominic-calvert-lewin-ca6d15bf5b",
+      "match": {
+        "home_team": "Nottingham Forest",
+        "away_team": "Leeds United",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-08-22T14:00:00Z",
+        "kickoff_display": "Sat 22 Aug 15:00 UK",
+        "fotmob_match_id": "5795367",
+        "fotmob_page_url": "/matches/leeds-united-vs-nottingham-forest/2vqauu#5795367",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Dominic Calvert-Lewin",
+        "team": "Leeds",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/leeds.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#facc15",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 50.3,
+        "fair_odds": 1.99
+      },
+      "market_data": {
+        "best_odds": 2.75,
+        "best_book": "Bet365",
+        "implied_chance_pct": 36.4
+      },
+      "edge": {
+        "price_gap_pp": 14.0,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 93
+        },
+        "share_of_team_chances_pct": 36,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 70
+        },
+        "recent_team_form": {
+          "tier": "Unknown",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-24",
+          "xg_for_avg": null,
+          "xg_against_avg": null,
+          "xgd_per90": null,
+          "shots_for_avg": 11.8,
+          "shots_against_avg": 15.4,
+          "sot_for_avg": 3.8,
+          "sot_against_avg": 6.0,
+          "corners_for_avg": 3.8,
+          "corners_against_avg": 8.0
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 86
+        },
+        "opponent_recent_defence": {
+          "tier": "Unknown"
+        },
+        "fixture_boost_pct": 25,
+        "projected_minutes": 88,
+        "penalty_role": "Primary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "The fixture profile adds to his scoring case"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260822-morgan-gibbs-white-169bcd7c80",
+      "match": {
+        "home_team": "Nottingham Forest",
+        "away_team": "Leeds United",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-08-22T14:00:00Z",
+        "kickoff_display": "Sat 22 Aug 15:00 UK",
+        "fotmob_match_id": "5795367",
+        "fotmob_page_url": "/matches/leeds-united-vs-nottingham-forest/2vqauu#5795367",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Morgan Gibbs-White",
+        "team": "Nottingham Forest",
+        "position": "AM",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/nottingham-forest.png",
+        "team_primary_color": "#dc2626",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 42.5,
+        "fair_odds": 2.36
+      },
+      "market_data": {
+        "best_odds": 3.1,
+        "best_book": "Bet365",
+        "implied_chance_pct": 32.3
+      },
+      "edge": {
+        "price_gap_pp": 10.2,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 91
+        },
+        "share_of_team_chances_pct": 30,
+        "share_of_team_chances_percentile": 98,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 84
+        },
+        "recent_team_form": {
+          "tier": "Unknown"
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 66
+        },
+        "opponent_recent_defence": {
+          "tier": "Unknown",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-24",
+          "xg_for_avg": null,
+          "xg_against_avg": null,
+          "xgd_per90": null,
+          "shots_for_avg": 11.8,
+          "shots_against_avg": 15.4,
+          "sot_for_avg": 3.8,
+          "sot_against_avg": 6.0,
+          "corners_for_avg": 3.8,
+          "corners_against_avg": 8.0
+        },
+        "fixture_boost_pct": 7,
+        "projected_minutes": 82,
+        "penalty_role": "Secondary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    },
     {
       "id": "20260821-orri-steinn-oskarsson-9feccacf05",
       "match": {
@@ -77,13 +347,13 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 97
+          "percentile": 98
         },
         "share_of_team_chances_pct": 31,
-        "share_of_team_chances_percentile": 99,
+        "share_of_team_chances_percentile": 98,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 26
+          "percentile": 25
         },
         "recent_team_form": {
           "tier": "Unknown",
@@ -102,13 +372,112 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 50
+          "percentile": 40
         },
         "opponent_recent_defence": {
           "tier": "Unknown"
         },
         "fixture_boost_pct": -13,
         "projected_minutes": 78,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260822-scott-mctominay-c648e769fc",
+      "match": {
+        "home_team": "Genoa CFC",
+        "away_team": "SSC Napoli",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "2026-08-22T18:45:00Z",
+        "kickoff_display": "Sat 22 Aug 19:45 UK",
+        "fotmob_match_id": "5749644",
+        "fotmob_page_url": "/matches/napoli-vs-genoa/3cdjj5#5749644",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Scott McTominay",
+        "team": "Napoli",
+        "position": "MID",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/serie-a/napoli.png",
+        "team_primary_color": "#0ea5e9",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 36.0,
+        "fair_odds": 2.77
+      },
+      "market_data": {
+        "best_odds": 3.4,
+        "best_book": "Bet365",
+        "implied_chance_pct": 29.4
+      },
+      "edge": {
+        "price_gap_pp": 6.6,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 92
+        },
+        "share_of_team_chances_pct": 33,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 29
+        },
+        "recent_team_form": {
+          "tier": "Unknown",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-24",
+          "xg_for_avg": null,
+          "xg_against_avg": null,
+          "xgd_per90": null,
+          "shots_for_avg": 14.2,
+          "shots_against_avg": 9.4,
+          "sot_for_avg": 5.2,
+          "sot_against_avg": 3.6,
+          "corners_for_avg": 5.0,
+          "corners_against_avg": 2.6
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 44
+        },
+        "opponent_recent_defence": {
+          "tier": "Unknown",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-24",
+          "xg_for_avg": null,
+          "xg_against_avg": null,
+          "xgd_per90": null,
+          "shots_for_avg": 8.8,
+          "shots_against_avg": 11.8,
+          "sot_for_avg": 1.8,
+          "sot_against_avg": 4.0,
+          "corners_for_avg": 3.4,
+          "corners_against_avg": 3.6
+        },
+        "fixture_boost_pct": -11,
+        "projected_minutes": 85,
         "penalty_role": "Not on penalties",
         "role_adjustment_factor": 1.0,
         "role_adjustment_reason": "",
