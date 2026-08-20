@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-17T22:52:49Z",
+  "generated_at": "2026-08-20T23:36:08Z",
   "team_shots_v3_ema20": {
     "label": "Team Shots V3 EMA20 Research",
     "model": "canonical_form_v3_ema20_nb",
@@ -78,12 +78,12 @@
       ]
     },
     "clv": {
-      "published_picks": 73,
-      "settled": 73,
+      "published_picks": 82,
+      "settled": 82,
       "pnl_units": 10.927,
-      "avg_published_to_close_clv": 0.003413493150684931,
-      "avg_model_to_close_clv": 0.20624371232876715,
-      "positive_clv_share": 0.0273972602739726,
+      "avg_published_to_close_clv": 0.003038841463414634,
+      "avg_model_to_close_clv": 0.2040153658536586,
+      "positive_clv_share": 0.024390243902439025,
       "sample_state": "actionable",
       "pause_rule_fired": false
     }
@@ -179,7 +179,7 @@
     }
   },
   "football_counts_vnext": {
-    "generated_at": "2026-08-17T22:52:48Z",
+    "generated_at": "2026-08-20T23:36:08Z",
     "team_shots_v4": {
       "count_gate": "PASS",
       "prospective_status": "AUTHORIZED_SHADOW",
@@ -196,6 +196,25 @@
         "mean_true_close_clv": null,
         "side_counts": {},
         "dominant_side_share": 0.0
+      },
+      "latest_scan": {
+        "state": "EXPECTED_WARMUP_BLOCK",
+        "explanation": "Candidates were scored, but the registered matchdays 1-3 safety lock blocked publication.",
+        "scored_rows": 44,
+        "scored_fixtures": 11,
+        "eligible_rows": 0,
+        "eligible_fixtures": 0,
+        "blocked_rows": 44,
+        "blocker_rows": {
+          "edge_below_3pct": 42,
+          "matchdays_1_to_3": 44
+        },
+        "edge_pass_but_warmup_blocked_fixtures": 2,
+        "matchday_min": 1,
+        "matchday_max": 1,
+        "next_unlock": "matchday_4",
+        "operational_alert_required": false,
+        "operational_alert_code": null
       },
       "promotion_gate": "BLOCKED"
     },
@@ -215,6 +234,25 @@
         "mean_true_close_clv": null,
         "side_counts": {},
         "dominant_side_share": 0.0
+      },
+      "latest_scan": {
+        "state": "EXPECTED_WARMUP_BLOCK",
+        "explanation": "Candidates were scored, but the registered matchdays 1-3 safety lock blocked publication.",
+        "scored_rows": 114,
+        "scored_fixtures": 22,
+        "eligible_rows": 0,
+        "eligible_fixtures": 0,
+        "blocked_rows": 114,
+        "blocker_rows": {
+          "edge_below_3pct": 91,
+          "matchdays_1_to_3": 114
+        },
+        "edge_pass_but_warmup_blocked_fixtures": 10,
+        "matchday_min": 1,
+        "matchday_max": 1,
+        "next_unlock": "matchday_4",
+        "operational_alert_required": false,
+        "operational_alert_code": null
       },
       "promotion_gate": "BLOCKED"
     }
@@ -316,24 +354,24 @@
       },
       "database_writes": 0,
       "errors": [
-        "fixtures epl 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
-        "fixtures serie-a 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
-        "fixtures la-liga 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
-        "fixtures bundesliga 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
-        "fixtures ligue-1 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
-        "fixtures epl 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
-        "fixtures serie-a 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
-        "fixtures la-liga 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
-        "fixtures bundesliga 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
-        "fixtures ligue-1 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
-        "fixtures epl 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
-        "fixtures serie-a 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
-        "fixtures la-liga 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
-        "fixtures bundesliga 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}",
-        "fixtures ligue-1 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-16 to 2026-08-18.'}"
+        "fixtures epl 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-19 to 2026-08-21.'}",
+        "fixtures serie-a 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-19 to 2026-08-21.'}",
+        "fixtures la-liga 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-19 to 2026-08-21.'}",
+        "fixtures bundesliga 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-19 to 2026-08-21.'}",
+        "fixtures ligue-1 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-19 to 2026-08-21.'}",
+        "fixtures epl 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-19 to 2026-08-21.'}",
+        "fixtures serie-a 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-19 to 2026-08-21.'}",
+        "fixtures la-liga 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-19 to 2026-08-21.'}",
+        "fixtures bundesliga 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-19 to 2026-08-21.'}",
+        "fixtures ligue-1 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-19 to 2026-08-21.'}",
+        "fixtures epl 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-19 to 2026-08-21.'}",
+        "fixtures serie-a 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-19 to 2026-08-21.'}",
+        "fixtures la-liga 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-19 to 2026-08-21.'}",
+        "fixtures bundesliga 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-19 to 2026-08-21.'}",
+        "fixtures ligue-1 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-19 to 2026-08-21.'}"
       ],
       "fixtures_discovered": 0,
-      "generated_at": "2026-08-17T09:02:48Z",
+      "generated_at": "2026-08-20T15:57:23Z",
       "latest_fixture_date": null,
       "max_requests": 90,
       "new_rows": 0,
@@ -393,7 +431,7 @@
           "within_one_pct": 0.0
         }
       },
-      "generated_at": "2026-08-17T22:50:49Z",
+      "generated_at": "2026-08-20T23:33:51Z",
       "latest_api_fixture_date": null,
       "match_rate_pct": 0.0,
       "matched_fixtures": 0,
@@ -416,7 +454,7 @@
         "opening_1x2_closeness_vs_total_fouls_correlation": 0.20236620673672806,
         "total_shots_vs_total_fouls_correlation": -0.1826485756525495
       },
-      "generated_at": "2026-08-17T22:50:49Z",
+      "generated_at": "2026-08-20T23:33:51Z",
       "leg_structure": {
         "bundesliga": {
           "alpha_away_after_raw_frailty": 0.005185795899176435,
@@ -1081,7 +1119,7 @@
           "validation_matches": 1734
         }
       ],
-      "generated_at": "2026-08-17T22:51:17Z",
+      "generated_at": "2026-08-20T23:34:19Z",
       "market_gate": "BLOCKED_TEAM_FOULS_NOT_OBSERVED",
       "registered": {
         "ema_decay": 0.93,
@@ -1466,7 +1504,7 @@
           "validation_matches": 1734
         }
       ],
-      "generated_at": "2026-08-17T22:51:20Z",
+      "generated_at": "2026-08-20T23:34:22Z",
       "market_gate": "BLOCKED_TEAM_FOULS_NOT_OBSERVED",
       "registered": {
         "distribution": "poisson",
@@ -1515,7 +1553,7 @@
         "passed": false,
         "within_one_pct": 98.38709677419355
       },
-      "generated_at": "2026-08-17T22:51:21Z",
+      "generated_at": "2026-08-20T23:34:23Z",
       "requirements": {
         "independent_sources_required": [
           "api-football",
@@ -1638,123 +1676,144 @@
   "tennis_model_evidence": {
     "lanes": {
       "strict": {
-        "status": "OK",
-        "generated_at": "2026-04-25T16:45:17+00:00",
-        "as_of_date": "2026-03-29",
-        "evidence_period": "clean",
-        "signals": 139,
-        "settled": 139,
-        "pending": 0,
-        "wins": 74,
-        "losses": 57,
-        "staked_units": 185.0,
-        "pnl_units": 45.958,
-        "roi_pct": 24.8422,
         "clv": {
           "rows": 45,
           "avg_clv_pct": -0.2085,
           "positive_clv_pct": 22.22
-        }
-      },
-      "volume_200": {
+        },
+        "wins": 91,
+        "losses": 90,
         "status": "OK",
-        "generated_at": "2026-04-25T16:45:17+00:00",
-        "as_of_date": "2026-04-25",
-        "evidence_period": "clean",
-        "signals": 0,
-        "settled": 0,
+        "pending": 4,
+        "roi_pct": 12.517,
+        "settled": 187,
+        "signals": 191,
+        "pnl_units": 28.038,
+        "as_of_date": "2026-08-20",
+        "generated_at": "2026-08-20T21:43:35+00:00",
+        "staked_units": 224.0,
+        "evidence_period": "clean"
+      },
+      "clay_bo3": {
+        "wins": 6,
+        "losses": 8,
+        "status": "OK",
+        "pending": 2,
+        "roi_pct": -16.1643,
+        "settled": 15,
+        "signals": 17,
+        "pnl_units": -4.526,
+        "as_of_date": "2026-07-24",
+        "generated_at": "2026-08-20T21:43:37+00:00",
+        "staked_units": 28.0,
+        "evidence_period": "clean"
+      },
+      "cpi_speed": {
+        "wins": 11,
+        "losses": 24,
+        "status": "OK",
         "pending": 0,
-        "wins": 0,
-        "losses": 0,
-        "staked_units": 0.0,
-        "pnl_units": 0.0,
-        "roi_pct": null,
-        "clv": {
-          "rows": 0,
-          "avg_clv_pct": null,
-          "positive_clv_pct": null
-        }
+        "roi_pct": -28.6571,
+        "settled": 35,
+        "signals": 35,
+        "pnl_units": -10.03,
+        "as_of_date": "2026-07-13",
+        "generated_at": "2026-08-20T21:43:38+00:00",
+        "staked_units": 35.0,
+        "evidence_period": "clean"
+      },
+      "grass_bo3": {
+        "wins": 7,
+        "losses": 10,
+        "status": "OK",
+        "pending": 0,
+        "roi_pct": -18.3176,
+        "settled": 17,
+        "signals": 17,
+        "pnl_units": -3.114,
+        "as_of_date": "2026-06-24",
+        "generated_at": "2026-08-20T21:43:38+00:00",
+        "staked_units": 17.0,
+        "evidence_period": "clean"
       },
       "spread_v1": {
-        "status": "OK",
-        "generated_at": "2026-04-25T16:45:17+00:00",
-        "as_of_date": "2026-04-24",
-        "evidence_period": "clean",
-        "signals": 71,
-        "settled": 54,
-        "pending": 17,
-        "wins": 26,
-        "losses": 28,
-        "staked_units": 108.0,
-        "pnl_units": -6.938,
-        "roi_pct": -6.4241,
         "clv": {
           "rows": 34,
           "avg_clv_pct": -0.0097,
           "positive_clv_pct": 35.29
-        }
-      },
-      "grass_bo3": {
-        "status": "MISSING",
-        "settled": 0,
-        "pnl_units": 0.0,
-        "roi_pct": null
-      },
-      "clay_bo3": {
-        "status": "MISSING",
-        "settled": 0,
-        "pnl_units": 0.0,
-        "roi_pct": null
-      },
-      "cpi_speed": {
+        },
+        "wins": 23,
+        "losses": 22,
         "status": "OK",
-        "generated_at": "2026-06-24T20:11:18+00:00",
-        "as_of_date": "2026-06-24",
-        "evidence_period": "clean",
-        "signals": 7,
-        "settled": 0,
-        "pending": 7,
-        "wins": 0,
-        "losses": 0,
-        "staked_units": 0.0,
-        "pnl_units": 0.0,
-        "roi_pct": null
+        "pending": 0,
+        "roi_pct": -1.4689,
+        "settled": 45,
+        "signals": 45,
+        "pnl_units": -1.322,
+        "as_of_date": "2026-04-24",
+        "generated_at": "2026-08-20T21:43:36+00:00",
+        "staked_units": 90.0,
+        "evidence_period": "clean"
       },
       "challenger": {
+        "clv": {
+          "rows": 0,
+          "avg_clv_pct": null,
+          "positive_clv_pct": null
+        },
+        "wins": 0,
+        "losses": 0,
         "status": "OK",
-        "generated_at": "2026-05-17T19:28:09+00:00",
-        "as_of_date": "2026-05-14",
-        "evidence_period": "clean",
-        "signals": 23,
-        "settled": 23,
-        "pending": 0,
-        "wins": 4,
-        "losses": 11,
-        "staked_units": 15.0,
-        "pnl_units": -2.601,
-        "roi_pct": -17.34
+        "pending": 2,
+        "roi_pct": null,
+        "settled": 0,
+        "signals": 2,
+        "pnl_units": 0.0,
+        "as_of_date": "2026-08-20",
+        "generated_at": "2026-08-20T21:43:37+00:00",
+        "staked_units": 0.0,
+        "evidence_period": "clean"
+      },
+      "volume_200": {
+        "clv": {
+          "rows": 0,
+          "avg_clv_pct": null,
+          "positive_clv_pct": null
+        },
+        "wins": 11,
+        "losses": 16,
+        "status": "OK",
+        "pending": 2,
+        "roi_pct": -16.6111,
+        "settled": 27,
+        "signals": 29,
+        "pnl_units": -4.485,
+        "as_of_date": "2026-08-17",
+        "generated_at": "2026-08-20T21:43:36+00:00",
+        "staked_units": 27.0,
+        "evidence_period": "clean"
       }
     },
     "lane_source": {
-      "status": "STALE",
-      "oldest_generated_at": "2026-04-25T16:45:17+00:00",
       "lanes": {
         "strict": {
-          "generated_at": "2026-04-25T16:45:17+00:00",
-          "age_days": 114.26,
-          "status": "STALE"
-        },
-        "volume_200": {
-          "generated_at": "2026-04-25T16:45:17+00:00",
-          "age_days": 114.26,
-          "status": "STALE"
+          "status": "FRESH",
+          "age_days": 0.0,
+          "generated_at": "2026-08-20T21:43:35+00:00"
         },
         "spread_v1": {
-          "generated_at": "2026-04-25T16:45:17+00:00",
-          "age_days": 114.26,
-          "status": "STALE"
+          "status": "FRESH",
+          "age_days": 0.0,
+          "generated_at": "2026-08-20T21:43:36+00:00"
+        },
+        "volume_200": {
+          "status": "FRESH",
+          "age_days": 0.0,
+          "generated_at": "2026-08-20T21:43:36+00:00"
         }
-      }
+      },
+      "status": "FRESH",
+      "oldest_generated_at": "2026-08-20T21:43:35+00:00"
     },
     "gap_source_status": "OK",
     "gap_status": "SHADOW_ONLY_NO_LIVE_ROUTING_CHANGE",
@@ -1765,7 +1824,7 @@
           "roi_positive": true,
           "clv_at_least_0_5pct": true,
           "historical_screen_passed": true,
-          "positive_clv_at_least_55pct": false
+          "positive_clv_at_least_55pct": true
         },
         "passes": false,
         "profile": "strict",
@@ -1775,17 +1834,17 @@
           "Hard": {
             "wins": 18,
             "voids": 0,
-            "losses": 18,
-            "pending": 1,
-            "roi_pct": 19.4,
-            "settled": 36,
+            "losses": 19,
+            "pending": 0,
+            "roi_pct": 16.17,
+            "settled": 37,
             "signals": 37,
             "clv_rows": 19,
-            "pnl_units": 6.983,
+            "pnl_units": 5.983,
             "avg_gap_pp": 13.08,
-            "avg_clv_pct": 0.535,
+            "avg_clv_pct": 0.6917,
             "avg_value_pct": 33.35,
-            "positive_clv_pct": 47.37
+            "positive_clv_pct": 57.89
           }
         },
         "historical": {
@@ -1869,33 +1928,33 @@
         "performance": {
           "wins": 18,
           "voids": 0,
-          "losses": 18,
-          "pending": 1,
-          "roi_pct": 19.4,
-          "settled": 36,
+          "losses": 19,
+          "pending": 0,
+          "roi_pct": 16.17,
+          "settled": 37,
           "signals": 37,
           "clv_rows": 19,
-          "pnl_units": 6.983,
+          "pnl_units": 5.983,
           "avg_gap_pp": 13.08,
-          "avg_clv_pct": 0.535,
+          "avg_clv_pct": 0.6917,
           "avg_value_pct": 33.35,
-          "positive_clv_pct": 47.37
+          "positive_clv_pct": 57.89
         },
         "quality_eligible": 31,
         "quality_performance": {
           "wins": 16,
           "voids": 0,
-          "losses": 14,
-          "pending": 1,
-          "roi_pct": 25.05,
-          "settled": 30,
+          "losses": 15,
+          "pending": 0,
+          "roi_pct": 21.02,
+          "settled": 31,
           "signals": 31,
-          "clv_rows": 14,
-          "pnl_units": 7.516,
+          "clv_rows": 15,
+          "pnl_units": 6.516,
           "avg_gap_pp": 12.85,
-          "avg_clv_pct": 0.5001,
+          "avg_clv_pct": 0.6366,
           "avg_value_pct": 31.87,
-          "positive_clv_pct": 50.0
+          "positive_clv_pct": 53.33
         },
         "excluded_low_quality": 6,
         "max_gap_pp_inclusive": 20.0,
@@ -1932,17 +1991,17 @@
           "Hard": {
             "wins": 18,
             "voids": 0,
-            "losses": 16,
-            "pending": 2,
-            "roi_pct": 25.06,
-            "settled": 34,
+            "losses": 17,
+            "pending": 1,
+            "roi_pct": 21.49,
+            "settled": 35,
             "signals": 36,
             "clv_rows": 15,
-            "pnl_units": 8.52,
+            "pnl_units": 7.52,
             "avg_gap_pp": 12.26,
-            "avg_clv_pct": -0.4008,
+            "avg_clv_pct": -0.2202,
             "avg_value_pct": 29.22,
-            "positive_clv_pct": 40.0
+            "positive_clv_pct": 46.67
           }
         },
         "historical": {
@@ -2035,33 +2094,33 @@
         "performance": {
           "wins": 27,
           "voids": 0,
-          "losses": 25,
-          "pending": 3,
-          "roi_pct": 14.73,
-          "settled": 52,
+          "losses": 26,
+          "pending": 2,
+          "roi_pct": 12.57,
+          "settled": 53,
           "signals": 55,
           "clv_rows": 22,
-          "pnl_units": 7.662,
+          "pnl_units": 6.662,
           "avg_gap_pp": 12.15,
-          "avg_clv_pct": -0.296,
+          "avg_clv_pct": -0.1728,
           "avg_value_pct": 27.02,
-          "positive_clv_pct": 36.36
+          "positive_clv_pct": 40.91
         },
         "quality_eligible": 35,
         "quality_performance": {
           "wins": 18,
           "voids": 0,
-          "losses": 16,
-          "pending": 1,
-          "roi_pct": 18.04,
-          "settled": 34,
+          "losses": 17,
+          "pending": 0,
+          "roi_pct": 14.67,
+          "settled": 35,
           "signals": 35,
-          "clv_rows": 14,
-          "pnl_units": 6.133,
+          "clv_rows": 15,
+          "pnl_units": 5.133,
           "avg_gap_pp": 12.15,
-          "avg_clv_pct": -0.7875,
+          "avg_clv_pct": -0.5651,
           "avg_value_pct": 28.2,
-          "positive_clv_pct": 35.71
+          "positive_clv_pct": 40.0
         },
         "excluded_low_quality": 20,
         "max_gap_pp_inclusive": 15.0,
@@ -2070,34 +2129,34 @@
     },
     "side_flip_by_surface": {
       "Clay": {
-        "wins": 33,
+        "wins": 37,
         "voids": 0,
-        "losses": 57,
-        "pending": 12,
-        "roi_pct": -8.53,
-        "settled": 90,
-        "signals": 102,
-        "clv_rows": 44,
-        "pnl_units": -7.68,
-        "avg_gap_pp": 8.57,
-        "avg_clv_pct": 0.1376,
-        "avg_value_pct": 118.48,
-        "positive_clv_pct": 40.91
+        "losses": 67,
+        "pending": 2,
+        "roi_pct": -11.03,
+        "settled": 104,
+        "signals": 106,
+        "clv_rows": 50,
+        "pnl_units": -11.47,
+        "avg_gap_pp": 8.4,
+        "avg_clv_pct": 0.1441,
+        "avg_value_pct": 115.16,
+        "positive_clv_pct": 36.0
       },
       "Hard": {
-        "wins": 52,
+        "wins": 54,
         "voids": 0,
-        "losses": 82,
-        "pending": 13,
-        "roi_pct": 2.64,
-        "settled": 134,
-        "signals": 147,
-        "clv_rows": 82,
-        "pnl_units": 3.54,
+        "losses": 95,
+        "pending": 11,
+        "roi_pct": -4.38,
+        "settled": 149,
+        "signals": 160,
+        "clv_rows": 93,
+        "pnl_units": -6.52,
         "avg_gap_pp": 6.75,
-        "avg_clv_pct": 0.6607,
-        "avg_value_pct": 65.59,
-        "positive_clv_pct": 45.12
+        "avg_clv_pct": 0.5884,
+        "avg_value_pct": 64.29,
+        "positive_clv_pct": 45.16
       }
     }
   },
@@ -2152,27 +2211,27 @@
     "pnl_units": 0,
     "rows_void": 2,
     "rows_pushed": 0,
-    "rows_scored": 94,
+    "rows_scored": 118,
     "brier_market": null,
-    "clv_coverage": 72,
-    "clv_mean_pct": 1.7684166666666665,
+    "clv_coverage": 90,
+    "clv_mean_pct": 1.8338999999999999,
     "count_mae_v3": null,
     "count_mae_v4": null,
-    "generated_at": "2026-08-15T21:39:44+00:00",
-    "rows_pending": 24,
-    "rows_settled": 94,
+    "generated_at": "2026-08-20T21:39:44+00:00",
+    "rows_pending": 2,
+    "rows_settled": 118,
     "count_bias_v3": null,
     "count_bias_v4": null,
-    "clv_null_count": 48,
-    "rows_registered": 120,
+    "clv_null_count": 32,
+    "rows_registered": 122,
     "signals_settled": 0,
-    "clv_positive_pct": 30.555555555555557,
+    "clv_positive_pct": 34.44444444444444,
     "overround_median": 1.19427,
     "promotion_sample": 0,
-    "ladder_groups_seen": 44,
+    "ladder_groups_seen": 4,
     "ladder_reject_reasons": {},
     "ladder_accept_rate_pct": 100.0,
-    "ladder_groups_accepted": 44,
+    "ladder_groups_accepted": 4,
     "minimum_prefit_settled": 200
   },
   "tennis_breaks_v1": {
@@ -2310,21 +2369,21 @@
     "promotion_target_events": 150
   },
   "tennis_most_aces_forecast": {
-    "brier": 0.44930357407407406,
+    "brier": 0.5123171463414634,
     "notes": [
       "Outcome-only validation; no bookmaker prices, ROI, value or CLV.",
       "Parameters remain frozen until a registered review at 200 settled forecasts."
     ],
     "models": {
       "most_aces_direct_1x2_v1": {
-        "brier": 0.44038867525773195,
-        "logloss": 0.7598754793814433,
-        "rows_void": 3,
-        "accuracy_pct": 68.55670103092784,
-        "rows_pending": 22,
-        "rows_settled": 194,
-        "rows_registered": 219,
-        "actual_draw_rate_pct": 8.762886597938145,
+        "brier": 0.3611204,
+        "logloss": 0.6194792,
+        "rows_void": 0,
+        "accuracy_pct": 80.0,
+        "rows_pending": 0,
+        "rows_settled": 5,
+        "rows_registered": 5,
+        "actual_draw_rate_pct": 0.0,
         "predicted_draw_rate_pct": 0.0
       },
       "v3_aces_gaussian_copula_nb2": {
@@ -2350,43 +2409,43 @@
         "predicted_draw_rate_pct": 0.0
       },
       "v3_aces_gaussian_copula_nb2_evidence_tiers_v3": {
-        "brier": 0.44296553365384617,
-        "logloss": 0.7597472884615384,
-        "rows_void": 4,
-        "accuracy_pct": 68.26923076923077,
-        "rows_pending": 24,
-        "rows_settled": 208,
-        "rows_registered": 236,
-        "actual_draw_rate_pct": 8.653846153846153,
+        "brier": 0.44541516666666664,
+        "logloss": 0.7223736666666666,
+        "rows_void": 0,
+        "accuracy_pct": 66.66666666666667,
+        "rows_pending": 4,
+        "rows_settled": 6,
+        "rows_registered": 10,
+        "actual_draw_rate_pct": 0.0,
         "predicted_draw_rate_pct": 0.0
       }
     },
-    "status": "REVIEW_READY",
-    "logloss": 0.772399224537037,
-    "rows_void": 9,
-    "accuracy_pct": 67.82407407407408,
-    "rows_pending": 46,
-    "rows_settled": 432,
-    "rows_registered": 487,
-    "generated_at_utc": "2026-08-17T21:41:03+00:00",
-    "player_count_mae": 3.111140756302521,
-    "rows_quote_ready": 346,
+    "status": "EVIDENCE_BUILDING",
+    "logloss": 0.8698737560975609,
+    "rows_void": 2,
+    "accuracy_pct": 63.41463414634146,
+    "rows_pending": 4,
+    "rows_settled": 41,
+    "rows_registered": 47,
+    "generated_at_utc": "2026-08-20T21:39:38+00:00",
+    "player_count_mae": 3.079138888888889,
+    "rows_quote_ready": 23,
     "paired_comparison": {
       "status": "EVIDENCE_BUILDING",
-      "direct_brier": 0.44038867525773195,
+      "direct_brier": 0.3611204,
       "direct_model": "most_aces_direct_1x2_v1",
-      "review_stage": "DIRECTIONAL_ONLY",
-      "control_brier": 0.4279437577319588,
+      "review_stage": "BUILDING",
+      "control_brier": 0.42317799999999994,
       "control_model": "v3_aces_gaussian_copula_nb2_evidence_tiers_v3",
-      "paired_events": 194,
-      "direct_logloss": 0.7598754793814433,
-      "next_review_at": 200,
-      "control_logloss": 0.7424415103092783,
-      "brier_delta_direct_minus_control": 0.012444917525773147,
-      "logloss_delta_direct_minus_control": 0.01743396907216499
+      "paired_events": 5,
+      "direct_logloss": 0.6194792,
+      "next_review_at": 50,
+      "control_logloss": 0.6929908,
+      "brier_delta_direct_minus_control": -0.062057599999999935,
+      "logloss_delta_direct_minus_control": -0.07351160000000001
     },
-    "rows_price_blocked": 111,
-    "actual_draw_rate_pct": 9.027777777777779,
+    "rows_price_blocked": 6,
+    "actual_draw_rate_pct": 9.75609756097561,
     "minimum_review_sample": 200,
     "can_claim_profitability": false,
     "predicted_draw_rate_pct": 0.0
@@ -2408,16 +2467,16 @@
     "clv": {
       "rows": 7,
       "mean_pct": 7.1503,
-      "coverage_pct": 58.33,
+      "coverage_pct": 53.85,
       "positive_pct": 42.86
     },
     "feed": {
       "state": "TWO_WAY_PRICES_MISSING",
-      "line_rows": 1008,
-      "matched_rows": 934,
+      "line_rows": 125,
+      "matched_rows": 109,
       "two_way_rows": 0,
-      "match_rate_pct": 92.7,
-      "over_only_rows": 1008,
+      "match_rate_pct": 87.2,
+      "over_only_rows": 125,
       "top_shadow_blocker": "NOT_BEST_AVAILABLE_LINE",
       "public_bettable_rows": 0
     },
@@ -2427,7 +2486,7 @@
       "roi": {
         "pass": true,
         "target_pct": 0.0,
-        "observed_pct": 52.25
+        "observed_pct": 40.53846153846153
       },
       "mean_clv": {
         "pass": true,
@@ -2438,7 +2497,7 @@
         "pass": false,
         "target": 300,
         "observed": 7,
-        "coverage_pct": 58.33
+        "coverage_pct": 53.85
       },
       "positive_clv": {
         "pass": false,
@@ -2454,12 +2513,12 @@
       "settled_sample": {
         "pass": false,
         "target": 300,
-        "observed": 12
+        "observed": 13
       },
       "calibration_gap": {
         "pass": false,
         "maximum_pp": 5.0,
-        "observed_pp": 11.387248254261523
+        "observed_pp": 6.473349286994479
       },
       "pipeline_health": {
         "pass": false,
@@ -2474,38 +2533,38 @@
       "calibration_brier": {
         "pass": true,
         "maximum": 0.25,
-        "observed": 0.21437878638590643
+        "observed": 0.21908473409989584
       },
       "calibration_sample": {
         "pass": false,
         "target": 100,
-        "observed": 12
+        "observed": 13
       }
     },
     "record": {
       "wins": 7,
-      "losses": 5,
+      "losses": 6,
       "pushes": 0
     },
     "status": "COLLECTING_EVIDENCE",
     "pending": 0,
-    "roi_pct": 52.25,
-    "settled": 12,
+    "roi_pct": 40.54,
+    "settled": 13,
     "blockers": [
-      "settled sample 12/300",
+      "settled sample 13/300",
       "Slam coverage 0/2",
       "CLV sample 7/300",
-      "calibration sample 12/100",
+      "calibration sample 13/100",
       "one-sided price feed (0 two-way rows)",
       "pipeline health TWO_WAY_PRICES_MISSING"
     ],
     "by_market": [
       {
         "market": "aces",
-        "roi_pct": 30.0,
-        "settled": 8,
-        "pnl_units": 2.4,
-        "registered": 8
+        "roi_pct": 15.56,
+        "settled": 9,
+        "pnl_units": 1.4,
+        "registered": 9
       },
       {
         "market": "double_faults",
@@ -2516,15 +2575,15 @@
       }
     ],
     "gate_rule": "Human review only after 300 settled lines across at least two Slams, non-negative ROI, mean CLV >= +1%, positive CLV >= 55%, at least 100 calibrated win/loss rows with Brier <= 0.25 and absolute calibration gap <= 5pp, plus approved price integrity and a healthy pipeline.",
-    "pnl_units": 6.27,
-    "registered": 12,
+    "pnl_units": 5.27,
+    "registered": 13,
     "calibration": {
-      "rows": 12,
-      "brier": 0.214379,
-      "actual_hit_pct": 58.33,
-      "absolute_gap_pp": 11.39,
+      "rows": 13,
+      "brier": 0.219085,
+      "actual_hit_pct": 53.85,
+      "absolute_gap_pp": 6.47,
       "pushes_excluded": true,
-      "predicted_hit_pct": 46.95
+      "predicted_hit_pct": 47.37
     },
     "failed_gates": [
       "settled_sample",
@@ -2536,16 +2595,16 @@
       "price_integrity",
       "pipeline_health"
     ],
-    "generated_at": "2026-08-17T21:49:27Z",
-    "staked_units": 12.0,
+    "generated_at": "2026-08-20T21:47:50Z",
+    "staked_units": 13.0,
     "settled_slams": [],
     "automatic_promotion": false
   },
   "tennis_evidence_source": {
     "status": "FRESH",
     "source": "supabase",
-    "generated_at": "2026-08-17T21:49:27Z",
-    "age_days": 0.04,
+    "generated_at": "2026-08-20T21:47:50Z",
+    "age_days": 0.08,
     "error": ""
   },
   "goalscorer_v2": {
@@ -2553,19 +2612,41 @@
     "variant": "v2_minutes_absolute_share_repair",
     "parity_decision": "PASS",
     "parity_max_delta_pp": 0.004699999999999999,
-    "signals": 41,
+    "signals": 49,
     "matched_closes": 0,
     "true_closes": 0,
     "clv_coverage_pct": 0.0,
+    "calibration": {
+      "n": 63545,
+      "raw_brier": 0.08554,
+      "beta_brier": 0.08528,
+      "brier_delta": -0.0002600000000000102,
+      "raw_log_loss": 0.30413,
+      "beta_log_loss": 0.29885,
+      "log_loss_delta": -0.005280000000000007,
+      "raw_ece": 0.02015,
+      "beta_ece": 0.00813,
+      "ece_delta": -0.012020000000000001,
+      "raw_predicted": 0.0838,
+      "beta_predicted": 0.1043,
+      "actual": 0.103
+    },
     "beta_folds": 4,
     "beta_fold_wins": 4,
     "probability_gate": "FAIL",
     "market_roi_gate": "UNAVAILABLE",
     "decision": "KEEP_RESEARCH",
+    "blockers": [
+      "fifth fold pending",
+      "probability gate fail",
+      "market ROI gate unavailable",
+      "no matched closing prices",
+      "no settled extreme-gap rows"
+    ],
     "ledger": {
-      "registered": 41,
+      "registered": 49,
       "settled": 41,
-      "pending": 0,
+      "pending": 8,
       "wins": 12,
       "losses": 28,
       "pushes_or_voids": 1,
@@ -2573,9 +2654,87 @@
       "staked_units": 41.0,
       "roi_pct": -4.27
     },
+    "extreme_gap_quarantine": {
+      "registered": 0,
+      "settled": 0,
+      "pending": 0,
+      "wins": 0,
+      "losses": 0,
+      "pushes_or_voids": 0,
+      "pnl_units": 0,
+      "staked_units": 0,
+      "roi_pct": null,
+      "by_league": [
+        {
+          "key": "serie-a",
+          "label": "Serie A",
+          "registered": 0,
+          "settled": 0,
+          "pending": 0,
+          "wins": 0,
+          "losses": 0,
+          "pushes_or_voids": 0,
+          "pnl_units": 0,
+          "staked_units": 0,
+          "roi_pct": null
+        },
+        {
+          "key": "epl",
+          "label": "Premier League",
+          "registered": 0,
+          "settled": 0,
+          "pending": 0,
+          "wins": 0,
+          "losses": 0,
+          "pushes_or_voids": 0,
+          "pnl_units": 0,
+          "staked_units": 0,
+          "roi_pct": null
+        },
+        {
+          "key": "la-liga",
+          "label": "La Liga",
+          "registered": 0,
+          "settled": 0,
+          "pending": 0,
+          "wins": 0,
+          "losses": 0,
+          "pushes_or_voids": 0,
+          "pnl_units": 0,
+          "staked_units": 0,
+          "roi_pct": null
+        },
+        {
+          "key": "bundesliga",
+          "label": "Bundesliga",
+          "registered": 0,
+          "settled": 0,
+          "pending": 0,
+          "wins": 0,
+          "losses": 0,
+          "pushes_or_voids": 0,
+          "pnl_units": 0,
+          "staked_units": 0,
+          "roi_pct": null
+        },
+        {
+          "key": "ligue-1",
+          "label": "Ligue 1",
+          "registered": 0,
+          "settled": 0,
+          "pending": 0,
+          "wins": 0,
+          "losses": 0,
+          "pushes_or_voids": 0,
+          "pnl_units": 0,
+          "staked_units": 0,
+          "roi_pct": null
+        }
+      ]
+    },
     "freshness": {
-      "generated_at": "2026-08-17T09:22:57Z",
-      "age_days": 0.56,
+      "generated_at": "2026-08-20T22:17:27Z",
+      "age_days": 0.05,
       "status": "FRESH"
     }
   },
@@ -2605,7 +2764,7 @@
       "roi_pct": null
     },
     "freshness": {
-      "generated_at": "2026-08-17T22:52:41Z",
+      "generated_at": "2026-08-20T23:36:00Z",
       "age_days": 0.0,
       "status": "FRESH"
     },
@@ -2619,8 +2778,36 @@
       "lineup_refresh_reuses_captured_prices": true
     }
   },
+  "goalkeeper_saves_v1": {
+    "candidate": "goalkeeper-saves-v1-nb2-confirmed-starter",
+    "count_gate": "PASS",
+    "historical_observations": 42958,
+    "model_samples": 38426,
+    "market_status": "OVER_ONLY_GOALKEEPER_SAVE_PRICES_RETURNED",
+    "over_lines": 10,
+    "capture_status": "NO_GOALKEEPER_SAVE_LINES",
+    "capture_events_selected": 0,
+    "capture_events_with_lines": 0,
+    "capture_three_way_events": 0,
+    "capture_rows_observed": 0,
+    "prospective_status": "NO_CURRENT_LINES",
+    "priced_lines": 0,
+    "eligible_lines": 0,
+    "provisional_lines": 0,
+    "candidate_board_preserved": false,
+    "blocker_counts": {},
+    "signals": 0,
+    "pending": 0,
+    "settled": 0,
+    "roi": null,
+    "clv": null,
+    "clv_matched": 0,
+    "true_close_coverage": null,
+    "promotion_gate": "BLOCKED",
+    "sellable": false
+  },
   "automation_budget": {
-    "generated_at": "2026-08-17T22:52:48Z",
+    "generated_at": "2026-08-20T23:36:08Z",
     "workflow_directory": ".effective-default-branch/.github/workflows",
     "status": "PASS",
     "errors": [],

@@ -1,18 +1,21 @@
 # Weekly Research Lane Report
 
-- Generated: 2026-08-17T22:52:49Z
+- Generated: 2026-08-20T23:36:08Z
 - Overall read: observe live sample
 
 ## Football Counts vNext
 
 - Team Shots v4: count PASS; prospective AUTHORIZED_SHADOW; promotion BLOCKED.
 - Team Shots v4 evidence: 0 signals, 0 settled, +0.00u, ROI -, true-close CLV -.
+- Team Shots v4 latest scan: EXPECTED_WARMUP_BLOCK; 44 rows / 11 fixtures scored; 2 fixtures passed edge but were warm-up blocked; blockers {'edge_below_3pct': 42, 'matchdays_1_to_3': 44}.
 - Corners v3: count PASS; prospective AUTHORIZED_SHADOW; promotion BLOCKED.
 - Corners v3 evidence: 0 signals, 0 settled, +0.00u, ROI -, true-close CLV -.
+- Corners v3 latest scan: EXPECTED_WARMUP_BLOCK; 114 rows / 22 fixtures scored; 10 fixtures passed edge but were warm-up blocked; blockers {'edge_below_3pct': 91, 'matchdays_1_to_3': 114}.
 - Neither experiment changes live routing or stakes.
 - API-Football count archive: 0 fixtures; latest -; last run 15/90 requests.
 - Cross-provider agreement: 0/0 API fixtures matched; status no_overlap.
 - Team Fouls: F1 COUNT_GATE_FAIL_MARKET_BLOCKED; F2 COUNT_GATE_FAIL_EXTERNAL_GATES_BLOCKED; M2 WAIT_OR_FAIL; market prices BLOCKED; signals disabled.
+- Goalkeeper Saves v1: count PASS on 42,958 observations; discovery OVER_ONLY_GOALKEEPER_SAVE_PRICES_RETURNED (10 probe Over lines); latest capture NO_GOALKEEPER_SAVE_LINES (0 events selected / 0 rows / 0 with 1X2); prospective NO_CURRENT_LINES with 0 priced lines, 0 eligible, 0 predicted-XI research rows, 0 signals and 0 settled; blockers {}; ROI -, CLV - n=0; promotion BLOCKED.
 - New provider fields remain diagnostic-only until source definitions and coverage are accepted.
 
 ## Team Shots V3 EMA20 Research
@@ -22,7 +25,7 @@
 - Blocked leagues: -
 - Canonical-only fixtures: blocked
 - Last-90 segment gate: 1140 rows, current MAE 3.7320, V3 MAE 3.6413, improvement +2.4%
-- Live CLV sample: 73 published, 73 settled
+- Live CLV sample: 82 published, 82 settled
 - Avg published-to-close CLV: +0.3%
 - P/L sample: +10.93u
 - Action: continue
@@ -50,11 +53,15 @@
 
 - Public Fair Odds Lab remains on the incumbent model.
 - Live/backtest parity: PASS | max drift +0.005%.
+- Held-out calibration (n=63,545): raw -> beta Brier 0.08554 -> 0.08528 (delta -0.00026); log loss 0.30413 -> 0.29885 (delta -0.00528); ECE +2.02% -> +0.81% (delta -1.20%).
+- Mean probability: raw +8.38% | beta +10.43% | actual +10.30%.
 - Beta calibration: 4/4 fold wins | probability gate FAIL | market gate UNAVAILABLE.
-- Real-price CLV coverage: 0/41 (0.0%) | true closes 0.
-- Settled ledger: 41/41 settled, 12W/28L, -1.75u, ROI -4.3%.
-- Evidence freshness: FRESH (2026-08-17T09:22:57Z).
-- Decision: keep research until the fifth fold and real-price evidence exist.
+- Real-price CLV coverage: 0/49 (0.0%) | true closes 0.
+- Settled ledger: 41/49 settled, 12W/28L, -1.75u, ROI -4.3%.
+- Extreme-gap quarantine: 0/0 settled, +0.00u at 1u evaluation stakes, ROI -.
+- Extreme-gap by league: no rows registered yet.
+- Evidence freshness: FRESH (2026-08-20T22:17:27Z).
+- Decision: KEEP_RESEARCH | blockers: fifth fold pending, probability gate fail, market ROI gate unavailable, no matched closing prices, no settled extreme-gap rows.
 
 ## Assist Value V1 Research Gate
 
@@ -63,7 +70,7 @@
 - Settlement gate: FAIL | player-assist agreement 0.00%.
 - Market gate: FAIL | 1300 matched player prices across 8 calendar days.
 - Prospective ledger: 0/0 settled (target 100), +0.00u, ROI -.
-- Evidence freshness: FRESH (2026-08-17T22:52:41Z).
+- Evidence freshness: FRESH (2026-08-20T23:36:00Z).
 - Automation budget: Friday-Sunday 07:10 UTC, August-May; <= 10 Odds-API calls/run and <= 30 calls/week; zero database reads/writes.
 - No public output, staking, database writes or automatic promotion are authorised.
 
@@ -114,21 +121,21 @@
 ## Tennis Aces/DF Prospective Decision
 
 Tennis Aces/DF Weekly Decision Report
-Generated UTC: 2026-08-17T21:49:27Z
+Generated UTC: 2026-08-20T21:47:50Z
 Status: COLLECTING_EVIDENCE (never auto-promoted)
 
-Sample: 12/12 settled; 0 pending; 0 void
-Record: 7W/5L/0P
-P/L: +6.27u | ROI: +52.2%
+Sample: 13/13 settled; 0 pending; 0 void
+Record: 7W/6L/0P
+P/L: +5.27u | ROI: +40.5%
 CLV: +7.15% mean; 42.9% positive; n=7
-Calibration: Brier 0.214379; predicted 47.0%; actual 58.3%; gap 11.4pp; n=12
-Feed: TWO_WAY_PRICES_MISSING; matched 934/1008; two-way 0; over-only 1008; public bettable 0
+Calibration: Brier 0.219085; predicted 47.4%; actual 53.9%; gap 6.5pp; n=13
+Feed: TWO_WAY_PRICES_MISSING; matched 109/125; two-way 0; over-only 125; public bettable 0
 
 By market:
-- aces: 8/8 settled, +2.40u, ROI +30.0%
+- aces: 9/9 settled, +1.40u, ROI +15.6%
 - double_faults: 4/4 settled, +3.87u, ROI +96.8%
 
-Blockers: settled sample 12/300; Slam coverage 0/2; CLV sample 7/300; calibration sample 12/100; one-sided price feed (0 two-way rows); pipeline health TWO_WAY_PRICES_MISSING
+Blockers: settled sample 13/300; Slam coverage 0/2; CLV sample 7/300; calibration sample 13/100; one-sided price feed (0 two-way rows); pipeline health TWO_WAY_PRICES_MISSING
 Promotion gate: Human review only after 300 settled lines across at least two Slams, non-negative ROI, mean CLV >= +1%, positive CLV >= 55%, at least 100 calibrated win/loss rows with Brier <= 0.25 and absolute calibration gap <= 5pp, plus approved price integrity and a healthy pipeline.
 
 Service Breaks v1 [INTERNAL]: OUTCOME_PASS | player ATP/WTA PASS | match ATP/WTA PASS | real Bet365 price feed MISSING | 0 prospective | NOT SELLABLE
