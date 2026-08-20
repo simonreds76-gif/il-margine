@@ -1,13 +1,13 @@
 {
-  "schema_version": 2,
-  "generated_at": "2026-08-20T22:43:25Z",
+  "schema_version": 3,
+  "generated_at": "2026-08-20T22:59:33Z",
   "source_status": {
-    "compared_at": "2026-08-20T22:42:43Z",
-    "hot_live_updated_at": "2026-08-20T22:42:46Z",
-    "expected_refresh_updated_at": "2026-08-20T22:42:43Z",
+    "compared_at": "2026-08-20T22:59:29Z",
+    "hot_live_updated_at": "2026-08-20T22:59:33Z",
+    "expected_refresh_updated_at": "2026-08-20T22:59:29Z",
     "settlement_updated_at": "2026-08-20T22:17:59Z",
-    "scheduler_heartbeat_at": "2026-08-20T22:42:46Z",
-    "snapshot_generated_at": "2026-08-20T22:43:25Z",
+    "scheduler_heartbeat_at": "2026-08-20T22:59:33Z",
+    "snapshot_generated_at": "2026-08-20T22:59:33Z",
     "live_status_state": "skipped",
     "live_status_message": "Goalscorer live poll skipped: no leagues due in current cadence window."
   },
@@ -18,7 +18,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-08-20T22:42:43Z",
+      "updated_at": "2026-08-20T22:59:29Z",
       "live_rows": 122,
       "public_now": 0,
       "shadow_now": 11,
@@ -49,7 +49,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-08-20T22:42:43Z",
+      "updated_at": "2026-08-20T22:59:29Z",
       "live_rows": 0,
       "public_now": 0,
       "shadow_now": 0,
@@ -80,7 +80,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-08-20T22:42:43Z",
+      "updated_at": "2026-08-20T22:59:29Z",
       "live_rows": 37,
       "public_now": 0,
       "shadow_now": 3,
@@ -111,7 +111,7 @@
       "status_key": "no_feed",
       "status_label": "no ATGS feed",
       "status_detail": "Source feed returned 0 current ATGS rows for this league window.",
-      "updated_at": "2026-08-20T22:42:43Z",
+      "updated_at": "2026-08-20T22:59:29Z",
       "live_rows": 0,
       "public_now": 0,
       "shadow_now": 0,
@@ -142,7 +142,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-08-20T22:42:43Z",
+      "updated_at": "2026-08-20T22:59:29Z",
       "live_rows": 0,
       "public_now": 0,
       "shadow_now": 0,
@@ -2650,7 +2650,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-08-16|Carlos Alvarez|Espanyol Barcelona vs Levante UD|la-liga",
@@ -2670,7 +2673,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score_super_sub_ambiguous",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-08-16|Ivan Romero|Espanyol Barcelona vs Levante UD|la-liga",
@@ -2690,7 +2696,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score_super_sub_checked:Marc Santos",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-08-16|Jon Ander Olasagasti|Espanyol Barcelona vs Levante UD|la-liga",
@@ -2710,7 +2719,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-08-16|Marcos Fernandez|Espanyol Barcelona vs Levante UD|la-liga",
@@ -2730,7 +2742,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-08-16|Roberto Fernandez|Espanyol Barcelona vs Levante UD|la-liga",
@@ -2750,7 +2765,10 @@
         "settled": true,
         "bet_outcome": "won",
         "settlement_note": "scored_2_goals",
-        "pnl_units": 1.875
+        "pnl_units": 1.875,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-08-16|Victor Garcia|Espanyol Barcelona vs Levante UD|la-liga",
@@ -2770,7 +2788,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score_super_sub_ambiguous",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Ruslan Malinovsky|US Lecce vs Genoa CFC|serie-a",
@@ -2790,7 +2811,10 @@
         "settled": true,
         "bet_outcome": "void",
         "settlement_note": "not_in_matchday_squad",
-        "pnl_units": 0.0
+        "pnl_units": 0.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Bryan Mbeumo|Brighton & Hove Albion vs Manchester United|epl",
@@ -2810,7 +2834,10 @@
         "settled": true,
         "bet_outcome": "won",
         "settlement_note": "scored_1_goals",
-        "pnl_units": 2.4
+        "pnl_units": 2.4,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Jack Hinshelwood|Brighton & Hove Albion vs Manchester United|epl",
@@ -2830,7 +2857,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score_super_sub_checked:Georginio Rutter",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Yerson Mosquera|Burnley FC vs Wolverhampton Wanderers|epl",
@@ -2850,7 +2880,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Malick Thiaw|Fulham FC vs Newcastle United|epl",
@@ -2870,7 +2903,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Sander Berge|Fulham FC vs Newcastle United|epl",
@@ -2890,7 +2926,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Virgil van Dijk|Liverpool FC vs Brentford FC|epl",
@@ -2910,7 +2949,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Ollie Watkins|Manchester City vs Aston Villa|epl",
@@ -2930,7 +2972,10 @@
         "settled": true,
         "bet_outcome": "won",
         "settlement_note": "scored_2_goals",
-        "pnl_units": 2.6
+        "pnl_units": 2.6,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Pau Torres|Manchester City vs Aston Villa|epl",
@@ -2950,7 +2995,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Tyrone Mings|Manchester City vs Aston Villa|epl",
@@ -2970,7 +3018,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Adrien Truffert|Nottingham Forest vs AFC Bournemouth|epl",
@@ -2990,7 +3041,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Elliot Anderson|Nottingham Forest vs AFC Bournemouth|epl",
@@ -3010,7 +3064,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score_super_sub_ambiguous",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Felipe Morato|Nottingham Forest vs AFC Bournemouth|epl",
@@ -3030,7 +3087,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Marcus Tavernier|Nottingham Forest vs AFC Bournemouth|epl",
@@ -3050,7 +3110,10 @@
         "settled": true,
         "bet_outcome": "won",
         "settlement_note": "scored_1_goals",
-        "pnl_units": 3.0
+        "pnl_units": 3.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Morgan Gibbs-White|Nottingham Forest vs AFC Bournemouth|epl",
@@ -3070,7 +3133,10 @@
         "settled": true,
         "bet_outcome": "won",
         "settlement_note": "scored_1_goals",
-        "pnl_units": 2.25
+        "pnl_units": 2.25,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Enzo Fernandez|Sunderland AFC vs Chelsea FC|epl",
@@ -3090,7 +3156,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Joao Pedro|Sunderland AFC vs Chelsea FC|epl",
@@ -3110,7 +3179,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.25
+        "pnl_units": -1.25,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Noah Sadiki|Sunderland AFC vs Chelsea FC|epl",
@@ -3130,7 +3202,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Nordi Mukiele|Sunderland AFC vs Chelsea FC|epl",
@@ -3150,7 +3225,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Trai Hume|Sunderland AFC vs Chelsea FC|epl",
@@ -3170,7 +3248,10 @@
         "settled": true,
         "bet_outcome": "won",
         "settlement_note": "scored_1_goals",
-        "pnl_units": 10.0
+        "pnl_units": 10.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Beto|Tottenham Hotspur vs Everton FC|epl",
@@ -3190,7 +3271,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Jake O'Brien|Tottenham Hotspur vs Everton FC|epl",
@@ -3210,7 +3294,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score_super_sub_ambiguous",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|James Tarkowski|Tottenham Hotspur vs Everton FC|epl",
@@ -3230,7 +3317,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Kiernan Dewsbury-Hall|Tottenham Hotspur vs Everton FC|epl",
@@ -3250,7 +3340,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score_super_sub_ambiguous",
-        "pnl_units": -0.5
+        "pnl_units": -0.5,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Michael Keane|Tottenham Hotspur vs Everton FC|epl",
@@ -3270,7 +3363,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Richarlison|Tottenham Hotspur vs Everton FC|epl",
@@ -3290,7 +3386,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score_super_sub_ambiguous",
-        "pnl_units": -1.25
+        "pnl_units": -1.25,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Thierno Barry|Tottenham Hotspur vs Everton FC|epl",
@@ -3310,7 +3409,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score_super_sub_ambiguous",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Dominic Calvert-Lewin|West Ham United vs Leeds United|epl",
@@ -3330,7 +3432,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score_super_sub_checked:Wilfried Gnonto",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|James Justin|West Ham United vs Leeds United|epl",
@@ -3350,7 +3455,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Pascal Struijk|West Ham United vs Leeds United|epl",
@@ -3370,7 +3478,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Alessandro Deiola|AC Milan vs Cagliari Calcio|serie-a",
@@ -3390,7 +3501,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score_super_sub_checked:Ibrahim Sulemana",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Michel Adopo|AC Milan vs Cagliari Calcio|serie-a",
@@ -3410,7 +3524,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Sebastiano Esposito|AC Milan vs Cagliari Calcio|serie-a",
@@ -3430,7 +3547,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score_super_sub_checked:Mattia Felici",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Yerry Mina|AC Milan vs Cagliari Calcio|serie-a",
@@ -3450,7 +3570,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Rafik Belghali|Hellas Verona vs AS Roma|serie-a",
@@ -3470,7 +3593,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score_super_sub_checked:Ioan Vermesan",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Mariano Troilo|Parma Calcio vs Sassuolo Calcio|serie-a",
@@ -3490,7 +3616,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Arthur Atta|SSC Napoli vs Udinese Calcio|serie-a",
@@ -3510,7 +3639,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Keinan Davis|SSC Napoli vs Udinese Calcio|serie-a",
@@ -3530,7 +3662,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score_super_sub_ambiguous",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Oumar Solet|SSC Napoli vs Udinese Calcio|serie-a",
@@ -3550,7 +3685,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Scott McTominay|SSC Napoli vs Udinese Calcio|serie-a",
@@ -3570,7 +3708,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Thomas Kristensen|SSC Napoli vs Udinese Calcio|serie-a",
@@ -3590,7 +3731,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score_super_sub_ambiguous",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Emirhan Ilkhan|Torino FC vs Juventus Turin|serie-a",
@@ -3610,7 +3754,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score_super_sub_ambiguous",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       },
       {
         "key": "2026-05-24|Giovanni Simeone|Torino FC vs Juventus Turin|serie-a",
@@ -3630,7 +3777,10 @@
         "settled": true,
         "bet_outcome": "lost",
         "settlement_note": "played_did_not_score",
-        "pnl_units": -1.0
+        "pnl_units": -1.0,
+        "tracking_tier": "",
+        "quarantine_reason": "",
+        "evaluation_stake_units": null
       }
     ],
     "settled_today": [],
@@ -3685,6 +3835,85 @@
       }
     ]
   },
+  "extreme_gap_quarantine": {
+    "registered": 0,
+    "settled": 0,
+    "pending": 0,
+    "wins": 0,
+    "losses": 0,
+    "voids": 0,
+    "staked_units": 0,
+    "pnl_units": 0,
+    "roi": null,
+    "by_league": [
+      {
+        "key": "serie-a",
+        "label": "Serie A",
+        "registered": 0,
+        "settled": 0,
+        "pending": 0,
+        "wins": 0,
+        "losses": 0,
+        "voids": 0,
+        "staked_units": 0,
+        "pnl_units": 0,
+        "roi": null
+      },
+      {
+        "key": "epl",
+        "label": "Premier League",
+        "registered": 0,
+        "settled": 0,
+        "pending": 0,
+        "wins": 0,
+        "losses": 0,
+        "voids": 0,
+        "staked_units": 0,
+        "pnl_units": 0,
+        "roi": null
+      },
+      {
+        "key": "la-liga",
+        "label": "La Liga",
+        "registered": 0,
+        "settled": 0,
+        "pending": 0,
+        "wins": 0,
+        "losses": 0,
+        "voids": 0,
+        "staked_units": 0,
+        "pnl_units": 0,
+        "roi": null
+      },
+      {
+        "key": "bundesliga",
+        "label": "Bundesliga",
+        "registered": 0,
+        "settled": 0,
+        "pending": 0,
+        "wins": 0,
+        "losses": 0,
+        "voids": 0,
+        "staked_units": 0,
+        "pnl_units": 0,
+        "roi": null
+      },
+      {
+        "key": "ligue-1",
+        "label": "Ligue 1",
+        "registered": 0,
+        "settled": 0,
+        "pending": 0,
+        "wins": 0,
+        "losses": 0,
+        "voids": 0,
+        "staked_units": 0,
+        "pnl_units": 0,
+        "roi": null
+      }
+    ],
+    "recent_rows": []
+  },
   "diagnostics": {
     "matched_rows": 159,
     "suppressed_rows": 0,
@@ -3705,12 +3934,12 @@
         "detail": "Source feed returned 0 current ATGS rows for this league window."
       }
     ],
-    "raw_monitor_summary": "=== Serie A | Updated 20/08/2026, 23:42 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-08-20T07:26:39Z\n\nHistorical Rows          31,109\nOdds Rows                204\nMatched Rows             122\nMissing Player History   82\nMissing Team Mapping     0\nFallback Rows            19\nQualified Rows           15\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   86\nLow Confidence Rows      36\nPublic High Signals      0\nPublic Caveat Signals    11\nShadow Track Rows        11\nPenalty Transfer Rows    2\nPosition Upgrade Rows    1\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 4\nFixtures Clean           0\nFixtures Degraded        4\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    52\nExpected Bench Rows      0\nExpected Out Rows        8\nNot In Squad Rows        0\n\nAverage EV               -0.5345\n\n\n=== Premier League | Updated 20/08/2026, 23:42 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-08-20T22:17:03Z\n\nHistorical Rows          30,722\nOdds Rows                50\nMatched Rows             0\nMissing Player History   50\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           0\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   0\nLow Confidence Rows      0\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        1\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               0.0000\n\n\n=== La Liga | Updated 20/08/2026, 23:42 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-08-20T22:17:27Z\n\nHistorical Rows          32,271\nOdds Rows                47\nMatched Rows             37\nMissing Player History   10\nMissing Team Mapping     0\nFallback Rows            1\nQualified Rows           4\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   27\nLow Confidence Rows      10\nPublic High Signals      0\nPublic Caveat Signals    4\nShadow Track Rows        3\nPenalty Transfer Rows    1\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 1\nFixtures Clean           0\nFixtures Degraded        1\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    15\nExpected Bench Rows      0\nExpected Out Rows        7\nNot In Squad Rows        0\n\nAverage EV               -0.5658\n\n\n=== Bundesliga | Updated 20/08/2026, 23:42 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-08-20T07:27:35Z\n\nHistorical Rows          25,557\nOdds Rows                0\nMatched Rows             0\nMissing Player History   0\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           0\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   0\nLow Confidence Rows      0\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        0\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               0.0000\n\n\n=== Ligue 1 | Updated 20/08/2026, 23:42 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-08-20T22:17:55Z\n\nHistorical Rows          25,039\nOdds Rows                48\nMatched Rows             0\nMissing Player History   48\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           0\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   0\nLow Confidence Rows      0\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        1\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               0.0000\n"
+    "raw_monitor_summary": "=== Serie A | Updated 20/08/2026, 23:59 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-08-20T07:26:39Z\n\nHistorical Rows          31,109\nOdds Rows                204\nMatched Rows             122\nMissing Player History   82\nMissing Team Mapping     0\nFallback Rows            19\nQualified Rows           15\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   86\nLow Confidence Rows      36\nPublic High Signals      0\nPublic Caveat Signals    11\nShadow Track Rows        11\nPenalty Transfer Rows    2\nPosition Upgrade Rows    1\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 4\nFixtures Clean           0\nFixtures Degraded        4\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    52\nExpected Bench Rows      0\nExpected Out Rows        8\nNot In Squad Rows        0\n\nAverage EV               -0.5345\n\n\n=== Premier League | Updated 20/08/2026, 23:59 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-08-20T22:17:03Z\n\nHistorical Rows          30,722\nOdds Rows                50\nMatched Rows             0\nMissing Player History   50\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           0\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   0\nLow Confidence Rows      0\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        1\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               0.0000\n\n\n=== La Liga | Updated 20/08/2026, 23:59 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-08-20T22:17:27Z\n\nHistorical Rows          32,271\nOdds Rows                47\nMatched Rows             37\nMissing Player History   10\nMissing Team Mapping     0\nFallback Rows            1\nQualified Rows           4\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   27\nLow Confidence Rows      10\nPublic High Signals      0\nPublic Caveat Signals    4\nShadow Track Rows        3\nPenalty Transfer Rows    1\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 1\nFixtures Clean           0\nFixtures Degraded        1\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    15\nExpected Bench Rows      0\nExpected Out Rows        7\nNot In Squad Rows        0\n\nAverage EV               -0.5658\n\n\n=== Bundesliga | Updated 20/08/2026, 23:59 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-08-20T07:27:35Z\n\nHistorical Rows          25,557\nOdds Rows                0\nMatched Rows             0\nMissing Player History   0\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           0\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   0\nLow Confidence Rows      0\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        0\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               0.0000\n\n\n=== Ligue 1 | Updated 20/08/2026, 23:59 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-08-20T22:17:55Z\n\nHistorical Rows          25,039\nOdds Rows                48\nMatched Rows             0\nMissing Player History   48\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           0\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   0\nLow Confidence Rows      0\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        1\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               0.0000\n"
   },
   "research_status": {
     "status": "RESEARCH_ONLY",
     "model_variant": "v2_minutes_absolute_share_repair",
-    "updated_at": "2026-08-20T22:42:43Z",
+    "updated_at": "2026-08-20T22:59:29Z",
     "parity": {
       "decision": "PASS",
       "golden_rows": 25,
@@ -3726,6 +3955,9 @@
       "ece": 0.00813,
       "predicted": 0.1043,
       "actual": 0.103,
+      "raw_brier": 0.08554,
+      "raw_log_loss": 0.30413,
+      "raw_ece": 0.02015,
       "evaluated_folds": 4,
       "fold_wins": 4,
       "probability_gate": "FAIL",
@@ -3750,5 +3982,5 @@
     }
   },
   "snapshot_key": "monitor_state",
-  "payload_hash": "d6ef4c30a4a9c55d8b37857dfebbeba2503a8087a62a7db49ef4205d9b13edd8"
+  "payload_hash": "ce2b07c2894d56e23b9681e5d906cd424e9fb9af42aa4e7f291f00e7d7e2c5e9"
 }
