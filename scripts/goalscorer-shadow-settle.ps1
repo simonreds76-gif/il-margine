@@ -74,6 +74,22 @@ $fairOddsLabSummaries = @{
     "ligue-1" = "data\goalscorer\fair-odds-lab-ligue-1-performance.txt"
 }
 
+$fairOddsLabQuarantineOutputs = @{
+    "serie-a" = "data\goalscorer\fair-odds-lab-serie-a-quarantine.csv"
+    "epl" = "data\goalscorer\fair-odds-lab-epl-quarantine.csv"
+    "la-liga" = "data\goalscorer\fair-odds-lab-la-liga-quarantine.csv"
+    "bundesliga" = "data\goalscorer\fair-odds-lab-bundesliga-quarantine.csv"
+    "ligue-1" = "data\goalscorer\fair-odds-lab-ligue-1-quarantine.csv"
+}
+
+$fairOddsLabQuarantineSummaries = @{
+    "serie-a" = "data\goalscorer\fair-odds-lab-serie-a-quarantine-performance.txt"
+    "epl" = "data\goalscorer\fair-odds-lab-epl-quarantine-performance.txt"
+    "la-liga" = "data\goalscorer\fair-odds-lab-la-liga-quarantine-performance.txt"
+    "bundesliga" = "data\goalscorer\fair-odds-lab-bundesliga-quarantine-performance.txt"
+    "ligue-1" = "data\goalscorer\fair-odds-lab-ligue-1-quarantine-performance.txt"
+}
+
 $penaltyContextCurrent = @{
     "serie-a" = "data\goalscorer\penalty-duty-context.json"
     "epl" = "data\goalscorer\epl\penalty-duty-context.json"
@@ -255,6 +271,19 @@ try {
         if ($LASTEXITCODE -ne 0) {
             Log "ERROR: Fair Odds Lab exposure settlement failed for $league (exit $LASTEXITCODE)"
             exit 1
+        }
+
+        $quarantineSignals = $fairOddsLabQuarantineOutputs[$league]
+        if (Test-Path $quarantineSignals) {
+            Log "---- Settle league: $league (Fair Odds Lab extreme-gap quarantine) ----"
+            & $pythonExe scripts\goalscorer-settle.py `
+                --league $league `
+                --signals $quarantineSignals `
+                --summary $fairOddsLabQuarantineSummaries[$league] 2>&1 | ForEach-Object { Log $_ }
+            if ($LASTEXITCODE -ne 0) {
+                Log "ERROR: Fair Odds Lab quarantine settlement failed for $league (exit $LASTEXITCODE)"
+                exit 1
+            }
         }
 
         $requiredLog = $requiredPlayerLogs[$league]

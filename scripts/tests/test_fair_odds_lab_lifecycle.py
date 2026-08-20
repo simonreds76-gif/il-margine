@@ -17,6 +17,15 @@ class FairOddsLabLifecycleTests(unittest.TestCase):
         implied_pct = 100 / odds
         return LAB["Candidate"](
             row={
+                "competition": "Spain - LaLiga",
+                "match_date": "2026-08-22",
+                "kickoff": "2026-08-22T19:30:00Z",
+                "home_team": "Espanyol Barcelona",
+                "away_team": "Real Madrid",
+                "player_name": "Roberto Fernandez",
+                "canonical_player_name": "Roberto Fernandez",
+                "player_team": "Espanyol",
+                "opponent": "Real Madrid",
                 "lineup_state": "starter",
                 "signal_confidence": "High",
                 "position": "FW",
@@ -48,6 +57,25 @@ class FairOddsLabLifecycleTests(unittest.TestCase):
     def test_extreme_goalscorer_model_market_gap_is_not_public(self) -> None:
         candidate = self._candidate(model_probability=0.454690, odds=4.50)
         self.assertEqual(self._public_exclusion_reason(candidate), "model_market_gap_gt_10pp")
+
+    def test_extreme_gap_is_written_to_separate_zero_stake_quarantine(self) -> None:
+        candidate = self._candidate(model_probability=0.454690, odds=4.50)
+        with tempfile.TemporaryDirectory() as temp_dir:
+            added = LAB["append_quarantine_logs"](
+                [(candidate, "model_market_gap_gt_10pp")],
+                Path(temp_dir),
+            )
+            path = Path(temp_dir) / "fair-odds-lab-la-liga-quarantine.csv"
+            rows, _fieldnames = LAB["read_exposure_log"](path)
+
+        self.assertEqual(added, {"la-liga": 1})
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["public_action"], "quarantine")
+        self.assertEqual(rows[0]["tracking_tier"], "extreme_gap_quarantine")
+        self.assertEqual(rows[0]["quarantine_reason"], "model_market_gap_gt_10pp")
+        self.assertEqual(rows[0]["recommended_stake_units"], "0.00")
+        self.assertEqual(rows[0]["evaluation_stake_units"], "1.00")
+        self.assertEqual(rows[0]["recommended_stake_label"], "Zero-stake quarantine (1u evaluation)")
 
     def test_ten_point_gap_boundary_can_remain_public(self) -> None:
         candidate = self._candidate(model_probability=0.35, odds=4.00)

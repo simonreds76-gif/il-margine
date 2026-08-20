@@ -58,6 +58,7 @@ artifacts=(
   data/goalscorer/*-shadow-performance.txt
 
   data/goalscorer/fair-odds-lab-*-signals.csv
+  data/goalscorer/fair-odds-lab-*-quarantine.csv
   data/goalscorer/fair-odds-lab-*-performance.txt
   data/goalscorer/fair-odds-lab-clv.csv
   data/goalscorer/fair-odds-lab-clv-weekly.txt

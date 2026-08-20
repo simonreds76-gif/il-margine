@@ -490,7 +490,7 @@ def main() -> int:
             continue
 
         odds = _parse_float(row.get("best_bookmaker_odds"))
-        stake_units = _parse_float(row.get("recommended_stake_units"))
+        stake_units = _parse_float(row.get("evaluation_stake_units") or row.get("recommended_stake_units"))
         if stake_units <= 0.0:
             stake_units = 1.0
         pnl_units = 0.0 if outcome == "void" else ((stake_units * (odds - 1.0)) if outcome == "won" else -stake_units)
