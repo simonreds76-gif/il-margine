@@ -2,11 +2,11 @@
 
 **RESEARCH SHADOW ONLY. No live routing or staking authorization.**
 
-- Generated: 2026-08-20T18:01:48Z
-- Status: CANDIDATES_BLOCKED
-- Current priced/eligible/blocked: 0/0/11
+- Generated: 2026-08-20T19:18:25Z
+- Status: NO_CURRENT_LINES
+- Current priced/eligible/blocked: 0/0/0
 - Provisional research lines: 0 (never appended to the signal ledger)
-- Candidate board preserved after infrastructure failure: True
+- Candidate board preserved after infrastructure failure: False
 - Signals: 0 (0 pending, 0 settled)
 - P/L: +0.00u; ROI: -
 - Closing evidence: 0/0 matched; mean CLV: -
