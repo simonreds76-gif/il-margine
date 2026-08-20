@@ -408,12 +408,6 @@ if ($tennisTelegramExit -ne 0) {
     Log "WARNING: weekly tennis Telegram report failed (exit $tennisTelegramExit), continuing..."
 }
 
-Log "=== Post-step: Send weekly tennis evidence to Telegram ==="
-$tennisTelegramExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\weekly-research-report.py", "--tennis-only-telegram") -Label "weekly tennis Telegram report" -TimeoutSeconds 90
-if ($tennisTelegramExit -ne 0) {
-    Log "WARNING: weekly tennis Telegram report failed (exit $tennisTelegramExit), continuing..."
-}
-
 Log "============================================"
 Log "  Weekly Full Load finished at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Log "============================================"
