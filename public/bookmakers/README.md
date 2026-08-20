@@ -15,7 +15,9 @@ For the recommended bookmakers section, use these filenames (PNG or SVG):
 
 Other bookmakers (if used elsewhere):
 
-- `10bet.png`, `bet365.png`, `betfair.png`, `paddypower.png`, `williamhill.png`, `skybet.png`, `betway.png`, `888sport.png`, `betfred.png`, `pinnacle.png` (or `pinnacle.svg`), `boylesports.png`, `spreadex.svg`, `virginbet.png`, etc.
+- `10bet.png`, `bet365.png`, `betfair.png`, `paddypower.png`, `williamhill.png`, `skybet.png`, `betway.png`, `888sport.png`, `betfred.png`, `pinnacle.png` (or `pinnacle.svg`), `boylesports.png`, `spreadex.svg`, `virginbet.png`, `sbk.svg`, etc.
+
+`sbk.svg` is the official compact SBK wordmark served by `getsbk.com` (retrieved 2026-08-20). `BetsBK` is accepted as an input alias, but the customer-facing brand name is `SBK`.
 
 ## Logo Specifications
 

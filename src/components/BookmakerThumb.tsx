@@ -22,7 +22,12 @@ const LOGO_SCALE: Record<string, number> = {
   betway: 1.14,
   boylesports: 0.92,
   spreadex: 0.95,
+  sbk: 1,
   virginbet: 1.75,
+};
+
+const FRAME_CLASSES: Record<string, string> = {
+  sbk: "border border-slate-200/90 bg-white px-2 py-1",
 };
 
 interface BookmakerThumbProps {
@@ -41,6 +46,7 @@ export default function BookmakerThumb({ id, name, size = "md", className = "" }
   const currentSrc = logoPaths[srcIndex] ?? null;
   const showImage = currentSrc && !failed;
   const scale = LOGO_SCALE[resolvedLogo?.key ?? ""] ?? 1;
+  const frameClass = FRAME_CLASSES[resolvedLogo?.key ?? ""] ?? "bg-slate-800/50";
   const displayName = resolvedLogo?.displayName ?? name;
 
   const handleError = () => {
@@ -54,7 +60,7 @@ export default function BookmakerThumb({ id, name, size = "md", className = "" }
   return (
     <div className={`flex items-center justify-center flex-shrink-0 ${className}`}>
       {showImage ? (
-        <div className={`${FRAME_SIZE_CLASSES[size]} relative overflow-hidden rounded-lg flex items-center justify-center bg-slate-800/50`}>
+        <div className={`${FRAME_SIZE_CLASSES[size]} relative overflow-hidden rounded-lg flex items-center justify-center ${frameClass}`}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={currentSrc}

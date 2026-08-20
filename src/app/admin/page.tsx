@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import dynamic from "next/dynamic";
+import BookmakerThumb from "@/components/BookmakerThumb";
 import { supabase, Bet, Bookmaker } from "@/lib/supabase";
 import { formatOdds } from "@/lib/format";
 import { stripTipSeoMarker } from "@/lib/tip-seo";
@@ -78,6 +79,9 @@ export default function AdminPanel() {
     match_date: new Date().toISOString().slice(0, 10),
     notes: "",
   });
+
+  const selectedBookmaker = bookmakers.find((bookmaker) => String(bookmaker.id) === form.bookmaker_id);
+  const selectedEditBookmaker = bookmakers.find((bookmaker) => String(bookmaker.id) === editForm.bookmaker_id);
 
   const categories = {
     props: [
@@ -805,6 +809,16 @@ export default function AdminPanel() {
                     </option>
                   ))}
                 </select>
+                {selectedBookmaker && (
+                  <div className="mt-2 flex items-center gap-2 text-xs text-slate-400">
+                    <BookmakerThumb
+                      id={selectedBookmaker.short_name}
+                      name={selectedBookmaker.name}
+                      size="xs"
+                    />
+                    <span>{selectedBookmaker.name}</span>
+                  </div>
+                )}
               </div>
               <div>
                 <label className="block text-xs text-slate-500 mb-1">Stake (units)</label>
@@ -1160,6 +1174,16 @@ export default function AdminPanel() {
                       <option key={bk.id} value={bk.id}>{bk.name}</option>
                     ))}
                   </select>
+                  {selectedEditBookmaker && (
+                    <div className="mt-2 flex items-center gap-2 text-xs text-slate-400">
+                      <BookmakerThumb
+                        id={selectedEditBookmaker.short_name}
+                        name={selectedEditBookmaker.name}
+                        size="xs"
+                      />
+                      <span>{selectedEditBookmaker.name}</span>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-xs text-slate-500 mb-1">Stake (units)</label>

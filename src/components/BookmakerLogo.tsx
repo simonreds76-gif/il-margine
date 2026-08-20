@@ -27,6 +27,7 @@ const logoScale: Record<string, number> = {
   betway: 1.14,
   boylesports: 0.92,
   spreadex: 0.95,
+  sbk: 1,
   virginbet: 1,
 };
 
@@ -34,6 +35,7 @@ const logoFrameClasses: Record<string, string> = {
   "10bet": "rounded-md border border-slate-200/90 bg-white px-1 py-0.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]",
   bwin: "rounded-md border border-slate-200/90 bg-white p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]",
   spreadex: "rounded-md border border-slate-200/90 bg-white px-1 py-0.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]",
+  sbk: "rounded-md border border-slate-200/90 bg-white px-2 py-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]",
 };
 
 // All logos one step larger so thumbnails are easier to recognise (was 24/32/40px)

@@ -149,6 +149,14 @@ const BOOKMAKER_THEMES: Record<string, BookmakerCardTheme> = {
     logoFrame: "rgba(255,251,235,0.96)",
     label: "#fef3c7",
   },
+  sbk: {
+    background: "linear-gradient(145deg, #07110f 0%, #12382f 54%, #050b0a 100%)",
+    border: "rgba(12,205,147,0.72)",
+    accent: "#0ccd93",
+    accentSoft: "rgba(12,205,147,0.18)",
+    logoFrame: "rgba(248,250,252,0.98)",
+    label: "#d1fae5",
+  },
   skybet: {
     background: "linear-gradient(145deg, #061637 0%, #0f4db3 50%, #9f1239 100%)",
     border: "rgba(59,130,246,0.70)",
