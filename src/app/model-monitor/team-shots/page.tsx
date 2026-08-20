@@ -101,6 +101,9 @@ type GoalkeeperSavesShadowReport = {
     eligible_lines?: number;
     blocked_lines?: number;
     signals_added?: number;
+    provisional_lines?: number;
+    candidate_board_preserved?: boolean;
+    blocker_counts?: Record<string, number>;
   };
   evidence?: {
     signals?: number;
@@ -126,7 +129,10 @@ type GoalkeeperSavesCaptureStatus = {
   request_budget?: number;
   events_selected?: number;
   events_with_lines?: number;
+  three_way_events?: number;
   rows_observed?: number;
+  market_inventory_rows_added?: number;
+  market_names_observed?: string[];
   capture_mode?: string;
 };
 type TeamShotsLiveLine = {
@@ -1222,6 +1228,8 @@ export default async function TeamShotsMonitorPage() {
 
     goalkeeperSavesCandidatesCsv,
 
+    goalkeeperSavesProvisionalCsv,
+
   ] = await Promise.all([
 
     readFile("data/team-shots/team-shots-calibration.txt"),
@@ -1292,6 +1300,8 @@ export default async function TeamShotsMonitorPage() {
     readJson<GoalkeeperSavesCaptureStatus>("data/goalkeeper-saves/gk-saves-capture-status.json"),
 
     readFile("data/goalkeeper-saves/gk-saves-v1-candidates.csv"),
+
+    readFile("data/goalkeeper-saves/gk-saves-v1-provisional.csv"),
 
   ]);
 
@@ -2084,10 +2094,14 @@ function LiveLineTable({
   const teamShotsV4ClvRows = teamShotsV4ClvCsv ? parseCsvCached(teamShotsV4ClvCsv) : [];
   const vnextCandidateRows = vnextCandidatesCsv ? parseCsvCached(vnextCandidatesCsv) : [];
   const goalkeeperCandidateRows = goalkeeperSavesCandidatesCsv ? parseCsvCached(goalkeeperSavesCandidatesCsv) : [];
+  const goalkeeperProvisionalRows = goalkeeperSavesProvisionalCsv ? parseCsvCached(goalkeeperSavesProvisionalCsv) : [];
   const goalkeeperTopRows = goalkeeperCandidateRows
     .filter((row) => row.strongest_for_fixture === "yes")
     .sort((a, b) => (maybeFloat(b.edge) ?? -999) - (maybeFloat(a.edge) ?? -999))
     .slice(0, 8);
+  const goalkeeperTopProvisionalRows = goalkeeperProvisionalRows
+    .sort((a, b) => (maybeFloat(b.edge) ?? -999) - (maybeFloat(a.edge) ?? -999))
+    .slice(0, 6);
   const goalkeeperCurrent = goalkeeperSavesReport?.current;
   const goalkeeperEvidence = goalkeeperSavesReport?.evidence;
   const teamShotsV3ClvRows = teamShotsV3ClvCsv ? parseCsvCached(teamShotsV3ClvCsv) : [];
@@ -2199,6 +2213,59 @@ function LiveLineTable({
               {goalkeeperSavesReport?.selection_rule ?? "One strongest O/U side per fixture; edge >=8%; confirmed starter only."}
             </span>
           </div>
+
+          <div className="mt-3 flex flex-wrap gap-2 text-[11px]">
+            <StatusPill
+              label={`3-way attached ${goalkeeperSavesCapture?.three_way_events ?? 0}/${goalkeeperSavesCapture?.events_with_lines ?? 0}`}
+              tone={(goalkeeperSavesCapture?.three_way_events ?? 0) > 0
+                ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-300"
+                : "border-amber-500/20 bg-amber-500/10 text-amber-300"}
+            />
+            <StatusPill
+              label={`Predicted-XI research ${goalkeeperCurrent?.provisional_lines ?? 0}`}
+              tone="border-sky-500/20 bg-sky-500/10 text-sky-300"
+            />
+            {goalkeeperCurrent?.candidate_board_preserved ? (
+              <StatusPill
+                label="Last useful board preserved"
+                tone="border-amber-500/20 bg-amber-500/10 text-amber-300"
+              />
+            ) : null}
+            {Object.entries(goalkeeperCurrent?.blocker_counts ?? {}).map(([reason, count]) => (
+              <StatusPill
+                key={reason}
+                label={`${reason.replaceAll("_", " ")} ${count}`}
+                tone="border-slate-700 bg-slate-900/70 text-slate-400"
+              />
+            ))}
+          </div>
+
+          {goalkeeperTopProvisionalRows.length ? (
+            <div className="mt-4 rounded-2xl border border-sky-500/15 bg-sky-500/[0.04] p-4">
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <div>
+                  <div className="text-xs font-semibold uppercase tracking-[0.16em] text-sky-300">Predicted-XI research</div>
+                  <p className="mt-1 text-xs text-slate-500">Model-priced candidates only. They cannot enter the signal ledger until the goalkeeper is confirmed.</p>
+                </div>
+                <span className="text-xs tabular-nums text-slate-500">{goalkeeperProvisionalRows.length} current</span>
+              </div>
+              <div className="mt-3 grid gap-2 lg:grid-cols-2">
+                {goalkeeperTopProvisionalRows.map((row) => {
+                  const edge = maybeFloat(row.edge);
+                  return (
+                    <div key={`${row.event_id}|${row.goalkeeper}|${row.line}|${row.side}`} className="rounded-xl border border-slate-800 bg-slate-950/55 p-3">
+                      <MatchLabel league={row.league} homeTeam={row.home_team} awayTeam={row.away_team} />
+                      <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs">
+                        <span className="font-semibold text-slate-200">{row.goalkeeper || "Unknown goalkeeper"}</span>
+                        <span className="tabular-nums text-slate-300">{(row.side || "over").replace(/^./, (letter) => letter.toUpperCase())} {row.line} @ {formatMaybeFixed(row.odds_decimal)}</span>
+                        <span className="font-semibold tabular-nums text-emerald-300">{formatSignedPercent(edge === null ? null : edge * 100)}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ) : null}
 
           {goalkeeperTopRows.length ? (
             <div className="mt-4 overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/45">
