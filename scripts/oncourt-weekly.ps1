@@ -288,10 +288,16 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: spread v1 shadow CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
-Log "=== Post-step: Challenger ML CLV audit ==="
-& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-challenger-ml-archive.csv --detail-csv data\backtest\strict-clv-audit-challenger-ml-2026.csv --summary-txt data\backtest\strict-clv-audit-challenger-ml-2026.txt 2>&1 | ForEach-Object { Log $_ }
+Log "=== Post-step: Challenger ML v2 verified-close CLV audit ==="
+& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-challenger-ml-v2-archive.csv --detail-csv data\backtest\strict-clv-audit-challenger-ml-v2-2026.csv --summary-txt data\backtest\strict-clv-audit-challenger-ml-v2-2026.txt --require-verified-kickoff --max-close-lag-minutes 720 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: Challenger ML CLV audit failed (exit $LASTEXITCODE), continuing..."
+}
+
+Log "=== Post-step: Canonical ATP/Challenger real-price market scoring ==="
+& python scripts\score-tennis-spread-history.py --start-date 2026-03-01 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: canonical tennis real-price scoring failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "=== Post-step: Clay-fav spread CLV audit ==="

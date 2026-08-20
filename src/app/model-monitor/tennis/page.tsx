@@ -259,11 +259,11 @@ const laneViews: Record<TennisResearchLaneId, LaneView> = {
   },
   challenger_ml: {
     id: "challenger_ml",
-    title: "Challenger ML tracker",
-    state: "DEFERRED",
-    badgeTone: badgeTones.deferred,
-    market: "Outcome calibration",
-    summary: "Outcome-calibration tracker only. No ROI/CLV claim until Pinnacle Challenger odds capture is complete."
+    title: "Challenger ML v2 tracker",
+    state: "SHADOW LIVE",
+    badgeTone: badgeTones.shadow,
+    market: "ML evidence only",
+    summary: "Fresh zero-stake cohort with immutable entry prices, nightly settlement and verified-close CLV. The rejected 23-row legacy batch is excluded."
   },
   indoor_bo3: {
     id: "indoor_bo3",

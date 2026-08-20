@@ -50,6 +50,7 @@ DATA_DIR = ROOT / "data" / "backtest"
 ONCOURT_DIR = ROOT / "data" / "oncourt"
 HTTP_TIMEOUT = 30
 HISTORY_SIGNAL_GRACE_SECONDS = 300
+DEFAULT_MAX_CLOSE_LAG_MINUTES = 720
 
 DEFAULT_SIGNALS = STRICT_SIGNAL_PATHS.archive
 DEFAULT_XLSX = DATA_DIR / "atp-2026.xlsx"
@@ -80,6 +81,8 @@ class HistoryRow:
     capture_date: str
     captured_at: str
     captured_ts: datetime
+    kickoff_iso: str
+    kickoff_ts: datetime | None
     capture_mode: str
     source: str
     league: str
@@ -104,6 +107,17 @@ def parse_args() -> argparse.Namespace:
         "--allow-stale-fallback",
         action="store_true",
         help="Allow fallback to the tennis-data XLSX close file after captured-history misses. Default off to avoid stale CLV contamination.",
+    )
+    parser.add_argument(
+        "--require-verified-kickoff",
+        action="store_true",
+        help="Reject captured closes without kickoff metadata. Required for decision-grade CLV lanes.",
+    )
+    parser.add_argument(
+        "--max-close-lag-minutes",
+        type=int,
+        default=None,
+        help=f"Optional maximum gap between captured close and kickoff. Challenger v2 uses {DEFAULT_MAX_CLOSE_LAG_MINUTES} minutes.",
     )
     parser.add_argument(
         "--local-history-dir",
@@ -403,7 +417,7 @@ def fetch_supabase_history_rows(start_date: date, end_date: date) -> tuple[list[
     limit = 1000
     while True:
         query = [
-            ("select", "capture_date,captured_at,capture_mode,league,player1_name,player2_name,odds1,odds2,spread_line,spread_odds1,spread_odds2"),
+            ("select", "capture_date,captured_at,capture_mode,league,player1_name,player2_name,odds1,odds2,spread_line,spread_odds1,spread_odds2,kickoff_iso"),
             ("bookmaker", "eq.Pinnacle"),
             ("capture_date", f"gte.{start_date.isoformat()}"),
             ("capture_date", f"lte.{end_date.isoformat()}"),
@@ -432,6 +446,8 @@ def fetch_supabase_history_rows(start_date: date, end_date: date) -> tuple[list[
                     capture_date=str(row.get("capture_date") or ""),
                     captured_at=str(row.get("captured_at") or ""),
                     captured_ts=ts,
+                    kickoff_iso=str(row.get("kickoff_iso") or ""),
+                    kickoff_ts=parse_timestamp(row.get("kickoff_iso")),
                     capture_mode=str(row.get("capture_mode") or ""),
                     source="supabase",
                     league=str(row.get("league") or ""),
@@ -484,6 +500,8 @@ def load_local_history_rows(history_dir: Path, start_date: date, end_date: date)
                             capture_date=capture_date.isoformat(),
                             captured_at=str(raw.get("captured_at") or ""),
                             captured_ts=ts,
+                            kickoff_iso=str(raw.get("kickoff_iso") or ""),
+                            kickoff_ts=parse_timestamp(raw.get("kickoff_iso")),
                             capture_mode=str(raw.get("capture_mode") or ""),
                             source="local_csv",
                             league=str(raw.get("league") or ""),
@@ -509,7 +527,7 @@ def load_local_history_rows(history_dir: Path, start_date: date, end_date: date)
 
 
 def merge_history_rows(primary: list[HistoryRow], secondary: list[HistoryRow]) -> list[HistoryRow]:
-    by_key: dict[tuple[str, str, str, str, float, float, str, float | None, float | None, float | None], HistoryRow] = {}
+    by_key: dict[tuple[Any, ...], HistoryRow] = {}
     source_priority = {"supabase": 2, "local_csv": 1}
     for row in [*primary, *secondary]:
         canonical_ts = row.captured_ts.isoformat()
@@ -524,6 +542,7 @@ def merge_history_rows(primary: list[HistoryRow], secondary: list[HistoryRow]) -
             row.spread_line,
             row.spread_odds1,
             row.spread_odds2,
+            row.kickoff_iso,
         )
         prev = by_key.get(key)
         if prev is None or source_priority.get(row.source, 0) > source_priority.get(prev.source, 0):
@@ -599,6 +618,8 @@ def match_signal_to_history(
     row: dict[str, str],
     lookup: dict[str, list[tuple[HistoryRow, bool]]],
     signal_line: float | None = None,
+    require_verified_kickoff: bool = False,
+    max_close_lag_minutes: int | None = None,
 ) -> tuple[HistoryRow | None, bool, str]:
     signal_ts = parse_signal_ts(row.get("date"), row.get("time_utc"))
     match_dt = parse_iso_date(row.get("match_date"))
@@ -614,10 +635,25 @@ def match_signal_to_history(
     earliest_ts = signal_ts - timedelta(seconds=HISTORY_SIGNAL_GRACE_SECONDS)
     cutoff_ts = datetime.combine(match_dt + timedelta(days=1), time.min, tzinfo=timezone.utc)
     candidate_map: dict[str, tuple[HistoryRow, bool, int]] = {}
+    rejected_missing_kickoff = False
+    rejected_post_kickoff = False
+    rejected_stale_close = False
     for key in _make_pair_keys(p1, p2):
         for hist, reversed_for_signal in lookup.get(key, []):
             if hist.captured_ts < earliest_ts or hist.captured_ts >= cutoff_ts:
                 continue
+            if hist.kickoff_ts is None:
+                if require_verified_kickoff:
+                    rejected_missing_kickoff = True
+                    continue
+            else:
+                close_lag_minutes = (hist.kickoff_ts - hist.captured_ts).total_seconds() / 60.0
+                if close_lag_minutes < 0:
+                    rejected_post_kickoff = True
+                    continue
+                if max_close_lag_minutes is not None and close_lag_minutes > max_close_lag_minutes:
+                    rejected_stale_close = True
+                    continue
             ident = (
                 f"{hist.captured_ts.isoformat()}|{hist.player1_name}|{hist.player2_name}|"
                 f"{'R' if reversed_for_signal else 'N'}|{hist.spread_line}|"
@@ -630,6 +666,12 @@ def match_signal_to_history(
                 candidate_map[ident] = (hist, reversed_for_signal, 1)
 
     if not candidate_map:
+        if rejected_post_kickoff:
+            return None, False, "history_post_kickoff_only"
+        if rejected_stale_close:
+            return None, False, "history_close_stale"
+        if rejected_missing_kickoff:
+            return None, False, "history_kickoff_unverified"
         return None, False, "history_not_found"
 
     fo_p1_first = _first_word(p1)
@@ -884,6 +926,9 @@ def write_detail_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         "closing_source",
         "history_capture_mode",
         "history_captured_at",
+        "history_kickoff_iso",
+        "history_close_lag_minutes",
+        "history_timing_quality",
         "tournament",
         "location",
         "signal_profile",
@@ -1035,11 +1080,24 @@ def main() -> None:
         closing_source = ""
         history_capture_mode = ""
         history_captured_at = ""
+        history_kickoff_iso = ""
+        history_close_lag_minutes: float | None = None
+        history_timing_quality = ""
         signal_side = norm(row.get("side"))
         signal_line = parse_float(row.get("spread_line"))
 
         hist_row, hist_reversed, hist_method = (
-            match_signal_to_history(row, history_lookup, signal_line if args.bet_type == "spread" else None)
+            match_signal_to_history(
+                row,
+                history_lookup,
+                signal_line if args.bet_type == "spread" else None,
+                require_verified_kickoff=args.require_verified_kickoff,
+                max_close_lag_minutes=(
+                    max(0, args.max_close_lag_minutes)
+                    if args.max_close_lag_minutes is not None
+                    else None
+                ),
+            )
             if history_lookup
             else (None, False, "history_unavailable")
         )
@@ -1074,6 +1132,14 @@ def main() -> None:
             closing_source = "bookmaker_odds_history" if hist_row.source == "supabase" else "local_pinnacle_history"
             history_capture_mode = hist_row.capture_mode
             history_captured_at = hist_row.captured_at
+            history_kickoff_iso = hist_row.kickoff_iso
+            if hist_row.kickoff_ts is not None:
+                history_close_lag_minutes = (
+                    hist_row.kickoff_ts - hist_row.captured_ts
+                ).total_seconds() / 60.0
+                history_timing_quality = "verified_prestart"
+            else:
+                history_timing_quality = "kickoff_unverified"
             close_line = -hist_row.spread_line if hist_reversed else hist_row.spread_line
             close_p1 = hist_row.spread_odds2 if hist_reversed else hist_row.spread_odds1
             close_p2 = hist_row.spread_odds1 if hist_reversed else hist_row.spread_odds2
@@ -1102,6 +1168,14 @@ def main() -> None:
                 closing_source = "bookmaker_odds_history" if hist_row.source == "supabase" else "local_pinnacle_history"
                 history_capture_mode = hist_row.capture_mode
                 history_captured_at = hist_row.captured_at
+                history_kickoff_iso = hist_row.kickoff_iso
+                if hist_row.kickoff_ts is not None:
+                    history_close_lag_minutes = (
+                        hist_row.kickoff_ts - hist_row.captured_ts
+                    ).total_seconds() / 60.0
+                    history_timing_quality = "verified_prestart"
+                else:
+                    history_timing_quality = "kickoff_unverified"
                 close_p1 = hist_row.odds2 if hist_reversed else hist_row.odds1
                 close_p2 = hist_row.odds1 if hist_reversed else hist_row.odds2
                 closing_odds = close_p1 if signal_side == "p1" else close_p2
@@ -1186,6 +1260,9 @@ def main() -> None:
                 "closing_source": closing_source,
                 "history_capture_mode": history_capture_mode,
                 "history_captured_at": history_captured_at,
+                "history_kickoff_iso": history_kickoff_iso,
+                "history_close_lag_minutes": history_close_lag_minutes,
+                "history_timing_quality": history_timing_quality,
                 "tournament": tournament,
                 "location": location,
                 "signal_profile": row.get("signal_profile") or "",

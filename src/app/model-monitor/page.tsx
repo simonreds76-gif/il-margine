@@ -926,11 +926,11 @@ export default async function ModelMonitorPage() {
     readLocalFile("data/backtest/strict-signals-spreadv1-live.csv"),
     readLocalFile("data/backtest/strict-signals-spreadshadow-archive.csv"),
     readLocalFile("data/backtest/strict-signals-spreadshadow-live.csv"),
-    INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/strict-signals-challenger-ml-archive.csv") : null,
-    INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/strict-signals-challenger-ml-live.csv") : null,
-    INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/challenger-ml-shadow-nearmiss.csv") : null,
-    INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/strict-policy-performance-challenger-ml-weekly.csv") : null,
-    INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/strict-clv-audit-challenger-ml-2026.txt") : null,
+    INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/strict-signals-challenger-ml-v2-archive.csv") : null,
+    INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/strict-signals-challenger-ml-v2-live.csv") : null,
+    INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/challenger-ml-v2-nearmiss.csv") : null,
+    INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/strict-policy-performance-challenger-ml-v2-weekly.csv") : null,
+    INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/strict-clv-audit-challenger-ml-v2-2026.txt") : null,
     INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/strict-signals-clay-fav-archive.csv") : null,
     INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/strict-signals-clay-fav-live.csv") : null,
     INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/strict-policy-performance-clay-fav-weekly.csv") : null,
@@ -1043,7 +1043,6 @@ export default async function ModelMonitorPage() {
   const spreadShadowSpreadRecordedCohort = summarizeSignalCohort(spreadShadowSignalsClean, undefined, "recorded", "spread");
   const spreadShadowSpreadFlatCohort = summarizeSignalCohort(spreadShadowSignalsClean, undefined, "flat", "spread");
   const challengerMlRecordedCohort = summarizeSignalCohort(challengerSignalsClean, undefined, "recorded", "match");
-  const challengerMlFlatCohort = summarizeSignalCohort(challengerSignalsClean, undefined, "flat", "match");
   const clayFavSpreadRecordedCohort = summarizeSignalCohort(clayFavSignalsClean, undefined, "recorded", "spread");
   const clayFavSpreadFlatCohort = summarizeSignalCohort(clayFavSignalsClean, undefined, "flat", "spread");
   const spreadV1Status = parseJsonMaybe<SpreadV1Status>(spreadV1StatusJson);
@@ -1197,7 +1196,6 @@ export default async function ModelMonitorPage() {
   }).length;
   const challengerInvalidOddsCount = Math.max(0, challengerSettledCount - challengerRoiEligibleCount);
   const challengerPerfRow = challengerBase.mlAll ?? challengerBase.combinedAll;
-  const challengerRoiPct = perfValue(challengerPerfRow, "roi_pct", parseFloatMaybe) ?? challengerMlRecordedCohort.roiPct;
   const clayFavTrackedCount = clayFavSignalsArchive.length;
   const clayFavSettledCount = getSettledSignalRows(clayFavSignalsArchive).length;
   const spreadShadowTrackedCount = perfValue(spreadShadowBase.combinedAll, "signals", parseIntMaybe) ?? spreadShadowSignalsArchive.length;
@@ -1303,12 +1301,12 @@ export default async function ModelMonitorPage() {
     ...(INTERNAL_RESEARCH_LANES
       ? [
           {
-            policy: "Challenger ML tracker",
-            lane: "CAL",
+            policy: "Challenger ML v2 tracker",
+            lane: "EVID",
             marketType: challengerNearmissRows.length
               ? `Outcome calibration - ${challengerNearmissRows.length} retained candidates`
               : "Outcome calibration",
-            usageNote: "No ROI/CLV claim. Odds coverage is incomplete, so this is a calibration tracker, not a betting lane.",
+            usageNote: "Zero-stake prospective evidence. Entry odds and verified-close CLV are collected; this is not a betting lane.",
             settled: perfValue(challengerPerfRow, "settled", parseIntMaybe) ?? challengerSettledCount,
             signals: perfValue(challengerPerfRow, "signals", parseIntMaybe) ?? challengerTrackedCount,
             open: perfValue(challengerPerfRow, "unsettled", parseIntMaybe) ?? challengerOpenCount,
@@ -1319,9 +1317,9 @@ export default async function ModelMonitorPage() {
             unitTotalStakedPounds: undefined,
             unitStakePounds: undefined,
             winRate: perfValue(challengerBase.mlAll ?? challengerBase.combinedAll, "win_rate_pct", parseFloatMaybe),
-            clv: undefined,
-            clvLabel: "no odds proof",
-            statusBadge: { tone: "muted" as const, label: "tracker - no odds proof" },
+            clv: clvChallenger.avgClvPct,
+            clvLabel: clvChallenger.matchedMl ? `CLV n=${clvChallenger.matchedMl}` : "awaiting CLV",
+            statusBadge: { tone: "muted" as const, label: "zero stake - evidence" },
           },
           {
             policy: "Clay-Fav HC (internal)",
@@ -1359,14 +1357,14 @@ export default async function ModelMonitorPage() {
     },
   ];
   const activeLaneScoreRows = laneScoreRows.filter(
-    (row) => row.policy !== "Spread Shadow" && row.policy !== "Challenger ML tracker" && !row.policy.includes("(internal)"),
+    (row) => row.policy !== "Spread Shadow" && row.policy !== "Challenger ML v2 tracker" && !row.policy.includes("(internal)"),
   );
   const laneDetailRows = new Map<string, MonitorSignalRow[]>([
     ["Strict|ML", sortSignalRowsByCapture(strictSignalsArchive.filter((row) => row.betType !== "spread"))],
     ["Strict|Spread", sortSignalRowsByCapture(strictSignalsArchive.filter((row) => row.betType === "spread"))],
     ["Volume 200|ML", sortSignalRowsByCapture(volumeSignalsLive.filter((row) => row.betType !== "spread"))],
     ["Spread v1|HC", sortSignalRowsByCapture(spreadV1SignalsLive)],
-    ["Challenger ML tracker|CAL", sortSignalRowsByCapture(challengerSignalsArchive)],
+    ["Challenger ML v2 tracker|EVID", sortSignalRowsByCapture(challengerSignalsArchive)],
     ["Clay-Fav HC (internal)|HC", sortSignalRowsByCapture(clayFavSignalsLive)],
   ]);
   const signalBrowserGroups = [
@@ -1398,10 +1396,10 @@ export default async function ModelMonitorPage() {
       ? [
           {
             key: "challenger-ml",
-            title: "Challenger ML Calibration Tracker",
-            subtitle: "Outcome tracker only. Odds coverage is incomplete, so ROI/CLV is not decision-grade.",
+            title: "Challenger ML v2 Prospective Tracker",
+            subtitle: "Zero-stake model evidence with real entry odds and verified-close CLV. Not a betting lane.",
             accent: "cyan",
-            statusBadge: { tone: "muted" as const, label: "tracker - no odds proof" },
+            statusBadge: { tone: "muted" as const, label: "zero stake - evidence" },
             rows: sortSignalRowsForBrowser(challengerSignalsArchive),
           },
           {
@@ -1788,12 +1786,12 @@ export default async function ModelMonitorPage() {
               </div>
             </details>
             <p className="mt-3 text-xs leading-6 text-slate-500">
-              Default board uses one money column only: <span className="font-semibold text-slate-300">Recorded P/L (GBP100/u)</span>. That is the actual settled P/L from stored unit sizes with 1u = GBP100. CLV is audited on strict ML, ATP ML research, and spread_v1 shadow. Old Spread Shadow, Challenger ML tracker, manual Clay-Fav HC, and the disabled Volume 200 spread lane are not mixed into active counts.
+              Default board uses one money column only: <span className="font-semibold text-slate-300">Recorded P/L (GBP100/u)</span>. That is the actual settled P/L from stored unit sizes with 1u = GBP100. CLV is audited on strict ML, ATP ML research, spread_v1 shadow and the zero-stake Challenger v2 cohort. Research lanes are not mixed into active counts.
             </p>
             <div className="mt-4 grid gap-3 lg:grid-cols-3">
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-sm text-slate-300">
                 <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Dormant / Manual Lanes</div>
-                <div className="mt-2">Spread Shadow, Challenger ML tracker, Clay-Fav HC internal, and Clay Calibrated are audit/manual only.</div>
+                <div className="mt-2">Spread Shadow, Challenger ML v2, Clay-Fav HC internal, and Clay Calibrated are audit/research only.</div>
                 <div className="mt-1 text-slate-500">They stay browsable below, but do not pretend to be active scheduled models.</div>
               </div>
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-sm text-slate-300">
@@ -2371,14 +2369,14 @@ export default async function ModelMonitorPage() {
 
         {INTERNAL_RESEARCH_LANES ? (
           <div className="mb-8">
-            <MonitorCard title="Challenger ML Calibration Tracker" subtitle="Outcome and coverage tracker only. No ROI/CLV claim until Pinnacle odds capture is complete.">
+            <MonitorCard title="Challenger ML v2 Prospective Tracker" subtitle="Fresh zero-stake evidence with immutable entry prices, nightly settlement and verified-close CLV.">
               <div className="grid gap-4 xl:grid-cols-[0.85fr_1.15fr]">
                 <div className="rounded-2xl border border-fuchsia-400/25 bg-fuchsia-400/5 p-4">
                   <div className="mb-4 flex items-start justify-between gap-3">
                     <div>
-                      <h3 className="text-base font-semibold text-white">Current Challenger tracker</h3>
+                      <h3 className="text-base font-semibold text-white">Current Challenger v2 cohort</h3>
                       <p className="mt-1 text-sm leading-6 text-slate-400">
-                        Shows the internal Challenger ML outcome ledger. It is useful for calibration, but odds coverage is incomplete so ROI and CLV are not decision-grade.
+                        Tracks the current production hybrid prospectively at zero stake. The failed legacy batch is frozen outside this cohort.
                       </p>
                     </div>
                     <span className="rounded-full border border-fuchsia-400/30 bg-fuchsia-400/10 px-2 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-fuchsia-200">
@@ -2392,10 +2390,10 @@ export default async function ModelMonitorPage() {
                     <Stat label="Near-miss shadow rows" value={`${challengerNearmissRows.length}`} tone={challengerNearmissRows.length > 0 ? "text-amber-300" : "text-slate-300"} compact />
                     <Stat label="Odds-matched rows" value={`${challengerRoiEligibleCount}/${challengerSettledCount}`} tone={challengerInvalidOddsCount > 0 ? "text-amber-300" : "text-slate-300"} compact />
                     <Stat label="ROI claim" value="not authorised" tone="text-amber-300" compact />
-                    <Stat label="CLV proof" value="none yet" tone="text-amber-300" compact />
+                    <Stat label="CLV proof" value={clvChallenger.matchedMl ? `${formatSignedLine(clvChallenger.avgClvPct)}% (n=${clvChallenger.matchedMl})` : "awaiting sample"} tone="text-amber-300" compact />
                   </div>
                   <div className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/45 p-3 text-xs leading-5 text-slate-400">
-                    Gate: Challenger singles, HIGH coverage, high confidence, value 10-15%. Near-miss rows are retained for outcome calibration only. Do not read this as a live model or paid-tip lane until Challenger Pinnacle odds capture produces a real CLV/ROI sample.
+                    Locked cohort: Challenger singles, HIGH coverage, high confidence, value 10-15%, 0u. Promotion requires at least 300 CLV-eligible forecasts, mean CLV +1% or better, at least 52% beating close, ECE at most 0.03 and log loss no worse than Pinnacle.
                   </div>
                 </div>
 

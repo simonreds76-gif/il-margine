@@ -227,7 +227,7 @@ SHADOW_PROFILE_LABELS: dict[str, str] = {
     "spread_shadow": "Spread shadow (20%+ handicap edges; Clay + non-policy tournaments)",
     "spread_v1_shadow": "Spread v1 shadow (strict-first ATP bo3 hard-only research lane; real-market calibration required)",
     "spread_v1_clay_fav": "Clay favourite handicap shadow (fav HC 2.0-3.5 games, 8-18% edge, clay-only calibration required)",
-    "challenger_ml_shadow": "Challenger singles ML internal shadow (HIGH coverage, 10-15% edge)",
+    "challenger_ml_shadow": "Challenger ML v2 prospective evidence (HIGH coverage, 10-15% edge, zero stake)",
     "clay_bo3": "Clay bo3 internal shadow (ATP clay ML 5-13% edge + dog HC 6-25%)",
     "grass_bo3": "Grass bo3 internal shadow (ATP grass warm-up ML, high/medium, 10-30% edge, favourite agreement)",
     "cpi_speed_shadow": "CPI speed-regime ML shadow (ATP only, passed train/holdout CPI cells, 10-30% edge)",
@@ -1397,6 +1397,18 @@ def compute_stake_units(
         return 2.0, 2.0 * STRICT_UNIT_GBP, "flat_spread"
 
     return 1.0, 1.0 * STRICT_UNIT_GBP, "flat_match"
+
+
+def apply_profile_stake_policy(
+    signal_profile: str,
+    stake_units: float,
+    stake_gbp: float,
+    stake_model: str,
+) -> tuple[float, float, str]:
+    """Force research-only cohorts to remain non-actionable."""
+    if signal_profile == "challenger_ml_shadow":
+        return 0.0, 0.0, "prospective_evidence_no_stake"
+    return stake_units, stake_gbp, stake_model
 
 
 def format_signed_line(v: float | None) -> str:
@@ -2861,6 +2873,12 @@ def main() -> int:
                 bet_type="match",
                 value_pct=value_pct,
             )
+            stake_units, stake_gbp, stake_model = apply_profile_stake_policy(
+                args.signal_profile,
+                stake_units,
+                stake_gbp,
+                stake_model,
+            )
 
             candidates.append(
                 {
@@ -2930,7 +2948,7 @@ def main() -> int:
                         if grass_bo3_ml_match
                         else "clay_bo3_ml_edge_5_13"
                         if clay_bo3_ml_match
-                        else "challenger_ml_high_coverage_10_15"
+                        else "challenger_ml_v2_prospective_high_coverage_10_15"
                         if challenger_ml_match
                         else ""
                     ),

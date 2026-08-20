@@ -18,9 +18,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_NEARMISS = ROOT / "data" / "backtest" / "challenger-ml-shadow-nearmiss.csv"
-DEFAULT_ARCHIVE = ROOT / "data" / "backtest" / "strict-signals-challenger-ml-archive.csv"
-DEFAULT_LIVE = ROOT / "data" / "backtest" / "strict-signals-challenger-ml-live.csv"
+DEFAULT_NEARMISS = ROOT / "data" / "backtest" / "challenger-ml-v2-nearmiss.csv"
+DEFAULT_ARCHIVE = ROOT / "data" / "backtest" / "strict-signals-challenger-ml-v2-archive.csv"
+DEFAULT_LIVE = ROOT / "data" / "backtest" / "strict-signals-challenger-ml-v2-live.csv"
 PINNACLE_GLOB = "pinnacle-odds-*.csv"
 
 FIELDNAMES = [
@@ -104,18 +104,27 @@ def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
             writer.writerow({field: row.get(field, "") for field in FIELDNAMES})
 
 
-def load_pinnacle_odds() -> dict[tuple[str, str], dict[str, str]]:
-    out: dict[tuple[str, str], dict[str, str]] = {}
-    for path in sorted((ROOT / "data").glob(PINNACLE_GLOB)):
+def load_pinnacle_odds(data_dir: Path | None = None) -> dict[tuple[str, str, str], dict[str, str]]:
+    """Index snapshots by event date and pair so rematches cannot inherit stale odds."""
+    out: dict[tuple[str, str, str], dict[str, str]] = {}
+    root = data_dir or (ROOT / "data")
+    for path in sorted(root.glob(PINNACLE_GLOB)):
+        match = re.search(r"(\d{4}-\d{2}-\d{2})", path.name)
+        snapshot_date = match.group(1) if match else ""
+        if not snapshot_date:
+            continue
         rows = read_csv(path)
         for row in rows:
-            key = pair_key(row.get("player1_name"), row.get("player2_name"))
-            if not key[0] or not key[1]:
+            pair = pair_key(row.get("player1_name"), row.get("player2_name"))
+            if not pair[0] or not pair[1]:
                 continue
-            # Keep the first matching snapshot. These daily files are already local audit snapshots.
+            key = (snapshot_date, *pair)
+            # Keep the first same-day snapshot as the immutable publication price.
             out.setdefault(
                 key,
                 {
+                    "player1_name": row.get("player1_name", ""),
+                    "player2_name": row.get("player2_name", ""),
                     "pin_odds1": row.get("odds1", ""),
                     "pin_odds2": row.get("odds2", ""),
                     "pinnacle_margin": row.get("pinnacle_margin", ""),
@@ -124,6 +133,30 @@ def load_pinnacle_odds() -> dict[tuple[str, str], dict[str, str]]:
                 },
             )
     return out
+
+
+def orient_odds(
+    signal_player1: str | None,
+    signal_player2: str | None,
+    odds: dict[str, str],
+) -> dict[str, str]:
+    if not odds:
+        return {}
+    signal_p1 = norm(signal_player1)
+    signal_p2 = norm(signal_player2)
+    odds_p1 = norm(odds.get("player1_name"))
+    odds_p2 = norm(odds.get("player2_name"))
+    if signal_p1 == odds_p1 and signal_p2 == odds_p2:
+        return odds
+    if signal_p1 == odds_p2 and signal_p2 == odds_p1:
+        return {
+            **odds,
+            "player1_name": odds.get("player2_name", ""),
+            "player2_name": odds.get("player1_name", ""),
+            "pin_odds1": odds.get("pin_odds2", ""),
+            "pin_odds2": odds.get("pin_odds1", ""),
+        }
+    return {}
 
 
 def signal_key(row: dict[str, str]) -> tuple[str, str, str, str, str]:
@@ -136,8 +169,13 @@ def signal_key(row: dict[str, str]) -> tuple[str, str, str, str, str]:
     )
 
 
-def promote_row(row: dict[str, str], odds_index: dict[tuple[str, str], dict[str, str]]) -> dict[str, str]:
-    odds = odds_index.get(pair_key(row.get("player1"), row.get("player2")), {})
+def promote_row(row: dict[str, str], odds_index: dict[tuple[str, str, str], dict[str, str]]) -> dict[str, str]:
+    pair = pair_key(row.get("player1"), row.get("player2"))
+    odds = orient_odds(
+        row.get("player1"),
+        row.get("player2"),
+        odds_index.get((row.get("date", ""), *pair), {}),
+    )
     has_odds = bool(odds.get("pin_odds1") and odds.get("pin_odds2"))
     promoted = {field: "" for field in FIELDNAMES}
     for field in row:
@@ -180,9 +218,18 @@ def merge_existing(existing: list[dict[str, str]], promoted: list[dict[str, str]
         if not prev:
             by_key[key] = row
             continue
-        # Preserve settlement fields if the row already settled, but refresh odds/metadata.
+        # Preserve the first publication price and all settlement fields.
         settled = (prev.get("settlement_status") or "").strip().lower() == "settled"
         merged = {**prev, **row}
+        for field in [
+            "odds_capture_status",
+            "pin_odds1",
+            "pin_odds2",
+            "pinnacle_margin",
+            "pinnacle_league_name",
+        ]:
+            if prev.get(field):
+                merged[field] = prev[field]
         if settled:
             for field in [
                 "settlement_status",

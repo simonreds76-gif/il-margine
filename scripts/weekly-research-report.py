@@ -64,12 +64,13 @@ TENNIS_LANE_FILES = {
     "grass_bo3": ROOT / "data" / "backtest" / "strict-policy-performance-grass_bo3-weekly.csv",
     "clay_bo3": ROOT / "data" / "backtest" / "strict-policy-performance-clay_bo3-weekly.csv",
     "cpi_speed": ROOT / "data" / "backtest" / "strict-policy-performance-cpi_speed-weekly.csv",
-    "challenger": ROOT / "data" / "backtest" / "strict-policy-performance-challenger-ml-weekly.csv",
+    "challenger": ROOT / "data" / "backtest" / "strict-policy-performance-challenger-ml-v2-weekly.csv",
 }
 TENNIS_CLV_FILES = {
     "strict": ROOT / "data" / "backtest" / "strict-clv-audit-2026.csv",
     "volume_200": ROOT / "data" / "backtest" / "strict-clv-audit-volume200-2026.csv",
     "spread_v1": ROOT / "data" / "backtest" / "strict-clv-audit-spreadv1-2026.csv",
+    "challenger": ROOT / "data" / "backtest" / "strict-clv-audit-challenger-ml-v2-2026.csv",
 }
 
 TEAM_SHOTS_MODEL = "canonical_form_v3_ema20_nb"
@@ -1579,6 +1580,16 @@ def telegram_text(payload: dict[str, Any]) -> str:
             f"CLV {pct(hard.get('avg_clv_pct'), 2)} n={hard.get('clv_rows', 0)} | "
             "not one sellable lane; only scoped Hard/Masters/HIGH <=10pp rows enter Strict"
         )
+
+    def challenger_line() -> str:
+        lane = tennis_lanes.get("challenger") or {}
+        clv = lane.get("clv") or {}
+        return (
+            "Challenger ML v2 [ZERO-STAKE SHADOW]: "
+            f"{lane.get('settled', 0)} settled | "
+            f"CLV {pct(clv.get('avg_clv_pct'), 2)} n={clv.get('rows', 0)} | "
+            "promotion requires n>=300, mean CLV>=+1.0%, and verified calibration"
+        )
     lines = [
         "Il Margine weekly model evidence",
         f"Generated: {payload['generated_at']}",
@@ -1611,6 +1622,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
         replacement_line("Strict gap 10-20pp", "strict_gap_10_20_same_side"),
         replacement_line("Volume gap 10-15pp", "volume200_gap_10_15_same_side"),
         hard_side_flip_line(),
+        challenger_line(),
         (
             "Inactive tennis research (not tips): "
             + "; ".join(
@@ -1620,7 +1632,6 @@ def telegram_text(payload: dict[str, Any]) -> str:
                     ("Grass", "grass_bo3"),
                     ("Clay", "clay_bo3"),
                     ("CPI", "cpi_speed"),
-                    ("Challenger", "challenger"),
                 )
             )
         ),
@@ -1731,6 +1742,16 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
             "only scoped Masters/HIGH <=10pp rows are Strict"
         )
 
+    def challenger_line() -> str:
+        lane = lanes.get("challenger") or {}
+        clv = lane.get("clv") or {}
+        return (
+            "Challenger ML v2 [ZERO-STAKE SHADOW]: "
+            f"{lane.get('settled', 0)} settled | "
+            f"CLV {pct(clv.get('avg_clv_pct'), 2)} n={clv.get('rows', 0)} | "
+            "gate n>=300 / CLV>=+1.0% / calibration pass"
+        )
+
     lines = [
         "Il Margine weekly tennis evidence",
         f"Generated: {payload['generated_at']}",
@@ -1751,6 +1772,7 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
         replacement_line("Strict gap 10-20pp", "strict_gap_10_20_same_side"),
         replacement_line("Volume gap 10-15pp", "volume200_gap_10_15_same_side"),
         hard_side_flip_line(),
+        challenger_line(),
         (
             "Inactive research (not tips): "
             + "; ".join(
@@ -1760,7 +1782,6 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
                     ("Grass", "grass_bo3"),
                     ("Clay", "clay_bo3"),
                     ("CPI", "cpi_speed"),
-                    ("Challenger", "challenger"),
                 )
             )
         ),

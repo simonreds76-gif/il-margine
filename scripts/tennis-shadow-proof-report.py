@@ -76,10 +76,11 @@ LANES = [
     ),
     LaneConfig(
         key="challenger_ml",
-        label="Challenger ML",
-        archive_paths=("strict-signals-challenger-ml-archive.csv",),
-        clv_paths=("strict-clv-audit-challenger-ml-2026.csv",),
-        note="Calibration tracker until Challenger odds capture and CLV are reliable.",
+        label="Challenger ML v2 prospective",
+        archive_paths=("strict-signals-challenger-ml-v2-archive.csv",),
+        live_paths=("strict-signals-challenger-ml-v2-live.csv",),
+        clv_paths=("strict-clv-audit-challenger-ml-v2-2026.csv",),
+        note="Zero-stake evidence only. Legacy 23-row batch is frozen and excluded.",
     ),
 ]
 

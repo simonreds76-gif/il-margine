@@ -510,7 +510,7 @@ function primarySignalBadgeMeta(
     return {
       label: "CH CAL",
       className: "border-fuchsia-400/35 bg-fuchsia-400/10 text-fuchsia-200",
-      title: "Challenger ML calibration tracker, no odds-proofed betting lane",
+      title: "Challenger ML v2 zero-stake evidence tracker, not a betting lane",
     };
   }
 

@@ -78,8 +78,8 @@ if ($LASTEXITCODE -ne 0) {
 
 Log "=== Step 7/13: Clay calibrated legacy settlement removed after failed ROI audit ==="
 
-Log "=== Step 7b/13: Settle Challenger ML CSV ==="
-& python scripts\settle-strict-signals.py --csv data\backtest\strict-signals-challenger-ml-archive.csv 2>&1 | ForEach-Object { Log $_ }
+Log "=== Step 7b/13: Settle Challenger ML v2 prospective evidence CSV ==="
+& python scripts\settle-strict-signals.py --csv data\backtest\strict-signals-challenger-ml-v2-archive.csv 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: challenger_ml settlement failed (exit $LASTEXITCODE), continuing..."
 }
@@ -144,8 +144,8 @@ if ($LASTEXITCODE -ne 0) {
 
 Log "=== Step 12/13: Clay calibrated legacy performance removed after failed ROI audit ==="
 
-Log "=== Step 12b/13: Challenger ML settled performance ==="
-& python scripts\strict-policy-performance.py --days 7 --signals data\backtest\strict-signals-challenger-ml-archive.csv --report-txt data\backtest\strict-policy-performance-challenger-ml-weekly.txt --summary-csv data\backtest\strict-policy-performance-challenger-ml-weekly.csv 2>&1 | ForEach-Object { Log $_ }
+Log "=== Step 12b/13: Challenger ML v2 prospective performance ==="
+& python scripts\strict-policy-performance.py --days 7 --signals data\backtest\strict-signals-challenger-ml-v2-archive.csv --report-txt data\backtest\strict-policy-performance-challenger-ml-v2-weekly.txt --summary-csv data\backtest\strict-policy-performance-challenger-ml-v2-weekly.csv 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-policy-performance challenger_ml_shadow failed (exit $LASTEXITCODE), continuing..."
 }
