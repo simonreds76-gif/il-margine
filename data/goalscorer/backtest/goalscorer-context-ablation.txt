@@ -1,0 +1,32 @@
+Goalscorer Context Feature Ablation
+===================================
+
+Research only. No live probabilities, routing, stakes, or public output changed.
+Train seasons: 2023-2024, 2024-2025; n=84,071
+Held-out season: 2025-2026; n=45,535
+Decision: REJECTED_OR_MORE_EVIDENCE_REQUIRED
+
+Raw production probability: Brier=0.0761026; log_loss=0.2809636; predicted=0.0930; actual=0.0873
+Base logistic recalibration: Brier=0.0753837; log_loss=0.2745690; predicted=0.0905; actual=0.0873
+Context extension: Brier=0.0754192; log_loss=0.2747409; predicted=0.0906; actual=0.0873
+
+Context minus calibrated Brier: +0.0000354
+Context minus calibrated log loss: +0.0001718
+Leagues materially harmed (>0.002 Brier, n>=500): 0
+
+Context coefficients
+--------------------
+intercept: -0.822672
+base_logit: +0.598810
+opponent_position_log_factor: +0.373671
+team_short_rest: +0.160931
+opponent_short_rest: -0.072080
+rest_advantage: -0.012665
+
+League holdout
+--------------
+epl: n=9751; Brier delta=+0.0000022; log-loss delta=+0.0002505
+serie-a: n=9886; Brier delta=-0.0000133; log-loss delta=-0.0001049
+la-liga: n=10131; Brier delta=+0.0000712; log-loss delta=+0.0002982
+bundesliga: n=8099; Brier delta=+0.0000593; log-loss delta=+0.0001755
+ligue-1: n=7668; Brier delta=+0.0000679; log-loss delta=+0.0002577
