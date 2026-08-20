@@ -127,7 +127,7 @@ def three_way_prices(event: dict[str, Any], bookmaker_name: str) -> tuple[float 
             continue
         for market in markets or []:
             name = normalize_market_name(market.get("name"))
-            if not any(token in name for token in THREE_WAY_MARKET_TOKENS):
+            if name != "ml" and not any(token in name for token in THREE_WAY_MARKET_TOKENS):
                 continue
             prices = _direct_three_way_prices(market)
             for prop in market.get("odds") or []:

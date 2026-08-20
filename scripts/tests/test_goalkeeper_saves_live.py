@@ -144,7 +144,7 @@ class GoalkeeperSavesLiveTests(unittest.TestCase):
             **event,
             "league": {"name": "England Premier League"},
             "bookmakers": {
-                "Bet365": [{"name": "Match Winner", "home": 2.0, "draw": 3.5, "away": 4.0}]
+                "Bet365": [{"name": "ML", "home": 2.0, "draw": 3.5, "away": 4.0}]
             },
         }
         rows = capture.extract_rows(
@@ -157,6 +157,16 @@ class GoalkeeperSavesLiveTests(unittest.TestCase):
         self.assertEqual(len(rows), 1)
         self.assertEqual(rows[0]["home_price"], "2.0000")
         self.assertEqual(rows[0]["source"], "odds_api_io:event_metadata")
+
+    def test_capture_does_not_treat_half_time_ml_as_full_time_result(self) -> None:
+        event = {
+            "home": "Home",
+            "away": "Away",
+            "bookmakers": {
+                "Bet365": [{"name": "ML HT", "home": 2.0, "draw": 3.5, "away": 4.0}]
+            },
+        }
+        self.assertEqual(capture.three_way_prices(event, "Bet365"), (None, None, None))
 
     def test_integer_line_prices_include_push_return(self) -> None:
         priced = live.price_side("over", 3.0, 2.20, 3.2, 0.25)
