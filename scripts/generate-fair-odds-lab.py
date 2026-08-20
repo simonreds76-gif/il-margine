@@ -59,6 +59,8 @@ PUBLIC_EDGE_THRESHOLD_PP = 6.0
 PUBLIC_MAX_SIGNALS = 5
 PUBLIC_MIN_MODEL_PROB_PCT = 20.0
 PUBLIC_MAX_MARKET_ODDS = 6.0
+PUBLIC_MAX_MODEL_MARKET_GAP_PP = 10.0
+PUBLIC_MAX_MODEL_MARKET_PROBABILITY_RATIO = 1.50
 PUBLIC_OFFICIAL_LINEUP_WINDOW_MINUTES = 0
 FAIR_ODDS_LAB_POLICY_REASON = "fair_odds_lab_likely_starters_top5_edge6_prob20_odds6"
 GOALSCORER_MODEL_VERSION = "goalscorer_v1_raw"
@@ -1413,14 +1415,14 @@ def build_reasons(
     return reasons[:5]
 
 
-def is_public_quality_signal(
+def public_quality_exclusion_reason(
     candidate: Candidate,
     *,
     min_model_prob_pct: float,
     max_market_odds: float,
     official_lineup_window_minutes: int,
     allow_projected_lineups: bool,
-) -> bool:
+) -> str:
     lineup = lineup_label(candidate.row).lower()
     confidence = normalize_confidence(
         candidate.row.get("signal_confidence"),
@@ -1429,22 +1431,45 @@ def is_public_quality_signal(
     )
 
     if "unknown" in lineup or "bench" in lineup:
-        return False
+        return "lineup_not_public_quality"
     if confidence == "Low":
-        return False
+        return "low_signal_confidence"
     if not allow_projected_lineups and "confirmed starter" not in lineup:
-        return False
+        return "confirmed_lineup_required"
     if candidate.expected_minutes is not None and candidate.expected_minutes < 70:
-        return False
+        return "expected_minutes_lt_70"
     if candidate.model_prob_pct < min_model_prob_pct:
-        return False
+        return "model_probability_below_floor"
     if candidate.best_odds > max_market_odds:
-        return False
+        return "market_odds_above_cap"
     if is_defensive_position(candidate.row):
-        return False
+        return "defensive_position"
     if official_lineup_required(candidate.row, official_lineup_window_minutes) and "confirmed starter" not in lineup:
-        return False
-    return True
+        return "official_lineup_required"
+    if candidate.price_gap_pp > PUBLIC_MAX_MODEL_MARKET_GAP_PP:
+        return "model_market_gap_gt_10pp"
+    if candidate.implied_pct <= 0:
+        return "invalid_market_probability"
+    if candidate.model_prob_pct / candidate.implied_pct > PUBLIC_MAX_MODEL_MARKET_PROBABILITY_RATIO:
+        return "model_market_probability_ratio_gt_1_5x"
+    return ""
+
+
+def is_public_quality_signal(
+    candidate: Candidate,
+    *,
+    min_model_prob_pct: float,
+    max_market_odds: float,
+    official_lineup_window_minutes: int,
+    allow_projected_lineups: bool,
+) -> bool:
+    return not public_quality_exclusion_reason(
+        candidate,
+        min_model_prob_pct=min_model_prob_pct,
+        max_market_odds=max_market_odds,
+        official_lineup_window_minutes=official_lineup_window_minutes,
+        allow_projected_lineups=allow_projected_lineups,
+    )
 
 
 def public_signal_score(signal: dict[str, Any]) -> float:
@@ -1612,19 +1637,22 @@ def main() -> None:
         "minutes": [c.expected_minutes for c in candidates if c.expected_minutes is not None],
     }
 
-    qualifying = [
-        candidate
-        for candidate in candidates
-        if candidate.price_gap_pp >= args.edge_threshold_pp
-        and candidate.best_odds > candidate.fair_odds
-        and is_public_quality_signal(
+    qualifying: list[Candidate] = []
+    safety_exclusions: dict[str, int] = {}
+    for candidate in candidates:
+        if candidate.price_gap_pp < args.edge_threshold_pp or candidate.best_odds <= candidate.fair_odds:
+            continue
+        exclusion_reason = public_quality_exclusion_reason(
             candidate,
             min_model_prob_pct=args.min_model_prob_pct,
             max_market_odds=args.max_market_odds,
             official_lineup_window_minutes=args.official_lineup_window_minutes,
             allow_projected_lineups=args.allow_projected_lineups,
         )
-    ]
+        if exclusion_reason:
+            safety_exclusions[exclusion_reason] = safety_exclusions.get(exclusion_reason, 0) + 1
+            continue
+        qualifying.append(candidate)
 
     signal_entries: list[tuple[Candidate, dict[str, Any]]] = []
     for candidate in qualifying:
@@ -1663,6 +1691,8 @@ def main() -> None:
         "public_filters": {
             "min_model_prob_pct": args.min_model_prob_pct,
             "max_market_odds": args.max_market_odds,
+            "max_model_market_gap_pp": PUBLIC_MAX_MODEL_MARKET_GAP_PP,
+            "max_model_market_probability_ratio": PUBLIC_MAX_MODEL_MARKET_PROBABILITY_RATIO,
             "max_signals": args.max_signals,
             "official_lineup_window_minutes": args.official_lineup_window_minutes,
             "require_confirmed_starter": not args.allow_projected_lineups,
@@ -1672,6 +1702,7 @@ def main() -> None:
         },
         "fixtures_evaluated": fixtures_evaluated,
         "signals_qualifying": len(signals),
+        "safety_exclusions": safety_exclusions,
         "leagues_covered": leagues_covered,
         "featured_signal_id": signals[0]["id"] if signals else None,
         "signals": signals,
