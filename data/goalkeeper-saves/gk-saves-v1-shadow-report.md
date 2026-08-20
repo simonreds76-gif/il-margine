@@ -2,7 +2,7 @@
 
 **RESEARCH SHADOW ONLY. No live routing or staking authorization.**
 
-- Generated: 2026-08-20T16:04:05Z
+- Generated: 2026-08-20T17:05:33Z
 - Status: CANDIDATES_BLOCKED
 - Current priced/eligible/blocked: 0/0/11
 - Signals: 0 (0 pending, 0 settled)
