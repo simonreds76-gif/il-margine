@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-20T19:18:31Z",
+  "generated_at": "2026-08-20T20:01:17Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -58,14 +58,14 @@
     "latest_scan": {
       "state": "EXPECTED_WARMUP_BLOCK",
       "explanation": "Candidates were scored, but the registered matchdays 1-3 safety lock blocked publication.",
-      "scored_rows": 112,
+      "scored_rows": 114,
       "scored_fixtures": 22,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 112,
+      "blocked_rows": 114,
       "blocker_rows": {
-        "edge_below_3pct": 89,
-        "matchdays_1_to_3": 112
+        "edge_below_3pct": 91,
+        "matchdays_1_to_3": 114
       },
       "edge_pass_but_warmup_blocked_fixtures": 10,
       "matchday_min": 1,
