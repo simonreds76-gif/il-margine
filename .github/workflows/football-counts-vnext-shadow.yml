@@ -77,13 +77,16 @@ jobs:
         run: |
           TEAM_ARGS=(--all-leagues --bookmakers "Bet365")
           CORNER_ARGS=()
+          GK_ARGS=(--bookmaker "Bet365")
           if [[ "$EVENT_NAME" == "schedule" && "$SCHEDULE_EXPR" != "15 8 * * *" ]]; then
             TEAM_ARGS+=(--days-ahead 1 --kickoff-within-minutes 90 --max-events-per-league 10 --max-odds-requests-per-league 1 --max-odds-api-http-requests 9)
             CORNER_ARGS+=(--bucket-hours 1 --kickoff-within-minutes 90)
+            GK_ARGS+=(--days-ahead 1 --max-events 10 --kickoff-within-minutes 90 --capture-mode close)
             echo "Near-kickoff mode: detailed odds calls are limited to fixtures starting within 90 minutes."
           else
             TEAM_ARGS+=(--days-ahead 7 --max-events-per-league 20 --max-odds-requests-per-league 2 --max-odds-api-http-requests 50 --market-audit-out data/football-form/football-count-market-inventory.csv)
             CORNER_ARGS+=(--bucket-hours 6)
+            GK_ARGS+=(--days-ahead 7 --max-events 10 --capture-mode publication)
             echo "Daily discovery mode: capturing publication prices for the seven-day board."
           fi
           if [ -n "${ODDS_API_KEY:-}${ODDS_API_IO_KEY:-}${BETS_API_KEY:-}" ]; then
@@ -91,6 +94,15 @@ jobs:
             # v4 reads the canonical archive, not dated inbox files. Archive
             # every capture before scoring so fresh Bet365 prices are visible.
             python scripts/team-shots-odds-archive.py
+            if [ -n "${ODDS_API_KEY:-}${ODDS_API_IO_KEY:-}" ]; then
+              # Hard cap: one discovery request plus one /odds/multi request.
+              # Predicted XIs remain blocked; only confirmed starting GKs can
+              # enter the append-only shadow ledger.
+              python scripts/goalkeeper-saves-capture.py "${GK_ARGS[@]}"
+              python scripts/goalkeeper-saves-shadow.py
+            else
+              echo "::warning::Odds-API key missing; GK Saves v1 capture skipped without affecting Team Shots."
+            fi
             if [[ "$EVENT_NAME" != "schedule" || "$SCHEDULE_EXPR" == "15 8 * * *" ]]; then
               python scripts/football-count-market-coverage.py
             fi
@@ -116,6 +128,21 @@ jobs:
           python scripts/team-shots-live-snapshot.py
           python scripts/corners-live-snapshot.py
 
+      - name: Settle goalkeeper saves shadow evidence
+        if: steps.season.outputs.active == 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *')
+        env:
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+        shell: bash
+        run: |
+          if [ -n "${API_FOOTBALL_KEY:-}" ]; then
+            # The earlier count archive is capped at 90 calls; this settler is
+            # capped at 10, preserving the registered 100-call daily ceiling.
+            python scripts/goalkeeper-saves-settle.py --max-requests 10
+            python scripts/goalkeeper-saves-shadow.py
+          else
+            echo "::warning::API_FOOTBALL_KEY missing; GK saves settlement retained pending."
+          fi
+
       - name: Commit append-only evidence
         if: steps.season.outputs.active == 'true'
         shell: bash
@@ -123,7 +150,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           if [[ "${{ github.event_name }}" == "workflow_dispatch" || "${{ github.event.schedule }}" == "15 8 * * *" ]]; then
-            git add data/football-form/ data/team-shots/inbox/ data/team-shots/understat/ data/team-shots/team-shots-odds-history.csv data/corners-ou/pinnacle-corners-odds.csv
+            git add data/football-form/ data/team-shots/inbox/ data/team-shots/understat/ data/team-shots/team-shots-odds-history.csv data/corners-ou/pinnacle-corners-odds.csv data/goalkeeper-saves/
           else
             # Near-kickoff runs publish current candidates/signals as well as
             # the raw prices. Full settlement reports remain daily.
@@ -133,6 +160,7 @@ jobs:
             git add data/football-form/corners-v3-shadow-signals.csv
             git add data/team-shots/team-shots-live-snapshot.json
             git add data/corners-ou/corners-live-snapshot.json
+            git add data/goalkeeper-saves/
           fi
           if git diff --cached --quiet; then
             echo "No vNext signal or evidence changes."
