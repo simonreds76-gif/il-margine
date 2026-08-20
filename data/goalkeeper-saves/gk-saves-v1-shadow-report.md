@@ -2,9 +2,9 @@
 
 **RESEARCH SHADOW ONLY. No live routing or staking authorization.**
 
-- Generated: 2026-08-20T15:15:36Z
-- Status: NO_CURRENT_LINES
-- Current priced/eligible/blocked: 0/0/0
+- Generated: 2026-08-20T15:58:03Z
+- Status: CANDIDATES_BLOCKED
+- Current priced/eligible/blocked: 0/0/11
 - Signals: 0 (0 pending, 0 settled)
 - P/L: +0.00u; ROI: -
 - Closing evidence: 0/0 matched; mean CLV: -
