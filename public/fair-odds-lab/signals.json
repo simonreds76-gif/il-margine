@@ -1,9 +1,11 @@
 {
-  "generated_at": "2026-08-20T23:01:31.138853Z",
+  "generated_at": "2026-08-21T07:30:26.592788Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
-    "data/goalscorer/la-liga/goalscorer-live-comparison.csv"
+    "data/goalscorer/epl/goalscorer-live-comparison.csv",
+    "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
+    "data/goalscorer/ligue-1/goalscorer-live-comparison.csv"
   ],
   "team_form_source": "/home/runner/work/_temp/football-form/team-match-base.csv",
   "edge_threshold_pp": 6.0,
@@ -32,24 +34,134 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 5,
-  "signals_qualifying": 3,
+  "fixtures_evaluated": 29,
+  "signals_qualifying": 5,
   "safety_exclusions": {
-    "market_odds_above_cap": 1,
-    "lineup_not_public_quality": 2
+    "model_probability_below_floor": 6,
+    "market_odds_above_cap": 3,
+    "lineup_not_public_quality": 3,
+    "low_signal_confidence": 3,
+    "model_market_gap_gt_10pp": 6,
+    "defensive_position": 2
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 0,
-    "added_by_league": {},
+    "eligible_rows": 6,
+    "added_by_league": {
+      "epl": 4,
+      "la-liga": 1,
+      "serie-a": 1
+    },
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
   "leagues_covered": [
+    "epl",
     "la-liga",
     "serie-a"
   ],
-  "featured_signal_id": "20260821-antony-6ec9c48b5f",
+  "featured_signal_id": "20260823-ollie-watkins-8ca9f6ece6",
   "signals": [
+    {
+      "id": "20260823-ollie-watkins-8ca9f6ece6",
+      "match": {
+        "home_team": "Brighton & Hove Albion",
+        "away_team": "Aston Villa",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-08-23T13:00:00Z",
+        "kickoff_display": "Sun 23 Aug 14:00 UK",
+        "fotmob_match_id": "5795369",
+        "fotmob_page_url": "/matches/brighton-hove-albion-vs-aston-villa/3gku1s#5795369",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Ollie Watkins",
+        "team": "Aston Villa",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/aston-villa.png",
+        "team_primary_color": "#7f1d1d",
+        "team_secondary_color": "#38bdf8",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 47.7,
+        "fair_odds": 2.1
+      },
+      "market_data": {
+        "best_odds": 2.6,
+        "best_book": "Bet365",
+        "implied_chance_pct": 38.5
+      },
+      "edge": {
+        "price_gap_pp": 9.2,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 99
+        },
+        "share_of_team_chances_pct": 46,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 34
+        },
+        "recent_team_form": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-24",
+          "xg_for_avg": 1.65,
+          "xg_against_avg": 1.4,
+          "xgd_per90": 0.25,
+          "shots_for_avg": 11.8,
+          "shots_against_avg": 14.0,
+          "sot_for_avg": 4.6,
+          "sot_against_avg": 5.0,
+          "corners_for_avg": 5.2,
+          "corners_against_avg": 5.4
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 14
+        },
+        "opponent_recent_defence": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-24",
+          "xg_for_avg": 1.91,
+          "xg_against_avg": 1.4,
+          "xgd_per90": 0.51,
+          "shots_for_avg": 14.8,
+          "shots_against_avg": 8.4,
+          "sot_for_avg": 5.8,
+          "sot_against_avg": 3.0,
+          "corners_for_avg": 6.2,
+          "corners_against_avg": 3.6
+        },
+        "fixture_boost_pct": -22,
+        "projected_minutes": 81,
+        "penalty_role": "Secondary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Recent team form supports the attacking case",
+        "Opponent has been allowing chances recently"
+      ],
+      "risk_flags": []
+    },
     {
       "id": "20260821-antony-6ec9c48b5f",
       "match": {
@@ -92,20 +204,20 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 90
+          "percentile": 88
         },
         "share_of_team_chances_pct": 32,
-        "share_of_team_chances_percentile": 99,
+        "share_of_team_chances_percentile": 98,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 90
+          "percentile": 89
         },
         "recent_team_form": {
           "tier": "Unknown"
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 90
+          "percentile": 92
         },
         "opponent_recent_defence": {
           "tier": "High",
@@ -181,13 +293,13 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 99
+          "percentile": 98
         },
         "share_of_team_chances_pct": 34,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
-          "tier": "Average",
-          "percentile": 47
+          "tier": "Quiet",
+          "percentile": 25
         },
         "recent_team_form": {
           "tier": "Quiet",
@@ -206,7 +318,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 37
+          "percentile": 39
         },
         "opponent_recent_defence": {
           "tier": "Unknown"
@@ -268,13 +380,13 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 94
+          "percentile": 92
         },
         "share_of_team_chances_pct": 33,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
-          "tier": "Positive",
-          "percentile": 58
+          "tier": "Quiet",
+          "percentile": 27
         },
         "recent_team_form": {
           "tier": "Strong",
@@ -293,7 +405,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 49
+          "percentile": 41
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -324,6 +436,106 @@
         "Recent chance quality grades as strong",
         "Recent team form supports the attacking case",
         "Opponent has been allowing chances recently"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260822-ismaila-sarr-7b68ab2a5b",
+      "match": {
+        "home_team": "Everton FC",
+        "away_team": "Crystal Palace",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-08-22T14:00:00Z",
+        "kickoff_display": "Sat 22 Aug 15:00 UK",
+        "fotmob_match_id": "5795365",
+        "fotmob_page_url": "/matches/everton-vs-crystal-palace/2tttz7#5795365",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Ismaila Sarr",
+        "team": "Crystal Palace",
+        "position": "AM",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/crystal-palace.png",
+        "team_primary_color": "#1d4ed8",
+        "team_secondary_color": "#dc2626",
+        "team_shirt_pattern": "vertical-stripes"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 34.3,
+        "fair_odds": 2.92
+      },
+      "market_data": {
+        "best_odds": 3.75,
+        "best_book": "Bet365",
+        "implied_chance_pct": 26.7
+      },
+      "edge": {
+        "price_gap_pp": 7.6,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 93
+        },
+        "share_of_team_chances_pct": 22,
+        "share_of_team_chances_percentile": 95,
+        "team_attacking_outlook": {
+          "tier": "Average",
+          "percentile": 46
+        },
+        "recent_team_form": {
+          "tier": "Quiet",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-24",
+          "xg_for_avg": 1.44,
+          "xg_against_avg": 2.36,
+          "xgd_per90": -0.92,
+          "shots_for_avg": 11.6,
+          "shots_against_avg": 15.0,
+          "sot_for_avg": 3.8,
+          "sot_against_avg": 5.0,
+          "corners_for_avg": 3.4,
+          "corners_against_avg": 7.8
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 77
+        },
+        "opponent_recent_defence": {
+          "tier": "High",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-24",
+          "xg_for_avg": 1.3,
+          "xg_against_avg": 1.85,
+          "xgd_per90": -0.55,
+          "shots_for_avg": 11.2,
+          "shots_against_avg": 16.0,
+          "sot_for_avg": 4.4,
+          "sot_against_avg": 4.8,
+          "corners_for_avg": 4.8,
+          "corners_against_avg": 5.0
+        },
+        "fixture_boost_pct": 27,
+        "projected_minutes": 78,
+        "penalty_role": "Secondary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "The fixture profile adds to his scoring case"
       ],
       "risk_flags": []
     }
