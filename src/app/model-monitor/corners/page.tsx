@@ -91,6 +91,31 @@ type CornersTotalDiagnostic = {
   conclusion?: string[];
 };
 
+type CornersV4G0Fold = {
+  season?: string;
+  variant?: string;
+  mae?: number;
+  brier?: number;
+};
+
+type CornersV4G0Variant = {
+  market_rows?: number;
+  model_brier?: number;
+  market_brier?: number;
+  brier_delta?: number;
+  g0a_per_line_residual?: string;
+  g0b_brier?: string;
+  g0_status?: string;
+};
+
+type CornersV4G0Diagnostic = {
+  generated_at?: string;
+  status?: string;
+  samples?: { v3?: number; enriched?: number; missing?: Record<string, number> };
+  folds?: CornersV4G0Fold[];
+  market_g0?: { variants?: Record<string, CornersV4G0Variant> };
+};
+
 function parseCsv(text: string): CsvRow[] {
   const lines = text.split("\n").filter((l) => l.trim());
   if (lines.length < 2) return [];
@@ -778,6 +803,8 @@ export default async function CornersMonitorPage() {
     cornersV3ClvCsv,
     vnextCandidatesCsv,
     vnextGate,
+    cornersV4G0,
+    cornersV4G0Report,
   ] = await Promise.all([
       readFile("data/corners-ou/corners-ou-calibration.txt"),
       readJson<CornersCalibrationParams>("data/corners-ou/corners-calibration-params.json"),
@@ -806,6 +833,8 @@ export default async function CornersMonitorPage() {
       readFile("data/football-form/corners-v3-shadow-clv.csv"),
       readFile("data/football-form/football-counts-vnext-candidates.csv"),
       readJson<FootballCountsGatePayload>("data/football-form/football-counts-vnext-gate.json"),
+      readJson<CornersV4G0Diagnostic>("data/corners-ou/corners-v4-g0-diagnostic.json"),
+      readFile("data/corners-ou/corners-v4-g0-diagnostic.md"),
     ]);
 
   const backtestRows = backtestCsv ? parseCsvCached(backtestCsv) : [];
@@ -1152,6 +1181,23 @@ export default async function CornersMonitorPage() {
   const cornersV0Lane = findResearchLane(researchLaneState, "corners_total", "canonical_form_v0");
   const cornersV0AllowedLeagues = cornersAllowedConfig?.allowed_leagues ?? cornersV0Lane?.allowed_leagues ?? [];
   const cornersV0BlockedLeagues = cornersAllowedConfig?.blocked_leagues ?? [];
+  const cornersV4Variants = cornersV4G0?.market_g0?.variants ?? {};
+  const cornersV4Lean = cornersV4Variants.v4_lean_no_wide_block;
+  const latestCornersV4Season = [...(cornersV4G0?.folds ?? [])]
+    .map((row) => row.season ?? "")
+    .filter(Boolean)
+    .sort()
+    .at(-1);
+  const latestCornersV3Control = (cornersV4G0?.folds ?? []).find(
+    (row) => row.season === latestCornersV4Season && row.variant === "v3_control",
+  );
+  const latestCornersV4LeanFold = (cornersV4G0?.folds ?? []).find(
+    (row) => row.season === latestCornersV4Season && row.variant === "v4_lean_no_wide_block",
+  );
+  const cornersV4MaeDelta =
+    latestCornersV3Control?.mae != null && latestCornersV4LeanFold?.mae != null
+      ? latestCornersV4LeanFold.mae - latestCornersV3Control.mae
+      : null;
   const cornersV0Clv = parseClvMonitorSummary(cornersClvReport);
   const cornersV0ClvRows = cornersClvCsv ? parseCsvCached(cornersClvCsv) : [];
   const cornersV0Summary = researchBetSummary(cornersV0ClvRows);
@@ -1219,6 +1265,55 @@ export default async function CornersMonitorPage() {
           candidates={vnextCandidateRows}
           gate={vnextGate?.corners_v3 ?? null}
         />
+
+        <SectionCard
+          collapsible
+          title="Corners v4 G0 Research Gate"
+          subtitle="Additive favourite-strength and corners-per-shot test. Diagnostic only; v3 routing and stakes are unchanged."
+        >
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <StatCard
+              label="Enriched count sample"
+              value={(cornersV4G0?.samples?.enriched ?? 0).toLocaleString()}
+              detail={`of ${(cornersV4G0?.samples?.v3 ?? 0).toLocaleString()} v3 rows`}
+            />
+            <StatCard
+              label="Latest MAE delta"
+              value={cornersV4MaeDelta == null ? "-" : `${cornersV4MaeDelta >= 0 ? "+" : ""}${cornersV4MaeDelta.toFixed(4)}`}
+              detail={`${latestCornersV4Season ?? "latest fold"}; negative is better`}
+              tone={statTone(cornersV4MaeDelta != null && cornersV4MaeDelta < 0 ? "green" : "amber")}
+            />
+            <StatCard
+              label="Raw Brier vs market"
+              value={cornersV4Lean?.brier_delta == null ? "-" : `+${cornersV4Lean.brier_delta.toFixed(4)}`}
+              detail={`${cornersV4Lean?.market_rows ?? 0} real Pinnacle lines`}
+              tone={statTone("amber")}
+            />
+            <StatCard
+              label="G0 decision"
+              value={cornersV4Lean?.g0_status ?? "NOT RUN"}
+              detail={`per-line ${cornersV4Lean?.g0a_per_line_residual ?? "-"} | Brier ${cornersV4Lean?.g0b_brier ?? "-"}`}
+              tone={statTone(cornersV4Lean?.g0_status === "PASS" ? "green" : "red")}
+            />
+          </div>
+          <p className="mt-4 text-sm leading-6 text-slate-400">
+            Count accuracy improved marginally, but the real-price calibration gate failed. No v4 candidate is authorized for signals,
+            settlement claims or staking until the per-line residual defect is corrected on a locked holdout.
+          </p>
+          {cornersV4G0?.generated_at ? (
+            <p className="mt-2 text-xs text-slate-500">Generated {formatDateTime(cornersV4G0.generated_at)}</p>
+          ) : null}
+          {cornersV4G0Report ? (
+            <details className="mt-4 rounded-xl border border-slate-800/70 bg-slate-950/30 p-4">
+              <summary className="cursor-pointer text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+                Full v4 G0 evidence
+              </summary>
+              <pre className="mt-4 overflow-x-auto whitespace-pre-wrap text-[11px] leading-relaxed text-slate-400">
+                {cornersV4G0Report}
+              </pre>
+            </details>
+          ) : null}
+        </SectionCard>
 
         <SectionCard
           collapsible

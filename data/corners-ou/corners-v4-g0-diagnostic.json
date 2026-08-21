@@ -1,0 +1,564 @@
+{
+  "generated_at": "2026-08-21T15:51:28Z",
+  "status": "RESEARCH_ONLY_NO_ROUTING_CHANGE",
+  "coverage": {
+    "eligible_fixtures": 13394,
+    "event_matches": 11405,
+    "event_coverage": 0.8515006719426609,
+    "model_samples": 10889
+  },
+  "samples": {
+    "v3": 10889,
+    "enriched": 6901,
+    "missing": {
+      "fav_gap_missing": 3,
+      "fixture_not_found": 3985
+    }
+  },
+  "features": [
+    "favourite_strength_gap",
+    "lagged_corner_per_shot"
+  ],
+  "folds": [
+    {
+      "season": "2024-2025",
+      "variant": "v3_control",
+      "train": 4901,
+      "validation": 1050,
+      "mae": 2.690357942772802,
+      "brier": 0.21158739330811763,
+      "log_loss": 0.6121605124256257,
+      "bias": 0.10613737249898372,
+      "alpha": 0.017654891746239253
+    },
+    {
+      "season": "2024-2025",
+      "variant": "v3_plus_fav_gap",
+      "train": 4901,
+      "validation": 1050,
+      "mae": 2.6891183841480495,
+      "brier": 0.21139769274748121,
+      "log_loss": 0.6117450522212188,
+      "bias": 0.10824158307821448,
+      "alpha": 0.01738567074913589
+    },
+    {
+      "season": "2024-2025",
+      "variant": "v3_plus_corner_per_shot",
+      "train": 4901,
+      "validation": 1050,
+      "mae": 2.685631091498016,
+      "brier": 0.21135946592435595,
+      "log_loss": 0.6116853036099604,
+      "bias": 0.07160757739898115,
+      "alpha": 0.01762199995225202
+    },
+    {
+      "season": "2024-2025",
+      "variant": "v4_full",
+      "train": 4901,
+      "validation": 1050,
+      "mae": 2.6849785667269117,
+      "brier": 0.21121094084056585,
+      "log_loss": 0.611362697592704,
+      "bias": 0.08100751741987955,
+      "alpha": 0.017360848499802316
+    },
+    {
+      "season": "2024-2025",
+      "variant": "v4_lean_no_wide_block",
+      "train": 4901,
+      "validation": 1050,
+      "mae": 2.6825368282913535,
+      "brier": 0.21108449128650983,
+      "log_loss": 0.6110726149880963,
+      "bias": 0.062850249918585,
+      "alpha": 0.017403402589714137
+    },
+    {
+      "season": "2024-2025",
+      "variant": "v4_core",
+      "train": 4901,
+      "validation": 1050,
+      "mae": 2.6834291443542972,
+      "brier": 0.21111956184593286,
+      "log_loss": 0.6111446209678775,
+      "bias": 0.06649037097535786,
+      "alpha": 0.017408414920654803
+    },
+    {
+      "season": "2025-2026",
+      "variant": "v3_control",
+      "train": 5951,
+      "validation": 950,
+      "mae": 2.7248761101202628,
+      "brier": 0.21272577775736484,
+      "log_loss": 0.6147319869177593,
+      "bias": 0.1244464678860864,
+      "alpha": 0.018064252864295364
+    },
+    {
+      "season": "2025-2026",
+      "variant": "v3_plus_fav_gap",
+      "train": 5951,
+      "validation": 950,
+      "mae": 2.721739591832369,
+      "brier": 0.21248850385994755,
+      "log_loss": 0.6142269634516797,
+      "bias": 0.1130834061717293,
+      "alpha": 0.017771280302262906
+    },
+    {
+      "season": "2025-2026",
+      "variant": "v3_plus_corner_per_shot",
+      "train": 5951,
+      "validation": 950,
+      "mae": 2.721304560146086,
+      "brier": 0.21255911694609794,
+      "log_loss": 0.6143712023820157,
+      "bias": 0.10030593987012788,
+      "alpha": 0.018013717082442475
+    },
+    {
+      "season": "2025-2026",
+      "variant": "v4_full",
+      "train": 5951,
+      "validation": 950,
+      "mae": 2.718939280774533,
+      "brier": 0.21236286763275886,
+      "log_loss": 0.6139530190333057,
+      "bias": 0.09392511280992977,
+      "alpha": 0.01774834569864426
+    },
+    {
+      "season": "2025-2026",
+      "variant": "v4_lean_no_wide_block",
+      "train": 5951,
+      "validation": 950,
+      "mae": 2.7175213954493365,
+      "brier": 0.21232156905668206,
+      "log_loss": 0.6138595188396228,
+      "bias": 0.09548695633116842,
+      "alpha": 0.017767619419568094
+    },
+    {
+      "season": "2025-2026",
+      "variant": "v4_core",
+      "train": 5951,
+      "validation": 950,
+      "mae": 2.718495159544241,
+      "brier": 0.21238164058152798,
+      "log_loss": 0.6140004683598109,
+      "bias": 0.09806672126439814,
+      "alpha": 0.017774298967285714
+    }
+  ],
+  "market_g0": {
+    "status": "OK",
+    "training_cutoff": "2026-04-10",
+    "variants": {
+      "v3_control": {
+        "training_cutoff": "2026-04-10",
+        "train": 6726,
+        "market_rows": 431,
+        "model_brier": 0.24971371562069403,
+        "market_brier": 0.2406255527318103,
+        "brier_delta": 0.009088162888883727,
+        "g0a_per_line_residual": "FAIL",
+        "g0b_brier": "PASS",
+        "g0_status": "FAIL",
+        "per_line": {
+          "7.5": {
+            "n": 19,
+            "predicted_over_rate": 0.6700989465742108,
+            "actual_over_rate": 0.5263157894736842,
+            "residual": 0.14378315710052658,
+            "model_brier": 0.26058908902399336,
+            "market_brier": 0.24042654160664811,
+            "gate": "FAIL"
+          },
+          "8.5": {
+            "n": 129,
+            "predicted_over_rate": 0.5752414760514585,
+            "actual_over_rate": 0.5891472868217055,
+            "residual": -0.013905810770246996,
+            "model_brier": 0.24078074328573784,
+            "market_brier": 0.23521111332694353,
+            "gate": "PASS"
+          },
+          "9.5": {
+            "n": 161,
+            "predicted_over_rate": 0.4649332078247091,
+            "actual_over_rate": 0.5217391304347826,
+            "residual": -0.0568059226100735,
+            "model_brier": 0.25099228753013153,
+            "market_brier": 0.2423902426776142,
+            "gate": "FAIL"
+          },
+          "10.5": {
+            "n": 111,
+            "predicted_over_rate": 0.3631123414819771,
+            "actual_over_rate": 0.44144144144144143,
+            "residual": -0.07832909995946435,
+            "model_brier": 0.2548679747331077,
+            "market_brier": 0.24318377842973402,
+            "gate": "FAIL"
+          },
+          "11.5": {
+            "n": 11,
+            "predicted_over_rate": 0.3191782236197794,
+            "actual_over_rate": 0.45454545454545453,
+            "residual": -0.13536723092567515,
+            "model_brier": 0.26496357904335954,
+            "market_brier": 0.25282244008289306,
+            "gate": "FAIL"
+          },
+          "12.5": {
+            "n": 0,
+            "status": "MISSING"
+          }
+        },
+        "misses": {
+          "no_pre_kickoff_price": 42,
+          "sample_not_found": 1222
+        }
+      },
+      "v3_plus_fav_gap": {
+        "training_cutoff": "2026-04-10",
+        "train": 6726,
+        "market_rows": 431,
+        "model_brier": 0.24973006359819291,
+        "market_brier": 0.2406255527318103,
+        "brier_delta": 0.009104510866382615,
+        "g0a_per_line_residual": "FAIL",
+        "g0b_brier": "PASS",
+        "g0_status": "FAIL",
+        "per_line": {
+          "7.5": {
+            "n": 19,
+            "predicted_over_rate": 0.6683813570011562,
+            "actual_over_rate": 0.5263157894736842,
+            "residual": 0.14206556752747201,
+            "model_brier": 0.2583242370365579,
+            "market_brier": 0.24042654160664811,
+            "gate": "FAIL"
+          },
+          "8.5": {
+            "n": 129,
+            "predicted_over_rate": 0.5724179380103882,
+            "actual_over_rate": 0.5891472868217055,
+            "residual": -0.01672934881131727,
+            "model_brier": 0.24022548360932525,
+            "market_brier": 0.23521111332694353,
+            "gate": "FAIL"
+          },
+          "9.5": {
+            "n": 161,
+            "predicted_over_rate": 0.4622512737528692,
+            "actual_over_rate": 0.5217391304347826,
+            "residual": -0.05948785668191342,
+            "model_brier": 0.25131069012347046,
+            "market_brier": 0.2423902426776142,
+            "gate": "FAIL"
+          },
+          "10.5": {
+            "n": 111,
+            "predicted_over_rate": 0.3604027316299865,
+            "actual_over_rate": 0.44144144144144143,
+            "residual": -0.08103870981145495,
+            "model_brier": 0.25457148150088393,
+            "market_brier": 0.24318377842973402,
+            "gate": "FAIL"
+          },
+          "11.5": {
+            "n": 11,
+            "predicted_over_rate": 0.3193691079781976,
+            "actual_over_rate": 0.45454545454545453,
+            "residual": -0.1351763465672569,
+            "model_brier": 0.27435945136788925,
+            "market_brier": 0.25282244008289306,
+            "gate": "FAIL"
+          },
+          "12.5": {
+            "n": 0,
+            "status": "MISSING"
+          }
+        },
+        "misses": {
+          "no_pre_kickoff_price": 42,
+          "sample_not_found": 1222
+        }
+      },
+      "v3_plus_corner_per_shot": {
+        "training_cutoff": "2026-04-10",
+        "train": 6726,
+        "market_rows": 431,
+        "model_brier": 0.24990363343962807,
+        "market_brier": 0.2406255527318103,
+        "brier_delta": 0.00927808070781777,
+        "g0a_per_line_residual": "FAIL",
+        "g0b_brier": "PASS",
+        "g0_status": "FAIL",
+        "per_line": {
+          "7.5": {
+            "n": 19,
+            "predicted_over_rate": 0.6651434722214209,
+            "actual_over_rate": 0.5263157894736842,
+            "residual": 0.1388276827477367,
+            "model_brier": 0.26141400523666664,
+            "market_brier": 0.24042654160664811,
+            "gate": "FAIL"
+          },
+          "8.5": {
+            "n": 129,
+            "predicted_over_rate": 0.5706309980589551,
+            "actual_over_rate": 0.5891472868217055,
+            "residual": -0.018516288762750355,
+            "model_brier": 0.24146842908155214,
+            "market_brier": 0.23521111332694353,
+            "gate": "FAIL"
+          },
+          "9.5": {
+            "n": 161,
+            "predicted_over_rate": 0.4611760839386781,
+            "actual_over_rate": 0.5217391304347826,
+            "residual": -0.0605630464961045,
+            "model_brier": 0.2511828365555365,
+            "market_brier": 0.2423902426776142,
+            "gate": "FAIL"
+          },
+          "10.5": {
+            "n": 111,
+            "predicted_over_rate": 0.3613283925567209,
+            "actual_over_rate": 0.44144144144144143,
+            "residual": -0.08011304888472054,
+            "model_brier": 0.25475972972095445,
+            "market_brier": 0.24318377842973402,
+            "gate": "FAIL"
+          },
+          "11.5": {
+            "n": 11,
+            "predicted_over_rate": 0.3216374554351705,
+            "actual_over_rate": 0.45454545454545453,
+            "residual": -0.132907999110284,
+            "model_brier": 0.26121871609049346,
+            "market_brier": 0.25282244008289306,
+            "gate": "FAIL"
+          },
+          "12.5": {
+            "n": 0,
+            "status": "MISSING"
+          }
+        },
+        "misses": {
+          "no_pre_kickoff_price": 42,
+          "sample_not_found": 1222
+        }
+      },
+      "v4_full": {
+        "training_cutoff": "2026-04-10",
+        "train": 6726,
+        "market_rows": 431,
+        "model_brier": 0.2498921793348197,
+        "market_brier": 0.2406255527318103,
+        "brier_delta": 0.009266626603009392,
+        "g0a_per_line_residual": "FAIL",
+        "g0b_brier": "PASS",
+        "g0_status": "FAIL",
+        "per_line": {
+          "7.5": {
+            "n": 19,
+            "predicted_over_rate": 0.6642531374004831,
+            "actual_over_rate": 0.5263157894736842,
+            "residual": 0.1379373479267989,
+            "model_brier": 0.25915305395121546,
+            "market_brier": 0.24042654160664811,
+            "gate": "FAIL"
+          },
+          "8.5": {
+            "n": 129,
+            "predicted_over_rate": 0.5686279808930388,
+            "actual_over_rate": 0.5891472868217055,
+            "residual": -0.020519305928666687,
+            "model_brier": 0.24083670171135615,
+            "market_brier": 0.23521111332694353,
+            "gate": "FAIL"
+          },
+          "9.5": {
+            "n": 161,
+            "predicted_over_rate": 0.45918026556311087,
+            "actual_over_rate": 0.5217391304347826,
+            "residual": -0.06255886487167173,
+            "model_brier": 0.2514650096694115,
+            "market_brier": 0.2423902426776142,
+            "gate": "FAIL"
+          },
+          "10.5": {
+            "n": 111,
+            "predicted_over_rate": 0.3589907337373349,
+            "actual_over_rate": 0.44144144144144143,
+            "residual": -0.08245070770410651,
+            "model_brier": 0.25448188769732333,
+            "market_brier": 0.24318377842973402,
+            "gate": "FAIL"
+          },
+          "11.5": {
+            "n": 11,
+            "predicted_over_rate": 0.32133653650261274,
+            "actual_over_rate": 0.45454545454545453,
+            "residual": -0.1332089180428418,
+            "model_brier": 0.2707573323901031,
+            "market_brier": 0.25282244008289306,
+            "gate": "FAIL"
+          },
+          "12.5": {
+            "n": 0,
+            "status": "MISSING"
+          }
+        },
+        "misses": {
+          "no_pre_kickoff_price": 42,
+          "sample_not_found": 1222
+        }
+      },
+      "v4_lean_no_wide_block": {
+        "training_cutoff": "2026-04-10",
+        "train": 6726,
+        "market_rows": 431,
+        "model_brier": 0.24959046755148334,
+        "market_brier": 0.2406255527318103,
+        "brier_delta": 0.008964914819673042,
+        "g0a_per_line_residual": "FAIL",
+        "g0b_brier": "PASS",
+        "g0_status": "FAIL",
+        "per_line": {
+          "7.5": {
+            "n": 19,
+            "predicted_over_rate": 0.66309240991988,
+            "actual_over_rate": 0.5263157894736842,
+            "residual": 0.13677662044619587,
+            "model_brier": 0.2590519757208671,
+            "market_brier": 0.24042654160664811,
+            "gate": "FAIL"
+          },
+          "8.5": {
+            "n": 129,
+            "predicted_over_rate": 0.5676165160984593,
+            "actual_over_rate": 0.5891472868217055,
+            "residual": -0.021530770723246162,
+            "model_brier": 0.24063260985723903,
+            "market_brier": 0.23521111332694353,
+            "gate": "FAIL"
+          },
+          "9.5": {
+            "n": 161,
+            "predicted_over_rate": 0.4587859397178511,
+            "actual_over_rate": 0.5217391304347826,
+            "residual": -0.0629531907169315,
+            "model_brier": 0.25138755249254796,
+            "market_brier": 0.2423902426776142,
+            "gate": "FAIL"
+          },
+          "10.5": {
+            "n": 111,
+            "predicted_over_rate": 0.3591967291511967,
+            "actual_over_rate": 0.44144144144144143,
+            "residual": -0.08224471229024471,
+            "model_brier": 0.25386110276435253,
+            "market_brier": 0.24318377842973402,
+            "gate": "FAIL"
+          },
+          "11.5": {
+            "n": 11,
+            "predicted_over_rate": 0.3246330467184597,
+            "actual_over_rate": 0.45454545454545453,
+            "residual": -0.1299124078269948,
+            "model_brier": 0.2689017223877764,
+            "market_brier": 0.25282244008289306,
+            "gate": "FAIL"
+          },
+          "12.5": {
+            "n": 0,
+            "status": "MISSING"
+          }
+        },
+        "misses": {
+          "no_pre_kickoff_price": 42,
+          "sample_not_found": 1222
+        }
+      },
+      "v4_core": {
+        "training_cutoff": "2026-04-10",
+        "train": 6726,
+        "market_rows": 431,
+        "model_brier": 0.24986680992843505,
+        "market_brier": 0.2406255527318103,
+        "brier_delta": 0.009241257196624747,
+        "g0a_per_line_residual": "FAIL",
+        "g0b_brier": "PASS",
+        "g0_status": "FAIL",
+        "per_line": {
+          "7.5": {
+            "n": 19,
+            "predicted_over_rate": 0.6649948633719425,
+            "actual_over_rate": 0.5263157894736842,
+            "residual": 0.1386790738982583,
+            "model_brier": 0.25816384905169726,
+            "market_brier": 0.24042654160664811,
+            "gate": "FAIL"
+          },
+          "8.5": {
+            "n": 129,
+            "predicted_over_rate": 0.5686564049001551,
+            "actual_over_rate": 0.5891472868217055,
+            "residual": -0.020490881921550352,
+            "model_brier": 0.24046459910028914,
+            "market_brier": 0.23521111332694353,
+            "gate": "FAIL"
+          },
+          "9.5": {
+            "n": 161,
+            "predicted_over_rate": 0.45925010616433615,
+            "actual_over_rate": 0.5217391304347826,
+            "residual": -0.06248902427044645,
+            "model_brier": 0.2517518927542332,
+            "market_brier": 0.2423902426776142,
+            "gate": "FAIL"
+          },
+          "10.5": {
+            "n": 111,
+            "predicted_over_rate": 0.3586111678805717,
+            "actual_over_rate": 0.44144144144144143,
+            "residual": -0.08283027356086975,
+            "model_brier": 0.25448432650572916,
+            "market_brier": 0.24318377842973402,
+            "gate": "FAIL"
+          },
+          "11.5": {
+            "n": 11,
+            "predicted_over_rate": 0.32104026430928295,
+            "actual_over_rate": 0.45454545454545453,
+            "residual": -0.13350519023617158,
+            "model_brier": 0.2716121534244117,
+            "market_brier": 0.25282244008289306,
+            "gate": "FAIL"
+          },
+          "12.5": {
+            "n": 0,
+            "status": "MISSING"
+          }
+        },
+        "misses": {
+          "no_pre_kickoff_price": 42,
+          "sample_not_found": 1222
+        }
+      }
+    }
+  },
+  "guards": {
+    "live_v3_modified": false,
+    "routing_modified": false,
+    "lock_modified": false,
+    "promotion_automatic": false
+  }
+}
