@@ -11,6 +11,7 @@ import ResultBadge from "@/components/ResultBadge";
 import TodaysEdge from "@/components/TodaysEdge";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
+import type { MonthRow } from "@/components/MonthlyBreakdown";
 import LabNotesSection from "@/components/LabNotesSection";
 import PropsAlertsCta from "@/components/PropsAlertsCta";
 import { formatMatchDate } from "@/lib/format";
@@ -196,6 +197,7 @@ type HomepageClientProps = {
   initialRecentBets?: HomepageBet[];
   initialPendingBets?: HomepageBet[];
   initialLast7?: { total: number; count: number } | null;
+  initialMonthlyPayload?: { show: boolean; rows: MonthRow[] };
   initialLabNotes?: Resource[];
   currentlyWatching?: string | null;
 };
@@ -262,6 +264,7 @@ export default function HomepageClient({
   initialRecentBets = [],
   initialPendingBets = [],
   initialLast7 = null,
+  initialMonthlyPayload,
   initialLabNotes = [],
   currentlyWatching = null,
 }: HomepageClientProps) {
@@ -412,19 +415,13 @@ export default function HomepageClient({
 
               <HomepageReveal delay={380}>
                 <div className="mt-8 flex flex-wrap items-center gap-4">
+                  <PropsAlertsCta source="homepage_hero" variant="pill" />
                   <Link
-                    href="/player-props"
-                    className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand-green)] px-6 py-3 text-base font-semibold text-slate-950 transition-all hover:brightness-110 hover:shadow-[0_0_40px_rgba(87,209,150,0.22)]"
-                  >
-                    Player Props Tips {"\u2192"}
-                  </Link>
-                  <Link
-                    href="/tennis-tips"
+                    href="/player-props#picks"
                     className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-6 py-3 text-base font-medium text-slate-200 transition-all hover:border-slate-400 hover:bg-slate-800/40"
                   >
-                    ATP Tennis Tips {"\u2192"}
+                    Today&apos;s picks {"\u2192"}
                   </Link>
-                  <PropsAlertsCta source="homepage_hero" variant="pill" />
                 </div>
               </HomepageReveal>
 
@@ -543,11 +540,12 @@ export default function HomepageClient({
                 Review player props results -&gt;
               </Link>
             </div>
+            <PropsAlertsCta source="homepage_after_results" className="mt-8" />
           </div>
         </section>
       ) : null}
 
-      <MonthlyBreakdownSection scope="combined" />
+      <MonthlyBreakdownSection scope="combined" initialPayload={initialMonthlyPayload} />
 
       <section id="markets" className="border-b border-slate-800/30 py-16 md:py-20 scroll-mt-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">

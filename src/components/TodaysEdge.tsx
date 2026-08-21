@@ -93,7 +93,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
       <div className="p-5 sm:p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-300/80">
+            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-emerald-300/90">
               Posted prices
             </p>
             <h2 id="todays-edge-heading" className="mt-1 text-xl font-semibold text-white">
@@ -119,7 +119,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
           />
         </div>
 
-        <div className="mt-4 flex gap-2 overflow-x-auto pb-1" aria-label="Filter active picks">
+        <div className="mt-4 flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter active picks">
           {([
             ["all", "All"],
             ["props", "Football props"],
@@ -163,7 +163,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
                     />
                     <span className="truncate">{laneLabel(pick.market)} · {dateChip(pick.match_date)}</span>
                   </div>
-                  <span>{publishedTime(pick.posted_at)}</span>
+                  <span className="shrink-0 whitespace-nowrap text-right">{publishedTime(pick.posted_at)}</span>
                 </div>
                 <div className="mt-2 text-sm font-semibold leading-snug text-slate-100 group-hover:text-emerald-100">
                   {pick.event}

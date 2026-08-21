@@ -24,25 +24,25 @@ export default function PropsAlertsCta({
         rel="noopener noreferrer"
         eventName="player_props_telegram_click"
         eventParams={{ source }}
-        className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-sky-300/30 bg-[#0b1720]/95 px-4 py-2 text-sm font-semibold text-sky-100 shadow-xl shadow-black/25 backdrop-blur transition hover:border-sky-300/55 hover:bg-sky-400/15 ${className}`}
+        className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[var(--brand-green)] px-6 py-3 text-base font-semibold text-[#050807] transition-all hover:brightness-110 hover:shadow-[0_0_40px_rgba(87,209,150,0.22)] ${className}`}
       >
         <TelegramIcon />
-        Free props alerts
+        Football player-prop alerts
       </TrackedLink>
     );
   }
 
   return (
-    <div className={`overflow-hidden rounded-2xl border border-sky-400/20 bg-[linear-gradient(135deg,rgba(56,189,248,0.10),rgba(8,15,24,0.92)_55%)] p-5 sm:p-6 ${className}`}>
+    <div className={`overflow-hidden rounded-2xl border border-[rgba(87,209,150,0.22)] bg-[linear-gradient(135deg,rgba(87,209,150,0.10),rgba(9,13,19,0.94)_55%)] p-5 sm:p-6 ${className}`}>
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex min-w-0 flex-[1_1_22rem] items-start gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-sky-400/25 bg-sky-400/10 text-sky-300">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[rgba(87,209,150,0.25)] bg-[rgba(87,209,150,0.08)] text-[#229ED9]">
             <TelegramIcon className="h-6 w-6" />
           </div>
           <div className="min-w-0">
-            <h2 className="font-semibold leading-6 text-slate-100">Get football player-prop alerts</h2>
+            <h2 className="font-semibold leading-6 text-slate-100">Football player-prop alerts, free on Telegram</h2>
             <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-400">
-              Selected free Telegram alerts include the posted odds, stake and a link to the full pick.
+              Selected football player-prop picks, sent when we post them with the odds, stake and a link to the full pick. Tennis picks and the full public record stay on the site.
             </p>
           </div>
         </div>
@@ -53,7 +53,7 @@ export default function PropsAlertsCta({
           rel="noopener noreferrer"
           eventName="player_props_telegram_click"
           eventParams={{ source }}
-          className="inline-flex min-h-11 w-full max-w-full shrink-0 items-center justify-center rounded-xl border border-sky-300/30 bg-sky-400/12 px-5 py-3 text-sm font-semibold text-sky-100 transition hover:border-sky-300/50 hover:bg-sky-400/20 sm:w-auto"
+          className="inline-flex min-h-11 w-full max-w-full shrink-0 items-center justify-center rounded-xl bg-[var(--brand-green)] px-5 py-3 text-sm font-semibold text-[#050807] transition hover:brightness-110 sm:w-auto"
         >
           Join free alerts
         </TrackedLink>
