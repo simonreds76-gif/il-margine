@@ -23,7 +23,7 @@
         "Bookings Totals",
         "Number of Cards In Match"
       ],
-      "rows": 115,
+      "rows": 113,
       "status": "PAIRED_PRICES_OBSERVED"
     },
     "match_fouls_total": {
@@ -117,8 +117,8 @@
         "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 30,
-      "paired_price_events": 29,
+      "events": 31,
+      "paired_price_events": 30,
       "pairing_unknown_events": 28,
       "raw_market_names": [
         "Bookings Totals Away",
@@ -126,7 +126,7 @@
         "Team Cards Away",
         "Team Cards Home"
       ],
-      "rows": 226,
+      "rows": 230,
       "status": "PAIRED_PRICES_OBSERVED"
     },
     "team_fouls_total": {
@@ -140,7 +140,7 @@
       "status": "NOT_OBSERVED"
     }
   },
-  "generated_at": "2026-08-21T09:10:12Z",
+  "generated_at": "2026-08-21T15:16:26Z",
   "policy": {
     "definition_gate": "Bookmaker settlement definitions must be reconciled against the result source before ROI is scored.",
     "live_staking": "BLOCKED",
