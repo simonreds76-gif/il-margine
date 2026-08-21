@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply the first-party Telegram click-tracking migration."""
+"""Apply all first-party Telegram click-tracking migrations."""
 from __future__ import annotations
 
 import argparse
@@ -9,7 +9,10 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MIGRATION = ROOT / "db" / "migrations" / "20260821_0001_telegram_clicks.sql"
+MIGRATIONS = (
+    ROOT / "db" / "migrations" / "20260821_0001_telegram_clicks.sql",
+    ROOT / "db" / "migrations" / "20260822_0001_telegram_click_analytics.sql",
+)
 ENV_FILES = (ROOT / ".env.local", ROOT / "env.local", ROOT / ".env")
 
 
@@ -32,7 +35,7 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
-    sql = MIGRATION.read_text(encoding="utf-8")
+    sql = "\n\n".join(path.read_text(encoding="utf-8") for path in MIGRATIONS)
     if args.dry_run:
         print(sql)
         return 0
@@ -53,7 +56,7 @@ def main() -> int:
         with conn.cursor() as cur:
             cur.execute(sql)
 
-    print("Applied Telegram click-tracking migration.")
+    print(f"Applied {len(MIGRATIONS)} Telegram click-tracking migrations.")
     return 0
 
 

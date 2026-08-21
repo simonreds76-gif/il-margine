@@ -26,12 +26,24 @@ type TelegramClickAnalytics = {
   generated_at: string;
   timezone: string;
   totals: {
-    today: number;
-    seven_days: number;
-    thirty_days: number;
+    today: { clicks: number; unique_visitors: number };
+    seven_days: { clicks: number; unique_visitors: number };
+    thirty_days: { clicks: number; unique_visitors: number };
   };
-  daily: Array<{ day: string; clicks: number }>;
-  sources: Array<{ source: string; clicks: number }>;
+  engagement: { repeat_clicks: number; repeat_rate: number };
+  coverage: {
+    schema_ready: boolean;
+    identifiable_clicks: number;
+    identifiable_percent: number;
+    geographic_clicks: number;
+    geographic_percent: number;
+    unique_tracking_since: string | null;
+  };
+  daily: Array<{ day: string; clicks: number; unique_visitors: number }>;
+  sources: Array<{ source: string; clicks: number; unique_visitors: number }>;
+  countries: Array<{ country: string; clicks: number; unique_visitors: number }>;
+  devices: Array<{ device: string; clicks: number; unique_visitors: number }>;
+  browsers: Array<{ browser: string; clicks: number; unique_visitors: number }>;
 };
 
 function formatTelegramSource(source: string): string {
@@ -40,6 +52,15 @@ function formatTelegramSource(source: string): string {
     .filter(Boolean)
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(" ") || "Unknown";
+}
+
+function formatCountry(country: string): string {
+  if (country === "unknown") return "Unknown";
+  try {
+    return new Intl.DisplayNames(["en"], { type: "region" }).of(country) || country;
+  } catch {
+    return country;
+  }
 }
 
 export default function AdminPanel() {
@@ -997,7 +1018,7 @@ export default function AdminPanel() {
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-300">Acquisition</p>
                 <h2 className="mt-1 text-xl font-semibold text-slate-100">Telegram click monitor</h2>
                 <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-400">
-                  Counts visits sent through Il Margine&apos;s Telegram buttons. These are outbound clicks, not confirmed channel joins.
+                  Separates outbound interactions from approximate unique visitors, then breaks them down by CTA, country and device. These are clicks, not confirmed channel joins.
                 </p>
               </div>
               <button
@@ -1018,35 +1039,61 @@ export default function AdminPanel() {
 
             {telegramAnalytics ? (
               <>
-                <div className="grid gap-3 sm:grid-cols-3">
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                   {[
-                    { label: "Today", value: telegramAnalytics.totals.today },
-                    { label: "Last 7 days", value: telegramAnalytics.totals.seven_days },
-                    { label: "Last 30 days", value: telegramAnalytics.totals.thirty_days },
+                    {
+                      label: "Today",
+                      value: telegramAnalytics.totals.today.unique_visitors,
+                      detail: `${telegramAnalytics.totals.today.clicks} total clicks`,
+                    },
+                    {
+                      label: "Last 7 days",
+                      value: telegramAnalytics.totals.seven_days.unique_visitors,
+                      detail: `${telegramAnalytics.totals.seven_days.clicks} total clicks`,
+                    },
+                    {
+                      label: "Last 30 days",
+                      value: telegramAnalytics.totals.thirty_days.unique_visitors,
+                      detail: `${telegramAnalytics.totals.thirty_days.clicks} total clicks`,
+                    },
+                    {
+                      label: "Repeat activity",
+                      value: `${telegramAnalytics.engagement.repeat_rate}%`,
+                      detail: `${telegramAnalytics.engagement.repeat_clicks} repeat clicks`,
+                    },
                   ].map((metric) => (
                     <div key={metric.label} className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
                       <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">{metric.label}</div>
                       <div className="mt-2 font-mono text-3xl font-semibold tabular-nums text-slate-100">{metric.value}</div>
-                      <div className="mt-1 text-xs text-slate-500">Telegram clicks</div>
+                      <div className="mt-1 text-xs text-slate-500">{metric.detail}</div>
                     </div>
                   ))}
                 </div>
+
+                {telegramAnalytics.coverage.identifiable_percent < 100 ? (
+                  <div className="rounded-xl border border-amber-400/20 bg-amber-400/5 px-4 py-3 text-xs leading-5 text-amber-100/70">
+                    Unique, country and device tracking only applies to clicks recorded after this upgrade. Older clicks remain in the total count and are not invented as visitors.
+                  </div>
+                ) : null}
 
                 <div className="grid gap-4 lg:grid-cols-[1.55fr_1fr]">
                   <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
                     <div className="flex items-center justify-between gap-3">
                       <h3 className="font-semibold text-slate-100">30-day trend</h3>
-                      <span className="text-xs text-slate-500">UTC</span>
+                      <span className="text-xs text-slate-500"><span className="text-emerald-300">Unique</span> / total · UTC</span>
                     </div>
-                    <div className="mt-5 flex h-36 items-end gap-1" aria-label="Telegram clicks by day">
+                    <div className="mt-5 flex h-36 items-end gap-1" aria-label="Telegram total clicks and unique visitors by day">
                       {telegramAnalytics.daily.map((point) => {
                         const height = point.clicks === 0 ? 3 : Math.max(8, Math.round((point.clicks / telegramChartMax) * 100));
+                        const uniqueHeight = point.clicks ? Math.round((point.unique_visitors / point.clicks) * 100) : 0;
                         return (
-                          <div key={point.day} className="group relative flex h-full min-w-0 flex-1 items-end" title={`${point.day}: ${point.clicks} clicks`}>
+                          <div key={point.day} className="group relative flex h-full min-w-0 flex-1 items-end" title={`${point.day}: ${point.unique_visitors} unique / ${point.clicks} clicks`}>
                             <div
-                              className="w-full rounded-t-sm bg-sky-400/70 transition group-hover:bg-sky-300"
+                              className="relative w-full overflow-hidden rounded-t-sm bg-sky-400/35 transition group-hover:bg-sky-300/45"
                               style={{ height: `${height}%` }}
-                            />
+                            >
+                              <div className="absolute inset-x-0 bottom-0 bg-emerald-400/80" style={{ height: `${uniqueHeight}%` }} />
+                            </div>
                           </div>
                         );
                       })}
@@ -1059,13 +1106,16 @@ export default function AdminPanel() {
                   </div>
 
                   <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
-                    <h3 className="font-semibold text-slate-100">Click sources</h3>
+                    <div className="flex items-center justify-between gap-3">
+                      <h3 className="font-semibold text-slate-100">Click sources</h3>
+                      <span className="text-[10px] uppercase tracking-wider text-slate-600">People / clicks</span>
+                    </div>
                     <p className="mt-1 text-xs text-slate-500">Last 30 days</p>
                     <div className="mt-4 space-y-3">
                       {telegramAnalytics.sources.length ? telegramAnalytics.sources.map((item) => (
                         <div key={item.source} className="flex items-center justify-between gap-3 border-b border-slate-800/80 pb-3 last:border-0 last:pb-0">
                           <span className="min-w-0 truncate text-sm text-slate-300" title={item.source}>{formatTelegramSource(item.source)}</span>
-                          <span className="font-mono text-sm font-semibold tabular-nums text-sky-300">{item.clicks}</span>
+                          <span className="font-mono text-sm font-semibold tabular-nums text-sky-300">{item.unique_visitors} / {item.clicks}</span>
                         </div>
                       )) : (
                         <p className="text-sm text-slate-500">No clicks recorded yet.</p>
@@ -1074,8 +1124,63 @@ export default function AdminPanel() {
                   </div>
                 </div>
 
+                <div className="grid gap-4 lg:grid-cols-3">
+                  {[
+                    {
+                      title: "Countries",
+                      coverage: `${telegramAnalytics.coverage.geographic_percent}% located`,
+                      rows: telegramAnalytics.countries.slice(0, 8).map((item) => ({
+                        key: item.country,
+                        label: formatCountry(item.country),
+                        clicks: item.clicks,
+                        uniqueVisitors: item.unique_visitors,
+                      })),
+                    },
+                    {
+                      title: "Devices",
+                      coverage: "Coarse device type",
+                      rows: telegramAnalytics.devices.map((item) => ({
+                        key: item.device,
+                        label: item.device.charAt(0).toUpperCase() + item.device.slice(1),
+                        clicks: item.clicks,
+                        uniqueVisitors: item.unique_visitors,
+                      })),
+                    },
+                    {
+                      title: "Browsers",
+                      coverage: "No raw user-agent stored",
+                      rows: telegramAnalytics.browsers.map((item) => ({
+                        key: item.browser,
+                        label: item.browser,
+                        clicks: item.clicks,
+                        uniqueVisitors: item.unique_visitors,
+                      })),
+                    },
+                  ].map((section) => (
+                    <div key={section.title} className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <h3 className="font-semibold text-slate-100">{section.title}</h3>
+                          <p className="mt-1 text-xs text-slate-500">{section.coverage}</p>
+                        </div>
+                        <span className="text-[10px] uppercase tracking-wider text-slate-600">People / clicks</span>
+                      </div>
+                      <div className="mt-4 space-y-3">
+                        {section.rows.length ? section.rows.map((item) => (
+                          <div key={item.key} className="flex items-center justify-between gap-3 border-b border-slate-800/80 pb-3 last:border-0 last:pb-0">
+                            <span className="min-w-0 truncate text-sm text-slate-300">{item.label}</span>
+                            <span className="font-mono text-sm tabular-nums text-slate-400">
+                              <span className="font-semibold text-sky-300">{item.uniqueVisitors}</span> / {item.clicks}
+                            </span>
+                          </div>
+                        )) : <p className="text-sm text-slate-500">No enriched clicks recorded yet.</p>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
                 <p className="text-xs text-slate-600">
-                  Updated {new Date(telegramAnalytics.generated_at).toLocaleString()} · No IP addresses or personal data are stored.
+                  Updated {new Date(telegramAnalytics.generated_at).toLocaleString()} · “Unique” is an anonymous device/network estimate, not a Telegram join count. No raw IP address or user-agent is stored.
                 </p>
               </>
             ) : telegramAnalyticsLoading ? (
