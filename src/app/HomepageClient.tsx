@@ -418,13 +418,13 @@ export default function HomepageClient({
                   <PropsAlertsCta source="homepage_hero" variant="pill" />
                   <Link
                     href="/tennis-tips#picks"
-                    className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-6 py-3 text-base font-medium text-slate-200 transition-all hover:border-slate-400 hover:bg-slate-800/40"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-600 px-6 py-3 text-base font-medium text-slate-200 transition-all hover:border-slate-400 hover:bg-slate-800/40 sm:w-auto"
                   >
                     ATP tennis picks {"\u2192"}
                   </Link>
                   <Link
                     href="/player-props#picks"
-                    className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-6 py-3 text-base font-medium text-slate-200 transition-all hover:border-slate-400 hover:bg-slate-800/40"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-600 px-6 py-3 text-base font-medium text-slate-200 transition-all hover:border-slate-400 hover:bg-slate-800/40 sm:w-auto"
                   >
                     Football picks {"\u2192"}
                   </Link>
