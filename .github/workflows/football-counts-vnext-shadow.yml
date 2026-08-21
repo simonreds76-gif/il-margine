@@ -161,17 +161,6 @@ jobs:
             # Near-kickoff runs publish current candidates/signals as well as
             # the raw prices. Full settlement reports remain daily.
             git add data/team-shots/inbox/ data/team-shots/team-shots-odds-history.csv data/corners-ou/pinnacle-corners-odds.csv
-            # These controls come from the same bounded Bet365 payload as Team
-            # Shots, so retaining them adds no API calls. Some markets may be
-            # absent for a fixture; only stage files that were actually made.
-            for evidence in \
-              data/football-form/football-1x2-odds-history.csv \
-              data/team-shots/match-shots-odds-history.csv \
-              data/corners-ou/bet365-corners-odds-history.csv; do
-              if [[ -f "$evidence" ]]; then
-                git add "$evidence"
-              fi
-            done
             git add data/football-form/football-counts-vnext-candidates.csv
             git add data/football-form/football-counts-vnext-gate.json
             git add data/football-form/football-counts-vnext-gate.md
@@ -181,6 +170,18 @@ jobs:
             git add data/corners-ou/corners-live-snapshot.json
             git add data/goalkeeper-saves/
           fi
+          # These controls come from the same bounded Bet365 payload as Team
+          # Shots, so retaining them adds no API calls. Stage them on both full
+          # and near-kickoff runs. `-f` is required for the 1X2 CSV because the
+          # broad football-form CSV ignore rule predates this evidence file.
+          for evidence in \
+            data/football-form/football-1x2-odds-history.csv \
+            data/team-shots/match-shots-odds-history.csv \
+            data/corners-ou/bet365-corners-odds-history.csv; do
+            if [[ -f "$evidence" ]]; then
+              git add -f "$evidence"
+            fi
+          done
           if git diff --cached --quiet; then
             echo "No vNext signal or evidence changes."
             exit 0

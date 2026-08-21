@@ -1206,6 +1206,12 @@ export default async function TeamShotsMonitorPage() {
 
     teamShotsV4ClvCsv,
 
+    teamShotsV4FoldCsv,
+
+    teamShotsV4aServedFoldCsv,
+
+    teamShotsV4aServedFoldReport,
+
     vnextCandidatesCsv,
 
     vnextGate,
@@ -1278,6 +1284,12 @@ export default async function TeamShotsMonitorPage() {
     readJson<TeamShotsScrapeStatus>("data/team-shots/team-shots-scrape-last-run.json"),
 
     readFile("data/football-form/team-shots-v4-shadow-clv.csv"),
+
+    readFile("data/team-shots/team-shots-v4-fold-results.csv"),
+
+    readFile("data/team-shots/team-shots-v4a-served-fold-results.csv"),
+
+    readFile("data/team-shots/team-shots-v4a-served-fold-report.md"),
 
     readFile("data/football-form/football-counts-vnext-candidates.csv"),
 
@@ -2105,6 +2117,16 @@ function LiveLineTable({
   const goalkeeperCurrent = goalkeeperSavesReport?.current;
   const goalkeeperEvidence = goalkeeperSavesReport?.evidence;
   const teamShotsV3ClvRows = teamShotsV3ClvCsv ? parseCsvCached(teamShotsV3ClvCsv) : [];
+  const teamShotsV4FoldRows = teamShotsV4FoldCsv ? parseCsvCached(teamShotsV4FoldCsv) : [];
+  const teamShotsV4aServedFoldRows = teamShotsV4aServedFoldCsv ? parseCsvCached(teamShotsV4aServedFoldCsv) : [];
+  const latestTeamShotsV4Fold = teamShotsV4FoldRows.at(-1);
+  const latestTeamShotsV4aServedFold = teamShotsV4aServedFoldRows.at(-1);
+  const registeredMae = maybeFloat(latestTeamShotsV4Fold?.count_mae);
+  const servedMae = maybeFloat(latestTeamShotsV4aServedFold?.count_mae);
+  const registeredBrier = maybeFloat(latestTeamShotsV4Fold?.hierarchical_mle_brier);
+  const servedBrier = maybeFloat(latestTeamShotsV4aServedFold?.hierarchical_mle_brier);
+  const servedMaeDelta = registeredMae != null && servedMae != null ? servedMae - registeredMae : null;
+  const servedBrierDelta = registeredBrier != null && servedBrier != null ? servedBrier - registeredBrier : null;
   const teamShotsV3Summary = researchBetSummary(teamShotsV3ClvRows);
   const teamShotsV3SideRows = (["over", "under"] as const).map((side) => {
     const rows = teamShotsV3ClvRows.filter((row) => (row.side ?? "").trim().toLowerCase() === side);
@@ -2170,6 +2192,52 @@ function LiveLineTable({
           candidates={vnextCandidateRows}
           gate={vnextGate?.team_shots_v4 ?? null}
         />
+
+        <SectionCard
+          id="team-shots-v4a-served-baseline"
+          collapsible
+          title="Team Shots v4 Model Integrity"
+          subtitle="Registered training mean versus the mean actually available to the live publisher. Diagnostic only; routing is unchanged."
+        >
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <StatCard
+              label="Registered v4 MAE"
+              value={registeredMae == null ? "-" : registeredMae.toFixed(3)}
+              detail={latestTeamShotsV4Fold?.season ? `Latest fold ${latestTeamShotsV4Fold.season}` : "Registered artifact missing"}
+            />
+            <StatCard
+              label="Served v4a MAE"
+              value={servedMae == null ? "-" : servedMae.toFixed(3)}
+              detail="Live-style mean without market-strength input"
+            />
+            <StatCard
+              label="Serve MAE regression"
+              value={servedMaeDelta == null ? "-" : `+${servedMaeDelta.toFixed(3)}`}
+              tone={statTone(servedMaeDelta != null && servedMaeDelta > 0 ? "red" : "green")}
+              detail="Positive means live serving is worse"
+            />
+            <StatCard
+              label="Serve Brier regression"
+              value={servedBrierDelta == null ? "-" : `+${servedBrierDelta.toFixed(4)}`}
+              tone={statTone(servedBrierDelta != null && servedBrierDelta > 0 ? "red" : "green")}
+              detail="Explains large team-level benchmark misses"
+            />
+          </div>
+          <p className="mt-4 text-sm leading-6 text-slate-400">
+            The registered model was tested with a causal market-strength feature, but the current publisher cannot serve that feature consistently.
+            v5 remains blocked until opening 1X2 history is captured prospectively and the same feature is reproduced at prediction time.
+          </p>
+          {teamShotsV4aServedFoldReport ? (
+            <details className="mt-4 rounded-xl border border-slate-800/70 bg-slate-950/30 p-4">
+              <summary className="cursor-pointer text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+                Full served-baseline evidence
+              </summary>
+              <pre className="mt-4 overflow-x-auto whitespace-pre-wrap text-[11px] leading-relaxed text-slate-400">
+                {teamShotsV4aServedFoldReport}
+              </pre>
+            </details>
+          ) : null}
+        </SectionCard>
 
         <SectionCard
           id="goalkeeper-saves"
