@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-08-21T18:02:17.681645Z",
+  "generated_at": "2026-08-21T18:54:29.289757Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
@@ -33,21 +34,20 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 23,
-  "signals_qualifying": 5,
+  "fixtures_evaluated": 18,
+  "signals_qualifying": 4,
   "safety_exclusions": {
-    "model_probability_below_floor": 6,
+    "model_probability_below_floor": 5,
     "market_odds_above_cap": 2,
-    "lineup_not_public_quality": 4,
-    "low_signal_confidence": 3,
-    "model_market_gap_gt_10pp": 6,
+    "lineup_not_public_quality": 2,
+    "low_signal_confidence": 1,
+    "model_market_gap_gt_10pp": 5,
     "defensive_position": 1
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 6,
+    "eligible_rows": 5,
     "added_by_league": {
       "epl": 4,
-      "la-liga": 1,
       "serie-a": 1
     },
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
@@ -55,7 +55,6 @@
   },
   "leagues_covered": [
     "epl",
-    "la-liga",
     "ligue-1",
     "serie-a"
   ],
@@ -109,7 +108,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 33
+          "percentile": 29
         },
         "recent_team_form": {
           "tier": "Positive",
@@ -128,7 +127,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 16
+          "percentile": 13
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -159,95 +158,6 @@
         "Recent chance quality grades as strong",
         "Recent team form supports the attacking case",
         "Opponent has been allowing chances recently"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260821-antony-6ec9c48b5f",
-      "match": {
-        "home_team": "Real Betis Seville",
-        "away_team": "Real Sociedad San Sebastian",
-        "league": "la-liga",
-        "league_display": "La Liga",
-        "league_logo_path": "/league-logos/la-liga.png",
-        "kickoff_utc": "2026-08-21T19:00:00Z",
-        "kickoff_display": "Fri 21 Aug 20:00 UK",
-        "fotmob_match_id": "5868023",
-        "fotmob_page_url": "/matches/real-sociedad-vs-real-betis/2fp6jh#5868023",
-        "lineup_type": "confirmed",
-        "venue": ""
-      },
-      "player": {
-        "name": "Antony",
-        "team": "Real Betis",
-        "position": "AM",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/la-liga/real-betis.png",
-        "team_primary_color": "#f8fafc",
-        "team_secondary_color": "#16a34a",
-        "team_shirt_pattern": "vertical-stripes"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 45.1,
-        "fair_odds": 2.22
-      },
-      "market_data": {
-        "best_odds": 2.75,
-        "best_book": "Bet365",
-        "implied_chance_pct": 36.4
-      },
-      "edge": {
-        "price_gap_pp": 8.7,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 88
-        },
-        "share_of_team_chances_pct": 32,
-        "share_of_team_chances_percentile": 98,
-        "team_attacking_outlook": {
-          "tier": "Strong",
-          "percentile": 87
-        },
-        "recent_team_form": {
-          "tier": "Unknown"
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 90
-        },
-        "opponent_recent_defence": {
-          "tier": "High",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-23",
-          "xg_for_avg": 1.17,
-          "xg_against_avg": 1.95,
-          "xgd_per90": -0.77,
-          "shots_for_avg": 8.6,
-          "shots_against_avg": 18.4,
-          "sot_for_avg": 3.0,
-          "sot_against_avg": 5.8,
-          "corners_for_avg": 3.6,
-          "corners_against_avg": 3.4
-        },
-        "fixture_boost_pct": 17,
-        "projected_minutes": 78,
-        "penalty_role": "Not on penalties",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Confirmed starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Opponent defensive profile is a positive matchup",
-        "The fixture profile adds to his scoring case"
       ],
       "risk_flags": []
     },
@@ -296,10 +206,10 @@
           "percentile": 92
         },
         "share_of_team_chances_pct": 33,
-        "share_of_team_chances_percentile": 98,
+        "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 27
+          "percentile": 21
         },
         "recent_team_form": {
           "tier": "Strong",
@@ -317,8 +227,8 @@
           "corners_against_avg": 2.6
         },
         "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 36
+          "tier": "Low",
+          "percentile": 29
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -400,7 +310,7 @@
         "share_of_team_chances_percentile": 95,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 42
+          "percentile": 40
         },
         "recent_team_form": {
           "tier": "Quiet",
@@ -494,13 +404,13 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 77
+          "percentile": 76
         },
         "share_of_team_chances_pct": 13,
         "share_of_team_chances_percentile": 87,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 95
+          "percentile": 94
         },
         "recent_team_form": {
           "tier": "Strong",
@@ -519,7 +429,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 44
+          "percentile": 39
         },
         "opponent_recent_defence": {
           "tier": "High",

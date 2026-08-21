@@ -1,38 +1,39 @@
 Fair Odds Lab CLV Monitor
 =============================
 
-Generated UTC: 2026-07-11T19:37:30Z
+Generated UTC: 2026-08-21T18:54:04Z
 Status: INTERNAL_DIAGNOSTIC_ONLY
 Public page role: live research fair odds; no betting record
 
 Coverage
-Signals: 38
-Captured price rows loaded: 739
+Signals: 51
+Captured price rows loaded: 97
 Matched closes/references: 0 (0.0%)
 True same-book closes (<= 45m): 0
 Lagged same-book closes: 0
 Pinnacle references: 0
-Missing: 38
+Missing: 51
 
 Overall
-all: n=38 close_n=0 avg=- median=- positive=-
+all: n=51 close_n=0 avg=- median=- positive=-
 true_close_only: n=0 close_n=0 avg=- median=- positive=-
 
 By league
 bundesliga: n=5 close_n=0 avg=- median=- positive=-
-epl: n=16 close_n=0 avg=- median=- positive=-
-la-liga: n=9 close_n=0 avg=- median=- positive=-
-ligue-1: n=2 close_n=0 avg=- median=- positive=-
-serie-a: n=6 close_n=0 avg=- median=- positive=-
+epl: n=20 close_n=0 avg=- median=- positive=-
+la-liga: n=15 close_n=0 avg=- median=- positive=-
+ligue-1: n=4 close_n=0 avg=- median=- positive=-
+serie-a: n=7 close_n=0 avg=- median=- positive=-
 
 By publication price
-3.0-3.99: n=15 close_n=0 avg=- median=- positive=-
-4.0-4.99: n=7 close_n=0 avg=- median=- positive=-
-5.0+: n=4 close_n=0 avg=- median=- positive=-
-<3.0: n=12 close_n=0 avg=- median=- positive=-
+3.0-3.99: n=21 close_n=0 avg=- median=- positive=-
+4.0-4.99: n=9 close_n=0 avg=- median=- positive=-
+5.0+: n=6 close_n=0 avg=- median=- positive=-
+<3.0: n=15 close_n=0 avg=- median=- positive=-
 
 Missing reasons
-no_capture_on_match_date: 38
+no_capture_on_match_date: 44
+player_not_found: 7
 
 Methodology
 - Positive CLV means the published decimal price was greater than the captured close.
