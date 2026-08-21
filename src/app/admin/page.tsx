@@ -22,13 +22,33 @@ const SETTING_KEYS = {
   tennis: "monthly_breakdown_tennis_public",
 } as const;
 
+type TelegramClickAnalytics = {
+  generated_at: string;
+  timezone: string;
+  totals: {
+    today: number;
+    seven_days: number;
+    thirty_days: number;
+  };
+  daily: Array<{ day: string; clicks: number }>;
+  sources: Array<{ source: string; clicks: number }>;
+};
+
+function formatTelegramSource(source: string): string {
+  return source
+    .split("_")
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ") || "Unknown";
+}
+
 export default function AdminPanel() {
   const [isLoggedIn, setIsLoggedIn] = useState(
     () => typeof window !== "undefined" && localStorage.getItem("admin_logged_in") === "true"
   );
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [activeTab, setActiveTab] = useState<"add" | "pending" | "recent" | "settings">("add");
+  const [activeTab, setActiveTab] = useState<"add" | "pending" | "recent" | "telegram" | "settings">("add");
   const [bookmakers, setBookmakers] = useState<Bookmaker[]>([]);
   const [pendingBets, setPendingBets] = useState<Bet[]>([]);
   const [pendingCount, setPendingCount] = useState<number | null>(null);
@@ -46,10 +66,14 @@ export default function AdminPanel() {
   const [tennisRefreshLoading, setTennisRefreshLoading] = useState(false);
   const [tennisRefreshMessage, setTennisRefreshMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [tennisRefreshRequestId, setTennisRefreshRequestId] = useState<string | null>(null);
+  const [telegramAnalytics, setTelegramAnalytics] = useState<TelegramClickAnalytics | null>(null);
+  const [telegramAnalyticsLoading, setTelegramAnalyticsLoading] = useState(false);
+  const [telegramAnalyticsError, setTelegramAnalyticsError] = useState<string | null>(null);
   const loadedTabsRef = useRef({
     bookmakers: false,
     pending: false,
     recent: false,
+    telegram: false,
     settings: false,
   });
   const [editForm, setEditForm] = useState({
@@ -82,6 +106,7 @@ export default function AdminPanel() {
 
   const selectedBookmaker = bookmakers.find((bookmaker) => String(bookmaker.id) === form.bookmaker_id);
   const selectedEditBookmaker = bookmakers.find((bookmaker) => String(bookmaker.id) === editForm.bookmaker_id);
+  const telegramChartMax = Math.max(1, ...(telegramAnalytics?.daily ?? []).map((item) => item.clicks));
 
   const categories = {
     props: [
@@ -241,6 +266,21 @@ export default function AdminPanel() {
     }
   }, [adminError]);
 
+  const fetchTelegramAnalytics = useCallback(async () => {
+    setTelegramAnalyticsLoading(true);
+    setTelegramAnalyticsError(null);
+    try {
+      const response = await fetch("/api/admin/telegram-clicks", { cache: "no-store" });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.error || "Unable to load Telegram clicks");
+      setTelegramAnalytics(payload as TelegramClickAnalytics);
+    } catch (error) {
+      setTelegramAnalyticsError(error instanceof Error ? error.message : "Unable to load Telegram clicks");
+    } finally {
+      setTelegramAnalyticsLoading(false);
+    }
+  }, []);
+
   const ensureTabData = useCallback(
     async (tab: typeof activeTab) => {
       if (tab === "add" && !loadedTabsRef.current.bookmakers) {
@@ -258,12 +298,17 @@ export default function AdminPanel() {
         await fetchRecentBets();
       }
 
+      if (tab === "telegram" && !loadedTabsRef.current.telegram) {
+        loadedTabsRef.current.telegram = true;
+        await fetchTelegramAnalytics();
+      }
+
       if (tab === "settings" && !loadedTabsRef.current.settings) {
         loadedTabsRef.current.settings = true;
         await fetchSettings();
       }
     },
-    [fetchBookmakers, fetchPendingBets, fetchRecentBets, fetchSettings]
+    [fetchBookmakers, fetchPendingBets, fetchRecentBets, fetchSettings, fetchTelegramAnalytics]
   );
 
   // Lazy-load tab data so the initial admin screen doesn't fetch everything at once.
@@ -628,17 +673,18 @@ export default function AdminPanel() {
 
       {/* Tabs */}
       <div className="border-b border-slate-800">
-        <div className="max-w-4xl mx-auto flex">
+        <div className="mx-auto flex max-w-4xl overflow-x-auto">
           {[
             { id: "add", label: "Add Bet" },
             { id: "pending", label: "Pending", count: pendingCount },
             { id: "recent", label: "Recent" },
+            { id: "telegram", label: "Telegram" },
             { id: "settings", label: "Settings" },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as typeof activeTab)}
-              className={`px-6 py-4 text-sm font-medium transition-colors ${
+              className={`shrink-0 px-4 py-4 text-sm font-medium transition-colors sm:px-6 ${
                 activeTab === tab.id
                   ? "text-emerald-400 border-b-2 border-emerald-400"
                   : "text-slate-400 hover:text-slate-100"
@@ -940,6 +986,103 @@ export default function AdminPanel() {
                 </div>
               ))
             )}
+          </div>
+        )}
+
+        {/* TELEGRAM CLICKS TAB */}
+        {activeTab === "telegram" && (
+          <div className="space-y-6">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-300">Acquisition</p>
+                <h2 className="mt-1 text-xl font-semibold text-slate-100">Telegram click monitor</h2>
+                <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-400">
+                  Counts visits sent through Il Margine&apos;s Telegram buttons. These are outbound clicks, not confirmed channel joins.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={fetchTelegramAnalytics}
+                disabled={telegramAnalyticsLoading}
+                className="rounded-lg border border-sky-400/30 bg-sky-400/10 px-4 py-2 text-sm font-semibold text-sky-200 transition hover:bg-sky-400/20 disabled:opacity-50"
+              >
+                {telegramAnalyticsLoading ? "Refreshing..." : "Refresh"}
+              </button>
+            </div>
+
+            {telegramAnalyticsError ? (
+              <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
+                {telegramAnalyticsError}
+              </div>
+            ) : null}
+
+            {telegramAnalytics ? (
+              <>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {[
+                    { label: "Today", value: telegramAnalytics.totals.today },
+                    { label: "Last 7 days", value: telegramAnalytics.totals.seven_days },
+                    { label: "Last 30 days", value: telegramAnalytics.totals.thirty_days },
+                  ].map((metric) => (
+                    <div key={metric.label} className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+                      <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">{metric.label}</div>
+                      <div className="mt-2 font-mono text-3xl font-semibold tabular-nums text-slate-100">{metric.value}</div>
+                      <div className="mt-1 text-xs text-slate-500">Telegram clicks</div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="grid gap-4 lg:grid-cols-[1.55fr_1fr]">
+                  <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
+                    <div className="flex items-center justify-between gap-3">
+                      <h3 className="font-semibold text-slate-100">30-day trend</h3>
+                      <span className="text-xs text-slate-500">UTC</span>
+                    </div>
+                    <div className="mt-5 flex h-36 items-end gap-1" aria-label="Telegram clicks by day">
+                      {telegramAnalytics.daily.map((point) => {
+                        const height = point.clicks === 0 ? 3 : Math.max(8, Math.round((point.clicks / telegramChartMax) * 100));
+                        return (
+                          <div key={point.day} className="group relative flex h-full min-w-0 flex-1 items-end" title={`${point.day}: ${point.clicks} clicks`}>
+                            <div
+                              className="w-full rounded-t-sm bg-sky-400/70 transition group-hover:bg-sky-300"
+                              style={{ height: `${height}%` }}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div className="mt-2 flex justify-between font-mono text-[10px] text-slate-600">
+                      <span>{telegramAnalytics.daily[0]?.day.slice(5)}</span>
+                      <span>{telegramAnalytics.daily[14]?.day.slice(5)}</span>
+                      <span>{telegramAnalytics.daily[29]?.day.slice(5)}</span>
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
+                    <h3 className="font-semibold text-slate-100">Click sources</h3>
+                    <p className="mt-1 text-xs text-slate-500">Last 30 days</p>
+                    <div className="mt-4 space-y-3">
+                      {telegramAnalytics.sources.length ? telegramAnalytics.sources.map((item) => (
+                        <div key={item.source} className="flex items-center justify-between gap-3 border-b border-slate-800/80 pb-3 last:border-0 last:pb-0">
+                          <span className="min-w-0 truncate text-sm text-slate-300" title={item.source}>{formatTelegramSource(item.source)}</span>
+                          <span className="font-mono text-sm font-semibold tabular-nums text-sky-300">{item.clicks}</span>
+                        </div>
+                      )) : (
+                        <p className="text-sm text-slate-500">No clicks recorded yet.</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-xs text-slate-600">
+                  Updated {new Date(telegramAnalytics.generated_at).toLocaleString()} · No IP addresses or personal data are stored.
+                </p>
+              </>
+            ) : telegramAnalyticsLoading ? (
+              <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-8 text-center text-sm text-slate-500">
+                Loading Telegram click data...
+              </div>
+            ) : null}
           </div>
         )}
 

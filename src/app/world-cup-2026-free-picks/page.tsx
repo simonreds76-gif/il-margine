@@ -128,7 +128,7 @@ export default async function WorldCupFreePicksPage() {
                   <Link href="/player-props?comp=worldcup#competition-record" className="inline-flex items-center justify-center rounded-full bg-emerald-400 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-300">
                     Review the World Cup record
                   </Link>
-                  <Link href="/go/world-cup-telegram?source=wc_archive" className="inline-flex items-center justify-center gap-2 rounded-full border border-[#2AABEE]/50 px-6 py-3 text-sm font-semibold text-sky-100 transition hover:bg-[#2AABEE]/10">
+                  <Link href="/go/telegram?source=wc_archive" prefetch={false} className="inline-flex items-center justify-center gap-2 rounded-full border border-[#2AABEE]/50 px-6 py-3 text-sm font-semibold text-sky-100 transition hover:bg-[#2AABEE]/10">
                     <TelegramIcon className="h-4 w-4" />
                     Follow future free picks
                   </Link>

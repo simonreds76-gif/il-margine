@@ -52,7 +52,8 @@ export default function WorldCupTelegramOverlay() {
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <Link
-            href="/go/world-cup-telegram?source=wc_sticky_post"
+            href="/go/telegram?source=wc_sticky_post"
+            prefetch={false}
             onClick={() => track("world_cup_telegram_cta_click", { source: "wc_sticky_post" })}
             className="inline-flex items-center gap-2 rounded-full bg-[#2AABEE] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#229ED9]"
           >

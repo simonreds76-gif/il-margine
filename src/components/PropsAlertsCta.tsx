@@ -19,6 +19,7 @@ export default function PropsAlertsCta({
     return (
       <TrackedLink
         href={href}
+        prefetch={false}
         target="_blank"
         rel="noopener noreferrer"
         eventName="player_props_telegram_click"
@@ -47,6 +48,7 @@ export default function PropsAlertsCta({
         </div>
         <TrackedLink
           href={href}
+          prefetch={false}
           target="_blank"
           rel="noopener noreferrer"
           eventName="player_props_telegram_click"

@@ -11,6 +11,7 @@ on:
         options:
           - bookmaker-history-schedule
           - run-status-active-cadence
+          - telegram-clicks
 
 permissions:
   contents: read
@@ -55,3 +56,7 @@ jobs:
       - name: Apply active run-status cadence
         if: inputs.task == 'run-status-active-cadence'
         run: python scripts/migrate-run-status-active-cadence.py
+
+      - name: Apply Telegram click tracking
+        if: inputs.task == 'telegram-clicks'
+        run: python scripts/migrate-telegram-clicks.py
