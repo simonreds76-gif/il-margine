@@ -34,11 +34,19 @@ from typing import Dict, List, Optional
 
 import requests
 
-from football_count_markets import append_market_inventory, build_market_inventory_rows
+from football_count_markets import (
+    append_control_odds_rows,
+    append_market_inventory,
+    build_control_odds_rows,
+    build_market_inventory_rows,
+)
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_OUT_DIR = ROOT / "data" / "team-shots" / "inbox"
 RUN_STATUS_PATH = ROOT / "data" / "team-shots" / "team-shots-scrape-last-run.json"
+DEFAULT_MATCH_ODDS_HISTORY = ROOT / "data" / "football-form" / "football-1x2-odds-history.csv"
+DEFAULT_MATCH_SHOTS_HISTORY = ROOT / "data" / "team-shots" / "match-shots-odds-history.csv"
+DEFAULT_BET365_CORNERS_HISTORY = ROOT / "data" / "corners-ou" / "bet365-corners-odds-history.csv"
 BASE_URL_ODDS_API = "https://api.odds-api.io/v3"
 BASE_URL_BETSAPI = "https://api.b365api.com"
 
@@ -320,6 +328,7 @@ def scrape_odds_api(
     days_ahead: int = 3,
     kickoff_within_minutes: int = 0,
     market_inventory: Optional[List[dict]] = None,
+    control_odds: Optional[List[dict]] = None,
     max_events: int = 0,
     max_odds_requests: int = 0,
 ) -> tuple[list[dict], int, list[str]]:
@@ -443,6 +452,8 @@ def scrape_odds_api(
 
     if market_inventory is not None:
         market_inventory.extend(build_market_inventory_rows(payload, config["competition"], captured))
+    if control_odds is not None:
+        control_odds.extend(build_control_odds_rows(payload, config["competition"], captured))
 
     return rows, len(matched), provider_errors
 
@@ -719,6 +730,9 @@ def main() -> None:
         default=None,
         help="Append the raw market inventory returned by the existing odds call (no extra API request).",
     )
+    parser.add_argument("--match-odds-history", type=Path, default=DEFAULT_MATCH_ODDS_HISTORY)
+    parser.add_argument("--match-shots-history", type=Path, default=DEFAULT_MATCH_SHOTS_HISTORY)
+    parser.add_argument("--bet365-corners-history", type=Path, default=DEFAULT_BET365_CORNERS_HISTORY)
     parser.add_argument("--days-ahead", type=int, default=3)
     parser.add_argument(
         "--kickoff-within-minutes",
@@ -780,6 +794,7 @@ def main() -> None:
 
     total_written = 0
     market_inventory_rows: List[dict] = []
+    control_odds_rows: List[dict] = []
     try:
         for league in leagues:
             config = LEAGUE_CONFIGS[league]
@@ -796,6 +811,7 @@ def main() -> None:
                     args.days_ahead,
                     args.kickoff_within_minutes,
                     market_inventory_rows,
+                    control_odds_rows,
                     args.max_events_per_league,
                     args.max_odds_requests_per_league,
                 )
@@ -851,6 +867,24 @@ def main() -> None:
                 f"  Market inventory: {added} new rows / {len(market_inventory_rows)} observed "
                 f"-> {args.market_audit_out}"
             )
+        if not args.dry_run:
+            control_outputs = (
+                ("MATCH_ODDS", args.match_odds_history),
+                ("MATCH_SHOTS", args.match_shots_history),
+                ("MATCH_CORNERS", args.bet365_corners_history),
+                ("MATCH_CORNERS_ALT", args.bet365_corners_history),
+            )
+            added_by_path: dict[Path, int] = {}
+            for market_name, output_path in control_outputs:
+                selected = [row for row in control_odds_rows if row.get("market") == market_name]
+                added_by_path[output_path] = added_by_path.get(output_path, 0) + append_control_odds_rows(
+                    output_path,
+                    selected,
+                )
+            for output_path, added in added_by_path.items():
+                print(f"  Control odds: {added} new rows -> {output_path}")
+            run_status["control_odds_rows_observed"] = len(control_odds_rows)
+            run_status["control_odds_rows_added"] = sum(added_by_path.values())
         print("\n  Done.\n")
         run_status["success"] = True
     except Exception as exc:

@@ -24,6 +24,40 @@ INVENTORY_FIELDS = [
     "sample_labels",
 ]
 
+CONTROL_ODDS_FIELDS = [
+    "captured_at",
+    "match_date",
+    "event_id",
+    "kickoff_at",
+    "snapshot_kind",
+    "bookmaker",
+    "competition",
+    "home_team",
+    "away_team",
+    "market",
+    "line",
+    "side",
+    "odds_decimal",
+    "source",
+    "notes",
+]
+
+THREE_WAY_MARKET_TOKENS = (
+    "fulltime result",
+    "full time result",
+    "match result",
+    "match odds",
+    "match winner",
+    "1x2",
+    "3way",
+    "three way",
+    "moneyline",
+    "money line",
+    "to win match",
+    "90 minutes",
+    "win draw win",
+)
+
 
 def normalize_market_name(value: object) -> str:
     text = html.unescape(str(value or "").strip().lower())
@@ -66,11 +100,21 @@ def classify_market(name: object) -> str:
             return "team_saves_total"
         return "saves_other"
 
+    if text == "ml" or any(token in text for token in THREE_WAY_MARKET_TOKENS):
+        return "match_odds"
     if "corner" in text:
         return "corners_control"
     if "shot" in text:
         return "shots_control"
     return "other"
+
+
+def _float_price(value: object) -> float | None:
+    try:
+        parsed = float(value)
+    except (TypeError, ValueError):
+        return None
+    return parsed if parsed > 1.0 else None
 
 
 def _decimal_price(prop: dict) -> float | None:
@@ -82,6 +126,168 @@ def _decimal_price(prop: dict) -> float | None:
         if value > 1.0:
             return value
     return None
+
+
+def _direct_three_way_prices(container: dict) -> dict[str, float]:
+    aliases = {
+        "home": ("home", "1"),
+        "draw": ("draw", "tie", "x"),
+        "away": ("away", "2"),
+    }
+    prices: dict[str, float] = {}
+    for side, keys in aliases.items():
+        for key in keys:
+            value = container.get(key)
+            price = _decimal_price(value) if isinstance(value, dict) else _float_price(value)
+            if price is not None:
+                prices[side] = price
+                break
+    return prices
+
+
+def _three_way_prices(market: dict, home_team: str, away_team: str) -> dict[str, float]:
+    prices = _direct_three_way_prices(market)
+    home_key = normalize_market_name(home_team)
+    away_key = normalize_market_name(away_team)
+    for prop in market.get("odds") or []:
+        prices.update(_direct_three_way_prices(prop))
+        price = _decimal_price(prop)
+        if price is None:
+            continue
+        label = normalize_market_name(prop.get("label") or prop.get("name"))
+        if label in {"1", "home", home_key} or (home_key and home_key in label):
+            prices["home"] = price
+        elif label in {"x", "draw", "tie"}:
+            prices["draw"] = price
+        elif label in {"2", "away", away_key} or (away_key and away_key in label):
+            prices["away"] = price
+    return prices
+
+
+def _line_price_rows(market: dict) -> list[tuple[float, str, float]]:
+    rows: list[tuple[float, str, float]] = []
+    market_name = str(market.get("name") or "")
+    market_line_match = re.search(r"(\d+(?:\.\d+)?)", market_name)
+    for prop in market.get("odds") or []:
+        try:
+            hdp = float(prop.get("hdp"))
+        except (TypeError, ValueError):
+            hdp = None
+        if hdp is not None:
+            found = False
+            for side in ("over", "under"):
+                price = _float_price(prop.get(side))
+                if price is not None:
+                    rows.append((hdp, side, price))
+                    found = True
+            if found:
+                continue
+
+        label = str(prop.get("label") or prop.get("name") or "").strip()
+        price = _decimal_price(prop)
+        if price is None:
+            continue
+        line_match = re.search(r"(\d+(?:\.\d+)?)", label) or market_line_match
+        if not line_match:
+            continue
+        lower = label.lower()
+        side = "over" if "over" in lower else "under" if "under" in lower else ""
+        if side:
+            rows.append((float(line_match.group(1)), side, price))
+    return rows
+
+
+def build_control_odds_rows(
+    payload: Iterable[dict],
+    competition: str,
+    captured_at: str,
+) -> list[dict]:
+    """Extract reusable count-market controls from an already-fetched payload."""
+    rows: list[dict] = []
+    for event in payload:
+        event_id = str(event.get("id") or "")
+        kickoff = str(event.get("date") or "")
+        home_team = str(event.get("home") or "")
+        away_team = str(event.get("away") or "")
+        for bookmaker, markets in (event.get("bookmakers") or {}).items():
+            for market in markets or []:
+                market_name = str(market.get("name") or "").strip()
+                normalized = normalize_market_name(market_name)
+                category = classify_market(market_name)
+                base = {
+                    "captured_at": captured_at,
+                    "match_date": kickoff[:10],
+                    "event_id": event_id,
+                    "kickoff_at": kickoff,
+                    "snapshot_kind": "live_capture",
+                    "bookmaker": str(bookmaker or ""),
+                    "competition": competition,
+                    "home_team": home_team,
+                    "away_team": away_team,
+                    "source": "odds_api_io",
+                    "notes": f"market={market_name}",
+                }
+                if category == "match_odds" and normalized != "ml ht":
+                    prices = _three_way_prices(market, home_team, away_team)
+                    for side in ("home", "draw", "away"):
+                        if side in prices:
+                            rows.append(
+                                {
+                                    **base,
+                                    "market": "MATCH_ODDS",
+                                    "line": "",
+                                    "side": side,
+                                    "odds_decimal": f"{prices[side]:.4f}",
+                                }
+                            )
+                    continue
+
+                if normalized == "match shots":
+                    output_market = "MATCH_SHOTS"
+                elif normalized == "corners totals":
+                    output_market = "MATCH_CORNERS"
+                elif normalized == "alternative corners":
+                    output_market = "MATCH_CORNERS_ALT"
+                else:
+                    continue
+                for line, side, price in _line_price_rows(market):
+                    rows.append(
+                        {
+                            **base,
+                            "market": output_market,
+                            "line": f"{line:g}",
+                            "side": side,
+                            "odds_decimal": f"{price:.4f}",
+                        }
+                    )
+    return rows
+
+
+def append_control_odds_rows(path: Path, rows: Iterable[dict]) -> int:
+    incoming = list(rows)
+    if not incoming:
+        return 0
+    path.parent.mkdir(parents=True, exist_ok=True)
+    key_fields = ("captured_at", "event_id", "bookmaker", "market", "line", "side")
+    existing_keys: set[tuple[str, ...]] = set()
+    if path.exists():
+        with path.open(newline="", encoding="utf-8-sig") as handle:
+            for row in csv.DictReader(handle):
+                existing_keys.add(tuple(str(row.get(field) or "") for field in key_fields))
+    mode = "a" if path.exists() and path.stat().st_size else "w"
+    added = 0
+    with path.open(mode, newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=CONTROL_ODDS_FIELDS, extrasaction="ignore", lineterminator="\n")
+        if mode == "w":
+            writer.writeheader()
+        for row in incoming:
+            key = tuple(str(row.get(field) or "") for field in key_fields)
+            if key in existing_keys:
+                continue
+            writer.writerow(row)
+            existing_keys.add(key)
+            added += 1
+    return added
 
 
 def market_line_sides(market: dict) -> dict[float, set[str]]:

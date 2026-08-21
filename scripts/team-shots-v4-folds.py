@@ -47,6 +47,8 @@ DEFAULT_FORM = ROOT / "data" / "football-form" / "team-rolling-form.csv"
 DEFAULT_ODDS = ROOT / "data" / "team-shots" / "team-shots-odds-history.csv"
 DEFAULT_RESULTS = ROOT / "data" / "team-shots" / "team-shots-v4-fold-results.csv"
 DEFAULT_REPORT = ROOT / "data" / "team-shots" / "team-shots-v4-fold-report.md"
+DEFAULT_SERVED_RESULTS = ROOT / "data" / "team-shots" / "team-shots-v4a-served-fold-results.csv"
+DEFAULT_SERVED_REPORT = ROOT / "data" / "team-shots" / "team-shots-v4a-served-fold-report.md"
 DEFAULT_LOCK = ROOT / "data" / "team-shots" / "team-shots-v4-lock.json"
 VALIDATION_SEASONS = ("2024-2025", "2025-2026")
 TEAM_PRIOR_WEIGHT = 60
@@ -131,7 +133,11 @@ def load_canonical_module() -> Any:
     return module
 
 
-def build_predictions(form_rows: list[dict[str, str]]) -> list[Prediction]:
+def build_predictions(
+    form_rows: list[dict[str, str]],
+    *,
+    use_market: bool = True,
+) -> list[Prediction]:
     canonical = load_canonical_module()
     fixtures: dict[tuple[str, str, str, str], list[dict[str, str]]] = defaultdict(list)
     for row in form_rows:
@@ -152,7 +158,7 @@ def build_predictions(form_rows: list[dict[str, str]]) -> list[Prediction]:
         for team, opponent in ((home[0], away[0]), (away[0], home[0])):
             match_date = parse_date(team.get("date"))
             actual = parse_float(team.get("current_shots_for"))
-            lam = canonical.canonical_team_shots_ema20_lambda(team, opponent, use_market=True)
+            lam = canonical.canonical_team_shots_ema20_lambda(team, opponent, use_market=use_market)
             if match_date is None or actual is None or lam is None:
                 continue
             output.append(
@@ -445,7 +451,14 @@ def metric(value: Any, digits: int = 4) -> str:
     return str(value)
 
 
-def write_report(path: Path, summaries: list[dict[str, Any]], market: dict[str, Any]) -> None:
+def write_report(
+    path: Path,
+    summaries: list[dict[str, Any]],
+    market: dict[str, Any],
+    *,
+    served_baseline: bool = False,
+    registered_summaries: list[dict[str, str]] | None = None,
+) -> None:
     count_gate = bool(summaries) and all(
         row.get("status") == "OK"
         and row["hierarchical_mle_brier"] < row["fixed_alpha_025_brier"]
@@ -456,13 +469,20 @@ def write_report(path: Path, summaries: list[dict[str, Any]], market: dict[str, 
         )
         for row in summaries
     )
+    title = "Team Shots v4a served-baseline diagnostic" if served_baseline else "Team Shots v4 registered experiment"
+    mean_note = (
+        "v4a reproduces the currently served mean with `use_market=False`. It is an honest diagnostic of the "
+        "train/serve mismatch and cannot change routing, stakes, promotion state, or the registered v4 artifacts."
+        if served_baseline
+        else "v4 freezes the canonical EMA20 v3 mean and tests only NB2 dispersion. "
+        "Per-team alpha is partially pooled to league alpha with `k=60`."
+    )
     lines = [
-        "# Team Shots v4 registered experiment",
+        f"# {title}",
         "",
         "**Status: research only. The live v3 mean and routing are unchanged.**",
         "",
-        "v4 freezes the canonical EMA20 v3 mean and tests only NB2 dispersion. "
-        "Per-team alpha is partially pooled to league alpha with `k=60`.",
+        mean_note,
         "",
         f"- Count-distribution gate: **{'PASS' if count_gate else 'FAIL'}**",
         "- Market/sell gate: **BLOCKED** pending the registered 2026-27 true-close sample.",
@@ -490,6 +510,34 @@ def write_report(path: Path, summaries: list[dict[str, Any]], market: dict[str, 
                 hierarchical_ll=metric(row["hierarchical_mle_log_loss"]),
             )
         )
+    if served_baseline and registered_summaries:
+        registered_by_season = {row.get("season", ""): row for row in registered_summaries}
+        lines.extend(
+            [
+                "",
+                "## Train/serve mismatch versus registered v4",
+                "",
+                "Positive deltas are regressions from removing the causal market-strength input at serve time.",
+                "",
+                "| Fold | Registered MAE | Served MAE | MAE delta | Registered hierarchical Brier | Served hierarchical Brier | Brier delta |",
+                "|---|---:|---:|---:|---:|---:|---:|",
+            ]
+        )
+        for row in summaries:
+            registered = registered_by_season.get(str(row.get("season", "")))
+            if row.get("status") != "OK" or not registered:
+                continue
+            registered_mae = parse_float(registered.get("count_mae"))
+            registered_brier = parse_float(registered.get("hierarchical_mle_brier"))
+            if registered_mae is None or registered_brier is None:
+                continue
+            served_mae = float(row["count_mae"])
+            served_brier = float(row["hierarchical_mle_brier"])
+            lines.append(
+                f"| {row['season']} | {registered_mae:.4f} | {served_mae:.4f} | "
+                f"{served_mae - registered_mae:+.4f} | {registered_brier:.4f} | {served_brier:.4f} | "
+                f"{served_brier - registered_brier:+.4f} |"
+            )
     lines.extend(["", "### Per-league Brier guard", "", "| Fold | League | Team rows | Fixed a=.25 | Hierarchical MLE | Delta |", "|---|---|---:|---:|---:|---:|"])
     for row in summaries:
         for league in row.get("by_league", []):
@@ -545,17 +593,39 @@ def main() -> int:
     parser.add_argument("--results", type=Path, default=DEFAULT_RESULTS)
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--lock", type=Path, default=DEFAULT_LOCK)
+    parser.add_argument(
+        "--served-baseline",
+        action="store_true",
+        help="Score the exact live-served mean (use_market=False) into separate v4a diagnostic artifacts.",
+    )
     args = parser.parse_args()
 
+    if args.served_baseline:
+        if args.results == DEFAULT_RESULTS:
+            args.results = DEFAULT_SERVED_RESULTS
+        if args.report == DEFAULT_REPORT:
+            args.report = DEFAULT_SERVED_REPORT
+
     verify_locked_input(args.lock, "team_rolling_form", args.form)
-    predictions = build_predictions(load_csv(args.form))
+    predictions = build_predictions(load_csv(args.form), use_market=not args.served_baseline)
     summaries: list[dict[str, Any]] = []
     for season in VALIDATION_SEASONS:
         _, summary = score_fold(season, predictions)
         summaries.append(summary)
     market = market_diagnostic(predictions, load_csv(args.odds))
     write_results(args.results, summary_csv_rows(summaries))
-    write_report(args.report, summaries, market)
+    registered_summaries = (
+        load_csv(DEFAULT_RESULTS)
+        if args.served_baseline and DEFAULT_RESULTS.exists()
+        else None
+    )
+    write_report(
+        args.report,
+        summaries,
+        market,
+        served_baseline=args.served_baseline,
+        registered_summaries=registered_summaries,
+    )
     print(f"Predictions: {len(predictions)}")
     print(f"Wrote {args.results.resolve().relative_to(ROOT)}")
     print(f"Wrote {args.report.resolve().relative_to(ROOT)}")
