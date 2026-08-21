@@ -1,6 +1,6 @@
 # Football Counts vNext Gate
 
-- Generated: 2026-08-20T23:02:00Z
+- Generated: 2026-08-21T09:10:19Z
 - This snapshot cannot promote or route bets.
 
 ## Team Shots v4
@@ -9,8 +9,8 @@
 - Market gate: **BLOCKED_PENDING_2026_27_TRUE_CLOSE_SAMPLE**
 - Promotion gate: **BLOCKED**
 - Prospective signals: 0 (0 settled / 0 pending)
-- Latest scan: **EXPECTED_WARMUP_BLOCK**; 44 rows / 11 fixtures scored; 2 fixtures passed edge but were held only by the warm-up lock.
-- Blockers: {'edge_below_3pct': 42, 'matchdays_1_to_3': 44}
+- Latest scan: **EXPECTED_WARMUP_BLOCK**; 70 rows / 15 fixtures scored; 5 fixtures passed edge but were held only by the warm-up lock.
+- Blockers: {'edge_below_3pct': 65, 'matchdays_1_to_3': 70}
 - P/L / ROI: -
 - True-close coverage: -
 - Mean true-close CLV: -
