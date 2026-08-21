@@ -1,5 +1,5 @@
 Assist Value Shadow Report
-generated_at_utc: 2026-08-16T07:40:32Z
+generated_at_utc: 2026-08-21T07:54:07Z
 
 Status
 shadow_status: ENABLED_RESEARCH_ONLY
@@ -8,60 +8,60 @@ model_status: NOT_FITTED
 fair_odds_status: NOT_AUTHORISED
 
 Inputs
-raw_odds_rows_loaded: 173
+raw_odds_rows_loaded: 1565
 role_players_loaded: 1030
 
 Join
-shadow_rows_assist_only: 173
-role_matched_rows: 45
-role_match_rate_pct: 26.01
-ambiguous_player_rows: 0
-unmatched_player_rows: 128
+shadow_rows_assist_only: 1565
+role_matched_rows: 458
+role_match_rate_pct: 29.27
+ambiguous_player_rows: 1
+unmatched_player_rows: 1106
 
 Interpretation
 This board is an evidence layer only: Bet365 assist market rows enriched with RotoWire set-piece role shares.
 It is not a betting model, not a public Fair Odds Lab lane, and not a value signal.
 
 Top role-matched rows
- - Jon Ander Olasagasti | Espanyol Barcelona vs Levante UD | odds 9.0000 | setpiece_last5 58.33 | corners_last5 63.64 | fk_last5 50.0
- - Victor Chust | RC Deportivo De A Coruna vs Elche CF | odds 26.0000 | setpiece_last5 56.0 | corners_last5 60.0 | fk_last5 57.14
- - Hugo Alvarez | RC Celta de Vigo vs CA Osasuna | odds 6.0000 | setpiece_last5 25.0 | corners_last5 30.0 | fk_last5 0.0
- - Alberto Moleiro | Racing Santander vs Villarreal CF | odds 5.0000 | setpiece_last5 24.14 | corners_last5 27.27 | fk_last5 20.0
- - Jon Moncayola | RC Celta de Vigo vs CA Osasuna | odds 7.5000 | setpiece_last5 18.92 | corners_last5 20.83 | fk_last5 15.38
- - Sergi Cardona | Racing Santander vs Villarreal CF | odds 7.5000 | setpiece_last5 17.24 | corners_last5 18.18 | fk_last5 20.0
- - Aimar Oroz | RC Celta de Vigo vs CA Osasuna | odds 6.5000 | setpiece_last5 10.81 | corners_last5 16.67 | fk_last5 0.0
- - Pere Milla | Espanyol Barcelona vs Levante UD | odds 5.5000 | setpiece_last5 10.34 | corners_last5 5.0 | fk_last5 22.22
- - Hugo Sotelo | Espanyol Barcelona vs Levante UD | odds 8.0000 | setpiece_last5 8.33 | corners_last5 10.0 | fk_last5 0.0
- - Gonzalo Villar | RC Deportivo De A Coruna vs Elche CF | odds 9.0000 | setpiece_last5 8.0 | corners_last5 0.0 | fk_last5 14.29
- - Nicolas Pepe | Racing Santander vs Villarreal CF | odds 4.5000 | setpiece_last5 6.9 | corners_last5 9.09 | fk_last5 0.0
- - Facundo Buonanotte | RC Deportivo De A Coruna vs Elche CF | odds 7.5000 | setpiece_last5 6.45 | corners_last5 9.52 | fk_last5 0.0
- - Kike Barja | RC Celta de Vigo vs CA Osasuna | odds 7.0000 | setpiece_last5 5.41 | corners_last5 8.33 | fk_last5 0.0
- - Pol Lozano | Espanyol Barcelona vs Levante UD | odds 8.5000 | setpiece_last5 3.45 | corners_last5 5.0 | fk_last5 0.0
- - Georges Mikautadze | Racing Santander vs Villarreal CF | odds 4.5000 | setpiece_last5 3.45 | corners_last5 4.55 | fk_last5 0.0
- - Ayoze Perez | Racing Santander vs Villarreal CF | odds 5.5000 | setpiece_last5 3.45 | corners_last5 0.0 | fk_last5 0.0
- - Raul Garcia | RC Celta de Vigo vs CA Osasuna | odds 7.0000 | setpiece_last5 2.7 | corners_last5 0.0 | fk_last5 7.69
- - Adrian De la Fuente | Espanyol Barcelona vs Levante UD | odds 10.0000 | setpiece_last5 2.08 | corners_last5 0.0 | fk_last5 0.0
- - Tajon Buchanan | Racing Santander vs Villarreal CF | odds 5.0000 | setpiece_last5 0.0 | corners_last5 0.0 | fk_last5 0.0
- - Pape Gueye | Racing Santander vs Villarreal CF | odds 7.0000 | setpiece_last5 0.0 | corners_last5 0.0 | fk_last5 0.0
+ - Luis Milla | Udinese Calcio vs Como 1907 | odds 3.7500 | setpiece_last5 96.88 | corners_last5 100.0 | fk_last5 100.0
+ - Gauthier Hein | OGC Nice vs FC Lorient | odds 4.5000 | setpiece_last5 94.12 | corners_last5 90.91 | fk_last5 100.0
+ - Kevin Danois | Racing Club De Lens vs AJ Auxerre | odds 7.0000 | setpiece_last5 78.95 | corners_last5 78.95 | fk_last5 0.0
+ - Trent Alexander-Arnold | Espanyol Barcelona vs Real Madrid | odds 4.0000 | setpiece_last5 78.57 | corners_last5 78.95 | fk_last5 77.78
+ - James Garner | Everton FC vs Crystal Palace | odds 5.5000 | setpiece_last5 75.0 | corners_last5 72.0 | fk_last5 85.71
+ - Pablo Pagis | ESTAC Troyes vs Paris FC | odds 5.0000 | setpiece_last5 72.0 | corners_last5 83.33 | fk_last5 63.64
+ - Branco van den Boomen | Angers SCO vs Lille OSC | odds 7.5000 | setpiece_last5 70.0 | corners_last5 78.57 | fk_last5 50.0
+ - Dominik Szoboszlai | Newcastle United vs Liverpool FC | odds 4.3330 | setpiece_last5 65.85 | corners_last5 57.69 | fk_last5 80.0
+ - Bruno Fernandes | Hull City vs Manchester United | odds 2.6250 | setpiece_last5 65.38 | corners_last5 59.09 | fk_last5 100.0
+ - Sebastian Szymanski | Stade Rennais FC vs Paris Saint-Germain | odds 6.5000 | setpiece_last5 64.44 | corners_last5 65.79 | fk_last5 66.67
+ - Lucas Da Cunha | Udinese Calcio vs Como 1907 | odds 6.0000 | setpiece_last5 58.62 | corners_last5 60.0 | fk_last5 50.0
+ - Mathias Jensen | Brentford FC vs Tottenham Hotspur | odds 6.5000 | setpiece_last5 58.62 | corners_last5 57.89 | fk_last5 66.67
+ - Andrija Bulatovic | Racing Club De Lens vs AJ Auxerre | odds 7.0000 | setpiece_last5 57.14 | corners_last5 56.52 | fk_last5 60.0
+ - Ruben Vargas | Athletic Bilbao vs Sevilla FC | odds 7.0000 | setpiece_last5 56.52 | corners_last5 57.14 | fk_last5 55.56
+ - Declan Rice | Arsenal FC vs Coventry City | odds 3.7500 | setpiece_last5 56.52 | corners_last5 35.71 | fk_last5 88.89
+ - Victor Chust | Elche CF vs FC Barcelona | odds 12.0000 | setpiece_last5 56.0 | corners_last5 60.0 | fk_last5 57.14
+ - Jonathan Clauss | OGC Nice vs FC Lorient | odds 4.3330 | setpiece_last5 56.0 | corners_last5 56.25 | fk_last5 62.5
+ - Pascal Gross | Brighton & Hove Albion vs Aston Villa | odds 5.0000 | setpiece_last5 55.56 | corners_last5 48.15 | fk_last5 77.78
+ - Christopher Nkunku | Torino FC vs AC Milan | odds 5.0000 | setpiece_last5 55.0 | corners_last5 50.0 | fk_last5 50.0
+ - Anton Stach | Nottingham Forest vs Leeds United | odds 7.0000 | setpiece_last5 54.84 | corners_last5 61.9 | fk_last5 44.44
 
 Unmatched sample
- - Alex Freeman | Racing Santander vs Villarreal CF
- - Sergio Canales | Racing Santander vs Villarreal CF
- - Andres Martin | Racing Santander vs Villarreal CF
- - Inigo Vicente | Racing Santander vs Villarreal CF
- - Jorge Salinas | Racing Santander vs Villarreal CF
- - Alvaro Mantilla | Racing Santander vs Villarreal CF
- - Juan Carlos Arana | Racing Santander vs Villarreal CF
- - Sergio Martinez | Racing Santander vs Villarreal CF
- - Inigo Sainz-Maza | Racing Santander vs Villarreal CF
- - Maguette Gueye | Racing Santander vs Villarreal CF
- - Pau Navarro | Racing Santander vs Villarreal CF
- - Renato Veiga | Racing Santander vs Villarreal CF
- - Willy Kambwala | Racing Santander vs Villarreal CF
- - Facundo Gonzalez | Racing Santander vs Villarreal CF
- - Logan Costa | Racing Santander vs Villarreal CF
- - Pablo Ramon | Racing Santander vs Villarreal CF
- - Manu Hernando | Racing Santander vs Villarreal CF
- - Asier Villalibre | Racing Santander vs Villarreal CF
- - Carlos Romero | Racing Santander vs Villarreal CF
- - Yassir Zabiri | Racing Santander vs Villarreal CF
+ - Kingstone Mutandwa | Parma Calcio vs Cagliari Calcio
+ - Gennaro Borrelli | Parma Calcio vs Cagliari Calcio
+ - Rachid Kouda | Parma Calcio vs Cagliari Calcio
+ - Oliver Sorensen | Parma Calcio vs Cagliari Calcio
+ - Matteo Prati | Parma Calcio vs Cagliari Calcio
+ - Enrico Del Prato | Parma Calcio vs Cagliari Calcio
+ - Alessandro Circati | Parma Calcio vs Cagliari Calcio
+ - David Romero | Parma Calcio vs Cagliari Calcio
+ - Nesta Elphege | Parma Calcio vs Cagliari Calcio
+ - Matija Frigan | Parma Calcio vs Cagliari Calcio
+ - Paul Mendy | Parma Calcio vs Cagliari Calcio
+ - Antoine Joujou | Parma Calcio vs Cagliari Calcio
+ - El Bilal Toure | Parma Calcio vs Cagliari Calcio
+ - Nicola Grandu | Parma Calcio vs Cagliari Calcio
+ - Pontus Almqvist | Parma Calcio vs Cagliari Calcio
+ - Sebastian Di Paolo | Parma Calcio vs Cagliari Calcio
+ - Abdou-Salam Konate | Parma Calcio vs Cagliari Calcio
+ - Nicolo Cavuoti | Parma Calcio vs Cagliari Calcio
+ - Sascha Britschgi | Parma Calcio vs Cagliari Calcio
+ - Giuseppe Aurelio | Parma Calcio vs Cagliari Calcio
