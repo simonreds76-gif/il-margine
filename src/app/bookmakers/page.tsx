@@ -435,7 +435,6 @@ export default function BookmakersPage() {
                         <tr className="border-b border-slate-800"><td className="py-2 pr-4">Player Props</td><td className="py-2 pr-4">10-15%</td><td className="py-2 pr-4">High</td><td className="py-2">Yes</td></tr>
                         <tr className="border-b border-slate-800"><td className="py-2 pr-4">Tennis Match Odds</td><td className="py-2 pr-4">4-6%</td><td className="py-2 pr-4">Low</td><td className="py-2">Occasionally (selective)</td></tr>
                         <tr className="border-b border-slate-800"><td className="py-2 pr-4">Tennis Handicaps</td><td className="py-2 pr-4">8-12%</td><td className="py-2 pr-4">Moderate-High</td><td className="py-2">Yes</td></tr>
-                        <tr className="border-b border-slate-800"><td className="py-2 pr-4">Bet Builders</td><td className="py-2 pr-4">10-15%</td><td className="py-2 pr-4">High</td><td className="py-2">Yes (coming soon)</td></tr>
                       </tbody>
                     </table>
                   </div>

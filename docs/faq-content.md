@@ -30,7 +30,7 @@ The goal is to follow good prices with discipline, not to chase action for its o
 
 **A:** No. The live selections are published on the site.
 
-There is no Telegram requirement, no paywall, and no sign-up gate to see the current football props and tennis picks.
+There is no Telegram requirement or sign-up gate to see the current public football props and tennis picks.
 
 ---
 
@@ -41,7 +41,7 @@ There is no Telegram requirement, no paywall, and no sign-up gate to see the cur
 - **Football player props**
 - **ATP tennis**
 
-We are also testing **anytime goalscorer** and **bet builders** privately. Those are not part of the main public feed yet because we would rather launch them with proper tracking than force them live too early.
+Additional research markets remain internal until their evidence and settlement gates are strong enough for public use.
 
 ---
 

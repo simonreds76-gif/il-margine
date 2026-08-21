@@ -24,7 +24,6 @@ export default function GlobalNav() {
 
   const isTipsActive =
     pathname === "/tennis-tips" ||
-    pathname === "/bet-builders" ||
     pathname === "/player-props";
   const isResourcesActive =
     pathname === "/bookmakers" ||
@@ -75,7 +74,6 @@ export default function GlobalNav() {
                 <div className="absolute top-full left-0 mt-2 w-48 bg-slate-900 border border-slate-800 rounded-lg shadow-xl z-50">
                   <Link href="/tennis-tips" className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">Tennis Tips</Link>
                   <Link href="/player-props" className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">Player Props</Link>
-                  <Link href="/bet-builders" className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">Bet Builders</Link>
                 </div>
               )}
             </div>
@@ -126,9 +124,6 @@ export default function GlobalNav() {
                   </Link>
                   <Link href="/player-props" className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded transition-colors ${pathname === '/player-props' ? 'text-[var(--brand-green)] font-medium bg-[rgba(87,209,150,0.10)]' : 'text-slate-400 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
                     Player Props
-                  </Link>
-                  <Link href="/bet-builders" className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded transition-colors ${pathname === '/bet-builders' ? 'text-[var(--brand-green)] font-medium bg-[rgba(87,209,150,0.10)]' : 'text-slate-400 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
-                    Bet Builders
                   </Link>
                 </div>
               )}

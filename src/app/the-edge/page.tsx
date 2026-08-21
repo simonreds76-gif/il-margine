@@ -391,13 +391,6 @@ export default function TheEdgePage() {
                 extra: null,
               },
               {
-                name: "Bet Builders",
-                tag: "Soon",
-                active: false,
-                desc: "Same-game multiples where correlation is mispriced. When books price legs too independently, edges compound.",
-                extra: null,
-              },
-              {
                 name: "What we avoid",
                 tag: null,
                 active: false,

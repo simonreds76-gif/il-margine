@@ -705,7 +705,6 @@ export default function AdminPanel() {
                 >
                   <option value="props">Player Props</option>
                   <option value="tennis">ATP Tennis</option>
-                  <option value="betbuilders">Bet Builders</option>
                   <option value="atg">ATG</option>
                 </select>
               </div>
@@ -1074,7 +1073,6 @@ export default function AdminPanel() {
                   >
                     <option value="props">Player Props</option>
                     <option value="tennis">ATP Tennis</option>
-                    <option value="betbuilders">Bet Builders</option>
                     <option value="atg">ATG</option>
                   </select>
                 </div>

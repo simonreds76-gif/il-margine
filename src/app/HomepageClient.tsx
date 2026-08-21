@@ -12,6 +12,7 @@ import TodaysEdge from "@/components/TodaysEdge";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import LabNotesSection from "@/components/LabNotesSection";
+import PropsAlertsCta from "@/components/PropsAlertsCta";
 import { formatMatchDate } from "@/lib/format";
 import { publicTipPath } from "@/lib/tip-seo";
 import type { Resource } from "@/lib/resources";
@@ -359,12 +360,6 @@ export default function HomepageClient({
       profit: `${displayStats.tennis.roi > 0 ? "+" : ""}${displayStats.tennis.roi.toFixed(1)}% ROI`,
     },
     {
-      id: "builders",
-      name: "Bet Builders",
-      description: "Same-game combinations where correlation is still being mapped.",
-      status: "coming" as const,
-    },
-    {
       id: "atg",
       name: "Fair Odds Lab",
       description: "Anytime goalscorer value spots where our model's fair price is shorter than the bookies'.",
@@ -429,21 +424,16 @@ export default function HomepageClient({
                   >
                     ATP Tennis Tips {"\u2192"}
                   </Link>
-                  <Link
-                    href="/the-edge"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-slate-400 transition-colors hover:text-[var(--brand-green)]"
-                  >
-                    How It Works {"\u2192"}
-                  </Link>
+                  <PropsAlertsCta source="homepage_hero" variant="pill" />
                 </div>
               </HomepageReveal>
 
               <HomepageReveal delay={520}>
                 <div className="mt-7 flex flex-wrap items-center gap-3 font-mono text-xs text-slate-400">
                   {[
-                    "Free picks",
-                    "No sign-up",
-                    "Transparent results",
+                    "Selected free picks",
+                    "Every result logged",
+                    "Transparent record",
                   ].map((item) => (
                     <span key={item} className="inline-flex items-center gap-2">
                       <span className="h-[3px] w-[3px] rounded-full bg-slate-600" />
@@ -485,6 +475,79 @@ export default function HomepageClient({
           </div>
         </div>
       </section>
+
+      {recentBets.length > 0 ? (
+        <section className="border-b border-slate-800/30 bg-[#0b0e13] py-16 md:py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mb-8 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.95)]">Latest results</span>
+                <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Latest settled picks</h2>
+              </div>
+              {last7DaysProfit != null && !last7Error && last7DaysCount > 0 ? (
+                <span
+                  className={`font-mono text-xs sm:text-sm ${
+                    last7DaysProfit > 0 ? "text-[var(--brand-green)]" : last7DaysProfit < 0 ? "text-red-400" : "text-slate-300"
+                  }`}
+                >
+                  Last 7 days: {last7DaysProfit > 0 ? "+" : ""}{last7DaysProfit.toFixed(2)}u
+                  <span className="ml-1 font-normal text-slate-400">
+                    ({last7DaysCount} bet{last7DaysCount !== 1 ? "s" : ""})
+                  </span>
+                </span>
+              ) : null}
+            </div>
+            <p className="mb-6 text-xs text-slate-400">Stake in units (1u = your standard stake). We typically recommend 0.5u to 2u per pick.</p>
+            <div className="overflow-hidden rounded-2xl border border-slate-700/40 bg-[#0c0f14]">
+              <div className="hidden overflow-x-auto md:block">
+                <PublicBetsTable bets={recentBets.slice(0, 5)} mode="settled" />
+              </div>
+              <div className="divide-y divide-slate-800/40 md:hidden">
+                {recentBets.slice(0, 5).map((bet) => (
+                  <Link
+                    key={bet.id}
+                    href={publicTipPath(bet)}
+                    className="block cursor-pointer p-5 hover:bg-slate-800/20 active:bg-slate-800/30"
+                  >
+                    <div className="mb-2 flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="mb-1 flex items-center gap-2">
+                          <span className="text-xs whitespace-nowrap text-slate-400">{formatMatchDate(bet.match_date)}</span>
+                        </div>
+                        <div className="mb-1 font-medium text-slate-200">{bet.event}</div>
+                        <div className="mb-1 text-sm text-slate-300">
+                          {bet.player ? <span>{bet.player} - </span> : null}
+                          {bet.selection}
+                        </div>
+                      </div>
+                      <ResultBadge status={bet.status} size="sm" className="ml-3" />
+                    </div>
+                    <BetMobileMeta
+                      odds={bet.odds}
+                      bookmaker={bet.bookmaker}
+                      stake={bet.stake}
+                      status={bet.status}
+                      profitLoss={bet.profit_loss}
+                      showProfit
+                    />
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm">
+              <Link href="/tennis-tips#picks" className="text-slate-400 transition-colors hover:text-[var(--brand-green)]">
+                Review tennis results -&gt;
+              </Link>
+              <Link href="/player-props#picks" className="text-slate-400 transition-colors hover:text-[var(--brand-green)]">
+                Review player props results -&gt;
+              </Link>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      <MonthlyBreakdownSection scope="combined" />
 
       <section id="markets" className="border-b border-slate-800/30 py-16 md:py-20 scroll-mt-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -566,78 +629,7 @@ export default function HomepageClient({
         </div>
       </section>
 
-      {recentBets.length > 0 ? (
-        <section className="border-b border-slate-800/30 bg-[#0b0e13] py-16 md:py-20">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-8 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.95)]">Latest results</span>
-                <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Latest settled picks</h2>
-              </div>
-              {last7DaysProfit != null && !last7Error && last7DaysCount > 0 ? (
-                <span
-                  className={`font-mono text-xs sm:text-sm ${
-                    last7DaysProfit > 0 ? "text-[var(--brand-green)]" : last7DaysProfit < 0 ? "text-red-400" : "text-slate-300"
-                  }`}
-                >
-                  Last 7 days: {last7DaysProfit > 0 ? "+" : ""}{last7DaysProfit.toFixed(2)}u
-                  <span className="ml-1 font-normal text-slate-400">
-                    ({last7DaysCount} bet{last7DaysCount !== 1 ? "s" : ""})
-                  </span>
-                </span>
-              ) : null}
-            </div>
-            <p className="mb-6 text-xs text-slate-400">Stake in units (1u = your standard stake). We typically recommend 0.5u to 2u per pick.</p>
-            <div className="overflow-hidden rounded-2xl border border-slate-700/40 bg-[#0c0f14]">
-              <div className="hidden overflow-x-auto md:block">
-                <PublicBetsTable bets={recentBets.slice(0, 5)} mode="settled" />
-              </div>
-              <div className="divide-y divide-slate-800/40 md:hidden">
-                {recentBets.slice(0, 5).map((bet) => (
-                  <Link
-                    key={bet.id}
-                    href={publicTipPath(bet)}
-                    className="block cursor-pointer p-5 hover:bg-slate-800/20 active:bg-slate-800/30"
-                  >
-                    <div className="mb-2 flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="mb-1 flex items-center gap-2">
-                          <span className="text-xs whitespace-nowrap text-slate-400">{formatMatchDate(bet.match_date)}</span>
-                        </div>
-                        <div className="mb-1 font-medium text-slate-200">{bet.event}</div>
-                        <div className="mb-1 text-sm text-slate-300">
-                          {bet.player ? <span>{bet.player} - </span> : null}
-                          {bet.selection}
-                        </div>
-                      </div>
-                      <ResultBadge status={bet.status} size="sm" className="ml-3" />
-                    </div>
-                    <BetMobileMeta
-                      odds={bet.odds}
-                      bookmaker={bet.bookmaker}
-                      stake={bet.stake}
-                      status={bet.status}
-                      profitLoss={bet.profit_loss}
-                      showProfit
-                    />
-                  </Link>
-                ))}
-              </div>
-            </div>
 
-            <div className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm">
-              <Link href="/tennis-tips#picks" className="text-slate-400 transition-colors hover:text-[var(--brand-green)]">
-                Review tennis results -&gt;
-              </Link>
-              <Link href="/player-props#picks" className="text-slate-400 transition-colors hover:text-[var(--brand-green)]">
-                Review player props results -&gt;
-              </Link>
-            </div>
-          </div>
-        </section>
-      ) : null}
-
-      <MonthlyBreakdownSection scope="combined" />
 
       <section className="border-b border-slate-800/30 bg-[#0b0e13] py-16 md:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">

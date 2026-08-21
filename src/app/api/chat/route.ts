@@ -467,13 +467,12 @@ function inferPlayerFromBestSlamQuery(query: string, contextTexts: string[]): st
 
 const FAQ_GETTING_STARTED = `Getting started is simple:
 1. Visit the website: All tips (football player props, ATP tennis) are published on the website. Check the relevant pages for today's selections.
-2. Anytime goalscorer markets and bet builders are coming very soon.
-3. Review the tip: Each includes match details, market, selection, bookmaker, odds, and stake recommendation.
-4. Place your bet: Use your own bankroll and stake sizing.
-5. Track results: Every bet is verified on our website with immutable records.
-No payment required. No trial period. No credit card.`;
+2. Review the tip: Each includes match details, market, selection, bookmaker, odds, and stake recommendation.
+3. Place your bet: Use your own bankroll and stake sizing.
+4. Track results: Every bet is verified on our website with immutable records.
+Selected football player-prop alerts are also available through the free Telegram channel.`;
 
-const FAQ_TELEGRAM = `No. All tips are published on the website. Football player props and ATP tennis selections are posted on the site. Anytime goalscorer and bet builder selections are coming very soon.`;
+const FAQ_TELEGRAM = `No. Current public selections are published on the website. The free Telegram channel provides selected football player-prop alerts with the posted price, stake and a link to the full pick.`;
 
 async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Promise<string | null> {
   const q = userText.trim();

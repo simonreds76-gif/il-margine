@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import { BASE_URL } from "@/lib/config";
 
-const title = "Football Bet Builder Tips | Same Game Combo Analysis";
-const description =
-  "Football bet builder tips and same game combo analysis, focusing on structure, correlation and risk control.";
-const url = `${BASE_URL}/bet-builders`;
+const title = "Football Player Props | Il Margine";
+const description = "Football player-prop picks, posted prices and publicly settled results from Il Margine.";
+const url = `${BASE_URL}/player-props`;
 
 export const metadata: Metadata = {
   title,
   description,
   alternates: { canonical: url },
+  robots: { index: false, follow: true },
   openGraph: {
     type: "website",
     locale: "en_GB",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     siteName: "Il Margine",
     title,
     description,
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Il Margine - Bet Builders" }],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Il Margine - Football Player Props" }],
   },
   twitter: {
     card: "summary_large_image",
