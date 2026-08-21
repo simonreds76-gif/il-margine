@@ -375,7 +375,7 @@ export default function HomepageClient({
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <style jsx global>{HOMEPAGE_KEYFRAMES}</style>
 
-      <section className="relative overflow-hidden border-b border-slate-800/40 pt-6 pb-12 md:pb-14 lg:pb-16">
+      <section className="relative overflow-x-clip border-b border-slate-800/40 pt-6 pb-12 md:pb-14 lg:pb-16">
         <div
           className="pointer-events-none absolute inset-x-0 -top-24 h-[640px]"
           style={{ background: "radial-gradient(ellipse 1200px 550px at 50% -120px, rgba(87,209,150,0.10), transparent)" }}
@@ -414,19 +414,13 @@ export default function HomepageClient({
               </HomepageReveal>
 
               <HomepageReveal delay={380}>
-                <div className="mt-8 flex flex-wrap items-center gap-4">
-                  <PropsAlertsCta source="homepage_hero" variant="pill" />
+                <div className="mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
+                  <PropsAlertsCta source="homepage_hero" variant="pill" className="w-full sm:w-auto" />
                   <Link
                     href="/tennis-tips#picks"
-                    className="inline-flex w-[calc(100vw-2rem)] max-w-full items-center justify-center gap-2 rounded-lg border border-slate-600 px-6 py-3 text-base font-medium text-slate-200 transition-all hover:border-slate-400 hover:bg-slate-800/40 sm:w-auto"
+                    className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-[rgba(87,209,150,0.35)] px-5 py-3 text-base font-medium text-slate-100 transition-all hover:border-[rgba(87,209,150,0.55)] hover:bg-[rgba(87,209,150,0.08)] sm:w-auto sm:px-6"
                   >
                     ATP tennis picks {"\u2192"}
-                  </Link>
-                  <Link
-                    href="/player-props#picks"
-                    className="inline-flex w-[calc(100vw-2rem)] max-w-full items-center justify-center gap-2 rounded-lg border border-slate-600 px-6 py-3 text-base font-medium text-slate-200 transition-all hover:border-slate-400 hover:bg-slate-800/40 sm:w-auto"
-                  >
-                    Football picks {"\u2192"}
                   </Link>
                 </div>
               </HomepageReveal>
@@ -443,6 +437,12 @@ export default function HomepageClient({
                       {item}
                     </span>
                   ))}
+                  <Link
+                    href="/player-props#picks"
+                    className="font-medium text-[rgba(87,209,150,0.85)] transition-colors hover:text-[var(--brand-green)]"
+                  >
+                    See all football picks {"\u2192"}
+                  </Link>
                 </div>
               </HomepageReveal>
 
@@ -540,10 +540,10 @@ export default function HomepageClient({
 
             <div className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm">
               <Link href="/tennis-tips#picks" className="text-slate-400 transition-colors hover:text-[var(--brand-green)]">
-                Review tennis results -&gt;
+                Review tennis results {"\u2192"}
               </Link>
               <Link href="/player-props#picks" className="text-slate-400 transition-colors hover:text-[var(--brand-green)]">
-                Review player props results -&gt;
+                Review player props results {"\u2192"}
               </Link>
             </div>
             <PropsAlertsCta source="homepage_after_results" className="mt-8" />
@@ -728,7 +728,7 @@ export default function HomepageClient({
                   href="/player-props#picks"
                   className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand-green)] px-8 py-3.5 text-[15px] font-semibold text-slate-950 transition-all hover:brightness-110 hover:shadow-[0_0_50px_rgba(87,209,150,0.22)]"
                 >
-                  Open latest picks {"\u2192"}
+                  Open football picks {"\u2192"}
                 </Link>
                 <Link
                   href="/track-record"
@@ -737,6 +737,12 @@ export default function HomepageClient({
                   See track record {"\u2192"}
                 </Link>
               </div>
+              <Link
+                href="/tennis-tips#picks"
+                className="mt-4 inline-flex text-sm font-medium text-slate-400 transition-colors hover:text-[var(--brand-green)]"
+              >
+                ATP tennis picks {"\u2192"}
+              </Link>
             </div>
           </div>
         </div>

@@ -54,3 +54,9 @@ body {
   background: #57d196;
   color: #000;
 }
+
+:focus-visible {
+  outline: 2px solid var(--brand-green);
+  outline-offset: 2px;
+  border-radius: 6px;
+}

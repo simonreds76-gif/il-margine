@@ -40,7 +40,7 @@ export default function PropsAlertsCta({
             <TelegramIcon className="h-6 w-6" />
           </div>
           <div className="min-w-0">
-            <h2 className="font-semibold leading-6 text-slate-100">Football player-prop alerts, free on Telegram</h2>
+            <h3 className="font-semibold leading-6 text-slate-100">Football player-prop alerts, free on Telegram</h3>
             <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-400">
               Selected football player-prop picks, sent when we post them with the odds, stake and a link to the full pick. Tennis picks and the full public record stay on the site.
             </p>

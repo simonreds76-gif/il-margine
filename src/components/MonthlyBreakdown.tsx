@@ -84,8 +84,8 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
         <span className="block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">
           Month by month
         </span>
-        <h3 className="mt-2 text-xl font-semibold text-slate-100">Monthly breakdown</h3>
-        <p className="mt-1 text-sm text-slate-500">{SUBTITLE_BY_SCOPE[scope]}</p>
+        <h2 className="mt-2 text-2xl font-semibold text-slate-100">Monthly breakdown</h2>
+        <p className="mt-1 text-sm text-slate-400">{SUBTITLE_BY_SCOPE[scope]}</p>
       </div>
       {/* Mobile: tap to expand each month */}
       <div className="divide-y divide-slate-800/40 md:hidden">
@@ -95,6 +95,7 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
             <button
               key={r.month}
               type="button"
+              aria-expanded={isOpen}
               onClick={() => setOpenMonth(isOpen ? null : r.month)}
               className="w-full px-4 py-3 text-left transition-colors active:bg-slate-800/35"
             >
@@ -104,7 +105,7 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
                   <span className={`font-mono font-medium ${Number(r.total_profit) >= 0 ? "text-emerald-400" : "text-red-400"}`}>
                     {Number(r.total_profit) >= 0 ? "+" : ""}{Number(r.total_profit).toFixed(2)}u
                   </span>
-                  <span className={`text-slate-500 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`}>
+                  <span className={`shrink-0 text-slate-400 transition-transform ${isOpen ? "rotate-180" : ""}`}>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="6 9 12 15 18 9" />
                     </svg>
@@ -112,7 +113,7 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
                 </span>
               </div>
               {isOpen && (
-                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 border-t border-slate-800/40 pt-2 text-xs font-mono text-slate-500">
+                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 border-t border-slate-800/40 pt-2 font-mono text-xs text-slate-400">
                   <span>{r.total_bets} bets</span>
                   <span>{r.wins}-{r.losses}</span>
                   <span>{formatStake(r.total_stake)}u staked</span>
@@ -129,7 +130,7 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-slate-800/40 text-[11px] uppercase text-slate-500">
+            <tr className="border-b border-slate-800/40 text-[11px] uppercase text-slate-400">
               <th className="px-4 py-3 text-left">Month</th>
               <th className="px-4 py-3 text-right">Bets</th>
               <th className="px-4 py-3 text-right">W-L</th>
@@ -156,7 +157,7 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
           </tbody>
         </table>
       </div>
-      <div className="border-t border-slate-800/40 px-4 py-3 text-xs text-slate-500">
+      <div className="border-t border-slate-800/40 px-4 py-3 text-xs text-slate-400">
         <span className="font-medium text-slate-400">Guide:</span>{" "}
         <span>
           <strong className="font-semibold text-slate-300">W-L</strong> = wins-losses,{" "}
@@ -179,7 +180,7 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
         <div className="border-t border-slate-800/40 px-4 py-2 text-center">
           <button
             onClick={() => setExpanded(false)}
-            className="text-xs text-slate-500 hover:text-slate-400 transition-colors"
+            className="text-xs text-slate-400 transition-colors hover:text-slate-300"
           >
             Show less
           </button>

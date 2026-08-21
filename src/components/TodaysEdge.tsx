@@ -58,6 +58,30 @@ function laneLabel(market: string): string {
   return market === "props" ? "Football props" : "Tennis";
 }
 
+function selectVisiblePicks(picks: EdgeBet[], filter: Filter): EdgeBet[] {
+  const filtered = picks.filter((pick) => filter === "all" || pick.market === filter);
+  if (filter !== "all") return filtered.slice(0, 4);
+
+  const eventCounts = new Map<string, number>();
+  const balanced = filtered.filter((pick) => {
+    const count = eventCounts.get(pick.event) ?? 0;
+    if (count >= 3) return false;
+    eventCounts.set(pick.event, count + 1);
+    return true;
+  });
+  const visible = balanced.slice(0, 4);
+
+  if (picks.some((pick) => pick.market === "tennis") && !visible.some((pick) => pick.market === "tennis")) {
+    const tennisPick = picks.find((pick) => pick.market === "tennis");
+    if (tennisPick) {
+      if (visible.length === 4) visible[3] = tennisPick;
+      else visible.push(tennisPick);
+    }
+  }
+
+  return visible;
+}
+
 export default function TodaysEdge({ picks, lastSettled = null, last7Profit = null }: TodaysEdgeProps) {
   const [filter, setFilter] = useState<Filter>("all");
   const counts = useMemo(
@@ -68,10 +92,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
     }),
     [picks],
   );
-  const visible = useMemo(
-    () => picks.filter((pick) => filter === "all" || pick.market === filter).slice(0, 4),
-    [filter, picks],
-  );
+  const visible = useMemo(() => selectVisiblePicks(picks, filter), [filter, picks]);
   const fullCardHref =
     filter === "props" || (filter === "all" && counts.props > 0)
       ? "/player-props#picks"
@@ -131,7 +152,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
               disabled={id !== "all" && counts[id] === 0}
               aria-pressed={filter === id}
               onClick={() => setActiveFilter(id)}
-              className={`min-h-9 shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition ${
+              className={`min-h-11 shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition ${
                 filter === id
                   ? "border-emerald-300/35 bg-emerald-400/12 text-emerald-100"
                   : "border-slate-700/70 bg-slate-900/55 text-slate-300 hover:border-slate-600 hover:text-slate-100 disabled:cursor-not-allowed disabled:border-slate-700/70 disabled:bg-slate-900/30 disabled:text-slate-400 disabled:hover:border-slate-700/70 disabled:hover:text-slate-400"
@@ -176,7 +197,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
                   <span className="rounded-md border border-slate-700/70 bg-slate-900/70 px-2 py-1 font-mono text-xs text-emerald-200">
                     {formatStake(pick.stake)}u
                   </span>
-                  <div className="ml-auto max-w-20 overflow-hidden">
+                  <div className="ml-auto max-w-20 overflow-hidden opacity-70 grayscale-[35%] transition group-hover:opacity-100 group-hover:grayscale-0">
                     <BookmakerLogo bookmaker={pick.bookmaker} size="sm" noLink />
                   </div>
                 </div>
