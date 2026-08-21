@@ -9,35 +9,35 @@
       "kickoff_utc": "2026-08-21T18:45:00Z",
       "home_team": "Marseille",
       "away_team": "Strasbourg",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Jeffrey De Lange",
         "Timothy Weah",
-        "Leonardo Balerdi",
-        "Derek Cornelius",
+        "Geoffrey Kondogbia",
+        "CJ Egan-Riley",
         "Emerson",
-        "Tochukwu Nnadi",
+        "Angel Gomes",
         "Pierre-Emile Højbjerg",
         "Amine Harit",
-        "Angel Gomes",
+        "Himad Abdelli",
         "Igor Paixão",
         "Amine Gouiri"
       ],
       "away_players": [
         "Filip Jörgensen",
-        "Guéla Doué",
+        "Genesis Antwi",
         "Andrew Omobamidele",
-        "Ismaël Doukouré",
-        "Ben Chilwell",
-        "Maxi Oyedele",
+        "Lucas Høgsberg",
+        "Guéla Doué",
         "Samir El Mourabet",
-        "Giovanni Reyna",
+        "Diogo Sousa",
+        "Samuel Amo-Ameyaw",
         "Sebastian Nanasi",
-        "Martial Godo",
+        "Gessime Yassine",
         "Sékou Mara"
       ],
       "home_starters": [
@@ -60,7 +60,7 @@
           "position_id": 32
         },
         {
-          "name": "Leonardo Balerdi",
+          "name": "Geoffrey Kondogbia",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -69,7 +69,7 @@
           "position_id": 34
         },
         {
-          "name": "Derek Cornelius",
+          "name": "CJ Egan-Riley",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -87,7 +87,7 @@
           "position_id": 38
         },
         {
-          "name": "Tochukwu Nnadi",
+          "name": "Angel Gomes",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -114,7 +114,7 @@
           "position_id": 83
         },
         {
-          "name": "Angel Gomes",
+          "name": "Himad Abdelli",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -152,7 +152,7 @@
           "position_id": 11
         },
         {
-          "name": "Guéla Doué",
+          "name": "Genesis Antwi",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -170,7 +170,7 @@
           "position_id": 34
         },
         {
-          "name": "Ismaël Doukouré",
+          "name": "Lucas Høgsberg",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -179,7 +179,7 @@
           "position_id": 36
         },
         {
-          "name": "Ben Chilwell",
+          "name": "Guéla Doué",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -188,7 +188,7 @@
           "position_id": 38
         },
         {
-          "name": "Maxi Oyedele",
+          "name": "Samir El Mourabet",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -197,7 +197,7 @@
           "position_id": 64
         },
         {
-          "name": "Samir El Mourabet",
+          "name": "Diogo Sousa",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -206,7 +206,7 @@
           "position_id": 66
         },
         {
-          "name": "Giovanni Reyna",
+          "name": "Samuel Amo-Ameyaw",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -224,7 +224,7 @@
           "position_id": 85
         },
         {
-          "name": "Martial Godo",
+          "name": "Gessime Yassine",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -242,13 +242,24 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
+      "home_subs": [
+        "Théo Vermot",
+        "Derek Cornelius",
+        "Nayef Aguerd",
+        "Ulisses Garcia",
+        "Tochukwu Nnadi",
+        "Keyliane Abdallah",
+        "Neal Maupay",
+        "Tadjidine Mmadi"
+      ],
       "away_subs": [],
       "home_unavailable": [
-        "Quinten Timber",
-        "Alexi Koum"
+        "Alexi Koum",
+        "Leonardo Balerdi",
+        "Quinten Timber"
       ],
       "away_unavailable": [
+        "Ben Chilwell",
         "Joaquín Panichelli"
       ]
     },
@@ -1766,15 +1777,15 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "Haris Belkebla",
-        "Louis Mouton"
+        "Louis Mouton",
+        "Haris Belkebla"
       ],
       "away_unavailable": [
-        "Matias Fernandez-Pardo",
         "Tanguy Nianzou Kouassi",
         "Loun Srdanovic",
         "Benjamin André",
-        "Hamza Igamane"
+        "Hamza Igamane",
+        "Matias Fernandez-Pardo"
       ]
     },
     {
