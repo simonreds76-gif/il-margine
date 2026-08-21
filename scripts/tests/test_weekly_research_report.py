@@ -62,10 +62,44 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertIn("data/football-form/weekly-research-report.md", workflow)
         self.assertIn("data/team-shots/team-shots-live-snapshot.json", workflow)
         self.assertIn("data/corners-ou/corners-live-snapshot.json", workflow)
+        self.assertIn("python scripts/corners-v4-g0-diagnostic.py", workflow)
+        self.assertIn("data/corners-ou/corners-v4-g0-diagnostic.json", workflow)
+
+    def test_corners_v4_g0_summary_reports_line_failures(self) -> None:
+        summary = REPORT["corners_v4_g0_summary"](
+            {
+                "status": "RESEARCH_ONLY_NO_ROUTING_CHANGE",
+                "samples": {"v3": 1000, "enriched": 800},
+                "folds": [
+                    {"season": "2025-2026", "variant": "v3_control", "mae": 2.72},
+                    {"season": "2025-2026", "variant": "v4_lean_no_wide_block", "mae": 2.70},
+                ],
+                "market_g0": {
+                    "variants": {
+                        "v4_lean_no_wide_block": {
+                            "g0_status": "FAIL",
+                            "market_rows": 200,
+                            "brier_delta": 0.004,
+                            "per_line": {
+                                "8.5": {"gate": "PASS"},
+                                "9.5": {"gate": "FAIL"},
+                                "12.5": {"status": "MISSING"},
+                            },
+                        }
+                    }
+                },
+            }
+        )
+        self.assertEqual(summary["decision"], "FAIL")
+        self.assertAlmostEqual(summary["mae_delta"], -0.02)
+        self.assertEqual(summary["passed_lines"], 1)
+        self.assertEqual(summary["available_lines"], 2)
+        self.assertEqual(summary["failed_lines"], ["9.5", "12.5"])
 
     def test_weekly_payload_includes_automation_budget(self) -> None:
         payload = REPORT["build_payload"]()
         self.assertIn("automation_budget", payload)
+        self.assertIn("corners_v4_g0", payload)
         self.assertIn("goalkeeper_saves_v1", payload)
         self.assertEqual(payload["goalkeeper_saves_v1"]["count_gate"], "PASS")
         self.assertEqual(

@@ -53,6 +53,7 @@ GOALKEEPER_SAVES_EVIDENCE = ROOT / "data" / "goalkeeper-saves" / "gk-saves-v1-ev
 GOALKEEPER_SAVES_MARKET_PROBE = ROOT / "data" / "goalkeeper-saves" / "gk-saves-market-probe.json"
 GOALKEEPER_SAVES_SHADOW_REPORT = ROOT / "data" / "goalkeeper-saves" / "gk-saves-v1-shadow-report.json"
 GOALKEEPER_SAVES_CAPTURE_STATUS = ROOT / "data" / "goalkeeper-saves" / "gk-saves-capture-status.json"
+CORNERS_V4_G0_DIAGNOSTIC = ROOT / "data" / "corners-ou" / "corners-v4-g0-diagnostic.json"
 TENNIS_GAP_REPORT = ROOT / "data" / "backtest" / "tennis-model-market-gap-report.json"
 TENNIS_EVIDENCE_SNAPSHOT_LOCAL = ROOT / "data" / "tennis-props" / "tennis-evidence-snapshot.json"
 TENNIS_EVIDENCE_SNAPSHOT_KEY = "tennis_evidence_v1"
@@ -107,6 +108,57 @@ def load_json(path: Path) -> dict[str, Any]:
         return json.loads(path.read_text(encoding="utf-8"))
     except Exception as exc:
         return {"_error": f"{display_path(path)} parse failed: {exc}"}
+
+
+def corners_v4_g0_summary(payload: dict[str, Any]) -> dict[str, Any]:
+    if not payload or payload.get("_error"):
+        return {
+            "status": "NOT_RUN",
+            "decision": "NOT_RUN",
+            "enriched_samples": 0,
+            "total_samples": 0,
+            "mae_delta": None,
+            "market_rows": 0,
+            "brier_delta": None,
+            "passed_lines": 0,
+            "available_lines": 0,
+            "failed_lines": [],
+        }
+
+    folds = payload.get("folds") or []
+    latest_season = max((str(row.get("season") or "") for row in folds), default="")
+    latest_rows = [row for row in folds if str(row.get("season") or "") == latest_season]
+    control = next((row for row in latest_rows if row.get("variant") == "v3_control"), {})
+    candidate = next((row for row in latest_rows if row.get("variant") == "v4_lean_no_wide_block"), {})
+    control_mae = control.get("mae")
+    candidate_mae = candidate.get("mae")
+    mae_delta = (
+        float(candidate_mae) - float(control_mae)
+        if control_mae is not None and candidate_mae is not None
+        else None
+    )
+
+    variants = ((payload.get("market_g0") or {}).get("variants") or {})
+    market = variants.get("v4_lean_no_wide_block") or {}
+    per_line = market.get("per_line") or {}
+    available = {line: stats for line, stats in per_line.items() if stats.get("status") != "MISSING"}
+    failed = sorted(
+        (line for line, stats in per_line.items() if stats.get("gate") != "PASS"),
+        key=float,
+    )
+    return {
+        "status": payload.get("status", "RESEARCH_ONLY"),
+        "decision": market.get("g0_status", "NOT_RUN"),
+        "latest_season": latest_season or None,
+        "enriched_samples": int((payload.get("samples") or {}).get("enriched") or 0),
+        "total_samples": int((payload.get("samples") or {}).get("v3") or 0),
+        "mae_delta": mae_delta,
+        "market_rows": int(market.get("market_rows") or 0),
+        "brier_delta": market.get("brier_delta"),
+        "passed_lines": sum(1 for stats in available.values() if stats.get("gate") == "PASS"),
+        "available_lines": len(available),
+        "failed_lines": failed,
+    }
 
 
 def tennis_breaks_gate_line(gate: dict[str, Any]) -> str:
@@ -534,6 +586,12 @@ def fixed(value: float | None, digits: int = 5) -> str:
     if value is None:
         return "-"
     return f"{value:.{digits}f}"
+
+
+def signed_number(value: float | None, digits: int = 4) -> str:
+    if value is None:
+        return "-"
+    return f"{number(value):+.{digits}f}"
 
 
 def ratio_pct(value: float | None, digits: int = 1) -> str:
@@ -1256,6 +1314,7 @@ def build_payload() -> dict[str, Any]:
     corners_allowed = load_json(OUT_DIR / "corners-v0-allowed-leagues.json")
     corners_diag = load_json(OUT_DIR / "corners-total-diagnostic.json")
     football_counts_vnext = load_json(OUT_DIR / "football-counts-vnext-gate.json")
+    corners_v4_g0 = corners_v4_g0_summary(load_json(CORNERS_V4_G0_DIAGNOSTIC))
     api_football_health = load_json(OUT_DIR / "api-football-counts-health.json")
     api_football_agreement = load_json(OUT_DIR / "api-football-source-agreement.json")
     team_fouls_m1 = load_json(OUT_DIR / "fouls-empirical-baseline.json")
@@ -1321,6 +1380,7 @@ def build_payload() -> dict[str, Any]:
             "clv": clv_summary(corners_clv_rows),
         },
         "football_counts_vnext": football_counts_vnext,
+        "corners_v4_g0": corners_v4_g0,
         "api_football_counts": {
             "health": api_football_health,
             "agreement": api_football_agreement,
@@ -1406,6 +1466,7 @@ def render_report(payload: dict[str, Any]) -> str:
     corners_v3_live = corners_v3.get("prospective") or {}
     team_v4_scan = team_v4.get("latest_scan") or {}
     corners_v3_scan = corners_v3.get("latest_scan") or {}
+    corners_v4_g0 = payload.get("corners_v4_g0") or {}
 
     lines = [
         "# Weekly Research Lane Report",
@@ -1421,6 +1482,7 @@ def render_report(payload: dict[str, Any]) -> str:
         f"- Corners v3: count {corners_v3.get('count_gate', 'NOT_RUN')}; prospective {corners_v3.get('prospective_status', 'BLOCKED')}; promotion {corners_v3.get('promotion_gate', 'BLOCKED')}.",
         f"- Corners v3 evidence: {corners_v3_live.get('signals', 0)} signals, {corners_v3_live.get('settled', 0)} settled, {number(corners_v3_live.get('pnl_units')):+.2f}u, ROI {pct(number(corners_v3_live.get('roi')) * 100) if corners_v3_live.get('roi') is not None else '-'}, true-close CLV {pct(number(corners_v3_live.get('mean_true_close_clv')) * 100) if corners_v3_live.get('mean_true_close_clv') is not None else '-'}.",
         f"- Corners v3 latest scan: {corners_v3_scan.get('state', 'NOT_RUN')}; {corners_v3_scan.get('scored_rows', 0)} rows / {corners_v3_scan.get('scored_fixtures', 0)} fixtures scored; {corners_v3_scan.get('edge_pass_but_warmup_blocked_fixtures', 0)} fixtures passed edge but were warm-up blocked; blockers {corners_v3_scan.get('blocker_rows') or '-'}.",
+        f"- Corners v4 G0 research: {corners_v4_g0.get('decision', 'NOT_RUN')}; {corners_v4_g0.get('enriched_samples', 0)}/{corners_v4_g0.get('total_samples', 0)} enriched; latest holdout MAE delta {signed_number(corners_v4_g0.get('mae_delta'), 4)}; real-market Brier delta {signed_number(corners_v4_g0.get('brier_delta'), 4)} on n={corners_v4_g0.get('market_rows', 0)}; line gates {corners_v4_g0.get('passed_lines', 0)}/{corners_v4_g0.get('available_lines', 0)} passed; failed {', '.join(corners_v4_g0.get('failed_lines') or []) or '-'}.",
         "- Neither experiment changes live routing or stakes.",
         f"- API-Football count archive: {api_health.get('archive_rows', 0)} fixtures; latest {api_health.get('latest_fixture_date') or '-'}; last run {api_health.get('requests_used', 0)}/{api_health.get('max_requests', 0)} requests.",
         f"- Cross-provider agreement: {api_agreement.get('matched_fixtures', 0)}/{api_agreement.get('api_rows', 0)} API fixtures matched; status {api_agreement.get('status', 'NOT_RUN')}.",
@@ -1661,6 +1723,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
     corners_v3_live = corners_v3.get("prospective") or {}
     team_v4_scan = team_v4.get("latest_scan") or {}
     corners_v3_scan = corners_v3.get("latest_scan") or {}
+    corners_v4_g0 = payload.get("corners_v4_g0") or {}
     tennis_lanes = tennis_model_evidence.get("lanes") or {}
     gap_replacements = tennis_model_evidence.get("gap_replacements") or {}
     gap_source_status = tennis_model_evidence.get("gap_source_status", "SOURCE_MISSING")
@@ -1729,6 +1792,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
         f"Team Shots scan: {team_v4_scan.get('state', 'NOT_RUN')} | scored {team_v4_scan.get('scored_rows', 0)} rows/{team_v4_scan.get('scored_fixtures', 0)} fixtures | edge-pass warmup blocks {team_v4_scan.get('edge_pass_but_warmup_blocked_fixtures', 0)}",
         f"Corners v3: {corners_v3.get('prospective_status', 'BLOCKED')} | {corners_v3_live.get('settled', 0)} settled | {number(corners_v3_live.get('pnl_units')):+.2f}u | ROI {pct(number(corners_v3_live.get('roi')) * 100) if corners_v3_live.get('roi') is not None else '-'} | CLV {pct(number(corners_v3_live.get('mean_true_close_clv')) * 100) if corners_v3_live.get('mean_true_close_clv') is not None else '-'} | promotion {corners_v3.get('promotion_gate', 'BLOCKED')}",
         f"Corners scan: {corners_v3_scan.get('state', 'NOT_RUN')} | scored {corners_v3_scan.get('scored_rows', 0)} rows/{corners_v3_scan.get('scored_fixtures', 0)} fixtures | edge-pass warmup blocks {corners_v3_scan.get('edge_pass_but_warmup_blocked_fixtures', 0)}",
+        f"Corners v4 G0 [RESEARCH]: {corners_v4_g0.get('decision', 'NOT_RUN')} | MAE delta {signed_number(corners_v4_g0.get('mae_delta'), 4)} | market Brier delta {signed_number(corners_v4_g0.get('brier_delta'), 4)} n={corners_v4_g0.get('market_rows', 0)} | line gates {corners_v4_g0.get('passed_lines', 0)}/{corners_v4_g0.get('available_lines', 0)}",
         f"Legacy controls: Team Shots V3 {team_clv['settled']} settled/{team_clv['pnl_units']:+.2f}u; Corners V0 {corners_clv['settled']} settled/{corners_clv['pnl_units']:+.2f}u",
         f"Count-source health: API-Football {api_health.get('archive_rows', 0)} archived, latest {api_health.get('latest_fixture_date') or '-'}, agreement {api_agreement.get('matched_fixtures', 0)}/{api_agreement.get('api_rows', 0)}",
         f"Team Fouls: F1 {team_fouls_decision.get('status', 'NOT_RUN')}; F2 {team_fouls_f2_decision.get('status', 'NOT_RUN')}; sources {team_fouls_m2.get('status', 'NOT_RUN')}; no signals",

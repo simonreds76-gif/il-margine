@@ -67,6 +67,7 @@ jobs:
             --allowed-config data/football-form/team-shots-v3-ema20-allowed-leagues.json
           python scripts/corners-v0-clv-monitor.py
           python scripts/run-football-vnext-shadow.py
+          python scripts/corners-v4-g0-diagnostic.py
           python scripts/api-football-source-agreement.py --allow-empty
           python scripts/fouls-empirical-baseline.py
           python scripts/team-fouls-v1-folds.py
@@ -139,6 +140,9 @@ jobs:
             data/team-shots/team-shots-v4-lock.json
             data/corners-ou/corners-v3-fold-report.md
             data/corners-ou/corners-v3-lock.json
+            data/corners-ou/corners-v4-g0-diagnostic.json
+            data/corners-ou/corners-v4-g0-diagnostic.md
+            data/corners-ou/corners-v4-g0-fold-results.csv
             data/football-form/team-shots-v3-ema20-clv-monitor.md
             data/football-form/corners-v0-clv-monitor.md
             data/football-form/team-shots-v4-shadow-clv.md

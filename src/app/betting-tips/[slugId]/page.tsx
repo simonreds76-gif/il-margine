@@ -287,6 +287,10 @@ export default async function BettingPreviewPage({ params }: PageProps) {
                   </article>
                 ))}
               </div>
+
+              {fixture.seed.market === "props" ? (
+                <PropsAlertsCta source="seo_match_preview" className="mt-6" />
+              ) : null}
             </section>
 
             <section aria-labelledby="analysis-heading" className="rounded-2xl border border-slate-800 bg-slate-900/45 p-6 md:p-8">
@@ -336,7 +340,6 @@ export default async function BettingPreviewPage({ params }: PageProps) {
                 Current selections, settled results and model-led betting analysis.
               </p>
             </div>
-            {fixture.seed.market === "props" ? <PropsAlertsCta source="seo_match_preview" /> : null}
           </aside>
         </section>
       </main>

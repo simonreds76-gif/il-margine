@@ -32,14 +32,14 @@ export default function PropsAlertsCta({
   }
 
   return (
-    <div className={`rounded-2xl border border-sky-400/20 bg-[linear-gradient(135deg,rgba(56,189,248,0.10),rgba(8,15,24,0.92)_55%)] p-5 sm:p-6 ${className}`}>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-start gap-3">
+    <div className={`overflow-hidden rounded-2xl border border-sky-400/20 bg-[linear-gradient(135deg,rgba(56,189,248,0.10),rgba(8,15,24,0.92)_55%)] p-5 sm:p-6 ${className}`}>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex min-w-0 flex-[1_1_22rem] items-start gap-3">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-sky-400/25 bg-sky-400/10 text-sky-300">
             <TelegramIcon className="h-6 w-6" />
           </div>
-          <div>
-            <h2 className="font-semibold text-slate-100">Get every football player-prop pick</h2>
+          <div className="min-w-0">
+            <h2 className="font-semibold leading-6 text-slate-100">Get every football player-prop pick</h2>
             <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-400">
               Free Telegram alerts include the posted odds, stake and a link to the full pick.
             </p>
@@ -51,7 +51,7 @@ export default function PropsAlertsCta({
           rel="noopener noreferrer"
           eventName="player_props_telegram_click"
           eventParams={{ source }}
-          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl border border-sky-300/30 bg-sky-400/12 px-5 py-3 text-sm font-semibold text-sky-100 transition hover:border-sky-300/50 hover:bg-sky-400/20"
+          className="inline-flex min-h-11 w-full max-w-full shrink-0 items-center justify-center rounded-xl border border-sky-300/30 bg-sky-400/12 px-5 py-3 text-sm font-semibold text-sky-100 transition hover:border-sky-300/50 hover:bg-sky-400/20 sm:w-auto"
         >
           Join free alerts
         </TrackedLink>
