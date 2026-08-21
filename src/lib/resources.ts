@@ -18,15 +18,17 @@ export interface Resource {
   category: ResourceCategory;
   tag?: "tennis" | "props" | "goalscorer" | "method" | "tools";
   datePublished?: string;
+  dateModified?: string;
   excerpt?: string;
   surface?: "lab-note" | "guide" | "tool";
   homepageFeature?: boolean;
+  featured?: boolean;
 }
 
 export const RESOURCES: Resource[] = [
   {
     href: "/resources/clay-season-tennis-model-caveats",
-    title: "Why our ATP model is conservative on clay",
+    title: "Clay Court Tennis Betting: Why Models Need Different Thresholds",
     description:
       "A lab note on clay volatility, player fitness, calibration risk, and why the model treats clay-court betting edges more carefully than hard courts.",
     excerpt:
@@ -35,12 +37,13 @@ export const RESOURCES: Resource[] = [
     category: "Lab Notes",
     tag: "tennis",
     datePublished: "2026-05-13",
+    dateModified: "2026-08-21",
     surface: "lab-note",
     homepageFeature: true,
   },
   {
     href: "/resources/fair-odds-lab-explained",
-    title: "What the Fair Odds Lab shows, and what it does not",
+    title: "How to Read Fair Odds and Find Value in Betting Markets",
     description:
       "How to read Il Margine fair prices, reference odds, price gaps, and model flags without confusing research signals for guaranteed betting picks.",
     excerpt:
@@ -49,12 +52,13 @@ export const RESOURCES: Resource[] = [
     category: "Lab Notes",
     tag: "method",
     datePublished: "2026-05-13",
+    dateModified: "2026-08-21",
     surface: "lab-note",
     homepageFeature: true,
   },
   {
     href: "/resources/how-to-read-a-tipster-track-record",
-    title: "How to read a betting track record properly",
+    title: "How to Verify a Tipster Track Record: ROI, CLV and Drawdown",
     description:
       "A practical guide to ROI, sample size, closing-line value, drawdowns, and the warning signs that make a betting record less useful than it looks.",
     excerpt:
@@ -63,24 +67,36 @@ export const RESOURCES: Resource[] = [
     category: "Lab Notes",
     tag: "method",
     datePublished: "2026-05-13",
+    dateModified: "2026-08-21",
     surface: "lab-note",
     homepageFeature: true,
+    featured: true,
   },
   {
     href: "/resources/closing-line-value",
-    title: "Closing Line Value: The Only Metric That Matters",
+    title: "Closing Line Value (CLV): Formula, Examples and Why It Matters",
     description:
       "Learn why CLV is the most reliable predictor of betting success. Understand how to calculate, track, and consistently beat the closing line across props and tennis markets.",
     minRead: 11,
     category: "Value Betting",
+    tag: "method",
+    datePublished: "2026-02-12",
+    dateModified: "2026-08-21",
+    surface: "guide",
+    featured: true,
   },
   {
     href: "/resources/kelly-criterion-sports-betting",
-    title: "The Kelly Criterion for Sports Betting",
+    title: "Kelly Criterion for Sports Betting: Formula and Stake Sizing",
     description:
       "Master the mathematics of optimal bet sizing. Learn how professional bettors use the Kelly Criterion to maximize bankroll growth while controlling risk. Covers fractional Kelly, player props, tennis, and practical implementation.",
     minRead: 13,
     category: "Tools",
+    tag: "tools",
+    datePublished: "2026-02-12",
+    dateModified: "2026-08-21",
+    surface: "guide",
+    featured: true,
   },
   {
     href: "/calculator",
@@ -100,14 +116,9 @@ export const RESOURCES: Resource[] = [
   },
 ];
 
-export const RESOURCE_CATEGORIES: ResourceCategory[] = [
-  "Lab Notes",
-  "Bankroll Management",
-  "Value Betting",
-  "Advanced Concepts",
-  "Psychology",
-  "Tools",
-];
+export const RESOURCE_CATEGORIES = Array.from(
+  new Set(RESOURCES.map((resource) => resource.category)),
+) as ResourceCategory[];
 
 export const CURRENTLY_WATCHING =
   "ATP clay remains the awkward bit of the board: fitness, surface tolerance, and late market moves matter more here, so marginal tennis edges stay in research until the calibration earns trust.";

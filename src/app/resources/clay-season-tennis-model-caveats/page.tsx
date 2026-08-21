@@ -4,17 +4,19 @@ import ResourceArticlePage from "@/components/ResourceArticlePage";
 import { BASE_URL } from "@/lib/config";
 
 const PATH = "/resources/clay-season-tennis-model-caveats";
-const TITLE = "Why our ATP model is conservative on clay";
+const TITLE = "Clay Court Tennis Betting: Why Models Need Different Thresholds";
 const DESCRIPTION =
-  "A lab note on clay volatility, player fitness, calibration risk, and why the model treats clay-court betting edges more carefully than hard courts.";
+  "Why clay-court tennis needs different betting thresholds, with practical notes on calibration, fatigue, serve advantage and handicap risk.";
 
 export const metadata: Metadata = {
-  title: `${TITLE} | Il Margine Lab Notes`,
+  title: TITLE,
   description: DESCRIPTION,
   alternates: {
     canonical: `${BASE_URL}${PATH}`,
   },
   robots: "index, follow",
+  openGraph: { title: TITLE, description: DESCRIPTION, url: `${BASE_URL}${PATH}`, type: "article", images: [`${BASE_URL}/og-social-20260629.png`] },
+  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION, images: [`${BASE_URL}/og-social-20260629.png`] },
 };
 
 const TOC = [
@@ -32,6 +34,7 @@ export default function ClaySeasonTennisModelCaveatsPage() {
       description={DESCRIPTION}
       canonicalPath={PATH}
       datePublished="2026-05-13"
+      dateModified="2026-08-21"
       toc={TOC}
     >
       <section id="why-clay-is-different">

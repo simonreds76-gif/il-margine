@@ -4,17 +4,19 @@ import ResourceArticlePage from "@/components/ResourceArticlePage";
 import { BASE_URL } from "@/lib/config";
 
 const PATH = "/resources/fair-odds-lab-explained";
-const TITLE = "What the Fair Odds Lab shows, and what it does not";
+const TITLE = "How to Read Fair Odds and Find Value in Betting Markets";
 const DESCRIPTION =
-  "How to read Il Margine fair prices, reference odds, price gaps, and model flags without confusing research signals for guaranteed betting picks.";
+  "Learn how fair odds, implied probability and bookmaker prices are compared to identify potential value without treating model estimates as guarantees.";
 
 export const metadata: Metadata = {
-  title: `${TITLE} | Il Margine Lab Notes`,
+  title: TITLE,
   description: DESCRIPTION,
   alternates: {
     canonical: `${BASE_URL}${PATH}`,
   },
   robots: "index, follow",
+  openGraph: { title: TITLE, description: DESCRIPTION, url: `${BASE_URL}${PATH}`, type: "article", images: [`${BASE_URL}/og-social-20260629.png`] },
+  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION, images: [`${BASE_URL}/og-social-20260629.png`] },
 };
 
 const TOC = [
@@ -32,6 +34,7 @@ export default function FairOddsLabExplainedPage() {
       description={DESCRIPTION}
       canonicalPath={PATH}
       datePublished="2026-05-13"
+      dateModified="2026-08-21"
       toc={TOC}
     >
       <section id="fair-price">
@@ -61,11 +64,11 @@ export default function FairOddsLabExplainedPage() {
         </h2>
         <p>
           The Lab uses a single bookmaker reference so signals stay comparable. That reference is not
-          a best-price claim. It is simply the market number used to compare against the model's fair
+          a best-price claim. It is simply the market number used to compare against the model&apos;s fair
           price at the moment the board updates.
         </p>
         <p>
-          This matters because "best price" language can be misleading. A better price may exist
+          This matters because &quot;best price&quot; language can be misleading. A better price may exist
           somewhere else, or the reference price may move after the Lab updates. The useful question is
           narrower: does the model materially disagree with a consistent reference market?
         </p>
@@ -84,7 +87,7 @@ export default function FairOddsLabExplainedPage() {
         <p>
           Big gaps are useful, but they are not automatically better. A very large gap can mean the
           model has found something real. It can also mean team news, minutes risk, or market movement
-          has not been handled properly. That is why the Lab favours visible caveats over "lock" type
+          has not been handled properly. That is why the Lab favours visible caveats over &quot;lock&quot; type
           language.
         </p>
       </section>

@@ -12,6 +12,7 @@ import { readWorldCupData, worldCupTeamUrl, WORLD_CUP_ARCHIVE_DATE, WORLD_CUP_PE
 import { fetchSeoTipSitemapState } from "@/lib/tip-seo-server";
 
 const STATIC_LAST_MODIFIED = new Date("2026-05-12T00:00:00Z");
+const RESOURCES_LAST_MODIFIED = new Date("2026-08-21T12:00:00Z");
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -77,12 +78,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           })),
         ]
       : []),
-    { url: `${BASE_URL}/resources`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/resources`, lastModified: RESOURCES_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.75 },
     ...RESOURCES.filter((resource) => resource.href.startsWith("/resources/")).map((resource) => ({
       url: `${BASE_URL}${resource.href}`,
-      lastModified: STATIC_LAST_MODIFIED,
+      lastModified: resource.dateModified
+        ? new Date(`${resource.dateModified}T12:00:00Z`)
+        : resource.datePublished
+          ? new Date(`${resource.datePublished}T12:00:00Z`)
+          : STATIC_LAST_MODIFIED,
       changeFrequency: "monthly" as const,
-      priority: 0.75,
+      priority: resource.surface === "guide" ? 0.78 : 0.7,
     })),
     { url: `${BASE_URL}/calculator`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.6 },
     ...(FAIR_ODDS_INDEXABLE

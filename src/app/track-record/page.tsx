@@ -428,6 +428,12 @@ export default function TrackRecordPage() {
               >
                 See methodology &rarr;
               </Link>
+              <Link
+                href="/resources/how-to-read-a-tipster-track-record"
+                className="inline-flex items-center gap-1.5 px-1 py-3 text-sm text-slate-500 transition-colors hover:text-emerald-400"
+              >
+                How to audit a betting record &rarr;
+              </Link>
             </div>
           </Reveal>
 

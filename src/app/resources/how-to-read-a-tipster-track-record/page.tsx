@@ -4,17 +4,19 @@ import ResourceArticlePage from "@/components/ResourceArticlePage";
 import { BASE_URL } from "@/lib/config";
 
 const PATH = "/resources/how-to-read-a-tipster-track-record";
-const TITLE = "How to read a betting track record properly";
+const TITLE = "How to Verify a Tipster Track Record: ROI, CLV and Drawdown";
 const DESCRIPTION =
-  "A practical guide to ROI, sample size, closing-line value, drawdowns, and the warning signs that make a betting record less useful than it looks.";
+  "A practical checklist for verifying a tipster record using timestamps, sample size, ROI, closing-line value, drawdown and visible losing bets.";
 
 export const metadata: Metadata = {
-  title: `${TITLE} | Il Margine Lab Notes`,
+  title: TITLE,
   description: DESCRIPTION,
   alternates: {
     canonical: `${BASE_URL}${PATH}`,
   },
   robots: "index, follow",
+  openGraph: { title: TITLE, description: DESCRIPTION, url: `${BASE_URL}${PATH}`, type: "article", images: [`${BASE_URL}/og-social-20260629.png`] },
+  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION, images: [`${BASE_URL}/og-social-20260629.png`] },
 };
 
 const TOC = [
@@ -32,6 +34,7 @@ export default function HowToReadATipsterTrackRecordPage() {
       description={DESCRIPTION}
       canonicalPath={PATH}
       datePublished="2026-05-13"
+      dateModified="2026-08-21"
       toc={TOC}
     >
       <section id="timestamps">

@@ -3,21 +3,35 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 import { BASE_URL } from "@/lib/config";
 import PageHomeLink from "@/components/PageHomeLink";
+import ResourceContentsNav from "@/components/ResourceContentsNav";
 
 export const metadata: Metadata = {
-  title: "Closing Line Value (CLV): The Only Metric That Matters | Il Margine",
+  title: "Closing Line Value (CLV): Formula, Examples and Why It Matters",
   description:
-    "Learn why CLV is the most reliable predictor of betting success. Understand how to calculate, track, and consistently beat the closing line in sports betting.",
+    "Learn what closing line value means, how to calculate CLV from decimal odds, and why beating the closing price is a useful betting process check.",
   alternates: {
     canonical: `${BASE_URL}/resources/closing-line-value`,
   },
   robots: "index, follow",
+  openGraph: {
+    type: "article",
+    url: `${BASE_URL}/resources/closing-line-value`,
+    title: "Closing Line Value (CLV): Formula, Examples and Why It Matters",
+    description: "Learn how to calculate closing line value and use it as a betting process check.",
+    images: [`${BASE_URL}/og-social-20260629.png`],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Closing Line Value (CLV): Formula, Examples and Why It Matters",
+    description: "Learn how to calculate closing line value and use it as a betting process check.",
+    images: [`${BASE_URL}/og-social-20260629.png`],
+  },
 };
 
 const ARTICLE_SCHEMA = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "Closing Line Value: The Only Metric That Matters",
+  headline: "Closing Line Value (CLV): Formula, Examples and Why It Matters",
   author: {
     "@type": "Organization",
     name: "Il Margine",
@@ -31,6 +45,9 @@ const ARTICLE_SCHEMA = {
     },
   },
   datePublished: "2026-02-12",
+  dateModified: "2026-08-21",
+  image: `${BASE_URL}/og-social-20260629.png`,
+  mainEntityOfPage: `${BASE_URL}/resources/closing-line-value`,
   description:
     "Learn why CLV is the most reliable predictor of betting success. Understand how to calculate, track, and consistently beat the closing line in sports betting.",
 };
@@ -74,7 +91,7 @@ export default function ClosingLineValuePage() {
             VALUE BETTING
           </span>
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4">
-            Closing Line Value: The Only Metric That Matters
+            Closing Line Value (CLV): Formula, Examples and Why It Matters
           </h1>
           <p className="text-base sm:text-lg text-slate-300 mb-8 max-w-3xl leading-relaxed">
             Win rate doesn&apos;t predict profitability. ROI can mislead over small samples. CLV is the single metric that separates winning bettors from losing ones.
@@ -85,24 +102,7 @@ export default function ClosingLineValuePage() {
       {/* Main content with TOC sidebar */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         <div className="lg:grid lg:grid-cols-[240px_1fr] lg:gap-16">
-          <aside className="lg:sticky lg:top-24 lg:self-start mb-10 lg:mb-0">
-            <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-5">
-              <h3 className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-4">
-                CONTENTS
-              </h3>
-              <nav className="space-y-2">
-                {TOC_ITEMS.map((item, i) => (
-                  <a
-                    key={item.id}
-                    href={`#${item.id}`}
-                    className="block text-sm text-slate-400 hover:text-emerald-400 transition-colors"
-                  >
-                    {i + 1}. {item.label}
-                  </a>
-                ))}
-              </nav>
-            </div>
-          </aside>
+          <ResourceContentsNav items={TOC_ITEMS} />
 
           <article className="text-base text-slate-300 leading-relaxed space-y-6">
             {/* Section 1: Introduction */}

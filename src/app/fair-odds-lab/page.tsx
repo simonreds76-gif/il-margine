@@ -1111,6 +1111,12 @@ export default async function FairOddsLabPage({ searchParams }: FairOddsLabPageP
                 <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base sm:leading-7">
                   Where our model price is shorter than the bookies&apos;.
                 </p>
+                <Link
+                  href="/resources/fair-odds-lab-explained"
+                  className="mt-4 inline-flex text-xs font-bold uppercase tracking-[0.14em] text-emerald-300 transition hover:text-emerald-200"
+                >
+                  How to read fair odds and value gaps -&gt;
+                </Link>
               </div>
 
               <div className="grid grid-cols-2 gap-0 overflow-hidden rounded-2xl border border-slate-700/55 bg-slate-950/75 sm:grid-cols-4">
