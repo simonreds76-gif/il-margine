@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-08-21T17:04:49.040107Z",
+  "generated_at": "2026-08-21T17:43:53.664827Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
@@ -33,15 +34,15 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 29,
+  "fixtures_evaluated": 23,
   "signals_qualifying": 5,
   "safety_exclusions": {
     "model_probability_below_floor": 6,
-    "market_odds_above_cap": 3,
+    "market_odds_above_cap": 2,
     "lineup_not_public_quality": 3,
     "low_signal_confidence": 3,
     "model_market_gap_gt_10pp": 6,
-    "defensive_position": 2
+    "defensive_position": 1
   },
   "extreme_gap_quarantine": {
     "eligible_rows": 6,
@@ -108,7 +109,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 34
+          "percentile": 33
         },
         "recent_team_form": {
           "tier": "Positive",
@@ -127,7 +128,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 14
+          "percentile": 16
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -209,14 +210,14 @@
         "share_of_team_chances_percentile": 98,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 89
+          "percentile": 87
         },
         "recent_team_form": {
           "tier": "Unknown"
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 92
+          "percentile": 90
         },
         "opponent_recent_defence": {
           "tier": "High",
@@ -298,7 +299,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 25
+          "percentile": 24
         },
         "recent_team_form": {
           "tier": "Quiet",
@@ -316,8 +317,8 @@
           "corners_against_avg": 3.4
         },
         "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 39
+          "tier": "Low",
+          "percentile": 33
         },
         "opponent_recent_defence": {
           "tier": "Unknown"
@@ -382,7 +383,7 @@
           "percentile": 92
         },
         "share_of_team_chances_pct": 33,
-        "share_of_team_chances_percentile": 99,
+        "share_of_team_chances_percentile": 98,
         "team_attacking_outlook": {
           "tier": "Quiet",
           "percentile": 27
@@ -404,7 +405,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 41
+          "percentile": 36
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -486,7 +487,7 @@
         "share_of_team_chances_percentile": 95,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 46
+          "percentile": 42
         },
         "recent_team_form": {
           "tier": "Quiet",
@@ -505,7 +506,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 77
+          "percentile": 75
         },
         "opponent_recent_defence": {
           "tier": "High",
