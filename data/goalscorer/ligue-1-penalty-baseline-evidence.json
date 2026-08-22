@@ -1,7 +1,24 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-21T09:19:06Z",
+  "generated_at": "2026-08-22T01:53:25Z",
   "league": "ligue-1",
-  "row_count": 0,
-  "rows": []
+  "row_count": 1,
+  "rows": [
+    {
+      "team": "Marseille",
+      "team_key": "marseille",
+      "player_name": "Amine Gouiri",
+      "player_key": "amine gouiri",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-08-21"
+    }
+  ]
 }
