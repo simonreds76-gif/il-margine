@@ -521,36 +521,36 @@
       "kickoff_utc": "2026-08-22T11:30:00Z",
       "home_team": "Hull City",
       "away_team": "Manchester United",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "4-2-3-1",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "5-4-1",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Konstantinos Tzolakis",
-        "Lewie Coyle",
         "Semi Ajayi",
+        "John Egan",
         "Nobel Mendy",
+        "Lewie Coyle",
         "Ryan Giles",
-        "Regan Slater",
-        "Lucas Gourna-Douath",
         "Mohamed Belloumi",
         "Matt Crooks",
+        "Regan Slater",
         "Elliot Stroud",
         "Oli McBurnie"
       ],
       "away_players": [
         "Senne Lammens",
-        "Diogo Dalot",
+        "Noussair Mazraoui",
         "Harry Maguire",
         "Ayden Heaven",
         "Luke Shaw",
         "Youri Tielemans",
         "Andrey Santos",
-        "Amad Diallo",
+        "Bryan Mbeumo",
         "Bruno Fernandes",
-        "Matheus Cunha",
-        "Bryan Mbeumo"
+        "Patrick Dorgu",
+        "Matheus Cunha"
       ],
       "home_starters": [
         {
@@ -559,97 +559,97 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-2-3-1",
+          "formation": "5-4-1",
           "position_id": 11
-        },
-        {
-          "name": "Lewie Coyle",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 32
         },
         {
           "name": "Semi Ajayi",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 34
+          "formation": "5-4-1",
+          "position_id": 33
+        },
+        {
+          "name": "John Egan",
+          "line_index": 0,
+          "line_size": 5,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "5-4-1",
+          "position_id": 35
         },
         {
           "name": "Nobel Mendy",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 36
+          "formation": "5-4-1",
+          "position_id": 37
+        },
+        {
+          "name": "Lewie Coyle",
+          "line_index": 0,
+          "line_size": 5,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "5-4-1",
+          "position_id": 51
         },
         {
           "name": "Ryan Giles",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 38
+          "formation": "5-4-1",
+          "position_id": 59
+        },
+        {
+          "name": "Mohamed Belloumi",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "5-4-1",
+          "position_id": 72
+        },
+        {
+          "name": "Matt Crooks",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "5-4-1",
+          "position_id": 74
         },
         {
           "name": "Regan Slater",
           "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64
-        },
-        {
-          "name": "Lucas Gourna-Douath",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 66
-        },
-        {
-          "name": "Mohamed Belloumi",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 83
-        },
-        {
-          "name": "Matt Crooks",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 85
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "5-4-1",
+          "position_id": 76
         },
         {
           "name": "Elliot Stroud",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 87
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "5-4-1",
+          "position_id": 78
         },
         {
           "name": "Oli McBurnie",
-          "line_index": 3,
+          "line_index": 2,
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-2-3-1",
+          "formation": "5-4-1",
           "position_id": 115
         }
       ],
@@ -664,7 +664,7 @@
           "position_id": 11
         },
         {
-          "name": "Diogo Dalot",
+          "name": "Noussair Mazraoui",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -718,7 +718,7 @@
           "position_id": 66
         },
         {
-          "name": "Amad Diallo",
+          "name": "Bryan Mbeumo",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -736,7 +736,7 @@
           "position_id": 85
         },
         {
-          "name": "Matheus Cunha",
+          "name": "Patrick Dorgu",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -745,7 +745,7 @@
           "position_id": 87
         },
         {
-          "name": "Bryan Mbeumo",
+          "name": "Matheus Cunha",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -754,12 +754,30 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
-      "home_unavailable": [
+      "home_subs": [
+        "Dillon Phillips",
         "Cody Drameh",
+        "Lucas Herrington",
+        "Matt Targett",
+        "Paddy McNair",
+        "Jens Hjertø-Dahl",
+        "Kieran Dowell",
+        "Lucas Gourna-Douath",
+        "Liam Millar"
+      ],
+      "away_subs": [
+        "Karl Darlow",
+        "Diogo Dalot",
+        "Leny Yoro",
+        "Lisandro Martínez",
+        "Kobbie Mainoo",
+        "Benjamin Sesko",
+        "Joshua Zirkzee",
+        "Marcus Rashford",
+        "Shea Lacey"
+      ],
+      "home_unavailable": [
         "Matty Jacob",
-        "Patrick McNair",
         "Hidemasa Morita",
         "Jack Butland",
         "Charlie Hughes",
@@ -769,9 +787,7 @@
         "Óscar Zambrano"
       ],
       "away_unavailable": [
-        "Karl Darlow",
         "Mason Mount",
-        "Benjamin Sesko",
         "Tom Heaton",
         "Matthijs de Ligt",
         "Manuel Ugarte"

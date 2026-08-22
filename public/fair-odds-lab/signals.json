@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-22T07:20:53.283999Z",
+  "generated_at": "2026-08-22T10:39:19.507475Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -34,20 +34,19 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 32,
+  "fixtures_evaluated": 28,
   "signals_qualifying": 2,
   "safety_exclusions": {
     "low_signal_confidence": 4,
-    "model_probability_below_floor": 7,
+    "model_probability_below_floor": 5,
     "market_odds_above_cap": 2,
-    "lineup_not_public_quality": 4,
-    "model_market_gap_gt_10pp": 7,
-    "defensive_position": 1
+    "lineup_not_public_quality": 3,
+    "model_market_gap_gt_10pp": 5
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 7,
+    "eligible_rows": 5,
     "added_by_league": {
-      "epl": 5,
+      "epl": 3,
       "la-liga": 1,
       "serie-a": 1
     },
@@ -91,12 +90,12 @@
         "fair_odds": 2.92
       },
       "market_data": {
-        "best_odds": 3.75,
+        "best_odds": 4.0,
         "best_book": "Bet365",
-        "implied_chance_pct": 26.7
+        "implied_chance_pct": 25.0
       },
       "edge": {
-        "price_gap_pp": 7.6,
+        "price_gap_pp": 9.3,
         "model_advantage": true
       },
       "metrics": {
@@ -108,7 +107,7 @@
         "share_of_team_chances_percentile": 95,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 46
+          "percentile": 52
         },
         "recent_team_form": {
           "tier": "Quiet",
@@ -127,7 +126,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 79
+          "percentile": 80
         },
         "opponent_recent_defence": {
           "tier": "High",
@@ -208,7 +207,7 @@
         "share_of_team_chances_percentile": 87,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 97
+          "percentile": 98
         },
         "recent_team_form": {
           "tier": "Strong",
@@ -227,7 +226,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 49
+          "percentile": 52
         },
         "opponent_recent_defence": {
           "tier": "High",
