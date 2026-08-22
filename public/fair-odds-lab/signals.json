@@ -1,7 +1,6 @@
 {
-  "generated_at": "2026-08-22T18:49:16.678367Z",
+  "generated_at": "2026-08-22T19:02:19.482905Z",
   "source_file": [
-    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
@@ -34,19 +33,19 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 13,
+  "fixtures_evaluated": 12,
   "signals_qualifying": 0,
   "safety_exclusions": {
     "lineup_not_public_quality": 2,
     "model_probability_below_floor": 3,
     "low_signal_confidence": 3,
-    "model_market_gap_gt_10pp": 5,
+    "model_market_gap_gt_10pp": 4,
     "defensive_position": 1
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 5,
+    "eligible_rows": 4,
     "added_by_league": {
-      "epl": 3,
+      "epl": 2,
       "la-liga": 1,
       "serie-a": 1
     },
