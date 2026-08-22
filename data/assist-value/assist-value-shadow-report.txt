@@ -1,5 +1,5 @@
 Assist Value Shadow Report
-generated_at_utc: 2026-08-21T07:54:07Z
+generated_at_utc: 2026-08-22T07:41:27Z
 
 Status
 shadow_status: ENABLED_RESEARCH_ONLY
@@ -8,15 +8,15 @@ model_status: NOT_FITTED
 fair_odds_status: NOT_AUTHORISED
 
 Inputs
-raw_odds_rows_loaded: 1565
+raw_odds_rows_loaded: 1650
 role_players_loaded: 1030
 
 Join
-shadow_rows_assist_only: 1565
-role_matched_rows: 458
-role_match_rate_pct: 29.27
+shadow_rows_assist_only: 1650
+role_matched_rows: 473
+role_match_rate_pct: 28.67
 ambiguous_player_rows: 1
-unmatched_player_rows: 1106
+unmatched_player_rows: 1176
 
 Interpretation
 This board is an evidence layer only: Bet365 assist market rows enriched with RotoWire set-piece role shares.
@@ -34,34 +34,34 @@ Top role-matched rows
  - Bruno Fernandes | Hull City vs Manchester United | odds 2.6250 | setpiece_last5 65.38 | corners_last5 59.09 | fk_last5 100.0
  - Sebastian Szymanski | Stade Rennais FC vs Paris Saint-Germain | odds 6.5000 | setpiece_last5 64.44 | corners_last5 65.79 | fk_last5 66.67
  - Lucas Da Cunha | Udinese Calcio vs Como 1907 | odds 6.0000 | setpiece_last5 58.62 | corners_last5 60.0 | fk_last5 50.0
- - Mathias Jensen | Brentford FC vs Tottenham Hotspur | odds 6.5000 | setpiece_last5 58.62 | corners_last5 57.89 | fk_last5 66.67
+ - Mathias Jensen | Brentford FC vs Tottenham Hotspur | odds 6.0000 | setpiece_last5 58.62 | corners_last5 57.89 | fk_last5 66.67
+ - Jon Ander Olasagasti | CA Osasuna vs Levante UD | odds 10.0000 | setpiece_last5 58.33 | corners_last5 63.64 | fk_last5 50.0
+ - Enzo Fernandez | Fulham FC vs Chelsea FC | odds 5.0000 | setpiece_last5 57.69 | corners_last5 57.14 | fk_last5 63.64
  - Andrija Bulatovic | Racing Club De Lens vs AJ Auxerre | odds 7.0000 | setpiece_last5 57.14 | corners_last5 56.52 | fk_last5 60.0
  - Ruben Vargas | Athletic Bilbao vs Sevilla FC | odds 7.0000 | setpiece_last5 56.52 | corners_last5 57.14 | fk_last5 55.56
- - Declan Rice | Arsenal FC vs Coventry City | odds 3.7500 | setpiece_last5 56.52 | corners_last5 35.71 | fk_last5 88.89
  - Victor Chust | Elche CF vs FC Barcelona | odds 12.0000 | setpiece_last5 56.0 | corners_last5 60.0 | fk_last5 57.14
  - Jonathan Clauss | OGC Nice vs FC Lorient | odds 4.3330 | setpiece_last5 56.0 | corners_last5 56.25 | fk_last5 62.5
  - Pascal Gross | Brighton & Hove Albion vs Aston Villa | odds 5.0000 | setpiece_last5 55.56 | corners_last5 48.15 | fk_last5 77.78
  - Christopher Nkunku | Torino FC vs AC Milan | odds 5.0000 | setpiece_last5 55.0 | corners_last5 50.0 | fk_last5 50.0
- - Anton Stach | Nottingham Forest vs Leeds United | odds 7.0000 | setpiece_last5 54.84 | corners_last5 61.9 | fk_last5 44.44
 
 Unmatched sample
- - Kingstone Mutandwa | Parma Calcio vs Cagliari Calcio
- - Gennaro Borrelli | Parma Calcio vs Cagliari Calcio
- - Rachid Kouda | Parma Calcio vs Cagliari Calcio
- - Oliver Sorensen | Parma Calcio vs Cagliari Calcio
- - Matteo Prati | Parma Calcio vs Cagliari Calcio
- - Enrico Del Prato | Parma Calcio vs Cagliari Calcio
- - Alessandro Circati | Parma Calcio vs Cagliari Calcio
- - David Romero | Parma Calcio vs Cagliari Calcio
- - Nesta Elphege | Parma Calcio vs Cagliari Calcio
- - Matija Frigan | Parma Calcio vs Cagliari Calcio
- - Paul Mendy | Parma Calcio vs Cagliari Calcio
- - Antoine Joujou | Parma Calcio vs Cagliari Calcio
- - El Bilal Toure | Parma Calcio vs Cagliari Calcio
- - Nicola Grandu | Parma Calcio vs Cagliari Calcio
- - Pontus Almqvist | Parma Calcio vs Cagliari Calcio
- - Sebastian Di Paolo | Parma Calcio vs Cagliari Calcio
- - Abdou-Salam Konate | Parma Calcio vs Cagliari Calcio
- - Nicolo Cavuoti | Parma Calcio vs Cagliari Calcio
- - Sascha Britschgi | Parma Calcio vs Cagliari Calcio
- - Giuseppe Aurelio | Parma Calcio vs Cagliari Calcio
+ - Andre-Franck Anguissa | Genoa CFC vs SSC Napoli
+ - Elias Havel | Genoa CFC vs SSC Napoli
+ - Giovane Nascimento | Genoa CFC vs SSC Napoli
+ - Joi Nuredini | Genoa CFC vs SSC Napoli
+ - Alexsandro Amorim | Genoa CFC vs SSC Napoli
+ - Leonardo Spinazzola | Genoa CFC vs SSC Napoli
+ - Franz-Ethan Meichtry | Genoa CFC vs SSC Napoli
+ - Morten Frendrup | Genoa CFC vs SSC Napoli
+ - Mario Mitaj | Genoa CFC vs SSC Napoli
+ - Amir Rrahmani | Genoa CFC vs SSC Napoli
+ - Leo Ostigard | Genoa CFC vs SSC Napoli
+ - Alessandro Marcandalli | Genoa CFC vs SSC Napoli
+ - Lorenzo Lucca | Genoa CFC vs SSC Napoli
+ - de Almeida Alisson Santos | Genoa CFC vs SSC Napoli
+ - Noa Lang | Genoa CFC vs SSC Napoli
+ - Tommaso Baldanzi | Genoa CFC vs SSC Napoli
+ - Giovanni Di Lorenzo | Genoa CFC vs SSC Napoli
+ - Jens Cajuste | Genoa CFC vs SSC Napoli
+ - Samuel Wiafe | Genoa CFC vs SSC Napoli
+ - Billy Gilmour | Genoa CFC vs SSC Napoli
