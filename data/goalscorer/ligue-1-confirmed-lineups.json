@@ -795,9 +795,9 @@
       "kickoff_utc": "2026-08-22T18:45:00Z",
       "home_team": "Toulouse",
       "away_team": "Lyon",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-3-3",
       "away_formation": "4-3-3",
       "home_players": [
@@ -806,7 +806,7 @@
         "Mark McKenzie",
         "Rasmus Nicolaisen",
         "Christ Tapé",
-        "Mário Sauer",
+        "Niklas Schmidt",
         "Cristian Cásseres",
         "Thomas Jørgensen",
         "Julián Vignolo",
@@ -814,17 +814,17 @@
         "Yann Gboho"
       ],
       "away_players": [
-        "Dominik Greif",
+        "Rémy Descamps",
         "Zachary Athekame",
         "Clinton Mata",
         "Felix Bacher",
         "Mohamed Ouédraogo",
         "Mads Bidstrup",
-        "Tyler Morton",
-        "Corentin Tolisso",
+        "Noah Nartey",
+        "Mathys de Carvalho",
         "Kaïl Boudache",
-        "Loïs Openda",
-        "Malick Fofana"
+        "Rémi Himbert",
+        "Julien Duranville"
       ],
       "home_starters": [
         {
@@ -873,7 +873,7 @@
           "position_id": 38
         },
         {
-          "name": "Mário Sauer",
+          "name": "Niklas Schmidt",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -929,7 +929,7 @@
       ],
       "away_starters": [
         {
-          "name": "Dominik Greif",
+          "name": "Rémy Descamps",
           "line_index": -1,
           "line_size": 1,
           "role_score": 0,
@@ -983,7 +983,7 @@
           "position_id": 73
         },
         {
-          "name": "Tyler Morton",
+          "name": "Noah Nartey",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -992,7 +992,7 @@
           "position_id": 75
         },
         {
-          "name": "Corentin Tolisso",
+          "name": "Mathys de Carvalho",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -1010,7 +1010,7 @@
           "position_id": 103
         },
         {
-          "name": "Loïs Openda",
+          "name": "Rémi Himbert",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -1019,7 +1019,7 @@
           "position_id": 105
         },
         {
-          "name": "Malick Fofana",
+          "name": "Julien Duranville",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -1028,8 +1028,28 @@
           "position_id": 107
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Mathys Niflore",
+        "David Odogu",
+        "Seny Koumbassa",
+        "Mário Sauer",
+        "Mathis Saka",
+        "Rafik Messali",
+        "Ilyas Azizi",
+        "Jacen Russell-Rowe",
+        "Sion Oppong"
+      ],
+      "away_subs": [
+        "Dominik Greif",
+        "Nicolás Tagliafico",
+        "Corentin Tolisso",
+        "Tanner Tessmann",
+        "Tyler Morton",
+        "Ernest Nuamah",
+        "Loïs Openda",
+        "Malick Fofana",
+        "Pavel Sulc"
+      ],
       "home_unavailable": [
         "Alexis Vossah"
       ],
@@ -1047,9 +1067,9 @@
       "kickoff_utc": "2026-08-22T18:45:00Z",
       "home_team": "Troyes",
       "away_team": "Paris FC",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -1070,7 +1090,7 @@
         "Adama Camara",
         "Diego Coppola",
         "Mamadou Mbow",
-        "Thibault De Smet",
+        "Otávio",
         "Pierre Lees-Melou",
         "Rudy Matondo",
         "Ilan Kebbal",
@@ -1217,7 +1237,7 @@
           "position_id": 36
         },
         {
-          "name": "Thibault De Smet",
+          "name": "Otávio",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,

@@ -9,9 +9,9 @@
       "kickoff_utc": "2026-08-22T18:45:00Z",
       "home_team": "Genoa",
       "away_team": "Napoli",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-1-2",
       "away_formation": "4-3-3",
       "home_players": [
@@ -21,7 +21,7 @@
         "Johan Vásquez",
         "Brooke Norton-Cuffy",
         "Morten Frendrup",
-        "Djibril Sow",
+        "Amorim",
         "Mikael Egill Ellertsson",
         "Tommaso Baldanzi",
         "Vítinha",
@@ -96,7 +96,7 @@
           "position_id": 64
         },
         {
-          "name": "Djibril Sow",
+          "name": "Amorim",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -500,6 +500,8 @@
         }
       ],
       "home_subs": [
+        "Petar Sucic",
+        "Ange-Yoan Bonny",
         "Ivan Provedel",
         "Raffaele Di Gennaro",
         "Benjamin Pavard",
@@ -508,8 +510,6 @@
         "Leonardo Bovio",
         "Aleksandar Stankovic",
         "Luis Henrique",
-        "Petar Sucic",
-        "Ange-Yoan Bonny",
         "Jamal Iddrissou",
         "Marcus Thuram"
       ],
@@ -559,8 +559,8 @@
         "Adrián Bernabé",
         "Christian Ordóñez",
         "Mandela Keita",
-        "Matija Frigan",
         "El Bilal Touré",
+        "Simone Lontani",
         "Ousmane Diallo"
       ],
       "away_players": [
@@ -574,7 +574,7 @@
         "Jacopo Fazzini",
         "Michel Ndary Adopo",
         "Daniel Maldini",
-        "Gennaro Borrelli"
+        "Paul Mendy"
       ],
       "home_starters": [
         {
@@ -650,7 +650,7 @@
           "position_id": 77
         },
         {
-          "name": "Matija Frigan",
+          "name": "El Bilal Touré",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -659,7 +659,7 @@
           "position_id": 103
         },
         {
-          "name": "El Bilal Touré",
+          "name": "Simone Lontani",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -769,7 +769,7 @@
           "position_id": 86
         },
         {
-          "name": "Gennaro Borrelli",
+          "name": "Paul Mendy",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -778,8 +778,26 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Abdou-Salam Konate"
+      ],
+      "away_subs": [
+        "Alen Sherri",
+        "Boris Radunovic",
+        "Gabriele Zappa",
+        "Raphael Kofler",
+        "Yerry Mina",
+        "Giuseppe Aurelio",
+        "Ivan Sulev",
+        "Joseph Liteta",
+        "Matteo Prati",
+        "Mattia Felici",
+        "Nicolò Cavuoti",
+        "Alieu Fadera",
+        "Gennaro Borrelli",
+        "Kevin Carlos",
+        "Kingstone Mutandwa"
+      ],
       "home_unavailable": [
         "Giovanni Daffara",
         "Benjamín Cremaschi",
@@ -1037,10 +1055,10 @@
         }
       ],
       "home_subs": [
+        "Enzo Ebosse",
         "Daniele Padelli",
         "Edoardo Piana",
         "Branimir Mlacic",
-        "Enzo Ebosse",
         "Juan Arizala",
         "Nicolò Bertola",
         "Saba Goglichidze",
@@ -1053,6 +1071,8 @@
         "Vakoun Issouf Bayo"
       ],
       "away_subs": [
+        "Lucas Da Cunha",
+        "Assane Diao",
         "Emil Audero",
         "Mauro Vigorito",
         "Noel Törnqvist",
@@ -1061,13 +1081,11 @@
         "Ivan Smolcic",
         "Kaiki",
         "Marc-Oliver Kempf",
-        "Lucas Da Cunha",
         "Mattia Liberali",
         "Maxence Caqueret",
         "Riccardo Cassano",
         "Adrian Lahdo",
-        "Álvaro Morata",
-        "Assane Diao"
+        "Álvaro Morata"
       ],
       "home_unavailable": [
         "Keinan Davis",
