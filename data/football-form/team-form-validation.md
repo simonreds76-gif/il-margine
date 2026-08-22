@@ -1,6 +1,6 @@
 # Football Form Layer Validation
 
-Generated: 2026-08-21T15:45:46+00:00
+Generated: 2026-08-22T09:17:23+00:00
 Status: **ERROR**
 
 ## Files
@@ -12,14 +12,14 @@ Status: **ERROR**
 
 ## Issues
 
-- **error** `team_match_base_bundesliga_stale`: bundesliga latest date 2026-05-16 is 97d old; max 21d
-- **error** `team_match_base_epl_stale`: epl latest date 2026-05-24 is 89d old; max 21d
-- **error** `team_match_base_ligue_1_stale`: ligue-1 latest date 2026-05-17 is 96d old; max 21d
-- **error** `team_match_base_serie_a_stale`: serie-a latest date 2026-05-24 is 89d old; max 21d
-- **error** `team_rolling_form_bundesliga_stale`: bundesliga latest date 2026-05-16 is 97d old; max 21d
-- **error** `team_rolling_form_epl_stale`: epl latest date 2026-05-24 is 89d old; max 21d
-- **error** `team_rolling_form_ligue_1_stale`: ligue-1 latest date 2026-05-17 is 96d old; max 21d
-- **error** `team_rolling_form_serie_a_stale`: serie-a latest date 2026-05-24 is 89d old; max 21d
+- **error** `team_match_base_bundesliga_stale`: bundesliga latest date 2026-05-16 is 98d old; max 21d
+- **error** `team_match_base_epl_stale`: epl latest date 2026-05-24 is 90d old; max 21d
+- **error** `team_match_base_ligue_1_stale`: ligue-1 latest date 2026-05-17 is 97d old; max 21d
+- **error** `team_match_base_serie_a_stale`: serie-a latest date 2026-05-24 is 90d old; max 21d
+- **error** `team_rolling_form_bundesliga_stale`: bundesliga latest date 2026-05-16 is 98d old; max 21d
+- **error** `team_rolling_form_epl_stale`: epl latest date 2026-05-24 is 90d old; max 21d
+- **error** `team_rolling_form_ligue_1_stale`: ligue-1 latest date 2026-05-17 is 97d old; max 21d
+- **error** `team_rolling_form_serie_a_stale`: serie-a latest date 2026-05-24 is 90d old; max 21d
 
 ## Per-League Freshness
 
@@ -27,18 +27,18 @@ Status: **ERROR**
 
 | League | Latest date | Age days |
 | --- | --- | ---: |
-| bundesliga | 2026-05-16 | 97 |
-| epl | 2026-05-24 | 89 |
-| la-liga | 2026-08-20 | 1 |
-| ligue-1 | 2026-05-17 | 96 |
-| serie-a | 2026-05-24 | 89 |
+| bundesliga | 2026-05-16 | 98 |
+| epl | 2026-05-24 | 90 |
+| la-liga | 2026-08-20 | 2 |
+| ligue-1 | 2026-05-17 | 97 |
+| serie-a | 2026-05-24 | 90 |
 
 ### team-rolling-form.csv
 
 | League | Latest date | Age days |
 | --- | --- | ---: |
-| bundesliga | 2026-05-16 | 97 |
-| epl | 2026-05-24 | 89 |
-| la-liga | 2026-08-20 | 1 |
-| ligue-1 | 2026-05-17 | 96 |
-| serie-a | 2026-05-24 | 89 |
+| bundesliga | 2026-05-16 | 98 |
+| epl | 2026-05-24 | 90 |
+| la-liga | 2026-08-20 | 2 |
+| ligue-1 | 2026-05-17 | 97 |
+| serie-a | 2026-05-24 | 90 |
