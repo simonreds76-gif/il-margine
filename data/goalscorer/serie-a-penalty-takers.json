@@ -31,8 +31,8 @@
       "Monza",
       "Venezia"
     ],
-    "last_verified": "2026-07-30",
-    "public_updated_at": "2026-07-30",
+    "last_verified": "2026-08-22",
+    "public_updated_at": "2026-08-22",
     "membership_source": "https://en.legaseriea.it/serie-a/news/looking-forward-to-the-2026-27-serie-a-fixture-list"
   },
   "AC Milan": {
@@ -5378,28 +5378,28 @@
     }
   },
   "Venezia": {
-    "primary": "Akor Adams",
-    "secondary": "Albion Rrahmani",
-    "tertiary": "Lion Lauberbach",
-    "last_updated": "2026-07-30",
-    "hierarchy_status": "disputed",
+    "primary": "Gianluca Busio",
+    "secondary": "Akor Adams",
+    "tertiary": "Albion Rrahmani",
+    "last_updated": "2026-08-22",
+    "hierarchy_status": "confirmed",
     "confidence": {
-      "primary": "low",
+      "primary": "high",
       "secondary": "low",
-      "tertiary": "medium"
+      "tertiary": "low"
     },
-    "condition_note": "Venezia officially signed Adams on 22 July. Goal ranks Adams ahead of Rrahmani, while SOS Fanta treats the two new forwards as the leading head-to-head; Adams's 3/3 at Sevilla gives him the narrow practical edge. The latest event adds a usable third: Lauberbach converted against Galatasaray on 27 July with Yeboah on the pitch, after Rrahmani had gone off and while Adams was not yet ready. The Adams-Rrahmani order is not settled by a like-for-like Venezia penalty. Lauberbach's event establishes him over Yeboah in that lineup but not over the absent Adams or substituted Rrahmani. Adorante is omitted from the three because he underwent back surgery on 25 July. Adams and Rrahmani have not yet been compared on the pitch for a Venezia penalty; Lauberbach's event occurred after Rrahmani went off and without Adams available. Conditions: If preseason or competitive evidence shows Rrahmani taking with Adams on the pitch, move Rrahmani to primary. When Adorante returns from back surgery, reassess him against Lauberbach for tertiary. A departure by Yeboah does not alter the recommended three but reduces depth.",
+    "condition_note": "Giovanni Stroppa explicitly named captain Gianluca Busio as Venezia's penalty taker in the pre-match press conference before Venezia-Lecce on 22 August. The coach added that Busio will decide what to do, so Busio owns the decision but may delegate a particular kick. Akor Adams and Albion Rrahmani remain conditional alternatives rather than co-primary takers; the press conference supersedes the speculative preseason rankings that had placed the forwards first. No fixed order behind Busio has been confirmed, so the backup positions remain low confidence.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-22",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-22",
     "latest_evidence": {
-      "id": "evt_20260730_venezia_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 6
+      "id": "evt_20260822_venezia_coach_designation",
+      "date": "2026-08-22",
+      "type": "coach_press_conference",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -5545,6 +5545,38 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260822_venezia_coach_designation",
+        "date": "2026-08-22",
+        "season": "2026/27",
+        "type": "coach_press_conference",
+        "penalty_kind": "regular_time",
+        "competition": "Serie A",
+        "match": "Venezia vs Lecce",
+        "context": "Before Venezia-Lecce, Giovanni Stroppa explicitly stated that Busio is the penalty taker and added that Busio will decide what to do. This confirms Busio as the designated primary while preserving the possibility that he delegates an individual kick.",
+        "sources": [
+          {
+            "label": "SpazioCalcio",
+            "url": "https://www.spaziocalcio.it/calcio-italiano/serie-a/stroppa-presenta-venezia-lecce-tutte-le-parole-del-tecnico/",
+            "date": "2026-08-22",
+            "note": "Reports Stroppa's direct pre-match statement: Busio is Venezia's penalty taker and will decide whether to take or delegate the kick."
+          },
+          {
+            "label": "Fantacalcio Online",
+            "url": "https://www.fantacalcio-online.com/it/consigli-fantacalcio/probabili-formazioni-serie-a",
+            "date": "2026-08-22",
+            "note": "Current 2026/27 squad guide independently lists Busio as Venezia's designated penalty taker."
+          }
+        ],
+        "detection": "manual_coach_press_conference",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-22T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Direct coach designation overrides the earlier speculative preseason hierarchy."
       }
     ],
     "change_log": [
@@ -5593,35 +5625,58 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-22",
+        "season": "2026/27",
+        "change_type": "coach_designation",
+        "from": {
+          "primary": "Akor Adams",
+          "secondary": "Albion Rrahmani",
+          "tertiary": "Lion Lauberbach"
+        },
+        "to": {
+          "primary": "Gianluca Busio",
+          "secondary": "Akor Adams",
+          "tertiary": "Albion Rrahmani"
+        },
+        "reason": "Giovanni Stroppa directly designated Busio as Venezia's penalty taker before Venezia-Lecce. His comment leaves Busio free to delegate an individual kick, but the decision belongs to Busio; Adams and Rrahmani therefore move to conditional backup positions.",
+        "evidence_ids": [
+          "evt_20260822_venezia_coach_designation"
+        ],
+        "detection": "manual_coach_press_conference",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-22T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": null,
     "player_ids": {},
-    "source": "Il Margine multi-source research",
-    "cross_check": "Il Margine roster cross-check",
+    "source": "Giovanni Stroppa pre-match press conference",
+    "cross_check": "Fantacalcio Online 2026/27 penalty-taker guide",
     "squad_membership": {
       "primary": {
+        "player": "Gianluca Busio",
+        "status": "confirmed",
+        "source_url": "https://www.spaziocalcio.it/calcio-italiano/serie-a/stroppa-presenta-venezia-lecce-tutte-le-parole-del-tecnico/",
+        "checked_at": "2026-08-22"
+      },
+      "secondary": {
         "player": "Akor Adams",
         "status": "confirmed",
         "source_url": "https://www.veneziafc.it/news/akor-adams-al-venezia-fc",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-08-22"
       },
-      "secondary": {
+      "tertiary": {
         "player": "Albion Rrahmani",
         "status": "confirmed",
         "source_url": "https://www.veneziafc.it/news/i-convocati-per-il-ritiro-di-falcade",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
-        "player": "Lion Lauberbach",
-        "status": "confirmed",
-        "source_url": "https://www.veneziafc.it/news/i-convocati-per-il-ritiro-di-falcade",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-08-22"
       }
     }
   }
