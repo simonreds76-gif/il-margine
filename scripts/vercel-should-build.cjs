@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-require-imports */
 /**
  * Vercel Ignored Build Step.
  *
@@ -36,10 +37,6 @@ if (commitMessage.includes("[force build]")) {
   build("force build flag found in commit message");
 }
 
-if (!previousSha) {
-  build("VERCEL_GIT_PREVIOUS_SHA missing; building defensively");
-}
-
 function parseFileList(output) {
   return output
     .split(/\r?\n/)
@@ -58,34 +55,38 @@ function readChangedFiles(args) {
 
 let changedFiles = [];
 let usedSingleCommitFallback = false;
-try {
-  changedFiles = readChangedFiles(["diff", "--name-only", previousSha, currentSha]);
-} catch (error) {
-  log(`initial git diff failed: ${error.message.split(/\r?\n/)[0]}`);
+if (previousSha) {
+  try {
+    changedFiles = readChangedFiles(["diff", "--name-only", previousSha, currentSha]);
+  } catch (error) {
+    log(`initial git diff failed: ${error.message.split(/\r?\n/)[0]}`);
 
-  if (commitRef) {
-    try {
-      execFileSync("git", ["fetch", "--no-tags", "--deepen=1000", "origin", commitRef], {
-        encoding: "utf8",
-        stdio: ["ignore", "pipe", "pipe"],
-      });
-      changedFiles = readChangedFiles(["diff", "--name-only", previousSha, currentSha]);
-      log("diff succeeded after deepening Vercel's shallow checkout");
-    } catch (fetchError) {
-      log(`history deepen fallback failed: ${fetchError.message.split(/\r?\n/)[0]}`);
+    if (commitRef) {
+      try {
+        execFileSync("git", ["fetch", "--no-tags", "--deepen=1000", "origin", commitRef], {
+          encoding: "utf8",
+          stdio: ["ignore", "pipe", "pipe"],
+        });
+        changedFiles = readChangedFiles(["diff", "--name-only", previousSha, currentSha]);
+        log("diff succeeded after deepening Vercel's shallow checkout");
+      } catch (fetchError) {
+        log(`history deepen fallback failed: ${fetchError.message.split(/\r?\n/)[0]}`);
+      }
     }
   }
+} else {
+  log("VERCEL_GIT_PREVIOUS_SHA missing; inspecting the current commit instead");
+}
 
-  if (changedFiles.length === 0) {
-    try {
-      // Last resort for single-commit artifact pushes. This avoids rebuilding
-      // known live-data commits just because Vercel did not clone enough history.
-      changedFiles = readChangedFiles(["diff-tree", "--no-commit-id", "--name-only", "-r", currentSha]);
-      usedSingleCommitFallback = true;
-      log("using current-commit diff fallback because previous SHA is unavailable");
-    } catch (treeError) {
-      build(`git diff failed after fallbacks; building defensively: ${treeError.message}`);
-    }
+if (changedFiles.length === 0) {
+  try {
+    // Last resort for single-commit artifact pushes. This avoids rebuilding
+    // known live-data commits just because Vercel did not clone enough history.
+    changedFiles = readChangedFiles(["diff-tree", "--no-commit-id", "--name-only", "-r", currentSha]);
+    usedSingleCommitFallback = true;
+    log("using current-commit diff fallback because previous SHA is unavailable");
+  } catch (treeError) {
+    build(`git diff failed after fallbacks; building defensively: ${treeError.message}`);
   }
 }
 
@@ -100,7 +101,9 @@ const SKIP_PATTERNS = [
   /^public\/fair-odds-lab\/(signals|highlights)\.json$/,
   /^data\/goalscorer\/all-leagues-live-board\.json$/,
   /^data\/goalscorer\/goalscorer-live-(snapshot|status|schedule-state)\.json$/,
+  /^data\/goalscorer\/goalscorer-match-status\.json$/,
   /^data\/goalscorer\/goalscorer-monitor-snapshot\.json$/,
+  /^data\/goalscorer\/confirmed-lineups\.json$/,
   /^data\/goalscorer\/goalscorer-odds-history\.csv$/,
   /^data\/goalscorer\/goalscorer-live-comparison\.(csv|txt)$/,
   /^data\/goalscorer\/penalty-duty-context\.json$/,
@@ -111,11 +114,15 @@ const SKIP_PATTERNS = [
   /^data\/goalscorer\/live-board\.json$/,
   /^data\/goalscorer\/live-history\//,
   /^data\/goalscorer\/inbox\//,
+  /^data\/assist-value\/(assist-value-model-report\.txt|assist-value-shadow-signals\.csv)$/,
 
   // Corners, team-shots and hosted monitor artifacts.
   /^data\/corners-ou\//,
   /^data\/football-form\//,
+  /^data\/goalkeeper-saves\//,
+  /^data\/team-shots\/inbox\//,
   /^data\/team-shots\/team-shots-live-snapshot\.json$/,
+  /^data\/team-shots\/team-shots-odds-history\.csv$/,
   /^data\/team-shots\/shadow\/settlement-audit.*\.json$/,
   /^data\/team-shots\/shadow\/team-shots-shadow-(signals.*\.csv|performance.*\.txt)$/,
   /^data\/shortlist\//,

@@ -10,7 +10,9 @@ import { BASE_URL } from "@/lib/config";
 import { formatMatchDate, formatOdds, formatStake } from "@/lib/format";
 import { fetchSeoTipFixture, type SeoTipBet } from "@/lib/tip-seo-server";
 
-export const revalidate = 3600;
+// Admin mutations explicitly invalidate betting-tip pages, so public reads can
+// use a long cache without delaying edits or settlements.
+export const revalidate = 86400;
 
 interface PageProps {
   params: Promise<{ slugId: string }>;

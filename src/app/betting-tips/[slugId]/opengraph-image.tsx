@@ -4,7 +4,7 @@ import { fetchSeoTipFixture } from "@/lib/tip-seo-server";
 export const alt = "Il Margine betting preview";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 interface ImageProps {
   params: Promise<{ slugId: string }>;
