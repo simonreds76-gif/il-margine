@@ -12,6 +12,7 @@ import { fetchSeoTipFixture, type SeoTipBet } from "@/lib/tip-seo-server";
 
 // Admin mutations explicitly invalidate betting-tip pages, so public reads can
 // use a long cache without delaying edits or settlements.
+export const dynamic = "force-static";
 export const revalidate = 86400;
 
 interface PageProps {

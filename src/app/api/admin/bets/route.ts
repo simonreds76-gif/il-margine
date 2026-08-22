@@ -21,6 +21,7 @@ function revalidatePublicBetSurfaces() {
   }
   revalidatePath("/tips/[slugId]", "page");
   revalidatePath("/betting-tips/[slugId]", "page");
+  revalidatePath("/betting-tips/[slugId]/opengraph-image", "page");
 }
 
 function getSignedToken(): string {
