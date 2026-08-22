@@ -31,8 +31,8 @@
       "Schalke 04",
       "SV Elversberg"
     ],
-    "last_verified": "2026-07-30",
-    "public_updated_at": "2026-07-30",
+    "last_verified": "2026-08-22",
+    "public_updated_at": "2026-08-22",
     "membership_source": "https://media.dfl.de/sites/3/2026/07/EN_eFyJmg6k_Bundesliga_Fixture-List_2026_27.pdf"
   },
   "Augsburg": {
@@ -4828,30 +4828,30 @@
     }
   },
   "Werder Bremen": {
-    "primary": "Romano Schmid",
+    "primary": "Niclas Füllkrug",
     "secondary": "Cedric Itten",
     "tertiary": "Salim Musah",
-    "last_updated": "2026-07-30",
+    "last_updated": "2026-08-22",
     "source": "Werder Bremen",
     "cross_check": "Kicker",
-    "hierarchy_status": "probable",
+    "hierarchy_status": "confirmed",
     "confidence": {
       "primary": "high",
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Schmid took all three Werder league penalties in 2025/26 and remains the clear incumbent. Itten's substantial senior career record and expected first-team role make him the practical deputy. Musah won and converted the 25 July preseason penalty; Schmid and Itten were absent, so it does not establish direct precedence over either. The rebuilt backup order has no direct same-match test. Musah's event came in a preseason lineup without Schmid or Itten. Conditions: Re-audit if Werder signs another senior penalty-specialist striker before the registration window closes.",
+    "condition_note": "Schmid left Werder. Füllkrug then started and converted Werder's competitive DFB-Pokal penalty on 22 August, making him the evidence-backed primary. Itten and Musah remain the best current-squad alternatives, but they have not been tested alongside Füllkrug for a penalty.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-22",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-22",
     "latest_evidence": {
-      "id": "evt_20260730_werder-bremen_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260822_werder_fuellkrug_assignment",
+      "date": "2026-08-22",
+      "type": "competitive_penalty_assignment",
+      "source_count": 3
     },
     "evidence_log": [
       {
@@ -5022,6 +5022,44 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260822_werder_fuellkrug_assignment",
+        "date": "2026-08-22",
+        "season": "2026/27",
+        "type": "competitive_penalty_assignment",
+        "penalty_kind": "regular_time",
+        "competition": "DFB-Pokal",
+        "match": "Werder Bremen DFB-Pokal first round",
+        "context": "Füllkrug converted a 53rd-minute competitive penalty. Itten replaced him after the hour, so no direct deputy precedence was established.",
+        "sources": [
+          {
+            "label": "Frosinone Schmid transfer announcement",
+            "url": "https://www.frosinonecalcio.com/schmid-e-giallazzurro/",
+            "date": "2026-08-22",
+            "note": "Confirms the former primary left Werder."
+          },
+          {
+            "label": "Sport1 DFB-Pokal report",
+            "url": "https://www.sport1.de/news/fussball/dfb-pokal/2026/08/dfb-pokal-fuellkrug-trifft-bei-werder-comeback",
+            "date": "2026-08-22",
+            "note": "Records Füllkrug's competitive penalty conversion."
+          },
+          {
+            "label": "Official Werder squad reference",
+            "url": "https://www.werder.de/teams/profis/spieler",
+            "date": "2026-08-22",
+            "note": "Current-squad cross-check."
+          }
+        ],
+        "detection": "manual_current_season_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-22T18:30:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Schmid left Werder. Füllkrug then started and converted Werder's competitive DFB-Pokal penalty on 22 August, making him the evidence-backed primary. Itten and Musah remain the best current-squad alternatives, but they have not been tested alongside Füllkrug for a penalty."
       }
     ],
     "change_log": [
@@ -5093,6 +5131,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-22",
+        "season": "2026/27",
+        "change_type": "current_season_evidence_update",
+        "from": {
+          "primary": "Romano Schmid",
+          "secondary": "Cedric Itten",
+          "tertiary": "Salim Musah"
+        },
+        "to": {
+          "primary": "Niclas Füllkrug",
+          "secondary": "Cedric Itten",
+          "tertiary": "Salim Musah"
+        },
+        "reason": "Schmid left Werder. Füllkrug then started and converted Werder's competitive DFB-Pokal penalty on 22 August, making him the evidence-backed primary. Itten and Musah remain the best current-squad alternatives, but they have not been tested alongside Füllkrug for a penalty.",
+        "evidence_ids": [
+          "evt_20260822_werder_fuellkrug_assignment"
+        ],
+        "detection": "manual_current_season_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-22T18:30:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -5110,22 +5171,22 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Romano Schmid",
+        "player": "Niclas Füllkrug",
         "status": "confirmed",
-        "source_url": "https://www.werder.de/news/maenner/2026-2027/rueckennummern-15072026",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.werder.de/teams/profis/spieler",
+        "checked_at": "2026-08-22"
       },
       "secondary": {
         "player": "Cedric Itten",
         "status": "confirmed",
-        "source_url": "https://www.werder.de/news/maenner/2026-2027/rueckennummern-15072026",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.werder.de/teams/profis/spieler",
+        "checked_at": "2026-08-22"
       },
       "tertiary": {
         "player": "Salim Musah",
         "status": "confirmed",
-        "source_url": "https://www.werder.de/news/maenner/2026-2027/rueckennummern-15072026",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.werder.de/teams/profis/spieler",
+        "checked_at": "2026-08-22"
       }
     }
   }

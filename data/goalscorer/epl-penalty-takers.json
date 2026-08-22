@@ -31,8 +31,8 @@
       "Hull City",
       "Ipswich Town"
     ],
-    "last_verified": "2026-08-10",
-    "public_updated_at": "2026-08-10",
+    "last_verified": "2026-08-22",
+    "public_updated_at": "2026-08-22",
     "membership_source": "https://www.premierleague.com/en/news/4675508/premier-league-fixture-schedulereleased-for-season-202627"
   },
   "Arsenal": {
@@ -3242,28 +3242,28 @@
     }
   },
   "Ipswich Town": {
-    "primary": "George Hirst",
-    "secondary": "Jack Clarke",
-    "tertiary": "Jaden Philogene",
-    "last_updated": "2026-08-08",
-    "hierarchy_status": "probable",
+    "primary": "Jack Clarke",
+    "secondary": "Jaden Philogene",
+    "tertiary": "Julio Enciso",
+    "last_updated": "2026-08-22",
+    "hierarchy_status": "conditional",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
-      "tertiary": "medium"
+      "tertiary": "low"
     },
-    "condition_note": "Official FPL 2026/27 role fields place George Hirst first, followed by Jack Clarke and Jaden Philogene. This reverses the earlier Clarke-led projection, but all three remain credible options from the existing multi-source research. Competitive same-pitch evidence will determine whether the preseason order holds.",
+    "condition_note": "George Hirst left Ipswich on 20 August. Clarke and Philogene are the strongest retained candidates, with Enciso the best current-squad fallback. No 2026/27 penalty has yet established a direct same-pitch order, so the hierarchy remains conditional.",
     "last_verified": {
-      "date": "2026-08-08",
+      "date": "2026-08-22",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-08-08",
+    "public_updated_at": "2026-08-22",
     "latest_evidence": {
-      "id": "evt_20260808_ipswich-town_fpl_role_review",
-      "date": "2026-08-08",
-      "type": "official_fpl_role_review",
-      "source_count": 1
+      "id": "evt_20260822_ipswich_roster_review",
+      "date": "2026-08-22",
+      "type": "current_season_roster_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -3417,6 +3417,38 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Applied after editorial review; direct competitive evidence remains the confirmation standard."
+      },
+      {
+        "id": "evt_20260822_ipswich_roster_review",
+        "date": "2026-08-22",
+        "season": "2026/27",
+        "type": "current_season_roster_review",
+        "penalty_kind": null,
+        "competition": "Premier League",
+        "match": "Ipswich Town vs Sunderland",
+        "context": "Hirst left before the match. Enciso started and Clarke replaced him; Philogene was absent. No penalty occurred, so the update removes a departed player without claiming a confirmed order.",
+        "sources": [
+          {
+            "label": "Stoke City transfer confirmation",
+            "url": "https://www.stokecityfc.com/news/2026/august/20/potters-sign-scotland-striker-hirst/",
+            "date": "2026-08-22",
+            "note": "Confirms George Hirst left Ipswich."
+          },
+          {
+            "label": "Sky Sports lineups",
+            "url": "https://www.skysports.com/football/ipswich-town-vs-sunderland/teams/559448",
+            "date": "2026-08-22",
+            "note": "Current-season lineup and substitution evidence."
+          }
+        ],
+        "detection": "manual_current_season_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-22T18:30:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "George Hirst left Ipswich on 20 August. Clarke and Philogene are the strongest retained candidates, with Enciso the best current-squad fallback. No 2026/27 penalty has yet established a direct same-pitch order, so the hierarchy remains conditional."
       }
     ],
     "change_log": [
@@ -3488,6 +3520,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-08-08T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-22",
+        "season": "2026/27",
+        "change_type": "current_season_evidence_update",
+        "from": {
+          "primary": "George Hirst",
+          "secondary": "Jack Clarke",
+          "tertiary": "Jaden Philogene"
+        },
+        "to": {
+          "primary": "Jack Clarke",
+          "secondary": "Jaden Philogene",
+          "tertiary": "Julio Enciso"
+        },
+        "reason": "George Hirst left Ipswich on 20 August. Clarke and Philogene are the strongest retained candidates, with Enciso the best current-squad fallback. No 2026/27 penalty has yet established a direct same-pitch order, so the hierarchy remains conditional.",
+        "evidence_ids": [
+          "evt_20260822_ipswich_roster_review"
+        ],
+        "detection": "manual_current_season_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-22T18:30:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -3501,22 +3556,22 @@
     "cross_check": "Existing multi-source preseason dossier and ongoing competitive match review.",
     "squad_membership": {
       "primary": {
-        "player": "George Hirst",
-        "status": "confirmed",
-        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-08"
-      },
-      "secondary": {
         "player": "Jack Clarke",
         "status": "confirmed",
-        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-08"
+        "source_url": "https://www.skysports.com/football/ipswich-town-vs-sunderland/teams/559448",
+        "checked_at": "2026-08-22"
       },
-      "tertiary": {
+      "secondary": {
         "player": "Jaden Philogene",
         "status": "confirmed",
-        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-08"
+        "source_url": "https://www.skysports.com/football/ipswich-town-vs-sunderland/teams/559448",
+        "checked_at": "2026-08-22"
+      },
+      "tertiary": {
+        "player": "Julio Enciso",
+        "status": "confirmed",
+        "source_url": "https://www.skysports.com/football/ipswich-town-vs-sunderland/teams/559448",
+        "checked_at": "2026-08-22"
       }
     }
   },

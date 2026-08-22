@@ -31,6 +31,7 @@ function LeagueCard({ league, season }: { league: ClubPenaltyLeague; season: Clu
     .map((name) => league.teams.find((team) => team.team === name))
     .filter((team): team is ClubPenaltyLeague["teams"][number] => Boolean(team));
   const unverified = league.teams.filter((team) => team.hierarchyStatus === "unknown").length;
+  const isLive = league.phase === "live";
 
   return (
     <article className="group relative overflow-hidden rounded-[28px] border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_18px_55px_rgba(0,0,0,0.2)] transition hover:-translate-y-0.5 hover:border-slate-700 sm:p-6">
@@ -44,10 +45,16 @@ function LeagueCard({ league, season }: { league: ClubPenaltyLeague; season: Clu
               <h2 className="mt-1 text-xl font-semibold tracking-tight text-slate-100">{league.label}</h2>
             </div>
           </div>
-          <span className="rounded-full border border-amber-300/20 bg-amber-400/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.16em] text-amber-100">Preseason</span>
+          <span className={`rounded-full border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.16em] ${isLive ? "border-emerald-300/25 bg-emerald-400/10 text-emerald-100" : "border-amber-300/20 bg-amber-400/10 text-amber-100"}`}>
+            {isLive ? "Live season" : "Preseason"}
+          </span>
         </div>
 
         <p className="mt-4 text-sm leading-6 text-slate-400">{league.copy}</p>
+        <p className="mt-3 text-xs text-slate-300">
+          <span className="text-slate-500">Board checked</span>{" "}
+          <span className="font-medium text-emerald-200">{league.boardCheckedLabel || "pending"}</span>
+        </p>
 
         <div className="mt-5 grid grid-cols-3 gap-2">
           <div className="rounded-2xl border border-slate-800 bg-slate-950/65 p-3">
@@ -100,11 +107,11 @@ export default function PenaltyTakersClient({ leagues, totalTeams, season }: Pro
                 Club penalty takers <span className="text-emerald-400">{season.label}</span>
               </h1>
               <p className="mt-5 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
-                Five dedicated league boards, {totalTeams} current clubs and honest preseason status. Final {season.previous_label} orders are carried forward only as a starting point, then re-verified from real penalties and lineup context.
+                Five dedicated league boards, {totalTeams} current clubs and transparent evidence status. Final {season.previous_label} orders were only a starting point; live-season penalties and lineup context now drive every update.
               </p>
               <div className="mt-7 flex flex-wrap gap-2">
                 <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-200">{totalTeams} current clubs</span>
-                <span className="rounded-full border border-amber-300/20 bg-amber-400/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-amber-100">Preseason verification</span>
+                <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-100">Live evidence monitoring</span>
                 <span className="rounded-full border border-slate-700 bg-slate-950/60 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-slate-300">{archivedCount} relegated records retained</span>
               </div>
             </div>

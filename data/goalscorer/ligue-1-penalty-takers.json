@@ -30,30 +30,30 @@
     "membership_source": "https://ligue1.com/en/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released"
   },
   "Angers": {
-    "primary": "Branco van den Boomen",
-    "secondary": "Amine Sbaï",
-    "tertiary": "Amine El Ouazzani",
-    "last_updated": "2026-07-30",
+    "primary": "Amine El Ouazzani",
+    "secondary": "Branco van den Boomen",
+    "tertiary": "Amine Sbaï",
+    "last_updated": "2026-08-22",
     "source": "AJ Auxerre",
     "cross_check": "Ligue 1",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "medium",
-      "secondary": "low",
+      "primary": "high",
+      "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Van den Boomen and Sbaï are the retained 2025/26 takers, both 0/1. Van den Boomen's broader dead-ball role gives him the least-speculative lead; El Ouazzani is the new senior-striker fallback. No 2026/27 coexistence penalty has established this order. Conditions: The first competitive penalty with Van den Boomen and Sbaï both available should override this order. Promote El Ouazzani if he becomes the regular centre-forward and takes the first current-season penalty.",
+    "condition_note": "El Ouazzani took and converted Angers' latest preseason penalty while van den Boomen started. That current-coach assignment moves El Ouazzani to first, with van den Boomen the dead-ball deputy and Sbaï next. A competitive penalty can still confirm or reverse the call.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-22",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-22",
     "latest_evidence": {
-      "id": "evt_20260730_angers_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260822_angers_el_ouazzani_assignment",
+      "date": "2026-08-22",
+      "type": "preseason_penalty_assignment",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -206,6 +206,38 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260822_angers_el_ouazzani_assignment",
+        "date": "2026-08-22",
+        "season": "2026/27",
+        "type": "preseason_penalty_assignment",
+        "penalty_kind": "regular_time",
+        "competition": "Club friendly",
+        "match": "Angers vs Paris FC",
+        "context": "El Ouazzani converted at five minutes while van den Boomen also started; Sbaï entered later.",
+        "sources": [
+          {
+            "label": "L'Équipe match report",
+            "url": "https://www.lequipe.fr/Football/match-direct/matches-amicaux-l1-intersaison/2026-2027/angers-paris-fc-live/695597",
+            "date": "2026-08-22",
+            "note": "Records El Ouazzani's penalty conversion."
+          },
+          {
+            "label": "ZeroZero lineup report",
+            "url": "https://www.zerozero.pt/live-ao-minuto/2026-08-15-angers-paris-fc/12266276",
+            "date": "2026-08-22",
+            "note": "Cross-checks candidate availability and substitutions."
+          }
+        ],
+        "detection": "manual_current_season_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-22T18:30:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "El Ouazzani took and converted Angers' latest preseason penalty while van den Boomen started. That current-coach assignment moves El Ouazzani to first, with van den Boomen the dead-ball deputy and Sbaï next. A competitive penalty can still confirm or reverse the call."
       }
     ],
     "change_log": [
@@ -277,6 +309,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-22",
+        "season": "2026/27",
+        "change_type": "current_season_evidence_update",
+        "from": {
+          "primary": "Branco van den Boomen",
+          "secondary": "Amine Sbaï",
+          "tertiary": "Amine El Ouazzani"
+        },
+        "to": {
+          "primary": "Amine El Ouazzani",
+          "secondary": "Branco van den Boomen",
+          "tertiary": "Amine Sbaï"
+        },
+        "reason": "El Ouazzani took and converted Angers' latest preseason penalty while van den Boomen started. That current-coach assignment moves El Ouazzani to first, with van den Boomen the dead-ball deputy and Sbaï next. A competitive penalty can still confirm or reverse the call.",
+        "evidence_ids": [
+          "evt_20260822_angers_el_ouazzani_assignment"
+        ],
+        "detection": "manual_current_season_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-22T18:30:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -294,50 +349,50 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Branco van den Boomen",
-        "status": "confirmed",
-        "source_url": "https://angers-sco.fr/equipe-pro/effectif/",
-        "checked_at": "2026-07-30"
-      },
-      "secondary": {
-        "player": "Amine Sbaï",
-        "status": "confirmed",
-        "source_url": "https://angers-sco.fr/equipe-pro/effectif/",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
         "player": "Amine El Ouazzani",
         "status": "confirmed",
-        "source_url": "https://angers-sco.fr/equipe-pro/effectif/",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.zerozero.pt/live-ao-minuto/2026-08-15-angers-paris-fc/12266276",
+        "checked_at": "2026-08-22"
+      },
+      "secondary": {
+        "player": "Branco van den Boomen",
+        "status": "confirmed",
+        "source_url": "https://www.zerozero.pt/live-ao-minuto/2026-08-15-angers-paris-fc/12266276",
+        "checked_at": "2026-08-22"
+      },
+      "tertiary": {
+        "player": "Amine Sbaï",
+        "status": "confirmed",
+        "source_url": "https://www.zerozero.pt/live-ao-minuto/2026-08-15-angers-paris-fc/12266276",
+        "checked_at": "2026-08-22"
       }
     }
   },
   "Auxerre": {
-    "primary": "Romain Faivre",
-    "secondary": "Josué Casimir",
-    "tertiary": "Danny Namaso",
-    "last_updated": "2026-07-30",
+    "primary": "Danny Namaso",
+    "secondary": "Romain Faivre",
+    "tertiary": "Josué Casimir",
+    "last_updated": "2026-08-22",
     "source": "AJ Auxerre",
     "cross_check": "Ligue 1",
-    "hierarchy_status": "probable",
+    "hierarchy_status": "confirmed",
     "confidence": {
-      "primary": "medium",
-      "secondary": "low",
+      "primary": "high",
+      "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Faivre's 10/11 career return and creative role are stronger than Casimir's single 2025/26 miss. Namaso is the practical attacking fallback. No current-season penalty or direct club designation establishes precedence. Conditions: The first regular-time attempt by any of the three is hierarchy-setting. Reassess immediately if Auxerre signs a proven penalty-taking forward.",
+    "condition_note": "Namaso took and converted Auxerre's 22 August league penalty while Faivre remained on the pitch. That is a direct current-season precedence test and moves Namaso first. Faivre remains the strongest deputy; Casimir is the next provisional fallback.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-22",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-22",
     "latest_evidence": {
-      "id": "evt_20260730_auxerre_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260822_auxerre_namaso_assignment",
+      "date": "2026-08-22",
+      "type": "competitive_penalty_assignment",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -496,6 +551,38 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260822_auxerre_namaso_assignment",
+        "date": "2026-08-22",
+        "season": "2026/27",
+        "type": "competitive_penalty_assignment",
+        "penalty_kind": "regular_time",
+        "competition": "Ligue 1",
+        "match": "Lens vs Auxerre",
+        "context": "Namaso converted at 61 minutes with Faivre still playing until 68; Casimir entered later.",
+        "sources": [
+          {
+            "label": "Lensois live match report",
+            "url": "https://www.lensois.com/live/lens-auxerre-8/",
+            "date": "2026-08-22",
+            "note": "Records the penalty and candidate availability."
+          },
+          {
+            "label": "Ligue 1 club reference",
+            "url": "https://ligue1.com/en/articles/l1_article_5488-",
+            "date": "2026-08-22",
+            "note": "Current Auxerre squad cross-check."
+          }
+        ],
+        "detection": "manual_current_season_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-22T18:30:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Namaso took and converted Auxerre's 22 August league penalty while Faivre remained on the pitch. That is a direct current-season precedence test and moves Namaso first. Faivre remains the strongest deputy; Casimir is the next provisional fallback."
       }
     ],
     "change_log": [
@@ -567,6 +654,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-22",
+        "season": "2026/27",
+        "change_type": "current_season_evidence_update",
+        "from": {
+          "primary": "Romain Faivre",
+          "secondary": "Josué Casimir",
+          "tertiary": "Danny Namaso"
+        },
+        "to": {
+          "primary": "Danny Namaso",
+          "secondary": "Romain Faivre",
+          "tertiary": "Josué Casimir"
+        },
+        "reason": "Namaso took and converted Auxerre's 22 August league penalty while Faivre remained on the pitch. That is a direct current-season precedence test and moves Namaso first. Faivre remains the strongest deputy; Casimir is the next provisional fallback.",
+        "evidence_ids": [
+          "evt_20260822_auxerre_namaso_assignment"
+        ],
+        "detection": "manual_current_season_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-22T18:30:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -584,22 +694,22 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Romain Faivre",
-        "status": "confirmed",
-        "source_url": "https://www.aja.fr/romain-faivre-reste-auxerrois/",
-        "checked_at": "2026-07-30"
-      },
-      "secondary": {
-        "player": "Josué Casimir",
-        "status": "confirmed",
-        "source_url": "https://ligue1.com/en/articles/l1_article_5488-",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
         "player": "Danny Namaso",
         "status": "confirmed",
-        "source_url": "https://ligue1.com/en/articles/l1_article_5488-",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.lensois.com/live/lens-auxerre-8/",
+        "checked_at": "2026-08-22"
+      },
+      "secondary": {
+        "player": "Romain Faivre",
+        "status": "confirmed",
+        "source_url": "https://www.lensois.com/live/lens-auxerre-8/",
+        "checked_at": "2026-08-22"
+      },
+      "tertiary": {
+        "player": "Josué Casimir",
+        "status": "confirmed",
+        "source_url": "https://www.lensois.com/live/lens-auxerre-8/",
+        "checked_at": "2026-08-22"
       }
     }
   },
@@ -1429,27 +1539,27 @@
     "primary": "Florian Thauvin",
     "secondary": "Odsonne Édouard",
     "tertiary": "Thorgan Hazard",
-    "last_updated": "2026-07-30",
+    "last_updated": "2026-08-22",
     "source": "L'Équipe",
     "cross_check": "Ligue 1",
-    "hierarchy_status": "probable",
+    "hierarchy_status": "confirmed",
     "confidence": {
       "primary": "high",
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Thauvin was explicitly the designated taker and delegated one attempt to Édouard; their 2025/26 returns were 2/3 and 1/1. Hazard converted a 2026 preseason penalty. Hazard's attempt came in a separate-half lineup and does not place him above Édouard. Conditions: Promote Hazard only if he takes a penalty while a higher-ranked taker is present. A current competitive penalty overrides the preseason-only tertiary evidence.",
+    "condition_note": "Thauvin is now directly confirmed for 2026/27. He converted Lens' first penalty against Auxerre, then retained responsibility for a second penalty after both Édouard and Hazard entered. The existing deputy order remains, but the primary is no longer merely probable.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-22",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-22",
     "latest_evidence": {
-      "id": "evt_20260730_lens_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260822_lens_thauvin_confirmation",
+      "date": "2026-08-22",
+      "type": "competitive_penalty_assignment",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -1590,6 +1700,38 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260822_lens_thauvin_confirmation",
+        "date": "2026-08-22",
+        "season": "2026/27",
+        "type": "competitive_penalty_assignment",
+        "penalty_kind": "regular_time",
+        "competition": "Ligue 1",
+        "match": "Lens vs Auxerre",
+        "context": "Thauvin converted at 12 minutes and took the 88-minute penalty after Hazard and Édouard had both entered, directly confirming his priority.",
+        "sources": [
+          {
+            "label": "Lensois live match report",
+            "url": "https://www.lensois.com/live/lens-auxerre-8/",
+            "date": "2026-08-22",
+            "note": "Records both penalty assignments and substitutions."
+          },
+          {
+            "label": "Official Ligue 1 competition site",
+            "url": "https://ligue1.com/",
+            "date": "2026-08-22",
+            "note": "Competition and current-season cross-check."
+          }
+        ],
+        "detection": "manual_current_season_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-22T18:30:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Thauvin is now directly confirmed for 2026/27. He converted Lens' first penalty against Auxerre, then retained responsibility for a second penalty after both Édouard and Hazard entered. The existing deputy order remains, but the primary is no longer merely probable."
       }
     ],
     "change_log": [
@@ -1680,20 +1822,20 @@
       "primary": {
         "player": "Florian Thauvin",
         "status": "confirmed",
-        "source_url": "https://www.rclens.fr/fr/rclens-royal-charleroi-sc-preparation-20260725",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.lensois.com/live/lens-auxerre-8/",
+        "checked_at": "2026-08-22"
       },
       "secondary": {
         "player": "Odsonne Édouard",
         "status": "confirmed",
-        "source_url": "https://www.rclens.fr/fr/rclens-royal-charleroi-sc-preparation-20260725",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.lensois.com/live/lens-auxerre-8/",
+        "checked_at": "2026-08-22"
       },
       "tertiary": {
         "player": "Thorgan Hazard",
         "status": "confirmed",
-        "source_url": "https://www.rclens.fr/fr/rclens-royal-charleroi-sc-preparation-20260725",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.lensois.com/live/lens-auxerre-8/",
+        "checked_at": "2026-08-22"
       }
     }
   },
