@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-08-22T16:57:09.396944Z",
+  "generated_at": "2026-08-22T17:35:30.910181Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
@@ -33,21 +34,21 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 16,
+  "fixtures_evaluated": 15,
   "signals_qualifying": 1,
   "safety_exclusions": {
     "model_probability_below_floor": 5,
-    "market_odds_above_cap": 2,
-    "lineup_not_public_quality": 4,
-    "model_market_gap_gt_10pp": 5,
-    "defensive_position": 1
+    "low_signal_confidence": 1,
+    "model_market_gap_gt_10pp": 4,
+    "defensive_position": 1,
+    "lineup_not_public_quality": 1,
+    "market_odds_above_cap": 1
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 5,
+    "eligible_rows": 4,
     "added_by_league": {
       "epl": 3,
-      "la-liga": 1,
-      "ligue-1": 1
+      "la-liga": 1
     },
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
@@ -99,13 +100,13 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 92
+          "percentile": 93
         },
         "share_of_team_chances_pct": 31,
         "share_of_team_chances_percentile": 98,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 33
+          "percentile": 31
         },
         "recent_team_form": {
           "tier": "Strong",
@@ -124,7 +125,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 46
+          "percentile": 45
         },
         "opponent_recent_defence": {
           "tier": "Positive",
