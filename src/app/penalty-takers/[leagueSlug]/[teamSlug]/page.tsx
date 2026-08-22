@@ -345,8 +345,11 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
 
           <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_14px_40px_rgba(0,0,0,0.18)] sm:p-6">
             <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Il Margine file</div>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Last verified: {team.lastUpdatedLabel || "awaiting direct evidence"}</h2>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Evidence verified: {team.lastUpdatedLabel || "awaiting direct evidence"}</h2>
             <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
+              <p className="rounded-xl border border-emerald-400/20 bg-emerald-400/8 px-3 py-2 text-emerald-100">
+                {team.leagueLabel} board review run: {team.leagueCheckedLabel || "pending"}. An unchanged evidence date means the order was checked but no stronger event justified rewriting it.
+              </p>
               <p>Public file updated: {team.publicUpdatedLabel || "not available"}.</p>
               {team.evidenceSources.length ? (
                 <div>

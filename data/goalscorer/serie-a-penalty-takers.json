@@ -894,30 +894,30 @@
     }
   },
   "Cagliari": {
-    "primary": "Sebastiano Esposito",
-    "secondary": "Gennaro Borrelli",
+    "primary": "Alessandro Deiola",
+    "secondary": "Jacopo Fazzini",
     "tertiary": "Yerry Mina",
-    "last_updated": "2026-07-30",
+    "last_updated": "2026-08-22",
     "source": "Il Margine multi-source research",
     "cross_check": "Il Margine roster cross-check",
-    "hierarchy_status": "probable",
+    "hierarchy_status": "confirmed",
     "confidence": {
       "primary": "high",
       "secondary": "medium",
-      "tertiary": "medium"
+      "tertiary": "low"
     },
-    "condition_note": "Esposito converted a competitive penalty while Mina was playing and has the strongest career record in the current squad. Goal ranks Borrelli second and Mina third; SOS Fanta treats both as alternatives but notes Borrelli's 2/2 record against Mina's 1/2 at Cagliari. The secondary order is inferred because Borrelli and Esposito have not been tested together on a current competitive penalty. Borrelli and Esposito have not yet been tested together on a current competitive penalty. Conditions: Cagliari is expected to add an attacker; an incoming proven penalty taker could enter above Borrelli and Mina.",
+    "condition_note": "Captain Alessandro Deiola took Cagliari's first competitive penalty of 2026/27 with Fazzini on the pitch. His first attempt was saved, but VAR ordered a retake for encroachment and he scored. Fazzini is the best current deputy; Mina remains a lower-confidence fallback.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-22",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-22",
     "latest_evidence": {
-      "id": "evt_20260730_cagliari_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 5
+      "id": "evt_20260822_cagliari_deiola_assignment",
+      "date": "2026-08-22",
+      "type": "competitive_penalty_assignment",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -1070,6 +1070,38 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260822_cagliari_deiola_assignment",
+        "date": "2026-08-22",
+        "season": "2026/27",
+        "type": "competitive_penalty_assignment",
+        "penalty_kind": "regular_time",
+        "competition": "Coppa Italia",
+        "match": "Cagliari 1-0 Arezzo",
+        "context": "Deiola took the penalty at 19 minutes and scored the ordered retake at 22. Fazzini started and remained on the pitch until 66 minutes.",
+        "sources": [
+          {
+            "label": "Official Cagliari match report",
+            "url": "https://cagliaricalcio.com/news/match-report-cagliari-arezzo-1-0/",
+            "date": "2026-08-22",
+            "note": "Official penalty, retake and lineup details."
+          },
+          {
+            "label": "Sky Sport starting lineups",
+            "url": "https://sport.sky.it/calcio/coppa-italia/partite/2026/giornata-2/cagliari-arezzo/formazioni",
+            "date": "2026-08-22",
+            "note": "Independent lineup cross-check."
+          }
+        ],
+        "detection": "manual_current_season_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-22T18:30:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Captain Alessandro Deiola took Cagliari's first competitive penalty of 2026/27 with Fazzini on the pitch. His first attempt was saved, but VAR ordered a retake for encroachment and he scored. Fazzini is the best current deputy; Mina remains a lower-confidence fallback."
       }
     ],
     "change_log": [
@@ -1141,6 +1173,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-22",
+        "season": "2026/27",
+        "change_type": "current_season_evidence_update",
+        "from": {
+          "primary": "Sebastiano Esposito",
+          "secondary": "Gennaro Borrelli",
+          "tertiary": "Yerry Mina"
+        },
+        "to": {
+          "primary": "Alessandro Deiola",
+          "secondary": "Jacopo Fazzini",
+          "tertiary": "Yerry Mina"
+        },
+        "reason": "Captain Alessandro Deiola took Cagliari's first competitive penalty of 2026/27 with Fazzini on the pitch. His first attempt was saved, but VAR ordered a retake for encroachment and he scored. Fazzini is the best current deputy; Mina remains a lower-confidence fallback.",
+        "evidence_ids": [
+          "evt_20260822_cagliari_deiola_assignment"
+        ],
+        "detection": "manual_current_season_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-22T18:30:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -1158,22 +1213,22 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Sebastiano Esposito",
+        "player": "Alessandro Deiola",
         "status": "confirmed",
-        "source_url": "https://app.cagliaricalcio.com/contents/precampionato-202627-al-via-il-raduno-wdce4vd48w7",
-        "checked_at": "2026-07-30"
+        "source_url": "https://cagliaricalcio.com/news/match-report-cagliari-arezzo-1-0/",
+        "checked_at": "2026-08-22"
       },
       "secondary": {
-        "player": "Gennaro Borrelli",
+        "player": "Jacopo Fazzini",
         "status": "confirmed",
-        "source_url": "https://app.cagliaricalcio.com/contents/precampionato-202627-al-via-il-raduno-wdce4vd48w7",
-        "checked_at": "2026-07-30"
+        "source_url": "https://cagliaricalcio.com/news/match-report-cagliari-arezzo-1-0/",
+        "checked_at": "2026-08-22"
       },
       "tertiary": {
         "player": "Yerry Mina",
         "status": "confirmed",
-        "source_url": "https://app.cagliaricalcio.com/contents/precampionato-202627-al-via-il-raduno-wdce4vd48w7",
-        "checked_at": "2026-07-30"
+        "source_url": "https://cagliaricalcio.com/news/match-report-cagliari-arezzo-1-0/",
+        "checked_at": "2026-08-22"
       }
     }
   },
@@ -3632,30 +3687,30 @@
     }
   },
   "Napoli": {
-    "primary": "Romelu Lukaku",
-    "secondary": "Kevin De Bruyne",
-    "tertiary": "Giovane",
-    "last_updated": "2026-07-30",
+    "primary": "Kevin De Bruyne",
+    "secondary": "Rasmus Højlund",
+    "tertiary": "Matteo Politano",
+    "last_updated": "2026-08-22",
     "source": "Il Margine multi-source research",
     "cross_check": "Il Margine roster cross-check",
     "hierarchy_status": "conditional",
     "confidence": {
-      "primary": "low",
-      "secondary": "high",
+      "primary": "medium",
+      "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Both current specialist boards make Lukaku first if he remains and is reintegrated, with De Bruyne next. Napoli's official March statement leaves Lukaku's group status unresolved, so his first position is explicitly conditional. For practical third depth, Giovane converted Allegri's 26 July friendly penalty with Højlund on the pitch; that direct current-coach signal narrowly outweighs older specialist projections that put Højlund third. If Lukaku is not retained or reintegrated, the practical order becomes De Bruyne, Giovane, Højlund. Højlund remains the closest omitted candidate and should replace Lukaku in the displayed three if the Belgian leaves. Lukaku is a roster-confirmed but conditional primary because retention and first-team reintegration were unresolved at the cutoff; Giovane versus Højlund is also unsettled. Conditions: Lukaku retained and reintegrated: keep Lukaku first. Lukaku leaves or remains outside the group: use Kevin De Bruyne first, Giovane second and Rasmus Højlund third. A major attacking signing with established penalty volume can enter the top three.",
+    "condition_note": "Lukaku was transferred permanently to Fenerbahçe on 12 August and has been removed. De Bruyne is the leading current specialist, Højlund the main striker alternative and Politano the next technical fallback. No 2026/27 competitive Napoli penalty has yet tested this new order.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-22",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-22",
     "latest_evidence": {
-      "id": "evt_20260730_napoli_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 7
+      "id": "evt_20260822_napoli_lukaku_exit",
+      "date": "2026-08-22",
+      "type": "official_transfer_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -3832,6 +3887,38 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 7 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260822_napoli_lukaku_exit",
+        "date": "2026-08-22",
+        "season": "2026/27",
+        "type": "official_transfer_review",
+        "penalty_kind": null,
+        "competition": "Serie A",
+        "match": null,
+        "context": "Napoli officially transferred Romelu Lukaku to Fenerbahçe, invalidating the previous conditional hierarchy.",
+        "sources": [
+          {
+            "label": "Official Napoli transfer announcement",
+            "url": "https://sscnapoli.it/ufficiale-lukaku-al-fenerbahce/",
+            "date": "2026-08-22",
+            "note": "Confirms Lukaku's permanent departure on 12 August 2026."
+          },
+          {
+            "label": "SOS Fanta penalty-taker review",
+            "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+            "date": "2026-08-22",
+            "note": "Current specialist cross-check for the remaining squad order."
+          }
+        ],
+        "detection": "manual_current_season_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-22T18:30:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Lukaku was transferred permanently to Fenerbahçe on 12 August and has been removed. De Bruyne is the leading current specialist, Højlund the main striker alternative and Politano the next technical fallback. No 2026/27 competitive Napoli penalty has yet tested this new order."
       }
     ],
     "change_log": [
@@ -3903,6 +3990,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-22",
+        "season": "2026/27",
+        "change_type": "current_season_evidence_update",
+        "from": {
+          "primary": "Romelu Lukaku",
+          "secondary": "Kevin De Bruyne",
+          "tertiary": "Giovane"
+        },
+        "to": {
+          "primary": "Kevin De Bruyne",
+          "secondary": "Rasmus Højlund",
+          "tertiary": "Matteo Politano"
+        },
+        "reason": "Lukaku was transferred permanently to Fenerbahçe on 12 August and has been removed. De Bruyne is the leading current specialist, Højlund the main striker alternative and Politano the next technical fallback. No 2026/27 competitive Napoli penalty has yet tested this new order.",
+        "evidence_ids": [
+          "evt_20260822_napoli_lukaku_exit"
+        ],
+        "detection": "manual_current_season_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-22T18:30:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -3920,50 +4030,50 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Romelu Lukaku",
-        "status": "confirmed",
-        "source_url": "https://sscnapoli.it/en/nota-del-club-5/",
-        "checked_at": "2026-07-30"
-      },
-      "secondary": {
         "player": "Kevin De Bruyne",
         "status": "confirmed",
         "source_url": "https://sscnapoli.it/squadra/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-08-22"
+      },
+      "secondary": {
+        "player": "Rasmus Højlund",
+        "status": "confirmed",
+        "source_url": "https://sscnapoli.it/squadra/",
+        "checked_at": "2026-08-22"
       },
       "tertiary": {
-        "player": "Giovane",
+        "player": "Matteo Politano",
         "status": "confirmed",
-        "source_url": "https://sscnapoli.it/match-report-napoli-carrarese-2-0/",
-        "checked_at": "2026-07-30"
+        "source_url": "https://sscnapoli.it/squadra/",
+        "checked_at": "2026-08-22"
       }
     }
   },
   "Parma Calcio 1913": {
-    "primary": "Adrian Benedyczak",
-    "secondary": "Mateo Pellegrino",
+    "primary": "El Bilal Touré",
+    "secondary": "Nesta Elphege",
     "tertiary": "Adrián Bernabé",
-    "last_updated": "2026-07-30",
+    "last_updated": "2026-08-22",
     "source": "Il Margine multi-source research",
     "cross_check": "Il Margine roster cross-check",
-    "hierarchy_status": "disputed",
+    "hierarchy_status": "conditional",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
+      "primary": "low",
+      "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Benedyczak took and converted against Pisa with Pellegrino on the pitch, the cleanest like-for-like event in Parma's file. Fantacalcio's completed season audit and Goal's dedicated event analysis both concluded that Benedyczak was the favored taker when available. The newer broad specialist boards prefer Pellegrino, so the direct-event-based swap is material but remains disputed. Benedyczak may not start regularly, meaning Pellegrino can still take many penalties in practice. Bernabé is retained as the third technical option, but there is no current direct event establishing him there. Direct match evidence favors Benedyczak, while current broad specialist boards favor Pellegrino because of expected playing time. Conditions: If Benedyczak leaves or remains a marginal substitute, Pellegrino is the practical primary. Pellegrino is also market-sensitive; a departure would move Bernabé up and require a new third candidate. Strefezza is excluded because his official Parma loan ended with 2025/26 and he was absent from the 10 July preseason squad.",
+    "condition_note": "Both previous leaders have left Parma: Benedyczak on 28 July and Pellegrino on 13 August. El Bilal Touré is the provisional first candidate after joining in August, with Nesta Elphege and Bernabé behind. This is an open hierarchy and the first competitive assignment should override it.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-22",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-22",
     "latest_evidence": {
-      "id": "evt_20260730_parma-calcio-1913_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 5
+      "id": "evt_20260822_parma_roster_reset",
+      "date": "2026-08-22",
+      "type": "official_transfer_review",
+      "source_count": 3
     },
     "evidence_log": [
       {
@@ -4122,6 +4232,44 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260822_parma_roster_reset",
+        "date": "2026-08-22",
+        "season": "2026/27",
+        "type": "official_transfer_review",
+        "penalty_kind": null,
+        "competition": "Serie A",
+        "match": null,
+        "context": "The previous primary and secondary both left permanently, forcing a low-confidence current-squad reset.",
+        "sources": [
+          {
+            "label": "Official Parma Benedyczak departure",
+            "url": "https://www.parmacalcio1913.com/en/main-news/adrian-benedyczak-permanent-transfer-kasimpasa/",
+            "date": "2026-08-22",
+            "note": "Confirms the former primary left."
+          },
+          {
+            "label": "Official Parma Touré arrival",
+            "url": "https://www.parmacalcio1913.com/news/el-bilal-toure-e-un-nuovo-calciatore-del-parma-calcio/",
+            "date": "2026-08-22",
+            "note": "Confirms Touré joined Parma."
+          },
+          {
+            "label": "Official Parma Pellegrino departure",
+            "url": "https://www.parmacalcio1913.com/news/mateo-pellegrino-ceduto-a-titolo-definitivo-alla-acf-fiorentina/",
+            "date": "2026-08-22",
+            "note": "Confirms the former secondary left."
+          }
+        ],
+        "detection": "manual_current_season_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-22T18:30:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Both previous leaders have left Parma: Benedyczak on 28 July and Pellegrino on 13 August. El Bilal Touré is the provisional first candidate after joining in August, with Nesta Elphege and Bernabé behind. This is an open hierarchy and the first competitive assignment should override it."
       }
     ],
     "change_log": [
@@ -4193,6 +4341,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-22",
+        "season": "2026/27",
+        "change_type": "current_season_evidence_update",
+        "from": {
+          "primary": "Adrian Benedyczak",
+          "secondary": "Mateo Pellegrino",
+          "tertiary": "Adrián Bernabé"
+        },
+        "to": {
+          "primary": "El Bilal Touré",
+          "secondary": "Nesta Elphege",
+          "tertiary": "Adrián Bernabé"
+        },
+        "reason": "Both previous leaders have left Parma: Benedyczak on 28 July and Pellegrino on 13 August. El Bilal Touré is the provisional first candidate after joining in August, with Nesta Elphege and Bernabé behind. This is an open hierarchy and the first competitive assignment should override it.",
+        "evidence_ids": [
+          "evt_20260822_parma_roster_reset"
+        ],
+        "detection": "manual_current_season_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-22T18:30:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -4210,22 +4381,22 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Adrian Benedyczak",
+        "player": "El Bilal Touré",
         "status": "confirmed",
-        "source_url": "https://www.parmacalcio1913.com/news/parma-al-via-la-stagione-2026-2027-raduno-a-collecchio-dal-25-luglio-ritiro-in-trentino/",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.parmacalcio1913.com/news/el-bilal-toure-e-un-nuovo-calciatore-del-parma-calcio/",
+        "checked_at": "2026-08-22"
       },
       "secondary": {
-        "player": "Mateo Pellegrino",
+        "player": "Nesta Elphege",
         "status": "confirmed",
-        "source_url": "https://www.parmacalcio1913.com/news/mateo-pellegrino-rinnova-in-gialloblu-fino-al-2030/",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.parmacalcio1913.com/news/el-bilal-toure-e-un-nuovo-calciatore-del-parma-calcio/",
+        "checked_at": "2026-08-22"
       },
       "tertiary": {
         "player": "Adrián Bernabé",
         "status": "confirmed",
-        "source_url": "https://www.parmacalcio1913.com/news/parma-al-via-la-stagione-2026-2027-raduno-a-collecchio-dal-25-luglio-ritiro-in-trentino/",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.parmacalcio1913.com/news/el-bilal-toure-e-un-nuovo-calciatore-del-parma-calcio/",
+        "checked_at": "2026-08-22"
       }
     }
   },

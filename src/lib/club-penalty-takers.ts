@@ -37,6 +37,7 @@ type PenaltyFileMeta = {
   schema_version?: number;
   season?: { label?: string; status?: string };
   relegated?: Array<{ team?: string; archived_slug?: string; archive?: string }>;
+  last_verified?: string;
   public_updated_at?: string;
 };
 
@@ -80,6 +81,8 @@ export type ClubPenaltyTeam = {
   lastUpdatedLabel: string;
   publicUpdatedAt: string;
   publicUpdatedLabel: string;
+  leagueCheckedAt: string;
+  leagueCheckedLabel: string;
   conditionNote: string;
   isCarryover: boolean;
   isArchived: boolean;
@@ -98,6 +101,9 @@ export type ClubPenaltyLeague = ClubLeagueConfig & {
   teams: ClubPenaltyTeam[];
   archivedTeams: ClubPenaltyTeam[];
   publicUpdatedAt: string;
+  boardCheckedAt: string;
+  boardCheckedLabel: string;
+  phase: "live" | "preseason";
 };
 
 export const CLUB_LEAGUES: ClubLeagueConfig[] = [
@@ -258,7 +264,7 @@ function mapTeam(
   teamName: string,
   entryValue: PenaltyTeamRow | PenaltyFileMeta | undefined,
   manifest: LogoManifest,
-  options: { archived?: boolean } = {},
+  options: { archived?: boolean; leagueCheckedAt?: string } = {},
 ): ClubPenaltyTeam {
   const entry = asTeamRow(entryValue);
   const team = cleanClubPenaltyText(teamName);
@@ -303,6 +309,8 @@ function mapTeam(
     lastUpdatedLabel: formatClubPenaltyDate(lastUpdated),
     publicUpdatedAt,
     publicUpdatedLabel: formatClubPenaltyDate(publicUpdatedAt),
+    leagueCheckedAt: cleanClubPenaltyText(options.leagueCheckedAt),
+    leagueCheckedLabel: formatClubPenaltyDate(options.leagueCheckedAt),
     conditionNote: cleanClubPenaltyText(entry.condition_note),
     isCarryover,
     isArchived,
@@ -331,17 +339,28 @@ export async function readClubPenaltyData(): Promise<ClubPenaltyLeague[]> {
         readJson<PenaltyFile>(league.archiveFile),
       ]);
       const meta = penaltyFile._meta ?? {};
+      const publicUpdatedAt = cleanClubPenaltyText(meta.public_updated_at) || clubPenaltySeason.published_at;
+      const boardCheckedAt = cleanClubPenaltyText(meta.last_verified) || publicUpdatedAt;
+      const startDate = clubPenaltySeason.league_start_dates[league.key as keyof typeof clubPenaltySeason.league_start_dates];
+      const phase = startDate && Date.now() >= Date.parse(`${startDate}T00:00:00Z`) ? "live" : "preseason";
       const teams = Object.entries(penaltyFile)
         .filter(([teamName]) => !teamName.startsWith("_"))
-        .map(([teamName, entry]) => mapTeam(league, teamName, entry, logoManifest))
+        .map(([teamName, entry]) => mapTeam(league, teamName, entry, logoManifest, { leagueCheckedAt: boardCheckedAt }))
         .sort((left, right) => left.team.localeCompare(right.team, "en"));
       const archivedNames = new Set((meta.relegated ?? []).map((row) => cleanClubPenaltyText(row.team)));
       const archivedTeams = Object.entries(archiveFile)
         .filter(([teamName]) => archivedNames.has(cleanClubPenaltyText(teamName)))
         .map(([teamName, entry]) => mapTeam(league, teamName, entry, logoManifest, { archived: true }))
         .sort((left, right) => left.team.localeCompare(right.team, "en"));
-      const publicUpdatedAt = cleanClubPenaltyText(meta.public_updated_at) || clubPenaltySeason.published_at;
-      return { ...league, teams, archivedTeams, publicUpdatedAt };
+      return {
+        ...league,
+        teams,
+        archivedTeams,
+        publicUpdatedAt,
+        boardCheckedAt,
+        boardCheckedLabel: formatClubPenaltyDate(boardCheckedAt),
+        phase,
+      };
     }),
   );
 }
@@ -398,4 +417,25 @@ export function buildClubPenaltyLead(team: ClubPenaltyTeam): string {
   return team.secondary !== "Not yet verified"
     ? `${team.primary} is our current ${team.team} penalty taker call, with ${team.secondary} next in line.`
     : `${team.primary} is our current ${team.team} penalty taker call. The backup order remains under review.`;
+}
+
+function firstSentence(value: string): string {
+  const sentence = value.match(/^.*?[.!?](?:\s|$)/)?.[0]?.trim();
+  return sentence || value.trim();
+}
+
+export function buildClubPenaltyCardSummary(team: ClubPenaltyTeam): string {
+  if (team.isArchived) return buildClubPenaltyLead(team);
+  if (team.hierarchyStatus === "unknown") {
+    return team.conditionNote
+      ? firstSentence(team.conditionNote)
+      : "No current penalty hierarchy is published until direct evidence supports it.";
+  }
+  if (team.hierarchyStatus === "disputed") {
+    const context = firstSentence(team.conditionNote);
+    return context
+      ? `${team.primary} currently leads a disputed order. ${context}`
+      : `${team.primary} currently leads a disputed order that remains under review.`;
+  }
+  return buildClubPenaltyLead(team);
 }

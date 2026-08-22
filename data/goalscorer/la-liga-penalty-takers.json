@@ -31,8 +31,8 @@
       "Malaga",
       "Racing Santander"
     ],
-    "last_verified": "2026-08-20",
-    "public_updated_at": "2026-08-20",
+    "last_verified": "2026-08-22",
+    "public_updated_at": "2026-08-22",
     "membership_source": "https://www.laliga.com/en-GB/laliga-easports/clubs"
   },
   "Alaves": {
@@ -2424,28 +2424,28 @@
   "Getafe": {
     "primary": "Martín Satriano",
     "secondary": "Borja Mayoral",
-    "tertiary": "Christantus Uche",
-    "last_updated": "2026-07-30",
+    "tertiary": "Enes Ünal",
+    "last_updated": "2026-08-22",
     "source": "Telemadrid",
     "cross_check": "AS",
-    "hierarchy_status": "probable",
+    "hierarchy_status": "conditional",
     "confidence": {
       "primary": "high",
-      "secondary": "low",
+      "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "After Arambarri's departure, Satriano took and converted a July preseason penalty. Mayoral is an experienced striker fallback; Uche has no current Getafe penalty assignment. A single friendly establishes only a provisional lead, and Getafe's squad remains transfer-sensitive. Conditions: Uche remains confirmed at the cutoff but must be removed if Getafe officially completes a sale. Reassess if Mayoral receives the first competitive assignment.",
+    "condition_note": "Satriano remains the active first-choice call after taking Getafe's July penalty. Mayoral is the experienced deputy. Uche has been removed after a season-ending knee injury; Ünal is a provisional third choice until a competitive assignment clarifies the fallback order.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-22",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-22",
     "latest_evidence": {
-      "id": "evt_20260730_getafe_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 7
+      "id": "evt_20260822_getafe_availability_review",
+      "date": "2026-08-22",
+      "type": "injury_availability_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -2622,6 +2622,38 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 7 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260822_getafe_availability_review",
+        "date": "2026-08-22",
+        "season": "2026/27",
+        "type": "injury_availability_review",
+        "penalty_kind": null,
+        "competition": "LaLiga",
+        "match": null,
+        "context": "Christantus Uche underwent surgery after a serious knee injury and is unavailable. Satriano's recent club penalty keeps him first; the lower order remains provisional.",
+        "sources": [
+          {
+            "label": "Official Getafe medical report",
+            "url": "https://www.getafecf.com/noticias/parte-medico-uche",
+            "date": "2026-08-22",
+            "note": "Confirms Uche's serious knee injury and surgery."
+          },
+          {
+            "label": "AS Getafe report",
+            "url": "https://as.com/futbol/primera/satriano-asume-galones-f202607-n/",
+            "date": "2026-08-22",
+            "note": "Reports Satriano taking responsibility from the spot in preseason."
+          }
+        ],
+        "detection": "manual_current_season_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-22T18:30:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Satriano remains the active first-choice call after taking Getafe's July penalty. Mayoral is the experienced deputy. Uche has been removed after a season-ending knee injury; Ünal is a provisional third choice until a competitive assignment clarifies the fallback order."
       }
     ],
     "change_log": [
@@ -2693,6 +2725,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-22",
+        "season": "2026/27",
+        "change_type": "current_season_evidence_update",
+        "from": {
+          "primary": "Martín Satriano",
+          "secondary": "Borja Mayoral",
+          "tertiary": "Christantus Uche"
+        },
+        "to": {
+          "primary": "Martín Satriano",
+          "secondary": "Borja Mayoral",
+          "tertiary": "Enes Ünal"
+        },
+        "reason": "Satriano remains the active first-choice call after taking Getafe's July penalty. Mayoral is the experienced deputy. Uche has been removed after a season-ending knee injury; Ünal is a provisional third choice until a competitive assignment clarifies the fallback order.",
+        "evidence_ids": [
+          "evt_20260822_getafe_availability_review"
+        ],
+        "detection": "manual_current_season_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-22T18:30:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -2712,20 +2767,20 @@
       "primary": {
         "player": "Martín Satriano",
         "status": "confirmed",
-        "source_url": "https://www.laliga.com/es-US/clubes/getafe-cf/plantilla",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.getafecf.com/plantilla",
+        "checked_at": "2026-08-22"
       },
       "secondary": {
         "player": "Borja Mayoral",
         "status": "confirmed",
-        "source_url": "https://www.laliga.com/es-US/clubes/getafe-cf/plantilla",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.getafecf.com/plantilla",
+        "checked_at": "2026-08-22"
       },
       "tertiary": {
-        "player": "Christantus Uche",
+        "player": "Enes Ünal",
         "status": "confirmed",
-        "source_url": "https://www.laliga.com/es-US/clubes/getafe-cf/plantilla",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.getafecf.com/plantilla",
+        "checked_at": "2026-08-22"
       }
     }
   },
@@ -3051,27 +3106,27 @@
   },
   "Malaga": {
     "primary": "Chupe",
-    "secondary": "Adrián Niño",
-    "tertiary": "David Larrubia",
-    "last_updated": "2026-07-30",
+    "secondary": "Eneko Jauregi",
+    "tertiary": "Adrián Niño",
+    "last_updated": "2026-08-22",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "high",
-      "secondary": "low",
-      "tertiary": "low"
+      "secondary": "high",
+      "tertiary": "medium"
     },
-    "condition_note": "Chupe retained responsibility through a mixed conversion run and converted during the promotion push. Niño and Larrubia have no equivalent current assignment evidence. The order behind Chupe is positional inference rather than direct penalty evidence.",
+    "condition_note": "Chupe retains the lead from competitive promotion-season evidence. Jauregi moves into the deputy role after taking and converting Málaga's August regular-time friendly penalty. Adrián Niño remains the next attacking fallback; the first competitive 2026/27 assignment can still reset the order.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-22",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-22",
     "latest_evidence": {
-      "id": "evt_20260730_malaga_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 6
+      "id": "evt_20260822_malaga_jauregi_review",
+      "date": "2026-08-22",
+      "type": "preseason_penalty_assignment",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -3223,6 +3278,38 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260822_malaga_jauregi_review",
+        "date": "2026-08-22",
+        "season": "2026/27",
+        "type": "preseason_penalty_assignment",
+        "penalty_kind": "regular_time",
+        "competition": "Club friendly",
+        "match": "Málaga vs Fulham",
+        "context": "Jauregi entered and converted the actual stoppage-time match penalty. A later abandoned or symbolic shootout kick is excluded.",
+        "sources": [
+          {
+            "label": "Official Málaga contract confirmation",
+            "url": "https://www.malagacf.com/noticias/jauregi-renueva-hasta-2027",
+            "date": "2026-08-22",
+            "note": "Confirms Jauregi remains in the 2026/27 squad."
+          },
+          {
+            "label": "Cadena SER Málaga match report",
+            "url": "https://cadenaser.com/andalucia/2026/08/12/el-malaga-empata-contra-un-fulham-que-se-nego-a-realizar-la-tanda-de-penaltis-2-2-ser-malaga/",
+            "date": "2026-08-22",
+            "note": "Records Jauregi's regular-time penalty conversion."
+          }
+        ],
+        "detection": "manual_current_season_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-22T18:30:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Chupe retains the lead from competitive promotion-season evidence. Jauregi moves into the deputy role after taking and converting Málaga's August regular-time friendly penalty. Adrián Niño remains the next attacking fallback; the first competitive 2026/27 assignment can still reset the order."
       }
     ],
     "change_log": [
@@ -3271,6 +3358,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-22",
+        "season": "2026/27",
+        "change_type": "current_season_evidence_update",
+        "from": {
+          "primary": "Chupe",
+          "secondary": "Adrián Niño",
+          "tertiary": "David Larrubia"
+        },
+        "to": {
+          "primary": "Chupe",
+          "secondary": "Eneko Jauregi",
+          "tertiary": "Adrián Niño"
+        },
+        "reason": "Chupe retains the lead from competitive promotion-season evidence. Jauregi moves into the deputy role after taking and converting Málaga's August regular-time friendly penalty. Adrián Niño remains the next attacking fallback; the first competitive 2026/27 assignment can still reset the order.",
+        "evidence_ids": [
+          "evt_20260822_malaga_jauregi_review"
+        ],
+        "detection": "manual_current_season_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-22T18:30:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -3286,20 +3396,20 @@
       "primary": {
         "player": "Chupe",
         "status": "confirmed",
-        "source_url": "https://iaas-public-front-pro.laliga.com/clubes/malaga-cf/plantilla",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.malagacf.com/noticias/jauregi-renueva-hasta-2027",
+        "checked_at": "2026-08-22"
       },
       "secondary": {
-        "player": "Adrián Niño",
+        "player": "Eneko Jauregi",
         "status": "confirmed",
-        "source_url": "https://iaas-public-front-pro.laliga.com/clubes/malaga-cf/plantilla",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.malagacf.com/noticias/jauregi-renueva-hasta-2027",
+        "checked_at": "2026-08-22"
       },
       "tertiary": {
-        "player": "David Larrubia",
+        "player": "Adrián Niño",
         "status": "confirmed",
-        "source_url": "https://iaas-public-front-pro.laliga.com/clubes/malaga-cf/plantilla",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.malagacf.com/noticias/jauregi-renueva-hasta-2027",
+        "checked_at": "2026-08-22"
       }
     }
   },
@@ -4810,28 +4920,28 @@
   "Real Sociedad": {
     "primary": "Mikel Oyarzabal",
     "secondary": "Brais Méndez",
-    "tertiary": "Orri Óskarsson",
-    "last_updated": "2026-07-30",
+    "tertiary": "Carlos Soler",
+    "last_updated": "2026-08-22",
     "source": "LaLiga",
     "cross_check": "Transfermarkt",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "high",
       "secondary": "medium",
-      "tertiary": "low"
+      "tertiary": "medium"
     },
-    "condition_note": "Oyarzabal remained the principal competitive taker and Brais also converted in league play. Óskarsson took second in the Copa-final shootout while Kubo remained on the field but was not among the first five. Óskarsson's evidence is shootout-only and does not establish a regular-time assignment.",
+    "condition_note": "Oyarzabal remains the clear regular-time primary and Brais the best-established deputy. Carlos Soler replaces Óskarsson in third after scoring Real Sociedad's first Copa-final shootout kick, while Óskarsson took the next kick and missed. The third slot remains shootout-led rather than a confirmed regular-time order.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-22",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-22",
     "latest_evidence": {
-      "id": "evt_20260730_real-sociedad_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 6
+      "id": "evt_20260822_real_sociedad_soler_review",
+      "date": "2026-08-22",
+      "type": "shootout_order_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -4996,6 +5106,38 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260822_real_sociedad_soler_review",
+        "date": "2026-08-22",
+        "season": "2026/27",
+        "type": "shootout_order_review",
+        "penalty_kind": null,
+        "competition": "Copa del Rey",
+        "match": "Copa del Rey final",
+        "context": "Soler converted Real Sociedad's first shootout kick; Óskarsson took second and missed. Oyarzabal had converted the regular-time penalty before being substituted.",
+        "sources": [
+          {
+            "label": "Official RFEF match report",
+            "url": "https://rfef.es/es/noticias/los-penaltis-coronan-la-real-sociedad-en-una-final-trepidante-2-2",
+            "date": "2026-08-22",
+            "note": "Official penalty and shootout sequence."
+          },
+          {
+            "label": "LaLiga specialist review",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-22",
+            "note": "Current-season cross-check of the alternative takers."
+          }
+        ],
+        "detection": "manual_current_season_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-22T18:30:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Oyarzabal remains the clear regular-time primary and Brais the best-established deputy. Carlos Soler replaces Óskarsson in third after scoring Real Sociedad's first Copa-final shootout kick, while Óskarsson took the next kick and missed. The third slot remains shootout-led rather than a confirmed regular-time order."
       }
     ],
     "change_log": [
@@ -5067,6 +5209,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-22",
+        "season": "2026/27",
+        "change_type": "current_season_evidence_update",
+        "from": {
+          "primary": "Mikel Oyarzabal",
+          "secondary": "Brais Méndez",
+          "tertiary": "Orri Óskarsson"
+        },
+        "to": {
+          "primary": "Mikel Oyarzabal",
+          "secondary": "Brais Méndez",
+          "tertiary": "Carlos Soler"
+        },
+        "reason": "Oyarzabal remains the clear regular-time primary and Brais the best-established deputy. Carlos Soler replaces Óskarsson in third after scoring Real Sociedad's first Copa-final shootout kick, while Óskarsson took the next kick and missed. The third slot remains shootout-led rather than a confirmed regular-time order.",
+        "evidence_ids": [
+          "evt_20260822_real_sociedad_soler_review"
+        ],
+        "detection": "manual_current_season_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-22T18:30:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -5086,47 +5251,47 @@
       "primary": {
         "player": "Mikel Oyarzabal",
         "status": "confirmed",
-        "source_url": "https://www.laliga.com/clubes/real-sociedad/plantilla",
-        "checked_at": "2026-07-30"
+        "source_url": "https://rfef.es/es/noticias/los-penaltis-coronan-la-real-sociedad-en-una-final-trepidante-2-2",
+        "checked_at": "2026-08-22"
       },
       "secondary": {
         "player": "Brais Méndez",
         "status": "confirmed",
-        "source_url": "https://www.laliga.com/clubes/real-sociedad/plantilla",
-        "checked_at": "2026-07-30"
+        "source_url": "https://rfef.es/es/noticias/los-penaltis-coronan-la-real-sociedad-en-una-final-trepidante-2-2",
+        "checked_at": "2026-08-22"
       },
       "tertiary": {
-        "player": "Orri Óskarsson",
+        "player": "Carlos Soler",
         "status": "confirmed",
-        "source_url": "https://www.laliga.com/clubes/real-sociedad/plantilla",
-        "checked_at": "2026-07-30"
+        "source_url": "https://rfef.es/es/noticias/los-penaltis-coronan-la-real-sociedad-en-una-final-trepidante-2-2",
+        "checked_at": "2026-08-22"
       }
     }
   },
   "Sevilla": {
-    "primary": "Isaac Romero",
-    "secondary": "Jon Guridi",
-    "tertiary": "Peque Fernández",
-    "last_updated": "2026-08-15",
+    "primary": "Jon Guridi",
+    "secondary": "Peque Fernández",
+    "tertiary": "Isaac Romero",
+    "last_updated": "2026-08-22",
     "source": "FotMob",
     "cross_check": "LaLiga",
-    "hierarchy_status": "probable",
+    "hierarchy_status": "confirmed",
     "confidence": {
-      "primary": "medium",
+      "primary": "high",
       "secondary": "high",
       "tertiary": "medium"
     },
-    "condition_note": "Isaac Romero remains the provisional primary because he converted Sevilla's previous competitive regular-time penalty, but he had been substituted before both penalties against Rayo Vallecano. Jon Guridi took and scored at 52 while Peque Fernández was also on the pitch, establishing Guridi ahead of Peque in the available-player order. Guridi went off injured at 82 and Peque then took and scored at 90. Conditions: the primary-versus-Guridi order remains untested in a competitive match with both players on the pitch and must be reviewed at Sevilla's next penalty.",
+    "condition_note": "Guridi took and scored Sevilla's first 2026/27 league penalty while Peque was on the pitch. After Guridi went off injured, Peque converted the second; Isaac had already been substituted. That establishes Guridi above Peque, while Isaac remains the next experienced fallback rather than the primary.",
     "last_verified": {
-      "date": "2026-08-15",
+      "date": "2026-08-22",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-08-15",
+    "public_updated_at": "2026-08-22",
     "latest_evidence": {
-      "id": "evt_20260815_sevilla_competitive_penalties",
-      "date": "2026-08-15",
-      "type": "competitive_penalty_assignments",
+      "id": "evt_20260822_sevilla_hierarchy_correction",
+      "date": "2026-08-22",
+      "type": "competitive_penalty_hierarchy_correction",
       "source_count": 2
     },
     "evidence_log": [
@@ -5360,6 +5525,38 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Competitive evidence reverses the previous Peque/Guridi deputy order."
+      },
+      {
+        "id": "evt_20260822_sevilla_hierarchy_correction",
+        "date": "2026-08-22",
+        "season": "2026/27",
+        "type": "competitive_penalty_hierarchy_correction",
+        "penalty_kind": "regular_time",
+        "competition": "LaLiga",
+        "match": "Sevilla 2-1 Rayo Vallecano",
+        "context": "Guridi converted at 52 minutes with Peque available. Peque converted at 97 minutes only after Guridi had left; Isaac had been substituted at half-time.",
+        "sources": [
+          {
+            "label": "Official LaLiga match report",
+            "url": "https://www.laliga.com/partido/temporada-2026-2027-laliga-ea-sports-sevilla-fc-rayo-vallecano-1",
+            "date": "2026-08-22",
+            "note": "Official goals, lineups and substitutions."
+          },
+          {
+            "label": "Official LaLiga follow-up lineup",
+            "url": "https://www.laliga.com/partido/temporada-2026-2027-laliga-ea-sports-athletic-club-sevilla-fc-2",
+            "date": "2026-08-22",
+            "note": "Confirms the three candidates remained in Sevilla's current squad."
+          }
+        ],
+        "detection": "manual_current_season_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-22T18:30:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Guridi took and scored Sevilla's first 2026/27 league penalty while Peque was on the pitch. After Guridi went off injured, Peque converted the second; Isaac had already been substituted. That establishes Guridi above Peque, while Isaac remains the next experienced fallback rather than the primary."
       }
     ],
     "change_log": [
@@ -5454,6 +5651,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-08-15T22:15:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-22",
+        "season": "2026/27",
+        "change_type": "current_season_evidence_update",
+        "from": {
+          "primary": "Isaac Romero",
+          "secondary": "Jon Guridi",
+          "tertiary": "Peque Fernández"
+        },
+        "to": {
+          "primary": "Jon Guridi",
+          "secondary": "Peque Fernández",
+          "tertiary": "Isaac Romero"
+        },
+        "reason": "Guridi took and scored Sevilla's first 2026/27 league penalty while Peque was on the pitch. After Guridi went off injured, Peque converted the second; Isaac had already been substituted. That establishes Guridi above Peque, while Isaac remains the next experienced fallback rather than the primary.",
+        "evidence_ids": [
+          "evt_20260822_sevilla_hierarchy_correction"
+        ],
+        "detection": "manual_current_season_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-22T18:30:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -5471,22 +5691,22 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Isaac Romero",
-        "status": "confirmed",
-        "source_url": "https://sevillafc.hiwaymedia.io/en/actualidad/noticias/match-report-cordoba-sevilla-fc-friendly-july-2026",
-        "checked_at": "2026-08-15"
-      },
-      "secondary": {
         "player": "Jon Guridi",
         "status": "confirmed",
-        "source_url": "https://sevillafc.hiwaymedia.io/en/actualidad/noticias/match-report-cordoba-sevilla-fc-friendly-july-2026",
-        "checked_at": "2026-08-15"
+        "source_url": "https://www.laliga.com/partido/temporada-2026-2027-laliga-ea-sports-athletic-club-sevilla-fc-2",
+        "checked_at": "2026-08-22"
       },
-      "tertiary": {
+      "secondary": {
         "player": "Peque Fernández",
         "status": "confirmed",
-        "source_url": "https://sevillafc.hiwaymedia.io/en/actualidad/noticias/match-report-cordoba-sevilla-fc-friendly-july-2026",
-        "checked_at": "2026-08-15"
+        "source_url": "https://www.laliga.com/partido/temporada-2026-2027-laliga-ea-sports-athletic-club-sevilla-fc-2",
+        "checked_at": "2026-08-22"
+      },
+      "tertiary": {
+        "player": "Isaac Romero",
+        "status": "confirmed",
+        "source_url": "https://www.laliga.com/partido/temporada-2026-2027-laliga-ea-sports-athletic-club-sevilla-fc-2",
+        "checked_at": "2026-08-22"
       }
     },
     "latest_match_review": {

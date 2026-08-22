@@ -8,7 +8,7 @@ import {
   CLUB_LEAGUES,
   CLUB_PENALTY_PREVIOUS_SEASON,
   CLUB_PENALTY_SEASON,
-  buildClubPenaltyLead,
+  buildClubPenaltyCardSummary,
   clubPenaltyLeagueUrl,
   getClubPenaltyLeague,
   type ClubPenaltyTeam,
@@ -24,6 +24,14 @@ const STATUS_LABELS: Record<ClubPenaltyTeam["hierarchyStatus"], string> = {
   conditional: "Conditional",
   disputed: "Disputed",
   unknown: "Not verified",
+};
+
+const STATUS_STYLES: Record<ClubPenaltyTeam["hierarchyStatus"], string> = {
+  confirmed: "border-emerald-300/30 bg-emerald-400/12 text-emerald-100",
+  probable: "border-cyan-300/30 bg-cyan-400/10 text-cyan-100",
+  conditional: "border-amber-300/30 bg-amber-400/10 text-amber-100",
+  disputed: "border-rose-300/30 bg-rose-400/10 text-rose-100",
+  unknown: "border-slate-500/50 bg-slate-700/30 text-slate-200",
 };
 
 export function generateStaticParams() {
@@ -76,35 +84,43 @@ function TeamCrest({ team }: { team: ClubPenaltyTeam }) {
 function TeamCard({ team }: { team: ClubPenaltyTeam }) {
   const unknown = team.hierarchyStatus === "unknown";
   return (
-    <article className="rounded-2xl border border-slate-800/80 bg-slate-900/65 p-4 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-5">
+    <article className="group relative overflow-hidden rounded-3xl border border-slate-700/70 bg-[linear-gradient(145deg,rgba(15,23,42,0.94),rgba(7,12,22,0.98))] p-4 shadow-[0_18px_42px_rgba(0,0,0,0.24)] transition duration-300 hover:-translate-y-0.5 hover:border-emerald-400/30 hover:shadow-[0_22px_55px_rgba(0,0,0,0.32)] sm:p-5">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-300/45 to-transparent opacity-60 transition group-hover:opacity-100" />
       <div className="flex items-start gap-3">
         <TeamCrest team={team} />
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-lg font-semibold text-slate-100">{team.team}</h2>
-            <span className={`rounded-full border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.15em] ${unknown ? "border-amber-300/25 bg-amber-400/10 text-amber-100" : "border-emerald-400/20 bg-emerald-400/10 text-emerald-200"}`}>
+            <span className={`rounded-full border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.15em] ${STATUS_STYLES[team.hierarchyStatus]}`}>
               {STATUS_LABELS[team.hierarchyStatus]}
             </span>
           </div>
-          <p className="mt-1 text-xs leading-5 text-slate-500">{buildClubPenaltyLead(team)}</p>
+          <p className="mt-2 text-sm leading-6 text-slate-300">{buildClubPenaltyCardSummary(team)}</p>
         </div>
       </div>
 
       <div className="mt-4 grid gap-2 sm:grid-cols-3">
         {[["First choice", team.primary], ["Second choice", team.secondary], ["Third choice", team.tertiary || "Under review"]].map(([label, value], index) => (
-          <div key={label} className="rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2.5">
-            <div className="font-mono text-[9px] uppercase tracking-[0.15em] text-slate-500">{index + 1}. {label}</div>
-            <div className={`mt-1 truncate text-sm font-medium ${index === 0 && !unknown ? "text-emerald-200" : "text-slate-200"}`}>{value}</div>
+          <div key={label} className="min-w-0 rounded-xl border border-slate-700/70 bg-slate-950/65 px-3 py-3">
+            <div className="font-mono text-[9px] uppercase tracking-[0.15em] text-slate-400">{index + 1}. {label}</div>
+            <div title={value} className={`mt-1.5 break-words text-sm font-semibold leading-5 ${index === 0 && !unknown ? "text-emerald-200" : "text-slate-100"}`}>{value}</div>
           </div>
         ))}
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-800/70 pt-3">
-        <span className="text-xs text-slate-500">
-          {team.isCarryover ? `Carried over from ${CLUB_PENALTY_PREVIOUS_SEASON}` : team.lastUpdatedLabel ? `Last verified ${team.lastUpdatedLabel}` : "Awaiting direct evidence"}
-        </span>
-        <Link href={team.relativeUrl} className="text-sm font-semibold text-emerald-300 transition hover:text-emerald-200">
-          Open evidence file -&gt;
+      <div className="mt-4 flex flex-col gap-3 border-t border-slate-700/60 pt-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs leading-5">
+          <span className="text-slate-300">
+            <span className="text-slate-500">Evidence verified</span>{" "}
+            {team.isCarryover ? CLUB_PENALTY_PREVIOUS_SEASON : team.lastUpdatedLabel || "Awaiting direct evidence"}
+          </span>
+          <span className="text-emerald-200">
+            <span className="text-slate-500">League review run</span>{" "}
+            {team.leagueCheckedLabel || "Pending"}
+          </span>
+        </div>
+        <Link href={team.relativeUrl} className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-emerald-300 transition group-hover:text-emerald-200">
+          Full evidence <span aria-hidden="true">-&gt;</span>
         </Link>
       </div>
     </article>
@@ -157,7 +173,7 @@ export default async function ClubPenaltyLeaguePage({ params }: PageProps) {
                 <img src={league.logoPath} alt={`${league.label} logo`} className="h-14 w-14 object-contain" />
               </span>
               <div>
-                <div className="font-mono text-xs uppercase tracking-[0.25em] text-emerald-300">{CLUB_PENALTY_SEASON} preseason board</div>
+                <div className="font-mono text-xs uppercase tracking-[0.25em] text-emerald-300">{CLUB_PENALTY_SEASON} penalty intelligence</div>
                 <h1 className="mt-2 text-4xl font-semibold tracking-tight text-slate-100 sm:text-5xl">{league.label} penalty takers</h1>
                 <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300 sm:text-base">{league.copy}</p>
               </div>
@@ -171,7 +187,10 @@ export default async function ClubPenaltyLeaguePage({ params }: PageProps) {
               <div className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-400">Current league</div>
               <h2 className="mt-2 text-2xl font-semibold text-slate-100">All {league.teams.length} clubs</h2>
             </div>
-            <p className="max-w-xl text-xs leading-5 text-slate-500">Carried-over orders are labelled and remain provisional until new-season evidence confirms or changes them.</p>
+            <div className="max-w-xl rounded-2xl border border-emerald-400/20 bg-emerald-400/8 px-4 py-3 text-xs leading-5 text-slate-300">
+              <span className="font-semibold text-emerald-200">Board checked {league.boardCheckedLabel || "pending"}.</span>{" "}
+              Evidence dates change only when a hierarchy receives new supporting information.
+            </div>
           </div>
           <div className="grid gap-4 xl:grid-cols-2">{league.teams.map((team) => <TeamCard key={team.relativeUrl} team={team} />)}</div>
         </section>
