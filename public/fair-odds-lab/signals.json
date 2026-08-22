@@ -1,7 +1,6 @@
 {
-  "generated_at": "2026-08-22T15:35:25.649144Z",
+  "generated_at": "2026-08-22T15:54:17.450826Z",
   "source_file": [
-    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
@@ -35,11 +34,11 @@
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
   "fixtures_evaluated": 16,
-  "signals_qualifying": 2,
+  "signals_qualifying": 1,
   "safety_exclusions": {
     "model_probability_below_floor": 5,
     "market_odds_above_cap": 2,
-    "lineup_not_public_quality": 3,
+    "lineup_not_public_quality": 4,
     "model_market_gap_gt_10pp": 5,
     "defensive_position": 1
   },
@@ -56,107 +55,8 @@
   "leagues_covered": [
     "serie-a"
   ],
-  "featured_signal_id": "20260822-lucas-da-cunha-1885b63a36",
+  "featured_signal_id": "20260822-scott-mctominay-c648e769fc",
   "signals": [
-    {
-      "id": "20260822-lucas-da-cunha-1885b63a36",
-      "match": {
-        "home_team": "Udinese Calcio",
-        "away_team": "Como 1907",
-        "league": "serie-a",
-        "league_display": "Serie A",
-        "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "2026-08-22T16:30:00Z",
-        "kickoff_display": "Sat 22 Aug 17:30 UK",
-        "fotmob_match_id": "5749648",
-        "fotmob_page_url": "/matches/udinese-vs-como/2wwfjq#5749648",
-        "lineup_type": "confirmed",
-        "venue": ""
-      },
-      "player": {
-        "name": "Lucas Da Cunha",
-        "team": "Como",
-        "position": "DMC",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/serie-a/como.png",
-        "team_primary_color": "#1d4ed8",
-        "team_secondary_color": "#f8fafc",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 28.1,
-        "fair_odds": 3.56
-      },
-      "market_data": {
-        "best_odds": 5.0,
-        "best_book": "Bet365",
-        "implied_chance_pct": 20.0
-      },
-      "edge": {
-        "price_gap_pp": 8.1,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Good",
-          "percentile": 58
-        },
-        "share_of_team_chances_pct": 13,
-        "share_of_team_chances_percentile": 86,
-        "team_attacking_outlook": {
-          "tier": "Positive",
-          "percentile": 71
-        },
-        "recent_team_form": {
-          "tier": "Strong",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-24",
-          "xg_for_avg": 1.68,
-          "xg_against_avg": 0.95,
-          "xgd_per90": 0.74,
-          "shots_for_avg": 14.6,
-          "shots_against_avg": 7.2,
-          "sot_for_avg": 4.8,
-          "sot_against_avg": 1.6,
-          "corners_for_avg": 6.4,
-          "corners_against_avg": 3.0
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 54
-        },
-        "opponent_recent_defence": {
-          "tier": "Average",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-24",
-          "xg_for_avg": 1.51,
-          "xg_against_avg": 1.28,
-          "xgd_per90": 0.24,
-          "shots_for_avg": 12.8,
-          "shots_against_avg": 13.0,
-          "sot_for_avg": 5.2,
-          "sot_against_avg": 4.2,
-          "corners_for_avg": 4.4,
-          "corners_against_avg": 4.4
-        },
-        "fixture_boost_pct": -6,
-        "projected_minutes": 85,
-        "penalty_role": "Primary",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Confirmed starter"
-      },
-      "confidence_tier": "High",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "Recent team form supports the attacking case",
-        "Primary penalty role adds a clear scoring route"
-      ],
-      "risk_flags": []
-    },
     {
       "id": "20260822-scott-mctominay-c648e769fc",
       "match": {
