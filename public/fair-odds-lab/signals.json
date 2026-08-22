@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-08-22T17:55:37.837705Z",
+  "generated_at": "2026-08-22T18:49:16.678367Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
@@ -33,130 +34,26 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 15,
-  "signals_qualifying": 1,
+  "fixtures_evaluated": 13,
+  "signals_qualifying": 0,
   "safety_exclusions": {
-    "model_probability_below_floor": 5,
-    "low_signal_confidence": 1,
-    "model_market_gap_gt_10pp": 4,
-    "defensive_position": 1,
-    "lineup_not_public_quality": 1,
-    "market_odds_above_cap": 1
+    "lineup_not_public_quality": 2,
+    "model_probability_below_floor": 3,
+    "low_signal_confidence": 3,
+    "model_market_gap_gt_10pp": 5,
+    "defensive_position": 1
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 4,
+    "eligible_rows": 5,
     "added_by_league": {
       "epl": 3,
-      "la-liga": 1
+      "la-liga": 1,
+      "serie-a": 1
     },
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
-  "leagues_covered": [
-    "serie-a"
-  ],
-  "featured_signal_id": "20260822-scott-mctominay-c648e769fc",
-  "signals": [
-    {
-      "id": "20260822-scott-mctominay-c648e769fc",
-      "match": {
-        "home_team": "Genoa CFC",
-        "away_team": "SSC Napoli",
-        "league": "serie-a",
-        "league_display": "Serie A",
-        "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "2026-08-22T18:45:00Z",
-        "kickoff_display": "Sat 22 Aug 19:45 UK",
-        "fotmob_match_id": "5749644",
-        "fotmob_page_url": "/matches/napoli-vs-genoa/3cdjj5#5749644",
-        "lineup_type": "confirmed",
-        "venue": ""
-      },
-      "player": {
-        "name": "Scott McTominay",
-        "team": "Napoli",
-        "position": "MID",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/serie-a/napoli.png",
-        "team_primary_color": "#0ea5e9",
-        "team_secondary_color": "#f8fafc",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 34.3,
-        "fair_odds": 2.91
-      },
-      "market_data": {
-        "best_odds": 3.75,
-        "best_book": "Bet365",
-        "implied_chance_pct": 26.7
-      },
-      "edge": {
-        "price_gap_pp": 7.7,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 93
-        },
-        "share_of_team_chances_pct": 31,
-        "share_of_team_chances_percentile": 98,
-        "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 31
-        },
-        "recent_team_form": {
-          "tier": "Strong",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-24",
-          "xg_for_avg": 1.66,
-          "xg_against_avg": 0.93,
-          "xgd_per90": 0.73,
-          "shots_for_avg": 14.2,
-          "shots_against_avg": 9.4,
-          "sot_for_avg": 5.2,
-          "sot_against_avg": 3.6,
-          "corners_for_avg": 5.0,
-          "corners_against_avg": 2.6
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 45
-        },
-        "opponent_recent_defence": {
-          "tier": "Positive",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-24",
-          "xg_for_avg": 0.82,
-          "xg_against_avg": 1.46,
-          "xgd_per90": -0.64,
-          "shots_for_avg": 8.8,
-          "shots_against_avg": 11.8,
-          "sot_for_avg": 1.8,
-          "sot_against_avg": 4.0,
-          "corners_for_avg": 3.4,
-          "corners_against_avg": 3.6
-        },
-        "fixture_boost_pct": -11,
-        "projected_minutes": 85,
-        "penalty_role": "Not on penalties",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Confirmed starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Recent team form supports the attacking case",
-        "Opponent has been allowing chances recently"
-      ],
-      "risk_flags": []
-    }
-  ]
+  "leagues_covered": [],
+  "featured_signal_id": null,
+  "signals": []
 }

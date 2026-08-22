@@ -20,8 +20,8 @@
         "Leo Østigard",
         "Johan Vásquez",
         "Brooke Norton-Cuffy",
-        "Morten Frendrup",
         "Amorim",
+        "Morten Frendrup",
         "Mikael Egill Ellertsson",
         "Tommaso Baldanzi",
         "Vítinha",
@@ -87,7 +87,7 @@
           "position_id": 62
         },
         {
-          "name": "Morten Frendrup",
+          "name": "Amorim",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -96,7 +96,7 @@
           "position_id": 64
         },
         {
-          "name": "Amorim",
+          "name": "Morten Frendrup",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -242,12 +242,39 @@
           "position_id": 107
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Daniele Sommariva",
+        "Franz Stolz",
+        "David Puczka",
+        "Mamedi Doucouré",
+        "Mario Mitaj",
+        "Sebastian Otoa",
+        "Aarón Martín",
+        "Djibril Sow",
+        "Junior Messias",
+        "Samuel Wiafe",
+        "Stefano Sabelli",
+        "Adam Zulevic",
+        "Franz-Ethan Meichtry"
+      ],
+      "away_subs": [
+        "Nikita Contini",
+        "Vanja Milinkovic-Savic",
+        "Christian Garofalo",
+        "Mathías Olivera",
+        "Sam Beukema",
+        "Antonio Vergara",
+        "Billy Gilmour",
+        "Costantino Favasuli",
+        "David Neres",
+        "Kevin De Bruyne",
+        "Giovane Nascimento",
+        "Lorenzo Lucca",
+        "Noa Lang"
+      ],
       "home_unavailable": [
         "Elias Havel",
         "Hamed Traorè",
-        "Franz-Ethan Meichtry",
         "Joi Xheto Nuredini",
         "Lorenzo Venturino"
       ],
@@ -502,26 +529,26 @@
       "home_subs": [
         "Petar Sucic",
         "Ange-Yoan Bonny",
+        "John Stones",
+        "Luis Henrique",
+        "Aleksandar Stankovic",
         "Ivan Provedel",
         "Raffaele Di Gennaro",
         "Benjamin Pavard",
         "Carlos Augusto",
-        "John Stones",
         "Leonardo Bovio",
-        "Aleksandar Stankovic",
-        "Luis Henrique",
         "Jamal Iddrissou",
         "Marcus Thuram"
       ],
       "away_subs": [
-        "Aljaz Strajnar",
-        "Filippo Delli Carri",
-        "Valentin Antov",
-        "Jay Robinson",
         "Nicolas Galazzi",
-        "Nicolò Ballabio",
         "Omari Forson",
         "Patrick Cutrone",
+        "Jay Robinson",
+        "Filippo Delli Carri",
+        "Aleksandr Ballabio",
+        "Aljaz Strajnar",
+        "Valentin Antov",
         "Solomon Loubao"
       ],
       "home_unavailable": [
@@ -545,9 +572,9 @@
       "kickoff_utc": "2026-08-22T18:45:00Z",
       "home_team": "Parma",
       "away_team": "Cagliari",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-3-3",
       "away_formation": "4-3-2-1",
       "home_players": [
@@ -556,12 +583,12 @@
         "Mariano Troilo",
         "Abdoulaye Ndiaye",
         "Emanuele Valeri",
-        "Adrián Bernabé",
+        "Abdou-Salam Konate",
         "Christian Ordóñez",
         "Mandela Keita",
-        "El Bilal Touré",
         "Simone Lontani",
-        "Ousmane Diallo"
+        "El Bilal Touré",
+        "Adrián Bernabé"
       ],
       "away_players": [
         "Elia Caprile",
@@ -571,8 +598,8 @@
         "Adam Obert",
         "Alessando Romano",
         "Harry Winks",
-        "Jacopo Fazzini",
         "Michel Ndary Adopo",
+        "Jacopo Fazzini",
         "Daniel Maldini",
         "Paul Mendy"
       ],
@@ -623,7 +650,7 @@
           "position_id": 38
         },
         {
-          "name": "Adrián Bernabé",
+          "name": "Abdou-Salam Konate",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -650,7 +677,7 @@
           "position_id": 77
         },
         {
-          "name": "El Bilal Touré",
+          "name": "Simone Lontani",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -659,7 +686,7 @@
           "position_id": 103
         },
         {
-          "name": "Simone Lontani",
+          "name": "El Bilal Touré",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -668,7 +695,7 @@
           "position_id": 105
         },
         {
-          "name": "Ousmane Diallo",
+          "name": "Adrián Bernabé",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -742,7 +769,7 @@
           "position_id": 65
         },
         {
-          "name": "Jacopo Fazzini",
+          "name": "Michel Ndary Adopo",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -751,7 +778,7 @@
           "position_id": 67
         },
         {
-          "name": "Michel Ndary Adopo",
+          "name": "Jacopo Fazzini",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -779,7 +806,20 @@
         }
       ],
       "home_subs": [
-        "Abdou-Salam Konate"
+        "Alessandro Mazzocchi",
+        "Giovanni Daffara",
+        "Dominik Drobnic",
+        "Lautaro Valenti",
+        "Benjamín Cremaschi",
+        "Franco Carboni",
+        "Oliver Sørensen",
+        "Pontus Almqvist",
+        "Rachid Kouda",
+        "David Romero",
+        "Matija Frigan",
+        "Nesta Elphege",
+        "Ousmane Diallo",
+        "Thomás de Martis"
       ],
       "away_subs": [
         "Alen Sherri",
@@ -799,12 +839,9 @@
         "Kingstone Mutandwa"
       ],
       "home_unavailable": [
-        "Giovanni Daffara",
-        "Benjamín Cremaschi",
         "Botond Balogh",
         "Hans Nicolussi Caviglia",
-        "Sascha Britschgi",
-        "Nesta Elphege"
+        "Sascha Britschgi"
       ],
       "away_unavailable": [
         "Agustín Albarracín",
@@ -1056,6 +1093,10 @@
       ],
       "home_subs": [
         "Enzo Ebosse",
+        "Lennon Miller",
+        "Vakoun Issouf Bayo",
+        "Unai Gómez",
+        "Oier Zarraga",
         "Daniele Padelli",
         "Edoardo Piana",
         "Branimir Mlacic",
@@ -1063,26 +1104,22 @@
         "Nicolò Bertola",
         "Saba Goglichidze",
         "David Pejicic",
-        "Lennon Miller",
-        "Oier Zarraga",
         "Sandi Lovric",
-        "Unai Gómez",
-        "Giulio Vinciati",
-        "Vakoun Issouf Bayo"
+        "Giulio Vinciati"
       ],
       "away_subs": [
         "Lucas Da Cunha",
         "Assane Diao",
+        "Mattia Liberali",
+        "Ivan Smolcic",
+        "Maxence Caqueret",
         "Emil Audero",
         "Mauro Vigorito",
         "Noel Törnqvist",
         "Alberto Dossena",
         "Edoardo Goldaniga",
-        "Ivan Smolcic",
         "Kaiki",
         "Marc-Oliver Kempf",
-        "Mattia Liberali",
-        "Maxence Caqueret",
         "Riccardo Cassano",
         "Adrian Lahdo",
         "Álvaro Morata"
