@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-22T09:18:33Z",
+  "generated_at": "2026-08-22T09:22:06Z",
   "league": "ligue-1",
   "row_count": 1,
   "rows": [
@@ -12,15 +12,15 @@
       "team": "Marseille",
       "opponent": "Strasbourg",
       "actual_taker": "Amine Gouiri",
-      "actual_role_pre_match": "secondary",
+      "actual_role_pre_match": "primary",
       "penalties_attempted": 1,
       "penalties_scored": 1,
       "distinct_takers_in_match": 1,
       "minute": "68",
       "event_type": "Goal",
       "event_result": "scored",
-      "primary_pre_match": "Himad Abdelli",
-      "secondary_pre_match": "Amine Gouiri",
+      "primary_pre_match": "Amine Gouiri",
+      "secondary_pre_match": "Himad Abdelli",
       "tertiary_pre_match": "Pierre-Emile Højbjerg",
       "primary_lineup_status": "",
       "secondary_lineup_status": "",
@@ -28,10 +28,10 @@
       "active_taker_pre_match": "",
       "active_slot_pre_match": "",
       "team_lineup_status": "unknown",
-      "review_type": "expected_backup_shift",
-      "review_priority": "medium",
-      "editorial_note": "Amine Gouiri took 1 penalty attempt and scored for Marseille vs Strasbourg. Primary pre-match: Himad Abdelli (unknown). Secondary pre-match: Amine Gouiri (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-07-30",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Amine Gouiri took 1 penalty attempt and scored for Marseille vs Strasbourg. Primary pre-match: Amine Gouiri (unknown). Secondary pre-match: Himad Abdelli (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-08-22",
       "context_source_path": "data/goalscorer/ligue-1-penalty-takers.json"
     }
   ]

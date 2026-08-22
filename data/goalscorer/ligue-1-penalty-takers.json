@@ -25,8 +25,8 @@
       "Le Mans",
       "Troyes"
     ],
-    "last_verified": "2026-07-30",
-    "public_updated_at": "2026-07-30",
+    "last_verified": "2026-08-22",
+    "public_updated_at": "2026-08-22",
     "membership_source": "https://ligue1.com/en/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released"
   },
   "Angers": {
@@ -2562,29 +2562,29 @@
     }
   },
   "Marseille": {
-    "primary": "Himad Abdelli",
-    "secondary": "Amine Gouiri",
+    "primary": "Amine Gouiri",
+    "secondary": "Himad Abdelli",
     "tertiary": "Pierre-Emile Højbjerg",
-    "last_updated": "2026-07-30",
-    "source": "Ligue 1",
-    "cross_check": "Transfermarkt",
-    "hierarchy_status": "conditional",
+    "last_updated": "2026-08-22",
+    "source": "L'Équipe",
+    "cross_check": "AS",
+    "hierarchy_status": "confirmed",
     "confidence": {
-      "primary": "low",
-      "secondary": "low",
+      "primary": "high",
+      "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "No current OM event establishes the new order. Abdelli is the only current candidate with strong recent evidence: 2/2 in 2025/26 and 14/15 career. Gouiri and Højbjerg follow from attacking and dead-ball roles. Abdelli's primary rank applies only when selected; no direct OM designation exists. Conditions: If Abdelli is not in the starting XI, Gouiri is practical matchday primary. The first competitive OM penalty must supersede this career-based projection. Any incoming proven specialist should be assessed immediately.",
+    "condition_note": "Gouiri converted Marseille's first 2026/27 Ligue 1 penalty in the 68th minute against Strasbourg with Abdelli and Højbjerg both on the pitch. This directly confirms Gouiri as first choice. Abdelli remains the strongest deputy on prior penalty record; Højbjerg remains tertiary, but the backup order has not yet been tested.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-22",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-22",
     "latest_evidence": {
-      "id": "evt_20260730_marseille_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
+      "id": "evt_20260821_marseille_competitive_penalty",
+      "date": "2026-08-21",
+      "type": "competitive_penalty_assignment",
       "source_count": 3
     },
     "evidence_log": [
@@ -2732,6 +2732,44 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260821_marseille_competitive_penalty",
+        "date": "2026-08-21",
+        "season": "2026/27",
+        "type": "competitive_penalty_assignment",
+        "penalty_kind": "regular_time",
+        "competition": "Ligue 1",
+        "match": "Marseille 4-0 Strasbourg",
+        "context": "Amine Gouiri converted Marseille's penalty in the 68th minute. Himad Abdelli started and remained on the pitch until the 82nd minute, while Pierre-Emile Højbjerg also remained on the pitch. The event therefore directly establishes Gouiri ahead of both filed alternatives.",
+        "sources": [
+          {
+            "label": "L'Équipe match centre",
+            "url": "https://www.lequipe.fr/Football/match-direct/ligue-1/2026-2027/om-strasbourg-live/690263",
+            "date": "2026-08-21",
+            "note": "Records Gouiri's 68th-minute penalty and the Marseille starting lineup including Abdelli and Højbjerg."
+          },
+          {
+            "label": "L'Équipe",
+            "url": "https://www.lequipe.fr/Football/Actualites/Retrouvez-en-video-la-reprise-tout-en-toucher-d-amine-gouiri-premier-buteur-de-la-saison-de-ligue-1-lors-d-om-strasbourg/1712655",
+            "date": "2026-08-21",
+            "note": "The match report confirms Gouiri converted Marseille's penalty against Strasbourg."
+          },
+          {
+            "label": "AS",
+            "url": "https://as.com/futbol/internacional/el-marsella-es-un-ciclon-al-ritmo-de-paixao-f202608-n/",
+            "date": "2026-08-21",
+            "note": "The match report records Gouiri's penalty and Abdelli's later substitution, confirming Abdelli was still on the pitch for the kick."
+          }
+        ],
+        "detection": "automated_fotmob_live_then_manual_lineup_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-22T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Direct competitive evidence reverses the preseason Abdelli/Gouiri projection and confirms Gouiri as Marseille's primary penalty taker."
       }
     ],
     "change_log": [
@@ -2803,11 +2841,34 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-22",
+        "season": "2026/27",
+        "change_type": "competitive_hierarchy_change",
+        "from": {
+          "primary": "Himad Abdelli",
+          "secondary": "Amine Gouiri",
+          "tertiary": "Pierre-Emile Højbjerg"
+        },
+        "to": {
+          "primary": "Amine Gouiri",
+          "secondary": "Himad Abdelli",
+          "tertiary": "Pierre-Emile Højbjerg"
+        },
+        "reason": "Gouiri converted Marseille's first league penalty with both Abdelli and Højbjerg on the pitch, directly establishing the primary order.",
+        "evidence_ids": [
+          "evt_20260821_marseille_competitive_penalty"
+        ],
+        "detection": "competitive_match_event_and_lineup_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-22T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -2820,23 +2881,28 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Himad Abdelli",
-        "status": "confirmed",
-        "source_url": "https://www.om.fr/fr/equipe/hommes",
-        "checked_at": "2026-07-30"
-      },
-      "secondary": {
         "player": "Amine Gouiri",
         "status": "confirmed",
         "source_url": "https://www.om.fr/fr/equipe/hommes",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-08-22"
+      },
+      "secondary": {
+        "player": "Himad Abdelli",
+        "status": "confirmed",
+        "source_url": "https://www.om.fr/fr/equipe/hommes",
+        "checked_at": "2026-08-22"
       },
       "tertiary": {
         "player": "Pierre-Emile Højbjerg",
         "status": "confirmed",
         "source_url": "https://www.om.fr/fr/equipe/hommes",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-08-22"
       }
+    },
+    "latest_match_review": {
+      "date": "2026-08-21",
+      "method": "competitive_match_event_and_lineup_review",
+      "evidence_id": "evt_20260821_marseille_competitive_penalty"
     }
   },
   "Monaco": {
