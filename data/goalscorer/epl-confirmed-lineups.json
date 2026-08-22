@@ -279,8 +279,8 @@
         "James Tarkowski",
         "Jarrad Branthwaite",
         "Vitaliy Mykolenko",
-        "Hayden Hackney",
         "Harrison Armstrong",
+        "Hayden Hackney",
         "Iliman Ndiaye",
         "Kiernan Dewsbury-Hall",
         "Tyrique George",
@@ -346,7 +346,7 @@
           "position_id": 38
         },
         {
-          "name": "Hayden Hackney",
+          "name": "Harrison Armstrong",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -355,7 +355,7 @@
           "position_id": 64
         },
         {
-          "name": "Harrison Armstrong",
+          "name": "Hayden Hackney",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -775,23 +775,23 @@
         "Lucas Herrington",
         "Paddy McNair",
         "Cody Drameh",
-        "Dillon Phillips",
+        "Liam Millar",
         "Matt Targett",
+        "Dillon Phillips",
         "Jens Hjertø-Dahl",
         "Kieran Dowell",
-        "Lucas Gourna-Douath",
-        "Liam Millar"
+        "Lucas Gourna-Douath"
       ],
       "away_subs": [
         "Marcus Rashford",
         "Kobbie Mainoo",
         "Benjamin Sesko",
-        "Karl Darlow",
         "Diogo Dalot",
+        "Shea Lacey",
+        "Karl Darlow",
         "Leny Yoro",
         "Lisandro Martínez",
-        "Joshua Zirkzee",
-        "Shea Lacey"
+        "Joshua Zirkzee"
       ],
       "home_unavailable": [
         "Matty Jacob",
@@ -840,8 +840,8 @@
       "away_players": [
         "Robin Roefs",
         "Thomas Meunier",
-        "Luke O'Nien",
         "Daniel Ballard",
+        "Luke O'Nien",
         "Reinildo",
         "Granit Xhaka",
         "Noah Sadiki",
@@ -971,7 +971,7 @@
           "position_id": 32
         },
         {
-          "name": "Luke O'Nien",
+          "name": "Daniel Ballard",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -980,7 +980,7 @@
           "position_id": 34
         },
         {
-          "name": "Daniel Ballard",
+          "name": "Luke O'Nien",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1094,7 +1094,7 @@
       "home_status": "Confirmed Lineup",
       "away_status": "Confirmed Lineup",
       "lineup_type": "standard",
-      "home_formation": "3-4-2-1",
+      "home_formation": "3-4-3",
       "away_formation": "3-4-3",
       "home_players": [
         "Matz Sels",
@@ -1102,12 +1102,12 @@
         "Jair Cunha",
         "Nikola Milenkovic",
         "Neco Williams",
-        "Dan Ndoye",
         "Ibrahim Sangaré",
-        "Ola Aina",
         "James McAtee",
+        "Ola Aina",
         "Morgan Gibbs-White",
-        "Igor Jesus"
+        "Igor Jesus",
+        "Dan Ndoye"
       ],
       "away_players": [
         "James Trafford",
@@ -1118,8 +1118,8 @@
         "Ethan Ampadu",
         "Anton Stach",
         "James Justin",
-        "Dominic Calvert-Lewin",
         "Harry Wilson",
+        "Dominic Calvert-Lewin",
         "Brenden Aaronson"
       ],
       "home_starters": [
@@ -1129,7 +1129,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-2-1",
+          "formation": "3-4-3",
           "position_id": 11
         },
         {
@@ -1138,7 +1138,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-4-3",
           "position_id": 33
         },
         {
@@ -1147,7 +1147,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-4-3",
           "position_id": 35
         },
         {
@@ -1156,7 +1156,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-4-3",
           "position_id": 37
         },
         {
@@ -1165,17 +1165,8 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 62
-        },
-        {
-          "name": "Dan Ndoye",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 64
+          "formation": "3-4-3",
+          "position_id": 72
         },
         {
           "name": "Ibrahim Sangaré",
@@ -1183,8 +1174,17 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 66
+          "formation": "3-4-3",
+          "position_id": 74
+        },
+        {
+          "name": "James McAtee",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 76
         },
         {
           "name": "Ola Aina",
@@ -1192,35 +1192,35 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 68
-        },
-        {
-          "name": "James McAtee",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 84
+          "formation": "3-4-3",
+          "position_id": 78
         },
         {
           "name": "Morgan Gibbs-White",
           "line_index": 2,
-          "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 86
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 103
         },
         {
           "name": "Igor Jesus",
-          "line_index": 3,
-          "line_size": 1,
+          "line_index": 2,
+          "line_size": 3,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-2-1",
+          "formation": "3-4-3",
           "position_id": 105
+        },
+        {
+          "name": "Dan Ndoye",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 107
         }
       ],
       "away_starters": [
@@ -1297,7 +1297,7 @@
           "position_id": 78
         },
         {
-          "name": "Dominic Calvert-Lewin",
+          "name": "Harry Wilson",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -1306,7 +1306,7 @@
           "position_id": 103
         },
         {
-          "name": "Harry Wilson",
+          "name": "Dominic Calvert-Lewin",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
