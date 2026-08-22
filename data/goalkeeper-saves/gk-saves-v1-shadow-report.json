@@ -2,12 +2,12 @@
   "candidate": "goalkeeper-saves-v1-nb2-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 47,
+    "blocked_lines": 35,
     "blocker_counts": {
       "edge_below_8pct": 13,
       "goalkeeper_team_unresolved": 10,
-      "history_lt_6": 22,
-      "missing_registered_feature": 22,
+      "history_lt_6": 10,
+      "missing_registered_feature": 10,
       "player_not_starting_goalkeeper": 10,
       "predicted_starter": 25
     },
@@ -27,7 +27,7 @@
     "signals": 1,
     "true_close_coverage": null
   },
-  "generated_at": "2026-08-22T10:58:08Z",
+  "generated_at": "2026-08-22T11:56:20Z",
   "live_routing": false,
   "promotion": {
     "mean_true_close_clv_required": 0.005,
