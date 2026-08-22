@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-08-22T14:55:06.834379Z",
+  "generated_at": "2026-08-22T15:35:25.649144Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
@@ -33,107 +34,117 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 24,
-  "signals_qualifying": 1,
+  "fixtures_evaluated": 16,
+  "signals_qualifying": 2,
   "safety_exclusions": {
-    "low_signal_confidence": 3,
-    "model_probability_below_floor": 6,
+    "model_probability_below_floor": 5,
     "market_odds_above_cap": 2,
-    "lineup_not_public_quality": 4,
-    "model_market_gap_gt_10pp": 8,
+    "lineup_not_public_quality": 3,
+    "model_market_gap_gt_10pp": 5,
     "defensive_position": 1
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 8,
+    "eligible_rows": 5,
     "added_by_league": {
-      "epl": 5,
+      "epl": 3,
       "la-liga": 1,
-      "ligue-1": 1,
-      "serie-a": 1
+      "ligue-1": 1
     },
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
   "leagues_covered": [
-    "epl"
+    "serie-a"
   ],
-  "featured_signal_id": "20260822-brian-brobbey-46c68c6b4d",
+  "featured_signal_id": "20260822-lucas-da-cunha-1885b63a36",
   "signals": [
     {
-      "id": "20260822-brian-brobbey-46c68c6b4d",
+      "id": "20260822-lucas-da-cunha-1885b63a36",
       "match": {
-        "home_team": "Ipswich Town",
-        "away_team": "Sunderland AFC",
-        "league": "epl",
-        "league_display": "Premier League",
-        "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "2026-08-22T14:00:00Z",
-        "kickoff_display": "Sat 22 Aug 15:00 UK",
-        "fotmob_match_id": "5795366",
-        "fotmob_page_url": "/matches/sunderland-vs-ipswich-town/2sif4z#5795366",
+        "home_team": "Udinese Calcio",
+        "away_team": "Como 1907",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "2026-08-22T16:30:00Z",
+        "kickoff_display": "Sat 22 Aug 17:30 UK",
+        "fotmob_match_id": "5749648",
+        "fotmob_page_url": "/matches/udinese-vs-como/2wwfjq#5749648",
         "lineup_type": "confirmed",
         "venue": ""
       },
       "player": {
-        "name": "Brian Brobbey",
-        "team": "Sunderland",
-        "position": "FW",
+        "name": "Lucas Da Cunha",
+        "team": "Como",
+        "position": "DMC",
         "jersey_label": "",
-        "team_logo_path": "/team-logos/epl/sunderland.png",
-        "team_primary_color": "#f8fafc",
-        "team_secondary_color": "#dc2626",
-        "team_shirt_pattern": "vertical-stripes"
+        "team_logo_path": "/team-logos/serie-a/como.png",
+        "team_primary_color": "#1d4ed8",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "solid"
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 42.3,
-        "fair_odds": 2.36
+        "scoring_chance_pct": 28.1,
+        "fair_odds": 3.56
       },
       "market_data": {
-        "best_odds": 3.0,
+        "best_odds": 5.0,
         "best_book": "Bet365",
-        "implied_chance_pct": 33.3
+        "implied_chance_pct": 20.0
       },
       "edge": {
-        "price_gap_pp": 9.0,
+        "price_gap_pp": 8.1,
         "model_advantage": true
       },
       "metrics": {
         "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 95
+          "tier": "Good",
+          "percentile": 58
         },
-        "share_of_team_chances_pct": 39,
-        "share_of_team_chances_percentile": 99,
+        "share_of_team_chances_pct": 13,
+        "share_of_team_chances_percentile": 86,
         "team_attacking_outlook": {
-          "tier": "Average",
-          "percentile": 44
+          "tier": "Positive",
+          "percentile": 71
         },
         "recent_team_form": {
+          "tier": "Strong",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-24",
+          "xg_for_avg": 1.68,
+          "xg_against_avg": 0.95,
+          "xgd_per90": 0.74,
+          "shots_for_avg": 14.6,
+          "shots_against_avg": 7.2,
+          "sot_for_avg": 4.8,
+          "sot_against_avg": 1.6,
+          "corners_for_avg": 6.4,
+          "corners_against_avg": 3.0
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 54
+        },
+        "opponent_recent_defence": {
           "tier": "Average",
           "window": 5,
           "matches": 5,
           "through_date": "2026-05-24",
-          "xg_for_avg": 1.28,
-          "xg_against_avg": 1.26,
-          "xgd_per90": 0.02,
-          "shots_for_avg": 13.2,
-          "shots_against_avg": 12.2,
-          "sot_for_avg": 3.0,
-          "sot_against_avg": 3.8,
+          "xg_for_avg": 1.51,
+          "xg_against_avg": 1.28,
+          "xgd_per90": 0.24,
+          "shots_for_avg": 12.8,
+          "shots_against_avg": 13.0,
+          "sot_for_avg": 5.2,
+          "sot_against_avg": 4.2,
           "corners_for_avg": 4.4,
-          "corners_against_avg": 6.0
+          "corners_against_avg": 4.4
         },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 99
-        },
-        "opponent_recent_defence": {
-          "tier": "Unknown"
-        },
-        "fixture_boost_pct": 28,
+        "fixture_boost_pct": -6,
         "projected_minutes": 85,
-        "penalty_role": "Not on penalties",
+        "penalty_role": "Primary",
         "role_adjustment_factor": 1.0,
         "role_adjustment_reason": "",
         "lineup_confidence": "Confirmed starter"
@@ -141,10 +152,109 @@
       "confidence_tier": "High",
       "reasons": [
         "The model price is shorter than the bookmaker's best available price",
+        "Recent team form supports the attacking case",
+        "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260822-scott-mctominay-c648e769fc",
+      "match": {
+        "home_team": "Genoa CFC",
+        "away_team": "SSC Napoli",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "2026-08-22T18:45:00Z",
+        "kickoff_display": "Sat 22 Aug 19:45 UK",
+        "fotmob_match_id": "5749644",
+        "fotmob_page_url": "/matches/napoli-vs-genoa/3cdjj5#5749644",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Scott McTominay",
+        "team": "Napoli",
+        "position": "MID",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/serie-a/napoli.png",
+        "team_primary_color": "#0ea5e9",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 34.3,
+        "fair_odds": 2.91
+      },
+      "market_data": {
+        "best_odds": 3.75,
+        "best_book": "Bet365",
+        "implied_chance_pct": 26.7
+      },
+      "edge": {
+        "price_gap_pp": 7.7,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 93
+        },
+        "share_of_team_chances_pct": 31,
+        "share_of_team_chances_percentile": 98,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 34
+        },
+        "recent_team_form": {
+          "tier": "Strong",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-24",
+          "xg_for_avg": 1.66,
+          "xg_against_avg": 0.93,
+          "xgd_per90": 0.73,
+          "shots_for_avg": 14.2,
+          "shots_against_avg": 9.4,
+          "sot_for_avg": 5.2,
+          "sot_against_avg": 3.6,
+          "corners_for_avg": 5.0,
+          "corners_against_avg": 2.6
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 45
+        },
+        "opponent_recent_defence": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-24",
+          "xg_for_avg": 0.82,
+          "xg_against_avg": 1.46,
+          "xgd_per90": -0.64,
+          "shots_for_avg": 8.8,
+          "shots_against_avg": 11.8,
+          "sot_for_avg": 1.8,
+          "sot_against_avg": 4.0,
+          "corners_for_avg": 3.4,
+          "corners_against_avg": 3.6
+        },
+        "fixture_boost_pct": -11,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
         "A large share of the team's chances runs through him",
         "Recent chance quality grades as strong",
-        "Opponent defensive profile is a positive matchup",
-        "The fixture profile adds to his scoring case"
+        "Recent team form supports the attacking case",
+        "Opponent has been allowing chances recently"
       ],
       "risk_flags": []
     }

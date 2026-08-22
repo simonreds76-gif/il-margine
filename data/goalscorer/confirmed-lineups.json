@@ -245,8 +245,8 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "Hamed Traorè",
         "Elias Havel",
+        "Hamed Traorè",
         "Franz-Ethan Meichtry",
         "Joi Xheto Nuredini",
         "Lorenzo Venturino"
@@ -266,9 +266,9 @@
       "kickoff_utc": "2026-08-22T16:30:00Z",
       "home_team": "Inter",
       "away_team": "Monza",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-5-2",
       "away_formation": "3-4-2-1",
       "home_players": [
@@ -287,14 +287,14 @@
       "away_players": [
         "Semuel Pizzignacco",
         "Eddy Kouadio",
-        "Filippo Delli Carri",
+        "Lorenzo Lucchesi",
         "Andrea Carboni",
         "Samuele Birindelli",
         "Foe Ondoa",
         "Mathis Mout",
+        "Adam Bakoune",
+        "Andrea Colpani",
         "Ricardo Mangas",
-        "Omari Forson",
-        "Patrick Cutrone",
         "Gustavo Varela"
       ],
       "home_starters": [
@@ -418,7 +418,7 @@
           "position_id": 33
         },
         {
-          "name": "Filippo Delli Carri",
+          "name": "Lorenzo Lucchesi",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -463,7 +463,7 @@
           "position_id": 66
         },
         {
-          "name": "Ricardo Mangas",
+          "name": "Adam Bakoune",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -472,7 +472,7 @@
           "position_id": 68
         },
         {
-          "name": "Omari Forson",
+          "name": "Andrea Colpani",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -481,7 +481,7 @@
           "position_id": 84
         },
         {
-          "name": "Patrick Cutrone",
+          "name": "Ricardo Mangas",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -758,9 +758,9 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "Botond Balogh",
         "Giovanni Daffara",
         "Benjamín Cremaschi",
+        "Botond Balogh",
         "Hans Nicolussi Caviglia",
         "Sascha Britschgi",
         "Nesta Elphege"
@@ -780,14 +780,14 @@
       "kickoff_utc": "2026-08-22T16:30:00Z",
       "home_team": "Udinese",
       "away_team": "Como",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Maduka Okoye",
-        "Nicolò Bertola",
+        "James Abankwah",
         "Matteo Palma",
         "Oumar Solet",
         "Mërgim Vojvoda",
@@ -822,7 +822,7 @@
           "position_id": 11
         },
         {
-          "name": "Nicolò Bertola",
+          "name": "James Abankwah",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -1013,11 +1013,41 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Daniele Padelli",
+        "Edoardo Piana",
+        "Branimir Mlacic",
+        "Enzo Ebosse",
+        "Juan Arizala",
+        "Nicolò Bertola",
+        "Saba Goglichidze",
+        "David Pejicic",
+        "Lennon Miller",
+        "Oier Zarraga",
+        "Sandi Lovric",
+        "Unai Gómez",
+        "Adam Buksa",
+        "Idrissa Gueye",
+        "Vakoun Issouf Bayo"
+      ],
+      "away_subs": [
+        "Mauro Vigorito",
+        "Noel Törnqvist",
+        "Alberto Dossena",
+        "Álex Valle",
+        "Edoardo Goldaniga",
+        "Ivan Smolcic",
+        "Marc-Oliver Kempf",
+        "Luis Milla",
+        "Mattia Liberali",
+        "Maxence Caqueret",
+        "Adrian Lahdo",
+        "Jesús Rodríguez",
+        "Nicolas-Gerrit Kühn"
+      ],
       "home_unavailable": [
-        "Alessandro Zanoli",
         "Christian Kabasele",
+        "Alessandro Zanoli",
         "Giorgi Chakvetadze"
       ],
       "away_unavailable": [
@@ -1044,9 +1074,9 @@
         "Odilon Kossounou",
         "Thomas Kristensen",
         "Lorenzo Bernasconi",
-        "Lazar Samardzic",
-        "Gianluca Gaetano",
         "Éderson",
+        "Gianluca Gaetano",
+        "Mario Pasalic",
         "Nicola Zalewski",
         "Gianluca Scamacca",
         "Giacomo Raspadori"
@@ -1111,7 +1141,7 @@
           "position_id": 38
         },
         {
-          "name": "Lazar Samardzic",
+          "name": "Éderson",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -1129,7 +1159,7 @@
           "position_id": 75
         },
         {
-          "name": "Éderson",
+          "name": "Mario Pasalic",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -1269,10 +1299,11 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "Charles De Ketelaere",
+        "Elif Elmas",
         "Giorgio Scalvini",
         "Honest Ahanor",
         "Isak Hien",
+        "Charles De Ketelaere",
         "Kamaldeen Sulemana"
       ],
       "away_unavailable": [
@@ -1550,9 +1581,9 @@
       "away_formation": "3-4-2-1",
       "home_players": [
         "Diego Mascardi",
-        "Pietro Comuzzo",
         "Saúl Coco",
-        "Eray Cömert",
+        "Ardian Ismajli",
+        "Pietro Comuzzo",
         "Marcus Holmgren Pedersen",
         "Gvidas Gineitis",
         "Kian Fitz-Jim",
@@ -1585,7 +1616,7 @@
           "position_id": 11
         },
         {
-          "name": "Pietro Comuzzo",
+          "name": "Saúl Coco",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -1594,7 +1625,7 @@
           "position_id": 33
         },
         {
-          "name": "Saúl Coco",
+          "name": "Ardian Ismajli",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -1603,7 +1634,7 @@
           "position_id": 35
         },
         {
-          "name": "Eray Cömert",
+          "name": "Pietro Comuzzo",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -2284,6 +2315,7 @@
         "Nicolò Casale"
       ],
       "away_unavailable": [
+        "Samuel Gigot",
         "Luca Pellegrini",
         "Danilo Cataldi",
         "Patric",
