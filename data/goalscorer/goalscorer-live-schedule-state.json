@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-22T11:53:33Z",
+  "updated_at": "2026-08-22T12:58:58Z",
   "reason": "cycle",
   "last_clv_run_at": "2026-08-21T18:54:04Z",
   "leagues": {
@@ -14,14 +14,14 @@
       "next_kickoff_utc": ""
     },
     "epl": {
-      "last_successful_run_at": "2026-08-22T10:38:37Z",
+      "last_successful_run_at": "2026-08-22T12:58:58Z",
       "last_detail_run_at": "2026-08-20T22:17:05Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "off",
-      "last_decision": "off",
-      "last_message": "Skip epl: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": ""
+      "last_tier": "lineup",
+      "last_decision": "ran",
+      "last_message": "Ran epl in lineup tier (cadence 10m, fixtures 3).",
+      "next_kickoff_utc": "2026-08-22T14:00:00Z"
     },
     "la-liga": {
       "last_successful_run_at": "2026-08-21T18:54:00Z",

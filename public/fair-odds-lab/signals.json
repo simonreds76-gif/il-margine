@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-08-22T11:54:05.340106Z",
+  "generated_at": "2026-08-22T12:59:24.364853Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
@@ -33,11 +34,11 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 28,
+  "fixtures_evaluated": 27,
   "signals_qualifying": 2,
   "safety_exclusions": {
-    "low_signal_confidence": 4,
-    "model_probability_below_floor": 5,
+    "low_signal_confidence": 5,
+    "model_probability_below_floor": 6,
     "market_odds_above_cap": 2,
     "lineup_not_public_quality": 3,
     "model_market_gap_gt_10pp": 5
@@ -56,102 +57,91 @@
     "epl",
     "ligue-1"
   ],
-  "featured_signal_id": "20260822-ismaila-sarr-7b68ab2a5b",
+  "featured_signal_id": "20260822-brian-brobbey-46c68c6b4d",
   "signals": [
     {
-      "id": "20260822-ismaila-sarr-7b68ab2a5b",
+      "id": "20260822-brian-brobbey-46c68c6b4d",
       "match": {
-        "home_team": "Everton FC",
-        "away_team": "Crystal Palace",
+        "home_team": "Ipswich Town",
+        "away_team": "Sunderland AFC",
         "league": "epl",
         "league_display": "Premier League",
         "league_logo_path": "/league-logos/epl.png",
         "kickoff_utc": "2026-08-22T14:00:00Z",
         "kickoff_display": "Sat 22 Aug 15:00 UK",
-        "fotmob_match_id": "5795365",
-        "fotmob_page_url": "/matches/everton-vs-crystal-palace/2tttz7#5795365",
-        "lineup_type": "predicted",
+        "fotmob_match_id": "5795366",
+        "fotmob_page_url": "/matches/sunderland-vs-ipswich-town/2sif4z#5795366",
+        "lineup_type": "confirmed",
         "venue": ""
       },
       "player": {
-        "name": "Ismaila Sarr",
-        "team": "Crystal Palace",
-        "position": "AM",
+        "name": "Brian Brobbey",
+        "team": "Sunderland",
+        "position": "FW",
         "jersey_label": "",
-        "team_logo_path": "/team-logos/epl/crystal-palace.png",
-        "team_primary_color": "#1d4ed8",
+        "team_logo_path": "/team-logos/epl/sunderland.png",
+        "team_primary_color": "#f8fafc",
         "team_secondary_color": "#dc2626",
         "team_shirt_pattern": "vertical-stripes"
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 34.3,
-        "fair_odds": 2.92
+        "scoring_chance_pct": 42.3,
+        "fair_odds": 2.36
       },
       "market_data": {
-        "best_odds": 4.0,
+        "best_odds": 3.0,
         "best_book": "Bet365",
-        "implied_chance_pct": 25.0
+        "implied_chance_pct": 33.3
       },
       "edge": {
-        "price_gap_pp": 9.3,
+        "price_gap_pp": 9.0,
         "model_advantage": true
       },
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 94
+          "percentile": 96
         },
-        "share_of_team_chances_pct": 22,
-        "share_of_team_chances_percentile": 95,
+        "share_of_team_chances_pct": 39,
+        "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 52
+          "percentile": 45
         },
         "recent_team_form": {
-          "tier": "Quiet",
+          "tier": "Average",
           "window": 5,
           "matches": 5,
           "through_date": "2026-05-24",
-          "xg_for_avg": 1.44,
-          "xg_against_avg": 2.36,
-          "xgd_per90": -0.92,
-          "shots_for_avg": 11.6,
-          "shots_against_avg": 15.0,
-          "sot_for_avg": 3.8,
-          "sot_against_avg": 5.0,
-          "corners_for_avg": 3.4,
-          "corners_against_avg": 7.8
+          "xg_for_avg": 1.28,
+          "xg_against_avg": 1.26,
+          "xgd_per90": 0.02,
+          "shots_for_avg": 13.2,
+          "shots_against_avg": 12.2,
+          "sot_for_avg": 3.0,
+          "sot_against_avg": 3.8,
+          "corners_for_avg": 4.4,
+          "corners_against_avg": 6.0
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 80
+          "percentile": 99
         },
         "opponent_recent_defence": {
-          "tier": "High",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-24",
-          "xg_for_avg": 1.3,
-          "xg_against_avg": 1.85,
-          "xgd_per90": -0.55,
-          "shots_for_avg": 11.2,
-          "shots_against_avg": 16.0,
-          "sot_for_avg": 4.4,
-          "sot_against_avg": 4.8,
-          "corners_for_avg": 4.8,
-          "corners_against_avg": 5.0
+          "tier": "Unknown"
         },
-        "fixture_boost_pct": 27,
-        "projected_minutes": 78,
-        "penalty_role": "Secondary",
+        "fixture_boost_pct": 28,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
         "role_adjustment_factor": 1.0,
         "role_adjustment_reason": "",
-        "lineup_confidence": "Projected starter"
+        "lineup_confidence": "Confirmed starter"
       },
-      "confidence_tier": "Medium",
+      "confidence_tier": "High",
       "reasons": [
         "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
         "Recent chance quality grades as strong",
         "Opponent defensive profile is a positive matchup",
         "The fixture profile adds to his scoring case"
@@ -225,7 +215,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 52
+          "percentile": 51
         },
         "opponent_recent_defence": {
           "tier": "High",
