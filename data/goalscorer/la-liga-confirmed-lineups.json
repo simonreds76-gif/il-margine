@@ -13,7 +13,7 @@
       "away_status": "Confirmed Lineup",
       "lineup_type": "standard",
       "home_formation": "4-2-3-1",
-      "away_formation": "4-5-1",
+      "away_formation": "4-2-3-1",
       "home_players": [
         "Unai Simón",
         "Jesús Areso",
@@ -33,10 +33,10 @@
         "Arouna Sangante",
         "Andrés Lopez",
         "Gabriel Suazo",
-        "Miguel Sierra",
         "Lucien Agoumé",
-        "Peque Fernández",
         "Jon Guridi",
+        "Miguel Sierra",
+        "Peque Fernández",
         "Oso",
         "Robbie Ure"
       ],
@@ -148,7 +148,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-5-1",
+          "formation": "4-2-3-1",
           "position_id": 11
         },
         {
@@ -157,7 +157,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-5-1",
+          "formation": "4-2-3-1",
           "position_id": 32
         },
         {
@@ -166,7 +166,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-5-1",
+          "formation": "4-2-3-1",
           "position_id": 34
         },
         {
@@ -175,7 +175,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-5-1",
+          "formation": "4-2-3-1",
           "position_id": 36
         },
         {
@@ -184,90 +184,90 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-5-1",
+          "formation": "4-2-3-1",
           "position_id": 38
-        },
-        {
-          "name": "Miguel Sierra",
-          "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-5-1",
-          "position_id": 71
         },
         {
           "name": "Lucien Agoumé",
           "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-5-1",
-          "position_id": 73
-        },
-        {
-          "name": "Peque Fernández",
-          "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-5-1",
-          "position_id": 75
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64
         },
         {
           "name": "Jon Guridi",
           "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-5-1",
-          "position_id": 77
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66
+        },
+        {
+          "name": "Miguel Sierra",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83
+        },
+        {
+          "name": "Peque Fernández",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85
         },
         {
           "name": "Oso",
-          "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-5-1",
-          "position_id": 79
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87
         },
         {
           "name": "Robbie Ure",
-          "line_index": 2,
+          "line_index": 3,
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-5-1",
+          "formation": "4-2-3-1",
           "position_id": 115
         }
       ],
       "home_subs": [
+        "Aymeric Laporte",
+        "Maroan Sannadi",
+        "Nico Williams",
+        "Hugo Rincón",
         "Álex Padilla",
         "Adama Boiro",
-        "Aymeric Laporte",
-        "Hugo Rincón",
         "Johaneko Louisjean",
         "Alejandro Rego",
         "Álvaro Djaló",
         "Íñigo Ruiz de Galarreta",
         "Mikel Jauregizar",
-        "Maroan Sannadi",
-        "Nico Williams",
         "Robert Navarro"
       ],
       "away_subs": [
+        "Nico Guillen",
+        "Chidera Ejuke",
+        "Isaac Romero",
+        "José Ángel Carmona",
         "Fran González",
         "Rafa Romero",
         "Iker Munoz",
-        "José Ángel Carmona",
         "Julio Díaz",
         "Giorgi Kochorashvili",
         "Manu Bueno",
-        "Nico Guillen",
-        "Chidera Ejuke",
         "Ibrahima Sow",
-        "Isaac Romero",
         "Manuel Angel Castillo"
       ],
       "home_unavailable": [
@@ -547,9 +547,9 @@
       "kickoff_utc": "2026-08-22T17:30:00Z",
       "home_team": "Valencia",
       "away_team": "Celta Vigo",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "5-3-2",
       "away_formation": "3-4-3",
       "home_players": [
@@ -557,26 +557,26 @@
         "César Tárrega",
         "Pepelu",
         "Justin De Haas",
-        "Rodrigo Gamon",
         "Jesus Vázquez",
+        "José Gayà",
         "Filip Ugrinic",
         "Guido Rodríguez",
-        "Javier Guerra",
         "Ryunosuke Sato",
-        "Hugo Duro"
+        "Javier Guerra",
+        "Arnaut Danjuma"
       ],
       "away_players": [
         "Ionut Radu",
         "Javi Rodríguez",
-        "Carl Starfelt",
+        "Yoel Lago",
         "Marcos Alonso",
-        "Javi Rueda",
+        "Sergio Carreira",
         "Miguel Román",
         "Aleix Febas",
-        "Sergio Carreira",
-        "Iago Aspas",
+        "Javi Galán",
+        "Jones El-Abdellaoui",
         "Ferrán Jutglà",
-        "Williot Swedberg"
+        "Hugo Álvarez"
       ],
       "home_starters": [
         {
@@ -616,7 +616,7 @@
           "position_id": 37
         },
         {
-          "name": "Rodrigo Gamon",
+          "name": "Jesus Vázquez",
           "line_index": 0,
           "line_size": 5,
           "role_score": 1,
@@ -625,7 +625,7 @@
           "position_id": 51
         },
         {
-          "name": "Jesus Vázquez",
+          "name": "José Gayà",
           "line_index": 0,
           "line_size": 5,
           "role_score": 1,
@@ -652,7 +652,7 @@
           "position_id": 75
         },
         {
-          "name": "Javier Guerra",
+          "name": "Ryunosuke Sato",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -661,7 +661,7 @@
           "position_id": 77
         },
         {
-          "name": "Ryunosuke Sato",
+          "name": "Javier Guerra",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -670,7 +670,7 @@
           "position_id": 104
         },
         {
-          "name": "Hugo Duro",
+          "name": "Arnaut Danjuma",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -699,7 +699,7 @@
           "position_id": 33
         },
         {
-          "name": "Carl Starfelt",
+          "name": "Yoel Lago",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -717,7 +717,7 @@
           "position_id": 37
         },
         {
-          "name": "Javi Rueda",
+          "name": "Sergio Carreira",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -744,7 +744,7 @@
           "position_id": 76
         },
         {
-          "name": "Sergio Carreira",
+          "name": "Javi Galán",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -753,7 +753,7 @@
           "position_id": 78
         },
         {
-          "name": "Iago Aspas",
+          "name": "Jones El-Abdellaoui",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -771,7 +771,7 @@
           "position_id": 105
         },
         {
-          "name": "Williot Swedberg",
+          "name": "Hugo Álvarez",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -780,7 +780,20 @@
           "position_id": 107
         }
       ],
-      "home_subs": [],
+      "home_subs": [
+        "Cristian Rivero",
+        "Iker Córdoba",
+        "Marcos Navarro",
+        "Mouctar Diakhaby",
+        "Pablo Maffeo",
+        "Aliou Dieng",
+        "André Almeida",
+        "Jaume Dura",
+        "Dani Raba",
+        "David Otorbi",
+        "Hugo Duro",
+        "Umar Sadiq"
+      ],
       "away_subs": [],
       "home_unavailable": [
         "Luis Rioja",
