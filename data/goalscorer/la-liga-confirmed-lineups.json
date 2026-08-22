@@ -9,11 +9,11 @@
       "kickoff_utc": "2026-08-22T15:00:00Z",
       "home_team": "Athletic Club",
       "away_team": "Sevilla",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
-      "away_formation": "4-4-2",
+      "away_formation": "4-5-1",
       "home_players": [
         "Unai Simón",
         "Jesús Areso",
@@ -35,9 +35,9 @@
         "Gabriel Suazo",
         "Miguel Sierra",
         "Lucien Agoumé",
+        "Peque Fernández",
         "Jon Guridi",
         "Oso",
-        "Peque Fernández",
         "Robbie Ure"
       ],
       "home_starters": [
@@ -148,7 +148,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-4-2",
+          "formation": "4-5-1",
           "position_id": 11
         },
         {
@@ -157,7 +157,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-5-1",
           "position_id": 32
         },
         {
@@ -166,7 +166,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-5-1",
           "position_id": 34
         },
         {
@@ -175,7 +175,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-5-1",
           "position_id": 36
         },
         {
@@ -184,62 +184,62 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-5-1",
           "position_id": 38
         },
         {
           "name": "Miguel Sierra",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 72
+          "formation": "4-5-1",
+          "position_id": 71
         },
         {
           "name": "Lucien Agoumé",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 74
+          "formation": "4-5-1",
+          "position_id": 73
+        },
+        {
+          "name": "Peque Fernández",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-5-1",
+          "position_id": 75
         },
         {
           "name": "Jon Guridi",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 76
+          "formation": "4-5-1",
+          "position_id": 77
         },
         {
           "name": "Oso",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 78
-        },
-        {
-          "name": "Peque Fernández",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-4-2",
-          "position_id": 104
+          "formation": "4-5-1",
+          "position_id": 79
         },
         {
           "name": "Robbie Ure",
           "line_index": 2,
-          "line_size": 2,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-4-2",
-          "position_id": 106
+          "formation": "4-5-1",
+          "position_id": 115
         }
       ],
       "home_subs": [
@@ -259,7 +259,7 @@
       "away_subs": [
         "Fran González",
         "Rafa Romero",
-        "Iker Ortín",
+        "Iker Munoz",
         "José Ángel Carmona",
         "Julio Díaz",
         "Giorgi Kochorashvili",

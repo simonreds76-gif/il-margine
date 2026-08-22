@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-08-22T13:57:04.824729Z",
+  "generated_at": "2026-08-22T14:37:38.409928Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
@@ -33,29 +34,29 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 29,
-  "signals_qualifying": 2,
+  "fixtures_evaluated": 24,
+  "signals_qualifying": 1,
   "safety_exclusions": {
-    "low_signal_confidence": 5,
-    "model_probability_below_floor": 7,
+    "low_signal_confidence": 3,
+    "model_probability_below_floor": 6,
     "market_odds_above_cap": 2,
     "lineup_not_public_quality": 4,
-    "model_market_gap_gt_10pp": 7,
+    "model_market_gap_gt_10pp": 8,
     "defensive_position": 1
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 7,
+    "eligible_rows": 8,
     "added_by_league": {
       "epl": 5,
       "la-liga": 1,
+      "ligue-1": 1,
       "serie-a": 1
     },
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
   "leagues_covered": [
-    "epl",
-    "ligue-1"
+    "epl"
   ],
   "featured_signal_id": "20260822-brian-brobbey-46c68c6b4d",
   "signals": [
@@ -107,7 +108,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 43
+          "percentile": 44
         },
         "recent_team_form": {
           "tier": "Average",
@@ -144,107 +145,6 @@
         "A large share of the team's chances runs through him",
         "Recent chance quality grades as strong",
         "Opponent defensive profile is a positive matchup",
-        "The fixture profile adds to his scoring case"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260822-matthieu-udol-fe43269f6f",
-      "match": {
-        "home_team": "Racing Club De Lens",
-        "away_team": "AJ Auxerre",
-        "league": "ligue-1",
-        "league_display": "Ligue 1",
-        "league_logo_path": "/league-logos/ligue-1.png",
-        "kickoff_utc": "2026-08-22T15:15:00Z",
-        "kickoff_display": "Sat 22 Aug 16:15 UK",
-        "fotmob_match_id": "5802904",
-        "fotmob_page_url": "/matches/auxerre-vs-lens/2fs4i2#5802904",
-        "lineup_type": "predicted",
-        "venue": ""
-      },
-      "player": {
-        "name": "Matthieu Udol",
-        "team": "Lens",
-        "position": "MID",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/ligue-1/lens.png",
-        "team_primary_color": "#dc2626",
-        "team_secondary_color": "#facc15",
-        "team_shirt_pattern": "vertical-stripes"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 24.3,
-        "fair_odds": 4.12
-      },
-      "market_data": {
-        "best_odds": 6.0,
-        "best_book": "Bet365",
-        "implied_chance_pct": 16.7
-      },
-      "edge": {
-        "price_gap_pp": 7.6,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 78
-        },
-        "share_of_team_chances_pct": 13,
-        "share_of_team_chances_percentile": 87,
-        "team_attacking_outlook": {
-          "tier": "Strong",
-          "percentile": 96
-        },
-        "recent_team_form": {
-          "tier": "Strong",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-17",
-          "xg_for_avg": 2.25,
-          "xg_against_avg": 0.86,
-          "xgd_per90": 1.39,
-          "shots_for_avg": 18.8,
-          "shots_against_avg": 11.2,
-          "sot_for_avg": 6.0,
-          "sot_against_avg": 3.0,
-          "corners_for_avg": 7.2,
-          "corners_against_avg": 6.6
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 51
-        },
-        "opponent_recent_defence": {
-          "tier": "High",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-17",
-          "xg_for_avg": 1.13,
-          "xg_against_avg": 1.91,
-          "xgd_per90": -0.78,
-          "shots_for_avg": 11.8,
-          "shots_against_avg": 11.6,
-          "sot_for_avg": 5.4,
-          "sot_against_avg": 4.8,
-          "corners_for_avg": 4.4,
-          "corners_against_avg": 5.6
-        },
-        "fixture_boost_pct": 11,
-        "projected_minutes": 85,
-        "penalty_role": "Not on penalties",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "Recent chance quality grades as strong",
-        "Recent team form supports the attacking case",
-        "Opponent has been allowing chances recently",
         "The fixture profile adds to his scoring case"
       ],
       "risk_flags": []

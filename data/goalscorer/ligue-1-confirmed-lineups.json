@@ -13,7 +13,7 @@
       "away_status": "FotMob Expected XI",
       "lineup_type": "predicted",
       "home_formation": "3-5-2",
-      "away_formation": "4-3-3",
+      "away_formation": "4-2-3-1",
       "home_players": [
         "Nicolas Kocik",
         "Rayan Bamba",
@@ -35,10 +35,10 @@
         "Bradley Locko",
         "Joris Chotard",
         "Lucas Tousart",
-        "Kamory Doumbia",
         "Romain Del Castillo",
-        "Ludovic Ajorque",
-        "Pathé Mboup"
+        "Kamory Doumbia",
+        "Pathé Mboup",
+        "Ludovic Ajorque"
       ],
       "home_starters": [
         {
@@ -148,7 +148,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-3-3",
+          "formation": "4-2-3-1",
           "position_id": 11
         },
         {
@@ -157,7 +157,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
+          "formation": "4-2-3-1",
           "position_id": 32
         },
         {
@@ -166,7 +166,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
+          "formation": "4-2-3-1",
           "position_id": 34
         },
         {
@@ -175,7 +175,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
+          "formation": "4-2-3-1",
           "position_id": 36
         },
         {
@@ -184,62 +184,62 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
+          "formation": "4-2-3-1",
           "position_id": 38
         },
         {
           "name": "Joris Chotard",
           "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 73
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64
         },
         {
           "name": "Lucas Tousart",
           "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 75
-        },
-        {
-          "name": "Kamory Doumbia",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 77
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66
         },
         {
           "name": "Romain Del Castillo",
           "line_index": 2,
           "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 103
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83
         },
         {
-          "name": "Ludovic Ajorque",
+          "name": "Kamory Doumbia",
           "line_index": 2,
           "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 105
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85
         },
         {
           "name": "Pathé Mboup",
           "line_index": 2,
           "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87
+        },
+        {
+          "name": "Ludovic Ajorque",
+          "line_index": 3,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 107
+          "formation": "4-2-3-1",
+          "position_id": 115
         }
       ],
       "home_subs": [],
@@ -248,9 +248,9 @@
         "Harold Voyer"
       ],
       "away_unavailable": [
-        "Hugo Magnetti",
+        "Brendan Chardonnet",
         "Justin Bourgault",
-        "Brendan Chardonnet"
+        "Hugo Magnetti"
       ]
     },
     {
@@ -262,19 +262,19 @@
       "kickoff_utc": "2026-08-22T15:15:00Z",
       "home_team": "Lens",
       "away_team": "Auxerre",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
       "away_formation": "4-3-3",
       "home_players": [
         "Robin Risser",
-        "Ruben Aguilar",
-        "Ismaëlo Ganiou",
         "Maik Nawrocki",
-        "Michal Skóras",
-        "Yacine Titraoui",
+        "Ismaëlo Ganiou",
+        "Souleymane Sagnan",
+        "Saud Abdulhamid",
         "Michaël Cuisance",
+        "Yacine Titraoui",
         "Matthieu Udol",
         "Florian Thauvin",
         "Franjo Ivanovic",
@@ -286,11 +286,11 @@
         "Sinaly Diomandé",
         "Christ Makosso",
         "Clément Akpa",
-        "Naouirou Ahamada",
-        "Kévin Danois",
         "Arthur Piedfort",
+        "Kévin Danois",
+        "Naouirou Ahamada",
         "Romain Faivre",
-        "Xiangxin Wei",
+        "Danny Namaso",
         "Aristide Zossou"
       ],
       "home_starters": [
@@ -304,7 +304,7 @@
           "position_id": 11
         },
         {
-          "name": "Ruben Aguilar",
+          "name": "Maik Nawrocki",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -322,7 +322,7 @@
           "position_id": 35
         },
         {
-          "name": "Maik Nawrocki",
+          "name": "Souleymane Sagnan",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -331,7 +331,7 @@
           "position_id": 37
         },
         {
-          "name": "Michal Skóras",
+          "name": "Saud Abdulhamid",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -340,7 +340,7 @@
           "position_id": 62
         },
         {
-          "name": "Yacine Titraoui",
+          "name": "Michaël Cuisance",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -349,7 +349,7 @@
           "position_id": 64
         },
         {
-          "name": "Michaël Cuisance",
+          "name": "Yacine Titraoui",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -441,7 +441,7 @@
           "position_id": 38
         },
         {
-          "name": "Naouirou Ahamada",
+          "name": "Arthur Piedfort",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -459,7 +459,7 @@
           "position_id": 75
         },
         {
-          "name": "Arthur Piedfort",
+          "name": "Naouirou Ahamada",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -477,7 +477,7 @@
           "position_id": 103
         },
         {
-          "name": "Xiangxin Wei",
+          "name": "Danny Namaso",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -495,8 +495,28 @@
           "position_id": 107
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Mathieu Gorgelin",
+        "Amadou Haidara",
+        "Andrija Bulatovic",
+        "Florian Sotoca",
+        "Mezian Soares",
+        "Michal Skóras",
+        "Thorgan Hazard",
+        "Odsonne Édouard",
+        "Rayan Fofana"
+      ],
+      "away_subs": [
+        "Paul Nardi",
+        "Elikya Legros",
+        "Fredrik Oppegård",
+        "Salimou Danfakha",
+        "Josué Casimir",
+        "Lamfia Dioubate",
+        "Lasso Coulibaly",
+        "Tidiane Devernois",
+        "Rayan Mandengue"
+      ],
       "home_unavailable": [
         "Jonathan Gradit",
         "Kyllian Antonio",
@@ -505,12 +525,12 @@
         "Jhoanner Chávez"
       ],
       "away_unavailable": [
-        "Theo Bair",
         "Bryan Okoh",
         "Marvin Senaya",
         "Sékou Fofana",
         "Telli Siwe",
-        "Assane Dioussé"
+        "Assane Dioussé",
+        "Thelonius Bair"
       ]
     },
     {
@@ -529,16 +549,16 @@
       "away_formation": "4-5-1",
       "home_players": [
         "Yéhvann Diouf",
-        "Xavier Mandza",
-        "Youssouf Ndayishimiye",
         "Antoine Mendy",
+        "Youssouf Ndayishimiye",
+        "Xavier Mandza",
         "Jonathan Clauss",
         "Djibril Coulibaly",
         "Everton",
         "Melvin Bard",
-        "Sofiane Diop",
+        "Gauthier Hein",
         "Victor Orakpo",
-        "Gauthier Hein"
+        "Sofiane Diop"
       ],
       "away_players": [
         "Yvon Mvogo",
@@ -564,7 +584,7 @@
           "position_id": 11
         },
         {
-          "name": "Xavier Mandza",
+          "name": "Antoine Mendy",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -582,7 +602,7 @@
           "position_id": 35
         },
         {
-          "name": "Antoine Mendy",
+          "name": "Xavier Mandza",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -627,7 +647,7 @@
           "position_id": 78
         },
         {
-          "name": "Sofiane Diop",
+          "name": "Gauthier Hein",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -645,7 +665,7 @@
           "position_id": 105
         },
         {
-          "name": "Gauthier Hein",
+          "name": "Sofiane Diop",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -786,12 +806,12 @@
         "Mark McKenzie",
         "Rasmus Nicolaisen",
         "Christ Tapé",
-        "Cristian Cásseres",
         "Mário Sauer",
+        "Cristian Cásseres",
         "Thomas Jørgensen",
-        "Yann Gboho",
         "Julián Vignolo",
-        "Santiago Hidalgo"
+        "Santiago Hidalgo",
+        "Yann Gboho"
       ],
       "away_players": [
         "Dominik Greif",
@@ -853,7 +873,7 @@
           "position_id": 38
         },
         {
-          "name": "Cristian Cásseres",
+          "name": "Mário Sauer",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -862,7 +882,7 @@
           "position_id": 73
         },
         {
-          "name": "Mário Sauer",
+          "name": "Cristian Cásseres",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -880,7 +900,7 @@
           "position_id": 77
         },
         {
-          "name": "Yann Gboho",
+          "name": "Julián Vignolo",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -889,7 +909,7 @@
           "position_id": 103
         },
         {
-          "name": "Julián Vignolo",
+          "name": "Santiago Hidalgo",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -898,7 +918,7 @@
           "position_id": 105
         },
         {
-          "name": "Santiago Hidalgo",
+          "name": "Yann Gboho",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -1264,8 +1284,8 @@
       "away_subs": [],
       "home_unavailable": [],
       "away_unavailable": [
-        "Jonathan Ikoné",
-        "Nhoa Sangui"
+        "Nhoa Sangui",
+        "Jonathan Ikoné"
       ]
     },
     {
@@ -1285,8 +1305,8 @@
       "home_players": [
         "Anthony Lopes",
         "Carlens Arcus",
-        "Jordan Lefort",
         "Ousmane Camara",
+        "Jordan Lefort",
         "Lilian Rao-Lisoa",
         "Branco van den Boomen",
         "Yassin Belkhdim",
@@ -1328,7 +1348,7 @@
           "position_id": 32
         },
         {
-          "name": "Jordan Lefort",
+          "name": "Ousmane Camara",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1337,7 +1357,7 @@
           "position_id": 34
         },
         {
-          "name": "Ousmane Camara",
+          "name": "Jordan Lefort",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1513,12 +1533,12 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "Louis Mouton",
-        "Haris Belkebla"
+        "Haris Belkebla",
+        "Louis Mouton"
       ],
       "away_unavailable": [
-        "Tanguy Nianzou Kouassi",
         "Loun Srdanovic",
+        "Tanguy Nianzou",
         "Benjamin André",
         "Hamza Igamane",
         "Matias Fernandez-Pardo"
@@ -1557,12 +1577,12 @@
         "Sadibou Sané",
         "Eric Dier",
         "Flávio Nazinho",
-        "Mamadou Coulibaly",
+        "Mathys Detourbet",
         "Lamine Camara",
         "Denis Zakaria",
         "Aleksandr Golovin",
         "Mika Biereth",
-        "Mathys Detourbet"
+        "Paris Brunner"
       ],
       "home_starters": [
         {
@@ -1712,7 +1732,7 @@
           "position_id": 38
         },
         {
-          "name": "Mamadou Coulibaly",
+          "name": "Mathys Detourbet",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -1757,7 +1777,7 @@
           "position_id": 104
         },
         {
-          "name": "Mathys Detourbet",
+          "name": "Paris Brunner",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -1773,12 +1793,13 @@
         "Felix Mambimbi"
       ],
       "away_unavailable": [
+        "Folarin Balogun",
+        "Matthis Abline",
         "Edan Diop",
-        "Takumi Minamino",
         "Christian Mawissa",
         "Mohammed Salisu",
         "Ansu Fati",
-        "Matthis Abline"
+        "Takumi Minamino"
       ]
     },
     {
@@ -1806,20 +1827,20 @@
         "Adrien Thomasson",
         "Ludovic Blas",
         "Estéban Lepaul",
-        "Eliezer Mayenda"
+        "Issa Soumaré"
       ],
       "away_players": [
         "Matvey Safonov",
         "Achraf Hakimi",
-        "Ilya Zabarnyi",
+        "Marquinhos",
         "Willian Pacho",
         "Lucas Digne",
         "Vitinha",
-        "Lucas Beraldo",
+        "João Neves",
         "Fabián Ruiz",
         "Maghnes Akliouche",
         "Ousmane Dembélé",
-        "Désiré Doué"
+        "Khvicha Kvaratskhelia"
       ],
       "home_starters": [
         {
@@ -1913,7 +1934,7 @@
           "position_id": 105
         },
         {
-          "name": "Eliezer Mayenda",
+          "name": "Issa Soumaré",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -1942,7 +1963,7 @@
           "position_id": 32
         },
         {
-          "name": "Ilya Zabarnyi",
+          "name": "Marquinhos",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1978,7 +1999,7 @@
           "position_id": 73
         },
         {
-          "name": "Lucas Beraldo",
+          "name": "João Neves",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -2014,7 +2035,7 @@
           "position_id": 105
         },
         {
-          "name": "Désiré Doué",
+          "name": "Khvicha Kvaratskhelia",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
