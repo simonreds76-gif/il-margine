@@ -9,23 +9,23 @@
       "kickoff_utc": "2026-08-23T15:00:00Z",
       "home_team": "Atletico Madrid",
       "away_team": "Villarreal",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "4-4-2",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "4-3-3",
       "away_formation": "4-4-2",
       "home_players": [
         "Jan Oblak",
-        "Marcos Llorente",
+        "Marc Pubill",
         "Robin Le Normand",
         "Dávid Hancko",
         "Alejandro Grimaldo",
-        "Giuliano Simeone",
+        "Morten Hjulmand",
         "Koke",
-        "Pablo Barrios",
-        "Álex Baena",
-        "Kang-In Lee",
-        "Ademola Lookman"
+        "Rodrigo Mendoza",
+        "Giuliano Simeone",
+        "Ademola Lookman",
+        "Kang-In Lee"
       ],
       "away_players": [
         "Luiz Júnior",
@@ -47,16 +47,16 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-4-2",
+          "formation": "4-3-3",
           "position_id": 11
         },
         {
-          "name": "Marcos Llorente",
+          "name": "Marc Pubill",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-3-3",
           "position_id": 32
         },
         {
@@ -65,7 +65,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-3-3",
           "position_id": 34
         },
         {
@@ -74,7 +74,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-3-3",
           "position_id": 36
         },
         {
@@ -83,62 +83,62 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-3-3",
           "position_id": 38
         },
         {
-          "name": "Giuliano Simeone",
+          "name": "Morten Hjulmand",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 72
+          "formation": "4-3-3",
+          "position_id": 73
         },
         {
           "name": "Koke",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 74
+          "formation": "4-3-3",
+          "position_id": 75
         },
         {
-          "name": "Pablo Barrios",
+          "name": "Rodrigo Mendoza",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 76
+          "formation": "4-3-3",
+          "position_id": 77
         },
         {
-          "name": "Álex Baena",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 78
-        },
-        {
-          "name": "Kang-In Lee",
+          "name": "Giuliano Simeone",
           "line_index": 2,
-          "line_size": 2,
+          "line_size": 3,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-4-2",
-          "position_id": 104
+          "formation": "4-3-3",
+          "position_id": 103
         },
         {
           "name": "Ademola Lookman",
           "line_index": 2,
-          "line_size": 2,
+          "line_size": 3,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-4-2",
-          "position_id": 106
+          "formation": "4-3-3",
+          "position_id": 105
+        },
+        {
+          "name": "Kang-In Lee",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 107
         }
       ],
       "away_starters": [
@@ -242,15 +242,39 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Juan Musso",
+        "Dani Martinez",
+        "Jorge Domínguez",
+        "José Giménez",
+        "Marcos Llorente",
+        "Álex Baena",
+        "Johnny Cardoso",
+        "Jorge Castillo",
+        "Pablo Barrios",
+        "Arnau Ortiz",
+        "Carlos Martín",
+        "Julián Álvarez"
+      ],
+      "away_subs": [
+        "Péter Gulácsi",
+        "Alex Freeman",
+        "Logan Costa",
+        "Pau Navarro",
+        "Sergi Cardona",
+        "Carlos Maciá",
+        "Cheikh Tidiane Thiam",
+        "Tajon Buchanan",
+        "Gerard Moreno",
+        "Ilias Akhomach",
+        "Nizar El Jmili",
+        "Tani Oluwaseyi"
+      ],
       "home_unavailable": [
         "Alexander Sørloth"
       ],
       "away_unavailable": [
-        "Alassane Diatta",
-        "Sergi Cardona",
-        "Gerard Moreno"
+        "Alassane Diatta"
       ]
     },
     {
@@ -284,8 +308,8 @@
         "Joan García",
         "Eric García",
         "Jules Koundé",
+        "Andreas Christensen",
         "Gerard Martín",
-        "Alejandro Balde",
         "Marc Bernal",
         "Gavi",
         "Lamine Yamal",
@@ -423,7 +447,7 @@
           "position_id": 34
         },
         {
-          "name": "Gerard Martín",
+          "name": "Andreas Christensen",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -432,7 +456,7 @@
           "position_id": 36
         },
         {
-          "name": "Alejandro Balde",
+          "name": "Gerard Martín",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -782,7 +806,7 @@
         "Einar Galilea",
         "Rafita",
         "David Larrubia",
-        "Eneko Jauregi",
+        "Ramón Enríquez",
         "Izan Merino",
         "Joaquín Muñoz",
         "Carlos Dotor",
@@ -857,7 +881,7 @@
           "position_id": 72
         },
         {
-          "name": "Eneko Jauregi",
+          "name": "Ramón Enríquez",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -1034,27 +1058,27 @@
         "Sergio Herrera",
         "Iñigo Arguibide",
         "Alejandro Catena",
-        "Flavien Boyomo",
+        "Jorge Herrando",
         "Abel Bretones",
         "Jon Moncayola",
         "Iker Muñoz",
         "Rubén Garcia",
         "Aimar Oroz",
-        "Raúl Moro",
+        "Moi Gómez",
         "Ante Budimir"
       ],
       "away_players": [
         "Mathew Ryan",
-        "Nacho Pérez",
+        "Jeremy Toljan",
         "Adrián De La Fuente",
         "Aïssa Mandi",
         "Manuel Sánchez",
         "Jon Olasagasti",
         "Oriol Rey",
         "Víctor García",
-        "Carlos Álvarez",
-        "Paco Cortés",
-        "Iván Romero"
+        "Enzo Bardeli",
+        "Kareem Tunde",
+        "Etta Eyong"
       ],
       "home_starters": [
         {
@@ -1085,7 +1109,7 @@
           "position_id": 34
         },
         {
-          "name": "Flavien Boyomo",
+          "name": "Jorge Herrando",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1139,7 +1163,7 @@
           "position_id": 85
         },
         {
-          "name": "Raúl Moro",
+          "name": "Moi Gómez",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1168,7 +1192,7 @@
           "position_id": 11
         },
         {
-          "name": "Nacho Pérez",
+          "name": "Jeremy Toljan",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1231,7 +1255,7 @@
           "position_id": 83
         },
         {
-          "name": "Carlos Álvarez",
+          "name": "Enzo Bardeli",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1240,7 +1264,7 @@
           "position_id": 85
         },
         {
-          "name": "Paco Cortés",
+          "name": "Kareem Tunde",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1249,7 +1273,7 @@
           "position_id": 87
         },
         {
-          "name": "Iván Romero",
+          "name": "Etta Eyong",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
