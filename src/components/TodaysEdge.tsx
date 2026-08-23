@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import MarketBadge from "@/components/MarketBadge";
@@ -112,7 +113,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
     >
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-300/45 to-transparent" />
       <div className="p-5 sm:p-6">
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
           <div>
             <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-emerald-300/90">
               Posted prices
@@ -121,26 +122,32 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
               Today&apos;s Edge
             </h2>
           </div>
-          <span className={`rounded-full border px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] ${
-            picks.length > 0
-              ? "border-emerald-300/25 bg-emerald-400/10 text-emerald-200"
-              : "border-slate-700 bg-slate-900/70 text-slate-400"
-          }`}>
-            {picks.length > 0 ? `${picks.length} active` : "No active picks"}
-          </span>
+          <div className="flex items-center justify-between gap-2 sm:justify-end">
+            <div className="rounded-lg border border-white/[0.07] bg-black/25 px-2.5 py-1.5 text-right shadow-inner shadow-black/25">
+              <span className="block font-mono text-[8px] font-bold uppercase tracking-[0.14em] text-slate-500">
+                7-day P/L
+              </span>
+              <span className={`mt-0.5 block font-mono text-xs font-black tabular-nums ${
+                last7Profit == null ? "text-slate-300" : last7Profit >= 0 ? "text-emerald-300" : "text-rose-300"
+              }`}>
+                {last7Profit == null ? "—" : `${last7Profit >= 0 ? "+" : ""}${last7Profit.toFixed(2)}u`}
+              </span>
+            </div>
+            <span className={`rounded-full border px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] ${
+              picks.length > 0
+                ? "border-emerald-300/25 bg-emerald-400/10 text-emerald-200"
+                : "border-slate-700 bg-slate-900/70 text-slate-400"
+            }`}>
+              {picks.length > 0 ? `${picks.length} active` : "No active picks"}
+            </span>
+          </div>
         </div>
 
-        <div className="mt-4 grid grid-cols-3 gap-2 rounded-xl border border-white/[0.06] bg-black/20 p-2">
-          <EdgeMetric label="Props" value={counts.props.toString()} />
-          <EdgeMetric label="Tennis" value={counts.tennis.toString()} />
-          <EdgeMetric
-            label="7-day P/L"
-            value={last7Profit == null ? "—" : `${last7Profit >= 0 ? "+" : ""}${last7Profit.toFixed(2)}u`}
-            positive={last7Profit != null ? last7Profit >= 0 : undefined}
-          />
-        </div>
-
-        <div className="mt-4 flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter active picks">
+        <div
+          className="mt-4 grid grid-cols-3 gap-1 rounded-xl border border-white/[0.08] bg-black/30 p-1.5 shadow-inner shadow-black/50"
+          role="group"
+          aria-label="Filter active picks"
+        >
           {([
             ["all", "All"],
             ["props", "Football props"],
@@ -151,14 +158,25 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
               type="button"
               disabled={id !== "all" && counts[id] === 0}
               aria-pressed={filter === id}
+              aria-label={`${label}, ${counts[id]} active ${counts[id] === 1 ? "pick" : "picks"}`}
               onClick={() => setActiveFilter(id)}
-              className={`min-h-11 shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition ${
+              className={`group/filter relative min-h-14 min-w-0 rounded-lg border px-1.5 py-2 text-xs font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#090d12] sm:px-3 ${
                 filter === id
-                  ? "border-emerald-300/35 bg-emerald-400/12 text-emerald-100"
-                  : "border-slate-700/70 bg-slate-900/55 text-slate-300 hover:border-slate-600 hover:text-slate-100 disabled:cursor-not-allowed disabled:border-slate-700/70 disabled:bg-slate-900/30 disabled:text-slate-400 disabled:hover:border-slate-700/70 disabled:hover:text-slate-400"
+                  ? "border-emerald-300/35 bg-[linear-gradient(180deg,rgba(52,211,153,0.17),rgba(16,185,129,0.08))] text-emerald-50 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_5px_14px_rgba(0,0,0,0.4),0_0_18px_rgba(52,211,153,0.07)]"
+                  : "border-transparent bg-transparent text-slate-400 hover:border-white/[0.09] hover:bg-white/[0.04] hover:text-slate-100 disabled:cursor-not-allowed disabled:border-transparent disabled:bg-transparent disabled:text-slate-600 disabled:opacity-55 disabled:hover:border-transparent disabled:hover:bg-transparent disabled:hover:text-slate-600"
               }`}
             >
-              {label} {counts[id]}
+              <span className="flex flex-col items-center justify-center gap-1">
+                <span className="flex items-center justify-center gap-1.5 whitespace-nowrap text-[11px] sm:text-xs">
+                  <FilterIcon filter={id} active={filter === id} />
+                  <span>{id === "all" ? "All picks" : label}</span>
+                </span>
+                <span className={`font-mono text-[9px] font-black uppercase tracking-[0.1em] tabular-nums ${
+                  filter === id ? "text-emerald-200/85" : "text-slate-500 group-hover/filter:text-slate-300"
+                }`}>
+                  {counts[id]} {counts[id] === 1 ? "pick" : "picks"}
+                </span>
+              </span>
             </button>
           ))}
         </div>
@@ -236,23 +254,32 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
   );
 }
 
-function EdgeMetric({
-  label,
-  value,
-  positive,
-}: {
-  label: string;
-  value: string;
-  positive?: boolean;
-}) {
+function FilterIcon({ filter, active }: { filter: Filter; active: boolean }) {
+  if (filter === "all") {
+    return (
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        className={`h-4 w-4 shrink-0 ${active ? "text-emerald-300" : "text-slate-500 group-hover/filter:text-slate-300"}`}
+        fill="none"
+      >
+        <rect x="3.5" y="4" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
+        <rect x="13.5" y="4" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
+        <rect x="3.5" y="14" width="7" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
+        <rect x="13.5" y="14" width="7" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
+      </svg>
+    );
+  }
+
+  const src = filter === "props" ? "/icons/markets/other-football.svg" : "/icons/markets/tennis.svg";
   return (
-    <div className="rounded-lg px-2 py-2 text-center">
-      <div className="font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-slate-400 sm:text-[11px] sm:tracking-[0.12em]">{label}</div>
-      <div className={`mt-1 font-mono text-sm font-black tabular-nums ${
-        positive === undefined ? "text-slate-100" : positive ? "text-emerald-300" : "text-rose-300"
-      }`}>
-        {value}
-      </div>
-    </div>
+    <Image
+      aria-hidden="true"
+      src={src}
+      alt=""
+      width={20}
+      height={20}
+      className={`h-5 w-5 shrink-0 transition ${active ? "opacity-100" : "opacity-60 grayscale-[25%] group-hover/filter:opacity-90 group-hover/filter:grayscale-0"}`}
+    />
   );
 }
