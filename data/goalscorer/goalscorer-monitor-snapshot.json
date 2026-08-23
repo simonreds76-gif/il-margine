@@ -1,15 +1,15 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-08-23T11:33:59Z",
+  "generated_at": "2026-08-23T11:54:07Z",
   "source_status": {
-    "compared_at": "2026-08-23T11:33:31Z",
-    "hot_live_updated_at": "2026-08-23T11:33:33Z",
-    "expected_refresh_updated_at": "2026-08-23T11:33:31Z",
+    "compared_at": "2026-08-23T11:53:44Z",
+    "hot_live_updated_at": "2026-08-23T11:54:07Z",
+    "expected_refresh_updated_at": "2026-08-23T11:53:44Z",
     "settlement_updated_at": "2026-08-23T09:27:46Z",
-    "scheduler_heartbeat_at": "2026-08-23T11:33:33Z",
-    "snapshot_generated_at": "2026-08-23T11:33:59Z",
-    "live_status_state": "skipped",
-    "live_status_message": "Goalscorer live poll skipped: no leagues due in current cadence window."
+    "scheduler_heartbeat_at": "2026-08-23T11:54:07Z",
+    "snapshot_generated_at": "2026-08-23T11:54:07Z",
+    "live_status_state": "idle",
+    "live_status_message": "Goalscorer live poll finished (2 league(s) ran)."
   },
   "league_cards": [
     {
@@ -18,7 +18,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-08-23T11:33:31Z",
+      "updated_at": "2026-08-23T11:53:44Z",
       "live_rows": 176,
       "public_now": 0,
       "shadow_now": 7,
@@ -49,7 +49,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-08-23T11:33:31Z",
+      "updated_at": "2026-08-23T11:53:44Z",
       "live_rows": 113,
       "public_now": 0,
       "shadow_now": 14,
@@ -80,7 +80,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-08-23T11:33:31Z",
+      "updated_at": "2026-08-23T11:53:44Z",
       "live_rows": 125,
       "public_now": 0,
       "shadow_now": 6,
@@ -111,7 +111,7 @@
       "status_key": "no_feed",
       "status_label": "no ATGS feed",
       "status_detail": "Source feed returned 0 current ATGS rows for this league window.",
-      "updated_at": "2026-08-23T11:33:31Z",
+      "updated_at": "2026-08-23T11:53:44Z",
       "live_rows": 0,
       "public_now": 0,
       "shadow_now": 0,
@@ -142,7 +142,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-08-23T11:33:31Z",
+      "updated_at": "2026-08-23T11:53:44Z",
       "live_rows": 32,
       "public_now": 0,
       "shadow_now": 0,
@@ -2802,7 +2802,7 @@
       },
       "home": {
         "team": "Brighton & Hove Albion",
-        "lineup_status": "FotMob Expected XI",
+        "lineup_status": "Confirmed Lineup",
         "total_players": 11,
         "matched_players": 9,
         "keeper": {
@@ -2926,15 +2926,15 @@
             "penalty_meta": null
           },
           {
-            "key": "Ferdi Kadioglu-DEF-38",
-            "name": "Ferdi Kadioglu",
+            "key": "Olivier Boscagli-DEF-38",
+            "name": "Olivier Boscagli",
             "position": "LB",
             "note": null,
             "has_price": true,
-            "odds": 7.5,
-            "fair": 9.2104,
-            "ev_pct": -18.570600000000002,
-            "expected_minutes": 90.0,
+            "odds": 12.0,
+            "fair": 99.0,
+            "ev_pct": -97.8766,
+            "expected_minutes": 78.0,
             "action": "monitor",
             "action_label": "monitor",
             "penalty_meta": null
@@ -2956,15 +2956,15 @@
             "penalty_meta": null
           },
           {
-            "key": "Olivier Boscagli-DEF-36",
-            "name": "Olivier Boscagli",
+            "key": "Lewis Dunk-DEF-36",
+            "name": "Lewis Dunk",
             "position": "LCB",
             "note": null,
             "has_price": true,
-            "odds": 12.0,
-            "fair": 99.0,
-            "ev_pct": -97.8766,
-            "expected_minutes": 78.0,
+            "odds": 10.0,
+            "fair": 10.5284,
+            "ev_pct": -5.019,
+            "expected_minutes": 82.9,
             "action": "monitor",
             "action_label": "monitor",
             "penalty_meta": null
@@ -2974,12 +2974,12 @@
       },
       "away": {
         "team": "Aston Villa",
-        "lineup_status": "FotMob Expected XI",
+        "lineup_status": "Confirmed Lineup",
         "total_players": 11,
         "matched_players": 7,
         "keeper": {
-          "key": "Zion Suzuki-GK-11",
-          "name": "Zion Suzuki",
+          "key": "Marco Bizot-GK-11",
+          "name": "Marco Bizot",
           "position": "GK",
           "note": "No price matched",
           "has_price": false,
@@ -2993,53 +2993,9 @@
         },
         "attackers": [
           {
-            "key": "Alejandro Garnacho-FW-115",
-            "name": "Alejandro Garnacho",
-            "position": "ST",
-            "note": "No price matched",
-            "has_price": false,
-            "odds": null,
-            "fair": null,
-            "ev_pct": null,
-            "expected_minutes": null,
-            "action": "monitor",
-            "action_label": "monitor",
-            "penalty_meta": null
-          }
-        ],
-        "midfielders": [
-          {
-            "key": "Ross Barkley-DMC-64",
-            "name": "Ross Barkley",
-            "position": "DM",
-            "note": null,
-            "has_price": true,
-            "odds": 6.0,
-            "fair": 9.9198,
-            "ev_pct": -39.5151,
-            "expected_minutes": 78.0,
-            "action": "monitor",
-            "action_label": "monitor",
-            "penalty_meta": null
-          },
-          {
-            "key": "Boubacar Kamara-DMC-66",
-            "name": "Boubacar Kamara",
-            "position": "DM",
-            "note": null,
-            "has_price": true,
-            "odds": 12.0,
-            "fair": 14.6243,
-            "ev_pct": -17.9448,
-            "expected_minutes": 84.6,
-            "action": "monitor",
-            "action_label": "monitor",
-            "penalty_meta": null
-          },
-          {
-            "key": "John McGinn-AM-83",
+            "key": "John McGinn-FW-103",
             "name": "John McGinn",
-            "position": "RW/AM",
+            "position": "RF",
             "note": null,
             "has_price": true,
             "odds": 4.75,
@@ -3051,9 +3007,9 @@
             "penalty_meta": null
           },
           {
-            "key": "Emiliano Buendía-AM-85",
+            "key": "Emiliano Buendía-FW-105",
             "name": "Emiliano Buendía",
-            "position": "AM",
+            "position": "ST",
             "note": null,
             "has_price": true,
             "odds": 4.5,
@@ -3068,9 +3024,53 @@
             }
           },
           {
-            "key": "George Hemmings-AM-87",
+            "key": "George Hemmings-FW-107",
             "name": "George Hemmings",
-            "position": "LW/AM",
+            "position": "LF",
+            "note": "No price matched",
+            "has_price": false,
+            "odds": null,
+            "fair": null,
+            "ev_pct": null,
+            "expected_minutes": null,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          }
+        ],
+        "midfielders": [
+          {
+            "key": "Ross Barkley-MID-73",
+            "name": "Ross Barkley",
+            "position": "RCM",
+            "note": null,
+            "has_price": true,
+            "odds": 6.0,
+            "fair": 9.9198,
+            "ev_pct": -39.5151,
+            "expected_minutes": 78.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Boubacar Kamara-MID-75",
+            "name": "Boubacar Kamara",
+            "position": "CM",
+            "note": null,
+            "has_price": true,
+            "odds": 12.0,
+            "fair": 14.6243,
+            "ev_pct": -17.9448,
+            "expected_minutes": 84.6,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "João Gomes-MID-77",
+            "name": "João Gomes",
+            "position": "LCM",
             "note": "No price matched",
             "has_price": false,
             "odds": null,
@@ -3175,7 +3175,7 @@
       },
       "home": {
         "team": "Manchester City",
-        "lineup_status": "FotMob Expected XI",
+        "lineup_status": "Confirmed Lineup",
         "total_players": 11,
         "matched_players": 6,
         "keeper": {
@@ -3194,7 +3194,21 @@
         },
         "attackers": [
           {
-            "key": "Erling Haaland-FW-115",
+            "key": "Antoine Semenyo-FW-103",
+            "name": "Antoine Semenyo",
+            "position": "RF",
+            "note": "No price matched",
+            "has_price": false,
+            "odds": null,
+            "fair": null,
+            "ev_pct": null,
+            "expected_minutes": null,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Erling Haaland-FW-105",
             "name": "Erling Haaland",
             "position": "ST",
             "note": null,
@@ -3209,55 +3223,11 @@
               "compact": "Primary pen | 80% share | lambda 0.047",
               "detail": "pen duty Primary | share 79.8% | base 100.0% | prior 74.0% | w 6.0 | src recent+long | sample 1.7 | career 16/17 | lambda_pen 0.047 | lambda_open 0.907"
             }
-          }
-        ],
-        "midfielders": [
-          {
-            "key": "Elliot Anderson-DMC-64",
-            "name": "Elliot Anderson",
-            "position": "DM",
-            "note": "No price matched",
-            "has_price": false,
-            "odds": null,
-            "fair": null,
-            "ev_pct": null,
-            "expected_minutes": null,
-            "action": "monitor",
-            "action_label": "monitor",
-            "penalty_meta": null
           },
           {
-            "key": "Mateo Kovacic-DMC-66",
-            "name": "Mateo Kovacic",
-            "position": "DM",
-            "note": null,
-            "has_price": true,
-            "odds": 6.0,
-            "fair": 25.6348,
-            "ev_pct": -76.5943,
-            "expected_minutes": 78.0,
-            "action": "monitor",
-            "action_label": "monitor",
-            "penalty_meta": null
-          },
-          {
-            "key": "Antoine Semenyo-AM-83",
-            "name": "Antoine Semenyo",
-            "position": "RW/AM",
-            "note": "No price matched",
-            "has_price": false,
-            "odds": null,
-            "fair": null,
-            "ev_pct": null,
-            "expected_minutes": null,
-            "action": "monitor",
-            "action_label": "monitor",
-            "penalty_meta": null
-          },
-          {
-            "key": "Phil Foden-AM-85",
+            "key": "Phil Foden-FW-107",
             "name": "Phil Foden",
-            "position": "AM",
+            "position": "LF",
             "note": null,
             "has_price": true,
             "odds": 2.75,
@@ -3267,11 +3237,27 @@
             "action": "monitor",
             "action_label": "monitor",
             "penalty_meta": null
+          }
+        ],
+        "midfielders": [
+          {
+            "key": "Rico Lewis-MID-73",
+            "name": "Rico Lewis",
+            "position": "RCM",
+            "note": null,
+            "has_price": true,
+            "odds": 10.0,
+            "fair": 99.0,
+            "ev_pct": -92.5051,
+            "expected_minutes": 37.4,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
           },
           {
-            "key": "Jack Grealish-AM-87",
-            "name": "Jack Grealish",
-            "position": "LW/AM",
+            "key": "Elliot Anderson-MID-75",
+            "name": "Elliot Anderson",
+            "position": "CM",
             "note": "No price matched",
             "has_price": false,
             "odds": null,
@@ -3280,6 +3266,20 @@
             "expected_minutes": null,
             "action": "monitor",
             "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Nico O'Reilly-MID-77",
+            "name": "Nico O'Reilly",
+            "position": "LCM",
+            "note": null,
+            "has_price": true,
+            "odds": 4.333,
+            "fair": 2.8598,
+            "ev_pct": 51.5122,
+            "expected_minutes": 82.1,
+            "action": "shadow_track",
+            "action_label": "shadow",
             "penalty_meta": null
           }
         ],
@@ -3299,17 +3299,17 @@
             "penalty_meta": null
           },
           {
-            "key": "Nico O'Reilly-DEF-38",
-            "name": "Nico O'Reilly",
+            "key": "Josko Gvardiol-DEF-38",
+            "name": "Josko Gvardiol",
             "position": "LB",
             "note": null,
             "has_price": true,
-            "odds": 4.333,
-            "fair": 2.8598,
-            "ev_pct": 51.5122,
-            "expected_minutes": 82.1,
-            "action": "shadow_track",
-            "action_label": "shadow",
+            "odds": 7.0,
+            "fair": 6.926,
+            "ev_pct": 1.0687,
+            "expected_minutes": 78.0,
+            "action": "monitor",
+            "action_label": "monitor",
             "penalty_meta": null
           }
         ],
@@ -3329,15 +3329,15 @@
             "penalty_meta": null
           },
           {
-            "key": "Josko Gvardiol-DEF-36",
-            "name": "Josko Gvardiol",
+            "key": "Marc Guéhi-DEF-36",
+            "name": "Marc Guéhi",
             "position": "LCB",
-            "note": null,
-            "has_price": true,
-            "odds": 7.0,
-            "fair": 6.926,
-            "ev_pct": 1.0687,
-            "expected_minutes": 78.0,
+            "note": "No price matched",
+            "has_price": false,
+            "odds": null,
+            "fair": null,
+            "ev_pct": null,
+            "expected_minutes": null,
             "action": "monitor",
             "action_label": "monitor",
             "penalty_meta": null
@@ -3347,7 +3347,7 @@
       },
       "away": {
         "team": "AFC Bournemouth",
-        "lineup_status": "FotMob Expected XI",
+        "lineup_status": "Confirmed Lineup",
         "total_players": 11,
         "matched_players": 9,
         "keeper": {
@@ -3929,7 +3929,7 @@
         "team": "Fulham FC",
         "lineup_status": "FotMob Expected XI",
         "total_players": 11,
-        "matched_players": 8,
+        "matched_players": 7,
         "keeper": {
           "key": "Bernd Leno-GK-11",
           "name": "Bernd Leno",
@@ -4018,15 +4018,15 @@
             "penalty_meta": null
           },
           {
-            "key": "Kevin-AM-87",
-            "name": "Kevin",
+            "key": "César Palacios-AM-87",
+            "name": "César Palacios",
             "position": "LW/AM",
-            "note": null,
-            "has_price": true,
-            "odds": 4.75,
-            "fair": 13.0503,
-            "ev_pct": -63.6023,
-            "expected_minutes": 78.0,
+            "note": "No price matched",
+            "has_price": false,
+            "odds": null,
+            "fair": null,
+            "ev_pct": null,
+            "expected_minutes": null,
             "action": "monitor",
             "action_label": "monitor",
             "penalty_meta": null
@@ -4118,9 +4118,53 @@
         },
         "attackers": [
           {
-            "key": "Cole Palmer-FW-103",
+            "key": "João Pedro-FW-105",
+            "name": "João Pedro",
+            "position": "ST",
+            "note": null,
+            "has_price": true,
+            "odds": 2.4,
+            "fair": 2.3163,
+            "ev_pct": 3.6124000000000005,
+            "expected_minutes": 80.3,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          }
+        ],
+        "midfielders": [
+          {
+            "key": "Moisés Caicedo-MID-64",
+            "name": "Moisés Caicedo",
+            "position": "DM",
+            "note": null,
+            "has_price": true,
+            "odds": 9.0,
+            "fair": 35.6037,
+            "ev_pct": -74.7217,
+            "expected_minutes": 86.7,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Roméo Lavia-MID-66",
+            "name": "Roméo Lavia",
+            "position": "DM",
+            "note": null,
+            "has_price": true,
+            "odds": 7.5,
+            "fair": 44.8374,
+            "ev_pct": -83.2729,
+            "expected_minutes": 78.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Cole Palmer-AM-84",
             "name": "Cole Palmer",
-            "position": "RF",
+            "position": "AM",
             "note": null,
             "has_price": true,
             "odds": 2.4,
@@ -4135,23 +4179,9 @@
             }
           },
           {
-            "key": "João Pedro-FW-105",
-            "name": "João Pedro",
-            "position": "ST",
-            "note": null,
-            "has_price": true,
-            "odds": 2.4,
-            "fair": 2.3163,
-            "ev_pct": 3.6124000000000005,
-            "expected_minutes": 80.3,
-            "action": "monitor",
-            "action_label": "monitor",
-            "penalty_meta": null
-          },
-          {
-            "key": "Morgan Rogers-FW-107",
+            "key": "Morgan Rogers-AM-86",
             "name": "Morgan Rogers",
-            "position": "LF",
+            "position": "AM",
             "note": "No price matched",
             "has_price": false,
             "odds": null,
@@ -4163,41 +4193,11 @@
             "penalty_meta": null
           }
         ],
-        "midfielders": [
-          {
-            "key": "Roméo Lavia-MID-74",
-            "name": "Roméo Lavia",
-            "position": "CM",
-            "note": null,
-            "has_price": true,
-            "odds": 7.5,
-            "fair": 44.8374,
-            "ev_pct": -83.2729,
-            "expected_minutes": 78.0,
-            "action": "monitor",
-            "action_label": "monitor",
-            "penalty_meta": null
-          },
-          {
-            "key": "Moisés Caicedo-MID-76",
-            "name": "Moisés Caicedo",
-            "position": "CM",
-            "note": null,
-            "has_price": true,
-            "odds": 9.0,
-            "fair": 35.6037,
-            "ev_pct": -74.7217,
-            "expected_minutes": 86.7,
-            "action": "monitor",
-            "action_label": "monitor",
-            "penalty_meta": null
-          }
-        ],
         "wide_players": [
           {
-            "key": "Pedro Neto-MID-72",
+            "key": "Pedro Neto-MID-62",
             "name": "Pedro Neto",
-            "position": "RM",
+            "position": "RM/WB",
             "note": null,
             "has_price": true,
             "odds": 3.4,
@@ -4209,9 +4209,9 @@
             "penalty_meta": null
           },
           {
-            "key": "Marco Palestra-MID-78",
+            "key": "Marco Palestra-MID-68",
             "name": "Marco Palestra",
-            "position": "LM",
+            "position": "LM/WB",
             "note": "No price matched",
             "has_price": false,
             "odds": null,
@@ -7536,9 +7536,9 @@
     ]
   },
   "extreme_gap_quarantine": {
-    "registered": 3,
+    "registered": 0,
     "settled": 0,
-    "pending": 3,
+    "pending": 0,
     "wins": 0,
     "losses": 0,
     "voids": 0,
@@ -7549,9 +7549,9 @@
       {
         "key": "serie-a",
         "label": "Serie A",
-        "registered": 1,
+        "registered": 0,
         "settled": 0,
-        "pending": 1,
+        "pending": 0,
         "wins": 0,
         "losses": 0,
         "voids": 0,
@@ -7562,9 +7562,9 @@
       {
         "key": "epl",
         "label": "Premier League",
-        "registered": 2,
+        "registered": 0,
         "settled": 0,
-        "pending": 2,
+        "pending": 0,
         "wins": 0,
         "losses": 0,
         "voids": 0,
@@ -7612,77 +7612,7 @@
         "roi": null
       }
     ],
-    "recent_rows": [
-      {
-        "key": "2026-08-23|Jack Hinshelwood|Brighton & Hove Albion vs Aston Villa|epl",
-        "player": "Jack Hinshelwood",
-        "team": "Brighton",
-        "match": "Brighton & Hove Albion vs Aston Villa",
-        "competition": "England - Premier League",
-        "league_key": "epl",
-        "kickoff": "2026-08-23T13:00:00Z",
-        "compared_at": "2026-08-23T07:22:52Z",
-        "settled_at": "",
-        "date": "2026-08-23",
-        "lineup_state": "starter",
-        "best_bookmaker_odds": 4.5,
-        "model_fair_odds": 2.6833,
-        "ev_pct": 67.7046,
-        "settled": false,
-        "bet_outcome": "",
-        "settlement_note": "",
-        "pnl_units": null,
-        "tracking_tier": "extreme_gap_quarantine",
-        "quarantine_reason": "model_market_gap_gt_10pp",
-        "evaluation_stake_units": 1.0
-      },
-      {
-        "key": "2026-08-23|Marcus Tavernier|Manchester City vs AFC Bournemouth|epl",
-        "player": "Marcus Tavernier",
-        "team": "Bournemouth",
-        "match": "Manchester City vs AFC Bournemouth",
-        "competition": "England - Premier League",
-        "league_key": "epl",
-        "kickoff": "2026-08-23T13:00:00Z",
-        "compared_at": "2026-08-23T07:22:52Z",
-        "settled_at": "",
-        "date": "2026-08-23",
-        "lineup_state": "starter",
-        "best_bookmaker_odds": 6.0,
-        "model_fair_odds": 3.2434,
-        "ev_pct": 84.9932,
-        "settled": false,
-        "bet_outcome": "",
-        "settlement_note": "",
-        "pnl_units": null,
-        "tracking_tier": "extreme_gap_quarantine",
-        "quarantine_reason": "model_market_gap_gt_10pp",
-        "evaluation_stake_units": 1.0
-      },
-      {
-        "key": "2026-08-23|Giovanni Simeone|Torino FC vs AC Milan|serie-a",
-        "player": "Giovanni Simeone",
-        "team": "Torino",
-        "match": "Torino FC vs AC Milan",
-        "competition": "Italy - Serie A",
-        "league_key": "serie-a",
-        "kickoff": "2026-08-23T18:45:00Z",
-        "compared_at": "2026-08-23T07:22:39Z",
-        "settled_at": "",
-        "date": "2026-08-23",
-        "lineup_state": "starter",
-        "best_bookmaker_odds": 3.5,
-        "model_fair_odds": 2.563,
-        "ev_pct": 36.560199999999995,
-        "settled": false,
-        "bet_outcome": "",
-        "settlement_note": "",
-        "pnl_units": null,
-        "tracking_tier": "extreme_gap_quarantine",
-        "quarantine_reason": "model_market_gap_gt_10pp",
-        "evaluation_stake_units": 1.0
-      }
-    ]
+    "recent_rows": []
   },
   "diagnostics": {
     "matched_rows": 446,
@@ -7704,12 +7634,12 @@
         "detail": "Source feed returned 0 current ATGS rows for this league window."
       }
     ],
-    "raw_monitor_summary": "=== Serie A | Updated 23/08/2026, 12:33 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-08-23T07:22:39Z\n\nHistorical Rows          31,154\nOdds Rows                313\nMatched Rows             176\nMissing Player History   137\nMissing Team Mapping     0\nFallback Rows            24\nQualified Rows           14\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   125\nLow Confidence Rows      51\nPublic High Signals      0\nPublic Caveat Signals    11\nShadow Track Rows        7\nPenalty Transfer Rows    2\nPosition Upgrade Rows    1\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 5\nFixtures Clean           0\nFixtures Degraded        6\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    69\nExpected Bench Rows      0\nExpected Out Rows        17\nNot In Squad Rows        0\n\nAverage EV               -0.6241\n\n\n=== Premier League | Updated 23/08/2026, 12:33 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-08-23T07:22:52Z\n\nHistorical Rows          30,733\nOdds Rows                175\nMatched Rows             113\nMissing Player History   62\nMissing Team Mapping     0\nFallback Rows            6\nQualified Rows           17\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   93\nLow Confidence Rows      20\nPublic High Signals      0\nPublic Caveat Signals    15\nShadow Track Rows        14\nPenalty Transfer Rows    2\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 4\nFixtures Clean           0\nFixtures Degraded        4\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    64\nExpected Bench Rows      0\nExpected Out Rows        11\nNot In Squad Rows        0\n\nAverage EV               -0.4635\n\n\n=== La Liga | Updated 23/08/2026, 12:33 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-08-23T07:23:10Z\n\nHistorical Rows          32,369\nOdds Rows                289\nMatched Rows             125\nMissing Player History   164\nMissing Team Mapping     0\nFallback Rows            29\nQualified Rows           12\nRoster Resolved Rows     22\nHigh Confidence Rows     0\nMedium Confidence Rows   83\nLow Confidence Rows      42\nPublic High Signals      0\nPublic Caveat Signals    9\nShadow Track Rows        6\nPenalty Transfer Rows    0\nPosition Upgrade Rows    1\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 2\nFixtures Clean           0\nFixtures Degraded        6\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    34\nExpected Bench Rows      0\nExpected Out Rows        2\nNot In Squad Rows        0\n\nAverage EV               -0.5801\n\n\n=== Bundesliga | Updated 23/08/2026, 12:33 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-08-23T07:23:15Z\n\nHistorical Rows          25,557\nOdds Rows                0\nMatched Rows             0\nMissing Player History   0\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           0\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   0\nLow Confidence Rows      0\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        0\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               0.0000\n\n\n=== Ligue 1 | Updated 23/08/2026, 12:33 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-08-23T07:23:23Z\n\nHistorical Rows          25,049\nOdds Rows                142\nMatched Rows             32\nMissing Player History   110\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           2\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   30\nLow Confidence Rows      2\nPublic High Signals      0\nPublic Caveat Signals    2\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        3\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.6276\n"
+    "raw_monitor_summary": "=== Serie A | Updated 23/08/2026, 12:53 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-08-23T07:22:39Z\n\nHistorical Rows          31,154\nOdds Rows                313\nMatched Rows             176\nMissing Player History   137\nMissing Team Mapping     0\nFallback Rows            24\nQualified Rows           14\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   125\nLow Confidence Rows      51\nPublic High Signals      0\nPublic Caveat Signals    11\nShadow Track Rows        7\nPenalty Transfer Rows    2\nPosition Upgrade Rows    1\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 5\nFixtures Clean           0\nFixtures Degraded        6\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    69\nExpected Bench Rows      0\nExpected Out Rows        17\nNot In Squad Rows        0\n\nAverage EV               -0.6241\n\n\n=== Premier League | Updated 23/08/2026, 12:53 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-08-23T07:22:52Z\n\nHistorical Rows          30,733\nOdds Rows                175\nMatched Rows             113\nMissing Player History   62\nMissing Team Mapping     0\nFallback Rows            6\nQualified Rows           17\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   93\nLow Confidence Rows      20\nPublic High Signals      0\nPublic Caveat Signals    15\nShadow Track Rows        14\nPenalty Transfer Rows    2\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 4\nFixtures Clean           0\nFixtures Degraded        4\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    64\nExpected Bench Rows      0\nExpected Out Rows        11\nNot In Squad Rows        0\n\nAverage EV               -0.4635\n\n\n=== La Liga | Updated 23/08/2026, 12:53 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-08-23T07:23:10Z\n\nHistorical Rows          32,369\nOdds Rows                289\nMatched Rows             125\nMissing Player History   164\nMissing Team Mapping     0\nFallback Rows            29\nQualified Rows           12\nRoster Resolved Rows     22\nHigh Confidence Rows     0\nMedium Confidence Rows   83\nLow Confidence Rows      42\nPublic High Signals      0\nPublic Caveat Signals    9\nShadow Track Rows        6\nPenalty Transfer Rows    0\nPosition Upgrade Rows    1\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 2\nFixtures Clean           0\nFixtures Degraded        6\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    34\nExpected Bench Rows      0\nExpected Out Rows        2\nNot In Squad Rows        0\n\nAverage EV               -0.5801\n\n\n=== Bundesliga | Updated 23/08/2026, 12:53 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-08-23T07:23:15Z\n\nHistorical Rows          25,557\nOdds Rows                0\nMatched Rows             0\nMissing Player History   0\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           0\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   0\nLow Confidence Rows      0\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        0\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               0.0000\n\n\n=== Ligue 1 | Updated 23/08/2026, 12:53 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-08-23T07:23:23Z\n\nHistorical Rows          25,049\nOdds Rows                142\nMatched Rows             32\nMissing Player History   110\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           2\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   30\nLow Confidence Rows      2\nPublic High Signals      0\nPublic Caveat Signals    2\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        3\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.6276\n"
   },
   "research_status": {
     "status": "RESEARCH_ONLY",
     "model_variant": "v2_minutes_absolute_share_repair",
-    "updated_at": "2026-08-23T11:33:31Z",
+    "updated_at": "2026-08-23T11:53:44Z",
     "parity": {
       "decision": "PASS",
       "golden_rows": 25,
@@ -7752,5 +7682,5 @@
     }
   },
   "snapshot_key": "monitor_state",
-  "payload_hash": "7fea1fd05013b9f7ef457d723eafe78c38639b78af1bf1dde34f499d2c05ef3d"
+  "payload_hash": "27b9e9d06b7c06ba797fb03e4697937d3bc30dfe5f82ec1311274e554a13763a"
 }
