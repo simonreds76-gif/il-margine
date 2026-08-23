@@ -271,21 +271,21 @@
       "kickoff_utc": "2026-08-23T16:30:00Z",
       "home_team": "Frosinone",
       "away_team": "Juventus",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-3-3",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Lorenzo Palmisani",
-        "Wisdom Amey",
+        "Giorgio Cittadini",
         "Gabriele Calvani",
         "Ilario Monterisi",
         "Gabriele Bracaglia",
-        "Romano Schmid",
-        "Giacomo Calò",
         "Matteo Cichella",
-        "Farès Ghedjemis",
+        "Giacomo Calò",
+        "Romano Schmid",
+        "Seydou Fini",
         "Antonio Raimondo",
         "Giorgi Kvernadze"
       ],
@@ -313,7 +313,7 @@
           "position_id": 11
         },
         {
-          "name": "Wisdom Amey",
+          "name": "Giorgio Cittadini",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -349,7 +349,7 @@
           "position_id": 38
         },
         {
-          "name": "Romano Schmid",
+          "name": "Matteo Cichella",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -367,7 +367,7 @@
           "position_id": 75
         },
         {
-          "name": "Matteo Cichella",
+          "name": "Romano Schmid",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -376,7 +376,7 @@
           "position_id": 77
         },
         {
-          "name": "Farès Ghedjemis",
+          "name": "Seydou Fini",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -504,7 +504,20 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
+      "home_subs": [
+        "Matteo Pisseri",
+        "Sebastiano Desplanches",
+        "Aleksa Terzic",
+        "Anthony Oyono",
+        "Kevin Akpoguma",
+        "Wisdom Amey",
+        "Alessio Zerbin",
+        "Anouar El Azzouzi",
+        "Florian Grillitsch",
+        "Ilias Koutsoupias",
+        "Luis Hasa",
+        "Patrizio Masini"
+      ],
       "away_subs": [
         "Carlo Pinsoglio",
         "Mattia Perin",
@@ -789,9 +802,9 @@
       "kickoff_utc": "2026-08-23T16:30:00Z",
       "home_team": "Venezia",
       "away_team": "Lecce",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-5-2",
       "away_formation": "4-3-3",
       "home_players": [
@@ -815,10 +828,10 @@
         "Antonino Gallo",
         "Lassana Coulibaly",
         "Oumar Ngom",
-        "Youssef Maleh",
+        "Olaf Gorter",
         "Santiago Pierotti",
         "Willem Geubbels",
-        "Hjalte Laerke"
+        "Konan N’Dri"
       ],
       "home_starters": [
         {
@@ -986,7 +999,7 @@
           "position_id": 75
         },
         {
-          "name": "Youssef Maleh",
+          "name": "Olaf Gorter",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -1013,7 +1026,7 @@
           "position_id": 105
         },
         {
-          "name": "Hjalte Laerke",
+          "name": "Konan N’Dri",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -1022,8 +1035,35 @@
           "position_id": 107
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Lorenzo Montipò",
+        "Ale Gomes",
+        "Redouane Halhal",
+        "Lamine Fanne",
+        "Matteo Dagasso",
+        "Richie Sagrado",
+        "Ridgeciano Haps",
+        "Simon Sohm",
+        "Simone Panada",
+        "Thórir Helgason",
+        "Albion Rrahmani",
+        "Alvin Okoro",
+        "Kornel Lisman",
+        "Lion Lauberbach",
+        "Marko Lawk Farji"
+      ],
+      "away_subs": [
+        "Marco Bleve",
+        "Plamen Penev",
+        "Corrie Ndaba",
+        "Tiago Gabriel",
+        "Omri Gandelman",
+        "Sadik Fofana",
+        "Youssef Maleh",
+        "Hjalte Laerke",
+        "Nikola Stulic",
+        "Paco Esteban"
+      ],
       "home_unavailable": [
         "Marin Sverko",
         "Andrea Adorante"
