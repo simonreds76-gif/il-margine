@@ -22,6 +22,7 @@ class TeamShotsMarketFilterTests(unittest.TestCase):
     def test_accepts_explicit_team_markets(self):
         self.assertTrue(MODULE._is_team_shots_market("Team Shots Home"))
         self.assertTrue(MODULE._is_team_shots_market("Total Shots Away"))
+        self.assertTrue(MODULE._is_team_shots_market("Total Shots Home"))
 
     def test_rejects_ambiguous_match_total(self):
         self.assertFalse(MODULE._is_team_shots_market("Total Shots"))

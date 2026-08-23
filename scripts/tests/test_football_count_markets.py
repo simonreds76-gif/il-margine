@@ -22,10 +22,12 @@ from football_count_markets import (  # noqa: E402
 class FootballCountMarketTests(unittest.TestCase):
     def test_conservative_market_classification(self) -> None:
         self.assertEqual(classify_market("Team Fouls Home"), "team_fouls_total")
+        self.assertEqual(classify_market("Total Fouls Home"), "team_fouls_total")
         self.assertEqual(classify_market("Fouls Totals"), "match_fouls_total")
         self.assertEqual(classify_market("Player Fouls Committed"), "player_fouls_committed")
         self.assertEqual(classify_market("Player To Be Fouled"), "player_fouled")
         self.assertEqual(classify_market("Team Cards Away"), "team_cards_total")
+        self.assertEqual(classify_market("Bookings Totals Away"), "team_cards_total")
         self.assertEqual(classify_market("Bookings Spread"), "cards_other")
         self.assertEqual(classify_market("Goalkeeper Saves"), "player_saves")
         self.assertEqual(classify_market("Team Saves Home"), "team_saves_total")
@@ -129,6 +131,36 @@ class FootballCountMarketTests(unittest.TestCase):
         self.assertEqual({row["side"] for row in by_market["MATCH_SHOTS"]}, {"over", "under"})
         self.assertEqual({row["line"] for row in by_market["MATCH_CORNERS"]}, {"9.5"})
         self.assertEqual({row["line"] for row in by_market["MATCH_CORNERS_ALT"]}, {"10.5"})
+
+    def test_extracts_canonical_total_shots_but_not_team_totals(self) -> None:
+        payload = [
+            {
+                "id": "event-canonical",
+                "date": "2026-09-06T18:45:00Z",
+                "home": "Home FC",
+                "away": "Away FC",
+                "bookmakers": {
+                    "Bet365": [
+                        {
+                            "name": "Total Shots",
+                            "odds": [{"hdp": 24.5, "over": "1.91", "under": "1.91"}],
+                        },
+                        {
+                            "name": "Total Shots Home",
+                            "odds": [{"hdp": 14.5, "over": "1.83", "under": "2.00"}],
+                        },
+                        {
+                            "name": "Total Shots on Target",
+                            "odds": [{"hdp": 8.5, "over": "1.90", "under": "1.90"}],
+                        },
+                    ]
+                },
+            }
+        ]
+        rows = build_control_odds_rows(payload, "Premier League", "2026-09-05T09:00:00Z")
+        self.assertEqual(len(rows), 2)
+        self.assertTrue(all(row["market"] == "MATCH_SHOTS" for row in rows))
+        self.assertEqual({row["line"] for row in rows}, {"24.5"})
 
     def test_control_odds_append_is_idempotent(self) -> None:
         row = {

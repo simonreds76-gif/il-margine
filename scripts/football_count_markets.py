@@ -242,7 +242,9 @@ def build_control_odds_rows(
                             )
                     continue
 
-                if normalized == "match shots":
+                # Odds-API.io serves the legacy label through 2026-09-05.
+                # Keep both names so match-total shot history remains continuous.
+                if normalized in {"match shots", "total shots"}:
                     output_market = "MATCH_SHOTS"
                 elif normalized == "corners totals":
                     output_market = "MATCH_CORNERS"
