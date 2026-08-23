@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-23T02:02:03Z",
+  "generated_at": "2026-08-23T09:27:29Z",
   "league": "epl",
   "row_count": 1,
   "rows": [
@@ -22,17 +22,17 @@
       "primary_pre_match": "Igor Thiago",
       "secondary_pre_match": "Kevin Schade",
       "tertiary_pre_match": "Fabio Carvalho",
-      "primary_lineup_status": "confirmed_starter",
-      "secondary_lineup_status": "confirmed_starter",
-      "tertiary_lineup_status": "unknown",
-      "active_taker_pre_match": "Igor Thiago",
-      "active_slot_pre_match": "primary",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
       "team_lineup_status": "unknown",
       "review_type": "primary_held",
       "review_priority": "low",
-      "editorial_note": "Igor Thiago took 1 penalty attempt and missed for Brentford vs Tottenham Hotspur. Primary pre-match: Igor Thiago (confirmed_starter). Secondary pre-match: Kevin Schade (confirmed_starter). Pre-match active slot was primary -> Igor Thiago. No hierarchy change implied from this event.",
-      "context_generated_at": "2026-08-22T15:34:43Z",
-      "context_source_path": "data/goalscorer/epl/penalty-duty-context.json"
+      "editorial_note": "Igor Thiago took 1 penalty attempt and missed for Brentford vs Tottenham Hotspur. Primary pre-match: Igor Thiago (unknown). Secondary pre-match: Kevin Schade (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-07-30",
+      "context_source_path": "data/goalscorer/epl-penalty-takers.json"
     }
   ]
 }
