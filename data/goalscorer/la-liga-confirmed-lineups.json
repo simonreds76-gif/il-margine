@@ -12,20 +12,20 @@
       "home_status": "Confirmed Lineup",
       "away_status": "Confirmed Lineup",
       "lineup_type": "standard",
-      "home_formation": "4-3-3",
+      "home_formation": "3-5-2",
       "away_formation": "4-4-2",
       "home_players": [
         "Jan Oblak",
         "Marc Pubill",
         "Robin Le Normand",
         "Dávid Hancko",
-        "Alejandro Grimaldo",
-        "Morten Hjulmand",
-        "Koke",
-        "Rodrigo Mendoza",
         "Giuliano Simeone",
-        "Ademola Lookman",
-        "Kang-In Lee"
+        "Koke",
+        "Morten Hjulmand",
+        "Rodrigo Mendoza",
+        "Alejandro Grimaldo",
+        "Kang-In Lee",
+        "Ademola Lookman"
       ],
       "away_players": [
         "Luiz Júnior",
@@ -47,98 +47,98 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-3-3",
+          "formation": "3-5-2",
           "position_id": 11
         },
         {
           "name": "Marc Pubill",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
-          "position_id": 32
+          "formation": "3-5-2",
+          "position_id": 33
         },
         {
           "name": "Robin Le Normand",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
-          "position_id": 34
+          "formation": "3-5-2",
+          "position_id": 35
         },
         {
           "name": "Dávid Hancko",
           "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-3-3",
-          "position_id": 36
-        },
-        {
-          "name": "Alejandro Grimaldo",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-3-3",
-          "position_id": 38
-        },
-        {
-          "name": "Morten Hjulmand",
-          "line_index": 1,
           "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 37
+        },
+        {
+          "name": "Giuliano Simeone",
+          "line_index": 1,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 73
+          "formation": "3-5-2",
+          "position_id": 71
         },
         {
           "name": "Koke",
           "line_index": 1,
-          "line_size": 3,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-3-3",
+          "formation": "3-5-2",
+          "position_id": 73
+        },
+        {
+          "name": "Morten Hjulmand",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
           "position_id": 75
         },
         {
           "name": "Rodrigo Mendoza",
           "line_index": 1,
-          "line_size": 3,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-3-3",
+          "formation": "3-5-2",
           "position_id": 77
         },
         {
-          "name": "Giuliano Simeone",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 103
-        },
-        {
-          "name": "Ademola Lookman",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 105
+          "name": "Alejandro Grimaldo",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 79
         },
         {
           "name": "Kang-In Lee",
           "line_index": 2,
-          "line_size": 3,
+          "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 107
+          "formation": "3-5-2",
+          "position_id": 104
+        },
+        {
+          "name": "Ademola Lookman",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 106
         }
       ],
       "away_starters": [
@@ -243,20 +243,22 @@
         }
       ],
       "home_subs": [
+        "Álex Baena",
+        "Marcos Llorente",
+        "Pablo Barrios",
+        "Julián Álvarez",
         "Juan Musso",
         "Dani Martinez",
         "Jorge Domínguez",
         "José Giménez",
-        "Marcos Llorente",
-        "Álex Baena",
         "Johnny Cardoso",
         "Jorge Castillo",
-        "Pablo Barrios",
         "Arnau Ortiz",
-        "Carlos Martín",
-        "Julián Álvarez"
+        "Carlos Martín"
       ],
       "away_subs": [
+        "Tajon Buchanan",
+        "Gerard Moreno",
         "Péter Gulácsi",
         "Alex Freeman",
         "Logan Costa",
@@ -264,8 +266,6 @@
         "Sergi Cardona",
         "Carlos Maciá",
         "Cheikh Tidiane Thiam",
-        "Tajon Buchanan",
-        "Gerard Moreno",
         "Ilias Akhomach",
         "Nizar El Jmili",
         "Tani Oluwaseyi"
@@ -540,28 +540,28 @@
       "kickoff_utc": "2026-08-23T17:30:00Z",
       "home_team": "Getafe",
       "away_team": "Racing Santander",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "5-3-2",
       "away_formation": "4-2-3-1",
       "home_players": [
         "David Soria",
-        "Sebastián Boselli",
-        "Abdelkabir Abqar",
+        "Saba Sazonov",
+        "Djené",
         "Zaid Abner Romero",
         "Andrés García",
-        "Davinchi",
-        "Orel Mangala",
-        "Djené",
+        "Johan Mojica",
         "Ramón Terrats",
+        "Orel Mangala",
+        "Francho Serrano",
         "Enes Ünal",
         "Martín Satriano"
       ],
       "away_players": [
         "Julen Agirrezabala",
         "Álvaro Mantilla",
-        "Facundo González",
+        "Manu",
         "Pablo Ramón",
         "Jorge Salinas",
         "Gustavo Puerta",
@@ -582,7 +582,7 @@
           "position_id": 11
         },
         {
-          "name": "Sebastián Boselli",
+          "name": "Saba Sazonov",
           "line_index": 0,
           "line_size": 5,
           "role_score": 1,
@@ -591,7 +591,7 @@
           "position_id": 33
         },
         {
-          "name": "Abdelkabir Abqar",
+          "name": "Djené",
           "line_index": 0,
           "line_size": 5,
           "role_score": 1,
@@ -618,7 +618,7 @@
           "position_id": 51
         },
         {
-          "name": "Davinchi",
+          "name": "Johan Mojica",
           "line_index": 0,
           "line_size": 5,
           "role_score": 1,
@@ -627,7 +627,7 @@
           "position_id": 59
         },
         {
-          "name": "Orel Mangala",
+          "name": "Ramón Terrats",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -636,7 +636,7 @@
           "position_id": 73
         },
         {
-          "name": "Djené",
+          "name": "Orel Mangala",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -645,7 +645,7 @@
           "position_id": 75
         },
         {
-          "name": "Ramón Terrats",
+          "name": "Francho Serrano",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -692,7 +692,7 @@
           "position_id": 32
         },
         {
-          "name": "Facundo González",
+          "name": "Manu",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -774,9 +774,20 @@
         }
       ],
       "home_subs": [],
-      "away_subs": [],
+      "away_subs": [
+        "Simon Eriksson",
+        "Carlos Sanchez",
+        "Facundo González",
+        "Samuel Calera",
+        "Andres Vallecillo",
+        "Íñigo Sainz-Maza",
+        "Maguette Gueye",
+        "Diego Díaz",
+        "Iván Martin",
+        "Juan Carlos Arana",
+        "Yassir Zabiri"
+      ],
       "home_unavailable": [
-        "Francho Serrano",
         "Kiko",
         "Christantus Uche",
         "Juanmi"
