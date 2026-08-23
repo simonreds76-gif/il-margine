@@ -563,9 +563,9 @@
       "kickoff_utc": "2026-08-23T18:45:00Z",
       "home_team": "Rennes",
       "away_team": "Paris Saint-Germain",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-3-3",
       "away_formation": "4-3-3",
       "home_players": [
@@ -574,9 +574,9 @@
         "Abdelhamid Aït Boudlal",
         "Charlie Cresswell",
         "Mahamadou Nagida",
-        "Sebastian Szymanski",
-        "Valentin Rongier",
         "Adrien Thomasson",
+        "Valentin Rongier",
+        "Sebastian Szymanski",
         "Mousa Tamari",
         "Estéban Lepaul",
         "Issa Soumaré"
@@ -586,11 +586,11 @@
         "Achraf Hakimi",
         "Marquinhos",
         "Willian Pacho",
-        "Lucas Digne",
+        "Lucas Hernández",
+        "Warren Zaïre-Emery",
         "Vitinha",
         "João Neves",
-        "Fabián Ruiz",
-        "Maghnes Akliouche",
+        "Désiré Doué",
         "Ousmane Dembélé",
         "Khvicha Kvaratskhelia"
       ],
@@ -641,7 +641,7 @@
           "position_id": 38
         },
         {
-          "name": "Sebastian Szymanski",
+          "name": "Adrien Thomasson",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -659,7 +659,7 @@
           "position_id": 75
         },
         {
-          "name": "Adrien Thomasson",
+          "name": "Sebastian Szymanski",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -733,7 +733,7 @@
           "position_id": 36
         },
         {
-          "name": "Lucas Digne",
+          "name": "Lucas Hernández",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -742,7 +742,7 @@
           "position_id": 38
         },
         {
-          "name": "Vitinha",
+          "name": "Warren Zaïre-Emery",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -751,7 +751,7 @@
           "position_id": 73
         },
         {
-          "name": "João Neves",
+          "name": "Vitinha",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -760,7 +760,7 @@
           "position_id": 75
         },
         {
-          "name": "Fabián Ruiz",
+          "name": "João Neves",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -769,7 +769,7 @@
           "position_id": 77
         },
         {
-          "name": "Maghnes Akliouche",
+          "name": "Désiré Doué",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -796,8 +796,28 @@
           "position_id": 107
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Kilian Belazzoug",
+        "Anthony Rouault",
+        "Bryan Reynolds",
+        "Jonathan Do Marcolino",
+        "Quentin Merlin",
+        "Ludovic Blas",
+        "Arnaud Nordin",
+        "Elías Legendre",
+        "Eliezer Mayenda"
+      ],
+      "away_subs": [
+        "Lucas Chevalier",
+        "Ilya Zabarnyi",
+        "Lucas Beraldo",
+        "Lucas Digne",
+        "Dro Fernández",
+        "Fabián Ruiz",
+        "Ferran Torres",
+        "Maghnes Akliouche",
+        "Mika Godts"
+      ],
       "home_unavailable": [
         "Seko Fofana",
         "Mahdi Camara"
