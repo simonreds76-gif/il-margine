@@ -3,14 +3,12 @@
   "count_model": "PASS",
   "current": {
     "blocked_lines": 0,
-    "blocker_counts": {
-      "edge_below_8pct": 9
-    },
+    "blocker_counts": {},
     "candidate_board_preserved": false,
-    "eligible_lines": 1,
-    "priced_lines": 10,
+    "eligible_lines": 0,
+    "priced_lines": 0,
     "provisional_lines": 0,
-    "signals_added": 1
+    "signals_added": 0
   },
   "evidence": {
     "clv": null,
@@ -22,7 +20,7 @@
     "signals": 8,
     "true_close_coverage": null
   },
-  "generated_at": "2026-08-23T19:02:38Z",
+  "generated_at": "2026-08-23T19:54:45Z",
   "live_routing": false,
   "promotion": {
     "mean_true_close_clv_required": 0.005,
