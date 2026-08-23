@@ -2,12 +2,12 @@
 
 **RESEARCH SHADOW ONLY. No live routing or staking authorization.**
 
-- Generated: 2026-08-23T13:19:35Z
+- Generated: 2026-08-23T13:58:44Z
 - Status: SIGNALS_COLLECTING
-- Current priced/eligible/blocked: 0/0/0
+- Current priced/eligible/blocked: 10/2/0
 - Provisional research lines: 0 (never appended to the signal ledger)
 - Candidate board preserved after infrastructure failure: False
-- Signals: 3 (3 pending, 0 settled)
+- Signals: 4 (4 pending, 0 settled)
 - P/L: +0.00u; ROI: -
 - Closing evidence: 0/0 matched; mean CLV: -
 - Settlement integrity: named-player API-Football saves; promotion remains blocked until the evidence gates pass.
