@@ -271,11 +271,39 @@ function FilterIcon({ filter, active }: { filter: Filter; active: boolean }) {
     );
   }
 
-  const src = filter === "props" ? "/icons/markets/other-football.svg" : "/icons/markets/tennis.svg";
+  if (filter === "props") {
+    return (
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        className={`h-5 w-5 shrink-0 transition ${
+          active ? "text-emerald-300" : "text-slate-500 group-hover/filter:text-slate-300"
+        }`}
+        fill="none"
+      >
+        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+        <path
+          d="m9.35 8.45 2.65-1.9 2.65 1.9-1.02 3.1h-3.26l-1.02-3.1Z"
+          fill="currentColor"
+          stroke="currentColor"
+          strokeLinejoin="round"
+          strokeWidth="0.8"
+        />
+        <path
+          d="m12 6.55-.82-3.38M9.35 8.45 5.8 7.2m4.57 4.35-2.18 3.02m5.44-3.02 2.18 3.02m-1.16-6.12 3.55-1.25M8.19 14.57l-3.07.12m10.69-.12 3.07.12M8.19 14.57l1.05 3.27m6.57-3.27-1.05 3.27"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.35"
+        />
+      </svg>
+    );
+  }
+
   return (
     <Image
       aria-hidden="true"
-      src={src}
+      src="/icons/markets/tennis.svg"
       alt=""
       width={20}
       height={20}
