@@ -1,7 +1,24 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-22T09:18:44Z",
+  "generated_at": "2026-08-23T02:02:03Z",
   "league": "epl",
-  "row_count": 0,
-  "rows": []
+  "row_count": 1,
+  "rows": [
+    {
+      "team": "Brentford",
+      "team_key": "brentford",
+      "player_name": "Igor Thiago",
+      "player_key": "igor thiago",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-08-22"
+    }
+  ]
 }
