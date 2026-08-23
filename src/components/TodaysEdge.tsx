@@ -116,7 +116,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
           <div>
             <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-emerald-300/90">
-              Posted prices
+              Posted tips
             </p>
             <h2 id="todays-edge-heading" className="mt-1 text-xl font-semibold text-white">
               Today&apos;s Edge
