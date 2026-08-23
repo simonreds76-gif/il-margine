@@ -9,22 +9,22 @@
       "kickoff_utc": "2026-08-23T18:45:00Z",
       "home_team": "Atalanta",
       "away_team": "Sassuolo",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-3-3",
       "away_formation": "4-3-3",
       "home_players": [
         "Marco Carnesecchi",
         "Davide Zappacosta",
         "Odilon Kossounou",
-        "Thomas Kristensen",
+        "Giorgio Scalvini",
         "Lorenzo Bernasconi",
         "Éderson",
         "Gianluca Gaetano",
         "Mario Pasalic",
         "Nicola Zalewski",
-        "Nikola Krstovic",
+        "Gianluca Scamacca",
         "Giacomo Raspadori"
       ],
       "away_players": [
@@ -69,7 +69,7 @@
           "position_id": 34
         },
         {
-          "name": "Thomas Kristensen",
+          "name": "Giorgio Scalvini",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -123,7 +123,7 @@
           "position_id": 103
         },
         {
-          "name": "Nikola Krstovic",
+          "name": "Gianluca Scamacca",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -246,7 +246,6 @@
       "away_subs": [],
       "home_unavailable": [
         "Elif Elmas",
-        "Giorgio Scalvini",
         "Honest Ahanor",
         "Isak Hien",
         "Charles De Ketelaere",
@@ -278,9 +277,9 @@
       "away_formation": "4-2-3-1",
       "home_players": [
         "Lorenzo Palmisani",
-        "Giorgio Cittadini",
-        "Gabriele Calvani",
         "Ilario Monterisi",
+        "Gabriele Calvani",
+        "Giorgio Cittadini",
         "Gabriele Bracaglia",
         "Matteo Cichella",
         "Giacomo Calò",
@@ -313,7 +312,7 @@
           "position_id": 11
         },
         {
-          "name": "Giorgio Cittadini",
+          "name": "Ilario Monterisi",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -331,7 +330,7 @@
           "position_id": 34
         },
         {
-          "name": "Ilario Monterisi",
+          "name": "Giorgio Cittadini",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -505,18 +504,18 @@
         }
       ],
       "home_subs": [
+        "Alessio Zerbin",
+        "Patrizio Masini",
         "Matteo Pisseri",
         "Sebastiano Desplanches",
         "Aleksa Terzic",
         "Anthony Oyono",
         "Kevin Akpoguma",
         "Wisdom Amey",
-        "Alessio Zerbin",
         "Anouar El Azzouzi",
         "Florian Grillitsch",
         "Ilias Koutsoupias",
-        "Luis Hasa",
-        "Patrizio Masini"
+        "Luis Hasa"
       ],
       "away_subs": [
         "Carlo Pinsoglio",
@@ -550,9 +549,9 @@
       "kickoff_utc": "2026-08-23T18:45:00Z",
       "home_team": "Torino",
       "away_team": "Milan",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
       "away_formation": "3-4-2-1",
       "home_players": [
@@ -564,17 +563,17 @@
         "Gvidas Gineitis",
         "Kian Fitz-Jim",
         "Alessio Cacciamani",
+        "Cesare Casadei",
         "Nikola Vlasic",
-        "Alieu Njie",
         "Giovanni Simeone"
       ],
       "away_players": [
         "Mike Maignan",
         "Mario Gila",
-        "Matteo Gabbia",
+        "Koni De Winter",
         "Strahinja Pavlovic",
         "Samuel Chukwueze",
-        "Luka Modric",
+        "Ardon Jashari",
         "Yunus Musah",
         "Pervis Estupinán",
         "Ruben Loftus-Cheek",
@@ -655,7 +654,7 @@
           "position_id": 68
         },
         {
-          "name": "Nikola Vlasic",
+          "name": "Cesare Casadei",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -664,7 +663,7 @@
           "position_id": 84
         },
         {
-          "name": "Alieu Njie",
+          "name": "Nikola Vlasic",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -702,7 +701,7 @@
           "position_id": 33
         },
         {
-          "name": "Matteo Gabbia",
+          "name": "Koni De Winter",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -729,7 +728,7 @@
           "position_id": 62
         },
         {
-          "name": "Luka Modric",
+          "name": "Ardon Jashari",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -783,10 +782,39 @@
           "position_id": 105
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
-      "home_unavailable": [
+      "home_subs": [
+        "Alberto Paleari",
+        "Lapo Siviero",
+        "Ali Dembélé",
+        "Mattia Pellini",
+        "Niccolò Fortini",
+        "Alieu Njie",
+        "Andrea Luongo",
+        "Cristiano Biraghi",
+        "Emirhan Ilkhan",
+        "Zakaria Aboukhlal",
+        "Ché Adams",
         "Duván Zapata",
+        "Gaetano Oristanio",
+        "Sandro Kulenovic"
+      ],
+      "away_subs": [
+        "Leo Paul Bouyer",
+        "Lorenzo Torriani",
+        "Filippo Terracciano",
+        "Matteo Gabbia",
+        "Sankhoun Diawara",
+        "Adrien Rabiot",
+        "Alexis Saelemaekers",
+        "Christian Comotto",
+        "Davide Bartesaghi",
+        "Luka Modric",
+        "Samuele Ricci",
+        "Christian Pulisic",
+        "Diego Moreira",
+        "Francesco Camarda"
+      ],
+      "home_unavailable": [
         "Pietro Pellegri"
       ],
       "away_unavailable": [
@@ -1053,9 +1081,9 @@
         "Marko Lawk Farji"
       ],
       "away_subs": [
+        "Corrie Ndaba",
         "Marco Bleve",
         "Plamen Penev",
-        "Corrie Ndaba",
         "Tiago Gabriel",
         "Omri Gandelman",
         "Sadik Fofana",
