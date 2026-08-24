@@ -1,7 +1,6 @@
 {
-  "generated_at": "2026-08-24T16:54:57.302922Z",
+  "generated_at": "2026-08-24T17:09:56.813608Z",
   "source_file": [
-    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv"
@@ -34,10 +33,9 @@
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
   "fixtures_evaluated": 4,
-  "signals_qualifying": 0,
+  "signals_qualifying": 1,
   "safety_exclusions": {
-    "model_probability_below_floor": 1,
-    "lineup_not_public_quality": 1
+    "model_probability_below_floor": 1
   },
   "extreme_gap_quarantine": {
     "eligible_rows": 0,
@@ -45,7 +43,110 @@
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
-  "leagues_covered": [],
-  "featured_signal_id": null,
-  "signals": []
+  "leagues_covered": [
+    "la-liga"
+  ],
+  "featured_signal_id": "20260824-ante-budimir-e168aa0cbf",
+  "signals": [
+    {
+      "id": "20260824-ante-budimir-e168aa0cbf",
+      "match": {
+        "home_team": "CA Osasuna",
+        "away_team": "Levante UD",
+        "league": "la-liga",
+        "league_display": "La Liga",
+        "league_logo_path": "/league-logos/la-liga.png",
+        "kickoff_utc": "2026-08-24T17:30:00Z",
+        "kickoff_display": "Mon 24 Aug 18:30 UK",
+        "fotmob_match_id": "5868028",
+        "fotmob_page_url": "/matches/osasuna-vs-levante/2dk1c1#5868028",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Ante Budimir",
+        "team": "Osasuna",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/la-liga/osasuna.png",
+        "team_primary_color": "#dc2626",
+        "team_secondary_color": "#1e3a8a",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 57.9,
+        "fair_odds": 1.73
+      },
+      "market_data": {
+        "best_odds": 1.95,
+        "best_book": "Bet365",
+        "implied_chance_pct": 51.2
+      },
+      "edge": {
+        "price_gap_pp": 6.7,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 97
+        },
+        "share_of_team_chances_pct": 48,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 86
+        },
+        "recent_team_form": {
+          "tier": "Quiet",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-23",
+          "xg_for_avg": 1.25,
+          "xg_against_avg": 1.8,
+          "xgd_per90": -0.55,
+          "shots_for_avg": 14.4,
+          "shots_against_avg": 13.2,
+          "sot_for_avg": 5.0,
+          "sot_against_avg": 5.2,
+          "corners_for_avg": 5.0,
+          "corners_against_avg": 6.0
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 74
+        },
+        "opponent_recent_defence": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-08-16",
+          "xg_for_avg": 2.47,
+          "xg_against_avg": 1.18,
+          "xgd_per90": 1.28,
+          "shots_for_avg": 16.6,
+          "shots_against_avg": 11.6,
+          "sot_for_avg": 5.6,
+          "sot_against_avg": 5.2,
+          "corners_for_avg": 6.4,
+          "corners_against_avg": 3.0
+        },
+        "fixture_boost_pct": 0,
+        "projected_minutes": 84,
+        "penalty_role": "Primary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    }
+  ]
 }
