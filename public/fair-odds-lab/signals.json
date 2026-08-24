@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-08-24T17:09:56.813608Z",
+  "generated_at": "2026-08-24T17:45:46.060121Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv"
@@ -32,7 +33,7 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 4,
+  "fixtures_evaluated": 3,
   "signals_qualifying": 1,
   "safety_exclusions": {
     "model_probability_below_floor": 1
@@ -96,7 +97,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 86
+          "percentile": 82
         },
         "recent_team_form": {
           "tier": "Quiet",
@@ -115,7 +116,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 74
+          "percentile": 66
         },
         "opponent_recent_defence": {
           "tier": "Average",
