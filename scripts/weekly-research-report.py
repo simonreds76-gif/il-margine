@@ -1736,6 +1736,8 @@ def telegram_text(payload: dict[str, Any]) -> str:
         strict_lane = tennis_lanes.get("strict") or {}
         volume_lane = tennis_lanes.get("volume_200") or {}
         hard_flip = side_flip_by_surface.get("Hard") or side_flip_by_surface.get("hard") or {}
+        strict_gap = (gap_replacements.get("strict_gap_10_20_same_side") or {}).get("performance") or {}
+        volume_gap = (gap_replacements.get("volume200_gap_10_15_same_side") or {}).get("performance") or {}
         if int(number(strict_lane.get("settled"))) >= 100 and number(strict_lane.get("roi_pct")) > 0:
             actions.append(
                 f"KEEP: Tennis Strict only as established ML lane ({pct(strict_lane.get('roi_pct'))}, "
@@ -1748,6 +1750,22 @@ def telegram_text(payload: dict[str, Any]) -> str:
             )
         if int(number(hard_flip.get("settled", hard_flip.get("bets")))) >= 100 and number(hard_flip.get("roi_pct")) <= 0:
             actions.append("KEEP BLOCKED: broad Hard side flips are negative; scoped Strict rows only")
+        for label, cohort in (("Strict gap", strict_gap), ("Volume gap", volume_gap)):
+            settled = int(number(cohort.get("settled")))
+            roi_pct = number(cohort.get("roi_pct"))
+            clv_pct = number(cohort.get("avg_clv_pct"))
+            if settled >= 30 and roi_pct > 0:
+                actions.append(
+                    f"KEEP COLLECTING: {label} is positive but provisional "
+                    f"(ROI {pct(roi_pct)}, CLV {pct(clv_pct, 2)}, n={settled}/150)"
+                )
+        props_settled = int(number(tennis_props_shadow.get("settled")))
+        props_roi = number(tennis_props_shadow.get("roi_pct"))
+        if props_settled >= 10 and props_roi > 0:
+            actions.append(
+                f"WATCH ONLY: Aces/DF is promising but far too small "
+                f"(ROI {pct(props_roi)}, n={props_settled}/300)"
+            )
         goalscorer_ledger = goalscorer.get("ledger") or {}
         if int(number(goalscorer_ledger.get("settled"))) >= 30 and number(goalscorer_ledger.get("roi_pct")) < 0:
             actions.append(

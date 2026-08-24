@@ -139,6 +139,7 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertIn("Tennis lane summaries:", message)
         self.assertIn("Tennis Strict [CORE]", message)
         self.assertIn("ACTION BOARD", message)
+        self.assertIn("EVIDENCE DETAIL", message)
         self.assertIn("Tennis Volume 200 [SHADOW / DO NOT BET]", message)
         self.assertIn("Strict gap 10-20pp [0.5u provisional]", message)
         self.assertIn("Volume gap 10-15pp [0.5u provisional]", message)
@@ -174,6 +175,20 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertIn("Aces/DF promotion gate", message)
         self.assertIn("Hard side-flip evidence [BROAD DIAGNOSTIC]", message)
         self.assertLessEqual(len(message), 4096)
+
+    def test_action_board_keeps_small_positive_cohorts_in_research(self) -> None:
+        payload = REPORT["build_payload"]()
+        evidence = payload["tennis_model_evidence"]
+        evidence["gap_source_status"] = "OK"
+        evidence["gap_replacements"]["strict_gap_10_20_same_side"]["performance"] = {
+            "settled": 38,
+            "roi_pct": 13.1,
+            "avg_clv_pct": 0.86,
+        }
+        payload["tennis_props_shadow_decision"].update({"settled": 14, "roi_pct": 30.5})
+        message = REPORT["telegram_text"](payload)
+        self.assertIn("KEEP COLLECTING: Strict gap is positive but provisional", message)
+        self.assertIn("WATCH ONLY: Aces/DF is promising but far too small", message)
 
     def test_missing_local_gap_evidence_is_not_rendered_as_zero_results(self) -> None:
         payload = REPORT["build_payload"]()
