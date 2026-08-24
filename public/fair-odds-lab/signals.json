@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-08-24T15:20:47.211034Z",
+  "generated_at": "2026-08-24T15:54:33.983233Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv"
@@ -33,7 +34,7 @@
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
   "fixtures_evaluated": 6,
-  "signals_qualifying": 1,
+  "signals_qualifying": 0,
   "safety_exclusions": {
     "model_probability_below_floor": 2
   },
@@ -43,109 +44,7 @@
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
-  "leagues_covered": [
-    "serie-a"
-  ],
-  "featured_signal_id": "20260824-moise-kean-8f57cef82d",
-  "signals": [
-    {
-      "id": "20260824-moise-kean-8f57cef82d",
-      "match": {
-        "home_team": "AS Roma",
-        "away_team": "ACF Fiorentina",
-        "league": "serie-a",
-        "league_display": "Serie A",
-        "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "2026-08-24T18:45:00Z",
-        "kickoff_display": "Mon 24 Aug 19:45 UK",
-        "fotmob_match_id": "5749640",
-        "fotmob_page_url": "/matches/fiorentina-vs-roma/2gak0t#5749640",
-        "lineup_type": "predicted",
-        "venue": ""
-      },
-      "player": {
-        "name": "Moise Kean",
-        "team": "Fiorentina",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/serie-a/fiorentina.png",
-        "team_primary_color": "#7e22ce",
-        "team_secondary_color": "#f8fafc",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 32.9,
-        "fair_odds": 3.04
-      },
-      "market_data": {
-        "best_odds": 3.75,
-        "best_book": "Bet365",
-        "implied_chance_pct": 26.7
-      },
-      "edge": {
-        "price_gap_pp": 6.2,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 91
-        },
-        "share_of_team_chances_pct": 46,
-        "share_of_team_chances_percentile": 99,
-        "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 6
-        },
-        "recent_team_form": {
-          "tier": "Quiet",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-22",
-          "xg_for_avg": 0.93,
-          "xg_against_avg": 1.5,
-          "xgd_per90": -0.57,
-          "shots_for_avg": 12.0,
-          "shots_against_avg": 16.2,
-          "sot_for_avg": 3.0,
-          "sot_against_avg": 5.2,
-          "corners_for_avg": 4.2,
-          "corners_against_avg": 4.0
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Low",
-          "percentile": 6
-        },
-        "opponent_recent_defence": {
-          "tier": "Low",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-24",
-          "xg_for_avg": 2.34,
-          "xg_against_avg": 0.49,
-          "xgd_per90": 1.85,
-          "shots_for_avg": 14.2,
-          "shots_against_avg": 7.8,
-          "sot_for_avg": 6.0,
-          "sot_against_avg": 2.2,
-          "corners_for_avg": 6.2,
-          "corners_against_avg": 4.8
-        },
-        "fixture_boost_pct": -24,
-        "projected_minutes": 78,
-        "penalty_role": "Secondary",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong"
-      ],
-      "risk_flags": []
-    }
-  ]
+  "leagues_covered": [],
+  "featured_signal_id": null,
+  "signals": []
 }
