@@ -19,7 +19,8 @@ type WorldCupLabArtifact = {
   signals?: unknown[];
 };
 
-export const revalidate = 300;
+// Archived research no longer needs five-minute ISR regeneration.
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: "World Cup 2026 Goalscorer Research Lab",

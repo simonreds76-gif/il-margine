@@ -13,8 +13,9 @@ import Footer from "@/components/Footer";
 import { formatStake, formatMatchDate, formatOdds } from "@/lib/format";
 import { assessTipSeoReadiness, stripTipSeoMarker, tipPreviewPath } from "@/lib/tip-seo";
 
-/** Revalidate tip pages every 60s so settled status and new tips show without full dynamic. */
-export const revalidate = 60;
+// Admin changes invalidate the affected tip URL directly. Keep a daily fallback
+// for automated settlements instead of regenerating every crawled tip each minute.
+export const revalidate = 86400;
 const DEFAULT_SOCIAL_IMAGE = `${BASE_URL}/og-social-20260629.png`;
 
 /** Spell out common abbreviations on the tip page (no need to shorten here). */

@@ -9,7 +9,8 @@ import { fetchWorldCupRecordSummary } from "@/lib/public-record";
 const PAGE_URL = `${BASE_URL}/world-cup-2026-free-picks`;
 const OG_IMAGE = `${BASE_URL}/brand/world-cup-2026-free-picks.png`;
 
-export const revalidate = 300;
+// The tournament is complete, so a daily archive refresh is sufficient.
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: "World Cup 2026 Free Picks: Final Record",

@@ -1,7 +1,9 @@
 import TennisTipsClient from "./TennisTipsClient";
 import { fetchMarketPayload } from "@/lib/public-record";
 
-export const revalidate = 60;
+// Admin bet mutations invalidate this page immediately. The hourly value is a
+// safety net for automated settlements that write directly to Supabase.
+export const revalidate = 3600;
 
 export default async function TennisTips() {
   const payload = await fetchMarketPayload("tennis").catch((error) => {

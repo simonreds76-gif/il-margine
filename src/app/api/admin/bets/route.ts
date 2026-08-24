@@ -4,6 +4,8 @@ import { createHmac } from "crypto";
 import { revalidatePath } from "next/cache";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { postPlayerPropTipToTelegram } from "@/lib/player-props-telegram";
+import { slugifyTip } from "@/lib/slugify";
+import { tipPreviewPath } from "@/lib/tip-seo";
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const COOKIE_NAME = "admin_session";
@@ -15,13 +17,33 @@ const PUBLIC_BET_PATHS = [
   "/calculator",
 ] as const;
 
-function revalidatePublicBetSurfaces() {
+type RevalidationBet = {
+  id: number;
+  market?: string | null;
+  event?: string | null;
+  match_date?: string | null;
+};
+
+const REVALIDATION_BET_COLUMNS = "id, market, event, match_date";
+
+function revalidatePublicBetSurfaces(...bets: Array<RevalidationBet | null | undefined>) {
   for (const path of PUBLIC_BET_PATHS) {
     revalidatePath(path);
   }
-  revalidatePath("/tips/[slugId]", "page");
-  revalidatePath("/betting-tips/[slugId]", "page");
-  revalidatePath("/betting-tips/[slugId]/opengraph-image", "page");
+
+  // Invalidate only the changed fixtures. Invalidating a route pattern here
+  // causes every crawled tip page to regenerate and consume ISR writes.
+  const tipPaths = new Set<string>();
+  for (const bet of bets) {
+    if (!bet?.id || !bet.event) continue;
+    tipPaths.add(`/tips/${slugifyTip(bet.event, bet.id)}`);
+    const previewPath = tipPreviewPath(bet);
+    tipPaths.add(previewPath);
+    tipPaths.add(`${previewPath}/opengraph-image`);
+  }
+  for (const path of tipPaths) {
+    revalidatePath(path);
+  }
 }
 
 function getSignedToken(): string {
@@ -52,7 +74,7 @@ export async function POST(req: Request) {
     .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
 
-  revalidatePublicBetSurfaces();
+  revalidatePublicBetSurfaces(data);
 
   const telegram = await postPlayerPropTipToTelegram(data);
   if (telegram.status === "failed") {
@@ -105,9 +127,24 @@ export async function PATCH(req: Request) {
   }
   const { id, ...updates } = await req.json();
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
-  const { error } = await supabase.from("bets").update(updates).eq("id", id);
+
+  const { data: previousBet, error: previousError } = await supabase
+    .from("bets")
+    .select(REVALIDATION_BET_COLUMNS)
+    .eq("id", Number(id))
+    .single();
+  if (previousError || !previousBet) {
+    return NextResponse.json({ error: previousError?.message || "Bet not found" }, { status: 404 });
+  }
+
+  const { data: updatedBet, error } = await supabase
+    .from("bets")
+    .update(updates)
+    .eq("id", Number(id))
+    .select(REVALIDATION_BET_COLUMNS)
+    .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
-  revalidatePublicBetSurfaces();
+  revalidatePublicBetSurfaces(previousBet, updatedBet);
   return NextResponse.json({ ok: true });
 }
 
@@ -122,8 +159,18 @@ export async function DELETE(req: Request) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
+
+  const { data: previousBet, error: previousError } = await supabase
+    .from("bets")
+    .select(REVALIDATION_BET_COLUMNS)
+    .eq("id", Number(id))
+    .single();
+  if (previousError || !previousBet) {
+    return NextResponse.json({ error: previousError?.message || "Bet not found" }, { status: 404 });
+  }
+
   const { error } = await supabase.from("bets").delete().eq("id", Number(id));
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
-  revalidatePublicBetSurfaces();
+  revalidatePublicBetSurfaces(previousBet);
   return NextResponse.json({ ok: true });
 }

@@ -2,7 +2,9 @@ import HomepageClient from "./HomepageClient";
 import { fetchHomePayload, fetchMonthlyPayload } from "@/lib/public-record";
 import { CURRENTLY_WATCHING, HOMEPAGE_LAB_NOTES } from "@/lib/resources";
 
-export const revalidate = 60;
+// Admin bet mutations invalidate this page immediately. The hourly value is a
+// safety net for automated settlements that write directly to Supabase.
+export const revalidate = 3600;
 
 export default async function Home() {
   const [payload, monthlyPayload] = await Promise.all([
