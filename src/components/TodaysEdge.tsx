@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import MarketBadge from "@/components/MarketBadge";
@@ -254,13 +255,13 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
 }
 
 function FilterIcon({ filter, active }: { filter: Filter; active: boolean }) {
-  const className = `h-4 w-4 shrink-0 transition-colors ${
+  const iconTone = `shrink-0 transition ${
     active ? "text-emerald-300" : "text-slate-500 group-hover/filter:text-slate-300"
   }`;
 
   if (filter === "all") {
     return (
-      <svg aria-hidden="true" viewBox="0 0 24 24" className={className} fill="none">
+      <svg aria-hidden="true" viewBox="0 0 24 24" className={`h-4 w-4 ${iconTone}`} fill="none">
         <rect x="3.5" y="4" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
         <rect x="13.5" y="4" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
         <rect x="3.5" y="14" width="7" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
@@ -271,9 +272,15 @@ function FilterIcon({ filter, active }: { filter: Filter; active: boolean }) {
 
   if (filter === "props") {
     return (
-      <svg aria-hidden="true" viewBox="0 0 24 24" className={className} fill="none">
+      <svg aria-hidden="true" viewBox="0 0 24 24" className={`h-5 w-5 ${iconTone}`} fill="none">
         <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
-        <path d="m9.35 8.45 2.65-1.9 2.65 1.9-1.02 3.1h-3.26l-1.02-3.1Z" fill="currentColor" />
+        <path
+          d="m9.35 8.45 2.65-1.9 2.65 1.9-1.02 3.1h-3.26l-1.02-3.1Z"
+          fill="currentColor"
+          stroke="currentColor"
+          strokeLinejoin="round"
+          strokeWidth="0.8"
+        />
         <path
           d="m12 6.55-.82-3.38M9.35 8.45 5.8 7.2m4.57 4.35-2.18 3.02m5.44-3.02 2.18 3.02m-1.16-6.12 3.55-1.25M8.19 14.57l-3.07.12m10.69-.12 3.07.12M8.19 14.57l1.05 3.27m6.57-3.27-1.05 3.27"
           stroke="currentColor"
@@ -286,9 +293,17 @@ function FilterIcon({ filter, active }: { filter: Filter; active: boolean }) {
   }
 
   return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" className={className} fill="none">
-      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.7" />
-      <path d="M5.9 5.8c4.1 2.25 6.15 6.35 5.65 12.15M18.1 18.2c-4.1-2.25-6.15-6.35-5.65-12.15" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" />
-    </svg>
+    <Image
+      aria-hidden="true"
+      src="/icons/markets/tennis.svg"
+      alt=""
+      width={20}
+      height={20}
+      className={`h-5 w-5 shrink-0 transition ${
+        active
+          ? "opacity-100"
+          : "opacity-80 grayscale-[10%] group-hover/filter:opacity-100 group-hover/filter:grayscale-0"
+      }`}
+    />
   );
 }
