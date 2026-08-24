@@ -272,21 +272,22 @@ function FilterIcon({ filter, active }: { filter: Filter; active: boolean }) {
 
   if (filter === "props") {
     return (
-      <svg aria-hidden="true" viewBox="0 0 24 24" className={`h-5 w-5 ${iconTone}`} fill="none">
-        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 shrink-0" fill="none">
+        <circle cx="12" cy="12" r="9.25" fill="#F8FAFC" stroke="#57D196" strokeWidth="1.35" />
+        <path d="m12 6.75 3.7 2.7-1.42 4.35H9.72L8.3 9.45 12 6.75Z" fill="#111827" />
         <path
-          d="m9.35 8.45 2.65-1.9 2.65 1.9-1.02 3.1h-3.26l-1.02-3.1Z"
-          fill="currentColor"
-          stroke="currentColor"
-          strokeLinejoin="round"
-          strokeWidth="0.8"
-        />
-        <path
-          d="m12 6.55-.82-3.38M9.35 8.45 5.8 7.2m4.57 4.35-2.18 3.02m5.44-3.02 2.18 3.02m-1.16-6.12 3.55-1.25M8.19 14.57l-3.07.12m10.69-.12 3.07.12M8.19 14.57l1.05 3.27m6.57-3.27-1.05 3.27"
-          stroke="currentColor"
+          d="M12 6.75V2.8M15.7 9.45l4.6-1.5m-6.02 5.85 2.85 3.92M9.72 13.8l-2.85 3.92M8.3 9.45l-4.6-1.5"
+          stroke="#111827"
           strokeLinecap="round"
           strokeLinejoin="round"
-          strokeWidth="1.35"
+          strokeWidth="1.3"
+        />
+        <path
+          d="m9.2 3.2 2.8-.45 2.8.45M19.75 8.95l.9 2.7-.35 2.8M16.45 18.55l-2.25 1.7-2.2.7M7.55 18.55l-2.25-1.7-1.6-2.4M4.25 8.95l1.6-2.35 2.2-1.65"
+          stroke="#111827"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.15"
         />
       </svg>
     );
