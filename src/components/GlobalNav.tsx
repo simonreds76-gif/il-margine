@@ -36,9 +36,9 @@ export default function GlobalNav() {
   return (
     <nav className="border-b border-slate-800/80 sticky top-0 z-50 bg-[#0f1117]/95 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20 md:h-[88px]">
-          <Link href="/" className="flex items-center h-14 md:h-[68px] shrink-0" onClick={() => { if (pathname === "/") window.scrollTo(0, 0); }}>
-            <Image src="/logo.png" alt="Il Margine" width={240} height={64} className="h-14 md:h-[68px] w-auto object-contain" priority />
+        <div className="flex h-16 items-center justify-between md:h-[88px]">
+          <Link href="/" className="flex h-12 min-w-0 shrink items-center md:h-[68px]" onClick={() => { if (pathname === "/") window.scrollTo(0, 0); }}>
+            <Image src="/logo.png" alt="Il Margine" width={240} height={64} className="h-12 max-w-[210px] w-auto object-contain md:h-[68px] md:max-w-none" priority />
           </Link>
           
           {/* Mobile Menu Button */}
@@ -46,6 +46,7 @@ export default function GlobalNav() {
             onClick={() => setMobileMenuPath(mobileMenuOpen ? null : pathname)}
             className="md:hidden min-h-[44px] min-w-[44px] flex items-center justify-center p-2 text-slate-400 hover:text-slate-100 transition-colors"
             aria-label="Toggle menu"
+            aria-expanded={mobileMenuOpen}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {mobileMenuOpen ? (
@@ -106,7 +107,7 @@ export default function GlobalNav() {
         
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-slate-800/50 py-4 space-y-1">
+          <div className="max-h-[calc(100dvh-4rem)] space-y-1 overflow-y-auto border-t border-slate-800/50 py-3 md:hidden">
             <div className="px-4">
               <button 
                 onClick={() => setTipsMenuPath(tipsMenuOpen ? null : pathname)}
@@ -119,10 +120,10 @@ export default function GlobalNav() {
               </button>
               {tipsMenuOpen && (
                 <div className="mt-1 ml-4 space-y-1">
-                  <Link href="/tennis-tips" className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded transition-colors ${pathname === '/tennis-tips' ? 'text-[var(--brand-green)] font-medium bg-[rgba(87,209,150,0.10)]' : 'text-slate-400 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
+                  <Link href="/tennis-tips" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded transition-colors ${pathname === '/tennis-tips' ? 'text-[var(--brand-green)] font-medium bg-[rgba(87,209,150,0.10)]' : 'text-slate-400 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
                     Tennis Tips
                   </Link>
-                  <Link href="/player-props" className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded transition-colors ${pathname === '/player-props' ? 'text-[var(--brand-green)] font-medium bg-[rgba(87,209,150,0.10)]' : 'text-slate-400 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
+                  <Link href="/player-props" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded transition-colors ${pathname === '/player-props' ? 'text-[var(--brand-green)] font-medium bg-[rgba(87,209,150,0.10)]' : 'text-slate-400 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
                     Player Props
                   </Link>
                 </div>
