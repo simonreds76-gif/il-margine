@@ -1,9 +1,10 @@
 import Link from "next/link";
+import ClubPenaltyLatestUpdates from "@/components/ClubPenaltyLatestUpdates";
 import Footer from "@/components/Footer";
 import PageHomeLink from "@/components/PageHomeLink";
-import type { ClubPenaltyLeague, ClubPenaltySeason } from "@/lib/club-penalty-takers";
+import type { ClubPenaltyLeague, ClubPenaltyNewsItem, ClubPenaltySeason } from "@/lib/club-penalty-takers";
 
-type Props = { leagues: ClubPenaltyLeague[]; totalTeams: number; season: ClubPenaltySeason };
+type Props = { leagues: ClubPenaltyLeague[]; totalTeams: number; season: ClubPenaltySeason; latestNews: ClubPenaltyNewsItem[] };
 
 const FEATURED: Record<string, string[]> = {
   epl: ["Arsenal", "Chelsea", "Liverpool", "Manchester City", "Manchester United"],
@@ -92,7 +93,7 @@ function LeagueCard({ league, season }: { league: ClubPenaltyLeague; season: Clu
   );
 }
 
-export default function PenaltyTakersClient({ leagues, totalTeams, season }: Props) {
+export default function PenaltyTakersClient({ leagues, totalTeams, season, latestNews }: Props) {
   const archivedCount = leagues.reduce((sum, league) => sum + league.archivedTeams.length, 0);
 
   return (
@@ -118,7 +119,9 @@ export default function PenaltyTakersClient({ leagues, totalTeams, season }: Pro
           </div>
         </section>
 
-        <section>
+        <ClubPenaltyLatestUpdates items={latestNews} />
+
+        <section className="mt-10">
           <div className="mb-6 max-w-3xl">
             <div className="font-mono text-xs uppercase tracking-[0.25em] text-emerald-400">Choose a league</div>
             <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-100">Every league now has its own indexable board</h2>

@@ -12,6 +12,19 @@ export const CLUB_PENALTY_BASE_PATH = "/penalty-takers";
 type PenaltyConfidence = "high" | "medium" | "low";
 type PenaltyHierarchyStatus = "confirmed" | "probable" | "conditional" | "disputed" | "unknown";
 
+type PenaltyEvidenceRow = {
+  id?: string;
+  date?: string;
+  type?: string;
+  match?: string;
+  headline?: string;
+  context?: string;
+  editorial_note?: string;
+  affects_hierarchy?: boolean;
+  sources?: Array<{ label?: string; url?: string | null; date?: string; note?: string }>;
+  review?: { status?: string };
+};
+
 type PenaltyTeamRow = {
   primary?: string;
   secondary?: string;
@@ -22,13 +35,7 @@ type PenaltyTeamRow = {
   condition_note?: string;
   last_verified?: { date?: string; by?: string; method?: string };
   public_updated_at?: string;
-  evidence_log?: Array<{
-    date?: string;
-    context?: string;
-    editorial_note?: string;
-    sources?: Array<{ label?: string; url?: string | null; date?: string; note?: string }>;
-    review?: { status?: string };
-  }>;
+  evidence_log?: PenaltyEvidenceRow[];
   change_log?: Array<{ change_type?: string; changed_at?: string; reason?: string }>;
   flags?: { carryover_from_previous_season?: boolean; weak_evidence?: boolean };
 };
@@ -89,12 +96,36 @@ export type ClubPenaltyTeam = {
   weakEvidence: boolean;
   evidenceCount: number;
   evidenceSources: Array<{ label: string; url: string; date: string; note: string }>;
+  evidenceUpdates: ClubPenaltyEvidenceUpdate[];
   seasonLabel: string;
   seasonStatus: string;
   logoPath: string;
   initials: string;
   relativeUrl: string;
   absoluteUrl: string;
+};
+
+export type ClubPenaltyEvidenceUpdate = {
+  id: string;
+  date: string;
+  dateLabel: string;
+  type: string;
+  match: string;
+  headline: string;
+  summary: string;
+  affectsHierarchy: boolean;
+};
+
+export type ClubPenaltyNewsItem = ClubPenaltyEvidenceUpdate & {
+  team: string;
+  leagueKey: string;
+  leagueLabel: string;
+  primary: string;
+  secondary: string;
+  hierarchyStatus: PenaltyHierarchyStatus;
+  logoPath: string;
+  initials: string;
+  relativeUrl: string;
 };
 
 export type ClubPenaltyLeague = ClubLeagueConfig & {
@@ -275,6 +306,25 @@ function mapTeam(
   const isArchived = Boolean(options.archived);
   const isCarryover = !isArchived && Boolean(entry.flags?.carryover_from_previous_season);
   const approvedEvidence = (entry.evidence_log ?? []).filter((evidence) => evidence.review?.status === "approved").length;
+  const evidenceUpdates = (entry.evidence_log ?? [])
+    .filter((evidence) => evidence.review?.status === "approved")
+    .filter((evidence) => evidence.type === "competitive_penalty_event")
+    .map((evidence, index) => {
+      const date = cleanClubPenaltyText(evidence.date);
+      const summary = cleanClubPenaltyText(evidence.editorial_note || evidence.context);
+      return {
+        id: cleanClubPenaltyText(evidence.id) || `${slug}-${date || "undated"}-${index}`,
+        date,
+        dateLabel: formatClubPenaltyDate(date),
+        type: cleanClubPenaltyText(evidence.type),
+        match: cleanClubPenaltyText(evidence.match),
+        headline: cleanClubPenaltyText(evidence.headline) || `${team} penalty update`,
+        summary,
+        affectsHierarchy: Boolean(evidence.affects_hierarchy),
+      } satisfies ClubPenaltyEvidenceUpdate;
+    })
+    .filter((evidence) => evidence.date && evidence.summary)
+    .sort((left, right) => right.date.localeCompare(left.date) || right.id.localeCompare(left.id));
   const evidenceSources = (entry.evidence_log ?? [])
     .filter((evidence) => evidence.review?.status === "approved")
     .flatMap((evidence) =>
@@ -317,6 +367,7 @@ function mapTeam(
     weakEvidence: isArchived ? false : Boolean(entry.flags?.weak_evidence),
     evidenceCount: approvedEvidence,
     evidenceSources,
+    evidenceUpdates,
     seasonLabel: isArchived ? CLUB_PENALTY_PREVIOUS_SEASON : CLUB_PENALTY_SEASON,
     seasonStatus: isArchived ? "archived" : clubPenaltySeason.status,
     logoPath: findLogoPath(league.key, teamName, manifest),
@@ -369,6 +420,28 @@ export async function readAllClubPenaltyTeams(options: { includeArchived?: boole
   const leagues = await readClubPenaltyData();
   const includeArchived = options.includeArchived ?? true;
   return leagues.flatMap((league) => includeArchived ? [...league.teams, ...league.archivedTeams] : league.teams);
+}
+
+export function getLatestClubPenaltyNews(leagues: ClubPenaltyLeague[], limit = 8): ClubPenaltyNewsItem[] {
+  return leagues
+    .flatMap((league) =>
+      league.teams.flatMap((team) =>
+        team.evidenceUpdates.map((update) => ({
+          ...update,
+          team: team.team,
+          leagueKey: team.leagueKey,
+          leagueLabel: team.leagueLabel,
+          primary: team.primary,
+          secondary: team.secondary,
+          hierarchyStatus: team.hierarchyStatus,
+          logoPath: team.logoPath,
+          initials: team.initials,
+          relativeUrl: team.relativeUrl,
+        })),
+      ),
+    )
+    .sort((left, right) => right.date.localeCompare(left.date) || right.id.localeCompare(left.id))
+    .slice(0, Math.max(limit, 0));
 }
 
 export async function getClubPenaltyLeague(leagueSlug: string): Promise<ClubPenaltyLeague | undefined> {

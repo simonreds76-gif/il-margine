@@ -4,6 +4,7 @@ import {
   CLUB_PENALTY_SEASON,
   clubPenaltyLeagueUrl,
   getClubPenaltySeason,
+  getLatestClubPenaltyNews,
   readClubPenaltyData,
 } from "@/lib/club-penalty-takers";
 import PenaltyTakersClient from "./PenaltyTakersClient";
@@ -49,6 +50,7 @@ export default async function PenaltyTakersPage() {
   const [leagues, season] = await Promise.all([readClubPenaltyData(), Promise.resolve(getClubPenaltySeason())]);
   const totalTeams = leagues.reduce((sum, league) => sum + league.teams.length, 0);
   const latestUpdate = leagues.map((league) => league.publicUpdatedAt).sort().at(-1) ?? season.published_at;
+  const latestNews = getLatestClubPenaltyNews(leagues, 6);
 
   const breadcrumbData = {
     "@context": "https://schema.org",
@@ -87,7 +89,7 @@ export default async function PenaltyTakersPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListData) }} />
-      <PenaltyTakersClient leagues={leagues} totalTeams={totalTeams} season={season} />
+      <PenaltyTakersClient leagues={leagues} totalTeams={totalTeams} season={season} latestNews={latestNews} />
     </>
   );
 }

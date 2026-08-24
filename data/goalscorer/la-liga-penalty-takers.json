@@ -31,8 +31,8 @@
       "Malaga",
       "Racing Santander"
     ],
-    "last_verified": "2026-08-22",
-    "public_updated_at": "2026-08-22",
+    "last_verified": "2026-08-24",
+    "public_updated_at": "2026-08-24",
     "membership_source": "https://www.laliga.com/en-GB/laliga-easports/clubs"
   },
   "Alaves": {
@@ -939,7 +939,7 @@
     "primary": "Raphinha",
     "secondary": "Lamine Yamal",
     "tertiary": "Anthony Gordon",
-    "last_updated": "2026-07-30",
+    "last_updated": "2026-08-23",
     "source": "AS",
     "cross_check": "Mundo Deportivo",
     "hierarchy_status": "disputed",
@@ -948,18 +948,18 @@
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Raphinha was perfect from the spot in 2025/26 and scored two against Sevilla when Lamine was absent. The editorial hierarchy therefore places Raphinha first, while acknowledging that Lamine took more total penalties and the latest competitive attempt. Gordon is the current newcomer and practical third option. Direct evidence does not establish an immutable first-versus-second order: Lamine had greater volume and the latest competitive kick, while Raphinha had the better conversion record. Conditions: Treat Raphinha and Lamine Yamal as a committee until the coach or a run of 2026/27 competitive assignments establishes a fixed order. Anthony Gordon's tertiary role is provisional pending Barcelona-specific penalty assignments.",
+    "condition_note": "Raphinha's conversion against Elche is fresh live-season support for the current first-choice call. Lamine Yamal remains a credible co-primary because the earlier order was shared and the event feed did not confirm a clean same-pitch hierarchy test. Anthony Gordon remains the provisional third option.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-23",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-24",
     "latest_evidence": {
-      "id": "evt_20260730_barcelona_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 7
+      "id": "evt_20260823_barcelona_raphinha_elche",
+      "date": "2026-08-23",
+      "type": "competitive_penalty_event",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -1124,6 +1124,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 7 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260823_barcelona_raphinha_elche",
+        "date": "2026-08-23",
+        "season": "2026/27",
+        "type": "competitive_penalty_event",
+        "penalty_kind": "regular_time",
+        "competition": null,
+        "match": "Elche vs Barcelona",
+        "headline": "Raphinha reinforces Barcelona's first-choice call",
+        "context": "Raphinha converted Barcelona's penalty against Elche in the 14th minute.",
+        "sources": [
+          {
+            "label": "FotMob live match event log",
+            "url": null,
+            "date": "2026-08-23",
+            "note": "Raphinha converted Barcelona's penalty against Elche in the 14th minute."
+          }
+        ],
+        "detection": "fotmob_live",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-24T00:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Raphinha converted against Elche, the first live-season event supporting the filed Raphinha-first call. Lamine Yamal remains a credible co-primary until clearer same-pitch evidence establishes a fixed order."
       }
     ],
     "change_log": [
@@ -6049,9 +6076,9 @@
   },
   "Villarreal": {
     "primary": "Gerard Moreno",
-    "secondary": "Nicolas Pépé",
-    "tertiary": "Georges Mikautadze",
-    "last_updated": "2026-07-30",
+    "secondary": "Georges Mikautadze",
+    "tertiary": "Nicolas Pépé",
+    "last_updated": "2026-08-23",
     "source": "Transfermarkt",
     "cross_check": "Cadena SER",
     "hierarchy_status": "probable",
@@ -6060,18 +6087,18 @@
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Gerard converted a competitive penalty with Pépé available. Pépé also converted in league play after Parejo's miss. Mikautadze converted in the July shootout and supplies practical third depth. Gerard's fitness affects availability, and Mikautadze has no current regular-time Villarreal assignment. Conditions: Mikautadze is labelled shootout-only for current club evidence. Reassess if Gerard is unavailable for an extended period.",
+    "condition_note": "Gerard Moreno took and converted Villarreal's first penalty against Atletico Madrid, preserving the primary role. Georges Mikautadze then converted a second penalty in the same match and now moves ahead of Nicolas Pépé as the evidence-led deputy. The split may reflect match state rather than equal first-choice duties, so Gerard remains first.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-23",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-24",
     "latest_evidence": {
-      "id": "evt_20260730_villarreal_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 8
+      "id": "evt_20260823_villarreal_split_atletico",
+      "date": "2026-08-23",
+      "type": "competitive_penalty_event",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -6272,6 +6299,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 8 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260823_villarreal_split_atletico",
+        "date": "2026-08-23",
+        "season": "2026/27",
+        "type": "competitive_penalty_event",
+        "penalty_kind": "regular_time",
+        "competition": null,
+        "match": "Atletico Madrid vs Villarreal",
+        "headline": "Gerard first, Mikautadze second for Villarreal",
+        "context": "Gerard Moreno converted Villarreal's first penalty before Georges Mikautadze took and scored a second against Atletico Madrid.",
+        "sources": [
+          {
+            "label": "FotMob live match event log",
+            "url": null,
+            "date": "2026-08-23",
+            "note": "Gerard Moreno converted Villarreal's first penalty before Georges Mikautadze took and scored a second against Atletico Madrid."
+          }
+        ],
+        "detection": "fotmob_live",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-24T00:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Gerard Moreno taking the first penalty keeps him at the top of Villarreal's order. Georges Mikautadze's later regular-time conversion moves him into the evidence-led backup slot, with Nicolas Pépé now third."
       }
     ],
     "change_log": [
@@ -6343,6 +6397,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-24",
+        "season": "2026/27",
+        "change_type": "live_penalty_hierarchy_update",
+        "from": {
+          "primary": "Gerard Moreno",
+          "secondary": "Nicolas Pépé",
+          "tertiary": "Georges Mikautadze"
+        },
+        "to": {
+          "primary": "Gerard Moreno",
+          "secondary": "Georges Mikautadze",
+          "tertiary": "Nicolas Pépé"
+        },
+        "reason": "Gerard Moreno took and converted Villarreal's first penalty against Atletico Madrid, preserving the primary role. Georges Mikautadze then converted a second penalty in the same match and now moves ahead of Nicolas Pépé as the evidence-led deputy. The split may reflect match state rather than equal first-choice duties, so Gerard remains first.",
+        "evidence_ids": [
+          "evt_20260823_villarreal_split_atletico"
+        ],
+        "detection": "fotmob_live",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-24T00:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -6366,13 +6443,13 @@
         "checked_at": "2026-07-30"
       },
       "secondary": {
-        "player": "Nicolas Pépé",
+        "player": "Georges Mikautadze",
         "status": "confirmed",
         "source_url": "https://iaas-public-front-pro.laliga.com/clubes/villarreal-cf/plantilla",
         "checked_at": "2026-07-30"
       },
       "tertiary": {
-        "player": "Georges Mikautadze",
+        "player": "Nicolas Pépé",
         "status": "confirmed",
         "source_url": "https://iaas-public-front-pro.laliga.com/clubes/villarreal-cf/plantilla",
         "checked_at": "2026-07-30"

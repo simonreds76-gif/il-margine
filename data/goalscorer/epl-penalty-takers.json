@@ -31,8 +31,8 @@
       "Hull City",
       "Ipswich Town"
     ],
-    "last_verified": "2026-08-22",
-    "public_updated_at": "2026-08-22",
+    "last_verified": "2026-08-24",
+    "public_updated_at": "2026-08-24",
     "membership_source": "https://www.premierleague.com/en/news/4675508/premier-league-fixture-schedulereleased-for-season-202627"
   },
   "Arsenal": {
@@ -3845,7 +3845,7 @@
     "primary": "Dominik Szoboszlai",
     "secondary": "Alexander Isak",
     "tertiary": "Cody Gakpo",
-    "last_updated": "2026-08-10",
+    "last_updated": "2026-08-23",
     "source": "Liverpool FC",
     "cross_check": "Official FPL role fields and Opta penalty record.",
     "hierarchy_status": "disputed",
@@ -3854,18 +3854,18 @@
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Szoboszlai is the evidence-led primary after taking with Gakpo on the pitch. Isak remains a credible co-primary and official FPL currently ranks him first, but Liverpool have not produced a same-pitch competitive test between the two. Recheck the first penalty with both available.",
+    "condition_note": "Dominik Szoboszlai's conversion against Newcastle United is fresh competitive support for the current first-choice call. Alexander Isak remains a credible co-primary because the event feed did not establish a clean same-pitch test between them. Cody Gakpo remains third.",
     "last_verified": {
-      "date": "2026-08-10",
+      "date": "2026-08-23",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-08-10",
+    "public_updated_at": "2026-08-24",
     "latest_evidence": {
-      "id": "evt_20260810_liverpool_current_squad_review",
-      "date": "2026-08-10",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260823_liverpool_szoboszlai_newcastle",
+      "date": "2026-08-23",
+      "type": "competitive_penalty_event",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -4100,6 +4100,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 current source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260823_liverpool_szoboszlai_newcastle",
+        "date": "2026-08-23",
+        "season": "2026/27",
+        "type": "competitive_penalty_event",
+        "penalty_kind": "regular_time",
+        "competition": null,
+        "match": "Newcastle United vs Liverpool",
+        "headline": "Szoboszlai converts for Liverpool",
+        "context": "Dominik Szoboszlai converted Liverpool's penalty against Newcastle United in the 90th minute.",
+        "sources": [
+          {
+            "label": "FotMob live match event log",
+            "url": null,
+            "date": "2026-08-23",
+            "note": "Dominik Szoboszlai converted Liverpool's penalty against Newcastle United in the 90th minute."
+          }
+        ],
+        "detection": "fotmob_live",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-24T00:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Szoboszlai's conversion at Newcastle reinforces the filed primary call. Alexander Isak remains the live challenger until a same-pitch competitive assignment clearly settles the order."
       }
     ],
     "change_log": [

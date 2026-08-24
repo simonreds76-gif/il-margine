@@ -114,7 +114,11 @@ def main() -> int:
             for field in ("primary", "secondary", "tertiary", "last_updated"):
                 check(field in entry, f"{league}/{team}: missing {field}")
             check(entry.get("hierarchy_status") in {"confirmed", "probable", "conditional", "disputed", "unknown"}, f"{league}/{team}: invalid hierarchy_status")
-            is_researched = entry.get("last_verified", {}).get("method") == "multi_source_preseason_research"
+            verification_method = entry.get("last_verified", {}).get("method")
+            is_researched = verification_method in {
+                "multi_source_preseason_research",
+                "reviewed_live_penalty_event",
+            }
             research_events = [
                 event
                 for event in entry.get("evidence_log", [])

@@ -180,6 +180,7 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
   const title = buildClubPenaltyTitle(team);
   const description = buildClubPenaltyDescription(team);
   const lead = buildClubPenaltyLead(team);
+  const latestEvidenceUpdate = team.evidenceUpdates[0];
 
   const quickAnswer = lead;
   const secondAnswer = team.hierarchyStatus === "unknown"
@@ -351,6 +352,17 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
                 {team.leagueLabel} board review run: {team.leagueCheckedLabel || "pending"}. An unchanged evidence date means the order was checked but no stronger event justified rewriting it.
               </p>
               <p>Public file updated: {team.publicUpdatedLabel || "not available"}.</p>
+              {latestEvidenceUpdate ? (
+                <div className="rounded-2xl border border-emerald-400/20 bg-slate-950/60 p-4">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-300">Latest competitive evidence</span>
+                    <span className="text-xs text-slate-500">{latestEvidenceUpdate.dateLabel}</span>
+                  </div>
+                  <h3 className="mt-2 font-semibold text-slate-100">{latestEvidenceUpdate.headline}</h3>
+                  {latestEvidenceUpdate.match ? <p className="mt-1 text-xs font-medium text-slate-300">{latestEvidenceUpdate.match}</p> : null}
+                  <p className="mt-2 text-sm leading-6 text-slate-400">{latestEvidenceUpdate.summary}</p>
+                </div>
+              ) : null}
               {team.evidenceSources.length ? (
                 <div>
                   <div className="flex flex-wrap items-center justify-between gap-2">
