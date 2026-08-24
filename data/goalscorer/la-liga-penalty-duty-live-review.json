@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-24T07:31:18Z",
+  "generated_at": "2026-08-24T09:46:38Z",
   "league": "la-liga",
-  "row_count": 5,
+  "row_count": 4,
   "rows": [
     {
       "date": "2026-08-23",
@@ -52,17 +52,17 @@
       "primary_pre_match": "Raphinha",
       "secondary_pre_match": "Lamine Yamal",
       "tertiary_pre_match": "Anthony Gordon",
-      "primary_lineup_status": "confirmed_starter",
-      "secondary_lineup_status": "confirmed_starter",
-      "tertiary_lineup_status": "confirmed_bench",
-      "active_taker_pre_match": "Raphinha",
-      "active_slot_pre_match": "primary",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
       "team_lineup_status": "unknown",
       "review_type": "primary_held",
       "review_priority": "low",
-      "editorial_note": "Raphinha took 1 penalty attempt and scored for Barcelona vs Elche. Primary pre-match: Raphinha (confirmed_starter). Secondary pre-match: Lamine Yamal (confirmed_starter). Pre-match active slot was primary -> Raphinha. No hierarchy change implied from this event.",
-      "context_generated_at": "2026-08-23T18:46:47Z",
-      "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json"
+      "editorial_note": "Raphinha took 1 penalty attempt and scored for Barcelona vs Elche. Primary pre-match: Raphinha (unknown). Secondary pre-match: Lamine Yamal (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-07-30",
+      "context_source_path": "data/goalscorer/la-liga-penalty-takers.json"
     },
     {
       "date": "2026-08-23",
@@ -122,36 +122,6 @@
       "review_priority": "high",
       "editorial_note": "Georges Mikautadze took 1 penalty attempt and scored for Villarreal vs Atletico Madrid. Primary pre-match: Gerard Moreno (unknown). Secondary pre-match: Nicolas Pépé (unknown). Strong review flag: penalty duty was split across multiple takers in the same match.",
       "context_generated_at": "2026-07-30",
-      "context_source_path": "data/goalscorer/la-liga-penalty-takers.json"
-    },
-    {
-      "date": "2026-08-16",
-      "league": "la-liga",
-      "review_source": "fotmob_live",
-      "match": "Racing Santander vs Villarreal",
-      "team": "Racing Santander",
-      "opponent": "Villarreal",
-      "actual_taker": "Andrés Martin",
-      "actual_role_pre_match": "primary",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "minute": "21",
-      "event_type": "Goal",
-      "event_result": "scored",
-      "primary_pre_match": "Andrés Martín",
-      "secondary_pre_match": "Sergio Canales",
-      "tertiary_pre_match": "Juan Carlos Arana",
-      "primary_lineup_status": "",
-      "secondary_lineup_status": "",
-      "tertiary_lineup_status": "",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "unknown",
-      "review_type": "primary_held",
-      "review_priority": "low",
-      "editorial_note": "Andrés Martin took 1 penalty attempt and scored for Racing Santander vs Villarreal. Primary pre-match: Andrés Martín (unknown). Secondary pre-match: Sergio Canales (unknown). No hierarchy change implied from this event.",
-      "context_generated_at": "2026-08-20",
       "context_source_path": "data/goalscorer/la-liga-penalty-takers.json"
     }
   ]
