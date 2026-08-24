@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
 import sys
 import urllib.error
 import urllib.parse
@@ -17,6 +18,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parents[1]
 ENV_FILES = [ROOT / ".env.local", ROOT / "env.local"]
 FOOTBALL_VNEXT_GATE = ROOT / "data" / "football-form" / "football-counts-vnext-gate.json"
+VERCEL_ISR_POLICY_GUARD = ROOT / "scripts" / "audit-vercel-isr-policy.py"
 LONDON_TZ = ZoneInfo("Europe/London")
 PINNACLE_PIPELINE = "pinnacle-capture-history"
 PINNACLE_SLOT_START = time(hour=8, minute=0)
@@ -250,6 +252,34 @@ def load_football_model_alerts(path: Path = FOOTBALL_VNEXT_GATE) -> list[str]:
     return alerts
 
 
+def load_vercel_isr_policy_alerts(path: Path = VERCEL_ISR_POLICY_GUARD) -> list[str]:
+    """Run the static ISR guard so caching regressions reach Telegram."""
+    if not path.exists():
+        return ["Vercel ISR guard missing"]
+    try:
+        result = subprocess.run(
+            [sys.executable, str(path), "--json"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        return [f"Vercel ISR guard could not run: {exc}"]
+    if result.returncode == 0:
+        return []
+    try:
+        payload = json.loads(result.stdout.strip())
+        issues = payload.get("issues") or []
+    except (json.JSONDecodeError, AttributeError):
+        issues = []
+    if not issues:
+        detail = (result.stderr or result.stdout or "unknown failure").strip().splitlines()[-1]
+        return [f"Vercel ISR policy failed: {detail}"]
+    return [f"Vercel ISR policy: {issue}" for issue in issues]
+
+
 def render_message(
     *,
     stuck: list[dict[str, Any]],
@@ -442,7 +472,7 @@ def main(argv: list[str] | None = None) -> int:
     stuck = filter_pipeline_aware_stuck_rows(stuck)
     silent = [row for row in silent_rows if row.get("pipeline") not in ignore_silent]
     silent = filter_schedule_aware_silent_rows(silent)
-    model_alerts = load_football_model_alerts()
+    model_alerts = load_football_model_alerts() + load_vercel_isr_policy_alerts()
 
     if not stuck and not silent and not model_alerts:
         print("OPS_ALERT_OK stuck=0 silent=0 model_alerts=0")

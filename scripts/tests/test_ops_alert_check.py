@@ -5,6 +5,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / "ops-alert-check.py"
@@ -51,6 +52,24 @@ class PipelineAwareStuckTests(unittest.TestCase):
 
         self.assertEqual(len(alerts), 1)
         self.assertIn("Team Shots v4: POST_UNLOCK_NO_SCORED_CANDIDATES", alerts[0])
+
+    def test_isr_guard_passes_without_alert(self) -> None:
+        completed = mock.Mock(returncode=0, stdout='{"ok":true,"issues":[]}', stderr="")
+        with mock.patch.object(MODULE.subprocess, "run", return_value=completed):
+            self.assertEqual(MODULE.load_vercel_isr_policy_alerts(SCRIPT), [])
+
+    def test_isr_guard_failure_becomes_ops_alert(self) -> None:
+        completed = mock.Mock(
+            returncode=1,
+            stdout='{"ok":false,"issues":["short revalidate on src/app/page.tsx: 60s (minimum 86400s)"]}',
+            stderr="",
+        )
+        with mock.patch.object(MODULE.subprocess, "run", return_value=completed):
+            alerts = MODULE.load_vercel_isr_policy_alerts(SCRIPT)
+        self.assertEqual(
+            alerts,
+            ["Vercel ISR policy: short revalidate on src/app/page.tsx: 60s (minimum 86400s)"],
+        )
 
 
 if __name__ == "__main__":
