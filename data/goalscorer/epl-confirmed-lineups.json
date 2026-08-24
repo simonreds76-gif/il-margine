@@ -9,9 +9,9 @@
       "kickoff_utc": "2026-08-24T19:00:00Z",
       "home_team": "Fulham",
       "away_team": "Chelsea",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "3-4-2-1",
       "home_players": [
@@ -29,13 +29,13 @@
       ],
       "away_players": [
         "Robert Sánchez",
-        "Reece James",
+        "Josh Acheampong",
         "Maxence Lacroix",
         "Levi Colwill",
-        "Pedro Neto",
-        "Moisés Caicedo",
+        "Malo Gusto",
+        "Reece James",
         "Roméo Lavia",
-        "Marco Palestra",
+        "Jorrel Hato",
         "Cole Palmer",
         "Morgan Rogers",
         "João Pedro"
@@ -152,7 +152,7 @@
           "position_id": 11
         },
         {
-          "name": "Reece James",
+          "name": "Josh Acheampong",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -179,7 +179,7 @@
           "position_id": 37
         },
         {
-          "name": "Pedro Neto",
+          "name": "Malo Gusto",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -188,7 +188,7 @@
           "position_id": 62
         },
         {
-          "name": "Moisés Caicedo",
+          "name": "Reece James",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -206,7 +206,7 @@
           "position_id": 66
         },
         {
-          "name": "Marco Palestra",
+          "name": "Jorrel Hato",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -242,8 +242,28 @@
           "position_id": 105
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Benjamin Lecomte",
+        "Kenny Tete",
+        "Luc De Fougerolles",
+        "Ryan Sessegnon",
+        "Emile Smith Rowe",
+        "Harrison Reed",
+        "Shea Charles",
+        "Kevin",
+        "Rodrigo Muniz"
+      ],
+      "away_subs": [
+        "Mike Penders",
+        "Pep Chavarría",
+        "Enzo Fernández",
+        "Valentín Barco",
+        "Danny Welbeck",
+        "Estêvão",
+        "Geovany Quenda",
+        "Jamie Gittens",
+        "Pedro Neto"
+      ],
       "home_unavailable": [
         "Joachim Andersen",
         "Tom Cairney"
