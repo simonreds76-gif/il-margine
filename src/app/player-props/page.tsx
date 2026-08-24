@@ -1,9 +1,9 @@
 import PlayerPropsClient from "./PlayerPropsClient";
 import { fetchMarketPayload } from "@/lib/public-record";
 
-// Admin bet mutations invalidate this page immediately. The hourly value is a
-// safety net for automated settlements that write directly to Supabase.
-export const revalidate = 3600;
+// Admin bet mutations invalidate this page immediately. The daily value is a
+// fallback for any automated settlement that writes directly to Supabase.
+export const revalidate = 86400;
 
 export default async function PlayerProps() {
   const payload = await fetchMarketPayload("props").catch((error) => {

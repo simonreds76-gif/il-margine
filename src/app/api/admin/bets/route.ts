@@ -9,13 +9,7 @@ import { tipPreviewPath } from "@/lib/tip-seo";
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const COOKIE_NAME = "admin_session";
-const PUBLIC_BET_PATHS = [
-  "/",
-  "/player-props",
-  "/tennis-tips",
-  "/track-record",
-  "/calculator",
-] as const;
+const SHARED_PUBLIC_BET_PATHS = ["/", "/track-record", "/calculator"] as const;
 
 type RevalidationBet = {
   id: number;
@@ -27,9 +21,13 @@ type RevalidationBet = {
 const REVALIDATION_BET_COLUMNS = "id, market, event, match_date";
 
 function revalidatePublicBetSurfaces(...bets: Array<RevalidationBet | null | undefined>) {
-  for (const path of PUBLIC_BET_PATHS) {
+  for (const path of SHARED_PUBLIC_BET_PATHS) {
     revalidatePath(path);
   }
+
+  const markets = new Set(bets.map((bet) => bet?.market).filter(Boolean));
+  if (markets.size === 0 || markets.has("props")) revalidatePath("/player-props");
+  if (markets.size === 0 || markets.has("tennis")) revalidatePath("/tennis-tips");
 
   // Invalidate only the changed fixtures. Invalidating a route pattern here
   // causes every crawled tip page to regenerate and consume ISR writes.
