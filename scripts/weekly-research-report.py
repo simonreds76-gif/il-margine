@@ -1731,6 +1731,35 @@ def telegram_text(payload: dict[str, Any]) -> str:
     tennis_evidence_source = payload.get("tennis_evidence_source") or {}
     tennis_lane_source = tennis_model_evidence.get("lane_source") or {}
 
+    def action_lines() -> list[str]:
+        actions: list[str] = []
+        strict_lane = tennis_lanes.get("strict") or {}
+        volume_lane = tennis_lanes.get("volume_200") or {}
+        hard_flip = side_flip_by_surface.get("Hard") or side_flip_by_surface.get("hard") or {}
+        if int(number(strict_lane.get("settled"))) >= 100 and number(strict_lane.get("roi_pct")) > 0:
+            actions.append(
+                f"KEEP: Tennis Strict only as established ML lane ({pct(strict_lane.get('roi_pct'))}, "
+                f"n={int(number(strict_lane.get('settled')))})"
+            )
+        if int(number(volume_lane.get("settled"))) >= 30 and number(volume_lane.get("roi_pct")) < 0:
+            actions.append(
+                f"PAUSE TIPS: Volume 200 remains shadow ({pct(volume_lane.get('roi_pct'))}, "
+                f"n={int(number(volume_lane.get('settled')))})"
+            )
+        if int(number(hard_flip.get("settled", hard_flip.get("bets")))) >= 100 and number(hard_flip.get("roi_pct")) <= 0:
+            actions.append("KEEP BLOCKED: broad Hard side flips are negative; scoped Strict rows only")
+        goalscorer_ledger = goalscorer.get("ledger") or {}
+        if int(number(goalscorer_ledger.get("settled"))) >= 30 and number(goalscorer_ledger.get("roi_pct")) < 0:
+            actions.append(
+                f"PUBLIC RISK: Goalscorer is research, not a proven edge "
+                f"({pct(goalscorer_ledger.get('roi_pct'))}, n={int(number(goalscorer_ledger.get('settled')))})"
+            )
+        if int(number(api_health.get("archive_rows"))) == 0:
+            actions.append("FIX DATA: API-Football agreement archive is empty")
+        if int(number(goalkeeper_saves.get("over_lines"))) > 0 and int(number(goalkeeper_saves.get("capture_rows_observed"))) == 0:
+            actions.append("FIX CAPTURE: GK prices were discovered but the live capture retained zero rows")
+        return actions
+
     def tennis_lane_line(label: str, key: str, status: str) -> str:
         lane = tennis_lanes.get(key) or {}
         clv = lane.get("clv") or {}
@@ -1788,6 +1817,10 @@ def telegram_text(payload: dict[str, Any]) -> str:
             f"(oldest core generation {tennis_lane_source.get('oldest_generated_at') or 'missing'})"
         ),
         "",
+        "ACTION BOARD",
+        *[f"- {action}" for action in action_lines()],
+        "",
+        "EVIDENCE DETAIL",
         f"Team Shots v4: {team_v4.get('prospective_status', 'BLOCKED')} | {team_v4_live.get('settled', 0)} settled | {number(team_v4_live.get('pnl_units')):+.2f}u | ROI {pct(number(team_v4_live.get('roi')) * 100) if team_v4_live.get('roi') is not None else '-'} | CLV {pct(number(team_v4_live.get('mean_true_close_clv')) * 100) if team_v4_live.get('mean_true_close_clv') is not None else '-'} | promotion {team_v4.get('promotion_gate', 'BLOCKED')}",
         f"Team Shots scan: {team_v4_scan.get('state', 'NOT_RUN')} | scored {team_v4_scan.get('scored_rows', 0)} rows/{team_v4_scan.get('scored_fixtures', 0)} fixtures | edge-pass warmup blocks {team_v4_scan.get('edge_pass_but_warmup_blocked_fixtures', 0)}",
         f"Corners v3: {corners_v3.get('prospective_status', 'BLOCKED')} | {corners_v3_live.get('settled', 0)} settled | {number(corners_v3_live.get('pnl_units')):+.2f}u | ROI {pct(number(corners_v3_live.get('roi')) * 100) if corners_v3_live.get('roi') is not None else '-'} | CLV {pct(number(corners_v3_live.get('mean_true_close_clv')) * 100) if corners_v3_live.get('mean_true_close_clv') is not None else '-'} | promotion {corners_v3.get('promotion_gate', 'BLOCKED')}",
@@ -1797,13 +1830,13 @@ def telegram_text(payload: dict[str, Any]) -> str:
         f"Count-source health: API-Football {api_health.get('archive_rows', 0)} archived, latest {api_health.get('latest_fixture_date') or '-'}, agreement {api_agreement.get('matched_fixtures', 0)}/{api_agreement.get('api_rows', 0)}",
         f"Team Fouls: F1 {team_fouls_decision.get('status', 'NOT_RUN')}; F2 {team_fouls_f2_decision.get('status', 'NOT_RUN')}; sources {team_fouls_m2.get('status', 'NOT_RUN')}; no signals",
         f"GK Saves v1: count {goalkeeper_saves.get('count_gate', 'NOT_RUN')} n={goalkeeper_saves.get('historical_observations', 0)} | discovery {goalkeeper_saves.get('market_status', 'NOT_RUN')} ({goalkeeper_saves.get('over_lines', 0)} probe Over lines) | capture {goalkeeper_saves.get('capture_status', 'NOT_RUN')} events={goalkeeper_saves.get('capture_events_selected', 0)} rows={goalkeeper_saves.get('capture_rows_observed', 0)} 1X2={goalkeeper_saves.get('capture_three_way_events', 0)} | prospective {goalkeeper_saves.get('prospective_status', 'BLOCKED')} priced={goalkeeper_saves.get('priced_lines', 0)} eligible={goalkeeper_saves.get('eligible_lines', 0)} provisional={goalkeeper_saves.get('provisional_lines', 0)} signals={goalkeeper_saves.get('signals', 0)} settled={goalkeeper_saves.get('settled', 0)} blockers={goalkeeper_saves.get('blocker_counts', {})} ROI={ratio_pct(goalkeeper_saves.get('roi'))} CLV={ratio_pct(goalkeeper_saves.get('clv'))} n={goalkeeper_saves.get('clv_matched', 0)} | promotion BLOCKED",
-        f"Goalscorer V2: {goalscorer['ledger']['settled']} settled | {goalscorer['ledger']['pnl_units']:+.2f}u | ROI {pct(goalscorer['ledger']['roi_pct'])} | CLV {goalscorer['matched_closes']}/{goalscorer['signals']} | public incumbent",
+        f"Goalscorer V2: {goalscorer['ledger']['settled']} settled | {goalscorer['ledger']['pnl_units']:+.2f}u | ROI {pct(goalscorer['ledger']['roi_pct'])} | CLV {goalscorer['matched_closes']}/{goalscorer['signals']} | PUBLIC RESEARCH ONLY",
         f"Goalscorer beta vs raw n={goalscorer['calibration']['n']}: Brier {fixed(goalscorer['calibration']['raw_brier'])}->{fixed(goalscorer['calibration']['beta_brier'])} ({fixed(goalscorer['calibration']['brier_delta'])}) | ECE {ratio_pct(goalscorer['calibration']['raw_ece'], 2)}->{ratio_pct(goalscorer['calibration']['beta_ece'], 2)} | folds {goalscorer['beta_fold_wins']}/{goalscorer['beta_folds']}",
         f"Goalscorer gaps [ZERO-STAKE]: {goalscorer['extreme_gap_quarantine']['settled']}/{goalscorer['extreme_gap_quarantine']['registered']} settled | {goalscorer['extreme_gap_quarantine']['pnl_units']:+.2f}u | ROI {pct(goalscorer['extreme_gap_quarantine']['roi_pct'])} | weekly verdict {goalscorer['decision']} | blockers {', '.join(goalscorer['blockers']) or 'none'}",
         f"Assist V1: {assist['lane_status']} | backtest {assist['backtest_status']} | settlement {assist['settlement_status']} | market {assist['market_status']} ({assist['market_calendar_span_days']}/90d) | prospective {assist['prospective']['settled']}/{assist['prospective_target']} | <=30 API calls/week | {assist['decision']}",
         f"Automation: {automation.get('status', 'NOT_RUN')} | Odds-API worst hour {odds_budget.get('max_requests_in_one_hour', '-')}/{odds_budget.get('requests_per_hour', '-')} | DB writes/week max {(automation.get('database') or {}).get('registered_writes_per_week_max', '-')}",
         tennis_lane_line("Tennis Strict", "strict", "CORE"),
-        tennis_lane_line("Tennis Volume 200", "volume_200", "VOLUME"),
+        tennis_lane_line("Tennis Volume 200", "volume_200", "SHADOW / DO NOT BET"),
         tennis_lane_line("Tennis Spread v1", "spread_v1", "PAUSED/RESEARCH"),
         replacement_line("Strict gap 10-20pp", "strict_gap_10_20_same_side"),
         replacement_line("Volume gap 10-15pp", "volume200_gap_10_15_same_side"),
@@ -1953,7 +1986,7 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
         ),
         "",
         lane_line("Strict", "strict", "CORE"),
-        lane_line("Volume 200", "volume_200", "VOLUME"),
+        lane_line("Volume 200", "volume_200", "SHADOW / DO NOT BET"),
         lane_line("Spread v1", "spread_v1", "PAUSED/RESEARCH"),
         replacement_line("Strict gap 10-20pp", "strict_gap_10_20_same_side"),
         replacement_line("Volume gap 10-15pp", "volume200_gap_10_15_same_side"),

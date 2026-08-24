@@ -46,7 +46,7 @@ class Lane:
 
 LANES = (
     Lane("STRICT", BACKTEST / "strict-signals-live.csv", "CORE", 0),
-    Lane("VOL200", BACKTEST / "strict-signals-volume200-live.csv", "TRACKED EXPANSION", 10),
+    Lane("VOL200", BACKTEST / "strict-signals-volume200-live.csv", "SHADOW / DO NOT BET", 10),
     Lane("SPREAD V1", BACKTEST / "strict-signals-spreadv1-live.csv", "SHADOW / RESEARCH", 20),
     Lane("GRASS BO3", BACKTEST / "strict-signals-grass_bo3-live.csv", "SHADOW / RESEARCH", 30),
     Lane("CLAY BO3", BACKTEST / "strict-signals-clay_bo3-live.csv", "SHADOW / RESEARCH", 31),
@@ -374,9 +374,9 @@ def render_messages(
     if empty_lanes:
         blocks.append("\nNo signals: " + ", ".join(empty_lanes))
     blocks.append(
-        "\nStatus guide: CORE and TRACKED EXPANSION are betting lanes at the stake shown. "
-        "APPROVED MASTERS FLIP is a scoped Strict bet. PROVISIONAL selections are 0.5u "
-        "forward trials. SHADOW/RESEARCH and WATCHLIST rows are evidence only, not bets."
+        "\nStatus guide: CORE is the established betting lane at the stake shown. "
+        "APPROVED MASTERS FLIP is a scoped Strict bet. Volume 200, PROVISIONAL, "
+        "SHADOW/RESEARCH and WATCHLIST rows are evidence only, not bets."
     )
 
     messages: list[str] = []
