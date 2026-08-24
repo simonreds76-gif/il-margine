@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-24T18:03:33Z",
+  "generated_at": "2026-08-24T19:17:22Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -20,16 +20,16 @@
     "latest_scan": {
       "state": "EXPECTED_WARMUP_BLOCK",
       "explanation": "Candidates were scored, but the registered matchdays 1-3 safety lock blocked publication.",
-      "scored_rows": 30,
-      "scored_fixtures": 5,
+      "scored_rows": 16,
+      "scored_fixtures": 3,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 30,
+      "blocked_rows": 16,
       "blocker_rows": {
-        "edge_below_3pct": 28,
-        "matchdays_1_to_3": 30
+        "edge_below_3pct": 15,
+        "matchdays_1_to_3": 16
       },
-      "edge_pass_but_warmup_blocked_fixtures": 2,
+      "edge_pass_but_warmup_blocked_fixtures": 1,
       "matchday_min": 1,
       "matchday_max": 1,
       "next_unlock": "matchday_4",
@@ -56,21 +56,18 @@
       "dominant_side_share": 0.0
     },
     "latest_scan": {
-      "state": "EXPECTED_WARMUP_BLOCK",
-      "explanation": "Candidates were scored, but the registered matchdays 1-3 safety lock blocked publication.",
-      "scored_rows": 10,
-      "scored_fixtures": 2,
+      "state": "NO_SCORED_CANDIDATES",
+      "explanation": "No paired current market rows reached model scoring. Check capture coverage and fixture joins.",
+      "scored_rows": 0,
+      "scored_fixtures": 0,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 10,
-      "blocker_rows": {
-        "edge_below_3pct": 8,
-        "matchdays_1_to_3": 10
-      },
-      "edge_pass_but_warmup_blocked_fixtures": 1,
-      "matchday_min": 1,
-      "matchday_max": 1,
-      "next_unlock": "matchday_4",
+      "blocked_rows": 0,
+      "blocker_rows": {},
+      "edge_pass_but_warmup_blocked_fixtures": 0,
+      "matchday_min": null,
+      "matchday_max": null,
+      "next_unlock": null,
       "operational_alert_required": false,
       "operational_alert_code": null
     },
