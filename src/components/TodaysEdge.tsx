@@ -165,8 +165,11 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
                   : "border-transparent bg-transparent text-slate-400 hover:border-white/[0.09] hover:bg-white/[0.04] hover:text-slate-100 disabled:cursor-not-allowed disabled:border-transparent disabled:bg-transparent disabled:text-slate-600 disabled:opacity-55 disabled:hover:border-transparent disabled:hover:bg-transparent disabled:hover:text-slate-600"
               }`}
             >
-              <span className="truncate">
-                {id === "all" ? "All" : id === "props" ? "Football" : label}
+              <span className="flex min-w-0 items-center justify-center gap-1.5">
+                <FilterIcon filter={id} active={filter === id} />
+                <span className="truncate">
+                  {id === "all" ? "All" : id === "props" ? "Football" : label}
+                </span>
               </span>
               <span className={`rounded-full px-1.5 py-0.5 font-mono text-[9px] font-black tabular-nums ${
                 filter === id ? "bg-emerald-300/12 text-emerald-200" : "bg-white/[0.04] text-slate-500 group-hover/filter:text-slate-300"
@@ -211,7 +214,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
                   <span className="rounded-md border border-slate-700/70 bg-slate-900/70 px-2 py-1 font-mono text-xs text-emerald-200">
                     {formatStake(pick.stake)}u
                   </span>
-                  <div className="ml-auto max-w-20 overflow-hidden opacity-70 grayscale-[35%] transition group-hover:opacity-100 group-hover:grayscale-0">
+                  <div className="ml-auto max-w-20 overflow-hidden">
                     <BookmakerLogo bookmaker={pick.bookmaker} size="sm" noLink />
                   </div>
                 </div>
@@ -247,5 +250,45 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
         </div>
       </div>
     </section>
+  );
+}
+
+function FilterIcon({ filter, active }: { filter: Filter; active: boolean }) {
+  const className = `h-4 w-4 shrink-0 transition-colors ${
+    active ? "text-emerald-300" : "text-slate-500 group-hover/filter:text-slate-300"
+  }`;
+
+  if (filter === "all") {
+    return (
+      <svg aria-hidden="true" viewBox="0 0 24 24" className={className} fill="none">
+        <rect x="3.5" y="4" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
+        <rect x="13.5" y="4" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
+        <rect x="3.5" y="14" width="7" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
+        <rect x="13.5" y="14" width="7" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
+      </svg>
+    );
+  }
+
+  if (filter === "props") {
+    return (
+      <svg aria-hidden="true" viewBox="0 0 24 24" className={className} fill="none">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+        <path d="m9.35 8.45 2.65-1.9 2.65 1.9-1.02 3.1h-3.26l-1.02-3.1Z" fill="currentColor" />
+        <path
+          d="m12 6.55-.82-3.38M9.35 8.45 5.8 7.2m4.57 4.35-2.18 3.02m5.44-3.02 2.18 3.02m-1.16-6.12 3.55-1.25M8.19 14.57l-3.07.12m10.69-.12 3.07.12M8.19 14.57l1.05 3.27m6.57-3.27-1.05 3.27"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.35"
+        />
+      </svg>
+    );
+  }
+
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className={className} fill="none">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.7" />
+      <path d="M5.9 5.8c4.1 2.25 6.15 6.35 5.65 12.15M18.1 18.2c-4.1-2.25-6.15-6.35-5.65-12.15" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" />
+    </svg>
   );
 }
