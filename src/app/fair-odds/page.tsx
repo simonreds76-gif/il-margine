@@ -1342,9 +1342,15 @@ export default function FairOddsPage() {
           return a.tournament.localeCompare(b.tournament);
         }),
     }));
+  const storedVolume200Signals = data?.signals_volume_200_live ?? [];
+  const internalVolume200Fallback = data?.internal_research_lanes
+    ? data?.signals_volume_profile ?? []
+    : [];
   const shadowOnlySignals =
     data?.shadow_profile === "volume_200"
-      ? data?.signals_volume_200_live ?? []
+      ? storedVolume200Signals.length > 0
+        ? storedVolume200Signals
+        : internalVolume200Fallback
       : data?.signals_volume_additional ?? data?.signals_volume ?? [];
   const strictFeedItems = sortSignalFeedItems(
     (data?.signals_strict ?? []).map((signal) => ({

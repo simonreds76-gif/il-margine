@@ -19,6 +19,7 @@ const FRAME_SIZE_CLASSES = {
 
 const LOGO_SCALE: Record<string, number> = {
   "10bet": 1,
+  ballybet: 1.08,
   betway: 1.14,
   boylesports: 0.92,
   spreadex: 0.95,
@@ -27,6 +28,7 @@ const LOGO_SCALE: Record<string, number> = {
 };
 
 const FRAME_CLASSES: Record<string, string> = {
+  ballybet: "border border-red-300/70 bg-[#c8102e] px-1.5 py-1",
   sbk: "border border-slate-200/90 bg-white px-2 py-1",
 };
 

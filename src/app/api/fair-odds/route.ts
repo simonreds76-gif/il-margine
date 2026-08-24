@@ -2420,8 +2420,58 @@ async function run(): Promise<Response> {
     }))
     .filter((row) => row.player1_name && row.player2_name && row.odds1 > 0 && row.odds2 > 0);
 
+  // The day-level snapshot is written by the full morning/evening pipeline, while
+  // the lightweight capture job keeps discovering markets that open later. Pull a
+  // narrow recent window when the snapshot is stale so late qualifier prices reach
+  // the live board without another bookmaker scrape or another scheduled job.
+  const freshestSnapshotMs = snapshotRows.reduce((latest, row) => {
+    const capturedMs = row.captured_at ? Date.parse(row.captured_at) : 0;
+    return Number.isFinite(capturedMs) ? Math.max(latest, capturedMs) : latest;
+  }, 0);
+  const snapshotIsStale = !freshestSnapshotMs || now.getTime() - freshestSnapshotMs > 20 * 60 * 1000;
+  let recentHistoryRows: PinnacleSourceRow[] = [];
+  if (snapshotIsStale) {
+    const recentCutoff = new Date(now.getTime() - 4 * 60 * 60 * 1000).toISOString();
+    try {
+      const { data: historyData, error: historyError } = await snapshotClient
+        .from("bookmaker_odds_history")
+        .select(PINNACLE_SNAPSHOT_SELECT)
+        .eq("bookmaker", "Pinnacle")
+        .or("league.eq.ATP,league.eq.Challenger")
+        .gte("captured_at", recentCutoff)
+        .order("captured_at", { ascending: false })
+        .limit(400);
+      if (historyError) {
+        console.warn("[fair-odds] Recent Pinnacle history supplement unavailable", historyError.message);
+      } else {
+        recentHistoryRows = ((historyData ?? []) as Array<Record<string, unknown>>)
+          .map((row): PinnacleSourceRow => ({
+            player1_name: String(row.player1_name ?? "").trim(),
+            player2_name: String(row.player2_name ?? "").trim(),
+            odds1: Number(row.odds1 ?? 0),
+            odds2: Number(row.odds2 ?? 0),
+            ou_line: row.ou_line != null ? Number(row.ou_line) : undefined,
+            ou_over: row.ou_over != null ? Number(row.ou_over) : undefined,
+            ou_under: row.ou_under != null ? Number(row.ou_under) : undefined,
+            league: row.league === "Challenger" ? "Challenger" : "ATP",
+            tournament: typeof row.league_name === "string" ? row.league_name : undefined,
+            captured_at: typeof row.captured_at === "string" ? row.captured_at : undefined,
+            match_date: typeof row.match_date === "string" ? row.match_date.slice(0, 10) : undefined,
+            kickoff_iso: typeof row.kickoff_iso === "string" ? row.kickoff_iso : undefined,
+          }))
+          .filter((row) => row.player1_name && row.player2_name && row.odds1 > 0 && row.odds2 > 0);
+      }
+    } catch (error) {
+      console.warn("[fair-odds] Recent Pinnacle history fetch failed; using daily snapshot", error);
+    }
+  }
+
   const localHistoryRows = loadRecentLocalPinnacleHistory([today, yesterday]);
-  pinnacleRows = dedupeLatestPinnacleRows([...snapshotRows, ...localHistoryRows]);
+  pinnacleRows = dedupeLatestPinnacleRows([...recentHistoryRows, ...snapshotRows, ...localHistoryRows]);
+
+  if (recentHistoryRows.length > 0) {
+    console.log(`[fair-odds] Recent Pinnacle history supplement: ${recentHistoryRows.length} rows from the last four hours.`);
+  }
 
   if (localHistoryRows.length > 0) {
     console.log(

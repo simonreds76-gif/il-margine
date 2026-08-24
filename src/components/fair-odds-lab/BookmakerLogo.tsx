@@ -7,6 +7,7 @@ type BookmakerLogoProps = {
 const BOOKMAKER_LOGOS: Array<[RegExp, string]> = [
   [/10\s*bet/i, "/bookmakers/10bet.png"],
   [/ten\s*bet/i, "/bookmakers/10bet.png"],
+  [/bally'?s?\s*bet/i, "/bookmakers/ballybet.svg"],
   [/bet\s*365/i, "/bookmakers/bet365.svg"],
   [/pinnacle/i, "/bookmakers/pinnacle.png"],
   [/bet\s*sbk/i, "/bookmakers/sbk.svg"],

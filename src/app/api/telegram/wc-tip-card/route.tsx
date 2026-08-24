@@ -44,6 +44,14 @@ const BOOKMAKER_THEMES: Record<string, BookmakerCardTheme> = {
     logoFrame: "rgba(3,10,8,0.70)",
     label: "#ecfdf5",
   },
+  ballybet: {
+    background: "linear-gradient(145deg, #120307 0%, #8f0d25 52%, #03060b 100%)",
+    border: "rgba(248,113,113,0.76)",
+    accent: "#ef4444",
+    accentSoft: "rgba(255,255,255,0.14)",
+    logoFrame: "#c8102e",
+    label: "#fff1f2",
+  },
   bet365: {
     background: "linear-gradient(145deg, #06130b 0%, #063f25 52%, #111827 100%)",
     border: "rgba(255,228,24,0.62)",

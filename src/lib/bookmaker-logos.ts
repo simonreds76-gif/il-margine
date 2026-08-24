@@ -16,6 +16,7 @@ export interface ResolvedBookmakerLogo {
 const LOGO_FILES: Record<string, string[]> = {
   "10bet": ["10bet.png", "10bet.svg"],
   "888sport": ["888sport.svg"],
+  ballybet: ["ballybet.svg"],
   bet365: ["bet365.svg", "bet365.png"],
   betfair: ["betfair.png", "betfair.svg"],
   betfred: ["betfred.png", "betfred.svg"],
@@ -40,6 +41,7 @@ const LOGO_FILES: Record<string, string[]> = {
 const DISPLAY_NAMES: Record<string, string> = {
   "10bet": "10bet",
   "888sport": "888sport",
+  ballybet: "Bally Bet",
   bet365: "Bet365",
   betfair: "Betfair",
   betfred: "Betfred",
@@ -67,6 +69,9 @@ const ALIASES: Record<string, string> = {
   tenbet: "10bet",
   "888": "888sport",
   "888sport": "888sport",
+  bally: "ballybet",
+  ballybet: "ballybet",
+  ballysbet: "ballybet",
   bet365: "bet365",
   betfair: "betfair",
   betfred: "betfred",
