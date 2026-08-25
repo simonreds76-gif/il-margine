@@ -1,6 +1,292 @@
 {
   "fixtures": [
     {
+      "fotmob_match_id": 5868020,
+      "fotmob_page_url": "/matches/real-betis-vs-valencia/2y0d9k#5868020",
+      "home_fotmob_team_id": 10267,
+      "away_fotmob_team_id": 8603,
+      "match_date": "2026-08-25",
+      "kickoff_utc": "2026-08-25T19:00:00Z",
+      "home_team": "Valencia",
+      "away_team": "Real Betis",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "5-3-2",
+      "away_formation": "4-2-3-1",
+      "home_players": [
+        "Stole Dimitrievski",
+        "César Tárrega",
+        "Pepelu",
+        "Mouctar Diakhaby",
+        "Pablo Maffeo",
+        "Jesus Vázquez",
+        "Ryunosuke Sato",
+        "Guido Rodríguez",
+        "Javier Guerra",
+        "Hugo Duro",
+        "Arnaut Danjuma"
+      ],
+      "away_players": [
+        "Álvaro Vallés",
+        "Ángel Ortiz",
+        "Diego Llorente",
+        "Valentín Gómez",
+        "Júnior Firpo",
+        "Facundo Bernal",
+        "Nelson Deossa",
+        "Antony",
+        "Pablo Fornals",
+        "Rodrigo Riquelme",
+        "Juan Hernández"
+      ],
+      "home_starters": [
+        {
+          "name": "Stole Dimitrievski",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "5-3-2",
+          "position_id": 11
+        },
+        {
+          "name": "César Tárrega",
+          "line_index": 0,
+          "line_size": 5,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "5-3-2",
+          "position_id": 33
+        },
+        {
+          "name": "Pepelu",
+          "line_index": 0,
+          "line_size": 5,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "5-3-2",
+          "position_id": 35
+        },
+        {
+          "name": "Mouctar Diakhaby",
+          "line_index": 0,
+          "line_size": 5,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "5-3-2",
+          "position_id": 37
+        },
+        {
+          "name": "Pablo Maffeo",
+          "line_index": 0,
+          "line_size": 5,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "5-3-2",
+          "position_id": 51
+        },
+        {
+          "name": "Jesus Vázquez",
+          "line_index": 0,
+          "line_size": 5,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "5-3-2",
+          "position_id": 59
+        },
+        {
+          "name": "Ryunosuke Sato",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "5-3-2",
+          "position_id": 73
+        },
+        {
+          "name": "Guido Rodríguez",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "5-3-2",
+          "position_id": 75
+        },
+        {
+          "name": "Javier Guerra",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "5-3-2",
+          "position_id": 77
+        },
+        {
+          "name": "Hugo Duro",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "5-3-2",
+          "position_id": 104
+        },
+        {
+          "name": "Arnaut Danjuma",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "5-3-2",
+          "position_id": 106
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Álvaro Vallés",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11
+        },
+        {
+          "name": "Ángel Ortiz",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32
+        },
+        {
+          "name": "Diego Llorente",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34
+        },
+        {
+          "name": "Valentín Gómez",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36
+        },
+        {
+          "name": "Júnior Firpo",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38
+        },
+        {
+          "name": "Facundo Bernal",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64
+        },
+        {
+          "name": "Nelson Deossa",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66
+        },
+        {
+          "name": "Antony",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83
+        },
+        {
+          "name": "Pablo Fornals",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85
+        },
+        {
+          "name": "Rodrigo Riquelme",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87
+        },
+        {
+          "name": "Juan Hernández",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115
+        }
+      ],
+      "home_subs": [
+        "Kayne van Oevelen",
+        "Alejandro Panach",
+        "Iker Córdoba",
+        "José Gayà",
+        "Aliou Dieng",
+        "André Almeida",
+        "Filip Ugrinic",
+        "Jaume Dura",
+        "Luis Rioja",
+        "Dani Raba",
+        "David Otorbi",
+        "Umar Sadiq"
+      ],
+      "away_subs": [
+        "Alvaro de Pablo",
+        "Manu González",
+        "Fran García",
+        "Héctor Bellerín",
+        "Marc Bartra",
+        "Natan",
+        "Álvaro Fidalgo",
+        "Iker Losada",
+        "Isco",
+        "Marc Roca",
+        "Pablo García",
+        "Troy Parrott"
+      ],
+      "home_unavailable": [
+        "José Copete",
+        "Justin De Haas",
+        "Diego López",
+        "Alberto Marí",
+        "Sergi Canós"
+      ],
+      "away_unavailable": [
+        "Gonzalo Petit",
+        "Ismael Barea",
+        "Diego Conde",
+        "Aitor Ruibal",
+        "Giovani Lo Celso",
+        "Abdessamad Ezzalzouli"
+      ]
+    },
+    {
       "fotmob_match_id": 5868018,
       "fotmob_page_url": "/matches/real-sociedad-vs-real-madrid/2g087q#5868018",
       "home_fotmob_team_id": 8633,
