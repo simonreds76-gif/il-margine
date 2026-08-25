@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-24T09:46:34Z",
+  "generated_at": "2026-08-25T01:55:01Z",
   "league": "epl",
-  "row_count": 2,
+  "row_count": 1,
   "rows": [
     {
       "date": "2026-08-23",
@@ -31,37 +31,7 @@
       "review_type": "primary_held",
       "review_priority": "low",
       "editorial_note": "Dominik Szoboszlai took 1 penalty attempt and scored for Liverpool vs Newcastle United. Primary pre-match: Dominik Szoboszlai (unknown). Secondary pre-match: Alexander Isak (unknown). No hierarchy change implied from this event.",
-      "context_generated_at": "2026-08-10",
-      "context_source_path": "data/goalscorer/epl-penalty-takers.json"
-    },
-    {
-      "date": "2026-08-22",
-      "league": "epl",
-      "review_source": "fotmob_live",
-      "match": "Brentford vs Tottenham Hotspur",
-      "team": "Brentford",
-      "opponent": "Tottenham Hotspur",
-      "actual_taker": "Igor Thiago",
-      "actual_role_pre_match": "primary",
-      "penalties_attempted": 1,
-      "penalties_scored": 0,
-      "distinct_takers_in_match": 1,
-      "minute": "55",
-      "event_type": "Post",
-      "event_result": "missed",
-      "primary_pre_match": "Igor Thiago",
-      "secondary_pre_match": "Kevin Schade",
-      "tertiary_pre_match": "Fabio Carvalho",
-      "primary_lineup_status": "",
-      "secondary_lineup_status": "",
-      "tertiary_lineup_status": "",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "unknown",
-      "review_type": "primary_held",
-      "review_priority": "low",
-      "editorial_note": "Igor Thiago took 1 penalty attempt and missed for Brentford vs Tottenham Hotspur. Primary pre-match: Igor Thiago (unknown). Secondary pre-match: Kevin Schade (unknown). No hierarchy change implied from this event.",
-      "context_generated_at": "2026-07-30",
+      "context_generated_at": "2026-08-23",
       "context_source_path": "data/goalscorer/epl-penalty-takers.json"
     }
   ]
