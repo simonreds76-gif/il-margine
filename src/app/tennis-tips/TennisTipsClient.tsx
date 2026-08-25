@@ -14,8 +14,9 @@ import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import PageHomeLink from "@/components/PageHomeLink";
 import SampleSizeBadge from "@/components/SampleSizeBadge";
+import PublicRecordMetricGrid from "@/components/PublicRecordMetricGrid";
 import { normalizeBetCategory } from "@/lib/bet-category";
-import { formatMatchDate, formatOdds } from "@/lib/format";
+import { formatMatchDate } from "@/lib/format";
 import { publicTipPath } from "@/lib/tip-seo";
 
 type TennisTipsClientProps = {
@@ -156,6 +157,8 @@ export default function TennisTips({
 
       return {
         total_bets: totalBets,
+        total_stake: totalStake,
+        total_profit: totalProfit,
         roi: calculateROI(totalProfit, totalStake || 1),
         win_rate: calculateWinRate(totalWins, totalLosses),
         avg_odds: avgOdds,
@@ -169,7 +172,7 @@ export default function TennisTips({
     if (!categoryBaseline) {
       // No baseline for this category, show only live data
       if (!catStats) {
-        return { total_bets: 0, roi: 0, win_rate: 0, avg_odds: 0 };
+        return { total_bets: 0, total_stake: 0, total_profit: 0, roi: 0, win_rate: 0, avg_odds: 0 };
       }
       const liveBets = catStats.total_bets || 0;
       const liveProfit = Number(catStats.total_profit) || 0;
@@ -178,6 +181,8 @@ export default function TennisTips({
       const liveStake = Number(catStats.total_stake) || liveBets;
       return {
         total_bets: liveBets,
+        total_stake: liveStake,
+        total_profit: liveProfit,
         roi: liveStake > 0 ? calculateROI(liveProfit, liveStake) : 0,
         win_rate: calculateWinRate(liveWins, liveLosses),
         avg_odds: Number(catStats.avg_odds) || 0,
@@ -205,6 +210,8 @@ export default function TennisTips({
 
     return {
       total_bets: totalBets,
+      total_stake: totalStake,
+      total_profit: totalProfit,
       roi: calculateROI(totalProfit, totalStake || 1),
       win_rate: calculateWinRate(totalWins, totalLosses),
       avg_odds: avgOdds,
@@ -236,8 +243,6 @@ export default function TennisTips({
   const activeName = categoryConfig.find(c => c.id === activeCategory)?.name || "Selected";
   const currentStats = getStatsForCategory(activeCategory);
   const archiveStats = getArchiveStatsForCategory(activeCategory);
-  const neutralBar = "from-slate-600 to-slate-400";
-  const roiBar = currentStats.roi >= 0 ? "from-emerald-500 to-emerald-400" : "from-rose-500 to-rose-400";
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
@@ -393,43 +398,20 @@ export default function TennisTips({
             })}
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4 flex justify-end">
             <SampleSizeBadge settled={currentStats.total_bets} />
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className="text-2xl font-bold text-white font-mono mb-2">{currentStats.total_bets}</div>
-              <div className="text-xs text-slate-500 mb-3">Total Bets</div>
-              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${neutralBar} rounded-full`} style={{ width: `${Math.min((currentStats.total_bets / 500) * 100, 100)}%` }} />
-              </div>
-            </div>
-            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className={`text-2xl font-bold ${currentStats.total_bets < 50 ? "text-slate-300/70" : roiToneClass(currentStats.roi)} font-mono mb-2`}>
-                {currentStats.total_bets > 0 ? `${currentStats.roi > 0 ? "+" : ""}${currentStats.roi.toFixed(1)}%` : "—"}
-              </div>
-              <div className="text-xs text-slate-500 mb-3">ROI</div>
-              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${roiBar} rounded-full`} style={{ width: `${Math.min(Math.abs(currentStats.roi) * 4, 100)}%` }} />
-              </div>
-            </div>
-            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className="text-2xl font-bold text-slate-100 font-mono mb-2">{currentStats.total_bets > 0 ? `${currentStats.win_rate.toFixed(1)}%` : "—"}</div>
-              <div className="text-xs text-slate-500 mb-3">Win Rate</div>
-              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${neutralBar} rounded-full`} style={{ width: `${currentStats.win_rate}%` }} />
-              </div>
-            </div>
-            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className="text-2xl font-bold text-slate-100 font-mono mb-2">{currentStats.total_bets > 0 ? formatOdds(currentStats.avg_odds) : "—"}</div>
-              <div className="text-xs text-slate-500 mb-3">Avg Odds</div>
-              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${neutralBar} rounded-full`} style={{ width: `${(currentStats.avg_odds / 3) * 100}%` }} />
-              </div>
-            </div>
-          </div>
+          <PublicRecordMetricGrid
+            activeName={activeName}
+            totalBets={currentStats.total_bets}
+            totalStake={currentStats.total_stake}
+            totalProfit={currentStats.total_profit}
+            roi={currentStats.roi}
+            winRate={currentStats.win_rate}
+            avgOdds={currentStats.avg_odds}
+            hasArchiveBaseline={Boolean(archiveStats?.total_bets)}
+          />
 
           <ProfitProgressionPanel rows={filteredProgressionRows} activeName={activeName} archiveStats={archiveStats} />
 

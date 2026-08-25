@@ -8,12 +8,12 @@ import ProfitProgressionPanel, { type CategoryProgressionRow } from "@/component
 import PlayerPropsMatchGroups from "@/components/PlayerPropsMatchGroups";
 import PropsAlertsCta from "@/components/PropsAlertsCta";
 import SampleSizeBadge from "@/components/SampleSizeBadge";
+import PublicRecordMetricGrid from "@/components/PublicRecordMetricGrid";
 
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import PageHomeLink from "@/components/PageHomeLink";
 import { getDisplayBetCategory, normalizeBetCategory } from "@/lib/bet-category";
-import { formatOdds } from "@/lib/format";
 
 type PlayerPropsClientProps = {
   initialPendingBets?: Bet[];
@@ -167,6 +167,8 @@ export default function PlayerProps({
 
       return {
         total_bets: totalBets,
+        total_stake: totalStake,
+        total_profit: totalProfit,
         roi: calculateROI(totalProfit, totalStake || 1),
         win_rate: calculateWinRate(totalWins, totalLosses),
         avg_odds: avgOdds,
@@ -194,7 +196,7 @@ export default function PlayerProps({
     if (!categoryBaseline) {
       // No baseline for this category, show only live data
       if (!leagueStats) {
-        return { total_bets: 0, roi: 0, win_rate: 0, avg_odds: 0 };
+        return { total_bets: 0, total_stake: 0, total_profit: 0, roi: 0, win_rate: 0, avg_odds: 0 };
       }
       const liveBets = leagueStats.total_bets || 0;
       const liveProfit = Number(leagueStats.total_profit) || 0;
@@ -203,6 +205,8 @@ export default function PlayerProps({
       const liveStake = Number(leagueStats.total_stake) || liveBets;
       return {
         total_bets: liveBets,
+        total_stake: liveStake,
+        total_profit: liveProfit,
         roi: liveStake > 0 ? calculateROI(liveProfit, liveStake) : 0,
         win_rate: calculateWinRate(liveWins, liveLosses),
         avg_odds: Number(leagueStats.avg_odds) || 0,
@@ -230,6 +234,8 @@ export default function PlayerProps({
 
     return {
       total_bets: totalBets,
+      total_stake: totalStake,
+      total_profit: totalProfit,
       roi: calculateROI(totalProfit, totalStake || 1),
       win_rate: calculateWinRate(totalWins, totalLosses),
       avg_odds: avgOdds,
@@ -250,8 +256,6 @@ export default function PlayerProps({
   const activeName = leagueConfig.find(l => l.id === activeLeague)?.name || "Selected";
   const currentStats = getStatsForLeague(activeLeague);
   const archiveStats = getArchiveStatsForLeague(activeLeague);
-  const neutralBar = "from-slate-600 to-slate-400";
-  const roiBar = currentStats.roi >= 0 ? "from-emerald-500 to-emerald-400" : "from-rose-500 to-rose-400";
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
@@ -367,43 +371,20 @@ export default function PlayerProps({
             })}
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4 flex justify-end">
             <SampleSizeBadge settled={currentStats.total_bets} />
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className="text-2xl font-bold text-white font-mono mb-2">{currentStats.total_bets}</div>
-              <div className="text-xs text-slate-500 mb-3">Total Bets</div>
-              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${neutralBar} rounded-full`} style={{ width: `${Math.min((currentStats.total_bets / 1000) * 100, 100)}%` }} />
-              </div>
-            </div>
-            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className={`text-2xl font-bold ${currentStats.total_bets < 50 ? "text-slate-300/70" : roiToneClass(currentStats.roi)} font-mono mb-2`}>
-                {currentStats.total_bets > 0 ? `${currentStats.roi > 0 ? "+" : ""}${currentStats.roi.toFixed(1)}%` : "—"}
-              </div>
-              <div className="text-xs text-slate-500 mb-3">ROI</div>
-              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${roiBar} rounded-full`} style={{ width: `${Math.min(Math.abs(currentStats.roi) * 3, 100)}%` }} />
-              </div>
-            </div>
-            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className="text-2xl font-bold text-slate-100 font-mono mb-2">{currentStats.total_bets > 0 ? `${currentStats.win_rate.toFixed(1)}%` : "—"}</div>
-              <div className="text-xs text-slate-500 mb-3">Win Rate</div>
-              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${neutralBar} rounded-full`} style={{ width: `${currentStats.win_rate}%` }} />
-              </div>
-            </div>
-            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className="text-2xl font-bold text-slate-100 font-mono mb-2">{currentStats.total_bets > 0 ? formatOdds(currentStats.avg_odds) : "—"}</div>
-              <div className="text-xs text-slate-500 mb-3">Avg Odds</div>
-              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className={`h-full bg-gradient-to-r ${neutralBar} rounded-full`} style={{ width: `${(currentStats.avg_odds / 3) * 100}%` }} />
-              </div>
-            </div>
-          </div>
+          <PublicRecordMetricGrid
+            activeName={activeName}
+            totalBets={currentStats.total_bets}
+            totalStake={currentStats.total_stake}
+            totalProfit={currentStats.total_profit}
+            roi={currentStats.roi}
+            winRate={currentStats.win_rate}
+            avgOdds={currentStats.avg_odds}
+            hasArchiveBaseline={Boolean(archiveStats?.total_bets)}
+          />
 
           <ProfitProgressionPanel rows={filteredProgressionRows} activeName={activeName} archiveStats={archiveStats} />
 
