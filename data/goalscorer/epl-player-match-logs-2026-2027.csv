@@ -1,14 +1,136 @@
 season,competition,match_date,team,opponent,is_home,player_id,player_name,position,started,minutes,goals,assists,shots,shots_on_target,xg,npxg,xa,big_chances,big_chance_goals,big_chance_misses,big_chance_xg,penalties_scored,penalties_attempted,team_xg,team_xga
 2026-2027,Premier League,2026-08-21,Arsenal,Coventry,1,5220,Kai Havertz,FW,,90,1,0,1,,0.098353,0.098353,0.047731,0,0,0,0.0,0,0,1.85424,0.558336
+2026-2027,Premier League,2026-08-23,Manchester City,Bournemouth,1,7603,Marc Guehi,DMC,,90,1,0,2,,0.646859,0.646859,0.480158,1,0,1,0.532734,0,0,2.47444,0.707541
+2026-2027,Premier League,2026-08-24,Chelsea,Fulham,0,8272,João Pedro,FW,,90,1,1,4,,0.674664,0.674664,0.354945,1,1,0,0.427719,0,0,2.58384,1.41707
+2026-2027,Premier League,2026-08-22,Brentford,Tottenham,1,9680,Vitaly Janelt,DMC,,90,1,0,2,,0.48804,0.48804,0.083658,1,1,0,0.444155,0,0,4.04155,0.756284
+2026-2027,Premier League,2026-08-22,Everton,Crystal Palace,1,9739,Kiernan Dewsbury-Hall,AMC,,90,1,0,3,,0.191406,0.191406,0.118894,0,0,0,0.0,0,0,1.45085,2.23095
+2026-2027,Premier League,2026-08-23,Liverpool,Newcastle United,0,9788,Dominik Szoboszlai,DMC,,90,1,0,3,,0.83154,0.070371,0.145358,0,0,0,0.0,1,1,3.13133,1.59465
+2026-2027,Premier League,2026-08-23,Manchester City,Bournemouth,1,9790,Josko Gvardiol,DL,,90,1,0,1,,0.408847,0.408847,0.0,1,1,0,0.408847,0,0,2.47444,0.707541
+2026-2027,Premier League,2026-08-22,Leeds,Nottingham Forest,0,9910,Anton Stach,MC,,90,1,0,3,,0.110485,0.110485,0.0,0,0,0,0.0,0,0,0.466247,0.656681
+2026-2027,Premier League,2026-08-23,Bournemouth,Manchester City,0,10741,Marcus Tavernier,AML,,90,1,0,2,,0.479344,0.479344,0.082477,1,1,0,0.440787,0,0,0.707541,2.47444
+2026-2027,Premier League,2026-08-22,Brentford,Tottenham,1,10809,Keane Lewis-Potter,DL,,90,1,0,2,,0.577696,0.577696,0.017858,1,1,0,0.543789,0,0,4.04155,0.756284
+2026-2027,Premier League,2026-08-23,Liverpool,Newcastle United,0,11296,Cody Gakpo,AML,,90,1,0,6,,0.225801,0.225801,0.231911,0,0,0,0.0,0,0,3.13133,1.59465
+2026-2027,Premier League,2026-08-24,Fulham,Chelsea,1,12035,Gonzalo García,FW,,90,1,0,3,,0.800455,0.800455,0.0,1,1,0,0.635872,0,0,1.41707,2.58384
+2026-2027,Premier League,2026-08-24,Fulham,Chelsea,1,12410,Joshua King,AMC,,90,1,0,3,,0.118748,0.118748,0.039838,0,0,0,0.0,0,0,1.41707,2.58384
+2026-2027,Premier League,2026-08-24,Fulham,Chelsea,1,181,Bernd Leno,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.41707,2.58384
+2026-2027,Premier League,2026-08-22,Sunderland,Ipswich,0,204,Granit Xhaka,DMC,,90,0,0,0,,0.0,0.0,0.048299,0,0,0,0.0,0,0,1.17743,1.58452
+2026-2027,Premier League,2026-08-23,Brighton,Aston Villa,1,239,Pascal Groß,DMC,,90,0,0,0,,0.0,0.0,0.477201,0,0,0,0.0,0,0,4.00327,0.275249
+2026-2027,Premier League,2026-08-24,Fulham,Chelsea,1,500,Alex Iwobi,DMC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.41707,2.58384
+2026-2027,Premier League,2026-08-22,Everton,Crystal Palace,1,741,Jordan Pickford,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.45085,2.23095
+2026-2027,Premier League,2026-08-23,Bournemouth,Manchester City,0,825,Adam Smith,DR,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.707541,2.47444
+2026-2027,Premier League,2026-08-23,Liverpool,Newcastle United,0,833,Virgil van Dijk,DC,,90,0,0,2,,0.122931,0.122931,0.0,0,0,0,0.0,0,0,3.13133,1.59465
+2026-2027,Premier League,2026-08-22,Manchester United,Hull,0,1006,Luke Shaw,DL,,90,0,0,0,,0.0,0.0,0.230166,0,0,0,0.0,0,0,1.77874,1.49627
 2026-2027,Premier League,2026-08-21,Coventry,Arsenal,0,1045,Matt Grimes,DMC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.558336,1.85424
+2026-2027,Premier League,2026-08-23,Manchester City,Bournemouth,1,1116,Gianluigi Donnarumma,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.47444,0.707541
+2026-2027,Premier League,2026-08-22,Manchester United,Hull,0,1228,Bruno Fernandes,AMC,,90,0,0,3,,0.040968,0.040968,0.165939,0,0,0,0.0,0,0,1.77874,1.49627
+2026-2027,Premier League,2026-08-23,Liverpool,Newcastle United,0,1257,Alisson,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,3.13133,1.59465
+2026-2027,Premier League,2026-08-22,Ipswich,Sunderland,1,1537,Sasa Lukic,DMC,,90,0,1,0,,0.0,0.0,0.064256,0,0,0,0.0,0,0,1.58452,1.17743
+2026-2027,Premier League,2026-08-22,Everton,Crystal Palace,1,1665,James Tarkowski,DC,,90,0,0,1,,0.048588,0.048588,0.0,0,0,0,0.0,0,0,1.45085,2.23095
+2026-2027,Premier League,2026-08-22,Manchester United,Hull,0,1687,Harry Maguire,DC,,90,0,0,2,,0.057672,0.057672,0.505333,0,0,0,0.0,0,0,1.77874,1.49627
+2026-2027,Premier League,2026-08-22,Tottenham,Brentford,0,1688,Andrew Robertson,DL,,90,0,0,0,,0.0,0.0,0.24652,0,0,0,0.0,0,0,0.756284,4.04155
+2026-2027,Premier League,2026-08-22,Hull,Manchester United,1,1736,Oliver McBurnie,FW,,90,0,0,2,,0.436807,0.436807,0.071455,1,0,1,0.410529,0,0,1.49627,1.77874
+2026-2027,Premier League,2026-08-23,Aston Villa,Brighton,0,2203,Emiliano Buendía,FW,,90,0,0,3,,0.117511,0.117511,0.097676,0,0,0,0.0,0,0,0.275249,4.00327
+2026-2027,Premier League,2026-08-22,Ipswich,Sunderland,1,3203,Issa Diop,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.58452,1.17743
+2026-2027,Premier League,2026-08-23,Brighton,Aston Villa,1,3645,Olivier Boscagli,DL,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,4.00327,0.275249
+2026-2027,Premier League,2026-08-23,Liverpool,Newcastle United,0,5232,Alexander Isak,FW,,90,0,0,4,,1.41066,1.41066,0.040461,2,0,2,1.289923,0,0,3.13133,1.59465
+2026-2027,Premier League,2026-08-22,Leeds,Nottingham Forest,0,5555,Dominic Calvert-Lewin,FW,,90,0,0,3,,0.160369,0.160369,0.0,0,0,0,0.0,0,0,0.466247,0.656681
 2026-2027,Premier League,2026-08-21,Arsenal,Coventry,1,5613,Gabriel,DC,,90,0,0,1,,0.028713,0.028713,0.0,0,0,0,0.0,0,0,1.85424,0.558336
+2026-2027,Premier League,2026-08-22,Sunderland,Ipswich,0,5680,Thomas Meunier,DR,,90,0,0,2,,0.046275,0.046275,0.0,0,0,0,0.0,0,0,1.17743,1.58452
+2026-2027,Premier League,2026-08-22,Nottingham Forest,Leeds,1,5722,Ibrahim Sangare,MC,,90,0,0,1,,0.014822,0.014822,0.017668,0,0,0,0.0,0,0,0.656681,0.466247
+2026-2027,Premier League,2026-08-23,Newcastle United,Liverpool,1,5786,Yoane Wissa,AMC,,90,0,1,4,,0.969901,0.969901,0.072235,2,0,2,0.931283,0,0,1.59465,3.13133
+2026-2027,Premier League,2026-08-23,Aston Villa,Brighton,0,5789,Boubacar Kamara,DMC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.275249,4.00327
+2026-2027,Premier League,2026-08-23,Brighton,Aston Villa,1,6048,Lewis Dunk,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,4.00327,0.275249
+2026-2027,Premier League,2026-08-23,Aston Villa,Brighton,0,6080,Victor Lindelöf,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.275249,4.00327
+2026-2027,Premier League,2026-08-22,Crystal Palace,Everton,0,6145,Daichi Kamada,MC,,90,0,0,0,,0.0,0.0,0.29724,0,0,0,0.0,0,0,2.23095,1.45085
+2026-2027,Premier League,2026-08-24,Fulham,Chelsea,1,6157,Timothy Castagne,DR,,90,0,1,1,,0.072133,0.072133,0.169018,0,0,0,0.0,0,0,1.41707,2.58384
+2026-2027,Premier League,2026-08-22,Nottingham Forest,Leeds,1,6174,Nikola Milenkovic,DC,,90,0,0,2,,0.123864,0.123864,0.0,0,0,0,0.0,0,0,0.656681,0.466247
+2026-2027,Premier League,2026-08-22,Leeds,Nottingham Forest,0,6369,Ethan Ampadu,MC,,90,0,0,0,,0.0,0.0,0.079752,0,0,0,0.0,0,0,0.466247,0.656681
+2026-2027,Premier League,2026-08-22,Leeds,Nottingham Forest,0,6377,Joe Rodon,DC,,90,0,0,1,,0.03359,0.03359,0.097837,0,0,0,0.0,0,0,0.466247,0.656681
+2026-2027,Premier League,2026-08-22,Manchester United,Hull,0,6552,Bryan Mbeumo,AMR,,90,0,0,4,,0.550503,0.550503,0.1213,1,0,1,0.428164,0,0,1.77874,1.49627
+2026-2027,Premier League,2026-08-23,Newcastle United,Liverpool,1,6681,Harvey Barnes,AML,,90,0,0,1,,0.060245,0.060245,0.0,0,0,0,0.0,0,0,1.59465,3.13133
+2026-2027,Premier League,2026-08-22,Leeds,Nottingham Forest,0,6807,Jaka Bijol,DC,,90,0,0,2,,0.083144,0.083144,0.0,0,0,0,0.0,0,0,0.466247,0.656681
+2026-2027,Premier League,2026-08-22,Nottingham Forest,Leeds,1,6857,Morgan Gibbs-White,AMC,,90,0,0,3,,0.143469,0.143469,0.0,0,0,0,0.0,0,0,0.656681,0.466247
+2026-2027,Premier League,2026-08-22,Nottingham Forest,Leeds,1,6903,Matz Sels,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.656681,0.466247
+2026-2027,Premier League,2026-08-23,Brighton,Aston Villa,1,6937,Georginio Rutter,FW,,90,0,1,2,,0.069454,0.069454,0.907571,0,0,0,0.0,0,0,4.00327,0.275249
 2026-2027,Premier League,2026-08-21,Arsenal,Coventry,1,7298,Ben White,DR,,90,0,1,1,,0.129039,0.129039,0.18718,0,0,0,0.0,0,0,1.85424,0.558336
+2026-2027,Premier League,2026-08-22,Sunderland,Ipswich,0,7432,Reinildo,DL,,90,0,0,0,,0.0,0.0,0.171862,0,0,0,0.0,0,0,1.17743,1.58452
+2026-2027,Premier League,2026-08-22,Crystal Palace,Everton,0,7702,Dean Henderson,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.23095,1.45085
+2026-2027,Premier League,2026-08-22,Hull,Manchester United,1,7703,John Egan,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.49627,1.77874
+2026-2027,Premier League,2026-08-22,Leeds,Nottingham Forest,0,7753,James Justin,DML,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.466247,0.656681
+2026-2027,Premier League,2026-08-22,Brentford,Tottenham,1,7904,Caoimhin Kelleher,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,4.04155,0.756284
+2026-2027,Premier League,2026-08-22,Tottenham,Brentford,0,7958,Sandro Tonali,DMC,,90,0,0,2,,0.026764,0.026764,0.0,0,0,0,0.0,0,0,0.756284,4.04155
+2026-2027,Premier League,2026-08-24,Chelsea,Fulham,0,8067,Reece James,MC,,90,0,0,2,,0.08309,0.08309,0.034903,0,0,0,0.0,0,0,2.58384,1.41707
+2026-2027,Premier League,2026-08-22,Nottingham Forest,Leeds,1,8204,Neco Williams,DML,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.656681,0.466247
+2026-2027,Premier League,2026-08-22,Crystal Palace,Everton,0,8214,Tyrick Mitchell,DML,,90,0,0,0,,0.0,0.0,0.028658,0,0,0,0.0,0,0,2.23095,1.45085
+2026-2027,Premier League,2026-08-23,Manchester City,Bournemouth,1,8260,Erling Haaland,FW,,90,0,0,5,,0.754003,0.754003,0.0,1,0,1,0.480158,0,0,2.47444,0.707541
+2026-2027,Premier League,2026-08-23,Newcastle United,Liverpool,1,8378,Malick Thiaw,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.59465,3.13133
+2026-2027,Premier League,2026-08-22,Crystal Palace,Everton,0,8430,Chris Richards,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.23095,1.45085
+2026-2027,Premier League,2026-08-22,Everton,Crystal Palace,1,8476,Jarrad Branthwaite,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.45085,2.23095
 2026-2027,Premier League,2026-08-21,Coventry,Arsenal,0,8483,Bobby Thomas,DC,,90,0,0,1,,0.007854,0.007854,0.032368,0,0,0,0.0,0,0,0.558336,1.85424
+2026-2027,Premier League,2026-08-24,Fulham,Chelsea,1,8489,Jorge Cuenca,DC,,90,0,0,0,,0.0,0.0,0.241219,0,0,0,0.0,0,0,1.41707,2.58384
+2026-2027,Premier League,2026-08-23,Newcastle United,Liverpool,1,8635,Sven Botman,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.59465,3.13133
+2026-2027,Premier League,2026-08-23,Bournemouth,Manchester City,0,8640,Adrien Truffert,DL,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.707541,2.47444
+2026-2027,Premier League,2026-08-22,Ipswich,Sunderland,1,8756,Dara O&#039;Shea,DR,,90,0,0,0,,0.0,0.0,0.047902,0,0,0,0.0,0,0,1.58452,1.17743
+2026-2027,Premier League,2026-08-24,Chelsea,Fulham,0,8853,Maxence Lacroix,DC,,90,0,1,0,,0.0,0.0,0.445555,0,0,0,0.0,0,0,2.58384,1.41707
+2026-2027,Premier League,2026-08-23,Aston Villa,Brighton,0,8864,Matthew Cash,DR,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.275249,4.00327
+2026-2027,Premier League,2026-08-22,Ipswich,Sunderland,1,8919,Leif Davis,DL,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.58452,1.17743
+2026-2027,Premier League,2026-08-23,Manchester City,Bournemouth,1,8961,Rúben Dias,DC,,90,0,0,0,,0.0,0.0,0.0267,0,0,0,0.0,0,0,2.47444,0.707541
+2026-2027,Premier League,2026-08-22,Leeds,Nottingham Forest,0,9077,James Trafford,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.466247,0.656681
+2026-2027,Premier League,2026-08-24,Chelsea,Fulham,0,9098,Robert Sánchez,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.58384,1.41707
+2026-2027,Premier League,2026-08-22,Brentford,Tottenham,1,9156,Kevin Schade,AML,,90,0,0,5,,0.435972,0.435972,0.043885,0,0,0,0.0,0,0,4.04155,0.756284
+2026-2027,Premier League,2026-08-22,Leeds,Nottingham Forest,0,9205,Jayden Bogle,DMR,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.466247,0.656681
+2026-2027,Premier League,2026-08-22,Everton,Crystal Palace,1,9307,Iliman Ndiaye,AMR,,90,0,1,2,,0.219113,0.219113,0.6093,0,0,0,0.0,0,0,1.45085,2.23095
+2026-2027,Premier League,2026-08-23,Liverpool,Newcastle United,0,9328,Jeremie Frimpong,DR,,90,0,0,1,,0.013494,0.013494,0.111768,0,0,0,0.0,0,0,3.13133,1.59465
+2026-2027,Premier League,2026-08-23,Aston Villa,Brighton,0,9614,Marco Bizot,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.275249,4.00327
 2026-2027,Premier League,2026-08-21,Arsenal,Coventry,1,9676,David Raya,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.85424,0.558336
+2026-2027,Premier League,2026-08-22,Brentford,Tottenham,1,9677,Kristoffer Ajer,DC,,90,0,0,1,,0.075333,0.075333,0.0,0,0,0,0.0,0,0,4.04155,0.756284
 2026-2027,Premier League,2026-08-21,Coventry,Arsenal,0,9681,Frank Onyeka,MC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.558336,1.85424
+2026-2027,Premier League,2026-08-22,Brentford,Tottenham,1,9733,Nathan Collins,DC,,90,0,0,2,,0.504323,0.504323,0.055379,1,0,1,0.485587,0,0,4.04155,0.756284
+2026-2027,Premier League,2026-08-22,Tottenham,Brentford,0,9780,Mathys Tel,AML,,90,0,0,2,,0.061417,0.061417,0.026531,0,0,0,0.0,0,0,0.756284,4.04155
+2026-2027,Premier League,2026-08-22,Ipswich,Sunderland,1,9960,Kjell Scherpen,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.58452,1.17743
 2026-2027,Premier League,2026-08-21,Arsenal,Coventry,1,10024,Cristhian Mosquera,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.85424,0.558336
+2026-2027,Premier League,2026-08-23,Newcastle United,Liverpool,1,10216,Lewis Hall,DL,,90,0,0,0,,0.0,0.0,0.630452,0,0,0,0.0,0,0,1.59465,3.13133
+2026-2027,Premier League,2026-08-22,Everton,Crystal Palace,1,10291,Vitalii Mykolenko,DL,,90,0,0,0,,0.0,0.0,0.028086,0,0,0,0.0,0,0,1.45085,2.23095
+2026-2027,Premier League,2026-08-23,Bournemouth,Manchester City,0,10747,James Hill,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.707541,2.47444
+2026-2027,Premier League,2026-08-24,Chelsea,Fulham,0,10805,Levi Colwill,DC,,90,0,0,1,,0.046287,0.046287,0.0,0,0,0,0.0,0,0,2.58384,1.41707
+2026-2027,Premier League,2026-08-22,Tottenham,Brentford,0,10807,Jan Paul van Hecke,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.756284,4.04155
+2026-2027,Premier League,2026-08-22,Tottenham,Brentford,0,10864,Marcos Senesi,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.756284,4.04155
+2026-2027,Premier League,2026-08-22,Everton,Crystal Palace,1,11331,Merlin Röhl,DR,,90,0,0,0,,0.0,0.0,0.085498,0,0,0,0.0,0,0,1.45085,2.23095
+2026-2027,Premier League,2026-08-23,Manchester City,Bournemouth,1,11363,Antoine Semenyo,AML,,90,0,0,1,,0.051346,0.051346,0.0,0,0,0,0.0,0,0,2.47444,0.707541
+2026-2027,Premier League,2026-08-23,Liverpool,Newcastle United,0,11709,Milos Kerkez,DL,,90,0,0,2,,0.038311,0.038311,0.024253,0,0,0,0.0,0,0,3.13133,1.59465
+2026-2027,Premier League,2026-08-23,Brighton,Aston Villa,1,11711,Bart Verbruggen,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,4.00327,0.275249
+2026-2027,Premier League,2026-08-24,Fulham,Chelsea,1,11728,Calvin Bassey,DC,,90,0,0,1,,0.017866,0.017866,0.0,0,0,0,0.0,0,0,1.41707,2.58384
+2026-2027,Premier League,2026-08-23,Manchester City,Bournemouth,1,11763,Abduqodir Khusanov,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.47444,0.707541
+2026-2027,Premier League,2026-08-23,Bournemouth,Manchester City,0,12032,Djordje Petrovic,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.707541,2.47444
+2026-2027,Premier League,2026-08-22,Nottingham Forest,Leeds,1,12123,Murillo,DC,,90,0,0,0,,0.0,0.0,0.105236,0,0,0,0.0,0,0,0.656681,0.466247
+2026-2027,Premier League,2026-08-23,Bournemouth,Manchester City,0,12149,Alex Scott,DMC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.707541,2.47444
 2026-2027,Premier League,2026-08-21,Arsenal,Coventry,1,12272,Myles Lewis-Skelly,DMC,,90,0,0,1,,0.047731,0.047731,0.051784,0,0,0,0.0,0,0,1.85424,0.558336
+2026-2027,Premier League,2026-08-22,Crystal Palace,Everton,0,12409,Adam Wharton,MC,,90,0,0,0,,0.0,0.0,0.326596,0,0,0,0.0,0,0,2.23095,1.45085
+2026-2027,Premier League,2026-08-24,Chelsea,Fulham,0,12535,Josh Acheampong,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.58384,1.41707
+2026-2027,Premier League,2026-08-22,Ipswich,Sunderland,1,12745,Jacob Greaves,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.58452,1.17743
+2026-2027,Premier League,2026-08-22,Everton,Crystal Palace,1,12757,Harrison Armstrong,DMC,,90,0,1,0,,0.0,0.0,0.069064,0,0,0,0.0,0,0,1.45085,2.23095
 2026-2027,Premier League,2026-08-21,Coventry,Arsenal,0,12760,Carl Rushworth,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.558336,1.85424
 2026-2027,Premier League,2026-08-21,Coventry,Arsenal,0,12955,Aurèle Amenda,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.558336,1.85424
+2026-2027,Premier League,2026-08-22,Manchester United,Hull,0,13080,Ayden Heaven,DC,,90,0,0,2,,0.132168,0.132168,0.0,0,0,0,0.0,0,0,1.77874,1.49627
+2026-2027,Premier League,2026-08-22,Crystal Palace,Everton,0,13091,Jaydee Canvot,DC,,90,0,0,1,,0.019444,0.019444,0.0,0,0,0,0.0,0,0,2.23095,1.45085
+2026-2027,Premier League,2026-08-22,Tottenham,Brentford,0,13348,Antonín Kinsky,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.756284,4.04155
+2026-2027,Premier League,2026-08-23,Brighton,Aston Villa,1,13364,Diego Gómez,AMR,,90,0,1,3,,0.231667,0.231667,0.813016,0,0,0,0.0,0,0,4.00327,0.275249
+2026-2027,Premier League,2026-08-23,Newcastle United,Liverpool,1,13456,Amar Dedic,DR,,90,0,0,1,,0.057983,0.057983,0.0,0,0,0,0.0,0,0,1.59465,3.13133
+2026-2027,Premier League,2026-08-22,Sunderland,Ipswich,0,13712,Robin Roefs,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.17743,1.58452
+2026-2027,Premier League,2026-08-22,Sunderland,Ipswich,0,13715,Dan Ballard,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.17743,1.58452
+2026-2027,Premier League,2026-08-22,Sunderland,Ipswich,0,13716,Noah Sadiki,DMC,,90,0,0,1,,0.288067,0.288067,0.055746,1,0,1,0.288067,0,0,1.17743,1.58452
+2026-2027,Premier League,2026-08-23,Brighton,Aston Villa,1,13725,Luka Vuskovic,DC,,90,0,0,2,,0.367155,0.367155,0.0,1,0,1,0.353157,0,0,4.00327,0.275249
+2026-2027,Premier League,2026-08-22,Nottingham Forest,Leeds,1,13778,Igor Jesus,FW,,90,0,0,3,,0.278193,0.278193,0.0,0,0,0,0.0,0,0,0.656681,0.466247
+2026-2027,Premier League,2026-08-22,Nottingham Forest,Leeds,1,13779,Jair,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.656681,0.466247
+2026-2027,Premier League,2026-08-22,Leeds,Nottingham Forest,0,13879,Tarik Muharemovic,DC,,90,0,0,1,,0.060155,0.060155,0.0,0,0,0,0.0,0,0,0.466247,0.656681
+2026-2027,Premier League,2026-08-22,Manchester United,Hull,0,14056,Senne Lammens,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.77874,1.49627
+2026-2027,Premier League,2026-08-23,Aston Villa,Brighton,0,14193,George Hemmings,AML,,90,0,0,0,,0.0,0.0,0.02544,0,0,0,0.0,0,0,0.275249,4.00327
+2026-2027,Premier League,2026-08-23,Bournemouth,Manchester City,0,14395,Rayan,AMR,,90,0,0,1,,0.067079,0.067079,0.07864,0,0,0,0.0,0,0,0.707541,2.47444
 2026-2027,Premier League,2026-08-21,Coventry,Arsenal,0,14742,Milan van Ewijk,DR,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.558336,1.85424
 2026-2027,Premier League,2026-08-21,Coventry,Arsenal,0,14743,Jay Dasilva,DL,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.558336,1.85424
+2026-2027,Premier League,2026-08-22,Hull,Manchester United,1,14758,Konstantinos Tzolakis,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.49627,1.77874
+2026-2027,Premier League,2026-08-22,Hull,Manchester United,1,14760,Mohamed Belloumi,MR,,90,0,0,2,,0.046342,0.046342,0.0,0,0,0,0.0,0,0,1.49627,1.77874
+2026-2027,Premier League,2026-08-22,Hull,Manchester United,1,14761,Matt Crooks,MC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.49627,1.77874
+2026-2027,Premier League,2026-08-22,Hull,Manchester United,1,14762,Regan Slater,MC,,90,0,1,0,,0.0,0.0,0.525585,0,0,0,0.0,0,0,1.49627,1.77874
+2026-2027,Premier League,2026-08-23,Bournemouth,Manchester City,0,14859,António Silva,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.707541,2.47444
+2026-2027,Premier League,2026-08-23,Newcastle United,Liverpool,1,14874,Lukás Hornícek,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.59465,3.13133

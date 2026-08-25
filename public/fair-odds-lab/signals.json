@@ -1,7 +1,10 @@
 {
-  "generated_at": "2026-08-24T22:58:20.101943Z",
+  "generated_at": "2026-08-25T07:33:51.501569Z",
   "source_file": [
-    "data/goalscorer/goalscorer-monitor-snapshot.json"
+    "data/goalscorer/all-leagues-live-board.json",
+    "data/goalscorer/goalscorer-live-comparison.csv",
+    "data/goalscorer/epl/goalscorer-live-comparison.csv",
+    "data/goalscorer/la-liga/goalscorer-live-comparison.csv"
   ],
   "team_form_source": "/home/runner/work/_temp/football-form/team-match-base.csv",
   "edge_threshold_pp": 6.0,
@@ -30,16 +33,120 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 0,
-  "signals_qualifying": 0,
-  "safety_exclusions": {},
+  "fixtures_evaluated": 4,
+  "signals_qualifying": 1,
+  "safety_exclusions": {
+    "lineup_not_public_quality": 1
+  },
   "extreme_gap_quarantine": {
     "eligible_rows": 0,
     "added_by_league": {},
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
-  "leagues_covered": [],
-  "featured_signal_id": null,
-  "signals": []
+  "leagues_covered": [
+    "la-liga"
+  ],
+  "featured_signal_id": "20260826-orri-steinn-oskarsson-a6200c7043",
+  "signals": [
+    {
+      "id": "20260826-orri-steinn-oskarsson-a6200c7043",
+      "match": {
+        "home_team": "Real Madrid",
+        "away_team": "Real Sociedad San Sebastian",
+        "league": "la-liga",
+        "league_display": "La Liga",
+        "league_logo_path": "/league-logos/la-liga.png",
+        "kickoff_utc": "2026-08-26T19:00:00Z",
+        "kickoff_display": "Wed 26 Aug 20:00 UK",
+        "fotmob_match_id": "5868018",
+        "fotmob_page_url": "/matches/real-sociedad-vs-real-madrid/2g087q#5868018",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Orri Steinn Oskarsson",
+        "team": "Real Sociedad",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/la-liga/real-sociedad.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#2563eb",
+        "team_shirt_pattern": "vertical-stripes"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 32.2,
+        "fair_odds": 3.11
+      },
+      "market_data": {
+        "best_odds": 4.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 25.0
+      },
+      "edge": {
+        "price_gap_pp": 7.2,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 99
+        },
+        "share_of_team_chances_pct": 35,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 17
+        },
+        "recent_team_form": {
+          "tier": "Quiet",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-23",
+          "xg_for_avg": 1.17,
+          "xg_against_avg": 1.95,
+          "xgd_per90": -0.77,
+          "shots_for_avg": 8.6,
+          "shots_against_avg": 18.4,
+          "sot_for_avg": 3.0,
+          "sot_against_avg": 5.8,
+          "corners_for_avg": 3.6,
+          "corners_against_avg": 3.4
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 17
+        },
+        "opponent_recent_defence": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-23",
+          "xg_for_avg": 1.33,
+          "xg_against_avg": 1.29,
+          "xgd_per90": 0.04,
+          "shots_for_avg": 13.4,
+          "shots_against_avg": 11.6,
+          "sot_for_avg": 4.4,
+          "sot_against_avg": 3.8,
+          "corners_for_avg": 4.8,
+          "corners_against_avg": 3.8
+        },
+        "fixture_boost_pct": -25,
+        "projected_minutes": 78,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    }
+  ]
 }
