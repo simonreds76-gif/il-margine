@@ -18,9 +18,9 @@ on:
         type: number
         default: 64
       bookmakers:
-        description: "Comma-separated count-market sources"
+        description: "Comma-separated count-market sources (Kambi requires a paid plan)"
         type: string
-        default: "Bet365,Kambi"
+        default: "Bet365"
       commit_results:
         description: "Commit captured odds files back to the branch"
         type: boolean
@@ -86,7 +86,7 @@ jobs:
         env:
           DAYS_AHEAD: ${{ github.event.inputs.days_ahead || '2' }}
           MAX_EVENTS: ${{ github.event.inputs.max_events || '64' }}
-          BOOKMAKERS: ${{ github.event.inputs.bookmakers || 'Bet365,Kambi' }}
+          BOOKMAKERS: ${{ github.event.inputs.bookmakers || 'Bet365' }}
           PROBE_MARKETS: ${{ github.event.inputs.probe_markets || 'false' }}
         run: |
           EXTRA_ARGS=""
