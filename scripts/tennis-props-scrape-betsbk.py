@@ -273,7 +273,7 @@ def capture_events(
                 try:
                     page.get_by_text(re.compile(r"(?:Aces|Double Faults)$")).first.wait_for(
                         state="attached",
-                        timeout=timeout_ms,
+                        timeout=min(timeout_ms, 5000),
                     )
                 except PlaywrightTimeoutError:
                     status = "NO_ACES_DF_MARKETS"
