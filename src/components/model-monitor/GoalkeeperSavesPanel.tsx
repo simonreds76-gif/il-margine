@@ -8,6 +8,7 @@ type GoalkeeperReport = {
   current?: {
     priced_lines?: number;
     eligible_lines?: number;
+    tail_diagnostic_lines?: number;
     provisional_lines?: number;
     signals_added?: number;
     blocker_counts?: Record<string, number>;
@@ -120,7 +121,7 @@ export default function GoalkeeperSavesPanel({
         <Metric label="ROI" value={pct(evidence?.roi)} detail="P/L / units staked" />
         <Metric label="Mean CLV" value={pct(evidence?.clv)} detail={`matched n=${evidence?.clv_matched ?? 0}`} />
         <Metric label="Captured rows" value={String(capture?.rows ?? 0)} detail={`${capture?.events ?? 0} events`} />
-        <Metric label="Board rows" value={String(board.length)} detail={`${provisional.length} provisional`} />
+        <Metric label="Board rows" value={String(board.length)} detail={`${report?.current?.tail_diagnostic_lines ?? 0} tail diagnostics`} />
       </div>
 
       <div className="border-t border-slate-800 px-4 py-4 sm:px-5">
@@ -150,7 +151,7 @@ export default function GoalkeeperSavesPanel({
               <tbody>{ledger.map((row, index) => {
                 const result = (row.result || row.status || "pending").toLowerCase();
                 const resultClass = result === "won" ? "text-emerald-300" : result === "lost" ? "text-rose-300" : "text-amber-200";
-                return <tr key={`${row.signal_id || row.event_id}-${index}`} className="border-t border-slate-800"><td className="px-3 py-2 text-slate-400">{row.match_date || "-"}</td><td className="px-3 py-2 text-slate-200">{row.home_team} vs {row.away_team}</td><td className="px-3 py-2 text-violet-100">{row.goalkeeper || "-"}</td><td className="px-3 py-2 capitalize">{row.side} {row.line}</td><td className="px-3 py-2 text-right font-mono">{row.odds_decimal || "-"}</td><td className="px-3 py-2 text-right font-mono">{row.fair_odds || "-"}</td><td className="px-3 py-2 text-right font-mono text-emerald-300">{pct(numberValue(row.edge))}</td><td className={`px-3 py-2 font-semibold uppercase ${resultClass}`}>{result}</td><td className="px-3 py-2 text-right font-mono">{row.pnl_units || "-"}</td></tr>;
+                return <tr key={`${row.signal_id || row.event_id}-${index}`} className="border-t border-slate-800"><td className="px-3 py-2 text-slate-400">{row.match_date || "-"}</td><td className="px-3 py-2 text-slate-200">{row.home_team} vs {row.away_team}</td><td className="px-3 py-2 text-violet-100">{row.goalkeeper || "-"}</td><td className="px-3 py-2 capitalize">{row.side} {row.line}</td><td className="px-3 py-2 text-right font-mono">{row.odds_decimal || "-"}</td><td className="px-3 py-2 text-right font-mono">{row.fair_odds || "-"}</td><td className="px-3 py-2 text-right font-mono text-emerald-300">{pct(numberValue(row.edge))}</td><td className={`px-3 py-2 font-semibold uppercase ${resultClass}`}><div>{result}</div>{row.selection_policy ? <div className="mt-1 text-[9px] font-normal normal-case tracking-normal text-slate-500">{row.selection_policy.replaceAll("_", " ")}</div> : null}</td><td className="px-3 py-2 text-right font-mono">{row.pnl_units || "-"}</td></tr>;
               })}</tbody>
             </table>
           </div>
@@ -165,7 +166,7 @@ export default function GoalkeeperSavesPanel({
           <div className="mt-3 overflow-x-auto rounded-xl border border-slate-800">
             <table className="w-full min-w-[900px] text-left text-xs">
               <thead className="bg-slate-950/80 text-[10px] uppercase tracking-[0.12em] text-slate-500"><tr><th className="px-3 py-2">Kickoff</th><th className="px-3 py-2">Match</th><th className="px-3 py-2">Goalkeeper</th><th className="px-3 py-2">Selection</th><th className="px-3 py-2 text-right">Price</th><th className="px-3 py-2 text-right">Fair</th><th className="px-3 py-2 text-right">Edge</th><th className="px-3 py-2">Status</th></tr></thead>
-              <tbody>{board.map((row, index) => <tr key={`${row.event_id}-${row.goalkeeper}-${row.line}-${row.side}-${index}`} className="border-t border-slate-800"><td className="px-3 py-2 text-slate-400">{(row.kickoff_at || row.match_date || "-").replace("T", " ").slice(0, 16)}</td><td className="px-3 py-2 text-slate-200">{row.home_team} vs {row.away_team}</td><td className="px-3 py-2 text-violet-100">{row.goalkeeper || "-"}</td><td className="px-3 py-2">{row.side} {row.line}</td><td className="px-3 py-2 text-right font-mono">{row.odds_decimal || "-"}</td><td className="px-3 py-2 text-right font-mono">{row.fair_odds || "-"}</td><td className="px-3 py-2 text-right font-mono text-emerald-300">{pct(numberValue(row.edge))}</td><td className="px-3 py-2 text-slate-400">{row.candidate_status || (row.research_only ? "provisional" : "candidate")}</td></tr>)}</tbody>
+              <tbody>{board.map((row, index) => <tr key={`${row.event_id}-${row.goalkeeper}-${row.line}-${row.side}-${index}`} className="border-t border-slate-800"><td className="px-3 py-2 text-slate-400">{(row.kickoff_at || row.match_date || "-").replace("T", " ").slice(0, 16)}</td><td className="px-3 py-2 text-slate-200">{row.home_team} vs {row.away_team}</td><td className="px-3 py-2 text-violet-100">{row.goalkeeper || "-"}</td><td className="px-3 py-2">{row.side} {row.line}</td><td className="px-3 py-2 text-right font-mono">{row.odds_decimal || "-"}</td><td className="px-3 py-2 text-right font-mono">{row.fair_odds || "-"}</td><td className="px-3 py-2 text-right font-mono text-emerald-300">{pct(numberValue(row.edge))}</td><td className="px-3 py-2 text-slate-400"><div>{row.candidate_status || (row.research_only ? "provisional" : "candidate")}</div>{row.selection_policy ? <div className="mt-1 text-[9px] text-slate-600">{row.selection_policy.replaceAll("_", " ")}</div> : null}</td></tr>)}</tbody>
             </table>
           </div>
         )}

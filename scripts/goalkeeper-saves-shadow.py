@@ -13,7 +13,6 @@ from typing import Any
 
 from football_team_names import football_form_team_key
 from goalkeeper_saves_live import (
-    MIN_EDGE,
     ROOT,
     build_features,
     league_key,
@@ -40,13 +39,18 @@ DEFAULT_PROVISIONAL = ROOT / "data" / "goalkeeper-saves" / "gk-saves-v1-provisio
 # props. Track both expected and confirmed starting keepers in the research ledger,
 # while retaining the lineup status so the two cohorts can be evaluated separately.
 TRACKABLE_STARTER_STATUSES = {"confirmed_starter", "predicted_starter"}
+PRIMARY_MIN_EDGE = 0.05
+PRIMARY_MIN_ODDS = 1.70
+PRIMARY_MAX_ODDS = 3.00
+PRIMARY_SELECTION_POLICY = "near_even_value_v2"
+LEGACY_SELECTION_POLICY = "max_edge_tail_v1"
 
 CANDIDATE_FIELDS = [
     "generated_at", "event_id", "match_date", "kickoff_at", "league", "home_team", "away_team",
     "team", "opponent", "venue", "goalkeeper", "line", "side", "odds_decimal", "model_mean",
     "model_probability", "push_probability", "fair_odds", "edge", "lineup_status", "lineup_source",
     "capture_mode", "captured_at", "candidate_status", "blockers", "strongest_for_fixture",
-    "three_way_source",
+    "selection_policy", "three_way_source",
 ]
 PROVISIONAL_FIELDS = CANDIDATE_FIELDS + ["research_only", "not_a_signal"]
 SIGNAL_FIELDS = [
@@ -54,7 +58,7 @@ SIGNAL_FIELDS = [
     "team", "opponent", "venue", "goalkeeper", "line", "side", "odds_decimal", "model_mean",
     "model_probability", "push_probability", "fair_odds", "edge", "stake_units", "lineup_status",
     "lineup_source", "capture_mode", "captured_at", "status", "result", "actual_saves", "pnl_units",
-    "settled_at", "settlement_source", "close_odds", "clv",
+    "settled_at", "settlement_source", "close_odds", "clv", "selection_policy",
 ]
 
 
@@ -124,17 +128,26 @@ def apply_starter_tracking_policy(candidates: list[dict[str, Any]]) -> list[dict
         edge = parse_float(row.get("edge"))
         if edge is None:
             blockers.add("missing_priced_edge")
-        elif edge < MIN_EDGE:
-            blockers.add("edge_below_8pct")
+        elif edge < PRIMARY_MIN_EDGE:
+            blockers.add("edge_below_5pct")
         else:
             blockers.discard("edge_below_8pct")
+            blockers.discard("edge_below_5pct")
 
         if not blockers:
-            row["candidate_status"] = "eligible_shadow"
-        elif blockers == {"edge_below_8pct"}:
+            odds = parse_float(row.get("odds_decimal"))
+            if odds is not None and PRIMARY_MIN_ODDS <= odds <= PRIMARY_MAX_ODDS:
+                row["candidate_status"] = "eligible_shadow"
+                row["selection_policy"] = PRIMARY_SELECTION_POLICY
+            else:
+                row["candidate_status"] = "tail_diagnostic"
+                row["selection_policy"] = "tail_diagnostic"
+        elif blockers == {"edge_below_5pct"}:
             row["candidate_status"] = "no_edge"
+            row["selection_policy"] = ""
         else:
             row["candidate_status"] = "blocked"
+            row["selection_policy"] = ""
         row["blockers"] = "|".join(sorted(blockers))
         normalized.append(row)
     return normalized
@@ -234,11 +247,16 @@ def build_candidates(
                 )
 
         edge = priced.get("edge")
-        if edge is not None and edge < MIN_EDGE:
-            blockers.append("edge_below_8pct")
+        if edge is not None and edge < PRIMARY_MIN_EDGE:
+            blockers.append("edge_below_5pct")
         if not blockers:
-            status = "eligible_shadow"
-        elif set(blockers) == {"edge_below_8pct"}:
+            odds = parse_float(price_row.get("odds_decimal"))
+            status = (
+                "eligible_shadow"
+                if odds is not None and PRIMARY_MIN_ODDS <= odds <= PRIMARY_MAX_ODDS
+                else "tail_diagnostic"
+            )
+        elif set(blockers) == {"edge_below_5pct"}:
             status = "no_edge"
         else:
             status = "blocked"
@@ -271,22 +289,40 @@ def build_candidates(
                 "candidate_status": status,
                 "blockers": "|".join(sorted(set(blockers))),
                 "strongest_for_fixture": "no",
+                "selection_policy": PRIMARY_SELECTION_POLICY if status == "eligible_shadow" else "tail_diagnostic" if status == "tail_diagnostic" else "",
             }
         )
 
+    mark_primary_selections(rows)
+    return sorted(rows, key=lambda row: (row["kickoff_at"], row["home_team"], -float(row["edge"] or -999)))
+
+
+def mark_primary_selections(rows: list[dict[str, Any]]) -> None:
+    """Choose one robust, near-even value line per fixture."""
     by_fixture: dict[str, list[dict[str, Any]]] = {}
     for row in rows:
+        row["strongest_for_fixture"] = "no"
         by_fixture.setdefault(str(row["event_id"]), []).append(row)
     for fixture_rows in by_fixture.values():
-        priceable = [row for row in fixture_rows if parse_float(row.get("edge")) is not None]
-        if priceable:
-            strongest = max(priceable, key=lambda row: float(row["edge"]))
-            strongest["strongest_for_fixture"] = "yes"
-    return sorted(rows, key=lambda row: (row["kickoff_at"], row["home_team"], -float(row["edge"] or -999)))
+        eligible = [row for row in fixture_rows if row.get("candidate_status") == "eligible_shadow"]
+        if not eligible:
+            continue
+        primary = min(
+            eligible,
+            key=lambda row: (
+                abs((parse_float(row.get("odds_decimal")) or 999.0) - 2.0),
+                -(parse_float(row.get("model_probability")) or 0.0),
+                -(parse_float(row.get("edge")) or 0.0),
+            ),
+        )
+        primary["strongest_for_fixture"] = "yes"
 
 
 def append_signals(path: Path, candidates: list[dict[str, Any]], generated_at: str) -> tuple[int, list[dict[str, str]]]:
     existing = read_csv(path)
+    for row in existing:
+        if not str(row.get("selection_policy") or "").strip():
+            row["selection_policy"] = LEGACY_SELECTION_POLICY
     keys = {str(row.get("signal_id") or "") for row in existing}
     added = 0
     for row in candidates:
@@ -305,6 +341,7 @@ def append_signals(path: Path, candidates: list[dict[str, Any]], generated_at: s
                 "created_at": generated_at,
                 "stake_units": "0.5",
                 "status": "pending",
+                "selection_policy": PRIMARY_SELECTION_POLICY,
             }
         )
         existing.append({field: str(signal.get(field, "")) for field in SIGNAL_FIELDS})
@@ -330,6 +367,7 @@ def report_payload(
     clv_values = [value for row in settled if (value := parse_float(row.get("clv"))) is not None]
     close_coverage = len(clv_values) / len(settled) if settled else None
     eligible = [row for row in candidates if row.get("candidate_status") == "eligible_shadow"]
+    tail_diagnostics = [row for row in candidates if row.get("candidate_status") == "tail_diagnostic"]
     blocked = [row for row in candidates if row.get("candidate_status") == "blocked"]
     blocker_counts = Counter(
         blocker
@@ -349,10 +387,11 @@ def report_payload(
         "count_model": "PASS",
         "live_routing": False,
         "sellable": False,
-        "selection_rule": "one strongest O/U side per fixture; edge >=8%; predicted or confirmed starting goalkeeper",
+        "selection_rule": "one predicted/confirmed starting goalkeeper line per fixture; edge >=5%; price 1.70-3.00; closest to even money",
         "current": {
             "priced_lines": sum(1 for row in candidates if row.get("model_mean")),
             "eligible_lines": len(eligible),
+            "tail_diagnostic_lines": len(tail_diagnostics),
             "blocked_lines": len(blocked),
             "signals_added": added,
             "provisional_lines": provisional_count,

@@ -614,7 +614,7 @@ def report_lines(audit: dict[str, Any], samples: Sequence[Sample], counters: dic
             "",
             "- Candidate: `goalkeeper-saves-v1-nb2-confirmed-starter` (legacy experiment ID).",
             "- Count evidence can authorize prospective shadow capture only.",
-            "- Shadow tracking accepts predicted or confirmed starting goalkeepers, paired real prices and one strongest selection per fixture.",
+            "- Shadow tracking accepts predicted or confirmed starting goalkeepers and one robust line per fixture: edge >=5%, odds 1.70-3.00, closest to even money.",
             "- Sell gate remains blocked until >=150 settled real-price selections, >=70% true-close coverage and mean true-close CLV >=+0.5%.",
             "- No synthetic-price P/L, inferred CLV or public/live routing is permitted.",
             "",
@@ -682,6 +682,12 @@ def main() -> int:
                 "ema_window": WINDOW,
                 "ema_decay": DECAY,
                 "publication_gate": "predicted_or_confirmed_starting_goalkeeper_shadow_only",
+                "selection_policy": {
+                    "minimum_edge": 0.05,
+                    "odds_range": [1.70, 3.00],
+                    "rank": "closest_to_even_money_then_higher_probability_then_edge",
+                    "version": "near_even_value_v2",
+                },
                 "input_files": {
                     "historical": {"path": str(args.historical.relative_to(ROOT)), "sha256": sha256_file(args.historical)},
                     "team_rolling_form": {"path": str(args.form.relative_to(ROOT)), "sha256": sha256_file(args.form)},
