@@ -123,6 +123,58 @@ class OverOnlyDecisionTests(unittest.TestCase):
         self.assertEqual(rows[0]["bettable"], "false")
         self.assertIn("EDGE_BELOW_GATE", rows[0]["block_reasons"])
 
+    def test_complete_two_way_player_line_enters_shadow_only(self) -> None:
+        now = datetime.now(timezone.utc)
+        row = {
+            "market": "aces",
+            "scope": "player",
+            "price_pair_status": "two_way",
+            "line_quality": "complete",
+            "matched_board": "yes",
+            "confidence": "MED",
+            "combined_surface_svpt_sample": "1800",
+            "capture_ts": now.isoformat(),
+            "match_start_utc": (now + timedelta(hours=5)).isoformat(),
+            "over_odds": "2.10",
+            "under_odds": "1.70",
+            "value_over_pct": "20.0",
+            "value_under_pct": "-10.0",
+            "edge_over_novig_pct": "12.0",
+            "edge_under_novig_pct": "-8.0",
+            "model_market_gap_pp": "5.0",
+            "notes": "EVENT_ENV_N63",
+        }
+        MODULE.apply_decision_gates([row], self.args(), now)
+        self.assertEqual(row["trackable_shadow"], "true")
+        self.assertEqual(row["shadow_side"], "OVER")
+        self.assertEqual(row["decision_mode"], "two_way_player_shadow")
+        self.assertEqual(row["bettable"], "false")
+
+    def test_two_way_player_shadow_rejects_unresolved_opponent(self) -> None:
+        now = datetime.now(timezone.utc)
+        row = {
+            "market": "double_faults",
+            "scope": "player",
+            "price_pair_status": "two_way",
+            "line_quality": "complete",
+            "matched_board": "yes",
+            "confidence": "MED",
+            "combined_surface_svpt_sample": "1800",
+            "capture_ts": now.isoformat(),
+            "match_start_utc": (now + timedelta(hours=5)).isoformat(),
+            "over_odds": "2.10",
+            "under_odds": "1.70",
+            "value_over_pct": "20.0",
+            "value_under_pct": "-10.0",
+            "edge_over_novig_pct": "12.0",
+            "edge_under_novig_pct": "-8.0",
+            "model_market_gap_pp": "5.0",
+            "notes": "OPPONENT_NAME_UNRESOLVED",
+        }
+        MODULE.apply_decision_gates([row], self.args(), now)
+        self.assertEqual(row["trackable_shadow"], "false")
+        self.assertIn("NAME_OR_DATA_WARNING", row["shadow_block_reasons"])
+
 
 class BreakMarketTests(unittest.TestCase):
     def test_break_means_use_player_break_projection(self) -> None:

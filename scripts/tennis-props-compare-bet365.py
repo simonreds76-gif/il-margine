@@ -34,6 +34,12 @@ ONE_SIDED_SHADOW_CAPTURE_HOURS = 18.0
 ONE_SIDED_MIN_ODDS = 1.50
 ONE_SIDED_MAX_ODDS = 3.50
 ONE_SIDED_MIN_VALUE = 0.08
+TWO_WAY_SHADOW_NOTE_BLOCKERS = (
+    "NO_PLAYER_DATA",
+    "NO_OPP_DATA",
+    "PLAYER_NAME_UNRESOLVED",
+    "OPPONENT_NAME_UNRESOLVED",
+)
 UNMATCHED_FIELDS = [
     "date",
     "tour",
@@ -487,14 +493,22 @@ def apply_decision_gates(rows: list[dict[str, str]], args: argparse.Namespace, n
         row["blocked_reason"] = "" if row["bettable"] == "true" else (row["block_reasons"].split("|")[0] if row["block_reasons"] else "GATE_BLOCKED")
 
         shadow_reasons: list[str] = []
+        two_way_shadow = row.get("price_pair_status") == "two_way"
+        shadow_candidate = best_candidate(row, args) if two_way_shadow else None
         if scope != "player" or market in MATCH_TOTAL_MARKETS:
             shadow_reasons.append("NOT_PLAYER_PROP")
         if row.get("matched_board") != "yes":
             shadow_reasons.append("NO_BOARD_MATCH")
-        if row.get("price_pair_status") != "over_only":
-            shadow_reasons.append("NOT_OVER_ONLY")
-        if row.get("best_available_line") != "true":
-            shadow_reasons.append("NOT_BEST_AVAILABLE_LINE")
+        if two_way_shadow:
+            if row.get("line_quality") != "complete":
+                shadow_reasons.append("LINE_NOT_COMPLETE")
+            if row.get("main_line") != "true":
+                shadow_reasons.append("NOT_MAIN_LINE")
+        else:
+            if row.get("price_pair_status") != "over_only":
+                shadow_reasons.append("NOT_OVER_ONLY")
+            if row.get("best_available_line") != "true":
+                shadow_reasons.append("NOT_BEST_AVAILABLE_LINE")
         if not row.get("capture_ts"):
             shadow_reasons.append("MISSING_CAPTURE_TS")
         else:
@@ -509,21 +523,34 @@ def apply_decision_gates(rows: list[dict[str, str]], args: argparse.Namespace, n
             shadow_reasons.append("CONF_BELOW_MED")
         if sample < MIN_COMBINED_SAMPLE:
             shadow_reasons.append("SAMPLE_BELOW_800")
-        over_odds = parse_float(row.get("over_odds"), 0.0) or 0.0
-        if not (ONE_SIDED_MIN_ODDS <= over_odds <= ONE_SIDED_MAX_ODDS):
-            shadow_reasons.append("PRICE_OUTSIDE_RESEARCH_RANGE")
-        raw_over = (parse_float(row.get("value_over_pct"), 0.0) or 0.0) / 100.0
-        if raw_over < ONE_SIDED_MIN_VALUE:
-            shadow_reasons.append("EDGE_BELOW_GATE")
+        if two_way_shadow:
+            if gap > args.max_model_market_gap * 100.0:
+                shadow_reasons.append("MODEL_MARKET_GAP")
+            note_text = str(row.get("notes") or "").upper()
+            if any(marker in note_text for marker in TWO_WAY_SHADOW_NOTE_BLOCKERS):
+                shadow_reasons.append("NAME_OR_DATA_WARNING")
+            if shadow_candidate is None:
+                shadow_reasons.append("EDGE_BELOW_GATE")
+        else:
+            over_odds = parse_float(row.get("over_odds"), 0.0) or 0.0
+            if not (ONE_SIDED_MIN_ODDS <= over_odds <= ONE_SIDED_MAX_ODDS):
+                shadow_reasons.append("PRICE_OUTSIDE_RESEARCH_RANGE")
+            raw_over = (parse_float(row.get("value_over_pct"), 0.0) or 0.0) / 100.0
+            if raw_over < ONE_SIDED_MIN_VALUE:
+                shadow_reasons.append("EDGE_BELOW_GATE")
 
         trackable_shadow = not shadow_reasons
         row["trackable_shadow"] = bool_text(trackable_shadow)
-        row["shadow_side"] = "OVER" if trackable_shadow else ""
+        row["shadow_side"] = (
+            shadow_candidate[0]
+            if trackable_shadow and two_way_shadow and shadow_candidate is not None
+            else ("OVER" if trackable_shadow else "")
+        )
         row["shadow_block_reasons"] = "|".join(dict.fromkeys(shadow_reasons))
         if row["bettable"] == "true":
             row["decision_mode"] = "two_way_decision"
         elif trackable_shadow:
-            row["decision_mode"] = "one_sided_over_shadow"
+            row["decision_mode"] = "two_way_player_shadow" if two_way_shadow else "one_sided_over_shadow"
         else:
             row["decision_mode"] = "blocked"
 
