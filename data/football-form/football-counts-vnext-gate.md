@@ -1,6 +1,6 @@
 # Football Counts vNext Gate
 
-- Generated: 2026-08-26T11:06:18Z
+- Generated: 2026-08-26T12:02:29Z
 - This snapshot cannot promote or route bets.
 
 ## Team Shots v4
