@@ -156,6 +156,41 @@ class ShadowTrackerTests(unittest.TestCase):
         row["trackable_shadow"] = "false"
         self.assertIsNone(TRACKER.build_signal(row, Path("comparison.csv"), args))
 
+    def test_two_way_player_shadow_tracks_registered_under_side(self) -> None:
+        row = {
+            "date": "2026-08-26",
+            "tour": "WTA",
+            "tournament": "US Open",
+            "scope": "player",
+            "player": "Player One",
+            "opponent": "Player Two",
+            "market": "aces",
+            "line": "3.5",
+            "confidence": "MED",
+            "matched_board": "yes",
+            "trackable_shadow": "true",
+            "decision_mode": "two_way_player_shadow",
+            "shadow_side": "UNDER",
+            "value_over_pct": "-10.0",
+            "value_under_pct": "14.0",
+            "over_odds": "1.70",
+            "under_odds": "2.02",
+            "price_pair_status": "two_way",
+            "bookmaker": "BetsBK",
+        }
+        args = argparse.Namespace(
+            min_value=8.0,
+            allow_watch=False,
+            allow_medium=True,
+            allow_notes=False,
+            bookmaker="Bet365",
+        )
+        signal = TRACKER.build_signal(row, Path("comparison.csv"), args)
+        self.assertIsNotNone(signal)
+        self.assertEqual(signal["side"], "UNDER")
+        self.assertEqual(signal["bookmaker"], "BetsBK")
+        self.assertEqual(signal["decision_mode"], "two_way_player_shadow")
+
     def test_missing_exact_comparison_never_falls_back_to_stale_file(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             base = Path(tmp)

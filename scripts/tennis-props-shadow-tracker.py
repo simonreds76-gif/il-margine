@@ -194,11 +194,16 @@ def build_signal(row: dict[str, str], source: Path, args: argparse.Namespace) ->
     else:
         if (row.get("trackable_shadow") or "").strip().lower() != "true":
             return None
-        if decision_mode != "one_sided_over_shadow":
+        if decision_mode not in {"one_sided_over_shadow", "two_way_player_shadow"}:
             return None
-        if (row.get("shadow_side") or "").strip().upper() != "OVER":
+        shadow_side = (row.get("shadow_side") or "").strip().upper()
+        if shadow_side not in {"OVER", "UNDER"}:
+            return None
+        if decision_mode == "one_sided_over_shadow" and shadow_side != "OVER":
             return None
         picked = pick_side(row, args.min_value, True)
+        if picked is not None and picked[0] != shadow_side:
+            return None
     if picked is None:
         return None
     side, value_pct, selected_odds = picked
