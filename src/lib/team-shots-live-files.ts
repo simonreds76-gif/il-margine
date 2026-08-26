@@ -40,7 +40,7 @@ const LOCAL_SNAPSHOT_FILE = "data/team-shots/team-shots-live-snapshot.json";
 // The scheduled jobs publish the canonical monitor bundle to hosted snapshots.
 // Local files are allowed only as an explicit debugging override; otherwise
 // localhost can silently lag behind the latest automated refresh.
-const PREFER_LOCAL = process.env.MONITOR_PREFER_LOCAL === "1";
+const PREFER_LOCAL = process.env.NODE_ENV === "development" || process.env.MONITOR_PREFER_LOCAL === "1";
 const INCLUDE_HOSTED_METADATA_IN_LOCAL_DEV = process.env.MONITOR_COMPARE_HOSTED === "1";
 const TEAM_SHOTS_SHADOW_FILES = [
   "data/team-shots/shadow/team-shots-shadow-signals.csv",
@@ -74,6 +74,12 @@ const TEAM_SHOTS_MARKET_FILES = [
   "data/football-form/team-fouls-fotmob-agreement.md",
   "data/football-form/weekly-research-report.json",
   "data/football-form/weekly-research-report.md",
+  "data/goalkeeper-saves/gk-saves-capture-status.json",
+  "data/goalkeeper-saves/gk-saves-v1-candidates.csv",
+  "data/goalkeeper-saves/gk-saves-v1-provisional.csv",
+  "data/goalkeeper-saves/gk-saves-v1-settlement-status.json",
+  "data/goalkeeper-saves/gk-saves-v1-shadow-report.json",
+  "data/goalkeeper-saves/gk-saves-v1-shadow-signals.csv",
   "data/team-shots/team-shots-comparison.csv",
   "data/team-shots/team-shots-comparison.txt",
   "data/team-shots/team-shots-odds-history.csv",

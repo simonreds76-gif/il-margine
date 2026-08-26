@@ -242,6 +242,18 @@ class GoalkeeperSavesLiveTests(unittest.TestCase):
         self.assertEqual(actual, 4)
         self.assertEqual(metadata["position"], "G")
 
+    def test_settlement_waits_until_match_has_had_time_to_finish(self) -> None:
+        now = settle.datetime(2026, 8, 26, 18, 0, tzinfo=settle.UTC)
+        self.assertFalse(settle.signal_is_due({"kickoff_at": "2026-08-26T16:00:00Z"}, now))
+        self.assertTrue(settle.signal_is_due({"kickoff_at": "2026-08-26T14:00:00Z"}, now))
+
+    def test_api_errors_are_exposed_for_settlement_diagnostics(self) -> None:
+        payload = {"errors": {"plan": "Free plans do not have access to this date."}}
+        self.assertEqual(
+            settle.api_error_messages(payload),
+            ["plan: Free plans do not have access to this date."],
+        )
+
     def test_settlement_uses_player_total_and_close_clv(self) -> None:
         signal = {"line": "3.5", "side": "over", "odds_decimal": "2.00", "stake_units": "0.5"}
         settle.settle_row(signal, 4, 1.80, "2026-08-20T12:00:00Z")
