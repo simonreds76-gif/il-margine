@@ -8,7 +8,7 @@ type GoalkeeperReport = {
   current?: {
     priced_lines?: number;
     eligible_lines?: number;
-    tail_diagnostic_lines?: number;
+    value_ladder_lines?: number;
     provisional_lines?: number;
     signals_added?: number;
     blocker_counts?: Record<string, number>;
@@ -103,7 +103,7 @@ export default function GoalkeeperSavesPanel({
               <span className="rounded-full border border-violet-400/25 bg-violet-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-violet-200">Tracked research</span>
             </div>
             <p className="mt-1 max-w-3xl text-xs leading-5 text-slate-400">
-              Every priced, eligible signal is retained for settlement, P/L, ROI and closing-line evidence. A zero board means the price capture supplied no usable goalkeeper-save line, not that results are being hidden.
+              Every positive-EV line stays visible as a correlated value ladder. Exactly one robust line per fixture enters settlement, P/L, ROI and closing-line evidence, preventing duplicate counting.
             </p>
           </div>
           <div className="text-right text-[11px] text-slate-500">
@@ -114,14 +114,14 @@ export default function GoalkeeperSavesPanel({
       </div>
 
       <div className="grid grid-cols-2 gap-2 p-4 sm:grid-cols-4 xl:grid-cols-8 sm:p-5">
-        <Metric label="Priced lines" value={String(report?.current?.priced_lines ?? 0)} detail={`${report?.current?.eligible_lines ?? 0} eligible`} />
+        <Metric label="Priced lines" value={String(report?.current?.priced_lines ?? 0)} detail={`${report?.current?.eligible_lines ?? 0} primary eligible`} />
         <Metric label="Tracked open" value={String(pending.length)} detail={`${evidence?.pending ?? pending.length} pending`} />
         <Metric label="Settled" value={String(settled.length)} detail={`${evidence?.settled ?? settled.length} in report`} />
         <Metric label="P/L" value={units(evidence?.pnl_units)} detail="current v1 ledger" />
         <Metric label="ROI" value={pct(evidence?.roi)} detail="P/L / units staked" />
         <Metric label="Mean CLV" value={pct(evidence?.clv)} detail={`matched n=${evidence?.clv_matched ?? 0}`} />
         <Metric label="Captured rows" value={String(capture?.rows ?? 0)} detail={`${capture?.events ?? 0} events`} />
-        <Metric label="Board rows" value={String(board.length)} detail={`${report?.current?.tail_diagnostic_lines ?? 0} tail diagnostics`} />
+        <Metric label="Board rows" value={String(board.length)} detail={`${report?.current?.value_ladder_lines ?? 0} extra value lines`} />
       </div>
 
       <div className="border-t border-slate-800 px-4 py-4 sm:px-5">
@@ -159,7 +159,7 @@ export default function GoalkeeperSavesPanel({
       </details>
 
       <details className="border-t border-slate-800 px-4 py-3 sm:px-5" open={board.length > 0}>
-        <summary className="cursor-pointer text-xs font-semibold text-slate-300">Current candidate board ({board.length})</summary>
+        <summary className="cursor-pointer text-xs font-semibold text-slate-300">Current candidate board and value ladders ({board.length})</summary>
         {board.length === 0 ? (
           <div className="mt-3 rounded-xl border border-dashed border-slate-700 px-4 py-5 text-sm text-slate-500">No current priced candidates. Tracking begins automatically when the capture contains named goalkeeper-save O/U lines.</div>
         ) : (

@@ -255,7 +255,7 @@ class GoalkeeperSavesLiveTests(unittest.TestCase):
             },
             {
                 "event_id": "fixture",
-                "candidate_status": "tail_diagnostic",
+                "candidate_status": "value_ladder",
                 "odds_decimal": "11.00",
                 "model_probability": "0.130475",
                 "edge": "0.435224",
@@ -265,6 +265,43 @@ class GoalkeeperSavesLiveTests(unittest.TestCase):
         shadow.mark_primary_selections(rows)
         self.assertEqual(rows[0]["strongest_for_fixture"], "yes")
         self.assertEqual(rows[1]["strongest_for_fixture"], "no")
+
+    def test_small_positive_edge_remains_on_value_ladder(self) -> None:
+        rows = shadow.apply_starter_tracking_policy([{
+            "lineup_status": "predicted_starter",
+            "odds_decimal": "1.90",
+            "edge": "0.012",
+            "candidate_status": "no_edge",
+            "blockers": "edge_below_8pct",
+        }])
+        self.assertEqual(rows[0]["candidate_status"], "value_ladder")
+        self.assertEqual(rows[0]["selection_policy"], "value_ladder")
+        self.assertEqual(rows[0]["blockers"], "")
+
+    def test_existing_fixture_cannot_add_second_correlated_signal(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "signals.csv"
+            existing = [{field: "" for field in shadow.SIGNAL_FIELDS}]
+            existing[0].update({
+                "signal_id": "fixture|keeper|7.5|over",
+                "event_id": "fixture",
+                "goalkeeper": "Keeper",
+                "line": "7.5",
+                "side": "over",
+                "status": "pending",
+            })
+            shadow.write_csv(path, existing, shadow.SIGNAL_FIELDS)
+            candidate = {
+                "event_id": "fixture",
+                "goalkeeper": "Keeper",
+                "line": "4.5",
+                "side": "over",
+                "candidate_status": "eligible_shadow",
+                "strongest_for_fixture": "yes",
+            }
+            added, signals = shadow.append_signals(path, [candidate], "2026-08-26T12:00:00Z")
+        self.assertEqual(added, 0)
+        self.assertEqual(len(signals), 1)
 
     def test_named_goalkeeper_saves_are_extracted(self) -> None:
         payload = {
