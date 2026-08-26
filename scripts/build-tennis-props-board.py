@@ -55,6 +55,11 @@ ROUND_BY_ID = {
     "10": "SF",
     "12": "F",
 }
+SLAM_QUALIFYING_ROUND_BY_ID = {
+    "1": "Q1",
+    "2": "Q2",
+    "3": "Q3",
+}
 SLAM_TOURNAMENTS = {"Australian Open", "Roland Garros", "Wimbledon", "US Open"}
 MAIN_TOUR_RANKS = {2, 3, 4}
 EXCLUDED_TOUR_NAME_FRAGMENTS = (
@@ -381,7 +386,7 @@ def round_label(round_id: object, tournament: str) -> str:
             "10": "SF",
             "12": "F",
         }.get(rid, rid)
-    return ROUND_BY_ID.get(rid, rid)
+    return SLAM_QUALIFYING_ROUND_BY_ID.get(rid, ROUND_BY_ID.get(rid, rid))
 
 
 def is_placeholder_player(value: object) -> bool:
@@ -389,8 +394,17 @@ def is_placeholder_player(value: object) -> bool:
     return name in {"unknown player", "bye"} or not name
 
 
-def is_best_of_five(tour: str, tournament: str) -> bool:
-    return tour.upper() == "ATP" and tournament in SLAM_TOURNAMENTS
+def is_slam_qualifying_round(tournament: str, round_id: object) -> bool:
+    round_number = parse_int(round_id)
+    return tournament in SLAM_TOURNAMENTS and 0 < round_number < 4
+
+
+def is_best_of_five(tour: str, tournament: str, round_id: object = None) -> bool:
+    return (
+        tour.upper() == "ATP"
+        and tournament in SLAM_TOURNAMENTS
+        and not is_slam_qualifying_round(tournament, round_id)
+    )
 
 
 def slam_main_draw_active_events(schedules: list[dict[str, str]]) -> set[tuple[str, str]]:
@@ -410,8 +424,8 @@ def skip_slam_qualifying_for_main_draw(main_draw_events: set[tuple[str, str]], t
     return (tour, tour_id) in main_draw_events and parse_int(round_id) < 4
 
 
-def default_match_games(tour: str, tournament: str) -> float:
-    if is_best_of_five(tour, tournament):
+def default_match_games(tour: str, tournament: str, round_id: object = None) -> float:
+    if is_best_of_five(tour, tournament, round_id):
         return 35.0
     return 23.5 if tour.upper() == "ATP" else 21.5
 
@@ -631,11 +645,15 @@ def oncourt_schedule_rows(tour_code: str, include_completed: bool, board_date: s
         row_date = parse_date(row.get("date"))
         if row_date and row_date < board_dt:
             continue
-        tour_start = parse_date(tour.get("date"))
-        if tour_start and tour_start > board_dt + timedelta(days=1):
-            continue
         tournament = scheduled_tournament_name(tour.get("name"))
         if not tournament:
+            continue
+        tour_start = parse_date(tour.get("date"))
+        if (
+            tour_start
+            and tour_start > board_dt + timedelta(days=1)
+            and not is_slam_qualifying_round(tournament, row.get("round_id"))
+        ):
             continue
         p1 = player_names.get(str(row.get("player1_id") or "").strip(), "")
         p2 = player_names.get(str(row.get("player2_id") or "").strip(), "")
@@ -1123,6 +1141,7 @@ def project_side(
     tour = schedule["tour"].upper()
     surface = schedule["surface"]
     tournament = schedule["tournament"]
+    round_id = schedule.get("round_id_raw")
     player_resolution = resolve_baseline_name(
         tour=tour,
         value=player,
@@ -1155,7 +1174,15 @@ def project_side(
         factor_source = "surface_baseline" if factor else ""
     elif factor_source == "venue":
         factor, factor_clipped = clipped_venue_factor_row(factor)
-    fallback_expected_games = parse_float(factor.get("match_games_per_match"), default_match_games(tour, tournament))
+    match_games_default = default_match_games(tour, tournament, round_id)
+    # Slam venue averages are best-of-five for ATP main draws. Qualifiers are
+    # best-of-three, so reusing that match-length average materially inflates
+    # ace and double-fault projections.
+    fallback_expected_games = (
+        match_games_default
+        if is_slam_qualifying_round(tournament, round_id)
+        else parse_float(factor.get("match_games_per_match"), match_games_default)
+    )
     expected_games_source = "venue_avg" if factor_source == "venue" else ("surface_avg" if factor_source == "surface_baseline" else "default")
     expected_games_confidence = ""
     fair_total_row = fair_odds_expected_games.get(
@@ -1183,7 +1210,7 @@ def project_side(
         player_all_rows=player_all_rows,
         opponent_all_rows=opponent_all_rows,
         factor_row=factor,
-        expected_match_games=expected_games or default_match_games(tour, tournament),
+        expected_match_games=expected_games or match_games_default,
         slam_matches=tournament_n,
         same_tournament_row=same_tournament_row,
         current_tournament_env_row=current_env_row,
@@ -1258,7 +1285,7 @@ def project_side(
         "tiebreak_confidence": projection.tiebreak_confidence,
         "service_points_estimate": fmt(projection.expected_service_points, 1),
         "service_games_estimate": fmt(projection.expected_service_games, 1),
-        "expected_match_games": fmt(expected_games or default_match_games(tour, tournament), 1),
+        "expected_match_games": fmt(expected_games or match_games_default, 1),
         "expected_match_games_source": expected_games_source,
         "expected_match_games_confidence": expected_games_confidence,
         "player_baseline_name": player_lookup,
