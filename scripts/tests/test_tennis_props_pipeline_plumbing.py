@@ -271,7 +271,29 @@ class DailyMarketSelectionTests(unittest.TestCase):
                 prior = DAILY.lines_file("2026-07-28")
                 write_csv(prior, [{"date": "2026-07-29", "capture_ts": "2026-07-28T15:30:00Z"}])
                 selected = DAILY.select_market_file("2026-07-29")
-                self.assertEqual(selected, prior)
+                self.assertEqual(selected, DAILY.combined_lines_file("2026-07-28"))
+                self.assertTrue(selected.exists())
+            finally:
+                DAILY.PROPS_DIR = old_props
+
+    def test_combines_bet365_and_betsbk_snapshots_without_source_collision(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            old_props = DAILY.PROPS_DIR
+            DAILY.PROPS_DIR = Path(tmp)
+            try:
+                write_csv(
+                    DAILY.lines_file("2026-08-26"),
+                    [{"date": "2026-08-26", "event_id": "odds-1", "bookmaker": "Bet365"}],
+                )
+                write_csv(
+                    DAILY.betsbk_lines_file("2026-08-26"),
+                    [{"date": "2026-08-26", "event_id": "sbk-1", "bookmaker": "BetsBK"}],
+                )
+                selected = DAILY.select_market_file("2026-08-26")
+                self.assertEqual(selected, DAILY.combined_lines_file("2026-08-26"))
+                with selected.open("r", encoding="utf-8", newline="") as handle:
+                    rows = list(csv.DictReader(handle))
+                self.assertEqual({row["bookmaker"] for row in rows}, {"Bet365", "BetsBK"})
             finally:
                 DAILY.PROPS_DIR = old_props
 
