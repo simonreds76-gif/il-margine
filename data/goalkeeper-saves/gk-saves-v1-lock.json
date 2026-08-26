@@ -31,6 +31,15 @@
     "true_close_coverage": 0.7
   },
   "publication_gate": "predicted_or_confirmed_starting_goalkeeper_shadow_only",
+  "selection_policy": {
+    "minimum_edge": 0.05,
+    "odds_range": [
+      1.7,
+      3.0
+    ],
+    "rank": "closest_to_even_money_then_higher_probability_then_edge",
+    "version": "near_even_value_v2"
+  },
   "status": "research_count_gate_only",
   "target": "team_saves_equals_opponent_sot_minus_opponent_goals"
 }

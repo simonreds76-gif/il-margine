@@ -235,12 +235,36 @@ class GoalkeeperSavesLiveTests(unittest.TestCase):
     def test_synced_predicted_starter_is_reclassified_for_tracking(self) -> None:
         rows = shadow.apply_starter_tracking_policy([{
             "lineup_status": "predicted_starter",
+            "odds_decimal": "2.20",
             "edge": "0.22",
             "candidate_status": "blocked",
             "blockers": "predicted_starter",
         }])
         self.assertEqual(rows[0]["candidate_status"], "eligible_shadow")
         self.assertEqual(rows[0]["blockers"], "")
+
+    def test_primary_selection_prefers_near_even_value_over_tail_edge(self) -> None:
+        rows = [
+            {
+                "event_id": "fixture",
+                "candidate_status": "eligible_shadow",
+                "odds_decimal": "2.20",
+                "model_probability": "0.486445",
+                "edge": "0.070178",
+                "strongest_for_fixture": "no",
+            },
+            {
+                "event_id": "fixture",
+                "candidate_status": "tail_diagnostic",
+                "odds_decimal": "11.00",
+                "model_probability": "0.130475",
+                "edge": "0.435224",
+                "strongest_for_fixture": "no",
+            },
+        ]
+        shadow.mark_primary_selections(rows)
+        self.assertEqual(rows[0]["strongest_for_fixture"], "yes")
+        self.assertEqual(rows[1]["strongest_for_fixture"], "no")
 
     def test_named_goalkeeper_saves_are_extracted(self) -> None:
         payload = {
