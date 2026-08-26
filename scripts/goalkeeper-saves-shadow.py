@@ -36,6 +36,11 @@ DEFAULT_REPORT = ROOT / "data" / "goalkeeper-saves" / "gk-saves-v1-shadow-report
 DEFAULT_REPORT_MD = ROOT / "data" / "goalkeeper-saves" / "gk-saves-v1-shadow-report.md"
 DEFAULT_PROVISIONAL = ROOT / "data" / "goalkeeper-saves" / "gk-saves-v1-provisional.csv"
 
+# Goalkeeper markets are materially less rotation-sensitive than outfield-player
+# props. Track both expected and confirmed starting keepers in the research ledger,
+# while retaining the lineup status so the two cohorts can be evaluated separately.
+TRACKABLE_STARTER_STATUSES = {"confirmed_starter", "predicted_starter"}
+
 CANDIDATE_FIELDS = [
     "generated_at", "event_id", "match_date", "kickoff_at", "league", "home_team", "away_team",
     "team", "opponent", "venue", "goalkeeper", "line", "side", "odds_decimal", "model_mean",
@@ -79,9 +84,15 @@ INFRASTRUCTURE_BLOCKERS = {
 def should_preserve_candidate_board(
     existing: list[dict[str, str]],
     scanned: list[dict[str, Any]],
+    now: datetime | None = None,
 ) -> bool:
-    if not existing or not scanned:
+    if not existing:
         return False
+    effective_now = now or datetime.now(UTC)
+    if not board_has_current_rows(existing, effective_now):
+        return False
+    if not scanned:
+        return True
     if any(row.get("candidate_status") == "eligible_shadow" or row.get("model_mean") for row in scanned):
         return False
     return all(
@@ -98,6 +109,46 @@ def provisional_rows(candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:
             continue
         rows.append({**row, "research_only": "true", "not_a_signal": "true"})
     return rows
+
+
+def apply_starter_tracking_policy(candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Reclassify synced boards using the current GK-only shadow policy."""
+    normalized: list[dict[str, Any]] = []
+    for source in candidates:
+        row = dict(source)
+        blockers = {item for item in str(row.get("blockers") or "").split("|") if item}
+        lineup_status = str(row.get("lineup_status") or "")
+        if lineup_status in TRACKABLE_STARTER_STATUSES:
+            blockers.discard(lineup_status)
+
+        edge = parse_float(row.get("edge"))
+        if edge is None:
+            blockers.add("missing_priced_edge")
+        elif edge < MIN_EDGE:
+            blockers.add("edge_below_8pct")
+        else:
+            blockers.discard("edge_below_8pct")
+
+        if not blockers:
+            row["candidate_status"] = "eligible_shadow"
+        elif blockers == {"edge_below_8pct"}:
+            row["candidate_status"] = "no_edge"
+        else:
+            row["candidate_status"] = "blocked"
+        row["blockers"] = "|".join(sorted(blockers))
+        normalized.append(row)
+    return normalized
+
+
+def board_has_current_rows(rows: list[dict[str, Any]], now: datetime) -> bool:
+    for row in rows:
+        try:
+            kickoff = datetime.fromisoformat(str(row.get("kickoff_at") or "").replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        if kickoff >= now - timedelta(minutes=15):
+            return True
+    return False
 
 
 def latest_price_rows(rows: list[dict[str, str]], now: datetime) -> list[dict[str, str]]:
@@ -149,7 +200,7 @@ def build_candidates(
         player = str(price_row.get("player") or "").strip()
         side, lineup_status, canonical_player = resolve_goalkeeper(fixture, player)
         blockers: list[str] = []
-        if lineup_status != "confirmed_starter":
+        if lineup_status not in TRACKABLE_STARTER_STATUSES:
             blockers.append(lineup_status)
 
         team = home if side == "home" else away if side == "away" else ""
@@ -298,7 +349,7 @@ def report_payload(
         "count_model": "PASS",
         "live_routing": False,
         "sellable": False,
-        "selection_rule": "one strongest O/U side per fixture; edge >=8%; confirmed starting goalkeeper",
+        "selection_rule": "one strongest O/U side per fixture; edge >=8%; predicted or confirmed starting goalkeeper",
         "current": {
             "priced_lines": sum(1 for row in candidates if row.get("model_mean")),
             "eligible_lines": len(eligible),
@@ -347,22 +398,22 @@ def main() -> None:
     generated_at = now.isoformat().replace("+00:00", "Z")
     params = json.loads(args.params.read_text(encoding="utf-8"))
     prices = latest_price_rows(read_csv(args.history), now)
-    candidates = build_candidates(
+    candidates = apply_starter_tracking_policy(build_candidates(
         prices,
         load_team_histories(args.form),
         params,
         load_lineup_index(lineup_paths()),
         generated_at,
-    )
-    existing_candidates = read_csv(args.candidates)
-    board_preserved = should_preserve_candidate_board(existing_candidates, candidates)
-    if not board_preserved:
-        write_csv(args.candidates, candidates, CANDIDATE_FIELDS)
-    provisional = provisional_rows(candidates)
+    ))
+    existing_candidates = apply_starter_tracking_policy(read_csv(args.candidates))
+    board_preserved = should_preserve_candidate_board(existing_candidates, candidates, now)
+    effective_candidates = existing_candidates if board_preserved else candidates
+    write_csv(args.candidates, effective_candidates, CANDIDATE_FIELDS)
+    provisional = provisional_rows(effective_candidates)
     write_csv(args.provisional, provisional, PROVISIONAL_FIELDS)
-    added, signals = append_signals(args.signals, candidates, generated_at)
+    added, signals = append_signals(args.signals, effective_candidates, generated_at)
     payload = report_payload(
-        candidates,
+        effective_candidates,
         signals,
         generated_at,
         added,
