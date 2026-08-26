@@ -2,7 +2,7 @@
 
 **RESEARCH SHADOW ONLY. No live routing or staking authorization.**
 
-- Generated: 2026-08-26T12:02:23Z
+- Generated: 2026-08-26T13:39:42Z
 - Status: SIGNALS_COLLECTING
 - Current priced/eligible/blocked: 28/0/33
 - Provisional research lines: 1 (never appended to the signal ledger)
