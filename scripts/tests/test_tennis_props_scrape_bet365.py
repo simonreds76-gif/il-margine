@@ -61,6 +61,13 @@ class TennisPropsTournamentSelectionTests(unittest.TestCase):
     def test_unknown_main_tour_name_uses_league_location(self) -> None:
         self.assertEqual(MODULE.tournament_from_event(event("ATP - Los Cabos, Mexico")), "Los Cabos")
 
+    def test_slam_qualifying_events_are_selected(self) -> None:
+        self.assertTrue(
+            MODULE.is_supported_tournament_event(
+                event("ATP - US Open, New York, USA, Qualifying")
+            )
+        )
+
 
 class TennisPropsMarketShapeTests(unittest.TestCase):
     def setUp(self) -> None:
@@ -126,6 +133,32 @@ class TennisPropsMarketShapeTests(unittest.TestCase):
 
     def test_tiebreak_is_not_misclassified_as_service_break(self) -> None:
         self.assertEqual(MODULE.identify_market("Tie Break in Match"), "match_tiebreak")
+
+    def test_consolidated_player_props_are_split_by_stat_label(self) -> None:
+        rows = MODULE.extract_rows(
+            self.fixture,
+            "Bet365",
+            {
+                "name": "Player Props",
+                "odds": [
+                    {"label": "Gonzalo Bueno (Aces)", "hdp": 4.5, "over": "1.90", "under": "1.83"},
+                    {"label": "Tiago Pereira (Double Faults)", "hdp": 2.5, "over": "2.10", "under": "1.66"},
+                ],
+            },
+        )
+        self.assertEqual([(row["market"], row["player"]) for row in rows], [
+            ("aces", "Gonzalo Bueno"),
+            ("double_faults", "Tiago Pereira"),
+        ])
+
+    def test_count_row_detection_ignores_generic_match_markets(self) -> None:
+        generic = dict(self.fixture)
+        generic["bookmakers"] = {"Bet365": [{"name": "ML", "odds": []}]}
+        self.assertFalse(MODULE.has_supported_count_rows(generic))
+        generic["bookmakers"]["Bet365"].append(
+            {"name": "Player Props", "odds": [{"label": "Gonzalo Bueno (Aces)", "hdp": 4.5, "over": "1.90"}]}
+        )
+        self.assertTrue(MODULE.has_supported_count_rows(generic))
 
 
 if __name__ == "__main__":

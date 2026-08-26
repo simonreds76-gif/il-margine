@@ -39,6 +39,40 @@ class CurrentTournamentAliasTests(unittest.TestCase):
             "Los Cabos",
         )
 
+    def test_slam_qualifiers_are_labelled_and_best_of_three(self) -> None:
+        self.assertEqual(MODULE.round_label("2", "US Open"), "Q2")
+        self.assertTrue(MODULE.is_slam_qualifying_round("US Open", "2"))
+        self.assertFalse(MODULE.is_best_of_five("ATP", "US Open", "2"))
+        self.assertEqual(MODULE.default_match_games("ATP", "US Open", "2"), 23.5)
+        self.assertTrue(MODULE.is_best_of_five("ATP", "US Open", "4"))
+        self.assertEqual(MODULE.default_match_games("ATP", "US Open", "4"), 35.0)
+
+    def test_future_slam_shell_keeps_dated_qualifying_round(self) -> None:
+        tour = {
+            "id": "21349",
+            "name": "U.S. Open - New York",
+            "date": "2026-08-31",
+            "rank": "4",
+            "court_id": "1",
+        }
+        today = {
+            "tour_id": "21349",
+            "date": "2026-08-26",
+            "player1_id": "1",
+            "player2_id": "2",
+            "round_id": "2",
+            "result": "",
+        }
+        with (
+            mock.patch.object(MODULE, "load_oncourt_player_names", return_value={"1": "One Player", "2": "Two Player"}),
+            mock.patch.object(MODULE, "load_oncourt_tours", return_value={"21349": tour}),
+            mock.patch.object(MODULE, "read_csv", return_value=[today]),
+        ):
+            rows = MODULE.oncourt_schedule_rows("ATP", False, "2026-08-26")
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["round"], "Q2")
+        self.assertEqual(rows[0]["date"], "2026-08-26")
+
 
 class CurrentEventRowsCacheTests(unittest.TestCase):
     def setUp(self) -> None:

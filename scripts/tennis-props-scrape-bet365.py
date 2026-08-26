@@ -384,6 +384,33 @@ def is_singles_event(event: dict[str, Any]) -> bool:
 def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any], captured_at: str = "") -> list[dict[str, str]]:
     market_name = str(market.get("name") or "")
     market_key = identify_market(market_name)
+    if not market_key and "player prop" in norm(market_name):
+        # The normalized odds-api.io feed now combines every statistic under
+        # one Player Props market. Split its mixed outcomes back into the
+        # count-market shapes consumed by the existing comparison layer.
+        rows: list[dict[str, str]] = []
+        synthetic_names = {
+            "aces": "Player Aces",
+            "double_faults": "Player Double Faults",
+            "player_breaks": "Player Service Breaks",
+        }
+        for prop in market.get("odds") or market.get("outcomes") or []:
+            prop_text = " ".join(
+                str(prop.get(key) or "")
+                for key in ("label", "name", "stat", "market", "description")
+            )
+            prop_key = identify_market(prop_text)
+            synthetic_name = synthetic_names.get(prop_key or "")
+            if synthetic_name:
+                rows.extend(
+                    extract_rows(
+                        event,
+                        bookmaker,
+                        {"name": synthetic_name, "odds": [prop]},
+                        captured_at=captured_at,
+                    )
+                )
+        return rows
     if not market_key:
         return []
 
@@ -531,18 +558,35 @@ def fetch_json(path: str, params: dict[str, Any]) -> Any:
     return response.json()
 
 
-def fetch_multi(api_key: str, event_ids: list[str], bookmakers: str) -> list[dict[str, Any]]:
+def fetch_multi(
+    api_key: str,
+    event_ids: list[str],
+    bookmakers: str,
+    *,
+    markets: str = "",
+) -> list[dict[str, Any]]:
     payload: list[dict[str, Any]] = []
     for i in range(0, len(event_ids), 10):
         chunk = event_ids[i : i + 10]
+        params = {"apiKey": api_key, "eventIds": ",".join(chunk), "bookmakers": bookmakers}
+        if markets:
+            params["markets"] = markets
         data = fetch_json(
             "odds/multi",
-            {"apiKey": api_key, "eventIds": ",".join(chunk), "bookmakers": bookmakers},
+            params,
         )
         if isinstance(data, list):
             payload.extend(data)
         time.sleep(0.35)
     return payload
+
+
+def has_supported_count_rows(event: dict[str, Any]) -> bool:
+    for bookmaker, markets in (event.get("bookmakers") or {}).items():
+        for market in markets or []:
+            if extract_rows(event, bookmaker, market):
+                return True
+    return False
 
 
 def summarize_market_names(data: Any) -> str:
@@ -721,7 +765,27 @@ def main() -> None:
     if not events:
         return
 
-    payload = fetch_multi(api_key, [str(event.get("id")) for event in events if event.get("id")], args.bookmakers)
+    event_ids = [str(event.get("id")) for event in events if event.get("id")]
+    payload = fetch_multi(api_key, event_ids, args.bookmakers)
+    count_event_ids = {
+        str(event.get("id") or "")
+        for event in payload
+        if has_supported_count_rows(event)
+    }
+    missing_count_event_ids = [event_id for event_id in event_ids if event_id not in count_event_ids]
+    if missing_count_event_ids:
+        print(
+            "count props absent from default payload; "
+            f"requesting consolidated Player Props for {len(missing_count_event_ids)} event(s)"
+        )
+        payload.extend(
+            fetch_multi(
+                api_key,
+                missing_count_event_ids,
+                args.bookmakers,
+                markets="Player Props",
+            )
+        )
     rows: list[dict[str, str]] = []
     audit_rows: list[dict[str, str]] = []
     captured_at = now.replace(microsecond=0).isoformat().replace("+00:00", "Z")
