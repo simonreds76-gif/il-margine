@@ -266,12 +266,14 @@ def props_signals(target_date: str) -> list[Signal]:
             selection += f" | edge {edge:+.1f}%"
         if is_shadow and not is_bettable:
             selection += " | shadow evidence only"
+        bookmaker = (row.get("bookmaker") or "Tennis props").strip()
+        source_name = bookmaker.upper()
         pair = tuple(sorted((norm(player), norm(opponent))))
         if is_service_break_market:
-            section = "BET365 BREAKS" if is_bettable else "BET365 BREAKS WATCHLIST"
+            section = f"{source_name} BREAKS" if is_bettable else f"{source_name} BREAKS WATCHLIST"
             labels = ["BREAKS"] if is_bettable else ["BREAKS WATCH"]
         else:
-            section = "BET365 PROPS" if is_bettable else "BET365 PROPS WATCHLIST"
+            section = f"{source_name} PROPS" if is_bettable else f"{source_name} PROPS WATCHLIST"
             labels = ["ACES/DF"] if is_bettable else ["ACES/DF WATCH"]
         signals.append(
             Signal(

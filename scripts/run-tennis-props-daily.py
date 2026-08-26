@@ -67,6 +67,14 @@ def lines_file(as_of: str) -> Path:
     return PROPS_DIR / "inbox" / f"bet365-lines-{as_of}.csv"
 
 
+def betsbk_lines_file(as_of: str) -> Path:
+    return PROPS_DIR / "inbox" / f"betsbk-lines-{as_of}.csv"
+
+
+def combined_lines_file(as_of: str) -> Path:
+    return PROPS_DIR / "inbox" / f"tennis-props-lines-{as_of}.csv"
+
+
 def most_aces_lines_file(as_of: str) -> Path:
     return PROPS_DIR / "inbox" / f"betmgm-most-aces-1x2-{as_of}.csv"
 
@@ -94,14 +102,50 @@ def market_event_dates(path: Path) -> set[str]:
         return set()
 
 
+def build_combined_market_file(as_of: str) -> Path | None:
+    sources = [path for path in (lines_file(as_of), betsbk_lines_file(as_of)) if has_market_rows(path)]
+    if not sources:
+        return None
+    rows: list[dict[str, str]] = []
+    fields: list[str] = []
+    seen: set[tuple[tuple[str, str], ...]] = set()
+    for path in sources:
+        with path.open("r", encoding="utf-8-sig", newline="") as handle:
+            reader = csv.DictReader(handle)
+            for field in reader.fieldnames or []:
+                if field not in fields:
+                    fields.append(field)
+            for raw_row in reader:
+                row = {str(key): str(value or "") for key, value in raw_row.items() if key is not None}
+                key = tuple(sorted(row.items()))
+                if key in seen:
+                    continue
+                seen.add(key)
+                rows.append(row)
+    if not rows or not fields:
+        return None
+    out = combined_lines_file(as_of)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    with out.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(rows)
+    print(
+        f"Combined tennis props prices: {len(rows)} rows from "
+        f"{', '.join(path.name for path in sources)} -> {out.name}"
+    )
+    return out
+
+
 def select_market_file(as_of: str, lookback_days: int = 3) -> Path | None:
-    exact = lines_file(as_of)
-    if has_market_rows(exact):
+    exact = build_combined_market_file(as_of)
+    if exact is not None:
         return exact
     target = date.fromisoformat(as_of)
     for offset in range(1, max(0, lookback_days) + 1):
-        candidate = lines_file((target - timedelta(days=offset)).isoformat())
-        if has_market_rows(candidate) and any(day >= as_of for day in market_event_dates(candidate)):
+        candidate_date = (target - timedelta(days=offset)).isoformat()
+        candidate = build_combined_market_file(candidate_date)
+        if candidate is not None and any(day >= as_of for day in market_event_dates(candidate)):
             return candidate
     return None
 
@@ -388,36 +432,57 @@ def capture_market_prices(args: argparse.Namespace) -> int:
     if args.skip_odds:
         print("\nMarket capture skipped by --skip-odds.")
         return 0
-    if not has_odds_key():
-        print("\nWARNING: no local odds-api key; live market capture skipped.")
-        return 0
-    scrape_exit = run(
-        [
-            sys.executable,
-            str(ROOT / "scripts" / "tennis-props-scrape-bet365.py"),
-            "--date", args.as_of,
-            "--days-ahead", str(args.days_ahead),
-            "--max-events", str(args.max_events),
-            "--bookmakers", "Bet365",
-        ],
-        "Capture Bet365 aces/DF lines before projections",
-        fatal=args.require_odds,
-        timeout_seconds=180,
-    )
-    run(
-        [
-            sys.executable,
-            str(ROOT / "scripts" / "tennis-most-aces-capture.py"),
-            "--date", args.as_of,
-            "--days-ahead", str(args.days_ahead),
-            "--max-events", str(args.max_events),
-            "--bookmakers", "BetMGM",
-        ],
-        "Capture BetMGM Most Aces 1X2 before projections",
-        fatal=False,
-        timeout_seconds=180,
-    )
-    return scrape_exit
+    source_exits: list[int] = []
+    if has_odds_key():
+        source_exits.append(
+            run(
+                [
+                    sys.executable,
+                    str(ROOT / "scripts" / "tennis-props-scrape-bet365.py"),
+                    "--date", args.as_of,
+                    "--days-ahead", str(args.days_ahead),
+                    "--max-events", str(args.max_events),
+                    "--bookmakers", "Bet365",
+                ],
+                "Capture Bet365 aces/DF lines before projections",
+                fatal=False,
+                timeout_seconds=180,
+            )
+        )
+        run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "tennis-most-aces-capture.py"),
+                "--date", args.as_of,
+                "--days-ahead", str(args.days_ahead),
+                "--max-events", str(args.max_events),
+                "--bookmakers", "BetMGM",
+            ],
+            "Capture BetMGM Most Aces 1X2 before projections",
+            fatal=False,
+            timeout_seconds=180,
+        )
+    else:
+        print("\nWARNING: no local odds-api key; Bet365/BetMGM capture skipped.")
+
+    if not args.skip_betsbk:
+        source_exits.append(
+            run(
+                [
+                    sys.executable,
+                    str(ROOT / "scripts" / "tennis-props-scrape-betsbk.py"),
+                    "--date", args.as_of,
+                    "--days-ahead", str(args.days_ahead),
+                    "--max-events", str(args.max_events),
+                ],
+                "Capture BetsBK US Open aces/DF fallback",
+                fatal=False,
+                timeout_seconds=900,
+            )
+        )
+    if args.require_odds and build_combined_market_file(args.as_of) is None:
+        raise SystemExit("No supported tennis props prices were captured from Bet365 or BetsBK.")
+    return 0 if any(exit_code == 0 for exit_code in source_exits) else (source_exits[0] if source_exits else 0)
 
 
 def run_comparison_only(
@@ -449,6 +514,7 @@ def main() -> int:
     parser.add_argument("--end-year", type=int, default=date.today().year)
     parser.add_argument("--refresh-sackmann", action="store_true", help="Download fresh ATP/WTA Sackmann CSVs first")
     parser.add_argument("--skip-odds", action="store_true", help="Do not scrape Bet365 lines even if a key is configured")
+    parser.add_argument("--skip-betsbk", action="store_true", help="Skip the local public BetsBK US Open props fallback")
     parser.add_argument("--require-odds", action="store_true", help="Fail if the Bet365 odds scrape cannot run")
     parser.add_argument("--comparison-only", action="store_true", help="Sync hosted prices and refresh comparison/tracking without rebuilding projections")
     parser.add_argument("--skip-derived-boards", action="store_true", help="Skip slow derived ace boards during a fast comparison pass")
