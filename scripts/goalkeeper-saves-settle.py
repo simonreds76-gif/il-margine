@@ -11,7 +11,7 @@ import argparse
 import csv
 import json
 import os
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -25,6 +25,7 @@ from goalkeeper_saves_live import ROOT, parse_float, person_match_score
 BASE_URL = "https://v3.football.api-sports.io"
 DEFAULT_SIGNALS = ROOT / "data" / "goalkeeper-saves" / "gk-saves-v1-shadow-signals.csv"
 DEFAULT_ODDS = ROOT / "data" / "goalkeeper-saves" / "gk-saves-odds-history.csv"
+DEFAULT_REPORT = ROOT / "data" / "goalkeeper-saves" / "gk-saves-v1-settlement-status.json"
 LEAGUES = {
     "epl": 39,
     "serie-a": 135,
@@ -33,6 +34,43 @@ LEAGUES = {
     "ligue-1": 61,
 }
 FINISHED = {"FT", "AET", "PEN"}
+
+
+def iso_utc() -> str:
+    return datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def api_error_messages(payload: dict[str, Any]) -> list[str]:
+    errors = payload.get("errors")
+    if not errors:
+        return []
+    if isinstance(errors, dict):
+        return [f"{key}: {value}" for key, value in errors.items() if value]
+    if isinstance(errors, list):
+        return [str(value) for value in errors if value]
+    return [str(errors)]
+
+
+def signal_is_due(signal: dict[str, str], now: datetime) -> bool:
+    raw_kickoff = str(signal.get("kickoff_at") or "").strip()
+    if raw_kickoff:
+        try:
+            kickoff = datetime.fromisoformat(raw_kickoff.replace("Z", "+00:00"))
+            if kickoff.tzinfo is None:
+                kickoff = kickoff.replace(tzinfo=UTC)
+            return kickoff <= now - timedelta(hours=3)
+        except ValueError:
+            pass
+    raw_day = str(signal.get("match_date") or "")[:10]
+    try:
+        return date.fromisoformat(raw_day) < now.date()
+    except ValueError:
+        return False
+
+
+def write_report(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def load_env() -> None:
@@ -193,18 +231,36 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Settle Goalkeeper Saves v1 shadow signals")
     parser.add_argument("--signals", type=Path, default=DEFAULT_SIGNALS)
     parser.add_argument("--odds", type=Path, default=DEFAULT_ODDS)
+    parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--max-requests", type=int, default=10)
     args = parser.parse_args()
     load_env()
 
     fields, signals = read_csv(args.signals)
+    generated_at = iso_utc()
     if not signals:
+        write_report(args.report, {"generated_at": generated_at, "status": "NO_SIGNALS", "settled": 0, "reason_counts": {}})
         print("No goalkeeper-save shadow signals to settle.")
         return
     pending = [row for row in signals if str(row.get("status") or "").lower() == "pending"]
-    today = datetime.now(UTC).date()
-    pending = [row for row in pending if (date.fromisoformat(str(row["match_date"])[:10]) <= today)]
+    now_dt = datetime.now(UTC)
+    deferred = [row for row in pending if not signal_is_due(row, now_dt)]
+    pending = [row for row in pending if signal_is_due(row, now_dt)]
     if not pending:
+        write_report(
+            args.report,
+            {
+                "generated_at": generated_at,
+                "status": "NOTHING_DUE",
+                "pending_total": len(deferred),
+                "pending_due": 0,
+                "deferred_not_due": len(deferred),
+                "settled": 0,
+                "requests_used": 0,
+                "max_requests": args.max_requests,
+                "reason_counts": {"not_due": len(deferred)} if deferred else {},
+            },
+        )
         print("No due goalkeeper-save shadow signals.")
         return
 
@@ -215,20 +271,55 @@ def main() -> None:
 
     requests_used = 0
     settled = 0
-    now = datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-    for (league, day_text), group in sorted(groups.items()):
-        if requests_used >= args.max_requests or league not in LEAGUES:
-            break
-        day = date.fromisoformat(day_text)
-        fixture_payload = request_json(
-            "fixtures",
-            {"league": LEAGUES[league], "season": season_for_day(day), "date": day_text, "status": "FT-AET-PEN"},
+    reasons: Counter[str] = Counter()
+    details: list[dict[str, str]] = []
+    api_errors: list[str] = []
+    now = generated_at
+
+    def record(signal: dict[str, str], reason: str, detail: str = "") -> None:
+        reasons[reason] += 1
+        details.append(
+            {
+                "signal_id": str(signal.get("signal_id") or ""),
+                "match_date": str(signal.get("match_date") or ""),
+                "match": f"{signal.get('home_team', '')} vs {signal.get('away_team', '')}",
+                "goalkeeper": str(signal.get("goalkeeper") or ""),
+                "reason": reason,
+                "detail": detail,
+            }
         )
-        requests_used += 1
+
+    for (league, day_text), group in sorted(groups.items()):
+        if league not in LEAGUES:
+            for signal in group:
+                record(signal, "unsupported_league", league)
+            continue
+        if requests_used >= args.max_requests:
+            for signal in group:
+                record(signal, "request_budget_exhausted")
+            continue
+        day = date.fromisoformat(day_text)
+        try:
+            fixture_payload = request_json(
+                "fixtures",
+                {"league": LEAGUES[league], "season": season_for_day(day), "date": day_text, "status": "FT-AET-PEN"},
+            )
+            requests_used += 1
+        except Exception as exc:  # Network/API failure must remain visible in the evidence report.
+            for signal in group:
+                record(signal, "fixture_request_failed", str(exc)[:240])
+            continue
+        fixture_errors = api_error_messages(fixture_payload)
+        if fixture_errors:
+            api_errors.extend(fixture_errors)
+            for signal in group:
+                record(signal, "fixture_api_error", "; ".join(fixture_errors)[:240])
+            continue
         fixtures = fixture_payload.get("response") or []
         for signal in group:
             if requests_used >= args.max_requests:
-                break
+                record(signal, "request_budget_exhausted")
+                continue
             fixture = next(
                 (
                     row for row in fixtures
@@ -239,22 +330,50 @@ def main() -> None:
             )
             fixture_id = ((fixture or {}).get("fixture") or {}).get("id")
             if not fixture_id:
+                record(signal, "finished_fixture_not_found", f"fixtures_returned={len(fixtures)}")
                 continue
-            players_payload = request_json("fixtures/players", {"fixture": fixture_id})
-            requests_used += 1
+            try:
+                players_payload = request_json("fixtures/players", {"fixture": fixture_id})
+                requests_used += 1
+            except Exception as exc:  # Keep the signal pending and explain why.
+                record(signal, "player_stats_request_failed", str(exc)[:240])
+                continue
+            player_errors = api_error_messages(players_payload)
+            if player_errors:
+                api_errors.extend(player_errors)
+                record(signal, "player_stats_api_error", "; ".join(player_errors)[:240])
+                continue
             actual, metadata = player_saves(players_payload, str(signal.get("goalkeeper") or ""))
             if actual is None:
+                record(signal, str(metadata.get("error") or "goalkeeper_stats_not_found"))
                 continue
             # The signal gate already required a confirmed starter. The player
             # payload must independently identify a goalkeeper, not an outfield
             # name collision.
             if str(metadata.get("position") or "").upper() not in {"G", "GK", "GOALKEEPER"}:
+                record(signal, "matched_player_not_goalkeeper", str(metadata.get("position") or ""))
                 continue
             settle_row(signal, actual, latest_close(odds_rows, signal), now)
             settled += 1
+            record(signal, "settled")
 
     write_csv(args.signals, fields, signals)
-    print(json.dumps({"settled": settled, "requests_used": requests_used, "max_requests": args.max_requests}, sort_keys=True))
+    status = "SETTLED" if settled and settled == len(pending) else "PARTIAL" if settled else "BLOCKED"
+    report = {
+        "generated_at": generated_at,
+        "status": status,
+        "pending_total": len(pending) + len(deferred),
+        "pending_due": len(pending),
+        "deferred_not_due": len(deferred),
+        "settled": settled,
+        "requests_used": requests_used,
+        "max_requests": args.max_requests,
+        "reason_counts": dict(sorted(reasons.items())),
+        "api_errors": sorted(set(api_errors)),
+        "details": details,
+    }
+    write_report(args.report, report)
+    print(json.dumps({key: value for key, value in report.items() if key != "details"}, sort_keys=True))
 
 
 if __name__ == "__main__":

@@ -52,6 +52,12 @@ $teamShotsFiles = @(
     "data/football-form/football-counts-vnext-gate.json",
     "data/football-form/football-counts-vnext-gate.md",
     "data/football-form/football-count-market-coverage.json",
+    "data/goalkeeper-saves/gk-saves-capture-status.json",
+    "data/goalkeeper-saves/gk-saves-v1-candidates.csv",
+    "data/goalkeeper-saves/gk-saves-v1-provisional.csv",
+    "data/goalkeeper-saves/gk-saves-v1-settlement-status.json",
+    "data/goalkeeper-saves/gk-saves-v1-shadow-report.json",
+    "data/goalkeeper-saves/gk-saves-v1-shadow-signals.csv",
     "data/team-shots/shadow/team-shots-shadow-signals.csv",
     "data/team-shots/shadow/team-shots-shadow-performance.txt",
     "data/shortlist/team-props-status.json"
@@ -87,12 +93,33 @@ $cornersFiles = @(
 
 $settlementFiles = @(
     "data/results-snapshot/latest.json",
+    # Current 2026/27 football-count lanes. These are deliberately included in
+    # normal localhost startup without pulling the much larger model archives.
+    "data/football-form/team-shots-v4-shadow-signals.csv",
+    "data/football-form/team-shots-v4-shadow-clv.csv",
+    "data/football-form/team-shots-v4-shadow-clv.md",
+    "data/football-form/team-shots-v4-settlement-audit.json",
+    "data/football-form/team-shots-v4-shadow-config.json",
+    "data/football-form/corners-v3-shadow-signals.csv",
+    "data/football-form/corners-v3-shadow-clv.csv",
+    "data/football-form/corners-v3-shadow-clv.md",
+    "data/football-form/corners-v3-settlement-audit.json",
+    "data/football-form/corners-v3-shadow-config.json",
+    "data/football-form/football-counts-vnext-candidates.csv",
+    "data/football-form/football-counts-vnext-gate.json",
+    "data/football-form/football-counts-vnext-gate.md",
     "data/football-form/team-shots-v3-ema20-clv-monitor.csv",
     "data/football-form/team-shots-v3-ema20-clv-monitor.md",
     "data/football-form/team-shots-v3-ema20-settlement-audit.json",
     "data/football-form/corners-v0-clv-monitor.csv",
     "data/football-form/corners-v0-clv-monitor.md",
     "data/football-form/corners-v0-settlement-audit.json",
+    "data/goalkeeper-saves/gk-saves-capture-status.json",
+    "data/goalkeeper-saves/gk-saves-v1-candidates.csv",
+    "data/goalkeeper-saves/gk-saves-v1-provisional.csv",
+    "data/goalkeeper-saves/gk-saves-v1-settlement-status.json",
+    "data/goalkeeper-saves/gk-saves-v1-shadow-report.json",
+    "data/goalkeeper-saves/gk-saves-v1-shadow-signals.csv",
     "data/team-shots/team-shots-live-snapshot.json",
     "data/corners-ou/corners-live-snapshot.json",
     "data/corners-ou/corners-monitor-summary.json"
@@ -179,6 +206,85 @@ $synced = 0
 $skipped = 0
 $backedUp = 0
 
+# These CSVs are append-only evidence ledgers. A hosted snapshot can lag the
+# laptop settlement run, so replacing a richer local ledger would erase rows
+# from the localhost monitor. Merge hosted additions into local evidence and
+# retain the more complete version of any existing pick.
+$mergeEvidenceCsvFiles = @(
+    "data/football-form/team-shots-v4-shadow-clv.csv",
+    "data/football-form/corners-v3-shadow-clv.csv",
+    "data/goalkeeper-saves/gk-saves-v1-shadow-signals.csv"
+)
+
+function Test-SettledEvidenceRow {
+    param([Parameter(Mandatory = $true)]$Row)
+    return ([string]$Row.result).Trim().ToLowerInvariant() -in @("won", "lost", "push", "void")
+}
+
+function Get-EvidenceRowScore {
+    param([Parameter(Mandatory = $true)]$Row)
+    $score = 0
+    if (Test-SettledEvidenceRow -Row $Row) { $score += 1000 }
+    foreach ($field in @("book_price_close", "pinnacle_price_close", "published_to_close_clv", "close_odds", "clv", "pnl_units", "actual_team_shots", "actual_total_corners", "actual_saves", "settled_at")) {
+        if (-not [string]::IsNullOrWhiteSpace([string]$Row.$field)) { $score += 1 }
+    }
+    return $score
+}
+
+function Merge-EvidenceCsvContent {
+    param(
+        [Parameter(Mandatory = $true)][string]$TargetPath,
+        [Parameter(Mandatory = $true)][string[]]$RemoteContent
+    )
+
+    if (-not (Test-Path -LiteralPath $TargetPath)) {
+        return (($RemoteContent -join "`n") + "`n")
+    }
+
+    $localRows = @(Import-Csv -LiteralPath $TargetPath)
+    $remoteRows = @($RemoteContent | ConvertFrom-Csv)
+    if ($localRows.Count -eq 0) {
+        return (($RemoteContent -join "`n") + "`n")
+    }
+    if ($remoteRows.Count -eq 0) {
+        Write-Host "Preserved local evidence (hosted ledger empty): $TargetPath"
+        return [System.IO.File]::ReadAllText($TargetPath)
+    }
+
+    $headers = New-Object System.Collections.Generic.List[string]
+    foreach ($row in @($remoteRows[0], $localRows[0])) {
+        foreach ($property in $row.PSObject.Properties.Name) {
+            if (-not $headers.Contains($property)) { [void]$headers.Add($property) }
+        }
+    }
+
+    $keyField = if ($headers.Contains("pick_id")) { "pick_id" } elseif ($headers.Contains("signal_id")) { "signal_id" } else { $null }
+    if (-not $keyField) {
+        throw "Evidence CSV has no pick_id or signal_id key: $TargetPath"
+    }
+
+    $merged = [ordered]@{}
+    foreach ($row in $remoteRows) {
+        $key = ([string]$row.$keyField).Trim()
+        if ($key) { $merged[$key] = $row }
+    }
+    foreach ($row in $localRows) {
+        $key = ([string]$row.$keyField).Trim()
+        if (-not $key) { continue }
+        if (-not $merged.Contains($key) -or (Get-EvidenceRowScore -Row $row) -gt (Get-EvidenceRowScore -Row $merged[$key])) {
+            $merged[$key] = $row
+        }
+    }
+
+    $normalized = foreach ($row in $merged.Values) {
+        $ordered = [ordered]@{}
+        foreach ($header in $headers) { $ordered[$header] = [string]$row.$header }
+        [pscustomobject]$ordered
+    }
+    Write-Host "Merged evidence ledger: local=$($localRows.Count), hosted=$($remoteRows.Count), result=$($normalized.Count)"
+    return (($normalized | ConvertTo-Csv -NoTypeInformation) -join "`n") + "`n"
+}
+
 function Write-TextFileWithRetry {
     param(
         [Parameter(Mandatory = $true)][string]$Path,
@@ -217,6 +323,10 @@ foreach ($relativePath in $files) {
     }
 
     $targetPath = Join-Path $repoRoot ($relativePath -replace "/", "\")
+    $contentToWrite = (($content -join "`n") + "`n")
+    if ($relativePath -in $mergeEvidenceCsvFiles) {
+        $contentToWrite = Merge-EvidenceCsvContent -TargetPath $targetPath -RemoteContent $content
+    }
     if ((Test-Path -LiteralPath $targetPath) -and $backupRoot) {
         $backupPath = Join-Path $backupRoot ($relativePath -replace "/", "\")
         New-Item -ItemType Directory -Force -Path (Split-Path -Parent $backupPath) | Out-Null
@@ -229,7 +339,7 @@ foreach ($relativePath in $files) {
         New-Item -ItemType Directory -Force -Path $targetDir | Out-Null
     }
 
-    Write-TextFileWithRetry -Path $targetPath -Content (($content -join "`n") + "`n") -Encoding $utf8NoBom
+    Write-TextFileWithRetry -Path $targetPath -Content $contentToWrite -Encoding $utf8NoBom
     Write-Host "Synced: $relativePath"
     $synced += 1
 }
