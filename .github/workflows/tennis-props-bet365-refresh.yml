@@ -17,6 +17,10 @@ on:
         description: "Maximum tennis events to query"
         type: number
         default: 64
+      bookmakers:
+        description: "Comma-separated count-market sources"
+        type: string
+        default: "Bet365,Kambi"
       commit_results:
         description: "Commit captured odds files back to the branch"
         type: boolean
@@ -82,6 +86,7 @@ jobs:
         env:
           DAYS_AHEAD: ${{ github.event.inputs.days_ahead || '2' }}
           MAX_EVENTS: ${{ github.event.inputs.max_events || '64' }}
+          BOOKMAKERS: ${{ github.event.inputs.bookmakers || 'Bet365,Kambi' }}
           PROBE_MARKETS: ${{ github.event.inputs.probe_markets || 'false' }}
         run: |
           EXTRA_ARGS=""
@@ -92,7 +97,7 @@ jobs:
             --date "$(date -u +%F)" \
             --days-ahead "${DAYS_AHEAD}" \
             --max-events "${MAX_EVENTS}" \
-            --bookmakers "Bet365" \
+            --bookmakers "${BOOKMAKERS}" \
             ${EXTRA_ARGS}
 
       - name: Scrape BetMGM Most Aces 1X2
