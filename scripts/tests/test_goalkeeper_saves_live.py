@@ -4,7 +4,7 @@ import importlib.util
 import sys
 import tempfile
 import unittest
-from datetime import date
+from datetime import UTC, date, datetime
 from pathlib import Path
 
 
@@ -193,7 +193,7 @@ class GoalkeeperSavesLiveTests(unittest.TestCase):
         self.assertEqual(len(rows), 1)
         self.assertEqual(len(rows_again), 1)
 
-    def test_provisional_candidate_never_enters_signal_ledger(self) -> None:
+    def test_predicted_starting_goalkeeper_enters_shadow_ledger(self) -> None:
         candidate = {field: "" for field in shadow.CANDIDATE_FIELDS}
         candidate.update(
             {
@@ -202,23 +202,45 @@ class GoalkeeperSavesLiveTests(unittest.TestCase):
                 "line": "3.5",
                 "side": "over",
                 "edge": "0.12",
-                "candidate_status": "blocked",
-                "blockers": "predicted_starter",
+                "lineup_status": "predicted_starter",
+                "candidate_status": "eligible_shadow",
+                "blockers": "",
                 "strongest_for_fixture": "yes",
             }
         )
-        self.assertEqual(len(shadow.provisional_rows([candidate])), 1)
         with tempfile.TemporaryDirectory() as directory:
             added, rows = shadow.append_signals(
                 Path(directory) / "signals.csv", [candidate], "2026-08-20T10:00:00Z"
             )
-        self.assertEqual(added, 0)
-        self.assertEqual(rows, [])
+        self.assertEqual(added, 1)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["lineup_status"], "predicted_starter")
 
     def test_infrastructure_failure_preserves_existing_candidate_board(self) -> None:
-        existing = [{"model_mean": "3.2", "candidate_status": "blocked", "blockers": "predicted_starter"}]
+        existing = [{
+            "kickoff_at": "2026-08-20T19:00:00Z",
+            "model_mean": "3.2",
+            "candidate_status": "blocked",
+            "blockers": "predicted_starter",
+        }]
         scanned = [{"model_mean": "", "candidate_status": "blocked", "blockers": "history_lt_6"}]
-        self.assertTrue(shadow.should_preserve_candidate_board(existing, scanned))
+        now = datetime(2026, 8, 20, 18, 0, tzinfo=UTC)
+        self.assertTrue(shadow.should_preserve_candidate_board(existing, scanned, now))
+
+    def test_empty_local_scan_preserves_current_hosted_board(self) -> None:
+        existing = [{"kickoff_at": "2026-08-20T19:00:00Z", "model_mean": "3.2"}]
+        now = datetime(2026, 8, 20, 18, 0, tzinfo=UTC)
+        self.assertTrue(shadow.should_preserve_candidate_board(existing, [], now))
+
+    def test_synced_predicted_starter_is_reclassified_for_tracking(self) -> None:
+        rows = shadow.apply_starter_tracking_policy([{
+            "lineup_status": "predicted_starter",
+            "edge": "0.22",
+            "candidate_status": "blocked",
+            "blockers": "predicted_starter",
+        }])
+        self.assertEqual(rows[0]["candidate_status"], "eligible_shadow")
+        self.assertEqual(rows[0]["blockers"], "")
 
     def test_named_goalkeeper_saves_are_extracted(self) -> None:
         payload = {

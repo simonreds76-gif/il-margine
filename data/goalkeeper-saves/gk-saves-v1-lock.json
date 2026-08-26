@@ -30,7 +30,7 @@
     "settled_real_price_selections": 150,
     "true_close_coverage": 0.7
   },
-  "publication_gate": "confirmed_starting_goalkeeper_only",
+  "publication_gate": "predicted_or_confirmed_starting_goalkeeper_shadow_only",
   "status": "research_count_gate_only",
   "target": "team_saves_equals_opponent_sot_minus_opponent_goals"
 }
