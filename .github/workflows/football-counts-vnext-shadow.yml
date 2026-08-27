@@ -149,6 +149,14 @@ jobs:
             echo "::warning::API_FOOTBALL_KEY missing; GK saves settlement retained pending."
           fi
 
+      - name: Send daily football model digest
+        if: steps.season.outputs.active == 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *')
+        continue-on-error: true
+        env:
+          OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
+          OPS_ALERT_TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
+        run: python scripts/football-daily-signal-digest.py
+
       - name: Commit append-only evidence
         if: steps.season.outputs.active == 'true'
         shell: bash
