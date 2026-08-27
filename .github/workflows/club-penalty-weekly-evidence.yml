@@ -168,6 +168,7 @@ jobs:
           git add -f data/goalscorer/bundesliga-penalty-baseline-evidence.json
           git add -f data/goalscorer/ligue-1-penalty-baseline-evidence.json
           git add -f data/goalscorer/goalscorer-monitor-snapshot.json
+          git add -f data/goalscorer/club-penalty-alert-state.json
           if git diff --cached --quiet; then
             echo "No new club penalty evidence."
             exit 0

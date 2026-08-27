@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -43,6 +44,26 @@ class ClubPenaltyReviewAlertTests(unittest.TestCase):
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0]["public_hierarchy_status"], "conditional")
 
+    def test_durable_alert_state_blocks_ticket_after_report_window_changes(self):
+        candidate = row(taker="Already Alerted")
+        result = MODULE.new_actionable_rows(
+            [candidate],
+            [],
+            {},
+            {MODULE.row_identity(candidate)},
+        )
+        self.assertEqual(result, [])
+
+    def test_alert_state_round_trip(self):
+        candidate = row(taker="Persisted Taker")
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "alert-state.json"
+            state = MODULE.load_alert_state(path)
+            MODULE.write_alert_state(path, state, [candidate])
+            loaded = MODULE.load_alert_state(path)
+        self.assertIn(MODULE.row_identity(candidate), loaded["items"])
+        self.assertEqual(loaded["items"][MODULE.row_identity(candidate)]["team"], "Example FC")
+
     def test_identity_normalises_accents_and_spacing(self):
         first = row(taker="Kylian Mbappe")
         second = row(taker="Kylian  Mbappe")
@@ -51,9 +72,9 @@ class ClubPenaltyReviewAlertTests(unittest.TestCase):
     def test_message_contains_review_actions_and_link(self):
         message = MODULE.build_message([row()], "http://localhost:3000/model-monitor/goalscorer#penalty-watchlist")
         self.assertIn("1 new ticket(s): 1 high, 0 medium", message)
-        self.assertIn("Accept evidence = keep open", message)
-        self.assertIn("Ignore = close", message)
+        self.assertIn("Done = reviewed and close", message)
         self.assertIn("Defer = park", message)
+        self.assertIn("Hierarchy changes remain a separate editorial action", message)
         self.assertIn("#penalty-watchlist", message)
 
 

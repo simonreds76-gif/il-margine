@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
 import json
 import os
 import re
@@ -16,6 +17,7 @@ from typing import Iterable
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_REVIEW_URL = "http://localhost:3000/model-monitor/goalscorer#penalty-watchlist"
+DEFAULT_ALERT_STATE = Path("data/goalscorer/club-penalty-alert-state.json")
 REVIEW_FILES = (
     Path("data/goalscorer/penalty-duty-review.json"),
     Path("data/goalscorer/epl-penalty-duty-review.json"),
@@ -127,18 +129,53 @@ def dedupe_rows(rows: Iterable[dict]) -> dict[str, dict]:
     return deduped
 
 
+def load_alert_state(path: Path) -> dict:
+    if not path.exists():
+        return {"schema_version": 1, "updated_at": None, "items": {}}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {"schema_version": 1, "updated_at": None, "items": {}}
+    items = payload.get("items", {}) if isinstance(payload, dict) else {}
+    if not isinstance(items, dict):
+        items = {}
+    return {"schema_version": 1, "updated_at": payload.get("updated_at"), "items": items}
+
+
+def write_alert_state(path: Path, state: dict, rows: Iterable[dict]) -> None:
+    now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    items = dict(state.get("items") or {})
+    for row in rows:
+        identity = row_identity(row)
+        items[identity] = {
+            "alerted_at": now,
+            "date": str(row.get("date") or ""),
+            "league": str(row.get("league") or ""),
+            "team": str(row.get("team") or ""),
+            "opponent": str(row.get("opponent") or ""),
+            "actual_taker": str(row.get("actual_taker") or ""),
+        }
+    payload = {"schema_version": 1, "updated_at": now, "items": items}
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(f"{path.suffix}.tmp")
+    temporary.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    temporary.replace(path)
+
+
 def new_actionable_rows(
     current: Iterable[dict],
     previous: Iterable[dict],
     priority_teams: dict[str, str] | None = None,
+    alerted_identities: set[str] | None = None,
 ) -> list[dict]:
     previous_ids = set(dedupe_rows(previous))
     priority_teams = priority_teams or {}
+    alerted_identities = alerted_identities or set()
     rows = []
     for identity, row in dedupe_rows(current).items():
         hierarchy_status = priority_teams.get(team_identity(row), "")
         review_priority = str(row.get("review_priority") or "").lower()
-        if identity in previous_ids:
+        if identity in previous_ids or identity in alerted_identities:
             continue
         if review_priority not in ACTIONABLE_PRIORITIES and not hierarchy_status:
             continue
@@ -192,10 +229,9 @@ def build_message(rows: list[dict], review_url: str, run_url: str = "") -> str:
             "Review on your PC:",
             review_url,
             "",
-            "Accept evidence = keep open until hierarchy is edited",
-            "Ignore = close with no public change",
+            "Done = reviewed and close the ticket",
             "Defer = park for more evidence",
-            "Mark applied only after the hierarchy and audit date are updated",
+            "Hierarchy changes remain a separate editorial action",
         ]
     )
     if run_url:
@@ -225,13 +261,20 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Alert on newly created club penalty review tickets")
     parser.add_argument("--base-ref", default="HEAD", help="Git ref containing the previously published review queues")
     parser.add_argument("--review-url", default=os.environ.get("PENALTY_REVIEW_URL", DEFAULT_REVIEW_URL))
+    parser.add_argument("--state", default=str(DEFAULT_ALERT_STATE), help="Durable ledger of tickets already sent")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
+
+    state_path = Path(args.state)
+    if not state_path.is_absolute():
+        state_path = ROOT / state_path
+    alert_state = load_alert_state(state_path)
 
     rows = new_actionable_rows(
         current_rows(REVIEW_FILES),
         previous_rows(REVIEW_FILES, args.base_ref),
         priority_hierarchy_teams(),
+        set(alert_state["items"]),
     )
     if not rows:
         print("PENALTY_REVIEW_TELEGRAM no_new_actionable_tickets")
@@ -249,6 +292,7 @@ def main() -> int:
         return 0
 
     send_telegram(message, token, chat_id)
+    write_alert_state(state_path, alert_state, rows)
     print(f"PENALTY_REVIEW_TELEGRAM sent tickets={len(rows)}")
     return 0
 
