@@ -1,0 +1,93 @@
+name: Bookmaker Margin Snapshot
+
+on:
+  workflow_dispatch:
+    inputs:
+      sports:
+        description: Comma-separated sports to capture
+        required: true
+        default: football,tennis
+        type: string
+      days_ahead:
+        description: Upcoming fixture window
+        required: true
+        default: "4"
+        type: string
+      max_events:
+        description: Maximum events per sport
+        required: true
+        default: "10"
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: golden-with-speed-insights-branch-writes
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: golden-with-speed-insights
+          token: ${{ github.token }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install capture dependency
+        run: pip install requests
+
+      - name: Capture one-off snapshot
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          test -n "${ODDS_API_KEY:-}" || { echo "::error::ODDS_API_KEY is missing"; exit 1; }
+          python scripts/bookmaker-margin-index.py \
+            --sports '${{ inputs.sports }}' \
+            --days-ahead '${{ inputs.days_ahead }}' \
+            --max-events '${{ inputs.max_events }}' \
+            --max-requests 1 \
+            --output "$RUNNER_TEMP/margin-index.json"
+          python - "$RUNNER_TEMP/margin-index.json" <<'PY'
+          import json
+          import sys
+
+          path = sys.argv[1]
+          payload = json.load(open(path, encoding="utf-8"))
+          if payload.get("status") != "PASS":
+              raise SystemExit(f"Snapshot failed publish gate: {payload.get('status')}")
+          sports = set((payload.get("summary") or {}).get("sports") or [])
+          if not {"Football", "Tennis"}.issubset(sports):
+              raise SystemExit(f"Snapshot missing required sports: {sorted(sports)}")
+          passing = [row for row in payload.get("segments") or [] if row.get("status") == "PASS"]
+          if not any(row.get("sport") == "Football" for row in passing):
+              raise SystemExit("Snapshot has no publishable football market segment")
+          if not any(row.get("sport") == "Tennis" for row in passing):
+              raise SystemExit("Snapshot has no publishable tennis market segment")
+          print(f"Verified {len(passing)} sport/market segments")
+          PY
+          cp "$RUNNER_TEMP/margin-index.json" data/bookmakers/margin-index.json
+
+      - name: Upload snapshot artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bookmaker-margin-snapshot
+          path: data/bookmakers/margin-index.json
+
+      - name: Publish dated snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f data/bookmakers/margin-index.json
+          if git diff --cached --quiet; then
+            echo "Snapshot is unchanged."
+            exit 0
+          fi
+          git commit -m "data: publish bookmaker margin snapshot"
+          bash scripts/ci-safe-push.sh golden-with-speed-insights
