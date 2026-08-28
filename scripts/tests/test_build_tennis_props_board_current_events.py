@@ -73,6 +73,58 @@ class CurrentTournamentAliasTests(unittest.TestCase):
         self.assertEqual(rows[0]["round"], "Q2")
         self.assertEqual(rows[0]["date"], "2026-08-26")
 
+    def test_main_draw_uses_configured_schedule_horizon(self) -> None:
+        tour = {
+            "id": "21349",
+            "name": "U.S. Open - New York",
+            "date": "2026-08-30",
+            "rank": "4",
+            "court_id": "1",
+        }
+        today = {
+            "tour_id": "21349",
+            "date": "2026-08-30",
+            "player1_id": "1",
+            "player2_id": "2",
+            "round_id": "4",
+            "result": "",
+        }
+        patches = (
+            mock.patch.object(MODULE, "load_oncourt_player_names", return_value={"1": "One Player", "2": "Two Player"}),
+            mock.patch.object(MODULE, "load_oncourt_tours", return_value={"21349": tour}),
+            mock.patch.object(MODULE, "read_csv", return_value=[today]),
+        )
+        with patches[0], patches[1], patches[2]:
+            one_day = MODULE.oncourt_schedule_rows("ATP", False, "2026-08-28", days_ahead=1)
+            two_days = MODULE.oncourt_schedule_rows("ATP", False, "2026-08-28", days_ahead=2)
+        self.assertEqual(one_day, [])
+        self.assertEqual(len(two_days), 1)
+        self.assertEqual(two_days[0]["date"], "2026-08-30")
+
+    def test_schedule_horizon_excludes_distant_events(self) -> None:
+        tour = {
+            "id": "999",
+            "name": "Future Open - Future City",
+            "date": "2026-09-05",
+            "rank": "3",
+            "court_id": "1",
+        }
+        today = {
+            "tour_id": "999",
+            "date": "2026-09-05",
+            "player1_id": "1",
+            "player2_id": "2",
+            "round_id": "4",
+            "result": "",
+        }
+        with (
+            mock.patch.object(MODULE, "load_oncourt_player_names", return_value={"1": "One Player", "2": "Two Player"}),
+            mock.patch.object(MODULE, "load_oncourt_tours", return_value={"999": tour}),
+            mock.patch.object(MODULE, "read_csv", return_value=[today]),
+        ):
+            rows = MODULE.oncourt_schedule_rows("ATP", False, "2026-08-28", days_ahead=3)
+        self.assertEqual(rows, [])
+
 
 class CurrentEventRowsCacheTests(unittest.TestCase):
     def setUp(self) -> None:
