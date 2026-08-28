@@ -1,6 +1,6 @@
 {
   "date_range": {
-    "max": "2026-08-24",
+    "max": "2026-08-27",
     "min": "2014-08-08"
   },
   "fields": {
@@ -186,7 +186,7 @@
       "ema20_opponent_market_strength_avg"
     ]
   },
-  "generated_at": "2026-08-27T19:43:38+00:00",
+  "generated_at": "2026-08-28T20:48:17+00:00",
   "notes": [
     "Versioned CSVs are date-tagged generated artifacts.",
     "Models should record the version value when training or producing research reports.",
@@ -195,21 +195,21 @@
   "outputs": {
     "report": "data/football-form/team-form-report.md",
     "team_match_base": "data/football-form/team-match-base.csv",
-    "team_match_base_versioned": "data/football-form/team-match-base-2026-08-27.csv",
+    "team_match_base_versioned": "data/football-form/team-match-base-2026-08-28.csv",
     "team_rolling_form": "data/football-form/team-rolling-form.csv",
-    "team_rolling_form_versioned": "data/football-form/team-rolling-form-2026-08-27.csv",
+    "team_rolling_form_versioned": "data/football-form/team-rolling-form-2026-08-28.csv",
     "validation_json": "data/football-form/team-form-validation.json",
     "validation_report": "data/football-form/team-form-validation.md"
   },
   "row_counts": {
-    "team_match_base": 43272,
-    "team_rolling_form": 43272
+    "team_match_base": 43280,
+    "team_rolling_form": 43280
   },
-  "version": "2026-08-27",
+  "version": "2026-08-28",
   "xg_overlay": {
-    "matched": 21634,
-    "rows": 21634,
+    "matched": 21638,
+    "rows": 21638,
     "unmatched": 0,
-    "with_xg": 19806
+    "with_xg": 19810
   }
 }
