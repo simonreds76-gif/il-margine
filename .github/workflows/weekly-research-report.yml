@@ -99,7 +99,13 @@ jobs:
           TENNIS_PROPS_V3_WEEKLY_JSON: '${{ vars.TENNIS_PROPS_V3_WEEKLY_JSON }}'
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
+          if [ -n "${ODDS_API_KEY:-}" ]; then
+            python scripts/bookmaker-margin-index.py --max-events 10 --max-requests 1
+          else
+            echo "::warning::ODDS_API_KEY missing; bookmaker margin index retains its previous fail-closed snapshot."
+          fi
           python scripts/audit-automation-budget.py \
             --workflows-dir .effective-default-branch/.github/workflows \
             --strict
@@ -183,6 +189,7 @@ jobs:
             data/assist-value/research/assist-value-market-history.csv
             data/assist-value/research/assist-value-v1-prospective.csv
             data/assist-value/research/assist-value-v1-prospective-performance.txt
+            data/bookmakers/margin-index.json
 
       - name: Publish canonical weekly monitor bundle
         run: |
@@ -193,7 +200,8 @@ jobs:
             data/football-form/weekly-research-report.json \
             data/team-shots/team-shots-live-snapshot.json \
             data/corners-ou/corners-live-snapshot.json \
-            data/goalscorer/goalscorer-monitor-snapshot.json
+            data/goalscorer/goalscorer-monitor-snapshot.json \
+            data/bookmakers/margin-index.json
           if git diff --cached --quiet; then
             echo "Canonical weekly monitor bundle is already current."
             exit 0
