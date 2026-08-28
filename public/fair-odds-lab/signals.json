@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-27T20:44:40.967171Z",
+  "generated_at": "2026-08-28T05:22:21.478771Z",
   "source_file": [
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
@@ -34,14 +34,14 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 36,
+  "fixtures_evaluated": 34,
   "signals_qualifying": 3,
   "safety_exclusions": {
     "market_odds_above_cap": 6,
     "model_probability_below_floor": 10,
     "low_signal_confidence": 2,
     "model_market_gap_gt_10pp": 12,
-    "lineup_not_public_quality": 9,
+    "lineup_not_public_quality": 8,
     "defensive_position": 1
   },
   "extreme_gap_quarantine": {
@@ -128,7 +128,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 52
+          "percentile": 50
         },
         "opponent_recent_defence": {
           "tier": "Average",
@@ -208,7 +208,7 @@
         "share_of_team_chances_percentile": 94,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 81
+          "percentile": 82
         },
         "recent_team_form": {
           "tier": "Strong",
@@ -305,10 +305,10 @@
           "percentile": 81
         },
         "share_of_team_chances_pct": 25,
-        "share_of_team_chances_percentile": 96,
+        "share_of_team_chances_percentile": 97,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 22
+          "percentile": 20
         },
         "recent_team_form": {
           "tier": "Quiet",
@@ -327,7 +327,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 58
+          "percentile": 56
         },
         "opponent_recent_defence": {
           "tier": "High",
