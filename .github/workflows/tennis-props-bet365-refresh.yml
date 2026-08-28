@@ -3,8 +3,8 @@ name: Tennis Props Bet365 Refresh
 on:
   schedule:
     - cron: "25 8 * * *"
-    # GitHub occasionally delays or drops a scheduled run. This fallback is
-    # credit-safe: it only scrapes when the morning capture has no usable rows.
+    # GitHub occasionally delays or drops a scheduled run. The 11:25 slot is a
+    # credit-safe fallback; 15:25 is a deliberate fresh pre-nightly capture.
     - cron: "25 11 * * *"
     - cron: "25 15 * * *"
   workflow_dispatch:
@@ -12,17 +12,25 @@ on:
       days_ahead:
         description: "How many days ahead to scan"
         type: number
-        default: 2
+        default: 3
       max_events:
         description: "Maximum tennis events to query"
         type: number
-        default: 64
+        default: 128
+      bookmakers:
+        description: "Comma-separated count-market sources (Kambi requires a paid plan)"
+        type: string
+        default: "Bet365"
       commit_results:
         description: "Commit captured odds files back to the branch"
         type: boolean
         default: true
       probe_markets:
         description: "Force odds-api.io tennis market endpoint probes in logs"
+        type: boolean
+        default: false
+      price_shape_probe:
+        description: "Run the bounded three-request Bet365 ladder diagnostic"
         type: boolean
         default: false
 
@@ -59,7 +67,7 @@ jobs:
           fi
 
       - name: Guard fallback API credits
-        if: ${{ github.event_name == 'schedule' && github.event.schedule != '25 8 * * *' }}
+        if: ${{ github.event_name == 'schedule' && github.event.schedule == '25 11 * * *' }}
         id: fallback_guard
         shell: bash
         run: |
@@ -76,8 +84,9 @@ jobs:
       - name: Scrape Bet365 tennis player props
         if: ${{ steps.fallback_guard.outputs.skip != 'true' }}
         env:
-          DAYS_AHEAD: ${{ github.event.inputs.days_ahead || '2' }}
-          MAX_EVENTS: ${{ github.event.inputs.max_events || '64' }}
+          DAYS_AHEAD: ${{ github.event.inputs.days_ahead || '3' }}
+          MAX_EVENTS: ${{ github.event.inputs.max_events || '128' }}
+          BOOKMAKERS: ${{ github.event.inputs.bookmakers || 'Bet365' }}
           PROBE_MARKETS: ${{ github.event.inputs.probe_markets || 'false' }}
         run: |
           EXTRA_ARGS=""
@@ -88,8 +97,27 @@ jobs:
             --date "$(date -u +%F)" \
             --days-ahead "${DAYS_AHEAD}" \
             --max-events "${MAX_EVENTS}" \
-            --bookmakers "Bet365" \
+            --bookmakers "${BOOKMAKERS}" \
             ${EXTRA_ARGS}
+
+      - name: Scrape BetMGM Most Aces 1X2
+        if: ${{ always() && github.event.inputs.price_shape_probe != 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '25 15 * * *') }}
+        env:
+          DAYS_AHEAD: ${{ github.event.inputs.days_ahead || '3' }}
+          MAX_EVENTS: ${{ github.event.inputs.max_events || '128' }}
+        run: |
+          python scripts/tennis-most-aces-capture.py \
+            --date "$(date -u +%F)" \
+            --days-ahead "${DAYS_AHEAD}" \
+            --max-events "${MAX_EVENTS}" \
+            --bookmakers "BetMGM"
+
+      - name: Probe Bet365 tennis price shape
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.price_shape_probe == 'true' }}
+        run: |
+          python scripts/probe-tennis-props-price-shape.py \
+            --date "$(date -u +%F)" \
+            --bookmaker "Bet365"
 
       - name: Build append-only Bet365 price history
         if: always()
@@ -104,6 +132,10 @@ jobs:
             data/tennis-props/inbox/bet365-lines-*.csv
             data/tennis-props/inbox/bet365-lines-history-*.csv
             data/tennis-props/inbox/bet365-tennis-market-audit-*.csv
+            data/tennis-props/inbox/betmgm-most-aces-1x2-*.csv
+            data/tennis-props/inbox/betmgm-most-aces-history-*.csv
+            data/tennis-props/inbox/betmgm-tennis-market-audit-*.csv
+            data/tennis-props/inbox/bet365-price-shape-probe-*.json
           if-no-files-found: warn
 
       - name: Commit captured odds
@@ -114,6 +146,9 @@ jobs:
           git add -f data/tennis-props/inbox/bet365-lines-*.csv || true
           git add -f data/tennis-props/inbox/bet365-lines-history-*.csv || true
           git add -f data/tennis-props/inbox/bet365-tennis-market-audit-*.csv || true
+          git add -f data/tennis-props/inbox/betmgm-most-aces-1x2-*.csv || true
+          git add -f data/tennis-props/inbox/betmgm-most-aces-history-*.csv || true
+          git add -f data/tennis-props/inbox/betmgm-tennis-market-audit-*.csv || true
           if git diff --cached --quiet; then
             echo "No tennis props odds changes to commit."
             exit 0
