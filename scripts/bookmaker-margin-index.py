@@ -28,7 +28,10 @@ ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_OUTPUT = ROOT / "data" / "bookmakers" / "margin-index.json"
 BASE_URL = "https://api.odds-api.io/v3"
 TARGET_BOOKMAKERS = {
+    "10bet": ("10bet", "tenbet"),
+    "Bally Bet": ("ballybet",),
     "Bet365": ("bet365",),
+    "Betfred": ("betfred",),
     "BetVictor": ("betvictor",),
     "William Hill": ("williamhill",),
     "Unibet": ("unibet",),
@@ -39,6 +42,8 @@ TARGET_BOOKMAKERS = {
     "Coral": ("coral",),
     "Ladbrokes": ("ladbrokes",),
     "BoyleSports": ("boylesports", "boylesport"),
+    "SBK": ("sbk", "smarketsbookmaker"),
+    "Spreadex": ("spreadex",),
     "Virgin Bet": ("virginbet",),
     "Midnite": ("midnite",),
     "Bwin": ("bwin",),

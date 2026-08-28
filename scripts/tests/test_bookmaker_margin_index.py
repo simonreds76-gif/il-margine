@@ -44,6 +44,10 @@ def event(event_id: int, book_prices: dict[str, tuple[float, float, float]]) -> 
 
 
 class BookmakerMarginIndexTests(unittest.TestCase):
+    def test_active_admin_recreational_books_are_targeted(self) -> None:
+        expected = {"10bet", "Bally Bet", "Bet365", "Betfred", "SBK", "Spreadex"}
+        self.assertTrue(expected.issubset(MODULE.TARGET_BOOKMAKERS))
+
     def test_ml_selection_labels_share_the_main_market(self) -> None:
         market = {
             "name": "Full Time Result",
