@@ -36,6 +36,7 @@ type BookmakerMarginIndex = {
   methodology: { minimum_publish_gate: string };
   summary: {
     operators: number;
+    diagnostic_operators?: number;
     sports?: string[];
     events: number;
     market_families: string[];
@@ -373,12 +374,13 @@ const FAQ_ITEMS = [
 ];
 
 export default function BookmakersPage() {
-  const publishable =
-    MARGIN_INDEX.status === "PASS" &&
-    MARGIN_INDEX.operators.length >= 4;
   const publishableSegments = (MARGIN_INDEX.segments ?? []).filter(
     (segment) => segment.status === "PASS" && segment.operators.length >= 3,
   );
+  const hasOverallRanking = MARGIN_INDEX.operators.length >= 4;
+  const publishable =
+    MARGIN_INDEX.status === "PASS" &&
+    (hasOverallRanking || publishableSegments.length > 0);
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
@@ -422,7 +424,7 @@ export default function BookmakersPage() {
             <div>
               <div className="grid gap-px bg-slate-800/80 sm:grid-cols-4">
                 {[
-                  ["Operators", String(MARGIN_INDEX.summary.operators)],
+                  ["Operators", String(MARGIN_INDEX.summary.diagnostic_operators ?? MARGIN_INDEX.summary.operators)],
                   ["Sports", String(MARGIN_INDEX.summary.sports?.length ?? 0)],
                   ["Events", String(MARGIN_INDEX.summary.events)],
                   ["Market families", String(MARGIN_INDEX.summary.market_families.length)],
@@ -470,7 +472,7 @@ export default function BookmakersPage() {
                 </div>
               )}
 
-              <div className="overflow-x-auto">
+              {hasOverallRanking && <div className="overflow-x-auto">
                 <table className="min-w-[780px] w-full text-left text-sm">
                   <thead className="border-b border-slate-800 bg-slate-950/55 text-[10px] uppercase tracking-[0.14em] text-slate-500">
                     <tr>
@@ -502,7 +504,7 @@ export default function BookmakersPage() {
                     ))}
                   </tbody>
                 </table>
-              </div>
+              </div>}
 
               <div className="grid gap-4 border-t border-slate-800/80 px-5 py-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:px-7">
                 <div>

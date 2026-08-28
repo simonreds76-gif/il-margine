@@ -95,6 +95,37 @@ class BookmakerMarginIndexTests(unittest.TestCase):
         self.assertEqual(segments[("Tennis", "Match Winner")]["status"], "PASS")
         self.assertEqual(len(segments[("Tennis", "Match Winner")]["operators"]), 4)
 
+    def test_market_segments_can_publish_without_blended_operator_ranking(self) -> None:
+        definitions = (
+            ("football", "ML", {"home": 2.4, "draw": 3.2, "away": 2.8}),
+            ("football", "Over/Under", {"hdp": 2.5, "over": 1.91, "under": 1.91}),
+            ("tennis", "ML", {"home": 1.8, "away": 2.1}),
+            ("tennis", "Totals (Games)", {"hdp": 22.5, "over": 1.91, "under": 1.91}),
+        )
+        payload = []
+        event_id = 0
+        for segment_index, (sport, market_name, prices) in enumerate(definitions):
+            for _ in range(2):
+                event_id += 1
+                payload.append({
+                    "id": str(event_id),
+                    "status": "pending",
+                    "home": f"Home {event_id}",
+                    "away": f"Away {event_id}",
+                    "_snapshot_sport": sport,
+                    "bookmakers": {
+                        f"Segment {segment_index} Book {book_index}": [
+                            {"name": market_name, **prices},
+                        ]
+                        for book_index in range(3)
+                    },
+                })
+
+        result = MODULE.build_index(payload, "2026-08-28T12:00:00Z")
+        self.assertEqual(result["status"], "PASS")
+        self.assertEqual(result["operators"], [])
+        self.assertEqual(len([row for row in result["segments"] if row["status"] == "PASS"]), 4)
+
     def test_index_passes_only_with_qualified_operator_coverage(self) -> None:
         prices = {
             "Tight Book": (2.55, 3.35, 2.95),

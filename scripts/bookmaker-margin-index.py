@@ -426,13 +426,19 @@ def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, An
         for slug in SPORT_CONFIG
         if any(row["sport_slug"] == slug for row in collapsed)
     ]
-    status = (
-        "PASS"
-        if len(operators) >= MIN_PUBLISH_OPERATORS
+    global_gate = (
+        len(operators) >= MIN_PUBLISH_OPERATORS
         and len(families) >= MIN_PUBLISH_FAMILIES
         and len(collapsed) >= MIN_PUBLISH_OBSERVATIONS
-        else "INSUFFICIENT_COVERAGE"
     )
+    passing_segments = [segment for segment in segments if segment["status"] == "PASS"]
+    segment_sports = {segment["sport"] for segment in passing_segments}
+    segment_gate = (
+        {"Football", "Tennis"}.issubset(segment_sports)
+        and len(passing_segments) >= 4
+        and len(collapsed) >= MIN_PUBLISH_OBSERVATIONS
+    )
+    status = "PASS" if global_gate or segment_gate else "INSUFFICIENT_COVERAGE"
     return {
         "schema_version": 2,
         "generated_at": captured_at,
@@ -444,8 +450,8 @@ def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, An
             "aggregation": "median alternate lines per operator/event/family, then equal-weight mean",
             "scope": "one-off pre-match football and tennis snapshot; complete like-for-like outcome sets only",
             "minimum_publish_gate": (
-                "4 qualified operators, 3 market families, 20 operator/event/family observations; "
-                "each ranked operator needs 6 observations across 3 families"
+                "Either a broad four-operator ranking, or at least four market-specific tables spanning "
+                "football and tennis; every market table needs three operators with two observations each"
             ),
         },
         "summary": {
@@ -462,7 +468,7 @@ def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, An
             "normalized_hold_pct": round(sum(row["normalized_hold_pct"] for row in synthetic_rows) / len(synthetic_rows), 2) if synthetic_rows else None,
             "samples": len(synthetic_rows),
         },
-        "operators": operators if status == "PASS" else [],
+        "operators": operators if global_gate else [],
         "diagnostic_operators": diagnostic_operators,
         "segments": segments,
     }
