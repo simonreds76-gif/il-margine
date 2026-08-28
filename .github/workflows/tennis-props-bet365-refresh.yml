@@ -12,7 +12,7 @@ on:
       days_ahead:
         description: "How many days ahead to scan"
         type: number
-        default: 2
+        default: 3
       max_events:
         description: "Maximum tennis events to query"
         type: number
