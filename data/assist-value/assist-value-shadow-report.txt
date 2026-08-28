@@ -1,5 +1,5 @@
 Assist Value Shadow Report
-generated_at_utc: 2026-08-23T07:43:21Z
+generated_at_utc: 2026-08-28T19:25:13Z
 
 Status
 shadow_status: ENABLED_RESEARCH_ONLY
@@ -8,60 +8,60 @@ model_status: NOT_FITTED
 fair_odds_status: NOT_AUTHORISED
 
 Inputs
-raw_odds_rows_loaded: 908
+raw_odds_rows_loaded: 1854
 role_players_loaded: 1030
 
 Join
-shadow_rows_assist_only: 908
-role_matched_rows: 264
-role_match_rate_pct: 29.07
-ambiguous_player_rows: 0
-unmatched_player_rows: 644
+shadow_rows_assist_only: 1854
+role_matched_rows: 511
+role_match_rate_pct: 27.56
+ambiguous_player_rows: 1
+unmatched_player_rows: 1342
 
 Interpretation
 This board is an evidence layer only: Bet365 assist market rows enriched with RotoWire set-piece role shares.
 It is not a betting model, not a public Fair Odds Lab lane, and not a value signal.
 
 Top role-matched rows
- - Branco van den Boomen | Angers SCO vs Lille OSC | odds 7.5000 | setpiece_last5 70.0 | corners_last5 78.57 | fk_last5 50.0
- - Dominik Szoboszlai | Newcastle United vs Liverpool FC | odds 4.3330 | setpiece_last5 65.85 | corners_last5 57.69 | fk_last5 80.0
- - Sebastian Szymanski | Stade Rennais FC vs Paris Saint-Germain | odds 6.5000 | setpiece_last5 64.44 | corners_last5 65.79 | fk_last5 66.67
- - Jon Ander Olasagasti | CA Osasuna vs Levante UD | odds 10.0000 | setpiece_last5 58.33 | corners_last5 63.64 | fk_last5 50.0
- - Enzo Fernandez | Fulham FC vs Chelsea FC | odds 5.0000 | setpiece_last5 57.69 | corners_last5 57.14 | fk_last5 63.64
- - Victor Chust | Elche CF vs FC Barcelona | odds 12.0000 | setpiece_last5 56.0 | corners_last5 60.0 | fk_last5 57.14
- - Pascal Gross | Brighton & Hove Albion vs Aston Villa | odds 5.0000 | setpiece_last5 55.56 | corners_last5 48.15 | fk_last5 77.78
- - Christopher Nkunku | Torino FC vs AC Milan | odds 5.0000 | setpiece_last5 55.0 | corners_last5 50.0 | fk_last5 50.0
- - Yanis Zouaoui | Le Havre AC vs AS Monaco | odds 5.0000 | setpiece_last5 54.84 | corners_last5 61.11 | fk_last5 45.45
- - Giacomo Raspadori | Atalanta BC vs Sassuolo Calcio | odds 5.5000 | setpiece_last5 53.85 | corners_last5 54.55 | fk_last5 50.0
- - Paulo Dybala | AS Roma vs ACF Fiorentina | odds 4.0000 | setpiece_last5 50.0 | corners_last5 52.0 | fk_last5 54.55
- - Alex Scott | Manchester City vs AFC Bournemouth | odds 9.0000 | setpiece_last5 45.71 | corners_last5 51.85 | fk_last5 28.57
- - Antonino Gallo | Venezia FC vs US Lecce | odds 7.0000 | setpiece_last5 42.86 | corners_last5 57.14 | fk_last5 14.29
- - Giovani Lo Celso | Valencia CF vs Real Betis Seville | odds 5.0000 | setpiece_last5 42.11 | corners_last5 47.06 | fk_last5 0.0
- - Phil Foden | Manchester City vs AFC Bournemouth | odds 4.5000 | setpiece_last5 40.0 | corners_last5 43.48 | fk_last5 28.57
- - John McGinn | Brighton & Hove Albion vs Aston Villa | odds 7.0000 | setpiece_last5 37.14 | corners_last5 44.0 | fk_last5 22.22
- - Maghnes Akliouche | Stade Rennais FC vs Paris Saint-Germain | odds 3.2500 | setpiece_last5 36.84 | corners_last5 35.71 | fk_last5 44.44
- - Ousmane Dembele | Stade Rennais FC vs Paris Saint-Germain | odds 3.5000 | setpiece_last5 36.0 | corners_last5 42.11 | fk_last5 0.0
- - Rafael Obrador | Atalanta BC vs Sassuolo Calcio | odds 10.0000 | setpiece_last5 35.0 | corners_last5 35.71 | fk_last5 40.0
- - Domenico Berardi | Atalanta BC vs Sassuolo Calcio | odds 5.0000 | setpiece_last5 35.0 | corners_last5 20.0 | fk_last5 50.0
+ - Luis Milla | SSC Napoli vs Como 1907 | odds 4.5000 | setpiece_last5 96.88 | corners_last5 100.0 | fk_last5 100.0
+ - Gauthier Hein | Paris FC vs OGC Nice | odds 6.5000 | setpiece_last5 94.12 | corners_last5 90.91 | fk_last5 100.0
+ - Nadiem Amiri | FSV Mainz vs SC Paderborn 07 | odds 4.5000 | setpiece_last5 93.33 | corners_last5 90.91 | fk_last5 100.0
+ - Max Finkgrafe | RB Leipzig vs Borussia Monchengladbach | odds 8.0000 | setpiece_last5 79.31 | corners_last5 75.0 | fk_last5 100.0
+ - Kevin Danois | AJ Auxerre vs Angers SCO | odds 5.0000 | setpiece_last5 78.95 | corners_last5 78.95 | fk_last5 0.0
+ - Trent Alexander-Arnold | Real Madrid vs Malaga CF | odds 3.0000 | setpiece_last5 78.57 | corners_last5 78.95 | fk_last5 77.78
+ - James Garner | AFC Bournemouth vs Everton FC | odds 7.0000 | setpiece_last5 75.0 | corners_last5 72.0 | fk_last5 85.71
+ - Pablo Pagis | Paris FC vs OGC Nice | odds 5.5000 | setpiece_last5 72.0 | corners_last5 83.33 | fk_last5 63.64
+ - Christopher Trimmel | Union Berlin vs Eintracht Frankfurt | odds 4.3330 | setpiece_last5 71.43 | corners_last5 72.0 | fk_last5 70.0
+ - Branco van den Boomen | AJ Auxerre vs Angers SCO | odds 7.0000 | setpiece_last5 70.0 | corners_last5 78.57 | fk_last5 50.0
+ - Dominik Szoboszlai | Liverpool FC vs Nottingham Forest | odds 4.0000 | setpiece_last5 65.85 | corners_last5 57.69 | fk_last5 80.0
+ - Julian Ryerson | Borussia Dortmund vs Hamburger SV | odds 3.4000 | setpiece_last5 65.38 | corners_last5 63.16 | fk_last5 71.43
+ - Bruno Fernandes | Manchester United vs Ipswich Town | odds 2.6250 | setpiece_last5 65.38 | corners_last5 59.09 | fk_last5 100.0
+ - Lucas Da Cunha | SSC Napoli vs Como 1907 | odds 7.5000 | setpiece_last5 58.62 | corners_last5 60.0 | fk_last5 50.0
+ - Mathias Jensen | Leeds United vs Brentford FC | odds 8.0000 | setpiece_last5 58.62 | corners_last5 57.89 | fk_last5 66.67
+ - Jon Ander Olasagasti | Levante UD vs Real Betis Seville | odds 8.5000 | setpiece_last5 58.33 | corners_last5 63.64 | fk_last5 50.0
+ - Enzo Fernandez | Chelsea FC vs Brighton & Hove Albion | odds 5.0000 | setpiece_last5 57.69 | corners_last5 57.14 | fk_last5 63.64
+ - Andrija Bulatovic | Strasbourg Alsace vs Racing Club De Lens | odds 7.5000 | setpiece_last5 57.14 | corners_last5 56.52 | fk_last5 60.0
+ - Ruben Vargas | Sevilla FC vs Atletico Madrid | odds 5.5000 | setpiece_last5 56.52 | corners_last5 57.14 | fk_last5 55.56
+ - Declan Rice | Aston Villa vs Arsenal FC | odds 5.0000 | setpiece_last5 56.52 | corners_last5 35.71 | fk_last5 88.89
 
 Unmatched sample
- - Giovanni Simeone | Torino FC vs AC Milan
- - Gaetano Oristanio | Torino FC vs AC Milan
- - Sandro Kulenovic | Torino FC vs AC Milan
- - Tommaso Gabellini | Torino FC vs AC Milan
- - Alieu Njie | Torino FC vs AC Milan
- - Andrea Luongo | Torino FC vs AC Milan
- - Ivan Ilic | Torino FC vs AC Milan
- - Koni de Winter | Torino FC vs AC Milan
- - Mattia Pellini | Torino FC vs AC Milan
- - Adrien Rabiot | Torino FC vs AC Milan
- - Alphadjo Cisse | Torino FC vs AC Milan
- - Alexis Saelemaekers | Torino FC vs AC Milan
- - Filippo Terracciano | Torino FC vs AC Milan
- - Cesare Casadei | Torino FC vs AC Milan
- - Fikayo Tomori | Torino FC vs AC Milan
- - Ardian Ismajli | Torino FC vs AC Milan
- - Ruben Loftus-Cheek | Torino FC vs AC Milan
- - Che Adams | Torino FC vs AC Milan
- - Pietro Pellegri | Torino FC vs AC Milan
- - Zakaria Aboukhlal | Torino FC vs AC Milan
+ - Giovanni Simeone | Sassuolo Calcio vs Torino FC
+ - Gaetano Oristanio | Sassuolo Calcio vs Torino FC
+ - Cesare Casadei | Sassuolo Calcio vs Torino FC
+ - Nemanja Matic | Sassuolo Calcio vs Torino FC
+ - Cas Odenthal | Sassuolo Calcio vs Torino FC
+ - Ardian Ismajli | Sassuolo Calcio vs Torino FC
+ - Kieron Bowie | Sassuolo Calcio vs Torino FC
+ - Gabriel Kulla | Sassuolo Calcio vs Torino FC
+ - Benjamin Dominguez | Sassuolo Calcio vs Torino FC
+ - Luca Moro | Sassuolo Calcio vs Torino FC
+ - Kristian Thorstvedt | Sassuolo Calcio vs Torino FC
+ - Riccardo Ciervo | Sassuolo Calcio vs Torino FC
+ - Sandro Kulenovic | Sassuolo Calcio vs Torino FC
+ - Nicholas Pierini | Sassuolo Calcio vs Torino FC
+ - Tommaso Gabellini | Sassuolo Calcio vs Torino FC
+ - Che Adams | Sassuolo Calcio vs Torino FC
+ - Pietro Pellegri | Sassuolo Calcio vs Torino FC
+ - Alieu Njie | Sassuolo Calcio vs Torino FC
+ - Zakaria Aboukhlal | Sassuolo Calcio vs Torino FC
+ - Tino Anjorin | Sassuolo Calcio vs Torino FC
