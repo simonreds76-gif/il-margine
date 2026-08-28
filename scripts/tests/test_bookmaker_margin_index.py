@@ -58,7 +58,7 @@ class BookmakerMarginIndexTests(unittest.TestCase):
                 {"label": "2", "odds": 3.1},
             ],
         }
-        quotes = MODULE.quote_sets(market, "Moneyline", "Home FC", "Away FC")
+        quotes = MODULE.quote_sets(market, "Match Winner", "Home FC", "Away FC")
         self.assertEqual(len(quotes), 1)
         self.assertEqual(quotes[0]["line"], "main")
 
@@ -68,6 +68,32 @@ class BookmakerMarginIndexTests(unittest.TestCase):
             "odds": [{"hdp": 2.5, "over": 1.9}],
         }
         self.assertEqual(MODULE.quote_sets(market, "Over/Under", "Home", "Away"), [])
+
+    def test_tennis_moneyline_is_two_way_and_segmented(self) -> None:
+        payload = []
+        for event_id in (1, 2):
+            bookmakers = {}
+            for bookmaker in ("Book A", "Book B", "Book C", "Book D"):
+                bookmakers[bookmaker] = [
+                    {"name": "ML", "home": 1.8, "away": 2.1},
+                    {"name": "Spread (Games)", "odds": [{"hdp": -2.5, "home": 1.91, "away": 1.91}]},
+                    {"name": "Totals (Games)", "odds": [{"hdp": 22.5, "over": 1.91, "under": 1.91}]},
+                ]
+            payload.append({
+                "id": str(event_id),
+                "status": "pending",
+                "home": f"Player A {event_id}",
+                "away": f"Player B {event_id}",
+                "_snapshot_sport": "tennis",
+                "bookmakers": bookmakers,
+            })
+
+        result = MODULE.build_index(payload, "2026-08-28T12:00:00Z")
+        self.assertEqual(result["status"], "PASS")
+        self.assertEqual(result["summary"]["sports"], ["Tennis"])
+        segments = {(row["sport"], row["market_family"]): row for row in result["segments"]}
+        self.assertEqual(segments[("Tennis", "Match Winner")]["status"], "PASS")
+        self.assertEqual(len(segments[("Tennis", "Match Winner")]["operators"]), 4)
 
     def test_index_passes_only_with_qualified_operator_coverage(self) -> None:
         prices = {
@@ -132,17 +158,18 @@ class BookmakerMarginIndexTests(unittest.TestCase):
         bet365 = [event(1, {"Bet365": (2.4, 3.2, 2.8)})]
         betfred = [event(1, {"Betfred": (2.5, 3.3, 2.9)})]
         responses = [
-            Response(200, scheduled),
             Response(200, [{"name": "Bet365"}, {"name": "Betfred"}]),
+            Response(200, scheduled),
             Response(403, {"message": "blocked combined request"}),
             Response(200, bet365),
             Response(200, betfred),
         ]
         with patch.object(MODULE.requests, "get", side_effect=responses) as get:
-            payload, bookmakers = MODULE.fetch_payload("secret", 4, 10, 1)
+            payload, bookmakers = MODULE.fetch_payload("secret", 4, 10, 1, ("football",))
 
         self.assertEqual(bookmakers, ["Bet365", "Betfred"])
         self.assertEqual(len(payload), 2)
+        self.assertTrue(all(row["_snapshot_sport"] == "football" for row in payload))
         self.assertEqual(get.call_count, 5)
 
 

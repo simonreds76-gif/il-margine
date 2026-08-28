@@ -14,12 +14,29 @@ type MarginOperator = {
   coverage_pct: number;
 };
 
+type MarginSegmentOperator = Pick<
+  MarginOperator,
+  "rank" | "name" | "raw_overround_pct" | "normalized_hold_pct" | "samples"
+>;
+
+type MarginSegment = {
+  sport: string;
+  sport_slug: string;
+  market_family: string;
+  events: number;
+  observations: number;
+  status: string;
+  operators: MarginSegmentOperator[];
+};
+
 type BookmakerMarginIndex = {
   generated_at: string | null;
   status: string;
+  capture_mode?: string;
   methodology: { minimum_publish_gate: string };
   summary: {
     operators: number;
+    sports?: string[];
     events: number;
     market_families: string[];
     observations: number;
@@ -30,15 +47,10 @@ type BookmakerMarginIndex = {
     samples: number;
   };
   operators: MarginOperator[];
+  segments?: MarginSegment[];
 };
 
 const MARGIN_INDEX = marginIndexJson as BookmakerMarginIndex;
-const MARGIN_INDEX_GENERATED_MS = MARGIN_INDEX.generated_at
-  ? Date.parse(MARGIN_INDEX.generated_at)
-  : Number.NaN;
-const MARGIN_INDEX_IS_FRESH =
-  Number.isFinite(MARGIN_INDEX_GENERATED_MS) &&
-  Date.now() - MARGIN_INDEX_GENERATED_MS <= 8 * 24 * 60 * 60 * 1000;
 
 function marginPct(value: number | null) {
   return value === null ? "-" : `${value >= 0 ? "+" : ""}${value.toFixed(2)}%`;
@@ -363,8 +375,10 @@ const FAQ_ITEMS = [
 export default function BookmakersPage() {
   const publishable =
     MARGIN_INDEX.status === "PASS" &&
-    MARGIN_INDEX_IS_FRESH &&
     MARGIN_INDEX.operators.length >= 4;
+  const publishableSegments = (MARGIN_INDEX.segments ?? []).filter(
+    (segment) => segment.status === "PASS" && segment.operators.length >= 3,
+  );
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
@@ -395,7 +409,7 @@ export default function BookmakersPage() {
                 <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-cyan-300">Price intelligence</span>
                 <h2 className="mt-2 text-2xl font-semibold text-white">UK bookmaker margin index</h2>
                 <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">
-                  A like-for-like comparison of the margin built into complete football markets. Lower hold is better for the bettor.
+                  A dated, like-for-like snapshot of the margin built into complete football and tennis markets. Lower hold is better for the bettor.
                 </p>
               </div>
               <div className="shrink-0 rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1.5 text-xs text-slate-400">
@@ -409,9 +423,9 @@ export default function BookmakersPage() {
               <div className="grid gap-px bg-slate-800/80 sm:grid-cols-4">
                 {[
                   ["Operators", String(MARGIN_INDEX.summary.operators)],
+                  ["Sports", String(MARGIN_INDEX.summary.sports?.length ?? 0)],
                   ["Events", String(MARGIN_INDEX.summary.events)],
                   ["Market families", String(MARGIN_INDEX.summary.market_families.length)],
-                  ["Comparable samples", String(MARGIN_INDEX.summary.observations)],
                 ].map(([label, value]) => (
                   <div key={label} className="bg-slate-950/80 px-5 py-4">
                     <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">{label}</p>
@@ -419,6 +433,42 @@ export default function BookmakersPage() {
                   </div>
                 ))}
               </div>
+
+              {publishableSegments.length > 0 && (
+                <div className="border-t border-slate-800/80 px-5 py-6 sm:px-7">
+                  <div className="mb-4">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-300">Sport and market breakdown</p>
+                    <p className="mt-1 text-sm text-slate-400">
+                      Each table is ranked only against operators quoting the same complete market in this snapshot.
+                    </p>
+                  </div>
+                  <div className="grid gap-4 lg:grid-cols-2">
+                    {publishableSegments.map((segment) => (
+                      <article key={`${segment.sport_slug}-${segment.market_family}`} className="overflow-hidden rounded-xl border border-slate-800 bg-slate-950/45">
+                        <div className="flex items-start justify-between gap-3 border-b border-slate-800 px-4 py-3">
+                          <div>
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">{segment.sport}</p>
+                            <h3 className="mt-1 font-semibold text-slate-100">{segment.market_family}</h3>
+                          </div>
+                          <span className="rounded-full border border-slate-700 px-2.5 py-1 font-mono text-[10px] text-slate-400">
+                            n={segment.observations}
+                          </span>
+                        </div>
+                        <div className="divide-y divide-slate-800/80">
+                          {segment.operators.slice(0, 6).map((operator) => (
+                            <div key={operator.name} className="grid grid-cols-[2rem_minmax(0,1fr)_auto_auto] items-center gap-3 px-4 py-3 text-sm">
+                              <span className="font-mono text-xs text-slate-600">#{operator.rank}</span>
+                              <span className="truncate font-medium text-slate-200">{operator.name}</span>
+                              <span className="font-mono tabular-nums text-cyan-300">{marginPct(operator.normalized_hold_pct)}</span>
+                              <span className="font-mono text-xs tabular-nums text-slate-500">n={operator.samples}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="overflow-x-auto">
                 <table className="min-w-[780px] w-full text-left text-sm">
@@ -488,7 +538,7 @@ export default function BookmakersPage() {
           )}
 
           <div className="border-t border-slate-800/80 bg-slate-950/45 px-5 py-4 text-xs leading-5 text-slate-500 sm:px-7">
-            Raw overround is Σ(1/decimal odds) − 1. Normalized hold is 1 − 1/Σ(1/decimal odds). Alternate lines are collapsed before operators are compared, so books with more lines do not receive extra weight.
+            Manual one-off snapshot, not a live or weekly feed. Raw overround is Σ(1/decimal odds) − 1. Normalized hold is 1 − 1/Σ(1/decimal odds). Alternate lines are collapsed before operators are compared, so books with more lines do not receive extra weight.
           </div>
         </section>
 

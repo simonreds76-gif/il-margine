@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a fail-closed UK bookmaker margin index from pre-match odds.
+"""Build a fail-closed, one-off UK bookmaker margin snapshot.
 
 The index compares complete outcome sets captured in the same API response.
 It reports both conventional raw overround and normalized hold; lower is
@@ -48,20 +48,59 @@ TARGET_BOOKMAKERS = {
     "Midnite": ("midnite",),
     "Bwin": ("bwin",),
 }
-LEAGUE_TOKENS = (
-    "premierleague",
-    "laliga",
-    "seriea",
-    "bundesliga",
-    "ligue1",
-    "championship",
+SPORT_CONFIG = {
+    "football": {
+        "display": "Football",
+        "league_tokens": (
+            "premierleague",
+            "laliga",
+            "seriea",
+            "bundesliga",
+            "ligue1",
+            "championship",
+        ),
+        "markets": (
+            "ML",
+            "3-Way Result",
+            "Draw No Bet",
+            "Spread",
+            "Totals",
+            "Goals Over/Under",
+            "Both Teams To Score",
+        ),
+    },
+    "tennis": {
+        "display": "Tennis",
+        "league_tokens": ("atp", "wta", "usopen", "australianopen", "frenchopen", "wimbledon"),
+        "markets": (
+            "ML",
+            "Spread",
+            "Spread (Games)",
+            "Totals",
+            "Totals (Games)",
+            "Totals (Aces)",
+            "Totals (Double Faults)",
+        ),
+    },
+}
+FAMILY_ORDER = (
+    "Match Winner",
+    "Handicap",
+    "Game Handicap",
+    "Over/Under",
+    "Game Total",
+    "Aces Total",
+    "Double Fault Total",
+    "BTTS",
+    "Draw No Bet",
 )
-FAMILY_ORDER = ("Moneyline", "Handicap", "Over/Under", "BTTS", "Draw No Bet")
 MIN_OPERATOR_SAMPLES = 6
 MIN_OPERATOR_FAMILIES = 3
 MIN_PUBLISH_OPERATORS = 4
 MIN_PUBLISH_FAMILIES = 3
 MIN_PUBLISH_OBSERVATIONS = 20
+MIN_SEGMENT_SAMPLES = 2
+MIN_SEGMENT_OPERATORS = 3
 OUTCOME_ALIASES = {
     "home": {"home", "1"},
     "away": {"away", "2"},
@@ -97,29 +136,46 @@ def display_bookmaker(value: Any) -> str:
     return str(value or "Unknown")
 
 
-def market_family(name: str) -> str | None:
+def market_family(name: str, sport: str = "football") -> str | None:
     text = str(name or "").strip().lower()
     compact = norm(text)
+    if sport == "tennis":
+        if compact in {"ml", "moneyline", "matchwinner"}:
+            return "Match Winner"
+        if compact in {"spread", "spreadgames"}:
+            return "Game Handicap"
+        if compact in {"totals", "total", "totalsgames"}:
+            return "Game Total"
+        if compact == "totalsaces":
+            return "Aces Total"
+        if compact == "totalsdoublefaults":
+            return "Double Fault Total"
+        return None
     if any(token in text for token in ("player", "corner", "card", "booking", "shot", "foul", "offside")):
         return None
     if "draw no bet" in text or "drawnobet" in compact or compact == "dnb":
         return "Draw No Bet"
     if "both teams to score" in text or "btts" in compact:
         return "BTTS"
-    if any(token in text for token in ("handicap", "spread")):
+    if compact in {"spread", "handicap", "asianhandicap"}:
         return "Handicap"
-    if any(token in text for token in ("over/under", "total goals", "match total")) or compact in {"totals", "total"}:
+    if compact in {"totals", "total", "overunder", "goalsoverunder", "totalgoals", "matchtotal"}:
         return "Over/Under"
-    if compact == "ml" or any(token in text for token in ("moneyline", "match winner", "full time result", "fulltime result", "1x2")):
-        return "Moneyline"
+    if compact in {"ml", "moneyline", "matchwinner", "fulltimeresult", "3wayresult", "1x2"}:
+        return "Match Winner"
     return None
 
 
-def required_outcomes(family: str) -> tuple[str, ...]:
+def required_outcomes(family: str, sport: str = "football") -> tuple[str, ...]:
+    if family == "Match Winner":
+        return ("home", "away") if sport == "tennis" else ("home", "draw", "away")
     return {
-        "Moneyline": ("home", "draw", "away"),
         "Handicap": ("home", "away"),
+        "Game Handicap": ("home", "away"),
         "Over/Under": ("over", "under"),
+        "Game Total": ("over", "under"),
+        "Aces Total": ("over", "under"),
+        "Double Fault Total": ("over", "under"),
         "BTTS": ("yes", "no"),
         "Draw No Bet": ("home", "away"),
     }[family]
@@ -134,7 +190,7 @@ def number(value: Any) -> float | None:
 
 
 def line_value(item: dict[str, Any], label: str = "", family: str = "") -> str:
-    if family in {"Moneyline", "BTTS", "Draw No Bet"}:
+    if family in {"Match Winner", "BTTS", "Draw No Bet"}:
         return "main"
     for key in ("hdp", "line", "point", "handicap"):
         value = item.get(key)
@@ -159,8 +215,14 @@ def canonical_label(label: str, home: str, away: str) -> str | None:
     return None
 
 
-def quote_sets(market: dict[str, Any], family: str, home: str, away: str) -> list[dict[str, Any]]:
-    required = required_outcomes(family)
+def quote_sets(
+    market: dict[str, Any],
+    family: str,
+    home: str,
+    away: str,
+    sport: str = "football",
+) -> list[dict[str, Any]]:
+    required = required_outcomes(family, sport)
     buckets: dict[str, dict[str, float]] = defaultdict(dict)
     containers = [market, *(market.get("odds") or [])]
     for item in containers:
@@ -222,7 +284,7 @@ def safe_error_summary(exc: Exception) -> str:
 
 def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, Any]:
     observations: list[dict[str, Any]] = []
-    synthetic: dict[tuple[str, str, str], dict[str, dict[str, float]]] = defaultdict(lambda: defaultdict(dict))
+    synthetic: dict[tuple[str, str, str, str], dict[str, dict[str, float]]] = defaultdict(lambda: defaultdict(dict))
 
     for event in payload:
         if str(event.get("status") or "pending").lower() not in {"pending", "scheduled", "upcoming", ""}:
@@ -231,16 +293,21 @@ def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, An
         home, away = str(event.get("home") or ""), str(event.get("away") or "")
         if not event_id or not home or not away:
             continue
+        sport_slug = norm(event.get("_snapshot_sport") or event.get("sport") or "football")
+        sport_slug = sport_slug if sport_slug in SPORT_CONFIG else "football"
+        sport = str(SPORT_CONFIG[sport_slug]["display"])
         for bookmaker_raw, markets in (event.get("bookmakers") or {}).items():
             bookmaker = display_bookmaker(bookmaker_raw)
             for market in markets or []:
-                family = market_family(str(market.get("name") or ""))
+                family = market_family(str(market.get("name") or ""), sport_slug)
                 if family is None:
                     continue
-                for quote in quote_sets(market, family, home, away):
-                    signature = (event_id, family, quote["line"])
+                for quote in quote_sets(market, family, home, away, sport_slug):
+                    signature = (sport_slug, event_id, family, quote["line"])
                     observations.append(
                         {
+                            "sport": sport,
+                            "sport_slug": sport_slug,
                             "event_id": event_id,
                             "family": family,
                             "line": quote["line"],
@@ -255,14 +322,16 @@ def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, An
 
     # One contribution per bookmaker/event/family prevents operators with many
     # alternate lines from receiving extra weight.
-    grouped: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    grouped: dict[tuple[str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
     for row in observations:
-        grouped[(row["bookmaker"], row["event_id"], row["family"])].append(row)
+        grouped[(row["bookmaker"], row["sport_slug"], row["event_id"], row["family"])].append(row)
     collapsed = [
         {
             "bookmaker": key[0],
-            "event_id": key[1],
-            "family": key[2],
+            "sport_slug": key[1],
+            "sport": str(SPORT_CONFIG[key[1]]["display"]),
+            "event_id": key[2],
+            "family": key[3],
             "raw_overround_pct": median(row["raw_overround_pct"] for row in rows),
             "normalized_hold_pct": median(row["normalized_hold_pct"] for row in rows),
             "line_count": len(rows),
@@ -270,14 +339,14 @@ def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, An
         for key, rows in grouped.items()
     ]
 
-    universe = {(row["event_id"], row["family"]) for row in collapsed}
+    universe = {(row["sport_slug"], row["event_id"], row["family"]) for row in collapsed}
     by_book: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in collapsed:
         by_book[row["bookmaker"]].append(row)
     diagnostic_operators = []
     for bookmaker, rows in by_book.items():
         families = sorted({row["family"] for row in rows}, key=lambda value: FAMILY_ORDER.index(value))
-        covered = {(row["event_id"], row["family"]) for row in rows}
+        covered = {(row["sport_slug"], row["event_id"], row["family"]) for row in rows}
         diagnostic_operators.append(
             {
                 "name": bookmaker,
@@ -298,9 +367,47 @@ def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, An
     for rank, operator in enumerate(operators, 1):
         operator["rank"] = rank
 
+    segments = []
+    segment_keys = sorted(
+        {(row["sport_slug"], row["family"]) for row in collapsed},
+        key=lambda key: (list(SPORT_CONFIG).index(key[0]), FAMILY_ORDER.index(key[1])),
+    )
+    for sport_slug, family in segment_keys:
+        segment_rows = [
+            row for row in collapsed
+            if row["sport_slug"] == sport_slug and row["family"] == family
+        ]
+        segment_by_book: dict[str, list[dict[str, Any]]] = defaultdict(list)
+        for row in segment_rows:
+            segment_by_book[row["bookmaker"]].append(row)
+        segment_operators = [
+            {
+                "name": bookmaker,
+                "raw_overround_pct": round(sum(row["raw_overround_pct"] for row in rows) / len(rows), 2),
+                "normalized_hold_pct": round(sum(row["normalized_hold_pct"] for row in rows) / len(rows), 2),
+                "samples": len(rows),
+            }
+            for bookmaker, rows in segment_by_book.items()
+            if len(rows) >= MIN_SEGMENT_SAMPLES
+        ]
+        segment_operators.sort(key=lambda row: (row["normalized_hold_pct"], -row["samples"], row["name"]))
+        for rank, operator in enumerate(segment_operators, 1):
+            operator["rank"] = rank
+        segments.append(
+            {
+                "sport": str(SPORT_CONFIG[sport_slug]["display"]),
+                "sport_slug": sport_slug,
+                "market_family": family,
+                "events": len({row["event_id"] for row in segment_rows}),
+                "observations": len(segment_rows),
+                "status": "PASS" if len(segment_operators) >= MIN_SEGMENT_OPERATORS else "THIN_SAMPLE",
+                "operators": segment_operators,
+            }
+        )
+
     synthetic_rows = []
     for signature, outcomes in synthetic.items():
-        required = required_outcomes(signature[1])
+        required = required_outcomes(signature[2], signature[0])
         if not set(required).issubset(outcomes):
             continue
         implied = sum(1.0 / outcomes[key]["price"] for key in required)
@@ -314,6 +421,11 @@ def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, An
         )
 
     families = sorted({row["family"] for row in collapsed}, key=lambda value: FAMILY_ORDER.index(value))
+    sports = [
+        str(SPORT_CONFIG[slug]["display"])
+        for slug in SPORT_CONFIG
+        if any(row["sport_slug"] == slug for row in collapsed)
+    ]
     status = (
         "PASS"
         if len(operators) >= MIN_PUBLISH_OPERATORS
@@ -322,14 +434,15 @@ def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, An
         else "INSUFFICIENT_COVERAGE"
     )
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "generated_at": captured_at,
+        "capture_mode": "manual_one_off",
         "status": status,
         "methodology": {
             "raw_overround": "sum(1/decimal_odds)-1",
             "normalized_hold": "1-(1/sum(1/decimal_odds))",
             "aggregation": "median alternate lines per operator/event/family, then equal-weight mean",
-            "scope": "pre-match football; complete like-for-like outcome sets only",
+            "scope": "one-off pre-match football and tennis snapshot; complete like-for-like outcome sets only",
             "minimum_publish_gate": (
                 "4 qualified operators, 3 market families, 20 operator/event/family observations; "
                 "each ranked operator needs 6 observations across 3 families"
@@ -338,7 +451,8 @@ def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, An
         "summary": {
             "operators": len(operators),
             "diagnostic_operators": len(diagnostic_operators),
-            "events": len({row["event_id"] for row in collapsed}),
+            "sports": sports,
+            "events": len({(row["sport_slug"], row["event_id"]) for row in collapsed}),
             "market_families": families,
             "observations": len(collapsed),
             "raw_quote_sets": len(observations),
@@ -350,6 +464,7 @@ def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, An
         },
         "operators": operators if status == "PASS" else [],
         "diagnostic_operators": diagnostic_operators,
+        "segments": segments,
     }
 
 
@@ -369,72 +484,88 @@ def discover_bookmakers(api_key: str) -> list[str]:
     return selected
 
 
-def fetch_payload(api_key: str, days_ahead: int, max_events: int, max_requests: int) -> tuple[list[dict[str, Any]], list[str]]:
+def fetch_payload(
+    api_key: str,
+    days_ahead: int,
+    max_events: int,
+    max_requests: int,
+    sports: tuple[str, ...] = ("football", "tennis"),
+) -> tuple[list[dict[str, Any]], list[str]]:
     now = datetime.now(timezone.utc)
-    response = requests.get(
-        f"{BASE_URL}/events",
-        params={
-            "apiKey": api_key,
-            "sport": "football",
-            "status": "pending",
-            "from": now.isoformat().replace("+00:00", "Z"),
-            "to": (now + timedelta(days=days_ahead)).isoformat().replace("+00:00", "Z"),
-        },
-        timeout=30,
-    )
-    response.raise_for_status()
-    events = response.json() if isinstance(response.json(), list) else []
-    selected_events = [
-        event for event in events
-        if any(token in norm((event.get("league") or {}).get("name") or (event.get("league") or {}).get("slug")) for token in LEAGUE_TOKENS)
-    ]
-    selected_events.sort(key=lambda event: str(event.get("date") or ""))
-    selected_events = selected_events[:max_events]
     bookmakers = discover_bookmakers(api_key)
     if not bookmakers:
         raise RuntimeError("No target UK bookmakers were returned by /bookmakers")
 
     payload: list[dict[str, Any]] = []
-    chunks = [selected_events[index:index + 10] for index in range(0, len(selected_events), 10)][:max_requests]
-    for chunk in chunks:
-        params = {
-            "apiKey": api_key,
-            "eventIds": ",".join(str(event["id"]) for event in chunk),
-            "bookmakers": ",".join(bookmakers[:30]),
-        }
-        odds = requests.get(
-            f"{BASE_URL}/odds/multi",
-            params=params,
-            timeout=45,
+    for sport in sports:
+        config = SPORT_CONFIG[sport]
+        response = requests.get(
+            f"{BASE_URL}/events",
+            params={
+                "apiKey": api_key,
+                "sport": sport,
+                "status": "pending",
+                "from": now.isoformat().replace("+00:00", "Z"),
+                "to": (now + timedelta(days=days_ahead)).isoformat().replace("+00:00", "Z"),
+            },
+            timeout=30,
         )
-        if odds.ok:
-            body = odds.json()
-            if isinstance(body, list):
-                payload.extend(body)
-            continue
-        if odds.status_code != 403 or len(bookmakers) <= 1:
-            odds.raise_for_status()
-
-        # The free account can reject a combined request when any requested
-        # operator is unavailable. Retry each discovered recreational book
-        # independently so one blocked operator cannot erase the sample.
-        print("Combined bookmaker request returned HTTP 403; retrying per bookmaker.")
-        for bookmaker in bookmakers:
-            single = requests.get(
+        response.raise_for_status()
+        events = response.json() if isinstance(response.json(), list) else []
+        selected_events = [
+            event for event in events
+            if any(
+                token in norm((event.get("league") or {}).get("name") or (event.get("league") or {}).get("slug"))
+                for token in config["league_tokens"]
+            )
+        ]
+        selected_events.sort(key=lambda event: str(event.get("date") or ""))
+        selected_events = selected_events[:max_events]
+        chunks = [selected_events[index:index + 10] for index in range(0, len(selected_events), 10)][:max_requests]
+        for chunk in chunks:
+            params = {
+                "apiKey": api_key,
+                "eventIds": ",".join(str(event["id"]) for event in chunk),
+                "bookmakers": ",".join(bookmakers[:30]),
+                "markets": ",".join(str(value) for value in config["markets"]),
+            }
+            odds = requests.get(
                 f"{BASE_URL}/odds/multi",
-                params={
-                    "apiKey": api_key,
-                    "eventIds": params["eventIds"],
-                    "bookmakers": bookmaker,
-                },
+                params=params,
                 timeout=45,
             )
-            if not single.ok:
-                print(f"Skipping unavailable bookmaker {bookmaker}: HTTP {single.status_code}")
+            if odds.ok:
+                body = odds.json()
+                if isinstance(body, list):
+                    for event in body:
+                        event["_snapshot_sport"] = sport
+                    payload.extend(body)
                 continue
-            body = single.json()
-            if isinstance(body, list):
-                payload.extend(body)
+            if odds.status_code != 403 or len(bookmakers) <= 1:
+                odds.raise_for_status()
+
+            # A combined free-tier request can fail if just one operator is
+            # unavailable. The fallback is bounded and only runs manually.
+            print(f"Combined {sport} request returned HTTP 403; retrying per bookmaker.")
+            for bookmaker in bookmakers:
+                single = requests.get(
+                    f"{BASE_URL}/odds/multi",
+                    params={
+                        "apiKey": api_key,
+                        "eventIds": params["eventIds"],
+                        "bookmakers": bookmaker,
+                        "markets": params["markets"],
+                    },
+                    timeout=45,
+                )
+                if not single.ok:
+                    print(f"Skipping unavailable {sport} bookmaker {bookmaker}: HTTP {single.status_code}")
+                    continue
+                body = single.json()
+                if isinstance(body, list):
+                    for event in body:
+                        event["_snapshot_sport"] = sport
+                    payload.extend(body)
     return payload, bookmakers
 
 
@@ -445,6 +576,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--days-ahead", type=int, default=4)
     parser.add_argument("--max-events", type=int, default=10)
     parser.add_argument("--max-requests", type=int, default=1)
+    parser.add_argument(
+        "--sports",
+        default="football,tennis",
+        help="Comma-separated sports. Supported: football,tennis.",
+    )
     return parser.parse_args()
 
 
@@ -460,7 +596,17 @@ def main() -> int:
         if not api_key:
             raise SystemExit("Set ODDS_API_KEY or ODDS_API_IO_KEY, or pass --input-json")
         try:
-            payload, bookmakers = fetch_payload(api_key, args.days_ahead, args.max_events, args.max_requests)
+            sports = tuple(value.strip().lower() for value in args.sports.split(",") if value.strip())
+            invalid = sorted(set(sports) - set(SPORT_CONFIG))
+            if invalid:
+                raise SystemExit(f"Unsupported sport(s): {','.join(invalid)}")
+            payload, bookmakers = fetch_payload(
+                api_key,
+                args.days_ahead,
+                args.max_events,
+                args.max_requests,
+                sports,
+            )
         except (requests.RequestException, RuntimeError) as exc:
             payload, bookmakers = [], []
             result = build_index([], captured_at)
