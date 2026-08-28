@@ -49,6 +49,7 @@ VOLUME_200_INTERNAL_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-si
 SPREAD_SHADOW_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-spreadshadow.csv")
 SPREAD_V1_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-spreadv1.csv")
 SPREAD_V1_CLAY_FAV_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-clay-fav.csv")
+SLAM_BO5_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-slam-bo5.csv")
 LEGACY_CHALLENGER_ML_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-challenger-ml.csv")
 CHALLENGER_ML_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-challenger-ml-v2.csv")
 CHALLENGER_ML_NEARMISS_PATH = DATA_DIR / "challenger-ml-v2-nearmiss.csv"
@@ -66,6 +67,7 @@ SIGNAL_PROFILE_PATHS: dict[str, tuple[SignalCsvPaths, SignalCsvPaths | None]] = 
     "spread_shadow": (SPREAD_SHADOW_SIGNAL_PATHS, None),
     "spread_v1_shadow": (SPREAD_V1_SIGNAL_PATHS, None),
     "spread_v1_clay_fav": (SPREAD_V1_CLAY_FAV_SIGNAL_PATHS, None),
+    "slam_bo5": (SLAM_BO5_SIGNAL_PATHS, None),
     "challenger_ml_shadow": (CHALLENGER_ML_SIGNAL_PATHS, None),
     "clay_bo3": (CLAY_BO3_SIGNAL_PATHS, None),
     "grass_bo3": (GRASS_BO3_SIGNAL_PATHS, None),

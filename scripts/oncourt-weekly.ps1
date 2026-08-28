@@ -330,6 +330,12 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: spread v1 shadow CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Post-step: Grand Slam BO5 handicap evidence CLV audit ==="
+& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-slam-bo5-archive.csv --bet-type spread --detail-csv data\backtest\strict-clv-audit-slam-bo5-2026.csv --summary-txt data\backtest\strict-clv-audit-slam-bo5-2026.txt 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: Grand Slam BO5 handicap evidence CLV audit failed (exit $LASTEXITCODE), continuing..."
+}
+
 Log "=== Post-step: Challenger ML v2 verified-close CLV audit ==="
 & python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-challenger-ml-v2-archive.csv --detail-csv data\backtest\strict-clv-audit-challenger-ml-v2-2026.csv --summary-txt data\backtest\strict-clv-audit-challenger-ml-v2-2026.txt --require-verified-kickoff --max-close-lag-minutes 720 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {

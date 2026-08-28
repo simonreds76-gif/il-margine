@@ -407,13 +407,14 @@ function gateNumber(row: JsonRecord, key: string): number {
 }
 
 function projectionFocusDate(rows: CsvRow[]): string {
-  const dates = [...new Set(rows.map((row) => row.date).filter(Boolean))].sort();
+  const dates = [...new Set(rows.map(projectionScheduleKey).filter((value) => value !== "unscheduled"))].sort();
   const today = londonDateIso();
   if (dates.includes(today)) return today;
   return dates.find((value) => value > today) ?? dates.at(-1) ?? "-";
 }
 
 function dateLabel(value: string): string {
+  if (value === "unscheduled") return "Schedule TBD";
   if (!value) return "Date missing";
   const parsed = new Date(`${value}T12:00:00Z`);
   if (Number.isNaN(parsed.getTime())) return value;
@@ -425,10 +426,16 @@ function dateLabel(value: string): string {
   }).format(parsed);
 }
 
+function projectionScheduleKey(row: CsvRow): string {
+  const status = (row.schedule_status || "").toLowerCase();
+  if (status === "tbd" || status === "unknown" || status === "unconfirmed") return "unscheduled";
+  return row.scheduled_date || row.date || "unscheduled";
+}
+
 function groupRowsByDate(rows: CsvRow[]): { date: string; rows: CsvRow[] }[] {
   const grouped = new Map<string, CsvRow[]>();
   for (const row of rows) {
-    const key = row.date || "unscheduled";
+    const key = projectionScheduleKey(row);
     grouped.set(key, [...(grouped.get(key) ?? []), row]);
   }
   const today = londonDateIso();

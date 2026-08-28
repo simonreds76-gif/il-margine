@@ -391,6 +391,16 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Disable handicap calibration (raw probabilities only).",
     )
+    ap.add_argument(
+        "--bo5-only",
+        action="store_true",
+        help="Update ATP Grand Slam best-of-five rows only; leave BO3 rows unchanged.",
+    )
+    ap.add_argument(
+        "--allow-bo5",
+        action="store_true",
+        help="Enable BO5 handicap calculations for the zero-stake evidence lane.",
+    )
     return ap.parse_args()
 
 
@@ -807,9 +817,11 @@ def main():
             _is_grand_slam_event(meta)
             and round_id in (None, "")
         )
+        if args.bo5_only and not is_bo5:
+            continue
         if (
             (is_bo5 or slam_format_unknown)
-            and not _env_bool("SPREAD_V1_ALLOW_BO5", False)
+            and not (args.allow_bo5 or _env_bool("SPREAD_V1_ALLOW_BO5", False))
         ):
             # The BO5 mathematics is now correct, but it has not passed a
             # real-price holdout. Remove stale edges rather than publishing it.
@@ -894,7 +906,9 @@ def main():
                 and abs(pin_p1_no_vig - 0.5) >= MODEL_MARKET_FAV_SIDE_FLIP_BUFFER
                 and abs(p1_win_prob - 0.5) >= MODEL_MARKET_FAV_SIDE_FLIP_BUFFER
             )
-            if model_market_fav_gap > MODEL_MARKET_FAV_PROB_GAP_MAX or model_market_side_flip:
+            if (
+                model_market_fav_gap > MODEL_MARKET_FAV_PROB_GAP_MAX or model_market_side_flip
+            ) and not args.bo5_only:
                 continue
 
         # Signed line from OUR P1 perspective:

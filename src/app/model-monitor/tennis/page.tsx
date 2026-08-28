@@ -23,7 +23,7 @@ const TENNIS_MONITOR_ENABLED =
 type LaneView = {
   id: TennisResearchLaneId;
   title: string;
-  state: "LIVE ALIAS" | "SHADOW LIVE" | "SHADOW PLANNED" | "DEFERRED" | "DISABLED" | "PAUSED - IDENTITY STALE";
+  state: "LIVE ALIAS" | "SHADOW LIVE" | "ZERO-STAKE SHADOW" | "SHADOW PLANNED" | "DEFERRED" | "DISABLED" | "PAUSED - IDENTITY STALE";
   badgeTone: string;
   market: string;
   summary: string;
@@ -435,11 +435,11 @@ const laneViews: Record<TennisResearchLaneId, LaneView> = {
   },
   slam_bo5: {
     id: "slam_bo5",
-    title: "Slam bo5",
-    state: "SHADOW PLANNED",
+    title: "Slam BO5 handicaps",
+    state: "ZERO-STAKE SHADOW",
     badgeTone: badgeTones.shadow,
-    market: "Fav ML, dog HC, overs",
-    summary: "Placeholder for the Grand Slam best-of-five lane. No bo5 model is active in Phase 0.",
+    market: "ATP game handicaps",
+    summary: "A separate best-of-five handicap lane using raw BO5 match maths. It records 0u evidence, settlement, ROI and CLV without entering the trusted daily tips.",
   },
   challenger_ml: {
     id: "challenger_ml",

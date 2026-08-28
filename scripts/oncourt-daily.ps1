@@ -288,6 +288,25 @@ if ($spreadV1ShadowEnabled) {
     Log "=== Step 8b/10: Spread v1 shadow skipped (STRICT_SPREAD_V1_SHADOW_ENABLED=0) ==="
 }
 
+Log "=== Step 8b2/10: Grand Slam BO5 handicap evidence (raw probabilities, zero stake) ==="
+& python scripts\compute-handicap-values.py --bo5-only --allow-bo5 --disable-calibration 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -eq 0) {
+    $prevInternalResearch = $env:INTERNAL_RESEARCH_LANES
+    $env:INTERNAL_RESEARCH_LANES = "1"
+    try {
+        & python scripts\strict-policy-report.py --append --signal-profile slam_bo5 2>&1 | ForEach-Object { Log $_ }
+        if ($LASTEXITCODE -ne 0) {
+            Log "WARNING: slam_bo5 evidence append failed (exit $LASTEXITCODE), continuing..."
+        }
+    }
+    finally {
+        if ($null -eq $prevInternalResearch) { Remove-Item Env:\INTERNAL_RESEARCH_LANES -ErrorAction SilentlyContinue }
+        else { $env:INTERNAL_RESEARCH_LANES = $prevInternalResearch }
+    }
+} else {
+    Log "WARNING: BO5 handicap calculation failed (exit $LASTEXITCODE), continuing..."
+}
+
 Log "=== Step 8c/10: Clay calibrated legacy lane removed after failed ROI audit ==="
 
 if ($challengerMlEnabled) {

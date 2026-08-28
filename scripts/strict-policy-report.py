@@ -214,7 +214,8 @@ VOLUME_200_RULES: list[dict[str, Any]] = [
 
 MATCH_ONLY_SIGNAL_PROFILES = {"volume_200", "challenger_ml_shadow", "grass_bo3", "cpi_speed_shadow"}
 SPREAD_V1_SIGNAL_PROFILES = {"spread_v1_shadow", "spread_v1_clay_fav"}
-SPREAD_ONLY_SIGNAL_PROFILES = SPREAD_V1_SIGNAL_PROFILES
+SPREAD_BO5_SIGNAL_PROFILES = {"slam_bo5"}
+SPREAD_ONLY_SIGNAL_PROFILES = SPREAD_V1_SIGNAL_PROFILES | SPREAD_BO5_SIGNAL_PROFILES
 
 SHADOW_PROFILE_RULES: dict[str, list[dict[str, Any]]] = {
     "volume_275": VOLUME_275_RULES,
@@ -225,6 +226,7 @@ SHADOW_PROFILE_LABELS: dict[str, str] = {
     "volume_275": "Volume 275 (legacy shadow; includes Clay Masters)",
     "volume_200": "ATP-only ML research lane (main-tour only, no ATP250 shadow expansion, no spreads)",
     "spread_shadow": "Spread shadow (20%+ handicap edges; Clay + non-policy tournaments)",
+    "slam_bo5": "ATP Grand Slam BO5 handicap evidence (raw model, zero stake)",
     "spread_v1_shadow": "Spread v1 shadow (strict-first ATP bo3 hard-only research lane; real-market calibration required)",
     "spread_v1_clay_fav": "Clay favourite handicap shadow (fav HC 2.0-3.5 games, 8-18% edge, clay-only calibration required)",
     "challenger_ml_shadow": "Challenger ML v2 prospective evidence (HIGH coverage, 10-15% edge, zero stake)",
@@ -950,6 +952,26 @@ def _is_doubles_name(name: str | None) -> bool:
     return "/" in (name or "") or "&" in (name or "")
 
 
+def signal_schedule_fields(pin: dict[str, Any], generation_date: str) -> dict[str, str]:
+    """Keep generation time separate from the fixture's confirmed schedule."""
+    scheduled_date = str(pin.get("match_date") or "").strip()
+    kickoff_iso = str(pin.get("kickoff_iso") or "").strip()
+    if not scheduled_date and len(kickoff_iso) >= 10:
+        scheduled_date = kickoff_iso[:10]
+    confirmed = bool(scheduled_date)
+    return {
+        # `date` remains the legacy settlement key. It is the real event date
+        # when known and only falls back to generation date for old consumers.
+        "date": scheduled_date or generation_date,
+        "generation_date": generation_date,
+        "match_date": scheduled_date,
+        "scheduled_date": scheduled_date,
+        "scheduled_start_utc": kickoff_iso,
+        "schedule_status": "confirmed" if confirmed else "tbd",
+        "schedule_source": "pinnacle" if confirmed else "unconfirmed_snapshot",
+    }
+
+
 def match_pinnacle_rows(
     fair_rows: list[dict[str, Any]],
     pin_rows: list[dict[str, Any]],
@@ -1024,11 +1046,13 @@ def match_pinnacle_rows(
         o2 = pin.get("odds2")
         if o1 is None or o2 is None:
             continue
-        matched[int(fo_id)] = (
-            {"odds1": float(o2), "odds2": float(o1), "league": (pin.get("league") or "").strip()}
-            if reversed_for_fair
-            else {"odds1": float(o1), "odds2": float(o2), "league": (pin.get("league") or "").strip()}
-        )
+        matched[int(fo_id)] = {
+            "odds1": float(o2) if reversed_for_fair else float(o1),
+            "odds2": float(o1) if reversed_for_fair else float(o2),
+            "league": (pin.get("league") or "").strip(),
+            "match_date": str(pin.get("match_date") or "").strip(),
+            "kickoff_iso": str(pin.get("kickoff_iso") or "").strip(),
+        }
 
     return matched
 
@@ -1071,6 +1095,8 @@ def load_local_pinnacle_snapshot(snapshot_date: str) -> list[dict[str, Any]]:
                         "odds1": odds1,
                         "odds2": odds2,
                         "league": league,
+                        "match_date": str(row.get("match_date") or "").strip(),
+                        "kickoff_iso": str(row.get("kickoff_iso") or "").strip(),
                     }
                     current = latest.get(pair_key)
                     if current is None or captured_at >= current[0]:
@@ -1255,6 +1281,18 @@ def spread_v1_clay_fav_scope_reason(surface: str, series_bucket: str, league: st
     return None
 
 
+def spread_bo5_scope_reason(surface: str, series_bucket: str, league: str, confidence: str) -> str | None:
+    if league != "ATP":
+        return "league"
+    if series_bucket != "Grand Slam":
+        return "not_grand_slam"
+    if surface not in {"Hard", "Clay", "Grass"}:
+        return "surface"
+    if (confidence or "").strip().lower() not in {"high", "medium"}:
+        return "confidence_low"
+    return None
+
+
 def clay_bo3_scope_reason(surface: str, series_bucket: str, league: str, confidence: str) -> str | None:
     if league != "ATP":
         return "league"
@@ -1419,7 +1457,7 @@ def apply_profile_stake_policy(
     stake_model: str,
 ) -> tuple[float, float, str]:
     """Force research-only cohorts to remain non-actionable."""
-    if signal_profile == "challenger_ml_shadow":
+    if signal_profile in {"challenger_ml_shadow", "slam_bo5"}:
         return 0.0, 0.0, "prospective_evidence_no_stake"
     return stake_units, stake_gbp, stake_model
 
@@ -1880,7 +1918,7 @@ def write_signals_current_artifact() -> None:
     SIGNALS_CURRENT_JSON.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
-PHASE0_RESEARCH_LANE_STUBS = {"slam_bo5", "challenger_ml", "indoor_bo3"}
+PHASE0_RESEARCH_LANE_STUBS = {"challenger_ml", "indoor_bo3"}
 
 
 def phase0_signal_profile_dispatch(
@@ -1899,6 +1937,8 @@ def phase0_signal_profile_dispatch(
         return signal_profile, 2, "lane disabled: awaiting Pinnacle HC coverage + challenger_ml proof", True
     if signal_profile in {"clay_bo3", "grass_bo3", "cpi_speed_shadow"} and not internal_research_lanes:
         return signal_profile, 2, f"lane {signal_profile} requires INTERNAL_RESEARCH_LANES=1", True
+    if signal_profile == "slam_bo5" and not internal_research_lanes:
+        return signal_profile, 2, "lane slam_bo5 requires INTERNAL_RESEARCH_LANES=1", True
     if signal_profile in PHASE0_RESEARCH_LANE_STUBS:
         if not internal_research_lanes:
             return signal_profile, 2, f"lane {signal_profile} requires INTERNAL_RESEARCH_LANES=1", True
@@ -2009,7 +2049,7 @@ def main() -> int:
     if not args.output:
         args.output = str(profile_public_paths.live)
     if not args.internal_output:
-        if args.signal_profile in {"spread_shadow", "challenger_ml_shadow", "clay_bo3", "grass_bo3", "cpi_speed_shadow", *SPREAD_V1_SIGNAL_PROFILES}:
+        if args.signal_profile in {"spread_shadow", "challenger_ml_shadow", "clay_bo3", "grass_bo3", "cpi_speed_shadow", *SPREAD_ONLY_SIGNAL_PROFILES}:
             args.internal_output = ""
         else:
             args.internal_output = str((profile_internal_paths or STRICT_INTERNAL_SIGNAL_PATHS).live)
@@ -2293,17 +2333,16 @@ def main() -> int:
                     players[int(pid)] = p.get("name") or ""
 
     def fetch_pinnacle_snapshot(snapshot_date: str) -> list[dict[str, Any]]:
-        snap = requests.get(
-            f"{base}/bookmaker_odds_snapshot",
-            headers=headers,
-            params={
-                "select": "player1_name,player2_name,odds1,odds2,league",
-                "bookmaker": "eq.Pinnacle",
-                "capture_date": "eq." + snapshot_date,
-                "league": "in.(ATP,Challenger)",
-            },
-            timeout=30,
-        )
+        params = {
+            "select": "player1_name,player2_name,odds1,odds2,league,match_date,kickoff_iso",
+            "bookmaker": "eq.Pinnacle",
+            "capture_date": "eq." + snapshot_date,
+            "league": "in.(ATP,Challenger)",
+        }
+        snap = requests.get(f"{base}/bookmaker_odds_snapshot", headers=headers, params=params, timeout=30)
+        if snap.status_code == 400 and any(token in snap.text.lower() for token in ("match_date", "kickoff_iso")):
+            params["select"] = "player1_name,player2_name,odds1,odds2,league"
+            snap = requests.get(f"{base}/bookmaker_odds_snapshot", headers=headers, params=params, timeout=30)
         snap.raise_for_status()
         return snap.json() or []
 
@@ -2357,7 +2396,7 @@ def main() -> int:
         strict_min_value = strict_min_value_for(surface, series_bucket, confidence)
         volume_min_value = (
             shadow_profile_min_value_for(args.signal_profile, surface, series_bucket, confidence, tournament_name)
-            if args.signal_profile not in {"strict", "spread_shadow", *SPREAD_V1_SIGNAL_PROFILES}
+            if args.signal_profile not in {"strict", "spread_shadow", *SPREAD_ONLY_SIGNAL_PROFILES}
             else None
         )
         if args.signal_profile == "clay_calibrated":
@@ -2371,6 +2410,7 @@ def main() -> int:
         grass_bo3_requested = args.signal_profile == "grass_bo3"
         cpi_speed_requested = args.signal_profile == "cpi_speed_shadow"
         spread_v1_requested = args.signal_profile in SPREAD_V1_SIGNAL_PROFILES
+        spread_bo5_requested = args.signal_profile in SPREAD_BO5_SIGNAL_PROFILES
         spread_v1_clay_fav_requested = args.signal_profile == "spread_v1_clay_fav"
         if (
             strict_min_value is None
@@ -2382,6 +2422,7 @@ def main() -> int:
             and not grass_bo3_requested
             and not cpi_speed_requested
             and not spread_v1_requested
+            and not spread_bo5_requested
         ):
             continue
 
@@ -2442,12 +2483,14 @@ def main() -> int:
             if spread_v1_clay_fav_requested
             else spread_v1_scope_reason(surface, series_bucket, league, confidence)
             if spread_v1_requested
+            else spread_bo5_scope_reason(surface, series_bucket, league, confidence)
+            if spread_bo5_requested
             else None
         )
         spread_v1_eligible = (
-            spread_v1_requested
+            (spread_v1_requested or spread_bo5_requested)
             and spread_v1_scope is None
-            and spread_v1_calibration_status.get("valid") is True
+            and (spread_bo5_requested or spread_v1_calibration_status.get("valid") is True)
         )
         clay_bo3_scope = clay_bo3_scope_reason(surface, series_bucket, league, confidence) if clay_bo3_requested else None
         clay_bo3_scope_ok = clay_bo3_requested and clay_bo3_scope is None
@@ -2536,7 +2579,7 @@ def main() -> int:
         stored_pb = _parse_point_prob(r.get("p_b"))
         stored_match_prob = prob_match_best_of_3(stored_pa, stored_pb) if stored_pa is not None and stored_pb is not None else None
         handicap_point_prob_gap = stored_match_prob - p1_win_prob if stored_match_prob is not None else None
-        handicap_shape_trusted = (
+        handicap_shape_trusted = spread_bo5_requested or (
             handicap_point_prob_gap is not None
             and abs(handicap_point_prob_gap) <= POINT_PROB_MATCH_PROB_GAP_MAX
         )
@@ -2733,7 +2776,7 @@ def main() -> int:
                 cpi_skip_reason = "blocked"
             cpi_speed_nearmiss_rows.append(
                 {
-                    "date": snapshot_date_used,
+                    **signal_schedule_fields(pin, snapshot_date_used),
                     "time_utc": datetime.now(timezone.utc).strftime("%H:%M:%S"),
                     "player1": p1_name,
                     "player2": p2_name,
@@ -2768,7 +2811,7 @@ def main() -> int:
             if skip_reason:
                 clay_bo3_nearmiss_rows.append(
                     {
-                        "date": snapshot_date_used,
+                    **signal_schedule_fields(pin, snapshot_date_used),
                         "time_utc": datetime.now(timezone.utc).strftime("%H:%M:%S"),
                         "player1": p1_name,
                         "player2": p2_name,
@@ -2798,7 +2841,7 @@ def main() -> int:
             if skip_reason:
                 grass_bo3_nearmiss_rows.append(
                     {
-                        "date": snapshot_date_used,
+                    **signal_schedule_fields(pin, snapshot_date_used),
                         "time_utc": datetime.now(timezone.utc).strftime("%H:%M:%S"),
                         "player1": p1_name,
                         "player2": p2_name,
@@ -2839,7 +2882,7 @@ def main() -> int:
             if skip_reason:
                 challenger_nearmiss_rows.append(
                     {
-                        "date": snapshot_date_used,
+                    **signal_schedule_fields(pin, snapshot_date_used),
                         "time_utc": datetime.now(timezone.utc).strftime("%H:%M:%S"),
                         "player1": p1_name,
                         "player2": p2_name,
@@ -2880,7 +2923,7 @@ def main() -> int:
         bet_side = "fav" if side == fav_side else "dog"
         tname = tournament_name
         tkey = tour_key(tname)
-        if args.signal_profile not in {"spread_shadow", *SPREAD_V1_SIGNAL_PROFILES} and (
+        if args.signal_profile not in {"spread_shadow", *SPREAD_ONLY_SIGNAL_PROFILES} and (
             strict_match or volume_match or challenger_ml_match or clay_bo3_ml_match or grass_bo3_ml_match or cpi_speed_match
         ):
             stake_units, stake_gbp, stake_model = compute_stake_units(
@@ -2901,7 +2944,7 @@ def main() -> int:
 
             candidates.append(
                 {
-                    "date": snapshot_date_used,
+                    **signal_schedule_fields(pin, snapshot_date_used),
                     "time_utc": datetime.now(timezone.utc).strftime("%H:%M:%S"),
                     "player1": p1_name,
                     "player2": p2_name,
@@ -2986,7 +3029,7 @@ def main() -> int:
             )
             candidates.append(
                 {
-                    "date": snapshot_date_used,
+                    **signal_schedule_fields(pin, snapshot_date_used),
                     "time_utc": datetime.now(timezone.utc).strftime("%H:%M:%S"),
                     "player1": p1_name,
                     "player2": p2_name,
@@ -3061,7 +3104,7 @@ def main() -> int:
             and handicap_shape_trusted
             and (
                 not model_market_gap_excluded
-                or args.signal_profile in SPREAD_V1_SIGNAL_PROFILES
+                or args.signal_profile in SPREAD_ONLY_SIGNAL_PROFILES
                 or clay_bo3_requested
             )
             and not inj_any
@@ -3074,7 +3117,7 @@ def main() -> int:
                 else SPREAD_V1_CLAY_FAV_MIN_EDGE_PCT
                 if spread_v1_clay_fav_requested
                 else SPREAD_V1_MIN_EDGE_PCT
-                if spread_v1_requested
+                if spread_v1_requested or spread_bo5_requested
                 else HANDICAP_MIN_EDGE_PCT
             )
             short_fav_dog_spread_p1_guarded = is_short_favorite_dog_spread_guarded(
@@ -3089,11 +3132,11 @@ def main() -> int:
                 model_ml_excluded,
                 pin_ml_excluded,
             )
-            spread_v1_segment_p1_guarded = is_spread_v1_segment_guarded("P1+", sl)
-            spread_v1_segment_p2_guarded = is_spread_v1_segment_guarded("P2-", sl)
+            spread_v1_segment_p1_guarded = False if spread_bo5_requested else is_spread_v1_segment_guarded("P1+", sl)
+            spread_v1_segment_p2_guarded = False if spread_bo5_requested else is_spread_v1_segment_guarded("P2-", sl)
             spread_v1_max_edge = SPREAD_V1_CLAY_FAV_MAX_EDGE_PCT if spread_v1_clay_fav_requested else SPREAD_V1_MAX_EDGE_PCT
-            spread_v1_p1_edge_guarded = spread_v1_requested and he1 > spread_v1_max_edge
-            spread_v1_p2_edge_guarded = spread_v1_requested and he2 > spread_v1_max_edge
+            spread_v1_p1_edge_guarded = (spread_v1_requested or spread_bo5_requested) and he1 > spread_v1_max_edge
+            spread_v1_p2_edge_guarded = (spread_v1_requested or spread_bo5_requested) and he2 > spread_v1_max_edge
             clay_bo3_p1_edge_guarded = clay_bo3_requested and he1 > CLAY_BO3_DOG_HC_MAX_EDGE_PCT
             clay_bo3_p2_edge_guarded = clay_bo3_requested and he2 > CLAY_BO3_DOG_HC_MAX_EDGE_PCT
             clay_bo3_p1_dog_side = our_odds1 > our_odds2
@@ -3115,7 +3158,7 @@ def main() -> int:
                 )
             )
             spread_v1_p1_allowed = (
-                not spread_v1_requested
+                not (spread_v1_requested or spread_bo5_requested)
                 or (
                     not spread_v1_segment_p1_guarded
                     and
@@ -3131,7 +3174,7 @@ def main() -> int:
                 )
             )
             spread_v1_p2_allowed = (
-                not spread_v1_requested
+                not (spread_v1_requested or spread_bo5_requested)
                 or (
                     not spread_v1_segment_p2_guarded
                     and
@@ -3155,6 +3198,8 @@ def main() -> int:
                 if spread_v1_clay_fav_requested
                 else "strict_first_atp_bo3_hard_clay"
                 if spread_v1_requested
+                else "atp_grand_slam_bo5_raw_zero_stake"
+                if spread_bo5_requested
                 else ""
             )
             calibration_reason = spread_v1_calibration_status.get("reason", "")
@@ -3168,9 +3213,12 @@ def main() -> int:
                     side="P1+",
                     bet_type="spread",
                 )
+                stake_units_h1, stake_gbp_h1, stake_model_h1 = apply_profile_stake_policy(
+                    args.signal_profile, stake_units_h1, stake_gbp_h1, stake_model_h1
+                )
                 candidates.append(
                     {
-                        "date": snapshot_date_used,
+                    **signal_schedule_fields(pin, snapshot_date_used),
                         "time_utc": datetime.now(timezone.utc).strftime("%H:%M:%S"),
                         "player1": p1_name,
                         "player2": p2_name,
@@ -3232,9 +3280,12 @@ def main() -> int:
                     side="P2-",
                     bet_type="spread",
                 )
+                stake_units_h2, stake_gbp_h2, stake_model_h2 = apply_profile_stake_policy(
+                    args.signal_profile, stake_units_h2, stake_gbp_h2, stake_model_h2
+                )
                 candidates.append(
                     {
-                        "date": snapshot_date_used,
+                    **signal_schedule_fields(pin, snapshot_date_used),
                         "time_utc": datetime.now(timezone.utc).strftime("%H:%M:%S"),
                         "player1": p1_name,
                         "player2": p2_name,
@@ -3301,7 +3352,7 @@ def main() -> int:
         profile_key = "_strict_match"
     elif args.signal_profile == "spread_shadow":
         profile_key = "_spread_shadow_match"
-    elif args.signal_profile in SPREAD_V1_SIGNAL_PROFILES:
+    elif args.signal_profile in SPREAD_ONLY_SIGNAL_PROFILES:
         profile_key = "_spread_v1_match"
     elif args.signal_profile == "challenger_ml_shadow":
         profile_key = "_challenger_ml_match"
@@ -3375,7 +3426,7 @@ def main() -> int:
             s["signal_profile"] = "spread_shadow"
         public_signals = signals
         internal_signals = []
-    elif args.signal_profile in SPREAD_V1_SIGNAL_PROFILES:
+    elif args.signal_profile in SPREAD_ONLY_SIGNAL_PROFILES:
         for s in signals:
             s["threshold_tier"] = "profile"
             s["signal_profile"] = args.signal_profile
@@ -3422,6 +3473,11 @@ def main() -> int:
                     f"Spread v1 edge window: {SPREAD_V1_MIN_EDGE_PCT:.1f}%"
                     f" to {SPREAD_V1_MAX_EDGE_PCT:.1f}%"
                 )
+        if args.signal_profile in SPREAD_BO5_SIGNAL_PROFILES:
+            print(
+                f"BO5 evidence gate: ATP Grand Slam | raw BO5 pricing | edge "
+                f"{SPREAD_V1_MIN_EDGE_PCT:.1f}-{SPREAD_V1_MAX_EDGE_PCT:.1f}% | stake=0u"
+            )
         if args.signal_profile == "challenger_ml_shadow":
             print(
                 "Challenger ML gate: "

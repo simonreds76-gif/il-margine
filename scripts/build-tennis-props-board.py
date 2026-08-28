@@ -673,10 +673,16 @@ def oncourt_schedule_rows(
             continue
         # OnCourt leaves upcoming match dates blank. The tournament start date
         # is not the match date and caused current lines to miss the daily board.
-        schedule_date = str(row.get("date") or "").strip() or board_date
+        confirmed_date = str(row.get("date") or "").strip()
+        schedule_date = confirmed_date or board_date
         rows.append(
             {
                 "date": schedule_date,
+                "generation_date": board_date,
+                "scheduled_date": confirmed_date,
+                "scheduled_start_utc": "",
+                "schedule_status": "confirmed" if confirmed_date else "tbd",
+                "schedule_source": "oncourt_today" if confirmed_date else "oncourt_draw_undated",
                 "tour": tour_code.upper(),
                 "tour_id": str(row.get("tour_id") or "").strip(),
                 "tournament": tournament,
@@ -703,9 +709,15 @@ def wta_schedule_rows(path: Path) -> list[dict[str, str]]:
         tournament = canonical_tournament_name(row.get("tournament")) or str(row.get("tournament") or "").strip()
         if not tournament:
             continue
+        scheduled_date = str(row.get("date") or "").strip()
         rows.append(
             {
-                "date": str(row.get("date") or "").strip(),
+                "date": scheduled_date,
+                "generation_date": scheduled_date,
+                "scheduled_date": scheduled_date,
+                "scheduled_start_utc": str(row.get("match_start_utc") or "").strip(),
+                "schedule_status": "confirmed" if scheduled_date else "tbd",
+                "schedule_source": str(path),
                 "tour": "WTA",
                 "tour_id": str(row.get("tour_id") or "").strip(),
                 "tournament": tournament,
@@ -1257,6 +1269,11 @@ def project_side(
         tiebreak_notes.append("LOW_VENUE_AGREEMENT")
     return {
         "date": schedule["date"],
+        "generation_date": str(schedule.get("generation_date") or schedule.get("date") or ""),
+        "scheduled_date": str(schedule.get("scheduled_date") or ""),
+        "scheduled_start_utc": str(schedule.get("scheduled_start_utc") or ""),
+        "schedule_status": str(schedule.get("schedule_status") or "confirmed"),
+        "schedule_source": str(schedule.get("schedule_source") or schedule.get("source") or ""),
         "tour": tour,
         "tour_id": str(schedule.get("tour_id") or ""),
         "tournament": tournament,
@@ -1452,6 +1469,11 @@ def main() -> None:
 
     fieldnames = [
         "date",
+        "generation_date",
+        "scheduled_date",
+        "scheduled_start_utc",
+        "schedule_status",
+        "schedule_source",
         "tour",
         "tour_id",
         "tournament",

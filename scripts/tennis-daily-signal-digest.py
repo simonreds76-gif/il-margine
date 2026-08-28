@@ -100,8 +100,21 @@ def norm(value: object) -> str:
     return " ".join(str(value or "").strip().lower().split())
 
 
+def row_event_date(row: dict[str, str]) -> str:
+    """Return only a confirmed event date, never a generation-date fallback."""
+    status = (row.get("schedule_status") or "").strip().lower()
+    scheduled = (row.get("scheduled_date") or row.get("match_date") or "").strip()
+    if scheduled:
+        return scheduled
+    if status in {"tbd", "unknown", "unconfirmed"}:
+        return ""
+    # Backward compatibility for rows written before schedule metadata existed.
+    return (row.get("date") or "").strip()
+
+
 def row_to_signal(row: dict[str, str], lane: Lane, target_date: str) -> Signal | None:
-    if row.get("date") != target_date or not is_pending(row):
+    event_date = row_event_date(row)
+    if event_date != target_date or not is_pending(row):
         return None
     player1 = (row.get("player1") or "").strip()
     player2 = (row.get("player2") or "").strip()
@@ -138,7 +151,7 @@ def row_to_signal(row: dict[str, str], lane: Lane, target_date: str) -> Signal |
         selection += f" | {fmt_stake(stake)}"
 
     pair = tuple(sorted((norm(player1), norm(player2))))
-    key = (target_date, *pair, norm(selected), key_market)
+    key = (event_date, *pair, norm(selected), key_market)
     return Signal(
         section=lane.section,
         priority=lane.priority,
@@ -152,7 +165,8 @@ def row_to_signal(row: dict[str, str], lane: Lane, target_date: str) -> Signal |
 
 
 def gap_replacement_signal(row: dict[str, str], target_date: str) -> Signal | None:
-    if row.get("date") != target_date or not is_pending(row):
+    event_date = row_event_date(row)
+    if event_date != target_date or not is_pending(row):
         return None
     if (row.get("bet_type") or "match").strip().lower() == "spread":
         return None
@@ -222,14 +236,15 @@ def gap_replacement_signal(row: dict[str, str], target_date: str) -> Signal | No
         selection=selection,
         edge_pct=edge,
         time_utc=(row.get("time_utc") or "").strip(),
-        key=(target_date, *pair, norm(selected), "ml"),
+        key=(event_date, *pair, norm(selected), "ml"),
     )
 
 def props_signals(target_date: str) -> list[Signal]:
     path = PROPS / f"comparison-{target_date}.csv"
     signals: list[Signal] = []
     for row in read_csv(path):
-        if (row.get("date") or "").strip() != target_date:
+        event_date = row_event_date(row)
+        if event_date != target_date:
             continue
         is_bettable = (row.get("bettable") or "").strip().lower() in {"1", "true", "yes"}
         is_shadow = (row.get("trackable_shadow") or "").strip().lower() in {"1", "true", "yes"}
@@ -284,7 +299,7 @@ def props_signals(target_date: str) -> list[Signal]:
                 selection=selection,
                 edge_pct=edge,
                 time_utc=(row.get("match_start_utc") or "").strip(),
-                key=(target_date, *pair, norm(subject), market, f"{line:g}", side),
+                key=(event_date, *pair, norm(subject), market, f"{line:g}", side),
             )
         )
     return signals

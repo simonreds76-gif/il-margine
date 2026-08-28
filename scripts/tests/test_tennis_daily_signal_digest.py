@@ -65,6 +65,37 @@ class TennisDailySignalDigestTests(unittest.TestCase):
         assert signal is not None
         self.assertIn("Player Two -4 games @ 1.855", signal.selection)
 
+    def test_confirmed_schedule_date_overrides_generation_date(self) -> None:
+        lane = MODULE.Lane("STRICT", Path("unused.csv"), "CORE", 0)
+        row = {
+            "date": "2026-08-30",
+            "generation_date": "2026-08-28",
+            "scheduled_date": "2026-08-31",
+            "schedule_status": "confirmed",
+            "player1": "Player One",
+            "player2": "Player Two",
+            "side": "P1",
+            "pin_odds1": "2.10",
+            "settlement_status": "pending",
+        }
+        self.assertIsNone(MODULE.row_to_signal(row, lane, "2026-08-30"))
+        self.assertIsNotNone(MODULE.row_to_signal(row, lane, "2026-08-31"))
+
+    def test_tbd_schedule_is_not_alerted_as_generation_date(self) -> None:
+        lane = MODULE.Lane("STRICT", Path("unused.csv"), "CORE", 0)
+        row = {
+            "date": "2026-08-30",
+            "generation_date": "2026-08-28",
+            "scheduled_date": "",
+            "schedule_status": "tbd",
+            "player1": "Player One",
+            "player2": "Player Two",
+            "side": "P1",
+            "pin_odds1": "2.10",
+            "settlement_status": "pending",
+        }
+        self.assertIsNone(MODULE.row_to_signal(row, lane, "2026-08-30"))
+
     def test_registered_gap_candidate_is_provisional_half_unit(self) -> None:
         signal = MODULE.gap_replacement_signal(
             {

@@ -211,6 +211,38 @@ def main() -> int:
             env_overrides={"SPREAD_V1_ENABLE_CORRECTION_ONLY": "1"},
         )
 
+        # BO5 handicap maths is tracked separately from the BO3-calibrated
+        # Spread v1 lane. It is raw, zero-stake evidence until its own real-
+        # price sample passes the promotion gates.
+        run_cmd(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "compute-handicap-values.py"),
+                "--bo5-only",
+                "--allow-bo5",
+                "--disable-calibration",
+            ],
+            label="5c/6 Grand Slam BO5 handicap values (research only)",
+            fatal=False,
+            timeout_seconds=step_timeout,
+        )
+        bo5_cmd = [
+            sys.executable,
+            str(ROOT / "scripts" / "strict-policy-report.py"),
+            "--append",
+            "--signal-profile",
+            "slam_bo5",
+        ]
+        if args.strict_report_date:
+            bo5_cmd.extend(["--date", args.strict_report_date])
+        run_cmd(
+            bo5_cmd,
+            label="5d/6 Grand Slam BO5 handicap evidence append",
+            fatal=False,
+            timeout_seconds=step_timeout,
+            env_overrides={"INTERNAL_RESEARCH_LANES": "1"},
+        )
+
         cpi_speed_cmd = [
             sys.executable,
             str(ROOT / "scripts" / "strict-policy-report.py"),

@@ -61,6 +61,7 @@ TENNIS_LANE_FILES = {
     "strict": ROOT / "data" / "backtest" / "strict-policy-performance-weekly.csv",
     "volume_200": ROOT / "data" / "backtest" / "strict-policy-performance-volume200-weekly.csv",
     "spread_v1": ROOT / "data" / "backtest" / "strict-policy-performance-spreadv1-weekly.csv",
+    "slam_bo5": ROOT / "data" / "backtest" / "strict-policy-performance-slam-bo5-weekly.csv",
     "grass_bo3": ROOT / "data" / "backtest" / "strict-policy-performance-grass_bo3-weekly.csv",
     "clay_bo3": ROOT / "data" / "backtest" / "strict-policy-performance-clay_bo3-weekly.csv",
     "cpi_speed": ROOT / "data" / "backtest" / "strict-policy-performance-cpi_speed-weekly.csv",
@@ -70,6 +71,7 @@ TENNIS_CLV_FILES = {
     "strict": ROOT / "data" / "backtest" / "strict-clv-audit-2026.csv",
     "volume_200": ROOT / "data" / "backtest" / "strict-clv-audit-volume200-2026.csv",
     "spread_v1": ROOT / "data" / "backtest" / "strict-clv-audit-spreadv1-2026.csv",
+    "slam_bo5": ROOT / "data" / "backtest" / "strict-clv-audit-slam-bo5-2026.csv",
     "challenger": ROOT / "data" / "backtest" / "strict-clv-audit-challenger-ml-v2-2026.csv",
 }
 
@@ -1313,6 +1315,8 @@ def render_report(payload: dict[str, Any]) -> str:
     corners_v3 = (vnext.get("corners_v3") or {})
     team_v4_live = team_v4.get("prospective") or {}
     corners_v3_live = corners_v3.get("prospective") or {}
+    team_v4_tracking = team_v4.get("tracking_only") or {}
+    corners_v3_tracking = corners_v3.get("tracking_only") or {}
     team_v4_scan = team_v4.get("latest_scan") or {}
     corners_v3_scan = corners_v3.get("latest_scan") or {}
 
@@ -1326,9 +1330,11 @@ def render_report(payload: dict[str, Any]) -> str:
         "",
         f"- Team Shots v4: count {team_v4.get('count_gate', 'NOT_RUN')}; prospective {team_v4.get('prospective_status', 'BLOCKED')}; promotion {team_v4.get('promotion_gate', 'BLOCKED')}.",
         f"- Team Shots v4 evidence: {team_v4_live.get('signals', 0)} signals, {team_v4_live.get('settled', 0)} settled, {number(team_v4_live.get('pnl_units')):+.2f}u, ROI {pct(number(team_v4_live.get('roi')) * 100) if team_v4_live.get('roi') is not None else '-'}, true-close CLV {pct(number(team_v4_live.get('mean_true_close_clv')) * 100) if team_v4_live.get('mean_true_close_clv') is not None else '-'}.",
+        f"- Team Shots v4 MD1-3 tracking: {team_v4_tracking.get('signals', 0)} rows, {team_v4_tracking.get('settled', 0)} settled, {number(team_v4_tracking.get('pnl_units')):+.2f}u, ROI {pct(number(team_v4_tracking.get('roi')) * 100) if team_v4_tracking.get('roi') is not None else '-'}.",
         f"- Team Shots v4 latest scan: {team_v4_scan.get('state', 'NOT_RUN')}; {team_v4_scan.get('scored_rows', 0)} rows / {team_v4_scan.get('scored_fixtures', 0)} fixtures scored; {team_v4_scan.get('edge_pass_but_warmup_blocked_fixtures', 0)} fixtures passed edge but were warm-up blocked; blockers {team_v4_scan.get('blocker_rows') or '-'}.",
         f"- Corners v3: count {corners_v3.get('count_gate', 'NOT_RUN')}; prospective {corners_v3.get('prospective_status', 'BLOCKED')}; promotion {corners_v3.get('promotion_gate', 'BLOCKED')}.",
         f"- Corners v3 evidence: {corners_v3_live.get('signals', 0)} signals, {corners_v3_live.get('settled', 0)} settled, {number(corners_v3_live.get('pnl_units')):+.2f}u, ROI {pct(number(corners_v3_live.get('roi')) * 100) if corners_v3_live.get('roi') is not None else '-'}, true-close CLV {pct(number(corners_v3_live.get('mean_true_close_clv')) * 100) if corners_v3_live.get('mean_true_close_clv') is not None else '-'}.",
+        f"- Corners v3 MD1-3 tracking: {corners_v3_tracking.get('signals', 0)} rows, {corners_v3_tracking.get('settled', 0)} settled, {number(corners_v3_tracking.get('pnl_units')):+.2f}u, ROI {pct(number(corners_v3_tracking.get('roi')) * 100) if corners_v3_tracking.get('roi') is not None else '-'}.",
         f"- Corners v3 latest scan: {corners_v3_scan.get('state', 'NOT_RUN')}; {corners_v3_scan.get('scored_rows', 0)} rows / {corners_v3_scan.get('scored_fixtures', 0)} fixtures scored; {corners_v3_scan.get('edge_pass_but_warmup_blocked_fixtures', 0)} fixtures passed edge but were warm-up blocked; blockers {corners_v3_scan.get('blocker_rows') or '-'}.",
         "- Neither experiment changes live routing or stakes.",
         f"- API-Football count archive: {api_health.get('archive_rows', 0)} fixtures; latest {api_health.get('latest_fixture_date') or '-'}; last run {api_health.get('requests_used', 0)}/{api_health.get('max_requests', 0)} requests.",
@@ -1544,6 +1550,8 @@ def telegram_text(payload: dict[str, Any]) -> str:
     corners_v3 = (vnext.get("corners_v3") or {})
     team_v4_live = team_v4.get("prospective") or {}
     corners_v3_live = corners_v3.get("prospective") or {}
+    team_v4_tracking = team_v4.get("tracking_only") or {}
+    corners_v3_tracking = corners_v3.get("tracking_only") or {}
     team_v4_scan = team_v4.get("latest_scan") or {}
     corners_v3_scan = corners_v3.get("latest_scan") or {}
     tennis_lanes = tennis_model_evidence.get("lanes") or {}
@@ -1611,8 +1619,10 @@ def telegram_text(payload: dict[str, Any]) -> str:
         ),
         "",
         f"Team Shots v4: {team_v4.get('prospective_status', 'BLOCKED')} | {team_v4_live.get('settled', 0)} settled | {number(team_v4_live.get('pnl_units')):+.2f}u | ROI {pct(number(team_v4_live.get('roi')) * 100) if team_v4_live.get('roi') is not None else '-'} | CLV {pct(number(team_v4_live.get('mean_true_close_clv')) * 100) if team_v4_live.get('mean_true_close_clv') is not None else '-'} | promotion {team_v4.get('promotion_gate', 'BLOCKED')}",
+        f"Team Shots MD1-3 tracking: {team_v4_tracking.get('settled', 0)}/{team_v4_tracking.get('signals', 0)} settled | {number(team_v4_tracking.get('pnl_units')):+.2f}u | ROI {pct(number(team_v4_tracking.get('roi')) * 100) if team_v4_tracking.get('roi') is not None else '-'}",
         f"Team Shots scan: {team_v4_scan.get('state', 'NOT_RUN')} | scored {team_v4_scan.get('scored_rows', 0)} rows/{team_v4_scan.get('scored_fixtures', 0)} fixtures | edge-pass warmup blocks {team_v4_scan.get('edge_pass_but_warmup_blocked_fixtures', 0)}",
         f"Corners v3: {corners_v3.get('prospective_status', 'BLOCKED')} | {corners_v3_live.get('settled', 0)} settled | {number(corners_v3_live.get('pnl_units')):+.2f}u | ROI {pct(number(corners_v3_live.get('roi')) * 100) if corners_v3_live.get('roi') is not None else '-'} | CLV {pct(number(corners_v3_live.get('mean_true_close_clv')) * 100) if corners_v3_live.get('mean_true_close_clv') is not None else '-'} | promotion {corners_v3.get('promotion_gate', 'BLOCKED')}",
+        f"Corners MD1-3 tracking: {corners_v3_tracking.get('settled', 0)}/{corners_v3_tracking.get('signals', 0)} settled | {number(corners_v3_tracking.get('pnl_units')):+.2f}u | ROI {pct(number(corners_v3_tracking.get('roi')) * 100) if corners_v3_tracking.get('roi') is not None else '-'}",
         f"Corners scan: {corners_v3_scan.get('state', 'NOT_RUN')} | scored {corners_v3_scan.get('scored_rows', 0)} rows/{corners_v3_scan.get('scored_fixtures', 0)} fixtures | edge-pass warmup blocks {corners_v3_scan.get('edge_pass_but_warmup_blocked_fixtures', 0)}",
         f"Legacy controls: Team Shots V3 {team_clv['settled']} settled/{team_clv['pnl_units']:+.2f}u; Corners V0 {corners_clv['settled']} settled/{corners_clv['pnl_units']:+.2f}u",
         f"Count-source health: API-Football {api_health.get('archive_rows', 0)} archived, latest {api_health.get('latest_fixture_date') or '-'}, agreement {api_agreement.get('matched_fixtures', 0)}/{api_agreement.get('api_rows', 0)}",
@@ -1625,6 +1635,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
         tennis_lane_line("Tennis Strict", "strict", "CORE"),
         tennis_lane_line("Tennis Volume 200", "volume_200", "VOLUME"),
         tennis_lane_line("Tennis Spread v1", "spread_v1", "PAUSED/RESEARCH"),
+        tennis_lane_line("Tennis Slam BO5 handicaps", "slam_bo5", "ZERO-STAKE SHADOW"),
         replacement_line("Strict gap 10-20pp", "strict_gap_10_20_same_side"),
         replacement_line("Volume gap 10-15pp", "volume200_gap_10_15_same_side"),
         hard_side_flip_line(),
@@ -1775,6 +1786,7 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
         lane_line("Strict", "strict", "CORE"),
         lane_line("Volume 200", "volume_200", "VOLUME"),
         lane_line("Spread v1", "spread_v1", "PAUSED/RESEARCH"),
+        lane_line("Slam BO5 handicaps", "slam_bo5", "ZERO-STAKE SHADOW"),
         replacement_line("Strict gap 10-20pp", "strict_gap_10_20_same_side"),
         replacement_line("Volume gap 10-15pp", "volume200_gap_10_15_same_side"),
         hard_side_flip_line(),

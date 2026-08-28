@@ -76,6 +76,12 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-signals-spreadshadow settlement failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Step 6b/13: Settle Grand Slam BO5 zero-stake evidence CSV ==="
+& python scripts\settle-strict-signals.py --csv data\backtest\strict-signals-slam-bo5-archive.csv 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: slam_bo5 evidence settlement failed (exit $LASTEXITCODE), continuing..."
+}
+
 Log "=== Step 7/13: Clay calibrated legacy settlement removed after failed ROI audit ==="
 
 Log "=== Step 7b/13: Settle Challenger ML v2 prospective evidence CSV ==="
@@ -140,6 +146,12 @@ Log "=== Step 11/13: Legacy spread shadow settled performance ==="
 & python scripts\strict-policy-performance.py --days 7 --signals data\backtest\strict-signals-spreadshadow-archive.csv --compare data\backtest\strict-signals-spreadshadow-compare.csv --report-txt data\backtest\strict-policy-performance-spreadshadow-weekly.txt --summary-csv data\backtest\strict-policy-performance-spreadshadow-weekly.csv 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-policy-performance spread_shadow failed (exit $LASTEXITCODE), continuing..."
+}
+
+Log "=== Step 11b/13: Grand Slam BO5 zero-stake evidence performance ==="
+& python scripts\strict-policy-performance.py --days 7 --signals data\backtest\strict-signals-slam-bo5-archive.csv --report-txt data\backtest\strict-policy-performance-slam-bo5-weekly.txt --summary-csv data\backtest\strict-policy-performance-slam-bo5-weekly.csv 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: strict-policy-performance slam_bo5 failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "=== Step 12/13: Clay calibrated legacy performance removed after failed ROI audit ==="
