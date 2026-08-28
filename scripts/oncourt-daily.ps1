@@ -241,7 +241,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Log "=== Step 6c/10: Tennis aces/DF research board ==="
-$tennisPropsExit = Invoke-LoggedProcessWithRetry -FilePath "python" -ArgumentList @("scripts\run-tennis-props-daily.py", "--max-events", "64") -Label "tennis props aces/DF board" -TimeoutSeconds 900 -Attempts 1
+$tennisPropsExit = Invoke-LoggedProcessWithRetry -FilePath "python" -ArgumentList @("scripts\run-tennis-props-daily.py", "--days-ahead", "3", "--max-events", "128") -Label "tennis props aces/DF board" -TimeoutSeconds 900 -Attempts 1
 if ($tennisPropsExit -ne 0) {
     Log "ERROR: tennis props aces/DF board failed/timed out (exit $tennisPropsExit); continuing remaining diagnostics"
     Set-RunStatusFailure "TennisPropsFailed" "tennis props aces/DF board failed/timed out (exit $tennisPropsExit)"

@@ -630,11 +630,17 @@ def load_tournament_samples(as_of: date) -> dict[tuple[str, str, str], int]:
     return {key: len(value) for key, value in samples.items()}
 
 
-def oncourt_schedule_rows(tour_code: str, include_completed: bool, board_date: str) -> list[dict[str, str]]:
+def oncourt_schedule_rows(
+    tour_code: str,
+    include_completed: bool,
+    board_date: str,
+    days_ahead: int = 1,
+) -> list[dict[str, str]]:
     tour_lower = tour_code.lower()
     player_names = load_oncourt_player_names(tour_lower)
     tours = load_oncourt_tours(tour_lower)
     board_dt = parse_date(board_date) or date.today()
+    horizon_dt = board_dt + timedelta(days=max(0, days_ahead))
     rows: list[dict[str, str]] = []
     for row in read_csv(ONCOURT_DIR / f"today_{tour_lower}.csv"):
         if not include_completed and str(row.get("result") or "").strip():
@@ -643,15 +649,17 @@ def oncourt_schedule_rows(tour_code: str, include_completed: bool, board_date: s
         if not is_supported_main_tour(tour):
             continue
         row_date = parse_date(row.get("date"))
-        if row_date and row_date < board_dt:
-            continue
+        if row_date:
+            if row_date < board_dt or row_date > horizon_dt:
+                continue
         tournament = scheduled_tournament_name(tour.get("name"))
         if not tournament:
             continue
         tour_start = parse_date(tour.get("date"))
         if (
-            tour_start
-            and tour_start > board_dt + timedelta(days=1)
+            not row_date
+            and tour_start
+            and tour_start > horizon_dt
             and not is_slam_qualifying_round(tournament, row.get("round_id"))
         ):
             continue
@@ -1362,6 +1370,12 @@ def main() -> None:
     parser.add_argument("--wta-schedule", default="")
     parser.add_argument("--include-completed", action="store_true")
     parser.add_argument(
+        "--days-ahead",
+        type=int,
+        default=3,
+        help="Include scheduled matches through this many calendar days after --as-of.",
+    )
+    parser.add_argument(
         "--fair-odds-totals-source",
         default=DEFAULT_FAIR_ODDS_TOTALS_SOURCE,
         choices=("auto", "required", "off"),
@@ -1379,8 +1393,8 @@ def main() -> None:
     aliases = load_aliases(Path(args.aliases))
     tournament_samples = load_tournament_samples(as_of)
 
-    schedules = oncourt_schedule_rows("ATP", args.include_completed, args.as_of)
-    schedules.extend(oncourt_schedule_rows("WTA", args.include_completed, args.as_of))
+    schedules = oncourt_schedule_rows("ATP", args.include_completed, args.as_of, args.days_ahead)
+    schedules.extend(oncourt_schedule_rows("WTA", args.include_completed, args.as_of, args.days_ahead))
     oncourt_wta_count = sum(1 for row in schedules if row.get("source") == "oncourt_today_wta")
     if args.wta_schedule:
         schedules.extend(wta_schedule_rows(Path(args.wta_schedule)))

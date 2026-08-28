@@ -321,6 +321,14 @@ class DailyMarketSelectionTests(unittest.TestCase):
         self.assertIn("--skip-hosted-sync", am_script)
         self.assertIn('"--require-ready", "--new-only"', am_script)
         self.assertIn('"scripts\\tennis-evidence-snapshot.py", "--supabase"', am_script)
+        self.assertIn('"--days-ahead", "3"', am_script)
+
+    def test_full_pipeline_passes_schedule_horizon_to_projection_board(self) -> None:
+        daily_script = (SCRIPTS / "run-tennis-props-daily.py").read_text(encoding="utf-8")
+        board_call = daily_script[daily_script.index('str(ROOT / "scripts" / "build-tennis-props-board.py")') :]
+        board_call = board_call[: board_call.index('"Build tennis props projection board"')]
+        self.assertIn('"--days-ahead"', board_call)
+        self.assertIn("str(args.days_ahead)", board_call)
 
     def test_am_timeout_kills_complete_process_tree(self) -> None:
         am_script = (SCRIPTS / "oncourt-am-refresh.ps1").read_text(encoding="utf-8")

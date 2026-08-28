@@ -16,7 +16,7 @@ on:
       max_events:
         description: "Maximum tennis events to query"
         type: number
-        default: 64
+        default: 128
       bookmakers:
         description: "Comma-separated count-market sources (Kambi requires a paid plan)"
         type: string
@@ -84,8 +84,8 @@ jobs:
       - name: Scrape Bet365 tennis player props
         if: ${{ steps.fallback_guard.outputs.skip != 'true' }}
         env:
-          DAYS_AHEAD: ${{ github.event.inputs.days_ahead || '2' }}
-          MAX_EVENTS: ${{ github.event.inputs.max_events || '64' }}
+          DAYS_AHEAD: ${{ github.event.inputs.days_ahead || '3' }}
+          MAX_EVENTS: ${{ github.event.inputs.max_events || '128' }}
           BOOKMAKERS: ${{ github.event.inputs.bookmakers || 'Bet365' }}
           PROBE_MARKETS: ${{ github.event.inputs.probe_markets || 'false' }}
         run: |
@@ -103,8 +103,8 @@ jobs:
       - name: Scrape BetMGM Most Aces 1X2
         if: ${{ always() && github.event.inputs.price_shape_probe != 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '25 15 * * *') }}
         env:
-          DAYS_AHEAD: ${{ github.event.inputs.days_ahead || '2' }}
-          MAX_EVENTS: ${{ github.event.inputs.max_events || '64' }}
+          DAYS_AHEAD: ${{ github.event.inputs.days_ahead || '3' }}
+          MAX_EVENTS: ${{ github.event.inputs.max_events || '128' }}
         run: |
           python scripts/tennis-most-aces-capture.py \
             --date "$(date -u +%F)" \

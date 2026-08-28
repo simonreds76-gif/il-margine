@@ -344,7 +344,7 @@ try {
     Log "=== Step 8b/8: Optional tennis props projection board ==="
     # Historical OnCourt scans are useful for the props monitor but are not
     # allowed to delay the daily ML/spread betting alert.
-    $tennisPropsBoardExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\build-tennis-props-board.py", "--as-of", (Get-Date -Format "yyyy-MM-dd")) -Label "tennis props projection board" -TimeoutSeconds 600
+    $tennisPropsBoardExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\build-tennis-props-board.py", "--as-of", (Get-Date -Format "yyyy-MM-dd"), "--days-ahead", "3") -Label "tennis props projection board" -TimeoutSeconds 600
     if ($tennisPropsBoardExit -ne 0) {
         Log "WARNING: tennis props projection board failed/timed out (exit $tennisPropsBoardExit), continuing..."
     }

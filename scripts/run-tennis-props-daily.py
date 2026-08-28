@@ -521,8 +521,8 @@ def main() -> int:
     parser.add_argument("--capture-only", action="store_true", help="Capture Bet365/BetMGM prices without rebuilding projections")
     parser.add_argument("--skip-hosted-sync", action="store_true", help="Do not sync captures from the golden data branch")
     parser.add_argument("--hosted-lookback-days", type=int, default=7)
-    parser.add_argument("--days-ahead", type=int, default=2)
-    parser.add_argument("--max-events", type=int, default=64)
+    parser.add_argument("--days-ahead", type=int, default=3)
+    parser.add_argument("--max-events", type=int, default=128)
     args = parser.parse_args()
 
     load_env()
@@ -606,6 +606,8 @@ def main() -> int:
             str(ROOT / "scripts" / "build-tennis-props-board.py"),
             "--as-of",
             args.as_of,
+            "--days-ahead",
+            str(args.days_ahead),
         ],
         "Build tennis props projection board",
         fatal=True,
