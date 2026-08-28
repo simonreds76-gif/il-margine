@@ -1,27 +1,29 @@
 {
-  "schema_version": 1,
-  "generated_at": null,
-  "status": "AWAITING_CAPTURE",
+  "diagnostic_operators": [],
+  "error": "HTTPError: HTTP 403",
+  "generated_at": "2026-08-28T17:18:58Z",
   "methodology": {
-    "raw_overround": "sum(1/decimal_odds)-1",
-    "normalized_hold": "1-(1/sum(1/decimal_odds))",
     "aggregation": "median alternate lines per operator/event/family, then equal-weight mean",
-    "scope": "pre-match football; complete like-for-like outcome sets only",
-    "minimum_publish_gate": "4 qualified operators, 3 market families, 20 operator/event/family observations; each ranked operator needs 6 observations across 3 families"
+    "minimum_publish_gate": "4 qualified operators, 3 market families, 20 operator/event/family observations; each ranked operator needs 6 observations across 3 families",
+    "normalized_hold": "1-(1/sum(1/decimal_odds))",
+    "raw_overround": "sum(1/decimal_odds)-1",
+    "scope": "pre-match football; complete like-for-like outcome sets only"
   },
+  "operators": [],
+  "requested_bookmakers": [],
+  "schema_version": 1,
+  "status": "CAPTURE_FAILED",
   "summary": {
-    "operators": 0,
+    "diagnostic_operators": 0,
     "events": 0,
     "market_families": [],
     "observations": 0,
+    "operators": 0,
     "raw_quote_sets": 0
   },
   "synthetic_best_price": {
-    "raw_overround_pct": null,
     "normalized_hold_pct": null,
+    "raw_overround_pct": null,
     "samples": 0
-  },
-  "operators": [],
-  "diagnostic_operators": [],
-  "requested_bookmakers": []
+  }
 }
