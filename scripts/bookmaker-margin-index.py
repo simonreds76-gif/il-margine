@@ -101,6 +101,7 @@ MIN_PUBLISH_FAMILIES = 3
 MIN_PUBLISH_OBSERVATIONS = 20
 MIN_SEGMENT_SAMPLES = 2
 MIN_SEGMENT_OPERATORS = 3
+MIN_LIMITED_SEGMENT_OPERATORS = 2
 OUTCOME_ALIASES = {
     "home": {"home", "1"},
     "away": {"away", "2"},
@@ -393,6 +394,13 @@ def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, An
         segment_operators.sort(key=lambda row: (row["normalized_hold_pct"], -row["samples"], row["name"]))
         for rank, operator in enumerate(segment_operators, 1):
             operator["rank"] = rank
+        segment_status = (
+            "PASS"
+            if len(segment_operators) >= MIN_SEGMENT_OPERATORS
+            else "PASS_LIMITED"
+            if len(segment_operators) >= MIN_LIMITED_SEGMENT_OPERATORS
+            else "THIN_SAMPLE"
+        )
         segments.append(
             {
                 "sport": str(SPORT_CONFIG[sport_slug]["display"]),
@@ -400,7 +408,7 @@ def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, An
                 "market_family": family,
                 "events": len({row["event_id"] for row in segment_rows}),
                 "observations": len(segment_rows),
-                "status": "PASS" if len(segment_operators) >= MIN_SEGMENT_OPERATORS else "THIN_SAMPLE",
+                "status": segment_status,
                 "operators": segment_operators,
             }
         )
@@ -438,7 +446,23 @@ def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, An
         and len(passing_segments) >= 4
         and len(collapsed) >= MIN_PUBLISH_OBSERVATIONS
     )
-    status = "PASS" if global_gate or segment_gate else "INSUFFICIENT_COVERAGE"
+    limited_segments = [
+        segment for segment in segments
+        if segment["status"] in {"PASS", "PASS_LIMITED"}
+    ]
+    limited_segment_sports = {segment["sport"] for segment in limited_segments}
+    limited_segment_gate = (
+        {"Football", "Tennis"}.issubset(limited_segment_sports)
+        and len(limited_segments) >= 4
+        and len(collapsed) >= MIN_PUBLISH_OBSERVATIONS
+    )
+    status = (
+        "PASS"
+        if global_gate or segment_gate
+        else "PASS_LIMITED"
+        if limited_segment_gate
+        else "INSUFFICIENT_COVERAGE"
+    )
     return {
         "schema_version": 2,
         "generated_at": captured_at,
@@ -451,7 +475,8 @@ def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, An
             "scope": "one-off pre-match football and tennis snapshot; complete like-for-like outcome sets only",
             "minimum_publish_gate": (
                 "Either a broad four-operator ranking, or at least four market-specific tables spanning "
-                "football and tennis; every market table needs three operators with two observations each"
+                "football and tennis. Three operators produces a full table; two operators produces an "
+                "explicitly labelled limited comparison. Every operator needs two observations per table"
             ),
         },
         "summary": {

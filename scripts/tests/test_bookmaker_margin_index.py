@@ -126,6 +126,36 @@ class BookmakerMarginIndexTests(unittest.TestCase):
         self.assertEqual(result["operators"], [])
         self.assertEqual(len([row for row in result["segments"] if row["status"] == "PASS"]), 4)
 
+    def test_two_book_cross_sport_snapshot_is_explicitly_limited(self) -> None:
+        definitions = (
+            ("football", "ML", {"home": 2.4, "draw": 3.2, "away": 2.8}),
+            ("football", "Over/Under", {"hdp": 2.5, "over": 1.91, "under": 1.91}),
+            ("tennis", "ML", {"home": 1.8, "away": 2.1}),
+            ("tennis", "Totals (Games)", {"hdp": 22.5, "over": 1.91, "under": 1.91}),
+        )
+        payload = []
+        event_id = 0
+        for sport, market_name, prices in definitions:
+            for _ in range(3):
+                event_id += 1
+                payload.append({
+                    "id": str(event_id),
+                    "status": "pending",
+                    "home": f"Home {event_id}",
+                    "away": f"Away {event_id}",
+                    "_snapshot_sport": sport,
+                    "bookmakers": {
+                        bookmaker: [{"name": market_name, **prices}]
+                        for bookmaker in ("Bet365", "BetMGM")
+                    },
+                })
+
+        result = MODULE.build_index(payload, "2026-08-28T12:00:00Z")
+        self.assertEqual(result["status"], "PASS_LIMITED")
+        limited = [row for row in result["segments"] if row["status"] == "PASS_LIMITED"]
+        self.assertEqual(len(limited), 4)
+        self.assertTrue(all(len(row["operators"]) == 2 for row in limited))
+
     def test_index_passes_only_with_qualified_operator_coverage(self) -> None:
         prices = {
             "Tight Book": (2.55, 3.35, 2.95),

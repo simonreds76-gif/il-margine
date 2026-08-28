@@ -375,11 +375,14 @@ const FAQ_ITEMS = [
 
 export default function BookmakersPage() {
   const publishableSegments = (MARGIN_INDEX.segments ?? []).filter(
-    (segment) => segment.status === "PASS" && segment.operators.length >= 3,
+    (segment) =>
+      ["PASS", "PASS_LIMITED"].includes(segment.status) &&
+      segment.operators.length >= 2,
   );
   const hasOverallRanking = MARGIN_INDEX.operators.length >= 4;
+  const limitedSnapshot = MARGIN_INDEX.status === "PASS_LIMITED";
   const publishable =
-    MARGIN_INDEX.status === "PASS" &&
+    ["PASS", "PASS_LIMITED"].includes(MARGIN_INDEX.status) &&
     (hasOverallRanking || publishableSegments.length > 0);
 
   return (
@@ -415,7 +418,7 @@ export default function BookmakersPage() {
                 </p>
               </div>
               <div className="shrink-0 rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1.5 text-xs text-slate-400">
-                Sampled {capturedLabel(MARGIN_INDEX.generated_at)}
+                {limitedSnapshot ? "Two-book snapshot" : "Broad snapshot"} · {capturedLabel(MARGIN_INDEX.generated_at)}
               </div>
             </div>
           </div>
@@ -441,7 +444,8 @@ export default function BookmakersPage() {
                   <div className="mb-4">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-300">Sport and market breakdown</p>
                     <p className="mt-1 text-sm text-slate-400">
-                      Each table is ranked only against operators quoting the same complete market in this snapshot.
+                      Each table compares only operators quoting the same complete market in this snapshot.
+                      {limitedSnapshot ? " Current free-tier coverage is limited to Bet365 and BetMGM; this is not a market-wide UK ranking." : ""}
                     </p>
                   </div>
                   <div className="grid gap-4 lg:grid-cols-2">
@@ -530,7 +534,7 @@ export default function BookmakersPage() {
               <div className="rounded-xl border border-amber-400/20 bg-amber-400/[0.06] px-4 py-4">
                 <p className="font-semibold text-amber-200">Awaiting a verified comparison sample</p>
                 <p className="mt-2 text-sm leading-6 text-slate-300">
-                  No ranking is shown until the capture contains at least four qualified operators, three market families and twenty comparable operator/event/market observations.
+                  No comparison is shown until the capture contains either broad four-operator coverage or a clearly labelled two-book sample spanning football and tennis markets.
                 </p>
                 <p className="mt-2 text-xs text-slate-500">
                   Current diagnostic coverage: {MARGIN_INDEX.summary.operators} qualified operators · {MARGIN_INDEX.summary.market_families.length} market families · {MARGIN_INDEX.summary.observations} observations.

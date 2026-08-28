@@ -1,29 +1,275 @@
 {
-  "diagnostic_operators": [],
-  "error": "HTTPError: HTTP 403",
-  "generated_at": "2026-08-28T17:18:58Z",
+  "capture_mode": "manual_one_off",
+  "diagnostic_operators": [
+    {
+      "coverage_pct": 100.0,
+      "market_families": [
+        "Match Winner",
+        "Handicap",
+        "Game Handicap",
+        "Over/Under",
+        "Game Total",
+        "BTTS",
+        "Draw No Bet"
+      ],
+      "name": "Bet365",
+      "normalized_hold_pct": 6.92,
+      "rank": 1,
+      "raw_overround_pct": 7.47,
+      "samples": 65
+    },
+    {
+      "coverage_pct": 52.3,
+      "market_families": [
+        "Match Winner",
+        "Handicap",
+        "Game Handicap",
+        "Over/Under",
+        "BTTS",
+        "Draw No Bet"
+      ],
+      "name": "BetMGM",
+      "normalized_hold_pct": 7.5,
+      "rank": 2,
+      "raw_overround_pct": 8.12,
+      "samples": 34
+    }
+  ],
+  "generated_at": "2026-08-28T18:00:18Z",
   "methodology": {
     "aggregation": "median alternate lines per operator/event/family, then equal-weight mean",
-    "minimum_publish_gate": "4 qualified operators, 3 market families, 20 operator/event/family observations; each ranked operator needs 6 observations across 3 families",
+    "minimum_publish_gate": "Either a broad four-operator ranking, or at least four market-specific tables spanning football and tennis. Three operators produces a full table; two operators produces an explicitly labelled limited comparison. Every operator needs two observations per table",
     "normalized_hold": "1-(1/sum(1/decimal_odds))",
     "raw_overround": "sum(1/decimal_odds)-1",
-    "scope": "pre-match football; complete like-for-like outcome sets only"
+    "scope": "one-off pre-match football and tennis snapshot; complete like-for-like outcome sets only"
   },
   "operators": [],
-  "requested_bookmakers": [],
-  "schema_version": 1,
-  "status": "CAPTURE_FAILED",
+  "requested_bookmakers": [
+    "10BET",
+    "Bally Bet",
+    "Bet365",
+    "BetVictor",
+    "William Hill",
+    "Unibet",
+    "Betway",
+    "BetMGM",
+    "Paddy Power",
+    "Coral",
+    "Ladbrokes",
+    "Bwin DE"
+  ],
+  "schema_version": 2,
+  "segments": [
+    {
+      "events": 10,
+      "market_family": "Match Winner",
+      "observations": 14,
+      "operators": [
+        {
+          "name": "BetMGM",
+          "normalized_hold_pct": 8.1,
+          "rank": 1,
+          "raw_overround_pct": 8.91,
+          "samples": 4
+        },
+        {
+          "name": "Bet365",
+          "normalized_hold_pct": 9.25,
+          "rank": 2,
+          "raw_overround_pct": 10.25,
+          "samples": 10
+        }
+      ],
+      "sport": "Football",
+      "sport_slug": "football",
+      "status": "PASS_LIMITED"
+    },
+    {
+      "events": 10,
+      "market_family": "Handicap",
+      "observations": 13,
+      "operators": [
+        {
+          "name": "Bet365",
+          "normalized_hold_pct": 5.41,
+          "rank": 1,
+          "raw_overround_pct": 5.72,
+          "samples": 10
+        },
+        {
+          "name": "BetMGM",
+          "normalized_hold_pct": 7.78,
+          "rank": 2,
+          "raw_overround_pct": 8.44,
+          "samples": 3
+        }
+      ],
+      "sport": "Football",
+      "sport_slug": "football",
+      "status": "PASS_LIMITED"
+    },
+    {
+      "events": 10,
+      "market_family": "Over/Under",
+      "observations": 14,
+      "operators": [
+        {
+          "name": "Bet365",
+          "normalized_hold_pct": 5.57,
+          "rank": 1,
+          "raw_overround_pct": 5.9,
+          "samples": 10
+        },
+        {
+          "name": "BetMGM",
+          "normalized_hold_pct": 6.57,
+          "rank": 2,
+          "raw_overround_pct": 7.03,
+          "samples": 4
+        }
+      ],
+      "sport": "Football",
+      "sport_slug": "football",
+      "status": "PASS_LIMITED"
+    },
+    {
+      "events": 4,
+      "market_family": "BTTS",
+      "observations": 8,
+      "operators": [
+        {
+          "name": "Bet365",
+          "normalized_hold_pct": 6.62,
+          "rank": 1,
+          "raw_overround_pct": 7.09,
+          "samples": 4
+        },
+        {
+          "name": "BetMGM",
+          "normalized_hold_pct": 7.8,
+          "rank": 2,
+          "raw_overround_pct": 8.46,
+          "samples": 4
+        }
+      ],
+      "sport": "Football",
+      "sport_slug": "football",
+      "status": "PASS_LIMITED"
+    },
+    {
+      "events": 10,
+      "market_family": "Draw No Bet",
+      "observations": 14,
+      "operators": [
+        {
+          "name": "Bet365",
+          "normalized_hold_pct": 6.43,
+          "rank": 1,
+          "raw_overround_pct": 6.88,
+          "samples": 10
+        },
+        {
+          "name": "BetMGM",
+          "normalized_hold_pct": 7.54,
+          "rank": 2,
+          "raw_overround_pct": 8.16,
+          "samples": 4
+        }
+      ],
+      "sport": "Football",
+      "sport_slug": "football",
+      "status": "PASS_LIMITED"
+    },
+    {
+      "events": 9,
+      "market_family": "Match Winner",
+      "observations": 18,
+      "operators": [
+        {
+          "name": "Bet365",
+          "normalized_hold_pct": 6.57,
+          "rank": 1,
+          "raw_overround_pct": 7.05,
+          "samples": 9
+        },
+        {
+          "name": "BetMGM",
+          "normalized_hold_pct": 6.87,
+          "rank": 2,
+          "raw_overround_pct": 7.38,
+          "samples": 9
+        }
+      ],
+      "sport": "Tennis",
+      "sport_slug": "tennis",
+      "status": "PASS_LIMITED"
+    },
+    {
+      "events": 6,
+      "market_family": "Game Handicap",
+      "observations": 12,
+      "operators": [
+        {
+          "name": "BetMGM",
+          "normalized_hold_pct": 8.28,
+          "rank": 1,
+          "raw_overround_pct": 9.03,
+          "samples": 6
+        },
+        {
+          "name": "Bet365",
+          "normalized_hold_pct": 8.34,
+          "rank": 2,
+          "raw_overround_pct": 9.11,
+          "samples": 6
+        }
+      ],
+      "sport": "Tennis",
+      "sport_slug": "tennis",
+      "status": "PASS_LIMITED"
+    },
+    {
+      "events": 6,
+      "market_family": "Game Total",
+      "observations": 6,
+      "operators": [
+        {
+          "name": "Bet365",
+          "normalized_hold_pct": 7.88,
+          "rank": 1,
+          "raw_overround_pct": 8.55,
+          "samples": 6
+        }
+      ],
+      "sport": "Tennis",
+      "sport_slug": "tennis",
+      "status": "THIN_SAMPLE"
+    }
+  ],
+  "status": "PASS_LIMITED",
   "summary": {
-    "diagnostic_operators": 0,
-    "events": 0,
-    "market_families": [],
-    "observations": 0,
-    "operators": 0,
-    "raw_quote_sets": 0
+    "diagnostic_operators": 2,
+    "events": 19,
+    "market_families": [
+      "Match Winner",
+      "Handicap",
+      "Game Handicap",
+      "Over/Under",
+      "Game Total",
+      "BTTS",
+      "Draw No Bet"
+    ],
+    "observations": 99,
+    "operators": 2,
+    "raw_quote_sets": 315,
+    "sports": [
+      "Football",
+      "Tennis"
+    ]
   },
   "synthetic_best_price": {
-    "normalized_hold_pct": null,
-    "raw_overround_pct": null,
-    "samples": 0
+    "normalized_hold_pct": 5.66,
+    "raw_overround_pct": 6.05,
+    "samples": 216
   }
 }
