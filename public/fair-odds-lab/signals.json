@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-08-28T05:36:28.297550Z",
+  "generated_at": "2026-08-28T19:08:17.791950Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
@@ -34,33 +35,135 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 34,
-  "signals_qualifying": 3,
+  "fixtures_evaluated": 36,
+  "signals_qualifying": 5,
   "safety_exclusions": {
-    "market_odds_above_cap": 6,
-    "model_probability_below_floor": 10,
-    "low_signal_confidence": 2,
-    "model_market_gap_gt_10pp": 12,
-    "lineup_not_public_quality": 8,
+    "market_odds_above_cap": 8,
+    "model_probability_below_floor": 11,
+    "model_market_gap_gt_10pp": 8,
+    "lineup_not_public_quality": 7,
     "defensive_position": 1
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 12,
+    "eligible_rows": 8,
     "added_by_league": {
       "bundesliga": 4,
-      "epl": 4,
+      "epl": 2,
       "la-liga": 1,
-      "ligue-1": 2,
-      "serie-a": 1
+      "ligue-1": 1
     },
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
   "leagues_covered": [
-    "bundesliga"
+    "bundesliga",
+    "epl",
+    "ligue-1",
+    "serie-a"
   ],
-  "featured_signal_id": "20260829-said-el-mala-849680e655",
+  "featured_signal_id": "20260830-dominic-calvert-lewin-b4192fe74c",
   "signals": [
+    {
+      "id": "20260830-dominic-calvert-lewin-b4192fe74c",
+      "match": {
+        "home_team": "Leeds United",
+        "away_team": "Brentford FC",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-08-30T13:00:00Z",
+        "kickoff_display": "Sun 30 Aug 14:00 UK",
+        "fotmob_match_id": "5795430",
+        "fotmob_page_url": "/matches/leeds-united-vs-brentford/2sso1t#5795430",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Dominic Calvert-Lewin",
+        "team": "Leeds",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/leeds.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#facc15",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 49.8,
+        "fair_odds": 2.01
+      },
+      "market_data": {
+        "best_odds": 2.5,
+        "best_book": "Bet365",
+        "implied_chance_pct": 40.0
+      },
+      "edge": {
+        "price_gap_pp": 9.8,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 95
+        },
+        "share_of_team_chances_pct": 32,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 77
+        },
+        "recent_team_form": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-08-22",
+          "xg_for_avg": 1.43,
+          "xg_against_avg": 1.51,
+          "xgd_per90": -0.08,
+          "shots_for_avg": 12.0,
+          "shots_against_avg": 14.4,
+          "sot_for_avg": 3.8,
+          "sot_against_avg": 5.0,
+          "corners_for_avg": 4.0,
+          "corners_against_avg": 6.2
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 74
+        },
+        "opponent_recent_defence": {
+          "tier": "High",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-08-22",
+          "xg_for_avg": 2.0,
+          "xg_against_avg": 2.14,
+          "xgd_per90": -0.14,
+          "shots_for_avg": 13.8,
+          "shots_against_avg": 17.4,
+          "sot_for_avg": 4.2,
+          "sot_against_avg": 6.2,
+          "corners_for_avg": 4.4,
+          "corners_against_avg": 7.4
+        },
+        "fixture_boost_pct": 13,
+        "projected_minutes": 88,
+        "penalty_role": "Primary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Opponent has been allowing chances recently",
+        "The fixture profile adds to his scoring case"
+      ],
+      "risk_flags": []
+    },
     {
       "id": "20260829-said-el-mala-849680e655",
       "match": {
@@ -109,7 +212,7 @@
         "share_of_team_chances_percentile": 98,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 83
+          "percentile": 87
         },
         "recent_team_form": {
           "tier": "Average",
@@ -127,8 +230,8 @@
           "corners_against_avg": 4.8
         },
         "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 50
+          "tier": "Positive",
+          "percentile": 58
         },
         "opponent_recent_defence": {
           "tier": "Average",
@@ -161,91 +264,191 @@
       "risk_flags": []
     },
     {
-      "id": "20260829-wouter-burger-ab040e4a04",
+      "id": "20260829-patrick-cutrone-ed35e420c0",
       "match": {
-        "home_team": "1. FC Cologne",
-        "away_team": "TSG Hoffenheim",
-        "league": "bundesliga",
-        "league_display": "Bundesliga",
-        "league_logo_path": "/league-logos/bundesliga.png",
-        "kickoff_utc": "2026-08-29T13:30:00Z",
-        "kickoff_display": "Sat 29 Aug 14:30 UK",
-        "fotmob_match_id": "5881147",
-        "fotmob_page_url": "/matches/hoffenheim-vs-1-fc-koln/2dil4k#5881147",
+        "home_team": "AC Monza",
+        "away_team": "Udinese Calcio",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "2026-08-29T16:30:00Z",
+        "kickoff_display": "Sat 29 Aug 17:30 UK",
+        "fotmob_match_id": "5749657",
+        "fotmob_page_url": "/matches/monza-vs-udinese/1vx5w8#5749657",
         "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
-        "name": "Wouter Burger",
-        "team": "Hoffenheim",
-        "position": "MID",
+        "name": "Patrick Cutrone",
+        "team": "Monza",
+        "position": "AM",
         "jersey_label": "",
-        "team_logo_path": "/team-logos/bundesliga/hoffenheim.png",
-        "team_primary_color": "#1d4ed8",
+        "team_logo_path": "/team-logos/serie-a/monza.png",
+        "team_primary_color": "#7f1d1d",
+        "team_secondary_color": "#38bdf8",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 40.0,
+        "fair_odds": 2.5
+      },
+      "market_data": {
+        "best_odds": 3.2,
+        "best_book": "Bet365",
+        "implied_chance_pct": 31.2
+      },
+      "edge": {
+        "price_gap_pp": 8.7,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 60
+        },
+        "share_of_team_chances_pct": 44,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 9
+        },
+        "recent_team_form": {
+          "tier": "Quiet",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-08-22",
+          "xg_for_avg": 1.04,
+          "xg_against_avg": 2.0,
+          "xgd_per90": -0.95,
+          "shots_for_avg": 8.6,
+          "shots_against_avg": 15.8,
+          "sot_for_avg": 3.6,
+          "sot_against_avg": 5.0,
+          "corners_for_avg": 2.8,
+          "corners_against_avg": 5.4
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 45
+        },
+        "opponent_recent_defence": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-08-22",
+          "xg_for_avg": 1.48,
+          "xg_against_avg": 1.4,
+          "xgd_per90": 0.08,
+          "shots_for_avg": 13.0,
+          "shots_against_avg": 14.4,
+          "sot_for_avg": 4.4,
+          "sot_against_avg": 4.4,
+          "corners_for_avg": 3.6,
+          "corners_against_avg": 5.6
+        },
+        "fixture_boost_pct": 32,
+        "projected_minutes": 78,
+        "penalty_role": "Secondary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Opponent has been allowing chances recently",
+        "The fixture profile adds to his scoring case"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260829-kamory-doumbia-5b5622c5bf",
+      "match": {
+        "home_team": "Stade Brest 29",
+        "away_team": "Toulouse FC",
+        "league": "ligue-1",
+        "league_display": "Ligue 1",
+        "league_logo_path": "/league-logos/ligue-1.png",
+        "kickoff_utc": "2026-08-29T18:45:00Z",
+        "kickoff_display": "Sat 29 Aug 19:45 UK",
+        "fotmob_match_id": "5802911",
+        "fotmob_page_url": "/matches/brest-vs-toulouse/2th5t2#5802911",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Kamory Doumbia",
+        "team": "Brest",
+        "position": "AM",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/ligue-1/brest.png",
+        "team_primary_color": "#dc2626",
         "team_secondary_color": "#f8fafc",
         "team_shirt_pattern": "solid"
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 29.7,
-        "fair_odds": 3.37
+        "scoring_chance_pct": 30.8,
+        "fair_odds": 3.25
       },
       "market_data": {
-        "best_odds": 4.5,
+        "best_odds": 4.75,
         "best_book": "Bet365",
-        "implied_chance_pct": 22.2
+        "implied_chance_pct": 21.1
       },
       "edge": {
-        "price_gap_pp": 7.5,
+        "price_gap_pp": 9.8,
         "model_advantage": true
       },
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 76
+          "percentile": 92
         },
-        "share_of_team_chances_pct": 19,
-        "share_of_team_chances_percentile": 94,
+        "share_of_team_chances_pct": 25,
+        "share_of_team_chances_percentile": 97,
         "team_attacking_outlook": {
-          "tier": "Strong",
-          "percentile": 82
+          "tier": "Average",
+          "percentile": 47
         },
         "recent_team_form": {
-          "tier": "Strong",
+          "tier": "Average",
           "window": 5,
           "matches": 5,
-          "through_date": "2026-05-16",
-          "xg_for_avg": 1.98,
-          "xg_against_avg": 1.34,
-          "xgd_per90": 0.65,
-          "shots_for_avg": 15.2,
-          "shots_against_avg": 10.8,
-          "sot_for_avg": 5.2,
-          "sot_against_avg": 4.0,
-          "corners_for_avg": 6.8,
-          "corners_against_avg": 3.4
+          "through_date": "2026-08-22",
+          "xg_for_avg": 1.7,
+          "xg_against_avg": 1.6,
+          "xgd_per90": 0.1,
+          "shots_for_avg": 15.6,
+          "shots_against_avg": 13.2,
+          "sot_for_avg": 4.2,
+          "sot_against_avg": 5.2,
+          "corners_for_avg": 5.2,
+          "corners_against_avg": 5.6
         },
         "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 89
+          "tier": "Average",
+          "percentile": 39
         },
         "opponent_recent_defence": {
-          "tier": "High",
+          "tier": "Average",
           "window": 5,
           "matches": 5,
-          "through_date": "2026-05-16",
-          "xg_for_avg": 1.77,
-          "xg_against_avg": 1.98,
-          "xgd_per90": -0.21,
-          "shots_for_avg": 14.0,
-          "shots_against_avg": 13.0,
-          "sot_for_avg": 4.8,
-          "sot_against_avg": 4.8,
-          "corners_for_avg": 4.6,
-          "corners_against_avg": 4.8
+          "through_date": "2026-08-22",
+          "xg_for_avg": 1.96,
+          "xg_against_avg": 1.02,
+          "xgd_per90": 0.94,
+          "shots_for_avg": 13.4,
+          "shots_against_avg": 9.6,
+          "sot_for_avg": 4.0,
+          "sot_against_avg": 3.2,
+          "corners_for_avg": 4.4,
+          "corners_against_avg": 5.0
         },
-        "fixture_boost_pct": 7,
-        "projected_minutes": 83,
+        "fixture_boost_pct": -12,
+        "projected_minutes": 78,
         "penalty_role": "Not on penalties",
         "role_adjustment_factor": 1.0,
         "role_adjustment_reason": "",
@@ -254,9 +457,8 @@
       "confidence_tier": "Medium",
       "reasons": [
         "The model price is shorter than the bookmaker's best available price",
-        "Recent chance quality grades as strong",
-        "Recent team form supports the attacking case",
-        "Opponent defensive profile is a positive matchup"
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong"
       ],
       "risk_flags": []
     },
@@ -278,7 +480,7 @@
       "player": {
         "name": "Justin Njinmah",
         "team": "Werder Bremen",
-        "position": "FW",
+        "position": "MID",
         "jersey_label": "",
         "team_logo_path": "/team-logos/bundesliga/werder-bremen.png",
         "team_primary_color": "#16a34a",
@@ -287,8 +489,8 @@
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 27.6,
-        "fair_odds": 3.62
+        "scoring_chance_pct": 27.3,
+        "fair_odds": 3.66
       },
       "market_data": {
         "best_odds": 4.75,
@@ -296,19 +498,19 @@
         "implied_chance_pct": 21.1
       },
       "edge": {
-        "price_gap_pp": 6.6,
+        "price_gap_pp": 6.3,
         "model_advantage": true
       },
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 81
+          "percentile": 82
         },
         "share_of_team_chances_pct": 25,
-        "share_of_team_chances_percentile": 97,
+        "share_of_team_chances_percentile": 96,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 20
+          "percentile": 26
         },
         "recent_team_form": {
           "tier": "Quiet",
@@ -327,7 +529,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 56
+          "percentile": 62
         },
         "opponent_recent_defence": {
           "tier": "High",
@@ -354,7 +556,6 @@
       "confidence_tier": "Medium",
       "reasons": [
         "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
         "Recent chance quality grades as strong",
         "Opponent has been allowing chances recently"
       ],
