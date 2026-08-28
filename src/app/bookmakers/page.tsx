@@ -2,6 +2,60 @@
 import Footer from "@/components/Footer";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import PageHomeLink from "@/components/PageHomeLink";
+import marginIndexJson from "../../../data/bookmakers/margin-index.json";
+
+type MarginOperator = {
+  rank: number;
+  name: string;
+  raw_overround_pct: number;
+  normalized_hold_pct: number;
+  samples: number;
+  market_families: string[];
+  coverage_pct: number;
+};
+
+type BookmakerMarginIndex = {
+  generated_at: string | null;
+  status: string;
+  methodology: { minimum_publish_gate: string };
+  summary: {
+    operators: number;
+    events: number;
+    market_families: string[];
+    observations: number;
+  };
+  synthetic_best_price: {
+    raw_overround_pct: number | null;
+    normalized_hold_pct: number | null;
+    samples: number;
+  };
+  operators: MarginOperator[];
+};
+
+const MARGIN_INDEX = marginIndexJson as BookmakerMarginIndex;
+const MARGIN_INDEX_GENERATED_MS = MARGIN_INDEX.generated_at
+  ? Date.parse(MARGIN_INDEX.generated_at)
+  : Number.NaN;
+const MARGIN_INDEX_IS_FRESH =
+  Number.isFinite(MARGIN_INDEX_GENERATED_MS) &&
+  Date.now() - MARGIN_INDEX_GENERATED_MS <= 8 * 24 * 60 * 60 * 1000;
+
+function marginPct(value: number | null) {
+  return value === null ? "-" : `${value >= 0 ? "+" : ""}${value.toFixed(2)}%`;
+}
+
+function capturedLabel(value: string | null) {
+  if (!value) return "No verified capture yet";
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "UTC",
+    timeZoneName: "short",
+  }).format(new Date(value));
+}
 
 const BOOKMAKERS = [
   {
@@ -307,6 +361,11 @@ const FAQ_ITEMS = [
 ];
 
 export default function BookmakersPage() {
+  const publishable =
+    MARGIN_INDEX.status === "PASS" &&
+    MARGIN_INDEX_IS_FRESH &&
+    MARGIN_INDEX.operators.length >= 4;
+
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8 md:pb-12">
@@ -327,6 +386,110 @@ export default function BookmakersPage() {
           <p className="text-slate-500 text-sm max-w-3xl">
             18+ only. Gamble responsibly. <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-emerald-400/80 hover:text-emerald-300 underline">begambleaware.org</a>
           </p>
+        </section>
+
+        <section className="mb-10 overflow-hidden rounded-2xl border border-cyan-400/20 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.10),transparent_42%),linear-gradient(145deg,rgba(15,23,42,0.96),rgba(2,6,23,0.96))] shadow-[0_24px_70px_rgba(2,6,23,0.35)]">
+          <div className="border-b border-slate-800/80 px-5 py-5 sm:px-7">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-cyan-300">Price intelligence</span>
+                <h2 className="mt-2 text-2xl font-semibold text-white">UK bookmaker margin index</h2>
+                <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">
+                  A like-for-like comparison of the margin built into complete football markets. Lower hold is better for the bettor.
+                </p>
+              </div>
+              <div className="shrink-0 rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1.5 text-xs text-slate-400">
+                Sampled {capturedLabel(MARGIN_INDEX.generated_at)}
+              </div>
+            </div>
+          </div>
+
+          {publishable ? (
+            <div>
+              <div className="grid gap-px bg-slate-800/80 sm:grid-cols-4">
+                {[
+                  ["Operators", String(MARGIN_INDEX.summary.operators)],
+                  ["Events", String(MARGIN_INDEX.summary.events)],
+                  ["Market families", String(MARGIN_INDEX.summary.market_families.length)],
+                  ["Comparable samples", String(MARGIN_INDEX.summary.observations)],
+                ].map(([label, value]) => (
+                  <div key={label} className="bg-slate-950/80 px-5 py-4">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">{label}</p>
+                    <p className="mt-1 font-mono text-xl font-semibold tabular-nums text-white">{value}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="min-w-[780px] w-full text-left text-sm">
+                  <thead className="border-b border-slate-800 bg-slate-950/55 text-[10px] uppercase tracking-[0.14em] text-slate-500">
+                    <tr>
+                      <th className="px-5 py-3 font-semibold">Rank</th>
+                      <th className="px-5 py-3 font-semibold">Operator</th>
+                      <th className="px-5 py-3 font-semibold">Normalized hold</th>
+                      <th className="px-5 py-3 font-semibold">Raw overround</th>
+                      <th className="px-5 py-3 font-semibold">Markets</th>
+                      <th className="px-5 py-3 font-semibold">Samples</th>
+                      <th className="px-5 py-3 font-semibold">Coverage</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/80">
+                    {MARGIN_INDEX.operators.map((operator) => (
+                      <tr key={operator.name} className="bg-slate-950/20 transition-colors hover:bg-cyan-400/[0.04]">
+                        <td className="px-5 py-4 font-mono text-slate-500">#{operator.rank}</td>
+                        <td className="px-5 py-4">
+                          <div className="flex items-center gap-3">
+                            <BookmakerLogo bookmaker={{ id: 0, name: operator.name, short_name: operator.name, affiliate_link: null, active: true }} size="sm" />
+                            <span className="font-semibold text-slate-100">{operator.name}</span>
+                          </div>
+                        </td>
+                        <td className="px-5 py-4 font-mono font-semibold tabular-nums text-cyan-300">{marginPct(operator.normalized_hold_pct)}</td>
+                        <td className="px-5 py-4 font-mono tabular-nums text-slate-300">{marginPct(operator.raw_overround_pct)}</td>
+                        <td className="px-5 py-4 text-xs text-slate-400">{operator.market_families.join(" · ")}</td>
+                        <td className="px-5 py-4 font-mono tabular-nums text-slate-300">{operator.samples}</td>
+                        <td className="px-5 py-4 font-mono tabular-nums text-slate-300">{operator.coverage_pct.toFixed(1)}%</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="grid gap-4 border-t border-slate-800/80 px-5 py-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:px-7">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300">Best-price market</p>
+                  <p className="mt-1 text-sm leading-6 text-slate-400">
+                    Synthetic line-shopping benchmark built from the best price for each outcome across operators. It is not one bookmaker&apos;s margin.
+                  </p>
+                </div>
+                <div className="flex gap-6 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.06] px-5 py-3">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500">Normalized</p>
+                    <p className="mt-1 font-mono text-lg font-semibold text-emerald-300">{marginPct(MARGIN_INDEX.synthetic_best_price.normalized_hold_pct)}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500">Samples</p>
+                    <p className="mt-1 font-mono text-lg font-semibold text-white">{MARGIN_INDEX.synthetic_best_price.samples}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="px-5 py-6 sm:px-7">
+              <div className="rounded-xl border border-amber-400/20 bg-amber-400/[0.06] px-4 py-4">
+                <p className="font-semibold text-amber-200">Awaiting a verified comparison sample</p>
+                <p className="mt-2 text-sm leading-6 text-slate-300">
+                  No ranking is shown until the capture contains at least four qualified operators, three market families and twenty comparable operator/event/market observations.
+                </p>
+                <p className="mt-2 text-xs text-slate-500">
+                  Current diagnostic coverage: {MARGIN_INDEX.summary.operators} qualified operators · {MARGIN_INDEX.summary.market_families.length} market families · {MARGIN_INDEX.summary.observations} observations.
+                </p>
+              </div>
+            </div>
+          )}
+
+          <div className="border-t border-slate-800/80 bg-slate-950/45 px-5 py-4 text-xs leading-5 text-slate-500 sm:px-7">
+            Raw overround is Σ(1/decimal odds) − 1. Normalized hold is 1 − 1/Σ(1/decimal odds). Alternate lines are collapsed before operators are compared, so books with more lines do not receive extra weight.
+          </div>
         </section>
 
         {/* Quick-offer strip: scan & convert */}
