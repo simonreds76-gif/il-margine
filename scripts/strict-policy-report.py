@@ -1281,11 +1281,23 @@ def spread_v1_clay_fav_scope_reason(surface: str, series_bucket: str, league: st
     return None
 
 
-def spread_bo5_scope_reason(surface: str, series_bucket: str, league: str, confidence: str) -> str | None:
+def spread_bo5_scope_reason(
+    surface: str,
+    series_bucket: str,
+    league: str,
+    confidence: str,
+    round_id: Any,
+) -> str | None:
     if league != "ATP":
         return "league"
     if series_bucket != "Grand Slam":
         return "not_grand_slam"
+    try:
+        numeric_round = int(round_id)
+    except (TypeError, ValueError):
+        return "round_unknown"
+    if numeric_round < 4:
+        return "qualifying_bo3"
     if surface not in {"Hard", "Clay", "Grass"}:
         return "surface"
     if (confidence or "").strip().lower() not in {"high", "medium"}:
@@ -2222,8 +2234,8 @@ def main() -> int:
     injury_flagged_matches = 0
     injury_skipped_matches = 0
 
-    base_daily_select = "id,tour_id,player1_id,player2_id,surface,p1_win_prob,p2_win_prob,odds1,odds2,p_a,p_b,confidence,spread_line,spread_odds1,spread_odds2,handicap_edge_p1,handicap_edge_p2"
-    raw_daily_select = "id,tour_id,player1_id,player2_id,surface,p1_win_prob_raw,p2_win_prob_raw,p1_win_prob,p2_win_prob,odds1,odds2,p_a,p_b,confidence,spread_line,spread_odds1,spread_odds2,handicap_edge_p1,handicap_edge_p2"
+    base_daily_select = "id,tour_id,round_id,player1_id,player2_id,surface,p1_win_prob,p2_win_prob,odds1,odds2,p_a,p_b,confidence,spread_line,spread_odds1,spread_odds2,handicap_edge_p1,handicap_edge_p2"
+    raw_daily_select = "id,tour_id,round_id,player1_id,player2_id,surface,p1_win_prob_raw,p2_win_prob_raw,p1_win_prob,p2_win_prob,odds1,odds2,p_a,p_b,confidence,spread_line,spread_odds1,spread_odds2,handicap_edge_p1,handicap_edge_p2"
     coverage_daily_select = (
         raw_daily_select
         + ",match_count_12m_p1,match_count_12m_p2,matches_total_p1,matches_total_p2,"
@@ -2483,7 +2495,7 @@ def main() -> int:
             if spread_v1_clay_fav_requested
             else spread_v1_scope_reason(surface, series_bucket, league, confidence)
             if spread_v1_requested
-            else spread_bo5_scope_reason(surface, series_bucket, league, confidence)
+            else spread_bo5_scope_reason(surface, series_bucket, league, confidence, r.get("round_id"))
             if spread_bo5_requested
             else None
         )

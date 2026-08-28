@@ -34,9 +34,20 @@ class SlamBo5EvidenceLaneTests(unittest.TestCase):
         self.assertIsNone(exit_code)
 
     def test_lane_is_grand_slam_atp_only(self) -> None:
-        self.assertIsNone(policy.spread_bo5_scope_reason("Hard", "Grand Slam", "ATP", "high"))
-        self.assertEqual(policy.spread_bo5_scope_reason("Hard", "Masters 1000", "ATP", "high"), "not_grand_slam")
-        self.assertEqual(policy.spread_bo5_scope_reason("Hard", "Grand Slam", "WTA", "high"), "league")
+        self.assertIsNone(policy.spread_bo5_scope_reason("Hard", "Grand Slam", "ATP", "high", 4))
+        self.assertEqual(
+            policy.spread_bo5_scope_reason("Hard", "Grand Slam", "ATP", "high", 3),
+            "qualifying_bo3",
+        )
+        self.assertEqual(
+            policy.spread_bo5_scope_reason("Hard", "Grand Slam", "ATP", "high", None),
+            "round_unknown",
+        )
+        self.assertEqual(
+            policy.spread_bo5_scope_reason("Hard", "Masters 1000", "ATP", "high", 4),
+            "not_grand_slam",
+        )
+        self.assertEqual(policy.spread_bo5_scope_reason("Hard", "Grand Slam", "WTA", "high", 4), "league")
 
     def test_lane_is_always_zero_stake(self) -> None:
         self.assertEqual(
