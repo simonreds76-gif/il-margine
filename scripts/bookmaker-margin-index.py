@@ -397,19 +397,44 @@ def fetch_payload(api_key: str, days_ahead: int, max_events: int, max_requests: 
     payload: list[dict[str, Any]] = []
     chunks = [selected_events[index:index + 10] for index in range(0, len(selected_events), 10)][:max_requests]
     for chunk in chunks:
+        params = {
+            "apiKey": api_key,
+            "eventIds": ",".join(str(event["id"]) for event in chunk),
+            "bookmakers": ",".join(bookmakers[:30]),
+        }
         odds = requests.get(
             f"{BASE_URL}/odds/multi",
-            params={
-                "apiKey": api_key,
-                "eventIds": ",".join(str(event["id"]) for event in chunk),
-                "bookmakers": ",".join(bookmakers[:30]),
-            },
+            params=params,
             timeout=45,
         )
-        odds.raise_for_status()
-        body = odds.json()
-        if isinstance(body, list):
-            payload.extend(body)
+        if odds.ok:
+            body = odds.json()
+            if isinstance(body, list):
+                payload.extend(body)
+            continue
+        if odds.status_code != 403 or len(bookmakers) <= 1:
+            odds.raise_for_status()
+
+        # The free account can reject a combined request when any requested
+        # operator is unavailable. Retry each discovered recreational book
+        # independently so one blocked operator cannot erase the sample.
+        print("Combined bookmaker request returned HTTP 403; retrying per bookmaker.")
+        for bookmaker in bookmakers:
+            single = requests.get(
+                f"{BASE_URL}/odds/multi",
+                params={
+                    "apiKey": api_key,
+                    "eventIds": params["eventIds"],
+                    "bookmakers": bookmaker,
+                },
+                timeout=45,
+            )
+            if not single.ok:
+                print(f"Skipping unavailable bookmaker {bookmaker}: HTTP {single.status_code}")
+                continue
+            body = single.json()
+            if isinstance(body, list):
+                payload.extend(body)
     return payload, bookmakers
 
 

@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.util
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -106,6 +107,43 @@ class BookmakerMarginIndexTests(unittest.TestCase):
             response=response,
         )
         self.assertEqual(MODULE.safe_error_summary(error), "HTTPError: HTTP 403")
+
+    def test_multi_book_403_falls_back_to_accessible_books(self) -> None:
+        class Response:
+            def __init__(self, status_code: int, payload: object) -> None:
+                self.status_code = status_code
+                self._payload = payload
+                self.ok = 200 <= status_code < 300
+
+            def json(self) -> object:
+                return self._payload
+
+            def raise_for_status(self) -> None:
+                if not self.ok:
+                    raise MODULE.requests.HTTPError(response=self)
+
+        scheduled = [{
+            "id": "1",
+            "date": "2026-08-29T15:00:00Z",
+            "home": "Home 1",
+            "away": "Away 1",
+            "league": {"name": "Premier League"},
+        }]
+        bet365 = [event(1, {"Bet365": (2.4, 3.2, 2.8)})]
+        betfred = [event(1, {"Betfred": (2.5, 3.3, 2.9)})]
+        responses = [
+            Response(200, scheduled),
+            Response(200, [{"name": "Bet365"}, {"name": "Betfred"}]),
+            Response(403, {"message": "blocked combined request"}),
+            Response(200, bet365),
+            Response(200, betfred),
+        ]
+        with patch.object(MODULE.requests, "get", side_effect=responses) as get:
+            payload, bookmakers = MODULE.fetch_payload("secret", 4, 10, 1)
+
+        self.assertEqual(bookmakers, ["Bet365", "Betfred"])
+        self.assertEqual(len(payload), 2)
+        self.assertEqual(get.call_count, 5)
 
 
 if __name__ == "__main__":
