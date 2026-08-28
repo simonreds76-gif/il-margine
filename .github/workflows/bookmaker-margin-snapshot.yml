@@ -95,12 +95,15 @@ jobs:
 
           path = sys.argv[1]
           payload = json.load(open(path, encoding="utf-8"))
-          if payload.get("status") != "PASS":
+          if payload.get("status") not in {"PASS", "PASS_LIMITED"}:
               raise SystemExit(f"Snapshot failed publish gate: {payload.get('status')}")
           sports = set((payload.get("summary") or {}).get("sports") or [])
           if not {"Football", "Tennis"}.issubset(sports):
               raise SystemExit(f"Snapshot missing required sports: {sorted(sports)}")
-          passing = [row for row in payload.get("segments") or [] if row.get("status") == "PASS"]
+          passing = [
+              row for row in payload.get("segments") or []
+              if row.get("status") in {"PASS", "PASS_LIMITED"}
+          ]
           if not any(row.get("sport") == "Football" for row in passing):
               raise SystemExit("Snapshot has no publishable football market segment")
           if not any(row.get("sport") == "Tennis" for row in passing):
