@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-28T19:27:02Z",
+  "generated_at": "2026-08-29T13:11:02Z",
   "lane_status": "FROZEN_RESEARCH",
   "reactivation_ready": false,
   "backtest": {
@@ -116,11 +116,11 @@
     "status": "FAIL",
     "extraction_status": "FAIL",
     "operational_status": "FAIL",
-    "result_files": 54,
-    "finished_matches": 50,
-    "instrumented_finished_matches": 50,
-    "assist_complete_matches": 49,
-    "assist_complete_rate": 0.98,
+    "result_files": 56,
+    "finished_matches": 55,
+    "instrumented_finished_matches": 55,
+    "assist_complete_matches": 54,
+    "assist_complete_rate": 0.9818181818181818,
     "matched_fixtures": 0,
     "fixture_match_rate": 0.0,
     "eligible_player_appearances": 0,
@@ -143,7 +143,7 @@
   "market": {
     "status": "FAIL",
     "reason": "one_sided_margin_adjustment_needs_90_days_and_prospective_confirmation",
-    "unique_market_players": 6979,
+    "unique_market_players": 7172,
     "matched_participants": 1300,
     "matched_old_shadow_signals": 0,
     "model_raw": {

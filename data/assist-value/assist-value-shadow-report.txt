@@ -1,5 +1,5 @@
 Assist Value Shadow Report
-generated_at_utc: 2026-08-28T19:25:13Z
+generated_at_utc: 2026-08-29T13:09:46Z
 
 Status
 shadow_status: ENABLED_RESEARCH_ONLY
@@ -8,15 +8,15 @@ model_status: NOT_FITTED
 fair_odds_status: NOT_AUTHORISED
 
 Inputs
-raw_odds_rows_loaded: 1854
+raw_odds_rows_loaded: 1984
 role_players_loaded: 1030
 
 Join
-shadow_rows_assist_only: 1854
-role_matched_rows: 511
-role_match_rate_pct: 27.56
+shadow_rows_assist_only: 1984
+role_matched_rows: 529
+role_match_rate_pct: 26.66
 ambiguous_player_rows: 1
-unmatched_player_rows: 1342
+unmatched_player_rows: 1454
 
 Interpretation
 This board is an evidence layer only: Bet365 assist market rows enriched with RotoWire set-piece role shares.
@@ -28,23 +28,29 @@ Top role-matched rows
  - Nadiem Amiri | FSV Mainz vs SC Paderborn 07 | odds 4.5000 | setpiece_last5 93.33 | corners_last5 90.91 | fk_last5 100.0
  - Max Finkgrafe | RB Leipzig vs Borussia Monchengladbach | odds 8.0000 | setpiece_last5 79.31 | corners_last5 75.0 | fk_last5 100.0
  - Kevin Danois | AJ Auxerre vs Angers SCO | odds 5.0000 | setpiece_last5 78.95 | corners_last5 78.95 | fk_last5 0.0
- - Trent Alexander-Arnold | Real Madrid vs Malaga CF | odds 3.0000 | setpiece_last5 78.57 | corners_last5 78.95 | fk_last5 77.78
- - James Garner | AFC Bournemouth vs Everton FC | odds 7.0000 | setpiece_last5 75.0 | corners_last5 72.0 | fk_last5 85.71
- - Pablo Pagis | Paris FC vs OGC Nice | odds 5.5000 | setpiece_last5 72.0 | corners_last5 83.33 | fk_last5 63.64
- - Christopher Trimmel | Union Berlin vs Eintracht Frankfurt | odds 4.3330 | setpiece_last5 71.43 | corners_last5 72.0 | fk_last5 70.0
+ - Trent Alexander-Arnold | Real Madrid vs Malaga CF | odds 2.7500 | setpiece_last5 78.57 | corners_last5 78.95 | fk_last5 77.78
+ - James Garner | AFC Bournemouth vs Everton FC | odds 6.5000 | setpiece_last5 75.0 | corners_last5 72.0 | fk_last5 85.71
+ - Pablo Pagis | Paris FC vs OGC Nice | odds 5.0000 | setpiece_last5 72.0 | corners_last5 83.33 | fk_last5 63.64
+ - Christopher Trimmel | Union Berlin vs Eintracht Frankfurt | odds 4.5000 | setpiece_last5 71.43 | corners_last5 72.0 | fk_last5 70.0
  - Branco van den Boomen | AJ Auxerre vs Angers SCO | odds 7.0000 | setpiece_last5 70.0 | corners_last5 78.57 | fk_last5 50.0
- - Dominik Szoboszlai | Liverpool FC vs Nottingham Forest | odds 4.0000 | setpiece_last5 65.85 | corners_last5 57.69 | fk_last5 80.0
  - Julian Ryerson | Borussia Dortmund vs Hamburger SV | odds 3.4000 | setpiece_last5 65.38 | corners_last5 63.16 | fk_last5 71.43
  - Bruno Fernandes | Manchester United vs Ipswich Town | odds 2.6250 | setpiece_last5 65.38 | corners_last5 59.09 | fk_last5 100.0
+ - Sebastian Szymanski | Stade Rennais FC vs Le Mans FC | odds 3.7500 | setpiece_last5 64.44 | corners_last5 65.79 | fk_last5 66.67
  - Lucas Da Cunha | SSC Napoli vs Como 1907 | odds 7.5000 | setpiece_last5 58.62 | corners_last5 60.0 | fk_last5 50.0
  - Mathias Jensen | Leeds United vs Brentford FC | odds 8.0000 | setpiece_last5 58.62 | corners_last5 57.89 | fk_last5 66.67
  - Jon Ander Olasagasti | Levante UD vs Real Betis Seville | odds 8.5000 | setpiece_last5 58.33 | corners_last5 63.64 | fk_last5 50.0
  - Enzo Fernandez | Chelsea FC vs Brighton & Hove Albion | odds 5.0000 | setpiece_last5 57.69 | corners_last5 57.14 | fk_last5 63.64
- - Andrija Bulatovic | Strasbourg Alsace vs Racing Club De Lens | odds 7.5000 | setpiece_last5 57.14 | corners_last5 56.52 | fk_last5 60.0
+ - Andrija Bulatovic | Strasbourg Alsace vs Racing Club De Lens | odds 7.0000 | setpiece_last5 57.14 | corners_last5 56.52 | fk_last5 60.0
  - Ruben Vargas | Sevilla FC vs Atletico Madrid | odds 5.5000 | setpiece_last5 56.52 | corners_last5 57.14 | fk_last5 55.56
  - Declan Rice | Aston Villa vs Arsenal FC | odds 5.0000 | setpiece_last5 56.52 | corners_last5 35.71 | fk_last5 88.89
 
 Unmatched sample
+ - Che Adams | Sassuolo Calcio vs Torino FC
+ - Alieu Njie | Sassuolo Calcio vs Torino FC
+ - Tino Anjorin | Sassuolo Calcio vs Torino FC
+ - Ali Dembele | Sassuolo Calcio vs Torino FC
+ - Mattia Pellini | Sassuolo Calcio vs Torino FC
+ - Eray Comert | Sassuolo Calcio vs Torino FC
  - Giovanni Simeone | Sassuolo Calcio vs Torino FC
  - Gaetano Oristanio | Sassuolo Calcio vs Torino FC
  - Cesare Casadei | Sassuolo Calcio vs Torino FC
@@ -52,16 +58,10 @@ Unmatched sample
  - Cas Odenthal | Sassuolo Calcio vs Torino FC
  - Ardian Ismajli | Sassuolo Calcio vs Torino FC
  - Kieron Bowie | Sassuolo Calcio vs Torino FC
- - Gabriel Kulla | Sassuolo Calcio vs Torino FC
- - Benjamin Dominguez | Sassuolo Calcio vs Torino FC
- - Luca Moro | Sassuolo Calcio vs Torino FC
  - Kristian Thorstvedt | Sassuolo Calcio vs Torino FC
  - Riccardo Ciervo | Sassuolo Calcio vs Torino FC
- - Sandro Kulenovic | Sassuolo Calcio vs Torino FC
  - Nicholas Pierini | Sassuolo Calcio vs Torino FC
- - Tommaso Gabellini | Sassuolo Calcio vs Torino FC
- - Che Adams | Sassuolo Calcio vs Torino FC
  - Pietro Pellegri | Sassuolo Calcio vs Torino FC
- - Alieu Njie | Sassuolo Calcio vs Torino FC
  - Zakaria Aboukhlal | Sassuolo Calcio vs Torino FC
- - Tino Anjorin | Sassuolo Calcio vs Torino FC
+ - Fabrizio Caligara | Sassuolo Calcio vs Torino FC
+ - Daniel Boloca | Sassuolo Calcio vs Torino FC
