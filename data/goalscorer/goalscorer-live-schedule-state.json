@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-29T15:03:29Z",
+  "updated_at": "2026-08-29T15:17:53Z",
   "reason": "cycle",
   "last_clv_run_at": "2026-08-22T13:43:35Z",
   "leagues": {
@@ -28,10 +28,10 @@
       "last_detail_run_at": "2026-08-20T22:17:29Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "grace",
-      "last_decision": "ran",
-      "last_message": "Ran la-liga in grace tier (cadence 10m, fixtures 1).",
-      "next_kickoff_utc": "2026-08-29T15:00:00Z"
+      "last_tier": "off",
+      "last_decision": "off",
+      "last_message": "Skip la-liga: no upcoming fixtures inside schedule window.",
+      "next_kickoff_utc": ""
     },
     "bundesliga": {
       "last_successful_run_at": "2026-05-16T13:02:45Z",
@@ -48,10 +48,10 @@
       "last_detail_run_at": "2026-08-20T22:17:57Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "lineup",
-      "last_decision": "ran",
-      "last_message": "Ran ligue-1 in lineup tier (cadence 10m, fixtures 1).",
-      "next_kickoff_utc": "2026-08-29T15:15:00Z"
+      "last_tier": "off",
+      "last_decision": "off",
+      "last_message": "Skip ligue-1: no upcoming fixtures inside schedule window.",
+      "next_kickoff_utc": ""
     }
   }
 }
