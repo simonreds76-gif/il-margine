@@ -1,279 +1,6 @@
 {
   "fixtures": [
     {
-      "fotmob_match_id": 5802918,
-      "fotmob_page_url": "/matches/lille-vs-paris-saint-germain/2tqnus#5802918",
-      "home_fotmob_team_id": 8639,
-      "away_fotmob_team_id": 9847,
-      "match_date": "2026-08-28",
-      "kickoff_utc": "2026-08-28T19:00:00Z",
-      "home_team": "Lille",
-      "away_team": "Paris Saint-Germain",
-      "home_status": "Confirmed Lineup",
-      "away_status": "Confirmed Lineup",
-      "lineup_type": "standard",
-      "home_formation": "4-2-3-1",
-      "away_formation": "4-3-3",
-      "home_players": [
-        "Berke Özer",
-        "Tiago Santos",
-        "Nathan Ngoy",
-        "Alexsandro Ribeiro",
-        "Romain Perraud",
-        "Benjamin André",
-        "Nabil Bentaleb",
-        "Ethan Mbappé",
-        "Hákon Arnar Haraldsson",
-        "Félix Correia",
-        "Olivier Giroud"
-      ],
-      "away_players": [
-        "Matvey Safonov",
-        "Achraf Hakimi",
-        "Marquinhos",
-        "Willian Pacho",
-        "Warren Zaïre-Emery",
-        "Vítinha",
-        "Lucas Beraldo",
-        "Fabián Ruiz",
-        "Maghnes Akliouche",
-        "Ferrán Torres",
-        "Désiré Doué"
-      ],
-      "home_starters": [
-        {
-          "name": "Berke Özer",
-          "line_index": -1,
-          "line_size": 1,
-          "role_score": 0,
-          "role_group": "GK",
-          "formation": "4-2-3-1",
-          "position_id": 11
-        },
-        {
-          "name": "Tiago Santos",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 32
-        },
-        {
-          "name": "Nathan Ngoy",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 34
-        },
-        {
-          "name": "Alexsandro Ribeiro",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 36
-        },
-        {
-          "name": "Romain Perraud",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 38
-        },
-        {
-          "name": "Benjamin André",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64
-        },
-        {
-          "name": "Nabil Bentaleb",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 66
-        },
-        {
-          "name": "Ethan Mbappé",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 83
-        },
-        {
-          "name": "Hákon Arnar Haraldsson",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 85
-        },
-        {
-          "name": "Félix Correia",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 87
-        },
-        {
-          "name": "Olivier Giroud",
-          "line_index": 3,
-          "line_size": 1,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-2-3-1",
-          "position_id": 115
-        }
-      ],
-      "away_starters": [
-        {
-          "name": "Matvey Safonov",
-          "line_index": -1,
-          "line_size": 1,
-          "role_score": 0,
-          "role_group": "GK",
-          "formation": "4-3-3",
-          "position_id": 11
-        },
-        {
-          "name": "Achraf Hakimi",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-3-3",
-          "position_id": 32
-        },
-        {
-          "name": "Marquinhos",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-3-3",
-          "position_id": 34
-        },
-        {
-          "name": "Willian Pacho",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-3-3",
-          "position_id": 36
-        },
-        {
-          "name": "Warren Zaïre-Emery",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-3-3",
-          "position_id": 38
-        },
-        {
-          "name": "Vítinha",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 73
-        },
-        {
-          "name": "Lucas Beraldo",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 75
-        },
-        {
-          "name": "Fabián Ruiz",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 77
-        },
-        {
-          "name": "Maghnes Akliouche",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 103
-        },
-        {
-          "name": "Ferrán Torres",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 105
-        },
-        {
-          "name": "Désiré Doué",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 107
-        }
-      ],
-      "home_subs": [
-        "Arnaud Bodart",
-        "Calvin Verdonk",
-        "Isaac Cossier",
-        "Basar Önal",
-        "Ngal Ayel Mukau",
-        "Soriba Diaoune",
-        "Dilane Bakwa",
-        "Gaëtan Perrin",
-        "Osame Sahraoui"
-      ],
-      "away_subs": [
-        "Alessandro Longoni",
-        "Lucas Chevalier",
-        "Ilya Zabarnyi",
-        "Lucas Digne",
-        "Lucas Hernández",
-        "Dro Fernández",
-        "Senny Mayulu",
-        "Khvicha Kvaratskhelia",
-        "Mika Godts"
-      ],
-      "home_unavailable": [
-        "Tanguy Nianzou Kouassi",
-        "Hamza Igamane"
-      ],
-      "away_unavailable": [
-        "João Neves",
-        "Nuno Mendes"
-      ]
-    },
-    {
       "fotmob_match_id": 5802910,
       "fotmob_page_url": "/matches/angers-vs-auxerre/2b2l2f#5802910",
       "home_fotmob_team_id": 8583,
@@ -518,12 +245,10 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "Romain Faivre",
         "Bryan Okoh",
         "Christ Makosso",
         "Marvin Senaya",
         "Sékou Fofana",
-        "Telli Siwe",
         "Assane Dioussé"
       ],
       "away_unavailable": [
@@ -1279,12 +1004,10 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "Julien Duranville",
-        "Khalis Merah"
+        "Julien Duranville"
       ],
       "away_unavailable": [
         "Stephan Zagadou",
-        "Yanis Zouaoui",
         "Felix Mambimbi"
       ]
     },
@@ -1543,7 +1266,6 @@
       "away_unavailable": [
         "Jonathan Gradit",
         "Kyllian Antonio",
-        "Nidal Celik",
         "Samson Baidoo",
         "Jhoanner Chávez",
         "Saud Abdulhamid"
@@ -1579,7 +1301,7 @@
       "away_players": [
         "Jeffrey De Lange",
         "Timothy Weah",
-        "Nayef Aguerd",
+        "CJ Egan-Riley",
         "Geoffrey Kondogbia",
         "Emerson",
         "Himad Abdelli",
@@ -1710,7 +1432,7 @@
           "position_id": 32
         },
         {
-          "name": "Nayef Aguerd",
+          "name": "CJ Egan-Riley",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1796,8 +1518,8 @@
       "home_unavailable": [
         "Edan Diop",
         "Mohammed Salisu",
-        "Takumi Minamino",
         "Ansu Fati",
+        "Takumi Minamino",
         "Folarin Balogun",
         "Matthis Abline"
       ],
@@ -1828,8 +1550,8 @@
         "Rudy Matondo",
         "Pierre Lees-Melou",
         "Ilan Kebbal",
+        "Pablo Pagis",
         "Moses Simon",
-        "Luca Koleosho",
         "Lassine Sinayoko"
       ],
       "away_players": [
@@ -1843,7 +1565,7 @@
         "Melvin Bard",
         "Gauthier Hein",
         "Sofiane Diop",
-        "Zoumana Diallo"
+        "Elye Wahi"
       ],
       "home_starters": [
         {
@@ -1919,7 +1641,7 @@
           "position_id": 83
         },
         {
-          "name": "Moses Simon",
+          "name": "Pablo Pagis",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1928,7 +1650,7 @@
           "position_id": 85
         },
         {
-          "name": "Luca Koleosho",
+          "name": "Moses Simon",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -2038,7 +1760,7 @@
           "position_id": 86
         },
         {
-          "name": "Zoumana Diallo",
+          "name": "Elye Wahi",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -2072,7 +1794,7 @@
       "away_status": "FotMob Expected XI",
       "lineup_type": "predicted",
       "home_formation": "4-3-3",
-      "away_formation": "3-4-3",
+      "away_formation": "3-5-2",
       "home_players": [
         "Brice Samba",
         "Przemyslaw Frankowski",
@@ -2082,7 +1804,7 @@
         "Sebastian Szymanski",
         "Valentin Rongier",
         "Adrien Thomasson",
-        "Mousa Tamari",
+        "Ludovic Blas",
         "Estéban Lepaul",
         "Issa Soumaré"
       ],
@@ -2090,14 +1812,14 @@
         "Nicolas Kocik",
         "Noa Boissé",
         "Théo Eyoum",
-        "Raúl Torrente",
+        "Harold Voyer",
         "Lucas Buadés",
-        "Adil Bourabaa",
+        "Billal Brahimi",
         "Alexandre Lauray",
+        "Antoine Rabillard",
         "Yasser Larouci",
         "Louis Mafouta",
-        "Dame Gueye",
-        "Antoine Rabillard"
+        "Dame Gueye"
       ],
       "home_starters": [
         {
@@ -2173,7 +1895,7 @@
           "position_id": 77
         },
         {
-          "name": "Mousa Tamari",
+          "name": "Ludovic Blas",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -2207,7 +1929,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-3",
+          "formation": "3-5-2",
           "position_id": 11
         },
         {
@@ -2216,7 +1938,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-3",
+          "formation": "3-5-2",
           "position_id": 33
         },
         {
@@ -2225,80 +1947,80 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-3",
+          "formation": "3-5-2",
           "position_id": 35
         },
         {
-          "name": "Raúl Torrente",
+          "name": "Harold Voyer",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-3",
+          "formation": "3-5-2",
           "position_id": 37
         },
         {
           "name": "Lucas Buadés",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-3",
-          "position_id": 72
+          "formation": "3-5-2",
+          "position_id": 71
         },
         {
-          "name": "Adil Bourabaa",
+          "name": "Billal Brahimi",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-3",
-          "position_id": 74
+          "formation": "3-5-2",
+          "position_id": 73
         },
         {
           "name": "Alexandre Lauray",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-3",
-          "position_id": 76
+          "formation": "3-5-2",
+          "position_id": 75
+        },
+        {
+          "name": "Antoine Rabillard",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 77
         },
         {
           "name": "Yasser Larouci",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-3",
-          "position_id": 78
+          "formation": "3-5-2",
+          "position_id": 79
         },
         {
           "name": "Louis Mafouta",
           "line_index": 2,
-          "line_size": 3,
+          "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-3",
-          "position_id": 103
+          "formation": "3-5-2",
+          "position_id": 104
         },
         {
           "name": "Dame Gueye",
           "line_index": 2,
-          "line_size": 3,
+          "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-3",
-          "position_id": 105
-        },
-        {
-          "name": "Antoine Rabillard",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-4-3",
-          "position_id": 107
+          "formation": "3-5-2",
+          "position_id": 106
         }
       ],
       "home_subs": [],
