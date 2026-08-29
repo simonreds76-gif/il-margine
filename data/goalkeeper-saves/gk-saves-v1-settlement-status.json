@@ -1,8 +1,10 @@
 {
   "api_errors": [
+    "bug: This is on our side, please report us this bug on https://dashboard.api-football.com",
+    "error: 5xEr",
     "plan: Free plans do not have access to this season, try from 2022 to 2024."
   ],
-  "deferred_not_due": 0,
+  "deferred_not_due": 3,
   "details": [
     {
       "detail": "plan: Free plans do not have access to this season, try from 2022 to 2024.",
@@ -13,7 +15,7 @@
       "signal_id": "72221164|anton\u00edn kinsky|4.5|over"
     },
     {
-      "detail": "plan: Free plans do not have access to this season, try from 2022 to 2024.",
+      "detail": "bug: This is on our side, please report us this bug on https://dashboard.api-football.com; error: 5xEr",
       "goalkeeper": "Alisson Becker",
       "match": "Newcastle United vs Liverpool FC",
       "match_date": "2026-08-23",
@@ -21,7 +23,7 @@
       "signal_id": "72221170|alisson becker|4.5|over"
     },
     {
-      "detail": "plan: Free plans do not have access to this season, try from 2022 to 2024.",
+      "detail": "bug: This is on our side, please report us this bug on https://dashboard.api-football.com; error: 5xEr",
       "goalkeeper": "Alex Remiro",
       "match": "Real Betis Seville vs Real Sociedad San Sebastian",
       "match_date": "2026-08-21",
@@ -93,10 +95,10 @@
       "signal_id": "71944902|david de gea|6.5|over"
     }
   ],
-  "generated_at": "2026-08-28T20:48:51Z",
+  "generated_at": "2026-08-29T14:37:12Z",
   "max_requests": 10,
   "pending_due": 11,
-  "pending_total": 11,
+  "pending_total": 14,
   "reason_counts": {
     "fixture_api_error": 11
   },

@@ -4,29 +4,30 @@
   "current": {
     "blocked_lines": 25,
     "blocker_counts": {
-      "goalkeeper_team_unresolved": 25,
+      "goalkeeper_team_unresolved": 15,
       "missing_lineup": 10,
       "missing_priced_edge": 25,
-      "player_not_starting_goalkeeper": 15
+      "missing_registered_feature": 10,
+      "player_not_starting_goalkeeper": 5
     },
     "candidate_board_preserved": false,
-    "eligible_lines": 0,
-    "priced_lines": 27,
+    "eligible_lines": 3,
+    "priced_lines": 44,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 5
+    "value_ladder_lines": 15
   },
   "evidence": {
     "clv": null,
     "clv_matched": 0,
-    "pending": 11,
+    "pending": 14,
     "pnl_units": 0,
     "roi": null,
     "settled": 0,
-    "signals": 11,
+    "signals": 14,
     "true_close_coverage": null
   },
-  "generated_at": "2026-08-29T03:23:04Z",
+  "generated_at": "2026-08-29T14:37:41Z",
   "live_routing": false,
   "promotion": {
     "mean_true_close_clv_required": 0.005,
