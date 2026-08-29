@@ -9,9 +9,9 @@
       "kickoff_utc": "2026-08-29T15:00:00Z",
       "home_team": "Levante",
       "away_team": "Real Betis",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -21,7 +21,7 @@
         "Aïssa Mandi",
         "Manuel Sánchez",
         "Jon Olasagasti",
-        "Hugo Sotelo",
+        "Oriol Rey",
         "Roger Brugué",
         "Enzo Bardeli",
         "Thiago Fernández",
@@ -36,9 +36,9 @@
         "Marc Roca",
         "Facundo Bernal",
         "Antony",
-        "Pablo Fornals",
+        "Isco",
         "Rodrigo Riquelme",
-        "Juan Hernández"
+        "Troy Parrott"
       ],
       "home_starters": [
         {
@@ -96,7 +96,7 @@
           "position_id": 64
         },
         {
-          "name": "Hugo Sotelo",
+          "name": "Oriol Rey",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -215,7 +215,7 @@
           "position_id": 83
         },
         {
-          "name": "Pablo Fornals",
+          "name": "Isco",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -233,7 +233,7 @@
           "position_id": 87
         },
         {
-          "name": "Juan Hernández",
+          "name": "Troy Parrott",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -242,8 +242,34 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Pablo Campos",
+        "Ifeanyi Ndukwe",
+        "Jeremy Toljan",
+        "Jorge Cabello",
+        "Marc Santos",
+        "Carlos Álvarez",
+        "Dani Requena",
+        "Hugo Sotelo",
+        "Etta Eyong",
+        "Paco Cortés",
+        "Víctor García",
+        "Yanis Musuayi"
+      ],
+      "away_subs": [
+        "Alvaro de Pablo",
+        "Manu González",
+        "Ángel Ortiz",
+        "Diego Llorente",
+        "Valentín Gómez",
+        "Álvaro Fidalgo",
+        "Iker Losada",
+        "Nelson Deossa",
+        "Pablo Fornals",
+        "Abdessamad Ezzalzouli",
+        "Juan Hernández",
+        "Pablo García"
+      ],
       "home_unavailable": [
         "Álex Primo"
       ],
