@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-29T18:50:15.216639Z",
+  "generated_at": "2026-08-29T21:42:59.803775Z",
   "source_file": [
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
@@ -34,20 +34,20 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 18,
-  "signals_qualifying": 5,
+  "fixtures_evaluated": 13,
+  "signals_qualifying": 2,
   "safety_exclusions": {
-    "lineup_not_public_quality": 4,
-    "model_probability_below_floor": 8,
-    "market_odds_above_cap": 7,
-    "model_market_gap_gt_10pp": 4
+    "model_probability_below_floor": 7,
+    "market_odds_above_cap": 2,
+    "model_market_gap_gt_10pp": 3,
+    "lineup_not_public_quality": 3
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 4,
+    "eligible_rows": 3,
     "added_by_league": {
       "bundesliga": 1,
       "epl": 1,
-      "ligue-1": 2
+      "ligue-1": 1
     },
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
@@ -56,309 +56,8 @@
     "bundesliga",
     "ligue-1"
   ],
-  "featured_signal_id": "20260829-danny-namaso-4917594e51",
+  "featured_signal_id": "20260830-sofiane-diop-83b47762a4",
   "signals": [
-    {
-      "id": "20260829-danny-namaso-4917594e51",
-      "match": {
-        "home_team": "AJ Auxerre",
-        "away_team": "Angers SCO",
-        "league": "ligue-1",
-        "league_display": "Ligue 1",
-        "league_logo_path": "/league-logos/ligue-1.png",
-        "kickoff_utc": "2026-08-29T18:45:00Z",
-        "kickoff_display": "Sat 29 Aug 19:45 UK",
-        "fotmob_match_id": "5802910",
-        "fotmob_page_url": "/matches/angers-vs-auxerre/2b2l2f#5802910",
-        "lineup_type": "confirmed",
-        "venue": ""
-      },
-      "player": {
-        "name": "Danny Namaso",
-        "team": "Auxerre",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/ligue-1/auxerre.png",
-        "team_primary_color": "#f8fafc",
-        "team_secondary_color": "#2563eb",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 35.4,
-        "fair_odds": 2.82
-      },
-      "market_data": {
-        "best_odds": 3.4,
-        "best_book": "Bet365",
-        "implied_chance_pct": 29.4
-      },
-      "edge": {
-        "price_gap_pp": 6.0,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Good",
-          "percentile": 65
-        },
-        "share_of_team_chances_pct": 25,
-        "share_of_team_chances_percentile": 96,
-        "team_attacking_outlook": {
-          "tier": "Positive",
-          "percentile": 55
-        },
-        "recent_team_form": {
-          "tier": "Quiet",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-08-22",
-          "xg_for_avg": 1.32,
-          "xg_against_avg": 2.55,
-          "xgd_per90": -1.22,
-          "shots_for_avg": 11.4,
-          "shots_against_avg": 11.0,
-          "sot_for_avg": 4.8,
-          "sot_against_avg": 5.4,
-          "corners_for_avg": 5.2,
-          "corners_against_avg": 4.2
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 86
-        },
-        "opponent_recent_defence": {
-          "tier": "High",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-08-23",
-          "xg_for_avg": 1.37,
-          "xg_against_avg": 2.19,
-          "xgd_per90": -0.82,
-          "shots_for_avg": 10.8,
-          "shots_against_avg": 16.0,
-          "sot_for_avg": 2.4,
-          "sot_against_avg": 7.8,
-          "corners_for_avg": 4.4,
-          "corners_against_avg": 3.8
-        },
-        "fixture_boost_pct": 18,
-        "projected_minutes": 85,
-        "penalty_role": "Primary",
-        "role_adjustment_factor": 1.0312,
-        "role_adjustment_reason": "confirmed_role_delta=+1;usual=AMC;today=FW;weight=0.62",
-        "lineup_confidence": "Confirmed starter"
-      },
-      "confidence_tier": "High",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "Opponent defensive profile is a positive matchup",
-        "The fixture profile adds to his scoring case",
-        "Confirmed XI shows a more advanced scoring role",
-        "Primary penalty role adds a clear scoring route"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260829-amine-sbai-d5ac35442e",
-      "match": {
-        "home_team": "AJ Auxerre",
-        "away_team": "Angers SCO",
-        "league": "ligue-1",
-        "league_display": "Ligue 1",
-        "league_logo_path": "/league-logos/ligue-1.png",
-        "kickoff_utc": "2026-08-29T18:45:00Z",
-        "kickoff_display": "Sat 29 Aug 19:45 UK",
-        "fotmob_match_id": "5802910",
-        "fotmob_page_url": "/matches/angers-vs-auxerre/2b2l2f#5802910",
-        "lineup_type": "confirmed",
-        "venue": ""
-      },
-      "player": {
-        "name": "Amine Sbai",
-        "team": "Angers",
-        "position": "AM",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/ligue-1/angers.png",
-        "team_primary_color": "#f8fafc",
-        "team_secondary_color": "#111827",
-        "team_shirt_pattern": "vertical-stripes"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 29.4,
-        "fair_odds": 3.4
-      },
-      "market_data": {
-        "best_odds": 4.5,
-        "best_book": "Bet365",
-        "implied_chance_pct": 22.2
-      },
-      "edge": {
-        "price_gap_pp": 7.2,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Good",
-          "percentile": 70
-        },
-        "share_of_team_chances_pct": 26,
-        "share_of_team_chances_percentile": 97,
-        "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 14
-        },
-        "recent_team_form": {
-          "tier": "Quiet",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-08-23",
-          "xg_for_avg": 1.37,
-          "xg_against_avg": 2.19,
-          "xgd_per90": -0.82,
-          "shots_for_avg": 10.8,
-          "shots_against_avg": 16.0,
-          "sot_for_avg": 2.4,
-          "sot_against_avg": 7.8,
-          "corners_for_avg": 4.4,
-          "corners_against_avg": 3.8
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 84
-        },
-        "opponent_recent_defence": {
-          "tier": "High",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-08-22",
-          "xg_for_avg": 1.32,
-          "xg_against_avg": 2.55,
-          "xgd_per90": -1.22,
-          "shots_for_avg": 11.4,
-          "shots_against_avg": 11.0,
-          "sot_for_avg": 4.8,
-          "sot_against_avg": 5.4,
-          "corners_for_avg": 5.2,
-          "corners_against_avg": 4.2
-        },
-        "fixture_boost_pct": 32,
-        "projected_minutes": 85,
-        "penalty_role": "Not on penalties",
-        "role_adjustment_factor": 0.9563,
-        "role_adjustment_reason": "confirmed_role_delta=-1;usual=FW;today=AM;weight=0.87",
-        "lineup_confidence": "Confirmed starter"
-      },
-      "confidence_tier": "High",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Opponent defensive profile is a positive matchup",
-        "The fixture profile adds to his scoring case"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260829-jim-allevinah-432b1bc10a",
-      "match": {
-        "home_team": "AJ Auxerre",
-        "away_team": "Angers SCO",
-        "league": "ligue-1",
-        "league_display": "Ligue 1",
-        "league_logo_path": "/league-logos/ligue-1.png",
-        "kickoff_utc": "2026-08-29T18:45:00Z",
-        "kickoff_display": "Sat 29 Aug 19:45 UK",
-        "fotmob_match_id": "5802910",
-        "fotmob_page_url": "/matches/angers-vs-auxerre/2b2l2f#5802910",
-        "lineup_type": "confirmed",
-        "venue": ""
-      },
-      "player": {
-        "name": "Jim Allevinah",
-        "team": "Angers",
-        "position": "AM",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/ligue-1/angers.png",
-        "team_primary_color": "#f8fafc",
-        "team_secondary_color": "#111827",
-        "team_shirt_pattern": "vertical-stripes"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 26.6,
-        "fair_odds": 3.76
-      },
-      "market_data": {
-        "best_odds": 5.0,
-        "best_book": "Bet365",
-        "implied_chance_pct": 20.0
-      },
-      "edge": {
-        "price_gap_pp": 6.6,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 84
-        },
-        "share_of_team_chances_pct": 26,
-        "share_of_team_chances_percentile": 97,
-        "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 14
-        },
-        "recent_team_form": {
-          "tier": "Quiet",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-08-23",
-          "xg_for_avg": 1.37,
-          "xg_against_avg": 2.19,
-          "xgd_per90": -0.82,
-          "shots_for_avg": 10.8,
-          "shots_against_avg": 16.0,
-          "sot_for_avg": 2.4,
-          "sot_against_avg": 7.8,
-          "corners_for_avg": 4.4,
-          "corners_against_avg": 3.8
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 84
-        },
-        "opponent_recent_defence": {
-          "tier": "High",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-08-22",
-          "xg_for_avg": 1.32,
-          "xg_against_avg": 2.55,
-          "xgd_per90": -1.22,
-          "shots_for_avg": 11.4,
-          "shots_against_avg": 11.0,
-          "sot_for_avg": 4.8,
-          "sot_against_avg": 5.4,
-          "corners_for_avg": 5.2,
-          "corners_against_avg": 4.2
-        },
-        "fixture_boost_pct": 9,
-        "projected_minutes": 85,
-        "penalty_role": "Not on penalties",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Confirmed starter"
-      },
-      "confidence_tier": "High",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Opponent defensive profile is a positive matchup"
-      ],
-      "risk_flags": []
-    },
     {
       "id": "20260830-sofiane-diop-83b47762a4",
       "match": {
@@ -401,13 +100,13 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 89
+          "percentile": 88
         },
         "share_of_team_chances_pct": 24,
         "share_of_team_chances_percentile": 96,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 18
+          "percentile": 14
         },
         "recent_team_form": {
           "tier": "Average",
@@ -425,8 +124,8 @@
           "corners_against_avg": 6.4
         },
         "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 48
+          "tier": "Positive",
+          "percentile": 56
         },
         "opponent_recent_defence": {
           "tier": "Average",
@@ -500,13 +199,13 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 84
+          "percentile": 82
         },
         "share_of_team_chances_pct": 25,
-        "share_of_team_chances_percentile": 96,
+        "share_of_team_chances_percentile": 97,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 24
+          "percentile": 23
         },
         "recent_team_form": {
           "tier": "Quiet",
@@ -525,7 +224,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 64
+          "percentile": 74
         },
         "opponent_recent_defence": {
           "tier": "High",
