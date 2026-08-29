@@ -1,9 +1,41 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-29T07:08:49Z",
+  "generated_at": "2026-08-29T14:39:12Z",
   "league": "la-liga",
-  "row_count": 1,
+  "row_count": 6,
   "rows": [
+    {
+      "team": "Barcelona",
+      "team_key": "barcelona",
+      "player_name": "Raphinha",
+      "player_key": "raphinha",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-08-23"
+    },
+    {
+      "team": "Málaga",
+      "team_key": "malaga",
+      "player_name": "Chupe",
+      "player_key": "chupe",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-08-24"
+    },
     {
       "team": "Osasuna",
       "team_key": "osasuna",
@@ -19,6 +51,54 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-08-27"
+    },
+    {
+      "team": "Racing Santander",
+      "team_key": "racing santander",
+      "player_name": "Andrés Martin",
+      "player_key": "andr s martin",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-08-23"
+    },
+    {
+      "team": "Villarreal",
+      "team_key": "villarreal",
+      "player_name": "Georges Mikautadze",
+      "player_key": "georges mikautadze",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-08-23"
+    },
+    {
+      "team": "Villarreal",
+      "team_key": "villarreal",
+      "player_name": "Gerard Moreno",
+      "player_key": "gerard moreno",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-08-23"
     }
   ]
 }
