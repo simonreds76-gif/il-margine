@@ -523,20 +523,20 @@
       "kickoff_utc": "2026-08-30T15:00:00Z",
       "home_team": "Real Madrid",
       "away_team": "Málaga",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Thibaut Courtois",
-        "Denzel Dumfries",
-        "Ibrahima Konaté",
+        "Trent Alexander-Arnold",
+        "Antonio Rüdiger",
         "Dean Huijsen",
         "Marc Cucurella",
-        "Bernardo Silva",
+        "Eduardo Camavinga",
         "Federico Valverde",
-        "Arda Güler",
+        "Brahim Díaz",
         "Jude Bellingham",
         "Vinícius Júnior",
         "Kylian Mbappé"
@@ -547,7 +547,7 @@
         "Ángel Recio",
         "Einar Galilea",
         "Rafita",
-        "Dani Lorenzo",
+        "Rafa Rodríguez",
         "Izan Merino",
         "David Larrubia",
         "Carlos Dotor",
@@ -565,7 +565,7 @@
           "position_id": 11
         },
         {
-          "name": "Denzel Dumfries",
+          "name": "Trent Alexander-Arnold",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -574,7 +574,7 @@
           "position_id": 32
         },
         {
-          "name": "Ibrahima Konaté",
+          "name": "Antonio Rüdiger",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -601,7 +601,7 @@
           "position_id": 38
         },
         {
-          "name": "Bernardo Silva",
+          "name": "Eduardo Camavinga",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -619,7 +619,7 @@
           "position_id": 66
         },
         {
-          "name": "Arda Güler",
+          "name": "Brahim Díaz",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -702,7 +702,7 @@
           "position_id": 38
         },
         {
-          "name": "Dani Lorenzo",
+          "name": "Rafa Rodríguez",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -756,8 +756,33 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Andriy Lunin",
+        "Javi Navarro",
+        "Alvaro Carreras",
+        "Ibrahima Konaté",
+        "Mario Rivas",
+        "Arda Güler",
+        "Bernardo Silva",
+        "Denzel Dumfries",
+        "Jorge Cestero",
+        "Alexis Ciria",
+        "Carlos Espí",
+        "Yan Diomande"
+      ],
+      "away_subs": [
+        "Carlos López",
+        "Álex Pastor",
+        "José Salinas",
+        "Haitam Abaida",
+        "Joseph Otu",
+        "Julen Lobete",
+        "Pablo Martínez",
+        "Ramón Enríquez",
+        "Eneko Jauregi",
+        "Juan Cruz",
+        "Juan Fernandez"
+      ],
       "home_unavailable": [
         "Éder Militao",
         "Ferland Mendy",
@@ -1279,6 +1304,8 @@
         "Valentin Rosier"
       ],
       "away_unavailable": [
+        "Abdel Abqar",
+        "Mario Martín",
         "Christantus Uche",
         "Juanmi"
       ]

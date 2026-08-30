@@ -272,15 +272,15 @@
       "home_players": [
         "Kevin Trapp",
         "Adama Camara",
-        "Diego Coppola",
         "Samir Chergui",
+        "Diego Coppola",
         "Otávio",
         "Pierre Lees-Melou",
         "Maxime Lopez",
-        "Pablo Pagis",
         "Ilan Kebbal",
-        "Lassine Sinayoko",
-        "Moses Simon"
+        "Pablo Pagis",
+        "Moses Simon",
+        "Lassine Sinayoko"
       ],
       "away_players": [
         "Yéhvann Diouf",
@@ -315,7 +315,7 @@
           "position_id": 32
         },
         {
-          "name": "Diego Coppola",
+          "name": "Samir Chergui",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -324,7 +324,7 @@
           "position_id": 34
         },
         {
-          "name": "Samir Chergui",
+          "name": "Diego Coppola",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -360,7 +360,7 @@
           "position_id": 66
         },
         {
-          "name": "Pablo Pagis",
+          "name": "Ilan Kebbal",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -369,7 +369,7 @@
           "position_id": 83
         },
         {
-          "name": "Ilan Kebbal",
+          "name": "Pablo Pagis",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -378,7 +378,7 @@
           "position_id": 85
         },
         {
-          "name": "Lassine Sinayoko",
+          "name": "Moses Simon",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -387,7 +387,7 @@
           "position_id": 87
         },
         {
-          "name": "Moses Simon",
+          "name": "Lassine Sinayoko",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -498,17 +498,27 @@
         }
       ],
       "home_subs": [
-        "Obed Nkambadio",
+        "Rudy Matondo",
+        "Patrick Zabi",
         "Hamari Traoré",
+        "Vincent Marchetti",
+        "Obed Nkambadio",
         "Mamadou Mbow",
         "Thibault De Smet",
-        "Patrick Zabi",
-        "Rudy Matondo",
-        "Vincent Marchetti",
         "Jean-Philippe Krasso",
         "Omar Sissoko"
       ],
-      "away_subs": [],
+      "away_subs": [
+        "Elye Wahi",
+        "Isak Jansson",
+        "Hamza Koutoune",
+        "Djelan Morana",
+        "Teddy Boulhendi",
+        "Antoine Mendy",
+        "Aboulaye Camara",
+        "Everton",
+        "Zoumana Diallo"
+      ],
       "home_unavailable": [
         "Nhoa Sangui",
         "Jonathan Ikoné"
@@ -528,40 +538,40 @@
       "kickoff_utc": "2026-08-30T15:15:00Z",
       "home_team": "Rennes",
       "away_team": "Le Mans",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-3-3",
       "away_formation": "3-5-2",
       "home_players": [
-        "Brice Samba",
+        "Nicolas Lemaître",
         "Przemyslaw Frankowski",
         "Charlie Cresswell",
         "Abdelhamid Aït Boudlal",
-        "Mahamadou Nagida",
+        "Quentin Merlin",
         "Sebastian Szymanski",
         "Valentin Rongier",
         "Adrien Thomasson",
-        "Ludovic Blas",
+        "Mousa Tamari",
         "Estéban Lepaul",
         "Issa Soumaré"
       ],
       "away_players": [
         "Nicolas Kocik",
-        "Noa Boissé",
         "Théo Eyoum",
+        "Noa Boissé",
         "Harold Voyer",
         "Lucas Buadés",
-        "Billal Brahimi",
+        "Lucas Bretelle",
         "Alexandre Lauray",
-        "Antoine Rabillard",
-        "Yasser Larouci",
-        "Louis Mafouta",
-        "Dame Gueye"
+        "Adil Bourabaa",
+        "Lucas Calodat",
+        "Dame Gueye",
+        "Louis Mafouta"
       ],
       "home_starters": [
         {
-          "name": "Brice Samba",
+          "name": "Nicolas Lemaître",
           "line_index": -1,
           "line_size": 1,
           "role_score": 0,
@@ -597,7 +607,7 @@
           "position_id": 36
         },
         {
-          "name": "Mahamadou Nagida",
+          "name": "Quentin Merlin",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -633,7 +643,7 @@
           "position_id": 77
         },
         {
-          "name": "Ludovic Blas",
+          "name": "Mousa Tamari",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -671,7 +681,7 @@
           "position_id": 11
         },
         {
-          "name": "Noa Boissé",
+          "name": "Théo Eyoum",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -680,7 +690,7 @@
           "position_id": 33
         },
         {
-          "name": "Théo Eyoum",
+          "name": "Noa Boissé",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -707,7 +717,7 @@
           "position_id": 71
         },
         {
-          "name": "Billal Brahimi",
+          "name": "Lucas Bretelle",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -725,7 +735,7 @@
           "position_id": 75
         },
         {
-          "name": "Antoine Rabillard",
+          "name": "Adil Bourabaa",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -734,7 +744,7 @@
           "position_id": 77
         },
         {
-          "name": "Yasser Larouci",
+          "name": "Lucas Calodat",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -743,7 +753,7 @@
           "position_id": 79
         },
         {
-          "name": "Louis Mafouta",
+          "name": "Dame Gueye",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -752,7 +762,7 @@
           "position_id": 104
         },
         {
-          "name": "Dame Gueye",
+          "name": "Louis Mafouta",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -761,11 +771,34 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
-      "home_unavailable": [],
+      "home_subs": [
+        "Kilian Belazzoug",
+        "Anthony Rouault",
+        "Bryan Reynolds",
+        "Mahamadou Nagida",
+        "Ludovic Blas",
+        "Mahdi Camara",
+        "Arnaud Nordin",
+        "Eliezer Mayenda",
+        "Henrick Do Marcolino"
+      ],
+      "away_subs": [
+        "Ewan Hatfout",
+        "Raúl Torrente",
+        "Billal Brahimi",
+        "Daouda Traoré",
+        "Djibril Sidibé",
+        "Jean Vercruysse",
+        "Milan Robin",
+        "Antoine Rabillard",
+        "William Harhouz"
+      ],
+      "home_unavailable": [
+        "Brice Samba"
+      ],
       "away_unavailable": [
         "Erwan Colas",
+        "Yasser Larouci",
         "Samuel Yohou"
       ]
     }
