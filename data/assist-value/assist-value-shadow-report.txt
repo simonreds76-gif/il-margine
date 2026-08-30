@@ -1,5 +1,5 @@
 Assist Value Shadow Report
-generated_at_utc: 2026-08-29T13:09:46Z
+generated_at_utc: 2026-08-30T12:49:17Z
 
 Status
 shadow_status: ENABLED_RESEARCH_ONLY
@@ -8,15 +8,15 @@ model_status: NOT_FITTED
 fair_odds_status: NOT_AUTHORISED
 
 Inputs
-raw_odds_rows_loaded: 1984
+raw_odds_rows_loaded: 881
 role_players_loaded: 1030
 
 Join
-shadow_rows_assist_only: 1984
-role_matched_rows: 529
-role_match_rate_pct: 26.66
+shadow_rows_assist_only: 881
+role_matched_rows: 248
+role_match_rate_pct: 28.15
 ambiguous_player_rows: 1
-unmatched_player_rows: 1454
+unmatched_player_rows: 632
 
 Interpretation
 This board is an evidence layer only: Bet365 assist market rows enriched with RotoWire set-piece role shares.
@@ -25,43 +25,43 @@ It is not a betting model, not a public Fair Odds Lab lane, and not a value sign
 Top role-matched rows
  - Luis Milla | SSC Napoli vs Como 1907 | odds 4.5000 | setpiece_last5 96.88 | corners_last5 100.0 | fk_last5 100.0
  - Gauthier Hein | Paris FC vs OGC Nice | odds 6.5000 | setpiece_last5 94.12 | corners_last5 90.91 | fk_last5 100.0
- - Nadiem Amiri | FSV Mainz vs SC Paderborn 07 | odds 4.5000 | setpiece_last5 93.33 | corners_last5 90.91 | fk_last5 100.0
- - Max Finkgrafe | RB Leipzig vs Borussia Monchengladbach | odds 8.0000 | setpiece_last5 79.31 | corners_last5 75.0 | fk_last5 100.0
- - Kevin Danois | AJ Auxerre vs Angers SCO | odds 5.0000 | setpiece_last5 78.95 | corners_last5 78.95 | fk_last5 0.0
- - Trent Alexander-Arnold | Real Madrid vs Malaga CF | odds 2.7500 | setpiece_last5 78.57 | corners_last5 78.95 | fk_last5 77.78
- - James Garner | AFC Bournemouth vs Everton FC | odds 6.5000 | setpiece_last5 75.0 | corners_last5 72.0 | fk_last5 85.71
+ - Trent Alexander-Arnold | Real Madrid vs Malaga CF | odds 2.6250 | setpiece_last5 78.57 | corners_last5 78.95 | fk_last5 77.78
  - Pablo Pagis | Paris FC vs OGC Nice | odds 5.0000 | setpiece_last5 72.0 | corners_last5 83.33 | fk_last5 63.64
- - Christopher Trimmel | Union Berlin vs Eintracht Frankfurt | odds 4.5000 | setpiece_last5 71.43 | corners_last5 72.0 | fk_last5 70.0
- - Branco van den Boomen | AJ Auxerre vs Angers SCO | odds 7.0000 | setpiece_last5 70.0 | corners_last5 78.57 | fk_last5 50.0
- - Julian Ryerson | Borussia Dortmund vs Hamburger SV | odds 3.4000 | setpiece_last5 65.38 | corners_last5 63.16 | fk_last5 71.43
- - Bruno Fernandes | Manchester United vs Ipswich Town | odds 2.6250 | setpiece_last5 65.38 | corners_last5 59.09 | fk_last5 100.0
+ - Bruno Fernandes | Manchester United vs Ipswich Town | odds 2.5000 | setpiece_last5 65.38 | corners_last5 59.09 | fk_last5 100.0
  - Sebastian Szymanski | Stade Rennais FC vs Le Mans FC | odds 3.7500 | setpiece_last5 64.44 | corners_last5 65.79 | fk_last5 66.67
  - Lucas Da Cunha | SSC Napoli vs Como 1907 | odds 7.5000 | setpiece_last5 58.62 | corners_last5 60.0 | fk_last5 50.0
- - Mathias Jensen | Leeds United vs Brentford FC | odds 8.0000 | setpiece_last5 58.62 | corners_last5 57.89 | fk_last5 66.67
- - Jon Ander Olasagasti | Levante UD vs Real Betis Seville | odds 8.5000 | setpiece_last5 58.33 | corners_last5 63.64 | fk_last5 50.0
+ - Mathias Jensen | Leeds United vs Brentford FC | odds 7.5000 | setpiece_last5 58.62 | corners_last5 57.89 | fk_last5 66.67
  - Enzo Fernandez | Chelsea FC vs Brighton & Hove Albion | odds 5.0000 | setpiece_last5 57.69 | corners_last5 57.14 | fk_last5 63.64
- - Andrija Bulatovic | Strasbourg Alsace vs Racing Club De Lens | odds 7.0000 | setpiece_last5 57.14 | corners_last5 56.52 | fk_last5 60.0
- - Ruben Vargas | Sevilla FC vs Atletico Madrid | odds 5.5000 | setpiece_last5 56.52 | corners_last5 57.14 | fk_last5 55.56
  - Declan Rice | Aston Villa vs Arsenal FC | odds 5.0000 | setpiece_last5 56.52 | corners_last5 35.71 | fk_last5 88.89
+ - Pascal Gross | Chelsea FC vs Brighton & Hove Albion | odds 7.0000 | setpiece_last5 55.56 | corners_last5 48.15 | fk_last5 77.78
+ - Anton Stach | Leeds United vs Brentford FC | odds 6.5000 | setpiece_last5 54.84 | corners_last5 61.9 | fk_last5 44.44
+ - Giacomo Raspadori | Atalanta BC vs Bologna FC | odds 6.5000 | setpiece_last5 53.85 | corners_last5 54.55 | fk_last5 50.0
+ - Fabian Rieder | FC Augsburg vs Schalke 04 | odds 5.5000 | setpiece_last5 53.12 | corners_last5 41.67 | fk_last5 85.71
+ - Bruno Guimaraes | Aston Villa vs Arsenal FC | odds 6.5000 | setpiece_last5 52.17 | corners_last5 50.0 | fk_last5 55.56
+ - Jan-Niklas Beste | SC Freiburg vs Werder Bremen | odds 4.3330 | setpiece_last5 50.0 | corners_last5 75.0 | fk_last5 30.0
+ - Paulo Dybala | US Lecce vs AS Roma | odds 3.7500 | setpiece_last5 50.0 | corners_last5 52.0 | fk_last5 54.55
+ - Marcus Rashford | Manchester United vs Ipswich Town | odds 4.0000 | setpiece_last5 44.44 | corners_last5 42.86 | fk_last5 50.0
+ - Vincenzo Grifo | SC Freiburg vs Werder Bremen | odds 3.7500 | setpiece_last5 44.44 | corners_last5 25.0 | fk_last5 60.0
+ - Antonino Gallo | US Lecce vs AS Roma | odds 8.5000 | setpiece_last5 42.86 | corners_last5 57.14 | fk_last5 14.29
 
 Unmatched sample
- - Che Adams | Sassuolo Calcio vs Torino FC
- - Alieu Njie | Sassuolo Calcio vs Torino FC
- - Tino Anjorin | Sassuolo Calcio vs Torino FC
- - Ali Dembele | Sassuolo Calcio vs Torino FC
- - Mattia Pellini | Sassuolo Calcio vs Torino FC
- - Eray Comert | Sassuolo Calcio vs Torino FC
- - Giovanni Simeone | Sassuolo Calcio vs Torino FC
- - Gaetano Oristanio | Sassuolo Calcio vs Torino FC
- - Cesare Casadei | Sassuolo Calcio vs Torino FC
- - Nemanja Matic | Sassuolo Calcio vs Torino FC
- - Cas Odenthal | Sassuolo Calcio vs Torino FC
- - Ardian Ismajli | Sassuolo Calcio vs Torino FC
- - Kieron Bowie | Sassuolo Calcio vs Torino FC
- - Kristian Thorstvedt | Sassuolo Calcio vs Torino FC
- - Riccardo Ciervo | Sassuolo Calcio vs Torino FC
- - Nicholas Pierini | Sassuolo Calcio vs Torino FC
- - Pietro Pellegri | Sassuolo Calcio vs Torino FC
- - Zakaria Aboukhlal | Sassuolo Calcio vs Torino FC
- - Fabrizio Caligara | Sassuolo Calcio vs Torino FC
- - Daniel Boloca | Sassuolo Calcio vs Torino FC
+ - Ivan Smolcic | SSC Napoli vs Como 1907
+ - Ivan Azon | SSC Napoli vs Como 1907
+ - Nicolas Paz | SSC Napoli vs Como 1907
+ - Anastasios Douvikas | SSC Napoli vs Como 1907
+ - Mattia Liberali | SSC Napoli vs Como 1907
+ - Alessandro Gabrielloni | SSC Napoli vs Como 1907
+ - Alberto Dossena | SSC Napoli vs Como 1907
+ - Maximo Perrone | SSC Napoli vs Como 1907
+ - Amir Rrahmani | SSC Napoli vs Como 1907
+ - Assane Diao | SSC Napoli vs Como 1907
+ - Nicolas Kuhn | SSC Napoli vs Como 1907
+ - Noa Lang | SSC Napoli vs Como 1907
+ - Ali Jasim | SSC Napoli vs Como 1907
+ - Leonardo Spinazzola | SSC Napoli vs Como 1907
+ - Alex Valle | SSC Napoli vs Como 1907
+ - Matthias Braunoder | SSC Napoli vs Como 1907
+ - Kaiki | SSC Napoli vs Como 1907
+ - Jens Cajuste | SSC Napoli vs Como 1907
+ - Christian Garofalo | SSC Napoli vs Como 1907
+ - Ignace van der Brempt | SSC Napoli vs Como 1907
