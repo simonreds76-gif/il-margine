@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-08-30T00:40:03.898110Z",
+  "generated_at": "2026-08-30T12:15:03.353683Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
@@ -34,18 +35,17 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 10,
-  "signals_qualifying": 2,
+  "fixtures_evaluated": 17,
+  "signals_qualifying": 5,
   "safety_exclusions": {
-    "model_probability_below_floor": 7,
+    "model_probability_below_floor": 11,
     "market_odds_above_cap": 2,
-    "model_market_gap_gt_10pp": 3,
-    "lineup_not_public_quality": 1
+    "lineup_not_public_quality": 3,
+    "model_market_gap_gt_10pp": 2
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 3,
+    "eligible_rows": 2,
     "added_by_league": {
-      "bundesliga": 1,
       "epl": 1,
       "ligue-1": 1
     },
@@ -54,10 +54,113 @@
   },
   "leagues_covered": [
     "bundesliga",
-    "ligue-1"
+    "epl",
+    "ligue-1",
+    "serie-a"
   ],
-  "featured_signal_id": "20260830-sofiane-diop-83b47762a4",
+  "featured_signal_id": "20260830-brian-brobbey-80490729e9",
   "signals": [
+    {
+      "id": "20260830-brian-brobbey-80490729e9",
+      "match": {
+        "home_team": "Sunderland AFC",
+        "away_team": "Fulham FC",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-08-30T13:00:00Z",
+        "kickoff_display": "Sun 30 Aug 14:00 UK",
+        "fotmob_match_id": "5795433",
+        "fotmob_page_url": "/matches/sunderland-vs-fulham/2s9d8f#5795433",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Brian Brobbey",
+        "team": "Sunderland",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/sunderland.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#dc2626",
+        "team_shirt_pattern": "vertical-stripes"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 43.5,
+        "fair_odds": 2.3
+      },
+      "market_data": {
+        "best_odds": 2.88,
+        "best_book": "Bet365",
+        "implied_chance_pct": 34.8
+      },
+      "edge": {
+        "price_gap_pp": 8.7,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 94
+        },
+        "share_of_team_chances_pct": 35,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 62
+        },
+        "recent_team_form": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-08-22",
+          "xg_for_avg": 1.39,
+          "xg_against_avg": 1.27,
+          "xgd_per90": 0.13,
+          "shots_for_avg": 12.6,
+          "shots_against_avg": 12.2,
+          "sot_for_avg": 3.0,
+          "sot_against_avg": 3.2,
+          "corners_for_avg": 4.8,
+          "corners_against_avg": 5.4
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 89
+        },
+        "opponent_recent_defence": {
+          "tier": "High",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-08-24",
+          "xg_for_avg": 1.31,
+          "xg_against_avg": 1.88,
+          "xgd_per90": -0.57,
+          "shots_for_avg": 14.4,
+          "shots_against_avg": 12.8,
+          "sot_for_avg": 4.0,
+          "sot_against_avg": 5.0,
+          "corners_for_avg": 6.6,
+          "corners_against_avg": 3.6
+        },
+        "fixture_boost_pct": 13,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "The fixture profile adds to his scoring case"
+      ],
+      "risk_flags": []
+    },
     {
       "id": "20260830-sofiane-diop-83b47762a4",
       "match": {
@@ -70,7 +173,7 @@
         "kickoff_display": "Sun 30 Aug 14:00 UK",
         "fotmob_match_id": "5802915",
         "fotmob_page_url": "/matches/paris-fc-vs-nice/268cvm#5802915",
-        "lineup_type": "predicted",
+        "lineup_type": "confirmed",
         "venue": ""
       },
       "player": {
@@ -85,28 +188,28 @@
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 29.3,
-        "fair_odds": 3.41
+        "scoring_chance_pct": 31.9,
+        "fair_odds": 3.14
       },
       "market_data": {
-        "best_odds": 4.33,
+        "best_odds": 4.0,
         "best_book": "Bet365",
-        "implied_chance_pct": 23.1
+        "implied_chance_pct": 25.0
       },
       "edge": {
-        "price_gap_pp": 6.3,
+        "price_gap_pp": 6.9,
         "model_advantage": true
       },
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 87
+          "percentile": 89
         },
-        "share_of_team_chances_pct": 24,
-        "share_of_team_chances_percentile": 97,
+        "share_of_team_chances_pct": 27,
+        "share_of_team_chances_percentile": 98,
         "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 17
+          "tier": "Average",
+          "percentile": 35
         },
         "recent_team_form": {
           "tier": "Average",
@@ -124,8 +227,8 @@
           "corners_against_avg": 6.4
         },
         "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 47
+          "tier": "Positive",
+          "percentile": 55
         },
         "opponent_recent_defence": {
           "tier": "Average",
@@ -143,17 +246,119 @@
           "corners_against_avg": 4.6
         },
         "fixture_boost_pct": -3,
-        "projected_minutes": 78,
+        "projected_minutes": 85,
         "penalty_role": "Primary",
+        "role_adjustment_factor": 1.0268,
+        "role_adjustment_reason": "confirmed_role_delta=+1;usual=ML;today=AM;weight=0.54",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260830-diego-gomez-d76db42510",
+      "match": {
+        "home_team": "Chelsea FC",
+        "away_team": "Brighton & Hove Albion",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-08-30T13:00:00Z",
+        "kickoff_display": "Sun 30 Aug 14:00 UK",
+        "fotmob_match_id": "5795427",
+        "fotmob_page_url": "/matches/chelsea-vs-brighton-hove-albion/2vni1p#5795427",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Diego Gomez",
+        "team": "Brighton",
+        "position": "AM",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/brighton.png",
+        "team_primary_color": "#2563eb",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "vertical-stripes"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 25.1,
+        "fair_odds": 3.98
+      },
+      "market_data": {
+        "best_odds": 5.5,
+        "best_book": "Bet365",
+        "implied_chance_pct": 18.2
+      },
+      "edge": {
+        "price_gap_pp": 6.9,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 85
+        },
+        "share_of_team_chances_pct": 17,
+        "share_of_team_chances_percentile": 92,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 71
+        },
+        "recent_team_form": {
+          "tier": "Strong",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-08-23",
+          "xg_for_avg": 2.21,
+          "xg_against_avg": 1.4,
+          "xgd_per90": 0.81,
+          "shots_for_avg": 16.0,
+          "shots_against_avg": 8.4,
+          "sot_for_avg": 5.2,
+          "sot_against_avg": 3.0,
+          "corners_for_avg": 6.0,
+          "corners_against_avg": 3.0
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 73
+        },
+        "opponent_recent_defence": {
+          "tier": "High",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-08-24",
+          "xg_for_avg": 1.47,
+          "xg_against_avg": 1.77,
+          "xgd_per90": -0.29,
+          "shots_for_avg": 12.8,
+          "shots_against_avg": 11.4,
+          "sot_for_avg": 3.8,
+          "sot_against_avg": 3.6,
+          "corners_for_avg": 5.2,
+          "corners_against_avg": 4.6
+        },
+        "fixture_boost_pct": 15,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
         "role_adjustment_factor": 1.0,
         "role_adjustment_reason": "",
-        "lineup_confidence": "Projected starter"
+        "lineup_confidence": "Confirmed starter"
       },
-      "confidence_tier": "Medium",
+      "confidence_tier": "High",
       "reasons": [
         "The model price is shorter than the bookmaker's best available price",
         "Recent chance quality grades as strong",
-        "Primary penalty role adds a clear scoring route"
+        "Recent team form supports the attacking case",
+        "Opponent has been allowing chances recently",
+        "The fixture profile adds to his scoring case"
       ],
       "risk_flags": []
     },
@@ -199,13 +404,13 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 82
+          "percentile": 83
         },
         "share_of_team_chances_pct": 25,
         "share_of_team_chances_percentile": 97,
         "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 28
+          "tier": "Average",
+          "percentile": 42
         },
         "recent_team_form": {
           "tier": "Quiet",
@@ -223,8 +428,8 @@
           "corners_against_avg": 6.4
         },
         "opponent_defensive_weakness": {
-          "tier": "Positive",
-          "percentile": 69
+          "tier": "High",
+          "percentile": 79
         },
         "opponent_recent_defence": {
           "tier": "High",
@@ -252,7 +457,104 @@
       "reasons": [
         "The model price is shorter than the bookmaker's best available price",
         "Recent chance quality grades as strong",
-        "Opponent has been allowing chances recently"
+        "Opponent defensive profile is a positive matchup"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260831-santiago-pierotti-15bc670f87",
+      "match": {
+        "home_team": "US Lecce",
+        "away_team": "AS Roma",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "2026-08-31T16:30:00Z",
+        "kickoff_display": "Mon 31 Aug 17:30 UK",
+        "fotmob_match_id": "5749656",
+        "fotmob_page_url": "/matches/roma-vs-lecce/2upm4p#5749656",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Santiago Pierotti",
+        "team": "Lecce",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/serie-a/lecce.png",
+        "team_primary_color": "#facc15",
+        "team_secondary_color": "#dc2626",
+        "team_shirt_pattern": "vertical-stripes"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 23.8,
+        "fair_odds": 4.2
+      },
+      "market_data": {
+        "best_odds": 6.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 16.7
+      },
+      "edge": {
+        "price_gap_pp": 7.1,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 72
+        },
+        "share_of_team_chances_pct": 23,
+        "share_of_team_chances_percentile": 97,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 10
+        },
+        "recent_team_form": {
+          "tier": "Quiet",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-08-23",
+          "xg_for_avg": 1.59,
+          "xg_against_avg": 2.21,
+          "xgd_per90": -0.62,
+          "shots_for_avg": 9.4,
+          "shots_against_avg": 14.8,
+          "sot_for_avg": 4.4,
+          "sot_against_avg": 5.4,
+          "corners_for_avg": 2.8,
+          "corners_against_avg": 5.2
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 4
+        },
+        "opponent_recent_defence": {
+          "tier": "Low",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-08-24",
+          "xg_for_avg": 2.87,
+          "xg_against_avg": 0.45,
+          "xgd_per90": 2.43,
+          "shots_for_avg": 16.2,
+          "shots_against_avg": 7.6,
+          "sot_for_avg": 7.2,
+          "sot_against_avg": 2.6,
+          "corners_for_avg": 5.2,
+          "corners_against_avg": 4.0
+        },
+        "fixture_boost_pct": -41,
+        "projected_minutes": 84,
+        "penalty_role": "Secondary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price"
       ],
       "risk_flags": []
     }
