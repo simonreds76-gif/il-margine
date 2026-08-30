@@ -1,10 +1,8 @@
 {
   "api_errors": [
-    "bug: This is on our side, please report us this bug on https://dashboard.api-football.com",
-    "error: 5xEr",
     "plan: Free plans do not have access to this season, try from 2022 to 2024."
   ],
-  "deferred_not_due": 3,
+  "deferred_not_due": 1,
   "details": [
     {
       "detail": "plan: Free plans do not have access to this season, try from 2022 to 2024.",
@@ -15,7 +13,7 @@
       "signal_id": "72221164|anton\u00edn kinsky|4.5|over"
     },
     {
-      "detail": "bug: This is on our side, please report us this bug on https://dashboard.api-football.com; error: 5xEr",
+      "detail": "plan: Free plans do not have access to this season, try from 2022 to 2024.",
       "goalkeeper": "Alisson Becker",
       "match": "Newcastle United vs Liverpool FC",
       "match_date": "2026-08-23",
@@ -23,7 +21,7 @@
       "signal_id": "72221170|alisson becker|4.5|over"
     },
     {
-      "detail": "bug: This is on our side, please report us this bug on https://dashboard.api-football.com; error: 5xEr",
+      "detail": "plan: Free plans do not have access to this season, try from 2022 to 2024.",
       "goalkeeper": "Alex Remiro",
       "match": "Real Betis Seville vs Real Sociedad San Sebastian",
       "match_date": "2026-08-21",
@@ -53,6 +51,14 @@
       "match_date": "2026-08-26",
       "reason": "fixture_api_error",
       "signal_id": "72478460|alex remiro|7.5|over"
+    },
+    {
+      "detail": "plan: Free plans do not have access to this season, try from 2022 to 2024.",
+      "goalkeeper": "\u00c1lvaro Vall\u00e9s",
+      "match": "Levante UD vs Real Betis Seville",
+      "match_date": "2026-08-29",
+      "reason": "fixture_api_error",
+      "signal_id": "72478514|\u00e1lvaro vall\u00e9s|2.5|over"
     },
     {
       "detail": "plan: Free plans do not have access to this season, try from 2022 to 2024.",
@@ -93,16 +99,32 @@
       "match_date": "2026-08-24",
       "reason": "fixture_api_error",
       "signal_id": "71944902|david de gea|6.5|over"
+    },
+    {
+      "detail": "plan: Free plans do not have access to this season, try from 2022 to 2024.",
+      "goalkeeper": "Maduka Okoye",
+      "match": "AC Monza vs Udinese Calcio",
+      "match_date": "2026-08-29",
+      "reason": "fixture_api_error",
+      "signal_id": "71945220|maduka okoye|2.5|over"
+    },
+    {
+      "detail": "plan: Free plans do not have access to this season, try from 2022 to 2024.",
+      "goalkeeper": "David de Gea",
+      "match": "ACF Fiorentina vs Frosinone Calcio",
+      "match_date": "2026-08-29",
+      "reason": "fixture_api_error",
+      "signal_id": "71945210|david de gea|2.5|over"
     }
   ],
-  "generated_at": "2026-08-29T14:37:12Z",
+  "generated_at": "2026-08-30T14:35:31Z",
   "max_requests": 10,
-  "pending_due": 11,
-  "pending_total": 14,
+  "pending_due": 14,
+  "pending_total": 15,
   "reason_counts": {
-    "fixture_api_error": 11
+    "fixture_api_error": 14
   },
-  "requests_used": 8,
+  "requests_used": 10,
   "settled": 0,
   "status": "BLOCKED"
 }
