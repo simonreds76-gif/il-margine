@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-30T14:52:24Z",
+  "generated_at": "2026-08-30T18:38:03Z",
   "league": "ligue-1",
   "row_count": 0,
   "stats": {
     "historical_rows": 25157,
-    "odds_rows": 97,
+    "odds_rows": 0,
     "matched_rows": 0,
-    "missing_player_history": 97,
+    "missing_player_history": 0,
     "missing_team_mapping": 0,
     "fallback_rows": 0,
     "qualified_rows": 0,
@@ -24,7 +24,7 @@
     "fixtures_with_confirmed_lineups": 0,
     "fixtures_with_expected_lineups": 0,
     "fixtures_clean": 0,
-    "fixtures_degraded": 2,
+    "fixtures_degraded": 0,
     "fixtures_quarantined": 0,
     "confirmed_starter_rows": 0,
     "confirmed_bench_rows": 0,
@@ -34,39 +34,6 @@
     "not_in_squad_rows": 0,
     "avg_ev": 0.0
   },
-  "fixtures": [
-    {
-      "match_date": "2026-08-30",
-      "home_team": "Stade Rennais FC",
-      "away_team": "Le Mans FC",
-      "league": "ligue-1",
-      "competition": "France - Ligue 1",
-      "bookmaker": "Bet365",
-      "lineup_input": "none",
-      "trust_tier": "T2",
-      "corruption_score": 1.0,
-      "corruption_flags": [
-        "no_lineup_payload"
-      ],
-      "home_player_checks": [],
-      "away_player_checks": []
-    },
-    {
-      "match_date": "2026-08-30",
-      "home_team": "AS Monaco",
-      "away_team": "Olympique Marseille",
-      "league": "ligue-1",
-      "competition": "France - Ligue 1",
-      "bookmaker": "Bet365",
-      "lineup_input": "none",
-      "trust_tier": "T2",
-      "corruption_score": 1.0,
-      "corruption_flags": [
-        "no_lineup_payload"
-      ],
-      "home_player_checks": [],
-      "away_player_checks": []
-    }
-  ],
+  "fixtures": [],
   "rows": []
 }

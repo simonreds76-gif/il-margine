@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-08-30T14:58:28.476998Z",
+  "generated_at": "2026-08-30T18:38:43.782778Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
@@ -33,12 +34,11 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 9,
-  "signals_qualifying": 2,
+  "fixtures_evaluated": 3,
+  "signals_qualifying": 1,
   "safety_exclusions": {
-    "model_probability_below_floor": 3,
-    "market_odds_above_cap": 1,
-    "lineup_not_public_quality": 4
+    "model_probability_below_floor": 1,
+    "lineup_not_public_quality": 1
   },
   "extreme_gap_quarantine": {
     "eligible_rows": 0,
@@ -47,88 +47,10 @@
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
   "leagues_covered": [
-    "epl",
     "serie-a"
   ],
-  "featured_signal_id": "20260830-bryan-mbeumo-e28b701e52",
+  "featured_signal_id": "20260831-santiago-pierotti-15bc670f87",
   "signals": [
-    {
-      "id": "20260830-bryan-mbeumo-e28b701e52",
-      "match": {
-        "home_team": "Manchester United",
-        "away_team": "Ipswich Town",
-        "league": "epl",
-        "league_display": "Premier League",
-        "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "2026-08-30T15:30:00Z",
-        "kickoff_display": "Sun 30 Aug 16:30 UK",
-        "fotmob_match_id": "5795432",
-        "fotmob_page_url": "/matches/ipswich-town-vs-manchester-united/3d0uj5#5795432",
-        "lineup_type": "confirmed",
-        "venue": ""
-      },
-      "player": {
-        "name": "Bryan Mbeumo",
-        "team": "Manchester United",
-        "position": "AM",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/epl/manchester-united.png",
-        "team_primary_color": "#dc2626",
-        "team_secondary_color": "#111827",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 51.0,
-        "fair_odds": 1.96
-      },
-      "market_data": {
-        "best_odds": 2.4,
-        "best_book": "Bet365",
-        "implied_chance_pct": 41.7
-      },
-      "edge": {
-        "price_gap_pp": 9.4,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 99
-        },
-        "share_of_team_chances_pct": 32,
-        "share_of_team_chances_percentile": 99,
-        "team_attacking_outlook": {
-          "tier": "Strong",
-          "percentile": 99
-        },
-        "recent_team_form": {
-          "tier": "Unknown"
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 99
-        },
-        "opponent_recent_defence": {
-          "tier": "Unknown"
-        },
-        "fixture_boost_pct": 40,
-        "projected_minutes": 85,
-        "penalty_role": "Secondary",
-        "role_adjustment_factor": 0.9688,
-        "role_adjustment_reason": "confirmed_role_delta=-1;usual=FW;today=AM;weight=0.62",
-        "lineup_confidence": "Confirmed starter"
-      },
-      "confidence_tier": "High",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Opponent defensive profile is a positive matchup",
-        "The fixture profile adds to his scoring case"
-      ],
-      "risk_flags": []
-    },
     {
       "id": "20260831-santiago-pierotti-15bc670f87",
       "match": {
@@ -170,14 +92,14 @@
       },
       "metrics": {
         "recent_chance_quality": {
-          "tier": "Good",
-          "percentile": 73
+          "tier": "Strong",
+          "percentile": 77
         },
         "share_of_team_chances_pct": 23,
         "share_of_team_chances_percentile": 97,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 19
+          "percentile": 24
         },
         "recent_team_form": {
           "tier": "Quiet",
@@ -196,7 +118,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 7
+          "percentile": 24
         },
         "opponent_recent_defence": {
           "tier": "Low",
@@ -222,7 +144,8 @@
       },
       "confidence_tier": "Medium",
       "reasons": [
-        "The model price is shorter than the bookmaker's best available price"
+        "The model price is shorter than the bookmaker's best available price",
+        "Recent chance quality grades as strong"
       ],
       "risk_flags": []
     }
