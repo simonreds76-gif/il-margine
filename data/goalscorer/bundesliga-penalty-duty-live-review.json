@@ -1,7 +1,38 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-29T14:38:54Z",
+  "generated_at": "2026-08-30T05:30:04Z",
   "league": "bundesliga",
-  "row_count": 0,
-  "rows": []
+  "row_count": 1,
+  "rows": [
+    {
+      "date": "2026-08-29",
+      "league": "bundesliga",
+      "review_source": "fotmob_live",
+      "match": "1. FC Köln vs Hoffenheim",
+      "team": "Hoffenheim",
+      "opponent": "1. FC Köln",
+      "actual_taker": "Max Moerstedt",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 0,
+      "distinct_takers_in_match": 1,
+      "minute": "57",
+      "event_type": "AttemptSaved",
+      "event_result": "missed",
+      "primary_pre_match": "Andrej Kramarić",
+      "secondary_pre_match": "Tim Lemperle",
+      "tertiary_pre_match": "Fisnik Asllani",
+      "primary_lineup_status": "confirmed_bench",
+      "secondary_lineup_status": "not_in_squad",
+      "tertiary_lineup_status": "not_in_squad",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "unranked_taker",
+      "review_priority": "high",
+      "editorial_note": "Max Moerstedt took 1 penalty attempt and missed for Hoffenheim vs 1. FC Köln. Primary pre-match: Andrej Kramarić (confirmed_bench). Secondary pre-match: Tim Lemperle (not_in_squad). Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-08-29T13:01:01Z",
+      "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
+    }
+  ]
 }
