@@ -10,8 +10,6 @@ import {
 import marginIndexJson from "../../../data/bookmakers/margin-index.json";
 
 const MARGIN_INDEX = marginIndexJson as BookmakerMarginIndex;
-const TARGET_UK_BOOKMAKERS = 21;
-
 type BookmakerReview = {
   id: string;
   name: string;
@@ -207,7 +205,7 @@ export default function BookmakersPage() {
     ),
   ));
   const marginCoverage = MARGIN_INDEX.coverage ?? {
-    target_operators: TARGET_UK_BOOKMAKERS,
+    target_operators: snapshotOperatorNames.length,
     discovered_operators: snapshotOperatorNames.length,
     payload_operators: snapshotOperatorNames.length,
     qualified_operators: snapshotOperatorNames.length,
@@ -244,6 +242,7 @@ export default function BookmakersPage() {
           segments={measuredSegments}
           notMeasured={NOT_MEASURED_MARKETS}
           coverage={marginCoverage}
+          summary={MARGIN_INDEX.summary}
         />
 
         <section className="mb-12 grid gap-4 md:grid-cols-3">

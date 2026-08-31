@@ -57,11 +57,12 @@ class BookmakerMarginIndexTests(unittest.TestCase):
         self.assertTrue(expected.issubset(MODULE.TARGET_BOOKMAKERS))
         self.assertGreaterEqual(len(MODULE.TARGET_BOOKMAKERS), 20)
 
-    def test_oddschecker_catalogue_has_23_fixed_odds_bookmakers_only(self) -> None:
-        self.assertEqual(len(MODULE.ODDSCHECKER_TARGET_BOOKMAKERS), 23)
+    def test_oddschecker_catalogue_has_22_fixed_odds_bookmakers_only(self) -> None:
+        self.assertEqual(len(MODULE.ODDSCHECKER_TARGET_BOOKMAKERS), 22)
         self.assertNotIn("Betfair", MODULE.ODDSCHECKER_TARGET_BOOKMAKERS)
         self.assertNotIn("Matchbook", MODULE.ODDSCHECKER_TARGET_BOOKMAKERS)
         self.assertNotIn("Sporting Index", MODULE.ODDSCHECKER_TARGET_BOOKMAKERS)
+        self.assertNotIn("Spreadex", MODULE.ODDSCHECKER_TARGET_BOOKMAKERS)
 
     def test_fractional_prices_are_converted_to_decimal(self) -> None:
         self.assertEqual(MODULE.fractional_to_decimal("evens"), 2.0)
@@ -75,6 +76,7 @@ class BookmakerMarginIndexTests(unittest.TestCase):
             {"code": "BF", "bookmaker": "Betfair", "fractional": "11/10"},
             {"code": "MA", "bookmaker": "Matchbook", "fractional": "11/10"},
             {"code": "SI", "bookmaker": "Sporting Index", "fractional": "11/10"},
+            {"code": "SX", "bookmaker": "Spreadex", "fractional": "11/10"},
         ]
         capture = {
             "captured_at": "2026-08-31T12:00:00Z",

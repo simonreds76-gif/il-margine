@@ -19,7 +19,6 @@
       "PricedUp",
       "QuinnBet",
       "Sky Bet",
-      "Spreadex",
       "Star Sports",
       "Unibet",
       "Virgin Bet",
@@ -122,11 +121,6 @@
           {
             "market_blocks": 10,
             "name": "Sky Bet",
-            "status": "returned"
-          },
-          {
-            "market_blocks": 10,
-            "name": "Spreadex",
             "status": "returned"
           },
           {
@@ -242,11 +236,6 @@
           },
           {
             "market_blocks": 3,
-            "name": "Spreadex",
-            "status": "returned"
-          },
-          {
-            "market_blocks": 3,
             "name": "Star Sports",
             "status": "returned"
           },
@@ -288,7 +277,6 @@
       "PricedUp",
       "QuinnBet",
       "Sky Bet",
-      "Spreadex",
       "Star Sports",
       "Unibet",
       "Virgin Bet",
@@ -297,7 +285,7 @@
   },
   "capture_mode": "manual_oddschecker_browser_one_off",
   "coverage": {
-    "discovered_operators": 23,
+    "discovered_operators": 22,
     "not_discovered": [],
     "payload_operator_names": [
       "10BET",
@@ -318,13 +306,12 @@
       "PricedUp",
       "QuinnBet",
       "Sky Bet",
-      "Spreadex",
       "Star Sports",
       "Unibet",
       "Virgin Bet",
       "William Hill"
     ],
-    "payload_operators": 23,
+    "payload_operators": 22,
     "qualified_operator_names": [
       "10BET",
       "AK Bets",
@@ -344,14 +331,13 @@
       "PricedUp",
       "QuinnBet",
       "Sky Bet",
-      "Spreadex",
       "Star Sports",
       "Unibet",
       "Virgin Bet",
       "William Hill"
     ],
-    "qualified_operators": 23,
-    "target_operators": 23
+    "qualified_operators": 22,
+    "target_operators": 22
   },
   "diagnostic_operators": [
     {
@@ -403,22 +389,6 @@
       "samples": 13
     },
     {
-      "coverage_pct": 92.9,
-      "market_families": [
-        "Match Winner",
-        "Game Handicap",
-        "Over/Under",
-        "Corners",
-        "BTTS",
-        "Draw No Bet"
-      ],
-      "name": "Spreadex",
-      "normalized_hold_pct": 5.75,
-      "rank": 4,
-      "raw_overround_pct": 6.12,
-      "samples": 13
-    },
-    {
       "coverage_pct": 100.0,
       "market_families": [
         "Match Winner",
@@ -430,7 +400,7 @@
       ],
       "name": "IvyBet",
       "normalized_hold_pct": 5.78,
-      "rank": 5,
+      "rank": 4,
       "raw_overround_pct": 6.19,
       "samples": 14
     },
@@ -446,7 +416,7 @@
       ],
       "name": "William Hill",
       "normalized_hold_pct": 5.78,
-      "rank": 6,
+      "rank": 5,
       "raw_overround_pct": 6.15,
       "samples": 12
     },
@@ -461,7 +431,7 @@
       ],
       "name": "PricedUp",
       "normalized_hold_pct": 5.87,
-      "rank": 7,
+      "rank": 6,
       "raw_overround_pct": 6.32,
       "samples": 12
     },
@@ -477,7 +447,7 @@
       ],
       "name": "QuinnBet",
       "normalized_hold_pct": 5.88,
-      "rank": 8,
+      "rank": 7,
       "raw_overround_pct": 6.25,
       "samples": 12
     },
@@ -493,7 +463,7 @@
       ],
       "name": "Betway",
       "normalized_hold_pct": 5.99,
-      "rank": 9,
+      "rank": 8,
       "raw_overround_pct": 6.4,
       "samples": 12
     },
@@ -509,7 +479,7 @@
       ],
       "name": "10BET",
       "normalized_hold_pct": 6.07,
-      "rank": 10,
+      "rank": 9,
       "raw_overround_pct": 6.47,
       "samples": 13
     },
@@ -525,7 +495,7 @@
       ],
       "name": "BetMGM",
       "normalized_hold_pct": 6.13,
-      "rank": 11,
+      "rank": 10,
       "raw_overround_pct": 6.55,
       "samples": 13
     },
@@ -541,7 +511,7 @@
       ],
       "name": "BoyleSports",
       "normalized_hold_pct": 6.2,
-      "rank": 12,
+      "rank": 11,
       "raw_overround_pct": 6.62,
       "samples": 12
     },
@@ -557,7 +527,7 @@
       ],
       "name": "BetAhoy",
       "normalized_hold_pct": 6.24,
-      "rank": 13,
+      "rank": 12,
       "raw_overround_pct": 6.67,
       "samples": 14
     },
@@ -573,7 +543,7 @@
       ],
       "name": "BetTom",
       "normalized_hold_pct": 6.24,
-      "rank": 14,
+      "rank": 13,
       "raw_overround_pct": 6.67,
       "samples": 14
     },
@@ -587,7 +557,7 @@
       ],
       "name": "Betfred",
       "normalized_hold_pct": 6.34,
-      "rank": 15,
+      "rank": 14,
       "raw_overround_pct": 6.78,
       "samples": 10
     },
@@ -603,7 +573,7 @@
       ],
       "name": "BetGoodwin",
       "normalized_hold_pct": 6.42,
-      "rank": 16,
+      "rank": 15,
       "raw_overround_pct": 6.88,
       "samples": 14
     },
@@ -619,7 +589,7 @@
       ],
       "name": "AK Bets",
       "normalized_hold_pct": 6.45,
-      "rank": 17,
+      "rank": 16,
       "raw_overround_pct": 6.96,
       "samples": 12
     },
@@ -635,7 +605,7 @@
       ],
       "name": "Star Sports",
       "normalized_hold_pct": 6.47,
-      "rank": 18,
+      "rank": 17,
       "raw_overround_pct": 6.97,
       "samples": 12
     },
@@ -651,7 +621,7 @@
       ],
       "name": "Ladbrokes",
       "normalized_hold_pct": 6.82,
-      "rank": 19,
+      "rank": 18,
       "raw_overround_pct": 7.33,
       "samples": 12
     },
@@ -666,7 +636,7 @@
       ],
       "name": "BetVictor",
       "normalized_hold_pct": 6.82,
-      "rank": 20,
+      "rank": 19,
       "raw_overround_pct": 7.33,
       "samples": 10
     },
@@ -682,7 +652,7 @@
       ],
       "name": "Paddy Power",
       "normalized_hold_pct": 6.85,
-      "rank": 21,
+      "rank": 20,
       "raw_overround_pct": 7.36,
       "samples": 12
     },
@@ -698,7 +668,7 @@
       ],
       "name": "Coral",
       "normalized_hold_pct": 6.95,
-      "rank": 22,
+      "rank": 21,
       "raw_overround_pct": 7.48,
       "samples": 12
     },
@@ -714,7 +684,7 @@
       ],
       "name": "Virgin Bet",
       "normalized_hold_pct": 8.05,
-      "rank": 23,
+      "rank": 22,
       "raw_overround_pct": 8.77,
       "samples": 11
     }
@@ -777,22 +747,6 @@
       "samples": 13
     },
     {
-      "coverage_pct": 92.9,
-      "market_families": [
-        "Match Winner",
-        "Game Handicap",
-        "Over/Under",
-        "Corners",
-        "BTTS",
-        "Draw No Bet"
-      ],
-      "name": "Spreadex",
-      "normalized_hold_pct": 5.75,
-      "rank": 4,
-      "raw_overround_pct": 6.12,
-      "samples": 13
-    },
-    {
       "coverage_pct": 100.0,
       "market_families": [
         "Match Winner",
@@ -804,7 +758,7 @@
       ],
       "name": "IvyBet",
       "normalized_hold_pct": 5.78,
-      "rank": 5,
+      "rank": 4,
       "raw_overround_pct": 6.19,
       "samples": 14
     },
@@ -820,7 +774,7 @@
       ],
       "name": "William Hill",
       "normalized_hold_pct": 5.78,
-      "rank": 6,
+      "rank": 5,
       "raw_overround_pct": 6.15,
       "samples": 12
     },
@@ -835,7 +789,7 @@
       ],
       "name": "PricedUp",
       "normalized_hold_pct": 5.87,
-      "rank": 7,
+      "rank": 6,
       "raw_overround_pct": 6.32,
       "samples": 12
     },
@@ -851,7 +805,7 @@
       ],
       "name": "QuinnBet",
       "normalized_hold_pct": 5.88,
-      "rank": 8,
+      "rank": 7,
       "raw_overround_pct": 6.25,
       "samples": 12
     },
@@ -867,7 +821,7 @@
       ],
       "name": "Betway",
       "normalized_hold_pct": 5.99,
-      "rank": 9,
+      "rank": 8,
       "raw_overround_pct": 6.4,
       "samples": 12
     },
@@ -883,7 +837,7 @@
       ],
       "name": "10BET",
       "normalized_hold_pct": 6.07,
-      "rank": 10,
+      "rank": 9,
       "raw_overround_pct": 6.47,
       "samples": 13
     },
@@ -899,7 +853,7 @@
       ],
       "name": "BetMGM",
       "normalized_hold_pct": 6.13,
-      "rank": 11,
+      "rank": 10,
       "raw_overround_pct": 6.55,
       "samples": 13
     },
@@ -915,7 +869,7 @@
       ],
       "name": "BoyleSports",
       "normalized_hold_pct": 6.2,
-      "rank": 12,
+      "rank": 11,
       "raw_overround_pct": 6.62,
       "samples": 12
     },
@@ -931,7 +885,7 @@
       ],
       "name": "BetAhoy",
       "normalized_hold_pct": 6.24,
-      "rank": 13,
+      "rank": 12,
       "raw_overround_pct": 6.67,
       "samples": 14
     },
@@ -947,7 +901,7 @@
       ],
       "name": "BetTom",
       "normalized_hold_pct": 6.24,
-      "rank": 14,
+      "rank": 13,
       "raw_overround_pct": 6.67,
       "samples": 14
     },
@@ -961,7 +915,7 @@
       ],
       "name": "Betfred",
       "normalized_hold_pct": 6.34,
-      "rank": 15,
+      "rank": 14,
       "raw_overround_pct": 6.78,
       "samples": 10
     },
@@ -977,7 +931,7 @@
       ],
       "name": "BetGoodwin",
       "normalized_hold_pct": 6.42,
-      "rank": 16,
+      "rank": 15,
       "raw_overround_pct": 6.88,
       "samples": 14
     },
@@ -993,7 +947,7 @@
       ],
       "name": "AK Bets",
       "normalized_hold_pct": 6.45,
-      "rank": 17,
+      "rank": 16,
       "raw_overround_pct": 6.96,
       "samples": 12
     },
@@ -1009,7 +963,7 @@
       ],
       "name": "Star Sports",
       "normalized_hold_pct": 6.47,
-      "rank": 18,
+      "rank": 17,
       "raw_overround_pct": 6.97,
       "samples": 12
     },
@@ -1025,7 +979,7 @@
       ],
       "name": "Ladbrokes",
       "normalized_hold_pct": 6.82,
-      "rank": 19,
+      "rank": 18,
       "raw_overround_pct": 7.33,
       "samples": 12
     },
@@ -1040,7 +994,7 @@
       ],
       "name": "BetVictor",
       "normalized_hold_pct": 6.82,
-      "rank": 20,
+      "rank": 19,
       "raw_overround_pct": 7.33,
       "samples": 10
     },
@@ -1056,7 +1010,7 @@
       ],
       "name": "Paddy Power",
       "normalized_hold_pct": 6.85,
-      "rank": 21,
+      "rank": 20,
       "raw_overround_pct": 7.36,
       "samples": 12
     },
@@ -1072,7 +1026,7 @@
       ],
       "name": "Coral",
       "normalized_hold_pct": 6.95,
-      "rank": 22,
+      "rank": 21,
       "raw_overround_pct": 7.48,
       "samples": 12
     },
@@ -1088,7 +1042,7 @@
       ],
       "name": "Virgin Bet",
       "normalized_hold_pct": 8.05,
-      "rank": 23,
+      "rank": 22,
       "raw_overround_pct": 8.77,
       "samples": 11
     }
@@ -1112,7 +1066,6 @@
     "PricedUp",
     "QuinnBet",
     "Sky Bet",
-    "Spreadex",
     "Star Sports",
     "Unibet",
     "Virgin Bet",
@@ -1123,7 +1076,7 @@
     {
       "events": 2,
       "market_family": "Match Winner",
-      "observations": 46,
+      "observations": 44,
       "operators": [
         {
           "name": "AK Bets",
@@ -1217,72 +1170,65 @@
           "samples": 2
         },
         {
-          "name": "Spreadex",
-          "normalized_hold_pct": 5.7,
-          "rank": 14,
-          "raw_overround_pct": 6.05,
-          "samples": 2
-        },
-        {
           "name": "William Hill",
           "normalized_hold_pct": 6.07,
-          "rank": 15,
+          "rank": 14,
           "raw_overround_pct": 6.47,
           "samples": 2
         },
         {
           "name": "BetAhoy",
           "normalized_hold_pct": 6.29,
-          "rank": 16,
+          "rank": 15,
           "raw_overround_pct": 6.71,
           "samples": 2
         },
         {
           "name": "BetTom",
           "normalized_hold_pct": 6.31,
-          "rank": 17,
+          "rank": 16,
           "raw_overround_pct": 6.74,
           "samples": 2
         },
         {
           "name": "Paddy Power",
           "normalized_hold_pct": 6.37,
-          "rank": 18,
+          "rank": 17,
           "raw_overround_pct": 6.8,
           "samples": 2
         },
         {
           "name": "Sky Bet",
           "normalized_hold_pct": 6.38,
-          "rank": 19,
+          "rank": 18,
           "raw_overround_pct": 6.82,
           "samples": 2
         },
         {
           "name": "Coral",
           "normalized_hold_pct": 6.47,
-          "rank": 20,
+          "rank": 19,
           "raw_overround_pct": 6.96,
           "samples": 2
         },
         {
           "name": "Ladbrokes",
           "normalized_hold_pct": 6.47,
-          "rank": 21,
+          "rank": 20,
           "raw_overround_pct": 6.96,
           "samples": 2
         },
         {
           "name": "BetGoodwin",
           "normalized_hold_pct": 6.95,
-          "rank": 22,
+          "rank": 21,
           "raw_overround_pct": 7.47,
           "samples": 2
         },
         {
           "name": "Virgin Bet",
           "normalized_hold_pct": 7.1,
-          "rank": 23,
+          "rank": 22,
           "raw_overround_pct": 7.64,
           "samples": 2
         }
@@ -1294,7 +1240,7 @@
     {
       "events": 2,
       "market_family": "Over/Under",
-      "observations": 46,
+      "observations": 44,
       "operators": [
         {
           "name": "IvyBet",
@@ -1346,114 +1292,107 @@
           "samples": 2
         },
         {
-          "name": "Spreadex",
-          "normalized_hold_pct": 5.7,
-          "rank": 8,
-          "raw_overround_pct": 6.05,
-          "samples": 2
-        },
-        {
           "name": "Betway",
           "normalized_hold_pct": 5.79,
-          "rank": 9,
+          "rank": 8,
           "raw_overround_pct": 6.15,
           "samples": 2
         },
         {
           "name": "10BET",
           "normalized_hold_pct": 5.8,
-          "rank": 10,
+          "rank": 9,
           "raw_overround_pct": 6.16,
           "samples": 2
         },
         {
           "name": "Sky Bet",
           "normalized_hold_pct": 5.82,
-          "rank": 11,
+          "rank": 10,
           "raw_overround_pct": 6.18,
           "samples": 2
         },
         {
           "name": "BoyleSports",
           "normalized_hold_pct": 6.22,
-          "rank": 12,
+          "rank": 11,
           "raw_overround_pct": 6.63,
           "samples": 2
         },
         {
           "name": "Star Sports",
           "normalized_hold_pct": 6.33,
-          "rank": 13,
+          "rank": 12,
           "raw_overround_pct": 6.75,
           "samples": 2
         },
         {
           "name": "AK Bets",
           "normalized_hold_pct": 6.36,
-          "rank": 14,
+          "rank": 13,
           "raw_overround_pct": 6.79,
           "samples": 2
         },
         {
           "name": "PricedUp",
           "normalized_hold_pct": 6.36,
-          "rank": 15,
+          "rank": 14,
           "raw_overround_pct": 6.79,
           "samples": 2
         },
         {
           "name": "BetAhoy",
           "normalized_hold_pct": 6.49,
-          "rank": 16,
+          "rank": 15,
           "raw_overround_pct": 6.94,
           "samples": 2
         },
         {
           "name": "BetTom",
           "normalized_hold_pct": 6.49,
-          "rank": 17,
+          "rank": 16,
           "raw_overround_pct": 6.94,
           "samples": 2
         },
         {
           "name": "BetGoodwin",
           "normalized_hold_pct": 6.58,
-          "rank": 18,
+          "rank": 17,
           "raw_overround_pct": 7.04,
           "samples": 2
         },
         {
           "name": "Betfred",
           "normalized_hold_pct": 6.61,
-          "rank": 19,
+          "rank": 18,
           "raw_overround_pct": 7.08,
           "samples": 2
         },
         {
           "name": "Ladbrokes",
           "normalized_hold_pct": 6.69,
-          "rank": 20,
+          "rank": 19,
           "raw_overround_pct": 7.17,
           "samples": 2
         },
         {
           "name": "Coral",
           "normalized_hold_pct": 7.46,
-          "rank": 21,
+          "rank": 20,
           "raw_overround_pct": 8.07,
           "samples": 2
         },
         {
           "name": "Paddy Power",
           "normalized_hold_pct": 7.55,
-          "rank": 22,
+          "rank": 21,
           "raw_overround_pct": 8.17,
           "samples": 2
         },
         {
           "name": "Virgin Bet",
           "normalized_hold_pct": 8.13,
-          "rank": 23,
+          "rank": 22,
           "raw_overround_pct": 8.87,
           "samples": 2
         }
@@ -1465,7 +1404,7 @@
     {
       "events": 2,
       "market_family": "Corners",
-      "observations": 44,
+      "observations": 42,
       "operators": [
         {
           "name": "Sky Bet",
@@ -1552,72 +1491,65 @@
           "samples": 2
         },
         {
-          "name": "Spreadex",
-          "normalized_hold_pct": 7.31,
-          "rank": 13,
-          "raw_overround_pct": 7.88,
-          "samples": 2
-        },
-        {
           "name": "Bet365",
           "normalized_hold_pct": 7.35,
-          "rank": 14,
+          "rank": 13,
           "raw_overround_pct": 7.94,
           "samples": 2
         },
         {
           "name": "QuinnBet",
           "normalized_hold_pct": 7.42,
-          "rank": 15,
+          "rank": 14,
           "raw_overround_pct": 8.01,
           "samples": 2
         },
         {
           "name": "Betway",
           "normalized_hold_pct": 8.04,
-          "rank": 16,
+          "rank": 15,
           "raw_overround_pct": 8.74,
           "samples": 2
         },
         {
           "name": "BetVictor",
           "normalized_hold_pct": 8.17,
-          "rank": 17,
+          "rank": 16,
           "raw_overround_pct": 8.89,
           "samples": 2
         },
         {
           "name": "BetMGM",
           "normalized_hold_pct": 8.29,
-          "rank": 18,
+          "rank": 17,
           "raw_overround_pct": 9.04,
           "samples": 2
         },
         {
           "name": "Virgin Bet",
           "normalized_hold_pct": 8.89,
-          "rank": 19,
+          "rank": 18,
           "raw_overround_pct": 9.76,
           "samples": 2
         },
         {
           "name": "Star Sports",
           "normalized_hold_pct": 9.23,
-          "rank": 20,
+          "rank": 19,
           "raw_overround_pct": 10.19,
           "samples": 2
         },
         {
           "name": "AK Bets",
           "normalized_hold_pct": 9.66,
-          "rank": 21,
+          "rank": 20,
           "raw_overround_pct": 10.72,
           "samples": 2
         },
         {
           "name": "PricedUp",
           "normalized_hold_pct": 9.66,
-          "rank": 22,
+          "rank": 21,
           "raw_overround_pct": 10.72,
           "samples": 2
         }
@@ -1629,7 +1561,7 @@
     {
       "events": 2,
       "market_family": "BTTS",
-      "observations": 46,
+      "observations": 44,
       "operators": [
         {
           "name": "BetAhoy",
@@ -1667,128 +1599,121 @@
           "samples": 2
         },
         {
-          "name": "Spreadex",
-          "normalized_hold_pct": 5.89,
-          "rank": 6,
-          "raw_overround_pct": 6.27,
-          "samples": 2
-        },
-        {
           "name": "William Hill",
           "normalized_hold_pct": 5.95,
-          "rank": 7,
+          "rank": 6,
           "raw_overround_pct": 6.33,
           "samples": 2
         },
         {
           "name": "Betway",
           "normalized_hold_pct": 6.36,
-          "rank": 8,
+          "rank": 7,
           "raw_overround_pct": 6.79,
           "samples": 2
         },
         {
           "name": "Unibet",
           "normalized_hold_pct": 6.46,
-          "rank": 9,
+          "rank": 8,
           "raw_overround_pct": 6.9,
           "samples": 2
         },
         {
           "name": "Sky Bet",
           "normalized_hold_pct": 6.48,
-          "rank": 10,
+          "rank": 9,
           "raw_overround_pct": 6.93,
           "samples": 2
         },
         {
           "name": "10BET",
           "normalized_hold_pct": 6.49,
-          "rank": 11,
+          "rank": 10,
           "raw_overround_pct": 6.95,
           "samples": 2
         },
         {
           "name": "AK Bets",
           "normalized_hold_pct": 7.08,
-          "rank": 12,
+          "rank": 11,
           "raw_overround_pct": 7.63,
           "samples": 2
         },
         {
           "name": "PricedUp",
           "normalized_hold_pct": 7.08,
-          "rank": 13,
+          "rank": 12,
           "raw_overround_pct": 7.63,
           "samples": 2
         },
         {
           "name": "Star Sports",
           "normalized_hold_pct": 7.08,
-          "rank": 14,
+          "rank": 13,
           "raw_overround_pct": 7.63,
           "samples": 2
         },
         {
           "name": "BetMGM",
           "normalized_hold_pct": 7.11,
-          "rank": 15,
+          "rank": 14,
           "raw_overround_pct": 7.65,
           "samples": 2
         },
         {
           "name": "Paddy Power",
           "normalized_hold_pct": 7.41,
-          "rank": 16,
+          "rank": 15,
           "raw_overround_pct": 8.0,
           "samples": 2
         },
         {
           "name": "BoyleSports",
           "normalized_hold_pct": 7.44,
-          "rank": 17,
+          "rank": 16,
           "raw_overround_pct": 8.03,
           "samples": 2
         },
         {
           "name": "Coral",
           "normalized_hold_pct": 7.49,
-          "rank": 18,
+          "rank": 17,
           "raw_overround_pct": 8.1,
           "samples": 2
         },
         {
           "name": "IvyBet",
           "normalized_hold_pct": 7.49,
-          "rank": 19,
+          "rank": 18,
           "raw_overround_pct": 8.09,
           "samples": 2
         },
         {
           "name": "Ladbrokes",
           "normalized_hold_pct": 7.49,
-          "rank": 20,
+          "rank": 19,
           "raw_overround_pct": 8.1,
           "samples": 2
         },
         {
           "name": "Betfred",
           "normalized_hold_pct": 7.83,
-          "rank": 21,
+          "rank": 20,
           "raw_overround_pct": 8.49,
           "samples": 2
         },
         {
           "name": "Virgin Bet",
           "normalized_hold_pct": 7.92,
-          "rank": 22,
+          "rank": 21,
           "raw_overround_pct": 8.61,
           "samples": 2
         },
         {
           "name": "BetVictor",
           "normalized_hold_pct": 7.99,
-          "rank": 23,
+          "rank": 22,
           "raw_overround_pct": 8.69,
           "samples": 2
         }
@@ -1800,7 +1725,7 @@
     {
       "events": 2,
       "market_family": "Draw No Bet",
-      "observations": 44,
+      "observations": 42,
       "operators": [
         {
           "name": "Bet365",
@@ -1852,100 +1777,93 @@
           "samples": 2
         },
         {
-          "name": "Spreadex",
-          "normalized_hold_pct": 5.12,
-          "rank": 8,
-          "raw_overround_pct": 5.41,
-          "samples": 2
-        },
-        {
           "name": "BetAhoy",
           "normalized_hold_pct": 5.15,
-          "rank": 9,
+          "rank": 8,
           "raw_overround_pct": 5.43,
           "samples": 2
         },
         {
           "name": "BetTom",
           "normalized_hold_pct": 5.15,
-          "rank": 10,
+          "rank": 9,
           "raw_overround_pct": 5.43,
           "samples": 2
         },
         {
           "name": "BetGoodwin",
           "normalized_hold_pct": 5.2,
-          "rank": 11,
+          "rank": 10,
           "raw_overround_pct": 5.49,
           "samples": 2
         },
         {
           "name": "BoyleSports",
           "normalized_hold_pct": 5.46,
-          "rank": 12,
+          "rank": 11,
           "raw_overround_pct": 5.78,
           "samples": 2
         },
         {
           "name": "Sky Bet",
           "normalized_hold_pct": 5.46,
-          "rank": 13,
+          "rank": 12,
           "raw_overround_pct": 5.8,
           "samples": 2
         },
         {
           "name": "BetMGM",
           "normalized_hold_pct": 5.86,
-          "rank": 14,
+          "rank": 13,
           "raw_overround_pct": 6.22,
           "samples": 2
         },
         {
           "name": "Betfred",
           "normalized_hold_pct": 5.9,
-          "rank": 15,
+          "rank": 14,
           "raw_overround_pct": 6.29,
           "samples": 2
         },
         {
           "name": "10BET",
           "normalized_hold_pct": 6.14,
-          "rank": 16,
+          "rank": 15,
           "raw_overround_pct": 6.56,
           "samples": 2
         },
         {
           "name": "Coral",
           "normalized_hold_pct": 6.39,
-          "rank": 17,
+          "rank": 16,
           "raw_overround_pct": 6.83,
           "samples": 2
         },
         {
           "name": "Ladbrokes",
           "normalized_hold_pct": 6.39,
-          "rank": 18,
+          "rank": 17,
           "raw_overround_pct": 6.83,
           "samples": 2
         },
         {
           "name": "Paddy Power",
           "normalized_hold_pct": 6.44,
-          "rank": 19,
+          "rank": 18,
           "raw_overround_pct": 6.9,
           "samples": 2
         },
         {
           "name": "BetVictor",
           "normalized_hold_pct": 6.92,
-          "rank": 20,
+          "rank": 19,
           "raw_overround_pct": 7.43,
           "samples": 2
         },
         {
           "name": "IvyBet",
           "normalized_hold_pct": 7.69,
-          "rank": 21,
+          "rank": 20,
           "raw_overround_pct": 8.33,
           "samples": 2
         }
@@ -1957,89 +1875,82 @@
     {
       "events": 2,
       "market_family": "Match Winner",
-      "observations": 34,
+      "observations": 32,
       "operators": [
-        {
-          "name": "Spreadex",
-          "normalized_hold_pct": 3.97,
-          "rank": 1,
-          "raw_overround_pct": 4.15,
-          "samples": 2
-        },
         {
           "name": "BetMGM",
           "normalized_hold_pct": 4.19,
-          "rank": 2,
+          "rank": 1,
           "raw_overround_pct": 4.4,
           "samples": 2
         },
         {
           "name": "PricedUp",
           "normalized_hold_pct": 4.73,
-          "rank": 3,
+          "rank": 2,
           "raw_overround_pct": 5.06,
           "samples": 2
         },
         {
           "name": "Sky Bet",
           "normalized_hold_pct": 4.83,
-          "rank": 4,
+          "rank": 3,
           "raw_overround_pct": 5.16,
           "samples": 2
         },
         {
           "name": "Bet365",
           "normalized_hold_pct": 4.88,
-          "rank": 5,
+          "rank": 4,
           "raw_overround_pct": 5.13,
           "samples": 2
         },
         {
           "name": "10BET",
           "normalized_hold_pct": 5.49,
-          "rank": 6,
+          "rank": 5,
           "raw_overround_pct": 5.82,
           "samples": 2
         },
         {
           "name": "QuinnBet",
           "normalized_hold_pct": 6.0,
-          "rank": 7,
+          "rank": 6,
           "raw_overround_pct": 6.38,
           "samples": 2
         },
         {
           "name": "Betfred",
           "normalized_hold_pct": 6.2,
-          "rank": 8,
+          "rank": 7,
           "raw_overround_pct": 6.61,
           "samples": 2
         },
         {
           "name": "IvyBet",
           "normalized_hold_pct": 6.29,
-          "rank": 9,
+          "rank": 8,
           "raw_overround_pct": 6.71,
           "samples": 2
         },
         {
           "name": "BetAhoy",
           "normalized_hold_pct": 8.12,
-          "rank": 10,
+          "rank": 9,
           "raw_overround_pct": 8.84,
           "samples": 2
         },
         {
           "name": "BetGoodwin",
           "normalized_hold_pct": 8.12,
-          "rank": 11,
+          "rank": 10,
           "raw_overround_pct": 8.84,
           "samples": 2
         },
         {
           "name": "BetTom",
           "normalized_hold_pct": 8.12,
-          "rank": 12,
+          "rank": 11,
           "raw_overround_pct": 8.84,
           "samples": 2
         }
@@ -2051,7 +1962,7 @@
     {
       "events": 2,
       "market_family": "Game Handicap",
-      "observations": 24,
+      "observations": 23,
       "operators": [
         {
           "name": "BetAhoy",
@@ -2089,7 +2000,7 @@
   ],
   "status": "PASS",
   "summary": {
-    "diagnostic_operators": 23,
+    "diagnostic_operators": 22,
     "events": 4,
     "market_families": [
       "Match Winner",
@@ -2099,9 +2010,9 @@
       "BTTS",
       "Draw No Bet"
     ],
-    "observations": 284,
-    "operators": 23,
-    "raw_quote_sets": 978,
+    "observations": 271,
+    "operators": 22,
+    "raw_quote_sets": 918,
     "sports": [
       "Football",
       "Tennis"
