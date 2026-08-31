@@ -69,6 +69,28 @@ class BookmakerMarginIndexTests(unittest.TestCase):
         }
         self.assertEqual(MODULE.quote_sets(market, "Over/Under", "Home", "Away"), [])
 
+    def test_complete_total_without_a_verified_line_is_rejected(self) -> None:
+        market = {
+            "name": "Over/Under",
+            "over": 1.91,
+            "under": 1.91,
+        }
+        self.assertEqual(MODULE.quote_sets(market, "Over/Under", "Home", "Away"), [])
+
+    def test_prices_from_different_total_lines_are_not_paired(self) -> None:
+        market = {
+            "name": "Over/Under",
+            "odds": [
+                {"label": "Over 2.5", "odds": 1.91},
+                {"label": "Under 3.5", "odds": 1.91},
+            ],
+        }
+        self.assertEqual(MODULE.quote_sets(market, "Over/Under", "Home", "Away"), [])
+
+    def test_bookmaker_aliases_do_not_absorb_regional_variants(self) -> None:
+        self.assertEqual(MODULE.display_bookmaker("Bwin"), "Bwin")
+        self.assertEqual(MODULE.display_bookmaker("Bwin DE"), "Bwin DE")
+
     def test_tennis_moneyline_is_two_way_and_segmented(self) -> None:
         payload = []
         for event_id in (1, 2):

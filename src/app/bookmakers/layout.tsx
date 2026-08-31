@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { BASE_URL, BOOKMAKERS_INDEXABLE } from "@/lib/config";
 
-const title = "Recommended Bookmakers | 8 Field-Tested Operators & Betting Glossary";
+const title = "UK Bookmaker Margin Index | Football & Tennis";
 const description =
-  "Eight recommended bookmakers (Midnite, BetVictor, Bwin, Coral, Ladbrokes, BetMGM, William Hill, Betway): honest reviews, welcome offers, key concepts, comparison table, and industry glossary.";
+  "Compare measured UK bookmaker margins by football and tennis market, with dated samples, transparent methodology, independent reviews and clearly labelled partner offers.";
 const url = `${BASE_URL}/bookmakers`;
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     siteName: "Il Margine",
     title,
     description,
-    images: [{ url: `${BASE_URL}/banner.png`, width: 1200, height: 400, alt: "Il Margine - Recommended Bookmakers", type: "image/png" }],
+    images: [{ url: `${BASE_URL}/banner.png`, width: 1200, height: 400, alt: "Il Margine UK bookmaker margin index", type: "image/png" }],
   },
   twitter: {
     card: "summary_large_image",

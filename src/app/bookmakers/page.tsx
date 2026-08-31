@@ -1,76 +1,44 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import Footer from "@/components/Footer";
 import BookmakerLogo from "@/components/BookmakerLogo";
+import MarginExplorer from "@/components/bookmakers/MarginExplorer";
 import PageHomeLink from "@/components/PageHomeLink";
+import {
+  NOT_MEASURED_MARKETS,
+  type BookmakerMarginIndex,
+} from "@/lib/bookmakers/margin-index";
 import marginIndexJson from "../../../data/bookmakers/margin-index.json";
-
-type MarginOperator = {
-  rank: number;
-  name: string;
-  raw_overround_pct: number;
-  normalized_hold_pct: number;
-  samples: number;
-  market_families: string[];
-  coverage_pct: number;
-};
-
-type MarginSegmentOperator = Pick<
-  MarginOperator,
-  "rank" | "name" | "raw_overround_pct" | "normalized_hold_pct" | "samples"
->;
-
-type MarginSegment = {
-  sport: string;
-  sport_slug: string;
-  market_family: string;
-  events: number;
-  observations: number;
-  status: string;
-  operators: MarginSegmentOperator[];
-};
-
-type BookmakerMarginIndex = {
-  generated_at: string | null;
-  status: string;
-  capture_mode?: string;
-  methodology: { minimum_publish_gate: string };
-  summary: {
-    operators: number;
-    diagnostic_operators?: number;
-    sports?: string[];
-    events: number;
-    market_families: string[];
-    observations: number;
-  };
-  synthetic_best_price: {
-    raw_overround_pct: number | null;
-    normalized_hold_pct: number | null;
-    samples: number;
-  };
-  operators: MarginOperator[];
-  segments?: MarginSegment[];
-};
 
 const MARGIN_INDEX = marginIndexJson as BookmakerMarginIndex;
 
-function marginPct(value: number | null) {
-  return value === null ? "-" : `${value >= 0 ? "+" : ""}${value.toFixed(2)}%`;
+type BookmakerReview = {
+  id: string;
+  name: string;
+  stars: string;
+  rating: string;
+  propsScore: string;
+  tennisScore: string;
+  strengths: string[];
+  weaknesses: string[];
+  usageTips: string;
+  bestFor: string;
+  welcomeOffer?: string;
+  welcomeTerms?: string;
+  offerUrl?: string;
+};
+
+const PARTNER_IDS = new Set(["william-hill", "bwin", "betway"]);
+
+function isPartner(
+  bookmaker: BookmakerReview,
+): bookmaker is BookmakerReview & Required<Pick<BookmakerReview, "welcomeOffer" | "welcomeTerms" | "offerUrl">> {
+  return (
+    PARTNER_IDS.has(bookmaker.id) &&
+    Boolean(bookmaker.welcomeOffer && bookmaker.welcomeTerms && bookmaker.offerUrl)
+  );
 }
 
-function capturedLabel(value: string | null) {
-  if (!value) return "No verified capture yet";
-  return new Intl.DateTimeFormat("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: "UTC",
-    timeZoneName: "short",
-  }).format(new Date(value));
-}
-
-const BOOKMAKERS = [
+const BOOKMAKERS: BookmakerReview[] = [
   {
     id: "midnite",
     name: "Midnite",
@@ -78,8 +46,6 @@ const BOOKMAKERS = [
     rating: "4.5/5",
     propsScore: "8/10",
     tennisScore: "7/10",
-    welcomeOffer: "Bet £10 Get £20 Free Bets",
-    welcomeTerms: "Min odds 1.50, free bets valid 7 days",
     strengths: [
       "Strong player props coverage across major leagues",
       "Competitive odds on shots, fouls, cards markets",
@@ -98,7 +64,6 @@ const BOOKMAKERS = [
     ],
     usageTips: "Midnite is one of the newer operators worth attention. Built from scratch with modern infrastructure, the platform is fast and intuitive. Best used for Premier League and Championship player props where their odds are often competitive with or better than legacy books. Coverage of shots on target, fouls committed, and cards received is solid. Account longevity appears reasonable based on limited testing, but treat as unproven until you've run a few months of profitable action. Start conservatively and scale if the account survives. Avoid for tennis beyond major tournaments. Stick to football props where they're strongest.",
     bestFor: "Modern platform, major league props",
-    offerUrl: "#",
   },
   {
     id: "betvictor",
@@ -107,8 +72,6 @@ const BOOKMAKERS = [
     rating: "3.5/5",
     propsScore: "8/10",
     tennisScore: "7/10",
-    welcomeOffer: "Bet £10 Get £40 in Bonuses",
-    welcomeTerms: "Min odds 2.00, various bonus types, T&Cs apply",
     strengths: [
       "Still offers solid player-props depth across the major leagues",
       "Historically useful tennis handicap and totals book on ATP events",
@@ -124,7 +87,6 @@ const BOOKMAKERS = [
     ],
     usageTips: "We would treat BetVictor as a comparison account now rather than a core one. For props: it is still worth checking because it can occasionally hang a strong number, but we would not rely on it as heavily as the better books on the page. For tennis: it remains more interesting on ATP events than on lower tiers, and it can still throw up a playable handicap or totals price from time to time. Useful to keep open, but not one we’d prioritise first.",
     bestFor: "Secondary all-rounder, still worth checking",
-    offerUrl: "#",
   },
   {
     id: "william-hill",
@@ -187,8 +149,6 @@ const BOOKMAKERS = [
     rating: "4/5",
     propsScore: "8/10",
     tennisScore: "7/10",
-    welcomeOffer: "Bet £10 Get £30 in Free Bets",
-    welcomeTerms: "Min odds 1.50, free bets valid 7 days",
     strengths: [
       "Comprehensive player props across all major leagues",
       "Part of Entain (shares pricing with Ladbrokes but separate account)",
@@ -205,7 +165,6 @@ const BOOKMAKERS = [
     ],
     usageTips: "Coral is part of the Entain group alongside Ladbrokes. Critically, you can hold accounts with both simultaneously. This creates a tactical opportunity: open both Coral and Ladbrokes. They share the same pricing engine, so odds are identical, but each account is independently managed. Having both gives you dual access to Entain's competitive pricing across props and tennis markets. For props: Coverage is excellent across Premier League, Championship, and major European leagues. Bet builder is solid and occasionally misprices correlation. Worth using. For tennis: Adequate for ATP 250+, but skip for anything below that tier. Other operators have better coverage of Challengers. Always pair Coral with Ladbrokes. Never use one without the other.",
     bestFor: "Pair with Ladbrokes for extended access",
-    offerUrl: "#",
   },
   {
     id: "ladbrokes",
@@ -214,8 +173,6 @@ const BOOKMAKERS = [
     rating: "4/5",
     propsScore: "8/10",
     tennisScore: "7/10",
-    welcomeOffer: "Bet £5 Get £20 in Free Bets",
-    welcomeTerms: "Min odds 1.50, free bets valid 7 days",
     strengths: [
       "Identical strengths to Coral (same pricing engine)",
       "Comprehensive props across major leagues",
@@ -230,7 +187,6 @@ const BOOKMAKERS = [
     ],
     usageTips: "Everything said about Coral applies here. Ladbrokes and Coral are operationally the same book with separate account management. The strategy is simple: Open both. Use both. When one restricts you, keep using the other. For props: Excellent coverage, good odds, decent bet builders. Use actively. For tennis: Fine for ATP 250+, skip below that. The only reason to choose Ladbrokes over Coral or vice versa is welcome offer preference. Otherwise, they're functionally identical, so having both doubles your access window to Entain pricing. This pairing is non-negotiable. If you have one, you must have the other.",
     bestFor: "Pair with Coral for extended access",
-    offerUrl: "#",
   },
   {
     id: "betmgm",
@@ -239,8 +195,6 @@ const BOOKMAKERS = [
     rating: "4/5",
     propsScore: "8/10",
     tennisScore: "7/10",
-    welcomeOffer: "Bet £10 Get £40 in Free Bets",
-    welcomeTerms: "Min odds 1.50, free bets valid 7 days",
     strengths: [
       "Operates on LeoVegas platform (acquired by MGM), independent pricing from other UK operators",
       "Growing props coverage",
@@ -258,7 +212,6 @@ const BOOKMAKERS = [
     ],
     usageTips: "BetMGM operates on the LeoVegas platform with fully independent pricing. This means odds can differ significantly from other bookmakers, creating valuable line shopping opportunities. For props: Solid coverage on Premier League and major European leagues. Worth checking for price comparison. Sometimes offers better odds than established operators on specific markets. For tennis: Good coverage across ATP 250+ events. Competitive pricing on game handicaps and totals. Stronger tennis offering than many UK books. Definitely check their odds when betting ATP events. Useful as a core account for both props and tennis. The independent pricing makes this essential for line shopping rather than optional.",
     bestFor: "Player props & tennis, independent pricing for line shopping",
-    offerUrl: "#",
   },
   {
     id: "betway",
@@ -292,44 +245,52 @@ const BOOKMAKERS = [
 ];
 
 const COMPARISON_ROWS = [
-  { name: "Midnite", props: "8/10", tennis: "7/10", offer: "£20 free bets", bestFor: "Modern platform, major league props" },
-  { name: "BetVictor", props: "8/10", tennis: "7/10", offer: "£40 bonuses", bestFor: "Secondary all-rounder, still worth checking" },
+  { name: "Midnite", props: "8/10", tennis: "7/10", offer: "Editorial only", bestFor: "Modern platform, major league props" },
+  { name: "BetVictor", props: "8/10", tennis: "7/10", offer: "Editorial only", bestFor: "Secondary all-rounder, still worth checking" },
   { name: "William Hill", props: "8/10", tennis: "7/10", offer: "£40 free bets", bestFor: "Must-have — we use it often, limits hold up" },
   { name: "Bwin", props: "8/10", tennis: "7/10", offer: "£5 → £20 free bets", bestFor: "Pair with Coral and Ladbrokes for extended access" },
-  { name: "Coral", props: "8/10", tennis: "7/10", offer: "£30 free bets", bestFor: "Pair with Ladbrokes for extended access" },
-  { name: "Ladbrokes", props: "8/10", tennis: "7/10", offer: "£20 free bets", bestFor: "Pair with Coral for extended access" },
-  { name: "BetMGM", props: "8/10", tennis: "7/10", offer: "£40 free bets", bestFor: "Player props & tennis, independent pricing for line shopping" },
+  { name: "Coral", props: "8/10", tennis: "7/10", offer: "Editorial only", bestFor: "Pair with Ladbrokes for extended access" },
+  { name: "Ladbrokes", props: "8/10", tennis: "7/10", offer: "Editorial only", bestFor: "Pair with Coral for extended access" },
+  { name: "BetMGM", props: "8/10", tennis: "7/10", offer: "Editorial only", bestFor: "Player props & tennis, independent pricing for line shopping" },
   { name: "Betway", props: "8/10", tennis: "6/10", offer: "£40 free bets", bestFor: "Football props, mobile betting, worthwhile line shopping" },
 ];
 
-function BookmakerCard({ bm }: { bm: (typeof BOOKMAKERS)[0] }) {
+function BookmakerCard({ bm }: { bm: BookmakerReview }) {
+  const partner = isPartner(bm);
+
   return (
     <article className="bg-[#1a1d24] rounded-xl border border-slate-800 overflow-hidden">
-      {/* Conversion block: always visible */}
       <div className="p-5 md:p-6">
         <div className="flex flex-wrap items-center gap-3 mb-3">
-          <BookmakerLogo bookmaker={{ id: 0, name: bm.name, short_name: bm.name, affiliate_link: bm.offerUrl !== "#" ? bm.offerUrl : null, active: true }} size="md" />
+          <BookmakerLogo bookmaker={{ id: 0, name: bm.name, short_name: bm.name, affiliate_link: partner ? bm.offerUrl : null, active: true }} size="md" />
           <div>
             <h3 className="font-semibold text-slate-100">{bm.name}</h3>
             <span className="text-xs text-slate-500">{bm.stars} · Props {bm.propsScore} · Tennis {bm.tennisScore}</span>
           </div>
-          <span className="sm:ml-auto text-[10px] font-medium px-2 py-0.5 rounded bg-slate-800 text-slate-400 shrink-0 max-w-full sm:max-w-[200px] truncate" title={bm.bestFor}>{bm.bestFor}</span>
+          <span className={`sm:ml-auto rounded-full border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.14em] ${partner ? "border-emerald-400/20 bg-emerald-400/[0.08] text-emerald-300" : "border-slate-700 bg-slate-900 text-slate-500"}`}>
+            {partner ? "Affiliate partner" : "Independent review"}
+          </span>
         </div>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-3 border-t border-slate-800">
-          <div className="flex items-baseline gap-2 flex-wrap">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-400">New customers</span>
-            <span className="text-slate-500">·</span>
-            <span className="text-sm font-semibold text-slate-100">{bm.welcomeOffer}</span>
+        {partner ? (
+          <div className="flex flex-col gap-3 border-t border-slate-800 pt-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-400">New UK customers</span>
+              <p className="mt-1 text-sm font-semibold text-slate-100">{bm.welcomeOffer}</p>
+            </div>
+            <a
+              href={bm.offerUrl}
+              target="_blank"
+              rel="sponsored nofollow noopener noreferrer"
+              className="inline-flex w-full items-center justify-center rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-400 sm:w-auto"
+            >
+              View {bm.name} offer →
+            </a>
           </div>
-          <a
-            href={bm.offerUrl}
-            target={bm.offerUrl !== "#" ? "_blank" : undefined}
-            rel={bm.offerUrl !== "#" ? "noopener noreferrer nofollow" : undefined}
-            className="inline-block w-full sm:w-auto text-center bg-emerald-500 hover:bg-emerald-400 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors shrink-0"
-          >
-            Claim {bm.name} Offer →
-          </a>
-        </div>
+        ) : (
+          <div className="border-t border-slate-800 pt-4">
+            <p className="text-sm text-slate-400">No paid link. Included for independent comparison and line-shopping context.</p>
+          </div>
+        )}
       </div>
       {/* Expandable details */}
       <details className="group border-t border-slate-800">
@@ -340,9 +301,11 @@ function BookmakerCard({ bm }: { bm: (typeof BOOKMAKERS)[0] }) {
           </span>
         </summary>
         <div className="px-5 md:px-6 pb-5 pt-0 space-y-4">
-          <div className="rounded-lg border border-slate-700/80 bg-slate-800/40 px-3 py-2">
-            <p className="text-[11px] text-slate-500">{bm.welcomeTerms}</p>
-          </div>
+          {partner && (
+            <div className="rounded-lg border border-slate-700/80 bg-slate-800/40 px-3 py-2">
+              <p className="text-[11px] leading-5 text-slate-500">{bm.welcomeTerms}</p>
+            </div>
+          )}
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-wider text-emerald-400 mb-1.5">Strengths</p>
@@ -365,25 +328,20 @@ function BookmakerCard({ bm }: { bm: (typeof BOOKMAKERS)[0] }) {
 }
 
 const FAQ_ITEMS = [
-  { q: "Should I open all eight accounts at once?", a: "Yes. Welcome offers alone provide £250+ value. More importantly, having eight accounts active extends your operational window to 18-24 months before restrictions become severe across all platforms. Open them all, claim all offers, use them strategically." },
-  { q: "What if odds are better elsewhere?", a: "Always take best price. Line shop across all eight before placing any bet. Over 100 bets, even 2-3% better average odds compounds significantly. Never settle for worse odds out of loyalty or convenience." },
-  { q: "Do affiliate links affect your recommendations?", a: "No. These bookmakers were selected through months of real-money testing before any affiliate discussions began. We sought partnerships with books we already used, not vice versa. If a bookmaker deteriorates in quality or changes practices, we'll remove them regardless of commercial arrangements." },
-  { q: "Are welcome bonuses worth it?", a: "Absolutely. Combined, these eight offer £250+ in bonuses. Even accounting for rollover requirements, expected value is positive. Claim all of them. Use them on +EV opportunities where possible, or on lower-variance markets if rollover requirements demand it." },
-  { q: "Can I use Ladbrokes, Coral, and Bwin together?", a: "Yes, and you should. They're part of the same group (Entain) and share identical pricing, but account management is separate. Opening all three extends your access window to Entain odds significantly. This trio is essential if you're serious about line shopping." },
+  { q: "Is the margin index live?", a: "No. It is a dated, one-off snapshot. We publish the capture time and sample size so the comparison is not mistaken for a live odds screen." },
+  { q: "Why are some prop markets not measured?", a: "A bookmaker margin needs every mutually exclusive outcome from the same bookmaker at the same line. An over-only player-prop price cannot produce a defensible margin, so we label it not measured rather than inventing one." },
+  { q: "What if odds are better elsewhere?", a: "Take the best available price after checking that the market, line and settlement rules are identical. Small price improvements compound materially over a large sample." },
+  { q: "Do affiliate links affect the margin ranking?", a: "No. William Hill, Bwin and Betway are our only affiliate partners on this page. The margin snapshot is computed independently from captured prices, and the measured Bet365 and BetMGM rows are not paid placements." },
+  { q: "Are welcome offers guaranteed value?", a: "No. Terms, qualifying odds, expiry and withdrawal conditions matter. Read the current operator terms and never place a poor-value bet solely to unlock a promotion." },
   { q: "What happens when I get restricted?", a: "Stake limits reduce gradually, eventually hitting £5-20 maximum. The account remains active but becomes operationally useless for serious betting. This is inevitable for winning accounts. Plan for it by having multiple accounts active. When one restricts, continue with others.", linkToFaq: true },
 ];
 
 export default function BookmakersPage() {
-  const publishableSegments = (MARGIN_INDEX.segments ?? []).filter(
-    (segment) =>
-      ["PASS", "PASS_LIMITED"].includes(segment.status) &&
-      segment.operators.length >= 2,
+  const measuredSegments = (MARGIN_INDEX.segments ?? []).filter(
+    (segment) => segment.operators.length > 0,
   );
-  const hasOverallRanking = MARGIN_INDEX.operators.length >= 4;
-  const limitedSnapshot = MARGIN_INDEX.status === "PASS_LIMITED";
-  const publishable =
-    ["PASS", "PASS_LIMITED"].includes(MARGIN_INDEX.status) &&
-    (hasOverallRanking || publishableSegments.length > 0);
+  const partnerBookmakers = BOOKMAKERS.filter(isPartner);
+  const editorialBookmakers = BOOKMAKERS.filter((bookmaker) => !isPartner(bookmaker));
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
@@ -393,215 +351,93 @@ export default function BookmakersPage() {
         {/* Hero */}
         <section className="mb-10 md:mb-12">
           <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">BOOKMAKERS</span>
-          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-2">
-            £250+ in Welcome Offers
+          <h1 className="max-w-4xl text-4xl font-semibold tracking-[-0.035em] text-white sm:text-5xl lg:text-6xl">
+            UK Bookmaker Margin Index
           </h1>
-          <p className="text-lg text-slate-300 max-w-2xl mb-4">
-            Eight bookmakers. One strategy. Field tested for props and tennis. We bet here and we&apos;re honest about restrictions.
+          <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+            Which UK bookmaker is cheapest, market by market. Measured from complete prices captured in a single snapshot — not estimates and not a live feed.
           </p>
-          <p className="text-slate-400 text-sm mb-4 max-w-2xl">
-            Independent reviews based on real money testing. Affiliate links are used where we have partnerships. Recommendations are unchanged regardless.
+          <p className="mt-4 max-w-3xl text-sm leading-6 text-slate-500">
+            The independent index covers every operator present in the verified capture. Promotional links appear only for our three partners: William Hill, Bwin and Betway.
           </p>
-          <p className="text-slate-500 text-sm max-w-3xl">
+          <p className="mt-4 text-sm text-slate-500">
             18+ only. Gamble responsibly. <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-emerald-400/80 hover:text-emerald-300 underline">begambleaware.org</a>
           </p>
         </section>
 
-        <section className="mb-10 overflow-hidden rounded-2xl border border-cyan-400/20 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.10),transparent_42%),linear-gradient(145deg,rgba(15,23,42,0.96),rgba(2,6,23,0.96))] shadow-[0_24px_70px_rgba(2,6,23,0.35)]">
-          <div className="border-b border-slate-800/80 px-5 py-5 sm:px-7">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-              <div>
-                <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-cyan-300">Price intelligence</span>
-                <h2 className="mt-2 text-2xl font-semibold text-white">UK bookmaker margin index</h2>
-                <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">
-                  A dated, like-for-like snapshot of the margin built into complete football and tennis markets. Lower hold is better for the bettor.
-                </p>
-              </div>
-              <div className="shrink-0 rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1.5 text-xs text-slate-400">
-                {limitedSnapshot ? "Two-book snapshot" : "Broad snapshot"} · {capturedLabel(MARGIN_INDEX.generated_at)}
-              </div>
-            </div>
-          </div>
+        <MarginExplorer
+          generatedAt={MARGIN_INDEX.generated_at}
+          segments={measuredSegments}
+          notMeasured={NOT_MEASURED_MARKETS}
+        />
 
-          {publishable ? (
-            <div>
-              <div className="grid gap-px bg-slate-800/80 sm:grid-cols-4">
-                {[
-                  ["Operators", String(MARGIN_INDEX.summary.diagnostic_operators ?? MARGIN_INDEX.summary.operators)],
-                  ["Sports", String(MARGIN_INDEX.summary.sports?.length ?? 0)],
-                  ["Events", String(MARGIN_INDEX.summary.events)],
-                  ["Market families", String(MARGIN_INDEX.summary.market_families.length)],
-                ].map(([label, value]) => (
-                  <div key={label} className="bg-slate-950/80 px-5 py-4">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">{label}</p>
-                    <p className="mt-1 font-mono text-xl font-semibold tabular-nums text-white">{value}</p>
-                  </div>
-                ))}
-              </div>
-
-              {publishableSegments.length > 0 && (
-                <div className="border-t border-slate-800/80 px-5 py-6 sm:px-7">
-                  <div className="mb-4">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-300">Sport and market breakdown</p>
-                    <p className="mt-1 text-sm text-slate-400">
-                      Each table compares only operators quoting the same complete market in this snapshot.
-                      {limitedSnapshot ? " Current free-tier coverage is limited to Bet365 and BetMGM; this is not a market-wide UK ranking." : ""}
-                    </p>
-                  </div>
-                  <div className="grid gap-4 lg:grid-cols-2">
-                    {publishableSegments.map((segment) => (
-                      <article key={`${segment.sport_slug}-${segment.market_family}`} className="overflow-hidden rounded-xl border border-slate-800 bg-slate-950/45">
-                        <div className="flex items-start justify-between gap-3 border-b border-slate-800 px-4 py-3">
-                          <div>
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">{segment.sport}</p>
-                            <h3 className="mt-1 font-semibold text-slate-100">{segment.market_family}</h3>
-                          </div>
-                          <span className="rounded-full border border-slate-700 px-2.5 py-1 font-mono text-[10px] text-slate-400">
-                            n={segment.observations}
-                          </span>
-                        </div>
-                        <div className="divide-y divide-slate-800/80">
-                          {segment.operators.slice(0, 6).map((operator) => (
-                            <div key={operator.name} className="grid grid-cols-[2rem_minmax(0,1fr)_auto_auto] items-center gap-3 px-4 py-3 text-sm">
-                              <span className="font-mono text-xs text-slate-600">#{operator.rank}</span>
-                              <span className="truncate font-medium text-slate-200">{operator.name}</span>
-                              <span className="font-mono tabular-nums text-cyan-300">{marginPct(operator.normalized_hold_pct)}</span>
-                              <span className="font-mono text-xs tabular-nums text-slate-500">n={operator.samples}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </article>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {hasOverallRanking && <div className="overflow-x-auto">
-                <table className="min-w-[780px] w-full text-left text-sm">
-                  <thead className="border-b border-slate-800 bg-slate-950/55 text-[10px] uppercase tracking-[0.14em] text-slate-500">
-                    <tr>
-                      <th className="px-5 py-3 font-semibold">Rank</th>
-                      <th className="px-5 py-3 font-semibold">Operator</th>
-                      <th className="px-5 py-3 font-semibold">Normalized hold</th>
-                      <th className="px-5 py-3 font-semibold">Raw overround</th>
-                      <th className="px-5 py-3 font-semibold">Markets</th>
-                      <th className="px-5 py-3 font-semibold">Samples</th>
-                      <th className="px-5 py-3 font-semibold">Coverage</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-800/80">
-                    {MARGIN_INDEX.operators.map((operator) => (
-                      <tr key={operator.name} className="bg-slate-950/20 transition-colors hover:bg-cyan-400/[0.04]">
-                        <td className="px-5 py-4 font-mono text-slate-500">#{operator.rank}</td>
-                        <td className="px-5 py-4">
-                          <div className="flex items-center gap-3">
-                            <BookmakerLogo bookmaker={{ id: 0, name: operator.name, short_name: operator.name, affiliate_link: null, active: true }} size="sm" />
-                            <span className="font-semibold text-slate-100">{operator.name}</span>
-                          </div>
-                        </td>
-                        <td className="px-5 py-4 font-mono font-semibold tabular-nums text-cyan-300">{marginPct(operator.normalized_hold_pct)}</td>
-                        <td className="px-5 py-4 font-mono tabular-nums text-slate-300">{marginPct(operator.raw_overround_pct)}</td>
-                        <td className="px-5 py-4 text-xs text-slate-400">{operator.market_families.join(" · ")}</td>
-                        <td className="px-5 py-4 font-mono tabular-nums text-slate-300">{operator.samples}</td>
-                        <td className="px-5 py-4 font-mono tabular-nums text-slate-300">{operator.coverage_pct.toFixed(1)}%</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>}
-
-              <div className="grid gap-4 border-t border-slate-800/80 px-5 py-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:px-7">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300">Best-price market</p>
-                  <p className="mt-1 text-sm leading-6 text-slate-400">
-                    Synthetic line-shopping benchmark built from the best price for each outcome across operators. It is not one bookmaker&apos;s margin.
-                  </p>
-                </div>
-                <div className="flex gap-6 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.06] px-5 py-3">
-                  <div>
-                    <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500">Normalized</p>
-                    <p className="mt-1 font-mono text-lg font-semibold text-emerald-300">{marginPct(MARGIN_INDEX.synthetic_best_price.normalized_hold_pct)}</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500">Samples</p>
-                    <p className="mt-1 font-mono text-lg font-semibold text-white">{MARGIN_INDEX.synthetic_best_price.samples}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="px-5 py-6 sm:px-7">
-              <div className="rounded-xl border border-amber-400/20 bg-amber-400/[0.06] px-4 py-4">
-                <p className="font-semibold text-amber-200">Awaiting a verified comparison sample</p>
-                <p className="mt-2 text-sm leading-6 text-slate-300">
-                  No comparison is shown until the capture contains either broad four-operator coverage or a clearly labelled two-book sample spanning football and tennis markets.
-                </p>
-                <p className="mt-2 text-xs text-slate-500">
-                  Current diagnostic coverage: {MARGIN_INDEX.summary.operators} qualified operators · {MARGIN_INDEX.summary.market_families.length} market families · {MARGIN_INDEX.summary.observations} observations.
-                </p>
-              </div>
-            </div>
-          )}
-
-          <div className="border-t border-slate-800/80 bg-slate-950/45 px-5 py-4 text-xs leading-5 text-slate-500 sm:px-7">
-            Manual one-off snapshot, not a live or weekly feed. Raw overround is Σ(1/decimal odds) − 1. Normalized hold is 1 − 1/Σ(1/decimal odds). Alternate lines are collapsed before operators are compared, so books with more lines do not receive extra weight.
-          </div>
+        <section className="mb-12 grid gap-4 md:grid-cols-3">
+          <article className="rounded-2xl border border-slate-800 bg-[#141820] p-5">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-300">Complete markets only</p>
+            <h2 className="mt-2 text-lg font-semibold text-white">No over-only shortcuts</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-400">We calculate margin only when every mutually exclusive outcome is available from the same bookmaker at the identical line.</p>
+          </article>
+          <article className="rounded-2xl border border-slate-800 bg-[#141820] p-5">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-300">One dated capture</p>
+            <h2 className="mt-2 text-lg font-semibold text-white">Comparable, not live</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-400">Alternate lines are collapsed before comparison, so a bookmaker with more lines cannot gain artificial weight.</p>
+          </article>
+          <article className="rounded-2xl border border-slate-800 bg-[#141820] p-5">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-300">Read the evidence</p>
+            <h2 className="mt-2 text-lg font-semibold text-white">Samples stay visible</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-400">Every panel shows event and quote counts. Thin markets remain labelled instead of being blended into a misleading global league table.</p>
+          </article>
         </section>
 
-        {/* Quick-offer strip: scan & convert */}
-        <section className="mb-10">
-          <h2 className="text-sm font-semibold text-slate-400 mb-4">Offers at a glance</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {BOOKMAKERS.map((bm) => (
-              <div key={bm.id} className="rounded-lg border border-slate-700/80 bg-slate-800/40 p-3 flex flex-col gap-2">
-                <div className="flex items-center gap-2">
-                  <BookmakerLogo bookmaker={{ id: 0, name: bm.name, short_name: bm.name, affiliate_link: bm.offerUrl !== "#" ? bm.offerUrl : null, active: true }} size="sm" />
-                  <span className="font-medium text-slate-200 text-sm">{bm.name}</span>
+        {/* Partner offers */}
+        <section className="mb-12 rounded-[2rem] border border-emerald-300/15 bg-[linear-gradient(145deg,rgba(16,185,129,0.06),rgba(15,17,23,0.9)_44%)] p-5 sm:p-7">
+          <div className="mb-5 max-w-3xl">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-300">Commercial relationships</p>
+            <h2 className="mt-2 text-2xl font-semibold text-white">Our partner offers</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-400">Only these three cards contain paid links. The independent margin explorer above is calculated without regard to affiliate status.</p>
+          </div>
+          <div className="grid gap-3 md:grid-cols-3">
+            {partnerBookmakers.map((bm) => (
+              <article key={bm.id} className="flex flex-col rounded-2xl border border-slate-700/80 bg-[#11151c] p-4 shadow-[0_14px_40px_rgba(0,0,0,0.2)]">
+                <div className="flex items-center gap-3">
+                  <BookmakerLogo bookmaker={{ id: 0, name: bm.name, short_name: bm.name, affiliate_link: bm.offerUrl, active: true }} size="sm" />
+                  <div>
+                    <p className="font-semibold text-slate-100">{bm.name}</p>
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-emerald-400">Affiliate partner</p>
+                  </div>
                 </div>
-                <p className="text-xs font-medium text-slate-100">{bm.welcomeOffer}</p>
-                <p className="text-[10px] text-slate-500 line-clamp-1">{bm.bestFor}</p>
+                <p className="mt-4 text-sm font-semibold text-white">{bm.welcomeOffer}</p>
+                <p className="mt-1 text-xs leading-5 text-slate-500">New UK customers. Full operator terms apply.</p>
                 <a
                   href={bm.offerUrl}
-                  target={bm.offerUrl !== "#" ? "_blank" : undefined}
-                  rel={bm.offerUrl !== "#" ? "noopener noreferrer nofollow" : undefined}
-                  className="mt-auto text-xs font-semibold text-emerald-400 hover:text-emerald-300"
+                  target="_blank"
+                  rel="sponsored nofollow noopener noreferrer"
+                  className="mt-4 inline-flex items-center justify-center rounded-xl border border-emerald-400/25 bg-emerald-400/[0.09] px-4 py-2.5 text-sm font-semibold text-emerald-200 transition-colors hover:bg-emerald-400/[0.16]"
                 >
-                  {bm.offerUrl !== "#" ? "Claim offer →" : "View offer"}
+                  View offer →
                 </a>
-              </div>
+              </article>
             ))}
           </div>
         </section>
 
         {/* Full reviews */}
         <section className="mb-12">
-          <h2 className="text-sm font-semibold text-slate-400 mb-4">Full reviews</h2>
-          <p className="text-slate-500 text-sm mb-6">Click &quot;Read full review&quot; on each card for strengths, weaknesses, terms and how we use each book.</p>
+          <h2 className="text-2xl font-semibold text-white">Independent bookmaker reviews</h2>
+          <p className="mb-7 mt-2 max-w-3xl text-sm leading-6 text-slate-500">All eight operators remain in the editorial comparison. Paid relationships are labelled on every relevant card; the remaining reviews contain no signup link.</p>
 
-          {/* Must-have: William Hill first */}
           <div className="mb-6">
-            <p className="text-xs font-semibold uppercase tracking-wider text-emerald-400/80 mb-3">Must-have — we use it often</p>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-400/80">Affiliate partners</p>
             <div className="space-y-6">
-              {BOOKMAKERS.filter((bm) => bm.id === "william-hill").map((bm) => (
+              {partnerBookmakers.map((bm) => (
                 <BookmakerCard key={bm.id} bm={bm} />
               ))}
             </div>
           </div>
 
-          {/* Entain trio */}
-          <div className="mb-6">
-            <p className="text-xs font-semibold uppercase tracking-wider text-emerald-400/80 mb-3">The Entain trio (open all three)</p>
-            <div className="space-y-6">
-              {BOOKMAKERS.filter((bm) => ["bwin", "coral", "ladbrokes"].includes(bm.id)).map((bm) => (
-                <BookmakerCard key={bm.id} bm={bm} />
-              ))}
-            </div>
-          </div>
-
-          {/* Rest */}
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Other operators</p>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Editorial only · no paid link</p>
           <div className="space-y-6">
-            {BOOKMAKERS.filter((bm) => !["bwin", "coral", "ladbrokes", "william-hill"].includes(bm.id)).map((bm) => (
+            {editorialBookmakers.map((bm) => (
               <BookmakerCard key={bm.id} bm={bm} />
             ))}
           </div>
@@ -713,49 +549,46 @@ export default function BookmakersPage() {
           </div>
         </section>
 
-        {/* Comparison Table */}
+        {/* Responsive comparison */}
         <section className="mb-10">
-          <h2 className="text-xl font-semibold text-emerald-400 mb-4">Quick Comparison</h2>
-          <div className="overflow-x-auto rounded-lg border border-slate-700">
-            <table className="w-full text-sm border-collapse min-w-[600px]">
-              <thead>
-                <tr className="bg-slate-800/60 border-b border-slate-700">
-                  <th className="text-left py-3 px-4 text-emerald-400/90 font-medium">Bookmaker</th>
-                  <th className="text-left py-3 px-4 text-emerald-400/90 font-medium">Player Props</th>
-                  <th className="text-left py-3 px-4 text-emerald-400/90 font-medium">Tennis</th>
-                  <th className="text-left py-3 px-4 text-emerald-400/90 font-medium">Welcome Offer</th>
-                  <th className="text-left py-3 px-4 text-emerald-400/90 font-medium">Best For</th>
-                </tr>
-              </thead>
-              <tbody>
-                {COMPARISON_ROWS.map((row) => (
-                  <tr key={row.name} className="border-b border-slate-800">
-                    <td className="py-3 px-4 font-medium text-slate-200">{row.name}</td>
-                    <td className="py-3 px-4 text-slate-300">{row.props}</td>
-                    <td className="py-3 px-4 text-slate-300">{row.tennis}</td>
-                    <td className="py-3 px-4 text-slate-300">{row.offer}</td>
-                    <td className="py-3 px-4 text-slate-300">{row.bestFor}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <h2 className="text-xl font-semibold text-emerald-400">Quick Comparison</h2>
+          <p className="mt-2 text-sm text-slate-500">Editorial ratings are relative to the UK recreational-bookmaker market. Offer labels appear only for partners.</p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {COMPARISON_ROWS.map((row) => (
+              <article key={row.name} className="rounded-2xl border border-slate-800 bg-[#141820] p-4">
+                <div className="flex items-center gap-3">
+                  <BookmakerLogo bookmaker={{ id: 0, name: row.name, short_name: row.name, affiliate_link: null, active: true }} size="sm" />
+                  <h3 className="font-semibold text-white">{row.name}</h3>
+                </div>
+                <dl className="mt-4 grid grid-cols-2 gap-2 text-xs">
+                  <div className="rounded-lg bg-black/20 p-2.5">
+                    <dt className="text-slate-600">Player props</dt>
+                    <dd className="mt-1 font-mono font-semibold text-slate-200">{row.props}</dd>
+                  </div>
+                  <div className="rounded-lg bg-black/20 p-2.5">
+                    <dt className="text-slate-600">Tennis</dt>
+                    <dd className="mt-1 font-mono font-semibold text-slate-200">{row.tennis}</dd>
+                  </div>
+                </dl>
+                <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-400/80">{row.offer}</p>
+                <p className="mt-2 text-xs leading-5 text-slate-500">{row.bestFor}</p>
+              </article>
+            ))}
           </div>
-          <p className="text-slate-500 text-xs mt-2">All ratings relative to UK bookmaker market, not global operators like Pinnacle.</p>
         </section>
 
         {/* Account Strategy */}
         <section className="bg-[#1a1d24] rounded-xl border border-slate-800 p-6 md:p-8 mb-10">
           <h2 className="text-xl font-semibold text-emerald-400 mb-4">Recommended Approach</h2>
           <div className="text-slate-300 text-sm leading-relaxed space-y-4">
-            <p><strong className="text-slate-100">Account opening sequence:</strong></p>
+            <p><strong className="text-slate-100">Use the index as evidence, not a signup ranking.</strong> Choose the sport and exact market you intend to bet, compare complete prices, then check the current live line and settlement rules directly with the operator.</p>
             <ol className="list-decimal pl-6 space-y-2">
-              <li>Open all eight accounts — welcome offers alone provide £250+ value</li>
-              <li>Prioritise by market focus: Props primary: BetVictor, Midnite, William Hill, Coral, Ladbrokes, Bwin. Tennis primary: BetVictor, William Hill. Mixed: all eight for line shopping</li>
-              <li>Always open Coral AND Ladbrokes — never one without the other</li>
-              <li>Use BetMGM for line shopping — independent pricing often differs from other UK operators</li>
+              <li>Match the same market and line across bookmakers.</li>
+              <li>Prefer the best price, not the bookmaker with the strongest promotion.</li>
+              <li>Treat thin samples as directional evidence only.</li>
+              <li>Keep stakes tied to bankroll and verified edge, never to bonus size.</li>
             </ol>
-            <p><strong className="text-slate-100">Line shopping workflow:</strong> Before placing any bet: check odds across all eight, identify best price, place at bookmaker offering highest odds, track which books consistently offer best price, adjust priority accordingly.</p>
-            <p>Over time, accounts will restrict at different rates. By opening all eight, you extend total operational window to 18-24 months before severe restrictions across all accounts. See <Link href="/track-record" className="text-emerald-400 hover:text-emerald-300 underline">Track Record</Link> for our performance context.</p>
+            <p>Reviews cover eight operators because line shopping benefits from breadth. Only William Hill, Bwin and Betway are commercial partners. See our <Link href="/track-record" className="text-emerald-400 hover:text-emerald-300 underline">Track Record</Link> for performance context.</p>
           </div>
         </section>
 
@@ -912,9 +745,9 @@ export default function BookmakersPage() {
         {/* Affiliate Disclosure - amber */}
         <section className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-6 md:p-8 mb-10">
           <h2 className="text-lg font-semibold text-amber-400/95 mb-3">Transparency Statement</h2>
-          <p className="text-slate-300 text-sm leading-relaxed mb-3">We&apos;re in the process of establishing affiliate partnerships with the bookmakers recommended on this page.</p>
-          <p className="text-slate-300 text-sm leading-relaxed mb-3"><strong className="text-slate-200">What this means:</strong> If you click through and open an account, we may receive a commission. This costs you nothing extra. Welcome offers are identical whether you use our links or go direct.</p>
-          <p className="text-slate-300 text-sm leading-relaxed">These bookmakers were selected based on our testing and professional use, not commercial arrangements. We only partner with bookmakers we genuinely use and recommend. If our assessment changes, we&apos;ll update this page accordingly.</p>
+          <p className="text-slate-300 text-sm leading-relaxed mb-3">William Hill, Bwin and Betway are our only affiliate partners on this page. Their cards and links are explicitly labelled. We may receive a commission if an eligible user opens an account through one of those links, at no extra cost to the user.</p>
+          <p className="text-slate-300 text-sm leading-relaxed mb-3">Midnite, BetVictor, Coral, Ladbrokes and BetMGM are included as editorial reviews only and have no signup link here. Bet365 and BetMGM appear in the current margin snapshot because prices were captured for comparison; neither paid for that placement.</p>
+          <p className="text-slate-300 text-sm leading-relaxed">Affiliate status never changes the margin calculation. The index uses complete captured outcome sets, publishes its timestamp and sample size, and labels unsupported markets as not measured.</p>
         </section>
 
         {/* Responsible Gambling */}
@@ -930,4 +763,3 @@ export default function BookmakersPage() {
     </div>
   );
 }
-

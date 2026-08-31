@@ -58,7 +58,7 @@
     "Ladbrokes",
     "Bwin DE"
   ],
-  "schema_version": 2,
+  "schema_version": 3,
   "segments": [
     {
       "events": 10,
@@ -266,10 +266,5 @@
       "Football",
       "Tennis"
     ]
-  },
-  "synthetic_best_price": {
-    "normalized_hold_pct": 5.66,
-    "raw_overround_pct": 6.05,
-    "samples": 216
   }
 }

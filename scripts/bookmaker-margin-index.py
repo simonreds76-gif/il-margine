@@ -3,8 +3,7 @@
 
 The index compares complete outcome sets captured in the same API response.
 It reports both conventional raw overround and normalized hold; lower is
-better. A separate synthetic best-price market shows the combined price a
-line shopper could build across operators.
+better. Incomplete or mismatched line sets are never published.
 """
 
 from __future__ import annotations
@@ -132,7 +131,7 @@ def norm(value: Any) -> str:
 def display_bookmaker(value: Any) -> str:
     normalized = norm(value)
     for display, aliases in TARGET_BOOKMAKERS.items():
-        if normalized in aliases or any(alias in normalized for alias in aliases):
+        if normalized in aliases:
             return display
     return str(value or "Unknown")
 
@@ -190,7 +189,7 @@ def number(value: Any) -> float | None:
     return parsed if math.isfinite(parsed) and parsed > 1.0 else None
 
 
-def line_value(item: dict[str, Any], label: str = "", family: str = "") -> str:
+def line_value(item: dict[str, Any], label: str = "", family: str = "") -> str | None:
     if family in {"Match Winner", "BTTS", "Draw No Bet"}:
         return "main"
     for key in ("hdp", "line", "point", "handicap"):
@@ -201,7 +200,7 @@ def line_value(item: dict[str, Any], label: str = "", family: str = "") -> str:
             except (TypeError, ValueError):
                 return str(value).strip()
     match = re.search(r"(?<!\d)([+-]?\d+(?:\.\d+)?)", label)
-    return f"{float(match.group(1)):g}" if match else "main"
+    return f"{float(match.group(1)):g}" if match else None
 
 
 def canonical_label(label: str, home: str, away: str) -> str | None:
@@ -229,7 +228,10 @@ def quote_sets(
     for item in containers:
         if not isinstance(item, dict):
             continue
-        line = line_value(item, family=family)
+        label = str(item.get("label") or item.get("name") or item.get("selection") or "")
+        line = line_value(item, label, family)
+        if line is None:
+            continue
         compound: dict[str, float] = {}
         for outcome in required:
             aliases = OUTCOME_ALIASES[outcome] | {outcome}
@@ -243,13 +245,13 @@ def quote_sets(
             buckets[line].update(compound)
             continue
 
-        label = str(item.get("label") or item.get("name") or item.get("selection") or "")
         outcome = canonical_label(label, home, away)
         if outcome not in required:
             continue
         price = next((number(item.get(key)) for key in ("odds", "price", "value", "decimal", "back") if number(item.get(key)) is not None), None)
-        if price is not None:
-            buckets[line_value(item, label, family)][outcome] = price
+        selection_line = line_value(item, label, family)
+        if price is not None and selection_line is not None:
+            buckets[selection_line][outcome] = price
 
     output: list[dict[str, Any]] = []
     for line, outcomes in buckets.items():
@@ -285,7 +287,6 @@ def safe_error_summary(exc: Exception) -> str:
 
 def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, Any]:
     observations: list[dict[str, Any]] = []
-    synthetic: dict[tuple[str, str, str, str], dict[str, dict[str, float]]] = defaultdict(lambda: defaultdict(dict))
 
     for event in payload:
         if str(event.get("status") or "pending").lower() not in {"pending", "scheduled", "upcoming", ""}:
@@ -304,7 +305,6 @@ def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, An
                 if family is None:
                     continue
                 for quote in quote_sets(market, family, home, away, sport_slug):
-                    signature = (sport_slug, event_id, family, quote["line"])
                     observations.append(
                         {
                             "sport": sport,
@@ -316,10 +316,6 @@ def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, An
                             **quote,
                         }
                     )
-                    for outcome, price in quote["outcomes"].items():
-                        current = synthetic[signature][outcome].get("price", 0.0)
-                        if price > current:
-                            synthetic[signature][outcome] = {"price": price, "bookmaker": bookmaker}
 
     # One contribution per bookmaker/event/family prevents operators with many
     # alternate lines from receiving extra weight.
@@ -413,21 +409,6 @@ def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, An
             }
         )
 
-    synthetic_rows = []
-    for signature, outcomes in synthetic.items():
-        required = required_outcomes(signature[2], signature[0])
-        if not set(required).issubset(outcomes):
-            continue
-        implied = sum(1.0 / outcomes[key]["price"] for key in required)
-        if not 0.75 <= implied <= 1.25:
-            continue
-        synthetic_rows.append(
-            {
-                "raw_overround_pct": (implied - 1.0) * 100.0,
-                "normalized_hold_pct": (1.0 - (1.0 / implied)) * 100.0,
-            }
-        )
-
     families = sorted({row["family"] for row in collapsed}, key=lambda value: FAMILY_ORDER.index(value))
     sports = [
         str(SPORT_CONFIG[slug]["display"])
@@ -464,7 +445,7 @@ def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, An
         else "INSUFFICIENT_COVERAGE"
     )
     return {
-        "schema_version": 2,
+        "schema_version": 3,
         "generated_at": captured_at,
         "capture_mode": "manual_one_off",
         "status": status,
@@ -488,11 +469,6 @@ def build_index(payload: list[dict[str, Any]], captured_at: str) -> dict[str, An
             "observations": len(collapsed),
             "raw_quote_sets": len(observations),
         },
-        "synthetic_best_price": {
-            "raw_overround_pct": round(sum(row["raw_overround_pct"] for row in synthetic_rows) / len(synthetic_rows), 2) if synthetic_rows else None,
-            "normalized_hold_pct": round(sum(row["normalized_hold_pct"] for row in synthetic_rows) / len(synthetic_rows), 2) if synthetic_rows else None,
-            "samples": len(synthetic_rows),
-        },
         "operators": operators if global_gate else [],
         "diagnostic_operators": diagnostic_operators,
         "segments": segments,
@@ -509,7 +485,7 @@ def discover_bookmakers(api_key: str) -> list[str]:
     available = [str(row.get("name") or "") for row in response.json() if row.get("active", True)]
     selected: list[str] = []
     for display, aliases in TARGET_BOOKMAKERS.items():
-        match = next((name for name in available if norm(name) in aliases or any(alias in norm(name) for alias in aliases)), None)
+        match = next((name for name in available if norm(name) in aliases), None)
         if match and match not in selected:
             selected.append(match)
     return selected
