@@ -584,6 +584,91 @@ def select_target_bookmakers(api_key: str, bookmakers: list[str]) -> None:
     response.raise_for_status()
 
 
+def selected_bookmaker_names(body: Any) -> list[str]:
+    """Normalize the provider's selected-bookmakers response variants."""
+    if isinstance(body, list):
+        values = body
+    elif isinstance(body, dict):
+        values = next(
+            (
+                body[key]
+                for key in ("bookmakers", "selectedBookmakers", "selected", "data")
+                if key in body
+            ),
+            [],
+        )
+        if not values:
+            values = [key for key, value in body.items() if value is True]
+    else:
+        values = []
+
+    if isinstance(values, dict):
+        values = [key for key, value in values.items() if value]
+    if not isinstance(values, list):
+        return []
+
+    names: list[str] = []
+    for value in values:
+        name = value.get("name") if isinstance(value, dict) else value
+        text = str(name or "").strip()
+        if text and text not in names:
+            names.append(text)
+    return names
+
+
+def get_selected_bookmakers(api_key: str) -> list[str]:
+    response = requests.get(
+        f"{BASE_URL}/bookmakers/selected",
+        params={"apiKey": api_key},
+        timeout=30,
+    )
+    response.raise_for_status()
+    return selected_bookmaker_names(response.json())
+
+
+def reset_target_bookmakers(api_key: str, bookmakers: list[str]) -> list[str]:
+    """Replace the account selection once, restoring the original set on failure."""
+    if not bookmakers:
+        raise RuntimeError("No target UK bookmakers are available to select")
+    original = get_selected_bookmakers(api_key)
+    if not original:
+        raise RuntimeError("Refusing to clear: the current bookmaker selection could not be verified")
+
+    cleared = requests.put(
+        f"{BASE_URL}/bookmakers/selected/clear",
+        params={"apiKey": api_key},
+        timeout=30,
+    )
+    cleared.raise_for_status()
+
+    try:
+        select_target_bookmakers(api_key, bookmakers)
+    except requests.RequestException as selection_error:
+        try:
+            select_target_bookmakers(api_key, original)
+        except requests.RequestException as restore_error:
+            raise RuntimeError(
+                "Target selection failed and the original bookmaker selection could not be restored"
+            ) from restore_error
+        raise RuntimeError(
+            "Target selection failed; the original bookmaker selection was restored"
+        ) from selection_error
+
+    selected = get_selected_bookmakers(api_key)
+    selected_norm = {norm(name) for name in selected}
+    missing = [name for name in bookmakers if norm(name) not in selected_norm]
+    if missing:
+        # All original books are part of the target catalogue, but explicitly
+        # add them back if the provider accepted only a partial replacement.
+        original_missing = [name for name in original if norm(name) not in selected_norm]
+        if original_missing:
+            select_target_bookmakers(api_key, original_missing)
+        raise RuntimeError(
+            f"Provider accepted only {len(selected)}/{len(bookmakers)} target bookmakers"
+        )
+    return original
+
+
 def payload_bookmakers(body: Any) -> set[str]:
     names: set[str] = set()
     if not isinstance(body, list):
@@ -764,10 +849,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--days-ahead", type=int, default=4)
     parser.add_argument("--max-events", type=int, default=10)
     parser.add_argument("--max-requests", type=int, default=1)
-    parser.add_argument(
+    selection = parser.add_mutually_exclusive_group()
+    selection.add_argument(
         "--select-target-bookmakers",
         action="store_true",
         help="Add the exact UK target catalogue to the authenticated Odds-API account before capture.",
+    )
+    selection.add_argument(
+        "--reset-target-bookmakers",
+        action="store_true",
+        help="One-time replacement of the account selection, with rollback if the target selection fails.",
     )
     parser.add_argument(
         "--sports",
@@ -794,10 +885,14 @@ def main() -> int:
             invalid = sorted(set(sports) - set(SPORT_CONFIG))
             if invalid:
                 raise SystemExit(f"Unsupported sport(s): {','.join(invalid)}")
-            if args.select_target_bookmakers:
+            if args.select_target_bookmakers or args.reset_target_bookmakers:
                 selectable = discover_bookmakers(api_key)
-                select_target_bookmakers(api_key, selectable)
-                print(f"Selected {len(selectable)} UK target sportsbooks on the Odds-API account.")
+                if args.reset_target_bookmakers:
+                    reset_target_bookmakers(api_key, selectable)
+                    print(f"Reset the Odds-API account to {len(selectable)} UK target sportsbooks.")
+                else:
+                    select_target_bookmakers(api_key, selectable)
+                    print(f"Selected {len(selectable)} UK target sportsbooks on the Odds-API account.")
             payload, bookmakers, capture = fetch_payload(
                 api_key,
                 args.days_ahead,

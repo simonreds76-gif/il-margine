@@ -107,6 +107,37 @@ class BookmakerMarginIndexTests(unittest.TestCase):
         self.assertEqual(put.call_count, 1)
         self.assertEqual(put.call_args.kwargs["params"]["bookmakers"], "Bet365,William Hill")
 
+    def test_selected_bookmaker_response_variants_are_normalized(self) -> None:
+        self.assertEqual(
+            MODULE.selected_bookmaker_names({"selectedBookmakers": ["Bet365", "BetMGM"]}),
+            ["Bet365", "BetMGM"],
+        )
+        self.assertEqual(
+            MODULE.selected_bookmaker_names({"bookmakers": [{"name": "Bet365"}]}),
+            ["Bet365"],
+        )
+
+    def test_reset_restores_original_selection_when_broad_selection_fails(self) -> None:
+        class Response:
+            def raise_for_status(self) -> None:
+                return None
+
+        selection_error = MODULE.requests.HTTPError("blocked")
+        with (
+            patch.object(MODULE, "get_selected_bookmakers", return_value=["Bet365", "BetMGM"]),
+            patch.object(MODULE.requests, "put", return_value=Response()) as put,
+            patch.object(
+                MODULE,
+                "select_target_bookmakers",
+                side_effect=[selection_error, None],
+            ) as select,
+        ):
+            with self.assertRaisesRegex(RuntimeError, "original bookmaker selection was restored"):
+                MODULE.reset_target_bookmakers("secret", ["Bet365", "BetMGM", "William Hill"])
+
+        self.assertEqual(put.call_count, 1)
+        self.assertEqual(select.call_args_list[1].args[1], ["Bet365", "BetMGM"])
+
     def test_player_props_require_matching_player_stat_and_line(self) -> None:
         market = {
             "name": "Player Props",

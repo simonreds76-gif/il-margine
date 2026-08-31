@@ -247,10 +247,25 @@ export default function MarginExplorer({ generatedAt, segments, notMeasured, cov
 
   if (measured.length === 0) {
     return (
-      <section className="mb-12 rounded-[2rem] border border-amber-300/20 bg-amber-300/[0.045] p-6 sm:p-8">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-300">Margin index</p>
-        <h2 className="mt-2 text-2xl font-semibold text-white">Awaiting a complete comparison sample</h2>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400">No market is shown until the snapshot contains at least one complete outcome set. Incomplete or over-only prices remain unpublished.</p>
+      <section className="relative mb-12 overflow-hidden rounded-[2rem] border border-amber-300/20 bg-[#090d12] p-6 shadow-[0_30px_90px_rgba(0,0,0,0.35)] sm:p-8">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.10),transparent_42%)]" aria-hidden="true" />
+        <div className="relative flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-300">UK margin index</p>
+            <h2 className="mt-2 text-2xl font-semibold text-white sm:text-3xl">Broad comparison pending</h2>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">
+              We do not publish a league table from only one or two bookmakers. Rankings remain hidden until at least 10 of the {coverage?.target_operators ?? 21} target UK sportsbooks return complete, like-for-like prices.
+            </p>
+          </div>
+          <div className="shrink-0 rounded-2xl border border-amber-300/20 bg-amber-300/[0.055] px-5 py-4">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-slate-500">Latest capture</p>
+            <p className="mt-1 font-mono text-2xl font-semibold tabular-nums text-amber-100">
+              {coverage?.payload_operators ?? 0}/{coverage?.target_operators ?? 21}
+            </p>
+            <p className="mt-1 text-xs text-slate-500">books returned prices</p>
+            <p className="mt-2 font-mono text-[10px] tabular-nums text-slate-600">{capturedLabel(generatedAt)}</p>
+          </div>
+        </div>
       </section>
     );
   }
@@ -399,8 +414,8 @@ export default function MarginExplorer({ generatedAt, segments, notMeasured, cov
           <p className="mt-1 leading-6 text-slate-500">An over-only price is not enough. We need every mutually exclusive outcome at the identical line.</p>
         </div>
         <div>
-          <p className="font-semibold text-slate-100">Commercially independent</p>
-          <p className="mt-1 leading-6 text-slate-500">Neither Bet365 nor BetMGM is an affiliate partner. The measured ranking ignores commercial relationships.</p>
+          <p className="font-semibold text-slate-100">How to use the table</p>
+          <p className="mt-1 leading-6 text-slate-500">Compare the same sport and market. A lower percentage means less bookmaker margin was embedded in that captured price set.</p>
         </div>
       </div>
     </section>

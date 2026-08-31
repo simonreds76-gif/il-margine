@@ -10,6 +10,7 @@ import {
 import marginIndexJson from "../../../data/bookmakers/margin-index.json";
 
 const MARGIN_INDEX = marginIndexJson as BookmakerMarginIndex;
+const TARGET_UK_BOOKMAKERS = 21;
 
 type BookmakerReview = {
   id: string;
@@ -198,7 +199,23 @@ const FAQ_ITEMS = [
 ];
 
 export default function BookmakersPage() {
-  const measuredSegments = (MARGIN_INDEX.segments ?? []).filter(
+  const snapshotOperatorNames = Array.from(new Set(
+    (MARGIN_INDEX.segments ?? []).flatMap((segment) =>
+      segment.operators.map((operator) =>
+        operator.name === "Bet365 (no latency)" ? "Bet365" : operator.name,
+      ),
+    ),
+  ));
+  const marginCoverage = MARGIN_INDEX.coverage ?? {
+    target_operators: TARGET_UK_BOOKMAKERS,
+    discovered_operators: snapshotOperatorNames.length,
+    payload_operators: snapshotOperatorNames.length,
+    qualified_operators: snapshotOperatorNames.length,
+    payload_operator_names: snapshotOperatorNames,
+    qualified_operator_names: snapshotOperatorNames,
+  };
+  const hasBroadCoverage = marginCoverage.payload_operators >= 10;
+  const measuredSegments = (hasBroadCoverage ? MARGIN_INDEX.segments ?? [] : []).filter(
     (segment) => segment.operators.length > 0,
   );
   const partnerBookmakers = BOOKMAKERS.filter(isPartner);
@@ -226,7 +243,7 @@ export default function BookmakersPage() {
           generatedAt={MARGIN_INDEX.generated_at}
           segments={measuredSegments}
           notMeasured={NOT_MEASURED_MARKETS}
-          coverage={MARGIN_INDEX.coverage}
+          coverage={marginCoverage}
         />
 
         <section className="mb-12 grid gap-4 md:grid-cols-3">
