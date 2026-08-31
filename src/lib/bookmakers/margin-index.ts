@@ -35,17 +35,19 @@ export type BookmakerMarginIndex = {
     observations: number;
   };
   segments?: MarginSegment[];
+  coverage?: {
+    target_operators: number;
+    discovered_operators: number;
+    payload_operators: number;
+    qualified_operators: number;
+    payload_operator_names?: string[];
+    qualified_operator_names?: string[];
+    not_discovered?: string[];
+  };
 };
 
 export const NOT_MEASURED_MARKETS: NotMeasuredMarket[] = [
-  { sport_slug: "football", label: "Corners", reason: "Complete paired prices were not captured in this snapshot." },
-  { sport_slug: "football", label: "Cards", reason: "Complete paired prices were not captured in this snapshot." },
-  { sport_slug: "football", label: "Team shots", reason: "Complete paired prices were not captured in this snapshot." },
-  { sport_slug: "football", label: "Player shots", reason: "Most feeds currently return one side only; a margin needs both sides at the same line." },
-  { sport_slug: "football", label: "GK saves", reason: "Complete paired prices were not captured in this snapshot." },
   { sport_slug: "football", label: "Goalscorer", reason: "Anytime goalscorer selections overlap, so they do not form a complete outcome set." },
-  { sport_slug: "tennis", label: "Aces", reason: "Complete over and under prices at the same line were not captured." },
-  { sport_slug: "tennis", label: "Double faults", reason: "Complete over and under prices at the same line were not captured." },
   { sport_slug: "tennis", label: "Set markets", reason: "Not measured in this snapshot." },
   { sport_slug: "tennis", label: "Breaks", reason: "The current data source does not expose this market." },
   { sport_slug: "tennis", label: "Most aces 1X2", reason: "The current data source does not expose a complete market." },

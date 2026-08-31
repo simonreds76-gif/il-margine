@@ -40,55 +40,6 @@ function isPartner(
 
 const BOOKMAKERS: BookmakerReview[] = [
   {
-    id: "midnite",
-    name: "Midnite",
-    stars: "⭐⭐⭐⭐½",
-    rating: "4.5/5",
-    propsScore: "8/10",
-    tennisScore: "7/10",
-    strengths: [
-      "Strong player props coverage across major leagues",
-      "Competitive odds on shots, fouls, cards markets",
-      "Modern, fast platform (built for mobile)",
-      "Quick bet placement and settlement",
-      "Good lower-league football coverage",
-      "Generally longer account lifespan than legacy bookmakers",
-      "Responsive customer service",
-    ],
-    weaknesses: [
-      "Limited tennis coverage outside ATP/WTA top events",
-      "Fewer niche markets than established competitors",
-      "Bet builder available on major matches",
-      "Stake limits can be conservative on props (£50-100 typical max)",
-      "Less track record for account longevity under sustained winning",
-    ],
-    usageTips: "Midnite is one of the newer operators worth attention. Built from scratch with modern infrastructure, the platform is fast and intuitive. Best used for Premier League and Championship player props where their odds are often competitive with or better than legacy books. Coverage of shots on target, fouls committed, and cards received is solid. Account longevity appears reasonable based on limited testing, but treat as unproven until you've run a few months of profitable action. Start conservatively and scale if the account survives. Avoid for tennis beyond major tournaments. Stick to football props where they're strongest.",
-    bestFor: "Modern platform, major league props",
-  },
-  {
-    id: "betvictor",
-    name: "BetVictor",
-    stars: "⭐⭐⭐½",
-    rating: "3.5/5",
-    propsScore: "8/10",
-    tennisScore: "7/10",
-    strengths: [
-      "Still offers solid player-props depth across the major leagues",
-      "Historically useful tennis handicap and totals book on ATP events",
-      "Can still show competitive prices when you line-shop properly",
-      "Reasonable ATP 250/500 coverage",
-      "Established operator with a familiar, stable platform",
-    ],
-    weaknesses: [
-      "No longer one of the first books we'd build around",
-      "Prices are not consistently strong enough to justify blind loyalty",
-      "Bet builder functionality is limited",
-      "Live betting interface feels dated next to newer books",
-    ],
-    usageTips: "We would treat BetVictor as a comparison account now rather than a core one. For props: it is still worth checking because it can occasionally hang a strong number, but we would not rely on it as heavily as the better books on the page. For tennis: it remains more interesting on ATP events than on lower tiers, and it can still throw up a playable handicap or totals price from time to time. Useful to keep open, but not one we’d prioritise first.",
-    bestFor: "Secondary all-rounder, still worth checking",
-  },
-  {
     id: "william-hill",
     name: "William Hill",
     stars: "⭐⭐⭐⭐",
@@ -126,92 +77,21 @@ const BOOKMAKERS: BookmakerReview[] = [
     welcomeTerms: "Min £5 bet on sports at odds 1/2+. 4×£5 free bets, valid 7 days, stake not returned. T&Cs apply.",
     strengths: [
       "Comprehensive player props across all major leagues",
-      "Part of Entain (shares group with Coral, Ladbrokes – separate account)",
+      "Established Entain sportsbook with broad mainstream coverage",
       "Solid odds quality on props markets",
       "Good bet builder functionality",
       "Modern online platform",
       "Reasonable tennis coverage on major events",
     ],
     weaknesses: [
-      "Same pricing engine as other Entain brands (no arbitrage between Bwin, Coral, Ladbrokes)",
+      "Pricing can overlap with other Entain brands",
       "Tennis markets thin out below ATP 250 level",
       "Props margins 10-13%",
       "Stake limits tighten quickly on profitable accounts",
     ],
-    usageTips: "Bwin is part of the Entain group alongside Coral and Ladbrokes. You can hold accounts with all three simultaneously. Each is independently managed despite shared pricing, so having Bwin plus Coral and Ladbrokes extends your access window to Entain's competitive odds. For props: Coverage is excellent across Premier League, Championship, and major European leagues. Bet builder is solid. For tennis: Adequate for ATP 250+. Worth pairing with Coral and Ladbrokes for maximum Entain access.",
-    bestFor: "Pair with Coral and Ladbrokes for extended access",
+    usageTips: "Bwin is strongest as a football-props and mainstream-tennis account. Coverage is broad across the Premier League, Championship and major European leagues, while the bet builder is useful for price comparison. Tennis coverage is adequate from ATP 250 level upward but becomes thinner lower down the schedule. Check the exact line and price rather than assuming the group-wide number is best.",
+    bestFor: "Football props and mainstream tennis",
     offerUrl: "/api/go/bwin",
-  },
-  {
-    id: "coral",
-    name: "Coral",
-    stars: "⭐⭐⭐⭐",
-    rating: "4/5",
-    propsScore: "8/10",
-    tennisScore: "7/10",
-    strengths: [
-      "Comprehensive player props across all major leagues",
-      "Part of Entain (shares pricing with Ladbrokes but separate account)",
-      "Solid odds quality on props markets",
-      "Good bet builder functionality",
-      "High street presence (useful for deposits/withdrawals if needed)",
-      "Reasonable tennis coverage on major events",
-    ],
-    weaknesses: [
-      "Same pricing engine as Ladbrokes (no arbitrage between them)",
-      "Tennis markets thin out below ATP 250 level",
-      "Props margins 10-13%",
-      "Stake limits tighten quickly on profitable accounts",
-    ],
-    usageTips: "Coral is part of the Entain group alongside Ladbrokes. Critically, you can hold accounts with both simultaneously. This creates a tactical opportunity: open both Coral and Ladbrokes. They share the same pricing engine, so odds are identical, but each account is independently managed. Having both gives you dual access to Entain's competitive pricing across props and tennis markets. For props: Coverage is excellent across Premier League, Championship, and major European leagues. Bet builder is solid and occasionally misprices correlation. Worth using. For tennis: Adequate for ATP 250+, but skip for anything below that tier. Other operators have better coverage of Challengers. Always pair Coral with Ladbrokes. Never use one without the other.",
-    bestFor: "Pair with Ladbrokes for extended access",
-  },
-  {
-    id: "ladbrokes",
-    name: "Ladbrokes",
-    stars: "⭐⭐⭐⭐",
-    rating: "4/5",
-    propsScore: "8/10",
-    tennisScore: "7/10",
-    strengths: [
-      "Identical strengths to Coral (same pricing engine)",
-      "Comprehensive props across major leagues",
-      "Solid bet builder markets",
-      "Part of established Entain group",
-      "Historical brand with long operational track record",
-    ],
-    weaknesses: [
-      "Identical weaknesses to Coral (same pricing engine)",
-      "Tennis coverage thins below ATP 250",
-      "Props margins 10-13%",
-    ],
-    usageTips: "Everything said about Coral applies here. Ladbrokes and Coral are operationally the same book with separate account management. The strategy is simple: Open both. Use both. When one restricts you, keep using the other. For props: Excellent coverage, good odds, decent bet builders. Use actively. For tennis: Fine for ATP 250+, skip below that. The only reason to choose Ladbrokes over Coral or vice versa is welcome offer preference. Otherwise, they're functionally identical, so having both doubles your access window to Entain pricing. This pairing is non-negotiable. If you have one, you must have the other.",
-    bestFor: "Pair with Coral for extended access",
-  },
-  {
-    id: "betmgm",
-    name: "BetMGM",
-    stars: "⭐⭐⭐⭐",
-    rating: "4/5",
-    propsScore: "8/10",
-    tennisScore: "7/10",
-    strengths: [
-      "Operates on LeoVegas platform (acquired by MGM), independent pricing from other UK operators",
-      "Growing props coverage",
-      "Competitive odds on major matches",
-      "Modern platform",
-      "Good bet builder selection",
-      "Fast withdrawals",
-    ],
-    weaknesses: [
-      "Smaller market selection than established operators",
-      "Props margins can be wider (12-15%)",
-      "Fewer users means less liquidity on niche markets",
-      "Smaller UK presence than established operators",
-      "Fewer promotional offers than competitors",
-    ],
-    usageTips: "BetMGM operates on the LeoVegas platform with fully independent pricing. This means odds can differ significantly from other bookmakers, creating valuable line shopping opportunities. For props: Solid coverage on Premier League and major European leagues. Worth checking for price comparison. Sometimes offers better odds than established operators on specific markets. For tennis: Good coverage across ATP 250+ events. Competitive pricing on game handicaps and totals. Stronger tennis offering than many UK books. Definitely check their odds when betting ATP events. Useful as a core account for both props and tennis. The independent pricing makes this essential for line shopping rather than optional.",
-    bestFor: "Player props & tennis, independent pricing for line shopping",
   },
   {
     id: "betway",
@@ -245,52 +125,36 @@ const BOOKMAKERS: BookmakerReview[] = [
 ];
 
 const COMPARISON_ROWS = [
-  { name: "Midnite", props: "8/10", tennis: "7/10", offer: "Editorial only", bestFor: "Modern platform, major league props" },
-  { name: "BetVictor", props: "8/10", tennis: "7/10", offer: "Editorial only", bestFor: "Secondary all-rounder, still worth checking" },
   { name: "William Hill", props: "8/10", tennis: "7/10", offer: "£40 free bets", bestFor: "Must-have — we use it often, limits hold up" },
-  { name: "Bwin", props: "8/10", tennis: "7/10", offer: "£5 → £20 free bets", bestFor: "Pair with Coral and Ladbrokes for extended access" },
-  { name: "Coral", props: "8/10", tennis: "7/10", offer: "Editorial only", bestFor: "Pair with Ladbrokes for extended access" },
-  { name: "Ladbrokes", props: "8/10", tennis: "7/10", offer: "Editorial only", bestFor: "Pair with Coral for extended access" },
-  { name: "BetMGM", props: "8/10", tennis: "7/10", offer: "Editorial only", bestFor: "Player props & tennis, independent pricing for line shopping" },
+  { name: "Bwin", props: "8/10", tennis: "7/10", offer: "£5 → £20 free bets", bestFor: "Football props and mainstream tennis" },
   { name: "Betway", props: "8/10", tennis: "6/10", offer: "£40 free bets", bestFor: "Football props, mobile betting, worthwhile line shopping" },
 ];
 
-function BookmakerCard({ bm }: { bm: BookmakerReview }) {
-  const partner = isPartner(bm);
-
+function BookmakerCard({ bm }: { bm: BookmakerReview & Required<Pick<BookmakerReview, "welcomeOffer" | "welcomeTerms" | "offerUrl">> }) {
   return (
     <article className="bg-[#1a1d24] rounded-xl border border-slate-800 overflow-hidden">
       <div className="p-5 md:p-6">
         <div className="flex flex-wrap items-center gap-3 mb-3">
-          <BookmakerLogo bookmaker={{ id: 0, name: bm.name, short_name: bm.name, affiliate_link: partner ? bm.offerUrl : null, active: true }} size="md" />
+          <BookmakerLogo bookmaker={{ id: 0, name: bm.name, short_name: bm.name, affiliate_link: bm.offerUrl, active: true }} size="md" />
           <div>
             <h3 className="font-semibold text-slate-100">{bm.name}</h3>
             <span className="text-xs text-slate-500">{bm.stars} · Props {bm.propsScore} · Tennis {bm.tennisScore}</span>
           </div>
-          <span className={`sm:ml-auto rounded-full border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.14em] ${partner ? "border-emerald-400/20 bg-emerald-400/[0.08] text-emerald-300" : "border-slate-700 bg-slate-900 text-slate-500"}`}>
-            {partner ? "Affiliate partner" : "Independent review"}
-          </span>
         </div>
-        {partner ? (
-          <div className="flex flex-col gap-3 border-t border-slate-800 pt-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-400">New UK customers</span>
-              <p className="mt-1 text-sm font-semibold text-slate-100">{bm.welcomeOffer}</p>
-            </div>
-            <a
-              href={bm.offerUrl}
-              target="_blank"
-              rel="sponsored nofollow noopener noreferrer"
-              className="inline-flex w-full items-center justify-center rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-400 sm:w-auto"
-            >
-              View {bm.name} offer →
-            </a>
+        <div className="flex flex-col gap-3 border-t border-slate-800 pt-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-400">New UK customers</span>
+            <p className="mt-1 text-sm font-semibold text-slate-100">{bm.welcomeOffer}</p>
           </div>
-        ) : (
-          <div className="border-t border-slate-800 pt-4">
-            <p className="text-sm text-slate-400">No paid link. Included for independent comparison and line-shopping context.</p>
-          </div>
-        )}
+          <a
+            href={bm.offerUrl}
+            target="_blank"
+            rel="sponsored nofollow noopener noreferrer"
+            className="inline-flex w-full items-center justify-center rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-400 sm:w-auto"
+          >
+            View {bm.name} offer →
+          </a>
+        </div>
       </div>
       {/* Expandable details */}
       <details className="group border-t border-slate-800">
@@ -301,11 +165,9 @@ function BookmakerCard({ bm }: { bm: BookmakerReview }) {
           </span>
         </summary>
         <div className="px-5 md:px-6 pb-5 pt-0 space-y-4">
-          {partner && (
-            <div className="rounded-lg border border-slate-700/80 bg-slate-800/40 px-3 py-2">
-              <p className="text-[11px] leading-5 text-slate-500">{bm.welcomeTerms}</p>
-            </div>
-          )}
+          <div className="rounded-lg border border-slate-700/80 bg-slate-800/40 px-3 py-2">
+            <p className="text-[11px] leading-5 text-slate-500">{bm.welcomeTerms}</p>
+          </div>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-wider text-emerald-400 mb-1.5">Strengths</p>
@@ -331,7 +193,6 @@ const FAQ_ITEMS = [
   { q: "Is the margin index live?", a: "No. It is a dated, one-off snapshot. We publish the capture time and sample size so the comparison is not mistaken for a live odds screen." },
   { q: "Why are some prop markets not measured?", a: "A bookmaker margin needs every mutually exclusive outcome from the same bookmaker at the same line. An over-only player-prop price cannot produce a defensible margin, so we label it not measured rather than inventing one." },
   { q: "What if odds are better elsewhere?", a: "Take the best available price after checking that the market, line and settlement rules are identical. Small price improvements compound materially over a large sample." },
-  { q: "Do affiliate links affect the margin ranking?", a: "No. William Hill, Bwin and Betway are our only affiliate partners on this page. The margin snapshot is computed independently from captured prices, and the measured Bet365 and BetMGM rows are not paid placements." },
   { q: "Are welcome offers guaranteed value?", a: "No. Terms, qualifying odds, expiry and withdrawal conditions matter. Read the current operator terms and never place a poor-value bet solely to unlock a promotion." },
   { q: "What happens when I get restricted?", a: "Stake limits reduce gradually, eventually hitting £5-20 maximum. The account remains active but becomes operationally useless for serious betting. This is inevitable for winning accounts. Plan for it by having multiple accounts active. When one restricts, continue with others.", linkToFaq: true },
 ];
@@ -341,7 +202,6 @@ export default function BookmakersPage() {
     (segment) => segment.operators.length > 0,
   );
   const partnerBookmakers = BOOKMAKERS.filter(isPartner);
-  const editorialBookmakers = BOOKMAKERS.filter((bookmaker) => !isPartner(bookmaker));
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
@@ -357,9 +217,6 @@ export default function BookmakersPage() {
           <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
             Which UK bookmaker is cheapest, market by market. Measured from complete prices captured in a single snapshot — not estimates and not a live feed.
           </p>
-          <p className="mt-4 max-w-3xl text-sm leading-6 text-slate-500">
-            The independent index covers every operator present in the verified capture. Promotional links appear only for our three partners: William Hill, Bwin and Betway.
-          </p>
           <p className="mt-4 text-sm text-slate-500">
             18+ only. Gamble responsibly. <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-emerald-400/80 hover:text-emerald-300 underline">begambleaware.org</a>
           </p>
@@ -369,6 +226,7 @@ export default function BookmakersPage() {
           generatedAt={MARGIN_INDEX.generated_at}
           segments={measuredSegments}
           notMeasured={NOT_MEASURED_MARKETS}
+          coverage={MARGIN_INDEX.coverage}
         />
 
         <section className="mb-12 grid gap-4 md:grid-cols-3">
@@ -389,12 +247,12 @@ export default function BookmakersPage() {
           </article>
         </section>
 
-        {/* Partner offers */}
+        {/* Bookmaker offers */}
         <section className="mb-12 rounded-[2rem] border border-emerald-300/15 bg-[linear-gradient(145deg,rgba(16,185,129,0.06),rgba(15,17,23,0.9)_44%)] p-5 sm:p-7">
           <div className="mb-5 max-w-3xl">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-300">Commercial relationships</p>
-            <h2 className="mt-2 text-2xl font-semibold text-white">Our partner offers</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-400">Only these three cards contain paid links. The independent margin explorer above is calculated without regard to affiliate status.</p>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-300">Current offers</p>
+            <h2 className="mt-2 text-2xl font-semibold text-white">Bookmakers we recommend</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-400">Three accounts we currently use for football props, tennis and price comparison.</p>
           </div>
           <div className="grid gap-3 md:grid-cols-3">
             {partnerBookmakers.map((bm) => (
@@ -403,7 +261,6 @@ export default function BookmakersPage() {
                   <BookmakerLogo bookmaker={{ id: 0, name: bm.name, short_name: bm.name, affiliate_link: bm.offerUrl, active: true }} size="sm" />
                   <div>
                     <p className="font-semibold text-slate-100">{bm.name}</p>
-                    <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-emerald-400">Affiliate partner</p>
                   </div>
                 </div>
                 <p className="mt-4 text-sm font-semibold text-white">{bm.welcomeOffer}</p>
@@ -419,25 +276,15 @@ export default function BookmakersPage() {
               </article>
             ))}
           </div>
+          <p className="mt-4 text-[11px] leading-5 text-slate-600">Some outbound bookmaker links are affiliate links. 18+; full terms apply.</p>
         </section>
 
         {/* Full reviews */}
         <section className="mb-12">
-          <h2 className="text-2xl font-semibold text-white">Independent bookmaker reviews</h2>
-          <p className="mb-7 mt-2 max-w-3xl text-sm leading-6 text-slate-500">All eight operators remain in the editorial comparison. Paid relationships are labelled on every relevant card; the remaining reviews contain no signup link.</p>
-
-          <div className="mb-6">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-400/80">Affiliate partners</p>
-            <div className="space-y-6">
-              {partnerBookmakers.map((bm) => (
-                <BookmakerCard key={bm.id} bm={bm} />
-              ))}
-            </div>
-          </div>
-
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Editorial only · no paid link</p>
+          <h2 className="text-2xl font-semibold text-white">Bookmaker reviews</h2>
+          <p className="mb-7 mt-2 max-w-3xl text-sm leading-6 text-slate-500">Practical notes on the three bookmakers currently featured on Il Margine.</p>
           <div className="space-y-6">
-            {editorialBookmakers.map((bm) => (
+            {partnerBookmakers.map((bm) => (
               <BookmakerCard key={bm.id} bm={bm} />
             ))}
           </div>
@@ -552,8 +399,8 @@ export default function BookmakersPage() {
         {/* Responsive comparison */}
         <section className="mb-10">
           <h2 className="text-xl font-semibold text-emerald-400">Quick Comparison</h2>
-          <p className="mt-2 text-sm text-slate-500">Editorial ratings are relative to the UK recreational-bookmaker market. Offer labels appear only for partners.</p>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <p className="mt-2 text-sm text-slate-500">Our practical ratings for the three bookmakers featured on this page.</p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {COMPARISON_ROWS.map((row) => (
               <article key={row.name} className="rounded-2xl border border-slate-800 bg-[#141820] p-4">
                 <div className="flex items-center gap-3">
@@ -588,7 +435,7 @@ export default function BookmakersPage() {
               <li>Treat thin samples as directional evidence only.</li>
               <li>Keep stakes tied to bankroll and verified edge, never to bonus size.</li>
             </ol>
-            <p>Reviews cover eight operators because line shopping benefits from breadth. Only William Hill, Bwin and Betway are commercial partners. See our <Link href="/track-record" className="text-emerald-400 hover:text-emerald-300 underline">Track Record</Link> for performance context.</p>
+            <p>Use multiple accounts to compare the same line and price before betting. See our <Link href="/track-record" className="text-emerald-400 hover:text-emerald-300 underline">Track Record</Link> for performance context.</p>
           </div>
         </section>
 
@@ -742,12 +589,8 @@ export default function BookmakersPage() {
           </div>
         </section>
 
-        {/* Affiliate Disclosure - amber */}
-        <section className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-6 md:p-8 mb-10">
-          <h2 className="text-lg font-semibold text-amber-400/95 mb-3">Transparency Statement</h2>
-          <p className="text-slate-300 text-sm leading-relaxed mb-3">William Hill, Bwin and Betway are our only affiliate partners on this page. Their cards and links are explicitly labelled. We may receive a commission if an eligible user opens an account through one of those links, at no extra cost to the user.</p>
-          <p className="text-slate-300 text-sm leading-relaxed mb-3">Midnite, BetVictor, Coral, Ladbrokes and BetMGM are included as editorial reviews only and have no signup link here. Bet365 and BetMGM appear in the current margin snapshot because prices were captured for comparison; neither paid for that placement.</p>
-          <p className="text-slate-300 text-sm leading-relaxed">Affiliate status never changes the margin calculation. The index uses complete captured outcome sets, publishes its timestamp and sample size, and labels unsupported markets as not measured.</p>
+        <section className="mb-10 rounded-xl border border-slate-800 bg-[#151920] px-5 py-4">
+          <p className="text-xs leading-5 text-slate-500">Some bookmaker links are affiliate links, which may earn Il Margine a commission at no extra cost to you. Margin figures come from the dated price snapshot shown above.</p>
         </section>
 
         {/* Responsible Gambling */}

@@ -45,9 +45,15 @@ def event(event_id: int, book_prices: dict[str, tuple[float, float, float]]) -> 
 
 
 class BookmakerMarginIndexTests(unittest.TestCase):
-    def test_active_admin_recreational_books_are_targeted(self) -> None:
-        expected = {"10bet", "Bally Bet", "Bet365", "Betfred", "SBK", "Spreadex"}
+    def test_broad_exact_uk_catalogue_is_targeted(self) -> None:
+        expected = {
+            "10BET", "888sport", "Bet365", "Betano", "Betfair Sportsbook",
+            "BetMGM", "BetUK", "BetVictor", "Betway", "Coral", "Ladbrokes",
+            "LeoVegas", "Mr Green", "Paddy Power", "Parimatch", "QuinnBet",
+            "Unibet", "William Hill",
+        }
         self.assertTrue(expected.issubset(MODULE.TARGET_BOOKMAKERS))
+        self.assertGreaterEqual(len(MODULE.TARGET_BOOKMAKERS), 20)
 
     def test_ml_selection_labels_share_the_main_market(self) -> None:
         market = {
@@ -88,8 +94,30 @@ class BookmakerMarginIndexTests(unittest.TestCase):
         self.assertEqual(MODULE.quote_sets(market, "Over/Under", "Home", "Away"), [])
 
     def test_bookmaker_aliases_do_not_absorb_regional_variants(self) -> None:
-        self.assertEqual(MODULE.display_bookmaker("Bwin"), "Bwin")
+        self.assertEqual(MODULE.display_bookmaker("Unibet UK"), "Unibet")
+        self.assertEqual(MODULE.display_bookmaker("Unibet"), "Unibet")
         self.assertEqual(MODULE.display_bookmaker("Bwin DE"), "Bwin DE")
+
+    def test_player_props_require_matching_player_stat_and_line(self) -> None:
+        market = {
+            "name": "Player Props",
+            "odds": [
+                {"label": "Player A (Shots) Over 1.5", "odds": 1.91},
+                {"label": "Player B (Shots) Under 1.5", "odds": 1.91},
+            ],
+        }
+        self.assertEqual(MODULE.quote_sets(market, "Player Props", "Home", "Away"), [])
+
+        market["odds"].append({"label": "Player A (Shots) Under 1.5", "odds": 1.91})
+        quotes = MODULE.quote_sets(market, "Player Props", "Home", "Away")
+        self.assertEqual(len(quotes), 1)
+
+    def test_new_complete_count_market_families_are_recognized(self) -> None:
+        self.assertEqual(MODULE.market_family("Corners Totals"), "Corners")
+        self.assertEqual(MODULE.market_family("Bookings Totals"), "Cards")
+        self.assertEqual(MODULE.market_family("Total Shots Home"), "Team Shots")
+        self.assertEqual(MODULE.market_family("Goalkeeper Saves Away"), "Goalkeeper Saves")
+        self.assertEqual(MODULE.market_family("Team Total (Aces) Home", "tennis"), "Player Aces")
 
     def test_tennis_moneyline_is_two_way_and_segmented(self) -> None:
         payload = []
@@ -239,21 +267,62 @@ class BookmakerMarginIndexTests(unittest.TestCase):
             "league": {"name": "Premier League"},
         }]
         bet365 = [event(1, {"Bet365": (2.4, 3.2, 2.8)})]
-        betfred = [event(1, {"Betfred": (2.5, 3.3, 2.9)})]
+        william_hill = [event(1, {"William Hill": (2.5, 3.3, 2.9)})]
         responses = [
-            Response(200, [{"name": "Bet365"}, {"name": "Betfred"}]),
+            Response(200, [{"name": "Bet365"}, {"name": "William Hill"}]),
             Response(200, scheduled),
             Response(403, {"message": "blocked combined request"}),
             Response(200, bet365),
-            Response(200, betfred),
+            Response(200, william_hill),
         ]
         with patch.object(MODULE.requests, "get", side_effect=responses) as get:
-            payload, bookmakers = MODULE.fetch_payload("secret", 4, 10, 1, ("football",))
+            payload, bookmakers, capture = MODULE.fetch_payload("secret", 4, 10, 1, ("football",))
 
-        self.assertEqual(bookmakers, ["Bet365", "Betfred"])
+        self.assertEqual(bookmakers, ["Bet365", "William Hill"])
         self.assertEqual(len(payload), 2)
         self.assertTrue(all(row["_snapshot_sport"] == "football" for row in payload))
+        self.assertEqual(capture["sports"][0]["operators"][0]["status"], "returned")
         self.assertEqual(get.call_count, 5)
+
+    def test_successful_multi_request_probes_silently_missing_books(self) -> None:
+        class Response:
+            def __init__(self, status_code: int, payload: object) -> None:
+                self.status_code = status_code
+                self._payload = payload
+                self.ok = 200 <= status_code < 300
+
+            def json(self) -> object:
+                return self._payload
+
+            def raise_for_status(self) -> None:
+                if not self.ok:
+                    raise MODULE.requests.HTTPError(response=self)
+
+        scheduled = [{
+            "id": "1",
+            "date": "2026-08-29T15:00:00Z",
+            "home": "Home 1",
+            "away": "Away 1",
+            "league": {"name": "Premier League"},
+        }]
+        combined = [event(1, {"Bet365": (2.4, 3.2, 2.8)})]
+        william_hill = [event(1, {"William Hill": (2.5, 3.3, 2.9)})]
+        responses = [
+            Response(200, [{"name": "Bet365"}, {"name": "William Hill"}]),
+            Response(200, scheduled),
+            Response(200, combined),
+            Response(200, william_hill),
+        ]
+        with patch.object(MODULE.requests, "get", side_effect=responses) as get:
+            payload, bookmakers, capture = MODULE.fetch_payload("secret", 4, 10, 1, ("football",))
+
+        self.assertEqual(bookmakers, ["Bet365", "William Hill"])
+        self.assertEqual(len(payload), 2)
+        operators = {row["provider_name"]: row for row in capture["sports"][0]["operators"]}
+        self.assertEqual(operators["Bet365"]["request_mode"], "combined")
+        self.assertEqual(operators["William Hill"]["request_mode"], "fallback")
+        self.assertEqual(operators["William Hill"]["status"], "returned")
+        self.assertEqual(get.call_count, 4)
 
 
 if __name__ == "__main__":

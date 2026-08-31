@@ -26,26 +26,31 @@ import requests
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_OUTPUT = ROOT / "data" / "bookmakers" / "margin-index.json"
 BASE_URL = "https://api.odds-api.io/v3"
+# Exact Odds-API catalogue names for UK-facing sportsbooks. Regional variants
+# are deliberately explicit so, for example, Unibet cannot resolve to a
+# non-UK feed and Bwin DE cannot be presented as a UK measurement.
 TARGET_BOOKMAKERS = {
-    "10bet": ("10bet", "tenbet"),
-    "Bally Bet": ("ballybet",),
-    "Bet365": ("bet365",),
-    "Betfred": ("betfred",),
-    "BetVictor": ("betvictor",),
-    "William Hill": ("williamhill",),
-    "Unibet": ("unibet",),
-    "Betway": ("betway",),
-    "BetMGM": ("betmgm",),
-    "Paddy Power": ("paddypower",),
-    "Sky Bet": ("skybet",),
-    "Coral": ("coral",),
-    "Ladbrokes": ("ladbrokes",),
-    "BoyleSports": ("boylesports", "boylesport"),
-    "SBK": ("sbk", "smarketsbookmaker"),
-    "Spreadex": ("spreadex",),
-    "Virgin Bet": ("virginbet",),
-    "Midnite": ("midnite",),
-    "Bwin": ("bwin",),
+    "10BET": ("10BET",),
+    "888sport": ("888Sport",),
+    "Bally Bet": ("Bally Bet",),
+    "Bet365": ("Bet365",),
+    "Betano": ("Betano UK",),
+    "Betfair Sportsbook": ("Betfair Sportsbook",),
+    "BetMGM": ("BetMGM",),
+    "BetUK": ("BetUK",),
+    "BetVictor": ("BetVictor",),
+    "Betway": ("Betway",),
+    "Coral": ("Coral",),
+    "Ladbrokes": ("Ladbrokes",),
+    "LeoVegas": ("LeoVegas",),
+    "Lottoland": ("Lottoland",),
+    "Mr Green": ("MrGreen",),
+    "NetBet": ("NetBet",),
+    "Paddy Power": ("Paddy Power",),
+    "Parimatch": ("Parimatch UK",),
+    "QuinnBet": ("QuinnBet",),
+    "Unibet": ("Unibet UK",),
+    "William Hill": ("William Hill",),
 }
 SPORT_CONFIG = {
     "football": {
@@ -60,12 +65,18 @@ SPORT_CONFIG = {
         ),
         "markets": (
             "ML",
-            "3-Way Result",
             "Draw No Bet",
             "Spread",
             "Totals",
             "Goals Over/Under",
             "Both Teams To Score",
+            "Player Props",
+            "Corners Totals",
+            "Bookings Totals",
+            "Total Shots Home",
+            "Total Shots Away",
+            "Goalkeeper Saves Home",
+            "Goalkeeper Saves Away",
         ),
     },
     "tennis": {
@@ -79,6 +90,10 @@ SPORT_CONFIG = {
             "Totals (Games)",
             "Totals (Aces)",
             "Totals (Double Faults)",
+            "Team Total (Aces) Home",
+            "Team Total (Aces) Away",
+            "Team Total (Double Faults) Home",
+            "Team Total (Double Faults) Away",
         ),
     },
 }
@@ -90,6 +105,13 @@ FAMILY_ORDER = (
     "Game Total",
     "Aces Total",
     "Double Fault Total",
+    "Player Aces",
+    "Player Double Faults",
+    "Corners",
+    "Cards",
+    "Team Shots",
+    "Goalkeeper Saves",
+    "Player Props",
     "BTTS",
     "Draw No Bet",
 )
@@ -131,7 +153,7 @@ def norm(value: Any) -> str:
 def display_bookmaker(value: Any) -> str:
     normalized = norm(value)
     for display, aliases in TARGET_BOOKMAKERS.items():
-        if normalized in aliases:
+        if normalized in {norm(alias) for alias in aliases}:
             return display
     return str(value or "Unknown")
 
@@ -150,7 +172,21 @@ def market_family(name: str, sport: str = "football") -> str | None:
             return "Aces Total"
         if compact == "totalsdoublefaults":
             return "Double Fault Total"
+        if compact in {"teamtotalaceshome", "teamtotalacesaway"}:
+            return "Player Aces"
+        if compact in {"teamtotaldoublefaultshome", "teamtotaldoublefaultsaway"}:
+            return "Player Double Faults"
         return None
+    if compact == "playerprops":
+        return "Player Props"
+    if compact in {"cornerstotals", "corners", "totalcorners"}:
+        return "Corners"
+    if compact in {"bookingstotals", "numberofcardsinmatch"}:
+        return "Cards"
+    if compact in {"totalshotshome", "totalshotsaway"}:
+        return "Team Shots"
+    if compact in {"goalkeepersaveshome", "goalkeepersavesaway"}:
+        return "Goalkeeper Saves"
     if any(token in text for token in ("player", "corner", "card", "booking", "shot", "foul", "offside")):
         return None
     if "draw no bet" in text or "drawnobet" in compact or compact == "dnb":
@@ -176,6 +212,13 @@ def required_outcomes(family: str, sport: str = "football") -> tuple[str, ...]:
         "Game Total": ("over", "under"),
         "Aces Total": ("over", "under"),
         "Double Fault Total": ("over", "under"),
+        "Player Aces": ("over", "under"),
+        "Player Double Faults": ("over", "under"),
+        "Corners": ("over", "under"),
+        "Cards": ("over", "under"),
+        "Team Shots": ("over", "under"),
+        "Goalkeeper Saves": ("over", "under"),
+        "Player Props": ("over", "under"),
         "BTTS": ("yes", "no"),
         "Draw No Bet": ("home", "away"),
     }[family]
@@ -215,6 +258,19 @@ def canonical_label(label: str, home: str, away: str) -> str | None:
     return None
 
 
+def prop_identity(item: dict[str, Any], label: str) -> str | None:
+    """Return a stable player/stat identity without side or line text."""
+    text = " ".join(
+        str(item.get(key) or "")
+        for key in ("player", "participant", "stat", "market", "description")
+    ).strip()
+    text = f"{text} {label}".strip()
+    text = re.sub(r"\b(over|under|yes|no)\b", " ", text, flags=re.IGNORECASE)
+    text = re.sub(r"(?<!\w)[+-]?\d+(?:\.\d+)?(?!\w)", " ", text)
+    identity = norm(text)
+    return identity or None
+
+
 def quote_sets(
     market: dict[str, Any],
     family: str,
@@ -232,6 +288,12 @@ def quote_sets(
         line = line_value(item, label, family)
         if line is None:
             continue
+        bucket_key = line
+        if family == "Player Props":
+            identity = prop_identity(item, label)
+            if identity is None:
+                continue
+            bucket_key = f"{identity}|{line}"
         compound: dict[str, float] = {}
         for outcome in required:
             aliases = OUTCOME_ALIASES[outcome] | {outcome}
@@ -241,17 +303,33 @@ def quote_sets(
                     if parsed is not None:
                         compound[outcome] = parsed
                         break
+        if family == "Player Props":
+            over = number(item.get("over")) or number(item.get("home"))
+            under = number(item.get("under")) or number(item.get("away"))
+            if over is not None:
+                compound["over"] = over
+            if under is not None:
+                compound["under"] = under
         if set(required).issubset(compound):
-            buckets[line].update(compound)
+            buckets[bucket_key].update(compound)
             continue
 
         outcome = canonical_label(label, home, away)
+        if family == "Player Props":
+            lower_label = label.lower()
+            outcome = "over" if "over" in lower_label else "under" if "under" in lower_label else None
         if outcome not in required:
             continue
         price = next((number(item.get(key)) for key in ("odds", "price", "value", "decimal", "back") if number(item.get(key)) is not None), None)
         selection_line = line_value(item, label, family)
         if price is not None and selection_line is not None:
-            buckets[selection_line][outcome] = price
+            selection_key = selection_line
+            if family == "Player Props":
+                identity = prop_identity(item, label)
+                if identity is None:
+                    continue
+                selection_key = f"{identity}|{selection_line}"
+            buckets[selection_key][outcome] = price
 
     output: list[dict[str, Any]] = []
     for line, outcomes in buckets.items():
@@ -485,10 +563,47 @@ def discover_bookmakers(api_key: str) -> list[str]:
     available = [str(row.get("name") or "") for row in response.json() if row.get("active", True)]
     selected: list[str] = []
     for display, aliases in TARGET_BOOKMAKERS.items():
-        match = next((name for name in available if norm(name) in aliases), None)
+        normalized_aliases = {norm(alias) for alias in aliases}
+        match = next((name for name in available if norm(name) in normalized_aliases), None)
         if match and match not in selected:
             selected.append(match)
     return selected
+
+
+def payload_bookmakers(body: Any) -> set[str]:
+    names: set[str] = set()
+    if not isinstance(body, list):
+        return names
+    for event in body:
+        if isinstance(event, dict):
+            names.update(str(name) for name in (event.get("bookmakers") or {}))
+    return names
+
+
+def operator_payload_counts(body: Any, bookmaker: str) -> tuple[int, int]:
+    events = 0
+    markets = 0
+    target = norm(bookmaker)
+    if not isinstance(body, list):
+        return events, markets
+    for event in body:
+        if not isinstance(event, dict):
+            continue
+        for name, rows in (event.get("bookmakers") or {}).items():
+            if norm(name) != target:
+                continue
+            events += 1
+            markets += len(rows or [])
+    return events, markets
+
+
+def append_sport_payload(payload: list[dict[str, Any]], body: Any, sport: str) -> None:
+    if not isinstance(body, list):
+        return
+    for event in body:
+        if isinstance(event, dict):
+            event["_snapshot_sport"] = sport
+            payload.append(event)
 
 
 def fetch_payload(
@@ -497,13 +612,20 @@ def fetch_payload(
     max_events: int,
     max_requests: int,
     sports: tuple[str, ...] = ("football", "tennis"),
-) -> tuple[list[dict[str, Any]], list[str]]:
+) -> tuple[list[dict[str, Any]], list[str], dict[str, Any]]:
     now = datetime.now(timezone.utc)
     bookmakers = discover_bookmakers(api_key)
     if not bookmakers:
         raise RuntimeError("No target UK bookmakers were returned by /bookmakers")
 
     payload: list[dict[str, Any]] = []
+    discovered_displays = {display_bookmaker(name) for name in bookmakers}
+    capture: dict[str, Any] = {
+        "target_operators": list(TARGET_BOOKMAKERS),
+        "discovered_operators": [display_bookmaker(name) for name in bookmakers],
+        "not_discovered": [name for name in TARGET_BOOKMAKERS if name not in discovered_displays],
+        "sports": [],
+    }
     for sport in sports:
         config = SPORT_CONFIG[sport]
         response = requests.get(
@@ -529,6 +651,26 @@ def fetch_payload(
         selected_events.sort(key=lambda event: str(event.get("date") or ""))
         selected_events = selected_events[:max_events]
         chunks = [selected_events[index:index + 10] for index in range(0, len(selected_events), 10)][:max_requests]
+        operator_results = {
+            bookmaker: {
+                "name": display_bookmaker(bookmaker),
+                "provider_name": bookmaker,
+                "status": "not_returned",
+                "request_mode": None,
+                "http_statuses": [],
+                "events_returned": 0,
+                "market_blocks": 0,
+            }
+            for bookmaker in bookmakers
+        }
+        sport_capture = {
+            "sport": sport,
+            "events_discovered": len(events),
+            "events_selected": len(selected_events),
+            "chunks": len(chunks),
+            "combined_http_statuses": [],
+            "operators": [],
+        }
         for chunk in chunks:
             params = {
                 "apiKey": api_key,
@@ -541,20 +683,38 @@ def fetch_payload(
                 params=params,
                 timeout=45,
             )
+            sport_capture["combined_http_statuses"].append(odds.status_code)
+            returned: set[str] = set()
             if odds.ok:
                 body = odds.json()
-                if isinstance(body, list):
-                    for event in body:
-                        event["_snapshot_sport"] = sport
-                    payload.extend(body)
-                continue
-            if odds.status_code != 403 or len(bookmakers) <= 1:
+                returned = payload_bookmakers(body)
+                append_sport_payload(payload, body, sport)
+                returned_norm = {norm(name) for name in returned}
+                for bookmaker in bookmakers:
+                    if norm(bookmaker) not in returned_norm:
+                        continue
+                    events_returned, market_blocks = operator_payload_counts(body, bookmaker)
+                    result = operator_results[bookmaker]
+                    result["status"] = "returned"
+                    result["request_mode"] = "combined"
+                    result["http_statuses"].append(odds.status_code)
+                    result["events_returned"] += events_returned
+                    result["market_blocks"] += market_blocks
+            elif odds.status_code in {401, 429}:
                 odds.raise_for_status()
 
-            # A combined free-tier request can fail if just one operator is
-            # unavailable. The fallback is bounded and only runs manually.
-            print(f"Combined {sport} request returned HTTP 403; retrying per bookmaker.")
-            for bookmaker in bookmakers:
+            # A successful combined request can silently omit books that are
+            # not selected on the account or have no payload. Probe every
+            # missing book once so a two-book response cannot masquerade as a
+            # complete UK comparison.
+            returned_norm = {norm(name) for name in returned}
+            missing = [bookmaker for bookmaker in bookmakers if norm(bookmaker) not in returned_norm]
+            if missing:
+                print(
+                    f"Combined {sport} request returned {len(returned_norm)}/{len(bookmakers)} books; "
+                    f"probing {len(missing)} missing books individually."
+                )
+            for bookmaker in missing:
                 single = requests.get(
                     f"{BASE_URL}/odds/multi",
                     params={
@@ -565,15 +725,22 @@ def fetch_payload(
                     },
                     timeout=45,
                 )
+                result = operator_results[bookmaker]
+                result["request_mode"] = "fallback"
+                result["http_statuses"].append(single.status_code)
                 if not single.ok:
+                    result["status"] = f"http_{single.status_code}"
                     print(f"Skipping unavailable {sport} bookmaker {bookmaker}: HTTP {single.status_code}")
                     continue
                 body = single.json()
-                if isinstance(body, list):
-                    for event in body:
-                        event["_snapshot_sport"] = sport
-                    payload.extend(body)
-    return payload, bookmakers
+                events_returned, market_blocks = operator_payload_counts(body, bookmaker)
+                result["events_returned"] += events_returned
+                result["market_blocks"] += market_blocks
+                result["status"] = "returned" if events_returned else "empty"
+                append_sport_payload(payload, body, sport)
+        sport_capture["operators"] = [operator_results[name] for name in bookmakers]
+        capture["sports"].append(sport_capture)
+    return payload, bookmakers, capture
 
 
 def parse_args() -> argparse.Namespace:
@@ -597,6 +764,7 @@ def main() -> int:
     if args.input_json:
         payload = json.loads(Path(args.input_json).read_text(encoding="utf-8"))
         bookmakers: list[str] = []
+        capture: dict[str, Any] = {}
     else:
         load_env()
         api_key = (os.environ.get("ODDS_API_KEY") or os.environ.get("ODDS_API_IO_KEY") or "").strip()
@@ -607,7 +775,7 @@ def main() -> int:
             invalid = sorted(set(sports) - set(SPORT_CONFIG))
             if invalid:
                 raise SystemExit(f"Unsupported sport(s): {','.join(invalid)}")
-            payload, bookmakers = fetch_payload(
+            payload, bookmakers, capture = fetch_payload(
                 api_key,
                 args.days_ahead,
                 args.max_events,
@@ -616,6 +784,7 @@ def main() -> int:
             )
         except (requests.RequestException, RuntimeError) as exc:
             payload, bookmakers = [], []
+            capture = {}
             result = build_index([], captured_at)
             result["status"] = "CAPTURE_FAILED"
             result["error"] = safe_error_summary(exc)
@@ -624,6 +793,24 @@ def main() -> int:
     if args.input_json:
         result = build_index(payload if isinstance(payload, list) else [], captured_at)
     result["requested_bookmakers"] = bookmakers
+    result["capture"] = capture
+    payload_operators = sorted(
+        {display_bookmaker(name) for name in payload_bookmakers(payload)},
+        key=str.lower,
+    )
+    qualified_operators = sorted(
+        {row["name"] for row in result.get("diagnostic_operators", [])},
+        key=str.lower,
+    )
+    result["coverage"] = {
+        "target_operators": len(TARGET_BOOKMAKERS),
+        "discovered_operators": len(bookmakers),
+        "payload_operators": len(payload_operators),
+        "qualified_operators": len(qualified_operators),
+        "payload_operator_names": payload_operators,
+        "qualified_operator_names": qualified_operators,
+        "not_discovered": capture.get("not_discovered", []) if capture else [],
+    }
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2, sort_keys=True), encoding="utf-8")

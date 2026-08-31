@@ -5,6 +5,7 @@ import BookmakerLogo from "@/components/BookmakerLogo";
 import {
   capturedLabel,
   confidenceLabel,
+  type BookmakerMarginIndex,
   type MarginSegment,
   type NotMeasuredMarket,
 } from "@/lib/bookmakers/margin-index";
@@ -13,6 +14,7 @@ type MarginExplorerProps = {
   generatedAt: string | null;
   segments: MarginSegment[];
   notMeasured: NotMeasuredMarket[];
+  coverage?: BookmakerMarginIndex["coverage"];
 };
 
 const SPORT_ORDER = ["football", "tennis"] as const;
@@ -174,7 +176,7 @@ function MarginPanel({ segment, active }: { segment: MarginSegment; active: bool
   );
 }
 
-export default function MarginExplorer({ generatedAt, segments, notMeasured }: MarginExplorerProps) {
+export default function MarginExplorer({ generatedAt, segments, notMeasured, coverage }: MarginExplorerProps) {
   const measured = useMemo(
     () => segments.filter((segment) => segment.operators.length > 0),
     [segments],
@@ -239,6 +241,9 @@ export default function MarginExplorer({ generatedAt, segments, notMeasured }: M
 
   const currentSegments = measured.filter((segment) => segment.sport_slug === selectedSport);
   const currentMissing = notMeasured.filter((market) => market.sport_slug === selectedSport);
+  const coverageIncomplete = Boolean(
+    coverage && coverage.payload_operators < Math.min(10, coverage.target_operators),
+  );
 
   if (measured.length === 0) {
     return (
@@ -277,9 +282,23 @@ export default function MarginExplorer({ generatedAt, segments, notMeasured }: M
           <div className="rounded-2xl border border-cyan-300/15 bg-cyan-300/[0.045] px-4 py-3">
             <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-slate-500">Captured</p>
             <p className="mt-1 font-mono text-xs tabular-nums text-cyan-100">{capturedLabel(generatedAt)}</p>
+            {coverage && (
+              <p className="mt-1 font-mono text-[10px] tabular-nums text-slate-500">
+                {coverage.payload_operators}/{coverage.target_operators} books returned prices
+              </p>
+            )}
           </div>
         </div>
       </div>
+
+      {coverageIncomplete && coverage && (
+        <div className="relative border-b border-amber-300/15 bg-amber-300/[0.055] px-5 py-4 sm:px-8">
+          <p className="text-sm font-semibold text-amber-100">Incomplete bookmaker coverage</p>
+          <p className="mt-1 max-w-4xl text-xs leading-5 text-slate-300">
+            Only {coverage.payload_operators} of {coverage.target_operators} target sportsbooks returned prices in this capture. Rankings below are limited to those books and must not be read as a complete UK league table.
+          </p>
+        </div>
+      )}
 
       <div className="relative px-5 py-5 sm:px-8">
         <div className="grid gap-5 xl:grid-cols-[280px_minmax(0,1fr)]">
