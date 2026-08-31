@@ -2,8 +2,16 @@
   "api_errors": [
     "plan: Free plans do not have access to this season, try from 2022 to 2024."
   ],
-  "deferred_not_due": 1,
+  "deferred_not_due": 2,
   "details": [
+    {
+      "detail": "plan: Free plans do not have access to this season, try from 2022 to 2024.",
+      "goalkeeper": "Loris Karius",
+      "match": "FC Augsburg vs Schalke 04",
+      "match_date": "2026-08-30",
+      "reason": "fixture_api_error",
+      "signal_id": "72513156|loris karius|3.5|over"
+    },
     {
       "detail": "plan: Free plans do not have access to this season, try from 2022 to 2024.",
       "goalkeeper": "Anton\u00edn Kinsky",
@@ -101,28 +109,37 @@
       "signal_id": "71944902|david de gea|6.5|over"
     },
     {
-      "detail": "plan: Free plans do not have access to this season, try from 2022 to 2024.",
+      "detail": "",
       "goalkeeper": "Maduka Okoye",
       "match": "AC Monza vs Udinese Calcio",
       "match_date": "2026-08-29",
-      "reason": "fixture_api_error",
+      "reason": "request_budget_exhausted",
       "signal_id": "71945220|maduka okoye|2.5|over"
     },
     {
-      "detail": "plan: Free plans do not have access to this season, try from 2022 to 2024.",
+      "detail": "",
       "goalkeeper": "David de Gea",
       "match": "ACF Fiorentina vs Frosinone Calcio",
       "match_date": "2026-08-29",
-      "reason": "fixture_api_error",
+      "reason": "request_budget_exhausted",
       "signal_id": "71945210|david de gea|2.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Josep Mart\u00ednez",
+      "match": "Cagliari Calcio vs Inter Milano",
+      "match_date": "2026-08-30",
+      "reason": "request_budget_exhausted",
+      "signal_id": "71945208|josep mart\u00ednez|2.5|over"
     }
   ],
-  "generated_at": "2026-08-30T14:35:31Z",
+  "generated_at": "2026-08-31T16:55:33Z",
   "max_requests": 10,
-  "pending_due": 14,
-  "pending_total": 15,
+  "pending_due": 16,
+  "pending_total": 18,
   "reason_counts": {
-    "fixture_api_error": 14
+    "fixture_api_error": 13,
+    "request_budget_exhausted": 3
   },
   "requests_used": 10,
   "settled": 0,
