@@ -71,16 +71,15 @@ ODDSCHECKER_TARGET_BOOKMAKERS = (
     "PricedUp",
     "QuinnBet",
     "Sky Bet",
-    "Sporting Index",
     "Spreadex",
     "Star Sports",
     "Unibet",
     "Virgin Bet",
     "William Hill",
 )
-# Exchange prices require commission adjustments and are not comparable with
+# Exchange and spread-betting prices are not comparable with fixed-odds
 # sportsbook overround. They remain in the raw browser export only.
-ODDSCHECKER_EXCLUDED_CODES = {"BF", "MA"}
+ODDSCHECKER_EXCLUDED_CODES = {"BF", "MA", "SI"}
 BOOKMAKER_DISPLAY_ALIASES = {
     **TARGET_BOOKMAKERS,
     "10BET": ("10bet",),
