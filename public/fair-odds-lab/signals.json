@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T14:25:52.410306Z",
+  "generated_at": "2026-08-31T17:37:22.619677Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -33,11 +33,11 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 5,
+  "fixtures_evaluated": 3,
   "signals_qualifying": 0,
   "safety_exclusions": {
     "model_probability_below_floor": 2,
-    "lineup_not_public_quality": 2
+    "lineup_not_public_quality": 1
   },
   "extreme_gap_quarantine": {
     "eligible_rows": 0,
