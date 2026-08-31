@@ -31,8 +31,8 @@
       "Hull City",
       "Ipswich Town"
     ],
-    "last_verified": "2026-08-24",
-    "public_updated_at": "2026-08-24",
+    "last_verified": "2026-08-30",
+    "public_updated_at": "2026-08-30",
     "membership_source": "https://www.premierleague.com/en/news/4675508/premier-league-fixture-schedulereleased-for-season-202627"
   },
   "Arsenal": {
@@ -934,27 +934,27 @@
     "primary": "Igor Thiago",
     "secondary": "Kevin Schade",
     "tertiary": "Fabio Carvalho",
-    "last_updated": "2026-07-30",
+    "last_updated": "2026-08-22",
     "source": "Brentford",
     "cross_check": "Brentford",
-    "hierarchy_status": "probable",
+    "hierarchy_status": "confirmed",
     "confidence": {
       "primary": "high",
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Thiago has repeated 2025/26 in-match evidence and converted with Schade playing. Schade is the best current deputy projection. Carvalho is a current-squad career fallback without a demonstrated Brentford assignment. No competitive event directly ordered Schade and Carvalho.",
+    "condition_note": "Igor Thiago remains Brentford's confirmed first choice. He took the 55th-minute penalty against Tottenham with Kevin Schade in the starting XI; Fabio Carvalho was not in the matchday squad. The miss does not alter the order, and Schade remains the evidence-led deputy.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-22",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-22",
     "latest_evidence": {
-      "id": "evt_20260730_brentford_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260822_brentford_thiago_confirmation",
+      "date": "2026-08-22",
+      "type": "competitive_penalty_assignment",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -1089,6 +1089,38 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260822_brentford_thiago_confirmation",
+        "date": "2026-08-22",
+        "season": "2026/27",
+        "type": "competitive_penalty_assignment",
+        "penalty_kind": "regular_time",
+        "competition": "Premier League",
+        "match": "Brentford 3-0 Tottenham Hotspur",
+        "context": "Thiago started and hit the post from the penalty spot in the 55th minute. Schade also started and remained on the pitch; Carvalho was outside the matchday squad.",
+        "sources": [
+          {
+            "label": "Brentford FC match report",
+            "url": "https://www.brentfordfc.com/en/news/article/match-reports-brentford-3-tottenham-hotspur-0-premier-league-22-08-2026",
+            "date": "2026-08-22",
+            "note": "Confirms Thiago's penalty miss and Brentford's lineup."
+          },
+          {
+            "label": "Brentford FC team news",
+            "url": "https://www.brentfordfc.com/en/news/article/first-team-brentford-v-tottenham-hotspur-premier-league-confirmed-team-news-22-08-2026",
+            "date": "2026-08-22",
+            "note": "Confirms Thiago and Schade both started; Carvalho was not in the squad."
+          }
+        ],
+        "detection": "automated_fotmob_live_then_manual_lineup_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-31T15:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "A direct same-pitch test confirms Thiago ahead of Schade. The miss affects conversion form, not penalty ownership."
       }
     ],
     "change_log": [
@@ -4550,27 +4582,27 @@
     "primary": "Bruno Fernandes",
     "secondary": "Bryan Mbeumo",
     "tertiary": "Youri Tielemans",
-    "last_updated": "2026-07-30",
+    "last_updated": "2026-08-30",
     "source": "Manchester United",
     "cross_check": "Manchester United",
-    "hierarchy_status": "probable",
+    "hierarchy_status": "confirmed",
     "confidence": {
       "primary": "high",
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Bruno took with Mbeumo available and remains the clear primary. Mbeumo has an established Brentford record. Tielemans is a confirmed United player with current international and career evidence but no United assignment. No United event directly orders Mbeumo and Tielemans.",
+    "condition_note": "Bruno Fernandes is directly confirmed as Manchester United's primary. He converted against Ipswich with both Bryan Mbeumo and Youri Tielemans in the starting XI. Mbeumo remains second and Tielemans third because this event establishes Bruno's precedence but does not order the two deputies against each other.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-30",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-30",
     "latest_evidence": {
-      "id": "evt_20260730_manchester-united_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260830_manchester_united_bruno_confirmation",
+      "date": "2026-08-30",
+      "type": "competitive_penalty_assignment",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -4729,6 +4761,32 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260830_manchester_united_bruno_confirmation",
+        "date": "2026-08-30",
+        "season": "2026/27",
+        "type": "competitive_penalty_assignment",
+        "penalty_kind": "regular_time",
+        "competition": "Premier League",
+        "match": "Manchester United 5-2 Ipswich Town",
+        "context": "Fernandes converted the 61st-minute penalty after starting alongside both filed deputies, Bryan Mbeumo and Youri Tielemans.",
+        "sources": [
+          {
+            "label": "Sky Sports match centre",
+            "url": "https://www.skysports.com/football/manchester-united-vs-ipswich-town/teams/559461",
+            "date": "2026-08-30",
+            "note": "Confirms the penalty and that Fernandes, Mbeumo and Tielemans all started."
+          }
+        ],
+        "detection": "automated_fotmob_live_then_manual_lineup_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-31T15:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "This is a clean same-pitch confirmation of Bruno Fernandes as first choice."
       }
     ],
     "change_log": [
@@ -5276,7 +5334,7 @@
     "primary": "Chris Wood",
     "secondary": "Morgan Gibbs-White",
     "tertiary": "Igor Jesus",
-    "last_updated": "2026-07-30",
+    "last_updated": "2026-08-29",
     "source": "Premier League",
     "cross_check": "UEFA",
     "hierarchy_status": "confirmed",
@@ -5285,18 +5343,18 @@
       "secondary": "high",
       "tertiary": "high"
     },
-    "condition_note": "Wood converted with Gibbs-White and Igor Jesus starting. Gibbs-White took when Wood was unavailable, placing him second. Igor Jesus is the remaining current specialist behind both. Normal matchday availability can activate the lower positions, but the hierarchy itself is well supported.",
+    "condition_note": "Chris Wood remains first choice. Morgan Gibbs-White converted at Liverpool after starting while Wood stayed on the bench; Igor Jesus also started. The event confirms Gibbs-White as the active deputy rather than moving him above an unavailable Wood.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-29",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-29",
     "latest_evidence": {
-      "id": "evt_20260730_nottingham-forest_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260829_forest_gibbs_white_backup",
+      "date": "2026-08-29",
+      "type": "competitive_penalty_assignment",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -5437,6 +5495,32 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260829_forest_gibbs_white_backup",
+        "date": "2026-08-29",
+        "season": "2026/27",
+        "type": "competitive_penalty_assignment",
+        "penalty_kind": "regular_time",
+        "competition": "Premier League",
+        "match": "Liverpool 2-2 Nottingham Forest",
+        "context": "Gibbs-White started and converted the 70th-minute penalty. Chris Wood was an unused substitute, while Igor Jesus started, so this was a backup activation rather than a same-pitch test against Wood.",
+        "sources": [
+          {
+            "label": "Football Web Pages match centre",
+            "url": "https://www.footballwebpages.co.uk/match/2026-2027/premier-league/liverpool/nottingham-forest/566557",
+            "date": "2026-08-29",
+            "note": "Records the penalty, starting XI, substitutions and Wood remaining on the bench."
+          }
+        ],
+        "detection": "automated_fotmob_live_then_manual_lineup_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-31T15:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Gibbs-White's conversion confirms the filed secondary role. Wood was not on the pitch, so there is no evidence to promote Gibbs-White above him."
       }
     ],
     "change_log": [

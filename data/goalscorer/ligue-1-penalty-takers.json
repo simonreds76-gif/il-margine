@@ -25,8 +25,8 @@
       "Le Mans",
       "Troyes"
     ],
-    "last_verified": "2026-08-22",
-    "public_updated_at": "2026-08-22",
+    "last_verified": "2026-08-30",
+    "public_updated_at": "2026-08-30",
     "membership_source": "https://ligue1.com/en/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released"
   },
   "Angers": {
@@ -1276,28 +1276,28 @@
     }
   },
   "Le Mans": {
-    "primary": "Dame Gueye",
-    "secondary": "Louis Mafouta",
+    "primary": "Louis Mafouta",
+    "secondary": "Dame Gueye",
     "tertiary": "Antoine Rabillard",
-    "last_updated": "2026-07-30",
-    "hierarchy_status": "conditional",
+    "last_updated": "2026-08-30",
+    "hierarchy_status": "confirmed",
     "confidence": {
       "primary": "high",
       "secondary": "medium",
-      "tertiary": "medium"
+      "tertiary": "low"
     },
-    "condition_note": "Gueye converted three 2025/26 regular-time penalties. Mafouta arrives with a 24/29 career record, while Rabillard also took a promotion-season penalty. Gueye and Mafouta have not yet produced a coexistence penalty. Conditions: If Mafouta takes the first penalty with Gueye on the pitch, move him to primary. Retain Rabillard third unless a new proven taker joins.",
+    "condition_note": "Louis Mafouta is now first choice after taking and converting Le Mans' 54th-minute penalty at Rennes with Dame Gueye still on the pitch. This satisfies the preseason promotion condition exactly. Gueye moves to second and Antoine Rabillard remains third.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-30",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-30",
     "latest_evidence": {
-      "id": "evt_20260730_le-mans_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260830_le_mans_mafouta_precedence",
+      "date": "2026-08-30",
+      "type": "competitive_penalty_assignment",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -1455,6 +1455,32 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260830_le_mans_mafouta_precedence",
+        "date": "2026-08-30",
+        "season": "2026/27",
+        "type": "competitive_penalty_assignment",
+        "penalty_kind": "regular_time",
+        "competition": "Ligue 1",
+        "match": "Rennes 3-2 Le Mans",
+        "context": "Mafouta and Gueye both started. Mafouta converted at 54, while Gueye remained on the pitch until being replaced at 68.",
+        "sources": [
+          {
+            "label": "Sky Sports match centre",
+            "url": "https://www.skysports.com/football/rennes-vs-le-mans/teams/557012",
+            "date": "2026-08-30",
+            "note": "Records both starters, Mafouta's penalty and Gueye's later substitution."
+          }
+        ],
+        "detection": "automated_fotmob_live_then_manual_lineup_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-31T15:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "The direct same-pitch test promotes Mafouta to primary and moves Gueye to the deputy slot."
       }
     ],
     "change_log": [
@@ -1503,6 +1529,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-30",
+        "season": "2026/27",
+        "change_type": "competitive_hierarchy_update",
+        "from": {
+          "primary": "Dame Gueye",
+          "secondary": "Louis Mafouta",
+          "tertiary": "Antoine Rabillard"
+        },
+        "to": {
+          "primary": "Louis Mafouta",
+          "secondary": "Dame Gueye",
+          "tertiary": "Antoine Rabillard"
+        },
+        "reason": "Mafouta converted at Rennes with Gueye still on the pitch, satisfying the exact preseason condition for promotion.",
+        "evidence_ids": [
+          "evt_20260830_le_mans_mafouta_precedence"
+        ],
+        "detection": "automated_fotmob_live_then_manual_lineup_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-31T15:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -1516,22 +1565,22 @@
     "cross_check": "Le Mans FC",
     "squad_membership": {
       "primary": {
-        "player": "Dame Gueye",
-        "status": "confirmed",
-        "source_url": "https://lemansfc.fr/index.php?actu=4105&section=actualites-contenu",
-        "checked_at": "2026-07-30"
-      },
-      "secondary": {
         "player": "Louis Mafouta",
         "status": "confirmed",
         "source_url": "https://www.lequipe.fr/Football/Actualites/Mercato-le-mans-officialise-l-arrivee-de-l-attaquant-de-guingamp-louis-mafouta-jusqu-en-2028/1703559",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-08-30"
+      },
+      "secondary": {
+        "player": "Dame Gueye",
+        "status": "confirmed",
+        "source_url": "https://lemansfc.fr/index.php?actu=4105&section=actualites-contenu",
+        "checked_at": "2026-08-30"
       },
       "tertiary": {
         "player": "Antoine Rabillard",
         "status": "confirmed",
         "source_url": "https://www.lemansfc.fr/index.php?actu=4075&section=actualites-contenu",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-08-30"
       }
     }
   },
@@ -1539,7 +1588,7 @@
     "primary": "Florian Thauvin",
     "secondary": "Odsonne Édouard",
     "tertiary": "Thorgan Hazard",
-    "last_updated": "2026-08-22",
+    "last_updated": "2026-08-29",
     "source": "L'Équipe",
     "cross_check": "Ligue 1",
     "hierarchy_status": "confirmed",
@@ -1548,16 +1597,16 @@
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Thauvin is now directly confirmed for 2026/27. He converted Lens' first penalty against Auxerre, then retained responsibility for a second penalty after both Édouard and Hazard entered. The existing deputy order remains, but the primary is no longer merely probable.",
+    "condition_note": "Florian Thauvin remains directly confirmed as Lens' primary. He followed his two opening-weekend penalties by converting again at Strasbourg. Thorgan Hazard started on the bench and Odsonne Édouard was not active, so the latest event reinforces Thauvin without changing the deputy order.",
     "last_verified": {
-      "date": "2026-08-22",
+      "date": "2026-08-29",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-08-22",
+    "public_updated_at": "2026-08-29",
     "latest_evidence": {
-      "id": "evt_20260822_lens_thauvin_confirmation",
-      "date": "2026-08-22",
+      "id": "evt_20260829_lens_thauvin_confirmation",
+      "date": "2026-08-29",
       "type": "competitive_penalty_assignment",
       "source_count": 2
     },
@@ -1732,6 +1781,38 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Thauvin is now directly confirmed for 2026/27. He converted Lens' first penalty against Auxerre, then retained responsibility for a second penalty after both Édouard and Hazard entered. The existing deputy order remains, but the primary is no longer merely probable."
+      },
+      {
+        "id": "evt_20260829_lens_thauvin_confirmation",
+        "date": "2026-08-29",
+        "season": "2026/27",
+        "type": "competitive_penalty_assignment",
+        "penalty_kind": "regular_time",
+        "competition": "Ligue 1",
+        "match": "Strasbourg 2-1 Lens",
+        "context": "Thauvin converted Lens' first-half penalty. Hazard was on the bench and Édouard was not active, so this was another primary confirmation rather than a deputy precedence test.",
+        "sources": [
+          {
+            "label": "Ligue 1 match report",
+            "url": "https://ligue1.com/en/articles/l1_article_5765-gessime-yassine-brace-hands-strasbourg-first-win",
+            "date": "2026-08-29",
+            "note": "Official competition report confirms Thauvin converted the penalty."
+          },
+          {
+            "label": "Lens lineup report",
+            "url": "https://www.lensois.com/live/lens-pfc/",
+            "date": "2026-08-29",
+            "note": "Records Thauvin starting and Hazard entering later from the bench."
+          }
+        ],
+        "detection": "automated_fotmob_live_then_manual_lineup_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-31T15:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Thauvin's third league penalty conversion of the season reinforces the existing primary call."
       }
     ],
     "change_log": [
@@ -3652,30 +3733,30 @@
     }
   },
   "Paris FC": {
-    "primary": "Ilan Kebbal",
-    "secondary": "Pablo Pagis",
-    "tertiary": "Lassine Sinayoko",
-    "last_updated": "2026-07-30",
+    "primary": "Lassine Sinayoko",
+    "secondary": "Ilan Kebbal",
+    "tertiary": "Pablo Pagis",
+    "last_updated": "2026-08-30",
     "source": "Ligue 1",
     "cross_check": "FC Lorient",
-    "hierarchy_status": "conditional",
+    "hierarchy_status": "confirmed",
     "confidence": {
       "primary": "high",
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Kebbal is the incumbent 3/4 taker. Pagis' 2/2 2025/26 return gives him a narrow backup edge over Sinayoko's 3/4 after both joined the club. No Paris FC coexistence penalty exists between the incumbent and new forwards. Conditions: A penalty awarded with all three available is the decisive hierarchy test. If Kebbal leaves, Pagis is provisional primary ahead of Sinayoko.",
+    "condition_note": "Lassine Sinayoko is now first choice after converting Paris FC's 21st-minute penalty against Nice with Ilan Kebbal and Pablo Pagis both starting. Kebbal, who won the penalty and was the previous incumbent, remains the strongest deputy; Pagis moves to third.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-30",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-30",
     "latest_evidence": {
-      "id": "evt_20260730_paris-fc_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260830_paris_fc_sinayoko_precedence",
+      "date": "2026-08-30",
+      "type": "competitive_penalty_assignment",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -3828,6 +3909,38 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260830_paris_fc_sinayoko_precedence",
+        "date": "2026-08-30",
+        "season": "2026/27",
+        "type": "competitive_penalty_assignment",
+        "penalty_kind": "regular_time",
+        "competition": "Ligue 1",
+        "match": "Paris FC 3-0 Nice",
+        "context": "Sinayoko converted in the 21st minute. Kebbal, who won the penalty, and Pagis were both in the starting XI, making this the exact three-player coexistence test the preseason hierarchy required.",
+        "sources": [
+          {
+            "label": "Ligue 1 match report",
+            "url": "https://ligue1.com/en/articles/l1_article_5772-",
+            "date": "2026-08-30",
+            "note": "Official competition report confirms Kebbal won the penalty and Sinayoko converted it."
+          },
+          {
+            "label": "Paris FC-Nice lineup record",
+            "url": "https://fbref.com/en/matches/903c74f3/Paris-FC-Nice-August-30-2026-Ligue-1",
+            "date": "2026-08-30",
+            "note": "Confirms Sinayoko, Kebbal and Pagis all started."
+          }
+        ],
+        "detection": "automated_fotmob_live_then_manual_lineup_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-31T15:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "The first competitive penalty with all three candidates active promotes Sinayoko to primary, Kebbal to deputy and Pagis to third."
       }
     ],
     "change_log": [
@@ -3899,6 +4012,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-30",
+        "season": "2026/27",
+        "change_type": "competitive_hierarchy_update",
+        "from": {
+          "primary": "Ilan Kebbal",
+          "secondary": "Pablo Pagis",
+          "tertiary": "Lassine Sinayoko"
+        },
+        "to": {
+          "primary": "Lassine Sinayoko",
+          "secondary": "Ilan Kebbal",
+          "tertiary": "Pablo Pagis"
+        },
+        "reason": "Sinayoko converted Paris FC's first league penalty with Kebbal and Pagis both starting, resolving the filed coexistence condition.",
+        "evidence_ids": [
+          "evt_20260830_paris_fc_sinayoko_precedence"
+        ],
+        "detection": "automated_fotmob_live_then_manual_lineup_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-31T15:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -3916,22 +4052,22 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Ilan Kebbal",
-        "status": "confirmed",
-        "source_url": "https://parisfc.fr/pro-homme/joueurs-staff/",
-        "checked_at": "2026-07-30"
-      },
-      "secondary": {
-        "player": "Pablo Pagis",
-        "status": "confirmed",
-        "source_url": "https://parisfc.fr/pro-homme/joueurs-staff/",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
         "player": "Lassine Sinayoko",
         "status": "confirmed",
         "source_url": "https://parisfc.fr/pro-homme/joueurs-staff/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-08-30"
+      },
+      "secondary": {
+        "player": "Ilan Kebbal",
+        "status": "confirmed",
+        "source_url": "https://parisfc.fr/pro-homme/joueurs-staff/",
+        "checked_at": "2026-08-30"
+      },
+      "tertiary": {
+        "player": "Pablo Pagis",
+        "status": "confirmed",
+        "source_url": "https://parisfc.fr/pro-homme/joueurs-staff/",
+        "checked_at": "2026-08-30"
       }
     }
   },
@@ -4220,30 +4356,30 @@
     }
   },
   "Rennes": {
-    "primary": "Ludovic Blas",
-    "secondary": "Estéban Lepaul",
+    "primary": "Estéban Lepaul",
+    "secondary": "Ludovic Blas",
     "tertiary": "Issa Soumaré",
-    "last_updated": "2026-07-30",
+    "last_updated": "2026-08-30",
     "source": "Stade Rennais",
     "cross_check": "L'Équipe",
-    "hierarchy_status": "confirmed",
+    "hierarchy_status": "probable",
     "confidence": {
       "primary": "high",
-      "secondary": "high",
+      "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Lepaul explicitly identified Blas as first and himself as second after Blas delegated two penalties. Soumaré is the only current tertiary with repeated 2025/26 attempts. Soumaré converted only one of three attempts and has no Rennes penalty event. Conditions: If Blas leaves, Lepaul becomes primary. Reassess Soumaré if he is not a regular attacker or another proven taker joins.",
+    "condition_note": "Estéban Lepaul moves first after taking and converting Rennes' 90+6 penalty against Le Mans with Ludovic Blas on the pitch from the 74th minute. Blas had previously described himself as first and Lepaul second, so one current-season reversal does not make the order fully settled; Blas remains the live deputy and Issa Soumaré stays third.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-30",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-30",
     "latest_evidence": {
-      "id": "evt_20260730_rennes_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260830_rennes_lepaul_precedence",
+      "date": "2026-08-30",
+      "type": "competitive_penalty_assignment",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -4390,6 +4526,38 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260830_rennes_lepaul_precedence",
+        "date": "2026-08-30",
+        "season": "2026/27",
+        "type": "competitive_penalty_assignment",
+        "penalty_kind": "regular_time",
+        "competition": "Ligue 1",
+        "match": "Rennes 3-2 Le Mans",
+        "context": "Lepaul started and converted the winning penalty at 90+6. Blas entered at 74 and was still on the pitch, creating a direct current-season precedence test.",
+        "sources": [
+          {
+            "label": "Sky Sports match centre",
+            "url": "https://www.skysports.com/football/rennes-vs-le-mans/teams/557012",
+            "date": "2026-08-30",
+            "note": "Records Lepaul's penalty and Blas entering before it at 74 minutes."
+          },
+          {
+            "label": "Ligue 1 match report",
+            "url": "https://ligue1.com/en/articles/l1_article_5773-lepaul-at-the-double-as-rennes-edge-le-mans",
+            "date": "2026-08-30",
+            "note": "Official competition report confirms Lepaul's decisive late penalty."
+          }
+        ],
+        "detection": "automated_fotmob_live_then_manual_lineup_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-31T15:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "A direct same-pitch event moves Lepaul above Blas, while the previous public designation keeps the new order at probable rather than fully confirmed."
       }
     ],
     "change_log": [
@@ -4461,6 +4629,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-30",
+        "season": "2026/27",
+        "change_type": "competitive_hierarchy_update",
+        "from": {
+          "primary": "Ludovic Blas",
+          "secondary": "Estéban Lepaul",
+          "tertiary": "Issa Soumaré"
+        },
+        "to": {
+          "primary": "Estéban Lepaul",
+          "secondary": "Ludovic Blas",
+          "tertiary": "Issa Soumaré"
+        },
+        "reason": "Lepaul took Rennes' 90+6 penalty after Blas had entered at 74, creating a direct current-season same-pitch precedence test.",
+        "evidence_ids": [
+          "evt_20260830_rennes_lepaul_precedence"
+        ],
+        "detection": "automated_fotmob_live_then_manual_lineup_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-08-31T15:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -4478,22 +4669,22 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Ludovic Blas",
-        "status": "confirmed",
-        "source_url": "https://www.lequipe.fr/Football/ligue-1/page-tableau-des-transferts",
-        "checked_at": "2026-07-30"
-      },
-      "secondary": {
         "player": "Estéban Lepaul",
         "status": "confirmed",
         "source_url": "https://www.lequipe.fr/Football/ligue-1/page-tableau-des-transferts",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-08-30"
+      },
+      "secondary": {
+        "player": "Ludovic Blas",
+        "status": "confirmed",
+        "source_url": "https://www.lequipe.fr/Football/ligue-1/page-tableau-des-transferts",
+        "checked_at": "2026-08-30"
       },
       "tertiary": {
         "player": "Issa Soumaré",
         "status": "confirmed",
         "source_url": "https://www.staderennais.com/en/news/issa-soumare-est-rouge-et-noir",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-08-30"
       }
     }
   },
@@ -5117,25 +5308,25 @@
     "primary": "Renaud Ripart",
     "secondary": "Antoine Mille",
     "tertiary": "Mouhamed Diop",
-    "last_updated": "2026-07-30",
-    "hierarchy_status": "conditional",
+    "last_updated": "2026-08-29",
+    "hierarchy_status": "confirmed",
     "confidence": {
-      "primary": "medium",
-      "secondary": "low",
-      "tertiary": "low"
+      "primary": "high",
+      "secondary": "medium",
+      "tertiary": "medium"
     },
-    "condition_note": "Ripart's 13/14 career record makes him the strongest current replacement for the promotion-season role. Mille and Diop rank from current minutes and attacking responsibility, not direct penalty evidence. Troyes are still completing the promoted squad and neither backup has a recent attempt. Conditions: Any incoming proven penalty-taking forward could enter the top two. If Ripart is not a regular starter, wait for the first competitive event.",
+    "condition_note": "Renaud Ripart is directly confirmed as Troyes' primary after converting at Lorient with both Antoine Mille and Mouhamed Diop in the starting XI. Mille remains second and Diop third; the event establishes Ripart's precedence without changing the backup order.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-29",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-29",
     "latest_evidence": {
-      "id": "evt_20260730_troyes_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260829_troyes_ripart_confirmation",
+      "date": "2026-08-29",
+      "type": "competitive_penalty_assignment",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -5293,6 +5484,32 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260829_troyes_ripart_confirmation",
+        "date": "2026-08-29",
+        "season": "2026/27",
+        "type": "competitive_penalty_assignment",
+        "penalty_kind": "regular_time",
+        "competition": "Ligue 1",
+        "match": "Lorient 1-2 Troyes",
+        "context": "Ripart converted the 29th-minute penalty after starting alongside both filed deputies, Antoine Mille and Mouhamed Diop.",
+        "sources": [
+          {
+            "label": "Sky Sports match centre",
+            "url": "https://www.skysports.com/football/lorient-vs-troyes/teams/557008",
+            "date": "2026-08-29",
+            "note": "Confirms the penalty and that Ripart, Mille and Diop all started."
+          }
+        ],
+        "detection": "automated_fotmob_live_then_manual_lineup_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-31T15:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "A clean same-pitch test confirms Ripart as first choice for 2026/27."
       }
     ],
     "change_log": [

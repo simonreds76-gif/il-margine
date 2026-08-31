@@ -31,8 +31,8 @@
       "Schalke 04",
       "SV Elversberg"
     ],
-    "last_verified": "2026-08-22",
-    "public_updated_at": "2026-08-22",
+    "last_verified": "2026-08-29",
+    "public_updated_at": "2026-08-29",
     "membership_source": "https://media.dfl.de/sites/3/2026/07/EN_eFyJmg6k_Bundesliga_Fixture-List_2026_27.pdf"
   },
   "Augsburg": {
@@ -2631,7 +2631,7 @@
     "primary": "Andrej Kramarić",
     "secondary": "Tim Lemperle",
     "tertiary": "Fisnik Asllani",
-    "last_updated": "2026-07-30",
+    "last_updated": "2026-08-29",
     "source": "Bundesliga",
     "cross_check": "Kicker",
     "hierarchy_status": "probable",
@@ -2640,18 +2640,18 @@
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Kramarić converted both April penalties against Dortmund while Lemperle and Asllani started, directly confirming primary precedence. Lemperle has the stronger senior club and career fallback record; Asllani has no current-club penalty event establishing precedence. The deputy order is inferred because Kramarić took the available penalties whenever all three were present.",
+    "condition_note": "Andrej Kramarić remains first choice, with Tim Lemperle second and Fisnik Asllani third. Max Moerstedt came on in the 53rd minute at Köln and missed a penalty four minutes later, but Kramarić was still on the bench until 87, Lemperle was suspended and Asllani was unavailable. That was emergency duty with all three filed options inactive, not evidence to reorder them.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-29",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-29",
     "latest_evidence": {
-      "id": "evt_20260730_hoffenheim_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260829_hoffenheim_moerstedt_emergency",
+      "date": "2026-08-29",
+      "type": "competitive_penalty_assignment",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -2810,6 +2810,32 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260829_hoffenheim_moerstedt_emergency",
+        "date": "2026-08-29",
+        "season": "2026/27",
+        "type": "competitive_penalty_assignment",
+        "penalty_kind": "regular_time",
+        "competition": "Bundesliga",
+        "match": "1. FC Köln 3-2 Hoffenheim",
+        "context": "Moerstedt entered at 53 and had his 57th-minute penalty saved. Kramarić did not enter until 87, Lemperle was suspended and Asllani was unavailable with a training deficit.",
+        "sources": [
+          {
+            "label": "Bundesliga official live ticker",
+            "url": "https://www.bundesliga.com/de/bundesliga/spieltag/2026-2027/1/1-fc-koeln-vs-tsg-hoffenheim/liveticker",
+            "date": "2026-08-29",
+            "note": "Records the substitution, missed penalty and availability of all three filed takers."
+          }
+        ],
+        "detection": "automated_fotmob_live_then_manual_lineup_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-31T15:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Moerstedt is recorded as emergency depth only. The event does not challenge Kramarić, Lemperle or Asllani because none was active at the penalty."
       }
     ],
     "change_log": [

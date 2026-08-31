@@ -31,8 +31,8 @@
       "Malaga",
       "Racing Santander"
     ],
-    "last_verified": "2026-08-24",
-    "public_updated_at": "2026-08-24",
+    "last_verified": "2026-08-27",
+    "public_updated_at": "2026-08-27",
     "membership_source": "https://www.laliga.com/en-GB/laliga-easports/clubs"
   },
   "Alaves": {
@@ -3444,27 +3444,27 @@
     "primary": "Ante Budimir",
     "secondary": "Raúl García de Haro",
     "tertiary": "Aimar Oroz",
-    "last_updated": "2026-07-30",
+    "last_updated": "2026-08-27",
     "source": "Cadena SER",
     "cross_check": "CA Osasuna",
-    "hierarchy_status": "probable",
+    "hierarchy_status": "confirmed",
     "confidence": {
       "primary": "high",
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Budimir remained Osasuna's regular competitive taker. A current specialist review names Raúl García de Haro second, while Aimar is an older fallback projection. Raúl has stronger specialist support than direct recent Osasuna penalty evidence; Aimar's tertiary role is weak.",
+    "condition_note": "Ante Budimir is directly confirmed as Osasuna's primary. He entered against Celta before taking the penalty while Raúl García de Haro, the filed deputy, was still on the pitch. Raúl remains second and Aimar Oroz third.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-08-27",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-08-27",
     "latest_evidence": {
-      "id": "evt_20260730_osasuna_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 7
+      "id": "evt_20260827_osasuna_budimir_confirmation",
+      "date": "2026-08-27",
+      "type": "competitive_penalty_assignment",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -3641,6 +3641,38 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 7 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260827_osasuna_budimir_confirmation",
+        "date": "2026-08-27",
+        "season": "2026/27",
+        "type": "competitive_penalty_assignment",
+        "penalty_kind": "regular_time",
+        "competition": "La Liga",
+        "match": "Celta Vigo 1-2 Osasuna",
+        "context": "Budimir came off the bench before converting Osasuna's penalty. Raúl García de Haro had started and remained on the pitch until 82, creating a direct precedence test; Aimar Oroz entered at 82.",
+        "sources": [
+          {
+            "label": "LaLiga match centre",
+            "url": "https://www.laliga.com/en-ES/match/temporada-2026-2027-laliga-ea-sports-rc-celta-ca-osasuna-1",
+            "date": "2026-08-27",
+            "note": "Records Budimir's penalty and the Osasuna lineup/substitutions."
+          },
+          {
+            "label": "RC Celta match report",
+            "url": "https://rccelta.es/equipo/actualidad/los-celestes-se-quedan-sin-premio-en-el-estreno-en-casa-celta-1-2-ca-osasuna/",
+            "date": "2026-08-27",
+            "note": "Cross-checks Budimir entering before the penalty and Raúl García remaining active."
+          }
+        ],
+        "detection": "automated_fotmob_live_then_manual_lineup_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-08-31T15:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "A direct same-pitch test confirms Budimir ahead of Raúl García de Haro."
       }
     ],
     "change_log": [
