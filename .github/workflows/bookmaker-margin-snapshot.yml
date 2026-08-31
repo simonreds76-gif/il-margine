@@ -53,6 +53,7 @@ jobs:
             --days-ahead '${{ inputs.days_ahead }}' \
             --max-events '${{ inputs.max_events }}' \
             --max-requests 1 \
+            --select-target-bookmakers \
             --output "$RUNNER_TEMP/margin-index.json"
 
       - name: Summarize candidate coverage
