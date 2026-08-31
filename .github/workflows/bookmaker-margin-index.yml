@@ -34,6 +34,7 @@ jobs:
           --days-ahead 7
           --max-events 10
           --max-requests 1
+          --select-target-bookmakers
 
       - name: Verify broad capture
         run: |

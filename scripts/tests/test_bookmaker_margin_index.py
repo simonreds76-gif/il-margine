@@ -96,7 +96,16 @@ class BookmakerMarginIndexTests(unittest.TestCase):
     def test_bookmaker_aliases_do_not_absorb_regional_variants(self) -> None:
         self.assertEqual(MODULE.display_bookmaker("Unibet UK"), "Unibet")
         self.assertEqual(MODULE.display_bookmaker("Unibet"), "Unibet")
+        self.assertEqual(MODULE.display_bookmaker("Bet365 (no latency)"), "Bet365")
         self.assertEqual(MODULE.display_bookmaker("Bwin DE"), "Bwin DE")
+
+    def test_target_selection_uses_one_bounded_account_request(self) -> None:
+        response = type("Response", (), {"raise_for_status": lambda self: None})()
+        with patch.object(MODULE.requests, "put", return_value=response) as put:
+            MODULE.select_target_bookmakers("secret", ["Bet365", "William Hill"])
+
+        self.assertEqual(put.call_count, 1)
+        self.assertEqual(put.call_args.kwargs["params"]["bookmakers"], "Bet365,William Hill")
 
     def test_player_props_require_matching_player_stat_and_line(self) -> None:
         market = {

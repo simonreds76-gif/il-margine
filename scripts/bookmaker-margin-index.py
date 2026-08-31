@@ -33,7 +33,7 @@ TARGET_BOOKMAKERS = {
     "10BET": ("10BET",),
     "888sport": ("888Sport",),
     "Bally Bet": ("Bally Bet",),
-    "Bet365": ("Bet365",),
+    "Bet365": ("Bet365", "Bet365 (no latency)"),
     "Betano": ("Betano UK",),
     "Betfair Sportsbook": ("Betfair Sportsbook",),
     "BetMGM": ("BetMGM",),
@@ -570,6 +570,20 @@ def discover_bookmakers(api_key: str) -> list[str]:
     return selected
 
 
+def select_target_bookmakers(api_key: str, bookmakers: list[str]) -> None:
+    if not bookmakers:
+        raise RuntimeError("No target UK bookmakers are available to select")
+    response = requests.put(
+        f"{BASE_URL}/bookmakers/selected/select",
+        params={
+            "apiKey": api_key,
+            "bookmakers": ",".join(bookmakers),
+        },
+        timeout=30,
+    )
+    response.raise_for_status()
+
+
 def payload_bookmakers(body: Any) -> set[str]:
     names: set[str] = set()
     if not isinstance(body, list):
@@ -751,6 +765,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-events", type=int, default=10)
     parser.add_argument("--max-requests", type=int, default=1)
     parser.add_argument(
+        "--select-target-bookmakers",
+        action="store_true",
+        help="Add the exact UK target catalogue to the authenticated Odds-API account before capture.",
+    )
+    parser.add_argument(
         "--sports",
         default="football,tennis",
         help="Comma-separated sports. Supported: football,tennis.",
@@ -775,6 +794,10 @@ def main() -> int:
             invalid = sorted(set(sports) - set(SPORT_CONFIG))
             if invalid:
                 raise SystemExit(f"Unsupported sport(s): {','.join(invalid)}")
+            if args.select_target_bookmakers:
+                selectable = discover_bookmakers(api_key)
+                select_target_bookmakers(api_key, selectable)
+                print(f"Selected {len(selectable)} UK target sportsbooks on the Odds-API account.")
             payload, bookmakers, capture = fetch_payload(
                 api_key,
                 args.days_ahead,
