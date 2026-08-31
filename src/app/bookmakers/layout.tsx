@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { BASE_URL, BOOKMAKERS_INDEXABLE } from "@/lib/config";
+import { BASE_URL } from "@/lib/config";
 
 const title = "UK Bookmaker Margin Index | Football & Tennis";
 const description =
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title,
   description,
   alternates: { canonical: url },
-  robots: { index: BOOKMAKERS_INDEXABLE, follow: true },
+  robots: { index: true, follow: true },
   openGraph: {
     type: "website",
     locale: "en_GB",

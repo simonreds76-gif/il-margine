@@ -13,7 +13,6 @@ This project now includes code-level setup to improve discovery in AI search:
 
 ## Runtime flags
 
-- `BOOKMAKERS_INDEXABLE=true|false`
 - `FAIR_ODDS_INDEXABLE=true|false` (default: `true`)
 
 ## Manual steps still required (outside code)

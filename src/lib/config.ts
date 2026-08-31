@@ -15,9 +15,6 @@ export const LAUNCH_LABEL = "Launching March 2026";
 export const STRIPE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "";
 export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || "";
 
-/** When true: /bookmakers is indexable and included in sitemap. When false (default): noindex and excluded from sitemap. */
-export const BOOKMAKERS_INDEXABLE = process.env.BOOKMAKERS_INDEXABLE === "true";
-
 /** When true: /fair-odds is indexable and included in sitemap. When false (default): noindex and excluded from sitemap. */
 export const FAIR_ODDS_INDEXABLE = process.env.FAIR_ODDS_INDEXABLE === "true";
 
