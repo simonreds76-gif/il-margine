@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-30T22:02:43.570673Z",
+  "generated_at": "2026-08-31T00:35:55.760998Z",
   "source_file": [
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
@@ -33,7 +33,7 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 3,
+  "fixtures_evaluated": 2,
   "signals_qualifying": 1,
   "safety_exclusions": {
     "model_probability_below_floor": 1,
@@ -91,14 +91,14 @@
       },
       "metrics": {
         "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 77
+          "tier": "Good",
+          "percentile": 73
         },
         "share_of_team_chances_pct": 23,
-        "share_of_team_chances_percentile": 97,
+        "share_of_team_chances_percentile": 96,
         "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 24
+          "tier": "Average",
+          "percentile": 35
         },
         "recent_team_form": {
           "tier": "Quiet",
@@ -116,8 +116,8 @@
           "corners_against_avg": 5.2
         },
         "opponent_defensive_weakness": {
-          "tier": "Low",
-          "percentile": 24
+          "tier": "Average",
+          "percentile": 35
         },
         "opponent_recent_defence": {
           "tier": "Low",
@@ -143,8 +143,7 @@
       },
       "confidence_tier": "Medium",
       "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "Recent chance quality grades as strong"
+        "The model price is shorter than the bookmaker's best available price"
       ],
       "risk_flags": []
     }
