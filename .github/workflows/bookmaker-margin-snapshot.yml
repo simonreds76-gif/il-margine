@@ -65,11 +65,13 @@ jobs:
 
           payload = json.load(open(sys.argv[1], encoding="utf-8"))
           summary = payload.get("summary") or {}
+          coverage = payload.get("coverage") or {}
           print(
               "Candidate: "
               f"{payload.get('status')} | sports={','.join(summary.get('sports') or []) or '-'} "
               f"| diagnostic_operators={summary.get('diagnostic_operators', 0)} "
-              f"| observations={summary.get('observations', 0)}"
+              f"| observations={summary.get('observations', 0)} "
+              f"| returned_books={coverage.get('payload_operators', 0)}/{coverage.get('target_operators', 0)}"
           )
           for row in payload.get("segments") or []:
               print(
@@ -100,6 +102,13 @@ jobs:
           sports = set((payload.get("summary") or {}).get("sports") or [])
           if not {"Football", "Tennis"}.issubset(sports):
               raise SystemExit(f"Snapshot missing required sports: {sorted(sports)}")
+          coverage = payload.get("coverage") or {}
+          returned = int(coverage.get("payload_operators") or 0)
+          target = int(coverage.get("target_operators") or 0)
+          if returned < 10:
+              raise SystemExit(
+                  f"Snapshot coverage too narrow: only {returned}/{target} target sportsbooks returned prices"
+              )
           passing = [
               row for row in payload.get("segments") or []
               if row.get("status") in {"PASS", "PASS_LIMITED"}
