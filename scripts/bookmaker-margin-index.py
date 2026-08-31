@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build a fail-closed, one-off UK bookmaker margin snapshot.
 
-The index compares complete outcome sets captured in the same API response.
+The index compares complete outcome sets captured in the same source snapshot.
 It reports both conventional raw overround and normalized hold; lower is
 better. Incomplete or mismatched line sets are never published.
 """
@@ -51,6 +51,56 @@ TARGET_BOOKMAKERS = {
     "QuinnBet": ("QuinnBet",),
     "Unibet": ("Unibet UK",),
     "William Hill": ("William Hill",),
+}
+ODDSCHECKER_TARGET_BOOKMAKERS = (
+    "10BET",
+    "AK Bets",
+    "Bet365",
+    "BetAhoy",
+    "Betfred",
+    "BetGoodwin",
+    "BetMGM",
+    "BetTom",
+    "BetVictor",
+    "Betway",
+    "BoyleSports",
+    "Coral",
+    "IvyBet",
+    "Ladbrokes",
+    "Paddy Power",
+    "PricedUp",
+    "QuinnBet",
+    "Sky Bet",
+    "Sporting Index",
+    "Spreadex",
+    "Star Sports",
+    "Unibet",
+    "Virgin Bet",
+    "William Hill",
+)
+# Exchange prices require commission adjustments and are not comparable with
+# sportsbook overround. They remain in the raw browser export only.
+ODDSCHECKER_EXCLUDED_CODES = {"BF", "MA"}
+BOOKMAKER_DISPLAY_ALIASES = {
+    **TARGET_BOOKMAKERS,
+    "10BET": ("10bet",),
+    "Bet365": ("Bet365", "Bet365 (no latency)"),
+    "BetMGM": ("BetMGM", "BetMGM UK"),
+    "BoyleSports": ("BOYLE Sports", "Boylesports"),
+    "Sky Bet": ("Skybet",),
+}
+ODDSCHECKER_MARKETS = {
+    "football": {
+        "Win Market": "ML",
+        "Draw No Bet": "Draw No Bet",
+        "Total Goals Over/Under": "Goals Over/Under",
+        "Both Teams To Score": "Both Teams To Score",
+        "Total Corners": "Corners Totals",
+    },
+    "tennis": {
+        "Win Market": "ML",
+        "Handicaps": "Spread (Games)",
+    },
 }
 SPORT_CONFIG = {
     "football": {
@@ -152,10 +202,27 @@ def norm(value: Any) -> str:
 
 def display_bookmaker(value: Any) -> str:
     normalized = norm(value)
-    for display, aliases in TARGET_BOOKMAKERS.items():
+    for display, aliases in BOOKMAKER_DISPLAY_ALIASES.items():
         if normalized in {norm(alias) for alias in aliases}:
             return display
     return str(value or "Unknown")
+
+
+def fractional_to_decimal(value: Any) -> float | None:
+    text = str(value or "").strip().lower()
+    if text in {"evens", "even", "evs"}:
+        return 2.0
+    match = re.fullmatch(r"(\d+)\s*/\s*(\d+)", text)
+    if not match or int(match.group(2)) == 0:
+        return None
+    return 1.0 + (int(match.group(1)) / int(match.group(2)))
+
+
+def split_handicap_label(label: str) -> tuple[str, float | None]:
+    match = re.fullmatch(r"(.+?)\s+([+-]\d+(?:\.\d+)?)", label.strip())
+    if not match:
+        return label.strip(), None
+    return match.group(1).strip(), abs(float(match.group(2)))
 
 
 def market_family(name: str, sport: str = "football") -> str | None:
@@ -705,6 +772,111 @@ def append_sport_payload(payload: list[dict[str, Any]], body: Any, sport: str) -
             payload.append(event)
 
 
+def load_oddschecker_capture(
+    path: str | Path,
+) -> tuple[list[dict[str, Any]], list[str], dict[str, Any]]:
+    """Convert a browser-exported Oddschecker grid into the common payload."""
+    source = json.loads(Path(path).read_text(encoding="utf-8"))
+    pages = source.get("pages") if isinstance(source, dict) else None
+    if not isinstance(pages, list):
+        raise RuntimeError("Oddschecker capture must contain a pages array")
+
+    payload: list[dict[str, Any]] = []
+    observed: set[str] = set()
+    sport_counts: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+
+    for page_index, page in enumerate(pages, 1):
+        if not isinstance(page, dict):
+            continue
+        sport = str(page.get("sport") or "").lower()
+        if sport not in ODDSCHECKER_MARKETS:
+            continue
+        home = str(page.get("home") or "").strip()
+        away = str(page.get("away") or "").strip()
+        event_name = str(page.get("event") or f"{home} vs {away}").strip()
+        if not home or not away:
+            continue
+
+        event: dict[str, Any] = {
+            "id": f"oddschecker:{sport}:{page_index}:{norm(event_name)}",
+            "status": "pending",
+            "home": home,
+            "away": away,
+            "_snapshot_sport": sport,
+            "bookmakers": {},
+        }
+        for grid in page.get("grids") or []:
+            if not isinstance(grid, dict):
+                continue
+            source_market = str(grid.get("market") or "").strip()
+            market_name = ODDSCHECKER_MARKETS[sport].get(source_market)
+            if not market_name:
+                continue
+
+            by_book: dict[str, list[dict[str, Any]]] = defaultdict(list)
+            for selection in grid.get("selections") or []:
+                if not isinstance(selection, dict):
+                    continue
+                label = str(selection.get("label") or "").strip()
+                if not label:
+                    continue
+                clean_label, handicap = (
+                    split_handicap_label(label)
+                    if sport == "tennis" and source_market == "Handicaps"
+                    else (label, None)
+                )
+                for price in selection.get("prices") or []:
+                    if not isinstance(price, dict):
+                        continue
+                    code = str(price.get("code") or "").strip().upper()
+                    if code in ODDSCHECKER_EXCLUDED_CODES:
+                        continue
+                    bookmaker = display_bookmaker(price.get("bookmaker") or code)
+                    decimal = fractional_to_decimal(price.get("fractional"))
+                    if decimal is None:
+                        continue
+                    item: dict[str, Any] = {"label": clean_label, "odds": decimal}
+                    if handicap is not None:
+                        item["hdp"] = handicap
+                    by_book[bookmaker].append(item)
+                    observed.add(bookmaker)
+
+            for bookmaker, selections in by_book.items():
+                event["bookmakers"].setdefault(bookmaker, []).append(
+                    {"name": market_name, "odds": selections}
+                )
+                sport_counts[sport][bookmaker] += 1
+        if event["bookmakers"]:
+            payload.append(event)
+
+    ordered_observed = sorted(observed, key=str.lower)
+    capture = {
+        "source": "oddschecker_public_browser_grid",
+        "source_capture_mode": source.get("capture_mode", "manual_browser_one_off"),
+        "source_captured_at": source.get("captured_at"),
+        "source_pages": len(pages),
+        "target_operators": list(ODDSCHECKER_TARGET_BOOKMAKERS),
+        "discovered_operators": ordered_observed,
+        "not_discovered": [
+            name for name in ODDSCHECKER_TARGET_BOOKMAKERS if name not in observed
+        ],
+        "sports": [
+            {
+                "sport": sport,
+                "events_selected": sum(
+                    1 for event in payload if event.get("_snapshot_sport") == sport
+                ),
+                "operators": [
+                    {"name": bookmaker, "market_blocks": count, "status": "returned"}
+                    for bookmaker, count in sorted(sport_counts[sport].items())
+                ],
+            }
+            for sport in ODDSCHECKER_MARKETS
+        ],
+    }
+    return payload, ordered_observed, capture
+
+
 def fetch_payload(
     api_key: str,
     days_ahead: int,
@@ -844,7 +1016,12 @@ def fetch_payload(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input-json", help="Use a saved /odds/multi payload instead of calling the API.")
+    source = parser.add_mutually_exclusive_group()
+    source.add_argument("--input-json", help="Use a saved /odds/multi payload instead of calling the API.")
+    source.add_argument(
+        "--oddschecker-json",
+        help="Use a manual browser export of public Oddschecker comparison grids.",
+    )
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT))
     parser.add_argument("--days-ahead", type=int, default=4)
     parser.add_argument("--max-events", type=int, default=10)
@@ -875,11 +1052,20 @@ def main() -> int:
         payload = json.loads(Path(args.input_json).read_text(encoding="utf-8"))
         bookmakers: list[str] = []
         capture: dict[str, Any] = {}
+    elif args.oddschecker_json:
+        try:
+            payload, bookmakers, capture = load_oddschecker_capture(args.oddschecker_json)
+            captured_at = str(capture.get("source_captured_at") or captured_at)
+        except (OSError, json.JSONDecodeError, RuntimeError) as exc:
+            raise SystemExit(f"Oddschecker capture failed: {exc}") from exc
     else:
         load_env()
         api_key = (os.environ.get("ODDS_API_KEY") or os.environ.get("ODDS_API_IO_KEY") or "").strip()
         if not api_key:
-            raise SystemExit("Set ODDS_API_KEY or ODDS_API_IO_KEY, or pass --input-json")
+            raise SystemExit(
+                "Set ODDS_API_KEY or ODDS_API_IO_KEY, pass --input-json, "
+                "or pass --oddschecker-json"
+            )
         try:
             sports = tuple(value.strip().lower() for value in args.sports.split(",") if value.strip())
             invalid = sorted(set(sports) - set(SPORT_CONFIG))
@@ -910,6 +1096,13 @@ def main() -> int:
             result = build_index(payload if isinstance(payload, list) else [], captured_at)
     if args.input_json:
         result = build_index(payload if isinstance(payload, list) else [], captured_at)
+    elif args.oddschecker_json:
+        result = build_index(payload if isinstance(payload, list) else [], captured_at)
+        result["capture_mode"] = "manual_oddschecker_browser_one_off"
+        result["methodology"]["scope"] = (
+            "one-off public Oddschecker UK pre-match football and tennis snapshot; "
+            "complete like-for-like sportsbook outcome sets only; exchanges excluded"
+        )
     result["requested_bookmakers"] = bookmakers
     result["capture"] = capture
     payload_operators = sorted(
@@ -920,8 +1113,13 @@ def main() -> int:
         {row["name"] for row in result.get("diagnostic_operators", [])},
         key=str.lower,
     )
+    target_operator_names = (
+        list(ODDSCHECKER_TARGET_BOOKMAKERS)
+        if args.oddschecker_json
+        else list(TARGET_BOOKMAKERS)
+    )
     result["coverage"] = {
-        "target_operators": len(TARGET_BOOKMAKERS),
+        "target_operators": len(target_operator_names),
         "discovered_operators": len(bookmakers),
         "payload_operators": len(payload_operators),
         "qualified_operators": len(qualified_operators),

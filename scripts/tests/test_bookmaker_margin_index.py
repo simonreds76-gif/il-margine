@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import importlib.util
+import json
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -54,6 +56,50 @@ class BookmakerMarginIndexTests(unittest.TestCase):
         }
         self.assertTrue(expected.issubset(MODULE.TARGET_BOOKMAKERS))
         self.assertGreaterEqual(len(MODULE.TARGET_BOOKMAKERS), 20)
+
+    def test_oddschecker_catalogue_has_24_sportsbooks_and_no_exchanges(self) -> None:
+        self.assertEqual(len(MODULE.ODDSCHECKER_TARGET_BOOKMAKERS), 24)
+        self.assertNotIn("Betfair", MODULE.ODDSCHECKER_TARGET_BOOKMAKERS)
+        self.assertNotIn("Matchbook", MODULE.ODDSCHECKER_TARGET_BOOKMAKERS)
+
+    def test_fractional_prices_are_converted_to_decimal(self) -> None:
+        self.assertEqual(MODULE.fractional_to_decimal("evens"), 2.0)
+        self.assertEqual(MODULE.fractional_to_decimal("4/5"), 1.8)
+        self.assertIsNone(MODULE.fractional_to_decimal("-"))
+
+    def test_oddschecker_capture_excludes_exchanges(self) -> None:
+        prices = [
+            {"code": "B3", "bookmaker": "bet365", "fractional": "1/1"},
+            {"code": "WH", "bookmaker": "William Hill", "fractional": "21/20"},
+            {"code": "BF", "bookmaker": "Betfair", "fractional": "11/10"},
+            {"code": "MA", "bookmaker": "Matchbook", "fractional": "11/10"},
+        ]
+        capture = {
+            "captured_at": "2026-08-31T12:00:00Z",
+            "capture_mode": "manual_browser_one_off",
+            "pages": [{
+                "sport": "football",
+                "event": "Home FC vs Away FC",
+                "home": "Home FC",
+                "away": "Away FC",
+                "grids": [{
+                    "market": "Win Market",
+                    "selections": [
+                        {"label": "Home FC", "prices": prices},
+                        {"label": "Draw", "prices": prices},
+                        {"label": "Away FC", "prices": prices},
+                    ],
+                }],
+            }],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "capture.json"
+            path.write_text(json.dumps(capture), encoding="utf-8")
+            payload, bookmakers, metadata = MODULE.load_oddschecker_capture(path)
+
+        self.assertEqual(bookmakers, ["Bet365", "William Hill"])
+        self.assertEqual(set(payload[0]["bookmakers"]), {"Bet365", "William Hill"})
+        self.assertEqual(metadata["source"], "oddschecker_public_browser_grid")
 
     def test_ml_selection_labels_share_the_main_market(self) -> None:
         market = {
