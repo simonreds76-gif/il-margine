@@ -66,6 +66,8 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertIn("data/corners-ou/corners-live-snapshot.json", workflow)
         self.assertIn("python scripts/corners-v4-g0-diagnostic.py", workflow)
         self.assertIn("data/corners-ou/corners-v4-g0-diagnostic.json", workflow)
+        self.assertIn("if [ -f data/football-form/team-rolling-form.csv ]; then", workflow)
+        self.assertIn("Corners v4 G0 diagnostic not run", workflow)
 
     def test_corners_v4_g0_summary_reports_line_failures(self) -> None:
         summary = REPORT["corners_v4_g0_summary"](

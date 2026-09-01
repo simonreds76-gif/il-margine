@@ -69,7 +69,15 @@ jobs:
             --allowed-config data/football-form/team-shots-v3-ema20-allowed-leagues.json
           python scripts/corners-v0-clv-monitor.py
           python scripts/run-football-vnext-shadow.py
-          python scripts/corners-v4-g0-diagnostic.py
+          if [ -f data/football-form/team-rolling-form.csv ]; then
+            python scripts/corners-v4-g0-diagnostic.py
+          else
+            echo "::warning::Corners v4 G0 diagnostic not run: local-only team-rolling-form.csv is unavailable on the hosted runner."
+            rm -f \
+              data/corners-ou/corners-v4-g0-diagnostic.json \
+              data/corners-ou/corners-v4-g0-diagnostic.md \
+              data/corners-ou/corners-v4-g0-fold-results.csv
+          fi
           python scripts/api-football-source-agreement.py --allow-empty
           python scripts/fouls-empirical-baseline.py
           python scripts/team-fouls-v1-folds.py
