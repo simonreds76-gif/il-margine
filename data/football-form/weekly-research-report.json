@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-01T14:56:50Z",
+  "generated_at": "2026-09-01T15:32:55Z",
   "team_shots_v3_ema20": {
     "label": "Team Shots V3 EMA20 Research",
     "model": "canonical_form_v3_ema20_nb",
@@ -179,7 +179,7 @@
     }
   },
   "football_counts_vnext": {
-    "generated_at": "2026-09-01T14:56:50Z",
+    "generated_at": "2026-09-01T15:32:54Z",
     "team_shots_v4": {
       "count_gate": "PASS",
       "prospective_status": "AUTHORIZED_SHADOW",
@@ -288,16 +288,24 @@
     }
   },
   "corners_v4_g0": {
-    "status": "NOT_RUN",
-    "decision": "NOT_RUN",
-    "enriched_samples": 0,
-    "total_samples": 0,
-    "mae_delta": null,
-    "market_rows": 0,
-    "brier_delta": null,
+    "status": "RESEARCH_ONLY_NO_ROUTING_CHANGE",
+    "decision": "FAIL",
+    "latest_season": "2025-2026",
+    "enriched_samples": 6901,
+    "total_samples": 10889,
+    "mae_delta": -0.007354714670926299,
+    "market_rows": 431,
+    "brier_delta": 0.008964914819673042,
     "passed_lines": 0,
-    "available_lines": 0,
-    "failed_lines": []
+    "available_lines": 5,
+    "failed_lines": [
+      "7.5",
+      "8.5",
+      "9.5",
+      "10.5",
+      "11.5",
+      "12.5"
+    ]
   },
   "api_football_counts": {
     "health": {
@@ -473,7 +481,7 @@
           "within_one_pct": 0.0
         }
       },
-      "generated_at": "2026-09-01T14:53:58Z",
+      "generated_at": "2026-09-01T15:29:50Z",
       "latest_api_fixture_date": null,
       "match_rate_pct": 0.0,
       "matched_fixtures": 0,
@@ -496,7 +504,7 @@
         "opening_1x2_closeness_vs_total_fouls_correlation": 0.20236620673672806,
         "total_shots_vs_total_fouls_correlation": -0.1826485756525495
       },
-      "generated_at": "2026-09-01T14:53:59Z",
+      "generated_at": "2026-09-01T15:29:50Z",
       "leg_structure": {
         "bundesliga": {
           "alpha_away_after_raw_frailty": 0.005185795899176435,
@@ -669,8 +677,8 @@
         "hierarchical_nb_wins": 2,
         "ladder_checks": [
           {
-            "delta_mae": 0.008315710828489031,
-            "delta_nll": 0.001381697239891455,
+            "delta_mae": 0.008309432102291847,
+            "delta_nll": 0.0013823912093324786,
             "from": "core",
             "n": 748,
             "passed": false,
@@ -679,8 +687,8 @@
             "to": "core_referee"
           },
           {
-            "delta_mae": -0.0236939146013877,
-            "delta_nll": -0.007030889893764769,
+            "delta_mae": -0.02368935134630412,
+            "delta_nll": -0.007036584225910136,
             "from": "core_referee",
             "n": 3454,
             "passed": true,
@@ -689,8 +697,8 @@
             "to": "core_referee_market"
           },
           {
-            "delta_mae": 6.838749573168101e-05,
-            "delta_nll": 1.4165748801531208e-05,
+            "delta_mae": 6.919741869237939e-05,
+            "delta_nll": 1.954447333041287e-05,
             "from": "core_referee_market",
             "n": 3454,
             "passed": false,
@@ -699,8 +707,8 @@
             "to": "full"
           },
           {
-            "delta_mae": -0.007829502078835926,
-            "delta_nll": -0.00256713514506135,
+            "delta_mae": -0.00783001465651978,
+            "delta_nll": -0.002555561448026822,
             "from": "core",
             "n": 760,
             "passed": true,
@@ -709,8 +717,8 @@
             "to": "core_referee"
           },
           {
-            "delta_mae": -0.016531254052993827,
-            "delta_nll": -0.005330110352966155,
+            "delta_mae": -0.016531201062898404,
+            "delta_nll": -0.005330975717676267,
             "from": "core_referee",
             "n": 3468,
             "passed": true,
@@ -719,8 +727,8 @@
             "to": "core_referee_market"
           },
           {
-            "delta_mae": -7.966034201745131e-05,
-            "delta_nll": -6.851671221319577e-05,
+            "delta_mae": -8.144745515092922e-05,
+            "delta_nll": -7.031662362866342e-05,
             "from": "core_referee_market",
             "n": 3468,
             "passed": false,
@@ -731,11 +739,11 @@
         ],
         "mae_checks": [
           {
-            "improvement_pct": 7.688087886558687,
+            "improvement_pct": 7.688071222471381,
             "season": "2024-2025"
           },
           {
-            "improvement_pct": 8.285660850088579,
+            "improvement_pct": 8.2855868191587,
             "season": "2025-2026"
           }
         ],
@@ -747,177 +755,177 @@
         {
           "causal_baseline_mae": 3.075242712182472,
           "coefficients": {
-            "intercept": -0.015995331439086546,
-            "opening_closeness": 0.03834637832561719,
-            "opening_strength": -0.0179163378256735,
-            "opponent_cards": -0.0005743833893524579,
-            "opponent_drawn": 0.06541621730622596,
-            "referee_epl": 0.015401580928558102,
-            "team_cards": -4.2480410753131296e-05,
-            "team_committed": 0.06810810388038749
+            "intercept": -0.01599363659811152,
+            "opening_closeness": 0.03834430279148505,
+            "opening_strength": -0.017916260142446124,
+            "opponent_cards": -0.0005767009666073238,
+            "opponent_drawn": 0.06541599398529219,
+            "referee_epl": 0.015402001808206623,
+            "team_cards": -4.041409469593897e-05,
+            "team_committed": 0.06811055794665304
           },
           "distribution": {
             "by_league": [
               {
-                "fixed_alpha_brier": 0.1777970572546004,
-                "hierarchical_nb_brier": 0.1778174896861636,
+                "fixed_alpha_brier": 0.17779704314628492,
+                "hierarchical_nb_brier": 0.17781747875661214,
                 "league": "bundesliga",
                 "matches": 586,
-                "poisson_brier": 0.1780169464999613
+                "poisson_brier": 0.17801694050562025
               },
               {
-                "fixed_alpha_brier": 0.1814419185942564,
-                "hierarchical_nb_brier": 0.1812410956426982,
+                "fixed_alpha_brier": 0.18144190780562003,
+                "hierarchical_nb_brier": 0.1812410979614396,
                 "league": "epl",
                 "matches": 748,
-                "poisson_brier": 0.1812240141074197
+                "poisson_brier": 0.18122401984403874
               },
               {
-                "fixed_alpha_brier": 0.19296728221882403,
-                "hierarchical_nb_brier": 0.19250110395560807,
+                "fixed_alpha_brier": 0.19296706004817646,
+                "hierarchical_nb_brier": 0.1925009037270335,
                 "league": "la-liga",
                 "matches": 760,
-                "poisson_brier": 0.19211003676971306
+                "poisson_brier": 0.19210986675805763
               },
               {
-                "fixed_alpha_brier": 0.2013868954011767,
-                "hierarchical_nb_brier": 0.20135526588060726,
+                "fixed_alpha_brier": 0.20138674681324498,
+                "hierarchical_nb_brier": 0.2013551307909805,
                 "league": "ligue-1",
                 "matches": 612,
-                "poisson_brier": 0.20131577841966816
+                "poisson_brier": 0.2013156475637255
               },
               {
-                "fixed_alpha_brier": 0.1974157516184234,
-                "hierarchical_nb_brier": 0.19687459289442957,
+                "fixed_alpha_brier": 0.19741599611325752,
+                "hierarchical_nb_brier": 0.1968749002276399,
                 "league": "serie-a",
                 "matches": 748,
-                "poisson_brier": 0.19682945049888773
+                "poisson_brier": 0.1968297753127888
               }
             ],
             "empirical_total_vmr": 1.3727451743900692,
-            "fixed_alpha_brier": 0.19035278730228938,
-            "fixed_alpha_log_loss": 0.5612290630874422,
-            "hierarchical_nb_brier": 0.19008739018733645,
-            "hierarchical_nb_log_loss": 0.5603819397981346,
+            "fixed_alpha_brier": 0.19035276030728535,
+            "fixed_alpha_log_loss": 0.5612290170722138,
+            "hierarchical_nb_brier": 0.1900873873982131,
+            "hierarchical_nb_log_loss": 0.5603819562481548,
             "league_alpha": {
-              "bundesliga": 0.0058524922147576925,
+              "bundesliga": 0.005852573197952074,
               "epl": 0.0020000000036067226,
-              "la-liga": 0.006763076793481465,
-              "ligue-1": 0.004882866084315109,
+              "la-liga": 0.006762944110629008,
+              "ligue-1": 0.004882865207372854,
               "serie-a": 0.004432633843730673
             },
-            "poisson_brier": 0.1900147094708494,
-            "poisson_log_loss": 0.5601609738397285,
-            "pooled_alpha": 0.004421500344677084,
-            "priced_total_vmr": 1.4312894879039078,
+            "poisson_brier": 0.19001471944375434,
+            "poisson_log_loss": 0.5601610297137798,
+            "pooled_alpha": 0.004421500344677076,
+            "priced_total_vmr": 1.4312897134052847,
             "reliability": {
               "bins": [
                 {
                   "actual": 0.07775020678246485,
                   "bin": 1,
-                  "gap": -0.0004162751696646788,
+                  "gap": -0.00041632179868314467,
                   "n": 2418,
-                  "predicted": 0.07733393161280017
+                  "predicted": 0.0773338849837817
                 },
                 {
                   "actual": 0.1567411083540116,
                   "bin": 2,
-                  "gap": -6.03901671156204e-06,
+                  "gap": -5.152839015143407e-06,
                   "n": 2418,
-                  "predicted": 0.15673506933730003
+                  "predicted": 0.15673595551499644
                 },
                 {
                   "actual": 0.21721141911460487,
                   "bin": 3,
-                  "gap": 0.005844543270477592,
+                  "gap": 0.005846044501997688,
                   "n": 2417,
-                  "predicted": 0.22305596238508246
+                  "predicted": 0.22305746361660256
                 },
                 {
-                  "actual": 0.2841191066997519,
+                  "actual": 0.2837055417700579,
                   "bin": 4,
-                  "gap": 0.0057262477824929214,
+                  "gap": 0.0061418756217140325,
                   "n": 2418,
-                  "predicted": 0.2898453544822448
+                  "predicted": 0.28984741739177194
                 },
                 {
-                  "actual": 0.36228287841191065,
+                  "actual": 0.3626964433416046,
                   "bin": 5,
-                  "gap": -0.0009366038791273623,
+                  "gap": -0.0013479091278126853,
                   "n": 2418,
-                  "predicted": 0.3613462745327833
+                  "predicted": 0.3613485342137919
                 },
                 {
                   "actual": 0.4400330851943755,
                   "bin": 6,
-                  "gap": -0.0027762908328973213,
+                  "gap": -0.0027737990652009215,
                   "n": 2418,
-                  "predicted": 0.4372567943614782
+                  "predicted": 0.4372592861291746
                 },
                 {
                   "actual": 0.532258064516129,
                   "bin": 7,
-                  "gap": -0.014856871481813694,
+                  "gap": -0.014854055319286186,
                   "n": 2418,
-                  "predicted": 0.5174011930343153
+                  "predicted": 0.5174040091968428
                 },
                 {
                   "actual": 0.604054613156806,
                   "bin": 8,
-                  "gap": -0.0023176597036759228,
+                  "gap": -0.002314681351891723,
                   "n": 2417,
-                  "predicted": 0.60173695345313
+                  "predicted": 0.6017399318049143
                 },
                 {
                   "actual": 0.695616211745244,
                   "bin": 9,
-                  "gap": -0.002151745732371535,
+                  "gap": -0.0021487616677172694,
                   "n": 2418,
-                  "predicted": 0.6934644660128725
+                  "predicted": 0.6934674500775267
                 },
                 {
                   "actual": 0.8101736972704715,
                   "bin": 10,
-                  "gap": 0.0009279828713677496,
+                  "gap": 0.0009308144227446746,
                   "n": 2418,
-                  "predicted": 0.8111016801418393
+                  "predicted": 0.8111045116932162
                 }
               ],
-              "max_abs_gap": 0.014856871481813694
+              "max_abs_gap": 0.014854055319286186
             },
             "residual_nu": {
-              "bundesliga": 0.009426354432014688,
-              "epl": 0.006406920531204065,
+              "bundesliga": 0.009426300640780691,
+              "epl": 0.006406847153891511,
               "la-liga": 0.0019489309562178677,
-              "ligue-1": 0.010051227767384548,
-              "serie-a": 0.01004509186151922
+              "ligue-1": 0.010051180186968222,
+              "serie-a": 0.010045015728967066
             },
-            "total_vmr_gap": 0.0585443135138386
+            "total_vmr_gap": 0.0585445390152155
           },
           "rungs": {
             "core": {
-              "alpha": 0.006094962842917672,
-              "bias": -0.0014002141669273783,
-              "mae": 2.8605803330222863,
-              "nll": 2.685847268489553
+              "alpha": 0.006081988465204304,
+              "bias": -0.0014155274769084036,
+              "mae": 2.860579854750157,
+              "nll": 2.685848753684711
             },
             "core_referee": {
-              "alpha": 0.005937151867017033,
-              "bias": 0.023874046977655838,
-              "mae": 2.8624408768505485,
-              "nll": 2.686180057532902
+              "alpha": 0.005931441482874802,
+              "bias": 0.023809128326017174,
+              "mae": 2.8624360161336346,
+              "nll": 2.686179942394514
             },
             "core_referee_market": {
-              "alpha": 0.004420047717098073,
-              "bias": 0.024927649321491628,
-              "mae": 2.838746962249161,
-              "nll": 2.679149167639137
+              "alpha": 0.004462950432493455,
+              "bias": 0.02481535282896261,
+              "mae": 2.8387466647873305,
+              "nll": 2.679143358168604
             },
             "full": {
-              "alpha": 0.004417322128999569,
-              "bias": 0.025196929605447525,
-              "mae": 2.8388153497448925,
-              "nll": 2.6791633333879386
+              "alpha": 0.0044196858611408926,
+              "bias": 0.02521924218444948,
+              "mae": 2.838815862206023,
+              "nll": 2.6791629026419344
             }
           },
           "season": "2024-2025",
@@ -925,24 +933,24 @@
           "train": 34850,
           "transitions": [
             {
-              "delta_mae": 0.008315710828489031,
-              "delta_nll": 0.001381697239891455,
+              "delta_mae": 0.008309432102291847,
+              "delta_nll": 0.0013823912093324786,
               "from": "core",
               "n": 748,
               "scope": "epl",
               "to": "core_referee"
             },
             {
-              "delta_mae": -0.0236939146013877,
-              "delta_nll": -0.007030889893764769,
+              "delta_mae": -0.02368935134630412,
+              "delta_nll": -0.007036584225910136,
               "from": "core_referee",
               "n": 3454,
               "scope": "all",
               "to": "core_referee_market"
             },
             {
-              "delta_mae": 6.838749573168101e-05,
-              "delta_nll": 1.4165748801531208e-05,
+              "delta_mae": 6.919741869237939e-05,
+              "delta_nll": 1.954447333041287e-05,
               "from": "core_referee_market",
               "n": 3454,
               "scope": "all",
@@ -955,177 +963,177 @@
         {
           "causal_baseline_mae": 3.042545116904369,
           "coefficients": {
-            "intercept": -0.01611356331946811,
-            "opening_closeness": 0.037809024431505245,
-            "opening_strength": -0.01838685399686873,
-            "opponent_cards": -9.039062769346722e-05,
-            "opponent_drawn": 0.06563893729120669,
-            "referee_epl": 0.014509701735098884,
-            "team_cards": -0.0009298718914551748,
-            "team_committed": 0.0701210867171408
+            "intercept": -0.01610847782596962,
+            "opening_closeness": 0.037827956694299635,
+            "opening_strength": -0.018368140119747314,
+            "opponent_cards": -0.00011328552063922273,
+            "opponent_drawn": 0.0656497456452775,
+            "referee_epl": 0.014514305231071018,
+            "team_cards": -0.0009179114441752652,
+            "team_committed": 0.07011557618658015
           },
           "distribution": {
             "by_league": [
               {
-                "fixed_alpha_brier": 0.16699161418826475,
-                "hierarchical_nb_brier": 0.1667052290047283,
+                "fixed_alpha_brier": 0.16699147335208386,
+                "hierarchical_nb_brier": 0.16670509567915975,
                 "league": "bundesliga",
                 "matches": 612,
-                "poisson_brier": 0.16661097824097
+                "poisson_brier": 0.1666108341044052
               },
               {
-                "fixed_alpha_brier": 0.17796431527280596,
-                "hierarchical_nb_brier": 0.1776496964450251,
+                "fixed_alpha_brier": 0.17796579154918016,
+                "hierarchical_nb_brier": 0.17765139138030006,
                 "league": "epl",
                 "matches": 760,
-                "poisson_brier": 0.17766998651748075
+                "poisson_brier": 0.17767174245842296
               },
               {
-                "fixed_alpha_brier": 0.19568491259834947,
-                "hierarchical_nb_brier": 0.1950703820983879,
+                "fixed_alpha_brier": 0.19568352367374545,
+                "hierarchical_nb_brier": 0.19506919029126055,
                 "league": "la-liga",
                 "matches": 748,
-                "poisson_brier": 0.19504760683046457
+                "poisson_brier": 0.19504649304482186
               },
               {
-                "fixed_alpha_brier": 0.19804482109268368,
-                "hierarchical_nb_brier": 0.1977649830911707,
+                "fixed_alpha_brier": 0.19804382607947435,
+                "hierarchical_nb_brier": 0.19776410452970733,
                 "league": "ligue-1",
                 "matches": 600,
-                "poisson_brier": 0.19783706777096635
+                "poisson_brier": 0.19783621747410407
               },
               {
-                "fixed_alpha_brier": 0.18945958671855606,
-                "hierarchical_nb_brier": 0.1884040264368892,
+                "fixed_alpha_brier": 0.1894578874689506,
+                "hierarchical_nb_brier": 0.18840257656895035,
                 "league": "serie-a",
                 "matches": 748,
-                "poisson_brier": 0.18822110213909837
+                "poisson_brier": 0.1882197480357179
               }
             ],
             "empirical_total_vmr": 1.4593579543460864,
-            "fixed_alpha_brier": 0.18580355410473032,
-            "fixed_alpha_log_loss": 0.5503785918205785,
-            "hierarchical_nb_brier": 0.18527543739567578,
-            "hierarchical_nb_log_loss": 0.5487061882955319,
+            "fixed_alpha_brier": 0.18580301454765794,
+            "fixed_alpha_log_loss": 0.5503773408910905,
+            "hierarchical_nb_brier": 0.18527506353343076,
+            "hierarchical_nb_log_loss": 0.5487053883650604,
             "league_alpha": {
-              "bundesliga": 0.005847115071008397,
+              "bundesliga": 0.005847870657794325,
               "epl": 0.0020000000036067226,
-              "la-liga": 0.006800503892467542,
-              "ligue-1": 0.004896572379464912,
-              "serie-a": 0.005041332456476248
+              "la-liga": 0.0068005010534671635,
+              "ligue-1": 0.004896729873782424,
+              "serie-a": 0.0050411592061607195
             },
-            "poisson_brier": 0.18523135623084583,
-            "poisson_log_loss": 0.5485246407643848,
-            "pooled_alpha": 0.004604171594017222,
-            "priced_total_vmr": 1.4819665094445102,
+            "poisson_brier": 0.1852310362032878,
+            "poisson_log_loss": 0.5485239779125973,
+            "pooled_alpha": 0.00460418138851036,
+            "priced_total_vmr": 1.4820178087268698,
             "reliability": {
               "bins": [
                 {
                   "actual": 0.06507413509060955,
                   "bin": 1,
-                  "gap": 0.007654148894369106,
+                  "gap": 0.007653372345655912,
                   "n": 2428,
-                  "predicted": 0.07272828398497866
+                  "predicted": 0.07272750743626546
                 },
                 {
                   "actual": 0.14132674083230326,
                   "bin": 2,
-                  "gap": 0.007159523232555337,
+                  "gap": 0.007161928021666875,
                   "n": 2427,
-                  "predicted": 0.1484862640648586
+                  "predicted": 0.14848866885397013
                 },
                 {
                   "actual": 0.21869851729818782,
                   "bin": 3,
-                  "gap": -0.0013891631028681017,
+                  "gap": -0.0013834153861660148,
                   "n": 2428,
-                  "predicted": 0.21730935419531971
+                  "predicted": 0.2173151019120218
                 },
                 {
                   "actual": 0.28141738772146685,
                   "bin": 4,
-                  "gap": 0.004569632049364114,
+                  "gap": 0.004578493073951639,
                   "n": 2427,
-                  "predicted": 0.28598701977083096
+                  "predicted": 0.2859958807954185
                 },
                 {
                   "actual": 0.35502471169686983,
                   "bin": 5,
-                  "gap": 0.0029220801839629496,
+                  "gap": 0.002933469754097695,
                   "n": 2428,
-                  "predicted": 0.3579467918808328
+                  "predicted": 0.3579581814509675
                 },
                 {
                   "actual": 0.4316309719934102,
                   "bin": 6,
-                  "gap": 0.0030628812677430117,
+                  "gap": 0.0030762341347155275,
                   "n": 2428,
-                  "predicted": 0.43469385326115323
+                  "predicted": 0.43470720612812574
                 },
                 {
                   "actual": 0.5109188298310672,
                   "bin": 7,
-                  "gap": 0.004317014192136481,
+                  "gap": 0.004331502005689658,
                   "n": 2427,
-                  "predicted": 0.5152358440232037
+                  "predicted": 0.5152503318367568
                 },
                 {
-                  "actual": 0.6165568369028006,
+                  "actual": 0.6161449752883031,
                   "bin": 8,
-                  "gap": -0.015889732794873268,
+                  "gap": -0.015462279422656988,
                   "n": 2428,
-                  "predicted": 0.6006671041079273
+                  "predicted": 0.6006826958656462
                 },
                 {
-                  "actual": 0.6979810465595385,
+                  "actual": 0.6983930778739185,
                   "bin": 9,
-                  "gap": -0.0019376743039680733,
+                  "gap": -0.00233284656722077,
                   "n": 2427,
-                  "predicted": 0.6960433722555704
+                  "predicted": 0.6960602313066977
                 },
                 {
                   "actual": 0.8422570016474464,
                   "bin": 10,
-                  "gap": -0.02091987070575385,
+                  "gap": -0.020902143717690724,
                   "n": 2428,
-                  "predicted": 0.8213371309416926
+                  "predicted": 0.8213548579297557
                 }
               ],
-              "max_abs_gap": 0.02091987070575385
+              "max_abs_gap": 0.020902143717690724
             },
             "residual_nu": {
-              "bundesliga": 0.009308078114679201,
-              "epl": 0.006331162099517786,
+              "bundesliga": 0.009307908437519337,
+              "epl": 0.006330786676169668,
               "la-liga": 0.0019489309562178677,
-              "ligue-1": 0.009881032414721732,
-              "serie-a": 0.008743704216274073
+              "ligue-1": 0.009881146248911817,
+              "serie-a": 0.008743400648201744
             },
-            "total_vmr_gap": 0.022608555098423855
+            "total_vmr_gap": 0.02265985438078344
           },
           "rungs": {
             "core": {
-              "alpha": 0.006248393588636595,
-              "bias": -0.0635562018940136,
-              "mae": 2.8087140825328794,
-              "nll": 2.6679927709266864
+              "alpha": 0.006241619961230235,
+              "bias": -0.06343734888692684,
+              "mae": 2.8087198001789995,
+              "nll": 2.6679928570469165
             },
             "core_referee": {
-              "alpha": 0.0060922292473147245,
-              "bias": -0.05264609822065671,
-              "mae": 2.807061061701753,
-              "nll": 2.667462030482893
+              "alpha": 0.0061092021055989204,
+              "bias": -0.052577223760013184,
+              "mae": 2.807065048249233,
+              "nll": 2.66746353479786
             },
             "core_referee_market": {
-              "alpha": 0.004623229534759233,
-              "bias": 0.0010692883964747704,
-              "mae": 2.7905298076487592,
-              "nll": 2.662131920129927
+              "alpha": 0.004623966470818947,
+              "bias": 0.001159800628027321,
+              "mae": 2.790533847186335,
+              "nll": 2.6621325590801836
             },
             "full": {
-              "alpha": 0.004598347380420723,
-              "bias": 0.003298894668329374,
-              "mae": 2.790450147306742,
-              "nll": 2.6620634034177137
+              "alpha": 0.004611363963026149,
+              "bias": 0.003416676921280036,
+              "mae": 2.790452399731184,
+              "nll": 2.662062242456555
             }
           },
           "season": "2025-2026",
@@ -1133,24 +1141,24 @@
           "train": 38304,
           "transitions": [
             {
-              "delta_mae": -0.007829502078835926,
-              "delta_nll": -0.00256713514506135,
+              "delta_mae": -0.00783001465651978,
+              "delta_nll": -0.002555561448026822,
               "from": "core",
               "n": 760,
               "scope": "epl",
               "to": "core_referee"
             },
             {
-              "delta_mae": -0.016531254052993827,
-              "delta_nll": -0.005330110352966155,
+              "delta_mae": -0.016531201062898404,
+              "delta_nll": -0.005330975717676267,
               "from": "core_referee",
               "n": 3468,
               "scope": "all",
               "to": "core_referee_market"
             },
             {
-              "delta_mae": -7.966034201745131e-05,
-              "delta_nll": -6.851671221319577e-05,
+              "delta_mae": -8.144745515092922e-05,
+              "delta_nll": -7.031662362866342e-05,
               "from": "core_referee_market",
               "n": 3468,
               "scope": "all",
@@ -1161,7 +1169,7 @@
           "validation_matches": 1734
         }
       ],
-      "generated_at": "2026-09-01T14:54:20Z",
+      "generated_at": "2026-09-01T15:30:18Z",
       "market_gate": "BLOCKED_TEAM_FOULS_NOT_OBSERVED",
       "registered": {
         "ema_decay": 0.93,
@@ -1253,10 +1261,10 @@
             "nll": 2.6878140626533593
           },
           "f1_control": {
-            "hierarchical_nb_brier": 0.19008739018733645,
-            "hierarchical_nb_log_loss": 0.5603819397981346,
-            "poisson_brier": 0.1900147094708494,
-            "poisson_log_loss": 0.5601609738397285
+            "hierarchical_nb_brier": 0.1900873873982131,
+            "hierarchical_nb_log_loss": 0.5603819562481548,
+            "poisson_brier": 0.19001471944375434,
+            "poisson_log_loss": 0.5601610297137798
           },
           "f2": {
             "bias": -0.000788072339270124,
@@ -1397,10 +1405,10 @@
           },
           "causal_baseline_mae": 3.042545116904369,
           "coefficients": {
-            "intercept": -0.015149336912723554,
-            "opening_strength": -0.015828156846250063,
-            "opponent_drawn": 0.06705777228981036,
-            "team_committed": 0.07548988601509338
+            "intercept": -0.015149336912723558,
+            "opening_strength": -0.01582815684625007,
+            "opponent_drawn": 0.06705777228981037,
+            "team_committed": 0.0754898860150934
           },
           "core": {
             "bias": -0.06335459188160263,
@@ -1408,13 +1416,13 @@
             "nll": 2.66882258373639
           },
           "f1_control": {
-            "hierarchical_nb_brier": 0.18527543739567578,
-            "hierarchical_nb_log_loss": 0.5487061882955319,
-            "poisson_brier": 0.18523135623084583,
-            "poisson_log_loss": 0.5485246407643848
+            "hierarchical_nb_brier": 0.18527506353343076,
+            "hierarchical_nb_log_loss": 0.5487053883650604,
+            "poisson_brier": 0.1852310362032878,
+            "poisson_log_loss": 0.5485239779125973
           },
           "f2": {
-            "bias": -0.063047454481577,
+            "bias": -0.06304745448157707,
             "mae": 2.8072570453837686,
             "nll": 2.668732065554199
           },
@@ -1475,16 +1483,16 @@
                 {
                   "actual": 0.14585908529048208,
                   "bin": 2,
-                  "gap": -0.006223976516358504,
+                  "gap": -0.0062239765163585314,
                   "n": 2427,
-                  "predicted": 0.13963510877412358
+                  "predicted": 0.13963510877412355
                 },
                 {
                   "actual": 0.22364085667215816,
                   "bin": 3,
-                  "gap": -0.01658601936457349,
+                  "gap": -0.016586019364573518,
                   "n": 2428,
-                  "predicted": 0.20705483730758467
+                  "predicted": 0.20705483730758464
                 },
                 {
                   "actual": 0.2826534816646065,
@@ -1536,7 +1544,7 @@
                   "predicted": 0.823133904737275
                 }
               ],
-              "max_abs_gap": 0.01658601936457349
+              "max_abs_gap": 0.016586019364573518
             }
           },
           "season": "2025-2026",
@@ -1546,7 +1554,7 @@
           "validation_matches": 1734
         }
       ],
-      "generated_at": "2026-09-01T14:54:23Z",
+      "generated_at": "2026-09-01T15:30:21Z",
       "market_gate": "BLOCKED_TEAM_FOULS_NOT_OBSERVED",
       "registered": {
         "distribution": "poisson",
@@ -1595,7 +1603,7 @@
         "passed": false,
         "within_one_pct": 98.38709677419355
       },
-      "generated_at": "2026-09-01T14:54:24Z",
+      "generated_at": "2026-09-01T15:30:21Z",
       "requirements": {
         "independent_sources_required": [
           "api-football",
@@ -2648,7 +2656,7 @@
     "status": "FRESH",
     "source": "supabase",
     "generated_at": "2026-09-01T09:20:30Z",
-    "age_days": 0.23,
+    "age_days": 0.26,
     "error": ""
   },
   "goalscorer_v2": {
@@ -2778,7 +2786,7 @@
     },
     "freshness": {
       "generated_at": "2026-08-31T16:57:09Z",
-      "age_days": 0.92,
+      "age_days": 0.94,
       "status": "FRESH"
     }
   },
@@ -2808,7 +2816,7 @@
       "roi_pct": null
     },
     "freshness": {
-      "generated_at": "2026-09-01T14:56:43Z",
+      "generated_at": "2026-09-01T15:32:47Z",
       "age_days": 0.0,
       "status": "FRESH"
     },
@@ -2856,7 +2864,7 @@
     "sellable": false
   },
   "automation_budget": {
-    "generated_at": "2026-09-01T14:56:50Z",
+    "generated_at": "2026-09-01T15:32:54Z",
     "workflow_directory": ".effective-default-branch/.github/workflows",
     "status": "PASS",
     "errors": [],

@@ -1,6 +1,6 @@
 # Weekly Research Lane Report
 
-- Generated: 2026-09-01T14:56:50Z
+- Generated: 2026-09-01T15:32:55Z
 - Overall read: observe live sample
 
 ## Football Counts vNext
@@ -13,7 +13,7 @@
 - Corners v3 evidence: 0 signals, 0 settled, +0.00u, ROI -, true-close CLV -.
 - Corners v3 warm-up tracking (not bets): 37 signals, 28 settled / 9 pending, -3.15u, ROI -11.2%.
 - Corners v3 latest scan: EXPECTED_WARMUP_BLOCK; 96 rows / 21 fixtures scored; 9 fixtures passed edge but were warm-up blocked; blockers {'edge_below_3pct': 76, 'matchdays_1_to_3': 96}.
-- Corners v4 G0 research: NOT_RUN; 0/0 enriched; latest holdout MAE delta -; real-market Brier delta - on n=0; line gates 0/0 passed; failed -.
+- Corners v4 G0 research: FAIL; 6901/10889 enriched; latest holdout MAE delta -0.0074; real-market Brier delta +0.0090 on n=431; line gates 0/5 passed; failed 7.5, 8.5, 9.5, 10.5, 11.5, 12.5.
 - Neither experiment changes live routing or stakes.
 - API-Football count archive: 0 fixtures; latest -; last run 15/90 requests.
 - Cross-provider agreement: 0/0 API fixtures matched; status no_overlap.
@@ -73,7 +73,7 @@
 - Settlement gate: FAIL | player-assist agreement 0.00%.
 - Market gate: FAIL | 1300 matched player prices across 8 calendar days.
 - Prospective ledger: 0/0 settled (target 100), +0.00u, ROI -.
-- Evidence freshness: FRESH (2026-09-01T14:56:43Z).
+- Evidence freshness: FRESH (2026-09-01T15:32:47Z).
 - Automation budget: Friday-Sunday 07:10 UTC, August-May; <= 10 Odds-API calls/run and <= 30 calls/week; zero database reads/writes.
 - No public output, staking, database writes or automatic promotion are authorised.
 
