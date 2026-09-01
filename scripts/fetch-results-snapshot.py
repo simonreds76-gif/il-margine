@@ -256,7 +256,15 @@ def main() -> int:
         fixtures, freshness = fetch_football_data_results(league)
 
         target_dates = target_dates_by_league.get(league, set())
-        fotmob_results = fetch_fotmob_recent_results(league, target_dates) if target_dates else {}
+        fotmob_results = (
+            fetch_fotmob_recent_results(
+                league,
+                target_dates,
+                target_fixtures_by_league.get(league, []),
+            )
+            if target_dates
+            else {}
+        )
         normalized_fotmob: Dict[str, dict] = {}
         for key, row in fotmob_results.items():
             parts = key.split("|")

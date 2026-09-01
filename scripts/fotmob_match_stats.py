@@ -101,7 +101,24 @@ def _extract_stat_pair(stats_payload: dict, key: str) -> Optional[tuple[int, int
     return None
 
 
-def fetch_fotmob_recent_results(league_key: str, target_dates: Iterable[str]) -> Dict[str, dict]:
+def _fixture_targeted(match: dict, iso_date: str, target_fixtures: Optional[Iterable[dict]]) -> bool:
+    if target_fixtures is None:
+        return True
+    home = normalize_team_name(str((match.get("home") or {}).get("longName") or (match.get("home") or {}).get("name") or ""))
+    away = normalize_team_name(str((match.get("away") or {}).get("longName") or (match.get("away") or {}).get("name") or ""))
+    return any(
+        str(target.get("date") or "")[:10] == iso_date
+        and normalize_team_name(str(target.get("home_team") or "")) == home
+        and normalize_team_name(str(target.get("away_team") or "")) == away
+        for target in target_fixtures
+    )
+
+
+def fetch_fotmob_recent_results(
+    league_key: str,
+    target_dates: Iterable[str],
+    target_fixtures: Optional[Iterable[dict]] = None,
+) -> Dict[str, dict]:
     """
     Return {date|home|away -> shots/corners result dict} for finished matches
     on the requested dates.
@@ -136,6 +153,11 @@ def fetch_fotmob_recent_results(league_key: str, target_dates: Iterable[str]) ->
         for match in league.get("matches", []) or []:
             status = match.get("status", {}) or {}
             if not status.get("finished"):
+                continue
+            # A date can contain dozens of matches. Fetching detail pages for
+            # every match made targeted settlement unbounded; only request the
+            # fixtures present in the permanent pending ledgers.
+            if not _fixture_targeted(match, iso_date, target_fixtures):
                 continue
             match_id = _safe_int(match.get("id"))
             if not match_id:

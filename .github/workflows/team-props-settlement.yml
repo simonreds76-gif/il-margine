@@ -88,7 +88,9 @@ jobs:
             --pending-path data/shortlist/settled-pnl.csv \
             --pending-path data/team-shots/shadow/team-shots-shadow-signals.csv \
             --pending-path data/football-form/team-shots-v3-ema20-clv-monitor.csv \
-            --pending-path data/football-form/corners-v0-clv-monitor.csv
+            --pending-path data/football-form/corners-v0-clv-monitor.csv \
+            --pending-path data/football-form/team-shots-v4-shadow-clv.csv \
+            --pending-path data/football-form/corners-v3-shadow-clv.csv
           fetch_status=$?
           set -e
 

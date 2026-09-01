@@ -41,6 +41,67 @@ class FootballVnextShadowTests(unittest.TestCase):
         capped = SHADOW.cap_signals(rows)
         self.assertEqual([row["pick_id"] for row in capped], ["b", "c"])
 
+    def test_warmup_tracking_keeps_only_edge_qualified_rows_and_caps_fixture(self) -> None:
+        rows = [
+            {
+                "pick_id": "weaker", "match_id": "fixture-1", "edge": 0.04,
+                "book_odds": 1.90, "kickoff_utc": "2026-08-22T14:00:00Z",
+                "match": "A vs B", "blocked_reason": "matchdays_1_to_3",
+                "signal_status": "blocked", "current_model_would_have_priced": "false",
+                "confidence_guard_applied": "true",
+            },
+            {
+                "pick_id": "stronger", "match_id": "fixture-1", "edge": 0.08,
+                "book_odds": 1.80, "kickoff_utc": "2026-08-22T14:00:00Z",
+                "match": "A vs B", "blocked_reason": "matchdays_1_to_3",
+                "signal_status": "blocked", "current_model_would_have_priced": "false",
+                "confidence_guard_applied": "true",
+            },
+            {
+                "pick_id": "low-edge", "match_id": "fixture-2", "edge": 0.01,
+                "book_odds": 1.90, "kickoff_utc": "2026-08-22T16:00:00Z",
+                "match": "C vs D", "blocked_reason": "matchdays_1_to_3;edge_below_3pct",
+                "signal_status": "blocked", "current_model_would_have_priced": "false",
+                "confidence_guard_applied": "true",
+            },
+        ]
+
+        tracking = SHADOW.warmup_tracking_signals(rows)
+
+        self.assertEqual([row["pick_id"] for row in tracking], ["stronger"])
+        self.assertEqual(tracking[0]["signal_status"], "warmup_tracking")
+        self.assertEqual(tracking[0]["current_model_would_have_priced"], "true")
+        self.assertEqual(tracking[0]["confidence_guard_applied"], "false")
+        self.assertEqual(tracking[0]["blocked_reason"], "")
+
+    def test_existing_warmup_fixture_is_frozen(self) -> None:
+        existing = [
+            {
+                "model": "corners_v3",
+                "match_id": "fixture-1",
+                "pick_id": "first",
+                "signal_status": "warmup_tracking",
+            }
+        ]
+        fresh = [
+            {
+                "model": "corners_v3",
+                "match_id": "fixture-1",
+                "pick_id": "later-higher-edge",
+                "signal_status": "warmup_tracking",
+            },
+            {
+                "model": "corners_v3",
+                "match_id": "fixture-2",
+                "pick_id": "new-fixture",
+                "signal_status": "warmup_tracking",
+            },
+        ]
+
+        unseen = SHADOW.unseen_warmup_signals(existing, fresh)
+
+        self.assertEqual([row["pick_id"] for row in unseen], ["new-fixture"])
+
     def test_team_identity_must_match_the_fixture(self) -> None:
         self.assertTrue(SHADOW.is_fixture_team("Arsenal", "Arsenal", "Chelsea"))
         self.assertTrue(SHADOW.is_fixture_team("Chelsea", "Arsenal", "Chelsea"))

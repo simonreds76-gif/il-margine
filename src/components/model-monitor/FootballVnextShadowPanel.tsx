@@ -97,13 +97,19 @@ export default function FootballVnextShadowPanel({
   candidates: Row[];
   gate: FootballVnextGate | null;
 }) {
-  const active = rows.filter((row) => !(row.blocked_reason ?? "").trim() && (row.confidence_guard_applied ?? "").toLowerCase() !== "true");
+  const allActive = rows.filter((row) => !(row.blocked_reason ?? "").trim() && (row.confidence_guard_applied ?? "").toLowerCase() !== "true");
+  const active = allActive.filter((row) => (row.signal_status ?? "").toLowerCase() !== "warmup_tracking");
+  const warmup = allActive.filter((row) => (row.signal_status ?? "").toLowerCase() === "warmup_tracking");
   const settled = active.filter((row) => ["won", "lost", "push"].includes((row.result ?? "").toLowerCase()));
   const pending = active
     .filter((row) => !row.result || row.result.toLowerCase() === "pending")
     .sort((a, b) => (a.kickoff_utc ?? "").localeCompare(b.kickoff_utc ?? ""));
   const pnl = settled.reduce((sum, row) => sum + (numberValue(row.pnl_units) ?? 0), 0);
   const roi = settled.length > 0 ? pnl / settled.length : null;
+  const warmupSettled = warmup.filter((row) => ["won", "lost", "push"].includes((row.result ?? "").toLowerCase()));
+  const warmupPending = warmup.filter((row) => !row.result || row.result.toLowerCase() === "pending");
+  const warmupPnl = warmupSettled.reduce((sum, row) => sum + (numberValue(row.pnl_units) ?? 0), 0);
+  const warmupRoi = warmupSettled.length > 0 ? warmupPnl / warmupSettled.length : null;
   const trueClose = settled.filter((row) => (row.true_close ?? "").toLowerCase() === "true");
   const trueCloseClv = trueClose
     .map((row) => numberValue(row.published_to_close_clv))
@@ -167,6 +173,61 @@ export default function FootballVnextShadowPanel({
         <Metric label="ROI" value={percent(roi)} detail="secondary gate" tone={roi !== null && roi > 0 ? "text-emerald-300" : roi !== null && roi < 0 ? "text-rose-300" : undefined} />
         <Metric label="True close" value={settled.length ? `${trueClose.length}/${settled.length}` : "-"} detail={evidence?.true_close_coverage != null ? `${(evidence.true_close_coverage * 100).toFixed(0)}% coverage` : "awaiting settlements"} />
         <Metric label="Mean CLV" value={percent(meanClv)} detail={`true close n=${trueCloseClv.length}`} tone={meanClv !== null && meanClv > 0 ? "text-emerald-300" : meanClv !== null && meanClv < 0 ? "text-rose-300" : undefined} />
+      </div>
+
+      <div className="border-t border-amber-400/15 bg-amber-950/5 px-4 py-4 sm:px-5">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.15em] text-amber-200">MD1-3 warm-up evidence</h3>
+              <span className="rounded-full border border-amber-400/25 bg-amber-400/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.14em] text-amber-200">Track only</span>
+            </div>
+            <p className="mt-1 max-w-3xl text-xs leading-5 text-slate-500">
+              These selections passed the locked 3% edge rule but were withheld by the matchday safety lock. They settle at 1u for provisional model evidence and never count toward the post-unlock promotion sample.
+            </p>
+          </div>
+          <div className="text-right text-[11px] text-slate-500">Automatic settlement and weekly Telegram reporting</div>
+        </div>
+        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <Metric label="Tracked" value={String(warmup.length)} detail={`${warmupPending.length} pending`} />
+          <Metric label="Settled" value={String(warmupSettled.length)} detail={`${warmupSettled.filter((row) => row.result?.toLowerCase() === "won").length}W / ${warmupSettled.filter((row) => row.result?.toLowerCase() === "lost").length}L`} />
+          <Metric label="Provisional P/L" value={units(warmupPnl)} detail="1u tracking stake" tone={warmupPnl > 0 ? "text-emerald-300" : warmupPnl < 0 ? "text-rose-300" : undefined} />
+          <Metric label="Provisional ROI" value={percent(warmupRoi)} detail="not a betting authorization" tone={warmupRoi !== null && warmupRoi > 0 ? "text-emerald-300" : warmupRoi !== null && warmupRoi < 0 ? "text-rose-300" : undefined} />
+        </div>
+        {warmup.length > 0 ? (
+          <div className="mt-3 overflow-x-auto rounded-xl border border-amber-400/15">
+            <table className="w-full min-w-[860px] text-left text-xs">
+              <thead className="bg-slate-950/80 text-[10px] uppercase tracking-[0.12em] text-slate-500">
+                <tr>
+                  <th className="px-3 py-2.5">Date</th><th className="px-3 py-2.5">Match</th><th className="px-3 py-2.5">Tracked selection</th>
+                  <th className="px-3 py-2.5 text-right">Price</th><th className="px-3 py-2.5 text-right">Edge</th><th className="px-3 py-2.5 text-right">Actual</th>
+                  <th className="px-3 py-2.5 text-right">Result</th><th className="px-3 py-2.5 text-right">P/L</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...warmup].sort((a, b) => (b.kickoff_utc ?? "").localeCompare(a.kickoff_utc ?? "")).slice(0, 20).map((row) => {
+                  const result = (row.result || "pending").toLowerCase();
+                  return (
+                    <tr key={`warmup-${row.pick_id}`} className="border-t border-slate-800/80 bg-slate-950/25">
+                      <td className="whitespace-nowrap px-3 py-3 text-slate-400">{(row.match_date || row.kickoff_utc || "-").slice(0, 10)}</td>
+                      <td className="px-3 py-3 font-medium text-slate-200">{row.match || "-"}</td>
+                      <td className="px-3 py-3 text-amber-100">{row.selection || "-"}</td>
+                      <td className="px-3 py-3 text-right font-mono text-white">{numberValue(row.book_price_at_publication || row.pinnacle_price_at_publication || row.book_odds)?.toFixed(2) ?? "-"}</td>
+                      <td className="px-3 py-3 text-right font-mono text-emerald-300">{percent(numberValue(row.edge))}</td>
+                      <td className="px-3 py-3 text-right font-mono text-slate-300">{row.actual_team_shots || row.actual_total_corners || "-"}</td>
+                      <td className={`px-3 py-3 text-right font-mono uppercase ${resultTone(result)}`}>{result}</td>
+                      <td className={`px-3 py-3 text-right font-mono ${resultTone(result)}`}>{units(numberValue(row.pnl_units))}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="mt-3 rounded-xl border border-dashed border-amber-400/15 px-4 py-4 text-xs text-slate-500">
+            No warm-up observations are in the permanent ledger yet. Qualifying scans are now retained automatically.
+          </div>
+        )}
       </div>
 
       <div className="border-t border-slate-800/80 px-4 py-4 sm:px-5">

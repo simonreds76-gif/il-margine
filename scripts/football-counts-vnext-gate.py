@@ -60,11 +60,16 @@ def truthy(value: Any) -> bool:
     return str(value or "").strip().lower() in {"1", "true", "yes", "y"}
 
 
-def live_summary(rows: list[dict[str, str]]) -> dict[str, Any]:
+def live_summary(rows: list[dict[str, str]], *, cohort: str = "authorized") -> dict[str, Any]:
+    def in_cohort(row: dict[str, str]) -> bool:
+        is_warmup = str(row.get("signal_status") or "").strip().lower() == "warmup_tracking"
+        return is_warmup if cohort == "warmup_tracking" else not is_warmup
+
     active = [
         row for row in rows
         if not str(row.get("blocked_reason") or "").strip()
         and not truthy(row.get("confidence_guard_applied"))
+        and in_cohort(row)
     ]
     settled = [row for row in active if str(row.get("result") or "").strip().lower() in {"won", "lost", "push"}]
     true_close = [row for row in settled if truthy(row.get("true_close"))]
@@ -179,8 +184,12 @@ def build_payload(
 ) -> dict[str, Any]:
     team_pass = team_count_gate(team_rows, team_report)
     corners_pass = corners_count_gate(corners_rows, corners_report)
-    team_live = live_summary(team_live_rows or [])
-    corners_live = live_summary(corners_live_rows or [])
+    team_live_rows = team_live_rows or []
+    corners_live_rows = corners_live_rows or []
+    team_live = live_summary(team_live_rows)
+    corners_live = live_summary(corners_live_rows)
+    team_warmup = live_summary(team_live_rows, cohort="warmup_tracking")
+    corners_warmup = live_summary(corners_live_rows, cohort="warmup_tracking")
     candidates = candidate_rows or []
     team_scan = candidate_diagnostics(candidates, "team_shots_v4")
     corners_scan = candidate_diagnostics(candidates, "corners_v3")
@@ -216,6 +225,7 @@ def build_payload(
             "market_gate": "BLOCKED_PENDING_2026_27_TRUE_CLOSE_SAMPLE",
             "live_routing": False,
             "prospective": team_live,
+            "warmup_tracking": team_warmup,
             "latest_scan": team_scan,
             "promotion_gate": "PASS" if team_promotable else "BLOCKED",
         },
@@ -225,6 +235,7 @@ def build_payload(
             "market_gate": "BLOCKED_PENDING_2026_27_PINNACLE_SAMPLE",
             "live_routing": False,
             "prospective": corners_live,
+            "warmup_tracking": corners_warmup,
             "latest_scan": corners_scan,
             "promotion_gate": "PASS" if corners_promotable else "BLOCKED",
         },
@@ -247,6 +258,7 @@ def render(payload: dict[str, Any]) -> str:
             f"- Market gate: **{team['market_gate']}**",
             f"- Promotion gate: **{team['promotion_gate']}**",
             f"- Prospective signals: {team['prospective']['signals']} ({team['prospective']['settled']} settled / {team['prospective']['pending']} pending)",
+            f"- Warm-up tracking: {team['warmup_tracking']['signals']} ({team['warmup_tracking']['settled']} settled / {team['warmup_tracking']['pending']} pending), {team['warmup_tracking']['pnl_units']:+.2f}u, ROI {team['warmup_tracking']['roi']:+.1%}" if team['warmup_tracking']['roi'] is not None else f"- Warm-up tracking: {team['warmup_tracking']['signals']} ({team['warmup_tracking']['settled']} settled / {team['warmup_tracking']['pending']} pending), ROI -",
             f"- Latest scan: **{team['latest_scan']['state']}**; {team['latest_scan']['scored_rows']} rows / {team['latest_scan']['scored_fixtures']} fixtures scored; {team['latest_scan']['edge_pass_but_warmup_blocked_fixtures']} fixtures passed edge but were held only by the warm-up lock.",
             f"- Blockers: {team['latest_scan']['blocker_rows'] or '-'}",
             f"- P/L / ROI: {team['prospective']['pnl_units']:+.2f}u / {team['prospective']['roi']:+.1%}" if team['prospective']['roi'] is not None else "- P/L / ROI: -",
@@ -260,6 +272,7 @@ def render(payload: dict[str, Any]) -> str:
             f"- Market gate: **{corners['market_gate']}**",
             f"- Promotion gate: **{corners['promotion_gate']}**",
             f"- Prospective signals: {corners['prospective']['signals']} ({corners['prospective']['settled']} settled / {corners['prospective']['pending']} pending)",
+            f"- Warm-up tracking: {corners['warmup_tracking']['signals']} ({corners['warmup_tracking']['settled']} settled / {corners['warmup_tracking']['pending']} pending), {corners['warmup_tracking']['pnl_units']:+.2f}u, ROI {corners['warmup_tracking']['roi']:+.1%}" if corners['warmup_tracking']['roi'] is not None else f"- Warm-up tracking: {corners['warmup_tracking']['signals']} ({corners['warmup_tracking']['settled']} settled / {corners['warmup_tracking']['pending']} pending), ROI -",
             f"- Latest scan: **{corners['latest_scan']['state']}**; {corners['latest_scan']['scored_rows']} rows / {corners['latest_scan']['scored_fixtures']} fixtures scored; {corners['latest_scan']['edge_pass_but_warmup_blocked_fixtures']} fixtures passed edge but were held only by the warm-up lock.",
             f"- Blockers: {corners['latest_scan']['blocker_rows'] or '-'}",
             f"- P/L / ROI: {corners['prospective']['pnl_units']:+.2f}u / {corners['prospective']['roi']:+.1%}" if corners['prospective']['roi'] is not None else "- P/L / ROI: -",

@@ -123,6 +123,19 @@ jobs:
           # capture supplies the locked Pinnacle corners lane.
           python scripts/pinnacle-scrape-corners.py "${CORNER_ARGS[@]}" || echo "::warning::Hosted Pinnacle corners capture unavailable; local capture remains authoritative."
 
+      - name: Refresh pending vNext results
+        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *')
+        env:
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+        shell: bash
+        run: |
+          # These permanent CLV ledgers are the settlement queue. Candidate
+          # boards are deliberately excluded because they are overwritten on
+          # every scan and contain non-qualifying rows.
+          python scripts/fetch-results-snapshot.py \
+            --pending-path data/football-form/team-shots-v4-shadow-clv.csv \
+            --pending-path data/football-form/corners-v3-shadow-clv.csv
+
       - name: Score current vNext shadow board
         if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true'
         shell: bash
@@ -168,7 +181,7 @@ jobs:
           if [[ "${{ github.event.inputs.settlement_only }}" == "true" ]]; then
             git add data/goalkeeper-saves/
           elif [[ "${{ github.event_name }}" == "workflow_dispatch" || "${{ github.event.schedule }}" == "15 8 * * *" ]]; then
-            git add data/football-form/ data/team-shots/inbox/ data/team-shots/understat/ data/team-shots/team-shots-odds-history.csv data/corners-ou/pinnacle-corners-odds.csv data/goalkeeper-saves/
+            git add data/football-form/ data/team-shots/inbox/ data/team-shots/understat/ data/team-shots/team-shots-odds-history.csv data/corners-ou/pinnacle-corners-odds.csv data/goalkeeper-saves/ data/results-snapshot/
           else
             # Near-kickoff runs publish current candidates/signals as well as
             # the raw prices. Full settlement reports remain daily.

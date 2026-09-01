@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-01T14:18:08Z",
+  "generated_at": "2026-09-01T14:27:15Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -16,6 +16,21 @@
       "mean_true_close_clv": null,
       "side_counts": {},
       "dominant_side_share": 0.0
+    },
+    "warmup_tracking": {
+      "signals": 12,
+      "settled": 12,
+      "pending": 0,
+      "pnl_units": 0.49,
+      "roi": 0.040833,
+      "true_close_n": 6,
+      "true_close_coverage": 0.5,
+      "mean_true_close_clv": -0.006001,
+      "side_counts": {
+        "under": 11,
+        "over": 1
+      },
+      "dominant_side_share": 0.916667
     },
     "latest_scan": {
       "state": "EXPECTED_WARMUP_BLOCK",
@@ -54,6 +69,21 @@
       "mean_true_close_clv": null,
       "side_counts": {},
       "dominant_side_share": 0.0
+    },
+    "warmup_tracking": {
+      "signals": 37,
+      "settled": 28,
+      "pending": 9,
+      "pnl_units": -3.147,
+      "roi": -0.112393,
+      "true_close_n": 15,
+      "true_close_coverage": 0.535714,
+      "mean_true_close_clv": 0.027316,
+      "side_counts": {
+        "under": 28,
+        "over": 9
+      },
+      "dominant_side_share": 0.756757
     },
     "latest_scan": {
       "state": "EXPECTED_WARMUP_BLOCK",

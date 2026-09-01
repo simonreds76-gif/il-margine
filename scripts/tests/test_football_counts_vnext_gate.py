@@ -57,6 +57,20 @@ class FootballCountsVnextGateTests(unittest.TestCase):
         self.assertEqual(summary["true_close_n"], 1)
         self.assertEqual(summary["mean_true_close_clv"], 0.02)
 
+    def test_live_summary_keeps_warmup_tracking_separate_from_authorized_sample(self) -> None:
+        rows = [
+            {"signal_status": "eligible", "side": "over", "result": "won", "pnl_units": "0.9"},
+            {"signal_status": "warmup_tracking", "side": "under", "result": "lost", "pnl_units": "-1"},
+        ]
+
+        authorized = GATE.live_summary(rows)
+        warmup = GATE.live_summary(rows, cohort="warmup_tracking")
+
+        self.assertEqual(authorized["signals"], 1)
+        self.assertEqual(authorized["pnl_units"], 0.9)
+        self.assertEqual(warmup["signals"], 1)
+        self.assertEqual(warmup["pnl_units"], -1.0)
+
     def test_corners_zero_clv_can_pass_at_the_registered_threshold(self) -> None:
         team_fold = {
             "status": "OK", "hierarchical_mle_brier": "0.19", "fixed_alpha_025_brier": "0.20",

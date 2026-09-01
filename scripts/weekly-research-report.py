@@ -1490,6 +1490,8 @@ def render_report(payload: dict[str, Any]) -> str:
     corners_v3 = (vnext.get("corners_v3") or {})
     team_v4_live = team_v4.get("prospective") or {}
     corners_v3_live = corners_v3.get("prospective") or {}
+    team_v4_warmup = team_v4.get("warmup_tracking") or {}
+    corners_v3_warmup = corners_v3.get("warmup_tracking") or {}
     team_v4_scan = team_v4.get("latest_scan") or {}
     corners_v3_scan = corners_v3.get("latest_scan") or {}
     corners_v4_g0 = payload.get("corners_v4_g0") or {}
@@ -1504,9 +1506,11 @@ def render_report(payload: dict[str, Any]) -> str:
         "",
         f"- Team Shots v4: count {team_v4.get('count_gate', 'NOT_RUN')}; prospective {team_v4.get('prospective_status', 'BLOCKED')}; promotion {team_v4.get('promotion_gate', 'BLOCKED')}.",
         f"- Team Shots v4 evidence: {team_v4_live.get('signals', 0)} signals, {team_v4_live.get('settled', 0)} settled, {number(team_v4_live.get('pnl_units')):+.2f}u, ROI {pct(number(team_v4_live.get('roi')) * 100) if team_v4_live.get('roi') is not None else '-'}, true-close CLV {pct(number(team_v4_live.get('mean_true_close_clv')) * 100) if team_v4_live.get('mean_true_close_clv') is not None else '-'}.",
+        f"- Team Shots v4 warm-up tracking (not bets): {team_v4_warmup.get('signals', 0)} signals, {team_v4_warmup.get('settled', 0)} settled / {team_v4_warmup.get('pending', 0)} pending, {number(team_v4_warmup.get('pnl_units')):+.2f}u, ROI {pct(number(team_v4_warmup.get('roi')) * 100) if team_v4_warmup.get('roi') is not None else '-'}.",
         f"- Team Shots v4 latest scan: {team_v4_scan.get('state', 'NOT_RUN')}; {team_v4_scan.get('scored_rows', 0)} rows / {team_v4_scan.get('scored_fixtures', 0)} fixtures scored; {team_v4_scan.get('edge_pass_but_warmup_blocked_fixtures', 0)} fixtures passed edge but were warm-up blocked; blockers {team_v4_scan.get('blocker_rows') or '-'}.",
         f"- Corners v3: count {corners_v3.get('count_gate', 'NOT_RUN')}; prospective {corners_v3.get('prospective_status', 'BLOCKED')}; promotion {corners_v3.get('promotion_gate', 'BLOCKED')}.",
         f"- Corners v3 evidence: {corners_v3_live.get('signals', 0)} signals, {corners_v3_live.get('settled', 0)} settled, {number(corners_v3_live.get('pnl_units')):+.2f}u, ROI {pct(number(corners_v3_live.get('roi')) * 100) if corners_v3_live.get('roi') is not None else '-'}, true-close CLV {pct(number(corners_v3_live.get('mean_true_close_clv')) * 100) if corners_v3_live.get('mean_true_close_clv') is not None else '-'}.",
+        f"- Corners v3 warm-up tracking (not bets): {corners_v3_warmup.get('signals', 0)} signals, {corners_v3_warmup.get('settled', 0)} settled / {corners_v3_warmup.get('pending', 0)} pending, {number(corners_v3_warmup.get('pnl_units')):+.2f}u, ROI {pct(number(corners_v3_warmup.get('roi')) * 100) if corners_v3_warmup.get('roi') is not None else '-'}.",
         f"- Corners v3 latest scan: {corners_v3_scan.get('state', 'NOT_RUN')}; {corners_v3_scan.get('scored_rows', 0)} rows / {corners_v3_scan.get('scored_fixtures', 0)} fixtures scored; {corners_v3_scan.get('edge_pass_but_warmup_blocked_fixtures', 0)} fixtures passed edge but were warm-up blocked; blockers {corners_v3_scan.get('blocker_rows') or '-'}.",
         f"- Corners v4 G0 research: {corners_v4_g0.get('decision', 'NOT_RUN')}; {corners_v4_g0.get('enriched_samples', 0)}/{corners_v4_g0.get('total_samples', 0)} enriched; latest holdout MAE delta {signed_number(corners_v4_g0.get('mae_delta'), 4)}; real-market Brier delta {signed_number(corners_v4_g0.get('brier_delta'), 4)} on n={corners_v4_g0.get('market_rows', 0)}; line gates {corners_v4_g0.get('passed_lines', 0)}/{corners_v4_g0.get('available_lines', 0)} passed; failed {', '.join(corners_v4_g0.get('failed_lines') or []) or '-'}.",
         "- Neither experiment changes live routing or stakes.",
@@ -1750,6 +1754,8 @@ def telegram_text(payload: dict[str, Any]) -> str:
     team_v4_scan = team_v4.get("latest_scan") or {}
     corners_v3_scan = corners_v3.get("latest_scan") or {}
     corners_v4_g0 = payload.get("corners_v4_g0") or {}
+    team_v4_warmup = team_v4.get("warmup_tracking") or {}
+    corners_v3_warmup = corners_v3.get("warmup_tracking") or {}
     tennis_lanes = tennis_model_evidence.get("lanes") or {}
     gap_replacements = tennis_model_evidence.get("gap_replacements") or {}
     gap_source_status = tennis_model_evidence.get("gap_source_status", "SOURCE_MISSING")
@@ -1866,8 +1872,10 @@ def telegram_text(payload: dict[str, Any]) -> str:
         "",
         "EVIDENCE DETAIL",
         f"Team Shots v4: {team_v4.get('prospective_status', 'BLOCKED')} | {team_v4_live.get('settled', 0)} settled | {number(team_v4_live.get('pnl_units')):+.2f}u | ROI {pct(number(team_v4_live.get('roi')) * 100) if team_v4_live.get('roi') is not None else '-'} | CLV {pct(number(team_v4_live.get('mean_true_close_clv')) * 100) if team_v4_live.get('mean_true_close_clv') is not None else '-'} | promotion {team_v4.get('promotion_gate', 'BLOCKED')}",
+        f"Team Shots v4 warm-up [TRACK ONLY]: {team_v4_warmup.get('settled', 0)}/{team_v4_warmup.get('signals', 0)} settled | {number(team_v4_warmup.get('pnl_units')):+.2f}u | ROI {pct(number(team_v4_warmup.get('roi')) * 100) if team_v4_warmup.get('roi') is not None else '-'} | pending {team_v4_warmup.get('pending', 0)}",
         f"Team Shots scan: {team_v4_scan.get('state', 'NOT_RUN')} | scored {team_v4_scan.get('scored_rows', 0)} rows/{team_v4_scan.get('scored_fixtures', 0)} fixtures | edge-pass warmup blocks {team_v4_scan.get('edge_pass_but_warmup_blocked_fixtures', 0)}",
         f"Corners v3: {corners_v3.get('prospective_status', 'BLOCKED')} | {corners_v3_live.get('settled', 0)} settled | {number(corners_v3_live.get('pnl_units')):+.2f}u | ROI {pct(number(corners_v3_live.get('roi')) * 100) if corners_v3_live.get('roi') is not None else '-'} | CLV {pct(number(corners_v3_live.get('mean_true_close_clv')) * 100) if corners_v3_live.get('mean_true_close_clv') is not None else '-'} | promotion {corners_v3.get('promotion_gate', 'BLOCKED')}",
+        f"Corners v3 warm-up [TRACK ONLY]: {corners_v3_warmup.get('settled', 0)}/{corners_v3_warmup.get('signals', 0)} settled | {number(corners_v3_warmup.get('pnl_units')):+.2f}u | ROI {pct(number(corners_v3_warmup.get('roi')) * 100) if corners_v3_warmup.get('roi') is not None else '-'} | pending {corners_v3_warmup.get('pending', 0)}",
         f"Corners scan: {corners_v3_scan.get('state', 'NOT_RUN')} | scored {corners_v3_scan.get('scored_rows', 0)} rows/{corners_v3_scan.get('scored_fixtures', 0)} fixtures | edge-pass warmup blocks {corners_v3_scan.get('edge_pass_but_warmup_blocked_fixtures', 0)}",
         f"Corners v4 G0 [RESEARCH]: {corners_v4_g0.get('decision', 'NOT_RUN')} | MAE delta {signed_number(corners_v4_g0.get('mae_delta'), 4)} | market Brier delta {signed_number(corners_v4_g0.get('brier_delta'), 4)} n={corners_v4_g0.get('market_rows', 0)} | line gates {corners_v4_g0.get('passed_lines', 0)}/{corners_v4_g0.get('available_lines', 0)}",
         f"Legacy controls: Team Shots V3 {team_clv['settled']} settled/{team_clv['pnl_units']:+.2f}u; Corners V0 {corners_clv['settled']} settled/{corners_clv['pnl_units']:+.2f}u",

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Publish the locked Team Shots v4 and Corners v3 prospective shadow lanes.
 
-Only paired two-way prices are scored. Matchdays 1-3 fail closed and the
-strongest eligible signal per fixture is appended to a versioned ledger. These
-outputs are research signals, not live staking instructions.
+Only paired two-way prices are scored. Matchdays 1-3 fail closed for official
+shadow publication, but edge-qualified warm-up observations are retained in a
+separate tracking cohort. The strongest row per fixture is appended to a
+versioned ledger. These outputs are research signals, not staking instructions.
 """
 
 from __future__ import annotations
@@ -81,7 +82,12 @@ def load_json(path: Path) -> dict[str, Any]:
 def write_csv(path: Path, rows: list[dict[str, Any]], fields: list[str] = FIELDS) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=fields,
+            extrasaction="ignore",
+            lineterminator="\n",
+        )
         writer.writeheader()
         writer.writerows(rows)
 
@@ -190,6 +196,47 @@ def cap_signals(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
         ],
         key=lambda row: (row.get("kickoff_utc", ""), row.get("match", "")),
     )
+
+
+def warmup_tracking_signals(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Keep rows blocked only by MD1-3 as non-bettable tracking evidence."""
+    tracking: list[dict[str, Any]] = []
+    for source in rows:
+        reasons = {
+            reason.strip()
+            for reason in str(source.get("blocked_reason") or "").split(";")
+            if reason.strip()
+        }
+        if reasons != {"matchdays_1_to_3"}:
+            continue
+        row = dict(source)
+        row.update(
+            {
+                "signal_status": "warmup_tracking",
+                "current_model_would_have_priced": "true",
+                "confidence_guard_applied": "false",
+                "blocked_reason": "",
+            }
+        )
+        tracking.append(row)
+    return cap_signals(tracking)
+
+
+def unseen_warmup_signals(
+    existing_rows: list[dict[str, Any]], fresh_rows: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Freeze the first recorded warm-up selection for each model fixture."""
+    existing_fixtures = {
+        (str(row.get("model") or ""), str(row.get("match_id") or ""))
+        for row in existing_rows
+        if str(row.get("signal_status") or "").strip().lower() == "warmup_tracking"
+    }
+    return [
+        row
+        for row in fresh_rows
+        if (str(row.get("model") or ""), str(row.get("match_id") or ""))
+        not in existing_fixtures
+    ]
 
 
 def is_fixture_team(team: str, home: str, away: str) -> bool:
@@ -534,16 +581,34 @@ def main() -> int:
         lock=load_json(args.corners_lock), now=now,
     )
 
-    team_ledger = PUB.merge_published_ledger(PUB.load_csv(args.team_output), team_signals)
-    corners_ledger = PUB.merge_published_ledger(PUB.load_csv(args.corners_output), corners_signals)
+    team_existing = PUB.load_csv(args.team_output)
+    corners_existing = PUB.load_csv(args.corners_output)
+    team_warmup = unseen_warmup_signals(
+        team_existing, warmup_tracking_signals(team_candidates)
+    )
+    corners_warmup = unseen_warmup_signals(
+        corners_existing, warmup_tracking_signals(corners_candidates)
+    )
+    team_ledger = PUB.merge_published_ledger(
+        team_existing, [*team_signals, *team_warmup]
+    )
+    corners_ledger = PUB.merge_published_ledger(
+        corners_existing, [*corners_signals, *corners_warmup]
+    )
     write_csv(args.team_output, team_ledger)
     write_csv(args.corners_output, corners_ledger)
     write_csv(args.candidates_output, sorted(
         team_candidates + corners_candidates,
         key=lambda row: (row.get("kickoff_utc", ""), row.get("model", ""), -float(row.get("edge") or 0.0)),
     ))
-    print(f"Team Shots v4: {len(team_signals)} fresh eligible, {len(team_ledger)} ledger rows")
-    print(f"Corners v3: {len(corners_signals)} fresh eligible, {len(corners_ledger)} ledger rows")
+    print(
+        f"Team Shots v4: {len(team_signals)} fresh eligible, "
+        f"{len(team_warmup)} warm-up tracking, {len(team_ledger)} ledger rows"
+    )
+    print(
+        f"Corners v3: {len(corners_signals)} fresh eligible, "
+        f"{len(corners_warmup)} warm-up tracking, {len(corners_ledger)} ledger rows"
+    )
     print(f"Candidates scored: {len(team_candidates) + len(corners_candidates)}")
     return 0
 
