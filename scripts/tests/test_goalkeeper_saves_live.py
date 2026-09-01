@@ -325,6 +325,50 @@ class GoalkeeperSavesLiveTests(unittest.TestCase):
         self.assertEqual(actual, 4)
         self.assertEqual(metadata["position"], "G")
 
+    def test_fotmob_named_goalkeeper_saves_exclude_blocks_and_other_keeper(self) -> None:
+        payload = {
+            "props": {
+                "pageProps": {
+                    "content": {
+                        "lineup": {
+                            "homeTeam": {
+                                "starters": [{"id": 10, "name": "David Raya", "positionId": 11}]
+                            },
+                            "awayTeam": {
+                                "starters": [{"id": 20, "name": "Nick Pope", "positionId": 11}]
+                            },
+                        },
+                        "shotmap": {
+                            "shots": [
+                                {"id": 1, "eventType": "AttemptSaved", "keeperId": 10, "isBlocked": False},
+                                {"id": 2, "eventType": "AttemptSaved", "keeperId": 10, "isBlocked": False},
+                                {"id": 3, "eventType": "AttemptSaved", "keeperId": None, "isBlocked": True},
+                                {"id": 4, "eventType": "AttemptSaved", "keeperId": 20, "isBlocked": False},
+                                {"id": 5, "eventType": "Goal", "keeperId": 10, "isBlocked": False},
+                            ]
+                        },
+                    }
+                }
+            }
+        }
+        actual, metadata = settle.fotmob_player_saves(payload, "D. Raya")
+        self.assertEqual(actual, 2)
+        self.assertEqual(metadata["player_id"], 10)
+        self.assertEqual(metadata["source"], "fotmob_named_keeper_shotmap")
+
+    def test_fotmob_fixture_match_uses_canonical_team_aliases(self) -> None:
+        fixture = {
+            "home": {"longName": "Real Betis"},
+            "away": {"longName": "Real Sociedad"},
+        }
+        self.assertTrue(
+            settle.fotmob_fixture_match(
+                fixture,
+                "Real Betis Seville",
+                "Real Sociedad San Sebastian",
+            )
+        )
+
     def test_settlement_waits_until_match_has_had_time_to_finish(self) -> None:
         now = settle.datetime(2026, 8, 26, 18, 0, tzinfo=settle.UTC)
         self.assertFalse(settle.signal_is_due({"kickoff_at": "2026-08-26T16:00:00Z"}, now))

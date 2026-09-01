@@ -11,6 +11,7 @@ import argparse
 import csv
 import json
 import os
+import re
 from collections import Counter, defaultdict
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
@@ -23,6 +24,16 @@ from goalkeeper_saves_live import ROOT, parse_float, person_match_score
 
 
 BASE_URL = "https://v3.football.api-sports.io"
+FOTMOB_MATCHES_URL = "https://www.fotmob.com/api/data/matches"
+FOTMOB_MATCH_URL = "https://www.fotmob.com/api/data/match"
+FOTMOB_WEB_BASE = "https://www.fotmob.com"
+FOTMOB_NEXT_DATA_RE = re.compile(r'<script id="__NEXT_DATA__" type="application/json">(.*?)</script>')
+FOTMOB_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122 Safari/537.36",
+    "Accept": "application/json, text/plain, */*",
+    "Accept-Language": "en-GB,en;q=0.9",
+    "Referer": "https://www.fotmob.com/",
+}
 DEFAULT_SIGNALS = ROOT / "data" / "goalkeeper-saves" / "gk-saves-v1-shadow-signals.csv"
 DEFAULT_ODDS = ROOT / "data" / "goalkeeper-saves" / "gk-saves-odds-history.csv"
 DEFAULT_REPORT = ROOT / "data" / "goalkeeper-saves" / "gk-saves-v1-settlement-status.json"
@@ -32,6 +43,13 @@ LEAGUES = {
     "la-liga": 140,
     "bundesliga": 78,
     "ligue-1": 61,
+}
+FOTMOB_LEAGUES = {
+    "epl": 47,
+    "serie-a": 55,
+    "la-liga": 87,
+    "bundesliga": 54,
+    "ligue-1": 53,
 }
 FINISHED = {"FT", "AET", "PEN"}
 
@@ -112,6 +130,87 @@ def request_json(path: str, params: dict[str, Any]) -> dict[str, Any]:
     )
     response.raise_for_status()
     return response.json()
+
+
+def request_fotmob_json(url: str, params: dict[str, Any]) -> dict[str, Any]:
+    response = requests.get(url, params=params, headers=FOTMOB_HEADERS, timeout=30)
+    response.raise_for_status()
+    return response.json()
+
+
+def request_fotmob_match_payload(match_id: int) -> dict[str, Any]:
+    metadata = request_fotmob_json(FOTMOB_MATCH_URL, {"id": match_id})
+    page_url = str(metadata.get("pageUrl") or "").strip()
+    if not page_url:
+        raise ValueError(f"FotMob match {match_id} has no pageUrl")
+    response = requests.get(f"{FOTMOB_WEB_BASE}{page_url}", headers=FOTMOB_HEADERS, timeout=30)
+    response.raise_for_status()
+    match = FOTMOB_NEXT_DATA_RE.search(response.text)
+    if not match:
+        raise ValueError(f"FotMob match {match_id} has no __NEXT_DATA__ payload")
+    return json.loads(match.group(1))
+
+
+def fotmob_fixtures(payload: dict[str, Any], league: str) -> list[dict[str, Any]]:
+    league_id = FOTMOB_LEAGUES.get(league)
+    if league_id is None:
+        return []
+    return [
+        match
+        for competition in payload.get("leagues") or []
+        if int(competition.get("id") or competition.get("primaryId") or 0) == league_id
+        for match in competition.get("matches") or []
+    ]
+
+
+def fotmob_fixture_match(row: dict[str, Any], home: str, away: str) -> bool:
+    source_home = football_form_team_key((row.get("home") or {}).get("longName") or (row.get("home") or {}).get("name"))
+    source_away = football_form_team_key((row.get("away") or {}).get("longName") or (row.get("away") or {}).get("name"))
+    return source_home == football_form_team_key(home) and source_away == football_form_team_key(away)
+
+
+def fotmob_player_saves(payload: dict[str, Any], goalkeeper: str) -> tuple[int | None, dict[str, Any]]:
+    page_props = (payload.get("props") or {}).get("pageProps") or {}
+    content = page_props.get("content") or {}
+    lineup = content.get("lineup") or {}
+    matches: list[tuple[int, dict[str, Any]]] = []
+    for side in ("homeTeam", "awayTeam"):
+        team = lineup.get(side) or {}
+        for bucket in ("starters", "subs"):
+            for player in team.get(bucket) or []:
+                score = person_match_score(goalkeeper, player.get("name"))
+                if score:
+                    matches.append((score, player))
+    if not matches:
+        return None, {"error": "fotmob_goalkeeper_not_found"}
+    matches.sort(key=lambda item: item[0], reverse=True)
+    if len(matches) > 1 and matches[0][0] == matches[1][0]:
+        return None, {"error": "fotmob_goalkeeper_ambiguous"}
+    player = matches[0][1]
+    if int(player.get("positionId") or 0) != 11:
+        return None, {"error": "fotmob_matched_player_not_goalkeeper", "position_id": player.get("positionId")}
+    keeper_id = int(player.get("id") or 0)
+    if keeper_id <= 0:
+        return None, {"error": "fotmob_goalkeeper_id_missing"}
+
+    saves: set[str] = set()
+    shots = ((content.get("shotmap") or {}).get("shots") or [])
+    for index, shot in enumerate(shots):
+        if str(shot.get("eventType") or "").casefold() != "attemptsaved":
+            continue
+        if int(shot.get("keeperId") or 0) != keeper_id:
+            continue
+        if bool(shot.get("isBlocked")) or bool(shot.get("isSavedOffLine")):
+            continue
+        if str(shot.get("period") or "").casefold() in {"penaltyshootout", "penalty shootout"}:
+            continue
+        saves.add(str(shot.get("id") or f"row-{index}"))
+    return len(saves), {
+        "player_id": keeper_id,
+        "player_name": player.get("name"),
+        "position": "GK",
+        "source": "fotmob_named_keeper_shotmap",
+    }
 
 
 def season_for_day(day: date) -> int:
@@ -200,7 +299,13 @@ def latest_close(
     return max(candidates)[1] if candidates else None
 
 
-def settle_row(signal: dict[str, str], actual: int, close_odds: float | None, settled_at: str) -> None:
+def settle_row(
+    signal: dict[str, str],
+    actual: int,
+    close_odds: float | None,
+    settled_at: str,
+    source: str = "api_football_fixture_players",
+) -> None:
     line = parse_float(signal.get("line")) or 0.0
     price = parse_float(signal.get("odds_decimal")) or 0.0
     stake = parse_float(signal.get("stake_units")) or 0.0
@@ -220,7 +325,7 @@ def settle_row(signal: dict[str, str], actual: int, close_odds: float | None, se
             "actual_saves": str(actual),
             "pnl_units": f"{pnl:.4f}",
             "settled_at": settled_at,
-            "settlement_source": "api_football_fixture_players",
+            "settlement_source": source,
             "close_odds": f"{close_odds:.4f}" if close_odds else "",
             "clv": f"{(price / close_odds) - 1.0:.6f}" if close_odds else "",
         }
@@ -233,6 +338,8 @@ def main() -> None:
     parser.add_argument("--odds", type=Path, default=DEFAULT_ODDS)
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--max-requests", type=int, default=10)
+    parser.add_argument("--max-fotmob-requests", type=int, default=50)
+    parser.add_argument("--api-football-fallback", action="store_true")
     args = parser.parse_args()
     load_env()
 
@@ -265,11 +372,8 @@ def main() -> None:
         return
 
     odds_rows = read_csv(args.odds)[1]
-    groups: dict[tuple[str, str], list[dict[str, str]]] = defaultdict(list)
-    for signal in pending:
-        groups[(str(signal.get("league") or ""), str(signal.get("match_date") or "")[:10])].append(signal)
-
     requests_used = 0
+    fotmob_requests_used = 0
     settled = 0
     reasons: Counter[str] = Counter()
     details: list[dict[str, str]] = []
@@ -288,6 +392,78 @@ def main() -> None:
                 "detail": detail,
             }
         )
+
+    unresolved: list[dict[str, str]] = []
+    date_cache: dict[str, dict[str, Any]] = {}
+    match_cache: dict[int, dict[str, Any]] = {}
+    for signal in pending:
+        league = str(signal.get("league") or "")
+        day_text = str(signal.get("match_date") or "")[:10]
+        if league not in FOTMOB_LEAGUES:
+            record(signal, "fotmob_unsupported_league", league)
+            unresolved.append(signal)
+            continue
+        if day_text not in date_cache:
+            if fotmob_requests_used >= args.max_fotmob_requests:
+                record(signal, "fotmob_request_budget_exhausted")
+                unresolved.append(signal)
+                continue
+            try:
+                date_cache[day_text] = request_fotmob_json(
+                    FOTMOB_MATCHES_URL,
+                    {"date": day_text.replace("-", "")},
+                )
+                fotmob_requests_used += 1
+            except Exception as exc:
+                record(signal, "fotmob_fixture_request_failed", str(exc)[:240])
+                unresolved.append(signal)
+                continue
+        fixtures = fotmob_fixtures(date_cache[day_text], league)
+        fixture = next(
+            (
+                row
+                for row in fixtures
+                if fotmob_fixture_match(row, signal.get("home_team", ""), signal.get("away_team", ""))
+                and bool((row.get("status") or {}).get("finished"))
+            ),
+            None,
+        )
+        match_id = int((fixture or {}).get("id") or 0)
+        if match_id <= 0:
+            record(signal, "fotmob_finished_fixture_not_found", f"fixtures_returned={len(fixtures)}")
+            unresolved.append(signal)
+            continue
+        if match_id not in match_cache:
+            if fotmob_requests_used + 2 > args.max_fotmob_requests:
+                record(signal, "fotmob_request_budget_exhausted")
+                unresolved.append(signal)
+                continue
+            try:
+                match_cache[match_id] = request_fotmob_match_payload(match_id)
+                fotmob_requests_used += 2
+            except Exception as exc:
+                record(signal, "fotmob_match_request_failed", str(exc)[:240])
+                unresolved.append(signal)
+                continue
+        actual, metadata = fotmob_player_saves(match_cache[match_id], str(signal.get("goalkeeper") or ""))
+        if actual is None:
+            record(signal, str(metadata.get("error") or "fotmob_goalkeeper_stats_not_found"))
+            unresolved.append(signal)
+            continue
+        settle_row(
+            signal,
+            actual,
+            latest_close(odds_rows, signal),
+            now,
+            source="fotmob_named_keeper_shotmap",
+        )
+        settled += 1
+        record(signal, "settled_fotmob")
+
+    groups: dict[tuple[str, str], list[dict[str, str]]] = defaultdict(list)
+    if args.api_football_fallback:
+        for signal in unresolved:
+            groups[(str(signal.get("league") or ""), str(signal.get("match_date") or "")[:10])].append(signal)
 
     for (league, day_text), group in sorted(groups.items()):
         if league not in LEAGUES:
@@ -355,19 +531,22 @@ def main() -> None:
                 continue
             settle_row(signal, actual, latest_close(odds_rows, signal), now)
             settled += 1
-            record(signal, "settled")
+            record(signal, "settled_api_football")
 
     write_csv(args.signals, fields, signals)
-    status = "SETTLED" if settled and settled == len(pending) else "PARTIAL" if settled else "BLOCKED"
+    remaining_due = sum(str(row.get("status") or "").casefold() == "pending" for row in pending)
+    status = "SETTLED" if settled and remaining_due == 0 else "PARTIAL" if settled else "BLOCKED"
     report = {
         "generated_at": generated_at,
         "status": status,
-        "pending_total": len(pending) + len(deferred),
-        "pending_due": len(pending),
+        "pending_total": remaining_due + len(deferred),
+        "pending_due": remaining_due,
         "deferred_not_due": len(deferred),
         "settled": settled,
         "requests_used": requests_used,
         "max_requests": args.max_requests,
+        "fotmob_requests_used": fotmob_requests_used,
+        "max_fotmob_requests": args.max_fotmob_requests,
         "reason_counts": dict(sorted(reasons.items())),
         "api_errors": sorted(set(api_errors)),
         "details": details,

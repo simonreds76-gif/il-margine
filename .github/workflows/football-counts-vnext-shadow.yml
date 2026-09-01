@@ -146,14 +146,10 @@ jobs:
           API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
         shell: bash
         run: |
-          if [ -n "${API_FOOTBALL_KEY:-}" ]; then
-            # The earlier count archive is capped at 90 calls; this settler is
-            # capped at 10, preserving the registered 100-call daily ceiling.
-            python scripts/goalkeeper-saves-settle.py --max-requests 10
-            python scripts/goalkeeper-saves-shadow.py
-          else
-            echo "::warning::API_FOOTBALL_KEY missing; GK saves settlement retained pending."
-          fi
+          # FotMob's named-keeper shot map is the primary settlement source;
+          # API-Football's free plan does not expose the current season.
+          python scripts/goalkeeper-saves-settle.py --max-requests 10 --max-fotmob-requests 50
+          python scripts/goalkeeper-saves-shadow.py
 
       - name: Send daily football model digest
         if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *')
