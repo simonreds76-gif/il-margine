@@ -1936,18 +1936,17 @@ def telegram_text(payload: dict[str, Any]) -> str:
     props_clv = tennis_props_shadow.get("clv") or {}
     props_calibration = tennis_props_shadow.get("calibration") or {}
     lines.append(
-        "Aces/DF decision: "
-        f"{tennis_props_shadow.get('settled', 0)}/{tennis_props_shadow.get('registered', 0)} settled | "
-        f"pending {tennis_props_shadow.get('pending', 0)} "
-        f"({tennis_props_shadow.get('pending_due', 0)} due / "
-        f"{tennis_props_shadow.get('pending_future', 0)} future / "
-        f"{tennis_props_shadow.get('pending_unknown', 0)} unknown) | "
+        "Aces/DF: "
+        f"{tennis_props_shadow.get('settled', 0)}/{tennis_props_shadow.get('registered', 0)} | "
+        f"P{tennis_props_shadow.get('pending', 0)} "
+        f"(D{tennis_props_shadow.get('pending_due', 0)}/"
+        f"F{tennis_props_shadow.get('pending_future', 0)}/"
+        f"U{tennis_props_shadow.get('pending_unknown', 0)}) | "
         f"{number(tennis_props_shadow.get('pnl_units')):+.2f}u | "
         f"ROI {pct(tennis_props_shadow.get('roi_pct'))} | "
         f"CLV {pct(props_clv.get('mean_pct'), 2)} n={props_clv.get('rows', 0)} | "
         f"Brier {props_calibration.get('brier') if props_calibration.get('brier') is not None else '-'} "
-        f"n={props_calibration.get('rows', 0)} | "
-        f"{tennis_props_shadow.get('status', 'COLLECTING_EVIDENCE')}"
+        f"n={props_calibration.get('rows', 0)}"
     )
     lines.append(tennis_breaks_gate_line(tennis_breaks_v1))
     lines.extend(
