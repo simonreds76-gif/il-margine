@@ -1852,19 +1852,19 @@
     }
   },
   "Fiorentina": {
-    "primary": "Franco Mastantuono",
-    "secondary": "Mateo Pellegrino",
-    "tertiary": "Rolando Mandragora",
+    "primary": "Mateo Pellegrino",
+    "secondary": "Beto",
+    "tertiary": "Franco Mastantuono",
     "last_updated": "2026-09-01",
-    "source": "GOAL Italia 2026/27 rigoristi board",
-    "cross_check": "Lega Serie A current squads",
+    "source": "Fantacalcio current Pellegrino role file",
+    "cross_check": "ANSA Beto signing report",
     "hierarchy_status": "disputed",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
-      "tertiary": "medium"
+      "primary": "low",
+      "secondary": "low",
+      "tertiary": "low"
     },
-    "condition_note": "Fiorentina's rebuilt attack makes Mastantuono the current first call, Pellegrino the main alternative and Mandragora the retained third option.",
+    "condition_note": "Deadline-day exits remove Gudmundsson, Kean and Mandragora. Pellegrino is the provisional first call, with Beto and Mastantuono the unassigned alternatives. All three positions remain low-confidence until Fiorentina's first competitive penalty with two candidates available.",
     "last_verified": {
       "date": "2026-09-01",
       "by": "Il Margine",
@@ -1875,7 +1875,7 @@
       "id": "evt_20260901_fiorentina_current_review",
       "date": "2026-09-01",
       "type": "current_season_board_review",
-      "source_count": 2
+      "source_count": 6
     },
     "evidence_log": [
       {
@@ -2065,19 +2065,43 @@
         "competition": null,
         "match": null,
         "headline": "Fiorentina penalty hierarchy updated",
-        "context": "Fiorentina's rebuilt attack makes Mastantuono the current first call, Pellegrino the main alternative and Mandragora the retained third option.",
+        "context": "Deadline-day exits remove Gudmundsson, Kean and Mandragora. Pellegrino is the provisional first call, with Beto and Mastantuono the unassigned alternatives. All three positions remain low-confidence until Fiorentina's first competitive penalty with two candidates available.",
         "sources": [
           {
-            "label": "GOAL Italia 2026/27 rigoristi board",
-            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-            "date": "2026-08-29",
-            "note": "Current all-club order reflecting late-August transfers and role changes."
+            "label": "Fantacalcio current Pellegrino role file",
+            "url": "https://www.fantacalcio.it/serie-a/squadre/fiorentina/pellegrino-m/7023/2026-27",
+            "date": "2026-09-01",
+            "note": "Lists Pellegrino as a current Fiorentina starter and explicitly flags him as a possible penalty taker when on the pitch."
           },
           {
-            "label": "Lega Serie A current squads",
-            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "label": "ANSA Beto signing report",
+            "url": "https://www.ansa.it/english/newswire/english_service/2026/08/31/soccer-fiorentina-sign-beto-and-gnonto-3_12fcb577-a703-4056-9e07-0d324193393a.html",
+            "date": "2026-08-31",
+            "note": "Confirms Beto joined Fiorentina as the central-forward replacement for outgoing Moise Kean."
+          },
+          {
+            "label": "Premier League Beto penalty report",
+            "url": "https://www.premierleague.com/en/news/3916734/everton-v-west-ham-homepage-report",
+            "date": "2024-03-02",
+            "note": "Records that Beto's only Premier League penalty was saved, limiting the case for promoting him automatically on arrival."
+          },
+          {
+            "label": "Mastantuono career penalty record",
+            "url": "https://www.transfermarkt.com/franco-mastantuono/elfmetertore/spieler/1057316",
             "date": "2026-09-01",
-            "note": "Current league squad directory used to reject departed candidates."
+            "note": "Records three conversions and no misses, but none establishes a Fiorentina or senior European league assignment."
+          },
+          {
+            "label": "ANSA Mandragora transfer report",
+            "url": "https://www.ansa.it/amp/piemonte/notizie/2026/09/01/torino-riecco-mandragora-operazione-da-cinque-milioni_f3ad4b17-c251-4df9-a2ad-0b9c50e44d5f.html",
+            "date": "2026-09-01",
+            "note": "Confirms Mandragora left Fiorentina for Torino and must be removed from the hierarchy."
+          },
+          {
+            "label": "FiorentinaNews Gudmundsson transfer confirmation",
+            "url": "https://www.fiorentinanews.com/news/522505326086/ufficiale-paratici-smonta-completamente-l-attacco-viola-che-fu-gudmundsson-saluta",
+            "date": "2026-09-01",
+            "note": "Reports the Lega Serie A registration of Gudmundsson's move from Fiorentina to Lazio."
           }
         ],
         "detection": "manual_multi_source_research",
@@ -2087,7 +2111,7 @@
           "reviewed_at": "2026-09-01T12:00:00Z"
         },
         "affects_hierarchy": true,
-        "editorial_note": "Fiorentina's rebuilt attack makes Mastantuono the current first call, Pellegrino the main alternative and Mandragora the retained third option."
+        "editorial_note": "Deadline-day exits remove Gudmundsson, Kean and Mandragora. Pellegrino is the provisional first call, with Beto and Mastantuono the unassigned alternatives. All three positions remain low-confidence until Fiorentina's first competitive penalty with two candidates available."
       }
     ],
     "change_log": [
@@ -2193,11 +2217,11 @@
           "tertiary": ""
         },
         "to": {
-          "primary": "Franco Mastantuono",
-          "secondary": "Mateo Pellegrino",
-          "tertiary": "Rolando Mandragora"
+          "primary": "Mateo Pellegrino",
+          "secondary": "Beto",
+          "tertiary": "Franco Mastantuono"
         },
-        "reason": "Fiorentina's rebuilt attack makes Mastantuono the current first call, Pellegrino the main alternative and Mandragora the retained third option.",
+        "reason": "Deadline-day exits remove Gudmundsson, Kean and Mandragora. Pellegrino is the provisional first call, with Beto and Mastantuono the unassigned alternatives. All three positions remain low-confidence until Fiorentina's first competitive penalty with two candidates available.",
         "evidence_ids": [
           "evt_20260901_fiorentina_current_review"
         ],
@@ -2222,21 +2246,21 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Franco Mastantuono",
+        "player": "Mateo Pellegrino",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "source_url": "https://www.fantacalcio.it/serie-a/squadre/fiorentina/pellegrino-m/7023/2026-27",
         "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Mateo Pellegrino",
+        "player": "Beto",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "source_url": "https://www.ansa.it/english/newswire/english_service/2026/08/31/soccer-fiorentina-sign-beto-and-gnonto-3_12fcb577-a703-4056-9e07-0d324193393a.html",
         "checked_at": "2026-09-01"
       },
       "tertiary": {
-        "player": "Rolando Mandragora",
+        "player": "Franco Mastantuono",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "source_url": "https://elpais.com/deportes/futbol/2026-08-07/franco-mastantuono-cedido-por-el-madrid-a-la-fiorentina.html",
         "checked_at": "2026-09-01"
       }
     },
@@ -2246,8 +2270,12 @@
       "method": "current_season_multi_source_review",
       "outcome": "hierarchy_updated",
       "sources": [
-        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "https://www.legaseriea.it/en/serie-a/teams"
+        "https://www.fantacalcio.it/serie-a/squadre/fiorentina/pellegrino-m/7023/2026-27",
+        "https://www.ansa.it/english/newswire/english_service/2026/08/31/soccer-fiorentina-sign-beto-and-gnonto-3_12fcb577-a703-4056-9e07-0d324193393a.html",
+        "https://www.premierleague.com/en/news/3916734/everton-v-west-ham-homepage-report",
+        "https://www.transfermarkt.com/franco-mastantuono/elfmetertore/spieler/1057316",
+        "https://www.ansa.it/amp/piemonte/notizie/2026/09/01/torino-riecco-mandragora-operazione-da-cinque-milioni_f3ad4b17-c251-4df9-a2ad-0b9c50e44d5f.html",
+        "https://www.fiorentinanews.com/news/522505326086/ufficiale-paratici-smonta-completamente-l-attacco-viola-che-fu-gudmundsson-saluta"
       ]
     }
   },

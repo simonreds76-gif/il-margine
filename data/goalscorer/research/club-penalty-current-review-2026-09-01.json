@@ -142,11 +142,11 @@
             "tertiary": ""
           },
           "to": {
-            "primary": "Franco Mastantuono",
-            "secondary": "Mateo Pellegrino",
-            "tertiary": "Rolando Mandragora"
+            "primary": "Mateo Pellegrino",
+            "secondary": "Beto",
+            "tertiary": "Franco Mastantuono"
           },
-          "reason": "Fiorentina's rebuilt attack makes Mastantuono the current first call, Pellegrino the main alternative and Mandragora the retained third option."
+          "reason": "Deadline-day exits remove Gudmundsson, Kean and Mandragora. Pellegrino is the provisional first call, with Beto and Mastantuono the unassigned alternatives. All three positions remain low-confidence until Fiorentina's first competitive penalty with two candidates available."
         },
         {
           "team": "Inter",
@@ -396,8 +396,22 @@
         "VfB Stuttgart",
         "Werder Bremen"
       ],
-      "changed_count": 8,
+      "changed_count": 11,
       "changes": [
+        {
+          "team": "Bayern Munich",
+          "from": {
+            "primary": "Harry Kane",
+            "secondary": "Jamal Musiala",
+            "tertiary": "Michael Olise"
+          },
+          "to": {
+            "primary": "Harry Kane",
+            "secondary": "Arijon Ibrahimović",
+            "tertiary": "Jamal Musiala"
+          },
+          "reason": "Kane remains the confirmed first choice. LigaInsider identifies Ibrahimović as the current preseason backup; Musiala is retained third pending a direct assignment."
+        },
         {
           "team": "Borussia Dortmund",
           "from": {
@@ -467,6 +481,34 @@
             "tertiary": "Paul Nebel"
           },
           "reason": "Amiri remains first choice; Königsdörffer and Nebel are the current alternatives."
+        },
+        {
+          "team": "RasenBallsport Leipzig",
+          "from": {
+            "primary": "Rômulo",
+            "secondary": "David Raum",
+            "tertiary": "Christoph Baumgartner"
+          },
+          "to": {
+            "primary": "Christopher Nkunku",
+            "secondary": "Rômulo",
+            "tertiary": "David Raum"
+          },
+          "reason": "Leipzig's order remains open. Nkunku is the provisional first call after his confirmed return and four successful Bundesliga penalties from five recorded attempts; Rômulo and Raum remain low-confidence alternatives until the first direct assignment."
+        },
+        {
+          "team": "Schalke 04",
+          "from": {
+            "primary": "Kenan Karaman",
+            "secondary": "Moussa Sylla",
+            "tertiary": "Junior Adamu"
+          },
+          "to": {
+            "primary": "Kenan Karaman",
+            "secondary": "Bryan Lasme",
+            "tertiary": "Moussa Sylla"
+          },
+          "reason": "Karaman remains first choice after a five-from-five league season. LigaInsider places Lasme next despite his preseason miss; Sylla is retained as the third current forward candidate."
         },
         {
           "team": "Union Berlin",
@@ -554,20 +596,32 @@
         {
           "label": "Ligue 1 official set-piece review",
           "url": "https://ligue1.com/fr/articles/l1_article_2916-",
-          "date": "2026-06-01",
-          "note": "Official role baseline retained only where current evidence has not superseded it."
+          "date": "2026-05-11",
+          "note": "Official 2025/26 role baseline retained only for players still at the same club; it is not treated as a current hierarchy by itself."
         },
         {
           "label": "StatBunker Ligue 1 2026/27 penalties",
           "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
           "date": "2026-09-01",
           "note": "Current-season penalty event and taker cross-check."
+        },
+        {
+          "label": "Deux-Zero Ligue 1 2026/27 penalty archive",
+          "url": "https://www.deux-zero.com/ligue-1/penalties-tireurs-epreuve/joueur/6874",
+          "date": "2026-09-01",
+          "note": "Independent French current-season archive used to cross-check every recorded penalty taker and outcome."
+        },
+        {
+          "label": "Starting11 Ligue 1 set-piece and lineup tracker",
+          "url": "https://starting11.com/set-piece-takers/ligue-1",
+          "date": "2026-09-01",
+          "note": "Current squads, starting roles and retained penalty history used for lineup and membership checks, not as proof of an unobserved 2026/27 assignment."
         }
       ]
     }
   },
   "summary": {
     "reviewed_clubs": 96,
-    "hierarchies_changed": 25
+    "hierarchies_changed": 28
   }
 }

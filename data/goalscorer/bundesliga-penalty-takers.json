@@ -698,22 +698,22 @@
   },
   "Bayern Munich": {
     "primary": "Harry Kane",
-    "secondary": "Jamal Musiala",
-    "tertiary": "Michael Olise",
-    "last_updated": "2026-07-30",
-    "source": "FC Bayern",
-    "cross_check": "Kicker",
+    "secondary": "Arijon Ibrahimović",
+    "tertiary": "Jamal Musiala",
+    "last_updated": "2026-09-01",
+    "source": "LigaInsider 2026/27 set-piece board",
+    "cross_check": "Bundesliga official penalty statistics",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "high",
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Kane remains Bayern's dominant high-volume penalty taker. Musiala converted when Kane was unavailable in March 2026. Olise has no recent Bayern first-team penalty event and is a role and career fallback. The tertiary order is not directly tested at Bayern.",
+    "condition_note": "Kane remains the confirmed first choice. LigaInsider identifies Ibrahimović as the current preseason backup; Musiala is retained third pending a direct assignment.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
@@ -888,8 +888,8 @@
         "penalty_kind": null,
         "competition": null,
         "match": null,
-        "headline": "Bayern Munich hierarchy rechecked",
-        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "headline": "Bayern Munich penalty hierarchy updated",
+        "context": "Kane remains the confirmed first choice. LigaInsider identifies Ibrahimović as the current preseason backup; Musiala is retained third pending a direct assignment.",
         "sources": [
           {
             "label": "LigaInsider 2026/27 set-piece board",
@@ -910,8 +910,8 @@
           "reviewed_by": "Il Margine",
           "reviewed_at": "2026-09-01T12:00:00Z"
         },
-        "affects_hierarchy": false,
-        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+        "affects_hierarchy": true,
+        "editorial_note": "Kane remains the confirmed first choice. LigaInsider identifies Ibrahimović as the current preseason backup; Musiala is retained third pending a direct assignment."
       }
     ],
     "change_log": [
@@ -983,6 +983,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Harry Kane",
+          "secondary": "Jamal Musiala",
+          "tertiary": "Michael Olise"
+        },
+        "to": {
+          "primary": "Harry Kane",
+          "secondary": "Arijon Ibrahimović",
+          "tertiary": "Jamal Musiala"
+        },
+        "reason": "Kane remains the confirmed first choice. LigaInsider identifies Ibrahimović as the current preseason backup; Musiala is retained third pending a direct assignment.",
+        "evidence_ids": [
+          "evt_20260901_bayern-munich_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -1006,15 +1029,15 @@
         "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Jamal Musiala",
+        "player": "Arijon Ibrahimović",
         "status": "confirmed",
-        "source_url": "https://fcbayern.com/de/teams/profis",
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
         "checked_at": "2026-09-01"
       },
       "tertiary": {
-        "player": "Michael Olise",
+        "player": "Jamal Musiala",
         "status": "confirmed",
-        "source_url": "https://fcbayern.com/de/teams/profis",
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
         "checked_at": "2026-09-01"
       }
     },
@@ -1022,7 +1045,7 @@
       "date": "2026-09-01",
       "by": "Il Margine",
       "method": "current_season_multi_source_review",
-      "outcome": "order_unchanged",
+      "outcome": "hierarchy_updated",
       "sources": [
         "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
         "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
@@ -3917,23 +3940,23 @@
     }
   },
   "RasenBallsport Leipzig": {
-    "primary": "Rômulo",
-    "secondary": "David Raum",
-    "tertiary": "Christoph Baumgartner",
-    "last_updated": "2026-07-30",
-    "source": "RB Leipzig",
-    "cross_check": "Hamburger SV",
-    "hierarchy_status": "probable",
+    "primary": "Christopher Nkunku",
+    "secondary": "Rômulo",
+    "tertiary": "David Raum",
+    "last_updated": "2026-09-01",
+    "source": "RB Leipzig Nkunku announcement",
+    "cross_check": "LigaInsider 2026/27 set-piece board",
+    "hierarchy_status": "disputed",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
+      "primary": "low",
+      "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Rômulo took the March penalty while Raum and Baumgartner were both on the pitch, establishing direct selection despite the miss. Raum converted his only 2025/26 league penalty. Baumgartner missed his attempt and is third. Rômulo's direct precedence is offset by the miss; Baumgartner also has an availability concern entering preseason.",
+    "condition_note": "Leipzig's order remains open. Nkunku is the provisional first call after his confirmed return and four successful Bundesliga penalties from five recorded attempts; Rômulo and Raum remain low-confidence alternatives until the first direct assignment.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
@@ -4108,20 +4131,20 @@
         "penalty_kind": null,
         "competition": null,
         "match": null,
-        "headline": "RasenBallsport Leipzig hierarchy rechecked",
-        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "headline": "RasenBallsport Leipzig penalty hierarchy updated",
+        "context": "Leipzig's order remains open. Nkunku is the provisional first call after his confirmed return and four successful Bundesliga penalties from five recorded attempts; Rômulo and Raum remain low-confidence alternatives until the first direct assignment.",
         "sources": [
+          {
+            "label": "RB Leipzig Nkunku announcement",
+            "url": "https://rbleipzig.com/de/news/christopher-nkunku-rb-leipzig-transfer-leihe-ac-mailand",
+            "date": "2026-08-25",
+            "note": "Confirms Nkunku's return to Leipzig for 2026/27."
+          },
           {
             "label": "LigaInsider 2026/27 set-piece board",
             "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
-            "date": "2026-08-31",
-            "note": "Current club-by-club penalty and set-piece hierarchy."
-          },
-          {
-            "label": "Bundesliga official penalty statistics",
-            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
             "date": "2026-09-01",
-            "note": "Official current-season penalty event cross-check."
+            "note": "Marks Leipzig's hierarchy open but identifies Nkunku as the leading candidate if his transfer is completed, citing four Bundesliga conversions from five attempts."
           }
         ],
         "detection": "manual_multi_source_research",
@@ -4130,8 +4153,8 @@
           "reviewed_by": "Il Margine",
           "reviewed_at": "2026-09-01T12:00:00Z"
         },
-        "affects_hierarchy": false,
-        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+        "affects_hierarchy": true,
+        "editorial_note": "Leipzig's order remains open. Nkunku is the provisional first call after his confirmed return and four successful Bundesliga penalties from five recorded attempts; Rômulo and Raum remain low-confidence alternatives until the first direct assignment."
       }
     ],
     "change_log": [
@@ -4203,6 +4226,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Rômulo",
+          "secondary": "David Raum",
+          "tertiary": "Christoph Baumgartner"
+        },
+        "to": {
+          "primary": "Christopher Nkunku",
+          "secondary": "Rômulo",
+          "tertiary": "David Raum"
+        },
+        "reason": "Leipzig's order remains open. Nkunku is the provisional first call after his confirmed return and four successful Bundesliga penalties from five recorded attempts; Rômulo and Raum remain low-confidence alternatives until the first direct assignment.",
+        "evidence_ids": [
+          "evt_20260901_rasenballsport-leipzig_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -4220,21 +4266,21 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Rômulo",
+        "player": "Christopher Nkunku",
         "status": "confirmed",
-        "source_url": "https://rbleipzig.com/de/news/rueckblick-suedafrika-tour-rb-leipzig",
+        "source_url": "https://rbleipzig.com/de/news/christopher-nkunku-rb-leipzig-transfer-leihe-ac-mailand",
         "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "David Raum",
+        "player": "Rômulo",
         "status": "confirmed",
-        "source_url": "https://homejersey.rbleipzig.com/de",
+        "source_url": "https://rbleipzig.com/de/news/christopher-nkunku-rb-leipzig-transfer-leihe-ac-mailand",
         "checked_at": "2026-09-01"
       },
       "tertiary": {
-        "player": "Christoph Baumgartner",
+        "player": "David Raum",
         "status": "confirmed",
-        "source_url": "https://rbleipzig.com/news/christoph-baumgartner-kapitaen-bundesliga-rb-leipzig",
+        "source_url": "https://rbleipzig.com/de/news/christopher-nkunku-rb-leipzig-transfer-leihe-ac-mailand",
         "checked_at": "2026-09-01"
       }
     },
@@ -4242,10 +4288,10 @@
       "date": "2026-09-01",
       "by": "Il Margine",
       "method": "current_season_multi_source_review",
-      "outcome": "order_unchanged",
+      "outcome": "hierarchy_updated",
       "sources": [
-        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
-        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+        "https://rbleipzig.com/de/news/christopher-nkunku-rb-leipzig-transfer-leihe-ac-mailand",
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/"
       ]
     }
   },
@@ -4595,13 +4641,13 @@
     "secondary": "Francis Onyeka",
     "tertiary": "Maurice Krattenmacher",
     "last_updated": "2026-07-30",
-    "hierarchy_status": "probable",
+    "hierarchy_status": "disputed",
     "confidence": {
-      "primary": "medium",
+      "primary": "low",
       "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Petkov was Elversberg's highest-volume current taker and converted the latest documented competitive penalty in April. Onyeka and Krattenmacher have no senior Elversberg regular-time penalty event, so their order is based on role and career fallback evidence. Both deputy positions are weak and could change on the next preseason penalty.",
+    "condition_note": "LigaInsider still marks Elversberg's penalty role open. Petkov, Onyeka and Krattenmacher are provisional candidates only, not a confirmed assignment.",
     "last_verified": {
       "date": "2026-07-30",
       "by": "Il Margine",
@@ -4768,7 +4814,7 @@
         "competition": null,
         "match": null,
         "headline": "SV Elversberg hierarchy rechecked",
-        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "context": "LigaInsider still marks Elversberg's penalty role open. Petkov, Onyeka and Krattenmacher are provisional candidates only, not a confirmed assignment.",
         "sources": [
           {
             "label": "LigaInsider 2026/27 set-piece board",
@@ -4790,7 +4836,7 @@
           "reviewed_at": "2026-09-01T12:00:00Z"
         },
         "affects_hierarchy": false,
-        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+        "editorial_note": "LigaInsider still marks Elversberg's penalty role open. Petkov, Onyeka and Krattenmacher are provisional candidates only, not a confirmed assignment."
       }
     ],
     "change_log": [
@@ -4848,8 +4894,8 @@
     },
     "prior_season": null,
     "player_ids": {},
-    "source": "SV Elversberg",
-    "cross_check": "SV Elversberg",
+    "source": "LigaInsider 2026/27 set-piece board",
+    "cross_check": "Bundesliga official penalty statistics",
     "squad_membership": {
       "primary": {
         "player": "Lukas Petkov",
@@ -4883,20 +4929,20 @@
   },
   "Schalke 04": {
     "primary": "Kenan Karaman",
-    "secondary": "Moussa Sylla",
-    "tertiary": "Junior Adamu",
-    "last_updated": "2026-07-30",
+    "secondary": "Bryan Lasme",
+    "tertiary": "Moussa Sylla",
+    "last_updated": "2026-09-01",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "high",
-      "secondary": "medium",
+      "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Karaman converted all five Schalke league penalties in 2025/26 and is the clear incumbent. Sylla's senior career record is the strongest deputy fallback. Adamu has a senior European conversion but no Schalke penalty event. The deputy positions have not been directly tested at Schalke because Karaman took every league penalty.",
+    "condition_note": "Karaman remains first choice after a five-from-five league season. LigaInsider places Lasme next despite his preseason miss; Sylla is retained as the third current forward candidate.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
@@ -5052,8 +5098,8 @@
         "penalty_kind": null,
         "competition": null,
         "match": null,
-        "headline": "Schalke 04 hierarchy rechecked",
-        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "headline": "Schalke 04 penalty hierarchy updated",
+        "context": "Karaman remains first choice after a five-from-five league season. LigaInsider places Lasme next despite his preseason miss; Sylla is retained as the third current forward candidate.",
         "sources": [
           {
             "label": "LigaInsider 2026/27 set-piece board",
@@ -5074,8 +5120,8 @@
           "reviewed_by": "Il Margine",
           "reviewed_at": "2026-09-01T12:00:00Z"
         },
-        "affects_hierarchy": false,
-        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+        "affects_hierarchy": true,
+        "editorial_note": "Karaman remains first choice after a five-from-five league season. LigaInsider places Lasme next despite his preseason miss; Sylla is retained as the third current forward candidate."
       }
     ],
     "change_log": [
@@ -5124,6 +5170,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Kenan Karaman",
+          "secondary": "Moussa Sylla",
+          "tertiary": "Junior Adamu"
+        },
+        "to": {
+          "primary": "Kenan Karaman",
+          "secondary": "Bryan Lasme",
+          "tertiary": "Moussa Sylla"
+        },
+        "reason": "Karaman remains first choice after a five-from-five league season. LigaInsider places Lasme next despite his preseason miss; Sylla is retained as the third current forward candidate.",
+        "evidence_ids": [
+          "evt_20260901_schalke-04_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -5133,8 +5202,8 @@
     },
     "prior_season": null,
     "player_ids": {},
-    "source": "Schalke 04",
-    "cross_check": "Kicker",
+    "source": "LigaInsider 2026/27 set-piece board",
+    "cross_check": "Bundesliga official penalty statistics",
     "squad_membership": {
       "primary": {
         "player": "Kenan Karaman",
@@ -5143,15 +5212,15 @@
         "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Moussa Sylla",
+        "player": "Bryan Lasme",
         "status": "confirmed",
-        "source_url": "https://schalke04.de/kader-2026-2027/",
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
         "checked_at": "2026-09-01"
       },
       "tertiary": {
-        "player": "Junior Adamu",
+        "player": "Moussa Sylla",
         "status": "confirmed",
-        "source_url": "https://schalke04.de/kader-2026-2027/",
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
         "checked_at": "2026-09-01"
       }
     },
@@ -5159,7 +5228,7 @@
       "date": "2026-09-01",
       "by": "Il Margine",
       "method": "current_season_multi_source_review",
-      "outcome": "order_unchanged",
+      "outcome": "hierarchy_updated",
       "sources": [
         "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
         "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"

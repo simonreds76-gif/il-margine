@@ -349,11 +349,31 @@ function mapTeam(
   const isArchived = Boolean(options.archived);
   const isCarryover = !isArchived && Boolean(entry.flags?.carryover_from_previous_season);
   const approvedEvidence = (entry.evidence_log ?? []).filter((evidence) => evidence.review?.status === "approved").length;
+  const supersedingReviewDates = new Set(
+    (entry.evidence_log ?? [])
+      .filter(
+        (evidence) =>
+          evidence.review?.status === "approved" &&
+          cleanClubPenaltyText(evidence.type) === "current_season_board_review" &&
+          evidence.affects_hierarchy,
+      )
+      .map((evidence) => cleanClubPenaltyText(evidence.date))
+      .filter(Boolean),
+  );
   const evidenceUpdates = (entry.evidence_log ?? [])
     .filter((evidence) => evidence.review?.status === "approved")
     .filter((evidence) => {
       const type = cleanClubPenaltyText(evidence.type);
-      return type.startsWith("competitive_penalty_") || type === "preseason_penalty_assignment" || type === "roster_integrity_review";
+      const date = cleanClubPenaltyText(evidence.date);
+      if (type === "roster_integrity_review" && evidence.affects_hierarchy && supersedingReviewDates.has(date)) {
+        return false;
+      }
+      return (
+        type.startsWith("competitive_penalty_") ||
+        type === "preseason_penalty_assignment" ||
+        type === "roster_integrity_review" ||
+        (type === "current_season_board_review" && evidence.affects_hierarchy)
+      );
     })
     .map((evidence, index) => {
       const date = cleanClubPenaltyText(evidence.date);

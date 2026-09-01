@@ -82,14 +82,26 @@ LEAGUE_SOURCES: dict[str, list[dict[str, str]]] = {
         {
             "label": "Ligue 1 official set-piece review",
             "url": "https://ligue1.com/fr/articles/l1_article_2916-",
-            "date": "2026-06-01",
-            "note": "Official role baseline retained only where current evidence has not superseded it.",
+            "date": "2026-05-11",
+            "note": "Official 2025/26 role baseline retained only for players still at the same club; it is not treated as a current hierarchy by itself.",
         },
         {
             "label": "StatBunker Ligue 1 2026/27 penalties",
             "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
             "date": "2026-09-01",
             "note": "Current-season penalty event and taker cross-check.",
+        },
+        {
+            "label": "Deux-Zero Ligue 1 2026/27 penalty archive",
+            "url": "https://www.deux-zero.com/ligue-1/penalties-tireurs-epreuve/joueur/6874",
+            "date": "2026-09-01",
+            "note": "Independent French current-season archive used to cross-check every recorded penalty taker and outcome.",
+        },
+        {
+            "label": "Starting11 Ligue 1 set-piece and lineup tracker",
+            "url": "https://starting11.com/set-piece-takers/ligue-1",
+            "date": "2026-09-01",
+            "note": "Current squads, starting roles and retained penalty history used for lineup and membership checks, not as proof of an unobserved 2026/27 assignment.",
         },
     ],
 }
@@ -182,9 +194,53 @@ OVERRIDES: dict[str, dict[str, dict[str, Any]]] = {
             "Da Cunha leads the current order, followed by Paz and Douvikas.",
         ),
         "Fiorentina": change(
-            ["Franco Mastantuono", "Mateo Pellegrino", "Rolando Mandragora"],
-            "Fiorentina's rebuilt attack makes Mastantuono the current first call, Pellegrino the main alternative and Mandragora the retained third option.",
+            ["Mateo Pellegrino", "Beto", "Franco Mastantuono"],
+            "Deadline-day exits remove Gudmundsson, Kean and Mandragora. Pellegrino is the provisional first call, with Beto and Mastantuono the unassigned alternatives. All three positions remain low-confidence until Fiorentina's first competitive penalty with two candidates available.",
             "disputed",
+            sources=[
+                {
+                    "label": "Fantacalcio current Pellegrino role file",
+                    "url": "https://www.fantacalcio.it/serie-a/squadre/fiorentina/pellegrino-m/7023/2026-27",
+                    "date": "2026-09-01",
+                    "note": "Lists Pellegrino as a current Fiorentina starter and explicitly flags him as a possible penalty taker when on the pitch.",
+                },
+                {
+                    "label": "ANSA Beto signing report",
+                    "url": "https://www.ansa.it/english/newswire/english_service/2026/08/31/soccer-fiorentina-sign-beto-and-gnonto-3_12fcb577-a703-4056-9e07-0d324193393a.html",
+                    "date": "2026-08-31",
+                    "note": "Confirms Beto joined Fiorentina as the central-forward replacement for outgoing Moise Kean.",
+                },
+                {
+                    "label": "Premier League Beto penalty report",
+                    "url": "https://www.premierleague.com/en/news/3916734/everton-v-west-ham-homepage-report",
+                    "date": "2024-03-02",
+                    "note": "Records that Beto's only Premier League penalty was saved, limiting the case for promoting him automatically on arrival.",
+                },
+                {
+                    "label": "Mastantuono career penalty record",
+                    "url": "https://www.transfermarkt.com/franco-mastantuono/elfmetertore/spieler/1057316",
+                    "date": "2026-09-01",
+                    "note": "Records three conversions and no misses, but none establishes a Fiorentina or senior European league assignment.",
+                },
+                {
+                    "label": "ANSA Mandragora transfer report",
+                    "url": "https://www.ansa.it/amp/piemonte/notizie/2026/09/01/torino-riecco-mandragora-operazione-da-cinque-milioni_f3ad4b17-c251-4df9-a2ad-0b9c50e44d5f.html",
+                    "date": "2026-09-01",
+                    "note": "Confirms Mandragora left Fiorentina for Torino and must be removed from the hierarchy.",
+                },
+                {
+                    "label": "FiorentinaNews Gudmundsson transfer confirmation",
+                    "url": "https://www.fiorentinanews.com/news/522505326086/ufficiale-paratici-smonta-completamente-l-attacco-viola-che-fu-gudmundsson-saluta",
+                    "date": "2026-09-01",
+                    "note": "Reports the Lega Serie A registration of Gudmundsson's move from Fiorentina to Lazio.",
+                },
+            ],
+            confidence={"primary": "low", "secondary": "low", "tertiary": "low"},
+            membership_sources={
+                "primary": "https://www.fantacalcio.it/serie-a/squadre/fiorentina/pellegrino-m/7023/2026-27",
+                "secondary": "https://www.ansa.it/english/newswire/english_service/2026/08/31/soccer-fiorentina-sign-beto-and-gnonto-3_12fcb577-a703-4056-9e07-0d324193393a.html",
+                "tertiary": "https://elpais.com/deportes/futbol/2026-08-07/franco-mastantuono-cedido-por-el-madrid-a-la-fiorentina.html",
+            },
         ),
         "Inter": change(
             ["Hakan Çalhanoğlu", "Lautaro Martínez", "Piotr Zieliński"],
@@ -245,6 +301,12 @@ OVERRIDES: dict[str, dict[str, dict[str, Any]]] = {
         ),
     },
     "bundesliga": {
+        "Bayern Munich": change(
+            ["Harry Kane", "Arijon Ibrahimović", "Jamal Musiala"],
+            "Kane remains the confirmed first choice. LigaInsider identifies Ibrahimović as the current preseason backup; Musiala is retained third pending a direct assignment.",
+            "probable",
+            confidence={"primary": "high", "secondary": "medium", "tertiary": "low"},
+        ),
         "Borussia Dortmund": change(
             ["Emre Can", "Serhou Guirassy", "Ramy Bensebaini"],
             "The current specialist board places Can first and Guirassy second; Bensebaini remains a proven third option.",
@@ -268,6 +330,41 @@ OVERRIDES: dict[str, dict[str, dict[str, Any]]] = {
             ["Nadiem Amiri", "Ransford-Yeboah Königsdörffer", "Paul Nebel"],
             "Amiri remains first choice; Königsdörffer and Nebel are the current alternatives.",
             "probable",
+        ),
+        "RasenBallsport Leipzig": change(
+            ["Christopher Nkunku", "Rômulo", "David Raum"],
+            "Leipzig's order remains open. Nkunku is the provisional first call after his confirmed return and four successful Bundesliga penalties from five recorded attempts; Rômulo and Raum remain low-confidence alternatives until the first direct assignment.",
+            "disputed",
+            sources=[
+                {
+                    "label": "RB Leipzig Nkunku announcement",
+                    "url": "https://rbleipzig.com/de/news/christopher-nkunku-rb-leipzig-transfer-leihe-ac-mailand",
+                    "date": "2026-08-25",
+                    "note": "Confirms Nkunku's return to Leipzig for 2026/27.",
+                },
+                {
+                    "label": "LigaInsider 2026/27 set-piece board",
+                    "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+                    "date": "2026-09-01",
+                    "note": "Marks Leipzig's hierarchy open but identifies Nkunku as the leading candidate if his transfer is completed, citing four Bundesliga conversions from five attempts.",
+                },
+            ],
+            confidence={"primary": "low", "secondary": "low", "tertiary": "low"},
+            membership_sources={
+                "primary": "https://rbleipzig.com/de/news/christopher-nkunku-rb-leipzig-transfer-leihe-ac-mailand",
+            },
+        ),
+        "Schalke 04": change(
+            ["Kenan Karaman", "Bryan Lasme", "Moussa Sylla"],
+            "Karaman remains first choice after a five-from-five league season. LigaInsider places Lasme next despite his preseason miss; Sylla is retained as the third current forward candidate.",
+            "probable",
+            confidence={"primary": "high", "secondary": "low", "tertiary": "low"},
+        ),
+        "SV Elversberg": change(
+            ["Lukas Petkov", "Francis Onyeka", "Maurice Krattenmacher"],
+            "LigaInsider still marks Elversberg's penalty role open. Petkov, Onyeka and Krattenmacher are provisional candidates only, not a confirmed assignment.",
+            "disputed",
+            confidence={"primary": "low", "secondary": "low", "tertiary": "low"},
         ),
         "Union Berlin": change(
             ["Aljoscha Kemlein", "Dejan Ljubičić", "Derrick Köhn"],
@@ -311,6 +408,9 @@ def event(team: str, league: str, audit_date: str, before: dict[str, str], after
     if changed:
         context = str(override["note"])
         headline = f"{team} penalty hierarchy updated"
+    elif override:
+        context = str(override["note"])
+        headline = f"{team} hierarchy rechecked"
     else:
         context = "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
         headline = f"{team} hierarchy rechecked"
@@ -392,23 +492,25 @@ def apply(audit_date: str, write: bool) -> dict[str, Any]:
             } if isinstance(prior_order, dict) else current_order
 
             changed = before != after
-            if changed:
-                entry.update(after)
+            if override:
                 entry["hierarchy_status"] = str(override.get("status") or entry.get("hierarchy_status") or "probable")
                 confidence = dict(entry.get("confidence") or {})
                 for position in ("primary", "secondary", "tertiary"):
                     confidence[position] = str((override.get("confidence") or {}).get(position) or "medium")
                 entry["confidence"] = confidence
                 entry["condition_note"] = str(override["note"])
+                team_sources = review_sources(league, team)
+                entry["source"] = team_sources[0]["label"]
+                entry["cross_check"] = team_sources[1]["label"]
+
+            if changed:
+                entry.update(after)
                 entry["last_updated"] = audit_date
                 entry["last_verified"] = {
                     "date": audit_date,
                     "by": "Il Margine",
                     "method": "current_roster_and_penalty_record_review",
                 }
-                team_sources = review_sources(league, team)
-                entry["source"] = team_sources[0]["label"]
-                entry["cross_check"] = team_sources[1]["label"]
 
             review_event = event(team, league, audit_date, before, after)
             evidence_log = [
