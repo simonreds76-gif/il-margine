@@ -42,12 +42,12 @@ export default function ClubPenaltyLatestUpdates({
         </span>
       </div>
 
-      <div className="mt-5 grid gap-3 lg:grid-cols-3">
+      <div className="mt-5 grid items-stretch gap-3 lg:grid-cols-3">
         {items.map((item) => (
           <Link
             key={`${item.relativeUrl}-${item.id}`}
             href={item.relativeUrl}
-            className="group relative overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-950/65 p-4 transition hover:-translate-y-0.5 hover:border-emerald-400/35 hover:bg-slate-950"
+            className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-950/65 p-4 transition hover:-translate-y-0.5 hover:border-emerald-400/35 hover:bg-slate-950"
           >
             <div className="flex items-start gap-3">
               <ClubCrest item={item} />
@@ -61,8 +61,8 @@ export default function ClubPenaltyLatestUpdates({
               </div>
             </div>
             {item.match ? <p className="mt-3 text-xs font-medium text-slate-300">{item.match}</p> : null}
-            <p className="mt-2 text-sm leading-6 text-slate-400">{item.summary}</p>
-            <div className="mt-4 flex items-center justify-between gap-3 border-t border-slate-800 pt-3 text-xs">
+            <p className="mt-2 flex-1 text-sm leading-6 text-slate-400">{item.summary}</p>
+            <div className="mt-4 flex items-center justify-between gap-3 border-t border-slate-800 pt-3 text-xs lg:mt-auto lg:pt-3">
               <span className="truncate text-slate-500">Current first choice: <strong className="font-medium text-slate-200">{item.primary}</strong></span>
               <span className="shrink-0 font-semibold text-emerald-300">Full file -&gt;</span>
             </div>

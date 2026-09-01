@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Footer from "@/components/Footer";
 import ClubPenaltyLatestUpdates from "@/components/ClubPenaltyLatestUpdates";
+import ClubPenaltyTeamFinder from "@/components/ClubPenaltyTeamFinder";
 import PageHomeLink from "@/components/PageHomeLink";
 import { BASE_URL } from "@/lib/config";
 import {
@@ -85,14 +86,20 @@ function TeamCrest({ team }: { team: ClubPenaltyTeam }) {
 
 function TeamCard({ team }: { team: ClubPenaltyTeam }) {
   const unknown = team.hierarchyStatus === "unknown";
+  const cardId = `club-${team.slug}`;
   return (
-    <article className="group relative overflow-hidden rounded-3xl border border-slate-700/70 bg-[linear-gradient(145deg,rgba(15,23,42,0.94),rgba(7,12,22,0.98))] p-4 shadow-[0_18px_42px_rgba(0,0,0,0.24)] transition duration-300 hover:-translate-y-0.5 hover:border-emerald-400/30 hover:shadow-[0_22px_55px_rgba(0,0,0,0.32)] sm:p-5">
+    <article
+      id={cardId}
+      tabIndex={-1}
+      aria-labelledby={`${cardId}-title`}
+      className="group relative scroll-mt-24 overflow-hidden rounded-3xl border border-slate-700/70 bg-[linear-gradient(145deg,rgba(15,23,42,0.94),rgba(7,12,22,0.98))] p-4 shadow-[0_18px_42px_rgba(0,0,0,0.24)] transition duration-300 target:border-emerald-400/60 target:ring-2 target:ring-emerald-400/20 hover:-translate-y-0.5 hover:border-emerald-400/30 hover:shadow-[0_22px_55px_rgba(0,0,0,0.32)] focus:outline-none focus-visible:border-emerald-300 focus-visible:ring-2 focus-visible:ring-emerald-400/30 sm:p-5"
+    >
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-300/45 to-transparent opacity-60 transition group-hover:opacity-100" />
       <div className="flex items-start gap-3">
         <TeamCrest team={team} />
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="text-lg font-semibold text-slate-100">{team.team}</h2>
+            <h2 id={`${cardId}-title`} className="text-lg font-semibold text-slate-100">{team.team}</h2>
             <span className={`rounded-full border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.15em] ${STATUS_STYLES[team.hierarchyStatus]}`}>
               {STATUS_LABELS[team.hierarchyStatus]}
             </span>
@@ -121,9 +128,14 @@ function TeamCard({ team }: { team: ClubPenaltyTeam }) {
             {team.leagueCheckedLabel || "Pending"}
           </span>
         </div>
-        <Link href={team.relativeUrl} className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-emerald-300 transition group-hover:text-emerald-200">
-          Full evidence <span aria-hidden="true">-&gt;</span>
-        </Link>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <a href="#club-finder" className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 transition hover:text-slate-200">
+            Find another club <span aria-hidden="true">&uarr;</span>
+          </a>
+          <Link href={team.relativeUrl} className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-emerald-300 transition group-hover:text-emerald-200">
+            Full evidence <span aria-hidden="true">-&gt;</span>
+          </Link>
+        </div>
       </div>
     </article>
   );
@@ -184,13 +196,20 @@ export default async function ClubPenaltyLeaguePage({ params }: PageProps) {
           </div>
         </section>
 
-        <ClubPenaltyLatestUpdates
-          items={latestNews}
-          eyebrow={`${league.label} live evidence`}
-          description={`The latest competitive penalty events reviewed for ${league.label}, linked to each club's current order and evidence file.`}
+        <ClubPenaltyTeamFinder
+          leagueLabel={league.label}
+          teams={league.teams.map((team) => ({ name: team.team, slug: team.slug, logoPath: team.logoPath, initials: team.initials }))}
         />
 
-        <section className={latestNews.length ? "mt-10" : undefined}>
+        <div className="mt-8">
+          <ClubPenaltyLatestUpdates
+            items={latestNews}
+            eyebrow={`${league.label} live evidence`}
+            description={`The latest competitive penalty events reviewed for ${league.label}, linked to each club's current order and evidence file.`}
+          />
+        </div>
+
+        <section className="mt-10">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
             <div>
               <div className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-400">Current league</div>
