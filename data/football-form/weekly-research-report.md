@@ -1,6 +1,6 @@
 # Weekly Research Lane Report
 
-- Generated: 2026-09-01T14:49:27Z
+- Generated: 2026-09-01T14:56:50Z
 - Overall read: observe live sample
 
 ## Football Counts vNext
@@ -73,7 +73,7 @@
 - Settlement gate: FAIL | player-assist agreement 0.00%.
 - Market gate: FAIL | 1300 matched player prices across 8 calendar days.
 - Prospective ledger: 0/0 settled (target 100), +0.00u, ROI -.
-- Evidence freshness: FRESH (2026-09-01T14:49:18Z).
+- Evidence freshness: FRESH (2026-09-01T14:56:43Z).
 - Automation budget: Friday-Sunday 07:10 UTC, August-May; <= 10 Odds-API calls/run and <= 30 calls/week; zero database reads/writes.
 - No public output, staking, database writes or automatic promotion are authorised.
 
