@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-31T16:57:13Z",
+  "generated_at": "2026-09-01T05:16:32Z",
   "league": "ligue-1",
-  "row_count": 5,
+  "row_count": 3,
   "rows": [
     {
       "team": "Le Mans",
@@ -19,22 +19,6 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-08-30"
-    },
-    {
-      "team": "Lens",
-      "team_key": "lens",
-      "player_name": "Florian Thauvin",
-      "player_key": "florian thauvin",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-08-29"
     },
     {
       "team": "Paris FC",
@@ -67,22 +51,6 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-08-30"
-    },
-    {
-      "team": "Troyes",
-      "team_key": "troyes",
-      "player_name": "Renaud Ripart",
-      "player_key": "renaud ripart",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-08-29"
     }
   ]
 }
