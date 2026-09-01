@@ -2,7 +2,9 @@ name: Weekly Research Report
 
 on:
   schedule:
-    - cron: "30 22 * * 1" # Monday 22:30 UTC, after the main weekend football settlement window.
+    # Run after Tuesday's local 10:05 Europe/London result refresh uploads the
+    # compact tennis evidence snapshot. Monday night leaves late US matches pending.
+    - cron: "30 11 * * 2"
   workflow_dispatch:
 
 permissions:

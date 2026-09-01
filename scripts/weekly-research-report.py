@@ -20,7 +20,7 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -910,6 +910,24 @@ def tennis_props_shadow_decision(
         for row in rows
         if (row.get("settlement_status") or "pending").strip().lower() in {"", "pending"}
     ]
+    pending_due: list[dict[str, str]] = []
+    pending_future: list[dict[str, str]] = []
+    pending_unknown: list[dict[str, str]] = []
+    now = datetime.now(UTC)
+    for row in pending:
+        raw_start = str(row.get("match_start_utc") or "").strip()
+        if not raw_start:
+            pending_unknown.append(row)
+            continue
+        try:
+            match_start = datetime.fromisoformat(raw_start.replace("Z", "+00:00")).astimezone(UTC)
+        except ValueError:
+            pending_unknown.append(row)
+            continue
+        if match_start + timedelta(hours=6) <= now:
+            pending_due.append(row)
+        else:
+            pending_future.append(row)
     voids = [
         row
         for row in rows
@@ -1065,6 +1083,9 @@ def tennis_props_shadow_decision(
         "registered": len(rows),
         "settled": len(settled),
         "pending": len(pending),
+        "pending_due": len(pending_due),
+        "pending_future": len(pending_future),
+        "pending_unknown": len(pending_unknown),
         "void": len(voids),
         "record": {"wins": wins, "losses": losses, "pushes": pushes},
         "staked_units": staked,
@@ -1144,7 +1165,12 @@ def tennis_props_shadow_decision_report(summary: dict[str, Any]) -> str:
             f"Generated UTC: {summary['generated_at']}",
             f"Status: {summary['status']} (never auto-promoted)",
             "",
-            f"Sample: {summary['settled']}/{summary['registered']} settled; {summary['pending']} pending; {summary['void']} void",
+            (
+                f"Sample: {summary['settled']}/{summary['registered']} settled; "
+                f"{summary['pending']} pending ({summary.get('pending_due', 0)} due, "
+                f"{summary.get('pending_future', 0)} future, {summary.get('pending_unknown', 0)} unknown); "
+                f"{summary['void']} void"
+            ),
             f"Record: {record['wins']}W/{record['losses']}L/{record['pushes']}P",
             f"P/L: {summary['pnl_units']:+.2f}u | ROI: {pct(summary['roi_pct'])}",
             f"CLV: {mean_clv} mean; {positive_clv} positive; n={clv['rows']}",
@@ -1912,6 +1938,10 @@ def telegram_text(payload: dict[str, Any]) -> str:
     lines.append(
         "Aces/DF decision: "
         f"{tennis_props_shadow.get('settled', 0)}/{tennis_props_shadow.get('registered', 0)} settled | "
+        f"pending {tennis_props_shadow.get('pending', 0)} "
+        f"({tennis_props_shadow.get('pending_due', 0)} due / "
+        f"{tennis_props_shadow.get('pending_future', 0)} future / "
+        f"{tennis_props_shadow.get('pending_unknown', 0)} unknown) | "
         f"{number(tennis_props_shadow.get('pnl_units')):+.2f}u | "
         f"ROI {pct(tennis_props_shadow.get('roi_pct'))} | "
         f"CLV {pct(props_clv.get('mean_pct'), 2)} n={props_clv.get('rows', 0)} | "

@@ -103,6 +103,10 @@ def pair_key(a: object, b: object) -> tuple[str, str]:
     return tuple(sorted((norm_text(a), norm_text(b))))  # type: ignore[return-value]
 
 
+def participant_key(name: object) -> tuple[str, str]:
+    return ("__participant__", norm_text(name))
+
+
 def parse_float(value: object) -> float | None:
     try:
         text = str(value or "").strip()
@@ -335,11 +339,15 @@ def load_oncourt_index(
 ) -> dict[tuple[str, int, tuple[str, str]], list[dict[str, str]]]:
     """Resolve current results from the local OnCourt game/stat exports."""
     wanted: dict[tuple[str, int], set[tuple[str, str]]] = defaultdict(set)
+    wanted_participants: dict[tuple[str, int], set[str]] = defaultdict(set)
     for signal in signals:
         tour = (signal.get("tour") or "").upper()
         year = parse_year(signal.get("date"))
         if tour in {"ATP", "WTA"} and year is not None:
             wanted[(tour, year)].add(pair_key(signal.get("player"), signal.get("opponent")))
+            wanted_participants[(tour, year)].update(
+                {norm_text(signal.get("player")), norm_text(signal.get("opponent"))}
+            )
     if not wanted:
         return {}
 
@@ -371,6 +379,22 @@ def load_oncourt_index(
             loser_name = players.get(loser_id, "")
             pair = pair_key(winner_name, loser_name)
             lookup_key = (tour, game_date.year, pair)
+            participant_names = wanted_participants.get((tour, game_date.year), set())
+            matching_participants = {
+                name for name in (norm_text(winner_name), norm_text(loser_name)) if name in participant_names
+            }
+            if matching_participants:
+                appearance = {
+                    "winner_name": winner_name,
+                    "loser_name": loser_name,
+                    "tourney_name": tours.get(str(game.get("tour_id") or "").strip(), str(game.get("tour_id") or "")),
+                    "tourney_date": game_date.strftime("%Y%m%d"),
+                    "score": str(game.get("result") or ""),
+                    "_settlement_source": "oncourt",
+                }
+                for participant in matching_participants:
+                    index[(tour, game_date.year, participant_key(participant))].append(appearance)
+
             if pair not in wanted.get((tour, game_date.year), set()):
                 continue
             stat_key = (
@@ -431,31 +455,80 @@ def tournament_overlap(signal_tournament: str, sackmann_tournament: str) -> bool
         "us open": "us open",
         "u s open": "us open",
     }
-    return slam_aliases.get(sig, sig) == slam_aliases.get(sm, sm)
+
+    def canonical(value: str) -> str:
+        for alias, canonical_name in slam_aliases.items():
+            if alias in value:
+                return canonical_name
+        return value
+
+    return canonical(sig) == canonical(sm)
 
 
 def choose_candidate(signal: dict[str, str], candidates: list[dict[str, str]]) -> dict[str, str] | None:
     if not candidates:
         return None
     tournament = signal.get("tournament", "")
+    signal_date = parse_signal_date(signal.get("date"))
+    if signal_date:
+        same_day = [
+            row
+            for row in candidates
+            if parse_sackmann_date(row.get("tourney_date")) == signal_date
+        ]
+        if len(same_day) == 1:
+            return same_day[0]
+        same_day_overlapped = [
+            row for row in same_day if tournament_overlap(tournament, row.get("tourney_name", ""))
+        ]
+        if len(same_day_overlapped) == 1:
+            return same_day_overlapped[0]
+        if same_day:
+            return None
+
     overlapped = [r for r in candidates if tournament_overlap(tournament, r.get("tourney_name", ""))]
     if overlapped:
         pool = overlapped
-    elif len(candidates) == 1:
-        pool = candidates
     else:
-        # If the same pair met multiple times in the year and tournament names
-        # do not overlap, settling from the most recent match can fabricate a
-        # result. Leave it pending for manual review instead.
+        # A unique same-pair match at another event is still the wrong match.
+        # Never use it merely because no second candidate exists.
         return None
 
-    signal_date = parse_signal_date(signal.get("date"))
     if signal_date:
         dated = [(row, parse_sackmann_date(row.get("tourney_date"))) for row in pool]
         with_dates = [(row, dt) for row, dt in dated if dt is not None]
         if with_dates:
             return sorted(with_dates, key=lambda item: abs((item[1] - signal_date).days))[0][0]
     return sorted(pool, key=lambda r: str(r.get("tourney_date") or ""), reverse=True)[0]
+
+
+def find_replacement_candidate(
+    signal: dict[str, str], candidates: list[dict[str, str]]
+) -> dict[str, str] | None:
+    """Find an unambiguous same-day replacement match for a cancelled market."""
+    signal_date = parse_signal_date(signal.get("date"))
+    if signal_date is None:
+        return None
+    original_pair = pair_key(signal.get("player"), signal.get("opponent"))
+    original_participants = set(original_pair)
+    matches: dict[tuple[str, str, str, str], dict[str, str]] = {}
+    for candidate in candidates:
+        candidate_date = parse_sackmann_date(candidate.get("tourney_date"))
+        candidate_pair = pair_key(candidate.get("winner_name"), candidate.get("loser_name"))
+        if candidate_date != signal_date or candidate_pair == original_pair:
+            continue
+        if not original_participants.intersection(candidate_pair):
+            continue
+        if not tournament_overlap(signal.get("tournament", ""), candidate.get("tourney_name", "")):
+            continue
+        dedupe_key = (
+            candidate_pair[0],
+            candidate_pair[1],
+            str(candidate.get("tourney_date") or ""),
+            norm_text(candidate.get("tourney_name")),
+        )
+        matches[dedupe_key] = candidate
+    return next(iter(matches.values())) if len(matches) == 1 else None
 
 
 def write_performance(path: Path, rows: list[dict[str, str]]) -> None:
@@ -538,6 +611,25 @@ def main() -> int:
             candidates = sackmann_index.get(key, [])
         candidate = choose_candidate(row, candidates)
         if candidate is None:
+            replacement_candidates = [
+                *oncourt_index.get((tour, year, participant_key(row.get("player"))), []),
+                *oncourt_index.get((tour, year, participant_key(row.get("opponent"))), []),
+            ]
+            replacement = find_replacement_candidate(row, replacement_candidates)
+            if replacement is not None:
+                row["settlement_status"] = "void"
+                row["actual"] = ""
+                row["result"] = "void"
+                row["pnl"] = "0.000"
+                row["settled_at_utc"] = now
+                row["settlement_note"] = (
+                    "void_replaced_match:"
+                    f"{replacement.get('_settlement_source', 'oncourt')}:"
+                    f"{replacement.get('winner_name', '')} vs {replacement.get('loser_name', '')}:"
+                    f"{replacement.get('tourney_name', '')}"
+                )
+                settled_now += 1
+                continue
             row["settlement_status"] = "pending"
             row["settlement_note"] = "sackmann_match_ambiguous" if candidates else "sackmann_match_not_found"
             still_pending += 1

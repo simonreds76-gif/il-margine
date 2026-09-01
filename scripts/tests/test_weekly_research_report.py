@@ -6,6 +6,7 @@ import os
 import runpy
 import tempfile
 import unittest
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 
@@ -56,6 +57,7 @@ class WeeklyResearchReportTests(unittest.TestCase):
 
     def test_weekly_workflow_publishes_canonical_monitor_bundle(self) -> None:
         workflow = (ROOT / ".github" / "workflows" / "weekly-research-report.yml").read_text(encoding="utf-8")
+        self.assertIn('cron: "30 11 * * 2"', workflow)
         self.assertIn("contents: write", workflow)
         self.assertIn("group: golden-with-speed-insights-branch-writes", workflow)
         self.assertIn("Publish canonical weekly monitor bundle", workflow)
@@ -317,8 +319,45 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertEqual(summary["status"], "COLLECTING_EVIDENCE")
         self.assertFalse(summary["automatic_promotion"])
         self.assertEqual(summary["settled"], 1)
+        self.assertEqual(summary["pending_unknown"], 1)
         self.assertEqual(summary["pnl_units"], 1.5)
         self.assertEqual(summary["calibration"]["rows"], 1)
+
+    def test_tennis_props_pending_rows_distinguish_due_from_future(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            signals = root / "signals.csv"
+            health = root / "health.json"
+            now = datetime.now(UTC)
+            self.write_csv(
+                signals,
+                [
+                    {
+                        "settlement_status": "pending",
+                        "match_start_utc": (now - timedelta(days=1)).isoformat(),
+                        "market": "aces",
+                    },
+                    {
+                        "settlement_status": "pending",
+                        "match_start_utc": (now + timedelta(days=1)).isoformat(),
+                        "market": "double_faults",
+                    },
+                    {
+                        "settlement_status": "pending",
+                        "match_start_utc": "",
+                        "market": "aces",
+                    },
+                ],
+            )
+            health.write_text(json.dumps({"structural_error": False}), encoding="utf-8")
+            summary = REPORT["tennis_props_shadow_decision"](signals, health)
+            rendered = REPORT["tennis_props_shadow_decision_report"](summary)
+
+        self.assertEqual(summary["pending"], 3)
+        self.assertEqual(summary["pending_due"], 1)
+        self.assertEqual(summary["pending_future"], 1)
+        self.assertEqual(summary["pending_unknown"], 1)
+        self.assertIn("3 pending (1 due, 1 future, 1 unknown)", rendered)
         self.assertIn("settled_sample", summary["failed_gates"])
         self.assertIn("price_integrity", summary["failed_gates"])
 

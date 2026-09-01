@@ -16,6 +16,13 @@ class FootballVnextGateTests(unittest.TestCase):
         self.assertIn("git add data/football-form/football-counts-vnext-gate.json", workflow)
         self.assertIn("git add data/football-form/football-counts-vnext-gate.md", workflow)
 
+    def test_manual_gk_settlement_skips_capture_and_limits_staged_files(self) -> None:
+        workflow = (ROOT / ".github" / "workflows" / "football-counts-vnext-shadow.yml").read_text(encoding="utf-8")
+        self.assertIn("settlement_only:", workflow)
+        self.assertGreaterEqual(workflow.count("github.event.inputs.settlement_only != 'true'"), 4)
+        self.assertIn('if [[ "${{ github.event.inputs.settlement_only }}" == "true" ]]; then', workflow)
+        self.assertIn("git add data/goalkeeper-saves/", workflow)
+
     def test_diagnostics_distinguish_expected_warmup_from_missing_feed(self) -> None:
         rows = [
             {
