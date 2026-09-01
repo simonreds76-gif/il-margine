@@ -33,7 +33,8 @@
     ],
     "last_verified": "2026-09-01",
     "public_updated_at": "2026-09-01",
-    "membership_source": "https://www.laliga.com/en-GB/laliga-easports/clubs"
+    "membership_source": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+    "last_reviewed": "2026-09-01"
   },
   "Alaves": {
     "primary": "Lucas Boyé",
@@ -54,12 +55,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_alaves_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 7
+      "id": "evt_20260901_alaves_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -242,6 +243,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 7 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_alaves_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Alaves hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Betfair Spain LaLiga penalty board",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-31",
+            "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+          },
+          {
+            "label": "LaLiga 2026/27 squads and match records",
+            "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+            "date": "2026-09-01",
+            "note": "Official current club and competition cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -333,47 +367,57 @@
         "player": "Lucas Boyé",
         "status": "confirmed",
         "source_url": "https://iaas-public-front-pro.laliga.com/clubes/d-alaves/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Antonio \"Toni\" Martínez",
         "status": "confirmed",
         "source_url": "https://iaas-public-front-pro.laliga.com/clubes/d-alaves/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Mariano Díaz",
         "status": "confirmed",
         "source_url": "https://iaas-public-front-pro.laliga.com/clubes/d-alaves/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+      ]
     }
   },
   "Athletic Club": {
     "primary": "Oihan Sancet",
-    "secondary": "Gorka Guruzeta",
-    "tertiary": "Nico Williams",
-    "last_updated": "2026-07-30",
-    "source": "Transfermarkt",
-    "cross_check": "El País",
+    "secondary": "Nico Williams",
+    "tertiary": "Gorka Guruzeta",
+    "last_updated": "2026-09-01",
+    "source": "Betfair Spain LaLiga penalty board",
+    "cross_check": "LaLiga 2026/27 squads and match records",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
+      "primary": "medium",
       "secondary": "medium",
-      "tertiary": "low"
+      "tertiary": "medium"
     },
-    "condition_note": "Sancet scored all three of his 2025/26 attempts. Guruzeta and Nico also received competitive assignments, with Guruzeta providing the stronger recent deputy evidence. Vesga and Iñaki Williams remain situational alternatives, so the tertiary role is not immutable.",
+    "condition_note": "Sancet remains first choice; Nico Williams is the current principal alternative ahead of Guruzeta.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_athletic-club_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 6
+      "id": "evt_20260901_athletic-club_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -526,6 +570,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_athletic-club_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Athletic Club penalty hierarchy updated",
+        "context": "Sancet remains first choice; Nico Williams is the current principal alternative ahead of Guruzeta.",
+        "sources": [
+          {
+            "label": "Betfair Spain LaLiga penalty board",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-31",
+            "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+          },
+          {
+            "label": "LaLiga 2026/27 squads and match records",
+            "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+            "date": "2026-09-01",
+            "note": "Official current club and competition cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Sancet remains first choice; Nico Williams is the current principal alternative ahead of Guruzeta."
       }
     ],
     "change_log": [
@@ -597,6 +674,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Oihan Sancet",
+          "secondary": "Gorka Guruzeta",
+          "tertiary": "Nico Williams"
+        },
+        "to": {
+          "primary": "Oihan Sancet",
+          "secondary": "Nico Williams",
+          "tertiary": "Gorka Guruzeta"
+        },
+        "reason": "Sancet remains first choice; Nico Williams is the current principal alternative ahead of Guruzeta.",
+        "evidence_ids": [
+          "evt_20260901_athletic-club_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -617,47 +717,57 @@
         "player": "Oihan Sancet",
         "status": "confirmed",
         "source_url": "https://www.laliga.com/clubes/athletic-club/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Gorka Guruzeta",
-        "status": "confirmed",
-        "source_url": "https://www.laliga.com/clubes/athletic-club/plantilla",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
         "player": "Nico Williams",
         "status": "confirmed",
-        "source_url": "https://www.laliga.com/clubes/athletic-club/plantilla",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "checked_at": "2026-09-01"
+      },
+      "tertiary": {
+        "player": "Gorka Guruzeta",
+        "status": "confirmed",
+        "source_url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+      ]
     }
   },
   "Atletico Madrid": {
     "primary": "Julián Álvarez",
-    "secondary": "Alexander Sørloth",
-    "tertiary": "Álex Baena",
-    "last_updated": "2026-07-30",
-    "source": "UEFA",
-    "cross_check": "AS",
+    "secondary": "Ademola Lookman",
+    "tertiary": "Alexander Sørloth",
+    "last_updated": "2026-09-01",
+    "source": "Betfair Spain LaLiga penalty board",
+    "cross_check": "LaLiga 2026/27 squads and match records",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
-      "secondary": "low",
-      "tertiary": "low"
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "medium"
     },
-    "condition_note": "Julián remained the regular competitive taker after Griezmann's departure. Sørloth has stronger regular-match specialist support than Baena; Baena's clearest recent penalty evidence is shootout-only. The latest direct deputy evidence is a shootout in which Sørloth missed and Baena scored; that does not establish a regular-time reversal. Conditions: Reassess only if a Julián Álvarez transfer is officially completed; current reports are rumours and he remains a confirmed Atlético player at the cutoff.",
+    "condition_note": "Álvarez remains first choice. Lookman is the current backup after Griezmann's departure, with Sørloth third.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_atletico-madrid_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 6
+      "id": "evt_20260901_atletico-madrid_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -828,6 +938,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_atletico-madrid_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Atletico Madrid penalty hierarchy updated",
+        "context": "Álvarez remains first choice. Lookman is the current backup after Griezmann's departure, with Sørloth third.",
+        "sources": [
+          {
+            "label": "Betfair Spain LaLiga penalty board",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-31",
+            "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+          },
+          {
+            "label": "LaLiga 2026/27 squads and match records",
+            "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+            "date": "2026-09-01",
+            "note": "Official current club and competition cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Álvarez remains first choice. Lookman is the current backup after Griezmann's departure, with Sørloth third."
       }
     ],
     "change_log": [
@@ -899,6 +1042,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Julián Álvarez",
+          "secondary": "Alexander Sørloth",
+          "tertiary": "Álex Baena"
+        },
+        "to": {
+          "primary": "Julián Álvarez",
+          "secondary": "Ademola Lookman",
+          "tertiary": "Alexander Sørloth"
+        },
+        "reason": "Álvarez remains first choice. Lookman is the current backup after Griezmann's departure, with Sørloth third.",
+        "evidence_ids": [
+          "evt_20260901_atletico-madrid_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -919,20 +1085,30 @@
         "player": "Julián Álvarez",
         "status": "confirmed",
         "source_url": "https://www.atleticodemadrid.com/noticias/agenda-de-nuestros-jugadores-en-el-mundial-2026",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Alexander Sørloth",
+        "player": "Ademola Lookman",
         "status": "confirmed",
-        "source_url": "https://www.atleticodemadrid.com/noticias/agenda-de-nuestros-jugadores-en-el-mundial-2026",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
-        "player": "Álex Baena",
+        "player": "Alexander Sørloth",
         "status": "confirmed",
-        "source_url": "https://www.atleticodemadrid.com/noticias/agenda-de-nuestros-jugadores-en-el-mundial-2026",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+      ]
     }
   },
   "Barcelona": {
@@ -954,12 +1130,12 @@
       "by": "Il Margine",
       "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-08-24",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260823_barcelona_raphinha_elche",
-      "date": "2026-08-23",
-      "type": "competitive_penalty_event",
-      "source_count": 1
+      "id": "evt_20260901_barcelona_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -1151,6 +1327,39 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Raphinha converted against Elche, the first live-season event supporting the filed Raphinha-first call. Lamine Yamal remains a credible co-primary until clearer same-pitch evidence establishes a fixed order."
+      },
+      {
+        "id": "evt_20260901_barcelona_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Barcelona hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Betfair Spain LaLiga penalty board",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-31",
+            "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+          },
+          {
+            "label": "LaLiga 2026/27 squads and match records",
+            "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+            "date": "2026-09-01",
+            "note": "Official current club and competition cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -1242,20 +1451,30 @@
         "player": "Raphinha",
         "status": "confirmed",
         "source_url": "https://www.fcbarcelona.es/es/futbol/primer-equipo/noticias/4527917/15-out-of-16-blaugranes-into-last-32-of-the-world-cup/featured",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Lamine Yamal",
         "status": "confirmed",
         "source_url": "https://www.fcbarcelona.es/es/futbol/primer-equipo/noticias/4527917/15-out-of-16-blaugranes-into-last-32-of-the-world-cup/featured",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Anthony Gordon",
         "status": "confirmed",
         "source_url": "https://www.fcbarcelona.es/es/futbol/primer-equipo/squad///23747/-------------------anthony---------------gordon",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+      ]
     }
   },
   "Celta Vigo": {
@@ -1277,12 +1496,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_celta-vigo_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 6
+      "id": "evt_20260901_celta-vigo_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -1435,6 +1654,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_celta-vigo_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Celta Vigo hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Betfair Spain LaLiga penalty board",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-31",
+            "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+          },
+          {
+            "label": "LaLiga 2026/27 squads and match records",
+            "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+            "date": "2026-09-01",
+            "note": "Official current club and competition cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -1526,20 +1778,30 @@
         "player": "Borja Iglesias",
         "status": "confirmed",
         "source_url": "https://www.laliga.com/clubes/rc-celta/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Iago Aspas",
         "status": "confirmed",
         "source_url": "https://www.laliga.com/clubes/rc-celta/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Marcos Alonso",
         "status": "confirmed",
         "source_url": "https://www.laliga.com/clubes/rc-celta/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+      ]
     }
   },
   "Deportivo La Coruna": {
@@ -1559,12 +1821,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_deportivo-la-coruna_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 7
+      "id": "evt_20260901_deportivo-la-coruna_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -1722,6 +1984,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 7 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_deportivo-la-coruna_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Deportivo La Coruna hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Betfair Spain LaLiga penalty board",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-31",
+            "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+          },
+          {
+            "label": "LaLiga 2026/27 squads and match records",
+            "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+            "date": "2026-09-01",
+            "note": "Official current club and competition cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -1786,47 +2081,57 @@
         "player": "Yeremay Hernández",
         "status": "confirmed",
         "source_url": "https://www.rcdeportivo.es/es/depor",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Pierre-Emerick Aubameyang",
         "status": "confirmed",
         "source_url": "https://www.rcdeportivo.es/es/depor",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Zakaria Eddahchouri",
         "status": "confirmed",
         "source_url": "https://www.rcdeportivo.es/es/depor",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+      ]
     }
   },
   "Elche": {
-    "primary": "Gonzalo Villar",
+    "primary": "Fer Niño",
     "secondary": "Germán Valera",
     "tertiary": "Ali Houary",
-    "last_updated": "2026-07-30",
-    "source": "El País",
-    "cross_check": "El País",
-    "hierarchy_status": "probable",
+    "last_updated": "2026-09-01",
+    "source": "Betfair Spain LaLiga penalty board",
+    "cross_check": "LaLiga 2026/27 squads and match records",
+    "hierarchy_status": "disputed",
     "confidence": {
-      "primary": "low",
-      "secondary": "low",
-      "tertiary": "low"
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "medium"
     },
-    "condition_note": "The former 2025/26 takers departed. No recent in-match or preseason penalty assignment was found for the three current candidates, so the listed order is a practical placeholder rather than an evidence-backed hierarchy. All three positions may change on Elche's first 2026/27 penalty or after further striker recruitment. Conditions: Rebuild immediately after Elche's first preseason or competitive penalty assignment. Do not promote reported incoming players until an official signing is completed.",
+    "condition_note": "Fer Niño now leads Elche's projected order, followed by Germán Valera and Ali Houary.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_elche_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 10
+      "id": "evt_20260901_elche_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -2045,6 +2350,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 10 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_elche_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Elche penalty hierarchy updated",
+        "context": "Fer Niño now leads Elche's projected order, followed by Germán Valera and Ali Houary.",
+        "sources": [
+          {
+            "label": "Betfair Spain LaLiga penalty board",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-31",
+            "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+          },
+          {
+            "label": "LaLiga 2026/27 squads and match records",
+            "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+            "date": "2026-09-01",
+            "note": "Official current club and competition cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Fer Niño now leads Elche's projected order, followed by Germán Valera and Ali Houary."
       }
     ],
     "change_log": [
@@ -2116,6 +2454,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Gonzalo Villar",
+          "secondary": "Germán Valera",
+          "tertiary": "Ali Houary"
+        },
+        "to": {
+          "primary": "Fer Niño",
+          "secondary": "Germán Valera",
+          "tertiary": "Ali Houary"
+        },
+        "reason": "Fer Niño now leads Elche's projected order, followed by Germán Valera and Ali Houary.",
+        "evidence_ids": [
+          "evt_20260901_elche_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -2133,50 +2494,60 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Gonzalo Villar",
+        "player": "Fer Niño",
         "status": "confirmed",
-        "source_url": "https://www.laliga.com/clubes/elche-cf/plantilla",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Germán Valera",
         "status": "confirmed",
         "source_url": "https://www.laliga.com/clubes/elche-cf/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Ali Houary",
         "status": "confirmed",
         "source_url": "https://www.laliga.com/clubes/elche-cf/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+      ]
     }
   },
   "Espanyol": {
     "primary": "Roberto Fernández",
-    "secondary": "Kike García",
-    "tertiary": "Javi Puado",
-    "last_updated": "2026-07-30",
-    "source": "Mundo Deportivo",
-    "cross_check": "RCD Espanyol",
-    "hierarchy_status": "disputed",
+    "secondary": "Pere Milla",
+    "tertiary": "Kike García",
+    "last_updated": "2026-09-01",
+    "source": "Betfair Spain LaLiga penalty board",
+    "cross_check": "LaLiga 2026/27 squads and match records",
+    "hierarchy_status": "probable",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
-      "tertiary": "low"
+      "tertiary": "medium"
     },
-    "condition_note": "Puado converted in August, Kike in September and Roberto in December. Roberto's assignment while Kike was involved gives him the strongest current primary case; Kike later took and missed in April. The role was shared and Puado's fitness clouds his availability, so a 2026/27 assignment can change the order quickly. Conditions: Reassess when Puado is fully fit and after the first 2026/27 competitive penalty.",
+    "condition_note": "Roberto Fernández remains first choice; Pere Milla is the current main alternative ahead of Kike García.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_espanyol_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 6
+      "id": "evt_20260901_espanyol_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -2341,6 +2712,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_espanyol_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Espanyol penalty hierarchy updated",
+        "context": "Roberto Fernández remains first choice; Pere Milla is the current main alternative ahead of Kike García.",
+        "sources": [
+          {
+            "label": "Betfair Spain LaLiga penalty board",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-31",
+            "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+          },
+          {
+            "label": "LaLiga 2026/27 squads and match records",
+            "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+            "date": "2026-09-01",
+            "note": "Official current club and competition cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Roberto Fernández remains first choice; Pere Milla is the current main alternative ahead of Kike García."
       }
     ],
     "change_log": [
@@ -2412,6 +2816,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Roberto Fernández",
+          "secondary": "Kike García",
+          "tertiary": "Javi Puado"
+        },
+        "to": {
+          "primary": "Roberto Fernández",
+          "secondary": "Pere Milla",
+          "tertiary": "Kike García"
+        },
+        "reason": "Roberto Fernández remains first choice; Pere Milla is the current main alternative ahead of Kike García.",
+        "evidence_ids": [
+          "evt_20260901_espanyol_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -2432,46 +2859,56 @@
         "player": "Roberto Fernández",
         "status": "confirmed",
         "source_url": "https://campaigns.rcdespanyol.com/ca/noticia/llistat-de-jugadors-per-a-l%E2%80%99estada-de-torremirona/20482",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Kike García",
+        "player": "Pere Milla",
         "status": "confirmed",
-        "source_url": "https://campaigns.rcdespanyol.com/ca/noticia/llistat-de-jugadors-per-a-l%E2%80%99estada-de-torremirona/20482",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
-        "player": "Javi Puado",
+        "player": "Kike García",
         "status": "confirmed",
-        "source_url": "https://campaigns.rcdespanyol.com/ca/noticia/llistat-de-jugadors-per-a-l%E2%80%99estada-de-torremirona/20482",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+      ]
     }
   },
   "Getafe": {
-    "primary": "Martín Satriano",
+    "primary": "Juanmi",
     "secondary": "Borja Mayoral",
     "tertiary": "Enes Ünal",
-    "last_updated": "2026-08-22",
-    "source": "Telemadrid",
-    "cross_check": "AS",
-    "hierarchy_status": "conditional",
+    "last_updated": "2026-09-01",
+    "source": "Betfair Spain LaLiga penalty board",
+    "cross_check": "LaLiga 2026/27 squads and match records",
+    "hierarchy_status": "disputed",
     "confidence": {
-      "primary": "high",
+      "primary": "medium",
       "secondary": "medium",
-      "tertiary": "low"
+      "tertiary": "medium"
     },
-    "condition_note": "Satriano remains the active first-choice call after taking Getafe's July penalty. Mayoral is the experienced deputy. Uche has been removed after a season-ending knee injury; Ünal is a provisional third choice until a competitive assignment clarifies the fallback order.",
+    "condition_note": "Juanmi is the current first-choice projection, followed by Mayoral and Ünal.",
     "last_verified": {
-      "date": "2026-08-22",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-08-22",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260822_getafe_availability_review",
-      "date": "2026-08-22",
-      "type": "injury_availability_review",
+      "id": "evt_20260901_getafe_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -2681,6 +3118,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Satriano remains the active first-choice call after taking Getafe's July penalty. Mayoral is the experienced deputy. Uche has been removed after a season-ending knee injury; Ünal is a provisional third choice until a competitive assignment clarifies the fallback order."
+      },
+      {
+        "id": "evt_20260901_getafe_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Getafe penalty hierarchy updated",
+        "context": "Juanmi is the current first-choice projection, followed by Mayoral and Ünal.",
+        "sources": [
+          {
+            "label": "Betfair Spain LaLiga penalty board",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-31",
+            "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+          },
+          {
+            "label": "LaLiga 2026/27 squads and match records",
+            "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+            "date": "2026-09-01",
+            "note": "Official current club and competition cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Juanmi is the current first-choice projection, followed by Mayoral and Ünal."
       }
     ],
     "change_log": [
@@ -2775,6 +3245,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-08-22T18:30:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Martín Satriano",
+          "secondary": "Borja Mayoral",
+          "tertiary": "Enes Ünal"
+        },
+        "to": {
+          "primary": "Juanmi",
+          "secondary": "Borja Mayoral",
+          "tertiary": "Enes Ünal"
+        },
+        "reason": "Juanmi is the current first-choice projection, followed by Mayoral and Ünal.",
+        "evidence_ids": [
+          "evt_20260901_getafe_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -2792,23 +3285,33 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Martín Satriano",
+        "player": "Juanmi",
         "status": "confirmed",
-        "source_url": "https://www.getafecf.com/plantilla",
-        "checked_at": "2026-08-22"
+        "source_url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Borja Mayoral",
         "status": "confirmed",
         "source_url": "https://www.getafecf.com/plantilla",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Enes Ünal",
         "status": "confirmed",
         "source_url": "https://www.getafecf.com/plantilla",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+      ]
     }
   },
   "Levante": {
@@ -2830,12 +3333,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_levante_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 8
+      "id": "evt_20260901_levante_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -3024,6 +3527,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 8 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_levante_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Levante hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Betfair Spain LaLiga penalty board",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-31",
+            "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+          },
+          {
+            "label": "LaLiga 2026/27 squads and match records",
+            "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+            "date": "2026-09-01",
+            "note": "Official current club and competition cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -3115,20 +3651,30 @@
         "player": "Adrián de la Fuente",
         "status": "confirmed",
         "source_url": "https://www.levanteud.com/noticias/los-jugadores-del-levante-ud-iniciaran-manana-los-reconocimientos-medicos",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Iván Romero",
         "status": "confirmed",
         "source_url": "https://www.levanteud.com/noticias/los-jugadores-del-levante-ud-iniciaran-manana-los-reconocimientos-medicos",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Carlos Álvarez",
         "status": "confirmed",
         "source_url": "https://www.levanteud.com/noticias/los-jugadores-del-levante-ud-iniciaran-manana-los-reconocimientos-medicos",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+      ]
     }
   },
   "Malaga": {
@@ -3148,11 +3694,11 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-08-22",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260822_malaga_jauregi_review",
-      "date": "2026-08-22",
-      "type": "preseason_penalty_assignment",
+      "id": "evt_20260901_malaga_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -3337,6 +3883,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Chupe retains the lead from competitive promotion-season evidence. Jauregi moves into the deputy role after taking and converting Málaga's August regular-time friendly penalty. Adrián Niño remains the next attacking fallback; the first competitive 2026/27 assignment can still reset the order."
+      },
+      {
+        "id": "evt_20260901_malaga_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Malaga hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Betfair Spain LaLiga penalty board",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-31",
+            "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+          },
+          {
+            "label": "LaLiga 2026/27 squads and match records",
+            "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+            "date": "2026-09-01",
+            "note": "Official current club and competition cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -3424,20 +4003,30 @@
         "player": "Chupe",
         "status": "confirmed",
         "source_url": "https://www.malagacf.com/noticias/jauregi-renueva-hasta-2027",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Eneko Jauregi",
         "status": "confirmed",
         "source_url": "https://www.malagacf.com/noticias/jauregi-renueva-hasta-2027",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Adrián Niño",
         "status": "confirmed",
         "source_url": "https://www.malagacf.com/noticias/jauregi-renueva-hasta-2027",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+      ]
     }
   },
   "Osasuna": {
@@ -3459,12 +4048,12 @@
       "by": "Il Margine",
       "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-08-31",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260831_osasuna_budimir_confirmation",
-      "date": "2026-08-31",
-      "type": "competitive_penalty_assignment",
-      "source_count": 1
+      "id": "evt_20260901_osasuna_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -3700,6 +4289,39 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Budimir's second league penalty in four days further confirms him as Osasuna's primary."
+      },
+      {
+        "id": "evt_20260901_osasuna_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Osasuna hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Betfair Spain LaLiga penalty board",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-31",
+            "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+          },
+          {
+            "label": "LaLiga 2026/27 squads and match records",
+            "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+            "date": "2026-09-01",
+            "note": "Official current club and competition cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -3814,20 +4436,30 @@
         "player": "Ante Budimir",
         "status": "confirmed",
         "source_url": "https://www.osasuna.es/ramis-desplaza-a-28-futbolistas-para-la-gira-en-inglaterra",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Raúl García de Haro",
         "status": "confirmed",
         "source_url": "https://www.osasuna.es/ramis-desplaza-a-28-futbolistas-para-la-gira-en-inglaterra",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Aimar Oroz",
         "status": "confirmed",
         "source_url": "https://www.osasuna.es/ramis-desplaza-a-28-futbolistas-para-la-gira-en-inglaterra",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+      ]
     }
   },
   "Racing Santander": {
@@ -3847,11 +4479,11 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-08-20",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260816_racing_competitive_penalty",
-      "date": "2026-08-16",
-      "type": "competitive_penalty_assignment",
+      "id": "evt_20260901_racing-santander_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -4036,6 +4668,39 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Direct competitive evidence confirms the existing order and removes the preseason uncertainty between Andrés and Canales."
+      },
+      {
+        "id": "evt_20260901_racing-santander_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Racing Santander hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Betfair Spain LaLiga penalty board",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-31",
+            "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+          },
+          {
+            "label": "LaLiga 2026/27 squads and match records",
+            "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+            "date": "2026-09-01",
+            "note": "Official current club and competition cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -4123,25 +4788,35 @@
         "player": "Andrés Martín",
         "status": "confirmed",
         "source_url": "https://www.laliga.com/clubes/r-racing-club/plantilla",
-        "checked_at": "2026-08-20"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Sergio Canales",
         "status": "confirmed",
         "source_url": "https://www.laliga.com/clubes/r-racing-club/plantilla",
-        "checked_at": "2026-08-20"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Juan Carlos Arana",
         "status": "confirmed",
         "source_url": "https://www.laliga.com/clubes/r-racing-club/plantilla",
-        "checked_at": "2026-08-20"
+        "checked_at": "2026-09-01"
       }
     },
     "latest_match_review": {
       "date": "2026-08-16",
       "method": "competitive_match_event_and_lineup_review",
       "evidence_id": "evt_20260816_racing_competitive_penalty"
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+      ]
     }
   },
   "Rayo Vallecano": {
@@ -4163,12 +4838,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_rayo-vallecano_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 8
+      "id": "evt_20260901_rayo-vallecano_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -4351,6 +5026,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 8 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_rayo-vallecano_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Rayo Vallecano hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Betfair Spain LaLiga penalty board",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-31",
+            "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+          },
+          {
+            "label": "LaLiga 2026/27 squads and match records",
+            "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+            "date": "2026-09-01",
+            "note": "Official current club and competition cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -4442,20 +5150,30 @@
         "player": "Isi Palazón",
         "status": "confirmed",
         "source_url": "https://iaas-public-front-pro.laliga.com/clubes/rayo-vallecano/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Jorge de Frutos",
         "status": "confirmed",
         "source_url": "https://iaas-public-front-pro.laliga.com/clubes/rayo-vallecano/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Pedro Díaz",
         "status": "confirmed",
         "source_url": "https://iaas-public-front-pro.laliga.com/clubes/rayo-vallecano/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+      ]
     }
   },
   "Real Betis": {
@@ -4477,12 +5195,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_real-betis_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 6
+      "id": "evt_20260901_real-betis_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -4647,6 +5365,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_real-betis_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Real Betis hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Betfair Spain LaLiga penalty board",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-31",
+            "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+          },
+          {
+            "label": "LaLiga 2026/27 squads and match records",
+            "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+            "date": "2026-09-01",
+            "note": "Official current club and competition cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -4738,20 +5489,30 @@
         "player": "Isco",
         "status": "confirmed",
         "source_url": "https://www.realbetisbalompie.es/partido/betis/como/60757/2026/alineacion",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Cucho Hernández",
         "status": "confirmed",
         "source_url": "https://www.realbetisbalompie.es/partido/betis/como/60757/2026/alineacion",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Giovani Lo Celso",
         "status": "confirmed",
         "source_url": "https://www.realbetisbalompie.es/partido/betis/como/60757/2026/alineacion",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+      ]
     }
   },
   "Real Madrid": {
@@ -4773,12 +5534,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_real-madrid_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260901_real-madrid_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -4919,6 +5680,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_real-madrid_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Real Madrid hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Betfair Spain LaLiga penalty board",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-31",
+            "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+          },
+          {
+            "label": "LaLiga 2026/27 squads and match records",
+            "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+            "date": "2026-09-01",
+            "note": "Official current club and competition cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -5010,20 +5804,30 @@
         "player": "Kylian Mbappé",
         "status": "confirmed",
         "source_url": "https://www.realmadrid.com/es-ES/futbol/primer-equipo-masculino/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Vinícius Júnior",
         "status": "confirmed",
         "source_url": "https://www.realmadrid.com/es-ES/futbol/primer-equipo-masculino/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Jude Bellingham",
         "status": "confirmed",
         "source_url": "https://www.realmadrid.com/es-ES/futbol/primer-equipo-masculino/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+      ]
     }
   },
   "Real Sociedad": {
@@ -5047,10 +5851,10 @@
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260901_real-sociedad_departure",
+      "id": "evt_20260901_real-sociedad_current_review",
       "date": "2026-09-01",
-      "type": "roster_integrity_review",
-      "source_count": 1
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -5274,6 +6078,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Mikel Oyarzabal then Carlos Soler. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
+      },
+      {
+        "id": "evt_20260901_real-sociedad_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Real Sociedad hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Betfair Spain LaLiga penalty board",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-31",
+            "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+          },
+          {
+            "label": "LaLiga 2026/27 squads and match records",
+            "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+            "date": "2026-09-01",
+            "note": "Official current club and competition cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -5419,6 +6256,16 @@
         "source_url": "https://rfef.es/es/noticias/los-penaltis-coronan-la-real-sociedad-en-una-final-trepidante-2-2",
         "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+      ]
     }
   },
   "Sevilla": {
@@ -5440,11 +6287,11 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-08-22",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260822_sevilla_hierarchy_correction",
-      "date": "2026-08-22",
-      "type": "competitive_penalty_hierarchy_correction",
+      "id": "evt_20260901_sevilla_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -5710,6 +6557,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Guridi took and scored Sevilla's first 2026/27 league penalty while Peque was on the pitch. After Guridi went off injured, Peque converted the second; Isaac had already been substituted. That establishes Guridi above Peque, while Isaac remains the next experienced fallback rather than the primary."
+      },
+      {
+        "id": "evt_20260901_sevilla_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Sevilla hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Betfair Spain LaLiga penalty board",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-31",
+            "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+          },
+          {
+            "label": "LaLiga 2026/27 squads and match records",
+            "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+            "date": "2026-09-01",
+            "note": "Official current club and competition cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -5847,25 +6727,35 @@
         "player": "Jon Guridi",
         "status": "confirmed",
         "source_url": "https://www.laliga.com/partido/temporada-2026-2027-laliga-ea-sports-athletic-club-sevilla-fc-2",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Peque Fernández",
         "status": "confirmed",
         "source_url": "https://www.laliga.com/partido/temporada-2026-2027-laliga-ea-sports-athletic-club-sevilla-fc-2",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Isaac Romero",
         "status": "confirmed",
         "source_url": "https://www.laliga.com/partido/temporada-2026-2027-laliga-ea-sports-athletic-club-sevilla-fc-2",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       }
     },
     "latest_match_review": {
       "date": "2026-08-15",
       "method": "competitive_match_event_and_lineup_review",
       "evidence_id": "evt_20260815_sevilla_competitive_penalties"
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+      ]
     }
   },
   "Valencia": {
@@ -5887,12 +6777,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_valencia_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 10
+      "id": "evt_20260901_valencia_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -6093,6 +6983,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 10 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_valencia_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Valencia hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Betfair Spain LaLiga penalty board",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-31",
+            "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+          },
+          {
+            "label": "LaLiga 2026/27 squads and match records",
+            "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+            "date": "2026-09-01",
+            "note": "Official current club and competition cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -6184,20 +7107,30 @@
         "player": "Hugo Duro",
         "status": "confirmed",
         "source_url": "https://www.laliga.com/clubes/valencia-cf/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Pepelu",
         "status": "confirmed",
         "source_url": "https://www.laliga.com/clubes/valencia-cf/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Arnaut Danjuma",
         "status": "confirmed",
         "source_url": "https://www.laliga.com/clubes/valencia-cf/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+      ]
     }
   },
   "Villarreal": {
@@ -6219,12 +7152,12 @@
       "by": "Il Margine",
       "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-08-24",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260823_villarreal_split_atletico",
-      "date": "2026-08-23",
-      "type": "competitive_penalty_event",
-      "source_count": 1
+      "id": "evt_20260901_villarreal_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -6452,6 +7385,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Gerard Moreno taking the first penalty keeps him at the top of Villarreal's order. Georges Mikautadze's later regular-time conversion moves him into the evidence-led backup slot, with Nicolas Pépé now third."
+      },
+      {
+        "id": "evt_20260901_villarreal_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Villarreal hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Betfair Spain LaLiga penalty board",
+            "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+            "date": "2026-08-31",
+            "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+          },
+          {
+            "label": "LaLiga 2026/27 squads and match records",
+            "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+            "date": "2026-09-01",
+            "note": "Official current club and competition cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -6566,20 +7532,30 @@
         "player": "Gerard Moreno",
         "status": "confirmed",
         "source_url": "https://iaas-public-front-pro.laliga.com/clubes/villarreal-cf/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Georges Mikautadze",
         "status": "confirmed",
         "source_url": "https://iaas-public-front-pro.laliga.com/clubes/villarreal-cf/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Nicolas Pépé",
         "status": "confirmed",
         "source_url": "https://iaas-public-front-pro.laliga.com/clubes/villarreal-cf/plantilla",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+      ]
     }
   }
 }

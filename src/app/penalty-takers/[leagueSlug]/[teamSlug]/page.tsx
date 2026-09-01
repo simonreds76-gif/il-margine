@@ -191,8 +191,13 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
   const hierarchyNote = buildClubPenaltyHierarchyNote(team);
   const faqItems = buildClubPenaltyFaq(team);
   const isUnderReview = ["unknown", "disputed", "conditional"].includes(team.hierarchyStatus);
-
-  const quickAnswer = lead;
+  const hierarchyPositions = ["primary", "secondary", "tertiary"] as const;
+  const checkedLabel = team.checkedLabel || team.leagueCheckedLabel || "review pending";
+  const evidenceFreshness = team.lastUpdatedLabel && team.lastUpdated !== team.checkedAt
+    ? `Order unchanged since ${team.lastUpdatedLabel}`
+    : team.lastUpdatedLabel
+      ? `Hierarchy updated ${team.lastUpdatedLabel}`
+      : "Awaiting hierarchy-changing evidence";
 
   const breadcrumbData = {
     "@context": "https://schema.org",
@@ -245,7 +250,7 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
       {faqData ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqData) }} /> : null}
 
       <main className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
-        <section className="pt-6 pb-12 md:pb-16">
+        <section className="pb-9 pt-6 sm:pb-12">
           <PageHomeLink className="mb-8" />
 
           <div className="mb-5 flex flex-wrap items-center gap-2 text-sm text-slate-400">
@@ -256,222 +261,199 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
             <span className="text-slate-200">{team.team}</span>
           </div>
 
-          <div className={`relative overflow-hidden rounded-[32px] border border-slate-800/80 bg-[linear-gradient(160deg,rgba(4,10,18,0.98),rgba(6,22,20,0.96))] ${accent.glow}`}>
-            <div className={`pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-r ${team.leagueSurface}`} />
-            <div className="pointer-events-none absolute right-8 top-4 hidden text-[130px] font-semibold tracking-[-0.08em] text-white/5 xl:block">
-              {team.initials}
-            </div>
-
-            <div className="relative p-5 pt-14 sm:p-8 sm:pt-28 lg:p-10">
-              <div className="grid gap-8 xl:grid-cols-[1.1fr_0.9fr] xl:items-start">
-                <div className="max-w-4xl">
-                  <div className="flex flex-col items-start gap-4 sm:flex-row">
-                    <Crest team={team} />
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className={`rounded-full border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] ${accent.badge}`}>
-                          <LeagueLogo team={team} /> <span className="ml-2 align-middle">{team.leagueLabel}</span>
-                        </span>
-                        <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-300">
-                          {team.seasonLabel}
-                        </span>
-                      </div>
-                      <h1 className="mt-4 text-[2.2rem] font-semibold leading-[0.98] tracking-tight text-slate-100 sm:text-5xl sm:leading-[1.02]">
-                        {team.team} <span className={accent.text}>penalty taker</span>
-                      </h1>
-                      <p className="mt-4 max-w-3xl text-[15px] leading-7 text-slate-300 sm:text-lg sm:leading-8">
-                        {lead}
-                      </p>
-                      {team.isArchived ? (
-                        <p className="mt-4 max-w-3xl rounded-2xl border border-slate-600/60 bg-slate-950/60 px-4 py-3 text-sm leading-6 text-slate-300">
-                          Archived record: {team.team} are not on the current {team.leagueLabel} board. This page preserves the final {team.seasonLabel} hierarchy and URL.
-                        </p>
-                      ) : conditionSummary ? (
-                        <div className={`mt-5 max-w-3xl rounded-2xl border p-4 sm:p-5 ${isUnderReview ? "border-amber-300/25 bg-[linear-gradient(135deg,rgba(245,158,11,0.12),rgba(15,23,42,0.68))]" : "border-emerald-300/20 bg-[linear-gradient(135deg,rgba(16,185,129,0.10),rgba(15,23,42,0.68))]"}`}>
-                          <div className={`font-mono text-[10px] font-semibold uppercase tracking-[0.2em] ${isUnderReview ? "text-amber-200" : "text-emerald-200"}`}>
-                            {isUnderReview ? "Why this order is under review" : "Why this order stands"}
-                          </div>
-                          <p className={`mt-2 text-sm leading-6 ${isUnderReview ? "text-amber-50/90" : "text-emerald-50/90"}`}>{conditionSummary}</p>
-                          {watchNote ? (
-                            <p className={`mt-3 border-t pt-3 text-xs leading-5 ${isUnderReview ? "border-amber-200/10 text-amber-100/65" : "border-emerald-200/10 text-emerald-100/65"}`}>
-                              <span className={isUnderReview ? "font-semibold text-amber-100" : "font-semibold text-emerald-100"}>Watch:</span> {watchNote}
-                            </p>
-                          ) : null}
-                          {team.conditionNote !== conditionSummary ? (
-                            <details className="mt-3 text-xs text-slate-400">
-                              <summary className={`cursor-pointer font-semibold ${isUnderReview ? "text-amber-200/85 hover:text-amber-100" : "text-emerald-200/85 hover:text-emerald-100"}`}>Read full evidence note</summary>
-                              <p className="mt-2 leading-6 text-slate-300">{team.conditionNote}</p>
-                            </details>
-                          ) : null}
-                        </div>
-                      ) : team.isCarryover ? (
-                        <p className="mt-4 max-w-3xl rounded-2xl border border-cyan-300/20 bg-cyan-400/8 px-4 py-3 text-sm leading-6 text-cyan-100">
-                          Provisional carryover from the final {CLUB_PENALTY_PREVIOUS_SEASON} order. It is being re-verified through preseason and the opening weeks.
-                        </p>
-                      ) : null}
-                    </div>
-                  </div>
+          <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_360px]">
+            <article className={`overflow-hidden rounded-2xl border border-slate-800 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.08),transparent_36%),#10151f] p-5 sm:p-7 lg:p-8 ${accent.glow}`}>
+              <div className="flex items-start justify-between gap-4">
+                <Crest team={team} />
+                <div className="flex flex-wrap justify-end gap-2">
+                  <span className={`inline-flex items-center rounded-full border px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] ${accent.badge}`}>
+                    <LeagueLogo team={team} /> <span className="ml-2">{team.leagueLabel}</span>
+                  </span>
+                  <span className="rounded-full border border-slate-700 bg-slate-950/80 px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-300">
+                    {team.seasonLabel}
+                  </span>
                 </div>
-
-                <aside className={`overflow-hidden rounded-3xl border border-slate-800/80 bg-gradient-to-br ${team.leagueSurface} p-4 shadow-[0_18px_50px_rgba(0,0,0,0.24)] sm:p-5`}>
-                  <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-slate-300">Penalty hierarchy</div>
-                  <div className="mt-4 space-y-3">
-                    {team.verifiedNames.map((value, index) => {
-                      const rank = `${index + 1}`;
-                      return (
-                        <div key={`${rank}-${value}`} className="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
-                          <div className="flex items-start gap-3">
-                            <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 font-mono text-base font-semibold ${rank === "1" ? `${accent.fill} text-slate-950` : "bg-slate-950/60 text-slate-300"}`}>
-                              {rank}
-                            </div>
-                            <div>
-                              <div className="text-[10px] uppercase tracking-[0.18em] text-slate-400">{hierarchyLabels[index]}</div>
-                              <div className={`mt-1.5 text-xl font-semibold tracking-tight ${rank === "1" ? accent.text : "text-slate-200"}`}>{value}</div>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                    {!team.isArchived && team.hierarchyDepth < 3 ? (
-                      <div className="rounded-2xl border border-dashed border-white/15 bg-slate-950/20 p-4">
-                        <div className="flex items-start gap-3">
-                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dashed border-white/15 bg-slate-950/30 font-mono text-base font-semibold text-slate-500">
-                            {team.hierarchyDepth + 1}
-                          </div>
-                          <div>
-                            <div className="text-[10px] uppercase tracking-[0.18em] text-slate-500">Open position</div>
-                            <div className="mt-1.5 text-base font-semibold tracking-tight text-slate-400">
-                              {team.hierarchyDepth === 0 ? "No verified taker" : team.hierarchyDepth === 1 ? "No verified backup" : "No verified third choice"}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : null}
-                  </div>
-                </aside>
               </div>
-            </div>
+
+              <h1 className="mt-6 text-[2.15rem] font-semibold leading-[1.02] tracking-tight text-white sm:text-5xl">
+                {team.team} <span className={accent.text}>penalty taker</span>
+              </h1>
+              <p className="mt-4 max-w-3xl text-base leading-7 text-slate-200 sm:text-lg sm:leading-8">{lead}</p>
+
+              {team.isArchived ? (
+                <p className="mt-5 rounded-2xl border border-slate-700 bg-slate-950/60 px-4 py-3 text-sm leading-6 text-slate-300">
+                  Archived record: {team.team} are not on the current {team.leagueLabel} board. This page preserves the final {team.seasonLabel} hierarchy and URL.
+                </p>
+              ) : conditionSummary ? (
+                <div className={`mt-6 border-l-2 pl-4 ${isUnderReview ? "border-amber-300" : "border-emerald-300"}`}>
+                  <div className={`font-mono text-[10px] font-semibold uppercase tracking-[0.2em] ${isUnderReview ? "text-amber-200" : "text-emerald-300"}`}>
+                    {isUnderReview ? "Order under review" : "Why this order stands"}
+                  </div>
+                  <p className="mt-2 text-sm leading-6 text-slate-200">{conditionSummary}</p>
+                  {team.conditionNote !== conditionSummary ? (
+                    <details className="mt-3 text-xs text-slate-400">
+                      <summary className="cursor-pointer font-semibold text-slate-300 hover:text-white">Full evidence note</summary>
+                      <p className="mt-2 leading-6 text-slate-300">{team.conditionNote}</p>
+                    </details>
+                  ) : null}
+                </div>
+              ) : team.isCarryover ? (
+                <p className="mt-5 border-l-2 border-cyan-300 pl-4 text-sm leading-6 text-cyan-100">
+                  Provisional carryover from the final {CLUB_PENALTY_PREVIOUS_SEASON} order. It is being re-verified through the opening weeks.
+                </p>
+              ) : null}
+
+              {!team.isArchived ? (
+                <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-slate-800 pt-4 text-xs text-slate-400">
+                  <span className="font-semibold text-emerald-300">Checked {checkedLabel}</span>
+                  <span className="hidden text-slate-600 sm:inline">/</span>
+                  <span>{evidenceFreshness}</span>
+                </div>
+              ) : null}
+            </article>
+
+            <aside className={`rounded-2xl border border-slate-700/80 bg-slate-900 p-4 shadow-[0_18px_50px_rgba(0,0,0,0.24)] sm:p-5 lg:sticky lg:top-5`}>
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-slate-400">Filed order</div>
+                  <h2 className="mt-1 text-xl font-semibold tracking-tight text-white">Penalty hierarchy</h2>
+                </div>
+                <span className={`rounded-full border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.14em] ${isUnderReview ? "border-amber-300/30 bg-amber-300/10 text-amber-100" : "border-emerald-300/25 bg-emerald-300/10 text-emerald-100"}`}>
+                  {isUnderReview ? "Reviewing" : "Current"}
+                </span>
+              </div>
+
+              <ol className="mt-4 space-y-2.5">
+                {team.verifiedNames.map((value, index) => {
+                  const rank = index + 1;
+                  const confidence = team.confidence[hierarchyPositions[index]];
+                  const confidenceLabel = confidence === "high" ? "Confirmed" : confidence === "medium" ? "Probable" : confidence === "low" ? "Projected" : "";
+                  return (
+                    <li key={`${rank}-${value}`} className={`rounded-xl border p-3.5 ${rank === 1 ? "border-emerald-300/30 bg-emerald-300/[0.07]" : "border-slate-800 bg-slate-950/55"}`}>
+                      <div className="flex items-center gap-3">
+                        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg font-mono text-sm font-bold ${rank === 1 ? `${accent.fill} text-slate-950` : "border border-slate-700 bg-slate-900 text-slate-300"}`}>
+                          {rank}
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-[9px] uppercase tracking-[0.16em] text-slate-400">{hierarchyLabels[index]}</span>
+                          <strong className={`mt-1 block truncate text-base font-semibold ${rank === 1 ? accent.text : "text-slate-100"}`}>{value}</strong>
+                        </span>
+                        {confidenceLabel ? (
+                          <span className="shrink-0 rounded-full border border-slate-700 px-2 py-1 text-[9px] font-medium text-slate-300">{confidenceLabel}</span>
+                        ) : null}
+                      </div>
+                    </li>
+                  );
+                })}
+                {!team.isArchived && team.hierarchyDepth < 3 ? (
+                  <li className="rounded-xl border border-dashed border-slate-700 bg-slate-950/30 p-3.5 text-sm text-slate-400">
+                    Position {team.hierarchyDepth + 1} remains open; no unsupported name is inserted.
+                  </li>
+                ) : null}
+              </ol>
+              <p className="mt-4 border-t border-slate-800 pt-4 text-xs leading-5 text-slate-400">{hierarchyNote}</p>
+              {watchNote ? (
+                <div className={`mt-4 rounded-xl border px-3.5 py-3 text-xs leading-5 ${isUnderReview ? "border-amber-300/25 bg-amber-300/[0.07] text-amber-50" : "border-slate-700 bg-slate-950/60 text-slate-300"}`}>
+                  <strong className={isUnderReview ? "text-amber-200" : "text-slate-100"}>Watch next:</strong> {watchNote}
+                </div>
+              ) : null}
+            </aside>
           </div>
         </section>
 
-        <section className="grid gap-4 sm:gap-6 xl:grid-cols-[1.08fr,0.92fr]">
-          <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_14px_40px_rgba(0,0,0,0.18)] sm:p-6">
-            <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Quick answer</div>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Who takes penalties for {team.team}?</h2>
-            <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
-              <p>{quickAnswer}</p>
-              <p>{hierarchyNote}</p>
-              <p>{team.leagueCopy}</p>
-              <p>
-                For live goalscorer pricing, compare the verified hierarchy with the{" "}
-                <Link href="/fair-odds-lab" className="border-b border-emerald-500/30 text-emerald-400 hover:text-emerald-300">
-                  Goalscorer Fair Odds Lab
-                </Link>
-                .
-              </p>
-            </div>
-          </div>
-
-          <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_14px_40px_rgba(0,0,0,0.18)] sm:p-6">
-            <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Il Margine file</div>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Evidence verified: {team.lastUpdatedLabel || "awaiting direct evidence"}</h2>
-            <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
-              <p className="rounded-xl border border-emerald-400/20 bg-emerald-400/8 px-3 py-2 text-emerald-100">
-                {team.leagueLabel} board review run: {team.leagueCheckedLabel || "pending"}. An unchanged evidence date means the order was checked but no stronger event justified rewriting it.
-              </p>
-              <p>Public file updated: {team.publicUpdatedLabel || "not available"}.</p>
+        <section className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/65 p-5 sm:p-6">
+            <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-emerald-400">Evidence file</div>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-white">How we verified {team.team}&apos;s penalty order</h2>
+            <p className="mt-3 text-sm leading-6 text-slate-300">
+              Checked <strong className="font-semibold text-emerald-300">{checkedLabel}</strong>. {evidenceFreshness}.
+            </p>
+            <div className="mt-5 space-y-4 text-sm leading-7 text-slate-300">
               {latestEvidenceUpdate ? (
-                <div className="rounded-2xl border border-emerald-400/20 bg-slate-950/60 p-4">
+                <div className="rounded-xl border border-slate-700 bg-slate-950/60 p-4">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-300">Latest verified evidence</span>
-                    <span className="text-xs text-slate-500">{latestEvidenceUpdate.dateLabel}</span>
+                    <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-emerald-300">Latest hierarchy evidence</span>
+                    <span className="text-xs text-slate-400">{latestEvidenceUpdate.dateLabel}</span>
                   </div>
                   <h3 className="mt-2 font-semibold text-slate-100">{latestEvidenceUpdate.headline}</h3>
                   {latestEvidenceUpdate.match ? <p className="mt-1 text-xs font-medium text-slate-300">{latestEvidenceUpdate.match}</p> : null}
-                   <p className="mt-2 text-sm leading-6 text-slate-300">{latestEvidenceUpdate.summary}</p>
-                   {latestEvidenceUpdate.fullSummary !== latestEvidenceUpdate.summary ? (
-                     <details className="mt-3 text-xs text-slate-500">
-                       <summary className="cursor-pointer font-semibold text-emerald-300/90 hover:text-emerald-200">Full evidence context</summary>
-                       <p className="mt-2 leading-6 text-slate-400">{latestEvidenceUpdate.fullSummary}</p>
-                     </details>
-                   ) : null}
+                  <p className="mt-2 text-sm leading-6 text-slate-300">{latestEvidenceUpdate.summary}</p>
+                  {latestEvidenceUpdate.fullSummary !== latestEvidenceUpdate.summary ? (
+                    <details className="mt-3 text-xs text-slate-400">
+                      <summary className="cursor-pointer font-semibold text-emerald-300 hover:text-emerald-200">Full evidence context</summary>
+                      <p className="mt-2 leading-6 text-slate-300">{latestEvidenceUpdate.fullSummary}</p>
+                    </details>
+                  ) : null}
                 </div>
               ) : null}
               {team.evidenceSources.length ? (
                 <div>
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <p className="font-medium text-slate-100">Evidence checked</p>
-                    <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.15em] text-emerald-200">
+                    <p className="font-medium text-slate-100">Sources checked</p>
+                    <span className="rounded-full border border-slate-700 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.14em] text-slate-300">
                       {Math.min(team.evidenceSources.length, 4)} sources shown
                     </span>
                   </div>
-                  <ul className="mt-2 space-y-2">
+                  <ul className="mt-3 grid gap-2 sm:grid-cols-2">
                     {team.evidenceSources.slice(0, 4).map((source) => (
-                      <li key={source.url} className="rounded-xl border border-slate-800 bg-slate-950/55 px-3 py-2.5">
-                        <span className="font-medium text-emerald-300">{source.label}</span>
+                      <li key={source.url} className="rounded-xl border border-slate-800 bg-slate-950/55 px-3 py-3">
+                        <span className="font-medium text-slate-100">{source.label}</span>
                         {source.note ? <span className="mt-1 block text-xs leading-5 text-slate-400">{source.note}</span> : null}
                       </li>
                     ))}
                   </ul>
-                  <p className="mt-2 text-xs leading-5 text-slate-500">
-                    Source URLs are retained in the internal review file so the public page stays focused on the hierarchy.
-                  </p>
                 </div>
               ) : null}
-              <p>
-                We update the order only when the evidence changes: penalties taken or missed, lineup context, injuries, suspensions, transfers, coaching comments, or strong league-specific signals.
-              </p>
-              <p>
-                Spot a hierarchy shift? <a href="mailto:contact@ilmargine.bet" className="border-b border-emerald-500/30 text-emerald-400 hover:text-emerald-300">Send it to us</a> and we will tighten the file.
-              </p>
+              <p className="border-t border-slate-800 pt-4 text-xs leading-5 text-slate-400">{team.leagueCopy} Source URLs remain in the internal audit file so this page keeps readers focused on the current decision.</p>
             </div>
           </div>
-        </section>
 
-        <section className="mt-8 grid gap-4 sm:gap-6 xl:grid-cols-[0.95fr,1.05fr]">
-          <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_14px_40px_rgba(0,0,0,0.18)] sm:p-6">
-            <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">FAQ</div>
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/65 p-5 sm:p-6">
+            <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-emerald-400">Quick reference</div>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">{team.team} penalty taker FAQ</h2>
-            <div className="mt-5 space-y-4">
+            <div className="mt-5 divide-y divide-slate-800">
               {faqItems.map((item) => (
-                <div key={item.question}>
+                <div key={item.question} className="py-4 first:pt-0 last:pb-0">
                   <h3 className="font-semibold text-slate-100">{item.question}</h3>
-                  <p className="mt-2 text-sm leading-7 text-slate-300">{item.answer}</p>
+                  <p className="mt-2 text-sm leading-6 text-slate-300">{item.answer}</p>
                 </div>
               ))}
             </div>
+            <p className="mt-5 border-t border-slate-800 pt-4 text-sm leading-6 text-slate-300">
+              For live goalscorer pricing, compare the filed order with the{" "}
+              <Link href="/fair-odds-lab" className="font-semibold text-emerald-300 hover:text-emerald-200">Goalscorer Fair Odds Lab</Link>.
+            </p>
           </div>
+        </section>
 
-          <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_14px_40px_rgba(0,0,0,0.18)] sm:p-6">
+        <section className="mt-5 rounded-2xl border border-slate-800 bg-slate-900/65 p-5 sm:p-6">
             <div className="flex items-start gap-3">
               <MiniLeagueLogo team={team} />
               <div>
-                <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">More {team.leagueLabel}</div>
+                <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-emerald-400">More {team.leagueLabel}</div>
                 <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Related club penalty takers</h2>
               </div>
             </div>
-            <div className="mt-5 grid gap-2 sm:grid-cols-2">
+            <div className="mt-5 grid grid-cols-2 gap-2 lg:grid-cols-4">
               {related.map((relatedTeam) => (
                 <Link
                   key={relatedTeam.relativeUrl}
                   href={relatedTeam.relativeUrl}
-                  className="group flex items-center gap-3 rounded-2xl border border-slate-800 bg-slate-950/70 px-3 py-2.5 text-sm text-slate-300 transition hover:border-slate-600 hover:bg-slate-950 hover:text-slate-100"
+                  className="group flex min-w-0 items-center gap-2.5 rounded-xl border border-slate-800 bg-slate-950/70 px-2.5 py-2.5 text-sm text-slate-300 transition hover:border-slate-600 hover:bg-slate-950 hover:text-slate-100 sm:px-3"
                 >
                   <MiniClubLogo team={relatedTeam} />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate font-medium text-slate-100 transition group-hover:text-emerald-300">
                       {relatedTeam.team}
                     </span>
-                    <span className="mt-0.5 block truncate text-xs text-slate-500">{relatedTeam.primary}</span>
+                    <span className="mt-0.5 block truncate text-xs text-slate-400">{relatedTeam.primary}</span>
                   </span>
-                  <span className="text-slate-600 transition group-hover:text-emerald-300" aria-hidden="true">-&gt;</span>
                 </Link>
               ))}
             </div>
-          </div>
         </section>
 
-        <section className="mt-10 flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_14px_40px_rgba(0,0,0,0.18)]">
+        <section className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-800 bg-slate-900/65 p-4 sm:p-5">
           <div className="text-sm text-slate-300">
             <span className="text-slate-100">Keep moving through {team.leagueLabel}:</span> use the previous and next links or return to the full table.
           </div>

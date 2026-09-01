@@ -33,7 +33,8 @@
     ],
     "last_verified": "2026-09-01",
     "public_updated_at": "2026-09-01",
-    "membership_source": "https://www.premierleague.com/en/news/4675508/premier-league-fixture-schedulereleased-for-season-202627"
+    "membership_source": "https://www.premierleague.com/en/news/4675508/premier-league-fixture-schedulereleased-for-season-202627",
+    "last_reviewed": "2026-09-01"
   },
   "Arsenal": {
     "primary": "Bukayo Saka",
@@ -54,12 +55,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_arsenal_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_arsenal_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -200,6 +201,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_arsenal_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Arsenal hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Squawka 2026/27 set-piece board",
+            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+            "date": "2026-08-10",
+            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+          },
+          {
+            "label": "FPL Assistant current role audit",
+            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
+            "date": "2026-08-15",
+            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -291,20 +325,30 @@
         "player": "Bukayo Saka",
         "status": "confirmed",
         "source_url": "https://www.arsenal.com/men/players",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Viktor Gyokeres",
         "status": "confirmed",
         "source_url": "https://www.arsenal.com/men/players",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Martin Odegaard",
         "status": "confirmed",
         "source_url": "https://www.arsenal.com/men/players",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+      ]
     }
   },
   "Aston Villa": {
@@ -328,10 +372,10 @@
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260901_aston-villa_departure",
+      "id": "evt_20260901_aston-villa_current_review",
       "date": "2026-09-01",
-      "type": "roster_integrity_review",
-      "source_count": 1
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -511,6 +555,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Emiliano Buendia then Tammy Abraham. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
+      },
+      {
+        "id": "evt_20260901_aston-villa_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Aston Villa hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Squawka 2026/27 set-piece board",
+            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+            "date": "2026-08-10",
+            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+          },
+          {
+            "label": "FPL Assistant current role audit",
+            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
+            "date": "2026-08-15",
+            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -633,6 +710,16 @@
         "source_url": "https://www.premierleague.com/en/clubs/7/aston-villa/squad",
         "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+      ]
     }
   },
   "Bournemouth": {
@@ -654,12 +741,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-08-08",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260808_bournemouth_fpl_role_review",
-      "date": "2026-08-08",
-      "type": "official_fpl_role_review",
-      "source_count": 1
+      "id": "evt_20260901_bournemouth_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -844,6 +931,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Applied after editorial review; direct competitive evidence remains the confirmation standard."
+      },
+      {
+        "id": "evt_20260901_bournemouth_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Bournemouth hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Squawka 2026/27 set-piece board",
+            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+            "date": "2026-08-10",
+            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+          },
+          {
+            "label": "FPL Assistant current role audit",
+            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
+            "date": "2026-08-15",
+            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -958,20 +1078,30 @@
         "player": "Junior Kroupi",
         "status": "confirmed",
         "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-08"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Justin Kluivert",
         "status": "confirmed",
         "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-08"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Marcus Tavernier",
         "status": "confirmed",
         "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-08"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+      ]
     }
   },
   "Brentford": {
@@ -993,11 +1123,11 @@
       "by": "Il Margine",
       "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-08-22",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260822_brentford_thiago_confirmation",
-      "date": "2026-08-22",
-      "type": "competitive_penalty_assignment",
+      "id": "evt_20260901_brentford_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -1165,6 +1295,39 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "A direct same-pitch test confirms Thiago ahead of Schade. The miss affects conversion form, not penalty ownership."
+      },
+      {
+        "id": "evt_20260901_brentford_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Brentford hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Squawka 2026/27 set-piece board",
+            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+            "date": "2026-08-10",
+            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+          },
+          {
+            "label": "FPL Assistant current role audit",
+            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
+            "date": "2026-08-15",
+            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -1256,20 +1419,30 @@
         "player": "Igor Thiago",
         "status": "confirmed",
         "source_url": "https://www.brentfordfc.com/en/news/article/fpl-brentford-fantasy-premier-league-prices-2026-27-igor-thiago",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Kevin Schade",
         "status": "confirmed",
         "source_url": "https://www.brentfordfc.com/en/news/article/fpl-brentford-fantasy-premier-league-prices-2026-27-igor-thiago",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Fabio Carvalho",
         "status": "confirmed",
         "source_url": "https://www.brentfordfc.com/en/news/article/fpl-brentford-fantasy-premier-league-prices-2026-27-igor-thiago",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+      ]
     }
   },
   "Brighton": {
@@ -1291,12 +1464,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-08-10",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260810_brighton_current_squad_review",
-      "date": "2026-08-10",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260901_brighton_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -1525,6 +1698,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 current source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_brighton_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Brighton hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Squawka 2026/27 set-piece board",
+            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+            "date": "2026-08-10",
+            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+          },
+          {
+            "label": "FPL Assistant current role audit",
+            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
+            "date": "2026-08-15",
+            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -1662,20 +1868,30 @@
         "player": "Pascal Gross",
         "status": "confirmed",
         "source_url": "https://www.brightonandhovealbion.com/media-article/mft-transfer-news-pascal-gross-borussia-dortmund-january-2026",
-        "checked_at": "2026-08-10"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Matt O'Riley",
         "status": "confirmed",
         "source_url": "https://www.brightonandhovealbion.com/media-article/mft-transfer-news-matt-o-riley-marseille-return-february-2026",
-        "checked_at": "2026-08-10"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Ibrahim Osman",
         "status": "confirmed",
         "source_url": "https://www.brightonandhovealbion.com/media-article/mft-match-report-bha-albion-show-set-piece-threat-in-win-over-strasbourg",
-        "checked_at": "2026-08-10"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+      ]
     }
   },
   "Chelsea": {
@@ -1697,12 +1913,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_chelsea_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_chelsea_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -1861,6 +2077,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_chelsea_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Chelsea hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Squawka 2026/27 set-piece board",
+            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+            "date": "2026-08-10",
+            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+          },
+          {
+            "label": "FPL Assistant current role audit",
+            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
+            "date": "2026-08-15",
+            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -1952,20 +2201,30 @@
         "player": "Cole Palmer",
         "status": "confirmed",
         "source_url": "https://www.chelseafc.com/en/news/article/fpl-2026-27-chelsea-player-prices-revealed",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Enzo Fernandez",
         "status": "confirmed",
         "source_url": "https://www.chelseafc.com/en/news/article/fpl-2026-27-chelsea-player-prices-revealed",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Estevao",
         "status": "confirmed",
         "source_url": "https://www.chelseafc.com/en/news/article/fpl-2026-27-chelsea-player-prices-revealed",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+      ]
     }
   },
   "Coventry City": {
@@ -1985,12 +2244,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_coventry-city_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_coventry-city_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -2106,6 +2365,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_coventry-city_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Coventry City hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Squawka 2026/27 set-piece board",
+            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+            "date": "2026-08-10",
+            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+          },
+          {
+            "label": "FPL Assistant current role audit",
+            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
+            "date": "2026-08-15",
+            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -2170,20 +2462,30 @@
         "player": "Haji Wright",
         "status": "confirmed",
         "source_url": "https://www.premierleague.com/en/clubs/9/coventry-city/squad",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Victor Torp",
         "status": "confirmed",
         "source_url": "https://www.premierleague.com/en/clubs/9/coventry-city/squad",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Brandon Thomas-Asante",
         "status": "confirmed",
         "source_url": "https://www.premierleague.com/en/clubs/9/coventry-city/squad",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+      ]
     }
   },
   "Crystal Palace": {
@@ -2205,12 +2507,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_crystal-palace_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260901_crystal-palace_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -2351,6 +2653,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_crystal-palace_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Crystal Palace hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Squawka 2026/27 set-piece board",
+            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+            "date": "2026-08-10",
+            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+          },
+          {
+            "label": "FPL Assistant current role audit",
+            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
+            "date": "2026-08-15",
+            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -2442,20 +2777,30 @@
         "player": "Jean-Philippe Mateta",
         "status": "confirmed",
         "source_url": "https://www.cpfc.co.uk/teams/first-team/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Ismaila Sarr",
         "status": "confirmed",
         "source_url": "https://www.cpfc.co.uk/teams/first-team/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Justin Devenny",
         "status": "confirmed",
         "source_url": "https://www.cpfc.co.uk/teams/first-team/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+      ]
     }
   },
   "Everton": {
@@ -2477,12 +2822,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_everton_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_everton_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -2617,6 +2962,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_everton_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Everton hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Squawka 2026/27 set-piece board",
+            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+            "date": "2026-08-10",
+            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+          },
+          {
+            "label": "FPL Assistant current role audit",
+            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
+            "date": "2026-08-15",
+            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -2708,20 +3086,30 @@
         "player": "Iliman Ndiaye",
         "status": "confirmed",
         "source_url": "https://www.evertonfc.com/teams/men",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "James Garner",
         "status": "confirmed",
         "source_url": "https://www.evertonfc.com/teams/men",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Beto",
         "status": "confirmed",
         "source_url": "https://www.evertonfc.com/teams/men",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+      ]
     }
   },
   "Fulham": {
@@ -2745,10 +3133,10 @@
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260901_fulham_departure",
+      "id": "evt_20260901_fulham_current_review",
       "date": "2026-09-01",
-      "type": "roster_integrity_review",
-      "source_count": 1
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -2952,6 +3340,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Antonee Robinson then Rodrigo Muniz. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
+      },
+      {
+        "id": "evt_20260901_fulham_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Fulham hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Squawka 2026/27 set-piece board",
+            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+            "date": "2026-08-10",
+            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+          },
+          {
+            "label": "FPL Assistant current role audit",
+            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
+            "date": "2026-08-15",
+            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -3074,6 +3495,16 @@
         "source_url": "https://www.fulhamfc.com/news/2026/july/23/fpl-prices-revealed/",
         "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+      ]
     }
   },
   "Hull City": {
@@ -3093,12 +3524,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-08-08",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260808_hull-city_fpl_role_review",
-      "date": "2026-08-08",
-      "type": "official_fpl_role_review",
-      "source_count": 1
+      "id": "evt_20260901_hull-city_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -3258,6 +3689,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Applied after editorial review; direct competitive evidence remains the confirmation standard."
+      },
+      {
+        "id": "evt_20260901_hull-city_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Hull City hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Squawka 2026/27 set-piece board",
+            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+            "date": "2026-08-10",
+            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+          },
+          {
+            "label": "FPL Assistant current role audit",
+            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
+            "date": "2026-08-15",
+            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -3345,20 +3809,30 @@
         "player": "Matt Crooks",
         "status": "confirmed",
         "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-08"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Oli McBurnie",
         "status": "confirmed",
         "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-08"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "David Akintola",
         "status": "confirmed",
         "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-08"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+      ]
     }
   },
   "Ipswich Town": {
@@ -3378,11 +3852,11 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-08-22",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260822_ipswich_roster_review",
-      "date": "2026-08-22",
-      "type": "current_season_roster_review",
+      "id": "evt_20260901_ipswich-town_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -3569,6 +4043,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "George Hirst left Ipswich on 20 August. Clarke and Philogene are the strongest retained candidates, with Enciso the best current-squad fallback. No 2026/27 penalty has yet established a direct same-pitch order, so the hierarchy remains conditional."
+      },
+      {
+        "id": "evt_20260901_ipswich-town_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Ipswich Town hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Squawka 2026/27 set-piece board",
+            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+            "date": "2026-08-10",
+            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+          },
+          {
+            "label": "FPL Assistant current role audit",
+            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
+            "date": "2026-08-15",
+            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -3679,20 +4186,30 @@
         "player": "Jack Clarke",
         "status": "confirmed",
         "source_url": "https://www.skysports.com/football/ipswich-town-vs-sunderland/teams/559448",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Jaden Philogene",
         "status": "confirmed",
         "source_url": "https://www.skysports.com/football/ipswich-town-vs-sunderland/teams/559448",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Julio Enciso",
         "status": "confirmed",
         "source_url": "https://www.skysports.com/football/ipswich-town-vs-sunderland/teams/559448",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+      ]
     }
   },
   "Leeds": {
@@ -3716,10 +4233,10 @@
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260901_leeds_departure",
+      "id": "evt_20260901_leeds_current_review",
       "date": "2026-09-01",
-      "type": "roster_integrity_review",
-      "source_count": 1
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -3881,6 +4398,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Dominic Calvert-Lewin then Lukas Nmecha. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
+      },
+      {
+        "id": "evt_20260901_leeds_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Leeds hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Squawka 2026/27 set-piece board",
+            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+            "date": "2026-08-10",
+            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+          },
+          {
+            "label": "FPL Assistant current role audit",
+            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
+            "date": "2026-08-15",
+            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -4003,6 +4553,16 @@
         "source_url": "https://www.leedsunited.com/en/news/travelling-squad-named-for-usa-pre-season-tour",
         "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+      ]
     }
   },
   "Liverpool": {
@@ -4024,12 +4584,12 @@
       "by": "Il Margine",
       "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-08-24",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260823_liverpool_szoboszlai_newcastle",
-      "date": "2026-08-23",
-      "type": "competitive_penalty_event",
-      "source_count": 1
+      "id": "evt_20260901_liverpool_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -4291,6 +4851,39 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Szoboszlai's conversion at Newcastle reinforces the filed primary call. Alexander Isak remains the live challenger until a same-pitch competitive assignment clearly settles the order."
+      },
+      {
+        "id": "evt_20260901_liverpool_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Liverpool hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Squawka 2026/27 set-piece board",
+            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+            "date": "2026-08-10",
+            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+          },
+          {
+            "label": "FPL Assistant current role audit",
+            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
+            "date": "2026-08-15",
+            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -4428,20 +5021,30 @@
         "player": "Dominik Szoboszlai",
         "status": "confirmed",
         "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-10"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Alexander Isak",
         "status": "confirmed",
         "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-10"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Cody Gakpo",
         "status": "confirmed",
         "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-10"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+      ]
     }
   },
   "Manchester City": {
@@ -4465,10 +5068,10 @@
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260901_manchester-city_departure",
+      "id": "evt_20260901_manchester-city_current_review",
       "date": "2026-09-01",
-      "type": "roster_integrity_review",
-      "source_count": 1
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -4630,6 +5233,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Erling Haaland then Jeremy Doku. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
+      },
+      {
+        "id": "evt_20260901_manchester-city_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Manchester City hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Squawka 2026/27 set-piece board",
+            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+            "date": "2026-08-10",
+            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+          },
+          {
+            "label": "FPL Assistant current role audit",
+            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
+            "date": "2026-08-15",
+            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -4752,6 +5388,16 @@
         "source_url": "https://www.mancity.com/news/mens/west-ham-v-manchester-city-team-news-tactics-and-stats-63909107",
         "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+      ]
     }
   },
   "Manchester United": {
@@ -4773,12 +5419,12 @@
       "by": "Il Margine",
       "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-08-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260830_manchester_united_bruno_confirmation",
-      "date": "2026-08-30",
-      "type": "competitive_penalty_assignment",
-      "source_count": 1
+      "id": "evt_20260901_manchester-united_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -4963,6 +5609,39 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "This is a clean same-pitch confirmation of Bruno Fernandes as first choice."
+      },
+      {
+        "id": "evt_20260901_manchester-united_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Manchester United hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Squawka 2026/27 set-piece board",
+            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+            "date": "2026-08-10",
+            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+          },
+          {
+            "label": "FPL Assistant current role audit",
+            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
+            "date": "2026-08-15",
+            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -5054,20 +5733,30 @@
         "player": "Bruno Fernandes",
         "status": "confirmed",
         "source_url": "https://www.manutd.com/en/teams/mens-team?matchId=2561969",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Bryan Mbeumo",
         "status": "confirmed",
         "source_url": "https://www.manutd.com/en/teams/mens-team?matchId=2561969",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Youri Tielemans",
         "status": "confirmed",
         "source_url": "https://www.manutd.com/en/teams/mens-team/youri-tielemans",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+      ]
     }
   },
   "Newcastle United": {
@@ -5089,12 +5778,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-08-10",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260810_newcastle_current_squad_review",
-      "date": "2026-08-10",
-      "type": "multi_source_preseason_research",
-      "source_count": 6
+      "id": "evt_20260901_newcastle-united_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -5353,6 +6042,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 6 current source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_newcastle-united_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Newcastle United hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Squawka 2026/27 set-piece board",
+            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+            "date": "2026-08-10",
+            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+          },
+          {
+            "label": "FPL Assistant current role audit",
+            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
+            "date": "2026-08-15",
+            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -5490,20 +6212,30 @@
         "player": "Nick Woltemade",
         "status": "confirmed",
         "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-10"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Fabian Schar",
         "status": "confirmed",
         "source_url": "https://www.newcastleunited.com/en/news/fabian-schaer-extends-newcastle-united-stay",
-        "checked_at": "2026-08-10"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Harvey Barnes",
         "status": "confirmed",
         "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-08-10"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+      ]
     }
   },
   "Nottingham Forest": {
@@ -5525,12 +6257,12 @@
       "by": "Il Margine",
       "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-08-29",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260829_forest_gibbs_white_backup",
-      "date": "2026-08-29",
-      "type": "competitive_penalty_assignment",
-      "source_count": 1
+      "id": "evt_20260901_nottingham-forest_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -5697,6 +6429,39 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Gibbs-White's conversion confirms the filed secondary role. Wood was not on the pitch, so there is no evidence to promote Gibbs-White above him."
+      },
+      {
+        "id": "evt_20260901_nottingham-forest_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Nottingham Forest hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Squawka 2026/27 set-piece board",
+            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+            "date": "2026-08-10",
+            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+          },
+          {
+            "label": "FPL Assistant current role audit",
+            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
+            "date": "2026-08-15",
+            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -5788,20 +6553,30 @@
         "player": "Chris Wood",
         "status": "confirmed",
         "source_url": "https://www.premierleague.com/en/news/4680932/fpl-prices-announced",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Morgan Gibbs-White",
         "status": "confirmed",
         "source_url": "https://www.premierleague.com/en/news/4680932/fpl-prices-announced",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Igor Jesus",
         "status": "confirmed",
         "source_url": "https://www.premierleague.com/en/news/4680932/fpl-prices-announced",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+      ]
     }
   },
   "Sunderland": {
@@ -5823,12 +6598,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_sunderland_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 5
+      "id": "evt_20260901_sunderland_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -6005,6 +6780,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_sunderland_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Sunderland hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Squawka 2026/27 set-piece board",
+            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+            "date": "2026-08-10",
+            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+          },
+          {
+            "label": "FPL Assistant current role audit",
+            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
+            "date": "2026-08-15",
+            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -6096,20 +6904,30 @@
         "player": "Habib Diarra",
         "status": "confirmed",
         "source_url": "https://www.safc.com/news/2026/may/17/le-bris-praises-sunderland-character-after-comeback-victory/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Enzo Le Fee",
         "status": "confirmed",
         "source_url": "https://www.safc.com/news/2026/may/17/le-bris-praises-sunderland-character-after-comeback-victory/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Granit Xhaka",
         "status": "confirmed",
         "source_url": "https://www.safc.com/news/2026/may/17/le-bris-praises-sunderland-character-after-comeback-victory/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+      ]
     }
   },
   "Tottenham": {
@@ -6131,12 +6949,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_tottenham_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_tottenham_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -6289,6 +7107,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_tottenham_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Tottenham hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Squawka 2026/27 set-piece board",
+            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+            "date": "2026-08-10",
+            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+          },
+          {
+            "label": "FPL Assistant current role audit",
+            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
+            "date": "2026-08-15",
+            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -6380,20 +7231,30 @@
         "player": "Dominic Solanke",
         "status": "confirmed",
         "source_url": "https://www.tottenhamhotspur.com/news/1079489",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Mohammed Kudus",
         "status": "confirmed",
         "source_url": "https://www.tottenhamhotspur.com/news/1079489",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Xavi Simons",
         "status": "confirmed",
         "source_url": "https://www.tottenhamhotspur.com/news/1079489",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
+        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+      ]
     }
   }
 }

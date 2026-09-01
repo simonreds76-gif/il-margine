@@ -34,6 +34,13 @@ type PenaltyTeamRow = {
   confidence?: Partial<Record<"primary" | "secondary" | "tertiary", PenaltyConfidence | null>>;
   condition_note?: string;
   last_verified?: { date?: string; by?: string; method?: string };
+  last_reviewed?: {
+    date?: string;
+    by?: string;
+    method?: string;
+    outcome?: string;
+    sources?: string[];
+  };
   public_updated_at?: string;
   evidence_log?: PenaltyEvidenceRow[];
   change_log?: Array<{ change_type?: string; changed_at?: string; reason?: string }>;
@@ -86,6 +93,9 @@ export type ClubPenaltyTeam = {
   hierarchyDepth: 0 | 1 | 2 | 3;
   hierarchyStatus: PenaltyHierarchyStatus;
   primaryConfidence: PenaltyConfidence;
+  confidence: Partial<Record<"primary" | "secondary" | "tertiary", PenaltyConfidence | null>>;
+  checkedAt: string;
+  checkedLabel: string;
   lastUpdated: string;
   lastUpdatedLabel: string;
   publicUpdatedAt: string;
@@ -334,6 +344,7 @@ function mapTeam(
   const slug = clubPenaltySlug(team);
   const relativeUrl = clubPenaltyTeamRelativeUrl(league.key, slug);
   const lastUpdated = cleanClubPenaltyText(entry.last_verified?.date || entry.last_updated);
+  const checkedAt = cleanClubPenaltyText(entry.last_reviewed?.date || entry.last_verified?.date || options.leagueCheckedAt);
   const publicUpdatedAt = cleanClubPenaltyText(entry.public_updated_at || entry.last_updated);
   const isArchived = Boolean(options.archived);
   const isCarryover = !isArchived && Boolean(entry.flags?.carryover_from_previous_season);
@@ -364,16 +375,21 @@ function mapTeam(
     .sort((left, right) => right.date.localeCompare(left.date) || right.id.localeCompare(left.id));
   const evidenceSources = (entry.evidence_log ?? [])
     .filter((evidence) => evidence.review?.status === "approved")
+    .sort((left, right) => cleanClubPenaltyText(right.date).localeCompare(cleanClubPenaltyText(left.date)))
     .flatMap((evidence) =>
-      (evidence.sources ?? []).map((source) => ({
-        label: cleanClubPenaltyText(source.label) || "Source",
-        url: cleanClubPenaltyText(source.url ?? ""),
-        date: cleanClubPenaltyText(source.date || evidence.date),
-        note: summarizeClubPenaltyText(source.note || evidence.context || evidence.editorial_note, 150),
-      })),
+      (evidence.sources ?? []).map((source) => {
+        const sourceLabel = cleanClubPenaltyText(source.label);
+        const sourceNote = cleanClubPenaltyText(source.note);
+        const genericLabel = sourceLabel.toLowerCase() === "il margine source review";
+        return {
+          label: genericLabel && sourceNote ? sourceNote : sourceLabel || "Source",
+          url: cleanClubPenaltyText(source.url ?? ""),
+          date: cleanClubPenaltyText(source.date || evidence.date),
+          note: genericLabel ? "" : summarizeClubPenaltyText(sourceNote || evidence.context || evidence.editorial_note, 150),
+        };
+      }),
     )
     .filter((source) => /^https?:\/\//i.test(source.url))
-    .reverse()
     .filter((source, index, rows) => rows.findIndex((row) => row.url === source.url) === index)
     .slice(0, 6);
   const hierarchyCandidates = [entry.primary, entry.secondary, entry.tertiary].map((value) => cleanClubPenaltyText(value));
@@ -401,6 +417,9 @@ function mapTeam(
     hierarchyDepth,
     hierarchyStatus: isArchived ? "confirmed" : entry.hierarchy_status ?? (entry.primary ? "probable" : "unknown"),
     primaryConfidence: entry.confidence?.primary ?? (entry.primary ? "medium" : "low"),
+    confidence: entry.confidence ?? {},
+    checkedAt,
+    checkedLabel: formatClubPenaltyDate(checkedAt),
     lastUpdated,
     lastUpdatedLabel: formatClubPenaltyDate(lastUpdated),
     publicUpdatedAt,

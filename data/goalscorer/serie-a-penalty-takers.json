@@ -33,7 +33,8 @@
     ],
     "last_verified": "2026-09-01",
     "public_updated_at": "2026-09-01",
-    "membership_source": "https://en.legaseriea.it/serie-a/news/looking-forward-to-the-2026-27-serie-a-fixture-list"
+    "membership_source": "https://en.legaseriea.it/serie-a/news/looking-forward-to-the-2026-27-serie-a-fixture-list",
+    "last_reviewed": "2026-09-01"
   },
   "AC Milan": {
     "primary": "Gonçalo Ramos",
@@ -56,9 +57,9 @@
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260901_ac-milan_departure",
+      "id": "evt_20260901_ac-milan_current_review",
       "date": "2026-09-01",
-      "type": "roster_integrity_review",
+      "type": "current_season_board_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -251,6 +252,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Gonçalo Ramos now leads the filed order, with Christian Pulisic next. The third-choice position remains under review after recent squad changes."
+      },
+      {
+        "id": "evt_20260901_ac-milan_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "AC Milan hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "GOAL Italia 2026/27 rigoristi board",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-08-29",
+            "note": "Current all-club order reflecting late-August transfers and role changes."
+          },
+          {
+            "label": "Lega Serie A current squads",
+            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "date": "2026-09-01",
+            "note": "Current league squad directory used to reject departed candidates."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -373,33 +407,43 @@
         "source_url": "https://www.acmilan.com/it/news/articoli/media/2026-06-30/comunicato-ufficiale-goncalo-ramos",
         "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "https://www.legaseriea.it/en/serie-a/teams"
+      ]
     }
   },
   "Atalanta": {
-    "primary": "Gianluca Scamacca",
-    "secondary": "Lazar Samardžić",
-    "tertiary": "Éderson",
-    "last_updated": "2026-07-30",
-    "source": "Il Margine multi-source research",
-    "cross_check": "Il Margine roster cross-check",
-    "hierarchy_status": "disputed",
+    "primary": "Franck Kessié",
+    "secondary": "Gianluca Scamacca",
+    "tertiary": "Charles De Ketelaere",
+    "last_updated": "2026-09-01",
+    "source": "GOAL Italia 2026/27 rigoristi board",
+    "cross_check": "Lega Serie A current squads",
+    "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
-      "secondary": "low",
-      "tertiary": "low"
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "medium"
     },
-    "condition_note": "Scamacca's primary position is supported by a competitive conversion with De Ketelaere starting and by the 2025/26 event sequence. For the backups, current SOS Fanta gives Samardžić 2/2 and Éderson 1/1, while De Ketelaere was 0/1; Fantacalcio also records Éderson taking successfully when Scamacca was absent. Goal still puts De Ketelaere second, so the backup reorder is evidence-led but low confidence. Sarri's arrival resets the tactical hierarchy. Samardžić is preferred to Éderson only as the best practical ordering from conversion volume; the two backup slots remain close. Scamacca is well supported, but Samardžić and Éderson are ordered from conversion volume rather than a current like-for-like event. Conditions: Any summer departure involving Samardžić or Éderson, or the arrival of a specialist forward, changes the backup order. If Sarri publicly designates De Ketelaere or uses him on the next like-for-like penalty, restore him to the top three.",
+    "condition_note": "Kessié is the late-August first-choice projection, with Scamacca and De Ketelaere the current alternatives.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_atalanta_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 5
+      "id": "evt_20260901_atalanta_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -552,6 +596,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_atalanta_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Atalanta penalty hierarchy updated",
+        "context": "Kessié is the late-August first-choice projection, with Scamacca and De Ketelaere the current alternatives.",
+        "sources": [
+          {
+            "label": "GOAL Italia 2026/27 rigoristi board",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-08-29",
+            "note": "Current all-club order reflecting late-August transfers and role changes."
+          },
+          {
+            "label": "Lega Serie A current squads",
+            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "date": "2026-09-01",
+            "note": "Current league squad directory used to reject departed candidates."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Kessié is the late-August first-choice projection, with Scamacca and De Ketelaere the current alternatives."
       }
     ],
     "change_log": [
@@ -623,6 +700,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Gianluca Scamacca",
+          "secondary": "Lazar Samardžić",
+          "tertiary": "Éderson"
+        },
+        "to": {
+          "primary": "Franck Kessié",
+          "secondary": "Gianluca Scamacca",
+          "tertiary": "Charles De Ketelaere"
+        },
+        "reason": "Kessié is the late-August first-choice projection, with Scamacca and De Ketelaere the current alternatives.",
+        "evidence_ids": [
+          "evt_20260901_atalanta_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -640,50 +740,60 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Gianluca Scamacca",
+        "player": "Franck Kessié",
         "status": "confirmed",
-        "source_url": "https://www.atalanta.it/news/preseason-2026-27-i-giocatori-convocati-per-l-inizio-della-preparazione?appview=true",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Lazar Samardžić",
+        "player": "Gianluca Scamacca",
         "status": "confirmed",
-        "source_url": "https://www.atalanta.it/news/preseason-2026-27-i-giocatori-convocati-per-l-inizio-della-preparazione?appview=true",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
-        "player": "Éderson",
+        "player": "Charles De Ketelaere",
         "status": "confirmed",
-        "source_url": "https://www.atalanta.it/news/preseason-2026-27-i-giocatori-convocati-per-l-inizio-della-preparazione?appview=true",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "https://www.legaseriea.it/en/serie-a/teams"
+      ]
     }
   },
   "Bologna": {
     "primary": "Riccardo Orsolini",
-    "secondary": "Federico Bernardeschi",
-    "tertiary": "Lewis Ferguson",
-    "last_updated": "2026-07-30",
-    "source": "Il Margine multi-source research",
-    "cross_check": "Il Margine roster cross-check",
+    "secondary": "Artem Dovbyk",
+    "tertiary": "Federico Bernardeschi",
+    "last_updated": "2026-09-01",
+    "source": "GOAL Italia 2026/27 rigoristi board",
+    "cross_check": "Lega Serie A current squads",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
-      "secondary": "high",
+      "primary": "medium",
+      "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Orsolini took Bologna's latest competitive penalty with Bernardeschi on the pitch. Bernardeschi's own 2025/26 penalty came after replacing Orsolini, preserving the first two positions. SOS Fanta identifies Ferguson as the third option from a 16/17 career record. Jonathan Rowe's 25 July friendly conversion does not displace the filed three because Orsolini and Bernardeschi entered only after that penalty. The first two are strongly supported; Ferguson is a career-record fallback and the new coaching cycle remains provisional. Conditions: Reassess after any departure, prolonged absence, or specialist signing affecting the named three.",
+    "condition_note": "Orsolini remains first choice. Dovbyk is now the principal backup, ahead of Bernardeschi.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_bologna_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 5
+      "id": "evt_20260901_bologna_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -836,6 +946,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_bologna_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Bologna penalty hierarchy updated",
+        "context": "Orsolini remains first choice. Dovbyk is now the principal backup, ahead of Bernardeschi.",
+        "sources": [
+          {
+            "label": "GOAL Italia 2026/27 rigoristi board",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-08-29",
+            "note": "Current all-club order reflecting late-August transfers and role changes."
+          },
+          {
+            "label": "Lega Serie A current squads",
+            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "date": "2026-09-01",
+            "note": "Current league squad directory used to reject departed candidates."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Orsolini remains first choice. Dovbyk is now the principal backup, ahead of Bernardeschi."
       }
     ],
     "change_log": [
@@ -907,6 +1050,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Riccardo Orsolini",
+          "secondary": "Federico Bernardeschi",
+          "tertiary": "Lewis Ferguson"
+        },
+        "to": {
+          "primary": "Riccardo Orsolini",
+          "secondary": "Artem Dovbyk",
+          "tertiary": "Federico Bernardeschi"
+        },
+        "reason": "Orsolini remains first choice. Dovbyk is now the principal backup, ahead of Bernardeschi.",
+        "evidence_ids": [
+          "evt_20260901_bologna_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -927,20 +1093,30 @@
         "player": "Riccardo Orsolini",
         "status": "confirmed",
         "source_url": "https://www.bolognafc.it/domani-la-ripresa-delle-attivita-i-calciatori-convocati/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Federico Bernardeschi",
+        "player": "Artem Dovbyk",
         "status": "confirmed",
-        "source_url": "https://www.bolognafc.it/domani-la-ripresa-delle-attivita-i-calciatori-convocati/",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
-        "player": "Lewis Ferguson",
+        "player": "Federico Bernardeschi",
         "status": "confirmed",
-        "source_url": "https://www.bolognafc.it/domani-la-ripresa-delle-attivita-i-calciatori-convocati/",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "https://www.legaseriea.it/en/serie-a/teams"
+      ]
     }
   },
   "Cagliari": {
@@ -962,11 +1138,11 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-08-22",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260822_cagliari_deiola_assignment",
-      "date": "2026-08-22",
-      "type": "competitive_penalty_assignment",
+      "id": "evt_20260901_cagliari_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -1152,6 +1328,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Captain Alessandro Deiola took Cagliari's first competitive penalty of 2026/27 with Fazzini on the pitch. His first attempt was saved, but VAR ordered a retake for encroachment and he scored. Fazzini is the best current deputy; Mina remains a lower-confidence fallback."
+      },
+      {
+        "id": "evt_20260901_cagliari_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Cagliari hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "GOAL Italia 2026/27 rigoristi board",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-08-29",
+            "note": "Current all-club order reflecting late-August transfers and role changes."
+          },
+          {
+            "label": "Lega Serie A current squads",
+            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "date": "2026-09-01",
+            "note": "Current league squad directory used to reject departed candidates."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -1266,47 +1475,57 @@
         "player": "Alessandro Deiola",
         "status": "confirmed",
         "source_url": "https://cagliaricalcio.com/news/match-report-cagliari-arezzo-1-0/",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Jacopo Fazzini",
         "status": "confirmed",
         "source_url": "https://cagliaricalcio.com/news/match-report-cagliari-arezzo-1-0/",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Yerry Mina",
         "status": "confirmed",
         "source_url": "https://cagliaricalcio.com/news/match-report-cagliari-arezzo-1-0/",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "https://www.legaseriea.it/en/serie-a/teams"
+      ]
     }
   },
   "Como": {
     "primary": "Lucas Da Cunha",
-    "secondary": "Tasos Douvikas",
-    "tertiary": "Martin Baturina",
-    "last_updated": "2026-07-30",
-    "source": "Il Margine multi-source research",
-    "cross_check": "Il Margine roster cross-check",
+    "secondary": "Nico Paz",
+    "tertiary": "Tasos Douvikas",
+    "last_updated": "2026-09-01",
+    "source": "GOAL Italia 2026/27 rigoristi board",
+    "cross_check": "Lega Serie A current squads",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
+      "primary": "medium",
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Da Cunha converted four from four in 2025/26 and took a competitive penalty with Douvikas and Baturina starting. Fantacalcio's season audit says Douvikas likely passed Nico Paz after Paz's misses. Baturina later converted in the Coppa Italia when both Da Cunha and Douvikas were absent, giving him better current tertiary evidence than Paz. Goal still ranks Nico Paz second, but that conflicts with his three Serie A misses and with the later specialist event analysis. The primary is clear; the backup order conflicts with some boards that still place Nico Paz higher. Conditions: A new specialist signing could alter the backup order; SOS Fanta explicitly flags that possibility.",
+    "condition_note": "Da Cunha leads the current order, followed by Paz and Douvikas.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_como_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 5
+      "id": "evt_20260901_como_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -1459,6 +1678,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_como_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Como penalty hierarchy updated",
+        "context": "Da Cunha leads the current order, followed by Paz and Douvikas.",
+        "sources": [
+          {
+            "label": "GOAL Italia 2026/27 rigoristi board",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-08-29",
+            "note": "Current all-club order reflecting late-August transfers and role changes."
+          },
+          {
+            "label": "Lega Serie A current squads",
+            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "date": "2026-09-01",
+            "note": "Current league squad directory used to reject departed candidates."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Da Cunha leads the current order, followed by Paz and Douvikas."
       }
     ],
     "change_log": [
@@ -1530,6 +1782,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Lucas Da Cunha",
+          "secondary": "Tasos Douvikas",
+          "tertiary": "Martin Baturina"
+        },
+        "to": {
+          "primary": "Lucas Da Cunha",
+          "secondary": "Nico Paz",
+          "tertiary": "Tasos Douvikas"
+        },
+        "reason": "Da Cunha leads the current order, followed by Paz and Douvikas.",
+        "evidence_ids": [
+          "evt_20260901_como_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -1550,47 +1825,57 @@
         "player": "Lucas Da Cunha",
         "status": "confirmed",
         "source_url": "https://comofootball.com/en/players/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Tasos Douvikas",
+        "player": "Nico Paz",
         "status": "confirmed",
-        "source_url": "https://comofootball.com/en/players/",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
-        "player": "Martin Baturina",
+        "player": "Tasos Douvikas",
         "status": "confirmed",
-        "source_url": "https://comofootball.com/en/players/",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "https://www.legaseriea.it/en/serie-a/teams"
+      ]
     }
   },
   "Fiorentina": {
-    "primary": "Moise Kean",
-    "secondary": "Rolando Mandragora",
-    "tertiary": "",
+    "primary": "Franco Mastantuono",
+    "secondary": "Mateo Pellegrino",
+    "tertiary": "Rolando Mandragora",
     "last_updated": "2026-09-01",
-    "source": "Il Margine multi-source research",
-    "cross_check": "Il Margine roster cross-check",
-    "hierarchy_status": "conditional",
+    "source": "GOAL Italia 2026/27 rigoristi board",
+    "cross_check": "Lega Serie A current squads",
+    "hierarchy_status": "disputed",
     "confidence": {
-      "primary": "high",
+      "primary": "medium",
       "secondary": "medium",
-      "tertiary": null
+      "tertiary": "medium"
     },
-    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Moise Kean then Rolando Mandragora. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+    "condition_note": "Fiorentina's rebuilt attack makes Mastantuono the current first call, Pellegrino the main alternative and Mandragora the retained third option.",
     "last_verified": {
       "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "confirmed_departure_roster_review"
+      "method": "current_roster_and_penalty_record_review"
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260901_fiorentina_departure",
+      "id": "evt_20260901_fiorentina_current_review",
       "date": "2026-09-01",
-      "type": "roster_integrity_review",
-      "source_count": 1
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -1770,6 +2055,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Moise Kean then Rolando Mandragora. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
+      },
+      {
+        "id": "evt_20260901_fiorentina_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Fiorentina penalty hierarchy updated",
+        "context": "Fiorentina's rebuilt attack makes Mastantuono the current first call, Pellegrino the main alternative and Mandragora the retained third option.",
+        "sources": [
+          {
+            "label": "GOAL Italia 2026/27 rigoristi board",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-08-29",
+            "note": "Current all-club order reflecting late-August transfers and role changes."
+          },
+          {
+            "label": "Lega Serie A current squads",
+            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "date": "2026-09-01",
+            "note": "Current league squad directory used to reject departed candidates."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Fiorentina's rebuilt attack makes Mastantuono the current first call, Pellegrino the main alternative and Mandragora the retained third option."
       }
     ],
     "change_log": [
@@ -1864,6 +2182,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-01T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Moise Kean",
+          "secondary": "Rolando Mandragora",
+          "tertiary": ""
+        },
+        "to": {
+          "primary": "Franco Mastantuono",
+          "secondary": "Mateo Pellegrino",
+          "tertiary": "Rolando Mandragora"
+        },
+        "reason": "Fiorentina's rebuilt attack makes Mastantuono the current first call, Pellegrino the main alternative and Mandragora the retained third option.",
+        "evidence_ids": [
+          "evt_20260901_fiorentina_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -1881,17 +2222,33 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Moise Kean",
+        "player": "Franco Mastantuono",
         "status": "confirmed",
-        "source_url": "https://www.acffiorentina.com/pages/prima-squadra-maschile",
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
         "checked_at": "2026-09-01"
       },
       "secondary": {
+        "player": "Mateo Pellegrino",
+        "status": "confirmed",
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
+      },
+      "tertiary": {
         "player": "Rolando Mandragora",
         "status": "confirmed",
-        "source_url": "https://www.acffiorentina.com/pages/prima-squadra-maschile",
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
         "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "https://www.legaseriea.it/en/serie-a/teams"
+      ]
     }
   },
   "Frosinone": {
@@ -1913,9 +2270,9 @@
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260901_frosinone_retained",
+      "id": "evt_20260901_frosinone_current_review",
       "date": "2026-09-01",
-      "type": "roster_integrity_review",
+      "type": "current_season_board_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -2077,6 +2434,39 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Giacomo Calò remains Frosinone's first-choice penalty taker after converting five from five in the promotion season. Ben Lhassine Kone is the current backup, with Antonio Raimondo third."
+      },
+      {
+        "id": "evt_20260901_frosinone_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Frosinone hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "GOAL Italia 2026/27 rigoristi board",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-08-29",
+            "note": "Current all-club order reflecting late-August transfers and role changes."
+          },
+          {
+            "label": "Lega Serie A current squads",
+            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "date": "2026-09-01",
+            "note": "Current league squad directory used to reject departed candidates."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -2155,6 +2545,16 @@
         "source_url": "https://www.frosinonecalcio.com/preseason-i-convocati/",
         "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "https://www.legaseriea.it/en/serie-a/teams"
+      ]
     }
   },
   "Genoa": {
@@ -2176,12 +2576,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_genoa_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 5
+      "id": "evt_20260901_genoa_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -2334,6 +2734,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_genoa_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Genoa hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "GOAL Italia 2026/27 rigoristi board",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-08-29",
+            "note": "Current all-club order reflecting late-August transfers and role changes."
+          },
+          {
+            "label": "Lega Serie A current squads",
+            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "date": "2026-09-01",
+            "note": "Current league squad directory used to reject departed candidates."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -2425,47 +2858,57 @@
         "player": "Lorenzo Colombo",
         "status": "confirmed",
         "source_url": "https://genoacfc.it/prima-squadra-maschile/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Junior Messias",
         "status": "confirmed",
         "source_url": "https://genoacfc.it/prima-squadra-maschile/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Vitinha",
         "status": "confirmed",
         "source_url": "https://genoacfc.it/prima-squadra-maschile/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "https://www.legaseriea.it/en/serie-a/teams"
+      ]
     }
   },
   "Inter": {
     "primary": "Hakan Çalhanoğlu",
-    "secondary": "Piotr Zieliński",
-    "tertiary": "Lautaro Martínez",
-    "last_updated": "2026-07-30",
-    "source": "Il Margine multi-source research",
-    "cross_check": "Il Margine roster cross-check",
-    "hierarchy_status": "probable",
+    "secondary": "Lautaro Martínez",
+    "tertiary": "Piotr Zieliński",
+    "last_updated": "2026-09-01",
+    "source": "GOAL Italia 2026/27 rigoristi board",
+    "cross_check": "Lega Serie A current squads",
+    "hierarchy_status": "confirmed",
     "confidence": {
-      "primary": "high",
-      "secondary": "high",
+      "primary": "medium",
+      "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Calhanoglu remains the clear designated taker. Inter's official post-match account and Fantacalcio's season event audit identify Zielinski as the taker in Calhanoglu's absence. Lautaro is the practical third by seniority but has not taken an Inter league penalty recently and has a materially weaker conversion record. Goal reverses Lautaro and Zielinski, but direct 2025/26 evidence and Calhanoglu's own account support the filed order. The first two positions are supported by direct club evidence; Lautaro is a seniority-based tertiary with weaker recent data. Conditions: Reassess after any departure, prolonged absence, or specialist signing affecting the named three.",
+    "condition_note": "Çalhanoğlu remains first choice; the current backup order is Lautaro then Zieliński.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_inter_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 5
+      "id": "evt_20260901_inter_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -2618,6 +3061,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_inter_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Inter penalty hierarchy updated",
+        "context": "Çalhanoğlu remains first choice; the current backup order is Lautaro then Zieliński.",
+        "sources": [
+          {
+            "label": "GOAL Italia 2026/27 rigoristi board",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-08-29",
+            "note": "Current all-club order reflecting late-August transfers and role changes."
+          },
+          {
+            "label": "Lega Serie A current squads",
+            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "date": "2026-09-01",
+            "note": "Current league squad directory used to reject departed candidates."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Çalhanoğlu remains first choice; the current backup order is Lautaro then Zieliński."
       }
     ],
     "change_log": [
@@ -2689,6 +3165,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Hakan Çalhanoğlu",
+          "secondary": "Piotr Zieliński",
+          "tertiary": "Lautaro Martínez"
+        },
+        "to": {
+          "primary": "Hakan Çalhanoğlu",
+          "secondary": "Lautaro Martínez",
+          "tertiary": "Piotr Zieliński"
+        },
+        "reason": "Çalhanoğlu remains first choice; the current backup order is Lautaro then Zieliński.",
+        "evidence_ids": [
+          "evt_20260901_inter_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -2709,20 +3208,30 @@
         "player": "Hakan Çalhanoğlu",
         "status": "confirmed",
         "source_url": "https://www.inter.it/it/teams/prima-squadra",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Piotr Zieliński",
-        "status": "confirmed",
-        "source_url": "https://www.inter.it/it/teams/prima-squadra",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
         "player": "Lautaro Martínez",
         "status": "confirmed",
-        "source_url": "https://www.inter.it/it/teams/prima-squadra",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
+      },
+      "tertiary": {
+        "player": "Piotr Zieliński",
+        "status": "confirmed",
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "https://www.legaseriea.it/en/serie-a/teams"
+      ]
     }
   },
   "Juventus": {
@@ -2746,10 +3255,10 @@
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260901_juventus_departure",
+      "id": "evt_20260901_juventus_current_review",
       "date": "2026-09-01",
-      "type": "roster_integrity_review",
-      "source_count": 1
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -2929,6 +3438,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Manuel Locatelli remains first choice after direct coach confirmation with Kenan Yıldız available. Yıldız is the current backup; third choice remains under review."
+      },
+      {
+        "id": "evt_20260901_juventus_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Juventus hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "GOAL Italia 2026/27 rigoristi board",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-08-29",
+            "note": "Current all-club order reflecting late-August transfers and role changes."
+          },
+          {
+            "label": "Lega Serie A current squads",
+            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "date": "2026-09-01",
+            "note": "Current league squad directory used to reject departed candidates."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -3051,33 +3593,43 @@
         "source_url": "https://www.juventus.com/it/squadre/prima-squadra-maschile/rosa/",
         "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "https://www.legaseriea.it/en/serie-a/teams"
+      ]
     }
   },
   "Lazio": {
     "primary": "Mattia Zaccagni",
-    "secondary": "Kenneth Taylor",
-    "tertiary": "Danilo Cataldi",
-    "last_updated": "2026-07-30",
-    "source": "Il Margine multi-source research",
-    "cross_check": "Il Margine roster cross-check",
-    "hierarchy_status": "disputed",
+    "secondary": "Albert Gudmundsson",
+    "tertiary": "Andrea Pinamonti",
+    "last_updated": "2026-09-01",
+    "source": "GOAL Italia 2026/27 rigoristi board",
+    "cross_check": "Lega Serie A current squads",
+    "hierarchy_status": "probable",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
-      "tertiary": "low"
+      "tertiary": "medium"
     },
-    "condition_note": "Zaccagni took the latest competitive penalty with Cataldi available, which preserves him first despite the miss. Sarri's April description of the dressing-room list named Zaccagni with Taylor and Pedro, and the 27 July SOS Fanta update frames Zaccagni-Taylor as the leading contest with Cataldi just behind. That evidence is stronger and newer than Goal's Zaccagni-Cataldi-Taylor order. Gattuso is a new coach and has not supplied a like-for-like preseason penalty. Cataldi also missed early preparation after surgery, reducing confidence in his immediate role. Gattuso has not supplied a like-for-like preseason penalty, so the order partly inherits Sarri-era evidence. Conditions: Any departure involving Taylor or Zaccagni requires a reorder. A new attacking specialist or a Gattuso designation can supersede the inherited Sarri-era evidence.",
+    "condition_note": "Zaccagni remains first choice. Gudmundsson and Pinamonti are the current specialist alternatives after Lazio's late-window changes.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_lazio_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 5
+      "id": "evt_20260901_lazio_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -3230,6 +3782,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_lazio_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Lazio penalty hierarchy updated",
+        "context": "Zaccagni remains first choice. Gudmundsson and Pinamonti are the current specialist alternatives after Lazio's late-window changes.",
+        "sources": [
+          {
+            "label": "GOAL Italia 2026/27 rigoristi board",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-08-29",
+            "note": "Current all-club order reflecting late-August transfers and role changes."
+          },
+          {
+            "label": "Lega Serie A current squads",
+            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "date": "2026-09-01",
+            "note": "Current league squad directory used to reject departed candidates."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Zaccagni remains first choice. Gudmundsson and Pinamonti are the current specialist alternatives after Lazio's late-window changes."
       }
     ],
     "change_log": [
@@ -3301,6 +3886,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Mattia Zaccagni",
+          "secondary": "Kenneth Taylor",
+          "tertiary": "Danilo Cataldi"
+        },
+        "to": {
+          "primary": "Mattia Zaccagni",
+          "secondary": "Albert Gudmundsson",
+          "tertiary": "Andrea Pinamonti"
+        },
+        "reason": "Zaccagni remains first choice. Gudmundsson and Pinamonti are the current specialist alternatives after Lazio's late-window changes.",
+        "evidence_ids": [
+          "evt_20260901_lazio_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -3321,47 +3929,57 @@
         "player": "Mattia Zaccagni",
         "status": "confirmed",
         "source_url": "https://www.sslazio.it/it/team/lazio/squadra",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Kenneth Taylor",
+        "player": "Albert Gudmundsson",
         "status": "confirmed",
-        "source_url": "https://www.sslazio.it/it/team/lazio/squadra",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
-        "player": "Danilo Cataldi",
+        "player": "Andrea Pinamonti",
         "status": "confirmed",
-        "source_url": "https://www.sslazio.it/it/team/lazio/squadra",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "https://www.legaseriea.it/en/serie-a/teams"
+      ]
     }
   },
   "Lecce": {
-    "primary": "Nikola Štulić",
-    "secondary": "Santiago Pierotti",
-    "tertiary": "Antonino Gallo",
-    "last_updated": "2026-07-30",
-    "source": "Il Margine multi-source research",
-    "cross_check": "Il Margine roster cross-check",
-    "hierarchy_status": "probable",
+    "primary": "Willem Geubbels",
+    "secondary": "Nikola Štulić",
+    "tertiary": "Santiago Pierotti",
+    "last_updated": "2026-09-01",
+    "source": "GOAL Italia 2026/27 rigoristi board",
+    "cross_check": "Lega Serie A current squads",
+    "hierarchy_status": "disputed",
     "confidence": {
       "primary": "medium",
-      "secondary": "low",
-      "tertiary": "low"
+      "secondary": "medium",
+      "tertiary": "medium"
     },
-    "condition_note": "Štulić converted a current preseason penalty with Pierotti starting and is first in both current specialist boards. Pierotti is the recurring backup candidate. SOS Fanta explicitly names Gallo as the other in-squad option, making him the most defensible practical tertiary rather than leaving the position blank. Only Štulić has direct current evidence. Pierotti and Gallo are projections, and the hierarchy remains one of the league's thinnest. Only Štulić has direct current evidence; Pierotti and Gallo remain projections. Conditions: A specialist attacking arrival could enter first or second. Francesco Camarda is excluded because AC Milan officially exercised its buy-back and he rejoined Milan from 1 July 2026.",
+    "condition_note": "Geubbels is the current first-choice projection after joining Lecce, with Štulić second and Pierotti retained as the next verified alternative.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_lecce_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 5
+      "id": "evt_20260901_lecce_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -3514,6 +4132,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_lecce_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Lecce penalty hierarchy updated",
+        "context": "Geubbels is the current first-choice projection after joining Lecce, with Štulić second and Pierotti retained as the next verified alternative.",
+        "sources": [
+          {
+            "label": "GOAL Italia 2026/27 rigoristi board",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-08-29",
+            "note": "Current all-club order reflecting late-August transfers and role changes."
+          },
+          {
+            "label": "Lega Serie A current squads",
+            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "date": "2026-09-01",
+            "note": "Current league squad directory used to reject departed candidates."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Geubbels is the current first-choice projection after joining Lecce, with Štulić second and Pierotti retained as the next verified alternative."
       }
     ],
     "change_log": [
@@ -3585,6 +4236,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Nikola Štulić",
+          "secondary": "Santiago Pierotti",
+          "tertiary": "Antonino Gallo"
+        },
+        "to": {
+          "primary": "Willem Geubbels",
+          "secondary": "Nikola Štulić",
+          "tertiary": "Santiago Pierotti"
+        },
+        "reason": "Geubbels is the current first-choice projection after joining Lecce, with Štulić second and Pierotti retained as the next verified alternative.",
+        "evidence_ids": [
+          "evt_20260901_lecce_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -3602,48 +4276,58 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Nikola Štulić",
+        "player": "Willem Geubbels",
         "status": "confirmed",
-        "source_url": "https://uslecce.it/raduno-in-sede/",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Santiago Pierotti",
+        "player": "Nikola Štulić",
         "status": "confirmed",
-        "source_url": "https://uslecce.it/raduno-in-sede/",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
-        "player": "Antonino Gallo",
+        "player": "Santiago Pierotti",
         "status": "confirmed",
-        "source_url": "https://uslecce.it/raduno-in-sede/",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "https://www.legaseriea.it/en/serie-a/teams"
+      ]
     }
   },
   "Monza": {
     "primary": "Matteo Pessina",
     "secondary": "Patrick Cutrone",
-    "tertiary": "",
+    "tertiary": "Andrea Petagna",
     "last_updated": "2026-09-01",
-    "hierarchy_status": "conditional",
+    "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
+      "primary": "medium",
       "secondary": "medium",
-      "tertiary": null
+      "tertiary": "medium"
     },
-    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Matteo Pessina then Patrick Cutrone. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+    "condition_note": "Pessina remains first choice, followed by Cutrone and Petagna.",
     "last_verified": {
       "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "confirmed_departure_roster_review"
+      "method": "current_roster_and_penalty_record_review"
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260901_monza_departure",
+      "id": "evt_20260901_monza_current_review",
       "date": "2026-09-01",
-      "type": "roster_integrity_review",
-      "source_count": 1
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -3804,6 +4488,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Matteo Pessina then Patrick Cutrone. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
+      },
+      {
+        "id": "evt_20260901_monza_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Monza penalty hierarchy updated",
+        "context": "Pessina remains first choice, followed by Cutrone and Petagna.",
+        "sources": [
+          {
+            "label": "GOAL Italia 2026/27 rigoristi board",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-08-29",
+            "note": "Current all-club order reflecting late-August transfers and role changes."
+          },
+          {
+            "label": "Lega Serie A current squads",
+            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "date": "2026-09-01",
+            "note": "Current league squad directory used to reject departed candidates."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Pessina remains first choice, followed by Cutrone and Petagna."
       }
     ],
     "change_log": [
@@ -3875,6 +4592,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-01T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Matteo Pessina",
+          "secondary": "Patrick Cutrone",
+          "tertiary": ""
+        },
+        "to": {
+          "primary": "Matteo Pessina",
+          "secondary": "Patrick Cutrone",
+          "tertiary": "Andrea Petagna"
+        },
+        "reason": "Pessina remains first choice, followed by Cutrone and Petagna.",
+        "evidence_ids": [
+          "evt_20260901_monza_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -3884,8 +4624,8 @@
     },
     "prior_season": null,
     "player_ids": {},
-    "source": "Il Margine multi-source research",
-    "cross_check": "Il Margine roster cross-check",
+    "source": "GOAL Italia 2026/27 rigoristi board",
+    "cross_check": "Lega Serie A current squads",
     "squad_membership": {
       "primary": {
         "player": "Matteo Pessina",
@@ -3898,7 +4638,23 @@
         "status": "confirmed",
         "source_url": "https://www.acmonza.com/it/news/monza-catanzaro-i-convocati-finale-playoff-ritorno/",
         "checked_at": "2026-09-01"
+      },
+      "tertiary": {
+        "player": "Andrea Petagna",
+        "status": "confirmed",
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "https://www.legaseriea.it/en/serie-a/teams"
+      ]
     }
   },
   "Napoli": {
@@ -3920,11 +4676,11 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-08-22",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260822_napoli_lukaku_exit",
-      "date": "2026-08-22",
-      "type": "official_transfer_review",
+      "id": "evt_20260901_napoli_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -4134,6 +4890,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Lukaku was transferred permanently to Fenerbahçe on 12 August and has been removed. De Bruyne is the leading current specialist, Højlund the main striker alternative and Politano the next technical fallback. No 2026/27 competitive Napoli penalty has yet tested this new order."
+      },
+      {
+        "id": "evt_20260901_napoli_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Napoli hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "GOAL Italia 2026/27 rigoristi board",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-08-29",
+            "note": "Current all-club order reflecting late-August transfers and role changes."
+          },
+          {
+            "label": "Lega Serie A current squads",
+            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "date": "2026-09-01",
+            "note": "Current league squad directory used to reject departed candidates."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -4248,47 +5037,57 @@
         "player": "Kevin De Bruyne",
         "status": "confirmed",
         "source_url": "https://sscnapoli.it/squadra/",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Rasmus Højlund",
         "status": "confirmed",
         "source_url": "https://sscnapoli.it/squadra/",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Matteo Politano",
         "status": "confirmed",
         "source_url": "https://sscnapoli.it/squadra/",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "https://www.legaseriea.it/en/serie-a/teams"
+      ]
     }
   },
   "Parma Calcio 1913": {
     "primary": "El Bilal Touré",
-    "secondary": "Nesta Elphege",
-    "tertiary": "Adrián Bernabé",
-    "last_updated": "2026-08-22",
-    "source": "Il Margine multi-source research",
-    "cross_check": "Il Margine roster cross-check",
+    "secondary": "Adrián Bernabé",
+    "tertiary": "Nesta Elphege",
+    "last_updated": "2026-09-01",
+    "source": "GOAL Italia 2026/27 rigoristi board",
+    "cross_check": "Lega Serie A current squads",
     "hierarchy_status": "conditional",
     "confidence": {
-      "primary": "low",
-      "secondary": "low",
-      "tertiary": "low"
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "medium"
     },
-    "condition_note": "Both previous leaders have left Parma: Benedyczak on 28 July and Pellegrino on 13 August. El Bilal Touré is the provisional first candidate after joining in August, with Nesta Elphege and Bernabé behind. This is an open hierarchy and the first competitive assignment should override it.",
+    "condition_note": "Touré is the current first-choice projection, Bernabé moves to second and Elphege remains the third filed option.",
     "last_verified": {
-      "date": "2026-08-22",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-08-22",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260822_parma_roster_reset",
-      "date": "2026-08-22",
-      "type": "official_transfer_review",
-      "source_count": 3
+      "id": "evt_20260901_parma-calcio-1913_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -4485,6 +5284,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Both previous leaders have left Parma: Benedyczak on 28 July and Pellegrino on 13 August. El Bilal Touré is the provisional first candidate after joining in August, with Nesta Elphege and Bernabé behind. This is an open hierarchy and the first competitive assignment should override it."
+      },
+      {
+        "id": "evt_20260901_parma-calcio-1913_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Parma Calcio 1913 penalty hierarchy updated",
+        "context": "Touré is the current first-choice projection, Bernabé moves to second and Elphege remains the third filed option.",
+        "sources": [
+          {
+            "label": "GOAL Italia 2026/27 rigoristi board",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-08-29",
+            "note": "Current all-club order reflecting late-August transfers and role changes."
+          },
+          {
+            "label": "Lega Serie A current squads",
+            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "date": "2026-09-01",
+            "note": "Current league squad directory used to reject departed candidates."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Touré is the current first-choice projection, Bernabé moves to second and Elphege remains the third filed option."
       }
     ],
     "change_log": [
@@ -4579,6 +5411,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-08-22T18:30:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "El Bilal Touré",
+          "secondary": "Nesta Elphege",
+          "tertiary": "Adrián Bernabé"
+        },
+        "to": {
+          "primary": "El Bilal Touré",
+          "secondary": "Adrián Bernabé",
+          "tertiary": "Nesta Elphege"
+        },
+        "reason": "Touré is the current first-choice projection, Bernabé moves to second and Elphege remains the third filed option.",
+        "evidence_ids": [
+          "evt_20260901_parma-calcio-1913_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -4599,20 +5454,30 @@
         "player": "El Bilal Touré",
         "status": "confirmed",
         "source_url": "https://www.parmacalcio1913.com/news/el-bilal-toure-e-un-nuovo-calciatore-del-parma-calcio/",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Nesta Elphege",
-        "status": "confirmed",
-        "source_url": "https://www.parmacalcio1913.com/news/el-bilal-toure-e-un-nuovo-calciatore-del-parma-calcio/",
-        "checked_at": "2026-08-22"
-      },
-      "tertiary": {
         "player": "Adrián Bernabé",
         "status": "confirmed",
-        "source_url": "https://www.parmacalcio1913.com/news/el-bilal-toure-e-un-nuovo-calciatore-del-parma-calcio/",
-        "checked_at": "2026-08-22"
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
+      },
+      "tertiary": {
+        "player": "Nesta Elphege",
+        "status": "confirmed",
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "https://www.legaseriea.it/en/serie-a/teams"
+      ]
     }
   },
   "Roma": {
@@ -4634,12 +5499,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_roma_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 6
+      "id": "evt_20260901_roma_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -4798,6 +5663,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_roma_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Roma hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "GOAL Italia 2026/27 rigoristi board",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-08-29",
+            "note": "Current all-club order reflecting late-August transfers and role changes."
+          },
+          {
+            "label": "Lega Serie A current squads",
+            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "date": "2026-09-01",
+            "note": "Current league squad directory used to reject departed candidates."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -4889,47 +5787,57 @@
         "player": "Donyell Malen",
         "status": "confirmed",
         "source_url": "https://www.asroma.com/it/notizie/75418/il-comunicato-su-donyell-malen",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Paulo Dybala",
         "status": "confirmed",
         "source_url": "https://www.asroma.com/en/news/75594/as-roma-and-paulo-dybala-together-until-2027",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Matías Soulé",
         "status": "confirmed",
         "source_url": "https://www.asroma.com/it/maschile/rosa-e-staff",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "https://www.legaseriea.it/en/serie-a/teams"
+      ]
     }
   },
   "Sassuolo": {
     "primary": "Domenico Berardi",
-    "secondary": "Armand Laurienté",
-    "tertiary": "",
+    "secondary": "Sebastiano Esposito",
+    "tertiary": "Armand Laurienté",
     "last_updated": "2026-09-01",
-    "source": "Il Margine multi-source research",
-    "cross_check": "Il Margine roster cross-check",
-    "hierarchy_status": "conditional",
+    "source": "GOAL Italia 2026/27 rigoristi board",
+    "cross_check": "Lega Serie A current squads",
+    "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
-      "secondary": "high",
-      "tertiary": null
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "medium"
     },
-    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Domenico Berardi then Armand Laurienté. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+    "condition_note": "Berardi remains first choice. Esposito is now the main alternative, with Laurienté retained third.",
     "last_verified": {
       "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "confirmed_departure_roster_review"
+      "method": "current_roster_and_penalty_record_review"
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260901_sassuolo_departure",
+      "id": "evt_20260901_sassuolo_current_review",
       "date": "2026-09-01",
-      "type": "roster_integrity_review",
-      "source_count": 1
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -5109,6 +6017,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Domenico Berardi then Armand Laurienté. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
+      },
+      {
+        "id": "evt_20260901_sassuolo_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Sassuolo penalty hierarchy updated",
+        "context": "Berardi remains first choice. Esposito is now the main alternative, with Laurienté retained third.",
+        "sources": [
+          {
+            "label": "GOAL Italia 2026/27 rigoristi board",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-08-29",
+            "note": "Current all-club order reflecting late-August transfers and role changes."
+          },
+          {
+            "label": "Lega Serie A current squads",
+            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "date": "2026-09-01",
+            "note": "Current league squad directory used to reject departed candidates."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Berardi remains first choice. Esposito is now the main alternative, with Laurienté retained third."
       }
     ],
     "change_log": [
@@ -5203,6 +6144,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-01T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Domenico Berardi",
+          "secondary": "Armand Laurienté",
+          "tertiary": ""
+        },
+        "to": {
+          "primary": "Domenico Berardi",
+          "secondary": "Sebastiano Esposito",
+          "tertiary": "Armand Laurienté"
+        },
+        "reason": "Berardi remains first choice. Esposito is now the main alternative, with Laurienté retained third.",
+        "evidence_ids": [
+          "evt_20260901_sassuolo_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -5226,38 +6190,54 @@
         "checked_at": "2026-09-01"
       },
       "secondary": {
+        "player": "Sebastiano Esposito",
+        "status": "confirmed",
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
+      },
+      "tertiary": {
         "player": "Armand Laurienté",
         "status": "confirmed",
-        "source_url": "https://www.sassuolocalcio.it/in-evidenza/ronzone-2026-i-convocati-per-il-ritiro/",
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
         "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "https://www.legaseriea.it/en/serie-a/teams"
+      ]
     }
   },
   "Torino": {
     "primary": "Nikola Vlašić",
-    "secondary": "Sandro Kulenović",
-    "tertiary": "Duván Zapata",
-    "last_updated": "2026-07-30",
-    "source": "Il Margine multi-source research",
-    "cross_check": "Il Margine roster cross-check",
+    "secondary": "Duván Zapata",
+    "tertiary": "Giovanni Simeone",
+    "last_updated": "2026-09-01",
+    "source": "GOAL Italia 2026/27 rigoristi board",
+    "cross_check": "Lega Serie A current squads",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
+      "primary": "medium",
       "secondary": "medium",
-      "tertiary": "low"
+      "tertiary": "medium"
     },
-    "condition_note": "Vlašić converted four consecutive 2025/26 league penalties and is the clear primary. Kulenović converted Torino's 22 July friendly penalty while Vlašić was absent and has a stronger career record than Zapata. The newer SOS Fanta order exactly matches the file. Kulenović's role may be rotational, so Zapata can still be the practical on-pitch fallback in some lineups. Kulenović's preseason conversion came while Vlašić was absent, and his rotational role limits certainty. Conditions: A transfer or reduced role for Kulenović would restore Zapata to secondary. Any departure involving Vlašić requires a full review.",
+    "condition_note": "Vlašić remains first choice, followed by Zapata and Simeone.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_torino_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 5
+      "id": "evt_20260901_torino_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -5410,6 +6390,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_torino_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Torino penalty hierarchy updated",
+        "context": "Vlašić remains first choice, followed by Zapata and Simeone.",
+        "sources": [
+          {
+            "label": "GOAL Italia 2026/27 rigoristi board",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-08-29",
+            "note": "Current all-club order reflecting late-August transfers and role changes."
+          },
+          {
+            "label": "Lega Serie A current squads",
+            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "date": "2026-09-01",
+            "note": "Current league squad directory used to reject departed candidates."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Vlašić remains first choice, followed by Zapata and Simeone."
       }
     ],
     "change_log": [
@@ -5481,6 +6494,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Nikola Vlašić",
+          "secondary": "Sandro Kulenović",
+          "tertiary": "Duván Zapata"
+        },
+        "to": {
+          "primary": "Nikola Vlašić",
+          "secondary": "Duván Zapata",
+          "tertiary": "Giovanni Simeone"
+        },
+        "reason": "Vlašić remains first choice, followed by Zapata and Simeone.",
+        "evidence_ids": [
+          "evt_20260901_torino_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -5501,20 +6537,30 @@
         "player": "Nikola Vlašić",
         "status": "confirmed",
         "source_url": "https://www.torinofc.it/news/12/07/2026/il-torino-pinzolo_43728",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Sandro Kulenović",
-        "status": "confirmed",
-        "source_url": "https://www.torinofc.it/news/12/07/2026/il-torino-pinzolo_43728",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
         "player": "Duván Zapata",
         "status": "confirmed",
-        "source_url": "https://www.torinofc.it/news/12/07/2026/il-torino-pinzolo_43728",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
+      },
+      "tertiary": {
+        "player": "Giovanni Simeone",
+        "status": "confirmed",
+        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "https://www.legaseriea.it/en/serie-a/teams"
+      ]
     }
   },
   "Udinese": {
@@ -5536,12 +6582,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_udinese_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 6
+      "id": "evt_20260901_udinese_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -5700,6 +6746,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_udinese_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Udinese hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "GOAL Italia 2026/27 rigoristi board",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-08-29",
+            "note": "Current all-club order reflecting late-August transfers and role changes."
+          },
+          {
+            "label": "Lega Serie A current squads",
+            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "date": "2026-09-01",
+            "note": "Current league squad directory used to reject departed candidates."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -5791,20 +6870,30 @@
         "player": "Keinan Davis",
         "status": "confirmed",
         "source_url": "https://www.udinese.it/news/squadra/i-convocati-per-il-ritiro-di-lienz",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Oumar Solet",
         "status": "confirmed",
         "source_url": "https://www.udinese.it/news/squadra/i-convocati-per-il-ritiro-di-lienz",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Nicolò Zaniolo",
         "status": "confirmed",
         "source_url": "https://www.udinese.it/news/squadra/nicolo-zaniolo-e-bianconero-a-titolo-definitivo",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "https://www.legaseriea.it/en/serie-a/teams"
+      ]
     }
   },
   "Venezia": {
@@ -5824,11 +6913,11 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-08-22",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260822_venezia_coach_designation",
-      "date": "2026-08-22",
-      "type": "coach_press_conference",
+      "id": "evt_20260901_venezia_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -6007,6 +7096,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Direct coach designation overrides the earlier speculative preseason hierarchy."
+      },
+      {
+        "id": "evt_20260901_venezia_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Venezia hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "GOAL Italia 2026/27 rigoristi board",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-08-29",
+            "note": "Current all-club order reflecting late-August transfers and role changes."
+          },
+          {
+            "label": "Lega Serie A current squads",
+            "url": "https://www.legaseriea.it/en/serie-a/teams",
+            "date": "2026-09-01",
+            "note": "Current league squad directory used to reject departed candidates."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -6094,20 +7216,30 @@
         "player": "Gianluca Busio",
         "status": "confirmed",
         "source_url": "https://www.spaziocalcio.it/calcio-italiano/serie-a/stroppa-presenta-venezia-lecce-tutte-le-parole-del-tecnico/",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Akor Adams",
         "status": "confirmed",
         "source_url": "https://www.veneziafc.it/news/akor-adams-al-venezia-fc",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Albion Rrahmani",
         "status": "confirmed",
         "source_url": "https://www.veneziafc.it/news/i-convocati-per-il-ritiro-di-falcade",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+        "https://www.legaseriea.it/en/serie-a/teams"
+      ]
     }
   }
 }

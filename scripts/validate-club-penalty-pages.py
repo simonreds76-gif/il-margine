@@ -24,6 +24,7 @@ BAD_TEXT = re.compile(r"(?:Ã.|Â.|â.|�)")
 AGENT_AUDIT_PATTERN = re.compile(
     r"agent-(?:epl|serie-a|la-liga|bundesliga|ligue-1)-hierarchy-audit-(\d{4}-\d{2}-\d{2})\.json$"
 )
+CURRENT_REVIEW_PATTERN = re.compile(r"club-penalty-current-review-(\d{4}-\d{2}-\d{2})\.json$")
 POSITIONS = ("primary", "secondary", "tertiary")
 UNVERIFIED_TAKER_VALUES = {"", "tbc", "tbd", "n/a", "-", "unknown", "not yet verified"}
 
@@ -64,6 +65,18 @@ def latest_agent_audit_dates() -> dict[str, str]:
     return dates_by_league
 
 
+def latest_current_review() -> tuple[str, dict]:
+    candidates: list[tuple[str, Path]] = []
+    for path in (DATA / "research").glob("club-penalty-current-review-*.json"):
+        match = CURRENT_REVIEW_PATTERN.fullmatch(path.name)
+        if match:
+            candidates.append((match.group(1), path))
+    if not candidates:
+        raise AssertionError("No current-season all-club review found")
+    review_date, path = max(candidates)
+    return review_date, load(path)
+
+
 def main() -> int:
     errors: list[str] = []
 
@@ -74,6 +87,11 @@ def main() -> int:
     season = load(DATA / "club-penalty-season.json")
     logo_manifest = load(DATA / "team-logo-map.json")
     audit_dates = latest_agent_audit_dates()
+    current_review_date, current_review = latest_current_review()
+    check(
+        current_review.get("summary", {}).get("reviewed_clubs") == sum(row["count"] for row in LEAGUES.values()),
+        "Current-season review must cover every active club",
+    )
     check(season.get("label") == "2026/27", "Season config must publish 2026/27")
     check(season.get("status") == "preseason", "Season must remain preseason until league kickoff")
     check(season.get("league_start_dates", {}).get("epl") == "2026-08-21", "Premier League start date must match the released fixture list")
@@ -100,6 +118,12 @@ def main() -> int:
             date_is_current_or_newer(meta.get("public_updated_at"), audit_date),
             f"{league}: public update date predates the latest full-league audit",
         )
+        check(
+            date_is_current_or_newer(meta.get("last_reviewed"), current_review_date),
+            f"{league}: board review predates the latest current-season review",
+        )
+        reviewed_clubs = set(current_review.get("leagues", {}).get(league, {}).get("reviewed_clubs", []))
+        check(reviewed_clubs == set(teams), f"{league}: current-season review coverage mismatch")
         check(len(teams) == expected["count"], f"{league}: expected {expected['count']} active teams, found {len(teams)}")
         check(expected["promoted"].issubset(teams), f"{league}: promoted teams missing")
         check(expected["relegated"].isdisjoint(teams), f"{league}: relegated teams still active")
@@ -141,6 +165,19 @@ def main() -> int:
             )
             check(is_researched, f"{league}/{team}: multi-source preseason verification missing")
             check(bool(research_events), f"{league}/{team}: approved research evidence missing")
+            last_reviewed = entry.get("last_reviewed") if isinstance(entry.get("last_reviewed"), dict) else {}
+            check(
+                date_is_current_or_newer(last_reviewed.get("date"), current_review_date),
+                f"{league}/{team}: current-season review is stale",
+            )
+            check(
+                last_reviewed.get("method") == "current_season_multi_source_review",
+                f"{league}/{team}: current-season review method missing",
+            )
+            check(
+                len(last_reviewed.get("sources") or []) >= 2,
+                f"{league}/{team}: current-season review needs two sources",
+            )
             evidence_ids = {
                 str(event.get("id") or "").strip()
                 for event in entry.get("evidence_log", [])
@@ -222,8 +259,8 @@ def main() -> int:
                         f"{league}/{team}/{player}: squad verification source must be HTTPS",
                     )
                     check(
-                        date_is_current_or_newer(membership.get("checked_at"), audit_date),
-                        f"{league}/{team}/{player}: squad verification predates the latest full-league audit",
+                        date_is_current_or_newer(membership.get("checked_at"), current_review_date),
+                        f"{league}/{team}/{player}: squad verification predates the latest current-season review",
                     )
             if team in expected["promoted"]:
                 check(
@@ -261,6 +298,7 @@ def main() -> int:
             "club-penalty-season.json",
             "isVerifiedTaker",
             "hierarchyDepth",
+            "last_reviewed",
             "buildClubPenaltyFaq",
         ],
         ROOT / "src" / "app" / "penalty-takers" / "page.tsx": ["CLUB_PENALTY_SEASON"],

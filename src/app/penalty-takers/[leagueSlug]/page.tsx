@@ -119,13 +119,13 @@ function TeamCard({ team }: { team: ClubPenaltyTeam }) {
 
       <div className="mt-4 flex flex-col gap-3 border-t border-slate-700/60 pt-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs leading-5">
-          <span className="text-slate-300">
-            <span className="text-slate-500">Evidence verified</span>{" "}
-            {team.isCarryover ? CLUB_PENALTY_PREVIOUS_SEASON : team.lastUpdatedLabel || "Awaiting direct evidence"}
+          <span className="font-semibold text-emerald-200">
+            <span className="font-normal text-slate-400">Checked</span>{" "}
+            {team.checkedLabel || team.leagueCheckedLabel || "Pending"}
           </span>
-          <span className="text-emerald-200">
-            <span className="text-slate-500">League review run</span>{" "}
-            {team.leagueCheckedLabel || "Pending"}
+          <span className="text-slate-300">
+            <span className="text-slate-400">Order {team.lastUpdated === team.checkedAt ? "updated" : "unchanged since"}</span>{" "}
+            {team.isCarryover ? CLUB_PENALTY_PREVIOUS_SEASON : team.lastUpdatedLabel || "awaiting direct evidence"}
           </span>
         </div>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">

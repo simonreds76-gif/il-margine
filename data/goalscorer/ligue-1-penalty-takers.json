@@ -27,7 +27,8 @@
     ],
     "last_verified": "2026-09-01",
     "public_updated_at": "2026-09-01",
-    "membership_source": "https://ligue1.com/en/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released"
+    "membership_source": "https://ligue1.com/en/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",
+    "last_reviewed": "2026-09-01"
   },
   "Angers": {
     "primary": "Amine El Ouazzani",
@@ -48,11 +49,11 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-08-22",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260822_angers_el_ouazzani_assignment",
-      "date": "2026-08-22",
-      "type": "preseason_penalty_assignment",
+      "id": "evt_20260901_angers_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -238,6 +239,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "El Ouazzani took and converted Angers' latest preseason penalty while van den Boomen started. That current-coach assignment moves El Ouazzani to first, with van den Boomen the dead-ball deputy and Sbaï next. A competitive penalty can still confirm or reverse the call."
+      },
+      {
+        "id": "evt_20260901_angers_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Angers hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece review",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+            "date": "2026-06-01",
+            "note": "Official role baseline retained only where current evidence has not superseded it."
+          },
+          {
+            "label": "StatBunker Ligue 1 2026/27 penalties",
+            "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+            "date": "2026-09-01",
+            "note": "Current-season penalty event and taker cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -352,20 +386,30 @@
         "player": "Amine El Ouazzani",
         "status": "confirmed",
         "source_url": "https://www.zerozero.pt/live-ao-minuto/2026-08-15-angers-paris-fc/12266276",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Branco van den Boomen",
         "status": "confirmed",
         "source_url": "https://www.zerozero.pt/live-ao-minuto/2026-08-15-angers-paris-fc/12266276",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Amine Sbaï",
         "status": "confirmed",
         "source_url": "https://www.zerozero.pt/live-ao-minuto/2026-08-15-angers-paris-fc/12266276",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://ligue1.com/fr/articles/l1_article_2916-",
+        "https://www.statbunker.com/competitions/Penalties?comp_id=796"
+      ]
     }
   },
   "Auxerre": {
@@ -387,11 +431,11 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-08-22",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260822_auxerre_namaso_assignment",
-      "date": "2026-08-22",
-      "type": "competitive_penalty_assignment",
+      "id": "evt_20260901_auxerre_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -583,6 +627,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Namaso took and converted Auxerre's 22 August league penalty while Faivre remained on the pitch. That is a direct current-season precedence test and moves Namaso first. Faivre remains the strongest deputy; Casimir is the next provisional fallback."
+      },
+      {
+        "id": "evt_20260901_auxerre_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Auxerre hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece review",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+            "date": "2026-06-01",
+            "note": "Official role baseline retained only where current evidence has not superseded it."
+          },
+          {
+            "label": "StatBunker Ligue 1 2026/27 penalties",
+            "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+            "date": "2026-09-01",
+            "note": "Current-season penalty event and taker cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -697,20 +774,30 @@
         "player": "Danny Namaso",
         "status": "confirmed",
         "source_url": "https://www.lensois.com/live/lens-auxerre-8/",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Romain Faivre",
         "status": "confirmed",
         "source_url": "https://www.lensois.com/live/lens-auxerre-8/",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Josué Casimir",
         "status": "confirmed",
         "source_url": "https://www.lensois.com/live/lens-auxerre-8/",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://ligue1.com/fr/articles/l1_article_2916-",
+        "https://www.statbunker.com/competitions/Penalties?comp_id=796"
+      ]
     }
   },
   "Brest": {
@@ -734,10 +821,10 @@
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260901_brest_departure",
+      "id": "evt_20260901_brest_current_review",
       "date": "2026-09-01",
-      "type": "roster_integrity_review",
-      "source_count": 1
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -911,6 +998,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Ludovic Ajorque then Kenny Lala. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
+      },
+      {
+        "id": "evt_20260901_brest_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Brest hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece review",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+            "date": "2026-06-01",
+            "note": "Official role baseline retained only where current evidence has not superseded it."
+          },
+          {
+            "label": "StatBunker Ligue 1 2026/27 penalties",
+            "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+            "date": "2026-09-01",
+            "note": "Current-season penalty event and taker cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -1033,6 +1153,16 @@
         "source_url": "https://www.lequipe.fr/Football/Actualites/-oui-il-nous-faut-des-recrues-julien-lachuer-le-nouvel-entraineur-de-brest-espere-des-retouches-et-des-jeunes/1703291",
         "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://ligue1.com/fr/articles/l1_article_2916-",
+        "https://www.statbunker.com/competitions/Penalties?comp_id=796"
+      ]
     }
   },
   "Le Havre": {
@@ -1056,10 +1186,10 @@
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260901_le-havre_departure",
+      "id": "evt_20260901_le-havre_current_review",
       "date": "2026-09-01",
-      "type": "roster_integrity_review",
-      "source_count": 1
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -1239,6 +1369,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Mbwana Ally Samatta then Rassoul Ndiaye. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
+      },
+      {
+        "id": "evt_20260901_le-havre_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Le Havre hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece review",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+            "date": "2026-06-01",
+            "note": "Official role baseline retained only where current evidence has not superseded it."
+          },
+          {
+            "label": "StatBunker Ligue 1 2026/27 penalties",
+            "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+            "date": "2026-09-01",
+            "note": "Current-season penalty event and taker cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -1361,6 +1524,16 @@
         "source_url": "https://www.lequipe.fr/Football/Actualites/Le-milieu-offensif-kaito-mizuta-s-engage-trois-ans-au-havre-et-devient-le-deuxieme-japonais-a-rejoindre-le-club-doyen/1702310",
         "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://ligue1.com/fr/articles/l1_article_2916-",
+        "https://www.statbunker.com/competitions/Penalties?comp_id=796"
+      ]
     }
   },
   "Le Mans": {
@@ -1380,12 +1553,12 @@
       "by": "Il Margine",
       "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-08-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260830_le_mans_mafouta_precedence",
-      "date": "2026-08-30",
-      "type": "competitive_penalty_assignment",
-      "source_count": 1
+      "id": "evt_20260901_le-mans_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -1569,6 +1742,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "The direct same-pitch test promotes Mafouta to primary and moves Gueye to the deputy slot."
+      },
+      {
+        "id": "evt_20260901_le-mans_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Le Mans hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece review",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+            "date": "2026-06-01",
+            "note": "Official role baseline retained only where current evidence has not superseded it."
+          },
+          {
+            "label": "StatBunker Ligue 1 2026/27 penalties",
+            "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+            "date": "2026-09-01",
+            "note": "Current-season penalty event and taker cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -1656,20 +1862,30 @@
         "player": "Louis Mafouta",
         "status": "confirmed",
         "source_url": "https://www.lequipe.fr/Football/Actualites/Mercato-le-mans-officialise-l-arrivee-de-l-attaquant-de-guingamp-louis-mafouta-jusqu-en-2028/1703559",
-        "checked_at": "2026-08-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Dame Gueye",
         "status": "confirmed",
         "source_url": "https://lemansfc.fr/index.php?actu=4105&section=actualites-contenu",
-        "checked_at": "2026-08-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Antoine Rabillard",
         "status": "confirmed",
         "source_url": "https://www.lemansfc.fr/index.php?actu=4075&section=actualites-contenu",
-        "checked_at": "2026-08-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://ligue1.com/fr/articles/l1_article_2916-",
+        "https://www.statbunker.com/competitions/Penalties?comp_id=796"
+      ]
     }
   },
   "Lens": {
@@ -1691,11 +1907,11 @@
       "by": "Il Margine",
       "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-08-29",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260829_lens_thauvin_confirmation",
-      "date": "2026-08-29",
-      "type": "competitive_penalty_assignment",
+      "id": "evt_20260901_lens_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -1901,6 +2117,39 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Thauvin's third league penalty conversion of the season reinforces the existing primary call."
+      },
+      {
+        "id": "evt_20260901_lens_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Lens hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece review",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+            "date": "2026-06-01",
+            "note": "Official role baseline retained only where current evidence has not superseded it."
+          },
+          {
+            "label": "StatBunker Ligue 1 2026/27 penalties",
+            "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+            "date": "2026-09-01",
+            "note": "Current-season penalty event and taker cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -1992,20 +2241,30 @@
         "player": "Florian Thauvin",
         "status": "confirmed",
         "source_url": "https://www.lensois.com/live/lens-auxerre-8/",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Odsonne Édouard",
         "status": "confirmed",
         "source_url": "https://www.lensois.com/live/lens-auxerre-8/",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Thorgan Hazard",
         "status": "confirmed",
         "source_url": "https://www.lensois.com/live/lens-auxerre-8/",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://ligue1.com/fr/articles/l1_article_2916-",
+        "https://www.statbunker.com/competitions/Penalties?comp_id=796"
+      ]
     }
   },
   "Lille": {
@@ -2029,10 +2288,10 @@
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260901_lille_departure",
+      "id": "evt_20260901_lille_current_review",
       "date": "2026-09-01",
-      "type": "roster_integrity_review",
-      "source_count": 1
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -2206,6 +2465,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Olivier Giroud then Matias Fernandez-Pardo. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
+      },
+      {
+        "id": "evt_20260901_lille_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Lille hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece review",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+            "date": "2026-06-01",
+            "note": "Official role baseline retained only where current evidence has not superseded it."
+          },
+          {
+            "label": "StatBunker Ligue 1 2026/27 penalties",
+            "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+            "date": "2026-09-01",
+            "note": "Current-season penalty event and taker cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -2328,6 +2620,16 @@
         "source_url": "https://www.losc.fr/actualites/2026-02-22/angers-losc-le-compte-rendu",
         "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://ligue1.com/fr/articles/l1_article_2916-",
+        "https://www.statbunker.com/competitions/Penalties?comp_id=796"
+      ]
     }
   },
   "Lorient": {
@@ -2349,12 +2651,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_lorient_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260901_lorient_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -2519,6 +2821,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_lorient_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Lorient hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece review",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+            "date": "2026-06-01",
+            "note": "Official role baseline retained only where current evidence has not superseded it."
+          },
+          {
+            "label": "StatBunker Ligue 1 2026/27 penalties",
+            "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+            "date": "2026-09-01",
+            "note": "Current-season penalty event and taker cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -2610,20 +2945,30 @@
         "player": "Aiyegun Tosin",
         "status": "confirmed",
         "source_url": "https://www.fclorient.bzh/lequipe-professionnelle-2026-2027/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Mohamed Bamba",
         "status": "confirmed",
         "source_url": "https://www.fclorient.bzh/lequipe-professionnelle-2026-2027/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Arsène Kouassi",
         "status": "confirmed",
         "source_url": "https://www.fclorient.bzh/lequipe-professionnelle-2026-2027/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://ligue1.com/fr/articles/l1_article_2916-",
+        "https://www.statbunker.com/competitions/Penalties?comp_id=796"
+      ]
     }
   },
   "Lyon": {
@@ -2645,12 +2990,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_lyon_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260901_lyon_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -2809,6 +3154,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_lyon_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Lyon hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece review",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+            "date": "2026-06-01",
+            "note": "Official role baseline retained only where current evidence has not superseded it."
+          },
+          {
+            "label": "StatBunker Ligue 1 2026/27 penalties",
+            "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+            "date": "2026-09-01",
+            "note": "Current-season penalty event and taker cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -2900,20 +3278,30 @@
         "player": "Corentin Tolisso",
         "status": "confirmed",
         "source_url": "https://www.lequipe.fr/Football/Actualites/La-preparation-avance-bien-porte-par-corentin-tolisso-et-dominik-greif-l-ol-enchaine-un-troisieme-succes-en-autant-de-matches-amicaux/1704641",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Loïs Openda",
         "status": "confirmed",
         "source_url": "https://www.lequipe.fr/Football/Actualites/L-olympique-lyonnais-officialise-l-arrivee-en-pret-de-lois-openda/1707631",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Pavel Šulc",
         "status": "confirmed",
         "source_url": "https://www.lequipe.fr/Football/ligue-1/page-tableau-des-transferts",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://ligue1.com/fr/articles/l1_article_2916-",
+        "https://www.statbunker.com/competitions/Penalties?comp_id=796"
+      ]
     }
   },
   "Marseille": {
@@ -2935,12 +3323,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-08-22",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260821_marseille_competitive_penalty",
-      "date": "2026-08-21",
-      "type": "competitive_penalty_assignment",
-      "source_count": 3
+      "id": "evt_20260901_marseille_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -3125,6 +3513,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Direct competitive evidence reverses the preseason Abdelli/Gouiri projection and confirms Gouiri as Marseille's primary penalty taker."
+      },
+      {
+        "id": "evt_20260901_marseille_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Marseille hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece review",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+            "date": "2026-06-01",
+            "note": "Official role baseline retained only where current evidence has not superseded it."
+          },
+          {
+            "label": "StatBunker Ligue 1 2026/27 penalties",
+            "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+            "date": "2026-09-01",
+            "note": "Current-season penalty event and taker cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -3239,25 +3660,35 @@
         "player": "Amine Gouiri",
         "status": "confirmed",
         "source_url": "https://www.om.fr/fr/equipe/hommes",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Himad Abdelli",
         "status": "confirmed",
         "source_url": "https://www.om.fr/fr/equipe/hommes",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Pierre-Emile Højbjerg",
         "status": "confirmed",
         "source_url": "https://www.om.fr/fr/equipe/hommes",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       }
     },
     "latest_match_review": {
       "date": "2026-08-21",
       "method": "competitive_match_event_and_lineup_review",
       "evidence_id": "evt_20260821_marseille_competitive_penalty"
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://ligue1.com/fr/articles/l1_article_2916-",
+        "https://www.statbunker.com/competitions/Penalties?comp_id=796"
+      ]
     }
   },
   "Monaco": {
@@ -3279,12 +3710,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_monaco_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 5
+      "id": "evt_20260901_monaco_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -3455,6 +3886,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_monaco_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Monaco hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece review",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+            "date": "2026-06-01",
+            "note": "Official role baseline retained only where current evidence has not superseded it."
+          },
+          {
+            "label": "StatBunker Ligue 1 2026/27 penalties",
+            "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+            "date": "2026-09-01",
+            "note": "Current-season penalty event and taker cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -3546,20 +4010,30 @@
         "player": "Folarin Balogun",
         "status": "confirmed",
         "source_url": "https://www.asmonaco.com/fr/pros/joueurs",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Ansu Fati",
         "status": "confirmed",
         "source_url": "https://www.asmonaco.com/fr/pros/joueurs",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Denis Zakaria",
         "status": "confirmed",
         "source_url": "https://www.asmonaco.com/fr/pros/joueurs",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://ligue1.com/fr/articles/l1_article_2916-",
+        "https://www.statbunker.com/competitions/Penalties?comp_id=796"
+      ]
     }
   },
   "Nice": {
@@ -3583,10 +4057,10 @@
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260901_nice_departure",
+      "id": "evt_20260901_nice_current_review",
       "date": "2026-09-01",
-      "type": "roster_integrity_review",
-      "source_count": 1
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -3784,6 +4258,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Sofiane Diop then Jonathan Clauss. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
+      },
+      {
+        "id": "evt_20260901_nice_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Nice hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece review",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+            "date": "2026-06-01",
+            "note": "Official role baseline retained only where current evidence has not superseded it."
+          },
+          {
+            "label": "StatBunker Ligue 1 2026/27 penalties",
+            "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+            "date": "2026-09-01",
+            "note": "Current-season penalty event and taker cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -3906,6 +4413,16 @@
         "source_url": "https://www.ogcnice.com/fr/f/equipes/2026-2027/equipe-pro",
         "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://ligue1.com/fr/articles/l1_article_2916-",
+        "https://www.statbunker.com/competitions/Penalties?comp_id=796"
+      ]
     }
   },
   "Paris FC": {
@@ -3927,11 +4444,11 @@
       "by": "Il Margine",
       "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-08-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260830_paris_fc_sinayoko_precedence",
-      "date": "2026-08-30",
-      "type": "competitive_penalty_assignment",
+      "id": "evt_20260901_paris-fc_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -4117,6 +4634,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "The first competitive penalty with all three candidates active promotes Sinayoko to primary, Kebbal to deputy and Pagis to third."
+      },
+      {
+        "id": "evt_20260901_paris-fc_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Paris FC hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece review",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+            "date": "2026-06-01",
+            "note": "Official role baseline retained only where current evidence has not superseded it."
+          },
+          {
+            "label": "StatBunker Ligue 1 2026/27 penalties",
+            "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+            "date": "2026-09-01",
+            "note": "Current-season penalty event and taker cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -4231,20 +4781,30 @@
         "player": "Lassine Sinayoko",
         "status": "confirmed",
         "source_url": "https://parisfc.fr/pro-homme/joueurs-staff/",
-        "checked_at": "2026-08-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Ilan Kebbal",
         "status": "confirmed",
         "source_url": "https://parisfc.fr/pro-homme/joueurs-staff/",
-        "checked_at": "2026-08-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Pablo Pagis",
         "status": "confirmed",
         "source_url": "https://parisfc.fr/pro-homme/joueurs-staff/",
-        "checked_at": "2026-08-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://ligue1.com/fr/articles/l1_article_2916-",
+        "https://www.statbunker.com/competitions/Penalties?comp_id=796"
+      ]
     }
   },
   "Paris Saint Germain": {
@@ -4266,12 +4826,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_paris-saint-germain_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260901_paris-saint-germain_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -4424,6 +4984,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_paris-saint-germain_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Paris Saint Germain hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece review",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+            "date": "2026-06-01",
+            "note": "Official role baseline retained only where current evidence has not superseded it."
+          },
+          {
+            "label": "StatBunker Ligue 1 2026/27 penalties",
+            "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+            "date": "2026-09-01",
+            "note": "Current-season penalty event and taker cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -4515,20 +5108,30 @@
         "player": "Ousmane Dembélé",
         "status": "confirmed",
         "source_url": "https://www.psg.fr/equipes/equipe-premiere/effectif",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Khvicha Kvaratskhelia",
         "status": "confirmed",
         "source_url": "https://www.psg.fr/equipes/equipe-premiere/effectif",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Nuno Mendes",
         "status": "confirmed",
         "source_url": "https://www.psg.fr/equipes/equipe-premiere/effectif",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://ligue1.com/fr/articles/l1_article_2916-",
+        "https://www.statbunker.com/competitions/Penalties?comp_id=796"
+      ]
     }
   },
   "Rennes": {
@@ -4550,11 +5153,11 @@
       "by": "Il Margine",
       "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-08-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260830_rennes_lepaul_precedence",
-      "date": "2026-08-30",
-      "type": "competitive_penalty_assignment",
+      "id": "evt_20260901_rennes_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -4734,6 +5337,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "A direct same-pitch event moves Lepaul above Blas, while the previous public designation keeps the new order at probable rather than fully confirmed."
+      },
+      {
+        "id": "evt_20260901_rennes_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Rennes hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece review",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+            "date": "2026-06-01",
+            "note": "Official role baseline retained only where current evidence has not superseded it."
+          },
+          {
+            "label": "StatBunker Ligue 1 2026/27 penalties",
+            "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+            "date": "2026-09-01",
+            "note": "Current-season penalty event and taker cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -4848,20 +5484,30 @@
         "player": "Estéban Lepaul",
         "status": "confirmed",
         "source_url": "https://www.lequipe.fr/Football/ligue-1/page-tableau-des-transferts",
-        "checked_at": "2026-08-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Ludovic Blas",
         "status": "confirmed",
         "source_url": "https://www.lequipe.fr/Football/ligue-1/page-tableau-des-transferts",
-        "checked_at": "2026-08-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Issa Soumaré",
         "status": "confirmed",
         "source_url": "https://www.staderennais.com/en/news/issa-soumare-est-rouge-et-noir",
-        "checked_at": "2026-08-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://ligue1.com/fr/articles/l1_article_2916-",
+        "https://www.statbunker.com/competitions/Penalties?comp_id=796"
+      ]
     }
   },
   "Strasbourg": {
@@ -4885,9 +5531,9 @@
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260901_strasbourg_departure",
+      "id": "evt_20260901_strasbourg_current_review",
       "date": "2026-09-01",
-      "type": "roster_integrity_review",
+      "type": "current_season_board_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -5098,6 +5744,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Joaquin Panichelli. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
+      },
+      {
+        "id": "evt_20260901_strasbourg_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Strasbourg hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece review",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+            "date": "2026-06-01",
+            "note": "Official role baseline retained only where current evidence has not superseded it."
+          },
+          {
+            "label": "StatBunker Ligue 1 2026/27 penalties",
+            "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+            "date": "2026-09-01",
+            "note": "Current-season penalty event and taker cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -5214,6 +5893,16 @@
         "source_url": "https://www.rcstrasbourgalsace.fr/equipe/equipe-premiere/",
         "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://ligue1.com/fr/articles/l1_article_2916-",
+        "https://www.statbunker.com/competitions/Penalties?comp_id=796"
+      ]
     }
   },
   "Toulouse": {
@@ -5235,12 +5924,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_toulouse_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260901_toulouse_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -5417,6 +6106,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_toulouse_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Toulouse hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece review",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+            "date": "2026-06-01",
+            "note": "Official role baseline retained only where current evidence has not superseded it."
+          },
+          {
+            "label": "StatBunker Ligue 1 2026/27 penalties",
+            "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+            "date": "2026-09-01",
+            "note": "Current-season penalty event and taker cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -5508,20 +6230,30 @@
         "player": "Aron Dønnum",
         "status": "confirmed",
         "source_url": "https://www.toulousefc.com/equipes/equipe-professionnelle/effectif",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Cristian Cásseres Jr.",
         "status": "confirmed",
         "source_url": "https://www.toulousefc.com/equipes/equipe-professionnelle/effectif",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Yann Gboho",
         "status": "confirmed",
         "source_url": "https://www.toulousefc.com/equipes/equipe-professionnelle/effectif",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://ligue1.com/fr/articles/l1_article_2916-",
+        "https://www.statbunker.com/competitions/Penalties?comp_id=796"
+      ]
     }
   },
   "Troyes": {
@@ -5541,12 +6273,12 @@
       "by": "Il Margine",
       "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-08-29",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260829_troyes_ripart_confirmation",
-      "date": "2026-08-29",
-      "type": "competitive_penalty_assignment",
-      "source_count": 1
+      "id": "evt_20260901_troyes_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -5730,6 +6462,39 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "A clean same-pitch test confirms Ripart as first choice for 2026/27."
+      },
+      {
+        "id": "evt_20260901_troyes_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Troyes hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece review",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+            "date": "2026-06-01",
+            "note": "Official role baseline retained only where current evidence has not superseded it."
+          },
+          {
+            "label": "StatBunker Ligue 1 2026/27 penalties",
+            "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+            "date": "2026-09-01",
+            "note": "Current-season penalty event and taker cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -5794,20 +6559,30 @@
         "player": "Renaud Ripart",
         "status": "confirmed",
         "source_url": "https://www.estac.fr/equipe-premiere/effectif/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Antoine Mille",
         "status": "confirmed",
         "source_url": "https://www.estac.fr/equipe-premiere/effectif/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Mouhamed Diop",
         "status": "confirmed",
         "source_url": "https://www.estac.fr/equipe-premiere/effectif/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://ligue1.com/fr/articles/l1_article_2916-",
+        "https://www.statbunker.com/competitions/Penalties?comp_id=796"
+      ]
     }
   }
 }

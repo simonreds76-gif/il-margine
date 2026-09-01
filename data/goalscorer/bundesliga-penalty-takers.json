@@ -33,7 +33,8 @@
     ],
     "last_verified": "2026-09-01",
     "public_updated_at": "2026-09-01",
-    "membership_source": "https://media.dfl.de/sites/3/2026/07/EN_eFyJmg6k_Bundesliga_Fixture-List_2026_27.pdf"
+    "membership_source": "https://media.dfl.de/sites/3/2026/07/EN_eFyJmg6k_Bundesliga_Fixture-List_2026_27.pdf",
+    "last_reviewed": "2026-09-01"
   },
   "Augsburg": {
     "primary": "Fabian Rieder",
@@ -54,12 +55,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_augsburg_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_augsburg_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -212,6 +213,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_augsburg_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Augsburg hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "LigaInsider 2026/27 set-piece board",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-08-31",
+            "note": "Current club-by-club penalty and set-piece hierarchy."
+          },
+          {
+            "label": "Bundesliga official penalty statistics",
+            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-09-01",
+            "note": "Official current-season penalty event cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -303,20 +337,30 @@
         "player": "Fabian Rieder",
         "status": "confirmed",
         "source_url": "https://www.fcaugsburg.de/article/trainingsauftakt-erste-einheit-auf-dem-platz-23251",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Alexis Claude-Maurice",
         "status": "confirmed",
         "source_url": "https://www.fcaugsburg.de/team/player/alexis-claude-maurice-282",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Michael Gregoritsch",
         "status": "confirmed",
         "source_url": "https://www.fcaugsburg.de/article/trainingsauftakt-erste-einheit-auf-dem-platz-23251",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+      ]
     }
   },
   "Bayer Leverkusen": {
@@ -338,12 +382,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_bayer-leverkusen_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_bayer-leverkusen_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -502,6 +546,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_bayer-leverkusen_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Bayer Leverkusen hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "LigaInsider 2026/27 set-piece board",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-08-31",
+            "note": "Current club-by-club penalty and set-piece hierarchy."
+          },
+          {
+            "label": "Bundesliga official penalty statistics",
+            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-09-01",
+            "note": "Official current-season penalty event cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -593,20 +670,30 @@
         "player": "Patrik Schick",
         "status": "confirmed",
         "source_url": "https://www.bayer04.de/pt-br/news/bayer04/veja-todos-os-jogadores-do-bayer-04-leverkusen-para-a-temporada-202627",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Aleix García",
         "status": "confirmed",
         "source_url": "https://www.bayer04.de/pt-br/news/bayer04/veja-todos-os-jogadores-do-bayer-04-leverkusen-para-a-temporada-202627",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Ibrahim Maza",
         "status": "confirmed",
         "source_url": "https://www.bayer04.de/pt-br/news/bayer04/veja-todos-os-jogadores-do-bayer-04-leverkusen-para-a-temporada-202627",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+      ]
     }
   },
   "Bayern Munich": {
@@ -628,12 +715,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_bayern-munich_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_bayern-munich_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -792,6 +879,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_bayern-munich_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Bayern Munich hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "LigaInsider 2026/27 set-piece board",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-08-31",
+            "note": "Current club-by-club penalty and set-piece hierarchy."
+          },
+          {
+            "label": "Bundesliga official penalty statistics",
+            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-09-01",
+            "note": "Official current-season penalty event cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -883,47 +1003,57 @@
         "player": "Harry Kane",
         "status": "confirmed",
         "source_url": "https://fcbayern.com/de/teams/profis",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Jamal Musiala",
         "status": "confirmed",
         "source_url": "https://fcbayern.com/de/teams/profis",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Michael Olise",
         "status": "confirmed",
         "source_url": "https://fcbayern.com/de/teams/profis",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+      ]
     }
   },
   "Borussia Dortmund": {
-    "primary": "Ramy Bensebaini",
-    "secondary": "Emre Can",
-    "tertiary": "Felix Nmecha",
-    "last_updated": "2026-07-30",
-    "source": "Borussia Dortmund",
-    "cross_check": "Borussia Dortmund",
-    "hierarchy_status": "probable",
+    "primary": "Emre Can",
+    "secondary": "Serhou Guirassy",
+    "tertiary": "Ramy Bensebaini",
+    "last_updated": "2026-09-01",
+    "source": "LigaInsider 2026/27 set-piece board",
+    "cross_check": "Bundesliga official penalty statistics",
+    "hierarchy_status": "disputed",
     "confidence": {
-      "primary": "high",
+      "primary": "medium",
       "secondary": "medium",
-      "tertiary": "low"
+      "tertiary": "medium"
     },
-    "condition_note": "After Nmecha missed against HSV, Bensebaini converted two later penalties while Nmecha remained on the pitch, establishing a direct takeover. Can had converted three league penalties before injury and remains the experienced deputy. Nmecha drops to third after the miss and same-match replacement. Can and Nmecha have injury-related availability risk; the practical matchday deputy may differ while either is unavailable.",
+    "condition_note": "The current specialist board places Can first and Guirassy second; Bensebaini remains a proven third option.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_borussia-dortmund_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_borussia-dortmund_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -1076,6 +1206,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_borussia-dortmund_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Borussia Dortmund penalty hierarchy updated",
+        "context": "The current specialist board places Can first and Guirassy second; Bensebaini remains a proven third option.",
+        "sources": [
+          {
+            "label": "LigaInsider 2026/27 set-piece board",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-08-31",
+            "note": "Current club-by-club penalty and set-piece hierarchy."
+          },
+          {
+            "label": "Bundesliga official penalty statistics",
+            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-09-01",
+            "note": "Official current-season penalty event cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "The current specialist board places Can first and Guirassy second; Bensebaini remains a proven third option."
       }
     ],
     "change_log": [
@@ -1147,6 +1310,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Ramy Bensebaini",
+          "secondary": "Emre Can",
+          "tertiary": "Felix Nmecha"
+        },
+        "to": {
+          "primary": "Emre Can",
+          "secondary": "Serhou Guirassy",
+          "tertiary": "Ramy Bensebaini"
+        },
+        "reason": "The current specialist board places Can first and Guirassy second; Bensebaini remains a proven third option.",
+        "evidence_ids": [
+          "evt_20260901_borussia-dortmund_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -1164,50 +1350,60 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Ramy Bensebaini",
-        "status": "confirmed",
-        "source_url": "https://www.bvb.de/de/de/mannschaften/fussball/profis.html",
-        "checked_at": "2026-07-30"
-      },
-      "secondary": {
         "player": "Emre Can",
         "status": "confirmed",
-        "source_url": "https://www.bvb.de/de/de/mannschaften/fussball/profis.html",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "checked_at": "2026-09-01"
+      },
+      "secondary": {
+        "player": "Serhou Guirassy",
+        "status": "confirmed",
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
-        "player": "Felix Nmecha",
+        "player": "Ramy Bensebaini",
         "status": "confirmed",
-        "source_url": "https://www.bvb.de/de/de/mannschaften/fussball/profis.html",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+      ]
     }
   },
   "Borussia M.Gladbach": {
     "primary": "Kevin Diks",
-    "secondary": "Robin Hack",
-    "tertiary": "Kevin Stöger",
-    "last_updated": "2026-07-30",
-    "source": "Borussia Mönchengladbach",
-    "cross_check": "GladbachLive",
+    "secondary": "Kevin Stöger",
+    "tertiary": "Robin Hack",
+    "last_updated": "2026-09-01",
+    "source": "LigaInsider 2026/27 set-piece board",
+    "cross_check": "Bundesliga official penalty statistics",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
+      "primary": "medium",
       "secondary": "medium",
-      "tertiary": "low"
+      "tertiary": "medium"
     },
-    "condition_note": "Diks converted all four 2025/26 league penalties. Hack converted the 18 July friendly penalty and local reporting identifies him as the revised plan B. Stöger remains an experienced fallback but missed his latest relevant club attempt and has no later precedence over Hack. The backup order is based on preseason reporting rather than a direct same-match competitive test.",
+    "condition_note": "Diks remains first choice, with Stöger now filed ahead of Hack in the backup order.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_borussia-m-gladbach_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_borussia-m-gladbach_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -1354,6 +1550,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_borussia-m-gladbach_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Borussia M.Gladbach penalty hierarchy updated",
+        "context": "Diks remains first choice, with Stöger now filed ahead of Hack in the backup order.",
+        "sources": [
+          {
+            "label": "LigaInsider 2026/27 set-piece board",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-08-31",
+            "note": "Current club-by-club penalty and set-piece hierarchy."
+          },
+          {
+            "label": "Bundesliga official penalty statistics",
+            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-09-01",
+            "note": "Official current-season penalty event cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Diks remains first choice, with Stöger now filed ahead of Hack in the backup order."
       }
     ],
     "change_log": [
@@ -1425,6 +1654,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Kevin Diks",
+          "secondary": "Robin Hack",
+          "tertiary": "Kevin Stöger"
+        },
+        "to": {
+          "primary": "Kevin Diks",
+          "secondary": "Kevin Stöger",
+          "tertiary": "Robin Hack"
+        },
+        "reason": "Diks remains first choice, with Stöger now filed ahead of Hack in the backup order.",
+        "evidence_ids": [
+          "evt_20260901_borussia-m-gladbach_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -1445,20 +1697,30 @@
         "player": "Kevin Diks",
         "status": "confirmed",
         "source_url": "https://shop.borussia.de/de-de/c/home-trikot",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Robin Hack",
-        "status": "confirmed",
-        "source_url": "https://shop.borussia.de/de-de/c/home-trikot",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
         "player": "Kevin Stöger",
         "status": "confirmed",
-        "source_url": "https://www.bundesliga.com/de/spieler/kevin-stoger",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "checked_at": "2026-09-01"
+      },
+      "tertiary": {
+        "player": "Robin Hack",
+        "status": "confirmed",
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+      ]
     }
   },
   "Eintracht Frankfurt": {
@@ -1482,10 +1744,10 @@
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260901_eintracht-frankfurt_departure",
+      "id": "evt_20260901_eintracht-frankfurt_current_review",
       "date": "2026-09-01",
-      "type": "roster_integrity_review",
-      "source_count": 1
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -1671,6 +1933,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Jonathan Burkardt then Can Uzun. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
+      },
+      {
+        "id": "evt_20260901_eintracht-frankfurt_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Eintracht Frankfurt hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "LigaInsider 2026/27 set-piece board",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-08-31",
+            "note": "Current club-by-club penalty and set-piece hierarchy."
+          },
+          {
+            "label": "Bundesliga official penalty statistics",
+            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-09-01",
+            "note": "Official current-season penalty event cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -1793,33 +2088,43 @@
         "source_url": "https://profis.eintracht.de/kader/",
         "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+      ]
     }
   },
   "FC Cologne": {
-    "primary": "Luca Waldschmidt",
+    "primary": "Marius Bülter",
     "secondary": "Said El Mala",
-    "tertiary": "Marius Bülter",
-    "last_updated": "2026-07-30",
-    "source": "1. FC Köln",
-    "cross_check": "1. FC Köln",
-    "hierarchy_status": "probable",
+    "tertiary": "Linton Maina",
+    "last_updated": "2026-09-01",
+    "source": "LigaInsider 2026/27 set-piece board",
+    "cross_check": "Bundesliga official penalty statistics",
+    "hierarchy_status": "disputed",
     "confidence": {
-      "primary": "high",
+      "primary": "medium",
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "The official current name is Luca Waldschmidt. El Mala handed Waldschmidt the ball for the April penalty while both were on the pitch, establishing Waldschmidt first. El Mala had converted the prior club penalty. Bülter converted in the 18 July friendly after Waldschmidt and El Mala had left with the first-half group. Bülter's event did not directly test him against Waldschmidt or El Mala because they were no longer playing.",
+    "condition_note": "Bülter is the current first-choice projection, followed by El Mala and Maina.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_fc-cologne_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_fc-cologne_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -1978,6 +2283,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_fc-cologne_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "FC Cologne penalty hierarchy updated",
+        "context": "Bülter is the current first-choice projection, followed by El Mala and Maina.",
+        "sources": [
+          {
+            "label": "LigaInsider 2026/27 set-piece board",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-08-31",
+            "note": "Current club-by-club penalty and set-piece hierarchy."
+          },
+          {
+            "label": "Bundesliga official penalty statistics",
+            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-09-01",
+            "note": "Official current-season penalty event cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Bülter is the current first-choice projection, followed by El Mala and Maina."
       }
     ],
     "change_log": [
@@ -2049,6 +2387,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Luca Waldschmidt",
+          "secondary": "Said El Mala",
+          "tertiary": "Marius Bülter"
+        },
+        "to": {
+          "primary": "Marius Bülter",
+          "secondary": "Said El Mala",
+          "tertiary": "Linton Maina"
+        },
+        "reason": "Bülter is the current first-choice projection, followed by El Mala and Maina.",
+        "evidence_ids": [
+          "evt_20260901_fc-cologne_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -2066,23 +2427,33 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Luca Waldschmidt",
+        "player": "Marius Bülter",
         "status": "confirmed",
-        "source_url": "https://fc.de/en/teams/men/squad",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Said El Mala",
         "status": "confirmed",
         "source_url": "https://fc.de/en/teams/men/squad",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
-        "player": "Marius Bülter",
+        "player": "Linton Maina",
         "status": "confirmed",
-        "source_url": "https://fc.de/en/teams/men/squad",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+      ]
     }
   },
   "Freiburg": {
@@ -2104,12 +2475,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_freiburg_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_freiburg_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -2268,6 +2639,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_freiburg_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Freiburg hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "LigaInsider 2026/27 set-piece board",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-08-31",
+            "note": "Current club-by-club penalty and set-piece hierarchy."
+          },
+          {
+            "label": "Bundesliga official penalty statistics",
+            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-09-01",
+            "note": "Official current-season penalty event cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -2359,47 +2763,57 @@
         "player": "Vincenzo Grifo",
         "status": "confirmed",
         "source_url": "https://www.scfreiburg.com/en/teams/first-team/squad",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Igor Matanović",
         "status": "confirmed",
         "source_url": "https://www.scfreiburg.com/en/teams/first-team/squad",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Lucas Höler",
         "status": "confirmed",
         "source_url": "https://www.scfreiburg.com/en/teams/first-team/squad",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+      ]
     }
   },
   "Hamburger SV": {
     "primary": "Albert Grønbæk",
-    "secondary": "Rayan Philippe",
-    "tertiary": "",
+    "secondary": "Miro Muheim",
+    "tertiary": "Otto Stange",
     "last_updated": "2026-09-01",
-    "source": "Hamburger SV",
-    "cross_check": "Hamburger SV",
+    "source": "LigaInsider 2026/27 set-piece board",
+    "cross_check": "Bundesliga official penalty statistics",
     "hierarchy_status": "conditional",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
-      "tertiary": null
+      "tertiary": "medium"
     },
-    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Albert Grønbæk then Rayan Philippe. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+    "condition_note": "Grønbæk leads the current order, followed by Muheim and Stange.",
     "last_verified": {
       "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "confirmed_departure_roster_review"
+      "method": "current_roster_and_penalty_record_review"
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260901_hamburger-sv_departure",
+      "id": "evt_20260901_hamburger-sv_current_review",
       "date": "2026-09-01",
-      "type": "roster_integrity_review",
-      "source_count": 1
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -2591,6 +3005,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Albert Grønbæk then Rayan Philippe. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
+      },
+      {
+        "id": "evt_20260901_hamburger-sv_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Hamburger SV penalty hierarchy updated",
+        "context": "Grønbæk leads the current order, followed by Muheim and Stange.",
+        "sources": [
+          {
+            "label": "LigaInsider 2026/27 set-piece board",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-08-31",
+            "note": "Current club-by-club penalty and set-piece hierarchy."
+          },
+          {
+            "label": "Bundesliga official penalty statistics",
+            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-09-01",
+            "note": "Official current-season penalty event cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Grønbæk leads the current order, followed by Muheim and Stange."
       }
     ],
     "change_log": [
@@ -2685,6 +3132,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-01T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Albert Grønbæk",
+          "secondary": "Rayan Philippe",
+          "tertiary": ""
+        },
+        "to": {
+          "primary": "Albert Grønbæk",
+          "secondary": "Miro Muheim",
+          "tertiary": "Otto Stange"
+        },
+        "reason": "Grønbæk leads the current order, followed by Muheim and Stange.",
+        "evidence_ids": [
+          "evt_20260901_hamburger-sv_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -2708,11 +3178,27 @@
         "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Rayan Philippe",
+        "player": "Miro Muheim",
         "status": "confirmed",
-        "source_url": "https://www.hsv.de/en/news/hsv-depart-for-denmark-training-camp-with-27-man-squad",
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "checked_at": "2026-09-01"
+      },
+      "tertiary": {
+        "player": "Otto Stange",
+        "status": "confirmed",
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
         "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+      ]
     }
   },
   "Hoffenheim": {
@@ -2734,12 +3220,12 @@
       "by": "Il Margine",
       "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-08-29",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260829_hoffenheim_moerstedt_emergency",
-      "date": "2026-08-29",
-      "type": "competitive_penalty_assignment",
-      "source_count": 1
+      "id": "evt_20260901_hoffenheim_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -2924,6 +3410,39 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Moerstedt is recorded as emergency depth only. The event does not challenge Kramarić, Lemperle or Asllani because none was active at the penalty."
+      },
+      {
+        "id": "evt_20260901_hoffenheim_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Hoffenheim hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "LigaInsider 2026/27 set-piece board",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-08-31",
+            "note": "Current club-by-club penalty and set-piece hierarchy."
+          },
+          {
+            "label": "Bundesliga official penalty statistics",
+            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-09-01",
+            "note": "Official current-season penalty event cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -3015,47 +3534,57 @@
         "player": "Andrej Kramarić",
         "status": "confirmed",
         "source_url": "https://www.bundesliga.com/en/bundesliga/news/andrej-kramaric-extends-hoffenheim-contract-croatia-37154",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Tim Lemperle",
         "status": "confirmed",
         "source_url": "https://s3.tsg-hoffenheim.de/public/Medien/Allgemein/TSG-Hoffenheim-Pressemappe-2025-2026.pdf",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Fisnik Asllani",
         "status": "confirmed",
         "source_url": "https://s3.tsg-hoffenheim.de/public/Medien/Allgemein/TSG-Hoffenheim-Pressemappe-2025-2026.pdf",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+      ]
     }
   },
   "Mainz 05": {
     "primary": "Nadiem Amiri",
-    "secondary": "Paul Nebel",
-    "tertiary": "Phillip Tietz",
-    "last_updated": "2026-07-30",
-    "source": "Mainz 05",
-    "cross_check": "Bundesliga",
+    "secondary": "Ransford-Yeboah Königsdörffer",
+    "tertiary": "Paul Nebel",
+    "last_updated": "2026-09-01",
+    "source": "LigaInsider 2026/27 set-piece board",
+    "cross_check": "Bundesliga official penalty statistics",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
+      "primary": "medium",
       "secondary": "medium",
-      "tertiary": "low"
+      "tertiary": "medium"
     },
-    "condition_note": "Amiri's perfect eight-penalty 2025/26 record makes him the clear incumbent. Nebel converted against Kaiserslautern during Amiri's post-World Cup absence. Tietz has no current Mainz conversion and remains a senior career fallback. Nebel's preseason kick did not test direct precedence against Amiri because Amiri had not yet returned.",
+    "condition_note": "Amiri remains first choice; Königsdörffer and Nebel are the current alternatives.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_mainz-05_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_mainz-05_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -3214,6 +3743,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_mainz-05_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Mainz 05 penalty hierarchy updated",
+        "context": "Amiri remains first choice; Königsdörffer and Nebel are the current alternatives.",
+        "sources": [
+          {
+            "label": "LigaInsider 2026/27 set-piece board",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-08-31",
+            "note": "Current club-by-club penalty and set-piece hierarchy."
+          },
+          {
+            "label": "Bundesliga official penalty statistics",
+            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-09-01",
+            "note": "Official current-season penalty event cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Amiri remains first choice; Königsdörffer and Nebel are the current alternatives."
       }
     ],
     "change_log": [
@@ -3285,6 +3847,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Nadiem Amiri",
+          "secondary": "Paul Nebel",
+          "tertiary": "Phillip Tietz"
+        },
+        "to": {
+          "primary": "Nadiem Amiri",
+          "secondary": "Ransford-Yeboah Königsdörffer",
+          "tertiary": "Paul Nebel"
+        },
+        "reason": "Amiri remains first choice; Königsdörffer and Nebel are the current alternatives.",
+        "evidence_ids": [
+          "evt_20260901_mainz-05_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -3305,20 +3890,30 @@
         "player": "Nadiem Amiri",
         "status": "confirmed",
         "source_url": "https://www.mainz05.de/news/trainingsauftakt-sommervorbereitung-profis-2627",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Paul Nebel",
+        "player": "Ransford-Yeboah Königsdörffer",
         "status": "confirmed",
-        "source_url": "https://www.mainz05.de/tab/kader",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
-        "player": "Phillip Tietz",
+        "player": "Paul Nebel",
         "status": "confirmed",
-        "source_url": "https://www.mainz05.de/news/trainingsauftakt-sommervorbereitung-profis-2627",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+      ]
     }
   },
   "RasenBallsport Leipzig": {
@@ -3340,12 +3935,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_rasenballsport-leipzig_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_rasenballsport-leipzig_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -3504,6 +4099,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_rasenballsport-leipzig_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "RasenBallsport Leipzig hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "LigaInsider 2026/27 set-piece board",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-08-31",
+            "note": "Current club-by-club penalty and set-piece hierarchy."
+          },
+          {
+            "label": "Bundesliga official penalty statistics",
+            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-09-01",
+            "note": "Official current-season penalty event cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -3595,20 +4223,30 @@
         "player": "Rômulo",
         "status": "confirmed",
         "source_url": "https://rbleipzig.com/de/news/rueckblick-suedafrika-tour-rb-leipzig",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "David Raum",
         "status": "confirmed",
         "source_url": "https://homejersey.rbleipzig.com/de",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Christoph Baumgartner",
         "status": "confirmed",
         "source_url": "https://rbleipzig.com/news/christoph-baumgartner-kapitaen-bundesliga-rb-leipzig",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+      ]
     }
   },
   "SC Paderborn 07": {
@@ -3630,10 +4268,10 @@
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260901_sc-paderborn-07_departure",
+      "id": "evt_20260901_sc-paderborn-07_current_review",
       "date": "2026-09-01",
-      "type": "roster_integrity_review",
-      "source_count": 1
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -3812,6 +4450,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Sebastian Klaas then Sven Michel. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
+      },
+      {
+        "id": "evt_20260901_sc-paderborn-07_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "SC Paderborn 07 hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "LigaInsider 2026/27 set-piece board",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-08-31",
+            "note": "Current club-by-club penalty and set-piece hierarchy."
+          },
+          {
+            "label": "Bundesliga official penalty statistics",
+            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-09-01",
+            "note": "Official current-season penalty event cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -3907,6 +4578,16 @@
         "source_url": "https://www.scp07.de/Newsarchiv/Auf-ins-Trainingslager.html",
         "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+      ]
     }
   },
   "SV Elversberg": {
@@ -3926,12 +4607,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_sv-elversberg_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_sv-elversberg_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -4077,6 +4758,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_sv-elversberg_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "SV Elversberg hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "LigaInsider 2026/27 set-piece board",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-08-31",
+            "note": "Current club-by-club penalty and set-piece hierarchy."
+          },
+          {
+            "label": "Bundesliga official penalty statistics",
+            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-09-01",
+            "note": "Official current-season penalty event cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -4141,20 +4855,30 @@
         "player": "Lukas Petkov",
         "status": "confirmed",
         "source_url": "https://sv07elversberg.de/knappe-testspiel-niederlage-sve-unterliegt-viktoria-koeln-mit-12/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Francis Onyeka",
         "status": "confirmed",
         "source_url": "https://sv07elversberg.de/trainingslager-in-barneveld-eine-woche-vorbereitung-in-den-niederlanden/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Maurice Krattenmacher",
         "status": "confirmed",
         "source_url": "https://sv07elversberg.de/trainingslager-in-barneveld-eine-woche-vorbereitung-in-den-niederlanden/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+      ]
     }
   },
   "Schalke 04": {
@@ -4174,12 +4898,12 @@
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_schalke-04_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_schalke-04_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -4319,6 +5043,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_schalke-04_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Schalke 04 hierarchy rechecked",
+        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "sources": [
+          {
+            "label": "LigaInsider 2026/27 set-piece board",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-08-31",
+            "note": "Current club-by-club penalty and set-piece hierarchy."
+          },
+          {
+            "label": "Bundesliga official penalty statistics",
+            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-09-01",
+            "note": "Official current-season penalty event cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       }
     ],
     "change_log": [
@@ -4383,47 +5140,57 @@
         "player": "Kenan Karaman",
         "status": "confirmed",
         "source_url": "https://schalke04.de/kader-2026-2027/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Moussa Sylla",
         "status": "confirmed",
         "source_url": "https://schalke04.de/kader-2026-2027/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Junior Adamu",
         "status": "confirmed",
         "source_url": "https://schalke04.de/kader-2026-2027/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "order_unchanged",
+      "sources": [
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+      ]
     }
   },
   "Union Berlin": {
-    "primary": "Derrick Köhn",
-    "secondary": "Leopold Querfeld",
-    "tertiary": "Andrej Ilić",
-    "last_updated": "2026-07-30",
-    "source": "Union Berlin",
-    "cross_check": "Union Berlin",
-    "hierarchy_status": "probable",
+    "primary": "Aljoscha Kemlein",
+    "secondary": "Dejan Ljubičić",
+    "tertiary": "Derrick Köhn",
+    "last_updated": "2026-09-01",
+    "source": "LigaInsider 2026/27 set-piece board",
+    "cross_check": "Bundesliga official penalty statistics",
+    "hierarchy_status": "disputed",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
-      "tertiary": "low"
+      "tertiary": "medium"
     },
-    "condition_note": "Querfeld converted two February penalties, then Köhn took and converted the later March penalty, supporting a latest-event takeover. Ilić missed his only 2025/26 attempt and ranks third. Köhn and Querfeld have not yet been tested by a 2026/27 competitive penalty, and the latest-event takeover could reflect match-specific assignment.",
+    "condition_note": "The current specialist board places Kemlein and Ljubičić first, with Köhn retained third.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_union-berlin_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260901_union-berlin_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -4588,6 +5355,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_union-berlin_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Union Berlin penalty hierarchy updated",
+        "context": "The current specialist board places Kemlein and Ljubičić first, with Köhn retained third.",
+        "sources": [
+          {
+            "label": "LigaInsider 2026/27 set-piece board",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-08-31",
+            "note": "Current club-by-club penalty and set-piece hierarchy."
+          },
+          {
+            "label": "Bundesliga official penalty statistics",
+            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-09-01",
+            "note": "Official current-season penalty event cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "The current specialist board places Kemlein and Ljubičić first, with Köhn retained third."
       }
     ],
     "change_log": [
@@ -4659,6 +5459,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Derrick Köhn",
+          "secondary": "Leopold Querfeld",
+          "tertiary": "Andrej Ilić"
+        },
+        "to": {
+          "primary": "Aljoscha Kemlein",
+          "secondary": "Dejan Ljubičić",
+          "tertiary": "Derrick Köhn"
+        },
+        "reason": "The current specialist board places Kemlein and Ljubičić first, with Köhn retained third.",
+        "evidence_ids": [
+          "evt_20260901_union-berlin_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -4676,50 +5499,60 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Derrick Köhn",
+        "player": "Aljoscha Kemlein",
         "status": "confirmed",
-        "source_url": "https://www.fc-union-berlin.de/de-e/fussball/profis-maenner/kader-F0GX",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Leopold Querfeld",
+        "player": "Dejan Ljubičić",
         "status": "confirmed",
-        "source_url": "https://www.fc-union-berlin.de/de-e/fussball/profis-maenner/kader-F0GX",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
-        "player": "Andrej Ilić",
+        "player": "Derrick Köhn",
         "status": "confirmed",
-        "source_url": "https://www.fc-union-berlin.de/de-e/fussball/profis-maenner/kader-F0GX",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+      ]
     }
   },
   "VfB Stuttgart": {
     "primary": "Maximilian Mittelstädt",
-    "secondary": "Ermedin Demirović",
-    "tertiary": "Deniz Undav",
-    "last_updated": "2026-07-30",
-    "source": "VfB Stuttgart",
-    "cross_check": "VfB Stuttgart",
+    "secondary": "Deniz Undav",
+    "tertiary": "Ermedin Demirović",
+    "last_updated": "2026-09-01",
+    "source": "LigaInsider 2026/27 set-piece board",
+    "cross_check": "Bundesliga official penalty statistics",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
+      "primary": "medium",
       "secondary": "medium",
-      "tertiary": "low"
+      "tertiary": "medium"
     },
-    "condition_note": "Mittelstädt converted in May while Demirović and Undav both started, giving direct precedence over both. Demirović has the stronger senior career record for the deputy slot. Undav missed the April penalty after Demirović had been substituted. The secondary versus tertiary order remains career-based because the Undav miss did not directly test him against Demirović.",
+    "condition_note": "Mittelstädt remains first choice; Undav is now the principal alternative ahead of Demirović.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_vfb-stuttgart_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_vfb-stuttgart_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -4878,6 +5711,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_vfb-stuttgart_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "VfB Stuttgart penalty hierarchy updated",
+        "context": "Mittelstädt remains first choice; Undav is now the principal alternative ahead of Demirović.",
+        "sources": [
+          {
+            "label": "LigaInsider 2026/27 set-piece board",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-08-31",
+            "note": "Current club-by-club penalty and set-piece hierarchy."
+          },
+          {
+            "label": "Bundesliga official penalty statistics",
+            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-09-01",
+            "note": "Official current-season penalty event cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Mittelstädt remains first choice; Undav is now the principal alternative ahead of Demirović."
       }
     ],
     "change_log": [
@@ -4949,6 +5815,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Maximilian Mittelstädt",
+          "secondary": "Ermedin Demirović",
+          "tertiary": "Deniz Undav"
+        },
+        "to": {
+          "primary": "Maximilian Mittelstädt",
+          "secondary": "Deniz Undav",
+          "tertiary": "Ermedin Demirović"
+        },
+        "reason": "Mittelstädt remains first choice; Undav is now the principal alternative ahead of Demirović.",
+        "evidence_ids": [
+          "evt_20260901_vfb-stuttgart_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -4969,47 +5858,57 @@
         "player": "Maximilian Mittelstädt",
         "status": "confirmed",
         "source_url": "https://www.vfb.de/de/1893/profis/kader/saisonen/2026-2027/kader/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Ermedin Demirović",
-        "status": "confirmed",
-        "source_url": "https://www.vfb.de/de/1893/profis/kader/saisonen/2026-2027/kader/",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
         "player": "Deniz Undav",
         "status": "confirmed",
-        "source_url": "https://www.vfb.de/de/1893/profis/kader/saisonen/2026-2027/kader/",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "checked_at": "2026-09-01"
+      },
+      "tertiary": {
+        "player": "Ermedin Demirović",
+        "status": "confirmed",
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+      ]
     }
   },
   "Werder Bremen": {
     "primary": "Niclas Füllkrug",
-    "secondary": "Cedric Itten",
-    "tertiary": "Salim Musah",
-    "last_updated": "2026-08-22",
-    "source": "Werder Bremen",
-    "cross_check": "Kicker",
-    "hierarchy_status": "confirmed",
+    "secondary": "Salim Musah",
+    "tertiary": "Cedric Itten",
+    "last_updated": "2026-09-01",
+    "source": "LigaInsider 2026/27 set-piece board",
+    "cross_check": "Bundesliga official penalty statistics",
+    "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
+      "primary": "medium",
       "secondary": "medium",
-      "tertiary": "low"
+      "tertiary": "medium"
     },
-    "condition_note": "Schmid left Werder. Füllkrug then started and converted Werder's competitive DFB-Pokal penalty on 22 August, making him the evidence-backed primary. Itten and Musah remain the best current-squad alternatives, but they have not been tested alongside Füllkrug for a penalty.",
+    "condition_note": "Füllkrug remains first choice, with Musah now ahead of Itten in the backup order.",
     "last_verified": {
-      "date": "2026-08-22",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-08-22",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260822_werder_fuellkrug_assignment",
-      "date": "2026-08-22",
-      "type": "competitive_penalty_assignment",
-      "source_count": 3
+      "id": "evt_20260901_werder-bremen_current_review",
+      "date": "2026-09-01",
+      "type": "current_season_board_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -5218,6 +6117,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Schmid left Werder. Füllkrug then started and converted Werder's competitive DFB-Pokal penalty on 22 August, making him the evidence-backed primary. Itten and Musah remain the best current-squad alternatives, but they have not been tested alongside Füllkrug for a penalty."
+      },
+      {
+        "id": "evt_20260901_werder-bremen_current_review",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Werder Bremen penalty hierarchy updated",
+        "context": "Füllkrug remains first choice, with Musah now ahead of Itten in the backup order.",
+        "sources": [
+          {
+            "label": "LigaInsider 2026/27 set-piece board",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-08-31",
+            "note": "Current club-by-club penalty and set-piece hierarchy."
+          },
+          {
+            "label": "Bundesliga official penalty statistics",
+            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+            "date": "2026-09-01",
+            "note": "Official current-season penalty event cross-check."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Füllkrug remains first choice, with Musah now ahead of Itten in the backup order."
       }
     ],
     "change_log": [
@@ -5312,6 +6244,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-08-22T18:30:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Niclas Füllkrug",
+          "secondary": "Cedric Itten",
+          "tertiary": "Salim Musah"
+        },
+        "to": {
+          "primary": "Niclas Füllkrug",
+          "secondary": "Salim Musah",
+          "tertiary": "Cedric Itten"
+        },
+        "reason": "Füllkrug remains first choice, with Musah now ahead of Itten in the backup order.",
+        "evidence_ids": [
+          "evt_20260901_werder-bremen_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -5332,20 +6287,30 @@
         "player": "Niclas Füllkrug",
         "status": "confirmed",
         "source_url": "https://www.werder.de/teams/profis/spieler",
-        "checked_at": "2026-08-22"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Cedric Itten",
-        "status": "confirmed",
-        "source_url": "https://www.werder.de/teams/profis/spieler",
-        "checked_at": "2026-08-22"
-      },
-      "tertiary": {
         "player": "Salim Musah",
         "status": "confirmed",
-        "source_url": "https://www.werder.de/teams/profis/spieler",
-        "checked_at": "2026-08-22"
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "checked_at": "2026-09-01"
+      },
+      "tertiary": {
+        "player": "Cedric Itten",
+        "status": "confirmed",
+        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "checked_at": "2026-09-01"
       }
+    },
+    "last_reviewed": {
+      "date": "2026-09-01",
+      "by": "Il Margine",
+      "method": "current_season_multi_source_review",
+      "outcome": "hierarchy_updated",
+      "sources": [
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+      ]
     }
   }
 }
