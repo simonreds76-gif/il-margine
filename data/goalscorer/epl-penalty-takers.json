@@ -723,30 +723,30 @@
     }
   },
   "Bournemouth": {
-    "primary": "Junior Kroupi",
-    "secondary": "Justin Kluivert",
-    "tertiary": "Marcus Tavernier",
-    "last_updated": "2026-08-08",
-    "source": "https://fantasy.premierleague.com/api/bootstrap-static/",
-    "cross_check": "Existing multi-source preseason dossier and ongoing competitive match review.",
+    "primary": "Justin Kluivert",
+    "secondary": "Marcus Tavernier",
+    "tertiary": "Evanilson",
+    "last_updated": "2026-09-01",
+    "source": "Cadena SER Kroupi injury report",
+    "cross_check": "AFC Bournemouth Kluivert penalty record",
     "hierarchy_status": "conditional",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
-      "tertiary": "medium"
+      "tertiary": "low"
     },
-    "condition_note": "Official FPL 2026/27 role fields place Junior Kroupi first, ahead of Justin Kluivert and Marcus Tavernier. Kroupi was listed injured when the review was generated, so Kluivert is the practical on-pitch alternative while he is unavailable. A competitive same-pitch event is still needed to confirm the order.",
+    "condition_note": "Kroupi remains the nominal long-term specialist but is excluded from the active matchday order while recovering from foot surgery. Kluivert's established Premier League record makes him the practical first call, with Tavernier second after converting with Kroupi in the side. Current starting striker Evanilson is the low-confidence active third candidate; he has no observed 2026/27 assignment.",
     "last_verified": {
-      "date": "2026-08-08",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
       "id": "evt_20260901_bournemouth_current_review",
       "date": "2026-09-01",
       "type": "current_season_board_review",
-      "source_count": 2
+      "source_count": 4
     },
     "evidence_log": [
       {
@@ -940,20 +940,32 @@
         "penalty_kind": null,
         "competition": null,
         "match": null,
-        "headline": "Bournemouth hierarchy rechecked",
-        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "headline": "Bournemouth penalty hierarchy updated",
+        "context": "Kroupi remains the nominal long-term specialist but is excluded from the active matchday order while recovering from foot surgery. Kluivert's established Premier League record makes him the practical first call, with Tavernier second after converting with Kroupi in the side. Current starting striker Evanilson is the low-confidence active third candidate; he has no observed 2026/27 assignment.",
         "sources": [
           {
-            "label": "Squawka 2026/27 set-piece board",
-            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
-            "date": "2026-08-10",
-            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+            "label": "Cadena SER Kroupi injury report",
+            "url": "https://cadenaser.com/nacional/2026/07/29/eli-junior-kroupi-alternativa-del-barca-para-reforzar-el-ataque-lesionado-para-los-proximos-tres-o-cuatro-meses-cadena-ser/",
+            "date": "2026-07-29",
+            "note": "Reports foot surgery and an expected absence of three to four months, removing Kroupi from the active matchday hierarchy until medical clearance."
           },
           {
-            "label": "FPL Assistant current role audit",
-            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
-            "date": "2026-08-15",
-            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+            "label": "AFC Bournemouth Kluivert penalty record",
+            "url": "https://www.afcb.co.uk/news/2024/november/30/kluivert-makes-premier-league-history-in-wolves-win/",
+            "date": "2024-11-30",
+            "note": "Kluivert converted three regular-time Premier League penalties in one match."
+          },
+          {
+            "label": "AFC Bournemouth Kroupi event",
+            "url": "https://www.afcb.co.uk/news/2026/may/03/cherries-shine-in-strong-showing-against-crystal-palace/",
+            "date": "2026-05-03",
+            "note": "Kroupi converted with Tavernier playing; this preserves his nominal role but does not make him currently available."
+          },
+          {
+            "label": "Evanilson 2026/27 match log",
+            "url": "https://fbref.com/en/players/6f3cc2fe/matchlogs/2026-2027/summary/Evanilson-Match-Logs",
+            "date": "2026-09-01",
+            "note": "Confirms Evanilson started Bournemouth's first two league matches; this supports active depth only, not a penalty assignment."
           }
         ],
         "detection": "manual_multi_source_research",
@@ -962,8 +974,8 @@
           "reviewed_by": "Il Margine",
           "reviewed_at": "2026-09-01T12:00:00Z"
         },
-        "affects_hierarchy": false,
-        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+        "affects_hierarchy": true,
+        "editorial_note": "Kroupi remains the nominal long-term specialist but is excluded from the active matchday order while recovering from foot surgery. Kluivert's established Premier League record makes him the practical first call, with Tavernier second after converting with Kroupi in the side. Current starting striker Evanilson is the low-confidence active third candidate; he has no observed 2026/27 assignment."
       }
     ],
     "change_log": [
@@ -1058,6 +1070,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-08-08T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Junior Kroupi",
+          "secondary": "Justin Kluivert",
+          "tertiary": "Marcus Tavernier"
+        },
+        "to": {
+          "primary": "Justin Kluivert",
+          "secondary": "Marcus Tavernier",
+          "tertiary": "Evanilson"
+        },
+        "reason": "Kroupi remains the nominal long-term specialist but is excluded from the active matchday order while recovering from foot surgery. Kluivert's established Premier League record makes him the practical first call, with Tavernier second after converting with Kroupi in the side. Current starting striker Evanilson is the low-confidence active third candidate; he has no observed 2026/27 assignment.",
+        "evidence_ids": [
+          "evt_20260901_bournemouth_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -1075,21 +1110,21 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Junior Kroupi",
+        "player": "Justin Kluivert",
         "status": "confirmed",
-        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "source_url": "https://www.afcb.co.uk/news/2024/november/30/kluivert-makes-premier-league-history-in-wolves-win/",
         "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Justin Kluivert",
+        "player": "Marcus Tavernier",
         "status": "confirmed",
-        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "source_url": "https://www.afcb.co.uk/news/2026/may/03/cherries-shine-in-strong-showing-against-crystal-palace/",
         "checked_at": "2026-09-01"
       },
       "tertiary": {
-        "player": "Marcus Tavernier",
+        "player": "Evanilson",
         "status": "confirmed",
-        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "source_url": "https://fbref.com/en/players/6f3cc2fe/matchlogs/2026-2027/summary/Evanilson-Match-Logs",
         "checked_at": "2026-09-01"
       }
     },
@@ -1097,12 +1132,23 @@
       "date": "2026-09-01",
       "by": "Il Margine",
       "method": "current_season_multi_source_review",
-      "outcome": "order_unchanged",
+      "outcome": "hierarchy_updated",
       "sources": [
-        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
-        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+        "https://cadenaser.com/nacional/2026/07/29/eli-junior-kroupi-alternativa-del-barca-para-reforzar-el-ataque-lesionado-para-los-proximos-tres-o-cuatro-meses-cadena-ser/",
+        "https://www.afcb.co.uk/news/2024/november/30/kluivert-makes-premier-league-history-in-wolves-win/",
+        "https://www.afcb.co.uk/news/2026/may/03/cherries-shine-in-strong-showing-against-crystal-palace/",
+        "https://fbref.com/en/players/6f3cc2fe/matchlogs/2026-2027/summary/Evanilson-Match-Logs"
       ]
-    }
+    },
+    "unavailable_candidates": [
+      {
+        "player": "Junior Kroupi",
+        "reason": "foot surgery; reported three-to-four-month absence",
+        "source_url": "https://cadenaser.com/nacional/2026/07/29/eli-junior-kroupi-alternativa-del-barca-para-reforzar-el-ataque-lesionado-para-los-proximos-tres-o-cuatro-meses-cadena-ser/",
+        "checked_at": "2026-09-01",
+        "return_rule": "Restore only after current medical clearance and matchday availability are verified."
+      }
+    ]
   },
   "Brentford": {
     "primary": "Igor Thiago",

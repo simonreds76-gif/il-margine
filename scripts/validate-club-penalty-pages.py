@@ -231,6 +231,33 @@ def main() -> int:
                 len(hierarchy_names) == sum(bool(str(entry.get(position) or "").strip()) for position in POSITIONS),
                 f"{league}/{team}: primary, secondary and tertiary must be distinct players",
             )
+            unavailable_candidates = entry.get("unavailable_candidates") or []
+            check(
+                isinstance(unavailable_candidates, list),
+                f"{league}/{team}: unavailable_candidates must be a list",
+            )
+            if isinstance(unavailable_candidates, list):
+                for unavailable in unavailable_candidates:
+                    check(
+                        isinstance(unavailable, dict),
+                        f"{league}/{team}: invalid unavailable candidate record",
+                    )
+                    if not isinstance(unavailable, dict):
+                        continue
+                    unavailable_player = str(unavailable.get("player") or "").strip()
+                    check(bool(unavailable_player), f"{league}/{team}: unavailable candidate has no player")
+                    check(
+                        normalize_name(unavailable_player) not in {normalize_name(name) for name in hierarchy_names},
+                        f"{league}/{team}/{unavailable_player}: unavailable player remains in the active hierarchy",
+                    )
+                    check(
+                        str(unavailable.get("source_url") or "").startswith("https://"),
+                        f"{league}/{team}/{unavailable_player}: unavailable status needs an HTTPS source",
+                    )
+                    check(
+                        date_is_current_or_newer(unavailable.get("checked_at"), current_review_date),
+                        f"{league}/{team}/{unavailable_player}: unavailable status predates the latest review",
+                    )
             check(
                 entry.get("flags", {}).get("carryover_from_previous_season") is False,
                 f"{league}/{team}: researched hierarchy must not remain labelled as carryover",

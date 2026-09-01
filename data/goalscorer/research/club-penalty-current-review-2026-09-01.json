@@ -34,8 +34,22 @@
         "Sunderland",
         "Tottenham"
       ],
-      "changed_count": 1,
+      "changed_count": 2,
       "changes": [
+        {
+          "team": "Bournemouth",
+          "from": {
+            "primary": "Junior Kroupi",
+            "secondary": "Justin Kluivert",
+            "tertiary": "Marcus Tavernier"
+          },
+          "to": {
+            "primary": "Justin Kluivert",
+            "secondary": "Marcus Tavernier",
+            "tertiary": "Evanilson"
+          },
+          "reason": "Kroupi remains the nominal long-term specialist but is excluded from the active matchday order while recovering from foot surgery. Kluivert's established Premier League record makes him the practical first call, with Tavernier second after converting with Kroupi in the side. Current starting striker Evanilson is the low-confidence active third candidate; he has no observed 2026/27 assignment."
+        },
         {
           "team": "Newcastle United",
           "from": {
@@ -420,11 +434,11 @@
             "tertiary": "Felix Nmecha"
           },
           "to": {
-            "primary": "Emre Can",
+            "primary": "Ramy Bensebaini",
             "secondary": "Serhou Guirassy",
-            "tertiary": "Ramy Bensebaini"
+            "tertiary": "Félix Nmecha"
           },
-          "reason": "The current specialist board places Can first and Guirassy second; Bensebaini remains a proven third option."
+          "reason": "Can is excluded from the active order while still in ACL rehabilitation. Bensebaini is first: he converted two penalties against HSV while Guirassy and Nmecha were both on the pitch, directly outranking them in the same match. Guirassy is the practical alternative when Bensebaini does not start; Nmecha remains third after missing the earlier penalty in that HSV match."
         },
         {
           "team": "Borussia M.Gladbach",
@@ -622,6 +636,6 @@
   },
   "summary": {
     "reviewed_clubs": 96,
-    "hierarchies_changed": 28
+    "hierarchies_changed": 29
   }
 }

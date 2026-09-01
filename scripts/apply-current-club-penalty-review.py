@@ -115,6 +115,7 @@ def change(
     sources: list[dict[str, str]] | None = None,
     confidence: dict[str, str] | None = None,
     membership_sources: dict[str, str] | None = None,
+    unavailable: list[dict[str, str]] | None = None,
 ) -> dict[str, Any]:
     result: dict[str, Any] = {"order": order, "note": note, "status": status}
     if sources:
@@ -123,6 +124,8 @@ def change(
         result["confidence"] = confidence
     if membership_sources:
         result["membership_sources"] = membership_sources
+    if unavailable:
+        result["unavailable"] = unavailable
     return result
 
 
@@ -130,6 +133,52 @@ def change(
 # existing files takes precedence over a generic league board and is retained.
 OVERRIDES: dict[str, dict[str, dict[str, Any]]] = {
     "epl": {
+        "Bournemouth": change(
+            ["Justin Kluivert", "Marcus Tavernier", "Evanilson"],
+            "Kroupi remains the nominal long-term specialist but is excluded from the active matchday order while recovering from foot surgery. Kluivert's established Premier League record makes him the practical first call, with Tavernier second after converting with Kroupi in the side. Current starting striker Evanilson is the low-confidence active third candidate; he has no observed 2026/27 assignment.",
+            "conditional",
+            sources=[
+                {
+                    "label": "Cadena SER Kroupi injury report",
+                    "url": "https://cadenaser.com/nacional/2026/07/29/eli-junior-kroupi-alternativa-del-barca-para-reforzar-el-ataque-lesionado-para-los-proximos-tres-o-cuatro-meses-cadena-ser/",
+                    "date": "2026-07-29",
+                    "note": "Reports foot surgery and an expected absence of three to four months, removing Kroupi from the active matchday hierarchy until medical clearance.",
+                },
+                {
+                    "label": "AFC Bournemouth Kluivert penalty record",
+                    "url": "https://www.afcb.co.uk/news/2024/november/30/kluivert-makes-premier-league-history-in-wolves-win/",
+                    "date": "2024-11-30",
+                    "note": "Kluivert converted three regular-time Premier League penalties in one match.",
+                },
+                {
+                    "label": "AFC Bournemouth Kroupi event",
+                    "url": "https://www.afcb.co.uk/news/2026/may/03/cherries-shine-in-strong-showing-against-crystal-palace/",
+                    "date": "2026-05-03",
+                    "note": "Kroupi converted with Tavernier playing; this preserves his nominal role but does not make him currently available.",
+                },
+                {
+                    "label": "Evanilson 2026/27 match log",
+                    "url": "https://fbref.com/en/players/6f3cc2fe/matchlogs/2026-2027/summary/Evanilson-Match-Logs",
+                    "date": "2026-09-01",
+                    "note": "Confirms Evanilson started Bournemouth's first two league matches; this supports active depth only, not a penalty assignment.",
+                },
+            ],
+            confidence={"primary": "medium", "secondary": "medium", "tertiary": "low"},
+            membership_sources={
+                "primary": "https://www.afcb.co.uk/news/2024/november/30/kluivert-makes-premier-league-history-in-wolves-win/",
+                "secondary": "https://www.afcb.co.uk/news/2026/may/03/cherries-shine-in-strong-showing-against-crystal-palace/",
+                "tertiary": "https://fbref.com/en/players/6f3cc2fe/matchlogs/2026-2027/summary/Evanilson-Match-Logs",
+            },
+            unavailable=[
+                {
+                    "player": "Junior Kroupi",
+                    "reason": "foot surgery; reported three-to-four-month absence",
+                    "source_url": "https://cadenaser.com/nacional/2026/07/29/eli-junior-kroupi-alternativa-del-barca-para-reforzar-el-ataque-lesionado-para-los-proximos-tres-o-cuatro-meses-cadena-ser/",
+                    "checked_at": "2026-09-01",
+                    "return_rule": "Restore only after current medical clearance and matchday availability are verified.",
+                }
+            ],
+        ),
         "Newcastle United": change(
             ["Yoane Wissa", "Matias Fernandez-Pardo", "William Osula"],
             "Wissa is the provisional first call after starting Newcastle's latest league match as the central forward and bringing the strongest senior penalty record. New signing Fernandez-Pardo has two recent Ligue 1 conversions but no Newcastle assignment, while Osula is retained as the specialist-board alternative. Woltemade is removed after the reported Juventus loan agreement. The first competitive award with Wissa and Fernandez-Pardo available must settle the order.",
@@ -308,9 +357,50 @@ OVERRIDES: dict[str, dict[str, dict[str, Any]]] = {
             confidence={"primary": "high", "secondary": "medium", "tertiary": "low"},
         ),
         "Borussia Dortmund": change(
-            ["Emre Can", "Serhou Guirassy", "Ramy Bensebaini"],
-            "The current specialist board places Can first and Guirassy second; Bensebaini remains a proven third option.",
-            "disputed",
+            ["Ramy Bensebaini", "Serhou Guirassy", "Félix Nmecha"],
+            "Can is excluded from the active order while still in ACL rehabilitation. Bensebaini is first: he converted two penalties against HSV while Guirassy and Nmecha were both on the pitch, directly outranking them in the same match. Guirassy is the practical alternative when Bensebaini does not start; Nmecha remains third after missing the earlier penalty in that HSV match.",
+            "conditional",
+            sources=[
+                {
+                    "label": "Borussia Dortmund HSV match report",
+                    "url": "https://www.bvb.de/de/en/news/news-overview/news.html/2026/3/21/3-2-from-0-2-down-BVBs-second-half-onslaught-against-HSV.html",
+                    "date": "2026-03-21",
+                    "note": "Bensebaini converted twice after entering with Guirassy; Nmecha remained on the pitch after missing the first-half penalty.",
+                },
+                {
+                    "label": "Borussia Dortmund preseason medical update",
+                    "url": "https://www.bvb.de/de/de/aktuelles/news/news.html/2026/7/12/An-die-Arbeit-BVB-startet-mit-Leistungsdiagnostik-in-die-Vorbereitung.html",
+                    "date": "2026-07-12",
+                    "note": "The club states that Can remained in rehabilitation after his cruciate-ligament injury.",
+                },
+                {
+                    "label": "Borussia Dortmund opening league lineup",
+                    "url": "https://www.bvb.de/de/en/news/news-overview/news.html/2026/8/29/From-dominance-to-gritty-defending-BVB-celebrates-first-win-of-the-season.html",
+                    "date": "2026-08-29",
+                    "note": "Can was absent from Dortmund's opening league matchday squad, providing a current-season availability cross-check.",
+                },
+                {
+                    "label": "LigaInsider 2026/27 set-piece board",
+                    "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+                    "date": "2026-08-31",
+                    "note": "Lists the nominal Can/Guirassy order but does not account for Can's current unavailability, so direct club evidence takes precedence.",
+                },
+            ],
+            confidence={"primary": "high", "secondary": "medium", "tertiary": "low"},
+            membership_sources={
+                "primary": "https://www.bvb.de/de/en/news/news-overview/news.html/2026/3/21/3-2-from-0-2-down-BVBs-second-half-onslaught-against-HSV.html",
+                "secondary": "https://www.bvb.de/de/en/news/news-overview/news.html/2026/3/21/3-2-from-0-2-down-BVBs-second-half-onslaught-against-HSV.html",
+                "tertiary": "https://www.bvb.de/de/en/news/news-overview/news.html/2026/3/21/3-2-from-0-2-down-BVBs-second-half-onslaught-against-HSV.html",
+            },
+            unavailable=[
+                {
+                    "player": "Emre Can",
+                    "reason": "ACL rehabilitation",
+                    "source_url": "https://www.bvb.de/de/de/aktuelles/news/news.html/2026/7/12/An-die-Arbeit-BVB-startet-mit-Leistungsdiagnostik-in-die-Vorbereitung.html",
+                    "checked_at": "2026-09-01",
+                    "return_rule": "Restore only after current official medical clearance and matchday availability are verified.",
+                }
+            ],
         ),
         "Borussia M.Gladbach": change(
             ["Kevin Diks", "Kevin Stöger", "Robin Hack"],
@@ -379,6 +469,68 @@ OVERRIDES: dict[str, dict[str, dict[str, Any]]] = {
             ["Niclas Füllkrug", "Salim Musah", "Cedric Itten"],
             "Füllkrug remains first choice, with Musah now ahead of Itten in the backup order.",
             "probable",
+        ),
+    },
+    "ligue-1": {
+        "Le Mans": change(
+            ["Louis Mafouta", "Dame Gueye", "Antoine Rabillard"],
+            "Louis Mafouta is now first choice after taking and converting Le Mans' 54th-minute penalty at Rennes with Dame Gueye still on the pitch. This satisfies the preseason promotion condition exactly. Gueye moves to second and Antoine Rabillard remains third.",
+            "confirmed",
+            sources=[
+                {
+                    "label": "L'Équipe Rennes-Le Mans match report",
+                    "url": "https://www.lequipe.fr/Football/Actualites/Apres-s-etre-fait-peur-contre-le-promu-le-mans-rennes-s-offre-sa-premiere-victoire-de-la-saison-grace-a-un-penalty-tardif-de-lepaul/1714776",
+                    "date": "2026-08-30",
+                    "note": "Records Mafouta converting Le Mans' penalty against Rennes.",
+                },
+                *LEAGUE_SOURCES["ligue-1"][1:],
+            ],
+            confidence={"primary": "high", "secondary": "medium", "tertiary": "low"},
+        ),
+        "Lens": change(
+            ["Florian Thauvin", "Odsonne Édouard", "Thorgan Hazard"],
+            "Florian Thauvin remains directly confirmed as Lens' primary. Coach Dino Toppmöller stated that Thauvin takes whenever he is on the pitch; Édouard may receive a delegated attempt, while Hazard remains the next filed alternative.",
+            "confirmed",
+            sources=[
+                {
+                    "label": "L'Équipe Lens coach confirmation",
+                    "url": "https://www.lequipe.fr/Football/Actualites/Deux-courses-sans-elan-sur-penalty-et-un-echec-florian-thauvin-a-pris-le-gout-du-risque-contre-auxerre/1712884",
+                    "date": "2026-08-22",
+                    "note": "Quotes Dino Toppmoller confirming Thauvin is the designated taker whenever he is on the pitch.",
+                },
+                *LEAGUE_SOURCES["ligue-1"][1:],
+            ],
+            confidence={"primary": "high", "secondary": "medium", "tertiary": "medium"},
+        ),
+        "Marseille": change(
+            ["Amine Gouiri", "Himad Abdelli", "Pierre-Emile Højbjerg"],
+            "Gouiri converted Marseille's first 2026/27 Ligue 1 penalty against Strasbourg with Abdelli and Højbjerg both on the pitch. This directly confirms Gouiri as first choice. Abdelli remains the strongest deputy on prior penalty record; Højbjerg remains tertiary, but the backup order has not yet been tested.",
+            "confirmed",
+            sources=[
+                {
+                    "label": "L'Équipe Marseille-Strasbourg report",
+                    "url": "https://www.lequipe.fr/Football/Actualites/Gouiri-lance-l-om-thauvin-voit-double-ferran-torres-en-sauveur-des-attaquants-en-feu-dans-l-equipe-type-de-la-premiere-journee-de-ligue-1/1713197",
+                    "date": "2026-08-24",
+                    "note": "Records Gouiri converting Marseille's penalty against Strasbourg.",
+                },
+                *LEAGUE_SOURCES["ligue-1"][1:],
+            ],
+            confidence={"primary": "high", "secondary": "medium", "tertiary": "low"},
+        ),
+        "Rennes": change(
+            ["Estéban Lepaul", "Ludovic Blas", "Issa Soumaré"],
+            "Estéban Lepaul moves first after taking and converting Rennes' 90+6 penalty against Le Mans with Ludovic Blas on the pitch from the 74th minute. Blas had previously described himself as first and Lepaul second, so one current-season reversal does not make the order fully settled; Blas remains the live deputy and Issa Soumaré stays third.",
+            "disputed",
+            sources=[
+                {
+                    "label": "L'Équipe Rennes-Le Mans match report",
+                    "url": "https://www.lequipe.fr/Football/Actualites/Apres-s-etre-fait-peur-contre-le-promu-le-mans-rennes-s-offre-sa-premiere-victoire-de-la-saison-grace-a-un-penalty-tardif-de-lepaul/1714776",
+                    "date": "2026-08-30",
+                    "note": "Records Lepaul converting Rennes' stoppage-time penalty against Le Mans.",
+                },
+                *LEAGUE_SOURCES["ligue-1"][1:],
+            ],
+            confidence={"primary": "high", "secondary": "medium", "tertiary": "low"},
         ),
     },
 }
@@ -470,8 +622,14 @@ def apply(audit_date: str, write: bool) -> dict[str, Any]:
             override = OVERRIDES.get(league, {}).get(team)
             if override:
                 names = list(override["order"])
-                if len(names) != 3 or len({name.casefold() for name in names}) != 3 or any(not name.strip() for name in names):
-                    raise ValueError(f"{league}/{team}: override must contain three distinct names")
+                filed_names = [name.strip() for name in names if name.strip()]
+                if (
+                    len(names) != 3
+                    or not names[0].strip()
+                    or (not names[1].strip() and names[2].strip())
+                    or len({name.casefold() for name in filed_names}) != len(filed_names)
+                ):
+                    raise ValueError(f"{league}/{team}: override must contain an ordered set of distinct names")
                 after = dict(zip(("primary", "secondary", "tertiary"), names, strict=True))
             else:
                 after = current_order
@@ -502,6 +660,16 @@ def apply(audit_date: str, write: bool) -> dict[str, Any]:
                 team_sources = review_sources(league, team)
                 entry["source"] = team_sources[0]["label"]
                 entry["cross_check"] = team_sources[1]["label"]
+                if override.get("unavailable"):
+                    entry["unavailable_candidates"] = list(override["unavailable"])
+
+                ranked = {name.casefold() for name in after.values() if name}
+                unavailable_ranked = [
+                    row["player"] for row in entry.get("unavailable_candidates", [])
+                    if str(row.get("player") or "").casefold() in ranked
+                ]
+                if unavailable_ranked:
+                    raise ValueError(f"{league}/{team}: unavailable players remain actively ranked: {unavailable_ranked}")
 
             if changed:
                 entry.update(after)
@@ -536,6 +704,7 @@ def apply(audit_date: str, write: bool) -> dict[str, Any]:
             membership = dict(entry.get("squad_membership") or {})
             for position, player in after.items():
                 if not player:
+                    membership.pop(position, None)
                     continue
                 current = dict(membership.get(position) or {})
                 current.update({

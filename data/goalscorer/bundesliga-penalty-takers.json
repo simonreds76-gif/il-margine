@@ -1053,19 +1053,19 @@
     }
   },
   "Borussia Dortmund": {
-    "primary": "Emre Can",
+    "primary": "Ramy Bensebaini",
     "secondary": "Serhou Guirassy",
-    "tertiary": "Ramy Bensebaini",
+    "tertiary": "Félix Nmecha",
     "last_updated": "2026-09-01",
-    "source": "LigaInsider 2026/27 set-piece board",
-    "cross_check": "Bundesliga official penalty statistics",
-    "hierarchy_status": "disputed",
+    "source": "Borussia Dortmund HSV match report",
+    "cross_check": "Borussia Dortmund preseason medical update",
+    "hierarchy_status": "conditional",
     "confidence": {
-      "primary": "medium",
+      "primary": "high",
       "secondary": "medium",
-      "tertiary": "medium"
+      "tertiary": "low"
     },
-    "condition_note": "The current specialist board places Can first and Guirassy second; Bensebaini remains a proven third option.",
+    "condition_note": "Can is excluded from the active order while still in ACL rehabilitation. Bensebaini is first: he converted two penalties against HSV while Guirassy and Nmecha were both on the pitch, directly outranking them in the same match. Guirassy is the practical alternative when Bensebaini does not start; Nmecha remains third after missing the earlier penalty in that HSV match.",
     "last_verified": {
       "date": "2026-09-01",
       "by": "Il Margine",
@@ -1076,7 +1076,7 @@
       "id": "evt_20260901_borussia-dortmund_current_review",
       "date": "2026-09-01",
       "type": "current_season_board_review",
-      "source_count": 2
+      "source_count": 4
     },
     "evidence_log": [
       {
@@ -1239,19 +1239,31 @@
         "competition": null,
         "match": null,
         "headline": "Borussia Dortmund penalty hierarchy updated",
-        "context": "The current specialist board places Can first and Guirassy second; Bensebaini remains a proven third option.",
+        "context": "Can is excluded from the active order while still in ACL rehabilitation. Bensebaini is first: he converted two penalties against HSV while Guirassy and Nmecha were both on the pitch, directly outranking them in the same match. Guirassy is the practical alternative when Bensebaini does not start; Nmecha remains third after missing the earlier penalty in that HSV match.",
         "sources": [
+          {
+            "label": "Borussia Dortmund HSV match report",
+            "url": "https://www.bvb.de/de/en/news/news-overview/news.html/2026/3/21/3-2-from-0-2-down-BVBs-second-half-onslaught-against-HSV.html",
+            "date": "2026-03-21",
+            "note": "Bensebaini converted twice after entering with Guirassy; Nmecha remained on the pitch after missing the first-half penalty."
+          },
+          {
+            "label": "Borussia Dortmund preseason medical update",
+            "url": "https://www.bvb.de/de/de/aktuelles/news/news.html/2026/7/12/An-die-Arbeit-BVB-startet-mit-Leistungsdiagnostik-in-die-Vorbereitung.html",
+            "date": "2026-07-12",
+            "note": "The club states that Can remained in rehabilitation after his cruciate-ligament injury."
+          },
+          {
+            "label": "Borussia Dortmund opening league lineup",
+            "url": "https://www.bvb.de/de/en/news/news-overview/news.html/2026/8/29/From-dominance-to-gritty-defending-BVB-celebrates-first-win-of-the-season.html",
+            "date": "2026-08-29",
+            "note": "Can was absent from Dortmund's opening league matchday squad, providing a current-season availability cross-check."
+          },
           {
             "label": "LigaInsider 2026/27 set-piece board",
             "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
             "date": "2026-08-31",
-            "note": "Current club-by-club penalty and set-piece hierarchy."
-          },
-          {
-            "label": "Bundesliga official penalty statistics",
-            "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
-            "date": "2026-09-01",
-            "note": "Official current-season penalty event cross-check."
+            "note": "Lists the nominal Can/Guirassy order but does not account for Can's current unavailability, so direct club evidence takes precedence."
           }
         ],
         "detection": "manual_multi_source_research",
@@ -1261,7 +1273,7 @@
           "reviewed_at": "2026-09-01T12:00:00Z"
         },
         "affects_hierarchy": true,
-        "editorial_note": "The current specialist board places Can first and Guirassy second; Bensebaini remains a proven third option."
+        "editorial_note": "Can is excluded from the active order while still in ACL rehabilitation. Bensebaini is first: he converted two penalties against HSV while Guirassy and Nmecha were both on the pitch, directly outranking them in the same match. Guirassy is the practical alternative when Bensebaini does not start; Nmecha remains third after missing the earlier penalty in that HSV match."
       }
     ],
     "change_log": [
@@ -1344,11 +1356,11 @@
           "tertiary": "Felix Nmecha"
         },
         "to": {
-          "primary": "Emre Can",
+          "primary": "Ramy Bensebaini",
           "secondary": "Serhou Guirassy",
-          "tertiary": "Ramy Bensebaini"
+          "tertiary": "Félix Nmecha"
         },
-        "reason": "The current specialist board places Can first and Guirassy second; Bensebaini remains a proven third option.",
+        "reason": "Can is excluded from the active order while still in ACL rehabilitation. Bensebaini is first: he converted two penalties against HSV while Guirassy and Nmecha were both on the pitch, directly outranking them in the same match. Guirassy is the practical alternative when Bensebaini does not start; Nmecha remains third after missing the earlier penalty in that HSV match.",
         "evidence_ids": [
           "evt_20260901_borussia-dortmund_current_review"
         ],
@@ -1373,21 +1385,21 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Emre Can",
+        "player": "Ramy Bensebaini",
         "status": "confirmed",
-        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "source_url": "https://www.bvb.de/de/en/news/news-overview/news.html/2026/3/21/3-2-from-0-2-down-BVBs-second-half-onslaught-against-HSV.html",
         "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Serhou Guirassy",
         "status": "confirmed",
-        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "source_url": "https://www.bvb.de/de/en/news/news-overview/news.html/2026/3/21/3-2-from-0-2-down-BVBs-second-half-onslaught-against-HSV.html",
         "checked_at": "2026-09-01"
       },
       "tertiary": {
-        "player": "Ramy Bensebaini",
+        "player": "Félix Nmecha",
         "status": "confirmed",
-        "source_url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+        "source_url": "https://www.bvb.de/de/en/news/news-overview/news.html/2026/3/21/3-2-from-0-2-down-BVBs-second-half-onslaught-against-HSV.html",
         "checked_at": "2026-09-01"
       }
     },
@@ -1397,10 +1409,21 @@
       "method": "current_season_multi_source_review",
       "outcome": "hierarchy_updated",
       "sources": [
-        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
-        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+        "https://www.bvb.de/de/en/news/news-overview/news.html/2026/3/21/3-2-from-0-2-down-BVBs-second-half-onslaught-against-HSV.html",
+        "https://www.bvb.de/de/de/aktuelles/news/news.html/2026/7/12/An-die-Arbeit-BVB-startet-mit-Leistungsdiagnostik-in-die-Vorbereitung.html",
+        "https://www.bvb.de/de/en/news/news-overview/news.html/2026/8/29/From-dominance-to-gritty-defending-BVB-celebrates-first-win-of-the-season.html",
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/"
       ]
-    }
+    },
+    "unavailable_candidates": [
+      {
+        "player": "Emre Can",
+        "reason": "ACL rehabilitation",
+        "source_url": "https://www.bvb.de/de/de/aktuelles/news/news.html/2026/7/12/An-die-Arbeit-BVB-startet-mit-Leistungsdiagnostik-in-die-Vorbereitung.html",
+        "checked_at": "2026-09-01",
+        "return_rule": "Restore only after current official medical clearance and matchday availability are verified."
+      }
+    ]
   },
   "Borussia M.Gladbach": {
     "primary": "Kevin Diks",
