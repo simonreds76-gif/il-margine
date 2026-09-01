@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-01T09:34:24Z",
+  "generated_at": "2026-09-01T14:49:27Z",
   "team_shots_v3_ema20": {
     "label": "Team Shots V3 EMA20 Research",
     "model": "canonical_form_v3_ema20_nb",
@@ -179,7 +179,7 @@
     }
   },
   "football_counts_vnext": {
-    "generated_at": "2026-09-01T09:34:23Z",
+    "generated_at": "2026-09-01T14:49:27Z",
     "team_shots_v4": {
       "count_gate": "PASS",
       "prospective_status": "AUTHORIZED_SHADOW",
@@ -196,6 +196,21 @@
         "mean_true_close_clv": null,
         "side_counts": {},
         "dominant_side_share": 0.0
+      },
+      "warmup_tracking": {
+        "signals": 12,
+        "settled": 12,
+        "pending": 0,
+        "pnl_units": 0.49,
+        "roi": 0.040833,
+        "true_close_n": 6,
+        "true_close_coverage": 0.5,
+        "mean_true_close_clv": -0.006001,
+        "side_counts": {
+          "under": 11,
+          "over": 1
+        },
+        "dominant_side_share": 0.916667
       },
       "latest_scan": {
         "state": "EXPECTED_WARMUP_BLOCK",
@@ -235,19 +250,37 @@
         "side_counts": {},
         "dominant_side_share": 0.0
       },
+      "warmup_tracking": {
+        "signals": 37,
+        "settled": 28,
+        "pending": 9,
+        "pnl_units": -3.147,
+        "roi": -0.112393,
+        "true_close_n": 15,
+        "true_close_coverage": 0.535714,
+        "mean_true_close_clv": 0.027316,
+        "side_counts": {
+          "under": 28,
+          "over": 9
+        },
+        "dominant_side_share": 0.756757
+      },
       "latest_scan": {
-        "state": "NO_SCORED_CANDIDATES",
-        "explanation": "No paired current market rows reached model scoring. Check capture coverage and fixture joins.",
-        "scored_rows": 0,
-        "scored_fixtures": 0,
+        "state": "EXPECTED_WARMUP_BLOCK",
+        "explanation": "Candidates were scored, but the registered matchdays 1-3 safety lock blocked publication.",
+        "scored_rows": 96,
+        "scored_fixtures": 21,
         "eligible_rows": 0,
         "eligible_fixtures": 0,
-        "blocked_rows": 0,
-        "blocker_rows": {},
-        "edge_pass_but_warmup_blocked_fixtures": 0,
-        "matchday_min": null,
-        "matchday_max": null,
-        "next_unlock": null,
+        "blocked_rows": 96,
+        "blocker_rows": {
+          "edge_below_3pct": 76,
+          "matchdays_1_to_3": 96
+        },
+        "edge_pass_but_warmup_blocked_fixtures": 9,
+        "matchday_min": 1,
+        "matchday_max": 3,
+        "next_unlock": "matchday_4",
         "operational_alert_required": false,
         "operational_alert_code": null
       },
@@ -363,24 +396,24 @@
       },
       "database_writes": 0,
       "errors": [
-        "fixtures epl 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-30 to 2026-09-01.'}",
-        "fixtures serie-a 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-30 to 2026-09-01.'}",
-        "fixtures la-liga 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-30 to 2026-09-01.'}",
-        "fixtures bundesliga 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-30 to 2026-09-01.'}",
-        "fixtures ligue-1 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-30 to 2026-09-01.'}",
-        "fixtures epl 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-30 to 2026-09-01.'}",
-        "fixtures serie-a 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-30 to 2026-09-01.'}",
-        "fixtures la-liga 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-30 to 2026-09-01.'}",
-        "fixtures bundesliga 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-30 to 2026-09-01.'}",
-        "fixtures ligue-1 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-30 to 2026-09-01.'}",
-        "fixtures epl 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-30 to 2026-09-01.'}",
-        "fixtures serie-a 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-30 to 2026-09-01.'}",
-        "fixtures la-liga 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-30 to 2026-09-01.'}",
-        "fixtures bundesliga 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-30 to 2026-09-01.'}",
-        "fixtures ligue-1 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-30 to 2026-09-01.'}"
+        "fixtures epl 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-31 to 2026-09-02.'}",
+        "fixtures serie-a 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-31 to 2026-09-02.'}",
+        "fixtures la-liga 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-31 to 2026-09-02.'}",
+        "fixtures bundesliga 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-31 to 2026-09-02.'}",
+        "fixtures ligue-1 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-08-31 to 2026-09-02.'}",
+        "fixtures epl 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-31 to 2026-09-02.'}",
+        "fixtures serie-a 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-31 to 2026-09-02.'}",
+        "fixtures la-liga 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-31 to 2026-09-02.'}",
+        "fixtures bundesliga 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-31 to 2026-09-02.'}",
+        "fixtures ligue-1 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-08-31 to 2026-09-02.'}",
+        "fixtures epl 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-31 to 2026-09-02.'}",
+        "fixtures serie-a 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-31 to 2026-09-02.'}",
+        "fixtures la-liga 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-31 to 2026-09-02.'}",
+        "fixtures bundesliga 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-31 to 2026-09-02.'}",
+        "fixtures ligue-1 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-08-31 to 2026-09-02.'}"
       ],
       "fixtures_discovered": 0,
-      "generated_at": "2026-08-31T16:54:55Z",
+      "generated_at": "2026-09-01T14:15:14Z",
       "latest_fixture_date": null,
       "max_requests": 90,
       "new_rows": 0,
@@ -440,7 +473,7 @@
           "within_one_pct": 0.0
         }
       },
-      "generated_at": "2026-09-01T09:31:49Z",
+      "generated_at": "2026-09-01T14:46:25Z",
       "latest_api_fixture_date": null,
       "match_rate_pct": 0.0,
       "matched_fixtures": 0,
@@ -463,7 +496,7 @@
         "opening_1x2_closeness_vs_total_fouls_correlation": 0.20236620673672806,
         "total_shots_vs_total_fouls_correlation": -0.1826485756525495
       },
-      "generated_at": "2026-09-01T09:31:49Z",
+      "generated_at": "2026-09-01T14:46:25Z",
       "leg_structure": {
         "bundesliga": {
           "alpha_away_after_raw_frailty": 0.005185795899176435,
@@ -1128,7 +1161,7 @@
           "validation_matches": 1734
         }
       ],
-      "generated_at": "2026-09-01T09:32:17Z",
+      "generated_at": "2026-09-01T14:46:54Z",
       "market_gate": "BLOCKED_TEAM_FOULS_NOT_OBSERVED",
       "registered": {
         "ema_decay": 0.93,
@@ -1513,7 +1546,7 @@
           "validation_matches": 1734
         }
       ],
-      "generated_at": "2026-09-01T09:32:21Z",
+      "generated_at": "2026-09-01T14:46:58Z",
       "market_gate": "BLOCKED_TEAM_FOULS_NOT_OBSERVED",
       "registered": {
         "distribution": "poisson",
@@ -1562,7 +1595,7 @@
         "passed": false,
         "within_one_pct": 98.38709677419355
       },
-      "generated_at": "2026-09-01T09:32:21Z",
+      "generated_at": "2026-09-01T14:46:58Z",
       "requirements": {
         "independent_sources_required": [
           "api-football",
@@ -2615,7 +2648,7 @@
     "status": "FRESH",
     "source": "supabase",
     "generated_at": "2026-09-01T09:20:30Z",
-    "age_days": 0.01,
+    "age_days": 0.23,
     "error": ""
   },
   "goalscorer_v2": {
@@ -2745,7 +2778,7 @@
     },
     "freshness": {
       "generated_at": "2026-08-31T16:57:09Z",
-      "age_days": 0.69,
+      "age_days": 0.91,
       "status": "FRESH"
     }
   },
@@ -2775,7 +2808,7 @@
       "roi_pct": null
     },
     "freshness": {
-      "generated_at": "2026-09-01T09:34:15Z",
+      "generated_at": "2026-09-01T14:49:18Z",
       "age_days": 0.0,
       "status": "FRESH"
     },
@@ -2806,7 +2839,12 @@
     "eligible_lines": 0,
     "provisional_lines": 0,
     "candidate_board_preserved": false,
-    "blocker_counts": {},
+    "blocker_counts": {
+      "goalkeeper_team_unresolved": 19,
+      "missing_lineup": 10,
+      "missing_priced_edge": 19,
+      "player_not_starting_goalkeeper": 9
+    },
     "signals": 19,
     "pending": 0,
     "settled": 19,
@@ -2818,7 +2856,7 @@
     "sellable": false
   },
   "automation_budget": {
-    "generated_at": "2026-09-01T09:34:23Z",
+    "generated_at": "2026-09-01T14:49:27Z",
     "workflow_directory": ".effective-default-branch/.github/workflows",
     "status": "PASS",
     "errors": [],

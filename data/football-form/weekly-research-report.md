@@ -1,22 +1,24 @@
 # Weekly Research Lane Report
 
-- Generated: 2026-09-01T09:34:24Z
+- Generated: 2026-09-01T14:49:27Z
 - Overall read: observe live sample
 
 ## Football Counts vNext
 
 - Team Shots v4: count PASS; prospective AUTHORIZED_SHADOW; promotion BLOCKED.
 - Team Shots v4 evidence: 0 signals, 0 settled, +0.00u, ROI -, true-close CLV -.
+- Team Shots v4 warm-up tracking (not bets): 12 signals, 12 settled / 0 pending, +0.49u, ROI +4.1%.
 - Team Shots v4 latest scan: EXPECTED_WARMUP_BLOCK; 4 rows / 1 fixtures scored; 0 fixtures passed edge but were warm-up blocked; blockers {'edge_below_3pct': 4, 'matchdays_1_to_3': 4}.
 - Corners v3: count PASS; prospective AUTHORIZED_SHADOW; promotion BLOCKED.
 - Corners v3 evidence: 0 signals, 0 settled, +0.00u, ROI -, true-close CLV -.
-- Corners v3 latest scan: NO_SCORED_CANDIDATES; 0 rows / 0 fixtures scored; 0 fixtures passed edge but were warm-up blocked; blockers -.
+- Corners v3 warm-up tracking (not bets): 37 signals, 28 settled / 9 pending, -3.15u, ROI -11.2%.
+- Corners v3 latest scan: EXPECTED_WARMUP_BLOCK; 96 rows / 21 fixtures scored; 9 fixtures passed edge but were warm-up blocked; blockers {'edge_below_3pct': 76, 'matchdays_1_to_3': 96}.
 - Corners v4 G0 research: NOT_RUN; 0/0 enriched; latest holdout MAE delta -; real-market Brier delta - on n=0; line gates 0/0 passed; failed -.
 - Neither experiment changes live routing or stakes.
 - API-Football count archive: 0 fixtures; latest -; last run 15/90 requests.
 - Cross-provider agreement: 0/0 API fixtures matched; status no_overlap.
 - Team Fouls: F1 COUNT_GATE_FAIL_MARKET_BLOCKED; F2 COUNT_GATE_FAIL_EXTERNAL_GATES_BLOCKED; M2 WAIT_OR_FAIL; market prices BLOCKED; signals disabled.
-- Goalkeeper Saves v1: count PASS on 42,958 observations; discovery OVER_ONLY_GOALKEEPER_SAVE_PRICES_RETURNED (10 probe Over lines); latest capture NO_GOALKEEPER_SAVE_LINES (0 events selected / 0 rows / 0 with 1X2); prospective SIGNALS_COLLECTING with 0 priced lines, 0 eligible, 0 predicted-XI research rows, 19 signals and 19 settled; blockers {}; ROI +107.7%, CLV - n=2; promotion BLOCKED.
+- Goalkeeper Saves v1: count PASS on 42,958 observations; discovery OVER_ONLY_GOALKEEPER_SAVE_PRICES_RETURNED (10 probe Over lines); latest capture NO_GOALKEEPER_SAVE_LINES (0 events selected / 0 rows / 0 with 1X2); prospective SIGNALS_COLLECTING with 0 priced lines, 0 eligible, 0 predicted-XI research rows, 19 signals and 19 settled; blockers {'goalkeeper_team_unresolved': 19, 'missing_lineup': 10, 'missing_priced_edge': 19, 'player_not_starting_goalkeeper': 9}; ROI +107.7%, CLV - n=2; promotion BLOCKED.
 - New provider fields remain diagnostic-only until source definitions and coverage are accepted.
 
 ## Team Shots V3 EMA20 Research
@@ -71,7 +73,7 @@
 - Settlement gate: FAIL | player-assist agreement 0.00%.
 - Market gate: FAIL | 1300 matched player prices across 8 calendar days.
 - Prospective ledger: 0/0 settled (target 100), +0.00u, ROI -.
-- Evidence freshness: FRESH (2026-09-01T09:34:15Z).
+- Evidence freshness: FRESH (2026-09-01T14:49:18Z).
 - Automation budget: Friday-Sunday 07:10 UTC, August-May; <= 10 Odds-API calls/run and <= 30 calls/week; zero database reads/writes.
 - No public output, staking, database writes or automatic promotion are authorised.
 
