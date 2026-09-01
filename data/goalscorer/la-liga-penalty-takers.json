@@ -31,8 +31,8 @@
       "Malaga",
       "Racing Santander"
     ],
-    "last_verified": "2026-08-27",
-    "public_updated_at": "2026-08-27",
+    "last_verified": "2026-08-31",
+    "public_updated_at": "2026-08-31",
     "membership_source": "https://www.laliga.com/en-GB/laliga-easports/clubs"
   },
   "Alaves": {
@@ -3444,7 +3444,7 @@
     "primary": "Ante Budimir",
     "secondary": "Raúl García de Haro",
     "tertiary": "Aimar Oroz",
-    "last_updated": "2026-08-27",
+    "last_updated": "2026-08-31",
     "source": "Cadena SER",
     "cross_check": "CA Osasuna",
     "hierarchy_status": "confirmed",
@@ -3453,18 +3453,18 @@
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Ante Budimir is directly confirmed as Osasuna's primary. He entered against Celta before taking the penalty while Raúl García de Haro, the filed deputy, was still on the pitch. Raúl remains second and Aimar Oroz third.",
+    "condition_note": "Ante Budimir is directly confirmed as Osasuna's primary. He followed his Celta penalty by converting again against Getafe on 31 August, reinforcing the role. Raúl García de Haro remains second and Aimar Oroz third.",
     "last_verified": {
-      "date": "2026-08-27",
+      "date": "2026-08-31",
       "by": "Il Margine",
       "method": "reviewed_live_penalty_event"
     },
-    "public_updated_at": "2026-08-27",
+    "public_updated_at": "2026-08-31",
     "latest_evidence": {
-      "id": "evt_20260827_osasuna_budimir_confirmation",
-      "date": "2026-08-27",
+      "id": "evt_20260831_osasuna_budimir_confirmation",
+      "date": "2026-08-31",
       "type": "competitive_penalty_assignment",
-      "source_count": 2
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -3673,6 +3673,33 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "A direct same-pitch test confirms Budimir ahead of Raúl García de Haro."
+      },
+      {
+        "id": "evt_20260831_osasuna_budimir_confirmation",
+        "date": "2026-08-31",
+        "season": "2026/27",
+        "type": "competitive_penalty_assignment",
+        "penalty_kind": "regular_time",
+        "competition": "La Liga",
+        "match": "Osasuna vs Getafe",
+        "headline": "Budimir converts again for Osasuna",
+        "context": "Ante Budimir converted Osasuna's 45th-minute penalty against Getafe, his second recorded league assignment in four days. The event reconfirms the filed primary without changing the backup order.",
+        "sources": [
+          {
+            "label": "FotMob match event feed",
+            "url": null,
+            "date": "2026-08-31",
+            "note": "Recorded Budimir's penalty attempt and goal against Getafe."
+          }
+        ],
+        "detection": "automated_fotmob_live_then_editorial_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T10:30:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Budimir's second league penalty in four days further confirms him as Osasuna's primary."
       }
     ],
     "change_log": [
@@ -3744,11 +3771,34 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-08-31",
+        "season": "2026/27",
+        "change_type": "live_primary_reconfirmation",
+        "from": {
+          "primary": "Ante Budimir",
+          "secondary": "Raúl García de Haro",
+          "tertiary": "Aimar Oroz"
+        },
+        "to": {
+          "primary": "Ante Budimir",
+          "secondary": "Raúl García de Haro",
+          "tertiary": "Aimar Oroz"
+        },
+        "reason": "Budimir converted against Getafe after also taking Osasuna's previous league penalty, reconfirming the existing order.",
+        "evidence_ids": [
+          "evt_20260831_osasuna_budimir_confirmation"
+        ],
+        "detection": "automated_fotmob_live_then_editorial_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T10:30:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {

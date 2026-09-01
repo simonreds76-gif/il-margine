@@ -308,7 +308,7 @@ function mapTeam(
   const approvedEvidence = (entry.evidence_log ?? []).filter((evidence) => evidence.review?.status === "approved").length;
   const evidenceUpdates = (entry.evidence_log ?? [])
     .filter((evidence) => evidence.review?.status === "approved")
-    .filter((evidence) => evidence.type === "competitive_penalty_event")
+    .filter((evidence) => cleanClubPenaltyText(evidence.type).startsWith("competitive_penalty_"))
     .map((evidence, index) => {
       const date = cleanClubPenaltyText(evidence.date);
       const summary = cleanClubPenaltyText(evidence.editorial_note || evidence.context);
