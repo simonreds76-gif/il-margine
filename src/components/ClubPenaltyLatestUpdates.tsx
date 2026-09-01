@@ -25,7 +25,7 @@ export default function ClubPenaltyLatestUpdates({
   items,
   eyebrow = "Live penalty evidence",
   title = "Latest penalty taker updates",
-  description = "Competitive penalties reviewed by Il Margine. Each update links to the club's current hierarchy and full evidence file.",
+  description = "Competitive penalties reviewed by Il Margine. Each update links to the club's current hierarchy and latest verified context.",
 }: Props) {
   if (!items.length) return null;
 
@@ -47,7 +47,7 @@ export default function ClubPenaltyLatestUpdates({
           <Link
             key={`${item.relativeUrl}-${item.id}`}
             href={item.relativeUrl}
-            className="group relative flex h-full min-h-[17rem] flex-col overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-950/65 p-4 transition hover:-translate-y-0.5 hover:border-emerald-400/35 hover:bg-slate-950"
+            className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-950/65 p-4 transition hover:-translate-y-0.5 hover:border-emerald-400/35 hover:bg-slate-950 sm:min-h-[17rem]"
           >
             <div className="flex items-start gap-3">
               <ClubCrest item={item} />
@@ -62,7 +62,7 @@ export default function ClubPenaltyLatestUpdates({
             </div>
             {item.match ? <p className="mt-3 text-xs font-medium text-slate-300">{item.match}</p> : null}
             <p className="mt-2 line-clamp-4 flex-1 text-sm leading-6 text-slate-300">{item.summary}</p>
-            <div className="mt-4 flex items-center justify-between gap-3 border-t border-slate-800 pt-3 text-xs lg:mt-auto lg:pt-3">
+            <div className="mt-4 flex items-center justify-between gap-3 border-t border-slate-800 pt-3 text-xs sm:mt-auto">
               <span className="truncate text-slate-500">Current first choice: <strong className="font-medium text-slate-200">{item.primary}</strong></span>
               <span className="shrink-0 font-semibold text-emerald-300">Open club file -&gt;</span>
             </div>

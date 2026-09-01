@@ -31,7 +31,7 @@ type PenaltyTeamRow = {
   tertiary?: string;
   last_updated?: string;
   hierarchy_status?: PenaltyHierarchyStatus;
-  confidence?: Partial<Record<"primary" | "secondary" | "tertiary", PenaltyConfidence>>;
+  confidence?: Partial<Record<"primary" | "secondary" | "tertiary", PenaltyConfidence | null>>;
   condition_note?: string;
   last_verified?: { date?: string; by?: string; method?: string };
   public_updated_at?: string;
@@ -82,6 +82,8 @@ export type ClubPenaltyTeam = {
   primary: string;
   secondary: string;
   tertiary: string;
+  verifiedNames: string[];
+  hierarchyDepth: 0 | 1 | 2 | 3;
   hierarchyStatus: PenaltyHierarchyStatus;
   primaryConfidence: PenaltyConfidence;
   lastUpdated: string;
@@ -148,7 +150,7 @@ export const CLUB_LEAGUES: ClubLeagueConfig[] = [
     logoPath: "/league-logos/epl.png",
     accent: "indigo",
     surface: "from-indigo-500/24 via-indigo-400/8 to-slate-950",
-    copy: "Premier League markets react quickly to the obvious taker, so the useful intelligence is the full order: who steps up first, who follows, and who becomes live if team news removes the headline name.",
+    copy: "Premier League penalty roles can change with transfers, team selection and recent spot-kick evidence. We publish only the order supported by the current file.",
   },
   {
     key: "serie-a",
@@ -159,7 +161,7 @@ export const CLUB_LEAGUES: ClubLeagueConfig[] = [
     logoPath: "/league-logos/serie-a.png",
     accent: "emerald",
     surface: "from-emerald-500/24 via-emerald-400/8 to-slate-950",
-    copy: "Serie A penalty orders move quickly around transfers, coaching changes and form. We keep the backup line visible because the second name is often the value edge when the regular taker is off the pitch.",
+    copy: "Serie A penalty roles can move quickly around transfers, coaching changes and form. Each filed name must be supported by current evidence.",
   },
   {
     key: "la-liga",
@@ -170,7 +172,7 @@ export const CLUB_LEAGUES: ClubLeagueConfig[] = [
     logoPath: "/league-logos/la-liga.png",
     accent: "amber",
     surface: "from-amber-500/24 via-amber-400/8 to-slate-950",
-    copy: "La Liga penalty boards often have a clear first choice but a less obvious backup. The second and third names are kept visible for lineup-driven goalscorer and fantasy decisions.",
+    copy: "La Liga penalty roles are reviewed against current squad status, match events and specialist reporting. Unverified places are left open rather than guessed.",
   },
   {
     key: "bundesliga",
@@ -181,7 +183,7 @@ export const CLUB_LEAGUES: ClubLeagueConfig[] = [
     logoPath: "/league-logos/bundesliga.png",
     accent: "rose",
     surface: "from-rose-500/24 via-rose-400/8 to-slate-950",
-    copy: "Bundesliga hierarchies can look stable until one missed penalty, injury or substitution reshuffles the live order. We track the full ladder rather than a single stale name.",
+    copy: "Bundesliga penalty roles can change after a miss, injury, substitution or coaching decision. The page separates verified names from open places.",
   },
   {
     key: "ligue-1",
@@ -192,7 +194,7 @@ export const CLUB_LEAGUES: ClubLeagueConfig[] = [
     logoPath: "/league-logos/ligue-1.png",
     accent: "cyan",
     surface: "from-cyan-500/24 via-cyan-400/8 to-slate-950",
-    copy: "Ligue 1 needs freshness more than reputation. This page is built to show the current order quickly, including the backup name that matters when the expected starter is missing.",
+    copy: "Ligue 1 penalty roles need current evidence rather than reputation. The page shows the verified order and leaves unsupported positions open.",
   },
 ];
 
@@ -222,6 +224,12 @@ export function cleanClubPenaltyText(value?: string): string {
   ).replace(/\s+/g, " ");
 }
 
+const UNVERIFIED_TAKER_VALUES = new Set(["", "tbc", "tbd", "n/a", "-", "unknown", "not yet verified"]);
+
+export function isVerifiedTaker(value?: string): boolean {
+  return !UNVERIFIED_TAKER_VALUES.has(cleanClubPenaltyText(value).toLowerCase());
+}
+
 function truncateClubPenaltyText(value: string, maxLength: number): string {
   if (value.length <= maxLength) return value;
   const clipped = value.slice(0, maxLength + 1);
@@ -233,7 +241,7 @@ export function summarizeClubPenaltyText(value?: string, maxLength = 220): strin
   const cleaned = cleanClubPenaltyText(value).split(/\bConditions?:\s*/i)[0]?.trim() ?? "";
   if (!cleaned) return "";
   const sentences = cleaned.match(/[^.!?]+[.!?]+|[^.!?]+$/g) ?? [cleaned];
-  return truncateClubPenaltyText(sentences.slice(0, 2).join(" ").trim(), maxLength);
+  return truncateClubPenaltyText(sentences.slice(0, 2).join(" ").replace(/\s+/g, " ").trim(), maxLength);
 }
 
 export function buildClubPenaltyConditionSummary(team: ClubPenaltyTeam): string {
@@ -334,7 +342,7 @@ function mapTeam(
     .filter((evidence) => evidence.review?.status === "approved")
     .filter((evidence) => {
       const type = cleanClubPenaltyText(evidence.type);
-      return type.startsWith("competitive_penalty_") || type === "roster_integrity_review";
+      return type.startsWith("competitive_penalty_") || type === "preseason_penalty_assignment" || type === "roster_integrity_review";
     })
     .map((evidence, index) => {
       const date = cleanClubPenaltyText(evidence.date);
@@ -368,6 +376,13 @@ function mapTeam(
     .reverse()
     .filter((source, index, rows) => rows.findIndex((row) => row.url === source.url) === index)
     .slice(0, 6);
+  const hierarchyCandidates = [entry.primary, entry.secondary, entry.tertiary].map((value) => cleanClubPenaltyText(value));
+  const verifiedNames: string[] = [];
+  for (const candidate of hierarchyCandidates) {
+    if (!isVerifiedTaker(candidate)) break;
+    verifiedNames.push(candidate);
+  }
+  const hierarchyDepth = verifiedNames.length as 0 | 1 | 2 | 3;
 
   return {
     leagueKey: league.key,
@@ -379,9 +394,11 @@ function mapTeam(
     leagueCopy: league.copy,
     team,
     slug,
-    primary: cleanClubPenaltyText(entry.primary) || "Not yet verified",
-    secondary: cleanClubPenaltyText(entry.secondary) || "Not yet verified",
-    tertiary: cleanClubPenaltyText(entry.tertiary),
+    primary: verifiedNames[0] ?? "",
+    secondary: verifiedNames[1] ?? "",
+    tertiary: verifiedNames[2] ?? "",
+    verifiedNames,
+    hierarchyDepth,
     hierarchyStatus: isArchived ? "confirmed" : entry.hierarchy_status ?? (entry.primary ? "probable" : "unknown"),
     primaryConfidence: entry.confidence?.primary ?? (entry.primary ? "medium" : "low"),
     lastUpdated,
@@ -491,32 +508,87 @@ export function buildClubPenaltyTitle(team: ClubPenaltyTeam): string {
 
 export function buildClubPenaltyDescription(team: ClubPenaltyTeam): string {
   if (team.isArchived) {
-    return `Archived ${team.seasonLabel} penalty hierarchy for ${team.team}: ${team.primary} first choice, with ${team.secondary} next in line.`;
+    if (team.hierarchyDepth >= 3) return `Archived ${team.seasonLabel} penalty hierarchy for ${team.team}: ${team.primary} first, ${team.secondary} second and ${team.tertiary} third.`;
+    if (team.hierarchyDepth === 2) return `Archived ${team.seasonLabel} penalty hierarchy for ${team.team}: ${team.primary} first and ${team.secondary} second.`;
+    if (team.hierarchyDepth === 1) return `Archived ${team.seasonLabel} penalty record for ${team.team}: ${team.primary} was the filed first choice.`;
+    return `Archived ${team.seasonLabel} penalty-taker record for ${team.team}.`;
   }
-  if (team.hierarchyStatus === "unknown") {
+  if (team.hierarchyDepth === 0 || team.hierarchyStatus === "unknown") {
     return `${team.team}'s ${CLUB_PENALTY_SEASON} penalty taker order is not yet verified. Il Margine is monitoring preseason and early-season evidence.`;
   }
-  return `Who takes penalties for ${team.team}? ${team.primary} is the current first-choice call for ${team.leagueLabel}, with ${team.secondary} next in line for ${CLUB_PENALTY_SEASON}.`;
+  if (team.hierarchyDepth === 1) return `Who takes penalties for ${team.team}? ${team.primary} is the current first-choice call for ${CLUB_PENALTY_SEASON}; no backup is verified yet.`;
+  if (team.hierarchyDepth === 2) return `Who takes penalties for ${team.team}? ${team.primary} is first choice and ${team.secondary} is second for ${CLUB_PENALTY_SEASON}; no third choice is filed.`;
+  return `Who takes penalties for ${team.team}? ${team.primary} is first choice, followed by ${team.secondary} and ${team.tertiary} for ${CLUB_PENALTY_SEASON}.`;
 }
 
 export function buildClubPenaltyLead(team: ClubPenaltyTeam): string {
   if (team.isArchived) {
     return `This is the final archived ${team.seasonLabel} order. ${team.team} is not part of the current ${team.leagueLabel} board.`;
   }
-  if (team.hierarchyStatus === "unknown") {
+  if (team.hierarchyDepth === 0 || team.hierarchyStatus === "unknown") {
     return `${team.team}'s current penalty hierarchy is not verified. We are not naming a taker until the evidence is strong enough.`;
   }
   if (team.hierarchyStatus === "disputed") {
-    return team.secondary !== "Not yet verified"
+    return team.hierarchyDepth >= 2
       ? `${team.primary} currently leads the disputed ${team.team} order, with ${team.secondary} next in line.`
-      : `${team.primary} currently leads the disputed ${team.team} order. The backup remains under review.`;
+      : `${team.primary} currently leads the disputed ${team.team} order. No backup is verified yet.`;
   }
   if (team.isCarryover) {
-    return `${team.primary} leads the carried-over ${team.team} order, with ${team.secondary} next. This hierarchy is being re-verified through preseason and the opening weeks.`;
+    return team.hierarchyDepth >= 2
+      ? `${team.primary} leads the carried-over ${team.team} order, with ${team.secondary} next. The hierarchy is being re-verified.`
+      : `${team.primary} leads the carried-over ${team.team} order. No backup is verified yet.`;
   }
-  return team.secondary !== "Not yet verified"
+  return team.hierarchyDepth >= 2
     ? `${team.primary} is our current ${team.team} penalty taker call, with ${team.secondary} next in line.`
-    : `${team.primary} is our current ${team.team} penalty taker call. The backup order remains under review.`;
+    : `${team.primary} is our current ${team.team} penalty taker call. No backup is verified yet.`;
+}
+
+export function buildClubPenaltyHierarchyNote(team: ClubPenaltyTeam): string {
+  if (team.isArchived) return `This page preserves the filed ${team.seasonLabel} order and does not present it as a current-season hierarchy.`;
+  if (team.hierarchyDepth === 3) return `If ${team.primary} is unavailable, ${team.secondary} is the filed second choice and ${team.tertiary} is third.`;
+  if (team.hierarchyDepth === 2) return `If ${team.primary} is unavailable, ${team.secondary} is the filed second choice. No third-choice taker is verified, so the final place remains open.`;
+  if (team.hierarchyDepth === 1) return `No backup is verified behind ${team.primary}. If the primary is unavailable, the next penalty is an open assignment rather than a guessed hierarchy.`;
+  return `No penalty taker is currently filed. The page will be updated only when direct evidence supports a name.`;
+}
+
+export type ClubPenaltyFaqItem = { question: string; answer: string };
+
+export function buildClubPenaltyFaq(team: ClubPenaltyTeam): ClubPenaltyFaqItem[] {
+  if (team.isArchived) {
+    return [
+      {
+        question: `Who was ${team.team}'s penalty taker in ${team.seasonLabel}?`,
+        answer: team.hierarchyDepth ? `${team.primary} was the filed first choice in the archived ${team.seasonLabel} order.` : `No verified first choice is retained in the archived ${team.seasonLabel} file.`,
+      },
+      {
+        question: `Is this ${team.team} penalty hierarchy current?`,
+        answer: `No. This is an archived ${team.seasonLabel} record and is not presented as the current ${team.leagueLabel} order.`,
+      },
+    ];
+  }
+
+  const primaryAnswer = buildClubPenaltyLead(team);
+  if (team.hierarchyDepth >= 2) {
+    return [
+      { question: `Who is ${team.team}'s penalty taker?`, answer: primaryAnswer },
+      {
+        question: `Who is ${team.team}'s second-choice penalty taker?`,
+        answer: team.hierarchyDepth === 3
+          ? `${team.secondary} is second choice behind ${team.primary}, with ${team.tertiary} filed third.`
+          : `${team.secondary} is second choice behind ${team.primary}. No third-choice taker is verified yet.`,
+      },
+    ];
+  }
+
+  return [
+    { question: `Who is ${team.team}'s penalty taker?`, answer: primaryAnswer },
+    {
+      question: `Does ${team.team} have a verified backup penalty taker?`,
+      answer: team.hierarchyDepth === 1
+        ? `No. ${team.primary} is the only verified name in the current file, so the backup position remains open.`
+        : `No. Neither a first-choice nor a backup penalty taker is currently verified.`,
+    },
+  ];
 }
 
 function firstSentence(value: string): string {

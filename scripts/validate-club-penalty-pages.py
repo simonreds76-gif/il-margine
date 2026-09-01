@@ -25,6 +25,7 @@ AGENT_AUDIT_PATTERN = re.compile(
     r"agent-(?:epl|serie-a|la-liga|bundesliga|ligue-1)-hierarchy-audit-(\d{4}-\d{2}-\d{2})\.json$"
 )
 POSITIONS = ("primary", "secondary", "tertiary")
+UNVERIFIED_TAKER_VALUES = {"", "tbc", "tbd", "n/a", "-", "unknown", "not yet verified"}
 
 
 def load(path: Path) -> dict:
@@ -171,6 +172,19 @@ def main() -> int:
                     bool(player) or documented_vacancy,
                     f"{league}/{team}: {position} candidate must be named; express uncertainty in status/note",
                 )
+                check(
+                    player.lower() not in UNVERIFIED_TAKER_VALUES or not player,
+                    f"{league}/{team}: {position} uses an unverified sentinel as a player name",
+                )
+                if not player:
+                    check(
+                        (entry.get("confidence") or {}).get(position) is None,
+                        f"{league}/{team}: blank {position} slot must not carry confidence",
+                    )
+            check(
+                bool(str(entry.get("secondary") or "").strip()) or not str(entry.get("tertiary") or "").strip(),
+                f"{league}/{team}: tertiary cannot be filed while secondary is blank",
+            )
             hierarchy_names = {
                 re.sub(r"[^a-z0-9]+", " ", str(entry.get(position) or "").lower()).strip()
                 for position in ("primary", "secondary", "tertiary")
@@ -243,7 +257,12 @@ def main() -> int:
         check(not BAD_TEXT.search(raw), f"{league}: mojibake detected")
 
     source_checks = {
-        ROOT / "src" / "lib" / "club-penalty-takers.ts": ["club-penalty-season.json"],
+        ROOT / "src" / "lib" / "club-penalty-takers.ts": [
+            "club-penalty-season.json",
+            "isVerifiedTaker",
+            "hierarchyDepth",
+            "buildClubPenaltyFaq",
+        ],
         ROOT / "src" / "app" / "penalty-takers" / "page.tsx": ["CLUB_PENALTY_SEASON"],
         ROOT / "src" / "app" / "penalty-takers" / "[leagueSlug]" / "page.tsx": ["generateStaticParams", "archivedTeams"],
         ROOT / "src" / "app" / "penalty-takers" / "methodology" / "page.tsx": ["Absence is not a promotion", "Shootouts are supporting evidence"],

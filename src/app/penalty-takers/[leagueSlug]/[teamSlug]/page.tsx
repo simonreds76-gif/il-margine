@@ -9,6 +9,8 @@ import {
   CLUB_PENALTY_PREVIOUS_SEASON,
   buildClubPenaltyConditionSummary,
   buildClubPenaltyDescription,
+  buildClubPenaltyFaq,
+  buildClubPenaltyHierarchyNote,
   buildClubPenaltyLead,
   buildClubPenaltyTitle,
   buildClubPenaltyWatchNote,
@@ -185,13 +187,12 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
   const conditionSummary = buildClubPenaltyConditionSummary(team);
   const watchNote = buildClubPenaltyWatchNote(team);
   const latestEvidenceUpdate = team.evidenceUpdates[0];
+  const hierarchyLabels = ["Current primary", "Second choice", "Third choice"];
+  const hierarchyNote = buildClubPenaltyHierarchyNote(team);
+  const faqItems = buildClubPenaltyFaq(team);
+  const isUnderReview = ["unknown", "disputed", "conditional"].includes(team.hierarchyStatus);
 
   const quickAnswer = lead;
-  const secondAnswer = team.hierarchyStatus === "unknown"
-    ? `The ${team.team} backup penalty taker is not yet verified for ${CLUB_PENALTY_SEASON}.`
-    : team.secondary && team.secondary !== "TBC" && team.secondary !== "Not yet verified"
-    ? `${team.secondary} is listed as the next ${team.team} penalty taker behind ${team.primary}. ${team.tertiary ? `${team.tertiary} is the current third-choice name.` : "The third-choice line is thinner."}`
-    : `We do not have a strong second-choice ${team.team} penalty taker call yet.`;
 
   const breadcrumbData = {
     "@context": "https://schema.org",
@@ -224,28 +225,24 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
     },
   };
 
-  const faqData = {
+  const faqData = team.isArchived ? null : {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: `Who is ${team.team}'s penalty taker?`,
-        acceptedAnswer: { "@type": "Answer", text: quickAnswer },
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
       },
-      {
-        "@type": "Question",
-        name: `Who is ${team.team}'s second-choice penalty taker?`,
-        acceptedAnswer: { "@type": "Answer", text: secondAnswer },
-      },
-    ],
+    })),
   };
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(pageData) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqData) }} />
+      {faqData ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqData) }} /> : null}
 
       <main className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
         <section className="pt-6 pb-12 md:pb-16">
@@ -265,7 +262,7 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
               {team.initials}
             </div>
 
-            <div className="relative p-5 pt-20 sm:p-8 sm:pt-28 lg:p-10">
+            <div className="relative p-5 pt-14 sm:p-8 sm:pt-28 lg:p-10">
               <div className="grid gap-8 xl:grid-cols-[1.1fr_0.9fr] xl:items-start">
                 <div className="max-w-4xl">
                   <div className="flex flex-col items-start gap-4 sm:flex-row">
@@ -289,18 +286,20 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
                         <p className="mt-4 max-w-3xl rounded-2xl border border-slate-600/60 bg-slate-950/60 px-4 py-3 text-sm leading-6 text-slate-300">
                           Archived record: {team.team} are not on the current {team.leagueLabel} board. This page preserves the final {team.seasonLabel} hierarchy and URL.
                         </p>
-                      ) : (team.hierarchyStatus === "unknown" || team.hierarchyStatus === "disputed" || team.hierarchyStatus === "conditional") && conditionSummary ? (
-                        <div className="mt-5 max-w-3xl rounded-2xl border border-amber-300/25 bg-[linear-gradient(135deg,rgba(245,158,11,0.12),rgba(15,23,42,0.68))] p-4 sm:p-5">
-                          <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-200">Why this order is under review</div>
-                          <p className="mt-2 text-sm leading-6 text-amber-50/90">{conditionSummary}</p>
+                      ) : conditionSummary ? (
+                        <div className={`mt-5 max-w-3xl rounded-2xl border p-4 sm:p-5 ${isUnderReview ? "border-amber-300/25 bg-[linear-gradient(135deg,rgba(245,158,11,0.12),rgba(15,23,42,0.68))]" : "border-emerald-300/20 bg-[linear-gradient(135deg,rgba(16,185,129,0.10),rgba(15,23,42,0.68))]"}`}>
+                          <div className={`font-mono text-[10px] font-semibold uppercase tracking-[0.2em] ${isUnderReview ? "text-amber-200" : "text-emerald-200"}`}>
+                            {isUnderReview ? "Why this order is under review" : "Why this order stands"}
+                          </div>
+                          <p className={`mt-2 text-sm leading-6 ${isUnderReview ? "text-amber-50/90" : "text-emerald-50/90"}`}>{conditionSummary}</p>
                           {watchNote ? (
-                            <p className="mt-3 border-t border-amber-200/10 pt-3 text-xs leading-5 text-amber-100/65">
-                              <span className="font-semibold text-amber-100">Watch:</span> {watchNote}
+                            <p className={`mt-3 border-t pt-3 text-xs leading-5 ${isUnderReview ? "border-amber-200/10 text-amber-100/65" : "border-emerald-200/10 text-emerald-100/65"}`}>
+                              <span className={isUnderReview ? "font-semibold text-amber-100" : "font-semibold text-emerald-100"}>Watch:</span> {watchNote}
                             </p>
                           ) : null}
                           {team.conditionNote !== conditionSummary ? (
                             <details className="mt-3 text-xs text-slate-400">
-                              <summary className="cursor-pointer font-semibold text-amber-200/85 hover:text-amber-100">Read full evidence note</summary>
+                              <summary className={`cursor-pointer font-semibold ${isUnderReview ? "text-amber-200/85 hover:text-amber-100" : "text-emerald-200/85 hover:text-emerald-100"}`}>Read full evidence note</summary>
                               <p className="mt-2 leading-6 text-slate-300">{team.conditionNote}</p>
                             </details>
                           ) : null}
@@ -317,23 +316,37 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
                 <aside className={`overflow-hidden rounded-3xl border border-slate-800/80 bg-gradient-to-br ${team.leagueSurface} p-4 shadow-[0_18px_50px_rgba(0,0,0,0.24)] sm:p-5`}>
                   <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-slate-300">Penalty hierarchy</div>
                   <div className="mt-4 space-y-3">
-                    {[
-                      ["1", "Current primary", team.primary],
-                      ["2", "Second choice", team.secondary],
-                      ["3", "Third choice", team.tertiary || "Watchlist"],
-                    ].map(([rank, label, value]) => (
-                      <div key={label} className="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+                    {team.verifiedNames.map((value, index) => {
+                      const rank = `${index + 1}`;
+                      return (
+                        <div key={`${rank}-${value}`} className="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+                          <div className="flex items-start gap-3">
+                            <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 font-mono text-base font-semibold ${rank === "1" ? `${accent.fill} text-slate-950` : "bg-slate-950/60 text-slate-300"}`}>
+                              {rank}
+                            </div>
+                            <div>
+                              <div className="text-[10px] uppercase tracking-[0.18em] text-slate-400">{hierarchyLabels[index]}</div>
+                              <div className={`mt-1.5 text-xl font-semibold tracking-tight ${rank === "1" ? accent.text : "text-slate-200"}`}>{value}</div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    {!team.isArchived && team.hierarchyDepth < 3 ? (
+                      <div className="rounded-2xl border border-dashed border-white/15 bg-slate-950/20 p-4">
                         <div className="flex items-start gap-3">
-                          <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 font-mono text-base font-semibold ${rank === "1" ? `${accent.fill} text-slate-950` : "bg-slate-950/60 text-slate-300"}`}>
-                            {rank}
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dashed border-white/15 bg-slate-950/30 font-mono text-base font-semibold text-slate-500">
+                            {team.hierarchyDepth + 1}
                           </div>
                           <div>
-                            <div className="text-[10px] uppercase tracking-[0.18em] text-slate-400">{label}</div>
-                            <div className={`mt-1.5 text-xl font-semibold tracking-tight ${rank === "1" ? accent.text : "text-slate-200"}`}>{value}</div>
+                            <div className="text-[10px] uppercase tracking-[0.18em] text-slate-500">Open position</div>
+                            <div className="mt-1.5 text-base font-semibold tracking-tight text-slate-400">
+                              {team.hierarchyDepth === 0 ? "No verified taker" : team.hierarchyDepth === 1 ? "No verified backup" : "No verified third choice"}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    ))}
+                    ) : null}
                   </div>
                 </aside>
               </div>
@@ -347,11 +360,10 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Who takes penalties for {team.team}?</h2>
             <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
               <p>{quickAnswer}</p>
+              <p>{hierarchyNote}</p>
+              <p>{team.leagueCopy}</p>
               <p>
-                This page is built as a live Il Margine club file, not a one-name list. If the first-choice taker is injured, suspended, substituted or not starting, the second and third names become the useful part of the hierarchy.
-              </p>
-              <p>
-                Penalty order is one input in goalscorer pricing. When {team.leagueLabel} fixtures are live, compare the hierarchy with the{" "}
+                For live goalscorer pricing, compare the verified hierarchy with the{" "}
                 <Link href="/fair-odds-lab" className="border-b border-emerald-500/30 text-emerald-400 hover:text-emerald-300">
                   Goalscorer Fair Odds Lab
                 </Link>
@@ -390,7 +402,7 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <p className="font-medium text-slate-100">Evidence checked</p>
                     <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.15em] text-emerald-200">
-                      {team.evidenceSources.length} sources reviewed
+                      {Math.min(team.evidenceSources.length, 4)} sources shown
                     </span>
                   </div>
                   <ul className="mt-2 space-y-2">
@@ -421,14 +433,12 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
             <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">FAQ</div>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">{team.team} penalty taker FAQ</h2>
             <div className="mt-5 space-y-4">
-              <div>
-                <h3 className="font-semibold text-slate-100">Who is {team.team}&apos;s penalty taker?</h3>
-                <p className="mt-2 text-sm leading-7 text-slate-300">{quickAnswer}</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">Who is {team.team}&apos;s second-choice penalty taker?</h3>
-                <p className="mt-2 text-sm leading-7 text-slate-300">{secondAnswer}</p>
-              </div>
+              {faqItems.map((item) => (
+                <div key={item.question}>
+                  <h3 className="font-semibold text-slate-100">{item.question}</h3>
+                  <p className="mt-2 text-sm leading-7 text-slate-300">{item.answer}</p>
+                </div>
+              ))}
             </div>
           </div>
 
