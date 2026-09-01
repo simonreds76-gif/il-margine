@@ -2,7 +2,7 @@
   "api_errors": [
     "plan: Free plans do not have access to this season, try from 2022 to 2024."
   ],
-  "deferred_not_due": 2,
+  "deferred_not_due": 0,
   "details": [
     {
       "detail": "plan: Free plans do not have access to this season, try from 2022 to 2024.",
@@ -70,6 +70,22 @@
     },
     {
       "detail": "plan: Free plans do not have access to this season, try from 2022 to 2024.",
+      "goalkeeper": "Dani C\u00e1rdenas",
+      "match": "FC Barcelona vs Rayo Vallecano",
+      "match_date": "2026-08-31",
+      "reason": "fixture_api_error",
+      "signal_id": "72478512|dani c\u00e1rdenas|4.5|over"
+    },
+    {
+      "detail": "plan: Free plans do not have access to this season, try from 2022 to 2024.",
+      "goalkeeper": "David Soria",
+      "match": "CA Osasuna vs Getafe CF",
+      "match_date": "2026-08-31",
+      "reason": "fixture_api_error",
+      "signal_id": "72478516|david soria|3.5|over"
+    },
+    {
+      "detail": "plan: Free plans do not have access to this season, try from 2022 to 2024.",
       "goalkeeper": "Josep Mart\u00ednez",
       "match": "Inter Milano vs AC Monza",
       "match_date": "2026-08-22",
@@ -93,19 +109,19 @@
       "signal_id": "71944904|mike maignan|4.5|over"
     },
     {
-      "detail": "plan: Free plans do not have access to this season, try from 2022 to 2024.",
+      "detail": "",
       "goalkeeper": "Christos Mandas",
       "match": "Bologna FC vs Lazio Rome",
       "match_date": "2026-08-24",
-      "reason": "fixture_api_error",
+      "reason": "request_budget_exhausted",
       "signal_id": "71944892|christos mandas|5.5|over"
     },
     {
-      "detail": "plan: Free plans do not have access to this season, try from 2022 to 2024.",
+      "detail": "",
       "goalkeeper": "David de Gea",
       "match": "AS Roma vs ACF Fiorentina",
       "match_date": "2026-08-24",
-      "reason": "fixture_api_error",
+      "reason": "request_budget_exhausted",
       "signal_id": "71944902|david de gea|6.5|over"
     },
     {
@@ -131,15 +147,23 @@
       "match_date": "2026-08-30",
       "reason": "request_budget_exhausted",
       "signal_id": "71945208|josep mart\u00ednez|2.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Marco Carnesecchi",
+      "match": "Atalanta BC vs Bologna FC",
+      "match_date": "2026-08-31",
+      "reason": "request_budget_exhausted",
+      "signal_id": "71945206|marco carnesecchi|2.5|over"
     }
   ],
-  "generated_at": "2026-08-31T16:55:33Z",
+  "generated_at": "2026-09-01T09:03:14Z",
   "max_requests": 10,
-  "pending_due": 16,
-  "pending_total": 18,
+  "pending_due": 19,
+  "pending_total": 19,
   "reason_counts": {
     "fixture_api_error": 13,
-    "request_budget_exhausted": 3
+    "request_budget_exhausted": 6
   },
   "requests_used": 10,
   "settled": 0,
