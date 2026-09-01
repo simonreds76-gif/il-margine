@@ -34,8 +34,23 @@
         "Sunderland",
         "Tottenham"
       ],
-      "changed_count": 0,
-      "changes": [],
+      "changed_count": 1,
+      "changes": [
+        {
+          "team": "Newcastle United",
+          "from": {
+            "primary": "Nick Woltemade",
+            "secondary": "Fabian Schar",
+            "tertiary": "Harvey Barnes"
+          },
+          "to": {
+            "primary": "Yoane Wissa",
+            "secondary": "Matias Fernandez-Pardo",
+            "tertiary": "William Osula"
+          },
+          "reason": "Wissa is the provisional first call after starting Newcastle's latest league match as the central forward and bringing the strongest senior penalty record. New signing Fernandez-Pardo has two recent Ligue 1 conversions but no Newcastle assignment, while Osula is retained as the specialist-board alternative. Woltemade is removed after the reported Juventus loan agreement. The first competitive award with Wissa and Fernandez-Pardo available must settle the order."
+        }
+      ],
       "sources": [
         {
           "label": "Squawka 2026/27 set-piece board",
@@ -553,6 +568,6 @@
   },
   "summary": {
     "reviewed_clubs": 96,
-    "hierarchies_changed": 24
+    "hierarchies_changed": 25
   }
 }

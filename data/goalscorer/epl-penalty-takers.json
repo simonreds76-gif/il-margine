@@ -5760,30 +5760,30 @@
     }
   },
   "Newcastle United": {
-    "primary": "Nick Woltemade",
-    "secondary": "Fabian Schar",
-    "tertiary": "Harvey Barnes",
-    "last_updated": "2026-08-10",
-    "source": "Newcastle United",
-    "cross_check": "Premier League role analysis and official FPL current roster.",
-    "hierarchy_status": "conditional",
+    "primary": "Yoane Wissa",
+    "secondary": "Matias Fernandez-Pardo",
+    "tertiary": "William Osula",
+    "last_updated": "2026-09-01",
+    "source": "Newcastle United latest league lineup",
+    "cross_check": "Newcastle United signing announcement",
+    "hierarchy_status": "disputed",
     "confidence": {
       "primary": "medium",
       "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Woltemade is the best current primary after the departures of Gordon and Bruno. Schar has a prior Newcastle regulation conversion but has fitness/selection risk; if he is absent, Barnes is the practical deputy. The first 2026/27 competitive penalty is a mandatory recheck.",
+    "condition_note": "Wissa is the provisional first call after starting Newcastle's latest league match as the central forward and bringing the strongest senior penalty record. New signing Fernandez-Pardo has two recent Ligue 1 conversions but no Newcastle assignment, while Osula is retained as the specialist-board alternative. Woltemade is removed after the reported Juventus loan agreement. The first competitive award with Wissa and Fernandez-Pardo available must settle the order.",
     "last_verified": {
-      "date": "2026-08-10",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
     "public_updated_at": "2026-09-01",
     "latest_evidence": {
       "id": "evt_20260901_newcastle-united_current_review",
       "date": "2026-09-01",
       "type": "current_season_board_review",
-      "source_count": 2
+      "source_count": 6
     },
     "evidence_log": [
       {
@@ -6051,20 +6051,44 @@
         "penalty_kind": null,
         "competition": null,
         "match": null,
-        "headline": "Newcastle United hierarchy rechecked",
-        "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+        "headline": "Newcastle United penalty hierarchy updated",
+        "context": "Wissa is the provisional first call after starting Newcastle's latest league match as the central forward and bringing the strongest senior penalty record. New signing Fernandez-Pardo has two recent Ligue 1 conversions but no Newcastle assignment, while Osula is retained as the specialist-board alternative. Woltemade is removed after the reported Juventus loan agreement. The first competitive award with Wissa and Fernandez-Pardo available must settle the order.",
         "sources": [
           {
-            "label": "Squawka 2026/27 set-piece board",
-            "url": "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
-            "date": "2026-08-10",
-            "note": "Current all-club penalty and set-piece hierarchy, updated for confirmed transfers."
+            "label": "Newcastle United latest league lineup",
+            "url": "https://www.newcastleunited.com/en/news/confirmed-line-up-spurs-a",
+            "date": "2026-08-29",
+            "note": "Wissa started at centre-forward; Woltemade and Schar were substitutes."
           },
           {
-            "label": "FPL Assistant current role audit",
-            "url": "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27",
-            "date": "2026-08-15",
-            "note": "Independent all-club cross-check with uncertainty and current-squad context."
+            "label": "Newcastle United signing announcement",
+            "url": "https://www.newcastleunited.com/en/news/newcastle-united-sign-matias-fernandez-pardo",
+            "date": "2026-09-01",
+            "note": "Confirms Fernandez-Pardo joined Newcastle as the club's eighth summer signing."
+          },
+          {
+            "label": "AS deadline-day transfer report",
+            "url": "https://as.com/futbol/internacional/woltemade-por-jonathan-david-f202609-n/",
+            "date": "2026-09-01",
+            "note": "Reports Newcastle and Juventus agreed Woltemade's season loan and that he travelled for his medical."
+          },
+          {
+            "label": "Yoane Wissa penalty record",
+            "url": "https://www.transfermarkt.co.uk/yoane-wissa/elfmetertore/spieler/388165",
+            "date": "2026-09-01",
+            "note": "Records 13 scored penalties and two misses across Wissa's senior career."
+          },
+          {
+            "label": "Matias Fernandez-Pardo penalty record",
+            "url": "https://www.transfermarkt.com/matias-fernandez-pardo/elfmetertore/spieler/724129",
+            "date": "2026-09-01",
+            "note": "Records two successful Ligue 1 penalties in April 2026 and no miss."
+          },
+          {
+            "label": "Fantasy Football Scout set-piece table",
+            "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+            "date": "2026-09-01",
+            "note": "Still listed Woltemade on deadline day, so it was treated as a stale baseline rather than current squad truth."
           }
         ],
         "detection": "manual_multi_source_research",
@@ -6073,8 +6097,8 @@
           "reviewed_by": "Il Margine",
           "reviewed_at": "2026-09-01T12:00:00Z"
         },
-        "affects_hierarchy": false,
-        "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+        "affects_hierarchy": true,
+        "editorial_note": "Wissa is the provisional first call after starting Newcastle's latest league match as the central forward and bringing the strongest senior penalty record. New signing Fernandez-Pardo has two recent Ligue 1 conversions but no Newcastle assignment, while Osula is retained as the specialist-board alternative. Woltemade is removed after the reported Juventus loan agreement. The first competitive award with Wissa and Fernandez-Pardo available must settle the order."
       }
     ],
     "change_log": [
@@ -6192,6 +6216,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-08-10T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "current_season_hierarchy_update",
+        "from": {
+          "primary": "Nick Woltemade",
+          "secondary": "Fabian Schar",
+          "tertiary": "Harvey Barnes"
+        },
+        "to": {
+          "primary": "Yoane Wissa",
+          "secondary": "Matias Fernandez-Pardo",
+          "tertiary": "William Osula"
+        },
+        "reason": "Wissa is the provisional first call after starting Newcastle's latest league match as the central forward and bringing the strongest senior penalty record. New signing Fernandez-Pardo has two recent Ligue 1 conversions but no Newcastle assignment, while Osula is retained as the specialist-board alternative. Woltemade is removed after the reported Juventus loan agreement. The first competitive award with Wissa and Fernandez-Pardo available must settle the order.",
+        "evidence_ids": [
+          "evt_20260901_newcastle-united_current_review"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -6209,21 +6256,21 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Nick Woltemade",
+        "player": "Yoane Wissa",
         "status": "confirmed",
-        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "source_url": "https://www.newcastleunited.com/en/news/confirmed-line-up-spurs-a",
         "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Fabian Schar",
+        "player": "Matias Fernandez-Pardo",
         "status": "confirmed",
-        "source_url": "https://www.newcastleunited.com/en/news/fabian-schaer-extends-newcastle-united-stay",
+        "source_url": "https://www.newcastleunited.com/en/news/newcastle-united-sign-matias-fernandez-pardo",
         "checked_at": "2026-09-01"
       },
       "tertiary": {
-        "player": "Harvey Barnes",
+        "player": "William Osula",
         "status": "confirmed",
-        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+        "source_url": "https://www.newcastleunited.com/en/news/confirmed-line-up-spurs-a",
         "checked_at": "2026-09-01"
       }
     },
@@ -6231,10 +6278,14 @@
       "date": "2026-09-01",
       "by": "Il Margine",
       "method": "current_season_multi_source_review",
-      "outcome": "order_unchanged",
+      "outcome": "hierarchy_updated",
       "sources": [
-        "https://www.squawka.com/en/features/premier-league-best-set-piece-takers-2026-27/",
-        "https://fplassistant.net/guides/fpl-penalty-set-piece-takers-2026-27"
+        "https://www.newcastleunited.com/en/news/confirmed-line-up-spurs-a",
+        "https://www.newcastleunited.com/en/news/newcastle-united-sign-matias-fernandez-pardo",
+        "https://as.com/futbol/internacional/woltemade-por-jonathan-david-f202609-n/",
+        "https://www.transfermarkt.co.uk/yoane-wissa/elfmetertore/spieler/388165",
+        "https://www.transfermarkt.com/matias-fernandez-pardo/elfmetertore/spieler/724129",
+        "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers"
       ]
     }
   },

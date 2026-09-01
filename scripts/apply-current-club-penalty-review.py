@@ -95,13 +95,79 @@ LEAGUE_SOURCES: dict[str, list[dict[str, str]]] = {
 }
 
 
-def change(order: list[str], note: str, status: str = "probable") -> dict[str, Any]:
-    return {"order": order, "note": note, "status": status}
+def change(
+    order: list[str],
+    note: str,
+    status: str = "probable",
+    *,
+    sources: list[dict[str, str]] | None = None,
+    confidence: dict[str, str] | None = None,
+    membership_sources: dict[str, str] | None = None,
+) -> dict[str, Any]:
+    result: dict[str, Any] = {"order": order, "note": note, "status": status}
+    if sources:
+        result["sources"] = sources
+    if confidence:
+        result["confidence"] = confidence
+    if membership_sources:
+        result["membership_sources"] = membership_sources
+    return result
 
 
 # Only source-supported changes belong here. Direct 2026/27 match evidence in the
 # existing files takes precedence over a generic league board and is retained.
 OVERRIDES: dict[str, dict[str, dict[str, Any]]] = {
+    "epl": {
+        "Newcastle United": change(
+            ["Yoane Wissa", "Matias Fernandez-Pardo", "William Osula"],
+            "Wissa is the provisional first call after starting Newcastle's latest league match as the central forward and bringing the strongest senior penalty record. New signing Fernandez-Pardo has two recent Ligue 1 conversions but no Newcastle assignment, while Osula is retained as the specialist-board alternative. Woltemade is removed after the reported Juventus loan agreement. The first competitive award with Wissa and Fernandez-Pardo available must settle the order.",
+            "disputed",
+            sources=[
+                {
+                    "label": "Newcastle United latest league lineup",
+                    "url": "https://www.newcastleunited.com/en/news/confirmed-line-up-spurs-a",
+                    "date": "2026-08-29",
+                    "note": "Wissa started at centre-forward; Woltemade and Schar were substitutes.",
+                },
+                {
+                    "label": "Newcastle United signing announcement",
+                    "url": "https://www.newcastleunited.com/en/news/newcastle-united-sign-matias-fernandez-pardo",
+                    "date": "2026-09-01",
+                    "note": "Confirms Fernandez-Pardo joined Newcastle as the club's eighth summer signing.",
+                },
+                {
+                    "label": "AS deadline-day transfer report",
+                    "url": "https://as.com/futbol/internacional/woltemade-por-jonathan-david-f202609-n/",
+                    "date": "2026-09-01",
+                    "note": "Reports Newcastle and Juventus agreed Woltemade's season loan and that he travelled for his medical.",
+                },
+                {
+                    "label": "Yoane Wissa penalty record",
+                    "url": "https://www.transfermarkt.co.uk/yoane-wissa/elfmetertore/spieler/388165",
+                    "date": "2026-09-01",
+                    "note": "Records 13 scored penalties and two misses across Wissa's senior career.",
+                },
+                {
+                    "label": "Matias Fernandez-Pardo penalty record",
+                    "url": "https://www.transfermarkt.com/matias-fernandez-pardo/elfmetertore/spieler/724129",
+                    "date": "2026-09-01",
+                    "note": "Records two successful Ligue 1 penalties in April 2026 and no miss.",
+                },
+                {
+                    "label": "Fantasy Football Scout set-piece table",
+                    "url": "https://www.fantasyfootballscout.co.uk/fantasy-premier-league-set-piece-takers",
+                    "date": "2026-09-01",
+                    "note": "Still listed Woltemade on deadline day, so it was treated as a stale baseline rather than current squad truth.",
+                },
+            ],
+            confidence={"primary": "medium", "secondary": "low", "tertiary": "low"},
+            membership_sources={
+                "primary": "https://www.newcastleunited.com/en/news/confirmed-line-up-spurs-a",
+                "secondary": "https://www.newcastleunited.com/en/news/newcastle-united-sign-matias-fernandez-pardo",
+                "tertiary": "https://www.newcastleunited.com/en/news/confirmed-line-up-spurs-a",
+            },
+        ),
+    },
     "serie-a": {
         "Atalanta": change(
             ["Franck Kessié", "Gianluca Scamacca", "Charles De Ketelaere"],
@@ -233,9 +299,14 @@ def order(entry: dict[str, Any]) -> dict[str, str]:
     return {key: str(entry.get(key) or "").strip() for key in ("primary", "secondary", "tertiary")}
 
 
+def review_sources(league: str, team: str) -> list[dict[str, str]]:
+    override = OVERRIDES.get(league, {}).get(team) or {}
+    return list(override.get("sources") or LEAGUE_SOURCES[league])
+
+
 def event(team: str, league: str, audit_date: str, before: dict[str, str], after: dict[str, str]) -> dict[str, Any]:
     changed = before != after
-    source_rows = LEAGUE_SOURCES[league]
+    source_rows = review_sources(league, team)
     override = OVERRIDES.get(league, {}).get(team)
     if changed:
         context = str(override["note"])
@@ -326,7 +397,7 @@ def apply(audit_date: str, write: bool) -> dict[str, Any]:
                 entry["hierarchy_status"] = str(override.get("status") or entry.get("hierarchy_status") or "probable")
                 confidence = dict(entry.get("confidence") or {})
                 for position in ("primary", "secondary", "tertiary"):
-                    confidence[position] = "medium"
+                    confidence[position] = str((override.get("confidence") or {}).get(position) or "medium")
                 entry["confidence"] = confidence
                 entry["condition_note"] = str(override["note"])
                 entry["last_updated"] = audit_date
@@ -335,8 +406,9 @@ def apply(audit_date: str, write: bool) -> dict[str, Any]:
                     "by": "Il Margine",
                     "method": "current_roster_and_penalty_record_review",
                 }
-                entry["source"] = LEAGUE_SOURCES[league][0]["label"]
-                entry["cross_check"] = LEAGUE_SOURCES[league][1]["label"]
+                team_sources = review_sources(league, team)
+                entry["source"] = team_sources[0]["label"]
+                entry["cross_check"] = team_sources[1]["label"]
 
             review_event = event(team, league, audit_date, before, after)
             evidence_log = [
@@ -355,7 +427,7 @@ def apply(audit_date: str, write: bool) -> dict[str, Any]:
                 "by": "Il Margine",
                 "method": "current_season_multi_source_review",
                 "outcome": "hierarchy_updated" if changed else "order_unchanged",
-                "sources": [source["url"] for source in LEAGUE_SOURCES[league]],
+                "sources": [source["url"] for source in review_sources(league, team)],
             }
             entry["public_updated_at"] = audit_date
 
@@ -367,7 +439,10 @@ def apply(audit_date: str, write: bool) -> dict[str, Any]:
                 current.update({
                     "player": player,
                     "status": "confirmed",
-                    "source_url": current.get("source_url") if current.get("player") == player else LEAGUE_SOURCES[league][0]["url"],
+                    "source_url": (
+                        (((override or {}).get("membership_sources") or {}).get(position))
+                        or (current.get("source_url") if current.get("player") == player else review_sources(league, team)[0]["url"])
+                    ),
                     "checked_at": audit_date,
                 })
                 membership[position] = current
