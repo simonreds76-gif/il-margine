@@ -418,13 +418,29 @@ class GoalkeeperSavesLiveTests(unittest.TestCase):
 
     def test_shadow_report_calculates_true_close_evidence(self) -> None:
         signals = [
-            {"status": "won", "stake_units": "0.5", "pnl_units": "0.5", "clv": "0.10"},
-            {"status": "lost", "stake_units": "0.5", "pnl_units": "-0.5", "clv": ""},
+            {
+                "status": "won",
+                "stake_units": "0.5",
+                "pnl_units": "0.5",
+                "clv": "0.10",
+                "settlement_source": "fotmob_named_keeper_shotmap",
+            },
+            {
+                "status": "lost",
+                "stake_units": "0.5",
+                "pnl_units": "-0.5",
+                "clv": "",
+                "settlement_source": "fotmob_named_keeper_shotmap",
+            },
         ]
         report = shadow.report_payload([], signals, "2026-08-20T12:00:00Z", 0)
         self.assertEqual(report["evidence"]["clv_matched"], 1)
         self.assertEqual(report["evidence"]["true_close_coverage"], 0.5)
         self.assertEqual(report["evidence"]["clv"], 0.1)
+        self.assertEqual(
+            report["evidence"]["settlement_sources"],
+            {"fotmob_named_keeper_shotmap": 2},
+        )
 
 
 if __name__ == "__main__":

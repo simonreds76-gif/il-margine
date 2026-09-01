@@ -374,6 +374,9 @@ def report_payload(
     staked = sum(parse_float(row.get("stake_units")) or 0.0 for row in settled if row.get("status") not in {"push", "void"})
     clv_values = [value for row in settled if (value := parse_float(row.get("clv"))) is not None]
     close_coverage = len(clv_values) / len(settled) if settled else None
+    settlement_sources = Counter(
+        str(row.get("settlement_source") or "unknown") for row in settled
+    )
     eligible = [row for row in candidates if row.get("candidate_status") == "eligible_shadow"]
     value_ladder = [row for row in candidates if row.get("candidate_status") == "value_ladder"]
     blocked = [row for row in candidates if row.get("candidate_status") == "blocked"]
@@ -415,13 +418,14 @@ def report_payload(
             "clv_matched": len(clv_values),
             "true_close_coverage": round(close_coverage, 6) if close_coverage is not None else None,
             "clv": round(sum(clv_values) / len(clv_values), 6) if clv_values else None,
+            "settlement_sources": dict(sorted(settlement_sources.items())),
         },
         "promotion": {
             "status": "BLOCKED",
             "settled_required": 150,
             "true_close_coverage_required": 0.70,
             "mean_true_close_clv_required": 0.005,
-            "settlement_integrity": "API_FOOTBALL_PLAYER_STATS",
+            "settlement_integrity": "NAMED_GOALKEEPER_EVENT_STATS",
         },
     }
 
@@ -482,9 +486,14 @@ def main() -> None:
         f"- Provisional research lines: {current['provisional_lines']} (never appended to the signal ledger)",
         f"- Candidate board preserved after infrastructure failure: {current['candidate_board_preserved']}",
         f"- Signals: {evidence['signals']} ({evidence['pending']} pending, {evidence['settled']} settled)",
-        f"- P/L: {evidence['pnl_units']:+.2f}u; ROI: {evidence['roi'] if evidence['roi'] is not None else '-'}",
+        (
+            f"- P/L: {evidence['pnl_units']:+.2f}u; "
+            f"ROI: {evidence['roi'] * 100:+.1f}%" if evidence["roi"] is not None else
+            f"- P/L: {evidence['pnl_units']:+.2f}u; ROI: -"
+        ),
         f"- Closing evidence: {evidence['clv_matched']}/{evidence['settled']} matched; mean CLV: {evidence['clv'] if evidence['clv'] is not None else '-'}",
-        "- Settlement integrity: named-player API-Football saves; promotion remains blocked until the evidence gates pass.",
+        f"- Settlement sources: {evidence['settlement_sources']}",
+        "- Settlement integrity: named-goalkeeper event stats only; promotion remains blocked until the evidence gates pass.",
     ]
     args.report_md.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(json.dumps(payload, sort_keys=True))
