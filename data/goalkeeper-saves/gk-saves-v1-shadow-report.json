@@ -18,15 +18,18 @@
     "pnl_units": 10.229,
     "roi": 1.076737,
     "settled": 19,
+    "settlement_sources": {
+      "fotmob_named_keeper_shotmap": 19
+    },
     "signals": 19,
     "true_close_coverage": 0.105263
   },
-  "generated_at": "2026-09-01T09:10:39Z",
+  "generated_at": "2026-09-01T09:14:48Z",
   "live_routing": false,
   "promotion": {
     "mean_true_close_clv_required": 0.005,
     "settled_required": 150,
-    "settlement_integrity": "API_FOOTBALL_PLAYER_STATS",
+    "settlement_integrity": "NAMED_GOALKEEPER_EVENT_STATS",
     "status": "BLOCKED",
     "true_close_coverage_required": 0.7
   },
