@@ -2251,9 +2251,36 @@ def github_token_from_credential_manager() -> str:
     raise RuntimeError("GitHub authentication unavailable (" + "; ".join(errors) + ")")
 
 
+TELEGRAM_CHUNK_LIMIT = 3800
+
+
+def telegram_chunks(message: str, limit: int = TELEGRAM_CHUNK_LIMIT) -> list[str]:
+    """Split reports at line boundaries below Telegram's 4096-char limit."""
+    if limit <= 0:
+        raise ValueError("Telegram chunk limit must be positive")
+
+    chunks: list[str] = []
+    current = ""
+    for line in message.splitlines():
+        pieces = [line[index:index + limit] for index in range(0, len(line), limit)] or [""]
+        for piece in pieces:
+            candidate = piece if not current else f"{current}\n{piece}"
+            if current and len(candidate) > limit:
+                chunks.append(current)
+                current = piece
+            else:
+                current = candidate
+    if current or not chunks:
+        chunks.append(current)
+
+    if len(chunks) == 1:
+        return chunks
+    return [f"Part {index}/{len(chunks)}\n{chunk}" for index, chunk in enumerate(chunks, 1)]
+
+
 def dispatch_telegram_relay(message: str) -> None:
     encoded = base64.b64encode(
-        json.dumps([message], ensure_ascii=False).encode("utf-8")
+        json.dumps(telegram_chunks(message), ensure_ascii=False).encode("utf-8")
     ).decode("ascii")
     repository = os.environ.get("TENNIS_DIGEST_GITHUB_REPOSITORY", TELEGRAM_RELAY_REPOSITORY)
     ref = os.environ.get("TENNIS_DIGEST_GITHUB_REF", "golden-with-speed-insights")
@@ -2285,27 +2312,40 @@ def post_telegram(message: str) -> bool:
         except Exception as exc:
             print(f"Warning: telegram relay dispatch failed: {exc}", file=sys.stderr)
             return False
-    payload = json.dumps(
-        {
-            "chat_id": chat_id,
-            "text": message,
-            "disable_web_page_preview": True,
-        }
-    ).encode("utf-8")
-    request = urllib.request.Request(
-        f"https://api.telegram.org/bot{token}/sendMessage",
-        data=payload,
-        headers={"Content-Type": "application/json"},
-        method="POST",
-    )
-    try:
-        with urllib.request.urlopen(request, timeout=20) as response:
-            response.read()
-        print("WEEKLY_REPORT_TELEGRAM sent")
-        return True
-    except Exception as exc:
-        print(f"Warning: telegram post failed: {exc}", file=sys.stderr)
-        return False
+    chunks = telegram_chunks(message)
+    for index, chunk in enumerate(chunks, 1):
+        payload = json.dumps(
+            {
+                "chat_id": chat_id,
+                "text": chunk,
+                "disable_web_page_preview": True,
+            }
+        ).encode("utf-8")
+        request = urllib.request.Request(
+            f"https://api.telegram.org/bot{token}/sendMessage",
+            data=payload,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=20) as response:
+                response.read()
+        except urllib.error.HTTPError as exc:
+            detail = exc.read().decode("utf-8", errors="replace")[:500]
+            print(
+                f"Warning: telegram post failed on chunk {index}/{len(chunks)}: "
+                f"HTTP {exc.code} {detail}",
+                file=sys.stderr,
+            )
+            return False
+        except Exception as exc:
+            print(
+                f"Warning: telegram post failed on chunk {index}/{len(chunks)}: {exc}",
+                file=sys.stderr,
+            )
+            return False
+    print(f"WEEKLY_REPORT_TELEGRAM sent ({len(chunks)} message(s))")
+    return True
 
 
 def main() -> int:
@@ -2343,7 +2383,8 @@ def main() -> int:
 
     if not args.no_telegram:
         message = tennis_telegram_text(payload) if args.tennis_only_telegram else telegram_text(payload)
-        post_telegram(message)
+        if not post_telegram(message):
+            return 1
 
     return 0
 

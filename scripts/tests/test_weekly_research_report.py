@@ -180,6 +180,16 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertIn("Hard side-flip evidence [BROAD DIAGNOSTIC]", message)
         self.assertLessEqual(len(message), 4096)
 
+    def test_long_telegram_report_splits_on_lines_below_platform_limit(self) -> None:
+        message = "\n".join([f"evidence row {index}: " + ("x" * 180) for index in range(30)])
+
+        chunks = REPORT["telegram_chunks"](message)
+
+        self.assertGreater(len(chunks), 1)
+        self.assertTrue(all(len(chunk) <= 4096 for chunk in chunks))
+        joined = "\n".join(chunk.split("\n", 1)[1] for chunk in chunks)
+        self.assertEqual(joined, message)
+
     def test_action_board_keeps_small_positive_cohorts_in_research(self) -> None:
         payload = REPORT["build_payload"]()
         evidence = payload["tennis_model_evidence"]
