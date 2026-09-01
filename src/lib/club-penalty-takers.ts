@@ -373,9 +373,12 @@ function mapTeam(
     })
     .filter((evidence) => evidence.date && evidence.summary)
     .sort((left, right) => right.date.localeCompare(left.date) || right.id.localeCompare(left.id));
-  const evidenceSources = (entry.evidence_log ?? [])
-    .filter((evidence) => evidence.review?.status === "approved")
-    .sort((left, right) => cleanClubPenaltyText(right.date).localeCompare(cleanClubPenaltyText(left.date)))
+  const approvedSourceEvidence = (entry.evidence_log ?? [])
+    .filter((evidence) => evidence.review?.status === "approved" && (evidence.sources ?? []).length > 0)
+    .sort((left, right) => cleanClubPenaltyText(right.date).localeCompare(cleanClubPenaltyText(left.date)));
+  const latestSourceDate = cleanClubPenaltyText(approvedSourceEvidence[0]?.date);
+  const evidenceSources = approvedSourceEvidence
+    .filter((evidence) => cleanClubPenaltyText(evidence.date) === latestSourceDate)
     .flatMap((evidence) =>
       (evidence.sources ?? []).map((source) => {
         const sourceLabel = cleanClubPenaltyText(source.label);
