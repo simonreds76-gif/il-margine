@@ -7,9 +7,11 @@ import { BASE_URL } from "@/lib/config";
 import {
   CLUB_PENALTY_SEASON,
   CLUB_PENALTY_PREVIOUS_SEASON,
+  buildClubPenaltyConditionSummary,
   buildClubPenaltyDescription,
   buildClubPenaltyLead,
   buildClubPenaltyTitle,
+  buildClubPenaltyWatchNote,
   getClubPenaltyTeam,
   readClubPenaltyData,
   readAllClubPenaltyTeams,
@@ -180,6 +182,8 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
   const title = buildClubPenaltyTitle(team);
   const description = buildClubPenaltyDescription(team);
   const lead = buildClubPenaltyLead(team);
+  const conditionSummary = buildClubPenaltyConditionSummary(team);
+  const watchNote = buildClubPenaltyWatchNote(team);
   const latestEvidenceUpdate = team.evidenceUpdates[0];
 
   const quickAnswer = lead;
@@ -285,10 +289,22 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
                         <p className="mt-4 max-w-3xl rounded-2xl border border-slate-600/60 bg-slate-950/60 px-4 py-3 text-sm leading-6 text-slate-300">
                           Archived record: {team.team} are not on the current {team.leagueLabel} board. This page preserves the final {team.seasonLabel} hierarchy and URL.
                         </p>
-                      ) : team.hierarchyStatus === "unknown" || team.hierarchyStatus === "disputed" ? (
-                        <p className="mt-4 max-w-3xl rounded-2xl border border-amber-300/25 bg-amber-400/10 px-4 py-3 text-sm leading-6 text-amber-100">
-                          {team.conditionNote || `No public hierarchy is claimed until direct preseason or competitive evidence supports it for ${CLUB_PENALTY_SEASON}.`}
-                        </p>
+                      ) : (team.hierarchyStatus === "unknown" || team.hierarchyStatus === "disputed" || team.hierarchyStatus === "conditional") && conditionSummary ? (
+                        <div className="mt-5 max-w-3xl rounded-2xl border border-amber-300/25 bg-[linear-gradient(135deg,rgba(245,158,11,0.12),rgba(15,23,42,0.68))] p-4 sm:p-5">
+                          <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-200">Why this order is under review</div>
+                          <p className="mt-2 text-sm leading-6 text-amber-50/90">{conditionSummary}</p>
+                          {watchNote ? (
+                            <p className="mt-3 border-t border-amber-200/10 pt-3 text-xs leading-5 text-amber-100/65">
+                              <span className="font-semibold text-amber-100">Watch:</span> {watchNote}
+                            </p>
+                          ) : null}
+                          {team.conditionNote !== conditionSummary ? (
+                            <details className="mt-3 text-xs text-slate-400">
+                              <summary className="cursor-pointer font-semibold text-amber-200/85 hover:text-amber-100">Read full evidence note</summary>
+                              <p className="mt-2 leading-6 text-slate-300">{team.conditionNote}</p>
+                            </details>
+                          ) : null}
+                        </div>
                       ) : team.isCarryover ? (
                         <p className="mt-4 max-w-3xl rounded-2xl border border-cyan-300/20 bg-cyan-400/8 px-4 py-3 text-sm leading-6 text-cyan-100">
                           Provisional carryover from the final {CLUB_PENALTY_PREVIOUS_SEASON} order. It is being re-verified through preseason and the opening weeks.
@@ -355,12 +371,18 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
               {latestEvidenceUpdate ? (
                 <div className="rounded-2xl border border-emerald-400/20 bg-slate-950/60 p-4">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-300">Latest competitive evidence</span>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-300">Latest verified evidence</span>
                     <span className="text-xs text-slate-500">{latestEvidenceUpdate.dateLabel}</span>
                   </div>
                   <h3 className="mt-2 font-semibold text-slate-100">{latestEvidenceUpdate.headline}</h3>
                   {latestEvidenceUpdate.match ? <p className="mt-1 text-xs font-medium text-slate-300">{latestEvidenceUpdate.match}</p> : null}
-                  <p className="mt-2 text-sm leading-6 text-slate-400">{latestEvidenceUpdate.summary}</p>
+                   <p className="mt-2 text-sm leading-6 text-slate-300">{latestEvidenceUpdate.summary}</p>
+                   {latestEvidenceUpdate.fullSummary !== latestEvidenceUpdate.summary ? (
+                     <details className="mt-3 text-xs text-slate-500">
+                       <summary className="cursor-pointer font-semibold text-emerald-300/90 hover:text-emerald-200">Full evidence context</summary>
+                       <p className="mt-2 leading-6 text-slate-400">{latestEvidenceUpdate.fullSummary}</p>
+                     </details>
+                   ) : null}
                 </div>
               ) : null}
               {team.evidenceSources.length ? (

@@ -7,7 +7,7 @@
     },
     "season": {
       "label": "2026/27",
-      "status": "preseason"
+      "status": "live"
     },
     "relegated": [
       {
@@ -31,8 +31,8 @@
       "Schalke 04",
       "SV Elversberg"
     ],
-    "last_verified": "2026-08-29",
-    "public_updated_at": "2026-08-29",
+    "last_verified": "2026-09-01",
+    "public_updated_at": "2026-09-01",
     "membership_source": "https://media.dfl.de/sites/3/2026/07/EN_eFyJmg6k_Bundesliga_Fixture-List_2026_27.pdf"
   },
   "Augsburg": {
@@ -1463,29 +1463,29 @@
   },
   "Eintracht Frankfurt": {
     "primary": "Jonathan Burkardt",
-    "secondary": "Michy Batshuayi",
-    "tertiary": "Can Uzun",
-    "last_updated": "2026-07-30",
+    "secondary": "Can Uzun",
+    "tertiary": "",
+    "last_updated": "2026-09-01",
     "source": "Eintracht Frankfurt",
     "cross_check": "Eintracht Frankfurt",
-    "hierarchy_status": "probable",
+    "hierarchy_status": "conditional",
     "confidence": {
       "primary": "high",
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Burkardt converted twice against Stuttgart and converted the 26 July preseason penalty with Uzun on the pitch. Batshuayi has a successful Frankfurt competitive penalty and therefore ranks above Uzun, who has no equivalent Eintracht first-team event. Batshuayi versus Uzun has not been tested with both available for the same penalty; the correction follows current-club evidence rather than projected minutes.",
+    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Jonathan Burkardt then Can Uzun. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "confirmed_departure_roster_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_eintracht-frankfurt_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_eintracht-frankfurt_departure",
+      "date": "2026-09-01",
+      "type": "roster_integrity_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -1644,6 +1644,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_eintracht-frankfurt_departure",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "roster_integrity_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Penalty order reset after squad change",
+        "context": "The hierarchy was reset after confirmed squad departures. The current filed order is Jonathan Burkardt then Can Uzun. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "sources": [
+          {
+            "label": "Eintracht Frankfurt",
+            "url": "https://go.eintracht.de/aVXXMg",
+            "date": "2026-08-17",
+            "note": "Confirmed squad departure relevant to the Eintracht Frankfurt penalty hierarchy."
+          }
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Jonathan Burkardt then Can Uzun. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
       }
     ],
     "change_log": [
@@ -1715,6 +1742,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "confirmed_departure_reorder",
+        "from": {
+          "primary": "Jonathan Burkardt",
+          "secondary": "Michy Batshuayi",
+          "tertiary": "Can Uzun"
+        },
+        "to": {
+          "primary": "Jonathan Burkardt",
+          "secondary": "Can Uzun",
+          "tertiary": ""
+        },
+        "reason": "The hierarchy was reset after confirmed squad departures. The current filed order is Jonathan Burkardt then Can Uzun. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "evidence_ids": [
+          "evt_20260901_eintracht-frankfurt_departure"
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -1735,19 +1785,13 @@
         "player": "Jonathan Burkardt",
         "status": "confirmed",
         "source_url": "https://profis.eintracht.de/kader/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Michy Batshuayi",
-        "status": "confirmed",
-        "source_url": "https://profis.eintracht.de/kader/",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
         "player": "Can Uzun",
         "status": "confirmed",
         "source_url": "https://profis.eintracht.de/kader/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
     }
   },
@@ -2332,30 +2376,30 @@
     }
   },
   "Hamburger SV": {
-    "primary": "Jean-Luc Dompé",
-    "secondary": "Albert Grønbæk",
-    "tertiary": "Rayan Philippe",
-    "last_updated": "2026-07-30",
+    "primary": "Albert Grønbæk",
+    "secondary": "Rayan Philippe",
+    "tertiary": "",
+    "last_updated": "2026-09-01",
     "source": "Hamburger SV",
     "cross_check": "Hamburger SV",
-    "hierarchy_status": "probable",
+    "hierarchy_status": "conditional",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Dompé converted a competitive league penalty at Wolfsburg. Grønbæk converted the 25 July preseason penalty, but Dompé was absent, so no direct precedence exists between them. Philippe is retained as the best current attacking career fallback. The hierarchy is materially rebuilt and remains untested with Dompé and Grønbæk simultaneously available for a penalty.",
+    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Albert Grønbæk then Rayan Philippe. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "confirmed_departure_roster_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_hamburger-sv_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_hamburger-sv_departure",
+      "date": "2026-09-01",
+      "type": "roster_integrity_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -2520,6 +2564,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_hamburger-sv_departure",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "roster_integrity_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Penalty order reset after squad change",
+        "context": "The hierarchy was reset after confirmed squad departures. The current filed order is Albert Grønbæk then Rayan Philippe. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "sources": [
+          {
+            "label": "Hamburger SV",
+            "url": "https://www.hsv.de/news/jean-luc-dompe-verlaesst-den-hsv",
+            "date": "2026-08-28",
+            "note": "Confirmed squad departure relevant to the Hamburger SV penalty hierarchy."
+          }
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Albert Grønbæk then Rayan Philippe. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
       }
     ],
     "change_log": [
@@ -2591,6 +2662,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "confirmed_departure_reorder",
+        "from": {
+          "primary": "Jean-Luc Dompé",
+          "secondary": "Albert Grønbæk",
+          "tertiary": "Rayan Philippe"
+        },
+        "to": {
+          "primary": "Albert Grønbæk",
+          "secondary": "Rayan Philippe",
+          "tertiary": ""
+        },
+        "reason": "The hierarchy was reset after confirmed squad departures. The current filed order is Albert Grønbæk then Rayan Philippe. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "evidence_ids": [
+          "evt_20260901_hamburger-sv_departure"
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -2608,22 +2702,16 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Jean-Luc Dompé",
-        "status": "confirmed",
-        "source_url": "https://www.hsv.de/en/news/hsv-depart-for-denmark-training-camp-with-27-man-squad",
-        "checked_at": "2026-07-30"
-      },
-      "secondary": {
         "player": "Albert Grønbæk",
         "status": "confirmed",
         "source_url": "https://www.hsv.de/en/news/hsv-depart-for-denmark-training-camp-with-27-man-squad",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
-      "tertiary": {
+      "secondary": {
         "player": "Rayan Philippe",
         "status": "confirmed",
         "source_url": "https://www.hsv.de/en/news/hsv-depart-for-denmark-training-camp-with-27-man-squad",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
     }
   },
@@ -3524,28 +3612,28 @@
     }
   },
   "SC Paderborn 07": {
-    "primary": "Mika Baur",
-    "secondary": "Sebastian Klaas",
-    "tertiary": "Sven Michel",
-    "last_updated": "2026-07-30",
-    "hierarchy_status": "probable",
+    "primary": "Sebastian Klaas",
+    "secondary": "Sven Michel",
+    "tertiary": "",
+    "last_updated": "2026-09-01",
+    "hierarchy_status": "conditional",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Klaas converted in December while Baur was present, but Baur then took the later February penalty while Klaas remained on the pitch. The later direct event supports Baur first and Klaas second. Michel has no equivalent recent Paderborn event and is a career fallback. The two evidenced takers reversed direct precedence during the season, so the gap between Baur and Klaas is narrow. Conditions: If Mika Baur completes a transfer, Sebastian Klaas becomes the provisional primary.",
+    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Sebastian Klaas then Sven Michel. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "confirmed_departure_roster_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_sc-paderborn-07_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_sc-paderborn-07_departure",
+      "date": "2026-09-01",
+      "type": "roster_integrity_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -3697,6 +3785,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_sc-paderborn-07_departure",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "roster_integrity_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Penalty order reset after squad change",
+        "context": "The hierarchy was reset after confirmed squad departures. The current filed order is Sebastian Klaas then Sven Michel. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "sources": [
+          {
+            "label": "Bundesliga / SC Paderborn",
+            "url": "https://www.bundesliga.com/de/bundesliga/news/mika-baur-wechselt-zu-celtic-glasgow-transfer-wechsel-leihe-38598",
+            "date": "2026-08-13",
+            "note": "Confirmed squad departure relevant to the SC Paderborn 07 penalty hierarchy."
+          }
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Sebastian Klaas then Sven Michel. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
       }
     ],
     "change_log": [
@@ -3745,6 +3860,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "confirmed_departure_reorder",
+        "from": {
+          "primary": "Mika Baur",
+          "secondary": "Sebastian Klaas",
+          "tertiary": "Sven Michel"
+        },
+        "to": {
+          "primary": "Sebastian Klaas",
+          "secondary": "Sven Michel",
+          "tertiary": ""
+        },
+        "reason": "The hierarchy was reset after confirmed squad departures. The current filed order is Sebastian Klaas then Sven Michel. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "evidence_ids": [
+          "evt_20260901_sc-paderborn-07_departure"
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -3758,22 +3896,16 @@
     "cross_check": "Bundesliga",
     "squad_membership": {
       "primary": {
-        "player": "Mika Baur",
-        "status": "confirmed",
-        "source_url": "https://www.scp07.de/Newsarchiv/Auf-ins-Trainingslager.html",
-        "checked_at": "2026-07-30"
-      },
-      "secondary": {
         "player": "Sebastian Klaas",
         "status": "confirmed",
         "source_url": "https://www.scp07.de/Newsarchiv/Auf-ins-Trainingslager.html",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
-      "tertiary": {
+      "secondary": {
         "player": "Sven Michel",
         "status": "confirmed",
         "source_url": "https://www.scp07.de/Newsarchiv/Auf-ins-Trainingslager.html",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
     }
   },

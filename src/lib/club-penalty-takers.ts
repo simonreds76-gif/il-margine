@@ -113,6 +113,7 @@ export type ClubPenaltyEvidenceUpdate = {
   match: string;
   headline: string;
   summary: string;
+  fullSummary: string;
   affectsHierarchy: boolean;
 };
 
@@ -221,6 +222,29 @@ export function cleanClubPenaltyText(value?: string): string {
   ).replace(/\s+/g, " ");
 }
 
+function truncateClubPenaltyText(value: string, maxLength: number): string {
+  if (value.length <= maxLength) return value;
+  const clipped = value.slice(0, maxLength + 1);
+  const boundary = clipped.lastIndexOf(" ");
+  return `${clipped.slice(0, boundary > maxLength * 0.65 ? boundary : maxLength).trimEnd()}...`;
+}
+
+export function summarizeClubPenaltyText(value?: string, maxLength = 220): string {
+  const cleaned = cleanClubPenaltyText(value).split(/\bConditions?:\s*/i)[0]?.trim() ?? "";
+  if (!cleaned) return "";
+  const sentences = cleaned.match(/[^.!?]+[.!?]+|[^.!?]+$/g) ?? [cleaned];
+  return truncateClubPenaltyText(sentences.slice(0, 2).join(" ").trim(), maxLength);
+}
+
+export function buildClubPenaltyConditionSummary(team: ClubPenaltyTeam): string {
+  return summarizeClubPenaltyText(team.conditionNote);
+}
+
+export function buildClubPenaltyWatchNote(team: ClubPenaltyTeam): string {
+  const match = cleanClubPenaltyText(team.conditionNote).match(/\bConditions?:\s*(.+)$/i);
+  return match?.[1] ? truncateClubPenaltyText(match[1], 180) : "";
+}
+
 export function normalizeClubPenaltyKey(value: string): string {
   return cleanClubPenaltyText(value)
     .normalize("NFKD")
@@ -308,10 +332,14 @@ function mapTeam(
   const approvedEvidence = (entry.evidence_log ?? []).filter((evidence) => evidence.review?.status === "approved").length;
   const evidenceUpdates = (entry.evidence_log ?? [])
     .filter((evidence) => evidence.review?.status === "approved")
-    .filter((evidence) => cleanClubPenaltyText(evidence.type).startsWith("competitive_penalty_"))
+    .filter((evidence) => {
+      const type = cleanClubPenaltyText(evidence.type);
+      return type.startsWith("competitive_penalty_") || type === "roster_integrity_review";
+    })
     .map((evidence, index) => {
       const date = cleanClubPenaltyText(evidence.date);
-      const summary = cleanClubPenaltyText(evidence.editorial_note || evidence.context);
+      const fullSummary = cleanClubPenaltyText(evidence.editorial_note || evidence.context);
+      const summary = summarizeClubPenaltyText(fullSummary, 210);
       return {
         id: cleanClubPenaltyText(evidence.id) || `${slug}-${date || "undated"}-${index}`,
         date,
@@ -320,6 +348,7 @@ function mapTeam(
         match: cleanClubPenaltyText(evidence.match),
         headline: cleanClubPenaltyText(evidence.headline) || `${team} penalty update`,
         summary,
+        fullSummary,
         affectsHierarchy: Boolean(evidence.affects_hierarchy),
       } satisfies ClubPenaltyEvidenceUpdate;
     })
@@ -332,13 +361,13 @@ function mapTeam(
         label: cleanClubPenaltyText(source.label) || "Source",
         url: cleanClubPenaltyText(source.url ?? ""),
         date: cleanClubPenaltyText(source.date || evidence.date),
-        note: cleanClubPenaltyText(source.note || evidence.context || evidence.editorial_note),
+        note: summarizeClubPenaltyText(source.note || evidence.context || evidence.editorial_note, 150),
       })),
     )
     .filter((source) => /^https?:\/\//i.test(source.url))
+    .reverse()
     .filter((source, index, rows) => rows.findIndex((row) => row.url === source.url) === index)
-    .slice(-6)
-    .reverse();
+    .slice(0, 6);
 
   return {
     leagueKey: league.key,
@@ -475,14 +504,12 @@ export function buildClubPenaltyLead(team: ClubPenaltyTeam): string {
     return `This is the final archived ${team.seasonLabel} order. ${team.team} is not part of the current ${team.leagueLabel} board.`;
   }
   if (team.hierarchyStatus === "unknown") {
-    return team.conditionNote
-      ? `${team.team}'s current penalty hierarchy remains under review. ${team.conditionNote}`
-      : `${team.team}'s current penalty hierarchy is not verified. We are not naming a taker until the evidence is strong enough.`;
+    return `${team.team}'s current penalty hierarchy is not verified. We are not naming a taker until the evidence is strong enough.`;
   }
   if (team.hierarchyStatus === "disputed") {
-    return team.conditionNote
-      ? `${team.team}'s order is disputed. ${team.conditionNote}`
-      : `${team.team}'s current penalty-taker order is disputed and remains under review.`;
+    return team.secondary !== "Not yet verified"
+      ? `${team.primary} currently leads the disputed ${team.team} order, with ${team.secondary} next in line.`
+      : `${team.primary} currently leads the disputed ${team.team} order. The backup remains under review.`;
   }
   if (team.isCarryover) {
     return `${team.primary} leads the carried-over ${team.team} order, with ${team.secondary} next. This hierarchy is being re-verified through preseason and the opening weeks.`;
@@ -500,12 +527,13 @@ function firstSentence(value: string): string {
 export function buildClubPenaltyCardSummary(team: ClubPenaltyTeam): string {
   if (team.isArchived) return buildClubPenaltyLead(team);
   if (team.hierarchyStatus === "unknown") {
-    return team.conditionNote
-      ? firstSentence(team.conditionNote)
+    const context = buildClubPenaltyConditionSummary(team);
+    return context
+      ? firstSentence(context)
       : "No current penalty hierarchy is published until direct evidence supports it.";
   }
   if (team.hierarchyStatus === "disputed") {
-    const context = firstSentence(team.conditionNote);
+    const context = firstSentence(buildClubPenaltyConditionSummary(team));
     return context
       ? `${team.primary} currently leads a disputed order. ${context}`
       : `${team.primary} currently leads a disputed order that remains under review.`;

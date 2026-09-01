@@ -80,6 +80,27 @@ class GoalscorerLivePenaltyReviewTests(unittest.TestCase):
             "primary_held",
         )
 
+    def test_pitch_status_distinguishes_starter_sub_and_unavailable(self):
+        lineup = {
+            "starters": [
+                {"name": "Starter", "performance": {"substitutionEvents": [{"type": "subOut", "time": 70}]}}
+            ],
+            "subs": [
+                {"name": "Early Sub", "performance": {"substitutionEvents": [{"type": "subIn", "time": 53}]}},
+                {"name": "Late Sub", "performance": {"substitutionEvents": [{"type": "subIn", "time": 87}]}},
+            ],
+            "unavailable": [{"name": "Suspended Player", "reason": "suspended"}],
+        }
+        best_match = PENALTY_REVIEW["best_name_match"] if "best_name_match" in PENALTY_REVIEW else None
+        if best_match is None:
+            utils = runpy.run_path(str(Path(__file__).resolve().parents[1] / "goalscorer_penalty_utils.py"))
+            best_match = utils["best_name_match"]
+
+        self.assertEqual(MODULE._player_at_penalty_status(lineup, "Starter", 57, best_match), "Yes - starter")
+        self.assertEqual(MODULE._player_at_penalty_status(lineup, "Early Sub", 57, best_match), "Yes - bench, on 53'")
+        self.assertEqual(MODULE._player_at_penalty_status(lineup, "Late Sub", 57, best_match), "No - bench, on 87'")
+        self.assertEqual(MODULE._player_at_penalty_status(lineup, "Suspended Player", 57, best_match), "No - suspended")
+
 
 if __name__ == "__main__":
     unittest.main()

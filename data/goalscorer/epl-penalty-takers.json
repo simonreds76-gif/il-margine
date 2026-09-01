@@ -7,7 +7,7 @@
     },
     "season": {
       "label": "2026/27",
-      "status": "preseason"
+      "status": "live"
     },
     "relegated": [
       {
@@ -31,8 +31,8 @@
       "Hull City",
       "Ipswich Town"
     ],
-    "last_verified": "2026-08-30",
-    "public_updated_at": "2026-08-30",
+    "last_verified": "2026-09-01",
+    "public_updated_at": "2026-09-01",
     "membership_source": "https://www.premierleague.com/en/news/4675508/premier-league-fixture-schedulereleased-for-season-202627"
   },
   "Arsenal": {
@@ -309,29 +309,29 @@
   },
   "Aston Villa": {
     "primary": "Emiliano Buendia",
-    "secondary": "Ollie Watkins",
-    "tertiary": "Tammy Abraham",
-    "last_updated": "2026-07-30",
+    "secondary": "Tammy Abraham",
+    "tertiary": "",
+    "last_updated": "2026-09-01",
     "source": "Premier League",
     "cross_check": "Aston Villa",
-    "hierarchy_status": "probable",
+    "hierarchy_status": "conditional",
     "confidence": {
       "primary": "high",
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Buendia took the May 2026 competitive penalty with Watkins starting. Watkins remains the specialist deputy. Abraham is current and experienced but has not been tested in this Villa hierarchy. Abraham has no current same-pitch Villa assignment evidence.",
+    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Emiliano Buendia then Tammy Abraham. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "confirmed_departure_roster_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_aston-villa_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_aston-villa_departure",
+      "date": "2026-09-01",
+      "type": "roster_integrity_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -484,6 +484,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_aston-villa_departure",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "roster_integrity_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Penalty order reset after squad change",
+        "context": "The hierarchy was reset after confirmed squad departures. The current filed order is Emiliano Buendia then Tammy Abraham. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "sources": [
+          {
+            "label": "AS",
+            "url": "https://as.com/futbol/internacional/watkins-deja-el-aston-villa-y-se-marcha-al-al-hilal-f202608-n/",
+            "date": "2026-08-30",
+            "note": "Confirmed squad departure relevant to the Aston Villa penalty hierarchy."
+          }
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Emiliano Buendia then Tammy Abraham. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
       }
     ],
     "change_log": [
@@ -555,6 +582,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "confirmed_departure_reorder",
+        "from": {
+          "primary": "Emiliano Buendia",
+          "secondary": "Ollie Watkins",
+          "tertiary": "Tammy Abraham"
+        },
+        "to": {
+          "primary": "Emiliano Buendia",
+          "secondary": "Tammy Abraham",
+          "tertiary": ""
+        },
+        "reason": "The hierarchy was reset after confirmed squad departures. The current filed order is Emiliano Buendia then Tammy Abraham. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "evidence_ids": [
+          "evt_20260901_aston-villa_departure"
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -575,19 +625,13 @@
         "player": "Emiliano Buendia",
         "status": "confirmed",
         "source_url": "https://www.premierleague.com/en/clubs/7/aston-villa/squad",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Ollie Watkins",
-        "status": "confirmed",
-        "source_url": "https://www.premierleague.com/en/clubs/7/aston-villa/squad",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
         "player": "Tammy Abraham",
         "status": "confirmed",
-        "source_url": "https://www.avfc.co.uk/news/2026/january/27/signing-abraham-out-to-create-more-villa-memories/",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.premierleague.com/en/clubs/7/aston-villa/squad",
+        "checked_at": "2026-09-01"
       }
     }
   },
@@ -2682,29 +2726,29 @@
   },
   "Fulham": {
     "primary": "Antonee Robinson",
-    "secondary": "Sasa Lukic",
-    "tertiary": "Rodrigo Muniz",
-    "last_updated": "2026-07-30",
+    "secondary": "Rodrigo Muniz",
+    "tertiary": "",
+    "last_updated": "2026-09-01",
     "source": "Fulham",
     "cross_check": "Fulham",
-    "hierarchy_status": "probable",
+    "hierarchy_status": "conditional",
     "confidence": {
       "primary": "medium",
       "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Robinson converted with Lukic and Muniz starting, and the former head coach confirmed he was selected. Lukic and Muniz remain weak fallback projections. The Robinson event occurred under Marco Silva before Alvaro Arbeloa became head coach.",
+    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Antonee Robinson then Rodrigo Muniz. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "confirmed_departure_roster_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_fulham_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260901_fulham_departure",
+      "date": "2026-09-01",
+      "type": "roster_integrity_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -2881,6 +2925,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_fulham_departure",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "roster_integrity_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Penalty order reset after squad change",
+        "context": "The hierarchy was reset after confirmed squad departures. The current filed order is Antonee Robinson then Rodrigo Muniz. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "sources": [
+          {
+            "label": "Ipswich Town",
+            "url": "https://www.itfc.co.uk/news/2026/august/08/town-sign-sasa-lukic/",
+            "date": "2026-08-08",
+            "note": "Confirmed squad departure relevant to the Fulham penalty hierarchy."
+          }
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Antonee Robinson then Rodrigo Muniz. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
       }
     ],
     "change_log": [
@@ -2952,6 +3023,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "confirmed_departure_reorder",
+        "from": {
+          "primary": "Antonee Robinson",
+          "secondary": "Sasa Lukic",
+          "tertiary": "Rodrigo Muniz"
+        },
+        "to": {
+          "primary": "Antonee Robinson",
+          "secondary": "Rodrigo Muniz",
+          "tertiary": ""
+        },
+        "reason": "The hierarchy was reset after confirmed squad departures. The current filed order is Antonee Robinson then Rodrigo Muniz. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "evidence_ids": [
+          "evt_20260901_fulham_departure"
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -2972,19 +3066,13 @@
         "player": "Antonee Robinson",
         "status": "confirmed",
         "source_url": "https://www.fulhamfc.com/news/2026/july/23/fpl-prices-revealed/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Sasa Lukic",
-        "status": "confirmed",
-        "source_url": "https://www.fulhamfc.com/news/2026/july/23/fpl-prices-revealed/",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
         "player": "Rodrigo Muniz",
         "status": "confirmed",
         "source_url": "https://www.fulhamfc.com/news/2026/july/23/fpl-prices-revealed/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
     }
   },
@@ -3610,28 +3698,28 @@
   "Leeds": {
     "primary": "Dominic Calvert-Lewin",
     "secondary": "Lukas Nmecha",
-    "tertiary": "Joel Piroe",
-    "last_updated": "2026-07-30",
+    "tertiary": "",
+    "last_updated": "2026-09-01",
     "source": "Leeds United",
     "cross_check": "Leeds United",
-    "hierarchy_status": "confirmed",
+    "hierarchy_status": "conditional",
     "confidence": {
       "primary": "high",
       "secondary": "high",
       "tertiary": "medium"
     },
-    "condition_note": "Calvert-Lewin converted with Nmecha on the pitch and has repeated recent assignments. Nmecha is the next current specialist, with Piroe the proven fallback. Piroe has not recently challenged the first two in a decisive same-pitch event.",
+    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Dominic Calvert-Lewin then Lukas Nmecha. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "confirmed_departure_roster_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_leeds_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_leeds_departure",
+      "date": "2026-09-01",
+      "type": "roster_integrity_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -3766,6 +3854,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_leeds_departure",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "roster_integrity_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Penalty order reset after squad change",
+        "context": "The hierarchy was reset after confirmed squad departures. The current filed order is Dominic Calvert-Lewin then Lukas Nmecha. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "sources": [
+          {
+            "label": "Leeds United",
+            "url": "https://www.leedsunited.com/en/news/joel-piroe-joins-west-ham-united-on-loan",
+            "date": "2026-08-19",
+            "note": "Confirmed squad departure relevant to the Leeds penalty hierarchy."
+          }
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Dominic Calvert-Lewin then Lukas Nmecha. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
       }
     ],
     "change_log": [
@@ -3837,11 +3952,34 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "confirmed_departure_reorder",
+        "from": {
+          "primary": "Dominic Calvert-Lewin",
+          "secondary": "Lukas Nmecha",
+          "tertiary": "Joel Piroe"
+        },
+        "to": {
+          "primary": "Dominic Calvert-Lewin",
+          "secondary": "Lukas Nmecha",
+          "tertiary": ""
+        },
+        "reason": "The hierarchy was reset after confirmed squad departures. The current filed order is Dominic Calvert-Lewin then Lukas Nmecha. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "evidence_ids": [
+          "evt_20260901_leeds_departure"
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": false,
+      "weak_evidence": true,
       "stale_override": null
     },
     "prior_season": {
@@ -3857,19 +3995,13 @@
         "player": "Dominic Calvert-Lewin",
         "status": "confirmed",
         "source_url": "https://www.leedsunited.com/en/news/travelling-squad-named-for-usa-pre-season-tour",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Lukas Nmecha",
         "status": "confirmed",
         "source_url": "https://www.leedsunited.com/en/news/travelling-squad-named-for-usa-pre-season-tour",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
-        "player": "Joel Piroe",
-        "status": "confirmed",
-        "source_url": "https://www.leedsunited.com/en/news/travelling-squad-named-for-usa-pre-season-tour",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
     }
   },
@@ -4314,29 +4446,29 @@
   },
   "Manchester City": {
     "primary": "Erling Haaland",
-    "secondary": "Omar Marmoush",
-    "tertiary": "Jeremy Doku",
-    "last_updated": "2026-07-30",
+    "secondary": "Jeremy Doku",
+    "tertiary": "",
+    "last_updated": "2026-09-01",
     "source": "Manchester City",
     "cross_check": "Manchester City",
-    "hierarchy_status": "probable",
+    "hierarchy_status": "conditional",
     "confidence": {
       "primary": "high",
       "secondary": "high",
       "tertiary": "low"
     },
-    "condition_note": "Haaland remains the regular primary. Guardiola has acknowledged players handing a penalty to Marmoush, supporting him as deputy. Doku has no equivalent Manchester City regular-time evidence. No competitive event establishes Doku as third choice.",
+    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Erling Haaland then Jeremy Doku. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "confirmed_departure_roster_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_manchester-city_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_manchester-city_departure",
+      "date": "2026-09-01",
+      "type": "roster_integrity_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -4471,6 +4603,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_manchester-city_departure",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "roster_integrity_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Penalty order reset after squad change",
+        "context": "The hierarchy was reset after confirmed squad departures. The current filed order is Erling Haaland then Jeremy Doku. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "sources": [
+          {
+            "label": "Manchester City",
+            "url": "https://www.mancity.com/news/mens/omar-marmoush-loan-tottenham-hotspur-63923423",
+            "date": "2026-08-27",
+            "note": "Confirmed squad departure relevant to the Manchester City penalty hierarchy."
+          }
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Erling Haaland then Jeremy Doku. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
       }
     ],
     "change_log": [
@@ -4542,6 +4701,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "confirmed_departure_reorder",
+        "from": {
+          "primary": "Erling Haaland",
+          "secondary": "Omar Marmoush",
+          "tertiary": "Jeremy Doku"
+        },
+        "to": {
+          "primary": "Erling Haaland",
+          "secondary": "Jeremy Doku",
+          "tertiary": ""
+        },
+        "reason": "The hierarchy was reset after confirmed squad departures. The current filed order is Erling Haaland then Jeremy Doku. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "evidence_ids": [
+          "evt_20260901_manchester-city_departure"
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -4562,19 +4744,13 @@
         "player": "Erling Haaland",
         "status": "confirmed",
         "source_url": "https://www.mancity.com/news/mens/west-ham-v-manchester-city-team-news-tactics-and-stats-63909107",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Omar Marmoush",
-        "status": "confirmed",
-        "source_url": "https://www.mancity.com/news/mens/west-ham-v-manchester-city-team-news-tactics-and-stats-63909107",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
         "player": "Jeremy Doku",
         "status": "confirmed",
         "source_url": "https://www.mancity.com/news/mens/west-ham-v-manchester-city-team-news-tactics-and-stats-63909107",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
     }
   },

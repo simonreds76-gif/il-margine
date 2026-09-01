@@ -46,6 +46,12 @@ class GoalscorerPlayerIdentityTests(unittest.TestCase):
         self.assertGreaterEqual(player_match_score("R. Fernandez", "Roberto Fernández"), 90)
         self.assertGreaterEqual(player_match_score("Kike Garcia", "Garcia Kike"), 90)
 
+    def test_transliteration_and_compound_given_names_match(self) -> None:
+        self.assertGreaterEqual(player_match_score("Kenan Yıldız", "Kenan Yildiz"), 90)
+        self.assertGreaterEqual(player_match_score("Luca Waldschmidt", "Gian-Luca Waldschmidt"), 88)
+        self.assertGreaterEqual(player_match_score("Ben Lhassine Kone", "Benjamin Lhassine Kone"), 88)
+        self.assertGreaterEqual(player_match_score("Tasos Douvikas", "Anastasios Douvikas"), 88)
+
     def test_live_resolver_rejects_surname_collision_inside_fixture(self) -> None:
         roberto = player("Roberto Fernández", "espanyol")
         resolved = COMPARE._resolve_player_meta(

@@ -12,10 +12,14 @@ from typing import Dict, Iterable, Optional
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_HIERARCHY_PATH = ROOT / "data" / "goalscorer" / "serie-a-penalty-takers.json"
 HIERARCHY_SLOTS = ("primary", "secondary", "tertiary")
+KNOWN_GIVEN_NAME_EQUIVALENTS = {
+    frozenset(("tasos", "anastasios")),
+}
 
 
 def norm_text(value: str) -> str:
     normalized = html.unescape((value or "").strip().lower())
+    normalized = normalized.translate(str.maketrans({"ı": "i", "ł": "l", "ø": "o", "đ": "d", "ð": "d", "þ": "th"}))
     normalized = unicodedata.normalize("NFD", normalized)
     normalized = "".join(ch for ch in normalized if unicodedata.category(ch) != "Mn")
     cleaned = re.sub(r"[^a-z0-9]+", " ", normalized)
@@ -51,6 +55,16 @@ def player_match_score(left: str, right: str) -> int:
             return 90
         if len(left_tokens) == 1 or len(right_tokens) == 1:
             return 82
+        left_given = " ".join(left_tokens[:-1])
+        right_given = " ".join(right_tokens[:-1])
+        if left_given in right_given or right_given in left_given:
+            return 90
+        if min(len(left_first), len(right_first)) >= 3 and (
+            left_first in right_first or right_first in left_first
+        ):
+            return 88
+        if frozenset((left_first, right_first)) in KNOWN_GIVEN_NAME_EQUIVALENTS:
+            return 88
         return 0
 
     if left_first == right_first:

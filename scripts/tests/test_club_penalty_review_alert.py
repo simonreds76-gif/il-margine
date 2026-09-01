@@ -24,6 +24,14 @@ def row(priority="high", taker="New Taker"):
         "review_type": "unexpected_taker",
         "event_result": "scored",
         "primary_pre_match": "Filed Taker",
+        "secondary_pre_match": "Second Taker",
+        "tertiary_pre_match": "Third Taker",
+        "actual_role_pre_match": "none",
+        "minute": "57",
+        "actual_taker_match_status": "Yes - bench, on 53'",
+        "primary_on_pitch_at_penalty": "No - bench, on 87'",
+        "secondary_on_pitch_at_penalty": "No - suspended",
+        "tertiary_on_pitch_at_penalty": "No - unavailable",
     }
 
 
@@ -75,6 +83,8 @@ class ClubPenaltyReviewAlertTests(unittest.TestCase):
         self.assertIn("Done = reviewed and close", message)
         self.assertIn("Defer = park", message)
         self.assertIn("Hierarchy changes remain a separate editorial action", message)
+        self.assertIn("Taker rank: Unranked", message)
+        self.assertIn("1. Filed Taker - No - bench, on 87'", message)
         self.assertIn("#penalty-watchlist", message)
 
 

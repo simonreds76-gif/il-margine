@@ -118,6 +118,8 @@ def main() -> int:
             is_researched = verification_method in {
                 "multi_source_preseason_research",
                 "reviewed_live_penalty_event",
+                "confirmed_departure_roster_review",
+                "current_roster_and_penalty_record_review",
             }
             research_events = [
                 event
@@ -125,6 +127,17 @@ def main() -> int:
                 if event.get("detection") == "manual_multi_source_research"
                 and event.get("review", {}).get("status") == "approved"
             ]
+            roster_events = [
+                event
+                for event in entry.get("evidence_log", [])
+                if event.get("type") == "roster_integrity_review"
+                and event.get("review", {}).get("status") == "approved"
+            ]
+            documented_vacancy = (
+                bool(roster_events)
+                and entry.get("hierarchy_status") in {"conditional", "disputed"}
+                and "under review" in str(entry.get("condition_note") or "").lower()
+            )
             check(is_researched, f"{league}/{team}: multi-source preseason verification missing")
             check(bool(research_events), f"{league}/{team}: approved research evidence missing")
             evidence_ids = {
@@ -153,16 +166,18 @@ def main() -> int:
                 check(len(source_urls) >= 2, f"{league}/{team}: research event needs at least two source URLs")
                 check(all(str(url).startswith("https://") for url in source_urls), f"{league}/{team}: research source URL must be HTTPS")
             for position in POSITIONS:
+                player = str(entry.get(position) or "").strip()
                 check(
-                    bool(str(entry.get(position) or "").strip()),
+                    bool(player) or documented_vacancy,
                     f"{league}/{team}: {position} candidate must be named; express uncertainty in status/note",
                 )
             hierarchy_names = {
                 re.sub(r"[^a-z0-9]+", " ", str(entry.get(position) or "").lower()).strip()
                 for position in ("primary", "secondary", "tertiary")
+                if str(entry.get(position) or "").strip()
             }
             check(
-                len(hierarchy_names) == 3,
+                len(hierarchy_names) == sum(bool(str(entry.get(position) or "").strip()) for position in POSITIONS),
                 f"{league}/{team}: primary, secondary and tertiary must be distinct players",
             )
             check(
@@ -174,6 +189,8 @@ def main() -> int:
             if isinstance(squad_membership, dict):
                 for position in POSITIONS:
                     player = str(entry.get(position) or "").strip()
+                    if not player and documented_vacancy:
+                        continue
                     membership = squad_membership.get(position)
                     check(isinstance(membership, dict), f"{league}/{team}/{player}: {position} squad verification missing")
                     if not isinstance(membership, dict):
@@ -196,9 +213,9 @@ def main() -> int:
                     )
             if team in expected["promoted"]:
                 check(
-                    is_researched and all(
-                        bool(str(entry.get(position) or "").strip())
-                        for position in ("primary", "secondary", "tertiary")
+                    is_researched and (
+                        all(bool(str(entry.get(position) or "").strip()) for position in POSITIONS)
+                        or documented_vacancy
                     ),
                     f"{league}/{team}: promoted team needs three researched candidates",
                 )

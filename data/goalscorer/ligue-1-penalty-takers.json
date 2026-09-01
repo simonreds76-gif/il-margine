@@ -7,7 +7,7 @@
     },
     "season": {
       "label": "2026/27",
-      "status": "preseason"
+      "status": "live"
     },
     "relegated": [
       {
@@ -25,8 +25,8 @@
       "Le Mans",
       "Troyes"
     ],
-    "last_verified": "2026-08-30",
-    "public_updated_at": "2026-08-30",
+    "last_verified": "2026-09-01",
+    "public_updated_at": "2026-09-01",
     "membership_source": "https://ligue1.com/en/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released"
   },
   "Angers": {
@@ -714,30 +714,30 @@
     }
   },
   "Brest": {
-    "primary": "Romain Del Castillo",
-    "secondary": "Ludovic Ajorque",
-    "tertiary": "Kenny Lala",
-    "last_updated": "2026-07-30",
+    "primary": "Ludovic Ajorque",
+    "secondary": "Kenny Lala",
+    "tertiary": "",
+    "last_updated": "2026-09-01",
     "source": "Ligue 1",
     "cross_check": "L'Équipe",
-    "hierarchy_status": "probable",
+    "hierarchy_status": "conditional",
     "confidence": {
       "primary": "high",
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Del Castillo was Brest's sole 2025/26 taker at 6/8 and was explicitly described as the taker. Ajorque's striker role and Lala's dead-ball role make them the practical backups. There is no observed Brest penalty without Del Castillo to resolve the backups. Conditions: If Del Castillo is unavailable, the first attempt involving Ajorque and Lala should replace the inferred backup order.",
+    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Ludovic Ajorque then Kenny Lala. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "confirmed_departure_roster_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_brest_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 3
+      "id": "evt_20260901_brest_departure",
+      "date": "2026-09-01",
+      "type": "roster_integrity_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -884,6 +884,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_brest_departure",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "roster_integrity_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Penalty order reset after squad change",
+        "context": "The hierarchy was reset after confirmed squad departures. The current filed order is Ludovic Ajorque then Kenny Lala. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "sources": [
+          {
+            "label": "Osasuna",
+            "url": "https://www.osasuna.es/en/osasuna-signs-forward-romain-del-castillo",
+            "date": "2026-09-01",
+            "note": "Confirmed squad departure relevant to the Brest penalty hierarchy."
+          }
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Ludovic Ajorque then Kenny Lala. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
       }
     ],
     "change_log": [
@@ -955,6 +982,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "confirmed_departure_reorder",
+        "from": {
+          "primary": "Romain Del Castillo",
+          "secondary": "Ludovic Ajorque",
+          "tertiary": "Kenny Lala"
+        },
+        "to": {
+          "primary": "Ludovic Ajorque",
+          "secondary": "Kenny Lala",
+          "tertiary": ""
+        },
+        "reason": "The hierarchy was reset after confirmed squad departures. The current filed order is Ludovic Ajorque then Kenny Lala. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "evidence_ids": [
+          "evt_20260901_brest_departure"
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -972,50 +1022,44 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Romain Del Castillo",
-        "status": "confirmed",
-        "source_url": "https://www.lequipe.fr/Football/Actualites/-oui-il-nous-faut-des-recrues-julien-lachuer-le-nouvel-entraineur-de-brest-espere-des-retouches-et-des-jeunes/1703291",
-        "checked_at": "2026-07-30"
-      },
-      "secondary": {
         "player": "Ludovic Ajorque",
         "status": "confirmed",
         "source_url": "https://www.lequipe.fr/Football/Actualites/-oui-il-nous-faut-des-recrues-julien-lachuer-le-nouvel-entraineur-de-brest-espere-des-retouches-et-des-jeunes/1703291",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
-      "tertiary": {
+      "secondary": {
         "player": "Kenny Lala",
         "status": "confirmed",
         "source_url": "https://www.lequipe.fr/Football/Actualites/-oui-il-nous-faut-des-recrues-julien-lachuer-le-nouvel-entraineur-de-brest-espere-des-retouches-et-des-jeunes/1703291",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
     }
   },
   "Le Havre": {
-    "primary": "Yanis Zouaoui",
-    "secondary": "Mbwana Ally Samatta",
-    "tertiary": "Rassoul Ndiaye",
-    "last_updated": "2026-07-30",
+    "primary": "Mbwana Ally Samatta",
+    "secondary": "Rassoul Ndiaye",
+    "tertiary": "",
+    "last_updated": "2026-09-01",
     "source": "Le Havre AC",
     "cross_check": "Ligue 1",
-    "hierarchy_status": "probable",
+    "hierarchy_status": "conditional",
     "confidence": {
       "primary": "high",
       "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Zouaoui converted his only 2025/26 penalty and remains a principal dead-ball taker. Samatta has limited career penalty experience and a confirmed extension; Ndiaye is the retained set-piece fallback. Neither backup took a 2025/26 Le Havre regular-time penalty. Conditions: A new attacker with a strong penalty record may enter above Samatta. Any current-season attempt without Zouaoui should supersede the backups.",
+    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Mbwana Ally Samatta then Rassoul Ndiaye. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "confirmed_departure_roster_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_le-havre_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260901_le-havre_departure",
+      "date": "2026-09-01",
+      "type": "roster_integrity_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -1168,6 +1212,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_le-havre_departure",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "roster_integrity_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Penalty order reset after squad change",
+        "context": "The hierarchy was reset after confirmed squad departures. The current filed order is Mbwana Ally Samatta then Rassoul Ndiaye. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "sources": [
+          {
+            "label": "Le Havre AC",
+            "url": "https://hac.football/fr/posts/yanis-zouaoui-a-montpellier",
+            "date": "2026-08-28",
+            "note": "Confirmed squad departure relevant to the Le Havre penalty hierarchy."
+          }
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Mbwana Ally Samatta then Rassoul Ndiaye. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
       }
     ],
     "change_log": [
@@ -1239,6 +1310,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "confirmed_departure_reorder",
+        "from": {
+          "primary": "Yanis Zouaoui",
+          "secondary": "Mbwana Ally Samatta",
+          "tertiary": "Rassoul Ndiaye"
+        },
+        "to": {
+          "primary": "Mbwana Ally Samatta",
+          "secondary": "Rassoul Ndiaye",
+          "tertiary": ""
+        },
+        "reason": "The hierarchy was reset after confirmed squad departures. The current filed order is Mbwana Ally Samatta then Rassoul Ndiaye. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "evidence_ids": [
+          "evt_20260901_le-havre_departure"
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -1256,22 +1350,16 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Yanis Zouaoui",
-        "status": "confirmed",
-        "source_url": "https://hac.football/fr/players",
-        "checked_at": "2026-07-30"
-      },
-      "secondary": {
         "player": "Mbwana Ally Samatta",
         "status": "confirmed",
-        "source_url": "https://www.lequipe.fr/Football/Actualites/Le-milieu-offensif-kaito-mizuta-s-engage-trois-ans-au-havre-et-devient-le-deuxieme-japonais-a-rejoindre-le-club-doyen/1702310",
-        "checked_at": "2026-07-30"
+        "source_url": "https://hac.football/fr/players",
+        "checked_at": "2026-09-01"
       },
-      "tertiary": {
+      "secondary": {
         "player": "Rassoul Ndiaye",
         "status": "confirmed",
-        "source_url": "https://hac.football/fr/players",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.lequipe.fr/Football/Actualites/Le-milieu-offensif-kaito-mizuta-s-engage-trois-ans-au-havre-et-devient-le-deuxieme-japonais-a-rejoindre-le-club-doyen/1702310",
+        "checked_at": "2026-09-01"
       }
     }
   },
@@ -1923,28 +2011,28 @@
   "Lille": {
     "primary": "Olivier Giroud",
     "secondary": "Matias Fernandez-Pardo",
-    "tertiary": "Marius Broholm",
-    "last_updated": "2026-07-30",
+    "tertiary": "",
+    "last_updated": "2026-09-01",
     "source": "LOSC",
     "cross_check": "LOSC",
-    "hierarchy_status": "confirmed",
+    "hierarchy_status": "conditional",
     "confidence": {
       "primary": "high",
       "secondary": "high",
       "tertiary": "medium"
     },
-    "condition_note": "Giroud took a 2025/26 penalty while Fernandez-Pardo was playing; their totals were 3/4 and 2/2. Broholm converted his only competitive attempt. Broholm's tertiary rank has not been tested with either senior taker present. Conditions: If Giroud is not starting, Fernandez-Pardo is the practical primary. A Broholm attempt with either senior taker present requires reordering.",
+    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Olivier Giroud then Matias Fernandez-Pardo. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "confirmed_departure_roster_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_lille_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 5
+      "id": "evt_20260901_lille_departure",
+      "date": "2026-09-01",
+      "type": "roster_integrity_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -2091,6 +2179,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_lille_departure",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "roster_integrity_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Penalty order reset after squad change",
+        "context": "The hierarchy was reset after confirmed squad departures. The current filed order is Olivier Giroud then Matias Fernandez-Pardo. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "sources": [
+          {
+            "label": "LOSC",
+            "url": "https://losc.fr/en/node/19337",
+            "date": "2026-08-20",
+            "note": "Confirmed squad departure relevant to the Lille penalty hierarchy."
+          }
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Olivier Giroud then Matias Fernandez-Pardo. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
       }
     ],
     "change_log": [
@@ -2162,11 +2277,34 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "confirmed_departure_reorder",
+        "from": {
+          "primary": "Olivier Giroud",
+          "secondary": "Matias Fernandez-Pardo",
+          "tertiary": "Marius Broholm"
+        },
+        "to": {
+          "primary": "Olivier Giroud",
+          "secondary": "Matias Fernandez-Pardo",
+          "tertiary": ""
+        },
+        "reason": "The hierarchy was reset after confirmed squad departures. The current filed order is Olivier Giroud then Matias Fernandez-Pardo. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "evidence_ids": [
+          "evt_20260901_lille_departure"
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": false,
+      "weak_evidence": true,
       "stale_override": null
     },
     "prior_season": {
@@ -2182,19 +2320,13 @@
         "player": "Olivier Giroud",
         "status": "confirmed",
         "source_url": "https://losc.fr/actualites/2026-06-08/une-faim-de-dogue-pour-olivier-giroud-qui-prolonge-dun",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Matias Fernandez-Pardo",
         "status": "confirmed",
         "source_url": "https://www.losc.fr/actualites/2026-02-22/angers-losc-le-compte-rendu",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
-        "player": "Marius Broholm",
-        "status": "confirmed",
-        "source_url": "https://www.losc.fr/actualites/2025-06-18/le-milieu-offensif-international-espoirs-norvegien-marius-broholm-rejoint-le-losc",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
     }
   },
@@ -3432,9 +3564,9 @@
   },
   "Nice": {
     "primary": "Sofiane Diop",
-    "secondary": "Terem Moffi",
-    "tertiary": "Jonathan Clauss",
-    "last_updated": "2026-07-30",
+    "secondary": "Jonathan Clauss",
+    "tertiary": "",
+    "last_updated": "2026-09-01",
     "source": "Ligue 1",
     "cross_check": "OGC Nice",
     "hierarchy_status": "conditional",
@@ -3443,18 +3575,18 @@
       "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Diop converted both 2025/26 attempts and is the only retained successful Nice taker. Moffi is the senior-striker fallback; Clauss remains the direct-free-kick specialist. Moffi is back in the squad but his transfer situation remains unresolved. Conditions: If Moffi leaves, Clauss moves second and a new attacker becomes tertiary. A new number nine with strong penalty history must be assessed against Diop.",
+    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Sofiane Diop then Jonathan Clauss. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "confirmed_departure_roster_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_nice_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260901_nice_departure",
+      "date": "2026-09-01",
+      "type": "roster_integrity_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -3625,6 +3757,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_nice_departure",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "roster_integrity_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Penalty order reset after squad change",
+        "context": "The hierarchy was reset after confirmed squad departures. The current filed order is Sofiane Diop then Jonathan Clauss. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "sources": [
+          {
+            "label": "OGC Nice",
+            "url": "https://www.ogcnice.com/fr/article/130711/terem-moffi-transfere-a-hambourg.html",
+            "date": "2026-08-24",
+            "note": "Confirmed squad departure relevant to the Nice penalty hierarchy."
+          }
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Sofiane Diop then Jonathan Clauss. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
       }
     ],
     "change_log": [
@@ -3696,6 +3855,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "confirmed_departure_reorder",
+        "from": {
+          "primary": "Sofiane Diop",
+          "secondary": "Terem Moffi",
+          "tertiary": "Jonathan Clauss"
+        },
+        "to": {
+          "primary": "Sofiane Diop",
+          "secondary": "Jonathan Clauss",
+          "tertiary": ""
+        },
+        "reason": "The hierarchy was reset after confirmed squad departures. The current filed order is Sofiane Diop then Jonathan Clauss. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "evidence_ids": [
+          "evt_20260901_nice_departure"
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -3716,19 +3898,13 @@
         "player": "Sofiane Diop",
         "status": "confirmed",
         "source_url": "https://www.ogcnice.com/fr/f/equipes/2026-2027/equipe-pro",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Terem Moffi",
-        "status": "confirmed",
-        "source_url": "https://www.ogcnice.com/fr/f/equipes/2026-2027/equipe-pro",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
         "player": "Jonathan Clauss",
         "status": "confirmed",
         "source_url": "https://www.ogcnice.com/fr/f/equipes/2026-2027/equipe-pro",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
     }
   },
@@ -4690,9 +4866,9 @@
   },
   "Strasbourg": {
     "primary": "Joaquin Panichelli",
-    "secondary": "Julio Enciso",
-    "tertiary": "Diego Moreira",
-    "last_updated": "2026-07-30",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-09-01",
     "source": "L'Équipe",
     "cross_check": "L'Équipe",
     "hierarchy_status": "conditional",
@@ -4701,18 +4877,18 @@
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Panichelli was explicitly the designated taker at 5/6. Enciso took over only after Panichelli was substituted or injured. Moreira is the retained attacking and set-piece fallback. Panichelli remains in ACL rehabilitation, making Enciso practical active primary. Conditions: Until Panichelli is medically available, Enciso is matchday primary. Any completed transfer involving a backup requires immediate reassessment. If rehabilitation is delayed, the first replacement penalty is decisive.",
+    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Joaquin Panichelli. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "confirmed_departure_roster_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_strasbourg_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260901_strasbourg_departure",
+      "date": "2026-09-01",
+      "type": "roster_integrity_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -4889,6 +5065,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_strasbourg_departure",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "roster_integrity_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Penalty order reset after squad change",
+        "context": "The hierarchy was reset after confirmed squad departures. The current filed order is Joaquin Panichelli. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "sources": [
+          {
+            "label": "Ipswich Town and AC Milan",
+            "url": "https://www.itfc.co.uk/news/2026/august/17/julio-returns-to-town/",
+            "date": "2026-08-19",
+            "note": "Confirmed squad departure relevant to the Strasbourg penalty hierarchy."
+          },
+          {
+            "label": "AC Milan",
+            "url": "https://www.acmilan.com/en/news/articles/media/2026-08-19/official-statement-diego-moreira",
+            "date": "2026-08-19",
+            "note": "Confirmed squad departure relevant to the Strasbourg penalty hierarchy."
+          }
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Joaquin Panichelli. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
       }
     ],
     "change_log": [
@@ -4960,6 +5169,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "confirmed_departure_reorder",
+        "from": {
+          "primary": "Joaquin Panichelli",
+          "secondary": "Julio Enciso",
+          "tertiary": "Diego Moreira"
+        },
+        "to": {
+          "primary": "Joaquin Panichelli",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "The hierarchy was reset after confirmed squad departures. The current filed order is Joaquin Panichelli. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "evidence_ids": [
+          "evt_20260901_strasbourg_departure"
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -4980,19 +5212,7 @@
         "player": "Joaquin Panichelli",
         "status": "confirmed",
         "source_url": "https://www.rcstrasbourgalsace.fr/equipe/equipe-premiere/",
-        "checked_at": "2026-07-30"
-      },
-      "secondary": {
-        "player": "Julio Enciso",
-        "status": "confirmed",
-        "source_url": "https://www.rcstrasbourgalsace.fr/equipe/equipe-premiere/",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
-        "player": "Diego Moreira",
-        "status": "confirmed",
-        "source_url": "https://www.rcstrasbourgalsace.fr/equipe/equipe-premiere/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
     }
   },

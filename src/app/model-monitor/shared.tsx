@@ -275,9 +275,9 @@ export function MatchLabel({
   separator?: string;
 }) {
   return (
-    <span className={cn("inline-flex items-center gap-2", className)}>
+    <span className={cn("inline-flex min-w-0 max-w-full items-center gap-2", className)}>
       <TeamLogo league={league} team={homeTeam} size={iconSize} />
-      <span className={cn("truncate", textClassName)}>
+      <span className={cn("min-w-0 flex-1 truncate", textClassName)}>
         {cleanText(homeTeam) || "?"} {separator} {cleanText(awayTeam) || "?"}
       </span>
       <TeamLogo league={league} team={awayTeam} size={iconSize} />

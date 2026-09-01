@@ -50,6 +50,10 @@ jobs:
             python scripts/build-penalty-baseline-evidence.py --league "${league}"
           done
 
+      - name: Audit current squad membership
+        if: github.event_name == 'workflow_dispatch' || github.event.schedule == '20 6 * * 1'
+        run: python scripts/audit-club-penalty-rosters.py
+
       - name: Summarise review queue
         run: |
           python - <<'PY'
@@ -69,6 +73,12 @@ jobs:
               rows = payload.get("rows", [])
               high = sum(str(row.get("review_priority", "")).lower() == "high" for row in rows)
               lines.append(f"- **{label}:** {len(rows)} event row(s), {high} high-priority review(s)")
+          roster_path = Path("data/goalscorer/club-penalty-roster-audit.json")
+          roster = json.loads(roster_path.read_text(encoding="utf-8")) if roster_path.exists() else {}
+          lines.append(
+              f"- **Roster integrity:** {roster.get('checked_teams', 0)} clubs checked, "
+              f"{roster.get('row_count', 0)} review row(s), {roster.get('failure_count', 0)} fetch failure(s)"
+          )
           summary = "\n".join(lines) + "\n"
           print(summary)
           with Path(__import__("os").environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as handle:
@@ -93,6 +103,7 @@ jobs:
               Path("data/goalscorer/la-liga-penalty-baseline-evidence.json"),
               Path("data/goalscorer/bundesliga-penalty-baseline-evidence.json"),
               Path("data/goalscorer/ligue-1-penalty-baseline-evidence.json"),
+              Path("data/goalscorer/club-penalty-roster-audit.json"),
           ]
 
           def semantic(payload):
@@ -134,6 +145,7 @@ jobs:
             data/goalscorer/la-liga-penalty-baseline-evidence.json
             data/goalscorer/bundesliga-penalty-baseline-evidence.json
             data/goalscorer/ligue-1-penalty-baseline-evidence.json
+            data/goalscorer/club-penalty-roster-audit.json
           )
           if git diff --quiet -- "${evidence_paths[@]}"; then
             echo "No semantic penalty evidence changes; monitor snapshot unchanged."
@@ -167,6 +179,7 @@ jobs:
           git add -f data/goalscorer/la-liga-penalty-baseline-evidence.json
           git add -f data/goalscorer/bundesliga-penalty-baseline-evidence.json
           git add -f data/goalscorer/ligue-1-penalty-baseline-evidence.json
+          git add -f data/goalscorer/club-penalty-roster-audit.json
           git add -f data/goalscorer/goalscorer-monitor-snapshot.json
           git add -f data/goalscorer/club-penalty-alert-state.json
           if git diff --cached --quiet; then

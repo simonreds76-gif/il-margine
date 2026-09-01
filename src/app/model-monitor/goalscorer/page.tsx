@@ -147,9 +147,12 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
   const primaryTakerPitchValue =
     row.primary_on_pitch_at_penalty?.trim() ||
     (row.primary_pre_match ? "Unknown" : "-");
-  const activeTakerPitchValue =
-    row.active_on_pitch_at_penalty?.trim() ||
-    (row.active_taker_pre_match ? "Unresolved" : row.primary_pre_match ? "Unknown" : "-");
+  const secondaryTakerPitchValue =
+    row.secondary_on_pitch_at_penalty?.trim() ||
+    (row.secondary_pre_match ? "Unknown" : "-");
+  const tertiaryTakerPitchValue =
+    row.tertiary_on_pitch_at_penalty?.trim() ||
+    (row.tertiary_pre_match ? "Unknown" : "-");
   const preMatchActiveTakerValue =
     row.active_taker_pre_match?.trim() ||
     (row.primary_pre_match ? "Unknown" : "-");
@@ -157,8 +160,16 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
     row.active_slot_pre_match ||
     (preMatchActiveTakerValue === "Unknown" ? "lineup unresolved" : undefined);
   const actualTakerPitchValue =
+    row.actual_taker_match_status?.trim() ||
     row.actual_taker_on_pitch_at_penalty?.trim() ||
     (row.actual_taker ? "On pitch" : "-");
+  const actualRole = row.actual_role_pre_match?.trim().toLowerCase() || "none";
+  const takerRank = ({
+    primary: "No.1 primary",
+    secondary: "No.2 backup",
+    tertiary: "No.3 backup",
+    none: "Unranked taker",
+  } as Record<string, string>)[actualRole] || "Unranked taker";
   const hasTransferContext =
     Boolean(row.inherited_from_pre_match?.trim()) || Boolean(row.transfer_level_pre_match?.trim());
   const editorialNote = row.editorial_note
@@ -192,7 +203,7 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
             <span>{formatDateLabel(row.date)}</span>
           </div>
         </div>
-        <div className="flex shrink-0 flex-wrap items-center gap-1.5">
+        <div className="flex w-full min-w-0 flex-wrap items-center gap-1.5 sm:w-auto sm:shrink-0 sm:justify-end">
           {row.review_priority ? (
             <StatusPill label={row.review_priority} tone={reviewPriorityTone(row.review_priority)} />
           ) : null}
@@ -218,6 +229,12 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
               }
             />
           ) : null}
+          <StatusPill
+            label={takerRank}
+            tone={actualRole === "none"
+              ? "bg-rose-500/10 text-rose-300 border-rose-500/20"
+              : "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"}
+          />
           {row.review_type ? (
             <StatusPill
               label={row.review_type.replaceAll("_", " ")}
@@ -236,9 +253,10 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
         {/* Pre-match */}
         <div className="space-y-2">
           <PhaseLabel label="Pre-match" />
-          <div className="grid gap-1.5 sm:grid-cols-3">
+          <div className="grid gap-1.5 sm:grid-cols-2 xl:grid-cols-4">
             <StatCard compact label="Primary" value={row.primary_pre_match || "-"} />
             <StatCard compact label="Backup" value={row.secondary_pre_match || "-"} />
+            <StatCard compact label="Third choice" value={row.tertiary_pre_match || "-"} />
             <StatCard
               compact
               label="Pre-match active taker"
@@ -251,13 +269,15 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
         {/* At penalty */}
         <div className="space-y-2">
           <PhaseLabel label="At penalty" aside={minuteAside} />
-          <div className="grid gap-1.5 sm:grid-cols-3">
-            <StatCard compact label="Primary on pitch" value={primaryTakerPitchValue} />
-            <StatCard compact label="Active taker on pitch"  value={activeTakerPitchValue} />
+          <div className="grid gap-1.5 sm:grid-cols-2 xl:grid-cols-4">
+            <StatCard compact label={`No.1 | ${row.primary_pre_match || "Unfiled"}`} value={primaryTakerPitchValue} />
+            <StatCard compact label={`No.2 | ${row.secondary_pre_match || "Unfiled"}`} value={secondaryTakerPitchValue} />
+            <StatCard compact label={`No.3 | ${row.tertiary_pre_match || "Unfiled"}`} value={tertiaryTakerPitchValue} />
             <StatCard
               compact
-              label="Actual taker"
-              value={actualTakerPitchValue}
+              label={`Actual | ${row.actual_taker || "Unknown"}`}
+              value={takerRank}
+              detail={actualTakerPitchValue}
               tone="text-slate-100"
             />
           </div>

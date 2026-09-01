@@ -7,7 +7,7 @@
     },
     "season": {
       "label": "2026/27",
-      "status": "preseason"
+      "status": "live"
     },
     "relegated": [
       {
@@ -31,35 +31,35 @@
       "Monza",
       "Venezia"
     ],
-    "last_verified": "2026-08-22",
-    "public_updated_at": "2026-08-22",
+    "last_verified": "2026-09-01",
+    "public_updated_at": "2026-09-01",
     "membership_source": "https://en.legaseriea.it/serie-a/news/looking-forward-to-the-2026-27-serie-a-fixture-list"
   },
   "AC Milan": {
-    "primary": "Christopher Nkunku",
-    "secondary": "Gonçalo Ramos",
-    "tertiary": "Christian Pulisic",
-    "last_updated": "2026-07-30",
+    "primary": "Gonçalo Ramos",
+    "secondary": "Christian Pulisic",
+    "tertiary": "",
+    "last_updated": "2026-09-01",
     "source": "Il Margine multi-source research",
     "cross_check": "Il Margine roster cross-check",
-    "hierarchy_status": "disputed",
+    "hierarchy_status": "conditional",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Nkunku converted Milan's latest identified competitive penalty and finished 2025/26 with the strongest current club volume. Goal ranks Nkunku, Ramos and Pulisic in the filed order, while SOS Fanta describes the same three-player contest and notes that Ramos may gain leverage through starting status. The direct Nkunku event did not include Pulisic, so it supports Nkunku without proving a settled three-way order. Preseason coaching decisions under Amorim are still needed to move this above medium confidence. Rafael Leão remains an emergency candidate but is behind the recommended three in the current specialist consensus. No like-for-like 2026/27 penalty has settled the Nkunku-Ramos-Pulisic contest under the new coach. Conditions: A summer exit by Nkunku or Pulisic, or an unexpected change to Ramos's starting role, requires an immediate reorder.",
+    "condition_note": "Gonçalo Ramos now leads the filed order, with Christian Pulisic next. The third-choice position remains under review after recent squad changes.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "confirmed_departure_roster_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_ac-milan_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 6
+      "id": "evt_20260901_ac-milan_departure",
+      "date": "2026-09-01",
+      "type": "roster_integrity_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -218,6 +218,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_ac-milan_departure",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "roster_integrity_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Penalty order reset after squad change",
+        "context": "Gonçalo Ramos now leads the filed order, with Christian Pulisic next. The third-choice position remains under review after recent squad changes.",
+        "sources": [
+          {
+            "label": "AC Milan",
+            "url": "https://www.acmilan.com/en/news/articles/media/2026-08-25/official-statement-christopher-nkunku",
+            "date": "2026-08-25",
+            "note": "Confirmed squad departure relevant to the AC Milan penalty hierarchy."
+          },
+          {
+            "label": "AC Milan transfer hub",
+            "url": "https://www.acmilan.com/en/transfer-window",
+            "date": "2026-08-30",
+            "note": "Confirmed squad departure relevant to the AC Milan penalty hierarchy."
+          }
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Gonçalo Ramos now leads the filed order, with Christian Pulisic next. The third-choice position remains under review after recent squad changes."
       }
     ],
     "change_log": [
@@ -289,6 +322,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "confirmed_departure_reorder",
+        "from": {
+          "primary": "Christopher Nkunku",
+          "secondary": "Gonçalo Ramos",
+          "tertiary": "Christian Pulisic"
+        },
+        "to": {
+          "primary": "Gonçalo Ramos",
+          "secondary": "Christian Pulisic",
+          "tertiary": ""
+        },
+        "reason": "Gonçalo Ramos now leads the filed order, with Christian Pulisic next. The third-choice position remains under review after recent squad changes.",
+        "evidence_ids": [
+          "evt_20260901_ac-milan_departure"
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -306,22 +362,16 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Christopher Nkunku",
-        "status": "confirmed",
-        "source_url": "https://www.acmilan.com/it/squadre/prima-squadra-maschile",
-        "checked_at": "2026-07-30"
-      },
-      "secondary": {
         "player": "Gonçalo Ramos",
         "status": "confirmed",
-        "source_url": "https://www.acmilan.com/it/news/articoli/media/2026-06-30/comunicato-ufficiale-goncalo-ramos",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.acmilan.com/it/squadre/prima-squadra-maschile",
+        "checked_at": "2026-09-01"
       },
-      "tertiary": {
+      "secondary": {
         "player": "Christian Pulisic",
         "status": "confirmed",
-        "source_url": "https://www.acmilan.com/it/squadre/prima-squadra-maschile",
-        "checked_at": "2026-07-30"
+        "source_url": "https://www.acmilan.com/it/news/articoli/media/2026-06-30/comunicato-ufficiale-goncalo-ramos",
+        "checked_at": "2026-09-01"
       }
     }
   },
@@ -1517,10 +1567,10 @@
     }
   },
   "Fiorentina": {
-    "primary": "Albert Guðmundsson",
-    "secondary": "Moise Kean",
-    "tertiary": "Rolando Mandragora",
-    "last_updated": "2026-07-30",
+    "primary": "Moise Kean",
+    "secondary": "Rolando Mandragora",
+    "tertiary": "",
+    "last_updated": "2026-09-01",
     "source": "Il Margine multi-source research",
     "cross_check": "Il Margine roster cross-check",
     "hierarchy_status": "conditional",
@@ -1529,18 +1579,18 @@
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Gudmundsson converted the first penalty of Grosso's preseason. The completed 2025/26 event audit explicitly describes the established grid as Gudmundsson, Kean, Mandragora, and the newer SOS Fanta assessment says Gudmundsson and Kean are the clear top two. Goal's Gudmundsson-Mandragora-Kean order is the minority view and predates the 27 July specialist update. Kean was not on the pitch for Gudmundsson's 22 July friendly penalty, so that event confirms Gudmundsson but does not settle the backup order by itself. The 22 July penalty confirms Guðmundsson but did not test him directly against Kean on the pitch. Conditions: If Kean leaves before the window closes, Mandragora becomes the practical secondary. A specialist attacking signing could enter the top three under new coach Fabio Grosso.",
+    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Moise Kean then Rolando Mandragora. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "confirmed_departure_roster_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_fiorentina_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 5
+      "id": "evt_20260901_fiorentina_departure",
+      "date": "2026-09-01",
+      "type": "roster_integrity_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -1693,6 +1743,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_fiorentina_departure",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "roster_integrity_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Penalty order reset after squad change",
+        "context": "The hierarchy was reset after confirmed squad departures. The current filed order is Moise Kean then Rolando Mandragora. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "sources": [
+          {
+            "label": "Fiorentina News",
+            "url": "https://www.fiorentinanews.com/news/183202909702/gudmundsson-lascia-la-fiorentina-per-ora-definita-la-sua-cessione",
+            "date": "2026-09-01",
+            "note": "Confirmed squad departure relevant to the Fiorentina penalty hierarchy."
+          }
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Moise Kean then Rolando Mandragora. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
       }
     ],
     "change_log": [
@@ -1764,6 +1841,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "confirmed_departure_reorder",
+        "from": {
+          "primary": "Albert Guðmundsson",
+          "secondary": "Moise Kean",
+          "tertiary": "Rolando Mandragora"
+        },
+        "to": {
+          "primary": "Moise Kean",
+          "secondary": "Rolando Mandragora",
+          "tertiary": ""
+        },
+        "reason": "The hierarchy was reset after confirmed squad departures. The current filed order is Moise Kean then Rolando Mandragora. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "evidence_ids": [
+          "evt_20260901_fiorentina_departure"
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -1781,22 +1881,16 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Albert Guðmundsson",
-        "status": "confirmed",
-        "source_url": "https://www.acffiorentina.com/pages/prima-squadra-maschile",
-        "checked_at": "2026-07-30"
-      },
-      "secondary": {
         "player": "Moise Kean",
         "status": "confirmed",
         "source_url": "https://www.acffiorentina.com/pages/prima-squadra-maschile",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
-      "tertiary": {
+      "secondary": {
         "player": "Rolando Mandragora",
         "status": "confirmed",
         "source_url": "https://www.acffiorentina.com/pages/prima-squadra-maschile",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
     }
   },
@@ -1804,25 +1898,25 @@
     "primary": "Giacomo Calò",
     "secondary": "Ben Lhassine Kone",
     "tertiary": "Antonio Raimondo",
-    "last_updated": "2026-07-30",
+    "last_updated": "2026-09-01",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "high",
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Calò converted five from five in the promotion season. The official Carrarese report supplies the missing depth evidence: Kone converted the second penalty after Calò and Raimondo had both been substituted. That makes Kone a stronger practical secondary than Raimondo, whose only professional penalty cited by SOS Fanta was missed. Raimondo remains the best third candidate from starting role and current specialist expectation. Kone's penalty was taken after the first two recommended names had left the field, so it proves fallback status rather than precedence over Calò. Raimondo's tertiary position remains an informed projection. Raimondo is a projected tertiary with weak direct evidence; the promoted squad is still being built. Conditions: Frosinone is still building a Serie A attack; a proven penalty-taking forward would likely replace Raimondo in the top three and could challenge Kone. Recheck Kone's role if the midfield changes materially before the window closes.",
+    "condition_note": "Giacomo Calò remains Frosinone's first-choice penalty taker after converting five from five in the promotion season. Ben Lhassine Kone is the current backup, with Antonio Raimondo third.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_frosinone_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 4
+      "id": "evt_20260901_frosinone_retained",
+      "date": "2026-09-01",
+      "type": "roster_integrity_review",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -1950,6 +2044,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_frosinone_retained",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "roster_integrity_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Current penalty order re-verified",
+        "context": "Giacomo Calò remains Frosinone's first-choice penalty taker after converting five from five in the promotion season. Ben Lhassine Kone is the current backup, with Antonio Raimondo third.",
+        "sources": [
+          {
+            "label": "La Gazzetta dello Sport",
+            "url": "https://www.gazzetta.it/en/football/fantanews/02-08-2026/frosinone-fantasy-football-2026-27-key-players-penalty-taker-dark-horses-and-transfer-tips.shtml",
+            "date": "2026-08-02",
+            "note": "Current squad and penalty-duty evidence reviewed for Frosinone."
+          },
+          {
+            "label": "Frosinone Calcio",
+            "url": "https://www.frosinonecalcio.com/calo-ancora-giallazzurro/",
+            "date": "2026-07-30",
+            "note": "Current squad and penalty-duty evidence reviewed for Frosinone."
+          }
+        ],
+        "detection": "manual_current_roster_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Giacomo Calò remains Frosinone's first-choice penalty taker after converting five from five in the promotion season. Ben Lhassine Kone is the current backup, with Antonio Raimondo third."
       }
     ],
     "change_log": [
@@ -2014,19 +2141,19 @@
         "player": "Giacomo Calò",
         "status": "confirmed",
         "source_url": "https://www.frosinonecalcio.com/preseason-i-convocati/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Ben Lhassine Kone",
         "status": "confirmed",
         "source_url": "https://www.frosinonecalcio.com/preseason-i-convocati/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "tertiary": {
         "player": "Antonio Raimondo",
         "status": "confirmed",
         "source_url": "https://www.frosinonecalcio.com/preseason-i-convocati/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
     }
   },
@@ -2601,8 +2728,8 @@
   "Juventus": {
     "primary": "Manuel Locatelli",
     "secondary": "Kenan Yıldız",
-    "tertiary": "Jonathan David",
-    "last_updated": "2026-07-30",
+    "tertiary": "",
+    "last_updated": "2026-09-01",
     "source": "Il Margine multi-source research",
     "cross_check": "Il Margine roster cross-check",
     "hierarchy_status": "disputed",
@@ -2611,18 +2738,18 @@
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Spalletti explicitly called Locatelli the penalty taker after Locatelli took with Yildiz available. Yildiz and David also took during 2025/26, but those attempts included delegated or situational choices and all three had misses. The coach's designation is stronger than the current specialist split and supports retaining Locatelli first. SOS Fanta calls Locatelli-Yildiz an open contest and Goal puts Yildiz first. The order is usable, not settled. Coach designation supports Locatelli, but current specialist sources split between Locatelli and Yıldız. Conditions: Juventus is expected to add an attacker; an incoming high-volume specialist could enter at primary or secondary. Vlahović is excluded because his prior contract ended and no official return was found at the cutoff.",
+    "condition_note": "Manuel Locatelli remains first choice after direct coach confirmation with Kenan Yıldız available. Yıldız is the current backup; third choice remains under review.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "confirmed_departure_roster_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_juventus_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 5
+      "id": "evt_20260901_juventus_departure",
+      "date": "2026-09-01",
+      "type": "roster_integrity_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -2775,6 +2902,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_juventus_departure",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "roster_integrity_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Penalty order reset after squad change",
+        "context": "Manuel Locatelli remains first choice after direct coach confirmation with Kenan Yıldız available. Yıldız is the current backup; third choice remains under review.",
+        "sources": [
+          {
+            "label": "ANSA",
+            "url": "https://www.ansa.it/piemonte/notizie/2026/09/01/david-lascia-la-juve-e-in-partenza-da-caselle-per-madrid_06a5b8fa-939a-48e8-bb73-1d49ff9d9ed2.html",
+            "date": "2026-09-01",
+            "note": "Confirmed squad departure relevant to the Juventus penalty hierarchy."
+          }
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Manuel Locatelli remains first choice after direct coach confirmation with Kenan Yıldız available. Yıldız is the current backup; third choice remains under review."
       }
     ],
     "change_log": [
@@ -2846,6 +3000,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "confirmed_departure_reorder",
+        "from": {
+          "primary": "Manuel Locatelli",
+          "secondary": "Kenan Yıldız",
+          "tertiary": "Jonathan David"
+        },
+        "to": {
+          "primary": "Manuel Locatelli",
+          "secondary": "Kenan Yıldız",
+          "tertiary": ""
+        },
+        "reason": "Manuel Locatelli remains first choice after direct coach confirmation with Kenan Yıldız available. Yıldız is the current backup; third choice remains under review.",
+        "evidence_ids": [
+          "evt_20260901_juventus_departure"
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -2866,19 +3043,13 @@
         "player": "Manuel Locatelli",
         "status": "confirmed",
         "source_url": "https://www.juventus.com/it/squadre/prima-squadra-maschile/rosa/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Kenan Yıldız",
         "status": "confirmed",
         "source_url": "https://www.juventus.com/it/squadre/prima-squadra-maschile/rosa/",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
-        "player": "Jonathan David",
-        "status": "confirmed",
-        "source_url": "https://www.juventus.com/it/squadre/prima-squadra-maschile/rosa/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
     }
   },
@@ -3453,26 +3624,26 @@
   "Monza": {
     "primary": "Matteo Pessina",
     "secondary": "Patrick Cutrone",
-    "tertiary": "Andrea Petagna",
-    "last_updated": "2026-07-30",
-    "hierarchy_status": "probable",
+    "tertiary": "",
+    "last_updated": "2026-09-01",
+    "hierarchy_status": "conditional",
     "confidence": {
       "primary": "high",
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Pessina converted multiple competitive penalties in the promotion season and has a 16/17 career record cited by current specialists. Goal and SOS Fanta agree that Cutrone and Petagna are the practical alternatives in that order. The backup order depends heavily on which striker is on the pitch; neither has current like-for-like evidence over the other. Cutrone versus Petagna depends on lineup availability and lacks a current direct comparison. Conditions: Cutrone and Petagna are both market-sensitive; a departure or a new starting striker requires a backup reorder.",
+    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Matteo Pessina then Patrick Cutrone. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "confirmed_departure_roster_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_monza_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 5
+      "id": "evt_20260901_monza_departure",
+      "date": "2026-09-01",
+      "type": "roster_integrity_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -3606,6 +3777,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_monza_departure",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "roster_integrity_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Penalty order reset after squad change",
+        "context": "The hierarchy was reset after confirmed squad departures. The current filed order is Matteo Pessina then Patrick Cutrone. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "sources": [
+          {
+            "label": "AC Monza",
+            "url": "https://www.acmonza.com/en/news/andrea-petagna-to-pisa/",
+            "date": "2026-08-20",
+            "note": "Confirmed squad departure relevant to the Monza penalty hierarchy."
+          }
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Matteo Pessina then Patrick Cutrone. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
       }
     ],
     "change_log": [
@@ -3654,11 +3852,34 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "confirmed_departure_reorder",
+        "from": {
+          "primary": "Matteo Pessina",
+          "secondary": "Patrick Cutrone",
+          "tertiary": "Andrea Petagna"
+        },
+        "to": {
+          "primary": "Matteo Pessina",
+          "secondary": "Patrick Cutrone",
+          "tertiary": ""
+        },
+        "reason": "The hierarchy was reset after confirmed squad departures. The current filed order is Matteo Pessina then Patrick Cutrone. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "evidence_ids": [
+          "evt_20260901_monza_departure"
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": false,
+      "weak_evidence": true,
       "stale_override": null
     },
     "prior_season": null,
@@ -3670,19 +3891,13 @@
         "player": "Matteo Pessina",
         "status": "confirmed",
         "source_url": "https://www.acmonza.com/it/news/monza-catanzaro-i-convocati-finale-playoff-ritorno/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
         "player": "Patrick Cutrone",
         "status": "confirmed",
         "source_url": "https://www.acmonza.com/it/news/monza-catanzaro-i-convocati-finale-playoff-ritorno/",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
-        "player": "Andrea Petagna",
-        "status": "confirmed",
-        "source_url": "https://www.acmonza.com/it/news/monza-catanzaro-i-convocati-finale-playoff-ritorno/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
     }
   },
@@ -4692,29 +4907,29 @@
   },
   "Sassuolo": {
     "primary": "Domenico Berardi",
-    "secondary": "Andrea Pinamonti",
-    "tertiary": "Armand Laurienté",
-    "last_updated": "2026-07-30",
+    "secondary": "Armand Laurienté",
+    "tertiary": "",
+    "last_updated": "2026-09-01",
     "source": "Il Margine multi-source research",
     "cross_check": "Il Margine roster cross-check",
-    "hierarchy_status": "probable",
+    "hierarchy_status": "conditional",
     "confidence": {
       "primary": "high",
       "secondary": "high",
       "tertiary": "medium"
     },
-    "condition_note": "Berardi remained the clear first taker throughout 2025/26. Pinamonti took in Berardi's absence and both current specialist sources call him the first backup. Laurienté has historical specialist support as the practical third but no recent like-for-like event. The first two positions are substantially stronger than the tertiary. Berardi and Pinamonti are strong; Laurienté is supported mainly by older specialist history. Conditions: A departure by Berardi, Pinamonti or Laurienté would materially reorder the hierarchy.",
+    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Domenico Berardi then Armand Laurienté. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-01",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "confirmed_departure_roster_review"
     },
-    "public_updated_at": "2026-07-30",
+    "public_updated_at": "2026-09-01",
     "latest_evidence": {
-      "id": "evt_20260730_sassuolo_research",
-      "date": "2026-07-30",
-      "type": "multi_source_preseason_research",
-      "source_count": 5
+      "id": "evt_20260901_sassuolo_departure",
+      "date": "2026-09-01",
+      "type": "roster_integrity_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -4867,6 +5082,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+      },
+      {
+        "id": "evt_20260901_sassuolo_departure",
+        "date": "2026-09-01",
+        "season": "2026/27",
+        "type": "roster_integrity_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Penalty order reset after squad change",
+        "context": "The hierarchy was reset after confirmed squad departures. The current filed order is Domenico Berardi then Armand Laurienté. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "sources": [
+          {
+            "label": "Lazio",
+            "url": "https://prodc.sslazio.it/it/news/comunicati/andrea-pinamonti-in-biancoceleste-a-titolo-definitivo",
+            "date": "2026-08-27",
+            "note": "Confirmed squad departure relevant to the Sassuolo penalty hierarchy."
+          }
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-01T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Domenico Berardi then Armand Laurienté. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
       }
     ],
     "change_log": [
@@ -4938,11 +5180,34 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-01",
+        "season": "2026/27",
+        "change_type": "confirmed_departure_reorder",
+        "from": {
+          "primary": "Domenico Berardi",
+          "secondary": "Andrea Pinamonti",
+          "tertiary": "Armand Laurienté"
+        },
+        "to": {
+          "primary": "Domenico Berardi",
+          "secondary": "Armand Laurienté",
+          "tertiary": ""
+        },
+        "reason": "The hierarchy was reset after confirmed squad departures. The current filed order is Domenico Berardi then Armand Laurienté. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+        "evidence_ids": [
+          "evt_20260901_sassuolo_departure"
+        ],
+        "detection": "automated_roster_audit_manual_verification",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-01T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": false,
+      "weak_evidence": true,
       "stale_override": null
     },
     "prior_season": {
@@ -4958,19 +5223,13 @@
         "player": "Domenico Berardi",
         "status": "confirmed",
         "source_url": "https://www.sassuolocalcio.it/in-evidenza/ronzone-2026-i-convocati-per-il-ritiro/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       },
       "secondary": {
-        "player": "Andrea Pinamonti",
-        "status": "confirmed",
-        "source_url": "https://www.sassuolocalcio.it/in-evidenza/ronzone-2026-i-convocati-per-il-ritiro/",
-        "checked_at": "2026-07-30"
-      },
-      "tertiary": {
         "player": "Armand Laurienté",
         "status": "confirmed",
         "source_url": "https://www.sassuolocalcio.it/in-evidenza/ronzone-2026-i-convocati-per-il-ritiro/",
-        "checked_at": "2026-07-30"
+        "checked_at": "2026-09-01"
       }
     }
   },

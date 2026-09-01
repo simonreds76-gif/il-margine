@@ -141,7 +141,10 @@ export type GoalscorerPenaltyWatchlistRow = {
   editorial_note?: string;
   context_generated_at?: string;
   context_source_path?: string;
+  actual_taker_match_status?: string;
   primary_on_pitch_at_penalty?: string;
+  secondary_on_pitch_at_penalty?: string;
+  tertiary_on_pitch_at_penalty?: string;
   active_on_pitch_at_penalty?: string;
   actual_taker_on_pitch_at_penalty?: string;
 };

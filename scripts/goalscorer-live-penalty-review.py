@@ -104,6 +104,11 @@ FIELDNAMES = [
     "active_taker_pre_match",
     "active_slot_pre_match",
     "team_lineup_status",
+    "actual_taker_match_status",
+    "primary_on_pitch_at_penalty",
+    "secondary_on_pitch_at_penalty",
+    "tertiary_on_pitch_at_penalty",
+    "actual_taker_on_pitch_at_penalty",
     "review_type",
     "review_priority",
     "editorial_note",
@@ -338,6 +343,55 @@ def _summarise_event_type(types: Iterable[str]) -> str:
     return " / ".join(distinct)
 
 
+def _substitution_minute(player: dict, event_type: str) -> int | None:
+    performance = player.get("performance") if isinstance(player.get("performance"), dict) else {}
+    events = performance.get("substitutionEvents") or []
+    for event in events:
+        if str(event.get("type") or "").strip().lower() == event_type.lower():
+            try:
+                return int(event.get("time"))
+            except (TypeError, ValueError):
+                return None
+    return None
+
+
+def _player_at_penalty_status(lineup_side: dict, player_name: str, minute: int, best_name_match) -> str:
+    if not player_name:
+        return "-"
+    if not lineup_side:
+        return "Unknown - lineup unavailable"
+
+    for bucket in ("starters", "subs", "unavailable"):
+        players = lineup_side.get(bucket) or []
+        names = [str(player.get("name") or "").strip() for player in players]
+        matched_name = best_name_match(player_name, names)
+        if not matched_name:
+            continue
+        player = next(item for item in players if str(item.get("name") or "").strip() == matched_name)
+        if bucket == "starters":
+            sub_out = _substitution_minute(player, "subOut")
+            if sub_out is not None and sub_out <= minute:
+                return f"No - starter, off {sub_out}'"
+            return "Yes - starter"
+        if bucket == "subs":
+            sub_in = _substitution_minute(player, "subIn")
+            if sub_in is None:
+                return "No - unused bench"
+            if sub_in <= minute:
+                return f"Yes - bench, on {sub_in}'"
+            return f"No - bench, on {sub_in}'"
+
+        reason = str(
+            player.get("unavailableReason")
+            or player.get("reason")
+            or (player.get("injury") or {}).get("description")
+            or "unavailable"
+        ).strip()
+        return f"No - {reason}"
+
+    return "No - not in match squad"
+
+
 def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List[dict]:
     config = LEAGUE_CONFIGS[league_key]
     model_mod = runpy.run_path(str(ROOT / "scripts" / "goalscorer-model.py"), run_name="goalscorer_model")
@@ -356,6 +410,7 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
         run_name="goalscorer_penalty_utils",
     )
     penalty_role_for_player = penalty_utils["penalty_role_for_player"]
+    best_name_match = penalty_utils["best_name_match"]
 
     context_map = _load_context_map([config["context"], config["context_history"]])
     hierarchy_map = _load_hierarchy_map(config["hierarchy"], team_key_func)
@@ -399,6 +454,7 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
             general = page_props.get("general", {}) or {}
             content = page_props.get("content", {}) or {}
             shotmap = content.get("shotmap", {}) or {}
+            lineup = content.get("lineup", {}) or {}
             shots = shotmap.get("shots", [])
             if not isinstance(shots, list):
                 shots = []
@@ -433,10 +489,12 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
                     team_name = home_team
                     opponent_name = away_team
                     is_home = True
+                    lineup_side = lineup.get("homeTeam", {}) or {}
                 elif team_id == away_id:
                     team_name = away_team
                     opponent_name = home_team
                     is_home = False
+                    lineup_side = lineup.get("awayTeam", {}) or {}
                 else:
                     continue
 
@@ -470,6 +528,7 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
                         "event_type": event_type,
                         "event_result": event_result,
                         "penalties_scored": scored_flag,
+                        "lineup_side": lineup_side,
                     }
                 )
 
@@ -502,6 +561,12 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
         scored = sum(int(event.get("penalties_scored") or 0) for event in events)
         minute_label = ", ".join(str(event["minute"]) for event in sorted(events, key=lambda item: item["minute"]) if event["minute"])
         distinct_takers = len(distinct_takers_by_team_match[(match_date, team_key, opponent_key)])
+        penalty_minute = min((int(event.get("minute") or 0) for event in events), default=0)
+        lineup_side = sample.get("lineup_side") if isinstance(sample.get("lineup_side"), dict) else {}
+        primary_pitch = _player_at_penalty_status(lineup_side, hierarchy["primary"], penalty_minute, best_name_match)
+        secondary_pitch = _player_at_penalty_status(lineup_side, hierarchy["secondary"], penalty_minute, best_name_match)
+        tertiary_pitch = _player_at_penalty_status(lineup_side, hierarchy["tertiary"], penalty_minute, best_name_match)
+        actual_pitch = _player_at_penalty_status(lineup_side, player_name, penalty_minute, best_name_match)
         review_type = classify_review_type(
             context=context,
             actual_role=actual_role,
@@ -532,7 +597,12 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
                 "tertiary_lineup_status": context.get("tertiary_lineup_status", ""),
                 "active_taker_pre_match": context.get("active_taker_pre_match", ""),
                 "active_slot_pre_match": context.get("active_slot_pre_match", ""),
-                "team_lineup_status": context.get("team_lineup_status", ""),
+                "team_lineup_status": "confirmed" if lineup_side else context.get("team_lineup_status", ""),
+                "actual_taker_match_status": actual_pitch,
+                "primary_on_pitch_at_penalty": primary_pitch,
+                "secondary_on_pitch_at_penalty": secondary_pitch,
+                "tertiary_on_pitch_at_penalty": tertiary_pitch,
+                "actual_taker_on_pitch_at_penalty": actual_pitch,
                 "review_type": review_type,
                 "review_priority": review_priority(review_type),
                 "editorial_note": build_editorial_note(

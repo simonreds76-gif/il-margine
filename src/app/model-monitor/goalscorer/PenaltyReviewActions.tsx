@@ -61,9 +61,9 @@ function actionsFor(status?: PenaltyReviewStatus): Action[] {
         className: warningClass,
       },
       {
-        label: "Ignore",
+        label: "Done - keep order",
         status: "ignored",
-        successText: "Closed with no public change",
+        successText: "Reviewed and closed with the current order",
         className: neutralClass,
       },
     ];
@@ -83,9 +83,9 @@ function actionsFor(status?: PenaltyReviewStatus): Action[] {
         className: warningClass,
       },
       {
-        label: "Ignore",
+        label: "Done - keep order",
         status: "ignored",
-        successText: "Closed with no public change",
+        successText: "Reviewed and closed with the current order",
         className: neutralClass,
       },
     ];
@@ -105,9 +105,9 @@ function actionsFor(status?: PenaltyReviewStatus): Action[] {
         className: restoreClass,
       },
       {
-        label: "Ignore",
+        label: "Done - keep order",
         status: "ignored",
-        successText: "Closed with no public change",
+        successText: "Reviewed and closed with the current order",
         className: neutralClass,
       },
     ];
@@ -157,7 +157,7 @@ function statusDescription(status?: PenaltyReviewStatus, mode: "event" | "source
   }
   if (status === "accepted") return "Evidence accepted. Edit the hierarchy, evidence log and audit date before marking applied.";
   if (status === "deferred") return "Parked until stronger evidence arrives.";
-  if (status === "ignored") return "Closed with the current public order unchanged.";
+  if (status === "ignored") return "Reviewed and closed with the current public order unchanged.";
   if (status === "applied") return "Public hierarchy membership and update dates passed validation.";
   return "Review the event before changing any public hierarchy.";
 }

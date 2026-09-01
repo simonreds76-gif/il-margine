@@ -29,6 +29,7 @@ REVIEW_FILES = (
     Path("data/goalscorer/la-liga-penalty-duty-live-review.json"),
     Path("data/goalscorer/bundesliga-penalty-duty-live-review.json"),
     Path("data/goalscorer/ligue-1-penalty-duty-live-review.json"),
+    Path("data/goalscorer/club-penalty-roster-audit.json"),
 )
 ACTIONABLE_PRIORITIES = {"high", "medium"}
 PRIORITY_ORDER = {"high": 0, "medium": 1, "low": 2}
@@ -211,13 +212,31 @@ def build_message(rows: list[dict], review_url: str, run_url: str = "") -> str:
         taker = compact(row.get("actual_taker"), 42)
         result = compact(row.get("event_result") or row.get("event_type"), 32)
         primary = compact(row.get("primary_pre_match"), 42) or "not filed"
+        secondary = compact(row.get("secondary_pre_match"), 42) or "not filed"
+        tertiary = compact(row.get("tertiary_pre_match"), 42) or "not filed"
         hierarchy_status = compact(row.get("public_hierarchy_status"), 20).upper()
+        role = str(row.get("actual_role_pre_match") or "none").strip().lower()
+        role_label = {
+            "primary": "No.1 primary",
+            "secondary": "No.2 backup",
+            "tertiary": "No.3 backup",
+            "none": "Unranked",
+        }.get(role, role.replace("_", " ").title() or "Unranked")
+        actual_status = compact(
+            row.get("actual_taker_match_status") or row.get("actual_taker_on_pitch_at_penalty"),
+            62,
+        ) or "lineup unavailable"
+        minute = compact(row.get("minute"), 12)
         lines.extend(
             [
                 f"[{priority}] {league} | {team}",
                 f"Public hierarchy: {hierarchy_status}",
                 f"{taker}: {result} vs {opponent}",
-                f"Filed primary: {primary}",
+                f"Taker rank: {role_label} | {actual_status}{f' | pen {minute}\'' if minute else ''}",
+                "Top three at the penalty:",
+                f"1. {primary} - {compact(row.get('primary_on_pitch_at_penalty'), 58) or 'unknown'}",
+                f"2. {secondary} - {compact(row.get('secondary_on_pitch_at_penalty'), 58) or 'unknown'}",
+                f"3. {tertiary} - {compact(row.get('tertiary_on_pitch_at_penalty'), 58) or 'unknown'}",
                 f"Reason: {compact(row.get('review_type'), 55)}",
                 "",
             ]

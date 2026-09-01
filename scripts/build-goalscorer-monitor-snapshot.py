@@ -1291,7 +1291,9 @@ def read_penalty_review_rows(config: dict[str, str]) -> tuple[list[dict[str, Any
             "active_taker_pre_match": decode_html_value(row.get("active_taker_pre_match")), "active_slot_pre_match": decode_html_value(row.get("active_slot_pre_match")), "team_lineup_status": decode_html_value(row.get("team_lineup_status")),
             "penalty_transfer_pre_match": parse_int(row.get("penalty_transfer_pre_match")), "inherited_from_pre_match": decode_html_value(row.get("inherited_from_pre_match")), "transfer_level_pre_match": decode_html_value(row.get("transfer_level_pre_match")),
             "editorial_note": decode_html_value(row.get("editorial_note")), "context_generated_at": row.get("context_generated_at"), "context_source_path": decode_html_value(row.get("context_source_path")),
-            "primary_on_pitch_at_penalty": decode_html_value(row.get("primary_on_pitch_at_penalty")), "active_on_pitch_at_penalty": decode_html_value(row.get("active_on_pitch_at_penalty")), "actual_taker_on_pitch_at_penalty": decode_html_value(row.get("actual_taker_on_pitch_at_penalty")),
+            "actual_taker_match_status": decode_html_value(row.get("actual_taker_match_status")),
+            "primary_on_pitch_at_penalty": decode_html_value(row.get("primary_on_pitch_at_penalty")), "secondary_on_pitch_at_penalty": decode_html_value(row.get("secondary_on_pitch_at_penalty")), "tertiary_on_pitch_at_penalty": decode_html_value(row.get("tertiary_on_pitch_at_penalty")),
+            "active_on_pitch_at_penalty": decode_html_value(row.get("active_on_pitch_at_penalty")), "actual_taker_on_pitch_at_penalty": decode_html_value(row.get("actual_taker_on_pitch_at_penalty")),
         })
     rows.sort(key=lambda row: (
         0 if row.get("hierarchy_status") in {"conditional", "disputed"} else 1,
