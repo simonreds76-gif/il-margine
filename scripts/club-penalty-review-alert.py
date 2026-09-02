@@ -227,12 +227,13 @@ def build_message(rows: list[dict], review_url: str, run_url: str = "") -> str:
             62,
         ) or "lineup unavailable"
         minute = compact(row.get("minute"), 12)
+        penalty_minute = f" | pen {minute}'" if minute else ""
         lines.extend(
             [
                 f"[{priority}] {league} | {team}",
                 f"Public hierarchy: {hierarchy_status}",
                 f"{taker}: {result} vs {opponent}",
-                f"Taker rank: {role_label} | {actual_status}{f' | pen {minute}\'' if minute else ''}",
+                f"Taker rank: {role_label} | {actual_status}{penalty_minute}",
                 "Top three at the penalty:",
                 f"1. {primary} - {compact(row.get('primary_on_pitch_at_penalty'), 58) or 'unknown'}",
                 f"2. {secondary} - {compact(row.get('secondary_on_pitch_at_penalty'), 58) or 'unknown'}",
