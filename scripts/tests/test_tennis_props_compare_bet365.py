@@ -227,15 +227,22 @@ class BreakMarketTests(unittest.TestCase):
             (True, "negative_binomial", 0.02),
         )
 
-    def test_single_source_break_price_is_calibration_not_a_bet(self) -> None:
+    def test_single_source_bet365_break_price_enters_separate_prospective_shadow(self) -> None:
         row = self.priced_row()
         MODULE.apply_break_shadow_gates([row], datetime.now(timezone.utc))
-        self.assertEqual(row["decision_mode"], "breaks_calibration_unfiltered")
-        self.assertEqual(row["shadow_side"], "")
-        self.assertEqual(row["trackable_shadow"], "false")
+        self.assertEqual(row["decision_mode"], "breaks_single_source_shadow")
+        self.assertEqual(row["shadow_side"], "OVER")
+        self.assertEqual(row["trackable_shadow"], "true")
         self.assertEqual(row["calibration_eligible"], "true")
-        self.assertIn("PRICE_SOURCE_UNVERIFIED", row["shadow_block_reasons"])
+        self.assertEqual(row["shadow_block_reasons"], "")
         self.assertEqual(row["bettable"], "false")
+
+    def test_unsupported_single_source_remains_calibration_only(self) -> None:
+        row = self.priced_row("Other Book")
+        MODULE.apply_break_shadow_gates([row], datetime.now(timezone.utc))
+        self.assertEqual(row["decision_mode"], "breaks_calibration_unfiltered")
+        self.assertEqual(row["trackable_shadow"], "false")
+        self.assertIn("PRICE_SOURCE_UNVERIFIED", row["shadow_block_reasons"])
 
     def test_two_agreeing_sources_can_enter_strict_prospective_shadow(self) -> None:
         rows = [self.priced_row("Bet365"), self.priced_row("BetsBK")]
@@ -251,7 +258,8 @@ class BreakMarketTests(unittest.TestCase):
         rows[1]["capture_ts"] = (now - timedelta(hours=2)).isoformat()
         MODULE.apply_break_shadow_gates(rows, now)
         self.assertTrue(all(row["source_agreement"] == "false" for row in rows))
-        self.assertTrue(all(row["decision_mode"] == "breaks_calibration_unfiltered" for row in rows))
+        self.assertEqual(rows[0]["decision_mode"], "breaks_single_source_shadow")
+        self.assertEqual(rows[1]["decision_mode"], "breaks_calibration_unfiltered")
 
     def test_model_market_gap_and_deep_alternate_fail_strict_gate(self) -> None:
         rows = [self.priced_row("Bet365"), self.priced_row("BetsBK")]

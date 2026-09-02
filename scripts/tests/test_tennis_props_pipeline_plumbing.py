@@ -249,6 +249,34 @@ class ShadowTrackerTests(unittest.TestCase):
         self.assertEqual(signal["observed_odds"], "1.900")
         self.assertTrue(signal["signal_id"].endswith("|6.5|CALIBRATION"))
 
+    def test_bet365_single_source_break_row_is_recorded_for_prospective_roi(self) -> None:
+        row = {
+            "date": "2026-09-02",
+            "tour": "ATP",
+            "tournament": "US Open",
+            "scope": "match_total",
+            "player": "Player One",
+            "opponent": "Player Two",
+            "market": "match_breaks",
+            "line": "6.5",
+            "confidence": "HIGH",
+            "matched_board": "yes",
+            "calibration_eligible": "true",
+            "trackable_shadow": "true",
+            "shadow_side": "OVER",
+            "decision_mode": "breaks_single_source_shadow",
+            "value_over_pct": "4.0",
+            "value_under_pct": "-7.0",
+            "over_odds": "1.90",
+            "under_odds": "1.90",
+            "bookmaker": "Bet365",
+        }
+        signal = TRACKER.build_signal(row, Path("comparison.csv"), self.args())
+        self.assertIsNotNone(signal)
+        self.assertEqual(signal["side"], "OVER")
+        self.assertEqual(signal["decision_mode"], "breaks_single_source_shadow")
+        self.assertEqual(signal["selected_odds"], "1.900")
+
     def test_legacy_break_signal_is_reclassified_without_losing_observed_price(self) -> None:
         row = {
             "signal_id": "legacy",
@@ -531,6 +559,7 @@ class PipelineHealthTests(unittest.TestCase):
                 "price_pair_status": "two_way",
                 "trackable_shadow": "true",
                 "bettable": "false",
+                "decision_mode": "breaks_prospective_shadow",
             }])
             payload = HEALTH.build_health(
                 "2026-09-02",
@@ -543,6 +572,34 @@ class PipelineHealthTests(unittest.TestCase):
             self.assertEqual(payload["break_line_rows"], 1)
             self.assertEqual(payload["break_matched_rows"], 1)
             self.assertEqual(payload["break_trackable_rows"], 1)
+            self.assertEqual(payload["break_strict_rows"], 1)
+
+    def test_service_break_health_identifies_bet365_only_prospective_rows(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            lines = base / "lines.csv"
+            comparison = base / "comparison.csv"
+            signals = base / "signals.csv"
+            write_csv(lines, [{"date": "2026-09-02", "market": "match_breaks", "capture_ts": "2026-09-02T08:00:00Z"}])
+            write_csv(comparison, [{
+                "date": "2026-09-02",
+                "market": "match_breaks",
+                "matched_board": "yes",
+                "price_pair_status": "two_way",
+                "trackable_shadow": "true",
+                "bettable": "false",
+                "decision_mode": "breaks_single_source_shadow",
+            }])
+            payload = HEALTH.build_health(
+                "2026-09-02",
+                lines,
+                comparison,
+                signals,
+                now=datetime(2026, 9, 2, 9, tzinfo=timezone.utc),
+            )
+            self.assertEqual(payload["break_state"], "BET365_PROSPECTIVE_READY")
+            self.assertEqual(payload["break_single_source_rows"], 1)
+            self.assertEqual(payload["break_strict_rows"], 0)
 
     def test_service_break_health_reports_calibration_only_separately(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

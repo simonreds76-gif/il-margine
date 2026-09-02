@@ -101,6 +101,12 @@ def build_health(
     break_comparison_rows = [row for row in comparison_rows if str(row.get("market") or "").lower() in break_markets]
     break_matched_rows = [row for row in break_comparison_rows if row.get("matched_board") == "yes"]
     break_trackable_rows = [row for row in break_matched_rows if row.get("trackable_shadow") == "true"]
+    break_strict_rows = [
+        row for row in break_trackable_rows if row.get("decision_mode") == "breaks_prospective_shadow"
+    ]
+    break_single_source_rows = [
+        row for row in break_trackable_rows if row.get("decision_mode") == "breaks_single_source_shadow"
+    ]
     break_calibration_rows = [row for row in break_comparison_rows if row.get("calibration_eligible") == "true"]
     break_blockers = Counter(
         str(row.get("shadow_block_reasons") or "none").split("|")[0]
@@ -111,8 +117,10 @@ def build_health(
         break_state = "PRICE_FEED_MISSING"
     elif not break_comparison_rows or not break_matched_rows:
         break_state = "BOARD_MATCH_FAILED"
-    elif break_trackable_rows:
+    elif break_strict_rows:
         break_state = "STRICT_PROSPECTIVE_READY"
+    elif break_single_source_rows:
+        break_state = "BET365_PROSPECTIVE_READY"
     elif break_calibration_rows:
         break_state = "CALIBRATION_ONLY"
     else:
@@ -168,6 +176,8 @@ def build_health(
         "break_comparison_rows": len(break_comparison_rows),
         "break_matched_rows": len(break_matched_rows),
         "break_trackable_rows": len(break_trackable_rows),
+        "break_strict_rows": len(break_strict_rows),
+        "break_single_source_rows": len(break_single_source_rows),
         "break_calibration_rows": len(break_calibration_rows),
         "top_break_blocker": break_blockers.most_common(1)[0][0] if break_blockers else "none",
         "latest_capture_utc": latest_capture.isoformat(timespec="seconds")
@@ -193,7 +203,7 @@ def write_report(path: Path, payload: dict[str, object]) -> None:
         f"Prospective shadow candidates: {payload['trackable_shadow_rows']}",
         f"Public bettable candidates: {payload['public_bettable_rows']}",
         f"Signals for event date: {payload['shadow_signals_for_event_date']}",
-        f"Service breaks: {payload['break_state']} | captured={payload['break_line_rows']} compared={payload['break_comparison_rows']} matched={payload['break_matched_rows']} strict={payload['break_trackable_rows']} calibration={payload['break_calibration_rows']}",
+        f"Service breaks: {payload['break_state']} | captured={payload['break_line_rows']} compared={payload['break_comparison_rows']} matched={payload['break_matched_rows']} strict={payload['break_strict_rows']} Bet365-only={payload['break_single_source_rows']} calibration={payload['break_calibration_rows']}",
         f"Top service-break blocker: {payload['top_break_blocker']}",
         f"Latest capture: {payload['latest_capture_utc']} (age {payload['capture_age_hours']}h)",
         f"Top shadow blocker: {payload['top_shadow_blocker']}",
