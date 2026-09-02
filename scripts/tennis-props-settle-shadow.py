@@ -233,9 +233,12 @@ def parse_utc_datetime(value: object) -> datetime | None:
 def history_key(row: dict[str, str], *, fallback: bool = False) -> tuple[object, ...]:
     line = parse_float(row.get("line"))
     line_key = round(line, 3) if line is not None else None
+    market = norm_text(row.get("market"))
+    subject = "" if market in {"match aces", "match double faults", "match breaks"} else norm_text(row.get("player"))
     common = (
         norm_text(row.get("bookmaker")),
-        norm_text(row.get("market")),
+        market,
+        subject,
         line_key,
     )
     event_id = str(row.get("event_id") or "").strip()

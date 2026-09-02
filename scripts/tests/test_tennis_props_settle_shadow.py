@@ -143,6 +143,15 @@ class TennisPropsSettlementTests(unittest.TestCase):
         self.assertAlmostEqual(float(signal["clv_pct"]), (1.90 / 1.80 - 1.0) * 100.0, places=3)
         self.assertIn("min2_postentry", signal["clv_method"])
 
+    def test_player_break_clv_keys_do_not_collide_at_the_same_line(self) -> None:
+        first = self.price_signal()
+        first["market"] = "player_breaks"
+        second = {**first, "player": "Player Two", "opponent": "Player One"}
+        self.assertNotEqual(SETTLE["history_key"](first), SETTLE["history_key"](second))
+        first["market"] = "match_breaks"
+        second["market"] = "match_breaks"
+        self.assertEqual(SETTLE["history_key"](first), SETTLE["history_key"](second))
+
     def test_calibration_rows_never_receive_clv(self) -> None:
         signal = self.price_signal()
         signal["decision_mode"] = "breaks_calibration_unfiltered"
