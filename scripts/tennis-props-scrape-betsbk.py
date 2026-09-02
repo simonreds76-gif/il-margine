@@ -2,10 +2,10 @@
 """Capture public BetsBK US Open tennis count prices.
 
 Odds-API does not currently return those markets for US Open qualifying. BetsBK
-publishes pre-match prices on its public event pages, so this local-only fallback
-reads the public event hierarchy and renders each relevant event in one headless
-browser session. Aces, double faults and service-break totals are supported. It
-does not log in or write to Supabase.
+publishes pre-match prices on its public event pages, so this fallback reads the
+public event hierarchy and renders each relevant event in one headless browser
+session. Aces, double faults and service-break totals are supported. It does not
+log in or write to Supabase.
 """
 
 from __future__ import annotations
@@ -291,16 +291,16 @@ def capture_events(
     except ImportError as exc:
         raise RuntimeError("Playwright is not installed for this Python interpreter") from exc
 
-    executable = browser_executable()
-    if executable is None:
-        raise RuntimeError("Microsoft Edge or Google Chrome was not found")
-
     captured_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     rows: list[dict[str, str]] = []
     audit: list[dict[str, str]] = []
     timeout_ms = max(5, timeout_seconds) * 1000
     with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(headless=True, executable_path=str(executable))
+        executable = browser_executable()
+        launch_options: dict[str, Any] = {"headless": True}
+        if executable is not None:
+            launch_options["executable_path"] = str(executable)
+        browser = playwright.chromium.launch(**launch_options)
         context = browser.new_context(locale="en-GB", timezone_id="Europe/London")
         page = context.new_page()
 
