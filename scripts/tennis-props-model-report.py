@@ -21,6 +21,7 @@ PROPS_DIR = ROOT / "data" / "tennis-props"
 SHADOW_SIGNALS = PROPS_DIR / "shadow" / "aces-dfs-shadow-signals.csv"
 DEFAULT_SUMMARY = PROPS_DIR / "model-monitor-summary.csv"
 DEFAULT_REPORT = PROPS_DIR / "model-monitor-report.txt"
+BREAK_CALIBRATION_MODE = "breaks_calibration_unfiltered"
 
 SUMMARY_FIELDS = [
     "period_type",
@@ -47,6 +48,8 @@ SUMMARY_FIELDS = [
     "shadow_void",
     "shadow_pnl_units",
     "shadow_roi_pct",
+    "break_calibration_rows",
+    "break_calibration_settled",
 ]
 
 
@@ -134,18 +137,22 @@ def shadow_period_rows(rows: list[dict[str, str]], period_type: str) -> dict[str
 
 
 def shadow_stats(rows: list[dict[str, str]]) -> dict[str, str]:
-    settled = [row for row in rows if str(row.get("settlement_status") or "").lower() == "settled"]
-    pending = [row for row in rows if str(row.get("settlement_status") or "").lower() == "pending"]
-    voided = [row for row in rows if str(row.get("settlement_status") or "").lower() == "void"]
+    calibration = [row for row in rows if row.get("decision_mode") == BREAK_CALIBRATION_MODE]
+    betting_rows = [row for row in rows if row.get("decision_mode") != BREAK_CALIBRATION_MODE]
+    settled = [row for row in betting_rows if str(row.get("settlement_status") or "").lower() == "settled"]
+    pending = [row for row in betting_rows if str(row.get("settlement_status") or "").lower() == "pending"]
+    voided = [row for row in betting_rows if str(row.get("settlement_status") or "").lower() == "void"]
     pnl = sum(parse_float(row.get("pnl")) or 0.0 for row in settled)
     stake = len(settled)
     return {
-        "shadow_signals": str(len(rows)),
+        "shadow_signals": str(len(betting_rows)),
         "shadow_settled": str(len(settled)),
         "shadow_pending": str(len(pending)),
         "shadow_void": str(len(voided)),
         "shadow_pnl_units": fmt(pnl, 2),
         "shadow_roi_pct": fmt((pnl / stake * 100.0) if stake else 0.0, 1),
+        "break_calibration_rows": str(len(calibration)),
+        "break_calibration_settled": str(sum(str(row.get("settlement_status") or "").lower() == "settled" for row in calibration)),
     }
 
 
@@ -243,7 +250,8 @@ def write_report(path: Path, rows: list[dict[str, str]]) -> None:
             f"main={row['main_line_rows']} bettable={row['bettable_rows']} "
             f"shadow_candidates={row['trackable_shadow_rows']} "
             f"top_blocker={row['top_blocker']} shadow_settled={row['shadow_settled']} "
-            f"pnl={row['shadow_pnl_units']}u roi={row['shadow_roi_pct']}%"
+            f"pnl={row['shadow_pnl_units']}u roi={row['shadow_roi_pct']}% "
+            f"break_calibration={row['break_calibration_settled']}/{row['break_calibration_rows']}"
         )
 
     report = [
@@ -268,6 +276,7 @@ def write_report(path: Path, rows: list[dict[str, str]]) -> None:
         "- best_available_rows shows the closest ladder row even when it is still blocked.",
         "- main_line_rows should rise only if the feed contains clean, fairly balanced two-way lines.",
         "- shadow ROI is not meaningful until the settled sample is large enough.",
+        "- break calibration rows test counts only and never enter shadow ROI or CLV.",
     ]
     path.write_text("\n".join(report) + "\n", encoding="utf-8")
 

@@ -31,9 +31,17 @@ CONFIDENCE_RANK = {"LOW": 0, "MED": 1, "HIGH": 2}
 MIN_COMBINED_SAMPLE = 800.0
 STALE_CAPTURE_HOURS = 6.0
 ONE_SIDED_SHADOW_CAPTURE_HOURS = 18.0
+BREAK_PROSPECTIVE_CAPTURE_HOURS = 1.5
 ONE_SIDED_MIN_ODDS = 1.50
 ONE_SIDED_MAX_ODDS = 3.50
 ONE_SIDED_MIN_VALUE = 0.08
+BREAK_MIN_VALUE_PCT = 3.0
+BREAK_MAX_VALUE_PCT = 12.0
+BREAK_MAX_MODEL_MARKET_GAP_PP = 12.0
+BREAK_SOURCE_AGREEMENT_MAX_PP = 5.0
+BREAK_PLAYER_LINE_RANGE = (1.5, 5.5)
+BREAK_MATCH_LINE_RANGE = (3.5, 9.5)
+BREAK_GATE_VERSION = "breaks_v1_p0"
 TWO_WAY_SHADOW_NOTE_BLOCKERS = (
     "NO_PLAYER_DATA",
     "NO_OPP_DATA",
@@ -581,30 +589,119 @@ def is_match_total_count_market(market: str) -> bool:
     return market.lower().replace(" ", "_") in MATCH_TOTAL_MARKETS
 
 
+def annotate_break_source_agreement(rows: list[dict[str, str]], now: datetime) -> None:
+    """Require two independent books to agree before a break row can track CLV/ROI."""
+    grouped: dict[tuple[object, ...], list[dict[str, str]]] = {}
+    for row in rows:
+        market = str(row.get("market") or "").lower()
+        if market not in BREAK_MARKETS:
+            continue
+        line = parse_float(row.get("line"))
+        identity = line_group_key(row)[:4]
+        key = (*identity, market, round(line, 3) if line is not None else None)
+        grouped.setdefault(key, []).append(row)
+
+    for group_rows in grouped.values():
+        prices_by_book: dict[str, float] = {}
+        display_names: dict[str, str] = {}
+        for row in group_rows:
+            bookmaker = str(row.get("bookmaker") or "").strip()
+            book_key = norm_name(bookmaker)
+            captured_at = parse_timestamp(row.get("capture_ts"))
+            starts_at = parse_timestamp(row.get("match_start_utc"))
+            capture_age = hours_since(row.get("capture_ts"), now)
+            over = parse_float(row.get("over_odds"))
+            under = parse_float(row.get("under_odds"))
+            no_vig_over, _no_vig_under = no_vig_probabilities(over, under)
+            if (
+                not book_key
+                or no_vig_over is None
+                or captured_at is None
+                or capture_age is None
+                or capture_age > BREAK_PROSPECTIVE_CAPTURE_HOURS
+                or (starts_at is not None and starts_at <= now)
+            ):
+                continue
+            prices_by_book.setdefault(book_key, no_vig_over)
+            display_names.setdefault(book_key, bookmaker)
+
+        probabilities = list(prices_by_book.values())
+        spread_pp = (
+            (max(probabilities) - min(probabilities)) * 100.0
+            if len(probabilities) >= 2
+            else None
+        )
+        agreed = spread_pp is not None and spread_pp <= BREAK_SOURCE_AGREEMENT_MAX_PP
+        books = ",".join(sorted(display_names.values()))
+        for row in group_rows:
+            row["source_agreement"] = bool_text(agreed)
+            row["source_agreement_bookmakers"] = books
+            row["source_agreement_gap_pp"] = fmt(spread_pp, 2)
+
+
+def break_line_supported(row: dict[str, str]) -> bool:
+    line = parse_float(row.get("line"))
+    if line is None or abs(line * 2.0 - round(line * 2.0)) > 1e-6:
+        return False
+    lower, upper = BREAK_MATCH_LINE_RANGE if row.get("scope") == "match_total" else BREAK_PLAYER_LINE_RANGE
+    return lower <= line <= upper
+
+
 def apply_break_shadow_gates(rows: list[dict[str, str]], now: datetime) -> None:
-    """Break prices are evidence-only until prospective ROI/CLV is established."""
+    """Split raw count calibration from strict prospective ROI/CLV evidence."""
+    annotate_break_source_agreement(rows, now)
     for row in rows:
         if str(row.get("market") or "").lower() not in BREAK_MARKETS:
             continue
-        reasons: list[str] = []
+        structural_reasons: list[str] = []
+        strict_reasons: list[str] = []
         if row.get("breaks_stage0_passed") != "true":
-            reasons.append("OUTCOME_GATE_FAIL")
+            strict_reasons.append("OUTCOME_GATE_FAIL")
         if row.get("matched_board") != "yes":
-            reasons.append("NO_BOARD_MATCH")
-        if confidence_rank(row.get("confidence")) < confidence_rank("MED"):
-            reasons.append("CONF_BELOW_MED")
-        if not row.get("capture_ts"):
-            reasons.append("MISSING_CAPTURE_TS")
-        else:
-            capture_age = hours_since(row.get("capture_ts"), now)
-            if capture_age is not None and capture_age > ONE_SIDED_SHADOW_CAPTURE_HOURS:
-                reasons.append("STALE_CAPTURE")
+            strict_reasons.append("NO_BOARD_MATCH")
+        if parse_float(row.get("line")) is None:
+            structural_reasons.append("MISSING_LINE")
+        if row.get("price_pair_status") == "missing_prices":
+            structural_reasons.append("MISSING_PRICES")
+        capture = parse_timestamp(row.get("capture_ts"))
         start = parse_timestamp(row.get("match_start_utc"))
+        if capture is None:
+            structural_reasons.append("MISSING_CAPTURE_TS")
         if start is None:
-            reasons.append("MISSING_MATCH_START")
-        elif start <= now:
-            reasons.append("MATCH_STARTED")
-        candidates: list[tuple[str, float]] = []
+            structural_reasons.append("MISSING_MATCH_START")
+        elif capture is not None and capture > start:
+            structural_reasons.append("CAPTURE_AFTER_START")
+
+        strict_reasons = [*structural_reasons, *strict_reasons]
+        if row.get("price_pair_status") != "two_way":
+            strict_reasons.append("TWO_WAY_PRICE_REQUIRED")
+        if row.get("line_quality") != "complete":
+            strict_reasons.append("LINE_NOT_COMPLETE")
+        if row.get("main_line") != "true":
+            strict_reasons.append("NOT_MAIN_LINE")
+        if capture is not None:
+            capture_age = hours_since(row.get("capture_ts"), now)
+            if capture_age is not None and capture_age > BREAK_PROSPECTIVE_CAPTURE_HOURS:
+                strict_reasons.append("STALE_CAPTURE_90M")
+        if start is not None and start <= now:
+            strict_reasons.append("MATCH_STARTED")
+        if confidence_rank(row.get("confidence")) < confidence_rank("HIGH"):
+            strict_reasons.append("CONF_BELOW_HIGH")
+        sample = parse_float(row.get("combined_surface_svpt_sample"), 0.0) or 0.0
+        if sample < MIN_COMBINED_SAMPLE:
+            strict_reasons.append("SAMPLE_BELOW_800")
+        gap = parse_float(row.get("model_market_gap_pp"), 0.0) or 0.0
+        if gap > BREAK_MAX_MODEL_MARKET_GAP_PP:
+            strict_reasons.append("MODEL_MARKET_GAP")
+        note_text = str(row.get("notes") or "").upper()
+        if any(marker in note_text for marker in TWO_WAY_SHADOW_NOTE_BLOCKERS):
+            strict_reasons.append("NAME_OR_DATA_WARNING")
+        if not break_line_supported(row):
+            strict_reasons.append("UNSUPPORTED_LINE")
+        if row.get("source_agreement") != "true":
+            strict_reasons.append("PRICE_SOURCE_UNVERIFIED")
+
+        candidates: list[tuple[str, float, float]] = []
         for side, value_key, odds_key in (
             ("OVER", "value_over_pct", "over_odds"),
             ("UNDER", "value_under_pct", "under_odds"),
@@ -613,21 +710,32 @@ def apply_break_shadow_gates(rows: list[dict[str, str]], now: datetime) -> None:
             odds = parse_float(row.get(odds_key))
             if (
                 value is not None
-                and value >= ONE_SIDED_MIN_VALUE * 100.0
+                and BREAK_MIN_VALUE_PCT <= value <= BREAK_MAX_VALUE_PCT
                 and odds is not None
                 and ONE_SIDED_MIN_ODDS <= odds <= ONE_SIDED_MAX_ODDS
             ):
-                candidates.append((side, value))
+                candidates.append((side, value, odds))
         if not candidates:
-            reasons.append("NO_SIDE_ABOVE_SHADOW_EDGE")
+            strict_reasons.append("EDGE_OUTSIDE_3_TO_12_PCT")
         selected = max(candidates, key=lambda item: item[1])[0] if candidates else ""
-        trackable = not reasons
+        strict_reasons = list(dict.fromkeys(strict_reasons))
+        structural_reasons = list(dict.fromkeys(structural_reasons))
+        trackable = not strict_reasons
+        calibration_eligible = not structural_reasons
         row["bettable"] = "false"
         row["recommended_side"] = ""
         row["trackable_shadow"] = bool_text(trackable)
         row["shadow_side"] = selected if trackable else ""
-        row["decision_mode"] = "breaks_shadow" if trackable else "breaks_blocked"
-        row["shadow_block_reasons"] = "|".join(reasons)
+        row["calibration_eligible"] = bool_text(calibration_eligible)
+        row["gate_version"] = BREAK_GATE_VERSION
+        if trackable:
+            row["decision_mode"] = "breaks_prospective_shadow"
+        elif calibration_eligible:
+            row["decision_mode"] = "breaks_calibration_unfiltered"
+        else:
+            row["decision_mode"] = "breaks_blocked"
+        row["cohort"] = row["decision_mode"]
+        row["shadow_block_reasons"] = "|".join(strict_reasons)
 
 
 def combine_confidence(left: str, right: str) -> str:
@@ -1012,6 +1120,12 @@ def main() -> None:
                 "line_quality": line_quality,
                 "line_quality_reason": line_quality_reason,
                 "price_pair_status": price_status,
+                "source_agreement": "false",
+                "source_agreement_bookmakers": "",
+                "source_agreement_gap_pp": "",
+                "calibration_eligible": "false",
+                "cohort": "",
+                "gate_version": "",
                 "decision_mode": "",
                 "main_line": "false",
                 "best_available_line": "false",
@@ -1079,6 +1193,12 @@ def main() -> None:
         "line_quality",
         "line_quality_reason",
         "price_pair_status",
+        "source_agreement",
+        "source_agreement_bookmakers",
+        "source_agreement_gap_pp",
+        "calibration_eligible",
+        "cohort",
+        "gate_version",
         "main_line",
         "best_available_line",
         "line_rank",

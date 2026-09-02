@@ -168,11 +168,24 @@ def tennis_breaks_gate_line(gate: dict[str, Any]) -> str:
     player = scopes.get("player_breaks") or {}
     match = scopes.get("match_breaks") or {}
     status = "OUTCOME_PASS" if gate.get("status") == "PASS" else "OUTCOME_FAIL"
+    break_rows = [
+        row
+        for row in load_csv(TENNIS_PROPS_SHADOW_SIGNALS)
+        if str(row.get("market") or "").lower() in {"player_breaks", "match_breaks"}
+    ]
+    prospective = [row for row in break_rows if row.get("decision_mode") == "breaks_prospective_shadow"]
+    calibration = [row for row in break_rows if row.get("decision_mode") != "breaks_prospective_shadow"]
+    calibration_settled = sum(
+        str(row.get("settlement_status") or "").lower() == "settled"
+        for row in calibration
+    )
+    price_status = f"CAPTURED {len(break_rows)}" if break_rows else "MISSING"
     return (
         f"Service Breaks v1 [INTERNAL]: {status} | "
         f"player ATP/WTA {'PASS' if player.get('passed') else 'FAIL'} | "
         f"match ATP/WTA {'PASS' if match.get('passed') else 'FAIL'} | "
-        "real Bet365 price feed MISSING | 0 prospective | NOT SELLABLE"
+        f"real price evidence {price_status} | strict prospective {len(prospective)} | "
+        f"count calibration {calibration_settled}/{len(calibration)} settled | NOT SELLABLE"
     )
 
 

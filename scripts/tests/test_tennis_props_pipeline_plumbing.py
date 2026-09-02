@@ -31,6 +31,7 @@ TRACKER = load_script("tennis-props-shadow-tracker.py", "props_tracker_plumbing"
 DAILY = load_script("run-tennis-props-daily.py", "props_daily_plumbing")
 SYNC = load_script("sync-tennis-props-hosted-captures.py", "props_sync_plumbing")
 HEALTH = load_script("tennis-props-pipeline-health.py", "props_health_plumbing")
+MODEL_REPORT = load_script("tennis-props-model-report.py", "props_model_report_plumbing")
 
 
 def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
@@ -121,6 +122,16 @@ class OneSidedComparisonTests(unittest.TestCase):
 
 
 class ShadowTrackerTests(unittest.TestCase):
+    @staticmethod
+    def args() -> argparse.Namespace:
+        return argparse.Namespace(
+            min_value=8.0,
+            allow_watch=False,
+            allow_medium=True,
+            allow_notes=False,
+            bookmaker="Bet365",
+        )
+
     def test_player_signal_requires_explicit_trackable_shadow_state(self) -> None:
         row = {
             "date": "2026-07-29",
@@ -189,6 +200,79 @@ class ShadowTrackerTests(unittest.TestCase):
         self.assertEqual(signal["side"], "UNDER")
         self.assertEqual(signal["bookmaker"], "BetsBK")
         self.assertEqual(signal["decision_mode"], "two_way_player_shadow")
+
+    def test_match_total_ids_include_line_and_side(self) -> None:
+        row = {
+            "date": "2026-09-02",
+            "tour": "ATP",
+            "tournament": "US Open",
+            "scope": "match_total",
+            "player": "Player One",
+            "opponent": "Player Two",
+            "market": "match_breaks",
+            "line": "6.5",
+        }
+        first = TRACKER.signal_id(row, "OVER")
+        row["line"] = "7.5"
+        second = TRACKER.signal_id(row, "OVER")
+        third = TRACKER.signal_id(row, "UNDER")
+        self.assertNotEqual(first, second)
+        self.assertNotEqual(second, third)
+        self.assertTrue(first.endswith("|6.5|OVER"))
+
+    def test_break_calibration_row_is_recorded_without_a_betting_side(self) -> None:
+        row = {
+            "date": "2026-09-02",
+            "tour": "ATP",
+            "tournament": "US Open",
+            "scope": "match_total",
+            "player": "Player One",
+            "opponent": "Player Two",
+            "market": "match_breaks",
+            "line": "6.5",
+            "confidence": "LOW",
+            "matched_board": "no",
+            "calibration_eligible": "true",
+            "decision_mode": "breaks_calibration_unfiltered",
+            "value_over_pct": "14.0",
+            "value_under_pct": "-12.0",
+            "over_odds": "1.90",
+            "under_odds": "1.90",
+            "price_pair_status": "two_way",
+            "gate_version": "breaks_v1_p0",
+        }
+        signal = TRACKER.build_signal(row, Path("comparison.csv"), self.args())
+        self.assertIsNotNone(signal)
+        self.assertEqual(signal["side"], "")
+        self.assertEqual(signal["selected_odds"], "")
+        self.assertEqual(signal["observed_side"], "OVER")
+        self.assertEqual(signal["observed_odds"], "1.900")
+        self.assertTrue(signal["signal_id"].endswith("|6.5|CALIBRATION"))
+
+    def test_legacy_break_signal_is_reclassified_without_losing_observed_price(self) -> None:
+        row = {
+            "signal_id": "legacy",
+            "date": "2026-09-02",
+            "tour": "ATP",
+            "tournament": "US Open",
+            "scope": "match_total",
+            "player": "Player One",
+            "opponent": "Player Two",
+            "market": "match_breaks",
+            "line": "6.5",
+            "side": "OVER",
+            "selected_odds": "1.833",
+            "value_pct": "11.09",
+            "decision_mode": "breaks_shadow",
+            "closing_snapshot_count": "1",
+            "clv_pct": "0.000",
+        }
+        migrated = TRACKER.normalize_existing_row(row)
+        self.assertEqual(migrated["decision_mode"], "breaks_calibration_unfiltered")
+        self.assertEqual(migrated["side"], "")
+        self.assertEqual(migrated["observed_side"], "OVER")
+        self.assertEqual(migrated["observed_odds"], "1.833")
+        self.assertEqual(migrated["clv_pct"], "")
 
     def test_missing_exact_comparison_never_falls_back_to_stale_file(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -455,16 +539,66 @@ class PipelineHealthTests(unittest.TestCase):
                 signals,
                 now=datetime(2026, 9, 2, 9, tzinfo=timezone.utc),
             )
-            self.assertEqual(payload["break_state"], "SHADOW_WATCHLIST_READY")
+            self.assertEqual(payload["break_state"], "STRICT_PROSPECTIVE_READY")
             self.assertEqual(payload["break_line_rows"], 1)
             self.assertEqual(payload["break_matched_rows"], 1)
             self.assertEqual(payload["break_trackable_rows"], 1)
+
+    def test_service_break_health_reports_calibration_only_separately(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            lines = base / "lines.csv"
+            comparison = base / "comparison.csv"
+            signals = base / "signals.csv"
+            write_csv(lines, [{"date": "2026-09-02", "market": "match_breaks", "capture_ts": "2026-09-02T08:00:00Z"}])
+            write_csv(comparison, [{
+                "date": "2026-09-02",
+                "market": "match_breaks",
+                "matched_board": "yes",
+                "price_pair_status": "two_way",
+                "trackable_shadow": "false",
+                "calibration_eligible": "true",
+                "decision_mode": "breaks_calibration_unfiltered",
+                "shadow_block_reasons": "PRICE_SOURCE_UNVERIFIED",
+            }])
+            payload = HEALTH.build_health(
+                "2026-09-02",
+                lines,
+                comparison,
+                signals,
+                now=datetime(2026, 9, 2, 9, tzinfo=timezone.utc),
+            )
+            self.assertEqual(payload["break_state"], "CALIBRATION_ONLY")
+            self.assertEqual(payload["break_calibration_rows"], 1)
+            self.assertEqual(payload["break_trackable_rows"], 0)
 
     def test_windows_watchdog_evaluates_pipeline_health_artifact(self) -> None:
         watchdog = (SCRIPTS / "tennis-health-check.ps1").read_text(encoding="utf-8")
         self.assertIn("function Get-ArtifactHealth", watchdog)
         self.assertIn("pipeline-health.json", watchdog)
         self.assertIn("$artifactConfigs | ForEach-Object { Get-ArtifactHealth", watchdog)
+
+
+class ModelReportTests(unittest.TestCase):
+    def test_break_calibration_is_excluded_from_shadow_roi(self) -> None:
+        rows = [
+            {
+                "decision_mode": "breaks_calibration_unfiltered",
+                "settlement_status": "settled",
+                "pnl": "8.0",
+            },
+            {
+                "decision_mode": "two_way_player_shadow",
+                "settlement_status": "settled",
+                "pnl": "1.0",
+            },
+        ]
+        stats = MODEL_REPORT.shadow_stats(rows)
+        self.assertEqual(stats["shadow_signals"], "1")
+        self.assertEqual(stats["shadow_settled"], "1")
+        self.assertEqual(stats["shadow_pnl_units"], "1.00")
+        self.assertEqual(stats["break_calibration_rows"], "1")
+        self.assertEqual(stats["break_calibration_settled"], "1")
 
 
 if __name__ == "__main__":
