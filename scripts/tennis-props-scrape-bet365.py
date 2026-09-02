@@ -8,9 +8,9 @@ This is intentionally narrow and credit-conscious:
   - outputs the same inbox format consumed by tennis-props-compare-bet365.py
 
 The odds-api.io tennis market naming is not guaranteed, so the parser accepts
-several common shapes and writes a market-audit CSV when requested. Aces/DFs
-are the only markets priced by the compare script today; tie-break/set-game
-markets are captured as raw evidence until a value layer is wired.
+several common shapes and writes a market-audit CSV when requested. Aces,
+double faults and service breaks are priced by the comparison layer; other
+side markets are retained as evidence where supported.
 """
 
 from __future__ import annotations
@@ -34,6 +34,7 @@ ROOT = Path(__file__).resolve().parent.parent
 BASE_URL = "https://api.odds-api.io/v3"
 OUT_DIR = ROOT / "data" / "tennis-props" / "inbox"
 DEFAULT_BOOKMAKERS = "Bet365"
+BREAK_MARKETS = {"player_breaks", "match_breaks"}
 SUPPORTED_TOURNAMENT_KEYWORDS = (
     ("Roland Garros", ("roland garros", "french open")),
     ("Wimbledon", ("wimbledon",)),
@@ -582,11 +583,45 @@ def fetch_multi(
 
 
 def has_supported_count_rows(event: dict[str, Any]) -> bool:
-    for bookmaker, markets in (event.get("bookmakers") or {}).items():
-        for market in markets or []:
-            if extract_rows(event, bookmaker, market):
+    return event_has_market_rows(event)
+
+
+def event_has_market_rows(
+    event: dict[str, Any],
+    requested_markets: set[str] | None = None,
+) -> bool:
+    for bookmaker, market_payloads in (event.get("bookmakers") or {}).items():
+        for market_payload in market_payloads or []:
+            rows = extract_rows(event, bookmaker, market_payload)
+            if rows and (
+                requested_markets is None
+                or any(str(row.get("market") or "").lower() in requested_markets for row in rows)
+            ):
                 return True
     return False
+
+
+def dedupe_snapshot_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
+    """Collapse default and explicit Player Props responses to one priced line."""
+    by_key: dict[tuple[str, ...], dict[str, str]] = {}
+    for row in rows:
+        key = tuple(
+            str(row.get(field) or "").strip().lower()
+            for field in ("event_id", "bookmaker", "player", "opponent", "market", "line")
+        )
+        current = by_key.get(key)
+        if current is None:
+            by_key[key] = dict(row)
+            continue
+        current_sides = int(bool(current.get("over_odds"))) + int(bool(current.get("under_odds")))
+        new_sides = int(bool(row.get("over_odds"))) + int(bool(row.get("under_odds")))
+        if new_sides > current_sides:
+            by_key[key] = dict(row)
+            continue
+        for field in ("over_odds", "under_odds", "raw_label_sample"):
+            if not current.get(field) and row.get(field):
+                current[field] = row[field]
+    return list(by_key.values())
 
 
 def summarize_market_names(data: Any) -> str:
@@ -767,21 +802,21 @@ def main() -> None:
 
     event_ids = [str(event.get("id")) for event in events if event.get("id")]
     payload = fetch_multi(api_key, event_ids, args.bookmakers)
-    count_event_ids = {
+    break_event_ids = {
         str(event.get("id") or "")
         for event in payload
-        if has_supported_count_rows(event)
+        if event_has_market_rows(event, BREAK_MARKETS)
     }
-    missing_count_event_ids = [event_id for event_id in event_ids if event_id not in count_event_ids]
-    if missing_count_event_ids:
+    missing_break_event_ids = [event_id for event_id in event_ids if event_id not in break_event_ids]
+    if missing_break_event_ids:
         print(
-            "count props absent from default payload; "
-            f"requesting consolidated Player Props for {len(missing_count_event_ids)} event(s)"
+            "service-break props absent from default payload; "
+            f"requesting consolidated Player Props for {len(missing_break_event_ids)} event(s)"
         )
         payload.extend(
             fetch_multi(
                 api_key,
-                missing_count_event_ids,
+                missing_break_event_ids,
                 args.bookmakers,
                 markets="Player Props",
             )
@@ -841,6 +876,7 @@ def main() -> None:
             }
         )
 
+    rows = dedupe_snapshot_rows(rows)
     out = Path(args.out) if args.out else OUT_DIR / f"bet365-lines-{args.date}.csv"
     audit_out = Path(args.audit_out) if args.audit_out else OUT_DIR / f"bet365-tennis-market-audit-{args.date}.csv"
     month = args.date[:7] if re.fullmatch(r"\d{4}-\d{2}-\d{2}", args.date) else now.strftime("%Y-%m")

@@ -160,6 +160,48 @@ class TennisPropsMarketShapeTests(unittest.TestCase):
         )
         self.assertTrue(MODULE.has_supported_count_rows(generic))
 
+    def test_break_detection_does_not_treat_aces_as_break_coverage(self) -> None:
+        payload = dict(self.fixture)
+        payload["bookmakers"] = {
+            "Bet365": [
+                {
+                    "name": "Player Props",
+                    "odds": [
+                        {"label": "Gonzalo Bueno (Aces)", "hdp": 4.5, "over": "1.90", "under": "1.83"},
+                    ],
+                }
+            ]
+        }
+        self.assertTrue(MODULE.has_supported_count_rows(payload))
+        self.assertFalse(MODULE.event_has_market_rows(payload, MODULE.BREAK_MARKETS))
+
+        payload["bookmakers"]["Bet365"][0]["odds"].append(
+            {"label": "Gonzalo Bueno (Service Breaks)", "hdp": 2.5, "over": "2.10", "under": "1.66"}
+        )
+        self.assertTrue(MODULE.event_has_market_rows(payload, MODULE.BREAK_MARKETS))
+
+    def test_default_and_player_props_rows_are_semantically_deduplicated(self) -> None:
+        base = {
+            "event_id": "72987034",
+            "bookmaker": "Bet365",
+            "player": "Gonzalo Bueno",
+            "opponent": "Tiago Pereira",
+            "market": "aces",
+            "line": "4.5",
+            "over_odds": "1.9000",
+            "under_odds": "",
+            "raw_market_name": "Team Total (Aces) Home",
+        }
+        consolidated = {
+            **base,
+            "under_odds": "1.8300",
+            "raw_market_name": "Player Aces",
+        }
+        rows = MODULE.dedupe_snapshot_rows([base, consolidated])
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["over_odds"], "1.9000")
+        self.assertEqual(rows[0]["under_odds"], "1.8300")
+
 
 if __name__ == "__main__":
     unittest.main()

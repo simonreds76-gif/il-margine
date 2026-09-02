@@ -433,6 +433,33 @@ class PipelineHealthTests(unittest.TestCase):
             self.assertEqual(payload["past_event_line_rows"], 1)
             self.assertEqual(payload["eligible_line_rows"], 1)
 
+    def test_service_break_health_distinguishes_feed_from_edge(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            lines = base / "lines.csv"
+            comparison = base / "comparison.csv"
+            signals = base / "signals.csv"
+            write_csv(lines, [{"date": "2026-09-02", "market": "match_breaks", "capture_ts": "2026-09-02T08:00:00Z"}])
+            write_csv(comparison, [{
+                "date": "2026-09-02",
+                "market": "match_breaks",
+                "matched_board": "yes",
+                "price_pair_status": "two_way",
+                "trackable_shadow": "true",
+                "bettable": "false",
+            }])
+            payload = HEALTH.build_health(
+                "2026-09-02",
+                lines,
+                comparison,
+                signals,
+                now=datetime(2026, 9, 2, 9, tzinfo=timezone.utc),
+            )
+            self.assertEqual(payload["break_state"], "SHADOW_WATCHLIST_READY")
+            self.assertEqual(payload["break_line_rows"], 1)
+            self.assertEqual(payload["break_matched_rows"], 1)
+            self.assertEqual(payload["break_trackable_rows"], 1)
+
     def test_windows_watchdog_evaluates_pipeline_health_artifact(self) -> None:
         watchdog = (SCRIPTS / "tennis-health-check.ps1").read_text(encoding="utf-8")
         self.assertIn("function Get-ArtifactHealth", watchdog)

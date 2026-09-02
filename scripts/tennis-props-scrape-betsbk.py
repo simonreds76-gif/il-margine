@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Capture public BetsBK US Open aces and double-fault prices.
+"""Capture public BetsBK US Open tennis count prices.
 
 Odds-API does not currently return those markets for US Open qualifying. BetsBK
-publishes the same pre-match prices on its public event pages, so this local-only
-fallback reads the public event hierarchy and renders each relevant event in one
-headless browser session. It does not log in or write to Supabase.
+publishes pre-match prices on its public event pages, so this local-only fallback
+reads the public event hierarchy and renders each relevant event in one headless
+browser session. Aces, double faults and service-break totals are supported. It
+does not log in or write to Supabase.
 """
 
 from __future__ import annotations
@@ -226,6 +227,59 @@ def extract_market(page: Any, heading: str, timeout_ms: int) -> tuple[str, str, 
     return line, over_odds, under_odds, button_texts
 
 
+def market_heading(heading: str, player1: str, player2: str) -> tuple[str, str, str] | None:
+    """Return market, player and opponent for a supported accordion heading."""
+    text = " ".join(str(heading or "").split())
+    lower = text.casefold()
+    if (
+        "tie break" in lower
+        or "tiebreak" in lower
+        or "break point" in lower
+        or re.search(r"\b(?:set\s*1|1st\s+set|first\s+set)\b", lower)
+    ):
+        return None
+    players = ((player1, player2), (player2, player1))
+    for player, opponent in players:
+        if player.casefold() not in lower:
+            continue
+        if "double fault" in lower:
+            return "double_faults", player, opponent
+        if re.search(r"\baces?\b", lower):
+            return "aces", player, opponent
+        if "break" in lower:
+            return "player_breaks", player, opponent
+    if "break" in lower and any(token in lower for token in ("total", "match", "service break", "breaks of serve")):
+        return "match_breaks", player1, player2
+    return None
+
+
+def market_headings(page: Any) -> list[str]:
+    headings: list[str] = []
+    for raw in page.locator("[aria-controls]").all_inner_texts():
+        text = " ".join(str(raw or "").split())
+        if text and text not in headings:
+            headings.append(text)
+    return headings
+
+
+def open_market_tab(page: Any, label: str) -> bool:
+    pattern = re.compile(rf"^{re.escape(label)}$", flags=re.I)
+    for locator in (
+        page.get_by_role("tab", name=pattern).first,
+        page.get_by_role("button", name=pattern).first,
+        page.get_by_text(pattern).first,
+    ):
+        if locator.count() == 0:
+            continue
+        try:
+            locator.click(timeout=2500)
+            page.wait_for_timeout(250)
+            return True
+        except Exception:
+            continue
+    return False
+
+
 def capture_events(
     events: list[dict[str, str]],
     *,
@@ -271,16 +325,23 @@ def capture_events(
                     timeout=timeout_ms,
                 )
                 try:
-                    page.get_by_text(re.compile(r"(?:Aces|Double Faults)$")).first.wait_for(
+                    page.locator("[aria-controls]").first.wait_for(
                         state="attached",
                         timeout=min(timeout_ms, 5000),
                     )
                 except PlaywrightTimeoutError:
-                    status = "NO_ACES_DF_MARKETS"
-                    raise LookupError("No full-match aces or double-fault market headings loaded")
-                for player, opponent in ((player1, player2), (player2, player1)):
-                    for market, suffix in (("aces", "Aces"), ("double_faults", "Double Faults")):
-                        heading = f"{player} {suffix}"
+                    status = "NO_SUPPORTED_MARKETS"
+                    raise LookupError("No market accordion headings loaded")
+
+                seen_rows: set[tuple[str, str, str]] = set()
+                inspected_headings: list[str] = []
+                for tab_label in ("Popular", "Players", "Game", "Other"):
+                    open_market_tab(page, tab_label)
+                    for heading in market_headings(page):
+                        classified = market_heading(heading, player1, player2)
+                        if classified is None:
+                            continue
+                        market, player, opponent = classified
                         try:
                             result = extract_market(page, heading, timeout_ms)
                         except PlaywrightTimeoutError:
@@ -288,6 +349,11 @@ def capture_events(
                         if result is None:
                             continue
                         line, over_odds, under_odds, labels = result
+                        row_key = (market, player.casefold(), line)
+                        if row_key in seen_rows:
+                            continue
+                        seen_rows.add(row_key)
+                        inspected_headings.append(heading)
                         event_rows.append(
                             {
                                 "event_id": event["event_id"],
@@ -308,7 +374,9 @@ def capture_events(
                                 "raw_label_sample": " | ".join(" ".join(label.split()) for label in labels),
                             }
                         )
-                status = "CAPTURED" if event_rows else "NO_ACES_DF_MARKETS"
+                break_rows = sum(row["market"] in {"player_breaks", "match_breaks"} for row in event_rows)
+                status = "CAPTURED" if break_rows else "CAPTURED_NO_BREAKS" if event_rows else "NO_SUPPORTED_MARKETS"
+                detail = f"break_rows={break_rows}; headings={len(inspected_headings)}"
             except LookupError as exc:
                 detail = str(exc)
             except Exception as exc:  # Browser/network failures must remain visible per event.
@@ -335,7 +403,7 @@ def capture_events(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Capture public BetsBK US Open aces/DF prices")
+    parser = argparse.ArgumentParser(description="Capture public BetsBK US Open tennis count prices")
     parser.add_argument("--date", default=datetime.now(timezone.utc).date().isoformat())
     parser.add_argument("--days-ahead", type=int, default=2)
     parser.add_argument("--max-events", type=int, default=64)
@@ -382,7 +450,7 @@ def main() -> int:
         print(f"Merged lines: {out}")
         print(f"Price history: added {history_added}, file={history_out}")
     else:
-        print("No BetsBK aces/DF rows captured; existing lines file left unchanged.")
+        print("No BetsBK tennis count rows captured; existing lines file left unchanged.")
     print(f"Saved audit: {audit_out}")
     return 0
 

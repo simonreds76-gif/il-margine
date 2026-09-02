@@ -96,6 +96,24 @@ def build_health(
         if row.get("trackable_shadow") != "true" and row.get("bettable") != "true"
     )
     as_of_signals = [row for row in signals if str(row.get("date") or "") == as_of]
+    break_markets = {"player_breaks", "match_breaks"}
+    break_line_rows = [row for row in line_rows if str(row.get("market") or "").lower() in break_markets]
+    break_comparison_rows = [row for row in comparison_rows if str(row.get("market") or "").lower() in break_markets]
+    break_matched_rows = [row for row in break_comparison_rows if row.get("matched_board") == "yes"]
+    break_trackable_rows = [row for row in break_matched_rows if row.get("trackable_shadow") == "true"]
+    break_blockers = Counter(
+        str(row.get("shadow_block_reasons") or "none").split("|")[0]
+        for row in break_matched_rows
+        if row.get("trackable_shadow") != "true"
+    )
+    if not break_line_rows:
+        break_state = "PRICE_FEED_MISSING"
+    elif not break_comparison_rows or not break_matched_rows:
+        break_state = "BOARD_MATCH_FAILED"
+    elif break_trackable_rows:
+        break_state = "SHADOW_WATCHLIST_READY"
+    else:
+        break_state = "NO_QUALIFYING_EDGE"
 
     structural_error = False
     if not line_rows:
@@ -142,6 +160,12 @@ def build_health(
         "trackable_shadow_rows": trackable_count,
         "public_bettable_rows": bettable_count,
         "shadow_signals_for_event_date": len(as_of_signals),
+        "break_state": break_state,
+        "break_line_rows": len(break_line_rows),
+        "break_comparison_rows": len(break_comparison_rows),
+        "break_matched_rows": len(break_matched_rows),
+        "break_trackable_rows": len(break_trackable_rows),
+        "top_break_blocker": break_blockers.most_common(1)[0][0] if break_blockers else "none",
         "latest_capture_utc": latest_capture.isoformat(timespec="seconds")
         if latest_capture
         else None,
@@ -165,6 +189,8 @@ def write_report(path: Path, payload: dict[str, object]) -> None:
         f"Prospective shadow candidates: {payload['trackable_shadow_rows']}",
         f"Public bettable candidates: {payload['public_bettable_rows']}",
         f"Signals for event date: {payload['shadow_signals_for_event_date']}",
+        f"Service breaks: {payload['break_state']} | captured={payload['break_line_rows']} compared={payload['break_comparison_rows']} matched={payload['break_matched_rows']} watchlist={payload['break_trackable_rows']}",
+        f"Top service-break blocker: {payload['top_break_blocker']}",
         f"Latest capture: {payload['latest_capture_utc']} (age {payload['capture_age_hours']}h)",
         f"Top shadow blocker: {payload['top_shadow_blocker']}",
         "",

@@ -222,7 +222,7 @@ function isMatchTotalComparisonRow(row: CsvRow): boolean {
 
 function isUsefulComparisonRow(row: CsvRow): boolean {
   if (isMatchTotalComparisonRow(row)) return true;
-  return row.market === "aces" || row.market === "double_faults";
+  return ["aces", "double_faults", "player_breaks", "match_breaks"].includes(row.market || "");
 }
 
 function isBettableComparisonRow(row: CsvRow): boolean {
@@ -718,7 +718,7 @@ function BreakFairOddsPanel({
         </div>
       ) : <div className="mt-2 text-xs text-slate-600">No validated ladder available.</div>}
       <div className="mt-2 text-[10px] uppercase tracking-[0.1em] text-slate-600">
-        {String(distribution || "poisson").replaceAll("_", " ")} · no Bet365 break price in provider feed · not a tip
+        {String(distribution || "poisson").replaceAll("_", " ")} · compare captured prices on the decision board · zero-stake research
       </div>
     </div>
   );
@@ -1146,6 +1146,8 @@ function rowRejectionReason(row: CsvRow): string {
 function marketLabel(row: CsvRow): string {
   if (row.market === "match_aces") return "Match aces";
   if (row.market === "match_double_faults") return "Match double faults";
+  if (row.market === "match_breaks") return "Match service breaks";
+  if (row.market === "player_breaks") return "Player service breaks";
   return row.market?.replaceAll("_", " ") || "market";
 }
 
@@ -1295,6 +1297,47 @@ function RecommendationPanel({
           </div>
         </div>
       ) : null}
+    </SectionCard>
+  );
+}
+
+function BreakRecommendationPanel({ rows }: { rows: CsvRow[] }) {
+  const matched = rows.filter((row) => row.matched_board === "yes");
+  const watchlist = matched
+    .filter((row) => row.trackable_shadow === "true" && ["OVER", "UNDER"].includes((row.shadow_side || "").toUpperCase()))
+    .sort((a, b) => rowBestValue(b) - rowBestValue(a));
+  const blocked = matched
+    .filter((row) => row.trackable_shadow !== "true")
+    .sort((a, b) => rowBestValue(b) - rowBestValue(a));
+
+  return (
+    <SectionCard
+      title="Service Breaks v1: Price-Backed Watchlist"
+      subtitle="Player and match break totals are priced only when a real Bet365 or BetsBK line matches the registered projection. These remain zero-stake research until prospective ROI and CLV gates pass."
+    >
+      <div className="grid gap-2 sm:grid-cols-4">
+        <MetricTile label="Captured" value={String(rows.length)} sub="break price rows" tone={rows.length ? "text-cyan-300" : "text-rose-300"} />
+        <MetricTile label="Matched" value={String(matched.length)} sub="joined to projections" tone={matched.length ? "text-emerald-300" : "text-slate-400"} />
+        <MetricTile label="Watchlist" value={String(watchlist.length)} sub="8%+ edge, MED+" tone={watchlist.length ? "text-amber-300" : "text-slate-400"} />
+        <MetricTile label="Official stake" value="0.0u" sub="evidence gate not passed" tone="text-slate-400" />
+      </div>
+      {watchlist.length ? (
+        <div className="mt-4 grid gap-3 lg:grid-cols-2">
+          {watchlist.slice(0, 12).map((row, index) => <ComparisonLineCard key={`break-watch-${row.event_id}-${row.player}-${row.line}-${index}`} row={row} />)}
+        </div>
+      ) : rows.length === 0 ? (
+        <div className="mt-4 rounded-2xl border border-rose-500/25 bg-rose-500/10 p-4 text-sm leading-6 text-rose-100">
+          <strong className="block uppercase tracking-[0.12em] text-rose-200">No live service-break price captured</strong>
+          The projection and fair-odds ladders exist, but no recommendation can be calculated without a bookmaker line. This is a feed-coverage result, not a no-edge verdict.
+        </div>
+      ) : (
+        <div className="mt-4">
+          <div className="mb-2 text-xs font-black uppercase tracking-[0.14em] text-slate-500">Best blocked break rows</div>
+          <div className="grid gap-3 lg:grid-cols-3">
+            {blocked.slice(0, 6).map((row, index) => <ComparisonLineCard key={`break-blocked-${row.event_id}-${row.player}-${row.line}-${index}`} row={row} />)}
+          </div>
+        </div>
+      )}
     </SectionCard>
   );
 }
@@ -2190,6 +2233,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
   const usefulComparisonRows = comparisonRows.filter(isUsefulComparisonRow);
   const sortedComparison = [...usefulComparisonRows].sort(comparisonSort);
   const decisionRows = sortedComparison.filter(isMatchTotalComparisonRow);
+  const breakRows = sortedComparison.filter((row) => row.market === "player_breaks" || row.market === "match_breaks");
   const matchedDecisionRows = decisionRows.filter((row) => row.matched_board === "yes");
   const bettableRows = matchedDecisionRows.filter(isBettableComparisonRow);
   const nearMissRows = matchedDecisionRows
@@ -2224,9 +2268,9 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
           <MonitorNav current="tennis-props" />
         </div>
 
-        <HeroCard title="Tennis Props Decision Board" eyebrow="Bet365 aces / double-faults monitor">
+        <HeroCard title="Tennis Props Decision Board" eyebrow="Aces / double faults / service breaks">
           <p className="text-slate-300">
-            Decision first: Bet365 match-total aces and double-fault lines are compared against the projection board. Two-way quotes use raw and no-vig edge; central Over-only quotes can qualify on a stricter raw-EV gate.
+            Decision first: bookmaker aces, double-fault and service-break lines are compared against the projection board. Breaks remain a zero-stake watchlist until prospective ROI and CLV gates pass.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             <StatusPill label="Decision board default" tone="border-emerald-500/25 bg-emerald-500/10 text-emerald-300" />
@@ -2309,6 +2353,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
               matchedCount={matchedDecisionRows.length}
               totalCount={decisionRows.length}
             />
+
+            <BreakRecommendationPanel rows={breakRows} />
 
             <div id="most-aces-evidence" className="scroll-mt-6">
               <MostAcesPanel

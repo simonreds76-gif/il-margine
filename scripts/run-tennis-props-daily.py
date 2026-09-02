@@ -444,7 +444,7 @@ def capture_market_prices(args: argparse.Namespace) -> int:
                     "--max-events", str(args.max_events),
                     "--bookmakers", "Bet365",
                 ],
-                "Capture Bet365 aces/DF lines before projections",
+                "Capture Bet365 tennis count lines before projections",
                 fatal=False,
                 timeout_seconds=180,
             )
@@ -518,7 +518,7 @@ def main() -> int:
     parser.add_argument("--require-odds", action="store_true", help="Fail if the Bet365 odds scrape cannot run")
     parser.add_argument("--comparison-only", action="store_true", help="Sync hosted prices and refresh comparison/tracking without rebuilding projections")
     parser.add_argument("--skip-derived-boards", action="store_true", help="Skip slow derived ace boards during a fast comparison pass")
-    parser.add_argument("--capture-only", action="store_true", help="Capture Bet365/BetMGM prices without rebuilding projections")
+    parser.add_argument("--capture-only", action="store_true", help="Capture bookmaker tennis count prices without rebuilding projections")
     parser.add_argument("--skip-hosted-sync", action="store_true", help="Do not sync captures from the golden data branch")
     parser.add_argument("--hosted-lookback-days", type=int, default=7)
     parser.add_argument("--days-ahead", type=int, default=3)
