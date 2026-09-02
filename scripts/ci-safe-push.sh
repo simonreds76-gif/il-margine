@@ -37,7 +37,9 @@ for attempt in $(seq 1 "${max_attempts}"); do
     git stash push --include-untracked -m "ci-safe-push leftovers before rebase"
   fi
 
-  git rebase "${remote}/${branch}"
+  # A large generated-data checkout can become dirty again while Git refreshes
+  # line-ending-normalized files. Let rebase park that second wave as well.
+  git rebase --autostash "${remote}/${branch}"
 
   push_log="$(mktemp)"
   if git push "${remote}" "HEAD:${branch}" 2>&1 | tee "${push_log}"; then
