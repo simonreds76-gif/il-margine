@@ -145,6 +145,7 @@ def main() -> int:
                 "reviewed_live_penalty_event",
                 "confirmed_departure_roster_review",
                 "current_roster_and_penalty_record_review",
+                "current_squad_membership_audit",
             }
             research_events = [
                 event

@@ -31,8 +31,8 @@
       "Hull City",
       "Ipswich Town"
     ],
-    "last_verified": "2026-09-01",
-    "public_updated_at": "2026-09-01",
+    "last_verified": "2026-09-02",
+    "public_updated_at": "2026-09-02",
     "membership_source": "https://www.premierleague.com/en/news/4675508/premier-league-fixture-schedulereleased-for-season-202627",
     "last_reviewed": "2026-09-01"
   },
@@ -51,11 +51,11 @@
     },
     "condition_note": "Saka converted with Gyokeres available in October 2025; Gyokeres then converted with Saka playing in December. Saka remains the best primary projection, Gyokeres is a live co-primary, and Odegaard is the practical third option. No 2026 preseason penalty resolved the Saka-Gyokeres conflict.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_arsenal_current_review",
       "date": "2026-09-01",
@@ -324,20 +324,20 @@
       "primary": {
         "player": "Bukayo Saka",
         "status": "confirmed",
-        "source_url": "https://www.arsenal.com/men/players",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9825/overview/arsenal",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Viktor Gyokeres",
         "status": "confirmed",
-        "source_url": "https://www.arsenal.com/men/players",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9825/overview/arsenal",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Martin Odegaard",
         "status": "confirmed",
-        "source_url": "https://www.arsenal.com/men/players",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9825/overview/arsenal",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -352,29 +352,29 @@
     }
   },
   "Aston Villa": {
-    "primary": "Emiliano Buendia",
+    "primary": "Emiliano Buendía",
     "secondary": "Tammy Abraham",
-    "tertiary": "",
-    "last_updated": "2026-09-01",
+    "tertiary": "Ross Barkley",
+    "last_updated": "2026-09-02",
     "source": "Premier League",
     "cross_check": "Aston Villa",
-    "hierarchy_status": "conditional",
+    "hierarchy_status": "probable",
     "confidence": {
       "primary": "high",
       "secondary": "medium",
       "tertiary": null
     },
-    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Emiliano Buendia then Tammy Abraham. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+    "condition_note": "Buendía remains first after taking Villa's May 2026 penalty. Watkins has left; Abraham and Barkley are the current experienced deputies, without a new direct ordering event.",
     "last_verified": {
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "confirmed_departure_roster_review"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
-      "id": "evt_20260901_aston-villa_current_review",
-      "date": "2026-09-01",
-      "type": "current_season_board_review",
+      "id": "evt_20260902_aston_villa_post_deadline",
+      "date": "2026-09-02",
+      "type": "post_deadline_roster_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -588,6 +588,38 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+      },
+      {
+        "id": "evt_20260902_aston_villa_post_deadline",
+        "date": "2026-09-02",
+        "season": "2026/27",
+        "type": "post_deadline_roster_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Buendía remains first after taking Villa's May 2026 penalty. Watkins has left; Abraham and Barkley are the current experienced deputies, without a new direct ordering event.",
+        "sources": [
+          {
+            "label": "FotMob current club squad",
+            "url": "https://www.fotmob.com/teams/10252/overview/aston-villa",
+            "date": "2026-09-02",
+            "note": "Current squad membership checked after the transfer deadline."
+          },
+          {
+            "label": "Current FPL set-piece order",
+            "url": "https://aifpl.co.uk/set-pieces",
+            "date": "2026-09-02",
+            "note": "Current role evidence cross-checked before reordering."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-02T18:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Post-deadline roster correction; uncertain depth remains explicitly provisional."
       }
     ],
     "change_log": [
@@ -682,11 +714,34 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-01T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-02",
+        "season": "2026/27",
+        "change_type": "post_deadline_roster_correction",
+        "from": {
+          "primary": "Emiliano Buendia",
+          "secondary": "Tammy Abraham",
+          "tertiary": ""
+        },
+        "to": {
+          "primary": "Emiliano Buendía",
+          "secondary": "Tammy Abraham",
+          "tertiary": "Ross Barkley"
+        },
+        "reason": "Buendía remains first after taking Villa's May 2026 penalty. Watkins has left; Abraham and Barkley are the current experienced deputies, without a new direct ordering event.",
+        "evidence_ids": [
+          "evt_20260902_aston_villa_post_deadline"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-02T18:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -699,16 +754,22 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Emiliano Buendia",
+        "player": "Emiliano Buendía",
         "status": "confirmed",
-        "source_url": "https://www.premierleague.com/en/clubs/7/aston-villa/squad",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10252/overview/aston-villa",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Tammy Abraham",
         "status": "confirmed",
-        "source_url": "https://www.premierleague.com/en/clubs/7/aston-villa/squad",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10252/overview/aston-villa",
+        "checked_at": "2026-09-02"
+      },
+      "tertiary": {
+        "player": "Ross Barkley",
+        "status": "confirmed",
+        "source_url": "https://www.fotmob.com/teams/10252/overview/aston-villa",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -737,11 +798,11 @@
     },
     "condition_note": "Kroupi remains the nominal long-term specialist but is excluded from the active matchday order while recovering from foot surgery. Kluivert's established Premier League record makes him the practical first call, with Tavernier second after converting with Kroupi in the side. Current starting striker Evanilson is the low-confidence active third candidate; he has no observed 2026/27 assignment.",
     "last_verified": {
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "current_roster_and_penalty_record_review"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_bournemouth_current_review",
       "date": "2026-09-01",
@@ -1112,20 +1173,20 @@
       "primary": {
         "player": "Justin Kluivert",
         "status": "confirmed",
-        "source_url": "https://www.afcb.co.uk/news/2024/november/30/kluivert-makes-premier-league-history-in-wolves-win/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8678/overview/afc-bournemouth",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Marcus Tavernier",
         "status": "confirmed",
-        "source_url": "https://www.afcb.co.uk/news/2026/may/03/cherries-shine-in-strong-showing-against-crystal-palace/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8678/overview/afc-bournemouth",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Evanilson",
         "status": "confirmed",
-        "source_url": "https://fbref.com/en/players/6f3cc2fe/matchlogs/2026-2027/summary/Evanilson-Match-Logs",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8678/overview/afc-bournemouth",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -1165,11 +1226,11 @@
     },
     "condition_note": "Igor Thiago remains Brentford's confirmed first choice. He took the 55th-minute penalty against Tottenham with Kevin Schade in the starting XI; Fabio Carvalho was not in the matchday squad. The miss does not alter the order, and Schade remains the evidence-led deputy.",
     "last_verified": {
-      "date": "2026-08-22",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "reviewed_live_penalty_event"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_brentford_current_review",
       "date": "2026-09-01",
@@ -1464,20 +1525,20 @@
       "primary": {
         "player": "Igor Thiago",
         "status": "confirmed",
-        "source_url": "https://www.brentfordfc.com/en/news/article/fpl-brentford-fantasy-premier-league-prices-2026-27-igor-thiago",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9937/overview/brentford",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Kevin Schade",
         "status": "confirmed",
-        "source_url": "https://www.brentfordfc.com/en/news/article/fpl-brentford-fantasy-premier-league-prices-2026-27-igor-thiago",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9937/overview/brentford",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Fabio Carvalho",
         "status": "confirmed",
-        "source_url": "https://www.brentfordfc.com/en/news/article/fpl-brentford-fantasy-premier-league-prices-2026-27-igor-thiago",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9937/overview/brentford",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -1506,11 +1567,11 @@
     },
     "condition_note": "Gross is the strongest current primary after taking Brighton's first post-Welbeck preseason penalty. O'Riley has the better competitive backup record; Osman is a documented emergency third after converting in an additional preseason period. Competitive confirmation is still required.",
     "last_verified": {
-      "date": "2026-08-10",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_brighton_current_review",
       "date": "2026-09-01",
@@ -1913,20 +1974,20 @@
       "primary": {
         "player": "Pascal Gross",
         "status": "confirmed",
-        "source_url": "https://www.brightonandhovealbion.com/media-article/mft-transfer-news-pascal-gross-borussia-dortmund-january-2026",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10204/overview/brighton-hove-albion",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Matt O'Riley",
         "status": "confirmed",
-        "source_url": "https://www.brightonandhovealbion.com/media-article/mft-transfer-news-matt-o-riley-marseille-return-february-2026",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10204/overview/brighton-hove-albion",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Ibrahim Osman",
         "status": "confirmed",
-        "source_url": "https://www.brightonandhovealbion.com/media-article/mft-match-report-bha-albion-show-set-piece-threat-in-win-over-strasbourg",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10204/overview/brighton-hove-albion",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -1942,28 +2003,28 @@
   },
   "Chelsea": {
     "primary": "Cole Palmer",
-    "secondary": "Enzo Fernandez",
-    "tertiary": "Estevao",
-    "last_updated": "2026-07-30",
+    "secondary": "Estêvão",
+    "tertiary": "João Pedro",
+    "last_updated": "2026-09-02",
     "source": "Chelsea",
     "cross_check": "Chelsea",
-    "hierarchy_status": "confirmed",
+    "hierarchy_status": "probable",
     "confidence": {
       "primary": "high",
       "secondary": "high",
       "tertiary": "medium"
     },
-    "condition_note": "Palmer remains the clear primary. Enzo has taken when Palmer did not, and Enzo and Estevao both converted against Ajax in an order consistent with Enzo second and Estevao third. Estevao has less evidence volume than the first two, but the observed ordering is usable.",
+    "condition_note": "Palmer remains the clear first choice. Enzo Fernández has left; Estêvão is promoted from the previous hierarchy and João Pedro is the provisional third option.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-02",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
-      "id": "evt_20260901_chelsea_current_review",
-      "date": "2026-09-01",
-      "type": "current_season_board_review",
+      "id": "evt_20260902_chelsea_post_deadline",
+      "date": "2026-09-02",
+      "type": "post_deadline_roster_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -2156,6 +2217,38 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+      },
+      {
+        "id": "evt_20260902_chelsea_post_deadline",
+        "date": "2026-09-02",
+        "season": "2026/27",
+        "type": "post_deadline_roster_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Palmer remains the clear first choice. Enzo Fernández has left; Estêvão is promoted from the previous hierarchy and João Pedro is the provisional third option.",
+        "sources": [
+          {
+            "label": "FotMob current club squad",
+            "url": "https://www.fotmob.com/teams/8455/overview/chelsea",
+            "date": "2026-09-02",
+            "note": "Current squad membership checked after the transfer deadline."
+          },
+          {
+            "label": "Current FPL set-piece order",
+            "url": "https://aifpl.co.uk/set-pieces",
+            "date": "2026-09-02",
+            "note": "Current role evidence cross-checked before reordering."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-02T18:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Post-deadline roster correction; uncertain depth remains explicitly provisional."
       }
     ],
     "change_log": [
@@ -2227,6 +2320,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-02",
+        "season": "2026/27",
+        "change_type": "post_deadline_roster_correction",
+        "from": {
+          "primary": "Cole Palmer",
+          "secondary": "Enzo Fernandez",
+          "tertiary": "Estevao"
+        },
+        "to": {
+          "primary": "Cole Palmer",
+          "secondary": "Estêvão",
+          "tertiary": "João Pedro"
+        },
+        "reason": "Palmer remains the clear first choice. Enzo Fernández has left; Estêvão is promoted from the previous hierarchy and João Pedro is the provisional third option.",
+        "evidence_ids": [
+          "evt_20260902_chelsea_post_deadline"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-02T18:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -2246,20 +2362,20 @@
       "primary": {
         "player": "Cole Palmer",
         "status": "confirmed",
-        "source_url": "https://www.chelseafc.com/en/news/article/fpl-2026-27-chelsea-player-prices-revealed",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8455/overview/chelsea",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
-        "player": "Enzo Fernandez",
+        "player": "Estêvão",
         "status": "confirmed",
-        "source_url": "https://www.chelseafc.com/en/news/article/fpl-2026-27-chelsea-player-prices-revealed",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8455/overview/chelsea",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
-        "player": "Estevao",
+        "player": "João Pedro",
         "status": "confirmed",
-        "source_url": "https://www.chelseafc.com/en/news/article/fpl-2026-27-chelsea-player-prices-revealed",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8455/overview/chelsea",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -2286,11 +2402,11 @@
     },
     "condition_note": "Wright remained the leading in-match taker. Torp and Thomas-Asante are the next current specialists based on the competitive club log. The lower two have fewer decisive same-pitch tests than Wright.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_coventry-city_current_review",
       "date": "2026-09-01",
@@ -2507,20 +2623,20 @@
       "primary": {
         "player": "Haji Wright",
         "status": "confirmed",
-        "source_url": "https://www.premierleague.com/en/clubs/9/coventry-city/squad",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8669/overview/coventry-city",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Victor Torp",
         "status": "confirmed",
-        "source_url": "https://www.premierleague.com/en/clubs/9/coventry-city/squad",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8669/overview/coventry-city",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Brandon Thomas-Asante",
         "status": "confirmed",
-        "source_url": "https://www.premierleague.com/en/clubs/9/coventry-city/squad",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8669/overview/coventry-city",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -2536,9 +2652,9 @@
   },
   "Crystal Palace": {
     "primary": "Jean-Philippe Mateta",
-    "secondary": "Ismaila Sarr",
-    "tertiary": "Justin Devenny",
-    "last_updated": "2026-07-30",
+    "secondary": "Ismaïla Sarr",
+    "tertiary": "Adam Wharton",
+    "last_updated": "2026-09-02",
     "source": "Crystal Palace",
     "cross_check": "Crystal Palace",
     "hierarchy_status": "probable",
@@ -2547,17 +2663,17 @@
       "secondary": "high",
       "tertiary": "low"
     },
-    "condition_note": "Mateta took with Sarr playing. Sarr took when Mateta was benched, establishing him as deputy. Devenny is the best current third candidate but has only shootout and set-piece specialist support. Devenny has no confirmed regular-time Palace assignment; his evidence is shootout-only.",
+    "condition_note": "Mateta and Sarr retain their evidenced first-two order. Devenny has left; Wharton is the provisional current-squad third option on set-piece responsibility.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-02",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
-      "id": "evt_20260901_crystal-palace_current_review",
-      "date": "2026-09-01",
-      "type": "current_season_board_review",
+      "id": "evt_20260902_crystal_palace_post_deadline",
+      "date": "2026-09-02",
+      "type": "post_deadline_roster_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -2732,6 +2848,38 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+      },
+      {
+        "id": "evt_20260902_crystal_palace_post_deadline",
+        "date": "2026-09-02",
+        "season": "2026/27",
+        "type": "post_deadline_roster_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Mateta and Sarr retain their evidenced first-two order. Devenny has left; Wharton is the provisional current-squad third option on set-piece responsibility.",
+        "sources": [
+          {
+            "label": "FotMob current club squad",
+            "url": "https://www.fotmob.com/teams/9826/overview/crystal-palace",
+            "date": "2026-09-02",
+            "note": "Current squad membership checked after the transfer deadline."
+          },
+          {
+            "label": "Current FPL set-piece order",
+            "url": "https://aifpl.co.uk/set-pieces",
+            "date": "2026-09-02",
+            "note": "Current role evidence cross-checked before reordering."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-02T18:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Post-deadline roster correction; uncertain depth remains explicitly provisional."
       }
     ],
     "change_log": [
@@ -2803,11 +2951,34 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-02",
+        "season": "2026/27",
+        "change_type": "post_deadline_roster_correction",
+        "from": {
+          "primary": "Jean-Philippe Mateta",
+          "secondary": "Ismaila Sarr",
+          "tertiary": "Justin Devenny"
+        },
+        "to": {
+          "primary": "Jean-Philippe Mateta",
+          "secondary": "Ismaïla Sarr",
+          "tertiary": "Adam Wharton"
+        },
+        "reason": "Mateta and Sarr retain their evidenced first-two order. Devenny has left; Wharton is the provisional current-squad third option on set-piece responsibility.",
+        "evidence_ids": [
+          "evt_20260902_crystal_palace_post_deadline"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-02T18:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -2822,20 +2993,20 @@
       "primary": {
         "player": "Jean-Philippe Mateta",
         "status": "confirmed",
-        "source_url": "https://www.cpfc.co.uk/teams/first-team/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9826/overview/crystal-palace",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
-        "player": "Ismaila Sarr",
+        "player": "Ismaïla Sarr",
         "status": "confirmed",
-        "source_url": "https://www.cpfc.co.uk/teams/first-team/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9826/overview/crystal-palace",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
-        "player": "Justin Devenny",
+        "player": "Adam Wharton",
         "status": "confirmed",
-        "source_url": "https://www.cpfc.co.uk/teams/first-team/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9826/overview/crystal-palace",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -2850,10 +3021,10 @@
     }
   },
   "Everton": {
-    "primary": "Iliman Ndiaye",
-    "secondary": "James Garner",
-    "tertiary": "Beto",
-    "last_updated": "2026-07-30",
+    "primary": "James Garner",
+    "secondary": "Thierno Barry",
+    "tertiary": "Kiernan Dewsbury-Hall",
+    "last_updated": "2026-09-02",
     "source": "Everton",
     "cross_check": "Premier League",
     "hierarchy_status": "conditional",
@@ -2862,17 +3033,17 @@
       "secondary": "high",
       "tertiary": "low"
     },
-    "condition_note": "Ndiaye is the primary. Garner took during Ndiaye absence and is the demonstrated deputy. Beto is a current-squad fallback without a decisive assignment. Ndiaye was linked with a move, but no official transfer existed by the cutoff. Conditions: Re-audit immediately if Everton officially transfers Iliman Ndiaye before the deadline.",
+    "condition_note": "Ndiaye and Beto left on deadline day. Garner previously converted with Barry available and is the strongest observed current-squad call; Barry and Dewsbury-Hall are provisional deputies.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-02",
       "by": "Il Margine",
       "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
-      "id": "evt_20260901_everton_current_review",
-      "date": "2026-09-01",
-      "type": "current_season_board_review",
+      "id": "evt_20260902_everton_post_deadline",
+      "date": "2026-09-02",
+      "type": "post_deadline_roster_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -3041,6 +3212,38 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+      },
+      {
+        "id": "evt_20260902_everton_post_deadline",
+        "date": "2026-09-02",
+        "season": "2026/27",
+        "type": "post_deadline_roster_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Ndiaye and Beto left on deadline day. Garner previously converted with Barry available and is the strongest observed current-squad call; Barry and Dewsbury-Hall are provisional deputies.",
+        "sources": [
+          {
+            "label": "FotMob current club squad",
+            "url": "https://www.fotmob.com/teams/8668/overview/everton",
+            "date": "2026-09-02",
+            "note": "Current squad membership checked after the transfer deadline."
+          },
+          {
+            "label": "Current FPL set-piece order",
+            "url": "https://aifpl.co.uk/set-pieces",
+            "date": "2026-09-02",
+            "note": "Current role evidence cross-checked before reordering."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-02T18:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Post-deadline roster correction; uncertain depth remains explicitly provisional."
       }
     ],
     "change_log": [
@@ -3112,6 +3315,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-02",
+        "season": "2026/27",
+        "change_type": "post_deadline_roster_correction",
+        "from": {
+          "primary": "Iliman Ndiaye",
+          "secondary": "James Garner",
+          "tertiary": "Beto"
+        },
+        "to": {
+          "primary": "James Garner",
+          "secondary": "Thierno Barry",
+          "tertiary": "Kiernan Dewsbury-Hall"
+        },
+        "reason": "Ndiaye and Beto left on deadline day. Garner previously converted with Barry available and is the strongest observed current-squad call; Barry and Dewsbury-Hall are provisional deputies.",
+        "evidence_ids": [
+          "evt_20260902_everton_post_deadline"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-02T18:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -3129,22 +3355,22 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Iliman Ndiaye",
-        "status": "confirmed",
-        "source_url": "https://www.evertonfc.com/teams/men",
-        "checked_at": "2026-09-01"
-      },
-      "secondary": {
         "player": "James Garner",
         "status": "confirmed",
-        "source_url": "https://www.evertonfc.com/teams/men",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8668/overview/everton",
+        "checked_at": "2026-09-02"
+      },
+      "secondary": {
+        "player": "Thierno Barry",
+        "status": "confirmed",
+        "source_url": "https://www.fotmob.com/teams/8668/overview/everton",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
-        "player": "Beto",
+        "player": "Kiernan Dewsbury-Hall",
         "status": "confirmed",
-        "source_url": "https://www.evertonfc.com/teams/men",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8668/overview/everton",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -3161,8 +3387,8 @@
   "Fulham": {
     "primary": "Antonee Robinson",
     "secondary": "Rodrigo Muniz",
-    "tertiary": "",
-    "last_updated": "2026-09-01",
+    "tertiary": "Gonzalo García",
+    "last_updated": "2026-09-02",
     "source": "Fulham",
     "cross_check": "Fulham",
     "hierarchy_status": "conditional",
@@ -3171,17 +3397,17 @@
       "secondary": "low",
       "tertiary": null
     },
-    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Antonee Robinson then Rodrigo Muniz. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+    "condition_note": "Robinson retains first place after Fulham's latest direct conversion and Muniz remains the existing deputy. Lukić has left; the current set-piece list adds Gonzalo García as the provisional third option.",
     "last_verified": {
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "confirmed_departure_roster_review"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
-      "id": "evt_20260901_fulham_current_review",
-      "date": "2026-09-01",
-      "type": "current_season_board_review",
+      "id": "evt_20260902_fulham_post_deadline",
+      "date": "2026-09-02",
+      "type": "post_deadline_roster_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -3419,6 +3645,38 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+      },
+      {
+        "id": "evt_20260902_fulham_post_deadline",
+        "date": "2026-09-02",
+        "season": "2026/27",
+        "type": "post_deadline_roster_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Robinson retains first place after Fulham's latest direct conversion and Muniz remains the existing deputy. Lukić has left; the current set-piece list adds Gonzalo García as the provisional third option.",
+        "sources": [
+          {
+            "label": "FotMob current club squad",
+            "url": "https://www.fotmob.com/teams/9879/overview/fulham",
+            "date": "2026-09-02",
+            "note": "Current squad membership checked after the transfer deadline."
+          },
+          {
+            "label": "Current FPL set-piece order",
+            "url": "https://aifpl.co.uk/set-pieces",
+            "date": "2026-09-02",
+            "note": "Current role evidence cross-checked before reordering."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-02T18:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Post-deadline roster correction; uncertain depth remains explicitly provisional."
       }
     ],
     "change_log": [
@@ -3513,6 +3771,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-01T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-02",
+        "season": "2026/27",
+        "change_type": "post_deadline_roster_correction",
+        "from": {
+          "primary": "Antonee Robinson",
+          "secondary": "Rodrigo Muniz",
+          "tertiary": ""
+        },
+        "to": {
+          "primary": "Antonee Robinson",
+          "secondary": "Rodrigo Muniz",
+          "tertiary": "Gonzalo García"
+        },
+        "reason": "Robinson retains first place after Fulham's latest direct conversion and Muniz remains the existing deputy. Lukić has left; the current set-piece list adds Gonzalo García as the provisional third option.",
+        "evidence_ids": [
+          "evt_20260902_fulham_post_deadline"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-02T18:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -3532,14 +3813,20 @@
       "primary": {
         "player": "Antonee Robinson",
         "status": "confirmed",
-        "source_url": "https://www.fulhamfc.com/news/2026/july/23/fpl-prices-revealed/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9879/overview/fulham",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Rodrigo Muniz",
         "status": "confirmed",
-        "source_url": "https://www.fulhamfc.com/news/2026/july/23/fpl-prices-revealed/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9879/overview/fulham",
+        "checked_at": "2026-09-02"
+      },
+      "tertiary": {
+        "player": "Gonzalo García",
+        "status": "confirmed",
+        "source_url": "https://www.fotmob.com/teams/9879/overview/fulham",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -3566,11 +3853,11 @@
     },
     "condition_note": "Official FPL 2026/27 role fields place Matt Crooks first and Oli McBurnie second. Crooks therefore leads the preseason projection, while McBurnie's regular-time evidence makes him the strongest deputy. David Akintola remains a lower-confidence third option based mainly on shootout evidence.",
     "last_verified": {
-      "date": "2026-08-08",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_hull-city_current_review",
       "date": "2026-09-01",
@@ -3854,20 +4141,20 @@
       "primary": {
         "player": "Matt Crooks",
         "status": "confirmed",
-        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8667/overview/hull-city",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Oli McBurnie",
         "status": "confirmed",
-        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8667/overview/hull-city",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "David Akintola",
         "status": "confirmed",
-        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8667/overview/hull-city",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -3894,11 +4181,11 @@
     },
     "condition_note": "George Hirst left Ipswich on 20 August. Clarke and Philogene are the strongest retained candidates, with Enciso the best current-squad fallback. No 2026/27 penalty has yet established a direct same-pitch order, so the hierarchy remains conditional.",
     "last_verified": {
-      "date": "2026-08-22",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_ipswich-town_current_review",
       "date": "2026-09-01",
@@ -4231,20 +4518,20 @@
       "primary": {
         "player": "Jack Clarke",
         "status": "confirmed",
-        "source_url": "https://www.skysports.com/football/ipswich-town-vs-sunderland/teams/559448",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9902/overview/ipswich",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Jaden Philogene",
         "status": "confirmed",
-        "source_url": "https://www.skysports.com/football/ipswich-town-vs-sunderland/teams/559448",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9902/overview/ipswich",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Julio Enciso",
         "status": "confirmed",
-        "source_url": "https://www.skysports.com/football/ipswich-town-vs-sunderland/teams/559448",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9902/overview/ipswich",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -4261,27 +4548,27 @@
   "Leeds": {
     "primary": "Dominic Calvert-Lewin",
     "secondary": "Lukas Nmecha",
-    "tertiary": "",
-    "last_updated": "2026-09-01",
+    "tertiary": "Harry Wilson",
+    "last_updated": "2026-09-02",
     "source": "Leeds United",
     "cross_check": "Leeds United",
-    "hierarchy_status": "conditional",
+    "hierarchy_status": "confirmed",
     "confidence": {
       "primary": "high",
       "secondary": "high",
       "tertiary": null
     },
-    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Dominic Calvert-Lewin then Lukas Nmecha. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+    "condition_note": "Calvert-Lewin and Nmecha retain the observed first-two order. Piroe has left; experienced specialist Harry Wilson is the current-squad third choice.",
     "last_verified": {
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "confirmed_departure_roster_review"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
-      "id": "evt_20260901_leeds_current_review",
-      "date": "2026-09-01",
-      "type": "current_season_board_review",
+      "id": "evt_20260902_leeds_post_deadline",
+      "date": "2026-09-02",
+      "type": "post_deadline_roster_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -4477,6 +4764,38 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+      },
+      {
+        "id": "evt_20260902_leeds_post_deadline",
+        "date": "2026-09-02",
+        "season": "2026/27",
+        "type": "post_deadline_roster_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Calvert-Lewin and Nmecha retain the observed first-two order. Piroe has left; experienced specialist Harry Wilson is the current-squad third choice.",
+        "sources": [
+          {
+            "label": "FotMob current club squad",
+            "url": "https://www.fotmob.com/teams/8463/overview/leeds-united",
+            "date": "2026-09-02",
+            "note": "Current squad membership checked after the transfer deadline."
+          },
+          {
+            "label": "Current FPL set-piece order",
+            "url": "https://aifpl.co.uk/set-pieces",
+            "date": "2026-09-02",
+            "note": "Current role evidence cross-checked before reordering."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-02T18:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Post-deadline roster correction; uncertain depth remains explicitly provisional."
       }
     ],
     "change_log": [
@@ -4571,11 +4890,34 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-01T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-02",
+        "season": "2026/27",
+        "change_type": "post_deadline_roster_correction",
+        "from": {
+          "primary": "Dominic Calvert-Lewin",
+          "secondary": "Lukas Nmecha",
+          "tertiary": ""
+        },
+        "to": {
+          "primary": "Dominic Calvert-Lewin",
+          "secondary": "Lukas Nmecha",
+          "tertiary": "Harry Wilson"
+        },
+        "reason": "Calvert-Lewin and Nmecha retain the observed first-two order. Piroe has left; experienced specialist Harry Wilson is the current-squad third choice.",
+        "evidence_ids": [
+          "evt_20260902_leeds_post_deadline"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-02T18:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -4590,14 +4932,20 @@
       "primary": {
         "player": "Dominic Calvert-Lewin",
         "status": "confirmed",
-        "source_url": "https://www.leedsunited.com/en/news/travelling-squad-named-for-usa-pre-season-tour",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8463/overview/leeds-united",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Lukas Nmecha",
         "status": "confirmed",
-        "source_url": "https://www.leedsunited.com/en/news/travelling-squad-named-for-usa-pre-season-tour",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8463/overview/leeds-united",
+        "checked_at": "2026-09-02"
+      },
+      "tertiary": {
+        "player": "Harry Wilson",
+        "status": "confirmed",
+        "source_url": "https://www.fotmob.com/teams/8463/overview/leeds-united",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -4626,11 +4974,11 @@
     },
     "condition_note": "Dominik Szoboszlai's conversion against Newcastle United is fresh competitive support for the current first-choice call. Alexander Isak remains a credible co-primary because the event feed did not establish a clean same-pitch test between them. Cody Gakpo remains third.",
     "last_verified": {
-      "date": "2026-08-23",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "reviewed_live_penalty_event"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_liverpool_current_review",
       "date": "2026-09-01",
@@ -5066,20 +5414,20 @@
       "primary": {
         "player": "Dominik Szoboszlai",
         "status": "confirmed",
-        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8650/overview/liverpool",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Alexander Isak",
         "status": "confirmed",
-        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8650/overview/liverpool",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Cody Gakpo",
         "status": "confirmed",
-        "source_url": "https://fantasy.premierleague.com/api/bootstrap-static/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8650/overview/liverpool",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -5095,28 +5443,28 @@
   },
   "Manchester City": {
     "primary": "Erling Haaland",
-    "secondary": "Jeremy Doku",
-    "tertiary": "",
-    "last_updated": "2026-09-01",
+    "secondary": "Jérémy Doku",
+    "tertiary": "Antoine Semenyo",
+    "last_updated": "2026-09-02",
     "source": "Manchester City",
     "cross_check": "Manchester City",
-    "hierarchy_status": "conditional",
+    "hierarchy_status": "probable",
     "confidence": {
       "primary": "high",
       "secondary": "high",
       "tertiary": null
     },
-    "condition_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Erling Haaland then Jeremy Doku. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+    "condition_note": "Haaland remains the established first choice and Doku the existing deputy. Marmoush has left; the current set-piece list adds Semenyo as the current-squad third option.",
     "last_verified": {
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "confirmed_departure_roster_review"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
-      "id": "evt_20260901_manchester-city_current_review",
-      "date": "2026-09-01",
-      "type": "current_season_board_review",
+      "id": "evt_20260902_manchester_city_post_deadline",
+      "date": "2026-09-02",
+      "type": "post_deadline_roster_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -5312,6 +5660,38 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+      },
+      {
+        "id": "evt_20260902_manchester_city_post_deadline",
+        "date": "2026-09-02",
+        "season": "2026/27",
+        "type": "post_deadline_roster_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Haaland remains the established first choice and Doku the existing deputy. Marmoush has left; the current set-piece list adds Semenyo as the current-squad third option.",
+        "sources": [
+          {
+            "label": "FotMob current club squad",
+            "url": "https://www.fotmob.com/teams/8456/overview/manchester-city",
+            "date": "2026-09-02",
+            "note": "Current squad membership checked after the transfer deadline."
+          },
+          {
+            "label": "Current FPL set-piece order",
+            "url": "https://aifpl.co.uk/set-pieces",
+            "date": "2026-09-02",
+            "note": "Current role evidence cross-checked before reordering."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-02T18:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Post-deadline roster correction; uncertain depth remains explicitly provisional."
       }
     ],
     "change_log": [
@@ -5406,11 +5786,34 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-01T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-02",
+        "season": "2026/27",
+        "change_type": "post_deadline_roster_correction",
+        "from": {
+          "primary": "Erling Haaland",
+          "secondary": "Jeremy Doku",
+          "tertiary": ""
+        },
+        "to": {
+          "primary": "Erling Haaland",
+          "secondary": "Jérémy Doku",
+          "tertiary": "Antoine Semenyo"
+        },
+        "reason": "Haaland remains the established first choice and Doku the existing deputy. Marmoush has left; the current set-piece list adds Semenyo as the current-squad third option.",
+        "evidence_ids": [
+          "evt_20260902_manchester_city_post_deadline"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-02T18:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -5425,14 +5828,20 @@
       "primary": {
         "player": "Erling Haaland",
         "status": "confirmed",
-        "source_url": "https://www.mancity.com/news/mens/west-ham-v-manchester-city-team-news-tactics-and-stats-63909107",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8456/overview/manchester-city",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
-        "player": "Jeremy Doku",
+        "player": "Jérémy Doku",
         "status": "confirmed",
-        "source_url": "https://www.mancity.com/news/mens/west-ham-v-manchester-city-team-news-tactics-and-stats-63909107",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8456/overview/manchester-city",
+        "checked_at": "2026-09-02"
+      },
+      "tertiary": {
+        "player": "Antoine Semenyo",
+        "status": "confirmed",
+        "source_url": "https://www.fotmob.com/teams/8456/overview/manchester-city",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -5461,11 +5870,11 @@
     },
     "condition_note": "Bruno Fernandes is directly confirmed as Manchester United's primary. He converted against Ipswich with both Bryan Mbeumo and Youri Tielemans in the starting XI. Mbeumo remains second and Tielemans third because this event establishes Bruno's precedence but does not order the two deputies against each other.",
     "last_verified": {
-      "date": "2026-08-30",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "reviewed_live_penalty_event"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_manchester-united_current_review",
       "date": "2026-09-01",
@@ -5778,20 +6187,20 @@
       "primary": {
         "player": "Bruno Fernandes",
         "status": "confirmed",
-        "source_url": "https://www.manutd.com/en/teams/mens-team?matchId=2561969",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10260/overview/manchester-united",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Bryan Mbeumo",
         "status": "confirmed",
-        "source_url": "https://www.manutd.com/en/teams/mens-team?matchId=2561969",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10260/overview/manchester-united",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Youri Tielemans",
         "status": "confirmed",
-        "source_url": "https://www.manutd.com/en/teams/mens-team/youri-tielemans",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10260/overview/manchester-united",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -5820,11 +6229,11 @@
     },
     "condition_note": "Wissa is the provisional first call after starting Newcastle's latest league match as the central forward and bringing the strongest senior penalty record. New signing Fernandez-Pardo has two recent Ligue 1 conversions but no Newcastle assignment, while Osula is retained as the specialist-board alternative. Woltemade is removed after the reported Juventus loan agreement. The first competitive award with Wissa and Fernandez-Pardo available must settle the order.",
     "last_verified": {
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "current_roster_and_penalty_record_review"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_newcastle-united_current_review",
       "date": "2026-09-01",
@@ -6304,20 +6713,20 @@
       "primary": {
         "player": "Yoane Wissa",
         "status": "confirmed",
-        "source_url": "https://www.newcastleunited.com/en/news/confirmed-line-up-spurs-a",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10261/overview/newcastle-united",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Matias Fernandez-Pardo",
         "status": "confirmed",
-        "source_url": "https://www.newcastleunited.com/en/news/newcastle-united-sign-matias-fernandez-pardo",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10261/overview/newcastle-united",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "William Osula",
         "status": "confirmed",
-        "source_url": "https://www.newcastleunited.com/en/news/confirmed-line-up-spurs-a",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10261/overview/newcastle-united",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -6350,11 +6759,11 @@
     },
     "condition_note": "Chris Wood remains first choice. Morgan Gibbs-White converted at Liverpool after starting while Wood stayed on the bench; Igor Jesus also started. The event confirms Gibbs-White as the active deputy rather than moving him above an unavailable Wood.",
     "last_verified": {
-      "date": "2026-08-29",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "reviewed_live_penalty_event"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_nottingham-forest_current_review",
       "date": "2026-09-01",
@@ -6649,20 +7058,20 @@
       "primary": {
         "player": "Chris Wood",
         "status": "confirmed",
-        "source_url": "https://www.premierleague.com/en/news/4680932/fpl-prices-announced",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10203/overview/nottingham-forest",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Morgan Gibbs-White",
         "status": "confirmed",
-        "source_url": "https://www.premierleague.com/en/news/4680932/fpl-prices-announced",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10203/overview/nottingham-forest",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Igor Jesus",
         "status": "confirmed",
-        "source_url": "https://www.premierleague.com/en/news/4680932/fpl-prices-announced",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10203/overview/nottingham-forest",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -6691,11 +7100,11 @@
     },
     "condition_note": "Diarra converted with Le Fee available. Le Fee took while Diarra was at AFCON. Xhaka is the best current tertiary based on a Sunderland shootout conversion and international regular-time history. Xhaka has no Sunderland regular-time assignment and was the subject of rejected transfer interest. Conditions: Re-audit if Sunderland accepts an official offer for Granit Xhaka before the deadline.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_sunderland_current_review",
       "date": "2026-09-01",
@@ -7000,20 +7409,20 @@
       "primary": {
         "player": "Habib Diarra",
         "status": "confirmed",
-        "source_url": "https://www.safc.com/news/2026/may/17/le-bris-praises-sunderland-character-after-comeback-victory/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8472/overview/sunderland",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Enzo Le Fee",
         "status": "confirmed",
-        "source_url": "https://www.safc.com/news/2026/may/17/le-bris-praises-sunderland-character-after-comeback-victory/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8472/overview/sunderland",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Granit Xhaka",
         "status": "confirmed",
-        "source_url": "https://www.safc.com/news/2026/may/17/le-bris-praises-sunderland-character-after-comeback-victory/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8472/overview/sunderland",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -7042,11 +7451,11 @@
     },
     "condition_note": "Solanke has the strongest incumbent Tottenham regular-time history. Kudus took the first penalty against Slavia Prague and Xavi took the second after Kudus was substituted; Solanke was absent. A competitive event with Solanke and Kudus together is needed to settle the primary role.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_tottenham_current_review",
       "date": "2026-09-01",
@@ -7327,20 +7736,20 @@
       "primary": {
         "player": "Dominic Solanke",
         "status": "confirmed",
-        "source_url": "https://www.tottenhamhotspur.com/news/1079489",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8586/overview/tottenham-hotspur",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Mohammed Kudus",
         "status": "confirmed",
-        "source_url": "https://www.tottenhamhotspur.com/news/1079489",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8586/overview/tottenham-hotspur",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Xavi Simons",
         "status": "confirmed",
-        "source_url": "https://www.tottenhamhotspur.com/news/1079489",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8586/overview/tottenham-hotspur",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {

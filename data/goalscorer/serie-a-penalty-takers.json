@@ -31,35 +31,35 @@
       "Monza",
       "Venezia"
     ],
-    "last_verified": "2026-09-01",
-    "public_updated_at": "2026-09-01",
+    "last_verified": "2026-09-02",
+    "public_updated_at": "2026-09-02",
     "membership_source": "https://en.legaseriea.it/serie-a/news/looking-forward-to-the-2026-27-serie-a-fixture-list",
     "last_reviewed": "2026-09-01"
   },
   "AC Milan": {
     "primary": "Gonçalo Ramos",
     "secondary": "Christian Pulisic",
-    "tertiary": "",
-    "last_updated": "2026-09-01",
+    "tertiary": "Luka Modrić",
+    "last_updated": "2026-09-02",
     "source": "Il Margine multi-source research",
     "cross_check": "Il Margine roster cross-check",
-    "hierarchy_status": "conditional",
+    "hierarchy_status": "probable",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
       "tertiary": null
     },
-    "condition_note": "Gonçalo Ramos now leads the filed order, with Christian Pulisic next. The third-choice position remains under review after recent squad changes.",
+    "condition_note": "Nkunku has left for Leipzig. The 1 September hierarchy keeps Ramos ahead of Pulisic; current Italian specialist lists add Modrić as the third current-squad option while the first same-pitch penalty remains decisive.",
     "last_verified": {
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "confirmed_departure_roster_review"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
-      "id": "evt_20260901_ac-milan_current_review",
-      "date": "2026-09-01",
-      "type": "current_season_board_review",
+      "id": "evt_20260902_ac_milan_post_deadline",
+      "date": "2026-09-02",
+      "type": "post_deadline_roster_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -285,6 +285,38 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+      },
+      {
+        "id": "evt_20260902_ac_milan_post_deadline",
+        "date": "2026-09-02",
+        "season": "2026/27",
+        "type": "post_deadline_roster_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Nkunku has left for Leipzig. The 1 September hierarchy keeps Ramos ahead of Pulisic; current Italian specialist lists add Modrić as the third current-squad option while the first same-pitch penalty remains decisive.",
+        "sources": [
+          {
+            "label": "FotMob current club squad",
+            "url": "https://www.fotmob.com/teams/8564/overview/milan",
+            "date": "2026-09-02",
+            "note": "Current squad membership checked after the transfer deadline."
+          },
+          {
+            "label": "Goal Italia 2026/27 rigoristi",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-09-02",
+            "note": "Current role evidence cross-checked before reordering."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-02T18:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Post-deadline roster correction; uncertain depth remains explicitly provisional."
       }
     ],
     "change_log": [
@@ -379,11 +411,34 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-01T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-02",
+        "season": "2026/27",
+        "change_type": "post_deadline_roster_correction",
+        "from": {
+          "primary": "Gonçalo Ramos",
+          "secondary": "Christian Pulisic",
+          "tertiary": ""
+        },
+        "to": {
+          "primary": "Gonçalo Ramos",
+          "secondary": "Christian Pulisic",
+          "tertiary": "Luka Modrić"
+        },
+        "reason": "Nkunku has left for Leipzig. The 1 September hierarchy keeps Ramos ahead of Pulisic; current Italian specialist lists add Modrić as the third current-squad option while the first same-pitch penalty remains decisive.",
+        "evidence_ids": [
+          "evt_20260902_ac_milan_post_deadline"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-02T18:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -398,14 +453,20 @@
       "primary": {
         "player": "Gonçalo Ramos",
         "status": "confirmed",
-        "source_url": "https://www.acmilan.com/it/squadre/prima-squadra-maschile",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8564/overview/milan",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Christian Pulisic",
         "status": "confirmed",
-        "source_url": "https://www.acmilan.com/it/news/articoli/media/2026-06-30/comunicato-ufficiale-goncalo-ramos",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8564/overview/milan",
+        "checked_at": "2026-09-02"
+      },
+      "tertiary": {
+        "player": "Luka Modrić",
+        "status": "confirmed",
+        "source_url": "https://www.fotmob.com/teams/8564/overview/milan",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -434,11 +495,11 @@
     },
     "condition_note": "Kessié is the late-August first-choice projection, with Scamacca and De Ketelaere the current alternatives.",
     "last_verified": {
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "current_roster_and_penalty_record_review"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_atalanta_current_review",
       "date": "2026-09-01",
@@ -742,20 +803,20 @@
       "primary": {
         "player": "Franck Kessié",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8524/overview/atalanta",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Gianluca Scamacca",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8524/overview/atalanta",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Charles De Ketelaere",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8524/overview/atalanta",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -784,11 +845,11 @@
     },
     "condition_note": "Orsolini remains first choice. Dovbyk is now the principal backup, ahead of Bernardeschi.",
     "last_verified": {
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "current_roster_and_penalty_record_review"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_bologna_current_review",
       "date": "2026-09-01",
@@ -1092,20 +1153,20 @@
       "primary": {
         "player": "Riccardo Orsolini",
         "status": "confirmed",
-        "source_url": "https://www.bolognafc.it/domani-la-ripresa-delle-attivita-i-calciatori-convocati/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9857/overview/bologna",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Artem Dovbyk",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9857/overview/bologna",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Federico Bernardeschi",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9857/overview/bologna",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -1134,11 +1195,11 @@
     },
     "condition_note": "Captain Alessandro Deiola took Cagliari's first competitive penalty of 2026/27 with Fazzini on the pitch. His first attempt was saved, but VAR ordered a retake for encroachment and he scored. Fazzini is the best current deputy; Mina remains a lower-confidence fallback.",
     "last_verified": {
-      "date": "2026-08-22",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_cagliari_current_review",
       "date": "2026-09-01",
@@ -1474,20 +1535,20 @@
       "primary": {
         "player": "Alessandro Deiola",
         "status": "confirmed",
-        "source_url": "https://cagliaricalcio.com/news/match-report-cagliari-arezzo-1-0/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8529/overview/cagliari",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Jacopo Fazzini",
         "status": "confirmed",
-        "source_url": "https://cagliaricalcio.com/news/match-report-cagliari-arezzo-1-0/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8529/overview/cagliari",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Yerry Mina",
         "status": "confirmed",
-        "source_url": "https://cagliaricalcio.com/news/match-report-cagliari-arezzo-1-0/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8529/overview/cagliari",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -1516,11 +1577,11 @@
     },
     "condition_note": "Da Cunha leads the current order, followed by Paz and Douvikas.",
     "last_verified": {
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "current_roster_and_penalty_record_review"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_como_current_review",
       "date": "2026-09-01",
@@ -1824,20 +1885,20 @@
       "primary": {
         "player": "Lucas Da Cunha",
         "status": "confirmed",
-        "source_url": "https://comofootball.com/en/players/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10171/overview/como",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Nico Paz",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10171/overview/como",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Tasos Douvikas",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10171/overview/como",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -1866,11 +1927,11 @@
     },
     "condition_note": "Deadline-day exits remove Gudmundsson, Kean and Mandragora. Pellegrino is the provisional first call, with Beto and Mastantuono the unassigned alternatives. All three positions remain low-confidence until Fiorentina's first competitive penalty with two candidates available.",
     "last_verified": {
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "current_roster_and_penalty_record_review"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_fiorentina_current_review",
       "date": "2026-09-01",
@@ -2248,20 +2309,20 @@
       "primary": {
         "player": "Mateo Pellegrino",
         "status": "confirmed",
-        "source_url": "https://www.fantacalcio.it/serie-a/squadre/fiorentina/pellegrino-m/7023/2026-27",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8535/overview/fiorentina",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Beto",
         "status": "confirmed",
-        "source_url": "https://www.ansa.it/english/newswire/english_service/2026/08/31/soccer-fiorentina-sign-beto-and-gnonto-3_12fcb577-a703-4056-9e07-0d324193393a.html",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8535/overview/fiorentina",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Franco Mastantuono",
         "status": "confirmed",
-        "source_url": "https://elpais.com/deportes/futbol/2026-08-07/franco-mastantuono-cedido-por-el-madrid-a-la-fiorentina.html",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8535/overview/fiorentina",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -2292,11 +2353,11 @@
     },
     "condition_note": "Giacomo Calò remains Frosinone's first-choice penalty taker after converting five from five in the promotion season. Ben Lhassine Kone is the current backup, with Antonio Raimondo third.",
     "last_verified": {
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "current_roster_and_penalty_record_review"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_frosinone_current_review",
       "date": "2026-09-01",
@@ -2558,20 +2619,20 @@
       "primary": {
         "player": "Giacomo Calò",
         "status": "confirmed",
-        "source_url": "https://www.frosinonecalcio.com/preseason-i-convocati/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9891/overview/frosinone",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Ben Lhassine Kone",
         "status": "confirmed",
-        "source_url": "https://www.frosinonecalcio.com/preseason-i-convocati/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9891/overview/frosinone",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Antonio Raimondo",
         "status": "confirmed",
-        "source_url": "https://www.frosinonecalcio.com/preseason-i-convocati/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9891/overview/frosinone",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -2600,11 +2661,11 @@
     },
     "condition_note": "With Malinovskyi departed, Colombo converted Genoa's first current preseason penalty. Messias was the 2025/26 vice-taker when Malinovskyi was absent, and both current specialist boards rank Colombo, Messias and Vitinha in the filed order. Colombo's primary evidence is still a friendly plus specialist consensus, not a competitive like-for-like event under the final 2026/27 squad. Colombo's lead rests on a preseason penalty and specialist consensus, not a competitive like-for-like event. Conditions: A specialist signing or a departure among Colombo, Messias or Vitinha requires a reorder.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_genoa_current_review",
       "date": "2026-09-01",
@@ -2885,20 +2946,20 @@
       "primary": {
         "player": "Lorenzo Colombo",
         "status": "confirmed",
-        "source_url": "https://genoacfc.it/prima-squadra-maschile/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10233/overview/genoa",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Junior Messias",
         "status": "confirmed",
-        "source_url": "https://genoacfc.it/prima-squadra-maschile/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10233/overview/genoa",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Vitinha",
         "status": "confirmed",
-        "source_url": "https://genoacfc.it/prima-squadra-maschile/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10233/overview/genoa",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -2927,11 +2988,11 @@
     },
     "condition_note": "Çalhanoğlu remains first choice; the current backup order is Lautaro then Zieliński.",
     "last_verified": {
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "current_roster_and_penalty_record_review"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_inter_current_review",
       "date": "2026-09-01",
@@ -3235,20 +3296,20 @@
       "primary": {
         "player": "Hakan Çalhanoğlu",
         "status": "confirmed",
-        "source_url": "https://www.inter.it/it/teams/prima-squadra",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8636/overview/inter",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Lautaro Martínez",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8636/overview/inter",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Piotr Zieliński",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8636/overview/inter",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -3265,8 +3326,8 @@
   "Juventus": {
     "primary": "Manuel Locatelli",
     "secondary": "Kenan Yıldız",
-    "tertiary": "",
-    "last_updated": "2026-09-01",
+    "tertiary": "Randal Kolo Muani",
+    "last_updated": "2026-09-02",
     "source": "Il Margine multi-source research",
     "cross_check": "Il Margine roster cross-check",
     "hierarchy_status": "disputed",
@@ -3275,17 +3336,17 @@
       "secondary": "medium",
       "tertiary": null
     },
-    "condition_note": "Manuel Locatelli remains first choice after direct coach confirmation with Kenan Yıldız available. Yıldız is the current backup; third choice remains under review.",
+    "condition_note": "Locatelli remains first after direct coach confirmation with Yıldız available. Current Italian specialist boards include Kolo Muani in the top three; the ordering remains disputed until another same-pitch penalty.",
     "last_verified": {
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "confirmed_departure_roster_review"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
-      "id": "evt_20260901_juventus_current_review",
-      "date": "2026-09-01",
-      "type": "current_season_board_review",
+      "id": "evt_20260902_juventus_post_deadline",
+      "date": "2026-09-02",
+      "type": "post_deadline_roster_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -3499,6 +3560,38 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+      },
+      {
+        "id": "evt_20260902_juventus_post_deadline",
+        "date": "2026-09-02",
+        "season": "2026/27",
+        "type": "post_deadline_roster_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Locatelli remains first after direct coach confirmation with Yıldız available. Current Italian specialist boards include Kolo Muani in the top three; the ordering remains disputed until another same-pitch penalty.",
+        "sources": [
+          {
+            "label": "FotMob current club squad",
+            "url": "https://www.fotmob.com/teams/9885/overview/juventus",
+            "date": "2026-09-02",
+            "note": "Current squad membership checked after the transfer deadline."
+          },
+          {
+            "label": "Goal Italia 2026/27 rigoristi",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-09-02",
+            "note": "Current role evidence cross-checked before reordering."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-02T18:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Post-deadline roster correction; uncertain depth remains explicitly provisional."
       }
     ],
     "change_log": [
@@ -3593,6 +3686,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-01T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-02",
+        "season": "2026/27",
+        "change_type": "post_deadline_roster_correction",
+        "from": {
+          "primary": "Manuel Locatelli",
+          "secondary": "Kenan Yıldız",
+          "tertiary": ""
+        },
+        "to": {
+          "primary": "Manuel Locatelli",
+          "secondary": "Kenan Yıldız",
+          "tertiary": "Randal Kolo Muani"
+        },
+        "reason": "Locatelli remains first after direct coach confirmation with Yıldız available. Current Italian specialist boards include Kolo Muani in the top three; the ordering remains disputed until another same-pitch penalty.",
+        "evidence_ids": [
+          "evt_20260902_juventus_post_deadline"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-02T18:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -3612,14 +3728,20 @@
       "primary": {
         "player": "Manuel Locatelli",
         "status": "confirmed",
-        "source_url": "https://www.juventus.com/it/squadre/prima-squadra-maschile/rosa/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9885/overview/juventus",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Kenan Yıldız",
         "status": "confirmed",
-        "source_url": "https://www.juventus.com/it/squadre/prima-squadra-maschile/rosa/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9885/overview/juventus",
+        "checked_at": "2026-09-02"
+      },
+      "tertiary": {
+        "player": "Randal Kolo Muani",
+        "status": "confirmed",
+        "source_url": "https://www.fotmob.com/teams/9885/overview/juventus",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -3635,9 +3757,9 @@
   },
   "Lazio": {
     "primary": "Mattia Zaccagni",
-    "secondary": "Albert Gudmundsson",
-    "tertiary": "Andrea Pinamonti",
-    "last_updated": "2026-09-01",
+    "secondary": "Danilo Cataldi",
+    "tertiary": "Kenneth Taylor",
+    "last_updated": "2026-09-02",
     "source": "GOAL Italia 2026/27 rigoristi board",
     "cross_check": "Lega Serie A current squads",
     "hierarchy_status": "probable",
@@ -3646,17 +3768,17 @@
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Zaccagni remains first choice. Gudmundsson and Pinamonti are the current specialist alternatives after Lazio's late-window changes.",
+    "condition_note": "Albert Gudmundsson is a Fiorentina player and was wrongly inserted into Lazio's hierarchy. Current Italian specialist sources list Zaccagni, Cataldi and Taylor in this order.",
     "last_verified": {
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "current_roster_and_penalty_record_review"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
-      "id": "evt_20260901_lazio_current_review",
-      "date": "2026-09-01",
-      "type": "current_season_board_review",
+      "id": "evt_20260902_lazio_post_deadline",
+      "date": "2026-09-02",
+      "type": "post_deadline_roster_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -3843,6 +3965,38 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Zaccagni remains first choice. Gudmundsson and Pinamonti are the current specialist alternatives after Lazio's late-window changes."
+      },
+      {
+        "id": "evt_20260902_lazio_post_deadline",
+        "date": "2026-09-02",
+        "season": "2026/27",
+        "type": "post_deadline_roster_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Albert Gudmundsson is a Fiorentina player and was wrongly inserted into Lazio's hierarchy. Current Italian specialist sources list Zaccagni, Cataldi and Taylor in this order.",
+        "sources": [
+          {
+            "label": "FotMob current club squad",
+            "url": "https://www.fotmob.com/teams/8543/overview/lazio",
+            "date": "2026-09-02",
+            "note": "Current squad membership checked after the transfer deadline."
+          },
+          {
+            "label": "Goal Italia 2026/27 rigoristi",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-09-02",
+            "note": "Current role evidence cross-checked before reordering."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-02T18:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Post-deadline roster correction; uncertain depth remains explicitly provisional."
       }
     ],
     "change_log": [
@@ -3937,11 +4091,34 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-01T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-02",
+        "season": "2026/27",
+        "change_type": "post_deadline_roster_correction",
+        "from": {
+          "primary": "Mattia Zaccagni",
+          "secondary": "Albert Gudmundsson",
+          "tertiary": "Andrea Pinamonti"
+        },
+        "to": {
+          "primary": "Mattia Zaccagni",
+          "secondary": "Danilo Cataldi",
+          "tertiary": "Kenneth Taylor"
+        },
+        "reason": "Albert Gudmundsson is a Fiorentina player and was wrongly inserted into Lazio's hierarchy. Current Italian specialist sources list Zaccagni, Cataldi and Taylor in this order.",
+        "evidence_ids": [
+          "evt_20260902_lazio_post_deadline"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-02T18:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -3956,20 +4133,20 @@
       "primary": {
         "player": "Mattia Zaccagni",
         "status": "confirmed",
-        "source_url": "https://www.sslazio.it/it/team/lazio/squadra",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8543/overview/lazio",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
-        "player": "Albert Gudmundsson",
+        "player": "Danilo Cataldi",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8543/overview/lazio",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
-        "player": "Andrea Pinamonti",
+        "player": "Kenneth Taylor",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8543/overview/lazio",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -3998,11 +4175,11 @@
     },
     "condition_note": "Geubbels is the current first-choice projection after joining Lecce, with Štulić second and Pierotti retained as the next verified alternative.",
     "last_verified": {
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "current_roster_and_penalty_record_review"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_lecce_current_review",
       "date": "2026-09-01",
@@ -4306,20 +4483,20 @@
       "primary": {
         "player": "Willem Geubbels",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9888/overview/lecce",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Nikola Štulić",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9888/overview/lecce",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Santiago Pierotti",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9888/overview/lecce",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -4336,25 +4513,25 @@
   "Monza": {
     "primary": "Matteo Pessina",
     "secondary": "Patrick Cutrone",
-    "tertiary": "Andrea Petagna",
-    "last_updated": "2026-09-01",
+    "tertiary": "Andrea Colpani",
+    "last_updated": "2026-09-02",
     "hierarchy_status": "probable",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Pessina remains first choice, followed by Cutrone and Petagna.",
+    "condition_note": "Pessina remains the established primary and Cutrone the existing deputy. Petagna has left; Colpani is the provisional current-squad third choice.",
     "last_verified": {
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "current_roster_and_penalty_record_review"
+      "method": "multi_source_preseason_research"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
-      "id": "evt_20260901_monza_current_review",
-      "date": "2026-09-01",
-      "type": "current_season_board_review",
+      "id": "evt_20260902_monza_post_deadline",
+      "date": "2026-09-02",
+      "type": "post_deadline_roster_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -4549,6 +4726,38 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Pessina remains first choice, followed by Cutrone and Petagna."
+      },
+      {
+        "id": "evt_20260902_monza_post_deadline",
+        "date": "2026-09-02",
+        "season": "2026/27",
+        "type": "post_deadline_roster_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "context": "Pessina remains the established primary and Cutrone the existing deputy. Petagna has left; Colpani is the provisional current-squad third choice.",
+        "sources": [
+          {
+            "label": "FotMob current club squad",
+            "url": "https://www.fotmob.com/teams/6504/overview/monza",
+            "date": "2026-09-02",
+            "note": "Current squad membership checked after the transfer deadline."
+          },
+          {
+            "label": "Goal Italia 2026/27 rigoristi",
+            "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+            "date": "2026-09-02",
+            "note": "Current role evidence cross-checked before reordering."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-02T18:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "editorial_note": "Post-deadline roster correction; uncertain depth remains explicitly provisional."
       }
     ],
     "change_log": [
@@ -4643,11 +4852,34 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-01T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-02",
+        "season": "2026/27",
+        "change_type": "post_deadline_roster_correction",
+        "from": {
+          "primary": "Matteo Pessina",
+          "secondary": "Patrick Cutrone",
+          "tertiary": "Andrea Petagna"
+        },
+        "to": {
+          "primary": "Matteo Pessina",
+          "secondary": "Patrick Cutrone",
+          "tertiary": "Andrea Colpani"
+        },
+        "reason": "Pessina remains the established primary and Cutrone the existing deputy. Petagna has left; Colpani is the provisional current-squad third choice.",
+        "evidence_ids": [
+          "evt_20260902_monza_post_deadline"
+        ],
+        "detection": "manual_multi_source_research",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-02T18:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": null,
@@ -4658,20 +4890,20 @@
       "primary": {
         "player": "Matteo Pessina",
         "status": "confirmed",
-        "source_url": "https://www.acmonza.com/it/news/monza-catanzaro-i-convocati-finale-playoff-ritorno/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/6504/overview/monza",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Patrick Cutrone",
         "status": "confirmed",
-        "source_url": "https://www.acmonza.com/it/news/monza-catanzaro-i-convocati-finale-playoff-ritorno/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/6504/overview/monza",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
-        "player": "Andrea Petagna",
+        "player": "Andrea Colpani",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/6504/overview/monza",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -4700,11 +4932,11 @@
     },
     "condition_note": "Lukaku was transferred permanently to Fenerbahçe on 12 August and has been removed. De Bruyne is the leading current specialist, Højlund the main striker alternative and Politano the next technical fallback. No 2026/27 competitive Napoli penalty has yet tested this new order.",
     "last_verified": {
-      "date": "2026-08-22",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_napoli_current_review",
       "date": "2026-09-01",
@@ -5064,20 +5296,20 @@
       "primary": {
         "player": "Kevin De Bruyne",
         "status": "confirmed",
-        "source_url": "https://sscnapoli.it/squadra/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9875/overview/napoli",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Rasmus Højlund",
         "status": "confirmed",
-        "source_url": "https://sscnapoli.it/squadra/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9875/overview/napoli",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Matteo Politano",
         "status": "confirmed",
-        "source_url": "https://sscnapoli.it/squadra/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9875/overview/napoli",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -5106,11 +5338,11 @@
     },
     "condition_note": "Touré is the current first-choice projection, Bernabé moves to second and Elphege remains the third filed option.",
     "last_verified": {
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "current_roster_and_penalty_record_review"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_parma-calcio-1913_current_review",
       "date": "2026-09-01",
@@ -5481,20 +5713,20 @@
       "primary": {
         "player": "El Bilal Touré",
         "status": "confirmed",
-        "source_url": "https://www.parmacalcio1913.com/news/el-bilal-toure-e-un-nuovo-calciatore-del-parma-calcio/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10167/overview/parma",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Adrián Bernabé",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10167/overview/parma",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Nesta Elphege",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/10167/overview/parma",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -5523,11 +5755,11 @@
     },
     "condition_note": "Malen took and converted Roma's 10 May competitive penalty against Parma with Dybala on the pitch; Gazzetta reported that Dybala handed him the ball. Malen then took again against Verona on 24 May with Dybala available, establishing the strongest late-season like-for-like signal. Dybala remains the high-confidence second choice. His July friendly penalty came while Malen was on post-World-Cup leave and does not reverse the order. Soulé is the best confirmed current tertiary after Lorenzo Pellegrini's contract expired without an official extension by the cutoff. Malen over Dybala is supported by late-2025/26 like-for-like usage; Soulé is a provisional tertiary without comparable current penalty evidence. Conditions: A departure or extended unavailability involving Malen or Dybala requires a reorder. Reassess Soulé if a current teammate takes a like-for-like penalty with both Malen and Dybala absent.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_roma_current_review",
       "date": "2026-09-01",
@@ -5814,20 +6046,20 @@
       "primary": {
         "player": "Donyell Malen",
         "status": "confirmed",
-        "source_url": "https://www.asroma.com/it/notizie/75418/il-comunicato-su-donyell-malen",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8686/overview/roma",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Paulo Dybala",
         "status": "confirmed",
-        "source_url": "https://www.asroma.com/en/news/75594/as-roma-and-paulo-dybala-together-until-2027",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8686/overview/roma",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Matías Soulé",
         "status": "confirmed",
-        "source_url": "https://www.asroma.com/it/maschile/rosa-e-staff",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8686/overview/roma",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -5856,11 +6088,11 @@
     },
     "condition_note": "Berardi remains first choice. Esposito is now the main alternative, with Laurienté retained third.",
     "last_verified": {
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "current_roster_and_penalty_record_review"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_sassuolo_current_review",
       "date": "2026-09-01",
@@ -6214,20 +6446,20 @@
       "primary": {
         "player": "Domenico Berardi",
         "status": "confirmed",
-        "source_url": "https://www.sassuolocalcio.it/in-evidenza/ronzone-2026-i-convocati-per-il-ritiro/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/7943/overview/sassuolo",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Sebastiano Esposito",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/7943/overview/sassuolo",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Armand Laurienté",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/7943/overview/sassuolo",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -6256,11 +6488,11 @@
     },
     "condition_note": "Vlašić remains first choice, followed by Zapata and Simeone.",
     "last_verified": {
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "current_roster_and_penalty_record_review"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_torino_current_review",
       "date": "2026-09-01",
@@ -6564,20 +6796,20 @@
       "primary": {
         "player": "Nikola Vlašić",
         "status": "confirmed",
-        "source_url": "https://www.torinofc.it/news/12/07/2026/il-torino-pinzolo_43728",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9804/overview/torino",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Duván Zapata",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9804/overview/torino",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Giovanni Simeone",
         "status": "confirmed",
-        "source_url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/9804/overview/torino",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -6606,11 +6838,11 @@
     },
     "condition_note": "Davis converted four from four in 2025/26 and took every league penalty for which he was available. Solet converted when Davis was injured and did so with coach approval. Both current specialist boards rank Davis, Solet and Zaniolo in the filed order. Zaniolo remains speculative because he has no senior penalty attempt in the cited history. Solet took only when Davis was injured; Zaniolo has no cited senior in-match penalty attempt. Conditions: Solet's secondary position is conditional on remaining at Udinese, as current specialist coverage flags his future. A departure by Davis requires a fresh primary decision rather than an automatic promotion.",
     "last_verified": {
-      "date": "2026-07-30",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_udinese_current_review",
       "date": "2026-09-01",
@@ -6897,20 +7129,20 @@
       "primary": {
         "player": "Keinan Davis",
         "status": "confirmed",
-        "source_url": "https://www.udinese.it/news/squadra/i-convocati-per-il-ritiro-di-lienz",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8600/overview/udinese",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Oumar Solet",
         "status": "confirmed",
-        "source_url": "https://www.udinese.it/news/squadra/i-convocati-per-il-ritiro-di-lienz",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8600/overview/udinese",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Nicolò Zaniolo",
         "status": "confirmed",
-        "source_url": "https://www.udinese.it/news/squadra/nicolo-zaniolo-e-bianconero-a-titolo-definitivo",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/8600/overview/udinese",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
@@ -6937,11 +7169,11 @@
     },
     "condition_note": "Giovanni Stroppa explicitly named captain Gianluca Busio as Venezia's penalty taker in the pre-match press conference before Venezia-Lecce on 22 August. The coach added that Busio will decide what to do, so Busio owns the decision but may delegate a particular kick. Akor Adams and Albion Rrahmani remain conditional alternatives rather than co-primary takers; the press conference supersedes the speculative preseason rankings that had placed the forwards first. No fixed order behind Busio has been confirmed, so the backup positions remain low confidence.",
     "last_verified": {
-      "date": "2026-08-22",
+      "date": "2026-09-02",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "current_squad_membership_audit"
     },
-    "public_updated_at": "2026-09-01",
+    "public_updated_at": "2026-09-02",
     "latest_evidence": {
       "id": "evt_20260901_venezia_current_review",
       "date": "2026-09-01",
@@ -7243,20 +7475,20 @@
       "primary": {
         "player": "Gianluca Busio",
         "status": "confirmed",
-        "source_url": "https://www.spaziocalcio.it/calcio-italiano/serie-a/stroppa-presenta-venezia-lecce-tutte-le-parole-del-tecnico/",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/7881/overview/venezia",
+        "checked_at": "2026-09-02"
       },
       "secondary": {
         "player": "Akor Adams",
         "status": "confirmed",
-        "source_url": "https://www.veneziafc.it/news/akor-adams-al-venezia-fc",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/7881/overview/venezia",
+        "checked_at": "2026-09-02"
       },
       "tertiary": {
         "player": "Albion Rrahmani",
         "status": "confirmed",
-        "source_url": "https://www.veneziafc.it/news/i-convocati-per-il-ritiro-di-falcade",
-        "checked_at": "2026-09-01"
+        "source_url": "https://www.fotmob.com/teams/7881/overview/venezia",
+        "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
