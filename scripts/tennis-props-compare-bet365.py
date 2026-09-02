@@ -41,7 +41,9 @@ BREAK_MAX_MODEL_MARKET_GAP_PP = 12.0
 BREAK_SOURCE_AGREEMENT_MAX_PP = 5.0
 BREAK_PLAYER_LINE_RANGE = (1.5, 5.5)
 BREAK_MATCH_LINE_RANGE = (3.5, 9.5)
-BREAK_GATE_VERSION = "breaks_v1_p0"
+BREAK_GATE_VERSION = "breaks_v1_p1"
+BREAK_STRICT_MODE = "breaks_prospective_shadow"
+BREAK_SINGLE_SOURCE_MODE = "breaks_single_source_shadow"
 TWO_WAY_SHADOW_NOTE_BLOCKERS = (
     "NO_PLAYER_DATA",
     "NO_OPP_DATA",
@@ -590,7 +592,7 @@ def is_match_total_count_market(market: str) -> bool:
 
 
 def annotate_break_source_agreement(rows: list[dict[str, str]], now: datetime) -> None:
-    """Require two independent books to agree before a break row can track CLV/ROI."""
+    """Mark exact-line cross-book agreement for the higher-confidence break cohort."""
     grouped: dict[tuple[object, ...], list[dict[str, str]]] = {}
     for row in rows:
         market = str(row.get("market") or "").lower()
@@ -698,9 +700,6 @@ def apply_break_shadow_gates(rows: list[dict[str, str]], now: datetime) -> None:
             strict_reasons.append("NAME_OR_DATA_WARNING")
         if not break_line_supported(row):
             strict_reasons.append("UNSUPPORTED_LINE")
-        if row.get("source_agreement") != "true":
-            strict_reasons.append("PRICE_SOURCE_UNVERIFIED")
-
         candidates: list[tuple[str, float, float]] = []
         for side, value_key, odds_key in (
             ("OVER", "value_over_pct", "over_odds"),
@@ -720,8 +719,12 @@ def apply_break_shadow_gates(rows: list[dict[str, str]], now: datetime) -> None:
         selected = max(candidates, key=lambda item: item[1])[0] if candidates else ""
         strict_reasons = list(dict.fromkeys(strict_reasons))
         structural_reasons = list(dict.fromkeys(structural_reasons))
-        trackable = not strict_reasons
+        source_verified = row.get("source_agreement") == "true"
+        single_source_bet365 = norm_name(row.get("bookmaker")) == "bet365"
+        trackable = not strict_reasons and (source_verified or single_source_bet365)
         calibration_eligible = not structural_reasons
+        if not trackable and not source_verified and not single_source_bet365:
+            strict_reasons.append("PRICE_SOURCE_UNVERIFIED")
         row["bettable"] = "false"
         row["recommended_side"] = ""
         row["trackable_shadow"] = bool_text(trackable)
@@ -729,7 +732,7 @@ def apply_break_shadow_gates(rows: list[dict[str, str]], now: datetime) -> None:
         row["calibration_eligible"] = bool_text(calibration_eligible)
         row["gate_version"] = BREAK_GATE_VERSION
         if trackable:
-            row["decision_mode"] = "breaks_prospective_shadow"
+            row["decision_mode"] = BREAK_STRICT_MODE if source_verified else BREAK_SINGLE_SOURCE_MODE
         elif calibration_eligible:
             row["decision_mode"] = "breaks_calibration_unfiltered"
         else:

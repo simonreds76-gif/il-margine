@@ -1006,6 +1006,12 @@ function ComparisonLineCard({ row }: { row: CsvRow }) {
   const bestValue = trustedLine ? (overOnlyMode ? n(row.value_over_pct) : Math.max(n(row.value_over_pct), n(row.value_under_pct))) : 0;
   const bestNovigEdge = bestSide === "UNDER" ? n(row.edge_under_novig_pct) : n(row.edge_over_novig_pct);
   const blockedReason = row.blocked_reason || rowRejectionReason(row);
+  const trackedSide = row.trackable_shadow === "true" ? (row.shadow_side || "watch") : (row.recommended_side || "watch");
+  const cohortLabel = row.decision_mode === "breaks_prospective_shadow"
+    ? "two-book strict"
+    : row.decision_mode === "breaks_single_source_shadow"
+      ? "Bet365-only shadow"
+      : "";
   const lineStatus = row.main_line === "true" ? "main line" : row.best_available_line === "true" ? "best available" : quality;
   const lineTone = row.main_line === "true"
     ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300"
@@ -1019,7 +1025,8 @@ function ComparisonLineCard({ row }: { row: CsvRow }) {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <MiniBadge label={row.bettable === "true" ? "BET NOW" : row.recommended_side || "watch"} tone={row.bettable === "true" ? "border-emerald-400/35 bg-emerald-500/15 text-emerald-200" : recTone(row.recommended_side)} />
+            <MiniBadge label={row.bettable === "true" ? "BET NOW" : trackedSide} tone={row.bettable === "true" ? "border-emerald-400/35 bg-emerald-500/15 text-emerald-200" : recTone(trackedSide)} />
+            {cohortLabel ? <MiniBadge label={cohortLabel} tone={row.decision_mode === "breaks_prospective_shadow" ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300" : "border-amber-500/25 bg-amber-500/10 text-amber-200"} /> : null}
             <MiniBadge label={row.matched_board === "yes" ? "matched" : "unmatched"} tone={row.matched_board === "yes" ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300" : "border-rose-500/25 bg-rose-500/10 text-rose-300"} />
             <MiniBadge label={lineStatus} tone={lineTone} />
             {row.price_pair_status ? <MiniBadge label={row.price_pair_status.replaceAll("_", " ")} tone="border-slate-700/70 bg-slate-800/60 text-slate-300" /> : null}
@@ -1306,6 +1313,8 @@ function BreakRecommendationPanel({ rows, evidenceRows }: { rows: CsvRow[]; evid
   const prospective = matched
     .filter((row) => row.trackable_shadow === "true" && ["OVER", "UNDER"].includes((row.shadow_side || "").toUpperCase()))
     .sort((a, b) => rowBestValue(b) - rowBestValue(a));
+  const strictProspective = prospective.filter((row) => row.decision_mode === "breaks_prospective_shadow");
+  const singleSourceProspective = prospective.filter((row) => row.decision_mode === "breaks_single_source_shadow");
   const calibration = rows
     .filter((row) => row.calibration_eligible === "true" && row.trackable_shadow !== "true")
     .sort((a, b) => rowBestValue(b) - rowBestValue(a));
@@ -1315,15 +1324,15 @@ function BreakRecommendationPanel({ rows, evidenceRows }: { rows: CsvRow[]; evid
 
   return (
     <SectionCard
-      title="Service Breaks v1: Calibration and Strict Shadow"
-      subtitle="Every captured line remains available for count calibration. ROI and CLV are calculated only for strict rows with a supported main line, HIGH confidence, controlled model-market gap and two-book price agreement."
+      title="Service Breaks v1: Prospective Evidence"
+      subtitle="Every captured line remains available for count calibration. Qualified Bet365-only rows now build a separate prospective ROI sample; exact-line two-book agreement remains the stricter cohort. Neither cohort is a public betting lane."
     >
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
         <MetricTile label="Captured" value={String(rows.length)} sub="break price rows" tone={rows.length ? "text-cyan-300" : "text-rose-300"} />
         <MetricTile label="Calibration ledger" value={String(calibrationEvidence.length)} sub="all retained lines" tone={calibrationEvidence.length ? "text-cyan-300" : "text-slate-400"} />
         <MetricTile label="Counts settled" value={String(calibrationSettled)} sub={`${calibrationEvidence.length - calibrationSettled} pending · no ROI`} tone={calibrationSettled ? "text-emerald-300" : "text-slate-400"} />
         <MetricTile label="Source verified" value={String(sourceVerified)} sub="same line, two books" tone={sourceVerified ? "text-emerald-300" : "text-amber-300"} />
-        <MetricTile label="Strict shadow" value={String(prospective.length)} sub="eligible for ROI/CLV" tone={prospective.length ? "text-emerald-300" : "text-slate-400"} />
+        <MetricTile label="Prospective" value={String(prospective.length)} sub={`${strictProspective.length} strict · ${singleSourceProspective.length} Bet365-only`} tone={prospective.length ? "text-emerald-300" : "text-slate-400"} />
       </div>
       {prospective.length ? (
         <div className="mt-4 grid gap-3 lg:grid-cols-2">

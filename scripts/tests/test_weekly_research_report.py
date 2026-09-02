@@ -46,6 +46,38 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertIn("market_status", summary)
         self.assertIn("prospective", summary)
 
+    def test_break_report_separates_strict_and_bet365_only_roi(self) -> None:
+        gate = {
+            "status": "PASS",
+            "scopes": {
+                "player_breaks": {"passed": True},
+                "match_breaks": {"passed": True},
+            },
+        }
+        rows = [
+            {
+                "market": "match_breaks",
+                "decision_mode": "breaks_prospective_shadow",
+                "settlement_status": "settled",
+                "pnl": "1.0",
+            },
+            {
+                "market": "player_breaks",
+                "decision_mode": "breaks_single_source_shadow",
+                "settlement_status": "settled",
+                "pnl": "-1.0",
+            },
+        ]
+        function = REPORT["tennis_breaks_gate_line"]
+        original = function.__globals__["load_csv"]
+        function.__globals__["load_csv"] = lambda _path: rows
+        try:
+            line = function(gate)
+        finally:
+            function.__globals__["load_csv"] = original
+        self.assertIn("strict 1 rows/1 settled/+1.00u/ROI +100.0%", line)
+        self.assertIn("Bet365-only 1 rows/1 settled/-1.00u/ROI -100.0%", line)
+
     def test_assist_workflow_has_a_fixed_weekly_api_ceiling(self) -> None:
         workflow = (ROOT / ".github" / "workflows" / "assist-value-shadow.yml").read_text(encoding="utf-8")
         self.assertIn('cron: "10 7 * * 0,5,6"', workflow)

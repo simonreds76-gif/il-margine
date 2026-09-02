@@ -22,7 +22,10 @@ DEFAULT_PERFORMANCE = SHADOW_DIR / "aces-dfs-shadow-performance.txt"
 BREAK_MARKETS = {"player_breaks", "match_breaks"}
 BREAK_CALIBRATION_MODE = "breaks_calibration_unfiltered"
 BREAK_PROSPECTIVE_MODE = "breaks_prospective_shadow"
-BREAK_GATE_VERSION = "breaks_v1_p0"
+BREAK_SINGLE_SOURCE_MODE = "breaks_single_source_shadow"
+BREAK_PROSPECTIVE_MODES = {BREAK_PROSPECTIVE_MODE, BREAK_SINGLE_SOURCE_MODE}
+BREAK_GATE_VERSION = "breaks_v1_p1"
+BREAK_MIN_VALUE_PCT = 3.0
 
 FIELDNAMES = [
     "signal_id",
@@ -218,8 +221,8 @@ def normalize_existing_row(row: dict[str, str]) -> dict[str, str]:
     if not is_break_market(normalized):
         return normalized
     mode = str(normalized.get("decision_mode") or "").strip()
-    if mode == BREAK_PROSPECTIVE_MODE:
-        normalized.setdefault("cohort", BREAK_PROSPECTIVE_MODE)
+    if mode in BREAK_PROSPECTIVE_MODES:
+        normalized.setdefault("cohort", mode)
         normalized.setdefault("gate_version", BREAK_GATE_VERSION)
         return normalized
     if mode not in {"", "breaks_shadow", BREAK_CALIBRATION_MODE}:
@@ -253,7 +256,7 @@ def build_signal(row: dict[str, str], source: Path, args: argparse.Namespace) ->
     scope = (row.get("scope") or "player").strip().lower()
     decision_mode = (row.get("decision_mode") or "").strip()
     is_break_calibration = is_break_market(row) and decision_mode == BREAK_CALIBRATION_MODE
-    is_break_prospective = is_break_market(row) and decision_mode == BREAK_PROSPECTIVE_MODE
+    is_break_prospective = is_break_market(row) and decision_mode in BREAK_PROSPECTIVE_MODES
     confidence = (row.get("confidence") or "").strip().upper()
     allowed_conf = {"HIGH", "MED"} if scope == "match_total" or args.allow_medium else {"HIGH"}
     if not is_break_calibration and confidence not in allowed_conf:
@@ -268,7 +271,7 @@ def build_signal(row: dict[str, str], source: Path, args: argparse.Namespace) ->
     elif is_break_prospective:
         if (row.get("trackable_shadow") or "").strip().lower() != "true":
             return None
-        picked = pick_side(row, args.min_value, True)
+        picked = pick_side(row, BREAK_MIN_VALUE_PCT, True)
         shadow_side = (row.get("shadow_side") or "").strip().upper()
         if picked is None or picked[0] != shadow_side:
             return None
@@ -408,7 +411,13 @@ def write_performance(path: Path, rows: list[dict[str, str]]) -> None:
         f"CLV: coverage={len(settled_clv)}/{len(settled)} | mean={mean_clv:+.2f}% | positive={positive_clv:.1f}%",
         "Promotion guard: do not read ROI seriously before 300 settled lines across at least two Slams.",
     ]
-    for label, key in [("By market", "market"), ("By side", "side"), ("By tour", "tour"), ("By confidence", "confidence")]:
+    for label, key in [
+        ("By cohort", "cohort"),
+        ("By market", "market"),
+        ("By side", "side"),
+        ("By tour", "tour"),
+        ("By confidence", "confidence"),
+    ]:
         lines.extend(bucket(label, key))
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 

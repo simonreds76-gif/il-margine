@@ -173,18 +173,40 @@ def tennis_breaks_gate_line(gate: dict[str, Any]) -> str:
         for row in load_csv(TENNIS_PROPS_SHADOW_SIGNALS)
         if str(row.get("market") or "").lower() in {"player_breaks", "match_breaks"}
     ]
-    prospective = [row for row in break_rows if row.get("decision_mode") == "breaks_prospective_shadow"]
-    calibration = [row for row in break_rows if row.get("decision_mode") != "breaks_prospective_shadow"]
+    strict = [row for row in break_rows if row.get("decision_mode") == "breaks_prospective_shadow"]
+    single_source = [row for row in break_rows if row.get("decision_mode") == "breaks_single_source_shadow"]
+    prospective = [*strict, *single_source]
+    calibration = [
+        row
+        for row in break_rows
+        if row.get("decision_mode") not in {"breaks_prospective_shadow", "breaks_single_source_shadow"}
+    ]
     calibration_settled = sum(
         str(row.get("settlement_status") or "").lower() == "settled"
         for row in calibration
     )
+
+    def cohort_result(rows: list[dict[str, str]]) -> str:
+        settled_rows = [
+            row for row in rows if str(row.get("settlement_status") or "").lower() == "settled"
+        ]
+        pnl = 0.0
+        for row in settled_rows:
+            try:
+                pnl += float(str(row.get("pnl") or "0"))
+            except ValueError:
+                continue
+        roi = pnl / len(settled_rows) * 100.0 if settled_rows else None
+        roi_text = f"{roi:+.1f}%" if roi is not None else "-"
+        return f"{len(rows)} rows/{len(settled_rows)} settled/{pnl:+.2f}u/ROI {roi_text}"
+
     price_status = f"CAPTURED {len(break_rows)}" if break_rows else "MISSING"
     return (
         f"Service Breaks v1 [INTERNAL]: {status} | "
         f"player ATP/WTA {'PASS' if player.get('passed') else 'FAIL'} | "
         f"match ATP/WTA {'PASS' if match.get('passed') else 'FAIL'} | "
-        f"real price evidence {price_status} | strict prospective {len(prospective)} | "
+        f"real price evidence {price_status} | prospective {len(prospective)} | "
+        f"strict {cohort_result(strict)} | Bet365-only {cohort_result(single_source)} | "
         f"count calibration {calibration_settled}/{len(calibration)} settled | NOT SELLABLE"
     )
 
