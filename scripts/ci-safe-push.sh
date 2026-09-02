@@ -21,6 +21,27 @@ for attempt in $(seq 1 "${max_attempts}"); do
   echo "Safe push attempt ${attempt}/${max_attempts} to ${remote}/${branch}"
   git fetch "${remote}" "${branch}"
 
+  remote_head="$(git rev-parse "${remote}/${branch}")"
+  commit_parent="$(git rev-parse HEAD^)"
+  if [ "${remote_head}" = "${commit_parent}" ]; then
+    # No competing writer landed after this workflow started. Push before
+    # inspecting the huge generated tree, where line-ending normalization can
+    # create unrelated dirty files that are irrelevant to this commit.
+    if git push "${remote}" "HEAD:${branch}"; then
+      echo "Safe push completed without rebase; remote still matched commit parent."
+      exit 0
+    fi
+    if [ "${attempt}" -lt "${max_attempts}" ]; then
+      sleep_seconds=$((attempt * attempt * 10))
+      if [ "${sleep_seconds}" -gt 120 ]; then
+        sleep_seconds=120
+      fi
+      echo "Direct push failed; retrying after ${sleep_seconds}s."
+      sleep "${sleep_seconds}"
+      continue
+    fi
+  fi
+
   if ! git diff --cached --quiet; then
     echo "::error::ci-safe-push was called with staged changes after the workflow commit."
     git status --short
