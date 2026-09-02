@@ -100,7 +100,7 @@ function repairMojibake(value: string): string {
   }
 }
 
-function cleanText(value?: string | null): string {
+export function cleanText(value?: string | null): string {
   return repairMojibake(
     (value ?? "")
       .trim()
@@ -426,35 +426,70 @@ export function PhaseLabel({ label, aside }: { label: string; aside?: string }) 
 export function MonitorNav({
   current,
 }: {
-  current: "tennis" | "tennis-props" | "goalscorer" | "lineups" | "assist-value" | "team-shots" | "corners";
+  current: "tennis" | "tennis-props" | "goalscorer" | "lineups" | "assist-value" | "team-shots" | "corners" | "gk-saves" | "team-fouls";
 }) {
   const base =
     "inline-flex items-center rounded-full border border-slate-700/70 bg-slate-900/70 px-3 py-1.5 text-sm text-slate-400 transition-colors hover:border-slate-600 hover:text-slate-200";
   const active =
     "border-emerald-500/30 bg-emerald-500/8 text-emerald-200 hover:border-emerald-500/40 hover:text-emerald-100";
+  const footballCurrent = ["team-shots", "corners", "gk-saves", "team-fouls"].includes(current);
   return (
     <nav className="flex flex-wrap items-center gap-2">
-      <Link href="/model-monitor" className={cn(base, current === "tennis" && active)}>
+      <Link href="/model-monitor" aria-current={current === "tennis" ? "page" : undefined} className={cn(base, current === "tennis" && active)}>
         Tennis
       </Link>
-      <Link href="/model-monitor/tennis-props" className={cn(base, current === "tennis-props" && active)}>
+      <Link href="/model-monitor/tennis-props" aria-current={current === "tennis-props" ? "page" : undefined} className={cn(base, current === "tennis-props" && active)}>
         Aces / DFs
       </Link>
-      <Link href="/model-monitor/goalscorer" className={cn(base, current === "goalscorer" && active)}>
+      <Link href="/model-monitor/goalscorer" aria-current={current === "goalscorer" ? "page" : undefined} className={cn(base, current === "goalscorer" && active)}>
         Goalscorer
       </Link>
-      <Link href="/model-monitor/goalscorer/lineups" className={cn(base, current === "lineups" && active)}>
+      <Link href="/model-monitor/goalscorer/lineups" aria-current={current === "lineups" ? "page" : undefined} className={cn(base, current === "lineups" && active)}>
         Lineups
       </Link>
-      <Link href="/model-monitor/assist-value" className={cn(base, current === "assist-value" && active)}>
+      <Link href="/model-monitor/assist-value" aria-current={current === "assist-value" ? "page" : undefined} className={cn(base, current === "assist-value" && active)}>
         Assist Value
       </Link>
-      <Link href="/model-monitor/team-shots" className={cn(base, current === "team-shots" && active)}>
-        Shots / Fouls
+      <Link href="/model-monitor/team-shots" aria-current={footballCurrent ? "page" : undefined} className={cn(base, footballCurrent && active)}>
+        Football Counts
       </Link>
-      <Link href="/model-monitor/corners" className={cn(base, current === "corners" && active)}>
-        Corners
-      </Link>
+    </nav>
+  );
+}
+
+export function FootballLaneNav({
+  current,
+}: {
+  current: "team-shots" | "corners" | "gk-saves" | "team-fouls";
+}) {
+  const lanes = [
+    { id: "team-shots", href: "/model-monitor/team-shots", label: "Team Shots v4", detail: "2026/27 ledger" },
+    { id: "corners", href: "/model-monitor/corners", label: "Corners v3", detail: "2026/27 ledger" },
+    { id: "gk-saves", href: "/model-monitor/gk-saves", label: "GK Saves v1", detail: "prospective evidence" },
+    { id: "team-fouls", href: "/model-monitor/team-fouls", label: "Team Fouls F2", detail: "gate progress" },
+  ] as const;
+
+  return (
+    <nav aria-label="Football model lanes" className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+      {lanes.map((lane) => {
+        const selected = current === lane.id;
+        return (
+          <Link
+            key={lane.id}
+            href={lane.href}
+            aria-current={selected ? "page" : undefined}
+            className={cn(
+              "group rounded-xl border px-3 py-3 transition-colors",
+              selected
+                ? "border-emerald-400/35 bg-emerald-400/[0.08]"
+                : "border-slate-800 bg-slate-950/45 hover:border-slate-700 hover:bg-slate-900/70",
+            )}
+          >
+            <span className={cn("block text-sm font-semibold", selected ? "text-emerald-200" : "text-slate-200")}>{lane.label}</span>
+            <span className="mt-0.5 block text-[11px] text-slate-500">{lane.detail}</span>
+          </Link>
+        );
+      })}
     </nav>
   );
 }

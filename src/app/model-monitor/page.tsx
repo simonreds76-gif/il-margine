@@ -1566,7 +1566,7 @@ export default async function ModelMonitorPage() {
               </p>
             </Link>
             <Link
-              href="/model-monitor/team-shots#team-fouls"
+              href="/model-monitor/team-fouls"
               className="rounded-2xl border border-emerald-500/20 bg-[linear-gradient(180deg,rgba(6,78,59,0.18),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-emerald-400/40"
             >
               <div className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300">Team Fouls F2</div>
@@ -1576,7 +1576,7 @@ export default async function ModelMonitorPage() {
               </p>
             </Link>
             <Link
-              href="/model-monitor/team-shots#goalkeeper-saves"
+              href="/model-monitor/gk-saves"
               className="rounded-2xl border border-sky-500/20 bg-[linear-gradient(180deg,rgba(14,116,144,0.16),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-sky-400/40"
             >
               <div className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-sky-300">Goalkeeper Saves v1</div>

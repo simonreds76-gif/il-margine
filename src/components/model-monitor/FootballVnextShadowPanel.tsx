@@ -1,6 +1,14 @@
-type Row = Record<string, string>;
+import type { MonitorCsvRow } from "@/lib/monitor-csv";
+import {
+  cleanText,
+  cn,
+  formatDateTimeLabel,
+  MatchLabel,
+  StatusPill,
+  TeamLabel,
+} from "@/app/model-monitor/shared";
 
-type ProspectiveGate = {
+type Evidence = {
   signals?: number;
   settled?: number;
   pending?: number;
@@ -19,6 +27,7 @@ type LatestScan = {
   scored_rows?: number;
   scored_fixtures?: number;
   eligible_rows?: number;
+  eligible_fixtures?: number;
   blocked_rows?: number;
   blocker_rows?: Record<string, number>;
   edge_pass_but_warmup_blocked_fixtures?: number;
@@ -33,55 +42,157 @@ export type FootballVnextGate = {
   market_gate?: string;
   promotion_gate?: string;
   live_routing?: boolean;
-  prospective?: ProspectiveGate;
+  prospective?: Evidence;
+  warmup_tracking?: Evidence;
   latest_scan?: LatestScan;
 };
 
-function numberValue(value: string | number | null | undefined): number | null {
+type SourceStatus = {
+  source?: "hosted" | "local" | "missing";
+  generatedAt?: string | null;
+};
+
+function numeric(value: string | number | null | undefined): number | null {
   if (value === null || value === undefined || value === "") return null;
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-function percent(value: number | null, digits = 1): string {
-  if (value === null) return "-";
-  return `${value >= 0 ? "+" : ""}${(value * 100).toFixed(digits)}%`;
+function pct(value: number | null | undefined, scale = 100): string {
+  if (value === null || value === undefined || !Number.isFinite(value)) return "-";
+  const amount = value * scale;
+  return `${amount > 0 ? "+" : ""}${amount.toFixed(1)}%`;
 }
 
-function units(value: number | null): string {
-  if (value === null) return "-";
-  return `${value >= 0 ? "+" : ""}${value.toFixed(2)}u`;
+function units(value: number | null | undefined): string {
+  if (value === null || value === undefined || !Number.isFinite(value)) return "-";
+  return `${value > 0 ? "+" : ""}${value.toFixed(2)}u`;
+}
+
+function resultFor(row: MonitorCsvRow): string {
+  return cleanText(row.result || "pending").toLowerCase();
+}
+
+function isSettled(row: MonitorCsvRow): boolean {
+  return ["won", "lost", "push", "void"].includes(resultFor(row));
+}
+
+function rowStake(row: MonitorCsvRow): number {
+  return numeric(row.stake_units || row.stake) ?? 1;
 }
 
 function resultTone(result: string): string {
   if (result === "won") return "text-emerald-300";
   if (result === "lost") return "text-rose-300";
-  return "text-slate-400";
+  if (result === "push" || result === "void") return "text-slate-300";
+  return "text-amber-200";
 }
 
-function blockReasonLabel(reason: string): string {
+function plainReason(value?: string | null): string {
   const labels: Record<string, string> = {
-    matchdays_1_to_3: "MD1-3 safety block",
+    matchdays_1_to_3: "Matchday 1-3 safety lock",
     edge_below_3pct: "Edge below 3%",
-    canonical_only: "Canonical source required",
-    confidence_guard: "Confidence guard",
+    missing_two_way_market: "No paired two-way price",
+    goalkeeper_team_unresolved: "Goalkeeper team unresolved",
+    missing_lineup: "Lineup not published",
+    player_not_starting_goalkeeper: "Player not starting goalkeeper",
+    missing_priced_edge: "No model-priced edge",
   };
-  return reason
-    .split(";")
-    .map((part) => part.trim())
+  return cleanText(value)
+    .split(/[|,;]/)
+    .map((part) => labels[part.trim()] ?? part.trim().replaceAll("_", " "))
     .filter(Boolean)
-    .map((part) => labels[part] ?? part.replaceAll("_", " "))
-    .join(" · ");
+    .join(" / ");
 }
 
-function Metric({ label, value, detail, tone = "text-slate-100" }: { label: string; value: string; detail?: string; tone?: string }) {
+function priceFor(row: MonitorCsvRow): number | null {
+  return numeric(row.book_price_at_publication || row.pinnacle_price_at_publication || row.book_odds || row.odds_decimal);
+}
+
+function actualFor(model: "team_shots_v4" | "corners_v3", row: MonitorCsvRow): string {
+  return cleanText(model === "team_shots_v4" ? row.actual_team_shots : row.actual_total_corners) || "-";
+}
+
+function metricTone(value: number | null): string {
+  if (value === null || value === 0) return "text-slate-100";
+  return value > 0 ? "text-emerald-300" : "text-rose-300";
+}
+
+function Metric({ label, value, detail, tone }: { label: string; value: string; detail: string; tone?: string }) {
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-950/55 px-3 py-3">
-      <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">{label}</div>
-      <div className={`mt-1 font-mono text-lg tabular-nums ${tone}`}>{value}</div>
-      {detail ? <div className="mt-1 text-[11px] text-slate-500">{detail}</div> : null}
+    <div className="min-w-0 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-3">
+      <div className="text-[11px] font-semibold uppercase tracking-[0.13em] text-slate-500">{label}</div>
+      <div className={cn("mt-1 font-mono text-lg font-semibold tabular-nums text-slate-100", tone)}>{value}</div>
+      <div className="mt-1 truncate text-[11px] text-slate-500" title={detail}>{detail}</div>
     </div>
   );
+}
+
+function LedgerCards({ model, rows }: { model: "team_shots_v4" | "corners_v3"; rows: MonitorCsvRow[] }) {
+  return (
+    <ul className="grid gap-2 md:hidden">
+      {rows.map((row, index) => {
+        const result = resultFor(row);
+        const edge = numeric(row.edge);
+        return (
+          <li key={row.pick_id || `${row.match}-${index}`} className="rounded-xl border border-slate-800 bg-slate-950/45 p-3">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <div className="text-[11px] text-slate-500">{formatDateTimeLabel(row.kickoff_utc || row.match_date)}</div>
+                <MatchLabel league={row.league} homeTeam={row.home_team} awayTeam={row.away_team} className="mt-1 w-full" textClassName="text-sm font-semibold text-slate-100" />
+              </div>
+              <span className={cn("shrink-0 text-xs font-bold uppercase", resultTone(result))}>{result}</span>
+            </div>
+            <div className="mt-3 flex items-center justify-between gap-3 border-t border-slate-800/80 pt-3">
+              <div className="min-w-0">
+                <div className="text-sm font-medium text-slate-200">{cleanText(row.selection) || `${cleanText(row.side)} ${cleanText(row.line)}`}</div>
+                <div className="mt-0.5 text-[11px] text-slate-500">{cleanText(row.signal_status).replaceAll("_", " ") || "tracked research"}</div>
+              </div>
+              <div className="grid shrink-0 grid-cols-3 gap-3 text-right text-xs tabular-nums">
+                <div><span className="block text-[11px] text-slate-600">Market</span>{priceFor(row)?.toFixed(2) ?? "-"}</div>
+                <div><span className="block text-[11px] text-slate-600">Fair</span>{numeric(row.model_fair_odds)?.toFixed(2) ?? "-"}</div>
+                <div className={metricTone(edge)}><span className="block text-[11px] text-slate-600">Edge</span>{pct(edge)}</div>
+              </div>
+            </div>
+            <div className="mt-3 grid grid-cols-3 gap-2 rounded-lg bg-slate-900/60 px-3 py-2 text-xs">
+              <div><span className="block text-[11px] text-slate-500">Stake</span>{rowStake(row).toFixed(1)}u</div>
+              <div><span className="block text-[11px] text-slate-500">Actual count</span>{actualFor(model, row)}</div>
+              <div className={cn("text-right font-mono", resultTone(result))}><span className="block text-[11px] text-slate-500">P/L</span>{isSettled(row) ? units(numeric(row.pnl_units)) : "-"}</div>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+function CandidateCards({ rows }: { rows: MonitorCsvRow[] }) {
+  return (
+    <ul className="grid gap-2 md:hidden">
+      {rows.map((row, index) => (
+        <li key={row.pick_id || `${row.match}-${index}`} className="rounded-xl border border-amber-400/15 bg-amber-400/[0.03] p-3">
+          <div className="text-[11px] text-slate-500">{formatDateTimeLabel(row.kickoff_utc || row.match_date)}</div>
+          <MatchLabel league={row.league} homeTeam={row.home_team} awayTeam={row.away_team} className="mt-1 w-full" textClassName="text-sm font-semibold text-slate-100" />
+          <div className="mt-3 flex items-center justify-between gap-3 text-sm">
+            <span className="font-medium text-amber-100">{cleanText(row.selection)}</span>
+            <span className="font-mono text-emerald-300">{pct(numeric(row.edge))}</span>
+          </div>
+          <div className="mt-2 text-xs leading-5 text-slate-400"><strong className="text-slate-300">Why not registered:</strong> {plainReason(row.blocked_reason) || "Gate not passed"}</div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function strongestPerFixture(rows: MonitorCsvRow[], model: string): MonitorCsvRow[] {
+  const byFixture = new Map<string, MonitorCsvRow>();
+  for (const row of rows) {
+    if ((row.model || "").trim() !== model) continue;
+    const key = row.match_id || `${row.match_date}|${row.league}|${row.match}`;
+    const current = byFixture.get(key);
+    if (!current || (numeric(row.edge) ?? -999) > (numeric(current.edge) ?? -999)) byFixture.set(key, row);
+  }
+  return [...byFixture.values()].sort((a, b) => String(a.kickoff_utc || a.match_date).localeCompare(String(b.kickoff_utc || b.match_date)));
 }
 
 export default function FootballVnextShadowPanel({
@@ -90,276 +201,130 @@ export default function FootballVnextShadowPanel({
   rows,
   candidates,
   gate,
+  source,
 }: {
   title: string;
   model: "team_shots_v4" | "corners_v3";
-  rows: Row[];
-  candidates: Row[];
+  rows: MonitorCsvRow[];
+  candidates: MonitorCsvRow[];
   gate: FootballVnextGate | null;
+  source?: SourceStatus;
 }) {
-  const allActive = rows.filter((row) => !(row.blocked_reason ?? "").trim() && (row.confidence_guard_applied ?? "").toLowerCase() !== "true");
-  const active = allActive.filter((row) => (row.signal_status ?? "").toLowerCase() !== "warmup_tracking");
-  const warmup = allActive.filter((row) => (row.signal_status ?? "").toLowerCase() === "warmup_tracking");
-  const settled = active.filter((row) => ["won", "lost", "push"].includes((row.result ?? "").toLowerCase()));
-  const pending = active
-    .filter((row) => !row.result || row.result.toLowerCase() === "pending")
-    .sort((a, b) => (a.kickoff_utc ?? "").localeCompare(b.kickoff_utc ?? ""));
-  const pnl = settled.reduce((sum, row) => sum + (numberValue(row.pnl_units) ?? 0), 0);
-  const roi = settled.length > 0 ? pnl / settled.length : null;
-  const warmupSettled = warmup.filter((row) => ["won", "lost", "push"].includes((row.result ?? "").toLowerCase()));
-  const warmupPending = warmup.filter((row) => !row.result || row.result.toLowerCase() === "pending");
-  const warmupPnl = warmupSettled.reduce((sum, row) => sum + (numberValue(row.pnl_units) ?? 0), 0);
-  const warmupRoi = warmupSettled.length > 0 ? warmupPnl / warmupSettled.length : null;
-  const trueClose = settled.filter((row) => (row.true_close ?? "").toLowerCase() === "true");
-  const trueCloseClv = trueClose
-    .map((row) => numberValue(row.published_to_close_clv))
-    .filter((value): value is number => value !== null);
-  const meanClv = trueCloseClv.length > 0
-    ? trueCloseClv.reduce((sum, value) => sum + value, 0) / trueCloseClv.length
-    : null;
-  const modelCandidates = candidates.filter((row) => row.model === model);
-  const eligibleCandidates = modelCandidates.filter((row) => row.signal_status === "eligible");
-  const blockedCandidates = modelCandidates.filter(
-    (row) => row.signal_status === "blocked" || Boolean((row.blocked_reason ?? "").trim()),
-  );
-  const strongestBlockedByFixture = new Map<string, Row>();
-  for (const row of blockedCandidates) {
-    const fixtureKey = row.match_id || `${row.match_date}|${row.match}`;
-    const incumbent = strongestBlockedByFixture.get(fixtureKey);
-    if (!incumbent || (numberValue(row.edge) ?? Number.NEGATIVE_INFINITY) > (numberValue(incumbent.edge) ?? Number.NEGATIVE_INFINITY)) {
-      strongestBlockedByFixture.set(fixtureKey, row);
-    }
-  }
-  const blockedWatchlist = [...strongestBlockedByFixture.values()]
-    .sort((a, b) => (numberValue(b.edge) ?? Number.NEGATIVE_INFINITY) - (numberValue(a.edge) ?? Number.NEGATIVE_INFINITY))
-    .slice(0, 8);
-  const evidence = gate?.prospective;
-  const latestScan = gate?.latest_scan;
-  const scanIsExpectedWarmup = latestScan?.state === "EXPECTED_WARMUP_BLOCK";
-  const scanIsHealthy = scanIsExpectedWarmup || latestScan?.state === "ELIGIBLE_CANDIDATES_PRESENT";
-  const scanBlockers = Object.entries(latestScan?.blocker_rows ?? {})
-    .map(([reason, count]) => `${blockReasonLabel(reason)} ${count}`)
-    .join(" · ");
+  const ledger = [...rows].sort((a, b) => String(b.kickoff_utc || b.match_date).localeCompare(String(a.kickoff_utc || a.match_date)));
+  const settled = ledger.filter(isSettled);
+  const pending = ledger.filter((row) => !isSettled(row));
+  const won = settled.filter((row) => resultFor(row) === "won").length;
+  const lost = settled.filter((row) => resultFor(row) === "lost").length;
+  const pushed = settled.filter((row) => ["push", "void"].includes(resultFor(row))).length;
+  const staked = settled.reduce((sum, row) => sum + rowStake(row), 0);
+  const pnl = settled.reduce((sum, row) => sum + (numeric(row.pnl_units) ?? 0), 0);
+  const roi = staked > 0 ? pnl / staked : null;
+  const trueCloseRows = settled.filter((row) => cleanText(row.true_close).toLowerCase() === "true");
+  const clvValues = trueCloseRows.map((row) => numeric(row.published_to_close_clv)).filter((value): value is number => value !== null);
+  const meanClv = clvValues.length ? clvValues.reduce((sum, value) => sum + value, 0) / clvValues.length : null;
+  const sideCounts = ledger.reduce<Record<string, number>>((acc, row) => {
+    const side = cleanText(row.side).toLowerCase() || "unknown";
+    acc[side] = (acc[side] ?? 0) + 1;
+    return acc;
+  }, {});
+  const dominantSide = Object.entries(sideCounts).sort((a, b) => b[1] - a[1])[0];
+  const usesWarmupEvidence = Boolean(gate?.warmup_tracking);
+  const evidence = gate?.warmup_tracking ?? gate?.prospective;
+  const currentCandidates = strongestPerFixture(candidates, model);
+  const gateStatus = cleanText(gate?.promotion_gate || "BLOCKED").replaceAll("_", " ");
+  const generatedAt = source?.generatedAt || undefined;
 
   return (
-    <section className="overflow-hidden rounded-2xl border border-cyan-500/25 bg-[linear-gradient(135deg,rgba(8,47,73,.22),rgba(2,6,23,.9)_45%,rgba(15,23,42,.86))] shadow-[0_18px_70px_rgba(2,132,199,.08)]">
-      <div className="border-b border-slate-800/90 px-4 py-4 sm:px-5">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
+    <section className="overflow-hidden rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.98),rgba(8,12,20,0.98))] shadow-[0_18px_60px_rgba(0,0,0,0.22)]">
+      <div className="border-b border-slate-800 px-4 py-4 sm:px-5">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+          <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <h2 className="text-lg font-semibold text-white">{title}</h2>
-              <span className="rounded-full border border-amber-400/25 bg-amber-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-amber-200">
-                Shadow only
-              </span>
-              <span className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-2 py-0.5 font-mono text-[10px] text-cyan-200">
-                {model}
-              </span>
+              <h2 className="text-xl font-semibold tracking-tight text-white">{title}</h2>
+              <StatusPill label="Tracked research" tone="border-violet-400/30 bg-violet-400/10 text-violet-200" />
+              <StatusPill label={`Promotion ${gateStatus}`} tone="border-rose-400/30 bg-rose-400/10 text-rose-200" />
             </div>
-            <p className="mt-1 max-w-3xl text-xs leading-5 text-slate-400">
-              Automatic prospective signals from the locked model. They are settled and checked against close, but are not a proven betting lane until every promotion gate passes.
-            </p>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">Registered and settled for evidence. Not a betting authorization.</p>
           </div>
-          <div className="text-right text-[11px] text-slate-500">
-            <div>Count gate <span className="font-semibold text-emerald-300">{gate?.count_gate ?? "-"}</span></div>
-            <div>Promotion <span className="font-semibold text-amber-300">{gate?.promotion_gate ?? "BLOCKED"}</span></div>
+          <div className="rounded-xl border border-slate-800 bg-slate-950/50 px-3 py-2 text-xs leading-5 text-slate-400">
+            <div>Source <strong className="uppercase text-slate-200">{source?.source ?? "unknown"}</strong></div>
+            <div>Generated <strong className="text-slate-200">{formatDateTimeLabel(generatedAt)}</strong></div>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 p-4 sm:grid-cols-3 xl:grid-cols-6 sm:p-5">
-        <Metric label="Open signals" value={String(pending.length)} detail={`${eligibleCandidates.length} eligible this scan`} tone={pending.length > 0 ? "text-cyan-200" : undefined} />
-        <Metric label="Settled" value={String(settled.length)} detail={`${settled.filter((row) => row.result?.toLowerCase() === "won").length}W / ${settled.filter((row) => row.result?.toLowerCase() === "lost").length}L`} />
-        <Metric label="P/L" value={units(pnl)} detail="1u shadow stake" tone={pnl > 0 ? "text-emerald-300" : pnl < 0 ? "text-rose-300" : undefined} />
-        <Metric label="ROI" value={percent(roi)} detail="secondary gate" tone={roi !== null && roi > 0 ? "text-emerald-300" : roi !== null && roi < 0 ? "text-rose-300" : undefined} />
-        <Metric label="True close" value={settled.length ? `${trueClose.length}/${settled.length}` : "-"} detail={evidence?.true_close_coverage != null ? `${(evidence.true_close_coverage * 100).toFixed(0)}% coverage` : "awaiting settlements"} />
-        <Metric label="Mean CLV" value={percent(meanClv)} detail={`true close n=${trueCloseClv.length}`} tone={meanClv !== null && meanClv > 0 ? "text-emerald-300" : meanClv !== null && meanClv < 0 ? "text-rose-300" : undefined} />
+      <div className="grid grid-cols-2 gap-2 p-4 sm:grid-cols-4 xl:grid-cols-8 sm:p-5">
+        <Metric label="Tracked" value={String(ledger.length)} detail={`${evidence?.signals ?? ledger.length} in ${usesWarmupEvidence ? "warm-up" : "prospective"} report`} />
+        <Metric label="Settled" value={String(settled.length)} detail={`${won}-${lost}-${pushed} W-L-P`} />
+        <Metric label="Pending" value={String(pending.length)} detail="awaiting settlement" tone={pending.length ? "text-amber-200" : undefined} />
+        <Metric label="Total staked" value={`${staked.toFixed(1)}u`} detail="settled denominator" />
+        <Metric label="P/L" value={units(pnl)} detail="current 2026/27 ledger" tone={metricTone(pnl)} />
+        <Metric label="ROI" value={pct(roi)} detail={`${units(pnl)} / ${staked.toFixed(1)}u`} tone={metricTone(roi)} />
+        <Metric label="Mean CLV" value={meanClv === null ? "-" : pct(meanClv)} detail={`true close ${clvValues.length} of ${settled.length}`} tone={metricTone(meanClv)} />
+        <Metric label="Side skew" value={dominantSide ? `${dominantSide[1]}/${ledger.length}` : "-"} detail={dominantSide ? `${dominantSide[0]} selections` : "no evidence"} />
       </div>
 
-      <div className="border-t border-amber-400/15 bg-amber-950/5 px-4 py-4 sm:px-5">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <h3 className="text-xs font-semibold uppercase tracking-[0.15em] text-amber-200">MD1-3 warm-up evidence</h3>
-              <span className="rounded-full border border-amber-400/25 bg-amber-400/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.14em] text-amber-200">Track only</span>
-            </div>
-            <p className="mt-1 max-w-3xl text-xs leading-5 text-slate-500">
-              These selections passed the locked 3% edge rule but were withheld by the matchday safety lock. They settle at 1u for provisional model evidence and never count toward the post-unlock promotion sample.
-            </p>
+      <div className="border-t border-slate-800 px-4 py-4 sm:px-5">
+        <div className="grid gap-3 rounded-xl border border-slate-800 bg-slate-950/45 p-4 lg:grid-cols-[auto_1fr] lg:items-center">
+          <div className="flex flex-wrap gap-2">
+            <StatusPill label={`Count ${cleanText(gate?.count_gate || "unknown")}`} tone="border-emerald-400/25 bg-emerald-400/10 text-emerald-200" />
+            <StatusPill label={`Market ${cleanText(gate?.market_gate || "blocked").replaceAll("_", " ")}`} tone="border-amber-400/25 bg-amber-400/10 text-amber-200" />
+            <StatusPill label={`Live routing ${gate?.live_routing ? "on" : "off"}`} tone="border-slate-600 bg-slate-800/70 text-slate-300" />
           </div>
-          <div className="text-right text-[11px] text-slate-500">Automatic settlement and weekly Telegram reporting</div>
+          <p className="text-sm leading-5 text-slate-400 lg:text-right">
+            {gate?.latest_scan?.next_unlock ? `Next operational unlock: ${plainReason(gate.latest_scan.next_unlock)}.` : "Promotion remains evidence-gated."}
+            {gate?.latest_scan?.explanation ? ` ${cleanText(gate.latest_scan.explanation)}` : ""}
+          </p>
         </div>
-        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-          <Metric label="Tracked" value={String(warmup.length)} detail={`${warmupPending.length} pending`} />
-          <Metric label="Settled" value={String(warmupSettled.length)} detail={`${warmupSettled.filter((row) => row.result?.toLowerCase() === "won").length}W / ${warmupSettled.filter((row) => row.result?.toLowerCase() === "lost").length}L`} />
-          <Metric label="Provisional P/L" value={units(warmupPnl)} detail="1u tracking stake" tone={warmupPnl > 0 ? "text-emerald-300" : warmupPnl < 0 ? "text-rose-300" : undefined} />
-          <Metric label="Provisional ROI" value={percent(warmupRoi)} detail="not a betting authorization" tone={warmupRoi !== null && warmupRoi > 0 ? "text-emerald-300" : warmupRoi !== null && warmupRoi < 0 ? "text-rose-300" : undefined} />
+      </div>
+
+      <div className="border-t border-slate-800 px-4 py-4 sm:px-5">
+        <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <h3 className="text-base font-semibold text-white">Current market scan</h3>
+            <p className="mt-1 text-xs leading-5 text-slate-500">Strongest priced candidate per fixture. Blocked rows are shown for evaluation and are not betting selections.</p>
+          </div>
+          <span className="text-xs text-slate-500">{gate?.latest_scan?.scored_rows ?? candidates.filter((row) => row.model === model).length} rows / {gate?.latest_scan?.scored_fixtures ?? currentCandidates.length} fixtures scored</span>
         </div>
-        {warmup.length > 0 ? (
-          <div className="mt-3 overflow-x-auto rounded-xl border border-amber-400/15">
-            <table className="w-full min-w-[860px] text-left text-xs">
-              <thead className="bg-slate-950/80 text-[10px] uppercase tracking-[0.12em] text-slate-500">
-                <tr>
-                  <th className="px-3 py-2.5">Date</th><th className="px-3 py-2.5">Match</th><th className="px-3 py-2.5">Tracked selection</th>
-                  <th className="px-3 py-2.5 text-right">Price</th><th className="px-3 py-2.5 text-right">Edge</th><th className="px-3 py-2.5 text-right">Actual</th>
-                  <th className="px-3 py-2.5 text-right">Result</th><th className="px-3 py-2.5 text-right">P/L</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[...warmup].sort((a, b) => (b.kickoff_utc ?? "").localeCompare(a.kickoff_utc ?? "")).slice(0, 20).map((row) => {
-                  const result = (row.result || "pending").toLowerCase();
-                  return (
-                    <tr key={`warmup-${row.pick_id}`} className="border-t border-slate-800/80 bg-slate-950/25">
-                      <td className="whitespace-nowrap px-3 py-3 text-slate-400">{(row.match_date || row.kickoff_utc || "-").slice(0, 10)}</td>
-                      <td className="px-3 py-3 font-medium text-slate-200">{row.match || "-"}</td>
-                      <td className="px-3 py-3 text-amber-100">{row.selection || "-"}</td>
-                      <td className="px-3 py-3 text-right font-mono text-white">{numberValue(row.book_price_at_publication || row.pinnacle_price_at_publication || row.book_odds)?.toFixed(2) ?? "-"}</td>
-                      <td className="px-3 py-3 text-right font-mono text-emerald-300">{percent(numberValue(row.edge))}</td>
-                      <td className="px-3 py-3 text-right font-mono text-slate-300">{row.actual_team_shots || row.actual_total_corners || "-"}</td>
-                      <td className={`px-3 py-3 text-right font-mono uppercase ${resultTone(result)}`}>{result}</td>
-                      <td className={`px-3 py-3 text-right font-mono ${resultTone(result)}`}>{units(numberValue(row.pnl_units))}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+        {currentCandidates.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-slate-700 bg-slate-950/30 px-4 py-5 text-sm leading-6 text-slate-400">
+            No current priced candidates. {cleanText(gate?.latest_scan?.explanation) || "The latest capture did not contain a paired market for this lane."}
           </div>
         ) : (
-          <div className="mt-3 rounded-xl border border-dashed border-amber-400/15 px-4 py-4 text-xs text-slate-500">
-            No warm-up observations are in the permanent ledger yet. Qualifying scans are now retained automatically.
-          </div>
+          <>
+            <CandidateCards rows={currentCandidates} />
+            <div className="hidden overflow-x-auto rounded-xl border border-slate-800 md:block">
+              <table className="w-full min-w-[920px] text-left text-xs">
+                <thead className="bg-slate-950/85 text-[11px] uppercase tracking-[0.11em] text-slate-500"><tr><th className="px-3 py-3">Kickoff</th><th className="px-3 py-3">Match</th><th className="px-3 py-3">Closest candidate</th><th className="px-3 py-3 text-right">Market odds</th><th className="px-3 py-3 text-right">Fair odds</th><th className="px-3 py-3 text-right">Edge</th><th className="px-3 py-3">Why not registered</th></tr></thead>
+                <tbody>{currentCandidates.map((row, index) => <tr key={row.pick_id || `${row.match}-${index}`} className="border-t border-slate-800/80"><td className="whitespace-nowrap px-3 py-3 text-slate-400">{formatDateTimeLabel(row.kickoff_utc || row.match_date)}</td><td className="max-w-[280px] px-3 py-3"><MatchLabel league={row.league} homeTeam={row.home_team} awayTeam={row.away_team} className="w-full" textClassName="font-medium text-slate-200" /></td><td className="px-3 py-3 text-amber-100">{cleanText(row.selection)}</td><td className="px-3 py-3 text-right font-mono">{priceFor(row)?.toFixed(2) ?? "-"}</td><td className="px-3 py-3 text-right font-mono">{numeric(row.model_fair_odds)?.toFixed(2) ?? "-"}</td><td className={cn("px-3 py-3 text-right font-mono", metricTone(numeric(row.edge)))}>{pct(numeric(row.edge))}</td><td className="max-w-[260px] px-3 py-3 leading-5 text-slate-400">{plainReason(row.blocked_reason) || "Gate not passed"}</td></tr>)}</tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 
-      <div className="border-t border-slate-800/80 px-4 py-4 sm:px-5">
-        <div className={`rounded-xl border px-4 py-3 ${scanIsHealthy ? "border-cyan-400/20 bg-cyan-400/5" : "border-amber-400/20 bg-amber-400/5"}`}>
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">Latest pipeline scan</div>
-              <div className={`mt-1 font-mono text-sm font-semibold ${scanIsHealthy ? "text-cyan-200" : "text-amber-200"}`}>
-                {(latestScan?.state ?? "NOT_RUN").replaceAll("_", " ")}
-              </div>
-              <p className="mt-1 max-w-3xl text-xs leading-5 text-slate-400">
-                {latestScan?.explanation ?? "No reason-coded scan summary has been generated yet."}
-              </p>
-            </div>
-            <div className="grid grid-cols-3 gap-3 text-right text-[11px] text-slate-500">
-              <div><span className="block font-mono text-sm text-slate-200">{latestScan?.scored_rows ?? 0}</span>rows scored</div>
-              <div><span className="block font-mono text-sm text-slate-200">{latestScan?.scored_fixtures ?? 0}</span>fixtures</div>
-              <div><span className="block font-mono text-sm text-amber-200">{latestScan?.edge_pass_but_warmup_blocked_fixtures ?? 0}</span>edge-pass held</div>
-            </div>
+      <div className="border-t border-slate-800 px-4 py-4 sm:px-5">
+        <div className="mb-3 flex items-end justify-between gap-3">
+          <div>
+            <h3 className="text-base font-semibold text-white">Registered 2026/27 evidence</h3>
+            <p className="mt-1 text-xs text-slate-500">Every row below counts toward prospective P/L and ROI, including matchday 1-3 tracking.</p>
           </div>
-          <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 border-t border-slate-800/70 pt-2 text-[11px] text-slate-500">
-            <span>Matchday range <strong className="font-mono text-slate-300">{latestScan?.matchday_min ?? "-"}–{latestScan?.matchday_max ?? "-"}</strong></span>
-            <span>Eligible rows <strong className="font-mono text-slate-300">{latestScan?.eligible_rows ?? 0}</strong></span>
-            <span>Blocked rows <strong className="font-mono text-slate-300">{latestScan?.blocked_rows ?? 0}</strong></span>
-            <span>Blockers <strong className="font-medium text-slate-300">{scanBlockers || "-"}</strong></span>
-          </div>
+          <span className="font-mono text-xs text-slate-400">{ledger.length} rows</span>
         </div>
-      </div>
-
-      <div className="border-t border-slate-800/80 px-4 py-4 sm:px-5">
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <h3 className="text-xs font-semibold uppercase tracking-[0.15em] text-slate-300">Current shadow signals</h3>
-          <span className="text-[11px] text-slate-500">3% minimum edge | MD1-3 blocked | one per fixture</span>
-        </div>
-        {pending.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-slate-700 bg-slate-950/35 px-4 py-5 text-sm text-slate-500">
-            No eligible signal at the latest scan. {modelCandidates.length > 0 ? `${modelCandidates.length} paired prices were evaluated and failed a gate.` : "No current paired two-way prices were available."}
-          </div>
+        {ledger.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-slate-700 px-4 py-5 text-sm text-slate-400">No registered selection yet. This lane is at gate stage; see the gate status above.</div>
         ) : (
-          <div className="overflow-x-auto rounded-xl border border-slate-800">
-            <table className="w-full min-w-[850px] text-left text-xs">
-              <thead className="bg-slate-950/80 text-[10px] uppercase tracking-[0.12em] text-slate-500">
-                <tr>
-                  <th className="px-3 py-2.5">Kickoff</th><th className="px-3 py-2.5">Match</th><th className="px-3 py-2.5">Signal</th>
-                  <th className="px-3 py-2.5 text-right">Price</th><th className="px-3 py-2.5 text-right">Fair</th><th className="px-3 py-2.5 text-right">Edge</th>
-                  <th className="px-3 py-2.5 text-right">MD</th><th className="px-3 py-2.5">Book</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pending.map((row) => {
-                  const price = numberValue(row.book_price_at_publication || row.pinnacle_price_at_publication || row.book_odds);
-                  const fair = numberValue(row.model_fair_odds);
-                  const edge = numberValue(row.edge);
-                  return (
-                    <tr key={row.pick_id} className="border-t border-slate-800/80 bg-slate-950/30">
-                      <td className="whitespace-nowrap px-3 py-3 text-slate-400">{(row.kickoff_utc || row.match_date || "-").replace("T", " ").slice(0, 16)}</td>
-                      <td className="px-3 py-3 font-medium text-slate-200">{row.match || "-"}</td>
-                      <td className="px-3 py-3 text-cyan-100">{row.selection || "-"}</td>
-                      <td className="px-3 py-3 text-right font-mono text-white">{price?.toFixed(2) ?? "-"}</td>
-                      <td className="px-3 py-3 text-right font-mono text-slate-300">{fair?.toFixed(2) ?? "-"}</td>
-                      <td className="px-3 py-3 text-right font-mono text-emerald-300">{percent(edge)}</td>
-                      <td className="px-3 py-3 text-right font-mono text-slate-400">{row.matchday || "-"}</td>
-                      <td className="px-3 py-3 text-slate-400">{row.bookmaker || "-"}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          <>
+            <LedgerCards model={model} rows={ledger} />
+            <div className="hidden overflow-x-auto rounded-xl border border-slate-800 md:block">
+              <table className="w-full min-w-[1120px] text-left text-xs">
+                <thead className="bg-slate-950/95 text-[11px] uppercase tracking-[0.11em] text-slate-500"><tr><th className="px-3 py-3">Date</th><th className="px-3 py-3">Match</th><th className="px-3 py-3">Selection</th><th className="px-3 py-3 text-right">Stake</th><th className="px-3 py-3 text-right">Market odds</th><th className="px-3 py-3 text-right">Fair odds</th><th className="px-3 py-3 text-right">Edge</th><th className="px-3 py-3 text-right">Actual count</th><th className="px-3 py-3">Status</th><th className="px-3 py-3 text-right">P/L</th><th className="px-3 py-3 text-right">CLV</th></tr></thead>
+                <tbody>{ledger.map((row, index) => { const result = resultFor(row); const clv = numeric(row.published_to_close_clv); return <tr key={row.pick_id || `${row.match}-${index}`} className="border-t border-slate-800/80"><td className="whitespace-nowrap px-3 py-3 text-slate-400">{formatDateTimeLabel(row.kickoff_utc || row.match_date)}</td><td className="max-w-[260px] px-3 py-3"><MatchLabel league={row.league} homeTeam={row.home_team} awayTeam={row.away_team} className="w-full" textClassName="font-medium text-slate-200" /></td><td className="px-3 py-3"><TeamLabel league={row.league} team={row.team} detail={cleanText(row.selection)} teamClassName="text-slate-200" detailClassName="text-[11px] text-slate-500" /></td><td className="px-3 py-3 text-right font-mono">{rowStake(row).toFixed(1)}u</td><td className="px-3 py-3 text-right font-mono">{priceFor(row)?.toFixed(2) ?? "-"}</td><td className="px-3 py-3 text-right font-mono">{numeric(row.model_fair_odds)?.toFixed(2) ?? "-"}</td><td className={cn("px-3 py-3 text-right font-mono", metricTone(numeric(row.edge)))}>{pct(numeric(row.edge))}</td><td className="px-3 py-3 text-right font-mono">{actualFor(model, row)}</td><td className={cn("px-3 py-3 font-semibold uppercase", resultTone(result))}>{result}<div className="mt-0.5 text-[11px] font-normal normal-case text-slate-600">{cleanText(row.signal_status).replaceAll("_", " ")}</div></td><td className={cn("px-3 py-3 text-right font-mono", resultTone(result))}>{isSettled(row) ? units(numeric(row.pnl_units)) : "-"}</td><td className={cn("px-3 py-3 text-right font-mono", metricTone(clv))}>{clv === null ? "-" : pct(clv)}</td></tr>; })}</tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
-
-      {blockedWatchlist.length > 0 ? (
-        <div className="border-t border-slate-800/80 px-4 py-4 sm:px-5">
-          <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
-            <div>
-              <h3 className="text-xs font-semibold uppercase tracking-[0.15em] text-amber-200">Gate-blocked watchlist</h3>
-              <p className="mt-1 text-xs text-slate-500">
-                Strongest priced candidate per fixture. These are visible for evaluation only and are not official tips.
-              </p>
-            </div>
-            <span className="rounded-full border border-amber-400/20 bg-amber-400/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-amber-200">
-              Do not bet as model signals
-            </span>
-          </div>
-          <div className="overflow-x-auto rounded-xl border border-amber-400/15">
-            <table className="w-full min-w-[940px] text-left text-xs">
-              <thead className="bg-slate-950/80 text-[10px] uppercase tracking-[0.12em] text-slate-500">
-                <tr>
-                  <th className="px-3 py-2.5">Kickoff</th><th className="px-3 py-2.5">Match</th><th className="px-3 py-2.5">Closest candidate</th>
-                  <th className="px-3 py-2.5 text-right">Price</th><th className="px-3 py-2.5 text-right">Fair</th><th className="px-3 py-2.5 text-right">Edge</th>
-                  <th className="px-3 py-2.5">Why blocked</th>
-                </tr>
-              </thead>
-              <tbody>
-                {blockedWatchlist.map((row) => {
-                  const price = numberValue(row.book_price_at_publication || row.pinnacle_price_at_publication || row.book_odds);
-                  const fair = numberValue(row.model_fair_odds);
-                  const edge = numberValue(row.edge);
-                  return (
-                    <tr key={`blocked-${row.pick_id}`} className="border-t border-slate-800/80 bg-amber-950/5">
-                      <td className="whitespace-nowrap px-3 py-3 text-slate-400">{(row.kickoff_utc || row.match_date || "-").replace("T", " ").slice(0, 16)}</td>
-                      <td className="px-3 py-3 font-medium text-slate-200">{row.match || "-"}</td>
-                      <td className="px-3 py-3 text-amber-100">{row.selection || "-"}</td>
-                      <td className="px-3 py-3 text-right font-mono text-white">{price?.toFixed(2) ?? "-"}</td>
-                      <td className="px-3 py-3 text-right font-mono text-slate-300">{fair?.toFixed(2) ?? "-"}</td>
-                      <td className={`px-3 py-3 text-right font-mono ${edge !== null && edge > 0 ? "text-emerald-300" : "text-rose-300"}`}>
-                        {percent(edge)}
-                      </td>
-                      <td className="px-3 py-3 text-slate-400">{blockReasonLabel(row.blocked_reason ?? "blocked")}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      ) : null}
-
-      {settled.length > 0 ? (
-        <details className="border-t border-slate-800/80 px-4 py-3 sm:px-5">
-          <summary className="cursor-pointer text-xs font-semibold text-slate-400 hover:text-slate-200">Recent settled shadow results</summary>
-          <div className="mt-3 grid gap-2 sm:grid-cols-2">
-            {[...settled].reverse().slice(0, 8).map((row) => (
-              <div key={row.pick_id} className="flex items-center justify-between gap-3 rounded-lg border border-slate-800 bg-slate-950/45 px-3 py-2 text-xs">
-                <div><div className="text-slate-200">{row.match}</div><div className="text-slate-500">{row.selection}</div></div>
-                <div className={`text-right font-mono ${resultTone(row.result)}`}><div>{row.result?.toUpperCase()}</div><div>{units(numberValue(row.pnl_units))}</div></div>
-              </div>
-            ))}
-          </div>
-        </details>
-      ) : null}
     </section>
   );
 }

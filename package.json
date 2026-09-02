@@ -8,7 +8,7 @@
     "dev:turbo": "node scripts/run-next.mjs dev",
     "daily-odds": "python scripts/run-daily-odds.py",
     "prebuild": "python scripts/audit-vercel-isr-policy.py",
-    "build": "node scripts/run-next.mjs build && node scripts/check-vercel-trace.mjs",
+    "build": "node scripts/check-monitor-text.mjs && node scripts/run-next.mjs build && node scripts/check-vercel-trace.mjs",
     "start": "node scripts/run-next.mjs start",
     "lint": "eslint",
     "create-logos": "node scripts/create-placeholder-logos.js",
@@ -17,7 +17,8 @@
     "check:vercel-trace": "node scripts/check-vercel-trace.mjs",
     "check:vercel-isr": "python scripts/audit-vercel-isr-policy.py",
     "check:wc-penalties": "python scripts/validate-world-cup-penalty-page.py",
-    "check:club-penalties": "python scripts/validate-club-penalty-pages.py"
+    "check:club-penalties": "python scripts/validate-club-penalty-pages.py",
+    "check:monitor-text": "node scripts/check-monitor-text.mjs"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.43",
