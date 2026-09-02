@@ -19,6 +19,10 @@ PROPS_DIR = ROOT / "data" / "tennis-props"
 SHADOW_DIR = PROPS_DIR / "shadow"
 DEFAULT_SIGNALS = SHADOW_DIR / "aces-dfs-shadow-signals.csv"
 DEFAULT_PERFORMANCE = SHADOW_DIR / "aces-dfs-shadow-performance.txt"
+BREAK_MARKETS = {"player_breaks", "match_breaks"}
+BREAK_CALIBRATION_MODE = "breaks_calibration_unfiltered"
+BREAK_PROSPECTIVE_MODE = "breaks_prospective_shadow"
+BREAK_GATE_VERSION = "breaks_v1_p0"
 
 FIELDNAMES = [
     "signal_id",
@@ -70,6 +74,22 @@ FIELDNAMES = [
     "matched_board",
     "decision_mode",
     "price_pair_status",
+    "cohort",
+    "gate_version",
+    "trackable_shadow",
+    "shadow_side",
+    "shadow_block_reasons",
+    "calibration_eligible",
+    "line_quality",
+    "main_line",
+    "best_available_line",
+    "model_market_gap_pp",
+    "source_agreement",
+    "source_agreement_bookmakers",
+    "source_agreement_gap_pp",
+    "observed_side",
+    "observed_odds",
+    "observed_value_pct",
     "notes",
     "source_file",
     "settlement_status",
@@ -131,6 +151,8 @@ def signal_id(row: dict[str, str], side: str) -> str:
                 norm_text(row.get("tournament")),
                 *pair,
                 norm_text(row.get("market")),
+                str(row.get("line") or "").strip(),
+                side.upper(),
             ]
         )
     parts = [
@@ -173,20 +195,83 @@ def fair_odds_for_side(row: dict[str, str], side: str) -> str:
     return row.get(key, "")
 
 
+def is_break_market(row: dict[str, str]) -> bool:
+    return str(row.get("market") or "").strip().lower() in BREAK_MARKETS
+
+
+def best_observation(row: dict[str, str]) -> tuple[str, float, float] | None:
+    candidates: list[tuple[str, float, float]] = []
+    for side, value_key, odds_key in (
+        ("OVER", "value_over_pct", "over_odds"),
+        ("UNDER", "value_under_pct", "under_odds"),
+    ):
+        value = parse_float(row.get(value_key))
+        odds = parse_float(row.get(odds_key))
+        if value is not None and odds is not None and odds > 1.0:
+            candidates.append((side, value, odds))
+    return max(candidates, key=lambda item: item[1]) if candidates else None
+
+
+def normalize_existing_row(row: dict[str, str]) -> dict[str, str]:
+    """Migrate legacy break selections into non-betting calibration evidence."""
+    normalized = dict(row)
+    if not is_break_market(normalized):
+        return normalized
+    mode = str(normalized.get("decision_mode") or "").strip()
+    if mode == BREAK_PROSPECTIVE_MODE:
+        normalized.setdefault("cohort", BREAK_PROSPECTIVE_MODE)
+        normalized.setdefault("gate_version", BREAK_GATE_VERSION)
+        return normalized
+    if mode not in {"", "breaks_shadow", BREAK_CALIBRATION_MODE}:
+        return normalized
+
+    normalized["observed_side"] = normalized.get("observed_side") or normalized.get("side", "")
+    normalized["observed_odds"] = normalized.get("observed_odds") or normalized.get("selected_odds", "")
+    normalized["observed_value_pct"] = normalized.get("observed_value_pct") or normalized.get("value_pct", "")
+    normalized["side"] = ""
+    normalized["selected_odds"] = ""
+    normalized["closing_odds"] = ""
+    normalized["closing_ts_utc"] = ""
+    normalized["closing_snapshot_count"] = ""
+    normalized["clv_pct"] = ""
+    normalized["clv_method"] = ""
+    normalized["fair_odds"] = ""
+    normalized["value_pct"] = ""
+    normalized["decision_mode"] = BREAK_CALIBRATION_MODE
+    normalized["cohort"] = BREAK_CALIBRATION_MODE
+    normalized["gate_version"] = BREAK_GATE_VERSION
+    normalized["trackable_shadow"] = "false"
+    normalized["shadow_side"] = ""
+    if (normalized.get("settlement_status") or "").lower() == "settled":
+        normalized["result"] = "calibration"
+        normalized["pnl"] = ""
+    normalized["signal_id"] = signal_id(normalized, "CALIBRATION")
+    return normalized
+
+
 def build_signal(row: dict[str, str], source: Path, args: argparse.Namespace) -> dict[str, str] | None:
     scope = (row.get("scope") or "player").strip().lower()
     decision_mode = (row.get("decision_mode") or "").strip()
-    is_break_shadow = decision_mode == "breaks_shadow"
+    is_break_calibration = is_break_market(row) and decision_mode == BREAK_CALIBRATION_MODE
+    is_break_prospective = is_break_market(row) and decision_mode == BREAK_PROSPECTIVE_MODE
     confidence = (row.get("confidence") or "").strip().upper()
-    allowed_conf = {"HIGH", "MED"} if scope == "match_total" or is_break_shadow or args.allow_medium else {"HIGH"}
-    if confidence not in allowed_conf:
+    allowed_conf = {"HIGH", "MED"} if scope == "match_total" or args.allow_medium else {"HIGH"}
+    if not is_break_calibration and confidence not in allowed_conf:
         return None
-    if (row.get("matched_board") or "").strip().lower() != "yes":
+    if not is_break_calibration and (row.get("matched_board") or "").strip().lower() != "yes":
         return None
-    if is_break_shadow:
+    observation = best_observation(row) if is_break_market(row) else None
+    if is_break_calibration:
+        if (row.get("calibration_eligible") or "").strip().lower() != "true":
+            return None
+        picked = None
+    elif is_break_prospective:
         if (row.get("trackable_shadow") or "").strip().lower() != "true":
             return None
         picked = pick_side(row, args.min_value, True)
+        shadow_side = (row.get("shadow_side") or "").strip().upper()
+        if picked is None or picked[0] != shadow_side:
+            return None
     elif scope == "match_total":
         if (row.get("bettable") or "").strip().lower() != "true":
             return None
@@ -204,10 +289,12 @@ def build_signal(row: dict[str, str], source: Path, args: argparse.Namespace) ->
         picked = pick_side(row, args.min_value, True)
         if picked is not None and picked[0] != shadow_side:
             return None
-    if picked is None:
+    if picked is None and not is_break_calibration:
         return None
-    side, value_pct, selected_odds = picked
-    sid = signal_id(row, side)
+    side = "" if is_break_calibration else picked[0]
+    value_pct = None if is_break_calibration else picked[1]
+    selected_odds = None if is_break_calibration else picked[2]
+    sid = signal_id(row, "CALIBRATION" if is_break_calibration else side)
     return {
         "signal_id": sid,
         "logged_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -241,7 +328,7 @@ def build_signal(row: dict[str, str], source: Path, args: argparse.Namespace) ->
         "clv_method": "",
         "fair_over_odds": row.get("fair_over_odds", ""),
         "fair_under_odds": row.get("fair_under_odds", ""),
-        "fair_odds": fair_odds_for_side(row, side),
+        "fair_odds": "" if is_break_calibration else fair_odds_for_side(row, side),
         "fair_p_push": row.get("fair_p_push", ""),
         "distribution": row.get("distribution", ""),
         "totals_alpha": row.get("totals_alpha", ""),
@@ -258,6 +345,22 @@ def build_signal(row: dict[str, str], source: Path, args: argparse.Namespace) ->
         "matched_board": row.get("matched_board", ""),
         "decision_mode": row.get("decision_mode", ""),
         "price_pair_status": row.get("price_pair_status", ""),
+        "cohort": row.get("cohort", "") or row.get("decision_mode", ""),
+        "gate_version": row.get("gate_version", ""),
+        "trackable_shadow": row.get("trackable_shadow", ""),
+        "shadow_side": row.get("shadow_side", ""),
+        "shadow_block_reasons": row.get("shadow_block_reasons", ""),
+        "calibration_eligible": row.get("calibration_eligible", ""),
+        "line_quality": row.get("line_quality", ""),
+        "main_line": row.get("main_line", ""),
+        "best_available_line": row.get("best_available_line", ""),
+        "model_market_gap_pp": row.get("model_market_gap_pp", ""),
+        "source_agreement": row.get("source_agreement", ""),
+        "source_agreement_bookmakers": row.get("source_agreement_bookmakers", ""),
+        "source_agreement_gap_pp": row.get("source_agreement_gap_pp", ""),
+        "observed_side": observation[0] if observation else "",
+        "observed_odds": fmt_float(observation[2], 3) if observation else "",
+        "observed_value_pct": fmt_float(observation[1], 2) if observation else "",
         "notes": row.get("notes", ""),
         "source_file": str(source.relative_to(ROOT)) if source.is_relative_to(ROOT) else str(source),
         "settlement_status": "pending",
@@ -271,9 +374,12 @@ def build_signal(row: dict[str, str], source: Path, args: argparse.Namespace) ->
 
 def write_performance(path: Path, rows: list[dict[str, str]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    settled = [r for r in rows if (r.get("settlement_status") or "").lower() == "settled"]
-    pending = [r for r in rows if (r.get("settlement_status") or "").lower() == "pending"]
-    voids = [r for r in rows if (r.get("settlement_status") or "").lower() == "void"]
+    calibration = [r for r in rows if r.get("decision_mode") == BREAK_CALIBRATION_MODE]
+    betting_rows = [r for r in rows if r.get("decision_mode") != BREAK_CALIBRATION_MODE]
+    settled = [r for r in betting_rows if (r.get("settlement_status") or "").lower() == "settled"]
+    pending = [r for r in betting_rows if (r.get("settlement_status") or "").lower() == "pending"]
+    voids = [r for r in betting_rows if (r.get("settlement_status") or "").lower() == "void"]
+    calibration_settled = [r for r in calibration if (r.get("settlement_status") or "").lower() == "settled"]
     pnl = sum(parse_float(r.get("pnl")) or 0.0 for r in settled)
     roi = pnl / len(settled) * 100.0 if settled else 0.0
     settled_clv = [parse_float(r.get("clv_pct")) for r in settled]
@@ -283,9 +389,9 @@ def write_performance(path: Path, rows: list[dict[str, str]]) -> None:
 
     def bucket(label: str, key: str) -> list[str]:
         out = [f"\n{label}:"]
-        values = sorted({r.get(key, "") or "-" for r in rows})
+        values = sorted({r.get(key, "") or "-" for r in betting_rows})
         for value in values:
-            subset = [r for r in rows if (r.get(key, "") or "-") == value]
+            subset = [r for r in betting_rows if (r.get(key, "") or "-") == value]
             settled_subset = [r for r in subset if (r.get("settlement_status") or "").lower() == "settled"]
             subset_pnl = sum(parse_float(r.get("pnl")) or 0.0 for r in settled_subset)
             subset_roi = subset_pnl / len(settled_subset) * 100.0 if settled_subset else 0.0
@@ -296,7 +402,8 @@ def write_performance(path: Path, rows: list[dict[str, str]]) -> None:
         "Tennis aces/DF shadow evidence",
         f"Generated UTC: {datetime.now(timezone.utc).isoformat(timespec='seconds')}",
         "Status: internal shadow only; no public betting record or live staking.",
-        f"Rows: {len(rows)} | settled: {len(settled)} | pending: {len(pending)} | void: {len(voids)}",
+        f"Betting rows: {len(betting_rows)} | settled: {len(settled)} | pending: {len(pending)} | void: {len(voids)}",
+        f"Break calibration rows: {len(calibration)} | counts settled: {len(calibration_settled)} | excluded from ROI/CLV",
         f"PnL: {pnl:+.2f}u | ROI: {roi:+.1f}%",
         f"CLV: coverage={len(settled_clv)}/{len(settled)} | mean={mean_clv:+.2f}% | positive={positive_clv:.1f}%",
         "Promotion guard: do not read ROI seriously before 300 settled lines across at least two Slams.",
@@ -324,7 +431,7 @@ def main() -> int:
         print(f"Comparison file not found: {comparison}")
         return 0
 
-    existing = read_csv(Path(args.signals))
+    existing = [normalize_existing_row(row) for row in read_csv(Path(args.signals))]
     existing_by_id = {row.get("signal_id", ""): row for row in existing if row.get("signal_id")}
     added = 0
     for row in read_csv(comparison):

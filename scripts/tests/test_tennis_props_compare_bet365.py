@@ -177,6 +177,37 @@ class OverOnlyDecisionTests(unittest.TestCase):
 
 
 class BreakMarketTests(unittest.TestCase):
+    @staticmethod
+    def priced_row(bookmaker: str = "Bet365") -> dict[str, str]:
+        now = datetime.now(timezone.utc)
+        return {
+            "date": now.date().isoformat(),
+            "tour": "ATP",
+            "tournament": "US Open",
+            "event_id": "event-1",
+            "market": "match_breaks",
+            "scope": "match_total",
+            "player": "Player One",
+            "opponent": "Player Two",
+            "line": "6.5",
+            "breaks_stage0_passed": "true",
+            "matched_board": "yes",
+            "confidence": "HIGH",
+            "combined_surface_svpt_sample": "2400",
+            "capture_ts": now.isoformat(),
+            "match_start_utc": (now + timedelta(hours=5)).isoformat(),
+            "over_odds": "1.90",
+            "under_odds": "1.90",
+            "price_pair_status": "two_way",
+            "line_quality": "complete",
+            "main_line": "true",
+            "model_market_gap_pp": "6.0",
+            "value_over_pct": "7.0",
+            "value_under_pct": "-7.0",
+            "notes": "",
+            "bookmaker": bookmaker,
+        }
+
     def test_break_means_use_player_break_projection(self) -> None:
         board = {"projected_breaks_for": "3.125", "projected_total_breaks": "7.0"}
         self.assertEqual(MODULE.market_mean(board, "player_breaks"), 3.125)
@@ -196,25 +227,51 @@ class BreakMarketTests(unittest.TestCase):
             (True, "negative_binomial", 0.02),
         )
 
-    def test_break_price_is_trackable_shadow_but_never_bettable(self) -> None:
-        now = datetime.now(timezone.utc)
-        row = {
-            "market": "match_breaks",
-            "breaks_stage0_passed": "true",
-            "matched_board": "yes",
-            "confidence": "MED",
-            "capture_ts": now.isoformat(),
-            "match_start_utc": (now + timedelta(hours=5)).isoformat(),
-            "over_odds": "2.60",
-            "value_over_pct": "12.0",
-            "under_odds": "1.55",
-            "value_under_pct": "-8.0",
-        }
-        MODULE.apply_break_shadow_gates([row], now)
-        self.assertEqual(row["decision_mode"], "breaks_shadow")
-        self.assertEqual(row["shadow_side"], "OVER")
-        self.assertEqual(row["trackable_shadow"], "true")
+    def test_single_source_break_price_is_calibration_not_a_bet(self) -> None:
+        row = self.priced_row()
+        MODULE.apply_break_shadow_gates([row], datetime.now(timezone.utc))
+        self.assertEqual(row["decision_mode"], "breaks_calibration_unfiltered")
+        self.assertEqual(row["shadow_side"], "")
+        self.assertEqual(row["trackable_shadow"], "false")
+        self.assertEqual(row["calibration_eligible"], "true")
+        self.assertIn("PRICE_SOURCE_UNVERIFIED", row["shadow_block_reasons"])
         self.assertEqual(row["bettable"], "false")
+
+    def test_two_agreeing_sources_can_enter_strict_prospective_shadow(self) -> None:
+        rows = [self.priced_row("Bet365"), self.priced_row("BetsBK")]
+        MODULE.apply_break_shadow_gates(rows, datetime.now(timezone.utc))
+        self.assertTrue(all(row["source_agreement"] == "true" for row in rows))
+        self.assertTrue(all(row["decision_mode"] == "breaks_prospective_shadow" for row in rows))
+        self.assertTrue(all(row["trackable_shadow"] == "true" for row in rows))
+        self.assertTrue(all(row["shadow_side"] == "OVER" for row in rows))
+
+    def test_stale_second_source_does_not_verify_a_price(self) -> None:
+        now = datetime.now(timezone.utc)
+        rows = [self.priced_row("Bet365"), self.priced_row("BetsBK")]
+        rows[1]["capture_ts"] = (now - timedelta(hours=2)).isoformat()
+        MODULE.apply_break_shadow_gates(rows, now)
+        self.assertTrue(all(row["source_agreement"] == "false" for row in rows))
+        self.assertTrue(all(row["decision_mode"] == "breaks_calibration_unfiltered" for row in rows))
+
+    def test_model_market_gap_and_deep_alternate_fail_strict_gate(self) -> None:
+        rows = [self.priced_row("Bet365"), self.priced_row("BetsBK")]
+        for row in rows:
+            row["model_market_gap_pp"] = "18.0"
+            row["line_quality"] = "deep_alt"
+            row["main_line"] = "false"
+        MODULE.apply_break_shadow_gates(rows, datetime.now(timezone.utc))
+        self.assertTrue(all(row["decision_mode"] == "breaks_calibration_unfiltered" for row in rows))
+        self.assertTrue(all("MODEL_MARKET_GAP" in row["shadow_block_reasons"] for row in rows))
+        self.assertTrue(all("LINE_NOT_COMPLETE" in row["shadow_block_reasons"] for row in rows))
+
+    def test_unmatched_break_line_still_preserves_raw_count_calibration(self) -> None:
+        row = self.priced_row()
+        row["matched_board"] = "no"
+        row["breaks_stage0_passed"] = "false"
+        MODULE.apply_break_shadow_gates([row], datetime.now(timezone.utc))
+        self.assertEqual(row["decision_mode"], "breaks_calibration_unfiltered")
+        self.assertEqual(row["calibration_eligible"], "true")
+        self.assertIn("NO_BOARD_MATCH", row["shadow_block_reasons"])
 
 
 if __name__ == "__main__":

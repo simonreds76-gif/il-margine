@@ -1301,29 +1301,33 @@ function RecommendationPanel({
   );
 }
 
-function BreakRecommendationPanel({ rows }: { rows: CsvRow[] }) {
+function BreakRecommendationPanel({ rows, evidenceRows }: { rows: CsvRow[]; evidenceRows: CsvRow[] }) {
   const matched = rows.filter((row) => row.matched_board === "yes");
-  const watchlist = matched
+  const prospective = matched
     .filter((row) => row.trackable_shadow === "true" && ["OVER", "UNDER"].includes((row.shadow_side || "").toUpperCase()))
     .sort((a, b) => rowBestValue(b) - rowBestValue(a));
-  const blocked = matched
-    .filter((row) => row.trackable_shadow !== "true")
+  const calibration = rows
+    .filter((row) => row.calibration_eligible === "true" && row.trackable_shadow !== "true")
     .sort((a, b) => rowBestValue(b) - rowBestValue(a));
+  const sourceVerified = matched.filter((row) => row.source_agreement === "true").length;
+  const calibrationEvidence = evidenceRows.filter((row) => row.decision_mode === "breaks_calibration_unfiltered");
+  const calibrationSettled = calibrationEvidence.filter((row) => row.settlement_status === "settled").length;
 
   return (
     <SectionCard
-      title="Service Breaks v1: Price-Backed Watchlist"
-      subtitle="Player and match break totals are priced only when a real Bet365 or BetsBK line matches the registered projection. These remain zero-stake research until prospective ROI and CLV gates pass."
+      title="Service Breaks v1: Calibration and Strict Shadow"
+      subtitle="Every captured line remains available for count calibration. ROI and CLV are calculated only for strict rows with a supported main line, HIGH confidence, controlled model-market gap and two-book price agreement."
     >
-      <div className="grid gap-2 sm:grid-cols-4">
+      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
         <MetricTile label="Captured" value={String(rows.length)} sub="break price rows" tone={rows.length ? "text-cyan-300" : "text-rose-300"} />
-        <MetricTile label="Matched" value={String(matched.length)} sub="joined to projections" tone={matched.length ? "text-emerald-300" : "text-slate-400"} />
-        <MetricTile label="Watchlist" value={String(watchlist.length)} sub="8%+ edge, MED+" tone={watchlist.length ? "text-amber-300" : "text-slate-400"} />
-        <MetricTile label="Official stake" value="0.0u" sub="evidence gate not passed" tone="text-slate-400" />
+        <MetricTile label="Calibration ledger" value={String(calibrationEvidence.length)} sub="all retained lines" tone={calibrationEvidence.length ? "text-cyan-300" : "text-slate-400"} />
+        <MetricTile label="Counts settled" value={String(calibrationSettled)} sub={`${calibrationEvidence.length - calibrationSettled} pending · no ROI`} tone={calibrationSettled ? "text-emerald-300" : "text-slate-400"} />
+        <MetricTile label="Source verified" value={String(sourceVerified)} sub="same line, two books" tone={sourceVerified ? "text-emerald-300" : "text-amber-300"} />
+        <MetricTile label="Strict shadow" value={String(prospective.length)} sub="eligible for ROI/CLV" tone={prospective.length ? "text-emerald-300" : "text-slate-400"} />
       </div>
-      {watchlist.length ? (
+      {prospective.length ? (
         <div className="mt-4 grid gap-3 lg:grid-cols-2">
-          {watchlist.slice(0, 12).map((row, index) => <ComparisonLineCard key={`break-watch-${row.event_id}-${row.player}-${row.line}-${index}`} row={row} />)}
+          {prospective.slice(0, 12).map((row, index) => <ComparisonLineCard key={`break-watch-${row.event_id}-${row.player}-${row.line}-${index}`} row={row} />)}
         </div>
       ) : rows.length === 0 ? (
         <div className="mt-4 rounded-2xl border border-rose-500/25 bg-rose-500/10 p-4 text-sm leading-6 text-rose-100">
@@ -1332,9 +1336,9 @@ function BreakRecommendationPanel({ rows }: { rows: CsvRow[] }) {
         </div>
       ) : (
         <div className="mt-4">
-          <div className="mb-2 text-xs font-black uppercase tracking-[0.14em] text-slate-500">Best blocked break rows</div>
+          <div className="mb-2 text-xs font-black uppercase tracking-[0.14em] text-slate-500">Calibration examples, not betting signals</div>
           <div className="grid gap-3 lg:grid-cols-3">
-            {blocked.slice(0, 6).map((row, index) => <ComparisonLineCard key={`break-blocked-${row.event_id}-${row.player}-${row.line}-${index}`} row={row} />)}
+            {calibration.slice(0, 6).map((row, index) => <ComparisonLineCard key={`break-calibration-${row.event_id}-${row.player}-${row.line}-${index}`} row={row} />)}
           </div>
         </div>
       )}
@@ -2247,8 +2251,10 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     .sort((a, b) => rowBestValue(b) - rowBestValue(a));
   const visibleAllLineRows = matchedDecisionRows.filter((row) => showHiddenLines || !isHardHiddenLine(row) || row.main_line === "true" || row.best_available_line === "true" || row.bettable === "true");
   const allLineRowsForPanel = showAllLines ? visibleAllLineRows : visibleAllLineRows.filter((row) => row.main_line === "true" || row.best_available_line === "true" || row.bettable === "true");
-  const sortedShadowRows = [...shadowRows].sort(shadowSort);
-  const shadow = shadowStats(shadowRows);
+  const breakCalibrationRows = shadowRows.filter((row) => row.decision_mode === "breaks_calibration_unfiltered");
+  const bettingShadowRows = shadowRows.filter((row) => row.decision_mode !== "breaks_calibration_unfiltered");
+  const sortedShadowRows = [...bettingShadowRows].sort(shadowSort);
+  const shadow = shadowStats(bettingShadowRows);
   const marketBenchmark = benchmarkStats(marketObservationRows);
   const todayIso = londonDateIso();
   const latestLinesDate = latestLinesPath ? path.basename(latestLinesPath).match(/bet365-lines-(\d{4}-\d{2}-\d{2})\.csv$/)?.[1] ?? "" : "";
@@ -2270,7 +2276,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
 
         <HeroCard title="Tennis Props Decision Board" eyebrow="Aces / double faults / service breaks">
           <p className="text-slate-300">
-            Decision first: bookmaker aces, double-fault and service-break lines are compared against the projection board. Breaks remain a zero-stake watchlist until prospective ROI and CLV gates pass.
+            Decision first: bookmaker aces, double-fault and service-break lines are compared against the projection board. Break prices first build count calibration; only independently verified strict rows may build ROI and CLV.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             <StatusPill label="Decision board default" tone="border-emerald-500/25 bg-emerald-500/10 text-emerald-300" />
@@ -2285,7 +2291,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
           <StatCard label="Match rate" value={`${matchedRate.toFixed(0)}%`} detail={`comparison ${comparisonStamp}`} tone={matchedRate >= 95 ? "text-emerald-300" : matchedRate ? "text-amber-300" : "text-slate-400"} />
           <StatCard label="Line freshness" value={lineStatus} detail={latestLinesPath ? `${latestLinesDate || "unknown date"} · ${lineStamp}` : "No Bet365 file found"} tone={lineStatus === "FRESH" ? "text-emerald-300" : "text-amber-300"} />
           <StatCard label="Projection rows" value={String(sortedBoard.length)} detail={`${countBy(sortedBoard, "tour", "ATP")} ATP / ${countBy(sortedBoard, "tour", "WTA")} WTA`} />
-          <StatCard label="Shadow evidence" value={String(shadowRows.length)} detail={`${shadow.settled} settled / ${shadow.pending} pending`} tone={shadowRows.length ? "text-amber-300" : "text-slate-400"} />
+          <StatCard label="Betting shadow" value={String(bettingShadowRows.length)} detail={`${shadow.settled} settled / ${shadow.pending} pending · ${breakCalibrationRows.length} break calibration`} tone={bettingShadowRows.length ? "text-amber-300" : "text-slate-400"} />
           <StatCard label="Market benchmark" value={String(marketBenchmark.observations)} detail={`${marketBenchmark.settled} settled / ${marketBenchmark.pending} pending`} tone={marketBenchmark.observations ? "text-cyan-300" : "text-slate-400"} />
         </section>
 
@@ -2354,7 +2360,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
               totalCount={decisionRows.length}
             />
 
-            <BreakRecommendationPanel rows={breakRows} />
+            <BreakRecommendationPanel rows={breakRows} evidenceRows={shadowRows} />
 
             <div id="most-aces-evidence" className="scroll-mt-6">
               <MostAcesPanel
