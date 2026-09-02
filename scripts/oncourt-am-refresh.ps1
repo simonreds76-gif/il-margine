@@ -336,7 +336,7 @@ try {
     }
 
     Log "=== Step 8a/8: Capture tennis props prices ==="
-    $tennisPropsCaptureExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\run-tennis-props-daily.py", "--as-of", (Get-Date -Format "yyyy-MM-dd"), "--capture-only") -Label "tennis props price capture" -TimeoutSeconds 240
+    $tennisPropsCaptureExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\run-tennis-props-daily.py", "--as-of", (Get-Date -Format "yyyy-MM-dd"), "--capture-only") -Label "tennis props price capture" -TimeoutSeconds 540
     if ($tennisPropsCaptureExit -ne 0) {
         Log "WARNING: tennis props price capture failed/timed out (exit $tennisPropsCaptureExit), continuing..."
     }

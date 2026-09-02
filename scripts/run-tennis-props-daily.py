@@ -465,6 +465,21 @@ def capture_market_prices(args: argparse.Namespace) -> int:
     else:
         print("\nWARNING: no local odds-api key; Bet365/BetMGM capture skipped.")
 
+    if os.name == "nt" and not args.skip_bet365_direct:
+        source_exits.append(
+            run(
+                [
+                    sys.executable,
+                    str(ROOT / "scripts" / "tennis-props-scrape-bet365-direct.py"),
+                    "--date", args.as_of,
+                    "--max-events", str(min(args.max_events, 40)),
+                ],
+                "Capture direct Bet365 service-break totals",
+                fatal=False,
+                timeout_seconds=480,
+            )
+        )
+
     if not args.skip_betsbk:
         source_exits.append(
             run(
@@ -515,6 +530,7 @@ def main() -> int:
     parser.add_argument("--refresh-sackmann", action="store_true", help="Download fresh ATP/WTA Sackmann CSVs first")
     parser.add_argument("--skip-odds", action="store_true", help="Do not scrape Bet365 lines even if a key is configured")
     parser.add_argument("--skip-betsbk", action="store_true", help="Skip the local public BetsBK US Open props fallback")
+    parser.add_argument("--skip-bet365-direct", action="store_true", help="Skip the Windows-local direct Bet365 service-break fallback")
     parser.add_argument("--require-odds", action="store_true", help="Fail if the Bet365 odds scrape cannot run")
     parser.add_argument("--comparison-only", action="store_true", help="Sync hosted prices and refresh comparison/tracking without rebuilding projections")
     parser.add_argument("--skip-derived-boards", action="store_true", help="Skip slow derived ace boards during a fast comparison pass")
