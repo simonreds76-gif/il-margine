@@ -949,6 +949,17 @@ function resultTone(value: string | undefined): string {
   return "border-amber-500/25 bg-amber-500/10 text-amber-300";
 }
 
+function marketMoveTone(row: CsvRow): string {
+  const status = row.market_move_status || "";
+  if (status.includes("market_favourite_flip")) return "border-amber-500/25 bg-amber-500/10 text-amber-200";
+  const lineMove = n(row.line_move);
+  if (!lineMove) return "border-slate-700/70 bg-slate-800/60 text-slate-300";
+  const favourable = row.side === "OVER" ? lineMove < 0 : lineMove > 0;
+  return favourable
+    ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300"
+    : "border-rose-500/25 bg-rose-500/10 text-rose-300";
+}
+
 function ShadowEvidenceTable({ rows }: { rows: CsvRow[] }) {
   if (!rows.length) {
     return <EmptyState message="No shadow signals yet. Add Bet365 aces/DF lines, run the comparison, then run python scripts/tennis-props-shadow-tracker.py." />;
@@ -965,6 +976,8 @@ function ShadowEvidenceTable({ rows }: { rows: CsvRow[] }) {
             <th className="px-3 py-3 font-semibold">Line</th>
             <th className="px-3 py-3 font-semibold">Side</th>
             <th className="px-3 py-3 font-semibold">Odds</th>
+            <th className="px-3 py-3 font-semibold">Latest market</th>
+            <th className="px-3 py-3 font-semibold">Move</th>
             <th className="px-3 py-3 font-semibold">Close</th>
             <th className="px-3 py-3 font-semibold">CLV</th>
             <th className="px-3 py-3 font-semibold">Value</th>
@@ -977,7 +990,7 @@ function ShadowEvidenceTable({ rows }: { rows: CsvRow[] }) {
           {groupedRows.map((group) => (
             <Fragment key={group.date}>
               <tr className="border-y border-slate-800 bg-slate-950/80">
-                <td colSpan={12} className="px-3 py-3">
+                <td colSpan={14} className="px-3 py-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="text-xs font-black uppercase tracking-[0.18em] text-amber-300">{dateLabel(group.date)}</span>
                     <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate-500">{group.rows.length} shadow rows</span>
@@ -995,6 +1008,19 @@ function ShadowEvidenceTable({ rows }: { rows: CsvRow[] }) {
                   <td className="px-3 py-3 font-mono text-slate-100">{fmt(row.line, 1)}</td>
                   <td className="px-3 py-3"><MiniBadge label={row.side || "-"} tone="border-cyan-500/25 bg-cyan-500/10 text-cyan-200" /></td>
                   <td className="px-3 py-3 font-mono text-slate-300">{fmt(row.selected_odds, 2)}</td>
+                  <td className="px-3 py-3 font-mono text-slate-300">
+                    {row.latest_line ? (
+                      <>
+                        <div>line {fmt(row.latest_line, 1)}</div>
+                        <div className="text-[11px] text-slate-500">O {fmt(row.latest_over_odds, 2)} / U {fmt(row.latest_under_odds, 2)}</div>
+                      </>
+                    ) : "-"}
+                  </td>
+                  <td className="px-3 py-3">
+                    {row.market_move_status ? (
+                      <MiniBadge label={row.market_move_status.replaceAll("_", " ").replaceAll("+", " · ")} tone={marketMoveTone(row)} />
+                    ) : "-"}
+                  </td>
                   <td className="px-3 py-3 font-mono text-slate-300">{row.closing_odds ? fmt(row.closing_odds, 2) : "-"}</td>
                   <td className={cn("px-3 py-3 font-mono", n(row.clv_pct) > 0 ? "text-emerald-300" : n(row.clv_pct) < 0 ? "text-rose-300" : "text-slate-500")}>{row.clv_pct ? `${n(row.clv_pct) >= 0 ? "+" : ""}${fmt(row.clv_pct, 1)}%` : "-"}</td>
                   <td className="px-3 py-3 font-mono text-emerald-300">{fmt(row.value_pct, 1)}%</td>

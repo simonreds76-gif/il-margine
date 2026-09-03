@@ -108,6 +108,30 @@ class Bet365DirectParserTests(unittest.TestCase):
         }
         self.assertEqual(MODULE.competition_labels(seeds, None), ("US Open", "US Open Women"))
 
+    def test_tracked_only_keeps_pending_prospective_break_fixtures(self) -> None:
+        seeds = {
+            MODULE.pair_key("Madison Keys", "Anna Bondar"): {"event_id": "1"},
+            MODULE.pair_key("Other Player", "Another Player"): {"event_id": "2"},
+        }
+        rows = [
+            {
+                "player": "Anna Bondar",
+                "opponent": "Madison Keys",
+                "market": "player_breaks",
+                "decision_mode": "breaks_single_source_shadow",
+                "settlement_status": "pending",
+            },
+            {
+                "player": "Other Player",
+                "opponent": "Another Player",
+                "market": "player_breaks",
+                "decision_mode": "breaks_single_source_shadow",
+                "settlement_status": "settled",
+            },
+        ]
+        filtered = MODULE.tracked_seed_events(seeds, rows)
+        self.assertEqual(list(filtered.values()), [{"event_id": "1"}])
+
 
 if __name__ == "__main__":
     unittest.main()

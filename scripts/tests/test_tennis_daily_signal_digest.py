@@ -235,6 +235,30 @@ class TennisDailySignalDigestTests(unittest.TestCase):
 
         self.assertEqual(signals, [])
 
+    def test_break_watchlist_identity_survives_line_and_side_repricing(self) -> None:
+        original_read_csv = MODULE.read_csv
+        base = {
+            "date": "2026-09-03",
+            "player": "Madison Keys",
+            "opponent": "Anna Bondar",
+            "market": "player_breaks",
+            "fair_over_odds": "1.8",
+            "fair_under_odds": "2.2",
+            "trackable_shadow": "true",
+            "bettable": "false",
+        }
+        MODULE.read_csv = lambda _path: [
+            {**base, "line": "3.5", "over_odds": "1.9", "shadow_side": "OVER"},
+            {**base, "line": "4.5", "under_odds": "2.0", "shadow_side": "UNDER"},
+        ]
+        try:
+            signals = MODULE.props_signals("2026-09-03")
+        finally:
+            MODULE.read_csv = original_read_csv
+
+        self.assertEqual(len(signals), 2)
+        self.assertEqual(signals[0].key, signals[1].key)
+
     def test_render_stays_within_telegram_limit(self) -> None:
         signals = [
             MODULE.Signal(

@@ -28,9 +28,11 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent.parent
 INBOX = ROOT / "data" / "tennis-props" / "inbox"
 PROJECTION_BOARD = ROOT / "data" / "tennis-props" / "player-props-board.csv"
+DEFAULT_SIGNALS = ROOT / "data" / "tennis-props" / "shadow" / "aces-dfs-shadow-signals.csv"
 COMMON_PATH = ROOT / "scripts" / "tennis-props-scrape-bet365.py"
 BET365_URL = "https://www.bet365.com/"
 DEFAULT_COMPETITIONS = ("US Open", "US Open Women")
+BREAK_PROSPECTIVE_MODES = {"breaks_prospective_shadow", "breaks_single_source_shadow"}
 AUDIT_FIELDS = (
     "captured_at",
     "competition",
@@ -164,6 +166,23 @@ def seed_events(rows: list[dict[str, str]]) -> dict[tuple[str, str], dict[str, s
             },
         )
     return events
+
+
+def tracked_seed_events(
+    seeds: dict[tuple[str, str], dict[str, str]],
+    signal_rows: list[dict[str, str]],
+) -> dict[tuple[str, str], dict[str, str]]:
+    """Keep fixtures with an open prospective service-break decision."""
+    tracked_pairs = {
+        pair_key(row.get("player"), row.get("opponent"))
+        for row in signal_rows
+        if str(row.get("market") or "").strip().lower() in {"player_breaks", "match_breaks"}
+        and str(row.get("decision_mode") or "").strip() in BREAK_PROSPECTIVE_MODES
+        and str(row.get("settlement_status") or "pending").strip().lower() in {"", "pending", "open"}
+        and norm_name(row.get("player"))
+        and norm_name(row.get("opponent"))
+    }
+    return {key: seed for key, seed in seeds.items() if key in tracked_pairs}
 
 
 def parse_event_start(
@@ -548,6 +567,8 @@ def main() -> int:
     parser.add_argument("--out", default="")
     parser.add_argument("--history-out", default="")
     parser.add_argument("--audit-out", default="")
+    parser.add_argument("--tracked-only", action="store_true")
+    parser.add_argument("--signals", default=str(DEFAULT_SIGNALS))
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
@@ -572,6 +593,12 @@ def main() -> int:
             "direct break capture skipped."
         )
         return 0
+    if args.tracked_only:
+        seeds = tracked_seed_events(seeds, read_rows(Path(args.signals)))
+        if not seeds:
+            print("No open prospective service-break fixtures; close capture skipped.")
+            return 0
+        print(f"Tracked-only service-break close capture: {len(seeds)} fixture(s).")
 
     try:
         rows, audit, scanned_ids = capture(
