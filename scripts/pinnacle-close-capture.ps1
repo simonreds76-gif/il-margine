@@ -81,7 +81,7 @@ function Resolve-PythonCommand {
 $pythonCommand = Resolve-PythonCommand
 $lockPath = Join-Path $root "data\locks\tennis-automation.lock"
 $directExitCode = $null
-$comparisonExitCode = $null
+$movementRefreshExitCode = $null
 
 Write-Heartbeat -State "starting" -Extra @{
     python = $pythonCommand
@@ -130,10 +130,11 @@ try {
             Log "WARNING: tracked Bet365 service-break close capture failed (exit $directExitCode)"
         } else {
             Log "=== Tracked Bet365 service-break close capture done ==="
-            & python scripts\run-tennis-props-daily.py --as-of $asOf --comparison-only --skip-hosted-sync --skip-derived-boards 2>&1 | ForEach-Object { Log $_ }
-            $comparisonExitCode = $LASTEXITCODE
-            if ($comparisonExitCode -ne 0) {
-                Log "WARNING: service-break comparison refresh failed (exit $comparisonExitCode)"
+            $historyPath = Join-Path $root "data\tennis-props\inbox\bet365-lines-history-$($asOf.Substring(0, 7)).csv"
+            & python scripts\tennis-props-shadow-tracker.py --movement-history $historyPath 2>&1 | ForEach-Object { Log $_ }
+            $movementRefreshExitCode = $LASTEXITCODE
+            if ($movementRefreshExitCode -ne 0) {
+                Log "WARNING: service-break movement refresh failed (exit $movementRefreshExitCode)"
             }
         }
     }
@@ -142,7 +143,7 @@ try {
         python = $pythonCommand
         exit_code = 0
         bet365_breaks_exit_code = $directExitCode
-        comparison_exit_code = $comparisonExitCode
+        movement_refresh_exit_code = $movementRefreshExitCode
         lock = [ordered]@{
             path = $lockHandle.Path
         }
