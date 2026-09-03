@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-09-03T14:43:22.083139Z",
+  "generated_at": "2026-09-03T18:37:35.816089Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
@@ -34,21 +35,19 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 29,
+  "fixtures_evaluated": 21,
   "signals_qualifying": 5,
   "safety_exclusions": {
-    "market_odds_above_cap": 4,
-    "model_market_gap_gt_10pp": 9,
+    "market_odds_above_cap": 3,
+    "model_market_gap_gt_10pp": 8,
     "model_probability_below_floor": 4,
-    "low_signal_confidence": 1,
-    "lineup_not_public_quality": 5
+    "lineup_not_public_quality": 4
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 9,
+    "eligible_rows": 8,
     "added_by_league": {
       "bundesliga": 5,
-      "epl": 3,
-      "ligue-1": 1
+      "epl": 3
     },
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
@@ -126,8 +125,8 @@
           "corners_against_avg": 4.0
         },
         "opponent_defensive_weakness": {
-          "tier": "Positive",
-          "percentile": 55
+          "tier": "Average",
+          "percentile": 45
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -209,7 +208,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 17
+          "percentile": 20
         },
         "recent_team_form": {
           "tier": "Average",
@@ -228,7 +227,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 42
+          "percentile": 37
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -304,20 +303,20 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 90
+          "percentile": 89
         },
         "share_of_team_chances_pct": 24,
-        "share_of_team_chances_percentile": 97,
+        "share_of_team_chances_percentile": 96,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 69
+          "percentile": 67
         },
         "recent_team_form": {
           "tier": "Unknown"
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 69
+          "percentile": 62
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -397,7 +396,7 @@
         "share_of_team_chances_percentile": 97,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 83
+          "percentile": 80
         },
         "recent_team_form": {
           "tier": "Strong",
@@ -416,7 +415,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 49
+          "percentile": 40
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -491,13 +490,13 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Good",
-          "percentile": 69
+          "percentile": 70
         },
         "share_of_team_chances_pct": 25,
         "share_of_team_chances_percentile": 97,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 50
+          "percentile": 45
         },
         "recent_team_form": {
           "tier": "Quiet",
@@ -515,8 +514,8 @@
           "corners_against_avg": 6.4
         },
         "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 80
+          "tier": "Positive",
+          "percentile": 73
         },
         "opponent_recent_defence": {
           "tier": "High",
@@ -544,7 +543,7 @@
       "reasons": [
         "The model price is shorter than the bookmaker's best available price",
         "A large share of the team's chances runs through him",
-        "Opponent defensive profile is a positive matchup"
+        "Opponent has been allowing chances recently"
       ],
       "risk_flags": []
     }
