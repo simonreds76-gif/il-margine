@@ -14,6 +14,40 @@ SPEC.loader.exec_module(MODULE)
 
 
 class Bet365DirectParserTests(unittest.TestCase):
+    def test_builds_stable_seed_from_projection_board_row(self) -> None:
+        rows = [
+            {
+                "scheduled_date": "2026-09-03",
+                "scheduled_start_utc": "",
+                "tour": "ATP",
+                "tournament": "US Open",
+                "player": "Jan-Lennard Struff",
+                "opponent": "Francisco Cerundolo",
+            }
+        ]
+        first = MODULE.seed_events(rows)
+        second = MODULE.seed_events(rows)
+        seed = first[MODULE.pair_key("Jan-Lennard Struff", "Francisco Cerundolo")]
+        self.assertEqual(seed["date"], "2026-09-03")
+        self.assertTrue(seed["event_id"].startswith("bet365-direct-"))
+        self.assertEqual(first, second)
+
+    def test_parses_london_event_start_to_utc_during_bst(self) -> None:
+        body = "US Open 3 Sep 16:00 Jan-Lennard Struff vs Francisco Cerundolo Popular"
+        self.assertEqual(
+            MODULE.parse_event_start(
+                body, "Jan-Lennard Struff", "Francisco Cerundolo", "2026-09-03"
+            ),
+            "2026-09-03T15:00:00Z",
+        )
+
+    def test_parses_london_event_start_to_utc_during_gmt(self) -> None:
+        body = "ATP London 8 Jan 14:30 One Player vs Two Player Popular"
+        self.assertEqual(
+            MODULE.parse_event_start(body, "One Player", "Two Player", "2027-01-08"),
+            "2027-01-08T14:30:00Z",
+        )
+
     def test_parses_fractional_break_board(self) -> None:
         body = (
             "Double Result BB Total Breaks of Serve BB Match Brandon Nakashima Alex Michelsen "
