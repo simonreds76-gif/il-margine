@@ -153,7 +153,18 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           if [[ "${{ github.event_name }}" == "workflow_dispatch" || "${{ github.event.schedule }}" == "15 8 * * *" ]]; then
-            git add data/football-form/ data/team-shots/inbox/ data/team-shots/understat/ data/team-shots/team-shots-odds-history.csv data/corners-ou/pinnacle-corners-odds.csv data/goalkeeper-saves/
+            git add \
+              data/football-form/ \
+              data/team-shots/inbox/ \
+              data/team-shots/understat/ \
+              data/team-shots/historical/ \
+              data/team-shots/team-shots-odds-history.csv \
+              data/team-shots/team-shots-live-snapshot.json \
+              data/team-shots/team-shots-scrape-last-run.json \
+              data/corners-ou/pinnacle-corners-odds.csv \
+              data/corners-ou/corners-live-snapshot.json \
+              data/corners-ou/corners-monitor-summary.json \
+              data/goalkeeper-saves/
           else
             # Near-kickoff runs publish current candidates/signals as well as
             # the raw prices. Full settlement reports remain daily.
@@ -164,7 +175,9 @@ jobs:
             git add data/football-form/team-shots-v4-shadow-signals.csv
             git add data/football-form/corners-v3-shadow-signals.csv
             git add data/team-shots/team-shots-live-snapshot.json
+            git add data/team-shots/team-shots-scrape-last-run.json
             git add data/corners-ou/corners-live-snapshot.json
+            git add data/corners-ou/corners-monitor-summary.json
             git add data/goalkeeper-saves/
           fi
           if git diff --cached --quiet; then
