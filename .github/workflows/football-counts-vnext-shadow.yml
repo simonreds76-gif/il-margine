@@ -7,6 +7,12 @@ on:
     # process-wide request cap keeps the shared free plan within budget.
     - cron: "45 9-22 * * *"
   workflow_dispatch:
+    inputs:
+      settlement_only:
+        description: "Skip capture/model refresh and settle due GK Saves signals only"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -47,7 +53,7 @@ jobs:
         run: pip install requests
 
       - name: Refresh current-season count inputs
-        if: steps.season.outputs.active == 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *')
+        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *')
         env:
           API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
         shell: bash
@@ -55,6 +61,9 @@ jobs:
           python scripts/footballdata-download-historical.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2026 --overwrite || echo "::warning::Football-Data current-season refresh was unavailable."
           python scripts/understat-download-shots.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2026 || echo "::warning::Understat current-season aggregate refresh was unavailable."
           python scripts/understat-download-corner-features.py --seasons 2026 || echo "::warning::Understat corner-event refresh was unavailable."
+          # The builder combines the durable archive with current-season and
+          # Understat supplements. Individual lanes fail closed on missing
+          # registered inputs; generic offseason league staleness is reported.
           python scripts/build-football-form-layer.py
           if [ -n "${API_FOOTBALL_KEY:-}" ]; then
             python scripts/capture-api-football-counts.py --historical-backfill --target-team-values 200 --max-requests 90 || echo "::warning::API-Football historical agreement backfill reported an error; existing archive retained."
@@ -66,7 +75,7 @@ jobs:
           python scripts/fouls-definition-agreement.py --allow-empty
 
       - name: Capture paired market prices
-        if: steps.season.outputs.active == 'true'
+        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true'
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           ODDS_API_IO_KEY: ${{ secrets.ODDS_API_KEY }}
@@ -114,8 +123,21 @@ jobs:
           # capture supplies the locked Pinnacle corners lane.
           python scripts/pinnacle-scrape-corners.py "${CORNER_ARGS[@]}" || echo "::warning::Hosted Pinnacle corners capture unavailable; local capture remains authoritative."
 
+      - name: Refresh pending vNext results
+        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *')
+        env:
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+        shell: bash
+        run: |
+          # These permanent CLV ledgers are the settlement queue. Candidate
+          # boards are deliberately excluded because they are overwritten on
+          # every scan and contain non-qualifying rows.
+          python scripts/fetch-results-snapshot.py \
+            --pending-path data/football-form/team-shots-v4-shadow-clv.csv \
+            --pending-path data/football-form/corners-v3-shadow-clv.csv
+
       - name: Score current vNext shadow board
-        if: steps.season.outputs.active == 'true'
+        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true'
         shell: bash
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" || "${{ github.event.schedule }}" == "15 8 * * *" ]]; then
@@ -137,14 +159,18 @@ jobs:
           API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
         shell: bash
         run: |
-          if [ -n "${API_FOOTBALL_KEY:-}" ]; then
-            # The earlier count archive is capped at 90 calls; this settler is
-            # capped at 10, preserving the registered 100-call daily ceiling.
-            python scripts/goalkeeper-saves-settle.py --max-requests 10
-            python scripts/goalkeeper-saves-shadow.py
-          else
-            echo "::warning::API_FOOTBALL_KEY missing; GK saves settlement retained pending."
-          fi
+          # FotMob's named-keeper shot map is the primary settlement source;
+          # API-Football's free plan does not expose the current season.
+          python scripts/goalkeeper-saves-settle.py --max-requests 10 --max-fotmob-requests 50
+          python scripts/goalkeeper-saves-shadow.py
+
+      - name: Send daily football model digest
+        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *')
+        continue-on-error: true
+        env:
+          OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
+          OPS_ALERT_TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
+        run: python scripts/football-daily-signal-digest.py
 
       - name: Commit append-only evidence
         if: steps.season.outputs.active == 'true'
@@ -152,7 +178,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" || "${{ github.event.schedule }}" == "15 8 * * *" ]]; then
+          if [[ "${{ github.event.inputs.settlement_only }}" == "true" ]]; then
+            git add data/goalkeeper-saves/
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" || "${{ github.event.schedule }}" == "15 8 * * *" ]]; then
             git add \
               data/football-form/ \
               data/team-shots/inbox/ \
@@ -164,7 +192,8 @@ jobs:
               data/corners-ou/pinnacle-corners-odds.csv \
               data/corners-ou/corners-live-snapshot.json \
               data/corners-ou/corners-monitor-summary.json \
-              data/goalkeeper-saves/
+              data/goalkeeper-saves/ \
+              data/results-snapshot/
           else
             # Near-kickoff runs publish current candidates/signals as well as
             # the raw prices. Full settlement reports remain daily.
@@ -180,6 +209,18 @@ jobs:
             git add data/corners-ou/corners-monitor-summary.json
             git add data/goalkeeper-saves/
           fi
+          # These controls come from the same bounded Bet365 payload as Team
+          # Shots, so retaining them adds no API calls. Stage them on both full
+          # and near-kickoff runs. `-f` is required for the 1X2 CSV because the
+          # broad football-form CSV ignore rule predates this evidence file.
+          for evidence in \
+            data/football-form/football-1x2-odds-history.csv \
+            data/team-shots/match-shots-odds-history.csv \
+            data/corners-ou/bet365-corners-odds-history.csv; do
+            if [[ -f "$evidence" ]]; then
+              git add -f "$evidence"
+            fi
+          done
           if git diff --cached --quiet; then
             echo "No vNext signal or evidence changes."
             exit 0
