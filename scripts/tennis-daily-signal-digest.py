@@ -275,6 +275,11 @@ def props_signals(target_date: str) -> list[Signal]:
         else:
             section = f"{source_name} PROPS" if is_bettable else f"{source_name} PROPS WATCHLIST"
             labels = ["ACES/DF"] if is_bettable else ["ACES/DF WATCH"]
+        signal_key = (
+            (target_date, *pair, norm(subject), market)
+            if is_service_break_market
+            else (target_date, *pair, norm(subject), market, f"{line:g}", side)
+        )
         signals.append(
             Signal(
                 section=section,
@@ -284,7 +289,7 @@ def props_signals(target_date: str) -> list[Signal]:
                 selection=selection,
                 edge_pct=edge,
                 time_utc=(row.get("match_start_utc") or "").strip(),
-                key=(target_date, *pair, norm(subject), market, f"{line:g}", side),
+                key=signal_key,
             )
         )
     return signals

@@ -80,6 +80,8 @@ function Resolve-PythonCommand {
 
 $pythonCommand = Resolve-PythonCommand
 $lockPath = Join-Path $root "data\locks\tennis-automation.lock"
+$directExitCode = $null
+$comparisonExitCode = $null
 
 Write-Heartbeat -State "starting" -Extra @{
     python = $pythonCommand
@@ -116,10 +118,31 @@ try {
         }
         exit 1
     }
+
+    $asOf = (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd")
+    $directScript = Join-Path $root "scripts\tennis-props-scrape-bet365-direct.py"
+    if (Test-Path $directScript) {
+        Log "=== Tracked Bet365 service-break close capture start ==="
+        & python $directScript --date $asOf --tracked-only --max-events 20 --timeout-seconds 8 2>&1 | ForEach-Object { Log $_ }
+        $directExitCode = $LASTEXITCODE
+        if ($directExitCode -ne 0) {
+            # A blocked browser session must not invalidate a successful Pinnacle capture.
+            Log "WARNING: tracked Bet365 service-break close capture failed (exit $directExitCode)"
+        } else {
+            Log "=== Tracked Bet365 service-break close capture done ==="
+            & python scripts\run-tennis-props-daily.py --as-of $asOf --comparison-only --skip-hosted-sync --skip-derived-boards 2>&1 | ForEach-Object { Log $_ }
+            $comparisonExitCode = $LASTEXITCODE
+            if ($comparisonExitCode -ne 0) {
+                Log "WARNING: service-break comparison refresh failed (exit $comparisonExitCode)"
+            }
+        }
+    }
     Log "=== Pinnacle close capture done ==="
     Write-Heartbeat -State "ok" -Extra @{
         python = $pythonCommand
         exit_code = 0
+        bet365_breaks_exit_code = $directExitCode
+        comparison_exit_code = $comparisonExitCode
         lock = [ordered]@{
             path = $lockHandle.Path
         }

@@ -50,6 +50,16 @@ FIELDNAMES = [
     "event_id",
     "capture_ts",
     "match_start_utc",
+    "decision_key",
+    "entry_novig_p_over",
+    "latest_line",
+    "latest_over_odds",
+    "latest_under_odds",
+    "latest_capture_ts",
+    "latest_novig_p_over",
+    "market_p_over_move_pp",
+    "line_move",
+    "market_move_status",
     "over_odds",
     "under_odds",
     "selected_odds",
@@ -171,6 +181,121 @@ def signal_id(row: dict[str, str], side: str) -> str:
     return "|".join(parts)
 
 
+def prospective_decision_key(row: dict[str, str]) -> str:
+    """Identify one immutable break decision despite later line/side changes."""
+    pair = sorted((norm_text(row.get("player")), norm_text(row.get("opponent"))))
+    market = norm_text(row.get("market"))
+    subject = "match" if market == "match breaks" else norm_text(row.get("player"))
+    return "|".join(
+        [
+            row.get("date") or "",
+            (row.get("tour") or "").upper(),
+            *pair,
+            market,
+            subject,
+        ]
+    )
+
+
+def novig_p_over(row: dict[str, str]) -> float | None:
+    over = parse_float(row.get("over_odds"))
+    under = parse_float(row.get("under_odds"))
+    if over is None or under is None or over <= 1.0 or under <= 1.0:
+        return None
+    over_implied = 1.0 / over
+    under_implied = 1.0 / under
+    return over_implied / (over_implied + under_implied)
+
+
+def update_break_market_observation(existing: dict[str, str], observed: dict[str, str]) -> bool:
+    observed_ts = str(observed.get("capture_ts") or observed.get("logged_at_utc") or "").strip()
+    current_ts = str(
+        existing.get("latest_capture_ts")
+        or existing.get("capture_ts")
+        or existing.get("logged_at_utc")
+        or ""
+    ).strip()
+    if not observed_ts or (current_ts and observed_ts <= current_ts):
+        return False
+
+    entry_line = parse_float(existing.get("line"))
+    latest_line = parse_float(observed.get("line"))
+    entry_p_over = parse_float(existing.get("entry_novig_p_over"))
+    if entry_p_over is None:
+        entry_p_over = novig_p_over(existing)
+    latest_p_over = novig_p_over(observed)
+    status: list[str] = []
+    line_move = None
+    probability_move = None
+    if entry_line is not None and latest_line is not None:
+        line_move = latest_line - entry_line
+        if abs(line_move) > 0.001:
+            status.append("line_up" if line_move > 0 else "line_down")
+        elif entry_p_over is not None and latest_p_over is not None:
+            probability_move = (latest_p_over - entry_p_over) * 100.0
+            status.append("same_line_price")
+    if entry_p_over is not None and latest_p_over is not None:
+        if (entry_p_over >= 0.5) != (latest_p_over >= 0.5):
+            status.append("market_favourite_flip")
+
+    existing["decision_key"] = existing.get("decision_key") or prospective_decision_key(existing)
+    existing["entry_novig_p_over"] = fmt_float(entry_p_over, 6)
+    existing["latest_line"] = str(observed.get("line") or "")
+    existing["latest_over_odds"] = str(observed.get("over_odds") or "")
+    existing["latest_under_odds"] = str(observed.get("under_odds") or "")
+    existing["latest_capture_ts"] = observed_ts
+    existing["latest_novig_p_over"] = fmt_float(latest_p_over, 6)
+    existing["market_p_over_move_pp"] = fmt_float(probability_move, 3)
+    existing["line_move"] = fmt_float(line_move, 3)
+    existing["market_move_status"] = "+".join(status) if status else "unchanged"
+    return True
+
+
+def normalize_break_prospective_fields(row: dict[str, str]) -> dict[str, str]:
+    if not is_break_market(row) or str(row.get("decision_mode") or "").strip() not in BREAK_PROSPECTIVE_MODES:
+        return row
+    row["decision_key"] = row.get("decision_key") or prospective_decision_key(row)
+    entry_p_over = parse_float(row.get("entry_novig_p_over"))
+    if entry_p_over is None:
+        entry_p_over = novig_p_over(row)
+    row["entry_novig_p_over"] = fmt_float(entry_p_over, 6)
+    row["latest_line"] = row.get("latest_line") or row.get("line", "")
+    row["latest_over_odds"] = row.get("latest_over_odds") or row.get("over_odds", "")
+    row["latest_under_odds"] = row.get("latest_under_odds") or row.get("under_odds", "")
+    row["latest_capture_ts"] = row.get("latest_capture_ts") or row.get("capture_ts", "")
+    row["latest_novig_p_over"] = row.get("latest_novig_p_over") or fmt_float(entry_p_over, 6)
+    row["market_p_over_move_pp"] = row.get("market_p_over_move_pp", "")
+    row["line_move"] = row.get("line_move") or "0.000"
+    row["market_move_status"] = row.get("market_move_status") or "opening"
+    return row
+
+
+def reconcile_duplicate_break_decisions(rows: list[dict[str, str]]) -> int:
+    groups: dict[str, list[dict[str, str]]] = {}
+    for row in rows:
+        if not is_break_market(row) or str(row.get("decision_mode") or "").strip() not in BREAK_PROSPECTIVE_MODES:
+            continue
+        normalize_break_prospective_fields(row)
+        groups.setdefault(prospective_decision_key(row), []).append(row)
+
+    voided = 0
+    now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    for decision_rows in groups.values():
+        decision_rows.sort(key=lambda item: str(item.get("capture_ts") or item.get("logged_at_utc") or ""))
+        original = decision_rows[0]
+        for duplicate in decision_rows[1:]:
+            update_break_market_observation(original, duplicate)
+            if str(duplicate.get("settlement_status") or "").lower() == "void" and str(duplicate.get("settlement_note") or "").startswith("duplicate_reprice_of:"):
+                continue
+            duplicate["settlement_status"] = "void"
+            duplicate["result"] = "void"
+            duplicate["pnl"] = "0.000"
+            duplicate["settled_at_utc"] = duplicate.get("settled_at_utc") or now
+            duplicate["settlement_note"] = f"duplicate_reprice_of:{original.get('signal_id', '')}"
+            voided += 1
+    return voided
+
+
 def pick_side(row: dict[str, str], min_value_pct: float, allow_watch: bool) -> tuple[str, float, float] | None:
     recommended = (row.get("recommended_side") or "").strip().upper()
     value_over = parse_float(row.get("value_over_pct"))
@@ -224,7 +349,7 @@ def normalize_existing_row(row: dict[str, str]) -> dict[str, str]:
     if mode in BREAK_PROSPECTIVE_MODES:
         normalized.setdefault("cohort", mode)
         normalized.setdefault("gate_version", BREAK_GATE_VERSION)
-        return normalized
+        return normalize_break_prospective_fields(normalized)
     if mode not in {"", "breaks_shadow", BREAK_CALIBRATION_MODE}:
         return normalized
 
@@ -321,6 +446,16 @@ def build_signal(row: dict[str, str], source: Path, args: argparse.Namespace) ->
         "event_id": row.get("event_id", ""),
         "capture_ts": row.get("capture_ts", ""),
         "match_start_utc": row.get("match_start_utc", ""),
+        "decision_key": prospective_decision_key(row) if is_break_prospective else "",
+        "entry_novig_p_over": fmt_float(novig_p_over(row), 6) if is_break_prospective else "",
+        "latest_line": row.get("line", "") if is_break_prospective else "",
+        "latest_over_odds": row.get("over_odds", "") if is_break_prospective else "",
+        "latest_under_odds": row.get("under_odds", "") if is_break_prospective else "",
+        "latest_capture_ts": row.get("capture_ts", "") if is_break_prospective else "",
+        "latest_novig_p_over": fmt_float(novig_p_over(row), 6) if is_break_prospective else "",
+        "market_p_over_move_pp": "",
+        "line_move": "0.000" if is_break_prospective else "",
+        "market_move_status": "opening" if is_break_prospective else "",
         "over_odds": row.get("over_odds", ""),
         "under_odds": row.get("under_odds", ""),
         "selected_odds": fmt_float(selected_odds, 3),
@@ -441,12 +576,29 @@ def main() -> int:
         return 0
 
     existing = [normalize_existing_row(row) for row in read_csv(Path(args.signals))]
+    duplicates_voided = reconcile_duplicate_break_decisions(existing)
     existing_by_id = {row.get("signal_id", ""): row for row in existing if row.get("signal_id")}
+    existing_break_decisions = {
+        prospective_decision_key(row): row
+        for row in existing
+        if is_break_market(row)
+        and str(row.get("decision_mode") or "").strip() in BREAK_PROSPECTIVE_MODES
+        and str(row.get("settlement_status") or "").strip().lower() != "void"
+    }
     added = 0
+    repriced = 0
     for row in read_csv(comparison):
+        if is_break_market(row):
+            original = existing_break_decisions.get(prospective_decision_key(row))
+            if original is not None:
+                repriced += int(update_break_market_observation(original, row))
+                continue
         signal = build_signal(row, comparison, args)
         if signal is None:
             continue
+        if is_break_market(signal) and str(signal.get("decision_mode") or "").strip() in BREAK_PROSPECTIVE_MODES:
+            key = prospective_decision_key(signal)
+            existing_break_decisions[key] = signal
         sid = signal["signal_id"]
         if sid in existing_by_id:
             continue
@@ -456,7 +608,10 @@ def main() -> int:
 
     write_csv(Path(args.signals), existing)
     write_performance(Path(args.performance), existing)
-    print(f"Shadow tracker: added {added}, total {len(existing)} -> {args.signals}")
+    print(
+        f"Shadow tracker: added {added}, repriced {repriced}, duplicate reprices voided {duplicates_voided}, "
+        f"total {len(existing)} -> {args.signals}"
+    )
     return 0
 
 

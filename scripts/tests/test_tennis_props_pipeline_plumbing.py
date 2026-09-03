@@ -220,6 +220,55 @@ class ShadowTrackerTests(unittest.TestCase):
         self.assertNotEqual(second, third)
         self.assertTrue(first.endswith("|6.5|OVER"))
 
+    def test_break_decision_key_ignores_later_line_and_side(self) -> None:
+        row = {
+            "date": "2026-09-03",
+            "tour": "WTA",
+            "player": "Madison Keys",
+            "opponent": "Anna Bondar",
+            "market": "player_breaks",
+            "line": "3.5",
+            "side": "UNDER",
+        }
+        first = TRACKER.prospective_decision_key(row)
+        row.update({"line": "4.5", "side": "OVER"})
+        self.assertEqual(first, TRACKER.prospective_decision_key(row))
+
+    def test_later_opposite_break_decision_is_voided_as_reprice(self) -> None:
+        base = {
+            "date": "2026-09-03",
+            "tour": "WTA",
+            "player": "Madison Keys",
+            "opponent": "Anna Bondar",
+            "market": "player_breaks",
+            "line": "3.5",
+            "decision_mode": "breaks_single_source_shadow",
+            "settlement_status": "pending",
+            "over_odds": "1.5333",
+            "under_odds": "2.3750",
+        }
+        original = {
+            **base,
+            "signal_id": "under-entry",
+            "side": "UNDER",
+            "capture_ts": "2026-09-02T14:20:05Z",
+        }
+        duplicate = {
+            **base,
+            "signal_id": "over-reprice",
+            "side": "OVER",
+            "over_odds": "1.9091",
+            "under_odds": "1.8000",
+            "capture_ts": "2026-09-03T09:45:54Z",
+        }
+
+        self.assertEqual(TRACKER.reconcile_duplicate_break_decisions([original, duplicate]), 1)
+        self.assertEqual(original["latest_over_odds"], "1.9091")
+        self.assertIn("market_favourite_flip", original["market_move_status"])
+        self.assertEqual(duplicate["settlement_status"], "void")
+        self.assertEqual(duplicate["pnl"], "0.000")
+        self.assertEqual(duplicate["settlement_note"], "duplicate_reprice_of:under-entry")
+
     def test_break_calibration_row_is_recorded_without_a_betting_side(self) -> None:
         row = {
             "date": "2026-09-02",
@@ -435,6 +484,12 @@ class DailyMarketSelectionTests(unittest.TestCase):
         self.assertIn('"scripts\\tennis-evidence-snapshot.py", "--supabase"', am_script)
         self.assertIn('"--days-ahead", "3"', am_script)
         self.assertIn('"tennis props hosted-price comparison" -TimeoutSeconds 420', am_script)
+
+    def test_close_task_recaptures_only_open_break_watch_fixtures(self) -> None:
+        close_script = (SCRIPTS / "pinnacle-close-capture.ps1").read_text(encoding="utf-8")
+        self.assertIn("tennis-props-scrape-bet365-direct.py", close_script)
+        self.assertIn("--tracked-only --max-events 20", close_script)
+        self.assertIn("--comparison-only --skip-hosted-sync --skip-derived-boards", close_script)
 
     def test_full_pipeline_passes_schedule_horizon_to_projection_board(self) -> None:
         daily_script = (SCRIPTS / "run-tennis-props-daily.py").read_text(encoding="utf-8")
