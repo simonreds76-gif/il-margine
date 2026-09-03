@@ -310,6 +310,40 @@ function shadowStats(rows: CsvRow[]): { settled: number; pending: number; voided
   };
 }
 
+type BreakSegmentStats = {
+  label: string;
+  settled: number;
+  pending: number;
+  wins: number;
+  losses: number;
+  pushes: number;
+  staked: number;
+  pnl: number;
+  roi: number | null;
+  winRate: number | null;
+};
+
+function breakSegmentStats(label: string, rows: CsvRow[]): BreakSegmentStats {
+  const settledRows = rows.filter((row) => row.settlement_status === "settled");
+  const wins = settledRows.filter((row) => row.result === "win").length;
+  const losses = settledRows.filter((row) => row.result === "loss").length;
+  const pushes = settledRows.filter((row) => row.result === "push").length;
+  const decisive = wins + losses;
+  const pnl = settledRows.reduce((sum, row) => sum + n(row.pnl), 0);
+  return {
+    label,
+    settled: settledRows.length,
+    pending: rows.filter((row) => row.settlement_status === "pending").length,
+    wins,
+    losses,
+    pushes,
+    staked: settledRows.length,
+    pnl,
+    roi: settledRows.length ? (pnl / settledRows.length) * 100 : null,
+    winRate: decisive ? (wins / decisive) * 100 : null,
+  };
+}
+
 function meanNumeric(rows: CsvRow[], field: string): number | null {
   const values = rows
     .map((row) => Number.parseFloat(row[field] || ""))
@@ -1321,6 +1355,20 @@ function BreakRecommendationPanel({ rows, evidenceRows }: { rows: CsvRow[]; evid
   const sourceVerified = matched.filter((row) => row.source_agreement === "true").length;
   const calibrationEvidence = evidenceRows.filter((row) => row.decision_mode === "breaks_calibration_unfiltered");
   const calibrationSettled = calibrationEvidence.filter((row) => row.settlement_status === "settled").length;
+  const prospectiveEvidence = evidenceRows.filter((row) => (
+    ["player_breaks", "match_breaks"].includes(row.market || "")
+    && ["breaks_prospective_shadow", "breaks_single_source_shadow"].includes(row.decision_mode || "")
+  ));
+  const segments = [
+    breakSegmentStats("All breaks", prospectiveEvidence),
+    breakSegmentStats("All OVER", prospectiveEvidence.filter((row) => row.side === "OVER")),
+    breakSegmentStats("All UNDER", prospectiveEvidence.filter((row) => row.side === "UNDER")),
+    breakSegmentStats("Player OVER", prospectiveEvidence.filter((row) => row.market === "player_breaks" && row.side === "OVER")),
+    breakSegmentStats("Player UNDER", prospectiveEvidence.filter((row) => row.market === "player_breaks" && row.side === "UNDER")),
+    breakSegmentStats("Match OVER", prospectiveEvidence.filter((row) => row.market === "match_breaks" && row.side === "OVER")),
+    breakSegmentStats("Match UNDER", prospectiveEvidence.filter((row) => row.market === "match_breaks" && row.side === "UNDER")),
+  ];
+  const settledBreaks = segments[0].settled;
 
   return (
     <SectionCard
@@ -1333,6 +1381,55 @@ function BreakRecommendationPanel({ rows, evidenceRows }: { rows: CsvRow[]; evid
         <MetricTile label="Counts settled" value={String(calibrationSettled)} sub={`${calibrationEvidence.length - calibrationSettled} pending · no ROI`} tone={calibrationSettled ? "text-emerald-300" : "text-slate-400"} />
         <MetricTile label="Source verified" value={String(sourceVerified)} sub="same line, two books" tone={sourceVerified ? "text-emerald-300" : "text-amber-300"} />
         <MetricTile label="Prospective" value={String(prospective.length)} sub={`${strictProspective.length} strict · ${singleSourceProspective.length} Bet365-only`} tone={prospective.length ? "text-emerald-300" : "text-slate-400"} />
+      </div>
+      <div className="mt-4 rounded-2xl border border-slate-800/80 bg-slate-950/60 p-4">
+        <div className="flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <div className="text-[10px] font-black uppercase tracking-[0.16em] text-cyan-300">Prospective record by segment</div>
+            <p className="mt-1 text-xs text-slate-500">One unit per settled row. Pushes count as turnover; voids do not.</p>
+          </div>
+          <MiniBadge
+            label={settledBreaks >= 100 ? "EVIDENCE MATURING" : `TINY SAMPLE ${settledBreaks}/100`}
+            tone={settledBreaks >= 100 ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300" : "border-amber-500/25 bg-amber-500/10 text-amber-200"}
+          />
+        </div>
+        <div className="mt-3 overflow-x-auto">
+          <table className="w-full min-w-[760px] text-left text-xs">
+            <thead className="border-b border-slate-800 text-[10px] uppercase tracking-[0.14em] text-slate-500">
+              <tr>
+                <th className="px-2 py-2">Segment</th>
+                <th className="px-2 py-2 text-right">Settled</th>
+                <th className="px-2 py-2 text-right">W-L-P</th>
+                <th className="px-2 py-2 text-right">Win rate</th>
+                <th className="px-2 py-2 text-right">Staked</th>
+                <th className="px-2 py-2 text-right">P/L</th>
+                <th className="px-2 py-2 text-right">ROI</th>
+                <th className="px-2 py-2 text-right">Pending</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-800/70">
+              {segments.map((segment) => (
+                <tr key={segment.label}>
+                  <td className="px-2 py-2.5 font-bold text-slate-200">{segment.label}</td>
+                  <td className="px-2 py-2.5 text-right font-mono text-slate-300">{segment.settled}</td>
+                  <td className="px-2 py-2.5 text-right font-mono text-slate-300">{segment.wins}-{segment.losses}-{segment.pushes}</td>
+                  <td className="px-2 py-2.5 text-right font-mono text-slate-300">{segment.winRate == null ? "-" : `${segment.winRate.toFixed(1)}%`}</td>
+                  <td className="px-2 py-2.5 text-right font-mono text-slate-300">{segment.staked.toFixed(2)}u</td>
+                  <td className={cn("px-2 py-2.5 text-right font-mono font-bold", segment.pnl > 0 ? "text-emerald-300" : segment.pnl < 0 ? "text-rose-300" : "text-slate-400")}>
+                    {segment.pnl >= 0 ? "+" : ""}{segment.pnl.toFixed(2)}u
+                  </td>
+                  <td className={cn("px-2 py-2.5 text-right font-mono font-bold", segment.roi != null && segment.roi > 0 ? "text-emerald-300" : segment.roi != null && segment.roi < 0 ? "text-rose-300" : "text-slate-400")}>
+                    {segment.roi == null ? "-" : `${segment.roi >= 0 ? "+" : ""}${segment.roi.toFixed(1)}%`}
+                  </td>
+                  <td className="px-2 py-2.5 text-right font-mono text-amber-300">{segment.pending}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-3 text-xs leading-relaxed text-amber-100/75">
+          Do not rank a segment as reliable from this table until it has a meaningful prospective sample. Early ROI can swing sharply after one result.
+        </p>
       </div>
       {prospective.length ? (
         <div className="mt-4 grid gap-3 lg:grid-cols-2">
