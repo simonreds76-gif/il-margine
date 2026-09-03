@@ -522,10 +522,10 @@ def load_oncourt_index(
                     "l_ace": str(stat.get("l_ace") or ""),
                     "w_df": str(stat.get("w_df") or ""),
                     "l_df": str(stat.get("l_df") or ""),
-                    "w_bpSaved": str(stat.get("w_bpSaved") or ""),
-                    "w_bpFaced": str(stat.get("w_bpFaced") or ""),
-                    "l_bpSaved": str(stat.get("l_bpSaved") or ""),
-                    "l_bpFaced": str(stat.get("l_bpFaced") or ""),
+                    "w_bpSaved": str(stat.get("w_bpsaved") or ""),
+                    "w_bpFaced": str(stat.get("w_bpfaced") or ""),
+                    "l_bpSaved": str(stat.get("l_bpsaved") or ""),
+                    "l_bpFaced": str(stat.get("l_bpfaced") or ""),
                     "_settlement_source": "oncourt",
                 }
             )
@@ -682,6 +682,24 @@ def write_performance(path: Path, rows: list[dict[str, str]]) -> None:
     ]
     for label, key in [("By market", "market"), ("By side", "side"), ("By tour", "tour"), ("By confidence", "confidence")]:
         lines.extend(bucket(label, key))
+    break_rows = [r for r in betting_rows if r.get("market") in {"player_breaks", "match_breaks"}]
+    if break_rows:
+        lines.append("\nBreak watchlist by market and side:")
+        for market in ("player_breaks", "match_breaks"):
+            for side in ("OVER", "UNDER"):
+                subset = [r for r in break_rows if r.get("market") == market and r.get("side") == side]
+                settled_subset = [r for r in subset if (r.get("settlement_status") or "").lower() == "settled"]
+                wins = sum((r.get("result") or "").lower() == "win" for r in settled_subset)
+                losses = sum((r.get("result") or "").lower() == "loss" for r in settled_subset)
+                pushes = sum((r.get("result") or "").lower() == "push" for r in settled_subset)
+                subset_pnl = sum(parse_float(r.get("pnl")) or 0.0 for r in settled_subset)
+                subset_roi = subset_pnl / len(settled_subset) * 100.0 if settled_subset else 0.0
+                pending_subset = sum((r.get("settlement_status") or "").lower() == "pending" for r in subset)
+                lines.append(
+                    f"  {market} {side}: settled={len(settled_subset)} "
+                    f"W-L-P={wins}-{losses}-{pushes} staked={len(settled_subset):.2f}u "
+                    f"pnl={subset_pnl:+.2f}u roi={subset_roi:+.1f}% pending={pending_subset}"
+                )
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 

@@ -192,6 +192,56 @@ class TennisPropsSettlementTests(unittest.TestCase):
         self.assertEqual(actual, 5)
         self.assertEqual(note, "ok")
 
+    def test_oncourt_break_fields_use_export_column_names(self) -> None:
+        signal = {
+            "date": "2026-09-02",
+            "tour": "ATP",
+            "tournament": "US Open",
+            "player": "Player One",
+            "opponent": "Player Two",
+            "market": "player_breaks",
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            oncourt = Path(tmp)
+            self.write_csv(
+                oncourt / "players_atp.csv",
+                [{"id": "1", "name": "Player One"}, {"id": "2", "name": "Player Two"}],
+            )
+            self.write_csv(oncourt / "tours_atp.csv", [{"id": "99", "name": "US Open"}])
+            self.write_csv(
+                oncourt / "games_atp.csv",
+                [{
+                    "date": "2026-09-02",
+                    "winner_id": "1",
+                    "loser_id": "2",
+                    "tour_id": "99",
+                    "result": "6-4 6-4",
+                }],
+            )
+            self.write_csv(
+                oncourt / "stat_atp.csv",
+                [{
+                    "winner_id": "1",
+                    "loser_id": "2",
+                    "tour_id": "99",
+                    "w_bpsaved": "2",
+                    "w_bpfaced": "5",
+                    "l_bpsaved": "4",
+                    "l_bpfaced": "6",
+                }],
+            )
+
+            index = SETTLE["load_oncourt_index"](oncourt, [signal])
+
+        key = ("ATP", 2026, SETTLE["pair_key"]("Player One", "Player Two"))
+        result = index[key][0]
+        self.assertEqual(result["w_bpSaved"], "2")
+        self.assertEqual(result["w_bpFaced"], "5")
+        self.assertEqual(result["l_bpSaved"], "4")
+        self.assertEqual(result["l_bpFaced"], "6")
+        self.assertEqual(SETTLE["market_count"](result, "player one", "player_breaks"), (2, "ok"))
+        self.assertEqual(SETTLE["market_count"](result, "player one", "match_breaks"), (5, "ok"))
+
     def test_settlement_schema_preserves_decision_labels(self) -> None:
         for field in ("decision_mode", "cohort", "gate_version", "price_pair_status", "source_agreement"):
             self.assertIn(field, SETTLE["FIELDNAMES"])
