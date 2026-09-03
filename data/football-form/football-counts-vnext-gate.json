@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-03T18:04:23Z",
+  "generated_at": "2026-09-03T21:20:20Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -33,21 +33,18 @@
       "dominant_side_share": 0.916667
     },
     "latest_scan": {
-      "state": "EXPECTED_WARMUP_BLOCK",
-      "explanation": "Candidates were scored, but the registered matchdays 1-3 safety lock blocked publication.",
-      "scored_rows": 6,
-      "scored_fixtures": 1,
+      "state": "NO_SCORED_CANDIDATES",
+      "explanation": "No paired current market rows reached model scoring. Check capture coverage and fixture joins.",
+      "scored_rows": 0,
+      "scored_fixtures": 0,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 6,
-      "blocker_rows": {
-        "edge_below_3pct": 6,
-        "matchdays_1_to_3": 6
-      },
+      "blocked_rows": 0,
+      "blocker_rows": {},
       "edge_pass_but_warmup_blocked_fixtures": 0,
-      "matchday_min": 3,
-      "matchday_max": 3,
-      "next_unlock": "matchday_4",
+      "matchday_min": null,
+      "matchday_max": null,
+      "next_unlock": null,
       "operational_alert_required": false,
       "operational_alert_code": null
     },
@@ -88,16 +85,16 @@
     "latest_scan": {
       "state": "EXPECTED_WARMUP_BLOCK",
       "explanation": "Candidates were scored, but the registered matchdays 1-3 safety lock blocked publication.",
-      "scored_rows": 120,
-      "scored_fixtures": 24,
+      "scored_rows": 114,
+      "scored_fixtures": 23,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 120,
+      "blocked_rows": 114,
       "blocker_rows": {
-        "edge_below_3pct": 101,
-        "matchdays_1_to_3": 120
+        "edge_below_3pct": 98,
+        "matchdays_1_to_3": 114
       },
-      "edge_pass_but_warmup_blocked_fixtures": 8,
+      "edge_pass_but_warmup_blocked_fixtures": 7,
       "matchday_min": 1,
       "matchday_max": 3,
       "next_unlock": "matchday_4",
