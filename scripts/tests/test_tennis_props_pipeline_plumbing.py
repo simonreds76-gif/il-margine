@@ -434,6 +434,7 @@ class DailyMarketSelectionTests(unittest.TestCase):
         self.assertIn('"--require-ready", "--new-only"', am_script)
         self.assertIn('"scripts\\tennis-evidence-snapshot.py", "--supabase"', am_script)
         self.assertIn('"--days-ahead", "3"', am_script)
+        self.assertIn('"tennis props hosted-price comparison" -TimeoutSeconds 420', am_script)
 
     def test_full_pipeline_passes_schedule_horizon_to_projection_board(self) -> None:
         daily_script = (SCRIPTS / "run-tennis-props-daily.py").read_text(encoding="utf-8")
@@ -441,6 +442,13 @@ class DailyMarketSelectionTests(unittest.TestCase):
         board_call = board_call[: board_call.index('"Build tennis props projection board"')]
         self.assertIn('"--days-ahead"', board_call)
         self.assertIn("str(args.days_ahead)", board_call)
+
+    def test_core_props_tracking_precedes_slow_ace_v4_research(self) -> None:
+        daily_script = (SCRIPTS / "run-tennis-props-daily.py").read_text(encoding="utf-8")
+        self.assertLess(
+            daily_script.index("Append tennis props shadow signals"),
+            daily_script.index("Register and score ATP ace-over v4 challenger"),
+        )
 
     def test_am_timeout_kills_complete_process_tree(self) -> None:
         am_script = (SCRIPTS / "oncourt-am-refresh.ps1").read_text(encoding="utf-8")

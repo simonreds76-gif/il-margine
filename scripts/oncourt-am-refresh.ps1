@@ -351,7 +351,7 @@ try {
     # Capture and settlement must survive a timeout in the independent,
     # historical projection-board build.
     Log "=== Step 8c/8: Tennis props comparison and settlement ==="
-    $tennisPropsCompareExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\run-tennis-props-daily.py", "--as-of", (Get-Date -Format "yyyy-MM-dd"), "--comparison-only", "--skip-hosted-sync", "--skip-derived-boards") -Label "tennis props hosted-price comparison" -TimeoutSeconds 180
+    $tennisPropsCompareExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\run-tennis-props-daily.py", "--as-of", (Get-Date -Format "yyyy-MM-dd"), "--comparison-only", "--skip-hosted-sync", "--skip-derived-boards") -Label "tennis props hosted-price comparison" -TimeoutSeconds 420
     if ($tennisPropsCompareExit -ne 0) {
         Log "WARNING: tennis props hosted-price comparison failed (exit $tennisPropsCompareExit), continuing..."
     }

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import importlib.util
 import json
 import os
@@ -21,10 +22,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
+from zoneinfo import ZoneInfo
 
 
 ROOT = Path(__file__).resolve().parent.parent
 INBOX = ROOT / "data" / "tennis-props" / "inbox"
+PROJECTION_BOARD = ROOT / "data" / "tennis-props" / "player-props-board.csv"
 COMMON_PATH = ROOT / "scripts" / "tennis-props-scrape-bet365.py"
 BET365_URL = "https://www.bet365.com/"
 DEFAULT_COMPETITIONS = ("US Open", "US Open Women")
@@ -141,17 +144,75 @@ def seed_events(rows: list[dict[str, str]]) -> dict[tuple[str, str], dict[str, s
         if not player or not opponent or norm_name(player) == norm_name(opponent):
             continue
         key = pair_key(player, opponent)
+        event_date = str(row.get("date") or row.get("scheduled_date") or "")
+        event_id = str(row.get("event_id") or "")
+        if not event_id:
+            digest = hashlib.sha1(
+                "|".join((event_date, *key)).encode("utf-8")
+            ).hexdigest()[:16]
+            event_id = f"bet365-direct-{digest}"
         events.setdefault(
             key,
             {
-                "event_id": str(row.get("event_id") or ""),
-                "date": str(row.get("date") or ""),
+                "event_id": event_id,
+                "date": event_date,
                 "tour": str(row.get("tour") or ""),
                 "tournament": str(row.get("tournament") or ""),
-                "match_start_utc": str(row.get("match_start_utc") or ""),
+                "match_start_utc": str(
+                    row.get("match_start_utc") or row.get("scheduled_start_utc") or ""
+                ),
             },
         )
     return events
+
+
+def parse_event_start(
+    body_text: str,
+    player1: str,
+    player2: str,
+    seed_date: str,
+) -> str:
+    """Extract Bet365's London-local fixture time and return a UTC timestamp."""
+    normalized = " ".join(str(body_text or "").split())
+    match = re.search(
+        rf"(?P<day>\d{{1,2}})\s+"
+        rf"(?P<month>Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+"
+        rf"(?P<time>\d{{1,2}}:\d{{2}})\s+"
+        rf"{re.escape(player1)}\s+vs\s+{re.escape(player2)}\b",
+        normalized,
+        flags=re.I,
+    )
+    if not match:
+        return ""
+    try:
+        expected = datetime.strptime(seed_date, "%Y-%m-%d").date()
+        month = datetime.strptime(match.group("month").title(), "%b").month
+        hour, minute = (int(part) for part in match.group("time").split(":"))
+        candidates = [
+            datetime(
+                year,
+                month,
+                int(match.group("day")),
+                hour,
+                minute,
+                tzinfo=ZoneInfo("Europe/London"),
+            )
+            for year in (expected.year - 1, expected.year, expected.year + 1)
+        ]
+        local_start = min(
+            candidates,
+            key=lambda value: abs((value.date() - expected).days),
+        )
+        if abs((local_start.date() - expected).days) > 7:
+            return ""
+    except (TypeError, ValueError):
+        return ""
+    return (
+        local_start.astimezone(timezone.utc)
+        .replace(microsecond=0)
+        .isoformat()
+        .replace("+00:00", "Z")
+    )
 
 
 def competition_labels(
@@ -389,14 +450,22 @@ def capture(
                         body = " ".join(page.locator("body").inner_text(timeout=timeout_ms).split())
                     prices = parse_break_board(body)
                     if prices:
+                        event_seed = dict(seed)
+                        if not event_seed.get("match_start_utc"):
+                            event_seed["match_start_utc"] = parse_event_start(
+                                body,
+                                player1,
+                                player2,
+                                event_seed.get("date", ""),
+                            )
                         event_rows = build_rows(
                             player1=player1,
                             player2=player2,
-                            seed=seed,
+                            seed=event_seed,
                             prices=prices,
                             captured_at=captured_at,
                         )
-                        status = "CAPTURED"
+                        status = "CAPTURED" if event_seed["match_start_utc"] else "CAPTURED_NO_START"
                         detail = re.search(r"/E(\d+)/", page.url).group(1) if re.search(r"/E(\d+)/", page.url) else page.url
                     else:
                         detail = "Break heading loaded but six prices were not parseable"
@@ -483,14 +552,25 @@ def main() -> int:
     args = parser.parse_args()
 
     common = load_common()
-    seed_path = Path(args.seed) if args.seed else INBOX / f"bet365-lines-{args.date}.csv"
-    out_path = Path(args.out) if args.out else seed_path
+    default_snapshot = INBOX / f"bet365-lines-{args.date}.csv"
+    seed_path = Path(args.seed) if args.seed else default_snapshot
+    out_path = Path(args.out) if args.out else default_snapshot
     history_path = Path(args.history_out) if args.history_out else INBOX / f"bet365-lines-history-{args.date[:7]}.csv"
     audit_path = Path(args.audit_out) if args.audit_out else INBOX / f"bet365-direct-market-audit-{args.date}.csv"
-    existing = read_rows(seed_path)
-    seeds = seed_events(existing)
+    existing = read_rows(out_path)
+    seeds = seed_events(read_rows(seed_path))
+    if not seeds and seed_path.resolve() != PROJECTION_BOARD.resolve():
+        seeds = seed_events(read_rows(PROJECTION_BOARD))
+        if seeds:
+            print(
+                f"No Odds-API seed events available in {seed_path}; "
+                f"using {len(seeds)} projection-board fixtures from {PROJECTION_BOARD}."
+            )
     if not seeds:
-        print(f"No Odds-API seed events available in {seed_path}; direct break capture skipped.")
+        print(
+            f"No fixture seeds available in {seed_path} or {PROJECTION_BOARD}; "
+            "direct break capture skipped."
+        )
         return 0
 
     try:
