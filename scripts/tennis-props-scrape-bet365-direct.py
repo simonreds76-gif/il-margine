@@ -284,6 +284,8 @@ def open_competition(page: Any, competition: str, timeout_ms: int) -> bool:
     """Open a competition from Trending/Most Used, then fall back to Tennis A-Z."""
     try:
         if click_visible_exact(page, competition):
+            # The old fixture list can remain attached briefly while the hash route changes.
+            page.wait_for_timeout(1500)
             page.locator(".rcl-ParticipantFixtureDetails_TeamNames").first.wait_for(
                 state="attached", timeout=timeout_ms
             )
@@ -299,6 +301,7 @@ def open_competition(page: Any, competition: str, timeout_ms: int) -> bool:
     if not click_visible_exact(page, competition):
         return False
     try:
+        page.wait_for_timeout(1500)
         page.locator(".rcl-ParticipantFixtureDetails_TeamNames").first.wait_for(
             state="attached", timeout=timeout_ms
         )
