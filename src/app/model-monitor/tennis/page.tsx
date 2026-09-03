@@ -1,15 +1,14 @@
 import { readFile, stat } from "node:fs/promises";
-import path from "node:path";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   TENNIS_LEGACY_DISABLED_LANES,
   TENNIS_MONITOR_FILES,
   TENNIS_RESEARCH_LANES,
+  tryGetKnownTennisMonitorFilePath,
   type TennisMonitorFilePath,
   type TennisResearchLaneId,
 } from "@/lib/tennis-monitor-files";
-import { tryGetKnownProjectFilePath } from "@/lib/project-file-paths";
 import { StatusPill, cn } from "../shared";
 
 export const dynamic = "force-dynamic";
@@ -343,7 +342,8 @@ async function readKnownFile(relativePath?: TennisMonitorFilePath): Promise<stri
   if (!relativePath) return null;
   const candidates = Array.isArray(relativePath) ? relativePath : [relativePath];
   for (const candidate of candidates) {
-    const fullPath = tryGetKnownProjectFilePath(candidate) ?? path.join(process.cwd(), candidate);
+    const fullPath = tryGetKnownTennisMonitorFilePath(candidate);
+    if (!fullPath) continue;
     try {
       return await readFile(fullPath, "utf8");
     } catch {
@@ -357,7 +357,8 @@ async function readKnownMtime(relativePath?: TennisMonitorFilePath): Promise<Dat
   if (!relativePath) return null;
   const candidates = Array.isArray(relativePath) ? relativePath : [relativePath];
   for (const candidate of candidates) {
-    const fullPath = tryGetKnownProjectFilePath(candidate) ?? path.join(process.cwd(), candidate);
+    const fullPath = tryGetKnownTennisMonitorFilePath(candidate);
+    if (!fullPath) continue;
     try {
       const info = await stat(fullPath);
       return info.mtime;
