@@ -296,6 +296,30 @@ def reconcile_duplicate_break_decisions(rows: list[dict[str, str]]) -> int:
     return voided
 
 
+def refresh_break_market_movements(
+    rows: list[dict[str, str]],
+    observations: list[dict[str, str]],
+) -> int:
+    active = {
+        prospective_decision_key(row): row
+        for row in rows
+        if is_break_market(row)
+        and str(row.get("decision_mode") or "").strip() in BREAK_PROSPECTIVE_MODES
+        and str(row.get("settlement_status") or "").strip().lower() != "void"
+    }
+    updated = 0
+    for observation in sorted(
+        observations,
+        key=lambda item: str(item.get("capture_ts") or ""),
+    ):
+        if not is_break_market(observation):
+            continue
+        original = active.get(prospective_decision_key(observation))
+        if original is not None:
+            updated += int(update_break_market_observation(original, observation))
+    return updated
+
+
 def pick_side(row: dict[str, str], min_value_pct: float, allow_watch: bool) -> tuple[str, float, float] | None:
     recommended = (row.get("recommended_side") or "").strip().upper()
     value_over = parse_float(row.get("value_over_pct"))
@@ -568,15 +592,32 @@ def main() -> int:
     parser.add_argument("--allow-notes", action="store_true", help="Track rows even when projection notes are present")
     parser.add_argument("--allow-watch", action="store_true", help="Track best-side rows even if compare script did not mark recommended_side")
     parser.add_argument("--bookmaker", default="Bet365")
+    parser.add_argument(
+        "--movement-history",
+        default="",
+        help="Refresh existing break decisions from one price-history CSV without rebuilding comparisons.",
+    )
     args = parser.parse_args()
+
+    signals_path = Path(args.signals)
+    existing = [normalize_existing_row(row) for row in read_csv(signals_path)]
+    duplicates_voided = reconcile_duplicate_break_decisions(existing)
+    if args.movement_history:
+        history_path = Path(args.movement_history)
+        repriced = refresh_break_market_movements(existing, read_csv(history_path))
+        write_csv(signals_path, existing)
+        write_performance(Path(args.performance), existing)
+        print(
+            f"Break movement refresh: repriced {repriced}, duplicate reprices voided {duplicates_voided}, "
+            f"history={history_path}"
+        )
+        return 0
 
     comparison = Path(args.comparison) if args.comparison else PROPS_DIR / f"comparison-{args.date}.csv"
     if not comparison.exists():
         print(f"Comparison file not found: {comparison}")
         return 0
 
-    existing = [normalize_existing_row(row) for row in read_csv(Path(args.signals))]
-    duplicates_voided = reconcile_duplicate_break_decisions(existing)
     existing_by_id = {row.get("signal_id", ""): row for row in existing if row.get("signal_id")}
     existing_break_decisions = {
         prospective_decision_key(row): row
@@ -606,7 +647,7 @@ def main() -> int:
         existing.append(signal)
         added += 1
 
-    write_csv(Path(args.signals), existing)
+    write_csv(signals_path, existing)
     write_performance(Path(args.performance), existing)
     print(
         f"Shadow tracker: added {added}, repriced {repriced}, duplicate reprices voided {duplicates_voided}, "

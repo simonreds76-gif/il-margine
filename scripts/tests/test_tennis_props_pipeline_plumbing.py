@@ -269,6 +269,35 @@ class ShadowTrackerTests(unittest.TestCase):
         self.assertEqual(duplicate["pnl"], "0.000")
         self.assertEqual(duplicate["settlement_note"], "duplicate_reprice_of:under-entry")
 
+    def test_history_refresh_records_line_move_without_new_signal(self) -> None:
+        original = {
+            "date": "2026-09-03",
+            "tour": "ATP",
+            "player": "Botic Van De Zandschulp",
+            "opponent": "Alex De Minaur",
+            "market": "player_breaks",
+            "line": "2.5",
+            "side": "OVER",
+            "decision_mode": "breaks_single_source_shadow",
+            "settlement_status": "pending",
+            "capture_ts": "2026-09-03T09:45:54Z",
+            "over_odds": "1.8000",
+            "under_odds": "1.9091",
+        }
+        history = [{
+            **original,
+            "line": "3.5",
+            "capture_ts": "2026-09-03T10:32:22Z",
+            "over_odds": "2.1000",
+            "under_odds": "1.6667",
+        }]
+
+        self.assertEqual(TRACKER.refresh_break_market_movements([original], history), 1)
+        self.assertEqual(original["latest_line"], "3.5")
+        self.assertEqual(original["line_move"], "1.000")
+        self.assertIn("line_up", original["market_move_status"])
+        self.assertIn("market_favourite_flip", original["market_move_status"])
+
     def test_break_calibration_row_is_recorded_without_a_betting_side(self) -> None:
         row = {
             "date": "2026-09-02",
@@ -489,7 +518,8 @@ class DailyMarketSelectionTests(unittest.TestCase):
         close_script = (SCRIPTS / "pinnacle-close-capture.ps1").read_text(encoding="utf-8")
         self.assertIn("tennis-props-scrape-bet365-direct.py", close_script)
         self.assertIn("--tracked-only --max-events 20", close_script)
-        self.assertIn("--comparison-only --skip-hosted-sync --skip-derived-boards", close_script)
+        self.assertIn("tennis-props-shadow-tracker.py --movement-history", close_script)
+        self.assertNotIn("--comparison-only", close_script)
 
     def test_full_pipeline_passes_schedule_horizon_to_projection_board(self) -> None:
         daily_script = (SCRIPTS / "run-tennis-props-daily.py").read_text(encoding="utf-8")
