@@ -1,3 +1,5 @@
+import path from "node:path";
+
 export type TennisResearchLaneId =
   | "hard_bo3"
   | "clay_bo3"
@@ -114,3 +116,72 @@ export const TENNIS_MONITOR_FILES: Record<TennisResearchLaneId, TennisMonitorFil
   },
 };
 
+const TENNIS_MONITOR_FILE_PATHS = {
+  "data/backtest/calibration/_fallback.json": path.join(process.cwd(), "data/backtest/calibration/_fallback.json"),
+  "data/backtest/calibration/challenger-ml-calibration.json": path.join(process.cwd(), "data/backtest/calibration/challenger-ml-calibration.json"),
+  "data/backtest/calibration/clay-bo3-calibration.json": path.join(process.cwd(), "data/backtest/calibration/clay-bo3-calibration.json"),
+  "data/backtest/calibration/grass-bo3-calibration.json": path.join(process.cwd(), "data/backtest/calibration/grass-bo3-calibration.json"),
+  "data/backtest/calibration/indoor-bo3-calibration.json": path.join(process.cwd(), "data/backtest/calibration/indoor-bo3-calibration.json"),
+  "data/backtest/calibration/slam-bo5-calibration.json": path.join(process.cwd(), "data/backtest/calibration/slam-bo5-calibration.json"),
+  "data/backtest/challenger-ml-v2-nearmiss.csv": path.join(process.cwd(), "data/backtest/challenger-ml-v2-nearmiss.csv"),
+  "data/backtest/clay_bo3-shadow-nearmiss.csv": path.join(process.cwd(), "data/backtest/clay_bo3-shadow-nearmiss.csv"),
+  "data/backtest/cpi-all-surfaces-cells.csv": path.join(process.cwd(), "data/backtest/cpi-all-surfaces-cells.csv"),
+  "data/backtest/cpi-regime-shadow-gates.csv": path.join(process.cwd(), "data/backtest/cpi-regime-shadow-gates.csv"),
+  "data/backtest/cpi-regime-shadow-identity-status.txt": path.join(process.cwd(), "data/backtest/cpi-regime-shadow-identity-status.txt"),
+  "data/backtest/cpi-regime-shadow-report.txt": path.join(process.cwd(), "data/backtest/cpi-regime-shadow-report.txt"),
+  "data/backtest/cpi-regime-shadow-value-factors.csv": path.join(process.cwd(), "data/backtest/cpi-regime-shadow-value-factors.csv"),
+  "data/backtest/cpi-regime-surface-cells.csv": path.join(process.cwd(), "data/backtest/cpi-regime-surface-cells.csv"),
+  "data/backtest/cpi-regime-surface-report.txt": path.join(process.cwd(), "data/backtest/cpi-regime-surface-report.txt"),
+  "data/backtest/cpi-shadow-overlay-cells.csv": path.join(process.cwd(), "data/backtest/cpi-shadow-overlay-cells.csv"),
+  "data/backtest/cpi-shadow-overlay-report.txt": path.join(process.cwd(), "data/backtest/cpi-shadow-overlay-report.txt"),
+  "data/backtest/cpi_speed-shadow-nearmiss.csv": path.join(process.cwd(), "data/backtest/cpi_speed-shadow-nearmiss.csv"),
+  "data/backtest/grass_bo3-shadow-nearmiss.csv": path.join(process.cwd(), "data/backtest/grass_bo3-shadow-nearmiss.csv"),
+  "data/backtest/indoor_bo3-shadow-nearmiss.csv": path.join(process.cwd(), "data/backtest/indoor_bo3-shadow-nearmiss.csv"),
+  "data/backtest/slam_bo5-shadow-nearmiss.csv": path.join(process.cwd(), "data/backtest/slam_bo5-shadow-nearmiss.csv"),
+  "data/backtest/strict-clv-audit-2026.csv": path.join(process.cwd(), "data/backtest/strict-clv-audit-2026.csv"),
+  "data/backtest/strict-clv-audit-2026.txt": path.join(process.cwd(), "data/backtest/strict-clv-audit-2026.txt"),
+  "data/backtest/strict-clv-audit-challenger-ml-v2-2026.csv": path.join(process.cwd(), "data/backtest/strict-clv-audit-challenger-ml-v2-2026.csv"),
+  "data/backtest/strict-clv-audit-challenger-ml-v2-2026.txt": path.join(process.cwd(), "data/backtest/strict-clv-audit-challenger-ml-v2-2026.txt"),
+  "data/backtest/strict-clv-audit-clay_bo3-2026.csv": path.join(process.cwd(), "data/backtest/strict-clv-audit-clay_bo3-2026.csv"),
+  "data/backtest/strict-clv-audit-clay_bo3-2026.txt": path.join(process.cwd(), "data/backtest/strict-clv-audit-clay_bo3-2026.txt"),
+  "data/backtest/strict-clv-audit-clay_bo3-spread-2026.csv": path.join(process.cwd(), "data/backtest/strict-clv-audit-clay_bo3-spread-2026.csv"),
+  "data/backtest/strict-clv-audit-clay_bo3-spread-2026.txt": path.join(process.cwd(), "data/backtest/strict-clv-audit-clay_bo3-spread-2026.txt"),
+  "data/backtest/strict-clv-audit-cpi_speed-2026.csv": path.join(process.cwd(), "data/backtest/strict-clv-audit-cpi_speed-2026.csv"),
+  "data/backtest/strict-clv-audit-cpi_speed-2026.txt": path.join(process.cwd(), "data/backtest/strict-clv-audit-cpi_speed-2026.txt"),
+  "data/backtest/strict-clv-audit-slam_bo5-2026.csv": path.join(process.cwd(), "data/backtest/strict-clv-audit-slam_bo5-2026.csv"),
+  "data/backtest/strict-clv-audit-slam_bo5-2026.txt": path.join(process.cwd(), "data/backtest/strict-clv-audit-slam_bo5-2026.txt"),
+  "data/backtest/strict-policy-performance-challenger-ml-v2-weekly.csv": path.join(process.cwd(), "data/backtest/strict-policy-performance-challenger-ml-v2-weekly.csv"),
+  "data/backtest/strict-policy-performance-clay_bo3-weekly.csv": path.join(process.cwd(), "data/backtest/strict-policy-performance-clay_bo3-weekly.csv"),
+  "data/backtest/strict-policy-performance-cpi_speed-weekly.csv": path.join(process.cwd(), "data/backtest/strict-policy-performance-cpi_speed-weekly.csv"),
+  "data/backtest/strict-policy-performance-grass_bo3-weekly.csv": path.join(process.cwd(), "data/backtest/strict-policy-performance-grass_bo3-weekly.csv"),
+  "data/backtest/strict-policy-performance-indoor_bo3-weekly.csv": path.join(process.cwd(), "data/backtest/strict-policy-performance-indoor_bo3-weekly.csv"),
+  "data/backtest/strict-policy-performance-slam_bo5-weekly.csv": path.join(process.cwd(), "data/backtest/strict-policy-performance-slam_bo5-weekly.csv"),
+  "data/backtest/strict-policy-performance-weekly.csv": path.join(process.cwd(), "data/backtest/strict-policy-performance-weekly.csv"),
+  "data/backtest/strict-signals-archive.csv": path.join(process.cwd(), "data/backtest/strict-signals-archive.csv"),
+  "data/backtest/strict-signals-challenger-ml-v2-archive.csv": path.join(process.cwd(), "data/backtest/strict-signals-challenger-ml-v2-archive.csv"),
+  "data/backtest/strict-signals-challenger-ml-v2-live.csv": path.join(process.cwd(), "data/backtest/strict-signals-challenger-ml-v2-live.csv"),
+  "data/backtest/strict-signals-clay_bo3-archive.csv": path.join(process.cwd(), "data/backtest/strict-signals-clay_bo3-archive.csv"),
+  "data/backtest/strict-signals-clay_bo3-live.csv": path.join(process.cwd(), "data/backtest/strict-signals-clay_bo3-live.csv"),
+  "data/backtest/strict-signals-cpi_speed-archive.csv": path.join(process.cwd(), "data/backtest/strict-signals-cpi_speed-archive.csv"),
+  "data/backtest/strict-signals-cpi_speed-live.csv": path.join(process.cwd(), "data/backtest/strict-signals-cpi_speed-live.csv"),
+  "data/backtest/strict-signals-cpi_speed.csv": path.join(process.cwd(), "data/backtest/strict-signals-cpi_speed.csv"),
+  "data/backtest/strict-signals-grass_bo3-archive.csv": path.join(process.cwd(), "data/backtest/strict-signals-grass_bo3-archive.csv"),
+  "data/backtest/strict-signals-grass_bo3-live.csv": path.join(process.cwd(), "data/backtest/strict-signals-grass_bo3-live.csv"),
+  "data/backtest/strict-signals-indoor_bo3-archive.csv": path.join(process.cwd(), "data/backtest/strict-signals-indoor_bo3-archive.csv"),
+  "data/backtest/strict-signals-indoor_bo3-live.csv": path.join(process.cwd(), "data/backtest/strict-signals-indoor_bo3-live.csv"),
+  "data/backtest/strict-signals-live.csv": path.join(process.cwd(), "data/backtest/strict-signals-live.csv"),
+  "data/backtest/strict-signals-slam_bo5-archive.csv": path.join(process.cwd(), "data/backtest/strict-signals-slam_bo5-archive.csv"),
+  "data/backtest/strict-signals-slam_bo5-live.csv": path.join(process.cwd(), "data/backtest/strict-signals-slam_bo5-live.csv"),
+  "data/backtest/tennis-identity-audit.txt": path.join(process.cwd(), "data/backtest/tennis-identity-audit.txt"),
+  "data/backtest/tennis-shadow-proof-report.csv": path.join(process.cwd(), "data/backtest/tennis-shadow-proof-report.csv"),
+  "data/backtest/vnext-counts-identity-check.txt": path.join(process.cwd(), "data/backtest/vnext-counts-identity-check.txt"),
+  "data/backtest/vnext-mve-report.txt": path.join(process.cwd(), "data/backtest/vnext-mve-report.txt"),
+  "data/backtest/vnext-v02-folds-report.txt": path.join(process.cwd(), "data/backtest/vnext-v02-folds-report.txt"),
+} as const;
+
+type KnownTennisMonitorFile = keyof typeof TENNIS_MONITOR_FILE_PATHS;
+
+export function tryGetKnownTennisMonitorFilePath(relativePath: string): string | null {
+  if (!(relativePath in TENNIS_MONITOR_FILE_PATHS)) return null;
+  return TENNIS_MONITOR_FILE_PATHS[relativePath as KnownTennisMonitorFile];
+}

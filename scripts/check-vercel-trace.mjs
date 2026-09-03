@@ -80,3 +80,70 @@ if (Number.isFinite(maxFairOddsTraceFiles) && files.length > maxFairOddsTraceFil
 }
 
 console.log(`[vercel-trace] /api/fair-odds trace OK (${files.length} files).`);
+
+const tennisTracePath = path.join(
+  process.cwd(),
+  ".next",
+  "server",
+  "app",
+  "model-monitor",
+  "tennis",
+  "page.js.nft.json",
+);
+const tennisForbiddenPrefixes = [
+  "data/assist-value/",
+  "data/corners-ou/",
+  "data/exports/",
+  "data/football-form/",
+  "data/goalkeeper-saves/",
+  "data/goalscorer/",
+  "data/oncourt/",
+  "data/results-snapshot/",
+  "data/sackmann/",
+  "data/shortlist/",
+  "data/team-shots/",
+  "data/tennis-props/",
+  "scripts/",
+  "tml-data/",
+];
+const tennisAllowedFiles = new Set(["data/goalscorer/team-logo-map.json"]);
+const maxTennisMonitorTraceFiles = Number.parseInt(
+  process.env.MAX_TENNIS_MONITOR_TRACE_FILES || "200",
+  10,
+);
+
+if (!fs.existsSync(tennisTracePath)) {
+  console.error(
+    `[vercel-trace] Missing tennis monitor trace at ${path.relative(process.cwd(), tennisTracePath)}. Run npm run build first.`,
+  );
+  process.exit(1);
+}
+
+const tennisTrace = JSON.parse(fs.readFileSync(tennisTracePath, "utf8"));
+const tennisFiles = Array.isArray(tennisTrace.files)
+  ? tennisTrace.files.map(normalizeTraceFile)
+  : [];
+const tennisForbiddenMatches = tennisFiles
+  .filter((file) => !tennisAllowedFiles.has(file))
+  .filter((file) => tennisForbiddenPrefixes.some((prefix) => file.startsWith(prefix)))
+  .sort();
+
+if (tennisForbiddenMatches.length > 0) {
+  console.error("[vercel-trace] /model-monitor/tennis is tracing unrelated model data:");
+  for (const file of tennisForbiddenMatches.slice(0, 40)) console.error(`  - ${file}`);
+  process.exit(1);
+}
+
+if (
+  Number.isFinite(maxTennisMonitorTraceFiles) &&
+  tennisFiles.length > maxTennisMonitorTraceFiles
+) {
+  console.error(
+    `[vercel-trace] /model-monitor/tennis trace has ${tennisFiles.length} files, above limit ${maxTennisMonitorTraceFiles}.`,
+  );
+  process.exit(1);
+}
+
+console.log(
+  `[vercel-trace] /model-monitor/tennis trace OK (${tennisFiles.length} files).`,
+);
