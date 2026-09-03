@@ -1,9 +1,11 @@
 {
-  "generated_at": "2026-09-03T00:36:49.151932Z",
+  "generated_at": "2026-09-03T11:49:43.542743Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
+    "data/goalscorer/bundesliga/goalscorer-live-comparison.csv",
     "data/goalscorer/ligue-1/goalscorer-live-comparison.csv"
   ],
   "team_form_source": "/home/runner/work/_temp/football-form/team-match-base.csv",
@@ -33,18 +35,519 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 2,
-  "signals_qualifying": 0,
+  "fixtures_evaluated": 29,
+  "signals_qualifying": 5,
   "safety_exclusions": {
-    "lineup_not_public_quality": 1
+    "market_odds_above_cap": 4,
+    "model_market_gap_gt_10pp": 9,
+    "model_probability_below_floor": 4,
+    "low_signal_confidence": 1,
+    "lineup_not_public_quality": 5
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 0,
-    "added_by_league": {},
+    "eligible_rows": 9,
+    "added_by_league": {
+      "bundesliga": 5,
+      "epl": 3,
+      "ligue-1": 1
+    },
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
-  "leagues_covered": [],
-  "featured_signal_id": null,
-  "signals": []
+  "leagues_covered": [
+    "bundesliga",
+    "epl",
+    "serie-a"
+  ],
+  "featured_signal_id": "20260905-donyell-malen-6c84781f09",
+  "signals": [
+    {
+      "id": "20260905-donyell-malen-6c84781f09",
+      "match": {
+        "home_team": "AS Roma",
+        "away_team": "Atalanta BC",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "2026-09-05T18:45:00Z",
+        "kickoff_display": "Sat 05 Sep 19:45 UK",
+        "fotmob_match_id": "5749660",
+        "fotmob_page_url": "/matches/atalanta-vs-roma/2g6hwd#5749660",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Donyell Malen",
+        "team": "Roma",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/serie-a/roma.png",
+        "team_primary_color": "#7f1d1d",
+        "team_secondary_color": "#f59e0b",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 61.2,
+        "fair_odds": 1.63
+      },
+      "market_data": {
+        "best_odds": 1.91,
+        "best_book": "Bet365",
+        "implied_chance_pct": 52.4
+      },
+      "edge": {
+        "price_gap_pp": 8.9,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 99
+        },
+        "share_of_team_chances_pct": 37,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 89
+        },
+        "recent_team_form": {
+          "tier": "Strong",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-08-24",
+          "xg_for_avg": 2.87,
+          "xg_against_avg": 0.45,
+          "xgd_per90": 2.43,
+          "shots_for_avg": 16.2,
+          "shots_against_avg": 7.6,
+          "sot_for_avg": 7.2,
+          "sot_against_avg": 2.6,
+          "corners_for_avg": 5.2,
+          "corners_against_avg": 4.0
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 55
+        },
+        "opponent_recent_defence": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-08-23",
+          "xg_for_avg": 1.33,
+          "xg_against_avg": 1.53,
+          "xgd_per90": -0.2,
+          "shots_for_avg": 15.0,
+          "shots_against_avg": 14.0,
+          "sot_for_avg": 5.2,
+          "sot_against_avg": 5.6,
+          "corners_for_avg": 3.4,
+          "corners_against_avg": 3.2
+        },
+        "fixture_boost_pct": -1,
+        "projected_minutes": 82,
+        "penalty_role": "Primary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Recent team form supports the attacking case",
+        "Opponent has been allowing chances recently"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260905-dominic-calvert-lewin-d4219ae050",
+      "match": {
+        "home_team": "Brighton & Hove Albion",
+        "away_team": "Leeds United",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-09-05T14:00:00Z",
+        "kickoff_display": "Sat 05 Sep 15:00 UK",
+        "fotmob_match_id": "5795437",
+        "fotmob_page_url": "/matches/leeds-united-vs-brighton-hove-albion/2vqp9d#5795437",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Dominic Calvert-Lewin",
+        "team": "Leeds",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/leeds.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#facc15",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 40.5,
+        "fair_odds": 2.47
+      },
+      "market_data": {
+        "best_odds": 3.1,
+        "best_book": "Bet365",
+        "implied_chance_pct": 32.3
+      },
+      "edge": {
+        "price_gap_pp": 8.2,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 92
+        },
+        "share_of_team_chances_pct": 31,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 17
+        },
+        "recent_team_form": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-08-22",
+          "xg_for_avg": 1.43,
+          "xg_against_avg": 1.51,
+          "xgd_per90": -0.08,
+          "shots_for_avg": 12.0,
+          "shots_against_avg": 14.4,
+          "sot_for_avg": 3.8,
+          "sot_against_avg": 5.0,
+          "corners_for_avg": 4.0,
+          "corners_against_avg": 6.2
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 42
+        },
+        "opponent_recent_defence": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-08-23",
+          "xg_for_avg": 2.21,
+          "xg_against_avg": 1.4,
+          "xgd_per90": 0.81,
+          "shots_for_avg": 16.0,
+          "shots_against_avg": 8.4,
+          "sot_for_avg": 5.2,
+          "sot_against_avg": 3.0,
+          "corners_for_avg": 6.0,
+          "corners_against_avg": 3.0
+        },
+        "fixture_boost_pct": -18,
+        "projected_minutes": 88,
+        "penalty_role": "Primary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Opponent has been allowing chances recently",
+        "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260905-morgan-gibbs-white-1918fc17c8",
+      "match": {
+        "home_team": "Nottingham Forest",
+        "away_team": "Tottenham Hotspur",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-09-05T14:00:00Z",
+        "kickoff_display": "Sat 05 Sep 15:00 UK",
+        "fotmob_match_id": "5795444",
+        "fotmob_page_url": "/matches/tottenham-hotspur-vs-nottingham-forest/2x3odl#5795444",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Morgan Gibbs-White",
+        "team": "Nottingham Forest",
+        "position": "AM",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/nottingham-forest.png",
+        "team_primary_color": "#dc2626",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 39.8,
+        "fair_odds": 2.51
+      },
+      "market_data": {
+        "best_odds": 3.1,
+        "best_book": "Bet365",
+        "implied_chance_pct": 32.3
+      },
+      "edge": {
+        "price_gap_pp": 7.6,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 90
+        },
+        "share_of_team_chances_pct": 24,
+        "share_of_team_chances_percentile": 97,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 69
+        },
+        "recent_team_form": {
+          "tier": "Unknown"
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 69
+        },
+        "opponent_recent_defence": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-08-22",
+          "xg_for_avg": 1.39,
+          "xg_against_avg": 1.58,
+          "xgd_per90": -0.19,
+          "shots_for_avg": 13.0,
+          "shots_against_avg": 11.8,
+          "sot_for_avg": 4.2,
+          "sot_against_avg": 4.0,
+          "corners_for_avg": 6.4,
+          "corners_against_avg": 3.8
+        },
+        "fixture_boost_pct": 7,
+        "projected_minutes": 83,
+        "penalty_role": "Secondary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "Recent chance quality grades as strong",
+        "Opponent has been allowing chances recently"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260905-diego-gomez-46e3fe76ff",
+      "match": {
+        "home_team": "Brighton & Hove Albion",
+        "away_team": "Leeds United",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-09-05T14:00:00Z",
+        "kickoff_display": "Sat 05 Sep 15:00 UK",
+        "fotmob_match_id": "5795437",
+        "fotmob_page_url": "/matches/leeds-united-vs-brighton-hove-albion/2vqp9d#5795437",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Diego Gomez",
+        "team": "Brighton",
+        "position": "AM",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/brighton.png",
+        "team_primary_color": "#2563eb",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "vertical-stripes"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 37.2,
+        "fair_odds": 2.69
+      },
+      "market_data": {
+        "best_odds": 3.4,
+        "best_book": "Bet365",
+        "implied_chance_pct": 29.4
+      },
+      "edge": {
+        "price_gap_pp": 7.8,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 90
+        },
+        "share_of_team_chances_pct": 24,
+        "share_of_team_chances_percentile": 97,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 83
+        },
+        "recent_team_form": {
+          "tier": "Strong",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-08-23",
+          "xg_for_avg": 2.21,
+          "xg_against_avg": 1.4,
+          "xgd_per90": 0.81,
+          "shots_for_avg": 16.0,
+          "shots_against_avg": 8.4,
+          "sot_for_avg": 5.2,
+          "sot_against_avg": 3.0,
+          "corners_for_avg": 6.0,
+          "corners_against_avg": 3.0
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 49
+        },
+        "opponent_recent_defence": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-08-22",
+          "xg_for_avg": 1.43,
+          "xg_against_avg": 1.51,
+          "xgd_per90": -0.08,
+          "shots_for_avg": 12.0,
+          "shots_against_avg": 14.4,
+          "sot_for_avg": 3.8,
+          "sot_against_avg": 5.0,
+          "corners_for_avg": 4.0,
+          "corners_against_avg": 6.2
+        },
+        "fixture_boost_pct": 2,
+        "projected_minutes": 78,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "Recent chance quality grades as strong",
+        "Recent team form supports the attacking case",
+        "Opponent has been allowing chances recently"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260905-marco-grull-07095660c8",
+      "match": {
+        "home_team": "Werder Bremen",
+        "away_team": "RB Leipzig",
+        "league": "bundesliga",
+        "league_display": "Bundesliga",
+        "league_logo_path": "/league-logos/bundesliga.png",
+        "kickoff_utc": "2026-09-05T13:30:00Z",
+        "kickoff_display": "Sat 05 Sep 14:30 UK",
+        "fotmob_match_id": "5881160",
+        "fotmob_page_url": "/matches/werder-bremen-vs-rb-leipzig/81p1es3#5881160",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Marco Grull",
+        "team": "Werder Bremen",
+        "position": "AM",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/bundesliga/werder-bremen.png",
+        "team_primary_color": "#16a34a",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 32.1,
+        "fair_odds": 3.11
+      },
+      "market_data": {
+        "best_odds": 4.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 25.0
+      },
+      "edge": {
+        "price_gap_pp": 7.1,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 69
+        },
+        "share_of_team_chances_pct": 25,
+        "share_of_team_chances_percentile": 97,
+        "team_attacking_outlook": {
+          "tier": "Average",
+          "percentile": 50
+        },
+        "recent_team_form": {
+          "tier": "Quiet",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-16",
+          "xg_for_avg": 0.94,
+          "xg_against_avg": 2.47,
+          "xgd_per90": -1.54,
+          "shots_for_avg": 12.4,
+          "shots_against_avg": 15.4,
+          "sot_for_avg": 4.4,
+          "sot_against_avg": 5.4,
+          "corners_for_avg": 4.8,
+          "corners_against_avg": 6.4
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 80
+        },
+        "opponent_recent_defence": {
+          "tier": "High",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-16",
+          "xg_for_avg": 2.38,
+          "xg_against_avg": 2.14,
+          "xgd_per90": 0.24,
+          "shots_for_avg": 16.0,
+          "shots_against_avg": 12.4,
+          "sot_for_avg": 6.8,
+          "sot_against_avg": 4.4,
+          "corners_for_avg": 4.8,
+          "corners_against_avg": 4.2
+        },
+        "fixture_boost_pct": 3,
+        "projected_minutes": 78,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Opponent defensive profile is a positive matchup"
+      ],
+      "risk_flags": []
+    }
+  ]
 }
