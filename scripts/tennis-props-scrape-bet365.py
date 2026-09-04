@@ -35,6 +35,7 @@ BASE_URL = "https://api.odds-api.io/v3"
 OUT_DIR = ROOT / "data" / "tennis-props" / "inbox"
 DEFAULT_BOOKMAKERS = "Bet365"
 BREAK_MARKETS = {"player_breaks", "match_breaks"}
+BREAK_POINT_MARKETS = {"player_break_points", "match_break_points"}
 SUPPORTED_TOURNAMENT_KEYWORDS = (
     ("Roland Garros", ("roland garros", "french open")),
     ("Wimbledon", ("wimbledon",)),
@@ -163,7 +164,12 @@ def clean_player(value: object) -> str:
         if last.strip() and first.strip():
             text = f"{first.strip()} {last.strip()}"
     text = re.sub(r"\s*\(\d+\)\s*", " ", text)
-    text = re.sub(r"\b(over|under|aces?|double faults?|dfs?|df|service breaks?|breaks?)\b", " ", text, flags=re.I)
+    text = re.sub(
+        r"\b(over|under|aces?|double faults?|dfs?|df|break points?|service breaks?|breaks?)\b",
+        " ",
+        text,
+        flags=re.I,
+    )
     text = re.sub(r"\d+\.?\d*", " ", text)
     text = re.sub(r"\s+", " ", text)
     return text.strip(" -:|")
@@ -198,6 +204,14 @@ def identify_market(name: str) -> str | None:
         if "total" in text:
             return "total_tiebreaks"
         return "first_set_tiebreak" if has_first_set else "match_tiebreak"
+    if "break point" in text:
+        if has_first_set:
+            return None
+        if "team total" in text or "player total" in text:
+            return "player_break_points"
+        if "total" in text:
+            return "match_break_points"
+        return "player_break_points"
     if "break" in text:
         if "team total" in text or "player total" in text:
             return "player_breaks"
@@ -394,6 +408,7 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any], 
             "aces": "Player Aces",
             "double_faults": "Player Double Faults",
             "player_breaks": "Player Service Breaks",
+            "player_break_points": "Player Break Points",
         }
         for prop in market.get("odds") or market.get("outcomes") or []:
             prop_text = " ".join(
@@ -428,7 +443,7 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any], 
     real_players = real_event_players(home, away)
     market_text = norm(market_name)
     is_team_count_total = (
-        market_key in {"aces", "double_faults", "player_breaks"}
+        market_key in {"aces", "double_faults", "player_breaks", "player_break_points"}
         and "team total" in market_text
     )
     is_match_count_total = (
@@ -437,7 +452,7 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any], 
             and "total" in market_text
             and not is_team_count_total
         )
-        or market_key == "match_breaks"
+        or market_key in {"match_breaks", "match_break_points"}
     ) and len(real_players) == 2
     output_market = (
         "match_aces"
@@ -446,6 +461,8 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any], 
         if is_match_count_total and market_key == "double_faults"
         else "match_breaks"
         if is_match_count_total and market_key == "match_breaks"
+        else "match_break_points"
+        if is_match_count_total and market_key == "match_break_points"
         else market_key
     )
     match_level_market = (

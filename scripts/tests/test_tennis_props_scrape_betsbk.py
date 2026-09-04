@@ -38,9 +38,16 @@ class BetsBkParserTests(unittest.TestCase):
             ("match_breaks", "Player One", "Player Two"),
         )
 
-    def test_does_not_confuse_tiebreaks_or_break_points_with_service_breaks(self) -> None:
+    def test_separates_tiebreaks_and_break_points_from_service_breaks(self) -> None:
         self.assertIsNone(MODULE.market_heading("Tie Break in Match", "Player One", "Player Two"))
-        self.assertIsNone(MODULE.market_heading("Player One Break Points Won", "Player One", "Player Two"))
+        self.assertEqual(
+            MODULE.market_heading("Player One Break Points Won", "Player One", "Player Two"),
+            ("player_break_points", "Player One", "Player Two"),
+        )
+        self.assertEqual(
+            MODULE.market_heading("Total Break Points in Match", "Player One", "Player Two"),
+            ("match_break_points", "Player One", "Player Two"),
+        )
         self.assertIsNone(MODULE.market_heading("Player One Aces in Set 1", "Player One", "Player Two"))
 
     def test_merge_replaces_refreshed_event_and_preserves_other_event(self) -> None:
