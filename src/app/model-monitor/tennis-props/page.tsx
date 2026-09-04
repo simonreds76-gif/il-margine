@@ -152,7 +152,7 @@ async function latestCsv(prefix: string): Promise<string | null> {
         file.startsWith(`${prefix}-`)
         && file.endsWith(".csv")
         && !(prefix === "comparison" && file.endsWith("-unmatched.csv"))
-        && !(prefix === "bet365-lines" && file.startsWith("bet365-lines-history-"))
+        && !file.includes("-history-")
       ))
       .map((file) => path.join(dir, file));
     if (!matches.length) return null;
@@ -1478,6 +1478,65 @@ function BreakRecommendationPanel({ rows, evidenceRows }: { rows: CsvRow[]; evid
   );
 }
 
+function CountMarketResearchIntake({ rows }: { rows: CsvRow[] }) {
+  const breakPointRows = rows.filter((row) => ["player_break_points", "match_break_points"].includes(row.market || ""));
+  const serviceBreakRows = rows.filter((row) => ["player_breaks", "match_breaks"].includes(row.market || ""));
+  const doubleFaultRows = rows.filter((row) => ["double_faults", "match_double_faults"].includes(row.market || ""));
+  const twoWay = (marketRows: CsvRow[]) => marketRows.filter((row) => hasNumeric(row.over_odds) && hasNumeric(row.under_odds)).length;
+  const books = (marketRows: CsvRow[]) => [...new Set(marketRows.map((row) => row.bookmaker).filter(Boolean))].sort();
+  const capturedBooks = books(rows);
+
+  return (
+    <SectionCard
+      title="Count-Market Research Intake"
+      subtitle="Bookmaker coverage is kept separate from model approval. Break points are opportunities created; service breaks are games actually broken. They must never share projections or settlement."
+    >
+      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+        <MetricTile label="Price sources" value={String(capturedBooks.length)} sub={capturedBooks.join(" · ") || "none captured"} tone={capturedBooks.length ? "text-cyan-300" : "text-rose-300"} />
+        <MetricTile label="Service-break rows" value={String(serviceBreakRows.length)} sub={`${twoWay(serviceBreakRows)} complete two-way`} tone={serviceBreakRows.length ? "text-emerald-300" : "text-slate-400"} />
+        <MetricTile label="Break-point rows" value={String(breakPointRows.length)} sub={`${twoWay(breakPointRows)} complete two-way`} tone={breakPointRows.length ? "text-amber-300" : "text-slate-400"} />
+        <MetricTile label="Double-fault rows" value={String(doubleFaultRows.length)} sub={`${twoWay(doubleFaultRows)} complete two-way`} tone={doubleFaultRows.length ? "text-rose-300" : "text-slate-400"} />
+      </div>
+
+      <div className="mt-4 rounded-2xl border border-amber-500/25 bg-amber-500/10 p-4 text-sm leading-relaxed text-amber-100">
+        <div className="font-black uppercase tracking-[0.14em] text-amber-200">Break-points lane: capture only</div>
+        <p className="mt-1">
+          No fair odds, EV signal, ROI or Telegram pick is produced yet. First we must confirm each book&apos;s settlement definition, build a break-point-opportunity model, and pass a locked historical holdout. The current service-break model cannot be reused for this market.
+        </p>
+      </div>
+
+      {breakPointRows.length ? (
+        <div className="mt-4 grid gap-3 lg:grid-cols-2">
+          {breakPointRows.slice(0, 12).map((row, index) => (
+            <article key={`bp-intake-${row.event_id}-${row.player}-${row.line}-${index}`} className="rounded-2xl border border-slate-800/80 bg-slate-950/70 p-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <MiniBadge label="CAPTURE ONLY" tone="border-amber-500/25 bg-amber-500/10 text-amber-200" />
+                <MiniBadge label={row.bookmaker || "unknown book"} tone="border-cyan-500/25 bg-cyan-500/10 text-cyan-200" />
+                <MiniBadge label={row.market === "match_break_points" ? "match" : "player"} tone="border-slate-700/70 bg-slate-800/60 text-slate-300" />
+              </div>
+              <h3 className="mt-3 font-bold text-slate-100">{row.player || "Match total"} {fmt(row.line, 1)} break points</h3>
+              <p className="mt-1 text-xs text-slate-500">vs {row.opponent || "-"} · {row.tournament || row.date || "tennis"}</p>
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <MetricTile label="Over" value={fmt(row.over_odds, 2)} tone="text-slate-100" />
+                <MetricTile label="Under" value={fmt(row.under_odds, 2)} tone="text-slate-100" />
+              </div>
+              <p className="mt-2 text-[11px] text-slate-600">Raw market: {row.raw_market_name || "break points"}</p>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div className="mt-4">
+          <EmptyState message="No break-point prices captured yet. The parser is ready, but the provider must return an actual Kambi/BetsBK market before this panel can populate." />
+        </div>
+      )}
+
+      <p className="mt-4 text-xs leading-relaxed text-slate-500">
+        Tournament conditions will be estimated from pre-match cumulative break-point chances per service/return game, separately by ATP/WTA and surface, with shrinkage toward the long-run prior. A visual impression that one US Open is unusually break-heavy is not enough to change the model.
+      </p>
+    </SectionCard>
+  );
+}
+
 function FeedDiagnosticsPanel({
   lineRows,
   auditRows,
@@ -2271,6 +2330,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     factorsStamp,
     latestComparisonPath,
     latestLinesPath,
+    latestBetsbkLinesPath,
     latestAuditPath,
     modelSummaryRows,
     modelSummaryStamp,
@@ -2317,6 +2377,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     fileStamp(FACTORS_PATH),
     latestCsv("comparison"),
     latestCsv("bet365-lines"),
+    latestCsv("betsbk-lines"),
     latestCsv("bet365-tennis-market-audit"),
     readCsv(MODEL_SUMMARY_PATH),
     fileStamp(MODEL_SUMMARY_PATH),
@@ -2359,6 +2420,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
 
   const comparisonRows = latestComparisonPath ? await readCsv(latestComparisonPath) : [];
   const lineRows = latestLinesPath ? await readCsv(latestLinesPath) : [];
+  const betsbkLineRows = latestBetsbkLinesPath ? await readCsv(latestBetsbkLinesPath) : [];
+  const countMarketIntakeRows = [...lineRows, ...betsbkLineRows];
   const auditRows = latestAuditPath ? await readCsv(latestAuditPath) : [];
   const lineStamp = latestLinesPath ? await fileStamp(latestLinesPath) : "missing";
   const lineAgeHours = latestLinesPath ? await fileAgeHours(latestLinesPath) : null;
@@ -2406,7 +2469,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
           <MonitorNav current="tennis-props" />
         </div>
 
-        <HeroCard title="Tennis Props Decision Board" eyebrow="Aces / double faults / service breaks">
+        <HeroCard title="Tennis Props Decision Board" eyebrow="Aces / double faults / service breaks / break-points intake">
           <p className="text-slate-300">
             Decision first: bookmaker aces, double-fault and service-break lines are compared against the projection board. Break prices first build count calibration; only independently verified strict rows may build ROI and CLV.
           </p>
@@ -2493,6 +2556,8 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
             />
 
             <BreakRecommendationPanel rows={breakRows} evidenceRows={shadowRows} />
+
+            <CountMarketResearchIntake rows={countMarketIntakeRows} />
 
             <div id="most-aces-evidence" className="scroll-mt-6">
               <MostAcesPanel

@@ -131,6 +131,31 @@ class TennisPropsMarketShapeTests(unittest.TestCase):
         self.assertEqual(rows[0]["market"], "player_breaks")
         self.assertEqual(rows[0]["player"], "Tiago Pereira")
 
+    def test_break_points_are_separate_from_service_breaks(self) -> None:
+        match_rows = MODULE.extract_rows(
+            self.fixture,
+            "Kambi",
+            {"name": "Totals (Break Points)", "odds": [{"hdp": 18.5, "over": "1.85", "under": "1.85"}]},
+        )
+        player_rows = MODULE.extract_rows(
+            self.fixture,
+            "Kambi",
+            {"name": "Team Total (Break Points) Away", "odds": [{"hdp": 8.5, "over": "1.90", "under": "1.80"}]},
+        )
+        self.assertEqual(match_rows[0]["market"], "match_break_points")
+        self.assertEqual(player_rows[0]["market"], "player_break_points")
+        self.assertEqual(player_rows[0]["player"], "Tiago Pereira")
+
+    def test_break_points_do_not_satisfy_service_break_coverage(self) -> None:
+        payload = dict(self.fixture)
+        payload["bookmakers"] = {
+            "Kambi": [
+                {"name": "Totals (Break Points)", "odds": [{"hdp": 18.5, "over": "1.85", "under": "1.85"}]},
+            ]
+        }
+        self.assertTrue(MODULE.event_has_market_rows(payload, MODULE.BREAK_POINT_MARKETS))
+        self.assertFalse(MODULE.event_has_market_rows(payload, MODULE.BREAK_MARKETS))
+
     def test_tiebreak_is_not_misclassified_as_service_break(self) -> None:
         self.assertEqual(MODULE.identify_market("Tie Break in Match"), "match_tiebreak")
 
@@ -143,12 +168,14 @@ class TennisPropsMarketShapeTests(unittest.TestCase):
                 "odds": [
                     {"label": "Gonzalo Bueno (Aces)", "hdp": 4.5, "over": "1.90", "under": "1.83"},
                     {"label": "Tiago Pereira (Double Faults)", "hdp": 2.5, "over": "2.10", "under": "1.66"},
+                    {"label": "Tiago Pereira (Break Points)", "hdp": 7.5, "over": "1.91", "under": "1.79"},
                 ],
             },
         )
         self.assertEqual([(row["market"], row["player"]) for row in rows], [
             ("aces", "Gonzalo Bueno"),
             ("double_faults", "Tiago Pereira"),
+            ("player_break_points", "Tiago Pereira"),
         ])
 
     def test_count_row_detection_ignores_generic_match_markets(self) -> None:

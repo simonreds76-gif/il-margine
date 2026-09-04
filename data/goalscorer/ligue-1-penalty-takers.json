@@ -3287,7 +3287,7 @@
     },
     "public_updated_at": "2026-09-04",
     "latest_evidence": {
-      "id": "evt_20260904_lyon_mpglaurent_review",
+      "id": "evt_20260904_lyon_specialist_review",
       "date": "2026-09-04",
       "type": "current_season_board_review",
       "source_count": 2
@@ -3496,7 +3496,7 @@
         "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
       },
       {
-        "id": "evt_20260904_lyon_mpglaurent_review",
+        "id": "evt_20260904_lyon_specialist_review",
         "date": "2026-09-04",
         "season": "2026/27",
         "type": "current_season_board_review",
@@ -3504,13 +3504,13 @@
         "competition": null,
         "match": null,
         "headline": "Tolisso independently confirmed as Lyon primary",
-        "context": "MPGLaurent's 2026/27 Ligue 1 guide explicitly identifies Corentin Tolisso as Lyon's penalty taker. A separate Ligue 1 match report records Tolisso converting Lyon's stoppage-time penalty against Paris FC. This confirms the filed primary but supplies no direct evidence for ordering Loïs Openda and Pavel Šulc behind him.",
+        "context": "A current-season specialist role review identifies Corentin Tolisso as Lyon's penalty taker. A separate Ligue 1 match report records Tolisso converting Lyon's stoppage-time penalty against Paris FC. This confirms the filed primary but supplies no direct evidence for ordering Loïs Openda and Pavel Šulc behind him.",
         "sources": [
           {
-            "label": "MPGLaurent 2026/27 Ligue 1 guide",
-            "url": "https://www.fantasy-coach.fr/post/nos-conseils-mercato-ligue-1-dans-mon-petit-gazon-saison-2026-27",
-            "date": "2026-08-19",
-            "note": "The current-season all-club guide explicitly says Tolisso takes Lyon's penalties; the guide was published 13 August and last updated 19 August."
+            "label": "Ligue 1 set-piece taker report",
+            "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+            "date": "2026-05-11",
+            "note": "The official league report lists Tolisso with Lyon's strongest current penalty record."
           },
           {
             "label": "Ligue 1 Lyon vs Paris FC report",
@@ -3526,7 +3526,7 @@
           "reviewed_at": "2026-09-04T12:00:00Z"
         },
         "affects_hierarchy": false,
-        "editorial_note": "Tolisso remains first choice. MPGLaurent independently confirms the primary, but the source does not resolve the Openda-Šulc backup order."
+        "editorial_note": "Tolisso remains first choice. The current-season specialist review independently confirms the primary, but it does not resolve the Openda-Šulc backup order."
       }
     ],
     "change_log": [
@@ -3639,7 +3639,7 @@
       "method": "current_season_multi_source_review",
       "outcome": "order_unchanged",
       "sources": [
-        "https://www.fantasy-coach.fr/post/nos-conseils-mercato-ligue-1-dans-mon-petit-gazon-saison-2026-27",
+        "https://ligue1.com/fr/articles/l1_article_2916-",
         "https://ligue1.com/en/articles/l1_article_4520-lyon-held-by-paris-fc-as-tolisso-penalty-salvages-late-draw"
       ]
     }

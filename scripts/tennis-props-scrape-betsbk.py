@@ -234,7 +234,6 @@ def market_heading(heading: str, player1: str, player2: str) -> tuple[str, str, 
     if (
         "tie break" in lower
         or "tiebreak" in lower
-        or "break point" in lower
         or re.search(r"\b(?:set\s*1|1st\s+set|first\s+set)\b", lower)
     ):
         return None
@@ -242,12 +241,16 @@ def market_heading(heading: str, player1: str, player2: str) -> tuple[str, str, 
     for player, opponent in players:
         if player.casefold() not in lower:
             continue
+        if "break point" in lower:
+            return "player_break_points", player, opponent
         if "double fault" in lower:
             return "double_faults", player, opponent
         if re.search(r"\baces?\b", lower):
             return "aces", player, opponent
         if "break" in lower:
             return "player_breaks", player, opponent
+    if "break point" in lower and any(token in lower for token in ("total", "match")):
+        return "match_break_points", player1, player2
     if "break" in lower and any(token in lower for token in ("total", "match", "service break", "breaks of serve")):
         return "match_breaks", player1, player2
     return None
@@ -375,8 +378,15 @@ def capture_events(
                             }
                         )
                 break_rows = sum(row["market"] in {"player_breaks", "match_breaks"} for row in event_rows)
+                break_point_rows = sum(
+                    row["market"] in {"player_break_points", "match_break_points"}
+                    for row in event_rows
+                )
                 status = "CAPTURED" if break_rows else "CAPTURED_NO_BREAKS" if event_rows else "NO_SUPPORTED_MARKETS"
-                detail = f"break_rows={break_rows}; headings={len(inspected_headings)}"
+                detail = (
+                    f"break_rows={break_rows}; break_point_rows={break_point_rows}; "
+                    f"headings={len(inspected_headings)}"
+                )
             except LookupError as exc:
                 detail = str(exc)
             except Exception as exc:  # Browser/network failures must remain visible per event.
