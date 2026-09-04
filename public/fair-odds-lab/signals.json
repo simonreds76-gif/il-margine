@@ -1,7 +1,6 @@
 {
-  "generated_at": "2026-09-04T18:24:17.401718Z",
+  "generated_at": "2026-09-04T21:01:33.913962Z",
   "source_file": [
-    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
@@ -35,19 +34,19 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 25,
-  "signals_qualifying": 5,
+  "fixtures_evaluated": 23,
+  "signals_qualifying": 4,
   "safety_exclusions": {
     "model_probability_below_floor": 7,
-    "model_market_gap_gt_10pp": 9,
+    "model_market_gap_gt_10pp": 8,
     "lineup_not_public_quality": 7,
     "low_signal_confidence": 1,
     "market_odds_above_cap": 3
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 9,
+    "eligible_rows": 8,
     "added_by_league": {
-      "bundesliga": 5,
+      "bundesliga": 4,
       "epl": 2,
       "la-liga": 1,
       "ligue-1": 1
@@ -57,8 +56,7 @@
   },
   "leagues_covered": [
     "bundesliga",
-    "epl",
-    "serie-a"
+    "epl"
   ],
   "featured_signal_id": "20260905-diego-gomez-46e3fe76ff",
   "signals": [
@@ -104,13 +102,13 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 90
+          "percentile": 91
         },
         "share_of_team_chances_pct": 26,
-        "share_of_team_chances_percentile": 97,
+        "share_of_team_chances_percentile": 98,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 81
+          "percentile": 82
         },
         "recent_team_form": {
           "tier": "Strong",
@@ -164,106 +162,6 @@
       "risk_flags": []
     },
     {
-      "id": "20260904-lorenzo-colombo-c1158ef717",
-      "match": {
-        "home_team": "Genoa CFC",
-        "away_team": "Como 1907",
-        "league": "serie-a",
-        "league_display": "Serie A",
-        "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "2026-09-04T18:45:00Z",
-        "kickoff_display": "Fri 04 Sep 19:45 UK",
-        "fotmob_match_id": "5749665",
-        "fotmob_page_url": "/matches/como-vs-genoa/3fy2aj#5749665",
-        "lineup_type": "confirmed",
-        "venue": ""
-      },
-      "player": {
-        "name": "Lorenzo Colombo",
-        "team": "Genoa",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/serie-a/genoa.png",
-        "team_primary_color": "#b91c1c",
-        "team_secondary_color": "#1e3a8a",
-        "team_shirt_pattern": "halves"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 29.2,
-        "fair_odds": 3.43
-      },
-      "market_data": {
-        "best_odds": 4.75,
-        "best_book": "Bet365",
-        "implied_chance_pct": 21.1
-      },
-      "edge": {
-        "price_gap_pp": 8.1,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 76
-        },
-        "share_of_team_chances_pct": 29,
-        "share_of_team_chances_percentile": 98,
-        "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 2
-        },
-        "recent_team_form": {
-          "tier": "Quiet",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-08-22",
-          "xg_for_avg": 0.78,
-          "xg_against_avg": 1.45,
-          "xgd_per90": -0.67,
-          "shots_for_avg": 9.2,
-          "shots_against_avg": 12.8,
-          "sot_for_avg": 2.0,
-          "sot_against_avg": 4.4,
-          "corners_for_avg": 4.0,
-          "corners_against_avg": 4.0
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Low",
-          "percentile": 2
-        },
-        "opponent_recent_defence": {
-          "tier": "Average",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-08-22",
-          "xg_for_avg": 1.98,
-          "xg_against_avg": 1.31,
-          "xgd_per90": 0.67,
-          "shots_for_avg": 17.0,
-          "shots_against_avg": 8.8,
-          "sot_for_avg": 5.6,
-          "sot_against_avg": 2.0,
-          "corners_for_avg": 7.8,
-          "corners_against_avg": 2.8
-        },
-        "fixture_boost_pct": -33,
-        "projected_minutes": 85,
-        "penalty_role": "Primary",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Confirmed starter"
-      },
-      "confidence_tier": "High",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Primary penalty role adds a clear scoring route"
-      ],
-      "risk_flags": []
-    },
-    {
       "id": "20260905-morgan-gibbs-white-1918fc17c8",
       "match": {
         "home_team": "Nottingham Forest",
@@ -311,14 +209,14 @@
         "share_of_team_chances_percentile": 97,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 65
+          "percentile": 66
         },
         "recent_team_form": {
           "tier": "Unknown"
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 62
+          "percentile": 63
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -395,10 +293,10 @@
           "percentile": 88
         },
         "share_of_team_chances_pct": 20,
-        "share_of_team_chances_percentile": 95,
+        "share_of_team_chances_percentile": 96,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 62
+          "percentile": 64
         },
         "recent_team_form": {
           "tier": "Average",
@@ -417,7 +315,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 91
+          "percentile": 93
         },
         "opponent_recent_defence": {
           "tier": "Unknown"
@@ -486,7 +384,7 @@
         "share_of_team_chances_percentile": 97,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 43
+          "percentile": 45
         },
         "recent_team_form": {
           "tier": "Quiet",
@@ -504,8 +402,8 @@
           "corners_against_avg": 6.4
         },
         "opponent_defensive_weakness": {
-          "tier": "Positive",
-          "percentile": 73
+          "tier": "High",
+          "percentile": 76
         },
         "opponent_recent_defence": {
           "tier": "High",
@@ -533,7 +431,7 @@
       "reasons": [
         "The model price is shorter than the bookmaker's best available price",
         "A large share of the team's chances runs through him",
-        "Opponent has been allowing chances recently"
+        "Opponent defensive profile is a positive matchup"
       ],
       "risk_flags": []
     }
