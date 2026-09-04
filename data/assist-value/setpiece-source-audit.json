@@ -1,5 +1,5 @@
 {
-  "fetched_at_utc": "2026-06-04T10:42:46+00:00",
+  "fetched_at_utc": "2026-09-04T12:05:35+00:00",
   "overall_decision": "PASS_SOURCE_LAYER",
   "production_guard": "research_only_no_public_assist_picks_authorised",
   "rotowire_scope_caveat": "RotoWire set-piece weeks can exceed domestic league matchweeks; use the feed for current role inference, not as a league-only historical volume source.",
@@ -7,37 +7,37 @@
     "pass": true,
     "teams_ok": 96,
     "teams_total": 96,
-    "role_rows": 1030,
+    "role_rows": 411,
     "by_league": {
       "epl": {
         "teams": 20,
         "ok": 20,
-        "role_rows": 211,
-        "max_latest_week": 57
+        "role_rows": 83,
+        "max_latest_week": 2
       },
       "bundesliga": {
         "teams": 18,
         "ok": 18,
-        "role_rows": 178,
-        "max_latest_week": 49
+        "role_rows": 54,
+        "max_latest_week": 1
       },
       "ligue-1": {
         "teams": 18,
         "ok": 18,
-        "role_rows": 200,
-        "max_latest_week": 51
+        "role_rows": 80,
+        "max_latest_week": 3
       },
       "la-liga": {
         "teams": 20,
         "ok": 20,
-        "role_rows": 220,
-        "max_latest_week": 54
+        "role_rows": 113,
+        "max_latest_week": 4
       },
       "serie-a": {
         "teams": 20,
         "ok": 20,
-        "role_rows": 221,
-        "max_latest_week": 52
+        "role_rows": 81,
+        "max_latest_week": 2
       }
     }
   },
@@ -45,21 +45,96 @@
     "source": "fpl_api",
     "ok": true,
     "reason": "ok",
+    "source_season": "2026/27",
+    "fetched_at_utc": "2026-09-04T12:05:35+00:00",
+    "valid_until_utc": "2026-09-11T12:05:35+00:00",
+    "max_age_days": 7,
     "teams": 20,
-    "players": 841,
-    "players_with_roles": 132,
+    "team_names": [
+      "Arsenal",
+      "Aston Villa",
+      "Bournemouth",
+      "Brentford",
+      "Brighton",
+      "Chelsea",
+      "Coventry City",
+      "Crystal Palace",
+      "Everton",
+      "Fulham",
+      "Hull City",
+      "Ipswich Town",
+      "Leeds",
+      "Liverpool",
+      "Man City",
+      "Man Utd",
+      "Newcastle",
+      "Nott'm Forest",
+      "Spurs",
+      "Sunderland"
+    ],
+    "canonical_team_names": [
+      "Arsenal",
+      "Aston Villa",
+      "Bournemouth",
+      "Brentford",
+      "Brighton",
+      "Chelsea",
+      "Coventry City",
+      "Crystal Palace",
+      "Everton",
+      "Fulham",
+      "Hull City",
+      "Ipswich Town",
+      "Leeds",
+      "Liverpool",
+      "Manchester City",
+      "Manchester United",
+      "Newcastle United",
+      "Nottingham Forest",
+      "Sunderland",
+      "Tottenham"
+    ],
+    "expected_team_names": [
+      "Arsenal",
+      "Aston Villa",
+      "Bournemouth",
+      "Brentford",
+      "Brighton",
+      "Chelsea",
+      "Coventry City",
+      "Crystal Palace",
+      "Everton",
+      "Fulham",
+      "Hull City",
+      "Ipswich Town",
+      "Leeds",
+      "Liverpool",
+      "Manchester City",
+      "Manchester United",
+      "Newcastle United",
+      "Nottingham Forest",
+      "Sunderland",
+      "Tottenham"
+    ],
+    "team_set_matches": true,
+    "missing_expected_teams": [],
+    "unexpected_live_teams": [],
+    "players": 652,
+    "players_with_roles": 135,
     "pass": true
   },
   "setpiecetakers": {
     "pass": false,
     "pages_checked": 15,
-    "stale_pages": 15,
-    "csv_disabled_pages": 15
+    "stale_pages": 0,
+    "csv_disabled_pages": 0
   },
   "outputs": {
     "rotowire_roles": "/home/runner/work/il-margine/il-margine/data/assist-value/rotowire-setpiece-roles.csv",
     "rotowire_status": "/home/runner/work/il-margine/il-margine/data/assist-value/rotowire-source-status.csv",
     "fpl_roles": "/home/runner/work/il-margine/il-margine/data/assist-value/fpl-setpiece-roles.csv",
+    "fpl_roster": "/home/runner/work/il-margine/il-margine/data/assist-value/fpl-player-roster.csv",
+    "fpl_status": "/home/runner/work/il-margine/il-margine/data/assist-value/fpl-source-status.json",
     "setpiecetakers_status": "/home/runner/work/il-margine/il-margine/data/assist-value/setpiecetakers-source-status.csv"
   }
 }

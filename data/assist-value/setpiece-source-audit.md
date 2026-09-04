@@ -1,6 +1,6 @@
 # Assist Value Set-Piece Source Audit
 
-Fetched at UTC: `2026-06-04T10:42:46+00:00`
+Fetched at UTC: `2026-09-04T12:05:35+00:00`
 
 ## Decision
 
@@ -14,55 +14,60 @@ Overall: **PASS_SOURCE_LAYER**
 ## RotoWire
 
 - Teams with set-piece blocks: `96/96`
-- Player role rows extracted: `1030`
+- Player role rows extracted: `411`
 
 | League | Teams OK | Teams | Role rows | Max latest week |
 |---|---:|---:|---:|---:|
-| bundesliga | 18 | 18 | 178 | 49 |
-| epl | 20 | 20 | 211 | 57 |
-| la-liga | 20 | 20 | 220 | 54 |
-| ligue-1 | 18 | 18 | 200 | 51 |
-| serie-a | 20 | 20 | 221 | 52 |
+| bundesliga | 18 | 18 | 54 | 1 |
+| epl | 20 | 20 | 83 | 2 |
+| la-liga | 20 | 20 | 113 | 4 |
+| ligue-1 | 18 | 18 | 80 | 3 |
+| serie-a | 20 | 20 | 81 | 2 |
 
 ## FPL API
 
 - Status: `PASS`
 - Teams: `20`
-- Players: `841`
-- Players with set-piece role fields: `132`
+- Players: `652`
+- Players with set-piece role fields: `135`
+- Registered season: `2026/27`
+- Exact 20-team roster match: `YES`
+- Snapshot valid until UTC: `2026-09-11T12:05:35+00:00`
 
 ## SetPieceTakers
 
 - Pages checked: `15`
-- Stale March 20 pages: `15`
-- CSV-disabled pages: `15`
+- Stale March 20 pages: `0`
+- CSV-disabled pages: `0`
 - Decision: `REJECT_AS_LIVE_PRIMARY`
 
 ## Top Last-5 Corner Role Shares From RotoWire
 
 | League | Team | Player | Last-5 corner share | Season corner share | Corner total |
 |---|---|---|---:|---:|---:|
-| la-liga | Getafe | Luis Milla | 100.0% | 83.69% | 118 |
-| bundesliga | FSV Mainz 05 | Nadiem Amiri | 90.91% | 57.25% | 79 |
-| ligue-1 | Metz | Gauthier Hein | 90.91% | 64.17% | 77 |
-| la-liga | Espanyol | Edu Exposito | 90.0% | 84.78% | 117 |
-| ligue-1 | Lorient | Pablo Pagis | 83.33% | 58.54% | 48 |
-| bundesliga | VfL Wolfsburg | Christian Eriksen | 81.25% | 59.23% | 77 |
-| ligue-1 | AJ Auxerre | Kevin Danois | 78.95% | 62.04% | 85 |
-| la-liga | Real Madrid | Trent Alexander-Arnold | 78.95% | 28.38% | 65 |
-| ligue-1 | Angers | Branco van den Boomen | 78.57% | 38.71% | 36 |
-| epl | Wolverhampton | Mateus Mane | 75.0% | 26.79% | 30 |
-| bundesliga | RB Leipzig | Max Finkgrafe | 75.0% | 12.24% | 18 |
-| bundesliga | SC Freiburg | Jan-Niklas Beste | 75.0% | 38.5% | 72 |
-| epl | Everton | James Garner | 72.0% | 66.67% | 98 |
-| bundesliga | Bayer Leverkusen | Alejandro Grimaldo | 72.0% | 55.62% | 94 |
-| bundesliga | Union Berlin | Christopher Trimmel | 72.0% | 51.95% | 80 |
+| epl | Crystal Palace | Yeremy Pino | 100.0% | 100.0% | 2 |
+| epl | Liverpool | Dominik Szoboszlai | 100.0% | 100.0% | 8 |
+| epl | Sunderland | Granit Xhaka | 100.0% | 100.0% | 4 |
+| bundesliga | Bayer Leverkusen | Aleix Garcia | 100.0% | 100.0% | 3 |
+| bundesliga | Eintracht Frankfurt | Fares Chaibi | 100.0% | 100.0% | 2 |
+| bundesliga | FC Schalke 04 | Adil Aouchiche | 100.0% | 100.0% | 3 |
+| bundesliga | FSV Mainz 05 | Nadiem Amiri | 100.0% | 100.0% | 10 |
+| bundesliga | Hamburger SV | Albert Gronbaek | 100.0% | 100.0% | 1 |
+| bundesliga | RB Leipzig | David Raum | 100.0% | 100.0% | 4 |
+| bundesliga | SV 07 Elversberg | Felix Keidel | 100.0% | 100.0% | 3 |
+| bundesliga | Union Berlin | Josip Juranovic | 100.0% | 100.0% | 5 |
+| bundesliga | VfB Stuttgart | Maximilian Mittelstadt | 100.0% | 100.0% | 3 |
+| ligue-1 | Brest | Joris Chotard | 100.0% | 100.0% | 13 |
+| serie-a | Frosinone | Giacomo Calo | 100.0% | 100.0% | 8 |
+| serie-a | Roma | Paulo Dybala | 100.0% | 100.0% | 1 |
 
 ## Outputs
 
 - `/home/runner/work/il-margine/il-margine/data/assist-value/rotowire-setpiece-roles.csv`
 - `/home/runner/work/il-margine/il-margine/data/assist-value/rotowire-source-status.csv`
 - `/home/runner/work/il-margine/il-margine/data/assist-value/fpl-setpiece-roles.csv`
+- `/home/runner/work/il-margine/il-margine/data/assist-value/fpl-player-roster.csv`
+- `/home/runner/work/il-margine/il-margine/data/assist-value/fpl-source-status.json`
 - `/home/runner/work/il-margine/il-margine/data/assist-value/setpiecetakers-source-status.csv`
 - `/home/runner/work/il-margine/il-margine/data/assist-value/setpiece-source-audit.json`
 
