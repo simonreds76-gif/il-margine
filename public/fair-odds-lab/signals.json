@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-09-04T00:21:50.447362Z",
+  "generated_at": "2026-09-04T12:02:04.134839Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
@@ -34,26 +35,28 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 20,
+  "fixtures_evaluated": 41,
   "signals_qualifying": 5,
   "safety_exclusions": {
-    "market_odds_above_cap": 3,
-    "model_market_gap_gt_10pp": 8,
-    "model_probability_below_floor": 4,
-    "lineup_not_public_quality": 4
+    "market_odds_above_cap": 4,
+    "model_probability_below_floor": 7,
+    "model_market_gap_gt_10pp": 10,
+    "lineup_not_public_quality": 7,
+    "low_signal_confidence": 1
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 8,
+    "eligible_rows": 10,
     "added_by_league": {
       "bundesliga": 5,
-      "epl": 3
+      "epl": 4,
+      "ligue-1": 1
     },
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
   "leagues_covered": [
-    "bundesliga",
     "epl",
+    "la-liga",
     "serie-a"
   ],
   "featured_signal_id": "20260905-donyell-malen-6c84781f09",
@@ -85,8 +88,8 @@
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 61.2,
-        "fair_odds": 1.63
+        "scoring_chance_pct": 61.1,
+        "fair_odds": 1.64
       },
       "market_data": {
         "best_odds": 1.91,
@@ -94,7 +97,7 @@
         "implied_chance_pct": 52.4
       },
       "edge": {
-        "price_gap_pp": 8.9,
+        "price_gap_pp": 8.7,
         "model_advantage": true
       },
       "metrics": {
@@ -106,7 +109,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 88
+          "percentile": 92
         },
         "recent_team_form": {
           "tier": "Strong",
@@ -124,8 +127,8 @@
           "corners_against_avg": 4.0
         },
         "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 43
+          "tier": "Positive",
+          "percentile": 60
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -160,91 +163,91 @@
       "risk_flags": []
     },
     {
-      "id": "20260905-dominic-calvert-lewin-d4219ae050",
+      "id": "20260906-ante-budimir-e8c7e1bb28",
       "match": {
-        "home_team": "Brighton & Hove Albion",
-        "away_team": "Leeds United",
-        "league": "epl",
-        "league_display": "Premier League",
-        "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "2026-09-05T14:00:00Z",
-        "kickoff_display": "Sat 05 Sep 15:00 UK",
-        "fotmob_match_id": "5795437",
-        "fotmob_page_url": "/matches/leeds-united-vs-brighton-hove-albion/2vqp9d#5795437",
+        "home_team": "Deportivo Alaves",
+        "away_team": "CA Osasuna",
+        "league": "la-liga",
+        "league_display": "La Liga",
+        "league_logo_path": "/league-logos/la-liga.png",
+        "kickoff_utc": "2026-09-06T16:30:00Z",
+        "kickoff_display": "Sun 06 Sep 17:30 UK",
+        "fotmob_match_id": "5868041",
+        "fotmob_page_url": "/matches/osasuna-vs-deportivo-alaves/2r0nzh#5868041",
         "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
-        "name": "Dominic Calvert-Lewin",
-        "team": "Leeds",
+        "name": "Ante Budimir",
+        "team": "Osasuna",
         "position": "FW",
         "jersey_label": "",
-        "team_logo_path": "/team-logos/epl/leeds.png",
-        "team_primary_color": "#f8fafc",
-        "team_secondary_color": "#facc15",
+        "team_logo_path": "/team-logos/la-liga/osasuna.png",
+        "team_primary_color": "#dc2626",
+        "team_secondary_color": "#1e3a8a",
         "team_shirt_pattern": "solid"
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 40.5,
-        "fair_odds": 2.47
+        "scoring_chance_pct": 44.9,
+        "fair_odds": 2.23
       },
       "market_data": {
-        "best_odds": 3.1,
+        "best_odds": 2.75,
         "best_book": "Bet365",
-        "implied_chance_pct": 32.3
+        "implied_chance_pct": 36.4
       },
       "edge": {
-        "price_gap_pp": 8.2,
+        "price_gap_pp": 8.6,
         "model_advantage": true
       },
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 92
+          "percentile": 94
         },
-        "share_of_team_chances_pct": 31,
-        "share_of_team_chances_percentile": 98,
+        "share_of_team_chances_pct": 40,
+        "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 20
+          "percentile": 7
         },
         "recent_team_form": {
-          "tier": "Average",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-08-22",
-          "xg_for_avg": 1.43,
-          "xg_against_avg": 1.51,
-          "xgd_per90": -0.08,
-          "shots_for_avg": 12.0,
-          "shots_against_avg": 14.4,
-          "sot_for_avg": 3.8,
-          "sot_against_avg": 5.0,
-          "corners_for_avg": 4.0,
-          "corners_against_avg": 6.2
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 35
-        },
-        "opponent_recent_defence": {
           "tier": "Positive",
           "window": 5,
           "matches": 5,
-          "through_date": "2026-08-23",
-          "xg_for_avg": 2.21,
-          "xg_against_avg": 1.4,
-          "xgd_per90": 0.81,
-          "shots_for_avg": 16.0,
-          "shots_against_avg": 8.4,
+          "through_date": "2026-08-27",
+          "xg_for_avg": 1.5,
+          "xg_against_avg": 0.87,
+          "xgd_per90": 0.63,
+          "shots_for_avg": 16.6,
+          "shots_against_avg": 6.6,
+          "sot_for_avg": 6.0,
+          "sot_against_avg": 2.6,
+          "corners_for_avg": 6.6,
+          "corners_against_avg": 3.4
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 13
+        },
+        "opponent_recent_defence": {
+          "tier": "Low",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-08-20",
+          "xg_for_avg": 1.8,
+          "xg_against_avg": 0.71,
+          "xgd_per90": 1.09,
+          "shots_for_avg": 13.6,
+          "shots_against_avg": 9.0,
           "sot_for_avg": 5.2,
-          "sot_against_avg": 3.0,
+          "sot_against_avg": 2.4,
           "corners_for_avg": 6.0,
-          "corners_against_avg": 3.0
+          "corners_against_avg": 5.2
         },
         "fixture_boost_pct": -18,
-        "projected_minutes": 88,
+        "projected_minutes": 80,
         "penalty_role": "Primary",
         "role_adjustment_factor": 1.0,
         "role_adjustment_reason": "",
@@ -255,7 +258,7 @@
         "The model price is shorter than the bookmaker's best available price",
         "A large share of the team's chances runs through him",
         "Recent chance quality grades as strong",
-        "Opponent has been allowing chances recently",
+        "Recent team form supports the attacking case",
         "Primary penalty role adds a clear scoring route"
       ],
       "risk_flags": []
@@ -302,20 +305,20 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 89
+          "percentile": 90
         },
         "share_of_team_chances_pct": 24,
-        "share_of_team_chances_percentile": 96,
+        "share_of_team_chances_percentile": 97,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 66
+          "percentile": 70
         },
         "recent_team_form": {
           "tier": "Unknown"
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 61
+          "percentile": 70
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -389,13 +392,13 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 90
+          "percentile": 91
         },
         "share_of_team_chances_pct": 24,
         "share_of_team_chances_percentile": 97,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 80
+          "percentile": 83
         },
         "recent_team_form": {
           "tier": "Strong",
@@ -414,7 +417,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 38
+          "percentile": 54
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -448,90 +451,90 @@
       "risk_flags": []
     },
     {
-      "id": "20260905-marco-grull-07095660c8",
+      "id": "20260906-francisco-conceicao-e0d1bd9c8a",
       "match": {
-        "home_team": "Werder Bremen",
-        "away_team": "RB Leipzig",
-        "league": "bundesliga",
-        "league_display": "Bundesliga",
-        "league_logo_path": "/league-logos/bundesliga.png",
-        "kickoff_utc": "2026-09-05T13:30:00Z",
-        "kickoff_display": "Sat 05 Sep 14:30 UK",
-        "fotmob_match_id": "5881160",
-        "fotmob_page_url": "/matches/werder-bremen-vs-rb-leipzig/81p1es3#5881160",
+        "home_team": "Juventus Turin",
+        "away_team": "AC Milan",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "2026-09-06T18:45:00Z",
+        "kickoff_display": "Sun 06 Sep 19:45 UK",
+        "fotmob_match_id": "5749667",
+        "fotmob_page_url": "/matches/milan-vs-juventus/2tc0mu#5749667",
         "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
-        "name": "Marco Grull",
-        "team": "Werder Bremen",
+        "name": "Francisco Conceicao",
+        "team": "Juventus",
         "position": "AM",
         "jersey_label": "",
-        "team_logo_path": "/team-logos/bundesliga/werder-bremen.png",
-        "team_primary_color": "#16a34a",
-        "team_secondary_color": "#f8fafc",
-        "team_shirt_pattern": "solid"
+        "team_logo_path": "/team-logos/serie-a/juventus.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#111827",
+        "team_shirt_pattern": "vertical-stripes"
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 32.1,
-        "fair_odds": 3.11
+        "scoring_chance_pct": 34.0,
+        "fair_odds": 2.94
       },
       "market_data": {
-        "best_odds": 4.0,
+        "best_odds": 3.75,
         "best_book": "Bet365",
-        "implied_chance_pct": 25.0
+        "implied_chance_pct": 26.7
       },
       "edge": {
-        "price_gap_pp": 7.1,
+        "price_gap_pp": 7.4,
         "model_advantage": true
       },
       "metrics": {
         "recent_chance_quality": {
-          "tier": "Good",
-          "percentile": 69
+          "tier": "Strong",
+          "percentile": 92
         },
-        "share_of_team_chances_pct": 25,
-        "share_of_team_chances_percentile": 97,
+        "share_of_team_chances_pct": 21,
+        "share_of_team_chances_percentile": 96,
         "team_attacking_outlook": {
-          "tier": "Average",
-          "percentile": 43
+          "tier": "Strong",
+          "percentile": 86
         },
         "recent_team_form": {
-          "tier": "Quiet",
+          "tier": "Strong",
           "window": 5,
           "matches": 5,
-          "through_date": "2026-05-16",
-          "xg_for_avg": 0.94,
-          "xg_against_avg": 2.47,
-          "xgd_per90": -1.54,
-          "shots_for_avg": 12.4,
-          "shots_against_avg": 15.4,
-          "sot_for_avg": 4.4,
-          "sot_against_avg": 5.4,
-          "corners_for_avg": 4.8,
-          "corners_against_avg": 6.4
+          "through_date": "2026-08-23",
+          "xg_for_avg": 2.35,
+          "xg_against_avg": 0.53,
+          "xgd_per90": 1.82,
+          "shots_for_avg": 21.4,
+          "shots_against_avg": 9.6,
+          "sot_for_avg": 6.2,
+          "sot_against_avg": 3.4,
+          "corners_for_avg": 9.0,
+          "corners_against_avg": 2.6
         },
         "opponent_defensive_weakness": {
-          "tier": "Positive",
-          "percentile": 72
+          "tier": "Average",
+          "percentile": 46
         },
         "opponent_recent_defence": {
           "tier": "High",
           "window": 5,
           "matches": 5,
-          "through_date": "2026-05-16",
-          "xg_for_avg": 2.38,
-          "xg_against_avg": 2.14,
-          "xgd_per90": 0.24,
-          "shots_for_avg": 16.0,
-          "shots_against_avg": 12.4,
-          "sot_for_avg": 6.8,
+          "through_date": "2026-08-23",
+          "xg_for_avg": 1.53,
+          "xg_against_avg": 2.02,
+          "xgd_per90": -0.49,
+          "shots_for_avg": 14.0,
+          "shots_against_avg": 13.2,
+          "sot_for_avg": 4.6,
           "sot_against_avg": 4.4,
-          "corners_for_avg": 4.8,
-          "corners_against_avg": 4.2
+          "corners_for_avg": 3.6,
+          "corners_against_avg": 3.0
         },
-        "fixture_boost_pct": 3,
+        "fixture_boost_pct": -17,
         "projected_minutes": 78,
         "penalty_role": "Not on penalties",
         "role_adjustment_factor": 1.0,
@@ -541,7 +544,8 @@
       "confidence_tier": "Medium",
       "reasons": [
         "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Recent team form supports the attacking case",
         "Opponent has been allowing chances recently"
       ],
       "risk_flags": []
