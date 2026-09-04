@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0",
+  "audit_type": "specialist_source_scan",
+  "league": "Ligue 1",
+  "season": "2026/27",
+  "reviewed_at": "2026-09-04T12:00:00Z",
+  "source": {
+    "name": "MPGLaurent",
+    "account_url": "https://x.com/MPGLaurent",
+    "pinned_post_url": "https://x.com/MPGLaurent/status/2087980823379132618",
+    "current_season_guide_url": "https://www.fantasy-coach.fr/post/nos-conseils-mercato-ligue-1-dans-mon-petit-gazon-saison-2026-27",
+    "guide_published_at": "2026-08-13",
+    "guide_updated_at": "2026-08-19"
+  },
+  "scope": {
+    "clubs_in_guide": 18,
+    "clubs_reviewed": 18,
+    "timeline_review": "Current public profile, pinned guide and searchable current-season matchday material reviewed.",
+    "method": "Only explicit penalty-role claims were eligible to alter a hierarchy. Official transfers and direct same-pitch penalty events take precedence over earlier fantasy guidance."
+  },
+  "explicit_penalty_claims": [
+    {
+      "club": "Lyon",
+      "player": "Corentin Tolisso",
+      "claim": "Current penalty taker",
+      "decision": "ACCEPTED_CONFIRMATION",
+      "hierarchy_effect": "No reorder; confirms the existing primary.",
+      "reason": "The guide explicitly assigns Tolisso the role and a Ligue 1 match report independently records a converted Lyon penalty. The source does not order the backups.",
+      "supporting_sources": [
+        "https://www.fantasy-coach.fr/post/nos-conseils-mercato-ligue-1-dans-mon-petit-gazon-saison-2026-27",
+        "https://ligue1.com/en/articles/l1_article_4520-lyon-held-by-paris-fc-as-tolisso-penalty-salvages-late-draw"
+      ]
+    },
+    {
+      "club": "Brest",
+      "player": "Romain Del Castillo",
+      "claim": "Would continue taking Brest penalties",
+      "decision": "REJECTED_SUPERSEDED",
+      "hierarchy_effect": "No reorder; retain the post-transfer Ajorque-Lala-Doumbia hierarchy.",
+      "reason": "The 13 August guide predates Del Castillo's official 1 September transfer from Brest to Osasuna.",
+      "supporting_sources": [
+        "https://www.fantasy-coach.fr/post/nos-conseils-mercato-ligue-1-dans-mon-petit-gazon-saison-2026-27",
+        "https://www.osasuna.es/en/osasuna-signs-forward-romain-del-castillo"
+      ]
+    }
+  ],
+  "current_timeline_findings": [
+    {
+      "clubs": [
+        "Paris Saint-Germain",
+        "Lyon",
+        "Monaco"
+      ],
+      "finding": "Recent posts provide squad and availability context but no explicit permanent penalty-order assignment.",
+      "hierarchy_effect": "NONE"
+    }
+  ],
+  "summary": {
+    "hierarchy_changes": 0,
+    "hierarchy_confirmations": 1,
+    "superseded_claims": 1,
+    "availability_only_findings": 3,
+    "verdict": "Useful specialist source for current Ligue 1 availability and role context. It should supplement, not override, official moves and direct penalty evidence."
+  }
+}

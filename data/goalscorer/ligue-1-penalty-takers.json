@@ -28,7 +28,7 @@
     "last_verified": "2026-09-02",
     "public_updated_at": "2026-09-02",
     "membership_source": "https://ligue1.com/en/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",
-    "last_reviewed": "2026-09-01"
+    "last_reviewed": "2026-09-04"
   },
   "Angers": {
     "primary": "Amine El Ouazzani",
@@ -3281,16 +3281,16 @@
     },
     "condition_note": "Tolisso took both observed 2026 preseason penalties. Openda's confirmed arrival and 14/18 career record place him above Šulc's 7/10 as the practical specialist fallback. Neither backup has taken an OL penalty with Tolisso present. Conditions: The first penalty after Openda joins team training is a direct precedence test. If Openda is not a regular starter, Šulc becomes practical second choice.",
     "last_verified": {
-      "date": "2026-09-02",
+      "date": "2026-09-04",
       "by": "Il Margine",
-      "method": "current_squad_membership_audit"
+      "method": "current_roster_and_penalty_record_review"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-04",
     "latest_evidence": {
-      "id": "evt_20260901_lyon_current_review",
-      "date": "2026-09-01",
+      "id": "evt_20260904_lyon_mpglaurent_review",
+      "date": "2026-09-04",
       "type": "current_season_board_review",
-      "source_count": 4
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -3494,6 +3494,39 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+      },
+      {
+        "id": "evt_20260904_lyon_mpglaurent_review",
+        "date": "2026-09-04",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Tolisso independently confirmed as Lyon primary",
+        "context": "MPGLaurent's 2026/27 Ligue 1 guide explicitly identifies Corentin Tolisso as Lyon's penalty taker. A separate Ligue 1 match report records Tolisso converting Lyon's stoppage-time penalty against Paris FC. This confirms the filed primary but supplies no direct evidence for ordering Loïs Openda and Pavel Šulc behind him.",
+        "sources": [
+          {
+            "label": "MPGLaurent 2026/27 Ligue 1 guide",
+            "url": "https://www.fantasy-coach.fr/post/nos-conseils-mercato-ligue-1-dans-mon-petit-gazon-saison-2026-27",
+            "date": "2026-08-19",
+            "note": "The current-season all-club guide explicitly says Tolisso takes Lyon's penalties; the guide was published 13 August and last updated 19 August."
+          },
+          {
+            "label": "Ligue 1 Lyon vs Paris FC report",
+            "url": "https://ligue1.com/en/articles/l1_article_4520-lyon-held-by-paris-fc-as-tolisso-penalty-salvages-late-draw",
+            "date": "2026-03-08",
+            "note": "The league report records Tolisso converting Lyon's stoppage-time penalty against Paris FC."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-04T12:00:00Z"
+        },
+        "affects_hierarchy": false,
+        "editorial_note": "Tolisso remains first choice. MPGLaurent independently confirms the primary, but the source does not resolve the Openda-Šulc backup order."
       }
     ],
     "change_log": [
