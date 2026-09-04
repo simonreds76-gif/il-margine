@@ -1,7 +1,88 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-04T04:39:25Z",
+  "generated_at": "2026-09-04T13:37:23Z",
   "league": "ligue-1",
-  "row_count": 0,
-  "rows": []
+  "row_count": 5,
+  "rows": [
+    {
+      "team": "Le Mans",
+      "team_key": "le mans",
+      "player_name": "Louis Mafouta",
+      "player_key": "louis mafouta",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-08-30"
+    },
+    {
+      "team": "Lens",
+      "team_key": "lens",
+      "player_name": "Florian Thauvin",
+      "player_key": "florian thauvin",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-08-29"
+    },
+    {
+      "team": "Paris FC",
+      "team_key": "paris fc",
+      "player_name": "Lassine Sinayoko",
+      "player_key": "lassine sinayoko",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-08-30"
+    },
+    {
+      "team": "Rennes",
+      "team_key": "rennes",
+      "player_name": "Estéban Lepaul",
+      "player_key": "est ban lepaul",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-08-30"
+    },
+    {
+      "team": "Troyes",
+      "team_key": "troyes",
+      "player_name": "Renaud Ripart",
+      "player_key": "renaud ripart",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-08-29"
+    }
+  ]
 }
