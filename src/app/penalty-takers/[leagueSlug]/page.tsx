@@ -21,21 +21,7 @@ export const revalidate = 43200;
 
 type PageProps = { params: Promise<{ leagueSlug: string }> };
 
-const STATUS_LABELS: Record<ClubPenaltyTeam["hierarchyStatus"], string> = {
-  confirmed: "Confirmed",
-  probable: "Probable",
-  conditional: "Conditional",
-  disputed: "Disputed",
-  unknown: "Not verified",
-};
 
-const STATUS_STYLES: Record<ClubPenaltyTeam["hierarchyStatus"], string> = {
-  confirmed: "border-emerald-300/30 bg-emerald-400/12 text-emerald-100",
-  probable: "border-cyan-300/30 bg-cyan-400/10 text-cyan-100",
-  conditional: "border-amber-300/30 bg-amber-400/10 text-amber-100",
-  disputed: "border-rose-300/30 bg-rose-400/10 text-rose-100",
-  unknown: "border-slate-500/50 bg-slate-700/30 text-slate-200",
-};
 
 export function generateStaticParams() {
   return CLUB_LEAGUES.map((league) => ({ leagueSlug: league.key }));
@@ -105,7 +91,7 @@ function TeamCard({ team }: { team: ClubPenaltyTeam }) {
       id={cardId}
       tabIndex={-1}
       aria-labelledby={`${cardId}-title`}
-      className="group relative flex h-full scroll-mt-24 flex-col overflow-hidden rounded-3xl border border-slate-800/90 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.08),transparent_42%),#10151f] p-4 shadow-[0_18px_50px_rgba(0,0,0,0.28)] transition duration-300 target:border-emerald-400/60 target:ring-2 target:ring-emerald-400/20 hover:border-emerald-400/35 hover:shadow-[0_22px_58px_rgba(0,0,0,0.34)] focus:outline-none focus-visible:border-emerald-300 focus-visible:ring-2 focus-visible:ring-emerald-400/30 motion-safe:hover:-translate-y-0.5 sm:min-h-[17rem] sm:p-5"
+      className="group relative flex h-full scroll-mt-24 flex-col overflow-hidden rounded-3xl border border-slate-800/90 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.08),transparent_42%),#10151f] p-4 shadow-[0_18px_50px_rgba(0,0,0,0.28)] transition duration-300 target:border-emerald-400/60 target:ring-2 target:ring-emerald-400/20 hover:border-emerald-400/35 hover:shadow-[0_22px_58px_rgba(0,0,0,0.34)] focus:outline-none focus-visible:border-emerald-300 focus-visible:ring-2 focus-visible:ring-emerald-400/30 motion-safe:hover:-translate-y-0.5 sm:p-5"
     >
       <div className="pointer-events-none absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-emerald-300/70 to-transparent opacity-75" />
       <header className="flex items-start gap-3">
@@ -113,10 +99,6 @@ function TeamCard({ team }: { team: ClubPenaltyTeam }) {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h3 id={`${cardId}-title`} className="min-w-0 flex-1 text-base font-semibold text-slate-100 sm:text-lg">{team.team}</h3>
-            <span className={`rounded-full border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.15em] ${STATUS_STYLES[team.hierarchyStatus]}`}>
-              <span className="sr-only">Status: </span>
-              {STATUS_LABELS[team.hierarchyStatus]}
-            </span>
           </div>
         </div>
       </header>
@@ -125,7 +107,7 @@ function TeamCard({ team }: { team: ClubPenaltyTeam }) {
         <li className="flex min-w-0 items-center gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.07] px-3.5 py-3">
           <span aria-hidden="true" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-300 font-mono text-sm font-bold text-slate-950">1</span>
           <div className="min-w-0">
-            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-emerald-300/80">First choice</span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-emerald-300/80">First choice</span>
             <strong title={team.primary || "Open position"} className="mt-0.5 block break-words text-xl font-semibold leading-tight text-emerald-100 sm:text-2xl">
               {team.primary || "Open position"}
             </strong>

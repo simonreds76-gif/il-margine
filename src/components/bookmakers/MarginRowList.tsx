@@ -1,3 +1,4 @@
+import BookmakerMark from "@/components/bookmakers/BookmakerMark";
 import MarginScaleBar from "@/components/bookmakers/MarginScaleBar";
 import {
   MEANINGFUL_GAP_PP,
@@ -73,7 +74,7 @@ export default function MarginRowList({
                   <span className="w-7 shrink-0 font-mono text-[11px] tabular-nums text-slate-500">
                     {operator.tied ? "=" : ""}{operator.displayRank}
                   </span>
-                  <span className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-100">{operator.name}</span>
+                  <BookmakerMark name={operator.name} /><span className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-100">{operator.name}</span>
                   {cheapest && <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-emerald-200">Best</span>}
                   <span className="font-mono text-lg font-semibold tabular-nums text-cyan-100">{formatMargin(operator.normalized_hold_pct)}</span>
                 </span>

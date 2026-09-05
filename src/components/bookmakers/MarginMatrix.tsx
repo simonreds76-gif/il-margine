@@ -1,3 +1,4 @@
+import BookmakerMark from "@/components/bookmakers/BookmakerMark";
 import type { MarginSegment } from "@/lib/bookmakers/margin-index";
 import { deriveSegmentStats, formatMargin } from "@/components/bookmakers/segment-stats";
 
@@ -43,7 +44,7 @@ export default function MarginMatrix({ segments, sportLabel }: { segments: Margi
             <tbody className="divide-y divide-white/[0.05]">
               {operators.map((name) => (
                 <tr key={name}>
-                  <th scope="row" className="sticky left-0 z-10 whitespace-nowrap bg-[#090e14] px-3 py-2.5 text-left font-semibold text-slate-200">{name}</th>
+                  <th scope="row" className="sticky left-0 z-10 whitespace-nowrap bg-[#090e14] px-3 py-2.5 text-left font-semibold text-slate-200"><span className="flex items-center gap-2"><BookmakerMark name={name} />{name}</span></th>
                   {segments.map((segment) => {
                     const operator = segment.operators.find((item) => item.name === name);
                     const stats = statsByMarket.get(segment.market_family);

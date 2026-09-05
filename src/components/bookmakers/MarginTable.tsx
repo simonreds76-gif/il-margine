@@ -1,3 +1,4 @@
+import BookmakerMark from "@/components/bookmakers/BookmakerMark";
 import { Fragment } from "react";
 import MarginScaleBar from "@/components/bookmakers/MarginScaleBar";
 import {
@@ -106,7 +107,7 @@ export default function MarginTable({
                       onClick={() => onToggleExpanded(operator.name)}
                       className="flex min-h-9 w-full items-center gap-2 rounded-md text-left font-semibold text-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/70"
                     >
-                      <span className="truncate">{operator.name}</span>
+                      <BookmakerMark name={operator.name} /><span className="truncate">{operator.name}</span>
                       {cheapest && (
                         <span className="rounded-full border border-emerald-300/25 bg-emerald-300/10 px-2 py-0.5 text-[9px] uppercase tracking-[0.13em] text-emerald-200">
                           Cheapest

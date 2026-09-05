@@ -1,5 +1,7 @@
 "use client";
 
+import BookmakerMark from "@/components/bookmakers/BookmakerMark";
+
 import { useEffect, useMemo, useState, type KeyboardEvent } from "react";
 import MarginBenchmarkStrip from "@/components/bookmakers/MarginBenchmarkStrip";
 import MarginMatrix from "@/components/bookmakers/MarginMatrix";
@@ -363,6 +365,15 @@ export default function MarginExplorer({ generatedAt, segments, notMeasured, cov
       <div className="relative px-4 py-5 sm:px-7">
         {activeSegment && <MarginPanel key={`${activeSegment.sport_slug}-${activeSegment.market_family}`} segment={activeSegment} />}
         <MarginMatrix segments={currentSegments} sportLabel={SPORT_LABELS[selectedSport]} />
+        <details className="mt-5 rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+          <summary className="min-h-8 cursor-pointer text-sm font-semibold text-slate-200">Bookmaker coverage · {coverage?.target_operators ?? 22} listed</summary>
+          <p className="mt-2 text-xs leading-5 text-slate-400">Coverage belongs to this capture. Missing prices are never carried forward from an older snapshot.</p>
+          <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {Array.from(new Set([...(coverage?.payload_operator_names ?? []), ...(coverage?.not_discovered ?? [])])).sort().map((name) => <li key={name} className="flex items-center gap-3 rounded-xl border border-white/[0.07] p-3">
+              <BookmakerMark name={name} /><span className="min-w-0"><span className="block text-sm font-medium text-slate-100">{name}</span><span className="block text-xs text-slate-400">{coverage?.not_discovered?.includes(name) ? "No prices returned" : "Prices captured"}</span></span>
+            </li>)}
+          </ul>
+        </details>
 
         <details className="mt-5 rounded-2xl border border-dashed border-white/10 bg-white/[0.02] p-4">
           <summary className="cursor-pointer text-xs font-semibold text-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/70">
