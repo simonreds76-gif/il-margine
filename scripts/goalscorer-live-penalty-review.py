@@ -17,6 +17,7 @@ import glob
 import json
 import re
 import runpy
+import unicodedata
 from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -104,16 +105,17 @@ FIELDNAMES = [
     "active_taker_pre_match",
     "active_slot_pre_match",
     "team_lineup_status",
-    "actual_taker_match_status",
-    "primary_on_pitch_at_penalty",
-    "secondary_on_pitch_at_penalty",
-    "tertiary_on_pitch_at_penalty",
-    "actual_taker_on_pitch_at_penalty",
     "review_type",
     "review_priority",
     "editorial_note",
     "context_generated_at",
     "context_source_path",
+    "actual_taker_match_status",
+    "primary_on_pitch_at_penalty",
+    "secondary_on_pitch_at_penalty",
+    "tertiary_on_pitch_at_penalty",
+    "actual_taker_on_pitch_at_penalty",
+    "event_evidence",
 ]
 
 
@@ -190,7 +192,72 @@ def _fetch_match_payload(match_id: int) -> dict:
     page_url = str(match_payload.get("pageUrl") or "").strip()
     if not page_url:
         raise ValueError(f"Missing pageUrl for match {match_id}")
-    return _extract_next_payload(_fetch_text(f"https://www.fotmob.com{page_url}"))
+    payload = _extract_next_payload(_fetch_text(f"https://www.fotmob.com{page_url}"))
+    payload["_source_url"] = f"https://www.fotmob.com{page_url}"
+    return payload
+
+
+def _event_name(value: object) -> str:
+    value = unicodedata.normalize("NFKD", str(value or ""))
+    return re.sub(r"[^a-z0-9]+", " ", "".join(c for c in value if not unicodedata.combining(c)).lower()).strip()
+
+
+def _on_pitch_at(team_lineup: dict, player_name: str, minute: int) -> tuple[bool | None, dict]:
+    """Use completed-match lineup timelines, never a predicted starting XI.
+
+    Exact same-minute substitutions/dismissals have unknown ordering. Missing
+    timelines and unknown event shapes remain unknown rather than implying that
+    the player completed the match.
+    """
+    team_lineup = team_lineup if isinstance(team_lineup, dict) else {}
+    starters = team_lineup.get("starters")
+    proof = {"player": player_name, "minute": minute, "method": "completed_lineup_timeline"}
+    if not isinstance(starters, list) or len(starters) != 11 or minute <= 0:
+        return None, dict(proof, reason="missing_complete_starting_lineup_or_minute")
+    found = [(bucket, player) for bucket in ("starters", "subs", "unavailable") for player in team_lineup.get(bucket, []) or []
+             if isinstance(player, dict) and _event_name(player.get("name")) == _event_name(player_name)]
+    if len(found) != 1:
+        return None, dict(proof, reason="missing_or_ambiguous_player")
+    bucket, player = found[0]
+    if not player.get("id"):
+        return None, dict(proof, reason="missing_player_identifier")
+    performance = player.get("performance") or {}
+    substitutions, events = performance.get("substitutionEvents"), performance.get("events")
+    proof.update(player_id=player.get("id"), bucket=bucket, substitutions=substitutions, events=events)
+    if not isinstance(substitutions, list) or not isinstance(events, list):
+        return None, dict(proof, reason="missing_explicit_player_timeline")
+    start, end = (0 if bucket == "starters" else None), None
+    seen_sub_types = set()
+    for event in substitutions:
+        try:
+            when = int(event["time"])
+        except (ValueError, TypeError, KeyError):
+            return None, dict(proof, reason="invalid_substitution_time")
+        kind = str(event.get("type") or "").lower()
+        if when <= 0 or when == minute or kind not in {"subin", "subout"} or kind in seen_sub_types:
+            return None, dict(proof, reason="ambiguous_substitution_order")
+        seen_sub_types.add(kind)
+        if kind == "subin":
+            start = when
+        else:
+            end = when
+    for event in events:
+        if not isinstance(event, dict):
+            return None, dict(proof, reason="unknown_player_event_shape")
+        kind = str(event.get("type") or "").lower()
+        dismissal = "red" in kind or kind in {"secondyellow", "secondyellowcard", "yellowred"}
+        if not dismissal and kind not in {"goal", "penaltygoal", "owngoal", "yellowcard", "assist", "penaltymiss", "missedpenalty"}:
+            return None, dict(proof, reason="unknown_player_event_type")
+        if dismissal:
+            try:
+                when = int(event["time"])
+            except (ValueError, TypeError, KeyError):
+                return None, dict(proof, reason="unknown_dismissal_time")
+            if when <= 0 or when == minute:
+                return None, dict(proof, reason="ambiguous_dismissal_order")
+            end = min(end, when) if end is not None else when
+    present = start is not None and start < minute and (end is None or minute < end)
+    return present, dict(proof, reason="on_pitch" if present else "not_on_pitch")
 
 
 def _expand_context_paths(paths: Iterable[Path]) -> List[Path]:
@@ -343,56 +410,11 @@ def _summarise_event_type(types: Iterable[str]) -> str:
     return " / ".join(distinct)
 
 
-def _substitution_minute(player: dict, event_type: str) -> int | None:
-    performance = player.get("performance") if isinstance(player.get("performance"), dict) else {}
-    events = performance.get("substitutionEvents") or []
-    for event in events:
-        if str(event.get("type") or "").strip().lower() == event_type.lower():
-            try:
-                return int(event.get("time"))
-            except (TypeError, ValueError):
-                return None
-    return None
-
-
-def _player_at_penalty_status(lineup_side: dict, player_name: str, minute: int, best_name_match) -> str:
-    if not player_name:
-        return "-"
-    if not lineup_side:
-        return "Unknown - lineup unavailable"
-
-    for bucket in ("starters", "subs", "unavailable"):
-        players = lineup_side.get(bucket) or []
-        names = [str(player.get("name") or "").strip() for player in players]
-        matched_name = best_name_match(player_name, names)
-        if not matched_name:
-            continue
-        player = next(item for item in players if str(item.get("name") or "").strip() == matched_name)
-        if bucket == "starters":
-            sub_out = _substitution_minute(player, "subOut")
-            if sub_out is not None and sub_out <= minute:
-                return f"No - starter, off {sub_out}'"
-            return "Yes - starter"
-        if bucket == "subs":
-            sub_in = _substitution_minute(player, "subIn")
-            if sub_in is None:
-                return "No - unused bench"
-            if sub_in <= minute:
-                return f"Yes - bench, on {sub_in}'"
-            return f"No - bench, on {sub_in}'"
-
-        reason = str(
-            player.get("unavailableReason")
-            or player.get("reason")
-            or (player.get("injury") or {}).get("description")
-            or "unavailable"
-        ).strip()
-        return f"No - {reason}"
-
-    return "No - not in match squad"
-
-
-def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List[dict]:
+def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str], diagnostics: dict | None = None) -> List[dict]:
+    diagnostics = diagnostics if diagnostics is not None else {}
+    fotmob_dates = list(fotmob_dates)
+    diagnostics.update(complete=True, errors=[], dates_requested=fotmob_dates, matches_checked=0)
+    observed_at = datetime.now(ZoneInfo("UTC")).replace(microsecond=0).isoformat()
     config = LEAGUE_CONFIGS[league_key]
     model_mod = runpy.run_path(str(ROOT / "scripts" / "goalscorer-model.py"), run_name="goalscorer_model")
     team_key_func = model_mod["_team_key"]
@@ -410,10 +432,10 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
         run_name="goalscorer_penalty_utils",
     )
     penalty_role_for_player = penalty_utils["penalty_role_for_player"]
-    best_name_match = penalty_utils["best_name_match"]
 
     context_map = _load_context_map([config["context"], config["context_history"]])
     hierarchy_map = _load_hierarchy_map(config["hierarchy"], team_key_func)
+    season = _load_json(config["hierarchy"]).get("_meta", {}).get("season", {}).get("label", "")
 
     grouped_events: Dict[tuple[str, str, str, str], List[dict]] = defaultdict(list)
     distinct_takers_by_team_match: Dict[tuple[str, str, str], set[str]] = defaultdict(set)
@@ -447,16 +469,20 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
             try:
                 match_payload = _fetch_match_payload(match_id)
             except Exception as exc:
+                diagnostics["complete"] = False
+                diagnostics["errors"].append({"match_id": match_id, "reason": "match_detail_fetch_failed"})
                 print(f"WARNING: failed to fetch FotMob match {match_id}: {exc}")
                 continue
+            diagnostics["matches_checked"] += 1
 
             page_props = match_payload.get("props", {}).get("pageProps", {})
             general = page_props.get("general", {}) or {}
             content = page_props.get("content", {}) or {}
             shotmap = content.get("shotmap", {}) or {}
-            lineup = content.get("lineup", {}) or {}
-            shots = shotmap.get("shots", [])
+            shots = shotmap.get("shots")
             if not isinstance(shots, list):
+                diagnostics["complete"] = False
+                diagnostics["errors"].append({"match_id": match_id, "reason": "missing_shotmap"})
                 shots = []
 
             home_team = str(
@@ -489,12 +515,10 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
                     team_name = home_team
                     opponent_name = away_team
                     is_home = True
-                    lineup_side = lineup.get("homeTeam", {}) or {}
                 elif team_id == away_id:
                     team_name = away_team
                     opponent_name = home_team
                     is_home = False
-                    lineup_side = lineup.get("awayTeam", {}) or {}
                 else:
                     continue
 
@@ -514,6 +538,21 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
                 taker_key = (match_date, team_key, opponent_key, player_name)
 
                 distinct_takers_by_team_match[team_match_key].add(player_name)
+                proof_context = _apply_hierarchy_fallback(dict(context_map.get((match_date, team_key, opponent_key)) or {}), hierarchy_map.get(team_key))
+                primary = str(proof_context.get("primary") or "")
+                lineup = content.get("lineup")
+                team_lineup = (lineup if isinstance(lineup, dict) else {}).get("homeTeam" if is_home else "awayTeam") or {}
+                on_pitch, proof = _on_pitch_at(team_lineup, primary, minute)
+                finished = status.get("finished") is True
+                event_id = shot.get("id")
+                identity = str(event_id) if event_id is not None else f"missing|{minute}|{player_name}"
+                evidence = {"id": f"fotmob|{league_key}|{match_id}|{identity}",
+                            "source_event_id": str(event_id) if event_id is not None else "", "match_id": str(match_id),
+                            "source_url": match_payload.get("_source_url", ""), "observed_at": observed_at,
+                            "event_date": match_date, "season": season, "team": team_name, "taker": player_name,
+                            "primary": primary, "primary_on_pitch": on_pitch if finished else None, "on_pitch_proof": proof,
+                            "minute": minute, "penalty_kind": "in_match", "competitive": True, "finished": finished,
+                            "match": f"{home_team} vs {away_team}", "event_result": event_result}
                 grouped_events[taker_key].append(
                     {
                         "date": match_date,
@@ -528,7 +567,9 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
                         "event_type": event_type,
                         "event_result": event_result,
                         "penalties_scored": scored_flag,
-                        "lineup_side": lineup_side,
+                        "lineup_side": team_lineup,
+                        "finished": finished,
+                        "evidence": evidence,
                     }
                 )
 
@@ -562,11 +603,15 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
         minute_label = ", ".join(str(event["minute"]) for event in sorted(events, key=lambda item: item["minute"]) if event["minute"])
         distinct_takers = len(distinct_takers_by_team_match[(match_date, team_key, opponent_key)])
         penalty_minute = min((int(event.get("minute") or 0) for event in events), default=0)
-        lineup_side = sample.get("lineup_side") if isinstance(sample.get("lineup_side"), dict) else {}
-        primary_pitch = _player_at_penalty_status(lineup_side, hierarchy["primary"], penalty_minute, best_name_match)
-        secondary_pitch = _player_at_penalty_status(lineup_side, hierarchy["secondary"], penalty_minute, best_name_match)
-        tertiary_pitch = _player_at_penalty_status(lineup_side, hierarchy["tertiary"], penalty_minute, best_name_match)
-        actual_pitch = _player_at_penalty_status(lineup_side, player_name, penalty_minute, best_name_match)
+        lineup_side = sample.get("lineup_side") or {}
+        def pitch_status(name):
+            present, _ = _on_pitch_at(lineup_side, name, penalty_minute)
+            if not sample.get("finished") or present is None:
+                return "Unknown - event-time evidence unavailable"
+            return "Yes - event-time timeline" if present else "No - event-time timeline"
+        primary_pitch, secondary_pitch, tertiary_pitch = (pitch_status(hierarchy[k]) for k in ("primary", "secondary", "tertiary"))
+        actual_pitch = pitch_status(player_name)
+
         review_type = classify_review_type(
             context=context,
             actual_role=actual_role,
@@ -597,12 +642,7 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
                 "tertiary_lineup_status": context.get("tertiary_lineup_status", ""),
                 "active_taker_pre_match": context.get("active_taker_pre_match", ""),
                 "active_slot_pre_match": context.get("active_slot_pre_match", ""),
-                "team_lineup_status": "confirmed" if lineup_side else context.get("team_lineup_status", ""),
-                "actual_taker_match_status": actual_pitch,
-                "primary_on_pitch_at_penalty": primary_pitch,
-                "secondary_on_pitch_at_penalty": secondary_pitch,
-                "tertiary_on_pitch_at_penalty": tertiary_pitch,
-                "actual_taker_on_pitch_at_penalty": actual_pitch,
+                "team_lineup_status": context.get("team_lineup_status", ""),
                 "review_type": review_type,
                 "review_priority": review_priority(review_type),
                 "editorial_note": build_editorial_note(
@@ -616,6 +656,12 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
                 ),
                 "context_generated_at": context.get("_generated_at", ""),
                 "context_source_path": context.get("_source_path", ""),
+                "actual_taker_match_status": actual_pitch,
+                "primary_on_pitch_at_penalty": primary_pitch,
+                "secondary_on_pitch_at_penalty": secondary_pitch,
+                "tertiary_on_pitch_at_penalty": tertiary_pitch,
+                "actual_taker_on_pitch_at_penalty": actual_pitch,
+                "event_evidence": [event["evidence"] for event in events],
             }
         )
 
@@ -642,7 +688,8 @@ def main() -> None:
     args = parser.parse_args()
 
     config = LEAGUE_CONFIGS[args.league]
-    rows = build_live_review_rows(args.league, _fotmob_date_window(args.date, args.days_back))
+    diagnostics: dict = {}
+    rows = build_live_review_rows(args.league, _fotmob_date_window(args.date, args.days_back), diagnostics)
     output_csv = Path(args.output) if args.output else config["output_csv"]
     output_json = Path(args.json_output) if args.json_output else config["output_json"]
     _write_csv(output_csv, rows)
@@ -654,6 +701,7 @@ def main() -> None:
             "league": args.league,
             "row_count": len(rows),
             "rows": rows,
+            "source_health": diagnostics,
         },
     )
 

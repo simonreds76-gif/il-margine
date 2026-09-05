@@ -5,6 +5,7 @@ import { readPenaltyReviewState } from "@/lib/goalscorer-penalty-review-state";
 import { type GoalscorerMonitorSnapshot, readGoalscorerMonitorSnapshot } from "@/lib/goalscorer-monitor-snapshot";
 
 import { PenaltyReviewActions, type PenaltyReviewStatus } from "./PenaltyReviewActions";
+import { PenaltyHierarchyControls } from "./PenaltyHierarchyControls";
 import {
   EmptyState,
   HeroCard,
@@ -1045,6 +1046,7 @@ export default async function GoalscorerMonitorPage() {
 
         {/* -- Penalty Watchlist ----------------------------------------------- */}
         <div id="penalty-watchlist" className="scroll-mt-24">
+          <div className="mb-5"><PenaltyHierarchyControls /></div>
           <SectionCard
             title={`Penalty Watchlist${activePenaltyRows.length ? ` | ${activePenaltyRows.length} active` : ""}`}
             subtitle="Conditional and disputed clubs are prioritised. Ticket actions never edit the public hierarchy automatically."

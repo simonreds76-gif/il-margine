@@ -20,6 +20,36 @@ PENALTY_REVIEW = runpy.run_path(
 
 
 class GoalscorerLivePenaltyReviewTests(unittest.TestCase):
+    def lineup(self, substitutions=None, events=None):
+        primary = {"id": 1, "name": "First Player", "performance": {"substitutionEvents": substitutions or [], "events": events or []}}
+        return {"starters": [primary] + [{"id": i, "name": f"Other {i}"} for i in range(2, 12)], "subs": [], "unavailable": []}
+
+    def test_actual_lineup_timeline_proves_on_pitch_before_substitution(self):
+        lineup = self.lineup([{"type": "subOut", "time": 70}])
+        self.assertIs(MODULE._on_pitch_at(lineup, "First Player", 60)[0], True)
+        self.assertIs(MODULE._on_pitch_at(lineup, "First Player", 80)[0], False)
+        self.assertIsNone(MODULE._on_pitch_at(lineup, "First Player", 70)[0])
+
+    def test_predicted_starter_or_missing_timeline_never_proves_availability(self):
+        self.assertIsNone(MODULE._on_pitch_at({"primary_lineup_status": "confirmed_starter"}, "First Player", 30)[0])
+        lineup = self.lineup()
+        del lineup["starters"][0]["performance"]["substitutionEvents"]
+        self.assertIsNone(MODULE._on_pitch_at(lineup, "First Player", 30)[0])
+
+    def test_red_card_and_ambiguous_dismissal_order_are_respected(self):
+        lineup = self.lineup(events=[{"type": "redCard", "time": 40}])
+        self.assertIs(MODULE._on_pitch_at(lineup, "First Player", 35)[0], True)
+        self.assertIs(MODULE._on_pitch_at(lineup, "First Player", 50)[0], False)
+        self.assertIsNone(MODULE._on_pitch_at(lineup, "First Player", 40)[0])
+
+    def test_exact_player_identity_is_required(self):
+        self.assertIsNone(MODULE._on_pitch_at(self.lineup(), "Player", 30)[0])
+        self.assertIs(MODULE._on_pitch_at(self.lineup(), "First Player", 30)[0], True)
+
+    def test_unknown_event_type_does_not_silently_ignore_possible_dismissal(self):
+        lineup = self.lineup(events=[{"type": "card", "cardType": "red", "time": 20}])
+        self.assertIsNone(MODULE._on_pitch_at(lineup, "First Player", 30)[0])
+
     def test_hierarchy_file_supplies_fallback_roles(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "hierarchy.json"
@@ -79,27 +109,6 @@ class GoalscorerLivePenaltyReviewTests(unittest.TestCase):
             ),
             "primary_held",
         )
-
-    def test_pitch_status_distinguishes_starter_sub_and_unavailable(self):
-        lineup = {
-            "starters": [
-                {"name": "Starter", "performance": {"substitutionEvents": [{"type": "subOut", "time": 70}]}}
-            ],
-            "subs": [
-                {"name": "Early Sub", "performance": {"substitutionEvents": [{"type": "subIn", "time": 53}]}},
-                {"name": "Late Sub", "performance": {"substitutionEvents": [{"type": "subIn", "time": 87}]}},
-            ],
-            "unavailable": [{"name": "Suspended Player", "reason": "suspended"}],
-        }
-        best_match = PENALTY_REVIEW["best_name_match"] if "best_name_match" in PENALTY_REVIEW else None
-        if best_match is None:
-            utils = runpy.run_path(str(Path(__file__).resolve().parents[1] / "goalscorer_penalty_utils.py"))
-            best_match = utils["best_name_match"]
-
-        self.assertEqual(MODULE._player_at_penalty_status(lineup, "Starter", 57, best_match), "Yes - starter")
-        self.assertEqual(MODULE._player_at_penalty_status(lineup, "Early Sub", 57, best_match), "Yes - bench, on 53'")
-        self.assertEqual(MODULE._player_at_penalty_status(lineup, "Late Sub", 57, best_match), "No - bench, on 87'")
-        self.assertEqual(MODULE._player_at_penalty_status(lineup, "Suspended Player", 57, best_match), "No - suspended")
 
 
 if __name__ == "__main__":
