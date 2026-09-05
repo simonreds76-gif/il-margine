@@ -3,21 +3,15 @@ name: Bookmaker Margin Snapshot
 on:
   workflow_dispatch:
     inputs:
-      sports:
-        description: Comma-separated sports to capture
+      capture_zlib_base64:
+        description: Compressed public Oddschecker browser export (4–8 upcoming events)
         required: true
-        default: football,tennis
         type: string
-      days_ahead:
-        description: Upcoming fixture window
+      publish:
+        description: Publish the validated snapshot and retain its raw evidence
         required: true
-        default: "4"
-        type: string
-      max_events:
-        description: Maximum events per sport
-        required: true
-        default: "10"
-        type: string
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -29,116 +23,52 @@ concurrency:
 jobs:
   snapshot:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
         with:
+          path: capture-tools
+      - uses: actions/checkout@v5
+        with:
           ref: golden-with-speed-insights
-          token: ${{ github.token }}
+          path: site
           fetch-depth: 1
-
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.11"
-
-      - name: Install capture dependency
+          python-version: '3.11'
+      - name: Install parser dependency
         run: pip install requests
-
-      - name: Capture one-off snapshot
+      - name: Test capture integrity checks
+        run: python capture-tools/scripts/test_bookmaker_browser_import.py
+      - name: Validate and build browser snapshot
         env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-        run: |
-          test -n "${ODDS_API_KEY:-}" || { echo "::error::ODDS_API_KEY is missing"; exit 1; }
-          python scripts/bookmaker-margin-index.py \
-            --sports '${{ inputs.sports }}' \
-            --days-ahead '${{ inputs.days_ahead }}' \
-            --max-events '${{ inputs.max_events }}' \
-            --max-requests 1 \
-            --select-target-bookmakers \
-            --output "$RUNNER_TEMP/margin-index.json"
-
-      - name: Summarize candidate coverage
+          CAPTURE_ZLIB_BASE64: ${{ inputs.capture_zlib_base64 }}
+        run: python capture-tools/scripts/bookmaker-browser-import.py --repository site --output-dir "$RUNNER_TEMP/bookmaker-candidate"
+      - uses: actions/upload-artifact@v4
         if: always()
-        run: |
-          test -f "$RUNNER_TEMP/margin-index.json" || { echo "No candidate snapshot was produced."; exit 0; }
-          python - "$RUNNER_TEMP/margin-index.json" <<'PY'
-          import json
-          import sys
-
-          payload = json.load(open(sys.argv[1], encoding="utf-8"))
-          summary = payload.get("summary") or {}
-          coverage = payload.get("coverage") or {}
-          print(
-              "Candidate: "
-              f"{payload.get('status')} | sports={','.join(summary.get('sports') or []) or '-'} "
-              f"| diagnostic_operators={summary.get('diagnostic_operators', 0)} "
-              f"| observations={summary.get('observations', 0)} "
-              f"| returned_books={coverage.get('payload_operators', 0)}/{coverage.get('target_operators', 0)}"
-          )
-          for row in payload.get("segments") or []:
-              print(
-                  f"- {row.get('sport')} / {row.get('market_family')}: "
-                  f"{row.get('status')} | operators={len(row.get('operators') or [])} "
-                  f"| events={row.get('events', 0)} | observations={row.get('observations', 0)}"
-              )
-          PY
-
-      - name: Upload candidate artifact
-        if: always()
-        uses: actions/upload-artifact@v4
         with:
           name: bookmaker-margin-candidate
-          path: ${{ runner.temp }}/margin-index.json
-          if-no-files-found: ignore
-
-      - name: Validate one-off snapshot
+          path: ${{ runner.temp }}/bookmaker-candidate/
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Publish validated snapshot
+        if: inputs.publish
+        working-directory: site
         run: |
-          python - "$RUNNER_TEMP/margin-index.json" <<'PY'
-          import json
-          import sys
-
-          path = sys.argv[1]
-          payload = json.load(open(path, encoding="utf-8"))
-          if payload.get("status") not in {"PASS", "PASS_LIMITED"}:
-              raise SystemExit(f"Snapshot failed publish gate: {payload.get('status')}")
-          sports = set((payload.get("summary") or {}).get("sports") or [])
-          if not {"Football", "Tennis"}.issubset(sports):
-              raise SystemExit(f"Snapshot missing required sports: {sorted(sports)}")
-          coverage = payload.get("coverage") or {}
-          returned = int(coverage.get("payload_operators") or 0)
-          target = int(coverage.get("target_operators") or 0)
-          if returned < 10:
-              raise SystemExit(
-                  f"Snapshot coverage too narrow: only {returned}/{target} target sportsbooks returned prices"
-              )
-          passing = [
-              row for row in payload.get("segments") or []
-              if row.get("status") in {"PASS", "PASS_LIMITED"}
-          ]
-          if not any(row.get("sport") == "Football" for row in passing):
-              raise SystemExit("Snapshot has no publishable football market segment")
-          if not any(row.get("sport") == "Tennis" for row in passing):
-              raise SystemExit("Snapshot has no publishable tennis market segment")
-          print(f"Verified {len(passing)} sport/market segments")
+          python - "$RUNNER_TEMP/bookmaker-candidate" <<'PY'
+          import json, pathlib, shutil, sys
+          candidate = pathlib.Path(sys.argv[1])
+          data = json.loads((candidate / 'margin-index.json').read_text())
+          stamp = data['generated_at'].replace(':', '').replace('-', '').replace('.', '')
+          archive = pathlib.Path('data/bookmakers/captures') / stamp
+          archive.mkdir(parents=True, exist_ok=True)
+          shutil.copy2(candidate / 'oddschecker-capture.json', archive / 'oddschecker.json')
+          shutil.copy2(candidate / 'margin-index.json', archive / 'margin-index.json')
+          shutil.copy2(candidate / 'margin-index.json', 'data/bookmakers/margin-index.json')
           PY
-
-      - name: Stage validated snapshot
-        run: |
-          cp "$RUNNER_TEMP/margin-index.json" data/bookmakers/margin-index.json
-
-      - name: Upload snapshot artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: bookmaker-margin-validated-snapshot
-          path: data/bookmakers/margin-index.json
-
-      - name: Publish dated snapshot
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f data/bookmakers/margin-index.json
-          if git diff --cached --quiet; then
-            echo "Snapshot is unchanged."
-            exit 0
-          fi
-          git commit -m "data: publish bookmaker margin snapshot"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/bookmakers/margin-index.json data/bookmakers/captures
+          git diff --cached --quiet && exit 0
+          git commit -m 'data: refresh verified Oddschecker bookmaker snapshot'
           bash scripts/ci-safe-push.sh golden-with-speed-insights
