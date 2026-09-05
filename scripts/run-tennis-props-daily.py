@@ -322,6 +322,12 @@ def run_shadow_tracking(as_of: str) -> None:
             fatal=False,
         )
     comparison = PROPS_DIR / f"comparison-{as_of}.csv"
+    run(
+        [sys.executable, str(ROOT / "scripts/tennis-props-rate-trend-prospective.py"),
+         "--comparison", str(comparison)],
+        "Freeze and settle paired rate-trend prospective research",
+        fatal=False, timeout_seconds=300,
+    )
     if has_market_rows(comparison):
         run(
             [

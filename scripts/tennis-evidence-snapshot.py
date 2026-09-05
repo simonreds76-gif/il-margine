@@ -114,6 +114,7 @@ def build_snapshot() -> dict[str, Any]:
         # local evidence instead of reconstructing them on GitHub.
         "tennis_model_evidence": tennis_model_evidence,
         "tennis_props_v3": module.tennis_props_v3_snapshot(),
+        "tennis_rate_trend": module.rate_trend_summary(),
         "tennis_props_v4": module.load_json(module.TENNIS_PROPS_V4_JSON),
         "tennis_venue_ace_factor_v1": module.venue_ace_factor_v1_summary(),
         "tennis_most_aces_forecast": module.load_json(module.TENNIS_MOST_ACES_FORECAST_JSON),

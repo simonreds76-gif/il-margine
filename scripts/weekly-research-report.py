@@ -1368,6 +1368,27 @@ def weighted_last90_delta(promotion: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def rate_trend_summary() -> dict[str, Any]:
+    result = load_json(ROOT / "data/tennis-props/shadow/rate-trend-v1/report.json")
+    if not result:
+        return {"status": "SOURCE_MISSING", "markets": {}}
+    result["freshness"] = evidence_freshness(str(result.get("generated_at") or ""), stale_after_days=2)
+    return result
+
+
+def rate_trend_text(payload: dict[str, Any]) -> str:
+    result = payload.get("tennis_rate_trend") or {}
+    if not result.get("markets"):
+        return "New aces/DF rate-trend: evidence snapshot missing; no performance claim."
+    parts = []
+    for market, item in result["markets"].items():
+        parts.append(f"{market}: {item.get('settled', 0)}/{item.get('registered', 0)} settled, "
+                     f"{item.get('pending', 0)} pending, {item.get('independent_fixtures', 0)}/200 fixtures")
+    freshness = evidence_freshness(str(result.get("generated_at") or ""), stale_after_days=2)
+    return ("New rate-trend SHADOW ONLY | " + " | ".join(parts)
+            + f" | data {freshness.get('status', 'UNKNOWN')}; 8 weeks/4 tournaments minimum, manual review before promotion.")
+
+
 def build_payload() -> dict[str, Any]:
     state = load_json(OUT_DIR / "research-lane-state.json")
     team_allowed = load_json(OUT_DIR / "team-shots-v3-ema20-allowed-leagues.json")
@@ -1388,6 +1409,7 @@ def build_payload() -> dict[str, Any]:
     tennis_gap_guard = ml_gap_guard_summary()
     tennis_model_evidence = tennis_model_evidence_summary()
     tennis_props_v3 = tennis_props_v3_snapshot()
+    tennis_rate_trend = rate_trend_summary()
     tennis_props_v4 = load_json(TENNIS_PROPS_V4_JSON)
     tennis_breaks_v1 = load_json(TENNIS_BREAKS_V1_GATE)
     tennis_venue_ace_v1 = venue_ace_factor_v1_summary()
@@ -1407,6 +1429,7 @@ def build_payload() -> dict[str, Any]:
         for key in ("lanes", "lane_source", "gap_source_status", "gap_status", "gap_replacements", "side_flip_by_surface"):
             if key in snapshot_model_evidence:
                 tennis_model_evidence[key] = snapshot_model_evidence[key]
+        tennis_rate_trend = snapshot_sections.get("tennis_rate_trend") or tennis_rate_trend
         tennis_props_v3 = snapshot_sections.get("tennis_props_v3") or tennis_props_v3
         tennis_props_v4 = snapshot_sections.get("tennis_props_v4") or tennis_props_v4
         tennis_venue_ace_v1 = snapshot_sections.get("tennis_venue_ace_factor_v1") or tennis_venue_ace_v1
@@ -1455,6 +1478,7 @@ def build_payload() -> dict[str, Any]:
         "tennis_ml_gap_guard": tennis_gap_guard,
         "tennis_model_evidence": tennis_model_evidence,
         "tennis_props_v3": tennis_props_v3,
+        "tennis_rate_trend": tennis_rate_trend,
         "tennis_props_v4": tennis_props_v4,
         "tennis_breaks_v1": tennis_breaks_v1,
         "tennis_venue_ace_factor_v1": tennis_venue_ace_v1,
@@ -1754,6 +1778,7 @@ def render_report(payload: dict[str, Any]) -> str:
             "",
         ]
     )
+    lines.extend(["", rate_trend_text(payload)])
     return "\n".join(lines)
 
 
@@ -1998,6 +2023,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
             "Read: all promotion gates remain fail-closed. No weekly report changes routing or stakes.",
         ]
     )
+    lines.extend(["", rate_trend_text(payload)])
     return "\n".join(lines)
 
 
@@ -2237,6 +2263,7 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
             "No automatic promotion: provisional lanes remain 0.5u until their registered gates pass.",
         ]
     )
+    lines.extend(["", rate_trend_text(payload)])
     return "\n".join(lines)
 
 
