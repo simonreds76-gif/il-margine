@@ -1,3 +1,4 @@
+import { createBoundedAsyncCache } from "@/lib/bounded-async-cache";
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import fs from "node:fs";
@@ -3929,19 +3930,45 @@ async function run(): Promise<Response> {
   });
 }
 
-export async function GET() {
-  const timeout = new Promise<Response>((resolve) =>
-    setTimeout(
-      () => resolve(NextResponse.json({ error: "Fair-odds API timed out (15s). Check Supabase or network." }, { status: 503 })),
-      API_TIMEOUT_MS
-    )
-  );
+const hostedResponseCache = createBoundedAsyncCache<Response>(1);
+
+async function runWithTimeout(): Promise<Response> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<Response>((resolve) => {
+    timer = setTimeout(() => resolve(NextResponse.json(
+      { error: "Fair-odds API timed out (15s). Check Supabase or network." },
+      { status: 503, headers: { "Cache-Control": "no-store" } },
+    )), API_TIMEOUT_MS);
+  });
   try {
     return await Promise.race([run(), timeout]);
   } catch (e) {
     return NextResponse.json(
       { error: e instanceof Error ? e.message : "Fair-odds API error" },
-      { status: 500 }
+      { status: 500, headers: { "Cache-Control": "no-store" } },
     );
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
+export async function GET() {
+  // Local monitor/manual refreshes continue to calculate directly. Hosted
+  // public reads share bounded work, even if a caller varies query parameters.
+  if (process.env.VERCEL !== "1") return runWithTimeout();
+  try {
+    const response = await hostedResponseCache.get("public", 30_000, async () => {
+      const result = await runWithTimeout();
+      if (!result.ok) throw result;
+      return result;
+    });
+    const result = response.clone();
+    result.headers.set("Cache-Control", "public, max-age=0, s-maxage=30, must-revalidate");
+    return result;
+  } catch (error) {
+    if (error instanceof Response) return error;
+    return NextResponse.json({ error: "Fair-odds API unavailable" }, {
+      status: 503, headers: { "Cache-Control": "no-store" },
+    });
   }
 }

@@ -13,5 +13,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/",
+  matcher: [{ source: "/", has: [{ type: "query", key: "q" }] }],
 };

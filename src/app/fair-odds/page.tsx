@@ -1285,7 +1285,7 @@ export default function FairOddsPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/fair-odds?ts=${Date.now()}`, { cache: "no-store" });
+      const res = await fetch("/api/fair-odds");
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         throw new Error(body.error || `HTTP ${res.status}`);

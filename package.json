@@ -7,7 +7,7 @@
     "dev:next": "node scripts/run-next.mjs dev --webpack",
     "dev:turbo": "node scripts/run-next.mjs dev",
     "daily-odds": "python scripts/run-daily-odds.py",
-    "prebuild": "python scripts/audit-vercel-isr-policy.py",
+    "prebuild": "python scripts/audit-vercel-isr-policy.py && node --test scripts/tests/cpu-budget.test.cjs",
     "build": "node scripts/check-monitor-text.mjs && node scripts/run-next.mjs build && node scripts/check-vercel-trace.mjs",
     "start": "node scripts/run-next.mjs start",
     "lint": "eslint",

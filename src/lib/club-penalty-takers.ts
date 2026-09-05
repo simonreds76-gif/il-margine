@@ -1,5 +1,6 @@
 import "server-only";
 
+import { cache } from "react";
 import { promises as fs } from "node:fs";
 import { BASE_URL } from "@/lib/config";
 import { getKnownProjectFilePath, type KnownProjectFile } from "@/lib/project-file-paths";
@@ -305,10 +306,15 @@ function parseDateOnly(value?: string): number {
   return Date.parse(`${value}T12:00:00Z`);
 }
 
+// Reuse the immutable ICU formatter; constructing one for every team/date is expensive.
+const clubPenaltyDateFormatter = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Europe/London", day: "numeric", month: "short", year: "numeric",
+});
+
 export function formatClubPenaltyDate(value?: string): string {
   const stamp = parseDateOnly(value);
   if (!Number.isFinite(stamp)) return value ?? "";
-  return new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/London", day: "numeric", month: "short", year: "numeric" }).format(new Date(stamp));
+  return clubPenaltyDateFormatter.format(new Date(stamp));
 }
 
 function findLogoPath(leagueKey: string, team: string, manifest: LogoManifest): string {
@@ -469,7 +475,9 @@ export function getClubPenaltySeason(): ClubPenaltySeason {
   return clubPenaltySeason;
 }
 
-export async function readClubPenaltyData(): Promise<ClubPenaltyLeague[]> {
+// React cache deduplicates metadata/page reads within a render only. A later
+// request still reads current files, preserving local edits and invalidation.
+export const readClubPenaltyData = cache(async (): Promise<ClubPenaltyLeague[]> => {
   const logoManifest = await readLogoManifest();
   return Promise.all(
     CLUB_LEAGUES.map(async (league) => {
@@ -502,7 +510,7 @@ export async function readClubPenaltyData(): Promise<ClubPenaltyLeague[]> {
       };
     }),
   );
-}
+});
 
 export async function readAllClubPenaltyTeams(options: { includeArchived?: boolean } = {}): Promise<ClubPenaltyTeam[]> {
   const leagues = await readClubPenaltyData();
