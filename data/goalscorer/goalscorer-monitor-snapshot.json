@@ -1,15 +1,15 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-09-05T13:31:38Z",
+  "generated_at": "2026-09-05T16:15:09Z",
   "source_status": {
-    "compared_at": "2026-09-05T13:31:33Z",
-    "hot_live_updated_at": "2026-09-05T13:31:37Z",
-    "expected_refresh_updated_at": "2026-09-05T13:31:33Z",
+    "compared_at": "2026-09-05T16:13:40Z",
+    "hot_live_updated_at": "2026-09-05T16:15:09Z",
+    "expected_refresh_updated_at": "2026-09-05T16:13:40Z",
     "settlement_updated_at": "2026-09-05T12:35:52Z",
-    "scheduler_heartbeat_at": "2026-09-05T13:31:37Z",
-    "snapshot_generated_at": "2026-09-05T13:31:38Z",
-    "live_status_state": "skipped",
-    "live_status_message": "Goalscorer live poll skipped: no leagues due in current cadence window."
+    "scheduler_heartbeat_at": "2026-09-05T16:15:09Z",
+    "snapshot_generated_at": "2026-09-05T16:15:09Z",
+    "live_status_state": "idle",
+    "live_status_message": "Goalscorer live poll finished (4 league(s) ran)."
   },
   "league_cards": [
     {
@@ -18,7 +18,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-09-05T13:31:33Z",
+      "updated_at": "2026-09-05T16:13:40Z",
       "live_rows": 318,
       "public_now": 0,
       "shadow_now": 17,
@@ -49,7 +49,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-09-05T13:31:33Z",
+      "updated_at": "2026-09-05T16:13:40Z",
       "live_rows": 209,
       "public_now": 5,
       "shadow_now": 18,
@@ -80,7 +80,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-09-05T13:31:33Z",
+      "updated_at": "2026-09-05T16:13:40Z",
       "live_rows": 84,
       "public_now": 2,
       "shadow_now": 3,
@@ -111,7 +111,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-09-05T13:31:33Z",
+      "updated_at": "2026-09-05T16:13:39Z",
       "live_rows": 33,
       "public_now": 0,
       "shadow_now": 0,
@@ -142,7 +142,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-09-05T13:31:33Z",
+      "updated_at": "2026-09-05T16:13:40Z",
       "live_rows": 117,
       "public_now": 0,
       "shadow_now": 3,
@@ -1746,9 +1746,9 @@
       },
       "home": {
         "team": "ACF Fiorentina",
-        "lineup_status": "FotMob Expected XI",
+        "lineup_status": "Confirmed Lineup",
         "total_players": 11,
-        "matched_players": 8,
+        "matched_players": 9,
         "keeper": {
           "key": "David de Gea-GK-11",
           "name": "David de Gea",
@@ -1812,14 +1812,14 @@
         ],
         "midfielders": [
           {
-            "key": "Cher Ndour-MID-73",
-            "name": "Cher Ndour",
+            "key": "Nicolò Fagioli-MID-73",
+            "name": "Nicolò Fagioli",
             "position": "RCM",
             "note": null,
             "has_price": true,
             "odds": 6.5,
-            "fair": 7.5085,
-            "ev_pct": -13.431299999999998,
+            "fair": 10.5605,
+            "ev_pct": -38.45,
             "expected_minutes": 78.0,
             "action": "monitor",
             "action_label": "monitor",
@@ -1840,15 +1840,15 @@
             "penalty_meta": null
           },
           {
-            "key": "Nicolò Fagioli-MID-77",
-            "name": "Nicolò Fagioli",
+            "key": "Marco Brescianini-MID-77",
+            "name": "Marco Brescianini",
             "position": "LCM",
             "note": null,
             "has_price": true,
-            "odds": 6.5,
-            "fair": 10.5605,
-            "ev_pct": -38.45,
-            "expected_minutes": 78.0,
+            "odds": 5.0,
+            "fair": 99.0,
+            "ev_pct": -99.5002,
+            "expected_minutes": 40.0,
             "action": "monitor",
             "action_label": "monitor",
             "penalty_meta": null
@@ -1856,15 +1856,15 @@
         ],
         "wide_players": [
           {
-            "key": "Álex Jiménez-DEF-32",
-            "name": "Álex Jiménez",
+            "key": "João Mário-DEF-32",
+            "name": "João Mário",
             "position": "RB",
-            "note": "No price matched",
-            "has_price": false,
-            "odds": null,
-            "fair": null,
-            "ev_pct": null,
-            "expected_minutes": null,
+            "note": null,
+            "has_price": true,
+            "odds": 8.0,
+            "fair": 99.0,
+            "ev_pct": -99.2004,
+            "expected_minutes": 42.5,
             "action": "monitor",
             "action_label": "monitor",
             "penalty_meta": null
@@ -1900,15 +1900,15 @@
             "penalty_meta": null
           },
           {
-            "key": "Luca Ranieri-DEF-36",
-            "name": "Luca Ranieri",
+            "key": "Viery-DEF-36",
+            "name": "Viery",
             "position": "LCB",
             "note": null,
             "has_price": true,
-            "odds": 13.0,
-            "fair": 33.4268,
-            "ev_pct": -61.109,
-            "expected_minutes": 81.6,
+            "odds": 10.0,
+            "fair": 99.0,
+            "ev_pct": -99.0005,
+            "expected_minutes": 26.0,
             "action": "monitor",
             "action_label": "monitor",
             "penalty_meta": null
@@ -1918,9 +1918,9 @@
       },
       "away": {
         "team": "Torino FC",
-        "lineup_status": "FotMob Expected XI",
+        "lineup_status": "Confirmed Lineup",
         "total_players": 11,
-        "matched_players": 8,
+        "matched_players": 9,
         "keeper": {
           "key": "Lucas Perri-GK-11",
           "name": "Lucas Perri",
@@ -1937,53 +1937,9 @@
         },
         "attackers": [
           {
-            "key": "Giovanni Simeone-FW-105",
-            "name": "Giovanni Simeone",
-            "position": "ST",
-            "note": null,
-            "has_price": true,
-            "odds": 3.4,
-            "fair": 3.0557,
-            "ev_pct": 11.2675,
-            "expected_minutes": 80.8,
-            "action": "shadow_track",
-            "action_label": "shadow",
-            "penalty_meta": null
-          }
-        ],
-        "midfielders": [
-          {
-            "key": "Kian Fitz-Jim-MID-64",
-            "name": "Kian Fitz-Jim",
-            "position": "DM",
-            "note": null,
-            "has_price": true,
-            "odds": 10.0,
-            "fair": 99.0,
-            "ev_pct": -97.13340000000001,
-            "expected_minutes": 90.0,
-            "action": "monitor",
-            "action_label": "monitor",
-            "penalty_meta": null
-          },
-          {
-            "key": "Rolando Mandragora-MID-66",
-            "name": "Rolando Mandragora",
-            "position": "DM",
-            "note": "No price matched",
-            "has_price": false,
-            "odds": null,
-            "fair": null,
-            "ev_pct": null,
-            "expected_minutes": null,
-            "action": "monitor",
-            "action_label": "monitor",
-            "penalty_meta": null
-          },
-          {
-            "key": "Nikola Vlasic-AM-84",
+            "key": "Nikola Vlasic-FW-104",
             "name": "Nikola Vlasic",
-            "position": "AM",
+            "position": "ST",
             "note": null,
             "has_price": true,
             "odds": 4.75,
@@ -1998,9 +1954,9 @@
             }
           },
           {
-            "key": "Ché Adams-AM-86",
+            "key": "Ché Adams-FW-106",
             "name": "Ché Adams",
-            "position": "AM",
+            "position": "ST",
             "note": null,
             "has_price": true,
             "odds": 4.0,
@@ -2012,11 +1968,25 @@
             "penalty_meta": null
           }
         ],
-        "wide_players": [
+        "midfielders": [
           {
-            "key": "Rafik Belghali-MID-62",
-            "name": "Rafik Belghali",
-            "position": "RM/WB",
+            "key": "Gvidas Gineitis-MID-73",
+            "name": "Gvidas Gineitis",
+            "position": "RCM",
+            "note": null,
+            "has_price": true,
+            "odds": 10.0,
+            "fair": 17.0569,
+            "ev_pct": -41.3726,
+            "expected_minutes": 77.6,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Rolando Mandragora-MID-75",
+            "name": "Rolando Mandragora",
+            "position": "CM",
             "note": "No price matched",
             "has_price": false,
             "odds": null,
@@ -2028,9 +1998,39 @@
             "penalty_meta": null
           },
           {
-            "key": "Alessio Cacciamani-MID-68",
+            "key": "Kian Fitz-Jim-MID-77",
+            "name": "Kian Fitz-Jim",
+            "position": "LCM",
+            "note": null,
+            "has_price": true,
+            "odds": 10.0,
+            "fair": 99.0,
+            "ev_pct": -97.13340000000001,
+            "expected_minutes": 90.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          }
+        ],
+        "wide_players": [
+          {
+            "key": "Niccolò Fortini-MID-71",
+            "name": "Niccolò Fortini",
+            "position": "RWB",
+            "note": null,
+            "has_price": true,
+            "odds": 15.0,
+            "fair": 99.0,
+            "ev_pct": -92.4999,
+            "expected_minutes": 30.1,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Alessio Cacciamani-MID-79",
             "name": "Alessio Cacciamani",
-            "position": "LM/WB",
+            "position": "LWB",
             "note": null,
             "has_price": true,
             "odds": 6.5,
@@ -2044,17 +2044,17 @@
         ],
         "centre_backs": [
           {
-            "key": "Pietro Comuzzo-DEF-33",
-            "name": "Pietro Comuzzo",
+            "key": "Eray Cömert-DEF-33",
+            "name": "Eray Cömert",
             "position": "RCB",
             "note": null,
             "has_price": true,
             "odds": 15.0,
-            "fair": 12.3585,
-            "ev_pct": 21.3735,
+            "fair": 37.0337,
+            "ev_pct": -59.49640000000001,
             "expected_minutes": 78.0,
-            "action": "shadow_track",
-            "action_label": "shadow",
+            "action": "monitor",
+            "action_label": "monitor",
             "penalty_meta": null
           },
           {
@@ -2072,17 +2072,17 @@
             "penalty_meta": null
           },
           {
-            "key": "Eray Cömert-DEF-37",
-            "name": "Eray Cömert",
+            "key": "Pietro Comuzzo-DEF-37",
+            "name": "Pietro Comuzzo",
             "position": "LCB",
             "note": null,
             "has_price": true,
             "odds": 15.0,
-            "fair": 37.0337,
-            "ev_pct": -59.49640000000001,
+            "fair": 12.3585,
+            "ev_pct": 21.3735,
             "expected_minutes": 78.0,
-            "action": "monitor",
-            "action_label": "monitor",
+            "action": "shadow_track",
+            "action_label": "shadow",
             "penalty_meta": null
           }
         ],
@@ -2498,7 +2498,7 @@
       },
       "home": {
         "team": "Inter Milano",
-        "lineup_status": "FotMob Expected XI",
+        "lineup_status": "Confirmed Lineup",
         "total_players": 11,
         "matched_players": 10,
         "keeper": {
@@ -2561,32 +2561,29 @@
             "penalty_meta": null
           },
           {
-            "key": "Hakan Çalhanoglu-MID-75",
-            "name": "Hakan Çalhanoglu",
-            "position": "CM",
-            "note": null,
-            "has_price": true,
-            "odds": 4.0,
-            "fair": 13.5815,
-            "ev_pct": -70.5481,
-            "expected_minutes": 78.0,
-            "action": "monitor",
-            "action_label": "monitor",
-            "penalty_meta": {
-              "compact": "Primary pen | 81% share | lambda 0.047",
-              "detail": "pen duty Primary | share 81.2% | base 97.7% | prior 74.0% | w 6.0 | src recent+long | sample 2.6 | career 19/22 | lambda_pen 0.047 | lambda_open 0.029"
-            }
-          },
-          {
-            "key": "Piotr Zielinski-MID-77",
+            "key": "Piotr Zielinski-MID-75",
             "name": "Piotr Zielinski",
-            "position": "LCM",
+            "position": "CM",
             "note": null,
             "has_price": true,
             "odds": 5.0,
             "fair": 18.3712,
             "ev_pct": -72.7835,
             "expected_minutes": 78.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Petar Sucic-MID-77",
+            "name": "Petar Sucic",
+            "position": "LCM",
+            "note": null,
+            "has_price": true,
+            "odds": 6.0,
+            "fair": 71.3265,
+            "ev_pct": -91.58800000000001,
+            "expected_minutes": 60.5,
             "action": "monitor",
             "action_label": "monitor",
             "penalty_meta": null
@@ -2624,15 +2621,15 @@
         ],
         "centre_backs": [
           {
-            "key": "Benjamin Pavard-DEF-33",
-            "name": "Benjamin Pavard",
+            "key": "Yann Aurel Bisseck-DEF-33",
+            "name": "Yann Aurel Bisseck",
             "position": "RCB",
             "note": null,
             "has_price": true,
-            "odds": 11.0,
-            "fair": 63.5289,
-            "ev_pct": -82.6851,
-            "expected_minutes": 78.0,
+            "odds": 8.5,
+            "fair": 13.9674,
+            "ev_pct": -39.143899999999995,
+            "expected_minutes": 77.7,
             "action": "monitor",
             "action_label": "monitor",
             "penalty_meta": null
@@ -2670,7 +2667,7 @@
       },
       "away": {
         "team": "SSC Napoli",
-        "lineup_status": "FotMob Expected XI",
+        "lineup_status": "Confirmed Lineup",
         "total_players": 11,
         "matched_players": 9,
         "keeper": {
@@ -2764,21 +2761,18 @@
             "penalty_meta": null
           },
           {
-            "key": "Kevin De Bruyne-MID-77",
-            "name": "Kevin De Bruyne",
+            "key": "Antonio Vergara-MID-77",
+            "name": "Antonio Vergara",
             "position": "LCM",
             "note": null,
             "has_price": true,
-            "odds": 5.5,
-            "fair": 10.2185,
-            "ev_pct": -46.1759,
-            "expected_minutes": 78.0,
+            "odds": 6.0,
+            "fair": 33.4422,
+            "ev_pct": -82.0586,
+            "expected_minutes": 54.1,
             "action": "monitor",
             "action_label": "monitor",
-            "penalty_meta": {
-              "compact": "Primary pen | 71% share | lambda 0.049",
-              "detail": "pen duty Primary | share 70.9% | base 62.5% | prior 74.0% | w 6.0 | src recent+long | sample 2.2 | career 3/4 | lambda_pen 0.049 | lambda_open 0.054"
-            }
+            "penalty_meta": null
           }
         ],
         "wide_players": [
@@ -4687,9 +4681,23 @@
         ],
         "midfielders": [
           {
-            "key": "Noah Sadiki-MID-74",
+            "key": "Granit Xhaka-DMC-64",
+            "name": "Granit Xhaka",
+            "position": "DM",
+            "note": null,
+            "has_price": true,
+            "odds": 9.5,
+            "fair": 29.1494,
+            "ev_pct": -67.4092,
+            "expected_minutes": 85.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Noah Sadiki-DMC-66",
             "name": "Noah Sadiki",
-            "position": "CM",
+            "position": "DM",
             "note": null,
             "has_price": true,
             "odds": 12.0,
@@ -4701,39 +4709,23 @@
             "penalty_meta": null
           },
           {
-            "key": "Granit Xhaka-MID-76",
-            "name": "Granit Xhaka",
-            "position": "CM",
+            "key": "Thomas Meunier-AM-83",
+            "name": "Thomas Meunier",
+            "position": "RW/AM",
             "note": null,
             "has_price": true,
-            "odds": 9.5,
-            "fair": 29.1494,
-            "ev_pct": -67.4092,
-            "expected_minutes": 85.0,
-            "action": "monitor",
-            "action_label": "monitor",
-            "penalty_meta": null
-          }
-        ],
-        "wide_players": [
-          {
-            "key": "Nilson Angulo-MID-72",
-            "name": "Nilson Angulo",
-            "position": "RM",
-            "note": null,
-            "has_price": true,
-            "odds": 5.5,
-            "fair": 11.6262,
-            "ev_pct": -52.6931,
+            "odds": 12.0,
+            "fair": 99.0,
+            "ev_pct": -91.6561,
             "expected_minutes": 85.0,
             "action": "monitor",
             "action_label": "monitor",
             "penalty_meta": null
           },
           {
-            "key": "Enzo Le Fée-MID-78",
+            "key": "Enzo Le Fée-AM-85",
             "name": "Enzo Le Fée",
-            "position": "LM",
+            "position": "AM",
             "note": null,
             "has_price": true,
             "odds": 5.5,
@@ -4746,13 +4738,27 @@
               "compact": "Secondary pen | 77% share | lambda 0.062",
               "detail": "pen duty Secondary | share 77.5% | base 53.1% | prior 80.0% | w 16.0 | src recent+long | sample 1.7 | career 4/5 | lambda_pen 0.062 | lambda_open 0.112"
             }
+          },
+          {
+            "key": "Nilson Angulo-AM-87",
+            "name": "Nilson Angulo",
+            "position": "LW/AM",
+            "note": null,
+            "has_price": true,
+            "odds": 5.5,
+            "fair": 11.6262,
+            "ev_pct": -52.6931,
+            "expected_minutes": 85.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
           }
         ],
-        "centre_backs": [
+        "wide_players": [
           {
-            "key": "Nordi Mukiele-DEF-33",
+            "key": "Nordi Mukiele-DEF-32",
             "name": "Nordi Mukiele",
-            "position": "RCB",
+            "position": "RB",
             "note": null,
             "has_price": true,
             "odds": 15.0,
@@ -4764,23 +4770,25 @@
             "penalty_meta": null
           },
           {
-            "key": "Daniel Ballard-DEF-35",
-            "name": "Daniel Ballard",
-            "position": "CB",
+            "key": "Reinildo-DEF-38",
+            "name": "Reinildo",
+            "position": "LB",
             "note": null,
             "has_price": true,
-            "odds": 9.5,
-            "fair": 15.2314,
-            "ev_pct": -37.6289,
+            "odds": 19.0,
+            "fair": 99.0,
+            "ev_pct": -91.2827,
             "expected_minutes": 85.0,
             "action": "monitor",
             "action_label": "monitor",
             "penalty_meta": null
-          },
+          }
+        ],
+        "centre_backs": [
           {
-            "key": "Kevin Danso-DEF-37",
+            "key": "Kevin Danso-DEF-34",
             "name": "Kevin Danso",
-            "position": "LCB",
+            "position": "RCB",
             "note": "No price matched",
             "has_price": false,
             "odds": null,
@@ -4792,28 +4800,14 @@
             "penalty_meta": null
           },
           {
-            "key": "Thomas Meunier-DEF-51",
-            "name": "Thomas Meunier",
-            "position": "DEF",
+            "key": "Daniel Ballard-DEF-36",
+            "name": "Daniel Ballard",
+            "position": "LCB",
             "note": null,
             "has_price": true,
-            "odds": 12.0,
-            "fair": 99.0,
-            "ev_pct": -91.6561,
-            "expected_minutes": 85.0,
-            "action": "monitor",
-            "action_label": "monitor",
-            "penalty_meta": null
-          },
-          {
-            "key": "Reinildo-DEF-59",
-            "name": "Reinildo",
-            "position": "DEF",
-            "note": null,
-            "has_price": true,
-            "odds": 19.0,
-            "fair": 99.0,
-            "ev_pct": -91.2827,
+            "odds": 9.5,
+            "fair": 15.2314,
+            "ev_pct": -37.6289,
             "expected_minutes": 85.0,
             "action": "monitor",
             "action_label": "monitor",
@@ -5433,7 +5427,21 @@
         ],
         "midfielders": [
           {
-            "key": "Adam Wharton-MID-64",
+            "key": "Quinten Timber-MID-64",
+            "name": "Quinten Timber",
+            "position": "DM",
+            "note": "No price matched",
+            "has_price": false,
+            "odds": null,
+            "fair": null,
+            "ev_pct": null,
+            "expected_minutes": null,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Adam Wharton-MID-66",
             "name": "Adam Wharton",
             "position": "DM",
             "note": null,
@@ -5450,35 +5458,7 @@
             }
           },
           {
-            "key": "Quinten Timber-MID-66",
-            "name": "Quinten Timber",
-            "position": "DM",
-            "note": "No price matched",
-            "has_price": false,
-            "odds": null,
-            "fair": null,
-            "ev_pct": null,
-            "expected_minutes": null,
-            "action": "monitor",
-            "action_label": "monitor",
-            "penalty_meta": null
-          },
-          {
-            "key": "Yéremi Pino-AM-84",
-            "name": "Yéremi Pino",
-            "position": "AM",
-            "note": "No price matched",
-            "has_price": false,
-            "odds": null,
-            "fair": null,
-            "ev_pct": null,
-            "expected_minutes": null,
-            "action": "monitor",
-            "action_label": "monitor",
-            "penalty_meta": null
-          },
-          {
-            "key": "Daichi Kamada-AM-86",
+            "key": "Daichi Kamada-AM-84",
             "name": "Daichi Kamada",
             "position": "AM",
             "note": null,
@@ -5487,6 +5467,20 @@
             "fair": 10.7109,
             "ev_pct": -43.9821,
             "expected_minutes": 85.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Yéremi Pino-AM-86",
+            "name": "Yéremi Pino",
+            "position": "AM",
+            "note": "No price matched",
+            "has_price": false,
+            "odds": null,
+            "fair": null,
+            "ev_pct": null,
+            "expected_minutes": null,
             "action": "monitor",
             "action_label": "monitor",
             "penalty_meta": null
@@ -5524,14 +5518,14 @@
         ],
         "centre_backs": [
           {
-            "key": "Jaydee Canvot-DEF-33",
-            "name": "Jaydee Canvot",
+            "key": "Chris Richards-DEF-33",
+            "name": "Chris Richards",
             "position": "RCB",
             "note": null,
             "has_price": true,
             "odds": 13.0,
-            "fair": 5.8717,
-            "ev_pct": 121.40150000000001,
+            "fair": 6.7774,
+            "ev_pct": 91.8142,
             "expected_minutes": 85.0,
             "action": "shadow_track",
             "action_label": "shadow",
@@ -5552,14 +5546,14 @@
             "penalty_meta": null
           },
           {
-            "key": "Chris Richards-DEF-37",
-            "name": "Chris Richards",
+            "key": "Jaydee Canvot-DEF-37",
+            "name": "Jaydee Canvot",
             "position": "LCB",
             "note": null,
             "has_price": true,
             "odds": 13.0,
-            "fair": 6.7774,
-            "ev_pct": 91.8142,
+            "fair": 5.8717,
+            "ev_pct": 121.40150000000001,
             "expected_minutes": 85.0,
             "action": "shadow_track",
             "action_label": "shadow",
@@ -5599,7 +5593,7 @@
       },
       "home": {
         "team": "Hull City",
-        "lineup_status": "FotMob Expected XI",
+        "lineup_status": "Confirmed Lineup",
         "total_players": 11,
         "matched_players": 0,
         "keeper": {
@@ -5692,8 +5686,8 @@
         ],
         "wide_players": [
           {
-            "key": "Brooke Norton-Cuffy-MID-72",
-            "name": "Brooke Norton-Cuffy",
+            "key": "Lewie Coyle-MID-72",
+            "name": "Lewie Coyle",
             "position": "RM",
             "note": "No price matched",
             "has_price": false,
@@ -5768,7 +5762,7 @@
       },
       "away": {
         "team": "Aston Villa",
-        "lineup_status": "FotMob Expected XI",
+        "lineup_status": "Confirmed Lineup",
         "total_players": 11,
         "matched_players": 9,
         "keeper": {
@@ -5922,17 +5916,17 @@
             "penalty_meta": null
           },
           {
-            "key": "Pau Torres-DEF-36",
-            "name": "Pau Torres",
+            "key": "Tyrone Mings-DEF-36",
+            "name": "Tyrone Mings",
             "position": "LCB",
             "note": null,
             "has_price": true,
             "odds": 13.0,
-            "fair": 6.9065,
-            "ev_pct": 88.2285,
-            "expected_minutes": 81.9,
-            "action": "shadow_track",
-            "action_label": "shadow",
+            "fair": 6.9935,
+            "ev_pct": 85.887,
+            "expected_minutes": 78.8,
+            "action": "surface_with_caveat",
+            "action_label": "caveat",
             "penalty_meta": null
           }
         ],
@@ -5971,7 +5965,7 @@
         "team": "Manchester City",
         "lineup_status": "Confirmed Lineup",
         "total_players": 11,
-        "matched_players": 7,
+        "matched_players": 6,
         "keeper": {
           "key": "Gianluigi Donnarumma-GK-11",
           "name": "Gianluigi Donnarumma",
@@ -6035,17 +6029,17 @@
             "penalty_meta": null
           },
           {
-            "key": "Nico O'Reilly-AM-84",
-            "name": "Nico O'Reilly",
+            "key": "Enzo Fernández-AM-84",
+            "name": "Enzo Fernández",
             "position": "AM",
-            "note": null,
-            "has_price": true,
-            "odds": 3.75,
-            "fair": 3.3366,
-            "ev_pct": 12.389999999999999,
-            "expected_minutes": 85.0,
-            "action": "shadow_track",
-            "action_label": "shadow",
+            "note": "No price matched",
+            "has_price": false,
+            "odds": null,
+            "fair": null,
+            "ev_pct": null,
+            "expected_minutes": null,
+            "action": "monitor",
+            "action_label": "monitor",
             "penalty_meta": null
           },
           {
@@ -6160,9 +6154,37 @@
         },
         "attackers": [
           {
+            "key": "Jack Rudoni-FW-103",
+            "name": "Jack Rudoni",
+            "position": "RF",
+            "note": "No price matched",
+            "has_price": false,
+            "odds": null,
+            "fair": null,
+            "ev_pct": null,
+            "expected_minutes": null,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
             "key": "Taiwo Awoniyi-FW-105",
             "name": "Taiwo Awoniyi",
             "position": "ST",
+            "note": "No price matched",
+            "has_price": false,
+            "odds": null,
+            "fair": null,
+            "ev_pct": null,
+            "expected_minutes": null,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Ephron Mason-Clark-FW-107",
+            "name": "Ephron Mason-Clark",
+            "position": "LF",
             "note": "No price matched",
             "has_price": false,
             "odds": null,
@@ -6176,9 +6198,9 @@
         ],
         "midfielders": [
           {
-            "key": "Frank Onyeka-MID-64",
+            "key": "Frank Onyeka-MID-74",
             "name": "Frank Onyeka",
-            "position": "DM",
+            "position": "CM",
             "note": "No price matched",
             "has_price": false,
             "odds": null,
@@ -6190,37 +6212,9 @@
             "penalty_meta": null
           },
           {
-            "key": "Matt Grimes-MID-66",
+            "key": "Matt Grimes-MID-76",
             "name": "Matt Grimes",
-            "position": "DM",
-            "note": "No price matched",
-            "has_price": false,
-            "odds": null,
-            "fair": null,
-            "ev_pct": null,
-            "expected_minutes": null,
-            "action": "monitor",
-            "action_label": "monitor",
-            "penalty_meta": null
-          },
-          {
-            "key": "Jack Rudoni-AM-84",
-            "name": "Jack Rudoni",
-            "position": "AM",
-            "note": "No price matched",
-            "has_price": false,
-            "odds": null,
-            "fair": null,
-            "ev_pct": null,
-            "expected_minutes": null,
-            "action": "monitor",
-            "action_label": "monitor",
-            "penalty_meta": null
-          },
-          {
-            "key": "Ephron Mason-Clark-AM-86",
-            "name": "Ephron Mason-Clark",
-            "position": "AM",
+            "position": "CM",
             "note": "No price matched",
             "has_price": false,
             "odds": null,
@@ -6234,9 +6228,9 @@
         ],
         "wide_players": [
           {
-            "key": "Milan van Ewijk-MID-62",
+            "key": "Milan van Ewijk-MID-72",
             "name": "Milan van Ewijk",
-            "position": "RM/WB",
+            "position": "RM",
             "note": "No price matched",
             "has_price": false,
             "odds": null,
@@ -6248,9 +6242,9 @@
             "penalty_meta": null
           },
           {
-            "key": "Jay Dasilva-MID-68",
+            "key": "Jay Dasilva-MID-78",
             "name": "Jay Dasilva",
-            "position": "LM/WB",
+            "position": "LM",
             "note": "No price matched",
             "has_price": false,
             "odds": null,
@@ -6264,8 +6258,8 @@
         ],
         "centre_backs": [
           {
-            "key": "Bobby Thomas-DEF-33",
-            "name": "Bobby Thomas",
+            "key": "Aurèle Amenda-DEF-33",
+            "name": "Aurèle Amenda",
             "position": "RCB",
             "note": "No price matched",
             "has_price": false,
@@ -6278,8 +6272,8 @@
             "penalty_meta": null
           },
           {
-            "key": "Aurèle Amenda-DEF-35",
-            "name": "Aurèle Amenda",
+            "key": "Bobby Thomas-DEF-35",
+            "name": "Bobby Thomas",
             "position": "CB",
             "note": "No price matched",
             "has_price": false,
@@ -6402,7 +6396,21 @@
             "penalty_meta": null
           },
           {
-            "key": "Morgan Gibbs-White-AM-84",
+            "key": "Dan Ndoye-AM-84",
+            "name": "Dan Ndoye",
+            "position": "AM",
+            "note": null,
+            "has_price": true,
+            "odds": 4.333,
+            "fair": 6.7659,
+            "ev_pct": -35.957899999999995,
+            "expected_minutes": 85.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Morgan Gibbs-White-AM-86",
             "name": "Morgan Gibbs-White",
             "position": "AM",
             "note": null,
@@ -6417,20 +6425,6 @@
               "compact": "Secondary pen | 77% share | lambda 0.088",
               "detail": "pen duty Secondary | share 77.1% | base 56.7% | prior 80.0% | w 16.0 | src recent+long | sample 2.3 | career 3/8 | lambda_pen 0.088 | lambda_open 0.604"
             }
-          },
-          {
-            "key": "Dan Ndoye-AM-86",
-            "name": "Dan Ndoye",
-            "position": "AM",
-            "note": null,
-            "has_price": true,
-            "odds": 4.333,
-            "fair": 6.7659,
-            "ev_pct": -35.957899999999995,
-            "expected_minutes": 85.0,
-            "action": "monitor",
-            "action_label": "monitor",
-            "penalty_meta": null
           }
         ],
         "wide_players": [
@@ -6546,21 +6540,7 @@
         ],
         "midfielders": [
           {
-            "key": "Rodrigo Bentancur-DMC-64",
-            "name": "Rodrigo Bentancur",
-            "position": "DM",
-            "note": null,
-            "has_price": true,
-            "odds": 9.5,
-            "fair": 30.4057,
-            "ev_pct": -68.7558,
-            "expected_minutes": 85.0,
-            "action": "monitor",
-            "action_label": "monitor",
-            "penalty_meta": null
-          },
-          {
-            "key": "Sandro Tonali-DMC-66",
+            "key": "Sandro Tonali-DMC-64",
             "name": "Sandro Tonali",
             "position": "DM",
             "note": null,
@@ -6568,6 +6548,20 @@
             "odds": 8.0,
             "fair": 13.3836,
             "ev_pct": -40.225300000000004,
+            "expected_minutes": 85.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Rodrigo Bentancur-DMC-66",
+            "name": "Rodrigo Bentancur",
+            "position": "DM",
+            "note": null,
+            "has_price": true,
+            "odds": 9.5,
+            "fair": 30.4057,
+            "ev_pct": -68.7558,
             "expected_minutes": 85.0,
             "action": "monitor",
             "action_label": "monitor",
@@ -7141,7 +7135,7 @@
       },
       "home": {
         "team": "Rayo Vallecano",
-        "lineup_status": "FotMob Expected XI",
+        "lineup_status": "Confirmed Lineup",
         "total_players": 11,
         "matched_players": 10,
         "keeper": {
@@ -7190,15 +7184,15 @@
             "penalty_meta": null
           },
           {
-            "key": "Gnangoro Bouare-DMC-66",
-            "name": "Gnangoro Bouare",
+            "key": "Pedro Díaz-DMC-66",
+            "name": "Pedro Díaz",
             "position": "DM",
             "note": null,
             "has_price": true,
             "odds": 3.2,
-            "fair": 69.3742,
-            "ev_pct": -95.3873,
-            "expected_minutes": 78.0,
+            "fair": 23.6628,
+            "ev_pct": -86.4767,
+            "expected_minutes": 52.5,
             "action": "monitor",
             "action_label": "monitor",
             "penalty_meta": null
@@ -7313,7 +7307,7 @@
       },
       "away": {
         "team": "Racing Santander",
-        "lineup_status": "FotMob Expected XI",
+        "lineup_status": "Confirmed Lineup",
         "total_players": 11,
         "matched_players": 9,
         "keeper": {
@@ -7464,15 +7458,15 @@
             "penalty_meta": null
           },
           {
-            "key": "Pablo Ramón-DEF-36",
-            "name": "Pablo Ramón",
+            "key": "Facundo González-DEF-36",
+            "name": "Facundo González",
             "position": "LCB",
             "note": null,
             "has_price": true,
-            "odds": 15.0,
+            "odds": 12.0,
             "fair": 99.0,
-            "ev_pct": -92.4002,
-            "expected_minutes": 86.6,
+            "ev_pct": -98.8006,
+            "expected_minutes": 34.4,
             "action": "monitor",
             "action_label": "monitor",
             "penalty_meta": null
@@ -10556,12 +10550,12 @@
     "expected_starter_rows": 212,
     "avg_ev_pct": -60.575583048620175,
     "source_feed_gap_leagues": [],
-    "raw_monitor_summary": "=== Serie A | Updated 05/09/2026, 14:31 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-05T11:03:53Z\n\nHistorical Rows          31,537\nOdds Rows                437\nMatched Rows             318\nMissing Player History   119\nMissing Team Mapping     0\nFallback Rows            72\nQualified Rows           19\nRoster Resolved Rows     40\nHigh Confidence Rows     0\nMedium Confidence Rows   212\nLow Confidence Rows      106\nPublic High Signals      0\nPublic Caveat Signals    18\nShadow Track Rows        17\nPenalty Transfer Rows    4\nPosition Upgrade Rows    1\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 8\nFixtures Clean           0\nFixtures Degraded        9\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    148\nExpected Bench Rows      0\nExpected Out Rows        21\nNot In Squad Rows        0\n\nAverage EV               -0.6178\n\n\n=== Premier League | Updated 05/09/2026, 14:31 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-05T13:27:11Z\n\nHistorical Rows          31,138\nOdds Rows                310\nMatched Rows             209\nMissing Player History   101\nMissing Team Mapping     0\nFallback Rows            36\nQualified Rows           27\nRoster Resolved Rows     30\nHigh Confidence Rows     67\nMedium Confidence Rows   53\nLow Confidence Rows      89\nPublic High Signals      5\nPublic Caveat Signals    8\nShadow Track Rows        23\nPenalty Transfer Rows    3\nPosition Upgrade Rows    1\nRole Adjusted Rows       13\nFixtures With Confirmed Lineups 5\nFixtures With Expected Lineups 2\nFixtures Clean           5\nFixtures Degraded        2\nFixtures Quarantined     0\nConfirmed Starter Rows   82\nConfirmed Bench Rows     52\nExpected Starter Rows    28\nExpected Bench Rows      0\nExpected Out Rows        2\nNot In Squad Rows        4\n\nAverage EV               -0.5349\n\n\n=== La Liga | Updated 05/09/2026, 14:31 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-05T13:27:37Z\n\nHistorical Rows          32,942\nOdds Rows                157\nMatched Rows             84\nMissing Player History   73\nMissing Team Mapping     0\nFallback Rows            31\nQualified Rows           7\nRoster Resolved Rows     12\nHigh Confidence Rows     16\nMedium Confidence Rows   17\nLow Confidence Rows      51\nPublic High Signals      2\nPublic Caveat Signals    0\nShadow Track Rows        5\nPenalty Transfer Rows    3\nPosition Upgrade Rows    0\nRole Adjusted Rows       2\nFixtures With Confirmed Lineups 1\nFixtures With Expected Lineups 1\nFixtures Clean           1\nFixtures Degraded        2\nFixtures Quarantined     0\nConfirmed Starter Rows   19\nConfirmed Bench Rows     18\nExpected Starter Rows    19\nExpected Bench Rows      0\nExpected Out Rows        4\nNot In Squad Rows        4\n\nAverage EV               -0.6682\n\n\n=== Bundesliga | Updated 05/09/2026, 14:31 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-05T13:28:01Z\n\nHistorical Rows          25,685\nOdds Rows                42\nMatched Rows             33\nMissing Player History   9\nMissing Team Mapping     0\nFallback Rows            13\nQualified Rows           2\nRoster Resolved Rows     12\nHigh Confidence Rows     0\nMedium Confidence Rows   19\nLow Confidence Rows      14\nPublic High Signals      0\nPublic Caveat Signals    1\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        1\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.6154\n\n\n=== Ligue 1 | Updated 05/09/2026, 14:31 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-05T11:05:43Z\n\nHistorical Rows          25,399\nOdds Rows                285\nMatched Rows             117\nMissing Player History   168\nMissing Team Mapping     0\nFallback Rows            37\nQualified Rows           9\nRoster Resolved Rows     17\nHigh Confidence Rows     0\nMedium Confidence Rows   72\nLow Confidence Rows      45\nPublic High Signals      0\nPublic Caveat Signals    8\nShadow Track Rows        3\nPenalty Transfer Rows    1\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 1\nFixtures Clean           0\nFixtures Degraded        6\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    17\nExpected Bench Rows      0\nExpected Out Rows        5\nNot In Squad Rows        0\n\nAverage EV               -0.6522\n"
+    "raw_monitor_summary": "=== Serie A | Updated 05/09/2026, 17:13 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-05T11:03:53Z\n\nHistorical Rows          31,537\nOdds Rows                437\nMatched Rows             318\nMissing Player History   119\nMissing Team Mapping     0\nFallback Rows            72\nQualified Rows           19\nRoster Resolved Rows     40\nHigh Confidence Rows     0\nMedium Confidence Rows   212\nLow Confidence Rows      106\nPublic High Signals      0\nPublic Caveat Signals    18\nShadow Track Rows        17\nPenalty Transfer Rows    4\nPosition Upgrade Rows    1\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 8\nFixtures Clean           0\nFixtures Degraded        9\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    148\nExpected Bench Rows      0\nExpected Out Rows        21\nNot In Squad Rows        0\n\nAverage EV               -0.6178\n\n\n=== Premier League | Updated 05/09/2026, 17:13 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-05T13:27:11Z\n\nHistorical Rows          31,138\nOdds Rows                310\nMatched Rows             209\nMissing Player History   101\nMissing Team Mapping     0\nFallback Rows            36\nQualified Rows           27\nRoster Resolved Rows     30\nHigh Confidence Rows     67\nMedium Confidence Rows   53\nLow Confidence Rows      89\nPublic High Signals      5\nPublic Caveat Signals    8\nShadow Track Rows        23\nPenalty Transfer Rows    3\nPosition Upgrade Rows    1\nRole Adjusted Rows       13\nFixtures With Confirmed Lineups 5\nFixtures With Expected Lineups 2\nFixtures Clean           5\nFixtures Degraded        2\nFixtures Quarantined     0\nConfirmed Starter Rows   82\nConfirmed Bench Rows     52\nExpected Starter Rows    28\nExpected Bench Rows      0\nExpected Out Rows        2\nNot In Squad Rows        4\n\nAverage EV               -0.5349\n\n\n=== La Liga | Updated 05/09/2026, 17:13 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-05T13:27:37Z\n\nHistorical Rows          32,942\nOdds Rows                157\nMatched Rows             84\nMissing Player History   73\nMissing Team Mapping     0\nFallback Rows            31\nQualified Rows           7\nRoster Resolved Rows     12\nHigh Confidence Rows     16\nMedium Confidence Rows   17\nLow Confidence Rows      51\nPublic High Signals      2\nPublic Caveat Signals    0\nShadow Track Rows        5\nPenalty Transfer Rows    3\nPosition Upgrade Rows    0\nRole Adjusted Rows       2\nFixtures With Confirmed Lineups 1\nFixtures With Expected Lineups 1\nFixtures Clean           1\nFixtures Degraded        2\nFixtures Quarantined     0\nConfirmed Starter Rows   19\nConfirmed Bench Rows     18\nExpected Starter Rows    19\nExpected Bench Rows      0\nExpected Out Rows        4\nNot In Squad Rows        4\n\nAverage EV               -0.6682\n\n\n=== Bundesliga | Updated 05/09/2026, 17:13 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-05T13:28:01Z\n\nHistorical Rows          25,685\nOdds Rows                42\nMatched Rows             33\nMissing Player History   9\nMissing Team Mapping     0\nFallback Rows            13\nQualified Rows           2\nRoster Resolved Rows     12\nHigh Confidence Rows     0\nMedium Confidence Rows   19\nLow Confidence Rows      14\nPublic High Signals      0\nPublic Caveat Signals    1\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        1\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.6154\n\n\n=== Ligue 1 | Updated 05/09/2026, 17:13 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-05T11:05:43Z\n\nHistorical Rows          25,399\nOdds Rows                285\nMatched Rows             117\nMissing Player History   168\nMissing Team Mapping     0\nFallback Rows            37\nQualified Rows           9\nRoster Resolved Rows     17\nHigh Confidence Rows     0\nMedium Confidence Rows   72\nLow Confidence Rows      45\nPublic High Signals      0\nPublic Caveat Signals    8\nShadow Track Rows        3\nPenalty Transfer Rows    1\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 1\nFixtures Clean           0\nFixtures Degraded        6\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    17\nExpected Bench Rows      0\nExpected Out Rows        5\nNot In Squad Rows        0\n\nAverage EV               -0.6522\n"
   },
   "research_status": {
     "status": "RESEARCH_ONLY",
     "model_variant": "v2_minutes_absolute_share_repair",
-    "updated_at": "2026-09-05T13:31:33Z",
+    "updated_at": "2026-09-05T16:13:40Z",
     "parity": {
       "decision": "PASS",
       "golden_rows": 25,
@@ -10604,5 +10598,5 @@
     }
   },
   "snapshot_key": "monitor_state",
-  "payload_hash": "b6f108227436b2f5b7108cdd93a51f41bdadfc9e55a3a09bb0bb9db229cd5db3"
+  "payload_hash": "0cff7f192987bc6c00d3ea50b277e1fb5d2c933f3251ef83614cae35e1469398"
 }
