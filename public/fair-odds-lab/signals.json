@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-05T21:12:55.542591Z",
+  "generated_at": "2026-09-05T23:15:01.607084Z",
   "source_file": [
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
@@ -34,12 +34,12 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 12,
-  "signals_qualifying": 2,
+  "fixtures_evaluated": 9,
+  "signals_qualifying": 1,
   "safety_exclusions": {
     "market_odds_above_cap": 1,
     "model_probability_below_floor": 1,
-    "lineup_not_public_quality": 4,
+    "lineup_not_public_quality": 2,
     "defensive_position": 1
   },
   "extreme_gap_quarantine": {
@@ -49,7 +49,6 @@
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
   "leagues_covered": [
-    "ligue-1",
     "serie-a"
   ],
   "featured_signal_id": "20260906-francisco-conceicao-e0d1bd9c8a",
@@ -99,10 +98,10 @@
           "percentile": 94
         },
         "share_of_team_chances_pct": 20,
-        "share_of_team_chances_percentile": 96,
+        "share_of_team_chances_percentile": 97,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 89
+          "percentile": 93
         },
         "recent_team_form": {
           "tier": "Strong",
@@ -150,105 +149,6 @@
         "The model price is shorter than the bookmaker's best available price",
         "Recent chance quality grades as strong",
         "Recent team form supports the attacking case",
-        "Opponent has been allowing chances recently"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260905-kamory-doumbia-341dbe9a36",
-      "match": {
-        "home_team": "Le Havre AC",
-        "away_team": "Stade Brest 29",
-        "league": "ligue-1",
-        "league_display": "Ligue 1",
-        "league_logo_path": "/league-logos/ligue-1.png",
-        "kickoff_utc": "2026-09-05T18:45:00Z",
-        "kickoff_display": "Sat 05 Sep 19:45 UK",
-        "fotmob_match_id": "5802920",
-        "fotmob_page_url": "/matches/brest-vs-le-havre/2rceek#5802920",
-        "lineup_type": "confirmed",
-        "venue": ""
-      },
-      "player": {
-        "name": "Kamory Doumbia",
-        "team": "Brest",
-        "position": "AMC",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/ligue-1/brest.png",
-        "team_primary_color": "#dc2626",
-        "team_secondary_color": "#f8fafc",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 27.2,
-        "fair_odds": 3.67
-      },
-      "market_data": {
-        "best_odds": 4.75,
-        "best_book": "Bet365",
-        "implied_chance_pct": 21.1
-      },
-      "edge": {
-        "price_gap_pp": 6.2,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 94
-        },
-        "share_of_team_chances_pct": 23,
-        "share_of_team_chances_percentile": 97,
-        "team_attacking_outlook": {
-          "tier": "Positive",
-          "percentile": 58
-        },
-        "recent_team_form": {
-          "tier": "Average",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-08-22",
-          "xg_for_avg": 1.7,
-          "xg_against_avg": 1.6,
-          "xgd_per90": 0.1,
-          "shots_for_avg": 15.6,
-          "shots_against_avg": 13.2,
-          "sot_for_avg": 4.2,
-          "sot_against_avg": 5.2,
-          "corners_for_avg": 5.2,
-          "corners_against_avg": 5.6
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 42
-        },
-        "opponent_recent_defence": {
-          "tier": "Positive",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-08-23",
-          "xg_for_avg": 1.23,
-          "xg_against_avg": 1.55,
-          "xgd_per90": -0.32,
-          "shots_for_avg": 9.6,
-          "shots_against_avg": 13.8,
-          "sot_for_avg": 3.4,
-          "sot_against_avg": 5.4,
-          "corners_for_avg": 4.4,
-          "corners_against_avg": 5.4
-        },
-        "fixture_boost_pct": -12,
-        "projected_minutes": 74,
-        "penalty_role": "Not on penalties",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Confirmed starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "Recent chance quality grades as strong",
         "Opponent has been allowing chances recently"
       ],
       "risk_flags": []
