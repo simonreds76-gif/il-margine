@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
+import { createBoundedAsyncCache } from "@/lib/bounded-async-cache";
 import { getDisplayBetCategory } from "@/lib/bet-category";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 const CACHE_HEADER = "public, s-maxage=90, stale-while-revalidate=900";
-const LIVE_RECORD_CACHE_HEADER = "no-store";
+// A shared 30-second response avoids repeating four database queries per
+// visitor/focus event. No stale-while-revalidate for current pending records.
+const LIVE_RECORD_CACHE_HEADER = "public, max-age=0, s-maxage=30, must-revalidate";
 const TIMEOUT_MS = 8000;
 const MARKET_RECENT_LIMIT = 500;
 
@@ -325,17 +328,22 @@ function parseMonthlyScope(value: string | null): MonthlyScope {
   return "combined";
 }
 
+// Canonical scope keys also coalesce simultaneous CDN misses/query variants.
+// Seven valid keys maximum; failures are never cached.
+const payloadCache = createBoundedAsyncCache<unknown>(7);
+
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const scope = parseScope(url.searchParams.get("scope"));
 
   try {
-    if (scope === "home") return cachedJson(await fetchHomePayload(), LIVE_RECORD_CACHE_HEADER);
+    if (scope === "home") return cachedJson(await payloadCache.get(scope, 15_000, fetchHomePayload), LIVE_RECORD_CACHE_HEADER);
     if (scope === "tennis" || scope === "props") {
-      return cachedJson(await fetchMarketPayload(scope), LIVE_RECORD_CACHE_HEADER);
+      return cachedJson(await payloadCache.get(scope, 15_000, () => fetchMarketPayload(scope)), LIVE_RECORD_CACHE_HEADER);
     }
-    if (scope === "calculator") return cachedJson(await fetchCalculatorPayload());
-    return cachedJson(await fetchMonthlyPayload(parseMonthlyScope(url.searchParams.get("monthlyScope"))));
+    if (scope === "calculator") return cachedJson(await payloadCache.get(scope, 30_000, fetchCalculatorPayload));
+    const monthlyScope = parseMonthlyScope(url.searchParams.get("monthlyScope"));
+    return cachedJson(await payloadCache.get(`monthly:${monthlyScope}`, 30_000, () => fetchMonthlyPayload(monthlyScope)));
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown public record query error";
     return errorJson(message);
