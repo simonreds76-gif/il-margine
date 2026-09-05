@@ -9,22 +9,22 @@
       "kickoff_utc": "2026-09-05T14:15:00Z",
       "home_team": "Athletic Club",
       "away_team": "Atlético Madrid",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-4-2",
       "home_players": [
         "Unai Simón",
         "Jesús Areso",
-        "Aitor Paredes",
+        "Yeray Álvarez",
         "Aymeric Laporte",
         "Yuri Berchiche",
         "Íñigo Ruiz de Galarreta",
         "Beñat Gerenabarrena",
         "Robert Navarro",
         "Oihan Sancet",
-        "Alex Berenguer",
+        "Nico Williams",
         "Iñaki Williams"
       ],
       "away_players": [
@@ -60,7 +60,7 @@
           "position_id": 32
         },
         {
-          "name": "Aitor Paredes",
+          "name": "Yeray Álvarez",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -123,7 +123,7 @@
           "position_id": 85
         },
         {
-          "name": "Alex Berenguer",
+          "name": "Nico Williams",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -242,10 +242,35 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
-      "home_unavailable": [
+      "home_subs": [
+        "Álex Padilla",
+        "Aitor Paredes",
+        "Hugo Rincón",
+        "Iker Monreal",
+        "Johaneko Louisjean",
+        "Alejandro Rego",
         "Beñat Prados",
+        "Mikel Jauregizar",
+        "Selton Sánchez",
+        "Alex Berenguer",
+        "Gorka Guruzeta",
+        "Maroan Sannadi"
+      ],
+      "away_subs": [
+        "Juan Musso",
+        "Cristian Romero",
+        "Dani Martinez",
+        "Jorge Domínguez",
+        "Robin Le Normand",
+        "Johnny Cardoso",
+        "Jorge Castillo",
+        "Koke",
+        "Rodrigo Mendoza",
+        "Arnau Ortiz",
+        "Jonathan David",
+        "Julián Álvarez"
+      ],
+      "home_unavailable": [
         "Daniel Vivian",
         "Unai Eguiluz",
         "Peio Canales",
@@ -1525,6 +1550,7 @@
         "Adrián Nino"
       ],
       "away_unavailable": [
+        "Karl Etta Eyong",
         "Álex Primo"
       ]
     },
