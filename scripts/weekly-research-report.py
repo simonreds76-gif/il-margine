@@ -1384,6 +1384,16 @@ def rate_trend_text(payload: dict[str, Any]) -> str:
     for market, item in result["markets"].items():
         parts.append(f"{market}: {item.get('settled', 0)}/{item.get('registered', 0)} settled, "
                      f"{item.get('pending', 0)} pending, {item.get('independent_fixtures', 0)}/200 fixtures")
+    performance = []
+    for market, item in result["markets"].items():
+        scores = []
+        for model in ("control", "candidate"):
+            metrics = item.get(model) or {}
+            roi = metrics.get("roi_pct")
+            label = f"{float(roi):+.1f}%" if roi is not None else "pending"
+            scores.append(f"{model} ROI {label} ({metrics.get('bets', 0)} contracts)")
+        performance.append(market + ": " + ", ".join(scores))
+    parts.extend(performance)
     freshness = evidence_freshness(str(result.get("generated_at") or ""), stale_after_days=2)
     return ("New rate-trend SHADOW ONLY | " + " | ".join(parts)
             + f" | data {freshness.get('status', 'UNKNOWN')}; 8 weeks/4 tournaments minimum, manual review before promotion.")
