@@ -523,30 +523,30 @@
         }
       ],
       "home_subs": [
+        "Curtis Jones",
+        "Marcus Thuram",
+        "Carlos Augusto",
+        "Hakan Çalhanoglu",
+        "Ange-Yoan Bonny",
         "Ivan Provedel",
         "Raffaele Di Gennaro",
         "Benjamin Pavard",
-        "Carlos Augusto",
         "John Stones",
         "Aleksandar Stankovic",
-        "Curtis Jones",
-        "Hakan Çalhanoglu",
         "Henrikh Mkhitaryan",
-        "Luis Henrique",
-        "Ange-Yoan Bonny",
-        "Marcus Thuram"
+        "Luis Henrique"
       ],
       "away_subs": [
-        "Nikita Contini",
-        "Vanja Milinkovic-Savic",
-        "Benoît Badiashile",
-        "Mathías Olivera",
-        "Sam Beukema",
-        "Billy Gilmour",
-        "Costantino Favasuli",
         "David Neres",
         "Kevin De Bruyne",
         "Lorenzo Lucca",
+        "Billy Gilmour",
+        "Benoît Badiashile",
+        "Nikita Contini",
+        "Vanja Milinkovic-Savic",
+        "Mathías Olivera",
+        "Sam Beukema",
+        "Costantino Favasuli",
         "Noa Lang"
       ],
       "home_unavailable": [
@@ -568,14 +568,14 @@
       "kickoff_utc": "2026-09-05T18:45:00Z",
       "home_team": "Roma",
       "away_team": "Atalanta",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
       "away_formation": "4-3-3",
       "home_players": [
         "Mile Svilar",
-        "Daniele Ghilardi",
+        "Evan N'Dicka",
         "Gianluca Mancini",
         "Mario Hermoso",
         "Emanuele Lulli",
@@ -588,16 +588,16 @@
       ],
       "away_players": [
         "Marco Carnesecchi",
-        "Davide Zappacosta",
+        "Raoul Bellanova",
         "Odilon Kossounou",
         "Giorgio Scalvini",
-        "Lorenzo Bernasconi",
+        "Sead Kolasinac",
         "Lazar Samardzic",
         "Gianluca Gaetano",
         "Éderson",
         "Charles De Ketelaere",
         "Gianluca Scamacca",
-        "Jonathan Rowe"
+        "Eljif Elmas"
       ],
       "home_starters": [
         {
@@ -610,7 +610,7 @@
           "position_id": 11
         },
         {
-          "name": "Daniele Ghilardi",
+          "name": "Evan N'Dicka",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -711,7 +711,7 @@
           "position_id": 11
         },
         {
-          "name": "Davide Zappacosta",
+          "name": "Raoul Bellanova",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -738,7 +738,7 @@
           "position_id": 36
         },
         {
-          "name": "Lorenzo Bernasconi",
+          "name": "Sead Kolasinac",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -792,7 +792,7 @@
           "position_id": 105
         },
         {
-          "name": "Jonathan Rowe",
+          "name": "Eljif Elmas",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -801,10 +801,35 @@
           "position_id": 107
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
-      "home_unavailable": [
+      "home_subs": [
+        "Giorgio De Marzi",
+        "Pierluigi Gollini",
+        "Daniele Ghilardi",
+        "Konstantinos Koulierakis",
         "Leonardo Balerdi",
+        "Nahuel Molina",
+        "Devyne Rensch",
+        "Marten de Roon",
+        "Matias Soulé",
+        "Niccolò Pisilli",
+        "Antonio Arena",
+        "Santiago Castro"
+      ],
+      "away_subs": [
+        "Marco Sportiello",
+        "Thomas Pompei",
+        "Relja Obric",
+        "Thomas Kristensen",
+        "Davide Zappacosta",
+        "Franck Kessié",
+        "Giacomo Raspadori",
+        "Lorenzo Bernasconi",
+        "Mario Pasalic",
+        "Nicola Zalewski",
+        "Jonathan Rowe",
+        "Nikola Krstovic"
+      ],
+      "home_unavailable": [
         "Lorenzo Pellegrini"
       ],
       "away_unavailable": [

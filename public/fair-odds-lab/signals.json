@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-05T16:49:18.054251Z",
+  "generated_at": "2026-09-05T18:34:51.567089Z",
   "source_file": [
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
@@ -34,20 +34,19 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 17,
+  "fixtures_evaluated": 15,
   "signals_qualifying": 2,
   "safety_exclusions": {
-    "model_market_gap_gt_10pp": 2,
-    "market_odds_above_cap": 2,
-    "model_probability_below_floor": 3,
+    "model_market_gap_gt_10pp": 1,
+    "market_odds_above_cap": 1,
+    "model_probability_below_floor": 2,
     "lineup_not_public_quality": 5,
     "defensive_position": 1,
     "low_signal_confidence": 1
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 2,
+    "eligible_rows": 1,
     "added_by_league": {
-      "ligue-1": 1,
       "serie-a": 1
     },
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
@@ -107,7 +106,7 @@
         "share_of_team_chances_percentile": 96,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 85
+          "percentile": 87
         },
         "recent_team_form": {
           "tier": "Strong",
@@ -125,8 +124,8 @@
           "corners_against_avg": 2.6
         },
         "opponent_defensive_weakness": {
-          "tier": "Positive",
-          "percentile": 57
+          "tier": "Average",
+          "percentile": 54
         },
         "opponent_recent_defence": {
           "tier": "High",
@@ -171,7 +170,7 @@
         "kickoff_display": "Sat 05 Sep 19:45 UK",
         "fotmob_match_id": "5802920",
         "fotmob_page_url": "/matches/brest-vs-le-havre/2rceek#5802920",
-        "lineup_type": "predicted",
+        "lineup_type": "confirmed",
         "venue": ""
       },
       "player": {
@@ -201,13 +200,13 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 92
+          "percentile": 93
         },
         "share_of_team_chances_pct": 23,
         "share_of_team_chances_percentile": 97,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 53
+          "percentile": 54
         },
         "recent_team_form": {
           "tier": "Average",
@@ -226,7 +225,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 50
+          "percentile": 46
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -248,7 +247,7 @@
         "penalty_role": "Not on penalties",
         "role_adjustment_factor": 1.0,
         "role_adjustment_reason": "",
-        "lineup_confidence": "Projected starter"
+        "lineup_confidence": "Confirmed starter"
       },
       "confidence_tier": "Medium",
       "reasons": [

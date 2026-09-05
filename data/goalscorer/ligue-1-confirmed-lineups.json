@@ -9,9 +9,9 @@
       "kickoff_utc": "2026-09-05T18:45:00Z",
       "home_team": "Le Havre",
       "away_team": "Brest",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -19,13 +19,13 @@
         "Ayumu Seko",
         "Junior Mwanga",
         "Ahmed Touba",
-        "Timothée Pembélé",
+        "Elias Jelert",
         "Simon Ebonog",
         "Amir Richardson",
-        "Enzo Koffi",
+        "Timothée Pembélé",
         "Rassoul Ndiaye",
-        "Kaito Mizuta",
-        "Josh Maja"
+        "Josh Maja",
+        "Mbwana Samatta"
       ],
       "away_players": [
         "Egil Selvik",
@@ -33,8 +33,8 @@
         "Raphaël Le Guen",
         "Gautier Lloris",
         "Bradley Locko",
-        "Hugo Magnetti",
         "Joris Chotard",
+        "Hugo Magnetti",
         "Mama Baldé",
         "Kamory Doumbia",
         "Pathé Mboup",
@@ -78,7 +78,7 @@
           "position_id": 37
         },
         {
-          "name": "Timothée Pembélé",
+          "name": "Elias Jelert",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -105,7 +105,7 @@
           "position_id": 66
         },
         {
-          "name": "Enzo Koffi",
+          "name": "Timothée Pembélé",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -123,7 +123,7 @@
           "position_id": 84
         },
         {
-          "name": "Kaito Mizuta",
+          "name": "Josh Maja",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -132,7 +132,7 @@
           "position_id": 86
         },
         {
-          "name": "Josh Maja",
+          "name": "Mbwana Samatta",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -188,7 +188,7 @@
           "position_id": 38
         },
         {
-          "name": "Hugo Magnetti",
+          "name": "Joris Chotard",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -197,7 +197,7 @@
           "position_id": 64
         },
         {
-          "name": "Joris Chotard",
+          "name": "Hugo Magnetti",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -242,14 +242,33 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Gauthier Gallon",
+        "Enzo Koffi",
+        "Vincent Sasso",
+        "Daren Mosengo",
+        "Djibril Ouziad",
+        "Ismaïl Bouneb",
+        "Kaito Mizuta",
+        "Sota Nakamura",
+        "Rayan Fofana"
+      ],
+      "away_subs": [
+        "Mathieu Patouillet",
+        "Justin Bourgault",
+        "Luck Zogbé",
+        "Joseph Boende",
+        "Lucas Tousart",
+        "Djylian N'Guessan",
+        "Giovani Versini",
+        "Mathis Laine",
+        "Noah Edjouma"
+      ],
       "home_unavailable": [
         "Stephan Zagadou",
         "Felix Mambimbi"
       ],
       "away_unavailable": [
-        "Justin Bourgault",
         "Brendan Chardonnet",
         "Mamady Diambou"
       ]
@@ -263,22 +282,22 @@
       "kickoff_utc": "2026-09-05T15:15:00Z",
       "home_team": "Lens",
       "away_team": "Lorient",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
       "away_formation": "3-4-2-1",
       "home_players": [
         "Robin Risser",
         "Kyllian Antonio",
         "Ismaëlo Ganiou",
-        "Souleymane Sagnan",
-        "Ruben Aguilar",
-        "Yacine Titraoui",
-        "Michaël Cuisance",
         "Matthieu Udol",
+        "Ruben Aguilar",
+        "Amadou Haidara",
+        "Yacine Titraoui",
+        "Michal Skóras",
         "Florian Thauvin",
-        "Franjo Ivanovic",
+        "Thorgan Hazard",
         "Abdallah Sima"
       ],
       "away_players": [
@@ -286,13 +305,13 @@
         "Dembo Sylla",
         "Montassar Talbi",
         "Nathaniel Adjei",
-        "Théo Le Bris",
-        "Arthur Avom",
+        "Panos Katseris",
+        "Noah Mbamba",
         "Noah Cadiou",
         "Arsène Kouassi",
         "Gabin Bernardeau",
         "Jean-Victor Makengo",
-        "Ibrahima Baldé"
+        "Mamadou Koné"
       ],
       "home_starters": [
         {
@@ -323,7 +342,7 @@
           "position_id": 35
         },
         {
-          "name": "Souleymane Sagnan",
+          "name": "Matthieu Udol",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -341,7 +360,7 @@
           "position_id": 62
         },
         {
-          "name": "Yacine Titraoui",
+          "name": "Amadou Haidara",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -350,7 +369,7 @@
           "position_id": 64
         },
         {
-          "name": "Michaël Cuisance",
+          "name": "Yacine Titraoui",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -359,7 +378,7 @@
           "position_id": 66
         },
         {
-          "name": "Matthieu Udol",
+          "name": "Michal Skóras",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -377,7 +396,7 @@
           "position_id": 84
         },
         {
-          "name": "Franjo Ivanovic",
+          "name": "Thorgan Hazard",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -433,7 +452,7 @@
           "position_id": 37
         },
         {
-          "name": "Théo Le Bris",
+          "name": "Panos Katseris",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -442,7 +461,7 @@
           "position_id": 62
         },
         {
-          "name": "Arthur Avom",
+          "name": "Noah Mbamba",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -487,7 +506,7 @@
           "position_id": 86
         },
         {
-          "name": "Ibrahima Baldé",
+          "name": "Mamadou Koné",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -496,8 +515,28 @@
           "position_id": 105
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Souleymane Sagnan",
+        "Andrija Bulatovic",
+        "Michaël Cuisance",
+        "Florian Sotoca",
+        "Odsonne Édouard",
+        "Mathieu Gorgelin",
+        "Jonathan Gradit",
+        "Mezian Soares",
+        "Franjo Ivanovic"
+      ],
+      "away_subs": [
+        "Arthur Avom",
+        "Théo Le Bris",
+        "Ibrahima Baldé",
+        "Isak Steiner Jensen",
+        "Bingourou Kamara",
+        "Alec Georgen",
+        "Nosa Edward Obaretin",
+        "Aiyegun Tosin",
+        "Souleymane Faye"
+      ],
       "home_unavailable": [
         "Jean-Clair Todibo",
         "Maik Nawrocki",
@@ -520,33 +559,33 @@
       "kickoff_utc": "2026-09-05T18:45:00Z",
       "home_team": "Nice",
       "away_team": "Le Mans",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
       "away_formation": "3-5-2",
       "home_players": [
         "Yéhvann Diouf",
-        "Mohamed Abdelmonem",
-        "Youssouf Ndayishimiye",
         "Xavier Mandza",
+        "Youssouf Ndayishimiye",
+        "Mohamed Abdelmonem",
         "Jonathan Clauss",
         "Djibril Coulibaly",
         "Axel Witsel",
         "Niels Nkounkou",
-        "Gauthier Hein",
+        "Nathan N'Goumou",
         "Sofiane Diop",
         "Elye Wahi"
       ],
       "away_players": [
         "Ewan Hatfout",
         "Noa Boissé",
-        "Samuel Yohou",
         "Harold Voyer",
-        "Lucas Buadés",
-        "Jean Vercruysse",
-        "Alexandre Lauray",
+        "Raúl Torrente",
+        "Rayan Bamba",
         "Adil Bourabaa",
+        "Alexandre Lauray",
+        "Jean Vercruysse",
         "Lucas Calodat",
         "Dame Gueye",
         "Louis Mafouta"
@@ -562,7 +601,7 @@
           "position_id": 11
         },
         {
-          "name": "Mohamed Abdelmonem",
+          "name": "Xavier Mandza",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -580,7 +619,7 @@
           "position_id": 35
         },
         {
-          "name": "Xavier Mandza",
+          "name": "Mohamed Abdelmonem",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -625,7 +664,7 @@
           "position_id": 68
         },
         {
-          "name": "Gauthier Hein",
+          "name": "Nathan N'Goumou",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -672,7 +711,7 @@
           "position_id": 33
         },
         {
-          "name": "Samuel Yohou",
+          "name": "Harold Voyer",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -681,7 +720,7 @@
           "position_id": 35
         },
         {
-          "name": "Harold Voyer",
+          "name": "Raúl Torrente",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -690,7 +729,7 @@
           "position_id": 37
         },
         {
-          "name": "Lucas Buadés",
+          "name": "Rayan Bamba",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -699,7 +738,7 @@
           "position_id": 71
         },
         {
-          "name": "Jean Vercruysse",
+          "name": "Adil Bourabaa",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -717,7 +756,7 @@
           "position_id": 75
         },
         {
-          "name": "Adil Bourabaa",
+          "name": "Jean Vercruysse",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -753,17 +792,34 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
-      "home_unavailable": [
-        "Mohamed Amoura",
+      "home_subs": [
+        "Teddy Boulhendi",
         "Ali Abdi",
+        "Antoine Mendy",
+        "Everton",
+        "Gauthier Hein",
+        "Issiaga Camara",
+        "Djelan Morana",
+        "Isak Jansson",
+        "Mohamed Amoura"
+      ],
+      "away_subs": [
+        "Augustin Delbecque",
+        "Samuel Yohou",
+        "Yasser Larouci",
+        "Billal Brahimi",
+        "Daouda Traoré",
+        "Lucas Bretelle",
+        "Lucas Buadés",
+        "Antoine Rabillard",
+        "Habibou Mouhamadou Diallo"
+      ],
+      "home_unavailable": [
         "Moïse Bombito",
         "Laurent Abergel",
         "Morgan Sanson"
       ],
       "away_unavailable": [
-        "Yasser Larouci",
         "Nicolas Kocik",
         "Djibril Sidibé",
         "Erwan Colas"
