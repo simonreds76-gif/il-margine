@@ -191,7 +191,6 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
   const hierarchyNote = buildClubPenaltyHierarchyNote(team);
   const faqItems = buildClubPenaltyFaq(team);
   const isUnderReview = ["unknown", "disputed", "conditional"].includes(team.hierarchyStatus);
-  const hierarchyPositions = ["primary", "secondary", "tertiary"] as const;
   const checkedLabel = team.checkedLabel || team.leagueCheckedLabel || "review pending";
   const evidenceFreshness = team.lastUpdatedLabel && team.lastUpdated !== team.checkedAt
     ? `Order unchanged since ${team.lastUpdatedLabel}`
@@ -266,10 +265,10 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
               <div className="flex items-start justify-between gap-4">
                 <Crest team={team} />
                 <div className="flex flex-wrap justify-end gap-2">
-                  <span className={`inline-flex items-center rounded-full border px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] ${accent.badge}`}>
+                  <span className={`inline-flex items-center rounded-full border px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] ${accent.badge}`}>
                     <LeagueLogo team={team} /> <span className="ml-2">{team.leagueLabel}</span>
                   </span>
-                  <span className="rounded-full border border-slate-700 bg-slate-950/80 px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-300">
+                  <span className="rounded-full border border-slate-700 bg-slate-950/80 px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-300">
                     {team.seasonLabel}
                   </span>
                 </div>
@@ -318,16 +317,11 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
                   <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-slate-400">Filed order</div>
                   <h2 className="mt-1 text-xl font-semibold tracking-tight text-white">Penalty hierarchy</h2>
                 </div>
-                <span className={`rounded-full border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.14em] ${isUnderReview ? "border-amber-300/30 bg-amber-300/10 text-amber-100" : "border-emerald-300/25 bg-emerald-300/10 text-emerald-100"}`}>
-                  {isUnderReview ? "Reviewing" : "Current"}
-                </span>
               </div>
 
               <ol className="mt-4 space-y-2.5">
                 {team.verifiedNames.map((value, index) => {
                   const rank = index + 1;
-                  const confidence = team.confidence[hierarchyPositions[index]];
-                  const confidenceLabel = confidence === "high" ? "Confirmed" : confidence === "medium" ? "Probable" : confidence === "low" ? "Projected" : "";
                   return (
                     <li key={`${rank}-${value}`} className={`rounded-xl border p-3.5 ${rank === 1 ? "border-emerald-300/30 bg-emerald-300/[0.07]" : "border-slate-800 bg-slate-950/55"}`}>
                       <div className="flex items-center gap-3">
@@ -335,12 +329,9 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
                           {rank}
                         </span>
                         <span className="min-w-0 flex-1">
-                          <span className="block text-[9px] uppercase tracking-[0.16em] text-slate-400">{hierarchyLabels[index]}</span>
-                          <strong className={`mt-1 block truncate text-base font-semibold ${rank === 1 ? accent.text : "text-slate-100"}`}>{value}</strong>
+                          <span className="block text-[11px] uppercase tracking-[0.16em] text-slate-400">{hierarchyLabels[index]}</span>
+                          <strong className={`mt-1 block break-words text-base font-semibold ${rank === 1 ? accent.text : "text-slate-100"}`}>{value}</strong>
                         </span>
-                        {confidenceLabel ? (
-                          <span className="shrink-0 rounded-full border border-slate-700 px-2 py-1 text-[9px] font-medium text-slate-300">{confidenceLabel}</span>
-                        ) : null}
                       </div>
                     </li>
                   );
@@ -372,7 +363,7 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
               {latestEvidenceUpdate ? (
                 <div className="rounded-xl border border-slate-700 bg-slate-950/60 p-4">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-emerald-300">Latest hierarchy evidence</span>
+                    <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-emerald-300">Latest hierarchy evidence</span>
                     <span className="text-xs text-slate-400">{latestEvidenceUpdate.dateLabel}</span>
                   </div>
                   <h3 className="mt-2 font-semibold text-slate-100">{latestEvidenceUpdate.headline}</h3>
@@ -390,7 +381,7 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
                 <div>
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <p className="font-medium text-slate-100">Sources checked</p>
-                    <span className="rounded-full border border-slate-700 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.14em] text-slate-300">
+                    <span className="rounded-full border border-slate-700 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.14em] text-slate-300">
                       {Math.min(team.evidenceSources.length, 4)} sources shown
                     </span>
                   </div>

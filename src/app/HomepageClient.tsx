@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { questionSlug } from "@/lib/parse-faq";
 import { type Bet, type Bookmaker, type MarketStats } from "@/lib/supabase";
@@ -17,17 +17,6 @@ import PropsAlertsCta from "@/components/PropsAlertsCta";
 import { formatMatchDate } from "@/lib/format";
 import { publicTipPath } from "@/lib/tip-seo";
 import type { Resource } from "@/lib/resources";
-
-const HOMEPAGE_KEYFRAMES = `
-@keyframes homepage-reveal {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes homepage-underline {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-`;
 
 const COMPILER_CARDS = [
   {
@@ -104,20 +93,6 @@ function getTrackingMonths() {
     (now.getUTCFullYear() - start.getUTCFullYear()) * 12 + (now.getUTCMonth() - start.getUTCMonth())
   );
   return `${months}+ months`;
-}
-
-function HomepageReveal({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) {
-  return (
-    <div
-      className={`min-w-0 ${className}`}
-      style={{
-        animation: "homepage-reveal 0.75s cubic-bezier(0.16,1,0.3,1) both",
-        animationDelay: `${delay}ms`,
-      }}
-    >
-      {children}
-    </div>
-  );
 }
 
 function MarketCard({
@@ -273,6 +248,7 @@ export default function HomepageClient({
   const [last7DaysProfit, setLast7DaysProfit] = useState<number | null>(initialLast7?.total ?? null);
   const [last7DaysCount, setLast7DaysCount] = useState<number>(initialLast7?.count ?? 0);
   const [last7Error, setLast7Error] = useState<boolean>(!initialLast7);
+  const [recordStatus, setRecordStatus] = useState<"loaded" | "historical" | "unavailable">(initialMarketStats.length ? "loaded" : "historical");
   const [combinedStats, setCombinedStats] = useState<{
     props: CombinedMarketStats;
     tennis: CombinedMarketStats;
@@ -293,6 +269,7 @@ export default function HomepageClient({
       setRecentBets((json.recent ?? []) as HomepageBet[]);
       setPendingBets((json.pending ?? []) as HomepageBet[]);
       calculateCombinedStats((json.stats as MarketStats[] | null) ?? []);
+      setRecordStatus(Array.isArray(json.stats) && json.stats.length ? "loaded" : "historical");
       setLast7Error(false);
       if (json.last7 && typeof json.last7.total === "number") {
         setLast7DaysProfit(json.last7.total);
@@ -303,7 +280,7 @@ export default function HomepageClient({
     } catch (error) {
       console.error("Error fetching public homepage record:", error);
       setLast7Error(true);
-      calculateCombinedStats([]);
+      setRecordStatus("unavailable");
     }
   }, []);
 
@@ -373,115 +350,37 @@ export default function HomepageClient({
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      <style jsx global>{HOMEPAGE_KEYFRAMES}</style>
+      <main id="main-content">
 
-      <section className="relative overflow-x-clip border-b border-slate-800/40 pb-10 pt-5 md:pb-14 md:pt-6 lg:pb-16">
-        <div
-          className="pointer-events-none absolute inset-x-0 -top-24 h-[640px]"
-          style={{ background: "radial-gradient(ellipse 1200px 550px at 50% -120px, rgba(87,209,150,0.10), transparent)" }}
-        />
-        <div className="pointer-events-none absolute -right-36 top-0 h-[420px] w-[420px] rounded-full bg-[rgba(87,209,150,0.035)] blur-[120px]" />
-
-        <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="grid min-w-0 items-start gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(23rem,0.92fr)] lg:gap-10 xl:gap-14">
-            <div className="min-w-0 lg:py-4">
-              <HomepageReveal delay={80}>
-                <h1 className="text-[clamp(2.55rem,13vw,3rem)] font-semibold leading-[0.98] tracking-[-0.045em] text-white sm:text-6xl md:text-7xl">
-                  Betting with
-                  <br />
-                  <span className="relative inline-block text-[var(--brand-green)]">
-                    mathematical
-                    <span
-                      className="absolute bottom-0 left-0 right-0 h-[2px] origin-left rounded-full bg-[rgba(87,209,150,0.32)]"
-                      style={{ animation: "homepage-underline 0.8s cubic-bezier(0.16,1,0.3,1) both", animationDelay: "850ms" }}
-                    />
-                  </span>
-                  <br />
-                  <span className="relative inline-block text-[var(--brand-green)]">
-                    edge
-                    <span
-                      className="absolute bottom-0 left-0 right-0 h-[2px] origin-left rounded-full bg-[rgba(87,209,150,0.32)]"
-                      style={{ animation: "homepage-underline 0.8s cubic-bezier(0.16,1,0.3,1) both", animationDelay: "1025ms" }}
-                    />
-                  </span>
-                </h1>
-              </HomepageReveal>
-
-              <HomepageReveal delay={240}>
-                <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-300">
-                  Professional betting methodology from a former odds compiler. We identify value where bookmakers misprice markets.
-                </p>
-              </HomepageReveal>
-
-              <HomepageReveal delay={380}>
-                <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
-                  <PropsAlertsCta source="homepage_hero" variant="pill" className="w-full sm:w-auto" />
-                  <Link
-                    href="/tennis-tips#picks"
-                    className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-[rgba(87,209,150,0.35)] px-5 py-3 text-base font-medium text-slate-100 transition-all hover:border-[rgba(87,209,150,0.55)] hover:bg-[rgba(87,209,150,0.08)] sm:w-auto sm:px-6"
-                  >
-                    ATP tennis picks {"\u2192"}
-                  </Link>
-                </div>
-              </HomepageReveal>
-
-              <HomepageReveal delay={520}>
-                <div className="mt-6 grid grid-cols-2 gap-x-3 gap-y-2 font-mono text-[10px] leading-4 text-slate-400 sm:mt-7 sm:flex sm:flex-wrap sm:items-center sm:gap-3 sm:text-xs">
-                  {[
-                    "Selected free picks",
-                    "Every result logged",
-                    "Transparent record",
-                  ].map((item) => (
-                    <span key={item} className="inline-flex items-center gap-2">
-                      <span className="h-[3px] w-[3px] rounded-full bg-slate-600" />
-                      {item}
-                    </span>
-                  ))}
-                  <Link
-                    href="/player-props#picks"
-                    className="col-span-2 font-medium text-[rgba(87,209,150,0.85)] transition-colors hover:text-[var(--brand-green)] sm:col-auto"
-                  >
-                    See all football picks {"\u2192"}
-                  </Link>
-                </div>
-              </HomepageReveal>
-
-              <HomepageReveal delay={650}>
-                <div className="mt-8 max-w-3xl rounded-[1.4rem] border border-[rgba(87,209,150,0.22)] bg-[linear-gradient(135deg,rgba(87,209,150,0.13),rgba(9,13,19,0.78)_34%,rgba(9,13,19,0.96))] p-2 shadow-[0_24px_80px_rgba(0,0,0,0.32)]">
-                  <div className="mb-2 flex min-w-0 items-center justify-between gap-3 px-2 pt-1 font-mono text-[9px] font-bold uppercase tracking-[0.13em] text-[rgba(87,209,150,0.82)] sm:text-[10px] sm:tracking-[0.18em]">
-                    <span>Public record</span>
-                    <span className="shrink-0 text-slate-400 sm:hidden">Live updates</span>
-                    <span className="hidden shrink-0 text-slate-400 sm:inline">Updated within a minute</span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
-                    {heroProofStats.map((stat) => (
-                      <div key={stat.label} className="rounded-xl border border-white/[0.06] bg-slate-950/55 px-2 py-3 text-center sm:rounded-2xl sm:px-4 sm:py-4 sm:text-left">
-                        <div className="font-mono text-[10px] font-bold uppercase leading-tight tracking-[0.09em] text-slate-400 sm:text-[11px] sm:tracking-[0.14em]">
-                          {stat.label}
-                        </div>
-                        <div className="mt-2 font-mono text-lg font-black leading-none tracking-tight text-[var(--brand-green)] sm:text-2xl">
-                          {stat.value}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </HomepageReveal>
+      <section className="border-b border-slate-800/70 py-8 sm:py-12 lg:py-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(22rem,.92fr)] lg:gap-12">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300">Independent betting analysis</p>
+              <h1 className="mt-3 max-w-2xl text-4xl font-semibold leading-[1.1] tracking-tight text-slate-100 sm:text-5xl xl:text-6xl">Betting with <span className="text-emerald-300">mathematical edge.</span></h1>
+              <p className="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">Professional betting methodology from a former odds compiler. We identify value where bookmakers misprice markets.</p>
+              <div className="mt-6 flex flex-wrap items-center gap-3">
+                <Link href="/player-props" className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-300 px-5 py-3 text-base font-semibold text-slate-950 transition hover:bg-emerald-200 sm:w-auto">Player Props Tips <span aria-hidden="true">→</span></Link>
+                <Link href="/tennis-tips" className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-slate-600 bg-slate-900/40 px-5 py-3 text-base font-semibold text-slate-100 transition hover:border-slate-400 hover:bg-slate-900 sm:w-auto">ATP Tennis Tips <span aria-hidden="true">→</span></Link>
+                <PropsAlertsCta source="homepage_hero" variant="pill" />
+              </div>
+              <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-400">
+                {["Selected free picks", "Every result logged", "Transparent record"].map((item) => <span key={item} className="inline-flex items-center gap-2"><span aria-hidden="true" className="h-1 w-1 rounded-full bg-slate-500" />{item}</span>)}
+              </div>
+              <div className="mt-6 rounded-2xl border border-slate-800 bg-slate-900/40 p-4 sm:p-5">
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-2"><p className="text-xs font-semibold uppercase tracking-wider text-slate-400">{recordStatus === "historical" || !combinedStats ? "Historical performance baseline" : "Public performance record"}</p><Link href="/track-record" className="text-xs text-emerald-300 underline decoration-emerald-400/30 underline-offset-4 hover:text-emerald-200">View results</Link></div>
+                <dl className="grid grid-cols-3 gap-3">{heroProofStats.map((stat) => <div key={stat.label}>
+                  <dt className="text-xs leading-5 text-slate-400">{stat.label}</dt><dd className="mt-1.5 text-lg font-semibold tabular-nums tracking-tight text-slate-100 sm:text-2xl">{stat.value}</dd>
+                </div>)}</dl>
+                <p className="mt-3 text-xs text-slate-400">{recordStatus === "unavailable" ? "Record refresh unavailable. Previously loaded figures are retained; historical baseline shown if no current record has loaded." : recordStatus === "historical" ? "Historical figures recorded before database tracking. Current database results have not been included." : "Includes the historical baseline plus settled database results. Past performance is not a forecast."}</p>
+              </div>
             </div>
-
-            <HomepageReveal delay={380} className="min-w-0 lg:mt-8">
-              <TodaysEdge
-                picks={pendingBets}
-                lastSettled={recentBets[0] ?? null}
-                last7Profit={last7DaysProfit}
-              />
-            </HomepageReveal>
+            <div className="lg:pt-1"><TodaysEdge picks={pendingBets} lastSettled={recentBets[0] ?? null} last7Profit={last7DaysProfit} /></div>
           </div>
         </div>
       </section>
-
       {recentBets.length > 0 ? (
-        <section className="border-b border-slate-800/30 bg-[#0b0e13] py-12 md:py-20">
+        <section className="border-b border-slate-800/30 bg-[#0b0e13] py-16 md:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mb-8 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-center sm:justify-between">
               <div>
@@ -511,7 +410,7 @@ export default function HomepageClient({
                   <Link
                     key={bet.id}
                     href={publicTipPath(bet)}
-                    className="block cursor-pointer p-4 hover:bg-slate-800/20 active:bg-slate-800/30 sm:p-5"
+                    className="block cursor-pointer p-5 hover:bg-slate-800/20 active:bg-slate-800/30"
                   >
                     <div className="mb-2 flex items-start justify-between">
                       <div className="flex-1">
@@ -541,20 +440,19 @@ export default function HomepageClient({
 
             <div className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm">
               <Link href="/tennis-tips#picks" className="text-slate-400 transition-colors hover:text-[var(--brand-green)]">
-                Review tennis results {"\u2192"}
+                Review tennis results -&gt;
               </Link>
               <Link href="/player-props#picks" className="text-slate-400 transition-colors hover:text-[var(--brand-green)]">
-                Review player props results {"\u2192"}
+                Review player props results -&gt;
               </Link>
             </div>
-            <PropsAlertsCta source="homepage_after_results" className="mt-8" />
           </div>
         </section>
       ) : null}
 
-      <MonthlyBreakdownSection scope="combined" initialPayload={initialMonthlyPayload} />
+      <MonthlyBreakdownSection initialPayload={initialMonthlyPayload} scope="combined" />
 
-      <section id="markets" className="scroll-mt-20 border-b border-slate-800/30 py-12 md:py-20">
+      <section id="markets" className="border-b border-slate-800/30 py-16 md:py-20 scroll-mt-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.95)]">
             Where we operate
@@ -580,7 +478,7 @@ export default function HomepageClient({
         </div>
       </section>
 
-      <section className="border-b border-slate-800/30 py-12 md:py-20">
+      <section className="border-b border-slate-800/30 py-16 md:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:gap-16">
             <div className="lg:sticky lg:top-28 lg:self-start">
@@ -636,7 +534,7 @@ export default function HomepageClient({
 
 
 
-      <section className="border-b border-slate-800/30 bg-[#0b0e13] py-12 md:py-20">
+      <section className="border-b border-slate-800/30 bg-[#0b0e13] py-16 md:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.95)]">
             Go deeper
@@ -652,7 +550,7 @@ export default function HomepageClient({
 
       <LabNotesSection notes={initialLabNotes} currentlyWatching={currentlyWatching} />
 
-      <section className="border-b border-slate-800/30 py-12 md:py-20">
+      <section className="border-b border-slate-800/30 py-16 md:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -707,9 +605,9 @@ export default function HomepageClient({
         </div>
       </section>
 
-      <section className="py-12 md:py-20">
+      <section className="py-16 md:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-2xl border border-[rgba(87,209,150,0.15)] px-5 py-9 text-center sm:px-6 sm:py-10 md:px-10 md:py-14">
+          <div className="relative overflow-hidden rounded-2xl border border-[rgba(87,209,150,0.15)] px-6 py-10 text-center md:px-10 md:py-14">
             <div className="absolute inset-0 bg-[#0c0f14]" />
             <div
               className="pointer-events-none absolute inset-0"
@@ -724,26 +622,20 @@ export default function HomepageClient({
               <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-slate-300">
                 Free selections posted on site. Match, market, selection, odds, bookmaker, and stake. Everything needed to place the bet with clarity.
               </p>
-              <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <Link
                   href="/player-props#picks"
-                  className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-[var(--brand-green)] px-6 py-3.5 text-[15px] font-semibold text-slate-950 transition-all hover:brightness-110 hover:shadow-[0_0_50px_rgba(87,209,150,0.22)] sm:w-auto sm:px-8"
+                  className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand-green)] px-8 py-3.5 text-[15px] font-semibold text-slate-950 transition-all hover:brightness-110 hover:shadow-[0_0_50px_rgba(87,209,150,0.22)]"
                 >
-                  Open football picks {"\u2192"}
+                  Open latest picks {"\u2192"}
                 </Link>
                 <Link
                   href="/track-record"
-                  className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-slate-600 px-6 py-3.5 text-[15px] font-medium text-slate-200 transition-all hover:border-slate-400 hover:bg-slate-800/40 sm:w-auto sm:px-8"
+                  className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-8 py-3.5 text-[15px] font-medium text-slate-200 transition-all hover:border-slate-400 hover:bg-slate-800/40"
                 >
                   See track record {"\u2192"}
                 </Link>
               </div>
-              <Link
-                href="/tennis-tips#picks"
-                className="mt-4 inline-flex text-sm font-medium text-slate-400 transition-colors hover:text-[var(--brand-green)]"
-              >
-                ATP tennis picks {"\u2192"}
-              </Link>
             </div>
           </div>
         </div>
@@ -758,6 +650,7 @@ export default function HomepageClient({
         </div>
       </div>
 
+      </main>
       <Footer />
     </div>
   );
