@@ -1,0 +1,48 @@
+{
+  "experiment_id": "fresh-oncourt-rate-trend-v1",
+  "declaration": "Prospective shadow only. Registration begins when this configuration is frozen by the collector. Historical rows cannot be enrolled.",
+  "markets": [
+    "aces",
+    "double_faults"
+  ],
+  "baseline_days": 365,
+  "recent_days": 90,
+  "baseline_min_matches": 5,
+  "baseline_min_points": 500,
+  "recent_min_matches": 2,
+  "recent_min_points": 100,
+  "point_prior": 500,
+  "second_serve_prior": 200,
+  "trend_blend": 0.5,
+  "multiplier_min": 0.8,
+  "multiplier_max": 1.2,
+  "development_fixture_fraction": 0.6666666666666666,
+  "minimum_ev": 0.03,
+  "probability_reconstruction_tolerance": 0.015,
+  "bootstrap_replicates": 2000,
+  "bootstrap_seed": 20260905,
+  "alpha": {
+    "ATP": {
+      "aces": 0.35,
+      "double_faults": 0.1
+    },
+    "WTA": {
+      "aces": 0.5,
+      "double_faults": 0.2
+    }
+  },
+  "fixed_formula": {
+    "aces": "sqrt(shrunk_recent_server_aces_per_service_point / baseline_server_rate * shrunk_recent_opponent_aces_allowed_per_return_point / baseline_opponent_rate)",
+    "double_faults": "(shrunk_recent_DF_per_second_serve_attempt / baseline_DF_rate) * (shrunk_recent_second_serve_share / baseline_second_serve_share)",
+    "mean": "frozen_entry_mean * clip((1 - trend_blend) + trend_blend * rate_trend, multiplier_min, multiplier_max)",
+    "no_support": "Exclude from paired evaluation and report reason; never substitute a fitted rate.",
+    "split": "Choose fixture-date boundary nearest declared development fraction, retaining whole dates and physical fixtures; no parameters fit in either period."
+  },
+  "automatic_promotion": false,
+  "id": "rate-trend-prospective-v1",
+  "min_ev": 0.03,
+  "max_source_age_hours": 48,
+  "review_min_days": 56,
+  "review_min_fixtures_per_market": 200,
+  "review_min_tournaments": 4
+}
