@@ -1,7 +1,101 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-05T04:35:39Z",
+  "generated_at": "2026-09-05T12:35:21Z",
   "league": "epl",
-  "row_count": 0,
-  "rows": []
+  "row_count": 1,
+  "rows": [
+    {
+      "date": "2026-08-30",
+      "league": "epl",
+      "review_source": "fotmob_live",
+      "match": "Manchester United vs Ipswich Town",
+      "team": "Manchester United",
+      "opponent": "Ipswich Town",
+      "actual_taker": "Bruno Fernandes",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "61",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Bruno Fernandes",
+      "secondary_pre_match": "Bryan Mbeumo",
+      "tertiary_pre_match": "Youri Tielemans",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Bruno Fernandes took 1 penalty attempt and scored for Manchester United vs Ipswich Town. Primary pre-match: Bruno Fernandes (unknown). Secondary pre-match: Bryan Mbeumo (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/epl-penalty-takers.json",
+      "actual_taker_match_status": "Unknown - event-time evidence unavailable",
+      "primary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
+      "secondary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
+      "tertiary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
+      "actual_taker_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
+      "event_evidence": [
+        {
+          "id": "fotmob|epl|5795432|2962225613",
+          "source_event_id": "2962225613",
+          "match_id": "5795432",
+          "source_url": "https://www.fotmob.com/matches/ipswich-town-vs-manchester-united/3d0uj5#5795432",
+          "observed_at": "2026-09-05T12:35:10+00:00",
+          "event_date": "2026-08-30",
+          "season": "2026/27",
+          "team": "Manchester United",
+          "taker": "Bruno Fernandes",
+          "primary": "Bruno Fernandes",
+          "primary_on_pitch": null,
+          "on_pitch_proof": {
+            "player": "Bruno Fernandes",
+            "minute": 61,
+            "method": "completed_lineup_timeline",
+            "player_id": 422685,
+            "bucket": "starters",
+            "substitutions": null,
+            "events": [
+              {
+                "type": "goal"
+              },
+              {
+                "type": "goal"
+              },
+              {
+                "type": "goal"
+              },
+              {
+                "type": "assist"
+              }
+            ],
+            "reason": "missing_explicit_player_timeline"
+          },
+          "minute": 61,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Manchester United vs Ipswich Town",
+          "event_result": "scored"
+        }
+      ]
+    }
+  ],
+  "source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20260830",
+      "20260831",
+      "20260901",
+      "20260902",
+      "20260903",
+      "20260904",
+      "20260905"
+    ],
+    "matches_checked": 7
+  }
 }

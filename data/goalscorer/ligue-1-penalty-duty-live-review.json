@@ -1,7 +1,241 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-05T04:35:52Z",
+  "generated_at": "2026-09-05T12:35:38Z",
   "league": "ligue-1",
-  "row_count": 0,
-  "rows": []
+  "row_count": 3,
+  "rows": [
+    {
+      "date": "2026-08-30",
+      "league": "ligue-1",
+      "review_source": "fotmob_live",
+      "match": "Rennes vs Le Mans",
+      "team": "Rennes",
+      "opponent": "Le Mans",
+      "actual_taker": "Estéban Lepaul",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "90",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Estéban Lepaul",
+      "secondary_pre_match": "Ludovic Blas",
+      "tertiary_pre_match": "Issa Soumaré",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Estéban Lepaul took 1 penalty attempt and scored for Rennes vs Le Mans. Primary pre-match: Estéban Lepaul (unknown). Secondary pre-match: Ludovic Blas (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/ligue-1-penalty-takers.json",
+      "actual_taker_match_status": "Unknown - event-time evidence unavailable",
+      "primary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
+      "secondary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
+      "tertiary_on_pitch_at_penalty": "No - event-time timeline",
+      "actual_taker_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
+      "event_evidence": [
+        {
+          "id": "fotmob|ligue-1|5802916|2962242037",
+          "source_event_id": "2962242037",
+          "match_id": "5802916",
+          "source_url": "https://www.fotmob.com/matches/le-mans-vs-rennes/2u9b4q#5802916",
+          "observed_at": "2026-09-05T12:35:33+00:00",
+          "event_date": "2026-08-30",
+          "season": "2026/27",
+          "team": "Rennes",
+          "taker": "Estéban Lepaul",
+          "primary": "Estéban Lepaul",
+          "primary_on_pitch": null,
+          "on_pitch_proof": {
+            "player": "Estéban Lepaul",
+            "minute": 90,
+            "method": "completed_lineup_timeline",
+            "player_id": 1280225,
+            "bucket": "starters",
+            "substitutions": null,
+            "events": [
+              {
+                "type": "yellowCard"
+              },
+              {
+                "type": "goal"
+              },
+              {
+                "type": "goal"
+              }
+            ],
+            "reason": "missing_explicit_player_timeline"
+          },
+          "minute": 90,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Rennes vs Le Mans",
+          "event_result": "scored"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-30",
+      "league": "ligue-1",
+      "review_source": "fotmob_live",
+      "match": "Paris FC vs Nice",
+      "team": "Paris FC",
+      "opponent": "Nice",
+      "actual_taker": "Lassine Sinayoko",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "21",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Lassine Sinayoko",
+      "secondary_pre_match": "Ilan Kebbal",
+      "tertiary_pre_match": "Pablo Pagis",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Lassine Sinayoko took 1 penalty attempt and scored for Paris FC vs Nice. Primary pre-match: Lassine Sinayoko (unknown). Secondary pre-match: Ilan Kebbal (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/ligue-1-penalty-takers.json",
+      "actual_taker_match_status": "Unknown - event-time evidence unavailable",
+      "primary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
+      "secondary_on_pitch_at_penalty": "Yes - event-time timeline",
+      "tertiary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
+      "actual_taker_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
+      "event_evidence": [
+        {
+          "id": "fotmob|ligue-1|5802915|2962017809",
+          "source_event_id": "2962017809",
+          "match_id": "5802915",
+          "source_url": "https://www.fotmob.com/matches/paris-fc-vs-nice/268cvm#5802915",
+          "observed_at": "2026-09-05T12:35:33+00:00",
+          "event_date": "2026-08-30",
+          "season": "2026/27",
+          "team": "Paris FC",
+          "taker": "Lassine Sinayoko",
+          "primary": "Lassine Sinayoko",
+          "primary_on_pitch": null,
+          "on_pitch_proof": {
+            "player": "Lassine Sinayoko",
+            "minute": 21,
+            "method": "completed_lineup_timeline",
+            "player_id": 923196,
+            "bucket": "starters",
+            "substitutions": null,
+            "events": [
+              {
+                "type": "goal"
+              }
+            ],
+            "reason": "missing_explicit_player_timeline"
+          },
+          "minute": 21,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Paris FC vs Nice",
+          "event_result": "scored"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-30",
+      "league": "ligue-1",
+      "review_source": "fotmob_live",
+      "match": "Rennes vs Le Mans",
+      "team": "Le Mans",
+      "opponent": "Rennes",
+      "actual_taker": "Louis Mafouta",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "54",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Louis Mafouta",
+      "secondary_pre_match": "Dame Gueye",
+      "tertiary_pre_match": "Antoine Rabillard",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Louis Mafouta took 1 penalty attempt and scored for Le Mans vs Rennes. Primary pre-match: Louis Mafouta (unknown). Secondary pre-match: Dame Gueye (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/ligue-1-penalty-takers.json",
+      "actual_taker_match_status": "Unknown - event-time evidence unavailable",
+      "primary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
+      "secondary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
+      "tertiary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
+      "actual_taker_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
+      "event_evidence": [
+        {
+          "id": "fotmob|ligue-1|5802916|2962194597",
+          "source_event_id": "2962194597",
+          "match_id": "5802916",
+          "source_url": "https://www.fotmob.com/matches/le-mans-vs-rennes/2u9b4q#5802916",
+          "observed_at": "2026-09-05T12:35:33+00:00",
+          "event_date": "2026-08-30",
+          "season": "2026/27",
+          "team": "Le Mans",
+          "taker": "Louis Mafouta",
+          "primary": "Louis Mafouta",
+          "primary_on_pitch": null,
+          "on_pitch_proof": {
+            "player": "Louis Mafouta",
+            "minute": 54,
+            "method": "completed_lineup_timeline",
+            "player_id": 807955,
+            "bucket": "starters",
+            "substitutions": null,
+            "events": [
+              {
+                "type": "goal"
+              },
+              {
+                "type": "goal"
+              }
+            ],
+            "reason": "missing_explicit_player_timeline"
+          },
+          "minute": 54,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Rennes vs Le Mans",
+          "event_result": "scored"
+        }
+      ]
+    }
+  ],
+  "source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20260830",
+      "20260831",
+      "20260901",
+      "20260902",
+      "20260903",
+      "20260904",
+      "20260905"
+    ],
+    "matches_checked": 6
+  }
 }

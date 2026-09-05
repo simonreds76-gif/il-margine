@@ -1,8 +1,30 @@
 {
-  "generated_at": "2026-09-05T11:06:11Z",
+  "generated_at": "2026-09-05T12:35:54Z",
   "source": "fair_odds_lab_settled_winners",
   "description": "Winning highlights from Fair Odds Lab research signals.",
   "highlights": [
+    {
+      "id": "2026-09-05-epl-newcastle-united-vs-afc-bournemouth-marcus-tavernier",
+      "date": "2026-09-05",
+      "kickoff": "2026-09-05T11:30:00Z",
+      "competition": "England - Premier League",
+      "league": "epl",
+      "match": "Newcastle United vs AFC Bournemouth",
+      "player": "Marcus Tavernier",
+      "team": "Bournemouth",
+      "best_bookmaker": "Bet365",
+      "best_odds": 4.5,
+      "fair_odds": 3.11,
+      "model_chance_pct": 32.2,
+      "market_chance_pct": 22.2,
+      "price_gap_pp": 10.0,
+      "goals_scored": 1,
+      "super_sub_win": false,
+      "super_sub_replacement": "",
+      "super_sub_replacement_goals": 0,
+      "settled_at": "2026-09-05T12:35:42Z",
+      "settlement_note": "scored_1_goals"
+    },
     {
       "id": "2026-08-30-epl-manchester-united-vs-ipswich-town-bryan-mbeumo",
       "date": "2026-08-30",
@@ -112,28 +134,6 @@
       "super_sub_replacement_goals": 0,
       "settled_at": "2026-08-17T09:22:57Z",
       "settlement_note": "scored_2_goals"
-    },
-    {
-      "id": "2026-05-24-epl-brighton-&-hove-albion-vs-manchester-united-bryan-mbeumo",
-      "date": "2026-05-24",
-      "kickoff": "2026-05-24T15:00:00Z",
-      "competition": "England - Premier League",
-      "league": "epl",
-      "match": "Brighton & Hove Albion vs Manchester United",
-      "player": "Bryan Mbeumo",
-      "team": "Manchester United",
-      "best_bookmaker": "Bet365",
-      "best_odds": 3.4,
-      "fair_odds": 2.67,
-      "model_chance_pct": 37.5,
-      "market_chance_pct": 29.4,
-      "price_gap_pp": 8.1,
-      "goals_scored": 1,
-      "super_sub_win": false,
-      "super_sub_replacement": "",
-      "super_sub_replacement_goals": 0,
-      "settled_at": "2026-05-25T01:44:33Z",
-      "settlement_note": "scored_1_goals"
     }
   ]
 }
