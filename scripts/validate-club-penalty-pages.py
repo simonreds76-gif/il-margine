@@ -143,6 +143,7 @@ def main() -> int:
             is_researched = verification_method in {
                 "multi_source_preseason_research",
                 "reviewed_live_penalty_event",
+                "reviewed_manual_hierarchy_override",
                 "confirmed_departure_roster_review",
                 "current_roster_and_penalty_record_review",
                 "current_squad_membership_audit",

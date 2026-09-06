@@ -1,13 +1,13 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-09-06T04:46:22Z",
+  "generated_at": "2026-09-06T08:34:33Z",
   "source_status": {
-    "compared_at": "2026-09-06T04:45:27Z",
+    "compared_at": "2026-09-06T08:29:51Z",
     "hot_live_updated_at": "2026-09-05T23:53:07Z",
-    "expected_refresh_updated_at": "2026-09-06T04:45:27Z",
-    "settlement_updated_at": "2026-09-06T04:46:21Z",
+    "expected_refresh_updated_at": "2026-09-06T08:29:51Z",
+    "settlement_updated_at": "2026-09-06T08:33:57Z",
     "scheduler_heartbeat_at": "2026-09-05T23:53:07Z",
-    "snapshot_generated_at": "2026-09-06T04:46:22Z",
+    "snapshot_generated_at": "2026-09-06T08:34:33Z",
     "live_status_state": "skipped",
     "live_status_message": "Goalscorer live poll skipped: no leagues due in current cadence window."
   },
@@ -18,7 +18,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-09-06T04:45:27Z",
+      "updated_at": "2026-09-06T08:29:51Z",
       "live_rows": 210,
       "public_now": 0,
       "shadow_now": 13,
@@ -49,7 +49,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-09-06T04:45:27Z",
+      "updated_at": "2026-09-06T08:29:51Z",
       "live_rows": 35,
       "public_now": 0,
       "shadow_now": 2,
@@ -71,7 +71,7 @@
         "losses": 230,
         "voids": 7,
         "roi": -15.209407540394974,
-        "pnl_units": -42.358200000000004
+        "pnl_units": -42.3582
       }
     },
     {
@@ -80,7 +80,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-09-06T04:45:27Z",
+      "updated_at": "2026-09-06T08:29:51Z",
       "live_rows": 0,
       "public_now": 0,
       "shadow_now": 0,
@@ -101,8 +101,8 @@
         "wins": 18,
         "losses": 111,
         "voids": 12,
-        "roi": -43.74535901926444,
-        "pnl_units": -62.446499999999986
+        "roi": -43.74535901926445,
+        "pnl_units": -62.4465
       }
     },
     {
@@ -111,7 +111,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-09-06T04:45:27Z",
+      "updated_at": "2026-09-06T08:29:51Z",
       "live_rows": 0,
       "public_now": 0,
       "shadow_now": 0,
@@ -132,8 +132,8 @@
         "wins": 18,
         "losses": 118,
         "voids": 10,
-        "roi": -39.66329371816638,
-        "pnl_units": -58.404199999999996
+        "roi": -39.663293718166386,
+        "pnl_units": -58.4042
       }
     },
     {
@@ -142,7 +142,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-09-06T04:45:27Z",
+      "updated_at": "2026-09-06T08:29:51Z",
       "live_rows": 38,
       "public_now": 0,
       "shadow_now": 0,
@@ -2788,7 +2788,7 @@
     }
   ],
   "penalty_watchlist": {
-    "generated_at": "2026-09-06T04:46:21Z",
+    "generated_at": "2026-09-06T08:33:57Z",
     "row_count": 4,
     "rows": [
       {
@@ -2826,12 +2826,12 @@
         "editorial_note": "Enzo Le Fée took 1 penalty attempt and scored for Sunderland vs Brentford. Primary pre-match: Habib Diarra (not_in_squad). Secondary pre-match: Enzo Le Fee (confirmed_starter). Pre-match active slot was secondary -> Enzo Le Fée. Looks like the expected backup took over because the primary was unavailable or inactive.",
         "context_generated_at": "2026-09-05T13:27:11Z",
         "context_source_path": "data/goalscorer/epl/penalty-duty-context.json",
-        "actual_taker_match_status": "Unknown - event-time evidence unavailable",
-        "primary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
-        "secondary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
-        "tertiary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
+        "actual_taker_match_status": "Yes - started",
+        "primary_on_pitch_at_penalty": "No - unavailable in match squad",
+        "secondary_on_pitch_at_penalty": "Yes - started",
+        "tertiary_on_pitch_at_penalty": "Yes - started",
         "active_on_pitch_at_penalty": "",
-        "actual_taker_on_pitch_at_penalty": "Unknown - event-time evidence unavailable"
+        "actual_taker_on_pitch_at_penalty": "Yes - started"
       },
       {
         "row_id": "2026-09-04|la-liga|real madrid|real betis|mbapp",
@@ -2910,36 +2910,36 @@
         "editorial_note": "Rayan Fofana took 1 penalty attempt and scored for Le Havre vs Brest. Primary pre-match: Mbwana Ally Samatta (unknown). Secondary pre-match: Rassoul Ndiaye (unknown). Strong review flag: the taker was not in the tracked top three.",
         "context_generated_at": "2026-09-02",
         "context_source_path": "data/goalscorer/ligue-1-penalty-takers.json",
-        "actual_taker_match_status": "Yes - event-time timeline",
-        "primary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
-        "secondary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
-        "tertiary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
+        "actual_taker_match_status": "Yes - bench, on 62'",
+        "primary_on_pitch_at_penalty": "Yes - started",
+        "secondary_on_pitch_at_penalty": "No - started, off 46'",
+        "tertiary_on_pitch_at_penalty": "No - started, off 62'",
         "active_on_pitch_at_penalty": "",
-        "actual_taker_on_pitch_at_penalty": "Yes - event-time timeline"
+        "actual_taker_on_pitch_at_penalty": "Yes - bench, on 62'"
       },
       {
         "row_id": "2026-09-05|ligue-1|brest|le havre|doumbia",
         "date": "2026-09-05",
         "league": "ligue-1",
         "review_source": "fotmob_live",
-        "review_priority": "medium",
-        "review_type": "expected_backup_shift",
+        "review_priority": "low",
+        "review_type": "primary_held",
         "match": "Le Havre vs Brest",
         "public_team": "Brest",
-        "hierarchy_status": "conditional",
+        "hierarchy_status": "probable",
         "team": "Brest",
         "opponent": "Le Havre",
         "actual_taker": "Kamory Doumbia",
-        "actual_role_pre_match": "tertiary",
+        "actual_role_pre_match": "primary",
         "penalties_attempted": 1,
         "penalties_scored": 1,
         "distinct_takers_in_match": 1,
         "minute": "12",
         "event_type": "Goal",
         "event_result": "scored",
-        "primary_pre_match": "Ludovic Ajorque",
-        "secondary_pre_match": "Kenny Lala",
-        "tertiary_pre_match": "Kamory Doumbia",
+        "primary_pre_match": "Kamory Doumbia",
+        "secondary_pre_match": "Ludovic Ajorque",
+        "tertiary_pre_match": "Kenny Lala",
         "primary_lineup_status": "unknown",
         "secondary_lineup_status": "unknown",
         "tertiary_lineup_status": "unknown",
@@ -2949,15 +2949,15 @@
         "penalty_transfer_pre_match": 0,
         "inherited_from_pre_match": "",
         "transfer_level_pre_match": "",
-        "editorial_note": "Kamory Doumbia took 1 penalty attempt and scored for Brest vs Le Havre. Primary pre-match: Ludovic Ajorque (unknown). Secondary pre-match: Kenny Lala (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-        "context_generated_at": "2026-09-02",
+        "editorial_note": "Kamory Doumbia took 1 penalty attempt and scored for Brest vs Le Havre. Primary pre-match: Kamory Doumbia (unknown). Secondary pre-match: Ludovic Ajorque (unknown). No hierarchy change implied from this event.",
+        "context_generated_at": "2026-09-06",
         "context_source_path": "data/goalscorer/ligue-1-penalty-takers.json",
-        "actual_taker_match_status": "Yes - event-time timeline",
-        "primary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
-        "secondary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
-        "tertiary_on_pitch_at_penalty": "Yes - event-time timeline",
+        "actual_taker_match_status": "Yes - started, off 75'",
+        "primary_on_pitch_at_penalty": "Yes - started, off 75'",
+        "secondary_on_pitch_at_penalty": "Yes - started",
+        "tertiary_on_pitch_at_penalty": "Yes - started, off 22'",
         "active_on_pitch_at_penalty": "",
-        "actual_taker_on_pitch_at_penalty": "Yes - event-time timeline"
+        "actual_taker_on_pitch_at_penalty": "Yes - started, off 75'"
       }
     ]
   },
@@ -3262,7 +3262,7 @@
         "losses": 230,
         "voids": 7,
         "roi": -15.209407540394974,
-        "pnl_units": -42.358200000000004
+        "pnl_units": -42.3582
       },
       {
         "key": "la-liga",
@@ -3273,8 +3273,8 @@
         "wins": 18,
         "losses": 111,
         "voids": 12,
-        "roi": -43.74535901926444,
-        "pnl_units": -62.446499999999986
+        "roi": -43.74535901926445,
+        "pnl_units": -62.4465
       },
       {
         "key": "bundesliga",
@@ -3285,8 +3285,8 @@
         "wins": 18,
         "losses": 118,
         "voids": 10,
-        "roi": -39.66329371816638,
-        "pnl_units": -58.404199999999996
+        "roi": -39.663293718166386,
+        "pnl_units": -58.4042
       },
       {
         "key": "ligue-1",
@@ -5126,14 +5126,14 @@
     "missing_player_history_rows": 470,
     "starter_rows": 0,
     "expected_starter_rows": 114,
-    "avg_ev_pct": -61.67965583038873,
+    "avg_ev_pct": -61.67965583038869,
     "source_feed_gap_leagues": [],
-    "raw_monitor_summary": "=== Serie A | Updated 06/09/2026, 05:45 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-05T11:03:53Z\n\nHistorical Rows          31,537\nOdds Rows                437\nMatched Rows             318\nMissing Player History   119\nMissing Team Mapping     0\nFallback Rows            72\nQualified Rows           19\nRoster Resolved Rows     40\nHigh Confidence Rows     0\nMedium Confidence Rows   212\nLow Confidence Rows      106\nPublic High Signals      0\nPublic Caveat Signals    18\nShadow Track Rows        17\nPenalty Transfer Rows    4\nPosition Upgrade Rows    1\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 8\nFixtures Clean           0\nFixtures Degraded        9\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    148\nExpected Bench Rows      0\nExpected Out Rows        21\nNot In Squad Rows        0\n\nAverage EV               -0.6178\n\n\n=== Premier League | Updated 06/09/2026, 05:45 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-05T13:27:11Z\n\nHistorical Rows          31,138\nOdds Rows                310\nMatched Rows             209\nMissing Player History   101\nMissing Team Mapping     0\nFallback Rows            36\nQualified Rows           27\nRoster Resolved Rows     30\nHigh Confidence Rows     67\nMedium Confidence Rows   53\nLow Confidence Rows      89\nPublic High Signals      5\nPublic Caveat Signals    8\nShadow Track Rows        23\nPenalty Transfer Rows    3\nPosition Upgrade Rows    1\nRole Adjusted Rows       13\nFixtures With Confirmed Lineups 5\nFixtures With Expected Lineups 2\nFixtures Clean           5\nFixtures Degraded        2\nFixtures Quarantined     0\nConfirmed Starter Rows   82\nConfirmed Bench Rows     52\nExpected Starter Rows    28\nExpected Bench Rows      0\nExpected Out Rows        2\nNot In Squad Rows        4\n\nAverage EV               -0.5349\n\n\n=== La Liga | Updated 06/09/2026, 05:45 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-05T13:27:37Z\n\nHistorical Rows          32,942\nOdds Rows                157\nMatched Rows             84\nMissing Player History   73\nMissing Team Mapping     0\nFallback Rows            31\nQualified Rows           7\nRoster Resolved Rows     12\nHigh Confidence Rows     16\nMedium Confidence Rows   17\nLow Confidence Rows      51\nPublic High Signals      2\nPublic Caveat Signals    0\nShadow Track Rows        5\nPenalty Transfer Rows    3\nPosition Upgrade Rows    0\nRole Adjusted Rows       2\nFixtures With Confirmed Lineups 1\nFixtures With Expected Lineups 1\nFixtures Clean           1\nFixtures Degraded        2\nFixtures Quarantined     0\nConfirmed Starter Rows   19\nConfirmed Bench Rows     18\nExpected Starter Rows    19\nExpected Bench Rows      0\nExpected Out Rows        4\nNot In Squad Rows        4\n\nAverage EV               -0.6682\n\n\n=== Bundesliga | Updated 06/09/2026, 05:45 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-05T13:28:01Z\n\nHistorical Rows          25,685\nOdds Rows                42\nMatched Rows             33\nMissing Player History   9\nMissing Team Mapping     0\nFallback Rows            13\nQualified Rows           2\nRoster Resolved Rows     12\nHigh Confidence Rows     0\nMedium Confidence Rows   19\nLow Confidence Rows      14\nPublic High Signals      0\nPublic Caveat Signals    1\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        1\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.6154\n\n\n=== Ligue 1 | Updated 06/09/2026, 05:45 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-05T11:05:43Z\n\nHistorical Rows          25,399\nOdds Rows                285\nMatched Rows             117\nMissing Player History   168\nMissing Team Mapping     0\nFallback Rows            37\nQualified Rows           9\nRoster Resolved Rows     17\nHigh Confidence Rows     0\nMedium Confidence Rows   72\nLow Confidence Rows      45\nPublic High Signals      0\nPublic Caveat Signals    8\nShadow Track Rows        3\nPenalty Transfer Rows    1\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 1\nFixtures Clean           0\nFixtures Degraded        6\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    17\nExpected Bench Rows      0\nExpected Out Rows        5\nNot In Squad Rows        0\n\nAverage EV               -0.6522\n"
+    "raw_monitor_summary": "=== Serie A | Updated 06/09/2026, 09:29 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-05T11:03:53Z\n\nHistorical Rows          31,537\nOdds Rows                437\nMatched Rows             318\nMissing Player History   119\nMissing Team Mapping     0\nFallback Rows            72\nQualified Rows           19\nRoster Resolved Rows     40\nHigh Confidence Rows     0\nMedium Confidence Rows   212\nLow Confidence Rows      106\nPublic High Signals      0\nPublic Caveat Signals    18\nShadow Track Rows        17\nPenalty Transfer Rows    4\nPosition Upgrade Rows    1\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 8\nFixtures Clean           0\nFixtures Degraded        9\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    148\nExpected Bench Rows      0\nExpected Out Rows        21\nNot In Squad Rows        0\n\nAverage EV               -0.6178\n\n\n=== Premier League | Updated 06/09/2026, 09:29 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-05T13:27:11Z\n\nHistorical Rows          31,138\nOdds Rows                310\nMatched Rows             209\nMissing Player History   101\nMissing Team Mapping     0\nFallback Rows            36\nQualified Rows           27\nRoster Resolved Rows     30\nHigh Confidence Rows     67\nMedium Confidence Rows   53\nLow Confidence Rows      89\nPublic High Signals      5\nPublic Caveat Signals    8\nShadow Track Rows        23\nPenalty Transfer Rows    3\nPosition Upgrade Rows    1\nRole Adjusted Rows       13\nFixtures With Confirmed Lineups 5\nFixtures With Expected Lineups 2\nFixtures Clean           5\nFixtures Degraded        2\nFixtures Quarantined     0\nConfirmed Starter Rows   82\nConfirmed Bench Rows     52\nExpected Starter Rows    28\nExpected Bench Rows      0\nExpected Out Rows        2\nNot In Squad Rows        4\n\nAverage EV               -0.5349\n\n\n=== La Liga | Updated 06/09/2026, 09:29 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-05T13:27:37Z\n\nHistorical Rows          32,942\nOdds Rows                157\nMatched Rows             84\nMissing Player History   73\nMissing Team Mapping     0\nFallback Rows            31\nQualified Rows           7\nRoster Resolved Rows     12\nHigh Confidence Rows     16\nMedium Confidence Rows   17\nLow Confidence Rows      51\nPublic High Signals      2\nPublic Caveat Signals    0\nShadow Track Rows        5\nPenalty Transfer Rows    3\nPosition Upgrade Rows    0\nRole Adjusted Rows       2\nFixtures With Confirmed Lineups 1\nFixtures With Expected Lineups 1\nFixtures Clean           1\nFixtures Degraded        2\nFixtures Quarantined     0\nConfirmed Starter Rows   19\nConfirmed Bench Rows     18\nExpected Starter Rows    19\nExpected Bench Rows      0\nExpected Out Rows        4\nNot In Squad Rows        4\n\nAverage EV               -0.6682\n\n\n=== Bundesliga | Updated 06/09/2026, 09:29 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-05T13:28:01Z\n\nHistorical Rows          25,685\nOdds Rows                42\nMatched Rows             33\nMissing Player History   9\nMissing Team Mapping     0\nFallback Rows            13\nQualified Rows           2\nRoster Resolved Rows     12\nHigh Confidence Rows     0\nMedium Confidence Rows   19\nLow Confidence Rows      14\nPublic High Signals      0\nPublic Caveat Signals    1\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        1\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.6154\n\n\n=== Ligue 1 | Updated 06/09/2026, 09:29 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-05T11:05:43Z\n\nHistorical Rows          25,399\nOdds Rows                285\nMatched Rows             117\nMissing Player History   168\nMissing Team Mapping     0\nFallback Rows            37\nQualified Rows           9\nRoster Resolved Rows     17\nHigh Confidence Rows     0\nMedium Confidence Rows   72\nLow Confidence Rows      45\nPublic High Signals      0\nPublic Caveat Signals    8\nShadow Track Rows        3\nPenalty Transfer Rows    1\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 1\nFixtures Clean           0\nFixtures Degraded        6\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    17\nExpected Bench Rows      0\nExpected Out Rows        5\nNot In Squad Rows        0\n\nAverage EV               -0.6522\n"
   },
   "research_status": {
     "status": "RESEARCH_ONLY",
     "model_variant": "v2_minutes_absolute_share_repair",
-    "updated_at": "2026-09-06T04:45:27Z",
+    "updated_at": "2026-09-06T08:29:51Z",
     "parity": {
       "decision": "PASS",
       "golden_rows": 25,
@@ -5176,5 +5176,5 @@
     }
   },
   "snapshot_key": "monitor_state",
-  "payload_hash": "9fd4a2b1c9d1c8940c759e9622dc8d97c1407b6f8080786719fb747bc1481008"
+  "payload_hash": "2520982e0b70b91bb04831587e77b754c44dc8fca5534517cafd178ef1cb925d"
 }

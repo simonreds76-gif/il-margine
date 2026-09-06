@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-06T04:45:54Z",
+  "generated_at": "2026-09-06T08:33:57Z",
   "league": "epl",
   "row_count": 1,
   "rows": [
@@ -33,33 +33,33 @@
       "editorial_note": "Enzo Le Fée took 1 penalty attempt and scored for Sunderland vs Brentford. Primary pre-match: Habib Diarra (not_in_squad). Secondary pre-match: Enzo Le Fee (confirmed_starter). Pre-match active slot was secondary -> Enzo Le Fée. Looks like the expected backup took over because the primary was unavailable or inactive.",
       "context_generated_at": "2026-09-05T13:27:11Z",
       "context_source_path": "data/goalscorer/epl/penalty-duty-context.json",
-      "actual_taker_match_status": "Unknown - event-time evidence unavailable",
-      "primary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
-      "secondary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
-      "tertiary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
-      "actual_taker_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
+      "actual_taker_match_status": "Yes - started",
+      "primary_on_pitch_at_penalty": "No - unavailable in match squad",
+      "secondary_on_pitch_at_penalty": "Yes - started",
+      "tertiary_on_pitch_at_penalty": "Yes - started",
+      "actual_taker_on_pitch_at_penalty": "Yes - started",
       "event_evidence": [
         {
           "id": "fotmob|epl|5795436|2964667989",
           "source_event_id": "2964667989",
           "match_id": "5795436",
           "source_url": "https://www.fotmob.com/matches/sunderland-vs-brentford/2sw7v2#5795436",
-          "observed_at": "2026-09-06T04:45:41+00:00",
+          "observed_at": "2026-09-06T08:33:51+00:00",
           "event_date": "2026-09-05",
           "season": "2026/27",
           "team": "Sunderland",
           "taker": "Enzo Le Fée",
           "primary": "Habib Diarra",
-          "primary_on_pitch": null,
+          "primary_on_pitch": false,
           "on_pitch_proof": {
             "player": "Habib Diarra",
             "minute": 82,
             "method": "completed_lineup_timeline",
             "player_id": 1285866,
             "bucket": "unavailable",
-            "substitutions": null,
-            "events": null,
-            "reason": "missing_explicit_player_timeline"
+            "substitutions": [],
+            "events": [],
+            "reason": "not_on_pitch"
           },
           "minute": 82,
           "penalty_kind": "in_match",
@@ -75,10 +75,8 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20260904",
-      "20260905",
-      "20260906"
+      "20260905"
     ],
-    "matches_checked": 8
+    "matches_checked": 7
   }
 }

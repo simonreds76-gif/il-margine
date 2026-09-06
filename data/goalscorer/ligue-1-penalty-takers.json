@@ -829,30 +829,30 @@
     }
   },
   "Brest": {
-    "primary": "Ludovic Ajorque",
-    "secondary": "Kenny Lala",
-    "tertiary": "Kamory Doumbia",
-    "last_updated": "2026-09-02",
+    "primary": "Kamory Doumbia",
+    "secondary": "Ludovic Ajorque",
+    "tertiary": "Kenny Lala",
+    "last_updated": "2026-09-06",
     "source": "Ligue 1",
     "cross_check": "L'Équipe",
-    "hierarchy_status": "conditional",
+    "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
+      "primary": "medium",
       "secondary": "medium",
-      "tertiary": null
+      "tertiary": "medium"
     },
-    "condition_note": "Ajorque and Lala retain the post-Del Castillo order. Doumbia fills the current-squad third slot until Brest receive a direct post-transfer penalty.",
+    "condition_note": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
     "last_verified": {
-      "date": "2026-09-02",
-      "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "date": "2026-09-06",
+      "by": "local_admin",
+      "method": "reviewed_manual_hierarchy_override"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-06",
     "latest_evidence": {
-      "id": "evt_20260902_brest_post_deadline",
-      "date": "2026-09-02",
-      "type": "post_deadline_roster_review",
-      "source_count": 2
+      "id": "be275a615158438ba80afb929487c56f",
+      "date": "2026-09-06",
+      "type": "current_season_board_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -1103,6 +1103,29 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Post-deadline roster correction; uncertain depth remains explicitly provisional."
+      },
+      {
+        "id": "be275a615158438ba80afb929487c56f",
+        "date": "2026-09-06",
+        "type": "current_season_board_review",
+        "headline": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
+        "editorial_note": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
+        "sources": [
+          {
+            "label": "Le Havre official match report and team sheet",
+            "url": "https://hac.football/fr/posts/hac-stade-brestois-29-les-choses-de-la-vie",
+            "date": "2026-09-06",
+            "note": ""
+          }
+        ],
+        "review": {
+          "status": "approved",
+          "reviewed_by": "local_admin",
+          "reviewed_at": "2026-09-06T08:33:01+00:00"
+        },
+        "affects_hierarchy": true,
+        "detection": "local_admin",
+        "season": "2026/27"
       }
     ],
     "change_log": [
@@ -1220,11 +1243,30 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-02T18:00:00Z",
         "article_slug": null
+      },
+      {
+        "id": "be275a615158438ba80afb929487c56f",
+        "changed_at": "2026-09-06T08:33:01+00:00",
+        "change_type": "hierarchy_change",
+        "reason": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
+        "from": {
+          "primary": "Ludovic Ajorque",
+          "secondary": "Kenny Lala",
+          "tertiary": "Kamory Doumbia"
+        },
+        "to": {
+          "primary": "Kamory Doumbia",
+          "secondary": "Ludovic Ajorque",
+          "tertiary": "Kenny Lala"
+        },
+        "evidence_ids": [
+          "be275a615158438ba80afb929487c56f"
+        ]
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -1237,19 +1279,19 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Ludovic Ajorque",
+        "player": "Kamory Doumbia",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/8521/overview/brest",
         "checked_at": "2026-09-02"
       },
       "secondary": {
-        "player": "Kenny Lala",
+        "player": "Ludovic Ajorque",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/8521/overview/brest",
         "checked_at": "2026-09-02"
       },
       "tertiary": {
-        "player": "Kamory Doumbia",
+        "player": "Kenny Lala",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/8521/overview/brest",
         "checked_at": "2026-09-02"
@@ -1266,7 +1308,8 @@
         "https://www.deux-zero.com/ligue-1/penalties-tireurs-epreuve/joueur/6874",
         "https://starting11.com/set-piece-takers/ligue-1"
       ]
-    }
+    },
+    "unavailable_candidates": []
   },
   "Le Havre": {
     "primary": "Mbwana Ally Samatta",

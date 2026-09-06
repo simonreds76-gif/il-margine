@@ -24,6 +24,22 @@ class GoalscorerLivePenaltyReviewTests(unittest.TestCase):
         primary = {"id": 1, "name": "First Player", "performance": {"substitutionEvents": substitutions or [], "events": events or []}}
         return {"starters": [primary] + [{"id": i, "name": f"Other {i}"} for i in range(2, 12)], "subs": [], "unavailable": []}
 
+    def test_completed_match_feed_fills_missing_player_arrays(self):
+        lineup = self.lineup()
+        lineup["starters"][0]["performance"] = {"rating": 7}
+        lineup["subs"] = [{"id": 12, "name": "Backup Player"}]
+        content = {"matchFacts": {"events": {"ongoing": False, "events": [
+            {"type": "Substitution", "time": 62, "isHome": True, "swap": [{"id": "12"}, {"id": "1"}]}
+        ]}}}
+        rebuilt = MODULE._attach_match_timeline(lineup, content, True, True)
+        self.assertTrue(MODULE._on_pitch_at(rebuilt, "First Middle Player", 12)[0])
+        self.assertFalse(MODULE._on_pitch_at(rebuilt, "First Player", 79)[0])
+        self.assertTrue(MODULE._on_pitch_at(rebuilt, "Backup Player", 79)[0])
+        self.assertIsNone(MODULE._on_pitch_at(rebuilt, "First Player", 62)[0])
+        self.assertIsNone(MODULE._on_pitch_at(rebuilt, "Missing Player", 79)[0])
+        incomplete = MODULE._attach_match_timeline(lineup, content, True, False)
+        self.assertIsNone(MODULE._on_pitch_at(incomplete, "First Player", 12)[0])
+
     def test_actual_lineup_timeline_proves_on_pitch_before_substitution(self):
         lineup = self.lineup([{"type": "subOut", "time": 70}])
         self.assertIs(MODULE._on_pitch_at(lineup, "First Player", 60)[0], True)

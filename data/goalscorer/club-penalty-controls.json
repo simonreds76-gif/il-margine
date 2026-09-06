@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "clubs": {
+    "ligue-1|Brest": {
+      "locked": true,
+      "override": {
+        "primary": "Kamory Doumbia",
+        "secondary": "Ludovic Ajorque",
+        "tertiary": "Kenny Lala"
+      },
+      "reason": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
+      "updated_at": "2026-09-06T08:33:01+00:00",
+      "actor": "local_admin"
+    }
+  },
+  "audit": [
+    {
+      "id": "be275a615158438ba80afb929487c56f",
+      "at": "2026-09-06T08:33:01+00:00",
+      "actor": "local_admin",
+      "action": "override",
+      "club_id": "ligue-1|Brest",
+      "reason": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
+      "before_entry_hash": "a4421c8eef41b897868e44fd655aab3e581aef304bedfeec30dc2dadf290614e",
+      "after_entry_hash": "204f89bcbd99a638102ee409e45c4adfa5a4e8370c56cae62fbcfa52f3a96c9c",
+      "before_control": {},
+      "after_control": {
+        "locked": true,
+        "override": {
+          "primary": "Kamory Doumbia",
+          "secondary": "Ludovic Ajorque",
+          "tertiary": "Kenny Lala"
+        },
+        "reason": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
+        "updated_at": "2026-09-06T08:33:01+00:00",
+        "actor": "local_admin"
+      },
+      "reverts": null,
+      "before_hierarchy": {
+        "primary": "Ludovic Ajorque",
+        "secondary": "Kenny Lala",
+        "tertiary": "Kamory Doumbia"
+      },
+      "after_hierarchy": {
+        "primary": "Kamory Doumbia",
+        "secondary": "Ludovic Ajorque",
+        "tertiary": "Kenny Lala"
+      }
+    }
+  ]
+}
