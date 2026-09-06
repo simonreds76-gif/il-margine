@@ -1,0 +1,990 @@
+{
+  "schema_version": 1,
+  "status": "committed",
+  "id": "be275a615158438ba80afb929487c56f",
+  "league": "ligue-1",
+  "audit": {
+    "id": "be275a615158438ba80afb929487c56f",
+    "at": "2026-09-06T08:33:01+00:00",
+    "actor": "local_admin",
+    "action": "override",
+    "club_id": "ligue-1|Brest",
+    "reason": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
+    "before_entry": {
+      "primary": "Ludovic Ajorque",
+      "secondary": "Kenny Lala",
+      "tertiary": "Kamory Doumbia",
+      "last_updated": "2026-09-02",
+      "source": "Ligue 1",
+      "cross_check": "L'Équipe",
+      "hierarchy_status": "conditional",
+      "confidence": {
+        "primary": "high",
+        "secondary": "medium",
+        "tertiary": null
+      },
+      "condition_note": "Ajorque and Lala retain the post-Del Castillo order. Doumbia fills the current-squad third slot until Brest receive a direct post-transfer penalty.",
+      "last_verified": {
+        "date": "2026-09-02",
+        "by": "Il Margine",
+        "method": "multi_source_preseason_research"
+      },
+      "public_updated_at": "2026-09-02",
+      "latest_evidence": {
+        "id": "evt_20260902_brest_post_deadline",
+        "date": "2026-09-02",
+        "type": "post_deadline_roster_review",
+        "source_count": 2
+      },
+      "evidence_log": [
+        {
+          "id": "evt_20260710_brest_rollover",
+          "date": "2026-07-10",
+          "season": "2026/27",
+          "type": "editorial_note",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": null,
+          "sources": [],
+          "detection": "manual",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-10T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+        },
+        {
+          "id": "evt_20260727_brest_research",
+          "date": "2026-07-27",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Del Castillo converted Brest's 15th-minute penalty at Nice. Listed Del Castillo as Brest's only penalty taker and recorded six conversions from eight attempts. A community-posted clip corroborated the Nice event but supplied no additional hierarchy evidence and was not used independently.",
+          "sources": [
+            {
+              "label": "L'Équipe",
+              "url": "https://www.lequipe.fr/Football/Article/Caractere-retrouve-remontee-reconciliation-avec-les-supporters-nice-avance-malgre-son-match-nul/1638628",
+              "date": "2026-02-01",
+              "note": "Del Castillo converted Brest's 15th-minute penalty at Nice."
+            },
+            {
+              "label": "Ligue 1 Fantasy",
+              "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+              "date": "2026-05-11",
+              "note": "Listed Del Castillo as Brest's only penalty taker and recorded six conversions from eight attempts."
+            },
+            {
+              "label": "Reddit",
+              "url": "https://www.reddit.com/r/soccer/comments/1qt5bxz/nice_01_brest_romain_del_castillo_penalty_15/",
+              "date": "2026-02-01",
+              "note": "A community-posted clip corroborated the Nice event but supplied no additional hierarchy evidence and was not used independently."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-27T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260728_brest_research",
+          "date": "2026-07-28",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Del Castillo is firmly established. There is no recent Brest coexistence event for the backups, so Ajorque's 10-for-15 career record is preferred to Lala's one recorded conversion. This reverses the older rollover backup order but is explicitly provisional.",
+          "sources": [
+            {
+              "label": "L'Équipe",
+              "url": "https://www.lequipe.fr/Football/Article/Caractere-retrouve-remontee-reconciliation-avec-les-supporters-nice-avance-malgre-son-match-nul/1638628",
+              "date": "2026-02-01",
+              "note": "Del Castillo converted Brest's 15th-minute penalty at Nice."
+            },
+            {
+              "label": "Ligue 1 Fantasy",
+              "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+              "date": "2026-05-11",
+              "note": "Listed Del Castillo as Brest's only penalty taker and recorded six conversions from eight attempts."
+            },
+            {
+              "label": "FootyStats",
+              "url": "https://footystats.org/players/france/ludovic-ajorque",
+              "date": "2026-07-28",
+              "note": "Ajorque is recorded at 10 scored from 15 career penalties."
+            },
+            {
+              "label": "Transfermarkt",
+              "url": "https://www.transfermarkt.com/kenny-lala/elfmetertore/spieler/174196/saison_id/2016/wettbewerb_id/FR2",
+              "date": "2026-07-28",
+              "note": "Lala's available recorded penalty sample is one conversion."
+            },
+            {
+              "label": "Capology",
+              "url": "https://www.capology.com/club/brest/salaries/",
+              "date": "2026-07-28",
+              "note": "Del Castillo, Ajorque and Lala remain listed with Brest contracts."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-28T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260730_brest_research",
+          "date": "2026-07-30",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Del Castillo was Brest's sole 2025/26 taker at 6/8 and was explicitly described as the taker. Ajorque's striker role and Lala's dead-ball role make them the practical backups.",
+          "sources": [
+            {
+              "label": "Ligue 1",
+              "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+              "date": "2026-05-11",
+              "note": "Source reviewed."
+            },
+            {
+              "label": "L'Équipe",
+              "url": "https://www.lequipe.fr/Football/Actualites/Del-castillo-aurait-du-nettoyer-sa-semelle-a-ironise-eric-roy-apres-le-gros-manque-de-son-joueur-sur-penalty-face-au-psg/1604720",
+              "date": "2025-10-25",
+              "note": "Source reviewed."
+            },
+            {
+              "label": "L'Équipe",
+              "url": "https://www.lequipe.fr/Football/Actualites/-oui-il-nous-faut-des-recrues-julien-lachuer-le-nouvel-entraineur-de-brest-espere-des-retouches-et-des-jeunes/1703291",
+              "date": "2026-07-10",
+              "note": "Source reviewed."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-30T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260901_brest_departure",
+          "date": "2026-09-01",
+          "season": "2026/27",
+          "type": "roster_integrity_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "headline": "Penalty order reset after squad change",
+          "context": "The hierarchy was reset after confirmed squad departures. The current filed order is Ludovic Ajorque then Kenny Lala. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+          "sources": [
+            {
+              "label": "Osasuna",
+              "url": "https://www.osasuna.es/en/osasuna-signs-forward-romain-del-castillo",
+              "date": "2026-09-01",
+              "note": "Confirmed squad departure relevant to the Brest penalty hierarchy."
+            }
+          ],
+          "detection": "automated_roster_audit_manual_verification",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-01T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Ludovic Ajorque then Kenny Lala. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
+        },
+        {
+          "id": "evt_20260901_brest_current_review",
+          "date": "2026-09-01",
+          "season": "2026/27",
+          "type": "current_season_board_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "headline": "Brest hierarchy rechecked",
+          "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+          "sources": [
+            {
+              "label": "Ligue 1 official set-piece review",
+              "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+              "date": "2026-05-11",
+              "note": "Official 2025/26 role baseline retained only for players still at the same club; it is not treated as a current hierarchy by itself."
+            },
+            {
+              "label": "StatBunker Ligue 1 2026/27 penalties",
+              "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+              "date": "2026-09-01",
+              "note": "Current-season penalty event and taker cross-check."
+            },
+            {
+              "label": "Deux-Zero Ligue 1 2026/27 penalty archive",
+              "url": "https://www.deux-zero.com/ligue-1/penalties-tireurs-epreuve/joueur/6874",
+              "date": "2026-09-01",
+              "note": "Independent French current-season archive used to cross-check every recorded penalty taker and outcome."
+            },
+            {
+              "label": "Starting11 Ligue 1 set-piece and lineup tracker",
+              "url": "https://starting11.com/set-piece-takers/ligue-1",
+              "date": "2026-09-01",
+              "note": "Current squads, starting roles and retained penalty history used for lineup and membership checks, not as proof of an unobserved 2026/27 assignment."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-01T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+        },
+        {
+          "id": "evt_20260902_brest_post_deadline",
+          "date": "2026-09-02",
+          "season": "2026/27",
+          "type": "post_deadline_roster_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Ajorque and Lala retain the post-Del Castillo order. Doumbia fills the current-squad third slot until Brest receive a direct post-transfer penalty.",
+          "sources": [
+            {
+              "label": "FotMob current club squad",
+              "url": "https://www.fotmob.com/teams/8521/overview/brest",
+              "date": "2026-09-02",
+              "note": "Current squad membership checked after the transfer deadline."
+            },
+            {
+              "label": "Ligue 1 official penalty and set-piece review",
+              "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+              "date": "2026-09-02",
+              "note": "Current role evidence cross-checked before reordering."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-02T18:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Post-deadline roster correction; uncertain depth remains explicitly provisional."
+        }
+      ],
+      "change_log": [
+        {
+          "changed_at": "2026-07-10",
+          "season": "2026/27",
+          "change_type": "season_rollover",
+          "from": {
+            "primary": "Romain Del Castillo",
+            "secondary": "Kenny Lala",
+            "tertiary": "Ludovic Ajorque"
+          },
+          "to": {
+            "primary": "Romain Del Castillo",
+            "secondary": "Kenny Lala",
+            "tertiary": "Ludovic Ajorque"
+          },
+          "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+          "evidence_ids": [
+            "evt_20260710_brest_rollover"
+          ],
+          "detection": "manual",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-10T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-28",
+          "season": "2026/27",
+          "change_type": "hierarchy_research_update",
+          "from": {
+            "primary": "Romain Del Castillo",
+            "secondary": "",
+            "tertiary": ""
+          },
+          "to": {
+            "primary": "Romain Del Castillo",
+            "secondary": "Ludovic Ajorque",
+            "tertiary": "Kenny Lala"
+          },
+          "reason": "Del Castillo is firmly established. There is no recent Brest coexistence event for the backups, so Ajorque's 10-for-15 career record is preferred to Lala's one recorded conversion. This reverses the older rollover backup order but is explicitly provisional. Conditions: If Ajorque is not a regular starter, Lala becomes the practical second candidate. Any preseason or competitive penalty taken while Del Castillo is absent should be used to reset the backup order.",
+          "evidence_ids": [
+            "evt_20260728_brest_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-28T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-30",
+          "season": "2026/27",
+          "change_type": "preseason_reverification",
+          "from": {
+            "primary": "Romain Del Castillo",
+            "secondary": "Ludovic Ajorque",
+            "tertiary": "Kenny Lala"
+          },
+          "to": {
+            "primary": "Romain Del Castillo",
+            "secondary": "Ludovic Ajorque",
+            "tertiary": "Kenny Lala"
+          },
+          "reason": "Del Castillo was Brest's sole 2025/26 taker at 6/8 and was explicitly described as the taker. Ajorque's striker role and Lala's dead-ball role make them the practical backups. There is no observed Brest penalty without Del Castillo to resolve the backups. Conditions: If Del Castillo is unavailable, the first attempt involving Ajorque and Lala should replace the inferred backup order.",
+          "evidence_ids": [
+            "evt_20260730_brest_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-30T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-09-01",
+          "season": "2026/27",
+          "change_type": "confirmed_departure_reorder",
+          "from": {
+            "primary": "Romain Del Castillo",
+            "secondary": "Ludovic Ajorque",
+            "tertiary": "Kenny Lala"
+          },
+          "to": {
+            "primary": "Ludovic Ajorque",
+            "secondary": "Kenny Lala",
+            "tertiary": ""
+          },
+          "reason": "The hierarchy was reset after confirmed squad departures. The current filed order is Ludovic Ajorque then Kenny Lala. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+          "evidence_ids": [
+            "evt_20260901_brest_departure"
+          ],
+          "detection": "automated_roster_audit_manual_verification",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-09-01T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-09-02",
+          "season": "2026/27",
+          "change_type": "post_deadline_roster_correction",
+          "from": {
+            "primary": "Ludovic Ajorque",
+            "secondary": "Kenny Lala",
+            "tertiary": ""
+          },
+          "to": {
+            "primary": "Ludovic Ajorque",
+            "secondary": "Kenny Lala",
+            "tertiary": "Kamory Doumbia"
+          },
+          "reason": "Ajorque and Lala retain the post-Del Castillo order. Doumbia fills the current-squad third slot until Brest receive a direct post-transfer penalty.",
+          "evidence_ids": [
+            "evt_20260902_brest_post_deadline"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-09-02T18:00:00Z",
+          "article_slug": null
+        }
+      ],
+      "flags": {
+        "carryover_from_previous_season": false,
+        "weak_evidence": true,
+        "stale_override": null
+      },
+      "prior_season": {
+        "label": "2025/26",
+        "primary": "Romain Del Castillo",
+        "secondary": "Kenny Lala",
+        "tertiary": "Ludovic Ajorque",
+        "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+      },
+      "player_ids": {},
+      "squad_membership": {
+        "primary": {
+          "player": "Ludovic Ajorque",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/8521/overview/brest",
+          "checked_at": "2026-09-02"
+        },
+        "secondary": {
+          "player": "Kenny Lala",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/8521/overview/brest",
+          "checked_at": "2026-09-02"
+        },
+        "tertiary": {
+          "player": "Kamory Doumbia",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/8521/overview/brest",
+          "checked_at": "2026-09-02"
+        }
+      },
+      "last_reviewed": {
+        "date": "2026-09-01",
+        "by": "Il Margine",
+        "method": "current_season_multi_source_review",
+        "outcome": "order_unchanged",
+        "sources": [
+          "https://ligue1.com/fr/articles/l1_article_2916-",
+          "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+          "https://www.deux-zero.com/ligue-1/penalties-tireurs-epreuve/joueur/6874",
+          "https://starting11.com/set-piece-takers/ligue-1"
+        ]
+      }
+    },
+    "after_entry": {
+      "primary": "Kamory Doumbia",
+      "secondary": "Ludovic Ajorque",
+      "tertiary": "Kenny Lala",
+      "last_updated": "2026-09-06",
+      "source": "Ligue 1",
+      "cross_check": "L'Équipe",
+      "hierarchy_status": "probable",
+      "confidence": {
+        "primary": "medium",
+        "secondary": "medium",
+        "tertiary": "medium"
+      },
+      "condition_note": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
+      "last_verified": {
+        "date": "2026-09-06",
+        "by": "local_admin",
+        "method": "reviewed_manual_hierarchy_override"
+      },
+      "public_updated_at": "2026-09-06",
+      "latest_evidence": {
+        "id": "be275a615158438ba80afb929487c56f",
+        "date": "2026-09-06",
+        "type": "current_season_board_review",
+        "source_count": 1
+      },
+      "evidence_log": [
+        {
+          "id": "evt_20260710_brest_rollover",
+          "date": "2026-07-10",
+          "season": "2026/27",
+          "type": "editorial_note",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": null,
+          "sources": [],
+          "detection": "manual",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-10T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+        },
+        {
+          "id": "evt_20260727_brest_research",
+          "date": "2026-07-27",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Del Castillo converted Brest's 15th-minute penalty at Nice. Listed Del Castillo as Brest's only penalty taker and recorded six conversions from eight attempts. A community-posted clip corroborated the Nice event but supplied no additional hierarchy evidence and was not used independently.",
+          "sources": [
+            {
+              "label": "L'Équipe",
+              "url": "https://www.lequipe.fr/Football/Article/Caractere-retrouve-remontee-reconciliation-avec-les-supporters-nice-avance-malgre-son-match-nul/1638628",
+              "date": "2026-02-01",
+              "note": "Del Castillo converted Brest's 15th-minute penalty at Nice."
+            },
+            {
+              "label": "Ligue 1 Fantasy",
+              "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+              "date": "2026-05-11",
+              "note": "Listed Del Castillo as Brest's only penalty taker and recorded six conversions from eight attempts."
+            },
+            {
+              "label": "Reddit",
+              "url": "https://www.reddit.com/r/soccer/comments/1qt5bxz/nice_01_brest_romain_del_castillo_penalty_15/",
+              "date": "2026-02-01",
+              "note": "A community-posted clip corroborated the Nice event but supplied no additional hierarchy evidence and was not used independently."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-27T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260728_brest_research",
+          "date": "2026-07-28",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Del Castillo is firmly established. There is no recent Brest coexistence event for the backups, so Ajorque's 10-for-15 career record is preferred to Lala's one recorded conversion. This reverses the older rollover backup order but is explicitly provisional.",
+          "sources": [
+            {
+              "label": "L'Équipe",
+              "url": "https://www.lequipe.fr/Football/Article/Caractere-retrouve-remontee-reconciliation-avec-les-supporters-nice-avance-malgre-son-match-nul/1638628",
+              "date": "2026-02-01",
+              "note": "Del Castillo converted Brest's 15th-minute penalty at Nice."
+            },
+            {
+              "label": "Ligue 1 Fantasy",
+              "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+              "date": "2026-05-11",
+              "note": "Listed Del Castillo as Brest's only penalty taker and recorded six conversions from eight attempts."
+            },
+            {
+              "label": "FootyStats",
+              "url": "https://footystats.org/players/france/ludovic-ajorque",
+              "date": "2026-07-28",
+              "note": "Ajorque is recorded at 10 scored from 15 career penalties."
+            },
+            {
+              "label": "Transfermarkt",
+              "url": "https://www.transfermarkt.com/kenny-lala/elfmetertore/spieler/174196/saison_id/2016/wettbewerb_id/FR2",
+              "date": "2026-07-28",
+              "note": "Lala's available recorded penalty sample is one conversion."
+            },
+            {
+              "label": "Capology",
+              "url": "https://www.capology.com/club/brest/salaries/",
+              "date": "2026-07-28",
+              "note": "Del Castillo, Ajorque and Lala remain listed with Brest contracts."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-28T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260730_brest_research",
+          "date": "2026-07-30",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Del Castillo was Brest's sole 2025/26 taker at 6/8 and was explicitly described as the taker. Ajorque's striker role and Lala's dead-ball role make them the practical backups.",
+          "sources": [
+            {
+              "label": "Ligue 1",
+              "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+              "date": "2026-05-11",
+              "note": "Source reviewed."
+            },
+            {
+              "label": "L'Équipe",
+              "url": "https://www.lequipe.fr/Football/Actualites/Del-castillo-aurait-du-nettoyer-sa-semelle-a-ironise-eric-roy-apres-le-gros-manque-de-son-joueur-sur-penalty-face-au-psg/1604720",
+              "date": "2025-10-25",
+              "note": "Source reviewed."
+            },
+            {
+              "label": "L'Équipe",
+              "url": "https://www.lequipe.fr/Football/Actualites/-oui-il-nous-faut-des-recrues-julien-lachuer-le-nouvel-entraineur-de-brest-espere-des-retouches-et-des-jeunes/1703291",
+              "date": "2026-07-10",
+              "note": "Source reviewed."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-30T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260901_brest_departure",
+          "date": "2026-09-01",
+          "season": "2026/27",
+          "type": "roster_integrity_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "headline": "Penalty order reset after squad change",
+          "context": "The hierarchy was reset after confirmed squad departures. The current filed order is Ludovic Ajorque then Kenny Lala. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+          "sources": [
+            {
+              "label": "Osasuna",
+              "url": "https://www.osasuna.es/en/osasuna-signs-forward-romain-del-castillo",
+              "date": "2026-09-01",
+              "note": "Confirmed squad departure relevant to the Brest penalty hierarchy."
+            }
+          ],
+          "detection": "automated_roster_audit_manual_verification",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-01T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "The hierarchy was reset after confirmed squad departures. The current filed order is Ludovic Ajorque then Kenny Lala. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement."
+        },
+        {
+          "id": "evt_20260901_brest_current_review",
+          "date": "2026-09-01",
+          "season": "2026/27",
+          "type": "current_season_board_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "headline": "Brest hierarchy rechecked",
+          "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+          "sources": [
+            {
+              "label": "Ligue 1 official set-piece review",
+              "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+              "date": "2026-05-11",
+              "note": "Official 2025/26 role baseline retained only for players still at the same club; it is not treated as a current hierarchy by itself."
+            },
+            {
+              "label": "StatBunker Ligue 1 2026/27 penalties",
+              "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+              "date": "2026-09-01",
+              "note": "Current-season penalty event and taker cross-check."
+            },
+            {
+              "label": "Deux-Zero Ligue 1 2026/27 penalty archive",
+              "url": "https://www.deux-zero.com/ligue-1/penalties-tireurs-epreuve/joueur/6874",
+              "date": "2026-09-01",
+              "note": "Independent French current-season archive used to cross-check every recorded penalty taker and outcome."
+            },
+            {
+              "label": "Starting11 Ligue 1 set-piece and lineup tracker",
+              "url": "https://starting11.com/set-piece-takers/ligue-1",
+              "date": "2026-09-01",
+              "note": "Current squads, starting roles and retained penalty history used for lineup and membership checks, not as proof of an unobserved 2026/27 assignment."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-01T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+        },
+        {
+          "id": "evt_20260902_brest_post_deadline",
+          "date": "2026-09-02",
+          "season": "2026/27",
+          "type": "post_deadline_roster_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Ajorque and Lala retain the post-Del Castillo order. Doumbia fills the current-squad third slot until Brest receive a direct post-transfer penalty.",
+          "sources": [
+            {
+              "label": "FotMob current club squad",
+              "url": "https://www.fotmob.com/teams/8521/overview/brest",
+              "date": "2026-09-02",
+              "note": "Current squad membership checked after the transfer deadline."
+            },
+            {
+              "label": "Ligue 1 official penalty and set-piece review",
+              "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+              "date": "2026-09-02",
+              "note": "Current role evidence cross-checked before reordering."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-02T18:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Post-deadline roster correction; uncertain depth remains explicitly provisional."
+        },
+        {
+          "id": "be275a615158438ba80afb929487c56f",
+          "date": "2026-09-06",
+          "type": "current_season_board_review",
+          "headline": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
+          "editorial_note": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
+          "sources": [
+            {
+              "label": "Le Havre official match report and team sheet",
+              "url": "https://hac.football/fr/posts/hac-stade-brestois-29-les-choses-de-la-vie",
+              "date": "2026-09-06",
+              "note": ""
+            }
+          ],
+          "review": {
+            "status": "approved",
+            "reviewed_by": "local_admin",
+            "reviewed_at": "2026-09-06T08:33:01+00:00"
+          },
+          "affects_hierarchy": true,
+          "detection": "local_admin",
+          "season": "2026/27"
+        }
+      ],
+      "change_log": [
+        {
+          "changed_at": "2026-07-10",
+          "season": "2026/27",
+          "change_type": "season_rollover",
+          "from": {
+            "primary": "Romain Del Castillo",
+            "secondary": "Kenny Lala",
+            "tertiary": "Ludovic Ajorque"
+          },
+          "to": {
+            "primary": "Romain Del Castillo",
+            "secondary": "Kenny Lala",
+            "tertiary": "Ludovic Ajorque"
+          },
+          "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+          "evidence_ids": [
+            "evt_20260710_brest_rollover"
+          ],
+          "detection": "manual",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-10T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-28",
+          "season": "2026/27",
+          "change_type": "hierarchy_research_update",
+          "from": {
+            "primary": "Romain Del Castillo",
+            "secondary": "",
+            "tertiary": ""
+          },
+          "to": {
+            "primary": "Romain Del Castillo",
+            "secondary": "Ludovic Ajorque",
+            "tertiary": "Kenny Lala"
+          },
+          "reason": "Del Castillo is firmly established. There is no recent Brest coexistence event for the backups, so Ajorque's 10-for-15 career record is preferred to Lala's one recorded conversion. This reverses the older rollover backup order but is explicitly provisional. Conditions: If Ajorque is not a regular starter, Lala becomes the practical second candidate. Any preseason or competitive penalty taken while Del Castillo is absent should be used to reset the backup order.",
+          "evidence_ids": [
+            "evt_20260728_brest_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-28T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-30",
+          "season": "2026/27",
+          "change_type": "preseason_reverification",
+          "from": {
+            "primary": "Romain Del Castillo",
+            "secondary": "Ludovic Ajorque",
+            "tertiary": "Kenny Lala"
+          },
+          "to": {
+            "primary": "Romain Del Castillo",
+            "secondary": "Ludovic Ajorque",
+            "tertiary": "Kenny Lala"
+          },
+          "reason": "Del Castillo was Brest's sole 2025/26 taker at 6/8 and was explicitly described as the taker. Ajorque's striker role and Lala's dead-ball role make them the practical backups. There is no observed Brest penalty without Del Castillo to resolve the backups. Conditions: If Del Castillo is unavailable, the first attempt involving Ajorque and Lala should replace the inferred backup order.",
+          "evidence_ids": [
+            "evt_20260730_brest_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-30T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-09-01",
+          "season": "2026/27",
+          "change_type": "confirmed_departure_reorder",
+          "from": {
+            "primary": "Romain Del Castillo",
+            "secondary": "Ludovic Ajorque",
+            "tertiary": "Kenny Lala"
+          },
+          "to": {
+            "primary": "Ludovic Ajorque",
+            "secondary": "Kenny Lala",
+            "tertiary": ""
+          },
+          "reason": "The hierarchy was reset after confirmed squad departures. The current filed order is Ludovic Ajorque then Kenny Lala. Any unfilled backup position remains under review until direct 2026/27 club evidence identifies a replacement.",
+          "evidence_ids": [
+            "evt_20260901_brest_departure"
+          ],
+          "detection": "automated_roster_audit_manual_verification",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-09-01T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-09-02",
+          "season": "2026/27",
+          "change_type": "post_deadline_roster_correction",
+          "from": {
+            "primary": "Ludovic Ajorque",
+            "secondary": "Kenny Lala",
+            "tertiary": ""
+          },
+          "to": {
+            "primary": "Ludovic Ajorque",
+            "secondary": "Kenny Lala",
+            "tertiary": "Kamory Doumbia"
+          },
+          "reason": "Ajorque and Lala retain the post-Del Castillo order. Doumbia fills the current-squad third slot until Brest receive a direct post-transfer penalty.",
+          "evidence_ids": [
+            "evt_20260902_brest_post_deadline"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-09-02T18:00:00Z",
+          "article_slug": null
+        },
+        {
+          "id": "be275a615158438ba80afb929487c56f",
+          "changed_at": "2026-09-06T08:33:01+00:00",
+          "change_type": "hierarchy_change",
+          "reason": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
+          "from": {
+            "primary": "Ludovic Ajorque",
+            "secondary": "Kenny Lala",
+            "tertiary": "Kamory Doumbia"
+          },
+          "to": {
+            "primary": "Kamory Doumbia",
+            "secondary": "Ludovic Ajorque",
+            "tertiary": "Kenny Lala"
+          },
+          "evidence_ids": [
+            "be275a615158438ba80afb929487c56f"
+          ]
+        }
+      ],
+      "flags": {
+        "carryover_from_previous_season": false,
+        "weak_evidence": false,
+        "stale_override": null
+      },
+      "prior_season": {
+        "label": "2025/26",
+        "primary": "Romain Del Castillo",
+        "secondary": "Kenny Lala",
+        "tertiary": "Ludovic Ajorque",
+        "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+      },
+      "player_ids": {},
+      "squad_membership": {
+        "primary": {
+          "player": "Kamory Doumbia",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/8521/overview/brest",
+          "checked_at": "2026-09-02"
+        },
+        "secondary": {
+          "player": "Ludovic Ajorque",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/8521/overview/brest",
+          "checked_at": "2026-09-02"
+        },
+        "tertiary": {
+          "player": "Kenny Lala",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/8521/overview/brest",
+          "checked_at": "2026-09-02"
+        }
+      },
+      "last_reviewed": {
+        "date": "2026-09-01",
+        "by": "Il Margine",
+        "method": "current_season_multi_source_review",
+        "outcome": "order_unchanged",
+        "sources": [
+          "https://ligue1.com/fr/articles/l1_article_2916-",
+          "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+          "https://www.deux-zero.com/ligue-1/penalties-tireurs-epreuve/joueur/6874",
+          "https://starting11.com/set-piece-takers/ligue-1"
+        ]
+      },
+      "unavailable_candidates": []
+    },
+    "before_entry_hash": "a4421c8eef41b897868e44fd655aab3e581aef304bedfeec30dc2dadf290614e",
+    "after_entry_hash": "204f89bcbd99a638102ee409e45c4adfa5a4e8370c56cae62fbcfa52f3a96c9c",
+    "before_control": {},
+    "after_control": {
+      "locked": true,
+      "override": {
+        "primary": "Kamory Doumbia",
+        "secondary": "Ludovic Ajorque",
+        "tertiary": "Kenny Lala"
+      },
+      "reason": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
+      "updated_at": "2026-09-06T08:33:01+00:00",
+      "actor": "local_admin"
+    },
+    "reverts": null
+  },
+  "summary": {
+    "id": "be275a615158438ba80afb929487c56f",
+    "at": "2026-09-06T08:33:01+00:00",
+    "actor": "local_admin",
+    "action": "override",
+    "club_id": "ligue-1|Brest",
+    "reason": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
+    "before_entry_hash": "a4421c8eef41b897868e44fd655aab3e581aef304bedfeec30dc2dadf290614e",
+    "after_entry_hash": "204f89bcbd99a638102ee409e45c4adfa5a4e8370c56cae62fbcfa52f3a96c9c",
+    "before_control": {},
+    "after_control": {
+      "locked": true,
+      "override": {
+        "primary": "Kamory Doumbia",
+        "secondary": "Ludovic Ajorque",
+        "tertiary": "Kenny Lala"
+      },
+      "reason": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
+      "updated_at": "2026-09-06T08:33:01+00:00",
+      "actor": "local_admin"
+    },
+    "reverts": null,
+    "before_hierarchy": {
+      "primary": "Ludovic Ajorque",
+      "secondary": "Kenny Lala",
+      "tertiary": "Kamory Doumbia"
+    },
+    "after_hierarchy": {
+      "primary": "Kamory Doumbia",
+      "secondary": "Ludovic Ajorque",
+      "tertiary": "Kenny Lala"
+    }
+  },
+  "before_hierarchy_hash": "5d59f8fc8cef139858ba56fe3968f3d94feb1d54c251af5a600549cfe0252a49",
+  "after_hierarchy_hash": "289fd4823745f71c25edc3f0ac30c12d2bbd8e9c976d428e46c1d1cfa1601641",
+  "before_state_hash": "8e2f5cafbc2a12ba45193d862f6bb84b8e37a8cc5d06886275ad288ac6d6e0d7",
+  "after_state_hash": "3d3478fe4bb43db88a9e6761defcd26a9e166cb85711dbdeb3369fadc187888a",
+  "after_revision": 1
+}

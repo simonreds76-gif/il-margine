@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-06T04:46:21Z",
+  "generated_at": "2026-09-06T08:33:51Z",
   "league": "ligue-1",
   "row_count": 2,
   "rows": [
@@ -30,36 +30,36 @@
       "team_lineup_status": "unknown",
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
-      "editorial_note": "Kamory Doumbia took 1 penalty attempt and scored for Brest vs Le Havre. Primary pre-match: Ludovic Ajorque (unknown). Secondary pre-match: Kenny Lala (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-09-02",
+      "editorial_note": "Doumbia took the penalty with both filed predecessors, Ajorque and Lala, on the pitch. Reviewed 6 September: Doumbia promoted to primary.",
+      "context_generated_at": "2026-09-06",
       "context_source_path": "data/goalscorer/ligue-1-penalty-takers.json",
-      "actual_taker_match_status": "Yes - event-time timeline",
-      "primary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
-      "secondary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
-      "tertiary_on_pitch_at_penalty": "Yes - event-time timeline",
-      "actual_taker_on_pitch_at_penalty": "Yes - event-time timeline",
+      "actual_taker_match_status": "Yes - started, off 75'",
+      "primary_on_pitch_at_penalty": "Yes - started",
+      "secondary_on_pitch_at_penalty": "Yes - started, off 22'",
+      "tertiary_on_pitch_at_penalty": "Yes - started, off 75'",
+      "actual_taker_on_pitch_at_penalty": "Yes - started, off 75'",
       "event_evidence": [
         {
           "id": "fotmob|ligue-1|5802920|2964902907",
           "source_event_id": "2964902907",
           "match_id": "5802920",
           "source_url": "https://www.fotmob.com/matches/brest-vs-le-havre/2rceek#5802920",
-          "observed_at": "2026-09-06T04:46:12+00:00",
+          "observed_at": "2026-09-06T08:33:48+00:00",
           "event_date": "2026-09-05",
           "season": "2026/27",
           "team": "Brest",
           "taker": "Kamory Doumbia",
           "primary": "Ludovic Ajorque",
-          "primary_on_pitch": null,
+          "primary_on_pitch": true,
           "on_pitch_proof": {
             "player": "Ludovic Ajorque",
+            "player_id": 471153,
             "minute": 12,
             "method": "completed_lineup_timeline",
-            "player_id": 471153,
             "bucket": "starters",
-            "substitutions": null,
-            "events": null,
-            "reason": "missing_explicit_player_timeline"
+            "substitutions": [],
+            "events": [],
+            "reason": "on_pitch"
           },
           "minute": 12,
           "penalty_kind": "in_match",
@@ -99,29 +99,33 @@
       "editorial_note": "Rayan Fofana took 1 penalty attempt and scored for Le Havre vs Brest. Primary pre-match: Mbwana Ally Samatta (unknown). Secondary pre-match: Rassoul Ndiaye (unknown). Strong review flag: the taker was not in the tracked top three.",
       "context_generated_at": "2026-09-02",
       "context_source_path": "data/goalscorer/ligue-1-penalty-takers.json",
-      "actual_taker_match_status": "Yes - event-time timeline",
-      "primary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
-      "secondary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
-      "tertiary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
-      "actual_taker_on_pitch_at_penalty": "Yes - event-time timeline",
+      "actual_taker_match_status": "Yes - bench, on 62'",
+      "primary_on_pitch_at_penalty": "Yes - started",
+      "secondary_on_pitch_at_penalty": "No - started, off 46'",
+      "tertiary_on_pitch_at_penalty": "No - started, off 62'",
+      "actual_taker_on_pitch_at_penalty": "Yes - bench, on 62'",
       "event_evidence": [
         {
           "id": "fotmob|ligue-1|5802920|2964993927",
           "source_event_id": "2964993927",
           "match_id": "5802920",
           "source_url": "https://www.fotmob.com/matches/brest-vs-le-havre/2rceek#5802920",
-          "observed_at": "2026-09-06T04:46:12+00:00",
+          "observed_at": "2026-09-06T08:33:48+00:00",
           "event_date": "2026-09-05",
           "season": "2026/27",
           "team": "Le Havre",
           "taker": "Rayan Fofana",
           "primary": "Mbwana Ally Samatta",
-          "primary_on_pitch": null,
+          "primary_on_pitch": true,
           "on_pitch_proof": {
             "player": "Mbwana Ally Samatta",
             "minute": 79,
             "method": "completed_lineup_timeline",
-            "reason": "missing_or_ambiguous_player"
+            "player_id": 437329,
+            "bucket": "starters",
+            "substitutions": [],
+            "events": [],
+            "reason": "on_pitch"
           },
           "minute": 79,
           "penalty_kind": "in_match",
@@ -137,10 +141,8 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20260904",
-      "20260905",
-      "20260906"
+      "20260905"
     ],
-    "matches_checked": 5
+    "matches_checked": 3
   }
 }

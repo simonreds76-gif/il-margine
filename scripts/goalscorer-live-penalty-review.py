@@ -202,6 +202,46 @@ def _event_name(value: object) -> str:
     return re.sub(r"[^a-z0-9]+", " ", "".join(c for c in value if not unicodedata.combining(c)).lower()).strip()
 
 
+def _attach_match_timeline(team, content, is_home, finished):
+    """Reconstruct explicit player timelines from the completed match feed."""
+    import copy
+    team = copy.deepcopy(team)
+    feed = (content.get("matchFacts") or {}).get("events") or {}
+    events = feed.get("events")
+    if not finished or feed.get("ongoing") is not False or not isinstance(events, list):
+        return team
+    players = [p for bucket in ("starters", "subs", "unavailable") for p in team.get(bucket, []) if isinstance(p, dict)]
+    by_id = {str(p.get("id")): p for p in players if p.get("id")}
+    substitutions, cards = {}, {}
+    for event in events:
+        if event.get("isHome") is not is_home:
+            continue
+        kind = event.get("type")
+        if kind not in ("Substitution", "Card"):
+            continue
+        minute = event.get("time")
+        if not isinstance(minute, (int, float)) or minute <= 0:
+            return team
+        if kind == "Substitution":
+            swap = event.get("swap")
+            if not isinstance(swap, list) or len(swap) != 2 or any(str(p.get("id")) not in by_id for p in swap):
+                return team
+            for player, action in zip(swap, ("subin", "subout")):
+                substitutions.setdefault(str(player["id"]), []).append({"type": action, "time": minute})
+        else:
+            pid = str(event.get("playerId") or (event.get("player") or {}).get("id"))
+            card = str(event.get("card") or "").lower()
+            if pid in by_id and ("red" in card or card in {"yellowred", "secondyellow"}):
+                cards.setdefault(pid, []).append({"type": "redcard", "time": minute})
+    for pid, player in by_id.items():
+        performance = dict(player.get("performance") or {})
+        performance["substitutionEvents"] = substitutions.get(pid, [])
+        performance["events"] = cards.get(pid, [])
+        player["performance"] = performance
+    team["_complete_match_timeline"] = True
+    return team
+
+
 def _on_pitch_at(team_lineup: dict, player_name: str, minute: int) -> tuple[bool | None, dict]:
     """Use completed-match lineup timelines, never a predicted starting XI.
 
@@ -216,6 +256,12 @@ def _on_pitch_at(team_lineup: dict, player_name: str, minute: int) -> tuple[bool
         return None, dict(proof, reason="missing_complete_starting_lineup_or_minute")
     found = [(bucket, player) for bucket in ("starters", "subs", "unavailable") for player in team_lineup.get(bucket, []) or []
              if isinstance(player, dict) and _event_name(player.get("name")) == _event_name(player_name)]
+    if not found:
+        target = _event_name(player_name).split()
+        found = [(bucket, player) for bucket in ("starters", "subs", "unavailable") for player in team_lineup.get(bucket, []) or []
+                 if isinstance(player, dict) and len(target) >= 2 and len(_event_name(player.get("name")).split()) >= 2
+                 and (_event_name(player.get("name")).split()[0], _event_name(player.get("name")).split()[-1]) == (target[0], target[-1])]
+
     if len(found) != 1:
         return None, dict(proof, reason="missing_or_ambiguous_player")
     bucket, player = found[0]
@@ -542,8 +588,9 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str], diagnos
                 primary = str(proof_context.get("primary") or "")
                 lineup = content.get("lineup")
                 team_lineup = (lineup if isinstance(lineup, dict) else {}).get("homeTeam" if is_home else "awayTeam") or {}
-                on_pitch, proof = _on_pitch_at(team_lineup, primary, minute)
                 finished = status.get("finished") is True
+                team_lineup = _attach_match_timeline(team_lineup, content, is_home, finished)
+                on_pitch, proof = _on_pitch_at(team_lineup, primary, minute)
                 event_id = shot.get("id")
                 identity = str(event_id) if event_id is not None else f"missing|{minute}|{player_name}"
                 evidence = {"id": f"fotmob|{league_key}|{match_id}|{identity}",
@@ -605,10 +652,15 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str], diagnos
         penalty_minute = min((int(event.get("minute") or 0) for event in events), default=0)
         lineup_side = sample.get("lineup_side") or {}
         def pitch_status(name):
-            present, _ = _on_pitch_at(lineup_side, name, penalty_minute)
+            present, proof = _on_pitch_at(lineup_side, name, penalty_minute)
             if not sample.get("finished") or present is None:
-                return "Unknown - event-time evidence unavailable"
-            return "Yes - event-time timeline" if present else "No - event-time timeline"
+                return "Unknown - " + proof.get("reason", "match_not_finished").replace("_", " ")
+            if proof.get("reason") == "absent_from_matchday_squad":
+                return "No - absent from matchday squad"
+            detail = "started" if proof.get("bucket") == "starters" else "unavailable in match squad" if proof.get("bucket") == "unavailable" else "bench"
+            for sub in proof.get("substitutions") or []:
+                detail += f", {'on' if sub['type'] == 'subin' else 'off'} {sub['time']}'"
+            return ("Yes - " if present else "No - ") + detail
         primary_pitch, secondary_pitch, tertiary_pitch = (pitch_status(hierarchy[k]) for k in ("primary", "secondary", "tertiary"))
         actual_pitch = pitch_status(player_name)
 

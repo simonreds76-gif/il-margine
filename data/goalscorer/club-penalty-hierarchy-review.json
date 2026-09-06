@@ -1,0 +1,2262 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-06T08:33:01+00:00",
+  "mode": "review",
+  "revision": 1,
+  "source_health": {
+    "epl": {
+      "path": "data/goalscorer/epl-penalty-duty-live-review.json",
+      "observed_at": "2026-09-06T08:32:47Z",
+      "fresh": true,
+      "complete": true,
+      "errors": [],
+      "status": "ok"
+    },
+    "la-liga": {
+      "path": "data/goalscorer/la-liga-penalty-duty-live-review.json",
+      "observed_at": "2026-09-06T04:46:00Z",
+      "fresh": true,
+      "complete": true,
+      "errors": [],
+      "status": "ok"
+    },
+    "serie-a": {
+      "path": "data/goalscorer/penalty-duty-live-review.json",
+      "observed_at": "2026-09-06T04:45:40Z",
+      "fresh": true,
+      "complete": true,
+      "errors": [],
+      "status": "ok"
+    },
+    "bundesliga": {
+      "path": "data/goalscorer/bundesliga-penalty-duty-live-review.json",
+      "observed_at": "2026-09-06T04:46:12Z",
+      "fresh": true,
+      "complete": true,
+      "errors": [],
+      "status": "ok"
+    },
+    "ligue-1": {
+      "path": "data/goalscorer/ligue-1-penalty-duty-live-review.json",
+      "observed_at": "2026-09-06T08:32:30Z",
+      "fresh": true,
+      "complete": true,
+      "errors": [],
+      "status": "ok"
+    }
+  },
+  "squad_observed_at": "2026-09-02T15:37:08.954568+00:00",
+  "summary": {
+    "stale": 92,
+    "review": 3,
+    "locked": 1
+  },
+  "clubs": [
+    {
+      "id": "epl|Arsenal",
+      "league": "epl",
+      "club": "Arsenal",
+      "season": "2026/27",
+      "current": {
+        "primary": "Bukayo Saka",
+        "secondary": "Viktor Gyokeres",
+        "tertiary": "Martin Odegaard"
+      },
+      "entry_hash": "3b8350fc237c0a7e572218490095c5b960b0d28911da3352b8845c730173a7d2",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:47Z"
+    },
+    {
+      "id": "epl|Aston Villa",
+      "league": "epl",
+      "club": "Aston Villa",
+      "season": "2026/27",
+      "current": {
+        "primary": "Emiliano Buendía",
+        "secondary": "Tammy Abraham",
+        "tertiary": "Ross Barkley"
+      },
+      "entry_hash": "406aa021071f9e34e7f06101303d6b0ecf1c56999f758cb04e71af6eb9091af0",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:47Z"
+    },
+    {
+      "id": "epl|Bournemouth",
+      "league": "epl",
+      "club": "Bournemouth",
+      "season": "2026/27",
+      "current": {
+        "primary": "Justin Kluivert",
+        "secondary": "Marcus Tavernier",
+        "tertiary": "Evanilson"
+      },
+      "entry_hash": "00f8d13f5296441f81a1190b9f69d18b1043fbfcd54e90554efbc3cd4d584948",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:47Z"
+    },
+    {
+      "id": "epl|Brentford",
+      "league": "epl",
+      "club": "Brentford",
+      "season": "2026/27",
+      "current": {
+        "primary": "Igor Thiago",
+        "secondary": "Kevin Schade",
+        "tertiary": "Fabio Carvalho"
+      },
+      "entry_hash": "913eecc33ca48629da9a29d7884f9b774e18f4aa066a5f21827c886a5b414377",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:47Z"
+    },
+    {
+      "id": "epl|Brighton",
+      "league": "epl",
+      "club": "Brighton",
+      "season": "2026/27",
+      "current": {
+        "primary": "Pascal Gross",
+        "secondary": "Matt O'Riley",
+        "tertiary": "Ibrahim Osman"
+      },
+      "entry_hash": "caa8aa02cdea363aa1c65b4a20caaad8ec40b7cf93d70d84a4792071bdd2ae7b",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:47Z"
+    },
+    {
+      "id": "epl|Chelsea",
+      "league": "epl",
+      "club": "Chelsea",
+      "season": "2026/27",
+      "current": {
+        "primary": "Cole Palmer",
+        "secondary": "Estêvão",
+        "tertiary": "João Pedro"
+      },
+      "entry_hash": "0dcd1681127279b0bdc03b251db3defba2736a9bf8835ab31f0dd1eab2c21ae2",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:47Z"
+    },
+    {
+      "id": "epl|Coventry City",
+      "league": "epl",
+      "club": "Coventry City",
+      "season": "2026/27",
+      "current": {
+        "primary": "Haji Wright",
+        "secondary": "Victor Torp",
+        "tertiary": "Brandon Thomas-Asante"
+      },
+      "entry_hash": "72bbe40ddec4811d4fbfc8a31c3631d32bbd84d1e6b64a14b3fe5fae8c6ef04a",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:47Z"
+    },
+    {
+      "id": "epl|Crystal Palace",
+      "league": "epl",
+      "club": "Crystal Palace",
+      "season": "2026/27",
+      "current": {
+        "primary": "Jean-Philippe Mateta",
+        "secondary": "Ismaïla Sarr",
+        "tertiary": "Adam Wharton"
+      },
+      "entry_hash": "2df9f6b5c18af81a269dca08f106906dfce6d61f4cd9961adc48d22a8f775909",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:47Z"
+    },
+    {
+      "id": "epl|Everton",
+      "league": "epl",
+      "club": "Everton",
+      "season": "2026/27",
+      "current": {
+        "primary": "James Garner",
+        "secondary": "Thierno Barry",
+        "tertiary": "Kiernan Dewsbury-Hall"
+      },
+      "entry_hash": "7e70925502f19a66a9b2ca2ac169b9b939aa13fc55512de520af0f3489f4b59e",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:47Z"
+    },
+    {
+      "id": "epl|Fulham",
+      "league": "epl",
+      "club": "Fulham",
+      "season": "2026/27",
+      "current": {
+        "primary": "Antonee Robinson",
+        "secondary": "Rodrigo Muniz",
+        "tertiary": "Gonzalo García"
+      },
+      "entry_hash": "8fb81433f0a75ec5f1170f007bf1c2fc7cd03bdeeb60ceb070683e3dc9dea023",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:47Z"
+    },
+    {
+      "id": "epl|Hull City",
+      "league": "epl",
+      "club": "Hull City",
+      "season": "2026/27",
+      "current": {
+        "primary": "Matt Crooks",
+        "secondary": "Oli McBurnie",
+        "tertiary": "David Akintola"
+      },
+      "entry_hash": "85924dba8080e5cfd980ee4d0dcf6a240d7519a96541aef2316d3fc4ed83c352",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:47Z"
+    },
+    {
+      "id": "epl|Ipswich Town",
+      "league": "epl",
+      "club": "Ipswich Town",
+      "season": "2026/27",
+      "current": {
+        "primary": "Jack Clarke",
+        "secondary": "Jaden Philogene",
+        "tertiary": "Julio Enciso"
+      },
+      "entry_hash": "a4eccf36f63863ad08cb10691710832a5614285f3aa477a43a4c96fca4662507",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:47Z"
+    },
+    {
+      "id": "epl|Leeds",
+      "league": "epl",
+      "club": "Leeds",
+      "season": "2026/27",
+      "current": {
+        "primary": "Dominic Calvert-Lewin",
+        "secondary": "Lukas Nmecha",
+        "tertiary": "Harry Wilson"
+      },
+      "entry_hash": "24c2de075bd31c2ae6065a255e9e97eb64e6d28010a9f79c66ce0d35b65f66f8",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:47Z"
+    },
+    {
+      "id": "epl|Liverpool",
+      "league": "epl",
+      "club": "Liverpool",
+      "season": "2026/27",
+      "current": {
+        "primary": "Dominik Szoboszlai",
+        "secondary": "Alexander Isak",
+        "tertiary": "Cody Gakpo"
+      },
+      "entry_hash": "20edde0b9763b6caaff21156e3fcc224aed0df45d4f4724a28b8c92ac046c06b",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:47Z"
+    },
+    {
+      "id": "epl|Manchester City",
+      "league": "epl",
+      "club": "Manchester City",
+      "season": "2026/27",
+      "current": {
+        "primary": "Erling Haaland",
+        "secondary": "Jérémy Doku",
+        "tertiary": "Antoine Semenyo"
+      },
+      "entry_hash": "f2504b3212b668b2d9128aed121fd5a49f95770b8a4f7936986d3bccdf3b6d33",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:47Z"
+    },
+    {
+      "id": "epl|Manchester United",
+      "league": "epl",
+      "club": "Manchester United",
+      "season": "2026/27",
+      "current": {
+        "primary": "Bruno Fernandes",
+        "secondary": "Bryan Mbeumo",
+        "tertiary": "Youri Tielemans"
+      },
+      "entry_hash": "20a19511597ad5e3b23cb0da21010f066d7a832708115236bbbd11ac99f062d3",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:47Z"
+    },
+    {
+      "id": "epl|Newcastle United",
+      "league": "epl",
+      "club": "Newcastle United",
+      "season": "2026/27",
+      "current": {
+        "primary": "Yoane Wissa",
+        "secondary": "Matias Fernandez-Pardo",
+        "tertiary": "William Osula"
+      },
+      "entry_hash": "5d91f5589536188c72585196335dfdef64cf27bc7f0dc3aea6669f35e790ba51",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:47Z"
+    },
+    {
+      "id": "epl|Nottingham Forest",
+      "league": "epl",
+      "club": "Nottingham Forest",
+      "season": "2026/27",
+      "current": {
+        "primary": "Chris Wood",
+        "secondary": "Morgan Gibbs-White",
+        "tertiary": "Igor Jesus"
+      },
+      "entry_hash": "2a153c2c28312a389b81c19e9454aab669d623c3be689cb7cae10601c95ce958",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:47Z"
+    },
+    {
+      "id": "epl|Sunderland",
+      "league": "epl",
+      "club": "Sunderland",
+      "season": "2026/27",
+      "current": {
+        "primary": "Habib Diarra",
+        "secondary": "Enzo Le Fee",
+        "tertiary": "Granit Xhaka"
+      },
+      "entry_hash": "d0e38c40acf9931a616030dc9ee4ecc792390c6e591fb779f9491e1c864ac8ab",
+      "proposed": null,
+      "status": "review",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [
+        {
+          "id": "fotmob|epl|5795436|2964667989",
+          "source_event_id": "2964667989",
+          "match_id": "5795436",
+          "source_url": "https://www.fotmob.com/matches/sunderland-vs-brentford/2sw7v2#5795436",
+          "observed_at": "2026-09-06T08:32:36+00:00",
+          "event_date": "2026-09-05",
+          "season": "2026/27",
+          "team": "Sunderland",
+          "taker": "Enzo Le Fée",
+          "primary": "Habib Diarra",
+          "primary_on_pitch": false,
+          "on_pitch_proof": {
+            "player": "Habib Diarra",
+            "minute": 82,
+            "method": "completed_lineup_timeline",
+            "player_id": 1285866,
+            "bucket": "unavailable",
+            "substitutions": [],
+            "events": [],
+            "reason": "not_on_pitch"
+          },
+          "minute": 82,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Brentford vs Sunderland",
+          "event_result": "scored",
+          "league": "epl",
+          "review_source": "fotmob_live",
+          "source_path": "data/goalscorer/epl-penalty-duty-live-review.json",
+          "manual_ticket_decisions": []
+        }
+      ],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:47Z"
+    },
+    {
+      "id": "epl|Tottenham",
+      "league": "epl",
+      "club": "Tottenham",
+      "season": "2026/27",
+      "current": {
+        "primary": "Dominic Solanke",
+        "secondary": "Mohammed Kudus",
+        "tertiary": "Xavi Simons"
+      },
+      "entry_hash": "688b2347713d3d5796f2b29622f77b2d0e8e0452b713e308803de833a3879aba",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:47Z"
+    },
+    {
+      "id": "la-liga|Alaves",
+      "league": "la-liga",
+      "club": "Alaves",
+      "season": "2026/27",
+      "current": {
+        "primary": "Lucas Boyé",
+        "secondary": "Antonio \"Toni\" Martínez",
+        "tertiary": "Mariano Díaz"
+      },
+      "entry_hash": "4a8ec24fcd950e2c735347cf2e84ff70eeaac59f949bf47ca1bba316c9eabfca",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:00Z"
+    },
+    {
+      "id": "la-liga|Athletic Club",
+      "league": "la-liga",
+      "club": "Athletic Club",
+      "season": "2026/27",
+      "current": {
+        "primary": "Oihan Sancet",
+        "secondary": "Nico Williams",
+        "tertiary": "Gorka Guruzeta"
+      },
+      "entry_hash": "ff8c7b0ec824046b4d5b3ec1b1b1f403a56f50e8a92673c7c490dcf01685f89e",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:00Z"
+    },
+    {
+      "id": "la-liga|Atletico Madrid",
+      "league": "la-liga",
+      "club": "Atletico Madrid",
+      "season": "2026/27",
+      "current": {
+        "primary": "Julián Álvarez",
+        "secondary": "Ademola Lookman",
+        "tertiary": "Alexander Sørloth"
+      },
+      "entry_hash": "437e62ab918034a72637b89ae9dc1d7552868368320e78bdfd3d5264b4c2c7ce",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:00Z"
+    },
+    {
+      "id": "la-liga|Barcelona",
+      "league": "la-liga",
+      "club": "Barcelona",
+      "season": "2026/27",
+      "current": {
+        "primary": "Raphinha",
+        "secondary": "Lamine Yamal",
+        "tertiary": "Anthony Gordon"
+      },
+      "entry_hash": "845918fb1728423fcc9c6be2d5ca5a1340373c4431dd6b52a37736169f919d1f",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:00Z"
+    },
+    {
+      "id": "la-liga|Celta Vigo",
+      "league": "la-liga",
+      "club": "Celta Vigo",
+      "season": "2026/27",
+      "current": {
+        "primary": "Borja Iglesias",
+        "secondary": "Iago Aspas",
+        "tertiary": "Marcos Alonso"
+      },
+      "entry_hash": "c583caf422bf4756adedb4ce0edfc1731ffeb7ab4236b5f14f8e626a58b476b7",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:00Z"
+    },
+    {
+      "id": "la-liga|Deportivo La Coruna",
+      "league": "la-liga",
+      "club": "Deportivo La Coruna",
+      "season": "2026/27",
+      "current": {
+        "primary": "Yeremay Hernández",
+        "secondary": "Pierre-Emerick Aubameyang",
+        "tertiary": "Zakaria Eddahchouri"
+      },
+      "entry_hash": "166d63160c871956e3fbbe2fa906e39d3048eb02a718b30d608ca2ca16f20a1a",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:00Z"
+    },
+    {
+      "id": "la-liga|Elche",
+      "league": "la-liga",
+      "club": "Elche",
+      "season": "2026/27",
+      "current": {
+        "primary": "Fer Niño",
+        "secondary": "Germán Valera",
+        "tertiary": "Ali Houary"
+      },
+      "entry_hash": "7f10f8a387279ac8b052e32428acf6d3f3e311c681d87cae91cfaf4e065dc630",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:00Z"
+    },
+    {
+      "id": "la-liga|Espanyol",
+      "league": "la-liga",
+      "club": "Espanyol",
+      "season": "2026/27",
+      "current": {
+        "primary": "Roberto Fernández",
+        "secondary": "Pere Milla",
+        "tertiary": "Kike García"
+      },
+      "entry_hash": "71f697b73f86f9b5c3a7facdfcbcd67d9464b07dae7ad2130c1492143c2733d7",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:00Z"
+    },
+    {
+      "id": "la-liga|Getafe",
+      "league": "la-liga",
+      "club": "Getafe",
+      "season": "2026/27",
+      "current": {
+        "primary": "Juanmi",
+        "secondary": "Borja Mayoral",
+        "tertiary": "Enes Ünal"
+      },
+      "entry_hash": "4776057b3a1fc026a37c0274986b85f833ccf836ba65ef07753ee788888b5c5c",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:00Z"
+    },
+    {
+      "id": "la-liga|Levante",
+      "league": "la-liga",
+      "club": "Levante",
+      "season": "2026/27",
+      "current": {
+        "primary": "Adrián de la Fuente",
+        "secondary": "Iván Romero",
+        "tertiary": "Carlos Álvarez"
+      },
+      "entry_hash": "07e0fec959b926d20a641e08e486ba7e8a72a5fcdf4e76f4202a1a31b0e2e814",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:00Z"
+    },
+    {
+      "id": "la-liga|Malaga",
+      "league": "la-liga",
+      "club": "Malaga",
+      "season": "2026/27",
+      "current": {
+        "primary": "Chupe",
+        "secondary": "Eneko Jauregi",
+        "tertiary": "Adrián Niño"
+      },
+      "entry_hash": "8899162820af188f357674291994668ca323820231beffa1b088b8a02acd3e54",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:00Z"
+    },
+    {
+      "id": "la-liga|Osasuna",
+      "league": "la-liga",
+      "club": "Osasuna",
+      "season": "2026/27",
+      "current": {
+        "primary": "Ante Budimir",
+        "secondary": "Raúl García de Haro",
+        "tertiary": "Aimar Oroz"
+      },
+      "entry_hash": "877be5b6ea11af745be41d9caf4d6ee26563671d95adc88835e6bb662b1f8419",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:00Z"
+    },
+    {
+      "id": "la-liga|Racing Santander",
+      "league": "la-liga",
+      "club": "Racing Santander",
+      "season": "2026/27",
+      "current": {
+        "primary": "Andrés Martín",
+        "secondary": "Sergio Canales",
+        "tertiary": "Juan Carlos Arana"
+      },
+      "entry_hash": "727ee39b28982e6fdf009551fdae65384ef84306dda8a7a740b86211053c5ee9",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:00Z"
+    },
+    {
+      "id": "la-liga|Rayo Vallecano",
+      "league": "la-liga",
+      "club": "Rayo Vallecano",
+      "season": "2026/27",
+      "current": {
+        "primary": "Isi Palazón",
+        "secondary": "Jorge de Frutos",
+        "tertiary": "Pedro Díaz"
+      },
+      "entry_hash": "5526c557b627366ca8365d3ad382f7f4ff6a5d169d65c00fc1ae465ab1564cc9",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:00Z"
+    },
+    {
+      "id": "la-liga|Real Betis",
+      "league": "la-liga",
+      "club": "Real Betis",
+      "season": "2026/27",
+      "current": {
+        "primary": "Isco",
+        "secondary": "Cucho Hernández",
+        "tertiary": "Giovani Lo Celso"
+      },
+      "entry_hash": "1b86786e4005f50a007e1b639effb7100652d2763e286a9468b86e8f63e9c055",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:00Z"
+    },
+    {
+      "id": "la-liga|Real Madrid",
+      "league": "la-liga",
+      "club": "Real Madrid",
+      "season": "2026/27",
+      "current": {
+        "primary": "Kylian Mbappé",
+        "secondary": "Vinícius Júnior",
+        "tertiary": "Jude Bellingham"
+      },
+      "entry_hash": "16fea1977a2da5bf5a64e3472e2acfebd5e5163f5c8320608b3d7efb1e4635da",
+      "proposed": null,
+      "status": "review",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [
+        {
+          "id": "fotmob|la-liga|5868043|2964189981",
+          "source_event_id": "2964189981",
+          "match_id": "5868043",
+          "source_url": "https://www.fotmob.com/matches/real-betis-vs-real-madrid/2gg3e3#5868043",
+          "observed_at": "2026-09-06T04:45:54+00:00",
+          "event_date": "2026-09-04",
+          "season": "2026/27",
+          "team": "Real Madrid",
+          "taker": "Kylian Mbappé",
+          "primary": "Kylian Mbappé",
+          "primary_on_pitch": null,
+          "on_pitch_proof": {
+            "player": "Kylian Mbappé",
+            "minute": 90,
+            "method": "completed_lineup_timeline",
+            "player_id": 701154,
+            "bucket": "starters",
+            "substitutions": null,
+            "events": [
+              {
+                "type": "missedPenalty"
+              }
+            ],
+            "reason": "missing_explicit_player_timeline"
+          },
+          "minute": 90,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Real Betis vs Real Madrid",
+          "event_result": "missed",
+          "league": "la-liga",
+          "review_source": "fotmob_live",
+          "source_path": "data/goalscorer/la-liga-penalty-duty-live-review.json",
+          "manual_ticket_decisions": []
+        }
+      ],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:00Z"
+    },
+    {
+      "id": "la-liga|Real Sociedad",
+      "league": "la-liga",
+      "club": "Real Sociedad",
+      "season": "2026/27",
+      "current": {
+        "primary": "Mikel Oyarzabal",
+        "secondary": "Carlos Soler",
+        "tertiary": "Gonçalo Guedes"
+      },
+      "entry_hash": "83a620f27dfb2647e4bb4f24cf66c5d4fab353a4c6a2c42728688874487dad4c",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:00Z"
+    },
+    {
+      "id": "la-liga|Sevilla",
+      "league": "la-liga",
+      "club": "Sevilla",
+      "season": "2026/27",
+      "current": {
+        "primary": "Jon Guridi",
+        "secondary": "Peque Fernández",
+        "tertiary": "Isaac Romero"
+      },
+      "entry_hash": "23e3c96624a9cbd6859f1ee06b816b86c1debf93ed9761a3585ce025383a8f2d",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:00Z"
+    },
+    {
+      "id": "la-liga|Valencia",
+      "league": "la-liga",
+      "club": "Valencia",
+      "season": "2026/27",
+      "current": {
+        "primary": "Hugo Duro",
+        "secondary": "Pepelu",
+        "tertiary": "Arnaut Danjuma"
+      },
+      "entry_hash": "c2eaf47ff8c6bb163aa4f7cca53fde8caa41e0b8a4c5762dd38d4d825225c969",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:00Z"
+    },
+    {
+      "id": "la-liga|Villarreal",
+      "league": "la-liga",
+      "club": "Villarreal",
+      "season": "2026/27",
+      "current": {
+        "primary": "Gerard Moreno",
+        "secondary": "Georges Mikautadze",
+        "tertiary": "Nicolas Pépé"
+      },
+      "entry_hash": "e4222aa271f424bce5e7be02312ab03c75419eb3b84da42f33c76997e58e22d6",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:00Z"
+    },
+    {
+      "id": "serie-a|AC Milan",
+      "league": "serie-a",
+      "club": "AC Milan",
+      "season": "2026/27",
+      "current": {
+        "primary": "Gonçalo Ramos",
+        "secondary": "Christian Pulisic",
+        "tertiary": "Luka Modrić"
+      },
+      "entry_hash": "cf234e6c49ffd21df0d58688cb60d7bd84d7d9a5ca2a59c42fe1c64121e0061d",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:45:40Z"
+    },
+    {
+      "id": "serie-a|Atalanta",
+      "league": "serie-a",
+      "club": "Atalanta",
+      "season": "2026/27",
+      "current": {
+        "primary": "Franck Kessié",
+        "secondary": "Gianluca Scamacca",
+        "tertiary": "Charles De Ketelaere"
+      },
+      "entry_hash": "f3261627a903898c132a4634e076ba20fb9d9a8eebc4ebd31e1e95d046e4703f",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:45:40Z"
+    },
+    {
+      "id": "serie-a|Bologna",
+      "league": "serie-a",
+      "club": "Bologna",
+      "season": "2026/27",
+      "current": {
+        "primary": "Riccardo Orsolini",
+        "secondary": "Artem Dovbyk",
+        "tertiary": "Federico Bernardeschi"
+      },
+      "entry_hash": "b4b195354abba01992f032214bd3f172b36192d65fb41611a173d146cb2ebff6",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:45:40Z"
+    },
+    {
+      "id": "serie-a|Cagliari",
+      "league": "serie-a",
+      "club": "Cagliari",
+      "season": "2026/27",
+      "current": {
+        "primary": "Alessandro Deiola",
+        "secondary": "Jacopo Fazzini",
+        "tertiary": "Yerry Mina"
+      },
+      "entry_hash": "a8a75d25822c9994e0fdb6c7ec1d2839c8f53fd7c79862b4deb8b0801c5ed65e",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:45:40Z"
+    },
+    {
+      "id": "serie-a|Como",
+      "league": "serie-a",
+      "club": "Como",
+      "season": "2026/27",
+      "current": {
+        "primary": "Lucas Da Cunha",
+        "secondary": "Nico Paz",
+        "tertiary": "Tasos Douvikas"
+      },
+      "entry_hash": "21d90ad40a3df51d27385f9ace82dd333a993f20f4e9c78a11c68b4f5a2f7e78",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:45:40Z"
+    },
+    {
+      "id": "serie-a|Fiorentina",
+      "league": "serie-a",
+      "club": "Fiorentina",
+      "season": "2026/27",
+      "current": {
+        "primary": "Mateo Pellegrino",
+        "secondary": "Beto",
+        "tertiary": "Franco Mastantuono"
+      },
+      "entry_hash": "d502a3a9da50e5f3410c4d9aa0513d2dac7f6716db2b937a278c410178fc90b0",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:45:40Z"
+    },
+    {
+      "id": "serie-a|Frosinone",
+      "league": "serie-a",
+      "club": "Frosinone",
+      "season": "2026/27",
+      "current": {
+        "primary": "Giacomo Calò",
+        "secondary": "Ben Lhassine Kone",
+        "tertiary": "Antonio Raimondo"
+      },
+      "entry_hash": "213bacec51934f9f43bff22c3e8d0b54fb2c877813ce7c8d5f8478258c38b83b",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:45:40Z"
+    },
+    {
+      "id": "serie-a|Genoa",
+      "league": "serie-a",
+      "club": "Genoa",
+      "season": "2026/27",
+      "current": {
+        "primary": "Lorenzo Colombo",
+        "secondary": "Junior Messias",
+        "tertiary": "Vitinha"
+      },
+      "entry_hash": "96c950cc8d4b29bef8ae186ad9ccada82859aeae6d65282e3586d2234def742e",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:45:40Z"
+    },
+    {
+      "id": "serie-a|Inter",
+      "league": "serie-a",
+      "club": "Inter",
+      "season": "2026/27",
+      "current": {
+        "primary": "Hakan Çalhanoğlu",
+        "secondary": "Lautaro Martínez",
+        "tertiary": "Piotr Zieliński"
+      },
+      "entry_hash": "8a4db183a11da8543bfb207359c6a762daa35091e79adac46352e3652a98ecac",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:45:40Z"
+    },
+    {
+      "id": "serie-a|Juventus",
+      "league": "serie-a",
+      "club": "Juventus",
+      "season": "2026/27",
+      "current": {
+        "primary": "Manuel Locatelli",
+        "secondary": "Kenan Yıldız",
+        "tertiary": "Randal Kolo Muani"
+      },
+      "entry_hash": "43b6d3279b5594984397240a63dbe1c65f215627e8082cf7fca3ffccff7a7801",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:45:40Z"
+    },
+    {
+      "id": "serie-a|Lazio",
+      "league": "serie-a",
+      "club": "Lazio",
+      "season": "2026/27",
+      "current": {
+        "primary": "Mattia Zaccagni",
+        "secondary": "Danilo Cataldi",
+        "tertiary": "Kenneth Taylor"
+      },
+      "entry_hash": "834e53dbb05b7492b0799c846623fa49cdb4583f1387d59ca60d192448832863",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:45:40Z"
+    },
+    {
+      "id": "serie-a|Lecce",
+      "league": "serie-a",
+      "club": "Lecce",
+      "season": "2026/27",
+      "current": {
+        "primary": "Willem Geubbels",
+        "secondary": "Nikola Štulić",
+        "tertiary": "Santiago Pierotti"
+      },
+      "entry_hash": "e017e6b48af0b92b1dcb4526a68fd84650fc1652d3d5e27610aef7e1a9819a1d",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:45:40Z"
+    },
+    {
+      "id": "serie-a|Monza",
+      "league": "serie-a",
+      "club": "Monza",
+      "season": "2026/27",
+      "current": {
+        "primary": "Matteo Pessina",
+        "secondary": "Patrick Cutrone",
+        "tertiary": "Andrea Colpani"
+      },
+      "entry_hash": "50a50a2097077531612141c0ad87d8127afb790da3ac673015001fe0acc0e1ef",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:45:40Z"
+    },
+    {
+      "id": "serie-a|Napoli",
+      "league": "serie-a",
+      "club": "Napoli",
+      "season": "2026/27",
+      "current": {
+        "primary": "Kevin De Bruyne",
+        "secondary": "Rasmus Højlund",
+        "tertiary": "Matteo Politano"
+      },
+      "entry_hash": "92da20e87a6d58c518770dac32d3b050233bf8ee337ba7882d7b2f913243f40e",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:45:40Z"
+    },
+    {
+      "id": "serie-a|Parma Calcio 1913",
+      "league": "serie-a",
+      "club": "Parma Calcio 1913",
+      "season": "2026/27",
+      "current": {
+        "primary": "El Bilal Touré",
+        "secondary": "Adrián Bernabé",
+        "tertiary": "Nesta Elphege"
+      },
+      "entry_hash": "0a3734d2e7e9868311f0b7e77e8af83ff9aed555c5665fbc0fe19819879b6fe6",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:45:40Z"
+    },
+    {
+      "id": "serie-a|Roma",
+      "league": "serie-a",
+      "club": "Roma",
+      "season": "2026/27",
+      "current": {
+        "primary": "Donyell Malen",
+        "secondary": "Paulo Dybala",
+        "tertiary": "Matías Soulé"
+      },
+      "entry_hash": "c0b3858b33d259e70ef3d63bae6c71a190f02e5b7d8d28b51beda1029f00d9d7",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:45:40Z"
+    },
+    {
+      "id": "serie-a|Sassuolo",
+      "league": "serie-a",
+      "club": "Sassuolo",
+      "season": "2026/27",
+      "current": {
+        "primary": "Domenico Berardi",
+        "secondary": "Sebastiano Esposito",
+        "tertiary": "Armand Laurienté"
+      },
+      "entry_hash": "91650fb61493a4085243f146d1f906637a0e420f9f25cbabe8be1a3d941e5868",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:45:40Z"
+    },
+    {
+      "id": "serie-a|Torino",
+      "league": "serie-a",
+      "club": "Torino",
+      "season": "2026/27",
+      "current": {
+        "primary": "Nikola Vlašić",
+        "secondary": "Duván Zapata",
+        "tertiary": "Giovanni Simeone"
+      },
+      "entry_hash": "0be0fbec29c462f6269156ac83d923d5ce6100e2ac5cbdbb179279477beaaaf7",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:45:40Z"
+    },
+    {
+      "id": "serie-a|Udinese",
+      "league": "serie-a",
+      "club": "Udinese",
+      "season": "2026/27",
+      "current": {
+        "primary": "Keinan Davis",
+        "secondary": "Oumar Solet",
+        "tertiary": "Nicolò Zaniolo"
+      },
+      "entry_hash": "dc85cae394f969a7c5adcd73726b31d3197fcecb44f74dd00d69288b7a96e77c",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:45:40Z"
+    },
+    {
+      "id": "serie-a|Venezia",
+      "league": "serie-a",
+      "club": "Venezia",
+      "season": "2026/27",
+      "current": {
+        "primary": "Gianluca Busio",
+        "secondary": "Akor Adams",
+        "tertiary": "Albion Rrahmani"
+      },
+      "entry_hash": "016aa4835fe6cac4619a38f496dcc7ac8d99004d682304cf143bf2ade99cd1b9",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:45:40Z"
+    },
+    {
+      "id": "bundesliga|Augsburg",
+      "league": "bundesliga",
+      "club": "Augsburg",
+      "season": "2026/27",
+      "current": {
+        "primary": "Fabian Rieder",
+        "secondary": "Alexis Claude-Maurice",
+        "tertiary": "Michael Gregoritsch"
+      },
+      "entry_hash": "dc7f2df281102af18320c64c988bc457e75ac014e499bfa3e2be873ffa6a96a8",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:12Z"
+    },
+    {
+      "id": "bundesliga|Bayer Leverkusen",
+      "league": "bundesliga",
+      "club": "Bayer Leverkusen",
+      "season": "2026/27",
+      "current": {
+        "primary": "Patrik Schick",
+        "secondary": "Aleix García",
+        "tertiary": "Ibrahim Maza"
+      },
+      "entry_hash": "d695639a937a037258558fdfc84d6786f0070d74067a02a9aa2a32937d20bdc5",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:12Z"
+    },
+    {
+      "id": "bundesliga|Bayern Munich",
+      "league": "bundesliga",
+      "club": "Bayern Munich",
+      "season": "2026/27",
+      "current": {
+        "primary": "Harry Kane",
+        "secondary": "Arijon Ibrahimović",
+        "tertiary": "Jamal Musiala"
+      },
+      "entry_hash": "fc961778d1e453da1a62d9bea44ca10a3575f9ab68cad3b9479b2375f072095d",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:12Z"
+    },
+    {
+      "id": "bundesliga|Borussia Dortmund",
+      "league": "bundesliga",
+      "club": "Borussia Dortmund",
+      "season": "2026/27",
+      "current": {
+        "primary": "Ramy Bensebaini",
+        "secondary": "Serhou Guirassy",
+        "tertiary": "Félix Nmecha"
+      },
+      "entry_hash": "ebd882d61cdc19a1c7bcb0defd3e41fdc9096118ba154f1fb93e5277b15e6d96",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:12Z"
+    },
+    {
+      "id": "bundesliga|Borussia M.Gladbach",
+      "league": "bundesliga",
+      "club": "Borussia M.Gladbach",
+      "season": "2026/27",
+      "current": {
+        "primary": "Kevin Diks",
+        "secondary": "Kevin Stöger",
+        "tertiary": "Robin Hack"
+      },
+      "entry_hash": "ea4b13145c6121c5ca3e65f2e398d642d7d130248b0d7b791b7ce0028f476811",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:12Z"
+    },
+    {
+      "id": "bundesliga|Eintracht Frankfurt",
+      "league": "bundesliga",
+      "club": "Eintracht Frankfurt",
+      "season": "2026/27",
+      "current": {
+        "primary": "Jonathan Burkardt",
+        "secondary": "Can Uzun",
+        "tertiary": "Mario Götze"
+      },
+      "entry_hash": "6c91386cf492b163b7eb7a3e3f35dbfcc6c64a6cdd3b358a52c93c3cffd5c2ec",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:12Z"
+    },
+    {
+      "id": "bundesliga|FC Cologne",
+      "league": "bundesliga",
+      "club": "FC Cologne",
+      "season": "2026/27",
+      "current": {
+        "primary": "Marius Bülter",
+        "secondary": "Said El Mala",
+        "tertiary": "Linton Maina"
+      },
+      "entry_hash": "59f22af11778852b0a1a9977a29060dc1624240b1c4a93a8d4d74dbd5fb39686",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:12Z"
+    },
+    {
+      "id": "bundesliga|Freiburg",
+      "league": "bundesliga",
+      "club": "Freiburg",
+      "season": "2026/27",
+      "current": {
+        "primary": "Vincenzo Grifo",
+        "secondary": "Igor Matanović",
+        "tertiary": "Lucas Höler"
+      },
+      "entry_hash": "d529c9a7b19d16b0f8f192183998c0001d9d466523f5d4cea310485b638c7ecd",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:12Z"
+    },
+    {
+      "id": "bundesliga|Hamburger SV",
+      "league": "bundesliga",
+      "club": "Hamburger SV",
+      "season": "2026/27",
+      "current": {
+        "primary": "Albert Grønbæk",
+        "secondary": "Miro Muheim",
+        "tertiary": "Otto Stange"
+      },
+      "entry_hash": "d62b73b0bc821393d644d76215b5730a8cfefc71a7f3827d91f8589fbc413753",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:12Z"
+    },
+    {
+      "id": "bundesliga|Hoffenheim",
+      "league": "bundesliga",
+      "club": "Hoffenheim",
+      "season": "2026/27",
+      "current": {
+        "primary": "Andrej Kramarić",
+        "secondary": "Tim Lemperle",
+        "tertiary": "Fisnik Asllani"
+      },
+      "entry_hash": "f360a2798d3bc0e1f1012a6bd6350dd7ff63290f3c0bcafbd20ccffa4b15d646",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:12Z"
+    },
+    {
+      "id": "bundesliga|Mainz 05",
+      "league": "bundesliga",
+      "club": "Mainz 05",
+      "season": "2026/27",
+      "current": {
+        "primary": "Nadiem Amiri",
+        "secondary": "Ransford-Yeboah Königsdörffer",
+        "tertiary": "Paul Nebel"
+      },
+      "entry_hash": "8aeb5796705fd4b9d1b4978e86464322d6c47f0d76f972502f44ac5dd59d0912",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:12Z"
+    },
+    {
+      "id": "bundesliga|RasenBallsport Leipzig",
+      "league": "bundesliga",
+      "club": "RasenBallsport Leipzig",
+      "season": "2026/27",
+      "current": {
+        "primary": "Christopher Nkunku",
+        "secondary": "Rômulo",
+        "tertiary": "David Raum"
+      },
+      "entry_hash": "522107b6886a1d087aad227e7f7616366ad7e012e6de3e841b24abb254ba2d7d",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:12Z"
+    },
+    {
+      "id": "bundesliga|SC Paderborn 07",
+      "league": "bundesliga",
+      "club": "SC Paderborn 07",
+      "season": "2026/27",
+      "current": {
+        "primary": "Sebastian Klaas",
+        "secondary": "Sven Michel",
+        "tertiary": "Raphael Obermair"
+      },
+      "entry_hash": "3d20a98c4977be42d2f04608f256bb89f846b1de6ae0e12c5eb084cc9f5d4942",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:12Z"
+    },
+    {
+      "id": "bundesliga|SV Elversberg",
+      "league": "bundesliga",
+      "club": "SV Elversberg",
+      "season": "2026/27",
+      "current": {
+        "primary": "Lukas Petkov",
+        "secondary": "Francis Onyeka",
+        "tertiary": "Maurice Krattenmacher"
+      },
+      "entry_hash": "9c9d8c7e7fa18c5e20133bc1f31b0e6517989b405da467c5b17700a69acee6d2",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:12Z"
+    },
+    {
+      "id": "bundesliga|Schalke 04",
+      "league": "bundesliga",
+      "club": "Schalke 04",
+      "season": "2026/27",
+      "current": {
+        "primary": "Kenan Karaman",
+        "secondary": "Bryan Lasme",
+        "tertiary": "Moussa Sylla"
+      },
+      "entry_hash": "442da7ccf97438ab2aeb399e8c2a65e49cdfe70d25a3a7957a54f1200b4a4c0c",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:12Z"
+    },
+    {
+      "id": "bundesliga|Union Berlin",
+      "league": "bundesliga",
+      "club": "Union Berlin",
+      "season": "2026/27",
+      "current": {
+        "primary": "Aljoscha Kemlein",
+        "secondary": "Derrick Köhn",
+        "tertiary": "Robert Skov"
+      },
+      "entry_hash": "620ce60c48b9cd9093e84529d1419313aa525cc881af86b0175e9ab0ad6cec72",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:12Z"
+    },
+    {
+      "id": "bundesliga|VfB Stuttgart",
+      "league": "bundesliga",
+      "club": "VfB Stuttgart",
+      "season": "2026/27",
+      "current": {
+        "primary": "Maximilian Mittelstädt",
+        "secondary": "Deniz Undav",
+        "tertiary": "Ermedin Demirović"
+      },
+      "entry_hash": "247fa70c2d16af18c8f3484e8e9fe022f704729dffe5729312f57860c79df86d",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:12Z"
+    },
+    {
+      "id": "bundesliga|Werder Bremen",
+      "league": "bundesliga",
+      "club": "Werder Bremen",
+      "season": "2026/27",
+      "current": {
+        "primary": "Niclas Füllkrug",
+        "secondary": "Salim Musah",
+        "tertiary": "Cedric Itten"
+      },
+      "entry_hash": "f792eb4eb4e9675b68558894c2a75676e573e59b08e7a9fbab0f53620d5e77ed",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T04:46:12Z"
+    },
+    {
+      "id": "ligue-1|Angers",
+      "league": "ligue-1",
+      "club": "Angers",
+      "season": "2026/27",
+      "current": {
+        "primary": "Amine El Ouazzani",
+        "secondary": "Branco van den Boomen",
+        "tertiary": "Amine Sbaï"
+      },
+      "entry_hash": "b3ccfefd7869269d581223d67386fabd3514f97be56613ae832f57a8ed9b59b6",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:30Z"
+    },
+    {
+      "id": "ligue-1|Auxerre",
+      "league": "ligue-1",
+      "club": "Auxerre",
+      "season": "2026/27",
+      "current": {
+        "primary": "Danny Namaso",
+        "secondary": "Romain Faivre",
+        "tertiary": "Josué Casimir"
+      },
+      "entry_hash": "107f5b6cbc669213d3efc9b6349e9d411636e2fbee3bdfa6c9775f21e20b7fa0",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:30Z"
+    },
+    {
+      "id": "ligue-1|Brest",
+      "league": "ligue-1",
+      "club": "Brest",
+      "season": "2026/27",
+      "current": {
+        "primary": "Kamory Doumbia",
+        "secondary": "Ludovic Ajorque",
+        "tertiary": "Kenny Lala"
+      },
+      "entry_hash": "204f89bcbd99a638102ee409e45c4adfa5a4e8370c56cae62fbcfa52f3a96c9c",
+      "proposed": null,
+      "status": "locked",
+      "confidence": "low",
+      "reasons": [
+        "Manual lock/override preserves the filed hierarchy"
+      ],
+      "evidence": [
+        {
+          "id": "fotmob|ligue-1|5802920|2964902907",
+          "source_event_id": "2964902907",
+          "match_id": "5802920",
+          "source_url": "https://www.fotmob.com/matches/brest-vs-le-havre/2rceek#5802920",
+          "observed_at": "2026-09-06T08:32:26+00:00",
+          "event_date": "2026-09-05",
+          "season": "2026/27",
+          "team": "Brest",
+          "taker": "Kamory Doumbia",
+          "primary": "Ludovic Ajorque",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Ludovic Ajorque",
+            "minute": 12,
+            "method": "completed_lineup_timeline",
+            "player_id": 471153,
+            "bucket": "starters",
+            "substitutions": [],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 12,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Le Havre vs Brest",
+          "event_result": "scored",
+          "league": "ligue-1",
+          "review_source": "fotmob_live",
+          "source_path": "data/goalscorer/ligue-1-penalty-duty-live-review.json",
+          "manual_ticket_decisions": []
+        }
+      ],
+      "control": {
+        "locked": true,
+        "override": {
+          "primary": "Kamory Doumbia",
+          "secondary": "Ludovic Ajorque",
+          "tertiary": "Kenny Lala"
+        },
+        "reason": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
+        "updated_at": "2026-09-06T08:33:01+00:00",
+        "actor": "local_admin"
+      },
+      "source_observed_at": "2026-09-06T08:32:30Z"
+    },
+    {
+      "id": "ligue-1|Le Havre",
+      "league": "ligue-1",
+      "club": "Le Havre",
+      "season": "2026/27",
+      "current": {
+        "primary": "Mbwana Ally Samatta",
+        "secondary": "Rassoul Ndiaye",
+        "tertiary": "Josh Maja"
+      },
+      "entry_hash": "a8707c815f562b98660b1eedd8f36866a3b6af4e9bb8b7aff7844a39d80b1376",
+      "proposed": null,
+      "status": "review",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [
+        {
+          "id": "fotmob|ligue-1|5802920|2964993927",
+          "source_event_id": "2964993927",
+          "match_id": "5802920",
+          "source_url": "https://www.fotmob.com/matches/brest-vs-le-havre/2rceek#5802920",
+          "observed_at": "2026-09-06T08:32:26+00:00",
+          "event_date": "2026-09-05",
+          "season": "2026/27",
+          "team": "Le Havre",
+          "taker": "Rayan Fofana",
+          "primary": "Mbwana Ally Samatta",
+          "primary_on_pitch": false,
+          "on_pitch_proof": {
+            "player": "Mbwana Ally Samatta",
+            "minute": 79,
+            "method": "completed_lineup_timeline",
+            "reason": "absent_from_matchday_squad"
+          },
+          "minute": 79,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Le Havre vs Brest",
+          "event_result": "scored",
+          "league": "ligue-1",
+          "review_source": "fotmob_live",
+          "source_path": "data/goalscorer/ligue-1-penalty-duty-live-review.json",
+          "manual_ticket_decisions": []
+        }
+      ],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:30Z"
+    },
+    {
+      "id": "ligue-1|Le Mans",
+      "league": "ligue-1",
+      "club": "Le Mans",
+      "season": "2026/27",
+      "current": {
+        "primary": "Louis Mafouta",
+        "secondary": "Dame Gueye",
+        "tertiary": "Antoine Rabillard"
+      },
+      "entry_hash": "7061f46c211509f65418747bf10d4a3c5094b4c752130b98ced500cbe505d078",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:30Z"
+    },
+    {
+      "id": "ligue-1|Lens",
+      "league": "ligue-1",
+      "club": "Lens",
+      "season": "2026/27",
+      "current": {
+        "primary": "Florian Thauvin",
+        "secondary": "Odsonne Édouard",
+        "tertiary": "Thorgan Hazard"
+      },
+      "entry_hash": "232ca4d7c8d43e2dd9212bee159caf993ae0bfdfd761e0b11726c3d62276c568",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:30Z"
+    },
+    {
+      "id": "ligue-1|Lille",
+      "league": "ligue-1",
+      "club": "Lille",
+      "season": "2026/27",
+      "current": {
+        "primary": "Olivier Giroud",
+        "secondary": "Nabil Bentaleb",
+        "tertiary": "Hamza Igamane"
+      },
+      "entry_hash": "d832ec7bd94318ffeac83c5bb0eead315be17818ab0c7bcecfed5787b89cea0e",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:30Z"
+    },
+    {
+      "id": "ligue-1|Lorient",
+      "league": "ligue-1",
+      "club": "Lorient",
+      "season": "2026/27",
+      "current": {
+        "primary": "Aiyegun Tosin",
+        "secondary": "Mohamed Bamba",
+        "tertiary": "Arsène Kouassi"
+      },
+      "entry_hash": "26241b137e902fb05077e64be4766c8942155540cd58c503b4cea340b0509363",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:30Z"
+    },
+    {
+      "id": "ligue-1|Lyon",
+      "league": "ligue-1",
+      "club": "Lyon",
+      "season": "2026/27",
+      "current": {
+        "primary": "Corentin Tolisso",
+        "secondary": "Loïs Openda",
+        "tertiary": "Pavel Šulc"
+      },
+      "entry_hash": "2664d866d65169a9f4c754be886b78c037d310b336cef311fdc4186677f98f3a",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:30Z"
+    },
+    {
+      "id": "ligue-1|Marseille",
+      "league": "ligue-1",
+      "club": "Marseille",
+      "season": "2026/27",
+      "current": {
+        "primary": "Amine Gouiri",
+        "secondary": "Himad Abdelli",
+        "tertiary": "Pierre-Emile Højbjerg"
+      },
+      "entry_hash": "2a72fd9c5ca1fb641740aa96cd887d41eeaedb3de6994dc40b577c91ba4474d7",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:30Z"
+    },
+    {
+      "id": "ligue-1|Monaco",
+      "league": "ligue-1",
+      "club": "Monaco",
+      "season": "2026/27",
+      "current": {
+        "primary": "Folarin Balogun",
+        "secondary": "Ansu Fati",
+        "tertiary": "Denis Zakaria"
+      },
+      "entry_hash": "031e2d400a8b126b8b4f4302039393cb7da03a6f644d230488ddf0a97d0ffd50",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:30Z"
+    },
+    {
+      "id": "ligue-1|Nice",
+      "league": "ligue-1",
+      "club": "Nice",
+      "season": "2026/27",
+      "current": {
+        "primary": "Sofiane Diop",
+        "secondary": "Jonathan Clauss",
+        "tertiary": "Elye Wahi"
+      },
+      "entry_hash": "19f8a5a5701f1a80de07e16ac0f5ff788eb2b8148b9d9d14c72850fac5b0f572",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:30Z"
+    },
+    {
+      "id": "ligue-1|Paris FC",
+      "league": "ligue-1",
+      "club": "Paris FC",
+      "season": "2026/27",
+      "current": {
+        "primary": "Lassine Sinayoko",
+        "secondary": "Ilan Kebbal",
+        "tertiary": "Pablo Pagis"
+      },
+      "entry_hash": "793bda8e38d5f9a95555c142e02cb53751383b53afa03fa41ab14217bbe0e4f3",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:30Z"
+    },
+    {
+      "id": "ligue-1|Paris Saint Germain",
+      "league": "ligue-1",
+      "club": "Paris Saint Germain",
+      "season": "2026/27",
+      "current": {
+        "primary": "Ousmane Dembélé",
+        "secondary": "Khvicha Kvaratskhelia",
+        "tertiary": "Nuno Mendes"
+      },
+      "entry_hash": "f07bbd85327084061579cb884c88f067f01d62da018da01db5e36a42d91fbcae",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:30Z"
+    },
+    {
+      "id": "ligue-1|Rennes",
+      "league": "ligue-1",
+      "club": "Rennes",
+      "season": "2026/27",
+      "current": {
+        "primary": "Estéban Lepaul",
+        "secondary": "Ludovic Blas",
+        "tertiary": "Issa Soumaré"
+      },
+      "entry_hash": "ef73c9fdc35d6b480ec7fd12445196e6d5ed908b10680b60604bfd159d2e48a0",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:30Z"
+    },
+    {
+      "id": "ligue-1|Strasbourg",
+      "league": "ligue-1",
+      "club": "Strasbourg",
+      "season": "2026/27",
+      "current": {
+        "primary": "Joaquín Panichelli",
+        "secondary": "Sebastian Nanasi",
+        "tertiary": "Giovanni Reyna"
+      },
+      "entry_hash": "a694393477b31959853225ea19297a3e2eccc19d450fecebe1a9024540109592",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:30Z"
+    },
+    {
+      "id": "ligue-1|Toulouse",
+      "league": "ligue-1",
+      "club": "Toulouse",
+      "season": "2026/27",
+      "current": {
+        "primary": "Aron Dønnum",
+        "secondary": "Cristian Cásseres Jr.",
+        "tertiary": "Yann Gboho"
+      },
+      "entry_hash": "5e679f81afccf24a650b6bd6e838bc844e34fc6f6959051a8ab7b0419f23c1a0",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:30Z"
+    },
+    {
+      "id": "ligue-1|Troyes",
+      "league": "ligue-1",
+      "club": "Troyes",
+      "season": "2026/27",
+      "current": {
+        "primary": "Renaud Ripart",
+        "secondary": "Antoine Mille",
+        "tertiary": "Mouhamed Diop"
+      },
+      "entry_hash": "bbd8874381724916365c4adefdfe968d723fc2414add3ee1546f1c3f0351af7b",
+      "proposed": null,
+      "status": "stale",
+      "confidence": "low",
+      "reasons": [
+        "Current squad source is stale or missing"
+      ],
+      "evidence": [],
+      "control": {},
+      "source_observed_at": "2026-09-06T08:32:30Z"
+    }
+  ],
+  "audit": [
+    {
+      "id": "be275a615158438ba80afb929487c56f",
+      "at": "2026-09-06T08:33:01+00:00",
+      "actor": "local_admin",
+      "action": "override",
+      "club_id": "ligue-1|Brest",
+      "reason": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
+      "before_entry_hash": "a4421c8eef41b897868e44fd655aab3e581aef304bedfeec30dc2dadf290614e",
+      "after_entry_hash": "204f89bcbd99a638102ee409e45c4adfa5a4e8370c56cae62fbcfa52f3a96c9c",
+      "before_control": {},
+      "after_control": {
+        "locked": true,
+        "override": {
+          "primary": "Kamory Doumbia",
+          "secondary": "Ludovic Ajorque",
+          "tertiary": "Kenny Lala"
+        },
+        "reason": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
+        "updated_at": "2026-09-06T08:33:01+00:00",
+        "actor": "local_admin"
+      },
+      "reverts": null,
+      "before_hierarchy": {
+        "primary": "Ludovic Ajorque",
+        "secondary": "Kenny Lala",
+        "tertiary": "Kamory Doumbia"
+      },
+      "after_hierarchy": {
+        "primary": "Kamory Doumbia",
+        "secondary": "Ludovic Ajorque",
+        "tertiary": "Kenny Lala"
+      }
+    }
+  ],
+  "policy": {
+    "source_max_age_hours": 48,
+    "event_window_days": 45,
+    "distinct_matches_required": 2,
+    "automatic_apply_requires_opt_in": true,
+    "membership_is_not_injury_availability": true,
+    "default_retains_curated_hierarchies": true
+  },
+  "applied_transactions": []
+}
