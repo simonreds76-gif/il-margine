@@ -127,6 +127,17 @@ const SKIP_PATTERNS = [
   /^data\/team-shots\/shadow\/team-shots-shadow-(signals.*\.csv|performance.*\.txt)$/,
   /^data\/shortlist\//,
 
+  // Local research captures and review tickets do not change published pages.
+  // Public penalty-takers/season/evidence files are deliberately NOT skipped.
+  /^data\/tennis-props\/inbox\//,
+  /^data\/team-shots\/match-shots-odds-history\.csv$/,
+  /^data\/team-shots\/team-shots-scrape-last-run\.json$/,
+  /^data\/goalscorer\/((epl|serie-a|la-liga|bundesliga|ligue-1)-)?penalty-(baseline-evidence\.json|duty-(live-)?review\.(json|csv))$/,
+  /^data\/assist-value\/assist-market-audit-[a-z-]+\.csv$/,
+  /^data\/assist-value\/assist-value-shadow-(board\.csv|performance\.txt|report\.txt)$/,
+  /^data\/assist-value\/fpl-setpiece-roles\.csv$/,
+  /^data\/assist-value\/research\//,
+
   // Results snapshots and Fair Odds Lab live highlight archives.
   /^data\/results-snapshot\//,
   /^data\/fair-odds-lab\/highlights\//,
