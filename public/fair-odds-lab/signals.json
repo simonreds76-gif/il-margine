@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-09-06T17:20:14.227382Z",
+  "generated_at": "2026-09-06T19:09:14.270881Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
-    "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
     "data/goalscorer/bundesliga/goalscorer-live-comparison.csv",
     "data/goalscorer/ligue-1/goalscorer-live-comparison.csv"
   ],
@@ -34,129 +34,23 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 11,
-  "signals_qualifying": 2,
+  "fixtures_evaluated": 5,
+  "signals_qualifying": 1,
   "safety_exclusions": {
     "market_odds_above_cap": 1,
-    "lineup_not_public_quality": 2,
-    "model_market_gap_gt_10pp": 2
+    "lineup_not_public_quality": 2
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 2,
-    "added_by_league": {
-      "bundesliga": 1,
-      "epl": 1
-    },
+    "eligible_rows": 0,
+    "added_by_league": {},
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
   "leagues_covered": [
-    "la-liga",
     "serie-a"
   ],
-  "featured_signal_id": "20260906-ante-budimir-e8c7e1bb28",
+  "featured_signal_id": "20260906-francisco-conceicao-e0d1bd9c8a",
   "signals": [
-    {
-      "id": "20260906-ante-budimir-e8c7e1bb28",
-      "match": {
-        "home_team": "Deportivo Alaves",
-        "away_team": "CA Osasuna",
-        "league": "la-liga",
-        "league_display": "La Liga",
-        "league_logo_path": "/league-logos/la-liga.png",
-        "kickoff_utc": "2026-09-06T16:30:00Z",
-        "kickoff_display": "Sun 06 Sep 17:30 UK",
-        "fotmob_match_id": "5868041",
-        "fotmob_page_url": "/matches/osasuna-vs-deportivo-alaves/2r0nzh#5868041",
-        "lineup_type": "predicted",
-        "venue": ""
-      },
-      "player": {
-        "name": "Ante Budimir",
-        "team": "Osasuna",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/la-liga/osasuna.png",
-        "team_primary_color": "#dc2626",
-        "team_secondary_color": "#1e3a8a",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 45.1,
-        "fair_odds": 2.22
-      },
-      "market_data": {
-        "best_odds": 2.75,
-        "best_book": "Bet365",
-        "implied_chance_pct": 36.4
-      },
-      "edge": {
-        "price_gap_pp": 8.7,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 96
-        },
-        "share_of_team_chances_pct": 40,
-        "share_of_team_chances_percentile": 99,
-        "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 11
-        },
-        "recent_team_form": {
-          "tier": "Positive",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-08-27",
-          "xg_for_avg": 1.5,
-          "xg_against_avg": 0.87,
-          "xgd_per90": 0.63,
-          "shots_for_avg": 16.6,
-          "shots_against_avg": 6.6,
-          "sot_for_avg": 6.0,
-          "sot_against_avg": 2.6,
-          "corners_for_avg": 6.6,
-          "corners_against_avg": 3.4
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Low",
-          "percentile": 16
-        },
-        "opponent_recent_defence": {
-          "tier": "Low",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-08-20",
-          "xg_for_avg": 1.8,
-          "xg_against_avg": 0.71,
-          "xgd_per90": 1.09,
-          "shots_for_avg": 13.6,
-          "shots_against_avg": 9.0,
-          "sot_for_avg": 5.2,
-          "sot_against_avg": 2.4,
-          "corners_for_avg": 6.0,
-          "corners_against_avg": 5.2
-        },
-        "fixture_boost_pct": -18,
-        "projected_minutes": 80,
-        "penalty_role": "Primary",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Recent team form supports the attacking case",
-        "Primary penalty role adds a clear scoring route"
-      ],
-      "risk_flags": []
-    },
     {
       "id": "20260906-francisco-conceicao-e0d1bd9c8a",
       "match": {
@@ -199,13 +93,13 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 93
+          "percentile": 94
         },
         "share_of_team_chances_pct": 20,
-        "share_of_team_chances_percentile": 96,
+        "share_of_team_chances_percentile": 98,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 95
+          "percentile": 99
         },
         "recent_team_form": {
           "tier": "Strong",
@@ -224,7 +118,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 64
+          "percentile": 61
         },
         "opponent_recent_defence": {
           "tier": "High",
