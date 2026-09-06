@@ -1,5 +1,5 @@
 Assist Value Shadow Report
-generated_at_utc: 2026-09-05T11:16:04Z
+generated_at_utc: 2026-09-06T11:38:40Z
 
 Status
 shadow_status: ENABLED_RESEARCH_ONLY
@@ -8,60 +8,60 @@ model_status: NOT_FITTED
 fair_odds_status: NOT_AUTHORISED
 
 Inputs
-raw_odds_rows_loaded: 1634
-role_players_loaded: 416
+raw_odds_rows_loaded: 813
+role_players_loaded: 451
 
 Join
-shadow_rows_assist_only: 1634
-role_matched_rows: 207
-role_match_rate_pct: 12.67
+shadow_rows_assist_only: 813
+role_matched_rows: 119
+role_match_rate_pct: 14.64
 ambiguous_player_rows: 0
-unmatched_player_rows: 1427
+unmatched_player_rows: 694
 
 Interpretation
 This board is an evidence layer only: Bet365 assist market rows enriched with RotoWire set-piece role shares.
 It is not a betting model, not a public Fair Odds Lab lane, and not a value signal.
 
 Top role-matched rows
- - Paulo Dybala | AS Roma vs Atalanta BC | odds 3.7500 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
- - Giacomo Calo | Frosinone Calcio vs Venezia FC | odds 4.5000 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
- - Yeremy Pino | Fulham FC vs Crystal Palace | odds 6.0000 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
- - Josip Juranovic | Bayer Leverkusen vs Union Berlin | odds 9.0000 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
- - Nadiem Amiri | Hamburger SV vs FSV Mainz | odds 5.0000 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
+ - Giacomo Calo | Frosinone Calcio vs Venezia FC | odds 4.3330 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
+ - Nadiem Amiri | Hamburger SV vs FSV Mainz | odds 5.5000 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
  - Albert Gronbaek | Hamburger SV vs FSV Mainz | odds 6.5000 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
- - David Raum | Werder Bremen vs RB Leipzig | odds 4.0000 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
- - Felix Keidel | Borussia Monchengladbach vs SV 07 Elversberg | odds 8.0000 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 0.0
- - Adil Aouchiche | Schalke 04 vs Bayern Munich | odds 9.0000 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 0.0
- - Florian Thauvin | Racing Club De Lens vs FC Lorient | odds 4.0000 | setpiece_last5 92.86 | corners_last5 87.5 | fk_last5 100.0
- - Rassoul Ndiaye | Le Havre AC vs Stade Brest 29 | odds 8.0000 | setpiece_last5 86.67 | corners_last5 90.91 | fk_last5 75.0
- - Joris Chotard | Le Havre AC vs Stade Brest 29 | odds 7.0000 | setpiece_last5 82.35 | corners_last5 100.0 | fk_last5 25.0
- - Granit Xhaka | Brentford FC vs Sunderland AFC | odds 7.0000 | setpiece_last5 80.0 | corners_last5 100.0 | fk_last5 66.67
- - Federico Dimarco | Inter Milano vs SSC Napoli | odds 4.3330 | setpiece_last5 80.0 | corners_last5 85.71 | fk_last5 66.67
+ - Branco van den Boomen | Angers SCO vs Stade Rennais FC | odds 6.5000 | setpiece_last5 95.24 | corners_last5 94.44 | fk_last5 100.0
  - Miguel Roman | Getafe CF vs RC Celta de Vigo | odds 8.0000 | setpiece_last5 80.0 | corners_last5 83.33 | fk_last5 66.67
- - Matt Grimes | Manchester City vs Coventry City | odds 12.0000 | setpiece_last5 75.0 | corners_last5 75.0 | fk_last5 75.0
- - Raphael Obermair | SC Paderborn 07 vs SC Freiburg | odds 7.0000 | setpiece_last5 75.0 | corners_last5 50.0 | fk_last5 100.0
- - Andres Martin | Rayo Vallecano vs Racing Santander | odds 5.0000 | setpiece_last5 71.43 | corners_last5 66.67 | fk_last5 0.0
- - Anton Stach | Brighton & Hove Albion vs Leeds United | odds 7.5000 | setpiece_last5 71.43 | corners_last5 57.14 | fk_last5 85.71
  - Raphinha | Valencia CF vs FC Barcelona | odds 2.6250 | setpiece_last5 71.43 | corners_last5 55.56 | fk_last5 100.0
+ - Emanuele Valeri | Parma Calcio vs AC Monza | odds 6.0000 | setpiece_last5 66.67 | corners_last5 40.0 | fk_last5 85.71
+ - Jon Ander Olasagasti | Malaga CF vs Levante UD | odds 8.0000 | setpiece_last5 57.14 | corners_last5 70.0 | fk_last5 25.0
+ - Bruno Fernandes | Everton FC vs Manchester United | odds 3.2500 | setpiece_last5 57.14 | corners_last5 60.0 | fk_last5 33.33
+ - Armand Lauriente | Bologna FC vs Sassuolo Calcio | odds 5.5000 | setpiece_last5 57.14 | corners_last5 50.0 | fk_last5 66.67
+ - Fares Chaibi | Eintracht Frankfurt vs FC Augsburg | odds 3.4000 | setpiece_last5 50.0 | corners_last5 100.0 | fk_last5 25.0
+ - Gianluca Busio | Frosinone Calcio vs Venezia FC | odds 7.5000 | setpiece_last5 50.0 | corners_last5 66.67 | fk_last5 25.0
+ - Ilan Kebbal | Olympique Marseille vs Paris FC | odds 5.0000 | setpiece_last5 50.0 | corners_last5 66.67 | fk_last5 0.0
+ - Luka Modric | Juventus Turin vs AC Milan | odds 6.5000 | setpiece_last5 50.0 | corners_last5 60.0 | fk_last5 33.33
+ - Sergio Gomez | Elche CF vs Real Sociedad San Sebastian | odds 4.5000 | setpiece_last5 50.0 | corners_last5 50.0 | fk_last5 50.0
+ - Douglas Luiz | Juventus Turin vs AC Milan | odds 6.5000 | setpiece_last5 50.0 | corners_last5 40.0 | fk_last5 66.67
+ - Toma Basic | Frosinone Calcio vs Venezia FC | odds 8.0000 | setpiece_last5 50.0 | corners_last5 33.33 | fk_last5 75.0
+ - Can Uzun | Eintracht Frankfurt vs FC Augsburg | odds 5.0000 | setpiece_last5 50.0 | corners_last5 0.0 | fk_last5 75.0
+ - Alfonso Pedraza | Udinese Calcio vs Lazio Rome | odds 6.5000 | setpiece_last5 45.45 | corners_last5 57.14 | fk_last5 25.0
+ - Declan Rice | Arsenal FC vs Chelsea FC | odds 5.0000 | setpiece_last5 45.45 | corners_last5 50.0 | fk_last5 33.33
 
 Unmatched sample
- - Weston McKennie | Juventus Turin vs AC Milan
- - Goncalo Ramos | Juventus Turin vs AC Milan
- - Christian Pulisic | Juventus Turin vs AC Milan
- - Randal Kolo Muani | Juventus Turin vs AC Milan
- - Adrien Rabiot | Juventus Turin vs AC Milan
- - Manuel Locatelli | Juventus Turin vs AC Milan
- - Bremer | Juventus Turin vs AC Milan
- - Fikayo Tomori | Juventus Turin vs AC Milan
- - Jeremie Boga | Juventus Turin vs AC Milan
- - Kenan Yildiz | Juventus Turin vs AC Milan
- - Arkadiusz Milik | Juventus Turin vs AC Milan
- - Nick Woltemade | Juventus Turin vs AC Milan
- - Kerim Alajbegovic | Juventus Turin vs AC Milan
- - Jeff Ekhator | Juventus Turin vs AC Milan
- - Teun Koopmeiners | Juventus Turin vs AC Milan
- - Francesco Camarda | Juventus Turin vs AC Milan
- - Khephren Thuram | Juventus Turin vs AC Milan
- - Diego Moreira | Juventus Turin vs AC Milan
- - Omari Giraud-Hutchinson | Juventus Turin vs AC Milan
- - Alexis Saelemaekers | Juventus Turin vs AC Milan
+ - Patrick Cutrone | Parma Calcio vs AC Monza
+ - Dany Mota | Parma Calcio vs AC Monza
+ - El Bilal Toure | Parma Calcio vs AC Monza
+ - Keita Balde | Parma Calcio vs AC Monza
+ - Kevin Martins | Parma Calcio vs AC Monza
+ - Cyril Ngonge | Parma Calcio vs AC Monza
+ - Jay Robinson | Parma Calcio vs AC Monza
+ - Mathis Mout | Parma Calcio vs AC Monza
+ - Giovanni Fabbian | Parma Calcio vs AC Monza
+ - Idrissa Toure | Parma Calcio vs AC Monza
+ - Manga Foe Ondoa | Parma Calcio vs AC Monza
+ - Michael Folorunsho | Parma Calcio vs AC Monza
+ - Ebenezer Akinsanmiro | Parma Calcio vs AC Monza
+ - Andrea Carboni | Parma Calcio vs AC Monza
+ - Valentin Antov | Parma Calcio vs AC Monza
+ - Eddy Kouadio | Parma Calcio vs AC Monza
+ - Jan Ziolkowski | Parma Calcio vs AC Monza
+ - Yvan Maye | Parma Calcio vs AC Monza
+ - Lorenzo Lucchesi | Parma Calcio vs AC Monza
+ - Saba Goglichidze | Parma Calcio vs AC Monza
