@@ -1,38 +1,38 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-05T12:35:21Z",
+  "generated_at": "2026-09-06T04:45:54Z",
   "league": "epl",
   "row_count": 1,
   "rows": [
     {
-      "date": "2026-08-30",
+      "date": "2026-09-05",
       "league": "epl",
       "review_source": "fotmob_live",
-      "match": "Manchester United vs Ipswich Town",
-      "team": "Manchester United",
-      "opponent": "Ipswich Town",
-      "actual_taker": "Bruno Fernandes",
-      "actual_role_pre_match": "primary",
+      "match": "Brentford vs Sunderland",
+      "team": "Sunderland",
+      "opponent": "Brentford",
+      "actual_taker": "Enzo Le Fée",
+      "actual_role_pre_match": "secondary",
       "penalties_attempted": 1,
       "penalties_scored": 1,
       "distinct_takers_in_match": 1,
-      "minute": "61",
+      "minute": "82",
       "event_type": "Goal",
       "event_result": "scored",
-      "primary_pre_match": "Bruno Fernandes",
-      "secondary_pre_match": "Bryan Mbeumo",
-      "tertiary_pre_match": "Youri Tielemans",
-      "primary_lineup_status": "",
-      "secondary_lineup_status": "",
-      "tertiary_lineup_status": "",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
+      "primary_pre_match": "Habib Diarra",
+      "secondary_pre_match": "Enzo Le Fee",
+      "tertiary_pre_match": "Granit Xhaka",
+      "primary_lineup_status": "not_in_squad",
+      "secondary_lineup_status": "confirmed_starter",
+      "tertiary_lineup_status": "confirmed_starter",
+      "active_taker_pre_match": "Enzo Le Fée",
+      "active_slot_pre_match": "secondary",
       "team_lineup_status": "unknown",
-      "review_type": "primary_held",
-      "review_priority": "low",
-      "editorial_note": "Bruno Fernandes took 1 penalty attempt and scored for Manchester United vs Ipswich Town. Primary pre-match: Bruno Fernandes (unknown). Secondary pre-match: Bryan Mbeumo (unknown). No hierarchy change implied from this event.",
-      "context_generated_at": "2026-09-02",
-      "context_source_path": "data/goalscorer/epl-penalty-takers.json",
+      "review_type": "expected_backup_shift",
+      "review_priority": "medium",
+      "editorial_note": "Enzo Le Fée took 1 penalty attempt and scored for Sunderland vs Brentford. Primary pre-match: Habib Diarra (not_in_squad). Secondary pre-match: Enzo Le Fee (confirmed_starter). Pre-match active slot was secondary -> Enzo Le Fée. Looks like the expected backup took over because the primary was unavailable or inactive.",
+      "context_generated_at": "2026-09-05T13:27:11Z",
+      "context_source_path": "data/goalscorer/epl/penalty-duty-context.json",
       "actual_taker_match_status": "Unknown - event-time evidence unavailable",
       "primary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
       "secondary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
@@ -40,45 +40,32 @@
       "actual_taker_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
       "event_evidence": [
         {
-          "id": "fotmob|epl|5795432|2962225613",
-          "source_event_id": "2962225613",
-          "match_id": "5795432",
-          "source_url": "https://www.fotmob.com/matches/ipswich-town-vs-manchester-united/3d0uj5#5795432",
-          "observed_at": "2026-09-05T12:35:10+00:00",
-          "event_date": "2026-08-30",
+          "id": "fotmob|epl|5795436|2964667989",
+          "source_event_id": "2964667989",
+          "match_id": "5795436",
+          "source_url": "https://www.fotmob.com/matches/sunderland-vs-brentford/2sw7v2#5795436",
+          "observed_at": "2026-09-06T04:45:41+00:00",
+          "event_date": "2026-09-05",
           "season": "2026/27",
-          "team": "Manchester United",
-          "taker": "Bruno Fernandes",
-          "primary": "Bruno Fernandes",
+          "team": "Sunderland",
+          "taker": "Enzo Le Fée",
+          "primary": "Habib Diarra",
           "primary_on_pitch": null,
           "on_pitch_proof": {
-            "player": "Bruno Fernandes",
-            "minute": 61,
+            "player": "Habib Diarra",
+            "minute": 82,
             "method": "completed_lineup_timeline",
-            "player_id": 422685,
-            "bucket": "starters",
+            "player_id": 1285866,
+            "bucket": "unavailable",
             "substitutions": null,
-            "events": [
-              {
-                "type": "goal"
-              },
-              {
-                "type": "goal"
-              },
-              {
-                "type": "goal"
-              },
-              {
-                "type": "assist"
-              }
-            ],
+            "events": null,
             "reason": "missing_explicit_player_timeline"
           },
-          "minute": 61,
+          "minute": 82,
           "penalty_kind": "in_match",
           "competitive": true,
           "finished": true,
-          "match": "Manchester United vs Ipswich Town",
+          "match": "Brentford vs Sunderland",
           "event_result": "scored"
         }
       ]
@@ -88,14 +75,10 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20260830",
-      "20260831",
-      "20260901",
-      "20260902",
-      "20260903",
       "20260904",
-      "20260905"
+      "20260905",
+      "20260906"
     ],
-    "matches_checked": 7
+    "matches_checked": 8
   }
 }
