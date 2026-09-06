@@ -774,23 +774,23 @@
       "kickoff_utc": "2026-09-06T14:15:00Z",
       "home_team": "Valencia",
       "away_team": "Barcelona",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "5-3-2",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Stole Dimitrievski",
         "Arnau Martínez",
+        "Pepelu",
         "Mouctar Diakhaby",
-        "César Tárrega",
         "Pablo Maffeo",
         "Jesus Vázquez",
+        "David Otorbi",
+        "Aliou Dieng",
         "Filip Ugrinic",
-        "Pepelu",
         "Javier Guerra",
-        "Arnaut Danjuma",
-        "Ryunosuke Sato"
+        "Arnaut Danjuma"
       ],
       "away_players": [
         "Joan García",
@@ -798,7 +798,7 @@
         "Pau Cubarsí",
         "Gerard Martín",
         "Xavi Espart",
-        "Marc Bernal",
+        "Rodri",
         "Pedri",
         "Lamine Yamal",
         "Fermín López",
@@ -825,7 +825,7 @@
           "position_id": 33
         },
         {
-          "name": "Mouctar Diakhaby",
+          "name": "Pepelu",
           "line_index": 0,
           "line_size": 5,
           "role_score": 1,
@@ -834,7 +834,7 @@
           "position_id": 35
         },
         {
-          "name": "César Tárrega",
+          "name": "Mouctar Diakhaby",
           "line_index": 0,
           "line_size": 5,
           "role_score": 1,
@@ -861,7 +861,7 @@
           "position_id": 59
         },
         {
-          "name": "Filip Ugrinic",
+          "name": "David Otorbi",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -870,7 +870,7 @@
           "position_id": 73
         },
         {
-          "name": "Pepelu",
+          "name": "Aliou Dieng",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -879,7 +879,7 @@
           "position_id": 75
         },
         {
-          "name": "Javier Guerra",
+          "name": "Filip Ugrinic",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -888,7 +888,7 @@
           "position_id": 77
         },
         {
-          "name": "Arnaut Danjuma",
+          "name": "Javier Guerra",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -897,7 +897,7 @@
           "position_id": 104
         },
         {
-          "name": "Ryunosuke Sato",
+          "name": "Arnaut Danjuma",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -953,7 +953,7 @@
           "position_id": 38
         },
         {
-          "name": "Marc Bernal",
+          "name": "Rodri",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -1007,10 +1007,35 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
-      "home_unavailable": [
+      "home_subs": [
         "Kayne van Oevelen",
+        "Aaron Mayol",
+        "César Tárrega",
+        "Iker Córdoba",
+        "José Gayà",
+        "Harvey Elliott",
+        "Jaume Dura",
+        "Rodrigo Gamon",
+        "Ryunosuke Sato",
+        "Aimar",
+        "Dani Raba",
+        "Hugo Duro"
+      ],
+      "away_subs": [
+        "Dominik Livakovic",
+        "Wojciech Szczesny",
+        "Alejandro Balde",
+        "Andreas Christensen",
+        "João Cancelo",
+        "Jules Koundé",
+        "Dani Olmo",
+        "Gavi",
+        "Karim Adeyemi",
+        "Marc Bernal",
+        "Gabriel Jesus",
+        "Hamza Abdelkarim"
+      ],
+      "home_unavailable": [
         "Dimitri Foulquier",
         "José Copete",
         "Justin De Haas",

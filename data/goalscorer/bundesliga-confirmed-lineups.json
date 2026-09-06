@@ -263,9 +263,9 @@
       "kickoff_utc": "2026-09-06T13:30:00Z",
       "home_team": "Hamburger SV",
       "away_team": "Mainz 05",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
       "away_formation": "3-5-2",
       "home_players": [
@@ -274,25 +274,25 @@
         "Sebastiaan Bornauw",
         "Jordan Torunarigha",
         "Zakaria El Ouahdi",
-        "Albert Sambi Lokonga",
+        "Bilal Nadir",
         "Nicolai Remberg",
-        "Louis Lemke",
-        "Fábio Vieira",
+        "David Møller Wolfe",
+        "Martin Adeline",
         "Albert Grønbæk",
-        "Patson Daka"
+        "Terem Moffi"
       ],
       "away_players": [
-        "Robin Zentner",
-        "Danny da Costa",
+        "Alexander Schwolow",
         "Stefan Posch",
+        "Fabio Gruber",
         "Kacper Potulski",
         "Anthony Caci",
         "Jae-Sung Lee",
         "Kaishu Sano",
         "Nadiem Amiri",
         "Phillipp Mwene",
-        "Sheraldo Becker",
-        "Phillip Tietz"
+        "Phillip Tietz",
+        "Sheraldo Becker"
       ],
       "home_starters": [
         {
@@ -341,7 +341,7 @@
           "position_id": 62
         },
         {
-          "name": "Albert Sambi Lokonga",
+          "name": "Bilal Nadir",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -359,7 +359,7 @@
           "position_id": 66
         },
         {
-          "name": "Louis Lemke",
+          "name": "David Møller Wolfe",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -368,7 +368,7 @@
           "position_id": 68
         },
         {
-          "name": "Fábio Vieira",
+          "name": "Martin Adeline",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -386,7 +386,7 @@
           "position_id": 86
         },
         {
-          "name": "Patson Daka",
+          "name": "Terem Moffi",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -397,7 +397,7 @@
       ],
       "away_starters": [
         {
-          "name": "Robin Zentner",
+          "name": "Alexander Schwolow",
           "line_index": -1,
           "line_size": 1,
           "role_score": 0,
@@ -406,7 +406,7 @@
           "position_id": 11
         },
         {
-          "name": "Danny da Costa",
+          "name": "Stefan Posch",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -415,7 +415,7 @@
           "position_id": 33
         },
         {
-          "name": "Stefan Posch",
+          "name": "Fabio Gruber",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -478,7 +478,7 @@
           "position_id": 79
         },
         {
-          "name": "Sheraldo Becker",
+          "name": "Phillip Tietz",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -487,7 +487,7 @@
           "position_id": 104
         },
         {
-          "name": "Phillip Tietz",
+          "name": "Sheraldo Becker",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -496,15 +496,34 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Sander Tangvik",
+        "Shafiq Nandja",
+        "Bakery Jatta",
+        "Fábio Vieira",
+        "Kofi Amoako",
+        "Louis Lemke",
+        "Otto Stange",
+        "Patson Daka",
+        "Yussuf Poulsen"
+      ],
+      "away_subs": [
+        "Maximilian Kinzig",
+        "Danny da Costa",
+        "Rael Nakuzola",
+        "Stefan Bell",
+        "Lennard Maloney",
+        "Otto Ruoppi",
+        "Sota Kawasaki",
+        "Benedict Hollerbach",
+        "Ransford Königsdörffer"
+      ],
       "home_unavailable": [
         "Miro Muheim",
         "Warmed Omari",
         "Alexander Røssing"
       ],
       "away_unavailable": [
-        "Benedict Hollerbach",
         "Dominik Kohr",
         "Eric Martel",
         "Paul Nebel",

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-06T11:22:29.049523Z",
+  "generated_at": "2026-09-06T13:41:00.712638Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -35,11 +35,11 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 17,
+  "fixtures_evaluated": 15,
   "signals_qualifying": 2,
   "safety_exclusions": {
     "market_odds_above_cap": 1,
-    "lineup_not_public_quality": 4,
+    "lineup_not_public_quality": 2,
     "model_market_gap_gt_10pp": 2
   },
   "extreme_gap_quarantine": {
@@ -84,8 +84,8 @@
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 44.9,
-        "fair_odds": 2.23
+        "scoring_chance_pct": 45.1,
+        "fair_odds": 2.22
       },
       "market_data": {
         "best_odds": 2.75,
@@ -93,7 +93,7 @@
         "implied_chance_pct": 36.4
       },
       "edge": {
-        "price_gap_pp": 8.6,
+        "price_gap_pp": 8.7,
         "model_advantage": true
       },
       "metrics": {
@@ -105,7 +105,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 7
+          "percentile": 8
         },
         "recent_team_form": {
           "tier": "Positive",
@@ -124,7 +124,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 11
+          "percentile": 12
         },
         "opponent_recent_defence": {
           "tier": "Low",
@@ -206,7 +206,7 @@
         "share_of_team_chances_percentile": 95,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 92
+          "percentile": 91
         },
         "recent_team_form": {
           "tier": "Strong",
@@ -225,7 +225,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 57
+          "percentile": 61
         },
         "opponent_recent_defence": {
           "tier": "High",
