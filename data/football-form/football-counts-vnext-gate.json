@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-06T18:38:05Z",
+  "generated_at": "2026-09-06T20:49:35Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -33,21 +33,18 @@
       "dominant_side_share": 0.916667
     },
     "latest_scan": {
-      "state": "EXPECTED_WARMUP_BLOCK",
-      "explanation": "Candidates were scored, but the registered matchdays 1-3 safety lock blocked publication.",
-      "scored_rows": 4,
-      "scored_fixtures": 1,
+      "state": "NO_SCORED_CANDIDATES",
+      "explanation": "No paired current market rows reached model scoring. Check capture coverage and fixture joins.",
+      "scored_rows": 0,
+      "scored_fixtures": 0,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 4,
-      "blocker_rows": {
-        "edge_below_3pct": 4,
-        "matchdays_1_to_3": 4
-      },
+      "blocked_rows": 0,
+      "blocker_rows": {},
       "edge_pass_but_warmup_blocked_fixtures": 0,
-      "matchday_min": 3,
-      "matchday_max": 3,
-      "next_unlock": "matchday_4",
+      "matchday_min": null,
+      "matchday_max": null,
+      "next_unlock": null,
       "operational_alert_required": false,
       "operational_alert_code": null
     },
@@ -88,18 +85,18 @@
     "latest_scan": {
       "state": "EXPECTED_WARMUP_BLOCK",
       "explanation": "Candidates were scored, but the registered matchdays 1-3 safety lock blocked publication.",
-      "scored_rows": 24,
-      "scored_fixtures": 5,
+      "scored_rows": 8,
+      "scored_fixtures": 2,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 24,
+      "blocked_rows": 8,
       "blocker_rows": {
-        "edge_below_3pct": 21,
-        "matchdays_1_to_3": 24
+        "edge_below_3pct": 6,
+        "matchdays_1_to_3": 8
       },
-      "edge_pass_but_warmup_blocked_fixtures": 2,
+      "edge_pass_but_warmup_blocked_fixtures": 1,
       "matchday_min": 2,
-      "matchday_max": 3,
+      "matchday_max": 2,
       "next_unlock": "matchday_4",
       "operational_alert_required": false,
       "operational_alert_code": null
