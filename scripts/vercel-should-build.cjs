@@ -127,6 +127,8 @@ const SKIP_PATTERNS = [
   /^data\/team-shots\/shadow\/team-shots-shadow-(signals.*\.csv|performance.*\.txt)$/,
   /^data\/shortlist\//,
 
+  /^data\/goalscorer\/fair-odds-lab-(epl|serie-a|la-liga|bundesliga|ligue-1)-(signals\.csv|performance\.txt)$/,
+
   // Local research captures and review tickets do not change published pages.
   // Public penalty-takers/season/evidence files are deliberately NOT skipped.
   /^data\/tennis-props\/inbox\//,
