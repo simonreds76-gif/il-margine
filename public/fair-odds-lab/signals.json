@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-06T19:28:41.591260Z",
+  "generated_at": "2026-09-06T21:21:34.824846Z",
   "source_file": [
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
@@ -33,10 +33,9 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 5,
-  "signals_qualifying": 1,
+  "fixtures_evaluated": 4,
+  "signals_qualifying": 0,
   "safety_exclusions": {
-    "market_odds_above_cap": 1,
     "lineup_not_public_quality": 2
   },
   "extreme_gap_quarantine": {
@@ -45,110 +44,7 @@
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
-  "leagues_covered": [
-    "serie-a"
-  ],
-  "featured_signal_id": "20260906-francisco-conceicao-e0d1bd9c8a",
-  "signals": [
-    {
-      "id": "20260906-francisco-conceicao-e0d1bd9c8a",
-      "match": {
-        "home_team": "Juventus Turin",
-        "away_team": "AC Milan",
-        "league": "serie-a",
-        "league_display": "Serie A",
-        "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "2026-09-06T18:45:00Z",
-        "kickoff_display": "Sun 06 Sep 19:45 UK",
-        "fotmob_match_id": "5749667",
-        "fotmob_page_url": "/matches/milan-vs-juventus/2tc0mu#5749667",
-        "lineup_type": "predicted",
-        "venue": ""
-      },
-      "player": {
-        "name": "Francisco Conceicao",
-        "team": "Juventus",
-        "position": "AM",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/serie-a/juventus.png",
-        "team_primary_color": "#f8fafc",
-        "team_secondary_color": "#111827",
-        "team_shirt_pattern": "vertical-stripes"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 33.4,
-        "fair_odds": 2.99
-      },
-      "market_data": {
-        "best_odds": 3.75,
-        "best_book": "Bet365",
-        "implied_chance_pct": 26.7
-      },
-      "edge": {
-        "price_gap_pp": 6.7,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 94
-        },
-        "share_of_team_chances_pct": 20,
-        "share_of_team_chances_percentile": 98,
-        "team_attacking_outlook": {
-          "tier": "Strong",
-          "percentile": 99
-        },
-        "recent_team_form": {
-          "tier": "Strong",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-08-23",
-          "xg_for_avg": 2.35,
-          "xg_against_avg": 0.53,
-          "xgd_per90": 1.82,
-          "shots_for_avg": 21.4,
-          "shots_against_avg": 9.6,
-          "sot_for_avg": 6.2,
-          "sot_against_avg": 3.4,
-          "corners_for_avg": 9.0,
-          "corners_against_avg": 2.6
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Positive",
-          "percentile": 61
-        },
-        "opponent_recent_defence": {
-          "tier": "High",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-08-23",
-          "xg_for_avg": 1.53,
-          "xg_against_avg": 2.02,
-          "xgd_per90": -0.49,
-          "shots_for_avg": 14.0,
-          "shots_against_avg": 13.2,
-          "sot_for_avg": 4.6,
-          "sot_against_avg": 4.4,
-          "corners_for_avg": 3.6,
-          "corners_against_avg": 3.0
-        },
-        "fixture_boost_pct": -17,
-        "projected_minutes": 78,
-        "penalty_role": "Not on penalties",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "Recent chance quality grades as strong",
-        "Recent team form supports the attacking case",
-        "Opponent has been allowing chances recently"
-      ],
-      "risk_flags": []
-    }
-  ]
+  "leagues_covered": [],
+  "featured_signal_id": null,
+  "signals": []
 }
