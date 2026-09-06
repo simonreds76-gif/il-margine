@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-06T04:46:00Z",
+  "generated_at": "2026-09-06T12:56:12Z",
   "league": "la-liga",
-  "row_count": 1,
+  "row_count": 2,
   "rows": [
     {
       "date": "2026-09-04",
@@ -33,37 +33,33 @@
       "editorial_note": "Kylian Mbappé took 1 penalty attempt and missed for Real Madrid vs Real Betis. Primary pre-match: Kylian Mbappé (unknown). Secondary pre-match: Vinícius Júnior (unknown). No hierarchy change implied from this event.",
       "context_generated_at": "2026-09-02",
       "context_source_path": "data/goalscorer/la-liga-penalty-takers.json",
-      "actual_taker_match_status": "Unknown - event-time evidence unavailable",
-      "primary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
-      "secondary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
-      "tertiary_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
-      "actual_taker_on_pitch_at_penalty": "Unknown - event-time evidence unavailable",
+      "actual_taker_match_status": "Yes - started",
+      "primary_on_pitch_at_penalty": "Yes - started",
+      "secondary_on_pitch_at_penalty": "Yes - started",
+      "tertiary_on_pitch_at_penalty": "Yes - started",
+      "actual_taker_on_pitch_at_penalty": "Yes - started",
       "event_evidence": [
         {
           "id": "fotmob|la-liga|5868043|2964189981",
           "source_event_id": "2964189981",
           "match_id": "5868043",
           "source_url": "https://www.fotmob.com/matches/real-betis-vs-real-madrid/2gg3e3#5868043",
-          "observed_at": "2026-09-06T04:45:54+00:00",
+          "observed_at": "2026-09-06T12:56:10+00:00",
           "event_date": "2026-09-04",
           "season": "2026/27",
           "team": "Real Madrid",
           "taker": "Kylian Mbappé",
           "primary": "Kylian Mbappé",
-          "primary_on_pitch": null,
+          "primary_on_pitch": true,
           "on_pitch_proof": {
             "player": "Kylian Mbappé",
             "minute": 90,
             "method": "completed_lineup_timeline",
             "player_id": 701154,
             "bucket": "starters",
-            "substitutions": null,
-            "events": [
-              {
-                "type": "missedPenalty"
-              }
-            ],
-            "reason": "missing_explicit_player_timeline"
+            "substitutions": [],
+            "events": [],
+            "reason": "on_pitch"
           },
           "minute": 90,
           "penalty_kind": "in_match",
@@ -73,16 +69,86 @@
           "event_result": "missed"
         }
       ]
+    },
+    {
+      "date": "2026-08-31",
+      "league": "la-liga",
+      "review_source": "fotmob_live",
+      "match": "Osasuna vs Getafe",
+      "team": "Osasuna",
+      "opponent": "Getafe",
+      "actual_taker": "Ante Budimir",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "45",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Ante Budimir",
+      "secondary_pre_match": "Raúl García de Haro",
+      "tertiary_pre_match": "Aimar Oroz",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Ante Budimir took 1 penalty attempt and scored for Osasuna vs Getafe. Primary pre-match: Ante Budimir (unknown). Secondary pre-match: Raúl García de Haro (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/la-liga-penalty-takers.json",
+      "actual_taker_match_status": "Yes - started",
+      "primary_on_pitch_at_penalty": "Yes - started",
+      "secondary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "tertiary_on_pitch_at_penalty": "Yes - started, off 71'",
+      "actual_taker_on_pitch_at_penalty": "Yes - started",
+      "event_evidence": [
+        {
+          "id": "fotmob|la-liga|5868036|2962854315",
+          "source_event_id": "2962854315",
+          "match_id": "5868036",
+          "source_url": "https://www.fotmob.com/matches/getafe-vs-osasuna/2askb1#5868036",
+          "observed_at": "2026-09-06T12:56:10+00:00",
+          "event_date": "2026-08-31",
+          "season": "2026/27",
+          "team": "Osasuna",
+          "taker": "Ante Budimir",
+          "primary": "Ante Budimir",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Ante Budimir",
+            "minute": 45,
+            "method": "completed_lineup_timeline",
+            "player_id": 251269,
+            "bucket": "starters",
+            "substitutions": [],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 45,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Osasuna vs Getafe",
+          "event_result": "scored"
+        }
+      ]
     }
   ],
   "source_health": {
     "complete": true,
     "errors": [],
     "dates_requested": [
+      "20260831",
+      "20260901",
+      "20260902",
+      "20260903",
       "20260904",
       "20260905",
       "20260906"
     ],
-    "matches_checked": 4
+    "matches_checked": 7
   }
 }

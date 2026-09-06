@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-06T08:33:57Z",
+  "generated_at": "2026-09-06T12:56:10Z",
   "league": "epl",
   "row_count": 1,
   "rows": [
@@ -22,17 +22,17 @@
       "primary_pre_match": "Habib Diarra",
       "secondary_pre_match": "Enzo Le Fee",
       "tertiary_pre_match": "Granit Xhaka",
-      "primary_lineup_status": "not_in_squad",
-      "secondary_lineup_status": "confirmed_starter",
-      "tertiary_lineup_status": "confirmed_starter",
-      "active_taker_pre_match": "Enzo Le Fée",
-      "active_slot_pre_match": "secondary",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
       "team_lineup_status": "unknown",
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
-      "editorial_note": "Enzo Le Fée took 1 penalty attempt and scored for Sunderland vs Brentford. Primary pre-match: Habib Diarra (not_in_squad). Secondary pre-match: Enzo Le Fee (confirmed_starter). Pre-match active slot was secondary -> Enzo Le Fée. Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-09-05T13:27:11Z",
-      "context_source_path": "data/goalscorer/epl/penalty-duty-context.json",
+      "editorial_note": "Enzo Le Fée took 1 penalty attempt and scored for Sunderland vs Brentford. Primary pre-match: Habib Diarra (unknown). Secondary pre-match: Enzo Le Fee (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/epl-penalty-takers.json",
       "actual_taker_match_status": "Yes - started",
       "primary_on_pitch_at_penalty": "No - unavailable in match squad",
       "secondary_on_pitch_at_penalty": "Yes - started",
@@ -44,7 +44,7 @@
           "source_event_id": "2964667989",
           "match_id": "5795436",
           "source_url": "https://www.fotmob.com/matches/sunderland-vs-brentford/2sw7v2#5795436",
-          "observed_at": "2026-09-06T08:33:51+00:00",
+          "observed_at": "2026-09-06T12:56:07+00:00",
           "event_date": "2026-09-05",
           "season": "2026/27",
           "team": "Sunderland",
@@ -75,8 +75,14 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20260905"
+      "20260831",
+      "20260901",
+      "20260902",
+      "20260903",
+      "20260904",
+      "20260905",
+      "20260906"
     ],
-    "matches_checked": 7
+    "matches_checked": 9
   }
 }

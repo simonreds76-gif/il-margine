@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-06T08:33:51Z",
+  "generated_at": "2026-09-06T12:56:15Z",
   "league": "ligue-1",
   "row_count": 2,
   "rows": [
@@ -12,31 +12,31 @@
       "team": "Brest",
       "opponent": "Le Havre",
       "actual_taker": "Kamory Doumbia",
-      "actual_role_pre_match": "tertiary",
+      "actual_role_pre_match": "primary",
       "penalties_attempted": 1,
       "penalties_scored": 1,
       "distinct_takers_in_match": 1,
       "minute": "12",
       "event_type": "Goal",
       "event_result": "scored",
-      "primary_pre_match": "Ludovic Ajorque",
-      "secondary_pre_match": "Kenny Lala",
-      "tertiary_pre_match": "Kamory Doumbia",
+      "primary_pre_match": "Kamory Doumbia",
+      "secondary_pre_match": "Ludovic Ajorque",
+      "tertiary_pre_match": "Kenny Lala",
       "primary_lineup_status": "",
       "secondary_lineup_status": "",
       "tertiary_lineup_status": "",
       "active_taker_pre_match": "",
       "active_slot_pre_match": "",
       "team_lineup_status": "unknown",
-      "review_type": "expected_backup_shift",
-      "review_priority": "medium",
-      "editorial_note": "Doumbia took the penalty with both filed predecessors, Ajorque and Lala, on the pitch. Reviewed 6 September: Doumbia promoted to primary.",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Kamory Doumbia took 1 penalty attempt and scored for Brest vs Le Havre. Primary pre-match: Kamory Doumbia (unknown). Secondary pre-match: Ludovic Ajorque (unknown). No hierarchy change implied from this event.",
       "context_generated_at": "2026-09-06",
       "context_source_path": "data/goalscorer/ligue-1-penalty-takers.json",
       "actual_taker_match_status": "Yes - started, off 75'",
-      "primary_on_pitch_at_penalty": "Yes - started",
-      "secondary_on_pitch_at_penalty": "Yes - started, off 22'",
-      "tertiary_on_pitch_at_penalty": "Yes - started, off 75'",
+      "primary_on_pitch_at_penalty": "Yes - started, off 75'",
+      "secondary_on_pitch_at_penalty": "Yes - started",
+      "tertiary_on_pitch_at_penalty": "Yes - started, off 22'",
       "actual_taker_on_pitch_at_penalty": "Yes - started, off 75'",
       "event_evidence": [
         {
@@ -44,20 +44,25 @@
           "source_event_id": "2964902907",
           "match_id": "5802920",
           "source_url": "https://www.fotmob.com/matches/brest-vs-le-havre/2rceek#5802920",
-          "observed_at": "2026-09-06T08:33:48+00:00",
+          "observed_at": "2026-09-06T12:56:13+00:00",
           "event_date": "2026-09-05",
           "season": "2026/27",
           "team": "Brest",
           "taker": "Kamory Doumbia",
-          "primary": "Ludovic Ajorque",
+          "primary": "Kamory Doumbia",
           "primary_on_pitch": true,
           "on_pitch_proof": {
-            "player": "Ludovic Ajorque",
-            "player_id": 471153,
+            "player": "Kamory Doumbia",
             "minute": 12,
             "method": "completed_lineup_timeline",
+            "player_id": 1310270,
             "bucket": "starters",
-            "substitutions": [],
+            "substitutions": [
+              {
+                "type": "subout",
+                "time": 75
+              }
+            ],
             "events": [],
             "reason": "on_pitch"
           },
@@ -110,7 +115,7 @@
           "source_event_id": "2964993927",
           "match_id": "5802920",
           "source_url": "https://www.fotmob.com/matches/brest-vs-le-havre/2rceek#5802920",
-          "observed_at": "2026-09-06T08:33:48+00:00",
+          "observed_at": "2026-09-06T12:56:13+00:00",
           "event_date": "2026-09-05",
           "season": "2026/27",
           "team": "Le Havre",
@@ -141,8 +146,14 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20260905"
+      "20260831",
+      "20260901",
+      "20260902",
+      "20260903",
+      "20260904",
+      "20260905",
+      "20260906"
     ],
-    "matches_checked": 3
+    "matches_checked": 6
   }
 }
