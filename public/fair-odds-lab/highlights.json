@@ -1,8 +1,30 @@
 {
-  "generated_at": "2026-09-07T13:08:45Z",
+  "generated_at": "2026-09-07T15:02:56Z",
   "source": "fair_odds_lab_settled_winners",
   "description": "Winning highlights from Fair Odds Lab research signals.",
   "highlights": [
+    {
+      "id": "2026-09-06-la-liga-deportivo-alaves-vs-ca-osasuna-ante-budimir",
+      "date": "2026-09-06",
+      "kickoff": "2026-09-06T16:30:00Z",
+      "competition": "Spain - LaLiga",
+      "league": "la-liga",
+      "match": "Deportivo Alaves vs CA Osasuna",
+      "player": "Ante Budimir",
+      "team": "Osasuna",
+      "best_bookmaker": "Bet365",
+      "best_odds": 2.75,
+      "fair_odds": 2.23,
+      "model_chance_pct": 44.9,
+      "market_chance_pct": 36.4,
+      "price_gap_pp": 8.6,
+      "goals_scored": 2,
+      "super_sub_win": false,
+      "super_sub_replacement": "",
+      "super_sub_replacement_goals": 0,
+      "settled_at": "2026-09-07T15:02:49Z",
+      "settlement_note": "scored_2_goals"
+    },
     {
       "id": "2026-09-05-ligue-1-le-havre-ac-vs-stade-brest-29-kamory-doumbia",
       "date": "2026-09-05",
@@ -112,28 +134,6 @@
       "super_sub_replacement_goals": 0,
       "settled_at": "2026-08-31T16:57:03Z",
       "settlement_note": "scored_1_goals"
-    },
-    {
-      "id": "2026-08-30-epl-sunderland-afc-vs-fulham-fc-brian-brobbey",
-      "date": "2026-08-30",
-      "kickoff": "2026-08-30T13:00:00Z",
-      "competition": "England - Premier League",
-      "league": "epl",
-      "match": "Sunderland AFC vs Fulham FC",
-      "player": "Brian Brobbey",
-      "team": "Sunderland",
-      "best_bookmaker": "Bet365",
-      "best_odds": 2.88,
-      "fair_odds": 2.3,
-      "model_chance_pct": 43.5,
-      "market_chance_pct": 34.8,
-      "price_gap_pp": 8.7,
-      "goals_scored": 1,
-      "super_sub_win": true,
-      "super_sub_replacement": "Wilson Isidor",
-      "super_sub_replacement_goals": 1,
-      "settled_at": "2026-08-31T16:57:03Z",
-      "settlement_note": "super_sub_replacement_scored:Wilson Isidor"
     }
   ]
 }

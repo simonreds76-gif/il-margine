@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-07T12:42:43Z",
+  "generated_at": "2026-09-07T15:02:56Z",
   "league": "ligue-1",
-  "row_count": 5,
+  "row_count": 3,
   "rows": [
     {
       "team": "Brest",
@@ -37,42 +37,10 @@
       "last_event_date": "2026-09-05"
     },
     {
-      "team": "Le Mans",
-      "team_key": "le mans",
-      "player_name": "Louis Mafouta",
-      "player_key": "louis mafouta",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-08-30"
-    },
-    {
       "team": "Paris FC",
       "team_key": "paris fc",
       "player_name": "Lassine Sinayoko",
       "player_key": "lassine sinayoko",
-      "observed_player_penalties": 2,
-      "observed_team_penalties": 2,
-      "observed_share": 1.0,
-      "observed_sample": 2.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 2,
-      "last_event_date": "2026-09-06"
-    },
-    {
-      "team": "Rennes",
-      "team_key": "rennes",
-      "player_name": "Estéban Lepaul",
-      "player_key": "est ban lepaul",
       "observed_player_penalties": 1,
       "observed_team_penalties": 1,
       "observed_share": 1.0,
@@ -82,7 +50,7 @@
         "fotmob_live"
       ],
       "event_count": 1,
-      "last_event_date": "2026-08-30"
+      "last_event_date": "2026-09-06"
     }
   ]
 }
