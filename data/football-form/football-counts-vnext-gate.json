@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-07T19:23:16Z",
+  "generated_at": "2026-09-07T22:16:00Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -35,19 +35,17 @@
       "dominant_side_share": 0.928571
     },
     "latest_scan": {
-      "state": "ELIGIBLE_CANDIDATES_PRESENT",
-      "explanation": "At least one candidate passed every locked shadow gate.",
-      "scored_rows": 4,
-      "scored_fixtures": 1,
-      "eligible_rows": 1,
-      "eligible_fixtures": 1,
-      "blocked_rows": 3,
-      "blocker_rows": {
-        "edge_below_3pct": 3
-      },
+      "state": "NO_SCORED_CANDIDATES",
+      "explanation": "No paired current market rows reached model scoring. Check capture coverage and fixture joins.",
+      "scored_rows": 0,
+      "scored_fixtures": 0,
+      "eligible_rows": 0,
+      "eligible_fixtures": 0,
+      "blocked_rows": 0,
+      "blocker_rows": {},
       "edge_pass_but_warmup_blocked_fixtures": 0,
-      "matchday_min": 3,
-      "matchday_max": 3,
+      "matchday_min": null,
+      "matchday_max": null,
       "next_unlock": null,
       "operational_alert_required": false,
       "operational_alert_code": null
