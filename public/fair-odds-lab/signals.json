@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-07T16:02:45.050222Z",
+  "generated_at": "2026-09-07T19:56:44.686131Z",
   "source_file": [
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv"
@@ -31,11 +31,9 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 3,
+  "fixtures_evaluated": 2,
   "signals_qualifying": 0,
-  "safety_exclusions": {
-    "lineup_not_public_quality": 1
-  },
+  "safety_exclusions": {},
   "extreme_gap_quarantine": {
     "eligible_rows": 0,
     "added_by_league": {},
