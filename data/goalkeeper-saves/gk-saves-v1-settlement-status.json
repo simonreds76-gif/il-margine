@@ -1,11 +1,42 @@
 {
-  "deferred_not_due": 0,
-  "generated_at": "2026-09-01T14:15:45Z",
+  "api_errors": [],
+  "deferred_not_due": 2,
+  "details": [
+    {
+      "detail": "",
+      "goalkeeper": "Gregor Kobel",
+      "match": "TSG Hoffenheim vs Borussia Dortmund",
+      "match_date": "2026-09-05",
+      "reason": "settled_fotmob",
+      "signal_id": "72513168|gregor kobel|2.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Karl Hein",
+      "match": "Werder Bremen vs RB Leipzig",
+      "match_date": "2026-09-05",
+      "reason": "settled_fotmob",
+      "signal_id": "72513178|karl hein|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Loris Karius",
+      "match": "Schalke 04 vs Bayern Munich",
+      "match_date": "2026-09-05",
+      "reason": "settled_fotmob",
+      "signal_id": "72513180|loris karius|4.5|over"
+    }
+  ],
+  "fotmob_requests_used": 7,
+  "generated_at": "2026-09-07T10:44:54Z",
+  "max_fotmob_requests": 50,
   "max_requests": 10,
   "pending_due": 0,
-  "pending_total": 0,
-  "reason_counts": {},
+  "pending_total": 2,
+  "reason_counts": {
+    "settled_fotmob": 3
+  },
   "requests_used": 0,
-  "settled": 0,
-  "status": "NOTHING_DUE"
+  "settled": 3,
+  "status": "SETTLED"
 }
