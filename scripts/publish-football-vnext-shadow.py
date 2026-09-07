@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Publish the locked Team Shots v4 and Corners v3 prospective shadow lanes.
 
-Only paired two-way prices are scored. Matchdays 1-3 fail closed for official
-shadow publication, but edge-qualified warm-up observations are retained in a
-separate tracking cohort. The strongest row per fixture is appended to a
+Only paired two-way prices are scored. Every matchday can publish research
+signals when the remaining history, price and edge checks pass. Historical
+warm-up observations retain their original cohort. The strongest row per fixture is appended to a
 versioned ledger. These outputs are research signals, not staking instructions.
 """
 
@@ -332,8 +332,6 @@ def score_team_shots(
         ):
             edge = (probability * float(source["odds"])) - 1.0
             blocked: list[str] = []
-            if matchday <= 3:
-                blocked.append("matchdays_1_to_3")
             if 4 <= matchday <= 6 and min(team_neff, opponent_neff) < 6:
                 blocked.append("early_neff_below_6")
             if 4 <= matchday <= 6 and abs(raw_probability - market_probability) > market_gap_cap:
@@ -531,8 +529,6 @@ def score_corners(
         ):
             edge = (probability * float(source["odds"])) - 1.0
             blocked: list[str] = []
-            if matchday <= 3:
-                blocked.append("matchdays_1_to_3")
             if edge < min_edge:
                 blocked.append("edge_below_3pct")
             status = "eligible" if not blocked else "blocked"

@@ -331,6 +331,7 @@ def scrape_odds_api(
     control_odds: Optional[List[dict]] = None,
     max_events: int = 0,
     max_odds_requests: int = 0,
+    discovery_diagnostics: Optional[List[dict]] = None,
 ) -> tuple[list[dict], int, list[str]]:
     config = LEAGUE_CONFIGS[league_key]
     now = datetime.now(timezone.utc)
@@ -383,8 +384,8 @@ def scrape_odds_api(
         fallback_resp.raise_for_status()
         events = fallback_resp.json()
 
-    if not isinstance(events, list):
-        events = []
+    if not isinstance(events, list) or any(not isinstance(e, dict) for e in events):
+        raise ValueError("odds-api.io /events returned an invalid event list; capture is not healthy")
 
     matched = [e for e in events if _looks_like_league(e.get("league") or {}, config)]
     league_events = len(matched)
@@ -403,6 +404,18 @@ def scrape_odds_api(
     matched.sort(key=lambda event: str(event.get("date") or ""))
     if max_events > 0:
         matched = matched[:max_events]
+    diagnostic = {
+        "league": league_key, "from": from_iso, "to": to_iso,
+        "kickoff_within_minutes": kickoff_within_minutes,
+        "provider_events": len(events), "league_events": league_events,
+        "selected_events": len(matched),
+        "state": "EVENTS_SELECTED" if matched else (
+            "NO_EVENTS_IN_KICKOFF_WINDOW" if league_events and kickoff_within_minutes > 0
+            else "NO_LEAGUE_EVENTS_IN_FEED"
+        ),
+    }
+    if discovery_diagnostics is not None:
+        discovery_diagnostics.append(diagnostic)
     if not matched:
         return [], 0, provider_errors
 
@@ -455,6 +468,8 @@ def scrape_odds_api(
     if control_odds is not None:
         control_odds.extend(build_control_odds_rows(payload, config["competition"], captured))
 
+    diagnostic["rows_scraped"] = len(rows)
+    diagnostic["state"] = "PRICES_CAPTURED" if rows else "EVENTS_WITHOUT_TEAM_SHOTS_MARKETS"
     return rows, len(matched), provider_errors
 
 
@@ -783,6 +798,10 @@ def main() -> None:
     run_status = {
         "run_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "leagues": leagues,
+        "capture_mode": "near_kickoff" if args.kickoff_within_minutes else "discovery",
+        "days_ahead": args.days_ahead,
+        "kickoff_within_minutes": args.kickoff_within_minutes,
+        "discovery_diagnostics": [],
         "events_found": 0,
         "rows_scraped": 0,
         "provider_errors": [],
@@ -814,6 +833,7 @@ def main() -> None:
                     control_odds_rows,
                     args.max_events_per_league,
                     args.max_odds_requests_per_league,
+                    discovery_diagnostics=run_status["discovery_diagnostics"],
                 )
                 run_status["events_found"] += events_found
                 run_status["provider_errors"].extend(provider_errors)
@@ -837,15 +857,10 @@ def main() -> None:
             run_status["rows_scraped"] += len(rows)
 
             if not rows:
-                missing = []
-                if not odds_api_key:
-                    missing.append("ODDS_API_KEY")
-                if not betsapi_key:
-                    missing.append("BETS_API_KEY")
-                if missing:
-                    print(f"  No API key found. Set one of: {', '.join(missing)} in .env.local")
-                else:
-                    print("  No team shots markets in feed for this league.")
+                usable_source = (args.source in ("auto", "odds-api") and odds_api_key) or (args.source in ("auto", "betsapi") and betsapi_key)
+                if not usable_source:
+                    raise RuntimeError("No API key configured for the selected source")
+                print("  No team shots prices returned for the selected fixture window.")
                 continue
 
             if args.dry_run:

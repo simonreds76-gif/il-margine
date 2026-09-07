@@ -18,6 +18,25 @@ SPEC.loader.exec_module(SHADOW)
 
 
 class FootballVnextShadowTests(unittest.TestCase):
+    def test_first_matchday_scores_both_sides_and_can_publish(self) -> None:
+        now = datetime(2026, 8, 22, 12, tzinfo=UTC)
+        base = {"kickoff_at":"2026-08-22T14:00:00Z", "captured_at":"2026-08-22T12:00:00Z",
+                "competition":"Premier League", "home_team":"Arsenal", "away_team":"Chelsea",
+                "team":"Arsenal", "line":"10.5", "bookmaker":"Bet365", "odds_decimal":"2.0"}
+        rows = [{**base,"side":side} for side in ("over","under")]
+        with patch.object(SHADOW.PUB,'live_form_row',return_value={"ema20_matches":20}), \
+             patch.object(SHADOW.PUB.BACKTEST,'canonical_team_shots_ema20_lambda',return_value=13), \
+             patch.object(SHADOW,'blend_logit',return_value=0.6):
+            signals,candidates=SHADOW.score_team_shots(by_team={},by_league={},odds_rows=rows,
+                params={"pooled_alpha":0.1,"market":{"model_weight":0.5,"over_vig_share":0.5}},
+                lock={"selection_rules":{"minimum_edge":0.03}},now=now)
+        self.assertEqual(len(candidates),2)
+        self.assertEqual(len(signals),1)
+        self.assertEqual(signals[0]['matchday'],1)
+        self.assertEqual(signals[0]['signal_status'],'eligible')
+        self.assertEqual(signals[0]['blocked_reason'],'')
+        self.assertIn('edge_below_3pct',candidates[1]['blocked_reason'])
+
     def test_paired_rows_requires_both_sides_within_capture_skew(self) -> None:
         captured = datetime(2026, 8, 22, 12, tzinfo=UTC)
         base = {"league": "epl", "match": "A vs B", "line": "10.5"}
