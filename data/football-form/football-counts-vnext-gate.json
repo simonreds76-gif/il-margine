@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-07T15:14:40Z",
+  "generated_at": "2026-09-07T19:23:16Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -37,16 +37,16 @@
     "latest_scan": {
       "state": "ELIGIBLE_CANDIDATES_PRESENT",
       "explanation": "At least one candidate passed every locked shadow gate.",
-      "scored_rows": 12,
-      "scored_fixtures": 3,
+      "scored_rows": 4,
+      "scored_fixtures": 1,
       "eligible_rows": 1,
       "eligible_fixtures": 1,
-      "blocked_rows": 11,
+      "blocked_rows": 3,
       "blocker_rows": {
-        "edge_below_3pct": 11
+        "edge_below_3pct": 3
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
-      "matchday_min": 2,
+      "matchday_min": 3,
       "matchday_max": 3,
       "next_unlock": null,
       "operational_alert_required": false,
@@ -89,19 +89,17 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "ELIGIBLE_CANDIDATES_PRESENT",
-      "explanation": "At least one candidate passed every locked shadow gate.",
-      "scored_rows": 8,
-      "scored_fixtures": 2,
-      "eligible_rows": 2,
-      "eligible_fixtures": 1,
-      "blocked_rows": 6,
-      "blocker_rows": {
-        "edge_below_3pct": 6
-      },
+      "state": "NO_SCORED_CANDIDATES",
+      "explanation": "No paired current market rows reached model scoring. Check capture coverage and fixture joins.",
+      "scored_rows": 0,
+      "scored_fixtures": 0,
+      "eligible_rows": 0,
+      "eligible_fixtures": 0,
+      "blocked_rows": 0,
+      "blocker_rows": {},
       "edge_pass_but_warmup_blocked_fixtures": 0,
-      "matchday_min": 2,
-      "matchday_max": 2,
+      "matchday_min": null,
+      "matchday_max": null,
       "next_unlock": null,
       "operational_alert_required": false,
       "operational_alert_code": null
