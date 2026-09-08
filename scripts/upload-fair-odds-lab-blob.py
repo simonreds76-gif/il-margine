@@ -18,6 +18,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_ARTIFACTS = (
+    ("daily-board", ROOT / "public" / "fair-odds-lab" / "daily-board.json", "fair-odds-lab/daily-board.json"),
     ("signals", ROOT / "public" / "fair-odds-lab" / "signals.json", "fair-odds-lab/signals.json"),
     ("highlights", ROOT / "public" / "fair-odds-lab" / "highlights.json", "fair-odds-lab/highlights.json"),
 )

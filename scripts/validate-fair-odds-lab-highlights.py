@@ -45,10 +45,12 @@ def highlight_id(date: str, league: str, match: str, player: str) -> str:
 
 def winning_rows(input_dir: Path) -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
-    for path in sorted(input_dir.glob("fair-odds-lab-*-signals.csv")):
-        league = league_from_path(path)
+    for path in sorted(list(input_dir.glob("fair-odds-lab-*-signals.csv")) + list(input_dir.glob("fair-odds-daily-*.csv"))):
+        league = path.stem.removeprefix("fair-odds-daily-") if path.name.startswith("fair-odds-daily-") else league_from_path(path)
         with path.open("r", encoding="utf-8-sig", newline="") as handle:
             for row in csv.DictReader(handle):
+                if row.get("signal_type") == "fair_odds_daily_board" and float(row.get("ev") or 0) <= 0:
+                    continue
                 if clean_text(row.get("bet_outcome")).lower() != "won":
                     continue
                 date = clean_text(row.get("date"))

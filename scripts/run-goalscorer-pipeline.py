@@ -294,6 +294,34 @@ def main() -> None:
     if not args.skip_model and not args.live_only:
         _run([sys.executable, model_script, "--data", *data_paths])
 
+    configured_lineups_path = str(ROOT / league_config["lineups"])
+    lineups_path = args.lineups or (configured_lineups_path if os.path.exists(configured_lineups_path) else "")
+    from fair_odds_board import confirmed_signatures, has_new_confirmed
+    before_lineups = confirmed_signatures(lineups_path) if lineups_path else {}
+    if args.fetch_lineups:
+        lineups_path = lineups_path or configured_lineups_path
+        _run(
+            [
+                sys.executable,
+                fotmob_lineups_script,
+                "--days-ahead",
+                str(args.lineup_days_ahead),
+                "--league-id",
+                str(league_config["league_id"]),
+                "--player-log",
+                str(preferred_player_log(args.league)),
+                "--out",
+                lineups_path,
+            ]
+        )
+
+    if args.fetch_lineups and has_new_confirmed(before_lineups, lineups_path) and not args.fetch_odds_api:
+        print("Official XI changed: refreshing reference prices (maximum 3 HTTP requests).")
+        args.fetch_odds_api = True
+        args.odds_api_bookmakers = "Bet365"
+        args.odds_api_days_ahead = 1
+        args.odds_api_max_http_requests = 3
+
     if args.fetch_odds_api:
         fetch_started_ts = datetime.now(timezone.utc).timestamp() - 1.0
         odds_fetch_ok = _run(
@@ -336,25 +364,6 @@ def main() -> None:
         if not odds_paths:
             print("  No fresh Pinnacle capture files were created. Skipping archive import for this fetch.")
 
-    configured_lineups_path = str(ROOT / league_config["lineups"])
-    lineups_path = args.lineups or (configured_lineups_path if os.path.exists(configured_lineups_path) else "")
-    if args.fetch_lineups:
-        lineups_path = lineups_path or configured_lineups_path
-        _run(
-            [
-                sys.executable,
-                fotmob_lineups_script,
-                "--days-ahead",
-                str(args.lineup_days_ahead),
-                "--league-id",
-                str(league_config["league_id"]),
-                "--player-log",
-                str(preferred_player_log(args.league)),
-                "--out",
-                lineups_path,
-            ]
-        )
-
     if not args.skip_odds_import and odds_paths:
         cmd = [sys.executable, archive_script, "--input", *odds_paths]
         if args.supabase:
@@ -365,8 +374,8 @@ def main() -> None:
 
     archive_path = ROOT / "data" / "goalscorer" / "goalscorer-odds-history.csv"
     if not args.skip_compare:
-        if archive_path.exists():
-            if not args.live_only:
+        if archive_path.exists() or lineups_path:
+            if not args.live_only and archive_path.exists():
                 cmd = [sys.executable, compare_script]
                 if args.bookmaker:
                     cmd.extend(["--bookmaker", args.bookmaker])

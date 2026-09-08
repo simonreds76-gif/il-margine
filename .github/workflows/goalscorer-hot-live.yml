@@ -3,7 +3,8 @@ name: Goalscorer Hot Live Poll
 on:
   schedule:
     # :10 is the full price/close poll. :40 refreshes lineups only, giving the
-    # public board a 30-minute XI cadence without extra Odds-API or DB usage.
+    # public board a 30-minute XI cadence. New official XIs trigger a bounded
+    # odds refresh; lineup-only runs still do not add database snapshots.
     - cron: "10 10-22 * * *"
     - cron: "40 10-22 * * *"
   workflow_dispatch:

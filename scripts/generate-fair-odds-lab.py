@@ -1672,6 +1672,8 @@ def build_signal(
 
 
 def main() -> None:
+    from fair_odds_board import write_board
+    write_board()
     args = parse_args()
     today_iso = london_today_iso(args.today)
     input_paths = args.input or DEFAULT_INPUTS

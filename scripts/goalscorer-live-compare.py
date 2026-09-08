@@ -611,6 +611,7 @@ def load_confirmed_lineup_map(path: str, team_key_func) -> Dict[tuple[str, str, 
         key = (match_date, team_key_func(home_team), team_key_func(away_team))
         loaded[key] = {
             "match_date": match_date,
+            "kickoff_utc": fixture.get("kickoff_utc", ""),
             "home_team": home_team,
             "away_team": away_team,
             "lineup_type": str(fixture.get("lineup_type") or fixture.get("lineupType") or "").strip(),
@@ -1478,7 +1479,7 @@ def _prediction_roster(quoted, lineup, fixture, resolve, team_key, historical_go
         starters = (lineup or {}).get(f"{side}_players", [])
         subs = (lineup or {}).get(f"{side}_subs", [])
         names = starters + subs
-        valid = (_is_confirmed_lineup(lineup) and len(starters) == 11
+        valid = ((_is_confirmed_lineup(lineup) or _is_expected_lineup(lineup)) and len(starters) == 11
                  and len({_norm_text(n) for n in names}) == len(names))
         keepers = {_norm_text(e["name"]) for e in (lineup or {}).get(f"{side}_starters", [])
                    if str(e.get("role_group", "")).upper() == "GK"}
@@ -1518,7 +1519,7 @@ def _prediction_roster(quoted, lineup, fixture, resolve, team_key, historical_go
             statuses[key] = "incomplete_roster"
             population.extend(originals)
             continue
-        statuses[key] = "confirmed_roster"
+        statuses[key] = "confirmed_roster" if _is_confirmed_lineup(lineup) else "expected_roster"
         population.extend(context)
         # Keep an output for stale/out-of-squad quotes, but never let them
         # enter the independent denominator or generate an actionable price.
@@ -1600,11 +1601,15 @@ def main() -> None:
     model_mod["LEAGUE_AVG"].clear()
     model_mod["LEAGUE_AVG"].update(league_avg_for(args.league, observed_penalty_rate))
     globals()["LEAGUE_AVG"] = model_mod["LEAGUE_AVG"]
-    odds_rows = load_odds_rows(args.odds, bookmaker_filter=args.bookmaker, league=args.league)
+    odds_rows = load_odds_rows(args.odds, bookmaker_filter=args.bookmaker, league=args.league) if Path(args.odds).exists() else []
+    if not Path(args.odds).exists():
+        print("No odds archive available: exporting lineup forecasts without bookmaker quotes.")
     if not args.all_captures:
         odds_rows = latest_rows_per_market(odds_rows)
     compared_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     lineup_map = load_confirmed_lineup_map(args.lineups, team_key_func)
+    from fair_odds_board import seed_lineup_context, fingerprint
+    odds_rows = seed_lineup_context(odds_rows, lineup_map)
     penalty_baseline_evidence = load_penalty_baseline_evidence(str(ROOT / args.penalty_baseline_evidence), team_key_func)
     penalty_baseline_overrides = load_penalty_baseline_overrides(str(ROOT / args.penalty_baseline_overrides), team_key_func)
     matchday_player_fixtures = _build_matchday_player_fixtures(lineup_map)
@@ -1700,11 +1705,12 @@ def main() -> None:
 
     history_index = 0
     results: List[dict] = []
+    board_forecasts: List[dict] = []
     penalty_context_rows: List[dict] = []
     fixture_health_rows: List[dict] = []
     stats = {
         "historical_rows": len(historical_rows),
-        "odds_rows": len(odds_rows),
+        "odds_rows": sum(not r.get("board_context_only") for r in odds_rows),
         "matched_rows": 0,
         "missing_player_history": 0,
         "missing_team_mapping": 0,
@@ -1943,7 +1949,7 @@ def main() -> None:
 
         quoted_object_ids = {id(c) for c in resolved_rows}
         for candidate in resolved_rows + [c for c in model_rows if id(c) not in quoted_object_ids]:
-            count_quote = int(id(candidate) in quoted_object_ids)
+            count_quote = int(id(candidate) in quoted_object_ids and not candidate["odds_row"].get("board_context_only"))
             player_display_name = candidate["player_meta"].get("player_name", candidate["odds_row"]["player_name"])
             lineup_state, lineup_match_name = _resolve_lineup_state(player_display_name, fixture_lineup, candidate["is_home"])
             if candidate.get("outside_prediction_roster"):
@@ -2204,8 +2210,27 @@ def main() -> None:
                 prediction["non_pen_lambda"] = non_pen_lambda
                 prediction["total_lambda"] = total_lambda
 
+        # Export complete sporting forecasts separately from real bookmaker quotes.
+        for candidate in model_rows:
+            if candidate.get("lineup_state") not in {"starter", "expected_starter"}:
+                continue
+            prediction = computed_predictions[(candidate["player_id"], candidate["player_team_key"])]
+            name = candidate["player_meta"].get("player_name", candidate["odds_row"]["player_name"])
+            position_signal = _position_upgrade_summary(name, player_histories[candidate["player_id"]], fixture_lineup, candidate["is_home"])
+            factor, _ = _confirmed_role_adjustment(position_signal, _canonical_lineup_status(candidate["lineup_state"]))
+            total = max(0.0, prediction["non_pen_lambda"] * factor + prediction["penalty_lambda"])
+            status = allocation_status.get(candidate["player_team_key"], "incomplete_roster")
+            board_forecasts.append(dict(match_date=fixture_sample["match_date"], home_team=fixture_sample["home_team"],
+                away_team=fixture_sample["away_team"], player_team=candidate["player_team"], player_name=name,
+                probability=prob_at_least_one(total), expected_minutes=candidate["expected_minutes"],
+                allocation_status=status, method=prediction["method"], context_only_prior=bool(candidate.get("context_only_prior")),
+                lineup_fingerprint=fingerprint(fixture_lineup or {}), generated_at=compared_at,
+                model_version="goalscorer_v1_roster_daily_20260908"))
+
         for candidate in resolved_rows:
             odds_row = candidate["odds_row"]
+            if odds_row.get("board_context_only"):
+                continue
             prediction = computed_predictions[(candidate["player_id"], candidate["player_team_key"])]
             method = prediction["method"]
             stacked_features = candidate["stacked_features"]
@@ -2496,6 +2521,9 @@ def main() -> None:
     print(f"  Average EV:           {stats['avg_ev']:.4f}")
 
     write_outputs(results, penalty_context_rows, fixture_health_rows, stats, args.out_dir, compared_at, args.league)
+    board_path = Path(args.out_dir) / "fair-odds-player-forecasts.json"
+    board_path.parent.mkdir(parents=True, exist_ok=True)
+    board_path.write_text(json.dumps({"generated_at": compared_at, "players": board_forecasts}, ensure_ascii=False), encoding="utf-8")
     print("\n  Done.\n")
 
 

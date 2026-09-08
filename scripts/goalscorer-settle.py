@@ -241,6 +241,8 @@ def _normalise_bookmaker(value: Any) -> str:
 
 
 def _is_super_sub_eligible_bookmaker(row: dict) -> bool:
+    if row.get("signal_type") == "fair_odds_daily_board" and row.get("super_sub_contract_verified") != "1":
+        return False
     bookmaker = _normalise_bookmaker(row.get("best_bookmaker"))
     return bookmaker in SUPER_SUB_BOOKMAKER_TOKENS
 

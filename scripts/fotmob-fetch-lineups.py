@@ -347,6 +347,11 @@ def fetch_confirmed_lineups(date_str: str, league_id: int, roster_by_team: Dict[
             team_key_func,
             away_formation,
         )
+        for side, entries in (("home", home_starter_entries), ("away", away_starter_entries)):
+            raw = lineup.get(side + "Team", {}).get("starters", [])
+            for entry, player in zip(entries, raw):
+                entry["player_id"] = player.get("id")
+                entry["shirt_number"] = player.get("shirtNumber")
         home_players = [entry["name"] for entry in home_starter_entries]
         away_players = [entry["name"] for entry in away_starter_entries]
         home_subs = _resolve_player_names(lineup.get("homeTeam", {}).get("subs", []), home_team, roster_by_team, team_key_func)
@@ -389,11 +394,30 @@ def fetch_confirmed_lineups(date_str: str, league_id: int, roster_by_team: Dict[
         else:
             stats["predicted_fixtures"] += 1
 
+    supplied = {f["fotmob_match_id"] for f in fixtures}
+    for match in serie_matches:
+        if not match.get("id") or int(match["id"]) in supplied:
+            continue
+        status = match.get("status") or {}
+        kickoff = _normalize_utc_iso(status.get("utcTime"), status.get("timeUTCDate"), match.get("timeUTCDate"))
+        if not kickoff:
+            continue
+        fixtures.append(dict(fotmob_match_id=int(match["id"]), match_date=kickoff[:10], kickoff_utc=kickoff,
+            home_team=str(match.get("home", {}).get("name") or ""), away_team=str(match.get("away", {}).get("name") or ""),
+            lineup_type="pending", home_players=[], away_players=[], home_starters=[], away_starters=[], home_subs=[], away_subs=[]))
     fixtures.sort(key=lambda item: (item["match_date"], item["home_team"], item["away_team"]))
     return fixtures, stats
 
 
 def write_output(path: Path, fixtures: List[dict]) -> None:
+    from fair_odds_board import fingerprint, fixture_key, read_json
+    old = {fixture_key(f): f for f in read_json(path).get("fixtures", [])}
+    stamp = datetime.now(timezone.utc).isoformat()
+    for f in fixtures:
+        previous = old.get(fixture_key(f), {})
+        if f != previous:
+            f["observed_at"] = stamp
+        f["changed_at"] = previous.get("changed_at") if fingerprint(f) == fingerprint(previous) and previous.get("changed_at") else stamp
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as handle:
         json.dump({"fixtures": fixtures}, handle, ensure_ascii=False, indent=2)

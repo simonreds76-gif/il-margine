@@ -55,12 +55,13 @@ class RosterIntegrationTests(unittest.TestCase):
             (folder/'lineups.json').write_text(json.dumps({'fixtures':[fixture]}))
             (folder/'empty.json').write_text('{}')
             argv=['live','--league','epl','--data',str(folder/'logs.csv'),'--odds',str(folder/'odds.csv'),
-                  '--lineups',str(folder/'lineups.json'),'--skip-roster-fetch',
+                  '--lineups',str(folder/'lineups.json'),'--skip-roster-fetch','--out-dir',str(folder/'output'),
                   '--penalty-hierarchy',str(folder/'empty.json'),
                   '--penalty-baseline-evidence',str(folder/'empty.json'),
                   '--penalty-baseline-overrides',str(folder/'empty.json')]
             with patch.object(sys,'argv',argv),patch.object(LIVE,'write_outputs') as write,contextlib.redirect_stdout(io.StringIO()):
                 LIVE.main()
+            self.last_forecasts=json.loads((folder/'output/fair-odds-player-forecasts.json').read_text())['players']
             return write.call_args.args[0]
 
     def test_removing_quotes_cannot_inflate_probability_or_emit_unquoted_players(self):
@@ -68,6 +69,8 @@ class RosterIntegrationTests(unittest.TestCase):
         sparse=self.run_model([10])
         target=next(r for r in full if r['player_id']=='Home10')
         self.assertEqual(len(sparse),1)
+        self.assertEqual(len(self.last_forecasts),20)
+        self.assertTrue(all(r['allocation_status']=='confirmed_roster' for r in self.last_forecasts))
         for field in ('model_p_atgs','model_lambda','non_pen_lambda','team_share','model_version'):
             self.assertEqual(target[field],sparse[0][field],field)
         self.assertEqual(sparse[0]['allocation_status'],'confirmed_roster')
@@ -84,12 +87,25 @@ class RosterIntegrationTests(unittest.TestCase):
         self.assertNotIn('Home0',by_id)
 
     def test_unresolved_roster_is_not_publishable(self):
-        for change in ({'missing':True},{'predicted':True},{'duplicate':True}):
+        for change in ({'missing':True},{'duplicate':True}):
             with self.subTest(change=change):
                 row=self.run_model([10],**change)[0]
                 self.assertEqual(row['allocation_status'],'incomplete_roster')
                 self.assertNotEqual(row['public_action'],'surface')
                 self.assertEqual(row['recommended_stake_units'],0)
+
+    def test_expected_roster_remains_provisional_and_quote_independent(self):
+        full=self.run_model(range(1,11),predicted=True)
+        sparse=self.run_model([10],predicted=True)
+        self.assertEqual(sparse[0]['allocation_status'],'expected_roster')
+        self.assertEqual(sparse[0]['model_p_atgs'],next(r['model_p_atgs'] for r in full if r['player_id']=='Home10'))
+        self.assertNotEqual(sparse[0]['public_action'],'surface')
+
+    def test_lineup_without_any_market_still_gets_forecasts_but_no_bets(self):
+        with patch.object(LIVE,'load_odds_rows',return_value=[]):
+            self.assertEqual(self.run_model([10]),[])
+        self.assertEqual(len(self.last_forecasts),20)
+        self.assertTrue(all(0<r['probability']<1 for r in self.last_forecasts))
 
     def test_named_reserve_uses_existing_position_prior_without_emitting_a_quote(self):
         full=self.run_model(range(1,11),missing=True,reserve_role='FW')

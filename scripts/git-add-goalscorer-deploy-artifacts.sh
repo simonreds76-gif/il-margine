@@ -6,6 +6,11 @@ set -euo pipefail
 # monitor snapshots, or the next hosted goalscorer run.
 shopt -s nullglob
 
+# Compact latest forecasts must survive a hosted run where a league is not due.
+for file in data/goalscorer/fair-odds-player-forecasts.json data/goalscorer/*/fair-odds-player-forecasts.json data/goalscorer/fair-odds-daily-*.csv data/goalscorer/fair-odds-daily-*.txt; do
+  if [[ -f "$file" ]]; then git add -f -- "$file"; fi
+done
+
 blocked_artifacts=(
   data/goalscorer/live-history
   data/goalscorer/*/live-history
