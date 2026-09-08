@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { DailyPitchBoard } from "@/components/fair-odds-lab/DailyPitchBoard";
 import { emptyBoard, isDailyBoard } from "@/components/fair-odds-lab/daily-board-data";
+import { LabHitsSection } from "@/components/fair-odds-lab/LabHitsSection";
 import { BASE_URL } from "@/lib/config";
 
 export const metadata: Metadata = {
@@ -27,7 +28,7 @@ async function remote(url: string) {
   } catch { return null; }
 }
 type Highlight = { id: string; player: string; match: string; date: string; best_odds: number; fair_odds: number;
-  goals_scored: number; super_sub_win?: boolean; super_sub_replacement?: string };
+  league?: string; competition?: string; team?: string; best_bookmaker?: string; goals_scored: number; super_sub_win?: boolean; super_sub_replacement?: string };
 
 async function readClock() { return Date.now(); }
 
@@ -49,7 +50,13 @@ export default async function FairOddsLabPage({ searchParams }: { searchParams?:
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structured).replace(/</g, "\\u003c") }} />
     <DailyPitchBoard initial={board} boardUrl={boardUrl} asOf={asOf} preview={preview} />
     <div className="mx-auto max-w-[1220px] px-4 pb-10 sm:px-6">
-      {highlights.length > 0 && !preview && <section className="mt-4 border-t border-slate-700 pt-7" aria-label="Selected scoring examples"><h2 className="text-xl font-semibold">Latest scoring examples</h2><p className="mt-2 text-sm text-slate-400">Selected winners from previously recorded Lab research signals. This is not a complete performance record or evidence of profitability.</p><div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{highlights.map(h => <article key={h.id} className="rounded-xl border border-slate-700 bg-[#17262d] p-4"><p className="text-xs text-emerald-300">Scored · {h.date}</p><h3 className="mt-1 font-semibold">{h.player}</h3><p className="mt-1 text-xs text-slate-400">{h.match}</p><p className="mt-3 font-mono text-sm">Recorded fair {h.fair_odds.toFixed(2)} · Bet365 {h.best_odds.toFixed(2)}</p></article>)}</div></section>}
+      {highlights.length > 0 && <LabHitsSection highlights={highlights.map(h => ({
+        id: h.id, player: h.player, match: h.match, date: h.date, team: h.team, league: h.league,
+        competition: h.competition || "Goalscorer", bestBookmaker: h.best_bookmaker || "Bet365",
+        bestOdds: h.best_odds, fairOdds: h.fair_odds, goalsScored: h.goals_scored,
+        modelChancePct: 100 / h.fair_odds, marketChancePct: 100 / h.best_odds,
+        priceGapPp: 100 / h.fair_odds - 100 / h.best_odds,
+      }))} />}
       <div className="mt-7 flex flex-wrap gap-5 text-sm text-slate-300"><Link href="/resources/fair-odds-lab-explained" className="underline underline-offset-4">How fair odds work</Link><Link href="/" className="underline underline-offset-4">Il Margine</Link></div>
     </div>
   </main>;

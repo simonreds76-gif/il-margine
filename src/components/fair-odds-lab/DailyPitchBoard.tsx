@@ -38,7 +38,7 @@ function MatchPitch({ fixture: f, now, snapshot, view }: { fixture: BoardFixture
   const detailId = `player-detail-${f.id.replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const started = now >= Date.parse(f.kickoffUtc);
   return <article className="ip-match" aria-label={`${f.teams[0].name} versus ${f.teams[1].name}`}>
-    <div className="ip-matchhead"><div><div className="ip-label">{f.competition} · {stamp(f.kickoffUtc)} UK</div><h2 className="ip-fixturetitle">{f.teams[0].name} <span className="ip-sub">vs</span> {f.teams[1].name}</h2><div className="ip-sub">{started ? "Kickoff passed · pre-match snapshot" : f.lineupStatus === "confirmed" ? "Official starting XIs" : f.lineupStatus === "pending" ? "Starting lineups pending" : "Expected XIs · provisional"} · Lineup checked {stamp(f.lineupObservedAt)}</div></div></div>
+    <div className="ip-matchhead"><div><div className="ip-label">{f.competition} · {new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: "Europe/London" }).format(new Date(f.kickoffUtc))} · {stamp(f.kickoffUtc)} UK</div><h2 className="ip-fixturetitle">{f.teams[0].name} <span className="ip-sub">vs</span> {f.teams[1].name}</h2><div className="ip-sub">{started ? "Kickoff passed · pre-match snapshot" : f.lineupStatus === "confirmed" ? "Official starting XIs" : f.lineupStatus === "pending" ? "Starting lineups pending" : "Expected XIs · provisional"} · Lineup checked {stamp(f.lineupObservedAt)}</div></div></div>
     {f.teams.filter(t => t.penaltyInheritedFrom && t.activePenaltyTaker).map(t => <div className="ip-pennews" key={t.name}><strong>Expected penalty duty</strong><span>{t.penaltyInheritedFrom} not starting → {t.activePenaltyTaker}</span></div>)}
     {view === "pitch" && <div className="ip-switch ip-teamtabs" aria-label="Team">{f.teams.map((t, i) => <button key={t.name} type="button" aria-pressed={side === i} onClick={() => setSide(i)}>{t.name}</button>)}</div>}
     {view === "pitch" ? <div className="ip-board">{f.teams.map((team, teamIndex) => {
@@ -59,7 +59,7 @@ function MatchPitch({ fixture: f, now, snapshot, view }: { fixture: BoardFixture
 export function DailyPitchBoard({ initial, boardUrl, asOf, preview = false }: { initial: DailyBoard; boardUrl: string; asOf: number; preview?: boolean }) {
   const [board, setBoard] = useState(initial);
   const [now, setNow] = useState(asOf);
-  const [date, setDate] = useState(day(asOf));
+  const [date, setDate] = useState("upcoming");
   const [league, setLeague] = useState("all");
   const [view, setView] = useState("pitch");
   const [refreshFailed, setRefreshFailed] = useState(false);
@@ -83,15 +83,25 @@ export function DailyPitchBoard({ initial, boardUrl, asOf, preview = false }: { 
     void refresh();
     return () => { alive = false; controller.abort(); clearInterval(tick); clearInterval(poll); document.removeEventListener("visibilitychange", refresh); };
   }, [boardUrl, preview]);
-  const dates = [...new Set([day(now), ...board.fixtures.map(f => f.date)])].sort();
-  const fixtures = board.fixtures.filter(f => f.date === date && (league === "all" || f.league === league));
+  const today = day(now);
+  const dates = [...new Set([...Array.from({ length: 4 }, (_, i) => day(now + i * 86400_000)), ...board.fixtures.map(f => f.date)])].sort();
+  const leagues = [["epl", "Premier League"], ["serie-a", "Serie A"], ["la-liga", "La Liga"], ["bundesliga", "Bundesliga"], ["ligue-1", "Ligue 1"]];
+  const inDate = (f: BoardFixture) => date === "upcoming" ? f.date >= today : f.date === date;
+  const fixtures = board.fixtures.filter(f => inDate(f) && (league === "all" || f.league === league));
+  const leagueName = leagues.find(([id]) => id === league)?.[1] ?? "All leagues";
+  const nextFixture = board.fixtures.find(f => f.date > date && (league === "all" || f.league === league));
+  const dateLabel = (d: string) => d === today ? "Today" : d === day(now + 86400_000) ? "Tomorrow" : new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "Europe/London" }).format(new Date(d + "T12:00:00Z"));
   const old = !board.generatedAt || now - Date.parse(board.generatedAt) > 90 * 60_000;
-  return <div id="im-pitch-lab"><div className="ip-main"><div className="ip-head"><div><h1>Fair Odds Lab</h1><p className="ip-sub">Every starter. Model fair odds. Bet365 comparison.</p></div><span className="ip-beta">Free beta</span></div>
+  return <div id="im-pitch-lab"><div className="ip-main"><div className="ip-head"><div><div className="ip-eyebrow">THE GOALSCORER WORKBENCH</div><h1>Fair Odds <span>Lab</span></h1><p className="ip-sub">Read the XI. Compare the price. Find your edge.</p></div><div className="ip-headlinks"><span className="ip-beta">Free beta</span><a href="#lab-hits">Latest hits ↗</a></div></div>
     {preview && <p role="status" className="ip-pennews">Design preview · illustrative prices, not current markets</p>}
-    <div className="ip-controls"><label>Date <select value={date} onChange={e => setDate(e.target.value)}>{dates.map(d => <option key={d} value={d}>{d === day(now) ? "Today" : d}</option>)}</select></label><label>Competition <select value={league} onChange={e => setLeague(e.target.value)}><option value="all">All supported leagues</option>{[...new Map(board.fixtures.map(f => [f.league, f.competition])).entries()].map(([id, name]) => <option key={id} value={id}>{name}</option>)}</select></label><div className="ip-switch" aria-label="Comparison view">{["pitch", "list"].map(v => <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)}>{v === "pitch" ? "Pitch" : "List"}</button>)}</div></div>
+    <nav className="ip-leagues" aria-label="Competition">
+      {[["all", "All leagues"], ...leagues].map(([id, name]) => <button key={id} type="button" aria-pressed={league === id} onClick={() => setLeague(id)}>{id === "all" ? <span className="ip-all-icon" aria-hidden="true">◈</span> : <Image unoptimized src={`/league-logos/${id}.png`} width={26} height={26} alt="" />}<span>{name}</span><span className="ip-count">{board.fixtures.filter(f => inDate(f) && (id === "all" || f.league === id)).length}</span></button>)}
+    </nav>
+    <div className="ip-controls"><div className="ip-dates" aria-label="Match date"><button type="button" aria-pressed={date === "upcoming"} onClick={() => setDate("upcoming")}>Upcoming<span>All available</span></button>{dates.map(d => <button key={d} type="button" aria-pressed={date === d} onClick={() => setDate(d)}>{dateLabel(d)}<span>{board.fixtures.filter(f => f.date === d && (league === "all" || f.league === league)).length} matches</span></button>)}</div><div className="ip-switch" aria-label="Comparison view">{["pitch", "list"].map(v => <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)}>{v === "pitch" ? "Pitch" : "List"}</button>)}</div></div>
+    <div className="ip-resultshead"><div><span className="ip-eyebrow">{leagueName}</span><h2>{date === "upcoming" ? "Upcoming matches" : dateLabel(date)}</h2></div><span className="ip-sub" aria-live="polite">{fixtures.length} matches · {fixtures.filter(f => f.lineupStatus === "confirmed").length} confirmed XIs</span></div>
     <div className="ip-legend"><span>Prices: Fair / Bet365</span><span>Δ pp = model chance − bookmaker implied chance</span><span>PEN = expected active taker</span><span>All times UK · Snapshot {stamp(board.generatedAt)}</span></div>
     {(old || refreshFailed) && <p className="ip-pennews" role="status">{old ? "Awaiting a current snapshot. Old quotes are not treated as fresh comparisons." : "Latest refresh failed. Showing the last received snapshot."}</p>}
-    {fixtures.length ? fixtures.map(f => <MatchPitch key={f.id} fixture={f} now={now} snapshot={board.generatedAt} view={view} />) : <section className="ip-empty"><h2>No match lineups available for this date</h2><p>Expected and official XIs appear as the feed supplies them. An empty board does not mean that every scheduled match has been checked.</p><p className="ip-sub">Coverage: Premier League, Serie A, La Liga, Bundesliga and Ligue 1.</p></section>}
+    {fixtures.length ? fixtures.map(f => <MatchPitch key={f.id} fixture={f} now={now} snapshot={board.generatedAt} view={view} />) : <section className="ip-empty"><div className="ip-empty-pitch" aria-hidden="true"><span /><i /></div><div><span className="ip-eyebrow">{leagueName} · {date === "upcoming" ? "Upcoming" : dateLabel(date)}</span><h2>{date === "upcoming" ? "Waiting for the next lineups" : "No lineups available for this date"}</h2><p>Scheduled matches and expected XIs appear as our feed supplies them. Official lineups update the player prices and penalty duties.</p><div className="ip-empty-actions">{date !== "upcoming" && <button type="button" onClick={() => setDate(nextFixture?.date ?? "upcoming")}>{nextFixture ? `Next available · ${dateLabel(nextFixture.date)}` : "Browse upcoming matches"} →</button>}{league !== "all" && <button type="button" onClick={() => setLeague("all")}>Show all leagues</button>}<a href="#lab-hits">Explore the latest hits ↗</a></div><p className="ip-sub">Current collection window: today + 3 days. Missing lineups do not mean no fixtures are scheduled.</p></div></section>}
     <p className="ip-footnote">Fair odds are model estimates. Expected lineups and penalty duties may change. A player scoring and a qualifying replacement scoring are different outcomes; promotion coverage is not included in the named-player probability.</p>
   </div></div>;
 }
