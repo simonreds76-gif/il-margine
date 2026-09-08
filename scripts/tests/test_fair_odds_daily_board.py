@@ -46,6 +46,9 @@ class DailyBoardTests(unittest.TestCase):
     def test_forecast_from_old_lineup_is_not_reused(self):
         self.fixture['home_players'][2]='new starter'
         self.assertIsNone(self.board()['teams'][0]['players'][1]['fairOdds'])
+    def test_quarantined_fixture_cannot_publish_model_prices(self):
+        self.model['trust_tier']='T3'
+        self.assertIsNone(self.board()['teams'][0]['players'][1]['fairOdds'])
     def test_kickoff_locks_gap_and_post_kickoff_forecast(self):
         self.now+=timedelta(hours=1)
         self.assertIsNone(self.board()['teams'][0]['players'][1]['gapPp'])

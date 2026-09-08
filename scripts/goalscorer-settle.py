@@ -15,6 +15,7 @@ import json
 import os
 import runpy
 import sys
+import subprocess
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
@@ -439,6 +440,13 @@ def main() -> int:
     config = LEAGUE_CONFIGS[args.league]
     signals_path = Path(args.signals) if args.signals else config["signals"]
     summary_path = Path(args.summary) if args.summary else config["summary"]
+    # Scheduled workflow definitions can live on main while scripts are checked
+    # out from golden. Attach to the existing Lab settlement call, once only.
+    daily_path = ROOT / "data" / "goalscorer" / f"fair-odds-daily-{args.league}.csv"
+    if signals_path.name == f"fair-odds-lab-{args.league}-signals.csv" and daily_path.exists():
+        subprocess.run([sys.executable, str(Path(__file__).resolve()), "--league", args.league,
+            "--signals", str(daily_path), "--summary", str(daily_path.with_name(daily_path.stem + "-performance.txt")),
+            "--match-results-dir", str(args.match_results_dir), "--alias-path", str(args.alias_path)], check=True)
     results_dir = Path(args.match_results_dir)
     aliases = _load_aliases(Path(args.alias_path))
 

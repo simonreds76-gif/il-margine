@@ -114,7 +114,7 @@ def build_board(root=ROOT, now=None):
                         quote=next((v for v in same_team.values() if match and match==(v.get('canonical_player_name') or v.get('player_name'))),{})
                     p=number(model.get('probability'))
                     valid=model.get('lineup_fingerprint')==fingerprint(f) and model.get('allocation_status') in {'confirmed_roster','expected_roster'} and model.get('method')=='model' and not model.get('context_only_prior')
-                    if not valid or p is None or not 0<p<1: p=None
+                    if not valid or model.get('trust_tier') == 'T3' or p is None or not 0<p<1: p=None
                     odds=number(quote.get('odds_decimal'))
                     if odds is not None and odds<=1: odds=None
                     capture=instant(quote.get('captured_at'))
@@ -187,10 +187,10 @@ def record_daily_board(payload, root=ROOT):
             with path.open('w',encoding='utf-8',newline='') as handle:
                 writer=csv.DictWriter(handle,fieldnames=fields);writer.writeheader();writer.writerows(rows)
 
-def write_board(output=None):
+def write_board(output=None, record=True):
     output=output or ROOT/'public/fair-odds-lab/daily-board.json'
     payload=build_board()
-    record_daily_board(payload)
+    if record: record_daily_board(payload)
     output.parent.mkdir(parents=True,exist_ok=True)
     output.write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
     print(f'Daily Lab: {len(payload["fixtures"])} fixtures -> {output}')

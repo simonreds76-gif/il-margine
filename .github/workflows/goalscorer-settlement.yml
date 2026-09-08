@@ -176,10 +176,6 @@ jobs:
 
           for league in serie-a epl la-liga bundesliga ligue-1; do
             echo "---- Settle league: ${league} (shadow)"
-            daily_signals="data/goalscorer/fair-odds-daily-${league}.csv"
-            if [ -f "${daily_signals}" ]; then
-              python scripts/goalscorer-settle.py --league "${league}" --signals "${daily_signals}" --summary "data/goalscorer/fair-odds-daily-${league}-performance.txt"
-            fi
             python scripts/goalscorer-settle.py \
               --league "${league}" \
               --signals "${SHADOW_OUTPUTS[$league]}" \

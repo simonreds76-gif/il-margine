@@ -2223,7 +2223,7 @@ def main() -> None:
             board_forecasts.append(dict(match_date=fixture_sample["match_date"], home_team=fixture_sample["home_team"],
                 away_team=fixture_sample["away_team"], player_team=candidate["player_team"], player_name=name,
                 probability=prob_at_least_one(total), expected_minutes=candidate["expected_minutes"],
-                allocation_status=status, method=prediction["method"], context_only_prior=bool(candidate.get("context_only_prior")),
+                allocation_status=status, trust_tier=fixture_health["trust_tier"], method=prediction["method"], context_only_prior=bool(candidate.get("context_only_prior")),
                 lineup_fingerprint=fingerprint(fixture_lineup or {}), generated_at=compared_at,
                 model_version="goalscorer_v1_roster_daily_20260908"))
 
