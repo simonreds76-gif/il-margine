@@ -1,149 +1,383 @@
 season,competition,match_date,team,opponent,is_home,player_id,player_name,position,started,minutes,goals,assists,shots,shots_on_target,xg,npxg,xa,big_chances,big_chance_goals,big_chance_misses,big_chance_xg,penalties_scored,penalties_attempted,team_xg,team_xga
+2026-2027,Bundesliga,2026-09-05,Freiburg,Paderborn,0,11354,Yuito Suzuki,AMC,,83,0,0,2,,0.128671,0.128671,0.022256,0,0,0,0.0,0,0,1.1716,0.733133
+2026-2027,Bundesliga,2026-08-30,Freiburg,Werder Bremen,1,11354,Yuito Suzuki,AMC,,81,3,0,3,,1.813932,1.813932,0.020419,3,3,0,1.813932,0,0,2.38503,0.948636
+2026-2027,Bundesliga,2026-09-06,Eintracht Frankfurt,Augsburg,1,14329,Younes Ebnoutalib,FW,,90,0,1,5,,0.796307,0.796307,0.802288,1,0,1,0.326723,0,0,2.51037,1.44545
 2026-2027,Bundesliga,2026-08-29,Eintracht Frankfurt,Union Berlin,0,14329,Younes Ebnoutalib,FW,,90,3,0,3,,1.213241,1.213241,0.065601,3,3,0,1.213241,0,0,2.1189,2.28332
+2026-2027,Bundesliga,2026-09-05,Bayer Leverkusen,Union Berlin,1,1236,Patrik Schick,FW,,68,1,1,4,,1.189108,1.189108,0.155207,2,1,1,0.929308,0,0,3.39215,0.249852
+2026-2027,Bundesliga,2026-08-29,Bayer Leverkusen,Elversberg,0,1236,Patrik Schick,FW,,90,1,0,5,,1.058276,1.058276,0.05897,2,1,1,0.856199,0,0,2.61527,1.40032
+2026-2027,Bundesliga,2026-09-05,Borussia Dortmund,Hoffenheim,0,3738,Serhou Guirassy,FW,,90,1,1,5,,0.661734,0.661734,0.223771,1,1,0,0.328173,0,0,2.02481,2.16627
+2026-2027,Bundesliga,2026-08-29,Borussia Dortmund,Hamburger SV,1,3738,Serhou Guirassy,FW,,90,1,0,2,,0.153066,0.153066,0.189665,0,0,0,0.0,0,0,1.31287,1.10643
 2026-2027,Bundesliga,2026-09-04,VfB Stuttgart,FC Cologne,1,6626,Joshua Vagnoman,DMR,,90,1,1,3,,0.683528,0.683528,0.278707,1,0,1,0.618472,0,0,3.5224,2.85818
 2026-2027,Bundesliga,2026-08-28,VfB Stuttgart,Bayern Munich,0,6626,Joshua Vagnoman,DMR,,90,1,0,1,,0.073437,0.073437,0.0,0,0,0,0.0,0,0,1.24951,4.07897
-2026-2027,Bundesliga,2026-08-29,Bayer Leverkusen,Elversberg,0,1236,Patrik Schick,FW,,90,1,0,5,,1.058276,1.058276,0.05897,2,1,1,0.856199,0,0,2.61527,1.40032
-2026-2027,Bundesliga,2026-08-29,Borussia Dortmund,Hamburger SV,1,3738,Serhou Guirassy,FW,,90,1,0,2,,0.153066,0.153066,0.189665,0,0,0,0.0,0,0,1.31287,1.10643
+2026-2027,Bundesliga,2026-09-05,RasenBallsport Leipzig,Werder Bremen,0,6708,Bote Baku,DR,,90,1,0,3,,0.616361,0.616361,0.046399,1,1,0,0.544395,0,0,1.58161,0.854137
+2026-2027,Bundesliga,2026-08-29,RasenBallsport Leipzig,Borussia M.Gladbach,1,6708,Bote Baku,DR,,74,1,0,2,,0.366301,0.366301,0.0,1,1,0,0.330904,0,0,3.76496,1.23375
+2026-2027,Bundesliga,2026-09-06,Mainz 05,Hamburger SV,0,11845,Phillip Tietz,FW,,90,2,0,4,,0.666531,0.666531,0.496203,1,1,0,0.432838,0,0,3.27983,0.257239
+2026-2027,Bundesliga,2026-08-29,Mainz 05,Paderborn,1,11845,Phillip Tietz,FW,,90,0,0,3,,0.440304,0.440304,0.063024,1,0,1,0.327304,0,0,1.54945,0.691131
+2026-2027,Bundesliga,2026-09-05,Elversberg,Borussia M.Gladbach,0,13289,David Mokwa,FW,,90,1,0,1,,0.528466,0.528466,0.313248,1,1,0,0.528466,0,0,3.03199,2.88776
+2026-2027,Bundesliga,2026-08-29,Elversberg,Bayer Leverkusen,1,13289,David Mokwa,FW,,77,1,0,2,,0.644754,0.644754,0.038662,1,1,0,0.611641,0,0,1.40032,2.61527
+2026-2027,Bundesliga,2026-09-05,Borussia M.Gladbach,Elversberg,1,14428,Hugo Bolin,AMC,,90,2,0,6,,1.294833,1.294833,0.286215,2,2,0,0.966614,0,0,2.88776,3.03199
+2026-2027,Bundesliga,2026-08-29,Borussia M.Gladbach,RasenBallsport Leipzig,0,14428,Hugo Bolin,AMR,,90,0,0,4,,0.51261,0.51261,0.091336,1,0,1,0.363696,0,0,1.23375,3.76496
+2026-2027,Bundesliga,2026-09-05,Freiburg,Paderborn,0,125,Maximilian Eggestein,DMC,,90,1,0,4,,0.471612,0.471612,0.126327,1,1,0,0.328615,0,0,1.1716,0.733133
+2026-2027,Bundesliga,2026-08-30,Freiburg,Werder Bremen,1,125,Maximilian Eggestein,DMC,,90,0,0,2,,0.047162,0.047162,0.028693,0,0,0,0.0,0,0,2.38503,0.948636
+2026-2027,Bundesliga,2026-09-06,Augsburg,Eintracht Frankfurt,0,171,Michael Gregoritsch,FW,,73,0,0,1,,0.067699,0.067699,0.071413,0,0,0,0.0,0,0,1.44545,2.51037
+2026-2027,Bundesliga,2026-08-30,Augsburg,Schalke 04,1,171,Michael Gregoritsch,FW,,84,1,0,4,,1.492367,1.492367,0.066994,2,1,1,1.365272,0,0,5.53649,1.83691
+2026-2027,Bundesliga,2026-09-05,Union Berlin,Bayer Leverkusen,0,1648,Emmanuel Latte Lath,FW,,64,0,0,1,,0.058282,0.058282,0.0,0,0,0,0.0,0,0,0.249852,3.39215
+2026-2027,Bundesliga,2026-08-29,Union Berlin,Eintracht Frankfurt,1,1648,Emmanuel Latte Lath,FW,,69,1,0,2,,0.22235,0.22235,0.0,0,0,0,0.0,0,0,2.28332,2.1189
 2026-2027,Bundesliga,2026-09-04,VfB Stuttgart,FC Cologne,1,4340,Grischa Prömel,MC,,90,1,0,3,,0.244045,0.244045,0.0,0,0,0,0.0,0,0,3.5224,2.85818
 2026-2027,Bundesliga,2026-08-28,VfB Stuttgart,Bayern Munich,0,4340,Grischa Prömel,MC,,90,0,0,2,,0.10741,0.10741,0.094601,0,0,0,0.0,0,0,1.24951,4.07897
+2026-2027,Bundesliga,2026-09-05,Bayern Munich,Schalke 04,0,5243,Dayotchanculle Upamecano,DC,,90,0,0,1,,0.190723,0.190723,0.0,0,0,0,0.0,0,0,2.0536,0.25073
 2026-2027,Bundesliga,2026-08-28,Bayern Munich,VfB Stuttgart,1,5243,Dayotchanculle Upamecano,DC,,90,1,0,1,,0.512086,0.512086,0.037821,1,1,0,0.512086,0,0,4.07897,1.24951
+2026-2027,Bundesliga,2026-09-05,Werder Bremen,RasenBallsport Leipzig,1,6098,Niclas Füllkrug,FW,,77,1,0,1,,0.019816,0.019816,0.011925,0,0,0,0.0,0,0,0.854137,1.58161
+2026-2027,Bundesliga,2026-08-30,Werder Bremen,Freiburg,0,6098,Niclas Füllkrug,FW,,62,0,0,2,,0.325705,0.325705,0.0,1,0,1,0.24975,0,0,0.948636,2.38503
+2026-2027,Bundesliga,2026-09-06,Mainz 05,Hamburger SV,0,7106,Philipp Mwene,DML,,90,1,1,1,,0.916868,0.916868,0.384158,1,1,0,0.916868,0,0,3.27983,0.257239
+2026-2027,Bundesliga,2026-08-29,Mainz 05,Paderborn,1,7106,Philipp Mwene,ML,,90,0,0,1,,0.080659,0.080659,0.0,0,0,0,0.0,0,0,1.54945,0.691131
+2026-2027,Bundesliga,2026-09-06,Eintracht Frankfurt,Augsburg,1,7108,Jonathan Burkardt,FW,,90,1,0,4,,0.89829,0.89829,0.026737,2,1,1,0.727095,0,0,2.51037,1.44545
+2026-2027,Bundesliga,2026-08-29,Eintracht Frankfurt,Union Berlin,0,7108,Jonathan Burkardt,FW,,74,0,0,1,,0.058667,0.058667,0.027968,0,0,0,0.0,0,0,2.1189,2.28332
+2026-2027,Bundesliga,2026-09-05,Hoffenheim,Borussia Dortmund,1,7376,Ozan Kabak,DC,,82,0,0,3,,0.436483,0.436483,0.402846,1,0,1,0.37207,0,0,2.16627,2.02481
 2026-2027,Bundesliga,2026-08-29,Hoffenheim,FC Cologne,0,7376,Ozan Kabak,DC,,90,1,0,1,,0.081448,0.081448,0.0,0,0,0,0.0,0,0,1.92317,2.31412
+2026-2027,Bundesliga,2026-09-06,Mainz 05,Hamburger SV,0,7882,Sheraldo Becker,FW,,69,1,2,4,,0.497789,0.497789,1.349706,1,1,0,0.374689,0,0,3.27983,0.257239
+2026-2027,Bundesliga,2026-08-29,Mainz 05,Paderborn,1,7882,Sheraldo Becker,FW,,69,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.54945,0.691131
+2026-2027,Bundesliga,2026-09-05,Bayer Leverkusen,Union Berlin,1,8664,Facundo Medina,DC,,72,1,0,1,,0.487541,0.487541,0.0,1,1,0,0.487541,0,0,3.39215,0.249852
+2026-2027,Bundesliga,2026-08-29,Bayer Leverkusen,Elversberg,0,8664,Facundo Medina,Sub,,33,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.61527,1.40032
+2026-2027,Bundesliga,2026-09-05,Elversberg,Borussia M.Gladbach,0,9127,Lukas Petkov,AMR,,90,0,0,2,,0.108797,0.108797,0.030653,0,0,0,0.0,0,0,3.03199,2.88776
 2026-2027,Bundesliga,2026-08-29,Elversberg,Bayer Leverkusen,1,9127,Lukas Petkov,AMR,,90,1,1,2,,0.079968,0.079968,0.736003,0,0,0,0.0,0,0,1.40032,2.61527
+2026-2027,Bundesliga,2026-09-05,Borussia M.Gladbach,Elversberg,1,9674,Joe Scally,DR,,79,1,0,1,,0.153686,0.153686,0.0,0,0,0,0.0,0,0,2.88776,3.03199
+2026-2027,Bundesliga,2026-08-29,Borussia M.Gladbach,RasenBallsport Leipzig,0,9674,Joe Scally,Sub,,13,0,0,1,,0.054579,0.054579,0.0,0,0,0,0.0,0,0,1.23375,3.76496
+2026-2027,Bundesliga,2026-09-05,Bayern Munich,Schalke 04,0,9948,Michael Olise,Sub,,31,0,0,1,,0.077249,0.077249,0.054562,0,0,0,0.0,0,0,2.0536,0.25073
 2026-2027,Bundesliga,2026-08-28,Bayern Munich,VfB Stuttgart,1,9948,Michael Olise,AMR,,90,1,0,6,,1.140484,1.140484,0.091795,2,1,1,0.914182,0,0,4.07897,1.24951
 2026-2027,Bundesliga,2026-08-30,Augsburg,Schalke 04,1,10288,Anton Kade,AMC,,90,1,1,6,,1.930835,1.930835,0.980259,4,0,4,1.795393,0,0,5.53649,1.83691
+2026-2027,Bundesliga,2026-09-05,Bayern Munich,Schalke 04,0,10408,Luis Díaz,AML,,90,0,0,3,,0.762647,0.762647,0.125568,2,0,2,0.708909,0,0,2.0536,0.25073
 2026-2027,Bundesliga,2026-08-28,Bayern Munich,VfB Stuttgart,1,10408,Luis Díaz,AML,,90,1,0,6,,1.289353,1.289353,0.084629,3,1,2,1.130247,0,0,4.07897,1.24951
+2026-2027,Bundesliga,2026-09-05,Bayer Leverkusen,Union Berlin,1,11484,Ibrahim Maza,AML,,90,1,0,5,,0.328462,0.328462,0.351551,0,0,0,0.0,0,0,3.39215,0.249852
+2026-2027,Bundesliga,2026-08-29,Bayer Leverkusen,Elversberg,0,11484,Ibrahim Maza,AMR,,90,0,1,3,,0.11341,0.11341,0.703746,0,0,0,0.0,0,0,2.61527,1.40032
+2026-2027,Bundesliga,2026-09-05,Bayern Munich,Schalke 04,0,11547,Aleksandar Pavlovic,DMC,,76,0,0,0,,0.0,0.0,0.426679,0,0,0,0.0,0,0,2.0536,0.25073
+2026-2027,Bundesliga,2026-08-28,Bayern Munich,VfB Stuttgart,1,11547,Aleksandar Pavlovic,DMC,,85,1,0,3,,0.736701,0.736701,0.130287,1,1,0,0.560278,0,0,4.07897,1.24951
+2026-2027,Bundesliga,2026-09-06,Augsburg,Eintracht Frankfurt,0,12038,Fabian Rieder,MC,,90,1,0,3,,0.139528,0.139528,0.0,0,0,0,0.0,0,0,1.44545,2.51037
+2026-2027,Bundesliga,2026-08-30,Augsburg,Schalke 04,1,12038,Fabian Rieder,MC,,84,0,1,2,,0.050003,0.050003,0.634194,0,0,0,0.0,0,0,5.53649,1.83691
 2026-2027,Bundesliga,2026-08-29,Union Berlin,Eintracht Frankfurt,1,12920,Leopold Querfeld,DC,,90,1,1,2,,0.39707,0.39707,0.936724,1,1,0,0.338177,0,0,2.28332,2.1189
+2026-2027,Bundesliga,2026-09-05,Werder Bremen,RasenBallsport Leipzig,1,12924,Marco Grüll,AML,,90,1,1,5,,0.167573,0.167573,0.093758,0,0,0,0.0,0,0,0.854137,1.58161
+2026-2027,Bundesliga,2026-08-30,Werder Bremen,Freiburg,0,12924,Marco Grüll,FWL,,86,0,1,1,,0.093141,0.093141,0.402175,0,0,0,0.0,0,0,0.948636,2.38503
+2026-2027,Bundesliga,2026-09-05,RasenBallsport Leipzig,Werder Bremen,0,12941,Antonio Nusa,FWL,,87,0,0,2,,0.055775,0.055775,0.0,0,0,0,0.0,0,0,1.58161,0.854137
 2026-2027,Bundesliga,2026-08-29,RasenBallsport Leipzig,Borussia M.Gladbach,1,12941,Antonio Nusa,FWL,,90,1,0,4,,0.26549,0.26549,0.344141,0,0,0,0.0,0,0,3.76496,1.23375
+2026-2027,Bundesliga,2026-09-05,Freiburg,Paderborn,0,12953,Igor Matanovic,FW,,90,0,0,5,,0.342466,0.342466,0.060739,0,0,0,0.0,0,0,1.1716,0.733133
+2026-2027,Bundesliga,2026-08-30,Freiburg,Werder Bremen,1,12953,Igor Matanovic,FW,,74,1,1,5,,0.20289,0.20289,0.663176,0,0,0,0.0,0,0,2.38503,0.948636
 2026-2027,Bundesliga,2026-09-04,VfB Stuttgart,FC Cologne,1,13020,Bilal El Khannouss,AMC,,78,1,0,2,,0.16061,0.16061,0.618472,0,0,0,0.0,0,0,3.5224,2.85818
 2026-2027,Bundesliga,2026-08-28,VfB Stuttgart,Bayern Munich,0,13020,Bilal El Khannouss,Sub,,15,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.24951,4.07897
+2026-2027,Bundesliga,2026-09-05,Elversberg,Borussia M.Gladbach,0,13131,Cole Campbell,AML,,66,0,0,0,,0.0,0.0,0.270781,0,0,0,0.0,0,0,3.03199,2.88776
+2026-2027,Bundesliga,2026-08-29,Elversberg,Bayer Leverkusen,1,13131,Cole Campbell,AML,,67,1,0,3,,0.456749,0.456749,0.0,1,0,1,0.277596,0,0,1.40032,2.61527
+2026-2027,Bundesliga,2026-09-05,Hoffenheim,Borussia Dortmund,1,13861,Leon Avdullahu,MC,,90,1,0,1,,0.020223,0.020223,0.14042,0,0,0,0.0,0,0,2.16627,2.02481
+2026-2027,Bundesliga,2026-08-29,Hoffenheim,FC Cologne,0,13861,Leon Avdullahu,MC,,90,0,0,2,,0.036281,0.036281,0.0,0,0,0,0.0,0,0,1.92317,2.31412
+2026-2027,Bundesliga,2026-09-06,Augsburg,Eintracht Frankfurt,0,13865,Robin Fellhauer,MC,,62,1,0,2,,0.617988,0.617988,0.0,1,1,0,0.596653,0,0,1.44545,2.51037
+2026-2027,Bundesliga,2026-08-30,Augsburg,Schalke 04,1,13865,Robin Fellhauer,AMC,,77,0,0,3,,0.205188,0.205188,0.0,0,0,0,0.0,0,0,5.53649,1.83691
+2026-2027,Bundesliga,2026-09-05,Bayer Leverkusen,Union Berlin,1,14008,Ezequiél Fernández,DMC,,72,1,0,2,,0.713873,0.713873,0.136284,1,1,0,0.625577,0,0,3.39215,0.249852
+2026-2027,Bundesliga,2026-08-29,Bayer Leverkusen,Elversberg,0,14008,Ezequiél Fernández,DMC,,57,0,0,1,,0.05897,0.05897,0.038098,0,0,0,0.0,0,0,2.61527,1.40032
+2026-2027,Bundesliga,2026-09-05,Hoffenheim,Borussia Dortmund,1,14024,Adam Daghim,ML,,90,0,1,3,,0.105595,0.105595,0.794149,0,0,0,0.0,0,0,2.16627,2.02481
+2026-2027,Bundesliga,2026-08-29,Hoffenheim,FC Cologne,0,14024,Adam Daghim,ML,,88,1,0,1,,0.03134,0.03134,0.031997,0,0,0,0.0,0,0,1.92317,2.31412
+2026-2027,Bundesliga,2026-09-05,Elversberg,Borussia M.Gladbach,0,14943,Felix Keidel,DMC,,90,1,0,1,,0.061835,0.061835,0.244042,0,0,0,0.0,0,0,3.03199,2.88776
+2026-2027,Bundesliga,2026-08-29,Elversberg,Bayer Leverkusen,1,14943,Felix Keidel,DMC,,90,0,0,1,,0.028673,0.028673,0.0,0,0,0,0.0,0,0,1.40032,2.61527
+2026-2027,Bundesliga,2026-09-05,Schalke 04,Bayern Munich,1,37,Loris Karius,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.25073,2.0536
 2026-2027,Bundesliga,2026-08-30,Schalke 04,Augsburg,0,37,Loris Karius,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.83691,5.53649
+2026-2027,Bundesliga,2026-09-05,Hoffenheim,Borussia Dortmund,1,73,Oliver Baumann,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.16627,2.02481
 2026-2027,Bundesliga,2026-08-29,Hoffenheim,FC Cologne,0,73,Oliver Baumann,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.92317,2.31412
+2026-2027,Bundesliga,2026-09-06,Mainz 05,Hamburger SV,0,82,Nadiem Amiri,MC,,90,0,0,3,,0.528418,0.528418,0.29051,1,0,1,0.461747,0,0,3.27983,0.257239
 2026-2027,Bundesliga,2026-08-29,Mainz 05,Paderborn,1,82,Nadiem Amiri,MC,,90,0,0,2,,0.141142,0.141142,0.485252,0,0,0,0.0,0,0,1.54945,0.691131
+2026-2027,Bundesliga,2026-09-05,Borussia Dortmund,Hoffenheim,0,106,Waldemar Anton,DC,,90,0,1,0,,0.0,0.0,0.328173,0,0,0,0.0,0,0,2.02481,2.16627
 2026-2027,Bundesliga,2026-08-29,Borussia Dortmund,Hamburger SV,1,106,Waldemar Anton,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.31287,1.10643
-2026-2027,Bundesliga,2026-08-30,Freiburg,Werder Bremen,1,125,Maximilian Eggestein,DMC,,90,0,0,2,,0.047162,0.047162,0.028693,0,0,0,0.0,0,0,2.38503,0.948636
+2026-2027,Bundesliga,2026-09-05,Bayern Munich,Schalke 04,0,183,Jonathan Tah,DC,,90,0,0,1,,0.21633,0.21633,0.0,1,0,1,0.21633,0,0,2.0536,0.25073
+2026-2027,Bundesliga,2026-08-28,Bayern Munich,VfB Stuttgart,1,183,Jonathan Tah,Sub,,5,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,4.07897,1.24951
+2026-2027,Bundesliga,2026-09-05,Bayern Munich,Schalke 04,0,217,Manuel Neuer,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.0536,0.25073
 2026-2027,Bundesliga,2026-08-28,Bayern Munich,VfB Stuttgart,1,217,Manuel Neuer,GK,,90,0,0,0,,0.0,0.0,0.295442,0,0,0,0.0,0,0,4.07897,1.24951
+2026-2027,Bundesliga,2026-09-05,Bayern Munich,Schalke 04,0,223,Joshua Kimmich,DMC,,90,0,0,0,,0.0,0.0,0.484302,0,0,0,0.0,0,0,2.0536,0.25073
 2026-2027,Bundesliga,2026-08-28,Bayern Munich,VfB Stuttgart,1,223,Joshua Kimmich,DMC,,90,0,2,0,,0.0,0.0,0.906554,0,0,0,0.0,0,0,4.07897,1.24951
+2026-2027,Bundesliga,2026-09-06,Mainz 05,Hamburger SV,0,249,Danny da Costa,Sub,,8,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,3.27983,0.257239
 2026-2027,Bundesliga,2026-08-29,Mainz 05,Paderborn,1,249,Danny da Costa,DC,,90,0,0,5,,0.19337,0.19337,0.104498,0,0,0,0.0,0,0,1.54945,0.691131
+2026-2027,Bundesliga,2026-09-05,Freiburg,Paderborn,0,315,Matthias Ginter,DC,,90,0,0,0,,0.0,0.0,0.040633,0,0,0,0.0,0,0,1.1716,0.733133
 2026-2027,Bundesliga,2026-08-30,Freiburg,Werder Bremen,1,315,Matthias Ginter,DC,,90,0,1,2,,0.051526,0.051526,0.124816,0,0,0,0.0,0,0,2.38503,0.948636
 2026-2027,Bundesliga,2026-09-04,VfB Stuttgart,FC Cologne,1,419,Maximilian Mittelstädt,DC,,78,0,1,0,,0.0,0.0,0.834046,0,0,0,0.0,0,0,3.5224,2.85818
 2026-2027,Bundesliga,2026-08-28,VfB Stuttgart,Bayern Munich,0,419,Maximilian Mittelstädt,DML,,90,0,0,2,,0.046852,0.046852,0.245668,0,0,0,0.0,0,0,1.24951,4.07897
 2026-2027,Bundesliga,2026-08-29,Mainz 05,Paderborn,1,449,Robin Zentner,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.54945,0.691131
+2026-2027,Bundesliga,2026-09-05,Bayern Munich,Schalke 04,0,647,Harry Kane,Sub,,42,0,0,3,,0.204598,0.204598,0.08224,0,0,0,0.0,0,0,2.0536,0.25073
+2026-2027,Bundesliga,2026-08-28,Bayern Munich,VfB Stuttgart,1,647,Harry Kane,FW,,85,0,0,2,,0.101879,0.101879,0.434648,0,0,0,0.0,0,0,4.07897,1.24951
+2026-2027,Bundesliga,2026-09-05,Bayer Leverkusen,Union Berlin,1,1055,Aleix García,DMC,,90,0,0,2,,0.12665,0.12665,0.287408,0,0,0,0.0,0,0,3.39215,0.249852
 2026-2027,Bundesliga,2026-08-29,Bayer Leverkusen,Elversberg,0,1055,Aleix García,DMC,,90,0,0,2,,0.064517,0.064517,0.060349,0,0,0,0.0,0,0,2.61527,1.40032
+2026-2027,Bundesliga,2026-09-05,Borussia M.Gladbach,Elversberg,1,1427,Kevin Diks,DC,,90,0,0,2,,0.030606,0.030606,0.0,0,0,0,0.0,0,0,2.88776,3.03199
 2026-2027,Bundesliga,2026-08-29,Borussia M.Gladbach,RasenBallsport Leipzig,0,1427,Kevin Diks,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.23375,3.76496
+2026-2027,Bundesliga,2026-09-05,Freiburg,Paderborn,0,2611,Philipp Lienhart,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.1716,0.733133
+2026-2027,Bundesliga,2026-08-30,Freiburg,Werder Bremen,1,2611,Philipp Lienhart,DC,,70,0,0,0,,0.0,0.0,0.059532,0,0,0,0.0,0,0,2.38503,0.948636
+2026-2027,Bundesliga,2026-09-06,Augsburg,Eintracht Frankfurt,0,2693,Marius Wolf,DR,,73,0,0,0,,0.0,0.0,0.075563,0,0,0,0.0,0,0,1.44545,2.51037
 2026-2027,Bundesliga,2026-08-30,Augsburg,Schalke 04,1,2693,Marius Wolf,DMR,,90,0,0,2,,0.144983,0.144983,2.586521,0,0,0,0.0,0,0,5.53649,1.83691
+2026-2027,Bundesliga,2026-09-05,RasenBallsport Leipzig,Werder Bremen,0,3300,Christopher Nkunku,FW,,87,0,0,4,,0.224516,0.224516,0.071966,0,0,0,0.0,0,0,1.58161,0.854137
+2026-2027,Bundesliga,2026-08-29,RasenBallsport Leipzig,Borussia M.Gladbach,1,3300,Christopher Nkunku,Sub,,24,0,1,0,,0.0,0.0,0.306251,0,0,0,0.0,0,0,3.76496,1.23375
+2026-2027,Bundesliga,2026-09-05,Borussia M.Gladbach,Elversberg,1,3314,Franck Honorat,AMR,,71,0,2,1,,0.014002,0.014002,0.574024,0,0,0,0.0,0,0,2.88776,3.03199
+2026-2027,Bundesliga,2026-08-29,Borussia M.Gladbach,RasenBallsport Leipzig,0,3314,Franck Honorat,Sub,,25,0,0,2,,0.043971,0.043971,0.525349,0,0,0,0.0,0,0,1.23375,3.76496
 2026-2027,Bundesliga,2026-09-04,FC Cologne,VfB Stuttgart,0,4376,Marvin Schwäbe,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.85818,3.5224
 2026-2027,Bundesliga,2026-08-29,FC Cologne,Hoffenheim,1,4376,Marvin Schwäbe,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.31412,1.92317
+2026-2027,Bundesliga,2026-09-05,Paderborn,Freiburg,1,5229,Raphael Obermair,DML,,90,0,0,0,,0.0,0.0,0.021143,0,0,0,0.0,0,0,0.733133,1.1716
 2026-2027,Bundesliga,2026-08-29,Paderborn,Mainz 05,0,5229,Raphael Obermair,DML,,90,0,0,1,,0.049031,0.049031,0.100088,0,0,0,0.0,0,0,0.691131,1.54945
+2026-2027,Bundesliga,2026-09-06,Hamburger SV,Mainz 05,1,5238,Jordan Torunarigha,DC,,47,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.257239,3.27983
+2026-2027,Bundesliga,2026-08-29,Hamburger SV,Borussia Dortmund,0,5238,Jordan Torunarigha,DC,,84,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.10643,1.31287
+2026-2027,Bundesliga,2026-09-05,Union Berlin,Bayer Leverkusen,0,5251,Rani Khedira,AMC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.249852,3.39215
 2026-2027,Bundesliga,2026-08-29,Union Berlin,Eintracht Frankfurt,1,5251,Rani Khedira,MC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.28332,2.1189
+2026-2027,Bundesliga,2026-09-05,RasenBallsport Leipzig,Werder Bremen,0,5257,Willi Orban,DC,,90,0,0,2,,0.292128,0.292128,0.0,1,0,1,0.27198,0,0,1.58161,0.854137
 2026-2027,Bundesliga,2026-08-29,RasenBallsport Leipzig,Borussia M.Gladbach,1,5257,Willi Orban,DC,,90,0,0,2,,0.990747,0.990747,0.0,1,0,1,0.930654,0,0,3.76496,1.23375
+2026-2027,Bundesliga,2026-09-06,Mainz 05,Hamburger SV,0,5262,Alexander Schwolow,GK,,90,0,0,0,,0.0,0.0,0.036251,0,0,0,0.0,0,0,3.27983,0.257239
+2026-2027,Bundesliga,2026-09-06,Hamburger SV,Mainz 05,1,5283,Daniel Heuer Fernandes,GK,,90,0,0,0,,0.0,0.0,0.014214,0,0,0,0.0,0,0,0.257239,3.27983
 2026-2027,Bundesliga,2026-08-29,Hamburger SV,Borussia Dortmund,0,5283,Daniel Heuer Fernandes,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.10643,1.31287
+2026-2027,Bundesliga,2026-09-05,Borussia Dortmund,Hoffenheim,0,5288,Gregor Kobel,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.02481,2.16627
 2026-2027,Bundesliga,2026-08-29,Borussia Dortmund,Hamburger SV,1,5288,Gregor Kobel,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.31287,1.10643
+2026-2027,Bundesliga,2026-09-05,Werder Bremen,RasenBallsport Leipzig,1,5340,Marco Friedl,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.854137,1.58161
 2026-2027,Bundesliga,2026-08-30,Werder Bremen,Freiburg,0,5340,Marco Friedl,DC,,90,0,0,0,,0.0,0.0,0.075955,0,0,0,0.0,0,0,0.948636,2.38503
+2026-2027,Bundesliga,2026-09-05,Schalke 04,Bayern Munich,1,6070,Moussa Sylla,FW,,90,0,0,1,,0.06769,0.06769,0.0,0,0,0,0.0,0,0,0.25073,2.0536
 2026-2027,Bundesliga,2026-08-30,Schalke 04,Augsburg,0,6070,Moussa Sylla,FW,,90,0,0,4,,1.190125,1.190125,0.157228,2,0,2,1.073799,0,0,1.83691,5.53649
+2026-2027,Bundesliga,2026-09-05,Union Berlin,Bayer Leverkusen,0,6100,Felix Uduokhai,DC,,90,0,0,1,,0.114573,0.114573,0.0,0,0,0,0.0,0,0,0.249852,3.39215
+2026-2027,Bundesliga,2026-09-05,Bayern Munich,Schalke 04,0,6109,Konrad Laimer,DR,,90,0,0,1,,0.291823,0.291823,0.0,1,0,1,0.291823,0,0,2.0536,0.25073
 2026-2027,Bundesliga,2026-08-28,Bayern Munich,VfB Stuttgart,1,6109,Konrad Laimer,DR,,90,0,0,1,,0.130287,0.130287,0.076098,0,0,0,0.0,0,0,4.07897,1.24951
+2026-2027,Bundesliga,2026-09-05,Borussia M.Gladbach,Elversberg,1,6142,Tim Kleindienst,FW,,79,0,0,5,,0.280329,0.280329,0.103238,0,0,0,0.0,0,0,2.88776,3.03199
 2026-2027,Bundesliga,2026-08-29,Borussia M.Gladbach,RasenBallsport Leipzig,0,6142,Tim Kleindienst,FW,,90,0,0,1,,0.246138,0.246138,0.051353,1,0,1,0.246138,0,0,1.23375,3.76496
+2026-2027,Bundesliga,2026-09-05,Schalke 04,Bayern Munich,1,6155,Robin Gosens,DL,,67,0,0,1,,0.05052,0.05052,0.0,0,0,0,0.0,0,0,0.25073,2.0536
+2026-2027,Bundesliga,2026-08-30,Schalke 04,Augsburg,0,6155,Robin Gosens,Sub,,27,0,0,1,,0.14447,0.14447,0.0,0,0,0,0.0,0,0,1.83691,5.53649
+2026-2027,Bundesliga,2026-09-06,Eintracht Frankfurt,Augsburg,1,6273,Robin Koch,DC,,90,0,0,3,,0.176969,0.176969,0.0,0,0,0,0.0,0,0,2.51037,1.44545
 2026-2027,Bundesliga,2026-08-29,Eintracht Frankfurt,Union Berlin,0,6273,Robin Koch,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.1189,2.28332
+2026-2027,Bundesliga,2026-09-05,Borussia M.Gladbach,Elversberg,1,6321,Moritz Nicolas,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.88776,3.03199
 2026-2027,Bundesliga,2026-08-29,Borussia M.Gladbach,RasenBallsport Leipzig,0,6321,Moritz Nicolas,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.23375,3.76496
+2026-2027,Bundesliga,2026-09-06,Mainz 05,Hamburger SV,0,6380,Anthony Caci,DMR,,82,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,3.27983,0.257239
+2026-2027,Bundesliga,2026-08-29,Mainz 05,Paderborn,1,6380,Anthony Caci,MR,,74,0,0,2,,0.145103,0.145103,0.175905,0,0,0,0.0,0,0,1.54945,0.691131
+2026-2027,Bundesliga,2026-09-06,Augsburg,Eintracht Frankfurt,0,6596,Finn Dahmen,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.44545,2.51037
 2026-2027,Bundesliga,2026-08-30,Augsburg,Schalke 04,1,6596,Finn Dahmen,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,5.53649,1.83691
 2026-2027,Bundesliga,2026-09-04,FC Cologne,VfB Stuttgart,0,6638,Linton Maina,FWL,,75,0,0,1,,0.036959,0.036959,0.058695,0,0,0,0.0,0,0,2.85818,3.5224
 2026-2027,Bundesliga,2026-08-29,FC Cologne,Hoffenheim,1,6638,Linton Maina,Sub,,24,0,1,0,,0.0,0.0,0.361759,0,0,0,0.0,0,0,2.31412,1.92317
 2026-2027,Bundesliga,2026-09-04,VfB Stuttgart,FC Cologne,1,7030,Fabian Bredlow,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,3.5224,2.85818
 2026-2027,Bundesliga,2026-08-28,VfB Stuttgart,Bayern Munich,0,7030,Fabian Bredlow,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.24951,4.07897
+2026-2027,Bundesliga,2026-09-05,Bayer Leverkusen,Union Berlin,1,7047,Mark Flekken,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,3.39215,0.249852
 2026-2027,Bundesliga,2026-08-29,Bayer Leverkusen,Elversberg,0,7047,Mark Flekken,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.61527,1.40032
-2026-2027,Bundesliga,2026-08-29,Mainz 05,Paderborn,1,7106,Philipp Mwene,ML,,90,0,0,1,,0.080659,0.080659,0.0,0,0,0,0.0,0,0,1.54945,0.691131
+2026-2027,Bundesliga,2026-09-05,Union Berlin,Bayer Leverkusen,0,7048,Frederik Rönnow,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.249852,3.39215
+2026-2027,Bundesliga,2026-09-06,Augsburg,Eintracht Frankfurt,0,7264,Han-Noah Massengo,MC,,90,0,1,1,,0.142562,0.142562,0.072336,0,0,0,0.0,0,0,1.44545,2.51037
 2026-2027,Bundesliga,2026-08-30,Augsburg,Schalke 04,1,7264,Han-Noah Massengo,MC,,90,0,0,0,,0.0,0.0,0.764459,0,0,0,0.0,0,0,5.53649,1.83691
+2026-2027,Bundesliga,2026-09-05,Werder Bremen,RasenBallsport Leipzig,1,7320,Amos Pieper,DC,,90,0,0,1,,0.037585,0.037585,0.0,0,0,0,0.0,0,0,0.854137,1.58161
 2026-2027,Bundesliga,2026-08-30,Werder Bremen,Freiburg,0,7320,Amos Pieper,DC,,90,0,0,1,,0.011616,0.011616,0.0,0,0,0,0.0,0,0,0.948636,2.38503
+2026-2027,Bundesliga,2026-09-05,Bayern Munich,Schalke 04,0,7345,Alphonso Davies,DL,,90,0,0,0,,0.0,0.0,0.343498,0,0,0,0.0,0,0,2.0536,0.25073
+2026-2027,Bundesliga,2026-08-28,Bayern Munich,VfB Stuttgart,1,7345,Alphonso Davies,DL,,75,0,0,0,,0.0,0.0,0.819526,0,0,0,0.0,0,0,4.07897,1.24951
+2026-2027,Bundesliga,2026-09-05,Schalke 04,Bayern Munich,1,7562,Eric Junior Dina Ebimbe,DR,,67,0,0,0,,0.0,0.0,0.05052,0,0,0,0.0,0,0,0.25073,2.0536
+2026-2027,Bundesliga,2026-08-30,Schalke 04,Augsburg,0,7562,Eric Junior Dina Ebimbe,Sub,,27,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.83691,5.53649
+2026-2027,Bundesliga,2026-09-06,Hamburger SV,Mainz 05,1,7791,Sebastiaan Bornauw,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.257239,3.27983
 2026-2027,Bundesliga,2026-08-29,Hamburger SV,Borussia Dortmund,0,7791,Sebastiaan Bornauw,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.10643,1.31287
 2026-2027,Bundesliga,2026-09-04,VfB Stuttgart,FC Cologne,1,7937,Julian Chabot,DC,,90,0,0,2,,0.323023,0.323023,0.0,1,0,1,0.203412,0,0,3.5224,2.85818
 2026-2027,Bundesliga,2026-08-28,VfB Stuttgart,Bayern Munich,0,7937,Julian Chabot,DC,,75,0,0,1,,0.245668,0.245668,0.0,1,0,1,0.245668,0,0,1.24951,4.07897
+2026-2027,Bundesliga,2026-09-05,Schalke 04,Bayern Munich,1,7980,Adil Aouchiche,ML,,86,0,0,1,,0.066918,0.066918,0.06769,0,0,0,0.0,0,0,0.25073,2.0536
+2026-2027,Bundesliga,2026-08-30,Schalke 04,Augsburg,0,7980,Adil Aouchiche,AMC,,87,0,0,2,,0.111939,0.111939,0.282578,0,0,0,0.0,0,0,1.83691,5.53649
+2026-2027,Bundesliga,2026-09-05,Borussia Dortmund,Hoffenheim,0,7997,Julian Ryerson,DMR,,90,0,0,0,,0.0,0.0,1.262112,0,0,0,0.0,0,0,2.02481,2.16627
+2026-2027,Bundesliga,2026-08-29,Borussia Dortmund,Hamburger SV,1,7997,Julian Ryerson,DMR,,76,0,0,0,,0.0,0.0,0.029318,0,0,0,0.0,0,0,1.31287,1.10643
 2026-2027,Bundesliga,2026-09-04,FC Cologne,VfB Stuttgart,0,8092,Tom Krauß,MC,,90,0,0,2,,0.158189,0.158189,0.060398,0,0,0,0.0,0,0,2.85818,3.5224
 2026-2027,Bundesliga,2026-08-29,FC Cologne,Hoffenheim,1,8092,Tom Krauß,MC,,90,0,0,2,,0.54555,0.54555,0.0,1,0,1,0.44174,0,0,2.31412,1.92317
+2026-2027,Bundesliga,2026-09-05,Borussia Dortmund,Hoffenheim,0,8137,Maximilian Beier,AMC,,90,0,0,2,,0.941936,0.941936,0.0,1,0,1,0.904928,0,0,2.02481,2.16627
+2026-2027,Bundesliga,2026-08-29,Borussia Dortmund,Hamburger SV,1,8137,Maximilian Beier,DML,,86,0,0,5,,0.341544,0.341544,0.179561,0,0,0,0.0,0,0,1.31287,1.10643
+2026-2027,Bundesliga,2026-09-05,Schalke 04,Bayern Munich,1,8148,Timo Becker,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.25073,2.0536
 2026-2027,Bundesliga,2026-08-30,Schalke 04,Augsburg,0,8148,Timo Becker,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.83691,5.53649
 2026-2027,Bundesliga,2026-09-04,FC Cologne,VfB Stuttgart,0,8205,Jan Thielmann,FWR,,46,0,0,1,,0.015218,0.015218,0.044641,0,0,0,0.0,0,0,2.85818,3.5224
 2026-2027,Bundesliga,2026-08-29,FC Cologne,Hoffenheim,1,8205,Jan Thielmann,FWR,,90,0,0,1,,0.077846,0.077846,0.011725,0,0,0,0.0,0,0,2.31412,1.92317
+2026-2027,Bundesliga,2026-09-05,Bayer Leverkusen,Union Berlin,1,8317,Edmond Tapsoba,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,3.39215,0.249852
 2026-2027,Bundesliga,2026-08-29,Bayer Leverkusen,Elversberg,0,8317,Edmond Tapsoba,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.61527,1.40032
+2026-2027,Bundesliga,2026-09-05,Bayer Leverkusen,Union Berlin,1,8513,Miguel Gutiérrez,DL,,84,0,2,0,,0.0,0.0,1.187076,0,0,0,0.0,0,0,3.39215,0.249852
 2026-2027,Bundesliga,2026-08-29,Bayer Leverkusen,Elversberg,0,8513,Miguel Gutiérrez,DL,,90,0,0,0,,0.0,0.0,0.452864,0,0,0,0.0,0,0,2.61527,1.40032
+2026-2027,Bundesliga,2026-09-06,Augsburg,Eintracht Frankfurt,0,8643,Chrislain Matsima,DC,,90,0,0,1,,0.025004,0.025004,0.0,0,0,0,0.0,0,0,1.44545,2.51037
 2026-2027,Bundesliga,2026-08-30,Augsburg,Schalke 04,1,8643,Chrislain Matsima,DC,,90,0,0,0,,0.0,0.0,0.019359,0,0,0,0.0,0,0,5.53649,1.83691
+2026-2027,Bundesliga,2026-09-06,Eintracht Frankfurt,Augsburg,1,8677,Lilian Brassier,DC,,90,0,0,1,,0.010744,0.010744,0.0,0,0,0,0.0,0,0,2.51037,1.44545
 2026-2027,Bundesliga,2026-09-04,FC Cologne,VfB Stuttgart,0,8869,Ragnar Ache,FW,,75,0,0,2,,0.202938,0.202938,0.139304,0,0,0,0.0,0,0,2.85818,3.5224
 2026-2027,Bundesliga,2026-08-29,FC Cologne,Hoffenheim,1,8869,Ragnar Ache,FW,,66,0,0,1,,0.082038,0.082038,0.178693,0,0,0,0.0,0,0,2.31412,1.92317
+2026-2027,Bundesliga,2026-09-05,Hoffenheim,Borussia Dortmund,1,8965,Vladimir Coufal,DR,,90,0,1,1,,0.049168,0.049168,0.020223,0,0,0,0.0,0,0,2.16627,2.02481
 2026-2027,Bundesliga,2026-08-29,Hoffenheim,FC Cologne,0,8965,Vladimir Coufal,DR,,90,0,1,0,,0.0,0.0,0.542581,0,0,0,0.0,0,0,1.92317,2.31412
+2026-2027,Bundesliga,2026-09-05,Borussia Dortmund,Hoffenheim,0,9202,Felix Nmecha,MC,,49,0,0,1,,0.100768,0.100768,0.089574,0,0,0,0.0,0,0,2.02481,2.16627
+2026-2027,Bundesliga,2026-08-29,Borussia Dortmund,Hamburger SV,1,9202,Felix Nmecha,MC,,76,0,0,2,,0.075004,0.075004,0.084265,0,0,0,0.0,0,0,1.31287,1.10643
+2026-2027,Bundesliga,2026-09-05,RasenBallsport Leipzig,Werder Bremen,0,9487,Maxime Estève,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.58161,0.854137
 2026-2027,Bundesliga,2026-08-29,RasenBallsport Leipzig,Borussia M.Gladbach,1,9511,Castello Lukeba,DC,,90,0,0,1,,0.018802,0.018802,0.0,0,0,0,0.0,0,0,3.76496,1.23375
+2026-2027,Bundesliga,2026-09-05,Paderborn,Freiburg,1,9546,Nahuel Nicolas Noll,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.733133,1.1716
 2026-2027,Bundesliga,2026-08-29,Paderborn,Mainz 05,0,9546,Nahuel Nicolas Noll,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.691131,1.54945
 2026-2027,Bundesliga,2026-08-29,Hamburger SV,Borussia Dortmund,0,9689,Albert Sambi Lokonga,MC,,90,0,0,1,,0.028508,0.028508,0.293168,0,0,0,0.0,0,0,1.10643,1.31287
+2026-2027,Bundesliga,2026-09-05,Werder Bremen,RasenBallsport Leipzig,1,9692,Karl Hein,GK,,90,0,0,0,,0.0,0.0,0.05016,0,0,0,0.0,0,0,0.854137,1.58161
 2026-2027,Bundesliga,2026-08-30,Werder Bremen,Freiburg,0,9692,Karl Hein,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.948636,2.38503
+2026-2027,Bundesliga,2026-09-05,RasenBallsport Leipzig,Werder Bremen,0,9724,David Raum,DL,,90,0,0,1,,0.013163,0.013163,0.396691,0,0,0,0.0,0,0,1.58161,0.854137
 2026-2027,Bundesliga,2026-08-29,RasenBallsport Leipzig,Borussia M.Gladbach,1,9724,David Raum,DL,,90,0,0,1,,0.041285,0.041285,0.773778,0,0,0,0.0,0,0,3.76496,1.23375
 2026-2027,Bundesliga,2026-09-04,VfB Stuttgart,FC Cologne,1,9725,Angelo Stiller,MC,,90,0,0,1,,0.049411,0.049411,0.0,0,0,0,0.0,0,0,3.5224,2.85818
 2026-2027,Bundesliga,2026-08-28,VfB Stuttgart,Bayern Munich,0,9725,Angelo Stiller,MC,,89,0,0,0,,0.0,0.0,0.065025,0,0,0,0.0,0,0,1.24951,4.07897
+2026-2027,Bundesliga,2026-09-05,Hoffenheim,Borussia Dortmund,1,9730,Patrick Wimmer,MR,,76,0,0,1,,0.023843,0.023843,0.069399,0,0,0,0.0,0,0,2.16627,2.02481
+2026-2027,Bundesliga,2026-08-29,Hoffenheim,FC Cologne,0,9730,Patrick Wimmer,MR,,72,0,0,2,,0.053559,0.053559,0.366371,0,0,0,0.0,0,0,1.92317,2.31412
+2026-2027,Bundesliga,2026-09-06,Hamburger SV,Mainz 05,1,9738,Patson Daka,Sub,,43,0,0,0,,0.0,0.0,0.022654,0,0,0,0.0,0,0,0.257239,3.27983
+2026-2027,Bundesliga,2026-08-29,Hamburger SV,Borussia Dortmund,0,9738,Patson Daka,FW,,69,0,0,3,,0.717661,0.717661,0.0,2,0,2,0.599082,0,0,1.10643,1.31287
+2026-2027,Bundesliga,2026-09-06,Mainz 05,Hamburger SV,0,9783,Jae-Sung Lee,MC,,89,0,1,0,,0.0,0.0,0.183099,0,0,0,0.0,0,0,3.27983,0.257239
+2026-2027,Bundesliga,2026-08-29,Mainz 05,Paderborn,1,9783,Jae-Sung Lee,MC,,69,0,0,4,,0.379781,0.379781,0.062221,1,0,1,0.202561,0,0,1.54945,0.691131
+2026-2027,Bundesliga,2026-09-05,Schalke 04,Bayern Munich,1,9797,Dejan Ljubicic,MR,,76,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.25073,2.0536
 2026-2027,Bundesliga,2026-08-30,Schalke 04,Augsburg,0,9797,Dejan Ljubicic,DMR,,90,0,0,1,,0.040097,0.040097,0.542235,0,0,0,0.0,0,0,1.83691,5.53649
 2026-2027,Bundesliga,2026-09-04,FC Cologne,VfB Stuttgart,0,9807,Gideon Mensah,DL,,90,0,0,2,,0.03451,0.03451,0.0,0,0,0,0.0,0,0,2.85818,3.5224
 2026-2027,Bundesliga,2026-08-29,FC Cologne,Hoffenheim,1,9807,Gideon Mensah,DL,,90,0,0,1,,0.0215,0.0215,0.0,0,0,0,0.0,0,0,2.31412,1.92317
+2026-2027,Bundesliga,2026-09-05,Bayer Leverkusen,Union Berlin,1,9860,Malik Tillman,AMC,,68,0,0,1,,0.054192,0.054192,0.083191,0,0,0,0.0,0,0,3.39215,0.249852
+2026-2027,Bundesliga,2026-08-29,Bayer Leverkusen,Elversberg,0,9860,Malik Tillman,AMC,,67,0,0,1,,0.038098,0.038098,0.0,0,0,0,0.0,0,0,2.61527,1.40032
+2026-2027,Bundesliga,2026-09-05,Elversberg,Borussia M.Gladbach,0,9955,Lasse Günther,DL,,77,0,0,1,,0.270781,0.270781,0.0,1,0,1,0.270781,0,0,3.03199,2.88776
 2026-2027,Bundesliga,2026-08-29,Elversberg,Bayer Leverkusen,1,9955,Lasse Günther,DL,,90,0,0,0,,0.0,0.0,0.101537,0,0,0,0.0,0,0,1.40032,2.61527
+2026-2027,Bundesliga,2026-09-06,Eintracht Frankfurt,Augsburg,1,10160,Noah Atubolu,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.51037,1.44545
 2026-2027,Bundesliga,2026-08-29,Eintracht Frankfurt,Union Berlin,0,10160,Noah Atubolu,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.1189,2.28332
+2026-2027,Bundesliga,2026-09-05,Bayer Leverkusen,Union Berlin,1,10187,Jarell Quansah,DR,,90,0,1,1,,0.052294,0.052294,0.493624,0,0,0,0.0,0,0,3.39215,0.249852
+2026-2027,Bundesliga,2026-08-29,Bayer Leverkusen,Elversberg,0,10187,Jarell Quansah,Sub,,33,0,0,0,,0.0,0.0,0.4082,0,0,0,0.0,0,0,2.61527,1.40032
+2026-2027,Bundesliga,2026-09-06,Hamburger SV,Mainz 05,1,10196,Martin Adeline,AMC,,47,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.257239,3.27983
+2026-2027,Bundesliga,2026-08-29,Hamburger SV,Borussia Dortmund,0,10196,Martin Adeline,AMC,,69,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.10643,1.31287
+2026-2027,Bundesliga,2026-09-05,Union Berlin,Bayer Leverkusen,0,10383,Michel Aebischer,MC,,64,0,0,0,,0.0,0.0,0.03381,0,0,0,0.0,0,0,0.249852,3.39215
+2026-2027,Bundesliga,2026-08-29,Union Berlin,Eintracht Frankfurt,1,10383,Michel Aebischer,MC,,69,0,0,3,,0.059334,0.059334,0.151689,0,0,0,0.0,0,0,2.28332,2.1189
+2026-2027,Bundesliga,2026-09-05,Hoffenheim,Borussia Dortmund,1,10427,Bambasé Conté,Sub,,14,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.16627,2.02481
 2026-2027,Bundesliga,2026-08-29,Hoffenheim,FC Cologne,0,10427,Bambasé Conté,FW,,90,0,1,2,,0.41629,0.41629,0.117138,1,0,1,0.398829,0,0,1.92317,2.31412
+2026-2027,Bundesliga,2026-09-05,Freiburg,Paderborn,0,10497,Yannick Engelhardt,DMC,,83,0,0,1,,0.075235,0.075235,0.0,0,0,0,0.0,0,0,1.1716,0.733133
 2026-2027,Bundesliga,2026-08-30,Freiburg,Werder Bremen,1,10497,Yannick Engelhardt,DMC,,90,0,0,1,,0.047529,0.047529,0.0,0,0,0,0.0,0,0,2.38503,0.948636
+2026-2027,Bundesliga,2026-09-05,Union Berlin,Bayer Leverkusen,0,10550,Tom Rothe,DL,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.249852,3.39215
 2026-2027,Bundesliga,2026-08-29,Union Berlin,Eintracht Frankfurt,1,10550,Tom Rothe,DL,,90,0,0,2,,0.036256,0.036256,0.119568,0,0,0,0.0,0,0,2.28332,2.1189
+2026-2027,Bundesliga,2026-09-05,Paderborn,Freiburg,1,10558,Gabriel Vidovic,MC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.733133,1.1716
 2026-2027,Bundesliga,2026-08-29,Paderborn,Mainz 05,0,10558,Gabriel Vidovic,FWL,,90,0,0,0,,0.0,0.0,0.015473,0,0,0,0.0,0,0,0.691131,1.54945
+2026-2027,Bundesliga,2026-09-05,Borussia M.Gladbach,Elversberg,1,10727,Ko Itakura,DC,,90,0,0,1,,0.547957,0.547957,0.029269,1,0,1,0.547957,0,0,2.88776,3.03199
 2026-2027,Bundesliga,2026-08-29,Borussia M.Gladbach,RasenBallsport Leipzig,0,10727,Ko Itakura,DC,,90,0,0,1,,0.052605,0.052605,0.0,0,0,0,0.0,0,0,1.23375,3.76496
+2026-2027,Bundesliga,2026-09-05,Hoffenheim,Borussia Dortmund,1,10774,Adam Hlozek,FW,,76,0,0,2,,0.465957,0.465957,0.0,1,0,1,0.402846,0,0,2.16627,2.02481
+2026-2027,Bundesliga,2026-08-29,Hoffenheim,FC Cologne,0,10774,Adam Hlozek,FW,,54,0,0,2,,0.084251,0.084251,0.017462,0,0,0,0.0,0,0,1.92317,2.31412
+2026-2027,Bundesliga,2026-09-06,Eintracht Frankfurt,Augsburg,1,10792,Farès Chaïbi,Sub,,20,0,0,0,,0.0,0.0,0.020029,0,0,0,0.0,0,0,2.51037,1.44545
 2026-2027,Bundesliga,2026-08-29,Eintracht Frankfurt,Union Berlin,0,10792,Farès Chaïbi,MC,,90,0,0,2,,0.071563,0.071563,0.070012,0,0,0,0.0,0,0,2.1189,2.28332
 2026-2027,Bundesliga,2026-09-04,VfB Stuttgart,FC Cologne,1,10804,Deniz Undav,AMC,,70,0,0,1,,0.116445,0.116445,0.058392,0,0,0,0.0,0,0,3.5224,2.85818
 2026-2027,Bundesliga,2026-08-28,VfB Stuttgart,Bayern Munich,0,10804,Deniz Undav,AMC,,75,0,0,0,,0.0,0.0,0.033898,0,0,0,0.0,0,0,1.24951,4.07897
+2026-2027,Bundesliga,2026-09-05,Elversberg,Borussia M.Gladbach,0,10833,Lukasz Poreba,DMC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,3.03199,2.88776
 2026-2027,Bundesliga,2026-08-29,Elversberg,Bayer Leverkusen,1,10833,Lukasz Poreba,DMC,,90,0,0,0,,0.0,0.0,0.034848,0,0,0,0.0,0,0,1.40032,2.61527
+2026-2027,Bundesliga,2026-09-05,Freiburg,Paderborn,0,10860,Derry Scherhant,AML,,75,0,0,3,,0.136588,0.136588,0.200918,0,0,0,0.0,0,0,1.1716,0.733133
 2026-2027,Bundesliga,2026-08-30,Freiburg,Werder Bremen,1,10860,Derry Scherhant,AML,,90,0,0,2,,0.101818,0.101818,0.037893,0,0,0,0.0,0,0,2.38503,0.948636
 2026-2027,Bundesliga,2026-09-04,FC Cologne,VfB Stuttgart,0,11026,Luka Lochoshvili,DC,,90,0,0,1,,0.044641,0.044641,0.0,0,0,0,0.0,0,0,2.85818,3.5224
 2026-2027,Bundesliga,2026-08-29,FC Cologne,Hoffenheim,1,11026,Luka Lochoshvili,DC,,90,0,0,2,,0.164979,0.164979,0.0,0,0,0,0.0,0,0,2.31412,1.92317
 2026-2027,Bundesliga,2026-09-04,VfB Stuttgart,FC Cologne,1,11227,Dzenan Pejcinovic,FW,,90,0,0,6,,1.213041,1.213041,0.0,2,0,2,0.961166,0,0,3.5224,2.85818
 2026-2027,Bundesliga,2026-08-28,VfB Stuttgart,Bayern Munich,0,11227,Dzenan Pejcinovic,AMC,,64,0,0,1,,0.033898,0.033898,0.0,0,0,0,0.0,0,0,1.24951,4.07897
+2026-2027,Bundesliga,2026-09-05,Paderborn,Freiburg,1,11228,Laurin Ulrich,MC,,75,0,0,3,,0.187759,0.187759,0.185497,0,0,0,0.0,0,0,0.733133,1.1716
+2026-2027,Bundesliga,2026-08-29,Paderborn,Mainz 05,0,11228,Laurin Ulrich,MC,,76,0,0,1,,0.022651,0.022651,0.0,0,0,0,0.0,0,0,0.691131,1.54945
+2026-2027,Bundesliga,2026-09-05,Union Berlin,Bayer Leverkusen,0,11236,Aljoscha Kemlein,DMC,,64,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.249852,3.39215
+2026-2027,Bundesliga,2026-08-29,Union Berlin,Eintracht Frankfurt,1,11236,Aljoscha Kemlein,DMC,,84,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.28332,2.1189
+2026-2027,Bundesliga,2026-09-05,Union Berlin,Bayer Leverkusen,0,11333,Josip Juranovic,DR,,75,0,0,1,,0.03381,0.03381,0.058282,0,0,0,0.0,0,0,0.249852,3.39215
 2026-2027,Bundesliga,2026-08-29,Union Berlin,Eintracht Frankfurt,1,11333,Josip Juranovic,DR,,90,0,2,1,,0.016099,0.016099,0.534869,0,0,0,0.0,0,0,2.28332,2.1189
-2026-2027,Bundesliga,2026-08-29,Bayer Leverkusen,Elversberg,0,11484,Ibrahim Maza,AMR,,90,0,1,3,,0.11341,0.11341,0.703746,0,0,0,0.0,0,0,2.61527,1.40032
-2026-2027,Bundesliga,2026-08-29,Mainz 05,Paderborn,1,11845,Phillip Tietz,FW,,90,0,0,3,,0.440304,0.440304,0.063024,1,0,1,0.327304,0,0,1.54945,0.691131
+2026-2027,Bundesliga,2026-09-05,Paderborn,Freiburg,1,11856,Marvin Pieringer,FW,,83,0,0,3,,0.22979,0.22979,0.0,0,0,0,0.0,0,0,0.733133,1.1716
 2026-2027,Bundesliga,2026-08-29,Paderborn,Mainz 05,0,11856,Marvin Pieringer,FWR,,90,0,0,1,,0.053421,0.053421,0.285167,0,0,0,0.0,0,0,0.691131,1.54945
+2026-2027,Bundesliga,2026-09-05,RasenBallsport Leipzig,Werder Bremen,0,11871,Nicolas Seiwald,MC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.58161,0.854137
 2026-2027,Bundesliga,2026-08-29,RasenBallsport Leipzig,Borussia M.Gladbach,1,11871,Nicolas Seiwald,MC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,3.76496,1.23375
+2026-2027,Bundesliga,2026-09-05,Freiburg,Paderborn,0,11982,Jan-Niklas Beste,AMR,,75,0,0,1,,0.046334,0.046334,0.053097,0,0,0,0.0,0,0,1.1716,0.733133
+2026-2027,Bundesliga,2026-08-30,Freiburg,Werder Bremen,1,11982,Jan-Niklas Beste,AMR,,47,0,1,2,,0.0542,0.0542,0.578802,0,0,0,0.0,0,0,2.38503,0.948636
+2026-2027,Bundesliga,2026-09-05,Borussia M.Gladbach,Elversberg,1,11991,Lukas Ullrich,DL,,83,0,0,1,,0.029269,0.029269,0.113355,0,0,0,0.0,0,0,2.88776,3.03199
+2026-2027,Bundesliga,2026-08-29,Borussia M.Gladbach,RasenBallsport Leipzig,0,11991,Lukas Ullrich,DL,,65,0,0,1,,0.047948,0.047948,0.0,0,0,0,0.0,0,0,1.23375,3.76496
+2026-2027,Bundesliga,2026-09-05,Werder Bremen,RasenBallsport Leipzig,1,12028,Olivier Deman,DL,,90,0,0,1,,0.044728,0.044728,0.0,0,0,0,0.0,0,0,0.854137,1.58161
 2026-2027,Bundesliga,2026-08-30,Werder Bremen,Freiburg,0,12028,Olivier Deman,DL,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.948636,2.38503
+2026-2027,Bundesliga,2026-09-05,Freiburg,Paderborn,0,12070,Jordy Makengo,DL,,90,0,0,0,,0.0,0.0,0.088369,0,0,0,0.0,0,0,1.1716,0.733133
 2026-2027,Bundesliga,2026-08-30,Freiburg,Werder Bremen,1,12070,Jordy Makengo,DL,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.38503,0.948636
+2026-2027,Bundesliga,2026-09-06,Eintracht Frankfurt,Augsburg,1,12250,Elias Baum,DR,,70,0,0,1,,0.083196,0.083196,0.048237,0,0,0,0.0,0,0,2.51037,1.44545
 2026-2027,Bundesliga,2026-08-29,Eintracht Frankfurt,Union Berlin,0,12250,Elias Baum,DR,,90,0,1,2,,0.126397,0.126397,0.764859,0,0,0,0.0,0,0,2.1189,2.28332
+2026-2027,Bundesliga,2026-09-05,Elversberg,Borussia M.Gladbach,0,12313,Francis-Ikechukwu Onyeka,AMC,,77,0,0,2,,0.286748,0.286748,0.0,1,0,1,0.22198,0,0,3.03199,2.88776
+2026-2027,Bundesliga,2026-08-29,Elversberg,Bayer Leverkusen,1,12313,Francis-Ikechukwu Onyeka,AMC,,67,0,1,1,,0.124362,0.124362,0.329949,0,0,0,0.0,0,0,1.40032,2.61527
+2026-2027,Bundesliga,2026-09-05,Borussia Dortmund,Hoffenheim,0,12485,Kouakou Gadou,DC,,66,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.02481,2.16627
 2026-2027,Bundesliga,2026-08-29,Borussia Dortmund,Hamburger SV,1,12485,Kouakou Gadou,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.31287,1.10643
+2026-2027,Bundesliga,2026-09-06,Hamburger SV,Mainz 05,1,12880,Albert Grønbæk,AMC,,90,0,0,1,,0.039947,0.039947,0.0,0,0,0,0.0,0,0,0.257239,3.27983
 2026-2027,Bundesliga,2026-08-29,Hamburger SV,Borussia Dortmund,0,12880,Albert Grønbæk,AMC,,90,0,0,2,,0.028876,0.028876,0.0,0,0,0,0.0,0,0,1.10643,1.31287
+2026-2027,Bundesliga,2026-09-05,Werder Bremen,RasenBallsport Leipzig,1,12896,Chuki,AMC,,86,0,1,1,,0.05016,0.05016,0.448701,0,0,0,0.0,0,0,0.854137,1.58161
 2026-2027,Bundesliga,2026-08-30,Werder Bremen,Freiburg,0,12896,Chuki,MC,,90,0,0,0,,0.0,0.0,0.032791,0,0,0,0.0,0,0,0.948636,2.38503
+2026-2027,Bundesliga,2026-09-05,Borussia M.Gladbach,Elversberg,1,12915,Philipp Sander,DMC,,90,0,0,2,,0.06265,0.06265,0.176168,0,0,0,0.0,0,0,2.88776,3.03199
 2026-2027,Bundesliga,2026-08-29,Borussia M.Gladbach,RasenBallsport Leipzig,0,12915,Philipp Sander,DMC,,90,0,0,2,,0.062688,0.062688,0.363696,0,0,0,0.0,0,0,1.23375,3.76496
+2026-2027,Bundesliga,2026-09-06,Mainz 05,Hamburger SV,0,12918,Kaishu Sano,MC,,89,0,1,0,,0.0,0.0,0.387715,0,0,0,0.0,0,0,3.27983,0.257239
 2026-2027,Bundesliga,2026-08-29,Mainz 05,Paderborn,1,12918,Kaishu Sano,DMC,,90,0,0,2,,0.087361,0.087361,0.044605,0,0,0,0.0,0,0,1.54945,0.691131
+2026-2027,Bundesliga,2026-09-05,Freiburg,Paderborn,0,12925,Mio Backhaus,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.1716,0.733133
 2026-2027,Bundesliga,2026-08-30,Freiburg,Werder Bremen,1,12925,Mio Backhaus,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.38503,0.948636
 2026-2027,Bundesliga,2026-09-04,VfB Stuttgart,FC Cologne,1,12927,Ramon Hendriks,Sub,,12,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,3.5224,2.85818
 2026-2027,Bundesliga,2026-08-28,VfB Stuttgart,Bayern Munich,0,12927,Ramon Hendriks,DC,,90,0,0,0,,0.0,0.0,0.070022,0,0,0,0.0,0,0,1.24951,4.07897
+2026-2027,Bundesliga,2026-09-06,Hamburger SV,Mainz 05,1,12937,Nicolai Remberg,MC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.257239,3.27983
 2026-2027,Bundesliga,2026-08-29,Hamburger SV,Borussia Dortmund,0,12937,Nicolai Remberg,MC,,90,0,0,0,,0.0,0.0,0.026646,0,0,0,0.0,0,0,1.10643,1.31287
+2026-2027,Bundesliga,2026-09-05,RasenBallsport Leipzig,Werder Bremen,0,12942,Maarten Vandevoordt,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.58161,0.854137
 2026-2027,Bundesliga,2026-08-29,RasenBallsport Leipzig,Borussia M.Gladbach,1,12942,Maarten Vandevoordt,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,3.76496,1.23375
+2026-2027,Bundesliga,2026-09-06,Eintracht Frankfurt,Augsburg,1,12954,Can Uzun,ML,,70,0,0,3,,0.401021,0.401021,0.246637,1,0,1,0.313676,0,0,2.51037,1.44545
+2026-2027,Bundesliga,2026-08-29,Eintracht Frankfurt,Union Berlin,0,12954,Can Uzun,ML,,87,0,0,1,,0.4375,0.4375,0.134488,1,0,1,0.4375,0,0,2.1189,2.28332
+2026-2027,Bundesliga,2026-09-05,Freiburg,Paderborn,0,12976,Philipp Treu,DR,,90,0,0,0,,0.0,0.0,0.160368,0,0,0,0.0,0,0,1.1716,0.733133
+2026-2027,Bundesliga,2026-08-30,Freiburg,Werder Bremen,1,12976,Philipp Treu,Sub,,20,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.38503,0.948636
+2026-2027,Bundesliga,2026-09-05,Bayern Munich,Schalke 04,0,13122,Nathaniel Brown,AMC,,48,0,0,1,,0.11187,0.11187,0.365411,0,0,0,0.0,0,0,2.0536,0.25073
+2026-2027,Bundesliga,2026-08-28,Bayern Munich,VfB Stuttgart,1,13122,Nathaniel Brown,AMC,,62,0,0,1,,0.130355,0.130355,0.0,0,0,0,0.0,0,0,4.07897,1.24951
+2026-2027,Bundesliga,2026-09-06,Augsburg,Eintracht Frankfurt,0,13149,Noahkai Banks,DC,,90,0,0,0,,0.0,0.0,0.067734,0,0,0,0.0,0,0,1.44545,2.51037
 2026-2027,Bundesliga,2026-08-30,Augsburg,Schalke 04,1,13149,Noahkai Banks,DC,,90,0,0,2,,0.667822,0.667822,0.028838,1,0,1,0.581925,0,0,5.53649,1.83691
 2026-2027,Bundesliga,2026-09-04,FC Cologne,VfB Stuttgart,0,13185,Jahmai Simpson-Pusey,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.85818,3.5224
 2026-2027,Bundesliga,2026-08-29,FC Cologne,Hoffenheim,1,13185,Jahmai Simpson-Pusey,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.31412,1.92317
+2026-2027,Bundesliga,2026-09-06,Augsburg,Eintracht Frankfurt,0,13414,Hennes Behrens,DL,,90,0,0,1,,0.047392,0.047392,0.0,0,0,0,0.0,0,0,1.44545,2.51037
 2026-2027,Bundesliga,2026-08-30,Augsburg,Schalke 04,1,13414,Hennes Behrens,DML,,90,0,0,0,,0.0,0.0,0.08813,0,0,0,0.0,0,0,5.53649,1.83691
+2026-2027,Bundesliga,2026-09-05,Werder Bremen,RasenBallsport Leipzig,1,13422,Mick Schmetgens,Sub,,20,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.854137,1.58161
 2026-2027,Bundesliga,2026-08-30,Werder Bremen,Freiburg,0,13422,Mick Schmetgens,DR,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.948636,2.38503
+2026-2027,Bundesliga,2026-09-05,Borussia Dortmund,Hoffenheim,0,13424,Daniel Svensson,DML,,90,0,0,1,,0.06351,0.06351,0.0,0,0,0,0.0,0,0,2.02481,2.16627
 2026-2027,Bundesliga,2026-08-29,Borussia Dortmund,Hamburger SV,1,13424,Daniel Svensson,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.31287,1.10643
 2026-2027,Bundesliga,2026-09-04,VfB Stuttgart,FC Cologne,1,13426,Finn Jeltsch,DC,,90,0,1,2,,0.408517,0.408517,0.328341,1,0,1,0.390834,0,0,3.5224,2.85818
 2026-2027,Bundesliga,2026-08-28,VfB Stuttgart,Bayern Munich,0,13426,Finn Jeltsch,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.24951,4.07897
+2026-2027,Bundesliga,2026-09-05,Union Berlin,Bayer Leverkusen,0,13428,Marin Ljubicic,FW,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.249852,3.39215
 2026-2027,Bundesliga,2026-08-29,Union Berlin,Eintracht Frankfurt,1,13428,Marin Ljubicic,FW,,90,0,0,2,,0.13552,0.13552,0.071108,0,0,0,0.0,0,0,2.28332,2.1189
+2026-2027,Bundesliga,2026-09-05,RasenBallsport Leipzig,Werder Bremen,0,13442,Tidiam Gomis,Sub,,24,0,0,2,,0.09645,0.09645,0.021169,0,0,0,0.0,0,0,1.58161,0.854137
+2026-2027,Bundesliga,2026-08-29,RasenBallsport Leipzig,Borussia M.Gladbach,1,13442,Tidiam Gomis,FW,,66,0,2,4,,0.781768,0.781768,0.421757,1,0,1,0.594891,0,0,3.76496,1.23375
+2026-2027,Bundesliga,2026-09-05,Bayer Leverkusen,Union Berlin,1,13739,Afonso Moreira,AMR,,90,0,0,3,,0.220454,0.220454,0.0,0,0,0,0.0,0,0,3.39215,0.249852
+2026-2027,Bundesliga,2026-08-29,Bayer Leverkusen,Elversberg,0,13739,Afonso Moreira,AML,,87,0,0,2,,0.377843,0.377843,0.0,1,0,1,0.360783,0,0,2.61527,1.40032
+2026-2027,Bundesliga,2026-09-05,RasenBallsport Leipzig,Werder Bremen,0,13851,Ezechiel Banzuzi,MC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.58161,0.854137
+2026-2027,Bundesliga,2026-08-29,RasenBallsport Leipzig,Borussia M.Gladbach,1,13851,Ezechiel Banzuzi,MC,,84,0,0,4,,1.201565,1.201565,0.055843,2,0,2,0.991256,0,0,3.76496,1.23375
+2026-2027,Bundesliga,2026-09-05,Hoffenheim,Borussia Dortmund,1,13860,Wouter Burger,MC,,82,0,0,1,,0.043078,0.043078,0.079121,0,0,0,0.0,0,0,2.16627,2.02481
 2026-2027,Bundesliga,2026-08-29,Hoffenheim,FC Cologne,0,13860,Wouter Burger,MC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.92317,2.31412
-2026-2027,Bundesliga,2026-08-29,Hoffenheim,FC Cologne,0,13861,Leon Avdullahu,MC,,90,0,0,2,,0.036281,0.036281,0.0,0,0,0,0.0,0,0,1.92317,2.31412
 2026-2027,Bundesliga,2026-08-29,Union Berlin,Eintracht Frankfurt,1,13867,Matheo Raab,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.28332,2.1189
+2026-2027,Bundesliga,2026-09-05,Borussia Dortmund,Hoffenheim,0,13887,Jobe Bellingham,MC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.02481,2.16627
 2026-2027,Bundesliga,2026-08-29,Borussia Dortmund,Hamburger SV,1,13887,Jobe Bellingham,MC,,90,0,0,1,,0.03506,0.03506,0.157315,0,0,0,0.0,0,0,1.31287,1.10643
 2026-2027,Bundesliga,2026-09-04,FC Cologne,VfB Stuttgart,0,13910,Ísak Bergmann Jóhannesson,MC,,90,0,0,1,,0.060398,0.060398,0.087912,0,0,0,0.0,0,0,2.85818,3.5224
 2026-2027,Bundesliga,2026-08-29,FC Cologne,Hoffenheim,1,13910,Ísak Bergmann Jóhannesson,MC,,90,0,0,1,,0.025743,0.025743,0.598396,0,0,0,0.0,0,0,2.31412,1.92317
+2026-2027,Bundesliga,2026-09-06,Hamburger SV,Mainz 05,1,13923,Nicolás Capaldo,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.257239,3.27983
 2026-2027,Bundesliga,2026-08-29,Hamburger SV,Borussia Dortmund,0,13923,Nicolás Capaldo,DC,,90,0,0,0,,0.0,0.0,0.352401,0,0,0,0.0,0,0,1.10643,1.31287
+2026-2027,Bundesliga,2026-09-05,Hoffenheim,Borussia Dortmund,1,13973,Albian Hajdari,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.16627,2.02481
+2026-2027,Bundesliga,2026-08-29,Hoffenheim,FC Cologne,0,13973,Albian Hajdari,DC,,88,0,0,1,,0.010051,0.010051,0.0,0,0,0,0.0,0,0,1.92317,2.31412
 2026-2027,Bundesliga,2026-09-04,FC Cologne,VfB Stuttgart,0,14025,Alessio Castro-Montes,DR,,90,0,0,0,,0.0,0.0,0.018502,0,0,0,0.0,0,0,2.85818,3.5224
 2026-2027,Bundesliga,2026-08-29,FC Cologne,Hoffenheim,1,14025,Alessio Castro-Montes,DR,,90,0,0,0,,0.0,0.0,0.131364,0,0,0,0.0,0,0,2.31412,1.92317
+2026-2027,Bundesliga,2026-09-05,Borussia M.Gladbach,Elversberg,1,14123,Wael Mohya,AML,,71,0,0,3,,0.27667,0.27667,0.0,0,0,0,0.0,0,0,2.88776,3.03199
+2026-2027,Bundesliga,2026-08-29,Borussia M.Gladbach,RasenBallsport Leipzig,0,14123,Wael Mohya,AMC,,65,0,0,0,,0.0,0.0,0.066915,0,0,0,0.0,0,0,1.23375,3.76496
+2026-2027,Bundesliga,2026-09-05,Union Berlin,Bayer Leverkusen,0,14177,Livan Burcu,MC,,80,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.249852,3.39215
+2026-2027,Bundesliga,2026-08-29,Union Berlin,Eintracht Frankfurt,1,14177,Livan Burcu,Sub,,21,0,0,2,,0.056296,0.056296,0.0,0,0,0,0.0,0,0,2.28332,2.1189
+2026-2027,Bundesliga,2026-09-06,Mainz 05,Hamburger SV,0,14187,Kacper Potulski,DC,,90,0,0,1,,0.046606,0.046606,0.0,0,0,0,0.0,0,0,3.27983,0.257239
+2026-2027,Bundesliga,2026-08-29,Mainz 05,Paderborn,1,14187,Kacper Potulski,Sub,,9,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.54945,0.691131
+2026-2027,Bundesliga,2026-09-06,Eintracht Frankfurt,Augsburg,1,14330,Keita Kosugi,DL,,90,0,0,1,,0.014938,0.014938,0.102543,0,0,0,0.0,0,0,2.51037,1.44545
 2026-2027,Bundesliga,2026-08-29,Eintracht Frankfurt,Union Berlin,0,14330,Keita Kosugi,DL,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.1189,2.28332
+2026-2027,Bundesliga,2026-09-06,Eintracht Frankfurt,Augsburg,1,14331,Ayoube Amaimouni-Echghouyab,Sub,,20,0,0,1,,0.041936,0.041936,0.0,0,0,0,0.0,0,0,2.51037,1.44545
+2026-2027,Bundesliga,2026-08-29,Eintracht Frankfurt,Union Berlin,0,14331,Ayoube Amaimouni-Echghouyab,MR,,87,0,0,3,,0.235333,0.235333,0.043596,0,0,0,0.0,0,0,2.1189,2.28332
+2026-2027,Bundesliga,2026-09-06,Hamburger SV,Mainz 05,1,14398,Louis Lemke,Sub,,5,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.257239,3.27983
 2026-2027,Bundesliga,2026-08-29,Hamburger SV,Borussia Dortmund,0,14398,Louis Lemke,DML,,90,0,0,0,,0.0,0.0,0.118579,0,0,0,0.0,0,0,1.10643,1.31287
-2026-2027,Bundesliga,2026-08-29,Borussia M.Gladbach,RasenBallsport Leipzig,0,14428,Hugo Bolin,AMR,,90,0,0,4,,0.51261,0.51261,0.091336,1,0,1,0.363696,0,0,1.23375,3.76496
+2026-2027,Bundesliga,2026-09-05,Elversberg,Borussia M.Gladbach,0,14939,Nicolas Kristof,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,3.03199,2.88776
 2026-2027,Bundesliga,2026-08-29,Elversberg,Bayer Leverkusen,1,14939,Nicolas Kristof,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.40032,2.61527
+2026-2027,Bundesliga,2026-09-05,Elversberg,Borussia M.Gladbach,0,14940,Jan Gyamerah,DR,,90,0,0,1,,0.244042,0.244042,0.01753,1,0,1,0.244042,0,0,3.03199,2.88776
+2026-2027,Bundesliga,2026-08-29,Elversberg,Bayer Leverkusen,1,14940,Jan Gyamerah,DR,,77,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.40032,2.61527
+2026-2027,Bundesliga,2026-09-05,Elversberg,Borussia M.Gladbach,0,14941,Maximilian Rohr,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,3.03199,2.88776
+2026-2027,Bundesliga,2026-08-29,Elversberg,Bayer Leverkusen,1,14941,Maximilian Rohr,DC,,84,0,0,1,,0.038662,0.038662,0.0,0,0,0,0.0,0,0,1.40032,2.61527
+2026-2027,Bundesliga,2026-09-05,Elversberg,Borussia M.Gladbach,0,14942,Lukas Pinckert,DC,,90,0,1,0,,0.0,0.0,0.528466,0,0,0,0.0,0,0,3.03199,2.88776
 2026-2027,Bundesliga,2026-08-29,Elversberg,Bayer Leverkusen,1,14942,Lukas Pinckert,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.40032,2.61527
-2026-2027,Bundesliga,2026-08-29,Elversberg,Bayer Leverkusen,1,14943,Felix Keidel,DMC,,90,0,0,1,,0.028673,0.028673,0.0,0,0,0,0.0,0,0,1.40032,2.61527
+2026-2027,Bundesliga,2026-09-06,Mainz 05,Hamburger SV,0,14951,Fabio Gruber,DC,,90,0,0,1,,0.113845,0.113845,0.0,0,0,0,0.0,0,0,3.27983,0.257239
 2026-2027,Bundesliga,2026-08-29,Mainz 05,Paderborn,1,14951,Fabio Gruber,DC,,90,0,0,1,,0.031108,0.031108,0.0,0,0,0,0.0,0,0,1.54945,0.691131
+2026-2027,Bundesliga,2026-09-05,Paderborn,Freiburg,1,14954,Mattes Hansen,DC,,90,0,0,1,,0.011365,0.011365,0.059023,0,0,0,0.0,0,0,0.733133,1.1716
+2026-2027,Bundesliga,2026-08-29,Paderborn,Mainz 05,0,14954,Mattes Hansen,DC,,76,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.691131,1.54945
+2026-2027,Bundesliga,2026-09-05,Paderborn,Freiburg,1,14955,Jano ter Horst,DC,,83,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.733133,1.1716
 2026-2027,Bundesliga,2026-08-29,Paderborn,Mainz 05,0,14955,Jano ter Horst,DC,,90,0,0,1,,0.015473,0.015473,0.053421,0,0,0,0.0,0,0,0.691131,1.54945
+2026-2027,Bundesliga,2026-09-05,Paderborn,Freiburg,1,14956,Tjark Scheller,DC,,90,0,0,0,,0.0,0.0,0.041132,0,0,0,0.0,0,0,0.733133,1.1716
 2026-2027,Bundesliga,2026-08-29,Paderborn,Mainz 05,0,14956,Tjark Scheller,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.691131,1.54945
+2026-2027,Bundesliga,2026-09-05,Paderborn,Freiburg,1,14957,Laurin Curda,DMR,,90,0,0,0,,0.0,0.0,0.174346,0,0,0,0.0,0,0,0.733133,1.1716
 2026-2027,Bundesliga,2026-08-29,Paderborn,Mainz 05,0,14957,Laurin Curda,DMR,,90,0,0,3,,0.337895,0.337895,0.112572,1,0,1,0.285167,0,0,0.691131,1.54945
+2026-2027,Bundesliga,2026-09-05,Paderborn,Freiburg,1,14958,Santiago Castañeda,MC,,90,0,0,1,,0.059023,0.059023,0.0,0,0,0,0.0,0,0,0.733133,1.1716
 2026-2027,Bundesliga,2026-08-29,Paderborn,Mainz 05,0,14958,Santiago Castañeda,MC,,90,0,0,0,,0.0,0.0,0.044933,0,0,0,0.0,0,0,0.691131,1.54945
+2026-2027,Bundesliga,2026-09-05,Borussia M.Gladbach,Elversberg,1,14967,Mathieu Nguefack,DMC,,90,0,0,2,,0.145597,0.145597,0.038976,0,0,0,0.0,0,0,2.88776,3.03199
+2026-2027,Bundesliga,2026-08-29,Borussia M.Gladbach,RasenBallsport Leipzig,0,14967,Mathieu Nguefack,Sub,,25,0,0,0,,0.0,0.0,0.024788,0,0,0,0.0,0,0,1.23375,3.76496
+2026-2027,Bundesliga,2026-09-05,Union Berlin,Bayer Leverkusen,0,14970,Zeno Van den Bosch,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.249852,3.39215
 2026-2027,Bundesliga,2026-08-29,Union Berlin,Eintracht Frankfurt,1,14970,Zeno Van den Bosch,DC,,90,0,0,0,,0.0,0.0,0.082668,0,0,0,0.0,0,0,2.28332,2.1189
 2026-2027,Bundesliga,2026-08-29,Eintracht Frankfurt,Union Berlin,0,14971,Jeremiaha Maluze,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.1189,2.28332
+2026-2027,Bundesliga,2026-09-06,Eintracht Frankfurt,Augsburg,1,14972,Raphael Onyedika,MC,,90,0,0,1,,0.025098,0.025098,0.055675,0,0,0,0.0,0,0,2.51037,1.44545
 2026-2027,Bundesliga,2026-08-29,Eintracht Frankfurt,Union Berlin,0,14972,Raphael Onyedika,MC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.1189,2.28332
 2026-2027,Bundesliga,2026-09-04,FC Cologne,VfB Stuttgart,0,14975,Paul Okon-Engstler,MC,,46,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.85818,3.5224
 2026-2027,Bundesliga,2026-08-29,FC Cologne,Hoffenheim,1,14975,Paul Okon-Engstler,MC,,66,0,0,1,,0.094166,0.094166,0.025743,0,0,0,0.0,0,0,2.31412,1.92317
+2026-2027,Bundesliga,2026-09-05,Hoffenheim,Borussia Dortmund,1,14978,Mats Rots,DL,,90,0,0,1,,0.032613,0.032613,0.471868,0,0,0,0.0,0,0,2.16627,2.02481
+2026-2027,Bundesliga,2026-08-29,Hoffenheim,FC Cologne,0,14978,Mats Rots,Sub,,2,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.92317,2.31412
+2026-2027,Bundesliga,2026-09-05,Borussia Dortmund,Hoffenheim,0,14989,Konstantinos Karetsas,AMC,,65,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.02481,2.16627
+2026-2027,Bundesliga,2026-08-29,Borussia Dortmund,Hamburger SV,1,14989,Konstantinos Karetsas,FWR,,76,0,1,6,,0.407421,0.407421,0.173508,0,0,0,0.0,0,0,1.31287,1.10643
+2026-2027,Bundesliga,2026-09-05,Werder Bremen,RasenBallsport Leipzig,1,15004,Ludovit Reis,DMC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.854137,1.58161
+2026-2027,Bundesliga,2026-08-30,Werder Bremen,Freiburg,0,15004,Ludovit Reis,MC,,86,0,0,1,,0.018422,0.018422,0.093141,0,0,0,0.0,0,0,0.948636,2.38503
+2026-2027,Bundesliga,2026-09-06,Augsburg,Eintracht Frankfurt,0,15010,Calvin Brackelmann,DC,,85,0,0,0,,0.0,0.0,0.021335,0,0,0,0.0,0,0,1.44545,2.51037
 2026-2027,Bundesliga,2026-08-30,Augsburg,Schalke 04,1,15010,Calvin Brackelmann,DC,,90,0,0,2,,0.070395,0.070395,0.085897,0,0,0,0.0,0,0,5.53649,1.83691
+2026-2027,Bundesliga,2026-09-05,Schalke 04,Bayern Munich,1,15012,Nikola Katic,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.25073,2.0536
+2026-2027,Bundesliga,2026-08-30,Schalke 04,Augsburg,0,15012,Nikola Katic,DC,,77,0,0,0,,0.0,0.0,0.018316,0,0,0,0.0,0,0,1.83691,5.53649
+2026-2027,Bundesliga,2026-09-05,Schalke 04,Bayern Munich,1,15013,Hasan Kuruçay,DC,,76,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.25073,2.0536
+2026-2027,Bundesliga,2026-08-30,Schalke 04,Augsburg,0,15013,Hasan Kuruçay,DC,,63,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.83691,5.53649
+2026-2027,Bundesliga,2026-09-05,Schalke 04,Bayern Munich,1,15016,Soufiane El-Faouzi,MC,,90,0,0,1,,0.065601,0.065601,0.0,0,0,0,0.0,0,0,0.25073,2.0536
 2026-2027,Bundesliga,2026-08-30,Schalke 04,Augsburg,0,15016,Soufiane El-Faouzi,MC,,90,0,0,0,,0.0,0.0,0.289654,0,0,0,0.0,0,0,1.83691,5.53649
+2026-2027,Bundesliga,2026-09-05,Schalke 04,Bayern Munich,1,15019,Satoshi Tanaka,MC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.25073,2.0536
+2026-2027,Bundesliga,2026-09-06,Hamburger SV,Mainz 05,1,15056,Zakaria El Ouahdi,DMR,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.257239,3.27983
