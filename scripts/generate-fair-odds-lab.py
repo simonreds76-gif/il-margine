@@ -1485,6 +1485,8 @@ def public_quality_exclusion_reason(
     official_lineup_window_minutes: int,
     allow_projected_lineups: bool,
 ) -> str:
+    if candidate.row.get("allocation_status") not in (None, "", "confirmed_roster"):
+        return "incomplete_prediction_roster"
     lineup = lineup_label(candidate.row).lower()
     confidence = normalize_confidence(
         candidate.row.get("signal_confidence"),

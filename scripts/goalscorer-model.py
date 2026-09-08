@@ -459,7 +459,7 @@ def detect_columns(rows: List[dict]) -> Dict[str, Optional[str]]:
     }
 
 
-def load_match_logs(paths: List[str]) -> List[NormalizedRow]:
+def load_match_logs(paths: List[str], *, include_goalkeepers: bool = False) -> List[NormalizedRow]:
     raw_rows: List[dict] = []
     for path in _expand_paths(paths):
         if not os.path.exists(path):
@@ -527,7 +527,7 @@ def load_match_logs(paths: List[str]) -> List[NormalizedRow]:
         if row.npxg is None:
             row.npxg = row.xg
         position_upper = (row.position or "").upper()
-        if position_upper.startswith("GK"):
+        if position_upper.startswith("GK") and not include_goalkeepers:
             continue
         filtered.append(row)
 

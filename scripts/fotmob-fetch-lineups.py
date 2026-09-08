@@ -148,6 +148,18 @@ def _resolve_player_names(players: List[dict], team_name: str, roster_by_team: D
     return resolved
 
 
+def _substitute_entries(players: List[dict]) -> List[dict]:
+    """Keep squad identities/roles already present in the fetched payload."""
+    groups = {0: "GK", 1: "DEF", 2: "MID", 3: "FW"}
+    entries = []
+    for player in players:
+        position = player.get("usualPlayingPositionId")
+        group = groups.get(position, "") if type(position) is int else ""
+        if player.get("name"):
+            entries.append({"name": player["name"], "player_id": str(player.get("id") or ""), "role_group": group})
+    return entries
+
+
 def _parse_formation_lines(formation: str, starter_count: int) -> List[int]:
     if not formation:
         return []
@@ -365,7 +377,9 @@ def fetch_confirmed_lineups(date_str: str, league_id: int, roster_by_team: Dict[
                 "home_starters": home_starter_entries,
                 "away_starters": away_starter_entries,
                 "home_subs": home_subs,
+                "home_substitute_entries": _substitute_entries(lineup.get("homeTeam", {}).get("subs", [])),
                 "away_subs": away_subs,
+                "away_substitute_entries": _substitute_entries(lineup.get("awayTeam", {}).get("subs", [])),
                 "home_unavailable": home_unavailable,
                 "away_unavailable": away_unavailable,
             }

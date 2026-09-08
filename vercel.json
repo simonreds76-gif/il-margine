@@ -3,7 +3,8 @@
   "ignoreCommand": "node scripts/vercel-should-build.cjs",
   "git": {
     "deploymentEnabled": {
-      "main": false
+      "main": false,
+      "golden-with-speed-insights": false
     }
   }
 }

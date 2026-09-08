@@ -620,7 +620,9 @@ def load_confirmed_lineup_map(path: str, team_key_func) -> Dict[tuple[str, str, 
             "away_players": away_players,
             "home_starters": _coerce_starter_entries(fixture.get("home_starters") or fixture.get("homeStarters") or []),
             "away_starters": _coerce_starter_entries(fixture.get("away_starters") or fixture.get("awayStarters") or []),
+            "home_substitute_entries": fixture.get("home_substitute_entries") or [],
             "home_subs": _coerce_lineup_names(fixture.get("home_subs") or fixture.get("homeSubs") or []),
+            "away_substitute_entries": fixture.get("away_substitute_entries") or [],
             "away_subs": _coerce_lineup_names(fixture.get("away_subs") or fixture.get("awaySubs") or []),
             "home_unavailable": _coerce_lineup_names(fixture.get("home_unavailable") or fixture.get("homeUnavailable") or []),
             "away_unavailable": _coerce_lineup_names(fixture.get("away_unavailable") or fixture.get("awayUnavailable") or []),
@@ -1459,6 +1461,74 @@ def write_outputs(
     print(f"  Saved: {snapshot_penalty_context_path}")
 
 
+def _prediction_roster(quoted, lineup, fixture, resolve, team_key, historical_goalkeepers=None):
+    """Separate sporting population from available bookmaker selections.
+
+    Unresolved squads remain research-only. Explicit goalkeeper entries can be
+    omitted: the existing unallocated non-penalty share retains that tiny mass.
+    No context entry is an odds quote or may be written as a selection.
+    """
+    population = []
+    statuses = {}
+    for side in ("home", "away"):
+        key = team_key(fixture[f"{side}_team"])
+        originals = [c for c in quoted if c["player_team_key"] == key]
+        if not originals:
+            continue
+        starters = (lineup or {}).get(f"{side}_players", [])
+        subs = (lineup or {}).get(f"{side}_subs", [])
+        names = starters + subs
+        valid = (_is_confirmed_lineup(lineup) and len(starters) == 11
+                 and len({_norm_text(n) for n in names}) == len(names))
+        keepers = {_norm_text(e["name"]) for e in (lineup or {}).get(f"{side}_starters", [])
+                   if str(e.get("role_group", "")).upper() == "GK"}
+        substitute_entries = {_norm_text(e.get("name", "")): e
+                              for e in (lineup or {}).get(f"{side}_substitute_entries", [])}
+        keepers.update(name for name, entry in substitute_entries.items() if entry.get("role_group") == "GK")
+        keepers.update(name for (team, name), first_seen in (historical_goalkeepers or {}).items()
+                       if team == key and first_seen < fixture["match_date"])
+        context = []
+        identities = set()
+        if valid:
+            for name in names:
+                if _norm_text(name) in keepers:
+                    continue
+                # This input supplies fixture identity only; it is never emitted.
+                context_input = dict(fixture, player_name=name, player_team=fixture[f"{side}_team"],
+                                     odds_decimal=0.0, implied_prob=0.0, bookmaker="")
+                candidate = resolve(context_input, lineup)
+                entry = substitute_entries.get(_norm_text(name), {})
+                if candidate is None and name in subs and entry.get("player_id") and entry.get("role_group") in {"DEF", "MID", "FW"}:
+                    # A named reserve with no Understat appearances receives the
+                    # model's existing position prior, never invented history.
+                    candidate = dict(originals[0], odds_row=context_input,
+                        player_meta={"player_name": name, "source": "lineup_position_prior"},
+                        player_id="fotmob:" + str(entry["player_id"]),
+                        position={"DEF": "DC", "MID": "MC", "FW": "FW"}[entry["role_group"]],
+                        player_recent=None, player_long=None, history_minutes=0.0,
+                        history_gap_days=None, history_stale=False, stacked_features={},
+                        context_only_prior=True, outside_prediction_roster=False)
+                identity = (candidate["player_id"], candidate["player_team_key"]) if candidate else None
+                if candidate is None or candidate["player_team_key"] != key or identity in identities:
+                    valid = False
+                    break
+                identities.add(identity)
+                context.append(candidate)
+        if not valid:
+            statuses[key] = "incomplete_roster"
+            population.extend(originals)
+            continue
+        statuses[key] = "confirmed_roster"
+        population.extend(context)
+        # Keep an output for stale/out-of-squad quotes, but never let them
+        # enter the independent denominator or generate an actionable price.
+        for candidate in originals:
+            if (candidate["player_id"], key) not in identities:
+                candidate["outside_prediction_roster"] = True
+                population.append(candidate)
+    return population, statuses
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Live pre-match comparison for ATGS odds")
     parser.add_argument("--data", nargs="+", default=DEFAULT_DATA, help="Historical player-log CSVs or globs")
@@ -1516,7 +1586,16 @@ def main() -> None:
     public_min_ev = max(args.min_ev, args.public_min_ev)
     shadow_min_ev = args.shadow_min_ev
 
-    historical_rows = load_match_logs(args.data)
+    # Retain keeper identities for squad completeness without feeding keeper
+    # rows into the existing outfield rate/penalty estimators.
+    history_with_keepers = load_match_logs(args.data, include_goalkeepers=True)
+    historical_goalkeepers = {}
+    historical_rows = []
+    for row in history_with_keepers:
+        if str(row.position or "").upper().startswith("GK"):
+            historical_goalkeepers.setdefault((row.team_key, _norm_text(row.player_name)), row.match_date_str)
+        else:
+            historical_rows.append(row)
     observed_penalty_rate = infer_league_penalties_per_match(historical_rows)
     model_mod["LEAGUE_AVG"].clear()
     model_mod["LEAGUE_AVG"].update(league_avg_for(args.league, observed_penalty_rate))
@@ -1799,6 +1878,10 @@ def main() -> None:
         if not resolved_rows:
             return
 
+        model_rows, allocation_status = _prediction_roster(
+            resolved_rows, fixture_lineup, fixture_sample, resolve_candidate, team_key_func, historical_goalkeepers,
+        ) if not args.v2_repair else (resolved_rows, {})
+
         if _is_confirmed_lineup(fixture_lineup):
             stats["fixtures_with_confirmed_lineups"] += 1
         elif _is_expected_lineup(fixture_lineup):
@@ -1858,9 +1941,13 @@ def main() -> None:
             )
         )
 
-        for candidate in resolved_rows:
+        quoted_object_ids = {id(c) for c in resolved_rows}
+        for candidate in resolved_rows + [c for c in model_rows if id(c) not in quoted_object_ids]:
+            count_quote = int(id(candidate) in quoted_object_ids)
             player_display_name = candidate["player_meta"].get("player_name", candidate["odds_row"]["player_name"])
             lineup_state, lineup_match_name = _resolve_lineup_state(player_display_name, fixture_lineup, candidate["is_home"])
+            if candidate.get("outside_prediction_roster"):
+                lineup_state = "not_in_squad"
             candidate["lineup_state"] = lineup_state
             candidate["lineup_match_name"] = lineup_match_name
 
@@ -1872,29 +1959,29 @@ def main() -> None:
             if lineup_state == "starter":
                 if not args.v2_repair:
                     candidate["expected_minutes"] = CONFIRMED_STARTER_MINUTES
-                stats["confirmed_starter_rows"] += 1
+                stats["confirmed_starter_rows"] += count_quote
             elif lineup_state == "expected_starter":
                 if not args.v2_repair:
                     candidate["expected_minutes"] = max(candidate["expected_minutes"], EXPECTED_STARTER_MINUTES)
-                stats["expected_starter_rows"] += 1
+                stats["expected_starter_rows"] += count_quote
             elif lineup_state == "bench":
                 if not args.v2_repair:
                     candidate["expected_minutes"] = CONFIRMED_BENCH_MINUTES
-                stats["confirmed_bench_rows"] += 1
+                stats["confirmed_bench_rows"] += count_quote
             elif lineup_state == "expected_bench":
                 if not args.v2_repair:
                     candidate["expected_minutes"] = min(candidate["expected_minutes"], EXPECTED_BENCH_MINUTES)
-                stats["expected_bench_rows"] += 1
+                stats["expected_bench_rows"] += count_quote
             elif lineup_state == "not_in_squad":
                 candidate["expected_minutes"] = 0.0
-                stats["not_in_squad_rows"] += 1
+                stats["not_in_squad_rows"] += count_quote
             elif lineup_state == "expected_out":
                 candidate["expected_minutes"] = 0.0
-                stats["expected_out_rows"] += 1
+                stats["expected_out_rows"] += count_quote
 
         team_buckets: Dict[str, List[dict]] = defaultdict(list)
         unique_predictions: Dict[tuple[str, str], dict] = {}
-        for candidate in resolved_rows:
+        for candidate in model_rows:
             unique_key = (candidate["player_id"], candidate["player_team_key"])
             if unique_key not in unique_predictions:
                 unique_predictions[unique_key] = candidate
@@ -1988,6 +2075,8 @@ def main() -> None:
                     share_prior = (position_prior(candidate["position"]) / team_npxg_prior) * (
                         max(candidate["expected_minutes"], 1.0) / 90.0
                     )
+                    if candidate.get("context_only_prior"):
+                        raw_share = share_prior
                     penalty_lambda = 0.0
                     penalty_share = 0.0
                     baseline_penalty_share = 0.0
@@ -2194,6 +2283,12 @@ def main() -> None:
                     )
                     if recommended_stake_units <= 0.0:
                         public_gate_reason = "stake_band_fail"
+            roster_status = allocation_status.get(candidate["player_team_key"], "research_v2")
+            if roster_status != "confirmed_roster":
+                public_gate_reason = "incomplete_prediction_roster"
+                recommended_stake_units = 0.0
+                recommended_stake_band = ""
+                recommended_stake_label = ""
             public_action = _compute_public_action(
                 signal_confidence,
                 lineup_status,
@@ -2265,6 +2360,12 @@ def main() -> None:
                     "position_group": coarse_position(candidate["position"]),
                     "odds_decimal": round(odds_decimal, 4),
                     "implied_prob": round(implied_prob, 6),
+                    "model_version": "goalscorer_v1_roster_20260908" if roster_status == "confirmed_roster" else (
+                        "goalscorer_v2_research" if args.v2_repair else "goalscorer_v1_incomplete_roster"
+                    ),
+                    "calibration_version": "raw",
+                    "allocation_status": roster_status,
+                    "roster_prior_players": sum(bool(c.get("context_only_prior")) for c in team_buckets[candidate["player_team_key"]]),
                     "model_p_atgs": round(model_prob, 6),
                     "model_fair_odds_atgs": round(fair_odds, 4),
                     "model_lambda": round(adjusted_total_lambda, 4),
