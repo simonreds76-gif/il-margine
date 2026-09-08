@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-07T15:02:42Z",
+  "generated_at": "2026-09-08T04:44:49Z",
   "league": "ligue-1",
-  "row_count": 3,
+  "row_count": 1,
   "rows": [
     {
       "date": "2026-09-06",
@@ -44,7 +44,7 @@
           "source_event_id": "2965969873",
           "match_id": "5802923",
           "source_url": "https://www.fotmob.com/matches/paris-fc-vs-marseille/1uqamy#5802923",
-          "observed_at": "2026-09-07T15:02:39+00:00",
+          "observed_at": "2026-09-08T04:44:44+00:00",
           "event_date": "2026-09-06",
           "season": "2026/27",
           "team": "Paris FC",
@@ -74,157 +74,16 @@
           "event_result": "scored"
         }
       ]
-    },
-    {
-      "date": "2026-09-05",
-      "league": "ligue-1",
-      "review_source": "fotmob_live",
-      "match": "Le Havre vs Brest",
-      "team": "Brest",
-      "opponent": "Le Havre",
-      "actual_taker": "Kamory Doumbia",
-      "actual_role_pre_match": "primary",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "minute": "12",
-      "event_type": "Goal",
-      "event_result": "scored",
-      "primary_pre_match": "Kamory Doumbia",
-      "secondary_pre_match": "Ludovic Ajorque",
-      "tertiary_pre_match": "Kenny Lala",
-      "primary_lineup_status": "",
-      "secondary_lineup_status": "",
-      "tertiary_lineup_status": "",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "unknown",
-      "review_type": "primary_held",
-      "review_priority": "low",
-      "editorial_note": "Kamory Doumbia took 1 penalty attempt and scored for Brest vs Le Havre. Primary pre-match: Kamory Doumbia (unknown). Secondary pre-match: Ludovic Ajorque (unknown). No hierarchy change implied from this event.",
-      "context_generated_at": "2026-09-06",
-      "context_source_path": "data/goalscorer/ligue-1-penalty-takers.json",
-      "actual_taker_match_status": "Yes - started, off 75'",
-      "primary_on_pitch_at_penalty": "Yes - started, off 75'",
-      "secondary_on_pitch_at_penalty": "Yes - started",
-      "tertiary_on_pitch_at_penalty": "Yes - started, off 22'",
-      "actual_taker_on_pitch_at_penalty": "Yes - started, off 75'",
-      "event_evidence": [
-        {
-          "id": "fotmob|ligue-1|5802920|2964902907",
-          "source_event_id": "2964902907",
-          "match_id": "5802920",
-          "source_url": "https://www.fotmob.com/matches/brest-vs-le-havre/2rceek#5802920",
-          "observed_at": "2026-09-07T15:02:39+00:00",
-          "event_date": "2026-09-05",
-          "season": "2026/27",
-          "team": "Brest",
-          "taker": "Kamory Doumbia",
-          "primary": "Kamory Doumbia",
-          "primary_on_pitch": true,
-          "on_pitch_proof": {
-            "player": "Kamory Doumbia",
-            "minute": 12,
-            "method": "completed_lineup_timeline",
-            "player_id": 1310270,
-            "bucket": "starters",
-            "substitutions": [
-              {
-                "type": "subout",
-                "time": 75
-              }
-            ],
-            "events": [],
-            "reason": "on_pitch"
-          },
-          "minute": 12,
-          "penalty_kind": "in_match",
-          "competitive": true,
-          "finished": true,
-          "match": "Le Havre vs Brest",
-          "event_result": "scored"
-        }
-      ]
-    },
-    {
-      "date": "2026-09-05",
-      "league": "ligue-1",
-      "review_source": "fotmob_live",
-      "match": "Le Havre vs Brest",
-      "team": "Le Havre",
-      "opponent": "Brest",
-      "actual_taker": "Rayan Fofana",
-      "actual_role_pre_match": "none",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "minute": "79",
-      "event_type": "Goal",
-      "event_result": "scored",
-      "primary_pre_match": "Mbwana Ally Samatta",
-      "secondary_pre_match": "Rassoul Ndiaye",
-      "tertiary_pre_match": "Josh Maja",
-      "primary_lineup_status": "",
-      "secondary_lineup_status": "",
-      "tertiary_lineup_status": "",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "unknown",
-      "review_type": "unranked_taker",
-      "review_priority": "high",
-      "editorial_note": "Rayan Fofana took 1 penalty attempt and scored for Le Havre vs Brest. Primary pre-match: Mbwana Ally Samatta (unknown). Secondary pre-match: Rassoul Ndiaye (unknown). Strong review flag: the taker was not in the tracked top three.",
-      "context_generated_at": "2026-09-02",
-      "context_source_path": "data/goalscorer/ligue-1-penalty-takers.json",
-      "actual_taker_match_status": "Yes - bench, on 62'",
-      "primary_on_pitch_at_penalty": "Yes - started",
-      "secondary_on_pitch_at_penalty": "No - started, off 46'",
-      "tertiary_on_pitch_at_penalty": "No - started, off 62'",
-      "actual_taker_on_pitch_at_penalty": "Yes - bench, on 62'",
-      "event_evidence": [
-        {
-          "id": "fotmob|ligue-1|5802920|2964993927",
-          "source_event_id": "2964993927",
-          "match_id": "5802920",
-          "source_url": "https://www.fotmob.com/matches/brest-vs-le-havre/2rceek#5802920",
-          "observed_at": "2026-09-07T15:02:39+00:00",
-          "event_date": "2026-09-05",
-          "season": "2026/27",
-          "team": "Le Havre",
-          "taker": "Rayan Fofana",
-          "primary": "Mbwana Ally Samatta",
-          "primary_on_pitch": true,
-          "on_pitch_proof": {
-            "player": "Mbwana Ally Samatta",
-            "minute": 79,
-            "method": "completed_lineup_timeline",
-            "player_id": 437329,
-            "bucket": "starters",
-            "substitutions": [],
-            "events": [],
-            "reason": "on_pitch"
-          },
-          "minute": 79,
-          "penalty_kind": "in_match",
-          "competitive": true,
-          "finished": true,
-          "match": "Le Havre vs Brest",
-          "event_result": "scored"
-        }
-      ]
     }
   ],
   "source_health": {
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20260901",
-      "20260902",
-      "20260903",
-      "20260904",
-      "20260905",
       "20260906",
-      "20260907"
+      "20260907",
+      "20260908"
     ],
-    "matches_checked": 9
+    "matches_checked": 3
   }
 }
