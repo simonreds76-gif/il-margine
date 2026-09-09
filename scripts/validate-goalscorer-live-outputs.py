@@ -85,21 +85,31 @@ def validate_lineups(path_str: str, label: str) -> list[str]:
     if not fixtures:
         return [f"{label}: fixtures=0"]
 
-    first_fixture = require_mapping(fixtures[0], f"{label}.fixtures[0]")
-    for key in ("match_date", "home_team", "away_team", "home_status", "away_status", "lineup_type"):
-        require_nonempty_string(first_fixture, key, f"{label}.fixtures[0]")
+    pending = 0
+    for index, value in enumerate(fixtures):
+        fixture_label = f"{label}.fixtures[{index}]"
+        fixture = require_mapping(value, fixture_label)
+        for key in ("match_date", "home_team", "away_team", "home_status", "away_status", "lineup_type"):
+            require_nonempty_string(fixture, key, fixture_label)
 
-    home_starters = first_fixture.get("home_starters")
-    away_starters = first_fixture.get("away_starters")
-    home_players = first_fixture.get("home_players")
-    away_players = first_fixture.get("away_players")
-    if not any(
-        isinstance(value, list) and len(value) > 0
-        for value in (home_starters, away_starters, home_players, away_players)
-    ):
-        raise ValueError(f"{label}.fixtures[0] must include players or starter entries")
+        lineup_type = fixture["lineup_type"].strip().lower()
+        if lineup_type not in {"pending", "predicted", "standard"}:
+            raise ValueError(f"{fixture_label}.lineup_type is unsupported: {lineup_type}")
 
-    return [f"{label}: fixtures={len(fixtures)} first_lineup_type={first_fixture.get('lineup_type')}"]
+        for side in ("home", "away"):
+            entries = [fixture.get(f"{side}_{key}") for key in ("players", "starters")]
+            if lineup_type == "pending":
+                # Scheduled fixtures are useful before an XI is available, but
+                # must never masquerade as a predicted or confirmed lineup.
+                if fixture[f"{side}_status"] != "Lineup Pending":
+                    raise ValueError(f"{fixture_label}.{side}_status must be Lineup Pending")
+                if not all(isinstance(entry, list) and not entry for entry in entries):
+                    raise ValueError(f"{fixture_label}.{side} pending lineup must have empty player and starter lists")
+            elif not any(isinstance(entry, list) and len(entry) == 11 for entry in entries):
+                raise ValueError(f"{fixture_label}.{side} {lineup_type} lineup must include 11 players or starter entries")
+        pending += lineup_type == "pending"
+
+    return [f"{label}: fixtures={len(fixtures)} pending={pending} available={len(fixtures) - pending}"]
 
 
 def validate_merged_live_board(path_str: str, label: str) -> list[str]:

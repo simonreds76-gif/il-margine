@@ -404,6 +404,7 @@ def fetch_confirmed_lineups(date_str: str, league_id: int, roster_by_team: Dict[
             continue
         fixtures.append(dict(fotmob_match_id=int(match["id"]), match_date=kickoff[:10], kickoff_utc=kickoff,
             home_team=str(match.get("home", {}).get("name") or ""), away_team=str(match.get("away", {}).get("name") or ""),
+            home_status="Lineup Pending", away_status="Lineup Pending",
             lineup_type="pending", home_players=[], away_players=[], home_starters=[], away_starters=[], home_subs=[], away_subs=[]))
     fixtures.sort(key=lambda item: (item["match_date"], item["home_team"], item["away_team"]))
     return fixtures, stats
