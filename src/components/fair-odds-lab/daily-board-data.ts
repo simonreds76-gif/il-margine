@@ -3,6 +3,7 @@ export type BoardPlayer = {
   photoUrl?: string | null; modelProbability: number | null; fairOdds: number | null;
   bookmakerOdds: number | null; priceCapturedAt: string | null; expectedMinutes: number | null;
   modelGeneratedAt: string | null; modelVersion: string | null; pricingStatus: string;
+  pricingReason?: string | null; bookmakerReason?: string | null; bookmakerStatus?: string; historyMatches?: number | null; rateBasis?: string | null;
   penaltyActive: boolean; penaltyInheritedFrom: string | null;
 };
 export type BoardTeam = { name: string; formation: string; players: BoardPlayer[]; substitutes: string[]; primaryColor?: string; secondaryColor?: string; logoPath?: string;

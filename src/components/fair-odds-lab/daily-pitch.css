@@ -72,3 +72,14 @@
 @container(max-width:800px){#im-pitch-lab .ip-headlinks{gap:9px}#im-pitch-lab .ip-controls{align-items:stretch;flex-direction:column;gap:12px}#im-pitch-lab .ip-controls>.ip-switch{align-self:flex-end}#im-pitch-lab .ip-empty{grid-template-columns:90px 1fr;padding:24px 18px;gap:18px}#im-pitch-lab .ip-empty-pitch{width:85px;height:130px}#im-pitch-lab .ip-empty-pitch span,#im-pitch-lab .ip-empty-pitch i{width:45px;left:19px}#im-pitch-lab .ip-resultshead>.ip-sub{font-size:11px;max-width:120px;text-align:right}}
 @container(max-width:450px){#im-pitch-lab .ip-head{align-items:start;gap:10px}#im-pitch-lab .ip-headlinks{flex-direction:column;align-items:flex-end}#im-pitch-lab .ip-empty{grid-template-columns:1fr}#im-pitch-lab .ip-empty-pitch{display:none}#im-pitch-lab .ip-head .ip-sub{font-size:13px}#im-pitch-lab .ip-headlinks a{font-size:11px}}
 @media(prefers-reduced-motion:reduce){#im-pitch-lab *,#lab-hits *{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+#im-pitch-lab .ip-search{display:flex;align-items:center;gap:16px;margin:16px 0;color:#a9bec9;font-size:12px}
+#im-pitch-lab .ip-search input{flex:1;min-width:0;max-width:540px;border:1px solid #45606e;border-radius:9px;background:#14232c;color:#fff;padding:12px 14px;outline-offset:3px}
+#im-pitch-lab .ip-grouphead{display:flex;justify-content:space-between;align-items:center;margin:32px 0 14px;border-bottom:1px solid #38505d;padding:12px 0;color:#b9d4dc}
+#im-pitch-lab .ip-grouphead h2{font-size:21px;font-weight:750;color:#e2f5ef}
+#im-pitch-lab .ip-grouphead span{font-size:12px}
+#im-pitch-lab .ip-coverage{display:flex;flex-wrap:wrap;gap:10px 24px;background:#0c1820;padding:12px 20px;color:#94abb8;font-size:11px;border-bottom:1px solid #263a44}
+#im-pitch-lab .ip-coverage strong{color:#cadce5;font-weight:600}
+#im-pitch-lab .ip-estimate{color:#d5b57b;font-size:11px;line-height:1.6}
+#im-pitch-lab .ip-book{font-size:11px}
+@container(max-width:550px){#im-pitch-lab .ip-search{align-items:stretch;flex-direction:column;gap:7px}#im-pitch-lab .ip-coverage{flex-direction:column;gap:4px;padding:10px 12px}}
