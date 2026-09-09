@@ -63,6 +63,8 @@ const DISPLAY_NAMES: Record<string, string> = {
   williamhill: "William Hill",
 };
 
+export const BOOKMAKER_LOGO_KEYS = Object.keys(LOGO_FILES);
+
 const ALIASES: Record<string, string> = {
   "10": "10bet",
   "10bet": "10bet",

@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 import { resolveBookmakerLogo } from "@/lib/bookmaker-logos";
-import { TELEGRAM_BRAND_ASSETS } from "@/lib/telegram-brand-assets";
+import { TELEGRAM_BRAND_ASSETS, TELEGRAM_BRAND_ASPECTS } from "@/lib/telegram-brand-assets";
 
 export const runtime = "edge";
 
@@ -22,6 +22,7 @@ export function GET(request: Request) {
   const resolved = resolveBookmakerLogo(bookmaker);
   const logo = resolved ? TELEGRAM_BRAND_ASSETS[resolved.key] : null;
   const hill = resolved?.key === "williamhill";
+  const compactLogo = resolved ? TELEGRAM_BRAND_ASPECTS[resolved.key] < 2.5 : false;
 
   return new ImageResponse(
     <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", background: "#091218", color: "#f4f7f5", padding: "44px 54px", fontFamily: "sans-serif", position: "relative" }}>
@@ -38,11 +39,14 @@ export function GET(request: Request) {
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", width: 250, paddingLeft: 32, borderLeft: "1px solid #2a383e" }}><span style={{ color: "#9bafae", fontSize: 20, letterSpacing: 2 }}>STAKE</span><span style={{ fontSize: 56, fontWeight: 700, marginTop: 8 }}>{stake}</span></div>
         <div style={{ display: "flex", flex: 1, flexDirection: "column", alignItems: "center", justifyContent: "center", background: hill ? "#00133b" : "#030a0e", padding: "18px 28px" }}>
           <span style={{ color: "#aabbb9", fontSize: 17, letterSpacing: 2, marginBottom: 14 }}>PRICE AT</span>
-          {logo ? <img src={logo} alt={resolved?.displayName || bookmaker} width={330} height={88} style={{ objectFit: "contain" }} /> : <span style={{ fontSize: 40, fontWeight: 700 }}>{resolved?.displayName || bookmaker}</span>}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 20 }}>
+            {logo ? <img src={logo} alt={resolved?.displayName || bookmaker} width={compactLogo ? 88 : 330} height={88} style={{ objectFit: "contain" }} /> : null}
+            {compactLogo || !logo ? <span style={{ fontSize: compactLogo ? 34 : 40, fontWeight: 700, maxWidth: 280 }}>{resolved?.displayName || bookmaker}</span> : null}
+          </div>
         </div>
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", marginTop: 24, color: "#93a6a5", fontSize: 20 }}><span>Price recorded when published</span><span style={{ color: "#caff70" }}>ilmargine.bet</span></div>
     </div>,
-    { width: 1200, height: 675, headers: { "Cache-Control": "public, max-age=86400, s-maxage=604800", "X-Card-Version": "props-v2" } },
+    { width: 1200, height: 675, headers: { "Cache-Control": "public, max-age=86400, s-maxage=604800", "X-Card-Version": "props-v3" } },
   );
 }

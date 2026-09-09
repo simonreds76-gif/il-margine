@@ -5,6 +5,7 @@ import { formatMatchDate, formatOdds, formatStake } from "@/lib/format";
 import { publicTipPath } from "@/lib/tip-seo";
 import { isWorldCupPropsTip } from "@/lib/world-cup-tips";
 import { telegramBookmakerPartner } from "@/lib/telegram-bookmakers";
+import { resolveBookmakerLogo } from "@/lib/bookmaker-logos";
 
 type BookmakerShape = {
   name?: string | null;
@@ -34,6 +35,7 @@ type TelegramMessageEntity = { type: "bold" | "text_link"; offset: number; lengt
 
 type TelegramMessagePayload = {
   text: string;
+  html: string;
   entities: TelegramMessageEntity[];
   reply_markup: { inline_keyboard: { text: string; url: string }[][] };
 };
@@ -58,7 +60,25 @@ function firstBookmaker(bookmaker: PlayerPropsTelegramTip["bookmaker"]): Bookmak
 
 function bookmakerLabel(tip: PlayerPropsTelegramTip): string | null {
   const bookmaker = firstBookmaker(tip.bookmaker);
-  return bookmaker?.short_name || bookmaker?.name || null;
+  return resolveBookmakerLogo(bookmaker)?.displayName || bookmaker?.short_name || bookmaker?.name || null;
+}
+
+function escapeHtml(value: string): string {
+  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+// The builder emits disjoint spans. Serialize before multipart normalizes LF to
+// CRLF: Telegram parses tags against the received caption, so offsets cannot drift.
+function telegramHtml(text: string, entities: TelegramMessageEntity[]): string {
+  let html = "";
+  let cursor = 0;
+  for (const entity of entities) {
+    html += escapeHtml(text.slice(cursor, entity.offset));
+    const label = escapeHtml(text.slice(entity.offset, entity.offset + entity.length));
+    html += entity.type === "bold" ? `<b>${label}</b>` : `<a href="${escapeHtml(entity.url!)}">${label}</a>`;
+    cursor = entity.offset + entity.length;
+  }
+  return html + escapeHtml(text.slice(cursor));
 }
 
 export function playerPropsTipUrl(tip: PlayerPropsTelegramTip): string {
@@ -139,7 +159,7 @@ export function renderPlayerPropsTipPayload(tip: PlayerPropsTelegramTip): Telegr
   append("Odds recorded at publication; availability can change.");
   if (partner) { newline(); append("Bookmaker link is an affiliate link."); }
 
-  return { text, entities, reply_markup: { inline_keyboard: [
+  return { text, html: telegramHtml(text, entities), entities, reply_markup: { inline_keyboard: [
     ...(partner ? [[{ text: `Open ${partner.name} ↗`, url: partner.url }]] : []),
     [{ text: "Full pick & results", url }],
   ] } };
@@ -148,7 +168,7 @@ export function renderPlayerPropsTipPayload(tip: PlayerPropsTelegramTip): Telegr
 function playerPropsTipCardUrl(tip: PlayerPropsTelegramTip): string {
   const bookmaker = bookmakerLabel(tip);
   const params = new URLSearchParams({
-    v: "2",
+    v: "3",
     scope: isWorldCupPropsTip(tip) ? "worldcup" : "props",
     event: tip.event || "Player props",
     player: tip.player || "",
@@ -190,8 +210,8 @@ async function sendTelegramPhotoUpload(
     const form = new FormData();
     form.append("chat_id", chatId);
     form.append("photo", cardBlob, `ilmargine-player-prop-${tip.id}.png`);
-    form.append("caption", payload.text);
-    form.append("caption_entities", JSON.stringify(payload.entities));
+    form.append("caption", payload.html);
+    form.append("parse_mode", "HTML");
     form.append("reply_markup", JSON.stringify(payload.reply_markup));
 
     const response = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
@@ -218,8 +238,8 @@ async function sendTelegramText(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         chat_id: chatId,
-        text: payload.text,
-        entities: payload.entities,
+        text: payload.html,
+        parse_mode: "HTML",
         reply_markup: payload.reply_markup,
         disable_web_page_preview: true,
       }),
