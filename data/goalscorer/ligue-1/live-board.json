@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-07T13:08:24Z",
+  "generated_at": "2026-09-09T12:04:02Z",
   "league": "ligue-1",
   "row_count": 0,
   "stats": {
     "historical_rows": 25633,
-    "odds_rows": 0,
+    "odds_rows": 44,
     "matched_rows": 0,
-    "missing_player_history": 0,
+    "missing_player_history": 46,
     "missing_team_mapping": 0,
     "fallback_rows": 0,
     "qualified_rows": 0,
@@ -22,9 +22,9 @@
     "position_upgrade_rows": 0,
     "role_adjusted_rows": 0,
     "fixtures_with_confirmed_lineups": 0,
-    "fixtures_with_expected_lineups": 0,
+    "fixtures_with_expected_lineups": 1,
     "fixtures_clean": 0,
-    "fixtures_degraded": 0,
+    "fixtures_degraded": 2,
     "fixtures_quarantined": 0,
     "confirmed_starter_rows": 0,
     "confirmed_bench_rows": 0,
@@ -34,6 +34,235 @@
     "not_in_squad_rows": 0,
     "avg_ev": 0.0
   },
-  "fixtures": [],
+  "fixtures": [
+    {
+      "match_date": "2026-09-11",
+      "home_team": "Rennes",
+      "away_team": "Marseille",
+      "league": "ligue-1",
+      "competition": "",
+      "bookmaker": "",
+      "lineup_input": "expected_xi",
+      "trust_tier": "T2",
+      "corruption_score": 0.0,
+      "corruption_flags": [],
+      "home_player_checks": [
+        {
+          "name": "Brice Samba",
+          "status": "plausible",
+          "known_team_keys": [
+            "rennes"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Przemysław Frankowski",
+          "status": "plausible",
+          "known_team_keys": [
+            "rennes"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Charlie Cresswell",
+          "status": "plausible",
+          "known_team_keys": [
+            "rennes"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Anthony Rouault",
+          "status": "plausible",
+          "known_team_keys": [
+            "rennes"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Quentin Merlin",
+          "status": "plausible",
+          "known_team_keys": [
+            "rennes"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Valentin Rongier",
+          "status": "plausible",
+          "known_team_keys": [
+            "rennes"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Ludovic Blas",
+          "status": "plausible",
+          "known_team_keys": [
+            "rennes"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Sebastian Szymański",
+          "status": "plausible",
+          "known_team_keys": [
+            "rennes"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Mahdi Camara",
+          "status": "plausible",
+          "known_team_keys": [
+            "rennes"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Mousa Tamari",
+          "status": "plausible",
+          "known_team_keys": [
+            "rennes"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Estéban Lepaul",
+          "status": "plausible",
+          "known_team_keys": [
+            "rennes"
+          ],
+          "score": 0.0,
+          "flags": []
+        }
+      ],
+      "away_player_checks": [
+        {
+          "name": "Jeffrey De Lange",
+          "status": "plausible",
+          "known_team_keys": [
+            "marseille"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Timothy Weah",
+          "status": "plausible",
+          "known_team_keys": [
+            "marseille"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "CJ Egan-Riley",
+          "status": "plausible",
+          "known_team_keys": [
+            "marseille"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Nayef Aguerd",
+          "status": "untracked",
+          "known_team_keys": [],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Emerson",
+          "status": "plausible",
+          "known_team_keys": [
+            "marseille"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Himad Abdelli",
+          "status": "plausible",
+          "known_team_keys": [
+            "marseille"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Pierre-Emile Højbjerg",
+          "status": "plausible",
+          "known_team_keys": [
+            "marseille"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Amine Harit",
+          "status": "plausible",
+          "known_team_keys": [
+            "marseille"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Angel Gomes",
+          "status": "plausible",
+          "known_team_keys": [
+            "marseille"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Igor Paixão",
+          "status": "plausible",
+          "known_team_keys": [
+            "marseille"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Amine Gouiri",
+          "status": "plausible",
+          "known_team_keys": [
+            "marseille"
+          ],
+          "score": 0.0,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "match_date": "2026-09-11",
+      "home_team": "Stade Rennais FC",
+      "away_team": "Olympique Marseille",
+      "league": "ligue-1",
+      "competition": "France - Ligue 1",
+      "bookmaker": "Bet365",
+      "lineup_input": "none",
+      "trust_tier": "T2",
+      "corruption_score": 1.0,
+      "corruption_flags": [
+        "no_lineup_payload"
+      ],
+      "home_player_checks": [],
+      "away_player_checks": []
+    }
+  ],
   "rows": []
 }
