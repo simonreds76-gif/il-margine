@@ -29,7 +29,7 @@ async function remote(url: string) {
   } catch { return null; }
 }
 type Highlight = { id: string; player: string; player_photo_url?: string; match: string; date: string; best_odds: number; fair_odds: number;
-  league?: string; competition?: string; team?: string; best_bookmaker?: string; goals_scored: number; super_sub_win?: boolean; super_sub_replacement?: string };
+  league?: string; competition?: string; team?: string; best_bookmaker?: string; goals_scored: number; super_sub_win?: boolean; super_sub_replacement?: string; super_sub_replacement_goals?: number };
 
 async function readClock() { return Date.now(); }
 
@@ -53,7 +53,8 @@ export default async function FairOddsLabPage({ searchParams }: { searchParams?:
   const board = isDailyBoard(raw) ? raw : emptyBoard;
   const highlights: Highlight[] = Array.isArray(highlightsRaw?.highlights) ? highlightsRaw.highlights.filter((h: Highlight) =>
     h && typeof h.player === "string" && typeof h.match === "string" && Number.isFinite(h.best_odds) && h.best_odds > 1 &&
-    Number.isFinite(h.fair_odds) && h.fair_odds > 1 && h.best_odds > h.fair_odds && h.goals_scored > 0 && !h.super_sub_win).slice(0, 6) : [];
+    Number.isFinite(h.fair_odds) && h.fair_odds > 1 && h.best_odds > h.fair_odds &&
+    (h.super_sub_win ? h.best_bookmaker?.toLowerCase().replace(/[^a-z0-9]/g, "") === "bet365" && !!h.super_sub_replacement?.trim() && (h.super_sub_replacement_goals ?? 0) > 0 : h.goals_scored > 0)).slice(0, 6) : [];
   const structured = { "@context": "https://schema.org", "@type": "WebPage", name: "Goalscorer Fair Odds Lab", url: `${BASE_URL}/fair-odds-lab` };
   return <main className="min-h-screen bg-[#0e181d] text-slate-100">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structured).replace(/</g, "\\u003c") }} />
@@ -63,6 +64,7 @@ export default async function FairOddsLabPage({ searchParams }: { searchParams?:
         id: h.id, player: h.player, playerPhotoUrl: highlightPortrait(h), match: h.match, date: h.date, team: h.team, league: h.league,
         competition: h.competition || "Goalscorer", bestBookmaker: h.best_bookmaker || "Bet365",
         bestOdds: h.best_odds, fairOdds: h.fair_odds, goalsScored: h.goals_scored,
+        superSubWin: h.super_sub_win, superSubReplacement: h.super_sub_replacement, superSubReplacementGoals: h.super_sub_replacement_goals,
         modelChancePct: 100 / h.fair_odds, marketChancePct: 100 / h.best_odds,
         priceGapPp: 100 / h.fair_odds - 100 / h.best_odds,
       }))} />}

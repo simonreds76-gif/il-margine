@@ -242,7 +242,7 @@ function HitTicket({ highlight }: { highlight: LabHighlight }) {
           </div>
           <div className="border-l border-amber-300/20 bg-amber-300/[0.065] p-3">
             <div className="text-[9px] font-black uppercase tracking-[0.14em] text-amber-100/80">
-              Our chance
+              Player chance
             </div>
             <div className="mt-1 font-mono text-2xl font-black text-amber-100">
               {highlight.modelChancePct.toFixed(1)}%
@@ -268,6 +268,7 @@ function HitTicket({ highlight }: { highlight: LabHighlight }) {
         <div className="mt-3 text-xs leading-5 text-slate-500">
           {highlight.bestBookmaker} offered higher odds than our estimated fair price.
         </div>
+        {highlight.superSubWin && <p className="mt-3 rounded-xl border border-cyan-300/20 bg-cyan-300/10 p-3 text-xs leading-5 text-cyan-100"><strong>Super Sub win:</strong> {highlight.superSubReplacement} scored after replacing {highlight.player}. The original player did not score; the probability above is for the original player only.</p>}
       </div>
     </article>
   );
@@ -285,13 +286,13 @@ export function LabHitsSection({ highlights }: { highlights: LabHighlight[] }) {
             Lab hits
           </div>
           <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-50">
-            The price stood out. The player scored.
+            The latest winning comparisons.
           </h2>
         </div>
 
       </div>
       <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-500">
-        Players who scored after we recorded bookmaker odds above our estimated fair price.
+        Recorded bookmaker prices above our estimated fair odds. Super Sub wins name the replacement who scored.
         Winning examples only; not the complete performance record.
       </p>
 
