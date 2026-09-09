@@ -204,6 +204,7 @@ def record_daily_board(payload, root=ROOT):
                         captured_at=p['priceCapturedAt'],compared_at=p['modelGeneratedAt'],recorded_at=payload['generatedAt'],
                         recommended_stake_units='0',evaluation_stake_units='1',public_action='comparison_only',
                         public_policy_reason='daily_first_official_v1',super_sub_contract_verified='0',
+                        super_sub_tracking_policy='bet365_automatic_20260909',
                         settled='',goals_scored='',bet_outcome='',settled_at='',pnl_units='',settlement_note=''))
                     seen.add(key);added+=1
         if added:

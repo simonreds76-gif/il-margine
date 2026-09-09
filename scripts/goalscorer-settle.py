@@ -30,6 +30,7 @@ from scripts._lib.run_status import run_status
 DEFAULT_RESULTS_DIR = ROOT / "data" / "goalscorer" / "match-results"
 DEFAULT_ALIAS_PATH = ROOT / "data" / "goalscorer" / "fotmob-player-aliases.json"
 SUPER_SUB_BOOKMAKER_TOKENS = {"bet365"}
+SUPER_SUB_POLICY = "bet365_automatic_20260909"
 
 TEAM_KEY_OVERRIDES = {
     "arsenal fc": "arsenal",
@@ -242,10 +243,15 @@ def _normalise_bookmaker(value: Any) -> str:
 
 
 def _is_super_sub_eligible_bookmaker(row: dict) -> bool:
-    if row.get("signal_type") == "fair_odds_daily_board" and row.get("super_sub_contract_verified") != "1":
-        return False
     bookmaker = _normalise_bookmaker(row.get("best_bookmaker"))
     return bookmaker in SUPER_SUB_BOOKMAKER_TOKENS
+
+
+def _needs_super_sub_recheck(row: dict) -> bool:
+    return (row.get("signal_type") == "fair_odds_daily_board"
+            and _is_super_sub_eligible_bookmaker(row)
+            and row.get("bet_outcome") == "lost"
+            and row.get("super_sub_settlement_policy") != SUPER_SUB_POLICY)
 
 
 def _settle_super_sub_replacement(
@@ -259,47 +265,42 @@ def _settle_super_sub_replacement(
     FotMob exposes each player's sub-in/sub-out minute in the match detail we
     archive. We only treat that as a verified direct replacement when exactly
     one player left and exactly one player entered for the same team/minute.
-    Multiple substitutions at the same minute stay as normal named-player
-    losses because we cannot prove the direct replacement from this source.
+    Multiple substitutions at the same minute remain pending for review.
+    Follow a verified one-for-one replacement chain when the substitute also exits.
     """
 
     row["super_sub_eligible_bookmaker"] = "1" if _is_super_sub_eligible_bookmaker(row) else "0"
     row["super_sub_checked"] = "0"
     row["super_sub_replacement"] = ""
     row["super_sub_replacement_goals"] = "0"
+    row["super_sub_replacement_chain"] = ""
 
     if row["super_sub_eligible_bookmaker"] != "1":
         return None
-    if not bool(player_entry.get("subbed_off")):
-        return None
-
-    sub_out_minute = _parse_int(player_entry.get("sub_out_minute"))
-    if sub_out_minute <= 0:
-        return None
-
-    outgoing = [
-        player
-        for player in team_players
-        if bool(player.get("subbed_off")) and _parse_int(player.get("sub_out_minute")) == sub_out_minute
-    ]
-    incoming = [
-        player
-        for player in team_players
-        if bool(player.get("subbed_on")) and _parse_int(player.get("sub_in_minute")) == sub_out_minute
-    ]
-    row["super_sub_checked"] = "1"
-
-    if len(outgoing) != 1 or len(incoming) != 1:
-        return None
-
-    replacement = incoming[0]
-    replacement_name = _player_name(replacement)
-    replacement_goals = _non_own_goal_count(replacement)
-    row["super_sub_replacement"] = replacement_name
-    row["super_sub_replacement_goals"] = str(replacement_goals)
-
-    if replacement_goals > 0:
-        return "won", f"super_sub_replacement_scored:{replacement_name}", replacement_goals
+    current = player_entry
+    chain = []
+    last_minute = -1
+    for _ in range(len(team_players)):
+        if not bool(current.get("subbed_off")):
+            return None
+        minute = _parse_int(current.get("sub_out_minute"))
+        row["super_sub_checked"] = "1"
+        if minute <= last_minute or minute <= 0:
+            return "pending", "super_sub_replacement_unresolved", 0
+        outgoing = [p for p in team_players if p.get("subbed_off") and _parse_int(p.get("sub_out_minute")) == minute]
+        incoming = [p for p in team_players if p.get("subbed_on") and _parse_int(p.get("sub_in_minute")) == minute]
+        if len(outgoing) != 1 or len(incoming) != 1:
+            return "pending", "super_sub_replacement_unresolved", 0
+        current = incoming[0]
+        replacement_name = _player_name(current)
+        chain.append(replacement_name)
+        row["super_sub_replacement_chain"] = json.dumps(chain, ensure_ascii=False)
+        row["super_sub_replacement"] = replacement_name
+        goals = _non_own_goal_count(current)
+        row["super_sub_replacement_goals"] = str(goals)
+        if goals > 0:
+            return "won", f"super_sub_replacement_scored:{replacement_name}", goals
+        last_minute = minute
     return None
 
 
@@ -393,6 +394,8 @@ def settle_row(
         return "void", "confirmed_non_runner", 0
 
     non_og_goals = _non_own_goal_count(player_entry)
+    row["named_player_goals"] = str(non_og_goals)
+    row["named_player_outcome"] = "won" if non_og_goals > 0 else "lost"
 
     if non_og_goals > 0:
         return "won", f"scored_{non_og_goals}_goals", non_og_goals
@@ -458,6 +461,10 @@ def main() -> int:
             if field not in fieldnames:
                 fieldnames.append(field)
 
+    for field in ("named_player_goals", "named_player_outcome", "super_sub_settlement_policy", "super_sub_replacement_chain"):
+        if field not in fieldnames:
+            fieldnames.append(field)
+
     print("\n" + "=" * 64)
     print("  IL MARGINE - Goalscorer FotMob Settler")
     print("=" * 64)
@@ -479,7 +486,7 @@ def main() -> int:
     still_open = 0
 
     for row in rows:
-        if str(row.get("settled") or "").strip().lower() in {"1", "true", "yes", "settled"}:
+        if str(row.get("settled") or "").strip().lower() in {"1", "true", "yes", "settled"} and not _needs_super_sub_recheck(row):
             already_settled += 1
             continue
 
@@ -496,6 +503,9 @@ def main() -> int:
             continue
         if outcome == "pending":
             row["settlement_note"] = note
+            if _needs_super_sub_recheck(row):
+                # Remove the old named-player loss from financial totals while resolving its replacement.
+                row.update(settled="", bet_outcome="", pnl_units="", settled_at="")
             pending += 1
             continue
 
@@ -505,7 +515,8 @@ def main() -> int:
             stake_units = 1.0
         pnl_units = 0.0 if outcome == "void" else ((stake_units * (odds - 1.0)) if outcome == "won" else -stake_units)
         row["settled"] = "1"
-        row["goals_scored"] = str(goals_scored)
+        row["goals_scored"] = row.get("named_player_goals", str(goals_scored))
+        row["super_sub_settlement_policy"] = SUPER_SUB_POLICY if _is_super_sub_eligible_bookmaker(row) else "named_player_only"
         row["bet_outcome"] = outcome
         row["settled_at"] = now_utc.replace(microsecond=0).isoformat().replace("+00:00", "Z")
         row["pnl_units"] = f"{pnl_units:.4f}"

@@ -98,7 +98,7 @@ def highlight_from_row(row: dict[str, str], league: str) -> dict[str, Any] | Non
         "model_chance_pct": round(model_prob * 100.0, 1),
         "market_chance_pct": round(market_prob * 100.0, 1),
         "price_gap_pp": round(price_gap_pp, 1),
-        "goals_scored": int(parse_float(row.get("goals_scored")) or 1),
+        "goals_scored": 0 if super_sub_win else int(parse_float(row.get("named_player_goals") or row.get("goals_scored")) or 1),
         "super_sub_win": super_sub_win,
         "super_sub_replacement": super_sub_replacement,
         "super_sub_replacement_goals": super_sub_replacement_goals,
