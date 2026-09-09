@@ -1258,6 +1258,9 @@ def _apply_surface_points_mismatch_guard(
 
 def _calibrate_match_probability(p1_win, series_bucket, surface, confidence):
     p = _clamp(float(p1_win), 1e-6, 1.0 - 1e-6)
+    # No favourite exists at a numerical tie; preserve player-swap symmetry.
+    if abs(p - 0.5) <= 1e-12:
+        return 0.5
     fav_is_p1 = p >= 0.5
     q_raw = p if fav_is_p1 else (1.0 - p)
     z = PROB_CAL_A + PROB_CAL_B * _logit(q_raw)

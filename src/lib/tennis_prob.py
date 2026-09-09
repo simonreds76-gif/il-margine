@@ -21,37 +21,33 @@ def _tb_server_is_a(total_points: int) -> bool:
 
 
 def _prob_tiebreak_dp(p_a: float, p_b: float, a_serves_first: bool) -> float:
-    """P(A wins tiebreak) via DP. At 6-6 we use iterative fixed point for extended TB."""
+    """P(A wins a seven-point, win-by-two tiebreak), including its exact tail."""
     p_a = max(0.01, min(0.99, p_a))
     p_b = max(0.01, min(0.99, p_b))
-    max_pts = 30
-    dp = [[None] * (max_pts + 1) for _ in range(max_pts + 1)]
 
     def p_win_point(total: int) -> float:
         srv_a = _tb_server_is_a(total) if a_serves_first else not _tb_server_is_a(total)
         return p_a if srv_a else (1.0 - p_b)
 
-    for a in range(max_pts, -1, -1):
-        for b in range(max_pts, -1, -1):
-            if a >= 7 and a - b >= 2:
-                dp[a][b] = 1.0
-            elif b >= 7 and b - a >= 2:
-                dp[a][b] = 0.0
-            elif a + b >= 12 and a == b and a > 6:
-                total = a + b
-                p = p_win_point(total)
-                p_next_a = p_win_point(total + 1)
-                p_next_b = p_win_point(total + 2)
-                denom = 1.0 - (p * (1 - p_next_a) + (1 - p) * (1 - p_next_b))
-                dp[a][b] = (p * p_next_a) / denom if abs(denom) >= 1e-9 else 0.5
-            else:
-                total = a + b
-                p = p_win_point(total)
-                next_a = dp[a + 1][b] if a + 1 <= max_pts else 0.5
-                next_b = dp[a][b + 1] if b + 1 <= max_pts else 0.5
-                dp[a][b] = p * next_a + (1.0 - p) * next_b
+    @lru_cache(maxsize=None)
+    def win(a: int, b: int) -> float:
+        if a >= 7 and a - b >= 2:
+            return 1.0
+        if b >= 7 and b - a >= 2:
+            return 0.0
+        if a == b and a >= 6:
+            # From a tie, each two-point block has one serve from each player.
+            # A split returns to an equivalent tie with the server order reversed;
+            # the products for winning/losing both points are unchanged.
+            first = p_win_point(a + b)
+            second = p_win_point(a + b + 1)
+            win_both = first * second
+            lose_both = (1.0 - first) * (1.0 - second)
+            return win_both / (win_both + lose_both)
+        p = p_win_point(a + b)
+        return p * win(a + 1, b) + (1.0 - p) * win(a, b + 1)
 
-    return dp[0][0]
+    return win(0, 0)
 
 
 def prob_tiebreak(p_a: float, p_b: float, a_serves_first: bool = True) -> float:

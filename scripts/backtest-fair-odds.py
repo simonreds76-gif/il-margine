@@ -1487,6 +1487,9 @@ def _apply_series_probability_guard(p1_win: float, series: str, surface: str, co
 
 def _calibrate_match_prob(p1_win: float, series: str, surface: str, confidence: str) -> float:
     p = _safe_prob(p1_win)
+    # No favourite exists at a numerical tie; preserve player-swap symmetry.
+    if abs(p - 0.5) <= 1e-12:
+        return 0.5
     fav_is_p1 = p >= 0.5
     q_raw = p if fav_is_p1 else (1.0 - p)
     q_raw = _safe_prob(q_raw)
