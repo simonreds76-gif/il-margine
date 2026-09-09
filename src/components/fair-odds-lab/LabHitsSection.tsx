@@ -247,7 +247,7 @@ function HitTicket({ highlight }: { highlight: LabHighlight }) {
         <div className="mt-4 grid grid-cols-3 overflow-hidden rounded-2xl border border-slate-800/80 bg-slate-950/70">
           <div className="p-3">
             <div className="text-[9px] font-black uppercase tracking-[0.14em] text-emerald-200/80">
-              Fair
+              Our fair odds
             </div>
             <div className="mt-1 font-mono text-2xl font-black text-emerald-100">
               {formatOdds(highlight.fairOdds)}
@@ -255,7 +255,7 @@ function HitTicket({ highlight }: { highlight: LabHighlight }) {
           </div>
           <div className="border-l border-slate-800/80 p-3">
             <div className="text-[9px] font-black uppercase tracking-[0.14em] text-slate-500">
-              Reference
+              Bookmaker odds
             </div>
             <div className="mt-1 flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2">
               <span className="font-mono text-2xl font-black text-slate-100">
@@ -266,13 +266,13 @@ function HitTicket({ highlight }: { highlight: LabHighlight }) {
           </div>
           <div className="border-l border-amber-300/20 bg-amber-300/[0.065] p-3">
             <div className="text-[9px] font-black uppercase tracking-[0.14em] text-amber-100/80">
-              Gap
+              Our chance
             </div>
             <div className="mt-1 font-mono text-2xl font-black text-amber-100">
-              +{highlight.priceGapPp.toFixed(1)}
+              {highlight.modelChancePct.toFixed(1)}%
             </div>
             <div className="text-[9px] font-black uppercase tracking-[0.14em] text-amber-100/60">
-              pp
+              of scoring
             </div>
           </div>
         </div>
@@ -290,7 +290,7 @@ function HitTicket({ highlight }: { highlight: LabHighlight }) {
         </div>
 
         <div className="mt-3 text-xs leading-5 text-slate-500">
-          Reference: {highlight.bestBookmaker} · Lab vs market gap.
+          {highlight.bestBookmaker} offered higher odds than our estimated fair price.
         </div>
       </div>
     </article>
@@ -315,7 +315,7 @@ export function LabHitsSection({ highlights }: { highlights: LabHighlight[] }) {
 
       </div>
       <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-500">
-        Selected recorded positive-EV comparisons where the named player scored.
+        Players who scored after we recorded bookmaker odds above our estimated fair price.
         Winning examples only; not the complete performance record.
       </p>
 

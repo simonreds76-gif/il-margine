@@ -82,4 +82,25 @@
 #im-pitch-lab .ip-coverage strong{color:#cadce5;font-weight:600}
 #im-pitch-lab .ip-estimate{color:#d5b57b;font-size:11px;line-height:1.6}
 #im-pitch-lab .ip-book{font-size:11px}
+/* Every player carries both price labels; colour reinforces the wording. */
+#im-pitch-lab .ip-price{display:grid;width:100%;gap:3px;padding:0;background:transparent;white-space:normal}
+#im-pitch-lab .ip-price .ip-fair,#im-pitch-lab .ip-price .ip-book{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:38px;padding:4px 2px;border:1px solid #76cfbe40;border-radius:6px;background:#081e23;color:#d2f5ed}
+#im-pitch-lab .ip-price .ip-book{border-color:#e5c96b55;background:#292817;color:#ffe39a}
+#im-pitch-lab .ip-price .ip-price-label{font:600 9px/1.2 Inter,system-ui,sans-serif;letter-spacing:0;color:inherit}
+#im-pitch-lab .ip-price strong{font:700 14px/1.25 ui-monospace,monospace}
+#im-pitch-lab .ip-player{padding:6px 3px;gap:5px}
+#im-pitch-lab .ip-row{min-height:184px}
+#im-pitch-lab .ip-player .ip-gap{font:600 10px/1.25 Inter,system-ui,sans-serif;white-space:normal;min-height:25px;display:grid;place-items:center}
+#im-pitch-lab .ip-aged .ip-book{border-style:dashed;color:#d2c5a2}
+#im-pitch-lab .ip-price-guide{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:16px;background:#13262b;border:1px solid #30484f;border-radius:12px}
+#im-pitch-lab .ip-price-guide p{font-size:12px;color:#b7c9ce;line-height:1.6;margin:7px 0 0}
+#im-pitch-lab .ip-guide-label{font-weight:750;color:#d2f5ed;font-size:13px}
+#im-pitch-lab .ip-guide-book{color:#ffe39a}
+#im-pitch-lab .ip-guide-value{color:#83e8be}
+#im-pitch-lab .ip-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+#im-pitch-lab .ip-metrics>div{padding:12px;border:1px solid #76cfbe40;background:#0c2026;border-radius:8px}
+#im-pitch-lab .ip-metrics>div+div{border-color:#e5c96b55;color:#ffe39a}
+#im-pitch-lab .ip-comparison-note{font-size:13px;line-height:1.65;color:#cfe2dc;margin:12px 0}
+#im-pitch-lab .ip-verdict{font-size:11px}
+@container(max-width:550px){#im-pitch-lab .ip-price-guide{grid-template-columns:1fr;gap:12px}#im-pitch-lab .ip-price-guide>div+div{border-top:1px solid #30484f;padding-top:12px}#im-pitch-lab th:first-child,#im-pitch-lab td:first-child{width:36%}}
 @container(max-width:550px){#im-pitch-lab .ip-search{align-items:stretch;flex-direction:column;gap:7px}#im-pitch-lab .ip-coverage{flex-direction:column;gap:4px;padding:10px 12px}}
