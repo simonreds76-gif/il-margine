@@ -65,6 +65,7 @@ export type LabArtifact = {
 };
 
 export type LabHighlight = {
+  playerPhotoUrl?: string;
   id: string;
   date: string;
   kickoff?: string;

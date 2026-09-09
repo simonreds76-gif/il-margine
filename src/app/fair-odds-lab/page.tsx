@@ -6,6 +6,7 @@ import { DailyPitchBoard } from "@/components/fair-odds-lab/DailyPitchBoard";
 import { emptyBoard, isDailyBoard } from "@/components/fair-odds-lab/daily-board-data";
 import { LabHitsSection } from "@/components/fair-odds-lab/LabHitsSection";
 import { BASE_URL } from "@/lib/config";
+import playerPortraits from "../../../data/goalscorer/lab-player-portraits.json";
 
 export const metadata: Metadata = {
   title: "Goalscorer Fair Odds Lab | Starting XI & Bet365 Comparison",
@@ -27,10 +28,18 @@ async function remote(url: string) {
     return response.ok ? await response.json() : null;
   } catch { return null; }
 }
-type Highlight = { id: string; player: string; match: string; date: string; best_odds: number; fair_odds: number;
+type Highlight = { id: string; player: string; player_photo_url?: string; match: string; date: string; best_odds: number; fair_odds: number;
   league?: string; competition?: string; team?: string; best_bookmaker?: string; goals_scored: number; super_sub_win?: boolean; super_sub_replacement?: string };
 
 async function readClock() { return Date.now(); }
+
+function highlightPortrait(h: Highlight) {
+  if (/^https:\/\/images\.fotmob\.com\/image_resources\/playerimages\/\d+\.png$/.test(h.player_photo_url ?? "")) return h.player_photo_url;
+  // Legacy player_id values belong to Understat, not FotMob. Use verified identities only.
+  const name = h.player.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const id = (playerPortraits as Record<string, string>)[`${h.league}|${name}`];
+  return id ? `https://images.fotmob.com/image_resources/playerimages/${id}.png` : undefined;
+}
 
 export default async function FairOddsLabPage({ searchParams }: { searchParams?: Promise<Record<string, string | string[] | undefined>> }) {
   const params = searchParams ? await searchParams : {};
@@ -51,7 +60,7 @@ export default async function FairOddsLabPage({ searchParams }: { searchParams?:
     <DailyPitchBoard initial={board} boardUrl={boardUrl} asOf={asOf} preview={preview} />
     <div className="mx-auto max-w-[1220px] px-4 pb-10 sm:px-6">
       {highlights.length > 0 && <LabHitsSection highlights={highlights.map(h => ({
-        id: h.id, player: h.player, match: h.match, date: h.date, team: h.team, league: h.league,
+        id: h.id, player: h.player, playerPhotoUrl: highlightPortrait(h), match: h.match, date: h.date, team: h.team, league: h.league,
         competition: h.competition || "Goalscorer", bestBookmaker: h.best_bookmaker || "Bet365",
         bestOdds: h.best_odds, fairOdds: h.fair_odds, goalsScored: h.goals_scored,
         modelChancePct: 100 / h.fair_odds, marketChancePct: 100 / h.best_odds,

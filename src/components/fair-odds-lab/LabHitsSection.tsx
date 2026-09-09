@@ -3,6 +3,7 @@ import teamLogoManifest from "../../../data/goalscorer/team-logo-map.json";
 import { AbstractJersey } from "./AbstractJersey";
 import { BookmakerLogo } from "./BookmakerLogo";
 import { LogoBadge } from "./LogoBadge";
+import { HitPortrait } from "./HitPortrait";
 import type { LabHighlight, Signal } from "./types";
 const asText = (v: unknown) => typeof v === "string" ? v : "";
 const formatOdds = (v: number) => v.toFixed(2);
@@ -201,47 +202,22 @@ function HitTicket({ highlight }: { highlight: LabHighlight }) {
       </div>
 
       <div className="relative mt-4 border-t border-dashed border-slate-700/50 pt-4">
-        <div className="flex gap-4">
-          <div className="w-[72px] shrink-0">
-            <AbstractJersey
-              teamLogoPath={teamLogoPath}
-              teamPrimaryColor={style?.primary ?? "#10b981"}
-              teamSecondaryColor={style?.secondary ?? "#0f172a"}
-              shirtPattern={style?.pattern ?? "solid"}
-              accentEmerald={false}
-            />
-          </div>
-          <div className="min-w-0 flex-1">
-            <h3 className="break-words text-2xl font-black leading-tight tracking-tight text-slate-50">
-              {highlight.player}
-            </h3>
-            <div className="mt-1 text-sm font-semibold text-slate-500">
-              {teams.team}
-            </div>
-            <div className="mt-3 flex min-w-0 items-center gap-2 rounded-xl border border-slate-800/80 bg-slate-950/55 px-3 py-2">
-              <LogoBadge
-                src={teamLogoPath}
-                alt={`${teams.team} logo`}
-                fallback={teams.team}
-                size={24}
-              />
-              <span className="min-w-0 truncate text-xs font-semibold text-slate-300">
-                {teams.team}
-              </span>
-              <span className="shrink-0 text-[10px] font-black uppercase tracking-[0.16em] text-slate-600">
-                vs
-              </span>
-              <LogoBadge
-                src={opponentLogoPath}
-                alt={`${teams.opponent} logo`}
-                fallback={teams.opponent}
-                size={24}
-              />
-              <span className="min-w-0 truncate text-xs font-semibold text-slate-300">
-                {teams.opponent}
-              </span>
+        <div className="flex items-end gap-3 rounded-2xl bg-[radial-gradient(ellipse_at_bottom_right,rgba(16,185,129,0.12),transparent_70%)]">
+          <div className="min-w-0 flex-1 self-center py-4">
+            <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300/80">Anytime goalscorer</span>
+            <h3 className="mt-2 break-words text-[28px] font-black leading-[1.08] tracking-tight text-slate-50">{highlight.player}</h3>
+            <div className="mt-3 flex items-center gap-2 text-sm font-semibold text-slate-400">
+              <LogoBadge src={teamLogoPath} alt={`${teams.team} logo`} fallback={teams.team} size={28} />
+              <span>{teams.team}</span>
             </div>
           </div>
+          <HitPortrait name={highlight.player} photoUrl={highlight.playerPhotoUrl} fallback={
+            <AbstractJersey teamLogoPath={teamLogoPath} teamPrimaryColor={style?.primary ?? "#10b981"} teamSecondaryColor={style?.secondary ?? "#0f172a"} shirtPattern={style?.pattern ?? "solid"} accentEmerald={false} />
+          } />
+        </div>
+        <div className="flex items-center justify-between gap-3 rounded-xl border border-slate-800/80 bg-slate-950/55 px-3 py-3">
+          <span className="min-w-0 text-xs font-semibold leading-5 text-slate-300">{highlight.match}</span>
+          <LogoBadge src={opponentLogoPath} alt={`${teams.opponent} logo`} fallback={teams.opponent} size={26} />
         </div>
 
         <div className="mt-4 grid grid-cols-3 overflow-hidden rounded-2xl border border-slate-800/80 bg-slate-950/70">
