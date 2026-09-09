@@ -1407,6 +1407,32 @@ def rate_trend_text(payload: dict[str, Any]) -> str:
             + f" | data {freshness.get('status', 'UNKNOWN')}; 8 weeks/4 tournaments minimum, manual review before promotion.")
 
 
+def model_watchlist_summary() -> dict[str, Any]:
+    """Small persistent register: reading it adds no API or database work."""
+    registry = load_json(ROOT / "config" / "model-review-watchlist.json")
+    if registry.get("schema_version") != 1:
+        return {"status": "UNAVAILABLE", "candidates": [], "families": []}
+    return registry
+
+
+def model_watchlist_text(payload: dict[str, Any]) -> str:
+    registry = payload.get("model_review_watchlist") or {}
+    if registry.get("schema_version") != 1:
+        return "Model review register UNAVAILABLE: check registry before calling model coverage complete."
+    lines = ["MODEL REVIEW WATCHLIST"]
+    for candidate in registry.get("candidates", []):
+        history = candidate.get("historical_replay") or {}
+        label = candidate.get("label", "Unnamed candidate")
+        roi = history.get("roi_pct")
+        roi_label = f"{float(roi):+.2f}%" if roi is not None else "unknown"
+        capture = candidate.get("prospective_capture_status", "UNKNOWN")
+        lines.append(
+            f"{label} [RESEARCH]: historical replay ROI {roi_label}, n={history.get('bets', '?')} "
+            f"| prospective capture {capture} | review weekly; historical bets are not forward evidence."
+        )
+    return "\n".join(lines)
+
+
 def build_payload() -> dict[str, Any]:
     state = load_json(OUT_DIR / "research-lane-state.json")
     team_allowed = load_json(OUT_DIR / "team-shots-v3-ema20-allowed-leagues.json")
@@ -1497,6 +1523,7 @@ def build_payload() -> dict[str, Any]:
         "tennis_model_evidence": tennis_model_evidence,
         "tennis_props_v3": tennis_props_v3,
         "tennis_rate_trend": tennis_rate_trend,
+        "model_review_watchlist": model_watchlist_summary(),
         "tennis_props_v4": tennis_props_v4,
         "tennis_breaks_v1": tennis_breaks_v1,
         "tennis_venue_ace_factor_v1": tennis_venue_ace_v1,
@@ -1797,6 +1824,7 @@ def render_report(payload: dict[str, Any]) -> str:
         ]
     )
     lines.extend(["", rate_trend_text(payload)])
+    lines.extend(["", model_watchlist_text(payload)])
     return "\n".join(lines)
 
 
@@ -2042,6 +2070,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
         ]
     )
     lines.extend(["", rate_trend_text(payload)])
+    lines.extend(["", model_watchlist_text(payload)])
     return "\n".join(lines)
 
 
@@ -2282,6 +2311,7 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
         ]
     )
     lines.extend(["", rate_trend_text(payload)])
+    lines.extend(["", model_watchlist_text(payload)])
     return "\n".join(lines)
 
 

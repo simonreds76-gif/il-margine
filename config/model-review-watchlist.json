@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-09-09",
+  "review_cadence": "Saturday weekly review after the Tuesday research report; deeper review on first Saturday of each month",
+  "automatic_promotion": false,
+  "families": [
+    {"id": "tennis_ml", "report_key": "tennis_model_evidence", "scope": "Strict, Volume, Challenger ML v2, spread, grass, clay and CPI controls"},
+    {"id": "tennis_gaps", "report_key": "tennis_ml_gap_guard", "scope": "Strict and Volume gap experiments"},
+    {"id": "tennis_aces_df", "report_key": "tennis_props_shadow_decision", "scope": "Aces and double faults"},
+    {"id": "astra_aces_df", "report_key": "tennis_rate_trend", "scope": "Astra Aces and Astra DF, paired baseline/candidate"},
+    {"id": "tennis_props", "report_key": "tennis_props_v3", "scope": "Props v3/v4, venue ace and most-aces experiments"},
+    {"id": "tennis_breaks", "report_key": "tennis_breaks_v1", "scope": "Service breaks and break-point markets; price capture and settlement"},
+    {"id": "football_counts", "report_key": "football_counts_vnext", "scope": "Team shots and corners, warm-up and legacy controls kept separate"},
+    {"id": "team_fouls", "report_key": "team_fouls_v1", "scope": "Team fouls and source agreement"},
+    {"id": "gk_saves", "report_key": "goalkeeper_saves_v1", "scope": "GK Saves, distinguish shadow from value ladder"},
+    {"id": "goalscorers", "report_key": "goalscorer_v2", "scope": "Goalscorer and fair-odds research; full record, not winning examples"},
+    {"id": "assists", "report_key": "assist_value_v1", "scope": "Assists, market coverage and settlement"},
+    {"id": "infrastructure", "report_key": "automation_budget", "scope": "Workflow health, stale evidence, API budget and hosting impact"}
+  ],
+  "candidates": [
+    {
+      "id": "astra_volume_context_v1",
+      "label": "Astra Volume",
+      "model_id": "astra-tennis-context-v2-raw-research",
+      "model_sha256": "d2fa88cb767faa7a4a2659e9d415eac239801c246703c2836308c1904af66c9a",
+      "profile": "volume_200_hard",
+      "status": "FROZEN_VOLUME_RESEARCH",
+      "prospective_capture_status": "NOT_CONNECTED",
+      "live_routing": false,
+      "actual_stake": 0,
+      "historical_replay": {
+        "from": "2026-06-05", "through": "2026-09-08",
+        "bets": 69, "wins": 32, "losses": 37,
+        "stake_units": 105.5, "profit_units": 7.6475,
+        "roi_pct": 7.248815165876778,
+        "kind": "previously_inspected_reconstructed_replay_not_prospective"
+      },
+      "artifact": "data/tennis-ml-research/context-20260909/fixed-history/candidate-2026-raw.json",
+      "evidence": "docs/audits/tennis-context-fixed-calibration-20260909.md",
+      "next_action": "Connect append-only pre-match capture with the frozen raw-probability basis and 14 context features, exact historical profile rules, timestamps and separate settlements. Verify input parity before enabling collection. Do not relabel the 69 replay bets as forward evidence.",
+      "evaluation": "Assess Volume independently of Strict; retain fixed policy and weights. Track sample size, W/L, flat and tier ROI, CLV coverage, calibration, uncertainty and freshness. Selection of this lane followed inspection of 2026 results and requires genuinely new evidence."
+    }
+  ],
+  "review_checks": [
+    "Separate historical, reconstructed, shadow and actually published evidence",
+    "Compare lifetime and recent samples with previous review; retain losing and inactive models in the register",
+    "Check data timestamps, workflow completion, price coverage and overdue settlements",
+    "Do not equate missing collection with zero qualifying signals",
+    "Record keep collecting, investigate, paused or ready for review with an explicit reason",
+    "Never change live stakes or promote automatically from a small positive ROI",
+    "Avoid repeated full backtests when data and code are unchanged"
+  ]
+}

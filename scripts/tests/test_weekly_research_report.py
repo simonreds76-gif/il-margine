@@ -234,7 +234,7 @@ class WeeklyResearchReportTests(unittest.TestCase):
         payload["tennis_props_shadow_decision"].update({"settled": 14, "roi_pct": 30.5})
         message = REPORT["telegram_text"](payload)
         self.assertIn("KEEP COLLECTING: Strict gap is positive but provisional", message)
-        self.assertIn("WATCH ONLY: Aces/DF is promising but far too small", message)
+        self.assertIn("WATCH ONLY: Aces/DF remains provisional; review all evidence gates", message)
 
     def test_missing_local_gap_evidence_is_not_rendered_as_zero_results(self) -> None:
         payload = REPORT["build_payload"]()
