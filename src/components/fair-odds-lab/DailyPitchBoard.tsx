@@ -118,6 +118,23 @@ export function DailyPitchBoard({ initial, boardUrl, asOf, preview = false }: { 
     <div className="ip-controls"><div className="ip-dates" aria-label="Match date"><button type="button" aria-pressed={date === "upcoming"} onClick={() => setDate("upcoming")}>Upcoming<span>All available</span></button>{dates.map(d => <button key={d} type="button" aria-pressed={date === d} onClick={() => setDate(d)}>{dateLabel(d)}<span>{board.fixtures.filter(f => f.date === d && (league === "all" || f.league === league)).length} matches</span></button>)}</div><div className="ip-switch" aria-label="Comparison view">{["pitch", "list"].map(v => <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)}>{v === "pitch" ? "Pitch" : "List"}</button>)}</div></div>
     <div className="ip-resultshead"><div><span className="ip-eyebrow">{leagueName}</span><h2>{date === "upcoming" ? "Upcoming matches" : dateLabel(date)}</h2></div><span className="ip-sub" aria-live="polite">{fixtures.length} matches · {fixtures.filter(f => f.lineupStatus === "confirmed").length} confirmed XIs</span></div>
     <div className="ip-price-guide"><div><span className="ip-guide-label">Our fair odds</span><p>The price our model estimates for this player to score.</p></div><div><span className="ip-guide-label ip-guide-book">Bet365</span><p>The bookmaker’s offered odds for the same player.</p></div><div><span className="ip-guide-label ip-guide-value">Better price</span><p>Bet365 odds are higher than our fair odds. That suggests value according to our model.</p></div></div><div className="ip-legend"><span>Decimal odds include your stake: 3.00 returns £3 per £1 if the bet wins.</span><span>* Estimate = limited player history; no value comparison</span><span>PEN = expected penalty taker · Goalkeepers unpriced</span><span>Tap a player for details · All times UK · Updated {stamp(board.generatedAt)}</span></div>
+    <details className="ip-label-guide">
+      <summary>Player labels explained <span>Value, odds updates and lineups</span></summary>
+      <dl>{[
+        ["Better price", "Bet365 odds are higher than our fair odds: potential value according to our model."],
+        ["Below fair", "Bet365 odds are lower than our fair odds: no positive value according to our model."],
+        ["Matches fair", "Bet365 odds match our fair odds."],
+        ["Update due", "The displayed odds need checking again before we flag value. They may be too old, from before a lineup change, or part of an overdue data update. Tap the player to see when the odds were last checked."],
+        ["No odds", "Our feed has not supplied Bet365 odds for this player. This does not necessarily mean Bet365 has no market."],
+        ["Estimate* / Estimate", "Limited player history. We show estimated fair odds but exclude the player from value comparisons."],
+        ["Not compared", "We cannot make a current value comparison: usable fair odds, recent bookmaker odds or pre-match eligibility are missing. It does not mean the odds match."],
+        ["Unpriced / Data pending", "We do not yet have fair odds for this player. GK unpriced means we do not currently price goalkeepers."],
+        ["Match started", "Kickoff time has passed. These are pre-match prices, not live betting odds."],
+        ["PEN", "Expected penalty taker among the players in this lineup."],
+        ["Expected starter", "Predicted to start. Fair odds assume the player starts and can change when the official lineup arrives."],
+        ["Confirmed starter", "Named in the official starting lineup supplied by our feed."],
+      ].map(([label, description]) => <div key={label}><dt>{label}</dt><dd>{description}</dd></div>)}</dl>
+    </details>
     {(old || refreshFailed) && <p className="ip-pennews" role="status">{old ? "The latest update is overdue. You can still browse the last prices, but they won’t appear in the value shortlist until checked again." : "We couldn’t load the latest update. Showing the last available prices."}</p>}
     <section className="ip-shortlist" aria-label="Value shortlist">
       <header className="ip-shortlist-head"><div><span className="ip-eyebrow">BET365 · ANYTIME GOALSCORER</span><h2>Value shortlist</h2><p>All recently checked Bet365 prices above our fair odds, together in one place. Matches your league, date and search filters.</p></div><span className="ip-shortlist-count">{shortlist.length} {shortlist.length === 1 ? "player" : "players"}</span></header>

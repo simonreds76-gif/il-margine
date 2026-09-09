@@ -102,6 +102,12 @@
 #im-pitch-lab .ip-metrics>div+div{border-color:#e5c96b55;color:#ffe39a}
 #im-pitch-lab .ip-comparison-note{font-size:13px;line-height:1.65;color:#cfe2dc;margin:12px 0}
 #im-pitch-lab .ip-verdict{font-size:11px}
+#im-pitch-lab .ip-label-guide{margin:16px 0;border:1px solid #38545c;border-radius:12px;background:#111f25}
+#im-pitch-lab .ip-label-guide summary{padding:14px 16px;cursor:pointer;font-size:14px;font-weight:700;min-height:48px}
+#im-pitch-lab .ip-label-guide summary span{display:block;margin:4px 0 0 18px;color:#afc5cc;font-size:12px;font-weight:400}
+#im-pitch-lab .ip-label-guide dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:18px;margin:0;padding:6px 16px 20px}
+#im-pitch-lab .ip-label-guide dt{font-size:13px;font-weight:700;color:#b5f0d9;margin-bottom:5px}
+#im-pitch-lab .ip-label-guide dd{margin:0;font-size:12px;line-height:1.65;color:#c0d1d6}
 #im-pitch-lab .ip-shortlist{margin:24px 0 36px;padding:22px;border:1px solid #427665;border-radius:16px;background:radial-gradient(ellipse at top left,#24564040,transparent 65%),#111f25}
 #im-pitch-lab .ip-shortlist-head{display:flex;align-items:start;justify-content:space-between;gap:16px;margin-bottom:18px}
 #im-pitch-lab .ip-shortlist h2{font-size:25px;font-weight:800;letter-spacing:-.03em}
