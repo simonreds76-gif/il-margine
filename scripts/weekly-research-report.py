@@ -200,7 +200,11 @@ def tennis_breaks_gate_line(gate: dict[str, Any]) -> str:
         roi_text = f"{roi:+.1f}%" if roi is not None else "-"
         return f"{len(rows)} rows/{len(settled_rows)} settled/{pnl:+.2f}u/ROI {roi_text}"
 
-    price_status = f"CAPTURED {len(break_rows)}" if break_rows else "MISSING"
+    health = load_json(TENNIS_PROPS_PIPELINE_HEALTH)
+    captured = int(health.get("break_line_rows") or 0)
+    price_status = f"{captured} latest capture rows; {len(break_rows)} ledger rows"
+    if not captured and not break_rows:
+        price_status = "NO_CAPTURE_OR_LEDGER_EVIDENCE"
     return (
         f"Service Breaks v1 [INTERNAL]: {status} | "
         f"player ATP/WTA {'PASS' if player.get('passed') else 'FAIL'} | "
@@ -933,7 +937,10 @@ def tennis_props_shadow_decision(
     signals_path: Path = TENNIS_PROPS_SHADOW_SIGNALS,
     health_path: Path = TENNIS_PROPS_PIPELINE_HEALTH,
 ) -> dict[str, Any]:
-    rows = load_csv(signals_path)
+    # The shared ledger includes breaks and count-only calibration, not aces/DF bets.
+    rows = [row for row in load_csv(signals_path)
+            if str(row.get("market") or "").strip().lower() in {"aces", "double_faults"}
+            and row.get("decision_mode") != "breaks_calibration_unfiltered"]
     health = load_json(health_path)
     settled = [
         row
@@ -1865,7 +1872,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
         props_roi = number(tennis_props_shadow.get("roi_pct"))
         if props_settled >= 10 and props_roi > 0:
             actions.append(
-                f"WATCH ONLY: Aces/DF is promising but far too small "
+                f"WATCH ONLY: Aces/DF remains provisional; review all evidence gates "
                 f"(ROI {pct(props_roi)}, n={props_settled}/300)"
             )
         goalscorer_ledger = goalscorer.get("ledger") or {}
