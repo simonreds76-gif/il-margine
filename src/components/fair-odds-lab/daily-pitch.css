@@ -102,5 +102,31 @@
 #im-pitch-lab .ip-metrics>div+div{border-color:#e5c96b55;color:#ffe39a}
 #im-pitch-lab .ip-comparison-note{font-size:13px;line-height:1.65;color:#cfe2dc;margin:12px 0}
 #im-pitch-lab .ip-verdict{font-size:11px}
+#im-pitch-lab .ip-shortlist{margin:24px 0 36px;padding:22px;border:1px solid #427665;border-radius:16px;background:radial-gradient(ellipse at top left,#24564040,transparent 65%),#111f25}
+#im-pitch-lab .ip-shortlist-head{display:flex;align-items:start;justify-content:space-between;gap:16px;margin-bottom:18px}
+#im-pitch-lab .ip-shortlist h2{font-size:25px;font-weight:800;letter-spacing:-.03em}
+#im-pitch-lab .ip-shortlist-head p,#im-pitch-lab .ip-shortlist-note,#im-pitch-lab .ip-shortlist-empty{font-size:12px;line-height:1.7;color:#b7cbd0;max-width:800px}
+#im-pitch-lab .ip-shortlist-count{flex-shrink:0;padding:6px 10px;border-radius:20px;background:#254c3d;color:#b7f1d8;font-size:12px;font-weight:700}
+#im-pitch-lab .ip-shortlist-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+#im-pitch-lab .ip-shortlist-card{min-width:0;display:flex;flex-direction:column;gap:12px;padding:16px;border:1px solid #38574f;border-radius:12px;background:#0e1c23}
+#im-pitch-lab .ip-lineup-badge{align-self:start;padding:4px 7px;background:#3f3623;color:#efcf91;border-radius:5px;font-size:10px}
+#im-pitch-lab .ip-lineup-badge.confirmed{background:#214a3b;color:#b5f0d9}
+#im-pitch-lab .ip-shortlist-player{display:flex;align-items:center;gap:12px}
+#im-pitch-lab .ip-shortlist-player>div{min-width:0}
+#im-pitch-lab .ip-shortlist-player h3{font-size:19px;font-weight:750;line-height:1.2;overflow-wrap:anywhere}
+#im-pitch-lab .ip-shortlist-player span{font-size:11px;color:#a9bfc6}
+#im-pitch-lab .ip-shortlist-player .ip-photo{flex-shrink:0;width:48px;height:48px}
+#im-pitch-lab .ip-shortlist-match{font-size:12px;line-height:1.6;color:#b7cbd0;margin:0}
+#im-pitch-lab .ip-shortlist-prices{display:grid;grid-template-columns:1fr 1fr;border:1px solid #365550;border-radius:9px;overflow:hidden;margin-top:auto}
+#im-pitch-lab .ip-shortlist-prices>div{padding:10px;background:#112d2e}
+#im-pitch-lab .ip-shortlist-prices>div+div{background:#302d1d;border-left:1px solid #776c3f;color:#ffe39a}
+#im-pitch-lab .ip-shortlist-prices span{display:block;font-size:11px;font-weight:600}
+#im-pitch-lab .ip-shortlist-prices strong{font:700 25px/1.5 ui-monospace,monospace}
+#im-pitch-lab .ip-shortlist-checked{font-size:10px;color:#a9bfc6;margin:0}
+#im-pitch-lab .ip-shortlist-card button{display:flex;justify-content:space-between;gap:12px;text-align:left;align-items:center;padding:10px 12px;border:1px solid #4d8d74;border-radius:7px;background:#1c4134;color:#c6f7df;font-size:12px;font-weight:700;min-height:44px}
+#im-pitch-lab .ip-shortlist-card button:hover{background:#2b5c48}
+#im-pitch-lab .ip-shortlist-note{margin:16px 0 0}
+@container(max-width:900px){#im-pitch-lab .ip-shortlist-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@container(max-width:550px){#im-pitch-lab .ip-shortlist{padding:16px 12px}#im-pitch-lab .ip-shortlist-grid{grid-template-columns:1fr}#im-pitch-lab .ip-shortlist-head{gap:8px}#im-pitch-lab .ip-shortlist-count{font-size:10px}}
 @container(max-width:550px){#im-pitch-lab .ip-price-guide{grid-template-columns:1fr;gap:12px}#im-pitch-lab .ip-price-guide>div+div{border-top:1px solid #30484f;padding-top:12px}#im-pitch-lab th:first-child,#im-pitch-lab td:first-child{width:36%}}
 @container(max-width:550px){#im-pitch-lab .ip-search{align-items:stretch;flex-direction:column;gap:7px}#im-pitch-lab .ip-coverage{flex-direction:column;gap:4px;padding:10px 12px}}
