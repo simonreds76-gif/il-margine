@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -18,6 +19,19 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_INPUT_DIR = ROOT / "data" / "goalscorer"
 DEFAULT_OUTPUT = ROOT / "public" / "fair-odds-lab" / "highlights.json"
+PORTRAITS = json.loads((ROOT / "data/goalscorer/lab-player-portraits.json").read_text(encoding="utf-8"))
+
+
+def portrait_url(row: dict[str, str], league: str) -> str | None:
+    # Daily board IDs are FotMob IDs. Legacy player_id is Understat: never reuse it.
+    player_id = clean_text(row.get("fotmob_player_id"))
+    if not player_id and row.get("signal_type") == "fair_odds_daily_board":
+        player_id = clean_text(row.get("player_id"))
+    if not player_id:
+        name = clean_text(row.get("player") or row.get("market_player_name"))
+        key = league + "|" + "".join(c for c in unicodedata.normalize("NFKD", name).casefold() if c.isalnum())
+        player_id = PORTRAITS.get(key, "")
+    return f"https://images.fotmob.com/image_resources/playerimages/{player_id}.png" if player_id.isdigit() else None
 
 
 def clean_text(value: Any, fallback: str = "") -> str:
@@ -76,6 +90,7 @@ def highlight_from_row(row: dict[str, str], league: str) -> dict[str, Any] | Non
         "league": league,
         "match": match,
         "player": player,
+        "player_photo_url": portrait_url(row, league),
         "team": clean_text(row.get("team")),
         "best_bookmaker": clean_text(row.get("best_bookmaker"), "Best market"),
         "best_odds": round(best_odds, 2),
