@@ -1386,10 +1386,11 @@ def rate_trend_summary() -> dict[str, Any]:
 def rate_trend_text(payload: dict[str, Any]) -> str:
     result = payload.get("tennis_rate_trend") or {}
     if not result.get("markets"):
-        return "New aces/DF rate-trend: evidence snapshot missing; no performance claim."
+        return "Astra Aces / Astra DF: evidence snapshot missing; no performance claim."
+    names = {"aces": "Astra Aces", "double_faults": "Astra DF"}
     parts = []
     for market, item in result["markets"].items():
-        parts.append(f"{market}: {item.get('settled', 0)}/{item.get('registered', 0)} settled, "
+        parts.append(f"{names.get(market, market)}: {item.get('settled', 0)}/{item.get('registered', 0)} settled, "
                      f"{item.get('pending', 0)} pending, {item.get('independent_fixtures', 0)}/200 fixtures")
     performance = []
     for market, item in result["markets"].items():
@@ -1398,11 +1399,11 @@ def rate_trend_text(payload: dict[str, Any]) -> str:
             metrics = item.get(model) or {}
             roi = metrics.get("roi_pct")
             label = f"{float(roi):+.1f}%" if roi is not None else "pending"
-            scores.append(f"{model} ROI {label} ({metrics.get('bets', 0)} contracts)")
-        performance.append(market + ": " + ", ".join(scores))
+            scores.append(f"{'baseline' if model == 'control' else 'Astra'} ROI {label} ({metrics.get('bets', 0)} contracts)")
+        performance.append(names.get(market, market) + ": " + ", ".join(scores))
     parts.extend(performance)
     freshness = evidence_freshness(str(result.get("generated_at") or ""), stale_after_days=2)
-    return ("New rate-trend SHADOW ONLY | " + " | ".join(parts)
+    return ("Astra models SHADOW ONLY | " + " | ".join(parts)
             + f" | data {freshness.get('status', 'UNKNOWN')}; 8 weeks/4 tournaments minimum, manual review before promotion.")
 
 
