@@ -30,6 +30,8 @@ from src.lib.tennis_prob import (
 )
 from injury_overlay import env_bool, load_recent_injury_index
 from class_gap import apply_class_gap
+from tennis_ml_evidence import capture_components
+from pathlib import Path
 
 # Matchup-aware p_a/p_b from decomposed serve stats (Path B)
 try:
@@ -2827,6 +2829,7 @@ def main():
         debug_names = ["cerundolo"]  # default
 
     out = []
+    research_components = []
     skip_no_players = 0
     skip_doubles = 0
     skip_unknown = 0
@@ -3829,6 +3832,18 @@ def main():
             "data_coverage_tag": _data_coverage_tag(mc1_12, mc2_12, p1_hist, p2_hist, p1_activity, p2_activity, today_d),
             **ou_data,
         })
+        # Keep components for offline model research without adding DB columns.
+        research_components.append({**{key: out[-1].get(key) for key in (
+            "tour_id", "player1_id", "player2_id", "surface", "round_id", "draw",
+            "p1_win_prob_raw", "p1_win_prob", "p_serve_return", "p_elo", "p_a", "p_b",
+            "confidence", "data_coverage_tag", "match_count_12m_p1", "match_count_12m_p2",
+            "matches_total_p1", "matches_total_p2", "last_match_days_p1", "last_match_days_p2",
+            "recent_challenger_plus_p1", "recent_challenger_plus_p2",
+        )},
+            "p_rank": round(p_rank, 6) if p_rank is not None else None,
+            "series": series_bucket,
+            "component_weights": {"serve_return": sr_weight, "elo": elo_weight, "rank": rank_weight},
+        })
 
     print(f"Computed {len(out)} fair odds rows")
     if v2_model is not None:
@@ -3870,6 +3885,12 @@ def main():
 
     out = _filter_rows_with_known_players(out)
     _sync_daily_fair_odds(out)
+    try:
+        known = {(r["tour_id"], r["player1_id"], r["player2_id"]) for r in out}
+        evidence = [r for r in research_components if (r["tour_id"], r["player1_id"], r["player2_id"]) in known]
+        print("  Local ML component evidence: " + capture_components(Path(_script_dir).parent, evidence))
+    except Exception as exc:
+        print(f"WARNING: local ML evidence capture failed ({type(exc).__name__}); live forecasts already saved.")
     if do_skip_handicap_values:
         print("Skipped handicap-value refresh (--skip-handicap-values).")
         print("Done.")

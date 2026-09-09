@@ -1,0 +1,837 @@
+{
+  "generated_at": "2026-09-09T08:55:44.452471+00:00",
+  "spec": {
+    "experiment": "tennis-market-residual-v1",
+    "created": "2026-09-09",
+    "automatic_promotion": false,
+    "ridge": 0.01,
+    "features": [
+      "stored_model",
+      "elo",
+      "serve_return",
+      "rank"
+    ],
+    "constraints": "nonnegative residual weights, sum <= 1; market logit offset fixed; no intercept",
+    "folds": [
+      2023,
+      2024,
+      2025
+    ],
+    "fit": "strictly earlier calendar dates only",
+    "bet_rule": "one side per match, highest EV >= 10%, side-specific market gap <= 10pp; flat 1u",
+    "roi_selection": "No candidate or parameter selected by ROI",
+    "bootstrap": "1000 calendar-week block resamples, seed 20260909",
+    "limitations": [
+      "Historical forecasts reconstructed; input vintages unavailable",
+      "Historical price timing unavailable; ROI illustrative",
+      "These years were examined in earlier research, not untouched holdouts",
+      "Main-tour coefficients must not be transferred to Challenger without validation"
+    ]
+  },
+  "sources": [
+    {
+      "file": "D:\\IlMargine\\il-margine\\data\\backtest\\backtest-results-2022.csv",
+      "sha256": "5ed9b00f2efefc92c26f09cb1d9523790b53c8aa3826c620db4f2597eaad6bde"
+    },
+    {
+      "file": "D:\\IlMargine\\il-margine\\data\\backtest\\backtest-results-2023.csv",
+      "sha256": "1fa8a0627133f75b806bf7d50c692cfb4f5e77da6813534a639fac6458098554"
+    },
+    {
+      "file": "D:\\IlMargine\\il-margine\\data\\backtest\\backtest-results-2024.csv",
+      "sha256": "9d7889282acbc14a7107ca9530679a6a2a38854fd517f4dfe136ff261923a7e5"
+    },
+    {
+      "file": "D:\\IlMargine\\il-margine\\data\\backtest\\backtest-results-2025.csv",
+      "sha256": "edf6be7653cf2c9a736e763cf51755096d9d95e1eb9adb5fbe2e345b8a1ffe57"
+    }
+  ],
+  "excluded": {
+    "missing_component": 15
+  },
+  "folds": [
+    {
+      "year": 2023,
+      "train_n": 2526,
+      "train_end": "2022-11-20",
+      "test_start": "2023-01-01",
+      "test_n": 2588,
+      "temperature": 1.051949738128492,
+      "residual_weights": {
+        "stored_model": 0.022248272555062572,
+        "elo": 0.0,
+        "serve_return": 3.469446951953613e-18,
+        "rank": 1.734723475976807e-18
+      },
+      "scores": {
+        "stored_model": {
+          "matches": 2588,
+          "brier": 0.2064779542516418,
+          "log_loss": 0.5983007337651051,
+          "bets": 798,
+          "wins": 246,
+          "losses": 552,
+          "pnl_units": -57.88000000000001,
+          "roi_pct": -7.253132832080202,
+          "roi_week_block_95pct": [
+            -17.113886612021858,
+            3.4080998846903023
+          ],
+          "largest_win_profit": 10.2,
+          "roi_without_best_win_pct": -8.542032622333753
+        },
+        "market_no_vig": {
+          "matches": 2588,
+          "brier": 0.2024466446401183,
+          "log_loss": 0.5869311951644538,
+          "bets": 0,
+          "wins": 0,
+          "losses": 0,
+          "pnl_units": 0.0,
+          "roi_pct": null,
+          "roi_week_block_95pct": null,
+          "largest_win_profit": null,
+          "roi_without_best_win_pct": null
+        },
+        "elo_only": {
+          "matches": 2588,
+          "brier": 0.211380466986471,
+          "log_loss": 0.6088628397194474,
+          "bets": 767,
+          "wins": 233,
+          "losses": 534,
+          "pnl_units": -48.44000000000001,
+          "roi_pct": -6.315514993481097,
+          "roi_week_block_95pct": [
+            -18.369489159230337,
+            8.564337686567162
+          ],
+          "largest_win_profit": 29.5,
+          "roi_without_best_win_pct": -10.174934725848566
+        },
+        "temperature_prior_fit": {
+          "matches": 2588,
+          "brier": 0.20640934511179773,
+          "log_loss": 0.5979517634371107,
+          "bets": 759,
+          "wins": 219,
+          "losses": 540,
+          "pnl_units": -62.989999999999995,
+          "roi_pct": -8.299077733860342,
+          "roi_week_block_95pct": [
+            -20.888898052260743,
+            6.286235355879747
+          ],
+          "largest_win_profit": 29.5,
+          "roi_without_best_win_pct": -12.20184696569921
+        },
+        "market75_model25": {
+          "matches": 2588,
+          "brier": 0.20184026342179878,
+          "log_loss": 0.5861779715659593,
+          "bets": 330,
+          "wins": 67,
+          "losses": 263,
+          "pnl_units": -52.60000000000001,
+          "roi_pct": -15.939393939393943,
+          "roi_week_block_95pct": [
+            -38.86069313827934,
+            19.45175211938218
+          ],
+          "largest_win_profit": 29.5,
+          "roi_without_best_win_pct": -24.954407294832826
+        },
+        "market_residual_stack_v1": {
+          "matches": 2588,
+          "brier": 0.20234735956762462,
+          "log_loss": 0.5867412235124884,
+          "bets": 0,
+          "wins": 0,
+          "losses": 0,
+          "pnl_units": 0.0,
+          "roi_pct": null,
+          "roi_week_block_95pct": null,
+          "largest_win_profit": null,
+          "roi_without_best_win_pct": null
+        }
+      }
+    },
+    {
+      "year": 2024,
+      "train_n": 5114,
+      "train_end": "2023-12-31",
+      "test_start": "2024-01-01",
+      "test_n": 2599,
+      "temperature": 1.06510402461521,
+      "residual_weights": {
+        "stored_model": 0.08545605485406396,
+        "elo": 0.0,
+        "serve_return": 4.580688701610748e-19,
+        "rank": 0.0
+      },
+      "scores": {
+        "stored_model": {
+          "matches": 2599,
+          "brier": 0.20884388514653368,
+          "log_loss": 0.6029771841514421,
+          "bets": 700,
+          "wins": 190,
+          "losses": 510,
+          "pnl_units": -110.19999999999999,
+          "roi_pct": -15.74285714285714,
+          "roi_week_block_95pct": [
+            -27.903463437123357,
+            -1.790029944194908
+          ],
+          "largest_win_profit": 31.020000000000003,
+          "roi_without_best_win_pct": -20.203147353361945
+        },
+        "market_no_vig": {
+          "matches": 2599,
+          "brier": 0.19902389822899402,
+          "log_loss": 0.5805501695817945,
+          "bets": 0,
+          "wins": 0,
+          "losses": 0,
+          "pnl_units": 0.0,
+          "roi_pct": null,
+          "roi_week_block_95pct": null,
+          "largest_win_profit": null,
+          "roi_without_best_win_pct": null
+        },
+        "elo_only": {
+          "matches": 2599,
+          "brier": 0.2084173180515279,
+          "log_loss": 0.6029196657466198,
+          "bets": 765,
+          "wins": 219,
+          "losses": 546,
+          "pnl_units": -80.45,
+          "roi_pct": -10.516339869281046,
+          "roi_week_block_95pct": [
+            -23.332590907281546,
+            3.646555464893664
+          ],
+          "largest_win_profit": 24.37,
+          "roi_without_best_win_pct": -13.719895287958115
+        },
+        "temperature_prior_fit": {
+          "matches": 2599,
+          "brier": 0.20887016203164907,
+          "log_loss": 0.6027981579818175,
+          "bets": 674,
+          "wins": 183,
+          "losses": 491,
+          "pnl_units": -83.82,
+          "roi_pct": -12.43620178041543,
+          "roi_week_block_95pct": [
+            -24.596781318625197,
+            0.185360789731628
+          ],
+          "largest_win_profit": 31.020000000000003,
+          "roi_without_best_win_pct": -17.063893016344725
+        },
+        "market75_model25": {
+          "matches": 2599,
+          "brier": 0.1995544842813958,
+          "log_loss": 0.581731903635145,
+          "bets": 336,
+          "wins": 62,
+          "losses": 274,
+          "pnl_units": 0.5800000000000036,
+          "roi_pct": 0.1726190476190487,
+          "roi_week_block_95pct": [
+            -24.61218335859944,
+            30.932218718884826
+          ],
+          "largest_win_profit": 31.020000000000003,
+          "roi_without_best_win_pct": -9.086567164179105
+        },
+        "market_residual_stack_v1": {
+          "matches": 2599,
+          "brier": 0.1990385856413301,
+          "log_loss": 0.5805627114382071,
+          "bets": 30,
+          "wins": 4,
+          "losses": 26,
+          "pnl_units": 58.45000000000001,
+          "roi_pct": 194.83333333333337,
+          "roi_week_block_95pct": [
+            -33.8,
+            567.1196291560102
+          ],
+          "largest_win_profit": 31.020000000000003,
+          "roi_without_best_win_pct": 94.58620689655176
+        }
+      }
+    },
+    {
+      "year": 2025,
+      "train_n": 7713,
+      "train_end": "2024-12-31",
+      "test_start": "2025-01-01",
+      "test_n": 2337,
+      "temperature": 1.0615184595921876,
+      "residual_weights": {
+        "stored_model": 0.06504536460145288,
+        "elo": 0.0,
+        "serve_return": 3.1517475366356718e-19,
+        "rank": 1.7347234759768075e-18
+      },
+      "scores": {
+        "stored_model": {
+          "matches": 2337,
+          "brier": 0.21111522409366282,
+          "log_loss": 0.6090349506562814,
+          "bets": 684,
+          "wins": 228,
+          "losses": 456,
+          "pnl_units": 25.319999999999997,
+          "roi_pct": 3.701754385964912,
+          "roi_week_block_95pct": [
+            -10.99060883406287,
+            18.24969457274044
+          ],
+          "largest_win_profit": 12.9,
+          "roi_without_best_win_pct": 1.818448023426061
+        },
+        "market_no_vig": {
+          "matches": 2337,
+          "brier": 0.20659366148089775,
+          "log_loss": 0.5979798822208232,
+          "bets": 0,
+          "wins": 0,
+          "losses": 0,
+          "pnl_units": 0.0,
+          "roi_pct": null,
+          "roi_week_block_95pct": null,
+          "largest_win_profit": null,
+          "roi_without_best_win_pct": null
+        },
+        "elo_only": {
+          "matches": 2337,
+          "brier": 0.21173906315086005,
+          "log_loss": 0.6103387994758275,
+          "bets": 710,
+          "wins": 228,
+          "losses": 482,
+          "pnl_units": -12.600000000000003,
+          "roi_pct": -1.774647887323944,
+          "roi_week_block_95pct": [
+            -13.660200976091245,
+            8.712304462254062
+          ],
+          "largest_win_profit": 11.64,
+          "roi_without_best_win_pct": -3.4188998589562765
+        },
+        "temperature_prior_fit": {
+          "matches": 2337,
+          "brier": 0.21121967342668507,
+          "log_loss": 0.6092892384765053,
+          "bets": 629,
+          "wins": 196,
+          "losses": 433,
+          "pnl_units": -14.139999999999997,
+          "roi_pct": -2.2480127186009535,
+          "roi_week_block_95pct": [
+            -16.33544450162978,
+            12.07415974518449
+          ],
+          "largest_win_profit": 12.9,
+          "roi_without_best_win_pct": -4.305732484076433
+        },
+        "market75_model25": {
+          "matches": 2337,
+          "brier": 0.2061024416192049,
+          "log_loss": 0.5969966270755438,
+          "bets": 271,
+          "wins": 54,
+          "losses": 217,
+          "pnl_units": 2.0199999999999925,
+          "roi_pct": 0.745387453874536,
+          "roi_week_block_95pct": [
+            -30.942548384484574,
+            29.24213029127534
+          ],
+          "largest_win_profit": 16.73,
+          "roi_without_best_win_pct": -5.448148148148151
+        },
+        "market_residual_stack_v1": {
+          "matches": 2337,
+          "brier": 0.20636271362713396,
+          "log_loss": 0.5974499453006707,
+          "bets": 4,
+          "wins": 0,
+          "losses": 4,
+          "pnl_units": -4.0,
+          "roi_pct": -100.0,
+          "roi_week_block_95pct": [
+            -100.0,
+            -100.0
+          ],
+          "largest_win_profit": 0.0,
+          "roi_without_best_win_pct": null
+        }
+      }
+    }
+  ],
+  "pooled": {
+    "stored_model": {
+      "matches": 7524,
+      "brier": 0.2087355770608692,
+      "log_loss": 0.6032502233223578,
+      "bets": 2182,
+      "wins": 664,
+      "losses": 1518,
+      "pnl_units": -142.76000000000002,
+      "roi_pct": -6.54262144821265,
+      "roi_week_block_95pct": [
+        -13.388859636751127,
+        0.8392504021872971
+      ],
+      "largest_win_profit": 31.020000000000003,
+      "roi_without_best_win_pct": -7.967904630903257
+    },
+    "market_no_vig": {
+      "matches": 7524,
+      "brier": 0.2025524208807336,
+      "log_loss": 0.5881587996516154,
+      "bets": 0,
+      "wins": 0,
+      "losses": 0,
+      "pnl_units": 0.0,
+      "roi_pct": null,
+      "roi_week_block_95pct": null,
+      "largest_win_profit": null,
+      "roi_without_best_win_pct": null
+    },
+    "elo_only": {
+      "matches": 7524,
+      "brier": 0.21046829462526156,
+      "log_loss": 0.6072683432807554,
+      "bets": 2242,
+      "wins": 680,
+      "losses": 1562,
+      "pnl_units": -141.49,
+      "roi_pct": -6.310883140053524,
+      "roi_week_block_95pct": [
+        -13.491744437359866,
+        1.0911384756226379
+      ],
+      "largest_win_profit": 29.5,
+      "roi_without_best_win_pct": -7.630075858991522
+    },
+    "temperature_prior_fit": {
+      "matches": 7524,
+      "brier": 0.20875349721793615,
+      "log_loss": 0.6031473320959035,
+      "bets": 2062,
+      "wins": 598,
+      "losses": 1464,
+      "pnl_units": -160.95,
+      "roi_pct": -7.805528612997089,
+      "roi_week_block_95pct": [
+        -15.169428981873269,
+        0.25899727997787136
+      ],
+      "largest_win_profit": 31.020000000000003,
+      "roi_without_best_win_pct": -9.314410480349345
+    },
+    "market75_model25": {
+      "matches": 7524,
+      "brier": 0.20237454976701816,
+      "log_loss": 0.5880025153423699,
+      "bets": 937,
+      "wins": 183,
+      "losses": 754,
+      "pnl_units": -49.99999999999997,
+      "roi_pct": -5.33617929562433,
+      "roi_week_block_95pct": [
+        -20.448816887744815,
+        12.010212600387437
+      ],
+      "largest_win_profit": 31.020000000000003,
+      "roi_without_best_win_pct": -8.655982905982905
+    },
+    "market_residual_stack_v1": {
+      "matches": 7524,
+      "brier": 0.20245160983379076,
+      "log_loss": 0.5879331865558064,
+      "bets": 34,
+      "wins": 4,
+      "losses": 30,
+      "pnl_units": 54.45000000000001,
+      "roi_pct": 160.14705882352945,
+      "roi_week_block_95pct": [
+        -63.22222222222222,
+        434.69313636363637
+      ],
+      "largest_win_profit": 31.020000000000003,
+      "roi_without_best_win_pct": 71.00000000000003
+    }
+  },
+  "segments": {
+    "Hard Masters high": {
+      "stored_model": {
+        "matches": 1218,
+        "brier": 0.2107697413039212,
+        "log_loss": 0.6090197772790195,
+        "bets": 397,
+        "wins": 124,
+        "losses": 273,
+        "pnl_units": -0.8300000000000018,
+        "roi_pct": -0.20906801007556722,
+        "roi_week_block_95pct": [
+          -15.76481177446103,
+          16.81865224828934
+        ],
+        "largest_win_profit": 9.76,
+        "roi_without_best_win_pct": -2.6742424242424248
+      },
+      "market_no_vig": {
+        "matches": 1218,
+        "brier": 0.2121332255648031,
+        "log_loss": 0.611042423406792,
+        "bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "pnl_units": 0.0,
+        "roi_pct": null,
+        "roi_week_block_95pct": null,
+        "largest_win_profit": null,
+        "roi_without_best_win_pct": null
+      },
+      "elo_only": {
+        "matches": 1218,
+        "brier": 0.2163836753990123,
+        "log_loss": 0.6199594516469789,
+        "bets": 351,
+        "wins": 117,
+        "losses": 234,
+        "pnl_units": 52.209999999999994,
+        "roi_pct": 14.874643874643873,
+        "roi_week_block_95pct": [
+          -4.414356169037706,
+          36.939370835966166
+        ],
+        "largest_win_profit": 24.37,
+        "roi_without_best_win_pct": 7.954285714285712
+      },
+      "temperature_prior_fit": {
+        "matches": 1218,
+        "brier": 0.21045797119494655,
+        "log_loss": 0.6080485906606908,
+        "bets": 396,
+        "wins": 122,
+        "losses": 274,
+        "pnl_units": -15.59,
+        "roi_pct": -3.936868686868687,
+        "roi_week_block_95pct": [
+          -19.929765433539504,
+          13.399200668609627
+        ],
+        "largest_win_profit": 9.76,
+        "roi_without_best_win_pct": -6.417721518987341
+      },
+      "market75_model25": {
+        "matches": 1218,
+        "brier": 0.2103978403782976,
+        "log_loss": 0.6069651502565386,
+        "bets": 170,
+        "wins": 34,
+        "losses": 136,
+        "pnl_units": 42.21,
+        "roi_pct": 24.82941176470588,
+        "roi_week_block_95pct": [
+          -15.643546511627907,
+          71.6778826691967
+        ],
+        "largest_win_profit": 24.37,
+        "roi_without_best_win_pct": 10.55621301775148
+      },
+      "market_residual_stack_v1": {
+        "matches": 1218,
+        "brier": 0.21158928700817434,
+        "log_loss": 0.6097400327506717,
+        "bets": 1,
+        "wins": 1,
+        "losses": 0,
+        "pnl_units": 24.37,
+        "roi_pct": 2437.0,
+        "roi_week_block_95pct": [
+          2437.0,
+          2437.0
+        ],
+        "largest_win_profit": 24.37,
+        "roi_without_best_win_pct": null
+      }
+    },
+    "Clay": {
+      "stored_model": {
+        "matches": 2367,
+        "brier": 0.20885519914604903,
+        "log_loss": 0.6034236001709675,
+        "bets": 728,
+        "wins": 225,
+        "losses": 503,
+        "pnl_units": -38.75,
+        "roi_pct": -5.322802197802198,
+        "roi_week_block_95pct": [
+          -17.255103376429098,
+          8.733958968133296
+        ],
+        "largest_win_profit": 12.9,
+        "roi_without_best_win_pct": -7.104539202200825
+      },
+      "market_no_vig": {
+        "matches": 2367,
+        "brier": 0.20401286184152292,
+        "log_loss": 0.5921205726406191,
+        "bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "pnl_units": 0.0,
+        "roi_pct": null,
+        "roi_week_block_95pct": null,
+        "largest_win_profit": null,
+        "roi_without_best_win_pct": null
+      },
+      "elo_only": {
+        "matches": 2367,
+        "brier": 0.21277466095757963,
+        "log_loss": 0.613118426152374,
+        "bets": 702,
+        "wins": 224,
+        "losses": 478,
+        "pnl_units": -33.98,
+        "roi_pct": -4.8404558404558395,
+        "roi_week_block_95pct": [
+          -16.58124357964392,
+          9.307801265458723
+        ],
+        "largest_win_profit": 29.5,
+        "roi_without_best_win_pct": -9.055634807417974
+      },
+      "temperature_prior_fit": {
+        "matches": 2367,
+        "brier": 0.20869596173477836,
+        "log_loss": 0.6028287371946519,
+        "bets": 674,
+        "wins": 201,
+        "losses": 473,
+        "pnl_units": -7.859999999999996,
+        "roi_pct": -1.1661721068249251,
+        "roi_week_block_95pct": [
+          -14.877587204815562,
+          16.82315175674381
+        ],
+        "largest_win_profit": 29.5,
+        "roi_without_best_win_pct": -5.551263001485884
+      },
+      "market75_model25": {
+        "matches": 2367,
+        "brier": 0.20371041697622846,
+        "log_loss": 0.5916088032939656,
+        "bets": 253,
+        "wins": 51,
+        "losses": 202,
+        "pnl_units": 11.770000000000003,
+        "roi_pct": 4.652173913043479,
+        "roi_week_block_95pct": [
+          -28.722681451612914,
+          44.028608232040895
+        ],
+        "largest_win_profit": 29.5,
+        "roi_without_best_win_pct": -7.035714285714285
+      },
+      "market_residual_stack_v1": {
+        "matches": 2367,
+        "brier": 0.20387346890532151,
+        "log_loss": 0.5918489294209102,
+        "bets": 9,
+        "wins": 0,
+        "losses": 9,
+        "pnl_units": -9.0,
+        "roi_pct": -100.0,
+        "roi_week_block_95pct": [
+          -100.0,
+          -100.0
+        ],
+        "largest_win_profit": 0.0,
+        "roi_without_best_win_pct": null
+      }
+    },
+    "Hard": {
+      "stored_model": {
+        "matches": 4251,
+        "brier": 0.20731878389986075,
+        "log_loss": 0.5995888411603847,
+        "bets": 1217,
+        "wins": 370,
+        "losses": 847,
+        "pnl_units": -85.06,
+        "roi_pct": -6.989317995069844,
+        "roi_week_block_95pct": [
+          -15.90439742613239,
+          2.3275746637047994
+        ],
+        "largest_win_profit": 31.020000000000003,
+        "roi_without_best_win_pct": -9.546052631578949
+      },
+      "market_no_vig": {
+        "matches": 4251,
+        "brier": 0.2022772530586727,
+        "log_loss": 0.5872195131271647,
+        "bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "pnl_units": 0.0,
+        "roi_pct": null,
+        "roi_week_block_95pct": null,
+        "largest_win_profit": null,
+        "roi_without_best_win_pct": null
+      },
+      "elo_only": {
+        "matches": 4251,
+        "brier": 0.20889379124317312,
+        "log_loss": 0.6032020661153624,
+        "bets": 1290,
+        "wins": 373,
+        "losses": 917,
+        "pnl_units": -105.85000000000001,
+        "roi_pct": -8.205426356589147,
+        "roi_week_block_95pct": [
+          -17.15350975213328,
+          1.1823003840042372
+        ],
+        "largest_win_profit": 24.37,
+        "roi_without_best_win_pct": -10.102404965089216
+      },
+      "temperature_prior_fit": {
+        "matches": 4251,
+        "brier": 0.20735998306088618,
+        "log_loss": 0.5994961635294838,
+        "bets": 1156,
+        "wins": 340,
+        "losses": 816,
+        "pnl_units": -90.12,
+        "roi_pct": -7.795847750865052,
+        "roi_week_block_95pct": [
+          -16.72895187644477,
+          1.4593474363013
+        ],
+        "largest_win_profit": 31.020000000000003,
+        "roi_without_best_win_pct": -10.48831168831169
+      },
+      "market75_model25": {
+        "matches": 4251,
+        "brier": 0.20184138807707422,
+        "log_loss": 0.5863398525756504,
+        "bets": 523,
+        "wins": 104,
+        "losses": 419,
+        "pnl_units": -26.330000000000002,
+        "roi_pct": -5.034416826003824,
+        "roi_week_block_95pct": [
+          -26.92351316780035,
+          19.930963359085432
+        ],
+        "largest_win_profit": 31.020000000000003,
+        "roi_without_best_win_pct": -10.986590038314178
+      },
+      "market_residual_stack_v1": {
+        "matches": 4251,
+        "brier": 0.20208794973733543,
+        "log_loss": 0.5867466072769532,
+        "bets": 9,
+        "wins": 3,
+        "losses": 6,
+        "pnl_units": 55.010000000000005,
+        "roi_pct": 611.2222222222223,
+        "roi_week_block_95pct": [
+          -100.0,
+          1572.1374999999994
+        ],
+        "largest_win_profit": 31.020000000000003,
+        "roi_without_best_win_pct": 299.875
+      }
+    }
+  },
+  "prospective_coverage": {
+    "Strict": {
+      "file": "D:\\IlMargine\\il-margine\\data\\backtest\\strict-signals-archive.csv",
+      "raw_rows": 363,
+      "match_rows": 292,
+      "with_scheduled_start": 0,
+      "with_both_closing_prices": 0,
+      "use": "coverage audit only; repeats/settlement updates not independent bets"
+    },
+    "Volume 200": {
+      "file": "D:\\IlMargine\\il-margine\\data\\backtest\\strict-signals-volume200-archive.csv",
+      "raw_rows": 166,
+      "match_rows": 166,
+      "with_scheduled_start": 56,
+      "with_both_closing_prices": 0,
+      "use": "coverage audit only; repeats/settlement updates not independent bets"
+    },
+    "Challenger ML v2": {
+      "file": "D:\\IlMargine\\il-margine\\data\\backtest\\strict-signals-challenger-ml-v2-archive.csv",
+      "raw_rows": 43,
+      "match_rows": 43,
+      "with_scheduled_start": 34,
+      "with_both_closing_prices": 0,
+      "use": "coverage audit only; repeats/settlement updates not independent bets"
+    },
+    "Challenger historical hybrid": {
+      "rows": 60,
+      "missing_rank": 60,
+      "use": "not pooled with main-tour training; too little independent hybrid history"
+    }
+  },
+  "challenger_diagnostic": {
+    "warning": "Small historical hybrid sample, incomplete quote timing; exploratory only. No coefficients transferred from ATP.",
+    "stored_model": {
+      "matches": 60,
+      "brier": 0.19702431212343333,
+      "log_loss": 0.5831864699894674,
+      "bets": 9,
+      "wins": 4,
+      "losses": 5,
+      "pnl_units": 3.6740000000000004,
+      "roi_pct": 40.82222222222222,
+      "roi_week_block_95pct": null,
+      "largest_win_profit": 3.79,
+      "roi_without_best_win_pct": -1.4499999999999957
+    },
+    "market_no_vig": {
+      "matches": 60,
+      "brier": 0.17537480128532953,
+      "log_loss": 0.5172674880000978,
+      "bets": 0,
+      "wins": 0,
+      "losses": 0,
+      "pnl_units": 0.0,
+      "roi_pct": null,
+      "roi_week_block_95pct": null,
+      "largest_win_profit": null,
+      "roi_without_best_win_pct": null
+    },
+    "market75_model25": {
+      "matches": 60,
+      "brier": 0.17640287448488642,
+      "log_loss": 0.5280222590138154,
+      "bets": 18,
+      "wins": 0,
+      "losses": 18,
+      "pnl_units": -18.0,
+      "roi_pct": -100.0,
+      "roi_week_block_95pct": null,
+      "largest_win_profit": 0.0,
+      "roi_without_best_win_pct": null
+    }
+  },
+  "verdict": "RESEARCH_ONLY_NO_LIVE_PROMOTION",
+  "additional_exclusions": [
+    "2026 ATP legacy file omitted: missing explicit real-price flags and inconsistent historical schema"
+  ]
+}

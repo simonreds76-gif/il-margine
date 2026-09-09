@@ -195,3 +195,6 @@ data/tennis-props/backtest/breaks-stage0-rows.csv
 
 # generated Masters qualifying coverage audit
 data/backtest/masters-qualifying-coverage.json
+
+# Local all-candidate ML research snapshots; never upload to Git or Vercel.
+data/tennis-ml-research/
