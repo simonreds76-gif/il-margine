@@ -4,6 +4,7 @@ import csv
 import hashlib
 import json
 import math
+import runpy
 import unicodedata
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -73,6 +74,17 @@ def build_board(root=ROOT, now=None):
     fixtures=[]
     kits={norm(k):v for k,v in read_json(root/'data/goalscorer/team-kit-colors.json').items() if isinstance(v,dict)}
     logos=read_json(root/'data/goalscorer/team-logo-map.json').get('leagues',{})
+    team_key = runpy.run_path(str(ROOT/'scripts/goalscorer-model.py'))['_team_key']
+    def price_key(row):
+        return (str(row.get('match_date') or '')[:10], norm(team_key(row.get('home_team') or '')),
+                norm(team_key(row.get('away_team') or '')), norm(team_key(row.get('player_team') or '')),
+                norm(row.get('canonical_player_name') or row.get('player_name')))
+    raw_quotes=[]
+    archive=root/'data/goalscorer/goalscorer-odds-history.csv'
+    if archive.exists():
+        with archive.open(encoding='utf-8-sig',newline='') as handle:
+            raw_quotes=[r for r in csv.DictReader(handle) if norm(r.get('bookmaker'))=='bet365'
+                        and str(r.get('match_date') or '')[:10]>= (now-timedelta(hours=4)).date().isoformat()]
     for league,label in LEAGUES.items():
         prefix='' if league=='serie-a' else league+'-'
         lineup_payload=read_json(root/'data/goalscorer'/f'{prefix}confirmed-lineups.json')
@@ -80,15 +92,19 @@ def build_board(root=ROOT, now=None):
         forecast_payload=read_json(out/'fair-odds-player-forecasts.json')
         forecasts={}
         for r in forecast_payload.get('players',[]):
-            forecasts[(*fixture_key(r),norm(r.get('player_team')),norm(r.get('player_name')))]=r
+            forecasts[price_key(r)]=r
         quotes={}
         try:
             with (out/'goalscorer-live-comparison.csv').open(encoding='utf-8-sig',newline='') as handle:
                 for r in csv.DictReader(handle):
                     if norm(r.get('bookmaker'))!='bet365': continue
-                    key=(*fixture_key(r),norm(r.get('player_team')),norm(r.get('canonical_player_name') or r.get('player_name')))
+                    key=price_key(r)
                     if (r.get('captured_at') or '')>(quotes.get(key,{}).get('captured_at') or ''): quotes[key]=r
         except OSError: pass
+        # A real quote is still useful when model identity/history is missing.
+        for r in raw_quotes:
+            key=price_key(r)
+            if (r.get('captured_at') or '')>(quotes.get(key,{}).get('captured_at') or ''): quotes[key]=r
         hierarchy=read_json(root/'data/goalscorer'/f'{league}-penalty-takers.json')
         hierarchy={norm(k):v for k,v in hierarchy.items() if isinstance(v,dict)}
         for f in lineup_payload.get('fixtures',[]):
@@ -104,7 +120,7 @@ def build_board(root=ROOT, now=None):
                 players=[]
                 for index,e in enumerate(starters):
                     name=e.get('name','')
-                    key=(*fixture_key(f),norm(team),norm(name))
+                    key=price_key(dict(f,player_team=team,player_name=name))
                     model=forecasts.get(key,{})
                     quote=quotes.get(key,{})
                     if not quote:
@@ -113,7 +129,8 @@ def build_board(root=ROOT, now=None):
                         match=best_name_match(name,[v.get('canonical_player_name') or v.get('player_name','') for v in same_team.values()])
                         quote=next((v for v in same_team.values() if match and match==(v.get('canonical_player_name') or v.get('player_name'))),{})
                     p=number(model.get('probability'))
-                    valid=model.get('lineup_fingerprint')==fingerprint(f) and model.get('allocation_status') in {'confirmed_roster','expected_roster'} and model.get('method')=='model' and not model.get('context_only_prior')
+                    valid=model.get('lineup_fingerprint')==fingerprint(f) and model.get('allocation_status') in {'confirmed_roster','expected_roster','estimated_roster'} and model.get('method') in {'model','fallback'}
+                    limited=bool(model.get('limited_data') or model.get('context_only_prior') or model.get('method')=='fallback')
                     if not valid or model.get('trust_tier') == 'T3' or p is None or not 0<p<1: p=None
                     odds=number(quote.get('odds_decimal'))
                     if odds is not None and odds<=1: odds=None
@@ -122,18 +139,26 @@ def build_board(root=ROOT, now=None):
                     fresh=bool(capture and timedelta(0)<=now-capture<=timedelta(minutes=65) and (not changed or capture>=changed))
                     model_time=instant(model.get('generated_at') or forecast_payload.get('generated_at'))
                     if model_time and model_time>=kickoff: p=None
+                    reason = None if p else ('Goalkeepers are not priced by this outfield model.' if e.get('role_group')=='GK' else
+                        'Player history could not be matched.' if not model else
+                        'The squad could not be fully resolved.' if model.get('allocation_status')=='incomplete_roster' else
+                        'Waiting for a forecast matching the latest lineup.')
                     active=best_name_match(name,[duty.get('active_taker','')]) is not None
                     players.append(dict(id=str(e.get('player_id') or norm(name)),name=name,number=e.get('shirt_number'),
                         role=e.get('role_group') or '',lineIndex=e.get('line_index'),positionId=e.get('position_id'),
                         photoUrl=f"https://images.fotmob.com/image_resources/playerimages/{e['player_id']}.png" if str(e.get('player_id','')).isdigit() else None,
                         modelProbability=p,fairOdds=round(1/p,2) if p else None,bookmakerOdds=odds,
                         priceCapturedAt=quote.get('captured_at') or None,priceFresh=fresh,
-                        gapPp=round(100*(p-1/odds),2) if p and odds and fresh and kickoff>now else None,
-                        modelEvPct=round(100*(p*odds-1),2) if p and odds and fresh and kickoff>now else None,
+                        gapPp=round(100*(p-1/odds),2) if p and odds and fresh and kickoff>now and not limited else None,
+                        modelEvPct=round(100*(p*odds-1),2) if p and odds and fresh and kickoff>now and not limited else None,
                         expectedMinutes=number(model.get('expected_minutes')),penaltyActive=active,
                         penaltyInheritedFrom=duty.get('inherited_from') if active and duty.get('penalty_transfer') else None,
                         modelVersion=model.get('model_version'),modelGeneratedAt=model_time.isoformat() if model_time else None,
-                        pricingStatus='available' if p else 'goalkeeper_unpriced' if e.get('role_group')=='GK' else 'awaiting_model'))
+                        pricingStatus=('limited_data' if limited else 'available') if p else 'goalkeeper_unpriced' if e.get('role_group')=='GK' else 'awaiting_model',
+                        pricingReason=('Estimate uses limited player history or a positional baseline; no value gap is published.' if limited and p else reason),
+                        bookmakerStatus='quoted' if odds else 'not_in_feed',
+                        bookmakerReason=None if odds else 'No matched Bet365 anytime-goalscorer quote in the latest captured feed.',
+                        historyMatches=model.get('history_matches'), rateBasis=model.get('rate_basis')))
                 team_logos=logos.get(league,{}).get('teams',{})
                 logo=next((v.get('logo_path') for k,v in team_logos.items() if norm(k)==norm(team) or norm(v.get('fotmob_name'))==norm(team)),None)
                 kit=kits.get(norm(team),{})

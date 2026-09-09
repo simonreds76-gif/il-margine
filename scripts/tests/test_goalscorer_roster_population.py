@@ -19,7 +19,7 @@ spec.loader.exec_module(LIVE)
 
 
 class RosterIntegrationTests(unittest.TestCase):
-    def run_model(self, selected, *, missing=False, predicted=False, duplicate=False, reserve_role=None):
+    def run_model(self, selected, *, missing=False, predicted=False, duplicate=False, reserve_role=None, new_starter=False):
         names = ['Alden', 'Barton', 'Corbett', 'Dawson', 'Elwood', 'Fenton', 'Granger',
                  'Hawthorne', 'Irvine', 'Jarvis', 'Kendall', 'Linton']
         players = {side:[side+' '+name for name in names] for side in ('Home', 'Away')}
@@ -43,6 +43,9 @@ class RosterIntegrationTests(unittest.TestCase):
         if reserve_role:
             fixture['home_substitute_entries']=[dict(name='Unresolved New Signing',player_id='999999',role_group=reserve_role)]
         if duplicate: fixture['home_players'][-1]=fixture['home_players'][1]
+        if new_starter:
+            fixture['home_players'][-1]='Unresolved New Signing'
+            fixture['home_starters'].append(dict(name='Unresolved New Signing',player_id='999998',role_group='FW'))
         odds=[dict(captured_at='2026-08-10T12:00:00Z',match_date='2026-08-10',
                    bookmaker='Bet365',competition='Premier League',home_team='Arsenal',away_team='Chelsea',
                    player_name=players['Home'][i],player_team='Arsenal',odds_decimal=4,implied_prob=.25)
@@ -100,6 +103,22 @@ class RosterIntegrationTests(unittest.TestCase):
         self.assertEqual(sparse[0]['allocation_status'],'expected_roster')
         self.assertEqual(sparse[0]['model_p_atgs'],next(r['model_p_atgs'] for r in full if r['player_id']=='Home10'))
         self.assertNotEqual(sparse[0]['public_action'],'surface')
+    def test_identified_new_starter_does_not_hide_the_entire_team(self):
+        rows=self.run_model([9],predicted=True,new_starter=True)
+        self.assertEqual(len(self.last_forecasts),20)
+        newcomer=next(r for r in self.last_forecasts if r['player_name']=='Unresolved New Signing')
+        self.assertTrue(newcomer['limited_data'])
+        self.assertEqual(newcomer['allocation_status'],'estimated_roster')
+        self.assertGreater(newcomer['probability'],0.02)
+        self.assertNotEqual(rows[0]['public_action'],'surface')
+        self.assertEqual(rows[0]['recommended_stake_units'],0)
+    def test_daily_rates_conserve_team_budget_and_are_quote_independent(self):
+        self.run_model([10])
+        sparse={r['player_name']:r for r in self.last_forecasts}
+        self.run_model(range(1,11))
+        for row in self.last_forecasts:
+            self.assertAlmostEqual(row['probability'],sparse[row['player_name']]['probability'])
+        self.assertLessEqual(sum(r['non_pen_lambda'] for r in self.last_forecasts if r['player_team']=='Arsenal'),1.5)
 
     def test_lineup_without_any_market_still_gets_forecasts_but_no_bets(self):
         with patch.object(LIVE,'load_odds_rows',return_value=[]):

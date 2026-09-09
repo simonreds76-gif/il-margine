@@ -559,12 +559,13 @@ def _coerce_starter_entries(values) -> List[dict]:
         entries.append(
             {
                 "name": name,
-                "line_index": int(item.get("line_index", -1) or -1),
+                "line_index": int(item["line_index"]) if item.get("line_index") is not None else -1,
                 "line_size": int(item.get("line_size", 0) or 0),
                 "role_score": int(item.get("role_score", 0) or 0),
                 "role_group": str(item.get("role_group") or "").strip(),
                 "formation": str(item.get("formation") or "").strip(),
                 "position_id": item.get("position_id", ""),
+                "player_id": item.get("player_id"),
             }
         )
     return entries
@@ -1485,6 +1486,8 @@ def _prediction_roster(quoted, lineup, fixture, resolve, team_key, historical_go
                    if str(e.get("role_group", "")).upper() == "GK"}
         substitute_entries = {_norm_text(e.get("name", "")): e
                               for e in (lineup or {}).get(f"{side}_substitute_entries", [])}
+        starter_entries = {_norm_text(e.get("name", "")): e
+                           for e in (lineup or {}).get(f"{side}_starters", [])}
         keepers.update(name for name, entry in substitute_entries.items() if entry.get("role_group") == "GK")
         keepers.update(name for (team, name), first_seen in (historical_goalkeepers or {}).items()
                        if team == key and first_seen < fixture["match_date"])
@@ -1498,9 +1501,9 @@ def _prediction_roster(quoted, lineup, fixture, resolve, team_key, historical_go
                 context_input = dict(fixture, player_name=name, player_team=fixture[f"{side}_team"],
                                      odds_decimal=0.0, implied_prob=0.0, bookmaker="")
                 candidate = resolve(context_input, lineup)
-                entry = substitute_entries.get(_norm_text(name), {})
-                if candidate is None and name in subs and entry.get("player_id") and entry.get("role_group") in {"DEF", "MID", "FW"}:
-                    # A named reserve with no Understat appearances receives the
+                entry = (starter_entries if name in starters else substitute_entries).get(_norm_text(name), {})
+                if candidate is None and entry.get("player_id") and entry.get("role_group") in {"DEF", "MID", "FW"}:
+                    # An identified player with no Understat appearances receives the
                     # model's existing position prior, never invented history.
                     candidate = dict(originals[0], odds_row=context_input,
                         player_meta={"player_name": name, "source": "lineup_position_prior"},
@@ -1520,6 +1523,8 @@ def _prediction_roster(quoted, lineup, fixture, resolve, team_key, historical_go
             population.extend(originals)
             continue
         statuses[key] = "confirmed_roster" if _is_confirmed_lineup(lineup) else "expected_roster"
+        if any(c.get("context_only_prior") and c["odds_row"]["player_name"] in starters for c in context):
+            statuses[key] = "estimated_roster"
         population.extend(context)
         # Keep an output for stale/out-of-squad quotes, but never let them
         # enter the independent denominator or generate an actionable price.
@@ -2210,22 +2215,34 @@ def main() -> None:
                 prediction["non_pen_lambda"] = non_pen_lambda
                 prediction["total_lambda"] = total_lambda
 
+        # Daily comparisons use the existing smoothed rate estimator; tip and
+        # research-ledger calculations above/below retain their original version.
+        from daily_goalscorer_rates import allocate_rates, VERSION as DAILY_VERSION
+        daily_predictions = {}
+        for team, candidates in team_buckets.items():
+            originals = [computed_predictions[(c["player_id"], team)] for c in candidates]
+            daily_candidates = []
+            for c in candidates:
+                name = c["player_meta"].get("player_name", c["odds_row"]["player_name"])
+                position_signal = _position_upgrade_summary(name, player_histories[c["player_id"]], fixture_lineup, c["is_home"])
+                factor, _ = _confirmed_role_adjustment(position_signal, _canonical_lineup_status(c["lineup_state"]))
+                daily_candidates.append(dict(c, daily_role_factor=factor))
+            estimates = allocate_rates(daily_candidates, originals, model_mod, fixture_lineup, candidates[0]["is_home"])
+            daily_predictions.update({(c["player_id"], team): estimate for c, estimate in zip(candidates, estimates)})
+
         # Export complete sporting forecasts separately from real bookmaker quotes.
         for candidate in model_rows:
             if candidate.get("lineup_state") not in {"starter", "expected_starter"}:
                 continue
-            prediction = computed_predictions[(candidate["player_id"], candidate["player_team_key"])]
             name = candidate["player_meta"].get("player_name", candidate["odds_row"]["player_name"])
-            position_signal = _position_upgrade_summary(name, player_histories[candidate["player_id"]], fixture_lineup, candidate["is_home"])
-            factor, _ = _confirmed_role_adjustment(position_signal, _canonical_lineup_status(candidate["lineup_state"]))
-            total = max(0.0, prediction["non_pen_lambda"] * factor + prediction["penalty_lambda"])
+            daily = daily_predictions[(candidate["player_id"], candidate["player_team_key"])]
             status = allocation_status.get(candidate["player_team_key"], "incomplete_roster")
             board_forecasts.append(dict(match_date=fixture_sample["match_date"], home_team=fixture_sample["home_team"],
                 away_team=fixture_sample["away_team"], player_team=candidate["player_team"], player_name=name,
-                probability=prob_at_least_one(total), expected_minutes=candidate["expected_minutes"],
-                allocation_status=status, trust_tier=fixture_health["trust_tier"], method=prediction["method"], context_only_prior=bool(candidate.get("context_only_prior")),
+                **daily, expected_minutes=candidate["expected_minutes"],
+                allocation_status=status, trust_tier=fixture_health["trust_tier"], context_only_prior=bool(candidate.get("context_only_prior")),
                 lineup_fingerprint=fingerprint(fixture_lineup or {}), generated_at=compared_at,
-                model_version="goalscorer_v1_roster_daily_20260908"))
+                model_version=DAILY_VERSION))
 
         for candidate in resolved_rows:
             odds_row = candidate["odds_row"]

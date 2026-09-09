@@ -58,6 +58,33 @@ class DailyBoardTests(unittest.TestCase):
         for invalid in (None,'NaN',False,0,1):
             self.model['probability']=invalid
             self.assertIsNone(self.board()['teams'][0]['players'][1]['fairOdds'])
+    def test_limited_history_estimate_is_visible_but_not_recorded_as_an_edge(self):
+        self.model.update(method='fallback',limited_data=True)
+        player=self.board()['teams'][0]['players'][1]
+        self.assertAlmostEqual(player['fairOdds'],3.33,places=2)
+        self.assertEqual(player['pricingStatus'],'limited_data')
+        self.assertIsNone(player['gapPp'])
+        self.assertIsNotNone(player['pricingReason'])
+    def test_raw_quote_survives_missing_model_identity(self):
+        raw=dict(self.quote,player_name='away1',player_team='Away',odds_decimal=7)
+        with (self.base/'goalscorer-odds-history.csv').open('w',newline='') as handle:
+            writer=csv.DictWriter(handle,fieldnames=raw);writer.writeheader();writer.writerow(raw)
+        player=self.board()['teams'][1]['players'][1]
+        self.assertEqual(player['bookmakerOdds'],7)
+        self.assertIsNone(player['modelProbability'])
+        self.assertIsNotNone(player['pricingReason'])
+    def test_missing_quote_explains_feed_gap_without_inventing_a_price(self):
+        player=self.board()['teams'][1]['players'][2]
+        self.assertEqual(player['bookmakerStatus'],'not_in_feed')
+        self.assertIsNotNone(player['bookmakerReason'])
+        self.assertIsNone(player['bookmakerOdds'])
+    def test_bookmaker_club_aliases_match_the_lineup_fixture(self):
+        self.fixture.update(home_team='Venezia',away_team='Fiorentina')
+        self.model.update(home_team='Venezia',away_team='Fiorentina',player_team='Venezia',lineup_fingerprint=fingerprint(self.fixture))
+        self.quote.update(home_team='Venezia FC',away_team='ACF Fiorentina',player_team='Venezia FC')
+        player=self.board()['teams'][0]['players'][1]
+        self.assertEqual(player['bookmakerOdds'],4)
+        self.assertIsNotNone(player['modelProbability'])
     def test_first_official_comparison_is_immutable_and_includes_negative_edges(self):
         from fair_odds_board import record_daily_board
         f=self.board(); f['teams'][0]['players'][1]['gapPp']=-2
