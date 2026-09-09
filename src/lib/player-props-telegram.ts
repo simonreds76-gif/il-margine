@@ -4,6 +4,7 @@ import { BASE_URL } from "@/lib/config";
 import { formatMatchDate, formatOdds, formatStake } from "@/lib/format";
 import { publicTipPath } from "@/lib/tip-seo";
 import { isWorldCupPropsTip } from "@/lib/world-cup-tips";
+import { telegramBookmakerPartner } from "@/lib/telegram-bookmakers";
 
 type BookmakerShape = {
   name?: string | null;
@@ -29,11 +30,12 @@ export type TelegramPostResult =
   | { status: "skipped"; reason: "not_player_props" | "disabled" | "missing_config"; url?: string }
   | { status: "failed"; reason: string; url?: string };
 
-type TelegramMessageEntity = { type: "bold"; offset: number; length: number };
+type TelegramMessageEntity = { type: "bold" | "text_link"; offset: number; length: number; url?: string };
 
 type TelegramMessagePayload = {
   text: string;
   entities: TelegramMessageEntity[];
+  reply_markup: { inline_keyboard: { text: string; url: string }[][] };
 };
 
 type TelegramAttempt = { ok: true } | { ok: false; reason: string };
@@ -73,15 +75,16 @@ function displayStake(value: PlayerPropsTelegramTip["stake"]): string {
   return `${formatStake(value)}u`;
 }
 
-function renderPlayerPropsTipPayload(tip: PlayerPropsTelegramTip): TelegramMessagePayload {
+export function renderPlayerPropsTipPayload(tip: PlayerPropsTelegramTip): TelegramMessagePayload {
   const url = playerPropsTipUrl(tip);
   const worldCup = isWorldCupPropsTip(tip);
-  const event = tip.event || "Player props";
+  const event = truncate(tip.event || "Player props", 90);
   const player = truncate(tip.player || "", 80);
   const selection = truncate(tip.selection || "Selection", 120);
   const pickLine = player ? `${player} - ${selection}` : selection;
-  const bookmaker = bookmakerLabel(tip);
-  const notes = truncate(tip.notes || "", 260);
+  const bookmaker = truncate(bookmakerLabel(tip) || "", 35);
+  const partner = telegramBookmakerPartner(bookmaker, BASE_URL);
+  const notes = truncate(tip.notes || "", 200);
 
   let text = "";
   const entities: TelegramMessageEntity[] = [];
@@ -94,27 +97,32 @@ function renderPlayerPropsTipPayload(tip: PlayerPropsTelegramTip): TelegramMessa
     entities.push({ type: "bold", offset, length: utf16Length(value) });
   };
   const newline = (count = 1) => append("\n".repeat(count));
+  const appendLink = (value: string, target: string) => {
+    const offset = utf16Length(text);
+    append(value);
+    entities.push({ type: "text_link", offset, length: utf16Length(value), url: target });
+  };
 
   appendBold(worldCup ? "Il Margine WC Pick" : "Il Margine Player Prop");
   newline(2);
   appendBold(event);
   newline();
-  append(pickLine);
+  appendBold(pickLine);
   newline(2);
   append("Odds: ");
   appendBold(displayOdds(tip.odds));
-  newline();
-  append("Stake: ");
+  append("  |  Stake: ");
   appendBold(displayStake(tip.stake));
   newline();
 
   if (bookmaker) {
     append("Bookmaker: ");
-    appendBold(bookmaker);
+    if (partner) appendLink(partner.name, partner.url);
+    else append(bookmaker);
     newline();
   }
   if (tip.match_date) {
-    append("Match date: ");
+    append("Match: ");
     appendBold(formatMatchDate(tip.match_date));
     newline();
   }
@@ -126,16 +134,21 @@ function renderPlayerPropsTipPayload(tip: PlayerPropsTelegramTip): TelegramMessa
   }
 
   newline();
-  append(worldCup ? "Model-driven World Cup player props and market value." : "Player-prop selection with tracked odds, stake and public record.");
-  newline(2);
-  append(`Full pick: ${url}`);
+  appendLink("Full pick & tracked results", url);
+  newline();
+  append("Odds recorded at publication; availability can change.");
+  if (partner) { newline(); append("Bookmaker link is an affiliate link."); }
 
-  return { text, entities };
+  return { text, entities, reply_markup: { inline_keyboard: [
+    ...(partner ? [[{ text: `Open ${partner.name} ↗`, url: partner.url }]] : []),
+    [{ text: "Full pick & results", url }],
+  ] } };
 }
 
 function playerPropsTipCardUrl(tip: PlayerPropsTelegramTip): string {
   const bookmaker = bookmakerLabel(tip);
   const params = new URLSearchParams({
+    v: "2",
     scope: isWorldCupPropsTip(tip) ? "worldcup" : "props",
     event: tip.event || "Player props",
     player: tip.player || "",
@@ -179,6 +192,7 @@ async function sendTelegramPhotoUpload(
     form.append("photo", cardBlob, `ilmargine-player-prop-${tip.id}.png`);
     form.append("caption", payload.text);
     form.append("caption_entities", JSON.stringify(payload.entities));
+    form.append("reply_markup", JSON.stringify(payload.reply_markup));
 
     const response = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
       method: "POST",
@@ -206,7 +220,8 @@ async function sendTelegramText(
         chat_id: chatId,
         text: payload.text,
         entities: payload.entities,
-        disable_web_page_preview: false,
+        reply_markup: payload.reply_markup,
+        disable_web_page_preview: true,
       }),
     });
 
