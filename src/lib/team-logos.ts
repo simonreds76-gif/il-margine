@@ -204,4 +204,3 @@ export function resolveTeamLogoPath(team: string | null, category: string): stri
     resolveManifestLogoPath(team, "all")
   );
 }
-

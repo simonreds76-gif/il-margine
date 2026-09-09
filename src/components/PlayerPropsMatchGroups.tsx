@@ -11,7 +11,7 @@ import ResultBadge from "@/components/ResultBadge";
 import { getDisplayBetCategory } from "@/lib/bet-category";
 import { formatMatchDate, formatOdds, formatStake } from "@/lib/format";
 import { publicTipPath } from "@/lib/tip-seo";
-import { normalizeText, resolveTeamLogoPath } from "@/lib/team-logos";
+import { resolveTeamLogoPath } from "@/lib/team-logos";
 
 type Mode = "pending" | "settled";
 
