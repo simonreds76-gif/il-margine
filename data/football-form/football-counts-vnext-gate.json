@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-10T13:53:39Z",
+  "generated_at": "2026-09-10T17:52:42Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -89,13 +89,13 @@
     "latest_scan": {
       "state": "ELIGIBLE_CANDIDATES_PRESENT",
       "explanation": "At least one candidate passed every locked shadow gate.",
-      "scored_rows": 112,
-      "scored_fixtures": 22,
+      "scored_rows": 124,
+      "scored_fixtures": 24,
       "eligible_rows": 24,
       "eligible_fixtures": 12,
-      "blocked_rows": 88,
+      "blocked_rows": 100,
       "blocker_rows": {
-        "edge_below_3pct": 88
+        "edge_below_3pct": 100
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 1,
