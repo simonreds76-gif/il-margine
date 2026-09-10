@@ -6,9 +6,11 @@ import Footer from "@/components/Footer";
 import MarketBadge from "@/components/MarketBadge";
 import PropsAlertsCta from "@/components/PropsAlertsCta";
 import TipPageTracker from "@/components/TipPageTracker";
+import TipTeamCrest from "@/components/TipTeamCrest";
 import { BASE_URL } from "@/lib/config";
 import { formatMatchDate, formatOdds, formatStake } from "@/lib/format";
 import { fetchSeoTipFixture, type SeoTipBet } from "@/lib/tip-seo-server";
+import { resolveTeamLogoPath } from "@/lib/team-logos";
 
 // Admin mutations explicitly invalidate betting-tip pages, so public reads can
 // use a long cache without delaying edits or settlements.
@@ -131,6 +133,9 @@ export default async function BettingPreviewPage({ params }: PageProps) {
   if (`/betting-tips/${slugId}` !== fixture.canonicalPath) permanentRedirect(fixture.canonicalPath);
 
   const hub = hubFor(fixture.seed.market);
+  const clubs = fixture.seed.market === "props"
+    ? fixture.seed.event.match(/^(.+?)\s+(vs?\.?)\s+(.+)$/i)
+    : null;
   const description = previewDescription(fixture);
   const canonicalUrl = `${BASE_URL}${fixture.canonicalPath}`;
   const imageUrl = `${canonicalUrl}/opengraph-image`;
@@ -223,9 +228,23 @@ export default async function BettingPreviewPage({ params }: PageProps) {
               <span className="font-mono text-xs text-slate-400">{formatMatchDate(fixture.seed.match_date)}</span>
             </div>
 
-            <h1 className="max-w-4xl text-4xl font-black tracking-[-0.035em] text-white sm:text-5xl md:text-6xl">
-              {fixture.seed.event}
-            </h1>
+            {clubs ? (
+              <h1 aria-label={fixture.seed.event} className="grid max-w-4xl grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 py-3 text-2xl font-black tracking-[-0.035em] text-white sm:gap-6 sm:text-4xl md:text-5xl">
+                <span className="flex min-w-0 flex-col items-center gap-4 text-center md:flex-row md:text-left">
+                  <TipTeamCrest team={clubs[1]} src={resolveTeamLogoPath(clubs[1], fixture.seed.category)} />
+                  <span className="break-words">{clubs[1]}</span>
+                </span>
+                <span className="text-sm font-medium uppercase tracking-widest text-slate-500"> {clubs[2]} </span>
+                <span className="flex min-w-0 flex-col items-center gap-4 text-center md:flex-row md:text-left">
+                  <TipTeamCrest team={clubs[3]} src={resolveTeamLogoPath(clubs[3], fixture.seed.category)} />
+                  <span className="break-words">{clubs[3]}</span>
+                </span>
+              </h1>
+            ) : (
+              <h1 className="max-w-4xl text-4xl font-black tracking-[-0.035em] text-white sm:text-5xl md:text-6xl">
+                {fixture.seed.event}
+              </h1>
+            )}
             <p className="mt-4 max-w-3xl text-lg leading-relaxed text-slate-300">
               Posted selections, prices and transparent settlement for this fixture.
             </p>
