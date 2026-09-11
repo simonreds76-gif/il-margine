@@ -7,6 +7,10 @@ on:
     - cron: "45 6 * * *"
   workflow_dispatch:
     inputs:
+      odds_only:
+        description: "Refresh prices and lineups using existing player history (fast recovery)"
+        type: boolean
+        default: false
       force_understat:
         description: "Re-run Understat scrape even if player-match CSVs already exist"
         type: boolean
@@ -67,6 +71,7 @@ jobs:
             --github-output
 
       - name: Refresh stale Understat player logs
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.odds_only != 'true'
         timeout-minutes: 45
         env:
           # Only read github.event.inputs when dispatch (schedule has no inputs; avoid invalid `inputs` context).
