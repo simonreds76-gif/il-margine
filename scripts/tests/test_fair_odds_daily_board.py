@@ -104,7 +104,10 @@ class DailyBoardTests(unittest.TestCase):
                ('Le Havre','Angers','Le Havre AC','Angers SCO'),
                ('Paris FC','Lyon','Paris FC','Olympique Lyon'),
                ('Rennes','Marseille','Stade Rennais FC','Olympique Marseille'),
-               ('Sevilla','Valencia','Sevilla FC','Valencia CF')]
+               ('Sevilla','Valencia','Sevilla FC','Valencia CF'),
+               ('Strasbourg','Monaco','Strasbourg Alsace','AS Monaco'),
+               ('Elversberg','Bayern München','SV 07 Elversberg','Bayern Munich'),
+               ('Getafe','Deportivo A Coruña','Getafe CF','RC Deportivo de A Coruna')]
         for home,away,book_home,book_away in cases:
             with self.subTest(home=home,away=away):
                 self.fixture.update(home_team=home,away_team=away)

@@ -7,6 +7,10 @@ on:
     - cron: "45 6 * * *"
   workflow_dispatch:
     inputs:
+      rebuild_only:
+        description: "Republish from retained prices and lineups without external sports API calls"
+        type: boolean
+        default: false
       odds_only:
         description: "Refresh prices and lineups using existing player history (fast recovery)"
         type: boolean
@@ -71,7 +75,7 @@ jobs:
             --github-output
 
       - name: Refresh stale Understat player logs
-        if: github.event_name != 'workflow_dispatch' || github.event.inputs.odds_only != 'true'
+        if: github.event_name != 'workflow_dispatch' || (github.event.inputs.odds_only != 'true' && github.event.inputs.rebuild_only != 'true')
         timeout-minutes: 45
         env:
           # Only read github.event.inputs when dispatch (schedule has no inputs; avoid invalid `inputs` context).
@@ -109,6 +113,7 @@ jobs:
           fi
 
       - name: Refresh expected lineups + public/shadow board
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.rebuild_only != 'true'
         run: |
           for league in serie-a epl la-liga bundesliga ligue-1; do
             echo "Running goalscorer expected refresh for ${league}"
