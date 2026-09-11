@@ -1,10 +1,12 @@
 {
-  "generated_at": "2026-09-11T17:55:21.389432Z",
+  "generated_at": "2026-09-11T18:31:50.485073Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
-    "data/goalscorer/bundesliga/goalscorer-live-comparison.csv"
+    "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
+    "data/goalscorer/bundesliga/goalscorer-live-comparison.csv",
+    "data/goalscorer/ligue-1/goalscorer-live-comparison.csv"
   ],
   "team_form_source": "/home/runner/work/_temp/football-form/team-match-base.csv",
   "edge_threshold_pp": 6.0,
@@ -33,11 +35,11 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 19,
-  "signals_qualifying": 1,
+  "fixtures_evaluated": 24,
+  "signals_qualifying": 0,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 33,
-    "market_odds_above_cap": 1
+    "incomplete_prediction_roster": 38,
+    "model_probability_below_floor": 1
   },
   "extreme_gap_quarantine": {
     "eligible_rows": 0,
@@ -45,111 +47,7 @@
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
-  "leagues_covered": [
-    "bundesliga"
-  ],
-  "featured_signal_id": "20260911-woo-yeong-jeong-0e66d57321",
-  "signals": [
-    {
-      "id": "20260911-woo-yeong-jeong-0e66d57321",
-      "match": {
-        "home_team": "Union Berlin",
-        "away_team": "Schalke 04",
-        "league": "bundesliga",
-        "league_display": "Bundesliga",
-        "league_logo_path": "/league-logos/bundesliga.png",
-        "kickoff_utc": "2026-09-11T18:30:00Z",
-        "kickoff_display": "Fri 11 Sep 19:30 UK",
-        "fotmob_match_id": "5881169",
-        "fotmob_page_url": "/matches/union-berlin-vs-schalke-04/2s47vs#5881169",
-        "lineup_type": "confirmed",
-        "venue": ""
-      },
-      "player": {
-        "name": "Woo-yeong Jeong",
-        "team": "Union Berlin",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/bundesliga/union-berlin.png",
-        "team_primary_color": "#b91c1c",
-        "team_secondary_color": "#facc15",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 29.8,
-        "fair_odds": 3.36
-      },
-      "market_data": {
-        "best_odds": 4.33,
-        "best_book": "Bet365",
-        "implied_chance_pct": 23.1
-      },
-      "edge": {
-        "price_gap_pp": 6.7,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 82
-        },
-        "share_of_team_chances_pct": 21,
-        "share_of_team_chances_percentile": 91,
-        "team_attacking_outlook": {
-          "tier": "Positive",
-          "percentile": 57
-        },
-        "recent_team_form": {
-          "tier": "Average",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-16",
-          "xg_for_avg": 1.81,
-          "xg_against_avg": 1.81,
-          "xgd_per90": -0.01,
-          "shots_for_avg": 15.2,
-          "shots_against_avg": 11.6,
-          "sot_for_avg": 5.8,
-          "sot_against_avg": 4.4,
-          "corners_for_avg": 5.8,
-          "corners_against_avg": 7.0
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 99
-        },
-        "opponent_recent_defence": {
-          "tier": "High",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2023-05-27",
-          "xg_for_avg": 1.42,
-          "xg_against_avg": 2.38,
-          "xgd_per90": -0.96,
-          "shots_for_avg": 14.2,
-          "shots_against_avg": 13.6,
-          "sot_for_avg": 5.6,
-          "sot_against_avg": 6.8,
-          "corners_for_avg": 6.6,
-          "corners_against_avg": 4.2
-        },
-        "fixture_boost_pct": 115,
-        "projected_minutes": 85,
-        "penalty_role": "Not on penalties",
-        "role_adjustment_factor": 1.05,
-        "role_adjustment_reason": "confirmed_role_delta=+1;usual=AMC;today=FW;weight=1.00",
-        "lineup_confidence": "Confirmed starter"
-      },
-      "confidence_tier": "High",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "Recent chance quality grades as strong",
-        "Opponent defensive profile is a positive matchup",
-        "The fixture profile adds to his scoring case",
-        "Confirmed XI shows a more advanced scoring role"
-      ],
-      "risk_flags": []
-    }
-  ]
+  "leagues_covered": [],
+  "featured_signal_id": null,
+  "signals": []
 }

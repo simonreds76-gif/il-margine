@@ -9,9 +9,9 @@
       "kickoff_utc": "2026-09-11T18:45:00Z",
       "home_team": "Rennes",
       "away_team": "Marseille",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-3-3",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -25,7 +25,7 @@
         "Adrien Thomasson",
         "Ludovic Blas",
         "Estéban Lepaul",
-        "Mousa Tamari"
+        "Issa Soumaré"
       ],
       "away_players": [
         "Jeffrey De Lange",
@@ -152,15 +152,15 @@
           "shirt_number": "9"
         },
         {
-          "name": "Mousa Tamari",
+          "name": "Issa Soumaré",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
           "role_group": "FW",
           "formation": "4-3-3",
           "position_id": 107,
-          "player_id": 813055,
-          "shirt_number": "11"
+          "player_id": 1103837,
+          "shirt_number": "90"
         }
       ],
       "away_starters": [
@@ -287,30 +287,128 @@
         }
       ],
       "home_subs": [
+        "Nicolas Lemaître",
         "Abdelhamid Aït Boudlal",
-        "Quentin Merlin"
+        "Bryan Reynolds",
+        "Quentin Merlin",
+        "Mousa Tamari",
+        "Sebastian Szymański",
+        "Boulaye Dia",
+        "Eliezer Mayenda",
+        "Henrick Do Marcolino"
       ],
       "home_substitute_entries": [
+        {
+          "name": "Nicolas Lemaître",
+          "player_id": "625422",
+          "role_group": "GK"
+        },
         {
           "name": "Abdelhamid Aït Boudlal",
           "player_id": "1581722",
           "role_group": "DEF"
         },
         {
+          "name": "Bryan Reynolds",
+          "player_id": "924446",
+          "role_group": "DEF"
+        },
+        {
           "name": "Quentin Merlin",
           "player_id": "1233931",
           "role_group": "DEF"
+        },
+        {
+          "name": "Mousa Tamari",
+          "player_id": "813055",
+          "role_group": "MID"
+        },
+        {
+          "name": "Sebastian Szymański",
+          "player_id": "765466",
+          "role_group": "MID"
+        },
+        {
+          "name": "Boulaye Dia",
+          "player_id": "972120",
+          "role_group": "FW"
+        },
+        {
+          "name": "Eliezer Mayenda",
+          "player_id": "1391052",
+          "role_group": "FW"
+        },
+        {
+          "name": "Henrick Do Marcolino",
+          "player_id": "1707955",
+          "role_group": "FW"
         }
       ],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "away_subs": [
+        "Théo Vermot",
+        "Bamo Meité",
+        "Derek Cornelius",
+        "Ulisses Garcia",
+        "Nouhoum Kamissoko",
+        "Faris Moumbagna",
+        "Keyliane Abdallah",
+        "Neal Maupay",
+        "Tadjidine Mmadi"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Théo Vermot",
+          "player_id": "1078904",
+          "role_group": "GK"
+        },
+        {
+          "name": "Bamo Meité",
+          "player_id": "1287489",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Derek Cornelius",
+          "player_id": "847629",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Ulisses Garcia",
+          "player_id": "520979",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Nouhoum Kamissoko",
+          "player_id": "1698484",
+          "role_group": "MID"
+        },
+        {
+          "name": "Faris Moumbagna",
+          "player_id": "952325",
+          "role_group": "FW"
+        },
+        {
+          "name": "Keyliane Abdallah",
+          "player_id": "1638922",
+          "role_group": "FW"
+        },
+        {
+          "name": "Neal Maupay",
+          "player_id": "391064",
+          "role_group": "FW"
+        },
+        {
+          "name": "Tadjidine Mmadi",
+          "player_id": "1814264",
+          "role_group": "FW"
+        }
+      ],
       "home_unavailable": [],
       "away_unavailable": [
         "Geoffrey Kondogbia",
         "Tochukwu Nnadi"
       ],
-      "observed_at": "2026-09-11T17:54:32.898939+00:00",
-      "changed_at": "2026-09-11T17:54:32.898939+00:00"
+      "observed_at": "2026-09-11T18:30:59.066631+00:00",
+      "changed_at": "2026-09-11T18:30:59.066631+00:00"
     },
     {
       "fotmob_match_id": 5802928,
@@ -616,7 +714,7 @@
         "Laurent Abergel",
         "Morgan Sanson"
       ],
-      "observed_at": "2026-09-11T17:54:32.898939+00:00",
+      "observed_at": "2026-09-11T18:30:59.066631+00:00",
       "changed_at": "2026-09-11T10:02:03.884539+00:00"
     },
     {
@@ -919,7 +1017,7 @@
         "Louis Mouton",
         "Haris Belkebla"
       ],
-      "observed_at": "2026-09-11T17:54:32.898939+00:00",
+      "observed_at": "2026-09-11T18:30:59.066631+00:00",
       "changed_at": "2026-09-10T12:05:52.813726+00:00"
     },
     {
@@ -1220,7 +1318,7 @@
         "Guillaume Restes",
         "Abu Francis"
       ],
-      "observed_at": "2026-09-11T17:54:32.898939+00:00",
+      "observed_at": "2026-09-11T18:30:59.066631+00:00",
       "changed_at": "2026-09-11T10:02:03.884539+00:00"
     },
     {
@@ -1522,7 +1620,7 @@
       "away_unavailable": [
         "Julien Duranville"
       ],
-      "observed_at": "2026-09-11T17:54:32.898939+00:00",
+      "observed_at": "2026-09-11T18:30:59.066631+00:00",
       "changed_at": "2026-09-11T10:02:03.884539+00:00"
     },
     {
@@ -1828,7 +1926,7 @@
         "Mohammed Salisu",
         "Folarin Balogun"
       ],
-      "observed_at": "2026-09-11T17:54:32.898939+00:00",
+      "observed_at": "2026-09-11T18:30:59.066631+00:00",
       "changed_at": "2026-09-11T10:02:03.884539+00:00"
     },
     {
@@ -2126,7 +2224,7 @@
         "Mamady Diambou"
       ],
       "away_unavailable": [],
-      "observed_at": "2026-09-11T17:54:32.898939+00:00",
+      "observed_at": "2026-09-11T18:30:59.066631+00:00",
       "changed_at": "2026-09-11T10:02:03.884539+00:00"
     },
     {
@@ -2431,7 +2529,7 @@
         "Saud Abdulhamid",
         "Yacine Titraoui"
       ],
-      "observed_at": "2026-09-11T17:54:32.898939+00:00",
+      "observed_at": "2026-09-11T18:30:59.066631+00:00",
       "changed_at": "2026-09-11T10:02:03.884539+00:00"
     },
     {
@@ -2732,7 +2830,7 @@
         "Paolo Gozzi",
         "Yvann Titi"
       ],
-      "observed_at": "2026-09-11T17:54:32.898939+00:00",
+      "observed_at": "2026-09-11T18:30:59.066631+00:00",
       "changed_at": "2026-09-11T17:54:32.898939+00:00"
     }
   ]
