@@ -8,6 +8,11 @@ on:
     - cron: "45 9-22 * * *"
   workflow_dispatch:
     inputs:
+      rebuild_only:
+        description: "Rebuild and publish from saved evidence without capture, API calls or Telegram"
+        required: false
+        default: false
+        type: boolean
       settlement_only:
         description: "Skip capture/model refresh and settle due GK Saves signals only"
         required: false
@@ -53,20 +58,22 @@ jobs:
         run: pip install requests
 
       - name: Refresh current-season count inputs
-        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *')
+        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *') && github.event.inputs.rebuild_only != 'true'
         env:
           API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
         shell: bash
         run: |
           python scripts/footballdata-download-historical.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2026 --overwrite || echo "::warning::Football-Data current-season refresh was unavailable."
           python scripts/understat-download-shots.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2026 || echo "::warning::Understat current-season aggregate refresh was unavailable."
-          python scripts/understat-download-corner-features.py --seasons 2026 || echo "::warning::Understat corner-event refresh was unavailable."
+          python scripts/understat-download-corner-features.py --seasons 2026 --limit 100 || echo "::warning::Understat corner-event refresh was unavailable."
           # The builder combines the durable archive with current-season and
           # Understat supplements. Individual lanes fail closed on missing
           # registered inputs; generic offseason league staleness is reported.
           python scripts/build-football-form-layer.py
           if [ -n "${API_FOOTBALL_KEY:-}" ]; then
-            python scripts/capture-api-football-counts.py --historical-backfill --target-team-values 200 --max-requests 90 || echo "::warning::API-Football historical agreement backfill reported an error; existing archive retained."
+            # Free access is date-limited. Accumulate recent results prospectively;
+            # historical backfills stay available as an explicit CLI operation.
+            python scripts/capture-api-football-counts.py --days-back 2 --max-requests 30 || echo "::warning::API-Football recent count capture reported a coverage error; existing archive retained."
           else
             echo "::warning::API_FOOTBALL_KEY is missing; API-Football count archive skipped."
           fi
@@ -75,7 +82,7 @@ jobs:
           python scripts/fouls-definition-agreement.py --allow-empty
 
       - name: Capture paired market prices
-        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true'
+        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && github.event.inputs.rebuild_only != 'true'
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           ODDS_API_IO_KEY: ${{ secrets.ODDS_API_KEY }}
@@ -124,7 +131,7 @@ jobs:
           python scripts/pinnacle-scrape-corners.py "${CORNER_ARGS[@]}" || echo "::warning::Hosted Pinnacle corners capture unavailable; local capture remains authoritative."
 
       - name: Refresh pending vNext results
-        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *')
+        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *') && github.event.inputs.rebuild_only != 'true'
         env:
           API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
         shell: bash
@@ -154,7 +161,7 @@ jobs:
           python scripts/corners-live-snapshot.py
 
       - name: Settle goalkeeper saves shadow evidence
-        if: steps.season.outputs.active == 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *')
+        if: steps.season.outputs.active == 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *') && github.event.inputs.rebuild_only != 'true'
         env:
           API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
         shell: bash
@@ -165,7 +172,7 @@ jobs:
           python scripts/goalkeeper-saves-shadow.py
 
       - name: Send daily football model digest
-        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *')
+        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *') && github.event.inputs.rebuild_only != 'true'
         continue-on-error: true
         env:
           OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
@@ -226,4 +233,15 @@ jobs:
             exit 0
           fi
           git commit -m "chore: refresh football vnext shadow evidence"
+          # Preserve the exact committed evidence if publication fails.
+          git format-patch -1 --stdout > "$RUNNER_TEMP/football-counts-evidence.patch"
           bash scripts/ci-safe-push.sh golden-with-speed-insights
+
+      - name: Preserve evidence after failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: football-counts-recovery-${{ github.run_id }}
+          path: ${{ runner.temp }}/football-counts-evidence.patch
+          if-no-files-found: ignore
+          retention-days: 7
