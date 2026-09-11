@@ -1,15 +1,15 @@
 {
-  "run_at": "2026-09-07T10:44:53Z",
+  "run_at": "2026-09-11T14:03:34Z",
   "model": "corners-v3-shadow",
-  "total_bets": 37,
-  "settled_this_run": 8,
+  "total_bets": 50,
+  "settled_this_run": 0,
   "total_settled": 36,
-  "total_pending": 1,
+  "total_pending": 14,
   "pending_breakdown": {
-    "future": 1,
+    "future": 13,
     "live": 0,
     "stale": 0,
-    "old_stale": 0,
+    "old_stale": 1,
     "unknown": 0
   },
   "source_freshness": {
@@ -90,10 +90,21 @@
     }
   },
   "stale_rows": [],
-  "old_stale_rows": [],
+  "old_stale_rows": [
+    {
+      "match": "Udinese vs Lazio",
+      "league": "serie-a",
+      "line": "9.5",
+      "side": "over",
+      "kickoff": "2026-09-07T18:45:00Z",
+      "hours_elapsed": 91.31
+    }
+  ],
   "unknown_rows": [],
   "overridden_rows": [],
   "warnings": [],
-  "errors": [],
-  "exit_code_recommendation": 0
+  "errors": [
+    "1 old stale pending row(s) (>=48h elapsed)"
+  ],
+  "exit_code_recommendation": 1
 }

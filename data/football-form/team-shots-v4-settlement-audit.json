@@ -1,15 +1,15 @@
 {
-  "run_at": "2026-09-07T10:44:53Z",
+  "run_at": "2026-09-11T14:03:34Z",
   "model": "team-shots-v4-shadow",
   "total_bets": 15,
-  "settled_this_run": 1,
+  "settled_this_run": 0,
   "total_settled": 13,
   "total_pending": 2,
   "pending_breakdown": {
-    "future": 1,
+    "future": 0,
     "live": 0,
-    "stale": 1,
-    "old_stale": 0,
+    "stale": 0,
+    "old_stale": 2,
     "unknown": 0
   },
   "source_freshness": {
@@ -89,22 +89,30 @@
       "snapshot_path": "data/results-snapshot/2026-09-07.json"
     }
   },
-  "stale_rows": [
+  "stale_rows": [],
+  "old_stale_rows": [
     {
       "match": "Schalke 04 vs Bayern Munich",
       "league": "bundesliga",
       "line": "20.5",
       "side": "under",
       "kickoff": "2026-09-05T16:30:00Z",
-      "hours_elapsed": 42.25
+      "hours_elapsed": 141.56
+    },
+    {
+      "match": "Elche CF vs Real Sociedad San Sebastian",
+      "league": "la-liga",
+      "line": "12.5",
+      "side": "under",
+      "kickoff": "2026-09-07T19:30:00Z",
+      "hours_elapsed": 90.56
     }
   ],
-  "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
-  "warnings": [
-    "1 stale pending row(s) across 1 fixture(s) (3-48h elapsed)"
+  "warnings": [],
+  "errors": [
+    "2 old stale pending row(s) (>=48h elapsed)"
   ],
-  "errors": [],
-  "exit_code_recommendation": 0
+  "exit_code_recommendation": 1
 }

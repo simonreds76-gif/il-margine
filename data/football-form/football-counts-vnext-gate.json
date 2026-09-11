@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T13:54:56Z",
+  "generated_at": "2026-09-11T14:03:34Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -58,18 +58,19 @@
     "market_gate": "BLOCKED_PENDING_2026_27_PINNACLE_SAMPLE",
     "live_routing": false,
     "prospective": {
-      "signals": 1,
+      "signals": 14,
       "settled": 0,
-      "pending": 1,
+      "pending": 14,
       "pnl_units": 0,
       "roi": null,
       "true_close_n": 0,
       "true_close_coverage": null,
       "mean_true_close_clv": null,
       "side_counts": {
-        "over": 1
+        "over": 6,
+        "under": 8
       },
-      "dominant_side_share": 1.0
+      "dominant_side_share": 0.571429
     },
     "warmup_tracking": {
       "signals": 36,
