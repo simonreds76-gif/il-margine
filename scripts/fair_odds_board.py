@@ -69,6 +69,29 @@ def seed_lineup_context(odds_rows, lineup_map):
                 seen.add(identity)
     return sorted(result,key=lambda r:(r['match_date'],r['home_team'],r['away_team'],r.get('captured_at','')))
 
+def latest_bookmaker_quotes(root, now):
+    """Retain current real prices across clean CI checkouts, independent of model coverage."""
+    base=root/'data/goalscorer'
+    rows=read_json(base/'bet365-latest-quotes.json').get('quotes',[])
+    archive=base/'goalscorer-odds-history.csv'
+    if archive.exists():
+        with archive.open(encoding='utf-8-sig',newline='') as handle:
+            rows += list(csv.DictReader(handle))
+    latest={}
+    fields=('match_date','home_team','away_team','player_team','player_name','canonical_player_name',
+            'bookmaker','odds_decimal','captured_at','kickoff_at','source','market')
+    for row in rows:
+        date=str(row.get('match_date') or '')[:10]
+        capture=instant(row.get('captured_at'))
+        odds=number(row.get('odds_decimal'))
+        if norm(row.get('bookmaker'))!='bet365' or not capture or capture>now or not odds or odds<=1: continue
+        if not (now-timedelta(hours=4)).date().isoformat()<=date<=(now+timedelta(days=4)).date().isoformat(): continue
+        if not all(row.get(k) for k in ('home_team','away_team','player_name','player_team')): continue
+        key=(date,*(norm(row.get(k)) for k in ('home_team','away_team','player_team','player_name')))
+        if key not in latest or capture>instant(latest[key]['captured_at']):
+            latest[key]={k:row.get(k,'') for k in fields}
+    return [latest[k] for k in sorted(latest)]
+
 def build_board(root=ROOT, now=None):
     now=now or datetime.now(timezone.utc)
     fixtures=[]
@@ -79,12 +102,7 @@ def build_board(root=ROOT, now=None):
         return (str(row.get('match_date') or '')[:10], norm(team_key(row.get('home_team') or '')),
                 norm(team_key(row.get('away_team') or '')), norm(team_key(row.get('player_team') or '')),
                 norm(row.get('canonical_player_name') or row.get('player_name')))
-    raw_quotes=[]
-    archive=root/'data/goalscorer/goalscorer-odds-history.csv'
-    if archive.exists():
-        with archive.open(encoding='utf-8-sig',newline='') as handle:
-            raw_quotes=[r for r in csv.DictReader(handle) if norm(r.get('bookmaker'))=='bet365'
-                        and str(r.get('match_date') or '')[:10]>= (now-timedelta(hours=4)).date().isoformat()]
+    raw_quotes=latest_bookmaker_quotes(root,now)
     for league,label in LEAGUES.items():
         prefix='' if league=='serie-a' else league+'-'
         lineup_payload=read_json(root/'data/goalscorer'/f'{prefix}confirmed-lineups.json')
@@ -215,10 +233,18 @@ def record_daily_board(payload, root=ROOT):
 
 def write_board(output=None, record=True):
     output=output or ROOT/'public/fair-odds-lab/daily-board.json'
-    payload=build_board()
+    now=datetime.now(timezone.utc)
+    quotes=latest_bookmaker_quotes(ROOT,now)
+    (ROOT/'data/goalscorer/bet365-latest-quotes.json').write_text(
+        json.dumps(dict(schemaVersion=1,quotes=quotes),ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+    payload=build_board(now=now)
     if record: record_daily_board(payload)
     output.parent.mkdir(parents=True,exist_ok=True)
     output.write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
     print(f'Daily Lab: {len(payload["fixtures"])} fixtures -> {output}')
+    for f in payload['fixtures']:
+        players=[p for t in f['teams'] for p in t['players']]
+        priced=sum(p['bookmakerOdds'] is not None for p in players)
+        print(f"  Bet365 coverage: {f['date']} {f['teams'][0]['name']} vs {f['teams'][1]['name']}: {priced}/{len(players)} players")
 
 if __name__=='__main__': write_board()

@@ -23,6 +23,7 @@ blocked_artifacts=(
 )
 
 artifacts=(
+  data/goalscorer/bet365-latest-quotes.json
   data/goalscorer/team-logo-map.json
   data/goalscorer/team-kit-colors.json
   data/goalscorer/world-cup-2026-penalty-takers.json

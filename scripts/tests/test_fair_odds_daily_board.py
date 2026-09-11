@@ -96,6 +96,45 @@ class DailyBoardTests(unittest.TestCase):
         with (self.base/'fair-odds-daily-serie-a.csv').open() as handle: rows=list(csv.DictReader(handle))
         self.assertEqual(len(rows),1);self.assertEqual(float(rows[0]['ev']),-.08)
         self.assertEqual(rows[0]['recommended_stake_units'],'0')
+    def test_observed_bookmaker_fixture_aliases_keep_prices_on_both_sides(self):
+        cases=[('Genoa','Frosinone','Genoa CFC','Frosinone Calcio'),
+               ('Sunderland','Arsenal','Sunderland AFC','Arsenal FC'),
+               ('Borussia Dortmund','Paderborn','Borussia Dortmund','SC Paderborn 07'),
+               ('Mainz 05','Eintracht Frankfurt','FSV Mainz','Eintracht Frankfurt'),
+               ('Le Havre','Angers','Le Havre AC','Angers SCO'),
+               ('Paris FC','Lyon','Paris FC','Olympique Lyon'),
+               ('Rennes','Marseille','Stade Rennais FC','Olympique Marseille'),
+               ('Sevilla','Valencia','Sevilla FC','Valencia CF')]
+        for home,away,book_home,book_away in cases:
+            with self.subTest(home=home,away=away):
+                self.fixture.update(home_team=home,away_team=away)
+                self.quote.update(home_team=book_home,away_team=book_away,player_team=book_home)
+                self.assertEqual(self.board()['teams'][0]['players'][1]['bookmakerOdds'],4)
+    def test_raw_prices_survive_clean_checkout_and_unrelated_league_refresh(self):
+        from fair_odds_board import latest_bookmaker_quotes
+        persisted=dict(self.quote,player_team='Away',player_name='away1',odds_decimal=7)
+        path=self.base/'bet365-latest-quotes.json'
+        path.write_text(json.dumps({'quotes':[persisted]}))
+        self.assertEqual(self.board()['teams'][1]['players'][1]['bookmakerOdds'],7)
+        newer=dict(persisted,odds_decimal=8,captured_at='2026-09-08T17:59:00Z')
+        unrelated=dict(self.quote,home_team='Other',away_team='Fixture')
+        with (self.base/'goalscorer-odds-history.csv').open('w',newline='') as h:
+            w=csv.DictWriter(h,fieldnames=newer);w.writeheader();w.writerows([newer,unrelated])
+        kept=latest_bookmaker_quotes(self.root,self.now)
+        self.assertEqual(len(kept),2)
+        path.write_text(json.dumps({'quotes':kept}))
+        (self.base/'goalscorer-odds-history.csv').unlink()
+        self.assertEqual(self.board()['teams'][1]['players'][1]['bookmakerOdds'],8)
+        self.now+=timedelta(hours=2)
+        p=self.board()['teams'][1]['players'][1]
+        self.assertEqual(p['bookmakerOdds'],8)
+        self.assertFalse(p['priceFresh'])
+    def test_persisted_quotes_reject_invalid_future_and_expired_rows(self):
+        from fair_odds_board import latest_bookmaker_quotes
+        rows=[dict(self.quote,bookmaker='Other'),dict(self.quote,odds_decimal='NaN'),
+              dict(self.quote,captured_at='2026-09-09T17:55:00Z'),dict(self.quote,match_date='2026-09-01')]
+        (self.base/'bet365-latest-quotes.json').write_text(json.dumps({'quotes':rows}))
+        self.assertEqual(latest_bookmaker_quotes(self.root,self.now),[])
     def test_only_new_prematch_confirmed_lineups_trigger_capture(self):
         self.board()
         from unittest.mock import patch

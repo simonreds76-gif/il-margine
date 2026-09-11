@@ -95,6 +95,23 @@ CENTER_BACK_SHOT_BOOST_MIN = 0.85
 CENTER_BACK_SHOT_BOOST_MAX = 1.60
 
 TEAM_ALIASES = {
+    "frosinone calcio": "frosinone",
+    "arsenal fc": "arsenal",
+    "sc paderborn 07": "paderborn",
+    "fsv mainz": "mainz 05",
+    "sevilla fc": "sevilla",
+    "valencia cf": "valencia",
+    "stade rennais": "rennes",
+    "stade rennais fc": "rennes",
+    "olympique marseille": "marseille",
+    "olympique de marseille": "marseille",
+    "racing strasbourg": "strasbourg",
+    "rc strasbourg alsace": "strasbourg",
+    "as monaco": "monaco",
+    "le havre ac": "le havre",
+    "olympique lyon": "lyon",
+    "olympique lyonnais": "lyon",
+    "malaga cf": "malaga",
     "ac milan": "milan",
     "milan": "milan",
     "inter": "inter",
