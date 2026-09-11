@@ -32,6 +32,15 @@ def configure(repo: Path) -> None:
 
 class CiSafePushTests(unittest.TestCase):
     def test_concurrent_push_preserves_dirty_runner_checkout(self) -> None:
+        self.check_concurrent_push()
+
+    def test_crlf_archive_with_new_lf_attributes(self) -> None:
+        self.check_concurrent_push(crlf=True)
+
+    def test_overlapping_conflict_leaves_remote_unchanged(self) -> None:
+        self.check_concurrent_push(conflict=True)
+
+    def check_concurrent_push(self, *, crlf=False, conflict=False) -> None:
         bash = shutil.which("bash")
         if bash is None:
             git_bash = Path(r"C:\Program Files\Git\bin\bash.exe")
@@ -52,8 +61,16 @@ class CiSafePushTests(unittest.TestCase):
             run("git", "checkout", "-b", BRANCH, cwd=seed)
             (seed / "base.txt").write_text("base\n", encoding="utf-8")
             (seed / "leftover.txt").write_text("clean\n", encoding="utf-8")
+            run("git", "config", "core.autocrlf", "false", cwd=seed)
+            if crlf:
+                (seed / "archive.csv").write_bytes(b"a,b\r\n1,2\r\n")
             run("git", "add", ".", cwd=seed)
             run("git", "commit", "-m", "base", cwd=seed)
+            if crlf:
+                # Existing CRLF blobs predate the new normalization policy.
+                (seed / ".gitattributes").write_text("*.csv text eol=lf\n")
+                run("git", "add", ".gitattributes", cwd=seed)
+                run("git", "commit", "-m", "normalize future CSV writes", cwd=seed)
             run("git", "remote", "add", "origin", str(remote), cwd=seed)
             run("git", "push", "-u", "origin", BRANCH, cwd=seed)
 
@@ -61,22 +78,41 @@ class CiSafePushTests(unittest.TestCase):
             run("git", "clone", "--branch", BRANCH, str(remote), str(writer), cwd=root)
             configure(runner)
             configure(writer)
+            if crlf:
+                self.assertIn("archive.csv", run("git", "status", "--short", cwd=runner).stdout)
 
             (runner / "evidence.txt").write_text("new evidence\n", encoding="utf-8")
             run("git", "add", "evidence.txt", cwd=runner)
+            if conflict:
+                (runner / "base.txt").write_text("runner change\n")
+                run("git", "add", "base.txt", cwd=runner)
             run("git", "commit", "-m", "evidence", cwd=runner)
 
             (writer / "concurrent.txt").write_text("other workflow\n", encoding="utf-8")
             run("git", "add", "concurrent.txt", cwd=writer)
+            if conflict:
+                (writer / "base.txt").write_text("writer change\n")
+                run("git", "add", "base.txt", cwd=writer)
             run("git", "commit", "-m", "concurrent writer", cwd=writer)
             run("git", "push", "origin", BRANCH, cwd=writer)
 
             (runner / "leftover.txt").write_text("must survive\n", encoding="utf-8")
             (runner / "untracked.json").write_text("{}\n", encoding="utf-8")
             helper_copy = runner / "ci-safe-push.sh"
-            helper_copy.write_bytes(HELPER.read_bytes())
+            helper_copy.write_text(HELPER.read_text(), encoding="utf-8", newline="\n")
             env = {**os.environ, "CI_SAFE_PUSH_ATTEMPTS": "1"}
+            if conflict:
+                before = run("git", "--git-dir", str(remote), "rev-parse", BRANCH, cwd=root).stdout
+                with self.assertRaises(subprocess.CalledProcessError) as raised:
+                    run(bash, str(helper_copy), BRANCH, "origin", cwd=runner, env=env)
+                self.assertIn("conflicting committed changes", raised.exception.stdout)
+                self.assertEqual(before, run("git", "--git-dir", str(remote), "rev-parse", BRANCH, cwd=root).stdout)
+                self.assertEqual((runner / "leftover.txt").read_text(), "must survive\n")
+                return
             result = run(bash, str(helper_copy), BRANCH, "origin", cwd=runner, env=env)
+            if crlf:
+                blob = subprocess.check_output(["git", "--git-dir", str(remote), "show", f"{BRANCH}:archive.csv"])
+                self.assertEqual(blob, b"a,b\r\n1,2\r\n")
 
             self.assertIn("Safe push completed.", result.stdout)
             self.assertEqual((runner / "leftover.txt").read_text(encoding="utf-8"), "must survive\n")

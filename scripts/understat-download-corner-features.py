@@ -145,6 +145,10 @@ def request_json(url: str, *, timeout: int = 30, retries: int = 3) -> dict[str, 
                 raise ValueError(f"Expected JSON object from {url}")
             return payload
         except (requests.RequestException, ValueError, json.JSONDecodeError) as exc:
+            # Unpublished matches return 404; retry only transient failures.
+            status = getattr(getattr(exc, "response", None), "status_code", None)
+            if status is not None and 400 <= status < 500 and status not in (408, 429):
+                raise
             last_error = exc
             if attempt + 1 < retries:
                 time.sleep(1.5 * (attempt + 1))
@@ -185,6 +189,7 @@ def main() -> int:
     processed = 0
     failures = 0
     discovered = 0
+    unfinished = 0
     jobs: list[tuple[str, int, dict[str, Any], str]] = []
 
     for league in args.leagues:
@@ -204,10 +209,16 @@ def main() -> int:
                 if not match_id:
                     continue
                 discovered += 1
+                # League feeds include the entire season, including next year.
+                # Never request match statistics until the provider marks it final.
+                if fixture.get("isResult") is not True:
+                    unfinished += 1
+                    continue
                 if match_id in output and not args.overwrite:
                     continue
                 jobs.append((league, season, fixture, match_id))
 
+    print(f"Discovered={discovered} unfinished={unfinished} new_completed={len(jobs)}", flush=True)
     if args.limit:
         jobs = jobs[: args.limit]
 

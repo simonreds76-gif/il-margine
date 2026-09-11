@@ -410,6 +410,8 @@ def main() -> int:
         f"requests {health['requests_used']}/{health['max_requests']}, "
         f"truncated={health['truncated_by_request_budget']}"
     )
+    for error in health["errors"][:5]:
+        print(f"API-Football coverage error: {error}")
     return 1 if health["errors"] else 0
 
 
