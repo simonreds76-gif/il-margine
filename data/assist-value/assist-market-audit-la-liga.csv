@@ -1,588 +1,678 @@
 event_id,kickoff_at,bookmaker,league,home_team,away_team,market_name,is_assist_candidate,odds_count,sample_labels
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,ML,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Draw No Bet,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Double Chance,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Spread,false,10,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Totals,false,14,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Goals Over/Under,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Both Teams To Score,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,First Team To Score,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Odd/Even,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,ML HT,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Totals HT,false,4,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,European Handicap,false,5,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Half Time / Full Time,false,9,Home / Home | Draw / Draw | Draw / Away | Away / Away | Home / Draw | Draw / Home | Away / Home | Away / Draw
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Corners Spread,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Corners Totals,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Corners Totals HT,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Anytime Goalscorer,false,49,Williot Swedberg | Alberto Risco | Francho Serrano | Ilaix Moriba | Nemanja Gudelj | Miguel Roman | Mario Martin | Abdoulaye Faye
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Player Shots on Target,false,78,Ebrahima Drammeh (1) | Williot Swedberg (2) | Ebrahima Drammeh (1) | Williot Swedberg (2) | Ebrahima Drammeh (1) | Marcos Alonso (2) | Marcos Alonso (2) | Andres Garcia (1)
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Player To Score or Assist,true,138,Enes Unal (Score) (1) | Moya Borja Mayoral (Score or Assist) (1) | Enes Unal (Score or Assist) (1) | Enes Unal (Assist) (1) | Ramon Terrats (Score) (1) | Miguel Roman (Score) (2) | Orel Mangala (Score) (1) | Marcos Alonso (Score) (2)
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Half Time Result,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Specials,false,2,To Win From Behind (1) | To Win From Behind (2)
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Team Shots Home,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Team Shots on Target Away,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Alternative Total Goals,false,14,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Both Teams To Score HT,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Correct Score,false,29,0-1 | 2-3 | 4-3 | 3-1 | 4-1 | 5-1 | 0-4 | 1-5
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Multi Scorers,false,98,Martin Satriano (2 or More) (1) | Alberto Risco (2 or More) (1) | Francho Serrano (2 or More) (1) | Andres Garcia (2 or More) (1) | Aleix Febas (2 or More) (2) | Ilaix Moriba (2 or More) (2) | Johan Mojica (2 or More) (1) | Mancha Davinchi (2 or More) (1)
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Player Shots,false,165,Ramon Terrats (1) | Ramon Terrats (1) | Ramon Terrats (1) | Ramon Terrats (1) | Andres Garcia (1) | Marcos Alonso (2) | Marcos Alonso (2) | Marcos Alonso (2)
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Team Corners Away,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Total Corners,false,5,9 - 11 | Over 14 | Under 6 | 6 - 8 | 12 - 14
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Totals 2H,false,4,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Exact 1st Half Goals,false,6,1 Goal | 2 Goals | 3 Goals | 4 Goals | 0 Goals | 5+ Goals
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Away Team Highest Scoring Half,false,3,2nd Half | 1st Half | Tie
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Total Shots Home,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,1st Half Corners,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,1st Half Handicap,false,4,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Double Chance HT,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Last Match Corner,false,2,1 | 2
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Player Shots O/U,false,165,Ramon Terrats (1) | Ramon Terrats (1) | Ramon Terrats (1) | Ramon Terrats (1) | Andres Garcia (1) | Marcos Alonso (2) | Marcos Alonso (2) | Marcos Alonso (2)
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Alternative Corners,false,6,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Player to be Booked,false,52,Dakonam Djene (Booked) | Marcos Alonso (Booked) | Martin Satriano (Booked) | Orel Mangala (Booked) | Ramon Terrats (Booked) | Iago Aspas (Booked) | Enes Unal (Booked) | Yoel Lago (Booked)
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,ML 2H,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Odd/Even Away,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Home Team Exact Goals,false,4,Getafe - 2 Goals | Getafe - 1 Goal | Getafe - 0 Goals | Getafe - 3+ Goals
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Alternative Goal Line,false,14,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,First Match Corner,false,2,1 | 2
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Home Team Highest Scoring Half,false,3,1st Half | Tie | 2nd Half
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Total Shots on Target Home,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Away Team Exact Goals,false,4,Celta Vigo - 3+ Goals | Celta Vigo - 0 Goals | Celta Vigo - 2 Goals | Celta Vigo - 1 Goal
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Corners Totals Home,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Goal Method,false,86,Ferran Jutgla (Outside the Box) (2) | Hugo Alvarez (Outside the Box) (2) | Ferran Jutgla (Header) (2) | Abdelkabir Abqar (Header) (1) | Mohamed Hamdoune (Header) (1) | Saba Sazonov (Header) (1) | Sebastian Caceres (Header) (2) | Sebastian Boselli (Header) (1)
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Exact 2nd Half Goals,false,6,0 Goals | 4 Goals | 1 Goal | 2 Goals | 5+ Goals | 3 Goals
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Corners Race,false,4,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Total Shots on Target Away,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Winning Margin,false,10,4+ (2) | 2 (1) | 3 (1) | 4+ (1) | Score Draw | 1 (1) | 1 (2) | 3 (2)
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Both Teams To Score 2H,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,European Handicap HT,false,4,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Last Team To Score,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Team Shots Away,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Teams to Score,false,4,Celta Vigo Only | Both Teams | Getafe Only | No Goal
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Team Shots on Target Home,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Team Goalscorer,false,102,Joselu Perez (First) | Martin Satriano (First) | Mario Martin (First) | Andres Garcia (First) | Mancha Davinchi (First) | No Goalscorer (Getafe) (First) | Joselu Perez (Last) | Martin Satriano (Last)
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Corners 2-Way,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Odd/Even HT,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Player To Be Fouled,false,184,Aleix Febas (2) | Ismael Bekhoucha (1) | Javier Rueda (2) | Javier Galan (2) | Williot Swedberg (2) | Mario Martin (1) | Martin Satriano (1) | Abdelkabir Abqar (1)
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Total Shots on Target,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Alternative 1st Half Goal Line,false,4,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Corners Totals Away,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Player Cards,false,156,Dakonam Djene (Booked) | Marcos Alonso (Booked) | Martin Satriano (Booked) | Orel Mangala (Booked) | Ramon Terrats (Booked) | Iago Aspas (Booked) | Enes Unal (Booked) | Yoel Lago (Booked)
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Team Total Goals Away,false,4,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Clean Sheet Home,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Time of First Corner,false,2,Corner before 8:00 | No Corner before 8:00
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Odd/Even 2H,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Goalkeeper Saves,false,9,David Soria | Andrei Radu | Andrei Radu | Andrei Radu | David Soria | David Soria | David Soria | Andrei Radu
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Multicorners,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Corners,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Alternative Asian Handicap,false,10,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Clean Sheet Away,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Match Shots,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Number of Goals In Match,false,3,Under 2 goals | 2 or 3 goals | Over 3 goals
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Player Shots on Target O/U,false,78,Ebrahima Drammeh (1) | Williot Swedberg (2) | Ebrahima Drammeh (1) | Williot Swedberg (2) | Ebrahima Drammeh (1) | Marcos Alonso (2) | Marcos Alonso (2) | Andres Garcia (1)
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Team Corners Home,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Total Shots Away,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Correct Score HT,false,18,1-1 | 1-3 | 0-3 | 3-0 | 3-1 | 4-1 | 0-1 | 0-2
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Match Shots on Target,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Odd/Even Home,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Team Total Goals Home,false,4,
-72478536,2026-09-07T17:00:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Celta de Vigo,Total Shots,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365 (no latency),Spain - LaLiga,Getafe CF,RC Celta de Vigo,ML,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365 (no latency),Spain - LaLiga,Getafe CF,RC Celta de Vigo,Spread,false,1,
-72478536,2026-09-07T17:00:00Z,Bet365 (no latency),Spain - LaLiga,Getafe CF,RC Celta de Vigo,Totals,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,ML,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Draw No Bet,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Double Chance,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Spread,false,14,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Totals,false,19,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Goals Over/Under,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Both Teams To Score,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,First Team To Score,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Odd/Even,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,ML HT,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Spread HT,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Totals HT,false,5,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,European Handicap,false,5,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Half Time / Full Time,false,9,Home / Home | Home / Draw | Home / Away | Draw / Home | Away / Away | Draw / Draw | Draw / Away | Away / Draw
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Corners Totals,false,2,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Corners Totals HT,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Anytime Goalscorer,false,51,Ali Houary | Victor Chust | Facundo Buonanotte | Nordin Al Lal | Yago Santiago | Carvalho Martim Neto | Marc Aguado | Alvaro Odriozola
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Player To Be Fouled,false,205,Gonzalo Villar (1) | Lucas Cepeda (1) | Bambo Diaby (1) | Federico Redondo (1) | Grady Diangana (1) | Fernando Nino (1) | German Valera (1) | Takefusa Kubo (2)
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Multi Scorers,false,102,Mamadou Sarr (3 or More) (2) | Goncalo Guedes (2 or More) (2) | Takefusa Kubo (2 or More) (2) | Ali Houary (2 or More) (1) | Facundo Buonanotte (2 or More) (1) | Nordin Al Lal (2 or More) (1) | Yago Santiago (2 or More) (1) | Javier Morcillo (3 or More) (1)
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Time of First Corner,false,2,Corner before 8:00 | No Corner before 8:00
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Alternative 1st Half Goal Line,false,5,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Player Shots on Target,false,118,Barragan Carlos Soler (2) | Fernandez Josan (1) | Grady Diangana (1) | Pablo Marin (2) | Alvaro Padilla (1) | Lucas Cepeda (1) | Mikel Oyarzabal (2) | Orri Steinn Oskarsson (2)
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Correct Score,false,40,0-0 | 0-4 | 1-2 | 1-3 | 1-6 | 2-0 | 2-3 | 2-6
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,ML 2H,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Odd/Even HT,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Alternative 1st Half Asian Handicap,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Away Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Corners 2-Way,false,2,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Team Total Goals Home,false,5,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Alternative Goal Line,false,19,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Match Shots on Target,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Goal Method,false,100,Fernando Nino (Header) (1) | Fernandez Josan (Header) (1) | Grady Diangana (Header) (1) | Fernandez Josan (Outside the Box) (1) | Grady Diangana (Outside the Box) (1) | Igor Zubeldia (Outside the Box) (2) | Lucas Cepeda (Outside the Box) (1) | Mamadou Sarr (Outside the Box) (2)
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Half With Most Goals,false,3,1st Half | Tie | 2nd Half
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Number of Goals In Match,false,3,Under 2 goals | Over 3 goals | 2 or 3 goals
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Total Shots on Target,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Alternative Total Goals,false,19,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Corners Totals Home,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Exact 2nd Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 4 Goals | 5+ Goals | 3 Goals
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Goalkeeper Saves,false,10,Matias Dituro | Matias Dituro | Matias Dituro | Alejandro Remiro | Alejandro Remiro | Alejandro Remiro | Matias Dituro | Matias Dituro
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Last Match Corner,false,2,1 | 2
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Teams to Score,false,4,Elche Only | Both Teams | No Goal | Real Sociedad Only
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Both Teams To Score HT,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Totals 2H,false,5,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Clean Sheet Home,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Corners Totals Away,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,European Handicap HT,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Odd/Even 2H,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Alternative Corners,false,6,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Player To Score or Assist,true,153,Ali Houary (Score) (1) | Ander Barrenetxea (Assist) (2) | German Valera (Assist) (1) | Mikel Oyarzabal (Assist) (2) | Orri Steinn Oskarsson (Assist) (2) | Igor Zubeldia (Assist) (2) | Arsen Zakharyan (Assist) (2) | Job Ochieng (Assist) (2)
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Team Total Goals Away,false,5,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Corners Race,false,4,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Specials,false,2,To Win From Behind (1) | To Win From Behind (2)
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Winning Margin,false,10,2 (1) | 4+ (2) | 3 (1) | 3 (2) | 4+ (1) | Score Draw | 1 (1) | 1 (2)
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Corners,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Total Corners,false,5,Over 14 | Under 6 | 6 - 8 | 9 - 11 | 12 - 14
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Player Shots,false,235,Victor Chust (1) | Javier Morcillo (1) | Jon Aramburu (2) | Ali Houary (1) | Nordin Al Lal (1) | Ezequiel Ponce (1) | Goncalo Guedes (2) | Lucas Cepeda (1)
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Team Goalscorer,false,106,Fernando Nino (First) | Ezequiel Ponce (First) | Abiel Osorio (First) | Lucas Cepeda (First) | Tete Morente (First) | Carvalho Martim Neto (First) | Marc Aguado (First) | Javier Morcillo (First)
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Odd/Even Away,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Odd/Even Home,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Alternative Asian Handicap,false,14,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Team Corners Away,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,First Match Corner,false,2,1 | 2
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Half Time Result,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Player Shots O/U,false,235,Victor Chust (1) | Javier Morcillo (1) | Jon Aramburu (2) | Ali Houary (1) | Nordin Al Lal (1) | Ezequiel Ponce (1) | Goncalo Guedes (2) | Lucas Cepeda (1)
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Team Corners Home,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Away Team Exact Goals,false,4,Real Sociedad - 0 Goals | Real Sociedad - 1 Goal | Real Sociedad - 2 Goals | Real Sociedad - 3+ Goals
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Home Team Highest Scoring Half,false,3,1st Half | Tie | 2nd Half
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Last Team To Score,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Clean Sheet Away,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,1st Half Handicap,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Player Shots on Target O/U,false,118,Barragan Carlos Soler (2) | Fernandez Josan (1) | Grady Diangana (1) | Pablo Marin (2) | Alvaro Padilla (1) | Lucas Cepeda (1) | Mikel Oyarzabal (2) | Orri Steinn Oskarsson (2)
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Double Chance HT,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Exact 1st Half Goals,false,6,0 Goals | 4 Goals | 1 Goal | 3 Goals | 2 Goals | 5+ Goals
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Multicorners,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Correct Score HT,false,21,0-0 | 0-4 | 2-2 | 2-4 | 3-2 | 3-3 | 0-1 | 1-2
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Home Team Exact Goals,false,4,Elche - 1 Goal | Elche - 0 Goals | Elche - 3+ Goals | Elche - 2 Goals
-72478532,2026-09-07T19:30:00Z,Bet365,Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Both Teams To Score 2H,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365 (no latency),Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,ML,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365 (no latency),Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Spread,false,1,
-72478532,2026-09-07T19:30:00Z,Bet365 (no latency),Spain - LaLiga,Elche CF,Real Sociedad San Sebastian,Totals,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,ML,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Draw No Bet,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Double Chance,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Spread,false,16,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Totals,false,20,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Goals Over/Under,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Both Teams To Score,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,First Team To Score,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Odd/Even,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,ML HT,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Spread HT,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Totals HT,false,5,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,European Handicap,false,5,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Half Time / Full Time,false,9,Home / Draw | Home / Home | Home / Away | Away / Draw | Draw / Draw | Away / Away | Draw / Home | Draw / Away
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Corners Totals,false,2,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Corners Totals HT,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Bookings Spread,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Bookings Totals,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Anytime Goalscorer,false,51,Javi Guerra | Mouctar Diakhaby | Andreas Christensen | David Otorbi | Diego Lopez | Jaume Dura | Luis Rioja | Arnau Martinez
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Total Shots Home,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Corners Totals Home,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Number of Goals In Match,false,3,2 or 3 goals | Over 3 goals | Under 2 goals
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Player Fouls Committed,false,189,Marc Bernal (2) | Ryunosuke Sato (1) | Marc Bernal (2) | Ryunosuke Sato (1) | Marc Bernal (2) | Ryunosuke Sato (1) | Marc Bernal (2) | Marc Bernal (2)
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Teams to Score,false,4,Valencia Only | Both Teams | No Goal | Barcelona Only
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Corners 2-Way,false,2,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Correct Score HT,false,24,1-2 | 0-6 | 1-6 | 2-4 | 0-3 | 0-5 | 1-0 | 0-4
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Match Shots,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Multicorners,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Number of Cards In Match,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Player to be Booked,false,54,Mouctar Diakhaby (Booked) | Cesar Tarrega (Booked) | Pau Cubarsi (Booked) | Arnaut Danjuma (Booked) | Javi Guerra (Booked) | Fermin Lopez (Booked) | Hugo Duro (Booked) | Raphinha (Booked)
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Player To Be Fouled,false,174,Marc Bernal (2) | Marc Bernal (2) | Marc Bernal (2) | Marc Bernal (2) | Guido Rodriguez (1) | Iker Cordoba (1) | Justin de Haas (1) | Luis Rioja (1)
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Totals 2H,false,5,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Odd/Even Home,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Team Goalscorer,false,106,Cesar Tarrega (First) | Guido Rodriguez (First) | Aliou Dieng (First) | Cesar Tarrega (Last) | Guido Rodriguez (Last) | Aliou Dieng (Last) | Anthony Gordon (First) | Dani Olmo (First)
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Team Shots Home,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Bookings Totals Away,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Corners Totals Away,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Goal Method,false,96,Jules Kounde (Header) (2) | Pedri (Header) (2) | Hugo Duro (Outside the Box) (1) | Jules Kounde (Outside the Box) (2) | Hugo Duro (Header) (1) | Andreas Christensen (Header) (2) | Alex Balde (Header) (2) | Martin Gerard (Outside the Box) (2)
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Home Team Exact Goals,false,4,Valencia - 1 Goal | Valencia - 2 Goals | Valencia - 0 Goals | Valencia - 3+ Goals
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,ML 2H,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Odd/Even 2H,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Player Cards,false,162,Anthony Gordon (Sent Off) | Pau Cubarsi (Sent Off) | Fermin Lopez (Sent Off) | Raphinha (Sent Off) | Lamine Yamal (Sent Off) | Jules Kounde (Sent Off) | Joao Cancelo (Sent Off) | Gavi (Sent Off)
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Team Shots Away,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Clean Sheet Away,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Away Team Highest Scoring Half,false,3,2nd Half | 1st Half | Tie
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Correct Score,false,40,1-6 | 3-5 | 3-4 | 0-2 | 1-4 | 2-3 | 2-7 | 0-5
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Team Cards Away,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Player Shots on Target O/U,false,125,Alex Balde (2) | Martin Gerard (2) | Pau Cubarsi (2) | Justin de Haas (1) | Mouctar Diakhaby (1) | Dimitri Foulquier (1) | Iker Cordoba (1) | Jose Gaya (1)
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Team Shots on Target Away,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Team Total Goals Home,false,4,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Odd/Even Away,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Both Teams To Score 2H,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Both Teams To Score HT,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Multi Scorers,false,102,Cesar Tarrega (2 or More) (1) | Mouctar Diakhaby (2 or More) (1) | Dimitri Foulquier (2 or More) (1) | Iker Cordoba (2 or More) (1) | Jose Gaya (2 or More) (1) | Justin de Haas (2 or More) (1) | Daniel Raba (3 or More) (1) | Arnaut Danjuma (3 or More) (1)
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Player Shots,false,242,Justin de Haas (1) | Mouctar Diakhaby (1) | Dimitri Foulquier (1) | Jose Gaya (1) | Iker Cordoba (1) | Justin de Haas (1) | Mouctar Diakhaby (1) | Dimitri Foulquier (1)
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Player Shots O/U,false,242,Justin de Haas (1) | Mouctar Diakhaby (1) | Dimitri Foulquier (1) | Jose Gaya (1) | Iker Cordoba (1) | Justin de Haas (1) | Mouctar Diakhaby (1) | Dimitri Foulquier (1)
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Team Cards Home,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Total Shots on Target Home,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Away Team Exact Goals,false,4,Barcelona - 0 Goals | Barcelona - 2 Goals | Barcelona - 1 Goal | Barcelona - 3+ Goals
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Corners,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Home Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Last Match Corner,false,2,1 | 2
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Team Shots on Target Home,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Team Total Goals Away,false,8,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Total Shots Away,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Alternative Goal Line,false,20,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Exact 2nd Half Goals,false,6,3 Goals | 5+ Goals | 1 Goal | 0 Goals | 4 Goals | 2 Goals
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Player Tackles,false,173,Marc Bernal (2) | Martin Gerard (2) | Guido Rodriguez (1) | Iker Cordoba (1) | Eric Garcia (2) | Rodri (2) | Xavi Espart (2) | Fermin Lopez (2)
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Alternative Asian Handicap,false,16,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Alternative Total Goals,false,20,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Specials,false,2,To Win From Behind (1) | To Win From Behind (2)
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Total Shots,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,1st Half Corners,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Alternative 1st Half Goal Line,false,5,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Alternative Corners,false,6,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Bookings Totals Home,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Clean Sheet Home,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Alternative 1st Half Asian Handicap,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,First Match Corner,false,2,1 | 2
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Winning Margin,false,10,2 (2) | 3 (1) | 3 (2) | 4+ (1) | 2 (1) | 1 (1) | 4+ (2) | Score Draw
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Total Corners,false,5,Under 6 | 6 - 8 | 9 - 11 | 12 - 14 | Over 14
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Total Shots on Target Away,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Exact 1st Half Goals,false,6,0 Goals | 1 Goal | 3 Goals | 5+ Goals | 2 Goals | 4 Goals
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Goalkeeper Saves,false,10,Joan Garcia | Joan Garcia | Joan Garcia | Stole Dimitrievski | Stole Dimitrievski | Stole Dimitrievski | Stole Dimitrievski | Stole Dimitrievski
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Odd/Even HT,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Player To Score or Assist,true,153,Mouctar Diakhaby (Score or Assist) (1) | Xavi Espart (Score or Assist) (2) | Jesus Vazquez (Score) (1) | Karim Adeyemi (Assist) (2) | Hugo Duro (Assist) (1) | Sadiq Umar (Assist) (1) | Alex Balde (Assist) (2) | Filip Ugrinic (Assist) (1)
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Team Corners Away,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Team Corners Home,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Time of First Corner,false,2,Corner before 7:00 | No Corner before 7:00
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Corners Race,false,4,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Double Chance HT,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Last Team To Score,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Match Shots on Target,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Player Shots on Target,false,125,Alex Balde (2) | Martin Gerard (2) | Pau Cubarsi (2) | Justin de Haas (1) | Mouctar Diakhaby (1) | Dimitri Foulquier (1) | Iker Cordoba (1) | Jose Gaya (1)
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Total Shots on Target,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,1st Half Handicap,false,4,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Half Time Result,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,European Handicap HT,false,4,
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Player Headed Shots on Target,false,74,Hugo Duro (1) | Luis Rioja (1) | Sadiq Umar (1) | Gabriel Jesus (2) | Marc Bernal (2) | Andreas Christensen (2) | Eric Garcia (2) | Fermin Lopez (2)
-72478542,2026-09-06T14:15:00Z,Bet365,Spain - LaLiga,Valencia CF,FC Barcelona,Half With Most Goals,false,3,2nd Half | 1st Half | Tie
-72478542,2026-09-06T14:15:00Z,Bet365 (no latency),Spain - LaLiga,Valencia CF,FC Barcelona,ML,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365 (no latency),Spain - LaLiga,Valencia CF,FC Barcelona,Spread,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365 (no latency),Spain - LaLiga,Valencia CF,FC Barcelona,Totals,false,1,
-72478542,2026-09-06T14:15:00Z,Bet365 (no latency),Spain - LaLiga,Valencia CF,FC Barcelona,Bookings Totals,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,ML,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Draw No Bet,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Double Chance,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Spread,false,14,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Totals,false,18,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Goals Over/Under,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Both Teams To Score,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,First Team To Score,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Odd/Even,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,ML HT,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Spread HT,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Totals HT,false,5,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,European Handicap,false,5,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Half Time / Full Time,false,9,Draw / Home | Draw / Away | Away / Draw | Home / Home | Home / Draw | Away / Home | Home / Away | Draw / Draw
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Corners Spread,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Corners Totals,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Corners Totals HT,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Bookings Spread,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Bookings Totals,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Anytime Goalscorer,false,52,Carlos Dotor | Manuel Sanchez | Alberto Calatrava | Jon Ander Olasagasti | Manel Usedo | Paco Cortes | Daniel Lorenzo | Daniel Requena
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Player To Score or Assist,true,156,David Larrubia (Score) (1) | Rafa Rodriguez (Score) (1) | Roger Brugue (Score) (2) | David Larrubia (Assist) (1) | Rafa Rodriguez (Assist) (1) | David Larrubia (Score or Assist) (1) | Rafa Rodriguez (Score or Assist) (1) | Roger Brugue (Score or Assist) (2)
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Number of Cards In Match,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Odd/Even HT,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Player Shots on Target O/U,false,119,Julen Lobete (1) | Rafa Garrido (1) | Hugo Sotelo (2) | Rafa Garrido (1) | Adrian De la Fuente (2) | Adrian De la Fuente (2) | Julen Lobete (1) | Enzo Bardeli (2)
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Alternative Asian Handicap,false,14,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Team Corners Away,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Total Shots on Target,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Goal Method,false,96,Adrian De la Fuente (Header) (2) | Roger Brugue (Header) (2) | Pablo Arriaza (Header) (1) | Pablo Martinez (Header) (1) | Rafa Rodriguez (Header) (1) | Oriol Rey (Header) (2) | Thiago Fernandez (Header) (2) | Azaceta Einar Galilea (Header) (1)
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Corner Handicap,false,2,1 (-2) | Tie (2)
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Corners Totals Home,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,1st Half Handicap,false,4,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Alternative 1st Half Asian Handicap,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Double Chance HT,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Multicorners,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Team Goalscorer,false,108,Juan Cruz (First) | Juan Cruz (Last) | Yanis Musuayi (First) | Thiago Fernandez (First) | Daniel Requena (First) | Victor Garcia (First) | Yanis Musuayi (Last) | Thiago Fernandez (Last)
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,1st Half Corners,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Alternative 1st Half Goal Line,false,5,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Correct Score,false,37,0-3 | 3-0 | 0-0 | 2-2 | 2-5 | 3-3 | 3-4 | 4-4
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Exact 2nd Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 4 Goals | 5+ Goals | 3 Goals
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Home Team Exact Goals,false,4,Malaga - 0 Goals | Malaga - 2 Goals | Malaga - 1 Goal | Malaga - 3+ Goals
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Last Team To Score,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Number of Goals In Match,false,3,2 or 3 goals | Over 3 goals | Under 2 goals
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Team Shots Home,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Clean Sheet Home,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Corners,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Player Shots on Target,false,119,Julen Lobete (1) | Rafa Garrido (1) | Hugo Sotelo (2) | Rafa Garrido (1) | Adrian De la Fuente (2) | Adrian De la Fuente (2) | Julen Lobete (1) | Enzo Bardeli (2)
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Team Shots on Target Away,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Total Corners,false,5,Under 6 | 6 - 8 | 12 - 14 | Over 14 | 9 - 11
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Total Shots on Target Away,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Total Shots on Target Home,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Alternative Corners,false,6,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Totals 2H,false,4,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Home Team Highest Scoring Half,false,3,1st Half | Tie | 2nd Half
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Team Shots Away,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Team Shots on Target Home,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Time of First Corner,false,2,Corner before 8:00 | No Corner before 8:00
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Away Team Highest Scoring Half,false,3,1st Half | Tie | 2nd Half
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Odd/Even Home,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Player Shots,false,233,Eneko Jauregui (1) | Jose Salinas (1) | Hugo Sotelo (2) | Rafa Garrido (1) | Jose Salinas (1) | Hugo Sotelo (2) | Rafa Garrido (1) | Jose Salinas (1)
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,ML 2H,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Multi Scorers,false,104,Daniel Requena (2 or More) (2) | Victor Garcia (2 or More) (2) | Daniel Requena (3 or More) (2) | Victor Garcia (3 or More) (2) | Petar Ratkov (2 or More) (2) | Jens Cajuste (2 or More) (1) | Petar Ratkov (3 or More) (2) | Carlos Chupete (2 or More) (1)
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Corners Race,false,4,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,European Handicap HT,false,4,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Half With Most Goals,false,3,2nd Half | Tie | 1st Half
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Last Match Corner,false,2,1 | 2
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Winning Margin,false,10,No Goal | 1 (1) | 1 (2) | 2 (2) | 2 (1) | 4+ (1) | 4+ (2) | 3 (2)
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Away Team Exact Goals,false,4,Levante - 3+ Goals | Levante - 0 Goals | Levante - 2 Goals | Levante - 1 Goal
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Half Time Result,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Correct Score HT,false,19,4-0 | 0-0 | 1-1 | 1-2 | 1-3 | 2-3 | 0-4 | 1-4
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Odd/Even 2H,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Player Shots O/U,false,233,Eneko Jauregui (1) | Jose Salinas (1) | Hugo Sotelo (2) | Rafa Garrido (1) | Jose Salinas (1) | Hugo Sotelo (2) | Rafa Garrido (1) | Jose Salinas (1)
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Exact 1st Half Goals,false,6,1 Goal | 0 Goals | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Goalkeeper Saves,false,10,Alfonso Herrero | Alfonso Herrero | Alfonso Herrero | Alfonso Herrero | Alfonso Herrero | Mathew Ryan | Mathew Ryan | Mathew Ryan
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Clean Sheet Away,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Teams to Score,false,4,Both Teams | No Goal | Levante Only | Malaga Only
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Team Total Goals Away,false,5,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Total Shots,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Total Shots Home,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Alternative Goal Line,false,18,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Alternative Total Goals,false,18,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Bookings Totals Home,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Player To Be Fouled,false,196,Ivan Romero (2) | Julen Lobete (1) | Carlos Alvarez (2) | Karl Etta (2) | Rafa Garrido (1) | Eneko Jauregui (1) | Joaquin Munoz (1) | Rafa Rodriguez (1)
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Corners 2-Way,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Team Total Goals Home,false,5,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Total Shots Away,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Bookings Totals Away,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Odd/Even Away,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Match Shots on Target,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Team Cards Away,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,First Match Corner,false,2,1 | 2
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Match Shots,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Team Cards Home,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Both Teams To Score HT,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Corners Totals Away,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Both Teams To Score 2H,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Specials,false,2,To Win From Behind (2) | To Win From Behind (1)
-72478538,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Malaga CF,Levante UD,Team Corners Home,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365 (no latency),Spain - LaLiga,Malaga CF,Levante UD,ML,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365 (no latency),Spain - LaLiga,Malaga CF,Levante UD,Spread,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365 (no latency),Spain - LaLiga,Malaga CF,Levante UD,Totals,false,1,
-72478538,2026-09-06T16:30:00Z,Bet365 (no latency),Spain - LaLiga,Malaga CF,Levante UD,Bookings Totals,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,ML,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Draw No Bet,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Double Chance,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Spread,false,14,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Totals,false,17,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Goals Over/Under,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Both Teams To Score,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,First Team To Score,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Odd/Even,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,ML HT,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Spread HT,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Totals HT,false,4,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,European Handicap,false,4,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Half Time / Full Time,false,9,Home / Draw | Home / Away | Draw / Home | Draw / Away | Away / Home | Away / Draw | Home / Home | Away / Away
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Corners Spread,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Corners Totals,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Corners Totals HT,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Bookings Spread,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Bookings Totals,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Anytime Goalscorer,false,48,Antonio Martinez | Miguel Rodriguez | Pablo Ibanez | Abde Rebbach | Angel Hidalgo Perez | Jorge Herrando | Aitor Manas | Carles Alena
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Team Cards Away,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Number of Cards In Match,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,ML 2H,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Team Corners Home,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Team Shots Home,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Total Shots on Target,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Alternative Corners,false,6,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Away Team Highest Scoring Half,false,3,Tie | 1st Half | 2nd Half
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Double Chance HT,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Match Shots,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Home Team Exact Goals,false,4,CD Alaves - 0 Goals | CD Alaves - 2 Goals | CD Alaves - 1 Goal | CD Alaves - 3+ Goals
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Number of Goals In Match,false,3,Under 2 goals | 2 or 3 goals | Over 3 goals
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Exact 1st Half Goals,false,6,5+ Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 0 Goals
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Player Shots,false,204,Diego Rico (2) | Unai Santos (2) | Unai Santos (2) | Diego Rico (2) | Unai Santos (2) | Antonio Martinez (1) | Aitor Manas (1) | Miguel Rodriguez (1)
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Goal Method,false,90,Antonio Martinez (Header) (1) | Nikola Maras (Header) (1) | Raul Moro (Header) (2) | Abel Bretones (Header) (2) | Hugo Novoa (Outside the Box) (1) | Abel Bretones (Outside the Box) (2) | Nicolas Valentini (Header) (1) | Antonio Blanco (Outside the Box) (1)
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Corner Handicap,false,2,1 (-1) | Tie (1)
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Alternative Asian Handicap,false,14,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Alternative 1st Half Asian Handicap,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Last Team To Score,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Player Shots on Target,false,97,Unai Santos (2) | Miguel Rodriguez (1) | Pablo Ibanez (1) | Jonathan Dubasin (2) | Denis Suarez (1) | Facundo Garces (1) | Enzo Boyomo (2) | Jorge Herrando (2)
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Alternative Total Goals,false,17,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Total Shots on Target Away,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Match Shots on Target,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Total Corners,false,5,Under 6 | 6 - 8 | 12 - 14 | Over 14 | 9 - 11
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Bookings Totals Home,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Both Teams To Score 2H,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Team Shots on Target Away,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Teams to Score,false,4,Both Teams | CD Alaves Only | Osasuna Only | No Goal
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Total Shots Home,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Total Shots on Target Home,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Corners,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Corners Totals Home,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Goalkeeper Saves,false,10,Antonio Sivera | Antonio Sivera | Antonio Sivera | Antonio Sivera | Antonio Sivera | Sergio Herrera | Sergio Herrera | Sergio Herrera
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Multicorners,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Player To Score or Assist,true,144,Pablo Ibanez (Score) (1) | Abde Rebbach (Score) (1) | Angel Hidalgo Perez (Score) (1) | Jorge Herrando (Score) (2) | Aitor Manas (Score) (1) | Carles Alena (Score) (1) | Denis Suarez (Score) (1) | Mikel Rodriguez (Score) (1)
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Half Time Result,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Team Cards Home,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Last Match Corner,false,2,1 | 2
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Odd/Even Away,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Player Shots on Target O/U,false,97,Unai Santos (2) | Miguel Rodriguez (1) | Pablo Ibanez (1) | Jonathan Dubasin (2) | Denis Suarez (1) | Facundo Garces (1) | Enzo Boyomo (2) | Jorge Herrando (2)
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Total Shots,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Clean Sheet Away,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Multi Scorers,false,96,Jonathan Dubasin (2 or More) (2) | Selu Diallo (2 or More) (1) | Asier Osambela (2 or More) (2) | Kike Barja (2 or More) (2) | Abel Bretones (2 or More) (2) | Nahuel Tenaglia (2 or More) (1) | Alejandro Catena (2 or More) (2) | Ander Guevara (2 or More) (1)
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Correct Score HT,false,18,1-1 | 1-0 | 1-3 | 2-0 | 2-1 | 2-2 | 3-0 | 4-0
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Corners Totals Away,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Bookings Totals Away,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,First Match Corner,false,2,1 | 2
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Totals 2H,false,4,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Winning Margin,false,10,1 (2) | 2 (2) | Score Draw | No Goal | 1 (1) | 3 (1) | 4+ (1) | 3 (2)
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,1st Half Handicap,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Alternative 1st Half Goal Line,false,4,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Alternative Goal Line,false,17,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Both Teams To Score HT,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Player Headed Shots on Target,false,74,Lucas Boye (1) | Ante Budimir (2) | Mariano Diaz (1) | Mikel Rodriguez (1) | Carles Alena (1) | Antonio Martinez (1) | Aitor Manas (1) | Nahuel Tenaglia (1)
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Specials,false,2,To Win From Behind (2) | To Win From Behind (1)
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Team Corners Away,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Corners Race,false,4,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,European Handicap HT,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Time of First Corner,false,2,Corner before 8:00 | No Corner before 8:00
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Odd/Even HT,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Team Goalscorer,false,100,Ville Koski (First) | Ville Koski (Last) | Asier Bonel (First) | Mauro Echegoyen (First) | Diego Rico (First) | Unai Santos (First) | Asier Bonel (Last) | Mauro Echegoyen (Last)
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Team Total Goals Away,false,4,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Team Total Goals Home,false,5,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Team Shots on Target Home,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Clean Sheet Home,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Player Shots O/U,false,204,Diego Rico (2) | Unai Santos (2) | Unai Santos (2) | Diego Rico (2) | Unai Santos (2) | Alejandro Catena (2) | Jorge Herrando (2) | Nikola Maras (1)
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Home Team Highest Scoring Half,false,3,Tie | 1st Half | 2nd Half
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Team Shots Away,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Odd/Even 2H,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Corners 2-Way,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Exact 2nd Half Goals,false,6,3 Goals | 0 Goals | 1 Goal | 2 Goals | 5+ Goals | 4 Goals
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Odd/Even Home,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Total Shots Away,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Away Team Exact Goals,false,4,Osasuna - 0 Goals | Osasuna - 2 Goals | Osasuna - 1 Goal | Osasuna - 3+ Goals
-72478526,2026-09-06T16:30:00Z,Bet365,Spain - LaLiga,Deportivo Alaves,CA Osasuna,Correct Score,false,34,4-1 | 1-5 | 2-2 | 2-5 | 4-2 | 0-2 | 1-4 | 2-1
-72478526,2026-09-06T16:30:00Z,Bet365 (no latency),Spain - LaLiga,Deportivo Alaves,CA Osasuna,ML,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365 (no latency),Spain - LaLiga,Deportivo Alaves,CA Osasuna,Spread,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365 (no latency),Spain - LaLiga,Deportivo Alaves,CA Osasuna,Totals,false,1,
-72478526,2026-09-06T16:30:00Z,Bet365 (no latency),Spain - LaLiga,Deportivo Alaves,CA Osasuna,Bookings Totals,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,ML,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Draw No Bet,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Double Chance,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Spread,false,13,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Totals,false,16,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Goals Over/Under,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Both Teams To Score,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,First Team To Score,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Odd/Even,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,ML HT,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Totals HT,false,5,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,European Handicap,false,4,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Half Time / Full Time,false,9,Draw / Away | Away / Away | Home / Draw | Home / Away | Draw / Home | Away / Home | Away / Draw | Home / Home
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Corners Spread,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Corners Totals,false,2,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Corners Totals HT,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Bookings Totals,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Anytime Goalscorer,false,56,Pol Lozano | Rafael Bauza | Edu Altozano | Manuel Castillo | Roger Hinojo | Iker Ortin | Santos Fabio Cardoso | Marcao Teixeira
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Number of Cards In Match,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Total Shots,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Alternative Corners,false,6,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Away Team Exact Goals,false,4,Sevilla - 1 Goal | Sevilla - 0 Goals | Sevilla - 2 Goals | Sevilla - 3+ Goals
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Odd/Even Home,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Number of Goals In Match,false,3,Under 2 goals | 2 or 3 goals | Over 3 goals
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Player Shots on Target,false,127,Manuel Castillo (2) | Gabriel Suazo (2) | Jose Carmona (2) | Quilindschy Hartman (1) | Arouna Sangante (2) | Clemens Riedel (1) | Unai Nunez (1) | Manuel Castillo (2)
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Goal Method,false,96,Javi Puado (Header) (1) | Isaac Romero (Header) (2) | Robbie Ure (Header) (2) | Gabriel Suazo (Header) (2) | Jofre Carreras (Header) (1) | Pol Lozano (Header) (1) | Isaac Romero (Outside the Box) (2) | Robbie Ure (Outside the Box) (2)
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Team Cards Home,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Total Shots on Target Away,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Alternative Goal Line,false,16,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Away Team Highest Scoring Half,false,3,1st Half | Tie | 2nd Half
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Clean Sheet Away,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Corners Totals Away,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Corners Totals Home,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Player Shots O/U,false,250,Manuel Castillo (2) | Gabriel Suazo (2) | Quilindschy Hartman (1) | Jose Carmona (2) | Unai Nunez (1) | Arouna Sangante (2) | Clemens Riedel (1) | Manuel Castillo (2)
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Player to be Booked,false,61,Gabriel Suazo (Booked) | Urko Gonzalez (Booked) | Eduardo Exposito (Booked) | Javier Hernandez (Booked) | Roberto Fernandez (Booked) | Miguel Sierra (Booked) | Gerard Peque Fernandez (Booked) | Jon Guridi (Booked)
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Time of First Corner,false,2,Corner before 8:00 | No Corner before 8:00
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,1st Half Corners,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Team Total Goals Home,false,5,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Multicorners,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Multi Scorers,false,112,Garcia Kike (2 or More) (1) | Javier Hernandez (2 or More) (1) | Isaac Romero (2 or More) (2) | Roberto Fernandez (2 or More) (1) | Marcos Fernandez (2 or More) (1) | Pere Milla (2 or More) (1) | Alex Calatrava (2 or More) (1) | Manuel Castillo (2 or More) (2)
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Odd/Even 2H,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Team Corners Home,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Team Shots Away,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Team Shots Home,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Alternative 1st Half Goal Line,false,5,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Corners,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Team Shots on Target Home,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Team Total Goals Away,false,4,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Player Cards,false,183,Gabriel Suazo (Booked) | Urko Gonzalez (Booked) | Eduardo Exposito (Booked) | Javier Hernandez (Booked) | Roberto Fernandez (Booked) | Miguel Sierra (Booked) | Gerard Peque Fernandez (Booked) | Jon Guridi (Booked)
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Correct Score,false,36,0-4 | 1-4 | 3-0 | 0-2 | 2-1 | 5-0 | 5-1 | 3-2
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Exact 1st Half Goals,false,6,0 Goals | 5+ Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Match Shots,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Team Goalscorer,false,116,Ruben Sanchez (First) | Urko Gonzalez (First) | Ruben Sanchez (Last) | Urko Gonzalez (Last) | Manuel Angel (First) | Miguel Sierra (First) | Chidera Ejuke (First) | Gerard Peque Fernandez (First)
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Totals 2H,false,4,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Bookings Totals Home,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Double Chance HT,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Specials,false,2,To Win From Behind (1) | To Win From Behind (2)
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,First Match Corner,false,2,1 | 2
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Home Team Exact Goals,false,4,Espanyol - 0 Goals | Espanyol - 1 Goal | Espanyol - 2 Goals | Espanyol - 3+ Goals
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Both Teams To Score 2H,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Corners Race,false,4,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,ML 2H,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Half Time Result,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Home Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Player Shots,false,250,Manuel Castillo (2) | Gabriel Suazo (2) | Quilindschy Hartman (1) | Jose Carmona (2) | Unai Nunez (1) | Arouna Sangante (2) | Clemens Riedel (1) | Manuel Castillo (2)
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Player Shots on Target O/U,false,127,Manuel Castillo (2) | Gabriel Suazo (2) | Jose Carmona (2) | Quilindschy Hartman (1) | Arouna Sangante (2) | Clemens Riedel (1) | Unai Nunez (1) | Manuel Castillo (2)
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Player To Score or Assist,true,168,Alex Calatrava (Score) (1) | Javier Hernandez (Score) (1) | Tyrhys Dolan (Score) (1) | Eduardo Exposito (Assist) (1) | Alex Calatrava (Score or Assist) (1) | Roberto Fernandez (Score) (1) | Robbie Ure (Score) (2) | Robbie Ure (Assist) (2)
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Match Shots on Target,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Goalkeeper Saves,false,9,Odisseas Vlachodimos | Marko Dmitrovic | Marko Dmitrovic | Marko Dmitrovic | Marko Dmitrovic | Marko Dmitrovic | Odisseas Vlachodimos | Odisseas Vlachodimos
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Last Team To Score,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Last Match Corner,false,2,1 | 2
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Teams to Score,false,4,Espanyol Only | Sevilla Only | Both Teams | No Goal
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Total Shots on Target Home,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Alternative Total Goals,false,16,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,1st Half Handicap,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Total Shots on Target,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Bookings Totals Away,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Card Handicap,false,1,1 (0)
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Exact 2nd Half Goals,false,6,4 Goals | 2 Goals | 3 Goals | 0 Goals | 1 Goal | 5+ Goals
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Total Corners,false,5,Under 6 | 6 - 8 | 9 - 11 | 12 - 14 | Over 14
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Odd/Even HT,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Team Cards Away,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Winning Margin,false,10,2 (1) | 1 (2) | 2 (2) | Score Draw | 3 (1) | 1 (1) | 4+ (1) | 3 (2)
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Alternative Asian Handicap,false,13,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,European Handicap HT,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Total Shots Away,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Odd/Even Away,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Team Corners Away,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Total Shots Home,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Clean Sheet Home,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Corners 2-Way,false,2,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Correct Score HT,false,19,0-1 | 0-3 | 4-0 | 1-2 | 1-4 | 1-0 | 3-1 | 3-0
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Both Teams To Score HT,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365,Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Team Shots on Target Away,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365 (no latency),Spain - LaLiga,Espanyol Barcelona,Sevilla FC,ML,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365 (no latency),Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Spread,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365 (no latency),Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Totals,false,1,
-72478534,2026-09-06T19:00:00Z,Bet365 (no latency),Spain - LaLiga,Espanyol Barcelona,Sevilla FC,Bookings Totals,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,ML,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Draw No Bet,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Double Chance,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Spread,false,14,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Totals,false,18,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Goals Over/Under,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Both Teams To Score,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,First Team To Score,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Odd/Even,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,ML HT,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Totals HT,false,5,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Team Total Home,false,5,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Team Total Away,false,5,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Half Time / Full Time,false,9,Home / Away | Draw / Home | Draw / Away | Home / Draw | Away / Draw | Home / Home | Away / Away | Draw / Draw
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Corners Totals,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Corners Totals HT,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Anytime Goalscorer,false,53,Mikel Rodriguez | Inigo Vicente | Nahuel Tenaglia | Alvaro Mantilla | Carles Alena | Miguel Rodriguez | Ander Guevara | Manu Hernando
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Number of Goals In Match,false,3,Under 2 goals | Over 3 goals | 2 or 3 goals
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Exact 1st Half Goals,false,6,0 Goals | 4 Goals | 3 Goals | 5+ Goals | 2 Goals | 1 Goal
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Odd/Even Home,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Alternative Corners,false,6,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Odd/Even Away,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Total Shots Away,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Clean Sheet Home,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Exact 2nd Half Goals,false,6,0 Goals | 2 Goals | 3 Goals | 5+ Goals | 1 Goal | 4 Goals
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Last Team To Score,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,ML 2H,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,European Handicap HT,false,4,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Time of First Corner,false,2,Corner before 7:00 | No Corner before 7:00
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Both Teams To Score 2H,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Total Shots on Target Home,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Last Match Corner,false,2,1 | 2
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Team Goalscorer,false,110,Inigo Vicente (First) | Andres Vallecillo (First) | Sergio Martinez (First) | Maguette Gueye (First) | Inigo Vicente (Last) | Andres Vallecillo (Last) | Sergio Martinez (Last) | Maguette Gueye (Last)
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Home Team Highest Scoring Half,false,3,Tie | 2nd Half | 1st Half
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Multicorners,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Player Shots on Target,false,128,Lucas Boye (2) | Andres Martin (1) | Sergio Canales (1) | Asier Villalibre (1) | Yassir Zabiri (1) | Antonio Martinez (2) | Giorgi Guliashvili (1) | Ivan Martin (1)
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Away Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Correct Score HT,false,22,0-3 | 1-0 | 1-4 | 2-4 | 3-2 | 3-3 | 3-0 | 1-1
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Total Shots Home,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Teams to Score,false,4,No Goal | Racing Santander Only | CD Alaves Only | Both Teams
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Correct Score,false,40,4-4 | 5-4 | 0-4 | 1-1 | 2-4 | 3-3 | 4-1 | 0-0
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Player Shots,false,244,Andres Martin (1) | Asier Villalibre (1) | Lucas Boye (2) | Sergio Canales (1) | Yassir Zabiri (1) | Antonio Martinez (2) | Giorgi Guliashvili (1) | Mariano Diaz (2)
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Corners Totals Away,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Goalkeeper Saves,false,9,Julen Agirrezabala | Antonio Sivera | Julen Agirrezabala | Julen Agirrezabala | Julen Agirrezabala | Julen Agirrezabala | Antonio Sivera | Antonio Sivera
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Multi Scorers,false,106,Diego Diaz (2 or More) (1) | Pablo Garcia (2 or More) (1) | Andre Almeida (2 or More) (1) | Aaron Martin (2 or More) (1) | Jeanuel Belocian (2 or More) (1) | Pablo Garcia (3 or More) (1) | Andre Almeida (3 or More) (1) | Izei Hernandez (3 or More) (2)
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Home Team Exact Goals,false,4,Racing Santander - 0 Goals | Racing Santander - 2 Goals | Racing Santander - 1 Goal | Racing Santander - 3+ Goals
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Corners Race,false,4,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Corners Totals Home,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Odd/Even 2H,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Winning Margin,false,10,No Goal | 2 (1) | 1 (2) | 4+ (1) | 4+ (2) | 3 (1) | 3 (2) | 1 (1)
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Away Team Exact Goals,false,4,CD Alaves - 0 Goals | CD Alaves - 2 Goals | CD Alaves - 3+ Goals | CD Alaves - 1 Goal
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Both Teams To Score HT,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Corners,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Specials,false,2,To Win From Behind (2) | To Win From Behind (1)
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Double Chance HT,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,First Match Corner,false,2,1 | 2
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Goal Method,false,106,Asier Villalibre (Header) (1) | Yassir Zabiri (Header) (1) | Yassir Zabiri (Outside the Box) (1) | Maguette Gueye (Outside the Box) (1) | Hugo Martin (Outside the Box) (1) | Sergio Canales (Outside the Box) (1) | Angel Hidalgo Perez (Outside the Box) (2) | Diego Diaz (Header) (1)
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Player To Score or Assist,true,147,Lucas Boye (Score) (2) | Inigo Vicente (Score) (1) | Mariano Diaz (Score) (2) | Sergio Canales (Score or Assist) (1) | Asier Villalibre (Score or Assist) (1) | Yassir Zabiri (Score or Assist) (1) | Lucas Boye (Score or Assist) (2) | Inigo Vicente (Score or Assist) (1)
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Total Corners,false,5,Under 6 | 6 - 8 | 9 - 11 | 12 - 14 | Over 14
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Total Shots on Target Away,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Totals 2H,false,5,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Total Shots on Target,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Total Shots,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Clean Sheet Away,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
+72478556,2026-09-12T12:00:00Z,Bet365,Spain - LaLiga,Racing Santander,Deportivo Alaves,Odd/Even HT,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365 (no latency),Spain - LaLiga,Racing Santander,Deportivo Alaves,ML,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365 (no latency),Spain - LaLiga,Racing Santander,Deportivo Alaves,Spread,false,1,
+72478556,2026-09-12T12:00:00Z,Bet365 (no latency),Spain - LaLiga,Racing Santander,Deportivo Alaves,Totals,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,ML,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Draw No Bet,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Double Chance,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Spread,false,14,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Totals,false,17,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Goals Over/Under,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Both Teams To Score,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,First Team To Score,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Odd/Even,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,ML HT,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Spread HT,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Totals HT,false,5,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Team Total Home,false,6,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Team Total Away,false,4,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,European Handicap,false,5,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Half Time / Full Time,false,9,Draw / Draw | Home / Draw | Home / Home | Draw / Away | Draw / Home | Home / Away | Away / Home | Away / Draw
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Corners Spread,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Corners Totals,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Corners Totals HT,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Anytime Goalscorer,false,50,Hugo Gonzalez | Pablo Duran | Couhaib Driouech | Miguel Roman | Hugo Burcio | Carl Starfelt | Carlos Chupete | Borja Iglesias
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Multicorners,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Goalkeeper Saves,false,10,Alfonso Herrero | Andrei Radu | Andrei Radu | Andrei Radu | Andrei Radu | Andrei Radu | Alfonso Herrero | Alfonso Herrero
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Specials,false,2,To Win From Behind (2) | To Win From Behind (1)
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Team Goalscorer,false,104,Rafa Rodriguez (First) | Pablo Martinez (First) | Joaquin Munoz (First) | Moussa Diarra (First) | Alex Pastor (First) | Azaceta Einar Galilea (First) | Carlos Puga (First) | Rafa Rodriguez (Last)
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Alternative Corners,false,6,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Corner Handicap,false,2,1 (-2) | Tie (2)
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Corners Totals Away,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Corners Totals Home,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Odd/Even Away,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Odd/Even 2H,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Winning Margin,false,10,4+ (2) | 1 (2) | 2 (2) | 3 (2) | Score Draw | No Goal | 3 (1) | 4+ (1)
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Home Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Away Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Both Teams To Score 2H,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Goal Method,false,98,Juan Cruz (Outside the Box) (2) | Abdoulaye Faye (Header) (1) | Alex Pastor (Header) (2) | Moussa Diarra (Header) (2) | Angel Recio (Header) (2) | Carlos Dotor (Header) (2) | Julen Lobete (Header) (2) | Juan Cruz (Header) (2)
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Time of First Corner,false,2,Corner before 9:00 | No Corner before 9:00
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Exact Total Goals,false,8,2 Goals | 3 Goals | 7+ Goals | 0 Goals | 1 Goal | 4 Goals | 5 Goals | 6 Goals
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Totals 2H,false,4,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Corners,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Correct Score HT,false,18,1-2 | 2-2 | 3-0 | 3-1 | 4-0 | 4-1 | 2-3 | 2-0
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Exact 1st Half Goals,false,6,0 Goals | 2 Goals | 3 Goals | 4 Goals | 5+ Goals | 1 Goal
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Total Shots Away,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Corners Race,false,4,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Total Shots on Target,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Player Shots on Target,false,112,Adam Aznou (2) | Aleix Febas (1) | Carl Starfelt (1) | Fernando Calero (2) | Jens Cajuste (2) | Jose Salinas (2) | Juan Cruz (2) | Julen Lobete (2)
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Teams to Score,false,4,Celta Vigo Only | No Goal | Both Teams | Malaga Only
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Clean Sheet Away,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Last Match Corner,false,2,1 | 2
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Player To Score or Assist,true,153,Miguel Roman (Score) (1) | Ferran Jutgla (Assist) (1) | Jones El-Abdellaoui (Assist) (1) | Hugo Alvarez (Assist) (1) | Juan Cruz (Assist) (2) | Miguel Roman (Assist) (1) | Jones El-Abdellaoui (Score or Assist) (1) | Miguel Roman (Score or Assist) (1)
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Total Corners,false,5,Under 6 | 6 - 8 | 9 - 11 | 12 - 14 | Over 14
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Away Team Exact Goals,false,4,Malaga - 1 Goal | Malaga - 3+ Goals | Malaga - 0 Goals | Malaga - 2 Goals
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Total Shots on Target Home,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Player Shots,false,220,Jens Cajuste (2) | Jose Salinas (2) | Marcos Alonso (1) | Rafa Garrido (2) | Sebastian Caceres (1) | Aleix Febas (1) | Julen Lobete (2) | Javier Rodriguez (1)
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Total Shots Home,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Clean Sheet Home,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Double Chance HT,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,First Match Corner,false,2,1 | 2
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Odd/Even Home,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Correct Score,false,36,0-1 | 0-3 | 0-4 | 1-3 | 1-4 | 2-1 | 3-0 | 3-3
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Exact 2nd Half Goals,false,6,0 Goals | 2 Goals | 3 Goals | 1 Goal | 4 Goals | 5+ Goals
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Home Team Exact Goals,false,4,Celta Vigo - 1 Goal | Celta Vigo - 2 Goals | Celta Vigo - 3+ Goals | Celta Vigo - 0 Goals
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,ML 2H,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Multi Scorers,false,100,Juan Berrocal (2 or More) (2) | Williot Swedberg (3 or More) (1) | Haitam Abaida (3 or More) (2) | Ilaix Moriba (3 or More) (1) | Juan Berrocal (3 or More) (2) | Borja Iglesias (2 or More) (1) | Ferran Jutgla (2 or More) (1) | Hugo Gonzalez (2 or More) (1)
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Odd/Even HT,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Total Shots,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Total Shots on Target Away,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Both Teams To Score HT,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Number of Goals In Match,false,3,2 or 3 goals | Under 2 goals | Over 3 goals
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,Last Team To Score,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365,Spain - LaLiga,RC Celta de Vigo,Malaga CF,European Handicap HT,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365 (no latency),Spain - LaLiga,RC Celta de Vigo,Malaga CF,ML,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365 (no latency),Spain - LaLiga,RC Celta de Vigo,Malaga CF,Spread,false,1,
+72478548,2026-09-13T12:00:00Z,Bet365 (no latency),Spain - LaLiga,RC Celta de Vigo,Malaga CF,Totals,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,ML,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Draw No Bet,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Double Chance,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Spread,false,11,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Totals,false,15,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Goals Over/Under,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Both Teams To Score,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,First Team To Score,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Odd/Even,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,ML HT,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Spread HT,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Totals HT,false,5,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Team Total Home,false,5,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Team Total Away,false,4,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Half Time / Full Time,false,9,Draw / Home | Home / Away | Away / Draw | Home / Home | Home / Draw | Draw / Draw | Draw / Away | Away / Away
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Corners Totals,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Corners Totals HT,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Anytime Goalscorer,false,49,Urko Gonzalez | Jonathan Dubasin | Garcia Kike | Javi Puado | Pol Lozano | Rafael Bauza | Diego Rico | Valentin Rosier
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Home Team Highest Scoring Half,false,3,1st Half | Tie | 2nd Half
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Odd/Even HT,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Player Fouls,false,198,Jose Flaco Lopez (2) | Vanja Drkusic (2) | Aimar Oroz (1) | Pere Milla (2) | Raul Garcia (1) | Santos Ruben Garcia (1) | Roger Hinojo (2) | Abel Bretones (1)
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Corners Race,false,4,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,European Handicap HT,false,4,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Multi Scorers,false,96,Romain Del Castillo (2 or More) (1) | Bryan Zaragoza (2 or More) (2) | Rockson Yeboah (2 or More) (1) | Andoni Gorosabel (2 or More) (2) | Romain Del Castillo (3 or More) (1) | Rockson Yeboah (3 or More) (1) | Andoni Gorosabel (3 or More) (2) | Abel Bretones (2 or More) (1)
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Correct Score,false,35,2-3 | 3-3 | 4-2 | 0-0 | 3-2 | 4-4 | 5-2 | 5-3
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Corners Totals Away,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Home Team Exact Goals,false,4,Osasuna - 3+ Goals | Osasuna - 0 Goals | Osasuna - 2 Goals | Osasuna - 1 Goal
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Player Shots,false,197,Clemens Riedel (2) | Pere Milla (2) | Marcos Fernandez (2) | Jofre Carreras (2) | Asier Osambela (1) | Kike Barja (1) | Jon Moncayola (1) | Mauro Echegoyen (1)
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Team Goalscorer,false,102,Roberto Fernandez (First) | Rafael Bauza (First) | Pol Lozano (First) | Quilindschy Hartman (First) | Clemens Riedel (First) | Unai Nunez (First) | Roberto Fernandez (Last) | Rafael Bauza (Last)
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Exact 2nd Half Goals,false,6,3 Goals | 0 Goals | 1 Goal | 2 Goals | 4 Goals | 5+ Goals
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Clean Sheet Away,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Alternative Corners,false,6,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Corners,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Number of Goals In Match,false,3,Over 3 goals | 2 or 3 goals | Under 2 goals
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Total Corners,false,5,Under 6 | 6 - 8 | 9 - 11 | 12 - 14 | Over 14
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Clean Sheet Home,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Winning Margin,false,10,4+ (2) | 4+ (1) | 3 (2) | Score Draw | No Goal | 1 (2) | 1 (1) | 2 (1)
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Away Team Exact Goals,false,4,Espanyol - 0 Goals | Espanyol - 2 Goals | Espanyol - 3+ Goals | Espanyol - 1 Goal
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Teams to Score,false,4,Both Teams | Espanyol Only | Osasuna Only | No Goal
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Odd/Even Home,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Corners Totals Home,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Goalkeeper Saves,false,10,Marko Dmitrovic | Marko Dmitrovic | Sergio Herrera | Sergio Herrera | Sergio Herrera | Marko Dmitrovic | Marko Dmitrovic | Marko Dmitrovic
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Last Team To Score,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Total Shots on Target Away,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Player Shots on Target,false,96,Roger Hinojo (2) | Pere Milla (2) | Marcos Fernandez (2) | Jofre Carreras (2) | Asier Osambela (1) | Kike Barja (1) | Jon Moncayola (1) | Abel Bretones (1)
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,ML 2H,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Last Match Corner,false,2,1 | 2
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Odd/Even Away,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Goal Method,false,86,Romain Del Castillo (Header) (1) | Bryan Zaragoza (Header) (2) | Andoni Gorosabel (Header) (2) | Romain Del Castillo (Outside the Box) (1) | Aimar Oroz (Outside the Box) (1) | Bryan Zaragoza (Outside the Box) (2) | Andoni Gorosabel (Outside the Box) (2) | Javi Puado (Header) (2)
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Exact 1st Half Goals,false,6,0 Goals | 1 Goal | 4 Goals | 2 Goals | 3 Goals | 5+ Goals
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Double Chance HT,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Specials,false,2,To Win From Behind (2) | To Win From Behind (1)
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Total Shots on Target Home,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Away Team Highest Scoring Half,false,3,2nd Half | Tie | 1st Half
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Both Teams To Score HT,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Correct Score HT,false,19,0-0 | 2-3 | 0-1 | 1-0 | 1-2 | 0-3 | 0-4 | 1-4
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Multicorners,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Player To Score or Assist,true,147,Roberto Fernandez (Score) (2) | Jorge Herrando (Score) (1) | Jose Flaco Lopez (Score) (2) | Urko Gonzalez (Score) (2) | Adama Timera (Score) (2) | Vanja Drkusic (Score) (2) | Enzo Boyomo (Score) (1) | Lucas Torro (Assist) (1)
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Total Shots on Target,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Corner Handicap,false,2,1 (-1) | Tie (1)
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,First Match Corner,false,2,1 | 2
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Odd/Even 2H,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Time of First Corner,false,2,Corner before 8:00 | No Corner before 8:00
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Total Shots,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Total Shots Away,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Total Shots Home,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Totals 2H,false,4,
+72478554,2026-09-12T14:15:00Z,Bet365,Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Both Teams To Score 2H,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365 (no latency),Spain - LaLiga,CA Osasuna,Espanyol Barcelona,ML,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365 (no latency),Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Spread,false,1,
+72478554,2026-09-12T14:15:00Z,Bet365 (no latency),Spain - LaLiga,CA Osasuna,Espanyol Barcelona,Totals,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,ML,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Draw No Bet,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Double Chance,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Spread,false,14,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Totals,false,19,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Goals Over/Under,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Both Teams To Score,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,First Team To Score,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Odd/Even,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,ML HT,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Totals HT,false,5,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,European Handicap,false,5,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Half Time / Full Time,false,9,Home / Away | Away / Home | Home / Home | Home / Draw | Draw / Home | Draw / Draw | Draw / Away | Away / Draw
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Corners Spread,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Corners Totals,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Corners Totals HT,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Anytime Goalscorer,false,54,Ruben Sanchez | Berchiche Yuri | Gonzalo Villar | Alvarez Yeray | Alex Berenguer | Alvaro Padilla | Inigo Ruiz de Galarreta | Federico Redondo
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Double Chance HT,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Clean Sheet Home,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Last Team To Score,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Total Shots on Target Away,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Exact 1st Half Goals,false,6,1 Goal | 0 Goals | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Player Shots on Target,false,121,Oihan Sancet (1) | Alex Berenguer (1) | Lucas Cepeda (2) | Benat Prados (1) | Benat Gerenabarrena (1) | Hugo Rincon (1) | Berchiche Yuri (1) | Inigo Ruiz de Galarreta (1)
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Team Goalscorer,false,112,Ruben Sanchez (First) | Ruben Sanchez (Last) | Selton Sanchez (First) | Aitor Paredes (First) | Johaneko Louisjean (First) | Mikel Jauregizar (First) | Berchiche Yuri (First) | Inigo Ruiz de Galarreta (First)
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Total Shots Home,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Clean Sheet Away,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Odd/Even 2H,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Total Shots on Target Home,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Corners Totals Away,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,First Match Corner,false,2,1 | 2
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,ML 2H,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Total Shots on Target,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Corners Totals Home,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Odd/Even Home,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Winning Margin,false,10,2 (1) | 4+ (1) | 2 (2) | 3 (2) | 1 (1) | No Goal | Score Draw | 4+ (2)
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Alternative Corners,false,6,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Exact 2nd Half Goals,false,6,2 Goals | 1 Goal | 3 Goals | 0 Goals | 4 Goals | 5+ Goals
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Multi Scorers,false,106,Oihan Sancet (2 or More) (1) | Alex Berenguer (2 or More) (1) | Alvarez Yeray (2 or More) (1) | Jesus Areso (2 or More) (1) | Bambo Diaby (2 or More) (2) | Buba Sangare (2 or More) (2) | Pedro Bigas (2 or More) (2) | Maroan Sannadi (3 or More) (1)
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Time of First Corner,false,2,Corner before 8:00 | No Corner before 8:00
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Total Corners,false,5,Under 6 | 6 - 8 | 9 - 11 | 12 - 14 | Over 14
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Home Team Exact Goals,false,4,Athletic Club - 1 Goal | Athletic Club - 3+ Goals | Athletic Club - 0 Goals | Athletic Club - 2 Goals
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Away Team Exact Goals,false,4,Elche - 0 Goals | Elche - 1 Goal | Elche - 3+ Goals | Elche - 2 Goals
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Player To Score or Assist,true,162,Gonzalo Villar (Score) (2) | German Valera (Score) (2) | Adam Boayar (Score) (2) | Alvaro Padilla (Score) (2) | Federico Redondo (Score) (2) | Marc Aguado (Assist) (2) | Ezequiel Ponce (Assist) (2) | Tete Morente (Assist) (2)
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Corner Handicap,false,2,1 (-1) | Tie (1)
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Odd/Even Away,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Goalkeeper Saves,false,10,Unai Simon | Unai Simon | Unai Simon | Matias Dituro | Matias Dituro | Matias Dituro | Matias Dituro | Matias Dituro
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Teams to Score,false,4,No Goal | Athletic Club Only | Both Teams | Elche Only
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Totals 2H,false,5,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Total Shots,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Total Shots Away,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Away Team Highest Scoring Half,false,3,2nd Half | Tie | 1st Half
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Specials,false,2,To Win From Behind (2) | To Win From Behind (1)
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Correct Score,false,38,0-4 | 1-1 | 6-0 | 7-0 | 2-1 | 3-3 | 4-2 | 0-0
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Correct Score HT,false,20,0-3 | 1-1 | 2-0 | 4-2 | 2-2 | 3-2 | 2-1 | 2-3
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Odd/Even HT,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Both Teams To Score HT,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Corners Race,false,4,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Last Match Corner,false,2,1 | 2
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Both Teams To Score 2H,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Multicorners,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Number of Goals In Match,false,3,Under 2 goals | 2 or 3 goals | Over 3 goals
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Player Shots,false,242,Alejandro Rego (1) | Maroan Sannadi (1) | Nico Williams (1) | Alex Berenguer (1) | Lucas Cepeda (2) | Benat Prados (1) | Benat Gerenabarrena (1) | Hugo Rincon (1)
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Corners,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Goal Method,false,104,Aymeric Laporte (Header) (1) | Benat Prados (Header) (1) | Alvaro Padilla (Outside the Box) (2) | Jesus Areso (Outside the Box) (1) | Maroan Sannadi (Header) (1) | Nico Williams (Header) (1) | Hugo Rincon (Header) (1) | Abiel Osorio (Header) (2)
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,Home Team Highest Scoring Half,false,3,2nd Half | Tie | 1st Half
+72478546,2026-09-12T16:30:00Z,Bet365,Spain - LaLiga,Athletic Bilbao,Elche CF,European Handicap HT,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365 (no latency),Spain - LaLiga,Athletic Bilbao,Elche CF,ML,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365 (no latency),Spain - LaLiga,Athletic Bilbao,Elche CF,Spread,false,1,
+72478546,2026-09-12T16:30:00Z,Bet365 (no latency),Spain - LaLiga,Athletic Bilbao,Elche CF,Totals,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,ML,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Draw No Bet,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Double Chance,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Spread,false,17,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Totals,false,23,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Goals Over/Under,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Both Teams To Score,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,First Team To Score,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Odd/Even,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,ML HT,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Spread HT,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Totals HT,false,5,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,European Handicap,false,5,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Half Time / Full Time,false,9,Home / Home | Draw / Away | Away / Draw | Draw / Home | Away / Home | Draw / Draw | Away / Away | Home / Away
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Corners Totals,false,2,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Corners Totals HT,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Anytime Goalscorer,false,54,Alexandre Alemao | Pathe Ciss | Endrick | Bouare Gnangoro | Pedro Diaz | Giorgi Tsitaishvili | Jozhua Vertrouwd | Marco de Las Sias
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Corners Totals Away,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Player Shots on Target,false,122,Denzel Dumfries (1) | Denzel Dumfries (1) | Alexandre Alemao (2) | Pedro Diaz (2) | Bouare Gnangoro (2) | Isi Palazon (2) | Fran Perez (2) | Ivan Alonso (2)
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Goalkeeper Saves,false,11,Thibaut Courtois | Thibaut Courtois | Thibaut Courtois | Daniel Cardenas | Daniel Cardenas | Daniel Cardenas | Daniel Cardenas | Daniel Cardenas
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Multi Scorers,false,108,Giorgi Tsitaishvili (2 or More) (2) | Pathe Ciss (2 or More) (2) | Samu Becerra (2 or More) (2) | Federico Valverde (3 or More) (1) | Bernardo Silva (3 or More) (1) | Alvaro Garcia (3 or More) (2) | Cabrera Unai Lopez (3 or More) (2) | Florian Lejeune (3 or More) (2)
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Odd/Even Home,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Player Cards,false,174,Pathe Ciss (Booked) | Cabrera Unai Lopez (Booked) | Alexandre Alemao (Booked) | Sergio Camello (Booked) | Alvaro Garcia (Booked) | Eduardo Camavinga (Booked) | Vinicius Jr. (Booked) | Florian Lejeune (Booked)
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Player To Be Fouled,false,193,Eduardo Camavinga (1) | Vinicius Jr. (1) | Carlos Espi (1) | Jude Bellingham (1) | Yan Diomande (1) | Alexandre Alemao (2) | Endrick (1) | Arda Guler (1)
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Player To Score or Assist,true,162,Pathe Ciss (Score) (2) | Trent Alexander-Arnold (Score) (1) | Marc Cucurella (Score) (1) | Eduardo Camavinga (Score) (1) | Alvaro Carreras (Score) (1) | Mario Rivas (Score) (1) | Ibrahima Konate (Score) (1) | Raul De Tomas (Score) (2)
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,First Match Corner,false,2,1 | 2
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Double Chance HT,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Exact 2nd Half Goals,false,6,2 Goals | 0 Goals | 1 Goal | 5+ Goals | 3 Goals | 4 Goals
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Player to be Booked,false,58,Pathe Ciss (Booked) | Cabrera Unai Lopez (Booked) | Alexandre Alemao (Booked) | Sergio Camello (Booked) | Alvaro Garcia (Booked) | Eduardo Camavinga (Booked) | Vinicius Jr. (Booked) | Florian Lejeune (Booked)
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Exact 1st Half Goals,false,6,2 Goals | 3 Goals | 0 Goals | 1 Goal | 4 Goals | 5+ Goals
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Totals 2H,false,6,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Total Shots Home,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Both Teams To Score HT,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Correct Score,false,40,2-3 | 0-1 | 1-2 | 2-2 | 3-1 | 3-3 | 4-1 | 5-0
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Odd/Even Away,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Total Shots Away,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Winning Margin,false,10,1 (2) | 3 (1) | 3 (2) | 4+ (2) | Score Draw | 1 (1) | 2 (1) | 4+ (1)
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Number of Goals In Match,false,3,Under 2 goals | Over 3 goals | 2 or 3 goals
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Correct Score HT,false,24,1-1 | 1-2 | 4-1 | 0-0 | 6-0 | 0-1 | 0-2 | 0-3
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Home Team Exact Goals,false,4,Real Madrid - 0 Goals | Real Madrid - 1 Goal | Real Madrid - 2 Goals | Real Madrid - 3+ Goals
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Player Fouls,false,205,Etienne Eto'o (2) | Randy Nteka (2) | Adria Pedrosa (2) | Florian Lejeune (2) | Oscar Valentin (2) | Pathe Ciss (2) | Carlos Espi (1) | Samu Becerra (2)
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Clean Sheet Home,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Goal Method,false,94,Eder Militao (Header) (1) | Mujaid Sadick (Header) (2) | Rayane Belaid (Header) (2) | Eder Militao (Outside the Box) (1) | Alexandre Alemao (Outside the Box) (2) | Mujaid Sadick (Outside the Box) (2) | Oscar Valentin (Outside the Box) (2) | Andrei Ratiu (Outside the Box) (2)
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Last Team To Score,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Player Shots,false,239,Denzel Dumfries (1) | Denzel Dumfries (1) | Denzel Dumfries (1) | Denzel Dumfries (1) | Denzel Dumfries (1) | Denzel Dumfries (1) | Denzel Dumfries (1) | Jozhua Vertrouwd (2)
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Corners,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Player Shots on Target Outside Box,false,86,Kylian Mbappe (1) | Vinicius Jr. (1) | Endrick (1) | Carlos Espi (1) | Jude Bellingham (1) | Arda Guler (1) | Federico Valverde (1) | Brahim Diaz (1)
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Time of First Corner,false,2,Corner before 7:00 | No Corner before 7:00
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Total Shots on Target,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Alternative Corners,false,6,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Total Shots,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Last Match Corner,false,2,1 | 2
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Home Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,ML 2H,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,1st Half Corners,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Both Teams To Score 2H,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Total Shots on Target Away,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Total Shots on Target Home,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Total Corners,false,5,Under 6 | 6 - 8 | 12 - 14 | Over 14 | 9 - 11
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Away Team Exact Goals,false,4,Rayo Vallecano - 2 Goals | Rayo Vallecano - 3+ Goals | Rayo Vallecano - 1 Goal | Rayo Vallecano - 0 Goals
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Multicorners,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Corners Totals Home,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Away Team Highest Scoring Half,false,3,2nd Half | 1st Half | Tie
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,European Handicap HT,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Corners Race,false,4,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Corner Handicap,false,2,1 (-2) | Tie (2)
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Teams to Score,false,4,Real Madrid Only | Both Teams | No Goal | Rayo Vallecano Only
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Clean Sheet Away,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Odd/Even 2H,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Odd/Even HT,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Specials,false,2,To Win From Behind (2) | To Win From Behind (1)
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Team Goalscorer,false,112,Alvaro Garcia (First) | Alvaro Garcia (Last) | Carlos Espi (First) | Vinicius Jr. (First) | Yan Diomande (First) | Jude Bellingham (First) | Brahim Diaz (First) | Thiago Pitarch (First)
+72478558,2026-09-12T19:00:00Z,Bet365,Spain - LaLiga,Real Madrid,Rayo Vallecano,Player Tackles,false,198,Pathe Ciss (2) | Etienne Eto'o (2) | Marco de Las Sias (2) | Samu Becerra (2) | Denzel Dumfries (1) | Marc Cucurella (1) | Jude Bellingham (1) | Pedro Diaz (2)
+72478558,2026-09-12T19:00:00Z,Bet365 (no latency),Spain - LaLiga,Real Madrid,Rayo Vallecano,ML,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365 (no latency),Spain - LaLiga,Real Madrid,Rayo Vallecano,Spread,false,1,
+72478558,2026-09-12T19:00:00Z,Bet365 (no latency),Spain - LaLiga,Real Madrid,Rayo Vallecano,Totals,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,ML,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Draw No Bet,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Double Chance,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Spread,false,16,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Totals,false,22,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Goals Over/Under,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Both Teams To Score,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,First Team To Score,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Odd/Even,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,ML HT,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Spread HT,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Totals HT,false,5,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Team Total Home,false,4,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Team Total Away,false,8,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,European Handicap,false,5,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Half Time / Full Time,false,9,Home / Away | Home / Draw | Draw / Draw | Draw / Away | Away / Draw | Away / Away | Home / Home | Draw / Home
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Corners Spread,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Corners Totals,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Corners Totals HT,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Anytime Goalscorer,false,47,Anthony Gordon | Fermin Lopez | Karim Adeyemi | Brian Farinas | Frenkie de Jong | Xavi Espart | Lamine Yamal | Roger Brugue
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Player Shots,false,240,Pedri (2) | Daniel Requena (1) | Ifeanyi Ndukwe (1) | Manuel Sanchez (1) | Raphinha (2) | Gabriel Jesus (2) | Hamza Abdelkarim (2) | Victor Garcia (1)
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Both Teams To Score HT,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Odd/Even HT,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Odd/Even Away,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Home Team Exact Goals,false,4,Levante - 1 Goal | Levante - 0 Goals | Levante - 2 Goals | Levante - 3+ Goals
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Both Teams To Score 2H,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,ML 2H,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,First Match Corner,false,2,1 | 2
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Corners Race,false,4,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Goal Method,false,90,Fermin Lopez (Header) (2) | Raphinha (Header) (2) | Pedri (Header) (2) | Roger Brugue (Header) (1) | Axel Tape (Header) (1) | Gavi (Header) (2) | Ifeanyi Ndukwe (Header) (1) | Oriol Rey (Header) (1)
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Time of First Corner,false,2,Corner before 8:00 | No Corner before 8:00
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Player To Score or Assist,true,144,Lamine Yamal (Score) (2) | Raphinha (Score) (2) | Anthony Gordon (Score) (2) | Fermin Lopez (Score) (2) | Lamine Yamal (Assist) (2) | Raphinha (Assist) (2) | Anthony Gordon (Assist) (2) | Fermin Lopez (Assist) (2)
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Team Goalscorer,false,100,Hamza Abdelkarim (First) | Brian Farinas (First) | Andreas Christensen (First) | Jordi Pesquer (First) | Eric Garcia (First) | Hamza Abdelkarim (Last) | Brian Farinas (Last) | Andreas Christensen (Last)
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Player to be Booked,false,52,Ivan Romero (Booked) | Jon Ander Olasagasti (Booked) | Manuel Sanchez (Booked) | Anthony Gordon (Booked) | Jeremy Toljan (Booked) | Roger Brugue (Booked) | Pau Cubarsi (Booked) | Fermin Lopez (Booked)
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Corners,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Exact 2nd Half Goals,false,6,2 Goals | 3 Goals | 4 Goals | 5+ Goals | 0 Goals | 1 Goal
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Number of Goals In Match,false,3,Under 2 goals | 2 or 3 goals | Over 3 goals
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Home Team Highest Scoring Half,false,3,2nd Half | Tie | 1st Half
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Alternative Corners,false,6,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Corners Totals Away,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,European Handicap HT,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Corners Totals Home,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Exact 1st Half Goals,false,6,2 Goals | 0 Goals | 3 Goals | 4 Goals | 1 Goal | 5+ Goals
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Player Cards,false,156,Ivan Romero (Booked) | Jon Ander Olasagasti (Booked) | Manuel Sanchez (Booked) | Anthony Gordon (Booked) | Jeremy Toljan (Booked) | Roger Brugue (Booked) | Pau Cubarsi (Booked) | Fermin Lopez (Booked)
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Total Shots on Target Home,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Multicorners,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Clean Sheet Away,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Total Shots on Target Away,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Totals 2H,false,6,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Total Shots Away,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Winning Margin,false,10,1 (1) | 2 (1) | 3 (1) | 4+ (1) | 4+ (2) | Score Draw | 2 (2) | 3 (2)
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Away Team Exact Goals,false,4,Barcelona - 0 Goals | Barcelona - 3+ Goals | Barcelona - 1 Goal | Barcelona - 2 Goals
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Double Chance HT,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Goalkeeper Saves,false,11,Joan Garcia | Joan Garcia | Joan Garcia | Mathew Ryan | Mathew Ryan | Mathew Ryan | Mathew Ryan | Mathew Ryan
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Last Match Corner,false,2,1 | 2
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Multi Scorers,false,96,Roger Brugue (2 or More) (1) | Marc Santos (2 or More) (1) | Nacho Perez (2 or More) (1) | Oriol Rey (2 or More) (1) | Jorge Cabello (2 or More) (1) | Anthony Gordon (3 or More) (2) | Adrian De la Fuente (2 or More) (1) | Aissa Mandi (2 or More) (1)
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Teams to Score,false,4,Both Teams | No Goal | Barcelona Only | Levante Only
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Correct Score,false,40,0-8 | 1-1 | 1-6 | 2-0 | 2-1 | 2-8 | 3-2 | 3-6
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Total Shots,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Away Team Highest Scoring Half,false,3,2nd Half | 1st Half | Tie
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Specials,false,2,To Win From Behind (2) | To Win From Behind (1)
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Odd/Even 2H,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Total Shots on Target,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Total Corners,false,5,Under 6 | 6 - 8 | 9 - 11 | 12 - 14 | Over 14
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Total Shots Home,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Clean Sheet Home,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Correct Score HT,false,25,2-1 | 0-5 | 0-0 | 0-2 | 1-3 | 1-6 | 1-5 | 3-1
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Last Team To Score,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Odd/Even Home,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365,Spain - LaLiga,Levante UD,FC Barcelona,Player Shots on Target,false,117,Gabriel Jesus (2) | Hamza Abdelkarim (2) | Victor Garcia (1) | Ifeanyi Ndukwe (1) | Manuel Sanchez (1) | Victor Garcia (1) | Gabriel Jesus (2) | Hamza Abdelkarim (2)
+72478552,2026-09-13T14:15:00Z,Bet365 (no latency),Spain - LaLiga,Levante UD,FC Barcelona,ML,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365 (no latency),Spain - LaLiga,Levante UD,FC Barcelona,Spread,false,1,
+72478552,2026-09-13T14:15:00Z,Bet365 (no latency),Spain - LaLiga,Levante UD,FC Barcelona,Totals,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,ML,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Draw No Bet,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Double Chance,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Spread,false,10,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Totals,false,15,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Goals Over/Under,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Both Teams To Score,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,First Team To Score,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Odd/Even,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,ML HT,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Spread HT,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Totals HT,false,4,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,European Handicap,false,5,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Half Time / Full Time,false,9,Home / Home | Home / Draw | Home / Away | Draw / Draw | Away / Home | Away / Draw | Draw / Home | Draw / Away
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Corners Totals,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Corners Totals HT,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Anytime Goalscorer,false,55,Enes Unal | Mario Soriano | Orel Mangala | Giacomo Quagliata | Johan Mojica | Mancha Davinchi | Joaquin Ximo Navarro | Jairo Noriega
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Home Team Exact Goals,false,4,Getafe - 1 Goal | Getafe - 2 Goals | Getafe - 3+ Goals | Getafe - 0 Goals
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Corners Race,false,4,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Odd/Even Away,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Total Shots Away,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Player Shots on Target,false,90,Yeremay Hernandez (2) | Kevin Sanchez (2) | Ismael Bekhoucha (1) | Abdelkabir Abqar (1) | Dakonam Djene (1) | Jean Valou (1) | Kiko Femenia (1) | Mohamed Hamdoune (1)
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Goalkeeper Saves,false,8,David Soria | David Soria | Leo Roman | Leo Roman | Leo Roman | Leo Roman | David Soria | David Soria
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Half With Most Goals,false,3,1st Half | Tie | 2nd Half
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,ML 2H,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Total Shots Home,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Total Shots on Target,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Last Team To Score,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Correct Score,false,29,0-3 | 1-1 | 1-3 | 2-1 | 2-3 | 3-2 | 3-3 | 4-1
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Away Team Exact Goals,false,4,Deportivo A Coruna - 2 Goals | Deportivo A Coruna - 3+ Goals | Deportivo A Coruna - 1 Goal | Deportivo A Coruna - 0 Goals
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Away Team Highest Scoring Half,false,3,1st Half | Tie | 2nd Half
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Exact 1st Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Home Team Highest Scoring Half,false,3,2nd Half | 1st Half | Tie
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Player Shots,false,194,Moya Borja Mayoral (1) | Yeremay Hernandez (2) | Kevin Sanchez (2) | Ismael Bekhoucha (1) | Abdelkabir Abqar (1) | Dakonam Djene (1) | Jean Valou (1) | Kiko Femenia (1)
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Corners Totals Home,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Odd/Even HT,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Total Corners,false,5,Under 6 | 6 - 8 | 9 - 11 | 12 - 14 | Over 14
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Specials,false,2,To Win From Behind (1) | To Win From Behind (2)
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,First Match Corner,false,2,1 | 2
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Last Match Corner,false,2,1 | 2
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Odd/Even Home,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Correct Score HT,false,18,2-0 | 2-3 | 0-0 | 1-2 | 2-1 | 2-2 | 3-2 | 1-1
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Player To Score or Assist,true,162,Enes Unal (Score) (1) | Mario Soriano (Score) (2) | Moya Borja Mayoral (Assist) (1) | Ramon Terrats (Assist) (1) | Mario Soriano (Score or Assist) (2) | Ivan Azon (Score) (1) | Kevin Sanchez (Score) (2) | Yeremay Hernandez (Score) (2)
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Corners Totals Away,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Exact 2nd Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Both Teams To Score HT,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Total Shots on Target Home,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Team Goalscorer,false,114,Ivan Azon (First) | Johan Mojica (First) | Orel Mangala (First) | Ivan Azon (Last) | Johan Mojica (Last) | Orel Mangala (Last) | David Mella (First) | Mohammed Bouldini (First)
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Goal Method,false,110,Martin Satriano (Header) (1) | Moya Borja Mayoral (Header) (1) | Joselu Perez (Header) (1) | Ebrahima Drammeh (Header) (1) | Oscar Lopez (Header) (1) | Teun Gijselhart (Header) (2) | Arnau Comas (Header) (2) | Jose Maria Gimenez (Header) (2)
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Odd/Even 2H,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Total Shots,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Double Chance HT,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Number of Goals In Match,false,3,2 or 3 goals | Under 2 goals | Over 3 goals
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Corners,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Totals 2H,false,4,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Clean Sheet Away,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Time of First Corner,false,2,Corner before 7:00 | No Corner before 7:00
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Winning Margin,false,10,Score Draw | 1 (2) | 3 (2) | No Goal | 1 (1) | 2 (1) | 3 (1) | 4+ (1)
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Alternative Corners,false,6,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Multicorners,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Multi Scorers,false,110,Moya Borja Mayoral (2 or More) (1) | Joselu Perez (2 or More) (1) | Martin Satriano (2 or More) (1) | Kevin Sanchez (2 or More) (2) | Yeremay Hernandez (2 or More) (2) | Bil Nsongo (2 or More) (2) | Jairo Noriega (2 or More) (2) | Oscar Lopez (2 or More) (1)
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Total Shots on Target Away,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Teams to Score,false,4,Both Teams | Getafe Only | Deportivo A Coruna Only | No Goal
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Both Teams To Score 2H,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Clean Sheet Home,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365,Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,European Handicap HT,false,4,
+72478550,2026-09-13T16:30:00Z,Bet365 (no latency),Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,ML,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365 (no latency),Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Spread,false,1,
+72478550,2026-09-13T16:30:00Z,Bet365 (no latency),Spain - LaLiga,Getafe CF,RC Deportivo de A Coruna,Totals,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,ML,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Draw No Bet,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Double Chance,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Spread,false,14,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Totals,false,19,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Goals Over/Under,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Both Teams To Score,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,First Team To Score,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Odd/Even,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,ML HT,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Spread HT,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Totals HT,false,5,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Team Total Home,false,5,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Team Total Away,false,5,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,European Handicap,false,4,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Half Time / Full Time,false,9,Home / Away | Draw / Home | Home / Draw | Draw / Draw | Away / Home | Away / Draw | Home / Home | Draw / Away
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Corners Totals,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Corners Totals HT,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Anytime Goalscorer,false,49,Alex Baena | Barragan Carlos Soler | Pablo Marin | David Hancko | Dani Martinez | Jorge Dominguez | Marc Pubill | Robin Le Normand
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Total Shots Home,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Away Team Highest Scoring Half,false,3,Tie | 1st Half | 2nd Half
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Total Shots,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Player Shots on Target,false,121,Jon Martin (1) | Goncalo Guedes (1) | Benat Turrientes (1) | Takefusa Kubo (1) | Yangel Herrera (1) | Jon Aramburu (1) | Jon Gorrotxategi (1) | Luken Beitia (1)
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Home Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Correct Score,false,40,0-0 | 1-1 | 1-6 | 2-2 | 3-3 | 2-3 | 2-6 | 3-1
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Odd/Even Away,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,ML 2H,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Goal Method,false,92,Alexander Sorloth (Header) (2) | Jon Martin (Header) (1) | Job Ochieng (Header) (1) | Alvaro Odriozola (Header) (1) | Aihen Munoz (Header) (1) | Alexander Sorloth (Outside the Box) (2) | Orri Steinn Oskarsson (Outside the Box) (1) | Jon Martin (Outside the Box) (1)
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Last Team To Score,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Specials,false,2,To Win From Behind (2) | To Win From Behind (1)
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Double Chance HT,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Home Team Exact Goals,false,4,Real Sociedad - 3+ Goals | Real Sociedad - 1 Goal | Real Sociedad - 0 Goals | Real Sociedad - 2 Goals
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Multi Scorers,false,98,Arnau Ortiz (2 or More) (2) | Arsen Zakharyan (2 or More) (1) | Alex Grimaldo (2 or More) (2) | Morten Hjulmand (2 or More) (2) | Obed Vargas (2 or More) (2) | Pablo Barrios (2 or More) (2) | David Hancko (2 or More) (2) | Dani Martinez (2 or More) (2)
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Totals 2H,false,5,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,European Handicap HT,false,4,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Total Shots on Target Home,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Correct Score HT,false,22,0-4 | 0-3 | 1-1 | 1-2 | 1-3 | 1-4 | 2-1 | 2-2
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Total Corners,false,5,Under 6 | 6 - 8 | 9 - 11 | 12 - 14 | Over 14
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Player To Score or Assist,true,144,Orri Steinn Oskarsson (Score) (1) | Kang-In Lee (Score) (2) | Takefusa Kubo (Score) (1) | Marcos Llorente (Score) (2) | Cristian Romero (Score) (2) | Jon Aramburu (Score) (1) | Igor Zubeldia (Score) (1) | Jonathan David (Score) (2)
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Goalkeeper Saves,false,10,Alejandro Remiro | Alejandro Remiro | Alejandro Remiro | Alejandro Remiro | Alejandro Remiro | Jan Oblak | Jan Oblak | Jan Oblak
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Odd/Even 2H,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Both Teams To Score 2H,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Away Team Exact Goals,false,4,Atletico Madrid - 2 Goals | Atletico Madrid - 1 Goal | Atletico Madrid - 0 Goals | Atletico Madrid - 3+ Goals
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Team Goalscorer,false,102,No Goalscorer (Real Sociedad) (First) | No Goalscorer (Real Sociedad) (Last) | Giuliano Simeone (First) | Giuliano Simeone (Last) | Goncalo Guedes (First) | Luka Sucic (First) | Takefusa Kubo (First) | Benat Turrientes (First)
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Alternative Corners,false,6,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Corners Totals Home,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Corner Handicap,false,2,1 (1) | Tie (-1)
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Corners Race,false,4,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Winning Margin,false,10,4+ (2) | 3 (1) | 1 (1) | 2 (1) | Score Draw | No Goal | 4+ (1) | 2 (2)
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Corners Totals Away,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,First Match Corner,false,2,1 | 2
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Teams to Score,false,4,Real Sociedad Only | No Goal | Both Teams | Atletico Madrid Only
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Time of First Corner,false,2,Corner before 7:00 | No Corner before 7:00
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Total Shots Away,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Clean Sheet Away,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Total Shots on Target Away,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Exact 2nd Half Goals,false,6,1 Goal | 2 Goals | 3 Goals | 4 Goals | 0 Goals | 5+ Goals
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Player Shots,false,233,Benat Turrientes (1) | Takefusa Kubo (1) | Yangel Herrera (1) | Jon Aramburu (1) | Jon Gorrotxategi (1) | Luken Beitia (1) | Igor Zubeldia (1) | Benat Turrientes (1)
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Both Teams To Score HT,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Half With Most Goals,false,3,1st Half | Tie | 2nd Half
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Multicorners,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Odd/Even HT,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Odd/Even Home,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Total Shots on Target,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Last Match Corner,false,2,1 | 2
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Corners,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Clean Sheet Home,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Exact 1st Half Goals,false,6,0 Goals | 5+ Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals
+72478560,2026-09-13T19:00:00Z,Bet365,Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Number of Goals In Match,false,3,Over 3 goals | 2 or 3 goals | Under 2 goals
+72478560,2026-09-13T19:00:00Z,Bet365 (no latency),Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,ML,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365 (no latency),Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Spread,false,1,
+72478560,2026-09-13T19:00:00Z,Bet365 (no latency),Spain - LaLiga,Real Sociedad San Sebastian,Atletico Madrid,Totals,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,ML,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Draw No Bet,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Double Chance,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Spread,false,11,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Totals,false,16,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Goals Over/Under,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Both Teams To Score,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,First Team To Score,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Odd/Even,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,ML HT,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Spread HT,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Totals HT,false,5,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Team Total Home,false,5,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Team Total Away,false,4,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,European Handicap,false,4,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Half Time / Full Time,false,9,Home / Draw | Away / Draw | Home / Away | Draw / Home | Draw / Draw | Away / Home | Home / Home | Draw / Away
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Corners Totals,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Corners Totals HT,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Bookings Spread,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Bookings Totals,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Anytime Goalscorer,false,54,Jon Guridi | Lucas Stassin | Daniel Raba | Felix Correia | Joan Jordan | Harvey Elliott | Jesus Vazquez | Arnau Martinez
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,ML 2H,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Exact 1st Half Goals,false,6,2 Goals | 3 Goals | 0 Goals | 1 Goal | 4 Goals | 5+ Goals
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Player Fouls,false,238,Jesus Vazquez (2) | Jose Manuel Copete (2) | Julio Diaz (1) | Miguel Sierra (1) | Cesar Tarrega (2) | Javi Guerra (2) | Jose Gaya (2) | Robbie Ure (1)
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Correct Score,false,35,3-4 | 2-2 | 2-3 | 3-2 | 0-1 | 0-2 | 1-0 | 2-0
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Player Shots,false,245,Arouna Sangante (1) | Jesus Vazquez (2) | Arouna Sangante (1) | Jesus Vazquez (2) | Arouna Sangante (1) | Jesus Vazquez (2) | Robbie Ure (1) | Alfonso Gonzalez (1)
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Player To Be Fouled,false,232,Hugo Duro (2) | Gerard Peque Fernandez (1) | David Otorbi (2) | Robbie Ure (1) | Sadiq Umar (2) | Daniel Raba (2) | Giorgi Kochorashvili (1) | Gabriel Suazo (1)
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Bookings Totals Home,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Corners Totals Home,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Winning Margin,false,10,1 (2) | Score Draw | No Goal | 1 (1) | 2 (1) | 3 (1) | 4+ (1) | 2 (2)
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,First Match Corner,false,2,1 | 2
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Last Match Corner,false,2,1 | 2
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Odd/Even Home,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Total Shots,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Clean Sheet Away,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Total Corners,false,5,Under 6 | 12 - 14 | 6 - 8 | 9 - 11 | Over 14
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Goalkeeper Saves,false,10,Odisseas Vlachodimos | Odisseas Vlachodimos | Stole Dimitrievski | Stole Dimitrievski | Stole Dimitrievski | Odisseas Vlachodimos | Stole Dimitrievski | Odisseas Vlachodimos
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Player To Score or Assist,true,162,Arnaut Danjuma (Score) (2) | Ryunosuke Sato (Score) (2) | Mouctar Diakhaby (Score) (2) | Filip Ugrinic (Score) (2) | Kike Salas (Score) (1) | Juan Iglesias (Score) (1) | Iker Ortin (Score) (1) | Santos Fabio Cardoso (Score) (1)
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Multi Scorers,false,108,Isaac Romero (2 or More) (1) | Chidera Ejuke (2 or More) (1) | Gerard Peque Fernandez (2 or More) (1) | Ibrahima Sow (2 or More) (1) | Miguel Sierra (2 or More) (1) | David Otorbi (2 or More) (2) | Diego Lopez (2 or More) (2) | Jaume Dura (2 or More) (2)
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Player Tackles,false,207,Aliou Dieng (2) | Jose Carmona (1) | Jose Gaya (2) | Jose Pepelu (2) | Manu Bueno (1) | Youssouf Fofana (1) | Pablo Maffeo (2) | Guido Rodriguez (2)
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Home Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Total Shots Away,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Both Teams To Score HT,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Correct Score HT,false,18,0-1 | 0-3 | 1-1 | 2-2 | 3-2 | 0-2 | 2-0 | 2-3
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Goal Method,false,104,Mouctar Diakhaby (Header) (2) | Isaac Romero (Header) (1) | Justin de Haas (Header) (2) | Iker Cordoba (Header) (2) | Arnau Martinez (Header) (2) | Dimitri Foulquier (Header) (2) | Jose Gaya (Header) (2) | Isaac Romero (Outside the Box) (1)
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Total Shots on Target Away,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Total Shots on Target Home,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Player Shots on Target,false,119,Harvey Elliott (2) | Jesus Vazquez (2) | Harvey Elliott (2) | Arouna Sangante (1) | Robbie Ure (1) | Alfonso Gonzalez (1) | Arnaut Danjuma (2) | Ruben Vargas (1)
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Number of Cards In Match,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Exact 2nd Half Goals,false,6,1 Goal | 3 Goals | 4 Goals | 0 Goals | 2 Goals | 5+ Goals
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Multicorners,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Totals 2H,false,4,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Corners Totals Away,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Double Chance HT,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Both Teams To Score 2H,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Alternative Corners,false,19,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Odd/Even 2H,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Player Shots on Target Outside Box,false,91,Isaac Romero (1) | Alfonso Gonzalez (1) | Robbie Ure (1) | Gerard Peque Fernandez (1) | Hugo Duro (2) | Felix Correia (1) | Ruben Vargas (1) | Javi Guerra (2)
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Team Goalscorer,false,112,Robbie Ure (First) | Lucien Agoume (First) | Andres Castrin (First) | Robbie Ure (Last) | Lucien Agoume (Last) | Andres Castrin (Last) | Filip Ugrinic (First) | Ryunosuke Sato (First)
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Away Team Highest Scoring Half,false,3,2nd Half | 1st Half | Tie
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Odd/Even HT,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Specials,false,2,To Win From Behind (1) | To Win From Behind (2)
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Total Shots Home,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Total Shots on Target,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Bookings Totals Away,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,European Handicap HT,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Last Team To Score,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Number of Goals In Match,false,3,Under 2 goals | Over 3 goals | 2 or 3 goals
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Player to be Booked,false,58,Arnau Martinez (Booked) | Cesar Tarrega (Booked) | Gabriel Suazo (Booked) | Miguel Sierra (Booked) | Arnaut Danjuma (Booked) | Gerard Peque Fernandez (Booked) | Javi Guerra (Booked) | Jon Guridi (Booked)
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Clean Sheet Home,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Home Team Exact Goals,false,4,Sevilla - 0 Goals | Sevilla - 2 Goals | Sevilla - 1 Goal | Sevilla - 3+ Goals
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Odd/Even Away,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Player Cards,false,174,Arnau Martinez (Booked) | Cesar Tarrega (Booked) | Gabriel Suazo (Booked) | Miguel Sierra (Booked) | Arnaut Danjuma (Booked) | Gerard Peque Fernandez (Booked) | Javi Guerra (Booked) | Jon Guridi (Booked)
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Away Team Exact Goals,false,4,Valencia - 1 Goal | Valencia - 2 Goals | Valencia - 0 Goals | Valencia - 3+ Goals
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Corners Race,false,4,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Corner Handicap,false,2,1 (-1) | Tie (1)
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Player Headed Shots on Target,false,84,Hugo Duro (2) | Luis Rioja (2) | Sadiq Umar (2) | Gerard Peque Fernandez (1) | Robbie Ure (1) | Diego Lopez (2) | Lucas Stassin (1) | Isaac Romero (1)
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Corners,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Teams to Score,false,4,Both Teams | No Goal | Sevilla Only | Valencia Only
+72478562,2026-09-11T19:00:00Z,Bet365,Spain - LaLiga,Sevilla FC,Valencia CF,Time of First Corner,false,2,Corner before 8:00 | No Corner before 8:00
+72478562,2026-09-11T19:00:00Z,Bet365 (no latency),Spain - LaLiga,Sevilla FC,Valencia CF,ML,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365 (no latency),Spain - LaLiga,Sevilla FC,Valencia CF,Spread,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365 (no latency),Spain - LaLiga,Sevilla FC,Valencia CF,Totals,false,1,
+72478562,2026-09-11T19:00:00Z,Bet365 (no latency),Spain - LaLiga,Sevilla FC,Valencia CF,Bookings Totals,false,1,
