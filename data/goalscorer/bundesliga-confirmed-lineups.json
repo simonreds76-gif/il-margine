@@ -9,10 +9,10 @@
       "kickoff_utc": "2026-09-11T18:30:00Z",
       "home_team": "Union Berlin",
       "away_team": "Schalke 04",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "4-1-2-1-2",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "4-4-2",
       "away_formation": "3-4-2-1",
       "home_players": [
         "Frederik Rønnow",
@@ -20,11 +20,11 @@
         "Leopold Querfeld",
         "Felix Uduokhai",
         "Tom Rothe",
-        "Aljoscha Kemlein",
         "Michel Aebischer",
-        "Livan Burcu",
+        "Aljoscha Kemlein",
         "Rani Khedira",
-        "Marin Ljubičić",
+        "Livan Burcu",
+        "Woo-Yeong Jeong",
         "Emmanuel Latte Lath"
       ],
       "away_players": [
@@ -32,13 +32,13 @@
         "Timo Becker",
         "Nikola Katić",
         "Hasan Kuruçay",
-        "Junior Dina Ebimbe",
+        "Chukwubuike Adamu",
         "Soufian El-Faouzi",
         "Satoshi Tanaka",
         "Robin Gosens",
         "Dejan Ljubičić",
         "Adil Aouchiche",
-        "Moussa Sylla"
+        "Kenan Karaman"
       ],
       "home_starters": [
         {
@@ -47,7 +47,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-1-2-1-2",
+          "formation": "4-4-2",
           "position_id": 11,
           "player_id": 186557,
           "shirt_number": "1"
@@ -58,7 +58,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-2-1-2",
+          "formation": "4-4-2",
           "position_id": 32,
           "player_id": 622373,
           "shirt_number": "18"
@@ -69,7 +69,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-2-1-2",
+          "formation": "4-4-2",
           "position_id": 34,
           "player_id": 1199947,
           "shirt_number": "14"
@@ -80,7 +80,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-2-1-2",
+          "formation": "4-4-2",
           "position_id": 36,
           "player_id": 767800,
           "shirt_number": "2"
@@ -91,74 +91,74 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-2-1-2",
+          "formation": "4-4-2",
           "position_id": 38,
           "player_id": 1282582,
           "shirt_number": "15"
         },
         {
-          "name": "Aljoscha Kemlein",
-          "line_index": 1,
-          "line_size": 1,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-1-2-1-2",
-          "position_id": 55,
-          "player_id": 1403332,
-          "shirt_number": "6"
-        },
-        {
           "name": "Michel Aebischer",
-          "line_index": 2,
-          "line_size": 2,
+          "line_index": 1,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-1-2-1-2",
-          "position_id": 74,
+          "formation": "4-4-2",
+          "position_id": 72,
           "player_id": 792756,
           "shirt_number": "20"
         },
         {
-          "name": "Livan Burcu",
-          "line_index": 2,
-          "line_size": 2,
+          "name": "Aljoscha Kemlein",
+          "line_index": 1,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-1-2-1-2",
-          "position_id": 76,
-          "player_id": 1520506,
-          "shirt_number": "9"
+          "formation": "4-4-2",
+          "position_id": 74,
+          "player_id": 1403332,
+          "shirt_number": "6"
         },
         {
           "name": "Rani Khedira",
-          "line_index": 3,
-          "line_size": 1,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-1-2-1-2",
-          "position_id": 95,
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 76,
           "player_id": 304348,
           "shirt_number": "8"
         },
         {
-          "name": "Marin Ljubičić",
-          "line_index": 4,
+          "name": "Livan Burcu",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 78,
+          "player_id": 1520506,
+          "shirt_number": "9"
+        },
+        {
+          "name": "Woo-Yeong Jeong",
+          "line_index": 2,
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-1-2-1-2",
-          "position_id": 114,
-          "player_id": 1242198,
-          "shirt_number": "27"
+          "formation": "4-4-2",
+          "position_id": 104,
+          "player_id": 949673,
+          "shirt_number": "11"
         },
         {
           "name": "Emmanuel Latte Lath",
-          "line_index": 4,
+          "line_index": 2,
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-1-2-1-2",
-          "position_id": 116,
+          "formation": "4-4-2",
+          "position_id": 106,
           "player_id": 783585,
           "shirt_number": "29"
         }
@@ -209,15 +209,15 @@
           "shirt_number": "4"
         },
         {
-          "name": "Junior Dina Ebimbe",
+          "name": "Chukwubuike Adamu",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
           "formation": "3-4-2-1",
           "position_id": 62,
-          "player_id": 1040889,
-          "shirt_number": "29"
+          "player_id": 882163,
+          "shirt_number": "20"
         },
         {
           "name": "Soufian El-Faouzi",
@@ -275,21 +275,133 @@
           "shirt_number": "24"
         },
         {
-          "name": "Moussa Sylla",
+          "name": "Kenan Karaman",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
           "formation": "3-4-2-1",
           "position_id": 105,
-          "player_id": 860056,
-          "shirt_number": "9"
+          "player_id": 469763,
+          "shirt_number": "19"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "home_subs": [
+        "Matheo Raab",
+        "Robert Skov",
+        "Zeno Van Den Bosch",
+        "András Schäfer",
+        "Christopher Trimmel",
+        "Janik Haberer",
+        "Linus Guether",
+        "Marin Ljubičić",
+        "Tim Skarke"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Matheo Raab",
+          "player_id": "1156148",
+          "role_group": "GK"
+        },
+        {
+          "name": "Robert Skov",
+          "player_id": "447959",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Zeno Van Den Bosch",
+          "player_id": "1231677",
+          "role_group": "DEF"
+        },
+        {
+          "name": "András Schäfer",
+          "player_id": "836726",
+          "role_group": "MID"
+        },
+        {
+          "name": "Christopher Trimmel",
+          "player_id": "166733",
+          "role_group": "MID"
+        },
+        {
+          "name": "Janik Haberer",
+          "player_id": "304354",
+          "role_group": "MID"
+        },
+        {
+          "name": "Linus Guether",
+          "player_id": "1958812",
+          "role_group": "MID"
+        },
+        {
+          "name": "Marin Ljubičić",
+          "player_id": "1242198",
+          "role_group": "FW"
+        },
+        {
+          "name": "Tim Skarke",
+          "player_id": "658440",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Kevin Müller",
+        "Maximilian Wöber",
+        "Mertcan Ayhan",
+        "Janik Bachmann",
+        "Luca Vozar",
+        "Vitalie Becker",
+        "Edin Džeko",
+        "Junior Dina Ebimbe",
+        "Hee-Chan Hwang"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Kevin Müller",
+          "player_id": "215159",
+          "role_group": "GK"
+        },
+        {
+          "name": "Maximilian Wöber",
+          "player_id": "701149",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Mertcan Ayhan",
+          "player_id": "1755657",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Janik Bachmann",
+          "player_id": "560976",
+          "role_group": "MID"
+        },
+        {
+          "name": "Luca Vozar",
+          "player_id": "1842512",
+          "role_group": "MID"
+        },
+        {
+          "name": "Vitalie Becker",
+          "player_id": "1659420",
+          "role_group": "MID"
+        },
+        {
+          "name": "Edin Džeko",
+          "player_id": "15403",
+          "role_group": "FW"
+        },
+        {
+          "name": "Junior Dina Ebimbe",
+          "player_id": "1040889",
+          "role_group": "FW"
+        },
+        {
+          "name": "Hee-Chan Hwang",
+          "player_id": "620026",
+          "role_group": "FW"
+        }
+      ],
       "home_unavailable": [
         "Marvin Friedrich",
         "Andrej Ilić",
@@ -304,8 +416,8 @@
         "Adrian Gantenbein",
         "Ron Schallenberg"
       ],
-      "observed_at": "2026-09-11T12:07:19.455958+00:00",
-      "changed_at": "2026-09-11T10:01:36.888086+00:00"
+      "observed_at": "2026-09-11T17:54:03.124735+00:00",
+      "changed_at": "2026-09-11T17:54:03.124735+00:00"
     },
     {
       "fotmob_match_id": 5881164,
@@ -611,7 +723,7 @@
         "Justin Njinmah",
         "Keke Topp"
       ],
-      "observed_at": "2026-09-11T12:07:19.455958+00:00",
+      "observed_at": "2026-09-11T17:54:03.124735+00:00",
       "changed_at": "2026-09-11T12:07:19.455958+00:00"
     },
     {
@@ -918,7 +1030,7 @@
         "Nathan Tella",
         "Montrell Culbreath"
       ],
-      "observed_at": "2026-09-11T12:07:19.455958+00:00",
+      "observed_at": "2026-09-11T17:54:03.124735+00:00",
       "changed_at": "2026-09-11T12:07:19.455958+00:00"
     },
     {
@@ -1226,7 +1338,7 @@
         "Sven Michel",
         "Timur Gayret"
       ],
-      "observed_at": "2026-09-11T12:07:19.455958+00:00",
+      "observed_at": "2026-09-11T17:54:03.124735+00:00",
       "changed_at": "2026-09-11T12:07:19.455958+00:00"
     },
     {
@@ -1532,7 +1644,7 @@
         "Jens Castrop",
         "Nicolas-Gerrit Kühn"
       ],
-      "observed_at": "2026-09-11T12:07:19.455958+00:00",
+      "observed_at": "2026-09-11T17:54:03.124735+00:00",
       "changed_at": "2026-09-10T12:05:22.317176+00:00"
     },
     {
@@ -1838,7 +1950,7 @@
         "Justin Diehl",
         "Tiago Tomás"
       ],
-      "observed_at": "2026-09-11T12:07:19.455958+00:00",
+      "observed_at": "2026-09-11T17:54:03.124735+00:00",
       "changed_at": "2026-09-11T12:07:19.455958+00:00"
     },
     {
@@ -2143,7 +2255,7 @@
         "Ansgar Knauff",
         "Jessic Ngankam"
       ],
-      "observed_at": "2026-09-11T12:07:19.455958+00:00",
+      "observed_at": "2026-09-11T17:54:03.124735+00:00",
       "changed_at": "2026-09-11T12:07:19.455958+00:00"
     },
     {
@@ -2443,7 +2555,7 @@
       "away_unavailable": [
         "Serge Gnabry"
       ],
-      "observed_at": "2026-09-11T12:07:19.455958+00:00",
+      "observed_at": "2026-09-11T17:54:03.124735+00:00",
       "changed_at": "2026-09-11T10:01:36.888086+00:00"
     },
     {
@@ -2742,6 +2854,7 @@
         "Rocco Reitz"
       ],
       "away_unavailable": [
+        "Kofi Amoako",
         "Immanuël Pherai",
         "Alexander Røssing",
         "Sebastiaan Bornauw",
@@ -2749,7 +2862,7 @@
         "Albert Sambi Lokonga",
         "Miro Muheim"
       ],
-      "observed_at": "2026-09-11T12:07:19.455958+00:00",
+      "observed_at": "2026-09-11T17:54:03.124735+00:00",
       "changed_at": "2026-09-11T12:07:19.455958+00:00"
     }
   ]

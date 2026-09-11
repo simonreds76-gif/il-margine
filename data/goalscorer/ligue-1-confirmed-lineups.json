@@ -18,8 +18,8 @@
         "Brice Samba",
         "Przemysław Frankowski",
         "Charlie Cresswell",
-        "Abdelhamid Aït Boudlal",
-        "Quentin Merlin",
+        "Anthony Rouault",
+        "Mahamadou Nagida",
         "Mahdi Camara",
         "Valentin Rongier",
         "Adrien Thomasson",
@@ -75,26 +75,26 @@
           "shirt_number": "4"
         },
         {
-          "name": "Abdelhamid Aït Boudlal",
+          "name": "Anthony Rouault",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-3-3",
           "position_id": 36,
-          "player_id": 1581722,
-          "shirt_number": "48"
+          "player_id": 1079554,
+          "shirt_number": "24"
         },
         {
-          "name": "Quentin Merlin",
+          "name": "Mahamadou Nagida",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-3-3",
           "position_id": 38,
-          "player_id": 1233931,
-          "shirt_number": "26"
+          "player_id": 1553514,
+          "shirt_number": "18"
         },
         {
           "name": "Mahdi Camara",
@@ -286,8 +286,22 @@
           "shirt_number": "9"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
+      "home_subs": [
+        "Abdelhamid Aït Boudlal",
+        "Quentin Merlin"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Abdelhamid Aït Boudlal",
+          "player_id": "1581722",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Quentin Merlin",
+          "player_id": "1233931",
+          "role_group": "DEF"
+        }
+      ],
       "away_subs": [],
       "away_substitute_entries": [],
       "home_unavailable": [],
@@ -295,8 +309,8 @@
         "Geoffrey Kondogbia",
         "Tochukwu Nnadi"
       ],
-      "observed_at": "2026-09-11T12:07:47.470503+00:00",
-      "changed_at": "2026-09-11T10:02:03.884539+00:00"
+      "observed_at": "2026-09-11T17:54:32.898939+00:00",
+      "changed_at": "2026-09-11T17:54:32.898939+00:00"
     },
     {
       "fotmob_match_id": 5802928,
@@ -602,7 +616,7 @@
         "Laurent Abergel",
         "Morgan Sanson"
       ],
-      "observed_at": "2026-09-11T12:07:47.470503+00:00",
+      "observed_at": "2026-09-11T17:54:32.898939+00:00",
       "changed_at": "2026-09-11T10:02:03.884539+00:00"
     },
     {
@@ -905,7 +919,7 @@
         "Louis Mouton",
         "Haris Belkebla"
       ],
-      "observed_at": "2026-09-11T12:07:47.470503+00:00",
+      "observed_at": "2026-09-11T17:54:32.898939+00:00",
       "changed_at": "2026-09-10T12:05:52.813726+00:00"
     },
     {
@@ -1206,7 +1220,7 @@
         "Guillaume Restes",
         "Abu Francis"
       ],
-      "observed_at": "2026-09-11T12:07:47.470503+00:00",
+      "observed_at": "2026-09-11T17:54:32.898939+00:00",
       "changed_at": "2026-09-11T10:02:03.884539+00:00"
     },
     {
@@ -1508,7 +1522,7 @@
       "away_unavailable": [
         "Julien Duranville"
       ],
-      "observed_at": "2026-09-11T12:07:47.470503+00:00",
+      "observed_at": "2026-09-11T17:54:32.898939+00:00",
       "changed_at": "2026-09-11T10:02:03.884539+00:00"
     },
     {
@@ -1807,12 +1821,14 @@
         "Martial Godo"
       ],
       "away_unavailable": [
+        "Jordan Teze",
         "Edan Diop",
         "Ansu Fati",
+        "Takumi Minamino",
         "Mohammed Salisu",
         "Folarin Balogun"
       ],
-      "observed_at": "2026-09-11T12:07:47.470503+00:00",
+      "observed_at": "2026-09-11T17:54:32.898939+00:00",
       "changed_at": "2026-09-11T10:02:03.884539+00:00"
     },
     {
@@ -2110,7 +2126,7 @@
         "Mamady Diambou"
       ],
       "away_unavailable": [],
-      "observed_at": "2026-09-11T12:07:47.470503+00:00",
+      "observed_at": "2026-09-11T17:54:32.898939+00:00",
       "changed_at": "2026-09-11T10:02:03.884539+00:00"
     },
     {
@@ -2415,7 +2431,7 @@
         "Saud Abdulhamid",
         "Yacine Titraoui"
       ],
-      "observed_at": "2026-09-11T12:07:47.470503+00:00",
+      "observed_at": "2026-09-11T17:54:32.898939+00:00",
       "changed_at": "2026-09-11T10:02:03.884539+00:00"
     },
     {
@@ -2453,7 +2469,7 @@
         "Anis Ouzenadji",
         "Mouhamed Diop",
         "Antoine Mille",
-        "Iron Gomis",
+        "Merwan Ifnaou",
         "Dermane Karim",
         "Hugo Picard",
         "Renaud Ripart"
@@ -2660,15 +2676,15 @@
           "shirt_number": "17"
         },
         {
-          "name": "Iron Gomis",
+          "name": "Merwan Ifnaou",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
           "position_id": 83,
-          "player_id": 1030945,
-          "shirt_number": "11"
+          "player_id": 1523321,
+          "shirt_number": "10"
         },
         {
           "name": "Dermane Karim",
@@ -2716,8 +2732,8 @@
         "Paolo Gozzi",
         "Yvann Titi"
       ],
-      "observed_at": "2026-09-11T12:07:47.470503+00:00",
-      "changed_at": "2026-09-11T10:02:03.884539+00:00"
+      "observed_at": "2026-09-11T17:54:32.898939+00:00",
+      "changed_at": "2026-09-11T17:54:32.898939+00:00"
     }
   ]
 }
