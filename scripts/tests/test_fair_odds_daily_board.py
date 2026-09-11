@@ -135,6 +135,25 @@ class DailyBoardTests(unittest.TestCase):
               dict(self.quote,captured_at='2026-09-09T17:55:00Z'),dict(self.quote,match_date='2026-09-01')]
         (self.base/'bet365-latest-quotes.json').write_text(json.dumps({'quotes':rows}))
         self.assertEqual(latest_bookmaker_quotes(self.root,self.now),[])
+    def test_api_quote_without_team_matches_player_without_model_history(self):
+        from fair_odds_board import latest_bookmaker_quotes
+        raw=dict(self.quote,player_team='',player_name='away1',odds_decimal=9)
+        (self.base/'bet365-latest-quotes.json').write_text(json.dumps({'quotes':[raw]}))
+        self.assertEqual(len(latest_bookmaker_quotes(self.root,self.now)),1)
+        player=self.board()['teams'][1]['players'][1]
+        self.assertEqual(player['bookmakerOdds'],9)
+        self.assertIsNone(player['modelProbability'])
+    def test_teamless_quote_never_crosses_fixture_or_ambiguous_roster(self):
+        raw=dict(self.quote,player_team='',player_name='away1',home_team='Different',odds_decimal=9)
+        path=self.base/'bet365-latest-quotes.json'
+        path.write_text(json.dumps({'quotes':[raw]}))
+        self.assertIsNone(self.board()['teams'][1]['players'][1]['bookmakerOdds'])
+        raw['home_team']='Home'
+        self.fixture['home_players'][2]='away1'
+        path.write_text(json.dumps({'quotes':[raw]}))
+        board=self.board()
+        self.assertIsNone(board['teams'][0]['players'][2]['bookmakerOdds'])
+        self.assertIsNone(board['teams'][1]['players'][1]['bookmakerOdds'])
     def test_only_new_prematch_confirmed_lineups_trigger_capture(self):
         self.board()
         from unittest.mock import patch

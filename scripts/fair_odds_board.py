@@ -86,7 +86,7 @@ def latest_bookmaker_quotes(root, now):
         odds=number(row.get('odds_decimal'))
         if norm(row.get('bookmaker'))!='bet365' or not capture or capture>now or not odds or odds<=1: continue
         if not (now-timedelta(hours=4)).date().isoformat()<=date<=(now+timedelta(days=4)).date().isoformat(): continue
-        if not all(row.get(k) for k in ('home_team','away_team','player_name','player_team')): continue
+        if not all(row.get(k) for k in ('home_team','away_team','player_name')): continue
         key=(date,*(norm(row.get(k)) for k in ('home_team','away_team','player_team','player_name')))
         if key not in latest or capture>instant(latest[key]['captured_at']):
             latest[key]={k:row.get(k,'') for k in fields}
@@ -128,6 +128,20 @@ def build_board(root=ROOT, now=None):
         for f in lineup_payload.get('fixtures',[]):
             kickoff=instant(f.get('kickoff_utc'))
             if not kickoff or not now-timedelta(hours=4)<=kickoff<=now+timedelta(days=3): continue
+            # The API supplies fixture-wide scorer names without player_team.
+            # Resolve against BOTH lineups, rejecting any name shared by two players.
+            fixture_prefix=price_key(f)[:3]
+            roster=[(name,f.get(side+'_team','')) for side in ('home','away') for name in f.get(side+'_players',[])]
+            names=[name for name,_ in roster]
+            fixture_quotes=dict(quotes)
+            for key,row in quotes.items():
+                if key[:3]!=fixture_prefix or key[3]: continue
+                matched=best_name_match(row.get('canonical_player_name') or row.get('player_name',''),names)
+                owners=[team for name,team in roster if matched and norm(name)==norm(matched)]
+                if len(owners)!=1: continue
+                resolved=(*fixture_prefix,norm(team_key(owners[0])),norm(matched))
+                if (row.get('captured_at') or '')>(fixture_quotes.get(resolved,{}).get('captured_at') or ''):
+                    fixture_quotes[resolved]=row
             teams=[]
             for side in ('home','away'):
                 team=f.get(side+'_team','')
@@ -140,9 +154,9 @@ def build_board(root=ROOT, now=None):
                     name=e.get('name','')
                     key=price_key(dict(f,player_team=team,player_name=name))
                     model=forecasts.get(key,{})
-                    quote=quotes.get(key,{})
+                    quote=fixture_quotes.get(key,{})
                     if not quote:
-                        same_team={k[-1]:v for k,v in quotes.items() if k[:-1]==key[:-1]}
+                        same_team={k[-1]:v for k,v in fixture_quotes.items() if k[:-1]==key[:-1]}
                         # Use the same ambiguity-rejecting name matcher as the model.
                         match=best_name_match(name,[v.get('canonical_player_name') or v.get('player_name','') for v in same_team.values()])
                         quote=next((v for v in same_team.values() if match and match==(v.get('canonical_player_name') or v.get('player_name'))),{})
