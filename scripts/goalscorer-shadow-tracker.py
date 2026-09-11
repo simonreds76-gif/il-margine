@@ -147,10 +147,15 @@ def _load_csv(path: Path) -> List[dict]:
 
 def _write_csv(path: Path, rows: List[dict], fieldnames: List[str]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+    # Settlement can add evidence columns after this tracker originally wrote a row.
+    # Preserve them when appending new signals, and never truncate the ledger on error.
+    columns = list(dict.fromkeys([*fieldnames, *(key for row in rows for key in row)]))
+    temporary = path.with_name(path.name + ".tmp")
+    with temporary.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=columns)
         writer.writeheader()
         writer.writerows(rows)
+    temporary.replace(path)
 
 
 def _dedupe_key(row: dict) -> tuple[str, str, str]:

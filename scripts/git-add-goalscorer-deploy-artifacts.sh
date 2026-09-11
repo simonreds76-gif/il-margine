@@ -7,7 +7,7 @@ set -euo pipefail
 shopt -s nullglob
 
 # Compact latest forecasts must survive a hosted run where a league is not due.
-for file in data/goalscorer/fair-odds-player-forecasts.json data/goalscorer/*/fair-odds-player-forecasts.json data/goalscorer/fair-odds-daily-*.csv data/goalscorer/fair-odds-daily-*.txt; do
+for file in data/goalscorer/bet365-latest-quotes.json data/goalscorer/fair-odds-player-forecasts.json data/goalscorer/*/fair-odds-player-forecasts.json data/goalscorer/fair-odds-daily-*.csv data/goalscorer/fair-odds-daily-*.txt; do
   if [[ -f "$file" ]]; then git add -f -- "$file"; fi
 done
 
