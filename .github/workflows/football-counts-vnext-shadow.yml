@@ -153,6 +153,7 @@ jobs:
             # Re-score from the just-captured near-kickoff prices. Settlement
             # and promotion gates remain on the daily full run.
             python scripts/publish-football-vnext-shadow.py
+            python scripts/team-shots-opponent-shadow.py
             # Refresh reason-coded scan telemetry even when the heavier daily
             # settlement stack is intentionally skipped.
             python scripts/football-counts-vnext-gate.py
@@ -217,6 +218,7 @@ jobs:
             git add data/goalkeeper-saves/
           fi
           # These controls come from the same bounded Bet365 payload as Team
+          git add -f data/football-form/team-shots-opponent-shadow.csv data/football-form/team-shots-opponent-candidates.csv data/football-form/team-shots-opponent-status.json
           # Shots, so retaining them adds no API calls. Stage them on both full
           # and near-kickoff runs. `-f` is required for the 1X2 CSV because the
           # broad football-form CSV ignore rule predates this evidence file.
