@@ -1,0 +1,414 @@
+{
+  "generated_at": "2026-09-12T19:27:36.385956+00:00",
+  "count_training_before": "2026-04-01",
+  "calibration_before": "2026-05-09",
+  "forward_from": "2026-08-01",
+  "models": {
+    "shots": {
+      "calibrators": {
+        "blend": {
+          "weight": 0.24875565834783392,
+          "intercept": 0
+        },
+        "blend_bias": {
+          "weight": 0.2512365726168941,
+          "intercept": 0.03299265885235576
+        }
+      },
+      "phases": {
+        "calibration": {
+          "raw": {
+            "rows": 240,
+            "fixtures": 144,
+            "brier": 0.2546596287194026,
+            "log_loss": 0.7040448512876023,
+            "calibration_bias": -0.012903839443744975,
+            "bets": 115,
+            "wins": 62,
+            "pnl": 0.00400000000000178,
+            "roi": 3.4782608695667655e-05,
+            "overs": 56
+          },
+          "market": {
+            "rows": 240,
+            "fixtures": 144,
+            "brier": 0.24882874015201428,
+            "log_loss": 0.6908037483483452,
+            "calibration_bias": -0.009482864790650558,
+            "bets": 0,
+            "wins": 0,
+            "pnl": 0,
+            "roi": null,
+            "overs": 0
+          },
+          "legacy": {
+            "rows": 240,
+            "fixtures": 144,
+            "brier": 0.2491638567129929,
+            "log_loss": 0.691472234856063,
+            "calibration_bias": -0.034151048721514504,
+            "bets": 15,
+            "wins": 7,
+            "pnl": -1.9129999999999996,
+            "roi": -0.1275333333333333,
+            "overs": 0
+          },
+          "blend": {
+            "rows": 240,
+            "fixtures": 144,
+            "brier": 0.24798868057270612,
+            "log_loss": 0.6890976050484271,
+            "calibration_bias": -0.010474939412883707,
+            "bets": 16,
+            "wins": 6,
+            "pnl": -4.646,
+            "roi": -0.290375,
+            "overs": 7
+          },
+          "blend_bias": {
+            "rows": 240,
+            "fixtures": 144,
+            "brier": 0.2478888485410097,
+            "log_loss": 0.6888870724189852,
+            "calibration_bias": -0.0022874381319626016,
+            "bets": 12,
+            "wins": 5,
+            "pnl": -2.646,
+            "roi": -0.2205,
+            "overs": 7
+          }
+        },
+        "validation": {
+          "raw": {
+            "rows": 177,
+            "fixtures": 106,
+            "brier": 0.2631122845992688,
+            "log_loss": 0.7206838007774735,
+            "calibration_bias": 0.0011366530906506882,
+            "bets": 87,
+            "wins": 46,
+            "pnl": -2.283999999999999,
+            "roi": -0.026252873563218378,
+            "overs": 33
+          },
+          "market": {
+            "rows": 177,
+            "fixtures": 106,
+            "brier": 0.2458617425351957,
+            "log_loss": 0.6848563553774031,
+            "calibration_bias": 0.019663442658503,
+            "bets": 0,
+            "wins": 0,
+            "pnl": 0,
+            "roi": null,
+            "overs": 0
+          },
+          "legacy": {
+            "rows": 177,
+            "fixtures": 106,
+            "brier": 0.24599233619655844,
+            "log_loss": 0.6850617150273409,
+            "calibration_bias": -0.007892262404947113,
+            "bets": 20,
+            "wins": 13,
+            "pnl": 4.255,
+            "roi": 0.21275,
+            "overs": 0
+          },
+          "blend": {
+            "rows": 177,
+            "fixtures": 106,
+            "brier": 0.24675918388948392,
+            "log_loss": 0.6866050198829695,
+            "calibration_bias": 0.014652796647641327,
+            "bets": 19,
+            "wins": 12,
+            "pnl": 3.462,
+            "roi": 0.1822105263157895,
+            "overs": 5
+          },
+          "blend_bias": {
+            "rows": 177,
+            "fixtures": 106,
+            "brier": 0.2470845721590942,
+            "log_loss": 0.687264191805094,
+            "calibration_bias": 0.02279552082130388,
+            "bets": 19,
+            "wins": 10,
+            "pnl": -0.6439999999999999,
+            "roi": -0.033894736842105255,
+            "overs": 10
+          }
+        },
+        "forward": {
+          "raw": {
+            "rows": 176,
+            "fixtures": 103,
+            "brier": 0.288051696436818,
+            "log_loss": 0.7776354992969301,
+            "calibration_bias": -0.07889423121064461,
+            "bets": 87,
+            "wins": 37,
+            "pnl": -18.895999999999997,
+            "roi": -0.21719540229885054,
+            "overs": 47
+          },
+          "market": {
+            "rows": 176,
+            "fixtures": 103,
+            "brier": 0.24953628173808,
+            "log_loss": 0.692216917630772,
+            "calibration_bias": -0.07405445283954804,
+            "bets": 0,
+            "wins": 0,
+            "pnl": 0,
+            "roi": null,
+            "overs": 0
+          },
+          "legacy": {
+            "rows": 176,
+            "fixtures": 103,
+            "brier": 0.2578098988307509,
+            "log_loss": 0.7088930191986811,
+            "calibration_bias": -0.09919643615264037,
+            "bets": 19,
+            "wins": 8,
+            "pnl": -4.513,
+            "roi": -0.23752631578947367,
+            "overs": 1
+          },
+          "blend": {
+            "rows": 176,
+            "fixtures": 103,
+            "brier": 0.25563749714424444,
+            "log_loss": 0.7044970725960065,
+            "calibration_bias": -0.07559113357735205,
+            "bets": 23,
+            "wins": 11,
+            "pnl": -2.9459999999999997,
+            "roi": -0.12808695652173913,
+            "overs": 10
+          },
+          "blend_bias": {
+            "rows": 176,
+            "fixtures": 103,
+            "brier": 0.25454719574949186,
+            "log_loss": 0.7022917876456091,
+            "calibration_bias": -0.06743917142823401,
+            "bets": 25,
+            "wins": 14,
+            "pnl": 0.8720000000000006,
+            "roi": 0.03488000000000002,
+            "overs": 17
+          }
+        }
+      }
+    },
+    "corners": {
+      "calibrators": {
+        "blend": {
+          "weight": 0.0,
+          "intercept": 0
+        },
+        "blend_bias": {
+          "weight": 0.0,
+          "intercept": 0.15974950523139472
+        }
+      },
+      "phases": {
+        "calibration": {
+          "raw": {
+            "rows": 333,
+            "fixtures": 135,
+            "brier": 0.2525155757730667,
+            "log_loss": 0.6986405196985105,
+            "calibration_bias": -0.07834644625751316,
+            "bets": 55,
+            "wins": 22,
+            "pnl": -10.383400000000002,
+            "roi": -0.18878909090909093,
+            "overs": 7
+          },
+          "market": {
+            "rows": 333,
+            "fixtures": 135,
+            "brier": 0.24487280231437164,
+            "log_loss": 0.6828086518819539,
+            "calibration_bias": -0.05077883539003162,
+            "bets": 0,
+            "wins": 0,
+            "pnl": 0,
+            "roi": null,
+            "overs": 0
+          },
+          "legacy": {
+            "rows": 333,
+            "fixtures": 135,
+            "brier": 0.2525155757730667,
+            "log_loss": 0.6986405196985105,
+            "calibration_bias": -0.07834644625751316,
+            "bets": 55,
+            "wins": 22,
+            "pnl": -10.383400000000002,
+            "roi": -0.18878909090909093,
+            "overs": 7
+          },
+          "blend": {
+            "rows": 333,
+            "fixtures": 135,
+            "brier": 0.24487280231437164,
+            "log_loss": 0.6828086518819539,
+            "calibration_bias": -0.05077883539003165,
+            "bets": 0,
+            "wins": 0,
+            "pnl": 0,
+            "roi": null,
+            "overs": 0
+          },
+          "blend_bias": {
+            "rows": 333,
+            "fixtures": 135,
+            "brier": 0.24248841905163215,
+            "log_loss": 0.6778111483489845,
+            "calibration_bias": -0.011826201139190494,
+            "bets": 115,
+            "wins": 58,
+            "pnl": 13.2092,
+            "roi": 0.11486260869565217,
+            "overs": 115
+          }
+        },
+        "validation": {
+          "raw": {
+            "rows": 239,
+            "fixtures": 94,
+            "brier": 0.2537288973333927,
+            "log_loss": 0.7012947633069012,
+            "calibration_bias": -0.034430778928410365,
+            "bets": 44,
+            "wins": 14,
+            "pnl": -16.1235,
+            "roi": -0.3664431818181818,
+            "overs": 4
+          },
+          "market": {
+            "rows": 239,
+            "fixtures": 94,
+            "brier": 0.2412175010910375,
+            "log_loss": 0.6754189114477985,
+            "calibration_bias": -0.0033072893974284076,
+            "bets": 0,
+            "wins": 0,
+            "pnl": 0,
+            "roi": null,
+            "overs": 0
+          },
+          "legacy": {
+            "rows": 239,
+            "fixtures": 94,
+            "brier": 0.2537288973333927,
+            "log_loss": 0.7012947633069012,
+            "calibration_bias": -0.034430778928410365,
+            "bets": 44,
+            "wins": 14,
+            "pnl": -16.1235,
+            "roi": -0.3664431818181818,
+            "overs": 4
+          },
+          "blend": {
+            "rows": 239,
+            "fixtures": 94,
+            "brier": 0.2412175010910375,
+            "log_loss": 0.6754189114477985,
+            "calibration_bias": -0.0033072893974284193,
+            "bets": 0,
+            "wins": 0,
+            "pnl": 0,
+            "roi": null,
+            "overs": 0
+          },
+          "blend_bias": {
+            "rows": 239,
+            "fixtures": 94,
+            "brier": 0.24241449732047698,
+            "log_loss": 0.6780023478299279,
+            "calibration_bias": 0.03561553649706593,
+            "bets": 79,
+            "wins": 33,
+            "pnl": -7.2224,
+            "roi": -0.09142278481012658,
+            "overs": 79
+          }
+        },
+        "forward": {
+          "raw": {
+            "rows": 212,
+            "fixtures": 87,
+            "brier": 0.2477185459415605,
+            "log_loss": 0.6889204257959689,
+            "calibration_bias": 0.04364375151479949,
+            "bets": 39,
+            "wins": 18,
+            "pnl": -0.9352000000000003,
+            "roi": -0.023979487179487186,
+            "overs": 15
+          },
+          "market": {
+            "rows": 212,
+            "fixtures": 87,
+            "brier": 0.24664524401850757,
+            "log_loss": 0.6864159675624993,
+            "calibration_bias": 0.055535975969377385,
+            "bets": 0,
+            "wins": 0,
+            "pnl": 0,
+            "roi": null,
+            "overs": 0
+          },
+          "legacy": {
+            "rows": 212,
+            "fixtures": 87,
+            "brier": 0.2477185459415605,
+            "log_loss": 0.6889204257959689,
+            "calibration_bias": 0.04364375151479949,
+            "bets": 39,
+            "wins": 18,
+            "pnl": -0.9352000000000003,
+            "roi": -0.023979487179487186,
+            "overs": 15
+          },
+          "blend": {
+            "rows": 212,
+            "fixtures": 87,
+            "brier": 0.24664524401850757,
+            "log_loss": 0.6864159675624993,
+            "calibration_bias": 0.05553597596937737,
+            "bets": 0,
+            "wins": 0,
+            "pnl": 0,
+            "roi": null,
+            "overs": 0
+          },
+          "blend_bias": {
+            "rows": 212,
+            "fixtures": 87,
+            "brier": 0.25252185100864133,
+            "log_loss": 0.6984036210859046,
+            "calibration_bias": 0.09450250294168638,
+            "bets": 59,
+            "wins": 20,
+            "pnl": -16.6176,
+            "roi": -0.2816542372881356,
+            "overs": 59
+          }
+        }
+      }
+    }
+  },
+  "input_sha256": {
+    "data\\football-form\\team-match-base.csv": "e49c48bb9152b85e3e8e68898dd295c5e3ba1dd51d1920585b6c4beb691c0397",
+    "data\\team-shots\\team-shots-odds-history.csv": "f19a64c64c74fdb98c4620b70d5a3850bb13798a86b4e12bcb130ba0c53d920e",
+    "data\\corners-ou\\pinnacle-corners-odds.csv": "5a76a466674601d0accf85df1b503c21a46834aa1c32d3b39957c74668c08ebb",
+    "data\\team-shots\\understat\\corner-event-features.csv": "27a0623ac43bd82a7b4108e3b5ac972b71bd9923fbb5022e20432f6997b71f2f"
+  }
+}

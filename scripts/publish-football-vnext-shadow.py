@@ -39,6 +39,7 @@ CORNERS_PARAMS = ROOT / "data" / "corners-ou" / "corners-v3-params.json"
 CORNERS_LOCK = ROOT / "data" / "corners-ou" / "corners-v3-lock.json"
 CORNERS_OUTPUT = ROOT / "data" / "football-form" / "corners-v3-shadow-signals.csv"
 CANDIDATES_OUTPUT = ROOT / "data" / "football-form" / "football-counts-vnext-candidates.csv"
+MATCH_ODDS_INPUT = ROOT / "data/football-form/football-1x2-odds-history.csv"
 EVENTS_INPUT = ROOT / "data" / "team-shots" / "understat" / "corner-event-features.csv"
 
 TEAM_MODEL = "team_shots_v4"
@@ -47,7 +48,9 @@ TOP_FIVE = {"epl", "serie-a", "la-liga", "bundesliga", "ligue-1"}
 MAX_CAPTURE_SKEW_MINUTES = 15.0
 
 EXTRA_FIELDS = [
+    "model_input_version",
     "price_captured_at_utc",
+    "market_strength_captured_at_utc",
     "raw_model_probability",
     "market_fair_probability",
     "model_market_gap",
@@ -99,6 +102,50 @@ def stamp_publications(existing: list[dict], fresh: list[dict], now: datetime) -
     for row in fresh:
         row["price_captured_at_utc"] = row.get("published_at_utc", "")
         row["published_at_utc"] = first_publications.get(row.get("pick_id")) or PUB.fmt_dt(now)
+
+
+def merge_shadow_ledger(existing: list[dict], fresh: list[dict]) -> list[dict]:
+    """Freeze the first actual selection; later calibration only changes the board."""
+    fixtures = {row.get("match_id") for row in existing}
+    output = list(existing)
+    for row in fresh:
+        if row.get("match_id") not in fixtures:
+            output.append(row)
+            fixtures.add(row.get("match_id"))
+    return sorted(output, key=lambda row: (row.get("kickoff_utc", ""), row.get("pick_id", "")))
+
+
+def match_strength_index(rows: list[dict]) -> dict:
+    snapshots = defaultdict(dict)
+    for row in rows:
+        if row.get("market") != "MATCH_ODDS":
+            continue
+        captured = PUB.parse_dt(row.get("captured_at"))
+        kickoff = PUB.parse_dt(row.get("kickoff_at"))
+        odds = PUB.pf(row.get("odds_decimal"))
+        side = row.get("side")
+        if not captured or not kickoff or captured >= kickoff or not odds or odds <= 1 or side not in {"home", "draw", "away"}:
+            continue
+        fixture = (kickoff.date(), PUB.league_slug(row.get("competition", "")),
+                   PUB.team_key(row.get("home_team", "")), PUB.team_key(row.get("away_team", "")), row.get("bookmaker"))
+        snapshots[(fixture, captured)][side] = 1.0 / odds
+    output = defaultdict(list)
+    for (fixture, captured), sides in snapshots.items():
+        if set(sides) != {"home", "draw", "away"}:
+            continue
+        total = sum(sides.values())
+        output[fixture].append((captured, sides["home"] / total, sides["away"] / total))
+    for values in output.values():
+        values.sort(key=lambda item: item[0])
+    return output
+
+
+def strength_at_quote(index: dict, source: dict) -> tuple | None:
+    key = (source["kickoff"].date(), source["league_slug"], PUB.team_key(source["home_team"]),
+           PUB.team_key(source["away_team"]), source.get("bookmaker"))
+    cutoff = source["captured_at_dt"]
+    available = [item for item in index.get(key, []) if 0 <= (cutoff - item[0]).total_seconds() <= 86400]
+    return available[-1] if available else None
 
 
 def season_match_count(by_team: dict[tuple[str, str], list[dict[str, str]]], league: str, team: str, day: date) -> int:
@@ -160,6 +207,7 @@ def candidate_row(
     return {
         "pick_id": "|".join([model, pick_scope, line, side]),
         "published_at_utc": PUB.fmt_dt(source["captured_at_dt"]),
+        "price_captured_at_utc": PUB.fmt_dt(source["captured_at_dt"]),
         "kickoff_utc": PUB.fmt_dt(kickoff),
         "match_id": fx_key,
         "match_date": match_date,
@@ -270,6 +318,7 @@ def score_team_shots(
     params: dict[str, Any],
     lock: dict[str, Any],
     now: datetime,
+    match_odds_rows: list[dict] | None = None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     latest = PUB.latest_team_shots_odds(odds_rows, now)
     pairs = paired_rows(latest, ("league_slug", "home_team", "away_team", "team", "line_label", "bookmaker"))
@@ -281,6 +330,7 @@ def score_team_shots(
     market_gap_cap = float(lock["selection_rules"].get("market_gap_cap", 0.12))
     form_cache: dict[tuple[str, str, str, str], tuple[dict[str, Any], dict[str, Any], str, float, float, int, int, int]] = {}
     baseline_cache: dict[tuple[str, date], dict[str, Any]] = {}
+    strength_index = match_strength_index(match_odds_rows or [])
 
     for pair in pairs:
         over, under = pair["over"], pair["under"]
@@ -295,7 +345,8 @@ def score_team_shots(
             continue
         is_home = PUB.team_key(team) == PUB.team_key(home)
         opponent = away if is_home else home
-        cache_key = (day.isoformat(), league, PUB.team_key(team), PUB.team_key(opponent))
+        strength = strength_at_quote(strength_index, min((over, under), key=lambda row: row["captured_at_dt"]))
+        cache_key = (day.isoformat(), league, PUB.team_key(team), PUB.team_key(opponent), strength)
         context = form_cache.get(cache_key)
         if context is None:
             team_form = PUB.live_form_row(
@@ -310,6 +361,11 @@ def score_team_shots(
             )
             if team_form is None or opponent_form is None:
                 continue
+            if strength is not None:
+                _, home_probability, away_probability = strength
+                team_probability, opponent_probability = (home_probability, away_probability) if is_home else (away_probability, home_probability)
+                team_form.update(market_team_win_prob=team_probability, market_opp_win_prob=opponent_probability)
+                opponent_form.update(market_team_win_prob=opponent_probability, market_opp_win_prob=team_probability)
             lam_value = PUB.BACKTEST.canonical_team_shots_ema20_lambda(team_form, opponent_form, use_market=True)
             if lam_value is None:
                 continue
@@ -356,6 +412,8 @@ def score_team_shots(
                 blocked_reason=";".join(blocked),
             )
             candidates.append(row)
+            row["market_strength_captured_at_utc"] = PUB.fmt_dt(strength[0]) if strength else ""
+            row["model_input_version"] = "v4-1x2-asof-20260912"
             if not blocked:
                 accepted.append(row)
     return cap_signals(accepted), candidates
@@ -386,10 +444,13 @@ class EventState:
         return len(self.wide_for)
 
 
-def latest_event_states(rows: list[dict[str, str]], params: dict[str, Any]) -> dict[tuple[str, str], EventState]:
+def latest_event_states(rows: list[dict[str, str]], params: dict[str, Any], before: date | None = None) -> dict[tuple[str, str], EventState]:
     states: dict[tuple[str, str], EventState] = defaultdict(EventState)
     window = int(params["event_window"])
     for row in sorted(rows, key=lambda item: (item.get("date", ""), item.get("league", ""))):
+        played = PUB.parse_date(row.get("date"))
+        if before is not None and (played is None or played >= before):
+            continue
         league = PUB.league_slug(row.get("league", ""))
         home = PUB.team_key(row.get("home_team", ""))
         away = PUB.team_key(row.get("away_team", ""))
@@ -476,7 +537,7 @@ def score_corners(
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     latest = PUB.latest_corners_odds(odds_rows, now)
     pairs = paired_rows(latest, ("league_slug", "home_team", "away_team", "line_label"))
-    states = latest_event_states(event_rows, params)
+    states_by_date = {}
     accepted: list[dict[str, Any]] = []
     candidates: list[dict[str, Any]] = []
     min_edge = float(lock["selection_rules"]["minimum_edge"])
@@ -492,6 +553,9 @@ def score_corners(
             continue
         kickoff: datetime = over["kickoff"]
         day = kickoff.date()
+        if day not in states_by_date:
+            states_by_date[day] = latest_event_states(event_rows, params, before=day)
+        states = states_by_date[day]
         home, away = over["home_team"], over["away_team"]
         cache_key = (day.isoformat(), league, PUB.team_key(home), PUB.team_key(away))
         context = form_cache.get(cache_key)
@@ -551,6 +615,8 @@ def score_corners(
             candidates.append(row)
             if not blocked:
                 accepted.append(row)
+    for row in candidates:
+        row["model_input_version"] = "v3-event-asof-20260912"
     return cap_signals(accepted), candidates
 
 
@@ -558,6 +624,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--team-base", type=Path, default=PUB.DEFAULT_TEAM_BASE)
     parser.add_argument("--team-odds", type=Path, default=PUB.DEFAULT_TEAM_ODDS)
+    parser.add_argument("--match-odds", type=Path, default=MATCH_ODDS_INPUT)
     parser.add_argument("--corners-odds", type=Path, default=PUB.DEFAULT_CORNERS_PINNACLE)
     parser.add_argument("--events", type=Path, default=EVENTS_INPUT)
     parser.add_argument("--team-params", type=Path, default=TEAM_PARAMS)
@@ -579,6 +646,7 @@ def main() -> int:
     team_signals, team_candidates = score_team_shots(
         by_team=by_team, by_league=by_league, odds_rows=PUB.load_csv(args.team_odds),
         params=load_json(args.team_params), lock=load_json(args.team_lock), now=now,
+        match_odds_rows=PUB.load_csv(args.match_odds),
     )
     corners_signals, corners_candidates = score_corners(
         by_team=by_team, by_league=by_league, odds_rows=PUB.load_csv(args.corners_odds),
@@ -596,10 +664,10 @@ def main() -> int:
     )
     stamp_publications(team_existing, [*team_signals, *team_warmup], now)
     stamp_publications(corners_existing, [*corners_signals, *corners_warmup], now)
-    team_ledger = PUB.merge_published_ledger(
+    team_ledger = merge_shadow_ledger(
         team_existing, [*team_signals, *team_warmup]
     )
-    corners_ledger = PUB.merge_published_ledger(
+    corners_ledger = merge_shadow_ledger(
         corners_existing, [*corners_signals, *corners_warmup]
     )
     write_csv(args.team_output, team_ledger)

@@ -18,6 +18,72 @@ SPEC.loader.exec_module(SHADOW)
 
 
 class FootballVnextShadowTests(unittest.TestCase):
+    def test_clv_keeps_mean_and_input_provenance(self):
+        for kind,filename in [('shots','team-shots-v1-clv-monitor.py'),('corners','corners-v0-clv-monitor.py')]:
+            monitor = SHADOW.load_module('provenance_'+kind,SCRIPTS/filename)
+            pick = dict(pick_id='test',published_at_utc='2026-09-12T11:00:00Z',
+                        kickoff_utc='2026-09-12T15:00:00Z',match_date='2026-09-12',league='epl',
+                        home_team='Arsenal',away_team='Chelsea',team='Arsenal',side='over',line='10.5',
+                        bookmaker='Bet365',book_odds=2,model_mean=12.3,model_input_version='asof-test',
+                        price_captured_at_utc='2026-09-12T10:00:00Z',market_strength_captured_at_utc='2026-09-12T09:00:00Z')
+            row = monitor.build_pick_row(pick,{},allowed_leagues={'epl'},allow_canonical_only=True,config_valid=True,config_error='')
+            for key in ['model_mean','model_input_version','price_captured_at_utc']:
+                self.assertEqual(row[key],pick[key])
+                self.assertIn(key,monitor.OUTPUT_FIELDS)
+            if kind=='shots':
+                self.assertEqual(row['market_strength_captured_at_utc'],pick['market_strength_captured_at_utc'])
+
+    def test_rescoring_cannot_rewrite_or_replace_published_selection(self):
+        original = {'match_id':'f1','pick_id':'old','book_odds':2,'result':'lost','pnl':-1}
+        fresh = [{'match_id':'f1','pick_id':'old','book_odds':3,'result':'pending'},
+                 {'match_id':'f1','pick_id':'replacement','edge':.5},
+                 {'match_id':'f2','pick_id':'new','result':'pending'}]
+        merged = SHADOW.merge_shadow_ledger([original], fresh)
+        self.assertEqual(len(merged), 2)
+        self.assertEqual(next(r for r in merged if r['match_id']=='f1'), original)
+
+    def test_match_strength_requires_complete_same_book_pre_quote_snapshot(self):
+        base = dict(kickoff_at='2026-09-12T15:00:00Z',captured_at='2026-09-12T11:00:00Z',
+                    market='MATCH_ODDS',competition='Premier League',home_team='Manchester City',
+                    away_team='Arsenal',bookmaker='Bet365')
+        rows = [{**base,'side':side,'odds_decimal':odd} for side,odd in [('home',2),('draw',4),('away',4)]]
+        source = dict(kickoff=datetime(2026,9,12,15,tzinfo=UTC), captured_at_dt=datetime(2026,9,12,12,tzinfo=UTC),
+                      league_slug='epl',home_team='Man City',away_team='Arsenal',bookmaker='Bet365')
+        index = SHADOW.match_strength_index(rows)
+        self.assertEqual(SHADOW.strength_at_quote(index,source)[1:], (.5,.25))
+        self.assertIsNone(SHADOW.strength_at_quote(SHADOW.match_strength_index(rows[:2]),source))
+        self.assertIsNone(SHADOW.strength_at_quote(index,{**source,'bookmaker':'Other'}))
+        self.assertIsNone(SHADOW.strength_at_quote(index,{**source,'captured_at_dt':datetime(2026,9,12,10,tzinfo=UTC)}))
+        self.assertIsNone(SHADOW.strength_at_quote(index,{**source,'captured_at_dt':datetime(2026,9,13,12,tzinfo=UTC)}))
+        mixed = [rows[0], rows[1], {**rows[2],'bookmaker':'Other'}]
+        self.assertEqual(dict(SHADOW.match_strength_index(mixed)), {})
+
+    def test_corners_event_state_excludes_same_day_and_future_results(self):
+        base = dict(league='epl',home_team='Arsenal',away_team='Chelsea',home_wide_share='.2',away_wide_share='.3')
+        rows = [{**base,'date':day} for day in ['2026-09-10','2026-09-12','2026-09-13']]
+        states = SHADOW.latest_event_states(rows,{'event_window':20},before=datetime(2026,9,12).date())
+        self.assertEqual(states[('epl',SHADOW.PUB.team_key('Arsenal'))].matches,1)
+
+    def test_shots_uses_pre_quote_strength_in_home_and_away_direction(self):
+        base = dict(kickoff_at='2026-09-12T15:00:00Z',captured_at='2026-09-12T11:00:00Z',
+                    competition='Premier League',home_team='Arsenal',away_team='Chelsea',bookmaker='Bet365')
+        strength = [{**base,'market':'MATCH_ODDS','side':side,'odds_decimal':odd}
+                    for side,odd in [('home',2),('draw',4),('away',4)]]
+        for team,expected in [('Arsenal',(.5,.25)),('Chelsea',(.25,.5))]:
+            prices = [{**base,'market':'TEAM_SHOTS','team':team,'line':'10.5','side':side,'odds_decimal':2}
+                      for side in ['over','under']]
+            def check_mean(home,away,**kwargs):
+                self.assertEqual((home['market_team_win_prob'],home['market_opp_win_prob']),expected)
+                self.assertEqual(away['market_team_win_prob'],expected[1])
+                return 13
+            with patch.object(SHADOW.PUB,'live_form_row',side_effect=lambda **kwargs: {'ema20_matches':20}), \
+                 patch.object(SHADOW.PUB.BACKTEST,'canonical_team_shots_ema20_lambda',side_effect=check_mean):
+                _, candidates = SHADOW.score_team_shots(by_team={},by_league={},odds_rows=prices,
+                    match_odds_rows=strength,params={'pooled_alpha':.1,'market':{'model_weight':.18,'over_vig_share':.856}},
+                    lock={'selection_rules':{'minimum_edge':.03}},now=datetime(2026,9,12,12,tzinfo=UTC))
+            self.assertEqual(len(candidates),2)
+            self.assertTrue(all(r['market_strength_captured_at_utc']=='2026-09-12T11:00:00Z' for r in candidates))
+
     def test_newly_joined_old_price_does_not_backdate_signal_publication(self):
         fresh=[{'pick_id':'new','published_at_utc':'2026-09-10T12:00:00Z'},
                {'pick_id':'existing','published_at_utc':'2026-09-12T17:00:00Z'}]

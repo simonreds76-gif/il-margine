@@ -396,8 +396,8 @@ def live_form_row(
         "current_sot_against": "",
         "current_corners_for": "",
         "current_corners_against": "",
-        # Live 1X2 odds are not currently captured with the team-shots feed.
-        # Leaving these blank makes the v3 game-state adjustment neutral.
+        # Neutral fallback. The vnext publisher injects complete, timestamped
+        # 1X2 snapshots where available before the paired shots quote.
         "market_team_win_prob": "",
         "market_opp_win_prob": "",
     }
