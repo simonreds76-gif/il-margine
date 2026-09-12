@@ -18,6 +18,16 @@ SPEC.loader.exec_module(SHADOW)
 
 
 class FootballVnextShadowTests(unittest.TestCase):
+    def test_newly_joined_old_price_does_not_backdate_signal_publication(self):
+        fresh=[{'pick_id':'new','published_at_utc':'2026-09-10T12:00:00Z'},
+               {'pick_id':'existing','published_at_utc':'2026-09-12T17:00:00Z'}]
+        SHADOW.stamp_publications([{'pick_id':'existing','published_at_utc':'2026-09-11T12:00:00Z'}],
+                                  fresh,datetime(2026,9,12,18,36,tzinfo=UTC))
+        self.assertEqual(fresh[0]['published_at_utc'],'2026-09-12T18:36:00Z')
+        self.assertEqual(fresh[0]['price_captured_at_utc'],'2026-09-10T12:00:00Z')
+        self.assertEqual(fresh[1]['published_at_utc'],'2026-09-11T12:00:00Z')
+        self.assertEqual(fresh[1]['price_captured_at_utc'],'2026-09-12T17:00:00Z')
+
     def test_live_bookmaker_names_join_history_without_cross_club_collisions(self):
         pairs = [
             ('AJ Auxerre','Auxerre'),('Angers SCO','Angers'),

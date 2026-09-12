@@ -47,6 +47,7 @@ TOP_FIVE = {"epl", "serie-a", "la-liga", "bundesliga", "ligue-1"}
 MAX_CAPTURE_SKEW_MINUTES = 15.0
 
 EXTRA_FIELDS = [
+    "price_captured_at_utc",
     "raw_model_probability",
     "market_fair_probability",
     "model_market_gap",
@@ -90,6 +91,14 @@ def write_csv(path: Path, rows: list[dict[str, Any]], fields: list[str] = FIELDS
         )
         writer.writeheader()
         writer.writerows(rows)
+
+
+def stamp_publications(existing: list[dict], fresh: list[dict], now: datetime) -> None:
+    """An old price newly matched to history is a new signal, not an old tip."""
+    first_publications = {row.get("pick_id"): row.get("published_at_utc") for row in existing}
+    for row in fresh:
+        row["price_captured_at_utc"] = row.get("published_at_utc", "")
+        row["published_at_utc"] = first_publications.get(row.get("pick_id")) or PUB.fmt_dt(now)
 
 
 def season_match_count(by_team: dict[tuple[str, str], list[dict[str, str]]], league: str, team: str, day: date) -> int:
@@ -585,6 +594,8 @@ def main() -> int:
     corners_warmup = unseen_warmup_signals(
         corners_existing, warmup_tracking_signals(corners_candidates)
     )
+    stamp_publications(team_existing, [*team_signals, *team_warmup], now)
+    stamp_publications(corners_existing, [*corners_signals, *corners_warmup], now)
     team_ledger = PUB.merge_published_ledger(
         team_existing, [*team_signals, *team_warmup]
     )
