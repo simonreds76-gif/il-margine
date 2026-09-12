@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import math
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterable, Mapping
@@ -199,7 +200,9 @@ def settle_team_shots(rows: list[dict[str, Any]], results: Mapping[str, dict]) -
             continue
 
         line = _pf(row.get("line"))
-        odds = _pf(row.get("book_price_at_publication") or row.get("book_price_close"))
+        odds = _pf(row.get("book_price_at_publication"))
+        if not math.isfinite(odds) or odds <= 1 or str(row.get("side") or "").lower() not in {"over", "under"}:
+            continue
         market_result, pnl = settle_market(str(row.get("side") or ""), line, float(actual), odds)
         row["actual_team_shots"] = actual
         row["result"] = market_result
@@ -227,7 +230,9 @@ def settle_corners(rows: list[dict[str, Any]], results: Mapping[str, dict]) -> i
             continue
 
         line = _pf(row.get("line"))
-        odds = _pf(row.get("pinnacle_price_at_publication") or row.get("pinnacle_price_close"))
+        odds = _pf(row.get("pinnacle_price_at_publication"))
+        if not math.isfinite(odds) or odds <= 1 or str(row.get("side") or "").lower() not in {"over", "under"}:
+            continue
         market_result, pnl = settle_market(str(row.get("side") or ""), line, float(total), odds)
         row["actual_total_corners"] = int(total)
         row["result"] = market_result

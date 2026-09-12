@@ -246,7 +246,11 @@ def build_pick_row(
     key = f"{match_date}|{norm_team(home)}|{norm_team(away)}|{line}|{side}"
     items = index.get(key) or index.get(f"__any__|{norm_team(home)}|{norm_team(away)}|{line}|{side}") or []
 
-    price_publication = price_at_or_before(items, published)
+    # Keep the price of the published selection, even when a later archive
+    # backfill supplies a different snapshot at the publication timestamp.
+    price_publication = pf(pick.get("pinnacle_price_at_publication") or pick.get("book_odds"))
+    if price_publication is None:
+        price_publication = price_at_or_before(items, published)
     price_3h = price_at_or_before(items, kickoff - timedelta(hours=3) if kickoff else None)
     price_1h = price_at_or_before(items, kickoff - timedelta(hours=1) if kickoff else None)
     close_snapshot = snapshot_at_or_before(items, kickoff)

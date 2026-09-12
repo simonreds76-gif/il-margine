@@ -38,6 +38,11 @@ TEAM_SHOTS_SIGNALS = ROOT / "data" / "team-shots" / "shadow" / "team-shots-shado
 TEAM_SHOTS_V3_RESEARCH = ROOT / "data" / "football-form" / "team-shots-v3-ema20-clv-monitor.csv"
 CORNERS_V0_RESEARCH = ROOT / "data" / "football-form" / "corners-v0-clv-monitor.csv"
 DEFAULT_PENDING_PATHS = [SHORTLIST_SETTLED, TEAM_SHOTS_SIGNALS, TEAM_SHOTS_V3_RESEARCH, CORNERS_V0_RESEARCH]
+COUNT_LEDGER_NAMES = (
+    "team-shots-v4-shadow-clv.csv", "corners-v3-shadow-clv.csv",
+    "team-shots-opponent-shadow.csv",
+)
+COUNT_SIGNAL_NAMES = ("team-shots-v4-shadow-signals.csv", "corners-v3-shadow-signals.csv")
 DEFAULT_API_FOOTBALL_MAX_REQUESTS = 10
 
 
@@ -142,18 +147,38 @@ def fetch_football_data_results(league: str) -> tuple[Dict[str, dict], dict]:
 
 
 def load_pending_rows(paths: list[str]) -> list[dict]:
+    # The daily job names the permanent CLV ledgers. Hourly publication can
+    # append selections before those ledgers refresh; Opponent also has its
+    # own ledger. Read the complete family, without adding a fetch or schedule.
+    resolved = [Path(p) if Path(p).is_absolute() else ROOT / p for p in paths]
+    family = ROOT / "data" / "football-form"
+    if any(p.parent.resolve() == family.resolve() and p.name in COUNT_LEDGER_NAMES + COUNT_SIGNAL_NAMES for p in resolved):
+        resolved.extend(family / name for name in COUNT_LEDGER_NAMES + COUNT_SIGNAL_NAMES)
     rows: list[dict] = []
-    for raw_path in paths:
-        path = Path(raw_path)
-        if not path.is_absolute():
-            path = ROOT / path
+    settled_ids: set[str] = set()
+    for path in dict.fromkeys(resolved):
         if not path.exists():
             continue
         with open(path, "r", encoding="utf-8", newline="") as fh:
             for row in csv.DictReader(fh):
-                if (row.get("settled") or "").strip() == "pending" or (row.get("result") or "").strip() == "pending":
+                status = (row.get("result") or row.get("settled") or "").strip().lower()
+                pick_id = str(row.get("pick_id") or "")
+                if status in {"won", "lost", "push", "void", "cancelled", "canceled"} and pick_id:
+                    settled_ids.add(pick_id)
+                # Published count signals initially have a blank result.
+                # Do not treat arbitrary candidate CSVs as published picks.
+                published_count = path.parent.resolve() == family.resolve() and path.name in COUNT_SIGNAL_NAMES
+                if status == "pending" or (published_count and pick_id and not status):
                     rows.append(dict(row))
-    return rows
+    # A settled CLV row takes precedence over its original blank signal row.
+    # Fixture-level deduplication below also combines selections across models.
+    unique: dict[str, dict] = {}
+    for i, row in enumerate(rows):
+        pick_id = str(row.get("pick_id") or "")
+        if pick_id and pick_id in settled_ids:
+            continue
+        unique.setdefault(pick_id or f"unkeyed:{i}", row)
+    return list(unique.values())
 
 
 def _split_match(row: dict) -> tuple[str, str]:

@@ -1,0 +1,54 @@
+{
+  "audit_date": "2026-09-12",
+  "reason": "Profit did not match the immutable original publication odds. Reconcile flat 1u profit to original signal; no result, odds, timestamps or selections changed.",
+  "original_signal_commit": "3bcfea9db",
+  "previous_evidence_ref": "a9666e11eceeb5e83b1b562842dfbee6a72a2088",
+  "corrections": [
+    {
+      "pick_id": "corners_v3|2026-08-22|serie-a|udinese|como|8.5|over",
+      "match": "Udinese vs Como",
+      "result": "won",
+      "publication_odds": "1.8197",
+      "old_pnl": "0.909",
+      "corrected_pnl": 0.82,
+      "delta": -0.089
+    },
+    {
+      "pick_id": "corners_v3|2026-08-22|la-liga|espanol|real madrid|9.5|under",
+      "match": "Espanyol vs Real Madrid",
+      "result": "won",
+      "publication_odds": "2.15",
+      "old_pnl": "1.16",
+      "corrected_pnl": 1.15,
+      "delta": -0.01
+    },
+    {
+      "pick_id": "corners_v3|2026-08-23|epl|brighton|aston villa|9.5|under",
+      "match": "Brighton vs Aston Villa",
+      "result": "won",
+      "publication_odds": "2.05",
+      "old_pnl": "1.06",
+      "corrected_pnl": 1.05,
+      "delta": -0.01
+    },
+    {
+      "pick_id": "corners_v3|2026-08-24|serie-a|bologna|lazio|8.5|over",
+      "match": "Bologna vs Lazio",
+      "result": "won",
+      "publication_odds": "1.813",
+      "old_pnl": "0.952",
+      "corrected_pnl": 0.813,
+      "delta": -0.139
+    },
+    {
+      "pick_id": "corners_v3|2026-08-31|serie-a|lecce|roma|9.5|under",
+      "match": "Lecce vs Roma",
+      "result": "won",
+      "publication_odds": "1.7692",
+      "old_pnl": "0.787",
+      "corrected_pnl": 0.769,
+      "delta": -0.018
+    }
+  ],
+  "total_delta": -0.266
+}

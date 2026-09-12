@@ -255,7 +255,11 @@ def build_pick_row(
     any_key = f"__any__|{norm(home)}|{norm(away)}|{norm(team)}|{line}|{side}|__any__"
     items = index.get(key) or index.get(fallback) or index.get(any_key) or []
 
-    price_publication = price_at_or_before(items, published)
+    # The selected contract is immutable. Later archive/backfill prices are
+    # observations for CLV, not replacement entry odds.
+    price_publication = pf(pick.get("book_price_at_publication") or pick.get("book_odds"))
+    if price_publication is None:
+        price_publication = price_at_or_before(items, published)
     price_3h = price_at_or_before(items, kickoff - timedelta(hours=3) if kickoff else None)
     price_1h = price_at_or_before(items, kickoff - timedelta(hours=1) if kickoff else None)
     close_snapshot = snapshot_at_or_before(items, kickoff)
