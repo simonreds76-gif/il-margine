@@ -95,10 +95,10 @@ jobs:
           CORNER_ARGS=()
           GK_ARGS=(--bookmaker "Bet365")
           if [[ "$EVENT_NAME" == "schedule" && "$SCHEDULE_EXPR" != "15 8 * * *" ]]; then
-            TEAM_ARGS+=(--days-ahead 1 --kickoff-within-minutes 90 --max-events-per-league 10 --max-odds-requests-per-league 1 --max-odds-api-http-requests 9)
+            TEAM_ARGS+=(--days-ahead 2 --kickoff-within-minutes 1440 --max-events-per-league 10 --max-odds-requests-per-league 1 --max-odds-api-http-requests 9)
             CORNER_ARGS+=(--bucket-hours 1 --kickoff-within-minutes 90)
             GK_ARGS+=(--days-ahead 1 --max-events 10 --kickoff-within-minutes 90 --capture-mode close)
-            echo "Near-kickoff mode: detailed odds calls are limited to fixtures starting within 90 minutes."
+            echo "Team Shots: next 24 hours with shared discovery and the same 9-request ceiling; GK/corners retain the 90-minute close window."
           else
             TEAM_ARGS+=(--days-ahead 7 --max-events-per-league 20 --max-odds-requests-per-league 2 --max-odds-api-http-requests 50 --market-audit-out data/football-form/football-count-market-inventory.csv)
             CORNER_ARGS+=(--bucket-hours 6)
