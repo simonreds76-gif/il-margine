@@ -6,9 +6,13 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from football_market import blend_logit
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -285,6 +289,42 @@ def render(payload: dict[str, Any]) -> str:
     )
 
 
+def apply_team_rule_feasibility(payload: dict, candidates: list[dict], params: dict, lock: dict) -> None:
+    """Distinguish low model edges from rules that cannot clear the quoted vig."""
+    weight = float(params["market"]["model_weight"])
+    cap = float(lock["selection_rules"]["market_gap_cap"])
+    minimum = float(lock["selection_rules"]["minimum_edge"])
+    ceilings = []
+    for row in candidates:
+        if row.get("model") != "team_shots_v4":
+            continue
+        day = as_float(row, "matchday")
+        market = as_float(row, "market_fair_probability")
+        odds = as_float(row, "book_odds")
+        if day is None or not 4 <= day <= 6 or market is None or odds is None:
+            continue
+        if not 0 < market < 1 or odds <= 1:
+            continue
+        best_raw = min(1 - 1e-6, market + cap)
+        ceilings.append(blend_logit(best_raw, market, weight) * odds - 1)
+    scan = payload["team_shots_v4"]["latest_scan"]
+    feasible = sum(edge >= minimum for edge in ceilings)
+    scan["rule_feasibility"] = {
+        "affected_rows": len(ceilings), "rows_capable_of_minimum_edge": feasible,
+        "maximum_allowed_edge": max(ceilings) if ceilings else None,
+        "minimum_edge": minimum, "raw_gap_cap": cap, "model_weight": weight,
+    }
+    if ceilings and not feasible and not scan["eligible_rows"]:
+        scan.update(
+            state="EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
+            explanation=(f"For all {len(ceilings)} scored matchday 4-6 lines, the raw-gap cap and market blend "
+                         f"limit edge to at most {max(ceilings):.2%}, below the required {minimum:.2%}. "
+                         "Review the combined selection rules; this is not missing price coverage."),
+            operational_alert_required=True,
+            operational_alert_code="EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
+        )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--team-results", type=Path, default=DEFAULT_TEAM_RESULTS)
@@ -306,6 +346,11 @@ def main() -> int:
         load_csv(args.team_live),
         load_csv(args.corners_live),
         load_csv(args.candidates),
+    )
+    apply_team_rule_feasibility(
+        payload, load_csv(args.candidates),
+        json.loads((ROOT / "data/team-shots/team-shots-v4-params.json").read_text(encoding="utf-8")),
+        json.loads((ROOT / "data/team-shots/team-shots-v4-lock.json").read_text(encoding="utf-8")),
     )
     args.json.parent.mkdir(parents=True, exist_ok=True)
     args.report.parent.mkdir(parents=True, exist_ok=True)

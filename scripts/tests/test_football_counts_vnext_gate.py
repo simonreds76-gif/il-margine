@@ -7,6 +7,7 @@ from pathlib import Path
 
 
 SCRIPTS = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(SCRIPTS))
 SPEC = importlib.util.spec_from_file_location("football_counts_vnext_gate", SCRIPTS / "football-counts-vnext-gate.py")
 assert SPEC is not None and SPEC.loader is not None
 GATE = importlib.util.module_from_spec(SPEC)
@@ -15,6 +16,25 @@ SPEC.loader.exec_module(GATE)
 
 
 class FootballCountsVnextGateTests(unittest.TestCase):
+    def test_conflicting_early_rules_are_reported_without_changing_selection(self):
+        payload={'team_shots_v4':{'latest_scan':{'eligible_rows':0,'state':'NO_EDGE_AFTER_UNLOCK'}}}
+        rows=[{'model':'team_shots_v4','matchday':'5','market_fair_probability':'0.544123','book_odds':'1.8'}]
+        params={'market':{'model_weight':0.18}}
+        lock={'selection_rules':{'market_gap_cap':0.12,'minimum_edge':0.03}}
+        GATE.apply_team_rule_feasibility(payload,rows,params,lock)
+        scan=payload['team_shots_v4']['latest_scan']
+        self.assertEqual(scan['state'],'EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES')
+        self.assertEqual(scan['rule_feasibility']['rows_capable_of_minimum_edge'],0)
+        self.assertTrue(scan['operational_alert_required'])
+        self.assertEqual(scan['eligible_rows'],0)
+
+    def test_feasible_rules_do_not_raise_a_configuration_alert(self):
+        payload={'team_shots_v4':{'latest_scan':{'eligible_rows':0,'state':'NO_EDGE_AFTER_UNLOCK'}}}
+        rows=[{'model':'team_shots_v4','matchday':'5','market_fair_probability':'0.5','book_odds':'2.0'}]
+        GATE.apply_team_rule_feasibility(payload,rows,{'market':{'model_weight':0.5}},
+            {'selection_rules':{'market_gap_cap':0.12,'minimum_edge':0.03}})
+        self.assertEqual(payload['team_shots_v4']['latest_scan']['state'],'NO_EDGE_AFTER_UNLOCK')
+
     def test_team_gate_requires_both_folds_to_improve(self) -> None:
         passing = {
             "status": "OK",
