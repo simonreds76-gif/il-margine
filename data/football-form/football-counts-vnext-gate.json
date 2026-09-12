@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-12T18:45:49Z",
+  "generated_at": "2026-09-12T19:10:48Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -35,8 +35,8 @@
       "dominant_side_share": 0.928571
     },
     "latest_scan": {
-      "state": "NO_EDGE_AFTER_UNLOCK",
-      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
+      "state": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
+      "explanation": "For all 74 scored matchday 4-6 lines, the raw-gap cap and market blend limit edge to at most 2.11%, below the required 3.00%. Review the combined selection rules; this is not missing price coverage.",
       "scored_rows": 78,
       "scored_fixtures": 18,
       "eligible_rows": 0,
@@ -50,8 +50,16 @@
       "matchday_min": 3,
       "matchday_max": 6,
       "next_unlock": null,
-      "operational_alert_required": false,
-      "operational_alert_code": null
+      "operational_alert_required": true,
+      "operational_alert_code": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
+      "rule_feasibility": {
+        "affected_rows": 74,
+        "rows_capable_of_minimum_edge": 0,
+        "maximum_allowed_edge": 0.021062786390673605,
+        "minimum_edge": 0.03,
+        "raw_gap_cap": 0.12,
+        "model_weight": 0.18
+      }
     },
     "promotion_gate": "BLOCKED"
   },
