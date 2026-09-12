@@ -1,6 +1,6 @@
 # Assist Value Set-Piece Source Audit
 
-Fetched at UTC: `2026-09-11T12:10:03+00:00`
+Fetched at UTC: `2026-09-12T11:37:00+00:00`
 
 ## Decision
 
@@ -14,13 +14,13 @@ Overall: **PASS_SOURCE_LAYER**
 ## RotoWire
 
 - Teams with set-piece blocks: `96/96`
-- Player role rows extracted: `480`
+- Player role rows extracted: `482`
 
 | League | Teams OK | Teams | Role rows | Max latest week |
 |---|---:|---:|---:|---:|
-| bundesliga | 18 | 18 | 74 | 3 |
+| bundesliga | 18 | 18 | 75 | 3 |
 | epl | 20 | 20 | 92 | 4 |
-| la-liga | 20 | 20 | 121 | 5 |
+| la-liga | 20 | 20 | 122 | 5 |
 | ligue-1 | 18 | 18 | 95 | 4 |
 | serie-a | 20 | 20 | 98 | 4 |
 
@@ -28,11 +28,11 @@ Overall: **PASS_SOURCE_LAYER**
 
 - Status: `PASS`
 - Teams: `20`
-- Players: `655`
+- Players: `656`
 - Players with set-piece role fields: `134`
 - Registered season: `2026/27`
 - Exact 20-team roster match: `YES`
-- Snapshot valid until UTC: `2026-09-18T12:10:03+00:00`
+- Snapshot valid until UTC: `2026-09-19T11:37:00+00:00`
 
 ## SetPieceTakers
 
@@ -47,15 +47,15 @@ Overall: **PASS_SOURCE_LAYER**
 |---|---|---|---:|---:|---:|
 | epl | Crystal Palace | Yeremy Pino | 100.0% | 100.0% | 3 |
 | epl | Liverpool | Dominik Szoboszlai | 100.0% | 100.0% | 16 |
-| bundesliga | FC Schalke 04 | Adil Aouchiche | 100.0% | 100.0% | 3 |
 | bundesliga | FSV Mainz 05 | Nadiem Amiri | 100.0% | 100.0% | 13 |
 | bundesliga | RB Leipzig | David Raum | 100.0% | 100.0% | 16 |
 | bundesliga | SV 07 Elversberg | Felix Keidel | 100.0% | 100.0% | 6 |
-| bundesliga | Union Berlin | Josip Juranovic | 100.0% | 100.0% | 6 |
+| bundesliga | Union Berlin | Josip Juranovic | 100.0% | 100.0% | 10 |
 | ligue-1 | Brest | Joris Chotard | 100.0% | 100.0% | 17 |
 | serie-a | Frosinone | Giacomo Calo | 100.0% | 100.0% | 11 |
 | ligue-1 | Angers | Branco van den Boomen | 96.67% | 96.67% | 29 |
 | bundesliga | Bayer Leverkusen | Aleix Garcia | 88.89% | 88.89% | 8 |
+| bundesliga | FC Schalke 04 | Adil Aouchiche | 87.5% | 87.5% | 7 |
 | epl | Sunderland | Granit Xhaka | 85.71% | 85.71% | 6 |
 | ligue-1 | Le Mans | Alexandre Lauray | 85.71% | 85.71% | 6 |
 | ligue-1 | Lens | Florian Thauvin | 82.61% | 82.61% | 19 |
