@@ -1,42 +1,58 @@
 {
   "api_errors": [],
-  "deferred_not_due": 5,
+  "deferred_not_due": 0,
   "details": [
     {
       "detail": "",
-      "goalkeeper": "Wladimiro Falcone",
-      "match": "Cagliari Calcio vs US Lecce",
-      "match_date": "2026-09-07",
+      "goalkeeper": "Justin Bijlow",
+      "match": "Genoa CFC vs Frosinone Calcio",
+      "match_date": "2026-09-12",
       "reason": "settled_fotmob",
-      "signal_id": "71945228|wladimiro falcone|3.5|over"
+      "signal_id": "71945250|justin bijlow|2.5|over"
     },
     {
       "detail": "",
-      "goalkeeper": "Christos Mandas",
-      "match": "Udinese Calcio vs Lazio Rome",
-      "match_date": "2026-09-07",
+      "goalkeeper": "Finn Dahmen",
+      "match": "FC Augsburg vs Bayer Leverkusen",
+      "match_date": "2026-09-12",
       "reason": "settled_fotmob",
-      "signal_id": "71945244|christos mandas|2.5|over"
+      "signal_id": "72513192|finn dahmen|3.5|over"
     },
     {
       "detail": "",
-      "goalkeeper": "David de Gea",
-      "match": "Venezia FC vs ACF Fiorentina",
-      "match_date": "2026-09-11",
+      "goalkeeper": "Noah Atubolu",
+      "match": "FSV Mainz vs Eintracht Frankfurt",
+      "match_date": "2026-09-12",
       "reason": "settled_fotmob",
-      "signal_id": "71945264|david de gea|2.5|over"
+      "signal_id": "72513194|noah atubolu|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Moritz Nicolas",
+      "match": "SC Freiburg vs Borussia Monchengladbach",
+      "match_date": "2026-09-12",
+      "reason": "settled_fotmob",
+      "signal_id": "72513190|moritz nicolas|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Fabian Bredlow",
+      "match": "TSG Hoffenheim vs VfB Stuttgart",
+      "match_date": "2026-09-12",
+      "reason": "settled_fotmob",
+      "signal_id": "72513188|fabian bredlow|4.5|over"
     }
   ],
-  "fotmob_requests_used": 8,
-  "generated_at": "2026-09-12T12:13:19Z",
+  "fotmob_requests_used": 11,
+  "generated_at": "2026-09-12T18:05:50Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
   "pending_due": 0,
-  "pending_total": 5,
+  "pending_total": 0,
   "reason_counts": {
-    "settled_fotmob": 3
+    "settled_fotmob": 5
   },
   "requests_used": 0,
-  "settled": 3,
+  "settled": 5,
   "status": "SETTLED"
 }
