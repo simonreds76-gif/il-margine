@@ -1,17 +1,93 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-12T04:41:21Z",
+  "generated_at": "2026-09-12T12:26:07Z",
   "league": "ligue-1",
-  "row_count": 0,
-  "rows": [],
+  "row_count": 1,
+  "rows": [
+    {
+      "date": "2026-09-06",
+      "league": "ligue-1",
+      "review_source": "fotmob_live",
+      "match": "Marseille vs Paris FC",
+      "team": "Paris FC",
+      "opponent": "Marseille",
+      "actual_taker": "Lassine Sinayoko",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "86",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Lassine Sinayoko",
+      "secondary_pre_match": "Ilan Kebbal",
+      "tertiary_pre_match": "Pablo Pagis",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Lassine Sinayoko took 1 penalty attempt and scored for Paris FC vs Marseille. Primary pre-match: Lassine Sinayoko (unknown). Secondary pre-match: Ilan Kebbal (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/ligue-1-penalty-takers.json",
+      "actual_taker_match_status": "Yes - started, off 90'",
+      "primary_on_pitch_at_penalty": "Yes - started, off 90'",
+      "secondary_on_pitch_at_penalty": "No - started, off 77'",
+      "tertiary_on_pitch_at_penalty": "No - started, off 64'",
+      "actual_taker_on_pitch_at_penalty": "Yes - started, off 90'",
+      "event_evidence": [
+        {
+          "id": "fotmob|ligue-1|5802923|2965969873",
+          "source_event_id": "2965969873",
+          "match_id": "5802923",
+          "source_url": "https://www.fotmob.com/matches/paris-fc-vs-marseille/1uqamy#5802923",
+          "observed_at": "2026-09-12T12:26:01+00:00",
+          "event_date": "2026-09-06",
+          "season": "2026/27",
+          "team": "Paris FC",
+          "taker": "Lassine Sinayoko",
+          "primary": "Lassine Sinayoko",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Lassine Sinayoko",
+            "minute": 86,
+            "method": "completed_lineup_timeline",
+            "player_id": 923196,
+            "bucket": "starters",
+            "substitutions": [
+              {
+                "type": "subout",
+                "time": 90
+              }
+            ],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 86,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Marseille vs Paris FC",
+          "event_result": "scored"
+        }
+      ]
+    }
+  ],
   "source_health": {
     "complete": true,
     "errors": [],
     "dates_requested": [
+      "20260906",
+      "20260907",
+      "20260908",
+      "20260909",
       "20260910",
       "20260911",
       "20260912"
     ],
-    "matches_checked": 1
+    "matches_checked": 4
   }
 }
