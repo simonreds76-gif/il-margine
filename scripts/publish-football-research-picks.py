@@ -92,6 +92,28 @@ LEAGUE_ALIASES = {
 }
 
 TEAM_KEY_ALIASES = {
+    # Exact bookmaker labels verified against the frozen form-history clubs.
+    # Do not use fuzzy matching: similarly named clubs must stay separate.
+    "aj auxerre": "auxerre",
+    "angers sco": "angers",
+    "brighton hove albion": "brighton",
+    "coventry city": "coventry",
+    "estac troyes": "troyes",
+    "hamburger sv": "hamburg",
+    "inter milano": "internazionale",
+    "juventus turin": "juventus",
+    "leeds united": "leeds",
+    "lille osc": "lille",
+    "manchester city": "man city",
+    "newcastle united": "newcastle",
+    "ogc nice": "nice",
+    "olympique lyon": "lyon",
+    "paris saint germain": "paris sg",
+    "racing club de lens": "lens",
+    "rayo vallecano": "vallecano",
+    "real betis seville": "betis",
+    "stade brest 29": "brest",
+    "sv 07 elversberg": "elversberg",
     "acf fiorentina": "fiorentina",
     "borussia dortmund": "dortmund",
     "borussia monchengladbach": "m gladbach",

@@ -18,6 +18,26 @@ SPEC.loader.exec_module(SHADOW)
 
 
 class FootballVnextShadowTests(unittest.TestCase):
+    def test_live_bookmaker_names_join_history_without_cross_club_collisions(self):
+        pairs = [
+            ('AJ Auxerre','Auxerre'),('Angers SCO','Angers'),
+            ('Brighton & Hove Albion','Brighton'),('Coventry City','Coventry'),
+            ('ESTAC Troyes','Troyes'),('Hamburger SV','Hamburg'),
+            ('Inter Milano','Internazionale'),('Juventus Turin','Juventus'),
+            ('Leeds United','Leeds'),('Lille OSC','Lille'),
+            ('Manchester City','Man City'),('Newcastle United','Newcastle'),
+            ('OGC Nice','Nice'),('Olympique Lyon','Lyon'),
+            ('Paris Saint-Germain','Paris SG'),('Racing Club De Lens','Lens'),
+            ('Rayo Vallecano','Vallecano'),('Real Betis Seville','Betis'),
+            ('Stade Brest 29','Brest'),('SV 07 Elversberg','Elversberg'),
+        ]
+        for provider, history in pairs:
+            with self.subTest(provider=provider):
+                self.assertEqual(SHADOW.PUB.team_key(provider),SHADOW.PUB.team_key(history))
+        for left,right in [('Paris FC','Paris Saint-Germain'),('Manchester City','Manchester United'),
+                           ('Leeds United','Newcastle United'),('Coventry City','Manchester City')]:
+            self.assertNotEqual(SHADOW.PUB.team_key(left),SHADOW.PUB.team_key(right))
+
     def test_first_matchday_scores_both_sides_and_can_publish(self) -> None:
         now = datetime(2026, 8, 22, 12, tzinfo=UTC)
         base = {"kickoff_at":"2026-08-22T14:00:00Z", "captured_at":"2026-08-22T12:00:00Z",
