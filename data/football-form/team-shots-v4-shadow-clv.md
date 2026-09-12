@@ -1,16 +1,16 @@
 # Team-Shots CLV Monitor: `team_shots_v4`
 
-Generated: 2026-09-12T12:13:16Z
-Picks input: `data/football-form/team-shots-v4-shadow-signals.csv`
-Odds input: `data/team-shots/team-shots-odds-history.csv`
+Generated: 2026-09-12T18:30:50Z
+Picks input: `data\football-form\team-shots-v4-shadow-signals.csv`
+Odds input: `data\team-shots\team-shots-odds-history.csv`
 
 ## Summary
 
 - Picks: 15
 - Active published picks: 15
-- Settled: 13
-- Open/pending: 2
-- Settled PnL: -0.51u
+- Settled: 15
+- Open/pending: 0
+- Settled PnL: -0.68u
 - Picks with close: 15
 - True-close coverage (<=120m): 8/15 (53.3%)
 - Average true-close CLV: -0.45% (n=8)
@@ -28,15 +28,15 @@ Odds input: `data/team-shots/team-shots-odds-history.csv`
 | Segment | Active | Settled | Pending | W-L-P | PnL | ROI | Avg CLV |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | Over | 1 | 1 | 0 | 1-0-0 | +0.73u | +72.70% | +0.00% (n=1) |
-| Under | 14 | 12 | 2 | 6-6-0 | -1.24u | -10.31% | -0.30% (n=12) |
+| Under | 14 | 14 | 0 | 7-7-0 | -1.40u | -10.03% | -0.26% (n=14) |
 
 ## Active League Breakdown
 
 | Segment | Active | Settled | Pending | W-L-P | PnL | ROI | Avg CLV |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| bundesliga | 1 | 0 | 1 | 0-0-0 | +0.00u | - | - (n=0) |
+| bundesliga | 1 | 1 | 0 | 1-0-0 | +0.83u | +83.30% | +0.00% (n=1) |
 | epl | 1 | 1 | 0 | 0-1-0 | -1.00u | -100.00% | +0.00% (n=1) |
-| la-liga | 9 | 8 | 1 | 5-3-0 | +1.04u | +12.95% | -0.45% (n=8) |
+| la-liga | 9 | 9 | 0 | 5-4-0 | +0.04u | +0.40% | -0.40% (n=9) |
 | serie-a | 4 | 4 | 0 | 2-2-0 | -0.55u | -13.65% | +0.00% (n=4) |
 
 ## Active Side x League Breakdown
@@ -44,9 +44,9 @@ Odds input: `data/team-shots/team-shots-odds-history.csv`
 | Segment | Active | Settled | Pending | W-L-P | PnL | ROI | Avg CLV |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | Over / serie-a | 1 | 1 | 0 | 1-0-0 | +0.73u | +72.70% | +0.00% (n=1) |
-| Under / bundesliga | 1 | 0 | 1 | 0-0-0 | +0.00u | - | - (n=0) |
+| Under / bundesliga | 1 | 1 | 0 | 1-0-0 | +0.83u | +83.30% | +0.00% (n=1) |
 | Under / epl | 1 | 1 | 0 | 0-1-0 | -1.00u | -100.00% | +0.00% (n=1) |
-| Under / la-liga | 9 | 8 | 1 | 5-3-0 | +1.04u | +12.95% | -0.45% (n=8) |
+| Under / la-liga | 9 | 9 | 0 | 5-4-0 | +0.04u | +0.40% | -0.40% (n=9) |
 | Under / serie-a | 3 | 3 | 0 | 1-2-0 | -1.27u | -42.43% | +0.00% (n=3) |
 
 ## Required Fields

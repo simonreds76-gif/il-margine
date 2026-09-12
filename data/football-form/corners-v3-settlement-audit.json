@@ -1,14 +1,14 @@
 {
-  "run_at": "2026-09-12T12:13:18Z",
+  "run_at": "2026-09-12T18:30:54Z",
   "model": "corners-v3-shadow",
   "total_bets": 51,
-  "settled_this_run": 4,
+  "settled_this_run": 0,
   "total_settled": 40,
   "total_pending": 11,
   "pending_breakdown": {
-    "future": 11,
+    "future": 6,
     "live": 0,
-    "stale": 0,
+    "stale": 5,
     "old_stale": 0,
     "unknown": 0
   },
@@ -89,11 +89,54 @@
       "snapshot_path": "data/results-snapshot/2026-09-12.json"
     }
   },
-  "stale_rows": [],
+  "stale_rows": [
+    {
+      "match": "Genoa vs Frosinone",
+      "league": "serie-a",
+      "line": "8.5",
+      "side": "under",
+      "kickoff": "2026-09-12T13:00:00Z",
+      "hours_elapsed": 5.52
+    },
+    {
+      "match": "Borussia Dortmund vs Paderborn",
+      "league": "bundesliga",
+      "line": "9.5",
+      "side": "under",
+      "kickoff": "2026-09-12T13:30:00Z",
+      "hours_elapsed": 5.02
+    },
+    {
+      "match": "Hoffenheim vs Stuttgart",
+      "league": "bundesliga",
+      "line": "9.5",
+      "side": "under",
+      "kickoff": "2026-09-12T13:30:00Z",
+      "hours_elapsed": 5.02
+    },
+    {
+      "match": "Liverpool vs Fulham",
+      "league": "epl",
+      "line": "9.5",
+      "side": "under",
+      "kickoff": "2026-09-12T14:00:00Z",
+      "hours_elapsed": 4.52
+    },
+    {
+      "match": "Osasuna vs Espanyol",
+      "league": "la-liga",
+      "line": "9.5",
+      "side": "over",
+      "kickoff": "2026-09-12T14:15:00Z",
+      "hours_elapsed": 4.27
+    }
+  ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
-  "warnings": [],
+  "warnings": [
+    "5 stale pending row(s) across 5 fixture(s) (3-48h elapsed)"
+  ],
   "errors": [],
   "exit_code_recommendation": 0
 }

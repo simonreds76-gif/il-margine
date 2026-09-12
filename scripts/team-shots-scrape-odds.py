@@ -118,6 +118,7 @@ def configure_odds_api_http_budget(limit: int) -> None:
     global _ODDS_API_HTTP_REQUEST_LIMIT, _ODDS_API_HTTP_REQUEST_COUNT
     _ODDS_API_HTTP_REQUEST_LIMIT = max(int(limit), 0)
     _ODDS_API_HTTP_REQUEST_COUNT = 0
+    _EVENT_DISCOVERY_CACHE.clear()
 
 
 def odds_api_get(url: str, **kwargs: object) -> requests.Response:
@@ -321,19 +322,14 @@ def _write_run_status(payload: dict) -> None:
     RUN_STATUS_PATH.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
 
 
-def scrape_odds_api(
-    api_key: str,
-    league_key: str,
-    bookmakers_str: str,
-    days_ahead: int = 3,
-    kickoff_within_minutes: int = 0,
-    market_inventory: Optional[List[dict]] = None,
-    control_odds: Optional[List[dict]] = None,
-    max_events: int = 0,
-    max_odds_requests: int = 0,
-    discovery_diagnostics: Optional[List[dict]] = None,
-) -> tuple[list[dict], int, list[str]]:
-    config = LEAGUE_CONFIGS[league_key]
+_EVENT_DISCOVERY_CACHE: dict[tuple[str, int], tuple] = {}
+
+
+def discover_odds_api_events(api_key: str, days_ahead: int) -> tuple:
+    """Share one football event discovery across leagues within a capture run."""
+    cache_key = (api_key, days_ahead)
+    if cache_key in _EVENT_DISCOVERY_CACHE:
+        return _EVENT_DISCOVERY_CACHE[cache_key]
     now = datetime.now(timezone.utc)
     from_iso = now.replace(microsecond=0).isoformat().replace("+00:00", "Z")
     to_iso = (now + timedelta(days=days_ahead)).replace(microsecond=0).isoformat().replace("+00:00", "Z")
@@ -346,7 +342,7 @@ def scrape_odds_api(
     }
 
     provider_errors: List[str] = []
-    print(f"  [odds-api.io] Discovering events for {config['label']}...")
+    print("  [odds-api.io] Discovering football events...")
     try:
         resp = None
         for attempt in range(RETRY_ATTEMPTS):
@@ -386,6 +382,28 @@ def scrape_odds_api(
 
     if not isinstance(events, list) or any(not isinstance(e, dict) for e in events):
         raise ValueError("odds-api.io /events returned an invalid event list; capture is not healthy")
+
+    result = (events, provider_errors, from_iso, to_iso)
+    _EVENT_DISCOVERY_CACHE[cache_key] = result
+    return result
+
+
+def scrape_odds_api(
+    api_key: str,
+    league_key: str,
+    bookmakers_str: str,
+    days_ahead: int = 3,
+    kickoff_within_minutes: int = 0,
+    market_inventory: Optional[List[dict]] = None,
+    control_odds: Optional[List[dict]] = None,
+    max_events: int = 0,
+    max_odds_requests: int = 0,
+    discovery_diagnostics: Optional[List[dict]] = None,
+) -> tuple[list[dict], int, list[str]]:
+    config = LEAGUE_CONFIGS[league_key]
+    now = datetime.now(timezone.utc)
+    events, discovery_errors, from_iso, to_iso = discover_odds_api_events(api_key, days_ahead)
+    provider_errors = list(discovery_errors)
 
     matched = [e for e in events if _looks_like_league(e.get("league") or {}, config)]
     league_events = len(matched)
