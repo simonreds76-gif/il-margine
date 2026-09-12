@@ -1,9 +1,9 @@
 # API-Football Count Archive Health
 
-- Generated: 2026-09-07T10:44:08Z
+- Generated: 2026-09-12T12:12:28Z
 - Archive: 0 fixtures; 0 new this run
 - Latest fixture: -
-- Requests: 15/90
+- Requests: 15/30
 - Request-budget truncation: no
 - Errors: 15
 - Storage: local CSV only; zero database writes
@@ -31,18 +31,18 @@
 
 ## Errors
 
-- fixtures epl 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-09-06 to 2026-09-08.'}
-- fixtures serie-a 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-09-06 to 2026-09-08.'}
-- fixtures la-liga 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-09-06 to 2026-09-08.'}
-- fixtures bundesliga 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-09-06 to 2026-09-08.'}
-- fixtures ligue-1 2025-05-10: {'plan': 'Free plans do not have access to this date, try from 2026-09-06 to 2026-09-08.'}
-- fixtures epl 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-09-06 to 2026-09-08.'}
-- fixtures serie-a 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-09-06 to 2026-09-08.'}
-- fixtures la-liga 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-09-06 to 2026-09-08.'}
-- fixtures bundesliga 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-09-06 to 2026-09-08.'}
-- fixtures ligue-1 2024-09-21: {'plan': 'Free plans do not have access to this date, try from 2026-09-06 to 2026-09-08.'}
-- fixtures epl 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-09-06 to 2026-09-08.'}
-- fixtures serie-a 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-09-06 to 2026-09-08.'}
-- fixtures la-liga 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-09-06 to 2026-09-08.'}
-- fixtures bundesliga 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-09-06 to 2026-09-08.'}
-- fixtures ligue-1 2024-08-31: {'plan': 'Free plans do not have access to this date, try from 2026-09-06 to 2026-09-08.'}
+- fixtures epl 2026-09-12: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures serie-a 2026-09-12: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures la-liga 2026-09-12: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures bundesliga 2026-09-12: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures ligue-1 2026-09-12: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures epl 2026-09-11: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures serie-a 2026-09-11: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures la-liga 2026-09-11: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures bundesliga 2026-09-11: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures ligue-1 2026-09-11: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures epl 2026-09-10: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures serie-a 2026-09-10: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures la-liga 2026-09-10: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures bundesliga 2026-09-10: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures ligue-1 2026-09-10: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}

@@ -2,29 +2,36 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 0,
-    "blocker_counts": {},
+    "blocked_lines": 26,
+    "blocker_counts": {
+      "goalkeeper_team_unresolved": 16,
+      "history_lt_6": 10,
+      "missing_lineup": 11,
+      "missing_priced_edge": 26,
+      "missing_registered_feature": 10,
+      "player_not_starting_goalkeeper": 5
+    },
     "candidate_board_preserved": false,
-    "eligible_lines": 0,
-    "priced_lines": 0,
+    "eligible_lines": 6,
+    "priced_lines": 67,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 0
+    "value_ladder_lines": 20
   },
   "evidence": {
     "clv": 0.0,
-    "clv_matched": 2,
-    "pending": 3,
-    "pnl_units": 9.629,
-    "roi": 0.875364,
-    "settled": 22,
+    "clv_matched": 3,
+    "pending": 5,
+    "pnl_units": 10.4585,
+    "roi": 0.83668,
+    "settled": 25,
     "settlement_sources": {
-      "fotmob_named_keeper_shotmap": 22
+      "fotmob_named_keeper_shotmap": 25
     },
-    "signals": 25,
-    "true_close_coverage": 0.090909
+    "signals": 30,
+    "true_close_coverage": 0.12
   },
-  "generated_at": "2026-09-11T23:33:21Z",
+  "generated_at": "2026-09-12T12:13:21Z",
   "live_routing": false,
   "promotion": {
     "mean_true_close_clv_required": 0.005,
