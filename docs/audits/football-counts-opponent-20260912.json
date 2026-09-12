@@ -1,0 +1,440 @@
+{
+  "status": "RESEARCH_ONLY",
+  "generated_at": "2026-09-12T20:45:22.330419+00:00",
+  "protocol": "One count-likelihood candidate per market. No ROI search. Previously inspected 2026 periods are diagnostic, not fresh holdouts. 1u flat, >=3% EV, max one selection/fixture.",
+  "feature_names": {
+    "shots": [
+      "attack20",
+      "opponent_concession20",
+      "venue_attack_delta",
+      "opponent_venue_concession_delta",
+      "attack_recent_delta",
+      "opponent_concession_recent_delta",
+      "opponent_adjusted_attack",
+      "opponent_adjusted_concession",
+      "shot_pressure",
+      "opponent_shot_pressure",
+      "rest_days",
+      "opponent_rest_days"
+    ],
+    "corners": [
+      "attack20",
+      "opponent_concession20",
+      "venue_attack_delta",
+      "opponent_venue_concession_delta",
+      "attack_recent_delta",
+      "opponent_concession_recent_delta",
+      "opponent_adjusted_attack",
+      "opponent_adjusted_concession",
+      "shot_pressure",
+      "opponent_shot_pressure",
+      "rest_days",
+      "opponent_rest_days",
+      "attack_asymmetry",
+      "concession_asymmetry"
+    ]
+  },
+  "input_sha256": {
+    "C:\\Users\\44746\\Documents\\Codex\\2026-09-05\\re\\work\\shots-coverage\\data\\football-form\\team-match-base.csv": "e49c48bb9152b85e3e8e68898dd295c5e3ba1dd51d1920585b6c4beb691c0397",
+    "..\\..\\outputs\\counts-calibration-20260912\\observations.json": "95d2641e1550ca62e6e3d01d834f9ab5c81dceaea323234c27b9b408b8697e74",
+    "C:\\Users\\44746\\Documents\\Codex\\2026-09-05\\re\\work\\shots-coverage\\scripts\\football-counts-opponent-research.py": "a9e52acdefbb7df4d70ff8035021f4365f719e563b1cc9534ae909d28288337e"
+  },
+  "models": {
+    "shots": {
+      "parameters": {
+        "beta": [
+          -0.01416028181997172,
+          0.03084896894472676,
+          0.014088423236841134,
+          0.019118048175197567,
+          0.00970736733291326,
+          -0.011304842940546646,
+          0.00493592973554538,
+          0.06486868693896265,
+          0.09614755891333865,
+          0.03084896894472676,
+          0.014088423236841134,
+          0.010989299111765603,
+          -0.009532070952727161
+        ],
+        "alpha": 0.049424235357082104,
+        "centers": [
+          -0.002713581543420043,
+          -0.00605092257508542,
+          -0.004931165833200582,
+          -0.008096300522572732,
+          -0.003961625245923732,
+          -0.004136355524083054,
+          -0.043697944087354605,
+          -0.04860752124241639,
+          -0.002713581543420043,
+          -0.00605092257508542,
+          7.677141788252899,
+          7.677141788252899
+        ],
+        "scales": [
+          0.0999570187075601,
+          0.1028427579308176,
+          0.08062763314181369,
+          0.08178527364686151,
+          0.05345103084704993,
+          0.055650874565507685,
+          0.10050790071610922,
+          0.10736161591585398,
+          0.0999570187075601,
+          0.1028427579308176,
+          3.0888376181622252,
+          3.0888376181622252
+        ],
+        "train_n": 10692,
+        "train_last": "2026-03-22"
+      },
+      "calibrator": {
+        "weight": 0.4450140339736927,
+        "intercept": 0
+      },
+      "count_folds": {
+        "2024-01-01": {
+          "training_n": 11026,
+          "test": {
+            "n": 3388,
+            "candidate_mae": 3.594995762991898,
+            "league_venue_mae": 4.004214313824703,
+            "candidate_bias": 0.21021188284156553,
+            "candidate_rmse": 4.558831153455829
+          }
+        },
+        "2025-01-01": {
+          "training_n": 10510,
+          "test": {
+            "n": 3436,
+            "candidate_mae": 3.613036675967841,
+            "league_venue_mae": 4.092143688674538,
+            "candidate_bias": -0.0725412573969486,
+            "candidate_rmse": 4.56026739680542
+          }
+        },
+        "2026-04-01": {
+          "training_n": 10692,
+          "test": {
+            "n": 1004,
+            "candidate_mae": 3.750825926071096,
+            "league_venue_mae": 4.121355530259914,
+            "candidate_bias": -0.3932006201492488,
+            "candidate_rmse": 4.8913332720092235
+          }
+        }
+      },
+      "market_rows": 592,
+      "excluded_rows": 1,
+      "exclusions": [
+        {
+          "fixture": "2026-08-23|ligue-1|paris sg|stade rennais",
+          "team": "paris sg",
+          "asof": "2026-08-20",
+          "available_teams": [],
+          "reason": "fixture_or_team_history_unavailable"
+        }
+      ],
+      "phases": {
+        "validation": {
+          "candidate_raw": {
+            "rows": 177,
+            "fixtures": 106,
+            "brier": 0.23921916217786582,
+            "log_loss": 0.6710779824878457,
+            "calibration_bias": -0.025048117202306864,
+            "bets": 90,
+            "wins": 57,
+            "pnl": 14.912000000000003,
+            "roi": 0.1656888888888889,
+            "overs": 22
+          },
+          "candidate_calibrated": {
+            "rows": 177,
+            "fixtures": 106,
+            "brier": 0.23850326152390885,
+            "log_loss": 0.6697361683858991,
+            "calibration_bias": -0.0014485191767415594,
+            "bets": 49,
+            "wins": 34,
+            "pnl": 13.925,
+            "roi": 0.2841836734693878,
+            "overs": 9
+          },
+          "incumbent_raw": {
+            "rows": 177,
+            "fixtures": 106,
+            "brier": 0.2631122845992688,
+            "log_loss": 0.7206838007774735,
+            "calibration_bias": 0.0011366530906506882,
+            "bets": 87,
+            "wins": 46,
+            "pnl": -2.283999999999999,
+            "roi": -0.026252873563218378,
+            "overs": 33
+          },
+          "market": {
+            "rows": 177,
+            "fixtures": 106,
+            "brier": 0.2458617425351957,
+            "log_loss": 0.6848563553774031,
+            "calibration_bias": 0.019663442658503,
+            "bets": 0,
+            "wins": 0,
+            "pnl": 0,
+            "roi": null,
+            "overs": 0
+          }
+        },
+        "historical_diagnostic": {
+          "candidate_raw": {
+            "rows": 175,
+            "fixtures": 102,
+            "brier": 0.27341127665850673,
+            "log_loss": 0.7493117458129642,
+            "calibration_bias": -0.08828041717547917,
+            "bets": 83,
+            "wins": 40,
+            "pnl": -8.537999999999998,
+            "roi": -0.10286746987951806,
+            "overs": 39
+          },
+          "candidate_calibrated": {
+            "rows": 175,
+            "fixtures": 102,
+            "brier": 0.25644370184305526,
+            "log_loss": 0.7067352391931321,
+            "calibration_bias": -0.0788140123463596,
+            "bets": 48,
+            "wins": 25,
+            "pnl": -1.6149999999999993,
+            "roi": -0.03364583333333332,
+            "overs": 20
+          },
+          "incumbent_raw": {
+            "rows": 175,
+            "fixtures": 102,
+            "brier": 0.28459852055804397,
+            "log_loss": 0.7694721262161037,
+            "calibration_bias": -0.07182287804604108,
+            "bets": 86,
+            "wins": 37,
+            "pnl": -17.895999999999997,
+            "roi": -0.2080930232558139,
+            "overs": 47
+          },
+          "market": {
+            "rows": 175,
+            "fixtures": 102,
+            "brier": 0.24953173548061022,
+            "log_loss": 0.6922077974059763,
+            "calibration_bias": -0.06987851610268085,
+            "bets": 0,
+            "wins": 0,
+            "pnl": 0,
+            "roi": null,
+            "overs": 0
+          }
+        }
+      }
+    },
+    "corners": {
+      "parameters": {
+        "beta": [
+          -0.004328850095043458,
+          0.015093122086329786,
+          0.006753934858222784,
+          0.0011666238947823729,
+          -0.004762038682697593,
+          -0.002728865963475596,
+          0.0034552078194765305,
+          0.0163943851738427,
+          0.02489249259497937,
+          0.02009604052591998,
+          0.02574303622146754,
+          0.0004526940135447624,
+          0.0004526940135447624,
+          0.009940429511027004,
+          0.004658112043083036
+        ],
+        "alpha": 0.01595316327987359,
+        "centers": [
+          -0.00737416996320383,
+          -0.009952977791618696,
+          -0.007148846172518897,
+          -0.009831742000696453,
+          -0.008050776220388385,
+          -0.008416457554809463,
+          -0.09308967267282756,
+          -0.09650167080682674,
+          -0.0027135815434200417,
+          -0.006050922575085413,
+          7.677141788252899,
+          7.677141788252899,
+          0.13330916844443266,
+          0.13579295296233193
+        ],
+        "scales": [
+          0.08164551940928218,
+          0.08591588806581976,
+          0.052666883941153216,
+          0.05164748210436754,
+          0.05303883065749647,
+          0.05497785892864341,
+          0.08373640594317844,
+          0.09026057364516481,
+          0.07135333630931244,
+          0.07294243590528378,
+          2.9995244269054657,
+          2.9995244269054657,
+          0.09778414281863708,
+          0.10425132426368781
+        ],
+        "train_n": 5346,
+        "train_last": "2026-03-22"
+      },
+      "calibrator": {
+        "weight": 0.0,
+        "intercept": 0
+      },
+      "count_folds": {
+        "2024-01-01": {
+          "training_n": 5513,
+          "test": {
+            "n": 1694,
+            "candidate_mae": 2.7081979488305175,
+            "league_venue_mae": 2.7311738910440204,
+            "candidate_bias": -0.06921635714069005,
+            "candidate_rmse": 3.385537141373605
+          }
+        },
+        "2025-01-01": {
+          "training_n": 5255,
+          "test": {
+            "n": 1718,
+            "candidate_mae": 2.698306580736016,
+            "league_venue_mae": 2.7040029935140524,
+            "candidate_bias": -0.0008991394806187457,
+            "candidate_rmse": 3.3765920299011336
+          }
+        },
+        "2026-04-01": {
+          "training_n": 5346,
+          "test": {
+            "n": 502,
+            "candidate_mae": 2.8642687851869164,
+            "league_venue_mae": 2.897476759628154,
+            "candidate_bias": -0.16830712706637133,
+            "candidate_rmse": 3.598304408286726
+          }
+        }
+      },
+      "market_rows": 784,
+      "excluded_rows": 0,
+      "exclusions": [],
+      "phases": {
+        "validation": {
+          "candidate_raw": {
+            "rows": 239,
+            "fixtures": 94,
+            "brier": 0.24164368462121708,
+            "log_loss": 0.6760649213816002,
+            "calibration_bias": -0.026733725027790225,
+            "bets": 33,
+            "wins": 15,
+            "pnl": -2.6007,
+            "roi": -0.0788090909090909,
+            "overs": 3
+          },
+          "candidate_calibrated": {
+            "rows": 239,
+            "fixtures": 94,
+            "brier": 0.2412175010910375,
+            "log_loss": 0.6754189114477985,
+            "calibration_bias": -0.0033072893974284193,
+            "bets": 0,
+            "wins": 0,
+            "pnl": 0,
+            "roi": null,
+            "overs": 0
+          },
+          "incumbent_raw": {
+            "rows": 239,
+            "fixtures": 94,
+            "brier": 0.2537288973333927,
+            "log_loss": 0.7012947633069012,
+            "calibration_bias": -0.034430778928410365,
+            "bets": 44,
+            "wins": 14,
+            "pnl": -16.1235,
+            "roi": -0.3664431818181818,
+            "overs": 4
+          },
+          "market": {
+            "rows": 239,
+            "fixtures": 94,
+            "brier": 0.2412175010910375,
+            "log_loss": 0.6754189114477985,
+            "calibration_bias": -0.0033072893974284076,
+            "bets": 0,
+            "wins": 0,
+            "pnl": 0,
+            "roi": null,
+            "overs": 0
+          }
+        },
+        "historical_diagnostic": {
+          "candidate_raw": {
+            "rows": 212,
+            "fixtures": 87,
+            "brier": 0.24962528941015225,
+            "log_loss": 0.6926143312885699,
+            "calibration_bias": 0.04495603431627155,
+            "bets": 32,
+            "wins": 14,
+            "pnl": -1.6034,
+            "roi": -0.05010625,
+            "overs": 9
+          },
+          "candidate_calibrated": {
+            "rows": 212,
+            "fixtures": 87,
+            "brier": 0.24664524401850757,
+            "log_loss": 0.6864159675624993,
+            "calibration_bias": 0.05553597596937737,
+            "bets": 0,
+            "wins": 0,
+            "pnl": 0,
+            "roi": null,
+            "overs": 0
+          },
+          "incumbent_raw": {
+            "rows": 212,
+            "fixtures": 87,
+            "brier": 0.2477185459415605,
+            "log_loss": 0.6889204257959689,
+            "calibration_bias": 0.04364375151479949,
+            "bets": 39,
+            "wins": 18,
+            "pnl": -0.9352000000000003,
+            "roi": -0.023979487179487186,
+            "overs": 15
+          },
+          "market": {
+            "rows": 212,
+            "fixtures": 87,
+            "brier": 0.24664524401850757,
+            "log_loss": 0.6864159675624993,
+            "calibration_bias": 0.055535975969377385,
+            "bets": 0,
+            "wins": 0,
+            "pnl": 0,
+            "roi": null,
+            "overs": 0
+          }
+        }
+      }
+    }
+  }
+}

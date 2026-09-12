@@ -1412,15 +1412,27 @@ def model_watchlist_summary() -> dict[str, Any]:
     registry = load_json(ROOT / "config" / "model-review-watchlist.json")
     if registry.get("schema_version") != 1:
         return {"status": "UNAVAILABLE", "candidates": [], "families": []}
+    for candidate in registry.get("candidates", []):
+        if candidate.get("id") == "opponent_shots_20260912":
+            candidate["forward_evidence"] = load_json(ROOT / "data/football-form/team-shots-opponent-status.json")
     return registry
 
 
-def model_watchlist_text(payload: dict[str, Any]) -> str:
+def model_watchlist_text(payload: dict[str, Any], *, tennis_only: bool = False) -> str:
     registry = payload.get("model_review_watchlist") or {}
     if registry.get("schema_version") != 1:
         return "Model review register UNAVAILABLE: check registry before calling model coverage complete."
     lines = ["MODEL REVIEW WATCHLIST"]
     for candidate in registry.get("candidates", []):
+        if tennis_only and candidate.get("family") == "football_counts":
+            continue
+        if candidate.get("id") == "opponent_shots_20260912":
+            status = candidate.get("forward_evidence") or {}
+            evidence = status.get("prospective") or {}
+            forward_roi = evidence.get("roi")
+            roi_text = f"{forward_roi:+.1%}" if forward_roi is not None else "-"
+            lines.append(f"Opponent Shots [SHADOW]: forward {evidence.get('wins', 0)}W/{evidence.get('losses', 0)}L, ROI {roi_text}, pending {evidence.get('pending', 0)} | {status.get('review_status', 'UNAVAILABLE')} | scan {status.get('generated_at', 'missing')}")
+            continue
         history = candidate.get("historical_replay") or {}
         label = candidate.get("label", "Unnamed candidate")
         roi = history.get("roi_pct")
@@ -2311,7 +2323,7 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
         ]
     )
     lines.extend(["", rate_trend_text(payload)])
-    lines.extend(["", model_watchlist_text(payload)])
+    lines.extend(["", model_watchlist_text(payload, tennis_only=True)])
     return "\n".join(lines)
 
 

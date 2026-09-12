@@ -1,21 +1,69 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-09",
+  "updated_at": "2026-09-12",
   "review_cadence": "Saturday weekly review after the Tuesday research report; deeper review on first Saturday of each month",
   "automatic_promotion": false,
   "families": [
-    {"id": "tennis_ml", "report_key": "tennis_model_evidence", "scope": "Strict, Volume, Challenger ML v2, spread, grass, clay and CPI controls"},
-    {"id": "tennis_gaps", "report_key": "tennis_ml_gap_guard", "scope": "Strict and Volume gap experiments"},
-    {"id": "tennis_aces_df", "report_key": "tennis_props_shadow_decision", "scope": "Aces and double faults"},
-    {"id": "astra_aces_df", "report_key": "tennis_rate_trend", "scope": "Astra Aces and Astra DF, paired baseline/candidate"},
-    {"id": "tennis_props", "report_key": "tennis_props_v3", "scope": "Props v3/v4, venue ace and most-aces experiments"},
-    {"id": "tennis_breaks", "report_key": "tennis_breaks_v1", "scope": "Service breaks and break-point markets; price capture and settlement"},
-    {"id": "football_counts", "report_key": "football_counts_vnext", "scope": "Team shots and corners, warm-up and legacy controls kept separate"},
-    {"id": "team_fouls", "report_key": "team_fouls_v1", "scope": "Team fouls and source agreement"},
-    {"id": "gk_saves", "report_key": "goalkeeper_saves_v1", "scope": "GK Saves, distinguish shadow from value ladder"},
-    {"id": "goalscorers", "report_key": "goalscorer_v2", "scope": "Goalscorer and fair-odds research; full record, not winning examples"},
-    {"id": "assists", "report_key": "assist_value_v1", "scope": "Assists, market coverage and settlement"},
-    {"id": "infrastructure", "report_key": "automation_budget", "scope": "Workflow health, stale evidence, API budget and hosting impact"}
+    {
+      "id": "tennis_ml",
+      "report_key": "tennis_model_evidence",
+      "scope": "Strict, Volume, Challenger ML v2, spread, grass, clay and CPI controls"
+    },
+    {
+      "id": "tennis_gaps",
+      "report_key": "tennis_ml_gap_guard",
+      "scope": "Strict and Volume gap experiments"
+    },
+    {
+      "id": "tennis_aces_df",
+      "report_key": "tennis_props_shadow_decision",
+      "scope": "Aces and double faults"
+    },
+    {
+      "id": "astra_aces_df",
+      "report_key": "tennis_rate_trend",
+      "scope": "Astra Aces and Astra DF, paired baseline/candidate"
+    },
+    {
+      "id": "tennis_props",
+      "report_key": "tennis_props_v3",
+      "scope": "Props v3/v4, venue ace and most-aces experiments"
+    },
+    {
+      "id": "tennis_breaks",
+      "report_key": "tennis_breaks_v1",
+      "scope": "Service breaks and break-point markets; price capture and settlement"
+    },
+    {
+      "id": "football_counts",
+      "report_key": "football_counts_vnext",
+      "scope": "Team shots and corners, warm-up and legacy controls kept separate"
+    },
+    {
+      "id": "team_fouls",
+      "report_key": "team_fouls_v1",
+      "scope": "Team fouls and source agreement"
+    },
+    {
+      "id": "gk_saves",
+      "report_key": "goalkeeper_saves_v1",
+      "scope": "GK Saves, distinguish shadow from value ladder"
+    },
+    {
+      "id": "goalscorers",
+      "report_key": "goalscorer_v2",
+      "scope": "Goalscorer and fair-odds research; full record, not winning examples"
+    },
+    {
+      "id": "assists",
+      "report_key": "assist_value_v1",
+      "scope": "Assists, market coverage and settlement"
+    },
+    {
+      "id": "infrastructure",
+      "report_key": "automation_budget",
+      "scope": "Workflow health, stale evidence, API budget and hosting impact"
+    }
   ],
   "candidates": [
     {
@@ -29,9 +77,13 @@
       "live_routing": false,
       "actual_stake": 0,
       "historical_replay": {
-        "from": "2026-06-05", "through": "2026-09-08",
-        "bets": 69, "wins": 32, "losses": 37,
-        "stake_units": 105.5, "profit_units": 7.6475,
+        "from": "2026-06-05",
+        "through": "2026-09-08",
+        "bets": 69,
+        "wins": 32,
+        "losses": 37,
+        "stake_units": 105.5,
+        "profit_units": 7.6475,
         "roi_pct": 7.248815165876778,
         "kind": "previously_inspected_reconstructed_replay_not_prospective"
       },
@@ -39,6 +91,28 @@
       "evidence": "docs/audits/tennis-context-fixed-calibration-20260909.md",
       "next_action": "Connect append-only pre-match capture with the frozen raw-probability basis and 14 context features, exact historical profile rules, timestamps and separate settlements. Verify input parity before enabling collection. Do not relabel the 69 replay bets as forward evidence.",
       "evaluation": "Assess Volume independently of Strict; retain fixed policy and weights. Track sample size, W/L, flat and tier ROI, CLV coverage, calibration, uncertainty and freshness. Selection of this lane followed inspection of 2026 results and requires genuinely new evidence."
+    },
+    {
+      "id": "opponent_shots_20260912",
+      "label": "Opponent Shots",
+      "model_id": "opponent-shots-20260912",
+      "status": "ACTIVE_SHADOW",
+      "prospective_capture_status": "CONNECTED_EXISTING_FOOTBALL_COUNTS_WORKFLOW",
+      "live_routing": false,
+      "actual_stake": 0,
+      "historical_replay": {
+        "bets": 97,
+        "wins": 59,
+        "losses": 38,
+        "roi_pct": 12.69072165,
+        "profit_units": 12.31,
+        "kind": "retrospective_replay_not_forward"
+      },
+      "artifact": "data/team-shots/team-shots-opponent-config.json",
+      "evidence": "docs/audits/team-shots-served-comparison-20260912.md",
+      "next_action": "Collect fixed-policy forward evidence; show pending, W/L, ROI and closing-price coverage weekly. No automatic promotion.",
+      "evaluation": "Manual review after 150 settled fixtures and eight weeks; assess calibration, ROI, positive CLV and at least 70% true-close coverage.",
+      "family": "football_counts"
     }
   ],
   "review_checks": [

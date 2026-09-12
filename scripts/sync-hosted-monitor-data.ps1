@@ -27,6 +27,9 @@ $includeTennisProps = $syncAll -or $TennisProps
 $includeSettlement = $syncAll -or $Settlement -or $TeamShots -or $Corners
 
 $teamShotsFiles = @(
+    "data/football-form/team-shots-opponent-shadow.csv",
+    "data/football-form/team-shots-opponent-candidates.csv",
+    "data/football-form/team-shots-opponent-status.json",
     "data/team-shots/team-shots-live-snapshot.json",
     "data/team-shots/team-shots-calibration.txt",
     "data/team-shots/team-shots-calibration-params.json",

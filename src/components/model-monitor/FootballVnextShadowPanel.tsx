@@ -109,8 +109,8 @@ function priceFor(row: MonitorCsvRow): number | null {
   return numeric(row.book_price_at_publication || row.pinnacle_price_at_publication || row.book_odds || row.odds_decimal);
 }
 
-function actualFor(model: "team_shots_v4" | "corners_v3", row: MonitorCsvRow): string {
-  return cleanText(model === "team_shots_v4" ? row.actual_team_shots : row.actual_total_corners) || "-";
+function actualFor(model: "team_shots_v4" | "team_shots_opponent" | "corners_v3", row: MonitorCsvRow): string {
+  return cleanText(model !== "corners_v3" ? row.actual_team_shots : row.actual_total_corners) || "-";
 }
 
 function metricTone(value: number | null): string {
@@ -128,7 +128,7 @@ function Metric({ label, value, detail, tone }: { label: string; value: string; 
   );
 }
 
-function LedgerCards({ model, rows }: { model: "team_shots_v4" | "corners_v3"; rows: MonitorCsvRow[] }) {
+function LedgerCards({ model, rows }: { model: "team_shots_v4" | "team_shots_opponent" | "corners_v3"; rows: MonitorCsvRow[] }) {
   return (
     <ul className="grid gap-2 md:hidden">
       {rows.map((row, index) => {
@@ -177,7 +177,7 @@ function CandidateCards({ rows }: { rows: MonitorCsvRow[] }) {
             <span className="font-medium text-amber-100">{cleanText(row.selection)}</span>
             <span className="font-mono text-emerald-300">{pct(numeric(row.edge))}</span>
           </div>
-          <div className="mt-2 text-xs leading-5 text-slate-400"><strong className="text-slate-300">Why not registered:</strong> {plainReason(row.blocked_reason) || "Gate not passed"}</div>
+          <div className="mt-2 text-xs leading-5 text-slate-400"><strong className="text-slate-300">Registration:</strong> {plainReason(row.blocked_reason) || "Eligible for shadow registration"}</div>
         </li>
       ))}
     </ul>
@@ -204,13 +204,13 @@ export default function FootballVnextShadowPanel({
   source,
 }: {
   title: string;
-  model: "team_shots_v4" | "corners_v3";
+  model: "team_shots_v4" | "team_shots_opponent" | "corners_v3";
   rows: MonitorCsvRow[];
   candidates: MonitorCsvRow[];
   gate: FootballVnextGate | null;
   source?: SourceStatus;
 }) {
-  const ledger = [...rows].sort((a, b) => String(b.kickoff_utc || b.match_date).localeCompare(String(a.kickoff_utc || a.match_date)));
+  const ledger = [...rows].sort((a, b) => Number(isSettled(a)) - Number(isSettled(b)) || String(b.kickoff_utc || b.match_date).localeCompare(String(a.kickoff_utc || a.match_date)));
   const settled = ledger.filter(isSettled);
   const pending = ledger.filter((row) => !isSettled(row));
   const won = settled.filter((row) => resultFor(row) === "won").length;
@@ -279,6 +279,29 @@ export default function FootballVnextShadowPanel({
       </div>
 
       <div className="border-t border-slate-800 px-4 py-4 sm:px-5">
+        <div className="mb-3 flex items-end justify-between gap-3">
+          <div>
+            <h3 className="text-base font-semibold text-white">Pending selections and results</h3>
+            <p className="mt-1 text-xs text-slate-500">Every row below counts toward prospective P/L and ROI, including matchday 1-3 tracking.</p>
+          </div>
+          <span className="font-mono text-xs text-slate-400">{ledger.length} rows</span>
+        </div>
+        {ledger.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-slate-700 px-4 py-5 text-sm text-slate-400">No registered selection yet. This lane is at gate stage; see the gate status above.</div>
+        ) : (
+          <>
+            <LedgerCards model={model} rows={ledger} />
+            <div className="hidden overflow-x-auto rounded-xl border border-slate-800 md:block">
+              <table className="w-full min-w-[1120px] text-left text-xs">
+                <thead className="bg-slate-950/95 text-[11px] uppercase tracking-[0.11em] text-slate-500"><tr><th className="px-3 py-3">Date</th><th className="px-3 py-3">Match</th><th className="px-3 py-3">Selection</th><th className="px-3 py-3 text-right">Stake</th><th className="px-3 py-3 text-right">Market odds</th><th className="px-3 py-3 text-right">Fair odds</th><th className="px-3 py-3 text-right">Edge</th><th className="px-3 py-3 text-right">Actual count</th><th className="px-3 py-3">Status</th><th className="px-3 py-3 text-right">P/L</th><th className="px-3 py-3 text-right">CLV</th></tr></thead>
+                <tbody>{ledger.map((row, index) => { const result = resultFor(row); const clv = cleanText(row.true_close).toLowerCase() === "true" ? numeric(row.published_to_close_clv) : null; return <tr key={row.pick_id || `${row.match}-${index}`} className="border-t border-slate-800/80"><td className="whitespace-nowrap px-3 py-3 text-slate-400">{formatDateTimeLabel(row.kickoff_utc || row.match_date)}</td><td className="max-w-[260px] px-3 py-3"><MatchLabel league={row.league} homeTeam={row.home_team} awayTeam={row.away_team} className="w-full" textClassName="font-medium text-slate-200" /></td><td className="px-3 py-3"><TeamLabel league={row.league} team={row.team} detail={cleanText(row.selection)} teamClassName="text-slate-200" detailClassName="text-[11px] text-slate-500" /></td><td className="px-3 py-3 text-right font-mono">{rowStake(row).toFixed(1)}u</td><td className="px-3 py-3 text-right font-mono">{priceFor(row)?.toFixed(2) ?? "-"}</td><td className="px-3 py-3 text-right font-mono">{numeric(row.model_fair_odds)?.toFixed(2) ?? "-"}</td><td className={cn("px-3 py-3 text-right font-mono", metricTone(numeric(row.edge)))}>{pct(numeric(row.edge))}</td><td className="px-3 py-3 text-right font-mono">{actualFor(model, row)}</td><td className={cn("px-3 py-3 font-semibold uppercase", resultTone(result))}>{result}<div className="mt-0.5 text-[11px] font-normal normal-case text-slate-600">{cleanText(row.signal_status).replaceAll("_", " ")}</div></td><td className={cn("px-3 py-3 text-right font-mono", resultTone(result))}>{isSettled(row) ? units(numeric(row.pnl_units)) : "-"}</td><td className={cn("px-3 py-3 text-right font-mono", metricTone(clv))}>{clv === null ? "-" : pct(clv)}</td></tr>; })}</tbody>
+              </table>
+            </div>
+          </>
+        )}
+      </div>
+
+      <div className="border-t border-slate-800 px-4 py-4 sm:px-5">
         <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
           <div>
             <h3 className="text-base font-semibold text-white">Current market scan</h3>
@@ -295,36 +318,14 @@ export default function FootballVnextShadowPanel({
             <CandidateCards rows={currentCandidates} />
             <div className="hidden overflow-x-auto rounded-xl border border-slate-800 md:block">
               <table className="w-full min-w-[920px] text-left text-xs">
-                <thead className="bg-slate-950/85 text-[11px] uppercase tracking-[0.11em] text-slate-500"><tr><th className="px-3 py-3">Kickoff</th><th className="px-3 py-3">Match</th><th className="px-3 py-3">Closest candidate</th><th className="px-3 py-3 text-right">Market odds</th><th className="px-3 py-3 text-right">Fair odds</th><th className="px-3 py-3 text-right">Edge</th><th className="px-3 py-3">Why not registered</th></tr></thead>
-                <tbody>{currentCandidates.map((row, index) => <tr key={row.pick_id || `${row.match}-${index}`} className="border-t border-slate-800/80"><td className="whitespace-nowrap px-3 py-3 text-slate-400">{formatDateTimeLabel(row.kickoff_utc || row.match_date)}</td><td className="max-w-[280px] px-3 py-3"><MatchLabel league={row.league} homeTeam={row.home_team} awayTeam={row.away_team} className="w-full" textClassName="font-medium text-slate-200" /></td><td className="px-3 py-3 text-amber-100">{cleanText(row.selection)}</td><td className="px-3 py-3 text-right font-mono">{priceFor(row)?.toFixed(2) ?? "-"}</td><td className="px-3 py-3 text-right font-mono">{numeric(row.model_fair_odds)?.toFixed(2) ?? "-"}</td><td className={cn("px-3 py-3 text-right font-mono", metricTone(numeric(row.edge)))}>{pct(numeric(row.edge))}</td><td className="max-w-[260px] px-3 py-3 leading-5 text-slate-400">{plainReason(row.blocked_reason) || "Gate not passed"}</td></tr>)}</tbody>
+                <thead className="bg-slate-950/85 text-[11px] uppercase tracking-[0.11em] text-slate-500"><tr><th className="px-3 py-3">Kickoff</th><th className="px-3 py-3">Match</th><th className="px-3 py-3">Closest candidate</th><th className="px-3 py-3 text-right">Market odds</th><th className="px-3 py-3 text-right">Fair odds</th><th className="px-3 py-3 text-right">Edge</th><th className="px-3 py-3">Registration</th></tr></thead>
+                <tbody>{currentCandidates.map((row, index) => <tr key={row.pick_id || `${row.match}-${index}`} className="border-t border-slate-800/80"><td className="whitespace-nowrap px-3 py-3 text-slate-400">{formatDateTimeLabel(row.kickoff_utc || row.match_date)}</td><td className="max-w-[280px] px-3 py-3"><MatchLabel league={row.league} homeTeam={row.home_team} awayTeam={row.away_team} className="w-full" textClassName="font-medium text-slate-200" /></td><td className="px-3 py-3 text-amber-100">{cleanText(row.selection)}</td><td className="px-3 py-3 text-right font-mono">{priceFor(row)?.toFixed(2) ?? "-"}</td><td className="px-3 py-3 text-right font-mono">{numeric(row.model_fair_odds)?.toFixed(2) ?? "-"}</td><td className={cn("px-3 py-3 text-right font-mono", metricTone(numeric(row.edge)))}>{pct(numeric(row.edge))}</td><td className="max-w-[260px] px-3 py-3 leading-5 text-slate-400">{plainReason(row.blocked_reason) || "Eligible for shadow registration"}</td></tr>)}</tbody>
               </table>
             </div>
           </>
         )}
       </div>
 
-      <div className="border-t border-slate-800 px-4 py-4 sm:px-5">
-        <div className="mb-3 flex items-end justify-between gap-3">
-          <div>
-            <h3 className="text-base font-semibold text-white">Registered 2026/27 evidence</h3>
-            <p className="mt-1 text-xs text-slate-500">Every row below counts toward prospective P/L and ROI, including matchday 1-3 tracking.</p>
-          </div>
-          <span className="font-mono text-xs text-slate-400">{ledger.length} rows</span>
-        </div>
-        {ledger.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-slate-700 px-4 py-5 text-sm text-slate-400">No registered selection yet. This lane is at gate stage; see the gate status above.</div>
-        ) : (
-          <>
-            <LedgerCards model={model} rows={ledger} />
-            <div className="hidden overflow-x-auto rounded-xl border border-slate-800 md:block">
-              <table className="w-full min-w-[1120px] text-left text-xs">
-                <thead className="bg-slate-950/95 text-[11px] uppercase tracking-[0.11em] text-slate-500"><tr><th className="px-3 py-3">Date</th><th className="px-3 py-3">Match</th><th className="px-3 py-3">Selection</th><th className="px-3 py-3 text-right">Stake</th><th className="px-3 py-3 text-right">Market odds</th><th className="px-3 py-3 text-right">Fair odds</th><th className="px-3 py-3 text-right">Edge</th><th className="px-3 py-3 text-right">Actual count</th><th className="px-3 py-3">Status</th><th className="px-3 py-3 text-right">P/L</th><th className="px-3 py-3 text-right">CLV</th></tr></thead>
-                <tbody>{ledger.map((row, index) => { const result = resultFor(row); const clv = numeric(row.published_to_close_clv); return <tr key={row.pick_id || `${row.match}-${index}`} className="border-t border-slate-800/80"><td className="whitespace-nowrap px-3 py-3 text-slate-400">{formatDateTimeLabel(row.kickoff_utc || row.match_date)}</td><td className="max-w-[260px] px-3 py-3"><MatchLabel league={row.league} homeTeam={row.home_team} awayTeam={row.away_team} className="w-full" textClassName="font-medium text-slate-200" /></td><td className="px-3 py-3"><TeamLabel league={row.league} team={row.team} detail={cleanText(row.selection)} teamClassName="text-slate-200" detailClassName="text-[11px] text-slate-500" /></td><td className="px-3 py-3 text-right font-mono">{rowStake(row).toFixed(1)}u</td><td className="px-3 py-3 text-right font-mono">{priceFor(row)?.toFixed(2) ?? "-"}</td><td className="px-3 py-3 text-right font-mono">{numeric(row.model_fair_odds)?.toFixed(2) ?? "-"}</td><td className={cn("px-3 py-3 text-right font-mono", metricTone(numeric(row.edge)))}>{pct(numeric(row.edge))}</td><td className="px-3 py-3 text-right font-mono">{actualFor(model, row)}</td><td className={cn("px-3 py-3 font-semibold uppercase", resultTone(result))}>{result}<div className="mt-0.5 text-[11px] font-normal normal-case text-slate-600">{cleanText(row.signal_status).replaceAll("_", " ")}</div></td><td className={cn("px-3 py-3 text-right font-mono", resultTone(result))}>{isSettled(row) ? units(numeric(row.pnl_units)) : "-"}</td><td className={cn("px-3 py-3 text-right font-mono", metricTone(clv))}>{clv === null ? "-" : pct(clv)}</td></tr>; })}</tbody>
-              </table>
-            </div>
-          </>
-        )}
-      </div>
     </section>
   );
 }

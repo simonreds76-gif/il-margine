@@ -1,0 +1,87 @@
+{
+  "model": "team_shots_opponent",
+  "status": "ACTIVE_SHADOW",
+  "activated_at": "2026-09-12T21:09:03.018654+00:00",
+  "model_version": "opponent-shots-20260912",
+  "research_sha256": "a9e52acdefbb7df4d70ff8035021f4365f719e563b1cc9534ae909d28288337e",
+  "parameters": {
+    "beta": [
+      -0.01416028181997172,
+      0.03084896894472676,
+      0.014088423236841134,
+      0.019118048175197567,
+      0.00970736733291326,
+      -0.011304842940546646,
+      0.00493592973554538,
+      0.06486868693896265,
+      0.09614755891333865,
+      0.03084896894472676,
+      0.014088423236841134,
+      0.010989299111765603,
+      -0.009532070952727161
+    ],
+    "alpha": 0.049424235357082104,
+    "centers": [
+      -0.002713581543420043,
+      -0.00605092257508542,
+      -0.004931165833200582,
+      -0.008096300522572732,
+      -0.003961625245923732,
+      -0.004136355524083054,
+      -0.043697944087354605,
+      -0.04860752124241639,
+      -0.002713581543420043,
+      -0.00605092257508542,
+      7.677141788252899,
+      7.677141788252899
+    ],
+    "scales": [
+      0.0999570187075601,
+      0.1028427579308176,
+      0.08062763314181369,
+      0.08178527364686151,
+      0.05345103084704993,
+      0.055650874565507685,
+      0.10050790071610922,
+      0.10736161591585398,
+      0.0999570187075601,
+      0.1028427579308176,
+      3.0888376181622252,
+      3.0888376181622252
+    ],
+    "train_n": 10692,
+    "train_last": "2026-03-22"
+  },
+  "calibrator": {
+    "weight": 0.4450140339736927,
+    "intercept": 0
+  },
+  "feature_names": [
+    "attack20",
+    "opponent_concession20",
+    "venue_attack_delta",
+    "opponent_venue_concession_delta",
+    "attack_recent_delta",
+    "opponent_concession_recent_delta",
+    "opponent_adjusted_attack",
+    "opponent_adjusted_concession",
+    "shot_pressure",
+    "opponent_shot_pressure",
+    "rest_days",
+    "opponent_rest_days"
+  ],
+  "allowed_leagues": [
+    "epl",
+    "serie-a",
+    "la-liga",
+    "bundesliga",
+    "ligue-1"
+  ],
+  "minimum_edge": 0.03,
+  "max_price_age_hours": 3,
+  "max_kickoff_hours": 24,
+  "stake_units": 1,
+  "real_stake_units": 0,
+  "selection_policy": "First prospectively registered selection per fixture; immutable prices and parameters; no historical backfill",
+  "review_policy": "Review after 150 settled fixtures and at least 8 weeks; require positive ROI, at least 70% true closing coverage, positive mean CLV and calibration review. Manual promotion only."
+}

@@ -92,6 +92,8 @@ LEAGUE_ALIASES = {
 }
 
 TEAM_KEY_ALIASES = {
+    "dep a coruna": "la coruna",
+    "atl madrid": "ath madrid",
     # Exact bookmaker labels verified against the frozen form-history clubs.
     # Do not use fuzzy matching: similarly named clubs must stay separate.
     "aj auxerre": "auxerre",
@@ -314,7 +316,8 @@ def avg(values: list[float]) -> float | None:
 def build_base_indexes(rows: list[dict[str, str]]):
     by_team: dict[tuple[str, str], list[dict[str, str]]] = defaultdict(list)
     by_league: dict[str, list[dict[str, str]]] = defaultdict(list)
-    for row in rows:
+    normalized_rows = [{**row, "league": league_slug(row.get("league", ""))} for row in rows]
+    for row in FORM_BUILD.unique_team_results(normalized_rows, team_key):
         league = league_slug(row.get("league", ""))
         key = row.get("team_key") or team_key(row.get("team", ""))
         row["league"] = league

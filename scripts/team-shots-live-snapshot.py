@@ -24,6 +24,10 @@ DEFAULT_OUTPUT = ROOT / "data" / "team-shots" / "team-shots-live-snapshot.json"
 DEFAULT_SNAPSHOT_KEY = "team_shots_state"
 SNAPSHOT_TABLE = "goalscorer_live_snapshot"
 SNAPSHOT_FILES = [
+    "data/football-form/team-shots-opponent-shadow.csv",
+    "data/football-form/team-shots-opponent-candidates.csv",
+    "data/football-form/team-shots-opponent-status.json",
+
     "data/team-shots/team-shots-calibration.txt",
     "data/team-shots/team-shots-calibration-params.json",
     "data/team-shots/team-shots-calibration-diagnostics.txt",

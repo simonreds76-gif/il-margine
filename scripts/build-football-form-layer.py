@@ -31,6 +31,7 @@ if str(ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(ROOT / "scripts"))
 
 from settlement_utils import normalize_team_name  # noqa: E402
+from football_form_integrity import unique_team_results
 
 
 DEFAULT_MATCH_BASE = ROOT / "data" / "corners-ou" / "historical" / "all-historical-matches.csv"
@@ -216,7 +217,8 @@ def clean_name(value: Any) -> str:
 
 
 def team_key(value: str) -> str:
-    return normalize_team_name(value or "")
+    normalized = normalize_team_name(value or "")
+    return {"dep a coruna": "la coruna", "atl madrid": "ath madrid"}.get(normalized, normalized)
 
 
 def match_key(match_date: date, league: str, home_team: str, away_team: str) -> tuple[str, str, str, str]:
@@ -614,7 +616,7 @@ def build_rolling_rows(team_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     current_date: str | None = None
     rolling_rows: list[dict[str, Any]] = []
     sorted_rows = sorted(
-        team_rows,
+        unique_team_results(team_rows, team_key),
         key=lambda row: (
             row["date"],
             row.get("league", ""),

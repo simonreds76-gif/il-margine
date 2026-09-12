@@ -1,0 +1,68 @@
+{
+  "status": "RETROSPECTIVE_COMPARISON_ONLY",
+  "matched_contracts": 352,
+  "matched_1x2_contracts": 118,
+  "excluded": [
+    {
+      "fixture": "2026-08-23|ligue-1|paris sg|stade rennais",
+      "reason": "fixture_orientation_or_result_mismatch"
+    }
+  ],
+  "v4_parameter_freeze": "2026-07-14T12:45:52Z",
+  "limitations": [
+    "Current v4 July parameters used retrospectively; May/June comparison is not out-of-sample for v4.",
+    "History strictly before capture day for both lanes; identical paired prices and one highest-edge selection per fixture.",
+    "Missing archived 1X2 uses the actual v4 fallback, not invented prices.",
+    "Historical selections do not enter forward ROI."
+  ],
+  "phases": {
+    "may_july": {
+      "candidate": {
+        "bets": 49,
+        "wins": 34,
+        "losses": 15,
+        "pnl": 13.925,
+        "roi": 0.2841836734693878
+      },
+      "served_v4": {
+        "bets": 23,
+        "wins": 16,
+        "losses": 7,
+        "pnl": 6.691000000000001,
+        "roi": 0.2909130434782609
+      }
+    },
+    "august_september": {
+      "candidate": {
+        "bets": 48,
+        "wins": 25,
+        "losses": 23,
+        "pnl": -1.6149999999999993,
+        "roi": -0.03364583333333332
+      },
+      "served_v4": {
+        "bets": 9,
+        "wins": 5,
+        "losses": 4,
+        "pnl": 0.12700000000000022,
+        "roi": 0.014111111111111137
+      }
+    },
+    "combined": {
+      "candidate": {
+        "bets": 97,
+        "wins": 59,
+        "losses": 38,
+        "pnl": 12.310000000000002,
+        "roi": 0.12690721649484538
+      },
+      "served_v4": {
+        "bets": 32,
+        "wins": 21,
+        "losses": 11,
+        "pnl": 6.8180000000000005,
+        "roi": 0.21306250000000002
+      }
+    }
+  }
+}
