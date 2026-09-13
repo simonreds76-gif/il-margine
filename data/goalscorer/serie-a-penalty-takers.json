@@ -1181,30 +1181,30 @@
     }
   },
   "Cagliari": {
-    "primary": "Alessandro Deiola",
-    "secondary": "Jacopo Fazzini",
+    "primary": "Daniel Maldini",
+    "secondary": "Alessandro Deiola",
     "tertiary": "Yerry Mina",
-    "last_updated": "2026-08-22",
+    "last_updated": "2026-09-13",
     "source": "Il Margine multi-source research",
     "cross_check": "Il Margine roster cross-check",
-    "hierarchy_status": "confirmed",
+    "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
+      "primary": "medium",
       "secondary": "medium",
-      "tertiary": "low"
+      "tertiary": "medium"
     },
-    "condition_note": "Captain Alessandro Deiola took Cagliari's first competitive penalty of 2026/27 with Fazzini on the pitch. His first attempt was saved, but VAR ordered a retake for encroachment and he scored. Fazzini is the best current deputy; Mina remains a lower-confidence fallback.",
+    "condition_note": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
     "last_verified": {
-      "date": "2026-09-02",
-      "by": "Il Margine",
-      "method": "current_squad_membership_audit"
+      "date": "2026-09-13",
+      "by": "local_admin",
+      "method": "reviewed_manual_hierarchy_override"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-13",
     "latest_evidence": {
-      "id": "evt_20260901_cagliari_current_review",
-      "date": "2026-09-01",
+      "id": "02b247d3974b49adbc89c32aee1076ff",
+      "date": "2026-09-13",
       "type": "current_season_board_review",
-      "source_count": 2
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -1422,6 +1422,29 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+      },
+      {
+        "id": "02b247d3974b49adbc89c32aee1076ff",
+        "date": "2026-09-13",
+        "type": "current_season_board_review",
+        "headline": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
+        "editorial_note": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
+        "sources": [
+          {
+            "label": "Reviewed match context",
+            "url": "https://www.fotmob.com/matches/atalanta-vs-cagliari/2ekudg#5749670",
+            "date": "2026-09-12",
+            "note": "Hierarchy set by owner editorial instruction. This match provides review context, not independent proof of every rank."
+          }
+        ],
+        "review": {
+          "status": "approved",
+          "reviewed_by": "local_admin",
+          "reviewed_at": "2026-09-13T11:57:43+00:00"
+        },
+        "affects_hierarchy": true,
+        "detection": "local_admin",
+        "season": "2026/27"
       }
     ],
     "change_log": [
@@ -1516,6 +1539,25 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-08-22T18:30:00Z",
         "article_slug": null
+      },
+      {
+        "id": "02b247d3974b49adbc89c32aee1076ff",
+        "changed_at": "2026-09-13T11:57:43+00:00",
+        "change_type": "hierarchy_change",
+        "reason": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
+        "from": {
+          "primary": "Alessandro Deiola",
+          "secondary": "Jacopo Fazzini",
+          "tertiary": "Yerry Mina"
+        },
+        "to": {
+          "primary": "Daniel Maldini",
+          "secondary": "Alessandro Deiola",
+          "tertiary": "Yerry Mina"
+        },
+        "evidence_ids": [
+          "02b247d3974b49adbc89c32aee1076ff"
+        ]
       }
     ],
     "flags": {
@@ -1533,13 +1575,14 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Alessandro Deiola",
+        "player": "Daniel Maldini",
         "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/8529/overview/cagliari",
-        "checked_at": "2026-09-02"
+        "source_url": "https://www.fotmob.com/matches/atalanta-vs-cagliari/2ekudg#5749670",
+        "checked_at": "2026-09-13",
+        "method": "manual_editorial_attestation"
       },
       "secondary": {
-        "player": "Jacopo Fazzini",
+        "player": "Alessandro Deiola",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/8529/overview/cagliari",
         "checked_at": "2026-09-02"
@@ -1560,7 +1603,8 @@
         "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
         "https://www.legaseriea.it/en/serie-a/teams"
       ]
-    }
+    },
+    "unavailable_candidates": []
   },
   "Como": {
     "primary": "Lucas Da Cunha",
@@ -2647,30 +2691,30 @@
     }
   },
   "Genoa": {
-    "primary": "Lorenzo Colombo",
-    "secondary": "Junior Messias",
+    "primary": "Junior Messias",
+    "secondary": "Milutin Osmajic",
     "tertiary": "Vitinha",
-    "last_updated": "2026-07-30",
+    "last_updated": "2026-09-13",
     "source": "Il Margine multi-source research",
     "cross_check": "Il Margine roster cross-check",
-    "hierarchy_status": "disputed",
+    "hierarchy_status": "probable",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
-      "tertiary": "low"
+      "tertiary": "medium"
     },
-    "condition_note": "With Malinovskyi departed, Colombo converted Genoa's first current preseason penalty. Messias was the 2025/26 vice-taker when Malinovskyi was absent, and both current specialist boards rank Colombo, Messias and Vitinha in the filed order. Colombo's primary evidence is still a friendly plus specialist consensus, not a competitive like-for-like event under the final 2026/27 squad. Colombo's lead rests on a preseason penalty and specialist consensus, not a competitive like-for-like event. Conditions: A specialist signing or a departure among Colombo, Messias or Vitinha requires a reorder.",
+    "condition_note": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
     "last_verified": {
-      "date": "2026-09-02",
-      "by": "Il Margine",
-      "method": "current_squad_membership_audit"
+      "date": "2026-09-13",
+      "by": "local_admin",
+      "method": "reviewed_manual_hierarchy_override"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-13",
     "latest_evidence": {
-      "id": "evt_20260901_genoa_current_review",
-      "date": "2026-09-01",
+      "id": "33bfd58cb2c34981a86f1c63bd532510",
+      "date": "2026-09-13",
       "type": "current_season_board_review",
-      "source_count": 2
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -2856,6 +2900,29 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+      },
+      {
+        "id": "33bfd58cb2c34981a86f1c63bd532510",
+        "date": "2026-09-13",
+        "type": "current_season_board_review",
+        "headline": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
+        "editorial_note": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
+        "sources": [
+          {
+            "label": "Reviewed match context",
+            "url": "https://www.fotmob.com/matches/frosinone-vs-genoa/3ckfw9#5749672",
+            "date": "2026-09-12",
+            "note": "Hierarchy set by owner editorial instruction. This match provides review context, not independent proof of every rank."
+          }
+        ],
+        "review": {
+          "status": "approved",
+          "reviewed_by": "local_admin",
+          "reviewed_at": "2026-09-13T11:57:43+00:00"
+        },
+        "affects_hierarchy": true,
+        "detection": "local_admin",
+        "season": "2026/27"
       }
     ],
     "change_log": [
@@ -2927,11 +2994,30 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "id": "33bfd58cb2c34981a86f1c63bd532510",
+        "changed_at": "2026-09-13T11:57:43+00:00",
+        "change_type": "hierarchy_change",
+        "reason": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
+        "from": {
+          "primary": "Lorenzo Colombo",
+          "secondary": "Junior Messias",
+          "tertiary": "Vitinha"
+        },
+        "to": {
+          "primary": "Junior Messias",
+          "secondary": "Milutin Osmajic",
+          "tertiary": "Vitinha"
+        },
+        "evidence_ids": [
+          "33bfd58cb2c34981a86f1c63bd532510"
+        ]
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -2944,16 +3030,17 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Lorenzo Colombo",
+        "player": "Junior Messias",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/10233/overview/genoa",
         "checked_at": "2026-09-02"
       },
       "secondary": {
-        "player": "Junior Messias",
+        "player": "Milutin Osmajic",
         "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/10233/overview/genoa",
-        "checked_at": "2026-09-02"
+        "source_url": "https://www.fotmob.com/matches/frosinone-vs-genoa/3ckfw9#5749672",
+        "checked_at": "2026-09-13",
+        "method": "manual_editorial_attestation"
       },
       "tertiary": {
         "player": "Vitinha",
@@ -2971,7 +3058,8 @@
         "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
         "https://www.legaseriea.it/en/serie-a/teams"
       ]
-    }
+    },
+    "unavailable_candidates": []
   },
   "Inter": {
     "primary": "Hakan Çalhanoğlu",
