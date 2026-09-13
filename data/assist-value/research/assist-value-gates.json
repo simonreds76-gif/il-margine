@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-12T11:41:27Z",
+  "generated_at": "2026-09-13T12:44:29Z",
   "lane_status": "FROZEN_RESEARCH",
   "reactivation_ready": false,
   "backtest": {
@@ -116,10 +116,10 @@
     "status": "FAIL",
     "extraction_status": "FAIL",
     "operational_status": "FAIL",
-    "result_files": 95,
-    "finished_matches": 95,
-    "instrumented_finished_matches": 95,
-    "assist_complete_matches": 95,
+    "result_files": 99,
+    "finished_matches": 98,
+    "instrumented_finished_matches": 98,
+    "assist_complete_matches": 98,
     "assist_complete_rate": 1.0,
     "matched_fixtures": 0,
     "fixture_match_rate": 0.0,
@@ -143,40 +143,40 @@
   "market": {
     "status": "FAIL",
     "reason": "one_sided_margin_adjustment_needs_90_days_and_prospective_confirmation",
-    "unique_market_players": 11533,
-    "matched_participants": 1300,
+    "unique_market_players": 11649,
+    "matched_participants": 1305,
     "matched_old_shadow_signals": 0,
     "model_raw": {
-      "n": 1300,
-      "positives": 84,
-      "prevalence": 0.06461538461538462,
-      "mean_probability": 0.06562092153846147,
-      "brier": 0.05892466515445546,
-      "log_loss": 0.22858303684568293,
-      "ece": 0.009461364615384603
+      "n": 1305,
+      "positives": 85,
+      "prevalence": 0.06513409961685823,
+      "mean_probability": 0.06563421379310337,
+      "brier": 0.059388655471141055,
+      "log_loss": 0.23006273052709397,
+      "ece": 0.011885991570881225
     },
     "model_historical_calibration": {
-      "n": 1300,
-      "positives": 84,
-      "prevalence": 0.06461538461538462,
-      "mean_probability": 0.058556987444791396,
-      "brier": 0.05912634058784784,
-      "log_loss": 0.2292746746779639,
-      "ece": 0.012832107434619997
+      "n": 1305,
+      "positives": 85,
+      "prevalence": 0.06513409961685823,
+      "mean_probability": 0.05857282824138082,
+      "brier": 0.05959252582580942,
+      "log_loss": 0.23078172465135893,
+      "ece": 0.012976445393997966
     },
     "market_one_sided_implied": {
-      "n": 1300,
-      "positives": 84,
-      "prevalence": 0.06461538461538462,
-      "mean_probability": 0.14442929388025744,
-      "brier": 0.06565498574780984,
-      "log_loss": 0.2600675670010297,
-      "ece": 0.07981390926487192
+      "n": 1305,
+      "positives": 85,
+      "prevalence": 0.06513409961685823,
+      "mean_probability": 0.14442671204906302,
+      "brier": 0.06617232822938598,
+      "log_loss": 0.261753948580027,
+      "ece": 0.07929261243220384
     },
     "one_sided_margin_calibration": {
       "method": "platt_on_raw_implied_probability",
-      "a": 0.7253665461667287,
-      "b": -1.3549464794861397,
+      "a": 0.7263474573251666,
+      "b": -1.3560395348769825,
       "fit_dates": [
         "2026-05-17",
         "2026-05-18",
@@ -189,22 +189,22 @@
       ],
       "calendar_span_days": 8,
       "holdout_raw": {
-        "n": 598,
-        "positives": 37,
-        "prevalence": 0.061872909698996656,
-        "mean_probability": 0.14097766084644092,
-        "brier": 0.06038646818731211,
-        "log_loss": 0.24343995124906354,
-        "ece": 0.0791047511474438
+        "n": 601,
+        "positives": 38,
+        "prevalence": 0.0632279534109817,
+        "mean_probability": 0.141039259295262,
+        "brier": 0.061682287247248134,
+        "log_loss": 0.2475780174199765,
+        "ece": 0.0778113058842798
       },
       "holdout_adjusted": {
-        "n": 598,
-        "positives": 37,
-        "prevalence": 0.061872909698996656,
-        "mean_probability": 0.06456729063575903,
-        "brier": 0.05580483246160267,
-        "log_loss": 0.2154324002540296,
-        "ece": 0.03856643512514037
+        "n": 601,
+        "positives": 38,
+        "prevalence": 0.0632279534109817,
+        "mean_probability": 0.064421037215505,
+        "brier": 0.05710175459505985,
+        "log_loss": 0.22021845841260854,
+        "ece": 0.03830785999658
       }
     },
     "note": "The empirical margin adjustment is research-only until it spans at least 90 days and then survives prospective confirmation."
