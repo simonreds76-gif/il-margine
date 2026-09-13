@@ -279,18 +279,19 @@ export function LabHitsSection({ highlights }: { highlights: LabHighlight[] }) {
   const visibleHighlights = highlights.slice(0, 6);
 
   return (
-    <section id="lab-hits" className="mt-10">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <details id="lab-hits" className="mt-4 scroll-mt-24 rounded-2xl border border-emerald-900/60 bg-[#102725] p-5">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden focus-visible:outline-2 focus-visible:outline-emerald-300">
         <div>
           <div className="text-[11px] font-black uppercase tracking-[0.22em] text-emerald-300">
-            Lab hits
+            Recorded winning comparisons
           </div>
-          <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-50">
-            The latest winning comparisons.
+          <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-50">
+            Latest hits
           </h2>
         </div>
 
-      </div>
+        <span className="text-sm text-emerald-200">{visibleHighlights.length} winners <span aria-hidden="true">⌄</span></span>
+      </summary>
       <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-500">
         Recorded bookmaker prices above our estimated fair odds. Super Sub wins name the replacement who scored.
         Winning examples only; not the complete performance record.
@@ -301,7 +302,7 @@ export function LabHitsSection({ highlights }: { highlights: LabHighlight[] }) {
           <HitTicket key={highlight.id} highlight={highlight} />
         ))}
       </div>
-    </section>
+    </details>
   );
 }
 
