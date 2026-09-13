@@ -289,13 +289,13 @@
       "home_subs": [
         "Noah Darvich",
         "Maurice Krattenmacher",
+        "Amara Condé",
+        "Noel Futkeu",
         "Tim Boss",
         "Florian Le Joncour",
         "Luca Sirch",
         "Nicholas Mickelson",
-        "Amara Condé",
-        "Luca Schnellbacher",
-        "Noel Futkeu"
+        "Luca Schnellbacher"
       ],
       "home_substitute_entries": [
         {
@@ -306,6 +306,16 @@
         {
           "name": "Maurice Krattenmacher",
           "player_id": "1412933",
+          "role_group": "FW"
+        },
+        {
+          "name": "Amara Condé",
+          "player_id": "763990",
+          "role_group": "MID"
+        },
+        {
+          "name": "Noel Futkeu",
+          "player_id": "1138725",
           "role_group": "FW"
         },
         {
@@ -329,42 +339,47 @@
           "role_group": "DEF"
         },
         {
-          "name": "Amara Condé",
-          "player_id": "763990",
-          "role_group": "MID"
-        },
-        {
           "name": "Luca Schnellbacher",
           "player_id": "459010",
-          "role_group": "FW"
-        },
-        {
-          "name": "Noel Futkeu",
-          "player_id": "1138725",
           "role_group": "FW"
         }
       ],
       "away_subs": [
-        "Manuel Neuer",
         "Alphonso Davies",
+        "Jamal Musiala",
+        "Joshua Kimmich",
+        "Luis Díaz",
+        "Manuel Neuer",
         "Hiroki Ito",
         "Jonathan Tah",
         "Konrad Laimer",
-        "Jamal Musiala",
-        "Joshua Kimmich",
-        "Serge Gnabry",
-        "Luis Díaz"
+        "Serge Gnabry"
       ],
       "away_substitute_entries": [
-        {
-          "name": "Manuel Neuer",
-          "player_id": "27299",
-          "role_group": "GK"
-        },
         {
           "name": "Alphonso Davies",
           "player_id": "751202",
           "role_group": "DEF"
+        },
+        {
+          "name": "Jamal Musiala",
+          "player_id": "1156141",
+          "role_group": "MID"
+        },
+        {
+          "name": "Joshua Kimmich",
+          "player_id": "460632",
+          "role_group": "MID"
+        },
+        {
+          "name": "Luis Díaz",
+          "player_id": "860914",
+          "role_group": "FW"
+        },
+        {
+          "name": "Manuel Neuer",
+          "player_id": "27299",
+          "role_group": "GK"
         },
         {
           "name": "Hiroki Ito",
@@ -382,24 +397,9 @@
           "role_group": "DEF"
         },
         {
-          "name": "Jamal Musiala",
-          "player_id": "1156141",
-          "role_group": "MID"
-        },
-        {
-          "name": "Joshua Kimmich",
-          "player_id": "460632",
-          "role_group": "MID"
-        },
-        {
           "name": "Serge Gnabry",
           "player_id": "385437",
           "role_group": "MID"
-        },
-        {
-          "name": "Luis Díaz",
-          "player_id": "860914",
-          "role_group": "FW"
         }
       ],
       "home_unavailable": [
@@ -407,7 +407,7 @@
         "Tom Zimmerschied"
       ],
       "away_unavailable": [],
-      "observed_at": "2026-09-13T16:52:10.635177+00:00",
+      "observed_at": "2026-09-13T17:10:51.561745+00:00",
       "changed_at": "2026-09-13T14:39:05.898516+00:00"
     },
     {
@@ -823,7 +823,7 @@
         "Alexander Røssing",
         "Sebastiaan Bornauw"
       ],
-      "observed_at": "2026-09-13T16:52:10.635177+00:00",
+      "observed_at": "2026-09-13T17:10:51.561745+00:00",
       "changed_at": "2026-09-13T14:21:40.120684+00:00"
     }
   ]
