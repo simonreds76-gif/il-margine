@@ -277,12 +277,13 @@ export default function PlayerProps({
           </div>
 
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6">
-            Football Player <span className="text-emerald-400">Props</span>
+            Football Player Props <span className="text-emerald-400">Betting Tips</span>
           </h1>
           <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed">
-            Player props are one of the few football markets where detailed matchup work still pays. We focus on
-            shots, tackles, fouls and cards where role, volume and game state move faster than the bookmaker template,
-            and where the wrong line appears more often than it does in the main match odds.
+            Independent football player props betting tips for shots, shots on target, tackles, fouls and cards.
+            Browse Premier League, Serie A, La Liga and Champions League selections below, with the player,
+            market, bookmaker odds and stake recorded for each pick. Our focus is finding value through role,
+            likely minutes and matchup analysis; the public record keeps both winning and losing results.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-2">

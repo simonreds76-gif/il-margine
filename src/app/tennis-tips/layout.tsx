@@ -4,7 +4,7 @@ import { BreadcrumbSchema } from "@/components/BreadcrumbSchema";
 
 const title = "Tennis Betting Tips Today | ATP, Challenger & Grand Slams";
 const description =
-  "Daily tennis betting tips covering ATP, Challenger and Grand Slam matches, with analytical previews and disciplined staking.";
+  "Independent tennis betting tips with statistical match analysis. Browse ATP and Grand Slam picks, recorded odds, stakes and tracked results.";
 const url = `${BASE_URL}/tennis-tips`;
 
 export const metadata: Metadata = {
