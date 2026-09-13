@@ -467,7 +467,7 @@
         "Matteo Pessina",
         "Patrick Ciurria"
       ],
-      "observed_at": "2026-09-13T17:09:48.455320+00:00",
+      "observed_at": "2026-09-13T17:38:47.544360+00:00",
       "changed_at": "2026-09-13T16:51:22.297861+00:00"
     },
     {
@@ -759,13 +759,13 @@
       "home_subs": [
         "Costantino Favasuli",
         "Noa Lang",
+        "Lorenzo Lucca",
         "Claudio Pugliese",
         "Nikita Contini",
         "Benoît Badiashile",
         "Mathías Olivera",
         "Sam Beukema",
-        "David Neres",
-        "Lorenzo Lucca"
+        "David Neres"
       ],
       "home_substitute_entries": [
         {
@@ -776,6 +776,11 @@
         {
           "name": "Noa Lang",
           "player_id": "837341",
+          "role_group": "FW"
+        },
+        {
+          "name": "Lorenzo Lucca",
+          "player_id": "1212630",
           "role_group": "FW"
         },
         {
@@ -807,14 +812,12 @@
           "name": "David Neres",
           "player_id": "793066",
           "role_group": "MID"
-        },
-        {
-          "name": "Lorenzo Lucca",
-          "player_id": "1212630",
-          "role_group": "FW"
         }
       ],
       "away_subs": [
+        "Jens Odgaard",
+        "Marco Libra",
+        "Nikola Moro",
         "Łukasz Skorupski",
         "Matteo Franceschelli",
         "Eivind Helland",
@@ -822,13 +825,25 @@
         "Martin Vitík",
         "Nicolò Casale",
         "Rahim Alhassane",
-        "Jens Odgaard",
-        "Marco Libra",
-        "Nikola Moro",
         "Jay Enem",
         "Samuel Mbangula"
       ],
       "away_substitute_entries": [
+        {
+          "name": "Jens Odgaard",
+          "player_id": "689680",
+          "role_group": "MID"
+        },
+        {
+          "name": "Marco Libra",
+          "player_id": "2008804",
+          "role_group": "MID"
+        },
+        {
+          "name": "Nikola Moro",
+          "player_id": "641595",
+          "role_group": "MID"
+        },
         {
           "name": "Łukasz Skorupski",
           "player_id": "178732",
@@ -865,21 +880,6 @@
           "role_group": "DEF"
         },
         {
-          "name": "Jens Odgaard",
-          "player_id": "689680",
-          "role_group": "MID"
-        },
-        {
-          "name": "Marco Libra",
-          "player_id": "2008804",
-          "role_group": "MID"
-        },
-        {
-          "name": "Nikola Moro",
-          "player_id": "641595",
-          "role_group": "MID"
-        },
-        {
           "name": "Jay Enem",
           "player_id": "1344246",
           "role_group": "FW"
@@ -907,7 +907,7 @@
         "Oussama El Azzouzi",
         "Riccardo Orsolini"
       ],
-      "observed_at": "2026-09-13T17:09:48.455320+00:00",
+      "observed_at": "2026-09-13T17:38:47.544360+00:00",
       "changed_at": "2026-09-13T16:51:22.297861+00:00"
     },
     {
@@ -1218,7 +1218,7 @@
         "Weston McKennie",
         "Jeff Ekhator"
       ],
-      "observed_at": "2026-09-13T17:09:48.455320+00:00",
+      "observed_at": "2026-09-13T17:38:47.544360+00:00",
       "changed_at": "2026-09-13T12:20:34.462690+00:00"
     },
     {
@@ -1519,7 +1519,7 @@
         "Adrián Bernabé",
         "Hans Nicolussi Caviglia"
       ],
-      "observed_at": "2026-09-13T17:09:48.455320+00:00",
+      "observed_at": "2026-09-13T17:38:47.544360+00:00",
       "changed_at": "2026-09-13T12:20:34.462690+00:00"
     },
     {
@@ -1824,7 +1824,7 @@
         "Alessandro Zanoli",
         "Nicolò Zaniolo"
       ],
-      "observed_at": "2026-09-13T17:09:48.455320+00:00",
+      "observed_at": "2026-09-13T17:38:47.544360+00:00",
       "changed_at": "2026-09-13T12:20:34.462690+00:00"
     },
     {
@@ -2126,7 +2126,7 @@
       "away_unavailable": [
         "Manu Koné"
       ],
-      "observed_at": "2026-09-13T17:09:48.455320+00:00",
+      "observed_at": "2026-09-13T17:38:47.544360+00:00",
       "changed_at": "2026-09-13T12:20:34.462690+00:00"
     }
   ]
