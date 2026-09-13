@@ -4,7 +4,7 @@ import { BreadcrumbSchema } from "@/components/BreadcrumbSchema";
 
 const title = "Player Props Betting Tips | Fouls, Shots, Cards & Value Markets";
 const description =
-  "Player props betting tips covering fouls committed, fouls won, shots, shots on target, tackles, yellow cards and situational angles such as super subs.";
+  "Independent football player props tips: shots, fouls, tackles and cards. Browse match picks, recorded bookmaker odds, analysis and tracked results.";
 const url = `${BASE_URL}/player-props`;
 
 export const metadata: Metadata = {

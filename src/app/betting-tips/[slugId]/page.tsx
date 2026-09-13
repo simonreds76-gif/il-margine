@@ -10,6 +10,7 @@ import TipTeamCrest from "@/components/TipTeamCrest";
 import { BASE_URL } from "@/lib/config";
 import { formatMatchDate, formatOdds, formatStake } from "@/lib/format";
 import { fetchSeoTipFixture, type SeoTipBet } from "@/lib/tip-seo-server";
+import { buildTipPageCopy, tipSelectionLabel, priceContext, serializeTipSchema } from "@/lib/tip-page-copy";
 import { resolveTeamLogoPath } from "@/lib/team-logos";
 
 // Admin mutations explicitly invalidate betting-tip pages, so public reads can
@@ -45,10 +46,7 @@ function resultClasses(status: string): string {
   return "border-amber-400/25 bg-amber-400/10 text-amber-200";
 }
 
-function selectionLabel(bet: SeoTipBet): string {
-  const selection = bet.selection.trim().toUpperCase() === "ML" ? "Moneyline" : bet.selection;
-  return bet.player ? `${bet.player} - ${selection}` : selection;
-}
+const selectionLabel = tipSelectionLabel;
 
 function bookmakerFor(bet: SeoTipBet) {
   const value = bet.bookmaker as SeoTipBet["bookmaker"] | SeoTipBet["bookmaker"][];
@@ -82,9 +80,7 @@ function formatSeoDate(value: string): string {
 
 function previewDescription(fixture: Awaited<ReturnType<typeof fetchSeoTipFixture>>): string {
   if (!fixture) return "";
-  const selections = fixture.bets.slice(0, 3).map(selectionLabel).join(", ");
-  const suffix = fixture.bets.length > 3 ? ` and ${fixture.bets.length - 3} more` : "";
-  return `${fixture.seed.event} prediction and betting analysis for ${formatMatchDate(fixture.seed.match_date)}. Tracked selections: ${selections}${suffix}.`;
+  return buildTipPageCopy(fixture.seed, fixture.bets, formatSeoDate(fixture.seed.match_date)).metaDescription;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -133,6 +129,7 @@ export default async function BettingPreviewPage({ params }: PageProps) {
   if (`/betting-tips/${slugId}` !== fixture.canonicalPath) permanentRedirect(fixture.canonicalPath);
 
   const hub = hubFor(fixture.seed.market);
+  const copy = buildTipPageCopy(fixture.seed, fixture.bets, formatSeoDate(fixture.seed.match_date));
   const clubs = fixture.seed.market === "props"
     ? fixture.seed.event.match(/^(.+?)\s+(vs?\.?)\s+(.+)$/i)
     : null;
@@ -145,7 +142,7 @@ export default async function BettingPreviewPage({ params }: PageProps) {
   const analysisCopy = reasoning.length
     ? reasoning
     : [
-        `Il Margine logged ${fixture.bets.length} ${fixture.bets.length === 1 ? "selection" : "selections"} for ${fixture.seed.event} before the match. The ledger preserves the original pick, price, stake and bookmaker.`,
+        `Il Margine logged ${fixture.bets.length} ${fixture.bets.length === 1 ? "selection" : "selections"} for ${fixture.seed.event}. The ledger preserves the original pick, price, stake and bookmaker.`,
         "This page updates the same public record after settlement. Posted odds are not replaced with later market prices.",
       ];
   const settled = fixture.bets.filter((bet) => bet.status !== "pending");
@@ -161,6 +158,10 @@ export default async function BettingPreviewPage({ params }: PageProps) {
     image: [imageUrl],
     datePublished: fixture.datePublished,
     dateModified: fixture.dateModified,
+    url: canonicalUrl,
+    inLanguage: "en-GB",
+    author: { "@type": "Organization", name: "Il Margine", url: `${BASE_URL}/the-edge` },
+    publisher: { "@type": "Organization", name: "Il Margine", url: BASE_URL },
     mainEntityOfPage: canonicalUrl,
     // This is a betting-analysis page, not a ticketable event page. Using
     // SportsEvent here makes Google require venue, organizer and offer data.
@@ -200,8 +201,8 @@ export default async function BettingPreviewPage({ params }: PageProps) {
         category={fixture.seed.category}
         status={fixture.seed.status}
       />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeTipSchema(webPageSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeTipSchema(breadcrumbSchema) }} />
 
       <main>
         <section className="relative overflow-hidden border-b border-slate-800/80">
@@ -246,12 +247,15 @@ export default async function BettingPreviewPage({ params }: PageProps) {
               </h1>
             )}
             <p className="mt-4 max-w-3xl text-lg leading-relaxed text-slate-300">
-              Posted selections, prices and transparent settlement for this fixture.
+              {copy.introduction}
             </p>
+            <p className="mt-4 max-w-3xl text-sm leading-6 text-slate-400">{copy.statusCopy}</p>
             <div className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-xs text-slate-500">
+              <Link href="/the-edge" className="text-emerald-300 hover:underline">By Il Margine · Our methodology</Link>
               <span>
                 Published <time dateTime={fixture.datePublished} className="font-mono text-slate-300">{formatPublishedDate(fixture.datePublished)}</time>
               </span>
+              {fixture.dateModified !== fixture.datePublished ? <span>Updated <time dateTime={fixture.dateModified}>{formatPublishedDate(fixture.dateModified)}</time></span> : null}
               <span>{fixture.bets.length} tracked {fixture.bets.length === 1 ? "selection" : "selections"}</span>
               <span>Odds and stakes are recorded at publication</span>
             </div>
@@ -264,7 +268,7 @@ export default async function BettingPreviewPage({ params }: PageProps) {
               <div className="mb-5 flex items-end justify-between gap-4">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-400">Tracked ledger</p>
-                  <h2 id="selections-heading" className="mt-2 text-2xl font-bold text-white">Selections for the match</h2>
+                  <h2 id="selections-heading" className="mt-2 text-2xl font-bold text-white">{fixture.seed.market === "tennis" ? "Tennis picks" : "Player prop picks"} for {fixture.seed.event}</h2>
                 </div>
               </div>
 
@@ -277,7 +281,7 @@ export default async function BettingPreviewPage({ params }: PageProps) {
                           <span className={`rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] ${resultClasses(bet.status)}`}>
                             {resultLabel(bet.status)}
                           </span>
-                          <span className="text-xs text-slate-500">{bet.category}</span>
+                          <span className="text-xs text-slate-500">{copy.competition || bet.category}</span>
                         </div>
                         <h3 className="text-lg font-bold text-white">{selectionLabel(bet)}</h3>
                       </div>
@@ -297,6 +301,12 @@ export default async function BettingPreviewPage({ params }: PageProps) {
                       </div>
                     </div>
 
+                    {priceContext(bet.odds) ? (
+                      <details className="border-t border-slate-800 px-5 py-3 text-sm">
+                        <summary className="cursor-pointer font-medium text-slate-300 hover:text-emerald-300">What do these odds mean?</summary>
+                        <p className="mt-3 leading-6 text-slate-400">{priceContext(bet.odds)}</p>
+                      </details>
+                    ) : null}
                     {bet.status !== "pending" ? (
                       <div className="flex items-center justify-between border-t border-slate-800 px-5 py-3 text-sm">
                         <span className="text-slate-500">Settled result</span>
@@ -324,6 +334,25 @@ export default async function BettingPreviewPage({ params }: PageProps) {
               </h2>
               <div className="mt-5 space-y-5 text-base leading-8 text-slate-300">
                 {analysisCopy.map((paragraph, index) => <p key={`${index}-${paragraph.slice(0, 20)}`}>{paragraph}</p>)}
+              </div>
+            </section>
+
+            <section aria-labelledby="value-heading" className="rounded-2xl border border-slate-800 bg-slate-900/45 p-6 md:p-8">
+              <h2 id="value-heading" className="text-xl font-bold text-white">How to judge value in these odds</h2>
+              <p className="mt-4 text-sm leading-7 text-slate-300">
+                A value bet needs a credible estimate of its chance of winning that is higher than the price implies.
+                The mathematical check is probability × decimal odds − 1: a positive number indicates estimated value for a win-or-lose bet.
+                A selection is not guaranteed to win, and shorter odds do not necessarily mean better value.
+              </p>
+              <p className="mt-3 text-sm leading-7 text-slate-300">
+                These are the prices recorded when the picks were published, not a live odds feed. A lower price can remove an edge.
+                Where no fair probability is published, the recorded price alone cannot establish the size of an advantage.
+                Judge the approach over the full record, including losses and the number of settled bets.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-x-5 gap-y-3 text-sm font-semibold text-emerald-300">
+                <Link href="/the-edge" className="hover:underline">Our betting methodology</Link>
+                <Link href="/resources/how-to-read-a-tipster-track-record" className="hover:underline">How to assess a tipster record</Link>
+                <Link href="/track-record" className="hover:underline">All tracked results</Link>
               </div>
             </section>
 

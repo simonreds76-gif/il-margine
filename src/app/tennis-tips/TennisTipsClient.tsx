@@ -260,9 +260,10 @@ export default function TennisTips({
             Tennis Betting <span className="text-emerald-400">Tips</span>
           </h1>
           <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed">
-            Daily ATP, Challenger and Grand Slam picks built around price rather than noise. The aim is not to
-            pretend we can call every winner in isolation; it is to find numbers that are too big, handicaps that
-            are a touch loose, and totals that have been shaped by generic assumptions instead of the actual match.
+            Independent tennis betting tips based on statistical pricing and match analysis. Browse our
+            published ATP and Grand Slam picks, compare the recorded bookmaker odds and stakes, and follow
+            every settled result. We look for value using surface-adjusted ratings and serve and return data;
+            picks are published when a price meets our criteria, rather than to fill a daily quota.
           </p>
         </div>
       </section>

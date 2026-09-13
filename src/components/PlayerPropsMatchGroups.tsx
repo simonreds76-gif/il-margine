@@ -290,6 +290,11 @@ function MatchCard({ group, mode, open, onToggle }: { group: MatchGroup; mode: M
           <Chevron open={open} />
         </span>
       </button>
+      <div className="border-t border-slate-800/50 px-4 py-2">
+        <Link href={publicTipPath(group.bets[0])} prefetch={false} className="text-xs font-medium text-emerald-300 hover:underline">
+          {group.event}: player prop tips &amp; results →
+        </Link>
+      </div>
       {open ? (
         <div className="divide-y divide-slate-800/70 border-t border-slate-800/70">
           {group.bets.map((bet) => (
