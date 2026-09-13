@@ -349,21 +349,24 @@ def build_report(root, now):
             "default_retains_curated_hierarchies": True}}, events
 
 
-def changed_entry(entry, order, evidence, actor, reason, now, transaction_id):
+def changed_entry(entry, order, evidence, actor, reason, now, transaction_id, public_copy=None):
     updated = copy.deepcopy(entry)
     updated.update(order)
+    public_copy = public_copy or {}
+    headline = public_copy.get("headline") or (f"{order['primary']} leads the penalty order" if order['primary'] else "Penalty hierarchy updated")
+    summary = public_copy.get("summary") or "; ".join(f"{label}: {order[slot]}" for slot, label in (("primary", "First choice"), ("secondary", "Second choice"), ("tertiary", "Third choice")) if order[slot]) + "."
     date = now.date().isoformat()
     vacancy = any(not name for name in order.values())
     updated.update(last_updated=date, public_updated_at=date,
                    last_verified={"date": date, "by": actor, "method": "reviewed_live_penalty_event" if actor == "automatic_evidence_review" else "reviewed_manual_hierarchy_override"},
-                   hierarchy_status="conditional" if vacancy else "probable", condition_note=reason + (" Unfilled positions remain under review." if vacancy else ""))
+                   hierarchy_status="conditional" if vacancy else "probable", condition_note=summary + (" Unfilled positions remain under review." if vacancy else ""))
     # The existing full-season editorial review remains dated to that actual
     # review. A targeted event/override is not silently relabelled as a new audit.
     updated["confidence"] = {slot: "medium" if order[slot] else None for slot in SLOTS}
     evidence_type = "roster_integrity_review" if vacancy else "competitive_penalty_duty_review" if actor == "automatic_evidence_review" else "current_season_board_review"
     updated["latest_evidence"] = {"id": transaction_id, "date": date, "type": evidence_type, "source_count": len({source["url"] for source in evidence})}
     updated.setdefault("flags", {}).update(carryover_from_previous_season=False, weak_evidence=vacancy)
-    updated.setdefault("evidence_log", []).append({"id": transaction_id, "date": date, "type": evidence_type, "headline": reason, "editorial_note": reason,
+    updated.setdefault("evidence_log", []).append({"id": transaction_id, "date": date, "type": evidence_type, "headline": headline, "editorial_note": summary, "match": public_copy.get("match", ""),
                                                    "sources": evidence, "review": {"status": "approved", "reviewed_by": actor, "reviewed_at": now.isoformat()},
                                                    "affects_hierarchy": True, "detection": actor})
     updated.setdefault("change_log", []).append({"id": transaction_id, "changed_at": now.isoformat(), "change_type": "hierarchy_change", "reason": reason,
@@ -414,7 +417,10 @@ def apply_command(root, command, now, actor="local_admin"):
             raise ValueError("Use real player names or leave an unverified slot empty")
         if len(names) != len(set(names)) or (order["tertiary"] and not order["secondary"]) or (not order["primary"] and names):
             raise ValueError("Hierarchy names must be unique and ordered without gaps")
-        new_entry = changed_entry(entry, order, evidence, actor, reason, now, transaction_id)
+        public_copy = command.get("public_copy", {})
+        if not isinstance(public_copy, dict) or any(key not in {"headline", "summary", "match"} or not isinstance(value, str) or len(value) > {"headline": 100, "summary": 600, "match": 160}[key] for key, value in public_copy.items()):
+            raise ValueError("Public copy requires a short headline, match evidence summary and optional match label")
+        new_entry = changed_entry(entry, order, evidence, actor, reason, now, transaction_id, public_copy)
         new_entry["evidence_log"][-1]["season"] = before.get("_meta", {}).get("season", {}).get("label", "")
         previous_membership = {norm(value.get("player")): value for value in (entry.get("squad_membership") or {}).values() if isinstance(value, dict)}
         current_squad = read_json(data_dir(root) / "club-penalty-squad-audit.json", {})

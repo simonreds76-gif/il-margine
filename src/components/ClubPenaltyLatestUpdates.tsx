@@ -47,9 +47,9 @@ export default function ClubPenaltyLatestUpdates({
           <Link
             key={`${item.relativeUrl}-${item.id}`}
             href={item.relativeUrl}
-            className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-950/65 p-4 transition hover:-translate-y-0.5 hover:border-emerald-400/35 hover:bg-slate-950 sm:min-h-[17rem]"
+            className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-950/65 p-5 transition hover:-translate-y-0.5 hover:border-emerald-400/35 hover:bg-slate-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-300"
           >
-            <div className="flex items-start gap-3">
+            <div className="flex items-center gap-3">
               <ClubCrest item={item} />
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2 font-mono text-[9px] uppercase tracking-[0.14em]">
@@ -57,14 +57,18 @@ export default function ClubPenaltyLatestUpdates({
                   <span className="text-slate-600">/</span>
                   <span className="text-slate-400">{item.leagueLabel}</span>
                 </div>
-                <h3 className="mt-1.5 text-base font-semibold leading-6 text-slate-100 transition group-hover:text-emerald-200">{item.headline}</h3>
+                <p className="mt-1 text-sm font-medium text-slate-300">{item.team}</p>
               </div>
             </div>
-            {item.match ? <p className="mt-3 text-xs font-medium text-slate-300">{item.match}</p> : null}
-            <p className="mt-2 line-clamp-4 flex-1 text-sm leading-6 text-slate-300">{item.summary}</p>
-            <div className="mt-4 flex items-center justify-between gap-3 border-t border-slate-800 pt-3 text-xs sm:mt-auto">
-              <span className="truncate text-slate-500">Current first choice: <strong className="font-medium text-slate-200">{item.primary}</strong></span>
-              <span className="shrink-0 font-semibold text-emerald-300">Open club file -&gt;</span>
+            <h3 className="mt-4 min-h-12 text-balance text-lg font-semibold leading-6 tracking-tight text-slate-100 transition group-hover:text-emerald-200">{item.headline === item.fullSummary || item.headline.length > 105 ? `${item.primary} leads ${item.team}'s penalty order` : item.headline}</h3>
+            <p className="mt-3 min-h-5 text-xs font-medium leading-5 text-emerald-300/85">{item.match || "Penalty hierarchy update"}</p>
+            <p className="mt-2 pb-5 text-sm leading-6 text-slate-300">{item.summary}</p>
+            <div className="mt-auto border-t border-slate-800 pt-4 text-xs">
+              <span className="block text-[10px] uppercase tracking-[0.14em] text-slate-500">First choice</span>
+              <div className="mt-1 flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+                <strong className="text-sm font-semibold text-slate-100">{item.primary}</strong>
+                <span className="shrink-0 font-semibold text-emerald-300">View hierarchy <span aria-hidden="true">→</span></span>
+              </div>
             </div>
           </Link>
         ))}

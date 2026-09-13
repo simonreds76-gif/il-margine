@@ -18,6 +18,19 @@ NOW = datetime(2026, 9, 5, 12, tzinfo=timezone.utc)
 
 
 class ClubPenaltyHierarchyReviewTests(unittest.TestCase):
+    def test_internal_reason_is_separate_from_public_match_copy(self):
+        command = self.command(reason="Owner editorial review: internal instructions", public_copy={
+            "headline": "Third Player moves to first choice",
+            "summary": "Third Player scored with First Player on the pitch.",
+            "match": "Example FC vs Other FC",
+        })
+        M["run"](self.root, command=command, now=NOW)
+        entry = json.loads((self.data / "epl-penalty-takers.json").read_text())["Example FC"]
+        self.assertEqual(entry["evidence_log"][-1]["headline"], command["public_copy"]["headline"])
+        self.assertEqual(entry["condition_note"], command["public_copy"]["summary"])
+        self.assertNotIn("Owner", entry["evidence_log"][-1]["editorial_note"])
+        self.assertEqual(entry["change_log"][-1]["reason"], command["reason"])
+
     def test_accented_taker_honors_legacy_closed_ticket(self):
         self.events = [self.event("one", "2026-09-04", taker="Enzo Le Fée")]
         self.write_events()
