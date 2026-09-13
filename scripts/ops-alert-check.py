@@ -233,7 +233,7 @@ def build_run_url() -> str | None:
     return None
 
 
-def load_football_model_alerts(path: Path = FOOTBALL_VNEXT_GATE) -> list[str]:
+def load_football_model_alerts(path: Path = FOOTBALL_VNEXT_GATE, *, warnings: bool = False) -> list[str]:
     if not path.exists():
         return []
     try:
@@ -242,12 +242,26 @@ def load_football_model_alerts(path: Path = FOOTBALL_VNEXT_GATE) -> list[str]:
         return []
     alerts: list[str] = []
     for model, label in (("team_shots_v4", "Team Shots v4"), ("corners_v3", "Corners v3")):
-        scan = (payload.get(model) or {}).get("latest_scan") or {}
+        lane = payload.get(model) or {}
+        scan = lane.get("latest_scan") or {}
         if not scan.get("operational_alert_required"):
+            continue
+        # A frozen, unrouted research lane rejecting supplied prices needs model
+        # review, not an outage notification. Keep the diagnostic and Telegram
+        # warning; missing captures, live-lane faults and unknown alerts still fail.
+        research_warning = (
+            scan.get("operational_alert_code") == "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES"
+            and lane.get("live_routing") is False
+            and lane.get("prospective_status") == "AUTHORIZED_SHADOW"
+            and lane.get("count_gate") == "PASS"
+            and scan.get("scored_rows", 0) > 0
+        )
+        if research_warning != warnings:
             continue
         alerts.append(
             f"{label}: {scan.get('operational_alert_code') or scan.get('state') or 'UNKNOWN'} "
             f"({scan.get('scored_rows', 0)} rows / {scan.get('scored_fixtures', 0)} fixtures scored)"
+            + (f" — {scan.get('explanation', 'Selection rules require research review.')}" if research_warning else "")
         )
     return alerts
 
@@ -285,9 +299,10 @@ def render_message(
     stuck: list[dict[str, Any]],
     silent: list[dict[str, Any]],
     model_alerts: list[str] | None = None,
+    model_warnings: list[str] | None = None,
 ) -> str:
     lines: list[str] = []
-    lines.append("Ops alert check found pipeline issues.")
+    lines.append("Ops alert check found pipeline issues." if stuck or silent or model_alerts else "Ops check passed. Research model review needed.")
     lines.append(f"Stuck runs: {len(stuck)}")
     for row in stuck[:5]:
         lines.append(
@@ -310,6 +325,9 @@ def render_message(
     model_alerts = model_alerts or []
     lines.append(f"Model pipeline alerts: {len(model_alerts)}")
     lines.extend(f"- {alert}" for alert in model_alerts[:5])
+    if model_warnings:
+        lines.append(f"Research warnings (capture running; selections unchanged): {len(model_warnings)}")
+        lines.extend(f"- {warning}" for warning in model_warnings[:5])
 
     run_url = build_run_url()
     if run_url:
@@ -473,12 +491,19 @@ def main(argv: list[str] | None = None) -> int:
     silent = [row for row in silent_rows if row.get("pipeline") not in ignore_silent]
     silent = filter_schedule_aware_silent_rows(silent)
     model_alerts = load_football_model_alerts() + load_vercel_isr_policy_alerts()
+    model_warnings = load_football_model_alerts(warnings=True)
+    for warning in model_warnings:
+        print(f"::warning title=Research model review::{warning}")
+    summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary_path and model_warnings:
+        with open(summary_path, "a", encoding="utf-8") as summary:
+            summary.write("## Research model review\n\n" + "\n".join(f"- {w}" for w in model_warnings) + "\n")
 
-    if not stuck and not silent and not model_alerts:
+    if not stuck and not silent and not model_alerts and not model_warnings:
         print("OPS_ALERT_OK stuck=0 silent=0 model_alerts=0")
         return 0
 
-    message = render_message(stuck=stuck, silent=silent, model_alerts=model_alerts)
+    message = render_message(stuck=stuck, silent=silent, model_alerts=model_alerts, model_warnings=model_warnings)
     print(message)
 
     bot_token = os.environ.get("OPS_ALERT_TELEGRAM_BOT_TOKEN", "").strip()
@@ -500,7 +525,7 @@ def main(argv: list[str] | None = None) -> int:
     else:
         print("OPS_ALERT_WEBHOOK skipped missing creds")
 
-    return 1
+    return 1 if stuck or silent or model_alerts else 0
 
 
 if __name__ == "__main__":

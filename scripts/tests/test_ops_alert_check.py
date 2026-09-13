@@ -16,6 +16,29 @@ SPEC.loader.exec_module(MODULE)
 
 
 class PipelineAwareStuckTests(unittest.TestCase):
+    def test_only_healthy_unrouted_research_rule_conflict_is_warning(self) -> None:
+        lane = {"live_routing": False, "prospective_status": "AUTHORIZED_SHADOW", "count_gate": "PASS",
+                "latest_scan": {"operational_alert_required": True,
+                                "operational_alert_code": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
+                                "scored_rows": 70, "scored_fixtures": 12,
+                                "explanation": "Maximum edge 2.11%, required 3.00%."}}
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "gate.json"
+            path.write_text(json.dumps({"team_shots_v4": lane}), encoding="utf-8")
+            self.assertEqual(MODULE.load_football_model_alerts(path), [])
+            warnings = MODULE.load_football_model_alerts(path, warnings=True)
+            self.assertIn("2.11%", warnings[0])
+            for change in ({"live_routing": True}, {"count_gate": "FAIL"}, {"prospective_status": "BLOCKED"}):
+                path.write_text(json.dumps({"team_shots_v4": {**lane, **change}}), encoding="utf-8")
+                self.assertEqual(len(MODULE.load_football_model_alerts(path)), 1)
+                self.assertEqual(MODULE.load_football_model_alerts(path, warnings=True), [])
+
+    def test_warning_only_message_does_not_claim_pipeline_failure(self) -> None:
+        message = MODULE.render_message(stuck=[], silent=[], model_warnings=["Review frozen selection rules"])
+        self.assertIn("Ops check passed", message)
+        self.assertIn("Review frozen selection rules", message)
+        self.assertNotIn("found pipeline issues", message)
+
     def test_daily_run_below_ninety_minutes_is_not_stuck(self) -> None:
         rows = [{"pipeline": "oncourt-daily", "age_seconds": 22.2 * 60}]
         self.assertEqual(MODULE.filter_pipeline_aware_stuck_rows(rows), [])
