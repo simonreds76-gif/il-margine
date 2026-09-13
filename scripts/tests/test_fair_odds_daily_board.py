@@ -7,8 +7,24 @@ from pathlib import Path
 from datetime import datetime, timezone, timedelta
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from fair_odds_board import build_board, fingerprint, has_new_confirmed, retain_prematch_forecasts
+from goalscorer_penalty_utils import best_name_match
 
 class DailyBoardTests(unittest.TestCase):
+    def test_verified_willock_alias_matches_but_does_not_match_his_brother(self):
+        self.assertEqual(best_name_match('Joseph Willock', ['Joe Willock', 'Chris Willock']), 'Joe Willock')
+        self.assertIsNone(best_name_match('Joseph Willock', ['Chris Willock']))
+
+    def test_forecast_and_quote_alias_stay_scoped_to_fixture_and_team(self):
+        self.fixture['home_players'][1] = 'Joseph Willock'
+        self.fixture['home_starters'][1]['name'] = 'Joseph Willock'
+        self.model.update(player_name='Joe Willock',lineup_fingerprint=fingerprint(self.fixture))
+        self.quote.update(player_name='Joe Willock')
+        player = self.board()['teams'][0]['players'][1]
+        self.assertIsNotNone(player['fairOdds'])
+        self.assertEqual(player['bookmakerOdds'], 4)
+        self.model['player_team'] = 'Away'
+        self.assertIsNone(self.board()['teams'][0]['players'][1]['fairOdds'])
+
     def test_later_runs_keep_authentic_prematch_prices_not_postmatch_recalculations(self):
         previous = dict(self.model)
         later = {**previous, 'generated_at': '2026-09-08T19:01:00Z', 'probability': .9}

@@ -17,6 +17,9 @@ HIERARCHY_SLOTS = ("primary", "secondary", "tertiary")
 KNOWN_GIVEN_NAME_EQUIVALENTS = {
     frozenset(("tasos", "anastasios")),
 }
+# Same Newcastle #28 in UEFA's squad list (Joe) and disciplinary list (Joseph).
+# Full-name alias only: never conflate Chris Willock or unrelated given names.
+KNOWN_PLAYER_NAME_EQUIVALENTS = {frozenset(("joe willock", "joseph willock"))}
 
 
 def norm_text(value: str) -> str:
@@ -36,6 +39,8 @@ def player_match_score(left: str, right: str) -> int:
         return 0
     if left_key == right_key:
         return 100
+    if frozenset((left_key, right_key)) in KNOWN_PLAYER_NAME_EQUIVALENTS:
+        return 96
 
     left_tokens = left_key.split()
     right_tokens = right_key.split()

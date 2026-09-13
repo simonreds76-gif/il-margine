@@ -181,6 +181,11 @@ def build_board(root=ROOT, now=None):
                     name=e.get('name','')
                     key=price_key(dict(f,player_team=team,player_name=name))
                     model=forecasts.get(key,{})
+                    if not model:
+                        team_models=[v for k,v in forecasts.items() if k[:-1]==key[:-1]]
+                        matched_model=best_name_match(name,[v.get('player_name','') for v in team_models], minimum_score=94)
+                        matches=[v for v in team_models if matched_model and v.get('player_name')==matched_model]
+                        model=matches[0] if len(matches)==1 else {}
                     quote=fixture_quotes.get(key,{})
                     if not quote:
                         same_team={k[-1]:v for k,v in fixture_quotes.items() if k[:-1]==key[:-1]}
