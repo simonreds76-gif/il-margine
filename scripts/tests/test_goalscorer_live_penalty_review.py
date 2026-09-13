@@ -3,12 +3,15 @@ from __future__ import annotations
 import importlib.util
 import json
 import runpy
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 
 
 MODULE_PATH = Path(__file__).resolve().parents[1] / "goalscorer-live-penalty-review.py"
+if str(MODULE_PATH.parent) not in sys.path:
+    sys.path.insert(0, str(MODULE_PATH.parent))
 SPEC = importlib.util.spec_from_file_location("goalscorer_live_penalty_review", MODULE_PATH)
 assert SPEC and SPEC.loader
 MODULE = importlib.util.module_from_spec(SPEC)
@@ -20,6 +23,16 @@ PENALTY_REVIEW = runpy.run_path(
 
 
 class GoalscorerLivePenaltyReviewTests(unittest.TestCase):
+    def test_full_player_name_matches_across_accents_and_special_letters(self):
+        for display, feed in [("Martin Odegaard", "Martin Ødegaard"), ("Enzo Le Fee", "Enzo Le Fée"), ("Lukasz Skorupski", "Łukasz Skorupski"), ("Milutin Osmajic", "Milutin Osmajić")]:
+            with self.subTest(display=display):
+                lineup = self.lineup()
+                lineup["starters"][0]["name"] = feed
+                self.assertTrue(MODULE._on_pitch_at(lineup, display, 30)[0])
+        lineup = self.lineup()
+        lineup["starters"][0]["name"] = "Martin Ødegaard"
+        self.assertIsNone(MODULE._on_pitch_at(lineup, "Thomas Odegaard", 30)[0])
+
     def lineup(self, substitutions=None, events=None):
         primary = {"id": 1, "name": "First Player", "performance": {"substitutionEvents": substitutions or [], "events": events or []}}
         return {"starters": [primary] + [{"id": i, "name": f"Other {i}"} for i in range(2, 12)], "subs": [], "unavailable": []}

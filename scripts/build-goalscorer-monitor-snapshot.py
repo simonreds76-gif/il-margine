@@ -15,6 +15,7 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 from goalscorer_penalty_utils import player_match_score as shared_player_match_score
+from goalscorer_penalty_utils import norm_text as normalized_player_name
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -328,7 +329,8 @@ def team_key(value: Any) -> str:
 
 
 def person_key(value: Any) -> str:
-    return norm_text(value)
+    # Player identity is accent-insensitive; keep legacy ticket/team keys stable.
+    return normalized_player_name(decode_html_value(value))
 
 
 def taker_key(value: Any) -> str:

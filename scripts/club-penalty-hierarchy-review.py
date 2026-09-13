@@ -22,6 +22,7 @@ from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlparse
+from goalscorer_penalty_utils import norm_text as normalized_player_name
 
 ROOT = Path(__file__).resolve().parents[1]
 LEAGUES = ("epl", "la-liga", "serie-a", "bundesliga", "ligue-1")
@@ -47,8 +48,7 @@ def timestamp(value):
 
 
 def norm(value):
-    text = unicodedata.normalize("NFKD", str(value or ""))
-    return re.sub(r"[^a-z0-9]+", " ", "".join(c for c in text if not unicodedata.combining(c)).lower()).strip()
+    return normalized_player_name(str(value or ""))
 
 
 def digest(value):
@@ -234,13 +234,17 @@ def collect_evidence(root, now):
         except ValueError:
             continue
         if 0 <= age <= EVENT_DAYS:
+            # Older monitor IDs dropped accented characters instead of folding
+            # them. Honor those saved decisions without changing durable IDs.
+            legacy_taker = re.sub(r"[^a-z0-9]+", " ", str(item.get("taker") or "").lower().encode("ascii", "ignore").decode()).strip()
+            taker_keys = {(norm(item.get("taker")).split() or [""])[-1], (legacy_taker.split() or [""])[-1]}
             # Legacy review IDs use surnames and several historical team aliases.
             # An ambiguous matching editorial decision blocks automation; it does
             # not authorize a different club/player assignment.
             decisions = [{"id": key, "status": decision.get("status")} for key, decision in resolutions.items()
                          if len(key.split("|")) == 5 and key.split("|")[0] == item.get("event_date")
                          and key.split("|")[1] == item.get("league")
-                         and norm(key.split("|")[4]) == (norm(item.get("taker")).split() or [""])[-1]
+                         and norm(key.split("|")[4]) in taker_keys
                          and decision.get("status") not in (None, "active")]
             item["manual_ticket_decisions"] = decisions
             retained.append(item)

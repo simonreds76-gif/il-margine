@@ -1,0 +1,875 @@
+{
+  "schema_version": 1,
+  "status": "committed",
+  "id": "02b247d3974b49adbc89c32aee1076ff",
+  "league": "serie-a",
+  "audit": {
+    "id": "02b247d3974b49adbc89c32aee1076ff",
+    "at": "2026-09-13T11:57:43+00:00",
+    "actor": "local_admin",
+    "action": "override",
+    "club_id": "serie-a|Cagliari",
+    "reason": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
+    "before_entry": {
+      "primary": "Alessandro Deiola",
+      "secondary": "Jacopo Fazzini",
+      "tertiary": "Yerry Mina",
+      "last_updated": "2026-08-22",
+      "source": "Il Margine multi-source research",
+      "cross_check": "Il Margine roster cross-check",
+      "hierarchy_status": "confirmed",
+      "confidence": {
+        "primary": "high",
+        "secondary": "medium",
+        "tertiary": "low"
+      },
+      "condition_note": "Captain Alessandro Deiola took Cagliari's first competitive penalty of 2026/27 with Fazzini on the pitch. His first attempt was saved, but VAR ordered a retake for encroachment and he scored. Fazzini is the best current deputy; Mina remains a lower-confidence fallback.",
+      "last_verified": {
+        "date": "2026-09-02",
+        "by": "Il Margine",
+        "method": "current_squad_membership_audit"
+      },
+      "public_updated_at": "2026-09-02",
+      "latest_evidence": {
+        "id": "evt_20260901_cagliari_current_review",
+        "date": "2026-09-01",
+        "type": "current_season_board_review",
+        "source_count": 2
+      },
+      "evidence_log": [
+        {
+          "id": "evt_20260710_cagliari_rollover",
+          "date": "2026-07-10",
+          "season": "2026/27",
+          "type": "editorial_note",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": null,
+          "sources": [],
+          "detection": "manual",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-10T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+        },
+        {
+          "id": "evt_20260727_cagliari_research",
+          "date": "2026-07-27",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Esposito converted Cagliari's penalty against Sassuolo; the match report lists Mina in the starting side. Names Esposito first, with Mina and Borrelli as alternatives. Ranks Esposito, Borrelli and Mina.",
+          "sources": [
+            {
+              "label": "Cagliari Calcio",
+              "url": "https://cagliaricalcio.com/news/match-report-sassuolo-cagliari-2-1/",
+              "date": "2026-04-04",
+              "note": "Esposito converted Cagliari's penalty against Sassuolo; the match report lists Mina in the starting side."
+            },
+            {
+              "label": "SOS Fanta",
+              "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+              "date": "2026-07-24",
+              "note": "Names Esposito first, with Mina and Borrelli as alternatives."
+            },
+            {
+              "label": "Goal Italia",
+              "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+              "date": "2026-07-23",
+              "note": "Ranks Esposito, Borrelli and Mina."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-27T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260728_cagliari_research",
+          "date": "2026-07-28",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Esposito converted a competitive penalty while Mina was playing and has the strongest career record in the current squad. Goal ranks Borrelli second and Mina third; SOS Fanta treats both as alternatives but notes Borrelli's 2/2 record against Mina's 1/2 at Cagliari.",
+          "sources": [
+            {
+              "label": "Cagliari Calcio",
+              "url": "https://cagliaricalcio.com/news/match-report-sassuolo-cagliari-2-1/",
+              "date": "2026-04-04",
+              "note": "Esposito converted Cagliari's penalty while Mina was in the starting side."
+            },
+            {
+              "label": "Fantacalcio",
+              "url": "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+              "date": "2026-04-25",
+              "note": "Records Esposito as one of Cagliari's two season takers and notes that the two takers had not appeared together."
+            },
+            {
+              "label": "SOS Fanta",
+              "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+              "date": "2026-07-27",
+              "note": "Names Esposito first and Borrelli and Mina as the principal alternatives."
+            },
+            {
+              "label": "Goal Italia",
+              "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+              "date": "2026-07-23",
+              "note": "Ranks Esposito, Borrelli and Mina in the filed order."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-28T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260730_cagliari_research",
+          "date": "2026-07-30",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Esposito converted a competitive penalty while Mina was playing and has the strongest career record in the current squad. Goal ranks Borrelli second and Mina third; SOS Fanta treats both as alternatives but notes Borrelli's 2/2 record against Mina's 1/2 at Cagliari. The secondary order is inferred because Borrelli and Esposito have not been tested together on a current competitive penalty.",
+          "sources": [
+            {
+              "label": "Il Margine source review",
+              "url": "https://cagliaricalcio.com/news/match-report-sassuolo-cagliari-2-1/",
+              "date": "2026-04-04",
+              "note": "Cagliari Calcio"
+            },
+            {
+              "label": "Il Margine source review",
+              "url": "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+              "date": "2026-04-25",
+              "note": "Fantacalcio"
+            },
+            {
+              "label": "Il Margine source review",
+              "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+              "date": "2026-07-29",
+              "note": "SOS Fanta"
+            },
+            {
+              "label": "Il Margine source review",
+              "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+              "date": "2026-07-23",
+              "note": "Goal Italia"
+            },
+            {
+              "label": "Il Margine source review",
+              "url": "https://app.cagliaricalcio.com/contents/precampionato-202627-al-via-il-raduno-wdce4vd48w7",
+              "date": "2026-07-30",
+              "note": "Official squad membership check"
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-30T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260822_cagliari_deiola_assignment",
+          "date": "2026-08-22",
+          "season": "2026/27",
+          "type": "competitive_penalty_assignment",
+          "penalty_kind": "regular_time",
+          "competition": "Coppa Italia",
+          "match": "Cagliari 1-0 Arezzo",
+          "context": "Deiola took the penalty at 19 minutes and scored the ordered retake at 22. Fazzini started and remained on the pitch until 66 minutes.",
+          "sources": [
+            {
+              "label": "Official Cagliari match report",
+              "url": "https://cagliaricalcio.com/news/match-report-cagliari-arezzo-1-0/",
+              "date": "2026-08-22",
+              "note": "Official penalty, retake and lineup details."
+            },
+            {
+              "label": "Sky Sport starting lineups",
+              "url": "https://sport.sky.it/calcio/coppa-italia/partite/2026/giornata-2/cagliari-arezzo/formazioni",
+              "date": "2026-08-22",
+              "note": "Independent lineup cross-check."
+            }
+          ],
+          "detection": "manual_current_season_review",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-08-22T18:30:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Captain Alessandro Deiola took Cagliari's first competitive penalty of 2026/27 with Fazzini on the pitch. His first attempt was saved, but VAR ordered a retake for encroachment and he scored. Fazzini is the best current deputy; Mina remains a lower-confidence fallback."
+        },
+        {
+          "id": "evt_20260901_cagliari_current_review",
+          "date": "2026-09-01",
+          "season": "2026/27",
+          "type": "current_season_board_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "headline": "Cagliari hierarchy rechecked",
+          "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+          "sources": [
+            {
+              "label": "GOAL Italia 2026/27 rigoristi board",
+              "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+              "date": "2026-08-29",
+              "note": "Current all-club order reflecting late-August transfers and role changes."
+            },
+            {
+              "label": "Lega Serie A current squads",
+              "url": "https://www.legaseriea.it/en/serie-a/teams",
+              "date": "2026-09-01",
+              "note": "Current league squad directory used to reject departed candidates."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-01T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+        }
+      ],
+      "change_log": [
+        {
+          "changed_at": "2026-07-10",
+          "season": "2026/27",
+          "change_type": "season_rollover",
+          "from": {
+            "primary": "Yerry Mina",
+            "secondary": "Sebastiano Esposito",
+            "tertiary": "Gianluca Gaetano"
+          },
+          "to": {
+            "primary": "Yerry Mina",
+            "secondary": "Sebastiano Esposito",
+            "tertiary": "Gianluca Gaetano"
+          },
+          "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+          "evidence_ids": [
+            "evt_20260710_cagliari_rollover"
+          ],
+          "detection": "manual",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-10T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-28",
+          "season": "2026/27",
+          "change_type": "preseason_reverification",
+          "from": {
+            "primary": "Sebastiano Esposito",
+            "secondary": "Gennaro Borrelli",
+            "tertiary": "Yerry Mina"
+          },
+          "to": {
+            "primary": "Sebastiano Esposito",
+            "secondary": "Gennaro Borrelli",
+            "tertiary": "Yerry Mina"
+          },
+          "reason": "Esposito converted a competitive penalty while Mina was playing and has the strongest career record in the current squad. Goal ranks Borrelli second and Mina third; SOS Fanta treats both as alternatives but notes Borrelli's 2/2 record against Mina's 1/2 at Cagliari. The secondary order is inferred because Borrelli and Esposito have not been tested together on a current competitive penalty. Conditions: Cagliari is expected to add an attacker; an incoming proven penalty taker could enter above Borrelli and Mina.",
+          "evidence_ids": [
+            "evt_20260728_cagliari_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-28T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-30",
+          "season": "2026/27",
+          "change_type": "preseason_reverification",
+          "from": {
+            "primary": "Sebastiano Esposito",
+            "secondary": "Gennaro Borrelli",
+            "tertiary": "Yerry Mina"
+          },
+          "to": {
+            "primary": "Sebastiano Esposito",
+            "secondary": "Gennaro Borrelli",
+            "tertiary": "Yerry Mina"
+          },
+          "reason": "Esposito converted a competitive penalty while Mina was playing and has the strongest career record in the current squad. Goal ranks Borrelli second and Mina third; SOS Fanta treats both as alternatives but notes Borrelli's 2/2 record against Mina's 1/2 at Cagliari. The secondary order is inferred because Borrelli and Esposito have not been tested together on a current competitive penalty. Borrelli and Esposito have not yet been tested together on a current competitive penalty. Conditions: Cagliari is expected to add an attacker; an incoming proven penalty taker could enter above Borrelli and Mina.",
+          "evidence_ids": [
+            "evt_20260730_cagliari_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-30T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-08-22",
+          "season": "2026/27",
+          "change_type": "current_season_evidence_update",
+          "from": {
+            "primary": "Sebastiano Esposito",
+            "secondary": "Gennaro Borrelli",
+            "tertiary": "Yerry Mina"
+          },
+          "to": {
+            "primary": "Alessandro Deiola",
+            "secondary": "Jacopo Fazzini",
+            "tertiary": "Yerry Mina"
+          },
+          "reason": "Captain Alessandro Deiola took Cagliari's first competitive penalty of 2026/27 with Fazzini on the pitch. His first attempt was saved, but VAR ordered a retake for encroachment and he scored. Fazzini is the best current deputy; Mina remains a lower-confidence fallback.",
+          "evidence_ids": [
+            "evt_20260822_cagliari_deiola_assignment"
+          ],
+          "detection": "manual_current_season_review",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-08-22T18:30:00Z",
+          "article_slug": null
+        }
+      ],
+      "flags": {
+        "carryover_from_previous_season": false,
+        "weak_evidence": false,
+        "stale_override": null
+      },
+      "prior_season": {
+        "label": "2025/26",
+        "primary": "Yerry Mina",
+        "secondary": "Sebastiano Esposito",
+        "tertiary": "Gianluca Gaetano",
+        "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+      },
+      "player_ids": {},
+      "squad_membership": {
+        "primary": {
+          "player": "Alessandro Deiola",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/8529/overview/cagliari",
+          "checked_at": "2026-09-02"
+        },
+        "secondary": {
+          "player": "Jacopo Fazzini",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/8529/overview/cagliari",
+          "checked_at": "2026-09-02"
+        },
+        "tertiary": {
+          "player": "Yerry Mina",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/8529/overview/cagliari",
+          "checked_at": "2026-09-02"
+        }
+      },
+      "last_reviewed": {
+        "date": "2026-09-01",
+        "by": "Il Margine",
+        "method": "current_season_multi_source_review",
+        "outcome": "order_unchanged",
+        "sources": [
+          "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+          "https://www.legaseriea.it/en/serie-a/teams"
+        ]
+      }
+    },
+    "after_entry": {
+      "primary": "Daniel Maldini",
+      "secondary": "Alessandro Deiola",
+      "tertiary": "Yerry Mina",
+      "last_updated": "2026-09-13",
+      "source": "Il Margine multi-source research",
+      "cross_check": "Il Margine roster cross-check",
+      "hierarchy_status": "probable",
+      "confidence": {
+        "primary": "medium",
+        "secondary": "medium",
+        "tertiary": "medium"
+      },
+      "condition_note": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
+      "last_verified": {
+        "date": "2026-09-13",
+        "by": "local_admin",
+        "method": "reviewed_manual_hierarchy_override"
+      },
+      "public_updated_at": "2026-09-13",
+      "latest_evidence": {
+        "id": "02b247d3974b49adbc89c32aee1076ff",
+        "date": "2026-09-13",
+        "type": "current_season_board_review",
+        "source_count": 1
+      },
+      "evidence_log": [
+        {
+          "id": "evt_20260710_cagliari_rollover",
+          "date": "2026-07-10",
+          "season": "2026/27",
+          "type": "editorial_note",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": null,
+          "sources": [],
+          "detection": "manual",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-10T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+        },
+        {
+          "id": "evt_20260727_cagliari_research",
+          "date": "2026-07-27",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Esposito converted Cagliari's penalty against Sassuolo; the match report lists Mina in the starting side. Names Esposito first, with Mina and Borrelli as alternatives. Ranks Esposito, Borrelli and Mina.",
+          "sources": [
+            {
+              "label": "Cagliari Calcio",
+              "url": "https://cagliaricalcio.com/news/match-report-sassuolo-cagliari-2-1/",
+              "date": "2026-04-04",
+              "note": "Esposito converted Cagliari's penalty against Sassuolo; the match report lists Mina in the starting side."
+            },
+            {
+              "label": "SOS Fanta",
+              "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+              "date": "2026-07-24",
+              "note": "Names Esposito first, with Mina and Borrelli as alternatives."
+            },
+            {
+              "label": "Goal Italia",
+              "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+              "date": "2026-07-23",
+              "note": "Ranks Esposito, Borrelli and Mina."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-27T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260728_cagliari_research",
+          "date": "2026-07-28",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Esposito converted a competitive penalty while Mina was playing and has the strongest career record in the current squad. Goal ranks Borrelli second and Mina third; SOS Fanta treats both as alternatives but notes Borrelli's 2/2 record against Mina's 1/2 at Cagliari.",
+          "sources": [
+            {
+              "label": "Cagliari Calcio",
+              "url": "https://cagliaricalcio.com/news/match-report-sassuolo-cagliari-2-1/",
+              "date": "2026-04-04",
+              "note": "Esposito converted Cagliari's penalty while Mina was in the starting side."
+            },
+            {
+              "label": "Fantacalcio",
+              "url": "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+              "date": "2026-04-25",
+              "note": "Records Esposito as one of Cagliari's two season takers and notes that the two takers had not appeared together."
+            },
+            {
+              "label": "SOS Fanta",
+              "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+              "date": "2026-07-27",
+              "note": "Names Esposito first and Borrelli and Mina as the principal alternatives."
+            },
+            {
+              "label": "Goal Italia",
+              "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+              "date": "2026-07-23",
+              "note": "Ranks Esposito, Borrelli and Mina in the filed order."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-28T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260730_cagliari_research",
+          "date": "2026-07-30",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Esposito converted a competitive penalty while Mina was playing and has the strongest career record in the current squad. Goal ranks Borrelli second and Mina third; SOS Fanta treats both as alternatives but notes Borrelli's 2/2 record against Mina's 1/2 at Cagliari. The secondary order is inferred because Borrelli and Esposito have not been tested together on a current competitive penalty.",
+          "sources": [
+            {
+              "label": "Il Margine source review",
+              "url": "https://cagliaricalcio.com/news/match-report-sassuolo-cagliari-2-1/",
+              "date": "2026-04-04",
+              "note": "Cagliari Calcio"
+            },
+            {
+              "label": "Il Margine source review",
+              "url": "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+              "date": "2026-04-25",
+              "note": "Fantacalcio"
+            },
+            {
+              "label": "Il Margine source review",
+              "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+              "date": "2026-07-29",
+              "note": "SOS Fanta"
+            },
+            {
+              "label": "Il Margine source review",
+              "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+              "date": "2026-07-23",
+              "note": "Goal Italia"
+            },
+            {
+              "label": "Il Margine source review",
+              "url": "https://app.cagliaricalcio.com/contents/precampionato-202627-al-via-il-raduno-wdce4vd48w7",
+              "date": "2026-07-30",
+              "note": "Official squad membership check"
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-30T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260822_cagliari_deiola_assignment",
+          "date": "2026-08-22",
+          "season": "2026/27",
+          "type": "competitive_penalty_assignment",
+          "penalty_kind": "regular_time",
+          "competition": "Coppa Italia",
+          "match": "Cagliari 1-0 Arezzo",
+          "context": "Deiola took the penalty at 19 minutes and scored the ordered retake at 22. Fazzini started and remained on the pitch until 66 minutes.",
+          "sources": [
+            {
+              "label": "Official Cagliari match report",
+              "url": "https://cagliaricalcio.com/news/match-report-cagliari-arezzo-1-0/",
+              "date": "2026-08-22",
+              "note": "Official penalty, retake and lineup details."
+            },
+            {
+              "label": "Sky Sport starting lineups",
+              "url": "https://sport.sky.it/calcio/coppa-italia/partite/2026/giornata-2/cagliari-arezzo/formazioni",
+              "date": "2026-08-22",
+              "note": "Independent lineup cross-check."
+            }
+          ],
+          "detection": "manual_current_season_review",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-08-22T18:30:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Captain Alessandro Deiola took Cagliari's first competitive penalty of 2026/27 with Fazzini on the pitch. His first attempt was saved, but VAR ordered a retake for encroachment and he scored. Fazzini is the best current deputy; Mina remains a lower-confidence fallback."
+        },
+        {
+          "id": "evt_20260901_cagliari_current_review",
+          "date": "2026-09-01",
+          "season": "2026/27",
+          "type": "current_season_board_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "headline": "Cagliari hierarchy rechecked",
+          "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+          "sources": [
+            {
+              "label": "GOAL Italia 2026/27 rigoristi board",
+              "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+              "date": "2026-08-29",
+              "note": "Current all-club order reflecting late-August transfers and role changes."
+            },
+            {
+              "label": "Lega Serie A current squads",
+              "url": "https://www.legaseriea.it/en/serie-a/teams",
+              "date": "2026-09-01",
+              "note": "Current league squad directory used to reject departed candidates."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-01T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+        },
+        {
+          "id": "02b247d3974b49adbc89c32aee1076ff",
+          "date": "2026-09-13",
+          "type": "current_season_board_review",
+          "headline": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
+          "editorial_note": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
+          "sources": [
+            {
+              "label": "Reviewed match context",
+              "url": "https://www.fotmob.com/matches/atalanta-vs-cagliari/2ekudg#5749670",
+              "date": "2026-09-12",
+              "note": "Hierarchy set by owner editorial instruction. This match provides review context, not independent proof of every rank."
+            }
+          ],
+          "review": {
+            "status": "approved",
+            "reviewed_by": "local_admin",
+            "reviewed_at": "2026-09-13T11:57:43+00:00"
+          },
+          "affects_hierarchy": true,
+          "detection": "local_admin",
+          "season": "2026/27"
+        }
+      ],
+      "change_log": [
+        {
+          "changed_at": "2026-07-10",
+          "season": "2026/27",
+          "change_type": "season_rollover",
+          "from": {
+            "primary": "Yerry Mina",
+            "secondary": "Sebastiano Esposito",
+            "tertiary": "Gianluca Gaetano"
+          },
+          "to": {
+            "primary": "Yerry Mina",
+            "secondary": "Sebastiano Esposito",
+            "tertiary": "Gianluca Gaetano"
+          },
+          "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+          "evidence_ids": [
+            "evt_20260710_cagliari_rollover"
+          ],
+          "detection": "manual",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-10T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-28",
+          "season": "2026/27",
+          "change_type": "preseason_reverification",
+          "from": {
+            "primary": "Sebastiano Esposito",
+            "secondary": "Gennaro Borrelli",
+            "tertiary": "Yerry Mina"
+          },
+          "to": {
+            "primary": "Sebastiano Esposito",
+            "secondary": "Gennaro Borrelli",
+            "tertiary": "Yerry Mina"
+          },
+          "reason": "Esposito converted a competitive penalty while Mina was playing and has the strongest career record in the current squad. Goal ranks Borrelli second and Mina third; SOS Fanta treats both as alternatives but notes Borrelli's 2/2 record against Mina's 1/2 at Cagliari. The secondary order is inferred because Borrelli and Esposito have not been tested together on a current competitive penalty. Conditions: Cagliari is expected to add an attacker; an incoming proven penalty taker could enter above Borrelli and Mina.",
+          "evidence_ids": [
+            "evt_20260728_cagliari_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-28T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-30",
+          "season": "2026/27",
+          "change_type": "preseason_reverification",
+          "from": {
+            "primary": "Sebastiano Esposito",
+            "secondary": "Gennaro Borrelli",
+            "tertiary": "Yerry Mina"
+          },
+          "to": {
+            "primary": "Sebastiano Esposito",
+            "secondary": "Gennaro Borrelli",
+            "tertiary": "Yerry Mina"
+          },
+          "reason": "Esposito converted a competitive penalty while Mina was playing and has the strongest career record in the current squad. Goal ranks Borrelli second and Mina third; SOS Fanta treats both as alternatives but notes Borrelli's 2/2 record against Mina's 1/2 at Cagliari. The secondary order is inferred because Borrelli and Esposito have not been tested together on a current competitive penalty. Borrelli and Esposito have not yet been tested together on a current competitive penalty. Conditions: Cagliari is expected to add an attacker; an incoming proven penalty taker could enter above Borrelli and Mina.",
+          "evidence_ids": [
+            "evt_20260730_cagliari_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-30T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-08-22",
+          "season": "2026/27",
+          "change_type": "current_season_evidence_update",
+          "from": {
+            "primary": "Sebastiano Esposito",
+            "secondary": "Gennaro Borrelli",
+            "tertiary": "Yerry Mina"
+          },
+          "to": {
+            "primary": "Alessandro Deiola",
+            "secondary": "Jacopo Fazzini",
+            "tertiary": "Yerry Mina"
+          },
+          "reason": "Captain Alessandro Deiola took Cagliari's first competitive penalty of 2026/27 with Fazzini on the pitch. His first attempt was saved, but VAR ordered a retake for encroachment and he scored. Fazzini is the best current deputy; Mina remains a lower-confidence fallback.",
+          "evidence_ids": [
+            "evt_20260822_cagliari_deiola_assignment"
+          ],
+          "detection": "manual_current_season_review",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-08-22T18:30:00Z",
+          "article_slug": null
+        },
+        {
+          "id": "02b247d3974b49adbc89c32aee1076ff",
+          "changed_at": "2026-09-13T11:57:43+00:00",
+          "change_type": "hierarchy_change",
+          "reason": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
+          "from": {
+            "primary": "Alessandro Deiola",
+            "secondary": "Jacopo Fazzini",
+            "tertiary": "Yerry Mina"
+          },
+          "to": {
+            "primary": "Daniel Maldini",
+            "secondary": "Alessandro Deiola",
+            "tertiary": "Yerry Mina"
+          },
+          "evidence_ids": [
+            "02b247d3974b49adbc89c32aee1076ff"
+          ]
+        }
+      ],
+      "flags": {
+        "carryover_from_previous_season": false,
+        "weak_evidence": false,
+        "stale_override": null
+      },
+      "prior_season": {
+        "label": "2025/26",
+        "primary": "Yerry Mina",
+        "secondary": "Sebastiano Esposito",
+        "tertiary": "Gianluca Gaetano",
+        "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+      },
+      "player_ids": {},
+      "squad_membership": {
+        "primary": {
+          "player": "Daniel Maldini",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/matches/atalanta-vs-cagliari/2ekudg#5749670",
+          "checked_at": "2026-09-13",
+          "method": "manual_editorial_attestation"
+        },
+        "secondary": {
+          "player": "Alessandro Deiola",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/8529/overview/cagliari",
+          "checked_at": "2026-09-02"
+        },
+        "tertiary": {
+          "player": "Yerry Mina",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/8529/overview/cagliari",
+          "checked_at": "2026-09-02"
+        }
+      },
+      "last_reviewed": {
+        "date": "2026-09-01",
+        "by": "Il Margine",
+        "method": "current_season_multi_source_review",
+        "outcome": "order_unchanged",
+        "sources": [
+          "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+          "https://www.legaseriea.it/en/serie-a/teams"
+        ]
+      },
+      "unavailable_candidates": []
+    },
+    "before_entry_hash": "a8a75d25822c9994e0fdb6c7ec1d2839c8f53fd7c79862b4deb8b0801c5ed65e",
+    "after_entry_hash": "1bef4d075a8ee6d1bf983eb33ff58b56672f71082aa3536886612f034f0261d3",
+    "before_control": {},
+    "after_control": {
+      "locked": true,
+      "override": {
+        "primary": "Daniel Maldini",
+        "secondary": "Alessandro Deiola",
+        "tertiary": "Yerry Mina"
+      },
+      "reason": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
+      "updated_at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin"
+    },
+    "reverts": null
+  },
+  "summary": {
+    "id": "02b247d3974b49adbc89c32aee1076ff",
+    "at": "2026-09-13T11:57:43+00:00",
+    "actor": "local_admin",
+    "action": "override",
+    "club_id": "serie-a|Cagliari",
+    "reason": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
+    "before_entry_hash": "a8a75d25822c9994e0fdb6c7ec1d2839c8f53fd7c79862b4deb8b0801c5ed65e",
+    "after_entry_hash": "1bef4d075a8ee6d1bf983eb33ff58b56672f71082aa3536886612f034f0261d3",
+    "before_control": {},
+    "after_control": {
+      "locked": true,
+      "override": {
+        "primary": "Daniel Maldini",
+        "secondary": "Alessandro Deiola",
+        "tertiary": "Yerry Mina"
+      },
+      "reason": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
+      "updated_at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin"
+    },
+    "reverts": null,
+    "before_hierarchy": {
+      "primary": "Alessandro Deiola",
+      "secondary": "Jacopo Fazzini",
+      "tertiary": "Yerry Mina"
+    },
+    "after_hierarchy": {
+      "primary": "Daniel Maldini",
+      "secondary": "Alessandro Deiola",
+      "tertiary": "Yerry Mina"
+    }
+  },
+  "before_hierarchy_hash": "ab1c2afb9d9359c4acc3954d6bdf12f2321ed11771d84c38538235ada01824d3",
+  "after_hierarchy_hash": "39cd72a8942984ec5e7539d68d9a0989379e3521b55a8c550e7669048e83e2bb",
+  "before_state_hash": "5dbb8d0cabf1e28dca61447c3223f2ad2766418dc3fbdb7eb1c75233794aabeb",
+  "after_state_hash": "511cc8c081149d8847ee677f09265347e5275d60b4ff626c33e908a590b9f1ba",
+  "after_revision": 4
+}

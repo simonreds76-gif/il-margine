@@ -1,13 +1,13 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-09-13T04:54:45Z",
+  "generated_at": "2026-09-13T11:59:03Z",
   "source_status": {
-    "compared_at": "2026-09-13T04:53:49Z",
+    "compared_at": "2026-09-13T10:19:36Z",
     "hot_live_updated_at": "2026-09-12T23:19:28Z",
-    "expected_refresh_updated_at": "2026-09-13T04:53:49Z",
+    "expected_refresh_updated_at": "2026-09-13T10:19:36Z",
     "settlement_updated_at": "2026-09-13T04:54:45Z",
     "scheduler_heartbeat_at": "2026-09-12T23:19:28Z",
-    "snapshot_generated_at": "2026-09-13T04:54:45Z",
+    "snapshot_generated_at": "2026-09-13T11:59:03Z",
     "live_status_state": "skipped",
     "live_status_message": "Goalscorer live poll skipped: no leagues due in current cadence window."
   },
@@ -18,7 +18,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-09-13T04:53:49Z",
+      "updated_at": "2026-09-13T10:19:36Z",
       "live_rows": 250,
       "public_now": 0,
       "shadow_now": 20,
@@ -49,7 +49,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-09-13T04:53:49Z",
+      "updated_at": "2026-09-13T10:19:36Z",
       "live_rows": 16,
       "public_now": 0,
       "shadow_now": 1,
@@ -70,8 +70,8 @@
         "wins": 42,
         "losses": 250,
         "voids": 10,
-        "roi": -15.933509060955519,
-        "pnl_units": -48.358200000000004
+        "roi": -15.933509060955517,
+        "pnl_units": -48.3582
       }
     },
     {
@@ -80,7 +80,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-09-13T04:53:49Z",
+      "updated_at": "2026-09-13T10:19:36Z",
       "live_rows": 40,
       "public_now": 0,
       "shadow_now": 1,
@@ -92,7 +92,7 @@
         "wins": 9,
         "losses": 25,
         "roi": -9.684689655172415,
-        "pnl_units": -3.5107000000000004
+        "pnl_units": -3.5107
       },
       "shadow_record": {
         "signals": 179,
@@ -101,8 +101,8 @@
         "wins": 21,
         "losses": 118,
         "voids": 12,
-        "roi": -41.697058823529396,
-        "pnl_units": -63.79649999999998
+        "roi": -41.69705882352942,
+        "pnl_units": -63.7965
       }
     },
     {
@@ -111,7 +111,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-09-13T04:53:49Z",
+      "updated_at": "2026-09-13T10:19:36Z",
       "live_rows": 41,
       "public_now": 0,
       "shadow_now": 5,
@@ -132,8 +132,8 @@
         "wins": 24,
         "losses": 137,
         "voids": 15,
-        "roi": -35.865275035260936,
-        "pnl_units": -63.571200000000005
+        "roi": -35.86527503526093,
+        "pnl_units": -63.5712
       }
     },
     {
@@ -142,7 +142,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-09-13T04:53:49Z",
+      "updated_at": "2026-09-13T10:19:36Z",
       "live_rows": 118,
       "public_now": 0,
       "shadow_now": 7,
@@ -4641,48 +4641,6 @@
     "row_count": 8,
     "rows": [
       {
-        "row_id": "2026-09-12|serie-a|genoa|frosinone|colombo",
-        "date": "2026-09-12",
-        "league": "serie-a",
-        "review_source": "fotmob_live",
-        "review_priority": "low",
-        "review_type": "primary_held",
-        "match": "Genoa vs Frosinone",
-        "public_team": "Genoa",
-        "hierarchy_status": "disputed",
-        "team": "Genoa",
-        "opponent": "Frosinone",
-        "actual_taker": "Lorenzo Colombo",
-        "actual_role_pre_match": "primary",
-        "penalties_attempted": 1,
-        "penalties_scored": 0,
-        "distinct_takers_in_match": 1,
-        "minute": "45",
-        "event_type": "Miss",
-        "event_result": "missed",
-        "primary_pre_match": "Lorenzo Colombo",
-        "secondary_pre_match": "Junior Messias",
-        "tertiary_pre_match": "Vitinha",
-        "primary_lineup_status": "expected_starter",
-        "secondary_lineup_status": "unknown",
-        "tertiary_lineup_status": "unknown",
-        "active_taker_pre_match": "Lorenzo Colombo",
-        "active_slot_pre_match": "primary",
-        "team_lineup_status": "unknown",
-        "penalty_transfer_pre_match": 0,
-        "inherited_from_pre_match": "",
-        "transfer_level_pre_match": "",
-        "editorial_note": "Lorenzo Colombo took 1 penalty attempt and missed for Genoa vs Frosinone. Primary pre-match: Lorenzo Colombo (expected_starter). Secondary pre-match: Junior Messias (unknown). Pre-match active slot was primary -> Lorenzo Colombo. No hierarchy change implied from this event.",
-        "context_generated_at": "2026-09-12T11:33:39Z",
-        "context_source_path": "data/goalscorer/penalty-duty-context.json",
-        "actual_taker_match_status": "Yes - started, off 70'",
-        "primary_on_pitch_at_penalty": "Yes - started, off 70'",
-        "secondary_on_pitch_at_penalty": "No - bench, on 46'",
-        "tertiary_on_pitch_at_penalty": "No - bench, on 70'",
-        "active_on_pitch_at_penalty": "",
-        "actual_taker_on_pitch_at_penalty": "Yes - started, off 70'"
-      },
-      {
         "row_id": "2026-09-12|serie-a|cagliari|atalanta|maldini",
         "date": "2026-09-12",
         "league": "serie-a",
@@ -4691,7 +4649,7 @@
         "review_type": "unranked_taker",
         "match": "Atalanta vs Cagliari",
         "public_team": "Cagliari",
-        "hierarchy_status": "confirmed",
+        "hierarchy_status": "probable",
         "team": "Cagliari",
         "opponent": "Atalanta",
         "actual_taker": "Daniel Maldini",
@@ -4723,6 +4681,48 @@
         "tertiary_on_pitch_at_penalty": "No - bench",
         "active_on_pitch_at_penalty": "",
         "actual_taker_on_pitch_at_penalty": "Yes - started, off 79'"
+      },
+      {
+        "row_id": "2026-09-12|serie-a|genoa|frosinone|colombo",
+        "date": "2026-09-12",
+        "league": "serie-a",
+        "review_source": "fotmob_live",
+        "review_priority": "low",
+        "review_type": "primary_held",
+        "match": "Genoa vs Frosinone",
+        "public_team": "Genoa",
+        "hierarchy_status": "probable",
+        "team": "Genoa",
+        "opponent": "Frosinone",
+        "actual_taker": "Lorenzo Colombo",
+        "actual_role_pre_match": "primary",
+        "penalties_attempted": 1,
+        "penalties_scored": 0,
+        "distinct_takers_in_match": 1,
+        "minute": "45",
+        "event_type": "Miss",
+        "event_result": "missed",
+        "primary_pre_match": "Lorenzo Colombo",
+        "secondary_pre_match": "Junior Messias",
+        "tertiary_pre_match": "Vitinha",
+        "primary_lineup_status": "expected_starter",
+        "secondary_lineup_status": "unknown",
+        "tertiary_lineup_status": "unknown",
+        "active_taker_pre_match": "Lorenzo Colombo",
+        "active_slot_pre_match": "primary",
+        "team_lineup_status": "unknown",
+        "penalty_transfer_pre_match": 0,
+        "inherited_from_pre_match": "",
+        "transfer_level_pre_match": "",
+        "editorial_note": "Lorenzo Colombo took 1 penalty attempt and missed for Genoa vs Frosinone. Primary pre-match: Lorenzo Colombo (expected_starter). Secondary pre-match: Junior Messias (unknown). Pre-match active slot was primary -> Lorenzo Colombo. No hierarchy change implied from this event.",
+        "context_generated_at": "2026-09-12T11:33:39Z",
+        "context_source_path": "data/goalscorer/penalty-duty-context.json",
+        "actual_taker_match_status": "Yes - started, off 70'",
+        "primary_on_pitch_at_penalty": "Yes - started, off 70'",
+        "secondary_on_pitch_at_penalty": "No - bench, on 46'",
+        "tertiary_on_pitch_at_penalty": "No - bench, on 70'",
+        "active_on_pitch_at_penalty": "",
+        "actual_taker_on_pitch_at_penalty": "Yes - started, off 70'"
       },
       {
         "row_id": "2026-09-12|epl|arsenal|sunderland|saka",
@@ -4762,7 +4762,7 @@
         "actual_taker_match_status": "Yes - started",
         "primary_on_pitch_at_penalty": "Yes - started",
         "secondary_on_pitch_at_penalty": "No - bench",
-        "tertiary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+        "tertiary_on_pitch_at_penalty": "No - started, off 85'",
         "active_on_pitch_at_penalty": "",
         "actual_taker_on_pitch_at_penalty": "Yes - started"
       },
@@ -4817,7 +4817,7 @@
         "review_type": "unranked_taker",
         "match": "Athletic Club vs Elche",
         "public_team": "Elche",
-        "hierarchy_status": "disputed",
+        "hierarchy_status": "probable",
         "team": "Elche",
         "opponent": "Athletic Club",
         "actual_taker": "Facundo Buonanotte",
@@ -5278,8 +5278,8 @@
         "wins": 42,
         "losses": 250,
         "voids": 10,
-        "roi": -15.933509060955519,
-        "pnl_units": -48.358200000000004
+        "roi": -15.933509060955517,
+        "pnl_units": -48.3582
       },
       {
         "key": "la-liga",
@@ -5290,8 +5290,8 @@
         "wins": 21,
         "losses": 118,
         "voids": 12,
-        "roi": -41.697058823529396,
-        "pnl_units": -63.79649999999998
+        "roi": -41.69705882352942,
+        "pnl_units": -63.7965
       },
       {
         "key": "bundesliga",
@@ -5302,8 +5302,8 @@
         "wins": 24,
         "losses": 137,
         "voids": 15,
-        "roi": -35.865275035260936,
-        "pnl_units": -63.571200000000005
+        "roi": -35.86527503526093,
+        "pnl_units": -63.5712
       },
       {
         "key": "ligue-1",
@@ -6846,7 +6846,7 @@
         "wins": 9,
         "losses": 25,
         "roi": -9.684689655172415,
-        "pnl_units": -3.5107000000000004
+        "pnl_units": -3.5107
       },
       {
         "key": "bundesliga",
@@ -6959,14 +6959,14 @@
     "missing_player_history_rows": 373,
     "starter_rows": 0,
     "expected_starter_rows": 219,
-    "avg_ev_pct": -68.9338410752688,
+    "avg_ev_pct": -68.93384107526882,
     "source_feed_gap_leagues": [],
-    "raw_monitor_summary": "=== Serie A | Updated 13/09/2026, 05:53 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-12T11:33:39Z\n\nHistorical Rows          31,809\nOdds Rows                446\nMatched Rows             367\nMissing Player History   82\nMissing Team Mapping     0\nFallback Rows            38\nQualified Rows           32\nRoster Resolved Rows     86\nHigh Confidence Rows     0\nMedium Confidence Rows   136\nLow Confidence Rows      231\nPublic High Signals      0\nPublic Caveat Signals    29\nShadow Track Rows        30\nPenalty Transfer Rows    5\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 18\nFixtures Clean           0\nFixtures Degraded        18\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    176\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        191\n\nAverage EV               -0.6859\n\n\n=== Premier League | Updated 13/09/2026, 05:53 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-12T13:35:52Z\n\nHistorical Rows          31,365\nOdds Rows                330\nMatched Rows             249\nMissing Player History   114\nMissing Team Mapping     0\nFallback Rows            42\nQualified Rows           28\nRoster Resolved Rows     87\nHigh Confidence Rows     64\nMedium Confidence Rows   45\nLow Confidence Rows      140\nPublic High Signals      3\nPublic Caveat Signals    12\nShadow Track Rows        28\nPenalty Transfer Rows    3\nPosition Upgrade Rows    0\nRole Adjusted Rows       13\nFixtures With Confirmed Lineups 8\nFixtures With Expected Lineups 7\nFixtures Clean           8\nFixtures Degraded        7\nFixtures Quarantined     0\nConfirmed Starter Rows   85\nConfirmed Bench Rows     61\nExpected Starter Rows    49\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        54\n\nAverage EV               -0.5920\n\n\n=== La Liga | Updated 13/09/2026, 05:53 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-12T13:36:29Z\n\nHistorical Rows          33,289\nOdds Rows                205\nMatched Rows             165\nMissing Player History   57\nMissing Team Mapping     0\nFallback Rows            12\nQualified Rows           13\nRoster Resolved Rows     63\nHigh Confidence Rows     13\nMedium Confidence Rows   43\nLow Confidence Rows      109\nPublic High Signals      1\nPublic Caveat Signals    8\nShadow Track Rows        10\nPenalty Transfer Rows    1\nPosition Upgrade Rows    0\nRole Adjusted Rows       1\nFixtures With Confirmed Lineups 3\nFixtures With Expected Lineups 9\nFixtures Clean           3\nFixtures Degraded        9\nFixtures Quarantined     0\nConfirmed Starter Rows   18\nConfirmed Bench Rows     14\nExpected Starter Rows    58\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        73\n\nAverage EV               -0.7256\n\n\n=== Bundesliga | Updated 13/09/2026, 05:53 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-12T13:36:57Z\n\nHistorical Rows          25,930\nOdds Rows                93\nMatched Rows             82\nMissing Player History   34\nMissing Team Mapping     0\nFallback Rows            14\nQualified Rows           10\nRoster Resolved Rows     71\nHigh Confidence Rows     0\nMedium Confidence Rows   24\nLow Confidence Rows      58\nPublic High Signals      0\nPublic Caveat Signals    10\nShadow Track Rows        10\nPenalty Transfer Rows    1\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 5\nFixtures With Expected Lineups 4\nFixtures Clean           5\nFixtures Degraded        4\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    38\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        44\n\nAverage EV               -0.6428\n\n\n=== Ligue 1 | Updated 13/09/2026, 05:53 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-12T11:35:39Z\n\nHistorical Rows          25,659\nOdds Rows                396\nMatched Rows             322\nMissing Player History   86\nMissing Team Mapping     0\nFallback Rows            49\nQualified Rows           29\nRoster Resolved Rows     83\nHigh Confidence Rows     0\nMedium Confidence Rows   97\nLow Confidence Rows      225\nPublic High Signals      0\nPublic Caveat Signals    20\nShadow Track Rows        23\nPenalty Transfer Rows    5\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 16\nFixtures Clean           0\nFixtures Degraded        16\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    151\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        171\n\nAverage EV               -0.6920\n"
+    "raw_monitor_summary": "=== Serie A | Updated 13/09/2026, 11:19 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-12T11:33:39Z\n\nHistorical Rows          31,809\nOdds Rows                446\nMatched Rows             367\nMissing Player History   82\nMissing Team Mapping     0\nFallback Rows            38\nQualified Rows           32\nRoster Resolved Rows     86\nHigh Confidence Rows     0\nMedium Confidence Rows   136\nLow Confidence Rows      231\nPublic High Signals      0\nPublic Caveat Signals    29\nShadow Track Rows        30\nPenalty Transfer Rows    5\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 18\nFixtures Clean           0\nFixtures Degraded        18\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    176\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        191\n\nAverage EV               -0.6859\n\n\n=== Premier League | Updated 13/09/2026, 11:19 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-12T13:35:52Z\n\nHistorical Rows          31,365\nOdds Rows                330\nMatched Rows             249\nMissing Player History   114\nMissing Team Mapping     0\nFallback Rows            42\nQualified Rows           28\nRoster Resolved Rows     87\nHigh Confidence Rows     64\nMedium Confidence Rows   45\nLow Confidence Rows      140\nPublic High Signals      3\nPublic Caveat Signals    12\nShadow Track Rows        28\nPenalty Transfer Rows    3\nPosition Upgrade Rows    0\nRole Adjusted Rows       13\nFixtures With Confirmed Lineups 8\nFixtures With Expected Lineups 7\nFixtures Clean           8\nFixtures Degraded        7\nFixtures Quarantined     0\nConfirmed Starter Rows   85\nConfirmed Bench Rows     61\nExpected Starter Rows    49\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        54\n\nAverage EV               -0.5920\n\n\n=== La Liga | Updated 13/09/2026, 11:19 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-12T13:36:29Z\n\nHistorical Rows          33,289\nOdds Rows                205\nMatched Rows             165\nMissing Player History   57\nMissing Team Mapping     0\nFallback Rows            12\nQualified Rows           13\nRoster Resolved Rows     63\nHigh Confidence Rows     13\nMedium Confidence Rows   43\nLow Confidence Rows      109\nPublic High Signals      1\nPublic Caveat Signals    8\nShadow Track Rows        10\nPenalty Transfer Rows    1\nPosition Upgrade Rows    0\nRole Adjusted Rows       1\nFixtures With Confirmed Lineups 3\nFixtures With Expected Lineups 9\nFixtures Clean           3\nFixtures Degraded        9\nFixtures Quarantined     0\nConfirmed Starter Rows   18\nConfirmed Bench Rows     14\nExpected Starter Rows    58\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        73\n\nAverage EV               -0.7256\n\n\n=== Bundesliga | Updated 13/09/2026, 11:19 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-12T13:36:57Z\n\nHistorical Rows          25,930\nOdds Rows                93\nMatched Rows             82\nMissing Player History   34\nMissing Team Mapping     0\nFallback Rows            14\nQualified Rows           10\nRoster Resolved Rows     71\nHigh Confidence Rows     0\nMedium Confidence Rows   24\nLow Confidence Rows      58\nPublic High Signals      0\nPublic Caveat Signals    10\nShadow Track Rows        10\nPenalty Transfer Rows    1\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 5\nFixtures With Expected Lineups 4\nFixtures Clean           5\nFixtures Degraded        4\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    38\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        44\n\nAverage EV               -0.6428\n\n\n=== Ligue 1 | Updated 13/09/2026, 11:19 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-12T11:35:39Z\n\nHistorical Rows          25,659\nOdds Rows                396\nMatched Rows             322\nMissing Player History   86\nMissing Team Mapping     0\nFallback Rows            49\nQualified Rows           29\nRoster Resolved Rows     83\nHigh Confidence Rows     0\nMedium Confidence Rows   97\nLow Confidence Rows      225\nPublic High Signals      0\nPublic Caveat Signals    20\nShadow Track Rows        23\nPenalty Transfer Rows    5\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 16\nFixtures Clean           0\nFixtures Degraded        16\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    151\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        171\n\nAverage EV               -0.6920\n"
   },
   "research_status": {
     "status": "RESEARCH_ONLY",
     "model_variant": "v2_minutes_absolute_share_repair",
-    "updated_at": "2026-09-13T04:53:49Z",
+    "updated_at": "2026-09-13T10:19:36Z",
     "parity": {
       "decision": "PASS",
       "golden_rows": 25,
@@ -7009,5 +7009,5 @@
     }
   },
   "snapshot_key": "monitor_state",
-  "payload_hash": "84f3388bb646fadde22b3ab2c9b00b02509a7613e2463360fb17b321cb164257"
+  "payload_hash": "d37351aa07e343f298a8ed6beda0a43bc8292202da7852519212a24a031eaa41"
 }

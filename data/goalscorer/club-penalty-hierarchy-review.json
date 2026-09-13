@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-06T08:33:01+00:00",
+  "generated_at": "2026-09-13T12:01:17+00:00",
   "mode": "review",
-  "revision": 1,
+  "revision": 4,
   "source_health": {
     "epl": {
       "path": "data/goalscorer/epl-penalty-duty-live-review.json",
-      "observed_at": "2026-09-06T08:32:47Z",
+      "observed_at": "2026-09-13T04:54:11Z",
       "fresh": true,
       "complete": true,
       "errors": [],
@@ -14,7 +14,7 @@
     },
     "la-liga": {
       "path": "data/goalscorer/la-liga-penalty-duty-live-review.json",
-      "observed_at": "2026-09-06T04:46:00Z",
+      "observed_at": "2026-09-13T04:54:20Z",
       "fresh": true,
       "complete": true,
       "errors": [],
@@ -22,7 +22,7 @@
     },
     "serie-a": {
       "path": "data/goalscorer/penalty-duty-live-review.json",
-      "observed_at": "2026-09-06T04:45:40Z",
+      "observed_at": "2026-09-13T04:54:00Z",
       "fresh": true,
       "complete": true,
       "errors": [],
@@ -30,7 +30,7 @@
     },
     "bundesliga": {
       "path": "data/goalscorer/bundesliga-penalty-duty-live-review.json",
-      "observed_at": "2026-09-06T04:46:12Z",
+      "observed_at": "2026-09-13T04:54:33Z",
       "fresh": true,
       "complete": true,
       "errors": [],
@@ -38,7 +38,7 @@
     },
     "ligue-1": {
       "path": "data/goalscorer/ligue-1-penalty-duty-live-review.json",
-      "observed_at": "2026-09-06T08:32:30Z",
+      "observed_at": "2026-09-13T04:54:45Z",
       "fresh": true,
       "complete": true,
       "errors": [],
@@ -47,9 +47,9 @@
   },
   "squad_observed_at": "2026-09-02T15:37:08.954568+00:00",
   "summary": {
-    "stale": 92,
-    "review": 3,
-    "locked": 1
+    "review": 5,
+    "stale": 87,
+    "locked": 4
   },
   "clubs": [
     {
@@ -64,14 +64,53 @@
       },
       "entry_hash": "3b8350fc237c0a7e572218490095c5b960b0d28911da3352b8845c730173a7d2",
       "proposed": null,
-      "status": "stale",
+      "status": "review",
       "confidence": "low",
       "reasons": [
         "Current squad source is stale or missing"
       ],
-      "evidence": [],
+      "evidence": [
+        {
+          "id": "fotmob|epl|5795453|2968703331",
+          "source_event_id": "2968703331",
+          "match_id": "5795453",
+          "source_url": "https://www.fotmob.com/matches/sunderland-vs-arsenal/2ro5o6#5795453",
+          "observed_at": "2026-09-13T04:54:00+00:00",
+          "event_date": "2026-09-12",
+          "season": "2026/27",
+          "team": "Arsenal",
+          "taker": "Bukayo Saka",
+          "primary": "Bukayo Saka",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Bukayo Saka",
+            "minute": 90,
+            "method": "completed_lineup_timeline",
+            "player_id": 961995,
+            "bucket": "starters",
+            "substitutions": [],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 90,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Sunderland vs Arsenal",
+          "event_result": "scored",
+          "league": "epl",
+          "review_source": "fotmob_live",
+          "source_path": "data/goalscorer/epl-penalty-duty-live-review.json",
+          "manual_ticket_decisions": [
+            {
+              "id": "2026-09-12|epl|arsenal|sunderland|saka",
+              "status": "ignored"
+            }
+          ]
+        }
+      ],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:47Z"
+      "source_observed_at": "2026-09-13T04:54:11Z"
     },
     {
       "id": "epl|Aston Villa",
@@ -92,7 +131,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:47Z"
+      "source_observed_at": "2026-09-13T04:54:11Z"
     },
     {
       "id": "epl|Bournemouth",
@@ -113,7 +152,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:47Z"
+      "source_observed_at": "2026-09-13T04:54:11Z"
     },
     {
       "id": "epl|Brentford",
@@ -134,7 +173,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:47Z"
+      "source_observed_at": "2026-09-13T04:54:11Z"
     },
     {
       "id": "epl|Brighton",
@@ -155,7 +194,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:47Z"
+      "source_observed_at": "2026-09-13T04:54:11Z"
     },
     {
       "id": "epl|Chelsea",
@@ -176,7 +215,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:47Z"
+      "source_observed_at": "2026-09-13T04:54:11Z"
     },
     {
       "id": "epl|Coventry City",
@@ -197,7 +236,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:47Z"
+      "source_observed_at": "2026-09-13T04:54:11Z"
     },
     {
       "id": "epl|Crystal Palace",
@@ -218,7 +257,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:47Z"
+      "source_observed_at": "2026-09-13T04:54:11Z"
     },
     {
       "id": "epl|Everton",
@@ -239,7 +278,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:47Z"
+      "source_observed_at": "2026-09-13T04:54:11Z"
     },
     {
       "id": "epl|Fulham",
@@ -260,7 +299,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:47Z"
+      "source_observed_at": "2026-09-13T04:54:11Z"
     },
     {
       "id": "epl|Hull City",
@@ -281,7 +320,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:47Z"
+      "source_observed_at": "2026-09-13T04:54:11Z"
     },
     {
       "id": "epl|Ipswich Town",
@@ -302,7 +341,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:47Z"
+      "source_observed_at": "2026-09-13T04:54:11Z"
     },
     {
       "id": "epl|Leeds",
@@ -323,7 +362,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:47Z"
+      "source_observed_at": "2026-09-13T04:54:11Z"
     },
     {
       "id": "epl|Liverpool",
@@ -344,7 +383,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:47Z"
+      "source_observed_at": "2026-09-13T04:54:11Z"
     },
     {
       "id": "epl|Manchester City",
@@ -365,7 +404,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:47Z"
+      "source_observed_at": "2026-09-13T04:54:11Z"
     },
     {
       "id": "epl|Manchester United",
@@ -386,7 +425,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:47Z"
+      "source_observed_at": "2026-09-13T04:54:11Z"
     },
     {
       "id": "epl|Newcastle United",
@@ -407,7 +446,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:47Z"
+      "source_observed_at": "2026-09-13T04:54:11Z"
     },
     {
       "id": "epl|Nottingham Forest",
@@ -428,7 +467,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:47Z"
+      "source_observed_at": "2026-09-13T04:54:11Z"
     },
     {
       "id": "epl|Sunderland",
@@ -479,11 +518,54 @@
           "league": "epl",
           "review_source": "fotmob_live",
           "source_path": "data/goalscorer/epl-penalty-duty-live-review.json",
-          "manual_ticket_decisions": []
+          "manual_ticket_decisions": [
+            {
+              "id": "2026-09-05|epl|sunderland|brentford|fe",
+              "status": "done"
+            }
+          ]
+        },
+        {
+          "id": "fotmob|epl|5795453|2968667133",
+          "source_event_id": "2968667133",
+          "match_id": "5795453",
+          "source_url": "https://www.fotmob.com/matches/sunderland-vs-arsenal/2ro5o6#5795453",
+          "observed_at": "2026-09-13T04:54:00+00:00",
+          "event_date": "2026-09-12",
+          "season": "2026/27",
+          "team": "Sunderland",
+          "taker": "Enzo Le Fée",
+          "primary": "Habib Diarra",
+          "primary_on_pitch": false,
+          "on_pitch_proof": {
+            "player": "Habib Diarra",
+            "minute": 56,
+            "method": "completed_lineup_timeline",
+            "player_id": 1285866,
+            "bucket": "unavailable",
+            "substitutions": [],
+            "events": [],
+            "reason": "not_on_pitch"
+          },
+          "minute": 56,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Sunderland vs Arsenal",
+          "event_result": "missed",
+          "league": "epl",
+          "review_source": "fotmob_live",
+          "source_path": "data/goalscorer/epl-penalty-duty-live-review.json",
+          "manual_ticket_decisions": [
+            {
+              "id": "2026-09-12|epl|sunderland|arsenal|fe",
+              "status": "ignored"
+            }
+          ]
         }
       ],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:47Z"
+      "source_observed_at": "2026-09-13T04:54:11Z"
     },
     {
       "id": "epl|Tottenham",
@@ -504,7 +586,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:47Z"
+      "source_observed_at": "2026-09-13T04:54:11Z"
     },
     {
       "id": "la-liga|Alaves",
@@ -525,7 +607,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:00Z"
+      "source_observed_at": "2026-09-13T04:54:20Z"
     },
     {
       "id": "la-liga|Athletic Club",
@@ -546,7 +628,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:00Z"
+      "source_observed_at": "2026-09-13T04:54:20Z"
     },
     {
       "id": "la-liga|Atletico Madrid",
@@ -567,7 +649,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:00Z"
+      "source_observed_at": "2026-09-13T04:54:20Z"
     },
     {
       "id": "la-liga|Barcelona",
@@ -588,7 +670,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:00Z"
+      "source_observed_at": "2026-09-13T04:54:20Z"
     },
     {
       "id": "la-liga|Celta Vigo",
@@ -609,7 +691,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:00Z"
+      "source_observed_at": "2026-09-13T04:54:20Z"
     },
     {
       "id": "la-liga|Deportivo La Coruna",
@@ -630,7 +712,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:00Z"
+      "source_observed_at": "2026-09-13T04:54:20Z"
     },
     {
       "id": "la-liga|Elche",
@@ -638,20 +720,74 @@
       "club": "Elche",
       "season": "2026/27",
       "current": {
-        "primary": "Fer Niño",
-        "secondary": "Germán Valera",
-        "tertiary": "Ali Houary"
+        "primary": "Facundo Buonanotte",
+        "secondary": "Fer Niño",
+        "tertiary": "Germán Valera"
       },
-      "entry_hash": "7f10f8a387279ac8b052e32428acf6d3f3e311c681d87cae91cfaf4e065dc630",
+      "entry_hash": "a6a6e213a873d9dcd16fa463acce02be6656e9b3aa071692940edb019b55d543",
       "proposed": null,
-      "status": "stale",
+      "status": "locked",
       "confidence": "low",
       "reasons": [
-        "Current squad source is stale or missing"
+        "Manual lock/override preserves the filed hierarchy"
       ],
-      "evidence": [],
-      "control": {},
-      "source_observed_at": "2026-09-06T04:46:00Z"
+      "evidence": [
+        {
+          "id": "fotmob|la-liga|5868051|2968497777",
+          "source_event_id": "2968497777",
+          "match_id": "5868051",
+          "source_url": "https://www.fotmob.com/matches/athletic-club-vs-elche/2ut5xr#5868051",
+          "observed_at": "2026-09-13T04:54:11+00:00",
+          "event_date": "2026-09-12",
+          "season": "2026/27",
+          "team": "Elche",
+          "taker": "Facundo Buonanotte",
+          "primary": "Fer Niño",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Fer Niño",
+            "minute": 50,
+            "method": "completed_lineup_timeline",
+            "player_id": 1127224,
+            "bucket": "starters",
+            "substitutions": [
+              {
+                "type": "subout",
+                "time": 69
+              }
+            ],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 50,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Athletic Club vs Elche",
+          "event_result": "scored",
+          "league": "la-liga",
+          "review_source": "fotmob_live",
+          "source_path": "data/goalscorer/la-liga-penalty-duty-live-review.json",
+          "manual_ticket_decisions": [
+            {
+              "id": "2026-09-12|la-liga|elche|athletic club|buonanotte",
+              "status": "applied"
+            }
+          ]
+        }
+      ],
+      "control": {
+        "locked": true,
+        "override": {
+          "primary": "Facundo Buonanotte",
+          "secondary": "Fer Niño",
+          "tertiary": "Germán Valera"
+        },
+        "reason": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
+        "updated_at": "2026-09-13T11:57:43+00:00",
+        "actor": "local_admin"
+      },
+      "source_observed_at": "2026-09-13T04:54:20Z"
     },
     {
       "id": "la-liga|Espanyol",
@@ -672,7 +808,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:00Z"
+      "source_observed_at": "2026-09-13T04:54:20Z"
     },
     {
       "id": "la-liga|Getafe",
@@ -693,7 +829,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:00Z"
+      "source_observed_at": "2026-09-13T04:54:20Z"
     },
     {
       "id": "la-liga|Levante",
@@ -714,7 +850,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:00Z"
+      "source_observed_at": "2026-09-13T04:54:20Z"
     },
     {
       "id": "la-liga|Malaga",
@@ -735,7 +871,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:00Z"
+      "source_observed_at": "2026-09-13T04:54:20Z"
     },
     {
       "id": "la-liga|Osasuna",
@@ -756,7 +892,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:00Z"
+      "source_observed_at": "2026-09-13T04:54:20Z"
     },
     {
       "id": "la-liga|Racing Santander",
@@ -777,7 +913,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:00Z"
+      "source_observed_at": "2026-09-13T04:54:20Z"
     },
     {
       "id": "la-liga|Rayo Vallecano",
@@ -798,7 +934,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:00Z"
+      "source_observed_at": "2026-09-13T04:54:20Z"
     },
     {
       "id": "la-liga|Real Betis",
@@ -819,7 +955,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:00Z"
+      "source_observed_at": "2026-09-13T04:54:20Z"
     },
     {
       "id": "la-liga|Real Madrid",
@@ -875,10 +1011,48 @@
           "review_source": "fotmob_live",
           "source_path": "data/goalscorer/la-liga-penalty-duty-live-review.json",
           "manual_ticket_decisions": []
+        },
+        {
+          "id": "fotmob|la-liga|5868057|2968608035",
+          "source_event_id": "2968608035",
+          "match_id": "5868057",
+          "source_url": "https://www.fotmob.com/matches/rayo-vallecano-vs-real-madrid/2e2lhn#5868057",
+          "observed_at": "2026-09-13T04:54:11+00:00",
+          "event_date": "2026-09-12",
+          "season": "2026/27",
+          "team": "Real Madrid",
+          "taker": "Kylian Mbappé",
+          "primary": "Kylian Mbappé",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Kylian Mbappé",
+            "minute": 14,
+            "method": "completed_lineup_timeline",
+            "player_id": 701154,
+            "bucket": "starters",
+            "substitutions": [],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 14,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Real Madrid vs Rayo Vallecano",
+          "event_result": "scored",
+          "league": "la-liga",
+          "review_source": "fotmob_live",
+          "source_path": "data/goalscorer/la-liga-penalty-duty-live-review.json",
+          "manual_ticket_decisions": [
+            {
+              "id": "2026-09-12|la-liga|real madrid|rayo vallecano|mbapp",
+              "status": "ignored"
+            }
+          ]
         }
       ],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:00Z"
+      "source_observed_at": "2026-09-13T04:54:20Z"
     },
     {
       "id": "la-liga|Real Sociedad",
@@ -899,7 +1073,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:00Z"
+      "source_observed_at": "2026-09-13T04:54:20Z"
     },
     {
       "id": "la-liga|Sevilla",
@@ -920,7 +1094,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:00Z"
+      "source_observed_at": "2026-09-13T04:54:20Z"
     },
     {
       "id": "la-liga|Valencia",
@@ -941,7 +1115,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:00Z"
+      "source_observed_at": "2026-09-13T04:54:20Z"
     },
     {
       "id": "la-liga|Villarreal",
@@ -962,7 +1136,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:00Z"
+      "source_observed_at": "2026-09-13T04:54:20Z"
     },
     {
       "id": "serie-a|AC Milan",
@@ -983,7 +1157,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:45:40Z"
+      "source_observed_at": "2026-09-13T04:54:00Z"
     },
     {
       "id": "serie-a|Atalanta",
@@ -1004,7 +1178,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:45:40Z"
+      "source_observed_at": "2026-09-13T04:54:00Z"
     },
     {
       "id": "serie-a|Bologna",
@@ -1025,7 +1199,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:45:40Z"
+      "source_observed_at": "2026-09-13T04:54:00Z"
     },
     {
       "id": "serie-a|Cagliari",
@@ -1033,20 +1207,69 @@
       "club": "Cagliari",
       "season": "2026/27",
       "current": {
-        "primary": "Alessandro Deiola",
-        "secondary": "Jacopo Fazzini",
+        "primary": "Daniel Maldini",
+        "secondary": "Alessandro Deiola",
         "tertiary": "Yerry Mina"
       },
-      "entry_hash": "a8a75d25822c9994e0fdb6c7ec1d2839c8f53fd7c79862b4deb8b0801c5ed65e",
+      "entry_hash": "1bef4d075a8ee6d1bf983eb33ff58b56672f71082aa3536886612f034f0261d3",
       "proposed": null,
-      "status": "stale",
+      "status": "locked",
       "confidence": "low",
       "reasons": [
-        "Current squad source is stale or missing"
+        "Manual lock/override preserves the filed hierarchy"
       ],
-      "evidence": [],
-      "control": {},
-      "source_observed_at": "2026-09-06T04:45:40Z"
+      "evidence": [
+        {
+          "id": "fotmob|serie-a|5749670|2968657107",
+          "source_event_id": "2968657107",
+          "match_id": "5749670",
+          "source_url": "https://www.fotmob.com/matches/atalanta-vs-cagliari/2ekudg#5749670",
+          "observed_at": "2026-09-13T04:53:52+00:00",
+          "event_date": "2026-09-12",
+          "season": "2026/27",
+          "team": "Cagliari",
+          "taker": "Daniel Maldini",
+          "primary": "Alessandro Deiola",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Alessandro Deiola",
+            "minute": 61,
+            "method": "completed_lineup_timeline",
+            "player_id": 449283,
+            "bucket": "starters",
+            "substitutions": [],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 61,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Atalanta vs Cagliari",
+          "event_result": "scored",
+          "league": "serie-a",
+          "review_source": "fotmob_live",
+          "source_path": "data/goalscorer/penalty-duty-live-review.json",
+          "manual_ticket_decisions": [
+            {
+              "id": "2026-09-12|serie-a|cagliari|atalanta|maldini",
+              "status": "applied"
+            }
+          ]
+        }
+      ],
+      "control": {
+        "locked": true,
+        "override": {
+          "primary": "Daniel Maldini",
+          "secondary": "Alessandro Deiola",
+          "tertiary": "Yerry Mina"
+        },
+        "reason": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
+        "updated_at": "2026-09-13T11:57:43+00:00",
+        "actor": "local_admin"
+      },
+      "source_observed_at": "2026-09-13T04:54:00Z"
     },
     {
       "id": "serie-a|Como",
@@ -1067,7 +1290,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:45:40Z"
+      "source_observed_at": "2026-09-13T04:54:00Z"
     },
     {
       "id": "serie-a|Fiorentina",
@@ -1088,7 +1311,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:45:40Z"
+      "source_observed_at": "2026-09-13T04:54:00Z"
     },
     {
       "id": "serie-a|Frosinone",
@@ -1109,7 +1332,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:45:40Z"
+      "source_observed_at": "2026-09-13T04:54:00Z"
     },
     {
       "id": "serie-a|Genoa",
@@ -1117,20 +1340,74 @@
       "club": "Genoa",
       "season": "2026/27",
       "current": {
-        "primary": "Lorenzo Colombo",
-        "secondary": "Junior Messias",
+        "primary": "Junior Messias",
+        "secondary": "Milutin Osmajic",
         "tertiary": "Vitinha"
       },
-      "entry_hash": "96c950cc8d4b29bef8ae186ad9ccada82859aeae6d65282e3586d2234def742e",
+      "entry_hash": "f72ec33a80f28628e9dd3feda1d10c99249e528d2a5ca9ba73c3f69034cfcb14",
       "proposed": null,
-      "status": "stale",
+      "status": "locked",
       "confidence": "low",
       "reasons": [
-        "Current squad source is stale or missing"
+        "Manual lock/override preserves the filed hierarchy"
       ],
-      "evidence": [],
-      "control": {},
-      "source_observed_at": "2026-09-06T04:45:40Z"
+      "evidence": [
+        {
+          "id": "fotmob|serie-a|5749672|2968107705",
+          "source_event_id": "2968107705",
+          "match_id": "5749672",
+          "source_url": "https://www.fotmob.com/matches/frosinone-vs-genoa/3ckfw9#5749672",
+          "observed_at": "2026-09-13T04:53:52+00:00",
+          "event_date": "2026-09-12",
+          "season": "2026/27",
+          "team": "Genoa",
+          "taker": "Lorenzo Colombo",
+          "primary": "Lorenzo Colombo",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Lorenzo Colombo",
+            "minute": 45,
+            "method": "completed_lineup_timeline",
+            "player_id": 1050163,
+            "bucket": "starters",
+            "substitutions": [
+              {
+                "type": "subout",
+                "time": 70
+              }
+            ],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 45,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Genoa vs Frosinone",
+          "event_result": "missed",
+          "league": "serie-a",
+          "review_source": "fotmob_live",
+          "source_path": "data/goalscorer/penalty-duty-live-review.json",
+          "manual_ticket_decisions": [
+            {
+              "id": "2026-09-12|serie-a|genoa|frosinone|colombo",
+              "status": "ignored"
+            }
+          ]
+        }
+      ],
+      "control": {
+        "locked": true,
+        "override": {
+          "primary": "Junior Messias",
+          "secondary": "Milutin Osmajic",
+          "tertiary": "Vitinha"
+        },
+        "reason": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
+        "updated_at": "2026-09-13T11:57:43+00:00",
+        "actor": "local_admin"
+      },
+      "source_observed_at": "2026-09-13T04:54:00Z"
     },
     {
       "id": "serie-a|Inter",
@@ -1151,7 +1428,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:45:40Z"
+      "source_observed_at": "2026-09-13T04:54:00Z"
     },
     {
       "id": "serie-a|Juventus",
@@ -1172,7 +1449,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:45:40Z"
+      "source_observed_at": "2026-09-13T04:54:00Z"
     },
     {
       "id": "serie-a|Lazio",
@@ -1193,7 +1470,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:45:40Z"
+      "source_observed_at": "2026-09-13T04:54:00Z"
     },
     {
       "id": "serie-a|Lecce",
@@ -1214,7 +1491,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:45:40Z"
+      "source_observed_at": "2026-09-13T04:54:00Z"
     },
     {
       "id": "serie-a|Monza",
@@ -1235,7 +1512,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:45:40Z"
+      "source_observed_at": "2026-09-13T04:54:00Z"
     },
     {
       "id": "serie-a|Napoli",
@@ -1256,7 +1533,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:45:40Z"
+      "source_observed_at": "2026-09-13T04:54:00Z"
     },
     {
       "id": "serie-a|Parma Calcio 1913",
@@ -1277,7 +1554,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:45:40Z"
+      "source_observed_at": "2026-09-13T04:54:00Z"
     },
     {
       "id": "serie-a|Roma",
@@ -1298,7 +1575,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:45:40Z"
+      "source_observed_at": "2026-09-13T04:54:00Z"
     },
     {
       "id": "serie-a|Sassuolo",
@@ -1319,7 +1596,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:45:40Z"
+      "source_observed_at": "2026-09-13T04:54:00Z"
     },
     {
       "id": "serie-a|Torino",
@@ -1340,7 +1617,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:45:40Z"
+      "source_observed_at": "2026-09-13T04:54:00Z"
     },
     {
       "id": "serie-a|Udinese",
@@ -1361,7 +1638,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:45:40Z"
+      "source_observed_at": "2026-09-13T04:54:00Z"
     },
     {
       "id": "serie-a|Venezia",
@@ -1382,7 +1659,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:45:40Z"
+      "source_observed_at": "2026-09-13T04:54:00Z"
     },
     {
       "id": "bundesliga|Augsburg",
@@ -1403,7 +1680,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:12Z"
+      "source_observed_at": "2026-09-13T04:54:33Z"
     },
     {
       "id": "bundesliga|Bayer Leverkusen",
@@ -1424,7 +1701,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:12Z"
+      "source_observed_at": "2026-09-13T04:54:33Z"
     },
     {
       "id": "bundesliga|Bayern Munich",
@@ -1445,7 +1722,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:12Z"
+      "source_observed_at": "2026-09-13T04:54:33Z"
     },
     {
       "id": "bundesliga|Borussia Dortmund",
@@ -1466,7 +1743,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:12Z"
+      "source_observed_at": "2026-09-13T04:54:33Z"
     },
     {
       "id": "bundesliga|Borussia M.Gladbach",
@@ -1487,7 +1764,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:12Z"
+      "source_observed_at": "2026-09-13T04:54:33Z"
     },
     {
       "id": "bundesliga|Eintracht Frankfurt",
@@ -1508,7 +1785,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:12Z"
+      "source_observed_at": "2026-09-13T04:54:33Z"
     },
     {
       "id": "bundesliga|FC Cologne",
@@ -1529,7 +1806,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:12Z"
+      "source_observed_at": "2026-09-13T04:54:33Z"
     },
     {
       "id": "bundesliga|Freiburg",
@@ -1550,7 +1827,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:12Z"
+      "source_observed_at": "2026-09-13T04:54:33Z"
     },
     {
       "id": "bundesliga|Hamburger SV",
@@ -1571,7 +1848,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:12Z"
+      "source_observed_at": "2026-09-13T04:54:33Z"
     },
     {
       "id": "bundesliga|Hoffenheim",
@@ -1592,7 +1869,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:12Z"
+      "source_observed_at": "2026-09-13T04:54:33Z"
     },
     {
       "id": "bundesliga|Mainz 05",
@@ -1606,14 +1883,58 @@
       },
       "entry_hash": "8aeb5796705fd4b9d1b4978e86464322d6c47f0d76f972502f44ac5dd59d0912",
       "proposed": null,
-      "status": "stale",
+      "status": "review",
       "confidence": "low",
       "reasons": [
         "Current squad source is stale or missing"
       ],
-      "evidence": [],
+      "evidence": [
+        {
+          "id": "fotmob|bundesliga|5881167|2968141999",
+          "source_event_id": "2968141999",
+          "match_id": "5881167",
+          "source_url": "https://www.fotmob.com/matches/eintracht-frankfurt-vs-mainz-05/37ptfb#5881167",
+          "observed_at": "2026-09-13T04:54:21+00:00",
+          "event_date": "2026-09-12",
+          "season": "2026/27",
+          "team": "Mainz 05",
+          "taker": "Nadiem Amiri",
+          "primary": "Nadiem Amiri",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Nadiem Amiri",
+            "minute": 43,
+            "method": "completed_lineup_timeline",
+            "player_id": 614449,
+            "bucket": "starters",
+            "substitutions": [
+              {
+                "type": "subout",
+                "time": 85
+              }
+            ],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 43,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Mainz 05 vs Eintracht Frankfurt",
+          "event_result": "missed",
+          "league": "bundesliga",
+          "review_source": "fotmob_live",
+          "source_path": "data/goalscorer/bundesliga-penalty-duty-live-review.json",
+          "manual_ticket_decisions": [
+            {
+              "id": "2026-09-12|bundesliga|mainz 05|eintracht frankfurt|amiri",
+              "status": "ignored"
+            }
+          ]
+        }
+      ],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:12Z"
+      "source_observed_at": "2026-09-13T04:54:33Z"
     },
     {
       "id": "bundesliga|RasenBallsport Leipzig",
@@ -1634,7 +1955,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:12Z"
+      "source_observed_at": "2026-09-13T04:54:33Z"
     },
     {
       "id": "bundesliga|SC Paderborn 07",
@@ -1655,7 +1976,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:12Z"
+      "source_observed_at": "2026-09-13T04:54:33Z"
     },
     {
       "id": "bundesliga|SV Elversberg",
@@ -1676,7 +1997,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:12Z"
+      "source_observed_at": "2026-09-13T04:54:33Z"
     },
     {
       "id": "bundesliga|Schalke 04",
@@ -1697,7 +2018,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:12Z"
+      "source_observed_at": "2026-09-13T04:54:33Z"
     },
     {
       "id": "bundesliga|Union Berlin",
@@ -1718,7 +2039,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:12Z"
+      "source_observed_at": "2026-09-13T04:54:33Z"
     },
     {
       "id": "bundesliga|VfB Stuttgart",
@@ -1739,7 +2060,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:12Z"
+      "source_observed_at": "2026-09-13T04:54:33Z"
     },
     {
       "id": "bundesliga|Werder Bremen",
@@ -1760,7 +2081,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T04:46:12Z"
+      "source_observed_at": "2026-09-13T04:54:33Z"
     },
     {
       "id": "ligue-1|Angers",
@@ -1781,7 +2102,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:30Z"
+      "source_observed_at": "2026-09-13T04:54:45Z"
     },
     {
       "id": "ligue-1|Auxerre",
@@ -1802,7 +2123,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:30Z"
+      "source_observed_at": "2026-09-13T04:54:45Z"
     },
     {
       "id": "ligue-1|Brest",
@@ -1853,7 +2174,12 @@
           "league": "ligue-1",
           "review_source": "fotmob_live",
           "source_path": "data/goalscorer/ligue-1-penalty-duty-live-review.json",
-          "manual_ticket_decisions": []
+          "manual_ticket_decisions": [
+            {
+              "id": "2026-09-05|ligue-1|brest|le havre|doumbia",
+              "status": "done"
+            }
+          ]
         }
       ],
       "control": {
@@ -1867,7 +2193,7 @@
         "updated_at": "2026-09-06T08:33:01+00:00",
         "actor": "local_admin"
       },
-      "source_observed_at": "2026-09-06T08:32:30Z"
+      "source_observed_at": "2026-09-13T04:54:45Z"
     },
     {
       "id": "ligue-1|Le Havre",
@@ -1914,11 +2240,16 @@
           "league": "ligue-1",
           "review_source": "fotmob_live",
           "source_path": "data/goalscorer/ligue-1-penalty-duty-live-review.json",
-          "manual_ticket_decisions": []
+          "manual_ticket_decisions": [
+            {
+              "id": "2026-09-05|ligue-1|le havre|brest|fofana",
+              "status": "done"
+            }
+          ]
         }
       ],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:30Z"
+      "source_observed_at": "2026-09-13T04:54:45Z"
     },
     {
       "id": "ligue-1|Le Mans",
@@ -1939,7 +2270,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:30Z"
+      "source_observed_at": "2026-09-13T04:54:45Z"
     },
     {
       "id": "ligue-1|Lens",
@@ -1960,7 +2291,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:30Z"
+      "source_observed_at": "2026-09-13T04:54:45Z"
     },
     {
       "id": "ligue-1|Lille",
@@ -1981,7 +2312,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:30Z"
+      "source_observed_at": "2026-09-13T04:54:45Z"
     },
     {
       "id": "ligue-1|Lorient",
@@ -2002,7 +2333,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:30Z"
+      "source_observed_at": "2026-09-13T04:54:45Z"
     },
     {
       "id": "ligue-1|Lyon",
@@ -2023,7 +2354,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:30Z"
+      "source_observed_at": "2026-09-13T04:54:45Z"
     },
     {
       "id": "ligue-1|Marseille",
@@ -2044,7 +2375,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:30Z"
+      "source_observed_at": "2026-09-13T04:54:45Z"
     },
     {
       "id": "ligue-1|Monaco",
@@ -2065,7 +2396,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:30Z"
+      "source_observed_at": "2026-09-13T04:54:45Z"
     },
     {
       "id": "ligue-1|Nice",
@@ -2086,7 +2417,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:30Z"
+      "source_observed_at": "2026-09-13T04:54:45Z"
     },
     {
       "id": "ligue-1|Paris FC",
@@ -2107,7 +2438,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:30Z"
+      "source_observed_at": "2026-09-13T04:54:45Z"
     },
     {
       "id": "ligue-1|Paris Saint Germain",
@@ -2128,7 +2459,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:30Z"
+      "source_observed_at": "2026-09-13T04:54:45Z"
     },
     {
       "id": "ligue-1|Rennes",
@@ -2149,7 +2480,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:30Z"
+      "source_observed_at": "2026-09-13T04:54:45Z"
     },
     {
       "id": "ligue-1|Strasbourg",
@@ -2170,7 +2501,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:30Z"
+      "source_observed_at": "2026-09-13T04:54:45Z"
     },
     {
       "id": "ligue-1|Toulouse",
@@ -2191,7 +2522,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:30Z"
+      "source_observed_at": "2026-09-13T04:54:45Z"
     },
     {
       "id": "ligue-1|Troyes",
@@ -2212,7 +2543,7 @@
       ],
       "evidence": [],
       "control": {},
-      "source_observed_at": "2026-09-06T08:32:30Z"
+      "source_observed_at": "2026-09-13T04:54:45Z"
     }
   ],
   "audit": [
@@ -2247,6 +2578,105 @@
         "primary": "Kamory Doumbia",
         "secondary": "Ludovic Ajorque",
         "tertiary": "Kenny Lala"
+      }
+    },
+    {
+      "id": "feb728c3216d454ba24c68b55de7d0b0",
+      "at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin",
+      "action": "override",
+      "club_id": "la-liga|Elche",
+      "reason": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
+      "before_entry_hash": "7f10f8a387279ac8b052e32428acf6d3f3e311c681d87cae91cfaf4e065dc630",
+      "after_entry_hash": "a6a6e213a873d9dcd16fa463acce02be6656e9b3aa071692940edb019b55d543",
+      "before_control": {},
+      "after_control": {
+        "locked": true,
+        "override": {
+          "primary": "Facundo Buonanotte",
+          "secondary": "Fer Niño",
+          "tertiary": "Germán Valera"
+        },
+        "reason": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
+        "updated_at": "2026-09-13T11:57:43+00:00",
+        "actor": "local_admin"
+      },
+      "reverts": null,
+      "before_hierarchy": {
+        "primary": "Fer Niño",
+        "secondary": "Germán Valera",
+        "tertiary": "Ali Houary"
+      },
+      "after_hierarchy": {
+        "primary": "Facundo Buonanotte",
+        "secondary": "Fer Niño",
+        "tertiary": "Germán Valera"
+      }
+    },
+    {
+      "id": "33bfd58cb2c34981a86f1c63bd532510",
+      "at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin",
+      "action": "override",
+      "club_id": "serie-a|Genoa",
+      "reason": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
+      "before_entry_hash": "96c950cc8d4b29bef8ae186ad9ccada82859aeae6d65282e3586d2234def742e",
+      "after_entry_hash": "f72ec33a80f28628e9dd3feda1d10c99249e528d2a5ca9ba73c3f69034cfcb14",
+      "before_control": {},
+      "after_control": {
+        "locked": true,
+        "override": {
+          "primary": "Junior Messias",
+          "secondary": "Milutin Osmajic",
+          "tertiary": "Vitinha"
+        },
+        "reason": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
+        "updated_at": "2026-09-13T11:57:43+00:00",
+        "actor": "local_admin"
+      },
+      "reverts": null,
+      "before_hierarchy": {
+        "primary": "Lorenzo Colombo",
+        "secondary": "Junior Messias",
+        "tertiary": "Vitinha"
+      },
+      "after_hierarchy": {
+        "primary": "Junior Messias",
+        "secondary": "Milutin Osmajic",
+        "tertiary": "Vitinha"
+      }
+    },
+    {
+      "id": "02b247d3974b49adbc89c32aee1076ff",
+      "at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin",
+      "action": "override",
+      "club_id": "serie-a|Cagliari",
+      "reason": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
+      "before_entry_hash": "a8a75d25822c9994e0fdb6c7ec1d2839c8f53fd7c79862b4deb8b0801c5ed65e",
+      "after_entry_hash": "1bef4d075a8ee6d1bf983eb33ff58b56672f71082aa3536886612f034f0261d3",
+      "before_control": {},
+      "after_control": {
+        "locked": true,
+        "override": {
+          "primary": "Daniel Maldini",
+          "secondary": "Alessandro Deiola",
+          "tertiary": "Yerry Mina"
+        },
+        "reason": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
+        "updated_at": "2026-09-13T11:57:43+00:00",
+        "actor": "local_admin"
+      },
+      "reverts": null,
+      "before_hierarchy": {
+        "primary": "Alessandro Deiola",
+        "secondary": "Jacopo Fazzini",
+        "tertiary": "Yerry Mina"
+      },
+      "after_hierarchy": {
+        "primary": "Daniel Maldini",
+        "secondary": "Alessandro Deiola",
+        "tertiary": "Yerry Mina"
       }
     }
   ],

@@ -1,0 +1,765 @@
+{
+  "schema_version": 1,
+  "status": "committed",
+  "id": "33bfd58cb2c34981a86f1c63bd532510",
+  "league": "serie-a",
+  "audit": {
+    "id": "33bfd58cb2c34981a86f1c63bd532510",
+    "at": "2026-09-13T11:57:43+00:00",
+    "actor": "local_admin",
+    "action": "override",
+    "club_id": "serie-a|Genoa",
+    "reason": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
+    "before_entry": {
+      "primary": "Lorenzo Colombo",
+      "secondary": "Junior Messias",
+      "tertiary": "Vitinha",
+      "last_updated": "2026-07-30",
+      "source": "Il Margine multi-source research",
+      "cross_check": "Il Margine roster cross-check",
+      "hierarchy_status": "disputed",
+      "confidence": {
+        "primary": "medium",
+        "secondary": "medium",
+        "tertiary": "low"
+      },
+      "condition_note": "With Malinovskyi departed, Colombo converted Genoa's first current preseason penalty. Messias was the 2025/26 vice-taker when Malinovskyi was absent, and both current specialist boards rank Colombo, Messias and Vitinha in the filed order. Colombo's primary evidence is still a friendly plus specialist consensus, not a competitive like-for-like event under the final 2026/27 squad. Colombo's lead rests on a preseason penalty and specialist consensus, not a competitive like-for-like event. Conditions: A specialist signing or a departure among Colombo, Messias or Vitinha requires a reorder.",
+      "last_verified": {
+        "date": "2026-09-02",
+        "by": "Il Margine",
+        "method": "current_squad_membership_audit"
+      },
+      "public_updated_at": "2026-09-02",
+      "latest_evidence": {
+        "id": "evt_20260901_genoa_current_review",
+        "date": "2026-09-01",
+        "type": "current_season_board_review",
+        "source_count": 2
+      },
+      "evidence_log": [
+        {
+          "id": "evt_20260710_genoa_rollover",
+          "date": "2026-07-10",
+          "season": "2026/27",
+          "type": "editorial_note",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": null,
+          "sources": [],
+          "detection": "manual",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-10T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+        },
+        {
+          "id": "evt_20260727_genoa_research",
+          "date": "2026-07-27",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Colombo won and converted Genoa's preseason penalty against Trento. Reports Malinovskyi's departure and names Colombo the current first candidate, followed by candidates including Messias and Vitinha. Ranks Colombo, Messias and Vitinha.",
+          "sources": [
+            {
+              "label": "ANSA",
+              "url": "https://www.ansa.it/sito/notizie/sport/calcio/2026/07/19/genoa-colombo-e-puzcka-rimontano-il-trento-la-prima-uscita-e-2-1_f5fb6842-b0fe-4857-a54b-84bb04703519.html",
+              "date": "2026-07-19",
+              "note": "Colombo won and converted Genoa's preseason penalty against Trento."
+            },
+            {
+              "label": "SOS Fanta",
+              "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+              "date": "2026-07-24",
+              "note": "Reports Malinovskyi's departure and names Colombo the current first candidate, followed by candidates including Messias and Vitinha."
+            },
+            {
+              "label": "Goal Italia",
+              "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+              "date": "2026-07-23",
+              "note": "Ranks Colombo, Messias and Vitinha."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-27T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260728_genoa_research",
+          "date": "2026-07-28",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "With Malinovskyi departed, Colombo converted Genoa's first current preseason penalty. Messias was the 2025/26 vice-taker when Malinovskyi was absent, and both current specialist boards rank Colombo, Messias and Vitinha in the filed order.",
+          "sources": [
+            {
+              "label": "ANSA",
+              "url": "https://www.ansa.it/sito/notizie/sport/calcio/2026/07/19/genoa-colombo-e-puzcka-rimontano-il-trento-la-prima-uscita-e-2-1_f5fb6842-b0fe-4857-a54b-84bb04703519.html",
+              "date": "2026-07-19",
+              "note": "Colombo won and converted Genoa's first preseason penalty."
+            },
+            {
+              "label": "Fantacalcio",
+              "url": "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+              "date": "2026-04-25",
+              "note": "Records Messias scoring when Malinovskyi was absent and identifies him as the 2025/26 vice-taker."
+            },
+            {
+              "label": "SOS Fanta",
+              "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+              "date": "2026-07-27",
+              "note": "Names Colombo first after Malinovskyi's departure and lists Messias and Vitinha among the leading alternatives."
+            },
+            {
+              "label": "Goal Italia",
+              "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+              "date": "2026-07-23",
+              "note": "Ranks Colombo, Messias and Vitinha in the filed order."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-28T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260730_genoa_research",
+          "date": "2026-07-30",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "With Malinovskyi departed, Colombo converted Genoa's first current preseason penalty. Messias was the 2025/26 vice-taker when Malinovskyi was absent, and both current specialist boards rank Colombo, Messias and Vitinha in the filed order. Colombo's primary evidence is still a friendly plus specialist consensus, not a competitive like-for-like event under the final 2026/27 squad.",
+          "sources": [
+            {
+              "label": "Il Margine source review",
+              "url": "https://www.ansa.it/sito/notizie/sport/calcio/2026/07/19/genoa-colombo-e-puzcka-rimontano-il-trento-la-prima-uscita-e-2-1_f5fb6842-b0fe-4857-a54b-84bb04703519.html",
+              "date": "2026-07-19",
+              "note": "ANSA"
+            },
+            {
+              "label": "Il Margine source review",
+              "url": "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+              "date": "2026-04-25",
+              "note": "Fantacalcio"
+            },
+            {
+              "label": "Il Margine source review",
+              "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+              "date": "2026-07-29",
+              "note": "SOS Fanta"
+            },
+            {
+              "label": "Il Margine source review",
+              "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+              "date": "2026-07-23",
+              "note": "Goal Italia"
+            },
+            {
+              "label": "Il Margine source review",
+              "url": "https://genoacfc.it/prima-squadra-maschile/",
+              "date": "2026-07-30",
+              "note": "Official squad membership check"
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-30T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260901_genoa_current_review",
+          "date": "2026-09-01",
+          "season": "2026/27",
+          "type": "current_season_board_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "headline": "Genoa hierarchy rechecked",
+          "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+          "sources": [
+            {
+              "label": "GOAL Italia 2026/27 rigoristi board",
+              "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+              "date": "2026-08-29",
+              "note": "Current all-club order reflecting late-August transfers and role changes."
+            },
+            {
+              "label": "Lega Serie A current squads",
+              "url": "https://www.legaseriea.it/en/serie-a/teams",
+              "date": "2026-09-01",
+              "note": "Current league squad directory used to reject departed candidates."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-01T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+        }
+      ],
+      "change_log": [
+        {
+          "changed_at": "2026-07-10",
+          "season": "2026/27",
+          "change_type": "season_rollover",
+          "from": {
+            "primary": "Ruslan Malinovskiy",
+            "secondary": "Junior Messias",
+            "tertiary": "Lorenzo Colombo"
+          },
+          "to": {
+            "primary": "Ruslan Malinovskiy",
+            "secondary": "Junior Messias",
+            "tertiary": "Lorenzo Colombo"
+          },
+          "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+          "evidence_ids": [
+            "evt_20260710_genoa_rollover"
+          ],
+          "detection": "manual",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-10T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-28",
+          "season": "2026/27",
+          "change_type": "preseason_reverification",
+          "from": {
+            "primary": "Lorenzo Colombo",
+            "secondary": "Junior Messias",
+            "tertiary": "Vitinha"
+          },
+          "to": {
+            "primary": "Lorenzo Colombo",
+            "secondary": "Junior Messias",
+            "tertiary": "Vitinha"
+          },
+          "reason": "With Malinovskyi departed, Colombo converted Genoa's first current preseason penalty. Messias was the 2025/26 vice-taker when Malinovskyi was absent, and both current specialist boards rank Colombo, Messias and Vitinha in the filed order. Colombo's primary evidence is still a friendly plus specialist consensus, not a competitive like-for-like event under the final 2026/27 squad. Conditions: A specialist signing or a departure among Colombo, Messias or Vitinha requires a reorder.",
+          "evidence_ids": [
+            "evt_20260728_genoa_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-28T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-30",
+          "season": "2026/27",
+          "change_type": "preseason_reverification",
+          "from": {
+            "primary": "Lorenzo Colombo",
+            "secondary": "Junior Messias",
+            "tertiary": "Vitinha"
+          },
+          "to": {
+            "primary": "Lorenzo Colombo",
+            "secondary": "Junior Messias",
+            "tertiary": "Vitinha"
+          },
+          "reason": "With Malinovskyi departed, Colombo converted Genoa's first current preseason penalty. Messias was the 2025/26 vice-taker when Malinovskyi was absent, and both current specialist boards rank Colombo, Messias and Vitinha in the filed order. Colombo's primary evidence is still a friendly plus specialist consensus, not a competitive like-for-like event under the final 2026/27 squad. Colombo's lead rests on a preseason penalty and specialist consensus, not a competitive like-for-like event. Conditions: A specialist signing or a departure among Colombo, Messias or Vitinha requires a reorder.",
+          "evidence_ids": [
+            "evt_20260730_genoa_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-30T12:00:00Z",
+          "article_slug": null
+        }
+      ],
+      "flags": {
+        "carryover_from_previous_season": false,
+        "weak_evidence": true,
+        "stale_override": null
+      },
+      "prior_season": {
+        "label": "2025/26",
+        "primary": "Ruslan Malinovskiy",
+        "secondary": "Junior Messias",
+        "tertiary": "Lorenzo Colombo",
+        "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+      },
+      "player_ids": {},
+      "squad_membership": {
+        "primary": {
+          "player": "Lorenzo Colombo",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/10233/overview/genoa",
+          "checked_at": "2026-09-02"
+        },
+        "secondary": {
+          "player": "Junior Messias",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/10233/overview/genoa",
+          "checked_at": "2026-09-02"
+        },
+        "tertiary": {
+          "player": "Vitinha",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/10233/overview/genoa",
+          "checked_at": "2026-09-02"
+        }
+      },
+      "last_reviewed": {
+        "date": "2026-09-01",
+        "by": "Il Margine",
+        "method": "current_season_multi_source_review",
+        "outcome": "order_unchanged",
+        "sources": [
+          "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+          "https://www.legaseriea.it/en/serie-a/teams"
+        ]
+      }
+    },
+    "after_entry": {
+      "primary": "Junior Messias",
+      "secondary": "Milutin Osmajic",
+      "tertiary": "Vitinha",
+      "last_updated": "2026-09-13",
+      "source": "Il Margine multi-source research",
+      "cross_check": "Il Margine roster cross-check",
+      "hierarchy_status": "probable",
+      "confidence": {
+        "primary": "medium",
+        "secondary": "medium",
+        "tertiary": "medium"
+      },
+      "condition_note": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
+      "last_verified": {
+        "date": "2026-09-13",
+        "by": "local_admin",
+        "method": "reviewed_manual_hierarchy_override"
+      },
+      "public_updated_at": "2026-09-13",
+      "latest_evidence": {
+        "id": "33bfd58cb2c34981a86f1c63bd532510",
+        "date": "2026-09-13",
+        "type": "current_season_board_review",
+        "source_count": 1
+      },
+      "evidence_log": [
+        {
+          "id": "evt_20260710_genoa_rollover",
+          "date": "2026-07-10",
+          "season": "2026/27",
+          "type": "editorial_note",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": null,
+          "sources": [],
+          "detection": "manual",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-10T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+        },
+        {
+          "id": "evt_20260727_genoa_research",
+          "date": "2026-07-27",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Colombo won and converted Genoa's preseason penalty against Trento. Reports Malinovskyi's departure and names Colombo the current first candidate, followed by candidates including Messias and Vitinha. Ranks Colombo, Messias and Vitinha.",
+          "sources": [
+            {
+              "label": "ANSA",
+              "url": "https://www.ansa.it/sito/notizie/sport/calcio/2026/07/19/genoa-colombo-e-puzcka-rimontano-il-trento-la-prima-uscita-e-2-1_f5fb6842-b0fe-4857-a54b-84bb04703519.html",
+              "date": "2026-07-19",
+              "note": "Colombo won and converted Genoa's preseason penalty against Trento."
+            },
+            {
+              "label": "SOS Fanta",
+              "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+              "date": "2026-07-24",
+              "note": "Reports Malinovskyi's departure and names Colombo the current first candidate, followed by candidates including Messias and Vitinha."
+            },
+            {
+              "label": "Goal Italia",
+              "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+              "date": "2026-07-23",
+              "note": "Ranks Colombo, Messias and Vitinha."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-27T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260728_genoa_research",
+          "date": "2026-07-28",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "With Malinovskyi departed, Colombo converted Genoa's first current preseason penalty. Messias was the 2025/26 vice-taker when Malinovskyi was absent, and both current specialist boards rank Colombo, Messias and Vitinha in the filed order.",
+          "sources": [
+            {
+              "label": "ANSA",
+              "url": "https://www.ansa.it/sito/notizie/sport/calcio/2026/07/19/genoa-colombo-e-puzcka-rimontano-il-trento-la-prima-uscita-e-2-1_f5fb6842-b0fe-4857-a54b-84bb04703519.html",
+              "date": "2026-07-19",
+              "note": "Colombo won and converted Genoa's first preseason penalty."
+            },
+            {
+              "label": "Fantacalcio",
+              "url": "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+              "date": "2026-04-25",
+              "note": "Records Messias scoring when Malinovskyi was absent and identifies him as the 2025/26 vice-taker."
+            },
+            {
+              "label": "SOS Fanta",
+              "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+              "date": "2026-07-27",
+              "note": "Names Colombo first after Malinovskyi's departure and lists Messias and Vitinha among the leading alternatives."
+            },
+            {
+              "label": "Goal Italia",
+              "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+              "date": "2026-07-23",
+              "note": "Ranks Colombo, Messias and Vitinha in the filed order."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-28T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260730_genoa_research",
+          "date": "2026-07-30",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "With Malinovskyi departed, Colombo converted Genoa's first current preseason penalty. Messias was the 2025/26 vice-taker when Malinovskyi was absent, and both current specialist boards rank Colombo, Messias and Vitinha in the filed order. Colombo's primary evidence is still a friendly plus specialist consensus, not a competitive like-for-like event under the final 2026/27 squad.",
+          "sources": [
+            {
+              "label": "Il Margine source review",
+              "url": "https://www.ansa.it/sito/notizie/sport/calcio/2026/07/19/genoa-colombo-e-puzcka-rimontano-il-trento-la-prima-uscita-e-2-1_f5fb6842-b0fe-4857-a54b-84bb04703519.html",
+              "date": "2026-07-19",
+              "note": "ANSA"
+            },
+            {
+              "label": "Il Margine source review",
+              "url": "https://www.fantacalcio.it/amp/rubriche/stat-corner/25_04_2026/fanta-stat-corner-i-rigoristi-della-serie-a-491975",
+              "date": "2026-04-25",
+              "note": "Fantacalcio"
+            },
+            {
+              "label": "Il Margine source review",
+              "url": "https://www.sosfanta.com/asta-fantacalcio/fantacalcio-asta-tutti-rigoristi-seriea-venti-squadre-campionato/",
+              "date": "2026-07-29",
+              "note": "SOS Fanta"
+            },
+            {
+              "label": "Il Margine source review",
+              "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+              "date": "2026-07-23",
+              "note": "Goal Italia"
+            },
+            {
+              "label": "Il Margine source review",
+              "url": "https://genoacfc.it/prima-squadra-maschile/",
+              "date": "2026-07-30",
+              "note": "Official squad membership check"
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-30T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260901_genoa_current_review",
+          "date": "2026-09-01",
+          "season": "2026/27",
+          "type": "current_season_board_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "headline": "Genoa hierarchy rechecked",
+          "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+          "sources": [
+            {
+              "label": "GOAL Italia 2026/27 rigoristi board",
+              "url": "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+              "date": "2026-08-29",
+              "note": "Current all-club order reflecting late-August transfers and role changes."
+            },
+            {
+              "label": "Lega Serie A current squads",
+              "url": "https://www.legaseriea.it/en/serie-a/teams",
+              "date": "2026-09-01",
+              "note": "Current league squad directory used to reject departed candidates."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-01T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+        },
+        {
+          "id": "33bfd58cb2c34981a86f1c63bd532510",
+          "date": "2026-09-13",
+          "type": "current_season_board_review",
+          "headline": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
+          "editorial_note": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
+          "sources": [
+            {
+              "label": "Reviewed match context",
+              "url": "https://www.fotmob.com/matches/frosinone-vs-genoa/3ckfw9#5749672",
+              "date": "2026-09-12",
+              "note": "Hierarchy set by owner editorial instruction. This match provides review context, not independent proof of every rank."
+            }
+          ],
+          "review": {
+            "status": "approved",
+            "reviewed_by": "local_admin",
+            "reviewed_at": "2026-09-13T11:57:43+00:00"
+          },
+          "affects_hierarchy": true,
+          "detection": "local_admin",
+          "season": "2026/27"
+        }
+      ],
+      "change_log": [
+        {
+          "changed_at": "2026-07-10",
+          "season": "2026/27",
+          "change_type": "season_rollover",
+          "from": {
+            "primary": "Ruslan Malinovskiy",
+            "secondary": "Junior Messias",
+            "tertiary": "Lorenzo Colombo"
+          },
+          "to": {
+            "primary": "Ruslan Malinovskiy",
+            "secondary": "Junior Messias",
+            "tertiary": "Lorenzo Colombo"
+          },
+          "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+          "evidence_ids": [
+            "evt_20260710_genoa_rollover"
+          ],
+          "detection": "manual",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-10T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-28",
+          "season": "2026/27",
+          "change_type": "preseason_reverification",
+          "from": {
+            "primary": "Lorenzo Colombo",
+            "secondary": "Junior Messias",
+            "tertiary": "Vitinha"
+          },
+          "to": {
+            "primary": "Lorenzo Colombo",
+            "secondary": "Junior Messias",
+            "tertiary": "Vitinha"
+          },
+          "reason": "With Malinovskyi departed, Colombo converted Genoa's first current preseason penalty. Messias was the 2025/26 vice-taker when Malinovskyi was absent, and both current specialist boards rank Colombo, Messias and Vitinha in the filed order. Colombo's primary evidence is still a friendly plus specialist consensus, not a competitive like-for-like event under the final 2026/27 squad. Conditions: A specialist signing or a departure among Colombo, Messias or Vitinha requires a reorder.",
+          "evidence_ids": [
+            "evt_20260728_genoa_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-28T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-30",
+          "season": "2026/27",
+          "change_type": "preseason_reverification",
+          "from": {
+            "primary": "Lorenzo Colombo",
+            "secondary": "Junior Messias",
+            "tertiary": "Vitinha"
+          },
+          "to": {
+            "primary": "Lorenzo Colombo",
+            "secondary": "Junior Messias",
+            "tertiary": "Vitinha"
+          },
+          "reason": "With Malinovskyi departed, Colombo converted Genoa's first current preseason penalty. Messias was the 2025/26 vice-taker when Malinovskyi was absent, and both current specialist boards rank Colombo, Messias and Vitinha in the filed order. Colombo's primary evidence is still a friendly plus specialist consensus, not a competitive like-for-like event under the final 2026/27 squad. Colombo's lead rests on a preseason penalty and specialist consensus, not a competitive like-for-like event. Conditions: A specialist signing or a departure among Colombo, Messias or Vitinha requires a reorder.",
+          "evidence_ids": [
+            "evt_20260730_genoa_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-30T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "id": "33bfd58cb2c34981a86f1c63bd532510",
+          "changed_at": "2026-09-13T11:57:43+00:00",
+          "change_type": "hierarchy_change",
+          "reason": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
+          "from": {
+            "primary": "Lorenzo Colombo",
+            "secondary": "Junior Messias",
+            "tertiary": "Vitinha"
+          },
+          "to": {
+            "primary": "Junior Messias",
+            "secondary": "Milutin Osmajic",
+            "tertiary": "Vitinha"
+          },
+          "evidence_ids": [
+            "33bfd58cb2c34981a86f1c63bd532510"
+          ]
+        }
+      ],
+      "flags": {
+        "carryover_from_previous_season": false,
+        "weak_evidence": false,
+        "stale_override": null
+      },
+      "prior_season": {
+        "label": "2025/26",
+        "primary": "Ruslan Malinovskiy",
+        "secondary": "Junior Messias",
+        "tertiary": "Lorenzo Colombo",
+        "archive": "data/goalscorer/archive/2025-26/serie-a-penalty-takers.json"
+      },
+      "player_ids": {},
+      "squad_membership": {
+        "primary": {
+          "player": "Junior Messias",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/10233/overview/genoa",
+          "checked_at": "2026-09-02"
+        },
+        "secondary": {
+          "player": "Milutin Osmajic",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/matches/frosinone-vs-genoa/3ckfw9#5749672",
+          "checked_at": "2026-09-13",
+          "method": "manual_editorial_attestation"
+        },
+        "tertiary": {
+          "player": "Vitinha",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/10233/overview/genoa",
+          "checked_at": "2026-09-02"
+        }
+      },
+      "last_reviewed": {
+        "date": "2026-09-01",
+        "by": "Il Margine",
+        "method": "current_season_multi_source_review",
+        "outcome": "order_unchanged",
+        "sources": [
+          "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
+          "https://www.legaseriea.it/en/serie-a/teams"
+        ]
+      },
+      "unavailable_candidates": []
+    },
+    "before_entry_hash": "96c950cc8d4b29bef8ae186ad9ccada82859aeae6d65282e3586d2234def742e",
+    "after_entry_hash": "f72ec33a80f28628e9dd3feda1d10c99249e528d2a5ca9ba73c3f69034cfcb14",
+    "before_control": {},
+    "after_control": {
+      "locked": true,
+      "override": {
+        "primary": "Junior Messias",
+        "secondary": "Milutin Osmajic",
+        "tertiary": "Vitinha"
+      },
+      "reason": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
+      "updated_at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin"
+    },
+    "reverts": null
+  },
+  "summary": {
+    "id": "33bfd58cb2c34981a86f1c63bd532510",
+    "at": "2026-09-13T11:57:43+00:00",
+    "actor": "local_admin",
+    "action": "override",
+    "club_id": "serie-a|Genoa",
+    "reason": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
+    "before_entry_hash": "96c950cc8d4b29bef8ae186ad9ccada82859aeae6d65282e3586d2234def742e",
+    "after_entry_hash": "f72ec33a80f28628e9dd3feda1d10c99249e528d2a5ca9ba73c3f69034cfcb14",
+    "before_control": {},
+    "after_control": {
+      "locked": true,
+      "override": {
+        "primary": "Junior Messias",
+        "secondary": "Milutin Osmajic",
+        "tertiary": "Vitinha"
+      },
+      "reason": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
+      "updated_at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin"
+    },
+    "reverts": null,
+    "before_hierarchy": {
+      "primary": "Lorenzo Colombo",
+      "secondary": "Junior Messias",
+      "tertiary": "Vitinha"
+    },
+    "after_hierarchy": {
+      "primary": "Junior Messias",
+      "secondary": "Milutin Osmajic",
+      "tertiary": "Vitinha"
+    }
+  },
+  "before_hierarchy_hash": "2fcd281a470e6dc92812974dfe8e8af9e22cac9024243b472b4344cff8acef9d",
+  "after_hierarchy_hash": "ab1c2afb9d9359c4acc3954d6bdf12f2321ed11771d84c38538235ada01824d3",
+  "before_state_hash": "270067ffa4ea65318b58620f3ad0f097785a1634466548edbb55c39f209e0a2a",
+  "after_state_hash": "5dbb8d0cabf1e28dca61447c3223f2ad2766418dc3fbdb7eb1c75233794aabeb",
+  "after_revision": 3
+}

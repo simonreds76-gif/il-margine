@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": 1,
+  "revision": 4,
   "clubs": {
     "ligue-1|Brest": {
       "locked": true,
@@ -11,6 +11,39 @@
       },
       "reason": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
       "updated_at": "2026-09-06T08:33:01+00:00",
+      "actor": "local_admin"
+    },
+    "la-liga|Elche": {
+      "locked": true,
+      "override": {
+        "primary": "Facundo Buonanotte",
+        "secondary": "Fer Niño",
+        "tertiary": "Germán Valera"
+      },
+      "reason": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
+      "updated_at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin"
+    },
+    "serie-a|Genoa": {
+      "locked": true,
+      "override": {
+        "primary": "Junior Messias",
+        "secondary": "Milutin Osmajic",
+        "tertiary": "Vitinha"
+      },
+      "reason": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
+      "updated_at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin"
+    },
+    "serie-a|Cagliari": {
+      "locked": true,
+      "override": {
+        "primary": "Daniel Maldini",
+        "secondary": "Alessandro Deiola",
+        "tertiary": "Yerry Mina"
+      },
+      "reason": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
+      "updated_at": "2026-09-13T11:57:43+00:00",
       "actor": "local_admin"
     }
   },
@@ -46,6 +79,105 @@
         "primary": "Kamory Doumbia",
         "secondary": "Ludovic Ajorque",
         "tertiary": "Kenny Lala"
+      }
+    },
+    {
+      "id": "feb728c3216d454ba24c68b55de7d0b0",
+      "at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin",
+      "action": "override",
+      "club_id": "la-liga|Elche",
+      "reason": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
+      "before_entry_hash": "7f10f8a387279ac8b052e32428acf6d3f3e311c681d87cae91cfaf4e065dc630",
+      "after_entry_hash": "a6a6e213a873d9dcd16fa463acce02be6656e9b3aa071692940edb019b55d543",
+      "before_control": {},
+      "after_control": {
+        "locked": true,
+        "override": {
+          "primary": "Facundo Buonanotte",
+          "secondary": "Fer Niño",
+          "tertiary": "Germán Valera"
+        },
+        "reason": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
+        "updated_at": "2026-09-13T11:57:43+00:00",
+        "actor": "local_admin"
+      },
+      "reverts": null,
+      "before_hierarchy": {
+        "primary": "Fer Niño",
+        "secondary": "Germán Valera",
+        "tertiary": "Ali Houary"
+      },
+      "after_hierarchy": {
+        "primary": "Facundo Buonanotte",
+        "secondary": "Fer Niño",
+        "tertiary": "Germán Valera"
+      }
+    },
+    {
+      "id": "33bfd58cb2c34981a86f1c63bd532510",
+      "at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin",
+      "action": "override",
+      "club_id": "serie-a|Genoa",
+      "reason": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
+      "before_entry_hash": "96c950cc8d4b29bef8ae186ad9ccada82859aeae6d65282e3586d2234def742e",
+      "after_entry_hash": "f72ec33a80f28628e9dd3feda1d10c99249e528d2a5ca9ba73c3f69034cfcb14",
+      "before_control": {},
+      "after_control": {
+        "locked": true,
+        "override": {
+          "primary": "Junior Messias",
+          "secondary": "Milutin Osmajic",
+          "tertiary": "Vitinha"
+        },
+        "reason": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
+        "updated_at": "2026-09-13T11:57:43+00:00",
+        "actor": "local_admin"
+      },
+      "reverts": null,
+      "before_hierarchy": {
+        "primary": "Lorenzo Colombo",
+        "secondary": "Junior Messias",
+        "tertiary": "Vitinha"
+      },
+      "after_hierarchy": {
+        "primary": "Junior Messias",
+        "secondary": "Milutin Osmajic",
+        "tertiary": "Vitinha"
+      }
+    },
+    {
+      "id": "02b247d3974b49adbc89c32aee1076ff",
+      "at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin",
+      "action": "override",
+      "club_id": "serie-a|Cagliari",
+      "reason": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
+      "before_entry_hash": "a8a75d25822c9994e0fdb6c7ec1d2839c8f53fd7c79862b4deb8b0801c5ed65e",
+      "after_entry_hash": "1bef4d075a8ee6d1bf983eb33ff58b56672f71082aa3536886612f034f0261d3",
+      "before_control": {},
+      "after_control": {
+        "locked": true,
+        "override": {
+          "primary": "Daniel Maldini",
+          "secondary": "Alessandro Deiola",
+          "tertiary": "Yerry Mina"
+        },
+        "reason": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
+        "updated_at": "2026-09-13T11:57:43+00:00",
+        "actor": "local_admin"
+      },
+      "reverts": null,
+      "before_hierarchy": {
+        "primary": "Alessandro Deiola",
+        "secondary": "Jacopo Fazzini",
+        "tertiary": "Yerry Mina"
+      },
+      "after_hierarchy": {
+        "primary": "Daniel Maldini",
+        "secondary": "Alessandro Deiola",
+        "tertiary": "Yerry Mina"
       }
     }
   ]

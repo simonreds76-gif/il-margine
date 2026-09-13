@@ -25,6 +25,7 @@ from typing import Dict, Iterable, List
 from zoneinfo import ZoneInfo
 
 import requests
+from goalscorer_penalty_utils import norm_text as normalized_player_name
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -198,8 +199,7 @@ def _fetch_match_payload(match_id: int) -> dict:
 
 
 def _event_name(value: object) -> str:
-    value = unicodedata.normalize("NFKD", str(value or ""))
-    return re.sub(r"[^a-z0-9]+", " ", "".join(c for c in value if not unicodedata.combining(c)).lower()).strip()
+    return normalized_player_name(str(value or ""))
 
 
 def _attach_match_timeline(team, content, is_home, finished):

@@ -2108,30 +2108,30 @@
     }
   },
   "Elche": {
-    "primary": "Fer Niño",
-    "secondary": "Germán Valera",
-    "tertiary": "Ali Houary",
-    "last_updated": "2026-09-01",
+    "primary": "Facundo Buonanotte",
+    "secondary": "Fer Niño",
+    "tertiary": "Germán Valera",
+    "last_updated": "2026-09-13",
     "source": "Betfair Spain LaLiga penalty board",
     "cross_check": "LaLiga 2026/27 squads and match records",
-    "hierarchy_status": "disputed",
+    "hierarchy_status": "probable",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Fer Niño now leads Elche's projected order, followed by Germán Valera and Ali Houary.",
+    "condition_note": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
     "last_verified": {
-      "date": "2026-09-02",
-      "by": "Il Margine",
-      "method": "current_squad_membership_audit"
+      "date": "2026-09-13",
+      "by": "local_admin",
+      "method": "reviewed_manual_hierarchy_override"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-13",
     "latest_evidence": {
-      "id": "evt_20260901_elche_current_review",
-      "date": "2026-09-01",
+      "id": "feb728c3216d454ba24c68b55de7d0b0",
+      "date": "2026-09-13",
       "type": "current_season_board_review",
-      "source_count": 2
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -2383,6 +2383,29 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Fer Niño now leads Elche's projected order, followed by Germán Valera and Ali Houary."
+      },
+      {
+        "id": "feb728c3216d454ba24c68b55de7d0b0",
+        "date": "2026-09-13",
+        "type": "current_season_board_review",
+        "headline": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
+        "editorial_note": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
+        "sources": [
+          {
+            "label": "Reviewed match context",
+            "url": "https://www.fotmob.com/matches/athletic-club-vs-elche/2ut5xr#5868051",
+            "date": "2026-09-12",
+            "note": "Hierarchy set by owner editorial instruction. This match provides review context, not independent proof of every rank."
+          }
+        ],
+        "review": {
+          "status": "approved",
+          "reviewed_by": "local_admin",
+          "reviewed_at": "2026-09-13T11:57:43+00:00"
+        },
+        "affects_hierarchy": true,
+        "detection": "local_admin",
+        "season": "2026/27"
       }
     ],
     "change_log": [
@@ -2477,11 +2500,30 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-01T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "id": "feb728c3216d454ba24c68b55de7d0b0",
+        "changed_at": "2026-09-13T11:57:43+00:00",
+        "change_type": "hierarchy_change",
+        "reason": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
+        "from": {
+          "primary": "Fer Niño",
+          "secondary": "Germán Valera",
+          "tertiary": "Ali Houary"
+        },
+        "to": {
+          "primary": "Facundo Buonanotte",
+          "secondary": "Fer Niño",
+          "tertiary": "Germán Valera"
+        },
+        "evidence_ids": [
+          "feb728c3216d454ba24c68b55de7d0b0"
+        ]
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -2494,19 +2536,20 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
+        "player": "Facundo Buonanotte",
+        "status": "confirmed",
+        "source_url": "https://www.fotmob.com/matches/athletic-club-vs-elche/2ut5xr#5868051",
+        "checked_at": "2026-09-13",
+        "method": "manual_editorial_attestation"
+      },
+      "secondary": {
         "player": "Fer Niño",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/10268/overview/elche",
         "checked_at": "2026-09-02"
       },
-      "secondary": {
-        "player": "Germán Valera",
-        "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/10268/overview/elche",
-        "checked_at": "2026-09-02"
-      },
       "tertiary": {
-        "player": "Ali Houary",
+        "player": "Germán Valera",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/10268/overview/elche",
         "checked_at": "2026-09-02"
@@ -2521,7 +2564,8 @@
         "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
         "https://www.laliga.com/en-GB/laliga-easports/clubs"
       ]
-    }
+    },
+    "unavailable_candidates": []
   },
   "Espanyol": {
     "primary": "Roberto Fernández",

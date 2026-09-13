@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import json
 import runpy
+import sys
 import tempfile
 import unittest
 from datetime import datetime, timezone
@@ -10,11 +11,22 @@ from pathlib import Path
 from unittest.mock import patch
 
 SCRIPT = Path(__file__).resolve().parents[1] / "club-penalty-hierarchy-review.py"
+if str(SCRIPT.parent) not in sys.path:
+    sys.path.insert(0, str(SCRIPT.parent))
 M = runpy.run_path(str(SCRIPT))
 NOW = datetime(2026, 9, 5, 12, tzinfo=timezone.utc)
 
 
 class ClubPenaltyHierarchyReviewTests(unittest.TestCase):
+    def test_accented_taker_honors_legacy_closed_ticket(self):
+        self.events = [self.event("one", "2026-09-04", taker="Enzo Le Fée")]
+        self.write_events()
+        self.write("penalty-duty-review-state.json", {"items": {
+            "2026-09-04|epl|example fc|other|fe": {"status": "ignored"}
+        }})
+        events, _ = M["collect_evidence"](self.root, NOW)
+        self.assertEqual(events[0]["manual_ticket_decisions"][0]["status"], "ignored")
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

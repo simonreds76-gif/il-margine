@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-06T08:33:01+00:00",
+  "updated_at": "2026-09-13T12:01:17+00:00",
   "events": [
     {
       "id": "fotmob|epl|5795436|2964667989",
@@ -33,7 +33,12 @@
       "league": "epl",
       "review_source": "fotmob_live",
       "source_path": "data/goalscorer/epl-penalty-duty-live-review.json",
-      "manual_ticket_decisions": []
+      "manual_ticket_decisions": [
+        {
+          "id": "2026-09-05|epl|sunderland|brentford|fe",
+          "status": "done"
+        }
+      ]
     },
     {
       "id": "fotmob|la-liga|5868043|2964189981",
@@ -103,7 +108,12 @@
       "league": "ligue-1",
       "review_source": "fotmob_live",
       "source_path": "data/goalscorer/ligue-1-penalty-duty-live-review.json",
-      "manual_ticket_decisions": []
+      "manual_ticket_decisions": [
+        {
+          "id": "2026-09-05|ligue-1|brest|le havre|doumbia",
+          "status": "done"
+        }
+      ]
     },
     {
       "id": "fotmob|ligue-1|5802920|2964993927",
@@ -132,7 +142,331 @@
       "league": "ligue-1",
       "review_source": "fotmob_live",
       "source_path": "data/goalscorer/ligue-1-penalty-duty-live-review.json",
-      "manual_ticket_decisions": []
+      "manual_ticket_decisions": [
+        {
+          "id": "2026-09-05|ligue-1|le havre|brest|fofana",
+          "status": "done"
+        }
+      ]
+    },
+    {
+      "id": "fotmob|epl|5795453|2968703331",
+      "source_event_id": "2968703331",
+      "match_id": "5795453",
+      "source_url": "https://www.fotmob.com/matches/sunderland-vs-arsenal/2ro5o6#5795453",
+      "observed_at": "2026-09-13T04:54:00+00:00",
+      "event_date": "2026-09-12",
+      "season": "2026/27",
+      "team": "Arsenal",
+      "taker": "Bukayo Saka",
+      "primary": "Bukayo Saka",
+      "primary_on_pitch": true,
+      "on_pitch_proof": {
+        "player": "Bukayo Saka",
+        "minute": 90,
+        "method": "completed_lineup_timeline",
+        "player_id": 961995,
+        "bucket": "starters",
+        "substitutions": [],
+        "events": [],
+        "reason": "on_pitch"
+      },
+      "minute": 90,
+      "penalty_kind": "in_match",
+      "competitive": true,
+      "finished": true,
+      "match": "Sunderland vs Arsenal",
+      "event_result": "scored",
+      "league": "epl",
+      "review_source": "fotmob_live",
+      "source_path": "data/goalscorer/epl-penalty-duty-live-review.json",
+      "manual_ticket_decisions": [
+        {
+          "id": "2026-09-12|epl|arsenal|sunderland|saka",
+          "status": "ignored"
+        }
+      ]
+    },
+    {
+      "id": "fotmob|epl|5795453|2968667133",
+      "source_event_id": "2968667133",
+      "match_id": "5795453",
+      "source_url": "https://www.fotmob.com/matches/sunderland-vs-arsenal/2ro5o6#5795453",
+      "observed_at": "2026-09-13T04:54:00+00:00",
+      "event_date": "2026-09-12",
+      "season": "2026/27",
+      "team": "Sunderland",
+      "taker": "Enzo Le Fée",
+      "primary": "Habib Diarra",
+      "primary_on_pitch": false,
+      "on_pitch_proof": {
+        "player": "Habib Diarra",
+        "minute": 56,
+        "method": "completed_lineup_timeline",
+        "player_id": 1285866,
+        "bucket": "unavailable",
+        "substitutions": [],
+        "events": [],
+        "reason": "not_on_pitch"
+      },
+      "minute": 56,
+      "penalty_kind": "in_match",
+      "competitive": true,
+      "finished": true,
+      "match": "Sunderland vs Arsenal",
+      "event_result": "missed",
+      "league": "epl",
+      "review_source": "fotmob_live",
+      "source_path": "data/goalscorer/epl-penalty-duty-live-review.json",
+      "manual_ticket_decisions": [
+        {
+          "id": "2026-09-12|epl|sunderland|arsenal|fe",
+          "status": "ignored"
+        }
+      ]
+    },
+    {
+      "id": "fotmob|la-liga|5868057|2968608035",
+      "source_event_id": "2968608035",
+      "match_id": "5868057",
+      "source_url": "https://www.fotmob.com/matches/rayo-vallecano-vs-real-madrid/2e2lhn#5868057",
+      "observed_at": "2026-09-13T04:54:11+00:00",
+      "event_date": "2026-09-12",
+      "season": "2026/27",
+      "team": "Real Madrid",
+      "taker": "Kylian Mbappé",
+      "primary": "Kylian Mbappé",
+      "primary_on_pitch": true,
+      "on_pitch_proof": {
+        "player": "Kylian Mbappé",
+        "minute": 14,
+        "method": "completed_lineup_timeline",
+        "player_id": 701154,
+        "bucket": "starters",
+        "substitutions": [],
+        "events": [],
+        "reason": "on_pitch"
+      },
+      "minute": 14,
+      "penalty_kind": "in_match",
+      "competitive": true,
+      "finished": true,
+      "match": "Real Madrid vs Rayo Vallecano",
+      "event_result": "scored",
+      "league": "la-liga",
+      "review_source": "fotmob_live",
+      "source_path": "data/goalscorer/la-liga-penalty-duty-live-review.json",
+      "manual_ticket_decisions": [
+        {
+          "id": "2026-09-12|la-liga|real madrid|rayo vallecano|mbapp",
+          "status": "ignored"
+        }
+      ]
+    },
+    {
+      "id": "fotmob|la-liga|5868051|2968497777",
+      "source_event_id": "2968497777",
+      "match_id": "5868051",
+      "source_url": "https://www.fotmob.com/matches/athletic-club-vs-elche/2ut5xr#5868051",
+      "observed_at": "2026-09-13T04:54:11+00:00",
+      "event_date": "2026-09-12",
+      "season": "2026/27",
+      "team": "Elche",
+      "taker": "Facundo Buonanotte",
+      "primary": "Fer Niño",
+      "primary_on_pitch": true,
+      "on_pitch_proof": {
+        "player": "Fer Niño",
+        "minute": 50,
+        "method": "completed_lineup_timeline",
+        "player_id": 1127224,
+        "bucket": "starters",
+        "substitutions": [
+          {
+            "type": "subout",
+            "time": 69
+          }
+        ],
+        "events": [],
+        "reason": "on_pitch"
+      },
+      "minute": 50,
+      "penalty_kind": "in_match",
+      "competitive": true,
+      "finished": true,
+      "match": "Athletic Club vs Elche",
+      "event_result": "scored",
+      "league": "la-liga",
+      "review_source": "fotmob_live",
+      "source_path": "data/goalscorer/la-liga-penalty-duty-live-review.json",
+      "manual_ticket_decisions": [
+        {
+          "id": "2026-09-12|la-liga|elche|athletic club|buonanotte",
+          "status": "applied"
+        }
+      ]
+    },
+    {
+      "id": "fotmob|serie-a|5749672|2968107705",
+      "source_event_id": "2968107705",
+      "match_id": "5749672",
+      "source_url": "https://www.fotmob.com/matches/frosinone-vs-genoa/3ckfw9#5749672",
+      "observed_at": "2026-09-13T04:53:52+00:00",
+      "event_date": "2026-09-12",
+      "season": "2026/27",
+      "team": "Genoa",
+      "taker": "Lorenzo Colombo",
+      "primary": "Lorenzo Colombo",
+      "primary_on_pitch": true,
+      "on_pitch_proof": {
+        "player": "Lorenzo Colombo",
+        "minute": 45,
+        "method": "completed_lineup_timeline",
+        "player_id": 1050163,
+        "bucket": "starters",
+        "substitutions": [
+          {
+            "type": "subout",
+            "time": 70
+          }
+        ],
+        "events": [],
+        "reason": "on_pitch"
+      },
+      "minute": 45,
+      "penalty_kind": "in_match",
+      "competitive": true,
+      "finished": true,
+      "match": "Genoa vs Frosinone",
+      "event_result": "missed",
+      "league": "serie-a",
+      "review_source": "fotmob_live",
+      "source_path": "data/goalscorer/penalty-duty-live-review.json",
+      "manual_ticket_decisions": [
+        {
+          "id": "2026-09-12|serie-a|genoa|frosinone|colombo",
+          "status": "ignored"
+        }
+      ]
+    },
+    {
+      "id": "fotmob|serie-a|5749670|2968657107",
+      "source_event_id": "2968657107",
+      "match_id": "5749670",
+      "source_url": "https://www.fotmob.com/matches/atalanta-vs-cagliari/2ekudg#5749670",
+      "observed_at": "2026-09-13T04:53:52+00:00",
+      "event_date": "2026-09-12",
+      "season": "2026/27",
+      "team": "Cagliari",
+      "taker": "Daniel Maldini",
+      "primary": "Alessandro Deiola",
+      "primary_on_pitch": true,
+      "on_pitch_proof": {
+        "player": "Alessandro Deiola",
+        "minute": 61,
+        "method": "completed_lineup_timeline",
+        "player_id": 449283,
+        "bucket": "starters",
+        "substitutions": [],
+        "events": [],
+        "reason": "on_pitch"
+      },
+      "minute": 61,
+      "penalty_kind": "in_match",
+      "competitive": true,
+      "finished": true,
+      "match": "Atalanta vs Cagliari",
+      "event_result": "scored",
+      "league": "serie-a",
+      "review_source": "fotmob_live",
+      "source_path": "data/goalscorer/penalty-duty-live-review.json",
+      "manual_ticket_decisions": [
+        {
+          "id": "2026-09-12|serie-a|cagliari|atalanta|maldini",
+          "status": "applied"
+        }
+      ]
+    },
+    {
+      "id": "fotmob|bundesliga|5881167|2968141999",
+      "source_event_id": "2968141999",
+      "match_id": "5881167",
+      "source_url": "https://www.fotmob.com/matches/eintracht-frankfurt-vs-mainz-05/37ptfb#5881167",
+      "observed_at": "2026-09-13T04:54:21+00:00",
+      "event_date": "2026-09-12",
+      "season": "2026/27",
+      "team": "Mainz 05",
+      "taker": "Nadiem Amiri",
+      "primary": "Nadiem Amiri",
+      "primary_on_pitch": true,
+      "on_pitch_proof": {
+        "player": "Nadiem Amiri",
+        "minute": 43,
+        "method": "completed_lineup_timeline",
+        "player_id": 614449,
+        "bucket": "starters",
+        "substitutions": [
+          {
+            "type": "subout",
+            "time": 85
+          }
+        ],
+        "events": [],
+        "reason": "on_pitch"
+      },
+      "minute": 43,
+      "penalty_kind": "in_match",
+      "competitive": true,
+      "finished": true,
+      "match": "Mainz 05 vs Eintracht Frankfurt",
+      "event_result": "missed",
+      "league": "bundesliga",
+      "review_source": "fotmob_live",
+      "source_path": "data/goalscorer/bundesliga-penalty-duty-live-review.json",
+      "manual_ticket_decisions": [
+        {
+          "id": "2026-09-12|bundesliga|mainz 05|eintracht frankfurt|amiri",
+          "status": "ignored"
+        }
+      ]
+    },
+    {
+      "id": "fotmob|bundesliga|5881164|2968411307",
+      "source_event_id": "2968411307",
+      "match_id": "5881164",
+      "source_url": "https://www.fotmob.com/matches/werder-bremen-vs-1-fc-koln/2ic28k#5881164",
+      "observed_at": "2026-09-13T04:54:21+00:00",
+      "event_date": "2026-09-12",
+      "season": "2026/27",
+      "team": "1. FC Köln",
+      "taker": "Thijs Dallinga",
+      "primary": "Marius Bülter",
+      "primary_on_pitch": true,
+      "on_pitch_proof": {
+        "player": "Marius Bülter",
+        "minute": 8,
+        "method": "completed_lineup_timeline",
+        "player_id": 626890,
+        "bucket": "starters",
+        "substitutions": [],
+        "events": [],
+        "reason": "on_pitch"
+      },
+      "minute": 8,
+      "penalty_kind": "in_match",
+      "competitive": true,
+      "finished": true,
+      "match": "1. FC Köln vs Werder Bremen",
+      "event_result": "missed",
+      "league": "bundesliga",
+      "review_source": "fotmob_live",
+      "source_path": "data/goalscorer/bundesliga-penalty-duty-live-review.json",
+      "manual_ticket_decisions": [
+        {
+          "id": "2026-09-12|bundesliga|1 fc kln|werder bremen|dallinga",
+          "status": "ignored"
+        }
+      ]
     }
   ]
 }

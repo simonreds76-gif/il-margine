@@ -1,0 +1,943 @@
+{
+  "schema_version": 1,
+  "status": "committed",
+  "id": "feb728c3216d454ba24c68b55de7d0b0",
+  "league": "la-liga",
+  "audit": {
+    "id": "feb728c3216d454ba24c68b55de7d0b0",
+    "at": "2026-09-13T11:57:43+00:00",
+    "actor": "local_admin",
+    "action": "override",
+    "club_id": "la-liga|Elche",
+    "reason": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
+    "before_entry": {
+      "primary": "Fer Niño",
+      "secondary": "Germán Valera",
+      "tertiary": "Ali Houary",
+      "last_updated": "2026-09-01",
+      "source": "Betfair Spain LaLiga penalty board",
+      "cross_check": "LaLiga 2026/27 squads and match records",
+      "hierarchy_status": "disputed",
+      "confidence": {
+        "primary": "medium",
+        "secondary": "medium",
+        "tertiary": "medium"
+      },
+      "condition_note": "Fer Niño now leads Elche's projected order, followed by Germán Valera and Ali Houary.",
+      "last_verified": {
+        "date": "2026-09-02",
+        "by": "Il Margine",
+        "method": "current_squad_membership_audit"
+      },
+      "public_updated_at": "2026-09-02",
+      "latest_evidence": {
+        "id": "evt_20260901_elche_current_review",
+        "date": "2026-09-01",
+        "type": "current_season_board_review",
+        "source_count": 2
+      },
+      "evidence_log": [
+        {
+          "id": "evt_20260710_elche_rollover",
+          "date": "2026-07-10",
+          "season": "2026/27",
+          "type": "editorial_note",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": null,
+          "sources": [],
+          "detection": "manual",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-10T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+        },
+        {
+          "id": "evt_20260727_elche_research",
+          "date": "2026-07-27",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Silva converted while Mir was not on the pitch. This established Silva as cover at that time, not precedence over Mir. Silva converted another regular-time penalty late in the season. Silva's departure removed him from the 2026/27 hierarchy.",
+          "sources": [
+            {
+              "label": "El País",
+              "url": "https://elpais.com/deportes/futbol/2026-02-20/guruzeta-decide-desde-los-once-metros-y-deja-sin-premio-al-elche.html",
+              "date": "2026-02-20",
+              "note": "Silva converted while Mir was not on the pitch. This established Silva as cover at that time, not precedence over Mir."
+            },
+            {
+              "label": "El País",
+              "url": "https://elpais.com/deportes/futbol/2026-04-22/el-elche-se-oxigena-y-derrota-a-un-atletico-de-bolo-veraniego.html",
+              "date": "2026-04-22",
+              "note": "Silva converted another regular-time penalty late in the season."
+            },
+            {
+              "label": "Onda Cero",
+              "url": "https://www.ondacero.es/emisoras/comunidad-valenciana/elche/noticias/oficial-andre-silva-deja-elche-jugar-oporto_202606126a2bf8f10f0ef63eb6687002.html",
+              "date": "2026-06-12",
+              "note": "Silva's departure removed him from the 2026/27 hierarchy."
+            },
+            {
+              "label": "Cadena SER Elche",
+              "url": "https://cadenaser.com/comunitat-valenciana/2026/06/18/el-elche-cf-rescinde-el-contrato-de-rafa-mir-tras-su-condena-por-agresion-sexual-y-lesiones-radio-elche/",
+              "date": "2026-06-18",
+              "note": "The termination removed Mir from the 2026/27 hierarchy."
+            },
+            {
+              "label": "AS",
+              "url": "https://as.com/futbol/primera/el-elche-empata-a-nada-frente-al-johor-ante-la-mirada-de-bragarnik-f202607-n/",
+              "date": "2026-07-24",
+              "note": "The preseason report described the attack as depleted after the departures of Álvaro Rodríguez, Rafa Mir, and André Silva, without identifying a new penalty taker."
+            },
+            {
+              "label": "FutbolFantasy",
+              "url": "https://www.futbolfantasy.com/laliga/noticias/130781-guia-fantasy-del-balon-parado-de-laliga-25-26-y-estadisticas-recientes",
+              "date": "2025-08-11",
+              "note": "The guide named Mourad and flagged Alvaro Rodriguez as a possible hierarchy changer. Neither establishes the 2026/27 order after the later attacking turnover, supporting the unresolved status."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-27T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260728_elche_research",
+          "date": "2026-07-28",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Mir, Silva and Febas all left. With no senior summer signing by July 27, Villar's set-piece involvement and the current preseason attacking roles of Valera and Ali form the least impractical forced order.",
+          "sources": [
+            {
+              "label": "El País",
+              "url": "https://elpais.com/deportes/futbol/2026-02-20/guruzeta-decide-desde-los-once-metros-y-deja-sin-premio-al-elche.html",
+              "date": "2026-02-20",
+              "note": "Silva converted while Mir was not on the pitch. This established Silva as cover at that time, not precedence over Mir."
+            },
+            {
+              "label": "El País",
+              "url": "https://elpais.com/deportes/futbol/2026-04-22/el-elche-se-oxigena-y-derrota-a-un-atletico-de-bolo-veraniego.html",
+              "date": "2026-04-22",
+              "note": "Silva converted another regular-time penalty late in the season."
+            },
+            {
+              "label": "Onda Cero",
+              "url": "https://www.ondacero.es/emisoras/comunidad-valenciana/elche/noticias/oficial-andre-silva-deja-elche-jugar-oporto_202606126a2bf8f10f0ef63eb6687002.html",
+              "date": "2026-06-12",
+              "note": "Silva's departure removed him from the 2026/27 hierarchy."
+            },
+            {
+              "label": "Cadena SER Elche",
+              "url": "https://cadenaser.com/comunitat-valenciana/2026/06/18/el-elche-cf-rescinde-el-contrato-de-rafa-mir-tras-su-condena-por-agresion-sexual-y-lesiones-radio-elche/",
+              "date": "2026-06-18",
+              "note": "The termination removed Mir from the 2026/27 hierarchy."
+            },
+            {
+              "label": "AS",
+              "url": "https://as.com/futbol/primera/el-elche-empata-a-nada-frente-al-johor-ante-la-mirada-de-bragarnik-f202607-n/",
+              "date": "2026-07-24",
+              "note": "The preseason report described the attack as depleted after the departures of Álvaro Rodríguez, Rafa Mir, and André Silva, without identifying a new penalty taker."
+            },
+            {
+              "label": "FutbolFantasy",
+              "url": "https://www.futbolfantasy.com/laliga/noticias/130781-guia-fantasy-del-balon-parado-de-laliga-25-26-y-estadisticas-recientes",
+              "date": "2025-08-11",
+              "note": "The guide named Mourad and flagged Alvaro Rodriguez as a possible hierarchy changer. Neither establishes the 2026/27 order after the later attacking turnover, supporting the unresolved status."
+            },
+            {
+              "label": "AS",
+              "url": "https://as.com/futbol/primera/la-aficion-del-elche-no-falla-f202607-n/",
+              "date": "2026-07-27",
+              "note": "Supports the deliberately speculative current-squad order."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-28T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 7 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260730_elche_research",
+          "date": "2026-07-30",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "The former 2025/26 takers departed. No recent in-match or preseason penalty assignment was found for the three current candidates, so the listed order is a practical placeholder rather than an evidence-backed hierarchy.",
+          "sources": [
+            {
+              "label": "El País",
+              "url": "https://elpais.com/deportes/futbol/2026-02-20/guruzeta-decide-desde-los-once-metros-y-deja-sin-premio-al-elche.html",
+              "date": "2026-02-20",
+              "note": "Silva converted while Mir was not on the pitch. This established Silva as cover at that time, not precedence over Mir."
+            },
+            {
+              "label": "El País",
+              "url": "https://elpais.com/deportes/futbol/2026-04-22/el-elche-se-oxigena-y-derrota-a-un-atletico-de-bolo-veraniego.html",
+              "date": "2026-04-22",
+              "note": "Silva converted another regular-time penalty late in the season."
+            },
+            {
+              "label": "Onda Cero",
+              "url": "https://www.ondacero.es/emisoras/comunidad-valenciana/elche/noticias/oficial-andre-silva-deja-elche-jugar-oporto_202606126a2bf8f10f0ef63eb6687002.html",
+              "date": "2026-06-12",
+              "note": "Silva's departure removed him from the 2026/27 hierarchy."
+            },
+            {
+              "label": "Cadena SER Elche",
+              "url": "https://cadenaser.com/comunitat-valenciana/2026/06/18/el-elche-cf-rescinde-el-contrato-de-rafa-mir-tras-su-condena-por-agresion-sexual-y-lesiones-radio-elche/",
+              "date": "2026-06-18",
+              "note": "The termination removed Mir from the 2026/27 hierarchy."
+            },
+            {
+              "label": "AS",
+              "url": "https://as.com/futbol/primera/el-elche-empata-a-nada-frente-al-johor-ante-la-mirada-de-bragarnik-f202607-n/",
+              "date": "2026-07-24",
+              "note": "The preseason report described the attack as depleted after the departures of Álvaro Rodríguez, Rafa Mir, and André Silva, without identifying a new penalty taker."
+            },
+            {
+              "label": "FutbolFantasy",
+              "url": "https://www.futbolfantasy.com/laliga/noticias/130781-guia-fantasy-del-balon-parado-de-laliga-25-26-y-estadisticas-recientes",
+              "date": "2025-08-11",
+              "note": "The guide named Mourad and flagged Alvaro Rodriguez as a possible hierarchy changer. Neither establishes the 2026/27 order after the later attacking turnover, supporting the unresolved status."
+            },
+            {
+              "label": "AS",
+              "url": "https://as.com/futbol/primera/la-aficion-del-elche-no-falla-f202607-n/",
+              "date": "2026-07-27",
+              "note": "Supports the deliberately speculative current-squad order."
+            },
+            {
+              "label": "AS",
+              "url": "https://as.com/futbol/primera/el-elche-empata-a-nada-frente-al-johor-ante-la-mirada-de-bragarnik-f202607-n/",
+              "date": "2026-07-24",
+              "note": "Confirms Villar, Valera and Houary in the current preseason group but supplies no penalty assignment."
+            },
+            {
+              "label": "AS",
+              "url": "https://as.com/futbol/ali-houary-convence-a-anselmi-f202607-n/",
+              "date": "2026-07-29",
+              "note": "Confirms Houary remains part of the current first-team project; it is not penalty evidence."
+            },
+            {
+              "label": "Official club or LaLiga",
+              "url": "https://www.laliga.com/clubes/elche-cf/plantilla",
+              "date": "2026-07-30",
+              "note": "Current-squad-first check confirms Gonzalo Villar, Germán Valera, Ali Houary."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-30T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 10 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260901_elche_current_review",
+          "date": "2026-09-01",
+          "season": "2026/27",
+          "type": "current_season_board_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "headline": "Elche penalty hierarchy updated",
+          "context": "Fer Niño now leads Elche's projected order, followed by Germán Valera and Ali Houary.",
+          "sources": [
+            {
+              "label": "Betfair Spain LaLiga penalty board",
+              "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+              "date": "2026-08-31",
+              "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+            },
+            {
+              "label": "LaLiga 2026/27 squads and match records",
+              "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+              "date": "2026-09-01",
+              "note": "Official current club and competition cross-check."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-01T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Fer Niño now leads Elche's projected order, followed by Germán Valera and Ali Houary."
+        }
+      ],
+      "change_log": [
+        {
+          "changed_at": "2026-07-10",
+          "season": "2026/27",
+          "change_type": "season_rollover",
+          "from": {
+            "primary": "Rafa Mir",
+            "secondary": "André Silva",
+            "tertiary": "Aleix Febas"
+          },
+          "to": {
+            "primary": "Rafa Mir",
+            "secondary": "André Silva",
+            "tertiary": "Aleix Febas"
+          },
+          "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+          "evidence_ids": [
+            "evt_20260710_elche_rollover"
+          ],
+          "detection": "manual",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-10T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-28",
+          "season": "2026/27",
+          "change_type": "hierarchy_research_update",
+          "from": {
+            "primary": "",
+            "secondary": "",
+            "tertiary": ""
+          },
+          "to": {
+            "primary": "Gonzalo Villar",
+            "secondary": "Germán Valera",
+            "tertiary": "Ali Houary"
+          },
+          "reason": "Mir, Silva and Febas all left. With no senior summer signing by July 27, Villar's set-piece involvement and the current preseason attacking roles of Valera and Ali form the least impractical forced order. No candidate has a current Elche regular-time penalty assignment; all three positions are deliberately low confidence. Conditions: Any senior striker or proven penalty specialist signing triggers a rebuild. Replace this order after Elche's first regular-time penalty or explicit role statement.",
+          "evidence_ids": [
+            "evt_20260728_elche_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-28T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-30",
+          "season": "2026/27",
+          "change_type": "preseason_reverification",
+          "from": {
+            "primary": "Gonzalo Villar",
+            "secondary": "Germán Valera",
+            "tertiary": "Ali Houary"
+          },
+          "to": {
+            "primary": "Gonzalo Villar",
+            "secondary": "Germán Valera",
+            "tertiary": "Ali Houary"
+          },
+          "reason": "The former 2025/26 takers departed. No recent in-match or preseason penalty assignment was found for the three current candidates, so the listed order is a practical placeholder rather than an evidence-backed hierarchy. All three positions may change on Elche's first 2026/27 penalty or after further striker recruitment. Conditions: Rebuild immediately after Elche's first preseason or competitive penalty assignment. Do not promote reported incoming players until an official signing is completed.",
+          "evidence_ids": [
+            "evt_20260730_elche_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-30T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-09-01",
+          "season": "2026/27",
+          "change_type": "current_season_hierarchy_update",
+          "from": {
+            "primary": "Gonzalo Villar",
+            "secondary": "Germán Valera",
+            "tertiary": "Ali Houary"
+          },
+          "to": {
+            "primary": "Fer Niño",
+            "secondary": "Germán Valera",
+            "tertiary": "Ali Houary"
+          },
+          "reason": "Fer Niño now leads Elche's projected order, followed by Germán Valera and Ali Houary.",
+          "evidence_ids": [
+            "evt_20260901_elche_current_review"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-09-01T12:00:00Z",
+          "article_slug": null
+        }
+      ],
+      "flags": {
+        "carryover_from_previous_season": false,
+        "weak_evidence": true,
+        "stale_override": null
+      },
+      "prior_season": {
+        "label": "2025/26",
+        "primary": "Rafa Mir",
+        "secondary": "André Silva",
+        "tertiary": "Aleix Febas",
+        "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+      },
+      "player_ids": {},
+      "squad_membership": {
+        "primary": {
+          "player": "Fer Niño",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/10268/overview/elche",
+          "checked_at": "2026-09-02"
+        },
+        "secondary": {
+          "player": "Germán Valera",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/10268/overview/elche",
+          "checked_at": "2026-09-02"
+        },
+        "tertiary": {
+          "player": "Ali Houary",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/10268/overview/elche",
+          "checked_at": "2026-09-02"
+        }
+      },
+      "last_reviewed": {
+        "date": "2026-09-01",
+        "by": "Il Margine",
+        "method": "current_season_multi_source_review",
+        "outcome": "hierarchy_updated",
+        "sources": [
+          "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+          "https://www.laliga.com/en-GB/laliga-easports/clubs"
+        ]
+      }
+    },
+    "after_entry": {
+      "primary": "Facundo Buonanotte",
+      "secondary": "Fer Niño",
+      "tertiary": "Germán Valera",
+      "last_updated": "2026-09-13",
+      "source": "Betfair Spain LaLiga penalty board",
+      "cross_check": "LaLiga 2026/27 squads and match records",
+      "hierarchy_status": "probable",
+      "confidence": {
+        "primary": "medium",
+        "secondary": "medium",
+        "tertiary": "medium"
+      },
+      "condition_note": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
+      "last_verified": {
+        "date": "2026-09-13",
+        "by": "local_admin",
+        "method": "reviewed_manual_hierarchy_override"
+      },
+      "public_updated_at": "2026-09-13",
+      "latest_evidence": {
+        "id": "feb728c3216d454ba24c68b55de7d0b0",
+        "date": "2026-09-13",
+        "type": "current_season_board_review",
+        "source_count": 1
+      },
+      "evidence_log": [
+        {
+          "id": "evt_20260710_elche_rollover",
+          "date": "2026-07-10",
+          "season": "2026/27",
+          "type": "editorial_note",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": null,
+          "sources": [],
+          "detection": "manual",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-10T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+        },
+        {
+          "id": "evt_20260727_elche_research",
+          "date": "2026-07-27",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Silva converted while Mir was not on the pitch. This established Silva as cover at that time, not precedence over Mir. Silva converted another regular-time penalty late in the season. Silva's departure removed him from the 2026/27 hierarchy.",
+          "sources": [
+            {
+              "label": "El País",
+              "url": "https://elpais.com/deportes/futbol/2026-02-20/guruzeta-decide-desde-los-once-metros-y-deja-sin-premio-al-elche.html",
+              "date": "2026-02-20",
+              "note": "Silva converted while Mir was not on the pitch. This established Silva as cover at that time, not precedence over Mir."
+            },
+            {
+              "label": "El País",
+              "url": "https://elpais.com/deportes/futbol/2026-04-22/el-elche-se-oxigena-y-derrota-a-un-atletico-de-bolo-veraniego.html",
+              "date": "2026-04-22",
+              "note": "Silva converted another regular-time penalty late in the season."
+            },
+            {
+              "label": "Onda Cero",
+              "url": "https://www.ondacero.es/emisoras/comunidad-valenciana/elche/noticias/oficial-andre-silva-deja-elche-jugar-oporto_202606126a2bf8f10f0ef63eb6687002.html",
+              "date": "2026-06-12",
+              "note": "Silva's departure removed him from the 2026/27 hierarchy."
+            },
+            {
+              "label": "Cadena SER Elche",
+              "url": "https://cadenaser.com/comunitat-valenciana/2026/06/18/el-elche-cf-rescinde-el-contrato-de-rafa-mir-tras-su-condena-por-agresion-sexual-y-lesiones-radio-elche/",
+              "date": "2026-06-18",
+              "note": "The termination removed Mir from the 2026/27 hierarchy."
+            },
+            {
+              "label": "AS",
+              "url": "https://as.com/futbol/primera/el-elche-empata-a-nada-frente-al-johor-ante-la-mirada-de-bragarnik-f202607-n/",
+              "date": "2026-07-24",
+              "note": "The preseason report described the attack as depleted after the departures of Álvaro Rodríguez, Rafa Mir, and André Silva, without identifying a new penalty taker."
+            },
+            {
+              "label": "FutbolFantasy",
+              "url": "https://www.futbolfantasy.com/laliga/noticias/130781-guia-fantasy-del-balon-parado-de-laliga-25-26-y-estadisticas-recientes",
+              "date": "2025-08-11",
+              "note": "The guide named Mourad and flagged Alvaro Rodriguez as a possible hierarchy changer. Neither establishes the 2026/27 order after the later attacking turnover, supporting the unresolved status."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-27T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260728_elche_research",
+          "date": "2026-07-28",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Mir, Silva and Febas all left. With no senior summer signing by July 27, Villar's set-piece involvement and the current preseason attacking roles of Valera and Ali form the least impractical forced order.",
+          "sources": [
+            {
+              "label": "El País",
+              "url": "https://elpais.com/deportes/futbol/2026-02-20/guruzeta-decide-desde-los-once-metros-y-deja-sin-premio-al-elche.html",
+              "date": "2026-02-20",
+              "note": "Silva converted while Mir was not on the pitch. This established Silva as cover at that time, not precedence over Mir."
+            },
+            {
+              "label": "El País",
+              "url": "https://elpais.com/deportes/futbol/2026-04-22/el-elche-se-oxigena-y-derrota-a-un-atletico-de-bolo-veraniego.html",
+              "date": "2026-04-22",
+              "note": "Silva converted another regular-time penalty late in the season."
+            },
+            {
+              "label": "Onda Cero",
+              "url": "https://www.ondacero.es/emisoras/comunidad-valenciana/elche/noticias/oficial-andre-silva-deja-elche-jugar-oporto_202606126a2bf8f10f0ef63eb6687002.html",
+              "date": "2026-06-12",
+              "note": "Silva's departure removed him from the 2026/27 hierarchy."
+            },
+            {
+              "label": "Cadena SER Elche",
+              "url": "https://cadenaser.com/comunitat-valenciana/2026/06/18/el-elche-cf-rescinde-el-contrato-de-rafa-mir-tras-su-condena-por-agresion-sexual-y-lesiones-radio-elche/",
+              "date": "2026-06-18",
+              "note": "The termination removed Mir from the 2026/27 hierarchy."
+            },
+            {
+              "label": "AS",
+              "url": "https://as.com/futbol/primera/el-elche-empata-a-nada-frente-al-johor-ante-la-mirada-de-bragarnik-f202607-n/",
+              "date": "2026-07-24",
+              "note": "The preseason report described the attack as depleted after the departures of Álvaro Rodríguez, Rafa Mir, and André Silva, without identifying a new penalty taker."
+            },
+            {
+              "label": "FutbolFantasy",
+              "url": "https://www.futbolfantasy.com/laliga/noticias/130781-guia-fantasy-del-balon-parado-de-laliga-25-26-y-estadisticas-recientes",
+              "date": "2025-08-11",
+              "note": "The guide named Mourad and flagged Alvaro Rodriguez as a possible hierarchy changer. Neither establishes the 2026/27 order after the later attacking turnover, supporting the unresolved status."
+            },
+            {
+              "label": "AS",
+              "url": "https://as.com/futbol/primera/la-aficion-del-elche-no-falla-f202607-n/",
+              "date": "2026-07-27",
+              "note": "Supports the deliberately speculative current-squad order."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-28T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 7 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260730_elche_research",
+          "date": "2026-07-30",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "The former 2025/26 takers departed. No recent in-match or preseason penalty assignment was found for the three current candidates, so the listed order is a practical placeholder rather than an evidence-backed hierarchy.",
+          "sources": [
+            {
+              "label": "El País",
+              "url": "https://elpais.com/deportes/futbol/2026-02-20/guruzeta-decide-desde-los-once-metros-y-deja-sin-premio-al-elche.html",
+              "date": "2026-02-20",
+              "note": "Silva converted while Mir was not on the pitch. This established Silva as cover at that time, not precedence over Mir."
+            },
+            {
+              "label": "El País",
+              "url": "https://elpais.com/deportes/futbol/2026-04-22/el-elche-se-oxigena-y-derrota-a-un-atletico-de-bolo-veraniego.html",
+              "date": "2026-04-22",
+              "note": "Silva converted another regular-time penalty late in the season."
+            },
+            {
+              "label": "Onda Cero",
+              "url": "https://www.ondacero.es/emisoras/comunidad-valenciana/elche/noticias/oficial-andre-silva-deja-elche-jugar-oporto_202606126a2bf8f10f0ef63eb6687002.html",
+              "date": "2026-06-12",
+              "note": "Silva's departure removed him from the 2026/27 hierarchy."
+            },
+            {
+              "label": "Cadena SER Elche",
+              "url": "https://cadenaser.com/comunitat-valenciana/2026/06/18/el-elche-cf-rescinde-el-contrato-de-rafa-mir-tras-su-condena-por-agresion-sexual-y-lesiones-radio-elche/",
+              "date": "2026-06-18",
+              "note": "The termination removed Mir from the 2026/27 hierarchy."
+            },
+            {
+              "label": "AS",
+              "url": "https://as.com/futbol/primera/el-elche-empata-a-nada-frente-al-johor-ante-la-mirada-de-bragarnik-f202607-n/",
+              "date": "2026-07-24",
+              "note": "The preseason report described the attack as depleted after the departures of Álvaro Rodríguez, Rafa Mir, and André Silva, without identifying a new penalty taker."
+            },
+            {
+              "label": "FutbolFantasy",
+              "url": "https://www.futbolfantasy.com/laliga/noticias/130781-guia-fantasy-del-balon-parado-de-laliga-25-26-y-estadisticas-recientes",
+              "date": "2025-08-11",
+              "note": "The guide named Mourad and flagged Alvaro Rodriguez as a possible hierarchy changer. Neither establishes the 2026/27 order after the later attacking turnover, supporting the unresolved status."
+            },
+            {
+              "label": "AS",
+              "url": "https://as.com/futbol/primera/la-aficion-del-elche-no-falla-f202607-n/",
+              "date": "2026-07-27",
+              "note": "Supports the deliberately speculative current-squad order."
+            },
+            {
+              "label": "AS",
+              "url": "https://as.com/futbol/primera/el-elche-empata-a-nada-frente-al-johor-ante-la-mirada-de-bragarnik-f202607-n/",
+              "date": "2026-07-24",
+              "note": "Confirms Villar, Valera and Houary in the current preseason group but supplies no penalty assignment."
+            },
+            {
+              "label": "AS",
+              "url": "https://as.com/futbol/ali-houary-convence-a-anselmi-f202607-n/",
+              "date": "2026-07-29",
+              "note": "Confirms Houary remains part of the current first-team project; it is not penalty evidence."
+            },
+            {
+              "label": "Official club or LaLiga",
+              "url": "https://www.laliga.com/clubes/elche-cf/plantilla",
+              "date": "2026-07-30",
+              "note": "Current-squad-first check confirms Gonzalo Villar, Germán Valera, Ali Houary."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-30T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 10 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260901_elche_current_review",
+          "date": "2026-09-01",
+          "season": "2026/27",
+          "type": "current_season_board_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "headline": "Elche penalty hierarchy updated",
+          "context": "Fer Niño now leads Elche's projected order, followed by Germán Valera and Ali Houary.",
+          "sources": [
+            {
+              "label": "Betfair Spain LaLiga penalty board",
+              "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+              "date": "2026-08-31",
+              "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+            },
+            {
+              "label": "LaLiga 2026/27 squads and match records",
+              "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+              "date": "2026-09-01",
+              "note": "Official current club and competition cross-check."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-01T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Fer Niño now leads Elche's projected order, followed by Germán Valera and Ali Houary."
+        },
+        {
+          "id": "feb728c3216d454ba24c68b55de7d0b0",
+          "date": "2026-09-13",
+          "type": "current_season_board_review",
+          "headline": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
+          "editorial_note": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
+          "sources": [
+            {
+              "label": "Reviewed match context",
+              "url": "https://www.fotmob.com/matches/athletic-club-vs-elche/2ut5xr#5868051",
+              "date": "2026-09-12",
+              "note": "Hierarchy set by owner editorial instruction. This match provides review context, not independent proof of every rank."
+            }
+          ],
+          "review": {
+            "status": "approved",
+            "reviewed_by": "local_admin",
+            "reviewed_at": "2026-09-13T11:57:43+00:00"
+          },
+          "affects_hierarchy": true,
+          "detection": "local_admin",
+          "season": "2026/27"
+        }
+      ],
+      "change_log": [
+        {
+          "changed_at": "2026-07-10",
+          "season": "2026/27",
+          "change_type": "season_rollover",
+          "from": {
+            "primary": "Rafa Mir",
+            "secondary": "André Silva",
+            "tertiary": "Aleix Febas"
+          },
+          "to": {
+            "primary": "Rafa Mir",
+            "secondary": "André Silva",
+            "tertiary": "Aleix Febas"
+          },
+          "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+          "evidence_ids": [
+            "evt_20260710_elche_rollover"
+          ],
+          "detection": "manual",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-10T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-28",
+          "season": "2026/27",
+          "change_type": "hierarchy_research_update",
+          "from": {
+            "primary": "",
+            "secondary": "",
+            "tertiary": ""
+          },
+          "to": {
+            "primary": "Gonzalo Villar",
+            "secondary": "Germán Valera",
+            "tertiary": "Ali Houary"
+          },
+          "reason": "Mir, Silva and Febas all left. With no senior summer signing by July 27, Villar's set-piece involvement and the current preseason attacking roles of Valera and Ali form the least impractical forced order. No candidate has a current Elche regular-time penalty assignment; all three positions are deliberately low confidence. Conditions: Any senior striker or proven penalty specialist signing triggers a rebuild. Replace this order after Elche's first regular-time penalty or explicit role statement.",
+          "evidence_ids": [
+            "evt_20260728_elche_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-28T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-30",
+          "season": "2026/27",
+          "change_type": "preseason_reverification",
+          "from": {
+            "primary": "Gonzalo Villar",
+            "secondary": "Germán Valera",
+            "tertiary": "Ali Houary"
+          },
+          "to": {
+            "primary": "Gonzalo Villar",
+            "secondary": "Germán Valera",
+            "tertiary": "Ali Houary"
+          },
+          "reason": "The former 2025/26 takers departed. No recent in-match or preseason penalty assignment was found for the three current candidates, so the listed order is a practical placeholder rather than an evidence-backed hierarchy. All three positions may change on Elche's first 2026/27 penalty or after further striker recruitment. Conditions: Rebuild immediately after Elche's first preseason or competitive penalty assignment. Do not promote reported incoming players until an official signing is completed.",
+          "evidence_ids": [
+            "evt_20260730_elche_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-30T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-09-01",
+          "season": "2026/27",
+          "change_type": "current_season_hierarchy_update",
+          "from": {
+            "primary": "Gonzalo Villar",
+            "secondary": "Germán Valera",
+            "tertiary": "Ali Houary"
+          },
+          "to": {
+            "primary": "Fer Niño",
+            "secondary": "Germán Valera",
+            "tertiary": "Ali Houary"
+          },
+          "reason": "Fer Niño now leads Elche's projected order, followed by Germán Valera and Ali Houary.",
+          "evidence_ids": [
+            "evt_20260901_elche_current_review"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-09-01T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "id": "feb728c3216d454ba24c68b55de7d0b0",
+          "changed_at": "2026-09-13T11:57:43+00:00",
+          "change_type": "hierarchy_change",
+          "reason": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
+          "from": {
+            "primary": "Fer Niño",
+            "secondary": "Germán Valera",
+            "tertiary": "Ali Houary"
+          },
+          "to": {
+            "primary": "Facundo Buonanotte",
+            "secondary": "Fer Niño",
+            "tertiary": "Germán Valera"
+          },
+          "evidence_ids": [
+            "feb728c3216d454ba24c68b55de7d0b0"
+          ]
+        }
+      ],
+      "flags": {
+        "carryover_from_previous_season": false,
+        "weak_evidence": false,
+        "stale_override": null
+      },
+      "prior_season": {
+        "label": "2025/26",
+        "primary": "Rafa Mir",
+        "secondary": "André Silva",
+        "tertiary": "Aleix Febas",
+        "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+      },
+      "player_ids": {},
+      "squad_membership": {
+        "primary": {
+          "player": "Facundo Buonanotte",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/matches/athletic-club-vs-elche/2ut5xr#5868051",
+          "checked_at": "2026-09-13",
+          "method": "manual_editorial_attestation"
+        },
+        "secondary": {
+          "player": "Fer Niño",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/10268/overview/elche",
+          "checked_at": "2026-09-02"
+        },
+        "tertiary": {
+          "player": "Germán Valera",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/10268/overview/elche",
+          "checked_at": "2026-09-02"
+        }
+      },
+      "last_reviewed": {
+        "date": "2026-09-01",
+        "by": "Il Margine",
+        "method": "current_season_multi_source_review",
+        "outcome": "hierarchy_updated",
+        "sources": [
+          "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+          "https://www.laliga.com/en-GB/laliga-easports/clubs"
+        ]
+      },
+      "unavailable_candidates": []
+    },
+    "before_entry_hash": "7f10f8a387279ac8b052e32428acf6d3f3e311c681d87cae91cfaf4e065dc630",
+    "after_entry_hash": "a6a6e213a873d9dcd16fa463acce02be6656e9b3aa071692940edb019b55d543",
+    "before_control": {},
+    "after_control": {
+      "locked": true,
+      "override": {
+        "primary": "Facundo Buonanotte",
+        "secondary": "Fer Niño",
+        "tertiary": "Germán Valera"
+      },
+      "reason": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
+      "updated_at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin"
+    },
+    "reverts": null
+  },
+  "summary": {
+    "id": "feb728c3216d454ba24c68b55de7d0b0",
+    "at": "2026-09-13T11:57:43+00:00",
+    "actor": "local_admin",
+    "action": "override",
+    "club_id": "la-liga|Elche",
+    "reason": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
+    "before_entry_hash": "7f10f8a387279ac8b052e32428acf6d3f3e311c681d87cae91cfaf4e065dc630",
+    "after_entry_hash": "a6a6e213a873d9dcd16fa463acce02be6656e9b3aa071692940edb019b55d543",
+    "before_control": {},
+    "after_control": {
+      "locked": true,
+      "override": {
+        "primary": "Facundo Buonanotte",
+        "secondary": "Fer Niño",
+        "tertiary": "Germán Valera"
+      },
+      "reason": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
+      "updated_at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin"
+    },
+    "reverts": null,
+    "before_hierarchy": {
+      "primary": "Fer Niño",
+      "secondary": "Germán Valera",
+      "tertiary": "Ali Houary"
+    },
+    "after_hierarchy": {
+      "primary": "Facundo Buonanotte",
+      "secondary": "Fer Niño",
+      "tertiary": "Germán Valera"
+    }
+  },
+  "before_hierarchy_hash": "719c0cec7d85aed93c146b7ea102e857bdee8870e3c6c1a69103dbad8ec2d3b3",
+  "after_hierarchy_hash": "b6199f72867d8ae695b0d5277f6e38f4a8e6c2632e70e922fc6752825abd8d81",
+  "before_state_hash": "3d3478fe4bb43db88a9e6761defcd26a9e166cb85711dbdeb3369fadc187888a",
+  "after_state_hash": "270067ffa4ea65318b58620f3ad0f097785a1634466548edbb55c39f209e0a2a",
+  "after_revision": 2
+}
