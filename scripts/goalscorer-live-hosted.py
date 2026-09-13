@@ -381,6 +381,7 @@ def main() -> int:
         supabase_upload_enabled = os.environ.get("ENABLE_SUPABASE_SNAPSHOT_UPLOADS", "0").strip() == "1"
         if (
             supabase_upload_enabled
+            and close_run_count > 0
             and os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
             and os.environ.get("NEXT_PUBLIC_SUPABASE_URL")
         ):
