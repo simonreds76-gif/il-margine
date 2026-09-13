@@ -1,4 +1,5 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { foldNameText } from "@/lib/player-name-matching";
 import { readFile } from "fs/promises";
 import path from "path";
 
@@ -661,10 +662,12 @@ export async function tournamentEntrants(tournamentName: string, playerName?: st
     const tName = str(data[0]?.tournament_name);
 
     if (playerName) {
-      const qLower = playerName.toLowerCase().trim();
-      const match = players.find((p: { name: string }) =>
-        p.name.toLowerCase().includes(qLower) || qLower.includes(p.name.toLowerCase().split(" ").pop() ?? "")
+      const qLower = foldNameText(playerName).toLowerCase().trim();
+      const matches = players.filter((p: { name: string }) =>
+        qLower && (foldNameText(p.name).toLowerCase().includes(qLower) || qLower.includes(foldNameText(p.name).toLowerCase().split(" ").pop() ?? ""))
       );
+      const exact = matches.filter((p: { name: string }) => foldNameText(p.name).toLowerCase() === qLower);
+      const match = exact.length === 1 ? exact[0] : matches.length === 1 ? matches[0] : null;
       return {
         tournament: tName,
         capture_date: captureDate,
@@ -950,7 +953,7 @@ function isMainTourFixture(tourName: string, rank?: number | null): boolean {
 }
 
 function normMatchName(s: string): string {
-  return (s ?? "")
+  return foldNameText(s)
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")

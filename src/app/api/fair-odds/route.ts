@@ -1,4 +1,5 @@
 import { createBoundedAsyncCache } from "@/lib/bounded-async-cache";
+import { foldNameText } from "@/lib/player-name-matching";
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import fs from "node:fs";
@@ -433,7 +434,7 @@ function signalMatchKey(player1Id: number, player2Id: number): string {
 }
 
 function normaliseSignalName(name: string): string {
-  return (name ?? "")
+  return foldNameText(name)
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
@@ -1787,9 +1788,7 @@ interface InjuryIndex {
 }
 
 function stripAccents(text: string): string {
-  return (text ?? "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+  return foldNameText(text);
 }
 
 function tokenizeIdentityName(text: string): string[] {
@@ -2482,7 +2481,7 @@ async function run(): Promise<Response> {
 
   /** Normalise for lookup: lowercase, strip accents, hyphens, apostrophes. */
   function norm(s: string): string {
-    return (s ?? "")
+    return foldNameText(s)
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
