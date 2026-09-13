@@ -287,6 +287,7 @@
         }
       ],
       "home_subs": [
+        "Sidiki Cherif",
         "Daniel Bentley",
         "Stephen Mfuni",
         "Caleb Yirenkyi",
@@ -294,10 +295,14 @@
         "Brandon Thomas-Asante",
         "Gustavo Hamer",
         "Loum Tchaouna",
-        "Sidiki Cherif",
         "Tatsuhiro Sakamoto"
       ],
       "home_substitute_entries": [
+        {
+          "name": "Sidiki Cherif",
+          "player_id": "1524069",
+          "role_group": "FW"
+        },
         {
           "name": "Daniel Bentley",
           "player_id": "189103",
@@ -331,11 +336,6 @@
         {
           "name": "Loum Tchaouna",
           "player_id": "1283034",
-          "role_group": "FW"
-        },
-        {
-          "name": "Sidiki Cherif",
-          "player_id": "1524069",
           "role_group": "FW"
         },
         {
@@ -420,7 +420,7 @@
         "Yankuba Minteh",
         "Zadok Yohanna"
       ],
-      "observed_at": "2026-09-13T12:20:50.186012+00:00",
+      "observed_at": "2026-09-13T14:20:52.661405+00:00",
       "changed_at": "2026-09-13T12:20:50.186012+00:00"
     },
     {
@@ -432,9 +432,9 @@
       "kickoff_utc": "2026-09-13T15:30:00Z",
       "home_team": "Manchester United",
       "away_team": "Manchester City",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-1-4-1",
       "home_players": [
@@ -442,7 +442,7 @@
         "Diogo Dalot",
         "Harry Maguire",
         "Lisandro Martínez",
-        "Luke Shaw",
+        "Patrick Dorgu",
         "Kobbie Mainoo",
         "Youri Tielemans",
         "Bryan Mbeumo",
@@ -459,7 +459,7 @@
         "Elliot Anderson",
         "Phil Foden",
         "Enzo Fernández",
-        "Nico O'Reilly",
+        "Rayan Cherki",
         "Antoine Semenyo",
         "Erling Haaland"
       ],
@@ -509,15 +509,15 @@
           "shirt_number": "6"
         },
         {
-          "name": "Luke Shaw",
+          "name": "Patrick Dorgu",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-2-3-1",
           "position_id": 38,
-          "player_id": 362694,
-          "shirt_number": "23"
+          "player_id": 1526560,
+          "shirt_number": "13"
         },
         {
           "name": "Kobbie Mainoo",
@@ -676,15 +676,15 @@
           "shirt_number": "17"
         },
         {
-          "name": "Nico O'Reilly",
+          "name": "Rayan Cherki",
           "line_index": 2,
           "line_size": 4,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-1-4-1",
           "position_id": 86,
-          "player_id": 1300526,
-          "shirt_number": "33"
+          "player_id": 1104053,
+          "shirt_number": "10"
         },
         {
           "name": "Antoine Semenyo",
@@ -709,11 +709,124 @@
           "shirt_number": "9"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "home_subs": [
+        "Karl Darlow",
+        "Ayden Heaven",
+        "Leny Yoro",
+        "Noussair Mazraoui",
+        "Andrey Santos",
+        "Mason Mount",
+        "Benjamin Šeško",
+        "Joshua Zirkzee",
+        "Shea Lacey"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Karl Darlow",
+          "player_id": "163604",
+          "role_group": "GK"
+        },
+        {
+          "name": "Ayden Heaven",
+          "player_id": "1559639",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Leny Yoro",
+          "player_id": "1358581",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Noussair Mazraoui",
+          "player_id": "775539",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Andrey Santos",
+          "player_id": "1372921",
+          "role_group": "MID"
+        },
+        {
+          "name": "Mason Mount",
+          "player_id": "750032",
+          "role_group": "MID"
+        },
+        {
+          "name": "Benjamin Šeško",
+          "player_id": "1073977",
+          "role_group": "FW"
+        },
+        {
+          "name": "Joshua Zirkzee",
+          "player_id": "950830",
+          "role_group": "FW"
+        },
+        {
+          "name": "Shea Lacey",
+          "player_id": "1436260",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Gerónimo Rulli",
+        "Abdukodir Khusanov",
+        "Nico O'Reilly",
+        "Rico Lewis",
+        "Vitor Reis",
+        "Ayyoub Bouaddi",
+        "Mateo Kovačić",
+        "Allan",
+        "Iliman Ndiaye"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Gerónimo Rulli",
+          "player_id": "245555",
+          "role_group": "GK"
+        },
+        {
+          "name": "Abdukodir Khusanov",
+          "player_id": "1362998",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Nico O'Reilly",
+          "player_id": "1300526",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Rico Lewis",
+          "player_id": "1288450",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Vitor Reis",
+          "player_id": "1580952",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Ayyoub Bouaddi",
+          "player_id": "1561552",
+          "role_group": "MID"
+        },
+        {
+          "name": "Mateo Kovačić",
+          "player_id": "239219",
+          "role_group": "MID"
+        },
+        {
+          "name": "Allan",
+          "player_id": "1721789",
+          "role_group": "FW"
+        },
+        {
+          "name": "Iliman Ndiaye",
+          "player_id": "965764",
+          "role_group": "FW"
+        }
+      ],
       "home_unavailable": [
+        "Luke Shaw",
         "Tom Heaton",
         "Matthijs de Ligt",
         "Carlos Baleba",
@@ -723,8 +836,8 @@
       "away_unavailable": [
         "Jérémy Doku"
       ],
-      "observed_at": "2026-09-13T12:20:50.186012+00:00",
-      "changed_at": "2026-09-12T11:34:07.339829+00:00"
+      "observed_at": "2026-09-13T14:20:52.661405+00:00",
+      "changed_at": "2026-09-13T14:20:52.661405+00:00"
     },
     {
       "fotmob_match_id": 5795450,
@@ -1027,7 +1140,7 @@
         "Joelinton",
         "William Osula"
       ],
-      "observed_at": "2026-09-13T12:20:50.186012+00:00",
+      "observed_at": "2026-09-13T14:20:52.661405+00:00",
       "changed_at": "2026-09-13T12:20:50.186012+00:00"
     }
   ]

@@ -295,7 +295,7 @@
         "Mamady Diambou"
       ],
       "away_unavailable": [],
-      "observed_at": "2026-09-13T12:21:56.204575+00:00",
+      "observed_at": "2026-09-13T14:21:51.420770+00:00",
       "changed_at": "2026-09-13T12:21:56.204575+00:00"
     },
     {
@@ -600,7 +600,7 @@
         "Saud Abdulhamid",
         "Yacine Titraoui"
       ],
-      "observed_at": "2026-09-13T12:21:56.204575+00:00",
+      "observed_at": "2026-09-13T14:21:51.420770+00:00",
       "changed_at": "2026-09-13T12:21:56.204575+00:00"
     },
     {
@@ -637,9 +637,9 @@
         "Michel Diaz",
         "Anis Ouzenadji",
         "Mouhamed Diop",
-        "Antoine Mille",
-        "Kandet Diawara",
         "Dermane Karim",
+        "Kandet Diawara",
+        "Antoine Mille",
         "Hugo Picard",
         "Jérémy Le Douaron"
       ],
@@ -834,15 +834,15 @@
           "shirt_number": "8"
         },
         {
-          "name": "Antoine Mille",
+          "name": "Dermane Karim",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
           "formation": "4-2-3-1",
           "position_id": 66,
-          "player_id": 1342983,
-          "shirt_number": "17"
+          "player_id": 1276315,
+          "shirt_number": "29"
         },
         {
           "name": "Kandet Diawara",
@@ -856,15 +856,15 @@
           "shirt_number": "7"
         },
         {
-          "name": "Dermane Karim",
+          "name": "Antoine Mille",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
           "position_id": 85,
-          "player_id": 1276315,
-          "shirt_number": "29"
+          "player_id": 1342983,
+          "shirt_number": "17"
         },
         {
           "name": "Hugo Picard",
@@ -890,17 +890,22 @@
         }
       ],
       "home_subs": [
+        "Maurits Kjærgaard",
         "Orlando Gill",
         "Calvin Verdonk",
         "Tanguy Nianzou",
         "Benjamin André",
-        "Maurits Kjærgaard",
         "Ethan Mbappé",
         "Gaëtan Perrin",
         "Olivier Giroud",
         "Osame Sahraoui"
       ],
       "home_substitute_entries": [
+        {
+          "name": "Maurits Kjærgaard",
+          "player_id": "1070404",
+          "role_group": "MID"
+        },
         {
           "name": "Orlando Gill",
           "player_id": "1683391",
@@ -919,11 +924,6 @@
         {
           "name": "Benjamin André",
           "player_id": "148830",
-          "role_group": "MID"
-        },
-        {
-          "name": "Maurits Kjærgaard",
-          "player_id": "1070404",
           "role_group": "MID"
         },
         {
@@ -948,10 +948,10 @@
         }
       ],
       "away_subs": [
+        "Noah Donkor",
         "Lassana Simakha",
         "Hillel Konaté",
         "Enisio Carneiro",
-        "Noah Donkor",
         "Idrissa Soukouna",
         "Iron Gomis",
         "Renaud Ripart",
@@ -959,6 +959,11 @@
         "Yacouba Kone"
       ],
       "away_substitute_entries": [
+        {
+          "name": "Noah Donkor",
+          "player_id": "1844131",
+          "role_group": "DEF"
+        },
         {
           "name": "Lassana Simakha",
           "player_id": "2222106",
@@ -972,11 +977,6 @@
         {
           "name": "Enisio Carneiro",
           "player_id": "2189695",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Noah Donkor",
-          "player_id": "1844131",
           "role_group": "DEF"
         },
         {
@@ -1013,7 +1013,7 @@
         "Ismaël Boura",
         "Yvann Titi"
       ],
-      "observed_at": "2026-09-13T12:21:56.204575+00:00",
+      "observed_at": "2026-09-13T14:21:51.420770+00:00",
       "changed_at": "2026-09-13T12:21:56.204575+00:00"
     }
   ]
