@@ -1,8 +1,8 @@
 # Corners CLV Monitor: `corners_v3`
 
-Generated: 2026-09-12T22:24:26Z
-Picks input: `data\football-form\corners-v3-shadow-signals.csv`
-Pinnacle input: `data\corners-ou\pinnacle-corners-odds.csv`
+Generated: 2026-09-13T13:22:06Z
+Picks input: `data/football-form/corners-v3-shadow-signals.csv`
+Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 
 ## Summary
 
@@ -24,7 +24,7 @@ Pinnacle input: `data\corners-ou\pinnacle-corners-odds.csv`
 
 | Segment | Active | Settled | Pending | W-L-P | PnL | ROI | Avg CLV |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| Over | 14 | 11 | 3 | 5-6-0 | -1.26u | -11.41% | -0.74% (n=11) |
+| Over | 14 | 11 | 3 | 5-6-0 | -1.25u | -11.41% | -0.74% (n=11) |
 | Under | 39 | 29 | 10 | 14-15-0 | +1.01u | +3.49% | +3.48% (n=29) |
 
 ## Active League Breakdown
