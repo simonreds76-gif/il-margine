@@ -1,6 +1,6 @@
 # Assist Value Set-Piece Source Audit
 
-Fetched at UTC: `2026-09-12T11:37:00+00:00`
+Fetched at UTC: `2026-09-13T12:40:56+00:00`
 
 ## Decision
 
@@ -14,25 +14,25 @@ Overall: **PASS_SOURCE_LAYER**
 ## RotoWire
 
 - Teams with set-piece blocks: `96/96`
-- Player role rows extracted: `482`
+- Player role rows extracted: `505`
 
 | League | Teams OK | Teams | Role rows | Max latest week |
 |---|---:|---:|---:|---:|
-| bundesliga | 18 | 18 | 75 | 3 |
-| epl | 20 | 20 | 92 | 4 |
-| la-liga | 20 | 20 | 122 | 5 |
-| ligue-1 | 18 | 18 | 95 | 4 |
-| serie-a | 20 | 20 | 98 | 4 |
+| bundesliga | 18 | 18 | 80 | 4 |
+| epl | 20 | 20 | 98 | 5 |
+| la-liga | 20 | 20 | 127 | 6 |
+| ligue-1 | 18 | 18 | 99 | 5 |
+| serie-a | 20 | 20 | 101 | 4 |
 
 ## FPL API
 
 - Status: `PASS`
 - Teams: `20`
-- Players: `656`
+- Players: `657`
 - Players with set-piece role fields: `134`
 - Registered season: `2026/27`
 - Exact 20-team roster match: `YES`
-- Snapshot valid until UTC: `2026-09-19T11:37:00+00:00`
+- Snapshot valid until UTC: `2026-09-20T12:40:56+00:00`
 
 ## SetPieceTakers
 
@@ -45,21 +45,21 @@ Overall: **PASS_SOURCE_LAYER**
 
 | League | Team | Player | Last-5 corner share | Season corner share | Corner total |
 |---|---|---|---:|---:|---:|
-| epl | Crystal Palace | Yeremy Pino | 100.0% | 100.0% | 3 |
-| epl | Liverpool | Dominik Szoboszlai | 100.0% | 100.0% | 16 |
-| bundesliga | FSV Mainz 05 | Nadiem Amiri | 100.0% | 100.0% | 13 |
+| bundesliga | FSV Mainz 05 | Nadiem Amiri | 100.0% | 100.0% | 15 |
 | bundesliga | RB Leipzig | David Raum | 100.0% | 100.0% | 16 |
 | bundesliga | SV 07 Elversberg | Felix Keidel | 100.0% | 100.0% | 6 |
 | bundesliga | Union Berlin | Josip Juranovic | 100.0% | 100.0% | 10 |
 | ligue-1 | Brest | Joris Chotard | 100.0% | 100.0% | 17 |
-| serie-a | Frosinone | Giacomo Calo | 100.0% | 100.0% | 11 |
-| ligue-1 | Angers | Branco van den Boomen | 96.67% | 96.67% | 29 |
-| bundesliga | Bayer Leverkusen | Aleix Garcia | 88.89% | 88.89% | 8 |
+| serie-a | Frosinone | Giacomo Calo | 100.0% | 100.0% | 18 |
+| ligue-1 | Angers | Branco van den Boomen | 97.14% | 97.14% | 34 |
+| epl | Liverpool | Dominik Szoboszlai | 95.0% | 95.0% | 19 |
+| bundesliga | Bayer Leverkusen | Aleix Garcia | 95.0% | 95.0% | 19 |
 | bundesliga | FC Schalke 04 | Adil Aouchiche | 87.5% | 87.5% | 7 |
-| epl | Sunderland | Granit Xhaka | 85.71% | 85.71% | 6 |
 | ligue-1 | Le Mans | Alexandre Lauray | 85.71% | 85.71% | 6 |
 | ligue-1 | Lens | Florian Thauvin | 82.61% | 82.61% | 19 |
-| la-liga | Osasuna | Ruben Garcia | 81.82% | 81.82% | 9 |
+| la-liga | Rayo Vallecano | Unai Lopez | 82.61% | 82.61% | 19 |
+| epl | Sunderland | Granit Xhaka | 80.0% | 80.0% | 8 |
+| serie-a | Como | Luis Milla | 78.95% | 78.95% | 15 |
 
 ## Outputs
 

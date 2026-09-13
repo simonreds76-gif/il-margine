@@ -1,5 +1,5 @@
 Assist Value Shadow Report
-generated_at_utc: 2026-09-12T11:38:33Z
+generated_at_utc: 2026-09-13T12:42:24Z
 
 Status
 shadow_status: ENABLED_RESEARCH_ONLY
@@ -8,41 +8,41 @@ model_status: NOT_FITTED
 fair_odds_status: NOT_AUTHORISED
 
 Inputs
-raw_odds_rows_loaded: 2038
-role_players_loaded: 482
+raw_odds_rows_loaded: 950
+role_players_loaded: 505
 
 Join
-shadow_rows_assist_only: 2038
-role_matched_rows: 313
-role_match_rate_pct: 15.36
+shadow_rows_assist_only: 950
+role_matched_rows: 156
+role_match_rate_pct: 16.42
 ambiguous_player_rows: 0
-unmatched_player_rows: 1725
+unmatched_player_rows: 794
 
 Interpretation
 This board is an evidence layer only: Bet365 assist market rows enriched with RotoWire set-piece role shares.
 It is not a betting model, not a public Fair Odds Lab lane, and not a value signal.
 
 Top role-matched rows
- - Giacomo Calo | Genoa CFC vs Frosinone Calcio | odds 5.0000 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
- - Yeremy Pino | Crystal Palace vs Ipswich Town | odds 4.5000 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
- - Dominik Szoboszlai | Liverpool FC vs Fulham FC | odds 3.7500 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
- - Nadiem Amiri | FSV Mainz vs Eintracht Frankfurt | odds 4.3330 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
- - David Raum | RB Leipzig vs Hamburger SV | odds 3.4000 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
- - Branco van den Boomen | Le Havre AC vs Angers SCO | odds 7.0000 | setpiece_last5 97.14 | corners_last5 96.67 | fk_last5 100.0
+ - David Raum | RB Leipzig vs Hamburger SV | odds 3.2500 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
  - Felix Keidel | SV 07 Elversberg vs Bayern Munich | odds 9.0000 | setpiece_last5 90.91 | corners_last5 100.0 | fk_last5 80.0
  - Florian Thauvin | Le Mans FC vs Racing Club De Lens | odds 4.0000 | setpiece_last5 83.87 | corners_last5 82.61 | fk_last5 80.0
  - Joris Chotard | Stade Brest 29 vs Paris Saint-Germain | odds 9.0000 | setpiece_last5 83.33 | corners_last5 100.0 | fk_last5 50.0
  - Luis Milla | Como 1907 vs Parma Calcio | odds 2.6250 | setpiece_last5 80.95 | corners_last5 78.95 | fk_last5 100.0
- - Granit Xhaka | Sunderland AFC vs Arsenal FC | odds 8.5000 | setpiece_last5 75.0 | corners_last5 85.71 | fk_last5 75.0
- - Raphael Obermair | Borussia Dortmund vs SC Paderborn 07 | odds 9.0000 | setpiece_last5 75.0 | corners_last5 71.43 | fk_last5 80.0
  - Anton Stach | Leeds United vs Newcastle United | odds 6.0000 | setpiece_last5 75.0 | corners_last5 69.23 | fk_last5 85.71
- - Can Uzun | FSV Mainz vs Eintracht Frankfurt | odds 7.0000 | setpiece_last5 71.43 | corners_last5 70.0 | fk_last5 75.0
- - Rassoul Ndiaye | Le Havre AC vs Angers SCO | odds 8.0000 | setpiece_last5 70.83 | corners_last5 75.0 | fk_last5 71.43
  - Paulo Dybala | Torino FC vs AS Roma | odds 3.7500 | setpiece_last5 69.23 | corners_last5 66.67 | fk_last5 75.0
  - Alexandre Lauray | Le Mans FC vs Racing Club De Lens | odds 11.0000 | setpiece_last5 66.67 | corners_last5 85.71 | fk_last5 0.0
  - Emanuele Valeri | Como 1907 vs Parma Calcio | odds 10.0000 | setpiece_last5 66.67 | corners_last5 63.64 | fk_last5 69.23
- - Regan Slater | Chelsea FC vs Hull City | odds 10.0000 | setpiece_last5 66.67 | corners_last5 60.0 | fk_last5 100.0
  - Luismi Cruz | Getafe CF vs RC Deportivo de A Coruna | odds 7.0000 | setpiece_last5 61.54 | corners_last5 63.64 | fk_last5 50.0
+ - Raphinha | Levante UD vs FC Barcelona | odds 2.3750 | setpiece_last5 60.87 | corners_last5 53.33 | fk_last5 71.43
+ - Albert Gronbaek | RB Leipzig vs Hamburger SV | odds 7.0000 | setpiece_last5 60.0 | corners_last5 50.0 | fk_last5 66.67
+ - Jon Ander Olasagasti | Levante UD vs FC Barcelona | odds 10.0000 | setpiece_last5 55.0 | corners_last5 71.43 | fk_last5 16.67
+ - Pascal Gross | Coventry City vs Brighton & Hove Albion | odds 5.5000 | setpiece_last5 54.55 | corners_last5 58.82 | fk_last5 40.0
+ - Joshua Kimmich | SV 07 Elversberg vs Bayern Munich | odds 2.7500 | setpiece_last5 52.17 | corners_last5 57.89 | fk_last5 25.0
+ - Douglas Luiz | Sassuolo Calcio vs Juventus Turin | odds 5.0000 | setpiece_last5 52.17 | corners_last5 46.67 | fk_last5 62.5
+ - Matt Grimes | Coventry City vs Brighton & Hove Albion | odds 10.0000 | setpiece_last5 50.0 | corners_last5 50.0 | fk_last5 50.0
+ - Sergio Gomez | Real Sociedad San Sebastian vs Atletico Madrid | odds 5.0000 | setpiece_last5 48.48 | corners_last5 50.0 | fk_last5 42.86
+ - Pablo Fornals | Villarreal CF vs Real Betis Seville | odds 5.0000 | setpiece_last5 47.83 | corners_last5 45.0 | fk_last5 66.67
+ - Trent Alexander-Arnold | Elche CF vs Real Madrid | odds 3.4000 | setpiece_last5 44.12 | corners_last5 48.15 | fk_last5 40.0
 
 Unmatched sample
  - Adrian Bernabe | Como 1907 vs Parma Calcio

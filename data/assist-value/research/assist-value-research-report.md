@@ -1,6 +1,6 @@
 # Assist Value Research Gates
 
-Generated: `2026-09-12T11:41:27Z`
+Generated: `2026-09-13T12:44:29Z`
 Lane status: **FROZEN_RESEARCH**
 Reactivation ready: **NO**
 
@@ -24,17 +24,17 @@ Reactivation ready: **NO**
 - Compared player appearances: 0
 - Assist agreement: 0.00%
 - Positive assist cases: 0; agreement 0.00%
-- Assist-complete instrumented fixtures: 95/95 (100.00%)
+- Assist-complete instrumented fixtures: 98/98 (100.00%)
 - Legacy pre-instrumentation fixtures excluded from completeness denominator: 0
 - Player matching coverage: 0.00%
 
 ## Market Evidence
 
 - Gate: **FAIL**
-- Matched participating players: 1,300
+- Matched participating players: 1,305
 - Old matched shadow signals: 0
 - Captured calendar span: 8 days (minimum 90)
-- Margin-adjustment holdout rows: 598
+- Margin-adjustment holdout rows: 601
 - Reason blocked: `one_sided_margin_adjustment_needs_90_days_and_prospective_confirmation`
 - The fitted one-sided margin adjustment remains research-only and is not treated as CLV.
 
