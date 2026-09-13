@@ -21,6 +21,7 @@ FAILURE_COOLDOWN_MINUTES = 60
 FAILURE_THRESHOLD = 3
 DETAIL_CADENCE_HOT_MINUTES = 60
 CLV_CADENCE_MINUTES = 360
+BOARD_PRICE_CADENCE_MINUTES = 55
 ASSIST_BOARD = ROOT / "data" / "assist-value" / "assist-value-shadow-board.csv"
 
 
@@ -107,6 +108,7 @@ def build_default_state(previous: dict[str, Any] | None) -> dict[str, Any]:
         existing = previous_leagues.get(league, {}) if isinstance(previous_leagues, dict) else {}
         leagues[league] = {
             "last_successful_run_at": str(existing.get("last_successful_run_at") or ""),
+            "last_price_run_at": str(existing.get("last_price_run_at") or ""),
             "last_detail_run_at": str(existing.get("last_detail_run_at") or ""),
             "last_failure_at": str(existing.get("last_failure_at") or ""),
             "consecutive_failures": int(existing.get("consecutive_failures") or 0),
@@ -116,6 +118,12 @@ def build_default_state(previous: dict[str, Any] | None) -> dict[str, Any]:
             "next_kickoff_utc": str(existing.get("next_kickoff_utc") or ""),
         }
     return leagues
+
+
+def board_price_refresh_due(plan_entry: dict[str, Any], *, lineup_only: bool, price_age: float | None) -> bool:
+    """Refresh an otherwise idle league only on the existing full-price tick."""
+    return (not lineup_only and int(plan_entry.get("upcoming_fixture_count") or 0) > 0
+            and (price_age is None or price_age >= BOARD_PRICE_CADENCE_MINUTES))
 
 
 def write_status(
@@ -171,8 +179,8 @@ def main() -> int:
         "--leagues", ",".join(LEAGUES),
         "--json",
     ]
-    if force_refresh:
-        plan_args.append("--include-distant-fixtures")
+    if force_refresh or not lineup_only:
+        plan_args.extend(["--include-distant-fixtures", "--include-confirmed", "--lookahead-hours", "96"])
     plan_proc = run_cmd(plan_args)
     if plan_proc.returncode != 0:
         warnings.append(f"goalscorer-live-schedule failed ({plan_proc.returncode})")
@@ -213,6 +221,12 @@ def main() -> int:
                 tier = "distant"
                 cadence_minutes = 1
                 active_fixture_count = distant_count
+        if tier == "off" and board_price_refresh_due(
+            plan_entry, lineup_only=lineup_only, price_age=iso_age_minutes(entry.get("last_price_run_at"))
+        ):
+            tier = "board"
+            cadence_minutes = BOARD_PRICE_CADENCE_MINUTES
+            active_fixture_count = int(plan_entry["upcoming_fixture_count"])
         next_kickoff_utc = str(plan_entry.get("next_kickoff_utc") or "")
 
         last_success_age = iso_age_minutes(entry.get("last_successful_run_at"))
@@ -238,7 +252,8 @@ def main() -> int:
             })
             continue
 
-        if not force_refresh and last_success_age is not None and last_success_age < cadence_minutes:
+        cadence_age = iso_age_minutes(entry.get("last_price_run_at")) if tier == "board" else last_success_age
+        if not force_refresh and cadence_age is not None and cadence_age < cadence_minutes:
             entry.update({
                 "last_tier": tier,
                 "last_decision": "waiting",
@@ -280,7 +295,7 @@ def main() -> int:
             live_args.extend([
                 "--fetch-odds-api",
                 "--odds-api-bookmakers", "Bet365",
-                "--odds-api-days-ahead", "1",
+                "--odds-api-days-ahead", "3",
                 "--odds-api-max-http-requests", "3",
             ])
         supabase_available = bool(
@@ -313,7 +328,7 @@ def main() -> int:
         successful_run_at = now_utc_iso()
         detail_run_at = ""
         run_detail_tasks = False
-        if tier not in {"lineup", "grace", "close"}:
+        if tier not in {"lineup", "grace", "close", "board"}:
             run_detail_tasks = not (last_detail_age is not None and last_detail_age < DETAIL_CADENCE_HOT_MINUTES)
 
         if run_detail_tasks:
@@ -334,6 +349,7 @@ def main() -> int:
             "consecutive_failures": 0,
             "last_failure_at": "",
             "last_successful_run_at": successful_run_at,
+            "last_price_run_at": successful_run_at if not lineup_only else entry.get("last_price_run_at", ""),
             "last_detail_run_at": detail_run_at or entry.get("last_detail_run_at", ""),
         })
 

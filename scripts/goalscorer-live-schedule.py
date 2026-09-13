@@ -341,6 +341,7 @@ def main() -> int:
                 "tier": tier,
                 "cadence_minutes": cadence_map[tier],
                 "active_fixture_count": len(active_fixtures),
+                "upcoming_fixture_count": sum(1 for item in fixtures if item.kickoff_utc > now_utc),
                 "lineup_count": sum(1 for item in active_fixtures if item.tier == "lineup"),
                 "grace_count": sum(1 for item in active_fixtures if item.tier == "grace"),
                 "close_count": sum(1 for item in active_fixtures if item.tier == "close"),
