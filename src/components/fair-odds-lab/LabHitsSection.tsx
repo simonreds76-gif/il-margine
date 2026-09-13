@@ -4,6 +4,7 @@ import { AbstractJersey } from "./AbstractJersey";
 import { BookmakerLogo } from "./BookmakerLogo";
 import { LogoBadge } from "./LogoBadge";
 import { HitPortrait } from "./HitPortrait";
+import { DisclosureCue } from "./DisclosureCue";
 import type { LabHighlight, Signal } from "./types";
 const asText = (v: unknown) => typeof v === "string" ? v : "";
 const formatOdds = (v: number) => v.toFixed(2);
@@ -290,7 +291,7 @@ export function LabHitsSection({ highlights }: { highlights: LabHighlight[] }) {
           </h2>
         </div>
 
-        <span className="text-sm text-emerald-200">{visibleHighlights.length} winners <span aria-hidden="true">⌄</span></span>
+        <span className="ip-summary-actions text-sm text-emerald-200"><span>{visibleHighlights.length} winners</span><DisclosureCue /></span>
       </summary>
       <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-500">
         Recorded bookmaker prices above our estimated fair odds. Super Sub wins name the replacement who scored.

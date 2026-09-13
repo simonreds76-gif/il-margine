@@ -58,16 +58,17 @@ export default async function FairOddsLabPage({ searchParams }: { searchParams?:
   const structured = { "@context": "https://schema.org", "@type": "WebPage", name: "Goalscorer Fair Odds Lab", url: `${BASE_URL}/fair-odds-lab` };
   return <main className="min-h-screen bg-[#0e181d] text-slate-100">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structured).replace(/</g, "\\u003c") }} />
-    <DailyPitchBoard initial={board} boardUrl={boardUrl} asOf={asOf} preview={preview} />
-    <div className="mx-auto max-w-[1220px] px-4 pb-10 sm:px-6">
-      {highlights.length > 0 && <LabHitsSection highlights={highlights.map(h => ({
+    <DailyPitchBoard initial={board} boardUrl={boardUrl} asOf={asOf} preview={preview} highlights={
+      <LabHitsSection highlights={highlights.map(h => ({
         id: h.id, player: h.player, playerPhotoUrl: highlightPortrait(h), match: h.match, date: h.date, team: h.team, league: h.league,
         competition: h.competition || "Goalscorer", bestBookmaker: h.best_bookmaker || "Bet365",
         bestOdds: h.best_odds, fairOdds: h.fair_odds, goalsScored: h.goals_scored,
         superSubWin: h.super_sub_win, superSubReplacement: h.super_sub_replacement, superSubReplacementGoals: h.super_sub_replacement_goals,
         modelChancePct: 100 / h.fair_odds, marketChancePct: 100 / h.best_odds,
         priceGapPp: 100 / h.fair_odds - 100 / h.best_odds,
-      }))} />}
+      }))} />
+    } />
+    <div className="mx-auto max-w-[1220px] px-4 pb-10 sm:px-6">
       <div className="mt-7 flex flex-wrap gap-5 text-sm text-slate-300"><Link href="/resources/fair-odds-lab-explained" className="underline underline-offset-4">How fair odds work</Link><Link href="/" className="underline underline-offset-4">Il Margine</Link></div>
     </div>
   </main>;
