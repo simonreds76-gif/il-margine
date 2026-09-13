@@ -1,58 +1,13 @@
 {
-  "api_errors": [],
-  "deferred_not_due": 0,
-  "details": [
-    {
-      "detail": "",
-      "goalkeeper": "Justin Bijlow",
-      "match": "Genoa CFC vs Frosinone Calcio",
-      "match_date": "2026-09-12",
-      "reason": "settled_fotmob",
-      "signal_id": "71945250|justin bijlow|2.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Finn Dahmen",
-      "match": "FC Augsburg vs Bayer Leverkusen",
-      "match_date": "2026-09-12",
-      "reason": "settled_fotmob",
-      "signal_id": "72513192|finn dahmen|3.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Noah Atubolu",
-      "match": "FSV Mainz vs Eintracht Frankfurt",
-      "match_date": "2026-09-12",
-      "reason": "settled_fotmob",
-      "signal_id": "72513194|noah atubolu|3.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Moritz Nicolas",
-      "match": "SC Freiburg vs Borussia Monchengladbach",
-      "match_date": "2026-09-12",
-      "reason": "settled_fotmob",
-      "signal_id": "72513190|moritz nicolas|3.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Fabian Bredlow",
-      "match": "TSG Hoffenheim vs VfB Stuttgart",
-      "match_date": "2026-09-12",
-      "reason": "settled_fotmob",
-      "signal_id": "72513188|fabian bredlow|4.5|over"
-    }
-  ],
-  "fotmob_requests_used": 11,
-  "generated_at": "2026-09-12T18:05:50Z",
-  "max_fotmob_requests": 50,
+  "deferred_not_due": 2,
+  "generated_at": "2026-09-13T11:36:20Z",
   "max_requests": 10,
   "pending_due": 0,
-  "pending_total": 0,
+  "pending_total": 2,
   "reason_counts": {
-    "settled_fotmob": 5
+    "not_due": 2
   },
   "requests_used": 0,
-  "settled": 5,
-  "status": "SETTLED"
+  "settled": 0,
+  "status": "NOTHING_DUE"
 }
