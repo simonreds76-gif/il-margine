@@ -1507,13 +1507,14 @@ def _prediction_roster(quoted, lineup, fixture, resolve, team_key, historical_go
                                      odds_decimal=0.0, implied_prob=0.0, bookmaker="")
                 candidate = resolve(context_input, lineup)
                 entry = (starter_entries if name in starters else substitute_entries).get(_norm_text(name), {})
-                if candidate is None and entry.get("player_id") and entry.get("role_group") in {"DEF", "MID", "FW"}:
+                position_priors = {"DEF": "DC", "DMC": "DMC", "MID": "MC", "AM": "AMC", "FW": "FW"}
+                if candidate is None and entry.get("player_id") and entry.get("role_group") in position_priors:
                     # An identified player with no Understat appearances receives the
                     # model's existing position prior, never invented history.
                     candidate = dict(originals[0], odds_row=context_input,
                         player_meta={"player_name": name, "source": "lineup_position_prior"},
                         player_id="fotmob:" + str(entry["player_id"]),
-                        position={"DEF": "DC", "MID": "MC", "FW": "FW"}[entry["role_group"]],
+                        position=position_priors[entry["role_group"]],
                         player_recent=None, player_long=None, history_minutes=0.0,
                         history_gap_days=None, history_stale=False, stacked_features={},
                         context_only_prior=True, outside_prediction_roster=False)
@@ -2545,6 +2546,8 @@ def main() -> None:
     write_outputs(results, penalty_context_rows, fixture_health_rows, stats, args.out_dir, compared_at, args.league)
     board_path = Path(args.out_dir) / "fair-odds-player-forecasts.json"
     board_path.parent.mkdir(parents=True, exist_ok=True)
+    from fair_odds_board import read_json, retain_prematch_forecasts
+    board_forecasts = retain_prematch_forecasts(read_json(board_path).get('players', []), board_forecasts, lineup_map.values())
     board_path.write_text(json.dumps({"generated_at": compared_at, "players": board_forecasts}, ensure_ascii=False), encoding="utf-8")
     print("\n  Done.\n")
 

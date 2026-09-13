@@ -19,7 +19,7 @@ spec.loader.exec_module(LIVE)
 
 
 class RosterIntegrationTests(unittest.TestCase):
-    def run_model(self, selected, *, missing=False, predicted=False, duplicate=False, reserve_role=None, new_starter=False):
+    def run_model(self, selected, *, missing=False, predicted=False, duplicate=False, reserve_role=None, new_starter=False, starter_role='FW'):
         names = ['Alden', 'Barton', 'Corbett', 'Dawson', 'Elwood', 'Fenton', 'Granger',
                  'Hawthorne', 'Irvine', 'Jarvis', 'Kendall', 'Linton']
         players = {side:[side+' '+name for name in names] for side in ('Home', 'Away')}
@@ -45,7 +45,7 @@ class RosterIntegrationTests(unittest.TestCase):
         if duplicate: fixture['home_players'][-1]=fixture['home_players'][1]
         if new_starter:
             fixture['home_players'][-1]='Unresolved New Signing'
-            fixture['home_starters'].append(dict(name='Unresolved New Signing',player_id='999998',role_group='FW'))
+            fixture['home_starters'].append(dict(name='Unresolved New Signing',player_id='999998',role_group=starter_role))
         odds=[dict(captured_at='2026-08-10T12:00:00Z',match_date='2026-08-10',
                    bookmaker='Bet365',competition='Premier League',home_team='Arsenal',away_team='Chelsea',
                    player_name=players['Home'][i],player_team='Arsenal',odds_decimal=4,implied_prob=.25)
@@ -119,6 +119,16 @@ class RosterIntegrationTests(unittest.TestCase):
         for row in self.last_forecasts:
             self.assertAlmostEqual(row['probability'],sparse[row['player_name']]['probability'])
         self.assertLessEqual(sum(r['non_pen_lambda'] for r in self.last_forecasts if r['player_team']=='Arsenal'),1.5)
+
+    def test_identified_attacking_and_defensive_midfielders_do_not_block_whole_team(self):
+        for role in ('AM', 'DMC'):
+            with self.subTest(role=role):
+                self.run_model([9], predicted=True, new_starter=True, starter_role=role)
+                team = [r for r in self.last_forecasts if r['player_team']=='Arsenal']
+                self.assertTrue(all(r['allocation_status']=='estimated_roster' for r in team))
+                newcomer = next(r for r in team if r['player_name']=='Unresolved New Signing')
+                self.assertTrue(newcomer['limited_data'])
+                self.assertGreater(newcomer['probability'], 0)
 
     def test_lineup_without_any_market_still_gets_forecasts_but_no_bets(self):
         with patch.object(LIVE,'load_odds_rows',return_value=[]):

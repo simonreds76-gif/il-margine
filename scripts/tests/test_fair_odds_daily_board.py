@@ -6,9 +6,17 @@ import unittest
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from fair_odds_board import build_board, fingerprint, has_new_confirmed
+from fair_odds_board import build_board, fingerprint, has_new_confirmed, retain_prematch_forecasts
 
 class DailyBoardTests(unittest.TestCase):
+    def test_later_runs_keep_authentic_prematch_prices_not_postmatch_recalculations(self):
+        previous = dict(self.model)
+        later = {**previous, 'generated_at': '2026-09-08T19:01:00Z', 'probability': .9}
+        self.assertEqual(retain_prematch_forecasts([previous], [later], [self.fixture]), [previous])
+        changed = {**self.fixture, 'home_players': ['Different player']}
+        self.assertEqual(retain_prematch_forecasts([previous], [later], [changed]), [later])
+        self.assertEqual(retain_prematch_forecasts([], [later], [self.fixture]), [later])
+
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
         self.root=Path(self.tmp.name);self.base=self.root/'data/goalscorer';self.base.mkdir(parents=True)

@@ -26,6 +26,30 @@ def fingerprint(fixture):
         content += [sorted(norm(n) for n in fixture.get(side+'_players', [])), fixture.get(side+'_formation','')]
     return hashlib.sha256(json.dumps(content,sort_keys=True).encode()).hexdigest()[:20]
 
+
+def retain_prematch_forecasts(previous, current, fixtures):
+    """Keep authentic pre-kickoff estimates when a later run reprices old games."""
+    def fixture_key(row):
+        return (str(row.get('match_date', ''))[:10], norm(row.get('home_team')), norm(row.get('away_team')))
+    def player_key(row):
+        return (*fixture_key(row), norm(row.get('player_team')), norm(row.get('player_name')))
+    lineups = {fixture_key(f): f for f in fixtures}
+    old = {player_key(row): row for row in previous}
+    retained = []
+    for row in current:
+        fixture = lineups.get(fixture_key(row), {})
+        kickoff = instant(fixture.get('kickoff_utc'))
+        generated = instant(row.get('generated_at'))
+        prior = old.get(player_key(row), {})
+        prior_time = instant(prior.get('generated_at'))
+        if (kickoff and generated and generated >= kickoff and prior_time and prior_time < kickoff
+                and prior.get('lineup_fingerprint') == fingerprint(fixture)
+                and prior.get('allocation_status') in {'confirmed_roster', 'expected_roster', 'estimated_roster'}):
+            retained.append(prior)
+        else:
+            retained.append(row)
+    return retained
+
 def read_json(path, fallback=None):
     try: return json.loads(Path(path).read_text(encoding='utf-8-sig'))
     except (OSError, ValueError): return fallback if fallback is not None else {}
