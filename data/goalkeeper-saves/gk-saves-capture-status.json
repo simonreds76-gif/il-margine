@@ -1,10 +1,10 @@
 {
   "capture_mode": "close",
-  "events_selected": 2,
-  "events_with_lines": 2,
-  "generated_at": "2026-09-13T13:53:16Z",
+  "events_selected": 3,
+  "events_with_lines": 3,
+  "generated_at": "2026-09-13T17:40:10Z",
   "last_publication_at": "2026-09-13T13:21:23Z",
-  "market_inventory_rows_added": 167,
+  "market_inventory_rows_added": 254,
   "market_names_observed": [
     "1st Half Corners",
     "Alternative Corners",
@@ -64,7 +64,6 @@
     "Odd/Even Home",
     "Player Cards",
     "Player Fouls",
-    "Player Headed Shots on Target",
     "Player Shots",
     "Player Shots on Target",
     "Player Shots on Target Outside Box",
@@ -94,24 +93,31 @@
   "publication_recovery": false,
   "request_budget": 2,
   "requests_used": 2,
-  "rows_added": 22,
-  "rows_observed": 22,
+  "rows_added": 37,
+  "rows_observed": 37,
   "selected_events": [
     {
-      "away": "FC Barcelona",
-      "competition": "Spain - LaLiga",
-      "home": "Levante UD",
-      "id": 72478552,
-      "kickoff_at": "2026-09-13T14:15:00Z"
+      "away": "Paris Saint-Germain",
+      "competition": "France - Ligue 1",
+      "home": "Stade Brest 29",
+      "id": 72036168,
+      "kickoff_at": "2026-09-13T18:45:00Z"
     },
     {
-      "away": "Racing Club De Lens",
-      "competition": "France - Ligue 1",
-      "home": "Le Mans FC",
-      "id": 72036172,
-      "kickoff_at": "2026-09-13T15:15:00Z"
+      "away": "Juventus Turin",
+      "competition": "Italy - Serie A",
+      "home": "Sassuolo Calcio",
+      "id": 71945260,
+      "kickoff_at": "2026-09-13T18:45:00Z"
+    },
+    {
+      "away": "Atletico Madrid",
+      "competition": "Spain - LaLiga",
+      "home": "Real Sociedad San Sebastian",
+      "id": 72478560,
+      "kickoff_at": "2026-09-13T19:00:00Z"
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 2
+  "three_way_events": 3
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-13T13:53:24Z",
+  "generated_at": "2026-09-13T17:40:20Z",
   "activated_at": "2026-09-12T21:09:03.018654+00:00",
   "status": "ACTIVE_SHADOW",
   "count_gate": "FIXED CANDIDATE",
@@ -18,9 +18,9 @@
     "mean_clv": null
   },
   "latest_scan": {
-    "scored_rows": 32,
-    "scored_fixtures": 7,
-    "explanation": "20 fresh paired contracts; 32 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: fewer_than_six_prior_matches=4, outside_capture_window=24, stale_price=184."
+    "scored_rows": 20,
+    "scored_fixtures": 5,
+    "explanation": "10 fresh paired contracts; 20 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: stale_price=112."
   },
   "settled_this_run": 0,
   "result_source": {
