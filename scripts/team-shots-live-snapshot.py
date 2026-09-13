@@ -24,6 +24,12 @@ DEFAULT_OUTPUT = ROOT / "data" / "team-shots" / "team-shots-live-snapshot.json"
 DEFAULT_SNAPSHOT_KEY = "team_shots_state"
 SNAPSHOT_TABLE = "goalscorer_live_snapshot"
 SNAPSHOT_FILES = [
+    "data/goalkeeper-saves/gk-saves-capture-status.json",
+    "data/goalkeeper-saves/gk-saves-v1-candidates.csv",
+    "data/goalkeeper-saves/gk-saves-v1-provisional.csv",
+    "data/goalkeeper-saves/gk-saves-v1-settlement-status.json",
+    "data/goalkeeper-saves/gk-saves-v1-shadow-report.json",
+    "data/goalkeeper-saves/gk-saves-v1-shadow-signals.csv",
     "data/football-form/team-shots-opponent-shadow.csv",
     "data/football-form/team-shots-opponent-candidates.csv",
     "data/football-form/team-shots-opponent-status.json",

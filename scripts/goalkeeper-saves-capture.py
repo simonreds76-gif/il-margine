@@ -7,6 +7,7 @@ import argparse
 import csv
 import json
 import os
+import re
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -68,12 +69,20 @@ def supported_events(
 ) -> list[dict[str, Any]]:
     candidates: list[dict[str, Any]] = []
     for event in events:
-        if not event.get("id") or not league_key(event_league(event)):
+        # Substring matching admitted U21 Premier League 2 and 2. Bundesliga,
+        # exhausting the batch before the five modelled senior leagues.
+        competition = re.sub(r"[^a-z0-9]+", "-", event_league(event).casefold()).strip("-")
+        if not event.get("id") or competition not in {
+            "england-premier-league", "italy-serie-a", "germany-bundesliga",
+            "spain-la-liga", "spain-laliga", "spain-la-liga-ea-sports", "france-ligue-1",
+        }:
             continue
         kickoff_text = str(event.get("date") or event.get("startTime") or "")
         try:
             kickoff = datetime.fromisoformat(kickoff_text.replace("Z", "+00:00"))
         except ValueError:
+            continue
+        if kickoff.tzinfo is None or kickoff <= now:
             continue
         if kickoff_within_minutes > 0:
             delta = (kickoff - now).total_seconds() / 60.0
@@ -81,7 +90,16 @@ def supported_events(
                 continue
         candidates.append(event)
     candidates.sort(key=lambda item: str(item.get("date") or item.get("startTime") or ""))
-    return candidates[: max(1, max_events)]
+    return candidates[: min(10, max(1, max_events))]
+
+
+def capture_window(mode: str, minutes: int, previous: dict[str, Any], now: datetime) -> tuple[str, int, bool]:
+    last_publication = str(previous.get("last_publication_at") or "")
+    if not last_publication and previous.get("capture_mode") == "publication":
+        last_publication = str(previous.get("generated_at") or "")
+    recovery = mode == "close" and last_publication[:10] != now.date().isoformat()
+    # Reuse the hourly request allowance if the morning publication was missed.
+    return ("publication", 0, True) if recovery else (mode, minutes, False)
 
 
 def decimal_price(prop: dict[str, Any]) -> float | None:
@@ -261,6 +279,15 @@ def main() -> None:
     if not api_key:
         raise SystemExit("Set ODDS_API_KEY or ODDS_API_IO_KEY")
     now = datetime.now(UTC).replace(microsecond=0)
+    try:
+        previous = json.loads(args.status.read_text(encoding="utf-8"))
+        if not isinstance(previous, dict):
+            previous = {}
+    except (OSError, ValueError):
+        previous = {}
+    capture_mode, cutoff_minutes, publication_recovery = capture_window(
+        args.capture_mode, args.kickoff_within_minutes, previous, now,
+    )
     discovered = request_json(
         "/events",
         {
@@ -275,7 +302,7 @@ def main() -> None:
     events = supported_events(
         discovered if isinstance(discovered, list) else [],
         max_events=args.max_events,
-        kickoff_within_minutes=args.kickoff_within_minutes,
+        kickoff_within_minutes=cutoff_minutes,
         now=now,
     )
     event_ids = [str(event["id"]) for event in events]
@@ -292,7 +319,7 @@ def main() -> None:
         {str(event["id"]): event for event in events},
         bookmaker_name=args.bookmaker,
         captured_at=captured_at,
-        capture_mode=args.capture_mode,
+        capture_mode=capture_mode,
     )
     inventory_rows: list[dict[str, Any]] = []
     event_index = {str(event["id"]): event for event in events}
@@ -330,7 +357,15 @@ def main() -> None:
         "rows_added": added,
         "market_inventory_rows_added": inventory_added,
         "market_names_observed": market_names,
-        "capture_mode": args.capture_mode,
+        "capture_mode": capture_mode,
+        "publication_recovery": publication_recovery,
+        "last_publication_at": captured_at if capture_mode == "publication" else previous.get("last_publication_at"),
+        "selected_events": [
+            {"id": event["id"], "competition": event_league(event),
+             "home": event.get("home"), "away": event.get("away"),
+             "kickoff_at": event.get("date") or event.get("startTime")}
+            for event in events
+        ],
     }
     args.status.parent.mkdir(parents=True, exist_ok=True)
     args.status.write_text(json.dumps(status, indent=2, sort_keys=True) + "\n", encoding="utf-8")

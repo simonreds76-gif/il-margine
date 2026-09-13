@@ -31,6 +31,29 @@ settle = load_script("goalkeeper_saves_settle", "goalkeeper-saves-settle.py")
 
 
 class GoalkeeperSavesLiveTests(unittest.TestCase):
+    def test_capture_excludes_youth_and_lower_divisions_before_budget(self):
+        now = datetime(2026, 9, 13, 10, tzinfo=UTC)
+        names = ["England Amateur - U21 Premier League 2", "Germany - 2. Bundesliga",
+                 "England - Premier League", "Italy - Serie A", "Germany - Bundesliga",
+                 "Spain - La Liga", "France - Ligue 1"]
+        events = [{"id": i + 1, "league": {"name": name}, "date": "2026-09-13T13:00:00Z"}
+                  for i, name in enumerate(names)]
+        selected = capture.supported_events(events, max_events=5, kickoff_within_minutes=0, now=now)
+        self.assertEqual([event["id"] for event in selected], [3, 4, 5, 6, 7])
+
+    def test_capture_recovers_missing_publication_without_extra_batch(self):
+        now = datetime(2026, 9, 13, 10, tzinfo=UTC)
+        self.assertEqual(capture.capture_window("close", 90, {}, now), ("publication", 0, True))
+        previous = {"last_publication_at": "2026-09-13T08:16:00Z", "capture_mode": "close"}
+        self.assertEqual(capture.capture_window("close", 90, previous, now), ("close", 90, False))
+        previous = {"capture_mode": "publication", "generated_at": "2026-09-13T08:16:00Z"}
+        self.assertEqual(capture.capture_window("close", 90, previous, now), ("close", 90, False))
+
+    def test_monitor_snapshot_contains_gk_evidence(self):
+        snapshot = load_script("gk_monitor_snapshot", "team-shots-live-snapshot.py")
+        self.assertIn("data/goalkeeper-saves/gk-saves-v1-shadow-signals.csv", snapshot.SNAPSHOT_FILES)
+        self.assertIn("data/goalkeeper-saves/gk-saves-capture-status.json", snapshot.SNAPSHOT_FILES)
+
     @staticmethod
     def history(team: str, venue: str) -> list[dict[str, str]]:
         rows = []
