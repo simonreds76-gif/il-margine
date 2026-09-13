@@ -206,9 +206,12 @@ def load_env():
 import unicodedata
 import re
 
+from player_name_matching import fold_name_text
+
 
 def _norm(s: str) -> str:
     """Lowercase, strip accents, hyphens, apostrophes (align with API matchPinnacle)."""
+    s = fold_name_text(s)
     if not s:
         return ""
     t = (s or "").strip().lower()

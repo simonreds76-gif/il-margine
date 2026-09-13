@@ -24,6 +24,8 @@ from datetime import date, datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
 
+from player_name_matching import fold_name_text
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_LIVE_COMPARE = ROOT / "data" / "goalscorer" / "goalscorer-live-comparison.csv"
@@ -99,6 +101,7 @@ OUTPUT_FIELDS = [
 
 
 def _norm_text(value: str) -> str:
+    value = fold_name_text(value)
     normalized = html.unescape((value or "").strip().lower())
     normalized = unicodedata.normalize("NFD", normalized)
     normalized = "".join(ch for ch in normalized if unicodedata.category(ch) != "Mn")

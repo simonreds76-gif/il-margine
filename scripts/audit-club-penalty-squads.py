@@ -23,6 +23,8 @@ from typing import Any
 
 import requests
 
+from player_name_matching import fold_name_text
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data" / "goalscorer"
@@ -103,6 +105,7 @@ class NextDataParser(HTMLParser):
 
 
 def normalize_name(value: str) -> str:
+    value = fold_name_text(value)
     value = (value or "").translate(TRANSLITERATION)
     value = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode("ascii")
     value = re.sub(r"[^a-z0-9]+", " ", value.lower()).strip()

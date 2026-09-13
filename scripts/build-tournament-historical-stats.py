@@ -32,6 +32,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from player_name_matching import fold_name_text
+
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_BACKTEST_DIR = ROOT / "data" / "backtest"
 DEFAULT_SACKMANN_DIR = ROOT / "data" / "sackmann"
@@ -165,6 +167,7 @@ def _strip_name_suffixes(name: str) -> str:
 
 
 def _normalize_name_for_join(name: str) -> str:
+    name = fold_name_text(name)
     s = _strip_name_suffixes(name)
     s = unicodedata.normalize("NFKD", str(s or ""))
     s = "".join(ch for ch in s if not unicodedata.combining(ch))

@@ -28,6 +28,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from tennis_props_model import negative_binomial_line_probabilities
 
+from player_name_matching import fold_name_text
+
 AUDIT = runpy.run_path(str(ROOT / "scripts/tennis-props-feature-audit.py"))
 BOARD = runpy.run_path(str(ROOT / "scripts/build-tennis-props-board.py"))
 MODEL_IDENTITY_FIELDS = ("model", "model_id", "model_name", "model_version", "variant", "variant_id", "gate_version")
@@ -35,6 +37,7 @@ rows, count, match_key, surface = (AUDIT[k] for k in ("rows", "count", "match_ke
 
 
 def norm(value):
+    value = fold_name_text(value)
     value = str(value or "").strip()
     if "," in value:
         last, first = value.split(",", 1)

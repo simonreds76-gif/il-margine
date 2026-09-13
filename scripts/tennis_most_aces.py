@@ -12,6 +12,8 @@ from typing import Iterable
 import numpy as np
 from scipy.stats import nbinom, norm, qmc
 
+from player_name_matching import fold_name_text
+
 
 DEFAULT_RHO = 0.22
 DEFAULT_SIMULATIONS = 16384
@@ -57,6 +59,7 @@ def recent_activity(matches: int, service_points: int) -> bool:
 
 
 def norm_name(value: object) -> str:
+    value = fold_name_text(value)
     text = unicodedata.normalize("NFKD", str(value or "").strip().lower())
     text = "".join(ch for ch in text if not unicodedata.combining(ch))
     return " ".join(re.sub(r"[^a-z0-9]+", " ", text).split())

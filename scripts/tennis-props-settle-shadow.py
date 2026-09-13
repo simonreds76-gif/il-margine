@@ -11,6 +11,8 @@ from pathlib import Path
 import re
 import unicodedata
 
+from player_name_matching import fold_name_text
+
 ROOT = Path(__file__).resolve().parent.parent
 PROPS_DIR = ROOT / "data" / "tennis-props"
 DEFAULT_SIGNALS = PROPS_DIR / "shadow" / "aces-dfs-shadow-signals.csv"
@@ -116,6 +118,7 @@ FIELDNAMES = [
 
 
 def norm_text(value: object) -> str:
+    value = fold_name_text(value)
     raw = str(value or "").strip()
     if "," in raw:
         last, first = raw.split(",", 1)

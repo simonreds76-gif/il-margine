@@ -12,6 +12,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
+from player_name_matching import fold_name_text
+
 ROOT = Path(__file__).resolve().parent.parent
 INBOX = ROOT / "data" / "tennis-props" / "inbox"
 COMMON_PATH = ROOT / "scripts" / "tennis-props-scrape-bet365.py"
@@ -28,6 +30,7 @@ AUDIT_FIELDS = [
 
 
 def norm_name(value: object) -> str:
+    value = fold_name_text(value)
     text = unicodedata.normalize("NFKD", str(value or "").strip().lower())
     text = "".join(ch for ch in text if not unicodedata.combining(ch))
     return " ".join(re.sub(r"[^a-z0-9]+", " ", text).split())

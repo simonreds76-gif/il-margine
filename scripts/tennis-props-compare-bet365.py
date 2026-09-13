@@ -18,6 +18,8 @@ from tennis_props_model import (
     push_adjusted_value_pct,
 )
 
+from player_name_matching import fold_name_text
+
 
 ROOT = Path(__file__).resolve().parent.parent
 PROPS_DIR = ROOT / "data" / "tennis-props"
@@ -162,6 +164,7 @@ def write_csv(path: Path, rows: list[dict[str, str]], fieldnames: list[str]) -> 
 
 
 def norm_name(value: object) -> str:
+    value = fold_name_text(value)
     raw = str(value or "").strip()
     if "," in raw:
         last, first = raw.split(",", 1)

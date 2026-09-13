@@ -21,6 +21,8 @@ from typing import Any, Iterable
 from football_counts import total_probs
 from football_team_names import football_form_team_key
 
+from player_name_matching import fold_name_text
+
 
 ROOT = Path(__file__).resolve().parents[1]
 WINDOW = 20
@@ -46,6 +48,7 @@ def parse_day(value: Any) -> date | None:
 
 
 def normalize_person(value: Any) -> str:
+    value = fold_name_text(value)
     text = unicodedata.normalize("NFD", str(value or "").strip().casefold())
     text = "".join(char for char in text if unicodedata.category(char) != "Mn")
     text = text.translate(str.maketrans({"ł": "l", "ø": "o", "đ": "d"}))
@@ -62,7 +65,8 @@ def person_match_score(left: Any, right: Any) -> int:
     if a == b:
         return 100
     a_parts, b_parts = a.split(), b.split()
-    if a_parts[-1] == b_parts[-1] and a_parts[0][0] == b_parts[0][0]:
+    if (a_parts[-1] == b_parts[-1] and a_parts[0][0] == b_parts[0][0]
+            and (a_parts[0] == b_parts[0] or min(len(a_parts[0]), len(b_parts[0])) == 1)):
         return 80
     return 0
 

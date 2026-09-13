@@ -44,6 +44,8 @@ import requests
 
 from signal_storage import STRICT_SIGNAL_PATHS
 
+from player_name_matching import fold_name_text
+
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data" / "backtest"
@@ -356,6 +358,7 @@ def load_closing_matches(xlsx_path: Path) -> tuple[list[ClosingMatch], dict[str,
 
 
 def _norm_pinnacle_name(s: str) -> str:
+    s = fold_name_text(s)
     t = (s or "").strip().lower()
     t = unicodedata.normalize("NFD", t)
     t = "".join(c for c in t if unicodedata.category(c) != "Mn")

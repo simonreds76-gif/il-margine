@@ -10,6 +10,8 @@ import runpy
 import unicodedata
 from pathlib import Path
 
+from player_name_matching import fold_name_text
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RESULTS_DIR = ROOT / "data" / "goalscorer" / "match-results"
@@ -46,6 +48,7 @@ def match_stub(payload: dict) -> dict:
 
 
 def normalize_name(value: object) -> str:
+    value = fold_name_text(value)
     text = unicodedata.normalize("NFKD", str(value or ""))
     return "".join(ch for ch in text if ch.isalnum()).casefold()
 

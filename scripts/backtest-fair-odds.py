@@ -56,6 +56,8 @@ if str(Path(__file__).resolve().parent) not in sys.path:
 from src.lib.tennis_prob import prob_match_best_of_3, prob_match_best_of_5
 import sackmann_tml_id_map as idmap
 
+from player_name_matching import fold_name_text
+
 try:
     from hybrid_v2 import compute_point_probs_bc
     HAS_HYBRID_V2 = True
@@ -1996,6 +1998,7 @@ def _compute_match_probability(
 
 def _normalize_name_for_match(name: str) -> str:
     """Normalize for Challenger Pinnacle vs OnCourt name matching."""
+    name = fold_name_text(name)
     s = (name or "").strip().lower()
     s = " ".join(s.split())
     return s

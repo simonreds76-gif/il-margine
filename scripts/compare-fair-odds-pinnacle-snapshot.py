@@ -16,6 +16,8 @@ import re
 import sys
 from datetime import datetime, timezone, timedelta
 
+from player_name_matching import fold_name_text
+
 def load_env():
     base = os.path.dirname(os.path.abspath(__file__))
     root = os.path.dirname(base)
@@ -32,6 +34,7 @@ def load_env():
 
 
 def normalize_name(s):
+    s = fold_name_text(s)
     if not s:
         return ""
     return (s or "").strip().lower().replace(".", "").replace("-", " ")

@@ -32,6 +32,8 @@ import requests
 
 from handicap_probs import prob_p1_covers_plus
 
+from player_name_matching import fold_name_text
+
 try:
     from src.lib.tennis_prob import prob_match_best_of_3
 except ImportError:
@@ -197,6 +199,7 @@ def _surface_scope(value: str) -> List[str]:
 
 
 def _normalize_name(v: object) -> str:
+    v = fold_name_text(v)
     s = str(v or "").strip().lower()
     if not s:
         return ""

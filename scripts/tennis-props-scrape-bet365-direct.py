@@ -24,6 +24,8 @@ from typing import Any
 from urllib.parse import urlparse
 from zoneinfo import ZoneInfo
 
+from player_name_matching import fold_name_text
+
 
 ROOT = Path(__file__).resolve().parent.parent
 INBOX = ROOT / "data" / "tennis-props" / "inbox"
@@ -54,6 +56,7 @@ def load_common() -> Any:
 
 
 def norm_name(value: object) -> str:
+    value = fold_name_text(value)
     text = unicodedata.normalize("NFKD", str(value or "").strip().casefold())
     text = "".join(char for char in text if not unicodedata.combining(char))
     return " ".join(re.sub(r"[^a-z0-9]+", " ", text).split())

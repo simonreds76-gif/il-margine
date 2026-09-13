@@ -29,6 +29,8 @@ from typing import Any
 
 import requests
 
+from player_name_matching import fold_name_text
+
 
 ROOT = Path(__file__).resolve().parent.parent
 BASE_URL = "https://api.odds-api.io/v3"
@@ -143,6 +145,7 @@ def load_env() -> None:
 
 
 def norm(value: object) -> str:
+    value = fold_name_text(value)
     text = html.unescape(str(value or "")).strip().lower()
     text = unicodedata.normalize("NFKD", text)
     text = "".join(ch for ch in text if not unicodedata.combining(ch))

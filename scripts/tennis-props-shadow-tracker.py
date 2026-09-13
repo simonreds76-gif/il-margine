@@ -181,11 +181,21 @@ def signal_id(row: dict[str, str], side: str) -> str:
     return "|".join(parts)
 
 
+def matching_signal_key(row: dict[str, str]) -> str:
+    """Compare historical entries without rewriting their stored signal IDs."""
+    from player_name_matching import fold_name_text
+    comparable = dict(row)
+    for field in ("player", "opponent"):
+        comparable[field] = fold_name_text(row.get(field))
+    return signal_id(comparable, row.get("side") or "")
+
+
 def prospective_decision_key(row: dict[str, str]) -> str:
     """Identify one immutable break decision despite later line/side changes."""
-    pair = sorted((norm_text(row.get("player")), norm_text(row.get("opponent"))))
+    from player_name_matching import fold_name_text
+    pair = sorted((norm_text(fold_name_text(row.get("player"))), norm_text(fold_name_text(row.get("opponent")))))
     market = norm_text(row.get("market"))
-    subject = "match" if market == "match breaks" else norm_text(row.get("player"))
+    subject = "match" if market == "match breaks" else norm_text(fold_name_text(row.get("player")))
     return "|".join(
         [
             row.get("date") or "",
@@ -619,6 +629,7 @@ def main() -> int:
         return 0
 
     existing_by_id = {row.get("signal_id", ""): row for row in existing if row.get("signal_id")}
+    existing_matching_keys = {matching_signal_key(row) for row in existing}
     existing_break_decisions = {
         prospective_decision_key(row): row
         for row in existing
@@ -641,8 +652,10 @@ def main() -> int:
             key = prospective_decision_key(signal)
             existing_break_decisions[key] = signal
         sid = signal["signal_id"]
-        if sid in existing_by_id:
+        matching_key = matching_signal_key(signal)
+        if sid in existing_by_id or matching_key in existing_matching_keys:
             continue
+        existing_matching_keys.add(matching_key)
         existing_by_id[sid] = signal
         existing.append(signal)
         added += 1

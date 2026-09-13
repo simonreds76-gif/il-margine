@@ -21,6 +21,7 @@ import urllib.request
 from dataclasses import dataclass, field
 from datetime import UTC, date, datetime
 from pathlib import Path
+from player_name_matching import fold_name_text
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -305,15 +306,15 @@ def collect_signals(target_date: str) -> tuple[list[Signal], list[str]]:
             if signal is None:
                 continue
             count += 1
-            existing = merged.get(signal.key)
+            existing = merged.get(comparison_key(signal))
             if existing is None:
-                merged[signal.key] = signal
+                merged[comparison_key(signal)] = signal
             else:
                 if lane.label not in existing.labels:
                     existing.labels.append(lane.label)
                 if signal.priority < existing.priority:
                     signal.labels = existing.labels
-                    merged[signal.key] = signal
+                    merged[comparison_key(signal)] = signal
         lane_counts[lane.label] = count
 
     gap_count = 0
@@ -322,9 +323,9 @@ def collect_signals(target_date: str) -> tuple[list[Signal], list[str]]:
         if signal is None:
             continue
         gap_count += 1
-        existing = merged.get(signal.key)
+        existing = merged.get(comparison_key(signal))
         if existing is None:
-            merged[signal.key] = signal
+            merged[comparison_key(signal)] = signal
         else:
             for label in signal.labels:
                 if label == "HARD FLIP" and existing.section == "CORE":
@@ -338,7 +339,7 @@ def collect_signals(target_date: str) -> tuple[list[Signal], list[str]]:
     props = props_signals(target_date)
     lane_counts["ACES/DF"] = len(props)
     for signal in props:
-        merged.setdefault(signal.key, signal)
+        merged.setdefault(comparison_key(signal), signal)
 
     signals = sorted(
         merged.values(),
@@ -418,6 +419,18 @@ def signal_id(signal: Signal) -> str:
     return "|".join(signal.key)
 
 
+def comparison_id(value: str) -> str:
+    """Match old/new spellings while preserving the saved alert ID format."""
+    parts = fold_name_text(value).lower().split("|")
+    if len(parts) >= 5:
+        parts[1:3] = sorted(parts[1:3])
+    return "|".join(parts)
+
+
+def comparison_key(signal: Signal) -> tuple[str, ...]:
+    return tuple(comparison_id(signal_id(signal)).split("|"))
+
+
 def new_signals_since_state(
     signals: list[Signal], state: dict[str, object], target_date: str
 ) -> list[Signal]:
@@ -427,8 +440,8 @@ def new_signals_since_state(
     if not isinstance(previous, list):
         # A legacy state cannot prove which individual selections were sent.
         return signals
-    previous_ids = {str(value) for value in previous}
-    return [signal for signal in signals if signal_id(signal) not in previous_ids]
+    previous_ids = {comparison_id(str(value)) for value in previous}
+    return [signal for signal in signals if comparison_id(signal_id(signal)) not in previous_ids]
 
 
 def github_token() -> str:

@@ -17,6 +17,8 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
+from player_name_matching import fold_name_text
+
 
 ROOT = Path(__file__).resolve().parents[1]
 BACKTEST_DIR = ROOT / "data" / "backtest"
@@ -62,6 +64,7 @@ def parse_date(value: Any) -> date | None:
 
 
 def norm_name(value: Any) -> str:
+    value = fold_name_text(value)
     return " ".join(clean_text(value).lower().replace("-", " ").split())
 
 

@@ -32,6 +32,8 @@ from time import sleep as _sleep
 
 import requests
 
+from player_name_matching import fold_name_text
+
 # ─── Environment ────────────────────────────────────────────────────
 
 def _load_env():
@@ -126,6 +128,7 @@ def _is_doubles(name: str) -> bool:
 
 def _norm_name(name: str) -> str:
     """Normalise name for dedup/matching: lowercase, strip accents."""
+    name = fold_name_text(name)
     n = (name or "").strip().lower()
     n = unicodedata.normalize("NFD", n)
     n = re.sub(r"[\u0300-\u036f]", "", n)

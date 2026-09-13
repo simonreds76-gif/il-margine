@@ -27,6 +27,8 @@ from typing import Dict, Iterable, List, Optional
 
 import requests
 
+from player_name_matching import fold_name_text
+
 
 PINNACLE_API_BASE = "https://guest.api.arcadia.pinnacle.com/0.1"
 PINNACLE_API_KEY = "CmX2KcMrXuFmNg6YFbmTxE0y9CIrOi0R"
@@ -52,6 +54,7 @@ def american_to_decimal(american: int | float) -> float:
 
 
 def _norm_text(value: str) -> str:
+    value = fold_name_text(value)
     normalized = html.unescape((value or "").strip().lower())
     normalized = unicodedata.normalize("NFD", normalized)
     normalized = "".join(ch for ch in normalized if unicodedata.category(ch) != "Mn")

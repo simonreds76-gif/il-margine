@@ -26,6 +26,8 @@ from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
+from player_name_matching import fold_name_text
+
 
 LONDON = ZoneInfo("Europe/London")
 MATCH_VISIBILITY_AFTER_KICKOFF = timedelta(minutes=150)
@@ -669,6 +671,7 @@ def canonical_team_key(value: Any | None) -> str:
 
 
 def canonical_person_key(value: Any | None) -> str:
+    value = fold_name_text(clean_text(value))
     normalized = normalize_logo_key(value)
     normalized = re.sub(r"\b(?:jr|junior|sr|ii|iii|iv)\b", " ", normalized)
     return re.sub(r"\s+", " ", normalized).strip()

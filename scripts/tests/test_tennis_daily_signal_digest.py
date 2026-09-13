@@ -17,6 +17,12 @@ SPEC.loader.exec_module(MODULE)
 
 
 class TennisDailySignalDigestTests(unittest.TestCase):
+    def test_special_letters_do_not_resend_existing_alerts(self):
+        original = '2026-09-13|tomas machac|łukasz kubot|łukasz kubot|ml'
+        plain = '2026-09-13|lukasz kubot|tomas machac|lukasz kubot|ml'
+        self.assertEqual(MODULE.comparison_id(original), MODULE.comparison_id(plain))
+        self.assertNotEqual(MODULE.comparison_id(original), MODULE.comparison_id(plain.replace('|ml', '|aces|4.5|OVER')))
+
     def test_ml_signal_formats_price_fair_edge_and_stake(self) -> None:
         lane = MODULE.Lane("VOL200", Path("unused.csv"), "TRACKED EXPANSION", 10)
         signal = MODULE.row_to_signal(

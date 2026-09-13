@@ -37,6 +37,8 @@ import requests
 
 from signal_storage import STRICT_SIGNAL_PATHS
 
+from player_name_matching import fold_name_text
+
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_CSV = STRICT_SIGNAL_PATHS.archive
@@ -101,6 +103,7 @@ def parse_date(v: str | None) -> date | None:
 
 
 def normalize_name(name: str | None) -> str:
+    name = fold_name_text(name)
     s = (name or "").strip().lower()
     if not s:
         return ""

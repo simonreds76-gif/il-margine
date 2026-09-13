@@ -59,6 +59,8 @@ from signal_storage import (
 )
 from src.lib.tennis_prob import prob_match_best_of_3
 
+from player_name_matching import fold_name_text
+
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data" / "backtest"
@@ -885,6 +887,7 @@ def _apply_piecewise_favorite_remap(p: float, points: list[tuple[float, float]])
 
 
 def norm_name(s: str | None) -> str:
+    s = fold_name_text(s)
     return (s or "").strip().lower().replace(".", "").replace("-", " ").replace(",", " ")
 
 
@@ -893,6 +896,7 @@ def tokenize(s: str | None) -> list[str]:
 
 
 def _norm_pinnacle_name(s: str) -> str:
+    s = fold_name_text(s)
     if not s:
         return ""
     t = (s or "").strip().lower()

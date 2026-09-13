@@ -16,6 +16,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable
 
+from player_name_matching import fold_name_text
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_ODDS_INPUT = "data/assist-value/inbox/*.csv"
@@ -54,6 +56,7 @@ def now_utc_iso() -> str:
 
 
 def norm_text(value: str) -> str:
+    value = fold_name_text(value)
     text = unicodedata.normalize("NFKD", value or "")
     text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
     text = text.replace("'", "").replace("’", "").replace("‘", "")

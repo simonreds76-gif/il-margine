@@ -11,10 +11,13 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 from goalscorer_penalty_utils import penalty_transfer_info, best_name_match
 
+from player_name_matching import fold_name_text
+
 ROOT = Path(__file__).resolve().parents[1]
 LEAGUES = {'serie-a':'Serie A','epl':'Premier League','la-liga':'La Liga','bundesliga':'Bundesliga','ligue-1':'Ligue 1'}
 
 def norm(value):
+    value = fold_name_text(value)
     return ''.join(c for c in unicodedata.normalize('NFKD', str(value or '')).lower() if c.isalnum())
 
 def fingerprint(fixture):

@@ -14,6 +14,8 @@ import pandas as pd
 
 from .clay_v3_tournament_map import canonical_tournament_key
 
+from player_name_matching import fold_name_text
+
 
 FIELDNAMES = [
     "date",
@@ -45,6 +47,7 @@ class RankJoinResult:
 
 
 def _norm_name(s: str | None) -> str:
+    s = fold_name_text(s)
     t = (s or "").strip().lower()
     t = unicodedata.normalize("NFD", t)
     t = "".join(c for c in t if unicodedata.category(c) != "Mn")

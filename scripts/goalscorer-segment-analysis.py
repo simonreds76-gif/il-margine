@@ -23,6 +23,8 @@ import unicodedata
 from collections import defaultdict
 from typing import Callable, Dict, List
 
+from player_name_matching import fold_name_text
+
 
 DEFAULT_BACKTEST = "data/goalscorer/test-run/historical-all/goalscorer-historical-backtest.csv"
 DEFAULT_MODEL = "data/goalscorer/goalscorer-backtest-results.csv"
@@ -30,6 +32,7 @@ DEFAULT_OUT_DIR = "data/goalscorer/test-run/historical-all"
 
 
 def _norm_text(value: str) -> str:
+    value = fold_name_text(value)
     normalized = html.unescape((value or "").strip().lower())
     normalized = unicodedata.normalize("NFD", normalized)
     normalized = "".join(ch for ch in normalized if unicodedata.category(ch) != "Mn")

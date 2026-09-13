@@ -15,6 +15,19 @@ SPEC.loader.exec_module(MODULE)
 
 
 class MostAcesShadowTests(unittest.TestCase):
+    def test_accent_recapture_preserves_historical_observation_id(self):
+        board = dict(self.board(), player1="Łukasz Kubot", player2="Tomáš Macháč")
+        capture = dict(self.capture(), event_id="", player1="Łukasz Kubot", player2="Tomáš Macháč")
+        old = MODULE.registration_row(board, capture)
+        self.assertIsNotNone(old)
+        old['observation_id'] = old['observation_id'].replace('lukasz', 'ukasz')
+        saved_id = old['observation_id']
+        ledger = [old]
+        plain = dict(capture, player1="Lukasz Kubot", player2="Tomas Machac")
+        self.assertEqual(MODULE.register([board], [plain], ledger), 0)
+        self.assertEqual(len(ledger), 1)
+        self.assertEqual(ledger[0]['observation_id'], saved_id)
+
     def board(self):
         return {
             "date": "2026-07-29", "tour": "ATP", "tournament": "Washington",

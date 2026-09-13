@@ -24,6 +24,8 @@ from handicap_probs import prob_p1_covers_plus
 from spread_v1_model import FEATURE_NAMES, MODEL_TYPE, clamp_prob, feature_vector, logit, sigmoid
 from src.lib.tennis_prob import prob_match_best_of_3
 
+from player_name_matching import fold_name_text
+
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data" / "backtest"
@@ -145,6 +147,7 @@ def _surface_filter_label(value: str) -> str | None:
 
 
 def _normalize_name(v: object) -> str:
+    v = fold_name_text(v)
     s = str(v or "").strip().lower()
     if not s:
         return ""

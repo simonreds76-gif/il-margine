@@ -35,6 +35,8 @@ from typing import Dict, Iterable, List, Optional
 
 import requests
 
+from player_name_matching import fold_name_text
+
 
 ROOT = Path(__file__).resolve().parent.parent
 BASE_URL = "https://api.the-odds-api.com/v4"
@@ -61,6 +63,7 @@ def load_env() -> None:
 
 
 def _norm_text(value: str) -> str:
+    value = fold_name_text(value)
     normalized = html.unescape((value or "").strip().lower())
     normalized = unicodedata.normalize("NFD", normalized)
     normalized = "".join(ch for ch in normalized if unicodedata.category(ch) != "Mn")

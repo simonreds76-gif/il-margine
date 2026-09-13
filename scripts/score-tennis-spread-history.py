@@ -20,6 +20,8 @@ from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any, Iterable
 
+from player_name_matching import fold_name_text
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_HISTORY_DIR = ROOT / "data" / "pinnacle-history"
@@ -159,6 +161,7 @@ UNMATCHED_FIELDS = [
 
 
 def normalize_name(value: Any) -> str:
+    value = fold_name_text(value)
     text = str(value or "").strip().lower()
     text = "".join(
         char

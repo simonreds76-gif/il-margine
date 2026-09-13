@@ -7,6 +7,8 @@ from dataclasses import dataclass
 import re
 import unicodedata
 
+from player_name_matching import fold_name_text
+
 
 @dataclass(frozen=True)
 class NameResolution:
@@ -19,6 +21,7 @@ class NameResolution:
 
 
 def norm_name(value: object) -> str:
+    value = fold_name_text(value)
     text = unicodedata.normalize("NFKD", str(value or ""))
     text = "".join(ch for ch in text if not unicodedata.combining(ch)).lower()
     return " ".join(re.sub(r"[^a-z0-9]+", " ", text).split())
@@ -57,14 +60,20 @@ def resolve_baseline_name(
     if normalized in candidates:
         return NameResolution(normalized, "exact")
 
+    folded = [candidate for candidate in candidates if norm_name(candidate) == normalized]
+    if len(folded) == 1:
+        return NameResolution(folded[0], "accent_equivalent")
+    if len(folded) > 1:
+        return NameResolution(normalized, "unresolved")
+
     tokens = normalized.split()
     if len(tokens) >= 2:
         first_last = [
             candidate
             for candidate in candidates
-            if len(candidate.split()) >= 2
-            and candidate.split()[0] == tokens[0]
-            and candidate.split()[-1] == tokens[-1]
+            if len(norm_name(candidate).split()) >= 2
+            and norm_name(candidate).split()[0] == tokens[0]
+            and norm_name(candidate).split()[-1] == tokens[-1]
         ]
         if len(first_last) == 1:
             return NameResolution(first_last[0], "unique_first_last")

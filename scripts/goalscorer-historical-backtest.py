@@ -19,6 +19,8 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from typing import Dict, Iterable, List, Optional
 
+from player_name_matching import fold_name_text
+
 
 DEFAULT_MODEL = "data/goalscorer/goalscorer-backtest-results.csv"
 DEFAULT_ODDS = "data/goalscorer/goalscorer-odds-history.csv"
@@ -26,6 +28,7 @@ DEFAULT_OUT_DIR = "data/goalscorer"
 
 
 def _norm_text(value: str) -> str:
+    value = fold_name_text(value)
     normalized = html.unescape((value or "").strip().lower())
     normalized = unicodedata.normalize("NFD", normalized)
     normalized = "".join(ch for ch in normalized if unicodedata.category(ch) != "Mn")

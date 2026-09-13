@@ -22,6 +22,8 @@ from pathlib import Path
 from statistics import mean
 from typing import Any, Iterable
 
+from player_name_matching import fold_name_text
+
 
 ROOT = Path(__file__).resolve().parents[1]
 BACKTEST_DIR = ROOT / "data" / "backtest"
@@ -108,6 +110,7 @@ def brier(prob: float, actual: int) -> float:
 
 
 def norm_name(value: object) -> str:
+    value = fold_name_text(value)
     return " ".join(clean(value).lower().replace("-", " ").split())
 
 

@@ -15,6 +15,8 @@ from pathlib import Path
 
 import requests
 
+from player_name_matching import fold_name_text
+
 ROOT = Path(__file__).resolve().parent.parent
 SACKMANN_DIR = ROOT / "data" / "sackmann"
 TML_DIR = ROOT / "tml-data"
@@ -77,6 +79,7 @@ def _read_csv(path):
 
 
 def _ascii_fold(text):
+    text = fold_name_text(text)
     s = str(text or "")
     s = s.translate(_SPECIAL_FOLDS)
     s = unicodedata.normalize("NFKD", s)

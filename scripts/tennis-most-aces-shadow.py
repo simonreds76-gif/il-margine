@@ -207,7 +207,8 @@ def registration_row(board: dict[str, str], capture: dict[str, str]) -> dict[str
 
 def register(board_rows: list[dict[str, str]], captures: list[dict[str, str]], ledger: list[dict[str, str]]) -> int:
     index = board_index(board_rows)
-    known = {row.get("observation_id", "") for row in ledger}
+    # Recognize accent-equivalent recaptures without changing stored IDs.
+    known = {key for row in ledger for key in (row.get("observation_id", ""), observation_id(row))}
     added = 0
     for capture in captures:
         boards = index.get(

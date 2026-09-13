@@ -9,6 +9,8 @@ import re
 from pathlib import Path
 from typing import Any
 
+from player_name_matching import fold_name_text
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data" / "goalscorer"
@@ -26,6 +28,7 @@ def slug(value: str) -> str:
 
 
 def normalize(value: str) -> str:
+    value = fold_name_text(value)
     return re.sub(r"[^a-z0-9]+", " ", value.lower()).strip()
 
 

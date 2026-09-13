@@ -8,6 +8,8 @@ from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Dict, Iterable, Optional
 
+from player_name_matching import fold_name_text
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_HIERARCHY_PATH = ROOT / "data" / "goalscorer" / "serie-a-penalty-takers.json"
@@ -18,6 +20,7 @@ KNOWN_GIVEN_NAME_EQUIVALENTS = {
 
 
 def norm_text(value: str) -> str:
+    value = fold_name_text(value)
     normalized = html.unescape((value or "").strip().lower())
     normalized = normalized.translate(str.maketrans({"ı": "i", "ł": "l", "ø": "o", "đ": "d", "ð": "d", "þ": "th"}))
     normalized = unicodedata.normalize("NFD", normalized)

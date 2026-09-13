@@ -21,6 +21,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from statistics import mean
 
+from player_name_matching import fold_name_text
+
 
 ROOT = Path(__file__).resolve().parent.parent
 BACKTEST_DIR = ROOT / "data" / "tennis-props" / "backtest"
@@ -67,6 +69,7 @@ def read_csv(path: Path) -> list[dict[str, str]]:
 
 
 def norm_name(value: object) -> str:
+    value = fold_name_text(value)
     raw = unicodedata.normalize("NFKD", str(value or ""))
     raw = "".join(ch for ch in raw if not unicodedata.combining(ch)).lower()
     return " ".join(re.sub(r"[^a-z0-9]+", " ", raw).split())

@@ -18,6 +18,7 @@ import math
 import re
 import statistics
 import unicodedata
+from player_name_matching import fold_name_text
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -154,6 +155,7 @@ def norm_text(value: str) -> str:
     text = value or ""
     for bad, good in MOJIBAKE_REPLACEMENTS.items():
         text = text.replace(bad, good)
+    text = fold_name_text(text)
     text = unicodedata.normalize("NFKD", text)
     text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
     text = text.replace("'", "")

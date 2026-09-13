@@ -33,6 +33,8 @@ from goalscorer_penalty_utils import (
     player_match_score as shared_player_match_score,
 )
 
+from player_name_matching import fold_name_text
+
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_DATA = ["data/goalscorer/serie-a-player-match-logs-*.csv"]
@@ -137,6 +139,7 @@ TRUST_TIER_QUARANTINED = "T3"
 
 
 def _norm_text(value: str) -> str:
+    value = fold_name_text(value)
     normalized = html.unescape((value or "").strip().lower())
     normalized = unicodedata.normalize("NFD", normalized)
     normalized = "".join(ch for ch in normalized if unicodedata.category(ch) != "Mn")
@@ -653,7 +656,9 @@ def load_penalty_baseline_evidence(path: str, team_key_func) -> Dict[str, Dict[s
         if not team or not player_name:
             continue
         team_key = str(row.get("team_key") or team_key_func(team)).strip()
-        player_key = str(row.get("player_key") or _norm_text(player_name)).strip()
+        # Rebuild a comparison key from the preserved display name; older
+        # persisted keys may already have dropped Ø/Ł and cannot be repaired.
+        player_key = _norm_text(player_name)
         if not team_key or not player_key:
             continue
         loaded[team_key][player_key] = {
