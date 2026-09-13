@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { fetchSeoTipFixture } from "@/lib/tip-seo-server";
+import { SITE_BRAND_IMAGE } from "@/lib/site-brand-image";
 
 export const alt = "Il Margine betting preview";
 export const size = { width: 1200, height: 630 };
@@ -68,23 +69,7 @@ export default async function Image({ params }: ImageProps) {
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", width: "100%" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: 64,
-                  height: 64,
-                  borderRadius: 18,
-                  border: "1px solid rgba(52,211,153,0.48)",
-                  color: "#6ee7b7",
-                  fontSize: 31,
-                  fontWeight: 900,
-                }}
-              >
-                IM
-              </div>
-              <div style={{ display: "flex", fontSize: 28, fontWeight: 800, letterSpacing: "0.08em" }}>IL MARGINE</div>
+              <img src={SITE_BRAND_IMAGE} alt="Il Margine" width={300} height={72} />
             </div>
             <div
               style={{

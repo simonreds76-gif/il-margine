@@ -22,14 +22,14 @@ export const metadata: Metadata = {
     title: "Verified Betting Track Record - Player Props & ATP Tennis | Il Margine",
     description:
       "Live public betting record across player props and ATP tennis. Every selection posted before kick-off, every result logged transparently. No edits, no deletions.",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Il Margine - Track Record" }],
+    images: [{ url: "/brand/20260913/social.png", width: 1200, height: 630, alt: "Il Margine - Track Record" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Verified Betting Track Record - Player Props & ATP Tennis | Il Margine",
     description:
       "Live public betting record across player props and ATP tennis. Every selection posted before kick-off, every result logged transparently. No edits, no deletions.",
-    images: ["/og.png"],
+    images: ["/brand/20260913/social.png"],
   },
 };
 

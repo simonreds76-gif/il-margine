@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { BRAND } from "@/lib/brand";
 
 export default function GlobalNav() {
   const [mobileMenuPath, setMobileMenuPath] = useState<string | null>(null);
@@ -36,15 +37,15 @@ export default function GlobalNav() {
   return (
     <nav className="border-b border-slate-800/80 sticky top-0 z-50 bg-[#0f1117]/95 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between md:h-[88px]">
-          <Link href="/" className="flex h-12 min-w-0 shrink items-center md:h-[68px]" onClick={() => { if (pathname === "/") window.scrollTo(0, 0); }}>
-            <Image src="/logo.png" alt="Il Margine" width={240} height={64} className="h-12 max-w-[210px] w-auto object-contain md:h-[68px] md:max-w-none" priority />
+        <div className="flex h-16 items-center justify-between lg:h-[88px]">
+          <Link href="/" className="flex h-12 min-w-0 shrink-0 items-center lg:h-[68px]" onClick={() => { if (pathname === "/") window.scrollTo(0, 0); }}>
+            <Image src={BRAND.compact} alt="Il Margine" width={700} height={168} className="h-auto w-[196px] max-w-full object-contain lg:w-[210px] xl:w-[240px]" priority unoptimized />
           </Link>
           
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuPath(mobileMenuOpen ? null : pathname)}
-            className="md:hidden min-h-[44px] min-w-[44px] flex items-center justify-center p-2 text-slate-400 hover:text-slate-100 transition-colors"
+            className="lg:hidden min-h-[44px] min-w-[44px] flex items-center justify-center p-2 text-slate-400 hover:text-slate-100 transition-colors"
             aria-label="Toggle menu"
             aria-expanded={mobileMenuOpen}
           >
@@ -58,7 +59,7 @@ export default function GlobalNav() {
           </button>
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-5 lg:gap-6">
+          <div className="hidden lg:flex items-center gap-4 xl:gap-6 whitespace-nowrap">
             {/* Tips Dropdown */}
             <div className="relative">
               <button 
@@ -107,7 +108,7 @@ export default function GlobalNav() {
         
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="max-h-[calc(100dvh-4rem)] space-y-1 overflow-y-auto border-t border-slate-800/50 py-3 md:hidden">
+          <div className="max-h-[calc(100dvh-4rem)] space-y-1 overflow-y-auto border-t border-slate-800/50 py-3 lg:hidden">
             <div className="px-4">
               <button 
                 onClick={() => setTipsMenuPath(tipsMenuOpen ? null : pathname)}

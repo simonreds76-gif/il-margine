@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     title: "World Cup 2026 Goalscorer Research Lab | Il Margine",
     description:
       "Tournament-specific World Cup goalscorer research using penalty hierarchy, expected minutes and confirmed lineups.",
-    images: [{ url: `${BASE_URL}/og.png`, width: 1200, height: 630, alt: "Il Margine World Cup research lab" }],
+    images: [{ url: `${BASE_URL}/brand/20260913/social.png`, width: 1200, height: 630, alt: "Il Margine World Cup research lab" }],
   },
 };
 

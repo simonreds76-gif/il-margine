@@ -18,13 +18,13 @@ export const metadata: Metadata = {
     siteName: "Il Margine",
     title,
     description,
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Il Margine - Tennis Tips" }],
+    images: [{ url: "/brand/20260913/social.png", width: 1200, height: 630, alt: "Il Margine - Tennis Tips" }],
   },
   twitter: {
     card: "summary_large_image",
     title,
     description,
-    images: ["/og.png"],
+    images: ["/brand/20260913/social.png"],
   },
 };
 

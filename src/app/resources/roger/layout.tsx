@@ -24,13 +24,13 @@ export const metadata: Metadata = {
       "Ask Roger about ATP head to head, tournament records, serve stats, and more. Tennis data to enhance your betting.",
     url: `${BASE_URL}/resources/roger`,
     type: "website",
-    images: [`${BASE_URL}/og-social-20260629.png`],
+    images: [`${BASE_URL}/brand/20260913/social.png`],
   },
   twitter: {
     card: "summary_large_image",
     title: "Roger ATP Tennis Stats Chatbot",
     description: "Ask Roger about ATP head to head, tournament records, serve stats, and more.",
-    images: [`${BASE_URL}/og-social-20260629.png`],
+    images: [`${BASE_URL}/brand/20260913/social.png`],
   },
   robots: "index, follow",
 };

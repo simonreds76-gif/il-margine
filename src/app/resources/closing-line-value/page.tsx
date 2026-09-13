@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import { BASE_URL } from "@/lib/config";
@@ -18,13 +18,13 @@ export const metadata: Metadata = {
     url: `${BASE_URL}/resources/closing-line-value`,
     title: "Closing Line Value (CLV): Formula, Examples and Why It Matters",
     description: "Learn how to calculate closing line value and use it as a betting process check.",
-    images: [`${BASE_URL}/og-social-20260629.png`],
+    images: [`${BASE_URL}/brand/20260913/social.png`],
   },
   twitter: {
     card: "summary_large_image",
     title: "Closing Line Value (CLV): Formula, Examples and Why It Matters",
     description: "Learn how to calculate closing line value and use it as a betting process check.",
-    images: [`${BASE_URL}/og-social-20260629.png`],
+    images: [`${BASE_URL}/brand/20260913/social.png`],
   },
 };
 
@@ -41,12 +41,12 @@ const ARTICLE_SCHEMA = {
     name: "Il Margine",
     logo: {
       "@type": "ImageObject",
-      url: `${BASE_URL}/logo.png`,
+      url: `${BASE_URL}/brand/20260913/logo.png`,
     },
   },
   datePublished: "2026-02-12",
   dateModified: "2026-08-21",
-  image: `${BASE_URL}/og-social-20260629.png`,
+  image: `${BASE_URL}/brand/20260913/social.png`,
   mainEntityOfPage: `${BASE_URL}/resources/closing-line-value`,
   description:
     "Learn why CLV is the most reliable predictor of betting success. Understand how to calculate, track, and consistently beat the closing line in sports betting.",

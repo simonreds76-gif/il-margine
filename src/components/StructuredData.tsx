@@ -15,7 +15,7 @@ export default function StructuredData() {
     "@type": "Organization",
     "name": "Il Margine",
     "url": BASE_URL,
-    "logo": `${BASE_URL}/logo.png`,
+    "logo": `${BASE_URL}/brand/20260913/logo.png`,
   };
   
   return (

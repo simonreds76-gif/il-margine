@@ -18,13 +18,13 @@ export const metadata: Metadata = {
     url: `${BASE_URL}/resources/kelly-criterion-sports-betting`,
     title: "Kelly Criterion for Sports Betting: Formula and Stake Sizing",
     description: "Learn the Kelly formula, fractional Kelly staking and the risks of inaccurate probability estimates.",
-    images: [`${BASE_URL}/og-social-20260629.png`],
+    images: [`${BASE_URL}/brand/20260913/social.png`],
   },
   twitter: {
     card: "summary_large_image",
     title: "Kelly Criterion for Sports Betting: Formula and Stake Sizing",
     description: "Learn the Kelly formula, fractional Kelly staking and the risks of inaccurate probability estimates.",
-    images: [`${BASE_URL}/og-social-20260629.png`],
+    images: [`${BASE_URL}/brand/20260913/social.png`],
   },
 };
 
@@ -41,12 +41,12 @@ const ARTICLE_SCHEMA = {
     name: "Il Margine",
     logo: {
       "@type": "ImageObject",
-      url: `${BASE_URL}/logo.png`,
+      url: `${BASE_URL}/brand/20260913/logo.png`,
     },
   },
   datePublished: "2026-02-12",
   dateModified: "2026-08-21",
-  image: `${BASE_URL}/og-social-20260629.png`,
+  image: `${BASE_URL}/brand/20260913/social.png`,
   mainEntityOfPage: `${BASE_URL}/resources/kelly-criterion-sports-betting`,
   description:
     "Master the Kelly Criterion for optimal bet sizing in sports betting. Learn the mathematics, fractional Kelly strategies, and how to apply it to player props and tennis betting.",

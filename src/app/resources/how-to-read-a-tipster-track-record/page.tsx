@@ -15,8 +15,8 @@ export const metadata: Metadata = {
     canonical: `${BASE_URL}${PATH}`,
   },
   robots: "index, follow",
-  openGraph: { title: TITLE, description: DESCRIPTION, url: `${BASE_URL}${PATH}`, type: "article", images: [`${BASE_URL}/og-social-20260629.png`] },
-  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION, images: [`${BASE_URL}/og-social-20260629.png`] },
+  openGraph: { title: TITLE, description: DESCRIPTION, url: `${BASE_URL}${PATH}`, type: "article", images: [`${BASE_URL}/brand/20260913/social.png`] },
+  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION, images: [`${BASE_URL}/brand/20260913/social.png`] },
 };
 
 const TOC = [

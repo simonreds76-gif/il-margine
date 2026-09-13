@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { resolveBookmakerLogo } from "@/lib/bookmaker-logos";
 import { TELEGRAM_BRAND_ASSETS, TELEGRAM_BRAND_ASPECTS } from "@/lib/telegram-brand-assets";
+import { SITE_BRAND_IMAGE } from "@/lib/site-brand-image";
 
 export const runtime = "edge";
 
@@ -28,7 +29,7 @@ export function GET(request: Request) {
     <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", background: "#091218", color: "#f4f7f5", padding: "44px 54px", fontFamily: "sans-serif", position: "relative" }}>
       <div style={{ position: "absolute", width: 9, top: 0, bottom: 0, left: 0, background: "#caff70", display: "flex" }} />
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: 28, borderBottom: "1px solid #2a383e" }}>
-        <div style={{ display: "flex", fontSize: 33, fontWeight: 700, letterSpacing: -1 }}>IL MARGINE<span style={{ color: "#caff70", marginLeft: 10 }}> / </span><span style={{ marginLeft: 14, color: "#acbbb9", fontSize: 23, alignSelf: "center", letterSpacing: 2 }}>PLAYER PROPS</span></div>
+        <div style={{ display: "flex", alignItems: "center", gap: 24 }}><img src={SITE_BRAND_IMAGE} alt="Il Margine" width={280} height={67} /><span style={{ color: "#acbbb9", fontSize: 23, letterSpacing: 2 }}>PLAYER PROPS</span></div>
         <div style={{ display: "flex", color: "#caff70", fontSize: 23 }}>{worldCup ? "WORLD CUP" : date || "PICK ALERT"}</div>
       </div>
       <div style={{ display: "flex", marginTop: 30, color: "#aabbb9", fontSize: event.length > 50 ? 27 : 31 }}>{event}</div>
@@ -47,6 +48,6 @@ export function GET(request: Request) {
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", marginTop: 24, color: "#93a6a5", fontSize: 20 }}><span>Price recorded when published</span><span style={{ color: "#caff70" }}>ilmargine.bet</span></div>
     </div>,
-    { width: 1200, height: 675, headers: { "Cache-Control": "public, max-age=86400, s-maxage=604800", "X-Card-Version": "props-v3" } },
+    { width: 1200, height: 675, headers: { "Cache-Control": "public, max-age=86400, s-maxage=604800", "X-Card-Version": "props-v4-brand-20260913" } },
   );
 }

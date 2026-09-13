@@ -21,14 +21,14 @@ export const metadata: Metadata = {
     title: "Betting Methodology from a Former Odds Compiler | Il Margine",
     description:
       "25 years in the betting industry. Former odds compiler. Proprietary models that strip bookmaker margin to find true odds in player props and ATP tennis.",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Il Margine - The Edge" }],
+    images: [{ url: "/brand/20260913/social.png", width: 1200, height: 630, alt: "Il Margine - The Edge" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Betting Methodology from a Former Odds Compiler | Il Margine",
     description:
       "25 years in the betting industry. Former odds compiler. Proprietary models that strip bookmaker margin to find true odds in player props and ATP tennis.",
-    images: ["/og.png"],
+    images: ["/brand/20260913/social.png"],
   },
 };
 

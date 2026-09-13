@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { SITE_MOTTO } from "@/lib/config";
+import { BRAND } from "@/lib/brand";
 
 interface FooterProps {
   className?: string;
@@ -13,15 +13,16 @@ export default function Footer({ className = "" }: FooterProps) {
         <div className="flex flex-col md:flex-row items-center justify-between gap-5">
           <Link
             href="/"
-            aria-label={`Il Margine: ${SITE_MOTTO}`}
+            aria-label="Il Margine home"
             className="group -ml-2 flex items-center transition hover:brightness-110"
           >
             <Image
-              src="/brand/il-margine-tube-footer-compact.png"
-              alt="Il Margine - Mind the Margin"
-              width={360}
-              height={90}
-              className="h-14 w-auto max-w-[min(86vw,25rem)] object-contain opacity-95 drop-shadow-[0_0_22px_rgba(87,209,150,0.12)] sm:h-16"
+              src={BRAND.full}
+              alt="Il Margine — Independent betting analysis"
+              width={900}
+              height={386}
+              unoptimized
+              className="h-auto w-[320px] max-w-[80vw] rounded-lg object-contain"
             />
           </Link>
           <div className="flex flex-col items-center md:items-end gap-3">

@@ -15,14 +15,14 @@ export const metadata: Metadata = {
     title: "Sports Betting Resources & Guides",
     description:
       "Practical guides to closing line value, Kelly staking, betting records, tennis models and fair odds.",
-    images: [`${BASE_URL}/og-social-20260629.png`],
+    images: [`${BASE_URL}/brand/20260913/social.png`],
   },
   twitter: {
     card: "summary_large_image",
     title: "Sports Betting Resources & Guides",
     description:
       "Practical guides to closing line value, Kelly staking, betting records, tennis models and fair odds.",
-    images: [`${BASE_URL}/og-social-20260629.png`],
+    images: [`${BASE_URL}/brand/20260913/social.png`],
   },
 };
 

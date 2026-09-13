@@ -48,10 +48,10 @@ export default function ResourceArticlePage({
       name: "Il Margine",
       logo: {
         "@type": "ImageObject",
-        url: `${BASE_URL}/logo.png`,
+        url: `${BASE_URL}/brand/20260913/logo.png`,
       },
     },
-    image: `${BASE_URL}/og-social-20260629.png`,
+    image: `${BASE_URL}/brand/20260913/social.png`,
     mainEntityOfPage: `${BASE_URL}${canonicalPath}`,
   };
   const breadcrumbSchema = {

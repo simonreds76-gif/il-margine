@@ -103,7 +103,7 @@ export default function ChatWidget() {
         >
           {/* Header */}
           <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-800/60 bg-[#0d0f14] shrink-0">
-            <img src="/favicon.png" alt="Il Margine" className="w-8 h-8 object-contain shrink-0" />
+            <img src="/brand/20260913/icon-128.png" alt="Il Margine" width={32} height={32} className="w-8 h-8 object-contain shrink-0" />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <p className="text-sm font-semibold text-slate-100">Roger</p>
