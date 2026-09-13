@@ -1,10 +1,10 @@
 {
-  "capture_mode": "publication",
-  "events_selected": 10,
-  "events_with_lines": 10,
-  "generated_at": "2026-09-13T13:21:23Z",
+  "capture_mode": "close",
+  "events_selected": 2,
+  "events_with_lines": 2,
+  "generated_at": "2026-09-13T13:53:16Z",
   "last_publication_at": "2026-09-13T13:21:23Z",
-  "market_inventory_rows_added": 848,
+  "market_inventory_rows_added": 167,
   "market_names_observed": [
     "1st Half Corners",
     "Alternative Corners",
@@ -65,11 +65,9 @@
     "Player Cards",
     "Player Fouls",
     "Player Headed Shots on Target",
-    "Player Passes",
     "Player Shots",
     "Player Shots on Target",
     "Player Shots on Target Outside Box",
-    "Player Tackles",
     "Player To Be Fouled",
     "Player To Score or Assist",
     "Player to be Booked",
@@ -82,18 +80,12 @@
     "Teams to Score",
     "Time of First Corner",
     "Total Corners",
-    "Total Offsides",
-    "Total Offsides Away",
-    "Total Offsides Home",
     "Total Shots",
     "Total Shots Away",
     "Total Shots Home",
     "Total Shots on Target",
     "Total Shots on Target Away",
     "Total Shots on Target Home",
-    "Total Tackles",
-    "Total Tackles Away",
-    "Total Tackles Home",
     "Totals",
     "Totals 2H",
     "Totals HT",
@@ -102,16 +94,9 @@
   "publication_recovery": false,
   "request_budget": 2,
   "requests_used": 2,
-  "rows_added": 110,
-  "rows_observed": 110,
+  "rows_added": 22,
+  "rows_observed": 22,
   "selected_events": [
-    {
-      "away": "Hamburger SV",
-      "competition": "Germany - Bundesliga",
-      "home": "RB Leipzig",
-      "id": 72513186,
-      "kickoff_at": "2026-09-13T13:30:00Z"
-    },
     {
       "away": "FC Barcelona",
       "competition": "Spain - LaLiga",
@@ -125,57 +110,8 @@
       "home": "Le Mans FC",
       "id": 72036172,
       "kickoff_at": "2026-09-13T15:15:00Z"
-    },
-    {
-      "away": "Bayern Munich",
-      "competition": "Germany - Bundesliga",
-      "home": "SV 07 Elversberg",
-      "id": 72513200,
-      "kickoff_at": "2026-09-13T15:30:00Z"
-    },
-    {
-      "away": "Manchester City",
-      "competition": "England - Premier League",
-      "home": "Manchester United",
-      "id": 72221266,
-      "kickoff_at": "2026-09-13T15:30:00Z"
-    },
-    {
-      "away": "Bologna FC",
-      "competition": "Italy - Serie A",
-      "home": "SSC Napoli",
-      "id": 71945258,
-      "kickoff_at": "2026-09-13T16:00:00Z"
-    },
-    {
-      "away": "RC Deportivo de A Coruna",
-      "competition": "Spain - LaLiga",
-      "home": "Getafe CF",
-      "id": 72478550,
-      "kickoff_at": "2026-09-13T16:30:00Z"
-    },
-    {
-      "away": "Paris Saint-Germain",
-      "competition": "France - Ligue 1",
-      "home": "Stade Brest 29",
-      "id": 72036168,
-      "kickoff_at": "2026-09-13T18:45:00Z"
-    },
-    {
-      "away": "Juventus Turin",
-      "competition": "Italy - Serie A",
-      "home": "Sassuolo Calcio",
-      "id": 71945260,
-      "kickoff_at": "2026-09-13T18:45:00Z"
-    },
-    {
-      "away": "Atletico Madrid",
-      "competition": "Spain - LaLiga",
-      "home": "Real Sociedad San Sebastian",
-      "id": 72478560,
-      "kickoff_at": "2026-09-13T19:00:00Z"
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 10
+  "three_way_events": 2
 }
