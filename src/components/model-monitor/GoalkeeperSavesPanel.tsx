@@ -102,16 +102,28 @@ function metricTone(value: number | null): string {
 
 function plain(value?: string | null): string {
   const labels: Record<string, string> = {
-    goalkeeper_team_unresolved: "Goalkeeper team unresolved",
+    goalkeeper_team_unresolved: "Unable to link goalkeeper to a team",
     missing_lineup: "Lineup not published",
-    missing_priced_edge: "No model-priced edge",
-    player_not_starting_goalkeeper: "Player not starting goalkeeper",
+    missing_priced_edge: "Fair odds unavailable until the data issue is resolved",
+    player_not_starting_goalkeeper: "Name not matched to the listed starting goalkeeper",
+    goalkeeper_not_matched_to_lineup: "Name not matched to the listed starting goalkeeper",
+    history_lt_6: "Fewer than 6 prior matches available for one of the teams",
+    missing_registered_feature: "Required historical statistics are missing",
+    predicted_starter: "Expected starter; official lineup pending",
+    confirmed_starter: "Confirmed starter",
   };
   return cleanText(value)
     .split("|")
     .map((part) => labels[part] ?? part.replaceAll("_", " "))
     .filter(Boolean)
     .join(" / ");
+}
+
+function candidateReason(row: MonitorCsvRow): string {
+  if (cleanText(row.data_issue_detail)) return cleanText(row.data_issue_detail);
+  const reasons = cleanText(row.blockers).split("|").filter(Boolean);
+  const usefulReasons = reasons.length > 1 ? reasons.filter((reason) => reason !== "missing_priced_edge" && reason !== "goalkeeper_team_unresolved") : reasons;
+  return plain(usefulReasons.join("|")) || plain(row.candidate_status) || "Awaiting model price";
 }
 
 function Metric({ label, value, detail, tone }: { label: string; value: string; detail: string; tone?: string }) {
@@ -256,7 +268,7 @@ export default function GoalkeeperSavesPanel({
 
       <details className="border-t border-slate-800 px-4 py-4 sm:px-5" open={board.length > 0}>
         <summary className="cursor-pointer text-sm font-semibold text-slate-300">Current candidates and value ladders ({board.length})</summary>
-        {board.length === 0 ? <div className="mt-3 rounded-xl border border-dashed border-slate-700 px-4 py-5 text-sm text-slate-400">No current priced candidates. The latest capture retained no named goalkeeper-save O/U line.</div> : <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">{board.map((row, index) => <div key={`${row.event_id}-${row.goalkeeper}-${row.line}-${index}`} className="rounded-xl border border-slate-800 bg-slate-950/45 p-3 text-xs"><div className="text-[11px] text-slate-500">{formatDateTimeLabel(row.kickoff_at || row.match_date)}</div><MatchLabel league={row.league} homeTeam={row.home_team} awayTeam={row.away_team} className="mt-1 w-full" textClassName="font-medium text-slate-200" /><div className="mt-3 flex items-center justify-between gap-3"><span className="text-slate-200">{cleanText(row.goalkeeper)} / {cleanText(row.side)} {cleanText(row.line)}</span><span className="font-mono text-white">{numeric(row.odds_decimal)?.toFixed(2) ?? "-"}</span></div><div className="mt-2 leading-5 text-amber-200">{plain(row.blockers) || plain(row.candidate_status) || "Awaiting model price"}</div></div>)}</div>}
+        {board.length === 0 ? <div className="mt-3 rounded-xl border border-dashed border-slate-700 px-4 py-5 text-sm text-slate-400">No current priced candidates. The latest capture retained no named goalkeeper-save O/U line.</div> : <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">{board.map((row, index) => <div key={`${row.event_id}-${row.goalkeeper}-${row.line}-${index}`} className="rounded-xl border border-slate-800 bg-slate-950/45 p-3 text-xs"><div className="text-[11px] text-slate-500">{formatDateTimeLabel(row.kickoff_at || row.match_date)}</div><MatchLabel league={row.league} homeTeam={row.home_team} awayTeam={row.away_team} className="mt-1 w-full" textClassName="font-medium text-slate-200" /><div className="mt-3 flex items-center justify-between gap-3"><span className="text-slate-200">{cleanText(row.goalkeeper)} / {cleanText(row.side)} {cleanText(row.line)}</span><span className="font-mono text-white">{numeric(row.odds_decimal)?.toFixed(2) ?? "-"}</span></div><div className="mt-2 leading-5 text-amber-200">{candidateReason(row)}</div>{["predicted_starter", "confirmed_starter"].includes(row.lineup_status) && <div className="mt-1 text-slate-400">{plain(row.lineup_status)}</div>}</div>)}</div>}
       </details>
     </section>
   );

@@ -31,6 +31,28 @@ settle = load_script("goalkeeper_saves_settle", "goalkeeper-saves-settle.py")
 
 
 class GoalkeeperSavesLiveTests(unittest.TestCase):
+    def test_radu_verified_alias_matches_without_surname_only_matching(self):
+        fixture = {"lineup_type": "predicted", "home_starters": [{"name": "Ionuț Radu", "role_group": "GK"}]}
+        self.assertEqual(live.resolve_goalkeeper(fixture, "Andrei Radu"), ("home", "predicted_starter", "Ionuț Radu"))
+        self.assertEqual(live.person_match_score("Mihai Radu", "Ionuț Radu"), 0)
+        self.assertEqual(live.resolve_goalkeeper(fixture, "Mihai Radu")[1], "goalkeeper_not_matched_to_lineup")
+
+    def test_coventry_joins_existing_form_and_explains_short_history(self):
+        self.assertEqual(live.football_form_team_key("Coventry City"), live.football_form_team_key("Coventry"))
+        diagnostics = {}
+        _, blockers = live.build_features(histories={"coventry": self.history("Coventry", "home")[:3], "brighton": self.history("Brighton", "away")}, team="Coventry City", opponent="Brighton", venue="home", kickoff_day=date(2026, 8, 1), home_price=2, draw_price=3.5, away_price=4, diagnostics=diagnostics)
+        self.assertIn("history_lt_6", blockers)
+        self.assertNotIn("missing_registered_feature", blockers)
+        self.assertEqual(diagnostics["team_history_matches"], 3)
+
+    def test_french_provider_clubs_join_lineup_and_history_names(self):
+        for provider, stored in [("Lille OSC", "Lille"), ("ESTAC Troyes", "Troyes"), ("Racing Club De Lens", "Lens"), ("SV 07 Elversberg", "Elversberg")]:
+            with self.subTest(provider=provider):
+                self.assertEqual(live.football_form_team_key(provider), live.football_form_team_key(stored))
+
+    def test_polish_keeper_name_preserves_l_when_matching_market(self):
+        self.assertEqual(live.person_match_score("Lukasz Skorupski", "Łukasz Skorupski"), 100)
+
     def test_capture_excludes_youth_and_lower_divisions_before_budget(self):
         now = datetime(2026, 9, 13, 10, tzinfo=UTC)
         names = ["England Amateur - U21 Premier League 2", "Germany - 2. Bundesliga",

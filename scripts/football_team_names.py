@@ -14,6 +14,11 @@ from settlement_utils import normalize_team_name
 
 
 FORM_TEAM_ALIASES = {
+    "coventry city": "coventry",
+    "lille osc": "lille",
+    "estac troyes": "troyes",
+    "racing lens": "lens",
+    "07 elversberg": "elversberg",
     "bayer leverkusen": "leverkusen",
     "borussia dortmund": "dortmund",
     "eintracht frankfurt": "ein frankfurt",

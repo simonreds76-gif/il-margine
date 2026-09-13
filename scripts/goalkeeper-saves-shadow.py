@@ -48,7 +48,7 @@ LEGACY_SELECTION_POLICY = "max_edge_tail_v1"
 CANDIDATE_FIELDS = [
     "generated_at", "event_id", "match_date", "kickoff_at", "league", "home_team", "away_team",
     "team", "opponent", "venue", "goalkeeper", "line", "side", "odds_decimal", "model_mean",
-    "model_probability", "push_probability", "fair_odds", "edge", "lineup_status", "lineup_source",
+    "model_probability", "push_probability", "fair_odds", "edge", "lineup_status", "lineup_source", "data_issue_detail",
     "capture_mode", "captured_at", "candidate_status", "blockers", "strongest_for_fixture",
     "selection_policy", "three_way_source",
 ]
@@ -224,6 +224,8 @@ def build_candidates(
         venue = side
         model_mean = None
         priced: dict[str, float] = {}
+        diagnostics: dict[str, Any] = {}
+        data_issues: list[str] = []
         if not team:
             blockers.append("goalkeeper_team_unresolved")
         else:
@@ -236,7 +238,14 @@ def build_candidates(
                 home_price=parse_float(price_row.get("home_price")) or 0.0,
                 draw_price=parse_float(price_row.get("draw_price")) or 0.0,
                 away_price=parse_float(price_row.get("away_price")) or 0.0,
+                diagnostics=diagnostics,
             )
+            for label, key in ((team, "team_history_matches"), (opponent, "opponent_history_matches")):
+                count = diagnostics.get(key)
+                if count is not None and count < 6:
+                    data_issues.append(f"{label}: {count} prior matches available; minimum 6 required")
+            if diagnostics.get("missing_features"):
+                data_issues.append("Missing recent data: " + ", ".join(diagnostics["missing_features"]))
             blockers.extend(feature_blockers)
             if features is not None:
                 league = str(price_row.get("league") or "") or league_key(price_row.get("competition"))
@@ -285,6 +294,7 @@ def build_candidates(
                 "fair_odds": f"{priced['fair_odds']:.3f}" if priced else "",
                 "edge": f"{edge:.6f}" if edge is not None else "",
                 "lineup_status": lineup_status,
+                "data_issue_detail": ". ".join(data_issues),
                 "lineup_source": "fotmob_confirmed_lineups" if fixture else "",
                 "capture_mode": price_row.get("capture_mode", ""),
                 "captured_at": price_row.get("captured_at", ""),

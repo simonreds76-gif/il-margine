@@ -48,11 +48,15 @@ def parse_day(value: Any) -> date | None:
 def normalize_person(value: Any) -> str:
     text = unicodedata.normalize("NFD", str(value or "").strip().casefold())
     text = "".join(char for char in text if unicodedata.category(char) != "Mn")
+    text = text.translate(str.maketrans({"ł": "l", "ø": "o", "đ": "d"}))
     return re.sub(r"[^a-z0-9]+", " ", text).strip()
 
 
 def person_match_score(left: Any, right: Any) -> int:
     a, b = normalize_person(left), normalize_person(right)
+    # Verified full name: https://rccelta.es/jugadores/andrei-radu/
+    aliases = {"andrei radu": "ionut andrei radu", "ionut radu": "ionut andrei radu"}
+    a, b = aliases.get(a, a), aliases.get(b, b)
     if not a or not b:
         return 0
     if a == b:
@@ -182,6 +186,7 @@ def build_features(
     home_price: float,
     draw_price: float,
     away_price: float,
+    diagnostics: dict[str, Any] | None = None,
 ) -> tuple[tuple[float, ...] | None, list[str]]:
     blockers: list[str] = []
     team_rows = as_of_rows(histories.get(football_form_team_key(team), []), kickoff_day)
@@ -223,6 +228,18 @@ def build_features(
     # Do not mask that supply issue as a second registered-feature failure.
     if any(index != 4 for index in missing_indexes):
         blockers.append("missing_registered_feature")
+    if missing_indexes:
+        if diagnostics is not None:
+            diagnostics["missing_features"] = [
+                ("opponent shots on target", "team shots on target conceded",
+                 "opponent shots", "team shots conceded", "match-result odds",
+                 "opponent expected goals", "team expected goals conceded",
+                 "opponent expected goals per shot", "team save history")[index]
+                for index in missing_indexes
+            ]
+    if diagnostics is not None:
+        diagnostics["team_history_matches"] = len(team_rows)
+        diagnostics["opponent_history_matches"] = len(opponent_rows)
     if missing_indexes:
         return None, sorted(set(blockers))
     return tuple(float(value) for value in values), sorted(set(blockers))
@@ -296,7 +313,7 @@ def resolve_goalkeeper(
             if score:
                 matches.append((score, side, str(starter.get("name") or "")))
     if not matches:
-        return "", "player_not_starting_goalkeeper", ""
+        return "", "goalkeeper_not_matched_to_lineup", ""
     matches.sort(reverse=True)
     if len(matches) > 1 and matches[0][0] == matches[1][0]:
         return "", "ambiguous_goalkeeper_identity", ""
