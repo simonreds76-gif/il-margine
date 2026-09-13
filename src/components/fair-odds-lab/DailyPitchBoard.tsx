@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { DisclosureCue } from "./DisclosureCue";
+import { PlayerLabelGuide } from "./PlayerLabelGuide";
+import { resolveTeamLogoPath } from "@/lib/team-logos";
 import "./daily-pitch.css";
 
 import { isDailyBoard, type BoardPlayer, type BoardFixture, type DailyBoard } from "./daily-board-data";
@@ -29,6 +31,15 @@ function Portrait({ player }: { player: BoardPlayer }) {
   return photo && !failed ? <Image unoptimized src={player.photoUrl!} alt="" width={42} height={42} className="ip-photo" onError={() => setFailed(true)} /> : <span className="ip-shirt" aria-hidden="true">{player.number ?? ""}</span>;
 }
 
+function ClubBadge({ name, path, league }: { name: string; path?: string; league: string }) {
+  const [failedPath, setFailedPath] = useState<string | null>(null);
+  const category = ({ epl: "pl", "serie-a": "seriea", "la-liga": "laliga", "ligue-1": "ligue1" } as Record<string, string>)[league] ?? league;
+  const source = path?.startsWith("/team-logos/") ? path : resolveTeamLogoPath(name, category);
+  return <span className="ip-club-badge">{source && failedPath !== source
+    ? <Image unoptimized src={source} alt={`${name} crest`} width={48} height={48} onError={() => setFailedPath(source)} />
+    : <span aria-label={name}>{name.split(/\s+/).map(word => word[0]).slice(0, 3).join("")}</span>}</span>;
+}
+
 function comparison(p: BoardPlayer, f: BoardFixture, now: number, snapshot: string | null) {
   const capture = Date.parse(p.priceCapturedAt ?? "");
   const change = Date.parse(f.lineupChangedAt ?? "");
@@ -53,9 +64,12 @@ function MatchPitch({ fixture: f, now, snapshot, view, selected, setSelected }: 
   const started = now >= Date.parse(f.kickoffUtc);
   return <details id={`match-${f.id}`} className="ip-match" aria-label={`${f.teams[0].name} versus ${f.teams[1].name}`}>
     <summary className="ip-match-summary">
-    <div className="ip-matchhead"><div><div className="ip-label">{f.competition} · {new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: "Europe/London" }).format(new Date(f.kickoffUtc))} · {stamp(f.kickoffUtc)} UK</div><h2 className="ip-fixturetitle">{f.teams[0].name} <span className="ip-sub">vs</span> {f.teams[1].name}</h2><div className="ip-sub">{started ? "Kickoff passed · pre-match snapshot" : f.lineupStatus === "confirmed" ? "Starting lineup confirmed" : f.lineupStatus === "pending" ? "Starting lineups pending" : "Predicted starting lineup · not confirmed"} · Lineup checked {stamp(f.lineupObservedAt)}</div></div></div>
-    <div className="ip-coverage">{f.teams.map(team => <span key={team.name}><strong>{team.name}</strong> · Fair {team.players.filter(p => p.modelProbability !== null).length}/{team.players.filter(p => p.role !== "GK").length} outfield · Bet365 {team.players.filter(p => p.bookmakerOdds !== null).length}/{team.players.length}</span>)}</div>
-    <span className="ip-expand-hint"><span>Lineup &amp; odds</span><DisclosureCue /></span>
+      <div className="ip-match-meta"><span>{f.competition} · {new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: "Europe/London" }).format(new Date(f.kickoffUtc))} · {stamp(f.kickoffUtc)} UK</span><span className={`ip-status-chip ${f.lineupStatus === "confirmed" ? "positive" : "pending"}`}>{started ? "Pre-match snapshot" : f.lineupStatus === "confirmed" ? "Confirmed lineups" : f.lineupStatus === "pending" ? "Lineups pending" : "Expected lineups"}</span></div>
+      <div className="ip-fixture-preview">{f.teams.map((team, i) => {
+        const outfield = team.players.filter(p => p.role !== "GK");
+        return <div className="ip-preview-team" key={team.name}><ClubBadge name={team.name} path={team.logoPath} league={f.league} /><div><span className="ip-preview-side">{i === 0 ? "Home" : "Away"}{team.formation ? ` · ${team.formation}` : ""}</span><h3>{team.name}</h3><span className="ip-preview-coverage">Outfield prices · Fair <strong>{outfield.filter(p => p.modelProbability !== null).length}/{outfield.length}</strong> · Bet365 <strong>{outfield.filter(p => p.bookmakerOdds !== null).length}/{outfield.length}</strong></span></div></div>;
+      })}</div>
+      <span className="ip-expand-hint"><span><strong>Lineups &amp; player odds</strong><small>Lineup checked {stamp(f.lineupObservedAt)} UK</small></span><DisclosureCue /></span>
     </summary>
     {f.teams.filter(t => t.penaltyInheritedFrom && t.activePenaltyTaker).map(t => <div className="ip-pennews" key={t.name}><strong>Expected penalty duty</strong><span>{t.penaltyInheritedFrom} not starting → {t.activePenaltyTaker}</span></div>)}
     {view === "pitch" && <div className="ip-switch ip-teamtabs" aria-label="Team">{f.teams.map((t, i) => <button key={t.name} type="button" aria-pressed={side === i} onClick={() => setSide(i)}>{t.name}</button>)}</div>}
@@ -63,7 +77,7 @@ function MatchPitch({ fixture: f, now, snapshot, view, selected, setSelected }: 
       const validLines = team.players.every(p => Number.isInteger(p.lineIndex)) && team.players.filter(p => p.lineIndex === -1).length === 1 && !!team.formation;
       const lines = validLines ? [...new Set(team.players.map(p => p.lineIndex!))].sort((a, b) => b - a).map(line => team.players.filter(p => p.lineIndex === line)) : [team.players];
       return <section key={team.name} className={`ip-club ${side === teamIndex ? "ip-active" : ""}`} style={{ "--ip-kit": team.primaryColor?.match(/^#[0-9a-f]{6}$/i) ? team.primaryColor : teamIndex ? "#efc2d1" : "#c6e7ff", "--ip-kit-ink": "#ffffff" } as CSSProperties}>
-        <div className="ip-clubhead"><span className="ip-clubname">{team.logoPath?.startsWith("/team-logos/") ? <Image src={team.logoPath} alt="" width={30} height={34} unoptimized /> : <span className="ip-crest" aria-hidden="true">{team.name.slice(0, 1)}</span>}{team.name}</span><span className="ip-sub">{validLines ? team.formation : "Positions pending"}</span></div>
+        <div className="ip-clubhead"><span className="ip-clubname"><ClubBadge name={team.name} path={team.logoPath} league={f.league} />{team.name}</span><span className="ip-sub">{validLines ? team.formation : "Positions pending"}</span></div>
         {!team.lineupComplete && <p className="ip-bench">Lineup incomplete · {team.players.length}/11 players supplied</p>}
         <div className={`ip-field ${validLines ? "" : "ip-ungrouped"}`}><div className="ip-lines" aria-hidden="true"><div className="ip-center" /><div className="ip-area top" /><div className="ip-area bottom" /></div>
           {lines.map((line, i) => <div key={i} className="ip-row">{line.map(p => { const c = comparison(p, f, now, snapshot); return <button key={p.id} type="button" className="ip-player" aria-label={`${p.name}, our fair odds ${decimal(c.fair)}, Bet365 odds ${decimal(p.bookmakerOdds)}${!c.fresh ? ", bookmaker odds unavailable or awaiting an update" : ""}`} aria-pressed={selected?.side === teamIndex && selected.id === p.id} aria-controls={detailId} onClick={() => setSelected({ side: teamIndex, id: p.id })}><Portrait player={p} />{p.penaltyActive && <span className="ip-pen">PEN</span>}<span className="ip-name">{p.name}</span><span className={`ip-price ${!c.fresh ? "ip-aged" : ""}`}><span className="ip-fair" title={p.pricingStatus === "limited_data" ? "Estimate based on limited player history." : "Our estimated fair odds"}><span className="ip-price-label">Our fair odds</span><strong>{c.fair === null ? "Unpriced" : decimal(c.fair)}{p.pricingStatus === "limited_data" ? "*" : ""}</strong></span><span className="ip-book" title={p.bookmakerOdds === null ? "We haven’t received Bet365 odds for this player yet." : "Bet365 decimal odds"}><span className="ip-price-label">Bet365</span><strong>{p.bookmakerOdds === null ? "No odds" : decimal(p.bookmakerOdds)}</strong></span></span><span className={`ip-gap ${c.gap !== null && c.gap < 0 ? "minus" : ""}`}>{c.gap === null ? p.pricingStatus === "limited_data" ? "Estimate*" : started ? "Match started" : p.bookmakerOdds && !c.fresh ? "Update due" : "Not compared" : priceVerdict(c.gap)}</span></button>; })}</div>)}
@@ -148,24 +162,7 @@ export function DailyPitchBoard({ initial, boardUrl, asOf, preview = false, high
     <label className="ip-search"><span>Find a team or player</span><input type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search Adams, Napoli, Marseille…" /></label>
     <div className="ip-controls"><div className="ip-dates" aria-label="Match date"><button type="button" aria-pressed={date === "upcoming"} onClick={() => setDate("upcoming")}>Upcoming<span>All available</span></button>{dates.map(d => <button key={d} type="button" aria-pressed={date === d} onClick={() => setDate(d)}>{dateLabel(d)}<span>{board.fixtures.filter(f => f.date === d && (league === "all" || f.league === league)).length} matches</span></button>)}</div><div className="ip-switch" aria-label="Comparison view">{["pitch", "list"].map(v => <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)}>{v === "pitch" ? "Pitch" : "List"}</button>)}</div></div>
     {highlights}
-    <details id="lab-guide" className="ip-label-guide">
-      <summary><span>Player labels explained</span><DisclosureCue /></summary>
-      <div className="ip-price-guide"><div><span className="ip-guide-label">Our fair odds</span><p>The price our model estimates for this player to score.</p></div><div><span className="ip-guide-label ip-guide-book">Bet365</span><p>The bookmaker’s offered odds for the same player.</p></div><div><span className="ip-guide-label ip-guide-value">Better price</span><p>Bet365 odds are higher than our fair odds. That suggests value according to our model.</p></div></div><div className="ip-legend"><span>Decimal odds include your stake: 3.00 returns £3 per £1 if the bet wins.</span><span>* Estimate = limited player history; no value comparison</span><span>PEN = expected penalty taker · Goalkeepers unpriced</span><span>Tap a player for details · All times UK · Updated {stamp(board.generatedAt)}</span></div>
-      <dl>{[
-        ["Better price", "Bet365 odds are higher than our fair odds: potential value according to our model."],
-        ["Below fair", "Bet365 odds are lower than our fair odds: no positive value according to our model."],
-        ["Matches fair", "Bet365 odds match our fair odds."],
-        ["Update due", "The displayed odds need checking again before we flag value. They may be too old, from before a lineup change, or part of an overdue data update. Tap the player to see when the odds were last checked."],
-        ["No odds", "Our feed has not supplied Bet365 odds for this player. This does not necessarily mean Bet365 has no market."],
-        ["Estimate* / Estimate", "Limited player history. We show estimated fair odds but exclude the player from value comparisons."],
-        ["Not compared", "We cannot make a current value comparison: usable fair odds, recent bookmaker odds or pre-match eligibility are missing. It does not mean the odds match."],
-        ["Unpriced / Data pending", "We do not yet have fair odds for this player. GK unpriced means we do not currently price goalkeepers."],
-        ["Match started", "Kickoff time has passed. These are pre-match prices, not live betting odds."],
-        ["PEN", "Expected penalty taker among the players in this lineup."],
-        ["Expected starter", "Predicted to start. Fair odds assume the player starts and can change when the official lineup arrives."],
-        ["Confirmed starter", "Named in the official starting lineup supplied by our feed."],
-      ].map(([label, description]) => <div key={label}><dt>{label}</dt><dd>{description}</dd></div>)}</dl>
-    </details>
+    <PlayerLabelGuide />
     {(old || refreshFailed) && <p className="ip-pennews" role="status">{old ? "The latest update is overdue. You can still browse the last prices, but they won’t appear in the value shortlist until checked again." : "We couldn’t load the latest update. Showing the last available prices."}</p>}
     <details id="lab-signals" className="ip-shortlist" aria-label="Suggested signals">
       <summary className="ip-shortlist-head"><div><span className="ip-eyebrow">BET365 · ANYTIME GOALSCORER</span><h2>Suggested signals</h2><p>Recently checked odds above our fair price. Uses your league, date and search filters.</p></div><span className="ip-summary-actions"><span className="ip-shortlist-count">{shortlist.length} {shortlist.length === 1 ? "player" : "players"}</span><DisclosureCue /></span></summary>

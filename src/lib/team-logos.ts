@@ -41,6 +41,7 @@ const CATEGORY_TO_MANIFEST_LEAGUE = Object.fromEntries(
 ) as Record<string, string>;
 
 const TEAM_LOGO_ALIASES: Record<string, string> = {
+  "deportivo-a-coruna": "deportivo-la-coruna",
   "cape-verde": "cabo-verde",
   "ivory-coast": "cote-d-ivoire",
   "iran": "ir-iran",
