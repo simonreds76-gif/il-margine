@@ -9,9 +9,9 @@
       "kickoff_utc": "2026-09-13T15:30:00Z",
       "home_team": "Elversberg",
       "away_team": "Bayern München",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -28,16 +28,16 @@
         "David Mokwa"
       ],
       "away_players": [
-        "Manuel Neuer",
+        "Jonas Urbig",
         "Josip Stanišić",
         "Dayot Upamecano",
         "Min-Jae Kim",
         "Nathaniel Brown",
-        "Joshua Kimmich",
         "Tom Bischof",
+        "Aleksandar Pavlović",
         "Lennart Karl",
         "Michael Olise",
-        "Luis Díaz",
+        "Ismael Saibari",
         "Harry Kane"
       ],
       "home_starters": [
@@ -165,15 +165,15 @@
       ],
       "away_starters": [
         {
-          "name": "Manuel Neuer",
+          "name": "Jonas Urbig",
           "line_index": -1,
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
           "formation": "4-2-3-1",
           "position_id": 11,
-          "player_id": 27299,
-          "shirt_number": "1"
+          "player_id": 1285872,
+          "shirt_number": "40"
         },
         {
           "name": "Josip Stanišić",
@@ -220,26 +220,26 @@
           "shirt_number": "11"
         },
         {
-          "name": "Joshua Kimmich",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64,
-          "player_id": 460632,
-          "shirt_number": "6"
-        },
-        {
           "name": "Tom Bischof",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
           "formation": "4-2-3-1",
-          "position_id": 66,
+          "position_id": 64,
           "player_id": 1286183,
           "shirt_number": "8"
+        },
+        {
+          "name": "Aleksandar Pavlović",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 1473580,
+          "shirt_number": "45"
         },
         {
           "name": "Lennart Karl",
@@ -264,15 +264,15 @@
           "shirt_number": "17"
         },
         {
-          "name": "Luis Díaz",
+          "name": "Ismael Saibari",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
           "position_id": 87,
-          "player_id": 860914,
-          "shirt_number": "14"
+          "player_id": 1180288,
+          "shirt_number": "34"
         },
         {
           "name": "Harry Kane",
@@ -286,19 +286,129 @@
           "shirt_number": "9"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "home_subs": [
+        "Tim Boss",
+        "Florian Le Joncour",
+        "Luca Sirch",
+        "Nicholas Mickelson",
+        "Amara Condé",
+        "Luca Schnellbacher",
+        "Maurice Krattenmacher",
+        "Noah Darvich",
+        "Noel Futkeu"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Tim Boss",
+          "player_id": "659051",
+          "role_group": "GK"
+        },
+        {
+          "name": "Florian Le Joncour",
+          "player_id": "594886",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Luca Sirch",
+          "player_id": "1097361",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Nicholas Mickelson",
+          "player_id": "633721",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Amara Condé",
+          "player_id": "763990",
+          "role_group": "MID"
+        },
+        {
+          "name": "Luca Schnellbacher",
+          "player_id": "459010",
+          "role_group": "FW"
+        },
+        {
+          "name": "Maurice Krattenmacher",
+          "player_id": "1412933",
+          "role_group": "FW"
+        },
+        {
+          "name": "Noah Darvich",
+          "player_id": "1479921",
+          "role_group": "FW"
+        },
+        {
+          "name": "Noel Futkeu",
+          "player_id": "1138725",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Manuel Neuer",
+        "Alphonso Davies",
+        "Hiroki Ito",
+        "Jonathan Tah",
+        "Konrad Laimer",
+        "Jamal Musiala",
+        "Joshua Kimmich",
+        "Serge Gnabry",
+        "Luis Díaz"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Manuel Neuer",
+          "player_id": "27299",
+          "role_group": "GK"
+        },
+        {
+          "name": "Alphonso Davies",
+          "player_id": "751202",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Hiroki Ito",
+          "player_id": "851626",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Jonathan Tah",
+          "player_id": "469700",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Konrad Laimer",
+          "player_id": "526827",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Jamal Musiala",
+          "player_id": "1156141",
+          "role_group": "MID"
+        },
+        {
+          "name": "Joshua Kimmich",
+          "player_id": "460632",
+          "role_group": "MID"
+        },
+        {
+          "name": "Serge Gnabry",
+          "player_id": "385437",
+          "role_group": "MID"
+        },
+        {
+          "name": "Luis Díaz",
+          "player_id": "860914",
+          "role_group": "FW"
+        }
+      ],
       "home_unavailable": [
         "Vincent Wagner",
         "Tom Zimmerschied"
       ],
-      "away_unavailable": [
-        "Serge Gnabry"
-      ],
-      "observed_at": "2026-09-13T14:21:40.120684+00:00",
-      "changed_at": "2026-09-12T11:35:12.828525+00:00"
+      "away_unavailable": [],
+      "observed_at": "2026-09-13T14:39:05.898516+00:00",
+      "changed_at": "2026-09-13T14:39:05.898516+00:00"
     },
     {
       "fotmob_match_id": 5881168,
@@ -645,6 +755,7 @@
         }
       ],
       "away_subs": [
+        "Terem Moffi",
         "Sander Tangvik",
         "Warmed Omari",
         "Bakery Jatta",
@@ -652,10 +763,14 @@
         "Fábio Vieira",
         "Louis Lemke",
         "Martin Adeline",
-        "Otto Stange",
-        "Terem Moffi"
+        "Otto Stange"
       ],
       "away_substitute_entries": [
+        {
+          "name": "Terem Moffi",
+          "player_id": "885005",
+          "role_group": "FW"
+        },
         {
           "name": "Sander Tangvik",
           "player_id": "1145714",
@@ -695,11 +810,6 @@
           "name": "Otto Stange",
           "player_id": "1576487",
           "role_group": "FW"
-        },
-        {
-          "name": "Terem Moffi",
-          "player_id": "885005",
-          "role_group": "FW"
         }
       ],
       "home_unavailable": [
@@ -713,7 +823,7 @@
         "Alexander Røssing",
         "Sebastiaan Bornauw"
       ],
-      "observed_at": "2026-09-13T14:21:40.120684+00:00",
+      "observed_at": "2026-09-13T14:39:05.898516+00:00",
       "changed_at": "2026-09-13T14:21:40.120684+00:00"
     }
   ]

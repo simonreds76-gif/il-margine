@@ -1,15 +1,15 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-09-13T14:22:33Z",
+  "generated_at": "2026-09-13T14:39:28Z",
   "source_status": {
-    "compared_at": "2026-09-13T14:21:54Z",
-    "hot_live_updated_at": "2026-09-13T14:22:00Z",
-    "expected_refresh_updated_at": "2026-09-13T14:21:54Z",
+    "compared_at": "2026-09-13T14:39:21Z",
+    "hot_live_updated_at": "2026-09-13T14:39:28Z",
+    "expected_refresh_updated_at": "2026-09-13T14:39:21Z",
     "settlement_updated_at": "2026-09-13T13:28:36Z",
-    "scheduler_heartbeat_at": "2026-09-13T14:22:00Z",
-    "snapshot_generated_at": "2026-09-13T14:22:33Z",
+    "scheduler_heartbeat_at": "2026-09-13T14:39:28Z",
+    "snapshot_generated_at": "2026-09-13T14:39:28Z",
     "live_status_state": "idle",
-    "live_status_message": "Goalscorer live poll finished (4 league(s) ran)."
+    "live_status_message": "Goalscorer live poll finished (2 league(s) ran)."
   },
   "league_cards": [
     {
@@ -18,7 +18,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-09-13T14:20:39Z",
+      "updated_at": "2026-09-13T14:38:57Z",
       "live_rows": 250,
       "public_now": 0,
       "shadow_now": 22,
@@ -49,7 +49,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-09-13T14:20:56Z",
+      "updated_at": "2026-09-13T14:38:57Z",
       "live_rows": 38,
       "public_now": 1,
       "shadow_now": 0,
@@ -80,7 +80,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-09-13T14:21:32Z",
+      "updated_at": "2026-09-13T14:38:57Z",
       "live_rows": 91,
       "public_now": 0,
       "shadow_now": 7,
@@ -111,12 +111,12 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-09-13T14:21:43Z",
+      "updated_at": "2026-09-13T14:39:09Z",
       "live_rows": 37,
       "public_now": 0,
       "shadow_now": 0,
-      "clean_fixtures": 1,
-      "degraded_fixtures": 2,
+      "clean_fixtures": 3,
+      "degraded_fixtures": 0,
       "quarantined_fixtures": 0,
       "public_record": {
         "settled": 35,
@@ -142,12 +142,12 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-09-13T14:21:55Z",
+      "updated_at": "2026-09-13T14:39:22Z",
       "live_rows": 82,
       "public_now": 0,
-      "shadow_now": 6,
-      "clean_fixtures": 1,
-      "degraded_fixtures": 4,
+      "shadow_now": 3,
+      "clean_fixtures": 3,
+      "degraded_fixtures": 2,
       "quarantined_fixtures": 0,
       "public_record": {
         "settled": 14,
@@ -400,29 +400,6 @@
       "stake_label": "-"
     },
     {
-      "key": "Matthieu Udol-2026-09-13-Bet365-shadow_track",
-      "status": "SHADOW",
-      "action": "shadow_track",
-      "action_label": "shadow",
-      "league_key": "ligue-1",
-      "league_label": "L1",
-      "competition": "France - Ligue 1",
-      "player": "Matthieu Udol",
-      "team": "Lens",
-      "opponent": "Le Mans FC",
-      "match": "Lens vs Le Mans FC",
-      "match_date": "2026-09-13",
-      "kickoff": "2026-09-13",
-      "bookmaker": "Bet365",
-      "lineup_short": "~",
-      "lineup_label": "FotMob Expected XI",
-      "lineup_status": "expected_starter",
-      "odds": 5.5,
-      "fair": 3.5479,
-      "edge_pct": 55.0192,
-      "stake_label": "-"
-    },
-    {
       "key": "Ludovic Ajorque-2026-09-13-Bet365-shadow_track",
       "status": "SHADOW",
       "action": "shadow_track",
@@ -607,29 +584,6 @@
       "stake_label": "-"
     },
     {
-      "key": "Habib Diallo-2026-09-13-Bet365-shadow_track",
-      "status": "SHADOW",
-      "action": "shadow_track",
-      "action_label": "shadow",
-      "league_key": "ligue-1",
-      "league_label": "L1",
-      "competition": "France - Ligue 1",
-      "player": "Habib Diallo",
-      "team": "Le Mans",
-      "opponent": "Racing Club De Lens",
-      "match": "Le Mans vs Racing Club De Lens",
-      "match_date": "2026-09-13",
-      "kickoff": "2026-09-13",
-      "bookmaker": "Bet365",
-      "lineup_short": "~",
-      "lineup_label": "FotMob Expected XI",
-      "lineup_status": "expected_starter",
-      "odds": 3.4,
-      "fair": 2.9937,
-      "edge_pct": 13.5705,
-      "stake_label": "-"
-    },
-    {
       "key": "Amir Rrahmani-2026-09-13-Bet365-shadow_track",
       "status": "SHADOW",
       "action": "shadow_track",
@@ -650,29 +604,6 @@
       "odds": 10.0,
       "fair": 9.039,
       "edge_pct": 10.631599999999999,
-      "stake_label": "-"
-    },
-    {
-      "key": "Florian Thauvin-2026-09-13-Bet365-shadow_track",
-      "status": "SHADOW",
-      "action": "shadow_track",
-      "action_label": "shadow",
-      "league_key": "ligue-1",
-      "league_label": "L1",
-      "competition": "France - Ligue 1",
-      "player": "Florian Thauvin",
-      "team": "Lens",
-      "opponent": "Le Mans FC",
-      "match": "Lens vs Le Mans FC",
-      "match_date": "2026-09-13",
-      "kickoff": "2026-09-13",
-      "bookmaker": "Bet365",
-      "lineup_short": "~",
-      "lineup_label": "FotMob Expected XI",
-      "lineup_status": "expected_starter",
-      "odds": 2.3,
-      "fair": 2.1635,
-      "edge_pct": 6.3092999999999995,
       "stake_label": "-"
     },
     {
@@ -1409,12 +1340,12 @@
         "away_team": "Bayern München",
         "competition": "",
         "bookmaker": "",
-        "lineup_input": "expected_xi",
-        "trust_tier": "T2",
+        "lineup_input": "confirmed_xi",
+        "trust_tier": "T1",
         "corruption_score": 0.0,
         "corruption_flags": [],
-        "status_label": "Expected XI",
-        "summary": "Expected XI only. Useful for monitoring and shadow context, but not confirmed-lineup decisions yet."
+        "status_label": "Lineup Clean",
+        "summary": "This fixture is visible in the monitor, but not in a fully confirmed clean state yet."
       },
       {
         "key": "bundesliga|2026-09-13|rb leipzig|hamburger sv",
@@ -1441,12 +1372,12 @@
         "away_team": "Bayern Munich",
         "competition": "Germany - Bundesliga",
         "bookmaker": "Bet365",
-        "lineup_input": "expected_xi",
-        "trust_tier": "T2",
+        "lineup_input": "confirmed_xi",
+        "trust_tier": "T1",
         "corruption_score": 0.0,
         "corruption_flags": [],
-        "status_label": "Expected XI",
-        "summary": "Expected XI only. Useful for monitoring and shadow context, but not confirmed-lineup decisions yet."
+        "status_label": "Lineup Clean",
+        "summary": "This fixture is visible in the monitor, but not in a fully confirmed clean state yet."
       },
       {
         "key": "ligue-1|2026-09-13|brest|paris saint germain",
@@ -1473,12 +1404,12 @@
         "away_team": "Lens",
         "competition": "",
         "bookmaker": "",
-        "lineup_input": "expected_xi",
-        "trust_tier": "T2",
+        "lineup_input": "confirmed_xi",
+        "trust_tier": "T1",
         "corruption_score": 0.0,
         "corruption_flags": [],
-        "status_label": "Expected XI",
-        "summary": "Expected XI only. Useful for monitoring and shadow context, but not confirmed-lineup decisions yet."
+        "status_label": "Lineup Clean",
+        "summary": "This fixture is visible in the monitor, but not in a fully confirmed clean state yet."
       },
       {
         "key": "ligue-1|2026-09-13|le mans fc|lens",
@@ -1489,12 +1420,12 @@
         "away_team": "Racing Club De Lens",
         "competition": "France - Ligue 1",
         "bookmaker": "Bet365",
-        "lineup_input": "expected_xi",
-        "trust_tier": "T2",
+        "lineup_input": "confirmed_xi",
+        "trust_tier": "T1",
         "corruption_score": 0.0,
         "corruption_flags": [],
-        "status_label": "Expected XI",
-        "summary": "Expected XI only. Useful for monitoring and shadow context, but not confirmed-lineup decisions yet."
+        "status_label": "Lineup Clean",
+        "summary": "This fixture is visible in the monitor, but not in a fully confirmed clean state yet."
       },
       {
         "key": "ligue-1|2026-09-13|lille|troyes",
@@ -1529,11 +1460,11 @@
         "summary": "Expected XI only. Useful for monitoring and shadow context, but not confirmed-lineup decisions yet."
       }
     ],
-    "clean_count": 6,
-    "degraded_count": 27,
+    "clean_count": 10,
+    "degraded_count": 23,
     "quarantined_count": 0,
     "hidden_pending_count": 0,
-    "hidden_expected_count": 27,
+    "hidden_expected_count": 23,
     "flagged_rows": []
   },
   "fixture_lineups": [
@@ -3972,12 +3903,12 @@
         "away_team": "Bayern Munich",
         "competition": "Germany - Bundesliga",
         "bookmaker": "Bet365",
-        "lineup_input": "expected_xi",
-        "trust_tier": "T2",
+        "lineup_input": "confirmed_xi",
+        "trust_tier": "T1",
         "corruption_score": 0.0,
         "corruption_flags": [],
-        "status_label": "Expected XI",
-        "summary": "Expected XI only. Useful for monitoring and shadow context, but not confirmed-lineup decisions yet."
+        "status_label": "Lineup Clean",
+        "summary": "This fixture is visible in the monitor, but not in a fully confirmed clean state yet."
       },
       "home": {
         "team": "SV 07 Elversberg",
@@ -4025,12 +3956,12 @@
         "away_team": "Racing Club De Lens",
         "competition": "France - Ligue 1",
         "bookmaker": "Bet365",
-        "lineup_input": "expected_xi",
-        "trust_tier": "T2",
+        "lineup_input": "confirmed_xi",
+        "trust_tier": "T1",
         "corruption_score": 0.0,
         "corruption_flags": [],
-        "status_label": "Expected XI",
-        "summary": "Expected XI only. Useful for monitoring and shadow context, but not confirmed-lineup decisions yet."
+        "status_label": "Lineup Clean",
+        "summary": "This fixture is visible in the monitor, but not in a fully confirmed clean state yet."
       },
       "home": {
         "team": "Le Mans FC",
@@ -9248,9 +9179,9 @@
     ]
   },
   "extreme_gap_quarantine": {
-    "registered": 1,
+    "registered": 0,
     "settled": 0,
-    "pending": 1,
+    "pending": 0,
     "wins": 0,
     "losses": 0,
     "voids": 0,
@@ -9274,9 +9205,9 @@
       {
         "key": "epl",
         "label": "Premier League",
-        "registered": 1,
+        "registered": 0,
         "settled": 0,
-        "pending": 1,
+        "pending": 0,
         "wins": 0,
         "losses": 0,
         "voids": 0,
@@ -9324,31 +9255,7 @@
         "roi": null
       }
     ],
-    "recent_rows": [
-      {
-        "key": "2026-09-13|Bryan Mbeumo|Manchester United vs Manchester City|epl",
-        "player": "Bryan Mbeumo",
-        "team": "Manchester United",
-        "match": "Manchester United vs Manchester City",
-        "competition": "England - Premier League",
-        "league_key": "epl",
-        "kickoff": "2026-09-13T15:30:00Z",
-        "compared_at": "2026-09-13T14:20:54Z",
-        "settled_at": "",
-        "date": "2026-09-13",
-        "lineup_state": "starter",
-        "best_bookmaker_odds": 3.4,
-        "model_fair_odds": 2.4612,
-        "ev_pct": 38.142700000000005,
-        "settled": false,
-        "bet_outcome": "",
-        "settlement_note": "",
-        "pnl_units": null,
-        "tracking_tier": "extreme_gap_quarantine",
-        "quarantine_reason": "model_market_gap_gt_10pp",
-        "evaluation_stake_units": 1.0
-      }
-    ]
+    "recent_rows": []
   },
   "diagnostics": {
     "matched_rows": 498,
@@ -9357,19 +9264,19 @@
     "fixtures_with_expected_xis": 0,
     "history_mapped_rows": 414,
     "roster_mapped_rows": 84,
-    "fallback_rows": 52,
-    "low_confidence_rows": 329,
-    "missing_player_history_rows": 119,
-    "starter_rows": 19,
-    "expected_starter_rows": 213,
-    "avg_ev_pct": -69.91908232931725,
+    "fallback_rows": 69,
+    "low_confidence_rows": 328,
+    "missing_player_history_rows": 121,
+    "starter_rows": 58,
+    "expected_starter_rows": 176,
+    "avg_ev_pct": -69.93471204819276,
     "source_feed_gap_leagues": [],
-    "raw_monitor_summary": "=== Serie A | Updated 13/09/2026, 15:20 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-13T12:20:36Z\n\nHistorical Rows          31,809\nOdds Rows                293\nMatched Rows             250\nMissing Player History   51\nMissing Team Mapping     0\nFallback Rows            26\nQualified Rows           22\nRoster Resolved Rows     70\nHigh Confidence Rows     0\nMedium Confidence Rows   92\nLow Confidence Rows      158\nPublic High Signals      0\nPublic Caveat Signals    20\nShadow Track Rows        22\nPenalty Transfer Rows    3\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 12\nFixtures Clean           0\nFixtures Degraded        12\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    118\nExpected Bench Rows      8\nExpected Out Rows        0\nNot In Squad Rows        124\n\nAverage EV               -0.7064\n\n\n=== Premier League | Updated 13/09/2026, 15:20 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-13T14:20:54Z\n\nHistorical Rows          31,549\nOdds Rows                41\nMatched Rows             38\nMissing Player History   19\nMissing Team Mapping     0\nFallback Rows            3\nQualified Rows           1\nRoster Resolved Rows     13\nHigh Confidence Rows     18\nMedium Confidence Rows   3\nLow Confidence Rows      17\nPublic High Signals      1\nPublic Caveat Signals    0\nShadow Track Rows        1\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       2\nFixtures With Confirmed Lineups 2\nFixtures With Expected Lineups 1\nFixtures Clean           2\nFixtures Degraded        1\nFixtures Quarantined     0\nConfirmed Starter Rows   19\nConfirmed Bench Rows     14\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        3\n\nAverage EV               -0.6407\n\n\n=== La Liga | Updated 13/09/2026, 15:21 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-13T14:21:29Z\n\nHistorical Rows          33,289\nOdds Rows                104\nMatched Rows             91\nMissing Player History   22\nMissing Team Mapping     0\nFallback Rows            2\nQualified Rows           8\nRoster Resolved Rows     56\nHigh Confidence Rows     0\nMedium Confidence Rows   23\nLow Confidence Rows      68\nPublic High Signals      0\nPublic Caveat Signals    6\nShadow Track Rows        7\nPenalty Transfer Rows    3\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 2\nFixtures With Expected Lineups 8\nFixtures Clean           2\nFixtures Degraded        8\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    39\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        52\n\nAverage EV               -0.6932\n\n\n=== Bundesliga | Updated 13/09/2026, 15:21 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-13T14:21:41Z\n\nHistorical Rows          25,930\nOdds Rows                40\nMatched Rows             37\nMissing Player History   4\nMissing Team Mapping     0\nFallback Rows            10\nQualified Rows           3\nRoster Resolved Rows     19\nHigh Confidence Rows     0\nMedium Confidence Rows   10\nLow Confidence Rows      27\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 1\nFixtures With Expected Lineups 2\nFixtures Clean           1\nFixtures Degraded        2\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    20\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        17\n\nAverage EV               -0.6247\n\n\n=== Ligue 1 | Updated 13/09/2026, 15:21 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-13T14:21:52Z\n\nHistorical Rows          25,659\nOdds Rows                93\nMatched Rows             82\nMissing Player History   23\nMissing Team Mapping     0\nFallback Rows            11\nQualified Rows           7\nRoster Resolved Rows     29\nHigh Confidence Rows     0\nMedium Confidence Rows   23\nLow Confidence Rows      59\nPublic High Signals      0\nPublic Caveat Signals    5\nShadow Track Rows        6\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 1\nFixtures With Expected Lineups 4\nFixtures Clean           1\nFixtures Degraded        4\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    36\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        46\n\nAverage EV               -0.7445\n"
+    "raw_monitor_summary": "=== Serie A | Updated 13/09/2026, 15:38 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-13T12:20:36Z\n\nHistorical Rows          31,809\nOdds Rows                293\nMatched Rows             250\nMissing Player History   51\nMissing Team Mapping     0\nFallback Rows            26\nQualified Rows           22\nRoster Resolved Rows     70\nHigh Confidence Rows     0\nMedium Confidence Rows   92\nLow Confidence Rows      158\nPublic High Signals      0\nPublic Caveat Signals    20\nShadow Track Rows        22\nPenalty Transfer Rows    3\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 12\nFixtures Clean           0\nFixtures Degraded        12\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    118\nExpected Bench Rows      8\nExpected Out Rows        0\nNot In Squad Rows        124\n\nAverage EV               -0.7064\n\n\n=== Premier League | Updated 13/09/2026, 15:38 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-13T14:20:54Z\n\nHistorical Rows          31,549\nOdds Rows                41\nMatched Rows             38\nMissing Player History   19\nMissing Team Mapping     0\nFallback Rows            3\nQualified Rows           1\nRoster Resolved Rows     13\nHigh Confidence Rows     18\nMedium Confidence Rows   3\nLow Confidence Rows      17\nPublic High Signals      1\nPublic Caveat Signals    0\nShadow Track Rows        1\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       2\nFixtures With Confirmed Lineups 2\nFixtures With Expected Lineups 1\nFixtures Clean           2\nFixtures Degraded        1\nFixtures Quarantined     0\nConfirmed Starter Rows   19\nConfirmed Bench Rows     14\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        3\n\nAverage EV               -0.6407\n\n\n=== La Liga | Updated 13/09/2026, 15:38 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-13T14:21:29Z\n\nHistorical Rows          33,289\nOdds Rows                104\nMatched Rows             91\nMissing Player History   22\nMissing Team Mapping     0\nFallback Rows            2\nQualified Rows           8\nRoster Resolved Rows     56\nHigh Confidence Rows     0\nMedium Confidence Rows   23\nLow Confidence Rows      68\nPublic High Signals      0\nPublic Caveat Signals    6\nShadow Track Rows        7\nPenalty Transfer Rows    3\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 2\nFixtures With Expected Lineups 8\nFixtures Clean           2\nFixtures Degraded        8\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    39\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        52\n\nAverage EV               -0.6932\n\n\n=== Bundesliga | Updated 13/09/2026, 15:39 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-13T14:39:07Z\n\nHistorical Rows          25,930\nOdds Rows                40\nMatched Rows             37\nMissing Player History   4\nMissing Team Mapping     0\nFallback Rows            19\nQualified Rows           3\nRoster Resolved Rows     38\nHigh Confidence Rows     9\nMedium Confidence Rows   0\nLow Confidence Rows      28\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       1\nFixtures With Confirmed Lineups 3\nFixtures With Expected Lineups 0\nFixtures Clean           3\nFixtures Degraded        0\nFixtures Quarantined     0\nConfirmed Starter Rows   20\nConfirmed Bench Rows     15\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        2\n\nAverage EV               -0.6132\n\n\n=== Ligue 1 | Updated 13/09/2026, 15:39 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-09-13T14:39:19Z\n\nHistorical Rows          25,659\nOdds Rows                93\nMatched Rows             82\nMissing Player History   25\nMissing Team Mapping     0\nFallback Rows            19\nQualified Rows           4\nRoster Resolved Rows     38\nHigh Confidence Rows     7\nMedium Confidence Rows   18\nLow Confidence Rows      57\nPublic High Signals      0\nPublic Caveat Signals    3\nShadow Track Rows        3\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       3\nFixtures With Confirmed Lineups 3\nFixtures With Expected Lineups 2\nFixtures Clean           3\nFixtures Degraded        2\nFixtures Quarantined     0\nConfirmed Starter Rows   19\nConfirmed Bench Rows     10\nExpected Starter Rows    19\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        34\n\nAverage EV               -0.7506\n"
   },
   "research_status": {
     "status": "RESEARCH_ONLY",
     "model_variant": "v2_minutes_absolute_share_repair",
-    "updated_at": "2026-09-13T14:20:39Z",
+    "updated_at": "2026-09-13T14:38:57Z",
     "parity": {
       "decision": "PASS",
       "golden_rows": 25,
@@ -9412,5 +9319,5 @@
     }
   },
   "snapshot_key": "monitor_state",
-  "payload_hash": "741cfdd991868ab8821932b9c7864ef73e77fbbe777af32bc21de2d86fdbe95c"
+  "payload_hash": "20052769ff48159df6a2a6f6f34ca785060974f755c0fa1a6256104b749a19ca"
 }
