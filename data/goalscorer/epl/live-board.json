@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-14T20:56:28Z",
+  "generated_at": "2026-09-14T23:51:22Z",
   "league": "epl",
   "row_count": 0,
   "stats": {
     "historical_rows": 31549,
     "odds_rows": 0,
     "matched_rows": 0,
-    "missing_player_history": 3,
+    "missing_player_history": 0,
     "missing_team_mapping": 0,
     "fallback_rows": 0,
     "qualified_rows": 0,
-    "roster_resolved_rows": 5,
+    "roster_resolved_rows": 0,
     "high_confidence_rows": 0,
     "medium_confidence_rows": 0,
     "low_confidence_rows": 0,
@@ -21,9 +21,9 @@
     "penalty_transfer_rows": 0,
     "position_upgrade_rows": 0,
     "role_adjusted_rows": 0,
-    "fixtures_with_confirmed_lineups": 1,
+    "fixtures_with_confirmed_lineups": 0,
     "fixtures_with_expected_lineups": 0,
-    "fixtures_clean": 1,
+    "fixtures_clean": 0,
     "fixtures_degraded": 0,
     "fixtures_quarantined": 0,
     "confirmed_starter_rows": 0,
@@ -34,221 +34,6 @@
     "not_in_squad_rows": 0,
     "avg_ev": 0.0
   },
-  "fixtures": [
-    {
-      "match_date": "2026-09-14",
-      "home_team": "Leeds United",
-      "away_team": "Newcastle United",
-      "league": "epl",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "James Trafford",
-          "status": "plausible",
-          "known_team_keys": [
-            "leeds"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "James Justin",
-          "status": "plausible",
-          "known_team_keys": [
-            "leeds"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Nico Elvedi",
-          "status": "plausible",
-          "known_team_keys": [
-            "leeds"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Tarik Muharemović",
-          "status": "plausible",
-          "known_team_keys": [
-            "leeds"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jayden Bogle",
-          "status": "plausible",
-          "known_team_keys": [
-            "leeds"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Anton Stach",
-          "status": "plausible",
-          "known_team_keys": [
-            "leeds"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ethan Ampadu",
-          "status": "plausible",
-          "known_team_keys": [
-            "leeds"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ao Tanaka",
-          "status": "plausible",
-          "known_team_keys": [
-            "leeds"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Gabriel Gudmundsson",
-          "status": "plausible",
-          "known_team_keys": [
-            "leeds"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Dominic Calvert-Lewin",
-          "status": "plausible",
-          "known_team_keys": [
-            "leeds"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Noah Okafor",
-          "status": "plausible",
-          "known_team_keys": [
-            "leeds"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "Lukás Hornícek",
-          "status": "plausible",
-          "known_team_keys": [
-            "newcastle united"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Amar Dedić",
-          "status": "plausible",
-          "known_team_keys": [
-            "newcastle united"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Malick Thiaw",
-          "status": "plausible",
-          "known_team_keys": [
-            "newcastle united"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Sven Botman",
-          "status": "plausible",
-          "known_team_keys": [
-            "newcastle united"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Lewis Hall",
-          "status": "plausible",
-          "known_team_keys": [
-            "newcastle united"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Lewis Miley",
-          "status": "plausible",
-          "known_team_keys": [
-            "newcastle united"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Nico González",
-          "status": "plausible",
-          "known_team_keys": [
-            "newcastle united"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jacob Murphy",
-          "status": "plausible",
-          "known_team_keys": [
-            "newcastle united"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Matias Fernandez-Pardo",
-          "status": "plausible",
-          "known_team_keys": [
-            "newcastle united"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Harvey Barnes",
-          "status": "plausible",
-          "known_team_keys": [
-            "newcastle united"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Yoane Wissa",
-          "status": "plausible",
-          "known_team_keys": [
-            "newcastle united"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    }
-  ],
+  "fixtures": [],
   "rows": []
 }
