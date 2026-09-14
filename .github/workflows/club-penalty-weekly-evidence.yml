@@ -32,6 +32,11 @@ jobs:
       - name: Install dependencies
         run: pip install requests
 
+      - name: Validate hierarchy evidence and manual controls
+        run: |
+          python -m unittest discover -s scripts/tests -p test_goalscorer_live_penalty_review.py
+          python -m unittest discover -s scripts/tests -p test_club_penalty_hierarchy_review.py
+
       - name: Select review window
         id: window
         shell: bash
@@ -50,6 +55,19 @@ jobs:
             python scripts/build-penalty-baseline-evidence.py --league "${league}"
           done
 
+      - name: Audit current squad membership
+        id: squad-audit
+        continue-on-error: true
+        run: python scripts/audit-club-penalty-squads.py --timeout 20 --workers 4
+
+      - name: Alert stale penalty hierarchy players
+        if: always() && (github.event_name == 'workflow_dispatch' || github.event.schedule == '20 6 * * 1')
+        env:
+          OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
+          OPS_ALERT_TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
+          GITHUB_RUN_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        run: python scripts/club-penalty-squad-alert.py
+
       - name: Summarise review queue
         run: |
           python - <<'PY'
@@ -63,17 +81,34 @@ jobs:
               "Bundesliga": Path("data/goalscorer/bundesliga-penalty-duty-live-review.json"),
               "Ligue 1": Path("data/goalscorer/ligue-1-penalty-duty-live-review.json"),
           }
-          lines = ["## Club penalty evidence", "", "Public hierarchies are unchanged until editorial approval.", ""]
+          lines = ["## Club penalty evidence", "", "Evidence-backed changes respect persistent manual locks; ambiguous assignments remain review tickets.", ""]
           for label, path in files.items():
               payload = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
               rows = payload.get("rows", [])
               high = sum(str(row.get("review_priority", "")).lower() == "high" for row in rows)
               lines.append(f"- **{label}:** {len(rows)} event row(s), {high} high-priority review(s)")
+          roster_path = Path("data/goalscorer/club-penalty-squad-audit.json")
+          roster = json.loads(roster_path.read_text(encoding="utf-8")) if roster_path.exists() else {}
+          lines.append(
+              f"- **Roster integrity:** {roster.get('clubs_checked', 0)} clubs / "
+              f"{roster.get('slots_checked', 0)} slots; "
+              f"{sum(value for key, value in (roster.get('status_counts') or {}).items() if key != 'present')} issue(s)"
+          )
           summary = "\n".join(lines) + "\n"
           print(summary)
           with Path(__import__("os").environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as handle:
               handle.write(summary)
           PY
+
+      - name: Review supported hierarchy changes
+        env:
+          PENALTY_AUTO_APPLY: ${{ vars.PENALTY_AUTO_APPLY }}
+        run: |
+          if [[ "${PENALTY_AUTO_APPLY}" == "true" ]]; then
+            python scripts/club-penalty-hierarchy-review.py --apply-safe --summary
+          else
+            python scripts/club-penalty-hierarchy-review.py --summary
+          fi
 
       - name: Ignore timestamp-only changes
         run: |
@@ -93,6 +128,7 @@ jobs:
               Path("data/goalscorer/la-liga-penalty-baseline-evidence.json"),
               Path("data/goalscorer/bundesliga-penalty-baseline-evidence.json"),
               Path("data/goalscorer/ligue-1-penalty-baseline-evidence.json"),
+              Path("data/goalscorer/club-penalty-squad-audit.json"),
           ]
 
           def semantic(payload):
@@ -124,6 +160,11 @@ jobs:
       - name: Rebuild monitor when evidence changes
         run: |
           evidence_paths=(
+            data/goalscorer/epl-penalty-takers.json
+            data/goalscorer/serie-a-penalty-takers.json
+            data/goalscorer/la-liga-penalty-takers.json
+            data/goalscorer/bundesliga-penalty-takers.json
+            data/goalscorer/ligue-1-penalty-takers.json
             data/goalscorer/penalty-duty-live-review.json
             data/goalscorer/epl-penalty-duty-live-review.json
             data/goalscorer/la-liga-penalty-duty-live-review.json
@@ -134,6 +175,7 @@ jobs:
             data/goalscorer/la-liga-penalty-baseline-evidence.json
             data/goalscorer/bundesliga-penalty-baseline-evidence.json
             data/goalscorer/ligue-1-penalty-baseline-evidence.json
+            data/goalscorer/club-penalty-squad-audit.json
           )
           if git diff --quiet -- "${evidence_paths[@]}"; then
             echo "No semantic penalty evidence changes; monitor snapshot unchanged."
@@ -142,7 +184,6 @@ jobs:
           fi
 
       - name: Alert new penalty review tickets
-        continue-on-error: true
         env:
           OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
           OPS_ALERT_TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
@@ -167,7 +208,17 @@ jobs:
           git add -f data/goalscorer/la-liga-penalty-baseline-evidence.json
           git add -f data/goalscorer/bundesliga-penalty-baseline-evidence.json
           git add -f data/goalscorer/ligue-1-penalty-baseline-evidence.json
+          git add -f data/goalscorer/club-penalty-squad-audit.json
+          git add -f data/goalscorer/club-penalty-squad-audit.csv
           git add -f data/goalscorer/goalscorer-monitor-snapshot.json
+          git add -f data/goalscorer/club-penalty-alert-state.json
+          git add -f data/goalscorer/club-penalty-hierarchy-review.json data/goalscorer/club-penalty-event-evidence.json
+          for path in data/goalscorer/club-penalty-controls.json data/goalscorer/penalty-transactions/*.json; do
+            if [[ -f "$path" ]]; then git add -f "$path"; fi
+          done
+          for league in serie-a epl la-liga bundesliga ligue-1; do
+            git add -f "data/goalscorer/${league}-penalty-takers.json"
+          done
           if git diff --cached --quiet; then
             echo "No new club penalty evidence."
             exit 0
