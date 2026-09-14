@@ -9,10 +9,10 @@
       "kickoff_utc": "2026-09-14T19:00:00Z",
       "home_team": "Leeds United",
       "away_team": "Newcastle United",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "3-4-2-1",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "3-5-2",
       "away_formation": "4-2-3-1",
       "home_players": [
         "James Trafford",
@@ -20,12 +20,12 @@
         "Nico Elvedi",
         "Tarik Muharemović",
         "Jayden Bogle",
+        "Anton Stach",
         "Ethan Ampadu",
         "Ao Tanaka",
         "Gabriel Gudmundsson",
-        "Anton Stach",
-        "Noah Okafor",
-        "Dominic Calvert-Lewin"
+        "Dominic Calvert-Lewin",
+        "Noah Okafor"
       ],
       "away_players": [
         "Lukás Hornícek",
@@ -33,10 +33,10 @@
         "Malick Thiaw",
         "Sven Botman",
         "Lewis Hall",
+        "Lewis Miley",
         "Nico González",
-        "Jacob Ramsey",
-        "Anthony Elanga",
-        "Joseph Willock",
+        "Jacob Murphy",
+        "Matias Fernandez-Pardo",
         "Harvey Barnes",
         "Yoane Wissa"
       ],
@@ -47,7 +47,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-2-1",
+          "formation": "3-5-2",
           "position_id": 11,
           "player_id": 1187213,
           "shirt_number": "1"
@@ -58,7 +58,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-5-2",
           "position_id": 33,
           "player_id": 710158,
           "shirt_number": "24"
@@ -69,7 +69,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-5-2",
           "position_id": 35,
           "player_id": 517346,
           "shirt_number": "30"
@@ -80,7 +80,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-5-2",
           "position_id": 37,
           "player_id": 1250485,
           "shirt_number": "5"
@@ -88,79 +88,79 @@
         {
           "name": "Jayden Bogle",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 62,
+          "formation": "3-5-2",
+          "position_id": 71,
           "player_id": 789646,
           "shirt_number": "2"
         },
         {
-          "name": "Ethan Ampadu",
+          "name": "Anton Stach",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 64,
+          "formation": "3-5-2",
+          "position_id": 73,
+          "player_id": 881735,
+          "shirt_number": "18"
+        },
+        {
+          "name": "Ethan Ampadu",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 75,
           "player_id": 780432,
           "shirt_number": "4"
         },
         {
           "name": "Ao Tanaka",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 66,
+          "formation": "3-5-2",
+          "position_id": 77,
           "player_id": 935728,
           "shirt_number": "22"
         },
         {
           "name": "Gabriel Gudmundsson",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 68,
+          "formation": "3-5-2",
+          "position_id": 79,
           "player_id": 744494,
           "shirt_number": "3"
         },
         {
-          "name": "Anton Stach",
+          "name": "Dominic Calvert-Lewin",
           "line_index": 2,
           "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 84,
-          "player_id": 881735,
-          "shirt_number": "18"
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 104,
+          "player_id": 612150,
+          "shirt_number": "9"
         },
         {
           "name": "Noah Okafor",
           "line_index": 2,
           "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 86,
-          "player_id": 915797,
-          "shirt_number": "19"
-        },
-        {
-          "name": "Dominic Calvert-Lewin",
-          "line_index": 3,
-          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-2-1",
-          "position_id": 105,
-          "player_id": 612150,
-          "shirt_number": "9"
+          "formation": "3-5-2",
+          "position_id": 106,
+          "player_id": 915797,
+          "shirt_number": "19"
         }
       ],
       "away_starters": [
@@ -220,48 +220,48 @@
           "shirt_number": "3"
         },
         {
-          "name": "Nico González",
+          "name": "Lewis Miley",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
           "formation": "4-2-3-1",
           "position_id": 64,
-          "player_id": 1280132,
-          "shirt_number": "6"
+          "player_id": 1296763,
+          "shirt_number": "67"
         },
         {
-          "name": "Jacob Ramsey",
+          "name": "Nico González",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
           "formation": "4-2-3-1",
           "position_id": 66,
-          "player_id": 1021929,
-          "shirt_number": "41"
+          "player_id": 1280132,
+          "shirt_number": "6"
         },
         {
-          "name": "Anthony Elanga",
+          "name": "Jacob Murphy",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
           "position_id": 83,
-          "player_id": 1050166,
-          "shirt_number": "19"
+          "player_id": 521148,
+          "shirt_number": "23"
         },
         {
-          "name": "Joseph Willock",
+          "name": "Matias Fernandez-Pardo",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
           "position_id": 85,
-          "player_id": 860975,
-          "shirt_number": "28"
+          "player_id": 1444231,
+          "shirt_number": "20"
         },
         {
           "name": "Harvey Barnes",
@@ -286,10 +286,122 @@
           "shirt_number": "9"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "home_subs": [
+        "Melvin Bard",
+        "Brenden Aaronson",
+        "Harry Wilson",
+        "Lukas Nmecha",
+        "Daniel James",
+        "Sean Longstaff",
+        "Michael Zetterer",
+        "Jaka Bijol",
+        "Jean-Mattéo Bahoya"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Melvin Bard",
+          "player_id": "1092403",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Brenden Aaronson",
+          "player_id": "952322",
+          "role_group": "MID"
+        },
+        {
+          "name": "Harry Wilson",
+          "player_id": "494417",
+          "role_group": "FW"
+        },
+        {
+          "name": "Lukas Nmecha",
+          "player_id": "861197",
+          "role_group": "FW"
+        },
+        {
+          "name": "Daniel James",
+          "player_id": "717176",
+          "role_group": "MID"
+        },
+        {
+          "name": "Sean Longstaff",
+          "player_id": "820024",
+          "role_group": "MID"
+        },
+        {
+          "name": "Michael Zetterer",
+          "player_id": "432435",
+          "role_group": "GK"
+        },
+        {
+          "name": "Jaka Bijol",
+          "player_id": "861805",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Jean-Mattéo Bahoya",
+          "player_id": "1393672",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Sean Steur",
+        "Valentino Livramento",
+        "Bazoumana Touré",
+        "Joseph Willock",
+        "Aladji Bamba",
+        "Nick Pope",
+        "Fabian Schär",
+        "Mason Miley",
+        "Jacob Ramsey"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Sean Steur",
+          "player_id": "1643770",
+          "role_group": "MID"
+        },
+        {
+          "name": "Valentino Livramento",
+          "player_id": "1107910",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Bazoumana Touré",
+          "player_id": "1624586",
+          "role_group": "FW"
+        },
+        {
+          "name": "Joseph Willock",
+          "player_id": "860975",
+          "role_group": "MID"
+        },
+        {
+          "name": "Aladji Bamba",
+          "player_id": "1695681",
+          "role_group": "MID"
+        },
+        {
+          "name": "Nick Pope",
+          "player_id": "280484",
+          "role_group": "GK"
+        },
+        {
+          "name": "Fabian Schär",
+          "player_id": "189982",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Mason Miley",
+          "player_id": "1867092",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Jacob Ramsey",
+          "player_id": "1021929",
+          "role_group": "MID"
+        }
+      ],
       "home_unavailable": [
         "Ilia Gruev",
         "Joe Rodon",
@@ -301,8 +413,8 @@
         "Joelinton",
         "William Osula"
       ],
-      "observed_at": "2026-09-14T16:21:37.673299+00:00",
-      "changed_at": "2026-09-13T12:20:50.186012+00:00"
+      "observed_at": "2026-09-14T20:56:26.512108+00:00",
+      "changed_at": "2026-09-14T20:56:26.512108+00:00"
     }
   ]
 }
