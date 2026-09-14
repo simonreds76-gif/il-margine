@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-14T05:02:37Z",
+  "generated_at": "2026-09-14T12:55:24Z",
   "league": "serie-a",
   "row_count": 2,
   "rows": [
@@ -44,7 +44,7 @@
           "source_event_id": "2968657107",
           "match_id": "5749670",
           "source_url": "https://www.fotmob.com/matches/atalanta-vs-cagliari/2ekudg#5749670",
-          "observed_at": "2026-09-14T05:02:28+00:00",
+          "observed_at": "2026-09-14T12:55:04+00:00",
           "event_date": "2026-09-12",
           "season": "2026/27",
           "team": "Cagliari",
@@ -115,7 +115,7 @@
           "source_event_id": "2968107705",
           "match_id": "5749672",
           "source_url": "https://www.fotmob.com/matches/frosinone-vs-genoa/3ckfw9#5749672",
-          "observed_at": "2026-09-14T05:02:28+00:00",
+          "observed_at": "2026-09-14T12:55:04+00:00",
           "event_date": "2026-09-12",
           "season": "2026/27",
           "team": "Genoa",
@@ -151,10 +151,16 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
+      "20260906",
+      "20260907",
+      "20260908",
+      "20260909",
+      "20260910",
+      "20260911",
       "20260912",
       "20260913",
       "20260914"
     ],
-    "matches_checked": 6
+    "matches_checked": 13
   }
 }
