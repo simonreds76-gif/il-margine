@@ -1,179 +1,89 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useRef, type FocusEvent, type KeyboardEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { BRAND } from "@/lib/brand";
 
+const TIP_LINKS = [{ href: "/tennis-tips", label: "Tennis tips" }, { href: "/player-props", label: "Player props" }];
+const PRIMARY_LINKS = [
+  { href: "/the-edge", label: "The Edge" },
+  { href: "/penalty-takers", label: "Penalty takers" },
+  { href: "/fair-odds-lab", label: "Fair Odds Lab" },
+  { href: "/track-record", label: "Track record" },
+];
+const RESOURCE_LINKS = [
+  { href: "/resources", label: "All resources" },
+  { href: "/bookmakers", label: "Bookmakers" },
+  { href: "/calculator", label: "Calculator" },
+];
+
+function closeWhenFocusLeaves(event: FocusEvent<HTMLDetailsElement>) {
+  if (!event.currentTarget.contains(event.relatedTarget as Node | null)) event.currentTarget.open = false;
+}
+
+function Chevron() {
+  return <svg aria-hidden="true" className="h-4 w-4 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="m6 9 6 6 6-6" /></svg>;
+}
+
 export default function GlobalNav() {
-  const [mobileMenuPath, setMobileMenuPath] = useState<string | null>(null);
-  const [tipsMenuPath, setTipsMenuPath] = useState<string | null>(null);
-  const [resourcesMenuPath, setResourcesMenuPath] = useState<string | null>(null);
   const pathname = usePathname();
-  const showMonitorLink =
-    process.env.NODE_ENV !== "production" ||
-    process.env.NEXT_PUBLIC_ENABLE_MODEL_MONITOR === "1";
-  const mobileMenuOpen = mobileMenuPath === pathname;
-  const tipsMenuOpen = tipsMenuPath === pathname;
-  const resourcesMenuOpen = resourcesMenuPath === pathname;
+  const nav = useRef<HTMLElement>(null);
+  const showMonitorLink = process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_ENABLE_MODEL_MONITOR === "1";
+  const resources = showMonitorLink ? [...RESOURCE_LINKS, { href: "/model-monitor", label: "Model monitor" }] : RESOURCE_LINKS;
+  const closeMenus = () => nav.current?.querySelectorAll<HTMLDetailsElement>("details[open]").forEach((menu) => { menu.open = false; });
+  const active = (href: string) => pathname === href || pathname.startsWith(href + "/");
+  const linkClass = (href: string) => `inline-flex min-h-11 items-center rounded-lg px-2.5 text-sm font-medium transition-colors ${active(href) ? "text-emerald-300" : "text-slate-300 hover:bg-slate-800/60 hover:text-white"}`;
+  const current = (href: string) => pathname === href ? "page" as const : active(href) ? "location" as const : undefined;
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    window.scrollTo(0, 0);
+    const closeOutside = (event: PointerEvent) => {
+      if (event.target instanceof Node && !nav.current?.contains(event.target)) {
+        nav.current?.querySelectorAll<HTMLDetailsElement>("details[open]").forEach((menu) => { menu.open = false; });
+      }
+    };
+    document.addEventListener("pointerdown", closeOutside);
+    return () => document.removeEventListener("pointerdown", closeOutside);
+  }, []);
+
+  useEffect(() => {
+    nav.current?.querySelectorAll<HTMLDetailsElement>("details[open]").forEach((menu) => { menu.open = false; });
   }, [pathname]);
 
-  const isTipsActive =
-    pathname === "/tennis-tips" ||
-    pathname === "/player-props";
-  const isResourcesActive =
-    pathname === "/bookmakers" ||
-    pathname === "/calculator" ||
-    pathname === "/resources" ||
-    pathname.startsWith("/resources/");
-  const linkClass = (active: boolean) =>
-    `text-base font-medium transition-colors ${active ? "text-[var(--brand-green)]" : "text-slate-400 hover:text-slate-100"}`;
+  const escapeMenu = (event: KeyboardEvent<HTMLElement>) => {
+    if (event.key !== "Escape") return;
+    const menu = event.target instanceof HTMLElement ? event.target.closest<HTMLDetailsElement>("details[open]") : null;
+    if (menu) { event.preventDefault(); closeMenus(); menu.querySelector("summary")?.focus(); }
+  };
 
-  return (
-    <nav className="border-b border-slate-800/80 sticky top-0 z-50 bg-[#0f1117]/95 backdrop-blur-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between lg:h-[88px]">
-          <Link href="/" className="flex h-12 min-w-0 shrink-0 items-center lg:h-[68px]" onClick={() => { if (pathname === "/") window.scrollTo(0, 0); }}>
-            <Image src={BRAND.compact} alt="Il Margine" width={700} height={168} className="h-auto w-[196px] max-w-full object-contain lg:w-[210px] xl:w-[240px]" priority unoptimized />
-          </Link>
-          
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuPath(mobileMenuOpen ? null : pathname)}
-            className="lg:hidden min-h-[44px] min-w-[44px] flex items-center justify-center p-2 text-slate-400 hover:text-slate-100 transition-colors"
-            aria-label="Toggle menu"
-            aria-expanded={mobileMenuOpen}
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {mobileMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
-          
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-4 xl:gap-6 whitespace-nowrap">
-            {/* Tips Dropdown */}
-            <div className="relative">
-              <button 
-                onClick={() => setTipsMenuPath(tipsMenuOpen ? null : pathname)}
-                onBlur={() => setTimeout(() => setTipsMenuPath(null), 150)}
-                className={`flex items-center gap-1 ${linkClass(isTipsActive)}`}
-              >
-                Tips
-                <svg className={`w-4 h-4 transition-transform ${tipsMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {tipsMenuOpen && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-slate-900 border border-slate-800 rounded-lg shadow-xl z-50">
-                  <Link href="/tennis-tips" className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">Tennis Tips</Link>
-                  <Link href="/player-props" className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">Player Props</Link>
-                </div>
-              )}
-            </div>
-            <Link href="/the-edge" className={linkClass(pathname === "/the-edge")}>The Edge</Link>
-            <Link href="/penalty-takers" className={linkClass(pathname === "/penalty-takers")}>Penalty Takers</Link>
-            <Link href="/fair-odds-lab" className={linkClass(pathname === "/fair-odds-lab")}>Fair Odds Lab</Link>
-            <Link href="/track-record" className={linkClass(pathname === "/track-record")}>Track Record</Link>
-            {showMonitorLink ? <Link href="/model-monitor" className={linkClass(pathname === "/model-monitor")}>Monitor</Link> : null}
-            <div className="relative">
-              <button
-                onClick={() => setResourcesMenuPath(resourcesMenuOpen ? null : pathname)}
-                onBlur={() => setTimeout(() => setResourcesMenuPath(null), 150)}
-                className={`flex items-center gap-1 ${linkClass(isResourcesActive)}`}
-              >
-                Resources
-                <svg className={`w-4 h-4 transition-transform ${resourcesMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {resourcesMenuOpen && (
-                <div className="absolute top-full right-0 mt-2 w-52 overflow-hidden rounded-lg border border-slate-800 bg-slate-950 shadow-2xl shadow-black/40 z-50">
-                  <Link href="/resources" className="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-900">All resources</Link>
-                  <Link href="/bookmakers" className="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-900">Bookmakers</Link>
-                  <Link href="/calculator" className="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-900">Calculator</Link>
-                </div>
-              )}
-            </div>
+  return <nav ref={nav} aria-label="Main navigation" onKeyDown={escapeMenu} className="sticky top-0 z-50 border-b border-slate-800 bg-[#0f1117]/95 backdrop-blur-sm">
+    <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 xl:h-20">
+      <Link href="/" aria-label="Il Margine home" onClick={closeMenus} className="flex min-h-11 shrink-0 items-center rounded-lg"><Image src={BRAND.compact} alt="Il Margine" width={700} height={168} className="h-auto w-[196px] max-w-full object-contain lg:w-[210px] xl:w-[240px]" priority unoptimized /></Link>
+      <div className="hidden items-center gap-1 xl:flex">
+        <details name="desktop-site-navigation" onBlur={closeWhenFocusLeaves} className="group relative">
+          <summary className={`flex min-h-11 cursor-pointer list-none items-center gap-1.5 rounded-lg px-2.5 text-sm font-medium hover:bg-slate-800/60 [&::-webkit-details-marker]:hidden ${TIP_LINKS.some((link) => active(link.href)) ? "text-emerald-300" : "text-slate-300"}`}>Tips <Chevron /></summary>
+          <div className="absolute left-0 top-full mt-2 w-48 rounded-xl border border-slate-700 bg-slate-950 p-2 shadow-xl shadow-black/30">{TIP_LINKS.map((link) => <Link key={link.href} href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={`flex w-full ${linkClass(link.href)}`}>{link.label}</Link>)}</div>
+        </details>
+        {PRIMARY_LINKS.map((link) => <Link key={link.href} href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={linkClass(link.href)}>{link.label}</Link>)}
+        <details name="desktop-site-navigation" onBlur={closeWhenFocusLeaves} className="group relative">
+          <summary className={`flex min-h-11 cursor-pointer list-none items-center gap-1.5 rounded-lg px-2.5 text-sm font-medium hover:bg-slate-800/60 [&::-webkit-details-marker]:hidden ${resources.some((link) => active(link.href)) ? "text-emerald-300" : "text-slate-300"}`}>Resources <Chevron /></summary>
+          <div className="absolute right-0 top-full mt-2 w-64 rounded-xl border border-slate-700 bg-slate-950 p-2 shadow-xl shadow-black/30">{resources.map((link) => <Link key={link.href} href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={`flex w-full ${linkClass(link.href)}`}>{link.label}</Link>)}</div>
+        </details>
+      </div>
+      <details onBlur={closeWhenFocusLeaves} className="group xl:hidden">
+        <summary className="flex min-h-11 min-w-11 cursor-pointer list-none items-center justify-center gap-2 rounded-xl border border-slate-700 px-3 text-sm font-medium text-slate-200 hover:bg-slate-800 [&::-webkit-details-marker]:hidden">
+          <svg aria-hidden="true" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" d="M4 6h16M4 12h16M4 18h16" /></svg>Menu
+        </summary>
+        <div className="absolute inset-x-0 top-full max-h-[calc(100dvh-72px)] overflow-y-auto border-b border-slate-700 bg-[#0f1117] shadow-xl shadow-black/30">
+          <div className="mx-auto grid max-w-7xl gap-5 px-4 py-5 sm:grid-cols-3 sm:px-6">
+            {[{ label: "Tips", links: TIP_LINKS }, { label: "Explore", links: PRIMARY_LINKS }, { label: "Resources", links: resources }].map((group) => <div key={group.label}>
+              <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-slate-500">{group.label}</p>
+              <ul className="space-y-1">{group.links.map((link) => <li key={link.href}><Link href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={`flex w-full min-h-11 rounded-xl px-3 py-3 text-sm font-medium ${active(link.href) ? "bg-emerald-400/10 text-emerald-200" : "text-slate-200 hover:bg-slate-800"}`}>{link.label}</Link></li>)}</ul>
+            </div>)}
           </div>
         </div>
-        
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="max-h-[calc(100dvh-4rem)] space-y-1 overflow-y-auto border-t border-slate-800/50 py-3 lg:hidden">
-            <div className="px-4">
-              <button 
-                onClick={() => setTipsMenuPath(tipsMenuOpen ? null : pathname)}
-                className={`w-full min-h-[44px] flex items-center justify-between text-base font-medium rounded px-3 py-3 transition-colors ${isTipsActive ? 'text-[var(--brand-green)] font-medium bg-[rgba(87,209,150,0.10)]' : 'text-slate-300 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}
-              >
-                <span>Tips</span>
-                <svg className={`w-4 h-4 transition-transform ${tipsMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {tipsMenuOpen && (
-                <div className="mt-1 ml-4 space-y-1">
-                  <Link href="/tennis-tips" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded transition-colors ${pathname === '/tennis-tips' ? 'text-[var(--brand-green)] font-medium bg-[rgba(87,209,150,0.10)]' : 'text-slate-400 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
-                    Tennis Tips
-                  </Link>
-                  <Link href="/player-props" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded transition-colors ${pathname === '/player-props' ? 'text-[var(--brand-green)] font-medium bg-[rgba(87,209,150,0.10)]' : 'text-slate-400 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
-                    Player Props
-                  </Link>
-                </div>
-              )}
-            </div>
-            <Link href="/the-edge" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/the-edge" ? "text-[var(--brand-green)] bg-[rgba(87,209,150,0.10)]" : "text-slate-300 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]"}`}>
-              The Edge
-            </Link>
-            <Link href="/penalty-takers" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/penalty-takers" ? "text-[var(--brand-green)] bg-[rgba(87,209,150,0.10)]" : "text-slate-300 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]"}`}>
-              Penalty Takers
-            </Link>
-            <Link href="/fair-odds-lab" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/fair-odds-lab" ? "text-[var(--brand-green)] bg-[rgba(87,209,150,0.10)]" : "text-slate-300 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]"}`}>
-              Fair Odds Lab
-            </Link>
-            <Link href="/track-record" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/track-record" ? "text-[var(--brand-green)] bg-[rgba(87,209,150,0.10)]" : "text-slate-300 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]"}`}>
-              Track Record
-            </Link>
-            {showMonitorLink ? (
-              <Link href="/model-monitor" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/model-monitor" ? "text-[var(--brand-green)] bg-[rgba(87,209,150,0.10)]" : "text-slate-300 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]"}`}>
-                Monitor
-              </Link>
-            ) : null}
-            <div className="px-4">
-              <button
-                onClick={() => setResourcesMenuPath(resourcesMenuOpen ? null : pathname)}
-                className={`w-full min-h-[44px] flex items-center justify-between rounded px-3 py-3 text-base font-medium transition-colors ${isResourcesActive ? 'text-[var(--brand-green)] bg-[rgba(87,209,150,0.10)]' : 'text-slate-300 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}
-              >
-                <span>Resources</span>
-                <svg className={`w-4 h-4 transition-transform ${resourcesMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {resourcesMenuOpen && (
-                <div className="mt-1 ml-4 space-y-1">
-                  <Link href="/resources" onClick={() => setMobileMenuPath(null)} className={`flex min-h-[44px] items-center rounded px-3 py-2 text-sm transition-colors ${pathname === '/resources' || pathname?.startsWith('/resources/') ? 'text-[var(--brand-green)] font-medium bg-[rgba(87,209,150,0.10)]' : 'text-slate-400 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
-                    All resources
-                  </Link>
-                  <Link href="/bookmakers" onClick={() => setMobileMenuPath(null)} className={`flex min-h-[44px] items-center rounded px-3 py-2 text-sm transition-colors ${pathname === '/bookmakers' ? 'text-[var(--brand-green)] font-medium bg-[rgba(87,209,150,0.10)]' : 'text-slate-400 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
-                    Bookmakers
-                  </Link>
-                  <Link href="/calculator" onClick={() => setMobileMenuPath(null)} className={`flex min-h-[44px] items-center rounded px-3 py-2 text-sm transition-colors ${pathname === '/calculator' ? 'text-[var(--brand-green)] font-medium bg-[rgba(87,209,150,0.10)]' : 'text-slate-400 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
-                    Calculator
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-    </nav>
-  );
+      </details>
+    </div>
+  </nav>;
 }
