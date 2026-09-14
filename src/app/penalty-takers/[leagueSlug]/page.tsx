@@ -4,7 +4,7 @@ import PenaltyTakerPortrait from "@/components/PenaltyTakerPortrait";
 import { notFound } from "next/navigation";
 import Footer from "@/components/Footer";
 import ClubPenaltyLatestUpdates from "@/components/ClubPenaltyLatestUpdates";
-import ClubPenaltyTeamFinder from "@/components/ClubPenaltyTeamFinder";
+import PenaltyDirectory from "@/components/PenaltyDirectory";
 import PageHomeLink from "@/components/PageHomeLink";
 import { BASE_URL } from "@/lib/config";
 import {
@@ -12,6 +12,8 @@ import {
   CLUB_PENALTY_PREVIOUS_SEASON,
   CLUB_PENALTY_SEASON,
   buildClubPenaltyCardSummary,
+  buildPenaltyDirectory,
+  readClubPenaltyData,
   clubPenaltyLeagueUrl,
   getClubPenaltyLeague,
   getLatestClubPenaltyNews,
@@ -209,6 +211,8 @@ export default async function ClubPenaltyLeaguePage({ params }: PageProps) {
           </div>
         </section>
 
+        <PenaltyDirectory leagues={buildPenaltyDirectory(await readClubPenaltyData())} initialLeague={league.key} boardHref="#league-board" hasUpdates={latestNews.length > 0} />
+
         <section aria-label={`${league.label} board status`} className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-4">
           {[
             ["Current clubs", String(league.teams.length)],
@@ -222,11 +226,6 @@ export default async function ClubPenaltyLeaguePage({ params }: PageProps) {
             </div>
           ))}
         </section>
-
-        <ClubPenaltyTeamFinder
-          leagueLabel={league.label}
-          teams={league.teams.map((team) => ({ name: team.team, slug: team.slug, logoPath: team.logoPath, initials: team.initials }))}
-        />
 
         <section id="league-board" className="scroll-mt-24 mt-8">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3">

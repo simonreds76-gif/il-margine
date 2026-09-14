@@ -672,3 +672,10 @@ export function buildClubPenaltyCardSummary(team: ClubPenaltyTeam): string {
   }
   return buildClubPenaltyLead(team);
 }
+
+/** Small static search index; no client requests or private evidence payload. */
+export function buildPenaltyDirectory(leagues: ClubPenaltyLeague[]) {
+  return leagues.map(league => ({ key: league.key, label: league.label, logoPath: league.logoPath,
+    teams: league.teams.map(team => ({ name: team.team, url: team.relativeUrl, logoPath: team.logoPath, players: team.verifiedNames })),
+  }));
+}

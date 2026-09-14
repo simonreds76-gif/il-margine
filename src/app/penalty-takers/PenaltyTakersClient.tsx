@@ -1,3 +1,5 @@
+import PenaltyDirectory from "@/components/PenaltyDirectory";
+import { buildPenaltyDirectory } from "@/lib/club-penalty-takers";
 import Link from "next/link";
 import ClubPenaltyLatestUpdates from "@/components/ClubPenaltyLatestUpdates";
 import Footer from "@/components/Footer";
@@ -99,8 +101,8 @@ export default function PenaltyTakersClient({ leagues, totalTeams, season, lates
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <main className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
-        <section className="pt-8 pb-12 md:pb-16">
-          <PageHomeLink className="mb-8" />
+        <section className="pt-5 pb-6 md:pb-8">
+          <PageHomeLink className="mb-4" />
           <div className="relative overflow-hidden rounded-[34px] border border-slate-800/80 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_38%),linear-gradient(150deg,#07100f,#0f1722_58%,#11131b)] p-6 sm:p-9 lg:p-11">
             <div className="max-w-4xl">
               <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Il Margine intelligence</div>
@@ -119,9 +121,11 @@ export default function PenaltyTakersClient({ leagues, totalTeams, season, lates
           </div>
         </section>
 
+        <PenaltyDirectory leagues={buildPenaltyDirectory(leagues)} hasUpdates={latestNews.length > 0} />
+
         <ClubPenaltyLatestUpdates items={latestNews} />
 
-        <section className="mt-10">
+        <section id="league-guides" className="mt-10 scroll-mt-24">
           <div className="mb-6 max-w-3xl">
             <div className="font-mono text-xs uppercase tracking-[0.25em] text-emerald-400">Choose a league</div>
             <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-100">Every league now has its own indexable board</h2>
