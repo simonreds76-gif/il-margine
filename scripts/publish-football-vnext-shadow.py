@@ -310,6 +310,22 @@ def team_alpha(params: dict[str, Any], league: str, team: str) -> float:
     return float(params["pooled_alpha"])
 
 
+# Shared with the opponent-shots collection policy: this governs whether a
+# captured price can support a NEW selection, not historical settlement.
+MAX_NEW_SIGNAL_PRICE_AGE_HOURS = 3
+
+
+def pair_price_blockers(pair: dict[str, Any], now: datetime) -> list[str]:
+    captures = [pair[side].get("captured_at_dt") for side in ("over", "under")]
+    if any(not isinstance(stamp, datetime) or stamp.tzinfo is None for stamp in captures):
+        return ["missing_price_timestamp"]
+    if any(stamp > now for stamp in captures):
+        return ["future_price_timestamp"]
+    if any((now - stamp).total_seconds() > MAX_NEW_SIGNAL_PRICE_AGE_HOURS * 3600 for stamp in captures):
+        return ["price_older_than_3h"]
+    return []
+
+
 def score_team_shots(
     *,
     by_team: dict[tuple[str, str], list[dict[str, str]]],
@@ -396,7 +412,7 @@ def score_team_shots(
             ("under", under, 1.0 - blended_over, 1.0 - raw_over, market_under),
         ):
             edge = (probability * float(source["odds"])) - 1.0
-            blocked: list[str] = []
+            blocked: list[str] = pair_price_blockers(pair, now)
             if 4 <= matchday <= 6 and min(team_neff, opponent_neff) < 6:
                 blocked.append("early_neff_below_6")
             if 4 <= matchday <= 6 and abs(raw_probability - market_probability) > market_gap_cap:
@@ -601,7 +617,7 @@ def score_corners(
             ("under", under, 1.0 - raw_over, market_under),
         ):
             edge = (probability * float(source["odds"])) - 1.0
-            blocked: list[str] = []
+            blocked: list[str] = pair_price_blockers(pair, now)
             if edge < min_edge:
                 blocked.append("edge_below_3pct")
             status = "eligible" if not blocked else "blocked"

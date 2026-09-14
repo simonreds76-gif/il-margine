@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": 4,
+  "revision": 5,
   "clubs": {
     "ligue-1|Brest": {
       "locked": true,
@@ -44,6 +44,17 @@
       },
       "reason": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
       "updated_at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin"
+    },
+    "la-liga|Atletico Madrid": {
+      "locked": true,
+      "override": {
+        "primary": "Julián Álvarez",
+        "secondary": "Alejandro Grimaldo",
+        "tertiary": "Alexander Sørloth"
+      },
+      "reason": "Promote Grimaldo to second choice following his penalty against Real Sociedad; retain Alvarez first and Sorloth third, as approved on 14 September.",
+      "updated_at": "2026-09-14T10:41:05+00:00",
       "actor": "local_admin"
     }
   },
@@ -178,6 +189,39 @@
         "primary": "Daniel Maldini",
         "secondary": "Alessandro Deiola",
         "tertiary": "Yerry Mina"
+      }
+    },
+    {
+      "id": "faffafb51fae459b83f6b4d84d6a92bb",
+      "at": "2026-09-14T10:41:05+00:00",
+      "actor": "local_admin",
+      "action": "override",
+      "club_id": "la-liga|Atletico Madrid",
+      "reason": "Promote Grimaldo to second choice following his penalty against Real Sociedad; retain Alvarez first and Sorloth third, as approved on 14 September.",
+      "before_entry_hash": "437e62ab918034a72637b89ae9dc1d7552868368320e78bdfd3d5264b4c2c7ce",
+      "after_entry_hash": "192ff079a37df12b92c9ec273f675cb5173e31c39e16df7bda0a197e106f4ae7",
+      "before_control": {},
+      "after_control": {
+        "locked": true,
+        "override": {
+          "primary": "Julián Álvarez",
+          "secondary": "Alejandro Grimaldo",
+          "tertiary": "Alexander Sørloth"
+        },
+        "reason": "Promote Grimaldo to second choice following his penalty against Real Sociedad; retain Alvarez first and Sorloth third, as approved on 14 September.",
+        "updated_at": "2026-09-14T10:41:05+00:00",
+        "actor": "local_admin"
+      },
+      "reverts": null,
+      "before_hierarchy": {
+        "primary": "Julián Álvarez",
+        "secondary": "Ademola Lookman",
+        "tertiary": "Alexander Sørloth"
+      },
+      "after_hierarchy": {
+        "primary": "Julián Álvarez",
+        "secondary": "Alejandro Grimaldo",
+        "tertiary": "Alexander Sørloth"
       }
     }
   ]

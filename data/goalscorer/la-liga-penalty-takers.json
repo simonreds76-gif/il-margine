@@ -745,9 +745,9 @@
   },
   "Atletico Madrid": {
     "primary": "Julián Álvarez",
-    "secondary": "Ademola Lookman",
+    "secondary": "Alejandro Grimaldo",
     "tertiary": "Alexander Sørloth",
-    "last_updated": "2026-09-01",
+    "last_updated": "2026-09-14",
     "source": "Betfair Spain LaLiga penalty board",
     "cross_check": "LaLiga 2026/27 squads and match records",
     "hierarchy_status": "probable",
@@ -756,18 +756,18 @@
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Álvarez remains first choice. Lookman is the current backup after Griezmann's departure, with Sørloth third.",
+    "condition_note": "Grimaldo converted against Real Sociedad on 13 September with Alvarez unavailable and Lookman already substituted. Alvarez stays first choice; Grimaldo moves second, ahead of Sorloth.",
     "last_verified": {
-      "date": "2026-09-02",
-      "by": "Il Margine",
-      "method": "current_squad_membership_audit"
+      "date": "2026-09-14",
+      "by": "local_admin",
+      "method": "reviewed_manual_hierarchy_override"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-14",
     "latest_evidence": {
-      "id": "evt_20260901_atletico-madrid_current_review",
-      "date": "2026-09-01",
+      "id": "faffafb51fae459b83f6b4d84d6a92bb",
+      "date": "2026-09-14",
       "type": "current_season_board_review",
-      "source_count": 2
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -971,6 +971,30 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Álvarez remains first choice. Lookman is the current backup after Griezmann's departure, with Sørloth third."
+      },
+      {
+        "id": "faffafb51fae459b83f6b4d84d6a92bb",
+        "date": "2026-09-14",
+        "type": "current_season_board_review",
+        "headline": "Grimaldo becomes Atletico’s second-choice penalty taker",
+        "editorial_note": "Grimaldo converted against Real Sociedad on 13 September with Alvarez unavailable and Lookman already substituted. Alvarez stays first choice; Grimaldo moves second, ahead of Sorloth.",
+        "match": "Real Sociedad vs Atletico Madrid",
+        "sources": [
+          {
+            "label": "FotMob match events and completed lineup",
+            "url": "https://www.fotmob.com/matches/real-sociedad-vs-atletico-madrid/2tiqrp#5868058",
+            "date": "2026-09-13",
+            "note": "Grimaldo converted at 84 minutes. Alvarez was unavailable; Lookman had been substituted at 76 minutes. This supports deputy duty, not displacement of Alvarez."
+          }
+        ],
+        "review": {
+          "status": "approved",
+          "reviewed_by": "local_admin",
+          "reviewed_at": "2026-09-14T10:41:05+00:00"
+        },
+        "affects_hierarchy": true,
+        "detection": "local_admin",
+        "season": "2026/27"
       }
     ],
     "change_log": [
@@ -1065,11 +1089,30 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-01T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "id": "faffafb51fae459b83f6b4d84d6a92bb",
+        "changed_at": "2026-09-14T10:41:05+00:00",
+        "change_type": "hierarchy_change",
+        "reason": "Promote Grimaldo to second choice following his penalty against Real Sociedad; retain Alvarez first and Sorloth third, as approved on 14 September.",
+        "from": {
+          "primary": "Julián Álvarez",
+          "secondary": "Ademola Lookman",
+          "tertiary": "Alexander Sørloth"
+        },
+        "to": {
+          "primary": "Julián Álvarez",
+          "secondary": "Alejandro Grimaldo",
+          "tertiary": "Alexander Sørloth"
+        },
+        "evidence_ids": [
+          "faffafb51fae459b83f6b4d84d6a92bb"
+        ]
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -1088,10 +1131,11 @@
         "checked_at": "2026-09-02"
       },
       "secondary": {
-        "player": "Ademola Lookman",
+        "player": "Alejandro Grimaldo",
         "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/9906/overview/atletico-madrid",
-        "checked_at": "2026-09-02"
+        "source_url": "https://www.fotmob.com/matches/real-sociedad-vs-atletico-madrid/2tiqrp#5868058",
+        "checked_at": "2026-09-14",
+        "method": "manual_editorial_attestation"
       },
       "tertiary": {
         "player": "Alexander Sørloth",
@@ -1109,7 +1153,8 @@
         "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
         "https://www.laliga.com/en-GB/laliga-easports/clubs"
       ]
-    }
+    },
+    "unavailable_candidates": []
   },
   "Barcelona": {
     "primary": "Raphinha",

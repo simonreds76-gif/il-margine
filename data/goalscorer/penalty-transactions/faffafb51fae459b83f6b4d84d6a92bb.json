@@ -1,0 +1,848 @@
+{
+  "schema_version": 1,
+  "status": "committed",
+  "id": "faffafb51fae459b83f6b4d84d6a92bb",
+  "league": "la-liga",
+  "audit": {
+    "id": "faffafb51fae459b83f6b4d84d6a92bb",
+    "at": "2026-09-14T10:41:05+00:00",
+    "actor": "local_admin",
+    "action": "override",
+    "club_id": "la-liga|Atletico Madrid",
+    "reason": "Promote Grimaldo to second choice following his penalty against Real Sociedad; retain Alvarez first and Sorloth third, as approved on 14 September.",
+    "before_entry": {
+      "primary": "Julián Álvarez",
+      "secondary": "Ademola Lookman",
+      "tertiary": "Alexander Sørloth",
+      "last_updated": "2026-09-01",
+      "source": "Betfair Spain LaLiga penalty board",
+      "cross_check": "LaLiga 2026/27 squads and match records",
+      "hierarchy_status": "probable",
+      "confidence": {
+        "primary": "medium",
+        "secondary": "medium",
+        "tertiary": "medium"
+      },
+      "condition_note": "Álvarez remains first choice. Lookman is the current backup after Griezmann's departure, with Sørloth third.",
+      "last_verified": {
+        "date": "2026-09-02",
+        "by": "Il Margine",
+        "method": "current_squad_membership_audit"
+      },
+      "public_updated_at": "2026-09-02",
+      "latest_evidence": {
+        "id": "evt_20260901_atletico-madrid_current_review",
+        "date": "2026-09-01",
+        "type": "current_season_board_review",
+        "source_count": 2
+      },
+      "evidence_log": [
+        {
+          "id": "evt_20260710_atletico_madrid_rollover",
+          "date": "2026-07-10",
+          "season": "2026/27",
+          "type": "editorial_note",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": null,
+          "sources": [],
+          "detection": "manual",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-10T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+        },
+        {
+          "id": "evt_20260727_atletico_madrid_research",
+          "date": "2026-07-27",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Álvarez converted a regular-time penalty in the Champions League semifinal first leg, providing recent high-level role evidence. Griezmann's move to Orlando removes him from the 2026/27 hierarchy. Álvarez remained at Atlético at the audit cutoff, but active transfer reporting makes the recommendation conditional on his continued registration.",
+          "sources": [
+            {
+              "label": "UEFA",
+              "url": "https://www.uefa.com/uefachampionsleague/news/02a4-2081fa8b7112-8f4474ea29c4-1000--atleti-1-1-arsenal-viktor-gyokeres-and-julian-alvarez-on-ta/",
+              "date": "2026-04-29",
+              "note": "Álvarez converted a regular-time penalty in the Champions League semifinal first leg, providing recent high-level role evidence."
+            },
+            {
+              "label": "AS",
+              "url": "https://as.com/futbol/el-atletico-hace-oficial-la-marcha-de-griezmann-a-orlando-f202603-n/",
+              "date": "2026-03-24",
+              "note": "Griezmann's move to Orlando removes him from the 2026/27 hierarchy."
+            },
+            {
+              "label": "Cadena SER",
+              "url": "https://cadenaser.com/nacional/2026/07/24/la-opcion-gyokeres-abre-la-puerta-de-salida-a-julian-alvarez-el-atletico-solo-contempla-un-destino-para-el-argentino-si-no-quiere-seguir-cadena-ser/",
+              "date": "2026-07-24",
+              "note": "Álvarez remained at Atlético at the audit cutoff, but active transfer reporting makes the recommendation conditional on his continued registration."
+            },
+            {
+              "label": "FutbolFantasy",
+              "url": "https://www.futbolfantasy.com/laliga/noticias/130781-guia-fantasy-del-balon-parado-de-laliga-25-26-y-estadisticas-recientes",
+              "date": "2025-08-11",
+              "note": "The specialist guide described Julian Alvarez as the main penalty figure, with Baena and Griezmann as alternatives, independently supporting the primary call."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-27T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260728_atletico-madrid_research",
+          "date": "2026-07-28",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Retain Julián Álvarez at the cutoff; Baena and Sørloth are practical depth after Griezmann's departure, not a proven backup sequence.",
+          "sources": [
+            {
+              "label": "UEFA",
+              "url": "https://www.uefa.com/uefachampionsleague/news/02a4-2081fa8b7112-8f4474ea29c4-1000--atleti-1-1-arsenal-viktor-gyokeres-and-julian-alvarez-on-ta/",
+              "date": "2026-04-29",
+              "note": "Álvarez converted a regular-time penalty in the Champions League semifinal first leg, providing recent high-level role evidence."
+            },
+            {
+              "label": "AS",
+              "url": "https://as.com/futbol/el-atletico-hace-oficial-la-marcha-de-griezmann-a-orlando-f202603-n/",
+              "date": "2026-03-24",
+              "note": "Griezmann's move to Orlando removes him from the 2026/27 hierarchy."
+            },
+            {
+              "label": "Cadena SER",
+              "url": "https://cadenaser.com/nacional/2026/07/24/la-opcion-gyokeres-abre-la-puerta-de-salida-a-julian-alvarez-el-atletico-solo-contempla-un-destino-para-el-argentino-si-no-quiere-seguir-cadena-ser/",
+              "date": "2026-07-24",
+              "note": "Álvarez remained at Atlético at the audit cutoff, but active transfer reporting makes the recommendation conditional on his continued registration."
+            },
+            {
+              "label": "FutbolFantasy",
+              "url": "https://www.futbolfantasy.com/laliga/noticias/130781-guia-fantasy-del-balon-parado-de-laliga-25-26-y-estadisticas-recientes",
+              "date": "2025-08-11",
+              "note": "The specialist guide described Julian Alvarez as the main penalty figure, with Baena and Griezmann as alternatives, independently supporting the primary call."
+            },
+            {
+              "label": "Transfermarkt",
+              "url": "https://www.transfermarkt.es/alexander-sorloth/elfmetertore/spieler/238407",
+              "date": "2026-07-28",
+              "note": "Supports practical depth only, not current club precedence."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-28T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260730_atletico-madrid_research",
+          "date": "2026-07-30",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Julián remained the regular competitive taker after Griezmann's departure. Sørloth has stronger regular-match specialist support than Baena; Baena's clearest recent penalty evidence is shootout-only.",
+          "sources": [
+            {
+              "label": "UEFA",
+              "url": "https://www.uefa.com/uefachampionsleague/news/02a4-2081fa8b7112-8f4474ea29c4-1000--atleti-1-1-arsenal-viktor-gyokeres-and-julian-alvarez-on-ta/",
+              "date": "2026-04-29",
+              "note": "Álvarez converted a regular-time penalty in the Champions League semifinal first leg, providing recent high-level role evidence."
+            },
+            {
+              "label": "AS",
+              "url": "https://as.com/futbol/el-atletico-hace-oficial-la-marcha-de-griezmann-a-orlando-f202603-n/",
+              "date": "2026-03-24",
+              "note": "Griezmann's move to Orlando removes him from the 2026/27 hierarchy."
+            },
+            {
+              "label": "Cadena SER",
+              "url": "https://cadenaser.com/nacional/2026/07/24/la-opcion-gyokeres-abre-la-puerta-de-salida-a-julian-alvarez-el-atletico-solo-contempla-un-destino-para-el-argentino-si-no-quiere-seguir-cadena-ser/",
+              "date": "2026-07-24",
+              "note": "Álvarez remained at Atlético at the audit cutoff, but active transfer reporting makes the recommendation conditional on his continued registration."
+            },
+            {
+              "label": "FutbolFantasy",
+              "url": "https://www.futbolfantasy.com/laliga/noticias/130781-guia-fantasy-del-balon-parado-de-laliga-25-26-y-estadisticas-recientes",
+              "date": "2025-08-11",
+              "note": "The specialist guide described Julian Alvarez as the main penalty figure, with Baena and Griezmann as alternatives, independently supporting the primary call."
+            },
+            {
+              "label": "Transfermarkt",
+              "url": "https://www.transfermarkt.es/alexander-sorloth/elfmetertore/spieler/238407",
+              "date": "2026-07-28",
+              "note": "Supports practical depth only, not current club precedence."
+            },
+            {
+              "label": "Official club or LaLiga",
+              "url": "https://www.atleticodemadrid.com/noticias/agenda-de-nuestros-jugadores-en-el-mundial-2026",
+              "date": "2026-07-30",
+              "note": "Current-squad-first check confirms Julián Álvarez, Alexander Sørloth, Álex Baena."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-30T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260901_atletico-madrid_current_review",
+          "date": "2026-09-01",
+          "season": "2026/27",
+          "type": "current_season_board_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "headline": "Atletico Madrid penalty hierarchy updated",
+          "context": "Álvarez remains first choice. Lookman is the current backup after Griezmann's departure, with Sørloth third.",
+          "sources": [
+            {
+              "label": "Betfair Spain LaLiga penalty board",
+              "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+              "date": "2026-08-31",
+              "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+            },
+            {
+              "label": "LaLiga 2026/27 squads and match records",
+              "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+              "date": "2026-09-01",
+              "note": "Official current club and competition cross-check."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-01T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Álvarez remains first choice. Lookman is the current backup after Griezmann's departure, with Sørloth third."
+        }
+      ],
+      "change_log": [
+        {
+          "changed_at": "2026-07-10",
+          "season": "2026/27",
+          "change_type": "season_rollover",
+          "from": {
+            "primary": "Julián Álvarez",
+            "secondary": "Antoine Griezmann",
+            "tertiary": "Alexander Sørloth"
+          },
+          "to": {
+            "primary": "Julián Álvarez",
+            "secondary": "Antoine Griezmann",
+            "tertiary": "Alexander Sørloth"
+          },
+          "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+          "evidence_ids": [
+            "evt_20260710_atletico_madrid_rollover"
+          ],
+          "detection": "manual",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-10T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-28",
+          "season": "2026/27",
+          "change_type": "hierarchy_research_update",
+          "from": {
+            "primary": "Julián Álvarez",
+            "secondary": "",
+            "tertiary": ""
+          },
+          "to": {
+            "primary": "Julián Álvarez",
+            "secondary": "Álex Baena",
+            "tertiary": "Alexander Sørloth"
+          },
+          "reason": "Retain Julián Álvarez at the cutoff; Baena and Sørloth are practical depth after Griezmann's departure, not a proven backup sequence. Active Álvarez exit reporting can invalidate the complete order. Conditions: Rebuild immediately if Julián Álvarez leaves. Re-evaluate if Gyökeres or another penalty-taking striker arrives.",
+          "evidence_ids": [
+            "evt_20260728_atletico-madrid_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-28T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-30",
+          "season": "2026/27",
+          "change_type": "hierarchy_research_update",
+          "from": {
+            "primary": "Julián Álvarez",
+            "secondary": "Álex Baena",
+            "tertiary": "Alexander Sørloth"
+          },
+          "to": {
+            "primary": "Julián Álvarez",
+            "secondary": "Alexander Sørloth",
+            "tertiary": "Álex Baena"
+          },
+          "reason": "Julián remained the regular competitive taker after Griezmann's departure. Sørloth has stronger regular-match specialist support than Baena; Baena's clearest recent penalty evidence is shootout-only. The latest direct deputy evidence is a shootout in which Sørloth missed and Baena scored; that does not establish a regular-time reversal. Conditions: Reassess only if a Julián Álvarez transfer is officially completed; current reports are rumours and he remains a confirmed Atlético player at the cutoff.",
+          "evidence_ids": [
+            "evt_20260730_atletico-madrid_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-30T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-09-01",
+          "season": "2026/27",
+          "change_type": "current_season_hierarchy_update",
+          "from": {
+            "primary": "Julián Álvarez",
+            "secondary": "Alexander Sørloth",
+            "tertiary": "Álex Baena"
+          },
+          "to": {
+            "primary": "Julián Álvarez",
+            "secondary": "Ademola Lookman",
+            "tertiary": "Alexander Sørloth"
+          },
+          "reason": "Álvarez remains first choice. Lookman is the current backup after Griezmann's departure, with Sørloth third.",
+          "evidence_ids": [
+            "evt_20260901_atletico-madrid_current_review"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-09-01T12:00:00Z",
+          "article_slug": null
+        }
+      ],
+      "flags": {
+        "carryover_from_previous_season": false,
+        "weak_evidence": true,
+        "stale_override": null
+      },
+      "prior_season": {
+        "label": "2025/26",
+        "primary": "Julián Álvarez",
+        "secondary": "Antoine Griezmann",
+        "tertiary": "Alexander Sørloth",
+        "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+      },
+      "player_ids": {},
+      "squad_membership": {
+        "primary": {
+          "player": "Julián Álvarez",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/9906/overview/atletico-madrid",
+          "checked_at": "2026-09-02"
+        },
+        "secondary": {
+          "player": "Ademola Lookman",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/9906/overview/atletico-madrid",
+          "checked_at": "2026-09-02"
+        },
+        "tertiary": {
+          "player": "Alexander Sørloth",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/9906/overview/atletico-madrid",
+          "checked_at": "2026-09-02"
+        }
+      },
+      "last_reviewed": {
+        "date": "2026-09-01",
+        "by": "Il Margine",
+        "method": "current_season_multi_source_review",
+        "outcome": "hierarchy_updated",
+        "sources": [
+          "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+          "https://www.laliga.com/en-GB/laliga-easports/clubs"
+        ]
+      }
+    },
+    "after_entry": {
+      "primary": "Julián Álvarez",
+      "secondary": "Alejandro Grimaldo",
+      "tertiary": "Alexander Sørloth",
+      "last_updated": "2026-09-14",
+      "source": "Betfair Spain LaLiga penalty board",
+      "cross_check": "LaLiga 2026/27 squads and match records",
+      "hierarchy_status": "probable",
+      "confidence": {
+        "primary": "medium",
+        "secondary": "medium",
+        "tertiary": "medium"
+      },
+      "condition_note": "Grimaldo converted against Real Sociedad on 13 September with Alvarez unavailable and Lookman already substituted. Alvarez stays first choice; Grimaldo moves second, ahead of Sorloth.",
+      "last_verified": {
+        "date": "2026-09-14",
+        "by": "local_admin",
+        "method": "reviewed_manual_hierarchy_override"
+      },
+      "public_updated_at": "2026-09-14",
+      "latest_evidence": {
+        "id": "faffafb51fae459b83f6b4d84d6a92bb",
+        "date": "2026-09-14",
+        "type": "current_season_board_review",
+        "source_count": 1
+      },
+      "evidence_log": [
+        {
+          "id": "evt_20260710_atletico_madrid_rollover",
+          "date": "2026-07-10",
+          "season": "2026/27",
+          "type": "editorial_note",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": null,
+          "sources": [],
+          "detection": "manual",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-10T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+        },
+        {
+          "id": "evt_20260727_atletico_madrid_research",
+          "date": "2026-07-27",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Álvarez converted a regular-time penalty in the Champions League semifinal first leg, providing recent high-level role evidence. Griezmann's move to Orlando removes him from the 2026/27 hierarchy. Álvarez remained at Atlético at the audit cutoff, but active transfer reporting makes the recommendation conditional on his continued registration.",
+          "sources": [
+            {
+              "label": "UEFA",
+              "url": "https://www.uefa.com/uefachampionsleague/news/02a4-2081fa8b7112-8f4474ea29c4-1000--atleti-1-1-arsenal-viktor-gyokeres-and-julian-alvarez-on-ta/",
+              "date": "2026-04-29",
+              "note": "Álvarez converted a regular-time penalty in the Champions League semifinal first leg, providing recent high-level role evidence."
+            },
+            {
+              "label": "AS",
+              "url": "https://as.com/futbol/el-atletico-hace-oficial-la-marcha-de-griezmann-a-orlando-f202603-n/",
+              "date": "2026-03-24",
+              "note": "Griezmann's move to Orlando removes him from the 2026/27 hierarchy."
+            },
+            {
+              "label": "Cadena SER",
+              "url": "https://cadenaser.com/nacional/2026/07/24/la-opcion-gyokeres-abre-la-puerta-de-salida-a-julian-alvarez-el-atletico-solo-contempla-un-destino-para-el-argentino-si-no-quiere-seguir-cadena-ser/",
+              "date": "2026-07-24",
+              "note": "Álvarez remained at Atlético at the audit cutoff, but active transfer reporting makes the recommendation conditional on his continued registration."
+            },
+            {
+              "label": "FutbolFantasy",
+              "url": "https://www.futbolfantasy.com/laliga/noticias/130781-guia-fantasy-del-balon-parado-de-laliga-25-26-y-estadisticas-recientes",
+              "date": "2025-08-11",
+              "note": "The specialist guide described Julian Alvarez as the main penalty figure, with Baena and Griezmann as alternatives, independently supporting the primary call."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-27T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260728_atletico-madrid_research",
+          "date": "2026-07-28",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Retain Julián Álvarez at the cutoff; Baena and Sørloth are practical depth after Griezmann's departure, not a proven backup sequence.",
+          "sources": [
+            {
+              "label": "UEFA",
+              "url": "https://www.uefa.com/uefachampionsleague/news/02a4-2081fa8b7112-8f4474ea29c4-1000--atleti-1-1-arsenal-viktor-gyokeres-and-julian-alvarez-on-ta/",
+              "date": "2026-04-29",
+              "note": "Álvarez converted a regular-time penalty in the Champions League semifinal first leg, providing recent high-level role evidence."
+            },
+            {
+              "label": "AS",
+              "url": "https://as.com/futbol/el-atletico-hace-oficial-la-marcha-de-griezmann-a-orlando-f202603-n/",
+              "date": "2026-03-24",
+              "note": "Griezmann's move to Orlando removes him from the 2026/27 hierarchy."
+            },
+            {
+              "label": "Cadena SER",
+              "url": "https://cadenaser.com/nacional/2026/07/24/la-opcion-gyokeres-abre-la-puerta-de-salida-a-julian-alvarez-el-atletico-solo-contempla-un-destino-para-el-argentino-si-no-quiere-seguir-cadena-ser/",
+              "date": "2026-07-24",
+              "note": "Álvarez remained at Atlético at the audit cutoff, but active transfer reporting makes the recommendation conditional on his continued registration."
+            },
+            {
+              "label": "FutbolFantasy",
+              "url": "https://www.futbolfantasy.com/laliga/noticias/130781-guia-fantasy-del-balon-parado-de-laliga-25-26-y-estadisticas-recientes",
+              "date": "2025-08-11",
+              "note": "The specialist guide described Julian Alvarez as the main penalty figure, with Baena and Griezmann as alternatives, independently supporting the primary call."
+            },
+            {
+              "label": "Transfermarkt",
+              "url": "https://www.transfermarkt.es/alexander-sorloth/elfmetertore/spieler/238407",
+              "date": "2026-07-28",
+              "note": "Supports practical depth only, not current club precedence."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-28T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260730_atletico-madrid_research",
+          "date": "2026-07-30",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Julián remained the regular competitive taker after Griezmann's departure. Sørloth has stronger regular-match specialist support than Baena; Baena's clearest recent penalty evidence is shootout-only.",
+          "sources": [
+            {
+              "label": "UEFA",
+              "url": "https://www.uefa.com/uefachampionsleague/news/02a4-2081fa8b7112-8f4474ea29c4-1000--atleti-1-1-arsenal-viktor-gyokeres-and-julian-alvarez-on-ta/",
+              "date": "2026-04-29",
+              "note": "Álvarez converted a regular-time penalty in the Champions League semifinal first leg, providing recent high-level role evidence."
+            },
+            {
+              "label": "AS",
+              "url": "https://as.com/futbol/el-atletico-hace-oficial-la-marcha-de-griezmann-a-orlando-f202603-n/",
+              "date": "2026-03-24",
+              "note": "Griezmann's move to Orlando removes him from the 2026/27 hierarchy."
+            },
+            {
+              "label": "Cadena SER",
+              "url": "https://cadenaser.com/nacional/2026/07/24/la-opcion-gyokeres-abre-la-puerta-de-salida-a-julian-alvarez-el-atletico-solo-contempla-un-destino-para-el-argentino-si-no-quiere-seguir-cadena-ser/",
+              "date": "2026-07-24",
+              "note": "Álvarez remained at Atlético at the audit cutoff, but active transfer reporting makes the recommendation conditional on his continued registration."
+            },
+            {
+              "label": "FutbolFantasy",
+              "url": "https://www.futbolfantasy.com/laliga/noticias/130781-guia-fantasy-del-balon-parado-de-laliga-25-26-y-estadisticas-recientes",
+              "date": "2025-08-11",
+              "note": "The specialist guide described Julian Alvarez as the main penalty figure, with Baena and Griezmann as alternatives, independently supporting the primary call."
+            },
+            {
+              "label": "Transfermarkt",
+              "url": "https://www.transfermarkt.es/alexander-sorloth/elfmetertore/spieler/238407",
+              "date": "2026-07-28",
+              "note": "Supports practical depth only, not current club precedence."
+            },
+            {
+              "label": "Official club or LaLiga",
+              "url": "https://www.atleticodemadrid.com/noticias/agenda-de-nuestros-jugadores-en-el-mundial-2026",
+              "date": "2026-07-30",
+              "note": "Current-squad-first check confirms Julián Álvarez, Alexander Sørloth, Álex Baena."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-30T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260901_atletico-madrid_current_review",
+          "date": "2026-09-01",
+          "season": "2026/27",
+          "type": "current_season_board_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "headline": "Atletico Madrid penalty hierarchy updated",
+          "context": "Álvarez remains first choice. Lookman is the current backup after Griezmann's departure, with Sørloth third.",
+          "sources": [
+            {
+              "label": "Betfair Spain LaLiga penalty board",
+              "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+              "date": "2026-08-31",
+              "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+            },
+            {
+              "label": "LaLiga 2026/27 squads and match records",
+              "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+              "date": "2026-09-01",
+              "note": "Official current club and competition cross-check."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-01T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Álvarez remains first choice. Lookman is the current backup after Griezmann's departure, with Sørloth third."
+        },
+        {
+          "id": "faffafb51fae459b83f6b4d84d6a92bb",
+          "date": "2026-09-14",
+          "type": "current_season_board_review",
+          "headline": "Grimaldo becomes Atletico’s second-choice penalty taker",
+          "editorial_note": "Grimaldo converted against Real Sociedad on 13 September with Alvarez unavailable and Lookman already substituted. Alvarez stays first choice; Grimaldo moves second, ahead of Sorloth.",
+          "match": "Real Sociedad vs Atletico Madrid",
+          "sources": [
+            {
+              "label": "FotMob match events and completed lineup",
+              "url": "https://www.fotmob.com/matches/real-sociedad-vs-atletico-madrid/2tiqrp#5868058",
+              "date": "2026-09-13",
+              "note": "Grimaldo converted at 84 minutes. Alvarez was unavailable; Lookman had been substituted at 76 minutes. This supports deputy duty, not displacement of Alvarez."
+            }
+          ],
+          "review": {
+            "status": "approved",
+            "reviewed_by": "local_admin",
+            "reviewed_at": "2026-09-14T10:41:05+00:00"
+          },
+          "affects_hierarchy": true,
+          "detection": "local_admin",
+          "season": "2026/27"
+        }
+      ],
+      "change_log": [
+        {
+          "changed_at": "2026-07-10",
+          "season": "2026/27",
+          "change_type": "season_rollover",
+          "from": {
+            "primary": "Julián Álvarez",
+            "secondary": "Antoine Griezmann",
+            "tertiary": "Alexander Sørloth"
+          },
+          "to": {
+            "primary": "Julián Álvarez",
+            "secondary": "Antoine Griezmann",
+            "tertiary": "Alexander Sørloth"
+          },
+          "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+          "evidence_ids": [
+            "evt_20260710_atletico_madrid_rollover"
+          ],
+          "detection": "manual",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-10T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-28",
+          "season": "2026/27",
+          "change_type": "hierarchy_research_update",
+          "from": {
+            "primary": "Julián Álvarez",
+            "secondary": "",
+            "tertiary": ""
+          },
+          "to": {
+            "primary": "Julián Álvarez",
+            "secondary": "Álex Baena",
+            "tertiary": "Alexander Sørloth"
+          },
+          "reason": "Retain Julián Álvarez at the cutoff; Baena and Sørloth are practical depth after Griezmann's departure, not a proven backup sequence. Active Álvarez exit reporting can invalidate the complete order. Conditions: Rebuild immediately if Julián Álvarez leaves. Re-evaluate if Gyökeres or another penalty-taking striker arrives.",
+          "evidence_ids": [
+            "evt_20260728_atletico-madrid_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-28T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-30",
+          "season": "2026/27",
+          "change_type": "hierarchy_research_update",
+          "from": {
+            "primary": "Julián Álvarez",
+            "secondary": "Álex Baena",
+            "tertiary": "Alexander Sørloth"
+          },
+          "to": {
+            "primary": "Julián Álvarez",
+            "secondary": "Alexander Sørloth",
+            "tertiary": "Álex Baena"
+          },
+          "reason": "Julián remained the regular competitive taker after Griezmann's departure. Sørloth has stronger regular-match specialist support than Baena; Baena's clearest recent penalty evidence is shootout-only. The latest direct deputy evidence is a shootout in which Sørloth missed and Baena scored; that does not establish a regular-time reversal. Conditions: Reassess only if a Julián Álvarez transfer is officially completed; current reports are rumours and he remains a confirmed Atlético player at the cutoff.",
+          "evidence_ids": [
+            "evt_20260730_atletico-madrid_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-30T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-09-01",
+          "season": "2026/27",
+          "change_type": "current_season_hierarchy_update",
+          "from": {
+            "primary": "Julián Álvarez",
+            "secondary": "Alexander Sørloth",
+            "tertiary": "Álex Baena"
+          },
+          "to": {
+            "primary": "Julián Álvarez",
+            "secondary": "Ademola Lookman",
+            "tertiary": "Alexander Sørloth"
+          },
+          "reason": "Álvarez remains first choice. Lookman is the current backup after Griezmann's departure, with Sørloth third.",
+          "evidence_ids": [
+            "evt_20260901_atletico-madrid_current_review"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-09-01T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "id": "faffafb51fae459b83f6b4d84d6a92bb",
+          "changed_at": "2026-09-14T10:41:05+00:00",
+          "change_type": "hierarchy_change",
+          "reason": "Promote Grimaldo to second choice following his penalty against Real Sociedad; retain Alvarez first and Sorloth third, as approved on 14 September.",
+          "from": {
+            "primary": "Julián Álvarez",
+            "secondary": "Ademola Lookman",
+            "tertiary": "Alexander Sørloth"
+          },
+          "to": {
+            "primary": "Julián Álvarez",
+            "secondary": "Alejandro Grimaldo",
+            "tertiary": "Alexander Sørloth"
+          },
+          "evidence_ids": [
+            "faffafb51fae459b83f6b4d84d6a92bb"
+          ]
+        }
+      ],
+      "flags": {
+        "carryover_from_previous_season": false,
+        "weak_evidence": false,
+        "stale_override": null
+      },
+      "prior_season": {
+        "label": "2025/26",
+        "primary": "Julián Álvarez",
+        "secondary": "Antoine Griezmann",
+        "tertiary": "Alexander Sørloth",
+        "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+      },
+      "player_ids": {},
+      "squad_membership": {
+        "primary": {
+          "player": "Julián Álvarez",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/9906/overview/atletico-madrid",
+          "checked_at": "2026-09-02"
+        },
+        "secondary": {
+          "player": "Alejandro Grimaldo",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/matches/real-sociedad-vs-atletico-madrid/2tiqrp#5868058",
+          "checked_at": "2026-09-14",
+          "method": "manual_editorial_attestation"
+        },
+        "tertiary": {
+          "player": "Alexander Sørloth",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/9906/overview/atletico-madrid",
+          "checked_at": "2026-09-02"
+        }
+      },
+      "last_reviewed": {
+        "date": "2026-09-01",
+        "by": "Il Margine",
+        "method": "current_season_multi_source_review",
+        "outcome": "hierarchy_updated",
+        "sources": [
+          "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+          "https://www.laliga.com/en-GB/laliga-easports/clubs"
+        ]
+      },
+      "unavailable_candidates": []
+    },
+    "before_entry_hash": "437e62ab918034a72637b89ae9dc1d7552868368320e78bdfd3d5264b4c2c7ce",
+    "after_entry_hash": "192ff079a37df12b92c9ec273f675cb5173e31c39e16df7bda0a197e106f4ae7",
+    "before_control": {},
+    "after_control": {
+      "locked": true,
+      "override": {
+        "primary": "Julián Álvarez",
+        "secondary": "Alejandro Grimaldo",
+        "tertiary": "Alexander Sørloth"
+      },
+      "reason": "Promote Grimaldo to second choice following his penalty against Real Sociedad; retain Alvarez first and Sorloth third, as approved on 14 September.",
+      "updated_at": "2026-09-14T10:41:05+00:00",
+      "actor": "local_admin"
+    },
+    "reverts": null
+  },
+  "summary": {
+    "id": "faffafb51fae459b83f6b4d84d6a92bb",
+    "at": "2026-09-14T10:41:05+00:00",
+    "actor": "local_admin",
+    "action": "override",
+    "club_id": "la-liga|Atletico Madrid",
+    "reason": "Promote Grimaldo to second choice following his penalty against Real Sociedad; retain Alvarez first and Sorloth third, as approved on 14 September.",
+    "before_entry_hash": "437e62ab918034a72637b89ae9dc1d7552868368320e78bdfd3d5264b4c2c7ce",
+    "after_entry_hash": "192ff079a37df12b92c9ec273f675cb5173e31c39e16df7bda0a197e106f4ae7",
+    "before_control": {},
+    "after_control": {
+      "locked": true,
+      "override": {
+        "primary": "Julián Álvarez",
+        "secondary": "Alejandro Grimaldo",
+        "tertiary": "Alexander Sørloth"
+      },
+      "reason": "Promote Grimaldo to second choice following his penalty against Real Sociedad; retain Alvarez first and Sorloth third, as approved on 14 September.",
+      "updated_at": "2026-09-14T10:41:05+00:00",
+      "actor": "local_admin"
+    },
+    "reverts": null,
+    "before_hierarchy": {
+      "primary": "Julián Álvarez",
+      "secondary": "Ademola Lookman",
+      "tertiary": "Alexander Sørloth"
+    },
+    "after_hierarchy": {
+      "primary": "Julián Álvarez",
+      "secondary": "Alejandro Grimaldo",
+      "tertiary": "Alexander Sørloth"
+    }
+  },
+  "before_hierarchy_hash": "a7be3383b5cf73ccf777e3b28c36803671675a13abb9b3f0cbb25eeb77ceeb35",
+  "after_hierarchy_hash": "2fdddec87544a44ccfab528ead1be805a42589f5ac531165ebf12f34e9c951b4",
+  "before_state_hash": "511cc8c081149d8847ee677f09265347e5275d60b4ff626c33e908a590b9f1ba",
+  "after_state_hash": "865464604025509c93888a8bca6e4d9d8105c791aae3eb2ac5371db7e901efd5",
+  "after_revision": 5
+}

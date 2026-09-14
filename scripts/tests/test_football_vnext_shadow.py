@@ -18,6 +18,22 @@ SPEC.loader.exec_module(SHADOW)
 
 
 class FootballVnextShadowTests(unittest.TestCase):
+    def test_new_signals_need_both_prices_within_3_hours(self):
+        now = datetime(2026, 9, 14, 12, tzinfo=UTC)
+        pair = {side: {"captured_at_dt": now - timedelta(hours=3)} for side in ("over", "under")}
+        self.assertEqual(SHADOW.pair_price_blockers(pair, now), [])
+        pair["under"]["captured_at_dt"] -= timedelta(seconds=1)
+        self.assertEqual(SHADOW.pair_price_blockers(pair, now), ["price_older_than_3h"])
+        pair["under"]["captured_at_dt"] = now + timedelta(seconds=1)
+        self.assertEqual(SHADOW.pair_price_blockers(pair, now), ["future_price_timestamp"])
+        pair["under"]["captured_at_dt"] = None
+        self.assertEqual(SHADOW.pair_price_blockers(pair, now), ["missing_price_timestamp"])
+
+    def test_stale_price_cannot_be_admitted_as_warmup(self):
+        self.assertEqual(SHADOW.warmup_tracking_signals([
+            {"blocked_reason": "matchdays_1_to_3;price_older_than_3h"}
+        ]), [])
+
     def test_clv_keeps_mean_and_input_provenance(self):
         for kind,filename in [('shots','team-shots-v1-clv-monitor.py'),('corners','corners-v0-clv-monitor.py')]:
             monitor = SHADOW.load_module('provenance_'+kind,SCRIPTS/filename)
