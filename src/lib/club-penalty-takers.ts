@@ -1,4 +1,6 @@
 import "server-only";
+import penaltyPortraits from "../../data/goalscorer/penalty-player-portraits.json";
+import { foldNameText } from "@/lib/player-name-matching";
 
 import { cache } from "react";
 import { promises as fs } from "node:fs";
@@ -91,6 +93,7 @@ export type ClubPenaltyTeam = {
   secondary: string;
   tertiary: string;
   verifiedNames: string[];
+  portraitUrls: (string | null)[];
   hierarchyDepth: 0 | 1 | 2 | 3;
   hierarchyStatus: PenaltyHierarchyStatus;
   primaryConfidence: PenaltyConfidence;
@@ -443,6 +446,13 @@ function mapTeam(
     secondary: verifiedNames[1] ?? "",
     tertiary: verifiedNames[2] ?? "",
     verifiedNames,
+    portraitUrls: verifiedNames.map(name => {
+      const key = foldNameText(name).toLowerCase().replace(/[^a-z0-9]/g, "");
+      const clubKey = foldNameText(team).toLowerCase().replace(/[^a-z0-9]/g, "");
+      const portraits = penaltyPortraits as Record<string, string>;
+      const id = portraits[`${league.key}|${clubKey}|${key}`] || portraits[key];
+      return id ? `https://images.fotmob.com/image_resources/playerimages/${id}.png` : null;
+    }),
     hierarchyDepth,
     hierarchyStatus: isArchived ? "confirmed" : entry.hierarchy_status ?? (entry.primary ? "probable" : "unknown"),
     primaryConfidence: entry.confidence?.primary ?? (entry.primary ? "medium" : "low"),

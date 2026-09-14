@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import PenaltyTakerPortrait from "@/components/PenaltyTakerPortrait";
 import { notFound } from "next/navigation";
 import Footer from "@/components/Footer";
 import ClubPenaltyLatestUpdates from "@/components/ClubPenaltyLatestUpdates";
@@ -105,7 +106,7 @@ function TeamCard({ team }: { team: ClubPenaltyTeam }) {
 
       <ol aria-label={`${team.team} penalty hierarchy`} className="mt-4 space-y-2">
         <li className="flex min-w-0 items-center gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.07] px-3.5 py-3">
-          <span aria-hidden="true" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-300 font-mono text-sm font-bold text-slate-950">1</span>
+          <PenaltyTakerPortrait name={team.primary} src={team.portraitUrls[0]} rank={1} size="medium" />
           <div className="min-w-0">
             <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-emerald-300/80">First choice</span>
             <strong title={team.primary || "Open position"} className="mt-0.5 block break-words text-xl font-semibold leading-tight text-emerald-100 sm:text-2xl">
@@ -116,7 +117,7 @@ function TeamCard({ team }: { team: ClubPenaltyTeam }) {
         <li className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {[["2", "Second choice", team.secondary], ["3", "Third choice", team.tertiary]].map(([rank, label, value]) => (
             <div key={rank} className="flex min-w-0 items-center gap-2.5 rounded-xl border border-slate-700/75 bg-slate-950/60 px-3 py-2.5">
-              <span aria-hidden="true" className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-slate-600/80 bg-slate-900 font-mono text-[10px] font-bold text-slate-300">{rank}</span>
+              <PenaltyTakerPortrait name={value} src={team.portraitUrls[Number(rank) - 1]} rank={Number(rank)} size="small" />
               <div className="min-w-0">
                 <span className="font-mono text-[8px] uppercase tracking-[0.13em] text-slate-500">{label}</span>
                 <strong title={value || "Open position"} className="mt-0.5 block break-words text-sm font-semibold leading-5 text-slate-100">{value || "Open position"}</strong>

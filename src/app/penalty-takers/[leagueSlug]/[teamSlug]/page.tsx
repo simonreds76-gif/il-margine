@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import PenaltyTakerPortrait from "@/components/PenaltyTakerPortrait";
 import { notFound } from "next/navigation";
 import Footer from "@/components/Footer";
 import PageHomeLink from "@/components/PageHomeLink";
@@ -325,9 +326,7 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
                   return (
                     <li key={`${rank}-${value}`} className={`rounded-xl border p-3.5 ${rank === 1 ? "border-emerald-300/30 bg-emerald-300/[0.07]" : "border-slate-800 bg-slate-950/55"}`}>
                       <div className="flex items-center gap-3">
-                        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg font-mono text-sm font-bold ${rank === 1 ? `${accent.fill} text-slate-950` : "border border-slate-700 bg-slate-900 text-slate-300"}`}>
-                          {rank}
-                        </span>
+                        <PenaltyTakerPortrait name={value} src={team.portraitUrls[index]} rank={rank} />
                         <span className="min-w-0 flex-1">
                           <span className="block text-[11px] uppercase tracking-[0.16em] text-slate-400">{hierarchyLabels[index]}</span>
                           <strong className={`mt-1 block break-words text-base font-semibold ${rank === 1 ? accent.text : "text-slate-100"}`}>{value}</strong>
