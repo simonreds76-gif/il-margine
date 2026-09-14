@@ -1,10 +1,10 @@
 {
   "capture_mode": "publication",
-  "events_selected": 5,
-  "events_with_lines": 5,
-  "generated_at": "2026-09-14T00:25:56Z",
-  "last_publication_at": "2026-09-14T00:25:56Z",
-  "market_inventory_rows_added": 433,
+  "events_selected": 10,
+  "events_with_lines": 10,
+  "generated_at": "2026-09-14T15:03:47Z",
+  "last_publication_at": "2026-09-14T15:03:47Z",
+  "market_inventory_rows_added": 832,
   "market_names_observed": [
     "1st Half Corners",
     "Alternative Corners",
@@ -68,6 +68,7 @@
     "Player Shots",
     "Player Shots on Target",
     "Player Shots on Target Outside Box",
+    "Player Tackles",
     "Player To Be Fouled",
     "Player To Score or Assist",
     "Player to be Booked",
@@ -97,11 +98,11 @@
     "Totals HT",
     "Winning Margin"
   ],
-  "publication_recovery": true,
+  "publication_recovery": false,
   "request_budget": 2,
   "requests_used": 2,
-  "rows_added": 51,
-  "rows_observed": 51,
+  "rows_added": 102,
+  "rows_observed": 102,
   "selected_events": [
     {
       "away": "Parma Calcio",
@@ -137,8 +138,43 @@
       "home": "Leeds United",
       "id": 72221262,
       "kickoff_at": "2026-09-14T19:00:00Z"
+    },
+    {
+      "away": "Espanyol Barcelona",
+      "competition": "Spain - LaLiga",
+      "home": "Rayo Vallecano",
+      "id": 72478582,
+      "kickoff_at": "2026-09-15T17:00:00Z"
+    },
+    {
+      "away": "Valencia CF",
+      "competition": "Spain - LaLiga",
+      "home": "Deportivo Alaves",
+      "id": 72478566,
+      "kickoff_at": "2026-09-15T18:00:00Z"
+    },
+    {
+      "away": "Real Madrid",
+      "competition": "Spain - LaLiga",
+      "home": "Elche CF",
+      "id": 72478574,
+      "kickoff_at": "2026-09-15T19:30:00Z"
+    },
+    {
+      "away": "CA Osasuna",
+      "competition": "Spain - LaLiga",
+      "home": "Atletico Madrid",
+      "id": 72478568,
+      "kickoff_at": "2026-09-16T17:00:00Z"
+    },
+    {
+      "away": "Sevilla FC",
+      "competition": "Spain - LaLiga",
+      "home": "RC Deportivo de A Coruna",
+      "id": 72478572,
+      "kickoff_at": "2026-09-16T17:00:00Z"
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 5
+  "three_way_events": 10
 }
