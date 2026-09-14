@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-13T13:28:19Z",
+  "generated_at": "2026-09-14T05:03:09Z",
   "league": "bundesliga",
   "row_count": 2,
   "rows": [
@@ -36,7 +36,7 @@
       "actual_taker_match_status": "Yes - started, off 85'",
       "primary_on_pitch_at_penalty": "Yes - started, off 85'",
       "secondary_on_pitch_at_penalty": "No - bench, on 46'",
-      "tertiary_on_pitch_at_penalty": "No - unavailable in match squad",
+      "tertiary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
       "actual_taker_on_pitch_at_penalty": "Yes - started, off 85'",
       "event_evidence": [
         {
@@ -44,7 +44,7 @@
           "source_event_id": "2968141999",
           "match_id": "5881167",
           "source_url": "https://www.fotmob.com/matches/eintracht-frankfurt-vs-mainz-05/37ptfb#5881167",
-          "observed_at": "2026-09-13T13:28:18+00:00",
+          "observed_at": "2026-09-14T05:02:59+00:00",
           "event_date": "2026-09-12",
           "season": "2026/27",
           "team": "Mainz 05",
@@ -115,7 +115,7 @@
           "source_event_id": "2968411307",
           "match_id": "5881164",
           "source_url": "https://www.fotmob.com/matches/werder-bremen-vs-1-fc-koln/2ic28k#5881164",
-          "observed_at": "2026-09-13T13:28:18+00:00",
+          "observed_at": "2026-09-14T05:02:59+00:00",
           "event_date": "2026-09-12",
           "season": "2026/27",
           "team": "1. FC Köln",
@@ -146,14 +146,10 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20260907",
-      "20260908",
-      "20260909",
-      "20260910",
-      "20260911",
       "20260912",
-      "20260913"
+      "20260913",
+      "20260914"
     ],
-    "matches_checked": 7
+    "matches_checked": 8
   }
 }
