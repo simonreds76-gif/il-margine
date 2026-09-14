@@ -1,40 +1,40 @@
 {
-  "updated_at": "2026-09-13T22:35:01Z",
+  "updated_at": "2026-09-14T00:10:26Z",
   "reason": "cycle",
   "last_clv_run_at": "2026-09-11T18:31:13Z",
   "leagues": {
     "serie-a": {
-      "last_successful_run_at": "2026-09-13T21:25:31Z",
-      "last_price_run_at": "2026-09-13T21:25:31Z",
+      "last_successful_run_at": "2026-09-14T00:09:44Z",
+      "last_price_run_at": "2026-09-14T00:09:44Z",
       "last_detail_run_at": "2026-05-01T17:16:09Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "off",
-      "last_decision": "off",
-      "last_message": "Skip serie-a: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": ""
+      "last_tier": "board",
+      "last_decision": "ran",
+      "last_message": "Ran serie-a in board tier (cadence 55m, fixtures 3).",
+      "next_kickoff_utc": "2026-09-14T16:30:00Z"
     },
     "epl": {
-      "last_successful_run_at": "2026-09-13T21:25:41Z",
-      "last_price_run_at": "2026-09-13T21:25:41Z",
+      "last_successful_run_at": "2026-09-14T00:09:53Z",
+      "last_price_run_at": "2026-09-14T00:09:53Z",
       "last_detail_run_at": "2026-08-20T22:17:05Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "off",
-      "last_decision": "off",
-      "last_message": "Skip epl: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": ""
+      "last_tier": "board",
+      "last_decision": "ran",
+      "last_message": "Ran epl in board tier (cadence 55m, fixtures 1).",
+      "next_kickoff_utc": "2026-09-14T19:00:00Z"
     },
     "la-liga": {
-      "last_successful_run_at": "2026-09-13T21:26:15Z",
-      "last_price_run_at": "2026-09-13T21:26:15Z",
+      "last_successful_run_at": "2026-09-14T00:10:26Z",
+      "last_price_run_at": "2026-09-14T00:10:26Z",
       "last_detail_run_at": "2026-08-20T22:17:29Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "off",
-      "last_decision": "off",
-      "last_message": "Skip la-liga: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": ""
+      "last_tier": "board",
+      "last_decision": "ran",
+      "last_message": "Ran la-liga in board tier (cadence 55m, fixtures 10).",
+      "next_kickoff_utc": "2026-09-14T19:00:00Z"
     },
     "bundesliga": {
       "last_successful_run_at": "2026-09-13T14:39:09Z",
