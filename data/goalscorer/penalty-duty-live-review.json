@@ -1,17 +1,164 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-15T04:59:25Z",
+  "generated_at": "2026-09-15T13:53:06Z",
   "league": "serie-a",
-  "row_count": 0,
-  "rows": [],
+  "row_count": 2,
+  "rows": [
+    {
+      "date": "2026-09-12",
+      "league": "serie-a",
+      "review_source": "fotmob_live",
+      "match": "Atalanta vs Cagliari",
+      "team": "Cagliari",
+      "opponent": "Atalanta",
+      "actual_taker": "Daniel Maldini",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "61",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Daniel Maldini",
+      "secondary_pre_match": "Alessandro Deiola",
+      "tertiary_pre_match": "Yerry Mina",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Daniel Maldini took 1 penalty attempt and scored for Cagliari vs Atalanta. Primary pre-match: Daniel Maldini (unknown). Secondary pre-match: Alessandro Deiola (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-09-13",
+      "context_source_path": "data/goalscorer/serie-a-penalty-takers.json",
+      "actual_taker_match_status": "Yes - started, off 79'",
+      "primary_on_pitch_at_penalty": "Yes - started, off 79'",
+      "secondary_on_pitch_at_penalty": "Yes - started",
+      "tertiary_on_pitch_at_penalty": "No - bench",
+      "actual_taker_on_pitch_at_penalty": "Yes - started, off 79'",
+      "event_evidence": [
+        {
+          "id": "fotmob|serie-a|5749670|2968657107",
+          "source_event_id": "2968657107",
+          "match_id": "5749670",
+          "source_url": "https://www.fotmob.com/matches/atalanta-vs-cagliari/2ekudg#5749670",
+          "observed_at": "2026-09-15T13:53:00+00:00",
+          "event_date": "2026-09-12",
+          "season": "2026/27",
+          "team": "Cagliari",
+          "taker": "Daniel Maldini",
+          "primary": "Daniel Maldini",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Daniel Maldini",
+            "minute": 61,
+            "method": "completed_lineup_timeline",
+            "player_id": 1072054,
+            "bucket": "starters",
+            "substitutions": [
+              {
+                "type": "subout",
+                "time": 79
+              }
+            ],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 61,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Atalanta vs Cagliari",
+          "event_result": "scored"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-12",
+      "league": "serie-a",
+      "review_source": "fotmob_live",
+      "match": "Genoa vs Frosinone",
+      "team": "Genoa",
+      "opponent": "Frosinone",
+      "actual_taker": "Lorenzo Colombo",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 0,
+      "distinct_takers_in_match": 1,
+      "minute": "45",
+      "event_type": "Miss",
+      "event_result": "missed",
+      "primary_pre_match": "Junior Messias",
+      "secondary_pre_match": "Milutin Osmajic",
+      "tertiary_pre_match": "Vitinha",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "unranked_taker",
+      "review_priority": "high",
+      "editorial_note": "Lorenzo Colombo took 1 penalty attempt and missed for Genoa vs Frosinone. Primary pre-match: Junior Messias (unknown). Secondary pre-match: Milutin Osmajic (unknown). Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-09-13",
+      "context_source_path": "data/goalscorer/serie-a-penalty-takers.json",
+      "actual_taker_match_status": "Yes - started, off 70'",
+      "primary_on_pitch_at_penalty": "No - bench, on 46'",
+      "secondary_on_pitch_at_penalty": "Yes - started",
+      "tertiary_on_pitch_at_penalty": "No - bench, on 70'",
+      "actual_taker_on_pitch_at_penalty": "Yes - started, off 70'",
+      "event_evidence": [
+        {
+          "id": "fotmob|serie-a|5749672|2968107705",
+          "source_event_id": "2968107705",
+          "match_id": "5749672",
+          "source_url": "https://www.fotmob.com/matches/frosinone-vs-genoa/3ckfw9#5749672",
+          "observed_at": "2026-09-15T13:53:00+00:00",
+          "event_date": "2026-09-12",
+          "season": "2026/27",
+          "team": "Genoa",
+          "taker": "Lorenzo Colombo",
+          "primary": "Junior Messias",
+          "primary_on_pitch": false,
+          "on_pitch_proof": {
+            "player": "Junior Messias",
+            "minute": 45,
+            "method": "completed_lineup_timeline",
+            "player_id": 1003368,
+            "bucket": "subs",
+            "substitutions": [
+              {
+                "type": "subin",
+                "time": 46
+              }
+            ],
+            "events": [],
+            "reason": "not_on_pitch"
+          },
+          "minute": 45,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Genoa vs Frosinone",
+          "event_result": "missed"
+        }
+      ]
+    }
+  ],
   "source_health": {
     "complete": true,
     "errors": [],
     "dates_requested": [
+      "20260909",
+      "20260910",
+      "20260911",
+      "20260912",
       "20260913",
       "20260914",
       "20260915"
     ],
-    "matches_checked": 6
+    "matches_checked": 10
   }
 }

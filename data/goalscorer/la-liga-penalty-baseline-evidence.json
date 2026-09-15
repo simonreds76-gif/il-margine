@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-15T04:59:35Z",
+  "generated_at": "2026-09-15T13:53:38Z",
   "league": "la-liga",
-  "row_count": 2,
+  "row_count": 4,
   "rows": [
     {
       "team": "Atlético Madrid",
@@ -35,6 +35,38 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-09-13"
+    },
+    {
+      "team": "Elche",
+      "team_key": "elche",
+      "player_name": "Facundo Buonanotte",
+      "player_key": "facundo buonanotte",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-09-12"
+    },
+    {
+      "team": "Real Madrid",
+      "team_key": "real madrid",
+      "player_name": "Kylian Mbappé",
+      "player_key": "kylian mbapp",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-09-12"
     }
   ]
 }
