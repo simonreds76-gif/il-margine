@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-15T14:28:18Z",
+  "generated_at": "2026-09-15T18:28:40Z",
   "activated_at": "2026-09-12T21:09:03.018654+00:00",
   "status": "ACTIVE_SHADOW",
   "count_gate": "FIXED CANDIDATE",
@@ -7,9 +7,9 @@
   "promotion_gate": "BLOCKED",
   "live_routing": false,
   "prospective": {
-    "signals": 7,
+    "signals": 8,
     "settled": 6,
-    "pending": 1,
+    "pending": 2,
     "pnl_units": -0.45799999999999996,
     "roi": -0.07633333333333332,
     "wins": 3,
@@ -20,7 +20,7 @@
   "latest_scan": {
     "scored_rows": 12,
     "scored_fixtures": 3,
-    "explanation": "6 fresh paired contracts; 12 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: outside_capture_window=112, stale_price=80."
+    "explanation": "6 fresh paired contracts; 12 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: stale_price=172."
   },
   "settled_this_run": 0,
   "result_source": {
