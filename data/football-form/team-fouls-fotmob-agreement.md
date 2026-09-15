@@ -1,6 +1,6 @@
 # Team Fouls v1: FotMob Definition Agreement
 
-Generated: 2026-09-14T15:03:42Z
+Generated: 2026-09-15T12:52:12Z
 Status: **WAIT/FAIL**
 
 - Matched fixtures: 62/70
