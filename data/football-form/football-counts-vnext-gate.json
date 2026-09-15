@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-14T23:28:25Z",
+  "generated_at": "2026-09-15T13:38:01Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -36,25 +36,25 @@
     },
     "latest_scan": {
       "state": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
-      "explanation": "For all 36 scored matchday 4-6 lines, the raw-gap cap and market blend limit edge to at most 2.11%, below the required 3.00%. Review the combined selection rules; this is not missing price coverage.",
-      "scored_rows": 36,
-      "scored_fixtures": 8,
+      "explanation": "For all 80 scored matchday 4-6 lines, the raw-gap cap and market blend limit edge to at most 2.11%, below the required 3.00%. Review the combined selection rules; this is not missing price coverage.",
+      "scored_rows": 80,
+      "scored_fixtures": 18,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 36,
+      "blocked_rows": 80,
       "blocker_rows": {
-        "early_market_gap_cap": 10,
-        "edge_below_3pct": 33,
-        "price_older_than_3h": 26
+        "early_market_gap_cap": 32,
+        "edge_below_3pct": 75,
+        "price_older_than_3h": 8
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 4,
-      "matchday_max": 5,
+      "matchday_max": 6,
       "next_unlock": null,
       "operational_alert_required": true,
       "operational_alert_code": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
       "rule_feasibility": {
-        "affected_rows": 36,
+        "affected_rows": 80,
         "rows_capable_of_minimum_edge": 0,
         "maximum_allowed_edge": 0.021062786390673605,
         "minimum_edge": 0.03,
@@ -70,19 +70,19 @@
     "market_gate": "BLOCKED_PENDING_2026_27_PINNACLE_SAMPLE",
     "live_routing": false,
     "prospective": {
-      "signals": 23,
-      "settled": 16,
+      "signals": 25,
+      "settled": 18,
       "pending": 7,
-      "pnl_units": -3.387,
-      "roi": -0.211688,
-      "true_close_n": 2,
-      "true_close_coverage": 0.125,
-      "mean_true_close_clv": -0.02381,
+      "pnl_units": -1.501,
+      "roi": -0.083389,
+      "true_close_n": 4,
+      "true_close_coverage": 0.222222,
+      "mean_true_close_clv": -0.015746,
       "side_counts": {
         "over": 7,
-        "under": 16
+        "under": 18
       },
-      "dominant_side_share": 0.695652
+      "dominant_side_share": 0.72
     },
     "warmup_tracking": {
       "signals": 36,
@@ -108,12 +108,12 @@
       "eligible_fixtures": 0,
       "blocked_rows": 40,
       "blocker_rows": {
-        "edge_below_3pct": 24,
+        "edge_below_3pct": 26,
         "price_older_than_3h": 40
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
-      "matchday_min": 3,
-      "matchday_max": 5,
+      "matchday_min": 4,
+      "matchday_max": 6,
       "next_unlock": null,
       "operational_alert_required": false,
       "operational_alert_code": null

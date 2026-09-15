@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-14T23:28:22Z",
+  "generated_at": "2026-09-15T13:37:57Z",
   "activated_at": "2026-09-12T21:09:03.018654+00:00",
   "status": "ACTIVE_SHADOW",
   "count_gate": "FIXED CANDIDATE",
@@ -8,26 +8,26 @@
   "live_routing": false,
   "prospective": {
     "signals": 7,
-    "settled": 5,
-    "pending": 2,
-    "pnl_units": -1.258,
-    "roi": -0.2516,
-    "wins": 2,
+    "settled": 6,
+    "pending": 1,
+    "pnl_units": -0.45799999999999996,
+    "roi": -0.07633333333333332,
+    "wins": 3,
     "losses": 3,
     "true_close_count": 1,
     "mean_clv": 0.091107
   },
   "latest_scan": {
-    "scored_rows": 14,
+    "scored_rows": 12,
     "scored_fixtures": 3,
-    "explanation": "7 fresh paired contracts; 14 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: stale_price=56."
+    "explanation": "6 fresh paired contracts; 12 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: outside_capture_window=112, stale_price=80."
   },
-  "settled_this_run": 0,
+  "settled_this_run": 1,
   "result_source": {
     "bundesliga": {
-      "football_data_latest": "2026-09-06",
-      "lag_days": 8,
-      "football_data_count": 18,
+      "football_data_latest": "2026-09-13",
+      "lag_days": 2,
+      "football_data_count": 27,
       "fotmob_count": 0,
       "fotmob_latest": null,
       "api_football_count": 0,
@@ -36,28 +36,28 @@
       "api_football_requests_remaining_after_league": 9,
       "api_football_error": null,
       "api_football_max_requests": 10,
-      "snapshot_date": "2026-09-14",
-      "snapshot_path": "data/results-snapshot/2026-09-14.json"
+      "snapshot_date": "2026-09-15",
+      "snapshot_path": "data/results-snapshot/2026-09-15.json"
     },
     "epl": {
-      "football_data_latest": "2026-09-06",
-      "lag_days": 8,
-      "football_data_count": 30,
-      "fotmob_count": 0,
-      "fotmob_latest": null,
+      "football_data_latest": "2026-09-14",
+      "lag_days": 1,
+      "football_data_count": 40,
+      "fotmob_count": 1,
+      "fotmob_latest": "2026-09-14",
       "api_football_count": 0,
       "api_football_latest": null,
       "api_football_requests_used": 2,
       "api_football_requests_remaining_after_league": 7,
       "api_football_error": null,
       "api_football_max_requests": 9,
-      "snapshot_date": "2026-09-14",
-      "snapshot_path": "data/results-snapshot/2026-09-14.json"
+      "snapshot_date": "2026-09-15",
+      "snapshot_path": "data/results-snapshot/2026-09-15.json"
     },
     "la-liga": {
-      "football_data_latest": "2026-09-07",
-      "lag_days": 7,
-      "football_data_count": 41,
+      "football_data_latest": "2026-09-14",
+      "lag_days": 1,
+      "football_data_count": 51,
       "fotmob_count": 0,
       "fotmob_latest": null,
       "api_football_count": 0,
@@ -66,28 +66,13 @@
       "api_football_requests_remaining_after_league": 6,
       "api_football_error": null,
       "api_football_max_requests": 7,
-      "snapshot_date": "2026-09-14",
-      "snapshot_path": "data/results-snapshot/2026-09-14.json"
+      "snapshot_date": "2026-09-15",
+      "snapshot_path": "data/results-snapshot/2026-09-15.json"
     },
     "ligue-1": {
-      "football_data_latest": "2026-09-06",
-      "lag_days": 8,
-      "football_data_count": 27,
-      "fotmob_count": 0,
-      "fotmob_latest": null,
-      "api_football_count": 0,
-      "api_football_latest": null,
-      "api_football_requests_used": 0,
-      "api_football_requests_remaining_after_league": 6,
-      "api_football_error": null,
-      "api_football_max_requests": 10,
-      "snapshot_date": "2026-09-14",
-      "snapshot_path": "data/results-snapshot/2026-09-14.json"
-    },
-    "serie-a": {
-      "football_data_latest": "2026-09-07",
-      "lag_days": 7,
-      "football_data_count": 30,
+      "football_data_latest": "2026-09-13",
+      "lag_days": 2,
+      "football_data_count": 36,
       "fotmob_count": 0,
       "fotmob_latest": null,
       "api_football_count": 0,
@@ -96,8 +81,23 @@
       "api_football_requests_remaining_after_league": 5,
       "api_football_error": null,
       "api_football_max_requests": 6,
-      "snapshot_date": "2026-09-14",
-      "snapshot_path": "data/results-snapshot/2026-09-14.json"
+      "snapshot_date": "2026-09-15",
+      "snapshot_path": "data/results-snapshot/2026-09-15.json"
+    },
+    "serie-a": {
+      "football_data_latest": "2026-09-14",
+      "lag_days": 1,
+      "football_data_count": 40,
+      "fotmob_count": 1,
+      "fotmob_latest": "2026-09-14",
+      "api_football_count": 0,
+      "api_football_latest": null,
+      "api_football_requests_used": 0,
+      "api_football_requests_remaining_after_league": 5,
+      "api_football_error": null,
+      "api_football_max_requests": 10,
+      "snapshot_date": "2026-09-15",
+      "snapshot_path": "data/results-snapshot/2026-09-15.json"
     }
   },
   "review_policy": "Review after 150 settled fixtures and at least 8 weeks; require positive ROI, at least 70% true closing coverage, positive mean CLV and calibration review. Manual promotion only.",
