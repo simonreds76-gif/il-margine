@@ -46,3 +46,15 @@ test('European aliases and historical qualifiers retain their own identities', (
 test('existing domestic and World Cup crests continue to resolve', () => {
   for (const [team, category] of [['Arsenal', 'pl'], ['Inter', 'seriea'], ['Barcelona', 'laliga'], ['PSG', 'ligue1'], ['Stuttgart', 'bundesliga'], ['England', 'worldcup']]) checkFile(team, category);
 });
+
+test('Racing de Santander and AZ tip names resolve across competition categories', () => {
+  for (const category of ['all', 'props', 'laliga', 'uel', 'football']) {
+    for (const name of ['Racing de Santander', 'Racing Santander', 'Real Racing Club de Santander']) {
+      assert.equal(checkFile(name, category), '/team-logos/la-liga/racing-santander.png');
+    }
+    for (const name of ['AZ Alkmaar', 'Az Alkmaar', 'AZ']) {
+      assert.equal(checkFile(name, category), '/team-logos/europe/az-alkmaar.png');
+    }
+  }
+  assert.notEqual(resolveTeamLogoPath('Jong AZ Alkmaar', 'all'), '/team-logos/europe/az-alkmaar.png');
+});
