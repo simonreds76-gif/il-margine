@@ -306,7 +306,7 @@
         "Ismaël Koné",
         "Cristian Volpato"
       ],
-      "observed_at": "2026-09-16T18:52:56.405239+00:00",
+      "observed_at": "2026-09-16T22:08:26.738181+00:00",
       "changed_at": "2026-09-15T22:12:18.481300+00:00"
     },
     {
@@ -611,7 +611,7 @@
         "Ché Adams",
         "Pietro Pellegri"
       ],
-      "observed_at": "2026-09-16T18:52:56.405239+00:00",
+      "observed_at": "2026-09-16T22:08:26.738181+00:00",
       "changed_at": "2026-09-16T14:57:08.428122+00:00"
     },
     {
@@ -910,7 +910,7 @@
         "John Stones",
         "Hakan Çalhanoglu"
       ],
-      "observed_at": "2026-09-16T18:52:56.405239+00:00",
+      "observed_at": "2026-09-16T22:08:26.738181+00:00",
       "changed_at": "2026-09-16T18:52:56.405239+00:00"
     },
     {
@@ -1218,26 +1218,318 @@
         "M'Bala Nzola",
         "Yael Trepy"
       ],
-      "observed_at": "2026-09-16T18:52:56.405239+00:00",
+      "observed_at": "2026-09-16T22:08:26.738181+00:00",
       "changed_at": "2026-09-16T14:57:08.428122+00:00"
     },
     {
       "fotmob_match_id": 5749689,
+      "fotmob_page_url": "/matches/venezia-vs-lazio/28b6ab#5749689",
+      "home_fotmob_team_id": 7881,
+      "away_fotmob_team_id": 8543,
       "match_date": "2026-09-19",
       "kickoff_utc": "2026-09-19T18:45:00Z",
       "home_team": "Venezia",
       "away_team": "Lazio",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "3-5-2",
+      "away_formation": "4-3-3",
+      "home_players": [
+        "Filip Stanković",
+        "Joël Schingtienne",
+        "Ale Gomes",
+        "Ridgeciano Haps",
+        "Antoine Hainaut",
+        "Kike Pérez",
+        "Lamine Fanne",
+        "Simon Sohm",
+        "Richie Sagrado",
+        "John Yeboah",
+        "Akor Adams"
+      ],
+      "away_players": [
+        "Christos Mandas",
+        "Romano Floriani Mussolini",
+        "Josip Šutalo",
+        "Oliver Provstgaard",
+        "Nuno Tavares",
+        "Davide Frattesi",
+        "Reda Belahyane",
+        "Kenneth Taylor",
+        "Matteo Cancellieri",
+        "Tijjani Noslin",
+        "Mattia Zaccagni"
+      ],
+      "home_starters": [
+        {
+          "name": "Filip Stanković",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-5-2",
+          "position_id": 11,
+          "player_id": 1130600,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Joël Schingtienne",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 33,
+          "player_id": 1352744,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Ale Gomes",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 35,
+          "player_id": 1842921,
+          "shirt_number": "95"
+        },
+        {
+          "name": "Ridgeciano Haps",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 37,
+          "player_id": 414232,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Antoine Hainaut",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 71,
+          "player_id": 1290968,
+          "shirt_number": "18"
+        },
+        {
+          "name": "Kike Pérez",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 73,
+          "player_id": 888167,
+          "shirt_number": "71"
+        },
+        {
+          "name": "Lamine Fanne",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 75,
+          "player_id": 1460862,
+          "shirt_number": "8"
+        },
+        {
+          "name": "Simon Sohm",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 77,
+          "player_id": 975242,
+          "shirt_number": "19"
+        },
+        {
+          "name": "Richie Sagrado",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 79,
+          "player_id": 1388039,
+          "shirt_number": "20"
+        },
+        {
+          "name": "John Yeboah",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 104,
+          "player_id": 845368,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Akor Adams",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 106,
+          "player_id": 958640,
+          "shirt_number": "45"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Christos Mandas",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-3-3",
+          "position_id": 11,
+          "player_id": 915156,
+          "shirt_number": "35"
+        },
+        {
+          "name": "Romano Floriani Mussolini",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 32,
+          "player_id": 1307957,
+          "shirt_number": "15"
+        },
+        {
+          "name": "Josip Šutalo",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 34,
+          "player_id": 1186228,
+          "shirt_number": "37"
+        },
+        {
+          "name": "Oliver Provstgaard",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 36,
+          "player_id": 1333331,
+          "shirt_number": "25"
+        },
+        {
+          "name": "Nuno Tavares",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 38,
+          "player_id": 957118,
+          "shirt_number": "17"
+        },
+        {
+          "name": "Davide Frattesi",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 73,
+          "player_id": 815431,
+          "shirt_number": "16"
+        },
+        {
+          "name": "Reda Belahyane",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 75,
+          "player_id": 1388071,
+          "shirt_number": "21"
+        },
+        {
+          "name": "Kenneth Taylor",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 77,
+          "player_id": 970565,
+          "shirt_number": "24"
+        },
+        {
+          "name": "Matteo Cancellieri",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 103,
+          "player_id": 1146500,
+          "shirt_number": "22"
+        },
+        {
+          "name": "Tijjani Noslin",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 105,
+          "player_id": 1282285,
+          "shirt_number": "14"
+        },
+        {
+          "name": "Mattia Zaccagni",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 107,
+          "player_id": 541555,
+          "shirt_number": "10"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-09-16T18:52:56.405239+00:00",
-      "changed_at": "2026-09-16T12:06:07.112569+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Armel Bella-Kotchap",
+        "Bartol Franjić",
+        "Marin Šverko",
+        "Gianluca Busio",
+        "Matteo Dagasso",
+        "Toma Bašić",
+        "Andrea Adorante"
+      ],
+      "away_unavailable": [
+        "Luca Pellegrini",
+        "Adam Marušić",
+        "Danilho Doekhi",
+        "Fisayo Dele-Bashiru",
+        "Nicolò Rovella",
+        "Patric"
+      ],
+      "observed_at": "2026-09-16T22:08:26.738181+00:00",
+      "changed_at": "2026-09-16T22:08:26.738181+00:00"
     }
   ]
 }
