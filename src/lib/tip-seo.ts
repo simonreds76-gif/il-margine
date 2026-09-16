@@ -4,8 +4,8 @@ import { parseTipSlugId, slugifyTip } from "@/lib/slugify";
 export const TIP_SEO_MARKER = "[[SEO_READY_V1]]";
 
 const INDEXABLE_CATEGORIES: Record<string, Set<string>> = {
-  tennis: new Set(["atp", "ausopen", "rolandgarros", "wimbledon", "usopen"]),
-  props: new Set(["pl", "seriea", "laliga", "bundesliga", "ligue1", "ucl"]),
+  tennis: new Set(["atp", "challenger", "ausopen", "rolandgarros", "wimbledon", "usopen"]),
+  props: new Set(["pl", "seriea", "laliga", "bundesliga", "ligue1", "ucl", "worldcup"]),
 };
 const MATCH_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const STABLE_HASH_RE = /^[a-z0-9]{7}$/;

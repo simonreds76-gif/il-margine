@@ -12,7 +12,7 @@ export function tipSelectionLabel(bet: Pick<CopyBet, "player" | "selection">): s
 export function competitionName(category: string): string {
   const names: Record<string, string> = {
     pl: "Premier League", seriea: "Serie A", laliga: "La Liga", bundesliga: "Bundesliga",
-    ligue1: "Ligue 1", ucl: "Champions League", atp: "ATP tennis", challenger: "Challenger tennis",
+    ligue1: "Ligue 1", ucl: "Champions League", worldcup: "World Cup", atp: "ATP tennis", challenger: "Challenger tennis",
     ausopen: "Australian Open", rolandgarros: "Roland-Garros", wimbledon: "Wimbledon", usopen: "US Open",
   };
   return names[category.toLowerCase().replace(/[^a-z0-9]/g, "")] || "";
