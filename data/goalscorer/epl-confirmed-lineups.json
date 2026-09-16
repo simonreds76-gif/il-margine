@@ -304,7 +304,7 @@
         "Moisés Caicedo",
         "Emanuel Emegha"
       ],
-      "observed_at": "2026-09-16T14:57:26.506470+00:00",
+      "observed_at": "2026-09-16T18:53:14.328016+00:00",
       "changed_at": "2026-09-15T22:12:25.480519+00:00"
     },
     {
@@ -614,7 +614,7 @@
         "Cristhian Mosquera",
         "William Saliba"
       ],
-      "observed_at": "2026-09-16T14:57:26.506470+00:00",
+      "observed_at": "2026-09-16T18:53:14.328016+00:00",
       "changed_at": "2026-09-16T14:57:26.506470+00:00"
     },
     {
@@ -915,7 +915,7 @@
         "Jack Taylor",
         "Emersonn"
       ],
-      "observed_at": "2026-09-16T14:57:26.506470+00:00",
+      "observed_at": "2026-09-16T18:53:14.328016+00:00",
       "changed_at": "2026-09-16T14:57:26.506470+00:00"
     },
     {
@@ -1226,26 +1226,311 @@
         "Hidemasa Morita",
         "Ilyas Ansah"
       ],
-      "observed_at": "2026-09-16T14:57:26.506470+00:00",
+      "observed_at": "2026-09-16T18:53:14.328016+00:00",
       "changed_at": "2026-09-16T14:57:26.506470+00:00"
     },
     {
       "fotmob_match_id": 5795463,
+      "fotmob_page_url": "/matches/coventry-city-vs-nottingham-forest/2y16ft#5795463",
+      "home_fotmob_team_id": 10203,
+      "away_fotmob_team_id": 8669,
       "match_date": "2026-09-19",
       "kickoff_utc": "2026-09-19T16:30:00Z",
       "home_team": "Nottingham Forest",
       "away_team": "Coventry City",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "3-4-2-1",
+      "away_formation": "3-4-3",
+      "home_players": [
+        "Matz Sels",
+        "Ola Aina",
+        "Ousmane Diomande",
+        "Murillo",
+        "Daniel Muñoz",
+        "James McAtee",
+        "Xaver Schlager",
+        "Neco Williams",
+        "Dan Ndoye",
+        "Morgan Gibbs-White",
+        "Liam Delap"
+      ],
+      "away_players": [
+        "Carl Rushworth",
+        "Aurèle Amenda",
+        "Bobby Thomas",
+        "Ethan Pinnock",
+        "Milan van Ewijk",
+        "Frank Onyeka",
+        "Matt Grimes",
+        "Jay Dasilva",
+        "Jack Rudoni",
+        "Loum Tchaouna",
+        "Ephron Mason-Clark"
+      ],
+      "home_starters": [
+        {
+          "name": "Matz Sels",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-4-2-1",
+          "position_id": 11,
+          "player_id": 181069,
+          "shirt_number": "26"
+        },
+        {
+          "name": "Ola Aina",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 33,
+          "player_id": 682548,
+          "shirt_number": "34"
+        },
+        {
+          "name": "Ousmane Diomande",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 35,
+          "player_id": 1425182,
+          "shirt_number": "2"
+        },
+        {
+          "name": "Murillo",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 37,
+          "player_id": 1458711,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Daniel Muñoz",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 62,
+          "player_id": 859282,
+          "shirt_number": "27"
+        },
+        {
+          "name": "James McAtee",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 64,
+          "player_id": 1107648,
+          "shirt_number": "24"
+        },
+        {
+          "name": "Xaver Schlager",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 66,
+          "player_id": 620027,
+          "shirt_number": "21"
+        },
+        {
+          "name": "Neco Williams",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 68,
+          "player_id": 1078788,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Dan Ndoye",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 84,
+          "player_id": 1022649,
+          "shirt_number": "14"
+        },
+        {
+          "name": "Morgan Gibbs-White",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 86,
+          "player_id": 789502,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Liam Delap",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-2-1",
+          "position_id": 105,
+          "player_id": 1113903,
+          "shirt_number": "19"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Carl Rushworth",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-4-3",
+          "position_id": 11,
+          "player_id": 1187236,
+          "shirt_number": "19"
+        },
+        {
+          "name": "Aurèle Amenda",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-3",
+          "position_id": 33,
+          "player_id": 1257648,
+          "shirt_number": "24"
+        },
+        {
+          "name": "Bobby Thomas",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-3",
+          "position_id": 35,
+          "player_id": 1161885,
+          "shirt_number": "4"
+        },
+        {
+          "name": "Ethan Pinnock",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-3",
+          "position_id": 37,
+          "player_id": 711357,
+          "shirt_number": "2"
+        },
+        {
+          "name": "Milan van Ewijk",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 72,
+          "player_id": 1074750,
+          "shirt_number": "27"
+        },
+        {
+          "name": "Frank Onyeka",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 74,
+          "player_id": 856685,
+          "shirt_number": "16"
+        },
+        {
+          "name": "Matt Grimes",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 76,
+          "player_id": 478357,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Jay Dasilva",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 78,
+          "player_id": 759814,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Jack Rudoni",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 103,
+          "player_id": 1030830,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Loum Tchaouna",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 105,
+          "player_id": 1283034,
+          "shirt_number": "18"
+        },
+        {
+          "name": "Ephron Mason-Clark",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 107,
+          "player_id": 798654,
+          "shirt_number": "10"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-09-16T14:57:26.506470+00:00",
-      "changed_at": "2026-09-16T12:06:21.562141+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Nicolò Savona"
+      ],
+      "away_unavailable": [
+        "Kaine Kesler-Hayden",
+        "Luke Woolfenden",
+        "Josh Eccles",
+        "Haji Wright",
+        "Taiwo Awoniyi"
+      ],
+      "observed_at": "2026-09-16T18:53:14.328016+00:00",
+      "changed_at": "2026-09-16T18:53:14.328016+00:00"
     },
     {
       "fotmob_match_id": 5795464,
@@ -1551,7 +1836,7 @@
         "Leon Goretzka",
         "Brian Madjo"
       ],
-      "observed_at": "2026-09-16T14:57:26.506470+00:00",
+      "observed_at": "2026-09-16T18:53:14.328016+00:00",
       "changed_at": "2026-09-16T12:06:21.562141+00:00"
     }
   ]

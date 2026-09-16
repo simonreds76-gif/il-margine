@@ -306,7 +306,7 @@
         "Ismaël Koné",
         "Cristian Volpato"
       ],
-      "observed_at": "2026-09-16T14:57:08.428122+00:00",
+      "observed_at": "2026-09-16T18:52:56.405239+00:00",
       "changed_at": "2026-09-15T22:12:18.481300+00:00"
     },
     {
@@ -611,26 +611,307 @@
         "Ché Adams",
         "Pietro Pellegri"
       ],
-      "observed_at": "2026-09-16T14:57:08.428122+00:00",
+      "observed_at": "2026-09-16T18:52:56.405239+00:00",
       "changed_at": "2026-09-16T14:57:08.428122+00:00"
     },
     {
       "fotmob_match_id": 5749681,
+      "fotmob_page_url": "/matches/inter-vs-roma/2hby2d#5749681",
+      "home_fotmob_team_id": 8686,
+      "away_fotmob_team_id": 8636,
       "match_date": "2026-09-19",
       "kickoff_utc": "2026-09-19T16:00:00Z",
       "home_team": "Roma",
       "away_team": "Inter",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "3-4-1-2",
+      "away_formation": "3-5-2",
+      "home_players": [
+        "Mile Svilar",
+        "Gianluca Mancini",
+        "Leonardo Balerdi",
+        "Mario Hermoso",
+        "Emanuele Lulli",
+        "Bryan Cristante",
+        "Niccolò Pisilli",
+        "Nahuel Molina",
+        "Matias Soulé",
+        "Paulo Dybala",
+        "Donyell Malen"
+      ],
+      "away_players": [
+        "Josep Martínez",
+        "Manuel Akanji",
+        "Benjamin Pavard",
+        "Alessandro Bastoni",
+        "Andy Diouf",
+        "Nicolò Barella",
+        "Piotr Zieliński",
+        "Henrikh Mkhitaryan",
+        "Carlos Augusto",
+        "Marcus Thuram",
+        "Francesco Pio Esposito"
+      ],
+      "home_starters": [
+        {
+          "name": "Mile Svilar",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-4-1-2",
+          "position_id": 11,
+          "player_id": 768474,
+          "shirt_number": "99"
+        },
+        {
+          "name": "Gianluca Mancini",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-1-2",
+          "position_id": 33,
+          "player_id": 588687,
+          "shirt_number": "23"
+        },
+        {
+          "name": "Leonardo Balerdi",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-1-2",
+          "position_id": 35,
+          "player_id": 958464,
+          "shirt_number": "26"
+        },
+        {
+          "name": "Mario Hermoso",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-1-2",
+          "position_id": 37,
+          "player_id": 671203,
+          "shirt_number": "22"
+        },
+        {
+          "name": "Emanuele Lulli",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-1-2",
+          "position_id": 62,
+          "player_id": 1800491,
+          "shirt_number": "77"
+        },
+        {
+          "name": "Bryan Cristante",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-1-2",
+          "position_id": 64,
+          "player_id": 299799,
+          "shirt_number": "4"
+        },
+        {
+          "name": "Niccolò Pisilli",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-1-2",
+          "position_id": 66,
+          "player_id": 1451196,
+          "shirt_number": "61"
+        },
+        {
+          "name": "Nahuel Molina",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-1-2",
+          "position_id": 68,
+          "player_id": 726345,
+          "shirt_number": "20"
+        },
+        {
+          "name": "Matias Soulé",
+          "line_index": 2,
+          "line_size": 1,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-1-2",
+          "position_id": 85,
+          "player_id": 1280082,
+          "shirt_number": "18"
+        },
+        {
+          "name": "Paulo Dybala",
+          "line_index": 3,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-1-2",
+          "position_id": 104,
+          "player_id": 325916,
+          "shirt_number": "21"
+        },
+        {
+          "name": "Donyell Malen",
+          "line_index": 3,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-1-2",
+          "position_id": 106,
+          "player_id": 660301,
+          "shirt_number": "14"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Josep Martínez",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-5-2",
+          "position_id": 11,
+          "player_id": 772168,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Manuel Akanji",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 33,
+          "player_id": 521318,
+          "shirt_number": "25"
+        },
+        {
+          "name": "Benjamin Pavard",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 35,
+          "player_id": 611223,
+          "shirt_number": "28"
+        },
+        {
+          "name": "Alessandro Bastoni",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 37,
+          "player_id": 805451,
+          "shirt_number": "95"
+        },
+        {
+          "name": "Andy Diouf",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 71,
+          "player_id": 1254297,
+          "shirt_number": "17"
+        },
+        {
+          "name": "Nicolò Barella",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 73,
+          "player_id": 541820,
+          "shirt_number": "23"
+        },
+        {
+          "name": "Piotr Zieliński",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 75,
+          "player_id": 362212,
+          "shirt_number": "7"
+        },
+        {
+          "name": "Henrikh Mkhitaryan",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 77,
+          "player_id": 73167,
+          "shirt_number": "22"
+        },
+        {
+          "name": "Carlos Augusto",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 79,
+          "player_id": 940829,
+          "shirt_number": "30"
+        },
+        {
+          "name": "Marcus Thuram",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 104,
+          "player_id": 621562,
+          "shirt_number": "9"
+        },
+        {
+          "name": "Francesco Pio Esposito",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 106,
+          "player_id": 1367618,
+          "shirt_number": "94"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-09-16T14:57:08.428122+00:00",
-      "changed_at": "2026-09-16T12:06:07.112569+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [],
+      "away_unavailable": [
+        "Djed Spence",
+        "John Stones",
+        "Hakan Çalhanoglu"
+      ],
+      "observed_at": "2026-09-16T18:52:56.405239+00:00",
+      "changed_at": "2026-09-16T18:52:56.405239+00:00"
     },
     {
       "fotmob_match_id": 5749688,
@@ -937,7 +1218,7 @@
         "M'Bala Nzola",
         "Yael Trepy"
       ],
-      "observed_at": "2026-09-16T14:57:08.428122+00:00",
+      "observed_at": "2026-09-16T18:52:56.405239+00:00",
       "changed_at": "2026-09-16T14:57:08.428122+00:00"
     },
     {
@@ -955,7 +1236,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-09-16T14:57:08.428122+00:00",
+      "observed_at": "2026-09-16T18:52:56.405239+00:00",
       "changed_at": "2026-09-16T12:06:07.112569+00:00"
     }
   ]
