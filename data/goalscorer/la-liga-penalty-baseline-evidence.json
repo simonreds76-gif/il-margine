@@ -1,7 +1,72 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-16T04:54:47Z",
+  "generated_at": "2026-09-16T13:44:43Z",
   "league": "la-liga",
-  "row_count": 0,
-  "rows": []
+  "row_count": 4,
+  "rows": [
+    {
+      "team": "Atlético Madrid",
+      "team_key": "atletico madrid",
+      "player_name": "Alejandro Grimaldo",
+      "player_key": "alejandro grimaldo",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-09-13"
+    },
+    {
+      "team": "Barcelona",
+      "team_key": "barcelona",
+      "player_name": "Lamine Yamal",
+      "player_key": "lamine yamal",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-09-13"
+    },
+    {
+      "team": "Elche",
+      "team_key": "elche",
+      "player_name": "Facundo Buonanotte",
+      "player_key": "facundo buonanotte",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-09-12"
+    },
+    {
+      "team": "Real Madrid",
+      "team_key": "real madrid",
+      "player_name": "Kylian Mbappé",
+      "player_key": "kylian mbapp",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-09-12"
+    }
+  ]
 }
