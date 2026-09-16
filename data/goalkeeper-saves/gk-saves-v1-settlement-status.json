@@ -1,50 +1,26 @@
 {
   "api_errors": [],
-  "deferred_not_due": 3,
+  "deferred_not_due": 2,
   "details": [
     {
       "detail": "",
-      "goalkeeper": "Lucas Perri",
-      "match": "Torino FC vs AS Roma",
-      "match_date": "2026-09-14",
+      "goalkeeper": "Stole Dimitrievski",
+      "match": "Deportivo Alaves vs Valencia CF",
+      "match_date": "2026-09-15",
       "reason": "settled_fotmob",
-      "signal_id": "71945262|lucas perri|4.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Maduka Okoye",
-      "match": "Inter Milano vs Udinese Calcio",
-      "match_date": "2026-09-14",
-      "reason": "settled_fotmob",
-      "signal_id": "71945252|maduka okoye|3.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Luk\u00e1s Horn\u00edcek",
-      "match": "Leeds United vs Newcastle United",
-      "match_date": "2026-09-14",
-      "reason": "settled_fotmob",
-      "signal_id": "72221262|luk\u00e1s horn\u00edcek|3.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "\u00c1lvaro Vall\u00e9s",
-      "match": "Villarreal CF vs Real Betis Seville",
-      "match_date": "2026-09-14",
-      "reason": "settled_fotmob",
-      "signal_id": "72478564|\u00e1lvaro vall\u00e9s|3.5|over"
+      "signal_id": "72478566|stole dimitrievski|2.5|over"
     }
   ],
-  "fotmob_requests_used": 9,
-  "generated_at": "2026-09-15T13:38:02Z",
+  "fotmob_requests_used": 3,
+  "generated_at": "2026-09-16T13:33:45Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
   "pending_due": 0,
-  "pending_total": 3,
+  "pending_total": 2,
   "reason_counts": {
-    "settled_fotmob": 4
+    "settled_fotmob": 1
   },
   "requests_used": 0,
-  "settled": 4,
+  "settled": 1,
   "status": "SETTLED"
 }

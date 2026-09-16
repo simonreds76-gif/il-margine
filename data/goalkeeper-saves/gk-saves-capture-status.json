@@ -1,10 +1,10 @@
 {
   "capture_mode": "publication",
-  "events_selected": 4,
-  "events_with_lines": 4,
-  "generated_at": "2026-09-16T00:48:39Z",
-  "last_publication_at": "2026-09-16T00:48:39Z",
-  "market_inventory_rows_added": 337,
+  "events_selected": 10,
+  "events_with_lines": 10,
+  "generated_at": "2026-09-16T13:33:17Z",
+  "last_publication_at": "2026-09-16T13:33:17Z",
+  "market_inventory_rows_added": 806,
   "market_names_observed": [
     "1st Half Corners",
     "Alternative Corners",
@@ -67,6 +67,8 @@
     "Player Headed Shots on Target",
     "Player Shots",
     "Player Shots on Target",
+    "Player Shots on Target Outside Box",
+    "Player Tackles",
     "Player To Be Fouled",
     "Player To Score or Assist",
     "Player to be Booked",
@@ -90,11 +92,11 @@
     "Totals HT",
     "Winning Margin"
   ],
-  "publication_recovery": true,
+  "publication_recovery": false,
   "request_budget": 2,
   "requests_used": 2,
-  "rows_added": 40,
-  "rows_observed": 40,
+  "rows_added": 106,
+  "rows_observed": 106,
   "selected_events": [
     {
       "away": "CA Osasuna",
@@ -123,8 +125,50 @@
       "home": "Levante UD",
       "id": 72478578,
       "kickoff_at": "2026-09-16T19:30:00Z"
+    },
+    {
+      "away": "Getafe CF",
+      "competition": "Spain - LaLiga",
+      "home": "Real Betis Seville",
+      "id": 72478570,
+      "kickoff_at": "2026-09-17T17:00:00Z"
+    },
+    {
+      "away": "Villarreal CF",
+      "competition": "Spain - LaLiga",
+      "home": "Malaga CF",
+      "id": 72478580,
+      "kickoff_at": "2026-09-17T19:30:00Z"
+    },
+    {
+      "away": "Union Berlin",
+      "competition": "Germany - Bundesliga",
+      "home": "Bayern Munich",
+      "id": 72513202,
+      "kickoff_at": "2026-09-18T18:30:00Z"
+    },
+    {
+      "away": "Sassuolo Calcio",
+      "competition": "Italy - Serie A",
+      "home": "AC Monza",
+      "id": 71945276,
+      "kickoff_at": "2026-09-18T18:45:00Z"
+    },
+    {
+      "away": "Racing Club De Lens",
+      "competition": "France - Ligue 1",
+      "home": "AS Monaco",
+      "id": 72036194,
+      "kickoff_at": "2026-09-18T18:45:00Z"
+    },
+    {
+      "away": "Elche CF",
+      "competition": "Spain - LaLiga",
+      "home": "Espanyol Barcelona",
+      "id": 72478594,
+      "kickoff_at": "2026-09-18T19:00:00Z"
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 4
+  "three_way_events": 10
 }
