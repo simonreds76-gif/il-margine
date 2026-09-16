@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-16T18:26:08Z",
+  "generated_at": "2026-09-16T21:43:05Z",
   "activated_at": "2026-09-12T21:09:03.018654+00:00",
   "status": "ACTIVE_SHADOW",
   "count_gate": "FIXED CANDIDATE",
@@ -7,9 +7,9 @@
   "promotion_gate": "BLOCKED",
   "live_routing": false,
   "prospective": {
-    "signals": 9,
+    "signals": 10,
     "settled": 7,
-    "pending": 2,
+    "pending": 3,
     "pnl_units": -1.458,
     "roi": -0.20828571428571427,
     "wins": 3,
@@ -20,7 +20,7 @@
   "latest_scan": {
     "scored_rows": 8,
     "scored_fixtures": 2,
-    "explanation": "6 fresh paired contracts; 8 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: fewer_than_six_prior_matches=2, stale_price=368."
+    "explanation": "4 fresh paired contracts; 8 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: stale_price=324."
   },
   "settled_this_run": 0,
   "result_source": {
@@ -102,5 +102,5 @@
   },
   "review_policy": "Review after 150 settled fixtures and at least 8 weeks; require positive ROI, at least 70% true closing coverage, positive mean CLV and calibration review. Manual promotion only.",
   "review_status": "COLLECTING_FIXED_POLICY",
-  "age_days": 3
+  "age_days": 4
 }
