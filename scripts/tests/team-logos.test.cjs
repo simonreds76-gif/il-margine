@@ -58,3 +58,16 @@ test('Racing de Santander and AZ tip names resolve across competition categories
   }
   assert.notEqual(resolveTeamLogoPath('Jong AZ Alkmaar', 'all'), '/team-logos/europe/az-alkmaar.png');
 });
+
+test('Omonia and Benfica picks use the correct senior club crests', () => {
+  for (const category of ['all', 'props', 'uel', 'ucl', 'football']) {
+    for (const name of ['Omonia Nicosia', 'AC Omonia', 'Omonoia']) {
+      assert.equal(checkFile(name, category), '/team-logos/europe/omonia-nicosia.png');
+    }
+    for (const name of ['Benfica', 'SL Benfica', 'S.L. Benfica', 'Benfica Lisbon']) {
+      assert.equal(checkFile(name, category), '/team-logos/europe/benfica.png');
+    }
+  }
+  assert.notEqual(resolveTeamLogoPath('Omonia Aradippou', 'all'), '/team-logos/europe/omonia-nicosia.png');
+  assert.notEqual(resolveTeamLogoPath('Benfica B', 'all'), '/team-logos/europe/benfica.png');
+});
