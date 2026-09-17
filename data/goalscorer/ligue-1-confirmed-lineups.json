@@ -306,7 +306,7 @@
         "Jhoanner Chávez",
         "Yacine Titraoui"
       ],
-      "observed_at": "2026-09-17T19:02:26.793933+00:00",
+      "observed_at": "2026-09-17T22:09:36.840258+00:00",
       "changed_at": "2026-09-17T12:13:43.573445+00:00"
     },
     {
@@ -608,7 +608,7 @@
         "Yvann Titi",
         "Merwan Ifnaou"
       ],
-      "observed_at": "2026-09-17T19:02:26.793933+00:00",
+      "observed_at": "2026-09-17T22:09:36.840258+00:00",
       "changed_at": "2026-09-16T22:09:43.556846+00:00"
     },
     {
@@ -909,7 +909,7 @@
         "Bandiougou Fadiga",
         "Mohamed Bamba"
       ],
-      "observed_at": "2026-09-17T19:02:26.793933+00:00",
+      "observed_at": "2026-09-17T22:09:36.840258+00:00",
       "changed_at": "2026-09-16T22:09:43.556846+00:00"
     },
     {
@@ -1204,7 +1204,7 @@
       "away_substitute_entries": [],
       "home_unavailable": [],
       "away_unavailable": [],
-      "observed_at": "2026-09-17T19:02:26.793933+00:00",
+      "observed_at": "2026-09-17T22:09:36.840258+00:00",
       "changed_at": "2026-09-16T22:09:43.556846+00:00"
     },
     {
@@ -1508,7 +1508,7 @@
         "Joaquín Panichelli",
         "Martial Godo"
       ],
-      "observed_at": "2026-09-17T19:02:26.793933+00:00",
+      "observed_at": "2026-09-17T22:09:36.840258+00:00",
       "changed_at": "2026-09-16T18:54:20.681419+00:00"
     },
     {
@@ -1810,7 +1810,7 @@
         "Stephan Zagadou",
         "Felix Mambimbi"
       ],
-      "observed_at": "2026-09-17T19:02:26.793933+00:00",
+      "observed_at": "2026-09-17T22:09:36.840258+00:00",
       "changed_at": "2026-09-16T22:09:43.556846+00:00"
     },
     {
@@ -2115,26 +2115,308 @@
         "Mamady Diambou",
         "Noah Edjouma"
       ],
-      "observed_at": "2026-09-17T19:02:26.793933+00:00",
+      "observed_at": "2026-09-17T22:09:36.840258+00:00",
       "changed_at": "2026-09-17T15:00:15.923959+00:00"
     },
     {
       "fotmob_match_id": 5802945,
+      "fotmob_page_url": "/matches/marseille-vs-paris-saint-germain/2t82ab#5802945",
+      "home_fotmob_team_id": 8592,
+      "away_fotmob_team_id": 9847,
       "match_date": "2026-09-20",
       "kickoff_utc": "2026-09-20T18:45:00Z",
       "home_team": "Marseille",
       "away_team": "Paris Saint-Germain",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "4-2-3-1",
+      "away_formation": "4-3-3",
+      "home_players": [
+        "Jeffrey De Lange",
+        "Timothy Weah",
+        "CJ Egan-Riley",
+        "Nayef Aguerd",
+        "Emerson",
+        "Himad Abdelli",
+        "Pierre-Emile Højbjerg",
+        "Amine Harit",
+        "Angel Gomes",
+        "Igor Paixão",
+        "Amine Gouiri"
+      ],
+      "away_players": [
+        "Matvey Safonov",
+        "Warren Zaïre-Emery",
+        "Marquinhos",
+        "Willian Pacho",
+        "Nuno Mendes",
+        "João Neves",
+        "Vítinha",
+        "Fabián Ruiz",
+        "Ousmane Dembélé",
+        "Ferrán Torres",
+        "Khvicha Kvaratskhelia"
+      ],
+      "home_starters": [
+        {
+          "name": "Jeffrey De Lange",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11,
+          "player_id": 687868,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Timothy Weah",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32,
+          "player_id": 889536,
+          "shirt_number": "22"
+        },
+        {
+          "name": "CJ Egan-Riley",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34,
+          "player_id": 1187227,
+          "shirt_number": "4"
+        },
+        {
+          "name": "Nayef Aguerd",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 617310,
+          "shirt_number": "21"
+        },
+        {
+          "name": "Emerson",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38,
+          "player_id": 267371,
+          "shirt_number": "33"
+        },
+        {
+          "name": "Himad Abdelli",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
+          "player_id": 956659,
+          "shirt_number": "8"
+        },
+        {
+          "name": "Pierre-Emile Højbjerg",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 266523,
+          "shirt_number": "23"
+        },
+        {
+          "name": "Amine Harit",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 780815,
+          "shirt_number": "77"
+        },
+        {
+          "name": "Angel Gomes",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 848667,
+          "shirt_number": "7"
+        },
+        {
+          "name": "Igor Paixão",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 1265963,
+          "shirt_number": "14"
+        },
+        {
+          "name": "Amine Gouiri",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115,
+          "player_id": 844437,
+          "shirt_number": "9"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Matvey Safonov",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-3-3",
+          "position_id": 11,
+          "player_id": 800880,
+          "shirt_number": "39"
+        },
+        {
+          "name": "Warren Zaïre-Emery",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 32,
+          "player_id": 1367615,
+          "shirt_number": "33"
+        },
+        {
+          "name": "Marquinhos",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 34,
+          "player_id": 267365,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Willian Pacho",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 36,
+          "player_id": 1137670,
+          "shirt_number": "51"
+        },
+        {
+          "name": "Nuno Mendes",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 38,
+          "player_id": 1158945,
+          "shirt_number": "25"
+        },
+        {
+          "name": "João Neves",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 73,
+          "player_id": 1342757,
+          "shirt_number": "87"
+        },
+        {
+          "name": "Vítinha",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 75,
+          "player_id": 1061249,
+          "shirt_number": "17"
+        },
+        {
+          "name": "Fabián Ruiz",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 77,
+          "player_id": 605654,
+          "shirt_number": "8"
+        },
+        {
+          "name": "Ousmane Dembélé",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 103,
+          "player_id": 692984,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Ferrán Torres",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 105,
+          "player_id": 881771,
+          "shirt_number": "9"
+        },
+        {
+          "name": "Khvicha Kvaratskhelia",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 107,
+          "player_id": 900433,
+          "shirt_number": "7"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-09-17T19:02:26.793933+00:00",
-      "changed_at": "2026-09-17T00:34:27.890734+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Geoffrey Kondogbia",
+        "Tochukwu Nnadi"
+      ],
+      "away_unavailable": [
+        "Achraf Hakimi"
+      ],
+      "observed_at": "2026-09-17T22:09:36.840258+00:00",
+      "changed_at": "2026-09-17T22:09:36.840258+00:00"
     },
     {
       "fotmob_match_id": 5802942,
@@ -2435,7 +2717,7 @@
       "away_unavailable": [
         "Hamza Igamane"
       ],
-      "observed_at": "2026-09-17T19:02:26.793933+00:00",
+      "observed_at": "2026-09-17T22:09:36.840258+00:00",
       "changed_at": "2026-09-17T19:02:26.793933+00:00"
     }
   ]
