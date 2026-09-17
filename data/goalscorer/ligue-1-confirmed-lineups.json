@@ -306,7 +306,7 @@
         "Jhoanner Chávez",
         "Yacine Titraoui"
       ],
-      "observed_at": "2026-09-17T12:13:43.573445+00:00",
+      "observed_at": "2026-09-17T15:00:15.923959+00:00",
       "changed_at": "2026-09-17T12:13:43.573445+00:00"
     },
     {
@@ -608,7 +608,7 @@
         "Yvann Titi",
         "Merwan Ifnaou"
       ],
-      "observed_at": "2026-09-17T12:13:43.573445+00:00",
+      "observed_at": "2026-09-17T15:00:15.923959+00:00",
       "changed_at": "2026-09-16T22:09:43.556846+00:00"
     },
     {
@@ -909,7 +909,7 @@
         "Bandiougou Fadiga",
         "Mohamed Bamba"
       ],
-      "observed_at": "2026-09-17T12:13:43.573445+00:00",
+      "observed_at": "2026-09-17T15:00:15.923959+00:00",
       "changed_at": "2026-09-16T22:09:43.556846+00:00"
     },
     {
@@ -1204,7 +1204,7 @@
       "away_substitute_entries": [],
       "home_unavailable": [],
       "away_unavailable": [],
-      "observed_at": "2026-09-17T12:13:43.573445+00:00",
+      "observed_at": "2026-09-17T15:00:15.923959+00:00",
       "changed_at": "2026-09-16T22:09:43.556846+00:00"
     },
     {
@@ -1508,7 +1508,7 @@
         "Joaquín Panichelli",
         "Martial Godo"
       ],
-      "observed_at": "2026-09-17T12:13:43.573445+00:00",
+      "observed_at": "2026-09-17T15:00:15.923959+00:00",
       "changed_at": "2026-09-16T18:54:20.681419+00:00"
     },
     {
@@ -1810,26 +1810,313 @@
         "Stephan Zagadou",
         "Felix Mambimbi"
       ],
-      "observed_at": "2026-09-17T12:13:43.573445+00:00",
+      "observed_at": "2026-09-17T15:00:15.923959+00:00",
       "changed_at": "2026-09-16T22:09:43.556846+00:00"
     },
     {
       "fotmob_match_id": 5802938,
+      "fotmob_page_url": "/matches/brest-vs-auxerre/2f3ii7#5802938",
+      "home_fotmob_team_id": 8583,
+      "away_fotmob_team_id": 8521,
       "match_date": "2026-09-20",
       "kickoff_utc": "2026-09-20T13:00:00Z",
       "home_team": "Auxerre",
       "away_team": "Brest",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "3-4-2-1",
+      "away_formation": "4-2-3-1",
+      "home_players": [
+        "Mamadou Diop",
+        "Christ Makosso",
+        "Axel Tuanzebe",
+        "Clément Akpa",
+        "Lamine Sy",
+        "Arthur Piedfort",
+        "Kévin Danois",
+        "Fredrik Oppegård",
+        "Danny Namaso",
+        "Rémy Lascary",
+        "Cameron Archer"
+      ],
+      "away_players": [
+        "Egil Selvik",
+        "Kenny Lala",
+        "Raphaël Le Guen",
+        "Gautier Lloris",
+        "Bradley Locko",
+        "Joris Chotard",
+        "Hugo Magnetti",
+        "Giovani Versini",
+        "Kamory Doumbia",
+        "Pathé Mboup",
+        "Ludovic Ajorque"
+      ],
+      "home_starters": [
+        {
+          "name": "Mamadou Diop",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-4-2-1",
+          "position_id": 11,
+          "player_id": 1387237,
+          "shirt_number": "23"
+        },
+        {
+          "name": "Christ Makosso",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 33,
+          "player_id": 1474555,
+          "shirt_number": "15"
+        },
+        {
+          "name": "Axel Tuanzebe",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 35,
+          "player_id": 690149,
+          "shirt_number": "4"
+        },
+        {
+          "name": "Clément Akpa",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 37,
+          "player_id": 1388678,
+          "shirt_number": "92"
+        },
+        {
+          "name": "Lamine Sy",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 62,
+          "player_id": 1334805,
+          "shirt_number": "27"
+        },
+        {
+          "name": "Arthur Piedfort",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 64,
+          "player_id": 1441582,
+          "shirt_number": "46"
+        },
+        {
+          "name": "Kévin Danois",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 66,
+          "player_id": 1305543,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Fredrik Oppegård",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 68,
+          "player_id": 1203189,
+          "shirt_number": "22"
+        },
+        {
+          "name": "Danny Namaso",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 84,
+          "player_id": 817724,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Rémy Lascary",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 86,
+          "player_id": 1401248,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Cameron Archer",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-2-1",
+          "position_id": 105,
+          "player_id": 1086647,
+          "shirt_number": "9"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Egil Selvik",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11,
+          "player_id": 631757,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Kenny Lala",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32,
+          "player_id": 279461,
+          "shirt_number": "70"
+        },
+        {
+          "name": "Raphaël Le Guen",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34,
+          "player_id": 1699556,
+          "shirt_number": "71"
+        },
+        {
+          "name": "Gautier Lloris",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 420731,
+          "shirt_number": "4"
+        },
+        {
+          "name": "Bradley Locko",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38,
+          "player_id": 1285784,
+          "shirt_number": "2"
+        },
+        {
+          "name": "Joris Chotard",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
+          "player_id": 1079548,
+          "shirt_number": "13"
+        },
+        {
+          "name": "Hugo Magnetti",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 812415,
+          "shirt_number": "8"
+        },
+        {
+          "name": "Giovani Versini",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 1441955,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Kamory Doumbia",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 1310270,
+          "shirt_number": "23"
+        },
+        {
+          "name": "Pathé Mboup",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 1514456,
+          "shirt_number": "9"
+        },
+        {
+          "name": "Ludovic Ajorque",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115,
+          "player_id": 471153,
+          "shirt_number": "19"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-09-17T12:13:43.573445+00:00",
-      "changed_at": "2026-09-17T00:34:27.890734+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Bryan Okoh",
+        "Marvin Senaya",
+        "Sékou Fofana",
+        "Telli Siwe",
+        "Assane Dioussé"
+      ],
+      "away_unavailable": [
+        "Brendan Chardonnet",
+        "Mamady Diambou",
+        "Noah Edjouma"
+      ],
+      "observed_at": "2026-09-17T15:00:15.923959+00:00",
+      "changed_at": "2026-09-17T15:00:15.923959+00:00"
     },
     {
       "fotmob_match_id": 5802945,
@@ -1846,7 +2133,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-09-17T12:13:43.573445+00:00",
+      "observed_at": "2026-09-17T15:00:15.923959+00:00",
       "changed_at": "2026-09-17T00:34:27.890734+00:00"
     },
     {
@@ -1864,7 +2151,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-09-17T12:13:43.573445+00:00",
+      "observed_at": "2026-09-17T15:00:15.923959+00:00",
       "changed_at": "2026-09-17T00:34:27.890734+00:00"
     }
   ]
