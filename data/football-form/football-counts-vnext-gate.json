@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-16T23:52:13Z",
+  "generated_at": "2026-09-17T13:32:28Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -36,16 +36,16 @@
     },
     "latest_scan": {
       "state": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
-      "explanation": "For all 140 scored matchday 4-6 lines, the raw-gap cap and market blend limit edge to at most 2.11%, below the required 3.00%. Review the combined selection rules; this is not missing price coverage.",
-      "scored_rows": 140,
+      "explanation": "For all 178 scored matchday 4-6 lines, the raw-gap cap and market blend limit edge to at most 2.11%, below the required 3.00%. Review the combined selection rules; this is not missing price coverage.",
+      "scored_rows": 178,
       "scored_fixtures": 32,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 140,
+      "blocked_rows": 178,
       "blocker_rows": {
-        "early_market_gap_cap": 44,
-        "edge_below_3pct": 135,
-        "price_older_than_3h": 132
+        "early_market_gap_cap": 62,
+        "edge_below_3pct": 170,
+        "price_older_than_3h": 50
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 4,
@@ -54,7 +54,7 @@
       "operational_alert_required": true,
       "operational_alert_code": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
       "rule_feasibility": {
-        "affected_rows": 140,
+        "affected_rows": 178,
         "rows_capable_of_minimum_edge": 0,
         "maximum_allowed_edge": 0.021062786390673605,
         "minimum_edge": 0.03,
@@ -70,9 +70,9 @@
     "market_gate": "BLOCKED_PENDING_2026_27_PINNACLE_SAMPLE",
     "live_routing": false,
     "prospective": {
-      "signals": 33,
+      "signals": 35,
       "settled": 21,
-      "pending": 12,
+      "pending": 14,
       "pnl_units": -0.691,
       "roi": -0.032905,
       "true_close_n": 4,
@@ -80,9 +80,9 @@
       "mean_true_close_clv": -0.015746,
       "side_counts": {
         "over": 8,
-        "under": 25
+        "under": 27
       },
-      "dominant_side_share": 0.757576
+      "dominant_side_share": 0.771429
     },
     "warmup_tracking": {
       "signals": 36,

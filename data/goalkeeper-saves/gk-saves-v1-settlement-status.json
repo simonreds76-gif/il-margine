@@ -1,26 +1,26 @@
 {
   "api_errors": [],
-  "deferred_not_due": 2,
+  "deferred_not_due": 3,
   "details": [
     {
-      "detail": "",
-      "goalkeeper": "Stole Dimitrievski",
-      "match": "Deportivo Alaves vs Valencia CF",
-      "match_date": "2026-09-15",
-      "reason": "settled_fotmob",
-      "signal_id": "72478566|stole dimitrievski|2.5|over"
+      "detail": "fixtures_returned=4",
+      "goalkeeper": "Unai Sim\u00f3n",
+      "match": "Levante UD vs Athletic Bilbao",
+      "match_date": "2026-09-16",
+      "reason": "fotmob_finished_fixture_not_found",
+      "signal_id": "72478578|unai sim\u00f3n|3.5|over"
     }
   ],
-  "fotmob_requests_used": 3,
-  "generated_at": "2026-09-16T13:33:45Z",
+  "fotmob_requests_used": 1,
+  "generated_at": "2026-09-17T13:32:29Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
-  "pending_due": 0,
-  "pending_total": 2,
+  "pending_due": 1,
+  "pending_total": 4,
   "reason_counts": {
-    "settled_fotmob": 1
+    "fotmob_finished_fixture_not_found": 1
   },
   "requests_used": 0,
-  "settled": 1,
-  "status": "SETTLED"
+  "settled": 0,
+  "status": "BLOCKED"
 }
