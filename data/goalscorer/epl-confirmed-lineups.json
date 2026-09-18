@@ -13,7 +13,7 @@
       "away_status": "Confirmed Lineup",
       "lineup_type": "standard",
       "home_formation": "4-2-3-1",
-      "away_formation": "3-4-3",
+      "away_formation": "3-4-2-1",
       "home_players": [
         "Caoimhín Kelleher",
         "Michael Kayode",
@@ -37,8 +37,8 @@
         "Valentín Barco",
         "Pep Chavarría",
         "Cole Palmer",
-        "Danny Welbeck",
-        "Morgan Rogers"
+        "Morgan Rogers",
+        "Danny Welbeck"
       ],
       "home_starters": [
         {
@@ -170,7 +170,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-3",
+          "formation": "3-4-2-1",
           "position_id": 11,
           "player_id": 268375,
           "shirt_number": "1"
@@ -181,7 +181,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-3",
+          "formation": "3-4-2-1",
           "position_id": 33,
           "player_id": 917802,
           "shirt_number": "3"
@@ -192,7 +192,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-3",
+          "formation": "3-4-2-1",
           "position_id": 35,
           "player_id": 950485,
           "shirt_number": "5"
@@ -203,7 +203,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-3",
+          "formation": "3-4-2-1",
           "position_id": 37,
           "player_id": 1096400,
           "shirt_number": "6"
@@ -214,8 +214,8 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-3",
-          "position_id": 72,
+          "formation": "3-4-2-1",
+          "position_id": 62,
           "player_id": 843040,
           "shirt_number": "7"
         },
@@ -225,8 +225,8 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-3",
-          "position_id": 74,
+          "formation": "3-4-2-1",
+          "position_id": 64,
           "player_id": 156008,
           "shirt_number": "14"
         },
@@ -236,8 +236,8 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-3",
-          "position_id": 76,
+          "formation": "3-4-2-1",
+          "position_id": 66,
           "player_id": 1272440,
           "shirt_number": "4"
         },
@@ -247,43 +247,43 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-3",
-          "position_id": 78,
+          "formation": "3-4-2-1",
+          "position_id": 68,
           "player_id": 988805,
           "shirt_number": "29"
         },
         {
           "name": "Cole Palmer",
           "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-4-3",
-          "position_id": 103,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 84,
           "player_id": 1096353,
           "shirt_number": "10"
         },
         {
-          "name": "Danny Welbeck",
+          "name": "Morgan Rogers",
           "line_index": 2,
-          "line_size": 3,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 86,
+          "player_id": 883080,
+          "shirt_number": "17"
+        },
+        {
+          "name": "Danny Welbeck",
+          "line_index": 3,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-3",
+          "formation": "3-4-2-1",
           "position_id": 105,
           "player_id": 113836,
           "shirt_number": "18"
-        },
-        {
-          "name": "Morgan Rogers",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-4-3",
-          "position_id": 107,
-          "player_id": 883080,
-          "shirt_number": "17"
         }
       ],
       "home_subs": [
@@ -417,8 +417,8 @@
         "Marco Palestra",
         "João Pedro"
       ],
-      "observed_at": "2026-09-18T17:52:41.612785+00:00",
-      "changed_at": "2026-09-18T17:52:41.612785+00:00"
+      "observed_at": "2026-09-18T18:26:45.181772+00:00",
+      "changed_at": "2026-09-18T18:26:45.181772+00:00"
     },
     {
       "fotmob_match_id": 5795457,
@@ -728,7 +728,7 @@
         "Cristhian Mosquera",
         "William Saliba"
       ],
-      "observed_at": "2026-09-18T17:52:41.612785+00:00",
+      "observed_at": "2026-09-18T18:26:45.181772+00:00",
       "changed_at": "2026-09-18T14:29:50.661661+00:00"
     },
     {
@@ -1030,7 +1030,7 @@
         "Azor Matusiwa",
         "Jack Taylor"
       ],
-      "observed_at": "2026-09-18T17:52:41.612785+00:00",
+      "observed_at": "2026-09-18T18:26:45.181772+00:00",
       "changed_at": "2026-09-18T14:29:50.661661+00:00"
     },
     {
@@ -1344,7 +1344,7 @@
         "Hidemasa Morita",
         "Ilyas Ansah"
       ],
-      "observed_at": "2026-09-18T17:52:41.612785+00:00",
+      "observed_at": "2026-09-18T18:26:45.181772+00:00",
       "changed_at": "2026-09-18T12:10:16.334855+00:00"
     },
     {
@@ -1650,7 +1650,7 @@
         "Haji Wright",
         "Taiwo Awoniyi"
       ],
-      "observed_at": "2026-09-18T17:52:41.612785+00:00",
+      "observed_at": "2026-09-18T18:26:45.181772+00:00",
       "changed_at": "2026-09-18T12:10:16.334855+00:00"
     },
     {
@@ -1957,7 +1957,7 @@
         "Leon Goretzka",
         "Brian Madjo"
       ],
-      "observed_at": "2026-09-18T17:52:41.612785+00:00",
+      "observed_at": "2026-09-18T18:26:45.181772+00:00",
       "changed_at": "2026-09-18T14:29:50.661661+00:00"
     },
     {
@@ -2262,7 +2262,7 @@
         "Federico Chiesa",
         "Hugo Ekitiké"
       ],
-      "observed_at": "2026-09-18T17:52:41.612785+00:00",
+      "observed_at": "2026-09-18T18:26:45.181772+00:00",
       "changed_at": "2026-09-17T14:59:03.809798+00:00"
     },
     {
@@ -2568,7 +2568,7 @@
         "Manuel Ugarte",
         "Amad Diallo"
       ],
-      "observed_at": "2026-09-18T17:52:41.612785+00:00",
+      "observed_at": "2026-09-18T18:26:45.181772+00:00",
       "changed_at": "2026-09-17T19:00:58.320829+00:00"
     },
     {
@@ -2871,7 +2871,7 @@
         "Chadi Riad",
         "Jean-Philippe Mateta"
       ],
-      "observed_at": "2026-09-18T17:52:41.612785+00:00",
+      "observed_at": "2026-09-18T18:26:45.181772+00:00",
       "changed_at": "2026-09-17T14:59:03.809798+00:00"
     },
     {
@@ -3174,7 +3174,7 @@
         "Habib Diarra",
         "Romaine Mundle"
       ],
-      "observed_at": "2026-09-18T17:52:41.612785+00:00",
+      "observed_at": "2026-09-18T18:26:45.181772+00:00",
       "changed_at": "2026-09-17T14:59:03.809798+00:00"
     }
   ]

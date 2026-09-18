@@ -1,38 +1,38 @@
 Fair Odds Lab CLV Monitor
 =============================
 
-Generated UTC: 2026-09-11T18:31:13Z
+Generated UTC: 2026-09-18T18:28:32Z
 Status: INTERNAL_DIAGNOSTIC_ONLY
 Public page role: live research fair odds; no betting record
 
 Coverage
-Signals: 84
-Captured price rows loaded: 576
+Signals: 86
+Captured price rows loaded: 2163
 Matched closes/references: 0 (0.0%)
 True same-book closes (<= 45m): 0
 Lagged same-book closes: 0
 Pinnacle references: 0
-Missing: 84
+Missing: 86
 
 Overall
-all: n=84 close_n=0 avg=- median=- positive=-
+all: n=86 close_n=0 avg=- median=- positive=-
 true_close_only: n=0 close_n=0 avg=- median=- positive=-
 
 By league
-bundesliga: n=10 close_n=0 avg=- median=- positive=-
+bundesliga: n=11 close_n=0 avg=- median=- positive=-
 epl: n=30 close_n=0 avg=- median=- positive=-
 la-liga: n=20 close_n=0 avg=- median=- positive=-
-ligue-1: n=10 close_n=0 avg=- median=- positive=-
+ligue-1: n=11 close_n=0 avg=- median=- positive=-
 serie-a: n=14 close_n=0 avg=- median=- positive=-
 
 By publication price
 3.0-3.99: n=31 close_n=0 avg=- median=- positive=-
 4.0-4.99: n=20 close_n=0 avg=- median=- positive=-
-5.0+: n=11 close_n=0 avg=- median=- positive=-
-<3.0: n=22 close_n=0 avg=- median=- positive=-
+5.0+: n=12 close_n=0 avg=- median=- positive=-
+<3.0: n=23 close_n=0 avg=- median=- positive=-
 
 Missing reasons
-no_capture_on_match_date: 83
+no_capture_on_match_date: 85
 player_not_found: 1
 
 Methodology
