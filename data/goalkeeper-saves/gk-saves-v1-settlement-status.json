@@ -1,26 +1,43 @@
 {
   "api_errors": [],
-  "deferred_not_due": 3,
+  "deferred_not_due": 2,
   "details": [
     {
-      "detail": "fixtures_returned=4",
+      "detail": "fixtures_returned=3",
       "goalkeeper": "Unai Sim\u00f3n",
       "match": "Levante UD vs Athletic Bilbao",
       "match_date": "2026-09-16",
       "reason": "fotmob_finished_fixture_not_found",
       "signal_id": "72478578|unai sim\u00f3n|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "David Soria",
+      "match": "Real Betis Seville vs Getafe CF",
+      "match_date": "2026-09-17",
+      "reason": "settled_fotmob",
+      "signal_id": "72478570|david soria|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "P\u00e9ter Gul\u00e1csi",
+      "match": "Malaga CF vs Villarreal CF",
+      "match_date": "2026-09-17",
+      "reason": "settled_fotmob",
+      "signal_id": "72478580|p\u00e9ter gul\u00e1csi|2.5|over"
     }
   ],
-  "fotmob_requests_used": 1,
-  "generated_at": "2026-09-17T13:32:29Z",
+  "fotmob_requests_used": 6,
+  "generated_at": "2026-09-18T13:01:08Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
   "pending_due": 1,
-  "pending_total": 4,
+  "pending_total": 3,
   "reason_counts": {
-    "fotmob_finished_fixture_not_found": 1
+    "fotmob_finished_fixture_not_found": 1,
+    "settled_fotmob": 2
   },
   "requests_used": 0,
-  "settled": 0,
-  "status": "BLOCKED"
+  "settled": 2,
+  "status": "PARTIAL"
 }
