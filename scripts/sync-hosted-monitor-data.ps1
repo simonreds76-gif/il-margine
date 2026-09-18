@@ -92,6 +92,9 @@ $cornersFiles = @(
 )
 
 $settlementFiles = @(
+    "data/football-form/team-shots-opponent-shadow.csv",
+    "data/football-form/team-shots-opponent-candidates.csv",
+    "data/football-form/team-shots-opponent-status.json",
     "data/results-snapshot/latest.json",
     # Current 2026/27 football-count lanes. These are deliberately included in
     # normal localhost startup without pulling the much larger model archives.
@@ -211,6 +214,7 @@ $backedUp = 0
 # from the localhost monitor. Merge hosted additions into local evidence and
 # retain the more complete version of any existing pick.
 $mergeEvidenceCsvFiles = @(
+    "data/football-form/team-shots-opponent-shadow.csv",
     "data/football-form/team-shots-v4-shadow-clv.csv",
     "data/football-form/corners-v3-shadow-clv.csv",
     "data/goalkeeper-saves/gk-saves-v1-shadow-signals.csv"
