@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-18T13:01:01Z",
+  "generated_at": "2026-09-18T13:50:10Z",
   "activated_at": "2026-09-12T21:09:03.018654+00:00",
   "status": "ACTIVE_SHADOW",
   "count_gate": "FIXED CANDIDATE",
@@ -7,9 +7,9 @@
   "promotion_gate": "BLOCKED",
   "live_routing": false,
   "prospective": {
-    "signals": 14,
+    "signals": 16,
     "settled": 10,
-    "pending": 4,
+    "pending": 6,
     "pnl_units": -4.458,
     "roi": -0.44580000000000003,
     "wins": 3,
@@ -18,11 +18,11 @@
     "mean_clv": 0.091107
   },
   "latest_scan": {
-    "scored_rows": 36,
-    "scored_fixtures": 9,
-    "explanation": "18 fresh paired contracts; 36 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: outside_capture_window=156, stale_price=532."
+    "scored_rows": 56,
+    "scored_fixtures": 13,
+    "explanation": "28 fresh paired contracts; 56 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: outside_capture_window=140, stale_price=532."
   },
-  "settled_this_run": 2,
+  "settled_this_run": 0,
   "result_source": {
     "bundesliga": {
       "football_data_latest": "2026-09-13",

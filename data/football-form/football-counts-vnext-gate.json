@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-18T13:01:07Z",
+  "generated_at": "2026-09-18T13:50:13Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -37,15 +37,15 @@
     "latest_scan": {
       "state": "ELIGIBLE_CANDIDATES_PRESENT",
       "explanation": "At least one candidate passed every locked shadow gate.",
-      "scored_rows": 192,
+      "scored_rows": 194,
       "scored_fixtures": 30,
       "eligible_rows": 1,
       "eligible_fixtures": 1,
-      "blocked_rows": 191,
+      "blocked_rows": 193,
       "blocker_rows": {
-        "early_market_gap_cap": 56,
-        "edge_below_3pct": 184,
-        "price_older_than_3h": 72
+        "early_market_gap_cap": 54,
+        "edge_below_3pct": 186,
+        "price_older_than_3h": 70
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 4,
@@ -54,7 +54,7 @@
       "operational_alert_required": false,
       "operational_alert_code": null,
       "rule_feasibility": {
-        "affected_rows": 152,
+        "affected_rows": 154,
         "rows_capable_of_minimum_edge": 0,
         "maximum_allowed_edge": 0.021062786390673605,
         "minimum_edge": 0.03,
