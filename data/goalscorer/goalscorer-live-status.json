@@ -1,9 +1,9 @@
 {
-  "state": "warning",
-  "updated_at": "2026-09-18T18:28:32Z",
-  "last_started_at": "2026-09-18T18:25:52Z",
-  "last_finished_at": "2026-09-18T18:28:32Z",
-  "last_successful_finished_at": "2026-09-18T18:28:32Z",
+  "state": "skipped",
+  "updated_at": "2026-09-18T21:12:32Z",
+  "last_started_at": "2026-09-18T21:12:30Z",
+  "last_finished_at": "2026-09-18T21:12:32Z",
+  "last_successful_finished_at": "2026-09-18T21:12:32Z",
   "current_league": "",
   "bookmaker": "Bet365",
   "leagues": [
@@ -13,9 +13,7 @@
     "bundesliga",
     "ligue-1"
   ],
-  "warnings": [
-    "Goalscorer close capture is local-only: Supabase credentials are missing."
-  ],
-  "message": "Goalscorer live poll finished with warnings (5 ran, 0 failed).",
+  "warnings": [],
+  "message": "Goalscorer live poll skipped: no leagues due in current cadence window.",
   "last_exit_code": 0
 }
