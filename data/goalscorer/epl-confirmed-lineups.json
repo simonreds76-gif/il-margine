@@ -9,9 +9,9 @@
       "kickoff_utc": "2026-09-18T19:00:00Z",
       "home_team": "Brentford",
       "away_team": "Chelsea",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "3-4-3",
       "home_players": [
@@ -20,7 +20,7 @@
         "Jannik Schuster",
         "Kristoffer Ajer",
         "Keane Lewis-Potter",
-        "Mamadou Sangaré",
+        "Yehor Yarmoliuk",
         "Vitaly Janelt",
         "Jaidon Anthony",
         "Mikkel Damsgaard",
@@ -33,8 +33,8 @@
         "Maxence Lacroix",
         "Levi Colwill",
         "Pedro Neto",
+        "Jordan Henderson",
         "Valentín Barco",
-        "Roméo Lavia",
         "Pep Chavarría",
         "Cole Palmer",
         "Danny Welbeck",
@@ -97,15 +97,15 @@
           "shirt_number": "23"
         },
         {
-          "name": "Mamadou Sangaré",
+          "name": "Yehor Yarmoliuk",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
           "formation": "4-2-3-1",
           "position_id": 64,
-          "player_id": 1185211,
-          "shirt_number": "18"
+          "player_id": 1157236,
+          "shirt_number": "6"
         },
         {
           "name": "Vitaly Janelt",
@@ -220,26 +220,26 @@
           "shirt_number": "7"
         },
         {
-          "name": "Valentín Barco",
+          "name": "Jordan Henderson",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
           "formation": "3-4-3",
           "position_id": 74,
-          "player_id": 1272440,
-          "shirt_number": "4"
+          "player_id": 156008,
+          "shirt_number": "14"
         },
         {
-          "name": "Roméo Lavia",
+          "name": "Valentín Barco",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
           "formation": "3-4-3",
           "position_id": 76,
-          "player_id": 1190867,
-          "shirt_number": "45"
+          "player_id": 1272440,
+          "shirt_number": "4"
         },
         {
           "name": "Pep Chavarría",
@@ -286,10 +286,122 @@
           "shirt_number": "17"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "home_subs": [
+        "Ellery Balcombe",
+        "Aaron Hickey",
+        "Benjamin Fredrick",
+        "Malick Diouf",
+        "Rico Henry",
+        "Fábio Carvalho",
+        "Mamadou Sangaré",
+        "Callum Wilson",
+        "Dango Ouattara"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Ellery Balcombe",
+          "player_id": "806579",
+          "role_group": "GK"
+        },
+        {
+          "name": "Aaron Hickey",
+          "player_id": "1002039",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Benjamin Fredrick",
+          "player_id": "1478706",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Malick Diouf",
+          "player_id": "1451265",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Rico Henry",
+          "player_id": "562892",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Fábio Carvalho",
+          "player_id": "963965",
+          "role_group": "MID"
+        },
+        {
+          "name": "Mamadou Sangaré",
+          "player_id": "1185211",
+          "role_group": "MID"
+        },
+        {
+          "name": "Callum Wilson",
+          "player_id": "184321",
+          "role_group": "FW"
+        },
+        {
+          "name": "Dango Ouattara",
+          "player_id": "1250253",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Mike Penders",
+        "Jorrel Hato",
+        "Josh Acheampong",
+        "Malo Gusto",
+        "Mahdi Nicoll-Jazuli",
+        "Roméo Lavia",
+        "Estêvão",
+        "Geovany Quenda",
+        "Jamie Gittens"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Mike Penders",
+          "player_id": "1319972",
+          "role_group": "GK"
+        },
+        {
+          "name": "Jorrel Hato",
+          "player_id": "1413846",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Josh Acheampong",
+          "player_id": "1400216",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Malo Gusto",
+          "player_id": "1197250",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Mahdi Nicoll-Jazuli",
+          "player_id": "1720243",
+          "role_group": "MID"
+        },
+        {
+          "name": "Roméo Lavia",
+          "player_id": "1190867",
+          "role_group": "MID"
+        },
+        {
+          "name": "Estêvão",
+          "player_id": "1580774",
+          "role_group": "FW"
+        },
+        {
+          "name": "Geovany Quenda",
+          "player_id": "1530314",
+          "role_group": "FW"
+        },
+        {
+          "name": "Jamie Gittens",
+          "player_id": "1113692",
+          "role_group": "FW"
+        }
+      ],
       "home_unavailable": [
         "Nathan Collins",
         "Sepp van den Berg",
@@ -303,11 +415,10 @@
         "Dastan Satpaev",
         "Moisés Caicedo",
         "Marco Palestra",
-        "Jordan Henderson",
         "João Pedro"
       ],
-      "observed_at": "2026-09-18T14:29:50.661661+00:00",
-      "changed_at": "2026-09-18T12:10:16.334855+00:00"
+      "observed_at": "2026-09-18T17:52:41.612785+00:00",
+      "changed_at": "2026-09-18T17:52:41.612785+00:00"
     },
     {
       "fotmob_match_id": 5795457,
@@ -617,7 +728,7 @@
         "Cristhian Mosquera",
         "William Saliba"
       ],
-      "observed_at": "2026-09-18T14:29:50.661661+00:00",
+      "observed_at": "2026-09-18T17:52:41.612785+00:00",
       "changed_at": "2026-09-18T14:29:50.661661+00:00"
     },
     {
@@ -919,7 +1030,7 @@
         "Azor Matusiwa",
         "Jack Taylor"
       ],
-      "observed_at": "2026-09-18T14:29:50.661661+00:00",
+      "observed_at": "2026-09-18T17:52:41.612785+00:00",
       "changed_at": "2026-09-18T14:29:50.661661+00:00"
     },
     {
@@ -1233,7 +1344,7 @@
         "Hidemasa Morita",
         "Ilyas Ansah"
       ],
-      "observed_at": "2026-09-18T14:29:50.661661+00:00",
+      "observed_at": "2026-09-18T17:52:41.612785+00:00",
       "changed_at": "2026-09-18T12:10:16.334855+00:00"
     },
     {
@@ -1539,7 +1650,7 @@
         "Haji Wright",
         "Taiwo Awoniyi"
       ],
-      "observed_at": "2026-09-18T14:29:50.661661+00:00",
+      "observed_at": "2026-09-18T17:52:41.612785+00:00",
       "changed_at": "2026-09-18T12:10:16.334855+00:00"
     },
     {
@@ -1846,7 +1957,7 @@
         "Leon Goretzka",
         "Brian Madjo"
       ],
-      "observed_at": "2026-09-18T14:29:50.661661+00:00",
+      "observed_at": "2026-09-18T17:52:41.612785+00:00",
       "changed_at": "2026-09-18T14:29:50.661661+00:00"
     },
     {
@@ -2151,7 +2262,7 @@
         "Federico Chiesa",
         "Hugo Ekitiké"
       ],
-      "observed_at": "2026-09-18T14:29:50.661661+00:00",
+      "observed_at": "2026-09-18T17:52:41.612785+00:00",
       "changed_at": "2026-09-17T14:59:03.809798+00:00"
     },
     {
@@ -2457,7 +2568,7 @@
         "Manuel Ugarte",
         "Amad Diallo"
       ],
-      "observed_at": "2026-09-18T14:29:50.661661+00:00",
+      "observed_at": "2026-09-18T17:52:41.612785+00:00",
       "changed_at": "2026-09-17T19:00:58.320829+00:00"
     },
     {
@@ -2760,7 +2871,7 @@
         "Chadi Riad",
         "Jean-Philippe Mateta"
       ],
-      "observed_at": "2026-09-18T14:29:50.661661+00:00",
+      "observed_at": "2026-09-18T17:52:41.612785+00:00",
       "changed_at": "2026-09-17T14:59:03.809798+00:00"
     },
     {
@@ -3063,7 +3174,7 @@
         "Habib Diarra",
         "Romaine Mundle"
       ],
-      "observed_at": "2026-09-18T14:29:50.661661+00:00",
+      "observed_at": "2026-09-18T17:52:41.612785+00:00",
       "changed_at": "2026-09-17T14:59:03.809798+00:00"
     }
   ]
