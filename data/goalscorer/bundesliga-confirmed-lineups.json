@@ -33,11 +33,11 @@
         "Leopold Querfeld",
         "Felix Uduokhai",
         "Tom Rothe",
-        "Michel Aebischer",
         "Rani Khedira",
+        "Michel Aebischer",
         "Janik Haberer",
-        "András Schäfer",
         "Woo-Yeong Jeong",
+        "András Schäfer",
         "Emmanuel Latte Lath"
       ],
       "home_starters": [
@@ -220,26 +220,26 @@
           "shirt_number": "15"
         },
         {
-          "name": "Michel Aebischer",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64,
-          "player_id": 792756,
-          "shirt_number": "20"
-        },
-        {
           "name": "Rani Khedira",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
           "formation": "4-2-3-1",
-          "position_id": 66,
+          "position_id": 64,
           "player_id": 304348,
           "shirt_number": "8"
+        },
+        {
+          "name": "Michel Aebischer",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 792756,
+          "shirt_number": "20"
         },
         {
           "name": "Janik Haberer",
@@ -253,26 +253,26 @@
           "shirt_number": "19"
         },
         {
-          "name": "András Schäfer",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 85,
-          "player_id": 836726,
-          "shirt_number": "13"
-        },
-        {
           "name": "Woo-Yeong Jeong",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
-          "position_id": 87,
+          "position_id": 85,
           "player_id": 949673,
           "shirt_number": "11"
+        },
+        {
+          "name": "András Schäfer",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 836726,
+          "shirt_number": "13"
         },
         {
           "name": "Emmanuel Latte Lath",
@@ -287,46 +287,26 @@
         }
       ],
       "home_subs": [
-        "Jonas Urbig",
-        "Hiroki Ito",
         "Min-Jae Kim",
-        "Nathaniel Brown",
         "Tom Bischof",
-        "Bara Ndiaye",
         "Ismael Saibari",
         "Serge Gnabry",
+        "Nathaniel Brown",
+        "Jonas Urbig",
+        "Hiroki Ito",
+        "Bara Ndiaye",
         "Lennart Karl"
       ],
       "home_substitute_entries": [
-        {
-          "name": "Jonas Urbig",
-          "player_id": "1285872",
-          "role_group": "GK"
-        },
-        {
-          "name": "Hiroki Ito",
-          "player_id": "851626",
-          "role_group": "DEF"
-        },
         {
           "name": "Min-Jae Kim",
           "player_id": "828159",
           "role_group": "DEF"
         },
         {
-          "name": "Nathaniel Brown",
-          "player_id": "1395447",
-          "role_group": "DEF"
-        },
-        {
           "name": "Tom Bischof",
           "player_id": "1286183",
           "role_group": "DEF"
-        },
-        {
-          "name": "Bara Ndiaye",
-          "player_id": "1798782",
-          "role_group": "MID"
         },
         {
           "name": "Ismael Saibari",
@@ -339,23 +319,68 @@
           "role_group": "MID"
         },
         {
+          "name": "Nathaniel Brown",
+          "player_id": "1395447",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Jonas Urbig",
+          "player_id": "1285872",
+          "role_group": "GK"
+        },
+        {
+          "name": "Hiroki Ito",
+          "player_id": "851626",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Bara Ndiaye",
+          "player_id": "1798782",
+          "role_group": "MID"
+        },
+        {
           "name": "Lennart Karl",
           "player_id": "1737700",
           "role_group": "FW"
         }
       ],
       "away_subs": [
+        "Tim Skarke",
+        "Aljoscha Kemlein",
+        "Livan Burcu",
+        "Zeno Van Den Bosch",
+        "Derrick Köhn",
         "Matheo Raab",
         "Robert Skov",
-        "Zeno Van Den Bosch",
-        "Aljoscha Kemlein",
-        "Derrick Köhn",
         "Kastriot Imeri",
-        "Livan Burcu",
-        "Marin Ljubičić",
-        "Tim Skarke"
+        "Marin Ljubičić"
       ],
       "away_substitute_entries": [
+        {
+          "name": "Tim Skarke",
+          "player_id": "658440",
+          "role_group": "FW"
+        },
+        {
+          "name": "Aljoscha Kemlein",
+          "player_id": "1403332",
+          "role_group": "MID"
+        },
+        {
+          "name": "Livan Burcu",
+          "player_id": "1520506",
+          "role_group": "FW"
+        },
+        {
+          "name": "Zeno Van Den Bosch",
+          "player_id": "1231677",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Derrick Köhn",
+          "player_id": "860260",
+          "role_group": "MID"
+        },
         {
           "name": "Matheo Raab",
           "player_id": "1156148",
@@ -367,42 +392,19 @@
           "role_group": "DEF"
         },
         {
-          "name": "Zeno Van Den Bosch",
-          "player_id": "1231677",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Aljoscha Kemlein",
-          "player_id": "1403332",
-          "role_group": "MID"
-        },
-        {
-          "name": "Derrick Köhn",
-          "player_id": "860260",
-          "role_group": "MID"
-        },
-        {
           "name": "Kastriot Imeri",
           "player_id": "852049",
           "role_group": "MID"
         },
         {
-          "name": "Livan Burcu",
-          "player_id": "1520506",
-          "role_group": "FW"
-        },
-        {
           "name": "Marin Ljubičić",
           "player_id": "1242198",
           "role_group": "FW"
-        },
-        {
-          "name": "Tim Skarke",
-          "player_id": "658440",
-          "role_group": "FW"
         }
       ],
-      "home_unavailable": [],
+      "home_unavailable": [
+        "Konrad Laimer"
+      ],
       "away_unavailable": [
         "Josip Juranović",
         "Andrej Ilić",
@@ -411,7 +413,7 @@
         "Stanley N'Soki",
         "Oliver Burke"
       ],
-      "observed_at": "2026-09-18T18:27:43.277476+00:00",
+      "observed_at": "2026-09-18T21:40:39.788803+00:00",
       "changed_at": "2026-09-18T17:53:37.269704+00:00"
     },
     {
@@ -720,7 +722,7 @@
         "Silvan Widmer",
         "Silas Katompa Mvumpa"
       ],
-      "observed_at": "2026-09-18T18:27:43.277476+00:00",
+      "observed_at": "2026-09-18T21:40:39.788803+00:00",
       "changed_at": "2026-09-18T12:11:11.830832+00:00"
     },
     {
@@ -1025,7 +1027,7 @@
         "Rihito Yamamoto",
         "Florent Muslija"
       ],
-      "observed_at": "2026-09-18T18:27:43.277476+00:00",
+      "observed_at": "2026-09-18T21:40:39.788803+00:00",
       "changed_at": "2026-09-18T12:11:11.830832+00:00"
     },
     {
@@ -1330,7 +1332,7 @@
         "Luca Waldschmidt",
         "Timo Hübers"
       ],
-      "observed_at": "2026-09-18T18:27:43.277476+00:00",
+      "observed_at": "2026-09-18T21:40:39.788803+00:00",
       "changed_at": "2026-09-18T12:11:11.830832+00:00"
     },
     {
@@ -1640,7 +1642,7 @@
         "Justin Lerma",
         "Konstantinos Karetsas"
       ],
-      "observed_at": "2026-09-18T18:27:43.277476+00:00",
+      "observed_at": "2026-09-18T21:40:39.788803+00:00",
       "changed_at": "2026-09-18T14:30:45.924488+00:00"
     },
     {
@@ -1947,7 +1949,7 @@
         "Faik Sakar",
         "Sima Suso"
       ],
-      "observed_at": "2026-09-18T18:27:43.277476+00:00",
+      "observed_at": "2026-09-18T21:40:39.788803+00:00",
       "changed_at": "2026-09-17T12:13:23.710395+00:00"
     },
     {
@@ -2252,7 +2254,7 @@
         "Rocco Reitz",
         "Marc Guiu"
       ],
-      "observed_at": "2026-09-18T18:27:43.277476+00:00",
+      "observed_at": "2026-09-18T21:40:39.788803+00:00",
       "changed_at": "2026-09-17T14:59:54.088195+00:00"
     },
     {
@@ -2551,8 +2553,10 @@
         "Sven Michel",
         "Timur Gayret"
       ],
-      "away_unavailable": [],
-      "observed_at": "2026-09-18T18:27:43.277476+00:00",
+      "away_unavailable": [
+        "Bernardo"
+      ],
+      "observed_at": "2026-09-18T21:40:39.788803+00:00",
       "changed_at": "2026-09-17T19:01:58.920404+00:00"
     },
     {
@@ -2855,7 +2859,7 @@
         "Francis Onyeka",
         "Tom Zimmerschied"
       ],
-      "observed_at": "2026-09-18T18:27:43.277476+00:00",
+      "observed_at": "2026-09-18T21:40:39.788803+00:00",
       "changed_at": "2026-09-17T19:01:58.920404+00:00"
     }
   ]

@@ -20,8 +20,8 @@
         "Lorenzo Lucchesi",
         "Andrea Carboni",
         "Samuele Birindelli",
-        "Ebenezer Akinsanmiro",
         "Michael Folorunsho",
+        "Ebenezer Akinsanmiro",
         "Ricardo Mangas",
         "Patrick Cutrone",
         "Jay Robinson",
@@ -97,26 +97,26 @@
           "shirt_number": "19"
         },
         {
-          "name": "Ebenezer Akinsanmiro",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 64,
-          "player_id": 1481909,
-          "shirt_number": "14"
-        },
-        {
           "name": "Michael Folorunsho",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
           "formation": "3-4-2-1",
-          "position_id": 66,
+          "position_id": 64,
           "player_id": 822440,
           "shirt_number": "90"
+        },
+        {
+          "name": "Ebenezer Akinsanmiro",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 66,
+          "player_id": 1481909,
+          "shirt_number": "14"
         },
         {
           "name": "Ricardo Mangas",
@@ -287,22 +287,47 @@
         }
       ],
       "home_subs": [
+        "Adam Bakoune",
+        "Foe Ondoa",
+        "Dany Mota",
+        "Mathis Mout",
+        "Yvan Kouadio Maye",
         "Aljaž Strajnar",
         "Demba Thiam",
         "Saba Goglichidze",
         "Valentin Antov",
-        "Yvan Kouadio Maye",
-        "Adam Bakoune",
         "Andrea Colpani",
-        "Foe Ondoa",
         "Leonardo Colombo",
-        "Mathis Mout",
         "Omari Forson",
         "Cyril Ngonge",
-        "Dany Mota",
         "Exequiel Zeballos"
       ],
       "home_substitute_entries": [
+        {
+          "name": "Adam Bakoune",
+          "player_id": "1425693",
+          "role_group": "MID"
+        },
+        {
+          "name": "Foe Ondoa",
+          "player_id": "1577900",
+          "role_group": "MID"
+        },
+        {
+          "name": "Dany Mota",
+          "player_id": "737339",
+          "role_group": "FW"
+        },
+        {
+          "name": "Mathis Mout",
+          "player_id": "1879542",
+          "role_group": "MID"
+        },
+        {
+          "name": "Yvan Kouadio Maye",
+          "player_id": "1830551",
+          "role_group": "DEF"
+        },
         {
           "name": "Aljaž Strajnar",
           "player_id": "1804416",
@@ -324,33 +349,13 @@
           "role_group": "DEF"
         },
         {
-          "name": "Yvan Kouadio Maye",
-          "player_id": "1830551",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Adam Bakoune",
-          "player_id": "1425693",
-          "role_group": "MID"
-        },
-        {
           "name": "Andrea Colpani",
           "player_id": "937462",
           "role_group": "MID"
         },
         {
-          "name": "Foe Ondoa",
-          "player_id": "1577900",
-          "role_group": "MID"
-        },
-        {
           "name": "Leonardo Colombo",
           "player_id": "1415623",
-          "role_group": "MID"
-        },
-        {
-          "name": "Mathis Mout",
-          "player_id": "1879542",
           "role_group": "MID"
         },
         {
@@ -364,32 +369,52 @@
           "role_group": "FW"
         },
         {
-          "name": "Dany Mota",
-          "player_id": "737339",
-          "role_group": "FW"
-        },
-        {
           "name": "Exequiel Zeballos",
           "player_id": "1110044",
           "role_group": "FW"
         }
       ],
       "away_subs": [
+        "Luca Lipani",
+        "Kieron Bowie",
+        "Vasilije Adžić",
+        "Benja Domínguez",
+        "Laurs Skjellerup",
         "Giacomo Satalino",
         "Stefano Turati",
         "Cas Odenthal",
         "Ignace Van Der Brempt",
         "Andrea Ghion",
         "Ibrahim Sulemana",
-        "Luca Lipani",
         "Rafael Obrador",
-        "Vasilije Adžić",
-        "Benja Domínguez",
-        "Kieron Bowie",
-        "Laurs Skjellerup",
         "Nicholas Pierini"
       ],
       "away_substitute_entries": [
+        {
+          "name": "Luca Lipani",
+          "player_id": "1369279",
+          "role_group": "MID"
+        },
+        {
+          "name": "Kieron Bowie",
+          "player_id": "982617",
+          "role_group": "FW"
+        },
+        {
+          "name": "Vasilije Adžić",
+          "player_id": "1382375",
+          "role_group": "MID"
+        },
+        {
+          "name": "Benja Domínguez",
+          "player_id": "1316088",
+          "role_group": "FW"
+        },
+        {
+          "name": "Laurs Skjellerup",
+          "player_id": "1163273",
+          "role_group": "FW"
+        },
         {
           "name": "Giacomo Satalino",
           "player_id": "727654",
@@ -421,34 +446,9 @@
           "role_group": "MID"
         },
         {
-          "name": "Luca Lipani",
-          "player_id": "1369279",
-          "role_group": "MID"
-        },
-        {
           "name": "Rafael Obrador",
           "player_id": "1167529",
           "role_group": "MID"
-        },
-        {
-          "name": "Vasilije Adžić",
-          "player_id": "1382375",
-          "role_group": "MID"
-        },
-        {
-          "name": "Benja Domínguez",
-          "player_id": "1316088",
-          "role_group": "FW"
-        },
-        {
-          "name": "Kieron Bowie",
-          "player_id": "982617",
-          "role_group": "FW"
-        },
-        {
-          "name": "Laurs Skjellerup",
-          "player_id": "1163273",
-          "role_group": "FW"
         },
         {
           "name": "Nicholas Pierini",
@@ -471,7 +471,7 @@
         "Ismaël Koné",
         "Cristian Volpato"
       ],
-      "observed_at": "2026-09-18T18:26:15.004285+00:00",
+      "observed_at": "2026-09-18T21:39:30.486522+00:00",
       "changed_at": "2026-09-18T18:26:15.004285+00:00"
     },
     {
@@ -775,7 +775,7 @@
         "Ché Adams",
         "Pietro Pellegri"
       ],
-      "observed_at": "2026-09-18T18:26:15.004285+00:00",
+      "observed_at": "2026-09-18T21:39:30.486522+00:00",
       "changed_at": "2026-09-18T12:09:45.164926+00:00"
     },
     {
@@ -1074,7 +1074,7 @@
         "John Stones",
         "Hakan Çalhanoglu"
       ],
-      "observed_at": "2026-09-18T18:26:15.004285+00:00",
+      "observed_at": "2026-09-18T21:39:30.486522+00:00",
       "changed_at": "2026-09-18T12:09:45.164926+00:00"
     },
     {
@@ -1380,7 +1380,7 @@
         "Riyad Idrissi",
         "Yael Trepy"
       ],
-      "observed_at": "2026-09-18T18:26:15.004285+00:00",
+      "observed_at": "2026-09-18T21:39:30.486522+00:00",
       "changed_at": "2026-09-18T12:09:45.164926+00:00"
     },
     {
@@ -1689,7 +1689,7 @@
         "Nicolò Rovella",
         "Patric"
       ],
-      "observed_at": "2026-09-18T18:26:15.004285+00:00",
+      "observed_at": "2026-09-18T21:39:30.486522+00:00",
       "changed_at": "2026-09-18T12:09:45.164926+00:00"
     },
     {
@@ -1994,7 +1994,7 @@
         "Scott McTominay",
         "Giovane Nascimento"
       ],
-      "observed_at": "2026-09-18T18:26:15.004285+00:00",
+      "observed_at": "2026-09-18T21:39:30.486522+00:00",
       "changed_at": "2026-09-18T12:09:45.164926+00:00"
     },
     {
@@ -2294,7 +2294,7 @@
       "away_unavailable": [
         "Jayden Addai"
       ],
-      "observed_at": "2026-09-18T18:26:15.004285+00:00",
+      "observed_at": "2026-09-18T21:39:30.486522+00:00",
       "changed_at": "2026-09-17T14:58:40.397967+00:00"
     },
     {
@@ -2601,7 +2601,7 @@
         "Isak Hien",
         "Kamaldeen Sulemana"
       ],
-      "observed_at": "2026-09-18T18:26:15.004285+00:00",
+      "observed_at": "2026-09-18T21:39:30.486522+00:00",
       "changed_at": "2026-09-17T19:00:29.643437+00:00"
     },
     {
@@ -2900,7 +2900,7 @@
         "Medon Berisha",
         "Omri Gandelman"
       ],
-      "observed_at": "2026-09-18T18:26:15.004285+00:00",
+      "observed_at": "2026-09-18T21:39:30.486522+00:00",
       "changed_at": "2026-09-17T22:07:47.496440+00:00"
     },
     {
@@ -3202,7 +3202,7 @@
         "Elias Havel",
         "Lorenzo Venturino"
       ],
-      "observed_at": "2026-09-18T18:26:15.004285+00:00",
+      "observed_at": "2026-09-18T21:39:30.486522+00:00",
       "changed_at": "2026-09-17T14:58:40.397967+00:00"
     }
   ]

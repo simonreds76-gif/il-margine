@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-18T18:26:49Z",
+  "generated_at": "2026-09-18T21:39:56Z",
   "league": "epl",
-  "row_count": 32,
+  "row_count": 30,
   "rows": [
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-18",
       "home_team": "Brentford",
       "away_team": "Chelsea",
@@ -34,15 +34,15 @@
         "Igor Thiago"
       ],
       "bench_names": [
-        "Ellery Balcombe",
         "Aaron Hickey",
-        "Benjamin Fredrick",
-        "Malick Diouf",
-        "Rico Henry",
-        "Fábio Carvalho",
         "Mamadou Sangaré",
-        "Callum Wilson",
-        "Dango Ouattara"
+        "Malick Diouf",
+        "Dango Ouattara",
+        "Fábio Carvalho",
+        "Ellery Balcombe",
+        "Benjamin Fredrick",
+        "Rico Henry",
+        "Callum Wilson"
       ],
       "unavailable_names": [
         "Nathan Collins",
@@ -68,7 +68,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-18",
       "home_team": "Brentford",
       "away_team": "Chelsea",
@@ -96,14 +96,14 @@
         "Danny Welbeck"
       ],
       "bench_names": [
+        "Josh Acheampong",
+        "Geovany Quenda",
+        "Mahdi Nicoll-Jazuli",
+        "Estêvão",
         "Mike Penders",
         "Jorrel Hato",
-        "Josh Acheampong",
         "Malo Gusto",
-        "Mahdi Nicoll-Jazuli",
         "Roméo Lavia",
-        "Estêvão",
-        "Geovany Quenda",
         "Jamie Gittens"
       ],
       "unavailable_names": [
@@ -131,132 +131,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
-      "match_date": "2026-09-18",
-      "home_team": "Brentford FC",
-      "away_team": "Chelsea FC",
-      "team": "Brentford FC",
-      "team_key": "brentford",
-      "opponent": "Chelsea FC",
-      "opponent_key": "chelsea",
-      "is_home": 1,
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "fixture_corruption_score": 0.0,
-      "fixture_corruption_flags": [],
-      "team_lineup_status": "unknown",
-      "starter_names": [
-        "Caoimhín Kelleher",
-        "Michael Kayode",
-        "Jannik Schuster",
-        "Kristoffer Ajer",
-        "Keane Lewis-Potter",
-        "Yehor Yarmoliuk",
-        "Vitaly Janelt",
-        "Jaidon Anthony",
-        "Mikkel Damsgaard",
-        "Kevin Schade",
-        "Igor Thiago"
-      ],
-      "bench_names": [
-        "Ellery Balcombe",
-        "Aaron Hickey",
-        "Benjamin Fredrick",
-        "Malick Diouf",
-        "Rico Henry",
-        "Fábio Carvalho",
-        "Mamadou Sangaré",
-        "Callum Wilson",
-        "Dango Ouattara"
-      ],
-      "unavailable_names": [
-        "Nathan Collins",
-        "Sepp van den Berg",
-        "Antoni Milambo",
-        "Mathias Jensen",
-        "Joshua Dasilva"
-      ],
-      "primary": "Igor Thiago",
-      "secondary": "Kevin Schade",
-      "tertiary": "Fabio Carvalho",
-      "primary_lineup_status": "confirmed_starter",
-      "primary_match_name": "Igor Thiago",
-      "secondary_lineup_status": "confirmed_starter",
-      "secondary_match_name": "Kevin Schade",
-      "tertiary_lineup_status": "confirmed_bench",
-      "tertiary_match_name": "Fábio Carvalho",
-      "active_taker_pre_match": "Igor Thiago",
-      "active_slot_pre_match": "primary",
-      "penalty_transfer_pre_match": 0,
-      "inherited_from_pre_match": "",
-      "transfer_level_pre_match": ""
-    },
-    {
-      "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
-      "match_date": "2026-09-18",
-      "home_team": "Brentford FC",
-      "away_team": "Chelsea FC",
-      "team": "Chelsea FC",
-      "team_key": "chelsea",
-      "opponent": "Brentford FC",
-      "opponent_key": "brentford",
-      "is_home": 0,
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "fixture_corruption_score": 0.0,
-      "fixture_corruption_flags": [],
-      "team_lineup_status": "unknown",
-      "starter_names": [
-        "Emiliano Martínez",
-        "Wesley Fofana",
-        "Maxence Lacroix",
-        "Levi Colwill",
-        "Pedro Neto",
-        "Jordan Henderson",
-        "Valentín Barco",
-        "Pep Chavarría",
-        "Cole Palmer",
-        "Morgan Rogers",
-        "Danny Welbeck"
-      ],
-      "bench_names": [
-        "Mike Penders",
-        "Jorrel Hato",
-        "Josh Acheampong",
-        "Malo Gusto",
-        "Mahdi Nicoll-Jazuli",
-        "Roméo Lavia",
-        "Estêvão",
-        "Geovany Quenda",
-        "Jamie Gittens"
-      ],
-      "unavailable_names": [
-        "Reece James",
-        "Emmanuel Emegha",
-        "Dastan Satpaev",
-        "Moisés Caicedo",
-        "Marco Palestra",
-        "João Pedro"
-      ],
-      "primary": "Cole Palmer",
-      "secondary": "Estêvão",
-      "tertiary": "João Pedro",
-      "primary_lineup_status": "confirmed_starter",
-      "primary_match_name": "Cole Palmer",
-      "secondary_lineup_status": "confirmed_bench",
-      "secondary_match_name": "Estêvão",
-      "tertiary_lineup_status": "not_in_squad",
-      "tertiary_match_name": "João Pedro",
-      "active_taker_pre_match": "Cole Palmer",
-      "active_slot_pre_match": "primary",
-      "penalty_transfer_pre_match": 0,
-      "inherited_from_pre_match": "",
-      "transfer_level_pre_match": ""
-    },
-    {
-      "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-19",
       "home_team": "Brighton & Hove Albion",
       "away_team": "Arsenal",
@@ -313,7 +188,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-19",
       "home_team": "Brighton & Hove Albion",
       "away_team": "Arsenal",
@@ -364,7 +239,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-19",
       "home_team": "Brighton & Hove Albion",
       "away_team": "Arsenal FC",
@@ -421,7 +296,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-19",
       "home_team": "Brighton & Hove Albion",
       "away_team": "Arsenal FC",
@@ -472,7 +347,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-19",
       "home_team": "Everton",
       "away_team": "Ipswich Town",
@@ -522,7 +397,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-19",
       "home_team": "Everton",
       "away_team": "Ipswich Town",
@@ -571,7 +446,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-19",
       "home_team": "Everton FC",
       "away_team": "Ipswich Town",
@@ -621,7 +496,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-19",
       "home_team": "Everton FC",
       "away_team": "Ipswich Town",
@@ -670,7 +545,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-19",
       "home_team": "Newcastle United",
       "away_team": "Hull City",
@@ -725,7 +600,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-19",
       "home_team": "Newcastle United",
       "away_team": "Hull City",
@@ -781,7 +656,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-19",
       "home_team": "Nottingham Forest",
       "away_team": "Coventry City",
@@ -831,7 +706,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-19",
       "home_team": "Nottingham Forest",
       "away_team": "Coventry City",
@@ -884,7 +759,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-19",
       "home_team": "Tottenham Hotspur",
       "away_team": "Aston Villa",
@@ -935,7 +810,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-19",
       "home_team": "Tottenham Hotspur",
       "away_team": "Aston Villa",
@@ -988,7 +863,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-20",
       "home_team": "AFC Bournemouth",
       "away_team": "Liverpool",
@@ -1039,7 +914,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-20",
       "home_team": "AFC Bournemouth",
       "away_team": "Liverpool",
@@ -1090,7 +965,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-20",
       "home_team": "AFC Bournemouth",
       "away_team": "Liverpool FC",
@@ -1141,7 +1016,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-20",
       "home_team": "AFC Bournemouth",
       "away_team": "Liverpool FC",
@@ -1192,7 +1067,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-20",
       "home_team": "Fulham",
       "away_team": "Manchester United",
@@ -1242,7 +1117,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-20",
       "home_team": "Fulham",
       "away_team": "Manchester United",
@@ -1295,7 +1170,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-20",
       "home_team": "Fulham FC",
       "away_team": "Manchester United",
@@ -1345,7 +1220,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-20",
       "home_team": "Fulham FC",
       "away_team": "Manchester United",
@@ -1398,7 +1273,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-20",
       "home_team": "Leeds United",
       "away_team": "Crystal Palace",
@@ -1447,7 +1322,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-20",
       "home_team": "Leeds United",
       "away_team": "Crystal Palace",
@@ -1498,7 +1373,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-20",
       "home_team": "Manchester City",
       "away_team": "Sunderland",
@@ -1547,7 +1422,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-20",
       "home_team": "Manchester City",
       "away_team": "Sunderland",
@@ -1598,7 +1473,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-20",
       "home_team": "Manchester City",
       "away_team": "Sunderland AFC",
@@ -1647,7 +1522,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-09-18T18:26:49Z",
+      "compared_at": "2026-09-18T21:39:56Z",
       "match_date": "2026-09-20",
       "home_team": "Manchester City",
       "away_team": "Sunderland AFC",

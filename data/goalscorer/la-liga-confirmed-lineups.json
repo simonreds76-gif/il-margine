@@ -287,20 +287,45 @@
         }
       ],
       "home_subs": [
+        "Quilindschy Hartman",
+        "Marcos Fernández",
+        "Pere Milla",
+        "Clemens Riedel",
+        "Tyrhys Dolan",
         "Ángel Fortuno",
         "Llorenç Serred",
-        "Clemens Riedel",
-        "Quilindschy Hartman",
         "Vanja Drkušić",
         "Gabriel Moscardo",
         "Pol Lozano",
         "Rafel Bauzà",
-        "Marcos Fernández",
-        "Pere Milla",
-        "Tyrhys Dolan",
         "Victor Mullerat"
       ],
       "home_substitute_entries": [
+        {
+          "name": "Quilindschy Hartman",
+          "player_id": "1393669",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Marcos Fernández",
+          "player_id": "1407741",
+          "role_group": "FW"
+        },
+        {
+          "name": "Pere Milla",
+          "player_id": "593129",
+          "role_group": "FW"
+        },
+        {
+          "name": "Clemens Riedel",
+          "player_id": "1279557",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Tyrhys Dolan",
+          "player_id": "1181101",
+          "role_group": "FW"
+        },
         {
           "name": "Ángel Fortuno",
           "player_id": "1184772",
@@ -310,16 +335,6 @@
           "name": "Llorenç Serred",
           "player_id": "1624106",
           "role_group": "GK"
-        },
-        {
-          "name": "Clemens Riedel",
-          "player_id": "1279557",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Quilindschy Hartman",
-          "player_id": "1393669",
-          "role_group": "DEF"
         },
         {
           "name": "Vanja Drkušić",
@@ -342,50 +357,35 @@
           "role_group": "MID"
         },
         {
-          "name": "Marcos Fernández",
-          "player_id": "1407741",
-          "role_group": "FW"
-        },
-        {
-          "name": "Pere Milla",
-          "player_id": "593129",
-          "role_group": "FW"
-        },
-        {
-          "name": "Tyrhys Dolan",
-          "player_id": "1181101",
-          "role_group": "FW"
-        },
-        {
           "name": "Victor Mullerat",
           "player_id": "2190234",
           "role_group": "FW"
         }
       ],
       "away_subs": [
-        "Alejandro Iturbe",
-        "Matia Barzić",
-        "Pedro Bigas",
         "Rubén Sánchez",
+        "Abiel Osorio",
+        "Pedro Bigas",
+        "Matia Barzić",
+        "Tete Morente",
+        "Alejandro Iturbe",
         "Facundo Buonanotte",
         "Grady Diangana",
         "Marc Aguado",
         "Martim Neto",
-        "Abiel Osorio",
         "Ezequiel Ponce",
-        "Josan",
-        "Tete Morente"
+        "Josan"
       ],
       "away_substitute_entries": [
         {
-          "name": "Alejandro Iturbe",
-          "player_id": "1311126",
-          "role_group": "GK"
+          "name": "Rubén Sánchez",
+          "player_id": "1330035",
+          "role_group": "DEF"
         },
         {
-          "name": "Matia Barzić",
-          "player_id": "1670276",
-          "role_group": "DEF"
+          "name": "Abiel Osorio",
+          "player_id": "1343195",
+          "role_group": "FW"
         },
         {
           "name": "Pedro Bigas",
@@ -393,9 +393,19 @@
           "role_group": "DEF"
         },
         {
-          "name": "Rubén Sánchez",
-          "player_id": "1330035",
+          "name": "Matia Barzić",
+          "player_id": "1670276",
           "role_group": "DEF"
+        },
+        {
+          "name": "Tete Morente",
+          "player_id": "801213",
+          "role_group": "FW"
+        },
+        {
+          "name": "Alejandro Iturbe",
+          "player_id": "1311126",
+          "role_group": "GK"
         },
         {
           "name": "Facundo Buonanotte",
@@ -418,11 +428,6 @@
           "role_group": "MID"
         },
         {
-          "name": "Abiel Osorio",
-          "player_id": "1343195",
-          "role_group": "FW"
-        },
-        {
           "name": "Ezequiel Ponce",
           "player_id": "493216",
           "role_group": "FW"
@@ -430,11 +435,6 @@
         {
           "name": "Josan",
           "player_id": "623982",
-          "role_group": "FW"
-        },
-        {
-          "name": "Tete Morente",
-          "player_id": "801213",
           "role_group": "FW"
         }
       ],
@@ -448,7 +448,7 @@
         "Adam Boayar",
         "Yago Santiago"
       ],
-      "observed_at": "2026-09-18T18:27:16.258558+00:00",
+      "observed_at": "2026-09-18T21:40:17.620347+00:00",
       "changed_at": "2026-09-18T18:27:16.258558+00:00"
     },
     {
@@ -751,7 +751,7 @@
         "Mikel Rodríguez",
         "Aitor Mañas"
       ],
-      "observed_at": "2026-09-18T18:27:16.258558+00:00",
+      "observed_at": "2026-09-18T21:40:17.620347+00:00",
       "changed_at": "2026-09-18T12:10:43.839760+00:00"
     },
     {
@@ -1053,7 +1053,7 @@
         "Pedro Felipe",
         "Andrés Martin"
       ],
-      "observed_at": "2026-09-18T18:27:16.258558+00:00",
+      "observed_at": "2026-09-18T21:40:17.620347+00:00",
       "changed_at": "2026-09-18T12:10:43.839760+00:00"
     },
     {
@@ -1359,7 +1359,7 @@
         "Isi Palazón",
         "Randy Nteka"
       ],
-      "observed_at": "2026-09-18T18:27:16.258558+00:00",
+      "observed_at": "2026-09-18T21:40:17.620347+00:00",
       "changed_at": "2026-09-18T12:10:43.839760+00:00"
     },
     {
@@ -1662,7 +1662,7 @@
         "Frenkie de Jong",
         "Roony Bardghji"
       ],
-      "observed_at": "2026-09-18T18:27:16.258558+00:00",
+      "observed_at": "2026-09-18T21:40:17.620347+00:00",
       "changed_at": "2026-09-18T12:10:43.839760+00:00"
     },
     {
@@ -1965,7 +1965,7 @@
         "Ferland Mendy",
         "Rodrygo"
       ],
-      "observed_at": "2026-09-18T18:27:16.258558+00:00",
+      "observed_at": "2026-09-18T21:40:17.620347+00:00",
       "changed_at": "2026-09-17T19:01:31.248648+00:00"
     },
     {
@@ -2267,7 +2267,7 @@
         "Ismael Barea",
         "Diego Llorente"
       ],
-      "observed_at": "2026-09-18T18:27:16.258558+00:00",
+      "observed_at": "2026-09-18T21:40:17.620347+00:00",
       "changed_at": "2026-09-17T19:01:31.248648+00:00"
     },
     {
@@ -2578,7 +2578,7 @@
         "Jens-Lys Cajuste",
         "Julen Lobete"
       ],
-      "observed_at": "2026-09-18T18:27:16.258558+00:00",
+      "observed_at": "2026-09-18T21:40:17.620347+00:00",
       "changed_at": "2026-09-18T12:10:43.839760+00:00"
     },
     {
@@ -2885,7 +2885,7 @@
         "Álvaro Odriozola",
         "Igor Zubeldia"
       ],
-      "observed_at": "2026-09-18T18:27:16.258558+00:00",
+      "observed_at": "2026-09-18T21:40:17.620347+00:00",
       "changed_at": "2026-09-17T22:08:45.126544+00:00"
     },
     {
@@ -3186,7 +3186,7 @@
         "Hugo Sotelo",
         "Etta Eyong"
       ],
-      "observed_at": "2026-09-18T18:27:16.258558+00:00",
+      "observed_at": "2026-09-18T21:40:17.620347+00:00",
       "changed_at": "2026-09-18T14:30:18.600815+00:00"
     }
   ]
