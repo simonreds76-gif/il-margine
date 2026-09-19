@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-18T13:24:35Z",
+  "generated_at": "2026-09-19T04:42:46Z",
   "league": "bundesliga",
-  "row_count": 2,
+  "row_count": 1,
   "rows": [
     {
-      "team": "1. FC Köln",
-      "team_key": "fc cologne",
-      "player_name": "Thijs Dallinga",
-      "player_key": "thijs dallinga",
+      "team": "Bayern München",
+      "team_key": "bayern munich",
+      "player_name": "Harry Kane",
+      "player_key": "harry kane",
       "observed_player_penalties": 1,
       "observed_team_penalties": 1,
       "observed_share": 1.0,
@@ -18,23 +18,7 @@
         "fotmob_live"
       ],
       "event_count": 1,
-      "last_event_date": "2026-09-12"
-    },
-    {
-      "team": "Mainz 05",
-      "team_key": "mainz 05",
-      "player_name": "Nadiem Amiri",
-      "player_key": "nadiem amiri",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-09-12"
+      "last_event_date": "2026-09-18"
     }
   ]
 }

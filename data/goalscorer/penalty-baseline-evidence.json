@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-18T13:24:32Z",
+  "generated_at": "2026-09-19T04:42:38Z",
   "league": "serie-a",
-  "row_count": 2,
+  "row_count": 1,
   "rows": [
     {
-      "team": "Cagliari",
-      "team_key": "cagliari",
-      "player_name": "Daniel Maldini",
-      "player_key": "daniel maldini",
+      "team": "Monza",
+      "team_key": "monza",
+      "player_name": "Gustavo Varela",
+      "player_key": "gustavo varela",
       "observed_player_penalties": 1,
       "observed_team_penalties": 1,
       "observed_share": 1.0,
@@ -18,23 +18,7 @@
         "fotmob_live"
       ],
       "event_count": 1,
-      "last_event_date": "2026-09-12"
-    },
-    {
-      "team": "Genoa",
-      "team_key": "genoa",
-      "player_name": "Lorenzo Colombo",
-      "player_key": "lorenzo colombo",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-09-12"
+      "last_event_date": "2026-09-18"
     }
   ]
 }
