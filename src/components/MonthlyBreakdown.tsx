@@ -45,7 +45,8 @@ interface MonthlyBreakdownProps {
 }
 
 export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride }: MonthlyBreakdownProps) {
-  const [rows, setRows] = useState<MonthRow[]>([]);
+  const [fetchedRows, setRows] = useState<MonthRow[]>([]);
+  const rows = rowsOverride ?? fetchedRows;
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(false);
   const [openMonth, setOpenMonth] = useState<string | null>(null);
@@ -53,11 +54,7 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
   const view = VIEW_BY_SCOPE[scope];
 
   useEffect(() => {
-    if (rowsOverride) {
-      setRows(rowsOverride);
-      setLoading(false);
-      return;
-    }
+    if (rowsOverride) return;
 
     async function fetch_() {
       const { data, error } = await supabase
@@ -71,7 +68,7 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
     fetch_();
   }, [rowsOverride, view]);
 
-  if (loading) return null;
+  if (!rowsOverride && loading) return null;
   if (rows.length === 0) return null;
 
   const displayAll = showAll || expanded;
@@ -86,6 +83,9 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
         </span>
         <h2 className="mt-2 text-2xl font-semibold text-slate-100">Monthly breakdown</h2>
         <p className="mt-1 text-sm text-slate-400">{SUBTITLE_BY_SCOPE[scope]}</p>
+      </div>
+      <div className="monthly-bars" role="img" aria-label={displayed.slice().reverse().map(r => `${formatMonth(r.month)}: ${Number(r.total_profit).toFixed(2)} units`).join("; ")}>
+        {displayed.slice().reverse().map(r => { const profit = Number(r.total_profit); const scale = Math.max(1, ...displayed.map(m => Math.abs(Number(m.total_profit)))); return <div className="monthly-bar-column" key={r.month}><strong className={profit >= 0 ? "gain" : "loss"}>{profit >= 0 ? "+" : ""}{profit.toFixed(1)}u</strong><div className="monthly-bar-track"><span className={profit >= 0 ? "positive" : "negative"} style={{height: `${Math.max(2, Math.abs(profit) / scale * 100)}%`}} /></div><span>{formatMonth(r.month)}</span></div>; })}
       </div>
       {/* Mobile: tap to expand each month */}
       <div className="divide-y divide-slate-800/40 md:hidden">

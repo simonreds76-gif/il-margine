@@ -32,11 +32,10 @@ export default function MonthlyBreakdownSection({ scope, initialPayload }: Month
   if (payload?.show !== true || payload.rows.length === 0) return null;
 
   return (
-    <section id="monthly" className="scroll-mt-20 border-b border-slate-800/30 py-16 md:py-20">
+    <section id="monthly" className="monthly-showcase scroll-mt-24 border-b border-slate-800/30 py-9 md:py-12">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <MonthlyBreakdown scope={scope} rowsOverride={payload.rows} />
       </div>
     </section>
   );
 }
-

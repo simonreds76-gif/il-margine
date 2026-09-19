@@ -291,7 +291,7 @@ export function LabHitsSection({ highlights }: { highlights: LabHighlight[] }) {
           </h2>
         </div>
 
-        <span className="ip-summary-actions text-sm text-emerald-200"><span>{visibleHighlights.length} winners</span><DisclosureCue /></span>
+        <span className="ip-summary-actions text-sm text-emerald-200"><span>Latest {visibleHighlights.length} hits</span><DisclosureCue /></span>
       </summary>
       <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-500">
         Recorded bookmaker prices above our estimated fair odds. Super Sub wins name the replacement who scored.

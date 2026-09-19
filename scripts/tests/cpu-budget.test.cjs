@@ -34,7 +34,14 @@ test('failed and slow loads cannot leave stale successful entries',async()=>{
 test('scope keys coalesce queries; live responses cache briefly; errors are not cached',async()=>{
  let queries=0,fail=false;
  const query=new Proxy({}, {get:(_,key)=>key==='then' ? (resolve)=>resolve({data:[],error:fail?{message:'offline'}:null}) : ()=>query});
+ const monthlyLoader=compile(fs.readFileSync(path.join(root,'src/lib/public-record.ts'),'utf8'),{
+  'server-only':{},
+  '@/lib/monthly-record':compile(fs.readFileSync(path.join(root,'src/lib/monthly-record.ts'),'utf8')),
+  '@/lib/supabase-server':{getSupabaseAdmin:()=>({from:()=>{queries++;return query}}),hasSupabaseAdminConfig:()=>true},
+  '@/lib/bet-category':{getDisplayBetCategory:()=>''},
+ });
  const api=compile(fs.readFileSync(path.join(root,'src/app/api/public-record/route.ts'),'utf8'),{
+  '@/lib/public-record':monthlyLoader,
   '@/lib/bounded-async-cache':cache,
   '@/lib/supabase-server':{getSupabaseAdmin:()=>({from:()=>{queries++;return query}})},
   '@/lib/bet-category':{getDisplayBetCategory:()=>''},

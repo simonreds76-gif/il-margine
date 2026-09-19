@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 
-/** Site-wide compliance bar: 18+, BeGambleAware, Gamble Responsibly. Below nav, above content. */
+/** Bottom-of-page support links, shared by every route. */
 export default function ComplianceBar() {
   return (
-    <div className="border-b border-slate-800/50 bg-slate-900/30">
+    <aside aria-label="Responsible gambling support" className="border-t border-slate-800/50 bg-[#0b0e13] py-3">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 py-2.5">
           <div title="18+ only. Gambling is for adults.">
@@ -35,6 +35,6 @@ export default function ComplianceBar() {
           <span className="text-xs font-medium text-slate-300">Gamble responsibly</span>
         </div>
       </div>
-    </div>
+    </aside>
   );
 }

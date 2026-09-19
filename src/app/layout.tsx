@@ -83,8 +83,8 @@ export default function RootLayout({
           <Analytics />
           <StructuredData />
           <GlobalNav />
-          <ComplianceBar />
           <PublicSiteFrame>{children}</PublicSiteFrame>
+          <ComplianceBar />
           <RouteScopedOverlays />
         </ChatProvider>
       </body>

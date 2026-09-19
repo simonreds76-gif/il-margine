@@ -1,18 +1,19 @@
 import HomepageClient from "./HomepageClient";
-import { fetchHomePayload } from "@/lib/public-record";
+import { fetchHomePayload, fetchMonthlyPayload } from "@/lib/public-record";
 
 // Admin bet mutations invalidate this page immediately. The daily value is a
 // fallback for any automated settlement that writes directly to Supabase.
 export const revalidate = 86400;
 
 export default async function Home() {
-  const payload = await fetchHomePayload().catch((error) => {
+  const [payload, monthly] = await Promise.all([fetchHomePayload().catch((error) => {
     console.error("[home] failed to load initial public record", error);
     return { stats: [], recent: [], pending: [], last7: null };
-  });
+  }), fetchMonthlyPayload("combined").catch((error) => { console.error("[home] monthly record unavailable", error); return undefined; })]);
 
   return (
     <HomepageClient
+      initialMonthly={monthly}
       initialMarketStats={payload.stats}
       initialRecentBets={payload.recent}
       initialPendingBets={payload.pending}

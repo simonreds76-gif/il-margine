@@ -9,7 +9,8 @@ import PublicBetsTable from "@/components/PublicBetsTable";
 import ResultBadge from "@/components/ResultBadge";
 import TodaysEdge from "@/components/TodaysEdge";
 import Footer from "@/components/Footer";
-import PropsAlertsCta from "@/components/PropsAlertsCta";
+import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
+import type { MonthRow } from "@/components/MonthlyBreakdown";
 import { formatMatchDate } from "@/lib/format";
 import { publicTipPath } from "@/lib/tip-seo";
 
@@ -102,6 +103,7 @@ function MarketCard({
 }
 
 type HomepageClientProps = {
+  initialMonthly?: { show: boolean; rows: MonthRow[] };
   initialMarketStats?: MarketStats[];
   initialRecentBets?: HomepageBet[];
   initialPendingBets?: HomepageBet[];
@@ -166,6 +168,7 @@ function buildCombinedStats(liveStats: MarketStats[]) {
 }
 
 export default function HomepageClient({
+  initialMonthly,
   initialMarketStats = [],
   initialRecentBets = [],
   initialPendingBets = [],
@@ -280,17 +283,17 @@ export default function HomepageClient({
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <main id="main-content">
 
-      <section className="border-b border-slate-800/70 py-8 sm:py-12 lg:py-14">
+      <section className="home-hero border-b border-slate-800/70 py-8 sm:py-12 lg:py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(22rem,.92fr)] lg:gap-12">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300">Football player props &amp; tennis</p>
               <h1 className="mt-3 max-w-2xl text-4xl font-semibold leading-[1.1] tracking-tight text-slate-100 sm:text-5xl xl:text-6xl">Independent <span className="text-emerald-300">betting analysis.</span></h1>
-              <p className="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">Evidence, estimated probabilities and the odds on offer. Explore our selections, compare prices and judge the results for yourself.</p>
+              <p className="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">Are the odds worth taking? Independent football and tennis research, published selections, tracked month by month.</p>
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 <Link href="/player-props" className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-300 px-5 py-3 text-base font-semibold text-slate-950 transition hover:bg-emerald-200 sm:w-auto">Player Props Tips <span aria-hidden="true">→</span></Link>
                 <Link href="/tennis-tips" className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-slate-600 bg-slate-900/40 px-5 py-3 text-base font-semibold text-slate-100 transition hover:border-slate-400 hover:bg-slate-900 sm:w-auto">ATP Tennis Tips <span aria-hidden="true">→</span></Link>
-                <PropsAlertsCta source="homepage_hero" variant="pill" />
+                <a href="#monthly" className="home-record-link">Monthly results <span aria-hidden="true">↓</span></a>
               </div>
               <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-400">
                 {["Selected free picks", "Every result logged", "Transparent record"].map((item) => <span key={item} className="inline-flex items-center gap-2"><span aria-hidden="true" className="h-1 w-1 rounded-full bg-slate-500" />{item}</span>)}
@@ -307,6 +310,7 @@ export default function HomepageClient({
           </div>
         </div>
       </section>
+      <MonthlyBreakdownSection scope="combined" initialPayload={initialMonthly} />
       {recentBets.length > 0 ? (
         <section className="border-b border-slate-800/30 bg-[#0b0e13] py-9 md:py-12">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
+import { BRAND } from "@/lib/brand";
 
 type Props = {
   className?: string;
@@ -8,10 +10,11 @@ export default function PageHomeLink({ className = "" }: Props) {
   return (
     <Link
       href="/"
-      className={`page-home-link inline-flex min-h-9 items-center gap-2 rounded-md text-sm text-slate-400 transition hover:text-emerald-200 ${className}`.trim()}
+      className={`page-home-link brand-home-button ${className}`.trim()}
     >
-      <span aria-hidden="true">←</span>
-      <span>Home</span>
+      <Image src={BRAND.icon} alt="" width={36} height={36} unoptimized />
+      <span><small>IL MARGINE</small><strong>Back to home</strong></span>
+      <span className="brand-home-arrow" aria-hidden="true">↗</span>
     </Link>
   );
 }

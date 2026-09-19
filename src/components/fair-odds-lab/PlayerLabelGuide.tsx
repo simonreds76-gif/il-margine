@@ -7,7 +7,7 @@ const groups = [
     ["Matches fair", "neutral", "The bookmaker price matches our estimate."],
   ] },
   { title: "Are the numbers ready?", number: "02", items: [
-    ["Update due", "pending", "These odds need a fresh check. They may be old or from before a lineup change. Open the player to see the last check."],
+    ["Odds need rechecking", "pending", "These odds need a fresh check. They may be old or from before a lineup change. Open the player to see the last check."],
     ["No odds", "pending", "Our feed has not supplied this player’s Bet365 odds yet. The bookmaker may still offer a market."],
     ["Estimate*", "pending", "Limited player history. We show an estimate but leave this player out of value comparisons."],
     ["Not compared", "neutral", "We need usable fair odds, recent bookmaker odds and a match that has not started to compare prices."],
@@ -31,7 +31,7 @@ export function PlayerLabelGuide() {
         <p className="ip-guide-takeaway"><span className="ip-status-chip positive">Better price</span>Here, Bet365 pays more than our estimated fair price. Decimal odds of 3.50 return £3.50 per £1 if the bet wins, including your stake.</p>
       </div>
       <div className="ip-guide-groups">{groups.map(group => <section key={group.number}><header><span>{group.number}</span><h3>{group.title}</h3></header><dl>{group.items.map(([label, tone, description]) => <div key={label}><dt><span className={`ip-status-chip ${tone}`}>{label}</span></dt><dd>{description}</dd></div>)}</dl></section>)}</div>
-      <p className="ip-guide-tip">Tap any player to see their odds, penalty role and last update. All times are UK time.</p>
+      <div className="ip-margin-note"><strong>Our fair odds ≠ bookmaker odds with the margin removed</strong><p>Our price comes from a player scoring estimate. Removing bookmaker margin needs every outcome in the same market — for example, both “scores” and “does not score”. Different players can all score, so adding their anytime goalscorer prices together does not give a valid market margin.</p><a href="/the-edge">Explore fair odds &amp; bookmaker margin →</a></div><p className="ip-guide-tip">Tap any player to see their odds, penalty role and last update. All times are UK time.</p>
     </div>
   </details>;
 }

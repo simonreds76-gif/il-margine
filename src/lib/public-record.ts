@@ -1,4 +1,5 @@
 import "server-only";
+import { buildMonthlyRows, type MonthlyBetRow } from "@/lib/monthly-record";
 
 import { getDisplayBetCategory } from "@/lib/bet-category";
 import { getSupabaseAdmin, hasSupabaseAdminConfig } from "@/lib/supabase-server";
@@ -11,12 +12,6 @@ type MonthlyScope = "combined" | "props" | "tennis";
 const MARKET_BY_SCOPE: Record<"tennis" | "props", string> = {
   tennis: "tennis",
   props: "props",
-};
-
-const MONTHLY_VIEW_BY_SCOPE: Record<MonthlyScope, string> = {
-  combined: "monthly_stats",
-  props: "monthly_stats_props",
-  tennis: "monthly_stats_tennis",
 };
 
 const MONTHLY_SETTING_BY_SCOPE: Record<MonthlyScope, string> = {
@@ -270,11 +265,8 @@ export async function fetchCalculatorPayload() {
 }
 
 export async function fetchMonthlyPayload(monthlyScope: MonthlyScope) {
-  if (!hasSupabaseAdminConfig()) return { show: false, rows: [] };
-
   const supabase = getSupabaseAdmin();
   const settingKey = MONTHLY_SETTING_BY_SCOPE[monthlyScope];
-  const view = MONTHLY_VIEW_BY_SCOPE[monthlyScope];
 
   const settingResponse = await withTimeout(
     supabase.from("site_settings").select("value").eq("key", settingKey).single(),
@@ -285,14 +277,23 @@ export async function fetchMonthlyPayload(monthlyScope: MonthlyScope) {
   const show = settingResponse.data?.value === true;
   if (!show) return { show: false, rows: [] };
 
-  const rowsResponse = await withTimeout(
-    supabase.from(view).select("*").order("month", { ascending: false }).limit(24),
-    `monthly ${monthlyScope} rows query`,
-  );
+  let rowsQuery = supabase
+    .from("bets")
+    .select("match_date, settled_at, status, stake, profit_loss")
+    .in("status", ["won", "lost"])
+    .not("profit_loss", "is", null)
+    .order("match_date", { ascending: false, nullsFirst: false })
+    .limit(5000);
+
+  if (monthlyScope === "props" || monthlyScope === "tennis") {
+    rowsQuery = rowsQuery.eq("market", MARKET_BY_SCOPE[monthlyScope]);
+  }
+
+  const rowsResponse = await withTimeout(rowsQuery, `monthly ${monthlyScope} raw bets query`);
   if (rowsResponse.error) throw new Error(rowsResponse.error.message);
 
   return {
     show: true,
-    rows: rowsResponse.data ?? [],
+    rows: buildMonthlyRows((rowsResponse.data ?? []) as MonthlyBetRow[]),
   };
 }
