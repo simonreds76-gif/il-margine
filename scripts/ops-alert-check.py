@@ -529,4 +529,14 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    # Parse first so --help never performs network operations.
+    build_parser().parse_args()
+    load_env_files()
+    from ops_morning_failures import check_morning_failure
+    morning_exit = 0
+    try:
+        morning_exit = 1 if check_morning_failure() else 0
+    except RuntimeError as exc:
+        print(f"OPS_MORNING_FAILURE_ERROR {exc}", file=sys.stderr)
+        morning_exit = 2
+    raise SystemExit(max(main(), morning_exit))
