@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import SportIcon from "@/components/SportIcon";
+import SportCta from "@/components/SportCta";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BetMobileMeta from "@/components/BetMobileMeta";
@@ -263,7 +264,7 @@ export default function TennisTips({
           <p className="text-sm sm:text-base text-slate-400 max-w-3xl leading-relaxed">
             ATP, Challenger and Grand Slam betting tips. Choose a competition to see the picks and their record.
           </p>
-          <Link href="/return-atlas" prefetch={false} className="mt-4 inline-flex min-h-11 items-center gap-3 rounded-xl border border-emerald-300/20 bg-emerald-300/5 px-4 py-2 text-sm font-semibold text-emerald-200 transition hover:border-emerald-300/50 hover:bg-emerald-300/10">Explore ATP player ROI in Return Atlas <span aria-hidden="true">↗</span></Link>
+          <div className="mt-5 max-w-md"><SportCta sport="tennis" href="/return-atlas" label="Explore Return Atlas" /></div>
         </div>
       </section>
 

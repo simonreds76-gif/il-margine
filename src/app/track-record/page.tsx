@@ -1,5 +1,7 @@
 "use client";
 
+import SportCta from "@/components/SportCta";
+
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats } from "@/lib/baseline";
@@ -253,7 +255,7 @@ export default function TrackRecordPage() {
               ["P/L", `${displayStats[key].total_profit > 0 ? "+" : ""}${displayStats[key].total_profit.toFixed(2)}u`],
               ["Bets", formatBetCount(displayStats[key].total_bets)],
             ].map(([label,value]) => <div key={label}><dt className="text-xs text-slate-400">{label}</dt><dd className="mt-1 text-xl font-semibold tabular-nums">{value}</dd></div>)}</dl>
-            <Link href={href} className="site-button">Browse selections &amp; results <span aria-hidden="true">→</span></Link>
+            <SportCta sport={key === "props" ? "football" : "tennis"} href={href} label="Selections & results" />
           </article>)}</div>
         </section>
       </div>

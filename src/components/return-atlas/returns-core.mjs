@@ -3,6 +3,18 @@ export function normalise(value) {
   return String(value).normalize('NFKD').replace(/\p{M}/gu, '').replace(/ø/gi, 'o').toLowerCase();
 }
 
+// Highlights describe today's player pool, even when viewing an older season.
+// This activity rule does not rewrite or remove anyone's historical results.
+export function recentlyActivePlayers(matches, players, asOf) {
+  const cutoff = new Date(asOf + 'T12:00:00Z');
+  cutoff.setUTCFullYear(cutoff.getUTCFullYear() - 1);
+  const from = cutoff.toISOString().slice(0, 10);
+  const active = new Set(matches.filter(m => m.date >= from && m.date <= asOf).flatMap(m => [m.p1, m.p2]));
+  // ATP confirmed Thiem's retirement in October 2024. Never feature exhibition returns.
+  const retired = new Set(['dominic thiem']);
+  return players.filter(p => active.has(p.id) && !retired.has(normalise(p.name)));
+}
+
 const playerIndexes=new WeakMap();
 function playerMatches(matches,id){
  if(!playerIndexes.has(matches)){const index=new Map();for(const m of matches)for(const p of new Set([m.p1,m.p2])){if(!index.has(p))index.set(p,[]);index.get(p).push(m);}playerIndexes.set(matches,index);}

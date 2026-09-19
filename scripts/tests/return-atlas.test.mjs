@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import path from 'node:path';
 import { decodeAtlas } from '../../src/components/return-atlas/decode.mjs';
-import { observations, summarise } from '../../src/components/return-atlas/returns-core.mjs';
+import { observations, summarise, recentlyActivePlayers } from '../../src/components/return-atlas/returns-core.mjs';
 
 const root = process.env.RETURN_ATLAS_OUTPUT_ROOT ? pathToFileURL(path.resolve(process.env.RETURN_ATLAS_OUTPUT_ROOT) + path.sep) : new URL('../../', import.meta.url);
 const release = JSON.parse(fs.readFileSync(new URL('src/data/return-atlas-release.json', root)));
@@ -53,4 +53,21 @@ test('season and surface filters partition the same accepted records', () => {
     assert.deepEqual(annual.map(m=>m.id).sort(), all.map(m=>m.id).sort());
     assert.deepEqual(courts.map(m=>m.id).sort(), all.map(m=>m.id).sort());
   }
+});
+
+
+test('featured pool excludes retired historical leaders without removing their records', () => {
+  const current = recentlyActivePlayers(data.matches, data.players, release.checkedAt);
+  assert.ok(current.length > 100 && current.length < data.players.length);
+  assert.ok(data.players.some(p => p.name === 'Dominic Thiem'));
+  assert.ok(!current.some(p => p.name === 'Dominic Thiem'));
+  assert.ok(current.some(p => p.name === 'Alexander Shevchenko'));
+  const thiem = data.players.find(p => p.name === 'Dominic Thiem');
+  assert.ok(observations(data.matches, thiem.id).length > 0);
+});
+
+test('activity window uses check date, includes the boundary, and ignores future records', () => {
+  const players = [{id:'active',name:'Active'}, {id:'old',name:'Old'}, {id:'future',name:'Future'}, {id:'thiem',name:'Dominic Thiem'}];
+  const matches = [{date:'2025-09-19',p1:'active',p2:'thiem'}, {date:'2025-09-18',p1:'old',p2:'old'}, {date:'2026-09-20',p1:'future',p2:'future'}];
+  assert.deepEqual(recentlyActivePlayers(matches,players,'2026-09-19').map(p=>p.id),['active']);
 });

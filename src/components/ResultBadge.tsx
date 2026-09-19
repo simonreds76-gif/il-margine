@@ -30,8 +30,8 @@ export default function ResultBadge({ status, size = "md", className = "" }: Res
       } ${className}`}
     >
       <svg aria-hidden="true" focusable="false" viewBox="0 0 20 20" className="h-3.5 w-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="10" cy="10" r="7.5" />
-        {normalized === "won" ? <path d="m6.5 10 2.3 2.3 4.7-5" /> : normalized === "lost" ? <path d="m7.5 7.5 5 5m0-5-5 5" /> : normalized === "pending" ? <path d="M10 5.5V10l3 1.5" /> : <path d="M7 10h6" />}
+        <circle cx="10" cy="10" r="7.5" fill={normalized === "won" ? "currentColor" : "none"} />
+        {normalized === "won" ? <path d="m6.5 10 2.3 2.3 4.7-5" stroke="#10271f" /> : normalized === "lost" ? <path d="m7.5 7.5 5 5m0-5-5 5" /> : normalized === "pending" ? <path d="M10 5.5V10l3 1.5" /> : <path d="M7 10h6" />}
       </svg>
       {label.charAt(0) + label.slice(1).toLowerCase()}
     </span>

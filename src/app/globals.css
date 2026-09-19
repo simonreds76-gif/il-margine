@@ -158,3 +158,13 @@ body {
 @media(max-width:767px) { .price-workbench { grid-template-columns:1fr; }.workbench-controls { padding:24px; border-right:0; border-bottom:1px solid #ffffff14; }.workbench-chart { padding:24px 16px; }.workbench-metrics strong { font-size:32px; }.monthly-bars { gap:12px; padding:20px 16px; } }
 @media(prefers-reduced-motion:reduce) { .public-site .brand-home-button:hover,.home-hero a:hover { transform:none; } }
 @media(max-width:639px) { .monthly-bars { gap:6px; padding-inline:12px; }.monthly-bar-column { min-width:40px; }.monthly-bar-column strong { font-size:11px; }.monthly-bar-column>span { font-size:9px; }.monthly-bar-track span { width:82%; } }
+/* Approved sport CTA: dark blue panel, full emblem, divider and mint arrow. */
+.sport-cta { display:flex; align-items:center; gap:18px; width:100%; min-width:0; min-height:88px; padding:16px 20px; border:1px solid #526773; border-radius:17px; background:linear-gradient(130deg,#1b2b36,#142029 65%,#172831); box-shadow:inset 0 1px 0 #ffffff14,0 5px 15px #0002; color:#f1f5f9; text-decoration:none; transition:border-color .18s,background .18s,box-shadow .18s; }
+.sport-cta:hover { border-color:#83dfbf; background:linear-gradient(130deg,#233b47,#182b34 65%,#1c373b); box-shadow:inset 0 1px 0 #ffffff18,0 5px 18px #60d9b313; }
+.sport-cta:focus-visible { outline:2px solid #83dfbf; outline-offset:4px; }
+.sport-cta-emblem { width:78px; height:56px; padding-right:20px; flex-shrink:0; border-right:1px solid #7e98a54d; }
+.sport-cta-label { min-width:0; flex:1; font-size:17px; line-height:1.35; font-weight:700; letter-spacing:-.015em; }
+.sport-cta-arrow { width:27px; height:27px; flex-shrink:0; color:#8ce6c7; transition:transform .18s; }
+.sport-cta:hover .sport-cta-arrow { transform:translateX(3px); }
+@media(max-width:420px) { .sport-cta { padding:14px 16px; gap:14px; min-height:80px; }.sport-cta-emblem { width:64px; height:50px; padding-right:14px; }.sport-cta-label { font-size:16px; }.sport-cta-arrow { width:23px; height:23px; } }
+@media(prefers-reduced-motion:reduce) { .sport-cta,.sport-cta-arrow { transition:none; }.sport-cta:hover .sport-cta-arrow { transform:none; } }
