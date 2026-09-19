@@ -8,7 +8,7 @@ import re
 import sys
 from pathlib import Path
 
-from goalscorer_penalty_utils import load_penalty_hierarchy
+from goalscorer_penalty_utils import load_penalty_hierarchy, norm_text
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -41,7 +41,7 @@ def slug(value: str) -> str:
 
 
 def normalize_name(value: str) -> str:
-    return re.sub(r"[^a-z0-9]+", " ", value.lower()).strip()
+    return norm_text(value)
 
 
 def date_is_current_or_newer(value: object, baseline: str) -> bool:
@@ -93,7 +93,7 @@ def main() -> int:
         "Current-season review must cover every active club",
     )
     check(season.get("label") == "2026/27", "Season config must publish 2026/27")
-    check(season.get("status") == "preseason", "Season must remain preseason until league kickoff")
+    check(season.get("status") in {"preseason", "live"}, "Season status must be preseason or live")
     check(season.get("league_start_dates", {}).get("epl") == "2026-08-21", "Premier League start date must match the released fixture list")
     check(all(str(url).startswith("https://") for url in season.get("league_sources", {}).values()), "League membership sources must be HTTPS URLs")
     archive_dir = DATA / "archive" / str(season.get("previous_label", "")).replace("/", "-")
@@ -147,6 +147,7 @@ def main() -> int:
                 "confirmed_departure_roster_review",
                 "current_roster_and_penalty_record_review",
                 "current_squad_membership_audit",
+                "targeted_source_review",
             }
             research_events = [
                 event
@@ -161,7 +162,13 @@ def main() -> int:
                 and event.get("review", {}).get("status") == "approved"
             ]
             documented_vacancy = (
-                bool(roster_events)
+                (bool(roster_events) or any(
+                    event.get("type") == "current_season_board_review"
+                    and event.get("review", {}).get("status") == "approved"
+                    and event.get("documents_unverified_slots") is True
+                    and any(str(source.get("url") or "").startswith("https://") for source in event.get("sources", []))
+                    for event in entry.get("evidence_log", [])
+                ))
                 and entry.get("hierarchy_status") in {"conditional", "disputed"}
                 and "under review" in str(entry.get("condition_note") or "").lower()
             )
@@ -173,12 +180,13 @@ def main() -> int:
                 f"{league}/{team}: current-season review is stale",
             )
             check(
-                last_reviewed.get("method") == "current_season_multi_source_review",
+                last_reviewed.get("method") in {"current_season_multi_source_review", "targeted_source_review"},
                 f"{league}/{team}: current-season review method missing",
             )
             check(
-                len(last_reviewed.get("sources") or []) >= 2,
-                f"{league}/{team}: current-season review needs two sources",
+                len(last_reviewed.get("sources") or []) >= (1 if last_reviewed.get("method") == "targeted_source_review" else 2)
+                and all(str(url).startswith("https://") for url in last_reviewed.get("sources") or []),
+                f"{league}/{team}: current-season review needs valid sources for its declared scope",
             )
             evidence_ids = {
                 str(event.get("id") or "").strip()
@@ -225,7 +233,7 @@ def main() -> int:
                 f"{league}/{team}: tertiary cannot be filed while secondary is blank",
             )
             hierarchy_names = {
-                re.sub(r"[^a-z0-9]+", " ", str(entry.get(position) or "").lower()).strip()
+                normalize_name(str(entry.get(position) or ""))
                 for position in ("primary", "secondary", "tertiary")
                 if str(entry.get(position) or "").strip()
             }

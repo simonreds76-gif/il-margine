@@ -16,7 +16,7 @@ import sys
 import time
 import unicodedata
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
@@ -206,6 +206,55 @@ def load_jobs(leagues: list[str]) -> list[dict[str, Any]]:
     return jobs
 
 
+def hierarchy_quality(jobs: list[dict[str, Any]], season: dict, today: date) -> list[dict[str, Any]]:
+    """Local-only review checks. Name collisions require review, never deletion."""
+    findings: list[dict[str, Any]] = []
+    names: dict[str, list[dict[str, str]]] = {}
+
+    def parse_date(value: Any) -> date | None:
+        try:
+            return date.fromisoformat(str(value or '')[:10])
+        except ValueError:
+            return None
+
+    for job in jobs:
+        entry = job['entry']
+        league, club = job['league'], job['club']
+        kickoff = parse_date(season.get('league_start_dates', {}).get(league))
+        # Roster checks alone do not renew a penalty-role review.
+        reviewed = parse_date((entry.get('last_reviewed') or {}).get('date'))
+        evidence_dates = [
+            parse_date((event.get('review') or {}).get('reviewed_at') or event.get('date'))
+            for event in entry.get('evidence_log', [])
+            if (event.get('review') or {}).get('status') == 'approved'
+            and (str(event.get('type', '')).startswith('competitive_penalty_')
+                 or event.get('type') == 'current_season_board_review')
+        ]
+        dates = [d for d in [reviewed, *evidence_dates] if d and d <= today]
+        latest = max(dates) if dates else None
+        active = kickoff and kickoff <= today <= date(kickoff.year + 1, 6, 30)
+        if active and (latest is None or (today - latest).days > 21):
+            findings.append({
+                'status': 'hierarchy_review_due', 'league': league, 'club': club,
+                'detail': f"Last penalty-role review: {latest.isoformat() if latest else 'unknown'}; review due after 21 days.",
+            })
+        for rank in ('primary', 'secondary', 'tertiary'):
+            player = str(entry.get(rank) or '').strip()
+            key = normalize_name(player)
+            # Mononyms are shared by unrelated footballers (for example Vitinha).
+            if len(re.sub(r'[^\w]+', ' ', player).split()) < 2:
+                continue
+            names.setdefault(key, []).append({'league': league, 'club': club, 'rank': rank, 'player': player})
+    for key, rows in sorted(names.items()):
+        if len({(r['league'], r['club']) for r in rows}) < 2:
+            continue
+        for row in rows:
+            others = ', '.join(r['club'] for r in rows if r['club'] != row['club'])
+            findings.append({**row, 'status': 'possible_duplicate_player',
+                             'detail': f"Same normalized full name also at {others}; check identity/transfer before changing either club."})
+    return findings
+
+
 def build_audit(leagues: list[str], timeout: int, workers: int) -> dict[str, Any]:
     jobs = load_jobs(leagues)
     fetched: dict[tuple[str, str], tuple[list[str], str]] = {}
@@ -231,6 +280,10 @@ def build_audit(leagues: list[str], timeout: int, workers: int) -> dict[str, Any
         current_squad, error = fetched.get(key, ([], "missing fetch result"))
         for rank in ("primary", "secondary", "tertiary"):
             player = str(job["entry"].get(rank) or "").strip()
+            # Unfilled positions are handled by the public-data validator, not
+            # reported as a missing player or counted as a checked squad slot.
+            if not player:
+                continue
             status, matched_name = ("fetch_error", "") if error else match_player(player, current_squad)
             rows.append(
                 {
@@ -263,6 +316,11 @@ def build_audit(leagues: list[str], timeout: int, workers: int) -> dict[str, Any
             if not error
         },
         "rows": rows,
+        "hierarchy_quality": hierarchy_quality(
+            jobs,
+            json.loads((DATA_DIR / 'club-penalty-season.json').read_text(encoding='utf-8')),
+            datetime.now(timezone.utc).date(),
+        ),
     }
 
 
@@ -307,7 +365,9 @@ def main() -> int:
     for row in payload["rows"]:
         if row["status"] != "present":
             print(f"- {row['status'].upper()} {row['league']} | {row['club']} | {row['rank']} | {row['player']}")
-    return 0 if payload["status_counts"] == {"present": payload["slots_checked"]} else 1
+    for issue in payload['hierarchy_quality']:
+        print(f"- {issue['status'].upper()} {issue['league']} | {issue['club']} | {issue['detail']}")
+    return 0 if all(row['status'] == 'present' for row in payload['rows']) and not payload['hierarchy_quality'] else 1
 
 
 if __name__ == "__main__":

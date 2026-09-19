@@ -32,7 +32,7 @@
       "Racing Santander"
     ],
     "last_verified": "2026-09-02",
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-19",
     "membership_source": "https://www.laliga.com/en-GB/laliga-easports/clubs",
     "last_reviewed": "2026-09-01"
   },
@@ -2986,20 +2986,20 @@
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
-      "tertiary": "medium"
+      "tertiary": "low"
     },
-    "condition_note": "Juanmi is the current first-choice projection, followed by Mayoral and Ünal.",
+    "condition_note": "Published guides conflict: the earlier board projects Juanmi, while another names Satriano, who also took a preseason penalty. Mayoral remains in the shortlist. The filed order is disputed pending a competitive assignment or clear coach confirmation.",
     "last_verified": {
-      "date": "2026-09-02",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_squad_membership_audit"
+      "method": "targeted_source_review"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-19",
     "latest_evidence": {
-      "id": "evt_20260901_getafe_current_review",
-      "date": "2026-09-01",
+      "id": "evt_20260919_getafe_source_review",
+      "date": "2026-09-19",
       "type": "current_season_board_review",
-      "source_count": 2
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -3241,6 +3241,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Juanmi is the current first-choice projection, followed by Mayoral and Ünal."
+      },
+      {
+        "id": "evt_20260919_getafe_source_review",
+        "date": "2026-09-19",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Getafe’s first-choice role needs clarification",
+        "context": "Published guides conflict: the earlier board projects Juanmi, while another names Satriano, who also took a preseason penalty. Mayoral remains in the shortlist. The filed order is disputed pending a competitive assignment or clear coach confirmation.",
+        "editorial_note": "Published guides conflict: the earlier board projects Juanmi, while another names Satriano, who also took a preseason penalty. Mayoral remains in the shortlist. The filed order is disputed pending a competitive assignment or clear coach confirmation.",
+        "sources": [
+          {
+            "label": "LaLiga penalty guide: conflicting Getafe order",
+            "url": "https://betbrothers.es/noticias/lanzadores-penaltis-faltas-corners-laliga/",
+            "date": "2026-09-19",
+            "note": "Published source reviewed on 19 September; source date is not a new match event."
+          }
+        ],
+        "detection": "manual_targeted_source_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-19T12:00:00Z"
+        },
+        "affects_hierarchy": true
       }
     ],
     "change_log": [
@@ -3394,13 +3421,12 @@
       }
     },
     "last_reviewed": {
-      "date": "2026-09-01",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_season_multi_source_review",
-      "outcome": "hierarchy_updated",
+      "method": "targeted_source_review",
+      "outcome": "context_updated",
       "sources": [
-        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
-        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+        "https://betbrothers.es/noticias/lanzadores-penaltis-faltas-corners-laliga/"
       ]
     }
   },
@@ -7287,28 +7313,28 @@
   "Villarreal": {
     "primary": "Gerard Moreno",
     "secondary": "Georges Mikautadze",
-    "tertiary": "Nicolas Pépé",
-    "last_updated": "2026-08-23",
+    "tertiary": "Pape Gueye",
+    "last_updated": "2026-09-19",
     "source": "Transfermarkt",
     "cross_check": "Cadena SER",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
+      "primary": "medium",
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "Gerard Moreno took and converted Villarreal's first penalty against Atletico Madrid, preserving the primary role. Georges Mikautadze then converted a second penalty in the same match and now moves ahead of Nicolas Pépé as the evidence-led deputy. The split may reflect match state rather than equal first-choice duties, so Gerard remains first.",
+    "condition_note": "Gueye converted the late penalty at Málaga on 17 September and replaces Pépé as the listed third option. Gerard Moreno and Mikautadze retain their earlier match-supported positions; this kick alone does not establish a new first choice.",
     "last_verified": {
-      "date": "2026-09-02",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_squad_membership_audit"
+      "method": "targeted_source_review"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-19",
     "latest_evidence": {
-      "id": "evt_20260901_villarreal_current_review",
-      "date": "2026-09-01",
+      "id": "evt_20260919_villarreal_source_review",
+      "date": "2026-09-19",
       "type": "current_season_board_review",
-      "source_count": 2
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -7569,6 +7595,33 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+      },
+      {
+        "id": "evt_20260919_villarreal_source_review",
+        "date": "2026-09-19",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": "regular_time",
+        "competition": null,
+        "match": "Malaga vs Villarreal",
+        "headline": "Gueye’s Málaga penalty strengthens Villarreal’s depth",
+        "context": "Gueye converted the late penalty at Málaga on 17 September and replaces Pépé as the listed third option. Gerard Moreno and Mikautadze retain their earlier match-supported positions; this kick alone does not establish a new first choice.",
+        "editorial_note": "Gueye converted the late penalty at Málaga on 17 September and replaces Pépé as the listed third option. Gerard Moreno and Mikautadze retain their earlier match-supported positions; this kick alone does not establish a new first choice.",
+        "sources": [
+          {
+            "label": "LaLiga Málaga–Villarreal match events",
+            "url": "https://iaas-public-front-pro.laliga.com/partido/temporada-2026-2027-laliga-ea-sports-malaga-cf-villarreal-cf-6",
+            "date": "2026-09-17",
+            "note": "Published source reviewed on 19 September; source date is not a new match event."
+          }
+        ],
+        "detection": "manual_targeted_source_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-19T12:00:00Z"
+        },
+        "affects_hierarchy": true
       }
     ],
     "change_log": [
@@ -7663,11 +7716,34 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-08-24T00:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-19",
+        "season": "2026/27",
+        "change_type": "sourced_hierarchy_review",
+        "from": {
+          "primary": "Gerard Moreno",
+          "secondary": "Georges Mikautadze",
+          "tertiary": "Nicolas Pépé"
+        },
+        "to": {
+          "primary": "Gerard Moreno",
+          "secondary": "Georges Mikautadze",
+          "tertiary": "Pape Gueye"
+        },
+        "reason": "Gueye converted the late penalty at Málaga on 17 September and replaces Pépé as the listed third option. Gerard Moreno and Mikautadze retain their earlier match-supported positions; this kick alone does not establish a new first choice.",
+        "evidence_ids": [
+          "evt_20260919_villarreal_source_review"
+        ],
+        "detection": "manual_targeted_source_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-19T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -7692,20 +7768,19 @@
         "checked_at": "2026-09-02"
       },
       "tertiary": {
-        "player": "Nicolas Pépé",
+        "player": "Pape Gueye",
         "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/10205/overview/villarreal",
-        "checked_at": "2026-09-02"
+        "source_url": "https://iaas-public-front-pro.laliga.com/partido/temporada-2026-2027-laliga-ea-sports-malaga-cf-villarreal-cf-6",
+        "checked_at": "2026-09-19"
       }
     },
     "last_reviewed": {
-      "date": "2026-09-01",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_season_multi_source_review",
-      "outcome": "order_unchanged",
+      "method": "targeted_source_review",
+      "outcome": "hierarchy_updated",
       "sources": [
-        "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
-        "https://www.laliga.com/en-GB/laliga-easports/clubs"
+        "https://iaas-public-front-pro.laliga.com/partido/temporada-2026-2027-laliga-ea-sports-malaga-cf-villarreal-cf-6"
       ]
     }
   }

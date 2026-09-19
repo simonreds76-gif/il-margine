@@ -23,7 +23,7 @@ def load_audit(path: Path) -> dict:
 
 
 def issue_rows(payload: dict) -> list[dict]:
-    rows = payload.get("rows") or []
+    rows = [*(payload.get("rows") or []), *(payload.get("hierarchy_quality") or [])]
     return [row for row in rows if isinstance(row, dict) and row.get("status") != "present"]
 
 
@@ -46,6 +46,8 @@ def build_message(payload: dict, run_url: str = "") -> str:
                 continue
             grouped_fetch_errors.add(key)
             label = f"[{status.upper()}] {key[0].upper()} | {key[1]} | squad unavailable"
+        elif status in {'hierarchy_review_due', 'possible_duplicate_player'}:
+            label = f"[{status.upper()}] {key[0].upper()} | {key[1]} | {row.get('detail', '')}"
         else:
             label = (
                 f"[{status.upper()}] {key[0].upper()} | {key[1]} | "
@@ -62,7 +64,7 @@ def build_message(payload: dict, run_url: str = "") -> str:
         [
             "",
             "Public hierarchies were not changed automatically.",
-            "Verify the transfer/squad source, then edit and close the exception.",
+            "Review the cited squad or penalty-role evidence before changing a hierarchy.",
         ]
     )
     if run_url:
