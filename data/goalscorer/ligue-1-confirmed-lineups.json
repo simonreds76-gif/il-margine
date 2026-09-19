@@ -299,7 +299,7 @@
         "Yvann Titi",
         "Merwan Ifnaou"
       ],
-      "observed_at": "2026-09-19T13:57:12.506842+00:00",
+      "observed_at": "2026-09-19T17:17:43.072963+00:00",
       "changed_at": "2026-09-19T11:49:45.261769+00:00"
     },
     {
@@ -603,7 +603,7 @@
         "Bandiougou Fadiga",
         "Aiyegun Tosin"
       ],
-      "observed_at": "2026-09-19T13:57:12.506842+00:00",
+      "observed_at": "2026-09-19T17:17:43.072963+00:00",
       "changed_at": "2026-09-19T11:49:45.261769+00:00"
     },
     {
@@ -900,7 +900,7 @@
         "Nicolás Tagliafico"
       ],
       "away_unavailable": [],
-      "observed_at": "2026-09-19T13:57:12.506842+00:00",
+      "observed_at": "2026-09-19T17:17:43.072963+00:00",
       "changed_at": "2026-09-19T11:49:45.261769+00:00"
     },
     {
@@ -912,19 +912,19 @@
       "kickoff_utc": "2026-09-19T15:15:00Z",
       "home_team": "Paris FC",
       "away_team": "Strasbourg",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Kevin Trapp",
         "Adama Camara",
-        "Samir Chergui",
+        "Mamadou Mbow",
         "Diego Coppola",
         "Hamari Traoré",
-        "Maxime Lopez",
         "Pierre Lees-Melou",
+        "Maxime Lopez",
         "Ilan Kebbal",
         "Pablo Pagis",
         "Luca Koleosho",
@@ -937,7 +937,7 @@
         "Ismaël Doukouré",
         "Oso",
         "Samir El Mourabet",
-        "Dário Essugo",
+        "Diogo Sousa",
         "Gessime Yassine",
         "Giovanni Reyna",
         "Sebastian Nanasi",
@@ -967,15 +967,15 @@
           "shirt_number": "17"
         },
         {
-          "name": "Samir Chergui",
+          "name": "Mamadou Mbow",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-2-3-1",
           "position_id": 34,
-          "player_id": 1039219,
-          "shirt_number": "31"
+          "player_id": 1053678,
+          "shirt_number": "5"
         },
         {
           "name": "Diego Coppola",
@@ -1000,26 +1000,26 @@
           "shirt_number": "14"
         },
         {
-          "name": "Maxime Lopez",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64,
-          "player_id": 614207,
-          "shirt_number": "20"
-        },
-        {
           "name": "Pierre Lees-Melou",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
           "formation": "4-2-3-1",
-          "position_id": 66,
+          "position_id": 64,
           "player_id": 660462,
           "shirt_number": "33"
+        },
+        {
+          "name": "Maxime Lopez",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 614207,
+          "shirt_number": "20"
         },
         {
           "name": "Ilan Kebbal",
@@ -1134,15 +1134,15 @@
           "shirt_number": "29"
         },
         {
-          "name": "Dário Essugo",
+          "name": "Diogo Sousa",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
           "formation": "4-2-3-1",
           "position_id": 66,
-          "player_id": 1239595,
-          "shirt_number": "14"
+          "player_id": 1701117,
+          "shirt_number": "23"
         },
         {
           "name": "Gessime Yassine",
@@ -1189,12 +1189,123 @@
           "shirt_number": "30"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
-      "home_unavailable": [
+      "home_subs": [
         "Thibault De Smet",
+        "Rudy Matondo",
+        "Jonathan Ikoné",
+        "Vincent Marchetti",
+        "Patrick Zabi",
+        "Obed Nkambadio",
+        "Yoan Koré",
+        "Jean-Philippe Krasso",
+        "Moses Simon"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Thibault De Smet",
+          "player_id": "784448",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Rudy Matondo",
+          "player_id": "1738340",
+          "role_group": "MID"
+        },
+        {
+          "name": "Jonathan Ikoné",
+          "player_id": "637745",
+          "role_group": "FW"
+        },
+        {
+          "name": "Vincent Marchetti",
+          "player_id": "640292",
+          "role_group": "MID"
+        },
+        {
+          "name": "Patrick Zabi",
+          "player_id": "1709839",
+          "role_group": "MID"
+        },
+        {
+          "name": "Obed Nkambadio",
+          "player_id": "1127125",
+          "role_group": "GK"
+        },
+        {
+          "name": "Yoan Koré",
+          "player_id": "1283024",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Jean-Philippe Krasso",
+          "player_id": "853108",
+          "role_group": "FW"
+        },
+        {
+          "name": "Moses Simon",
+          "player_id": "467486",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Conrad Harder",
+        "Dário Essugo",
+        "Pape Demba Diop",
+        "Samuel Amo-Ameyaw",
+        "Yaya Dieme",
+        "Miłosz Piekutowski",
+        "Karim Coulibaly",
+        "Lucas Høgsberg",
+        "Tyrese Noubissie"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Conrad Harder",
+          "player_id": "1482294",
+          "role_group": "FW"
+        },
+        {
+          "name": "Dário Essugo",
+          "player_id": "1239595",
+          "role_group": "MID"
+        },
+        {
+          "name": "Pape Demba Diop",
+          "player_id": "1417802",
+          "role_group": "MID"
+        },
+        {
+          "name": "Samuel Amo-Ameyaw",
+          "player_id": "1418073",
+          "role_group": "MID"
+        },
+        {
+          "name": "Yaya Dieme",
+          "player_id": "1975804",
+          "role_group": "FW"
+        },
+        {
+          "name": "Miłosz Piekutowski",
+          "player_id": "1283393",
+          "role_group": "GK"
+        },
+        {
+          "name": "Karim Coulibaly",
+          "player_id": "1643851",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Lucas Høgsberg",
+          "player_id": "1436942",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Tyrese Noubissie",
+          "player_id": "1900030",
+          "role_group": "MID"
+        }
+      ],
+      "home_unavailable": [
         "Emmanuel Mbemba",
         "Nhoa Sangui",
         "Otávio"
@@ -1204,8 +1315,8 @@
         "Joaquín Panichelli",
         "Martial Godo"
       ],
-      "observed_at": "2026-09-19T13:57:12.506842+00:00",
-      "changed_at": "2026-09-19T11:49:45.261769+00:00"
+      "observed_at": "2026-09-19T17:17:43.072963+00:00",
+      "changed_at": "2026-09-19T17:17:43.072963+00:00"
     },
     {
       "fotmob_match_id": 5802944,
@@ -1506,7 +1617,7 @@
         "Stephan Zagadou",
         "Felix Mambimbi"
       ],
-      "observed_at": "2026-09-19T13:57:12.506842+00:00",
+      "observed_at": "2026-09-19T17:17:43.072963+00:00",
       "changed_at": "2026-09-19T11:49:45.261769+00:00"
     },
     {
@@ -1811,7 +1922,7 @@
         "Mamady Diambou",
         "Noah Edjouma"
       ],
-      "observed_at": "2026-09-19T13:57:12.506842+00:00",
+      "observed_at": "2026-09-19T17:17:43.072963+00:00",
       "changed_at": "2026-09-19T11:49:45.261769+00:00"
     },
     {
@@ -2111,7 +2222,7 @@
       "away_unavailable": [
         "Achraf Hakimi"
       ],
-      "observed_at": "2026-09-19T13:57:12.506842+00:00",
+      "observed_at": "2026-09-19T17:17:43.072963+00:00",
       "changed_at": "2026-09-17T22:09:36.840258+00:00"
     },
     {
@@ -2413,7 +2524,7 @@
       "away_unavailable": [
         "Hamza Igamane"
       ],
-      "observed_at": "2026-09-19T13:57:12.506842+00:00",
+      "observed_at": "2026-09-19T17:17:43.072963+00:00",
       "changed_at": "2026-09-19T11:49:45.261769+00:00"
     }
   ]
