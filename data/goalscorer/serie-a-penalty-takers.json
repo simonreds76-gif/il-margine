@@ -32,7 +32,7 @@
       "Venezia"
     ],
     "last_verified": "2026-09-02",
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-19",
     "membership_source": "https://en.legaseriea.it/serie-a/news/looking-forward-to-the-2026-27-serie-a-fixture-list",
     "last_reviewed": "2026-09-01"
   },
@@ -1958,30 +1958,30 @@
     }
   },
   "Fiorentina": {
-    "primary": "Mateo Pellegrino",
-    "secondary": "Beto",
-    "tertiary": "Franco Mastantuono",
-    "last_updated": "2026-09-01",
-    "source": "Fantacalcio current Pellegrino role file",
-    "cross_check": "ANSA Beto signing report",
-    "hierarchy_status": "disputed",
+    "primary": "Pedro Goncalves",
+    "secondary": "Franco Mastantuono",
+    "tertiary": "Mateo Pellegrino",
+    "last_updated": "2026-09-19",
+    "source": "Vanoli pre-Napoli press conference",
+    "cross_check": "Fiorentina penalty shortlist after Vanoli return",
+    "hierarchy_status": "conditional",
     "confidence": {
       "primary": "low",
       "secondary": "low",
       "tertiary": "low"
     },
-    "condition_note": "Deadline-day exits remove Gudmundsson, Kean and Mandragora. Pellegrino is the provisional first call, with Beto and Mastantuono the unassigned alternatives. All three positions remain low-confidence until Fiorentina's first competitive penalty with two candidates available.",
+    "condition_note": "Goncalves leads our provisional order ahead of Mastantuono, with Pellegrino retained as third choice. Vanoli named Goncalves and Mastantuono as penalty options and said the hierarchy depends on who plays; he did not publicly rank the pair. Pellegrino remains an alternative from the earlier shortlist, not a newly confirmed third choice.",
     "last_verified": {
-      "date": "2026-09-02",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_squad_membership_audit"
+      "method": "reviewed_manual_hierarchy_override"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-19",
     "latest_evidence": {
-      "id": "evt_20260901_fiorentina_current_review",
-      "date": "2026-09-01",
-      "type": "current_season_board_review",
-      "source_count": 6
+      "id": "evt_20260919_fiorentina_penalty_review",
+      "date": "2026-09-18",
+      "type": "manager_press_conference",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -2218,6 +2218,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Deadline-day exits remove Gudmundsson, Kean and Mandragora. Pellegrino is the provisional first call, with Beto and Mastantuono the unassigned alternatives. All three positions remain low-confidence until Fiorentina's first competitive penalty with two candidates available."
+      },
+      {
+        "id": "evt_20260919_fiorentina_penalty_review",
+        "date": "2026-09-18",
+        "season": "2026/27",
+        "type": "manager_press_conference",
+        "headline": "Vanoli names Goncalves and Mastantuono",
+        "context": "Goncalves leads our provisional order ahead of Mastantuono, with Pellegrino retained as third choice. Vanoli named Goncalves and Mastantuono as penalty options and said the hierarchy depends on who plays; he did not publicly rank the pair. Pellegrino remains an alternative from the earlier shortlist, not a newly confirmed third choice.",
+        "editorial_note": "Goncalves leads our provisional order ahead of Mastantuono, with Pellegrino retained as third choice. Vanoli named Goncalves and Mastantuono as penalty options and said the hierarchy depends on who plays; he did not publicly rank the pair. Pellegrino remains an alternative from the earlier shortlist, not a newly confirmed third choice.",
+        "match": null,
+        "competition": "Serie A",
+        "penalty_kind": null,
+        "sources": [
+          {
+            "label": "Vanoli pre-Napoli press conference",
+            "url": "https://www.sosfanta.com/squadra/fiorentina/vanoli-rigorista-fiorentina-due-nomi-atta-dragusin-recuperati-napoli/",
+            "date": "2026-09-18",
+            "note": "Reviewed evidence; the published order remains provisional."
+          },
+          {
+            "label": "Fiorentina penalty shortlist after Vanoli return",
+            "url": "https://www.sosfanta.com/news/nuova-fiorentina-vanoli-modulo-probabile-formazione-fantacalcio-sale-scende/3/",
+            "date": "2026-09-08",
+            "note": "Reviewed evidence; the published order remains provisional."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-19T10:00:00Z"
+        },
+        "affects_hierarchy": true
       }
     ],
     "change_log": [
@@ -2335,6 +2368,28 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-01T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "id": "evt_20260919_fiorentina_penalty_review",
+        "changed_at": "2026-09-19T10:00:00Z",
+        "season": "2026/27",
+        "change_type": "hierarchy_change",
+        "reason": "Goncalves leads our provisional order ahead of Mastantuono, with Pellegrino retained as third choice. Vanoli named Goncalves and Mastantuono as penalty options and said the hierarchy depends on who plays; he did not publicly rank the pair. Pellegrino remains an alternative from the earlier shortlist, not a newly confirmed third choice.",
+        "from": {
+          "primary": "Mateo Pellegrino",
+          "secondary": "Beto",
+          "tertiary": "Franco Mastantuono"
+        },
+        "to": {
+          "primary": "Pedro Goncalves",
+          "secondary": "Franco Mastantuono",
+          "tertiary": "Mateo Pellegrino"
+        },
+        "evidence_ids": [
+          "evt_20260919_fiorentina_penalty_review"
+        ],
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-19T10:00:00Z"
       }
     ],
     "flags": {
@@ -2352,36 +2407,33 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Mateo Pellegrino",
+        "player": "Pedro Goncalves",
         "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/8535/overview/fiorentina",
-        "checked_at": "2026-09-02"
+        "source_url": "https://www.sosfanta.com/squadra/fiorentina/vanoli-rigorista-fiorentina-due-nomi-atta-dragusin-recuperati-napoli/",
+        "checked_at": "2026-09-19",
+        "method": "current_team_press_or_match_report"
       },
       "secondary": {
-        "player": "Beto",
+        "player": "Franco Mastantuono",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/8535/overview/fiorentina",
         "checked_at": "2026-09-02"
       },
       "tertiary": {
-        "player": "Franco Mastantuono",
+        "player": "Mateo Pellegrino",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/8535/overview/fiorentina",
         "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
-      "date": "2026-09-01",
+      "date": "2026-09-19",
       "by": "Il Margine",
       "method": "current_season_multi_source_review",
       "outcome": "hierarchy_updated",
       "sources": [
-        "https://www.fantacalcio.it/serie-a/squadre/fiorentina/pellegrino-m/7023/2026-27",
-        "https://www.ansa.it/english/newswire/english_service/2026/08/31/soccer-fiorentina-sign-beto-and-gnonto-3_12fcb577-a703-4056-9e07-0d324193393a.html",
-        "https://www.premierleague.com/en/news/3916734/everton-v-west-ham-homepage-report",
-        "https://www.transfermarkt.com/franco-mastantuono/elfmetertore/spieler/1057316",
-        "https://www.ansa.it/amp/piemonte/notizie/2026/09/01/torino-riecco-mandragora-operazione-da-cinque-milioni_f3ad4b17-c251-4df9-a2ad-0b9c50e44d5f.html",
-        "https://www.fiorentinanews.com/news/522505326086/ufficiale-paratici-smonta-completamente-l-attacco-viola-che-fu-gudmundsson-saluta"
+        "https://www.sosfanta.com/squadra/fiorentina/vanoli-rigorista-fiorentina-due-nomi-atta-dragusin-recuperati-napoli/",
+        "https://www.sosfanta.com/news/nuova-fiorentina-vanoli-modulo-probabile-formazione-fantacalcio-sale-scende/3/"
       ]
     }
   },
@@ -2692,30 +2744,30 @@
     }
   },
   "Genoa": {
-    "primary": "Junior Messias",
-    "secondary": "Milutin Osmajic",
-    "tertiary": "Vitinha",
-    "last_updated": "2026-09-13",
-    "source": "Il Margine multi-source research",
-    "cross_check": "Il Margine roster cross-check",
-    "hierarchy_status": "probable",
+    "primary": "Leo Ostigard",
+    "secondary": "Junior Messias",
+    "tertiary": "Tommaso Baldanzi",
+    "last_updated": "2026-09-19",
+    "source": "De Rossi pre-Parma press conference",
+    "cross_check": "Genoa penalty candidates in the press conference",
+    "hierarchy_status": "conditional",
     "confidence": {
-      "primary": "medium",
-      "secondary": "medium",
-      "tertiary": "medium"
+      "primary": "low",
+      "secondary": "low",
+      "tertiary": "low"
     },
-    "condition_note": "Colombo missed a first-half penalty against Frosinone. Our revised order has Messias first, Osmajic second and Vitinha third; Colombo drops out of the list.",
+    "condition_note": "Ostigard moves to the top of our provisional shortlist, with Messias second when on the pitch and Baldanzi third. De Rossi said Baldanzi would have taken a penalty against Sudtirol and praised Ostigard in training, while keeping the matchday choice private. The coach has not confirmed this exact order.",
     "last_verified": {
-      "date": "2026-09-13",
-      "by": "local_admin",
+      "date": "2026-09-19",
+      "by": "Il Margine",
       "method": "reviewed_manual_hierarchy_override"
     },
-    "public_updated_at": "2026-09-13",
+    "public_updated_at": "2026-09-19",
     "latest_evidence": {
-      "id": "33bfd58cb2c34981a86f1c63bd532510",
-      "date": "2026-09-13",
-      "type": "current_season_board_review",
-      "source_count": 1
+      "id": "evt_20260919_genoa_penalty_review",
+      "date": "2026-09-18",
+      "type": "manager_press_conference",
+      "source_count": 2
     },
     "evidence_log": [
       {
@@ -2925,6 +2977,39 @@
         "detection": "local_admin",
         "season": "2026/27",
         "match": "Genoa vs Frosinone · 12 September"
+      },
+      {
+        "id": "evt_20260919_genoa_penalty_review",
+        "date": "2026-09-18",
+        "season": "2026/27",
+        "type": "manager_press_conference",
+        "headline": "De Rossi opens up Genoa penalty shortlist",
+        "context": "Ostigard moves to the top of our provisional shortlist, with Messias second when on the pitch and Baldanzi third. De Rossi said Baldanzi would have taken a penalty against Sudtirol and praised Ostigard in training, while keeping the matchday choice private. The coach has not confirmed this exact order.",
+        "editorial_note": "Ostigard moves to the top of our provisional shortlist, with Messias second when on the pitch and Baldanzi third. De Rossi said Baldanzi would have taken a penalty against Sudtirol and praised Ostigard in training, while keeping the matchday choice private. The coach has not confirmed this exact order.",
+        "match": null,
+        "competition": "Serie A",
+        "penalty_kind": null,
+        "sources": [
+          {
+            "label": "De Rossi pre-Parma press conference",
+            "url": "https://www.buoncalcioatutti.it/2026/09/18/parma-genoa-de-rossi-sara-partita-molto-importante-amorim-non-penso-ci-siano-problemi-per-domenica/",
+            "date": "2026-09-18",
+            "note": "Reviewed evidence; the published order remains provisional."
+          },
+          {
+            "label": "Genoa penalty candidates in the press conference",
+            "url": "https://www.pazzidifanta.com/news/de-rossi-parma-genoa-conferenza-stampa-5a-giornata-serie-a-2026-2027-459391",
+            "date": "2026-09-18",
+            "note": "Reviewed evidence; the published order remains provisional."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-19T10:00:00Z"
+        },
+        "affects_hierarchy": true
       }
     ],
     "change_log": [
@@ -3015,11 +3100,33 @@
         "evidence_ids": [
           "33bfd58cb2c34981a86f1c63bd532510"
         ]
+      },
+      {
+        "id": "evt_20260919_genoa_penalty_review",
+        "changed_at": "2026-09-19T10:00:00Z",
+        "season": "2026/27",
+        "change_type": "hierarchy_change",
+        "reason": "Ostigard moves to the top of our provisional shortlist, with Messias second when on the pitch and Baldanzi third. De Rossi said Baldanzi would have taken a penalty against Sudtirol and praised Ostigard in training, while keeping the matchday choice private. The coach has not confirmed this exact order.",
+        "from": {
+          "primary": "Junior Messias",
+          "secondary": "Milutin Osmajic",
+          "tertiary": "Vitinha"
+        },
+        "to": {
+          "primary": "Leo Ostigard",
+          "secondary": "Junior Messias",
+          "tertiary": "Tommaso Baldanzi"
+        },
+        "evidence_ids": [
+          "evt_20260919_genoa_penalty_review"
+        ],
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-19T10:00:00Z"
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": false,
+      "weak_evidence": true,
       "stale_override": null
     },
     "prior_season": {
@@ -3032,33 +3139,34 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
+        "player": "Leo Ostigard",
+        "status": "confirmed",
+        "source_url": "https://www.buoncalcioatutti.it/2026/09/18/parma-genoa-de-rossi-sara-partita-molto-importante-amorim-non-penso-ci-siano-problemi-per-domenica/",
+        "checked_at": "2026-09-19",
+        "method": "current_team_press_or_match_report"
+      },
+      "secondary": {
         "player": "Junior Messias",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/10233/overview/genoa",
         "checked_at": "2026-09-02"
       },
-      "secondary": {
-        "player": "Milutin Osmajic",
-        "status": "confirmed",
-        "source_url": "https://www.fotmob.com/matches/frosinone-vs-genoa/3ckfw9#5749672",
-        "checked_at": "2026-09-13",
-        "method": "manual_editorial_attestation"
-      },
       "tertiary": {
-        "player": "Vitinha",
+        "player": "Tommaso Baldanzi",
         "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/10233/overview/genoa",
-        "checked_at": "2026-09-02"
+        "source_url": "https://www.buoncalcioatutti.it/2026/09/18/parma-genoa-de-rossi-sara-partita-molto-importante-amorim-non-penso-ci-siano-problemi-per-domenica/",
+        "checked_at": "2026-09-19",
+        "method": "current_team_press_or_match_report"
       }
     },
     "last_reviewed": {
-      "date": "2026-09-01",
+      "date": "2026-09-19",
       "by": "Il Margine",
       "method": "current_season_multi_source_review",
-      "outcome": "order_unchanged",
+      "outcome": "hierarchy_updated",
       "sources": [
-        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "https://www.legaseriea.it/en/serie-a/teams"
+        "https://www.buoncalcioatutti.it/2026/09/18/parma-genoa-de-rossi-sara-partita-molto-importante-amorim-non-penso-ci-siano-problemi-per-domenica/",
+        "https://www.pazzidifanta.com/news/de-rossi-parma-genoa-conferenza-stampa-5a-giornata-serie-a-2026-2027-459391"
       ]
     },
     "unavailable_candidates": []
@@ -4601,27 +4709,27 @@
     }
   },
   "Monza": {
-    "primary": "Matteo Pessina",
-    "secondary": "Patrick Cutrone",
-    "tertiary": "Andrea Colpani",
-    "last_updated": "2026-09-02",
-    "hierarchy_status": "probable",
+    "primary": "Gustavo Varela",
+    "secondary": "Matteo Pessina",
+    "tertiary": "Patrick Cutrone",
+    "last_updated": "2026-09-19",
+    "hierarchy_status": "conditional",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
-      "tertiary": "medium"
+      "tertiary": "low"
     },
-    "condition_note": "Pessina remains the established primary and Cutrone the existing deputy. Petagna has left; Colpani is the provisional current-squad third choice.",
+    "condition_note": "Varela converted against Sassuolo on 18 September and moves first in our provisional order, ahead of Pessina and Cutrone. Pessina was absent and Cutrone had already been substituted, so this penalty does not settle their priority when all three are available. Review again when Pessina returns.",
     "last_verified": {
-      "date": "2026-09-02",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "reviewed_manual_hierarchy_override"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-19",
     "latest_evidence": {
-      "id": "evt_20260902_monza_post_deadline",
-      "date": "2026-09-02",
-      "type": "post_deadline_roster_review",
+      "id": "evt_20260919_monza_penalty_review",
+      "date": "2026-09-18",
+      "type": "competitive_penalty",
       "source_count": 2
     },
     "evidence_log": [
@@ -4848,6 +4956,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Post-deadline roster correction; uncertain depth remains explicitly provisional."
+      },
+      {
+        "id": "evt_20260919_monza_penalty_review",
+        "date": "2026-09-18",
+        "season": "2026/27",
+        "type": "competitive_penalty",
+        "headline": "Varela stakes his claim from the spot",
+        "context": "Varela converted against Sassuolo on 18 September and moves first in our provisional order, ahead of Pessina and Cutrone. Pessina was absent and Cutrone had already been substituted, so this penalty does not settle their priority when all three are available. Review again when Pessina returns.",
+        "editorial_note": "Varela converted against Sassuolo on 18 September and moves first in our provisional order, ahead of Pessina and Cutrone. Pessina was absent and Cutrone had already been substituted, so this penalty does not settle their priority when all three are available. Review again when Pessina returns.",
+        "match": "Monza vs Sassuolo",
+        "competition": "Serie A",
+        "penalty_kind": "competitive",
+        "sources": [
+          {
+            "label": "AC Monza official match report",
+            "url": "https://www.acmonza.com/en/news/monza-sassuolo-match-report-18092026/",
+            "date": "2026-09-18",
+            "note": "Reviewed evidence; the published order remains provisional."
+          },
+          {
+            "label": "Penalty handover and Pessina absence",
+            "url": "https://www.sosfanta.com/news/monza-rigorista-fantacalcio-varela-folorunsho-pessina/",
+            "date": "2026-09-18",
+            "note": "Reviewed evidence; the published order remains provisional."
+          }
+        ],
+        "detection": "manual_multi_source_research",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-19T10:00:00Z"
+        },
+        "affects_hierarchy": true
       }
     ],
     "change_log": [
@@ -4965,45 +5106,68 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-02T18:00:00Z",
         "article_slug": null
+      },
+      {
+        "id": "evt_20260919_monza_penalty_review",
+        "changed_at": "2026-09-19T10:00:00Z",
+        "season": "2026/27",
+        "change_type": "hierarchy_change",
+        "reason": "Varela converted against Sassuolo on 18 September and moves first in our provisional order, ahead of Pessina and Cutrone. Pessina was absent and Cutrone had already been substituted, so this penalty does not settle their priority when all three are available. Review again when Pessina returns.",
+        "from": {
+          "primary": "Matteo Pessina",
+          "secondary": "Patrick Cutrone",
+          "tertiary": "Andrea Colpani"
+        },
+        "to": {
+          "primary": "Gustavo Varela",
+          "secondary": "Matteo Pessina",
+          "tertiary": "Patrick Cutrone"
+        },
+        "evidence_ids": [
+          "evt_20260919_monza_penalty_review"
+        ],
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-19T10:00:00Z"
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": false,
+      "weak_evidence": true,
       "stale_override": null
     },
     "prior_season": null,
     "player_ids": {},
-    "source": "GOAL Italia 2026/27 rigoristi board",
-    "cross_check": "Lega Serie A current squads",
+    "source": "AC Monza official match report",
+    "cross_check": "Penalty handover and Pessina absence",
     "squad_membership": {
       "primary": {
+        "player": "Gustavo Varela",
+        "status": "confirmed",
+        "source_url": "https://www.acmonza.com/en/news/monza-sassuolo-match-report-18092026/",
+        "checked_at": "2026-09-19",
+        "method": "current_team_press_or_match_report"
+      },
+      "secondary": {
         "player": "Matteo Pessina",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/6504/overview/monza",
         "checked_at": "2026-09-02"
       },
-      "secondary": {
-        "player": "Patrick Cutrone",
-        "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/6504/overview/monza",
-        "checked_at": "2026-09-02"
-      },
       "tertiary": {
-        "player": "Andrea Colpani",
+        "player": "Patrick Cutrone",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/6504/overview/monza",
         "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
-      "date": "2026-09-01",
+      "date": "2026-09-19",
       "by": "Il Margine",
       "method": "current_season_multi_source_review",
       "outcome": "hierarchy_updated",
       "sources": [
-        "https://www.goal.com/it/liste/fantacalcio-rigoristi-serie-a-2026-2027-tiratori-e-gerarchie-dal-dischetto-delle-20-squadre-del-campionato/bltdebca56c3bd91419",
-        "https://www.legaseriea.it/en/serie-a/teams"
+        "https://www.acmonza.com/en/news/monza-sassuolo-match-report-18092026/",
+        "https://www.sosfanta.com/news/monza-rigorista-fantacalcio-varela-folorunsho-pessina/"
       ]
     }
   },
