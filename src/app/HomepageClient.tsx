@@ -289,7 +289,7 @@ export default function HomepageClient({
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300">Football player props &amp; tennis</p>
               <h1 className="mt-3 max-w-2xl text-4xl font-semibold leading-[1.1] tracking-tight text-slate-100 sm:text-5xl xl:text-6xl">Independent <span className="text-emerald-300">betting analysis.</span></h1>
-              <p className="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">Are the odds worth taking? Independent football and tennis research, published selections, tracked month by month.</p>
+              <p className="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">Independent betting advice, backed by results. Explore profitable football and tennis picks, compare fair odds, check penalty takers and read our latest insights.</p>
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 <Link href="/player-props" className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-300 px-5 py-3 text-base font-semibold text-slate-950 transition hover:bg-emerald-200 sm:w-auto">Player Props Tips <span aria-hidden="true">→</span></Link>
                 <Link href="/tennis-tips" className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-slate-600 bg-slate-900/40 px-5 py-3 text-base font-semibold text-slate-100 transition hover:border-slate-400 hover:bg-slate-900 sm:w-auto">ATP Tennis Tips <span aria-hidden="true">→</span></Link>
