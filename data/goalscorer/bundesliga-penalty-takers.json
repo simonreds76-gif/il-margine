@@ -32,7 +32,7 @@
       "SV Elversberg"
     ],
     "last_verified": "2026-09-02",
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-19",
     "membership_source": "https://media.dfl.de/sites/3/2026/07/EN_eFyJmg6k_Bundesliga_Fixture-List_2026_27.pdf",
     "last_reviewed": "2026-09-01"
   },
@@ -1432,24 +1432,24 @@
     "last_updated": "2026-09-01",
     "source": "LigaInsider 2026/27 set-piece board",
     "cross_check": "Bundesliga official penalty statistics",
-    "hierarchy_status": "probable",
+    "hierarchy_status": "conditional",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
-      "tertiary": "medium"
+      "tertiary": "low"
     },
-    "condition_note": "Diks remains first choice, with Stöger now filed ahead of Hack in the backup order.",
+    "condition_note": "Diks leads the current available-player order, ahead of Stöger and Hack. LigaInsider also names Kleindienst among the leading takers. His availability and the next shared-lineup assignment need checking before a permanent change.",
     "last_verified": {
-      "date": "2026-09-02",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_squad_membership_audit"
+      "method": "targeted_source_review"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-19",
     "latest_evidence": {
-      "id": "evt_20260901_borussia-m-gladbach_current_review",
-      "date": "2026-09-01",
+      "id": "evt_20260919_borussia_mgladbach_source_review",
+      "date": "2026-09-19",
       "type": "current_season_board_review",
-      "source_count": 2
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -1629,6 +1629,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Diks remains first choice, with Stöger now filed ahead of Hack in the backup order."
+      },
+      {
+        "id": "evt_20260919_borussia_mgladbach_source_review",
+        "date": "2026-09-19",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Kleindienst remains part of Gladbach’s penalty picture",
+        "context": "Diks leads the current available-player order, ahead of Stöger and Hack. LigaInsider also names Kleindienst among the leading takers. His availability and the next shared-lineup assignment need checking before a permanent change.",
+        "editorial_note": "Diks leads the current available-player order, ahead of Stöger and Hack. LigaInsider also names Kleindienst among the leading takers. His availability and the next shared-lineup assignment need checking before a permanent change.",
+        "sources": [
+          {
+            "label": "LigaInsider penalty-role guide",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-09-19",
+            "note": "Published source reviewed on 19 September; source date is not a new match event."
+          }
+        ],
+        "detection": "manual_targeted_source_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-19T12:00:00Z"
+        },
+        "affects_hierarchy": true
       }
     ],
     "change_log": [
@@ -1759,13 +1786,12 @@
       }
     },
     "last_reviewed": {
-      "date": "2026-09-01",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_season_multi_source_review",
-      "outcome": "hierarchy_updated",
+      "method": "targeted_source_review",
+      "outcome": "context_updated",
       "sources": [
-        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
-        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/"
       ]
     }
   },
@@ -2208,30 +2234,30 @@
     }
   },
   "FC Cologne": {
-    "primary": "Marius Bülter",
-    "secondary": "Said El Mala",
-    "tertiary": "Linton Maina",
-    "last_updated": "2026-09-01",
+    "primary": "Thijs Dallinga",
+    "secondary": "Marius Bülter",
+    "tertiary": "Said El Mala",
+    "last_updated": "2026-09-19",
     "source": "LigaInsider 2026/27 set-piece board",
     "cross_check": "Bundesliga official penalty statistics",
-    "hierarchy_status": "disputed",
+    "hierarchy_status": "probable",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
-      "tertiary": "medium"
+      "tertiary": "low"
     },
-    "condition_note": "Bülter is the current first-choice projection, followed by El Mala and Maina.",
+    "condition_note": "Dallinga took the 12 September penalty while Bülter and Maina were on the pitch; Hein saved it. Dallinga moves first provisionally. El Mala was not on the pitch for that kick, so the full order is not settled by this one event.",
     "last_verified": {
-      "date": "2026-09-02",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_squad_membership_audit"
+      "method": "targeted_source_review"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-19",
     "latest_evidence": {
-      "id": "evt_20260901_fc-cologne_current_review",
-      "date": "2026-09-01",
+      "id": "evt_20260919_fc_cologne_source_review",
+      "date": "2026-09-19",
       "type": "current_season_board_review",
-      "source_count": 2
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -2423,6 +2449,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Bülter is the current first-choice projection, followed by El Mala and Maina."
+      },
+      {
+        "id": "evt_20260919_fc_cologne_source_review",
+        "date": "2026-09-19",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": "regular_time",
+        "competition": null,
+        "match": "FC Cologne vs Werder Bremen",
+        "headline": "Dallinga takes Köln’s penalty against Bremen",
+        "context": "Dallinga took the 12 September penalty while Bülter and Maina were on the pitch; Hein saved it. Dallinga moves first provisionally. El Mala was not on the pitch for that kick, so the full order is not settled by this one event.",
+        "editorial_note": "Dallinga took the 12 September penalty while Bülter and Maina were on the pitch; Hein saved it. Dallinga moves first provisionally. El Mala was not on the pitch for that kick, so the full order is not settled by this one event.",
+        "sources": [
+          {
+            "label": "Kicker Köln–Bremen match report and lineups",
+            "url": "https://www.kicker.de/koeln-gegen-bremen-2026-bundesliga-5226834/analyse",
+            "date": "2026-09-12",
+            "note": "Published source reviewed on 19 September; source date is not a new match event."
+          }
+        ],
+        "detection": "manual_targeted_source_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-19T12:00:00Z"
+        },
+        "affects_hierarchy": true
       }
     ],
     "change_log": [
@@ -2517,6 +2570,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-01T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-19",
+        "season": "2026/27",
+        "change_type": "sourced_hierarchy_review",
+        "from": {
+          "primary": "Marius Bülter",
+          "secondary": "Said El Mala",
+          "tertiary": "Linton Maina"
+        },
+        "to": {
+          "primary": "Thijs Dallinga",
+          "secondary": "Marius Bülter",
+          "tertiary": "Said El Mala"
+        },
+        "reason": "Dallinga took the 12 September penalty while Bülter and Maina were on the pitch; Hein saved it. Dallinga moves first provisionally. El Mala was not on the pitch for that kick, so the full order is not settled by this one event.",
+        "evidence_ids": [
+          "evt_20260919_fc_cologne_source_review"
+        ],
+        "detection": "manual_targeted_source_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-19T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -2534,32 +2610,31 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
+        "player": "Thijs Dallinga",
+        "status": "confirmed",
+        "source_url": "https://www.kicker.de/koeln-gegen-bremen-2026-bundesliga-5226834/analyse",
+        "checked_at": "2026-09-19"
+      },
+      "secondary": {
         "player": "Marius Bülter",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/8722/overview/1-fc-koln",
         "checked_at": "2026-09-02"
       },
-      "secondary": {
-        "player": "Said El Mala",
-        "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/8722/overview/1-fc-koln",
-        "checked_at": "2026-09-02"
-      },
       "tertiary": {
-        "player": "Linton Maina",
+        "player": "Said El Mala",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/8722/overview/1-fc-koln",
         "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
-      "date": "2026-09-01",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_season_multi_source_review",
+      "method": "targeted_source_review",
       "outcome": "hierarchy_updated",
       "sources": [
-        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
-        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+        "https://www.kicker.de/koeln-gegen-bremen-2026-bundesliga-5226834/analyse"
       ]
     }
   },
@@ -4388,20 +4463,20 @@
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
-      "tertiary": null
+      "tertiary": "low"
     },
-    "condition_note": "Mika Baur has left. Klaas is promoted from the evidenced deputy position; Michel and set-piece specialist Obermair are provisional backups until Paderborn receive a current-season penalty.",
+    "condition_note": "Klaas remains the provisional lead after Baur’s departure, with Michel and Obermair as candidates. LigaInsider leaves the role open; the published order is a projection, not a confirmed assignment.",
     "last_verified": {
-      "date": "2026-09-02",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "targeted_source_review"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-19",
     "latest_evidence": {
-      "id": "evt_20260902_sc_paderborn_07_post_deadline",
-      "date": "2026-09-02",
-      "type": "post_deadline_roster_review",
-      "source_count": 2
+      "id": "evt_20260919_sc_paderborn_07_source_review",
+      "date": "2026-09-19",
+      "type": "current_season_board_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -4645,6 +4720,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Post-deadline roster correction; uncertain depth remains explicitly provisional."
+      },
+      {
+        "id": "evt_20260919_sc_paderborn_07_source_review",
+        "date": "2026-09-19",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Paderborn’s projected order still needs a match test",
+        "context": "Klaas remains the provisional lead after Baur’s departure, with Michel and Obermair as candidates. LigaInsider leaves the role open; the published order is a projection, not a confirmed assignment.",
+        "editorial_note": "Klaas remains the provisional lead after Baur’s departure, with Michel and Obermair as candidates. LigaInsider leaves the role open; the published order is a projection, not a confirmed assignment.",
+        "sources": [
+          {
+            "label": "LigaInsider penalty-role guide",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-09-19",
+            "note": "Published source reviewed on 19 September; source date is not a new match event."
+          }
+        ],
+        "detection": "manual_targeted_source_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-19T12:00:00Z"
+        },
+        "affects_hierarchy": true
       }
     ],
     "change_log": [
@@ -4771,39 +4873,38 @@
       }
     },
     "last_reviewed": {
-      "date": "2026-09-01",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_season_multi_source_review",
-      "outcome": "order_unchanged",
+      "method": "targeted_source_review",
+      "outcome": "context_updated",
       "sources": [
-        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
-        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/"
       ]
     }
   },
   "SV Elversberg": {
-    "primary": "Lukas Petkov",
-    "secondary": "Francis Onyeka",
-    "tertiary": "Maurice Krattenmacher",
-    "last_updated": "2026-07-30",
-    "hierarchy_status": "disputed",
+    "primary": "",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-09-19",
+    "hierarchy_status": "conditional",
     "confidence": {
-      "primary": "low",
-      "secondary": "low",
-      "tertiary": "low"
+      "primary": null,
+      "secondary": null,
+      "tertiary": null
     },
-    "condition_note": "LigaInsider still marks Elversberg's penalty role open. Petkov, Onyeka and Krattenmacher are provisional candidates only, not a confirmed assignment.",
+    "condition_note": "The penalty role remains under review. Petkov, Onyeka and Krattenmacher are candidates, but the source does not establish a ranked order. A competitive assignment or a clear coach statement is needed.",
     "last_verified": {
-      "date": "2026-09-02",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_squad_membership_audit"
+      "method": "targeted_source_review"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-19",
     "latest_evidence": {
-      "id": "evt_20260901_sv-elversberg_current_review",
-      "date": "2026-09-01",
+      "id": "evt_20260919_sv_elversberg_source_review",
+      "date": "2026-09-19",
       "type": "current_season_board_review",
-      "source_count": 2
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -4982,6 +5083,34 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "LigaInsider still marks Elversberg's penalty role open. Petkov, Onyeka and Krattenmacher are provisional candidates only, not a confirmed assignment."
+      },
+      {
+        "id": "evt_20260919_sv_elversberg_source_review",
+        "date": "2026-09-19",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Elversberg’s penalty order remains open",
+        "context": "The penalty role remains under review. Petkov, Onyeka and Krattenmacher are candidates, but the source does not establish a ranked order. A competitive assignment or a clear coach statement is needed.",
+        "editorial_note": "The penalty role remains under review. Petkov, Onyeka and Krattenmacher are candidates, but the source does not establish a ranked order. A competitive assignment or a clear coach statement is needed.",
+        "sources": [
+          {
+            "label": "LigaInsider penalty-role guide",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-09-19",
+            "note": "Published source reviewed on 19 September; source date is not a new match event."
+          }
+        ],
+        "detection": "manual_targeted_source_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-19T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "documents_unverified_slots": true
       }
     ],
     "change_log": [
@@ -5030,6 +5159,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-19",
+        "season": "2026/27",
+        "change_type": "sourced_hierarchy_review",
+        "from": {
+          "primary": "Lukas Petkov",
+          "secondary": "Francis Onyeka",
+          "tertiary": "Maurice Krattenmacher"
+        },
+        "to": {
+          "primary": "",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "The penalty role remains under review. Petkov, Onyeka and Krattenmacher are candidates, but the source does not establish a ranked order. A competitive assignment or a clear coach statement is needed.",
+        "evidence_ids": [
+          "evt_20260919_sv_elversberg_source_review"
+        ],
+        "detection": "manual_targeted_source_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-19T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -5041,34 +5193,14 @@
     "player_ids": {},
     "source": "LigaInsider 2026/27 set-piece board",
     "cross_check": "Bundesliga official penalty statistics",
-    "squad_membership": {
-      "primary": {
-        "player": "Lukas Petkov",
-        "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/8232/overview/sv-elversberg",
-        "checked_at": "2026-09-02"
-      },
-      "secondary": {
-        "player": "Francis Onyeka",
-        "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/8232/overview/sv-elversberg",
-        "checked_at": "2026-09-02"
-      },
-      "tertiary": {
-        "player": "Maurice Krattenmacher",
-        "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/8232/overview/sv-elversberg",
-        "checked_at": "2026-09-02"
-      }
-    },
+    "squad_membership": {},
     "last_reviewed": {
-      "date": "2026-09-01",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_season_multi_source_review",
-      "outcome": "order_unchanged",
+      "method": "targeted_source_review",
+      "outcome": "hierarchy_updated",
       "sources": [
-        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
-        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+        "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/"
       ]
     }
   },
@@ -5382,28 +5514,28 @@
   },
   "Union Berlin": {
     "primary": "Aljoscha Kemlein",
-    "secondary": "Derrick Köhn",
-    "tertiary": "Robert Skov",
-    "last_updated": "2026-09-02",
+    "secondary": "Marin Ljubičić",
+    "tertiary": "Derrick Köhn",
+    "last_updated": "2026-09-19",
     "source": "LigaInsider 2026/27 set-piece board",
     "cross_check": "Bundesliga official penalty statistics",
     "hierarchy_status": "conditional",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
-      "tertiary": "medium"
+      "tertiary": "low"
     },
-    "condition_note": "Dejan Ljubičić is no longer in Union Berlin's current squad. Kemlein remains first, Köhn is promoted from the existing hierarchy and experienced set-piece specialist Skov is the provisional third option.",
+    "condition_note": "Kemlein leads the provisional order, with Marin Ljubičić restored as deputy. The previous departure note confused Marin with Dejan Ljubičić. Union lists Marin in its current squad; Köhn remains a provisional third option.",
     "last_verified": {
-      "date": "2026-09-02",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "targeted_source_review"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-19",
     "latest_evidence": {
-      "id": "evt_20260902_union_berlin_post_deadline",
-      "date": "2026-09-02",
-      "type": "post_deadline_roster_review",
+      "id": "evt_20260919_union_berlin_source_review",
+      "date": "2026-09-19",
+      "type": "current_season_board_review",
       "source_count": 2
     },
     "evidence_log": [
@@ -5634,6 +5766,39 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Post-deadline roster correction; uncertain depth remains explicitly provisional."
+      },
+      {
+        "id": "evt_20260919_union_berlin_source_review",
+        "date": "2026-09-19",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Marin Ljubičić restored to Union’s shortlist",
+        "context": "Kemlein leads the provisional order, with Marin Ljubičić restored as deputy. The previous departure note confused Marin with Dejan Ljubičić. Union lists Marin in its current squad; Köhn remains a provisional third option.",
+        "editorial_note": "Kemlein leads the provisional order, with Marin Ljubičić restored as deputy. The previous departure note confused Marin with Dejan Ljubičić. Union lists Marin in its current squad; Köhn remains a provisional third option.",
+        "sources": [
+          {
+            "label": "LigaInsider penalty-role guide",
+            "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+            "date": "2026-09-19",
+            "note": "Published source reviewed on 19 September; source date is not a new match event."
+          },
+          {
+            "label": "Union Berlin official first-team squad",
+            "url": "https://www.fc-union-berlin.de/en/football/first-men-p6kl",
+            "date": "2026-09-19",
+            "note": "Published source reviewed on 19 September; source date is not a new match event."
+          }
+        ],
+        "detection": "manual_targeted_source_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-19T12:00:00Z"
+        },
+        "affects_hierarchy": true
       }
     ],
     "change_log": [
@@ -5751,6 +5916,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-02T18:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-19",
+        "season": "2026/27",
+        "change_type": "sourced_hierarchy_review",
+        "from": {
+          "primary": "Aljoscha Kemlein",
+          "secondary": "Derrick Köhn",
+          "tertiary": "Robert Skov"
+        },
+        "to": {
+          "primary": "Aljoscha Kemlein",
+          "secondary": "Marin Ljubičić",
+          "tertiary": "Derrick Köhn"
+        },
+        "reason": "Kemlein leads the provisional order, with Marin Ljubičić restored as deputy. The previous departure note confused Marin with Dejan Ljubičić. Union lists Marin in its current squad; Köhn remains a provisional third option.",
+        "evidence_ids": [
+          "evt_20260919_union_berlin_source_review"
+        ],
+        "detection": "manual_targeted_source_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-19T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -5774,26 +5962,26 @@
         "checked_at": "2026-09-02"
       },
       "secondary": {
-        "player": "Derrick Köhn",
+        "player": "Marin Ljubičić",
         "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/8149/overview/union-berlin",
-        "checked_at": "2026-09-02"
+        "source_url": "https://www.fc-union-berlin.de/en/football/first-men-p6kl",
+        "checked_at": "2026-09-19"
       },
       "tertiary": {
-        "player": "Robert Skov",
+        "player": "Derrick Köhn",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/8149/overview/union-berlin",
         "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
-      "date": "2026-09-01",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_season_multi_source_review",
+      "method": "targeted_source_review",
       "outcome": "hierarchy_updated",
       "sources": [
         "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
-        "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter"
+        "https://www.fc-union-berlin.de/en/football/first-men-p6kl"
       ]
     }
   },

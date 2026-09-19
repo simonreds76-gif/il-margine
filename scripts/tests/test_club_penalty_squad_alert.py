@@ -13,6 +13,13 @@ SPEC.loader.exec_module(MODULE)
 
 
 class ClubPenaltySquadAlertTests(unittest.TestCase):
+    def test_quality_findings_alert_even_when_squad_membership_is_clean(self) -> None:
+        payload = {'rows': [{'status': 'present'}], 'hierarchy_quality': [
+            {'status': 'hierarchy_review_due', 'league': 'epl', 'club': 'Test', 'detail': 'Last penalty-role review: 2026-08-01'},
+        ]}
+        self.assertEqual(len(MODULE.issue_rows(payload)), 1)
+        self.assertIn('Last penalty-role review: 2026-08-01', MODULE.build_message(payload))
+
     def test_clean_audit_has_no_issues(self) -> None:
         payload = {"rows": [{"status": "present"}]}
         self.assertEqual(MODULE.issue_rows(payload), [])

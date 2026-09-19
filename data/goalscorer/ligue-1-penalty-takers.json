@@ -26,35 +26,35 @@
       "Troyes"
     ],
     "last_verified": "2026-09-02",
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-19",
     "membership_source": "https://ligue1.com/en/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",
     "last_reviewed": "2026-09-04"
   },
   "Angers": {
     "primary": "Amine El Ouazzani",
-    "secondary": "Branco van den Boomen",
-    "tertiary": "Amine Sbaï",
-    "last_updated": "2026-08-22",
+    "secondary": "Amine Sbaï",
+    "tertiary": "Branco van den Boomen",
+    "last_updated": "2026-09-19",
     "source": "AJ Auxerre",
     "cross_check": "Ligue 1",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
+      "primary": "medium",
       "secondary": "medium",
       "tertiary": "low"
     },
-    "condition_note": "El Ouazzani took and converted Angers' latest preseason penalty while van den Boomen started. That current-coach assignment moves El Ouazzani to first, with van den Boomen the dead-ball deputy and Sbaï next. A competitive penalty can still confirm or reverse the call.",
+    "condition_note": "El Ouazzani stays first. The league’s 7 September guide lists Sbaï ahead of van den Boomen; that backup order remains provisional.",
     "last_verified": {
-      "date": "2026-09-02",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_squad_membership_audit"
+      "method": "targeted_source_review"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-19",
     "latest_evidence": {
-      "id": "evt_20260901_angers_current_review",
-      "date": "2026-09-01",
+      "id": "evt_20260919_angers_source_review",
+      "date": "2026-09-19",
       "type": "current_season_board_review",
-      "source_count": 4
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -284,6 +284,33 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+      },
+      {
+        "id": "evt_20260919_angers_source_review",
+        "date": "2026-09-19",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Sbaï moves up the Angers backup order",
+        "context": "El Ouazzani stays first. The league’s 7 September guide lists Sbaï ahead of van den Boomen; that backup order remains provisional.",
+        "editorial_note": "El Ouazzani stays first. The league’s 7 September guide lists Sbaï ahead of van den Boomen; that backup order remains provisional.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece guide",
+            "url": "https://ligue1.com/fr/articles/l1_article_5846-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2627",
+            "date": "2026-09-07",
+            "note": "Published source reviewed on 19 September; source date is not a new match event."
+          }
+        ],
+        "detection": "manual_targeted_source_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-19T12:00:00Z"
+        },
+        "affects_hierarchy": true
       }
     ],
     "change_log": [
@@ -378,11 +405,34 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-08-22T18:30:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-19",
+        "season": "2026/27",
+        "change_type": "sourced_hierarchy_review",
+        "from": {
+          "primary": "Amine El Ouazzani",
+          "secondary": "Branco van den Boomen",
+          "tertiary": "Amine Sbaï"
+        },
+        "to": {
+          "primary": "Amine El Ouazzani",
+          "secondary": "Amine Sbaï",
+          "tertiary": "Branco van den Boomen"
+        },
+        "reason": "El Ouazzani stays first. The league’s 7 September guide lists Sbaï ahead of van den Boomen; that backup order remains provisional.",
+        "evidence_ids": [
+          "evt_20260919_angers_source_review"
+        ],
+        "detection": "manual_targeted_source_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-19T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -401,28 +451,25 @@
         "checked_at": "2026-09-02"
       },
       "secondary": {
-        "player": "Branco van den Boomen",
+        "player": "Amine Sbaï",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/8121/overview/angers",
         "checked_at": "2026-09-02"
       },
       "tertiary": {
-        "player": "Amine Sbaï",
+        "player": "Branco van den Boomen",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/8121/overview/angers",
         "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
-      "date": "2026-09-01",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_season_multi_source_review",
-      "outcome": "order_unchanged",
+      "method": "targeted_source_review",
+      "outcome": "hierarchy_updated",
       "sources": [
-        "https://ligue1.com/fr/articles/l1_article_2916-",
-        "https://www.statbunker.com/competitions/Penalties?comp_id=796",
-        "https://www.deux-zero.com/ligue-1/penalties-tireurs-epreuve/joueur/6874",
-        "https://starting11.com/set-piece-takers/ligue-1"
+        "https://ligue1.com/fr/articles/l1_article_5846-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2627"
       ]
     }
   },
@@ -1312,30 +1359,30 @@
     "unavailable_candidates": []
   },
   "Le Havre": {
-    "primary": "Mbwana Ally Samatta",
-    "secondary": "Rassoul Ndiaye",
-    "tertiary": "Josh Maja",
-    "last_updated": "2026-09-02",
+    "primary": "Rayan Fofana",
+    "secondary": "",
+    "tertiary": "",
+    "last_updated": "2026-09-19",
     "source": "Le Havre AC",
     "cross_check": "Ligue 1",
     "hierarchy_status": "conditional",
     "confidence": {
-      "primary": "high",
-      "secondary": "low",
+      "primary": "medium",
+      "secondary": null,
       "tertiary": null
     },
-    "condition_note": "Samatta and Rassoul Ndiaye retain the post-Zouaoui order. Maja is the current attacking fallback pending a direct 2026/27 penalty.",
+    "condition_note": "The official league guide names Fofana and records one successful penalty. The backup order remains under review; the earlier projected trio had no direct current-season assignment.",
     "last_verified": {
-      "date": "2026-09-02",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "targeted_source_review"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-19",
     "latest_evidence": {
-      "id": "evt_20260902_le_havre_post_deadline",
-      "date": "2026-09-02",
-      "type": "post_deadline_roster_review",
-      "source_count": 2
+      "id": "evt_20260919_le_havre_source_review",
+      "date": "2026-09-19",
+      "type": "current_season_board_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -1592,6 +1639,34 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Post-deadline roster correction; uncertain depth remains explicitly provisional."
+      },
+      {
+        "id": "evt_20260919_le_havre_source_review",
+        "date": "2026-09-19",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Fofana takes the lead for Le Havre",
+        "context": "The official league guide names Fofana and records one successful penalty. The backup order remains under review; the earlier projected trio had no direct current-season assignment.",
+        "editorial_note": "The official league guide names Fofana and records one successful penalty. The backup order remains under review; the earlier projected trio had no direct current-season assignment.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece guide",
+            "url": "https://ligue1.com/fr/articles/l1_article_5846-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2627",
+            "date": "2026-09-07",
+            "note": "Published source reviewed on 19 September; source date is not a new match event."
+          }
+        ],
+        "detection": "manual_targeted_source_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-19T12:00:00Z"
+        },
+        "affects_hierarchy": true,
+        "documents_unverified_slots": true
       }
     ],
     "change_log": [
@@ -1709,6 +1784,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-02T18:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-19",
+        "season": "2026/27",
+        "change_type": "sourced_hierarchy_review",
+        "from": {
+          "primary": "Mbwana Ally Samatta",
+          "secondary": "Rassoul Ndiaye",
+          "tertiary": "Josh Maja"
+        },
+        "to": {
+          "primary": "Rayan Fofana",
+          "secondary": "",
+          "tertiary": ""
+        },
+        "reason": "The official league guide names Fofana and records one successful penalty. The backup order remains under review; the earlier projected trio had no direct current-season assignment.",
+        "evidence_ids": [
+          "evt_20260919_le_havre_source_review"
+        ],
+        "detection": "manual_targeted_source_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-19T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -1726,34 +1824,19 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Mbwana Ally Samatta",
+        "player": "Rayan Fofana",
         "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/9746/overview/le-havre",
-        "checked_at": "2026-09-02"
-      },
-      "secondary": {
-        "player": "Rassoul Ndiaye",
-        "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/9746/overview/le-havre",
-        "checked_at": "2026-09-02"
-      },
-      "tertiary": {
-        "player": "Josh Maja",
-        "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/9746/overview/le-havre",
-        "checked_at": "2026-09-02"
+        "source_url": "https://ligue1.com/fr/articles/l1_article_5846-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2627",
+        "checked_at": "2026-09-19"
       }
     },
     "last_reviewed": {
-      "date": "2026-09-01",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_season_multi_source_review",
-      "outcome": "order_unchanged",
+      "method": "targeted_source_review",
+      "outcome": "hierarchy_updated",
       "sources": [
-        "https://ligue1.com/fr/articles/l1_article_2916-",
-        "https://www.statbunker.com/competitions/Penalties?comp_id=796",
-        "https://www.deux-zero.com/ligue-1/penalties-tireurs-epreuve/joueur/6874",
-        "https://starting11.com/set-piece-takers/ligue-1"
+        "https://ligue1.com/fr/articles/l1_article_5846-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2627"
       ]
     }
   },
@@ -4091,28 +4174,28 @@
   "Monaco": {
     "primary": "Folarin Balogun",
     "secondary": "Ansu Fati",
-    "tertiary": "Denis Zakaria",
-    "last_updated": "2026-07-30",
+    "tertiary": "Paris Brunner",
+    "last_updated": "2026-09-19",
     "source": "AS Monaco",
     "cross_check": "AS Monaco",
-    "hierarchy_status": "confirmed",
+    "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
-      "secondary": "high",
-      "tertiary": "medium"
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
     },
-    "condition_note": "Balogun converted regular-time penalties with Fati available and finished 3/3 versus Fati's 3/4. Zakaria's 5/5 career record makes him the strongest tertiary. The tertiary has not been tested in a Monaco regular-time coexistence event. Conditions: If Balogun leaves, Fati becomes primary and Zakaria second. Reassess after the first penalty involving Monaco's latest attacking arrival.",
+    "condition_note": "Balogun and Fati stay ahead of Brunner, who replaces the career-record-only fallback Zakaria in the league’s September penalty list.",
     "last_verified": {
-      "date": "2026-09-02",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_squad_membership_audit"
+      "method": "targeted_source_review"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-19",
     "latest_evidence": {
-      "id": "evt_20260901_monaco_current_review",
-      "date": "2026-09-01",
+      "id": "evt_20260919_monaco_source_review",
+      "date": "2026-09-19",
       "type": "current_season_board_review",
-      "source_count": 4
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -4328,6 +4411,33 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+      },
+      {
+        "id": "evt_20260919_monaco_source_review",
+        "date": "2026-09-19",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Brunner added to Monaco’s penalty shortlist",
+        "context": "Balogun and Fati stay ahead of Brunner, who replaces the career-record-only fallback Zakaria in the league’s September penalty list.",
+        "editorial_note": "Balogun and Fati stay ahead of Brunner, who replaces the career-record-only fallback Zakaria in the league’s September penalty list.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece guide",
+            "url": "https://ligue1.com/fr/articles/l1_article_5846-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2627",
+            "date": "2026-09-07",
+            "note": "Published source reviewed on 19 September; source date is not a new match event."
+          }
+        ],
+        "detection": "manual_targeted_source_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-19T12:00:00Z"
+        },
+        "affects_hierarchy": true
       }
     ],
     "change_log": [
@@ -4399,6 +4509,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-19",
+        "season": "2026/27",
+        "change_type": "sourced_hierarchy_review",
+        "from": {
+          "primary": "Folarin Balogun",
+          "secondary": "Ansu Fati",
+          "tertiary": "Denis Zakaria"
+        },
+        "to": {
+          "primary": "Folarin Balogun",
+          "secondary": "Ansu Fati",
+          "tertiary": "Paris Brunner"
+        },
+        "reason": "Balogun and Fati stay ahead of Brunner, who replaces the career-record-only fallback Zakaria in the league’s September penalty list.",
+        "evidence_ids": [
+          "evt_20260919_monaco_source_review"
+        ],
+        "detection": "manual_targeted_source_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-19T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -4428,50 +4561,47 @@
         "checked_at": "2026-09-02"
       },
       "tertiary": {
-        "player": "Denis Zakaria",
+        "player": "Paris Brunner",
         "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/9829/overview/monaco",
-        "checked_at": "2026-09-02"
+        "source_url": "https://ligue1.com/fr/articles/l1_article_5846-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2627",
+        "checked_at": "2026-09-19"
       }
     },
     "last_reviewed": {
-      "date": "2026-09-01",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_season_multi_source_review",
-      "outcome": "order_unchanged",
+      "method": "targeted_source_review",
+      "outcome": "hierarchy_updated",
       "sources": [
-        "https://ligue1.com/fr/articles/l1_article_2916-",
-        "https://www.statbunker.com/competitions/Penalties?comp_id=796",
-        "https://www.deux-zero.com/ligue-1/penalties-tireurs-epreuve/joueur/6874",
-        "https://starting11.com/set-piece-takers/ligue-1"
+        "https://ligue1.com/fr/articles/l1_article_5846-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2627"
       ]
     }
   },
   "Nice": {
-    "primary": "Sofiane Diop",
-    "secondary": "Jonathan Clauss",
-    "tertiary": "Elye Wahi",
-    "last_updated": "2026-09-02",
+    "primary": "Elye Wahi",
+    "secondary": "Gauthier Hein",
+    "tertiary": "Sofiane Diop",
+    "last_updated": "2026-09-19",
     "source": "Ligue 1",
     "cross_check": "OGC Nice",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
-      "secondary": "low",
-      "tertiary": null
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "low"
     },
-    "condition_note": "Diop remains the retained successful primary and Clauss the deputy after Moffi's departure. Wahi is the current attacking third option.",
+    "condition_note": "The league’s September guide names Wahi and Hein. Diop remains a provisional fallback based on his earlier successful penalty, pending a new assignment.",
     "last_verified": {
-      "date": "2026-09-02",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "multi_source_preseason_research"
+      "method": "targeted_source_review"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-19",
     "latest_evidence": {
-      "id": "evt_20260902_nice_post_deadline",
-      "date": "2026-09-02",
-      "type": "post_deadline_roster_review",
-      "source_count": 2
+      "id": "evt_20260919_nice_source_review",
+      "date": "2026-09-19",
+      "type": "current_season_board_review",
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -4746,6 +4876,33 @@
         },
         "affects_hierarchy": true,
         "editorial_note": "Post-deadline roster correction; uncertain depth remains explicitly provisional."
+      },
+      {
+        "id": "evt_20260919_nice_source_review",
+        "date": "2026-09-19",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Wahi and Hein lead Nice’s updated order",
+        "context": "The league’s September guide names Wahi and Hein. Diop remains a provisional fallback based on his earlier successful penalty, pending a new assignment.",
+        "editorial_note": "The league’s September guide names Wahi and Hein. Diop remains a provisional fallback based on his earlier successful penalty, pending a new assignment.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece guide",
+            "url": "https://ligue1.com/fr/articles/l1_article_5846-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2627",
+            "date": "2026-09-07",
+            "note": "Published source reviewed on 19 September; source date is not a new match event."
+          }
+        ],
+        "detection": "manual_targeted_source_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-19T12:00:00Z"
+        },
+        "affects_hierarchy": true
       }
     ],
     "change_log": [
@@ -4863,6 +5020,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-02T18:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-19",
+        "season": "2026/27",
+        "change_type": "sourced_hierarchy_review",
+        "from": {
+          "primary": "Sofiane Diop",
+          "secondary": "Jonathan Clauss",
+          "tertiary": "Elye Wahi"
+        },
+        "to": {
+          "primary": "Elye Wahi",
+          "secondary": "Gauthier Hein",
+          "tertiary": "Sofiane Diop"
+        },
+        "reason": "The league’s September guide names Wahi and Hein. Diop remains a provisional fallback based on his earlier successful penalty, pending a new assignment.",
+        "evidence_ids": [
+          "evt_20260919_nice_source_review"
+        ],
+        "detection": "manual_targeted_source_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-19T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -4880,34 +5060,31 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Sofiane Diop",
+        "player": "Elye Wahi",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/9831/overview/nice",
         "checked_at": "2026-09-02"
       },
       "secondary": {
-        "player": "Jonathan Clauss",
+        "player": "Gauthier Hein",
         "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/9831/overview/nice",
-        "checked_at": "2026-09-02"
+        "source_url": "https://ligue1.com/fr/articles/l1_article_5846-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2627",
+        "checked_at": "2026-09-19"
       },
       "tertiary": {
-        "player": "Elye Wahi",
+        "player": "Sofiane Diop",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/9831/overview/nice",
         "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
-      "date": "2026-09-01",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_season_multi_source_review",
-      "outcome": "order_unchanged",
+      "method": "targeted_source_review",
+      "outcome": "hierarchy_updated",
       "sources": [
-        "https://ligue1.com/fr/articles/l1_article_2916-",
-        "https://www.statbunker.com/competitions/Penalties?comp_id=796",
-        "https://www.deux-zero.com/ligue-1/penalties-tireurs-epreuve/joueur/6874",
-        "https://starting11.com/set-piece-takers/ligue-1"
+        "https://ligue1.com/fr/articles/l1_article_5846-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2627"
       ]
     }
   },
@@ -5309,29 +5486,29 @@
   },
   "Paris Saint Germain": {
     "primary": "Ousmane Dembélé",
-    "secondary": "Khvicha Kvaratskhelia",
-    "tertiary": "Nuno Mendes",
-    "last_updated": "2026-07-30",
+    "secondary": "Vitinha",
+    "tertiary": "Khvicha Kvaratskhelia",
+    "last_updated": "2026-09-19",
     "source": "Paris Saint-Germain",
     "cross_check": "L'Équipe",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
+      "primary": "medium",
       "secondary": "medium",
-      "tertiary": "medium"
+      "tertiary": "low"
     },
-    "condition_note": "Dembélé took and converted the Champions League final penalty with Kvaratskhelia present. Kvaratskhelia and Nuno Mendes each converted their sole 2025/26 league attempt. The second-versus-third order has no direct coexistence test. Conditions: If Dembélé is unavailable, the next regular-time attempt resolves the backups. Any new forward with an established penalty role should be reviewed.",
+    "condition_note": "Dembélé stays first, with Vitinha named alongside him by the league. Kvaratskhelia remains a provisional third option from his earlier club penalty record.",
     "last_verified": {
-      "date": "2026-09-02",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_squad_membership_audit"
+      "method": "targeted_source_review"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-19",
     "latest_evidence": {
-      "id": "evt_20260901_paris-saint-germain_current_review",
-      "date": "2026-09-01",
+      "id": "evt_20260919_paris_saint_germain_source_review",
+      "date": "2026-09-19",
       "type": "current_season_board_review",
-      "source_count": 4
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -5529,6 +5706,33 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+      },
+      {
+        "id": "evt_20260919_paris_saint_germain_source_review",
+        "date": "2026-09-19",
+        "season": "2026/27",
+        "type": "current_season_board_review",
+        "penalty_kind": null,
+        "competition": null,
+        "match": null,
+        "headline": "Vitinha becomes PSG’s listed deputy",
+        "context": "Dembélé stays first, with Vitinha named alongside him by the league. Kvaratskhelia remains a provisional third option from his earlier club penalty record.",
+        "editorial_note": "Dembélé stays first, with Vitinha named alongside him by the league. Kvaratskhelia remains a provisional third option from his earlier club penalty record.",
+        "sources": [
+          {
+            "label": "Ligue 1 official set-piece guide",
+            "url": "https://ligue1.com/fr/articles/l1_article_5846-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2627",
+            "date": "2026-09-07",
+            "note": "Published source reviewed on 19 September; source date is not a new match event."
+          }
+        ],
+        "detection": "manual_targeted_source_review",
+        "review": {
+          "status": "approved",
+          "reviewed_by": "Il Margine",
+          "reviewed_at": "2026-09-19T12:00:00Z"
+        },
+        "affects_hierarchy": true
       }
     ],
     "change_log": [
@@ -5600,6 +5804,29 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "changed_at": "2026-09-19",
+        "season": "2026/27",
+        "change_type": "sourced_hierarchy_review",
+        "from": {
+          "primary": "Ousmane Dembélé",
+          "secondary": "Khvicha Kvaratskhelia",
+          "tertiary": "Nuno Mendes"
+        },
+        "to": {
+          "primary": "Ousmane Dembélé",
+          "secondary": "Vitinha",
+          "tertiary": "Khvicha Kvaratskhelia"
+        },
+        "reason": "Dembélé stays first, with Vitinha named alongside him by the league. Kvaratskhelia remains a provisional third option from his earlier club penalty record.",
+        "evidence_ids": [
+          "evt_20260919_paris_saint_germain_source_review"
+        ],
+        "detection": "manual_targeted_source_review",
+        "approved_by": "Il Margine",
+        "approved_at": "2026-09-19T12:00:00Z",
+        "article_slug": null
       }
     ],
     "flags": {
@@ -5623,28 +5850,25 @@
         "checked_at": "2026-09-02"
       },
       "secondary": {
-        "player": "Khvicha Kvaratskhelia",
+        "player": "Vitinha",
         "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/9847/overview/paris-saint-germain",
-        "checked_at": "2026-09-02"
+        "source_url": "https://ligue1.com/fr/articles/l1_article_5846-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2627",
+        "checked_at": "2026-09-19"
       },
       "tertiary": {
-        "player": "Nuno Mendes",
+        "player": "Khvicha Kvaratskhelia",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/9847/overview/paris-saint-germain",
         "checked_at": "2026-09-02"
       }
     },
     "last_reviewed": {
-      "date": "2026-09-01",
+      "date": "2026-09-19",
       "by": "Il Margine",
-      "method": "current_season_multi_source_review",
-      "outcome": "order_unchanged",
+      "method": "targeted_source_review",
+      "outcome": "hierarchy_updated",
       "sources": [
-        "https://ligue1.com/fr/articles/l1_article_2916-",
-        "https://www.statbunker.com/competitions/Penalties?comp_id=796",
-        "https://www.deux-zero.com/ligue-1/penalties-tireurs-epreuve/joueur/6874",
-        "https://starting11.com/set-piece-takers/ligue-1"
+        "https://ligue1.com/fr/articles/l1_article_5846-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2627"
       ]
     }
   },

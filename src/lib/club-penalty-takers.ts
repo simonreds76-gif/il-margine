@@ -352,8 +352,11 @@ function mapTeam(
   const team = cleanClubPenaltyText(teamName);
   const slug = clubPenaltySlug(team);
   const relativeUrl = clubPenaltyTeamRelativeUrl(league.key, slug);
-  const lastUpdated = cleanClubPenaltyText(entry.last_verified?.date || entry.last_updated);
-  const checkedAt = cleanClubPenaltyText(entry.last_reviewed?.date || entry.last_verified?.date || options.leagueCheckedAt);
+  const lastUpdated = cleanClubPenaltyText(entry.last_updated || entry.last_verified?.date);
+  const checkedAt = [entry.last_reviewed?.date, entry.last_verified?.date]
+    .map(value => cleanClubPenaltyText(value))
+    .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value))
+    .sort().at(-1) || cleanClubPenaltyText(options.leagueCheckedAt);
   const publicUpdatedAt = cleanClubPenaltyText(entry.public_updated_at || entry.last_updated);
   const isArchived = Boolean(options.archived);
   const isCarryover = !isArchived && Boolean(entry.flags?.carryover_from_previous_season);
