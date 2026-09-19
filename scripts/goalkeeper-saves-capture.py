@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Capture real Bet365 goalkeeper-save lines with a hard two-request budget."""
+"""Capture real Bet365 goalkeeper-save lines with a hard four-request budget."""
 
 from __future__ import annotations
 
@@ -66,6 +66,7 @@ def supported_events(
     max_events: int,
     kickoff_within_minutes: int,
     now: datetime,
+    last_seen: dict[str, str] | None = None,
 ) -> list[dict[str, Any]]:
     candidates: list[dict[str, Any]] = []
     for event in events:
@@ -89,8 +90,13 @@ def supported_events(
             if delta < -15 or delta > kickoff_within_minutes:
                 continue
         candidates.append(event)
-    candidates.sort(key=lambda item: str(item.get("date") or item.get("startTime") or ""))
-    return candidates[: min(10, max(1, max_events))]
+    seen = last_seen or {}
+    # Near-kickoff fixtures first for CLV; rotate the rest by oldest observation.
+    candidates.sort(key=lambda item: (
+        0 if datetime.fromisoformat(str(item.get("date") or item.get("startTime")).replace("Z", "+00:00")) <= now + timedelta(minutes=120) else 1,
+        seen.get(str(item["id"]), ""), str(item.get("date") or item.get("startTime") or ""),
+    ))
+    return candidates[: min(30, max(1, max_events))]
 
 
 def capture_window(mode: str, minutes: int, previous: dict[str, Any], now: datetime) -> tuple[str, int, bool]:
@@ -266,7 +272,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Capture Bet365 goalkeeper saves prices")
     parser.add_argument("--bookmaker", default="Bet365")
     parser.add_argument("--days-ahead", type=int, default=7)
-    parser.add_argument("--max-events", type=int, default=10)
+    parser.add_argument("--max-events", type=int, default=30)
     parser.add_argument("--kickoff-within-minutes", type=int, default=0)
     parser.add_argument("--capture-mode", choices=("publication", "close"), default="publication")
     parser.add_argument("--history", type=Path, default=DEFAULT_HISTORY)
@@ -299,20 +305,24 @@ def main() -> None:
             "limit": 5000,
         },
     )
+    previous_seen = previous.get("event_last_checked", {})
+    # Obtain the uncapped count separately for honest coverage telemetry.
+    supported_ids = {str(e["id"]) for e in (discovered if isinstance(discovered, list) else [])
+                     if supported_events([e], max_events=1, kickoff_within_minutes=cutoff_minutes, now=now)}
     events = supported_events(
         discovered if isinstance(discovered, list) else [],
         max_events=args.max_events,
         kickoff_within_minutes=cutoff_minutes,
-        now=now,
+        now=now, last_seen=previous_seen,
     )
     event_ids = [str(event["id"]) for event in events]
     payload: list[dict[str, Any]] = []
-    if event_ids:
+    for offset in range(0, len(event_ids), 10):
         result = request_json(
             "/odds/multi",
-            {"apiKey": api_key, "eventIds": ",".join(event_ids), "bookmakers": args.bookmaker},
+            {"apiKey": api_key, "eventIds": ",".join(event_ids[offset:offset + 10]), "bookmakers": args.bookmaker},
         )
-        payload = result if isinstance(result, list) else []
+        payload.extend(result if isinstance(result, list) else [])
     captured_at = now.isoformat().replace("+00:00", "Z")
     rows = extract_rows(
         payload,
@@ -321,6 +331,9 @@ def main() -> None:
         captured_at=captured_at,
         capture_mode=capture_mode,
     )
+    for row in rows:
+        kickoff = datetime.fromisoformat(row["kickoff_at"].replace("Z", "+00:00"))
+        row["capture_mode"] = "close" if timedelta(0) < kickoff - now <= timedelta(minutes=90) else "publication"
     inventory_rows: list[dict[str, Any]] = []
     event_index = {str(event["id"]): event for event in events}
     for event in payload:
@@ -346,9 +359,16 @@ def main() -> None:
     status = {
         "generated_at": captured_at,
         "status": "CAPTURED" if rows else "NO_GOALKEEPER_SAVE_LINES",
-        "requests_used": 1 + int(bool(event_ids)),
-        "request_budget": 2,
+        "requests_used": 1 + (len(event_ids) + 9) // 10,
+        "request_budget": 4,
+        "events_supported": len(supported_ids),
+        "events_deferred_by_budget": len(supported_ids - set(event_ids)),
+        "event_last_checked": {k: (captured_at if k in event_ids else previous_seen.get(k, "")) for k in supported_ids},
         "events_selected": len(event_ids),
+        "league_coverage": {league: {
+            "selected": sum(league_key(event_league(e)) == league for e in events),
+            "with_prices": len({r["event_id"] for r in rows if r.get("league") == league}),
+        } for league in ["epl", "serie-a", "la-liga", "bundesliga", "ligue-1"]},
         "events_with_lines": len({row["event_id"] for row in rows}),
         "three_way_events": len(
             {row["event_id"] for row in rows if parse_float(row.get("home_price")) is not None}

@@ -13,6 +13,10 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+# Git emits UTF-8; never decode native output through the Windows OEM page.
+[Console]::OutputEncoding = New-Object System.Text.UTF8Encoding($false)
+$OutputEncoding = [Console]::OutputEncoding
+
 $repoRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $repoRoot
 

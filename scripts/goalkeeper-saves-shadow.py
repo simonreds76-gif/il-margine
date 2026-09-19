@@ -47,7 +47,7 @@ LEGACY_SELECTION_POLICY = "max_edge_tail_v1"
 
 CANDIDATE_FIELDS = [
     "generated_at", "event_id", "match_date", "kickoff_at", "league", "home_team", "away_team",
-    "team", "opponent", "venue", "goalkeeper", "line", "side", "odds_decimal", "model_mean",
+    "team", "opponent", "venue", "goalkeeper", "bookmaker", "line", "side", "odds_decimal", "model_mean",
     "model_probability", "push_probability", "fair_odds", "edge", "lineup_status", "lineup_source", "data_issue_detail",
     "capture_mode", "captured_at", "candidate_status", "blockers", "strongest_for_fixture",
     "selection_policy", "three_way_source",
@@ -55,7 +55,7 @@ CANDIDATE_FIELDS = [
 PROVISIONAL_FIELDS = CANDIDATE_FIELDS + ["research_only", "not_a_signal"]
 SIGNAL_FIELDS = [
     "signal_id", "created_at", "event_id", "match_date", "kickoff_at", "league", "home_team", "away_team",
-    "team", "opponent", "venue", "goalkeeper", "line", "side", "odds_decimal", "model_mean",
+    "team", "opponent", "venue", "goalkeeper", "bookmaker", "line", "side", "odds_decimal", "model_mean",
     "model_probability", "push_probability", "fair_odds", "edge", "stake_units", "lineup_status",
     "lineup_source", "capture_mode", "captured_at", "status", "result", "actual_saves", "pnl_units",
     "settled_at", "settlement_source", "close_odds", "clv", "selection_policy",
@@ -285,6 +285,7 @@ def build_candidates(
                 "opponent": opponent,
                 "venue": venue,
                 "goalkeeper": canonical_player or player,
+                "bookmaker": price_row.get("bookmaker") or "Bet365",
                 "line": price_row.get("line", ""),
                 "side": str(price_row.get("side") or "over").casefold(),
                 "odds_decimal": price_row.get("odds_decimal", ""),
@@ -472,7 +473,16 @@ def main() -> None:
     write_csv(args.candidates, effective_candidates, CANDIDATE_FIELDS)
     provisional = provisional_rows(effective_candidates)
     write_csv(args.provisional, provisional, PROVISIONAL_FIELDS)
-    added, signals = append_signals(args.signals, effective_candidates, generated_at)
+    fresh_candidates = []
+    for row in candidates:
+        try:
+            captured = datetime.fromisoformat(str(row.get("captured_at") or "").replace("Z", "+00:00"))
+            kickoff = datetime.fromisoformat(str(row.get("kickoff_at") or "").replace("Z", "+00:00"))
+            if captured.tzinfo and kickoff.tzinfo and timedelta(0) <= now - captured <= timedelta(hours=6) and kickoff > now:
+                fresh_candidates.append(row)
+        except ValueError:
+            continue
+    added, signals = append_signals(args.signals, fresh_candidates, generated_at)
     payload = report_payload(
         effective_candidates,
         signals,
