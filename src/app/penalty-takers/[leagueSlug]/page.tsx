@@ -129,7 +129,7 @@ function TeamCard({ team }: { team: ClubPenaltyTeam }) {
         </li>
       </ol>
 
-      {context ? <p className="mt-3 line-clamp-2 min-h-10 text-xs leading-5 text-slate-300">{context}</p> : <div className="min-h-3 flex-1" />}
+      {context ? <details className="penalty-context"><summary>Why this order <span aria-hidden="true">⌄</span></summary><p>{context}</p></details> : <div className="min-h-3 flex-1" />}
 
       <footer className="mt-auto border-t border-slate-800/90 pt-3">
         <div className="flex flex-wrap items-end justify-between gap-3">
@@ -187,12 +187,11 @@ export default async function ClubPenaltyLeaguePage({ params }: PageProps) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionData) }} />
       <main className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
-        <section className="pt-6 pb-10">
-          <PageHomeLink className="mb-7" />
-          <div className="mb-5 flex flex-wrap items-center gap-2 text-sm text-slate-400">
+        <section className="public-hub-heading pt-5 pb-8">
+          <div className="page-breadcrumb mb-4 flex flex-wrap items-center gap-2 text-sm text-slate-400"><PageHomeLink /><span>/</span>
             <Link href="/penalty-takers" className="hover:text-slate-100">Penalty Takers</Link><span>/</span><span className="text-slate-200">{league.label}</span>
           </div>
-          <div className="relative overflow-hidden rounded-[30px] border border-emerald-400/20 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.16),transparent_40%),linear-gradient(145deg,#0c1514,#0b0f17_68%)] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.3)] sm:p-7">
+          <div className="relative py-1">
             <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-300/70 to-transparent" />
             <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center">
               <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white shadow-[0_12px_30px_rgba(0,0,0,0.3)]">

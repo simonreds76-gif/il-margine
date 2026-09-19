@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { useState } from "react";
 import { foldNameText } from "@/lib/player-name-matching";
+import PenaltyTakerPortrait from "./PenaltyTakerPortrait";
 
 type League = { key: string; label: string; logoPath: string; teams: {
-  name: string; url: string; logoPath: string; players: string[];
+  name: string; url: string; logoPath: string; players: string[]; portraits?: (string | null)[];
 }[] };
 
 const normalize = (value: string) => foldNameText(value).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
@@ -54,14 +55,21 @@ export default function PenaltyDirectory({ leagues, initialLeague = "all", board
     <p role="status" aria-live="polite" className="my-3 text-xs text-slate-400">{tokens.length ? `${matches.length} matching ${matches.length === 1 ? "club" : "clubs"}` : `${matches.length} clubs • Open a club to see its full order and evidence`}</p>
     <ul id="penalty-directory-results" className="grid gap-2 sm:grid-cols-2">
       {visible.map(team => <li key={team.url}>
-        <Link prefetch={false} href={team.url} className="group flex h-full items-start gap-3 rounded-2xl border border-slate-700/70 bg-slate-950/50 p-3 transition hover:border-emerald-300/50 hover:bg-emerald-300/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-300">
+        <Link prefetch={false} href={team.url} className="group block h-full rounded-2xl border border-slate-700/70 bg-slate-950/50 p-4 transition hover:border-emerald-300/50 hover:bg-emerald-300/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-300">
+          <span className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={team.logoPath} alt="" width="36" height="36" loading="lazy" className="h-9 w-9 shrink-0 rounded-lg bg-white object-contain p-1" />
           <span className="min-w-0 flex-1">
             <span className="flex items-center justify-between gap-2 font-semibold text-slate-100"><span>{team.name}</span><span aria-hidden="true" className="text-emerald-300">↗</span></span>
             <span className="mb-2 block text-[11px] text-slate-400">{team.league}</span>
-            {team.players.map((name, i) => <span key={`${i}-${name}`} className={`flex gap-2 text-xs leading-6 ${i === 0 ? "font-semibold text-emerald-200" : "text-slate-300"}`}><span className="w-3 shrink-0 tabular-nums text-slate-500">{i + 1}</span><span>{name}</span></span>)}
-          </span>
+          </span></span>
+            <span className="penalty-preview-order">
+              {team.players.map((name, i) => <span key={`${i}-${name}`} className={`penalty-preview-player ${i === 0 ? "penalty-preview-primary" : ""}`}>
+                <PenaltyTakerPortrait name={name} src={team.portraits?.[i]} rank={i + 1} size={i === 0 ? "medium" : "small"} />
+                <span><small>{i === 0 ? "First choice" : i === 1 ? "Second choice" : "Third choice"}</small><strong>{name}</strong></span>
+              </span>)}
+            </span>
+            <span className="mt-3 block text-xs font-semibold text-emerald-300">View order &amp; evidence <span aria-hidden="true">→</span></span>
         </Link>
       </li>)}
     </ul>

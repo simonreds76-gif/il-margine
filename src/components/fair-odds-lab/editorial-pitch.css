@@ -1,0 +1,53 @@
+/* Compact fixture browsing, aligned with the public page shell. */
+#im-pitch-lab { --ip-bg: #0f1117; --ip-panel: #15202a; --ip-line: #2a3c46; background: var(--ip-bg); }
+#im-pitch-lab .ip-main { padding: 20px 16px 32px; }
+#im-pitch-lab .ip-head { align-items: flex-start; padding-bottom: 28px; }
+#im-pitch-lab .ip-head h1 { font-size: clamp(32px,4vw,52px); font-weight: 650; line-height: 1.12; letter-spacing: -.045em; }
+#im-pitch-lab .ip-head .ip-sub { font-size: 16px; margin-top: 16px; max-width: 680px; }
+#im-pitch-lab .ip-headlinks { padding-top: 24px; }
+#im-pitch-lab .ip-eyebrow { font-size: 11px; letter-spacing: .14em; font-weight: 700; }
+#im-pitch-lab .ip-section-nav { gap: 6px; padding: 8px; background: #111f25; border-radius: 14px; margin-bottom: 16px; }
+#im-pitch-lab .ip-section-nav a { padding: 10px 14px; min-height: 44px; border-radius: 9px; font-size: 13px; }
+#im-pitch-lab .ip-leagues { padding-bottom: 10px; }
+#im-pitch-lab .ip-leagues button { min-height: 48px; padding: 9px 12px; }
+#im-pitch-lab .ip-search { margin-block: 10px; }
+#im-pitch-lab .ip-match { border-radius: 16px; margin-bottom: 12px; overflow: hidden; }
+#im-pitch-lab .ip-match-summary { transition: background .18s; }
+#im-pitch-lab .ip-match-summary:hover { background: #1b2c32; }
+#im-pitch-lab .ip-match-meta { padding: 12px 18px; font-size: 11px; }
+#im-pitch-lab .ip-fixture-preview { padding: 16px 18px; gap: 24px; }
+#im-pitch-lab .ip-preview-team { gap: 12px; }
+#im-pitch-lab .ip-preview-team h3 { font-size: 20px; line-height: 1.25; font-weight: 650; }
+#im-pitch-lab .ip-preview-side { font-size: 10px; }
+#im-pitch-lab .ip-preview-coverage { font-size: 11px; margin-top: 5px; line-height: 1.6; }
+#im-pitch-lab .ip-club-badge { width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0; }
+#im-pitch-lab .ip-club-badge img { width: 36px; height: 36px; }
+#im-pitch-lab .ip-expand-hint { padding: 10px 18px; }
+#im-pitch-lab .ip-expand-hint strong { font-size: 12px; }
+#im-pitch-lab .ip-expand-hint small { font-size: 10px; }
+#im-pitch-lab .ip-disclosure-cue { min-height: 40px; }
+#im-pitch-lab .ip-teamtabs { margin: 12px; gap: 8px; padding: 0; border: 0; background: transparent; }
+#im-pitch-lab .ip-teamtabs button { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 12px; border: 1px solid #334653; border-radius: 12px; color: #bdced4; text-align: left; font-size: 13px; font-weight: 650; }
+#im-pitch-lab .ip-teamtabs button[aria-pressed=true] { background: #183b31; border-color: #70d6aa; color: #e1fbee; box-shadow: inset 0 -2px #70d6aa; }
+#im-pitch-lab .ip-teamtabs button small { display: block; margin-top: 3px; font-size: 10px; font-weight: 400; color: #a6beb5; }
+#im-pitch-lab .ip-teamtabs .ip-club-badge { width: 30px; height: 34px; border-radius: 8px; }
+#im-pitch-lab .ip-teamtabs .ip-club-badge img { width: 24px; height: 24px; }
+#im-pitch-lab .ip-avatar { width: 64px; height: 64px; overflow: hidden; }
+#im-pitch-lab .ip-avatar .ip-photo { width: 64px; height: 64px; }
+#im-pitch-lab .ip-metrics { grid-template-columns: 1fr 1fr; }
+@media(min-width:640px) { #im-pitch-lab .ip-main { padding-inline: 24px; } }
+@media(min-width:1024px) { #im-pitch-lab .ip-main { padding-inline: 32px; } }
+@container(max-width:550px) {
+  #im-pitch-lab .ip-fixture-preview { grid-template-columns: 1fr 1fr; gap: 12px; padding: 14px; }
+  #im-pitch-lab .ip-preview-team { flex-direction: column; align-items: flex-start; gap: 8px; }
+  #im-pitch-lab .ip-preview-team+div { border-top: 0; border-left: 1px solid #ffffff15; padding: 0 0 0 12px; }
+  #im-pitch-lab .ip-preview-team h3 { font-size: 16px; }
+  #im-pitch-lab .ip-preview-coverage { display: block; font-size: 10px; }
+  #im-pitch-lab .ip-match-meta { padding: 12px 14px; gap: 8px; }
+  #im-pitch-lab .ip-match-meta .ip-status-chip { font-size: 10px; }
+  #im-pitch-lab .ip-headlinks { padding-top: 0; }
+  #im-pitch-lab .ip-controls { flex-wrap: wrap; }
+  #im-pitch-lab .ip-dates { width: 100%; }
+  #im-pitch-lab .ip-section-nav { display: grid; grid-template-columns: 1fr 1fr; }
+  #im-pitch-lab .ip-teamtabs button { gap: 7px; padding: 10px 8px; font-size: 12px; }
+}

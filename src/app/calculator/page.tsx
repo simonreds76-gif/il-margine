@@ -506,7 +506,7 @@ export default function CalculatorPage() {
         }}
       />
 
-      <div className="relative mx-auto max-w-6xl px-4 pb-8 pt-6 sm:px-6 lg:px-8 md:pb-12">
+      <div className="public-hub-heading relative mx-auto max-w-6xl px-4 pb-8 pt-5 sm:px-6 lg:px-8 md:pb-12">
         <PageHomeLink className="mb-8" />
 
         <div>

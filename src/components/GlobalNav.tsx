@@ -8,7 +8,7 @@ import { BRAND } from "@/lib/brand";
 
 const TIP_LINKS = [{ href: "/tennis-tips", label: "Tennis tips" }, { href: "/player-props", label: "Player props" }];
 const PRIMARY_LINKS = [
-  { href: "/the-edge", label: "The Edge" },
+  { href: "/the-edge", label: "Methodology" },
   { href: "/penalty-takers", label: "Penalty takers" },
   { href: "/fair-odds-lab", label: "Fair Odds Lab" },
   { href: "/track-record", label: "Track record" },
@@ -34,7 +34,7 @@ export default function GlobalNav() {
   const resources = showMonitorLink ? [...RESOURCE_LINKS, { href: "/model-monitor", label: "Model monitor" }] : RESOURCE_LINKS;
   const closeMenus = () => nav.current?.querySelectorAll<HTMLDetailsElement>("details[open]").forEach((menu) => { menu.open = false; });
   const active = (href: string) => pathname === href || pathname.startsWith(href + "/");
-  const linkClass = (href: string) => `inline-flex min-h-11 items-center rounded-lg px-2.5 text-sm font-medium transition-colors ${active(href) ? "text-emerald-300" : "text-slate-300 hover:bg-slate-800/60 hover:text-white"}`;
+  const linkClass = (href: string) => `inline-flex min-h-11 items-center rounded-xl border border-transparent px-3 text-sm font-semibold transition-colors ${active(href) ? "border-emerald-300/25 bg-emerald-300/10 text-emerald-200" : "text-slate-300 hover:border-emerald-300/20 hover:bg-emerald-300/10 hover:text-emerald-100"}`;
   const current = (href: string) => pathname === href ? "page" as const : active(href) ? "location" as const : undefined;
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function GlobalNav() {
     if (menu) { event.preventDefault(); closeMenus(); menu.querySelector("summary")?.focus(); }
   };
 
-  return <nav ref={nav} aria-label="Main navigation" onKeyDown={escapeMenu} className="sticky top-0 z-50 border-b border-slate-800 bg-[#0f1117]/95 backdrop-blur-sm">
+  return <nav ref={nav} aria-label="Main navigation" onKeyDown={escapeMenu} className="public-navigation sticky top-0 z-50 border-b border-slate-800 bg-[#0f1117]/95 backdrop-blur-sm">
     <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 xl:h-20">
       <Link href="/" aria-label="Il Margine home" onClick={closeMenus} className="flex min-h-11 shrink-0 items-center rounded-lg"><Image src={BRAND.compact} alt="Il Margine" width={700} height={168} className="h-auto w-[196px] max-w-full object-contain lg:w-[210px] xl:w-[240px]" priority unoptimized /></Link>
       <div className="hidden items-center gap-1 xl:flex">

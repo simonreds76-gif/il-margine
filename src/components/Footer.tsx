@@ -17,12 +17,12 @@ export default function Footer({ className = "" }: FooterProps) {
             className="group -ml-2 flex items-center transition hover:brightness-110"
           >
             <Image
-              src={BRAND.full}
+              src={BRAND.compact}
               alt="Il Margine — Independent betting analysis"
-              width={900}
-              height={386}
+              width={700}
+              height={168}
               unoptimized
-              className="h-auto w-[320px] max-w-[80vw] rounded-lg object-contain"
+              className="h-auto w-[220px] max-w-[80vw] rounded-lg object-contain"
             />
           </Link>
           <div className="flex flex-col items-center md:items-end gap-3">
@@ -33,7 +33,7 @@ export default function Footer({ className = "" }: FooterProps) {
               <Link href="/privacy-policy" className="hover:text-white">Privacy Policy</Link>
               <Link href="/cookies-policy" className="hover:text-white">Cookies Policy</Link>
             </div>
-            <div className="text-xs text-slate-400">Gamble responsibly. 18+ only.</div>
+            <div className="flex flex-wrap justify-center gap-4 text-xs text-slate-300"><Link href="/the-edge">Our methodology</Link><Link href="/track-record">Track record</Link><Link href="/resources">Resources</Link></div><div className="text-xs text-slate-400">Independent betting analysis. Gamble responsibly. 18+ only.</div>
           </div>
         </div>
       </div>

@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { questionSlug } from "@/lib/parse-faq";
 import { type Bet, type Bookmaker, type MarketStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats } from "@/lib/baseline";
 import BetMobileMeta from "@/components/BetMobileMeta";
@@ -10,59 +9,9 @@ import PublicBetsTable from "@/components/PublicBetsTable";
 import ResultBadge from "@/components/ResultBadge";
 import TodaysEdge from "@/components/TodaysEdge";
 import Footer from "@/components/Footer";
-import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
-import type { MonthRow } from "@/components/MonthlyBreakdown";
-import LabNotesSection from "@/components/LabNotesSection";
 import PropsAlertsCta from "@/components/PropsAlertsCta";
 import { formatMatchDate } from "@/lib/format";
 import { publicTipPath } from "@/lib/tip-seo";
-import type { Resource } from "@/lib/resources";
-
-const COMPILER_CARDS = [
-  {
-    number: "01",
-    title: "Template pricing",
-    body: "Props are rarely handcrafted per match. Opponent context and role changes often go missing.",
-  },
-  {
-    number: "02",
-    title: "Margin allocation",
-    body: "Player props usually carry more margin and less oversight than headline markets.",
-  },
-  {
-    number: "03",
-    title: "Copy-paste lines",
-    body: "If the original number is wrong, smaller books inherit the same error.",
-  },
-  {
-    number: "04",
-    title: "Risk gaps",
-    body: "High-profile markets get monitored hardest. We look where value survives longer.",
-  },
-] as const;
-
-const EXPLORE_LINKS = [
-  {
-    href: "/the-edge",
-    title: "The Edge",
-    body: "Our methodology. Former compiler knowledge applied to find value.",
-  },
-  {
-    href: "/track-record",
-    title: "Track Record",
-    body: "Verified performance, immutable timestamps, and transparent settlement.",
-  },
-  {
-    href: "/calculator",
-    title: "Calculator",
-    body: "Returns tracking and Kelly sizing built around the same approach.",
-  },
-  {
-    href: "/bookmakers",
-    title: "Bookmakers",
-    body: "Which books to use, how limits work, and how to stay operational.",
-  },
-] as const;
 
 interface CombinedMarketStats {
   total_bets: number;
@@ -152,29 +101,11 @@ function MarketCard({
   );
 }
 
-function ExploreCard({ href, title, body }: { href: string; title: string; body: string }) {
-  return (
-    <Link
-      href={href}
-      className="group flex h-full flex-col rounded-xl border border-slate-700/40 bg-[#0c0f14] p-4 transition-all duration-300 hover:-translate-y-[1px] hover:border-[rgba(87,209,150,0.20)] sm:p-5"
-    >
-      <h3 className="mb-1 text-[14px] font-semibold text-slate-200 transition-colors group-hover:text-white">{title}</h3>
-      <p className="text-[13px] leading-[1.6] text-slate-400 transition-colors group-hover:text-slate-300">{body}</p>
-      <span className="mt-auto inline-flex w-full items-center justify-between pt-4 font-mono text-[11px] uppercase tracking-[0.15em] text-[rgba(87,209,150,0.78)] transition-colors group-hover:text-[var(--brand-green)]">
-        View page {"\u2192"}
-      </span>
-    </Link>
-  );
-}
-
 type HomepageClientProps = {
   initialMarketStats?: MarketStats[];
   initialRecentBets?: HomepageBet[];
   initialPendingBets?: HomepageBet[];
   initialLast7?: { total: number; count: number } | null;
-  initialMonthlyPayload?: { show: boolean; rows: MonthRow[] };
-  initialLabNotes?: Resource[];
-  currentlyWatching?: string | null;
 };
 
 function buildCombinedStats(liveStats: MarketStats[]) {
@@ -239,9 +170,6 @@ export default function HomepageClient({
   initialRecentBets = [],
   initialPendingBets = [],
   initialLast7 = null,
-  initialMonthlyPayload,
-  initialLabNotes = [],
-  currentlyWatching = null,
 }: HomepageClientProps) {
   const [recentBets, setRecentBets] = useState<HomepageBet[]>(initialRecentBets);
   const [pendingBets, setPendingBets] = useState<HomepageBet[]>(initialPendingBets);
@@ -315,7 +243,7 @@ export default function HomepageClient({
     },
     {
       label: "Settled bets",
-      value: `${displayStats.overall.total_bets.toLocaleString()}+`,
+      value: `${displayStats.overall.total_bets.toLocaleString()}`,
     },
     {
       label: "Tracking period",
@@ -326,7 +254,7 @@ export default function HomepageClient({
     {
       id: "props",
       name: "Player Props",
-      description: "Football individual player markets where tactical context changes probability fast.",
+      description: "Published football player selections, recorded odds and settled results.",
       status: "active" as const,
       bets: `${displayStats.props.total_bets}+`,
       profit: `${displayStats.props.roi > 0 ? "+" : ""}${displayStats.props.roi.toFixed(1)}% ROI`,
@@ -334,7 +262,7 @@ export default function HomepageClient({
     {
       id: "atp",
       name: "ATP Tennis",
-      description: "Pre-match singles markets backed by deeper model work and pricing discipline.",
+      description: "Tennis selections with recorded stakes, prices and results.",
       status: "active" as const,
       bets: `${displayStats.tennis.total_bets}+`,
       profit: `${displayStats.tennis.roi > 0 ? "+" : ""}${displayStats.tennis.roi.toFixed(1)}% ROI`,
@@ -342,9 +270,9 @@ export default function HomepageClient({
     {
       id: "atg",
       name: "Fair Odds Lab",
-      description: "Anytime goalscorer value spots where our model's fair price is shorter than the bookies'.",
+      description: "Expected and confirmed lineups, model fair odds and Bet365 price comparisons.",
       status: "active" as const,
-      profit: "Live intelligence board",
+      profit: "Explore lineups & odds",
     },
   ];
 
@@ -356,9 +284,9 @@ export default function HomepageClient({
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(22rem,.92fr)] lg:gap-12">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300">Independent betting analysis</p>
-              <h1 className="mt-3 max-w-2xl text-4xl font-semibold leading-[1.1] tracking-tight text-slate-100 sm:text-5xl xl:text-6xl">Betting with <span className="text-emerald-300">mathematical edge.</span></h1>
-              <p className="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">Professional betting methodology from a former odds compiler. We identify value where bookmakers misprice markets.</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300">Football player props &amp; tennis</p>
+              <h1 className="mt-3 max-w-2xl text-4xl font-semibold leading-[1.1] tracking-tight text-slate-100 sm:text-5xl xl:text-6xl">Independent <span className="text-emerald-300">betting analysis.</span></h1>
+              <p className="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">Evidence, estimated probabilities and the odds on offer. Explore our selections, compare prices and judge the results for yourself.</p>
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 <Link href="/player-props" className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-300 px-5 py-3 text-base font-semibold text-slate-950 transition hover:bg-emerald-200 sm:w-auto">Player Props Tips <span aria-hidden="true">→</span></Link>
                 <Link href="/tennis-tips" className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-slate-600 bg-slate-900/40 px-5 py-3 text-base font-semibold text-slate-100 transition hover:border-slate-400 hover:bg-slate-900 sm:w-auto">ATP Tennis Tips <span aria-hidden="true">→</span></Link>
@@ -380,9 +308,9 @@ export default function HomepageClient({
         </div>
       </section>
       {recentBets.length > 0 ? (
-        <section className="border-b border-slate-800/30 bg-[#0b0e13] py-16 md:py-20">
+        <section className="border-b border-slate-800/30 bg-[#0b0e13] py-9 md:py-12">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-8 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-center sm:justify-between">
+            <div className="mb-5 flex flex-col gap-4 sm:mb-6 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.95)]">Latest results</span>
                 <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Latest settled picks</h2>
@@ -450,19 +378,18 @@ export default function HomepageClient({
         </section>
       ) : null}
 
-      <MonthlyBreakdownSection initialPayload={initialMonthlyPayload} scope="combined" />
 
-      <section id="markets" className="border-b border-slate-800/30 py-16 md:py-20 scroll-mt-20">
+      <section id="markets" className="border-b border-slate-800/30 py-9 md:py-12 scroll-mt-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.95)]">
             Where we operate
           </span>
           <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Markets</h2>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-400">
-            We focus on markets where our pricing can be stronger than the number on offer - usually football player props and selective ATP tennis rather than headline match odds.
+            Follow published selections or use the goalscorer board to make your own comparisons.
           </p>
 
-          <div className={`mt-10 grid gap-3 md:grid-cols-2 ${markets.length > 3 ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
+          <div className={`mt-6 grid gap-3 md:grid-cols-2 ${markets.length > 3 ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
             {markets.map((market) => {
               const href =
                 market.id === "props"
@@ -478,178 +405,17 @@ export default function HomepageClient({
         </div>
       </section>
 
-      <section className="border-b border-slate-800/30 py-16 md:py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:gap-16">
-            <div className="lg:sticky lg:top-28 lg:self-start">
-              <div className="mb-5 flex items-center gap-3">
-                <div className="h-10 w-[3px] rounded-full bg-[var(--brand-green)]" />
-                <span className="text-xs font-mono font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.95)]">
-                  Why Il Margine
-                </span>
-              </div>
-              <h2 className="text-2xl font-semibold leading-tight text-slate-100 sm:text-3xl">
-                Built from the
-                <br />
-                other side
-              </h2>
-              <div className="mt-5 space-y-4 text-base leading-relaxed text-slate-400">
-                <p>
-                  Most betting services learn by betting. We learned by <span className="font-medium text-slate-200">building the prices</span> bookmakers use.
-                </p>
-                <p>
-                  Template pricing, margin allocation, copied lines, and risk-management blind spots are where the machinery leaves room for edge.
-                </p>
-              </div>
-              <Link
-                href="/the-edge"
-                className="group mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-[rgba(87,209,150,0.80)] transition-colors hover:text-[var(--brand-green)]"
-              >
-                Read full methodology
-                <svg className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
-            </div>
-
-            <div className="grid gap-2.5 sm:grid-cols-2">
-              {COMPILER_CARDS.map((item) => (
-                <div key={item.number} className="group relative overflow-hidden rounded-xl border border-slate-700/40 bg-[#0c0f14] p-4 transition-all duration-300 hover:border-slate-600/50">
-                  <span className="pointer-events-none absolute -right-1 -top-3 select-none font-mono text-[52px] font-black leading-none text-white/[0.015]">
-                    {item.number}
-                  </span>
-                  <div className="relative">
-                    <span className="font-mono text-[10px] font-bold text-[rgba(87,209,150,0.70)]">{item.number}</span>
-                    <h3 className="mt-1 text-[14px] font-semibold text-slate-200">{item.title}</h3>
-                    <p className="mt-1.5 text-[13px] leading-[1.6] text-slate-400 transition-colors duration-300 group-hover:text-slate-300">
-                      {item.body}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+      <section className="site-section">
+        <div className="site-container grid gap-6 lg:grid-cols-[1fr_1.3fr]">
+          <div><p className="site-eyebrow">The approach</p><h2 className="text-2xl font-semibold tracking-tight">A price is only useful with context.</h2><p className="mt-3 text-sm text-slate-300">We assess the evidence, compare an estimated fair price with the market and record what happens. Our methodology explains the assumptions and limitations.</p><Link href="/the-edge" className="site-text-link">Read our methodology →</Link></div>
+          <div className="grid gap-3 sm:grid-cols-2">{[
+            ["/track-record", "Review the results", "ROI, sample sizes and links to the full public histories."],
+            ["/penalty-takers", "Penalty taker directory", "First choices, deputies and the evidence behind each order."],
+            ["/calculator", "Check the numbers", "Compare returns and staking assumptions."],
+            ["/resources", "Understand the method", "Practical guides to probability, pricing and value."],
+          ].map(([href,title,copy]) => <Link href={href} key={href} className="site-card site-card-link"><h3 className="font-semibold">{title} <span aria-hidden="true">↗</span></h3><p className="mt-2 text-sm text-slate-400">{copy}</p></Link>)}</div>
         </div>
       </section>
-
-
-
-      <section className="border-b border-slate-800/30 bg-[#0b0e13] py-16 md:py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.95)]">
-            Go deeper
-          </span>
-          <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Explore</h2>
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {EXPLORE_LINKS.map((item) => (
-              <ExploreCard key={item.href} href={item.href} title={item.title} body={item.body} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <LabNotesSection notes={initialLabNotes} currentlyWatching={currentlyWatching} />
-
-      <section className="border-b border-slate-800/30 py-16 md:py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.95)]">
-                Common questions
-              </span>
-              <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Frequently asked questions</h2>
-            </div>
-            <Link href="/faq" className="shrink-0 text-sm font-medium text-[var(--brand-green)] transition-colors hover:text-[var(--brand-green)]">
-              View all FAQ -&gt;
-            </Link>
-          </div>
-
-          <div className="grid max-w-4xl gap-4 sm:grid-cols-2">
-            {(
-              [
-                {
-                  q: "What does \"betting with mathematical edge\" mean?",
-                  title: "What makes a bet value instead of just a guess?",
-                  summary: "We price the event first, then only act when the odds on screen are bigger than the true probability.",
-                },
-                {
-                  q: "Why do you focus on player props and tennis instead of mainstream match odds?",
-                  title: "Why these markets instead of headline match odds?",
-                  summary: "Because player props and selective ATP tennis give us more room to beat the screen than generic top-line markets do.",
-                },
-                {
-                  q: "How do I follow Il Margine's betting tips?",
-                  title: "Where do the tips actually get posted?",
-                  summary: "Every pick is posted on the site. Football player-prop picks can also reach you through our free Telegram alerts.",
-                },
-                {
-                  q: "Why does ROI matter more than win rate?",
-                  title: "How should I judge whether the picks actually work?",
-                  summary: "Not by raw win rate. ROI tells you whether the prices taken are genuinely profitable over a real sample.",
-                },
-              ] as const
-            ).map((item) => (
-              <Link
-                key={item.q}
-                href={`/faq#${questionSlug(item.q)}`}
-                className="group flex h-full flex-col rounded-xl border border-slate-700/40 bg-[#0c0f14] p-4 text-left transition-all duration-300 hover:-translate-y-[1px] hover:border-[rgba(87,209,150,0.25)] sm:p-5"
-              >
-                <h3 className="mb-2 text-[15px] font-medium text-slate-200 transition-colors group-hover:text-white">{item.title}</h3>
-                <p className="text-sm leading-relaxed text-slate-400 transition-colors group-hover:text-slate-300">{item.summary}</p>
-                <span className="mt-auto pt-4 font-mono text-[11px] uppercase tracking-[0.15em] text-[rgba(87,209,150,0.78)] transition-colors group-hover:text-[var(--brand-green)]">
-                  Read answer {"\u2192"}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 md:py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-2xl border border-[rgba(87,209,150,0.15)] px-6 py-10 text-center md:px-10 md:py-14">
-            <div className="absolute inset-0 bg-[#0c0f14]" />
-            <div
-              className="pointer-events-none absolute inset-0"
-              style={{ background: "radial-gradient(circle at 50% 140%, rgba(87,209,150,0.12), transparent 55%)" }}
-            />
-            <div
-              className="absolute top-0 left-[12%] right-[12%] h-px"
-              style={{ background: "linear-gradient(90deg, transparent, rgba(87,209,150,0.35), transparent)" }}
-            />
-            <div className="relative">
-              <h2 className="text-3xl font-semibold text-slate-100">See the edge in practice</h2>
-              <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-slate-300">
-                Free selections posted on site. Match, market, selection, odds, bookmaker, and stake. Everything needed to place the bet with clarity.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                <Link
-                  href="/player-props#picks"
-                  className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand-green)] px-8 py-3.5 text-[15px] font-semibold text-slate-950 transition-all hover:brightness-110 hover:shadow-[0_0_50px_rgba(87,209,150,0.22)]"
-                >
-                  Open latest picks {"\u2192"}
-                </Link>
-                <Link
-                  href="/track-record"
-                  className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-8 py-3.5 text-[15px] font-medium text-slate-200 transition-all hover:border-slate-400 hover:bg-slate-800/40"
-                >
-                  See track record {"\u2192"}
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="mx-auto max-w-6xl px-4 pb-14 sm:px-6 lg:px-8">
-        <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.05] px-5 py-4 text-[13px] leading-relaxed text-slate-300">
-          <strong className="text-amber-400">Responsible gambling:</strong> Past performance does not guarantee future results. Only bet what you can afford to lose.{" "}
-          <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-slate-200 underline underline-offset-2">BeGambleAware</a>
-          <span className="px-1.5 text-slate-500">|</span>
-          <a href="https://www.gamcare.org.uk" target="_blank" rel="noopener noreferrer" className="text-slate-200 underline underline-offset-2">GamCare</a>
-        </div>
-      </div>
-
       </main>
       <Footer />
     </div>

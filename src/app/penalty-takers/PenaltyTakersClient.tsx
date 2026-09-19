@@ -103,9 +103,9 @@ export default function PenaltyTakersClient({ leagues, totalTeams, season, lates
       <main className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
         <section className="pt-5 pb-6 md:pb-8">
           <PageHomeLink className="mb-4" />
-          <div className="relative overflow-hidden rounded-[34px] border border-slate-800/80 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_38%),linear-gradient(150deg,#07100f,#0f1722_58%,#11131b)] p-6 sm:p-9 lg:p-11">
+          <div className="penalty-page-heading">
             <div className="max-w-4xl">
-              <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Il Margine intelligence</div>
+              <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">The club directory</div>
               <h1 className="mt-4 text-4xl font-semibold tracking-[-0.035em] text-slate-100 sm:text-6xl">
                 Club penalty takers <span className="text-emerald-400">{season.label}</span>
               </h1>
@@ -128,8 +128,8 @@ export default function PenaltyTakersClient({ leagues, totalTeams, season, lates
         <section id="league-guides" className="mt-10 scroll-mt-24">
           <div className="mb-6 max-w-3xl">
             <div className="font-mono text-xs uppercase tracking-[0.25em] text-emerald-400">Choose a league</div>
-            <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-100">Every league now has its own indexable board</h2>
-            <p className="mt-3 text-sm leading-7 text-slate-400">The main page is an overview. Full club tables live on dedicated league pages so users and search engines do not have to navigate five duplicate sections.</p>
+            <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-100">Explore every league and club</h2>
+            <p className="mt-3 text-sm leading-7 text-slate-400">Open a league for the full penalty orders, then choose a club to see the match evidence and latest hierarchy changes.</p>
           </div>
           <div className="grid gap-5 lg:grid-cols-2">
             {leagues.map((league) => <LeagueCard key={league.key} league={league} season={season} />)}

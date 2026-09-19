@@ -249,11 +249,11 @@ export default function TennisTips({
       {/* Navigation is now in GlobalNav component in layout.tsx */}
 
       {/* Hero */}
-      <section className="pt-6 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50">
+      <section className="public-hub-heading pt-5 pb-8 md:pb-10 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-6 flex flex-wrap items-center gap-3">
+          <div className="mb-0 block">
             <PageHomeLink />
-            <span className="text-xs font-mono uppercase tracking-[0.18em] text-emerald-400">Tennis Tips</span>
+            <span className="site-eyebrow block">Tennis Tips</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6">

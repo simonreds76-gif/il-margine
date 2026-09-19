@@ -61,7 +61,7 @@ function laneLabel(market: string): string {
 
 function selectVisiblePicks(picks: EdgeBet[], filter: Filter): EdgeBet[] {
   const filtered = picks.filter((pick) => filter === "all" || pick.market === filter);
-  if (filter !== "all") return filtered.slice(0, 4);
+  if (filter !== "all") return filtered.slice(0, 3);
 
   const eventCounts = new Map<string, number>();
   const balanced = filtered.filter((pick) => {
@@ -70,12 +70,12 @@ function selectVisiblePicks(picks: EdgeBet[], filter: Filter): EdgeBet[] {
     eventCounts.set(pick.event, count + 1);
     return true;
   });
-  const visible = balanced.slice(0, 4);
+  const visible = balanced.slice(0, 3);
 
   if (picks.some((pick) => pick.market === "tennis") && !visible.some((pick) => pick.market === "tennis")) {
     const tennisPick = picks.find((pick) => pick.market === "tennis");
     if (tennisPick) {
-      if (visible.length === 4) visible[3] = tennisPick;
+      if (visible.length === 3) visible[2] = tennisPick;
       else visible.push(tennisPick);
     }
   }

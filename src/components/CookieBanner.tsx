@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Script from "next/script";
@@ -45,19 +45,17 @@ function subscribeToConsent(onStoreChange: () => void) {
 export default function CookieBanner({ measurementId }: Props) {
   const pathname = usePathname();
   const consent = useSyncExternalStore(subscribeToConsent, readConsentSnapshot, () => null);
-  const [sessionDismissed, setSessionDismissed] = useState(false);
 
   const isPolicyPage = pathname && POLICY_PATHS.some((p) => pathname.startsWith(p));
 
   const accept = () => {
     window.localStorage.setItem(CONSENT_KEY, "1");
-    setSessionDismissed(false);
     window.dispatchEvent(new Event(CONSENT_EVENT));
   };
 
   const reject = () => {
-    // Don't persist — modal will show again on next visit. Only Accept gets you off the hook.
-    setSessionDismissed(true);
+    window.localStorage.setItem(CONSENT_KEY, "0");
+    window.dispatchEvent(new Event(CONSENT_EVENT));
   };
 
   if (!measurementId) return null;
@@ -84,16 +82,14 @@ export default function CookieBanner({ measurementId }: Props) {
   }
 
   if (consent === "rejected") {
-    // They clicked "Essential only" — dismiss for this session only. No persist, so modal reappears on next visit.
+    // Remember either choice. Analytics load only after an explicit acceptance.
     return null;
   }
-
-  if (sessionDismissed) return null;
 
   // On policy pages, never block — let the user read the policy before deciding.
   if (isPolicyPage) return null;
 
-  // Modal overlay — blocks the page. "Accept" persists and loads GA. "Essential only" dismisses now but modal shows again next visit.
+  // Both choices persist; only Accept loads analytics.
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/90 backdrop-blur-sm p-4"

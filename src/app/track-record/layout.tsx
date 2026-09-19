@@ -4,7 +4,7 @@ import { BreadcrumbSchema } from "@/components/BreadcrumbSchema";
 
 const title = "Track Record | Verified Betting Results";
 const description =
-  "Verified betting track record across player props and ATP tennis. Pre-match timestamps, live public settlements, and immutable accounting.";
+  "Explore the Il Margine betting record: recorded stakes, ROI and settled results across football player props and tennis, including the historical baseline.";
 const url = `${BASE_URL}/track-record`;
 
 export const metadata: Metadata = {
@@ -20,15 +20,13 @@ export const metadata: Metadata = {
     siteName: "Il Margine",
     url,
     title: "Verified Betting Track Record - Player Props & ATP Tennis | Il Margine",
-    description:
-      "Live public betting record across player props and ATP tennis. Every selection posted before kick-off, every result logged transparently. No edits, no deletions.",
+    description,
     images: [{ url: "/brand/20260913/social.png", width: 1200, height: 630, alt: "Il Margine - Track Record" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Verified Betting Track Record - Player Props & ATP Tennis | Il Margine",
-    description:
-      "Live public betting record across player props and ATP tennis. Every selection posted before kick-off, every result logged transparently. No edits, no deletions.",
+    description,
     images: ["/brand/20260913/social.png"],
   },
 };

@@ -250,10 +250,8 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
       {faqData ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqData) }} /> : null}
 
       <main className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
-        <section className="pb-9 pt-6 sm:pb-12">
-          <PageHomeLink className="mb-8" />
-
-          <div className="mb-5 flex flex-wrap items-center gap-2 text-sm text-slate-400">
+        <section className="public-hub-heading pb-8 pt-5 sm:pb-10">
+          <div className="page-breadcrumb mb-4 flex flex-wrap items-center gap-2 text-sm text-slate-400"><PageHomeLink /><span>/</span>
             <Link href="/penalty-takers" className="hover:text-slate-100">Penalty Takers</Link>
             <span>/</span>
             <Link href={`/penalty-takers/${team.leagueKey}`} className="hover:text-slate-100">{team.leagueLabel}</Link>

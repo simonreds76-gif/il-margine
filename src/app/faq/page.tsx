@@ -58,7 +58,7 @@ export default function FaqPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
       <FaqOpenByHash />
-      <section className="pt-6 pb-8 md:pt-6 md:pb-10 border-b border-slate-800/50">
+      <section className="public-hub-heading pt-5 pb-8 md:pb-10 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <PageHomeLink className="mb-8" />
 

@@ -131,7 +131,7 @@ export default async function ResourcesPage({ searchParams }: PageProps) {
       <section className="relative overflow-hidden border-b border-slate-800/60">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_75%_20%,rgba(16,185,129,0.10),transparent_35%),linear-gradient(120deg,rgba(15,23,42,0.75),transparent_58%)]" />
         <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 opacity-25 md:block [background-image:linear-gradient(rgba(52,211,153,0.10)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,0.10)_1px,transparent_1px)] [background-size:34px_34px]" />
-        <div className="relative mx-auto max-w-6xl px-4 pb-10 pt-6 sm:px-6 md:pb-14 lg:px-8">
+        <div className="public-hub-heading relative mx-auto max-w-6xl px-4 pb-8 pt-5 sm:px-6 md:pb-10 lg:px-8">
           <PageHomeLink className="mb-7" />
           <div className="grid items-end gap-8 md:grid-cols-[minmax(0,1fr)_280px]">
             <div>

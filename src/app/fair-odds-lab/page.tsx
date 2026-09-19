@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { Metadata } from "next";
@@ -56,7 +57,7 @@ export default async function FairOddsLabPage({ searchParams }: { searchParams?:
     Number.isFinite(h.fair_odds) && h.fair_odds > 1 && h.best_odds > h.fair_odds &&
     (h.super_sub_win ? h.best_bookmaker?.toLowerCase().replace(/[^a-z0-9]/g, "") === "bet365" && !!h.super_sub_replacement?.trim() && (h.super_sub_replacement_goals ?? 0) > 0 : h.goals_scored > 0)).slice(0, 6) : [];
   const structured = { "@context": "https://schema.org", "@type": "WebPage", name: "Goalscorer Fair Odds Lab", url: `${BASE_URL}/fair-odds-lab` };
-  return <main className="min-h-screen bg-[#0e181d] text-slate-100">
+  return <><main className="min-h-screen bg-[#0f1117] text-slate-100">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structured).replace(/</g, "\\u003c") }} />
     <DailyPitchBoard initial={board} boardUrl={boardUrl} asOf={asOf} preview={preview} highlights={
       <LabHitsSection highlights={highlights.map(h => ({
@@ -71,5 +72,5 @@ export default async function FairOddsLabPage({ searchParams }: { searchParams?:
     <div className="mx-auto max-w-[1220px] px-4 pb-10 sm:px-6">
       <div className="mt-7 flex flex-wrap gap-5 text-sm text-slate-300"><Link href="/resources/fair-odds-lab-explained" className="underline underline-offset-4">How fair odds work</Link><Link href="/" className="underline underline-offset-4">Il Margine</Link></div>
     </div>
-  </main>;
+  </main><Footer /></>;
 }

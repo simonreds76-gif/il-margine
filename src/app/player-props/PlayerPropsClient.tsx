@@ -269,11 +269,11 @@ export default function PlayerProps({
 
 
       {/* Hero */}
-      <section className="pt-6 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50">
+      <section className="public-hub-heading pt-5 pb-8 md:pb-10 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-6 flex flex-wrap items-center gap-3">
+          <div className="mb-0 block">
             <PageHomeLink />
-            <span className="text-xs font-mono uppercase tracking-[0.18em] text-emerald-400">Player Props</span>
+            <span className="site-eyebrow block">Player Props</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6">
@@ -304,7 +304,7 @@ export default function PlayerProps({
               <span className="text-xs font-mono text-emerald-400 mb-2 block">ACTIVE SELECTIONS</span>
               <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Current Picks</h2>
             </div>
-            <span className="text-xs text-slate-500 hidden sm:block">Updates on site within a minute</span>
+            <span className="text-xs text-slate-500 hidden sm:block">Recorded odds shown with each pick</span>
           </div>
           <p className="text-slate-500 text-xs mb-6">Stake in units (1u = your standard stake). We typically recommend 0.5u-2u per pick.</p>
 

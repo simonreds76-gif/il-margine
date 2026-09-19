@@ -117,7 +117,7 @@ const BOOKMAKERS: BookmakerReview[] = [
       "Prices still need line-shopping rather than blind trust",
       "Like most recreational books, it is not built to be a forever home for winning accounts",
     ],
-    usageTips: "Betway is better than the first draft made it sound. For props: it absolutely deserves to be checked, because on selected football markets the price can be right there with the best of the softer books and sometimes even top the screen. That alone makes it worth having in the rotation. For tennis: we still see it as a mainstream-events book rather than a specialist one, so we would use it more for ATP/WTA headline matches than for deeper lower-tier work. Overall, this is a strong football/mobile sportsbook with enough pricing quality to matter. The one thing to keep in proportion is the welcome offer: the headline is good, but the token rules are tighter than the cleaner sportsbook offers elsewhere.",
+    usageTips: "Compare Betway against other available books for the exact player, line and settlement rules. Check current odds, accepted stakes and offer terms before placing a bet; neither brand reputation nor a welcome offer establishes value.",
     bestFor: "Football props, mobile betting, worthwhile line shopping",
     offerUrl: "/api/go/betway",
   },
@@ -193,7 +193,7 @@ const FAQ_ITEMS = [
   { q: "Why are some prop markets not measured?", a: "A bookmaker margin needs every mutually exclusive outcome from the same bookmaker at the same line. An over-only player-prop price cannot produce a defensible margin, so we label it not measured rather than inventing one." },
   { q: "What if odds are better elsewhere?", a: "Take the best available price after checking that the market, line and settlement rules are identical. Small price improvements compound materially over a large sample." },
   { q: "Are welcome offers guaranteed value?", a: "No. Terms, qualifying odds, expiry and withdrawal conditions matter. Read the current operator terms and never place a poor-value bet solely to unlock a promotion." },
-  { q: "What happens when I get restricted?", a: "Stake limits reduce gradually, eventually hitting £5-20 maximum. The account remains active but becomes operationally useless for serious betting. This is inevitable for winning accounts. Plan for it by having multiple accounts active. When one restricts, continue with others.", linkToFaq: true },
+  { q: "What happens when I get restricted?", a: "Stake limits reduce gradually, eventually hitting £5-20 maximum. The account remains active but becomes operationally useless for serious betting. Limits vary by account and market. Check the accepted stake and current terms; past availability does not guarantee future access.", linkToFaq: true },
 ];
 
 export default function BookmakersPage() {
@@ -220,7 +220,7 @@ export default function BookmakersPage() {
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8 md:pb-12">
+      <div className="public-hub-heading max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-8 md:pb-12">
         <PageHomeLink className="mb-8" />
 
         {/* Hero */}
@@ -323,7 +323,7 @@ export default function BookmakersPage() {
                   <p><strong className="text-slate-100">Efficient Markets:</strong> Premier League match odds are the clearest example. Teams of traders, real-time monitoring and heavy liquidity make those lines hard to beat consistently.</p>
                   <p><strong className="text-slate-100">Softer Markets:</strong> Player props are the clearest soft market for us: template pricing, lighter oversight and wider margins. Bet builders can also misprice correlation.</p>
                   <p><strong className="text-slate-100">Tennis sits in the middle.</strong> It is generally more efficient than props, but selected ATP and Challenger spots, especially in handicaps and totals, can still be worth betting when our model prices them better than the market.</p>
-                  <p>Our approach: we bet wherever we identify genuine edge. Props and selective tennis prices are the main focus, but for different reasons. See <Link href="/the-edge" className="text-emerald-400 hover:text-emerald-300 underline">The Edge</Link> for methodology.</p>
+                  <p>Our approach: we bet wherever we identify genuine edge. Props and selective tennis prices are the main focus, but for different reasons. See <Link href="/the-edge" className="text-emerald-400 hover:text-emerald-300 underline">Our methodology</Link> for methodology.</p>
                 </div>
               </div>
             </details>
@@ -405,7 +405,7 @@ export default function BookmakersPage() {
               </summary>
               <div className="px-6 md:px-8 pb-4 pt-0">
                 <div className="text-slate-300 text-sm leading-relaxed space-y-3">
-                  <p>Most bookmakers use template pricing for player props, and far more generic automation on parts of the tennis board than the average bettor realises. Example: bookmaker pulls a player&apos;s last 10 matches, calculates an average, applies margin, and pushes out a number. What those shortcuts miss: opponent-specific factors, tactical matchups, referee tendencies, venue context, surface effects, and scheduling pressure. When your analysis captures those things and the template doesn&apos;t, price and true probability drift apart. That&apos;s where we operate. See <Link href="/the-edge" className="text-emerald-400 hover:text-emerald-300 underline">The Edge</Link>.</p>
+                  <p>Most bookmakers use template pricing for player props, and far more generic automation on parts of the tennis board than the average bettor realises. Example: bookmaker pulls a player&apos;s last 10 matches, calculates an average, applies margin, and pushes out a number. What those shortcuts miss: opponent-specific factors, tactical matchups, referee tendencies, venue context, surface effects, and scheduling pressure. When your analysis captures those things and the template doesn&apos;t, price and true probability drift apart. That&apos;s where we operate. See <Link href="/the-edge" className="text-emerald-400 hover:text-emerald-300 underline">Our methodology</Link>.</p>
                 </div>
               </div>
             </details>

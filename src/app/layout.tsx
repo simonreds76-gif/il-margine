@@ -1,3 +1,4 @@
+import PublicSiteFrame from "@/components/PublicSiteFrame";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
@@ -31,10 +32,10 @@ export const metadata: Metadata = {
     apple: [{ url: "/brand/20260913/icon-180.png", sizes: "180x180", type: "image/png" }],
   },
   title: {
-    default: "Il Margine | Betting with Mathematical Edge",
+    default: "Il Margine | Independent Betting Analysis",
     template: "%s | Il Margine",
   },
-  description: "Professional betting methodology from a former odds compiler. We identify value where bookmakers misprice markets. Data-driven tips on tennis, player props & football with transparent results.",
+  description: "Independent betting analysis for football player props and tennis. Compare fair odds, explore our methodology and review published picks and results.",
   alternates: {
     canonical: BASE_URL,
   },
@@ -43,8 +44,8 @@ export const metadata: Metadata = {
     locale: "en_GB",
     url: BASE_URL,
     siteName: "Il Margine",
-    title: "Betting with Mathematical Edge | Tennis and Football Player Props",
-    description: "Professional betting methodology from a former odds compiler. Data driven betting tips on tennis markets and football player props. We identify value where bookmakers misprice markets and publish transparent results.",
+    title: "Independent Betting Analysis | Tennis and Football Player Props",
+    description: "Independent analysis of tennis and football player props, with fair odds, published selections and a transparent results record.",
     images: [
       {
         url: DEFAULT_SOCIAL_IMAGE,
@@ -57,8 +58,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Betting with Mathematical Edge | Tennis and Football Player Props",
-    description: "Professional betting methodology from a former odds compiler. Data driven betting tips on tennis markets and football player props. We identify value where bookmakers misprice markets and publish transparent results.",
+    title: "Independent Betting Analysis | Tennis and Football Player Props",
+    description: "Independent analysis of tennis and football player props, with fair odds, published selections and a transparent results record.",
     images: [DEFAULT_SOCIAL_IMAGE],
   },
 };
@@ -83,9 +84,7 @@ export default function RootLayout({
           <StructuredData />
           <GlobalNav />
           <ComplianceBar />
-          <div className="site-content w-full min-h-screen">
-            {children}
-          </div>
+          <PublicSiteFrame>{children}</PublicSiteFrame>
           <RouteScopedOverlays />
         </ChatProvider>
       </body>
