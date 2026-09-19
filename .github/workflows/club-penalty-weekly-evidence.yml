@@ -50,6 +50,22 @@ jobs:
             python scripts/build-penalty-baseline-evidence.py --league "${league}"
           done
 
+      - name: Check penalty review age and duplicate names
+        id: penalty-quality
+        continue-on-error: true
+        if: github.event_name == 'workflow_dispatch' || github.event.schedule == '20 6 * * 1'
+        run: python scripts/audit-club-penalty-squads.py --quality-only --json-output tmp/penalty-quality.json --csv-output tmp/penalty-quality.csv
+
+      - name: Alert penalty hierarchy review issues
+        if: always() && steps.penalty-quality.outcome != 'skipped' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '20 6 * * 1')
+        env:
+          OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
+          OPS_ALERT_TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
+          GITHUB_RUN_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        run: |
+          test -s tmp/penalty-quality.json
+          python scripts/club-penalty-squad-alert.py --audit tmp/penalty-quality.json
+
       - name: Summarise review queue
         run: |
           python - <<'PY'
