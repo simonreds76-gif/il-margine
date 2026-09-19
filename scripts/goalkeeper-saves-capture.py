@@ -317,12 +317,22 @@ def main() -> None:
     )
     event_ids = [str(event["id"]) for event in events]
     payload: list[dict[str, Any]] = []
+    capture_errors: list[str] = []
+    checked_ids: set[str] = set()
     for offset in range(0, len(event_ids), 10):
-        result = request_json(
-            "/odds/multi",
-            {"apiKey": api_key, "eventIds": ",".join(event_ids[offset:offset + 10]), "bookmakers": args.bookmaker},
-        )
-        payload.extend(result if isinstance(result, list) else [])
+        batch = event_ids[offset:offset + 10]
+        try:
+            result = request_json(
+                "/odds/multi",
+                {"apiKey": api_key, "eventIds": ",".join(batch), "bookmakers": args.bookmaker},
+            )
+            if not isinstance(result, list):
+                raise ValueError("Unexpected odds payload")
+            payload.extend(result)
+            checked_ids.update(batch)
+        except (requests.RequestException, ValueError) as error:
+            # Keep successful batches; no unbounded retry or credential-bearing URL.
+            capture_errors.append(f"batch_{offset // 10 + 1}: {type(error).__name__}")
     captured_at = now.isoformat().replace("+00:00", "Z")
     rows = extract_rows(
         payload,
@@ -358,12 +368,13 @@ def main() -> None:
     )
     status = {
         "generated_at": captured_at,
-        "status": "CAPTURED" if rows else "NO_GOALKEEPER_SAVE_LINES",
+        "status": "PARTIAL_CAPTURE_FAILURE" if capture_errors else "CAPTURED" if rows else "NO_GOALKEEPER_SAVE_LINES",
+        "capture_errors": capture_errors,
         "requests_used": 1 + (len(event_ids) + 9) // 10,
         "request_budget": 4,
         "events_supported": len(supported_ids),
         "events_deferred_by_budget": len(supported_ids - set(event_ids)),
-        "event_last_checked": {k: (captured_at if k in event_ids else previous_seen.get(k, "")) for k in supported_ids},
+        "event_last_checked": {k: (captured_at if k in checked_ids else previous_seen.get(k, "")) for k in supported_ids},
         "events_selected": len(event_ids),
         "league_coverage": {league: {
             "selected": sum(league_key(event_league(e)) == league for e in events),

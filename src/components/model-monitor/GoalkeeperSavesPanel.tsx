@@ -48,6 +48,10 @@ export type GoalkeeperCaptureStatus = {
   events_selected?: number;
   events_with_lines?: number;
   rows_added?: number;
+  rows_observed?: number;
+  events_supported?: number;
+  events_deferred_by_budget?: number;
+  league_coverage?: Record<string, { selected: number; with_prices: number }>;
   message?: string;
 };
 
@@ -202,7 +206,7 @@ export default function GoalkeeperSavesPanel({
   const topTwoPnl = settled.map((row) => numeric(row.pnl_units) ?? 0).sort((a, b) => b - a).slice(0, 2).reduce((sum, value) => sum + value, 0);
   const board = [...candidates, ...provisional].sort((a, b) => String(a.kickoff_at || a.match_date).localeCompare(String(b.kickoff_at || b.match_date)) || (numeric(b.edge) ?? -999) - (numeric(a.edge) ?? -999));
   const promotion = cleanText(report?.promotion?.status || "BLOCKED").replaceAll("_", " ");
-  const captureRows = capture?.rows ?? capture?.rows_added ?? 0;
+  const captureRows = capture?.rows_observed ?? capture?.rows ?? capture?.rows_added ?? 0;
   const captureEvents = capture?.events ?? capture?.events_with_lines ?? 0;
 
   return (
@@ -241,6 +245,8 @@ export default function GoalkeeperSavesPanel({
             <div className="flex items-center justify-between gap-3"><strong className="text-slate-200">Price capture</strong><StatusPill label={plain(capture?.status || report?.status || "not run")} tone={captureRows ? "border-emerald-400/25 bg-emerald-400/10 text-emerald-200" : "border-amber-400/25 bg-amber-400/10 text-amber-200"} /></div>
             <p className="mt-2">{captureRows} rows across {captureEvents} events in the latest capture. {cleanText(capture?.message)}</p>
             <p className="mt-1 text-xs text-slate-500">Generated {formatDateTimeLabel(capture?.generated_at)}</p>
+            {capture?.league_coverage && <div className="mt-3 grid grid-cols-2 gap-1 text-xs">{Object.entries(capture.league_coverage).map(([league, counts]) => <div key={league}>{({epl:"Premier League", "serie-a":"Serie A", "la-liga":"La Liga", bundesliga:"Bundesliga", "ligue-1":"Ligue 1"} as Record<string,string>)[league] || league}: {counts.with_prices}/{counts.selected} fixtures priced</div>)}</div>}
+            {!!capture?.events_deferred_by_budget && <p className="mt-2 text-xs text-amber-200">{capture.events_deferred_by_budget} fixtures deferred by the request cap; later scans rotate through them.</p>}
           </div>
           <div className="rounded-xl border border-slate-800 bg-slate-950/45 p-4 text-sm leading-6 text-slate-400">
             <div className="flex items-center justify-between gap-3"><strong className="text-slate-200">Promotion gate</strong><StatusPill label={promotion} tone="border-rose-400/25 bg-rose-400/10 text-rose-200" /></div>
