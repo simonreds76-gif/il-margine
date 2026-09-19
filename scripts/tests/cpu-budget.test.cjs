@@ -7,11 +7,28 @@ const root=process.env.CPU_TEST_ROOT || path.resolve(__dirname,'../..');
 const ts=require(path.join(root,'node_modules/typescript'));
 function compile(source, imports={}, globals={}) {
  const module={exports:{}};
- vm.runInNewContext(ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText,
+ vm.runInNewContext(ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true,jsx:ts.JsxEmit.ReactJSX}}).outputText,
  {module,exports:module.exports,URL,Response,Request,Date,setTimeout,clearTimeout,process:{env:{}},...globals,require:n=>imports[n]??require(n)});
  return module.exports;
 }
 const cache=compile(fs.readFileSync(path.join(root,'src/lib/bounded-async-cache.ts'),'utf8'));
+test('tip preview PNGs have an explicit shared cache and missing tips avoid rendering',async()=>{
+ let fixture=null, renders=0;
+ const route=compile(fs.readFileSync(path.join(root,'src/app/betting-tips/[slugId]/opengraph-image.tsx'),'utf8'),{
+  'next/og':{ImageResponse:class extends Response {constructor(_jsx,options){super('png',options);renders++;}}},
+  '@/lib/tip-seo-server':{fetchSeoTipFixture:async()=>fixture},
+  '@/lib/site-brand-image':{SITE_BRAND_IMAGE:'test-logo'},
+  'react/jsx-runtime':{jsx:()=>null,jsxs:()=>null},
+ });
+ const missing=await route.default({params:Promise.resolve({slugId:'missing'})});
+ assert.equal(missing.status,404);assert.equal(renders,0);
+ fixture={seed:{event:'Home vs Away',market:'props'},bets:[{}]};
+ const valid=await route.default({params:Promise.resolve({slugId:'known'})});
+ assert.equal(valid.status,200);assert.equal(renders,1);
+ assert.equal(route.revalidate,604800);
+ assert.match(valid.headers.get('Cache-Control'),/s-maxage=604800/);
+ assert.doesNotMatch(valid.headers.get('Cache-Control'),/immutable/);
+});
 test('concurrent callers share one load, expiry reloads, capacity is bounded',async()=>{
  let now=0,calls=0,resolve;
  const c=cache.createBoundedAsyncCache(2,()=>now);

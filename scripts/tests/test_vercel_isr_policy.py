@@ -28,6 +28,7 @@ class VercelIsrPolicyTests(unittest.TestCase):
                 [
                     'tipPaths.add(`/tips/${slugifyTip(bet.event, bet.id)}`);',
                     "tipPaths.add(previewPath);",
+                    'tipPaths.add(`${previewPath}/opengraph-image`);',
                     'if (markets.has("props")) revalidatePath("/player-props");',
                     'if (markets.has("tennis")) revalidatePath("/tennis-tips");',
                 ]

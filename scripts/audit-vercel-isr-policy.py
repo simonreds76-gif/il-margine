@@ -19,7 +19,7 @@ MIN_REVALIDATE_SECONDS = {
     "src/app/tennis-tips/page.tsx": 86_400,
     "src/app/tips/[slugId]/page.tsx": 86_400,
     "src/app/betting-tips/[slugId]/page.tsx": 86_400,
-    "src/app/betting-tips/[slugId]/opengraph-image.tsx": 86_400,
+    "src/app/betting-tips/[slugId]/opengraph-image.tsx": 604_800,
     "src/app/world-cup-2026-free-picks/page.tsx": 86_400,
     "src/app/fair-odds-lab/world-cup/page.tsx": 86_400,
     "src/app/penalty-takers/page.tsx": 43_200,
@@ -69,6 +69,7 @@ def audit_isr_policy(root: Path = ROOT) -> list[str]:
     required_fragments = {
         'tipPaths.add(`/tips/${slugifyTip(bet.event, bet.id)}`)': "exact public tip invalidation",
         "tipPaths.add(previewPath)": "exact SEO tip invalidation",
+        'tipPaths.add(`${previewPath}/opengraph-image`)': "exact social-image invalidation",
         'markets.has("props")': "market-scoped player-props invalidation",
         'markets.has("tennis")': "market-scoped tennis invalidation",
     }

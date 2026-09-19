@@ -6,7 +6,9 @@ export const alt = "Il Margine betting preview";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const dynamic = "force-static";
-export const revalidate = 86400;
+// Fixture edits invalidate this exact image in the admin bets route.
+// Historical previews should not be rasterized again every day.
+export const revalidate = 604800;
 
 interface ImageProps {
   params: Promise<{ slugId: string }>;
@@ -15,6 +17,7 @@ interface ImageProps {
 export default async function Image({ params }: ImageProps) {
   const { slugId } = await params;
   const fixture = await fetchSeoTipFixture(slugId);
+  if (!fixture) return new Response("Tip not found", { status: 404, headers: { "Cache-Control": "no-store" } });
   const event = fixture?.seed.event || "Il Margine betting preview";
   const eyebrow = fixture?.seed.market === "props" ? "PLAYER PROPS" : "TENNIS MATCH";
   const pickCount = fixture?.bets.length || 0;
@@ -108,6 +111,11 @@ export default async function Image({ params }: ImageProps) {
         </div>
       </div>
     ),
-    size,
+    {
+      ...size,
+      // ImageResponse otherwise supplies max-age=0, must-revalidate, which
+      // leaves the CDN repeatedly revalidating the expensive PNG response.
+      headers: { "Cache-Control": "public, max-age=0, s-maxage=604800, must-revalidate" },
+    },
   );
 }

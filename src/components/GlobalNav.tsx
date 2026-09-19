@@ -59,16 +59,16 @@ export default function GlobalNav() {
 
   return <nav ref={nav} aria-label="Main navigation" onKeyDown={escapeMenu} className="public-navigation sticky top-0 z-50 border-b border-slate-800 bg-[#0f1117]/95 backdrop-blur-sm">
     <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 xl:h-20">
-      <Link href="/" aria-label="Il Margine home" onClick={closeMenus} className="flex min-h-11 shrink-0 items-center rounded-lg"><Image src={BRAND.compact} alt="Il Margine" width={700} height={168} className="h-auto w-[196px] max-w-full object-contain lg:w-[210px] xl:w-[240px]" priority unoptimized /></Link>
+      <Link prefetch={false} href="/" aria-label="Il Margine home" onClick={closeMenus} className="flex min-h-11 shrink-0 items-center rounded-lg"><Image src={BRAND.compact} alt="Il Margine" width={700} height={168} className="h-auto w-[196px] max-w-full object-contain lg:w-[210px] xl:w-[240px]" priority unoptimized /></Link>
       <div className="hidden items-center gap-1 xl:flex">
         <details name="desktop-site-navigation" onBlur={closeWhenFocusLeaves} className="group relative">
           <summary className={`flex min-h-11 cursor-pointer list-none items-center gap-1.5 rounded-lg px-2.5 text-sm font-medium hover:bg-slate-800/60 [&::-webkit-details-marker]:hidden ${TIP_LINKS.some((link) => active(link.href)) ? "text-emerald-300" : "text-slate-300"}`}>Tips <Chevron /></summary>
-          <div className="absolute left-0 top-full mt-2 w-48 rounded-xl border border-slate-700 bg-slate-950 p-2 shadow-xl shadow-black/30">{TIP_LINKS.map((link) => <Link key={link.href} href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={`flex w-full ${linkClass(link.href)}`}>{link.label}</Link>)}</div>
+          <div className="absolute left-0 top-full mt-2 w-48 rounded-xl border border-slate-700 bg-slate-950 p-2 shadow-xl shadow-black/30">{TIP_LINKS.map((link) => <Link prefetch={false} key={link.href} href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={`flex w-full ${linkClass(link.href)}`}>{link.label}</Link>)}</div>
         </details>
-        {PRIMARY_LINKS.map((link) => <Link key={link.href} href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={linkClass(link.href)}>{link.label}</Link>)}
+        {PRIMARY_LINKS.map((link) => <Link prefetch={false} key={link.href} href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={linkClass(link.href)}>{link.label}</Link>)}
         <details name="desktop-site-navigation" onBlur={closeWhenFocusLeaves} className="group relative">
           <summary className={`flex min-h-11 cursor-pointer list-none items-center gap-1.5 rounded-lg px-2.5 text-sm font-medium hover:bg-slate-800/60 [&::-webkit-details-marker]:hidden ${resources.some((link) => active(link.href)) ? "text-emerald-300" : "text-slate-300"}`}>Resources <Chevron /></summary>
-          <div className="absolute right-0 top-full mt-2 w-64 rounded-xl border border-slate-700 bg-slate-950 p-2 shadow-xl shadow-black/30">{resources.map((link) => <Link key={link.href} href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={`flex w-full ${linkClass(link.href)}`}>{link.label}</Link>)}</div>
+          <div className="absolute right-0 top-full mt-2 w-64 rounded-xl border border-slate-700 bg-slate-950 p-2 shadow-xl shadow-black/30">{resources.map((link) => <Link prefetch={false} key={link.href} href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={`flex w-full ${linkClass(link.href)}`}>{link.label}</Link>)}</div>
         </details>
       </div>
       <details onBlur={closeWhenFocusLeaves} className="group xl:hidden">
@@ -79,7 +79,7 @@ export default function GlobalNav() {
           <div className="mx-auto grid max-w-7xl gap-5 px-4 py-5 sm:grid-cols-3 sm:px-6">
             {[{ label: "Tips", links: TIP_LINKS }, { label: "Explore", links: PRIMARY_LINKS }, { label: "Resources", links: resources }].map((group) => <div key={group.label}>
               <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-slate-500">{group.label}</p>
-              <ul className="space-y-1">{group.links.map((link) => <li key={link.href}><Link href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={`flex w-full min-h-11 rounded-xl px-3 py-3 text-sm font-medium ${active(link.href) ? "bg-emerald-400/10 text-emerald-200" : "text-slate-200 hover:bg-slate-800"}`}>{link.label}</Link></li>)}</ul>
+              <ul className="space-y-1">{group.links.map((link) => <li key={link.href}><Link prefetch={false} href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={`flex w-full min-h-11 rounded-xl px-3 py-3 text-sm font-medium ${active(link.href) ? "bg-emerald-400/10 text-emerald-200" : "text-slate-200 hover:bg-slate-800"}`}>{link.label}</Link></li>)}</ul>
             </div>)}
           </div>
         </div>
