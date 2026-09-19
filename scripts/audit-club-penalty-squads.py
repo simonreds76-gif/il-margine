@@ -352,11 +352,28 @@ def main() -> int:
     parser.add_argument("--league", choices=sorted(LEAGUE_FILES), nargs="+", default=sorted(LEAGUE_FILES))
     parser.add_argument("--timeout", type=int, default=30)
     parser.add_argument("--workers", type=int, default=4)
+    parser.add_argument("--quality-only", action="store_true", help="Check local review age and duplicate names without fetching squads")
     parser.add_argument("--json-output", type=Path, default=DEFAULT_JSON_OUTPUT)
     parser.add_argument("--csv-output", type=Path, default=DEFAULT_CSV_OUTPUT)
     args = parser.parse_args()
 
-    payload = build_audit(args.league, args.timeout, args.workers)
+    if args.quality_only:
+        jobs = load_jobs(args.league)
+        payload = {
+            'generated_at': datetime.now(timezone.utc).isoformat(),
+            'source': 'Local approved penalty hierarchy files',
+            'scope': 'Review age and name collisions only; no squad or provider requests',
+            'clubs_checked': len(jobs), 'slots_checked': 0, 'status_counts': {}, 'rows': [],
+            'hierarchy_quality': hierarchy_quality(jobs,
+                json.loads((DATA_DIR / 'club-penalty-season.json').read_text(encoding='utf-8')),
+                datetime.now(timezone.utc).date()),
+        }
+        if args.json_output == DEFAULT_JSON_OUTPUT:
+            args.json_output = DATA_DIR / 'club-penalty-quality-audit.json'
+        if args.csv_output == DEFAULT_CSV_OUTPUT:
+            args.csv_output = DATA_DIR / 'club-penalty-quality-audit.csv'
+    else:
+        payload = build_audit(args.league, args.timeout, args.workers)
     write_outputs(payload, args.json_output, args.csv_output)
     print(
         f"Checked {payload['clubs_checked']} clubs / {payload['slots_checked']} hierarchy slots: "
